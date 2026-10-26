@@ -135,6 +135,31 @@ export const ENEMY_ART = Object.freeze([
         as3: 'Puzzlements/Button.as:14-15 Spritemap(8, 8); :20 centerOO; :47 frame int(_active)' },
     { pack: 'seedling', key: 'seedling:puzzlement/buttonroom', file: 'ButtonRoom.png', fw: 16, fh: 16, origin: [8, 8],
         as3: 'Puzzlements/ButtonRoom.as:14-15 Spritemap(16, 16); :29 centerOO; :47-49,97 frame int(_active) + frameAdd (2 over a Wire)' },
+    // ── G8: the placed NPCs' bodies and the talk prompt (`seedlingNpcSkin.js`). `centerOO` on the entity, so the
+    //    origin is the frame centre, but for a class with its own offset. The Oracle's anims ride the skin
+    //    (`NPC_ANIMS.oracle`: two are at frame rate 0, which the manifest refuses). ──
+    ...[['introchar', 'IntroCharacter', 8, 8, [0, 1, 0, 2], 5, 'NPCs/IntroCharacter.as:14-15,23'],
+        ['adnanchar', 'AdnanCharacter', 8, 8, [0, 1, 0, 2], 5, 'NPCs/AdnanCharacter.as:14-15,22'],
+        ['forestchar', 'ForestCharacter', 8, 9, [0, 1], 5, 'NPCs/ForestCharacter.as:14-15,22'],
+        ['hermit', 'Hermit', 10, 12, [1, 2, 3, 0, 0], 15, 'NPCs/Hermit.as:14-15,25'],
+        ['karlore', 'Karlore', 20, 20, [0, 1], 5, 'NPCs/Karlore.as:14-15,22'],
+        ['rekcahdam', 'Rekcahdam', 9, 10, [0, 1, 0], 5, 'NPCs/Rekcahdam.as:14-15,23'],
+        ['sensei', 'Sensei', 8, 8, [1, 2, 1, 0, 0], 15, 'NPCs/Sensei.as:14-15,25'],
+        ['witch', 'Witch', 16, 13, [0, 1], 5, 'NPCs/Witch.as:14-15,28'],
+        ['yeti', 'Yeti', 10, 12, [0, 1], 5, 'NPCs/Yeti.as:14-15,25']]
+        .map(([k, cls, w, h, talk, rate, as3]) => ({ pack: 'seedling', key: `seedling:npc/${k}`, file: `NPCs/${cls}.png`, fw: w, fh: h,
+            origin: [w / 2, h / 2], as3: `${as3} Spritemap(${w}, ${h}), talk [${talk}] fps ${rate}; NPC.as:57 centerOO`,
+            anims: { talk: fps(talk, rate) } })),
+    { pack: 'seedling', key: 'seedling:npc/oracle', file: 'NPCs/Oracle.png', fw: 16, fh: 24, origin: [8, 16],
+        as3: 'NPCs/Oracle.as:13-14 Spritemap(16, 24, animEnd); :37-38 y = -16, originY = 16 (after centerOO: x = -8); :42-46 its anims (NPC_ANIMS.oracle)' },
+    { pack: 'seedling', key: 'seedling:npc/sign', file: 'Sign.png', fw: 16, fh: 16, origin: [8, 8],
+        as3: 'NPCs/Sign.as:13-14 Spritemap(16, 16), frame 0; NPC.as:57 centerOO' },
+    { pack: 'seedling', key: 'seedling:npc/totem', file: 'Totem.png', fw: 32, fh: 64, origin: [16, 48],
+        as3: 'NPCs/Totem.as:13-14 Spritemap(32, 64), frame 0; :21-24 originX 16, x = -16, originY 48, y = -48' },
+    { pack: 'seedling', key: 'seedling:npc/watcher', file: 'NPCs/Watcher.png', fw: 12, fh: 15, origin: [6, 7.5],
+        as3: 'NPCs/Watcher.as:13-14 Spritemap(12, 15); NPC.as:57 centerOO; :58-95 its frame (direction, seed 6, die [7,8,9])' },
+    { pack: 'seedling', key: 'seedling:npc/talk', file: 'NPCs/Talk.png', fw: 10, fh: 14, origin: [5, 14],
+        as3: 'NPCs/NPC.as:17-18 Spritemap(10, 14); :59-61 centerOO, then y = -height; :174-181 frame Game.worldFrame(2, 1/1.25) at (x, y - originY - charToTalkMargin)' },
     // ── G4: the effects and the HUD (`seedlingEffectSkin.js`). The droplet and the heart are frame-only rows (the
     //    droplet's frame is a Number the class steps itself; the heart's is `int(i > healthc)`). ──
     { pack: 'seedling', key: 'seedling:fx/explosion', file: 'Explosion.png', fw: 128, fh: 128, origin: [64, 64],

@@ -1,0 +1,4 @@
+t=0..13 L47 [] |
+t=14..22 L48 [n:karlore,n:prompt,n:flip] | seedling:npc/karlore#0 drawImage(seedling/NPCs/Karlore, 0, 0, 110, 270) flipX ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 115, 256)
+t=23..44 L48 [n:karlore,n:prompt,n:flip] | seedling:npc/karlore#1 drawImage(seedling/NPCs/Karlore, 20, 0, 110, 270) flipX ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 115, 256)
+t=45..61 L48 [n:karlore,n:prompt,n:flip] | seedling:npc/karlore#0 drawImage(seedling/NPCs/Karlore, 0, 0, 110, 270) flipX ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 115, 256)

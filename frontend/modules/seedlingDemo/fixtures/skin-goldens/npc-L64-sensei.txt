@@ -1,0 +1,6 @@
+t=1..2 L64 [n:sensei,n:prompt,n:flip] | seedling:npc/sensei#0 drawImage(seedling/NPCs/Sensei, 0, 0, 36, 52) flipX ; seedling:npc/talk#1 drawImage(seedling/NPCs/Talk, 10, 0, 35, 36)
+t=3..16 L64 [n:sensei,n:prompt,n:flip] | seedling:npc/sensei#0 drawImage(seedling/NPCs/Sensei, 0, 0, 36, 52) flipX ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 35, 36)
+t=17..20 L64 [n:sensei,n:prompt,n:flip] | seedling:npc/sensei#1 drawImage(seedling/NPCs/Sensei, 8, 0, 36, 52) flipX ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 35, 36)
+t=21..38 L64 [n:sensei,n:prompt,n:flip] | seedling:npc/sensei#1 drawImage(seedling/NPCs/Sensei, 8, 0, 36, 52) flipX ; seedling:npc/talk#1 drawImage(seedling/NPCs/Talk, 10, 0, 35, 36)
+t=39..56 L64 [n:sensei,n:prompt,n:flip] | seedling:npc/sensei#0 drawImage(seedling/NPCs/Sensei, 0, 0, 36, 52) flipX ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 35, 36)
+t=57..60 L64 [n:sensei,n:prompt,n:flip] | seedling:npc/sensei#0 drawImage(seedling/NPCs/Sensei, 0, 0, 36, 52) flipX ; seedling:npc/talk#1 drawImage(seedling/NPCs/Talk, 10, 0, 35, 36)

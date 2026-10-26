@@ -3490,3 +3490,59 @@ registerTest({
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/**
+ * ⛓ GRAPHICS G8 — the placed NPCs in a real browser: the standalone page driven to `Game(1, 64, 56)`, which puts the
+ * player 24 px below the Oracle — inside its 48 px wake and its talk range. The Oracle wakes (`Oracle.as` "waken" →
+ * "awake", frame 3) and the talk prompt shows over it. No panel, preset or AP state is touched.
+ */
+export async function seedlingJsRuntimeGraphicsNpcs(tc) {
+    const frame = document.createElement('iframe');
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    const errors = [];
+    try {
+        frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+        }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+        tc.reportCondition('the standalone page is up with its pack', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [1, 64, 56] }]);
+        const g = win.__seedlingJsGraphics;
+        const rt = win.__seedlingJsRuntime;
+        const awake = await tc.pollForValue(() => (rt.run?.level === 1 && g.effects?.owed === 0
+            && g.npcs?.ops.some((o) => o.key === 'seedling:npc/oracle' && o.frame === 3) ? g.npcs : null),
+        'level 1 is up and the Oracle is awake (frame 3)', 15000, 100);
+        tc.log(`npcs: ${JSON.stringify(awake ? { ...awake, ops: awake.ops.map((o) => `${o.key.split('/')[1]}#${o.frame}`) } : null)}`);
+        tc.assertEqual('the Oracle and its talk prompt are drawn', 'seedling:npc/oracle,seedling:npc/talk',
+            [...new Set((awake?.ops ?? []).map((o) => o.key))].sort().join(','));
+        tc.assertEqual('every op from the seedling pack', 'seedling', [...new Set((awake?.ops ?? []).map((o) => o.pack))].join(','));
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 1 and did not halt', '1/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-npcs',
+    name: 'Seedling JS runtime: the placed NPCs — the Oracle wakes and its talk prompt shows (G8)',
+    description: 'Mounts jsRuntime.html?graphics=seedling standalone in its own iframe, drives it to level 1 beside the Oracle '
+        + 'through its own __swfBridge, and asserts the Oracle wakes (frame 3) and the talk prompt is drawn, both from the '
+        + 'seedling pack, every sheet decodes, and no console error. Touches no panel, preset or AP state; the iframe is '
+        + 'removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsNpcs,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

@@ -658,6 +658,76 @@
       "w": 64,
       "h": 16
     },
+    "NPCs/IntroCharacter": {
+      "file": "sheets/NPCs/IntroCharacter.png",
+      "w": 24,
+      "h": 8
+    },
+    "NPCs/AdnanCharacter": {
+      "file": "sheets/NPCs/AdnanCharacter.png",
+      "w": 24,
+      "h": 8
+    },
+    "NPCs/ForestCharacter": {
+      "file": "sheets/NPCs/ForestCharacter.png",
+      "w": 16,
+      "h": 9
+    },
+    "NPCs/Hermit": {
+      "file": "sheets/NPCs/Hermit.png",
+      "w": 40,
+      "h": 12
+    },
+    "NPCs/Karlore": {
+      "file": "sheets/NPCs/Karlore.png",
+      "w": 40,
+      "h": 20
+    },
+    "NPCs/Rekcahdam": {
+      "file": "sheets/NPCs/Rekcahdam.png",
+      "w": 18,
+      "h": 10
+    },
+    "NPCs/Sensei": {
+      "file": "sheets/NPCs/Sensei.png",
+      "w": 24,
+      "h": 8
+    },
+    "NPCs/Witch": {
+      "file": "sheets/NPCs/Witch.png",
+      "w": 32,
+      "h": 13
+    },
+    "NPCs/Yeti": {
+      "file": "sheets/NPCs/Yeti.png",
+      "w": 20,
+      "h": 12
+    },
+    "NPCs/Oracle": {
+      "file": "sheets/NPCs/Oracle.png",
+      "w": 96,
+      "h": 24
+    },
+    "Sign": {
+      "file": "sheets/Sign.png",
+      "w": 16,
+      "h": 16
+    },
+    "Totem": {
+      "file": "sheets/Totem.png",
+      "w": 32,
+      "h": 64
+    },
+    "NPCs/Watcher": {
+      "file": "sheets/NPCs/Watcher.png",
+      "w": 120,
+      "h": 15
+    },
+    "NPCs/Talk": {
+      "file": "sheets/NPCs/Talk.png",
+      "w": 20,
+      "h": 14
+    },
     "Explosion": {
       "file": "sheets/Explosion.png",
       "w": 1024,
@@ -3223,6 +3293,261 @@
         8
       ],
       "as3": "Puzzlements/ButtonRoom.as:14-15 Spritemap(16, 16); :29 centerOO; :47-49,97 frame int(_active) + frameAdd (2 over a Wire)"
+    },
+    "seedling:npc/introchar": {
+      "sheet": "NPCs/IntroCharacter",
+      "fw": 8,
+      "fh": 8,
+      "frames": 3,
+      "origin": [
+        4,
+        4
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            0,
+            2
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/IntroCharacter.as:14-15,23 Spritemap(8, 8), talk [0,1,0,2] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/adnanchar": {
+      "sheet": "NPCs/AdnanCharacter",
+      "fw": 8,
+      "fh": 8,
+      "frames": 3,
+      "origin": [
+        4,
+        4
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            0,
+            2
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/AdnanCharacter.as:14-15,22 Spritemap(8, 8), talk [0,1,0,2] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/forestchar": {
+      "sheet": "NPCs/ForestCharacter",
+      "fw": 8,
+      "fh": 9,
+      "frames": 2,
+      "origin": [
+        4,
+        4.5
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/ForestCharacter.as:14-15,22 Spritemap(8, 9), talk [0,1] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/hermit": {
+      "sheet": "NPCs/Hermit",
+      "fw": 10,
+      "fh": 12,
+      "frames": 4,
+      "origin": [
+        5,
+        6
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2,
+            3,
+            0,
+            0
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "NPCs/Hermit.as:14-15,25 Spritemap(10, 12), talk [1,2,3,0,0] fps 15; NPC.as:57 centerOO"
+    },
+    "seedling:npc/karlore": {
+      "sheet": "NPCs/Karlore",
+      "fw": 20,
+      "fh": 20,
+      "frames": 2,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/Karlore.as:14-15,22 Spritemap(20, 20), talk [0,1] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/rekcahdam": {
+      "sheet": "NPCs/Rekcahdam",
+      "fw": 9,
+      "fh": 10,
+      "frames": 2,
+      "origin": [
+        4.5,
+        5
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            0
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/Rekcahdam.as:14-15,23 Spritemap(9, 10), talk [0,1,0] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/sensei": {
+      "sheet": "NPCs/Sensei",
+      "fw": 8,
+      "fh": 8,
+      "frames": 3,
+      "origin": [
+        4,
+        4
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2,
+            1,
+            0,
+            0
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "NPCs/Sensei.as:14-15,25 Spritemap(8, 8), talk [1,2,1,0,0] fps 15; NPC.as:57 centerOO"
+    },
+    "seedling:npc/witch": {
+      "sheet": "NPCs/Witch",
+      "fw": 16,
+      "fh": 13,
+      "frames": 2,
+      "origin": [
+        8,
+        6.5
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/Witch.as:14-15,28 Spritemap(16, 13), talk [0,1] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/yeti": {
+      "sheet": "NPCs/Yeti",
+      "fw": 10,
+      "fh": 12,
+      "frames": 2,
+      "origin": [
+        5,
+        6
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/Yeti.as:14-15,25 Spritemap(10, 12), talk [0,1] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/oracle": {
+      "sheet": "NPCs/Oracle",
+      "fw": 16,
+      "fh": 24,
+      "frames": 6,
+      "origin": [
+        8,
+        16
+      ],
+      "as3": "NPCs/Oracle.as:13-14 Spritemap(16, 24, animEnd); :37-38 y = -16, originY = 16 (after centerOO: x = -8); :42-46 its anims (NPC_ANIMS.oracle)"
+    },
+    "seedling:npc/sign": {
+      "sheet": "Sign",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "NPCs/Sign.as:13-14 Spritemap(16, 16), frame 0; NPC.as:57 centerOO"
+    },
+    "seedling:npc/totem": {
+      "sheet": "Totem",
+      "fw": 32,
+      "fh": 64,
+      "frames": 1,
+      "origin": [
+        16,
+        48
+      ],
+      "as3": "NPCs/Totem.as:13-14 Spritemap(32, 64), frame 0; :21-24 originX 16, x = -16, originY 48, y = -48"
+    },
+    "seedling:npc/watcher": {
+      "sheet": "NPCs/Watcher",
+      "fw": 12,
+      "fh": 15,
+      "frames": 10,
+      "origin": [
+        6,
+        7.5
+      ],
+      "as3": "NPCs/Watcher.as:13-14 Spritemap(12, 15); NPC.as:57 centerOO; :58-95 its frame (direction, seed 6, die [7,8,9])"
+    },
+    "seedling:npc/talk": {
+      "sheet": "NPCs/Talk",
+      "fw": 10,
+      "fh": 14,
+      "frames": 2,
+      "origin": [
+        5,
+        14
+      ],
+      "as3": "NPCs/NPC.as:17-18 Spritemap(10, 14); :59-61 centerOO, then y = -height; :174-181 frame Game.worldFrame(2, 1/1.25) at (x, y - originY - charToTalkMargin)"
     },
     "seedling:fx/explosion": {
       "sheet": "Explosion",

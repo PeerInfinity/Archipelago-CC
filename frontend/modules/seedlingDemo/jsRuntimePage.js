@@ -141,7 +141,9 @@
  * chests, breakable rocks, burnable trees and magical locks at the run's live
  * state; the locks, covers, boss locks, rock locks and buttons in their default
  * state, `SOLIDS_PENDING`). Their build-time rectangles are not painted.
- * `__seedlingJsGraphics.solids` reads them back.
+ * `__seedlingJsGraphics.solids` reads them back. And the placed NPCs
+ * (`seedlingNpcSkin.js`: each class's stand / talk frames, the facing, the talk
+ * prompt, the Oracle's wake, the Watcher), `__seedlingJsGraphics.npcs`.
  *
  * ⛓ KILLLOCK HOOK —`?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
@@ -173,6 +175,7 @@ import {
 } from './seedlingEffectSkin.js';
 import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from './seedlingPuzzleSkin.js';
 import { SOLIDS_OBJECT_TAGS, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
+import { NPC_TAGS, npcOps, npcSkinView, stepNpcSkin } from './seedlingNpcSkin.js';
 import { EFFECT_RULES } from './seedlingEffectSkin.js';
 import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
@@ -275,6 +278,8 @@ export function mountJsRuntimePage(win = window) {
         puzzleSkin: null, puzzles: null,
         // ⛓ G8 — the changeable solids' and buttons' pictures and the last paint's ops.
         solidsSkin: null, solids: null,
+        // ⛓ G8 — the placed NPCs' pictures and the last paint's ops.
+        npcSkin: null, npcs: null,
         // ⛓ G4 — the effects' and overlays' state (one step per game tick, one hold per owed dead frame), the last paint's.
         effectSkin: null, effects: null, held: 0,
         // ⛓ G1.5 — the static tile layer (room mode; `?tileLayer=off` = none) and the last paint's inputs.
@@ -303,7 +308,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, effectSkin: null, effects: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, npcSkin: null, npcs: null, effectSkin: null, effects: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -352,6 +357,8 @@ export function mountJsRuntimePage(win = window) {
         get puzzles() { return graphics.puzzles ? { ...graphics.puzzles, ops: graphics.puzzles.ops.map((o) => ({ ...o })) } : null; },
         /** ⛓ G8 — the last paint's chests, rocks, trees, locks and buttons. */
         get solids() { return graphics.solids ? { ...graphics.solids, ops: graphics.solids.ops.map((o) => ({ ...o })) } : null; },
+        /** ⛓ G8 — the last paint's NPCs and talk prompts. */
+        get npcs() { return graphics.npcs ? { ...graphics.npcs, ops: graphics.npcs.ops.map((o) => ({ ...o })) } : null; },
         get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
         /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
         get held() { return graphics.held; },
@@ -437,6 +444,7 @@ export function mountJsRuntimePage(win = window) {
                 graphics.hazardSkin = stepHazardSkin(graphics.hazardSkin, hazardSkinView(runtime.run), runtime.ticks);
                 graphics.puzzleSkin = stepPuzzleSkin(graphics.puzzleSkin, puzzleView(), runtime.ticks);
                 graphics.solidsSkin = stepSolidsSkin(graphics.solidsSkin, solidsView(), runtime.ticks);
+                graphics.npcSkin = stepNpcSkin(graphics.npcSkin, npcSkinView(runtime.run), runtime.ticks);
                 const fv = effectView();
                 graphics.effectSkin = stepEffectSkin(carryThroughReboot(graphics.effectSkin, fv, { run: runtime.run, inPlace: lastBootInPlace }),
                     fv, runtime.ticks, { rain: effectsOn() });
@@ -571,6 +579,12 @@ export function mountJsRuntimePage(win = window) {
                 responders: sv.responders.length, rockLocks: sv.rockLocks.length, buttons: sv.buttons.length,
                 ops: solidSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, alpha: o.alpha ?? 1, pack: o.key ? art.packOf(o.key) : null })) }
             : null;
+        const nv = art ? npcSkinView(runtime.run) : null;
+        const npcSprites = nv ? npcOps(nv, art, { skin: graphics.npcSkin }) : [];
+        graphics.npcs = nv
+            ? { talkers: nv.talkers.length, watchers: nv.watchers.length,
+                ops: npcSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, flipX: !!o.flipX, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
         const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
         // ⛓ G7 — a run the effects have not met (booted between two clock slots: the game's own first frame) is adopted
         // before its first paint, so that paint shows the cover its fade starts from; before G7 it showed the bare room
@@ -585,7 +599,7 @@ export function mountJsRuntimePage(win = window) {
         const lit = art && graphics.lights === 'on' ? nightView() : null;
         const modelCam = lit ? cameraView('follow', world, state, runtime.run) : null;
         const litMain = lit ? nightMainOps(lit, { cam: modelCam }) : [];
-        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...solidSprites, ...effectSprites, ...litMain];
+        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...solidSprites, ...npcSprites, ...effectSprites, ...litMain];
         const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
         graphics.enemies = ev
             ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
@@ -594,7 +608,7 @@ export function mountJsRuntimePage(win = window) {
             : null;
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
-            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag),
+            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag),
                 drawnTeleporters: (tp) => tp.isStairs === true } : {}),
         });
         // ⚖ follow mode jiggles inside a shake band on the renderer's own draw; the band's edges are the model's

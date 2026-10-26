@@ -10,7 +10,7 @@ GitHub Pages serves only `frontend/`.
   the enemies, the arrow and the AP item looks (G3), the wallflyers, drills, turrets, their shots and the
   Bob Boss (G3b), and the spinning axes, crushers, lava chains, the Boss Totem and its shots, the bomb pusher,
   its bombs and the grenades (G3c), the explosions, slash hits, rain droplets and hearts (G4), the stairs, pushable
-  blocks and sand traps (G7), and the chests, breakable rocks, burnable trees, locks and buttons (G8; the G3–G8 rows live in
+  blocks and sand traps (G7), the chests, breakable rocks, burnable trees, locks, buttons and the placed NPCs (G8; the G3–G8 rows live in
   `frontend/modules/seedlingDemo/seedlingEnemyArt.js`, which the extractor spreads into its table). The art is by
   Connor Ullmann, under the Unlicense (`vendor/seedling/LICENSE`). The ONE exception is the dialogue font
   (`sheets/SeedlingFont.png`, key `seedling:font/default`, G4b): ORIGINAL glyphs authored in this repository, not
