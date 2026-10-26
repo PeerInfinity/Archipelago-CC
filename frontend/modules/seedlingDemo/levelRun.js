@@ -3936,11 +3936,20 @@ export function createLevelRun({
         if (!chestStates.has(n)) return keptUnlessReading(chestStates, n, createChestState(chestsOf(n)));
         return chestStates.get(n);
     };
+    /**
+     * ⛓ fidelity CHESTSEAL (`CONTACT_FIDELITY.chestSealRemoval`) — every chest of a level is ABSENT when the save holds
+     * all sixteen seal parts: `Chest`'s constructor runs `checkBySeal()` (the flag write), `Chest.check()` removes the
+     * tagged chest on the first `Game.update` and `update`'s own `checkBySeal()` an untagged one, both before any frame
+     * the player moves in. A derivation of the save, so it holds from the build — no state, no tick needed. OFF: false.
+     */
+    const chestsSealRemoved = () => CONTACT_FIDELITY.chestSealRemoval
+        && sealParts[SAVE_SLOTS.seal_parts - 1] !== -1;
     const openChestIdsNow = () => {
         const st = chestStateFor(level);
         if (st.size === 0) return null;
         const open = new Set();
-        for (const c of st.values()) if (!c.solid) open.add(c.id);
+        const sealGone = chestsSealRemoved();
+        for (const c of st.values()) if (!c.solid || sealGone) open.add(c.id);
         return open.size === 0 ? null : open;
     };
     /**
@@ -7739,6 +7748,16 @@ export function createLevelRun({
             },
         });
         for (const ev of events) {
+            // ⛓ fidelity CHESTSEAL: `checkBySeal()`'s `Game.setPersistence(tag, false)` — the game writes it in the
+            // constructor; the model banks it on the visit's first chest step, as `open()`'s is (a `tag = -1` chest
+            // writes nothing, `Chest.as:51`). OFF: dropped, as before.
+            if (ev.kind === 'chestgone' && ev.why === 'checkBySeal' && chestsSealRemoved()) {
+                if (ev.persistTag >= 0) {
+                    if (!pendingEarnedClears.has(level)) pendingEarnedClears.set(level, new Set());
+                    pendingEarnedClears.get(level).add(ev.persistTag);
+                }
+                continue;
+            }
             if (ev.kind !== 'chestopen') continue;
             chestOpens.push({ t: ticksCompleted + 1, level, id: ev.id, persistTag: ev.persistTag });
             if (ev.persistTag >= 0) {
@@ -19909,6 +19928,13 @@ export function createLevelRun({
         get openChests() { return reading(openChestsNow); },
         /** One record per chest OPENED, with the flag `open()` cleared. */
         get chestOpens() { return chestOpensNow(); },
+        /**
+         * ⛓ fidelity CHESTSEAL: TRUE when `checkBySeal()` has removed every chest of every level this run builds — the
+         * save holds all sixteen seal parts and `CONTACT_FIDELITY.chestSealRemoval` is ON (OFF: always false). Such a
+         * chest's location is CHECKED by the game itself (the constructor's `setPersistence(tag, false)`, banked in
+         * `bankedClears` on the visit's first tick), so a `collect-placement` at it is already satisfied.
+         */
+        get chestsSealRemoved() { return chestsSealRemoved(); },
 
         /**
          * ⛓⛓⛓ R9 SLICE 6 — **THE BANKED WRITES, AS A LEDGER** (trap 493, third

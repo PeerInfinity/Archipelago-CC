@@ -1459,6 +1459,18 @@ export const CONTACT_FIDELITY = {
      * row. OFF: byte-identical. `SEEDLING_DASH_SPINNER_FORECAST=0|1`.
      */
     dashSpinnerForecast: true,
+    /**
+     * fidelity CHESTSEAL (wave 32) — A CHEST `checkBySeal()` REMOVED IS NOT A WALL, AND ITS FLAG IS CLEARED. With all
+     * sixteen seal parts held (`SealController.hasAllSealParts()`), `Chest`'s CONSTRUCTOR runs `checkBySeal()`
+     * (`Chest.as:35`, `:47-57`): `Game.setPersistence(tag, false)` — the AP check report — and a `remove` that is a
+     * no-op before the add; `Chest.check()` then removes the tagged chest on the first `Game.update` (`Game.as:870-877`,
+     * which runs under the `blackCover`), and `update`'s own `checkBySeal()` an untagged one. So no player-controlled
+     * frame sees it. OFF the model marked it `gone` and left it SOLID (`openChestIdsNow` reads `solid`), the solver bound
+     * the chest verb and refused *"NEVER OPENED"*. ON: such a chest is open in `openChests` from the build, its flag is
+     * banked like `open()`'s, and a `collect-placement` at it is satisfied (`arm: 'seal-removed'`). OFF:
+     * byte-identical. `SEEDLING_CHEST_SEAL_REMOVAL=0|1`.
+     */
+    chestSealRemoval: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1740,6 +1752,9 @@ if (globalThis.process?.env?.SEEDLING_WEIGH_HYPOTHESIS_CHAIN === '1') CONTACT_FI
 if (globalThis.process?.env?.SEEDLING_WEIGH_HYPOTHESIS_CHAIN === '0') CONTACT_FIDELITY.weighHypothesisChain = false;
 if (globalThis.process?.env?.SEEDLING_DASH_SPINNER_FORECAST === '1') CONTACT_FIDELITY.dashSpinnerForecast = true;
 if (globalThis.process?.env?.SEEDLING_DASH_SPINNER_FORECAST === '0') CONTACT_FIDELITY.dashSpinnerForecast = false;
+// ⛓ fidelity CHESTSEAL: `SEEDLING_CHEST_SEAL_REMOVAL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CHEST_SEAL_REMOVAL === '1') CONTACT_FIDELITY.chestSealRemoval = true;
+if (globalThis.process?.env?.SEEDLING_CHEST_SEAL_REMOVAL === '0') CONTACT_FIDELITY.chestSealRemoval = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

@@ -311,7 +311,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // dashSpinnerForecast waits on L18's wall time ("Chain ON; forecast after L18").
             weighHypothesisChain: true,
             // ⛓ and dashSpinnerForecast after the L18 wall-time check (OFF 6,192 vs ON 6,116 ms; hammer-2 signed).
-            dashSpinnerForecast: true });
+            dashSpinnerForecast: true,
+            // ⛓ fidelity CHESTSEAL (wave 32): a chest `checkBySeal()` removed is open and its flag banked — shipped OFF.
+            chestSealRemoval: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 113,
-            "count": 160,
+            "browser": 114,
+            "count": 161,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 467,
-        "browser": 178,
-        "cited": 252,
-        "files": 481,
+        "blockStyle": 468,
+        "browser": 179,
+        "cited": 253,
+        "files": 482,
         "lineStyle": 14,
-        "withDocblock": 481,
-        "withFlags": 398
+        "withDocblock": 482,
+        "withFlags": 399
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11118,6 +11118,57 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-chaser-mobiles — ⛓ seedling-fidelity-staticladder D3: ONE BRIDGED CHASER CLASS, ASKED OF THE GAME TICK BY SAMPLED TICK (`probe-seedling-bobsoldier-mobiles.mjs` with the class and the tape as arguments).",
             "path": "scripts/procgen/probe-seedling-chaser-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "passedThroughChest"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-chestseal.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "⛓ SEEDLING FIDELITY CHESTSEAL — a chest `checkBySeal()` removed, witnessed on the game (wave 32, W0 + D1 + D2).",
+            "path": "scripts/procgen/probe-seedling-chestseal.mjs"
         },
         {
             "argvHelpers": [],
