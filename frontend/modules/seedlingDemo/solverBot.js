@@ -6267,6 +6267,13 @@ export function previewWalk(run, wps, tolerance = 0,
          */
         standKeys = null,
         /**
+         * ⛓ fidelity L40LATCH D1a — an OPT-IN tail without the lobbers' bombs: `false` drops every `kind: 'bomb'` spit
+         * from the tail's samples (the forecast still steps). A LATCHED hold under `MOVING_WAIT` paces exactly when its
+         * still wait prices a bomb (`pacedHoldPlan`, at the executor), so its tail prices the rest (`holdStandWalk`).
+         * `true` (every other caller) changes nothing.
+         */
+        standBombs = true,
+        /**
          * ⛓ fidelity BEAMLANE D1 — an OPT-IN steered aim: `(state, wp, tick, intermediate) => true | {x, y}`, asked
          * once per transit tick (`tick` = the tick whose sample is about to be taken). `true` = this waypoint is
          * reached; a point = what `chooseHeld` aims at this tick instead of `wp`. The PHASE arm's lane walk
@@ -6881,6 +6888,7 @@ export function previewWalk(run, wps, tolerance = 0,
                 phase: 'dwell', wp: wpIndex };
             if (spitForecast) {
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
+                if (!standBombs && sample.spits) sample.spits = [...sample.spits].filter((b) => b.kind !== 'bomb');
             }
             if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
             if (corridorForecast) {
@@ -7389,7 +7397,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     const previewFor = (dashPlan) => {
         const strike = strikePolicyFor(run, { dashPlan, dashMode, iframeLapse });
         if (!stand) return { walk: previewWalkOrDeath(run, wps, tolerance, { strike }), strike };
-        const whole = previewWalkOrDeath(run, wps, tolerance, { strike, standFor: stand.ticks, standKeys: stand.keys });
+        const whole = previewWalkOrDeath(run, wps, tolerance, { strike, ...standTailOpts(stand) });
         const walk = { ...whole, samples: whole.samples.filter((sm) => sm.phase !== 'dwell'),
             tail: whole.samples.filter((sm) => sm.phase === 'dwell') };
         return { walk, strike };
@@ -18765,7 +18773,21 @@ function keylockStandWalk(run, resolved) {
 function holdStandWalk(run, resolved) {
     if (!(resolved?.hold?.ticks > 0) || !resolved.target || !resolved.stance) return {};
     const NO_KEYS = new Set();
-    return { stand: { ticks: resolved.hold.ticks, keys: () => () => NO_KEYS, hold: true } };
+    // ⛓ a LATCHED hold under MOVING_WAIT paces where its still wait meets a bomb (`pacedHoldPlan`): its tail prices
+    // everything but the bombs (measured: WANDHOLD's legs 368/371, two paced holds, refused with the bombs in the tail)
+    const paces = MOVING_WAIT.enabled && Boolean(resolved.hold.until)
+        && (resolved.hold.latched === true || resolved.latched === true);
+    return { stand: { ticks: resolved.hold.ticks, keys: () => () => NO_KEYS, hold: true,
+        ...(paces ? { bombs: false } : {}) } };
+}
+
+/**
+ * The `previewWalk` options a stance walk's tail (`stand`, `KEYLOCK_WAIT_PRICED`'s instrument) asks for: `standFor`,
+ * `standKeys`, and — only for a `holdStandWalk` tail that paces its bombs — `standBombs: false`. `{}` for no tail.
+ */
+function standTailOpts(stand) {
+    if (!stand) return {};
+    return { standFor: stand.ticks, standKeys: stand.keys, ...(stand.bombs === false ? { standBombs: false } : {}) };
 }
 
 /**
@@ -24528,7 +24550,7 @@ function solveSegmentUnder({
          * the key line counts down is a hit on THIS corridor (trap 154: a stance safe to pass is not safe to wait
          * in). `null` (every other walk) previews exactly what it did.
          */
-        const tail = stand ? { standFor: stand.ticks, standKeys: stand.keys } : {};
+        const tail = standTailOpts(stand);
         const walk = previewWalk(run, wps, tolerance, axisAligned
             ? { strike: null, axisAligned, ...tail }
             : { strike: strikePolicyFor(run, { dashMode, iframeLapse }), ...tail });
@@ -26773,8 +26795,7 @@ function solveSegmentUnder({
                     // ⛓ L30KEYLOCK — a WHOLE candidate (it ends at the aim) carries the stance wait; a prefix
                     // (it ends at a via) does not, because nobody waits at a via.
                     const end = wps[wps.length - 1];
-                    const tail = stand && end && end.x === aim.x && end.y === aim.y
-                        ? { standFor: stand.ticks, standKeys: stand.keys } : {};
+                    const tail = stand && end && end.x === aim.x && end.y === aim.y ? standTailOpts(stand) : {};
                     const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
                         ? { strike: null, axisAligned, stopWhen: dangerous, ...tail }
                         : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous, ...tail });
