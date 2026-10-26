@@ -46,13 +46,30 @@
  * view before the picture goes; the picture follows the callback, the run's
  * geometry is untouched. A chest is `openChests` + its own 60-update timer.
  *
- * ⛔ NOT YET (`SOLIDS_PENDING`, the brief's step 2): the responders' FADE (Lock
- * alpha −0.01 drawn INVERT while active, Cover −0.1, BossLock's keyTimer,
- * scale and key icon). `activatorsNow` (⚖ fidelity-13, 2026-10-25) reads the
- * model's fade, but only its OPEN tick is game-witnessed, and the acceptance is a
- * frame-by-frame game read of alpha/held; until then a responder is drawn shut
- * (opaque, normal) until `openActivators` says open, then not drawn. A button's
- * PRESSED frame is drawn from `activatorsNow.pressers` (cleared as-is).
+ * ⛓ G9c — THE RESPONDERS' FADE (⚖ fidelity-14, 2026-10-26: no game read; the AS3
+ * recurrence, anchored on the run). Each responder `activatorsNow` carries is stepped
+ * here by its own class's update, transcribed, with `activate` = the run's `held > 0`
+ * (a BossLock's: `touched`, which latches as `activate` does), and its `type` held to
+ * the run's `open` (the witnessed tick; a disagreement is counted, `skin.drift`):
+ *   · Lock / WandLock / GrassLock / ShieldLock (`Lock.as:64-97`): active, `alpha > 0 ?
+ *     alpha −= 0.01 (Image-clamped) : turnOff()` — open on step 101; inactive, `alpha = 1`
+ *     only while `type == normType`, so an OPENED lock released keeps alpha 0 and, the
+ *     tick the run re-closes it (`returnToNormal`), still 0: the alpha line ran first —
+ *     1 from the step after. Drawn INVERT while active (a white silhouette under
+ *     `difference`), and while active onto nightBmp first, NORMAL (`render()`).
+ *   · Cover (`Cover.as:37-73`): active, `alpha −= 0.1` then the test — open on step 11;
+ *     inactive, `reset()` only when nothing hitable overlaps it or a Chest does — a
+ *     player or a block on it keeps the faded alpha.
+ *   · BossLock (`BossLock.as:58-125`): `keyTimer` 60 down, then `scale += 0.05`, `alpha −=
+ *     0.05` (a private Number, unclamped; the Image clamps it at the render) — open on
+ *     step 80; SCREEN while active with `keyTimer ≤ 20`; the key rising and fading above
+ *     it (`alpha = keyTimer / 60`) while `keyTimer > 0`. A release keeps alpha, scale and
+ *     keyTimer; a re-close (`type != normType`) restores alpha only.
+ * ⚠ Band: a frame the run does not tick (a freeze, a ceremony, dead frames) — the same
+ * band as G7's sinking block. ⚠ Residue (`SOLIDS_PENDING`): a Cover's overlap counts the
+ * player, the chests and the pushables, not an enemy-free Solid the run does not list;
+ * the kill locks and the RockLock (tset −1: not in `activatorsNow`) stay shut until open.
+ * A button's PRESSED frame is drawn from `activatorsNow.pressers` (cleared as-is).
  */
 import { HIT_TO_GONE_TICKS as ROCK_CALLBACK } from './breakableRocks.js';
 import { HIT_TO_GONE_TICKS as TREE_CALLBACK } from './burnableTree.js';
@@ -60,6 +77,7 @@ import { MAGICAL_LOCK_CALLBACK_TICK_OFFSET } from './magicalLock.js';
 import { ANIMS, freshSprite, play, rectOp, spriteOp, updateSprite, worldFrame } from './seedlingEnemySkin.js';
 import { TILE_LAYER } from './seedlingSkinRenderer.js';
 import { objectSolidColour } from './rectPalette.js';
+import { playerBoxAt } from './playerPhysicsV2.js';
 
 export const KEYS = Object.freeze({
     chest: 'seedling:puzzlement/chest',
@@ -99,11 +117,9 @@ export const SOLIDS_COVERAGE = Object.freeze({
     drawn: Object.freeze(['Chest', 'BreakableRock', 'BurnableTree', 'MagicalLock', 'Lock', 'WandLock', 'GrassLock', 'ShieldLock',
         'Cover', 'BossLock', 'RockLock', 'Button', 'ButtonRoom']),
 });
-/** Drawn in their DEFAULT state until `activatorsNow` is cleared (the brief's step 2). */
+/** Still drawn in their DEFAULT state (G9c drew the responders' fades). */
 export const SOLIDS_PENDING = Object.freeze({
-    'Lock / WandLock / GrassLock / ShieldLock': 'the fade: alpha −0.01 per active update, drawn INVERT while active (Lock.as:64-130)',
-    Cover: 'the fade: alpha −0.1 per active update (Cover.as:37-73)',
-    BossLock: 'keyTimer 60, then alpha −0.05 / scale +0.05, SCREEN in the last third, the key icon (BossLock.as:58-125)',
+    'Cover (residue)': 'a release under a Solid the run does not list (not the player, a chest or a pushable): drawn reset',
     RockLock: 'the kill-lock fade and INVERT (RockLock.as:49-88); drawn shut while the world holds it',
     'a KILL lock (tset −1, `world.killLocks`)': 'its fade after the last kill (Lock.as:109-115): the run banks the clear through its '
         + 'kill-lock ledgers and does not open the activator this visit, so it is drawn shut until a build despawns it',
@@ -139,7 +155,14 @@ export function solidsSkinView(run, { record = null } = {}) {
     const hits = newestBy(read(run, 'rocksBroken', []), level);
     const burns = newestBy(read(run, 'treeBurns', []), level);
     const wands = newestBy(read(run, 'magicalLocksOpened', []), level);
-    const pressed = new Map((read(run, 'activatorsNow', null)?.pressers ?? []).map((p) => [p.id, p.down]));
+    const acts = read(run, 'activatorsNow', null);
+    const pressed = new Map((acts?.pressers ?? []).map((p) => [p.id, p.down]));
+    const live = new Map((acts?.responders ?? []).map((r) => [r.id, r]));
+    const box = playerBoxAt(run.state.x, run.state.y);
+    const pushables = read(run, 'pushables', null);
+    const blocks = pushables ? [...pushables.values()].filter((b) => !b.removed).map((b) => b.rect) : [];
+    const chestBoxes = (world?.chests ?? []).map((c) => ({ x: c.x, y: c.y, right: c.x + 16, bottom: c.y + 16 }));
+    const hit = (a, b) => a.x < b.right && a.right > b.x && a.y < b.bottom && a.bottom > b.y;
     const wires = new Set((record?.entities ?? []).filter((e) => e.type === 'wire').map((e) => `${Number(e.x)},${Number(e.y)}`));
     // `k` updates into the animation, counted back from the run's own end tick (`end`); null = not running. A ledger
     // row from an EARLIER visit (a rebuilt `tag = -1` body) has ended, so it is not this one's.
@@ -166,9 +189,16 @@ export function solidsSkinView(run, { record = null } = {}) {
             return { id: m.id, x: m.x, y: m.y, fire: m.lockType === 1, k: running(row, MAGICAL_LOCK_CALLBACK_TICK_OFFSET + 1, 'end'),
                 gone: ended(row, 'end') };
         }).filter((m) => !m.gone),
-        responders: (world?.activators ?? []).filter((a) => RESPONDER_ART[a.tag]).map((a) => ({
-            id: a.id, tag: a.tag, x: a.x, y: a.y, keyType: a.keyType ?? null, open: open.has(a.id),
-        })),
+        responders: (world?.activators ?? []).filter((a) => RESPONDER_ART[a.tag]).map((a) => {
+            const r = live.get(a.id);
+            const cell = { x: a.x, y: a.y, right: a.x + 16, bottom: a.y + 16 };
+            return {
+                id: a.id, tag: a.tag, x: a.x, y: a.y, keyType: a.keyType ?? null, open: open.has(a.id),
+                // ⛓ G9c — what the class's own update reads: the run's step count / latch, and (a Cover's reset) what overlaps it
+                ...(r ? { held: r.held, touched: !!r.touched, overlap: [box, ...blocks, ...chestBoxes].some((b) => hit(b, cell)),
+                    chestUnder: chestBoxes.some((b) => hit(b, cell)) } : {}),
+            };
+        }),
         rockLocks: solids.filter((o) => o.tag === 'rocklock').map((o) => ({ x: o.x, y: o.y })),
         buttons: (world?.pressers ?? []).map((p) => {
             const id = `${p.tag}@${p.x},${p.y}`;
@@ -196,8 +226,62 @@ function spriteAfter(key, name, k) {
     return sp;
 }
 
+/** `Image.alpha`'s setter (`graphics/Image.as:155-158`). */
+const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+/** Which class's update a responder tag runs. */
+export const RESPONDER_CLASS = Object.freeze({ lock: 'lock', wandlock: 'lock', grasslock: 'lock', shieldlock: 'lock', shieldlocknorm: 'lock',
+    cover: 'cover', bosslock: 'bosslock' });
+/** `BossLock.as:27` `keyTimerMax`. */
+export const BOSS_KEY_TIMER = 60;
+
+/**
+ * ONE UPDATE of a responder's own state, transcribed (`Lock.activationStep`, `Cover.update`, `BossLock.update`),
+ * `activate` read off the run. Returns `{state, drift}`: `drift` when the class's `type` disagreed with the run's
+ * `open` (the witnessed fact), which then wins.
+ */
+export function stepResponder(prev, a) {
+    const cls = RESPONDER_CLASS[a.tag];
+    const s = prev ? { ...prev } : (cls === 'bosslock'
+        ? { keyTimer: BOSS_KEY_TIMER, alpha: 1, scale: 1, solid: true, active: false }
+        : { alpha: 1, solid: true, active: false });
+    if (cls === 'bosslock') {
+        s.active = a.touched;
+        if (s.active) {
+            if (s.keyTimer > 0) s.keyTimer -= 1;
+            else {
+                s.scale += 0.05;
+                s.alpha -= 0.05;
+                if (s.alpha <= 0 && s.solid) { s.solid = false; s.alpha = 0; }
+            }
+        } else if (!s.solid) { s.solid = true; s.alpha = 1; }
+    } else if (cls === 'cover') {
+        s.active = a.held > 0;
+        if (s.active) {
+            s.alpha = clamp01(s.alpha - 0.1);
+            if (s.alpha <= 0) { s.solid = false; s.alpha = 0; }
+        } else if (!a.overlap || a.chestUnder) { s.solid = true; s.alpha = 1; }
+    } else {
+        s.active = a.held > 0;
+        if (s.active) {
+            if (s.alpha > 0) s.alpha = clamp01(s.alpha - 0.01);
+            else if (s.solid) { s.solid = false; s.alpha = 0; }
+        } else {
+            if (s.solid) s.alpha = 1;
+            // `returnToNormal()` AFTER the alpha line: the run's re-close is the anchor, the alpha follows a step later
+            if (!s.solid && !a.open) s.solid = true;
+        }
+    }
+    let drift = false;
+    if (s.solid === a.open) {
+        drift = true;
+        s.solid = !a.open;
+        if (a.open) s.alpha = 0;
+    }
+    return { state: s, drift };
+}
+
 /** The reducer's rules, by name, so a test can swap ONE for a mutant (`opts.rules`). */
-export const SOLIDS_RULES = Object.freeze({ chestTimer, buttonFrame, spriteAfter, worldFrame });
+export const SOLIDS_RULES = Object.freeze({ chestTimer, buttonFrame, spriteAfter, worldFrame, stepResponder });
 
 /** One GAME tick of these pictures (call it after every `tick()`). Pure: returns a new object. */
 export function stepSolidsSkin(prev, view, tick, { rules = SOLIDS_RULES } = {}) {
@@ -213,12 +297,22 @@ export function stepSolidsSkin(prev, view, tick, { rules = SOLIDS_RULES } = {}) 
         const before = same ? prev.buttons.get(b.id) : null;
         buttons.set(b.id, { shown: R.buttonFrame(before, b), seen: b.down });
     }
-    return { epoch: view.epoch, tick, chests, buttons, rules: R };
+    const responders = new Map();
+    let drift = same ? prev.drift ?? 0 : 0;
+    for (const a of view.responders) {
+        if (a.held === undefined) continue;
+        const r = R.stepResponder(same ? prev.responders?.get(a.id) ?? null : null, a);
+        if (r.drift) drift += 1;
+        responders.set(a.id, r.state);
+    }
+    return { epoch: view.epoch, tick, chests, buttons, responders, drift, rules: R };
 }
 
 // ── the ops ─────────────────────────────────────────────────────────────
 
 const cellBox = (x, y, w = 16, h = 16) => ({ x, y, w, h, right: x + w, bottom: y + h });
+/** `BlendMode.INVERT` on a canvas: the picture's white SILHOUETTE (a `tint` the page's `tinted` reads as `=colour`) under `difference`. */
+export const INVERT_SILHOUETTE = '=#ffffff';
 
 /**
  * THE DRAW OPS at the tick `skin` was stepped to. Every op carries the body's
@@ -256,10 +350,39 @@ export function solidsOps(view, art, { skin } = {}) {
         push(key, frame, centre(m), cellBox(m.x, m.y), objectSolidColour({ magicalLockId: m.id }), { layer: -(m.y + 16) });
     }
     for (const a of view.responders) {
-        if (a.open) continue;   // ⚠ default state (SOLIDS_PENDING): an open responder's alpha is 0
+        const st = skin.responders?.get(a.id) ?? null;
         const spec = RESPONDER_ART[a.tag];
         const key = typeof spec.key === 'function' ? spec.key(a) : spec.key;
-        push(key, R.worldFrame(now, spec.frames), centre(a), cellBox(a.x, a.y), objectSolidColour({ activatorId: a.id }), { layer: spec.layer(a.y) });
+        const frame = R.worldFrame(now, spec.frames);
+        const colour = objectSolidColour({ activatorId: a.id });
+        if (!st) {
+            if (a.open) continue;   // ⚠ no live state (a kill lock): shut until the run opens it
+            push(key, frame, centre(a), cellBox(a.x, a.y), colour, { layer: spec.layer(a.y) });
+            continue;
+        }
+        const alpha = clamp01(st.alpha);
+        const cls = RESPONDER_CLASS[a.tag];
+        if (cls === 'bosslock') {
+            const extra = { layer: spec.layer(a.y), ...(alpha !== 1 ? { alpha } : {}) };
+            if (st.scale !== 1) Object.assign(extra, { scaleX: st.scale, scaleY: st.scale });
+            if (alpha > 0) {
+                push(key, frame, centre(a), cellBox(a.x, a.y), colour, extra);
+                if (st.active && st.keyTimer <= BOSS_KEY_TIMER / 3 && ops.at(-1)?.sheetRef) ops[ops.length - 1].blend = 'screen';
+            }
+            if (st.active && st.keyTimer > 0) {
+                // `myKey.render(…)`: centred on (x, y + height/2 − key.height − keyTimer/60·8 + 3), at keyTimer/60
+                const keyArt = `seedling:pickup/bosskey${a.keyType ?? 0}`;
+                const at = { x: a.x + 8, y: a.y + 8 + 8 - 16 - (st.keyTimer / BOSS_KEY_TIMER) * 8 + 3 };
+                push(keyArt, 0, at, cellBox(at.x - 6, at.y - 8, 12, 16), '#e8c040', { layer: spec.layer(a.y), alpha: st.keyTimer / BOSS_KEY_TIMER });
+            }
+            continue;
+        }
+        if (alpha <= 0) continue;
+        push(key, frame, centre(a), cellBox(a.x, a.y), colour, { layer: spec.layer(a.y), ...(alpha !== 1 ? { alpha } : {}) });
+        if (cls === 'lock' && st.active && ops.at(-1)?.sheetRef) {
+            // `render()`: while active, the picture onto nightBmp (NORMAL), then INVERT on the main buffer
+            Object.assign(ops[ops.length - 1], { blend: 'difference', tint: INVERT_SILHOUETTE, nightCopy: true });
+        }
     }
     for (const r of view.rockLocks) push(KEYS.rockLock, 0, centre(r), cellBox(r.x, r.y), objectSolidColour({}), { layer: 0 });
     for (const b of view.buttons) {
