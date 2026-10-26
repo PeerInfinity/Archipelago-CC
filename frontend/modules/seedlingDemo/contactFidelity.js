@@ -1459,6 +1459,21 @@ export const CONTACT_FIDELITY = {
      * row. OFF: byte-identical. `SEEDLING_DASH_SPINNER_FORECAST=0|1`.
      */
     dashSpinnerForecast: true,
+    /**
+     * fidelity L32BOB D1 (wave 32) — THE BOB BOSS FORECAST CARRIES THE SWING ALREADY IN FLIGHT. `bobBossForecast` handed
+     * the encounter's strike search the boss and the slash STATE but not the run's `swordWindow`, so a solve that starts
+     * inside a swing (a continuation whose prefix ends on a press: `Player.slash()` tests on every tick `slashing` is
+     * up, five for a swing) forecast none of that swing's remaining tests, and the run landed one the forecast never
+     * saw. Measured: `apb-l32-fresh-no-fire`'s staging solved from its own plan's tick 380 (press 376 in flight) — the
+     * run lands the 376 swing's T+5 test at t381 (form 1: 1 → 2 hits), the forecast keeps form 1 at 1 and lands its own
+     * press at +58; the executor counts 2 landings and declines ("the forecast and the run disagree"). The game agrees
+     * with the run (p4g, the tape t370–560 at 0 px: form 1's death flight starts at t426, after the THIRD landing,
+     * which needs t381's). ON: the forecast steps the live window with `advance`'s own `swordWindowStep` /
+     * `swordWindowReplace` / `swordWindowSchedule` (each thrust at its own scale), and the executor checks the run's
+     * landings against every landing the forecast made through its own press's. OFF: byte-identical.
+     * `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`.
+     */
+    encounterSwingInFlight: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1740,6 +1755,9 @@ if (globalThis.process?.env?.SEEDLING_WEIGH_HYPOTHESIS_CHAIN === '1') CONTACT_FI
 if (globalThis.process?.env?.SEEDLING_WEIGH_HYPOTHESIS_CHAIN === '0') CONTACT_FIDELITY.weighHypothesisChain = false;
 if (globalThis.process?.env?.SEEDLING_DASH_SPINNER_FORECAST === '1') CONTACT_FIDELITY.dashSpinnerForecast = true;
 if (globalThis.process?.env?.SEEDLING_DASH_SPINNER_FORECAST === '0') CONTACT_FIDELITY.dashSpinnerForecast = false;
+// ⛓ fidelity L32BOB: `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '1') CONTACT_FIDELITY.encounterSwingInFlight = true;
+if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '0') CONTACT_FIDELITY.encounterSwingInFlight = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

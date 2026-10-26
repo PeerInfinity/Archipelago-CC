@@ -20128,8 +20128,13 @@ export function createLevelRun({
                 || !!world.collidesSolid(box, solidOpts);
             const clone = (b) => ({ ...b, v: { ...b.v }, swordSpin: [...b.swordSpin],
                 swordSpinBegin: [...b.swordSpinBegin] });
+            // ⛓ fidelity L32BOB D1 (`CONTACT_FIDELITY.encounterSwingInFlight`): the swing already in flight — the run's
+            // own window (immutable: `swordWindowStep` returns a new one), and `slash` at a thrust's own `scale` (a dash's
+            // remaining tests are the dash's rect and reach). OFF: no `window`, and `slash` is called at the normal scale.
+            const inFlight = CONTACT_FIDELITY.encounterSwingInFlight ? { window: swordWindow } : {};
             return {
                 body: clone(a.boss),
+                ...inFlight,
                 clone,
                 box: (b) => bobBossBox(b),
                 // ⛓ R1-swim D3: the dark arm too — the live bump's own function.
@@ -20140,10 +20145,10 @@ export function createLevelRun({
                     player: { x: p.x, y: p.y }, playerBox: playerBoxAt(p.x, p.y),
                     frozen: false, blocked,
                 }),
-                slash: (b, p, direction) => {
+                slash: (b, p, direction, scale = SLASH_SCALE_NORMAL) => {
                     const geo = bobBossSlashGeometry(b, p.x, p.y,
-                        slashRect(p.x, p.y, direction, SLASH_SCALE_NORMAL),
-                        slashReachFor(SLASH_SCALE_NORMAL));
+                        slashRect(p.x, p.y, direction, scale),
+                        slashReachFor(scale));
                     if (!geo || geo.gate) return { landed: false, killed: false, reached: !!geo };
                     return { ...bobBossHit(b, { d: inventory?.hasDarkSword
                         ? DARK_SWORD_DAMAGE : SWORD_DAMAGE, t: 'Sword', frozen: false }),

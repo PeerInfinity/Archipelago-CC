@@ -1242,36 +1242,68 @@ function forecastEncounterPlan(run, fc, stepper, { approach, n, retreat, tail, p
     let landedAt = null;
     let killed = false;
     let pressOutcome = null;
+    /**
+     * ⛓ fidelity L32BOB D1 (`CONTACT_FIDELITY.encounterSwingInFlight`) — THE SWING ALREADY IN FLIGHT. ON, the tests
+     * are the run's own window (`fc.window`), stepped at the top of each tick by `swordWindowStep` as `advance` steps
+     * it, so a swing pressed before this forecast keeps testing (each thrust at its own scale); this plan's press
+     * REPLACES that swing's remaining tests and schedules its own (`advance`'s two places). Every landing through the
+     * plan's own is counted (`landings`): the executor checks the run against that count. OFF: the plan's own tests
+     * alone, from an empty map, as before.
+     */
+    const inFlight = CONTACT_FIDELITY.encounterSwingInFlight;
+    const t0 = run.ticksCompleted;
+    let win = inFlight ? (fc.window ?? EMPTY_SWORD_WINDOW) : null;
+    let landings = 0;
+    const done = (o) => (inFlight ? { ...o, landings } : o);
     const total = press ? n + 1 + tail : n + tail;
     for (let k = 0; k < total; k += 1) {
         const r = fc.step(b, p);
-        if (r.playerHits.length > 0) return { touchedAt: k, landedAt, killed, pressOutcome, end: p };
-        if (b.removed) return { touchedAt: null, landedAt, killed, pressOutcome, end: p };
+        if (r.playerHits.length > 0) return done({ touchedAt: k, landedAt, killed, pressOutcome, end: p });
+        if (b.removed) return done({ touchedAt: null, landedAt, killed, pressOutcome, end: p });
         // `Player.update`: `shieldBump()`, then `slash()`'s timer and test.
         fc.shieldBump(b, p, slash.slashing);
         slash = slashTimerTick(slash);
-        const due = tests.get(k);
-        if (due !== undefined && landedAt === null) {
-            const v = fc.slash(b, p, due);
-            if (v.landed) { landedAt = k; killed = v.killed; }
+        if (inFlight) {
+            const fired = swordWindowStep(win, t0 + k);
+            win = fired.window;
+            for (const th of fired.fires) {
+                // Only a sword's tests are this forecast's; any other thrust in flight is not modelled here: the plan
+                // is not taken (a touch at this tick, as a previewed death is).
+                if (th.weapon !== 'sword') return done({ touchedAt: k, landedAt, killed, pressOutcome, end: p });
+                const v = fc.slash(b, p, th.direction, th.scale);
+                if (!v.landed || landedAt !== null) continue;
+                landings += 1;
+                if (press && th.pressTick === t0 + n) { landedAt = k; killed = v.killed; }
+            }
+        } else {
+            const due = tests.get(k);
+            if (due !== undefined && landedAt === null) {
+                const v = fc.slash(b, p, due);
+                if (v.landed) { landedAt = k; killed = v.killed; }
+            }
         }
         const keys = k < n ? approach : (press && k === n ? [...approach, 'primary'] : retreat);
         if (press && k === n) {
             const out = slashSet(slash, { pressed: true, hasSword: true, direction: p.direction });
             pressOutcome = out.outcome;
-            if (out.outcome !== 'slash') return { touchedAt: null, landedAt: null, killed, pressOutcome, end: p };
+            if (out.outcome !== 'slash') return done({ touchedAt: null, landedAt: null, killed, pressOutcome, end: p });
             slash = out.state;
             endsAt = k + SLASH_ANIM_TICKS[slash.anim];
-            for (let i = 1; i <= SLASH_HIT_TICKS; i += 1) tests.set(k + i, out.slashDirection);
+            if (inFlight) {
+                win = swordWindowSchedule(swordWindowReplace(win), { weapon: 'sword', direction: out.slashDirection,
+                    pressTick: t0 + k, anim: slash.anim, scale: slashScaleFor(slash.anim) });
+            } else {
+                for (let i = 1; i <= SLASH_HIT_TICKS; i += 1) tests.set(k + i, out.slashDirection);
+            }
         }
         p = stepper(p, new Set(keys));
-        if (p === null) return { touchedAt: k, landedAt, killed, pressOutcome, end: null };
+        if (p === null) return done({ touchedAt: k, landedAt, killed, pressOutcome, end: null });
         if (endsAt !== null && k + 1 >= endsAt) {
             endsAt = null;
             slash = slashSet(slash, { pressed: false, hasSword: true }).state;
         }
     }
-    return { touchedAt: null, landedAt, killed, pressOutcome, end: p };
+    return done({ touchedAt: null, landedAt, killed, pressOutcome, end: p });
 }
 
 /** The earliest-landing admissible strike plan, or null. (Exported for hammer-phase PDS's rows.) */
@@ -1296,7 +1328,9 @@ export function searchEncounterStrike(run) {
                     { approach, n, retreat, tail: ENCOUNTER_SAFE_TAIL, press: true });
                 if (f.touchedAt !== null || f.landedAt === null) continue;
                 if (!best || f.landedAt < best.landedAt) {
-                    best = { approach, n, retreat, landedAt: f.landedAt, killed: f.killed };
+                    best = { approach, n, retreat, landedAt: f.landedAt, killed: f.killed,
+                        // ⛓ fidelity L32BOB D1: ON, every landing through this plan's own (a swing in flight's too)
+                        ...(f.landings !== undefined ? { landings: f.landings } : {}) };
                 }
             }
         }
@@ -1443,12 +1477,14 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
             tick(keys);
         }
         const after = bobLandings(run);
-        if (after !== before + 1) {
+        // ⛓ fidelity L32BOB D1: ON, the forecast's count (a swing in flight lands too); OFF, this plan's one.
+        const forecastLandings = plan.landings ?? 1;
+        if (after !== before + forecastLandings) {
             refuse(`${what}: the forecast landed form ${formBefore}'s hit at +${plan.landedAt} and `
                 + `the run's boss reports ${after - before} landing(s) — the forecast and the run `
-                + 'disagree.', { goal });
+                + `disagree.${forecastLandings === 1 ? '' : ` (the forecast's landings: ${forecastLandings})`}`, { goal });
         }
-        landings += 1;
+        landings += forecastLandings;
         records.push({ goal: 'encounter', leg: 'strike', form: formBefore, landings, pages,
             killed: plan.killed, t: perTick.length });
         if (hitsTaken() !== hits0) {
