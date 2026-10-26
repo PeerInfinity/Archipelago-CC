@@ -6275,6 +6275,13 @@ export function previewWalk(run, wps, tolerance = 0,
          */
         standKeys = null,
         /**
+         * ⛓ fidelity L40LATCH D1a — an OPT-IN tail without the lobbers' bombs: `false` drops every `kind: 'bomb'` spit
+         * from the tail's samples (the forecast still steps). A LATCHED hold under `MOVING_WAIT` paces exactly when its
+         * still wait prices a bomb (`pacedHoldPlan`, at the executor), so its tail prices the rest (`holdStandWalk`).
+         * `true` (every other caller) changes nothing.
+         */
+        standBombs = true,
+        /**
          * ⛓ fidelity BEAMLANE D1 — an OPT-IN steered aim: `(state, wp, tick, intermediate) => true | {x, y}`, asked
          * once per transit tick (`tick` = the tick whose sample is about to be taken). `true` = this waypoint is
          * reached; a point = what `chooseHeld` aims at this tick instead of `wp`. The PHASE arm's lane walk
@@ -6889,6 +6896,7 @@ export function previewWalk(run, wps, tolerance = 0,
                 phase: 'dwell', wp: wpIndex };
             if (spitForecast) {
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
+                if (!standBombs && sample.spits) sample.spits = [...sample.spits].filter((b) => b.kind !== 'bomb');
             }
             if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
             if (corridorForecast) {
@@ -7397,7 +7405,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     const previewFor = (dashPlan) => {
         const strike = strikePolicyFor(run, { dashPlan, dashMode, iframeLapse });
         if (!stand) return { walk: previewWalkOrDeath(run, wps, tolerance, { strike }), strike };
-        const whole = previewWalkOrDeath(run, wps, tolerance, { strike, standFor: stand.ticks, standKeys: stand.keys });
+        const whole = previewWalkOrDeath(run, wps, tolerance, { strike, ...standTailOpts(stand) });
         const walk = { ...whole, samples: whole.samples.filter((sm) => sm.phase !== 'dwell'),
             tail: whole.samples.filter((sm) => sm.phase === 'dwell') };
         return { walk, strike };
@@ -18805,6 +18813,39 @@ function keylockStandWalk(run, resolved) {
 }
 
 /**
+ * ⛓⛓⛓ fidelity L40LATCH D1 (`CONTACT_FIDELITY.holdWaitPriced`, OFF) — the walk options that price a HOLD's still
+ * wait as its stance walk's tail, by `KEYLOCK_WAIT_PRICED`'s instrument: `stand` = `{ticks: hold.ticks, keys}`, where
+ * `keys` presses nothing (`runHold` pushes `NO_HELD` for every tick of its bound and refuses a tick that MOVED).
+ * MEASURED on L40's S-door latch (`buttonroom@880,768`, `l40latch-stand`): the transit probe of the walk onto the
+ * latch is clean, the holder stands for the 101-tick fade (+ slack), and `bobsoldier@880,832` walks up the pocket and
+ * lands its sword at hold tick 93. With the tail that wait is a hit on the stance corridor, so the combat ladder
+ * climbs (the kill rung's chaser arm: kill first, then the hold). ⚠ The tail stands the whole bound (the executor
+ * stops on its `until`), the side to err on. A paced hold (`MOVING_WAIT`) is not this tail's: it is priced by
+ * `planPacedWait` at the executor. `{}` (the walk unchanged) for a resolution without a presser, a stance or a bound.
+ * The tail is marked `hold: true`: the ladder's TIME rung refuses a hit IN it by name (it certifies the walk to the aim,
+ * never the wait at it), where a keylock's tail is unchanged.
+ */
+function holdStandWalk(run, resolved) {
+    if (!(resolved?.hold?.ticks > 0) || !resolved.target || !resolved.stance) return {};
+    const NO_KEYS = new Set();
+    // ⛓ a LATCHED hold under MOVING_WAIT paces where its still wait meets a bomb (`pacedHoldPlan`): its tail prices
+    // everything but the bombs (measured: WANDHOLD's legs 368/371, two paced holds, refused with the bombs in the tail)
+    const paces = MOVING_WAIT.enabled && Boolean(resolved.hold.until)
+        && (resolved.hold.latched === true || resolved.latched === true);
+    return { stand: { ticks: resolved.hold.ticks, keys: () => () => NO_KEYS, hold: true,
+        ...(paces ? { bombs: false } : {}) } };
+}
+
+/**
+ * The `previewWalk` options a stance walk's tail (`stand`, `KEYLOCK_WAIT_PRICED`'s instrument) asks for: `standFor`,
+ * `standKeys`, and — only for a `holdStandWalk` tail that paces its bombs — `standBombs: false`. `{}` for no tail.
+ */
+function standTailOpts(stand) {
+    if (!stand) return {};
+    return { standFor: stand.ticks, standKeys: stand.keys, ...(stand.bombs === false ? { standBombs: false } : {}) };
+}
+
+/**
  * ⛓⛓ SEEDLING FIDELITY STRIKELAPSE D1 (`CONTACT_FIDELITY.strikeIframeLapse` ON only) — **A COLLECT'S APPROACH IS
  * PRICED AS ITS STANCE WALK'S TAIL**, by `KEYLOCK_WAIT_PRICED`'s instrument (`stand`): the walk's probe, the
  * ladder's AVOID/DETOUR and every dash candidate are previewed with the approach `execCollect` will walk after the
@@ -21843,6 +21884,110 @@ export function killedOnWalk(run, id, from) {
     return kill ? { pressedAt: kill.t, firedAt: kill.fired, weapon: kill.weapon, direction: kill.direction } : null;
 }
 
+/**
+ * ⛓⛓⛓ fidelity L40LATCH D1b (`CONTACT_FIDELITY.chaserOrbitKill`, OFF) — **A BOBSOLDIER IS KILLED ON THE MOVE, BEHIND
+ * ITS BLADE.**
+ *
+ * `BobSoldier.swordHitting` tests the blade every frame, spinning or not (`collideLine` from `weaponLength / 2` to
+ * `weaponLength` = 8..16 px off the body, `BobSoldier.as:161-171`), and a spin ends with the blade pointing at the
+ * player (`swordSpinningStop(ang)`), so a body walking at a STILL player always meets it blade first: no stance the
+ * chaser arm scans kills one hitless (measured on L40's latch, `bobsoldier@880,832`: every one of the 16 candidates is
+ * hit at tick 93–100). But the rest angle does not move until the next spin, which begins only once the body has been
+ * within `attackRange` (32 px) for `swordSpinResetTimerMax` (60) ticks after the last one. So the policy:
+ *   - a spinning blade, or one about to begin: circle at `r` (outside the 8..16 px sweep), the spin is let run;
+ *   - a resting blade on the player's side: circle round it, at `r`, to the far side;
+ *   - the body in its hit i-frames: back off to `rw` (past `attackRange`, so the reset timer stands);
+ *   - the far side and the body hittable: close in (`close` px) — the run's one strike policy presses (⚖ 30(c));
+ *   - a corpse (`destroy`, it still swings until `Mobile.death`'s fade removes it): keep away, strike nothing.
+ * The steering is `chooseHeld` toward that point, each tick. ⚖ The user, of the ice turret (2026-10-24): *"The way to
+ * not get hit is to keep moving while attacking."* Tried on FORKS only (`orbitKillChaser`).
+ */
+export const ORBIT_KILL = Object.freeze({
+    // the radii (px, centre to centre), the circling step (rad per steering aim), the far-side arc (rad off the blade)
+    radii: Object.freeze([22, 24, 20, 26, 28]),
+    trigger: 28,
+    backoff: 34,
+    close: 10,
+    step: 25 * Math.PI / 180,
+    farSides: Object.freeze([110 * Math.PI / 180, 90 * Math.PI / 180]),
+    // the kill's bound (ticks, the removal included): three cadences and two spins with room, MEASURED ≤ 260 on L40
+    ticks: 420,
+});
+
+/** Every candidate `orbitKillChaser` tries, in order: radius, then direction, then far-side arc. */
+export const ORBIT_KILL_CANDIDATES = Object.freeze(ORBIT_KILL.radii.flatMap((r) => [1, -1]
+    .flatMap((dir) => ORBIT_KILL.farSides.map((safe) => Object.freeze({ r, dir, safe })))));
+
+/** The orbit policy's held set for this tick against the body `c` (a `chasers` row), or `null` once it is removed. */
+export function orbitKillPolicy(run, id, { r, dir, safe }, strike) {
+    const c = (run.entities('chasers') ?? []).find((b) => b.id === id);
+    if (!c) return null;
+    const s = run.state;
+    const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+    const phi = Math.atan2(s.y - c.y, s.x - c.x);
+    const off = wrap(phi - Math.atan2(Math.sin(-c.swordSpin), Math.cos(-c.swordSpin)));
+    const at = (rad, turn) => ({ x: c.x + rad * Math.cos(phi + turn), y: c.y + rad * Math.sin(phi + turn) });
+    let aim;
+    if (c.destroy) aim = at(Math.max(r, ORBIT_KILL.backoff), 0);
+    else if (c.swordSpinning) aim = at(r, dir * ORBIT_KILL.step);
+    else if (c.swordSpinResetTimer === 0) aim = at(ORBIT_KILL.trigger, dir * ORBIT_KILL.step);
+    else if (Math.abs(off) < safe) aim = at(r, (off >= 0 ? 1 : -1) * ORBIT_KILL.step);
+    else if (c.hitsTimer > 0) aim = at(ORBIT_KILL.backoff, 0);
+    else aim = at(ORBIT_KILL.close, 0);
+    const held = chooseHeld(s, aim, DEFAULT_TOLERANCE);
+    if (c.destroy || !strike || s.fall) return held;
+    return strike.decide(s, run.entities('strikeBodies'), run.ticksCompleted, held,
+        { slash: run.progress('slashInfo') }).held;
+}
+
+/**
+ * The orbit kill of `id` (a live BobSoldier) from the run's current tick: each `ORBIT_KILL_CANDIDATES` entry is played
+ * on a FORK until the body is removed, rejected at the first player hit or death, level crossing, or the bound; the
+ * first clean one is played on the live run key for key and must kill there too. `{record}` or `{why}` (no tick spent).
+ */
+function orbitKillChaser(run, perTick, id, { fork, dashMode, what }) {
+    if (typeof fork !== 'function') return { why: 'no fork to try the orbit on (the solve has no `forkRun`)' };
+    const play = (r, keys, cand) => {
+        const strike = strikePolicyFor(r, { dashMode });
+        const hits = (r.ledger('playerHits') ?? []).length;
+        const deaths = (r.ledger('playerDeaths') ?? []).length;
+        for (let i = 0; i < ORBIT_KILL.ticks; i += 1) {
+            const held = orbitKillPolicy(r, id, cand, strike);
+            if (held === null) return { ok: true, ticks: i };
+            keys.push(held);
+            const { transition } = r.advance(held);
+            if (transition) return { why: `crossed to level ${transition.to_level} at orbit tick ${i + 1}` };
+            const h = (r.ledger('playerHits') ?? []).slice(hits)[0];
+            if (h || (r.ledger('playerDeaths') ?? []).length !== deaths) {
+                return { why: `hit at orbit tick ${i + 1}${h ? ` (${h.source}:${h.id})` : ''}` };
+            }
+        }
+        return { why: `${id} not removed inside the ${ORBIT_KILL.ticks}-tick bound` };
+    };
+    const whys = [];
+    let forks = 0;
+    for (const cand of ORBIT_KILL_CANDIDATES) {
+        const label = `r ${cand.r} ${cand.dir > 0 ? 'ccw' : 'cw'} far ${Math.round(cand.safe * 180 / Math.PI)}°`;
+        const f = fineDeadlineReached('crusher-fork') ? null : fork();
+        if (f === null) { whys.push(`the deadline, after ${forks} fork(s)`); break; }
+        forks += 1;
+        const keys = [];
+        const out = play(f, keys, cand);
+        if (!out.ok) { if (whys.length < 4) whys.push(`${label}: ${out.why}`); continue; }
+        const from = perTick.length;
+        const live = [];
+        const again = play(run, live, cand);
+        for (const k of live) perTick.push(k);
+        if (!again.ok || live.length !== keys.length) {
+            fail(`${what}: the fork's orbit kill of ${id} (${label}, ${keys.length} t) did not replay on the live run — `
+                + `${again.why ?? `${live.length} t`} (the fork is not this run).`);
+        }
+        return { record: { kind: 'orbit', from, ticks: live.length, candidate: label, forks } };
+    }
+    return { why: `no orbit kill of ${id} is hitless (${forks} fork(s) of ${ORBIT_KILL_CANDIDATES.length}): `
+        + `${whys.join(' | ')}` };
+}
+
 export function deriveKillByChaser(run, body, contacts,
     /**
      * ⛓ R9 slice 12i — `dashMode` rides down here for the same reason ⚖ 46's
@@ -24473,7 +24618,7 @@ function solveSegmentUnder({
          * the key line counts down is a hit on THIS corridor (trap 154: a stance safe to pass is not safe to wait
          * in). `null` (every other walk) previews exactly what it did.
          */
-        const tail = stand ? { standFor: stand.ticks, standKeys: stand.keys } : {};
+        const tail = standTailOpts(stand);
         const walk = previewWalk(run, wps, tolerance, axisAligned
             ? { strike: null, axisAligned, ...tail }
             : { strike: strikePolicyFor(run, { dashMode, iframeLapse }), ...tail });
@@ -25910,6 +26055,17 @@ function solveSegmentUnder({
                 + `${TIME_RUNG.dwell}. TIME is the contested LAST-MILE tool (kickoff `
                 + '§3.1); it is not a room-crossing one, and the bound is named rather '
                 + 'than widened.';
+        } else if (stand?.hold === true && hit.waiting === true) {
+            /**
+             * ⛓ fidelity L40LATCH D1 — a hit in a HOLD's tail (`holdStandWalk`; the probe marks it `waiting`) is not
+             * this search's to certify: TIME plans the mover to the aim against the danger timeline and stops there,
+             * and the danger is the WAIT that follows. MEASURED on L40's latch (the player already on
+             * `buttonroom@880,768`): the search answered 0 ticks, the walk re-probed the same tail hit, and the ladder
+             * climbed again with no tick spent, forever. A TRANSIT hit on a hold stance walk is TIME's as ever.
+             */
+            timeWhy = 'the walk carries a HOLD\'s still wait as its tail (`holdStandWalk`), and the danger is in that '
+                + 'wait: TIME certifies the mover TO the aim against the danger timeline, never the wait at it, so its '
+                + 'answer would leave the tail hit where it was (L40LATCH).';
         } else if (fineDeadlineReached('time')) {
             // ⛓ FIDELITY CHECKPOINTS — the `time` site, latched: the search is
             // not run and the ladder falls through to the next rung.
@@ -26599,6 +26755,21 @@ function solveSegmentUnder({
                 }
             } else {
                 killWhy = `${kill.why}\n         chaser arm: ${hunt.why}`;
+                /**
+                 * ⛓⛓ fidelity L40LATCH D1b (`chaserOrbitKill`, OFF) — no stance kills a BobSoldier hitless (its blade
+                 * meets a still player first); the orbit kill, tried on forks, may (`orbitKillChaser`).
+                 */
+                if (CONTACT_FIDELITY.chaserOrbitKill && !swordless && hunted.id.startsWith('bobsoldier@')) {
+                    const orbit = orbitKillChaser(run, perTick, hunted.id,
+                        { fork, dashMode, what: `${what} -> kill (${hunted.id}) by orbit` });
+                    if (orbit.record) {
+                        rowFor('kill', refused, { arm: 'orbit', target: hunted.id, candidate: orbit.record.candidate });
+                        records.push({ goal: goal.kind, strategy: 'kill', arm: 'orbit', target: hunted.id,
+                            ...orbit.record });
+                        return { escalations };
+                    }
+                    killWhy += `\n         orbit arm: ${orbit.why}`;
+                }
             }
             if (!killWhy) killWhy = kill.why;
         }
@@ -26693,8 +26864,7 @@ function solveSegmentUnder({
                     // ⛓ L30KEYLOCK — a WHOLE candidate (it ends at the aim) carries the stance wait; a prefix
                     // (it ends at a via) does not, because nobody waits at a via.
                     const end = wps[wps.length - 1];
-                    const tail = stand && end && end.x === aim.x && end.y === aim.y
-                        ? { standFor: stand.ticks, standKeys: stand.keys } : {};
+                    const tail = stand && end && end.x === aim.x && end.y === aim.y ? standTailOpts(stand) : {};
                     const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
                         ? { strike: null, axisAligned, stopWhen: dangerous, ...tail }
                         : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous, ...tail });
@@ -27560,6 +27730,9 @@ function solveSegmentUnder({
                                 // every dash candidate's (BOBSOLDIER2's lesson: the drive is a priced walk).
                                 ...(plan.strategy === 'keylock' && KEYLOCK_WAIT_PRICED.enabled
                                     ? keylockStandWalk(run, plan.resolved) : {}),
+                                // ⛓ fidelity L40LATCH D1: a hold's still wait, likewise (`holdWaitPriced`, OFF).
+                                ...(plan.strategy === 'hold' && CONTACT_FIDELITY.holdWaitPriced
+                                    ? holdStandWalk(run, plan.resolved) : {}),
                                 // ⛓ SEARCHGAPS D-A: a dash's swing would break the bait's SHIELD on the way to the
                                 // stance (measured: rocks gone at t127, the crusher charging before the bait), so this
                                 // walk is undashed. `shield` exists only while `crusherBaitPressGoal` is ON.
