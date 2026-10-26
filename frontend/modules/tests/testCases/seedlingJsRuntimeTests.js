@@ -3732,3 +3732,204 @@ registerTest({
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/**
+ * ⛓ TOUCH CONTROLS (slice `seedling-js-touch-controls`) — the on-screen controls in the real panel, driven by synthetic
+ * TOUCH pointer events on the controls (what a finger sends; CSS / layout are the app's own). With
+ * `flashPanel.touchControls = on` (a session override) on seedling_generated_room: the controls are mounted with the
+ * runtime's buttons (Esc on wasm only) and the Settings row shows; a held d-pad press MOVES the player (its position,
+ * as the keyboard moves it) and its release STOPS it (no stuck key); a pointercancel releases too; a second finger on
+ * X while the first holds the d-pad reaches the game as a press (js: the run's `slashPresses` ledger, with the sword
+ * granted through the AP path; wasm: the keydown/keyup the frame heard). `off` unmounts them; `auto` on this browser
+ * shows them exactly when its pointer is coarse. Settings restored however it ends.
+ */
+const touchControlsRow = (runtime) => async (tc) => {
+    const { TOUCH_SETTING_KEY } = await import('../../flashPanel/touchControls.js');
+    let previousTouch = 'auto';
+    let granted = false;
+    try { previousTouch = await settingsManager.getSetting(TOUCH_SETTING_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        return await withRuntimeRestored(tc, async () => {
+            await settingsManager.updateSetting(TOUCH_SETTING_KEY, 'on', { persist: false });
+            const up = await generatedPresetOn(tc, runtime);
+            if (!up) return;
+            const { panel, win } = up;
+            const touch = await tc.pollForValue(() => panel._touch ?? null, `[${runtime}] the touch controls are mounted`, 10000, 100);
+            tc.reportCondition(`[${runtime}] touchControls = on mounts the controls`, !!touch);
+            if (!touch) return;
+            const root = touch.element;
+            const rect = root.getBoundingClientRect();
+            const stage = panel.stageElement.getBoundingClientRect();
+            tc.log(`[${runtime}] placement ${root.dataset.placement}; controls ${Math.round(rect.width)}×${Math.round(rect.height)} at `
+                + `(${Math.round(rect.left)},${Math.round(rect.top)}); stage ${Math.round(stage.width)}×${Math.round(stage.height)} at (${Math.round(stage.left)},${Math.round(stage.top)})`);
+            tc.reportCondition(`[${runtime}] the controls are in the document and drawn`, root.isConnected && rect.width > 0 && rect.height > 0);
+            const shown = [...root.querySelectorAll('.flash-touch-button')].filter((b) => b.style.display !== 'none').map((b) => b.dataset.button);
+            tc.assertEqual(`[${runtime}] the runtime's buttons (Escape on wasm only)`,
+                runtime === 'wasm' ? 'primary,secondary,inventory,menu' : 'primary,secondary,inventory', shown.join(','));
+            const row = panel._settingsControls?.find((c) => c.prop === 'touchControls') ?? null;
+            tc.assertEqual(`[${runtime}] the Settings section shows the "Touch controls" row, set to on`, 'flex/on',
+                `${row?.row?.style?.display}/${row?.input?.value}`);
+
+            // ⛓ the player's position, as each runtime reports it
+            const lastReport = (name) => {
+                const log = win.__swfBridge?.stateLog ?? [];
+                for (let i = log.length - 1; i >= 0; i -= 1) if (log[i].name === name) return Number(log[i].value);
+                return NaN;
+            };
+            // ⛔ wasm: the bridge's playerPosition reports LAG the game (measured: unchanged through a 4 s hold); one
+            // `botStatus()` per poll reads the player itself (its top-level x / y, `Bot.as` botStatus)
+            const game = runtime === 'wasm' ? panel.seedlingPlaybackSurface?.()?.wasm?.getGame?.() ?? null : null;
+            const status = () => { try { return JSON.parse(game.botStatus()); } catch { return null; } };
+            const pos = () => {
+                if (runtime === 'js') return { x: up.rt.run?.state?.x, y: up.rt.run?.state?.y };
+                const st = status();
+                return st ? { x: Number(st.x), y: Number(st.y) } : { x: lastReport('playerPositionX'), y: lastReport('playerPositionY') };
+            };
+            const POLL_MS = runtime === 'js' ? 50 : 200;
+            if (game) {
+                const st = status();
+                tc.log(`[wasm] botStatus keys ${Object.keys(st ?? {}).join(',')}; level ${st?.level} x ${st?.x} y ${st?.y}`);
+            }
+            const keysHeard = [];
+            const hear = (e) => { if (e.code) keysHeard.push(`${e.type}:${e.code}`); };
+            win.addEventListener('keydown', hear, true);
+            win.addEventListener('keyup', hear, true);
+            const pad = root.querySelector('.flash-touch-dpad');
+            const point = (el, fx = 0.5, fy = 0.5) => {
+                const r = el.getBoundingClientRect();
+                return { clientX: r.left + r.width * fx, clientY: r.top + r.height * fy };
+            };
+            const DIR_AT = { right: [0.85, 0.5], left: [0.15, 0.5], down: [0.5, 0.85], up: [0.5, 0.15] };
+            const finger = (type, el, id, at) => el.dispatchEvent(new PointerEvent(type, {
+                pointerId: id, pointerType: 'touch', isPrimary: id === 1, bubbles: true, cancelable: true, ...point(el, ...at),
+            }));
+            const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+            try {
+                // a press and hold on the d-pad moves the player; its release stops it
+                let moved = null;
+                for (const dir of ['right', 'left', 'down', 'up']) {
+                    const p0 = pos();
+                    finger('pointerdown', pad, 1, DIR_AT[dir]);
+                    // eslint-disable-next-line no-await-in-loop
+                    const p1 = await tc.pollForValue(() => {
+                        const p = pos();
+                        return Math.abs(p.x - p0.x) + Math.abs(p.y - p0.y) >= 8 ? p : null;
+                    }, `[${runtime}] the player moves ${dir} while the d-pad is held`, runtime === 'js' ? 4000 : 8000, POLL_MS);
+                    finger('pointerup', pad, 1, DIR_AT[dir]);
+                    tc.log(`[${runtime}] d-pad ${dir}: ${JSON.stringify(p0)} → ${JSON.stringify(p1 ?? pos())}; heard ${keysHeard.slice(-2).join(' ')}`);
+                    if (p1) { moved = dir; break; }
+                }
+                tc.reportCondition(`[${runtime}] a held d-pad press moved the player (${moved})`, !!moved);
+                tc.assertEqual(`[${runtime}] the d-pad sent the keyboard's own keydown/keyup pair`, true,
+                    keysHeard.some((k) => k.startsWith('keydown:Arrow')) && keysHeard.some((k) => k.startsWith('keyup:Arrow')));
+                await wait(1500); // friction's decay ends inside this (the wasm page ticks slowly headless)
+                const s0 = pos();
+                await wait(600);
+                const s1 = pos();
+                // ⛓ NO STUCK KEY = nothing the controls hold AND nothing the game heard go down without its up (the host's
+                // F3 tracker, `gameInput.createHeldKeyRelease`). The stand-still is asserted on js (measured 0.00 px); on
+                // the slow headless wasm page friction's tail still moved the player 0.95 px 1.5 s after a release, so
+                // there it is logged, not graded.
+                const drift = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+                tc.log(`[${runtime}] after the release: ${JSON.stringify(s0)} → ${JSON.stringify(s1)} (drift ${drift(s0, s1).toFixed(2)} px)`);
+                tc.assertEqual(`[${runtime}] released: no key held by the controls or by the game`, '/',
+                    `${root.dataset.held}/${panel._heldKeys.held().join(',')}`);
+                if (runtime === 'js') tc.assertEqual('[js] released: the player stands still', true, drift(s0, s1) === 0);
+
+                // ⛔ a pointercancel releases (the browser took the gesture)
+                if (moved) {
+                    finger('pointerdown', pad, 3, DIR_AT[moved]);
+                    await wait(150);
+                    const held = root.dataset.held;
+                    finger('pointercancel', pad, 3, DIR_AT[moved]);
+                    tc.assertEqual(`[${runtime}] pointercancel releases the held arrow`, `true/`, `${held.startsWith('Arrow')}/${root.dataset.held}`);
+                    await wait(1500);
+                    const c0 = pos();
+                    await wait(500);
+                    const c1 = pos();
+                    tc.log(`[${runtime}] after the cancel: ${JSON.stringify(c0)} → ${JSON.stringify(c1)}`);
+                    tc.assertEqual(`[${runtime}] after the cancel: no key held by the game`, '', panel._heldKeys.held().join(','));
+                    if (runtime === 'js') tc.assertEqual('[js] after the cancel the player stands still', true, drift(c0, c1) === 0);
+                }
+
+                // two fingers: the d-pad held, X tapped
+                if (runtime === 'js') {
+                    await tc.stateManager.addItemToInventory('Progressive Sword', 1);
+                    granted = true;
+                    await tc.stateManager.pingWorker('after-item-grant', 5000);
+                    const armed = await tc.pollForCondition(() => up.rt.run?.inventory?.hasSword === true || up.rt.run?.state?.inventory?.hasSword === true,
+                        '[js] the sword reached the run (the AP path)', 10000, 100);
+                    if (!armed) tc.log(`[js] run inventory: ${JSON.stringify(up.rt.run?.inventory ?? null)?.slice(0, 300)}`, 'warn');
+                }
+                const swings0 = runtime === 'js' ? up.rt.run?.slashPresses?.length ?? 0 : 0;
+                const heard0 = keysHeard.length;
+                const xBtn = root.querySelector('.flash-touch-button-primary');
+                finger('pointerdown', pad, 1, DIR_AT[moved ?? 'down']);
+                await wait(120);
+                finger('pointerdown', xBtn, 2, [0.5, 0.5]);
+                await wait(120);
+                const both = root.dataset.held;
+                finger('pointerup', xBtn, 2, [0.5, 0.5]);
+                await wait(120);
+                finger('pointerup', pad, 1, DIR_AT[moved ?? 'down']);
+                tc.assertEqual(`[${runtime}] two fingers hold an arrow and X at once`, true, /Arrow/.test(both) && /KeyX/.test(both));
+                tc.assertEqual(`[${runtime}] X came down and up once, inside the arrow's hold`, 'keydown:KeyX,keyup:KeyX',
+                    keysHeard.slice(heard0).filter((k) => k.endsWith('KeyX')).join(','));
+                if (runtime === 'js') {
+                    const swung = await tc.pollForValue(() => {
+                        const n = up.rt.run?.slashPresses?.length ?? 0;
+                        return n > swings0 ? up.rt.run.slashPresses.at(-1) : null;
+                    }, '[js] the X tap reached the run as a sword press', 3000, 50);
+                    tc.reportCondition(`[js] the X button swings (slashPresses ${swings0} → +1, outcome ${swung?.outcome ?? 'none'})`, !!swung);
+                }
+                tc.assertEqual(`[${runtime}] all fingers up: nothing held`, '', root.dataset.held);
+            } finally {
+                touch.releaseAll();
+                win.removeEventListener('keydown', hear, true);
+                win.removeEventListener('keyup', hear, true);
+            }
+
+            // off unmounts; auto follows this browser's pointer
+            await settingsManager.updateSetting(TOUCH_SETTING_KEY, 'off', { persist: false });
+            const gone = await tc.pollForCondition(() => !panel._touch && !root.isConnected, `[${runtime}] off unmounts the controls`, 5000, 50);
+            tc.reportCondition(`[${runtime}] touchControls = off: no controls in the document`, !!gone);
+            await settingsManager.updateSetting(TOUCH_SETTING_KEY, 'auto', { persist: false });
+            await wait(200);
+            const coarse = !!window.matchMedia?.('(pointer: coarse)').matches;
+            const urlTouch = new URLSearchParams(location.search).get('touch');
+            tc.log(`[${runtime}] auto: pointer coarse ${coarse}; ?touch=${urlTouch}`);
+            if (urlTouch === null) {
+                tc.assertEqual(`[${runtime}] auto shows the controls exactly when the pointer is coarse (${coarse ? 'coarse' : 'fine'})`,
+                    coarse, !!panel._touch);
+            }
+            assertNoDeathNoHalt(tc, runtime, up.rt);
+        });
+    } finally {
+        if (granted) { try { await tc.stateManager.removeItemFromInventory('Progressive Sword', 1); } catch { /* best effort */ } }
+        try { await settingsManager.updateSetting(TOUCH_SETTING_KEY, previousTouch, { persist: false }); } catch { /* best effort */ }
+    }
+};
+
+export const seedlingJsRuntimeTouchControls = touchControlsRow('js');
+export const seedlingWasmRuntimeTouchControls = touchControlsRow('wasm');
+
+const TOUCH_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} and touchControls = on (session overrides) on `
+    + 'seedling_generated_room: the on-screen controls mount with the runtime\'s buttons; a held d-pad touch moves the '
+    + 'player and its release (and a pointercancel) stops it; a second finger on X while the d-pad is held reaches the '
+    + 'game as one keydown/keyup (js: a sword press in the run\'s ledger); off unmounts them; auto follows the pointer.';
+
+for (const [id, name, fn] of [
+    ['seedling-js-runtime-touch-controls',
+        'Seedling JS runtime: the touch controls — a held d-pad moves, release stops, X swings, off / auto hide them',
+        seedlingJsRuntimeTouchControls],
+    ['seedling-wasm-runtime-touch-controls',
+        'Seedling (wasm runtime): the touch controls — a held d-pad moves, release stops, X reaches the game',
+        seedlingWasmRuntimeTouchControls],
+]) {
+    registerTest({
+        id, name, description: TOUCH_DESCRIPTION(id.startsWith('seedling-js') ? 'js' : 'wasm'),
+        testFunction: fn,
+        category: 'Seedling JS runtime',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
