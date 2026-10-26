@@ -1,0 +1,13 @@
+arm dir: /tmp/claude-0/-home-user-Archipelago-CC/f635daa8-232b-5e4d-b8fe-9bf38284d3d6/scratchpad/cut/A; seams present 55; switches shakeExactSplit=True pressKillBombs=True
+phases solving: 30 of 45  (seams [5226, 5227, 5228, 5229, 5230, 5231, 5232, 5233, 5234, 5235, 5236, 5237, 5238, 5239, 5240, 5241, 5242, 5250, 5252, 5253, 5254, 5256, 5260, 5261, 5262, 5263, 5267, 5268, 5269, 5270])
+overlap pairs: 10; identical answer+units 10; differing []
+counters over the period: shakeRefused 0 (seams>0: 0 ) rebootRefused 0 bandBuilt 0 (seams>0: [] ) refugeRefused 1054
+classes over the period:
+- 23x SOLVE dashless
+- 7x SOLVE full-only
+- 5x EXHAUSTED@hold | HOLD-WAIT@hold
+- 5x EXHAUSTED@break | EXHAUSTED@break
+- 2x NO-STEP-OUT@kill | NO-STEP-OUT@kill
+- 2x NOWHERE@kill | NOWHERE@kill
+- 1x HOLD-WAIT@hold | EXHAUSTED@hold
+band answers (a pass whose text is the band or carries PRESS_KILL_SHAKE_GUARD), all seams: []

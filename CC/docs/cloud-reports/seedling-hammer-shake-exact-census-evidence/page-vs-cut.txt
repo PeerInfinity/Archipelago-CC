@@ -1,0 +1,6 @@
+# arm A, the page capture (seam 5229, full atlas source) vs BX cut (seam 5242, L40 source); only seam.time and source differ
+5229 page True 333 bf959df7e959 | cut True 333 bf959df7e959 SAME
+5242 page True 551 21e3fe5e9d55 | cut True 551 21e3fe5e9d55 SAME
+5243 page False 641 a4a54f911ab0 | cut False 641 a4a54f911ab0 SAME
+5251 page False 179 2b108f0c6d54 | cut False 179 2b108f0c6d54 SAME
+5266 page False 177 13519ffbee1d | cut False 177 13519ffbee1d SAME

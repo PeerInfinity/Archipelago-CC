@@ -1,0 +1,13 @@
+from /tmp/claude-0/-home-user-Archipelago-CC/f635daa8-232b-5e4d-b8fe-9bf38284d3d6/scratchpad/cut/A
+to   /tmp/claude-0/-home-user-Archipelago-CC/f635daa8-232b-5e4d-b8fe-9bf38284d3d6/scratchpad/cut/B
+transition counts over the period (from-class -> to-class [band in from]):
+- 23x SOLVE dashless  ->  SOLVE dashless   (class kept)
+- 7x SOLVE full-only  ->  SOLVE full-only   (class kept)
+- 5x EXHAUSTED@hold | HOLD-WAIT@hold  ->  EXHAUSTED@hold | HOLD-WAIT@hold   (class kept)
+- 5x EXHAUSTED@break | EXHAUSTED@break  ->  EXHAUSTED@break | EXHAUSTED@break   (class kept)
+- 2x NO-STEP-OUT@kill | NO-STEP-OUT@kill  ->  NO-STEP-OUT@kill | NO-STEP-OUT@kill   (class kept)
+- 2x NOWHERE@kill | NOWHERE@kill  ->  NOWHERE@kill | NOWHERE@kill   (class kept)
+- 1x HOLD-WAIT@hold | EXHAUSTED@hold  ->  SHAKE-BAND@walk | EXHAUSTED@hold
+
+seams whose answer/work moved: 1
+  	5243	23	HOLD-WAIT@hold | EXHAUSTED@hold	SHAKE-BAND@walk | EXHAUSTED@hold	641	641	

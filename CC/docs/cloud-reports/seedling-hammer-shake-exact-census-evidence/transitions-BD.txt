@@ -1,0 +1,50 @@
+from /tmp/claude-0/-home-user-Archipelago-CC/f635daa8-232b-5e4d-b8fe-9bf38284d3d6/scratchpad/cut/B
+to   /tmp/claude-0/-home-user-Archipelago-CC/f635daa8-232b-5e4d-b8fe-9bf38284d3d6/scratchpad/cut/D
+transition counts over the period (from-class -> to-class [band in from]):
+- 21x SOLVE dashless  ->  SOLVE dashless   (class kept)
+- 5x SOLVE full-only  ->  NOWHERE+PKSG@kill | NOWHERE+PKSG@kill
+- 3x EXHAUSTED@hold | HOLD-WAIT@hold  ->  NO-STEP-OUT@kill | HOLD-WAIT@hold
+- 3x EXHAUSTED@break | EXHAUSTED@break  ->  NOWHERE+PKSG@kill | NOWHERE+PKSG@kill
+- 2x EXHAUSTED@hold | HOLD-WAIT@hold  ->  NOWHERE+PKSG@kill | HOLD-WAIT@hold
+- 2x NO-STEP-OUT@kill | NO-STEP-OUT@kill  ->  NO-STEP-OUT@kill | NO-STEP-OUT@kill   (class kept)
+- 2x SOLVE dashless  ->  SHAKE-BAND@walk | SHAKE-BAND@walk
+- 1x SHAKE-BAND@walk | EXHAUSTED@hold  ->  EXHAUSTED@hold | DEADLINE@walk   [band]
+- 1x SOLVE full-only  ->  SHAKE-BAND@walk | SHAKE-BAND@walk
+- 1x EXHAUSTED@break | EXHAUSTED@break  ->  DEATH@kill | DEATH@kill
+- 1x SOLVE full-only  ->  SOLVE full-only   (class kept)
+- 1x EXHAUSTED@break | EXHAUSTED@break  ->  EXHAUSTED@break | EXHAUSTED@break   (class kept)
+- 1x NOWHERE@kill | NOWHERE@kill  ->  EXHAUSTED@break | EXHAUSTED@break
+- 1x NOWHERE@kill | NOWHERE@kill  ->  NOWHERE+PKSG@kill | NOWHERE+PKSG@kill
+
+seams whose answer/work moved: 31
+  	5226	6	SOLVE full-only	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	578	177	
+  	5227	7	SOLVE dashless	SOLVE dashless	333	340	
+  	5228	8	SOLVE dashless	SOLVE dashless	333	340	
+  	5229	9	SOLVE dashless	SOLVE dashless	333	340	
+  	5230	10	SOLVE dashless	SOLVE dashless	333	340	
+  	5231	11	SOLVE dashless	SOLVE dashless	608	340	
+  	5232	12	SOLVE dashless	SOLVE dashless	608	340	
+  	5233	13	SOLVE dashless	SOLVE dashless	608	340	
+  	5234	14	SOLVE dashless	SOLVE dashless	608	340	
+  	5235	15	SOLVE dashless	SOLVE dashless	608	340	
+  	5236	16	SOLVE dashless	SOLVE dashless	608	340	
+  	5243	23	SHAKE-BAND@walk | EXHAUSTED@hold	EXHAUSTED@hold | DEADLINE@walk	641	642	BAND-in-from
+  	5244	24	EXHAUSTED@hold | HOLD-WAIT@hold	NO-STEP-OUT@kill | HOLD-WAIT@hold	269	229	
+  	5245	25	EXHAUSTED@hold | HOLD-WAIT@hold	NOWHERE+PKSG@kill | HOLD-WAIT@hold	257	216	
+  	5246	26	EXHAUSTED@hold | HOLD-WAIT@hold	NOWHERE+PKSG@kill | HOLD-WAIT@hold	257	216	
+  	5247	27	EXHAUSTED@hold | HOLD-WAIT@hold	NO-STEP-OUT@kill | HOLD-WAIT@hold	257	216	
+  	5248	28	EXHAUSTED@hold | HOLD-WAIT@hold	NO-STEP-OUT@kill | HOLD-WAIT@hold	257	216	
+  	5249	29	EXHAUSTED@break | EXHAUSTED@break	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	261	195	
+  	5252	32	SOLVE dashless	SHAKE-BAND@walk | SHAKE-BAND@walk	261	185	
+  	5253	33	SOLVE dashless	SHAKE-BAND@walk | SHAKE-BAND@walk	261	185	
+  	5254	34	SOLVE full-only	SHAKE-BAND@walk | SHAKE-BAND@walk	392	191	
+  	5255	35	EXHAUSTED@break | EXHAUSTED@break	DEATH@kill | DEATH@kill	265	199	
+  	5256	36	SOLVE full-only	SOLVE full-only	425	392	
+  	5257	37	EXHAUSTED@break | EXHAUSTED@break	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	265	181	
+  	5258	38	EXHAUSTED@break | EXHAUSTED@break	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	265	181	
+  	5265	0	NOWHERE@kill | NOWHERE@kill	EXHAUSTED@break | EXHAUSTED@break	177	642	
+  	5266	1	NOWHERE@kill | NOWHERE@kill	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	177	177	
+  	5267	2	SOLVE full-only	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	578	177	
+  	5268	3	SOLVE full-only	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	578	177	
+  	5269	4	SOLVE full-only	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	578	177	
+  	5270	5	SOLVE full-only	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	578	177	

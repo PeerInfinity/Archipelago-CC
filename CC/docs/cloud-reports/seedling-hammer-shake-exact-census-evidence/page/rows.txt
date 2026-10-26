@@ -1,0 +1,7 @@
+page-row-371.jsonl 371 end=timeout seam=5229 ms=90315 plan=ok 1915t passes=dashless:ok,full:ok drained=1575/1915 solvedMs=20501 msg=
+page-sweep-1.jsonl 368 end=done seam=5283 ms=72037 plan=ok 1558t passes=dashless:refusal,full:ok drained=1559/1558 solvedMs=8316 msg=
+page-sweep-1.jsonl 371 end=timeout seam=5278 ms=90102 plan=ok 1915t passes=dashless:ok,full:refusal drained=1900/1915 solvedMs=15777 msg=
+page-sweep-2.jsonl 368 end=done seam=5273 ms=71090 plan=ok 1558t passes=dashless:refusal,full:ok drained=1559/1558 solvedMs=8339 msg=
+page-sweep-2.jsonl 371 end=timeout seam=5275 ms=90186 plan=ok 1915t passes=dashless:ok,full:ok drained=1915/1915 solvedMs=14023 msg=
+page-sweep-3.jsonl 368 end=done seam=5275 ms=72269 plan=ok 1558t passes=dashless:refusal,full:ok drained=1559/1558 solvedMs=8542 msg=
+page-sweep-3.jsonl 371 end=done seam=5283 ms=83371 plan=ok 1888t passes=dashless:ok,full:refusal drained=1889/1888 solvedMs=8622 msg=

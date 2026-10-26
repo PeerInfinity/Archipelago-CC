@@ -1,0 +1,6 @@
+# SXC_NO_WRAP=1 (no Error wrapper) vs the census row: ok, work, answer, per-pass answers, guard counters
+A 5229 SAME (True, 333, 'bf959df7e959', ['bf959df7e959', '212e7b9aa668'], {'shakeRefused': 0, 'rebootRefused': 0})
+B 5243 SAME (False, 641, '93956fd3a7b2', ['93956fd3a7b2', 'b07bc43e4a36'], {'shakeRefused': 0, 'rebootRefused': 0})
+C 5257 SAME (True, 566, '63169f24f62a', ['63169f24f62a', '3c881194fc3e'], {'shakeRefused': 0, 'rebootRefused': 0})
+D 5252 SAME (False, 185, '93956fd3a7b2', ['93956fd3a7b2', '93956fd3a7b2'], {'shakeRefused': 0, 'rebootRefused': 0})
+D 5266 SAME (False, 177, '81b52c9e9f67', ['81b52c9e9f67', '81b52c9e9f67'], {'shakeRefused': 62, 'rebootRefused': 0})

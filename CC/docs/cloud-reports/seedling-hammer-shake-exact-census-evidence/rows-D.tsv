@@ -1,0 +1,55 @@
+5226	6	NO	177	81b52c9e9f67	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	shakeRefused=66 rebootRefused=0 bandBuilt=68 refugeRefused=0
+5227	7	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5228	8	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5229	9	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5230	10	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5231	11	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5232	12	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5233	13	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5234	14	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5235	15	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5236	16	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5237	17	OK	551	21e3fe5e9d55	SOLVE dashless	SOLVE 1888t	EXHAUSTED@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5238	18	OK	551	21e3fe5e9d55	SOLVE dashless	SOLVE 1888t	EXHAUSTED@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5239	19	OK	551	21e3fe5e9d55	SOLVE dashless	SOLVE 1888t	EXHAUSTED@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5240	20	OK	551	21e3fe5e9d55	SOLVE dashless	SOLVE 1888t	EXHAUSTED@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5241	21	OK	551	21e3fe5e9d55	SOLVE dashless	SOLVE 1888t	EXHAUSTED@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5242	22	OK	551	21e3fe5e9d55	SOLVE dashless	SOLVE 1888t	EXHAUSTED@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5243	23	NO	642	4af59f364225	EXHAUSTED@hold | DEADLINE@walk	EXHAUSTED@hold	DEADLINE@walk	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5244	24	NO	229	669560868f2f	NO-STEP-OUT@kill | HOLD-WAIT@hold	NO-STEP-OUT@kill	HOLD-WAIT@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5245	25	NO	216	5e24993b40c3	NOWHERE+PKSG@kill | HOLD-WAIT@hold	NOWHERE+PKSG@kill	HOLD-WAIT@hold	shakeRefused=31 rebootRefused=0 bandBuilt=32 refugeRefused=0
+5246	26	NO	216	5e24993b40c3	NOWHERE+PKSG@kill | HOLD-WAIT@hold	NOWHERE+PKSG@kill	HOLD-WAIT@hold	shakeRefused=31 rebootRefused=0 bandBuilt=32 refugeRefused=0
+5247	27	NO	216	6264111cc999	NO-STEP-OUT@kill | HOLD-WAIT@hold	NO-STEP-OUT@kill	HOLD-WAIT@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5248	28	NO	216	6264111cc999	NO-STEP-OUT@kill | HOLD-WAIT@hold	NO-STEP-OUT@kill	HOLD-WAIT@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5249	29	NO	195	7c4ff7ee4d8f	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	shakeRefused=62 rebootRefused=0 bandBuilt=64 refugeRefused=0
+5250	30	OK	333	41a338401fae	SOLVE dashless	SOLVE 1843t	SOLVE 1780t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5251	31	NO	179	2b108f0c6d54	NO-STEP-OUT@kill | NO-STEP-OUT@kill	NO-STEP-OUT@kill	NO-STEP-OUT@kill	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5252	32	NO	185	93956fd3a7b2	SHAKE-BAND@walk | SHAKE-BAND@walk	SHAKE-BAND@walk	SHAKE-BAND@walk	shakeRefused=0 rebootRefused=0 bandBuilt=2 refugeRefused=0
+5253	33	NO	185	93956fd3a7b2	SHAKE-BAND@walk | SHAKE-BAND@walk	SHAKE-BAND@walk	SHAKE-BAND@walk	shakeRefused=0 rebootRefused=0 bandBuilt=2 refugeRefused=0
+5254	34	NO	191	2707530419b1	SHAKE-BAND@walk | SHAKE-BAND@walk	SHAKE-BAND@walk	SHAKE-BAND@walk	shakeRefused=0 rebootRefused=0 bandBuilt=2 refugeRefused=0
+5255	35	NO	199	adde38cbc7b4	DEATH@kill | DEATH@kill	DEATH@kill	DEATH@kill	shakeRefused=0 rebootRefused=2 bandBuilt=0 refugeRefused=0
+5256	36	OK	392	7ab4e5a7a3d5	SOLVE full-only	DEATH@kill	SOLVE 1658t	shakeRefused=0 rebootRefused=1 bandBuilt=0 refugeRefused=0
+5257	37	NO	181	81b52c9e9f67	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	shakeRefused=66 rebootRefused=0 bandBuilt=68 refugeRefused=0
+5258	38	NO	181	81b52c9e9f67	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	shakeRefused=66 rebootRefused=0 bandBuilt=68 refugeRefused=0
+5259	39	NO	642	760e6725b2bf	EXHAUSTED@break | EXHAUSTED@break	EXHAUSTED@break	EXHAUSTED@break	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5260	40	OK	556	c4ad5e891b3f	SOLVE dashless	SOLVE 1866t	EXHAUSTED@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5261	41	OK	556	c4ad5e891b3f	SOLVE dashless	SOLVE 1866t	EXHAUSTED@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5262	42	OK	556	c4ad5e891b3f	SOLVE dashless	SOLVE 1866t	EXHAUSTED@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5263	43	OK	556	c4ad5e891b3f	SOLVE dashless	SOLVE 1866t	EXHAUSTED@hold	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5264	44	NO	177	b2edb91fce92	NO-STEP-OUT@kill | NO-STEP-OUT@kill	NO-STEP-OUT@kill	NO-STEP-OUT@kill	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5265	0	NO	642	6bde639afc39	EXHAUSTED@break | EXHAUSTED@break	EXHAUSTED@break	EXHAUSTED@break	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5266	1	NO	177	81b52c9e9f67	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	shakeRefused=62 rebootRefused=0 bandBuilt=64 refugeRefused=0
+5267	2	NO	177	81b52c9e9f67	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	shakeRefused=66 rebootRefused=0 bandBuilt=68 refugeRefused=0
+5268	3	NO	177	81b52c9e9f67	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	shakeRefused=66 rebootRefused=0 bandBuilt=68 refugeRefused=0
+5269	4	NO	177	81b52c9e9f67	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	shakeRefused=66 rebootRefused=0 bandBuilt=68 refugeRefused=0
+5270	5	NO	177	81b52c9e9f67	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	shakeRefused=66 rebootRefused=0 bandBuilt=68 refugeRefused=0
+5271	6	NO	177	81b52c9e9f67	NOWHERE+PKSG@kill | NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	NOWHERE+PKSG@kill	shakeRefused=66 rebootRefused=0 bandBuilt=68 refugeRefused=0
+5272	7	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5273	8	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5274	9	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5275	10	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5276	11	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5277	12	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5278	13	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5279	14	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0
+5280	15	OK	340	bb2b890e55aa	SOLVE dashless	SOLVE 1890t	SOLVE 1736t	shakeRefused=0 rebootRefused=0 bandBuilt=0 refugeRefused=0

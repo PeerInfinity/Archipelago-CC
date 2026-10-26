@@ -1,0 +1,492 @@
+arm dir: /tmp/claude-0/-home-user-Archipelago-CC/f635daa8-232b-5e4d-b8fe-9bf38284d3d6/scratchpad/cut/D; seams present 55; switches shakeExactSplit=False pressKillBombs=False
+phases solving: 22 of 45  (seams [5227, 5228, 5229, 5230, 5231, 5232, 5233, 5234, 5235, 5236, 5237, 5238, 5239, 5240, 5241, 5242, 5250, 5256, 5260, 5261, 5262, 5263])
+overlap pairs: 10; identical answer+units 10; differing []
+counters over the period: shakeRefused 648 (seams>0: 11 ) rebootRefused 3 bandBuilt 674 (seams>0: [5226, 5245, 5246, 5249, 5252, 5253, 5254, 5257, 5258, 5266, 5267, 5268, 5269, 5270] ) refugeRefused 0
+classes over the period:
+- 21x SOLVE dashless
+- 9x NOWHERE+PKSG@kill | NOWHERE+PKSG@kill
+- 3x NO-STEP-OUT@kill | HOLD-WAIT@hold
+- 3x SHAKE-BAND@walk | SHAKE-BAND@walk
+- 2x NOWHERE+PKSG@kill | HOLD-WAIT@hold
+- 2x NO-STEP-OUT@kill | NO-STEP-OUT@kill
+- 2x EXHAUSTED@break | EXHAUSTED@break
+- 1x EXHAUSTED@hold | DEADLINE@walk
+- 1x DEATH@kill | DEATH@kill
+- 1x SOLVE full-only
+band answers (a pass whose text is the band or carries PRESS_KILL_SHAKE_GUARD), all seams: [5226, 5245, 5246, 5249, 5252, 5253, 5254, 5257, 5258, 5266, 5267, 5268, 5269, 5270, 5271]
+
+## seam 5226 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5226 pass full: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5245 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> kill (spinner@192,160) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,160 is derivable. The room has nowhere to be. (PRESS_KILL_SHAKE_GUARD: 12 refuge candidate(s) whose pr
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5246 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> kill (spinner@192,160) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,160 is derivable. The room has nowhere to be. (PRESS_KILL_SHAKE_GUARD: 12 refuge candidate(s) whose pr
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5249 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,160) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,160 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5249 pass full: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,160) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,160 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5252 pass dashless: chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not — and a FORECAST must not guess it any more than the live run m
+   stack (construction, top frames):
+      at onScreenAt (frontend/modules/seedlingDemo/levelRun.js:8654:23)
+      at Object.step (frontend/modules/seedlingDemo/levelRun.js:8828:35)
+      at previewWalk (frontend/modules/seedlingDemo/solverBot.js:6758:27)
+      at probeCorridor (frontend/modules/seedlingDemo/solverBot.js:24409:22)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27561:23)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+
+## seam 5252 pass full: chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not — and a FORECAST must not guess it any more than the live run m
+   stack (construction, top frames):
+      at onScreenAt (frontend/modules/seedlingDemo/levelRun.js:8654:23)
+      at Object.step (frontend/modules/seedlingDemo/levelRun.js:8828:35)
+      at previewWalk (frontend/modules/seedlingDemo/solverBot.js:6758:27)
+      at probeCorridor (frontend/modules/seedlingDemo/solverBot.js:24409:22)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27561:23)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+
+## seam 5253 pass dashless: chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not — and a FORECAST must not guess it any more than the live run m
+   stack (construction, top frames):
+      at onScreenAt (frontend/modules/seedlingDemo/levelRun.js:8654:23)
+      at Object.step (frontend/modules/seedlingDemo/levelRun.js:8828:35)
+      at previewWalk (frontend/modules/seedlingDemo/solverBot.js:6758:27)
+      at probeCorridor (frontend/modules/seedlingDemo/solverBot.js:24409:22)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27561:23)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+
+## seam 5253 pass full: chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not — and a FORECAST must not guess it any more than the live run m
+   stack (construction, top frames):
+      at onScreenAt (frontend/modules/seedlingDemo/levelRun.js:8654:23)
+      at Object.step (frontend/modules/seedlingDemo/levelRun.js:8828:35)
+      at previewWalk (frontend/modules/seedlingDemo/solverBot.js:6758:27)
+      at probeCorridor (frontend/modules/seedlingDemo/solverBot.js:24409:22)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27561:23)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+
+## seam 5254 pass dashless: chaserForecast: whether bob bob@288,112 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not — and a FORECAST must not guess it any more than the live run 
+   stack (construction, top frames):
+      at onScreenAt (frontend/modules/seedlingDemo/levelRun.js:8654:23)
+      at Object.step (frontend/modules/seedlingDemo/levelRun.js:8828:35)
+      at previewWalk (frontend/modules/seedlingDemo/solverBot.js:6758:27)
+      at probeCorridor (frontend/modules/seedlingDemo/solverBot.js:24409:22)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27561:23)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+
+## seam 5254 pass full: chaserForecast: whether bob bob@288,112 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not — and a FORECAST must not guess it any more than the live run 
+   stack (construction, top frames):
+      at onScreenAt (frontend/modules/seedlingDemo/levelRun.js:8654:23)
+      at Object.step (frontend/modules/seedlingDemo/levelRun.js:8828:35)
+      at previewWalk (frontend/modules/seedlingDemo/solverBot.js:6758:27)
+      at probeCorridor (frontend/modules/seedlingDemo/solverBot.js:24409:22)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27561:23)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+
+## seam 5257 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5257 pass full: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5258 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5258 pass full: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5266 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5266 pass full: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5267 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5267 pass full: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5268 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5268 pass full: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5269 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5269 pass full: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5270 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5270 pass full: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5271 pass dashless: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
+
+## seam 5271 pass full: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: no reachable cell in level 40 is clear of every live body's 7x7 rect and of the 13 px hammer line at that tick's own phase for the next 45 tick(s), and no strike on spinner@192,128 is derivable. The room has nowhere to be. (PRESS_KILL_SHAK
+   stack (construction, top frames):
+      at fail (frontend/modules/seedlingDemo/solverBot.js:492:35)
+      at execKillByPressOnce (frontend/modules/seedlingDemo/solverBot.js:17277:29)
+      at execKillByPress (frontend/modules/seedlingDemo/solverBot.js:16876:16)
+      at execute (frontend/modules/seedlingDemo/solverBot.js:26216:43)
+      at climbLadderUnder (frontend/modules/seedlingDemo/solverBot.js:26222:53)
+      at frontend/modules/seedlingDemo/solverBot.js:27084:56
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at climbLadder (frontend/modules/seedlingDemo/solverBot.js:27084:11)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27609:31)
+      at frontend/modules/seedlingDemo/solverBot.js:27796:53
+      at progressRun (frontend/modules/seedlingDemo/solveProgress.js:420:15)
+      at walkToRun (frontend/modules/seedlingDemo/solverBot.js:27796:11)
+      at walkTo (frontend/modules/seedlingDemo/solverBot.js:27818:19)
+      at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:27486:29)
