@@ -145,19 +145,17 @@ export function wireMask(w, boxes, size) {
     return img;
 }
 
-/** THE ADAPTER (null when there is no run). `record` is the room's level record (`{entities}`). */
-export function machineSkinView(run, { record = null } = {}) {
-    if (!run?.state) return null;
+/** The room's wires (each with its `check()` mask) and ButtonRooms — static per record, so built once (a 70-wire room's mask is O(n²)). */
+const WIRING = new WeakMap();
+function wiringOf(record, size) {
+    const key = record ?? WIRING;
+    const hit = WIRING.get(key);
+    if (hit && hit.w === size.width && hit.h === size.height) return hit.out;
     const ents = record?.entities ?? [];
-    const size = run.world?.world ? { width: run.world.world.width, height: run.world.world.height } : { width: 160, height: 160 };
-    const machines = run.machinesNow ?? { pulsers: [], beamTowers: [] };
-    const acts = run.activatorsNow ?? null;
     const rooms = ents.filter((e) => e.type === 'buttonroom').map((e) => {
         const x = num(e.x);
         const y = num(e.y);
-        const id = `buttonroom@${x},${y}`;
-        return { id, x, y, down: !!acts?.pressers?.find((p) => p.id === id)?.down,
-            box: { x: x + 4, y: y + 5, right: x + 12, bottom: y + 11 } };
+        return { id: `buttonroom@${x},${y}`, x, y, box: { x: x + 4, y: y + 5, right: x + 12, bottom: y + 11 } };
     });
     const wires = ents.filter((e) => e.type === 'wire').map((e) => {
         const x = num(e.x);
@@ -166,6 +164,21 @@ export function machineSkinView(run, { record = null } = {}) {
     });
     const boxes = [...wires.map((w) => w.box), ...rooms.map((r) => r.box)];
     for (const w of wires) if (w.img < 0) w.img = wireMask(w, boxes, size);
+    const out = { rooms: Object.freeze(rooms.map(({ box, ...r }) => Object.freeze(r))), wires: Object.freeze(wires.map(({ box, ...w }) => Object.freeze(w))) };
+    if (record) WIRING.set(record, { w: size.width, h: size.height, out });
+    return out;
+}
+
+/** THE ADAPTER (null when there is no run). `record` is the room's level record (`{entities}`). */
+export function machineSkinView(run, { record = null } = {}) {
+    if (!run?.state) return null;
+    const ents = record?.entities ?? [];
+    const size = run.world?.world ? { width: run.world.world.width, height: run.world.world.height } : { width: 160, height: 160 };
+    const machines = run.machinesNow ?? { pulsers: [], beamTowers: [] };
+    const acts = run.activatorsNow ?? null;
+    const { rooms: roomCells, wires } = wiringOf(record, size);
+    const down = new Map((acts?.pressers ?? []).map((p) => [p.id, !!p.down]));
+    const rooms = roomCells.map((r) => ({ ...r, down: down.get(r.id) === true }));
     const objectAt = new Set((run.world?.objectSolids ?? []).map((o) => `${o.tag}@${o.x},${o.y}`));
     const pods = run.owlPods ?? [];
     const player = { x: run.state.x, y: run.state.y };
@@ -178,8 +191,8 @@ export function machineSkinView(run, { record = null } = {}) {
         player,
         beamTowers: machines?.beamTowers ?? [],
         pulsers: machines?.pulsers ?? [],
-        wires: wires.map(({ box, ...w }) => w),
-        rooms: rooms.map(({ box, ...r }) => r),
+        wires,
+        rooms,
         whirlpools: ents.filter((e) => e.type === 'whirlpool').map((e) => ({ id: `whirlpool@${num(e.x)},${num(e.y)}`, x: num(e.x) + 16, y: num(e.y) + 16 })),
         pulls: (run.pulls ?? []).map((p) => ({ id: p.id, x: p.x, y: p.y })),
         pods: ents.filter((e) => e.type === 'pod').map((e) => {
