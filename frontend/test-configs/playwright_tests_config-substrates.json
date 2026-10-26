@@ -2049,6 +2049,12 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "GRAPHICS G8. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 1 beside the Oracle: it wakes (frame 3) and the talk prompt is drawn, both from the seedling pack; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-one-fade-per-crossing",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "ONE FADE PER CROSSING (2026-10-26). flashPanel.runtime = js + the seedling graphics stack on seedling_atlas: the Playback Bot walks four real crossings; a sampler records the drawn black cover per animation frame. Each crossing = ONE monotone ramp of 20 held dead frames at 1 - 0.05k, with the host's arrival teleport landing inside it (it faded in twice before). seedling-js batch."
         }
     ]
 }

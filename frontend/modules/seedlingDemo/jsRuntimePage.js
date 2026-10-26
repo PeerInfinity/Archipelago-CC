@@ -135,7 +135,10 @@
  * ⚖ And ONE fade per `new Game`: a reboot in place (an item delivery,
  * `jsRuntimeCore.IN_PLACE_REBOOT_WHY`) is a new run object but no new world in
  * the game, so it owes no fade (`seedlingEffectSkin.fadeSlot`); before G7 it
- * faded in from black a second time.
+ * faded in from black a second time. ⚖ And ONE fade per CROSSING: each held
+ * dead frame polls the host's queue as the game does (`runtime.drainItems`),
+ * so the host's arrival teleport answering a door lands inside that door's
+ * fade, which plays on; before, it waited out the hold and faded in again.
  *
  * ⛓ G8 — the changeable solids and the buttons (`seedlingSolidsSkin.js`: the
  * chests, breakable rocks, burnable trees and magical locks at the run's live
@@ -444,6 +447,9 @@ export function mountJsRuntimePage(win = window) {
                 graphics.effectSkin = slot.skin;
                 if (slot.held) {
                     graphics.held += 1;
+                    // ⛓ the game polls the host's queue on a dead frame too (`drainItems`): the arrival teleport that
+                    // answers a door lands inside that door's fade, which then plays on (`adoptRunEffectSkin`)
+                    runtime.drainItems();
                     acc -= TICK_MS;
                     n += 1;
                     continue;
