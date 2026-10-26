@@ -1,0 +1,1 @@
+t=0..868 L32 [r:fallrocklarge,r:parked] | seedling:scenery/fallrocklarge#0 drawImage(seedling/FallRockLarge, 0, 0, 64, -48)

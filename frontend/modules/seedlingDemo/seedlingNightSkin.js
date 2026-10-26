@@ -308,6 +308,8 @@ export const NIGHT_COPIES = Object.freeze({
     'seedling:puzzlement/pushableblockfire': { alpha: 'same' },
     // ⛓ G8 — `BossLock.as:106-112`: the Dungeon 6 lock (`keyType == 4`) again onto nightBmp at alpha · 0.2.
     'seedling:puzzlement/bosslock4': { alpha: (op) => (op.alpha ?? 1) * 0.2 },
+    // ⛓ G8 — `DarkTrap.as:61-69`: while "die1" plays, the same picture again onto nightBmp (`seedlingTrapSkin` marks it).
+    'seedling:enemy/darktrap': { alpha: 'same', when: (op) => op.dying === true },
     // `LavaChain.as:63-73`: only while its anim is "hit".
     'seedling:puzzlement/lavachain': { alpha: 'same', when: (op, ctx) => ctx.hitChains.has(`${opCentre(op).x},${opCentre(op).y}`) },
 });

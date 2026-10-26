@@ -160,6 +160,22 @@ export const ENEMY_ART = Object.freeze([
         as3: 'NPCs/Watcher.as:13-14 Spritemap(12, 15); NPC.as:57 centerOO; :58-95 its frame (direction, seed 6, die [7,8,9])' },
     { pack: 'seedling', key: 'seedling:npc/talk', file: 'NPCs/Talk.png', fw: 10, fh: 14, origin: [5, 14],
         as3: 'NPCs/NPC.as:17-18 Spritemap(10, 14); :59-61 centerOO, then y = -height; :174-181 frame Game.worldFrame(2, 1/1.25) at (x, y - originY - charToTalkMargin)' },
+    // ── G8: the arrow traps, the ice / dark / lava traps and the falling rocks (`seedlingTrapSkin.js`). ──
+    { pack: 'seedling', key: 'seedling:puzzlement/arrowtrap', file: 'ArrowTrap.png', fw: 16, fh: 5, origin: [8, 2.5],
+        as3: 'Puzzlements/ArrowTrap.as:13-14 Spritemap(16, 5); :21-22 super(_x + 8, _y + 2.5), centerOO; :40-43 frame Game.worldFrame(frameCount)' },
+    { pack: 'seedling', key: 'seedling:enemy/icetrap', file: 'IceTrap.png', fw: 16, fh: 16, origin: [8, 8],
+        as3: 'Enemies/IceTrap.as:13-14 Spritemap(16, 16, endAnim); :22-24 centerOO, chomp [0,1,2,1] fps 10, hit [1]; :39-42 "" → Game.worldFrame(2)',
+        anims: { chomp: fps([0, 1, 2, 1], 10) } },
+    { pack: 'seedling', key: 'seedling:enemy/darktrap', file: 'DarkTrap.png', fw: 14, fh: 14, origin: [7, 7],
+        as3: 'Enemies/DarkTrap.as:15-16 Spritemap(14, 14, endAnim); SandTrap.as:29-33 its ctor adds chomp [0,1,2,3,2,1] fps 10 to this sheet; :22 die1 [4,0,1,0,4,5,4,5,6..11] fps 10',
+        anims: { chomp: fps([0, 1, 2, 3, 2, 1], 10), die1: fps([4, 0, 1, 0, 4, 5, 4, 5, 6, 7, 8, 9, 10, 11], 10) } },
+    { pack: 'seedling', key: 'seedling:enemy/lavatrap', file: 'LavaTrap.png', fw: 16, fh: 16, origin: [8, 8],
+        as3: 'Enemies/LavaTrap.as:17-18 Spritemap(16, 16, endAnim); :34-37 centerOO, chomp [2], die [3..8] fps 10, play("")',
+        anims: { die: fps(range(3, 8), 10) } },
+    { pack: 'seedling', key: 'seedling:scenery/fallrock', file: 'FallRock.png', origin: [8, 8],
+        as3: 'Scenery/FallRock.as:16-17 Image; :32-34 super(_x + 8, _y + 8), centerOO; :37 parked at y = -16' },
+    { pack: 'seedling', key: 'seedling:scenery/fallrocklarge', file: 'FallRockLarge.png', origin: [16, 16],
+        as3: 'Scenery/FallRockLarge.as:16-17 Image; :34-36 super(_x + 16, _y + 16), centerOO; :41 parked at y = -32' },
     // ── G4: the effects and the HUD (`seedlingEffectSkin.js`). The droplet and the heart are frame-only rows (the
     //    droplet's frame is a Number the class steps itself; the heart's is `int(i > healthc)`). ──
     { pack: 'seedling', key: 'seedling:fx/explosion', file: 'Explosion.png', fw: 128, fh: 128, origin: [64, 64],

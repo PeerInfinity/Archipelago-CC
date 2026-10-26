@@ -1,0 +1,1 @@
+t=1..20 L77 [l:lavatrap] | seedling:enemy/lavatrap#0 drawImage(seedling/LavaTrap, 0, 0, 96, 192)

@@ -1,0 +1,2 @@
+t=0..9 L29 [r:fallrock,r:parked] | seedling:scenery/fallrock#0 drawImage(seedling/FallRock, 0, 0, 112, -24)
+t=10..59 L29 [r:fallrock,r:landed] | seedling:scenery/fallrock#0 drawImage(seedling/FallRock, 0, 0, 112, 112)

@@ -728,6 +728,36 @@
       "w": 20,
       "h": 14
     },
+    "ArrowTrap": {
+      "file": "sheets/ArrowTrap.png",
+      "w": 32,
+      "h": 5
+    },
+    "IceTrap": {
+      "file": "sheets/IceTrap.png",
+      "w": 48,
+      "h": 16
+    },
+    "DarkTrap": {
+      "file": "sheets/DarkTrap.png",
+      "w": 168,
+      "h": 14
+    },
+    "LavaTrap": {
+      "file": "sheets/LavaTrap.png",
+      "w": 144,
+      "h": 16
+    },
+    "FallRock": {
+      "file": "sheets/FallRock.png",
+      "w": 16,
+      "h": 16
+    },
+    "FallRockLarge": {
+      "file": "sheets/FallRockLarge.png",
+      "w": 32,
+      "h": 32
+    },
     "Explosion": {
       "file": "sheets/Explosion.png",
       "w": 1024,
@@ -3548,6 +3578,132 @@
         14
       ],
       "as3": "NPCs/NPC.as:17-18 Spritemap(10, 14); :59-61 centerOO, then y = -height; :174-181 frame Game.worldFrame(2, 1/1.25) at (x, y - originY - charToTalkMargin)"
+    },
+    "seedling:puzzlement/arrowtrap": {
+      "sheet": "ArrowTrap",
+      "fw": 16,
+      "fh": 5,
+      "frames": 2,
+      "origin": [
+        8,
+        2.5
+      ],
+      "as3": "Puzzlements/ArrowTrap.as:13-14 Spritemap(16, 5); :21-22 super(_x + 8, _y + 2.5), centerOO; :40-43 frame Game.worldFrame(frameCount)"
+    },
+    "seedling:enemy/icetrap": {
+      "sheet": "IceTrap",
+      "fw": 16,
+      "fh": 16,
+      "frames": 3,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "chomp": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/IceTrap.as:13-14 Spritemap(16, 16, endAnim); :22-24 centerOO, chomp [0,1,2,1] fps 10, hit [1]; :39-42 \"\" → Game.worldFrame(2)"
+    },
+    "seedling:enemy/darktrap": {
+      "sheet": "DarkTrap",
+      "fw": 14,
+      "fh": 14,
+      "frames": 12,
+      "origin": [
+        7,
+        7
+      ],
+      "anims": {
+        "chomp": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            2,
+            1
+          ],
+          "fps": 10
+        },
+        "die1": {
+          "clock": "fps",
+          "frames": [
+            4,
+            0,
+            1,
+            0,
+            4,
+            5,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/DarkTrap.as:15-16 Spritemap(14, 14, endAnim); SandTrap.as:29-33 its ctor adds chomp [0,1,2,3,2,1] fps 10 to this sheet; :22 die1 [4,0,1,0,4,5,4,5,6..11] fps 10"
+    },
+    "seedling:enemy/lavatrap": {
+      "sheet": "LavaTrap",
+      "fw": 16,
+      "fh": 16,
+      "frames": 9,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "die": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/LavaTrap.as:17-18 Spritemap(16, 16, endAnim); :34-37 centerOO, chomp [2], die [3..8] fps 10, play(\"\")"
+    },
+    "seedling:scenery/fallrock": {
+      "sheet": "FallRock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Scenery/FallRock.as:16-17 Image; :32-34 super(_x + 8, _y + 8), centerOO; :37 parked at y = -16"
+    },
+    "seedling:scenery/fallrocklarge": {
+      "sheet": "FallRockLarge",
+      "fw": 32,
+      "fh": 32,
+      "frames": 1,
+      "origin": [
+        16,
+        16
+      ],
+      "as3": "Scenery/FallRockLarge.as:16-17 Image; :34-36 super(_x + 16, _y + 16), centerOO; :41 parked at y = -32"
     },
     "seedling:fx/explosion": {
       "sheet": "Explosion",

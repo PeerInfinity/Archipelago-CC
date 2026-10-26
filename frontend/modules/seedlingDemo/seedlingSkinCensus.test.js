@@ -17,11 +17,12 @@ import { HAZARD_COVERAGE } from './seedlingHazardSkin.js';
 import { PUZZLE_COVERAGE } from './seedlingPuzzleSkin.js';
 import { SOLIDS_COVERAGE } from './seedlingSolidsSkin.js';
 import { NPC_COVERAGE } from './seedlingNpcSkin.js';
+import { TRAP_COVERAGE } from './seedlingTrapSkin.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MAP = JSON.parse(readFileSync(join(HERE, '../flashPanel/atlases/seedling-map.json'), 'utf8'));
 const DRAWN = new Set([...ENEMY_COVERAGE.drawn, ...ROOM_BODY_COVERAGE.drawn, ...HAZARD_COVERAGE.drawn, ...PUZZLE_COVERAGE.drawn,
-    ...SOLIDS_COVERAGE.drawn, ...NPC_COVERAGE.drawn]);
+    ...SOLIDS_COVERAGE.drawn, ...NPC_COVERAGE.drawn, ...TRAP_COVERAGE.drawn]);
 const drawnBySkin = (r) => !!SCENERY[r.tag] || DRAWN.has(r.as3);
 
 describe('the census of record', () => {
@@ -46,6 +47,6 @@ describe('the census of record', () => {
 
     it('`PUZZLE_COVERAGE.remaining` IS the census\'s list (one list, not two)', () => {
         expect(PUZZLE_COVERAGE.remaining).toBe(CENSUS_REMAINING);
-        for (const c of [...SOLIDS_COVERAGE.drawn, ...NPC_COVERAGE.drawn]) expect(CENSUS_REMAINING, c).not.toContain(c);
+        for (const c of [...SOLIDS_COVERAGE.drawn, ...NPC_COVERAGE.drawn, ...TRAP_COVERAGE.drawn]) expect(CENSUS_REMAINING, c).not.toContain(c);
     });
 });
