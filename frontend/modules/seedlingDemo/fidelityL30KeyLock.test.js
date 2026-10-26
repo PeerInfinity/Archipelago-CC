@@ -109,7 +109,9 @@ describe('L30KEYLOCK D2 — the solver, switch by switch, from both pit landings
         refusal: refusal ? refusal.message : null,
     });
 
-    it('both OFF, (224,80): the survey\'s refusal, the keys driven are the BEFORE witness, and they were hit twice', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
+    // ⛓ `chaserOrbitKill` named OFF (planning-14's wave-32 flip): ON, with no stance for the body, the orbit arm kills it
+    // hitless (model-only; L40LATCH's evidence `l30-orbit.txt`, a game witness owed) — this row is the switch-by-switch control.
+    it('both OFF, (224,80): the survey\'s refusal, the keys driven are the BEFORE witness, and they were hit twice', () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, async () => {
         const p = await l30keylockPlan(224, { rescan: false, waitPriced: false });
         const v = verdict(p);
         expect(v.solved).toBeNull();
@@ -132,7 +134,9 @@ describe('L30KEYLOCK D2 — the solver, switch by switch, from both pit landings
             .toMatchObject({ solved: null, hits: 3 });
     }), 120_000);
 
-    it('WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
+    // ⛓ `chaserOrbitKill` named OFF (planning-14's wave-32 flip): ON, with no stance for the body, the orbit arm kills it
+    // hitless (model-only; L40LATCH's evidence `l30-orbit.txt`, a game witness owed) — this row is the switch-by-switch control.
+    it('WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick', () => withContactFidelity({ strikeIframeLapse: false, chaserOrbitKill: false }, async () => {
         expect(verdict(await l30keylockPlan(224, { rescan: false, waitPriced: true })))
             .toMatchObject({ solved: 309, hits: 0 });
         const v = verdict(await l30keylockPlan(240, { rescan: false, waitPriced: true }));

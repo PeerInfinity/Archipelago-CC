@@ -21980,6 +21980,8 @@ export function orbitKillPolicy(run, id, { r, dir, safe }, strike) {
  * The orbit kill of `id` (a live BobSoldier) from the run's current tick: each `ORBIT_KILL_CANDIDATES` entry is played
  * on a FORK until the body is removed, rejected at the first player hit or death, level crossing, or the bound; the
  * first clean one is played on the live run key for key and must kill there too. `{record}` or `{why}` (no tick spent).
+ * Each fork try asks the FINE deadline site `orbit-fork`. ⚠ A live replay that does not kill as its fork did fails by
+ * name AFTER the live run has advanced those ticks: the run is not rewound (the solve is refused, never continued).
  */
 function orbitKillChaser(run, perTick, id, { fork, dashMode, what }) {
     if (typeof fork !== 'function') return { why: 'no fork to try the orbit on (the solve has no `forkRun`)' };
@@ -22004,7 +22006,7 @@ function orbitKillChaser(run, perTick, id, { fork, dashMode, what }) {
     let forks = 0;
     for (const cand of ORBIT_KILL_CANDIDATES) {
         const label = `r ${cand.r} ${cand.dir > 0 ? 'ccw' : 'cw'} far ${Math.round(cand.safe * 180 / Math.PI)}°`;
-        const f = fineDeadlineReached('crusher-fork') ? null : fork();
+        const f = fineDeadlineReached('orbit-fork') ? null : fork();
         if (f === null) { whys.push(`the deadline, after ${forks} fork(s)`); break; }
         forks += 1;
         const keys = [];
@@ -23201,6 +23203,10 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  *    without `fineCheckpoints` it is never asked. A trip refuses the bait verb by name. CAN turn a solve into a
  *    refusal.
  *
+ *  - `orbit-fork` — (seedling-fidelity-l40latch) the orbit kill's fork tries (`orbitKillChaser`, `chaserOrbitKill`):
+ *    asked before each candidate's fork. FINE (opt-in), as `crusher-fork`. A trip ends the candidates and the orbit
+ *    kill answers `why` (the deadline, after N forks); the arm's other verbs are asked as before.
+ *
  * ⛓ FIDELITY CHECKPOINTS also ask `detour` inside the DETOUR rung's via set
  * (opt-in, as above), once per lattice cell it plans to (L16's ~225 legs ran
  * ~19–50 s between the rung's first two asks; L40's thousands, ~230 s after
@@ -23218,7 +23224,7 @@ export { withSolveProgress };
 
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
     'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge', 'hammer-escape',
-    'hammer-approach', 'hammer-fight', 'crusher-fork']);
+    'hammer-approach', 'hammer-fight', 'crusher-fork', 'orbit-fork']);
 
 /**
  * ⛓ FIDELITY CHECKPOINTS — the ticks a segment drives between two asks of the

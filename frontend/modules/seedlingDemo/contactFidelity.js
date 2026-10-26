@@ -1470,7 +1470,7 @@ export const CONTACT_FIDELITY = {
      * banked like `open()`'s, and a `collect-placement` at it is satisfied (`arm: 'seal-removed'`). OFF:
      * byte-identical. `SEEDLING_CHEST_SEAL_REMOVAL=0|1`.
      */
-    chestSealRemoval: false,
+    chestSealRemoval: true,
     /**
      * fidelity L40LATCH D1 (wave 32) — A HOLD'S STILL WAIT IS PRICED AS ITS STANCE WALK'S TAIL. `runHold` stands the
      * player on the presser for the hold's whole bound (a latched `room = -1` ButtonRoom included: the hold waits for
@@ -1481,7 +1481,7 @@ export const CONTACT_FIDELITY = {
      * `stand` instrument, `holdStandWalk`), so a body that reaches the holder is a hit on that corridor and the combat
      * ladder climbs (the kill rung's chaser arm: kill first, then hold). OFF: byte-identical. `SEEDLING_HOLD_WAIT_PRICED=0|1`.
      */
-    holdWaitPriced: false,
+    holdWaitPriced: true,
     /**
      * fidelity L40LATCH D1b (wave 32) — A BOBSOLDIER IS KILLED ON THE MOVE, BEHIND ITS BLADE. The kill rung's chaser arm
      * (`deriveKillByChaser`) scans STILL stances (stand and strike), and no stance kills `bobsoldier@880,832` hitless:
@@ -1492,7 +1492,7 @@ export const CONTACT_FIDELITY = {
      * first hitless kill (the body removed, no hit, no crossing) is played on the live run key for key (TURRETCIRCLE's
      * shape). OFF: byte-identical. `SEEDLING_CHASER_ORBIT_KILL=0|1`.
      */
-    chaserOrbitKill: false,
+    chaserOrbitKill: true,
     /**
      * fidelity L32BOB D1 (wave 32) — THE BOB BOSS FORECAST CARRIES THE SWING ALREADY IN FLIGHT. `bobBossForecast` handed
      * the encounter's strike search the boss and the slash STATE but not the run's `swordWindow`, so a solve that starts
@@ -1507,7 +1507,7 @@ export const CONTACT_FIDELITY = {
      * landings against every landing the forecast made through its own press's. OFF: byte-identical.
      * `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`.
      */
-    encounterSwingInFlight: false,
+    encounterSwingInFlight: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

@@ -29,9 +29,9 @@ import { L40LATCH_D1_SWITCHES, L40LATCH_WITNESS_DIR, l40LatchBoot, l40LatchModel
 const witness = (name) => JSON.parse(readFileSync(join(L40LATCH_WITNESS_DIR, `${name}.json`), 'utf8'));
 
 describe('L40LATCH — the switches', () => {
-    it('both ship OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.holdWaitPriced).toBe(false);
-        expect(CONTACT_FIDELITY_DEFAULTS.chaserOrbitKill).toBe(false);
+    it('both ship ON (planning-14\'s wave-32 flip, ⚖ user 2026-10-26)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.holdWaitPriced).toBe(true);
+        expect(CONTACT_FIDELITY_DEFAULTS.chaserOrbitKill).toBe(true);
     });
 
     it('the staging banks the chest {40,13}, the tree {40,0} and spinner@880,848 {40,16}, and boots on the latch', async () => {
@@ -68,7 +68,8 @@ describe('L40LATCH W0 — the still holder, on the game (`l40latch-stand`)', () 
     });
 
     it('OFF the solver stands on the latch for the fade and is moved at hold tick 93 (the brief\'s refusal)', async () => {
-        const { out, refusal } = await l40LatchSolve(await l40LatchBoot(), {});
+        // ⛓ both keys named OFF since planning-14's wave-32 flip turned them ON.
+        const { out, refusal } = await l40LatchSolve(await l40LatchBoot(), { holdWaitPriced: false, chaserOrbitKill: false });
         expect(out).toBeNull();
         expect(refusal.message).toContain('hold: hold tick 93 of 131 MOVED, from (888,776)');
     }, 120_000);

@@ -313,14 +313,15 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             weighHypothesisChain: true,
             // ⛓ and dashSpinnerForecast after the L18 wall-time check (OFF 6,192 vs ON 6,116 ms; hammer-2 signed).
             dashSpinnerForecast: true,
+            // ⛓ planning-14's wave-32 flip (⚖ user 2026-10-26): CHESTSEAL, L40LATCH and L32BOB turn ON.
             // ⛓ fidelity CHESTSEAL (wave 32): a chest `checkBySeal()` removed is open and its flag banked — shipped OFF.
-            chestSealRemoval: false,
+            chestSealRemoval: true,
             // ⛓ fidelity L40LATCH D1 (wave 32): a hold's still wait priced as its stance walk's tail — shipped OFF.
-            holdWaitPriced: false,
+            holdWaitPriced: true,
             // ⛓ fidelity L40LATCH D1b (wave 32): a BobSoldier killed on the move, behind its blade — shipped OFF.
-            chaserOrbitKill: false,
+            chaserOrbitKill: true,
             // ⛓ fidelity L32BOB (wave 32): the Bob Boss forecast carries the swing in flight — ships OFF.
-            encounterSwingInFlight: false });
+            encounterSwingInFlight: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

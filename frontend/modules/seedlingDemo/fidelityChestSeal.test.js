@@ -40,9 +40,9 @@ const ENV = ['SEEDLING_CONTACT_FIDELITY', 'SEEDLING_CHEST_SEAL_REMOVAL'];
 const at = (o) => ({ x: o.x, y: o.y, level: o.level });
 
 describe('CHESTSEAL D1 — the model: a seal-removed chest is open from the build and its flag is banked', () => {
-    it.skipIf(ENV.some((k) => process.env[k]))('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.chestSealRemoval).toBe(false);
-        expect(CONTACT_FIDELITY.chestSealRemoval).toBe(false);
+    it.skipIf(ENV.some((k) => process.env[k]))('ships ON (planning-14\'s wave-32 flip, ⚖ user 2026-10-26)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.chestSealRemoval).toBe(true);
+        expect(CONTACT_FIDELITY.chestSealRemoval).toBe(true);
     });
 
     it('seal-edge: the model ON reproduces the game — through the chest\'s cell, into L16 — and opens nothing', () => {

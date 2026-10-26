@@ -66,8 +66,8 @@ function solveFromSeam() {
 const landed = (run) => run.ledger('bobBossEvents').filter((r) => r.what === 'boss-hit' && r.landed);
 
 describe('fidelity L32BOB — the swing in flight', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.encounterSwingInFlight).toBe(false);
+    it('ships ON (planning-14\'s wave-32 flip, ⚖ user 2026-10-26)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.encounterSwingInFlight).toBe(true);
     });
 
     it('W0 — the tape: form 1 lands at 351, 381 (press 376, its T+5) and 425 — the game\'s death flight starts at t426', () => {
