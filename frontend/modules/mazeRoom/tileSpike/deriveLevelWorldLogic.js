@@ -20,6 +20,7 @@ import {
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
     createState, step, getExitAt, worldInputs, sharedWorldOwnerAt, standsInArmedLane, strikeTarget, USE_PREFIX, TURN_PREFIX,
+    actionUsable,
 } from '../mazeRoomEngine.js';
 
 /**
@@ -38,8 +39,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
     const have = start.inventory;
     const inputs = reachInputs(worldInputs(w).filter((input) => {
         if (!input.startsWith(USE_PREFIX)) return true;
-        const item = w.actionLib[input.slice(USE_PREFIX.length)]?.item;
-        return !item || have.has(item);
+        return actionUsable(w.actionLib[input.slice(USE_PREFIX.length)], have);
     }));
     const seen = new Map([[reachKey(start), null]]);
     const cells = new Map([[`${start.player_pos.x},${start.player_pos.y}`, reachKey(start)]]);

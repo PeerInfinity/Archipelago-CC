@@ -533,6 +533,7 @@ export function projectRegionToMaze(region, grid, ctx) {
         for (const [x, y] of component.tiles) builder.floor(x, y);
 
         const note = (n) => notes.push({ region_id: region.region_id, sub_region: component.id, ...n });
+        const directional = floorDirectionalCells(builder, grid, component.tiles, resolveCondition, note);
         /**
          * `entry.exitName` is the id (see the exit-id invariant above); it is
          * globally unique by construction, so a collision here means the graph
@@ -683,6 +684,7 @@ export function projectRegionToMaze(region, grid, ctx) {
         }
 
         bindWorldEvents(builder, ctx.eventsFor?.(region), local, ([x, y]) => x >= 0 && y >= 0 && x < grid.width && y < grid.height);
+        const entryGates = directional > 0 ? levelWorldEntryGates(builder, grid, new Set(), resolveCondition, new Set(), note) : [];
 
         // --- assemble --------------------------------------------------------
         const [ex, ey] = component.tiles[0];
@@ -701,6 +703,7 @@ export function projectRegionToMaze(region, grid, ctx) {
                 return { x, y, id: entry.id, locationName: entry.locationName };
             }).sort((a, b) => (a.y - b.y) || (a.x - b.x)),
             obstacleLib: builder.obstacleLib,
+            ...(entryGates.length > 0 ? { entry_gates: entryGates } : {}),
             // Atlas provenance. The maze runtime ignores these; they are what
             // makes a dumped sidecar traceable back to the map it came from.
             atlas_region: region.region_id,
@@ -806,6 +809,41 @@ export function levelHasInteraction(entities) {
 const MOVES = Object.freeze([['N', 0, -1, 'S'], ['E', 1, 0, 'W'], ['S', 0, 1, 'N'], ['W', -1, 0, 'E']]);
 
 /**
+ * ⛓ DIRECTIONAL CELLS IN A PER-SUB-REGION WORLD (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "Entry gates in
+ * every world"; water-exits floored them in LEVEL worlds only). The analyzer's components hold no directional cell —
+ * it steps THROUGH them (`stepCost`) — so a sub-region joined by one projected as islands: L94 r3c4's two cells are
+ * (4,3) and (4,6), joined by the cliffside (4,4)/(4,5) (faces W:null). Every directional cell chained to the
+ * component through directional cells is floored here, with its occupancy gate as a gated cell's; its direction
+ * physics become ENTRY GATES (`levelWorldEntryGates`, the level world's own). A cell whose condition has no AP item
+ * stays a wall, by name. Returns how many were floored (0 ⇒ the world is unchanged and carries no entry gates).
+ */
+function floorDirectionalCells(builder, grid, tiles, resolveCondition, note) {
+    const cellAt = (x, y) => (x >= 0 && y >= 0 && x < grid.width && y < grid.height ? grid.cells[y * grid.width + x] : null);
+    const queue = tiles.map(([x, y]) => [x, y]);
+    const seen = new Set(queue.map(([x, y]) => `${x},${y}`));
+    let floored = 0;
+    for (let head = 0; head < queue.length; head += 1) {
+        const [x, y] = queue[head];
+        for (const [, dx, dy] of MOVES) {
+            const [nx, ny] = [x + dx, y + dy];
+            const key = `${nx},${ny}`;
+            if (seen.has(key) || cellAt(nx, ny)?.kind !== 'directional' || builder.isFloor(nx, ny)) continue;
+            seen.add(key);
+            const own = occupancyRule(cellAt(nx, ny), resolveCondition);
+            if (own.unresolved.length > 0) {
+                note({ kind: 'unresolved_walled', tile: [nx, ny], message: `a directional cell at [${nx},${ny}] has a condition with no AP item behind it — WALLED` });
+                continue;
+            }
+            builder.floor(nx, ny);
+            if (own.rule) builder.gate(nx, ny, own.rule);
+            floored += 1;
+            queue.push([nx, ny]);
+        }
+    }
+    return floored;
+}
+
+/**
  * ⛓ ENTRY GATES (session tile-primitives-water-exits, ⚖ 2026-10-25 "Level world + step gates") — every directed step
  * between two floor cells of a level world whose terrain gates it, as the region analyzer prices a step
  * (`regionAtlasAnalyzer.stepCost`): the face it crosses, read from BOTH cells; the direction gate of moving that way,
@@ -869,7 +907,7 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
  * @param {object} ctx `projectRegionToMaze`'s, plus `partitionFor(region)` →
  *   `{sub_regions, rows, origin:[x,y]}` (the atlas's persisted partition)
  * @param {Array<object>} entities `levelEntitiesFor`'s rows:
- *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item}], label}`
+ *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item} | {action, rule}], label}`
  * @returns {{ sidecars: object, notes: Array, analysis: null, sharedWorld: string }}
  */
 export function projectLevelWorld(region, grid, ctx, entities) {
@@ -937,18 +975,24 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     const modelled = new Map(); // "x,y" → Set of condition keys
     const groupsWithButton = new Set();
     for (const e of entities) if (e.kind === 'button') groupsWithButton.add(String(e.group));
+    // A strike needs one `item` or, for a fusion, a `rule` (an And of Has — ⚖ 2026-10-25 "action_lib `rule`").
+    const needOf = (strike) => (strike.rule !== undefined ? { rule: strike.rule } : { item: strike.item });
     const actionFor = (strike) => {
         if (!actionLib[strike.action]) {
             const used = Object.keys(actionLib).length;
             actionLib[strike.action] = {
-                item: strike.item,
+                ...needOf(strike),
                 primitive: 'strike',
                 condition: 'strikes',
                 ...(used < LEVEL_WORLD_USE_KEYS.length ? { key: LEVEL_WORLD_USE_KEYS[used] } : {}),
             };
-        } else if (actionLib[strike.action].item !== strike.item) {
-            throw new Error(`atlas region "${regionId}": action "${strike.action}" names two items `
-                + `(${actionLib[strike.action].item}, ${strike.item})`);
+        } else {
+            const { item, rule } = actionLib[strike.action];
+            const had = JSON.stringify(rule ?? item);
+            const now = JSON.stringify(strike.rule ?? strike.item);
+            if (had !== now) {
+                throw new Error(`atlas region "${regionId}": action "${strike.action}" names two items (${had}, ${now})`);
+            }
         }
         return strike.action;
     };
@@ -1332,6 +1376,18 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     }
     const entryGates = levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
         (n) => note({ ...n, tile: [n.tile[0] + ox, n.tile[1] + oy] }));
+    // ⛓ BLOCK SINKS (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "Sink from grid terrain"): in a world with a
+    // block, every floored terrain cell the game's block sinks into (`ctx.blockSinkCell`: Seedling's water, lava, pit) —
+    // L8's lane block is shoved into the water to clear the lane. An entity's cell is the entity's, never a sink.
+    const blockSinks = [];
+    if (blocks.length > 0 && typeof ctx.blockSinkCell === 'function') {
+        for (let y = 0; y < grid.height; y += 1) {
+            for (let x = 0; x < grid.width; x += 1) {
+                if (claimed.has(keyOf(x, y)) || !builder.isFloor(x, y)) continue;
+                if (ctx.blockSinkCell(grid.cells[y * grid.width + x])) blockSinks.push({ x, y });
+            }
+        }
+    }
 
     // --- assemble: ONE payload, carried by the first sub-region --------------
     const carrier = bindings[0].apName;
@@ -1356,6 +1412,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         ...(Object.keys(actionLib).length > 0 ? { action_lib: actionLib } : {}),
         ...(traps.length > 0 ? { traps: traps.sort(sortRows), trapLib } : {}),
         ...(entryGates.length > 0 ? { entry_gates: entryGates } : {}),
+        ...(blockSinks.length > 0 ? { block_sinks: blockSinks } : {}),
         shared_world: {
             key: regionId,
             regions: bindings.map((b) => b.apName),
