@@ -1,0 +1,16 @@
+== arm stand
+VERDICT solverBot(l40bk2) collect (656,528) stance (ladder-routed: no corridor from (488,904) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's ow || -> shove stance (pushableblockfire@576,576) || -> hold stance (wandlock@448,432) || -> chest stance (chest@880,816): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.7,853.7) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no en
+HITS 972:bob@736,752 1116:bob@736,752 DEATHS 0 PKC {"standAsked":20947,"standRefused":20940,"refugeRefused":0,"stepRefused":0} ticks 1329
+ms 236910
+== arm refuge
+VERDICT solverBot(l40bk2) collect (656,528) stance (ladder-routed: no corridor from (488,904) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's ow || -> shove stance (pushableblockfire@576,576) || -> hold stance (wandlock@448,432) || -> chest stance (chest@880,816) || -> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752) while pressing spinner@880,848, after 1 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the s
+HITS 660:bob@736,752 749:bob@736,752 780:bob@736,752 DEATHS 1 PKC {"standAsked":0,"standRefused":0,"refugeRefused":0,"stepRefused":0} ticks 780
+ms 42458
+== arm step
+VERDICT solverBot(l40bk2) collect (656,528) stance (ladder-routed: no corridor from (488,904) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's ow || -> shove stance (pushableblockfire@576,576) || -> hold stance (wandlock@448,432) || -> chest stance (chest@880,816): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.6,853.4) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no en
+HITS  DEATHS 0 PKC {"standAsked":0,"standRefused":0,"refugeRefused":0,"stepRefused":0} ticks 1738
+ms 48761
+== arm all
+VERDICT solverBot(l40bk2) collect (656,528) stance (ladder-routed: no corridor from (488,904) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's ow || -> shove stance (pushableblockfire@576,576) || -> hold stance (wandlock@448,432) || -> chest stance (chest@880,816): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,852.9) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no en
+HITS  DEATHS 0 PKC {"standAsked":25330,"standRefused":25321,"refugeRefused":66,"stepRefused":0} ticks 1567
+ms 273797

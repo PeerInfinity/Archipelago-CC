@@ -1,0 +1,8 @@
+## THE ADDENDUM — 0 step(s) of the alternative leg 2 that the chosen route never walks
+
+== step 67 — L40 ... REFUSED — solverBot(survey-step-67) collect (656,528) stance (ladder-routed: no corridor from (488,904) to a stance that can collect bosskey@656,528 — 16 walkable candida
+
+wrote /tmp/claude-0/-home-user-Archipelago-CC/4b925bac-f075-5c78-aefd-deb3ced2cec7/scratchpad/i/survey67-off.json
+
+## HEADLINE: 0/1 route steps SOLVE today
+  step 67 L40: REFUSED — unclassified — see the refusal text

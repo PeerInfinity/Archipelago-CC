@@ -1,0 +1,16 @@
+FAIL: r8-solve-11 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+1 FAILURE(S)
+FAIL: r8-d2 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r8-d2-19 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r8-d2-20 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+3 FAILURE(S)
+FAIL: r8-solve-18 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+1 FAILURE(S)
+FAIL: r8-solve-10 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-11 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-3 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-2 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-0 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-13 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-14 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-15 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
