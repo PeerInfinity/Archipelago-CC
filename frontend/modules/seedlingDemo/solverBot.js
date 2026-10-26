@@ -105,6 +105,8 @@ import {
     WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
     ARROW, arrowLaneForPlacement, arrowLaneRect, arrowTrapFires,
     bridgedChaserTags, chaserBoxAt, chaserHasSword, killWindowTicks,
+    // ⛓ fidelity RULESREF D1: a chaser whose class carries a timed attack (the puncher), for the walk's gate.
+    chaserHasAttack,
     // ⛓ STRIKELAPSE D1: a corpse's removal clock (`createCorpseClock`).
     deathTicks, removalTicksAfterHit,
     // ⛓ CEREMONYSHOVE D3: the classes a shield's bump moves (`ceremonyBesideLiveBody`).
@@ -7824,6 +7826,15 @@ const NO_HELD_PREVIEW = new Set();
  */
 function dangerNow(run, x, y, except = null, { timedSword = false, timedAxe = false } = {}) {
     const swordTick = timedSword && SWORD_GATE_TIMED.enabled ? swordTickAt(run, x, y) : null;
+    // ⛓ fidelity RULESREF D1 (`punchGateTimed`, OFF): the walk's gate times a puncher's punch too (`punchTickAt`).
+    if (timedSword && swordTick === null && CONTACT_FIDELITY.punchGateTimed) {
+        const punchTick = punchTickAt(run, x, y);
+        if (punchTick) {
+            const d = withoutSources(dangerAt(run, run.ticksCompleted, playerBoxAt(x, y), { swordTick: punchTick }),
+                except);
+            return timedAxe && CONTACT_FIDELITY.axeGateTransit ? axeGateTimed(run, x, y, d) : d;
+        }
+    }
     const d = withoutSources(dangerAt(run, run.ticksCompleted, playerBoxAt(x, y),
         swordTick ? { swordTick } : {}), except);
     return timedAxe && CONTACT_FIDELITY.axeGateTransit ? axeGateTimed(run, x, y, d) : d;
@@ -7901,6 +7912,24 @@ export function withSwordGateTimed(enabled, fn) {
  * One chaser-forecast tick against a player standing at (x, y) — the bodies `previewWalk`'s first sample would
  * carry. `null` when the run steps no sworded body (the gate is then the code it was) or has no forecast.
  */
+/**
+ * ⛓⛓ fidelity RULESREF D1 (`CONTACT_FIDELITY.punchGateTimed`, OFF) — **THE WALK'S DECISION GATE TIMES A PUNCHER'S
+ * PUNCH**, as BOBSOLDIER2 D2b timed a BobSoldier's blade. The gate asks the WAIT question at horizon 0 and prices a
+ * live puncher by `threatPad` 8 ("a reach without a clock"); the walk's transit probe prices the same body by the
+ * forecast's punch (U10 D2, game-witnessed by `u10-puncher-dwell`). MEASURED (survey step 79, L53 → L54): the walk to
+ * `breakablerock@112,128`'s stance arrives with `puncher@136,96` 11 px away and the next walk's gate refuses
+ * *"inside leash 80 (d=11.1) … pad 8"*, so no corridor is ever probed and the ladder's chaser KILL rung never runs.
+ * ON, a walk-opening gate (`timedSword`) in a room with a live chaser whose class carries an `attack` row hands
+ * `chaserDanger` the chaser forecast stepped ONE tick against the player standing at the box (the walk's first transit
+ * sample), and a body whose row carries `punch` is priced by that punch and its bare body. `null` when no such body.
+ */
+export function punchTickAt(run, x, y) {
+    if (!(run.entities('chasers') ?? []).some((c) => !c.destroy && chaserHasAttack(c.tag))) return null;
+    const fc = run.chaserForecast?.() ?? null;
+    if (!fc) return null;
+    return fc.step({ ...run.state, x, y }, { slashing: run.progress('slashInfo')?.slashing === true });
+}
+
 export function swordTickAt(run, x, y) {
     if (!(run.entities('chasers') ?? []).some((c) => chaserHasSword(c.tag))) return null;
     const fc = run.chaserForecast?.() ?? null;
@@ -27799,6 +27828,35 @@ function solveSegmentUnder({
              */
             const dashFirst = corridorDashRescue(wps, hit, except, { stand, axisAligned, undashed });
             if (dashFirst) hit = null;
+            /**
+             * ⛓⛓ fidelity RULESREF D1 (`CONTACT_FIDELITY.punchGateTimed`, OFF) — **A WALK THAT STARTS BESIDE A PINNED
+             * PUNCHER LEAVES ALONG ONE AXIS.** Game-witnessed (survey step 79, L53; `d1-l53-puncher-stall`): after the
+             * dashed walk to the rock's stance, `puncher@136,96` stalls 0.17 px above the player's box with one hit on it
+             * and the game bills NOTHING over an 80-tick stand. The next corridor's first tick is the bang-bang
+             * controller's diagonal (RIGHT+UP: 0.8 px up, into the body — the model bills a contact at t122), while RIGHT
+             * alone slides out from under it hitless. So when every reason the probe gave is an attack chaser (the
+             * puncher's class), the same aim is asked once as an axis-aligned walk (`planWaypoints`' `manhattan`, the
+             * drive's `holdOneAxis` — swim U2's mode) and probed by the same predicate; a clean probe is this attempt's
+             * corridor. Otherwise the ladder is climbed as before. OFF: not asked.
+             */
+            if (hit && CONTACT_FIDELITY.punchGateTimed && !axisAligned && hit.sources.length > 0
+                && hit.sources.every((sx) => sx.kind === 'chaser' && chaserHasAttack(
+                    (run.entities('chasers') ?? []).find((c) => c.id === sx.id)?.tag))) {
+                let aligned = null;
+                try {
+                    aligned = planWaypoints(run.world, run.state, aim, allowTeleporter, {
+                        ...solverPlanOpts(run, contacts, { ...goalPlanExtra, ...(fine ? { lattice: FINE_LATTICE } : {}) }),
+                        manhattan: true });
+                } catch (e) {
+                    if (!(e instanceof BotDriverV2Error)) throw e;
+                }
+                if (aligned && !probeCorridor(aligned, except,
+                    { axisAligned: true, walkCheck: true, ...(stand ? { stand } : {}) })) {
+                    wps = aligned;
+                    axisAligned = true;
+                    hit = null;
+                }
+            }
             /**
              * ⛓ fidelity CORRIDOR D2 (`corridorBodyPricing` ON only) — THE CLIMB IS NOT RE-ENTERED WITHOUT BOUND.
              * The KILL rung's chaser arm walks to its stance through this same `walkTo`, and a stance corridor a

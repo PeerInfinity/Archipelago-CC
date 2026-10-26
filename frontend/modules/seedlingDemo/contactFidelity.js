@@ -1484,6 +1484,19 @@ export const CONTACT_FIDELITY = {
      * notch), which names the lock (`keylock`). OFF: byte-identical. `SEEDLING_FINE_FRONTIER_FLOOD=0|1`.
      */
     fineFrontierFlood: false,
+    /**
+     * fidelity RULESREF D1 (wave 32) — THE WALK'S DECISION GATE TIMES A PUNCHER'S PUNCH (`solverBot.punchTickAt`,
+     * `dangerMap.chaserDanger`), as `SWORD_GATE_TIMED` times a BobSoldier's blade.
+     *
+     *     Puncher.as:111-117, 172-218   the wind-up (`attack` anim) and `attackPlayer`'s box off the body's edge
+     *
+     * The gate a walk opens with priced a live puncher by `threatPad` 8 while the transit probe that follows prices it
+     * by the forecast's punch (U10 D2). L53 (survey step 79): the walk to the rock's stance arrives with
+     * `puncher@136,96` 11 px off, and the next gate refused before any corridor was probed, so the ladder's chaser kill
+     * rung never ran. ON: that gate prices a body whose one-tick forecast row carries `punch` by the punch and its bare
+     * body. OFF: byte-identical. `SEEDLING_PUNCH_GATE_TIMED=0|1`.
+     */
+    punchGateTimed: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1669,6 +1682,9 @@ if (globalThis.process?.env?.SEEDLING_SPEAR_BRIDGE_VERB === '0') CONTACT_FIDELIT
 // ⛓ fidelity RULESREF D3: `SEEDLING_FINE_FRONTIER_FLOOD=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '1') CONTACT_FIDELITY.fineFrontierFlood = true;
 if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '0') CONTACT_FIDELITY.fineFrontierFlood = false;
+// ⛓ fidelity RULESREF D1: `SEEDLING_PUNCH_GATE_TIMED=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '1') CONTACT_FIDELITY.punchGateTimed = true;
+if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '0') CONTACT_FIDELITY.punchGateTimed = false;
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;
