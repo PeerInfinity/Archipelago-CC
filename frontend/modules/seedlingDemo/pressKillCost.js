@@ -368,7 +368,7 @@ export function resetPressKillBombsCounts() {
  * Two treatments were MEASURED and are not here (PKC § M2): pricing the strike's STAND against the chasers (a walk then
  * a stand to the train's end, the chaser forecast stepped along it) refused 20,940 of 20,947 candidates at step 67 and
  * took 237 s against 49 s, because a chaser closes on any player who stands; pricing the refuge's walk and wait the same
- * way refused nothing the kill needed. Unmeasured behaviour is not shipped.
+ * way, alone, moved nothing at step 67 (0 refuges refused; the death at t780 stands). Unmeasured behaviour is not shipped.
  *
  * ⛓ THE SWITCH — `PRESS_KILL_CHASERS`, OFF by default. `SEEDLING_PRESS_KILL_CHASERS=1` turns it on in a node process
  * (the page's worker has no `process`, so it is OFF there), and `withPressKillChasers(enabled, fn)` is for a test or a
