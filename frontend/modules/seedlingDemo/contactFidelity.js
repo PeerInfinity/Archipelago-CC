@@ -1473,7 +1473,7 @@ export const CONTACT_FIDELITY = {
      * landings against every landing the forecast made through its own press's. OFF: byte-identical.
      * `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`.
      */
-    encounterSwingInFlight: false,
+    encounterSwingInFlight: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
