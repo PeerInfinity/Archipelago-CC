@@ -791,8 +791,10 @@ export function mountJsRuntimePage(win = window) {
             c.height = img.height;
             const t = c.getContext('2d');
             t.drawImage(img, 0, 0);
-            t.globalCompositeOperation = 'multiply';
-            t.fillStyle = tint;
+            // ⛓ G9c — `=colour` is a SILHOUETTE (the picture's alpha, filled): a Lock's INVERT is a white one under `difference`
+            const silhouette = tint.startsWith('=');
+            t.globalCompositeOperation = silhouette ? 'source-in' : 'multiply';
+            t.fillStyle = silhouette ? tint.slice(1) : tint;
             t.fillRect(0, 0, c.width, c.height);
             t.globalCompositeOperation = 'destination-in';
             t.drawImage(img, 0, 0);

@@ -321,6 +321,10 @@ export const NIGHT_COPIES = Object.freeze({
     ...Object.fromEntries(['machine/pulser', 'scenery/moonrock', 'scenery/finaldoor']
         .map((k) => [`seedling:${k}`, { alpha: 'same', when: (op) => op.nightCopy === true }])),
     'seedling:machine/wire': { alpha: 0.1, when: (op) => op.nightCopy === true },
+    // ⛓ G9c — `Lock.render()`: while active, the picture onto nightBmp BEFORE its INVERT is set — so the copy is plain
+    //    (no blend, no silhouette tint); `seedlingSolidsSkin` marks it `nightCopy`.
+    ...Object.fromEntries(['lock', 'wandlock', 'grasslock', 'shieldlock', 'shieldlocknorm']
+        .map((k) => [`seedling:puzzlement/${k}`, { alpha: 'same', when: (op) => op.nightCopy === true, plain: true }])),
     // `LavaChain.as:63-73`: only while its anim is "hit".
     'seedling:puzzlement/lavachain': { alpha: 'same', when: (op, ctx) => ctx.hitChains.has(`${opCentre(op).x},${opCentre(op).y}`) },
 });
@@ -483,7 +487,7 @@ export function nightOps(view, art, { skin = null, ops = [], hazard = null, whit
         const rule = R.copies[op.key];
         if (!rule || (rule.when && !rule.when(op, ctx))) continue;
         const k = rule.alpha === 'same' ? (op.alpha ?? 1) : (typeof rule.alpha === 'function' ? rule.alpha(op, ctx) : rule.alpha);
-        if (k > 0) night.push(withAlpha(op, k));
+        if (k > 0) night.push(rule.plain ? withAlpha(op, k, { blend: undefined, tint: undefined }) : withAlpha(op, k));
         if (op.key === 'seedling:puzzlement/crusher') night.push(...R.crusherLanes(opCentre(op), op.layer));
     }
 
