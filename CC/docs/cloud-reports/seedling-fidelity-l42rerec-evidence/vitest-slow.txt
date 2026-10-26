@@ -1,0 +1,22 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityLights.slow.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 61474[2mms[22m[39m
+     [33m[2m✓[22m[39m lights-solve-sword (lightsSortiePortfolio OFF): the solver's tape equals the recorded one, key for key [33m 15258[2mms[22m[39m
+     [33m[2m✓[22m[39m lights-solve-spear-on (lightsSortiePortfolio OFF): the solver's tape equals the recorded one, key for key [33m 16879[2mms[22m[39m
+     [33m[2m✓[22m[39m lights-solve-spear (spearGameTest OFF) (lightsSortiePortfolio OFF): the solver's tape equals the recorded one, key for key [33m 10340[2mms[22m[39m
+     [33m[2m✓[22m[39m lights-solve-spear-portfolio: the solver's tape equals the recorded one, key for key [33m 9141[2mms[22m[39m
+     [33m[2m✓[22m[39m lights-solve-sword: the solver's tape equals the recorded one, key for key [33m 9854[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL32ArenaPrefix.slow.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 21607[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 349, the 'dashless' pass: solves through the kill and the burn, and lands on L30 [33m 5410[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 349, the 'full' pass: solves through the kill and the burn, and lands on L30 [33m 5299[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 350, the 'dashless' pass: solves through the kill and the burn, and lands on L30 [33m 5403[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 350, the 'full' pass: solves through the kill and the burn, and lands on L30 [33m 5492[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolverForkRun.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 4223[2mms[22m[39m
+     [33m[2m✓[22m[39m solveFromTape (dashless) plans L42's part through `bait` [33m 4222[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m11 passed[39m[22m[90m (11)[39m
+[2m   Start at [22m 18:49:55
+[2m   Duration [22m 90.86s[2m (transform 1.69s, setup 0ms, import 3.28s, tests 87.30s, environment 0ms)[22m
+
