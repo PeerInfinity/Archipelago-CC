@@ -1469,7 +1469,7 @@ export const CONTACT_FIDELITY = {
      * `stand` instrument, `holdStandWalk`), so a body that reaches the holder is a hit on that corridor and the combat
      * ladder climbs (the kill rung's chaser arm: kill first, then hold). OFF: byte-identical. `SEEDLING_HOLD_WAIT_PRICED=0|1`.
      */
-    holdWaitPriced: false,
+    holdWaitPriced: true,
     /**
      * fidelity L40LATCH D1b (wave 32) — A BOBSOLDIER IS KILLED ON THE MOVE, BEHIND ITS BLADE. The kill rung's chaser arm
      * (`deriveKillByChaser`) scans STILL stances (stand and strike), and no stance kills `bobsoldier@880,832` hitless:
@@ -1480,7 +1480,7 @@ export const CONTACT_FIDELITY = {
      * first hitless kill (the body removed, no hit, no crossing) is played on the live run key for key (TURRETCIRCLE's
      * shape). OFF: byte-identical. `SEEDLING_CHASER_ORBIT_KILL=0|1`.
      */
-    chaserOrbitKill: false,
+    chaserOrbitKill: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
