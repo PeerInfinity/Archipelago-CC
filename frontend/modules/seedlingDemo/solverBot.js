@@ -23236,6 +23236,15 @@ function solveSegmentDeadlined(o) {
  * fine rows call `deriveKillByChaser` directly, as slice 12b′'s rows do). `fn`'s
  * object result gains `deadline` when a site tripped; a `SolverRefusal` it
  * throws gains the clause and `e.deadline`. Nested installs restore the outer.
+ *
+ * ⛓⛓ SDC (⛓ FF-HARNESS hand-over 1, `CC/docs/cloud-reports/seedling-hammer-ff-harness.md` § 11.1) — A TRIPPED
+ * RESULT KEEPS ITS `liveRun`. B3's contract: a rewound segment's result carries `liveRun` (not enumerable), the run
+ * it ended on, and a caller that reads the run after the solve takes it (`solveFromTape`'s recorder,
+ * `watchSolve.solveForPage`). The tripped result is a NEW object (`{ ...out, deadline }`), and a spread copies only
+ * enumerable fields, so before this the mark was lost exactly when a rewound pass also tripped its window: 371's
+ * seam 5251 (full pass: rewound at t1112, solved 1753 t, `sword-dash` tripped) read the shadow and threw
+ * *"returned 1753 … the shadow advanced 1260"*. It is carried as it came, still not enumerable. No `liveRun` (every
+ * solve with `HAMMER_FIGHT_FALLBACK` off: only `rewind.to` sets it) = the spread exactly as before.
  */
 export function withSolveDeadline({ shouldStop, fineCheckpoints = false }, fn) {
     if (typeof shouldStop !== 'function') {
@@ -23252,7 +23261,11 @@ export function withSolveDeadline({ shouldStop, fineCheckpoints = false }, fn) {
     activeDeadline = deadline;
     try {
         const out = fn();
-        return deadline.first === null ? out : { ...out, deadline: deadlineReport(deadline) };
+        if (deadline.first === null) return out;
+        const tripped = { ...out, deadline: deadlineReport(deadline) };
+        // ⛓⛓ SDC — the spread drops the non-enumerable `liveRun` (B3): carry it, still not enumerable
+        if (out?.liveRun !== undefined) Object.defineProperty(tripped, 'liveRun', { value: out.liveRun });
+        return tripped;
     } catch (e) {
         if (deadline.first !== null && e instanceof SolverRefusal) {
             e.message += deadlineClause(deadline);
