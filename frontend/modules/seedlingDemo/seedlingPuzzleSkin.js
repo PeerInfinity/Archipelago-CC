@@ -45,12 +45,13 @@
  * (a freeze, a ceremony) shows a brighter block than the game for those
  * frames; the removal is the run's either way.
  *
- * ⛔ NOT YET (`PUZZLE_COVERAGE.remaining`): every other undrawn class of the G7
- * census (the evidence's `census.txt`).
+ * ⛔ NOT YET (`PUZZLE_COVERAGE.remaining` = `seedlingSkinCensus.CENSUS_REMAINING`):
+ * every other undrawn class of the census of record.
  */
 import {
     ANIMS, ENEMY_COLOUR, ENEMY_HIT_TINT, freshSprite, hitTint, play, rectOp, spriteOp, updateSprite, worldFrame,
 } from './seedlingEnemySkin.js';
+import { CENSUS_REMAINING } from './seedlingSkinCensus.js';
 
 export const KEYS = Object.freeze({
     stairs: 'seedling:puzzlement/stairs',
@@ -81,13 +82,14 @@ const STAIRS_PIVOT_X = 8;
 const BLOCK_COLOUR = '#6f5fd0';
 const STAIRS_COLOUR = '#7a6a3a';
 
-/** WHAT G7 DRAWS, by AS3 class; `remaining` is the census's undrawn list, the next slice's. */
+/**
+ * WHAT G7 DRAWS, by AS3 class. ⛓ G8 — `remaining` is now the census of record's
+ * (`seedlingSkinCensus.CENSUS_REMAINING`, every tag the levels place, checked by
+ * `seedlingSkinCensus.test.js`), not a hand list here.
+ */
 export const PUZZLE_COVERAGE = Object.freeze({
     drawn: Object.freeze(['Stairs', 'PushableBlock', 'PushableBlockFire', 'PushableBlockSpear', 'SandTrap']),
-    remaining: Object.freeze(['Button', 'ButtonRoom', 'BreakableRock', 'BurnableTree', 'FallRock', 'FallRockLarge', 'ArrowTrap',
-        'MagicalLock', 'WandLock', 'ShieldLock', 'GrassLock', 'Lock / BossLock / RockLock (rects)', 'Chest (rect)', 'IceTrap',
-        'DarkTrap', 'LavaTrap', 'Whirlpool', 'BossTotemPart', 'Pod', 'MoonrockPile', 'LittleStones', 'Rope',
-        'pickups (Conch, Feather, GhostSpear, DarkShield, DarkSuit)']),
+    remaining: CENSUS_REMAINING,
 });
 
 // ── the adapter ─────────────────────────────────────────────────────────

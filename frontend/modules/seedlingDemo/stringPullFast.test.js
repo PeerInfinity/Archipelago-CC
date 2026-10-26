@@ -194,8 +194,10 @@ describe('SP — committed solves: OFF and ON end to end, and every real pull au
         { what: 'L40 kill rung (the lever\'s target)', tape: 'r5-l40-part5',
             goals: [{ kind: 'collect-placement', placement: { x: 160, y: 640 } }], digest: '3addc379', minCalls: 20 },
         { what: 'L18 hammer room (residue 21)', tape: 'r9-solve-18', residue: 21,
-            // '230dc0ff' with `STRIKE_ETA_FLOOR` OFF; '441782e9' since hammer-phase SFF shipped the floor ON
-            goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], digest: '441782e9', minCalls: 1 },
+            // '230dc0ff' with `STRIKE_ETA_FLOOR` OFF; '441782e9' since hammer-phase SFF shipped the floor ON;
+            // '8ba8b8ff' since planning-13's wave-31 dashSpinnerForecast flip (the D2 cursor's extra preview; L18's
+            // answer unchanged, as solveProgress pins — bisected by env: '441782e9' with the key OFF)
+            goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], digest: '8ba8b8ff', minCalls: 1 },
         { what: 'L6 ladder climb', tape: 'r8-solve-6', goals: [{ kind: 'reach-exit', exit: { x: 224, y: 32 } }],
             minCalls: 1 },
         { what: 'L3 plain walk', tape: 'r8-solve-3', goals: [{ kind: 'reach-exit', exit: { x: 128, y: 48 } }],

@@ -1,0 +1,4 @@
+t=1..2 L0 [n:introchar,n:statue2,n:prompt] | seedling:npc/introchar#0 drawImage(seedling/NPCs/IntroCharacter, 0, 0, 148, 292) ; seedling:npc/talk#1 drawImage(seedling/NPCs/Talk, 10, 0, 203, 144)
+t=3..16 L0 [n:introchar,n:statue2,n:prompt] | seedling:npc/introchar#0 drawImage(seedling/NPCs/IntroCharacter, 0, 0, 148, 292) ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 203, 144)
+t=17..20 L0 [n:introchar,n:statue2,n:prompt] | seedling:npc/introchar#1 drawImage(seedling/NPCs/IntroCharacter, 8, 0, 148, 292) ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 203, 144)
+t=21..30 L0 [n:introchar,n:statue2,n:prompt] | seedling:npc/introchar#1 drawImage(seedling/NPCs/IntroCharacter, 8, 0, 148, 292) ; seedling:npc/talk#1 drawImage(seedling/NPCs/Talk, 10, 0, 203, 144)

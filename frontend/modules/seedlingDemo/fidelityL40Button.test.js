@@ -55,8 +55,11 @@ describe('L40BUTTON D2 — the switch and the hypothesis', () => {
     it('OFF the hypothesis at leg 378\'s arrival holds the cluster\'s wandlocks and no rock; ON it adds the three', async () => {
         const staging = await l40buttonStaging(L40BUTTON_WITNESSES[0].boot);
         const run = createRunForStaging(staging, levelSource);
-        const off = withStanceRocks(false, () => stanceHypothesisProbe(run));
-        const on = withStanceRocks(true, () => stanceHypothesisProbe(run));
+        // ⛓ control since planning-13's wave-31 flip: `weighHypothesisChain` ON lists the chained t2/t5 holders too
+        // (fidelityL40Bk2's hypothesis row); this row pins the rocks' own delta with it OFF.
+        const probe = () => withContactFidelity({ weighHypothesisChain: false }, () => stanceHypothesisProbe(run));
+        const off = withStanceRocks(false, probe);
+        const on = withStanceRocks(true, probe);
         expect(rocksIn(off)).toEqual([]);
         expect(off.map((h) => h.id)).toEqual(expect.arrayContaining(
             ['wandlock@176,80', 'wandlock@176,208', 'wandlock@208,128', 'wandlock@208,144', 'wandlock@208,160']));

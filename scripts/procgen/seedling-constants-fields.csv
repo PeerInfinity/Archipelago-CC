@@ -1079,6 +1079,8 @@ frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|20,rule,magnitude,,pit
 frontend/modules/seedlingDemo/spinner.js|SPINNER_CTOR_RNG|(module),rule,count,,RNG draws per ctor (inert but phase-relevant)
 frontend/modules/seedlingDemo/spinner.js|spinnerFriction|h6e9b004f|0|0,physics,magnitude,,velocity snapped to zero in dead band
 frontend/modules/seedlingDemo/spinner.js|spinnerFriction|hcfb3654e|0|0,physics,magnitude,,velocity snapped to zero in dead band
+frontend/modules/seedlingDemo/spinnerPoint.js|spinnerFrictionExact|h3f608299|0|0,physics,magnitude,,velocity snapped to zero in dead band (vx)
+frontend/modules/seedlingDemo/spinnerPoint.js|spinnerFrictionExact|h3f608299|0|1,physics,magnitude,,velocity snapped to zero in dead band (vy)
 frontend/modules/seedlingDemo/spinner.js|reflectAxis|h10b9a735|1|0,physics,magnitude,,1 px movement step
 frontend/modules/seedlingDemo/spinner.js|newSpinner|h8a45366c|-1|0,rule,sentinel,,persistTag -1 = none
 frontend/modules/seedlingDemo/spinner.js|newSpinner|h73ca37f1|1|0,rule,magnitude,,REVIEW: initial alpha; the fade from it gates removal

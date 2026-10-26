@@ -1,0 +1,2 @@
+t=0..22 L0 [n:introchar,n:statue2] | seedling:npc/introchar#0 drawImage(seedling/NPCs/IntroCharacter, 0, 0, 148, 292)
+t=23..36 L0 [n:introchar,n:statue2] | seedling:npc/introchar#1 drawImage(seedling/NPCs/IntroCharacter, 8, 0, 148, 292)

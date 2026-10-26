@@ -367,7 +367,10 @@ const RK_SOLVES = [
         goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], ticks: 445, shouldStop: 165,
         asks: [{ 'walk': 13, 'hammer-escape': 37 }, { 'walk': 14, 'hammer-escape': 37 },
             { 'walk': 18, 'hammer-escape': 37, 'sword-dash': 9 }],
-        v1: '84b55e41f71e00298238dbd053ba464e', kinds: { pending: 10, exhausted: 3 } },
+        // ⛓ planning-13's wave-31 dashSpinnerForecast flip (L40BK2 D2, ⛓ hammer hand-over 368; signed by hammer-2): the
+        //   D2 cursor (previewWalk advances the spinner fight forecast per previewed tick) moves the v1 bytes; the answer,
+        //   shouldStop, the asks and the kinds are unchanged. Was '84b55e41f71e00298238dbd053ba464e'.
+        v1: '485b2ac25ed8634af7606fe9bf91aaaa', kinds: { pending: 10, exhausted: 3 } },
     { what: 'L40 kill rung (the totem part at (160,640))', tape: 'r5-l40-part5', deadline: true,
         goals: [{ kind: 'collect-placement', placement: { x: 160, y: 640 } }], ticks: 679, shouldStop: 167,
         asks: [{ 'walk': 61, 'kill-chaser': 97, 'sword-dash': 9 }],
@@ -863,12 +866,15 @@ describe('hammer-phase RK2 — precondition, the error\'s name, and the residue\
  */
 describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)', () => {
     const TC2 = {
-        'r9-solve-18': { pre: '815d03a141424a831b3318151c604107', snapshots: 1593, work: [
+        // ⛓ planning-13's wave-31 dashSpinnerForecast flip (signed by hammer-2): the D2 cursor adds ONE preview to the
+        //   third pass (411 → 412 previews, 26,472 → 26,508 preview states), hence one more snapshot and new pre bytes.
+        //   Was pre '815d03a141424a831b3318151c604107', 1593 snapshots.
+        'r9-solve-18': { pre: 'e6023c2339c849aea79f683109308c32', snapshots: 1594, work: [
             { shouldStop: 50, ticks: 408, previews: 401, previewStates: 25884, searchStates: 18362, expansions: 10444,
                 waypointsPlanned: 0, replans: 0, dashesPressed: 0 },
             { shouldStop: 51, ticks: 441, previews: 401, previewStates: 25884, searchStates: 18362, expansions: 10444,
                 waypointsPlanned: 0, replans: 0, dashesPressed: 0 },
-            { shouldStop: 64, ticks: 445, previews: 411, previewStates: 26472, searchStates: 18362, expansions: 10444,
+            { shouldStop: 64, ticks: 445, previews: 412, previewStates: 26508, searchStates: 18362, expansions: 10444,
                 waypointsPlanned: 1, replans: 0, dashesPressed: 6 }] },
         'r5-l40-part5': { pre: 'ffb863ee0a956e0489b522a266fb28a7', snapshots: 372, work: [
             { shouldStop: 167, ticks: 679, previews: 33, previewStates: 15970, searchStates: 0, expansions: 0,

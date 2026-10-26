@@ -133,6 +133,14 @@ export async function l40buttonPlan(boot, name) {
  * history of why they were).
  */
 
+/**
+ * ⛓ INTERIM PIN (planning-13's wave-31 flip, 2026-10-25): `dashSpinnerForecast` (L40BK2 D2, ⛓ hammer hand-over 368)
+ * moves `l40button-l42-part0`'s solve (bisected by env: no other wave-31 key moves it), so this producer pins it OFF
+ * and the committed tapes stay the walks the game recorded at 0 px (L40REREC). Retire it with a game re-record of
+ * l42-part0 at the defaults (the user's licence; js reviews the roster change).
+ */
+const PINNED_FIDELITY = Object.freeze({ dashSpinnerForecast: false });
+
 async function main() {
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
     const { runTape } = await import(join(MODULE, 'tapeRunner.js'));
@@ -198,4 +206,7 @@ async function main() {
     console.log('all checks green');
 }
 
-if (isEntryPoint(import.meta.url)) await main();
+if (isEntryPoint(import.meta.url)) {
+    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
+    await withContactFidelity(PINNED_FIDELITY, main);
+}

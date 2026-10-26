@@ -160,6 +160,10 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // ⛓ Seedling fidelity ARROWLANE D2: the `arrow-lane` rung (`solverBot`'s ladder, behind `arrowLaneCrossing`) — an
     // ARMED lane crossed with its arrows billed (⚖ "arrows aren't supposed to be dodgeable"). (Above `pace`.)
     'arrow-lane',
+    // ⛓ Seedling fidelity L67BK4 D2 (`totem`, the L43 Totem fight) and L39SHAFT (`l39shaft`, L39's licensed special case)
+    // — listed at planning-13's wave-31 flip, when their switch-gated rows ship ON. (Above `pace`.)
+    'totem',
+    'l39shaft',
     // ⛓ Seedling fidelity MOVINGWAIT: the `pace` row (`solverBot.planPacedWait`, behind `MOVING_WAIT`) — a LATCHED
     // wait inside a lobber's reach that paces an out-and-back cycle instead of standing still.
     'pace',

@@ -1,0 +1,20 @@
+# L39SHAFT mutants — copy + edit + `npx vitest run fidelityL39Shaft.test.js` + restore (the file restored from a copy each time).
+# Predicted (before running) vs measured (the FAIL rows).
+
+m1  execL39Shaft's final press removed (`const press = null && runFire(...)`)
+    predicted: "the solver plans exactly the recorded tape" + either-state "all three already on the inner buttons"
+    measured (4): those two, AND either-state "one block home (t300)" and the CONTROL "ON without collectSpanAim"
+      — without the press neither solve reaches its row's expected end (the dwell refuses: the locks never open). Over-predicted by none, under by 2.
+
+m2  refineStrategy's L39 hook off even when ON (`if (false && ...)`)
+    predicted: plan = tape + the three either-state rows (4)
+    measured (5): those four AND the CONTROL "ON without collectSpanAim" (it expects the shaft open and the collect's
+      approach error; with the hook off it refuses at the shaft instead).
+
+m3  spinnerFrictionExact with the OLD normalize ((v/len)*t)
+    predicted: the switches row (the ON value) + D2's 0 px replay with spinnerPointExact ON
+    measured (2): exactly those.
+
+m4  collectSpanAim always null
+    predicted: plan = tape
+    measured (1): exactly that.

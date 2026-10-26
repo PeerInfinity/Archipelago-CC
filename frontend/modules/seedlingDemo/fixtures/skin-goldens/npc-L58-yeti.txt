@@ -1,0 +1,8 @@
+t=1..2 L58 [n:yeti,n:prompt,n:flip] | seedling:npc/yeti#0 drawImage(seedling/NPCs/Yeti, 0, 0, 59, 58) flipX ; seedling:npc/talk#1 drawImage(seedling/NPCs/Talk, 10, 0, 59, 42)
+t=3..16 L58 [n:yeti,n:prompt,n:flip] | seedling:npc/yeti#0 drawImage(seedling/NPCs/Yeti, 0, 0, 59, 58) flipX ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 59, 42)
+t=17..20 L58 [n:yeti,n:prompt,n:flip] | seedling:npc/yeti#1 drawImage(seedling/NPCs/Yeti, 10, 0, 59, 58) flipX ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 59, 42)
+t=21..30 L58 [n:yeti,n:prompt,n:flip] | seedling:npc/yeti#1 drawImage(seedling/NPCs/Yeti, 10, 0, 59, 58) flipX ; seedling:npc/talk#1 drawImage(seedling/NPCs/Talk, 10, 0, 59, 42)
+t=31..36 L58 [n:yeti,n:prompt,n:flip] | seedling:npc/yeti#0 drawImage(seedling/NPCs/Yeti, 0, 0, 59, 58) flipX ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 59, 42)
+t=37..41 L58 [n:yeti,n:prompt,n:flip] | seedling:npc/yeti#0 drawImage(seedling/NPCs/Yeti, 0, 0, 59, 58) flipX ; seedling:npc/talk#1 drawImage(seedling/NPCs/Talk, 10, 0, 59, 42)
+t=42..54 L58 [n:yeti,n:prompt,n:flip] | seedling:npc/yeti#1 drawImage(seedling/NPCs/Yeti, 10, 0, 59, 58) flipX ; seedling:npc/talk#1 drawImage(seedling/NPCs/Talk, 10, 0, 59, 42)
+t=55..60 L58 [n:yeti,n:prompt,n:flip] | seedling:npc/yeti#1 drawImage(seedling/NPCs/Yeti, 10, 0, 59, 58) flipX ; seedling:npc/talk#0 drawImage(seedling/NPCs/Talk, 0, 0, 59, 42)

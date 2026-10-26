@@ -558,6 +558,221 @@
       "w": 140,
       "h": 14
     },
+    "Chest": {
+      "file": "sheets/Chest.png",
+      "w": 32,
+      "h": 16
+    },
+    "BreakableRock": {
+      "file": "sheets/BreakableRock.png",
+      "w": 64,
+      "h": 16
+    },
+    "BreakableRockGhost": {
+      "file": "sheets/BreakableRockGhost.png",
+      "w": 64,
+      "h": 16
+    },
+    "BurnableTreeBurn": {
+      "file": "sheets/BurnableTreeBurn.png",
+      "w": 640,
+      "h": 32
+    },
+    "MagicalLock": {
+      "file": "sheets/MagicalLock.png",
+      "w": 220,
+      "h": 21
+    },
+    "MagicalLockFire": {
+      "file": "sheets/MagicalLockFire.png",
+      "w": 220,
+      "h": 21
+    },
+    "Lock": {
+      "file": "sheets/Lock.png",
+      "w": 96,
+      "h": 16
+    },
+    "WandLock": {
+      "file": "sheets/WandLock.png",
+      "w": 96,
+      "h": 16
+    },
+    "GrassLock": {
+      "file": "sheets/GrassLock.png",
+      "w": 80,
+      "h": 16
+    },
+    "ShieldLock": {
+      "file": "sheets/ShieldLock.png",
+      "w": 96,
+      "h": 16
+    },
+    "ShieldLockNorm": {
+      "file": "sheets/ShieldLockNorm.png",
+      "w": 96,
+      "h": 16
+    },
+    "Cover": {
+      "file": "sheets/Cover.png",
+      "w": 128,
+      "h": 16
+    },
+    "BossLock": {
+      "file": "sheets/BossLock.png",
+      "w": 112,
+      "h": 16
+    },
+    "BossLock1": {
+      "file": "sheets/BossLock1.png",
+      "w": 112,
+      "h": 16
+    },
+    "BossLock2": {
+      "file": "sheets/BossLock2.png",
+      "w": 112,
+      "h": 16
+    },
+    "BossLock3": {
+      "file": "sheets/BossLock3.png",
+      "w": 112,
+      "h": 16
+    },
+    "BossLock4": {
+      "file": "sheets/BossLock4.png",
+      "w": 112,
+      "h": 16
+    },
+    "RockLock": {
+      "file": "sheets/RockLock.png",
+      "w": 16,
+      "h": 16
+    },
+    "Button": {
+      "file": "sheets/Button.png",
+      "w": 16,
+      "h": 8
+    },
+    "ButtonRoom": {
+      "file": "sheets/ButtonRoom.png",
+      "w": 64,
+      "h": 16
+    },
+    "NPCs/IntroCharacter": {
+      "file": "sheets/NPCs/IntroCharacter.png",
+      "w": 24,
+      "h": 8
+    },
+    "NPCs/AdnanCharacter": {
+      "file": "sheets/NPCs/AdnanCharacter.png",
+      "w": 24,
+      "h": 8
+    },
+    "NPCs/ForestCharacter": {
+      "file": "sheets/NPCs/ForestCharacter.png",
+      "w": 16,
+      "h": 9
+    },
+    "NPCs/Hermit": {
+      "file": "sheets/NPCs/Hermit.png",
+      "w": 40,
+      "h": 12
+    },
+    "NPCs/Karlore": {
+      "file": "sheets/NPCs/Karlore.png",
+      "w": 40,
+      "h": 20
+    },
+    "NPCs/Rekcahdam": {
+      "file": "sheets/NPCs/Rekcahdam.png",
+      "w": 18,
+      "h": 10
+    },
+    "NPCs/Sensei": {
+      "file": "sheets/NPCs/Sensei.png",
+      "w": 24,
+      "h": 8
+    },
+    "NPCs/Witch": {
+      "file": "sheets/NPCs/Witch.png",
+      "w": 32,
+      "h": 13
+    },
+    "NPCs/Yeti": {
+      "file": "sheets/NPCs/Yeti.png",
+      "w": 20,
+      "h": 12
+    },
+    "NPCs/Oracle": {
+      "file": "sheets/NPCs/Oracle.png",
+      "w": 96,
+      "h": 24
+    },
+    "Sign": {
+      "file": "sheets/Sign.png",
+      "w": 16,
+      "h": 16
+    },
+    "Totem": {
+      "file": "sheets/Totem.png",
+      "w": 32,
+      "h": 64
+    },
+    "NPCs/Watcher": {
+      "file": "sheets/NPCs/Watcher.png",
+      "w": 120,
+      "h": 15
+    },
+    "NPCs/Talk": {
+      "file": "sheets/NPCs/Talk.png",
+      "w": 20,
+      "h": 14
+    },
+    "ArrowTrap": {
+      "file": "sheets/ArrowTrap.png",
+      "w": 32,
+      "h": 5
+    },
+    "IceTrap": {
+      "file": "sheets/IceTrap.png",
+      "w": 48,
+      "h": 16
+    },
+    "DarkTrap": {
+      "file": "sheets/DarkTrap.png",
+      "w": 168,
+      "h": 14
+    },
+    "LavaTrap": {
+      "file": "sheets/LavaTrap.png",
+      "w": 144,
+      "h": 16
+    },
+    "FallRock": {
+      "file": "sheets/FallRock.png",
+      "w": 16,
+      "h": 16
+    },
+    "FallRockLarge": {
+      "file": "sheets/FallRockLarge.png",
+      "w": 32,
+      "h": 32
+    },
+    "Torch": {
+      "file": "sheets/Torch.png",
+      "w": 12,
+      "h": 10
+    },
+    "Orb": {
+      "file": "sheets/Orb.png",
+      "w": 40,
+      "h": 8
+    },
+    "LightPole": {
+      "file": "sheets/LightPole.png",
+      "w": 16,
+      "h": 16
+    },
     "Explosion": {
       "file": "sheets/Explosion.png",
       "w": 1024,
@@ -717,11 +932,6 @@
       "file": "sheets/BossTotemParts.png",
       "w": 120,
       "h": 24
-    },
-    "Chest": {
-      "file": "sheets/Chest.png",
-      "w": 32,
-      "h": 16
     },
     "Seed": {
       "file": "sheets/Seed.png",
@@ -2826,6 +3036,722 @@
         }
       },
       "as3": "Enemies/SandTrap.as:14 Spritemap(14, 14, endAnim); :29 centerOO; :31 chomp [0,1,2,3,2,1] fps 10; :32 hit [1] (never played); :33 die [4..9] fps 10; :68-71 \"\" → frame Game.worldFrame(2)"
+    },
+    "seedling:puzzlement/chest": {
+      "sheet": "Chest",
+      "fw": 16,
+      "fh": 16,
+      "frames": 2,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Chest.as:17-18 Spritemap(16, 16); :27-28 super(_x + 8, _y + 8), centerOO; :75 frame 1 on open; :93-104 alpha = min(openTimer / 20, 1), removed at 0"
+    },
+    "seedling:puzzlement/breakablerock": {
+      "sheet": "BreakableRock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "break": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Puzzlements/BreakableRock.as:15-18 Spritemap(BreakableRock.png, 16, 16, endAnim); :37 centerOO; :38 break [0,1,2,3] fps 20 (loops; endAnim removes it)"
+    },
+    "seedling:puzzlement/breakablerockghost": {
+      "sheet": "BreakableRockGhost",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "break": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Puzzlements/BreakableRock.as:15-18 Spritemap(BreakableRockGhost.png, 16, 16, endAnim); :37 centerOO; :38 break [0,1,2,3] fps 20 (loops; endAnim removes it)"
+    },
+    "seedling:scenery/burnabletree": {
+      "sheet": "BurnableTreeBurn",
+      "fw": 32,
+      "fh": 32,
+      "frames": 20,
+      "origin": [
+        16,
+        16
+      ],
+      "anims": {
+        "burn": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Scenery/BurnableTree.as:13-14 Spritemap(BurnableTreeBurn, 32, 32, burnEnd); :23 centerOO; :24 burn [0..19] fps 15 (burnEnd removes it); Tree.as:20 super(_x + 16, _y + 16)"
+    },
+    "seedling:puzzlement/magicallock": {
+      "sheet": "MagicalLock",
+      "fw": 22,
+      "fh": 21,
+      "frames": 10,
+      "origin": [
+        11,
+        10.5
+      ],
+      "anims": {
+        "destroy": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Puzzlements/MagicalLock.as:15-18 Spritemap(MagicalLock.png, 22, 21, animEnd); :38 centerOO; :39 destroy [3..9] fps 15; :73-77 frame Game.worldFrame(3) otherwise"
+    },
+    "seedling:puzzlement/magicallockfire": {
+      "sheet": "MagicalLockFire",
+      "fw": 22,
+      "fh": 21,
+      "frames": 10,
+      "origin": [
+        11,
+        10.5
+      ],
+      "anims": {
+        "destroy": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Puzzlements/MagicalLock.as:15-18 Spritemap(MagicalLockFire.png, 22, 21, animEnd); :38 centerOO; :39 destroy [3..9] fps 15; :73-77 frame Game.worldFrame(3) otherwise"
+    },
+    "seedling:puzzlement/lock": {
+      "sheet": "Lock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 6,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/Lock.as:17-18 Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/wandlock": {
+      "sheet": "WandLock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 6,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/WandLock.as:13-14 Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/grasslock": {
+      "sheet": "GrassLock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 5,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/GrassLock.as:13-14 Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/shieldlock": {
+      "sheet": "ShieldLock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 6,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/ShieldLock.as:17-18 (type 1) Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/shieldlocknorm": {
+      "sheet": "ShieldLockNorm",
+      "fw": 16,
+      "fh": 16,
+      "frames": 6,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/ShieldLock.as:15-16 (type 0) Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/cover": {
+      "sheet": "Cover",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/Cover.as:15-16 Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/bosslock0": {
+      "sheet": "BossLock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Game.as:421-422 sprBossLock; Game.as:443 bossLocks[0] Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/bosslock1": {
+      "sheet": "BossLock1",
+      "fw": 16,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Game.as:423-424 sprBossLock1; Game.as:443 bossLocks[1] Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/bosslock2": {
+      "sheet": "BossLock2",
+      "fw": 16,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Game.as:425-426 sprBossLock2; Game.as:443 bossLocks[2] Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/bosslock3": {
+      "sheet": "BossLock3",
+      "fw": 16,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Game.as:427-428 sprBossLock3; Game.as:443 bossLocks[3] Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/bosslock4": {
+      "sheet": "BossLock4",
+      "fw": 16,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Game.as:429-430 sprBossLock4; Game.as:443 bossLocks[4] Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/rocklock": {
+      "sheet": "RockLock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/RockLock.as:16-17 Image; :24-25 super(_x + 8, _y + 8), centerOO; no layer (0)"
+    },
+    "seedling:puzzlement/button": {
+      "sheet": "Button",
+      "fw": 8,
+      "fh": 8,
+      "frames": 2,
+      "origin": [
+        4,
+        4
+      ],
+      "as3": "Puzzlements/Button.as:14-15 Spritemap(8, 8); :20 centerOO; :47 frame int(_active)"
+    },
+    "seedling:puzzlement/buttonroom": {
+      "sheet": "ButtonRoom",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/ButtonRoom.as:14-15 Spritemap(16, 16); :29 centerOO; :47-49,97 frame int(_active) + frameAdd (2 over a Wire)"
+    },
+    "seedling:npc/introchar": {
+      "sheet": "NPCs/IntroCharacter",
+      "fw": 8,
+      "fh": 8,
+      "frames": 3,
+      "origin": [
+        4,
+        4
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            0,
+            2
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/IntroCharacter.as:14-15,23 Spritemap(8, 8), talk [0,1,0,2] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/adnanchar": {
+      "sheet": "NPCs/AdnanCharacter",
+      "fw": 8,
+      "fh": 8,
+      "frames": 3,
+      "origin": [
+        4,
+        4
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            0,
+            2
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/AdnanCharacter.as:14-15,22 Spritemap(8, 8), talk [0,1,0,2] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/forestchar": {
+      "sheet": "NPCs/ForestCharacter",
+      "fw": 8,
+      "fh": 9,
+      "frames": 2,
+      "origin": [
+        4,
+        4.5
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/ForestCharacter.as:14-15,22 Spritemap(8, 9), talk [0,1] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/hermit": {
+      "sheet": "NPCs/Hermit",
+      "fw": 10,
+      "fh": 12,
+      "frames": 4,
+      "origin": [
+        5,
+        6
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2,
+            3,
+            0,
+            0
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "NPCs/Hermit.as:14-15,25 Spritemap(10, 12), talk [1,2,3,0,0] fps 15; NPC.as:57 centerOO"
+    },
+    "seedling:npc/karlore": {
+      "sheet": "NPCs/Karlore",
+      "fw": 20,
+      "fh": 20,
+      "frames": 2,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/Karlore.as:14-15,22 Spritemap(20, 20), talk [0,1] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/rekcahdam": {
+      "sheet": "NPCs/Rekcahdam",
+      "fw": 9,
+      "fh": 10,
+      "frames": 2,
+      "origin": [
+        4.5,
+        5
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            0
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/Rekcahdam.as:14-15,23 Spritemap(9, 10), talk [0,1,0] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/sensei": {
+      "sheet": "NPCs/Sensei",
+      "fw": 8,
+      "fh": 8,
+      "frames": 3,
+      "origin": [
+        4,
+        4
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2,
+            1,
+            0,
+            0
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "NPCs/Sensei.as:14-15,25 Spritemap(8, 8), talk [1,2,1,0,0] fps 15; NPC.as:57 centerOO"
+    },
+    "seedling:npc/witch": {
+      "sheet": "NPCs/Witch",
+      "fw": 16,
+      "fh": 13,
+      "frames": 2,
+      "origin": [
+        8,
+        6.5
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/Witch.as:14-15,28 Spritemap(16, 13), talk [0,1] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/yeti": {
+      "sheet": "NPCs/Yeti",
+      "fw": 10,
+      "fh": 12,
+      "frames": 2,
+      "origin": [
+        5,
+        6
+      ],
+      "anims": {
+        "talk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "NPCs/Yeti.as:14-15,25 Spritemap(10, 12), talk [0,1] fps 5; NPC.as:57 centerOO"
+    },
+    "seedling:npc/oracle": {
+      "sheet": "NPCs/Oracle",
+      "fw": 16,
+      "fh": 24,
+      "frames": 6,
+      "origin": [
+        8,
+        16
+      ],
+      "as3": "NPCs/Oracle.as:13-14 Spritemap(16, 24, animEnd); :37-38 y = -16, originY = 16 (after centerOO: x = -8); :42-46 its anims (NPC_ANIMS.oracle)"
+    },
+    "seedling:npc/sign": {
+      "sheet": "Sign",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "NPCs/Sign.as:13-14 Spritemap(16, 16), frame 0; NPC.as:57 centerOO"
+    },
+    "seedling:npc/totem": {
+      "sheet": "Totem",
+      "fw": 32,
+      "fh": 64,
+      "frames": 1,
+      "origin": [
+        16,
+        48
+      ],
+      "as3": "NPCs/Totem.as:13-14 Spritemap(32, 64), frame 0; :21-24 originX 16, x = -16, originY 48, y = -48"
+    },
+    "seedling:npc/watcher": {
+      "sheet": "NPCs/Watcher",
+      "fw": 12,
+      "fh": 15,
+      "frames": 10,
+      "origin": [
+        6,
+        7.5
+      ],
+      "as3": "NPCs/Watcher.as:13-14 Spritemap(12, 15); NPC.as:57 centerOO; :58-95 its frame (direction, seed 6, die [7,8,9])"
+    },
+    "seedling:npc/talk": {
+      "sheet": "NPCs/Talk",
+      "fw": 10,
+      "fh": 14,
+      "frames": 2,
+      "origin": [
+        5,
+        14
+      ],
+      "as3": "NPCs/NPC.as:17-18 Spritemap(10, 14); :59-61 centerOO, then y = -height; :174-181 frame Game.worldFrame(2, 1/1.25) at (x, y - originY - charToTalkMargin)"
+    },
+    "seedling:puzzlement/arrowtrap": {
+      "sheet": "ArrowTrap",
+      "fw": 16,
+      "fh": 5,
+      "frames": 2,
+      "origin": [
+        8,
+        2.5
+      ],
+      "as3": "Puzzlements/ArrowTrap.as:13-14 Spritemap(16, 5); :21-22 super(_x + 8, _y + 2.5), centerOO; :40-43 frame Game.worldFrame(frameCount)"
+    },
+    "seedling:enemy/icetrap": {
+      "sheet": "IceTrap",
+      "fw": 16,
+      "fh": 16,
+      "frames": 3,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "chomp": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/IceTrap.as:13-14 Spritemap(16, 16, endAnim); :22-24 centerOO, chomp [0,1,2,1] fps 10, hit [1]; :39-42 \"\" → Game.worldFrame(2)"
+    },
+    "seedling:enemy/darktrap": {
+      "sheet": "DarkTrap",
+      "fw": 14,
+      "fh": 14,
+      "frames": 12,
+      "origin": [
+        7,
+        7
+      ],
+      "anims": {
+        "chomp": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            2,
+            1
+          ],
+          "fps": 10
+        },
+        "die1": {
+          "clock": "fps",
+          "frames": [
+            4,
+            0,
+            1,
+            0,
+            4,
+            5,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/DarkTrap.as:15-16 Spritemap(14, 14, endAnim); SandTrap.as:29-33 its ctor adds chomp [0,1,2,3,2,1] fps 10 to this sheet; :22 die1 [4,0,1,0,4,5,4,5,6..11] fps 10"
+    },
+    "seedling:enemy/lavatrap": {
+      "sheet": "LavaTrap",
+      "fw": 16,
+      "fh": 16,
+      "frames": 9,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "die": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/LavaTrap.as:17-18 Spritemap(16, 16, endAnim); :34-37 centerOO, chomp [2], die [3..8] fps 10, play(\"\")"
+    },
+    "seedling:scenery/fallrock": {
+      "sheet": "FallRock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Scenery/FallRock.as:16-17 Image; :32-34 super(_x + 8, _y + 8), centerOO; :37 parked at y = -16"
+    },
+    "seedling:scenery/fallrocklarge": {
+      "sheet": "FallRockLarge",
+      "fw": 32,
+      "fh": 32,
+      "frames": 1,
+      "origin": [
+        16,
+        16
+      ],
+      "as3": "Scenery/FallRockLarge.as:16-17 Image; :34-36 super(_x + 16, _y + 16), centerOO; :41 parked at y = -32"
+    },
+    "seedling:scenery/torch": {
+      "sheet": "Torch",
+      "fw": 4,
+      "fh": 10,
+      "frames": 3,
+      "origin": [
+        2,
+        5
+      ],
+      "as3": "Scenery/Torch.as:13-14 Spritemap(4, 10); :19-20 super(_x + 8, _y + 8), centerOO; :27-30 frame Game.worldFrame(frameCount)"
+    },
+    "seedling:scenery/orb": {
+      "sheet": "Orb",
+      "fw": 8,
+      "fh": 8,
+      "frames": 5,
+      "origin": [
+        4,
+        4
+      ],
+      "as3": "Scenery/Orb.as:13-14 Spritemap(8, 8); :36-37 centerOO, color = _c; :49-58 the float; :61-64 frame Game.worldFrame(frameCount, 4)"
+    },
+    "seedling:scenery/lightpole": {
+      "sheet": "LightPole",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Scenery/LightPole.as:15-16 Image; :33-35 super(_x + 8, _y + 8), centerOO; :59-75 the bob, and onto nightBmp while activate"
     },
     "seedling:fx/explosion": {
       "sheet": "Explosion",

@@ -22,7 +22,9 @@
  *      over a RECORDING Proxy of the shadow: every `advance` the solver makes
  *      is a row of the EXPECTED trajectory, every `equipNow` an equip at
  *      that row. (The solver searches no run futures — `solverBot.js` header,
- *      "NO SEARCH OVER RUN FUTURES" — so the advances ARE the solution.)
+ *      "NO SEARCH OVER RUN FUTURES" — so the advances ARE the solution;
+ *      ⛓ FF-HARNESS: the advances of the run the segment ENDED on — a
+ *      rewound segment's is a recorded fork, `solveFromTape`.)
  *   4. PLAY one key set per page tick (the page's clock stays the only clock;
  *      `jsRuntimeCore` passes `autoAdvanceText: false` while the solver
  *      drives — the solver already pressed every ceremony X), each equip on
@@ -766,9 +768,59 @@ export function replayShadow(session, levelSource, {
 }
 
 /**
+ * ⛓⛓ FF-HARNESS — the RECORDER `solveFromTape` reads its plan's rows off: `run` wrapped so every `advance` pushes the
+ * row it ended on (`expected`) and every `equipNow` records the slot and the inventory at the row it was made on
+ * (`equipsAt`, `equipItems`). The first `skip` advances (a fork's replay of the caller's prefix, from boot) are not
+ * rows: a row's index is the count of advances PAST the prefix, so a fork's rows and the shadow's are on one index.
+ * One function for the shadow and every fork, so the two recordings cannot differ.
+ */
+function recordingRun(run, { skip = 0, expected = [] } = {}) {
+    const rec = { expected, equipsAt: new Map(), equipItems: new Map() };
+    let advanced = 0;
+    const recording = new Proxy(run, {
+        get(target, prop) {
+            const v = Reflect.get(target, prop);
+            if (prop === 'advance') {
+                return (...args) => {
+                    const out = v.apply(target, args);
+                    advanced += 1;
+                    if (advanced > skip) rec.expected.push(rowOf(target));
+                    return out;
+                };
+            }
+            if (prop === 'equipNow') {
+                return (slot) => {
+                    const out = v.call(target, slot);
+                    if (advanced >= skip) {
+                        rec.equipsAt.set(advanced - skip, slot);
+                        rec.equipItems.set(advanced - skip, { ...target.inventory });
+                    }
+                    return out;
+                };
+            }
+            return typeof v === 'function' ? v.bind(target) : v;
+        },
+    });
+    return { run: recording, rec };
+}
+
+/**
  * ⛓ S2 — steps 2–3 from a TAPE (staging + the session's keys + the live
  * digest), the form a worker receives: nothing in it is the live run. The
  * plan it returns is structured-cloneable (Sets, a Map, plain rows).
+ *
+ * ⛓⛓ FF-HARNESS (⛓ FF: `CC/docs/cloud-reports/seedling-hammer-fight-fallback-shadow.md`, class (c)) — THE PLAN'S
+ * ROWS ARE READ OFF THE RUN THE SEGMENT ENDED ON. `HAMMER_FIGHT_FALLBACK`'s rewind (`solveSegment`'s `rewind.to`, B3)
+ * moves the segment onto a FRESH fork, and a segment that ends there says so: B3's contract is that a rewound
+ * result carries `liveRun` (not enumerable), the run it ended on, and a caller that reads the run after the solve
+ * takes it (`watchSolve.solveForPage` does). This recorder honours the same contract: every fork is recorded as
+ * the shadow is (`recordingRun`), and with `liveRun` set, `expected` / `equipsAt` / `equipItems` (and the
+ * trailing equip's idle tick) are that fork's. Before it, the shadow's recording stopped at the refused kill's
+ * last tick, and "the solve returned N key set(s) but the shadow advanced M" read M = the rewind's `refusedAt`
+ * (371's 5251 / 5264 / 5265 / 5266) — a plan that replays, thrown away as a page bug. Every `rewind.to` is covered
+ * by the same lookup, the admission arms' (`resolveKillStrategy`, the kill rung: a failed fight-on kill is rewound
+ * and NOT undone) included: whichever fork the segment ends on, its recording is the one read. No `liveRun` (every
+ * solve with the switch OFF) = the shadow's recording, exactly as before.
  */
 export function solveFromTape({ staging, perTick, live, levelSource, solverGoal, name = 'js-runtime-solve',
     scratchPersistence = false, equips = null, clock = () => Date.now(), dashMode = DEFAULT_DASH_MODE, adds = null,
@@ -780,46 +832,41 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     const available = adds ? PASS_STRATEGIES[adds] : null;
     const unusable = !adds ? null : available ? available(shadow) : `no strategy is named ${adds}`;
     if (unusable) throw new PassSkipped(`${adds} is not available here: ${unusable}`);
-    const expected = [rowOf(shadow)];
-    const equipsAt = new Map();
-    // ⛓ WASM EQUIPS — the model's inventory at each equip: a host that ships the equip checks the GAME's slot at
-    // that index holds the same item (`wasmDelivery.equipSlotRefusal`; the game appends a late slot).
-    const equipItems = new Map();
-    const run = new Proxy(shadow, {
-        get(target, prop) {
-            const v = Reflect.get(target, prop);
-            if (prop === 'advance') {
-                return (...args) => {
-                    const out = v.apply(target, args);
-                    expected.push(rowOf(target));
-                    return out;
-                };
-            }
-            if (prop === 'equipNow') {
-                return (slot) => {
-                    const out = v.call(target, slot);
-                    equipsAt.set(expected.length - 1, slot);
-                    equipItems.set(expected.length - 1, { ...target.inventory });
-                    return out;
-                };
-            }
-            return typeof v === 'function' ? v.bind(target) : v;
-        },
-    });
+    // ⛓ WASM EQUIPS — `equipItems`: the model's inventory at each equip: a host that ships the equip checks the GAME's
+    // slot at that index holds the same item (`wasmDelivery.equipSlotRefusal`; the game appends a late slot).
+    const { run, rec: shadowRec } = recordingRun(shadow, { expected: [rowOf(shadow)] });
+    // ⛓⛓ FF-HARNESS — every fork records too (its own rows, past the prefix it replays from boot), so the run a
+    // rewound segment ends on (`out.liveRun`) has its recording to hand.
+    const forkRecs = new WeakMap();
+    const forkOf = forkRunFor({ staging, levelSource, scratchPersistence, equips, prefixLength: perTick.length, holds });
+    const forkRun = () => {
+        const { run: fork, rec } = recordingRun(forkOf(), { skip: perTick.length });
+        forkRecs.set(fork, rec);
+        return fork;
+    };
     const t1 = clock();
     // ⛓ SHOULD-STOP — the pass's deadline (`passShouldStop`; null = today's search exactly).
     // ⛓ RECALIBRATE — and whether it also asks the fine sites (`time`, `walk`, the via-set `detour`; only with a hook).
     // ⛓⛓ CRUSHER — and a fork of the run (`forkRunFor`): `bait` tries a choreography there before committing it.
     const out = solveSegment({ run, goals: solverGoalsOf(solverGoal), name, boot: staging.boot, prefix: perTick, dashMode, shouldStop,
-        forkRun: forkRunFor({ staging, levelSource, scratchPersistence, equips, prefixLength: perTick.length, holds }),
-        ...(shouldStop ? { fineCheckpoints: fineCheckpoints === true } : {}) });
+        forkRun, ...(shouldStop ? { fineCheckpoints: fineCheckpoints === true } : {}) });
     const solveMs = clock() - t1;
-    const solution = out.perTick.slice(perTick.length).map((h) => new Set(h));
-    if (solution.length !== expected.length - 1) {
-        // The recording and the tape disagree — the plan cannot be checked tick by tick.
-        throw new ShadowDivergence(`the solve returned ${solution.length} key set(s) but the shadow advanced `
-            + `${expected.length - 1} time(s) — the expected trajectory cannot be checked`);
+    // ⛓⛓ FF-HARNESS — the run the segment ENDED on: the shadow, or the fork a rewind adopted (`liveRun`, B3).
+    const liveRec = out.liveRun === undefined ? shadowRec : forkRecs.get(out.liveRun);
+    if (liveRec === undefined) {
+        throw new ShadowDivergence('the solve ended on a run this tape\'s harness did not build (`liveRun` is none of '
+            + 'its forks) — the expected trajectory cannot be checked');
     }
+    const ended = out.liveRun ?? run;
+    const advanced = () => liveRec.expected.length - (liveRec === shadowRec ? 1 : 0);
+    const solution = out.perTick.slice(perTick.length).map((h) => new Set(h));
+    if (solution.length !== advanced()) {
+        // The recording and the tape disagree — the plan cannot be checked tick by tick.
+        throw new ShadowDivergence(`the solve returned ${solution.length} key set(s) but the `
+            + `${liveRec === shadowRec ? 'shadow' : 'rewound run'} advanced ${advanced()} time(s) — the expected `
+            + 'trajectory cannot be checked');
+    }
+    const { equipsAt, equipItems } = liveRec;
     // ⛓ TRAILING EQUIP — a selection AFTER the last tick (BURN's sword re-select when the burn is the whole goal:
     // L24:0's clear-tag, equips [60,1],[114,0] over 114 ticks) is made on an observation no tick follows, so a
     // tape never fires it and the game would end on the wrong slot. The PLAN gets one idle tick the model plays
@@ -827,9 +874,11 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     // planned slot. `trailingEquip` names the tick for the JS walker, which settles a done goal before asking.
     const trailingEquip = equipsAt.has(solution.length);
     if (trailingEquip) {
-        run.advance(new Set());
+        ended.advance(new Set());
         solution.push(new Set());
     }
+    // ⛓⛓ FF-HARNESS — a fork's rows start past the prefix; its first row is the shadow's (both are the handed-over state)
+    const expected = liveRec === shadowRec ? shadowRec.expected : [shadowRec.expected[0], ...liveRec.expected];
     const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
     return { solution, expected, equipsAt, equipItems, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
         ...(trailingEquip ? { trailingEquip } : {}),

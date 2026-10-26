@@ -4,7 +4,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { compareSurveys, mergeShards, partitionSteps, stepCosts, stepIdentity } from './surveyShards.js';
+import { bootCheckFailures, compareSurveys, mergeShards, partitionSteps, stepCosts, stepIdentity } from './surveyShards.js';
 
 const step = (n, level = n) => ({ step: n, level, arrival: { x: 16 * n, y: 32 }, goals: [{ kind: 'reach-exit', exit: { x: n, y: 0 } }] });
 const route = (n = 6, mode = 'route-only', through = '3.1') => ({
@@ -131,5 +131,27 @@ describe('compareSurveys — verdict and family, ms reported not compared', () =
         expect(c.disagreements).toBe(2);
         expect(c.rows.map((x) => x.agree)).toEqual([true, false, false]);
         expect(compareSurveys(a, { ...b, route: route(3, 'full') }).refusals[0]).toMatch(/^FOREIGN-ROUTE/);
+    });
+});
+
+describe('bootCheckFailures — the merge READS every row\'s boot check (RULES survey-cleanup)', () => {
+    const row = (step, check) => ({ step, level: step, boot: { kind: 'staged', ...(check ? { check } : {}) } });
+
+    it('counts only rows that carry a check; all ok → no failures', () => {
+        expect(bootCheckFailures([row(1, { what: 'a', ok: true }), row(2, null), row(3, { what: 'b', ok: true })]))
+            .toEqual({ checked: 2, failures: [] });
+    });
+
+    it('names a false check by step, level, claim and the fields that differ', () => {
+        expect(bootCheckFailures([row(27, { what: "the staged construction equals r8-solve-18's committed boot",
+            ok: false, differs: ['save'] }), row(4, { what: 'c', ok: false })]))
+            .toEqual({ checked: 2, failures: [
+                "step 27 L27: the staged construction equals r8-solve-18's committed boot (differs: save)",
+                'step 4 L4: c',
+            ] });
+    });
+
+    it('a check with no `ok` is a failure, not a pass', () => {
+        expect(bootCheckFailures([row(5, { what: 'd' })]).failures).toEqual(['step 5 L5: d']);
     });
 });

@@ -306,6 +306,12 @@ export const NIGHT_COPIES = Object.freeze({
     'seedling:puzzlement/crusher': { alpha: 'same' },
     // ⛓ G7 — `PushableBlockFire.as:163-171`: the same picture again onto nightBmp (`PushableBlockSpear` inherits it).
     'seedling:puzzlement/pushableblockfire': { alpha: 'same' },
+    // ⛓ G8 — `BossLock.as:106-112`: the Dungeon 6 lock (`keyType == 4`) again onto nightBmp at alpha · 0.2.
+    'seedling:puzzlement/bosslock4': { alpha: (op) => (op.alpha ?? 1) * 0.2 },
+    // ⛓ G8 — `LightPole.as:59-75`: while `activate` and its hit timer is out, the pole again onto nightBmp (`seedlingLampSkin`).
+    'seedling:scenery/lightpole': { alpha: 'same', when: (op) => op.nightCopy === true },
+    // ⛓ G8 — `DarkTrap.as:61-69`: while "die1" plays, the same picture again onto nightBmp (`seedlingTrapSkin` marks it).
+    'seedling:enemy/darktrap': { alpha: 'same', when: (op) => op.dying === true },
     // `LavaChain.as:63-73`: only while its anim is "hit".
     'seedling:puzzlement/lavachain': { alpha: 'same', when: (op, ctx) => ctx.hitChains.has(`${opCentre(op).x},${opCentre(op).y}`) },
 });
@@ -403,7 +409,18 @@ export function nightMainOps(view, { cam }) {
 }
 
 /** `LightPole.render()` (`:61`): the bob `2 · sin(2π · (time % 45) / 45)` about the pole's centre minus its 8 px origin. */
-function poleAt(p, time) {
+/**
+ * `Orb.update()` (:49-58): the float about its start, phased by `randVal` (cosmetic: `cosmeticRand`). ONE spelling,
+ * shared with the orb's body (G8, `seedlingLampSkin`), so the light and the picture cannot part.
+ */
+export function orbFloat(o, time, level) {
+    const rv = cosmeticRand(level, o.sx, o.sy, 7);
+    const f = worldFrame(time, 100, 4) / 99 + rv;
+    return { x: o.sx + 5 * Math.sin(f * 4 * Math.PI), y: o.sy + 5 * Math.sin(f * 2 * Math.PI) };
+}
+
+/** `LightPole.render()`'s bob (`:47`): exported for the pole's body (G8, `seedlingLampSkin`). */
+export function poleAt(p, time) {
     return { ...p, y: p.startY - 8 + 2 * Math.sin((2 * Math.PI * ((((time ?? 0) % 45) + 45) % 45)) / 45) };
 }
 
@@ -502,12 +519,7 @@ export function nightOps(view, art, { skin = null, ops = [], hazard = null, whit
         const k = R.plantAlpha(d, p.distance);
         if (k > 0) night.push(...R.lightCircles({ ...p, alpha: k }, time, L));
     }
-    for (const o of view.sources.orbs) {
-        // `Orb.update()` (:49-58): the float about its start, phased by `randVal` (cosmetic: `cosmeticRand`)
-        const rv = cosmeticRand(level, o.sx, o.sy, 7);
-        const f = worldFrame(time, 100, 4) / 99 + rv;
-        night.push(...R.lightCircles({ ...o, x: o.sx + 5 * Math.sin(f * 4 * Math.PI), y: o.sy + 5 * Math.sin(f * 2 * Math.PI) }, time, L));
-    }
+    for (const o of view.sources.orbs) night.push(...R.lightCircles({ ...o, ...orbFloat(o, time, level) }, time, L));
     if (view.poles) {
         for (const p of view.sources.poles) if (view.poles.get(p.id)) night.push(...R.lightCircles(poleAt(p, time), time, L));
     }

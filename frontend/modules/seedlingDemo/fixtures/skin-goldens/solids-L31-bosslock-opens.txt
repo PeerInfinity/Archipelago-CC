@@ -1,0 +1,5 @@
+t=0..179 L29 [bt:button] | seedling:puzzlement/button#0 drawImage(seedling/Button, 0, 0, 116, 132)
+t=180..610 L31 [a:bosslock] | seedling:puzzlement/bosslock1#0 drawImage(seedling/BossLock1, 0, 0, 192, 432)
+t=611..712 L31 [a:bosslock,a:open] |
+t=713..1013 L30 [r:whole,a:bosslock] | seedling:puzzlement/breakablerock#0 drawImage(seedling/BreakableRock, 0, 0, 48, 224) ; seedling:puzzlement/bosslock1#0 drawImage(seedling/BossLock1, 0, 0, 64, 32) ; seedling:puzzlement/bosslock1#0 drawImage(seedling/BossLock1, 0, 0, 224, 208)
+t=1014..1070 L30 [r:whole,a:bosslock,a:open] | seedling:puzzlement/breakablerock#0 drawImage(seedling/BreakableRock, 0, 0, 48, 224) ; seedling:puzzlement/bosslock1#0 drawImage(seedling/BossLock1, 0, 0, 64, 32)

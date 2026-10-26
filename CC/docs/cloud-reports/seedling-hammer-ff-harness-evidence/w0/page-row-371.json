@@ -1,0 +1,7 @@
+{
+ "id": 371,
+ "key": "level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144",
+ "seamTime": 5264,
+ "end": "failed",
+ "failed": "the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: every key set \u2014 the plan's own and 5 alternative(s) \u2014 lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (246.39,154.67) in level 40. There is no step out."
+}

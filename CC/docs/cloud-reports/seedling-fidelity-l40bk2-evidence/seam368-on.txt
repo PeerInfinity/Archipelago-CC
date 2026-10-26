@@ -1,0 +1,17 @@
+SEAM 5276 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (22040 ms)
+SEAM 5278 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (19903 ms)
+SEAM 5280 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (19594 ms)
+SEAM 5282 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (20206 ms)
+SEAM 5284 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (19193 ms)
+SEAM 5286 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (19276 ms)
+SEAM 5288 REFUSED 32c7b7f741a3 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.31999915943214,135.13770516537005), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,134) 56 
+SEAM 5289 REFUSED 32c7b7f741a3 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.31999915943214,135.13770516537005), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,134) 56 
+SEAM 5290 REFUSED 32c7b7f741a3 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.31999915943214,135.13770516537005), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,134) 56 
+SEAM 5291 REFUSED 32c7b7f741a3 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.31999915943214,135.13770516537005), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,134) 56 
+SEAM 5292 REFUSED 32c7b7f741a3 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.31999915943214,135.13770516537005), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,134) 56 
+SEAM 5293 REFUSED 32c7b7f741a3 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.31999915943214,135.13770516537005), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,134) 56 
+SEAM 5295 REFUSED 32c7b7f741a3 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.31999915943214,135.13770516537005), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,134) 56 
+SEAM 5298 REFUSED 1ce1955d012a solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (168.57638423928648,136.39409024522368), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (169,135) 40 
+SEAM 5300 REFUSED 1ce1955d012a solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (168.57638423928648,136.39409024522368), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (169,135) 40 
+SEAM 5305 SOLVED 1583 t plan d24f1e7a1150 model hits 0 [] (17626 ms)
+SEAM 5310 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (18679 ms)
