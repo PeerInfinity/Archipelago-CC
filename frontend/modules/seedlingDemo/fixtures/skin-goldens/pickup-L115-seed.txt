@@ -1,0 +1,2 @@
+t=0..129 L115 [seed] | seedling:pickup/seed#0 drawImage(seedling/Seed, 0, 0, 75.5, 73.5)
+t=130..220 L115 [seed:held] | seedling:pickup/seed#0 drawImage(seedling/Seed, 0, 0, 76.95, 68.425)

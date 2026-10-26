@@ -2051,6 +2051,18 @@
             "_comment": "GRAPHICS G8. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 1 beside the Oracle: it wakes (frame 3) and the talk prompt is drawn, both from the seedling pack; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-pickups",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G9a. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 10: the Sword drawn from the seedling pack as its class (seedlingPickupSkin), not the stand-in; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-machines",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G9b/G9c. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 38 onto the pulser's ButtonRoom: its wires light, the pulser ring is drawn (levelRun.machinesNow reaching the page), a cover is drawn mid-fade; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-game-speed",
             "enabled": true,
             "category": "Seedling JS runtime",

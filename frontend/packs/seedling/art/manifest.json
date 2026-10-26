@@ -773,6 +773,61 @@
       "w": 16,
       "h": 16
     },
+    "BeamTower": {
+      "file": "sheets/BeamTower.png",
+      "w": 144,
+      "h": 40
+    },
+    "Pulser": {
+      "file": "sheets/Pulser.png",
+      "w": 80,
+      "h": 16
+    },
+    "Wire": {
+      "file": "sheets/Wire.png",
+      "w": 256,
+      "h": 16
+    },
+    "WhirlPool": {
+      "file": "sheets/WhirlPool.png",
+      "w": 96,
+      "h": 32
+    },
+    "LittleStones": {
+      "file": "sheets/LittleStones.png",
+      "w": 16,
+      "h": 16
+    },
+    "Grass": {
+      "file": "sheets/Grass.png",
+      "w": 15,
+      "h": 4
+    },
+    "Moonrock": {
+      "file": "sheets/Moonrock.png",
+      "w": 364,
+      "h": 52
+    },
+    "MoonrockPile": {
+      "file": "sheets/MoonrockPile.png",
+      "w": 32,
+      "h": 16
+    },
+    "Pod": {
+      "file": "sheets/Pod.png",
+      "w": 168,
+      "h": 24
+    },
+    "PodBody": {
+      "file": "sheets/PodBody.png",
+      "w": 24,
+      "h": 24
+    },
+    "FinalDoor": {
+      "file": "sheets/FinalDoor.png",
+      "w": 832,
+      "h": 32
+    },
     "Explosion": {
       "file": "sheets/Explosion.png",
       "w": 1024,
@@ -3752,6 +3807,111 @@
         8
       ],
       "as3": "Scenery/LightPole.as:15-16 Image; :33-35 super(_x + 8, _y + 8), centerOO; :59-75 the bob, and onto nightBmp while activate"
+    },
+    "seedling:machine/beamtower": {
+      "sheet": "BeamTower",
+      "fw": 16,
+      "fh": 40,
+      "frames": 9,
+      "origin": [
+        8,
+        32
+      ],
+      "as3": "Puzzlements/BeamTower.as:20-21 Spritemap(16, 40); :28-32 super(_x + 8, _y + 16), origin (8, 32), x/y = -origin; :34-38 right/up/left/down/sit"
+    },
+    "seedling:machine/pulser": {
+      "sheet": "Pulser",
+      "fw": 16,
+      "fh": 16,
+      "frames": 5,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/Pulser.as:21-22 Spritemap(16, 16); :42-45 super(_x + 8, _y + 8), centerOO; \"pulse\" [0..4] fps 20, \"\" [0]"
+    },
+    "seedling:machine/wire": {
+      "sheet": "Wire",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:368-369 sprWire Spritemap(16, 16); Scenery/Wire.as render: frame = img (its 4-neighbour mask), at (x, y)"
+    },
+    "seedling:machine/whirlpool": {
+      "sheet": "WhirlPool",
+      "fw": 32,
+      "fh": 32,
+      "frames": 3,
+      "origin": [
+        16,
+        16
+      ],
+      "as3": "Puzzlements/Whirlpool.as:15-16 Spritemap(32, 32); :31-35 super(_x + 16, _y + 16), centerOO, angle Rng.cos()·360, alpha 0.5"
+    },
+    "seedling:scenery/littlestones": {
+      "sheet": "LittleStones",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Scenery/LittleStones.as:14-15 Image; :19-21 super(_x, _y), layer = -y"
+    },
+    "seedling:scenery/grass": {
+      "sheet": "Grass",
+      "fw": 3,
+      "fh": 4,
+      "frames": 5,
+      "as3": "Game.as:216-217 sprGrass Spritemap(3, 4); Scenery/Grass.as render: frame startIndex + worldFrame(2) (0 once cut)"
+    },
+    "seedling:scenery/moonrock": {
+      "sheet": "Moonrock",
+      "fw": 52,
+      "fh": 52,
+      "frames": 7,
+      "origin": [
+        2,
+        2
+      ],
+      "as3": "Scenery/Moonrock.as:15-16 Spritemap(52, 52); :37-38 x = y = -2, origin 2; render frame worldFrame(7), and onto nightBmp"
+    },
+    "seedling:scenery/moonrockpile": {
+      "sheet": "MoonrockPile",
+      "fw": 32,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Scenery/MoonrockPile.as:14-15 Image; super(_x, _y); layer = -(y - originY + height·4/5)"
+    },
+    "seedling:scenery/pod": {
+      "sheet": "Pod",
+      "fw": 24,
+      "fh": 24,
+      "frames": 7,
+      "origin": [
+        12,
+        12
+      ],
+      "as3": "Scenery/Pod.as:18-19 Spritemap(24, 24); super(_x + 8, _y + 8), centerOO, alpha 0.5; open/opened/close/closed fps 10"
+    },
+    "seedling:scenery/podbody": {
+      "sheet": "PodBody",
+      "fw": 24,
+      "fh": 24,
+      "frames": 1,
+      "origin": [
+        12,
+        12
+      ],
+      "as3": "Scenery/Pod.as:16-17 Image, centerOO; addGraphic(sprPodBody, -(y - Tile.h·3), x, y)"
+    },
+    "seedling:scenery/finaldoor": {
+      "sheet": "FinalDoor",
+      "fw": 32,
+      "fh": 32,
+      "frames": 26,
+      "origin": [
+        16,
+        16
+      ],
+      "as3": "Scenery/FinalDoor.as:17-18 Spritemap(32, 32); super(_x + 16, _y + 16), centerOO; \"open\" [1,1,1,1,2..25] fps 15; and onto nightBmp"
     },
     "seedling:fx/explosion": {
       "sheet": "Explosion",
