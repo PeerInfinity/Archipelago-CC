@@ -3933,3 +3933,49 @@ for (const [id, name, fn] of [
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+/**
+ * ⛓ GRAPHICS G10 — the bosses in a real browser (the user's sighting: L19's ShieldBoss, beside the red key): the standalone
+ * page driven to `Game(19, 104, 96)` — inside the ShieldBoss's stand-under band, so after 120 updates it moves its shield
+ * and stabs. The boss is drawn from the seedling pack as its class (`seedlingBossSkin`), sitting and then stabbing, and its
+ * build-time rectangle is gone. No panel, preset or AP state is touched; the iframe is removed however the row ends.
+ */
+export async function seedlingJsRuntimeGraphicsBosses(tc) {
+    const frame = document.createElement('iframe');
+    const errors = [];
+    try {
+        const win = await bootGraphicsPage(tc, frame, errors, [19, 104, 96]);
+        if (!win) return tc.getOverallResult();
+        const g = win.__seedlingJsGraphics;
+        const rt = win.__seedlingJsRuntime;
+        const frames = new Set();
+        const stabbed = await tc.pollForValue(() => {
+            for (const o of g.bosses?.ops ?? []) if (o.key === 'seedling:boss/shieldboss') frames.add(o.frame);
+            return rt.run?.level === 19 && [3, 4, 5, 6, 7, 8].some((f) => frames.has(f)) ? g.bosses : null;
+        }, 'level 19: the ShieldBoss drawn sitting, then stabbing', 20000, 50);
+        tc.log(`bosses: ${JSON.stringify(stabbed)} frames seen ${JSON.stringify([...frames].sort((a, b) => a - b))}`);
+        tc.assertEqual('one ShieldBoss in the room', 1, stabbed?.shieldBosses ?? 0);
+        tc.assertEqual('drawn sitting (frame 0) before the stab', true, frames.has(0));
+        tc.assertEqual('drawn stabbing (a frame of [3..8])', true, [3, 4, 5, 6, 7, 8].some((f) => frames.has(f)));
+        tc.assertEqual('from the seedling pack', 'seedling', [...new Set((stabbed?.ops ?? []).map((o) => o.pack))].join(','));
+        tc.assertEqual('its build-time rectangle is no longer painted', 0, stabbed?.standIns ?? -1);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 19 and did not halt', '19/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-bosses',
+    name: 'Seedling JS runtime: the ShieldBoss drawn as its class, sitting then stabbing (G10)',
+    description: 'Mounts jsRuntime.html?graphics=seedling standalone in its own iframe, drives it to level 19 inside the '
+        + 'ShieldBoss\'s stand-under band through its own __swfBridge, and asserts the boss is drawn from the seedling pack '
+        + 'sitting and then stabbing, its build-time rectangle is gone, every sheet decodes, and no console error. Touches no '
+        + 'panel, preset or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsBosses,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

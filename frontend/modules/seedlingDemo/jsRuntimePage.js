@@ -705,6 +705,11 @@ export function mountJsRuntimePage(win = window) {
                 || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag),
                 drawnTeleporters: (tp) => tp.isStairs === true, drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
         });
+        // ⛓ G10 — the boss bodies' build-time rectangles still painted (0 once the skin draws them)
+        if (graphics.bosses) {
+            const bossRects = [...world.objectSolids, ...world.pixelmasks].filter((o) => BOSS_OBJECT_TAGS.has(o.tag)).map((o) => o.rect);
+            graphics.bosses.standIns = ops.filter((o) => o?.rect && !o.key && bossRects.some((r) => r.x === o.rect.x && r.y === o.rect.y)).length;
+        }
         // ⚖ follow mode jiggles inside a shake band on the renderer's own draw; the band's edges are the model's
         const view = cameraView(graphics.camera, world, state, runtime.run,
             { jiggle: (now) => jiggleCam(now, level, runtime.ticks) });
