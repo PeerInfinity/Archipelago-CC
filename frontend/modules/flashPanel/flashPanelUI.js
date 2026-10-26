@@ -118,6 +118,8 @@ const SETTING_KEY_PREFIX = 'moduleSettings.flashPanel.';
 const CONTROL_CSS = 'background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;max-width:100%;';
 /** ⛓ TOUCH CONTROLS — the side room (px) each of the d-pad and the buttons needs to sit BESIDE the game, not under it. */
 const TOUCH_BESIDE_MIN_PX = 150;
+/** ⛓ TOUCH CONTROLS — the strip's height under the game before it is first laid out (the d-pad + its padding). */
+const TOUCH_STRIP_PX = 150;
 const BUTTON_CSS = 'background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;';
 
 let instanceCounter = 0;
@@ -938,6 +940,8 @@ export class FlashPanelUI {
     if (typeof ResizeObserver === 'function') {
       this._stageObserver = new ResizeObserver(() => this._fitStage());
       this._stageObserver.observe(this.stageElement);
+      // ⛓ TOUCH CONTROLS — the height fit follows the panel's height too (a phone turned on its side)
+      this._stageObserver.observe(this.rootElement);
     }
 
     this.container.element.appendChild(this.rootElement);
@@ -964,22 +968,45 @@ export class FlashPanelUI {
     const [w, h] = size;
     const avail = stage.clientWidth;
     if (!(avail > 0)) return; // a hidden tab: keep the last fit until it is shown
-    const k = Math.min(1, avail / w);
+    let k = Math.min(1, avail / w);
+    const touch = this._touchFit(avail, w, h, k);
+    if (touch) k = touch.k;
     Object.assign(box.style, { width: `${w}px`, height: `${h}px`, transform: k < 1 ? `scale(${k})` : '' });
     stage.style.height = `${Math.round(h * k * 100) / 100}px`;
     stage.dataset.scale = String(Math.round(k * 1000) / 1000);
-    this._placeTouchControls(avail, w, h, k);
+    this._placeTouchControls(avail, w * k, h * k, touch?.beside ?? false);
   }
 
   /**
-   * ⛓ TOUCH CONTROLS — where the controls sit: BESIDE the game (the d-pad left of it, the buttons right, the game
-   * centred) when it is at full size with `TOUCH_BESIDE_MIN_PX` to spare on each side — a landscape phone, a wide
-   * panel; otherwise UNDER it, in the flow, so they never cover the play area (a portrait phone).
+   * ⛓ TOUCH CONTROLS — while they are shown the game also fits the panel's VISIBLE height (a landscape phone is
+   * 390 px tall: at full size the game and the controls ran off the screen, measured): BESIDE the game when, fitted to
+   * that height, it leaves `TOUCH_BESIDE_MIN_PX` on each side; else UNDER it, fitted to the height left above the
+   * strip. Never scaled up, and never below the width fit's half (a panel squeezed flat keeps a playable game and
+   * scrolls). Null when no controls are shown — the width fit alone, unchanged.
    */
-  _placeTouchControls(avail, w, h, k) {
+  _touchFit(avail, w, h, kWidth) {
+    if (!this._touch) return null;
+    const root = this.rootElement;
+    const top = this.stageElement.getBoundingClientRect().top - root.getBoundingClientRect().top + root.scrollTop;
+    const visible = root.clientHeight - top - 8;
+    if (!(visible > 0)) return { k: kWidth, beside: kWidth >= 1 && avail - w >= 2 * TOUCH_BESIDE_MIN_PX };
+    const floor = kWidth / 2;
+    const kBeside = Math.max(floor, Math.min(kWidth, visible / h));
+    if (avail - w * kBeside >= 2 * TOUCH_BESIDE_MIN_PX) return { k: kBeside, beside: true };
+    const strip = this._touch.element.offsetHeight > 0 && this._touch.element.dataset.placement !== 'beside'
+      ? this._touch.element.offsetHeight : TOUCH_STRIP_PX;
+    return { k: Math.max(floor, Math.min(kWidth, (visible - strip) / h)), beside: false };
+  }
+
+  /**
+   * ⛓ TOUCH CONTROLS — where the controls sit (`_touchFit` decides): BESIDE the game (the d-pad left of it, the
+   * buttons right, the game centred) — a landscape phone, a wide panel; otherwise UNDER it, in the flow, so they never
+   * cover the play area (a portrait phone). `w`/`h` are the game's drawn (scaled) size.
+   */
+  _placeTouchControls(avail, w, h, beside) {
     const box = this.swfContainer;
     const touch = this._touch;
-    const beside = !!touch && k >= 1 && avail - w >= 2 * TOUCH_BESIDE_MIN_PX;
+    beside = !!touch && beside;
     box.style.marginLeft = beside ? `${Math.floor((avail - w) / 2)}px` : '';
     this.stageElement.style.position = beside ? 'relative' : '';
     if (!touch) return;
