@@ -25862,3 +25862,51 @@ both: *"the solve returned 381 key set(s) but the shadow advanced 266 time(s)"*.
 **Trap candidate.** Every wrapper between a result's producer and its reader is part of a non-enumerable field's
 contract. A wrapper that spreads only when something rare happened (here, a tripped deadline) hides the loss until the
 rare thing and the field meet on one pass.
+### Seedling hammer-phase PKC — the press kill prices the chasers beside its walks
+
+⚖ User, 2026-10-26: queued (*"Yes please"*), answering fidelity L40BK2's hand-over D3. Switch
+`pressKillCost.PRESS_KILL_CHASERS`, **OFF** (`SEEDLING_PRESS_KILL_CHASERS=1`, `withPressKillChasers`).
+
+- **Where the chaser went unpriced** (measured from `fixtures/l40bk2-witness/step67-boot.json`): the press kill's
+  per-tick step, `safeStep` → `landsClearOfHammers`, asks only the spinners' rects and hammers. At t604 `deriveStrike`
+  picks the strike (744,776) +733; its walk preview prices the chasers (`dangerDuringTransit` over the samples' own
+  forecast bodies) and passes `bob@736,752` 2.9 px clear at +54. The executor's walk (`stepToward`'s spinner dodge, then
+  `safeStep`) runs 1.4 px ahead of the preview, and the bob's contact lands at t660. The strike's dwell beside the same
+  bob (priced against hammers only) then takes t749 and t780 → death → `PRESS_KILL_REBOOT_GUARD`.
+- **The change** (`solverBot.safeStep`, `landsClearOfChasers`): ON, among the key sets OFF accepts, in OFF's order, the
+  first whose next step also lands clear of every chaser (the run's chaser forecast stepped twice, as `previewWalk`
+  pairs it, then `chaserDanger`'s per-tick arm). None clear ⇒ OFF's choice (`unavoidable`); a press is never swapped; a
+  shake-band forecast is left to OFF (`banded`). OFF builds no forecast and reads nothing new.
+- **Measured not shipped:** pricing the strike's STAND against the chasers (refused 20,940 of 20,947 candidates at step
+  67, 237 s vs 49 s); pricing the refuge's walk and wait (alone it moved nothing at step 67: 0 refuges refused, the death at t780 stands).
+- **Effect ON:** step 67 (node and the survey's child): death t780 → the chain's next link, the chest stance under
+  `bobsoldier@880,832`'s sword. Leg 860 over one hammer period (45 seams, its captured request replayed): 29 press-kill
+  deaths to `bob@736,752` OFF → 0 ON; every phase then refuses on the burn stance's walk (or, 8 vs 7, `safeStep`'s
+  existing "every key set lands" spinner refusal). Leg 859: 0 deaths both ways (it refuses on the burn stance's
+  chasers at every seam). L40's 60 captured requests: 59 identical, the mover 860/1 (death → burn-stance refusal).
+  L18's 45 residues: identical. Bounded set ON: 8 rows move, every one an L40 row pinning the chest press kill's death.
+- **Gate** `hammerPressKillChasers.test.js` (step 67's boot, the chest goal, capped at t800): OFF the death with its
+  three hits; ON no hit, keys equal to OFF's through t657; "ships OFF". Mutants (no treatment / always clear / one
+  forecast step) all red. The report is `CC/docs/cloud-reports/seedling-hammer-press-kill-chasers.md`.
+
+### Seedling fidelity L42REREC — `l40button-l42-part0` re-recorded on the game at the defaults; the `dashSpinnerForecast` INTERIM pin retired (no switch)
+
+Planner `seedling-fidelity-planning-14`, wave 32. ⚖ The user (2026-10-26): *"Yes, re-record"*. The report is
+`CC/docs/cloud-reports/seedling-fidelity-l42rerec.md`. No solver or model code moved: the diff is the producer, one tape
+and its oracle stream, the tape index, and two `r8Acceptance.js` row texts.
+
+**D1.** `plan-seedling-l40button-witness.mjs` pinned `dashSpinnerForecast` OFF from the wave-31 flip, because that key
+alone moved l42's solve. The pin is gone and the producer solves at the base's defaults (85 ON). l41-part0 stays
+byte-identical. l42-part0 goes from 1,663 t to 1,665 t:
+- The verbs are the same (`brave, hold, kill spinner@192,128, break, hold, collect`), the kill is the same (t1112–1268),
+  and so is the break press (t1337).
+- The held inputs part at t1310, on the approach to the break.
+
+On p4g (headless, damage on), the game recorded the new walk with 0 hits and `hasTotemPart` [true,…]. The model
+reproduces it at 0 px over 1,666 observations.
+
+**Trap candidate.** The identity block's six producer `--check`s are not all green at a clean base: at 1e17f44738,
+`solve-seedling-r8-battery`, `-r8-d2-chain`, `-r8-l18` and `-r9-campaign` exit 1. `ci-producer-checks.mjs` does not run
+those four. Compare their md5 before and after rather than reading "exit 1" as your own red.
+
+---

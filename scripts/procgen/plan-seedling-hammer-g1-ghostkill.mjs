@@ -25,6 +25,10 @@
  * played, and this script's solves run with both guards OFF (`withPressKillShakeGuard(false, …)`,
  * `withPressKillRebootGuard(false, …)`). The ON answer is pinned in `hammerGhostKillRung.test.js` beside the witness row.
  *
+ * ⚖ AND `PRESS_KILL_CHASERS` IS PINNED OFF HERE (hammer-phase PKC, 2026-10-26; the switch ships OFF). ON, the press
+ * kill's step keeps clear of `bob@736,752`, so the death this witness's kill crosses never happens and the solve leaves
+ * the witness (1289 ticks, refused later on the bob). The witness stays the kill across the death.
+ *
  * Run (the solve takes 2–3 minutes):
  *   node scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs            # write the tape
  *   node scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs --check    # exit 1 on drift
@@ -71,7 +75,8 @@ export async function ghostKillSolve(staging, enabled) {
     const { withGhostKillRung } = await import(join(MODULE, 'ghostSpinnerPress.js'));
     const { withPressKillRebootGuard, withPressKillShakeGuard } = await import(join(MODULE, 'pressKillGuards.js'));
     const run = createRunForStaging(staging, atlasLevelSource());
-    const guardsOff = (fn) => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, fn));
+    const { withPressKillChasers } = await import(join(MODULE, 'pressKillCost.js'));
+    const guardsOff = (fn) => withPressKillChasers(false, () => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, fn)));
     return withStrikeEtaFloor(false, () => guardsOff(() => withGhostKillRung(enabled, () => {
         try {
             const out = solveSegment({ run, goals: [JSON.parse(JSON.stringify(GOAL))], name: NAME, boot: staging.boot,

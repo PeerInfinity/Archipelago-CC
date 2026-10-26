@@ -6,6 +6,25 @@
   "ap_id_offset": 20000000,
   "reset_on_connect": true,
 
+  "$comment_touch_controls": "⛓ TOUCH CONTROLS (slice seedling-js-touch-controls) — the on-screen controls `flashPanel/touchControls.js` draws on a touch device; each sends the key the keyboard sends. The set is the AS3's: `Player.as:59` keys = [RIGHT, UP, LEFT, DOWN, X (primary), C (secondary), X (talk), V (inventory), I (inventory, the same)]; the four arrows are read independently (`Player.as:1528-1555` — Input.check per arrow), so a diagonal is two held arrows. Escape opens the pause menu (`Game.as menuAndRestart`); the JS runtime page has no menu (watchManual KEYBOARD_BINDINGS), so it is limited to wasm. ⛔ Not R / Y (restart + confirm: clears the save), M (mute) or W (opens a URL). Inert to the bridge: configure sends only classes / state_properties / path_reads.",
+  "touch_controls": {
+    "dpad": {
+      "diagonals": true,
+      "keys": {
+        "up":    { "key": "ArrowUp",    "code": "ArrowUp",    "keyCode": 38 },
+        "down":  { "key": "ArrowDown",  "code": "ArrowDown",  "keyCode": 40 },
+        "left":  { "key": "ArrowLeft",  "code": "ArrowLeft",  "keyCode": 37 },
+        "right": { "key": "ArrowRight", "code": "ArrowRight", "keyCode": 39 }
+      }
+    },
+    "buttons": [
+      { "id": "primary",   "label": "X",    "title": "Primary item (X) — also talks", "key": "x", "code": "KeyX", "keyCode": 88 },
+      { "id": "secondary", "label": "C",    "title": "Secondary item (C)",            "key": "c", "code": "KeyC", "keyCode": 67 },
+      { "id": "inventory", "label": "V",    "title": "Inventory (V)",                 "key": "v", "code": "KeyV", "keyCode": 86 },
+      { "id": "menu",      "label": "Esc",  "title": "Pause menu (Escape)",           "key": "Escape", "code": "Escape", "keyCode": 27, "transports": ["wasm"] }
+    ]
+  },
+
   "classes": {
     "main": {
       "name": "Main",

@@ -60,6 +60,19 @@ export function focusGameCanvas(frameEl) {
 }
 
 /**
+ * Dispatch one key event on the game's canvas, spelled as the keyboard spells it (`key`, `code`, `keyCode`/`which`):
+ * the wasm runtime hears the canvas, the JS page the frame's document it bubbles to. Used by the F3 release and by
+ * the on-screen touch controls (`touchControls.js`). @returns {boolean} whether a canvas took it
+ */
+export function dispatchGameKey(frameEl, type, { key, code, keyCode = 0 } = {}) {
+    const canvas = gameCanvasOf(frameEl);
+    const Ctor = canvas?.ownerDocument?.defaultView?.KeyboardEvent;
+    if (!canvas || typeof Ctor !== 'function') return false;
+    canvas.dispatchEvent(new Ctor(type, { key, code, keyCode, which: keyCode, bubbles: true, cancelable: true }));
+    return true;
+}
+
+/**
  * Track the keys the game is holding and release them into it on demand.
  * `getFrame()` is read on every use, so a remounted iframe is followed.
  */
@@ -74,15 +87,10 @@ export function createHeldKeyRelease({ getFrame, onRelease } = {}) {
         if (released.length === 0) return [];
         const frame = getFrame?.();
         const canvas = gameCanvasOf(frame);
-        const win = canvas?.ownerDocument?.defaultView ?? null;
-        const Ctor = win?.KeyboardEvent;
+        const Ctor = canvas?.ownerDocument?.defaultView?.KeyboardEvent;
         for (const k of released) held.delete(k.code);
         if (!canvas || typeof Ctor !== 'function') return [];
-        for (const k of released) {
-            canvas.dispatchEvent(new Ctor('keyup', {
-                key: k.key, code: k.code, keyCode: k.keyCode, which: k.keyCode, bubbles: true, cancelable: true,
-            }));
-        }
+        for (const k of released) dispatchGameKey(frame, 'keyup', k);
         onRelease?.(released.map((k) => k.code), reason);
         return released.map((k) => k.code);
     }

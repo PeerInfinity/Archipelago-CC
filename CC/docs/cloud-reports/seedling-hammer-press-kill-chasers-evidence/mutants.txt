@@ -1,0 +1,3 @@
+M1 no treatment (ON block removed) | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯ | ['AssertionError: expected undefined to be true // Object.is equality']
+M2 landing test always clear | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯ | ['AssertionError: expected undefined to be true // Object.is equality']
+M3 one forecast step (the wrong pairing) | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯ | ['AssertionError: expected undefined to be true // Object.is equality']
