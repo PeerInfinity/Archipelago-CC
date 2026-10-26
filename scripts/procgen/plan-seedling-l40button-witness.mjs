@@ -131,15 +131,13 @@ export async function l40buttonPlan(boot, name) {
  * wave-28 flip) and `bombBlastBody` is ON (the lapse's condition). The re-record solves at the shipped defaults and the
  * game (p4g, headless, DAMAGE ON) witnesses it at 0 px; the tapes are no longer `noDamage` (`BOMB_REFUTED` is the
  * history of why they were).
+ *
+ * ⛓ The `dashSpinnerForecast` INTERIM pin is retired too (L42REREC, wave 32, ⚖ user 2026-10-26 "Yes, re-record"). From the
+ * wave-31 flip (2026-10-25) this producer pinned that key OFF, because it ALONE moves `l40button-l42-part0`'s solve.
+ * Measured at 1e17f44738: l42 goes from 1,663 t to 1,665 t. The walk parts at t1310, on the approach to the rock
+ * break, after the `spinner@192,128` kill (t1112–1268). `l40button-l41-part0` stays byte-identical. The l42 tape
+ * was re-recorded on the game (p4g, headless, damage on): 0 hits and 0 px over 1,666 observations.
  */
-
-/**
- * ⛓ INTERIM PIN (planning-13's wave-31 flip, 2026-10-25): `dashSpinnerForecast` (L40BK2 D2, ⛓ hammer hand-over 368)
- * moves `l40button-l42-part0`'s solve (bisected by env: no other wave-31 key moves it), so this producer pins it OFF
- * and the committed tapes stay the walks the game recorded at 0 px (L40REREC). Retire it with a game re-record of
- * l42-part0 at the defaults (the user's licence; js reviews the roster change).
- */
-const PINNED_FIDELITY = Object.freeze({ dashSpinnerForecast: false });
 
 async function main() {
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
@@ -207,6 +205,5 @@ async function main() {
 }
 
 if (isEntryPoint(import.meta.url)) {
-    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
-    await withContactFidelity(PINNED_FIDELITY, main);
+    await main();
 }

@@ -1,0 +1,14 @@
+defaults: 1665 t
+  brave iceturret@472,400 {"ticks":0}
+  hold  {"ticks":131,"stoppedOn":"every shut responder in group t=0 [wandlock@208,128, wandlock@208,144, wandlock@208,160] is open — and the group is LATCHED by `localPublish`, so the fade completes whoever is standing where","at":{"x":280.68648150
+  kill spinner@192,128 {"from":1112,"ticks":156}
+  break breakablerock@176,128 {"from":1337,"ticks":20,"pressedAt":1337}
+  hold  {"ticks":131,"stoppedOn":"every shut responder in group t=1 [wandlock@176,80, wandlock@176,208] is open — and the group is LATCHED by `localPublish`, so the fade completes whoever is standing where","at":{"x":167.968078256317,"y":136.367912
+  collect  {"from":1659}
+dashSpinnerForecast OFF: 1663 t
+  brave iceturret@472,400 {"ticks":0}
+  hold  {"ticks":131,"stoppedOn":"every shut responder in group t=0 [wandlock@208,128, wandlock@208,144, wandlock@208,160] is open — and the group is LATCHED by `localPublish`, so the fade completes whoever is standing where","at":{"x":280.68648150
+  kill spinner@192,128 {"from":1112,"ticks":156}
+  break breakablerock@176,128 {"from":1336,"ticks":21,"pressedAt":1337}
+  hold  {"ticks":131,"stoppedOn":"every shut responder in group t=1 [wandlock@176,80, wandlock@176,208] is open — and the group is LATCHED by `localPublish`, so the fade completes whoever is standing where","at":{"x":168.64349714717795,"y":135.1123
+  collect  {"from":1656}
