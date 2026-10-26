@@ -1,0 +1,3 @@
+t=0..15 L79 [darksuit] | seedling:pickup/darksuit#0 drawImage(seedling/DarkSuit, 0, 0, 43, 155)
+t=16..44 L79 [darksuit:held] | seedling:pickup/darksuit#0 drawImage(seedling/DarkSuit, 0, 0, 43, 149.25)
+t=45..53 L79 [taken] |

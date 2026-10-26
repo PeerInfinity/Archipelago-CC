@@ -319,6 +319,10 @@ describe('4. one mutant per family turns a golden red', () => {
         ['Lock family (Cover) — worldFrame: frame 0 always', 'L38-chest-covers', { rules: { worldFrame: () => 0 } }],
         ['Button — buttonFrame: no one-update lag', 'L71-lock-opens', { rules: { buttonFrame: (before, b) => b.down } }],
         ['ButtonRoom — buttonFrame: never down', 'L20-buttonroom-boots-down', { rules: { buttonFrame: () => false } }],
+        // ⛓ G9c — the responders' fade (`stepResponder`): opaque until the run opens it (G8's default state) turns each red
+        ...[['Lock', 'L71-lock-opens'], ['Cover', 'L38-chest-covers'], ['BossLock', 'L31-bosslock-opens']].map(([cls, tape]) => [
+            `${cls} — stepResponder: no fade (G8's open/shut)`, tape,
+            { rules: { stepResponder: (prev, a) => ({ state: { alpha: a.open ? 0 : 1, solid: !a.open, active: false, keyTimer: 60, scale: 1 }, drift: false }) } }]),
     ];
     for (const [name, tape, opts] of MUTANTS) it(name, () => expect(differs(T[tape], opts)).toBeGreaterThan(0), 240_000);
 });
