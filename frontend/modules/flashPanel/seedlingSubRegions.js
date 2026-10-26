@@ -3,7 +3,7 @@
  * user, 2026-10-03: the controller and the region binding learn a region move INSIDE a level — this amends
  * the level-granular binding, ruling 1 of 2026-07-27, for logical links).
  *
- * A region with a subgraph compiles to one AP region per sub-region (`level_0__r8c0`), all in ONE level,
+ * A region with a subgraph compiles to one AP region per sub-region (`level_0__r7c6`), all in ONE level,
  * and the rules join them with exits that carry a rule and no door: LOGICAL links. Nothing in the game
  * reports crossing one (no teleporter, no level change), so the binding needs two facts the sidecars do
  * not carry:

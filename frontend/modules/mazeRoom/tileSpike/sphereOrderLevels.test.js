@@ -7,6 +7,9 @@
  *   - L8: L8 → L9 needed Swim — the lane block is shoved into the water, where the game's block SINKS — ⚖ "Sink from grid
  *     terrain";
  *   - L94: r3c4's two cells are joined by a CLIFFSIDE the per-sub-region world walled — ⚖ "Entry gates in every world".
+ * ⛓ PIXELMASK FOOTPRINTS (session tile-primitives-pixelmask-l86, ⚖ "Pixelmask fix, then L86") — L86, the last sphere-0 level:
+ *   - L86: the game lands its return on L0 (10,18), under building1's SPRITE but outside its 48x32 Pixelmask; the grid boxed
+ *     the sprite, so the maze world walled the landing. The playthrough grid now takes a building's footprint from its mask.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -61,5 +64,21 @@ describe('L94 — a per-sub-region world floors its cliffside', () => {
         for (const [name, sc] of Object.entries(rules.preset_sidecars['1'])) {
             expect(sc.playable_payload.entry_gates, name).toBeUndefined();
         }
+    });
+});
+
+describe('L86 — its landing under L0\'s building is floor', () => {
+    it('L0 + L86 certify clean; L86 -> L0 is free and its Chest is reached empty-handed', () => {
+        const out = certify(['level_0', 'level_86']);
+        expect(out.problems).toEqual([]);
+        expect(out.accepted).toEqual([]);
+        expect(line(out, 'level_86->level_0__r7c6=')).toBe(FREE);
+        expect(line(out, 'level_86@Level 086 - Chest=')).toBe(FREE);
+    });
+
+    it('L0\'s world floors building1\'s door (10,17) and the landing (10,18); the mask row above stays wall', () => {
+        const p = Object.values(compile(['level_0', 'level_86']).preset_sidecars['1'])
+            .find((s) => s.playable_payload?.atlas_region === 'level_0').playable_payload;
+        expect([18, 17, 16].map((y) => p.tiles[y * p.width + 10])).toEqual([0, 0, 1]);
     });
 });

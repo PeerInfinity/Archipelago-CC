@@ -99,13 +99,14 @@ describe('L0: the islands are one world', () => {
         const out = certify(['level_0']);
         expect(out.problems).toEqual([]);
         // the arrival IS r11c19's exit to L12; a strike there is not a walk onto it
-        expect(JSON.parse(line(out, 'level_0__r11c19>level_0__r8c0='))).toContainEqual(['Ghost Spear']);
+        expect(JSON.parse(line(out, 'level_0__r11c19>level_0__r7c6='))).toContainEqual(['Ghost Spear']);
     });
 
-    it('its door to L86, inside an untranscribed building, is carved to and priced', () => {
+    // ⛓ tile-primitives-pixelmask-l86: building1's Pixelmask leaves its doorway clear, so the door is floor — nothing is carved.
+    it('its door to L86, in building1\'s doorway, is reached and priced', () => {
         const out = certify(['level_0', 'level_86']);
         expect(out.problems.filter((q) => q.startsWith('level_0'))).toEqual([]);
-        expect(line(out, 'level_0__r8c0->level_86=')).toBe('[[]]');
+        expect(line(out, 'level_0__r7c6->level_86=')).toBe('[[]]');
     });
 });
 

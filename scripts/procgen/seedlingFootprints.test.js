@@ -15,9 +15,12 @@ import { describe, it, expect } from 'vitest';
 import { modelColliders, renderColliders, COLLIDERS_MODULE } from './make-seedling-entity-colliders.mjs';
 import {
     ENTITY_SEMANTICS, entityPixelRect, entitySealedTiles, entitySemantics, isLevelPropertyTag,
+    buildSeedlingRegionGrid, entityMaskTiles,
 } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
+import { ENTITY_COLLIDERS } from '../../frontend/modules/flashPanel/seedlingEntityColliders.js';
+import { SEEDLING_PIXEL_MASKS } from '../../frontend/modules/seedlingDemo/seedlingPixelMasks.js';
 import { overlayEntitySemantics } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
-import { ENTITY_CLASSES, entityRect, TILE_SIZE } from '../../frontend/modules/seedlingDemo/levelWorld.js';
+import { ENTITY_CLASSES, entityRect, TILE_SIZE, buildLevelWorld, ROLES } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 
 const REPO = join(import.meta.dirname ?? new URL('.', import.meta.url).pathname, '..', '..');
 const MAP = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
@@ -112,5 +115,116 @@ describe('the derived footprints, where they move the rules', () => {
         expect(subOf(l43, 'out_teleporter_144_64')).not.toBe(south);
         const way = l43.subgraph.internal_exits.find((e) => e.from === south || e.to === south);
         expect(JSON.stringify(way.access_rule)).toContain('"Totem Shard"');
+    });
+});
+
+/**
+ * ⛓ PIXELMASK FOOTPRINTS (session tile-primitives-pixelmask-l86, ⚖ 2026-10-25 "3-way by coverage", "Playthrough only").
+ * A Building collides through its Pixelmask, and the grid used to claim its whole SPRITE rect as `manual`: L0's
+ * building1 is a 48x40 sprite over a 48x32 mask, so the free tile (10,18) under it — where the game lands the player
+ * back from L86 — was material. With `pixelMaskFootprints` each tile takes the mask's coverage: every pixel opaque
+ * -> wall, none -> no claim, partly -> `manual` (the physics model decides), the `entitySealedTiles` rounding.
+ */
+describe('a Building\'s footprint is its Pixelmask, tile by tile', () => {
+    const levelOf = (n) => MAP.levels.find((l) => l.level === n);
+    const BUILDINGS = Object.entries(ENTITY_SEMANTICS).filter(([, row]) => row.pixelMask).map(([tag]) => tag);
+    const gridOf = (n, options) => {
+        const level = levelOf(n);
+        return buildSeedlingRegionGrid({ x: 0, y: 0, w: level.width, h: level.height }, level, options);
+    };
+    const kindAt = (grid, x, y) => grid.cells[y * grid.width + x].kind;
+
+    it('every Building the model places names its bitmap in the collider table', () => {
+        const modelled = BUILDINGS.filter((tag) => ENTITY_CLASSES[tag]?.collider === 'pixelmask');
+        expect(modelled.length).toBeGreaterThan(5);
+        for (const tag of modelled) {
+            expect(ENTITY_COLLIDERS[tag].mask, tag).toBe(ENTITY_CLASSES[tag].mask);
+            expect(SEEDLING_PIXEL_MASKS[ENTITY_COLLIDERS[tag].mask], tag).toBeTruthy();
+        }
+    });
+
+    it('the coverage of every placed Building\'s tiles equals the physics model\'s bitmap where the model places it', () => {
+        let tiles = 0;
+        const wrong = [];
+        for (const level of MAP.levels) {
+            if (!(level.entities ?? []).some((e) => BUILDINGS.includes(e.type))) continue;
+            for (const p of buildLevelWorld(level, { roles: ROLES }).pixelmasks.filter((q) => BUILDINGS.includes(q.tag))) {
+                for (const { tile: [tx, ty], cover } of entityMaskTiles({ type: p.tag, x: p.x, y: p.y })) {
+                    let n = 0;
+                    for (let py = ty * TILE_SIZE; py < (ty + 1) * TILE_SIZE; py += 1) {
+                        for (let px = tx * TILE_SIZE; px < (tx + 1) * TILE_SIZE; px += 1) {
+                            if (p.mask.rows[py - p.maskY]?.[px - p.maskX] === '#') n += 1;
+                        }
+                    }
+                    const model = n === TILE_SIZE * TILE_SIZE ? 'full' : (n === 0 ? 'none' : 'partial');
+                    tiles += 1;
+                    if (model !== cover) wrong.push(`L${level.level} ${p.tag} (${tx},${ty}): ${cover} vs the model's ${model}`);
+                }
+            }
+        }
+        expect(tiles).toBeGreaterThan(150);
+        expect(wrong).toEqual([]);
+    });
+
+    it('L0 building1: rows 16-17 are wall, its door (10,17) and the landing (10,18) are not claimed', () => {
+        const grid = gridOf(0, { pixelMaskFootprints: true });
+        for (const [x, y] of [[9, 16], [10, 16], [11, 16], [9, 17], [11, 17]]) expect(kindAt(grid, x, y), `(${x},${y})`).toBe('wall');
+        for (const x of [9, 10, 11]) expect(kindAt(grid, x, 18), `(${x},18)`).toBe('open');
+        expect(grid.cells[17 * grid.width + 10].manual).toEqual([]);
+    });
+
+    it('without the option the grid is unchanged: the sprite rect is manual, (10,18) included', () => {
+        const grid = gridOf(0);
+        for (const [x, y] of [[10, 16], [10, 17], [10, 18]]) expect(kindAt(grid, x, y), `(${x},${y})`).toBe('manual');
+    });
+
+    it('L66 building8: the half-covered door notch stays manual, so the Yellow-Key lock still stamps it', () => {
+        const grid = gridOf(66, { pixelMaskFootprints: true });
+        for (const [x, y] of [[4, 4], [5, 4]]) expect(kindAt(grid, x, y), `(${x},${y})`).toBe('manual');
+        expect(kindAt(grid, 4, 1)).toBe('wall');
+        expect(grid.cells[1 * grid.width + 3].manual).toEqual([]); // 0 mask px: the building claims nothing (the tile is water)
+    });
+
+    it('the playthrough generator runs with it: L0 (10,18) is open in its grid', async () => {
+        const { playthroughGridFor, PLAYTHROUGH_MAP } = await import('./make-seedling-playthrough-rules.mjs');
+        const grid = playthroughGridFor(PLAYTHROUGH_MAP.levels.find((l) => l.level === 0));
+        expect(kindAt(grid, 10, 18)).toBe('open');
+        expect(kindAt(grid, 10, 16)).toBe('wall');
+    });
+});
+
+/**
+ * ⛓ PIXELMASK FOOTPRINTS — the one rule the footprint TIGHTENS: L93's door into L98 (`out_teleporter_112_80`, [7,5])
+ * stands atop a waterfall pool, so from r10c7 it costs the Feather. Witnessed on the game by
+ * `probe-seedling-l93-door.mjs` (Conch only stalls on the fall; Conch + Feather reaches L98; the landing swims down).
+ */
+describe('L93: building7\'s door is its own sub-region, up the waterfall', () => {
+    const RULES = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
+    const exitRule = (from, to) => RULES.regions['1'][from].exits.find((e) => e.connected_region === to)?.access_rule;
+    const l93 = ATLAS.regions.find((r) => r.region_id === 'level_93');
+    const exitOf = (id) => l93.exits.find((e) => e.exit_id === id);
+
+    it('the door and the L98 landing stand in r5c7; r10c7 reaches it with Swim x2, and back with Swim', () => {
+        expect(exitOf('out_teleporter_112_80').sub_region).toBe('r5c7');
+        expect(exitOf('in_L98_112_192').sub_region).toBe('r5c7');
+        expect(exitRule('level_93__r10c7', 'level_93__r5c7')).toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim', count: 2 } });
+        expect(exitRule('level_93__r5c7', 'level_93__r10c7')).toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim' } });
+        expect(exitRule('level_93__r5c7', 'level_98')).toEqual({ rule: 'True_' });
+        expect(exitRule('level_93__r10c7', 'level_98')).toBeUndefined();
+    });
+
+    it('the probe boots on the cells the atlas names: r10c7 for the pool, the L98 landing for the reverse', async () => {
+        const { l93Tapes, expectL93, R10_Y } = await import('./probe-seedling-l93-door.mjs');
+        const tapes = l93Tapes();
+        const tileOf = (b) => [b.x / TILE_SIZE, b.y / TILE_SIZE];
+        expect(tileOf(tapes['pool-swim'].boot)).toEqual([7, 10]);
+        expect(tileOf(tapes['landing-swim'].boot)).toEqual(exitOf('in_L98_112_192').entrance_tile);
+        expect(tapes['pool-swim'].grants[0].items).toEqual(['conch']);
+        expect(tapes['pool-feather'].grants[0].items).toEqual(['conch', 'feather']);
+        expect(R10_Y).toEqual([160, 176]);
+        expect(expectL93('pool-swim', { reachedDoor: false })).toBe(true);
+        expect(expectL93('pool-feather', { reachedDoor: false })).toBe(false);
+        expect(expectL93('landing-swim', { reachedDoor: false, levels: [93], final: { y: 181 } })).toBe(false);
+        expect(expectL93('landing-swim', { reachedDoor: false, levels: [93], final: { y: 170 } })).toBe(true);
     });
 });

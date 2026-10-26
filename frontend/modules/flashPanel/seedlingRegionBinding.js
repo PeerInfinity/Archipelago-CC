@@ -175,7 +175,7 @@ export function resolveArrivalSpawn(world, arrivedFrom, returnSpawns = null) {
 /**
  * ⛓⛓ **WHERE A NEW GAME STARTS — THE ONE ANSWER** (the Menu panel's Restart,
  * 2026-10-05). `world` is the START region's payload (the region the declared
- * start's hop enters: `level_0__r8c0`, `overworld_start__r8c0`, …); `set` is
+ * start's hop enters: `level_0__r7c6`, `overworld_start__r8c0`, …); `set` is
  * the level set a randomized load DELIVERED, or null.
  *
  * Every caller that puts a player at the start asks this, so they cannot drift:

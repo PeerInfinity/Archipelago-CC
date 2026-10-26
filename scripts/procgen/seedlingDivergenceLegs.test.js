@@ -189,8 +189,8 @@ describe('the committed playthrough\'s leg list', () => {
         expect([l.arrive.x, l.arrive.y, l.targetRegion]).toEqual([288, 176, 'level_12__r0c19']);
     });
 
-    it('rank 6 (`level_12__r42c29 -> level_83`, 12): L83 → L12\'s arrival stages BOTH its flags (the magical lock and the boss lock)', () => {
-        const l = legs.find((x) => x.key === 'level_12__r42c29 <- in_L83_32_64 -> exit:out_teleporter_32_848');
+    it('rank 6 (`level_12__r42c28 -> level_83`, 12): L83 → L12\'s arrival stages BOTH its flags (the magical lock and the boss lock)', () => {
+        const l = legs.find((x) => x.key === 'level_12__r42c28 <- in_L83_32_64 -> exit:out_teleporter_32_848');
         expect(l.skip).toBeUndefined();
         expect(l.stagedEvents.map((e) => [e.eventId, e.level, e.tag, e.otherLevel]))
             .toEqual([['flag:L12:7', 12, 7, false], ['flag:L12:12', 12, 12, false]]);
@@ -212,9 +212,11 @@ describe('the committed playthrough\'s leg list', () => {
         //   RULES watcher-event 4 (flag:L114:0, staged `otherLevel` on L115's four return legs through the FinalDoor)
         //   R4b boss-locations 1 (the Owl's location reached back through L113, gated by flag:L112:1, staged)
         //   RULES rope-events 1 (flag:L16:0: L17's stairs land in L16's armed lane, staged)
-        expect(gated.length).toBe(50);
+        // ⛓ tile-primitives-pixelmask-l86: 50 -> 43 — the L1 arrival (gated by flag:L0:4) binds to the house-door pocket
+        //   level_0__r6c5, so its 8 hub legs go (7 staged, 1 skipped) and the pocket's one leg to the door arrives (staged).
+        expect(gated.length).toBe(43);
         expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
-        expect(gated.filter((l) => l.stagedEvents).length).toBe(41);
+        expect(gated.filter((l) => l.stagedEvents).length).toBe(35);
         expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
         const plain = legs.filter((l) => !l.arrive.events && !l.goalEvents);
         expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
@@ -232,22 +234,24 @@ describe('the committed playthrough\'s leg list', () => {
         //   L17's eight legs to its stairs up (they land in L16's armed lane) stage the cut, flag:L16:0.
         // ⛓ rules-l55-waterfall: the SAME legs by key, every id from 471 on shifted by -10 — all-water L52 splits into
         //   its three pools, so its 16 one-region legs become 6 within-pool legs (465-470).
+        // ⛓ tile-primitives-pixelmask-l86: the SAME legs by key, every id from 38 on shifted by -12 — L0's 13 hub legs that
+        //   touched the L1 arrival or the house door go (both bind to the new pocket level_0__r6c5) and its one leg arrives.
         expect(by).toEqual({
-            'flag:L0:4': [50], 'flag:L0:1': [102, 112, 122, 132, 142, 152, 162], 'flag:L24:0': [178],
-            'flag:L16:0': [204, 206, 208, 210, 212, 214, 216, 218], 'flag:L39:8': [355],
-            'flag:L62:0': [523, 528, 533, 538, 543, 571], 'flag:L63:1': [525, 530, 535, 540, 545, 549, 554, 559, 564],
-            'flag:L71:2': [625, 627], 'flag:L12:7+flag:L12:12': [645],
-            'flag:L112:1': [797, 798, 804, 805, 811, 812, 818, 819, 825, 826],
-            'flag:L114:0': [799, 800, 801, 806, 807, 808, 813, 814, 815, 820, 821, 827, 828],
-            'flag:L113:0': [836, 837, 838, 839],
+            'flag:L0:4': [38], 'flag:L0:1': [90, 100, 110, 120, 130, 140, 150], 'flag:L24:0': [166],
+            'flag:L16:0': [192, 194, 196, 198, 200, 202, 204, 206], 'flag:L39:8': [343],
+            'flag:L62:0': [511, 516, 521, 526, 531, 559], 'flag:L63:1': [513, 518, 523, 528, 533, 537, 542, 547, 552],
+            'flag:L71:2': [613, 615], 'flag:L12:7+flag:L12:12': [633],
+            'flag:L112:1': [785, 786, 792, 793, 799, 800, 806, 807, 813, 814],
+            'flag:L114:0': [787, 788, 789, 794, 795, 796, 801, 802, 803, 808, 809, 815, 816],
+            'flag:L113:0': [824, 825, 826, 827],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[800].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[788].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
-        expect(legs[523].sphere.inventory).not.toContain('Ghost Spear');
-        expect(legs[525].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
+        expect(legs[511].sphere.inventory).not.toContain('Ghost Spear');
+        expect(legs[513].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
         // a goal that needs no event keeps no goalEvents key at all (its row is byte-identical)
         expect(legs.filter((l) => !l.goalEvents).every((l) => !('goalEvents' in l))).toBe(true);
     });

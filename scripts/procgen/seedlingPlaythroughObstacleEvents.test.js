@@ -225,11 +225,17 @@ describe('the playthrough\'s obstacle events', () => {
         expect(eventsOf(RULES).find((x) => x.event_id === 'flag:L58:1').access_rule).toEqual({ rule: 'True_' });
     });
 
-    it('the L0↔L1 binding: the door in the house\'s doorway is charged the rock under it', () => {
-        expect(pocketDoorsCharged).toEqual(['level_0/out_teleporter_80_96']);
-        const exit = RULES.regions['1'].level_0__r8c0.exits.find((e) => e.connected_region === 'level_1');
-        expect(exit.access_rule).toEqual({ rule: 'Or', children: [
-            { rule: 'Has', args: { item_name: 'Progressive Sword' } }, { rule: 'Has', args: { item_name: 'Ghost Spear' } }] });
+    it('the L0↔L1 binding: the door in the house\'s doorway costs the rock under it', () => {
+        // ⛓ tile-primitives-pixelmask-l86: the house's Pixelmask leaves its door tile clear, so the door and the L1
+        // arrival (on the rock's tile) are their own sub-region, r6c5, and the ANALYZER charges the rock on the way in.
+        // No door is left in a model pocket, so the census of pocket-charged doors is empty.
+        expect(pocketDoorsCharged).toEqual([]);
+        const R = RULES.regions['1'];
+        const WEAPON = { rule: 'Or', children: [
+            { rule: 'Has', args: { item_name: 'Progressive Sword' } }, { rule: 'Has', args: { item_name: 'Ghost Spear' } }] };
+        expect(R.level_0__r7c6.exits.find((e) => e.connected_region === 'level_0__r6c5').access_rule).toEqual(WEAPON);
+        expect(R.level_0__r6c5.exits.find((e) => e.connected_region === 'level_1').access_rule).toEqual({ rule: 'True_' });
+        expect(R.level_0__r7c6.exits.find((e) => e.connected_region === 'level_1')).toBeUndefined();
     });
 
     it('world_generator → Generate.py: the seed-1 export carries every event and every field back', () => {

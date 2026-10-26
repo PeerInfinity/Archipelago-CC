@@ -26,7 +26,7 @@ describe('the playthrough reads the PATCHED set, the starter atlas reads VANILLA
         expect(hasMoonrock(PLAYTHROUGH_MAP)).toBe(false);
     });
 
-    it('a fresh partition: the rock\'s footprint is r8c0 in the playthrough and NO sub-region in the starter atlas', async () => {
+    it('a fresh partition: the rock\'s footprint is r7c6 (the start hub) in the playthrough and NO sub-region in the starter atlas', async () => {
         const { doc } = await buildSubRegionPartition();
         const entryOf = (file, region) => Object.values(doc.atlases).find((a) => a.atlas === file).regions[region];
         const subAt = (e, [x, y]) => {
@@ -35,7 +35,7 @@ describe('the playthrough reads the PATCHED set, the starter atlas reads VANILLA
         };
         const playthrough = entryOf('seedling-playthrough.json', 'level_0');
         const starter = entryOf('seedling.json', 'overworld_start');
-        expect(ROCK_TILES.map((t) => subAt(playthrough, t))).toEqual(ROCK_TILES.map(() => 'r8c0'));
+        expect(ROCK_TILES.map((t) => subAt(playthrough, t))).toEqual(ROCK_TILES.map(() => 'r7c6')); // r8c0 until tile-primitives-pixelmask-l86 renamed the hub
         expect(ROCK_TILES.map((t) => subAt(starter, t))).toEqual(ROCK_TILES.map(() => null));
     }, 120_000);
 });

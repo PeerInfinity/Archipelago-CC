@@ -23856,7 +23856,7 @@ function solveSegmentUnder({
      * frontier ranks doors by distance to the aim: L12's route steps 134/175
      * name `bosslock@416,240` first (d ≈ 415 px) and never ask the
      * `burnabletree@480,640` behind it (d ≈ 545), whose burn plus Progressive
-     * Swim IS the way round (AP's own region chain r0c37 →[Fire]→ r42c29
+     * Swim IS the way round (AP's own region chain r0c37 →[Fire]→ r42c28
      * →[Swim]→ r0c19; the corridor plans with the tree hypothesised gone).
      *
      * ⇒ when the chosen door refuses SEALED, the rest of the actionable frontier

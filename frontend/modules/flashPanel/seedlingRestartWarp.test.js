@@ -71,7 +71,7 @@ describe('the covered presets — DERIVED from the committed presets', () => {
 
 describe('seedlingStartSpawn — the one start', () => {
     const rules = rulesOf('seedling_playthrough');
-    const world = seedlingEntry.deserializeWorld(rules.preset_sidecars['1'].level_0__r8c0.playable_payload);
+    const world = seedlingEntry.deserializeWorld(rules.preset_sidecars['1'].level_0__r7c6.playable_payload);
     const map = JSON.parse(readFileSync(`${FRONTEND}${mapDocumentPath(rules, '1').path}`, 'utf8'));
     const returnSpawns = returnSpawnTable(map);
 
