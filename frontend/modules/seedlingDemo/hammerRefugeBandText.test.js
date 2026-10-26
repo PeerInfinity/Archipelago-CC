@@ -21,6 +21,7 @@ import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCod
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, solveAnytime } from './jsRuntimeSolver.js';
 import { withPressKillBombs } from './pressKillCost.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -38,11 +39,24 @@ function solve371(seam, { bombs }) {
 
 const NOWHERE = 'and no strike on spinner@192,128 is derivable. The room has nowhere to be.';
 describe('the press kill\'s "nowhere to be" names the refuges the shake band hid (hammer-phase BX I2)', () => {
-    it('371 at 5266, `PRESS_KILL_BOMBS` OFF: every one of the 12 previewed refuges is banded, and the refusal says so', () => {
-        const r = solve371(5266, { bombs: false });
+    // ⛓ control since planning-13's wave-31 shakeExactSplit flip (⚖ user "Exact for split"; hammer-2's ruling (a)):
+    //   the row's SUBJECT is a banded refuge, so SHAKEEXACT is pinned OFF here (bisected by env: no other wave-31 key
+    //   moves it); its ON sibling below is the evidence SHAKEEXACT dissolves the band at 5266.
+    it('371 at 5266, `PRESS_KILL_BOMBS` OFF: every one of the 12 previewed refuges is banded, and the refusal says so (shakeExactSplit OFF)', () => {
+        const r = withContactFidelity({ shakeExactSplit: false }, () => solve371(5266, { bombs: false }));
         expect([r.ok, r.work]).toEqual([false, 88]);
         expect(r.message.endsWith(`${NOWHERE} (PRESS_KILL_SHAKE_GUARD: 12 refuge candidate(s) whose preview the `
             + 'camera-shake band hid are not counted.)')).toBe(true);
+    }, 120_000);
+
+    it('371 at 5266, `PRESS_KILL_BOMBS` OFF, shakeExactSplit ON (the default since wave 31): no refuge is banded — the '
+        + 'press kill is passed and the dashless pass refuses later, at the paced bomb-pusher hold', () => {
+        const r = solve371(5266, { bombs: false });
+        expect([r.ok, r.work]).toEqual([false, 98]);
+        expect(r.message).not.toContain('PRESS_KILL_SHAKE_GUARD');
+        expect(r.message).not.toContain(NOWHERE);
+        expect(r.message).toContain('MOVING_WAIT');
+        expect(r.message).toContain('bomb:bombpusher@112,128');
     }, 120_000);
 
     it('371 at 5265, the defaults: no refuge was banded, and the refusal is the words it was (BW\'s suffix, no other)', () => {
