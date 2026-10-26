@@ -1470,7 +1470,7 @@ export const CONTACT_FIDELITY = {
      * banked like `open()`'s, and a `collect-placement` at it is satisfied (`arm: 'seal-removed'`). OFF:
      * byte-identical. `SEEDLING_CHEST_SEAL_REMOVAL=0|1`.
      */
-    chestSealRemoval: false,
+    chestSealRemoval: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
