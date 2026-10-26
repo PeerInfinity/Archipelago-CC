@@ -1,0 +1,25 @@
+## m1: PINNED_FIDELITY { dashSpinnerForecast: false } restored around main()
+predicted: l41 byte-identical, l42 DRIFT (1663 t)
+PASS: l40button-l41-part0: the ON plan latches t0, breaks, latches t1, collects — and never touches group 2 — ["brave","kill","hold","break","hold","collect"], 1601 t, 5 s
+PASS: l40button-l41-part0: the model replays it to the part, damage on, with no hit — 1602 observations, ends {"level":40,"x":72.22553841535428,"y":142.7391580354677}, 0 hit(s)
+PASS: the committed l40button-l41-part0 is what this script produces today — byte-identical
+PASS: l40button-l42-part0: the ON plan latches t0, breaks, latches t1, collects — and never touches group 2 — ["brave","hold","kill","break","hold","collect"], 1663 t, 5 s
+PASS: l40button-l42-part0: the model replays it to the part, damage on, with no hit — 1664 observations, ends {"level":40,"x":70.91286797260325,"y":143.2565066495161}, 0 hit(s)
+FAIL: the committed l40button-l42-part0 is what this script produces today — ⛔ DRIFT — re-run without --check
+1 FAILED
+rc=0
+
+## m2: the pre-L42REREC oracle (expectations) under the new tape
+predicted: tapeRunner 'fixture differential l40button-l42-part0' red; nothing else red
+[31m     [31m×[31m l40button-l42-part0: JS stream matches the real game recording, exactly[39m[33m 665[2mms[22m[39m
+     [2m[90m↓[39m[22m FAILS by name on a grant for a level the run never entered
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/tapeRunner.test.js[2m > [22mfixture differential[2m > [22ml40button-l42-part0: JS stream matches the real game recording, exactly
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[2m | [22m[33m930 skipped[39m[90m (934)[39m
+
+## m3: index.json tickCount 1665 -> 1663
+predicted: tapeIndexManifest l42 row red
+[31m     [31m×[31m l40button-l42-part0.json — every field equals the tape on disk[39m[32m 5[2mms[22m[39m
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/tapeIndexManifest.test.js[2m > [22mthe tape manifest the picker reads[2m > [22ml40button-l42-part0.json — every field equals the tape on d
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m291 passed[39m[22m[90m (292)[39m
