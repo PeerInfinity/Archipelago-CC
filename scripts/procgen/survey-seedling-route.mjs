@@ -147,7 +147,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 
 import { fileURLToPath } from 'node:url';
 
 import { familyOf } from './surveyFamily.js';
-import { deriveStagedGrant, stageGrantSave, stagedRng, tapeCoversVisit } from './surveyGrants.js';
+import { deriveStagedGrant, stageGrantSave, stagedBlockCheck, stagedRng, tapeCoversVisit } from './surveyGrants.js';
 import {
     RESTART_TARGET, deriveLegs, gameStateEventsOf, stagedPersistence, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
     ROUTE_MODES, routeOnlyRows,
@@ -1335,6 +1335,9 @@ async function solveOneStep(step) {
         // ⛓ RULES survey-tentacle-staging: the room runs the game's `Rng.split`, not the base tape's (`stagedRng`).
         staging.rng = stagedRng(staging.rng, SHIPPED_RNG);
     }
+    /** ⛓ RULES survey-cleanup: the block as constructed, before the walk's grants (`stagedBlockCheck`). */
+    const construction = JSON.parse(JSON.stringify({ boot: staging.boot, save: staging.save ?? null,
+        rng: staging.rng ?? null, seam: staging.seam ?? null }));
     /**
      * ⛓ RULES survey-save-arrays — **THE DELIVERED SAVE ARRAYS ARE STAGED** (`surveyGrants.stageGrantSave`, through
      * `saveArrayRules`), under `--through` only (the default survey grants nothing, so its rows cannot move):
@@ -1424,7 +1427,11 @@ async function solveOneStep(step) {
      *  · and where a staged room already HAS a committed tape
      *    (`r8-solve-18`), the block this script builds must be that tape's
      *    boot block. That is the claim "the staged policy is R8's, not this
-     *    script's", asserted rather than asserted-in-a-docblock.
+     *    script's", asserted rather than asserted-in-a-docblock. It compares
+     *    the CONSTRUCTION (before the walk's grants; `stagedBlockCheck`).
+     *
+     * ⛓ RULES survey-cleanup: both are READ — `survey-seedling-shards --merge`
+     * prints a `BOOT-CHECK-FAIL` per false row and exits 1 (`bootCheckFailures`).
      */
     let bootCheck = null;
     if (boot.kind === 'committed') {
@@ -1438,12 +1445,11 @@ async function solveOneStep(step) {
     } else if (STAGED_CROSSCHECK.has(bootKey(step.level, step.arrival.x, step.arrival.y))) {
         const crossName = STAGED_CROSSCHECK.get(bootKey(step.level, step.arrival.x, step.arrival.y));
         const other = parseTape(committedTape(crossName));
+        const { ok, differs } = stagedBlockCheck(construction, other, SHIPPED_RNG);
         bootCheck = {
-            what: `the staged block equals ${crossName}'s committed boot`,
-            ok: JSON.stringify(staging.boot) === JSON.stringify(other.boot)
-                && JSON.stringify(staging.save) === JSON.stringify(other.save)
-                && JSON.stringify(staging.rng) === JSON.stringify(stagedRng(other.rng, SHIPPED_RNG))
-                && JSON.stringify(staging.seam) === JSON.stringify(other.seam),
+            what: `the staged construction equals ${crossName}'s committed boot`,
+            ok,
+            ...(differs.length ? { differs } : {}),
             got: { ...staging.boot },
             want: { ...other.boot },
         };
