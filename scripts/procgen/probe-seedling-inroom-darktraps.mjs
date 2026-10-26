@@ -22,6 +22,7 @@
  *   l101-alive          the L102 landing [9,5]: RIGHT — stopped by the trap (a hit)
  *   l101-cleared        the same with `{101,1}` cleared — crossed hitless
  *   l101-pocket-thrust  the landing with the Spear: faces UP, thrusts at the pole, waits, RIGHT — crossed hitless
+ *   l101-wall-thrust    the r4c2 column's [7,4] with the Spear: faces E, thrusts THROUGH the wall [8,4] — the trap dies
  *   l101-east-thrust    the far side [11,5] with the Spear: faces W, thrusts, waits, LEFT — NOT crossed (no stance there)
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW {json}`, and `ALL CHECKS PASSED` / `N CHECK(S) FAILED`.
@@ -89,6 +90,9 @@ export function inroomTapes() {
         'l101-alive': c('l101-alive', l101, eastOf, { boot: landing, inputs: [hold('right', 10, 2 * STEP)], ticks: 70 }),
         'l101-cleared': c('l101-cleared', l101, eastOf, { boot: landing, persistence: [1], inputs: [hold('right', 10, 2 * STEP)], ticks: 70 }),
         'l101-pocket-thrust': c('l101-pocket-thrust', l101, eastOf, { boot: landing, spear: true, inputs: [...thrust(10, 'up'), hold('right', 10 + WAIT, 2 * STEP)], ticks: 160 }),
+        // The pole lit THROUGH the wall [8,4] from the r4c2 column: `collideRectInto` tests no Solid in between.
+        'l101-wall-thrust': c('l101-wall-thrust', l101, () => false, { boot: { x: 112, y: 64 }, spear: true,
+            inputs: [hold('up', 2, 10), ...[20, 40, 60, 80].flatMap((t) => thrust(t, 'right'))], ticks: 160 }),
         'l101-east-thrust': c('l101-east-thrust', l101, westOf, { boot: east, spear: true, inputs: [...thrust(10, 'left'), hold('left', 10 + WAIT, 2 * STEP)], ticks: 160 }),
     };
 }
@@ -111,6 +115,7 @@ export function expectInroom(name, r) {
     // L65's trap turns the walk back without a counted hit; the seal is the walk not crossing.
     if (name.endsWith('-alive')) return !r.passed;
     if (name === 'l101-east-thrust') return !r.passed;
+    if (name === 'l101-wall-thrust') return r.hits === 0 && r.trapDying;
     if (name.endsWith('-cleared')) return r.passed && r.hits === 0 && !r.trapSeen;
     return r.passed && r.hits === 0 && r.trapDying;
 }
@@ -123,6 +128,7 @@ const WHAT = {
     'l101-alive': 'L101: from the L102 landing the walk east is stopped by darktrap@160,80 (a hit)',
     'l101-cleared': 'L101 with {101,1} cleared: no trap, the walk east crosses hitless (the control)',
     'l101-pocket-thrust': 'L101: a Spear thrust UP from the landing lights lightpole@144,64; after a wait the walk east crosses hitless',
+    'l101-wall-thrust': 'L101: a Spear thrust E from [7,4], through the wall [8,4], lights lightpole@144,64: the trap dies',
     'l101-east-thrust': 'L101: a Spear thrust W from [11,5] does NOT light it: the walk west is not crossed',
 };
 

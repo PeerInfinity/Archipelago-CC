@@ -10,10 +10,12 @@ import { describe, expect, it } from 'vitest';
 import {
     crossRoomButtonsOf, crossRoomPrerequisitesOf, deriveButtonEvents, deriveLockEvents, deriveTalkEvents, deriveObstacleEvents, persistenceEffect, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
     parseSolidId, poleKillsOf, poleLightReaches, POLE_LIGHT_ARM, rowVerdict, ruleItemNames,
+    deriveInRoomPoleEvents, inRoomPolesOf, poleThrustStances,
     deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges, ropePeerEffect, ropesOf, ropeVerdict,
 } from './seedlingObstacleEvents.js';
 import { patchedMapDocument } from '../seedlingDemo/seedlingSetPatches.js';
-import { buildLevelWorld, combatCensusOf } from '../seedlingDemo/levelWorld.js';
+import { buildLevelWorld, combatCensusOf, rectsOverlap } from '../seedlingDemo/levelWorld.js';
+import { pressRectTouches, spearHitRect } from '../seedlingDemo/presses.js';
 import { contactRect } from '../seedlingDemo/combat.js';
 import { DARKTRAP_LIGHT_DEATH } from '../seedlingDemo/enemyDamage.js';
 
@@ -529,5 +531,73 @@ describe('rope cuts as events (ropesOf / ropePeerEffect / deriveRopeEvents / rop
     it('…but a door in the lane with a neighbour OUTSIDE it is refused by name (the pocket would leak)', () => {
         const g = grid(['#...#', '#...#', '#.R.#', '#...#', '##.##', '#####']);
         expect(() => ropeLaneCharges(g, LANE, C, new Set(['2,1']), 16)).toThrow(/the door \[2,1\] stands in a lane, but its neighbour \[3,1\]/);
+    });
+});
+
+describe('a pole only its own room\'s Spear lights (deriveInRoomPoleEvents / poleThrustStances / inRoomPolesOf) — RULES l63-darktrap', () => {
+    const MAP = JSON.parse(readFileSync(new URL('./atlases/seedling-map.json', import.meta.url), 'utf8'));
+    const levelOf = (n) => MAP.levels.find((l) => l.level === n);
+    const SPEAR = { rule: 'Has', args: { item_name: 'Ghost Spear' } };
+
+    it('inRoomPolesOf: every tagged pole no cross-room press writes — the two Dungeon 6 presses\' poles are left out', () => {
+        const poles = inRoomPolesOf(MAP).map((p) => `L${p.level}@${p.x},${p.y}#${p.tag}`);
+        expect(poles).toEqual(expect.arrayContaining(['L63@48,272#6', 'L63@112,272#7', 'L65@128,168#0', 'L101@144,64#0']));
+        expect(poles).not.toContain('L62@120,200#0');
+        expect(poles).not.toContain('L63@64,88#1');
+    });
+
+    it('poleThrustStances: L63\'s pole@112,272 is reached from the trap\'s NORTH side only (the probe), never from the trap\'s own tile', () => {
+        const L = levelOf(63);
+        const pole = buildLevelWorld(L).pressResponders.find((r) => r.as3 === 'LightPole' && r.x === 112 && r.y === 272);
+        // every tile walkable, so the geometry alone decides
+        const trap = { x: 128, y: 272, w: 16, h: 16, right: 144, bottom: 288 };
+        const st = poleThrustStances(pole.rect, { width: L.width, height: L.height, tile: 16, walkable: () => true,
+            avoid: [trap], spearHitRect, pressRectTouches, rectsOverlap });
+        const tiles = st.map((x) => x.tile.join(','));
+        expect(tiles).toContain('8,16');
+        expect(tiles).not.toContain('8,18');
+        expect(tiles).not.toContain('8,17');
+        // [8,16] thrusts WEST (direction 2), as the probe's north-thrust-leave did
+        expect(st.find((x) => x.tile.join(',') === '8,16').dirs).toContain(2);
+    });
+
+    it('ONE event in the pole\'s flag where the cut places it; Has(event) on a door with no stance, Or(event, arm) on one with', () => {
+        const pole = { level: 63, type: 'lightpole', x: 112, y: 272, tag: 7 };
+        const NAME = 'L63 flag 7: lightpole@112,272 cleared';
+        const cut = () => ({
+            place: { region_id: 'level_63', sub_region: 'r6c9', side: 'level_63__r6c9' }, reach: SPEAR,
+            gates: [{ region_id: 'level_65', exit_id: 'out_teleporter_128_0', arm: false },
+                { region_id: 'level_63', exit_id: 'out_teleporter_128_304', arm: true }],
+        });
+        const ctx = { kills: () => ({ bodies: ['darktrap@128,272'], why: 'lit' }), cut, arm: SPEAR,
+            action: { verb: POLE_LIGHT_ARM.verb, item: POLE_LIGHT_ARM.item } };
+        const out = deriveInRoomPoleEvents([pole], ctx);
+        expect(out.events.map((e) => [e.name, e.region_id, e.sub_region, e.access_rule])).toEqual([[NAME, 'level_63', 'r6c9', SPEAR]]);
+        expect(out.events[0].fields).toEqual({ event_id: 'flag:L63:7', event_kind: OBSTACLE_EVENT_KIND,
+            obstacle: { level: 63, tag: 7, class: 'lightpole', x: 112, y: 272 },
+            action: { verb: 'lit by a Spear thrust', item: 'hasSpear' }, side: 'level_63__r6c9', across: [] });
+        const has = { rule: 'Has', args: { item_name: NAME } };
+        expect(out.exitGates).toEqual([
+            { region_id: 'level_63', exit_id: 'out_teleporter_128_304', rule: { rule: 'Or', children: [has, SPEAR] } },
+            { region_id: 'level_65', exit_id: 'out_teleporter_128_0', rule: has },
+        ]);
+        // a pole that kills nothing is skipped by name; a flag already minted is refused
+        expect(deriveInRoomPoleEvents([pole], { ...ctx, kills: () => null }).skipped[0]).toMatch(/kills no body/);
+        expect(() => deriveInRoomPoleEvents([pole], { ...ctx, existing: [{ fields: { event_id: 'flag:L63:7' } }] }))
+            .toThrow(/already another event/);
+    });
+
+    it('deriveButtonEvents: a gate marked arm: false costs the event alone (the cross-room presses\' doors keep the Or)', () => {
+        const presser = { level: 63, x: 32, y: 64, t: 0, tag: 0, flip: true, room: 62 };
+        const target = { level: 62, type: 'lightpole', x: 120, y: 200, tset: -1, tag: 0 };
+        const out = deriveButtonEvents([{ presser, write: { level: 62, tag: 0, value: false }, targets: [target] }], {
+            effect: () => ({ effect: null, why: 'light' }), kills: () => ({ bodies: ['darktrap@112,208'], why: 'lit' }),
+            inRoom: () => SPEAR, pricedByButton: () => ({ free: true, why: '' }),
+            place: () => ({ region_id: 'level_63', sub_region: 'r0c1', side: 'level_63__r0c1' }), reach: () => null,
+            gates: () => [{ region_id: 'a', exit_id: 'out_x', arm: false }, { region_id: 'b', exit_id: 'out_y', arm: true }],
+        });
+        const has = { rule: 'Has', args: { item_name: 'L62 flag 0: lightpole@120,200 cleared' } };
+        expect(out.exitGates).toEqual([{ region_id: 'a', exit_id: 'out_x', rule: has },
+            { region_id: 'b', exit_id: 'out_y', rule: { rule: 'Or', children: [has, SPEAR] } }]);
     });
 });
