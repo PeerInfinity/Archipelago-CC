@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 109,
-            "count": 156,
+            "browser": 110,
+            "count": 157,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 463,
-        "browser": 174,
+        "blockStyle": 464,
+        "browser": 175,
         "cited": 249,
-        "files": 477,
+        "files": 478,
         "lineStyle": 14,
-        "withDocblock": 477,
-        "withFlags": 394
+        "withDocblock": 478,
+        "withFlags": 395
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13191,6 +13191,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l67-reach2 — does the spear push a block from TWO tiles away, across a pit?",
             "path": "scripts/procgen/probe-seedling-l67-reach2.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l93-door.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L93 DOOR into L98 (`out_teleporter_112_80`, tile [7,5]), ON THE GAME (slice tile-primitives-pixelmask-l86): does the player need the Feather to reach it from `level_93__r10c7`?",
+            "path": "scripts/procgen/probe-seedling-l93-door.mjs"
         },
         {
             "argvHelpers": [],

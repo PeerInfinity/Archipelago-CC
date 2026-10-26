@@ -236,6 +236,13 @@
             }
           },
           {
+            "name": "level_0__r7c6 -> level_86",
+            "connected_region": "level_86",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
             "name": "level_0__r7c6 -> level_2",
             "connected_region": "level_2",
             "access_rule": {
@@ -1702,6 +1709,33 @@
         ],
         "locations": []
       },
+      "level_86": {
+        "name": "level_86",
+        "exits": [
+          {
+            "name": "level_86 -> level_0__r7c6",
+            "connected_region": "level_0__r7c6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 086 - Chest",
+            "id": 30000007,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
       "level_94__r2c16": {
         "name": "level_94__r2c16",
         "exits": [
@@ -1797,7 +1831,7 @@
         "groups": [],
         "classification": "progression",
         "type": null,
-        "max_count": 4
+        "max_count": 5
       },
       "L0 flag 1: breakablerock@288,176 cleared": {
         "name": "L0 flag 1: breakablerock@288,176 cleared",
@@ -1851,7 +1885,7 @@
   "itempool_counts": {
     "1": {
       "Progressive Sword": 1,
-      "Seal": 4,
+      "Seal": 5,
       "Red Key": 1,
       "Progressive Shield": 1,
       "L0 flag 1: breakablerock@288,176 cleared": 1,
@@ -1889,7 +1923,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-e0c58c45",
+      "atlas_id": "seedling-de209f05",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -1940,6 +1974,17 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsdown_32_192"
+            },
+            {
+              "exit_id": "level_0__r7c6 -> level_86",
+              "x": 10,
+              "y": 17,
+              "side": null,
+              "exitName": "level_0__r7c6 -> level_86",
+              "targetRegion": "level_86",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_160_272"
             },
             {
               "exit_id": "level_0__r7c6 -> level_2",
@@ -5999,6 +6044,48 @@
           }
         }
       },
+      "level_86": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 6,
+          "height": 5,
+          "tiles": [1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,1,1],
+          "entrance": {
+            "x": 3,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_86 -> level_0__r7c6",
+              "x": 3,
+              "y": 4,
+              "side": null,
+              "exitName": "level_86 -> level_0__r7c6",
+              "targetRegion": "level_0__r7c6",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_48_64"
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 3,
+              "y": 1,
+              "id": "Seal",
+              "locationName": "Level 086 - Chest"
+            }
+          ],
+          "obstacleLib": {},
+          "atlas_region": "level_86",
+          "level": 86,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
       "level_94__r2c16": {
         "substrate": "maze",
         "playable_payload": {
@@ -6114,7 +6201,8 @@
           },
           "new_accessible_locations": [
             "Level 010 - Sword",
-            "Level 011 - Chest"
+            "Level 011 - Chest",
+            "Level 086 - Chest"
           ],
           "new_accessible_regions": [
             "level_0__r7c6",
@@ -6132,6 +6220,7 @@
             "level_6",
             "level_7",
             "level_8",
+            "level_86",
             "level_9",
             "level_94__r2c16",
             "level_94__r3c4",
@@ -6188,6 +6277,27 @@
           "new_accessible_regions": [],
           "sphere_locations": [
             "Level 011 - Chest"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 086 - Chest"
           ]
         }
       }
