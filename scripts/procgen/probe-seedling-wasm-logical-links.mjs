@@ -5,7 +5,7 @@
  * p4f, headless logic-only, under the box lock; every session on a FRESH page.
  *
  *   H  A HUMAN WALK (no bot): keys pressed on the game canvas, the region glue reading the position. From a
- *      tile of `level_0__r8c0` the player walks west through the pond into `level_0__r14c0` and back (the
+ *      tile of `level_0__r7c6` the player walks west through the pond into `level_0__r14c0` and back (the
  *      tiles DERIVED from the committed partition: a row where the two sub-regions face each other across
  *      tiles of neither). First WITHOUT the link's item (`Progressive Swim`): no move, however far the
  *      player gets. Then WITH it: exactly ONE logical `user:regionMove` each way, `logical: true`, no
@@ -14,7 +14,7 @@
  *      false` since `9a35ad8989`: the proxy's source reads `explicit`, no in-page override): the sphere queue's
  *      first goal (the Sword, level 10) in 9 hops through DOORS ONLY — since the rules' logical-links recompile
  *      (`ce1cba867a`) L0's stairs bind to r8c0 and the model-sealed `level_0__r8c0 -> level_0__r1c6` link is
- *      gone, so the route opens with `level_0__r8c0 -> level_2` and nothing is credited at r1c6. The Sword
+ *      gone, so the route opens with `level_0__r7c6 -> level_2` and nothing is credited at r1c6. The Sword
  *      CHECKED, and the walk continues to the next named refusal (`ROW B reach`), within `--budget-s`. ⚠ On a base without fidelity F4 (the sandtraps' arrow death) the solver declines
  *      L8 → L9 by name before the Sword; the check accepts exactly that decline there.
  *      ⛓ ANYTIME (solver-walk anytime): every solver leg is named by the PASS that made its plan (`dashless` / `full`), and
@@ -185,14 +185,14 @@ async function main() {
             const MAP_DOC = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
             const { walkableCellsFrom } = await import('../../frontend/modules/seedlingDemo/levelSetExits.js');
             const L0 = MAP_DOC.levels.find((l) => l.level === 0);
-            // Flooded from the first tile of r8c0 (the start's sub-region).
-            const d = entry.sub_regions.indexOf('r8c0');
+            // Flooded from the first tile of r7c6 (the start's sub-region).
+            const d = entry.sub_regions.indexOf('r7c6');
             const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[d];
             const fy = entry.rows.findIndex((r) => r.includes(ch));
             const flood = walkableCellsFrom(L0, { tx: entry.rows[fy].indexOf(ch) + entry.origin[0], ty: fy + entry.origin[1] });
-            const cross = facingTiles(entry, 'r8c0', 'r14c0', (x, y) => flood.has(`${x},${y}`));
+            const cross = facingTiles(entry, 'r7c6', 'r14c0', (x, y) => flood.has(`${x},${y}`));
             out('H crossing', cross);
-            check('H: the partition has a row where r8c0 and r14c0 face each other', !!cross, JSON.stringify(cross));
+            check('H: the partition has a row where r7c6 and r14c0 face each other', !!cross, JSON.stringify(cross));
             if (!cross) return;
             const g0 = await rp.waitFor('the binding holds the start sub-region and the sub-region map', async () => {
                 const g = await glue();
@@ -260,7 +260,7 @@ async function main() {
             // 1. WITHOUT the item.
             const stood = await standOn(cross.fromTile);
             out('H stand', stood);
-            check('H: the player stands on the crossing\'s r8c0 tile', JSON.stringify(stood.tile) === JSON.stringify(cross.fromTile),
+            check('H: the player stands on the crossing\'s r7c6 tile', JSON.stringify(stood.tile) === JSON.stringify(cross.fromTile),
                 JSON.stringify(stood));
             await rp.focusGame();
             const before = await movesNow();
@@ -281,7 +281,7 @@ async function main() {
             await rp.waitFor('the game can swim', async () => ((await rp.readGameState()).canSwim === true ? true : null), 20000);
             out('H stand again', await standOn(cross.fromTile));
             const g1 = await glue();
-            check('H: back on r8c0 after the jump, the AP region unmoved', g1.region === START, JSON.stringify(g1));
+            check('H: back on r7c6 after the jump, the AP region unmoved', g1.region === START, JSON.stringify(g1));
             await rp.focusGame();
             const base = (await movesNow()).length;
             const teleports0 = g1.stats.teleports;
@@ -567,7 +567,7 @@ async function main() {
             out('B boot', booted);
             check(`B: the bot is mounted in ${START}, its first goal in level 10`, booted.ok && booted.region === START
                 && /^level_10(__|$)/.test(booted.head?.region ?? ''), JSON.stringify(booted));
-            check('B: the Sword\'s route is 9 hops, opening with r8c0\'s OWN stairs (`level_0__r8c0 -> level_2`), never through r1c6',
+            check('B: the Sword\'s route is 9 hops, opening with r7c6\'s OWN stairs (`level_0__r7c6 -> level_2`), never through r1c6',
                 booted.route?.length === 9 && booted.route?.nextExit === `${START} -> level_2`
                     && !(booted.route?.steps ?? []).some((r) => r.startsWith('level_0__r1c6')), JSON.stringify(booted.route));
             await clickPanelTab(page, FLASH_PANEL).catch(() => null);

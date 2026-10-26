@@ -47,12 +47,12 @@ describe('seedlingArrivalEscape — the refusal, in the AP\'s terms', () => {
         expect(e).toMatchObject({ kind: ARRIVAL_INSIDE_SOLID, solids: ['breakablerock@288,176'],
             at: { level: 0, x: 296, y: 184 }, restart: true, unmapped: [] });
         expect(e.arrivals.map((a) => `L${a.from} ${a.door} = ${a.exit}`)).toEqual([
-            'L2 stairs@48,16 = level_2 -> level_0__r8c0',
-            'L13 stairs@64,144 = level_13 -> level_0__r8c0',
-            'L86 teleporter@48,64 = level_86 -> level_0__r8c0',
+            'L2 stairs@48,16 = level_2 -> level_0__r7c6',
+            'L13 stairs@64,144 = level_13 -> level_0__r7c6',
+            'L86 teleporter@48,64 = level_86 -> level_0__r7c6',
             'L89 teleporter@160,304 = level_89__r11c12 -> level_0__r2c13',
-            'L94 teleporter@304,160 = level_94__r2c16 -> level_0__r8c0',
-            'L94 teleporter@304,176 = level_94__r2c16 -> level_0__r8c0 #2',
+            'L94 teleporter@304,160 = level_94__r2c16 -> level_0__r7c6',
+            'L94 teleporter@304,176 = level_94__r2c16 -> level_0__r7c6 #2',
         ]);
         // each is a real rules exit, out of its region, landing in level 0 (never L12's door, which landed inside)
         for (const a of e.arrivals) {

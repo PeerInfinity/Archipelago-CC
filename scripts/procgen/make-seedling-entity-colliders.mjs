@@ -51,6 +51,7 @@ export function modelColliders(entityClasses) {
         }
         out[tag] = {
             collider: cls.collider, left: cls.dx - cls.originX, top: cls.dy - cls.originY, w: cls.w, h: cls.h,
+            ...(cls.collider === 'pixelmask' ? { mask: cls.mask } : {}),
             src: cls.src,
         };
     }
@@ -60,7 +61,8 @@ export function modelColliders(entityClasses) {
 /** The module text. No timestamp, so `--check` is exact. */
 export function renderColliders(colliders) {
     const rows = Object.entries(colliders).map(([tag, c]) => `    ${tag}: Object.freeze({ collider: '${c.collider}', `
-        + `left: ${c.left}, top: ${c.top}, w: ${c.w}, h: ${c.h}, src: ${JSON.stringify(c.src)} }),`);
+        + `left: ${c.left}, top: ${c.top}, w: ${c.w}, h: ${c.h}, ${c.mask ? `mask: '${c.mask}', ` : ''}`
+        + `src: ${JSON.stringify(c.src)} }),`);
     return `/**
  * flashPanel/seedlingEntityColliders — GENERATED. Do not edit by hand.
  *
