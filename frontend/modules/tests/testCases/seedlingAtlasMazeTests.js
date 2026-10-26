@@ -746,7 +746,7 @@ const L15_PRESET_PATH = './presets/seedling_playthrough_maze/AP_1/AP_1_rules.jso
 const L15_R1C5 = 'level_15__r1c5';
 const L15_R1C9 = 'level_15__r1c9';
 
-const L0_R8C0 = 'level_0__r8c0';
+const L0_R8C0 = 'level_0__r7c6';
 const L13 = 'level_13';
 const L14 = 'level_14';
 const L16_R1C1 = 'level_16__r1c1';
@@ -776,7 +776,7 @@ function planToExit(panel, target, inventory) {
 
 /**
  * Seedling L14 → L15 → L16 in the maze (tile-primitives Stage 2; grown to L14 + L16 by session
- * tile-primitives-levels-gap3, ⚖ "L14 + L16"). The preset starts where the game does, in L0 r8c0 (session
+ * tile-primitives-levels-gap3, ⚖ "L14 + L16"). The preset starts where the game does, in L0 r7c6 (session
  * tile-primitives-grow-ring2, ⚖ "level_0, row walks in"): the player walks empty-handed down L0's stairs to L13
  * and on to L14 (the atlas: True_ both). L14's stairs land the player in L15,
  * which plays as ONE shared level world: the sword is refused before it is held; once granted through
@@ -797,7 +797,7 @@ async function l15SharedLevelWorld(testController) {
             return (p?.world && p.state && p.currentRegionId === L0_R8C0) ? p : null;
         },
         `maze panel mounted in ${L0_R8C0}`, 20000, 250);
-    testController.assertEqual('the preset put the player in L0 r8c0, the game\'s own start', true, !!inL0);
+    testController.assertEqual('the preset put the player in L0 r7c6, the game\'s own start', true, !!inL0);
     if (!inL0) return testController.getOverallResult();
 
     // ── L0 → L13 → L14, empty-handed: the start's stairs, then L13's ──

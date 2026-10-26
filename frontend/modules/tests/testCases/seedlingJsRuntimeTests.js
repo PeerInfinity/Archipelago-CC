@@ -3546,3 +3546,189 @@ registerTest({
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/** ⛓ G9 — mount the standalone graphics page in the row's own iframe and boot `Game(level, x, y)` through its bridge. */
+async function bootGraphicsPage(tc, frame, errors, [level, x, y]) {
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling';
+    document.body.appendChild(frame);
+    const win = await tc.pollForValue(() => {
+        const w = frame.contentWindow;
+        return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+    }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+    tc.reportCondition('the standalone page is up with its pack', !!win);
+    if (!win) return null;
+    const origError = win.console.error.bind(win.console);
+    win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+    win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+    const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+    win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+    win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+        { invocation: 'new_instance', className: 'Game', args: [level, x, y] }]);
+    return win;
+}
+
+/**
+ * ⛓ GRAPHICS G9a — the placed vanilla pickups in a real browser: the standalone page driven to `Game(10, 48, 80)`
+ * (level 10: the Sword on its cell). The Sword is drawn from the seedling pack as its class (`seedlingPickupSkin`), not
+ * the stand-in rectangle. No panel, preset or AP state is touched; the iframe is removed however the row ends.
+ */
+export async function seedlingJsRuntimeGraphicsPickups(tc) {
+    const frame = document.createElement('iframe');
+    const errors = [];
+    try {
+        const win = await bootGraphicsPage(tc, frame, errors, [10, 48, 80]);
+        if (!win) return tc.getOverallResult();
+        const g = win.__seedlingJsGraphics;
+        const rt = win.__seedlingJsRuntime;
+        const drawn = await tc.pollForValue(() => (rt.run?.level === 10 && g.effects?.owed === 0 && g.pickups?.ops.length >= 1 ? g.pickups : null),
+            'level 10 is up, its arrival fade is over and its pickup is drawn', 15000, 100);
+        tc.log(`pickups: ${JSON.stringify(drawn)}`);
+        tc.assertEqual('one placed pickup, none taken', '1/0', `${drawn?.pickups}/${drawn?.taken}`);
+        tc.assertEqual('drawn as the Sword', 'seedling:pickup/sword', (drawn?.ops ?? []).map((o) => o.key).join(','));
+        tc.assertEqual('from the seedling pack', 'seedling', [...new Set((drawn?.ops ?? []).map((o) => o.pack))].join(','));
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 10 and did not halt', '10/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-pickups',
+    name: 'Seedling JS runtime: the placed vanilla pickups drawn as their classes (G9a)',
+    description: 'Mounts jsRuntime.html?graphics=seedling standalone in its own iframe, drives it to level 10 through its own '
+        + '__swfBridge, and asserts the Sword is drawn from the seedling pack as its class, every sheet decodes, and no console '
+        + 'error. Touches no panel, preset or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsPickups,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ GRAPHICS G9b/G9c — the machines and a responder's fade in a real browser: the standalone page driven to
+ * `Game(38, 208, 224)` — on the covered ButtonRoom wired to the pulser (tset 1). The pressed ButtonRoom lights its
+ * twelve wires and arms the pulser, whose ring (`levelRun.machinesNow`) is drawn; the pulse knocks the player onto the
+ * Button, and the cover over the chest it publishes fades (`seedlingSolidsSkin.stepResponder`). No panel, preset or AP
+ * state is touched.
+ */
+export async function seedlingJsRuntimeGraphicsMachines(tc) {
+    const frame = document.createElement('iframe');
+    const errors = [];
+    try {
+        const win = await bootGraphicsPage(tc, frame, errors, [38, 208, 224]);
+        if (!win) return tc.getOverallResult();
+        const g = win.__seedlingJsGraphics;
+        const rt = win.__seedlingJsRuntime;
+        let fadedCover = false;
+        const lit = await tc.pollForValue(() => {
+            if ((g.solids?.ops ?? []).some((o) => o.key === 'seedling:puzzlement/cover' && o.alpha < 1)) fadedCover = true;
+            return rt.run?.level === 38 && g.effects?.owed === 0 && g.machines?.lit > 0
+                && g.machines.ops.some((o) => o.ring) && fadedCover ? g.machines : null;
+        }, 'level 38: wires lit, a pulser ring drawn, a cover mid-fade', 20000, 50);
+        tc.log(`machines: ${JSON.stringify(lit ? { ...lit, ops: lit.ops.map((o) => o.key ?? (o.ring ? 'ring' : 'line')) } : null)}`);
+        tc.assertEqual('the pulser and its wires are drawn from the seedling pack', 'seedling:machine/pulser,seedling:machine/wire',
+            [...new Set((lit?.ops ?? []).filter((o) => o.key).map((o) => o.key))].sort().join(','));
+        tc.assertEqual('a ButtonRoom lit its wires', true, (lit?.lit ?? 0) > 0);
+        tc.assertEqual('the pulser\'s ring is drawn (machinesNow reached the page)', true, (lit?.ops ?? []).some((o) => o.ring));
+        tc.assertEqual('a cover was drawn mid-fade', true, fadedCover);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 38 and did not halt', '38/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-machines',
+    name: 'Seedling JS runtime: the machines and a responder fade — lit wires, a pulser ring, a fading cover (G9b/G9c)',
+    description: 'Mounts jsRuntime.html?graphics=seedling standalone in its own iframe, drives it to level 38 onto the pulser\'s '
+        + 'ButtonRoom through its own __swfBridge, and asserts the pressed ButtonRoom lights its wires, the pulser ring is drawn from '
+        + 'levelRun.machinesNow, a cover is drawn mid-fade, every sheet decodes, and no console error. Touches no panel, preset '
+        + 'or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsMachines,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ GAME SPEED (slice `seedling-js-game-speed`) — the speed setting in the real panel. With `flashPanel.runtime = js`
+ * (a session override) and seedling_generated_room loaded, the panel's Settings section shows the "Game speed" row
+ * (a js-only row); a speed saved before the mount (`2x`) is on the page's URL and its clock; `flashPanel.seedlingJsSpeed = 4x` (a session override) reaches the mounted page LIVE: its
+ * clock reads 4, the adapter's item push is re-timed to 100/4 ms, and the page achieves ≈ 120 ticks a second. Back
+ * to `1x`: ≈ 30. The run never halts. Both settings are restored however it ends.
+ */
+export async function seedlingJsRuntimeGameSpeed(tc) {
+    const { SPEED_SETTING_KEY } = await import('../../flashPanel/seedlingGameSpeedSettings.js');
+    const { PUSH_INTERVAL_MS } = await import('../../flashPanel/wasmBridgeAdapter.js');
+    let previousRuntime = 'auto';
+    let previousSpeed = '1x';
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSpeed = await settingsManager.getSetting(SPEED_SETTING_KEY, '1x'); } catch { /* keep 1x */ }
+    try {
+        // the speed is set BEFORE the mount: the mount reads it onto the page's URL
+        await settingsManager.updateSetting(SPEED_SETTING_KEY, '2x', { persist: false });
+        await settingsManager.updateSetting(RUNTIME_KEY, 'js', { persist: false });
+        const rulesJson = await (await fetch(PRESET_PATH)).json();
+        const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+        tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: PRESET_PATH });
+        await loaded;
+        await tc.stateManager.pingWorker('after-rules-load', 5000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+        const panel = await tc.pollForValue(() => {
+            const p = getActivePanelInstance();
+            return p?.transport === 'js' && p.adapter && p._apLoadResult && frameOf(p)?.__seedlingJsClock && frameOf(p)?.__seedlingJsRuntime?.run ? p : null;
+        }, 'the flash panel mounted the JS runtime page and finished its AP load', 30000, 250);
+        tc.reportCondition('the panel is on the JS runtime with a live run', !!panel);
+        if (!panel) return tc.getOverallResult();
+        const win = frameOf(panel);
+        const clock = win.__seedlingJsClock;
+        const rt = win.__seedlingJsRuntime;
+        const row = panel._settingsControls?.find((c) => c.prop === 'seedlingJsSpeed') ?? null;
+        tc.log(`mounted: wasmPath ${panel.wasmPath}; frame ${win.location.href}; _jsSpeed ${panel._jsSpeed}`);
+        tc.assertEqual('the Settings section has a visible "Game speed" row on the js runtime', 'flex/1x,2x,4x',
+            `${row?.row?.style?.display}/${row ? [...row.input.options].map((o) => o.value).join(',') : null}`);
+        tc.assertEqual('mounted at the saved 2×: the page clock, its URL, the push and the control', `2/2/${PUSH_INTERVAL_MS / 2}/2x`,
+            `${clock.speed}/${new URLSearchParams(win.location.search).get('speed')}/${panel.adapter._pushIntervalMs}/${row?.input?.value}`);
+        const rateOver = async (ms) => {
+            const s0 = clock.slots;
+            const t0 = performance.now();
+            await new Promise((r) => setTimeout(r, ms));
+            return ((clock.slots - s0) * 1000) / (performance.now() - t0);
+        };
+        await settingsManager.updateSetting(SPEED_SETTING_KEY, '4x', { persist: false });
+        const at4 = await tc.pollForValue(() => (clock.speed === 4 ? clock : null), 'the page clock took 4× live', 5000, 50);
+        tc.assertEqual('4× live: the page clock, the control and the push (no re-mount)', `4/4x/${PUSH_INTERVAL_MS / 4}/true`,
+            `${at4?.speed}/${row?.input?.value}/${panel.adapter._pushIntervalMs}/${frameOf(panel) === win}`);
+        const r4 = await rateOver(2000);
+        tc.log(`4×: ${r4.toFixed(1)} slots a second (target 120); clock.rate ${JSON.stringify(clock.rate)}`);
+        tc.reportCondition(`4× achieves ≥ 100 slots a second (measured ${r4.toFixed(1)})`, r4 >= 100);
+        await settingsManager.updateSetting(SPEED_SETTING_KEY, '1x', { persist: false });
+        await tc.pollForCondition(() => clock.speed === 1, 'the page clock back at 1×', 5000, 50);
+        const r1 = await rateOver(2000);
+        tc.log(`1×: ${r1.toFixed(1)} slots a second (target 30)`);
+        tc.reportCondition(`1× is 30 slots a second again (measured ${r1.toFixed(1)})`, r1 > 25 && r1 < 35);
+        tc.assertEqual('the run did not halt', 'null', `${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        try { await settingsManager.updateSetting(SPEED_SETTING_KEY, previousSpeed, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-game-speed',
+    name: 'Seedling JS runtime: the game-speed setting — a js-only Settings row, applied live (1× → 4× → 1×)',
+    description: 'With flashPanel.runtime = js (session override) and seedling_generated_room loaded: the panel\'s Settings '
+        + 'section shows the "Game speed" row; a speed set before the mount (2x) mounts the page at ?speed=2; seedlingJsSpeed = 4x (session override) reaches the mounted page live (its '
+        + 'clock reads 4, the item push is re-timed to 25 ms, no re-mount) and it achieves ≥ 100 slots a second; back to '
+        + '1x it is ≈ 30. Both settings are restored.',
+    testFunction: seedlingJsRuntimeGameSpeed,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

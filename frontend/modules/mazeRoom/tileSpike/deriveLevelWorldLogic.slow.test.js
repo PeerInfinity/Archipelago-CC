@@ -29,7 +29,7 @@ const RULES = JSON.parse(readFileSync(
     new URL('../../../presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
-    'level_18__r1c1', 'level_18__r7c10', 'level_0__r8c0', 'level_19__r5c5', 'level_20__r1c4',
+    'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
     'level_3__r0c4', 'level_8', 'level_94__r3c4'];
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */

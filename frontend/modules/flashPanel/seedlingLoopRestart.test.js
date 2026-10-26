@@ -33,7 +33,7 @@ import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 const FRONTEND = fileURLToPath(new URL('../../', import.meta.url));
 const PLAYTHROUGH = JSON.parse(readFileSync(`${FRONTEND}presets/seedling_playthrough/AP_1/AP_1_rules.json`, 'utf8'));
-const START = 'level_0__r8c0';
+const START = 'level_0__r7c6';
 const AWAY = 'level_94__r2c16';
 
 describe('the glue — handleLoopReset decides (stubbed procgen + loop)', () => {

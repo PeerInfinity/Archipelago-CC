@@ -4,7 +4,7 @@
  * (solver-walk §5.17, logical sub-region links).
  *
  * A region with a subgraph is split by the reachability analyzer into walkable COMPONENTS, and each kept
- * component is a sub-region (`level_0__r8c0`). The atlas keeps the ids and the crossings between them,
+ * component is a sub-region (`level_0__r7c6`). The atlas keeps the ids and the crossings between them,
  * not the tiles, so the region binding could not tell which sub-region a player stands in. This file
  * re-runs each atlas's OWN analysis (the same grid, the same options) and writes the tiles down:
  *

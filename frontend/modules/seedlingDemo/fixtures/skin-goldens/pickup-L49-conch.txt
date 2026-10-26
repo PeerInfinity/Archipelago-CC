@@ -1,0 +1,8 @@
+t=0..115 L44 [] |
+t=116..346 L45 [] |
+t=347..732 L46 [] |
+t=733..1022 L47 [] |
+t=1023..1444 L48 [] |
+t=1445..1615 L49 [conch] | seedling:pickup/conch#0 drawImage(seedling/Conch, 0, 0, 36, 84)
+t=1616..1644 L49 [conch:held] | seedling:pickup/conch#0 drawImage(seedling/Conch, 0, 0, 34.562, 66.38)
+t=1645..1677 L49 [taken] |
