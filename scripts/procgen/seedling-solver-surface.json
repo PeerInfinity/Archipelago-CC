@@ -329,9 +329,9 @@
       "class": "seedling",
       "form": "forecast",
       "files": {
-        "solverBot.js": 3
+        "solverBot.js": 5
       },
-      "sites": 3,
+      "sites": 5,
       "seen": "both",
       "via": [
         "direct"
@@ -1093,9 +1093,9 @@
         "arrivalSolid.js": 1,
         "crusherBait.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 18
+        "solverBot.js": 19
       },
-      "sites": 21,
+      "sites": 22,
       "seen": "both",
       "via": [
         "direct"
@@ -1346,9 +1346,9 @@
         "crusherBait.js": 6,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 587
+        "solverBot.js": 589
       },
-      "sites": 726,
+      "sites": 728,
       "seen": "both",
       "via": [
         "direct",
@@ -5875,10 +5875,10 @@
         "dangerMap.js": 1,
         "encounters.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 68,
+        "solverBot.js": 69,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 89,
+      "sites": 90,
       "seen": "static",
       "via": [
         "import"
@@ -6410,6 +6410,42 @@
     },
     {
       "surface": "import",
+      "name": "PRESS_KILL_CHASERS",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 378,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The switch (hammer-phase PKC; OFF, SEEDLING_PRESS_KILL_CHASERS=1 opts in) under which the spinner press kill's safeStep prefers a key set whose next step lands clear of every chaser (run.chaserForecast stepped twice, then chaserDanger's per-tick arm); OFF nothing is asked."
+    },
+    {
+      "surface": "import",
+      "name": "PRESS_KILL_CHASERS_COUNTS",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 404,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 4
+      },
+      "sites": 4,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "hammer-phase PKC's instrument: how many chaser landing tests the press kill's step asked, swapped, found unavoidable or left to the shake band; written only with the switch ON, read by nothing that decides."
+    },
+    {
+      "surface": "import",
       "name": "PRESS_KILL_COST",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
       "line": 25,
@@ -6448,7 +6484,7 @@
       "surface": "import",
       "name": "REFUGE_ETA_CUT",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 379,
+      "line": 444,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -6466,7 +6502,7 @@
       "surface": "import",
       "name": "REFUGE_ETA_CUT_COUNTS",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 414,
+      "line": 479,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -6484,7 +6520,7 @@
       "surface": "import",
       "name": "refugeEtaCut",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 405,
+      "line": 470,
       "class": "seedling",
       "form": "function",
       "files": {

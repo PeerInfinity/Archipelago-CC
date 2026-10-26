@@ -130,6 +130,8 @@ import {
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
     // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (behind `PRESS_KILL_BOMBS`, ON since PKB).
     PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
+    // ⛓⛓⛓ hammer-phase PKC: the press kill's step sees the chasers (behind `PRESS_KILL_CHASERS`, OFF).
+    PRESS_KILL_CHASERS, PRESS_KILL_CHASERS_COUNTS,
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, ON by default since the user's flip; a behaviour switch, see its file).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
@@ -13119,6 +13121,25 @@ export function previewWalkOrDeath(run, wps, tolerance, opts) {
 function safeStep(run, held, alternatives, what, bodyId, landsClear = landsClearOfHammers) {
     if ((run.entities('spinnerBodies') ?? []).length === 0) return held;
     const lands = (keys) => landsClear(run, keys);
+    /**
+     * ⛓ hammer-phase PKC (`PRESS_KILL_CHASERS`, OFF ⇒ not reached) — among the key sets OFF would accept, in OFF's
+     * order, the first that also lands clear of every chaser; none ⇒ OFF's own choice (`unavoidable`). A press is not
+     * swapped (below). Asked only where the room has a chaser forecast.
+     */
+    if (PRESS_KILL_CHASERS.enabled && !held.has('primary') && run.chaserForecast?.()) {
+        let first = null;
+        for (const keys of [held, ...alternatives]) {
+            if (!lands(keys)) continue;
+            first ??= keys;
+            if (!landsClearOfChasers(run, keys)) continue;
+            if (keys !== first) PRESS_KILL_CHASERS_COUNTS.swapped += 1;
+            return keys;
+        }
+        if (first !== null) {
+            PRESS_KILL_CHASERS_COUNTS.unavoidable += 1;
+            return first;
+        }
+    }
     if (lands(held)) return held;
     if (held.has('primary')) {
         return fail(`${what}: the derived PRESS tick against ${bodyId} would land the `
@@ -13167,6 +13188,34 @@ function landsClearOfHammers(run, keys) {
     return clearOfHammersAt(
         { gameTimeAt: (i) => run.gameTimeAt(i + 1) },
         playerBoxAt(next.x, next.y), [ahead], 0);
+}
+
+/**
+ * ⛓ hammer-phase PKC — DOES THIS KEY SET LAND CLEAR OF EVERY CHASER ONE TICK ON (`PRESS_KILL_CHASERS`)? The run's own
+ * chaser forecast, stepped as `previewWalk` steps it: once against the player as this tick starts (this tick's contact,
+ * already decided whatever is held), then against the stepped player — the next tick's bodies at their post-move
+ * positions, which is where `chaserContactNow` tests them against the box this step leaves. The verdict is
+ * `chaserDanger`'s per-tick arm (the transit question: contact gate, sword lines, punch), chaser sources only. A step
+ * whose preview dies does not land clear (A2's rule); a forecast the shake band cannot answer leaves the step to OFF's
+ * test (`banded`, ⚖ the shake value is never modelled). ⚠ The stepped player carries no slash flag (the shield box is
+ * then ≤ 1 px off during a swing — the forecast's own note).
+ */
+function landsClearOfChasers(run, keys) {
+    const f = run.chaserForecast?.() ?? null;
+    if (f === null) return true;
+    const next = previewOrDeath(run.previewStepper())({ ...run.state }, keys);
+    if (!next) return false;
+    PRESS_KILL_CHASERS_COUNTS.asked += 1;
+    let rows;
+    try {
+        f.step(run.state);
+        rows = f.step(next);
+    } catch (e) {
+        if (!isShakeBandThrow(e)) throw e;
+        PRESS_KILL_CHASERS_COUNTS.banded += 1;
+        return true;
+    }
+    return chaserDanger(run, playerBoxAt(next.x, next.y), 0, rows, { perTick: true }).length === 0;
 }
 
 /**

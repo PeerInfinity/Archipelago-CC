@@ -1,0 +1,9 @@
+⏳ run 40276821052: waiting on "JavaScript Unit Tests (slow Vitest)" in_progress
+CI vitest @ da0f05ff — run 40276821052 in_progress (2026-10-26T05:54:56Z)
+  job "JavaScript Unit Tests (Vitest shard 1/3)"  completed success  325/8107
+  job "JavaScript Unit Tests (Vitest shard 2/3)"  completed success  325/7812
+  job "JavaScript Unit Tests (Vitest shard 3/3)"  completed success  324/7133
+  job "JavaScript Unit Tests (slow Vitest)"  completed success  24/269
+  suite: vitest (unfiltered)  974/23052   (23052 passed | 0 skipped | 0 failed)
+  slow battery                24/269   (269 passed | 0 failed)
+rc=0
