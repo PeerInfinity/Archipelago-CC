@@ -197,7 +197,12 @@ function bindWorldEvents(builder, events, local, inGrid) {
         const id = `${base.id}~${evs.map((e) => e.name).join('~')}`;
         if (!builder.obstacleLib[id]) {
             const names = evs.filter((e) => e.mode === 'open').map((e) => ({ rule: 'Has', args: { item_name: e.name } }));
-            const entry = { ...base, id, name: `${base.name}: ${evs.map((e) => e.name).join(' + ')}`, events: evs.map((e) => ({ name: e.name, side: e.side })) };
+            // ⛓ Two events on ONE cell (L12's magical lock on its boss lock) open by their OWN rules (a wand shot, a key
+            // touch — `MagicalLock.as`, `BossLock.as`), so each names its rule; the cell passes once both are open
+            // (session tile-primitives-sphere-order-2, ⚖ "Lay touched event cells").
+            // A one-sided lock names the side it opens from (`probe`, BossLock.as `update`: a line below the lock).
+            const own = (e) => ({ ...(evs.length > 1 && e.rule ? { rule: e.rule } : {}), ...(e.probe ? { probe: e.probe } : {}) });
+            const entry = { ...base, id, name: `${base.name}: ${evs.map((e) => e.name).join(' + ')}`, events: evs.map((e) => ({ name: e.name, side: e.side, ...own(e) })) };
             if (names.length > 0 && base.struck_by) {
                 entry.clear_set = [names.map((n) => n.args.item_name)];
                 if (!firstCell.has(id)) firstCell.set(id, key);
@@ -209,6 +214,34 @@ function bindWorldEvents(builder, events, local, inGrid) {
             builder.obstacleLib[id] = entry;
         }
         builder.obstacles.set(key, id);
+    }
+}
+
+/**
+ * ⛓ TOUCHED EVENT CELLS (session tile-primitives-sphere-order-2, ⚖ 2026-10-26 "Lay touched event cells"). A
+ * per-sub-region world lays its crossings on their FIRST cell only, so an event lock its component touches but no
+ * crossing runs through stayed wall, and its event was laid in no world of its own region: L12's 2-wide Red-Key
+ * doorway (26,15)+(27,15) — both opened from r0c19 in the game, the analyzer kept one route — and the magical lock
+ * stacked on a boss lock at (2,54), whose crossing (to L83) is not wired. Each such cell is floored and gated by its
+ * events' own rules (all of them, for a stacked cell: it passes once every lock on it is open), so `bindWorldEvents`
+ * binds it; it leads nowhere further in this world. A cell already floor or holding an obstacle is left as it is.
+ */
+function layTouchedEventCells(builder, events, local, component, inGrid) {
+    const mine = new Set(component.tiles.map(([x, y]) => `${x},${y}`));
+    const byCell = new Map();
+    for (const ev of events ?? []) {
+        if (!ev.rule) continue;
+        for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
+            const key = `${x},${y}`;
+            if (builder.isFloor(x, y) || builder.obstacles.has(key)) continue;
+            if (!DIRS.some(([dx, dy]) => mine.has(`${x + dx},${y + dy}`))) continue;
+            if (!byCell.has(key)) byCell.set(key, { x, y, rules: [] });
+            byCell.get(key).rules.push(ev.rule);
+        }
+    }
+    for (const { x, y, rules } of byCell.values()) {
+        builder.floor(x, y);
+        builder.gate(x, y, rules.length === 1 ? rules[0] : { rule: 'And', children: rules });
     }
 }
 
@@ -683,7 +716,10 @@ export function projectRegionToMaze(region, grid, ctx) {
             });
         }
 
-        bindWorldEvents(builder, ctx.eventsFor?.(region), local, ([x, y]) => x >= 0 && y >= 0 && x < grid.width && y < grid.height);
+        const inGrid = ([x, y]) => x >= 0 && y >= 0 && x < grid.width && y < grid.height;
+        const events = ctx.eventsFor?.(region);
+        layTouchedEventCells(builder, events, local, component, inGrid);
+        bindWorldEvents(builder, events, local, inGrid);
         const entryGates = directional > 0 ? levelWorldEntryGates(builder, grid, new Set(), resolveCondition, new Set(), note) : [];
 
         // --- assemble --------------------------------------------------------
@@ -907,7 +943,8 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
  * @param {object} ctx `projectRegionToMaze`'s, plus `partitionFor(region)` →
  *   `{sub_regions, rows, origin:[x,y]}` (the atlas's persisted partition)
  * @param {Array<object>} entities `levelEntitiesFor`'s rows:
- *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item} | {action, rule}], label}`
+ *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item} | {action, rule}], reach?, label}` — a
+ *   block with a `strike` is moved only by it, from up to `reach` cells (`block_strike`)
  * @returns {{ sidecars: object, notes: Array, analysis: null, sharedWorld: string }}
  */
 export function projectLevelWorld(region, grid, ctx, entities) {
@@ -954,6 +991,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
 
     // --- entity rows ---------------------------------------------------------
     const blocks = [];
+    let blockPush = null; // 'walk', or a struck block's JSON {by, reach} — one per world
     const buttons = [];
     const buttonLib = {};
     const actionLib = {};
@@ -1015,6 +1053,14 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             builder.floor(x, y);
             claimed.add(keyOf(x, y));
             blocks.push({ x, y });
+            // ⛓ STRUCK BLOCKS (session tile-primitives-sphere-order-2, ⚖ "Reach-2 strike-push"): a block the game moves
+            // only by a hit (Seedling's PushableBlockSpear) names its strike; the world's `block_strike` says so for all.
+            const how = e.strike ? JSON.stringify({ by: e.strike.map(actionFor), reach: e.reach }) : 'walk';
+            if (blockPush !== null && blockPush !== how) {
+                throw new Error(`atlas region "${regionId}": ${e.label ?? 'a block'} is pushed ${how}, another block ${blockPush} `
+                    + '— one world moves all its blocks one way (a mixed world is not modelled)');
+            }
+            blockPush = how;
             continue;
         }
         if (e.kind === 'button') {
@@ -1413,6 +1459,8 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         ...(traps.length > 0 ? { traps: traps.sort(sortRows), trapLib } : {}),
         ...(entryGates.length > 0 ? { entry_gates: entryGates } : {}),
         ...(blockSinks.length > 0 ? { block_sinks: blockSinks } : {}),
+        ...(blockPush !== null && blockPush !== 'walk'
+            ? { block_strike: { struck_by: JSON.parse(blockPush).by, reach: JSON.parse(blockPush).reach } } : {}),
         shared_world: {
             key: regionId,
             regions: bindings.map((b) => b.apName),

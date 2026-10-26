@@ -152,12 +152,16 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         // Boss Key and Shieldspire with them). Without the three weapons that set is cut off beside the rope's.
         // ⛓ tile-primitives-pixelmask-l86: + level_0__r6c5, the house-door pocket the L0 door rock stands in (the house's
         // Pixelmask leaves the door tile clear, so the door is its own sub-region behind the rock).
-        const RING2_WEAPON_GATED = ['level_0__r11c19', 'level_0__r1c6', 'level_0__r6c5', 'level_19__r1c5', 'level_19__r5c5'];
+        // ⛓ tile-primitives-sphere-order-2 (sphere 0.1 joined): r11c19 is reached now — through L12 r0c19, whose way back
+        // costs the rock's EVENT, which this inventory holds as an item; L1 (behind r6c5's rock), L67's key room (the spear
+        // block) and L92's four sub-regions (Sword | Spear crossings) are the weapon-gated set's new members.
+        const RING2_WEAPON_GATED = ['level_0__r1c6', 'level_0__r6c5', 'level_19__r1c5', 'level_19__r5c5'];
+        const SPHERE01_WEAPON_GATED = ['level_1', 'level_67__r3c2', 'level_92__r1c7', 'level_92__r3c12', 'level_92__r4c2', 'level_92__r7c8'];
         expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
             .toEqual({
-                unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED].sort(),
+                unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED, ...SPHERE01_WEAPON_GATED].sort(),
                 unchecked: ['L0 flag 1: breakablerock@288,176 cleared', 'L0 flag 4: breakablerock@80,112 cleared', ROPE,
-                    'Level 017 - Chest', 'Level 019 - Boss Key 0', 'Level 019 - Shieldspire'],
+                    'Level 017 - Chest', 'Level 019 - Boss Key 0', 'Level 019 - Shieldspire', 'Level 067 - Boss Key 4'],
             });
         expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'constant', value: true });
     });

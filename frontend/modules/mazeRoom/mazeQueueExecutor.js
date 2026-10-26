@@ -33,7 +33,9 @@ import {
     getObstacle,
     sinksBlock,
     step,
+    strikePushes,
     turnInput,
+    unposKey,
     useInput,
     whyBlocked,
 } from './mazeRoomEngine.js';
@@ -448,10 +450,14 @@ export function deriveRequires(world, startState, actions) {
                 if (!held.has(item) && !pickedUp.has(item)) requires.add(item);
             }
         }
-        if (dir !== null) {
-            const target = intendedTileFor(from, dir);
-            const cells = [target];
-            const pushed = Array.isArray(engine.blocks)
+        // ⛓ STRUCK BLOCKS: a use that moved blocks asked each one's next cell, as a walk-push asks the cell beyond.
+        const struck = entry.actionType === ACTION_USE
+            ? strikePushes(world, engine, entry.actionId, inv).map((p) => unposKey(p.to)).filter((c) => !sinksBlock(world, c.x, c.y))
+            : [];
+        if (dir !== null || struck.length > 0) {
+            const target = dir !== null ? intendedTileFor(from, dir) : null;
+            const cells = target ? [target] : struck;
+            const pushed = target !== null && Array.isArray(engine.blocks)
                 && engine.blocks.includes(`${target.x},${target.y}`);
             // ⛓ BLOCK SINKS: a block pushed onto a sink cell enters whatever its clearance — nothing is needed there.
             const beyond = pushed ? intendedTileFor(target, dir) : null;
@@ -475,7 +481,7 @@ export function deriveRequires(world, startState, actions) {
                     requires.add(id);
                 }
             }
-            const got = getItem(world, target.x, target.y);
+            const got = target ? getItem(world, target.x, target.y) : null;
             if (got) pickedUp.add(got);
         }
         engine = next;

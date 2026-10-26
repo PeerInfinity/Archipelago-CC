@@ -10,6 +10,12 @@
  * ⛓ PIXELMASK FOOTPRINTS (session tile-primitives-pixelmask-l86, ⚖ "Pixelmask fix, then L86") — L86, the last sphere-0 level:
  *   - L86: the game lands its return on L0 (10,18), under building1's SPRITE but outside its 48x32 Pixelmask; the grid boxed
  *     the sprite, so the maze world walled the landing. The playthrough grid now takes a building's footprint from its mask.
+ * ⛓ SPHERE 0.1 (session tile-primitives-sphere-order-2):
+ *   - L12: a per-sub-region world walled the event locks its component touches but no crossing uses — the doorway's second
+ *     Red-Key lock (27,15) and the magical lock stacked on a boss lock at (2,54), whose crossing (to L83) is unwired —
+ *     ⚖ "Lay touched event cells";
+ *   - L67: the spear block was a static Ghost Spear gate; the game spears it onto the button that silences the key's lane,
+ *     from two cells away across a wall — ⚖ "Reach-2 strike-push".
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -80,5 +86,39 @@ describe('L86 — its landing under L0\'s building is floor', () => {
         const p = Object.values(compile(['level_0', 'level_86']).preset_sidecars['1'])
             .find((s) => s.playable_payload?.atlas_region === 'level_0').playable_payload;
         expect([18, 17, 16].map((y) => p.tiles[y * p.width + 10])).toEqual([0, 0, 1]);
+    });
+});
+
+describe('L12 — a sub-region world lays the event locks it touches', () => {
+    it('L12 certifies clean; the doorway\'s second lock is Red Key from r0c19, the stacked locks each their own item', () => {
+        const out = certify(['level_12']);
+        expect(out.problems).toEqual([]);
+        expect(out.accepted).toEqual([]);
+        expect(line(out, 'level_12__r0c19@L12 flag 4: bosslock@416,240 cleared=')).toBe(JSON.stringify([['Red Key']]));
+        expect(line(out, 'level_12__r0c19@L12 flag 5: bosslock@432,240 cleared=')).toBe(JSON.stringify([['Red Key']]));
+        expect(line(out, 'level_12__r42c28@L12 flag 12: bosslock@32,864 cleared=')).toBe(JSON.stringify([['Yellow Key']]));
+        expect(line(out, 'level_12__r42c28@L12 flag 7: magicallock@32,864 cleared=')).toBe(JSON.stringify([['Wand']]));
+    });
+
+    it('the touched lock is a dead-end gate in its world; the stacked cell carries both events', () => {
+        const sc = compile(['level_12']).preset_sidecars['1'];
+        const at = (name, x, y) => {
+            const p = sc[name].playable_payload;
+            const ob = p.obstacles.find((o) => o.x === x && o.y === y);
+            return ob && p.obstacleLib[ob.id];
+        };
+        expect(at('level_12__r0c19', 27, 15).events.map((e) => e.name)).toEqual(['L12 flag 5: bosslock@432,240 cleared']);
+        expect(at('level_12__r0c37', 26, 15).events.map((e) => e.name)).toEqual(['L12 flag 4: bosslock@416,240 cleared']);
+        expect(at('level_12__r42c28', 2, 54).events.map((e) => e.name).sort())
+            .toEqual(['L12 flag 12: bosslock@32,864 cleared', 'L12 flag 7: magicallock@32,864 cleared']);
+    });
+});
+
+describe('L67 — the spear block is speared onto the button', () => {
+    it('L59 + L67 certify clean; the Boss Key, priced from r6c11 (its only way in), needs only the Ghost Spear', () => {
+        const out = certify(['level_59', 'level_67']);
+        expect(out.problems).toEqual([]);
+        expect(out.accepted).toEqual([]);
+        expect(line(out, 'level_67__r3c2@Level 067 - Boss Key 4<level_67__r6c11=')).toBe(JSON.stringify([['Ghost Spear']]));
     });
 });
