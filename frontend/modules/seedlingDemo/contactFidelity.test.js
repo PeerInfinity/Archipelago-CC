@@ -310,7 +310,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ planning-13's wave-31 flip (⚖ user 2026-10-25): SHAKEEXACT, L67BK4, L39SHAFT, and L40BK2's D1 turn ON;
             // dashSpinnerForecast waits on L18's wall time ("Chain ON; forecast after L18").
             weighHypothesisChain: true,
-            dashSpinnerForecast: false });
+            // ⛓ and dashSpinnerForecast after the L18 wall-time check (OFF 6,192 vs ON 6,116 ms; hammer-2 signed).
+            dashSpinnerForecast: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

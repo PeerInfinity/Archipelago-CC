@@ -1458,7 +1458,7 @@ export const CONTACT_FIDELITY = {
      * hammer arc's `spinnerFightForecast` cursor with the walk's presses and each sample's spinners are priced from its
      * row. OFF: byte-identical. `SEEDLING_DASH_SPINNER_FORECAST=0|1`.
      */
-    dashSpinnerForecast: false,
+    dashSpinnerForecast: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
