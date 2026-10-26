@@ -325,6 +325,8 @@ export const NIGHT_COPIES = Object.freeze({
     //    (no blend, no silhouette tint); `seedlingSolidsSkin` marks it `nightCopy`.
     ...Object.fromEntries(['lock', 'wandlock', 'grasslock', 'shieldlock', 'shieldlocknorm']
         .map((k) => [`seedling:puzzlement/${k}`, { alpha: 'same', when: (op) => op.nightCopy === true, plain: true }])),
+    // ⛓ G10 — the bosses' `render()` copies, marked `nightCopy` by `seedlingBossSkin`: the FrozenBoss (the same picture).
+    'seedling:boss/frozenboss': { alpha: 'same', when: (op) => op.nightCopy === true },
     // `LavaChain.as:63-73`: only while its anim is "hit".
     'seedling:puzzlement/lavachain': { alpha: 'same', when: (op, ctx) => ctx.hitChains.has(`${opCentre(op).x},${opCentre(op).y}`) },
 });

@@ -993,6 +993,16 @@
       "w": 27,
       "h": 13
     },
+    "ShieldBoss": {
+      "file": "sheets/ShieldBoss.png",
+      "w": 1120,
+      "h": 80
+    },
+    "FrozenBoss": {
+      "file": "sheets/FrozenBoss.png",
+      "w": 160,
+      "h": 160
+    },
     "BossKey": {
       "file": "sheets/BossKey.png",
       "w": 84,
@@ -4312,6 +4322,24 @@
         6.5
       ],
       "as3": "Pickups/APItem.as:94-104 \"seed\" → [Seed.png, 9, 13]; :171 centerOO, frame 0"
+    },
+    "seedling:boss/shieldboss": {
+      "sheet": "ShieldBoss",
+      "fw": 56,
+      "fh": 80,
+      "frames": 20,
+      "origin": [
+        28,
+        40
+      ],
+      "as3": "Enemies/ShieldBoss.as:15-16 Spritemap(56, 80); :35-41 super(_x + 24, _y + 32), centerOO; sit [0], stab [3..8], moveShield [0,1], movedShield [2], die [9..19]"
+    },
+    "seedling:boss/frozenboss": {
+      "sheet": "FrozenBoss",
+      "fw": 160,
+      "fh": 160,
+      "frames": 1,
+      "as3": "Scenery/FrozenBoss.as:13-14 Image; :18 super(_x, _y) (origin 0); :20 layer; :25-30 render, and onto nightBmp"
     },
     "seedling:pickup/bosskey0": {
       "sheet": "BossKey",

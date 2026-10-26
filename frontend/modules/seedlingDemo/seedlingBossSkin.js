@@ -1,0 +1,141 @@
+/**
+ * seedlingDemo/seedlingBossSkin — **THE BOSSES, IN THE ORIGINAL GRAPHICS**
+ * (Seedling JS graphics G10). G7's three pieces again (`seedlingPuzzleSkin.js`):
+ *
+ *   · `bossSkinView(run)` — THE ONE ADAPTER. It copies; it writes nothing. Every
+ *     read is a getter the fights already expose for the solver (`shieldBosses`,
+ *     …); G10 adds no `levelRun` getter.
+ *   · `stepBossSkin(prev, view, tick)` — the renderer's own state, one GAME tick at
+ *     a time (the hit tint, which `Enemy.hitUpdate` toggles in the body's update).
+ *   · `bossOps(view, art, { skin })` — PURE. The draw ops, Y-sorted with the room.
+ *
+ * ── What AS3 does, transcribed (`vendor/seedling/src`) ─────────────────
+ *
+ *   · SHIELD BOSS (`Enemies/ShieldBoss.as`, L19) — a 56 × 80 Spritemap centred
+ *     (`centerOO`) at the entity point (oel + (24, 32)); `layer = -(y − 40 + 80)`.
+ *     The animation is the MODEL's (`shieldBossFight.js` steps the class's own
+ *     Spritemap: "sit" [0], "moveShield" [0,1], "movedShield" [2], "stab" [3..8],
+ *     "die" [9..19]), read back as `frame`. `render()`: nothing once `destroy`
+ *     (so `Mobile.death`'s alpha fade is never seen), HARDLIGHT while "die".
+ *     The hit tint: `Enemy.hitUpdate` (the default `hitsColor` 0xFF0000) runs
+ *     inside `Enemy.update`, which `ShieldBoss.update` calls only while the
+ *     animation is not "die" — so the reducer toggles only on a tick whose
+ *     `hitsTimer` stepped down by one (the update ran), never on the kill.
+ *   · FROZEN BOSS (`Scenery/FrozenBoss.as`, L111) — an Image at the placement
+ *     (origin 0), `layer = -(y − originY + height·2/3)` with the hitbox's
+ *     origin −128 and height 32; `render()` draws it again onto nightBmp.
+ *
+ * ⛔ The renderer only reads. `seedlingBossSkin.test.js` holds each tape's
+ * stream, ledgers, stateLog and `stateDigest` identical with it on and off.
+ * NOT YET: `BOSS_PENDING` (per class, why) and the census's `remaining` rows.
+ */
+import { ENEMY_HIT_TINT, hitTint, rectOp, spriteOp } from './seedlingEnemySkin.js';
+
+export const KEYS = Object.freeze({
+    shieldBoss: 'seedling:boss/shieldboss',
+    frozenBoss: 'seedling:boss/frozenboss',
+});
+/** `ShieldBoss.as:15` Spritemap(56, 80), `centerOO`: the frame's height (the layer). */
+const SHIELD_H = 80;
+/** `ShieldBoss.as:45` `setHitbox(48, 48, 24, 24)`: the stand-in. */
+const SHIELD_BOX = 48;
+/** `FrozenBoss.as:18-20`: Image 160 × 160 at the placement; hitbox (80, 32, −32, −128). */
+const FROZEN_SIZE = 160;
+const FROZEN_LAYER_DY = 128 + (32 * 2) / 3;
+const BOSS_COLOUR = '#e04848';
+
+/** WHAT G10 DRAWS, by AS3 class. */
+export const BOSS_COVERAGE = Object.freeze({
+    drawn: Object.freeze(['ShieldBoss', 'FrozenBoss']),
+});
+/** What G10 does not draw yet, and why (the census's `remaining` rows say which classes). */
+export const BOSS_PENDING = Object.freeze({
+    ShieldBoss: 'HARDLIGHT is the canvas `hard-light` composite (an approximation of BlendMode.HARDLIGHT, as G9c\'s INVERT)',
+});
+/** The placed tags whose build-time rectangle a boss's sprite replaces (`roomOps`' `drawnObjects`). */
+export const BOSS_OBJECT_TAGS = new Set(['shieldboss', 'frozenboss']);
+
+// ── the adapter ─────────────────────────────────────────────────────────
+
+const read = (run, name, fallback) => (name in run ? run[name] ?? fallback : fallback);
+
+/** THE ADAPTER. Everything these pictures read, as plain objects (null when there is no run). */
+export function bossSkinView(run) {
+    if (!run?.state) return null;
+    const world = run.world ?? null;
+    const objects = world?.objectSolids ?? [];
+    return {
+        epoch: { run, key: `${run.level}|${run.transitions?.length ?? 0}|${run.playerDeaths?.length ?? 0}` },
+        level: run.level,
+        gameTime: run.gameTime ?? null,
+        shieldBosses: (read(run, 'shieldBosses', []) ?? []).map((b) => ({
+            id: b.id, x: b.x, y: b.y, anim: b.anim, frame: b.frame, hitsTimer: b.hitsTimer ?? 0,
+            destroy: !!b.destroy, removed: !!b.removed,
+        })),
+        frozenBosses: objects.filter((o) => o.tag === 'frozenboss').map((o) => ({ id: `frozenboss@${o.x},${o.y}`, x: o.x, y: o.y })),
+    };
+}
+
+const sameVisit = (a, b) => !!a && !!b && a.run === b.run && a.key === b.key;
+
+// ── the reducer ─────────────────────────────────────────────────────────
+
+/**
+ * `Enemy.hitUpdate` (Enemy.as:223-245) for a boss whose update the model ran: it
+ * ran this tick iff `hitsTimer` stepped from `h` to `h − 1` (a hit sets it to 30
+ * AFTER the update, in the player's; the "die" path and an off-camera body skip it).
+ */
+function bossTint(st, h, now) {
+    return h > 0 && now === h - 1 ? hitTint(st.tint, h, ENEMY_HIT_TINT) : st.tint;
+}
+
+/** The reducer's rules, by name, so a test can swap ONE for a mutant (`opts.rules`). */
+export const BOSS_RULES = Object.freeze({ bossTint, dieBlend: (anim) => (anim === 'die' ? 'hard-light' : null) });
+
+/** One GAME tick of these pictures (call it after every `tick()`). Pure: returns a new object. */
+export function stepBossSkin(prev, view, tick, { rules = BOSS_RULES } = {}) {
+    if (!view) return prev;
+    const R = rules === BOSS_RULES ? rules : { ...BOSS_RULES, ...rules };
+    const same = !!prev && sameVisit(prev.epoch, view.epoch);
+    const bodies = new Map();
+    for (const b of view.shieldBosses) {
+        const old = same ? prev.bodies.get(b.id) : null;
+        const st = old ? { ...old } : { tint: null, prevHits: b.hitsTimer };
+        st.tint = R.bossTint(st, st.prevHits, b.hitsTimer);
+        st.prevHits = b.hitsTimer;
+        bodies.set(b.id, st);
+    }
+    return { epoch: view.epoch, gameTime: view.gameTime, bodies, rules: R };
+}
+
+// ── the ops ─────────────────────────────────────────────────────────────
+
+const boxAround = (x, y, w, h) => ({ x: x - w / 2, y: y - h / 2, w, h, right: x + w / 2, bottom: y + h / 2 });
+
+/** THE DRAW OPS at the tick `skin` was stepped to; a body whose key the stack lacks is its rectangle. */
+export function bossOps(view, art, { skin } = {}) {
+    if (!view || !art || !skin) return [];
+    const R = skin.rules ?? BOSS_RULES;
+    const ops = [];
+    const push = (key, frame, at, box, extra) => {
+        const fallback = rectOp(box, BOSS_COLOUR, 0.85, extra.layer);
+        if (!art.has(key)) { ops.push(fallback); return; }
+        const op = spriteOp(art, key, frame, at, { ...extra, fallback });
+        if (op && extra.blend) op.blend = extra.blend;
+        if (op && extra.nightCopy) op.nightCopy = true;
+        ops.push(op);
+    };
+    for (const b of view.shieldBosses) {
+        // `ShieldBoss.render`: `if (destroy) return;` — the corpse's alpha fade is never drawn
+        if (b.destroy || b.removed) continue;
+        const st = skin.bodies.get(b.id);
+        push(KEYS.shieldBoss, b.frame, b, boxAround(b.x, b.y, SHIELD_BOX, SHIELD_BOX), {
+            layer: -(b.y - SHIELD_H / 2 + SHIELD_H), tint: st?.tint ?? null, blend: R.dieBlend(b.anim),
+        });
+    }
+    for (const f of view.frozenBosses) {
+        push(KEYS.frozenBoss, 0, f, { x: f.x, y: f.y, w: FROZEN_SIZE, h: FROZEN_SIZE, right: f.x + FROZEN_SIZE, bottom: f.y + FROZEN_SIZE },
+            { layer: -(f.y + FROZEN_LAYER_DY), nightCopy: true });
+    }
+    return ops.filter(Boolean);
+}

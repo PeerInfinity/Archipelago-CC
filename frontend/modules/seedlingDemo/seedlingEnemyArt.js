@@ -242,6 +242,12 @@ export const ENEMY_ART = Object.freeze([
         ['totempart', 'BossTotemParts.png', 24, 24], ['chest', 'Chest.png', 16, 16], ['seed', 'Seed.png', 9, 13]]
         .map(([look, file, w, h, image]) => ({ pack: 'seedling', key: `seedling:pickup/${look}`, file, fw: w, fh: h, origin: [w / 2, h / 2],
             as3: `Pickups/APItem.as:94-104 "${look}" → [${file}, ${image ? '0, 0] (an Image: the whole ' + w + 'x' + h + ' file)' : `${w}, ${h}]`}; :171 centerOO, frame 0` })),
+    // ── G10: the bosses (`seedlingBossSkin.js`). The anims ride the model's own tables (`shieldBossFight.SHIELD_BOSS_ANIMS`
+    //    etc.): the run carries the frame, so the rows hold the sheet, the frame size and the origin. ──
+    { pack: 'seedling', key: 'seedling:boss/shieldboss', file: 'ShieldBoss.png', fw: 56, fh: 80, origin: [28, 40],
+        as3: 'Enemies/ShieldBoss.as:15-16 Spritemap(56, 80); :35-41 super(_x + 24, _y + 32), centerOO; sit [0], stab [3..8], moveShield [0,1], movedShield [2], die [9..19]' },
+    { pack: 'seedling', key: 'seedling:boss/frozenboss', file: 'FrozenBoss.png',
+        as3: 'Scenery/FrozenBoss.as:13-14 Image; :18 super(_x, _y) (origin 0); :20 layer; :25-30 render, and onto nightBmp' },
     // `Game.as:432-444` `bossKeys` (Spritemap(12, 16), centerOO at `Game.as:811-813`); `APItem.as:155-162` "bosskeyN".
     ...['', '1', '2', '3', '4'].map((n, i) => ({ pack: 'seedling', key: `seedling:pickup/bosskey${i}`, file: `BossKey${n}.png`, fw: 12, fh: 16, origin: [6, 8],
         as3: `Game.as:${432 + 2 * i}-${433 + 2 * i} sprBossKey${n}; Game.as:444 bossKeys[${i}]; APItem.as:155-162 "bosskey${i}"` })),
