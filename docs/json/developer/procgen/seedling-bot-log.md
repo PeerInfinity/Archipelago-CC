@@ -25667,3 +25667,30 @@ landed; its branch `claude/seedling-executor-shake-band-tnp9ij` and report stay 
   at the defaults none moves, and none of L40's 47 page requests.
 - **Gate** `hammerRefugeBandText.test.js` (BX's two I2 rows), fixture `fixtures/hammer-bx-371/` (the page's 371 request
   cut to level 40, 10 KB).
+
+### Seedling hammer-phase SDC — a tripped deadline keeps a rewound run's liveRun
+
+⚖ User, 2026-10-26: *"Yes please"* (to queue it). It closes FF-HARNESS's hand-over 1 and lands FF's report
+(`CC/docs/cloud-reports/seedling-hammer-fight-fallback-shadow.md`, until now only on its branch). The report is
+`CC/docs/cloud-reports/seedling-hammer-solve-deadline-carry.md`. `HAMMER_FIGHT_FALLBACK` stays OFF.
+
+**The fix** (`solverBot.withSolveDeadline`). A segment whose deadline tripped returns a new object,
+`{ ...out, deadline }`. A spread copies only enumerable fields, so B3's non-enumerable `liveRun` (the fork a rewind
+adopted) was lost exactly when a rewound pass also tripped its window. The tripped result now keeps it, still not
+enumerable. With no `liveRun` (every solve with the switch OFF: only `rewind.to` sets it) the spread is as before.
+`withSolveDeadline` is the only site between `solveSegmentUnder` and its readers that copies the result
+(`withSolveProgress`, `progressSegment`, `refusingByName` and `twoPassSolve` hand the same object on).
+
+**Measured.** Leg 371 (`level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144`, seams 5226–5280)
+with the switch ON goes from 34 of 45 phases solving with 1 divergence (5251) to **35 of 45 with 0**: 5251's full pass
+(rewound at t1112, `sword-dash` tripped) is now a 1753-tick plan whose `expected` equals an independent replay, row for
+row. Nothing else moves. With the switch OFF it is byte-identical (55 seams, every field but wall time).
+
+**Gate.** `hammerFightFallback.test.js`, two rows: `r9-solve-18` at residue 4 through `solveFromTape` with a
+`shouldStop` that trips once the fallback has answered (a 381-tick plan, its rows a replay of its keys), and a unit row
+on `withSolveDeadline` (the mark kept across a trip, none added without one). Mutant sdc-m1 (the carry dropped) fails
+both: *"the solve returned 381 key set(s) but the shadow advanced 266 time(s)"*.
+
+**Trap candidate.** Every wrapper between a result's producer and its reader is part of a non-enumerable field's
+contract. A wrapper that spreads only when something rare happened (here, a tripped deadline) hides the loss until the
+rare thing and the field meet on one pass.
