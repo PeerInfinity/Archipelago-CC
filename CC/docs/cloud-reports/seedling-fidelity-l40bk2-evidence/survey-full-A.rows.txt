@@ -1,0 +1,270 @@
+1	0	SOLVED	183		
+2	2	SOLVED	47		
+3	3	SOLVED	245		
+4	4	SOLVED	255		
+5	5	SOLVED	403		
+6	6	SOLVED	294		
+7	7	SOLVED	146		
+8	8	SOLVED	827		
+9	9	SOLVED	122		
+10	10	SOLVED	83		
+11	11	SOLVED	97		
+12	3	SOLVED	152		
+13	2	SOLVED	23		
+14	0	SOLVED	111		
+15	86	SOLVED	101		
+16	0	SOLVED	186		
+17	12	SOLVED	328		
+18	36	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-18) chest (64,48) stance: the re-planned corridor failed too — solverBot(survey-step-18) chest (64,48) stance waypoint 1 (72,66): the route entered a proximity-hazard — chest at (64,48) in level 36 — at (72.97948572567307,67.99500184538654). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.
+19	12	SOLVED	311		
+20	0	SOLVED	198		
+21	13	SOLVED	36		
+22	14	SOLVED	103		
+23	15	SOLVED	456		
+24	16	SOLVED	273		
+25	17	SOLVED	131		
+26	16	SOLVED	516		
+27	18	SOLVED	467		
+28	19	SOLVED	746		
+29	20	SOLVED	560		
+30	13	SOLVED	48		
+31	0	SOLVED	201		
+32	12	SOLVED	2364		
+33	21	SOLVED	26		
+34	22	SOLVED	113		
+35	25	REFUSED	None	VERB-MISSING — the selected obstacle has NO strategy row at all	solverBot(survey-step-35) chest (96,96): the placement is INSIDE solid:rock2 (rock2@80,96) — a pickup in a solid is an obstacle, not a stance problem. No strategy row exists for this obstacle.
+36	22	SOLVED	201		
+37	29	SOLVED	257		
+38	31	SOLVED	336		
+39	30	SOLVED	395		
+40	32	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-40) encounter (80,128)->Seal: the arena's exit (burnabletree@64,0) burns only with Fire, and under `apReportBosses` the Fire pickup grants nothing (`Fire.removed()` @0eda15f785 clears {32,4}; the HOST grants the item): this run holds none.
+41	30	SOLVED	320		
+42	22	SOLVED	406		
+43	21	SOLVED	31		
+44	23	SOLVED	11		
+45	24	SOLVED	124		
+46	12	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-46) chest (320,816) stance: the re-planned corridor failed too — solverBot(survey-step-46) chest (320,816) stance waypoint 13 (328,834): the route entered a proximity-hazard — chest at (320,816) in level 12 — at (328.6670530633372,835.8463944777346). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.
+47	37	SOLVED	316		
+48	38	SOLVED	371		
+49	37	SOLVED	332		
+50	44	SOLVED	212		
+51	45	SOLVED	239		
+52	46	SOLVED	208		
+53	47	SOLVED	204		
+54	48	SOLVED	330		
+55	49	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-55) collect (32,80) stance: the re-planned corridor failed too — solverBot(survey-step-55) collect (32,80) stance waypoint 0 (40,72): not reached within 400 ticks; stalled at (40,72.1500000000028) v=(0,-1.5249999999999981) in level 49, aiming at (40,72).
+56	0	SOLVED	74		
+57	13	SOLVED	36		
+58	14	SOLVED	117		
+59	15	SOLVED	326		
+60	14	SOLVED	55		
+61	13	SOLVED	48		
+62	0	SOLVED	169		
+63	12	SOLVED	953		
+64	37	SOLVED	314		
+65	38	SOLVED	480		
+66	39	REFUSED	None	unclassified — see the refusal text	solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corridor from (120.49007092256514,151.93516637563243). A hold that cannot be stood on is not a strategy for this obstacle. ⛔ AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@144,48 — its group t=4 publishes only while a Solid sits on button@144,112, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@144,32 — its group t=5 publishes only while a Solid sits on button@176,144, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@144,112 — its group t=0 publishes only while a Solid sits on button@128,144, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@176,144 — its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@48,160 — its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap. ⛔ SEALED BEHIND A WALL: with cover@144,112 discharged a corridor from (120.49007092256514,151.93516637563243) reaches the stance (152,120); with it shut none does. cover@144,112 is a wall nothing on this side can redeem durably (guard iii). From this arrival, with this inventory, the button is out of reach. That is a fact about the room, not a rung the ladder lacks.
+67	40	REFUSED	None	unclassified — see the refusal text	solverBot: no REACHABLE stance inside button@816,400 in level 40 — 1 cell(s) land the player box in the button and none of them plans a corridor from (488,904). A hold that cannot be stood on is not a strategy for this obstacle. ⛔ AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@448,432 — its group t=2 publishes only while a Solid sits on button@480,384, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@512,480 — its group t=2 publishes only while a Solid sits on button@480,384, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@800,400 — its group t=5 publishes only while a Solid sits on button@768,400, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; bosslock@480,352 (no presser publishes its tSet group at all, so nothing in this room can open it); pushableblock@576,560 (no shove of it plans the corridor).
+68	0	SOLVED	204		
+69	12	SOLVED	953		
+70	37	SOLVED	36		
+71	44	SOLVED	120		
+72	45	SOLVED	358		
+73	46	SOLVED	1352		
+74	47	SOLVED	300		
+75	48	SOLVED	681		
+76	49	REFUSED	None	VERB-APPLY — the 'collect' strategy IS registered and did not apply here	solverBot(survey-step-76): no corridor for goal reach-exit toward (40,136) in level 49. Obstacle: pickup:conch (conch@32,80). Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 49 from tile (2,2) to (2,8). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+77	50	SOLVED	608		
+78	51	SOLVED	101		
+79	53	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-79) reach-exit (144,240)->L54: the danger map forbids (104.74873326654372,120.11157546231716) — chaser:puncher@136,96 (inside leash 80 (d=11.1), box grown 1 px/tick x 0 + pad 8). Slice 2 has NO DODGE POLICY (kickoff §4: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.
+80	54	SOLVED	579		
+81	52	SOLVED	208		
+82	55	SOLVED	46		
+83	0	SOLVED	204		
+84	12	SOLVED	232		
+85	88	SOLVED	476		
+86	87	SOLVED	205		
+87	89	REFUSED	None	VERB-APPLY — the 'collect' strategy IS registered and did not apply here	solverBot(survey-step-87): no corridor for goal collect-placement toward (168,88) in level 89. Obstacle: pickup:feather (feather@160,96); also on the frontier: cliffside0@144,80, cliffside0@144,64, cliffside0@144,96, cliffside2@144,48, tree@96,32, forestchar@80,96, tree@64,32, tree@64,128, tree@240,128, tree@208,160, tree@32,64, tree@272,96, tree@32,96, tree@96,192, tree@64,160, tree@128,192, tree@208,192, tree@240,192, tree@128,224, tree@272,192, tree@128,256, tree@176,256, tree@208,256, pole@288,224, tree@240,256, tree@272,256, tree@176,288, tree@128,288. Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 89 from tile (17,15) to (10,5). ⛓ The search refused 3 UPWARD step(s) into or out of an armed waterfall (`climbsArmedWaterfall`): without the feather the push (`v.y += 0.8`) beats the climb, so a waterfall is one-way DOWN. The two are in different connected components 
+88	90	SOLVED	137		
+89	89	SOLVED	639		
+90	87	SOLVED	250		
+91	44	SOLVED	149		
+92	37	SOLVED	522		
+93	38	SOLVED	359		
+94	39	REFUSED	None	unclassified — see the refusal text	solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corridor from (120.49007092256514,151.93516637563243). A hold that cannot be stood on is not a strategy for this obstacle. ⛔ AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@144,48 — its group t=4 publishes only while a Solid sits on button@144,112, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@144,32 — its group t=5 publishes only while a Solid sits on button@176,144, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@144,112 — its group t=0 publishes only while a Solid sits on button@128,144, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@176,144 — its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@48,160 — its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap. ⛔ SEALED BEHIND A WALL: with cover@144,112 discharged a corridor from (120.49007092256514,151.93516637563243) reaches the stance (152,120); with it shut none does. cover@144,112 is a wall nothing on this side can redeem durably (guard iii). From this arrival, with this inventory, the button is out of reach. That is a fact about the room, not a rung the ladder lacks.
+95	40	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-95) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 — 22 walkable candidate(s) in range, 15 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> hold stance (wandlock@448,432) -> chest stance (chest@880,816) -> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752) while pressing spinner@880,848, after 1 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound).
+96	41	SOLVED	2346		
+97	40	SOLVED	70		
+98	42	SOLVED	1294		
+99	0	SOLVED	392		
+100	89	SOLVED	135		
+101	87	SOLVED	250		
+102	44	SOLVED	71		
+103	45	SOLVED	358		
+104	46	SOLVED	347		
+105	47	SOLVED	300		
+106	48	SOLVED	295		
+107	49	REFUSED	None	VERB-APPLY — the 'collect' strategy IS registered and did not apply here	solverBot(survey-step-107): no corridor for goal reach-exit toward (40,136) in level 49. Obstacle: pickup:conch (conch@32,80). Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 49 from tile (2,2) to (2,8). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+108	50	SOLVED	608		
+109	51	SOLVED	378		
+110	52	SOLVED	381		
+111	56	SOLVED	262		
+112	57	SOLVED	1389		
+113	58	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-113) reach-exit (80,16)->L46: the re-planned corridor failed too — solverBot(survey-step-113) reach-exit (80,16)->L46 waypoint 1 (72,56): not reached within 400 ticks; stalled at (56.82857242301463,55.93354209545144) v=(1.0500000000000023,0) in level 58, aiming at (72,56), after grazing 400 solid(s): yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56); yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56); yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56).
+114	46	SOLVED	342		
+115	45	SOLVED	360		
+116	44	SOLVED	92		
+117	87	SOLVED	148		
+118	88	REFUSED	None	LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons	solverBot(survey-step-118) reach-exit (96,304)->L12: the combat ladder is EXHAUSTED. The corridor passes through danger at (136.9,144.4) — enemy:drill@128,160 (a stepped drill, priced as a static box where it stands now (136,152) (`drillMixedRooms`: it hops only when the player is in its run range with a clear line)) — and every rung of ⚖ §11.8a's order refused:
+  avoid: the danger-forbidden corridor STILL probes dangerous at (136.9,144.4) — enemy:drill@128,160 (a stepped drill, priced as a static box where it stands now (136,152) (`drillMixedRooms`: it hops only when the player is in its run range with a clear line)). ⚠ The AVOID rung routes around RECTS and the probe asks the whole union, which includes the point tests a rect cannot carry (a disc hazard); that gap is why the ladder has a second rung.
+  time: the aim is 193 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [enemy:drill@128,160] and this room's live roster is [empty]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.
+  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static "Enemy" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)
+  forced-hit: no forced hit is proven from (136.4,121.3): the hitless input [· · ·] survives 3 tick(s) — no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))
+119	12	SOLVED	208		
+120	95	SOLVED	490		
+121	59	SOLVED	150		
+122	60	SOLVED	530		
+123	61	SOLVED	296		
+124	63	SOLVED	86		
+125	62	SOLVED	266		
+126	64	REFUSED	None	unclassified — see the refusal text	levelRun: a sword press at tick 43 would fire its rect on a FROZEN tick (a pickup ceremony), and `genericHit` returns immediately under `Game.freezeObjects` — so the press would do nothing at all. Press outside the freeze.
+127	62	SOLVED	263		
+128	61	SOLVED	303		
+129	60	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-129) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 179-tick bound (0 guard step(s)); it stands at (121.9,84.6), 31.3 px from the player, and its straight chase line to the player is blocked by lock — the body is PINNED on the solid between them (a chaser does not path-find).
+130	59	SOLVED	150		
+131	95	SOLVED	511		
+132	12	SOLVED	957		
+133	37	SOLVED	314		
+134	38	SOLVED	359		
+135	39	REFUSED	None	unclassified — see the refusal text	solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corridor from (120.49007092256514,151.93516637563243). A hold that cannot be stood on is not a strategy for this obstacle. ⛔ AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@144,48 — its group t=4 publishes only while a Solid sits on button@144,112, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@144,32 — its group t=5 publishes only while a Solid sits on button@176,144, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@144,112 — its group t=0 publishes only while a Solid sits on button@128,144, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@176,144 — its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@48,160 — its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap. ⛔ SEALED BEHIND A WALL: with cover@144,112 discharged a corridor from (120.49007092256514,151.93516637563243) reaches the stance (152,120); with it shut none does. cover@144,112 is a wall nothing on this side can redeem durably (guard iii). From this arrival, with this inventory, the button is out of reach. That is a fact about the room, not a rung the ladder lacks.
+136	40	SOLVED	172		
+137	43	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-137) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112): the re-planned corridor failed too — solverBot(survey-step-137) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112) waypoint 0 (168,184): not reached within 400 ticks; stalled at (178.5677669529664,423.6215908221288) v=(-0.8270292269908041,-0.8270292269908041) in level 43, aiming at (168,184), after grazing 82 solid(s): tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,449.0516504294495) in level 43, aiming at (168,184); tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,447.7123106012293) in level 43, aiming at (168,184); tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,446.5497474683058) in level 43, aiming at (168,184).
+138	37	SOLVED	234		
+139	12	SOLVED	1269		
+140	95	SOLVED	490		
+141	59	SOLVED	143		
+142	67	REFUSED	None	LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons	solverBot(survey-step-142) collect (48,64) stance (ladder-routed: no corridor from (216,120) to a stance that can collect bosskey@48,64 — 10 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it): the combat ladder is EXHAUSTED. The corridor passes through danger at (63.3,151.3) — arrowLane:arrowtrap@48,48 (an ARMED trap's lane — a STATE question, and still danger at every horizon: the volley that has not fired yet is the one a walk needs warning about) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 13 volume(s) forbidden — A* goal tile (3,3) in level 67 — for (56,56) — is not walkable: danger:arrowtrap@48,48 (an ARMED trap's lane) at (50,48). The planner works in whole tiles, so both ends of a route must be tiles the pl
+  time: the aim is 141 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [arrowLane:arrowtrap@48,48] and this room's live roster is [empty]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.
+  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static "Enemy" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)
+  forced-hit: no forced hit is proven from (181.7,120.7): the hitless input [· · ·] survives 3 tick(s) — no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))
+143	59	SOLVED	151		
+144	60	SOLVED	530		
+145	61	REFUSED	None	VERB-MISSING — the selected obstacle has NO strategy row at all	solverBot(survey-step-145): no corridor for goal reach-exit toward (232,216) in level 61. Obstacle: solid:spinningaxe (spinningaxe@160,80); also on the frontier: planttorch@144,80, spinningaxe@64,144. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 61 from tile (1,10) to (14,13). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+146	63	SOLVED	89		
+147	65	SOLVED	63		
+148	66	REFUSED	None	VERB-MISSING — the selected obstacle has NO strategy row at all	solverBot(survey-step-148): no corridor for goal reach-exit toward (80,72) in level 66. Obstacle: no-corridor. No strategy row exists for this obstacle. Planner said: A* goal tile (5,4) in level 66 — for (80,72) — is not walkable: pixelmask building8 at (48,16). The planner works in whole tiles, so both ends of a route must be tiles the player box fits in at the centre of.
+149	70	SOLVED	105		
+150	69	TIMEOUT	None		
+151	36	SOLVED	50		
+152	12	SOLVED	1189		
+153	37	SOLVED	314		
+154	38	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-154) reach-exit (144,0)->L39 -> chest: chest@144,112 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide("Solid", x, y)` — the chest colliding with whatever shares its cell — so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.
+155	39	REFUSED	None	unclassified — see the refusal text	solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corridor from (120.49007092256514,151.93516637563243). A hold that cannot be stood on is not a strategy for this obstacle. ⛔ AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@144,48 — its group t=4 publishes only while a Solid sits on button@144,112, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@144,32 — its group t=5 publishes only while a Solid sits on button@176,144, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@144,112 — its group t=0 publishes only while a Solid sits on button@128,144, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@176,144 — its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@48,160 — its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it — so the only order that could open it is a `hold` the walker shuts again by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap. ⛔ SEALED BEHIND A WALL: with cover@144,112 discharged a corridor from (120.49007092256514,151.93516637563243) reaches the stance (152,120); with it shut none does. cover@144,112 is a wall nothing on this side can redeem durably (guard iii). From this arrival, with this inventory, the button is out of reach. That is a fact about the room, not a rung the ladder lacks.
+156	40	SOLVED	172		
+157	43	REFUSED	None	VERB-APPLY — the 'collect' strategy IS registered and did not apply here	solverBot(survey-step-157): no corridor for goal reach-exit toward (152,72) in level 43. Obstacle: pickup:wand (wand@144,224); also on the frontier: bosstotem@152,168, dungeonspire@96,320, dungeonspire@192,320, dungeonspire@96,352, rock@96,368. Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 43 from tile (11,28) to (9,4). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+158	37	SOLVED	234		
+159	12	SOLVED	1269		
+160	95	SOLVED	490		
+161	59	SOLVED	150		
+162	60	SOLVED	497		
+163	61	SOLVED	296		
+164	63	SOLVED	504		
+165	65	SOLVED	546		
+166	68	REFUSED	None	VERB-APPLY — the 'collect' strategy IS registered and did not apply here	solverBot(survey-step-166): no corridor for goal collect-placement toward (8,8) in level 68. Obstacle: pickup:health (health@16,16). Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 68 from tile (1,3) to (0,0). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+167	65	SOLVED	233		
+168	63	REFUSED	None	VERB-APPLY — the 'shove' strategy IS registered and did not apply here	solverBot(survey-step-168): no corridor for goal reach-exit toward (132,268) in level 63. Obstacle: solid:pushableblockspear (pushableblockspear@112,96). Strategy 'shove' failed to apply. Planner said: A* start tile (7,18) in level 63 — for (123.61554871341427,301.16961173792373) — is not walkable: pit Pit (t=6) at tile (7,18). The planner works in whole tiles, so both ends of a route must be tiles the player box fits in at the centre of.
+169	61	SOLVED	227		
+170	60	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-170) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (121.9,82.5), 31.4 px from the player, and its straight chase line to the player is blocked by lock — the body is PINNED on the solid between them (a chaser does not path-find).
+171	59	SOLVED	150		
+172	95	SOLVED	511		
+173	12	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-173) reach-exit (32,848)->L83 -> chest: chest@320,816 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide("Solid", x, y)` — the chest colliding with whatever shares its cell — so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.
+174	83	SOLVED	85		
+175	84	REFUSED	None	VERB-MISSING — the selected obstacle has NO strategy row at all	solverBot(survey-step-175): no corridor for goal reach-pit toward (56,24) in level 84. Obstacle: no-corridor. No strategy row exists for this obstacle. Planner said: A* start tile (2,2) in level 84 — for (40,40) — is not walkable: pit Pit (t=6) at tile (2,2). The planner works in whole tiles, so both ends of a route must be tiles the player box fits in at the centre of.
+176	85	SOLVED	18		
+177	71	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-177) chest (160,256) stance -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone — the body is PINNED on the solid between them (a chaser does not path-find).
+178	75	REFUSED	None	LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons	solverBot(survey-step-178) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (104.3,160.6) — hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its update 124 of this visit (rate -6, 336°) — the exact `collideLine`/`collideRect` at THIS tick, not the disc) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 9 volume(s) forbidden — no walkable tile path in level 75 from tile (4,13) to (4,0). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water,
+  dodge: no stall of one revolution or less at the doorstep or 7 earlier walk-offset(s) (step 4) clears the corridor of hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its update 124 of this visit (rate -6, 336°) — the exact `collideLine`/`collideRect` at THIS tick, not the disc) (1711 preview(s)); and bent through via cells: no corridor bent through at most 2 via cell(s) of the 29 the walk can plan to probes clean: 60 candidate corridor(s) previewed with the bodies stepped against each, 2 prefix(es) dangerous before their last via, 60 preview(s) of the 60 bound spent and 355 leg(s) of the 500 planned, 193 candidate(s) left unasked.; and on the axe's clock at dash speed (AXETIMING, 140 preview(s)): no stall of 0..59 at the doorstep (sample 83) × 10 phase(s) of the dash chain [0,2,8,14] every 20 t crosses spinningaxe@80,144's reach clean
+  time: the aim is 208 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [hazard:spinningaxe@80,144] and this room's live roster is [lavarunner@8,112, lavarunner@104,64]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.
+  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static "Enemy" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)
+  narrow: the corridor walked with the pre-lapse strike admissions is dangerous too — hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its update 124 of this visit (rate -6, 336°) — the exact `collideLine`/`collideRect` at THIS tick, not the disc) at (104.3,160.6)
+  forced-hit: no forced hit is proven from (72.0,216.0): the hitless input [· · ·] survives 3 tick(s) — no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))
+179	74	SOLVED	321		
+180	75	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-180) reach-exit (64,224)->L71: the danger map forbids (78.24124278936391,35.24504871165134) — hazard:lavachain@96,32 (avoid (phase-band) — rect: the arm, -x). Slice 2 has NO DODGE POLICY (kickoff §4: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.
+181	71	SOLVED	327		
+182	76	SOLVED	496		
+183	77	REFUSED	None	VERB-MISSING — the selected obstacle has NO strategy row at all	solverBot(survey-step-183): no corridor for goal reach-exit toward (104,312) in level 77. Obstacle: proximity-hazard:lavatrap (lavatrap@96,192). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 77 from tile (1,2) to (6,19). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+184	78	REFUSED	None	VERB-MISSING — the selected obstacle has NO strategy row at all	solverBot(survey-step-184): no corridor for goal reach-exit toward (40,8) in level 78. Obstacle: proximity-hazard:lavatrap (lavatrap@144,48); also on the frontier: lavatrap@144,96. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 78 from tile (16,1) to (2,0). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+185	79	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-185) collect (40,152) stance: the re-planned corridor failed too — solverBot(survey-step-185) collect (40,152) stance waypoint 0 (40,152): not reached within 400 ticks; stalled at (54.39673789518503,152.3676028103863) v=(-0.8,0) in level 79, aiming at (40,152).
+186	78	SOLVED	392		
+187	77	SOLVED	475		
+188	76	SOLVED	434		
+189	71	SOLVED	193		
+190	82	SOLVED	1363		
+191	96	SOLVED	5		
+192	97	SOLVED	5		
+193	37	SOLVED	780		
+194	12	SOLVED	1269		
+195	95	SOLVED	490		
+196	59	SOLVED	150		
+197	60	SOLVED	497		
+198	61	SOLVED	296		
+199	63	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-199) chest (224,80) stance: the re-planned corridor failed too — solverBot(survey-step-199) chest (224,80) stance waypoint 8 (232,98): the route entered a proximity-hazard — chest at (224,80) in level 63 — at (231.07145863495577,99.57690978766065). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.
+200	61	SOLVED	227		
+201	60	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-201) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (121.9,82.5), 31.4 px from the player, and its straight chase line to the player is blocked by lock — the body is PINNED on the solid between them (a chaser does not path-find).
+202	59	SOLVED	150		
+203	95	SOLVED	511		
+204	12	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-204) reach-exit (32,848)->L83 -> chest: chest@320,816 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide("Solid", x, y)` — the chest colliding with whatever shares its cell — so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.
+205	83	SOLVED	85		
+206	84	REFUSED	None	VERB-MISSING — the selected obstacle has NO strategy row at all	solverBot(survey-step-206): no corridor for goal reach-pit toward (56,24) in level 84. Obstacle: no-corridor. No strategy row exists for this obstacle. Planner said: A* start tile (2,2) in level 84 — for (40,40) — is not walkable: pit Pit (t=6) at tile (2,2). The planner works in whole tiles, so both ends of a route must be tiles the player box fits in at the centre of.
+207	85	SOLVED	18		
+208	71	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-208) reach-exit (224,304)->L80 -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone — the body is PINNED on the solid between them (a chaser does not path-find).
+209	80	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-209) chest (16,128): chest@16,128 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide("Solid", x, y)` — the chest colliding with whatever shares its cell — so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.
+210	71	SOLVED	171		
+211	82	SOLVED	1363		
+212	96	SOLVED	5		
+213	97	SOLVED	5		
+214	37	SOLVED	767		
+215	44	SOLVED	86		
+216	87	SOLVED	223		
+217	93	REFUSED	None	VERB-MISSING — the selected obstacle has NO strategy row at all	solverBot(survey-step-217): no corridor for goal reach-exit toward (120,88) in level 93. Obstacle: solid:dungeonspire (dungeonspire@128,240); also on the frontier: dungeonspire@96,240, tree@128,256, tree@80,256. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 93 from tile (7,16) to (7,5). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+218	98	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-218) chest (160,32) stance: the re-planned corridor failed too — solverBot(survey-step-218) chest (160,32) stance waypoint 3 (168,50): the route entered a proximity-hazard — chest at (160,32) in level 98 — at (167.74495030824033,51.25719294972813). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.
+219	99	REFUSED	None	unclassified — see the refusal text	solverBot(survey-step-219) reach-exit (48,96)->L100 -> kill: the count is still waiting on [lavarunner@192,64, lavarunner@160,32, lavarunner@176,64] and no stance derives for any of them — no stance derives for lavarunner@176,64 on level 99: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 81 cell(s) inside its 80 px leash, 35 of those reachable, and 35 of THOSE refused by the forecast [(120,88): the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; (136,136): the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; (136,88): the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; …]. ⛔ A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant. GUARD APPROACH (guardApproachStance): no approach stance for lavarunner@176,64 either — REACH: 9 lattice cell(s) within the sword's 16 px of its box, 1 of those with no corridor here or onward, +35 candidate(s) whose walk did not settle or plan; TIMING: 0 candidate(s) where lavarunner@176,64 outlives the ceiling or lands on the player first; LEASH: 0 candidate(s) where another body reaches the player — of 35 asked [(120,88) reach: the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; (136,136) reach: the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; (136,88) reach: the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; …]. | no stance derives for lavarunner@160,32 on level 99: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 81 cell(s) inside its 80 px leash, 26 of those reachable, and 26 of THOSE refused by the forecast [(120,88): the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; (136,88): the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; (120,72): the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; …]. ⛔ A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant. GUARD APPROACH (guardApproachStance): no approach stance for lavarunner@160,32 either — REACH: 9 lattice cell(s) within the sword's 16 px of its box, 4 of those with no corridor here or onward, +26 candidate(s) whose walk did not settle or plan; TIMING: 0 candidate(s) where lavarunner@160,32 outlives the ceiling or lands on the player first; LEASH: 0 candidate(s) where another body reaches the player — of 26 asked [(120,88) reach: the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; (136,88) reach: the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; (120,72) reach: the preview did not settle — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further; …]. | no stance derives for lavarunner@192,64 on level 99: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 81 cell(s) inside its 80 px leash, 30 of those reachable, and 30 of THOSE refused by the forecast [(136,88): the preview did not settle — the preview spent 400
+220	100	REFUSED	None	VERB-MISSING — the selected obstacle has NO strategy row at all	solverBot(survey-step-220): no corridor for goal reach-exit toward (296,104) in level 100. Obstacle: pixelmask:cliffside0 (cliffside0@112,96); also on the frontier: cliffside0@112,112, cliffside0@112,80, cliffside0@112,128, cliffside0@112,64, cliffside0@112,144, cliffside0@112,48, cliffside1@64,64, cliffside1@48,112, cliffside1@48,160. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 100 from tile (2,6) to (18,6). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+221	101	SOLVED	287		
+222	102	SOLVED	16		
+223	103	REFUSED	None	LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons	solverBot(survey-step-223) reach-exit (0,64)->L104: the combat ladder is EXHAUSTED. The corridor passes through danger at (103.0,247.5) — hazard:beamtower@208,248 (a BeamTower's beam on its update 265 of this visit (side left) — the exact `collideRect` at THIS tick, not the volume) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 6 volume(s) forbidden — no walkable tile path in level 103 from tile (18,9) to (0,4). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water
+  dodge: no stall of 1..89 tick(s) at the doorstep or 7 earlier walk-offset(s) (step 4) clears the corridor of hazard:beamtower@208,248 (a BeamTower's beam on its update 265 of this visit (side left) — the exact `collideRect` at THIS tick, not the volume) (1145 preview(s)); and bent through via cells: no corridor bent through at most 2 via cell(s) of the 56 the walk can plan to probes clean: 41 candidate corridor(s) previewed with the bodies stepped against each, 0 prefix(es) dangerous before their last via, 41 preview(s) of the 60 bound spent and 500 leg(s) of the 500 planned, 510 candidate(s) left unasked.; and the band-to-band lane: the lane walk meets hazard:beamtower@208,248 (a BeamTower's beam on its update 265 of this visit (side left) — the exact `collideRect` at THIS tick, not the volume) at (102.3,247.7) on tick 265
+  time: the aim is 299 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [hazard:beamtower@208,248] and this room's live roster is [flyer@192,144]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.
+  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static "Enemy" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)
+  narrow: the corridor walked with the pre-lapse strike admissions is dangerous too — hazard:beamtower@208,248 (a BeamTower's beam on its update 265 of this visit (side left) — the exact `collideRect` at THIS tick, not the volume) at (103.3,247.6)
+  forced-hit: no forced hit is proven from (296.0,152.0): the hitless input [· · ·] survives 3 tick(s) — no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))
+224	104	SOLVED	261		
+225	105	SOLVED	416		
+226	106	SOLVED	185		
+227	101	REFUSED	None	ITEM-GATE — the 'wand' verb is registered and magicallockfire@112,48 is gated on an item this run does not hold (or on a press the model refuses); the work order is the item, not the room	solverBot(survey-step-227) reach-exit (144,96)->L102 -> wand: magicallockfire@112,48 cannot be opened by this run — magicallockfire@112,48 is a FIRE MagicalLock (`lockType 1`): `MagicalLock.hit(t)` opens on `lockType <= t`, and only the Fire Wand's shot is type 1. This run does not hold the Fire Wand.
+228	102	SOLVED	20		
+229	107	REFUSED	None	LADDER — every rung of ⚖ §11.8a's order refused; see the per-rung reasons	solverBot(survey-step-229) reach-exit (304,176)->L108 -> hold stance (buttonroom@288,176): the combat ladder is EXHAUSTED. The corridor passes through danger at (30.7,56.0) — crusher:crusher@32,0 (trigger lane S with a clear sight line (LIVE centre 48,16)) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 9 volume(s) forbidden — no walkable tile path in level 107 from tile (1,3) to (18,11). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by wate
+  time: the aim is 301 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [crusher:crusher@32,0] and this room's live roster is [empty]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.
+  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static "Enemy" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)
+  forced-hit: no forced hit is proven from (24.0,56.0): the hitless input [· · ·] survives 3 tick(s) — no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))
+230	108	REFUSED	None	VERB-MISSING — the selected obstacle has NO strategy row at all	solverBot(survey-step-230): no corridor for goal reach-exit toward (232,232) in level 108. Obstacle: proximity-hazard:lavatrap (lavatrap@128,80). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 108 from tile (1,2) to (14,14). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+231	109	SOLVED	158		
+232	101	REFUSED	None	ITEM-GATE — the 'wand' verb is registered and magicallockfire@96,48 is gated on an item this run does not hold (or on a press the model refuses); the work order is the item, not the room	solverBot(survey-step-232) reach-exit (104,24)->L110 -> wand: magicallockfire@96,48 cannot be opened by this run — magicallockfire@96,48 needs the FIRE WAND's shot, whose slot is `useItem` case 5 (`wanding` AND `firing` on one press). `levelRun.weaponForPress` refuses that case by name — two windows on one press are not modelled — so the shot this lock needs cannot be pressed by this model. ⇒ the work order is the case-5 press, not a stance.
+233	110	SOLVED	173		
+234	2	SOLVED	26		
+235	3	SOLVED	82		
+236	111	SOLVED	112		
+237	112	REFUSED	None	ENCOUNTER-GATE — rocklock@112,16 has no strategy row and its opener is not in this room (an encounter the route must win); the work order is the gate, not the room	solverBot(survey-step-237): no corridor for goal reach-exit toward (120,8) in level 112. Obstacle: solid:rocklock (rocklock@112,16); also on the frontier: planttorch@80,32, pod@112,48, planttorch@208,96, pod@184,120, cliffside1@0,96, pod@40,120, cliffside1@0,112, cliffside0@224,112, cliffside1@0,128, cliffside0@224,128, cliffside1@0,144, planttorch@16,160, pod@112,192, planttorch@144,208, cliffside4@112,224, cliffside4@128,224, cliffside3@64,224, cliffside2@48,224. ENCOUNTER-GATE (rocklock@112,16): no presser in level 112 publishes its group; its opener is finalboss@64,96's death (the `dead` arm: `Button.activateAll(null, 0, true)` and `setPersistence(tag + 1)`, `FinalBoss.as`). The work order is the fight, not the room. Planner said: no walkable tile path in level 112 from tile (2,13) to (7,0). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.
+238	113	SOLVED	87		
+239	114	SOLVED	406		
+240	113	SOLVED	166		
+241	115	SOLVED	173		

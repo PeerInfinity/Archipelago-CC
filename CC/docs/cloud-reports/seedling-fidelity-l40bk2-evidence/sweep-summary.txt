@@ -1,0 +1,21 @@
+sweep-A1.jsonl 52 {'done': 36, 'failed': 14, 'timeout': 1, 'unresolved': 1}
+sweep-B1.jsonl 52 {'done': 36, 'failed': 13, 'timeout': 2, 'unresolved': 1}
+sweep-A2.jsonl 52 {'done': 36, 'failed': 14, 'timeout': 1, 'unresolved': 1}
+sweep-B2.jsonl 52 {'done': 36, 'failed': 14, 'timeout': 1, 'unresolved': 1}
+DIFF level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+     sweep-A1.jsonl done 6076 
+     sweep-B1.jsonl failed 6147 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.3199991
+     sweep-A2.jsonl done 6111 
+     sweep-B2.jsonl done 6115 
+DIFF level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+     sweep-A1.jsonl failed 5574 solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,
+     sweep-B1.jsonl timeout 5602 
+     sweep-A2.jsonl failed 5580 solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,
+     sweep-B2.jsonl failed 5608 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.7190556
+DIFF level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152
+     sweep-A1.jsonl failed None 
+     sweep-B1.jsonl done 6299 
+     sweep-A2.jsonl failed None 
+     sweep-B2.jsonl failed None 
+
+[exited with code 0]

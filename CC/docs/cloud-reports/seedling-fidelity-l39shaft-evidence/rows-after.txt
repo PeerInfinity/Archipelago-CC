@@ -1,0 +1,2 @@
+4830 passed 1 failed 7 skipped
+FAIL frontend/modules/flashPanel/seedlingAtlasArm.test.js > loadSeedlingRandomizer hands the four pipeline real-room worlds to the atlas arm seedling_atlas_location is a FUNCTION of SEEDLING_ATLAS_LOCATION_STAT

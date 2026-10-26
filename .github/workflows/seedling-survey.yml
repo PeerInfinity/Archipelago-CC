@@ -293,7 +293,7 @@ jobs:
           done
           { echo '```'; cat merged/merge.txt merged/wall.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           if grep -q '^MERGE-FAIL' merged/merge.txt || [ "$FAIL" = 1 ]; then
-            echo "::error::$(grep '^MERGE-FAIL' merged/merge.txt | head -1)"
+            echo "::error::$(grep -E '^(MERGE-FAIL|BOOT-CHECK-FAIL)' merged/merge.txt | head -1)"
             exit 1
           fi
 

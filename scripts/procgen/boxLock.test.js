@@ -519,6 +519,8 @@ describe('who takes the box', () => {
          * fidelity TURRETCIRCLE the L40 circling-kill and shield witnesses, `probe-seedling-turret-circle.mjs`;
          * rules-l55-waterfall L52's pools into L55, with and without the Feather, `probe-seedling-l55-waterfall.mjs`;
          * rules-l0-tighter-probe L0's lake to the L89 door, past the house and up the falls, `probe-seedling-l0-tighter.mjs`;
+         * fidelity L39SHAFT the three-block shaft's witnesses (the scripted solution, the solver's plan), `probe-seedling-l39-shaft.mjs`;
+         * fidelity L40BK2 L40's Boss Key 2 chain from inside the lock room, `probe-seedling-l40bk2.mjs`;
          * rules-l66-l57-probe L66's door into Dungeon 6 under the off-grid Yellow-Key lock, `probe-seedling-l66-door.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
@@ -569,6 +571,9 @@ describe('who takes the box', () => {
             'probe-seedling-turret-circle.mjs',
             'probe-seedling-l55-waterfall.mjs',
             'probe-seedling-l0-tighter.mjs',
+            'probe-seedling-shake-exact.mjs',
+            'probe-seedling-l39-shaft.mjs',
+            'probe-seedling-l40bk2.mjs',
             'probe-seedling-l66-door.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');

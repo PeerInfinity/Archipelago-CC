@@ -100,7 +100,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_SHAKE_BAND_MOOT || !!process.env.SEEDLING_SPINNER_SWING_LOS
         || !!process.env.SEEDLING_KING_OF_FIRE_FIGHT || !!process.env.SEEDLING_TENTACLE_BEAST_FIGHT
         || !!process.env.SEEDLING_LIGHTS_SORTIE_PORTFOLIO
-        || !!process.env.SEEDLING_CRUSHER_BAIT_PRESS_GOAL || !!process.env.SEEDLING_FORCED_HIT_WITNESS_FIRST)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_CRUSHER_BAIT_PRESS_GOAL || !!process.env.SEEDLING_FORCED_HIT_WITNESS_FIRST
+        || !!process.env.SEEDLING_WEIGH_HYPOTHESIS_CHAIN || !!process.env.SEEDLING_DASH_SPINNER_FORECAST)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -291,7 +292,26 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // the shot — shipped OFF.
             iceBlastShield: true,
             turretCircleKill: true,
-            iceTurretDeathAnim: true });
+            iceTurretDeathAnim: true,
+            // ⛓ fidelity SHAKEEXACT (wave 31): a split run's camera shake stepped exactly — shipped OFF.
+            shakeExactSplit: true,
+            // ⛓ fidelity L67BK4 (wave 31): a spear block that holds an armed lane's button is parked, not sunk; and the
+            // Totem is fought — both shipped OFF.
+            laneWeigh: true,
+            totemBossFight: true,
+            // ⛓ fidelity L39SHAFT (wave 31): L39's three-block shaft as a licensed solver special case — shipped OFF.
+            l39ShaftPress: true,
+            // ⛓ fidelity L39SHAFT D2b (wave 31): a collect from a stance in the pickup's span closes on one axis — OFF.
+            collectSpanAim: true,
+            // ⛓ fidelity L39SHAFT D2c (wave 31): `Spinner.friction()` in the runtime's `Point` spelling — OFF.
+            spinnerPointExact: true,
+            // ⛓ fidelity L40BK2 (wave 31): a weigh's holder derived under the rest of the stance hypothesis (D1), and a
+            // struck spinner priced where the walk's strike left it (D2, ⛓ hammer hand-over 368) — shipped OFF.
+            // ⛓ planning-13's wave-31 flip (⚖ user 2026-10-25): SHAKEEXACT, L67BK4, L39SHAFT, and L40BK2's D1 turn ON;
+            // dashSpinnerForecast waits on L18's wall time ("Chain ON; forecast after L18").
+            weighHypothesisChain: true,
+            // ⛓ and dashSpinnerForecast after the L18 wall-time check (OFF 6,192 vs ON 6,116 ms; hammer-2 signed).
+            dashSpinnerForecast: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

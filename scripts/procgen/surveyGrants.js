@@ -252,3 +252,24 @@ export function stagedRng(rng, shipped) {
     if (rng === null || rng === undefined || rng.split === shipped.split) return rng ?? null;
     return { ...rng, split: shipped.split, cosmetic: rng.split ? rng.cosmetic : shipped.cosmetic };
 }
+
+/** The four boot-block fields the staged cross-check compares (`stagedBlockCheck`). */
+export const STAGED_BLOCK_FIELDS = Object.freeze(['boot', 'save', 'rng', 'seam']);
+
+/**
+ * ⛓ RULES survey-cleanup — **THE STAGED CROSS-CHECK COMPARES THE CONSTRUCTION, NOT THE GRANTED BLOCK.** Where a
+ * staged room also has a committed tape (`r8-solve-18` at L18@16,32), the block the survey builds from `STAGED_BASE`
+ * must be that tape's: the claim "the staged policy is R8's, not this script's". `construction` is the block as
+ * re-pointed (`boot` = the arrival, `rng` through `stagedRng`) BEFORE the route's own grants. Those grants are the
+ * walk's, which no committed tape carries. From b9641cfb2d (survey-save-arrays) the check compared the GRANTED
+ * block and read `ok:false` on every route holding a Seal before L18 (`save.seal_parts`), so nothing could read it.
+ * `tape.rng` goes through the same `stagedRng` the construction did.
+ *
+ * @returns {{ok: boolean, differs: string[]}} `differs` names each field of `STAGED_BLOCK_FIELDS` that disagrees
+ */
+export function stagedBlockCheck(construction, tape, shipped) {
+    const want = { boot: tape.boot ?? null, save: tape.save ?? null, rng: stagedRng(tape.rng ?? null, shipped),
+        seam: tape.seam ?? null };
+    const differs = STAGED_BLOCK_FIELDS.filter((f) => JSON.stringify(construction[f] ?? null) !== JSON.stringify(want[f]));
+    return { ok: differs.length === 0, differs };
+}

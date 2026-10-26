@@ -7,7 +7,11 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-import { deriveStagedGrant, stageGrantSave, stagedRng, tapeCoversVisit } from './surveyGrants.js';
+import {
+    deriveStagedGrant, STAGED_BLOCK_FIELDS, stageGrantSave, stagedBlockCheck, stagedRng, tapeCoversVisit,
+} from './surveyGrants.js';
+import { parseTape } from '../../frontend/modules/seedlingDemo/tapeFormat.js';
+import { solveStaging, stagingFromTape } from '../../frontend/modules/seedlingDemo/tapeRunner.js';
 import { SHIPPED_RNG } from '../../frontend/modules/seedlingDemo/wasmArrival.js';
 import { tentacleStreamRefusal } from '../../frontend/modules/seedlingDemo/tentacleBeast.js';
 
@@ -263,5 +267,43 @@ describe('stagedRng — a staged room runs the game\'s Rng.split (RULES survey-t
         const at = { bootLevel: 57, level: 57, worldEntries: 0 };
         expect(tentacleStreamRefusal(base, at)).toMatch(/split: true/);
         expect(tentacleStreamRefusal(stagedRng(base, SHIPPED_RNG), at)).toBe(null);
+    });
+});
+
+describe('stagedBlockCheck — the staged construction is R8\'s (RULES survey-cleanup; the r8-solve-18 cross-check)', () => {
+    const tape = (name) => parseTape(JSON.parse(readFileSync(new URL(
+        `../../frontend/modules/seedlingDemo/fixtures/tapes/${name}.json`, import.meta.url), 'utf8')));
+    const other = tape('r8-solve-18');
+    /** The survey's construction for a staged row at L18@16,32: STAGED_BASE re-pointed, `rng` through `stagedRng`. */
+    const construct = () => {
+        const staging = solveStaging(stagingFromTape(tape('r8-solve-11')));
+        return JSON.parse(JSON.stringify({ boot: { level: 18, x: 16, y: 32 }, save: staging.save ?? null,
+            rng: stagedRng(staging.rng, SHIPPED_RNG), seam: staging.seam ?? null }));
+    };
+
+    it('the real STAGED_BASE re-pointed at L18@16,32 IS r8-solve-18\'s committed block, field by field', () => {
+        expect(other.boot).toEqual({ level: 18, x: 16, y: 32 });
+        expect(stagedBlockCheck(construct(), other, SHIPPED_RNG)).toEqual({ ok: true, differs: [] });
+    });
+
+    it('the walk\'s granted Seals are NOT the construction: comparing the granted block is the old ok:false', () => {
+        const c = construct();
+        const granted = { ...c, save: stageGrantSave(c.save, { keys: [], items: [], saveCounts: { seal_parts: 4 } },
+            { keys: true, sealsRequired: 16 }) };
+        expect(granted.save.seal_parts).toEqual([0, 1, 2, 3]);
+        expect(stagedBlockCheck(granted, other, SHIPPED_RNG)).toEqual({ ok: false, differs: ['save'] });
+    });
+
+    it('a drifted field is named (each of the four)', () => {
+        for (const f of STAGED_BLOCK_FIELDS) {
+            const c = construct();
+            c[f] = f === 'boot' ? { level: 18, x: 16, y: 48 } : { drifted: true };
+            expect(stagedBlockCheck(c, other, SHIPPED_RNG)).toEqual({ ok: false, differs: [f] });
+        }
+    });
+
+    it('the tape\'s own unsplit rng is normalised the same way the construction\'s is', () => {
+        expect(other.rng.split).toBe(false);
+        expect(construct().rng.split).toBe(true);
     });
 });

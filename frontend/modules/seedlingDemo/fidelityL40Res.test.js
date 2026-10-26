@@ -62,7 +62,8 @@ describe('L40RES D2 — a stance walk that re-enters its own order walks on alon
 
     it('the measurement behind it: the south door is in the stance hypothesis, the west door is not', () => {
         const run = createRunForStaging(fixture('step93-boot'), atlasLevelSource());
-        const h = stanceHypothesisProbe(run);
+        // ⛓ control since planning-13's wave-31 flip: `weighHypothesisChain` ON adds the west door as a chained `weigh`.
+        const h = withContactFidelity({ weighHypothesisChain: false }, () => stanceHypothesisProbe(run));
         expect(h).toContainEqual({ id: 'wandlock@480,560', kind: 'activator', strategy: 'hold' });
         expect(h.map((r) => r.id)).not.toContain('wandlock@448,432');
         expect(h.map((r) => r.id)).not.toContain('wandlock@512,480');

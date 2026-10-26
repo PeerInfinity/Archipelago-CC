@@ -25624,6 +25624,174 @@ drive steps north.
 - Retiring a `noDamage` flag is an exposure change, not just a re-record: the R8 bridge names the tape on the next run.
 - A combination of pins nobody ran can throw instead of drifting (m1: the retired pins with the floor ON throw a
   ceremony-while-dying refusal on l42).
+
+### Seedling fidelity SHAKEEXACT — a split run's camera shake stepped exactly; the band stays where the model cannot know the jiggle (`shakeExactSplit`, OFF)
+
+⚖ User, 2026-10-25 ("Exact for split"): *"Should the model compute the shake jiggle exactly for split runs, keeping the
+band only for split-off tapes and the fade-length / reboot cases?"* → "Exact for split". It replaces the 10-10 "keep the
+band" ruling for split runs. The report is `CC/docs/cloud-reports/seedling-fidelity-shakeexact.md`.
+
+**The game.** Since AS3 3′c `view()` under `Rng.split` adds `shake * Game.shakeJiggle(Game.time, axis) - shake/2` (no draw),
+reading `Game.time` before that frame's `time += timeRate` (`Game.as:889-890`, `:2004-2011`). Unsplit it is `Rng.cos()`,
+which is `Math.random()` there.
+
+**D1.** `camera.stepCameraSplit` (= `stepCameraJiggled` at `finalBossRng.shakeJiggle`). `levelRun.stepCameraNow` takes it on
+a split run whose clock counts and whose camera is still a point. The time is `clock.now() − 1` after a tick's
+`clock.tick()`, and `now() + f − 1` for frame `f` of a dead span the clock has not paid yet (the moonrock, a FallRock). The
+chaser and corridor-body forecasts step their own cameras the same way. The band stays for `camera.SHAKE_BAND_KEPT`'s
+cases: unsplit, no clock, a band already open, across a load, and the `rebootShake` settle. `run.shakeExactCounts` counts
+the exact views. OFF: byte-identical.
+
+**D2 (p4g, headless, `probe-seedling-shake-exact.mjs`).** Every sampled camera equals the model's point at 0 px, and every
+kept band contains the game's camera. Committed tapes: u14-moonrock-beam (60 exact dead-frame views), u15-turret-spit
+(4/4 shaking frames), r9-solve-0-v3. Walks re-declared split: the L41/L42 bomb and reboot walks (10/10 each, with the
+reboot band kept), the L75 lavarunner grenade (4/4) and chain (12/12), and L40's bomb blast (10/10). Recorded:
+`fixtures/shake-witness/` (3).
+
+**D3.** With the key ON, LB's leg 414 seam census (−10..10) loses its 3 live-run shake throws (5121–5123). They become the
+REBOOT guard's death refusal, and the other 18 seams are identical. The bounded set ON moves only the defaults pin. The
+band-text pins (`fidelityArrowLane`, `fidelityLavaRunner`, `fidelityF7`) run split:false or clockless tapes and stay green.
+
+**Trap candidates.**
+- A frozen bot tick is not a frozen clock: inside a dead span, `botStatus.tick` stands still while `game_time` runs. The
+  first poll at a tick can therefore be mid-span (u14 t2 was 451 frames behind), so join the polls on `game_time`.
+- Every committed camera witness was split:false (12 bomb/blast fixtures and 3 lavarunner fixtures). A split ruling had
+  no game evidence in the tree until a walk was re-declared split.
+- A clockless split tape keeps its band by `noClock` alone (the Owl tapes have no `save.time`). A test of the unsplit arm
+  needs a tape whose clock counts, or it passes for the wrong reason (mutant m3).
+
+### Seedling fidelity L67BK4 — L67's spear block parked on the trap's button (`laneWeigh`); L43's Totem fought (`totemBossFight`) — both OFF
+
+The planner's wave-31 slice, from SEARCHGAPS' leg 908 (now leg **898** at this base) and PITPORT's 13 `bosstotem` legs. The
+report is `CC/docs/cloud-reports/seedling-fidelity-l67bk4.md`.
+
+**D1 — L67 Boss Key 4 (`laneWeigh`).** L67 (`Dungeon6/8.oel`) is one puzzle: `arrowtrap@48,48 tset 0 shoot 1` stands over
+`bosskey4` at (48,64), `button@96,112 tset 0` silences it while pressed, and `pushableblockspear@144,112` stands in the
+only corridor west. What the ladder "ran out on" was not the arrows. The clear-path block-route search had already SUNK
+the block: its cheapest route was one thrust W into the pit at (8,7), and after that the button has no holder. ON,
+`resolveSpearPushStrategy` drops a clear-path route that destroys the block in favour of `laneHolderRoute`, which parks
+the block on a button of an armed lane's own group: N W W S W, five thrusts. That empties the same cell, and the walk
+then meets a silent lane. Leg 898's captured request solves in 233 units, the same at every arrival clock tried. The
+census says the rule can only fire in L67: of the three `shoot="1"` rooms, only `Dungeon6/8` has a button on the
+trap's own group. `arrowLaneCrossing` ON (the brief's ask) still refuses at the crossing's fork drive (waypoint 5): a
+tank-a-hit crossing is not the room's answer. The local survey moves one row: L67 Boss Key 4 REFUSED → SOLVED (957 t).
+
+**D2 — L43's Totem (`totemBossFight`).** `bosstotem@152,168` spans L43's 80 px arena. It is a Solid before the wake and
+the clamp holds the player below it after, so the north half (the magical lock, the teleporter to L37) can only be
+reached after the kill. The body is a real wall, but not an honest refusal: the model already stepped the whole fight
+(R6), and only the solver had no verb. ON, `solid:bosstotem` → `totem`, a switch-gated row (as Lights'). The verb
+selects the Wand, walks to a stance west of the laser's fixed `[x-17, x+17)` band and plays `bossTotemPolicy.js`, the
+`r6-totem-kill` cycle read off the live body (an up tap, the wand every 22 ticks, the descent tracked in bursts). Each
+variant is played on a fork, and the first kill with no death wins, hitless first. That ranking matters: the first
+variant takes 2 hits on three of the four captured passes. `levelRun`'s `bosses` view carries the fight's reads only
+while the switch is ON. Legs 862 and 872 solve in 199 and 168 units and cross to L37 with no hit. In the VANILLA rooms
+(survey step 157) the Wand is a real pickup and the body never wakes (`classCount(Wand) <= 0`), so the resolver refuses
+by name there (D2b). Ordering the pickup is residue.
+
+**Witnesses (p4g, headless logic-only, 0 px).** `seedling-fidelity-l67bk4-evidence/witness.mjs` solves each captured
+request with the switch ON, folds the plan with its equips into a tape, and plays it with the request's own
+AP-delivered set loaded (`botLoadLevels`). Leg 898: 5/5 clocks equal row for row; no hit; `{67,0}` (the AP check) is
+written. Legs 862 and 872: 3/3 clocks each equal to L37; no hit; `{43,0}`, `{43,4}` and `{43,5}` are written.
+
+**Trap candidates.**
+- A fresh game page plays the VANILLA rooms. An AP leg's plan witnessed there can match for 892 rows and then part, as
+  L43's Totem never woke (the Wand was a real `Wand`) while the model's did (an `apitem`). Deliver the request's records.
+- `inventory_slots` is staging-only: no tape field carries it. A plan solved under the sweep page's acquisition order
+  names slot indices that a fresh page does not hold.
+- "The ladder is exhausted on the arrow lane" can be a symptom of an earlier, cheaper move that destroyed the room's
+  own answer. Read the run's state at the refusal (the block was `removed`), not just the refusal's words.
+
+### Seedling fidelity L39SHAFT — L39's three-block shaft as a licensed solver special case (`l39ShaftPress`); a collect closes on one axis (`collectSpanAim`); `Spinner.friction()` in the runtime's `Point` spelling (`spinnerPointExact`) — all OFF
+
+Planner `seedling-fidelity-planning-13`, wave 31. The report is `CC/docs/cloud-reports/seedling-fidelity-l39shaft.md`.
+⚖ The user (2026-10-25): *"The solution is to move the three blocks into the three inner switches, then stand between them
+and use fire, which means that for a moment the blocks are half on one button and half on another. For this one, we might
+need to give the solver a special case, rather than trying to find a general rule that would solve this."*
+
+**W0 — the room.** Six plain buttons. The inner three (t1 (9,8), t2 (10,9), t0 (8,9)) each open a cover; the outer three
+(t4 (9,7), t5 (11,9), t3 (7,9)) each sit under one of those covers and each opens one of the three wandlocks on column 9. A
+plain `Button` republishes every update and a `Cover` resets the moment its group drops unless a Solid is inside it, so no
+outer button can be held while the player stands anywhere else, and the one-block weigh parks one block and refuses three
+links deeper (*"no REACHABLE stance inside button@144,112"*, survey steps 66/94/135/155, reproduced at the base).
+`Player.fire()` pushes every block in its 32x32 rect `atan2` away, so from (9,9) with all three inner buttons loaded the
+three blocks go N, E and W at once, each onto the outer button under the cover the other two hold open.
+
+**D1 — the game witness of the user's solution** (`l39shaft-scripted`, `r5-shaft`'s `SHAFT_PLAN` on p4g, the page's own
+levels): 2,763 ticks at 0 px — the player, all three fire blocks, all three spinners, L39's lock tags. The half-on moment is
+t2250..t2260: every block overlaps its inner AND its outer button (the button hitbox is 8x6 in a 16 px cell, the glide is
+0.5 px/tick). The locks write {39,0}/{39,2} at t2349 and {39,1} at t2351; the pocket's {39,7} is written at t648 and taken
+back at t2262. The model already had all of it: no gap.
+
+**D2 — the special case** (`l39ShaftPress`): a frontier member of `L39_SHAFT` refines to `l39shaft`; the executor reads the
+state (`l39ShaftState`), routes a fire block onto each empty inner button in the table's order (each the cheapest fire route
+of any free block, so the plan follows the live room), walks to (9,9), presses once (`runFire`'s exact set), and waits out
+the fade. The solver's plan for step 66 (3,496 t) played on p4g on the delivered set: 3,494 ticks at 0 px, the part
+collected, the exit to L40 taken. Two more gaps came out of that witness, each its own key: `collectSpanAim` (the part's
+rect straddles x = 80 under its only free cell; the centre-aimed approach hit (4,1)'s wall) and `spinnerPointExact`
+(`spinnerFriction` spelled `Point.length`/`normalize` as `Math.hypot` and `(v / len) * t`, one ulp off the runtime's after a
+knockback; the game disagreed at t547 on the last bit of a spinner's x).
+
+**Trap candidates.**
+- A witness on the wrong level set: the survey solves on the DELIVERED set, whose L39 has no `fallrock@144,624`; replaying
+  its walk on the page's own levels diverged at t72 (the vanilla rope publication drops the rock and freezes the room), which
+  read like a sword-dash model gap until the set was matched.
+- A survey diff keyed on (level, goals, boot block) is not a key: many staged visits share all three, and the pairing
+  invented 30 "movers". Two concurrent full runs gave rows identical to a sequential one; pair rows by step.
+- A general rule found in one room is measured everywhere before it ships: `collectSpanAim` as first written (any stance in
+  one span) moved 10 bounded rows and 7 survey steps whose approach was never blocked; narrowed to "the centre approach's
+  own path meets a Solid", it moves none of them and still opens L39.
+- `oneSpelling` visits only files that IMPORT the transcription: `spinner.js` spelled `Point.length` with `Math.hypot`
+  outside the law's bound, and it took a game witness to see the ulp.
+
+**Movers (local; the CI dispatches are in the report).**
+- Full survey, A (the 77 defaults) vs B (+ the three keys), sequential: exactly 4 rows — L39 steps 66/94/135/155 REFUSED →
+  SOLVED (3,496 / 3,376 / 3,376 / 3,253 t). Steps 94/135/155 need `l39ShaftPress` alone; 66 also needs `collectSpanAim`.
+- Keyed sweep ×2 over the 51 legs in the spinner rooms (L18, L39, L40, L92) and L38's two L39 doors: 0 key-driven verdicts;
+  leg 371 flips inside both arms, and its captured requests answer OFF = ON at their own seam times.
+- Probes standard, the three keys ON: 11/11. Long logical-links B: past L39 (Totem Part 72,40 checked, 0 divergences) to
+  L40 Boss Key 2 at +1023 s, 18 checks — L40BK2's room.
+- Bounded vitest, the keys ON: `l39ShaftPress` moves WANDHOLD's two L39 controls (they pin the old refusal); the defaults
+  tables owe their re-pins; `spinnerPointExact` and the narrowed `collectSpanAim` move nothing else.
+
+### Seedling fidelity L40BK2 — a weigh's holder derived under the rest of the stance hypothesis (`weighHypothesisChain`); a struck spinner priced where the walk's strike left it (`dashSpinnerForecast`, ⛓ hammer hand-over 368) — both OFF
+
+Planner `seedling-fidelity-planning-13`, wave 31. The report is `CC/docs/cloud-reports/seedling-fidelity-l40bk2.md`.
+
+**W0 — the first refusal in the chain.** Legs 869/870 (ids 859/860 at the base `89da08f355`) and survey step 67 refuse
+*"no REACHABLE stance inside button@816,400"*: guard (iii) walls `wandlock@448,432`/`@512,480` {t 2} and `wandlock@800,400`
+{t 5}. It asked each `weigh` holder of the world as it is. t2's holder, `iceturret@472,400`'s corpse, has its first press
+stance inside the lock room, behind the latched south door `wandlock@480,560`; t5's holder, `pushableblockfire@480,480`,
+needs the 35-press Fire route across t2. Both holders exist and both are in reach under the hypothesis itself.
+
+**D1 — the chain (`weighHypothesisChain`).** `chainWeighHypothesis` asks the refused holders again under the bag with the
+admitted hypothesis discharged, to a fixed point, and a corpse holder's turret volume rides on its entry as an exemption
+(the fire route's far-side stances sit in the live turret's census rect). The walk to `button@816,400`'s stance then names
+`pushableblockfire@576,576` nearest the aim, whose mover is the pulser that very hold publishes; `nextPastUnbound` passes the
+round to the next door (before guard (ii) demotes it). From the arrival the chain walks the south door's links and dies in
+`kill (spinner@880,848) by press` (three hits from `chaser bob@736,752`, PRESS_KILL_REBOOT_GUARD: the hammer arc's). From
+inside the lock room the solver builds links 4–9 itself (circling kill, corpse on t2, 35 presses onto t5, the hold, the
+pulser's push); `probe-seedling-l40bk2.mjs` plays those ticks on p4g: 0 px on every sampled tick, never hit. Refusals carry
+`equips` under the key, so a refused prefix replays.
+
+**D2 — leg 368 (`dashSpinnerForecast`).** `previewWalk` advances the hammer arc's `spinnerFightForecast` with the walk's
+presses, and `spinnerDanger` prices each sample's own row. Two findings came out of the census: (1) the body arm needs
+`Enemy.hitPlayer`'s gate (`hitsTimer <= 0`, `!destroy`, taken from the previous row: the frame's landing comes after the
+spinner's update) — the drive overlaps a struck spinner's body at t1225 and is not hit; (2) a window-by-window dash
+admission refuses a prefix whose spinner a later window turns back, so the chain is planned press-blind and certified whole.
+Seam census 5276–5310: every hitless OFF plan is the same plan ON; the OFF plans the game hits (5288, 5290–5293) are refused.
+
+**D3 — measured and stopped.** At this base legs 387/404 refuse at the chest's chaser ladder or the shake band on 9 seams
+each, OFF = ON; the press-kill death is reached only by the chain's walk. Its hits are a chaser's, not a spinner's, so the fix
+is `execKillByPress`'s, not the forecast's: handed to the hammer arc.
+
+**Trap candidates.**
+- A guard asked of the world AS IT IS walls a holder the hypothesis itself makes reachable: a quantifier must be asked under
+  the same assumptions it grants.
+- An exact forecast exposes a conservative arm: the body arm never needed the i-frame gate while the forecast put struck
+  bodies elsewhere.
+- A greedy admission refuses a chain whose danger a later window resolves (CORRIDOR D2's shape, a second family).
+- A refused prefix without its slot selections is not replayable.
+
 ### Seedling hammer-phase FF-HARNESS — the tape solver's recorder follows a rewound run
 
 ⚖ User, 2026-10-25: *"Queue FF-HARNESS (Recommended)"*. It fixes the harness defect FF found (class (c)). The report is

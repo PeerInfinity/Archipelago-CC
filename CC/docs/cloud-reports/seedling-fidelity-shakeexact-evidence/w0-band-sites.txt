@@ -1,0 +1,105 @@
+bossTotemFight.js:471: * ⇒ **`'uncertain'` RESOLVES TO THE SURVIVING BRANCH, AND THAT IS SOUND
+bossTotemFight.js:528:        removalUncertain: onScreenVerdict === 'uncertain',
+camera.js:394:export function cameraBand(cam) {
+camera.js:436:export function stepCameraBand(band, player, world, {
+camera.js:569: * @returns {'on'|'off'|'uncertain'}
+camera.js:571:export function onScreenUnderShake(rect, band, margin = 0) {
+camera.js:584:    return off ? 'off' : 'uncertain';
+camera.js:605:export function shakeAcrossLoad(shake, fade) {
+combat.js:1165: * @param {'on'|'off'|'uncertain'} onScreenVerdict from `camera.onScreen*`
+combat.js:1169:    if (onScreenVerdict === 'uncertain') {
+combat.js:1228: * @param {'on'|'off'|'uncertain'} onScreenVerdict
+combat.js:1236:    if (onScreenVerdict !== 'on' && onScreenVerdict !== 'off' && onScreenVerdict !== 'uncertain') {
+combat.js:1242:    if (onScreenVerdict === 'uncertain') {
+contactFidelity.js:766:     * SCREEN IS STEPPED, NOT THROWN (`levelRun.shakeBandMootNow`): at rest (`v` 0), no i-frames, no player overlap, no
+contactFidelity.js:771:    shakeBandMoot: true,
+contactFidelity.js:1520:if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '1') CONTACT_FIDELITY.shakeBandMoot = true;
+contactFidelity.js:1521:if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '0') CONTACT_FIDELITY.shakeBandMoot = false;
+levelRun.js:3306:    /** ⛓ fidelity L40GUARD D4: `{t, level, id}` per body an uncertain shake band left moot (`shakeBandMootNow`). */
+levelRun.js:3307:    const shakeBandMoots = [];
+levelRun.js:3774:        stepCameraNow(state, worldFor(level).world);
+levelRun.js:5145:    let camBand = null;
+levelRun.js:5156:        camBand = null;
+levelRun.js:5169:                if (camBand === null && shake === 0) { cam = stepCamera(cam, state, w); continue; }
+levelRun.js:5170:                if (camBand === null) camBand = cameraBand(cam);
+levelRun.js:5171:                const r = stepCameraBand(camBand, state, w, { shake });
+levelRun.js:5172:                camBand = r.band;
+levelRun.js:5176:                    camBand = null;
+levelRun.js:5187:        const carried = shakeAcrossLoad(shake, LEGACY_FADE_PER_LOAD);
+levelRun.js:5214:        if (camBand === null && shake === 0) {
+levelRun.js:5218:        if (camBand === null) camBand = cameraBand(cam);
+levelRun.js:5219:        const r = stepCameraBand(camBand, player, worldRec, { shake, cameraTarget });
+levelRun.js:5220:        camBand = r.band;
+levelRun.js:5229:            camBand = null;
+levelRun.js:5237:     * ⚖ The user (2026-10-10): never model the cosmetic RNG; keep the shake band. A band's 'uncertain' verdict
+levelRun.js:5253:        if (camBand === null) {
+levelRun.js:5277:        if (camBand === null) {
+levelRun.js:5281:        const verdict = onScreenUnderShake(rect, camBand);
+levelRun.js:5282:        if (verdict === 'uncertain' && cameraWitness) {
+levelRun.js:5286:        if (verdict === 'uncertain') {
+levelRun.js:5288:                + `${ticksCompleted} depends on where inside \`Game.shake\`'s jiggle the `
+levelRun.js:8587:            if (fband === null) fband = cameraBand(fcam);
+levelRun.js:8588:            const r = stepCameraBand(fband, player, worldRec,
+levelRun.js:8601:            const verdict = onScreenUnderShake(rect, fband);
+levelRun.js:8602:            if (verdict === 'uncertain') {
+levelRun.js:8620:             * `stepCameraNow(next)` runs at the END of a tick on the POST-move
+levelRun.js:9667:            if (camBand === null) return camOnScreen(b, cam, margin);
+levelRun.js:9668:            const verdict = onScreenUnderShake(b, camBand, margin);
+levelRun.js:9672:            if (verdict === 'uncertain' && noDamage) return true;
+levelRun.js:9673:            if (verdict === 'uncertain') {
+levelRun.js:9675:                    + `${ticksCompleted + 1} in level ${level} depends on where inside `
+levelRun.js:9753:                        + 'now true — so the cull\'s verdict depends on where inside the '
+levelRun.js:10062:            const vis = camBand === null ? (camOnScreen(tile.rect, cam, 0) ? 'on' : 'off')
+levelRun.js:10063:                : onScreenUnderShake(tile.rect, camBand, 0);
+levelRun.js:10064:            if (vis === 'uncertain') {
+levelRun.js:10159:        if (at === null || !at.cam || camBand !== null || shake !== 0) {
+levelRun.js:10161:                + `does not hold as a point (${camBand !== null || shake !== 0 ? 'a shake band'
+levelRun.js:10183:            if (near && camBand !== null) {
+levelRun.js:10196:            visit.last = { x: a.x, y: a.y, cam: camBand === null ? c : null };
+levelRun.js:10211:            const vis = camBand === null ? (camOnScreen(tile.rect, cam, 0) ? 'on' : 'off')
+levelRun.js:10212:                : onScreenUnderShake(tile.rect, camBand, 0);
+levelRun.js:10213:            if (vis === 'uncertain') {
+levelRun.js:10226:        let here = { x: state.x, y: state.y, cam: camBand === null && cam ? { x: cam.x, y: cam.y } : null };
+levelRun.js:10258:        if (camBand === null) return camOnScreen(box, cam, margin) ? 'on' : 'off';
+levelRun.js:10259:        return onScreenUnderShake(box, camBand, margin);
+levelRun.js:12633:            if (fband === null) fband = cameraBand(fcam);
+levelRun.js:12634:            const r = stepCameraBand(fband, player, worldRec, { shake: fshake, cameraTarget: target });
+levelRun.js:12653:                    const verdict = onScreenUnderShake(rect, fband);
+levelRun.js:12654:                    if (verdict === 'uncertain') seen.set(id, true);
+levelRun.js:13209:            // ⛓ fidelity L40GUARD D4 (`shakeBandMoot`, OFF): an uncertain band over a body both branches step alike.
+levelRun.js:13212:                : (shakeBandMootNow(c, box) ? false : onScreenNow(box, `${c.tag} ${c.id}`));
+levelRun.js:13509:     * EITHER WAY IS NOT A QUESTION** (`CONTACT_FIDELITY.shakeBandMoot`, OFF).
+levelRun.js:13515:     * `onScreenNow` refuses an 'uncertain' band (⚖ never model the cosmetic RNG). But the off-screen return skips only
+levelRun.js:13525:    function shakeBandMootNow(c, box) {
+levelRun.js:13526:        if (!CONTACT_FIDELITY.shakeBandMoot || camBand === null) return false;
+levelRun.js:13527:        if (onScreenUnderShake(box, camBand) !== 'uncertain') return false;
+levelRun.js:13533:        shakeBandMoots.push({ t: ticksCompleted + 1, level, id: c.id });
+levelRun.js:15019:        stepCameraNow(state, world.world);
+levelRun.js:15847:                    stepCameraNow(state, world.world);
+levelRun.js:15884:                stepCameraNow(state, world.world);
+levelRun.js:16657:        if (camBand === null) {
+levelRun.js:16661:        const verdict = onScreenUnderShake(box, camBand, margin);
+levelRun.js:16662:        if (verdict !== 'uncertain') return verdict === 'on';
+levelRun.js:16674:            + 'depends on where inside `Game.shake`\'s jiggle the camera landed, and the shot is over a cell the player can '
+levelRun.js:16892:        if (camBand === null) return camOnScreen(box, cam, margin);
+levelRun.js:16893:        const verdict = onScreenUnderShake(box, camBand, margin);
+levelRun.js:16894:        if (verdict === 'uncertain') {
+levelRun.js:19299:        /** ⛓ fidelity L40GUARD D4: the bodies a moot shake band stepped (`CONTACT_FIDELITY.shakeBandMoot`; `[]` OFF). */
+levelRun.js:19300:        get shakeBandMoots() { return shakeBandMoots.map((c) => ({ ...c })); },
+levelRun.js:22766:            if (!next.transition) stepCameraNow(next, world.world);
+pressKillGuards.js:7: * 1. **`PRESS_KILL_SHAKE_GUARD` — the strike preview inside the camera's shake band (HO1).** A player death reboots
+pressKillGuards.js:29: * chest leg (L40 ← L39 → Chest), the shake guard on no request. `SEEDLING_PRESS_KILL_SHAKE_GUARD=0` /
+pressKillGuards.js:34:export const PRESS_KILL_SHAKE_GUARD = {
+pressKillGuards.js:35:    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_SHAKE_GUARD !== '0',
+pressKillGuards.js:37:export const PRESS_KILL_SHAKE_GUARD_DEFAULT = true;
+pressKillGuards.js:55:        && /^chaserForecast: whether .+ is on screen depends on where inside `Game\.shake`'s jiggle the camera landed/
+pressKillGuards.js:74:/** Run `fn` with `PRESS_KILL_SHAKE_GUARD` set to `enabled`, restoring the previous value. */
+pressKillGuards.js:75:export const withPressKillShakeGuard = (enabled, fn) => withSwitch(PRESS_KILL_SHAKE_GUARD, enabled, fn);
+solverBot.js:201:// ⛓ hammer-phase LB (HX) — the press kill's shake-band and reboot guards (`PRESS_KILL_SHAKE_GUARD`, `PRESS_KILL_REBOOT_GUARD`, ON since GF).
+solverBot.js:202:import { PRESS_KILL_GUARD_COUNTS, PRESS_KILL_REBOOT_GUARD, PRESS_KILL_SHAKE_GUARD, isShakeBandThrow }
+solverBot.js:7121:         * tick 73 — *"whether `bob@176,112` is on screen depends on where inside
+solverBot.js:11506:             * CANDIDATE REFUSED (`PRESS_KILL_SHAKE_GUARD`, ON since GF; OFF rethrows). The chaser forecast throws when
+solverBot.js:11515:            if (!PRESS_KILL_SHAKE_GUARD.enabled || !isShakeBandThrow(e)) throw e;
+solverBot.js:12101:            // ⛓ hammer-phase LB (HO1, `PRESS_KILL_SHAKE_GUARD`; OFF rethrows): a preview the camera's shake band
+solverBot.js:12103:            if (!PRESS_KILL_SHAKE_GUARD.enabled || !isShakeBandThrow(e)) throw e;
+solverBot.js:12221:                    + '(PRESS_KILL_SHAKE_GUARD: the candidate is refused, and the kill waits the band out)' });

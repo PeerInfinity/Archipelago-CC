@@ -1,0 +1,17 @@
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+const REPO = '/home/user/Archipelago-CC';
+const { restoreRequest } = await import(REPO + '/scripts/procgen/seedlingSolveRequestCodec.js');
+const { atSeamTime } = await import(REPO + '/scripts/procgen/replay-seedling-solve-request.mjs');
+const M = REPO + '/frontend/modules/seedlingDemo/';
+const { levelSourceFromAtlas } = await import(M + 'atlasSource.js');
+const { atlasLevelSource } = await import(M + 'levelSource.js');
+const { solveAnytime, ANYTIME_PASSES } = await import(M + 'jsRuntimeSolver.js');
+const [file, id, at] = process.argv.slice(2);
+const line = readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).find((l) => l.id === +id);
+const req = restoreRequest(atSeamTime(line.requests[0].request, +at));
+const { passes = ANYTIME_PASSES, source, ...tape } = req;
+const h = (a) => createHash('sha1').update(a.ok ? JSON.stringify(a.plan.solution.map((k) => [...k])) : a.message).digest('hex').slice(0, 12);
+const a = solveAnytime({ ...tape, source, levelSource: levelSourceFromAtlas(source.records) }, { passes });
+const b = solveAnytime({ ...tape, source: { records: [] }, levelSource: atlasLevelSource() }, { passes });
+console.log('records', a.ok, h(a), 'atlas', b.ok, h(b), b.ok ? '' : b.message.slice(0, 200));
