@@ -344,6 +344,71 @@ export function resetPressKillBombsCounts() {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE PKC — THE PRESS KILL'S STEP SEES THE CHASERS (`PRESS_KILL_CHASERS`, OFF).
+ * ⛓ fidelity L40BK2 D3 (its hand-over to the hammer arc).
+ *
+ * The press kill's per-tick step is `safeStep`: the planned key set, else the first of the stand and the eight moves,
+ * that lands the player clear of every spinner's rect and hammer one tick on (`landsClearOfHammers`). Nothing on that
+ * path asked about a CHASER. `deriveStrike`'s walk preview prices the chasers (`dangerDuringTransit` over the samples'
+ * own forecast bodies), but the executor does not walk the preview: `stepToward` dodges the spinners and `safeStep`
+ * overrides, and a chaser is PLAYER-COUPLED, so a walk that leaves the preview by a pixel meets a body the preview
+ * missed by three. MEASURED (survey step 67, L40 Boss Key 2, from `fixtures/l40bk2-witness/step67-boot.json`): at t604
+ * the kill derives the strike (744,776) +733 down the x≈744 corridor; its preview passes `bob@736,752` 2.9 px clear at
+ * +54, the live walk runs 1.4 px ahead of it, and the bob lands its contact at t660; the strike's 637-tick dwell beside
+ * the same bob then takes t749 and t780 — the death `PRESS_KILL_REBOOT_GUARD` refuses.
+ *
+ * ⇒ ON, `safeStep` PREFERS a key set that also lands clear of every chaser one tick on (`solverBot.landsClearOfChasers`:
+ * the run's own chaser forecast, stepped once against the player as this tick starts and once against the stepped
+ * player, then `dangerMap.chaserDanger`'s per-tick arm — the transit question every walk preview asks, contact gate,
+ * sword lines and punches included). The order is OFF's: the planned set, then the alternatives. When no hammer-clear
+ * set is also chaser-clear, OFF's choice is taken unchanged (`unavoidable`), so ON never refuses where OFF steps, and a
+ * press tick is never swapped (OFF's rule). A forecast the camera's shake band cannot answer is OFF's answer too
+ * (`banded`): the shake value is never modelled.
+ *
+ * Two treatments were MEASURED and are not here (PKC § M2): pricing the strike's STAND against the chasers (a walk then
+ * a stand to the train's end, the chaser forecast stepped along it) refused 20,940 of 20,947 candidates at step 67 and
+ * took 237 s against 49 s, because a chaser closes on any player who stands; pricing the refuge's walk and wait the same
+ * way refused nothing the kill needed. Unmeasured behaviour is not shipped.
+ *
+ * ⛓ THE SWITCH — `PRESS_KILL_CHASERS`, OFF by default. `SEEDLING_PRESS_KILL_CHASERS=1` turns it on in a node process
+ * (the page's worker has no `process`, so it is OFF there), and `withPressKillChasers(enabled, fn)` is for a test or a
+ * witness. OFF, `safeStep` asks exactly what it asked before and no forecast is built: every walk is byte-identical.
+ * ON in a room with no chaser forecast (`run.chaserForecast()` null) it reads nothing more.
+ */
+export const PRESS_KILL_CHASERS = {
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_CHASERS === '1',
+};
+export const PRESS_KILL_CHASERS_DEFAULT = false;
+
+/** Run `fn` with `PRESS_KILL_CHASERS` set to `enabled`, restoring the previous value (`withPressKillCost`'s shape). */
+export function withPressKillChasers(enabled, fn) {
+    const was = PRESS_KILL_CHASERS.enabled;
+    PRESS_KILL_CHASERS.enabled = enabled === true;
+    const restore = () => { PRESS_KILL_CHASERS.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * The switch's instrument (`PRESS_KILL_BOMBS_COUNTS`' shape), written only with it ON and read by nothing that decides:
+ * `asked` landing tests, `swapped` steps where ON took another key set than OFF, `unavoidable` steps where no
+ * hammer-clear set was chaser-clear (OFF's taken), `banded` tests the shake band left to OFF.
+ */
+export const PRESS_KILL_CHASERS_COUNTS = {
+    asked: 0, swapped: 0, unavoidable: 0, banded: 0,
+};
+export function resetPressKillChasersCounts() {
+    for (const k of Object.keys(PRESS_KILL_CHASERS_COUNTS)) PRESS_KILL_CHASERS_COUNTS[k] = 0;
+}
+
+/**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE RE — THE REFUGE'S BEST-ETA CUT (`REFUGE_ETA_CUT`, ON by default since the user's flip).
  *
  * `deriveRefuge` previews its `REFUGE_CANDIDATES` (12) nearest clear cells on every tick the press kill has nowhere to
