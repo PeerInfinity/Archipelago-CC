@@ -323,7 +323,8 @@ export const NIGHT_COPIES = Object.freeze({
     'seedling:machine/wire': { alpha: 0.1, when: (op) => op.nightCopy === true },
     // ⛓ G9c — `Lock.render()`: while active, the picture onto nightBmp BEFORE its INVERT is set — so the copy is plain
     //    (no blend, no silhouette tint); `seedlingSolidsSkin` marks it `nightCopy`.
-    ...Object.fromEntries(['lock', 'wandlock', 'grasslock', 'shieldlock', 'shieldlocknorm']
+    //    ⛓ G10 — and `RockLock.render`, the same way, while its kill-lock fade runs.
+    ...Object.fromEntries(['lock', 'wandlock', 'grasslock', 'shieldlock', 'shieldlocknorm', 'rocklock']
         .map((k) => [`seedling:puzzlement/${k}`, { alpha: 'same', when: (op) => op.nightCopy === true, plain: true }])),
     // ⛓ G10 — the bosses' `render()` copies, marked `nightCopy` by `seedlingBossSkin`: the FrozenBoss and a LavaBall (the same picture;
     //    the LavaBoss's copies differ from its main picture, so they ride `nightExtra`/`solidExtra`).

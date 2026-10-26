@@ -50,6 +50,7 @@ import { HAZARD_COVERAGE } from './seedlingHazardSkin.js';
 import { PUZZLE_COVERAGE } from './seedlingPuzzleSkin.js';
 import {
     KEYS, RESPONDER_ART, SOLIDS_COVERAGE, SOLIDS_OBJECT_TAGS, SOLIDS_RULES, solidsOps, solidsSkinView, stepSolidsSkin,
+    stepRockLock,
 } from './seedlingSolidsSkin.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -361,7 +362,7 @@ describe('5. the adapter reads the run and writes nothing', () => {
         expect(v.magicalLocks).toEqual([{ id: 'magicallock@96,0', x: 96, y: 0, fire: false, k: 15 - (54 + 1 - 50), gone: false }]);
         expect(v.responders).toEqual([{ id: 'lock@112,0', tag: 'lock', x: 112, y: 0, keyType: null, open: true },
             { id: 'bosslock@128,0', tag: 'bosslock', x: 128, y: 0, keyType: 2, open: false }]);
-        expect(v.rockLocks).toEqual([{ x: 32, y: 0 }]);
+        expect(v.rockLocks).toEqual([{ id: 'rocklock@32,0', x: 32, y: 0, held: 0 }]);
         expect(v.buttons).toEqual([{ id: 'buttonroom@144,0', tag: 'buttonroom', x: 144, y: 0, boot: false, down: true, wire: true }]);
         expect(solidsSkinView(null)).toBe(null);
     });
@@ -400,4 +401,84 @@ describe('7. the room\'s own ops: only the replaced rectangles leave', () => {
             expect(base.filter((l) => !kept.has(l)).every((l) => l.startsWith('fillRect('))).toBe(true);
         });
     }
+});
+
+describe('8. ⛓ G10 — the kill locks\' and the RockLock\'s fade (tset −1), from the kill-lock ledgers', () => {
+    // Every committed tape whose kill-lock ledger OPENS a lock (all L18's `lock@144,112`, a spinner kill).
+    const KILL_TAPES = ['f1c-l18-lock-removal', 'f1c-l18-phase42', 'hammer-a-l18-escape15', 'hammer-a-l18-escape21',
+        'hammer-b1-l18-approach40', 'hammer-b2-l18-fight40', 'r8-d2', 'r8-l18-spinner-press', 'r8-solve-18', 'r9-solve-18'];
+    const KILL = { name: 'L18-killlock-opens', fixture: 'f1c-l18-lock-removal' };
+    const V = (over = {}) => ({ epoch: { run: 'g10', key: 'syn' }, level: 26, now: 100, gameTime: 900,
+        chests: [], rocks: [], trees: [], magicalLocks: [], responders: [], rockLocks: [], buttons: [], ...over });
+    const killRows = (run) => [...(run.spinnerKillLockOpens ?? []), ...(run.chaserKillLockOpens ?? [])].filter((r) => !r.nil && r.opens?.length);
+
+    it('L18: the golden — shut, then INVERTed and fading from the removal tick, gone on `declaredAt`', () => {
+        const rows = runTape(KILL);
+        const lines = goldenLines(rows);
+        expect(lines).toEqual(golden(`solids-${KILL.name}.txt`, lines));
+    }, 240_000);
+
+    it('THE ANCHOR, on every opening tape: the drawn lock fades 0.01 a tick from the row\'s `t` and is gone exactly from `declaredAt`', () => {
+        let checked = 0;
+        for (const name of KILL_TAPES) {
+            const rows = runTape({ name, fixture: name });
+            let last = null;
+            drive({ fixture: name }, (t, run) => { last = run; });
+            for (const row of killRows(last)) {
+                for (const o of row.opens) {
+                    // the tape's declared open (`declaredAt`), or — undeclared (`[null]`) — the fade's own 100 steps
+                    const open = row.declaredAt?.[0] ?? row.t + 100;
+                    expect(open, `${name}: declaredAt = t + 100`).toBe(row.t + 100);
+                    const at = rows.filter((r) => r.view.level === row.level);
+                    const opOf = (r) => r.ops.find((op) => op.key && Math.abs(op.dx + 8 - (Number(o.at.split('@')[1].split(',')[0]) + 8)) < 1e-9
+                        && op.key.endsWith('/lock'));
+                    const before = at.filter((r) => r.view.now < row.t);
+                    const fading = at.filter((r) => r.view.now >= row.t && r.view.now < open);
+                    const after = at.filter((r) => r.view.now >= open && r.view.now <= open + 5);
+                    expect(before.length, `${name}`).toBeGreaterThan(0);
+                    for (const r of before.slice(-5)) expect(opOf(r)?.alpha ?? 1, `${name} t${r.view.now}`).toBe(1);
+                    for (const r of fading) {
+                        const k = r.view.now - row.t + 1;
+                        // the band: the row lands a tick after `t`, so the removal tick itself is drawn shut
+                        if (k === 1) { expect(opOf(r)?.alpha ?? 1, `${name} t${r.view.now}: the ledger-lag band`).toBe(1); continue; }
+                        expect(opOf(r)?.alpha ?? 0, `${name} t${r.view.now}`).toBeCloseTo(Math.max(0, 1 - 0.01 * k), 9);
+                        expect(opOf(r)?.blend ?? null, `${name} t${r.view.now}: INVERT while active`).toBe(k >= 100 ? null : 'difference');
+                    }
+                    for (const r of after) expect(opOf(r), `${name} t${r.view.now}: open on declaredAt`).toBeUndefined();
+                    checked += 1;
+                }
+            }
+        }
+        expect(checked).toBe(KILL_TAPES.length);
+    }, 600_000);
+
+    it('RockLock.update by hand: −0.01 a step while active (the Image clamp), open when it reaches ≤ 0; INVERT and the night copy while active', () => {
+        let s = { alpha: 1, solid: true, active: false };
+        let opened = null;
+        for (let k = 1; k <= 110 && opened === null; k += 1) {
+            s = stepRockLock(s, true);
+            if (!s.solid) opened = k;
+        }
+        // IEEE: 1 − 0.01 × 100 by repeated subtraction is ≤ 0 on the 100th step (`alpha <= 0` → `type = ""`), one
+        // step before a Lock, whose `activationStep` opens on the step AFTER its alpha reached 0
+        let a = 1;
+        let n = 0;
+        while (a > 0) { a = Math.max(0, a - 0.01); n += 1; }
+        expect(opened).toBe(n);
+        expect(n).toBe(100);
+        const v = V({ rockLocks: [{ id: 'rocklock@64,112', x: 64, y: 112, held: 3 }] });
+        let skin = stepSolidsSkin(null, v, 1);
+        skin = stepSolidsSkin(skin, v, 2);
+        const [op] = solidsOps(v, art, { skin });
+        expect([op.alpha, op.blend, op.nightCopy]).toEqual([0.98, 'difference', true]);
+        const idle = V({ rockLocks: [{ id: 'rocklock@64,112', x: 64, y: 112, held: 0 }] });
+        const [shut] = solidsOps(idle, art, { skin: stepSolidsSkin(null, idle, 1) });
+        expect([shut.alpha, shut.blend]).toEqual([undefined, undefined]);
+    });
+
+    it('MUTANT: the kill fade dropped (G9\'s shut-until-open) turns the L18 golden red', () => {
+        const want = readFileSync(join(GOLDENS, `solids-${KILL.name}.txt`), 'utf8').trimEnd().split('\n');
+        const got = goldenLines(runTape(KILL, { rules: { stepResponder: (prev, a) => ({ state: { alpha: a.open ? 0 : 1, solid: !a.open, active: false }, drift: false }) } }));
+        expect(got.filter((l, i) => l !== want[i]).length + Math.abs(got.length - want.length)).toBeGreaterThan(0);
+    }, 240_000);
 });

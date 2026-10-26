@@ -483,8 +483,10 @@ describe('5. ⛔ STATE IDENTITY — the boss renderer never touches the run', ()
             expect(md5(on.end)).toBe(md5(off.end));
             expect(md5(on.stateLog)).toBe(md5(off.stateLog));
             if (tape.digestAcrossRuns === false) {
-                // the defect, pinned: when `flierSeq` is per run, this turns red — drop the exemption then
-                expect(drive(tape).digest, 'two OFF runs digest differently (flierSeq)').not.toBe(off.digest);
+                // ⛔ KNOWN-DEFECT PIN, NOT A REQUIREMENT: `lightBoss.js:258` keeps `flierSeq` at MODULE level (owner:
+                // fidelity), so two identical runs in one process digest differently. The fix flips this row ON PURPOSE:
+                // then delete the pin and the tape's `digestAcrossRuns: false`, and compare the digest like every other tape.
+                expect(drive(tape).digest, 'KNOWN DEFECT (fidelity): flierSeq is module-level').not.toBe(off.digest);
             } else expect(on.digest).toBe(off.digest);
         }, 240_000);
     }
