@@ -1,0 +1,49 @@
+{
+ "tape": "control-edge",
+ "set_id": "seedling-vanilla-record-5aeefc3c",
+ "mounted": "seedling-vanilla-record-5aeefc3c",
+ "observations": 301,
+ "clears": [
+  "10,0",
+  "11,0",
+  "3,0",
+  "5,0",
+  "8,0",
+  "8,1"
+ ],
+ "game": {
+  "cleared": false,
+  "through": false,
+  "final": {
+   "t": 300,
+   "x": 157.99692271842153,
+   "y": 114.34349760511718,
+   "level": 15
+  },
+  "pendingCheck": []
+ },
+ "modelOff": {
+  "opened": false,
+  "through": false,
+  "final": {
+   "t": 300,
+   "x": 157.99692271842153,
+   "y": 114.34349760511718,
+   "level": 15
+  },
+  "maxDrift": 0,
+  "firstDrift": null
+ },
+ "modelOn": {
+  "opened": false,
+  "through": false,
+  "final": {
+   "t": 300,
+   "x": 157.99692271842153,
+   "y": 114.34349760511718,
+   "level": 15
+  },
+  "maxDrift": 0,
+  "firstDrift": null
+ }
+}
