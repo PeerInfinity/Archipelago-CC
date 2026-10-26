@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 113,
-            "count": 160,
+            "browser": 114,
+            "count": 161,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 467,
-        "browser": 178,
+        "blockStyle": 468,
+        "browser": 179,
         "cited": 252,
-        "files": 481,
+        "files": 482,
         "lineStyle": 14,
-        "withDocblock": 481,
-        "withFlags": 398
+        "withDocblock": 482,
+        "withFlags": 399
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13191,6 +13191,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l59-l67 — the gold-key room's three unknowns, live.",
             "path": "scripts/procgen/probe-seedling-l59-l67.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l63-darktrap.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L63 darktraps over the two L65 arrivals, ON THE GAME (slice rules-l63-darktrap-probe): does darktrap@128,272 (tag 4) seal the arrival (128,288), what kills it, and which flag carries the kill to the next visit?",
+            "path": "scripts/procgen/probe-seedling-l63-darktrap.mjs"
         },
         {
             "argvHelpers": [],
