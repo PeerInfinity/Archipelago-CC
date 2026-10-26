@@ -25835,3 +25835,59 @@ landed; its branch `claude/seedling-executor-shake-band-tnp9ij` and report stay 
   at the defaults none moves, and none of L40's 47 page requests.
 - **Gate** `hammerRefugeBandText.test.js` (BX's two I2 rows), fixture `fixtures/hammer-bx-371/` (the page's 371 request
   cut to level 40, 10 KB).
+
+### Seedling fidelity L40LATCH — L40's S-door latch held under `bobsoldier@880,832`: the hold's still wait priced (`holdWaitPriced`), a BobSoldier killed on the move behind its blade (`chaserOrbitKill`) — both OFF
+
+Planner `seedling-fidelity-planning-14`, wave 32. The report is `CC/docs/cloud-reports/seedling-fidelity-l40latch.md`.
+
+**W0.** Legs 859/860 (`level_40__r32c36 <- in_L39_144_0 / in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss
+Key 2`) at the base `1e17f44738`, captured and replayed in node (the page's answers, byte for byte): both die before the latch,
+in the x≈744 corridor — 859 at the burn stance's ladder (`chaser bob@736,752`), 860 in the hammer arc's press kill of
+`spinner@880,848` ("every key set …"). The latch is reached only from a staging. `fixtures/l40latch-witness/latch-boot.json`
+is step 67's boot ON the latch with the chest {40,13}, the tree {40,0} and `spinner@880,848` {40,16} banked: the room as a
+re-entry finds it once those three are done (the BobSoldier does not persist). Standing still there, the game and the model
+agree at 0 px (`l40latch-stand`, p4g): the BobSoldier walks up the pocket from t49 and its blade lands at t93 and t113, and the
+holder dies at t133. The solver OFF stands for the fade and refuses *"hold tick 93 of 131 MOVED"*. No model gap.
+
+**D1a — `holdWaitPriced`.** The hold stance walk carries the hold as its tail (`holdStandWalk`: L30KEYLOCK's `stand`, keys
+empty as `runHold`'s), so the wait is a corridor hit and the combat ladder climbs. MEASURED on the first cut: from a player
+already on the stance the TIME rung answered 0 ticks, the walk re-probed the same tail hit, and the climb looped forever (300 s
+without a tick spent, mutant m2). A hold's tail is marked, and TIME refuses it by name. The ladder then reaches the kill rung,
+whose chaser arm finds no stance: all 16 in the leash are hit at tick 93–100.
+
+**D1b — `chaserOrbitKill`.** `BobSoldier.swordHitting` tests the blade (8–16 px off the body) every frame, spinning or resting,
+and a spin ends pointing at the player (`swordSpinningStop(ang)`): a body walking at a still player always meets it blade first.
+The rest angle holds until the next spin, which waits on 60 ticks inside `attackRange`. `orbitKillPolicy`: circle outside the
+blade while it spins, round the resting blade to its far side, close in and let the one strike policy press, back off past
+`attackRange` in the body's i-frames, keep away from the swinging corpse. The kill rung tries it on forks over 20 candidates
+(radius × direction × far-side arc; 8 of the 20 are hitless from the staging, 257 of 720 in a wider scratch grid) and plays the
+first hitless one live. Both ON from the staging: the latch publishes {t 3} on tick 1, the BobSoldier dies on the orbit (removed
+t184), `spinner@816,848` by the press arm (t251), `wandlock@480,560` fades open at t101 during the fight, never hit; the game
+reproduces the 271 ticks at 0 px (`l40latch-orbit-chain`).
+
+**D2 — the rest of the chain, named.** Next: the walk back west through the x≈744 corridor, where `bob@736,752` and
+`bob@736,800` stand together. AVOID finds the components disconnected, and `chooseBodyToRemove` names no body (no SINGLE
+removal admits a corridor; `CHOOSER_HIT_SOURCES` never takes a chaser): the hammer arc's chooser. A scratch measurement
+(`hitSourceBodies` admitting the probe's chaser sources, not landed) walks it, and the walk to `wandlock@448,432`'s hold stance
+then meets `iceturret@472,400` as a static "Enemy" the kill rung has no arm for (TURRETCIRCLE's circling kill lives in the
+weigh's `killForCorpse`, not the rung's static arm).
+
+**Movers (both keys ON).** The full survey: 0 rows of 235 differ. The 52-leg L40 sweep ×2 per arm: 0 verdicts by key (368/371
+flip inside arm A too, and their captured requests answer A = B). The bounded set shows 10 reds:
+- four `movingWait`-OFF controls whose still hold's bomb is now priced at the stance walk;
+- L4's `jsRuntimeSolverShouldStop` work pins (+4 units, the same plans);
+- two L30 rescan-OFF controls that the orbit arm now solves hitless (393 t / 401 t, model-only);
+- two env artifacts.
+
+Two findings were fixed before the movers were taken:
+- a latched hold under `MOVING_WAIT` drops the bombs from its tail, because the executor paces them (WANDHOLD 368/371 had lost
+  their plans);
+- TIME refuses only a hit IN the tail (leg 371's transit hit).
+
+**Trap candidates.**
+- A rung that succeeds by spending nothing is a loop: the TIME rung's 0-tick certificate re-entered the same climb forever.
+- A still stance is the wrong question for a chaser whose weapon rests where the player last was; the answer moves.
+- A staging past a hand-over must bank what that hand-over kills (`spinner@880,848`, left alive in the first staging, wandered
+  into the latch room and hit the first scratch fight policy).
+- A tail that prices what the executor would not do is a false refusal: a latched hold under `MOVING_WAIT` paces its bombs, so
+  its still tail must not price them.
