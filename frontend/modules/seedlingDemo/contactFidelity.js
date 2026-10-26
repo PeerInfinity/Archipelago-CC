@@ -1459,6 +1459,44 @@ export const CONTACT_FIDELITY = {
      * row. OFF: byte-identical. `SEEDLING_DASH_SPINNER_FORECAST=0|1`.
      */
     dashSpinnerForecast: true,
+    /**
+     * fidelity RULESREF D2 (wave 32) — A CLOSED SPEAR BRIDGE ON THE FRONTIER IS OPENED BY A THRUST
+     * (`solverBot.resolveBridgeStrategy` / `execBridge`, through `botDriverV2.runSpear`'s `bridge` arm).
+     *
+     *     Player.as:1116-1119   genericHit's `e is Tile` arm: `bridgeOpeningTimer--` only under `t == "Spear"`
+     *     Tile.as:343-365       a Bridge (`t = 29`) is Solid until its timer has rendered down to 0
+     *
+     * The model has stepped the bridge since R4 (`bridges.js`); the solver's frontier dropped every `tile:*` blocker
+     * as a wall, so L63's `(2,9)` (survey step 161, the corridor to `teleporter@32,304`) and L66's `(7,9)` (step 163,
+     * between the L65 arrival and the doorway) had no verb. ON: the frontier names a closed bridge `solid:bridge`, the
+     * verb thrusts from a stance one or two tiles behind it, and the block-route search's relaxed proof and goal test
+     * count a bridge the run can open as open (`deriveBlockRoute`). OFF: byte-identical. `SEEDLING_SPEAR_BRIDGE_VERB=0|1`.
+     */
+    spearBridgeVerb: false,
+    /**
+     * fidelity RULESREF D3 (wave 32) — A DOOR HALF A TILE OFF THE GRID IS NAMED ON THE 8 px LATTICE
+     * (`solverBot.identifyAndSelect`'s frontier flood).
+     *
+     * L66's `teleporter@72,64` is in `building8`'s doorway — the pixel mask's notch is x 72-87, half a tile off the
+     * 16 px grid — behind `bosslock@72,64`. Every 16 px node centre beside the walk's component hits the MASK first,
+     * so the frontier held only scenery (*"No strategy row exists"*, survey step 163, divergence leg 579 on both arms).
+     * ON: a frontier with no actionable entry is flooded again at `FINE_LATTICE` (8 px; nodes at x 76, 84 fit the
+     * notch), which names the lock (`keylock`). OFF: byte-identical. `SEEDLING_FINE_FRONTIER_FLOOD=0|1`.
+     */
+    fineFrontierFlood: false,
+    /**
+     * fidelity RULESREF D1 (wave 32) — THE WALK'S DECISION GATE TIMES A PUNCHER'S PUNCH (`solverBot.punchTickAt`,
+     * `dangerMap.chaserDanger`), as `SWORD_GATE_TIMED` times a BobSoldier's blade.
+     *
+     *     Puncher.as:111-117, 172-218   the wind-up (`attack` anim) and `attackPlayer`'s box off the body's edge
+     *
+     * The gate a walk opens with priced a live puncher by `threatPad` 8 while the transit probe that follows prices it
+     * by the forecast's punch (U10 D2). L53 (survey step 79): the walk to the rock's stance arrives with
+     * `puncher@136,96` 11 px off, and the next gate refused before any corridor was probed, so the ladder's chaser kill
+     * rung never ran. ON: that gate prices a body whose one-tick forecast row carries `punch` by the punch and its bare
+     * body. OFF: byte-identical. `SEEDLING_PUNCH_GATE_TIMED=0|1`.
+     */
+    punchGateTimed: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1638,6 +1676,15 @@ if (globalThis.process?.env?.SEEDLING_IGNEOUS_DEAD_FRAMES === '0') CONTACT_FIDEL
 // ⛓ fidelity ROPESTANCE: `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '1') CONTACT_FIDELITY.ropeCutAnyWeapon = true;
 if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '0') CONTACT_FIDELITY.ropeCutAnyWeapon = false;
+// ⛓ fidelity RULESREF D2: `SEEDLING_SPEAR_BRIDGE_VERB=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SPEAR_BRIDGE_VERB === '1') CONTACT_FIDELITY.spearBridgeVerb = true;
+if (globalThis.process?.env?.SEEDLING_SPEAR_BRIDGE_VERB === '0') CONTACT_FIDELITY.spearBridgeVerb = false;
+// ⛓ fidelity RULESREF D3: `SEEDLING_FINE_FRONTIER_FLOOD=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '1') CONTACT_FIDELITY.fineFrontierFlood = true;
+if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '0') CONTACT_FIDELITY.fineFrontierFlood = false;
+// ⛓ fidelity RULESREF D1: `SEEDLING_PUNCH_GATE_TIMED=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '1') CONTACT_FIDELITY.punchGateTimed = true;
+if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '0') CONTACT_FIDELITY.punchGateTimed = false;
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;

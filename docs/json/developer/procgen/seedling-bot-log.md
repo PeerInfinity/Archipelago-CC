@@ -25862,3 +25862,59 @@ both: *"the solve returned 381 key set(s) but the shadow advanced 266 time(s)"*.
 **Trap candidate.** Every wrapper between a result's producer and its reader is part of a non-enumerable field's
 contract. A wrapper that spreads only when something rare happened (here, a tripped deadline) hides the loss until the
 rare thing and the field meet on one pass.
+
+### Seedling fidelity RULESREF — a spear bridge opened by a thrust (`spearBridgeVerb`); a half-tile door named on the 8 px lattice (`fineFrontierFlood`); the walk's gate times a puncher's punch (`punchGateTimed`) — all OFF
+
+Wave 32, planner `seedling-fidelity-planning-14`. Three walk-model refusals the rules arc exposed. The report is
+`CC/docs/cloud-reports/seedling-fidelity-rulesref.md` (evidence beside it).
+
+**D2 — L63's spear block, and the bridge behind it (`spearBridgeVerb`).** Survey step 161 (L63 visit 3, arrival
+(128,288) → `teleporter@32,304`) named `pushableblockspear@112,96` and refused *"shove failed to apply"*. The block-route
+search's SF3 proof was right: the room does not connect even with every pushable removed, because the spear BRIDGE tile
+(2,9) cuts it as well. The model has stepped the bridge since R4 (`bridges.js`), but the frontier dropped every `tile:*`
+blocker as a wall, so no verb could be selected. ON: the frontier names a closed bridge `solid:bridge` (`bridge@tx,ty`); the
+`bridge` verb (`resolveBridgeStrategy` / `execBridge`) thrusts from a stance one or two tiles behind it (`runSpear`'s
+bridge arm, the spear slot selected and restored; no spear is a by-name refusal); and `deriveBlockRoute` plans in a bag
+where every bridge the run can open is open. Step 161 then resolves the block (four W thrusts, the last sinking it at
+(3,6)) and refuses on a third wall: `darktrap@128,272` (tag 4) fills the one-tile column above the arrival, and no stance
+below it puts the spear on `lightpole@112,272` (computed). Visit 2 (step 157) kills that very trap with the light arm at
+t469–472 and leaves at t504, before the trap's removal (`deathCounter` 30 + the 14-frame die anim) writes {63,4}. Handed
+to the rules arc. Elsewhere: L93 step 211 goes REFUSED → SOLVED (362 t, 0 hits; FRONTIER3's other spear-bridge cut) and
+step 157 goes 504 → 497 t (0 hits).
+
+**D3 — L66's half-tile door (`fineFrontierFlood`).** Step 163 / leg 579 refused on both arms: *"A* goal tile (5,4) … is
+not walkable: pixelmask building8"*. `building8`'s door notch is x 72–87, half a tile off the grid, and
+`bosslock@72,64` stands in it. Every 16 px node centre beside the component hits the mask first, so the frontier held
+only scenery. ON: a frontier with no actionable entry, or a 16 px plan that failed on a masked goal tile, is flooded again
+at `FINE_LATTICE` (nodes x 76, 84 fit the notch), which names the lock; its key-line cells are asked at 8 px too. The goal
+tile arm matters on leg 579's arrival (64,80): the coarse frontier also holds L66's bridge, which is not on the way (271 t
+without it, 87 t with it). Witness (p4g, headless): `rulesref-l66-door` (step 163 with both keys: the bridge thrust,
+open t64; the key line, open t228; L70 at t230; 0 hits); the game equals the committed oracle, and the model is 0 px over
+231 observations. Producer `plan-seedling-rulesref-witness.mjs` (`--check` re-derives it from the committed tape).
+
+**D1 — L53's puncher (`punchGateTimed`).** Step 79 refused at the walk's decision gate: *"inside leash 80 (d=11.1) … pad
+8"*. The gate priced the live puncher by `threatPad`, while the transit probe prices it by the forecast's punch (U10 D2).
+Game witness first (`fixtures/chaser-witness/rulesref-d1-l53-stall`, p4g): the solver's 120-tick prefix plus an 80-tick
+idle stand. The puncher, hit once by the dash, stalls 0.17 px above the player's box, and the game bills nothing (201
+samples, puncher |Δ| 0, player hits 0). ON: the walk-opening gate hands `chaserDanger` the chaser forecast stepped one tick
+(`punchTickAt`, the `SWORD_GATE_TIMED` shape) and prices a body whose row carries `punch` by that punch and its bare body.
+A corridor whose every hit source is an attack chaser is also asked once axis-aligned: the controller's diagonal first
+tick moves 0.8 px up into the pinned body (the model bills a hit at t122), while RIGHT alone slides out hitless. The step
+then walks 560 ticks hitless (both rocks broken) and refuses inside the hammer arc's press-kill dwell, waiting for a
+puncher pinned at (115.6,119.4) that never reaches the stance. Handed to the hammer arc.
+
+**Movers (local, all three ON).** Survey 191/44 → 193/42 (163 and 211 SOLVED; 79, 161 and 214 change refusal; 157 −7 t).
+Bounded set ON: 5 `solveProgress.test.js` L40 kill-rung pins move (asks 167 → 183, `punchGateTimed`). No committed tape
+or producer `--check` moves (the identity block is equal OFF; the four producer reds there are the base's own).
+
+**Trap candidates.**
+- A frontier that drops `tile:*` blockers drops the one terrain that has a verb. Ask what moves a tile before calling it
+  stone.
+- SF3's "no route even with every pushable removed" is a proof about the PUSH, not the room. When it fires, the next
+  question is which non-pushable cut it, and that cut is the real work order.
+- A frontier with ONE actionable entry is not a frontier that is on the way. A masked goal tile hid the doorway behind a
+  bridge that led nowhere.
+- A gate and the probe after it must ask one question. A pad at the gate refused a box that the game, and the probe's own
+  forecast, leave alone.
+- A survey staging is one visit. The trap killed in visit 2 is gone in visit 3 only if its removal finished before the
+  door.
