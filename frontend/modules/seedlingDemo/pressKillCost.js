@@ -302,7 +302,8 @@ export function sameValue(a, b) {
  * `CONTACT_FIDELITY.bombPusherLive` is OFF, so ON it is inert outside the lobber's rooms too.
  *
  * ⛔ A BEHAVIOUR SWITCH IN A COST FILE, AND WHY HERE. P1/P2 above move not one plan; this one does, so it is its own
- * switch (shipped OFF by BW, flipped ON by PKB), and the P1/P2 A/B stays theirs alone. It lives in this file because of the solver's door
+ * switch (shipped OFF by BW, flipped ON by PKB, OFF again since PKB-OFF), and the P1/P2 A/B stays theirs alone. It lives
+ * in this file because of the solver's door
  * (`solverView.js`): the door re-exports only modules in `levelRun.js`'s import closure, and this file is one; a new
  * module only `solverBot` imports would be a solver-FAMILY file instead (`census-seedling-solver-surface`). The two
  * reads (`solverBot.bombsInPlay`, `solverBot.firstBlastOn`) read the run, so they live in the solver.
@@ -310,10 +311,16 @@ export function sameValue(a, b) {
  * is a COPY" has nothing to copy here).
  */
 
+/**
+ * ⚖ PKB-OFF (user, 2026-10-26, *"Turn it back off"*): the default is OFF again. Measured on hammer-measure/pkb-off
+ * against main 08aa042aa3: the whole-route sweep 835 = 835 done and the survey 0 / 70 movers; on the page leg 371
+ * (`level_40__r0c53 <- in_L42_240_336`) solved 3 / 3 OFF (1,736–1,888 t, 0 deaths, 0 divergences, 5.5–12 s) against 1 / 3
+ * ON (1,915 t, 17–19 s, two leg-budget timeouts). `SEEDLING_PRESS_KILL_BOMBS=1` or `withPressKillBombs(true, …)` opts in.
+ */
 export const PRESS_KILL_BOMBS = {
-    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_BOMBS !== '0',
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_BOMBS === '1',
 };
-export const PRESS_KILL_BOMBS_DEFAULT = true;
+export const PRESS_KILL_BOMBS_DEFAULT = false;
 
 /** Run `fn` with `PRESS_KILL_BOMBS` set to `enabled`, restoring the previous value (`withPressKillCost`'s shape). */
 export function withPressKillBombs(enabled, fn) {

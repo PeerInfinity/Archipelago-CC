@@ -448,6 +448,10 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.block_sinks !== undefined) {
         world.blockSinks = checkBlockSinks(sidecar.block_sinks, width, height, 'deserializeMazeWorld');
     }
+    // ⛓ STRUCK BLOCKS: absent on every other sidecar, so `world.blockStrike` stays undefined and a block is walk-pushed.
+    if (sidecar.block_strike !== undefined) {
+        world.blockStrike = checkBlockStrike(sidecar.block_strike, world.actionLib, 'deserializeMazeWorld');
+    }
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
     // immutable shape (tiles + cycleLength + length + shape); phase
@@ -739,6 +743,74 @@ export function blocksAfterPush(world, blocks, from, to) {
     return out.sort();
 }
 
+/**
+ * ⛓ STRUCK BLOCKS (session tile-primitives-sphere-order-2, ⚖ 2026-10-26 "Reach-2 strike-push"): `block_strike:
+ * {struck_by: [actionId…], reach}` — every block of this world is one the game moves only by a HIT: Seedling's
+ * `PushableBlockSpear` (`Puzzlements/PushableBlockSpear.as`: `moveTypes = ["Spear"]`, type "Solid"). Walking into
+ * one is refused: it is never walk-pushed. A `USE:<id>` of a listed action hits every block within `reach` cells
+ * ahead of the facing — the spear's 32 px stab rect (`Player.as:964-989`: no reach gate, no line test, so over any
+ * cell between) — and moves each ONE cell the way the player faces (`Player.as:1121-1123`: the hit is relative to
+ * the thrust), farthest first. A block whose next cell is off the grid, a wall, a block, a shut obstacle (unless it
+ * sinks there) or an entry gate stays put (`PushableBlockFire.update`: a collided move resets its target). Game-
+ * measured by the seedling-fidelity spear legs (L63, L65, L67 — L67's five thrusts park the block on its button)
+ * and the spearrect witnesses. The world's `action_lib` must hold every listed action. Returns `{struckBy, reach}`.
+ */
+export function checkBlockStrike(spec, actionLib, who) {
+    const bad = (why) => new Error(`${who}: "block_strike" ${why}`);
+    if (!spec || typeof spec !== 'object' || Array.isArray(spec)) throw bad('must be an object {struck_by, reach}');
+    const struckBy = spec.struck_by;
+    if (!Array.isArray(struckBy) || struckBy.length === 0 || struckBy.some((id) => typeof id !== 'string')) {
+        throw bad(`struck_by must be a non-empty list of action ids, got ${JSON.stringify(struckBy)}`);
+    }
+    const missing = struckBy.filter((id) => !actionLib?.[id]);
+    if (missing.length > 0) throw bad(`names ${missing.join(', ')}, which the action_lib does not hold`);
+    if (!Number.isInteger(spec.reach) || spec.reach < 1) throw bad(`reach must be a positive integer, got ${JSON.stringify(spec.reach)}`);
+    return { struckBy: [...struckBy], reach: spec.reach };
+}
+
+/** May a block move onto (x, y) going `dir`, with `blocks` where they are now? (A walk-push's and a strike-push's test.) */
+function blockMayEnter(world, state, blocks, x, y, dir, inv, clearanceOpts) {
+    if (x < 0 || y < 0 || x >= world.width || y >= world.height || !isFloor(world, x, y)) return false;
+    if (blocks.includes(posKey(x, y))) return false;
+    if (!sinksBlock(world, x, y) && shutObstacleAt(world, state, x, y, inv, clearanceOpts) !== null) return false;
+    return !hasEntryGate(world, x, y, dir);
+}
+
+/**
+ * The pushes a `USE:<actionId>` makes on a STRUCK-BLOCK world from `state` (see `checkBlockStrike`): `[{from, to}]`,
+ * farthest block first, each applied before the next is asked; `[]` when the action moves no block. `inv` = the
+ * effective inventory the use is asked with.
+ */
+export function strikePushes(world, state, actionId, inv, clearanceOpts) {
+    const spec = world.blockStrike;
+    const d = DELTAS[state.facing];
+    if (!spec || !d || !spec.struckBy.includes(actionId) || !state.blocks?.length) return [];
+    let blocks = state.blocks;
+    const out = [];
+    for (let k = spec.reach; k >= 1; k -= 1) {
+        const x = state.player_pos.x + d.dx * k;
+        const y = state.player_pos.y + d.dy * k;
+        const from = posKey(x, y);
+        if (!blocks.includes(from)) continue;
+        if (!blockMayEnter(world, state, blocks, x + d.dx, y + d.dy, state.facing, inv, clearanceOpts)) continue;
+        const to = posKey(x + d.dx, y + d.dy);
+        out.push({ from, to });
+        blocks = blocksAfterPush(world, blocks, from, to);
+    }
+    return out;
+}
+
+/** Might `USE:<actionId>` move a block from `state` — does one stand within the world's strike reach ahead? (Position only.) */
+export function blockWithinReach(world, state, actionId) {
+    const spec = world.blockStrike;
+    const d = DELTAS[state.facing];
+    if (!spec || !d || !spec.struckBy.includes(actionId) || !state.blocks?.length) return false;
+    for (let k = 1; k <= spec.reach; k += 1) {
+        if (state.blocks.includes(posKey(state.player_pos.x + d.dx * k, state.player_pos.y + d.dy * k))) return true;
+    }
+    return false;
+}
+
 /** Does any entry gate stand on entering (x, y) moving `dir`? A pushed block never crosses one (it carries nothing). */
 function hasEntryGate(world, x, y, dir) {
     return world.entryGates?.has(`${x},${y},${dir}`) ?? false;
@@ -829,6 +901,9 @@ export function serializeMazeEntities(world) {
     }
     if (world.blockSinks?.size) {
         out.block_sinks = [...world.blockSinks].map(unposKey).sort(rowMajor);
+    }
+    if (world.blockStrike) {
+        out.block_strike = { struck_by: [...world.blockStrike.struckBy], reach: world.blockStrike.reach };
     }
     return out;
 }
@@ -1260,17 +1335,23 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
         const actionId = input.slice(USE_PREFIX.length);
         const entry = state.facing === undefined ? undefined : world.actionLib?.[actionId];
         if (!entry) return null;
-        if (actionItems(entry).length > 0) {
-            const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
-            if (!actionUsable(entry, inv)) return null;
-        }
+        const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+        const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+        if (actionItems(entry).length > 0 && !actionUsable(entry, inv)) return null;
         const used = cloneState(state);
         used.turn += 1;
         const hit = strikeTarget(world, state, actionId);
         if (hit !== null) {
             used.broken.push(hit);
             used.broken.sort();
+        }
+        // ⛓ STRUCK BLOCKS: the use moves every block it hits; a block moved off a button may arm the lane the player
+        // stands in (`step`'s last guard, on the stance after).
+        const pushes = strikePushes(world, state, actionId, inv, clearanceOpts);
+        if (pushes.length > 0) {
+            for (const p of pushes) used.blocks = blocksAfterPush(world, used.blocks, p.from, p.to);
+            if (world.trapLanes && armedTrapAt(world, effectiveInventory(world, carried, used.player_pos, used.blocks, used.broken),
+                used.player_pos.x, used.player_pos.y) !== null) return null;
         }
         return used;
     }
@@ -1290,6 +1371,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     if (state.blocks !== undefined) {
         const targetKey = posKey(nx, ny);
         if (state.blocks.includes(targetKey)) {
+            if (world.blockStrike) return null; // ⛓ STRUCK BLOCKS: never walk-pushed
             const bx = nx + delta.dx;
             const by = ny + delta.dy;
             if (!isFloor(world, bx, by)) return null;
@@ -1420,6 +1502,17 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
             const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
             if (!actionUsable(entry, inv)) return `use ${actionId} needs ${actionItems(entry).join(' + ')}`;
         }
+        if (world.blockStrike && world.trapLanes) {
+            const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+            let blocks = state.blocks;
+            for (const p of strikePushes(world, state, actionId, inv, clearanceOpts)) blocks = blocksAfterPush(world, blocks, p.from, p.to);
+            if (blocks !== state.blocks) {
+                const trap = armedTrapAt(world, effectiveInventory(world, carried, state.player_pos, blocks, state.broken),
+                    state.player_pos.x, state.player_pos.y);
+                if (trap !== null) return armedBecause(world, trap);
+            }
+        }
         // ⚖ "Use at air" is legal — a swing that hits nothing still passes a turn.
         return null;
     }
@@ -1439,6 +1532,9 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
     if (entry === null) return `no entry into (${nx},${ny}) moving ${input}`;
     if (entry !== undefined) return `entry into (${nx},${ny}) moving ${input} is shut — ${shutBecause(world, entry, inv)}`;
     if (state.blocks !== undefined && state.blocks.includes(posKey(nx, ny))) {
+        if (world.blockStrike) {
+            return `block at (${nx},${ny}) is moved only by a strike (${world.blockStrike.struckBy.join(' or ')}, from up to ${world.blockStrike.reach} cell(s) away)`;
+        }
         const bx = nx + delta.dx;
         const by = ny + delta.dy;
         const cannot = `block at (${nx},${ny}) cannot move`;
@@ -1915,6 +2011,12 @@ function blockWorldAccessRules(world) {
         if ((entry.clear_set_type ?? 'combo_list') === 'rule') clearRuleItems(entry.clear_rule, id, axis);
         else for (const combo of entry.clear_set ?? []) for (const item of combo) axis.add(item);
         for (const actionId of entry.struck_by ?? []) {
+            for (const item of actionItems(world.actionLib?.[actionId])) axis.add(item);
+        }
+    }
+    // ⛓ STRUCK BLOCKS: the items of the actions that move the world's blocks.
+    if (world.blocks?.size > 0) {
+        for (const actionId of world.blockStrike?.struckBy ?? []) {
             for (const item of actionItems(world.actionLib?.[actionId])) axis.add(item);
         }
     }
