@@ -25835,3 +25835,34 @@ landed; its branch `claude/seedling-executor-shake-band-tnp9ij` and report stay 
   at the defaults none moves, and none of L40's 47 page requests.
 - **Gate** `hammerRefugeBandText.test.js` (BX's two I2 rows), fixture `fixtures/hammer-bx-371/` (the page's 371 request
   cut to level 40, 10 KB).
+
+### Seedling fidelity L32BOB — the Bob Boss forecast carries the swing already in flight (`encounterSwingInFlight`, OFF)
+
+Wave 32, the L32BOB slice (report `CC/docs/cloud-reports/seedling-fidelity-l32bob.md`, base main `1e17f44738`).
+
+**The decline, reproduced.** The JS arc's L32 Bob encounter declined *"the forecast landed form N's hit at +k and the
+run's boss reports M landing(s) — the forecast and the run disagree"* (`execBobBossEncounter`). Every L32 staging SOLVES
+from its boot; the decline is a CONTINUATION whose prefix ends inside a swing. `apb-l32-fresh-no-fire`'s staging continued
+from its own tape at t380 (the 376 press still testing): the run fires that swing's T+5 test at t381 and it lands (form 1:
+1 → 2 hits). `forecastEncounterPlan` built its tests from an empty map, so it kept form 1 at 1 and landed its own press at
++58; the run counted 2. First disagreement: +1, the forecast's.
+
+**The game agrees with the run.** p4g headless, `probe-seedling-encounter-ticks.mjs --tape=apb-l32-fresh-no-fire
+--from=370 --to=560`: 191 sampled ticks, game and model boss rows 0 px apart; form 1's death flight starts at t426 on
+both, after the THIRD landing (351, 381, 425 — the 381 one is the in-flight test).
+
+**The fix (OFF).** `bobBossForecast()` hands out the run's `swordWindow` and a `slash` at a thrust's own scale;
+`forecastEncounterPlan` steps that window with `advance`'s `swordWindowStep` / `swordWindowReplace` /
+`swordWindowSchedule`, and counts every landing through its own press's (`landings`); the executor checks the run against
+that count. OFF: byte-identical (no `window`, the old text). `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`.
+
+**Measured.** The census: every prefix of each of the four L32 stagings' own plans that ends inside a swing (4 × 35).
+OFF declines at exactly three per staging (the ones whose T+5 test still lands); ON solves 140/140. The U5 plan every
+10 ticks: OFF 82/83 (k 380), ON 83/83. From boot, nothing moves ON: `plan-seedling-encounters --check` 31/31,
+the r1/r3/r5/u11/r5-swim producers byte-equal ON vs OFF, survey step 40 equal, the arena-prefix legs 349/350 equal.
+
+**Trap candidates.**
+- A forecast seeded from a run's STATE but not its PENDING EVENTS is right from every quiet tick and wrong from a busy
+  one. A solve from boot never starts mid-swing, so every producer passed; only a continuation (the JS page's replan)
+  starts there. Census the seams a continuation can start on, not only the boots.
+- A count check (`after !== before + 1`) encodes "nothing else lands in this window": an assumption, not a measurement.
