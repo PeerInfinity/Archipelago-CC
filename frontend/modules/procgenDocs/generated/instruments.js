@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 113,
-            "count": 160,
+            "browser": 114,
+            "count": 161,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 467,
-        "browser": 178,
-        "cited": 252,
-        "files": 481,
+        "blockStyle": 468,
+        "browser": 179,
+        "cited": 253,
+        "files": 482,
         "lineStyle": 14,
-        "withDocblock": 481,
-        "withFlags": 398
+        "withDocblock": 482,
+        "withFlags": 399
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13116,6 +13116,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l40button — Measure-only (seedling fidelity L40BUTTON, wave 12): WHAT GATES `Totem Part 64,144` FROM L40's NORTH ARRIVALS, and why the solver read it as `wandlock@448,432`.",
             "path": "scripts/procgen/probe-seedling-l40button.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l40latch.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "from-fixture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l40latch — ⛓⛓⛓ seedling-fidelity-l40latch: L40 BOSS KEY 2'S S-DOOR LATCH (`buttonroom@880,768`) UNDER `bobsoldier@880,832`, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-l40latch.mjs"
         },
         {
             "argvHelpers": [

@@ -1,0 +1,8 @@
+B2 id 368 req 0 arm A seam 6099 ok false work 504 answer 32c7b7f741a3 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.31999915943214,135.13770516537005), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,1
+B2 id 368 req 0 arm B seam 6099 ok false work 520 answer 32c7b7f741a3 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.31999915943214,135.13770516537005), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (168,1
+B2 id 371 req 0 arm A seam 5589 ok true work 333 answer bf959df7e959 SOLVED 1915 ["hold","kill","walk"]
+B2 id 371 req 0 arm B seam 5589 ok true work 349 answer bf959df7e959 SOLVED 1915 ["hold","kill","walk"]
+A2 id 368 req 0 arm A seam 6119 ok false work 528 answer 4fec21f8e7f9 solverBot(wasm-location-40) apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (224.4,135.9) — spinner:spinner@192,144 (a live Spinner BODY at (230.4,131.0) at horizon 50 — `En
+A2 id 368 req 0 arm B seam 6119 ok false work 544 answer 4fec21f8e7f9 solverBot(wasm-location-40) apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (224.4,135.9) — spinner:spinner@192,144 (a live Spinner BODY at (230.4,131.0) at horizon 50 — `En
+A2 id 371 req 0 arm A seam 5600 ok true work 551 answer 21e3fe5e9d55 SOLVED 1888 ["hold","kill","walk"]
+A2 id 371 req 0 arm B seam 5600 ok true work 563 answer 21e3fe5e9d55 SOLVED 1888 ["hold","kill","walk"]

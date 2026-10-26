@@ -1,0 +1,15 @@
+import { readFileSync } from 'node:fs';
+const M = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo/';
+const { parseTape } = await import(M + 'tapeFormat.js');
+const { createRunForStaging, stagingFromTape, solveStaging } = await import(M + 'tapeRunner.js');
+const { atlasLevelSource } = await import(M + 'levelSource.js');
+const staging = solveStaging(stagingFromTape(parseTape(readFileSync(process.argv[2], 'utf8'))));
+const ls = atlasLevelSource();
+let t0 = Date.now();
+for (let i = 0; i < 5; i++) createRunForStaging(staging, ls);
+console.log('create ms', (Date.now() - t0) / 5);
+const run = createRunForStaging(staging, ls);
+t0 = Date.now();
+for (let i = 0; i < 150; i++) run.advance(new Set());
+console.log('advance ms/tick', (Date.now() - t0) / 150);
+console.log(Object.keys(run).filter((k)=>/fork|snap|clone|digest/i.test(k)));

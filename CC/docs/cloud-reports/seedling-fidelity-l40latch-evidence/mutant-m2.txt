@@ -1,0 +1,7 @@
+== m2 (TIME guard off), holdWaitPriced alone, 300 s timeout: exit 124
+[0s] segment | segment:l40latch
+[60s] heartbeat | segment:l40latch > goal:collect-placement (656,528) > walk:walk > verb:shove > walk:walk > verb:hold > walk:walk > verb:hold > walk:walk
+[120s] preview | segment:l40latch > goal:collect-placement (656,528) > walk:walk > verb:shove > walk:walk > verb:hold > walk:walk > verb:hold > walk:walk > climb:climb > rung:avoid
+[180s] climb | segment:l40latch > goal:collect-placement (656,528) > walk:walk > verb:shove > walk:walk > verb:hold > walk:walk > verb:hold > walk:walk > climb:climb
+[240s] preview | segment:l40latch > goal:collect-placement (656,528) > walk:walk > verb:shove > walk:walk > verb:hold > walk:walk > verb:hold > walk:walk > climb:climb > rung:avoid
+
