@@ -1,0 +1,2 @@
+OFF raw identical (every field but wall times): 55 / 55
+ON raw movers (every field but wall times): [5251]
