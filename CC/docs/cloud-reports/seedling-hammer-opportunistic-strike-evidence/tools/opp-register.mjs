@@ -29,12 +29,18 @@ globalThis.__oppInstrument = (run) => {
                 const row = S.byExec.get(f) ?? { ticks: 0, consulted: 0, bodies: new Set() };
                 row.ticks += 1;
                 if (consulted === t) row.consulted += 1;
-                else S.misses.push({ t, exec: f, level: run.level, bodies: chosen.map((c) => c.id), held: [...k].join('+') });
+                else S.misses.push({ t, exec: f, level: run.level, bodies: chosen.map((c) => c.id), held: [...k].join('+'),
+                    chain: lines.filter((l) => /solverBot\.js|botDriverV2\.js/.test(l)).slice(0, 6).map((l) => (l.match(/at (?:Object\.)?([\w$.<>]+)? ?\(?.*\/(\w+\.js):(\d+)/) ?? []).slice(1).join('@')).join(' < ') });
                 chosen.forEach((c) => row.bodies.add(`L${run.level}:${c.id}`));
                 S.byExec.set(f, row);
             }
         }
-        return advance(k);
+        const before = new Map((ent('chasers') ?? []).map((c) => [c.id, c.hits]));
+        const out = advance(k);
+        for (const c of ent('chasers') ?? []) {
+            if (before.has(c.id) && c.hits !== before.get(c.id)) (S.chaserHits ??= []).push(`r${S.runs}:t${run.ticksCompleted - 1}:${c.id}:${c.hits}`);
+        }
+        return out;
     };
     return run;
 };
@@ -49,6 +55,6 @@ if (process.env.OPP_EXIT_OUT) {
     process.on('exit', () => {
         const rows = [...S.byExec].map(([f, r]) => ({ exec: f, ticks: r.ticks, consulted: r.consulted, bodies: [...r.bodies] }));
         appendFileSync(process.env.OPP_EXIT_OUT, JSON.stringify({ pid: process.pid, argv: process.argv.slice(2).join(' ').slice(0, 200), runs: S.runs, rows,
-            misses: S.misses.slice(0, 400) }) + '\n');
+            misses: S.misses.slice(0, 400), chaserHits: (S.chaserHits ?? []).slice(0, 400) }) + '\n');
     });
 }
