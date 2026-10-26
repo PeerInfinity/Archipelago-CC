@@ -19,6 +19,8 @@
  *   b3c-m2 the takes keyed on the RUN clock (`takesAt.get(r.ticksCompleted)`) -> the b3c dead-frame TAKE row
  *   m2 the "replace only if it solves" check removed (a failed retry adopted) -> the refusal-stands row
  *   m3 the trigger widened to every refusal -> the trigger row
+ *   ff-m1 (FF-HARNESS) `solveFromTape` reads the SHADOW's recording whatever `liveRun` says (FF § 6.2's step 2 dropped)
+ *      -> the tape-solver row: *"the solve returned 349 key set(s) but the shadow advanced 266 time(s)"*
  */
 import { readFileSync } from 'node:fs';
 
@@ -28,15 +30,15 @@ import { loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
 import { ENTITY_FAMILY_NAMES, LEDGER_KIND_NAMES, PROGRESS_FIELD_NAMES } from './levelRun.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
-import { forkRunFor, replayTape } from './jsRuntimeSolver.js';
+import { forkRunFor, liveOf, replayTape, solveFromTape } from './jsRuntimeSolver.js';
 import { CRUSHER_WITNESSES, crusherStaging } from '../../../scripts/procgen/plan-seedling-crusher-witness.mjs';
 import { twoPassSolve } from './twoPassSolve.js';
 import { solve } from './procgenOracle.js';
 import { SPINNER } from './spinner.js';
 import {
-    FIGHT_FALLBACK_CODES, HAMMER_ESCAPE, HAMMER_FIGHT, HAMMER_FIGHT_BOUNDS, HAMMER_FIGHT_FALLBACK, HAMMER_SAFETY, REWIND_PROBE,
-    STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal, isFightFallbackRefusal, replayOntoFork, withHammerEscape,
-    withHammerFight, withHammerFightFallback,
+    FIGHT_FALLBACK_CODES, HAMMER_ESCAPE, HAMMER_FIGHT, HAMMER_FIGHT_BOUNDS, HAMMER_FIGHT_FALLBACK, HAMMER_FIGHT_FALLBACK_TRACE,
+    HAMMER_SAFETY, REWIND_PROBE, STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal, isFightFallbackRefusal,
+    replayOntoFork, withHammerEscape, withHammerFight, withHammerFightFallback,
 } from './solverBot.js';
 
 const SOURCE = atlasLevelSource();
@@ -287,5 +289,52 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
         expect(on.ticks).toBe(withHammerFight(true, solveKillLock).ticks);
         expect(on.fightFallbacks).toEqual([{ t: 0, how: 'admission', refused: 'PRESS_ADMISSION',
             bodies: ['spinner@80,80', 'spinner@80,112'], verdict: 'solved', ticks: 569, fights: 1 }]);
+    }, 300_000);
+});
+
+/**
+ * ⛓⛓ FF-HARNESS — the fallback through the WORKER's solve (`jsRuntimeSolver.solveFromTape`, which `solveAnytime` runs
+ * per pass). The tape is the fixture above at residue 4 with `HAMMER_ESCAPE` off, its kill-lock clear at the tick the
+ * ON two-pass loop measures (323: the removal at 223 + the fade's 100); the prefix is empty, so the plan is the solve.
+ */
+const R9_TAPE_AT_4 = (() => {
+    const seam = seamAt(4);
+    const persistence = R9.persistence.map((c) => (c.at === undefined ? c : { ...c, at: 323 }));
+    return { ...R9, seam, persistence, equips: [] };
+})();
+const solveTapeR9At4 = () => solveFromTape({ staging: R9_TAPE_AT_4, perTick: [],
+    live: liveOf(createRunForStaging(R9_TAPE_AT_4, SOURCE)), levelSource: SOURCE,
+    solverGoal: { kind: 'reach-exit', exit: { x: 176, y: 112 } } });
+/** `jsRuntimeSolver`'s per-tick row, read off a run. */
+const rowAt = (run) => ({ level: run.level, x: run.state.x, y: run.state.y, deaths: run.playerDeaths.length });
+
+describe('FF-HARNESS — the tape solver\'s recorder follows a rewound run (`liveRun`)', () => {
+    it('⛓⛓⛓ ON: the rewind that solves is a plan whose `expected` IS a replay of its keys, row by row', () => {
+        withHammerEscape(false, () => {
+            const off = (() => { try { solveTapeR9At4(); return null; } catch (e) { return e; } })();
+            expect(off).toBeInstanceOf(SolverBotError);
+            expect(off.code).toBe(HAMMER_SAFETY);
+            const fallbacks = [];
+            HAMMER_FIGHT_FALLBACK_TRACE.sink = (row) => fallbacks.push(row);
+            let plan;
+            try {
+                plan = withHammerFightFallback(true, solveTapeR9At4);
+            } finally {
+                HAMMER_FIGHT_FALLBACK_TRACE.sink = null;
+            }
+            // the segment was rewound at the kill (t0) and the retry solved: the plan ends on the adopted fork
+            expect(fallbacks).toMatchObject([{ t: 0, how: 'rewind', refused: HAMMER_SAFETY, refusedAt: 266, verdict: 'solved' }]);
+            expect(plan.solution.length).toBe(349);
+            expect(plan.expected.length - 1).toBe(plan.solution.length);
+            // a replay of the plan, from the tape's own boot: one row before the first tick, one after each
+            const replay = createRunForStaging(R9_TAPE_AT_4, SOURCE);
+            const rows = [rowAt(replay)];
+            for (const h of plan.solution) {
+                replay.advance(h);
+                rows.push(rowAt(replay));
+            }
+            expect(plan.expected).toEqual(rows);
+            expect(plan.equipsAt.size).toBe(0);
+        });
     }, 300_000);
 });
