@@ -1,4 +1,4 @@
-t=0..87 L114 [w:watcher,w:visible] | seedling:npc/watcher#4 drawImage(seedling/NPCs/Watcher, 48, 0, 74, 72.5)
-t=88..197 L114 [w:watcher,w:seed,w:visible] | seedling:npc/watcher#6 drawImage(seedling/NPCs/Watcher, 72, 0, 74, 72.5)
-t=198..210 L114 [w:watcher,w:visible] | seedling:npc/watcher#4 drawImage(seedling/NPCs/Watcher, 48, 0, 74, 72.5)
-t=211..258 L114 [w:watcher,w:visible] | seedling:npc/watcher#1 drawImage(seedling/NPCs/Watcher, 12, 0, 74, 72.5)
+t=0..87 L114 [w:watcher,w:visible] | seedling:npc/watcher#4 drawImage(seedling/NPCs/Watcher, 48, 0, 74, 73)
+t=88..197 L114 [w:watcher,w:seed,w:visible] | seedling:npc/watcher#6 drawImage(seedling/NPCs/Watcher, 72, 0, 74, 73)
+t=198..210 L114 [w:watcher,w:visible] | seedling:npc/watcher#4 drawImage(seedling/NPCs/Watcher, 48, 0, 74, 73)
+t=211..258 L114 [w:watcher,w:visible] | seedling:npc/watcher#1 drawImage(seedling/NPCs/Watcher, 12, 0, 74, 73)

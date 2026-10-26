@@ -251,7 +251,8 @@ describe('2. by hand from the AS3', () => {
         });
         const ops = solidsOps(v, art, { skin: stepSolidsSkin(null, v, 1) });
         expect(ops.map((o) => [o.key.split('/')[1], o.dx, o.dy, o.layer])).toEqual([
-            ['breakablerock', 16, 32, -48], ['burnabletree', 48, 64, -96], ['magicallockfire', 77, 93.5, -112],
+            ['breakablerock', 16, 32, -48], ['burnabletree', 48, 64, -96], ['magicallockfire', 77, 94, -112],   // ⛓ G10 (F4): 21 px high → int origin 10
+           
             ['lock', 0, 112, -120], ['cover', 16, 112, -129], ['bosslock4', 32, 112, -128],   // the open lock is not drawn
             ['rocklock', 64, 112, 0], ['button', 4, 132, -136], ['buttonroom', 16, 128, 100],
         ]);

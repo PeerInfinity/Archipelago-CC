@@ -1,4 +1,4 @@
 t=0 L43 [wand:hidden] |
-t=1..9 L43 [wand] | seedling:pickup/wand#0 drawImage(seedling/WandPickup, 0, 0, 149.5, 227.5) +circle(153,229,14,#ffff00)circle(153,229,7,#ffff00)
-t=10..108 L43 [wand:held] | seedling:pickup/wand#0 drawImage(seedling/WandPickup, 0, 0, 149.5, 210.7) +circle(153,212,14,#ffff00)circle(153,212,7,#ffff00)
+t=1..9 L43 [wand] | seedling:pickup/wand#0 drawImage(seedling/WandPickup, 0, 0, 150, 228) +circle(153,229,14,#ffff00)circle(153,229,7,#ffff00)
+t=10..108 L43 [wand:held] | seedling:pickup/wand#0 drawImage(seedling/WandPickup, 0, 0, 150, 211.2) +circle(153,212,14,#ffff00)circle(153,212,7,#ffff00)
 t=109..200 L43 [taken] |

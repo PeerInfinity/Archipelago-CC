@@ -217,7 +217,7 @@ export const ART_TABLE = Object.freeze([
         .map(([key, file, as3]) => ({ pack: 'seedling', key: `seedling:player/${key}`, file, fw: 16, fh: 32, origin: [0, 16],
             as3: `${as3} — slash [0..4] at swordSpeed 30, slashnarrow [1,2,3] at swordSpeedDash 20 (Player.as:131-132)`,
             anims: { slash: fps([0, 1, 2, 3, 4], 30), slashnarrow: fps([1, 2, 3], 20) } })),
-    { pack: 'seedling', key: 'seedling:player/ghostSword', file: 'GhostSword.png', fw: 24, fh: 7, origin: [0, 3.5],
+    { pack: 'seedling', key: 'seedling:player/ghostSword', file: 'GhostSword.png', fw: 24, fh: 7, origin: [0, 3],
         as3: 'Player.as:44-45 sprGhostSword; :399-405 slash [0,1,2,2,3,3,4] at 30, slashnarrow [0,1,2,3] at 20',
         anims: { slash: fps([0, 1, 2, 2, 3, 3, 4], 30), slashnarrow: fps([0, 1, 2, 3], 20) } },
 

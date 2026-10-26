@@ -1,5 +1,5 @@
-t=1..16 L106 [ghostsword] | seedling:pickup/ghostsword#0 drawImage(seedling/GhostSwordPickup, 0, 0, 60, 76.5) night
-t=17..38 L106 [ghostsword] | seedling:pickup/ghostsword#1 drawImage(seedling/GhostSwordPickup, 24, 0, 60, 76.5) night
-t=39..61 L106 [ghostsword] | seedling:pickup/ghostsword#0 drawImage(seedling/GhostSwordPickup, 0, 0, 60, 76.5) night
-t=62..83 L106 [ghostsword] | seedling:pickup/ghostsword#1 drawImage(seedling/GhostSwordPickup, 24, 0, 60, 76.5) night
-t=84..90 L106 [ghostsword] | seedling:pickup/ghostsword#0 drawImage(seedling/GhostSwordPickup, 0, 0, 60, 76.5) night
+t=1..16 L106 [ghostsword] | seedling:pickup/ghostsword#0 drawImage(seedling/GhostSwordPickup, 0, 0, 60, 77) night
+t=17..38 L106 [ghostsword] | seedling:pickup/ghostsword#1 drawImage(seedling/GhostSwordPickup, 24, 0, 60, 77) night
+t=39..61 L106 [ghostsword] | seedling:pickup/ghostsword#0 drawImage(seedling/GhostSwordPickup, 0, 0, 60, 77) night
+t=62..83 L106 [ghostsword] | seedling:pickup/ghostsword#1 drawImage(seedling/GhostSwordPickup, 24, 0, 60, 77) night
+t=84..90 L106 [ghostsword] | seedling:pickup/ghostsword#0 drawImage(seedling/GhostSwordPickup, 0, 0, 60, 77) night
