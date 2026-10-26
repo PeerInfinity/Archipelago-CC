@@ -312,6 +312,10 @@ export const NIGHT_COPIES = Object.freeze({
     'seedling:scenery/lightpole': { alpha: 'same', when: (op) => op.nightCopy === true },
     // ⛓ G8 — `DarkTrap.as:61-69`: while "die1" plays, the same picture again onto nightBmp (`seedlingTrapSkin` marks it).
     'seedling:enemy/darktrap': { alpha: 'same', when: (op) => op.dying === true },
+    // ⛓ G9a — the placed pickups' `render()` copies (`seedlingPickupSkin` marks them `nightCopy`, so an AP look sharing
+    //    the sheet is never copied): HealthPickup, GhostSword, TorchPickup, and the boss keys 2, 3, 4 (`BossKey.as`).
+    ...Object.fromEntries(['health', 'ghostsword', 'torchpickup', 'bosskey2', 'bosskey3', 'bosskey4']
+        .map((k) => [`seedling:pickup/${k}`, { alpha: 'same', when: (op) => op.nightCopy === true }])),
     // `LavaChain.as:63-73`: only while its anim is "hit".
     'seedling:puzzlement/lavachain': { alpha: 'same', when: (op, ctx) => ctx.hitChains.has(`${opCentre(op).x},${opCentre(op).y}`) },
 });
@@ -469,6 +473,8 @@ export function nightOps(view, art, { skin = null, ops = [], hazard = null, whit
             if (op.key === LAVA_TILE) solid.push(...R.lavaEdges(edgeFrameOf(op, cell, art, level, skin), cell, time));
             continue;
         }
+        // ⛓ G9a — a body's own `Draw` calls onto nightBmp before its copy (the wands' and boss key 2's `circlePlus`)
+        if (op.nightExtra) night.push(...op.nightExtra);
         const rule = R.copies[op.key];
         if (!rule || (rule.when && !rule.when(op, ctx))) continue;
         const k = rule.alpha === 'same' ? (op.alpha ?? 1) : (typeof rule.alpha === 'function' ? rule.alpha(op, ctx) : rule.alpha);
@@ -605,13 +611,13 @@ export const NIGHT_COVERAGE = Object.freeze({
         'Light: Torch, BoneTorch, PlantTorch (player-distance alpha), Orb (float), LightPole (lit / darkLight, lightPolesNow), the grenade light, PlayerLight (hasTorch)',
         'tile glows: darkStone, igneousStone, lava (+ solidBmp edges, HARDLIGHT), iceWall(s) unless snowing, ghostTile(s), bridge, igneousToLava, fuchsiaTile',
         'copies: the dark-suit body, the slash, LavaRunner, BossTotemShot, Explosion, SlashHit, Droplet, TurretSpit, Grenade, the mound (building 8), Crusher (+ its lanes), LavaChain (hit), PushableBlockFire / PushableBlockSpear (G7)',
+        'the placed pickups\' copies and glows (G9a): HealthPickup, GhostSword, TorchPickup, BossKey 2–4 (+ key 2\'s circle), the Wand / Fire Wand circles',
         'the Boss Totem: its parts SCREENed, its LASER, its white-out rect',
         'Shadow, LightRay (night shaft + its two screen rects)',
     ]),
     remaining: Object.freeze([
         'the PlayerLight sprite (PlayerLight.png is not in the pack)', 'Wire (not drawn by G1)', 'DarkTrap\'s die1 copy (no dark-trap picture)',
-        'the copies of classes G1–G4b draw as rectangles or not at all: Lock, RockLock, BossLock, BossKey, the pickups (GhostSword, FireWand, Wand, '
-            + 'TorchPickup, HealthPickup), Pulser, BeamTower, Pull, LavaTrap, LavaBoss, LightBoss, LightBossTotem, Moonrock, '
+        'the copies of classes G1–G4b draw as rectangles or not at all: Lock, RockLock, BossLock, Pulser, BeamTower, Pull, LavaTrap, LavaBoss, LightBoss, LightBossTotem, Moonrock, '
             + 'TreeLarge, FrozenBoss, FinalDoor, SealController, Help, WandShot, RayShot, LavaBall, the spear / fire / death ray / dark shield',
         'the slash-narrow blur copies (Player.as:1201-1212)', 'snow, the blizzard and the black-and-white pass (not nightBmp)',
         'the underwater colour transform', 'Teleporter: no graphic (renderLight copies an empty graphic)',

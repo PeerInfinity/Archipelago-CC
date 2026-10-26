@@ -296,11 +296,14 @@ const sprite = (art, key, frame, at, extra = {}) => {
  *   rectangle is not painted under (or, for a crusher that has moved, beside) the sprite. Omitted: every object is drawn.
  * @param {function} [opts.drawnTeleporters] `(teleporter) → boolean`: a teleporter the caller draws itself (G7's
  *   stairs — `seedlingPuzzleSkin`), so its stand-in rectangle is not painted. Omitted: every active one is.
+ * @param {function} [opts.drawnPickups] `(pickup) → boolean`: a placed pickup the caller draws itself (G9a's
+ *   `seedlingPickupSkin`, taken ones included: it draws nothing for those), so its stand-in rectangle is not painted.
+ *   Omitted: every one is.
  * @param {Function} [opts.mask] the autotiler (a test's MUTANT; default `autotileMask`)
  */
 export function roomOps(world, art, {
     level, tick = 0, player = null, playerSprites = null, apItems = [], apItemSprites = null, entitySprites = null, mask = autotileMask,
-    drawnObjects = null, drawnTeleporters = null,
+    drawnObjects = null, drawnTeleporters = null, drawnPickups = null,
 } = {}) {
     const plan = planFor(world, level, mask);
     const ops = [];
@@ -341,7 +344,7 @@ export function roomOps(world, art, {
     }
 
     for (const tp of world.teleporters) if (!tp.deactivated && !drawnTeleporters?.(tp)) ops.push(rectOp(tp.rect, TELEPORTER_COLOUR, 0.45, -Infinity));
-    for (const p of world.pickups ?? []) ops.push(rectOp(p.rect, AP_ITEM_COLOUR, 0.5, -p.rect.bottom));
+    for (const p of world.pickups ?? []) if (!drawnPickups?.(p)) ops.push(rectOp(p.rect, AP_ITEM_COLOUR, 0.5, -p.rect.bottom));
     if (apItemSprites) ops.push(...apItemSprites);
     else for (const a of apItems) {
         const fallback = rectOp(a.rect, AP_ITEM_COLOUR, 1, -a.rect.bottom);
