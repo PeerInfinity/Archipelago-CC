@@ -115,3 +115,40 @@ describe('fidelity L32BOB — the swing in flight', () => {
         expect(run.ledger('playerHits')).toHaveLength(0);
     });
 });
+
+/**
+ * D2 — THE SOLVE, FROM EVERY L32 STAGING. The census (the report: every prefix of each staging's own solved plan that
+ * ends inside a swing, 4 × 35) declines OFF at exactly three prefixes per staging — the three whose swing's T+5 test
+ * still lands — and solves all 140 ON. One of each staging's three is pinned here, continued from its committed tape.
+ */
+const D2 = [
+    // [tape, seam k, OFF's +landedAt]
+    ['swim-u5-bobboss-encounter', 380, 58],
+    ['enc-l32-live-arrival', 373, 58],
+    ['enc-l32-fallen-door', 379, 58],
+    ['apb-l32-fresh-fire-held', 380, 58],
+];
+function solveTapeSeam(name, k) {
+    const tape = JSON.parse(readFileSync(new URL(`./fixtures/tapes/${name}.json`, import.meta.url), 'utf8'));
+    const st = solveStaging(stagingFromTape(parseTape({ ...tape, tick_count: 0, inputs: [] })));
+    const pre = Array.from({ length: k }, (_, t) => new Set(heldKeysAt(tape, t)));
+    const run = createRunForStaging(st, SRC, { scratchPersistence: true });
+    for (const h of pre) run.advance(h);
+    try {
+        solveSegment({ run, goals: [{ ...GOAL }], name: 'l32bob-d2', boot: st.boot, prefix: pre, dashMode: 'none' });
+        return { run, refusal: null };
+    } catch (e) {
+        if (e instanceof SolverRefusal) return { run, refusal: e };
+        throw e;
+    }
+}
+describe('fidelity L32BOB D2 — every L32 staging, continued inside its form-1 swing', () => {
+    it.each(D2)('%s @%i: OFF declines (+%i, 2 landings); ON both reports, untouched', (name, k, at) => {
+        const off = withContactFidelity({ encounterSwingInFlight: false }, () => solveTapeSeam(name, k));
+        expect(off.refusal?.message).toContain(`the forecast landed form 1's hit at +${at} and the run's boss reports 2 landing(s)`);
+        const on = withContactFidelity({ encounterSwingInFlight: true }, () => solveTapeSeam(name, k));
+        expect(on.refusal?.message).toBeUndefined();
+        expect([on.run.apReportSlotHeld(32, 3), on.run.apReportSlotHeld(32, 4), on.run.level]).toEqual([false, false, 32]);
+        expect(on.run.ledger('playerHits')).toHaveLength(0);
+    });
+});
