@@ -1988,6 +1988,13 @@
       "noHazards": []
     },
     {
+      "file": "rulesref-l66-door.json",
+      "tickCount": 230,
+      "bootLevel": 66,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "sealdoor-l113-clear.json",
       "tickCount": 148,
       "bootLevel": 113,

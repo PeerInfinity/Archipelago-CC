@@ -1473,6 +1473,17 @@ export const CONTACT_FIDELITY = {
      * count a bridge the run can open as open (`deriveBlockRoute`). OFF: byte-identical. `SEEDLING_SPEAR_BRIDGE_VERB=0|1`.
      */
     spearBridgeVerb: false,
+    /**
+     * fidelity RULESREF D3 (wave 32) — A DOOR HALF A TILE OFF THE GRID IS NAMED ON THE 8 px LATTICE
+     * (`solverBot.identifyAndSelect`'s frontier flood).
+     *
+     * L66's `teleporter@72,64` is in `building8`'s doorway — the pixel mask's notch is x 72-87, half a tile off the
+     * 16 px grid — behind `bosslock@72,64`. Every 16 px node centre beside the walk's component hits the MASK first,
+     * so the frontier held only scenery (*"No strategy row exists"*, survey step 163, divergence leg 579 on both arms).
+     * ON: a frontier with no actionable entry is flooded again at `FINE_LATTICE` (8 px; nodes at x 76, 84 fit the
+     * notch), which names the lock (`keylock`). OFF: byte-identical. `SEEDLING_FINE_FRONTIER_FLOOD=0|1`.
+     */
+    fineFrontierFlood: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1655,6 +1666,9 @@ if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '0') CONTACT_FIDEL
 // ⛓ fidelity RULESREF D2: `SEEDLING_SPEAR_BRIDGE_VERB=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_SPEAR_BRIDGE_VERB === '1') CONTACT_FIDELITY.spearBridgeVerb = true;
 if (globalThis.process?.env?.SEEDLING_SPEAR_BRIDGE_VERB === '0') CONTACT_FIDELITY.spearBridgeVerb = false;
+// ⛓ fidelity RULESREF D3: `SEEDLING_FINE_FRONTIER_FLOOD=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '1') CONTACT_FIDELITY.fineFrontierFlood = true;
+if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '0') CONTACT_FIDELITY.fineFrontierFlood = false;
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;

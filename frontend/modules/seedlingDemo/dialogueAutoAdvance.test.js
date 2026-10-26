@@ -184,8 +184,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // `apb-l32-both-reported`, `apb-l32-fresh-fire-held`, `apb-l32-fresh-no-fire`, `apb-l32-killed-drop-held`,
         // `apb-l12-witch-slot-held`, `apb-l12-witch-server-sword`, `apb-l12-witch-reported`, `apb-l43-totem-no-parts`,
         // inert (the three Witch tapes' sword is no auto-advance arrival, as `enc-l12-witch`'s).
-        expect(rows).toHaveLength(289);
-        expect(rows.length - parted.length).toBe(288);
+        // ⛓ fidelity RULESREF: +1 (290) — `rulesref-l66-door` (no dialogue), inert.
+        expect(rows).toHaveLength(290);
+        expect(rows.length - parted.length).toBe(289);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

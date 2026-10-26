@@ -18698,6 +18698,22 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
     }
+    /**
+     * ⛓⛓ fidelity RULESREF D3 (`CONTACT_FIDELITY.fineFrontierFlood`, OFF) — a lock in a doorway half a tile off the grid
+     * (L66's `bosslock@72,64` in `building8`'s x 72-87 notch) has no 16 px cell whose pinned box meets its key line; its
+     * 8 px cells do, and are asked (in the world as it is, on the 8 px lattice) once every 16 px cell has failed.
+     */
+    if (CONTACT_FIDELITY.fineFrontierFlood) {
+        for (const c of keylockCandidates(run, row, contacts, FINE_LATTICE)) {
+            try {
+                planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
+                    solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
+                return { stance: { x: c.x, y: c.y }, discharged: [] };
+            } catch (e) {
+                if (!(e instanceof BotDriverV2Error)) throw e;
+            }
+        }
+    }
     const siblings = base().filter((h) => keylockOutOfReach(run, h, contacts));
     const sealed = keyLineBehindLock(run, row, candidates, contacts, siblings);
     const refusal = new SolverRefusal(
@@ -18716,8 +18732,7 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
  * sibling's reach can be asked with the same cells): a free lattice cell from
  * which a walk into the lock pins the box on the key line, nearest first.
  */
-function keylockCandidates(run, row, contacts) {
-    const pitch = DEFAULT_LATTICE;
+function keylockCandidates(run, row, contacts, pitch = DEFAULT_LATTICE) {
     const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
     const cell = nodeAt((row.rect.x + row.rect.right) / 2,
         (row.rect.y + row.rect.bottom) / 2, pitch);
@@ -24184,8 +24199,10 @@ function solveSegmentUnder({
     const identifyAndSelect = (goal, aim, contacts, planError, allowTeleporter) => {
         const opts = solverPlanOpts(run, contacts,
             { ...goalPlanExtra, nodeMargin: 0, triggerMargin: 0 });
-        const pitch = DEFAULT_LATTICE;
         const w = run.world;
+        // ⛓ fidelity RULESREF D3 (`fineFrontierFlood`, OFF): the flood is a function of its pitch so it can be asked
+        // again on the 8 px lattice (below). OFF it runs once, at `DEFAULT_LATTICE`, as it always did.
+        const floodFrontier = (pitch) => {
         const nx = w.width * TILE_SIZE / pitch;
         const ny = w.height * TILE_SIZE / pitch;
         const start = nodeAt(run.state.x, run.state.y, pitch);
@@ -24236,6 +24253,30 @@ function solveSegmentUnder({
                         d: Math.hypot(c.x - aim.x, c.y - aim.y),
                     });
                 }
+            }
+        }
+        return frontier;
+        };
+        let frontier = floodFrontier(DEFAULT_LATTICE);
+        /**
+         * ⛓⛓ fidelity RULESREF D3 (`CONTACT_FIDELITY.fineFrontierFlood`, OFF) — **A DOOR HALF A TILE OFF THE GRID IS
+         * NAMED ON THE 8 px LATTICE.** L66's `teleporter@72,64` stands in `building8`'s doorway (the mask's notch is
+         * x 72-87) behind `bosslock@72,64`: every 16 px node centre next to the walk's component (x 72, x 88) hits the
+         * MASK first, so the frontier held only scenery and refused *"No strategy row exists"* (survey step 163, sweep
+         * leg 579), and FRONTIER3's 8 px retry plans no corridor while the lock stands. ON, a frontier with no
+         * actionable entry is flooded again at `FINE_LATTICE` (nodes x 76, x 84 fit the notch), which meets the lock.
+         * ⚠ And so is one whose 16 px plan failed on a MASKED GOAL TILE (the planner's own words): from leg 579's arrival
+         * (64,80) the coarse frontier also holds L66's spear bridge, which is actionable and NOT on the way, so without
+         * this the walk opened the bridge first (271 t against the fine flood's 87 t, measured).
+         */
+        if (CONTACT_FIDELITY.fineFrontierFlood) {
+            const actionableIn = (f) => [...f.values()].some((o) => frontierExecutor(refineStrategy(run,
+                OBSTACLE_STRATEGIES[o.tag ? `${o.kind}:${o.tag}` : o.kind] ?? OBSTACLE_STRATEGIES[o.kind] ?? null, o)));
+            const goalMasked = /^A\* goal tile \(\d+,\d+\) in level \d+ — .* is not walkable: pixelmask /
+                .test(String(planError?.message ?? ''));
+            if (!actionableIn(frontier) || goalMasked) {
+                const fine = floodFrontier(FINE_LATTICE);
+                if (actionableIn(fine)) frontier = fine;
             }
         }
         /**
