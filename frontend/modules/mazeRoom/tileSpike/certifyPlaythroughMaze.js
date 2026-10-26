@@ -370,6 +370,92 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
         if (at !== cell) problems.push(`${label}: witness [${formatPoint(inventory)}] replays to ${at}, not ${cell}`);
     };
 
+    /**
+     * ⛓ INTERNAL-ONLY MEMBERS (session tile-primitives-sphere-order-2, ⚖ 2026-10-26 "Price from inbound"). A member of a
+     * level world that NO AP exit enters from outside that world (and no start) is entered only by walking in from
+     * another member: its fresh arrival (its entrance cell, the level freshly entered) is no AP state. L67's key room
+     * r3c2 is entered only after r6c11 spears the block onto the button that silences the key's lane; fresh, the key
+     * sits in the armed lane. Such a member is priced from the arrival of every ROOTED member of its world (one an AP
+     * exit enters from outside it) whose AP closure reaches it — the full search from there, so every state a walk
+     * enters it in (blocks, cuts, facing), through any chain of members — against that closure into it. A member with
+     * an AP entrance from outside, or a start, keeps the fresh-arrival pricing (that arrival is real), and so does every
+     * member of a world nothing outside enters (a level compiled alone: no outside arrival to price from — its start
+     * is the compile's fallback, not the game's).
+     */
+    const inboundOf = (name) => Object.entries(REGIONS).filter(([, r]) => r.exits.some((e) => e.connected_region === name)).map(([f]) => f);
+    const rootedIn = (members, name) => inboundOf(name).some((f) => !members.includes(f) && !starts.includes(f));
+    const rootsOf = (world) => world.sharedWorld.regions.filter((m) => rootedIn(world.sharedWorld.regions, m));
+    const startOf = (name) => starts.includes(name) || inboundOf(name).some((f) => starts.includes(f));
+    const internalOnly = (world, name) => {
+        const members = world.sharedWorld?.regions;
+        if (!members || startOf(name) || rootedIn(members, name)) return false;
+        return rootsOf(world).length > 0;
+    };
+    // Every AP item at its highest named count: what an AP closure is asked with to say whether a member is reachable at all.
+    const topLevels = new Map();
+    for (const r of Object.values(REGIONS)) {
+        for (const e of r.exits ?? []) ruleLevels(e.access_rule, topLevels);
+        for (const l of r.locations ?? []) ruleLevels(l.access_rule, topLevels);
+    }
+    const everyPoint = [...everyItem].sort().flatMap((i) => Array(Math.max(1, ...(topLevels.get(i) ?? []))).fill(i));
+    const certifyFromInbound = (world, name) => {
+        const closure = inWorldClosure(world.sharedWorld.regions);
+        const priced = new Set();
+        const rowItems = (out, atlas) => {
+            const asked = new Set([...out.items, ...ruleItems(atlas)]);
+            const levels = mergeLevels(out.levels, ruleLevels(atlas));
+            for (const e of closure.edges) { ruleItems(e.rule, asked); ruleLevels(e.rule, levels); }
+            return { asked: [...asked].sort(), levels };
+        };
+        for (const via of rootsOf(world).filter((r) => closure.reaches(r, name, everyPoint)).sort()) {
+            const out = deriveEntryLogic(world, name, helpers, {
+                native, arrivalBlocked: arrivalBlockedFrom(name), cache: cacheOf(world, via), arriveFrom: via,
+            });
+            const entered = enteredAt(world, via);
+            // The inbound member's own arrival in an armed lane is no state either (its own rows report it).
+            const notHere = entered.trapLanes ? (inv) => standsInArmedLane(entered, createState(entered), inventoryOf(inv)) : null;
+            // An EVENT location is asked without the event in hand: holding it, it was collected already (no question).
+            const row = (label, atlas, minimal, event = null) => {
+                const derived = ruleFromMinimalSets(minimal);
+                const { asked, levels } = rowItems(out, atlas);
+                const skip = event === null ? notHere : (inv) => inv.includes(event) || Boolean(notHere?.(inv));
+                compareRow(label, via, asked, levels, (inv) => holds(derived, inv),
+                    (inv) => closure.reaches(via, name, inv) && holds(atlas, inv), skip, explain(atlas));
+            };
+            const exitTo = new Map(REGIONS[name].exits.map((e) => [e.name, e.connected_region]));
+            const byTarget = new Map();
+            for (const t of out.targets) {
+                const label = `${name} @ ${t.exitName ?? t.locationName} (from ${via})`;
+                for (const w of t.witnesses) {
+                    replay(label, entered, w.inventory, w.plan, t.adjacent ? w.cell : `${t.x},${t.y}`, { cut: Boolean(t.event) && !t.adjacent });
+                }
+                if (t.kind === 'exit') {
+                    const to = exitTo.get(t.exitName);
+                    if (to === undefined) { problems.push(`${label}: no AP exit of that name`); continue; }
+                    if (!byTarget.has(to)) byTarget.set(to, []);
+                    byTarget.get(to).push(...t.minimal);
+                    continue;
+                }
+                const loc = (REGIONS[name].locations ?? []).find((l) => l.name === t.locationName);
+                if (!loc) { problems.push(`${label}: no AP location of that name`); continue; }
+                row(label, loc.access_rule ?? { rule: 'True_' }, t.minimal, loc.event ? (loc.item?.name ?? loc.name) : null);
+                priced.add(loc.name);
+                lines.push(`${name}@${t.locationName}<${via}=${JSON.stringify(t.minimal)}`);
+            }
+            const inWorld = new Set(world.sharedWorld.regions);
+            for (const to of new Set(REGIONS[name].exits.map((e) => e.connected_region))) {
+                if (inWorld.has(to)) continue;
+                if (!byTarget.has(to)) { problems.push(`${name}: its exit(s) to ${to} are not priced (from ${via})`); continue; }
+                const atlas = anyOf(REGIONS[name].exits.filter((e) => e.connected_region === to).map((e) => e.access_rule ?? { rule: 'True_' }));
+                row(`${name} → ${to} (from ${via})`, atlas, byTarget.get(to));
+                lines.push(`${name}->${to}<${via}=${JSON.stringify(byTarget.get(to))}`);
+            }
+        }
+        for (const l of REGIONS[name].locations ?? []) {
+            if (!priced.has(l.name)) problems.push(`${name}: location ${l.name} is not priced`);
+        }
+    };
+
     const sample = new Set(regions ?? Object.keys(SIDECARS));
     // One reach cache per world (a shared world's key, else the region): pairs and entries share reaches.
     const caches = new Map();
@@ -386,10 +472,16 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
             const out = deriveLevelWorldLogic(world, helpers, { native, cache: cacheOf(world, name) });
             const closure = inWorldClosure(world.sharedWorld.regions);
             for (const p of out.pairs) {
+                // An internal-only member's own arrival is no AP state: what it reaches, its inbound members' pairs reach.
+                if (internalOnly(world, p.from)) continue;
                 agreeWithClosure(`${p.from} → ${p.to}`, closure, p, out);
                 for (const w of p.witnesses) replay(`${p.from} → ${p.to}`, enteredAt(world, p.from), w.inventory, w.plan, w.cell);
                 lines.push(`${p.from}>${p.to}=${JSON.stringify(p.minimal)}`);
             }
+        }
+        if (internalOnly(world, name)) {
+            certifyFromInbound(world, name);
+            continue;
         }
         const out = deriveEntryLogic(world, name, helpers, {
             native, arrivalBlocked: arrivalBlockedFrom(name), cache: cacheOf(world, name),

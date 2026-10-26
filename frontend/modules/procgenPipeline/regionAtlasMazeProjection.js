@@ -200,7 +200,8 @@ function bindWorldEvents(builder, events, local, inGrid) {
             // ⛓ Two events on ONE cell (L12's magical lock on its boss lock) open by their OWN rules (a wand shot, a key
             // touch — `MagicalLock.as`, `BossLock.as`), so each names its rule; the cell passes once both are open
             // (session tile-primitives-sphere-order-2, ⚖ "Lay touched event cells").
-            const own = (e) => (evs.length > 1 && e.rule ? { rule: e.rule } : {});
+            // A one-sided lock names the side it opens from (`probe`, BossLock.as `update`: a line below the lock).
+            const own = (e) => ({ ...(evs.length > 1 && e.rule ? { rule: e.rule } : {}), ...(e.probe ? { probe: e.probe } : {}) });
             const entry = { ...base, id, name: `${base.name}: ${evs.map((e) => e.name).join(' + ')}`, events: evs.map((e) => ({ name: e.name, side: e.side, ...own(e) })) };
             if (names.length > 0 && base.struck_by) {
                 entry.clear_set = [names.map((n) => n.args.item_name)];
@@ -942,7 +943,8 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
  * @param {object} ctx `projectRegionToMaze`'s, plus `partitionFor(region)` →
  *   `{sub_regions, rows, origin:[x,y]}` (the atlas's persisted partition)
  * @param {Array<object>} entities `levelEntitiesFor`'s rows:
- *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item} | {action, rule}], label}`
+ *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item} | {action, rule}], reach?, label}` — a
+ *   block with a `strike` is moved only by it, from up to `reach` cells (`block_strike`)
  * @returns {{ sidecars: object, notes: Array, analysis: null, sharedWorld: string }}
  */
 export function projectLevelWorld(region, grid, ctx, entities) {
@@ -989,6 +991,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
 
     // --- entity rows ---------------------------------------------------------
     const blocks = [];
+    let blockPush = null; // 'walk', or a struck block's JSON {by, reach} — one per world
     const buttons = [];
     const buttonLib = {};
     const actionLib = {};
@@ -1050,6 +1053,14 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             builder.floor(x, y);
             claimed.add(keyOf(x, y));
             blocks.push({ x, y });
+            // ⛓ STRUCK BLOCKS (session tile-primitives-sphere-order-2, ⚖ "Reach-2 strike-push"): a block the game moves
+            // only by a hit (Seedling's PushableBlockSpear) names its strike; the world's `block_strike` says so for all.
+            const how = e.strike ? JSON.stringify({ by: e.strike.map(actionFor), reach: e.reach }) : 'walk';
+            if (blockPush !== null && blockPush !== how) {
+                throw new Error(`atlas region "${regionId}": ${e.label ?? 'a block'} is pushed ${how}, another block ${blockPush} `
+                    + '— one world moves all its blocks one way (a mixed world is not modelled)');
+            }
+            blockPush = how;
             continue;
         }
         if (e.kind === 'button') {
@@ -1448,6 +1459,8 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         ...(traps.length > 0 ? { traps: traps.sort(sortRows), trapLib } : {}),
         ...(entryGates.length > 0 ? { entry_gates: entryGates } : {}),
         ...(blockSinks.length > 0 ? { block_sinks: blockSinks } : {}),
+        ...(blockPush !== null && blockPush !== 'walk'
+            ? { block_strike: { struck_by: JSON.parse(blockPush).by, reach: JSON.parse(blockPush).reach } } : {}),
         shared_world: {
             key: regionId,
             regions: bindings.map((b) => b.apName),

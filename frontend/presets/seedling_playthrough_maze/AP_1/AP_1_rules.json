@@ -5726,7 +5726,8 @@
               "events": [
                 {
                   "name": "L19 flag 1: bosslock@48,32 cleared",
-                  "side": "level_19__r3c3"
+                  "side": "level_19__r3c3",
+                  "probe": "S"
                 }
               ]
             },

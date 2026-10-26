@@ -18,6 +18,9 @@
  *            `block_may_enter` condition lets it in through `tile.sink` whatever the cell's own clearance
  *   entry  — ENTRY GATES: entering a cell MOVING one way (a waterfall climbed north) needs its gate; read by
  *            the enter / push conditions through `tile.entry` (the gate's combos for THIS move's direction)
+ *   strike-push — STRUCK BLOCKS (`block_strike`): a block is never walk-pushed; a use of a listed action moves
+ *            every block within `reach` ahead one cell, farthest first (the push primitive's data, not a
+ *            condition)                                  condition: tileLib.block.may_enter (asked of each next cell)
  *
  * Helpers are called as `f(cell, tile)` with `state`/`player` ambient (⚖ Q4 v1): `state.has` reads
  * the EFFECTIVE inventory — carried plus held tokens — through the context's `hasItem`.
@@ -225,6 +228,25 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
             next.broken.push(world.obstacleLib?.[getObstacle(world, fx, fy)]?.at ?? posKey(fx, fy));
             next.broken.sort();
         }
+        // ⛓ STRUCK BLOCKS (session tile-primitives-sphere-order-2): the native `strikePushes`, the next cell asked of
+        // the push condition; a block moved off a button may arm the lane the player stands in.
+        if (world.blockStrike?.struckBy.includes(actionId) && state.blocks?.length) {
+            const ctx = makeContext(helpers, inv);
+            const moved = next.blocks;
+            for (let k = world.blockStrike.reach; k >= 1; k -= 1) {
+                const x = state.player_pos.x + d.dx * k;
+                const y = state.player_pos.y + d.dy * k;
+                if (!next.blocks.includes(posKey(x, y))) continue;
+                const bx = x + d.dx;
+                const by = y + d.dy;
+                const beyond = tileAt(world, bx, by, next.blocks, state.player_pos, state.broken, null, state.facing);
+                if (!callHelper(ctx, tileLib.block.may_enter, { x: bx, y: by }, beyond)) continue;
+                next.blocks = blocksAfterPush(world, next.blocks, posKey(x, y), posKey(bx, by));
+            }
+            if (next.blocks !== moved && world.trapLanes && scriptedStandsInArmedLane(world, next, helpers, tileLib)) {
+                return { next: null, refused: { primitive: 'lane', cell: { ...state.player_pos }, helper: tileLib.trap.armed } };
+            }
+        }
         return { next, refused: null };
     }
     const delta = DELTAS[input];
@@ -239,6 +261,9 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     }
     let pushedFrom = null;
     let pushedTo = null;
+    if (target.block && world.blockStrike) {
+        return { next: null, refused: { primitive: 'push', cell: { x: nx, y: ny }, helper: null } };
+    }
     if (target.block) {
         const bx = nx + delta.dx;
         const by = ny + delta.dy;

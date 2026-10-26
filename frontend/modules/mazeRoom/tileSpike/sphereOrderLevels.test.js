@@ -14,6 +14,8 @@
  *   - L12: a per-sub-region world walled the event locks its component touches but no crossing uses — the doorway's second
  *     Red-Key lock (27,15) and the magical lock stacked on a boss lock at (2,54), whose crossing (to L83) is unwired —
  *     ⚖ "Lay touched event cells";
+ *   - L67: the spear block was a static Ghost Spear gate; the game spears it onto the button that silences the key's lane,
+ *     from two cells away across a wall — ⚖ "Reach-2 strike-push".
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -109,5 +111,14 @@ describe('L12 — a sub-region world lays the event locks it touches', () => {
         expect(at('level_12__r0c37', 26, 15).events.map((e) => e.name)).toEqual(['L12 flag 4: bosslock@416,240 cleared']);
         expect(at('level_12__r42c28', 2, 54).events.map((e) => e.name).sort())
             .toEqual(['L12 flag 12: bosslock@32,864 cleared', 'L12 flag 7: magicallock@32,864 cleared']);
+    });
+});
+
+describe('L67 — the spear block is speared onto the button', () => {
+    it('L59 + L67 certify clean; the Boss Key, priced from r6c11 (its only way in), needs only the Ghost Spear', () => {
+        const out = certify(['level_59', 'level_67']);
+        expect(out.problems).toEqual([]);
+        expect(out.accepted).toEqual([]);
+        expect(line(out, 'level_67__r3c2@Level 067 - Boss Key 4<level_67__r6c11=')).toBe(JSON.stringify([['Ghost Spear']]));
     });
 });
