@@ -56,10 +56,10 @@ function runAt(upto) {
 const bombWhys = (d) => (d?.rejected ?? []).filter((r) => /the STAND meets a bomb/.test(r.why));
 
 describe('PRESS_KILL_BOMBS — the switch', () => {
-    it.skipIf(globalThis.process?.env?.SEEDLING_PRESS_KILL_BOMBS !== undefined)('ships ON (the user\'s flip, '
-        + 'hammer-phase PKB, 2026-10-24)', () => {
-        expect(PRESS_KILL_BOMBS_DEFAULT).toBe(true);
-        expect(PRESS_KILL_BOMBS.enabled).toBe(true);
+    it.skipIf(globalThis.process?.env?.SEEDLING_PRESS_KILL_BOMBS !== undefined)('ships OFF (ON by PKB 2026-10-24; '
+        + 'OFF again by the user\'s PKB-OFF ruling, 2026-10-26)', () => {
+        expect(PRESS_KILL_BOMBS_DEFAULT).toBe(false);
+        expect(PRESS_KILL_BOMBS.enabled).toBe(false);
     });
 
     it('withPressKillBombs sets and restores it, also on a throw', () => {
