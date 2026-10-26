@@ -22,7 +22,8 @@
  *   3. BOSSES, PIXEL MASKS AND CHOREOGRAPHY — the overlay again for the boss
  *      bodies, plus the PHYSICS MODEL's own pixel masks
  *      (`seedlingDemo/levelWorld.js` + `seedlingPixelMasks.js`) for the
- *      building outlines the transcription cannot carry. ⛓ That import is the
+ *      building outlines (the grid's `pixelMaskFootprints`, and the model
+ *      oracles on the tiles a mask covers in part). ⛓ That import is the
  *      firewall's ALLOWED direction (§6.3): the generator reads the model, the
  *      model reads nothing back, and the artifact is one-way.
  *
@@ -75,9 +76,8 @@ const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance
 const {
     deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM, levelName, BOSS_LOCATION_ITEM, BOSS_FILLER_ITEM,
 } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
-const { buildLevelWorld, ROLES, maskHitsBox, PERSISTENCE_RESPONSE, combatCensusOf } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
+const { buildLevelWorld, ROLES, PERSISTENCE_RESPONSE, combatCensusOf } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
-const { playerBoxAt } = await imp('frontend/modules/seedlingDemo/playerPhysicsV2.js');
 const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 const { lethalTerrainUnder, arrivalIsLethal } = await imp('frontend/modules/seedlingDemo/seedlingLethalArrivals.js');
@@ -118,42 +118,11 @@ const levelOf = (id) => LEVELS.find((l) => l.level === id);
 const notes = [];
 const note = (s) => notes.push(s);
 
-// ── layer 3a: the pixel-mask outlines, taken from the PHYSICS MODEL ─────────
+// ── layer 3a: the pixel-mask outlines — see ⛔ THE MASK EXPANSION below ─────
 //
-// `seedlingSemantics` calls a Building `manual` because its collider is a
-// per-pixel mask it does not carry — "neither rectangle approximation is safe:
-// the sprite rect swallows the building's OWN doorway". The model DOES carry
-// them, extracted from the PNGs and verified against the real game, so the
-// generator asks it and hands the analyzer the answer as ordinary 1x1 walls.
-//
-// The synthetic tag is private to this generator and registered in the overlay
-// lookup below; the map extract is never written.
-const MASK_TAG = '__playthrough_mask_solid';
-
-function expandPixelMasks(level) {
-    const masked = new Set(OV.PIXEL_MASK_TAGS);
-    if (!level.entities.some((e) => masked.has(e.type))) return level;
-    const world = buildLevelWorld(level, { roles: ROLES });
-    if (world.pixelmasks.length === 0) return level;
-    const extra = [];
-    for (let ty = 0; ty < level.height; ty += 1) {
-        for (let tx = 0; tx < level.width; tx += 1) {
-            const box = playerBoxAt(tx * TILE + TILE / 2, ty * TILE + TILE / 2);
-            for (const p of world.pixelmasks) {
-                if (!maskHitsBox(p.mask, p.maskX, p.maskY, box)) continue;
-                extra.push({ type: MASK_TAG, x: tx * TILE, y: ty * TILE, attrs: {} });
-                break;
-            }
-        }
-    }
-    // The masked entities themselves drop out — their cells are now stated
-    // exactly, and leaving the sprite rect behind would re-add the wall the
-    // mask says is a doorway.
-    return {
-        ...level,
-        entities: [...level.entities.filter((e) => !masked.has(e.type)), ...extra],
-    };
-}
+// ⛓ PIXELMASK FOOTPRINTS (session tile-primitives-pixelmask-l86): the grid takes a
+// Building's outline from its Pixelmask (`seedlingSemantics.buildSeedlingRegionGrid`'s
+// `pixelMaskFootprints`, passed in `baseGridFor`), tile by tile.
 
 // ── the analyzer's options, with the overlay's vocabulary folded in ─────────
 
@@ -207,19 +176,12 @@ const BLOCK_HOLDERS = OV.buildBlockHolders(MAP);
 /** ⛓ RULES kill-locks — the census, for a reader that reports it. Additive. */
 export const playthroughKillLocks = KILL_LOCKS;
 const entityOverride = (entity, base, level) => {
-    if (entity.type === MASK_TAG) {
-        return {
-            kind: 'wall',
-            cite: 'seedlingDemo/levelWorld.ENTITY_CLASSES + seedlingPixelMasks.js',
-            why: 'the real per-pixel outline, from the model that drives the game byte-exact',
-        };
-    }
     return OV.overlayEntitySemantics(entity, base, {
         level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
     });
 };
 
-// ⛔⛔⛔ THE MASK EXPANSION IS OFF BY DEFAULT, AND THAT IS A MEASUREMENT.
+// ⛔⛔⛔ THE MASK EXPANSION WAS OFF BY DEFAULT, AND THAT WAS A MEASUREMENT (kept as history; the expansion is RETIRED).
 //
 // Layer 3 originally ran `expandPixelMasks` on every level: ask the physics
 // model for a building's real per-pixel outline and hand the analyzer exact
@@ -242,9 +204,13 @@ const entityOverride = (entity, base, level) => {
 // instead of an invented wall."* A permissive refusal that produces a
 // hand-authoring row beats an accurate wall that produces a sealed map.
 //
-// `--masks` keeps the code alive and runnable for whoever wants to make it
-// sub-tile (where it would be a genuine improvement rather than a coarsening).
-const MASKS = process.argv.includes('--masks');
+// ⛓ PIXELMASK FOOTPRINTS (session tile-primitives-pixelmask-l86, ⚖ 2026-10-25 "3-way by coverage", "Retire
+// --masks") replaced it. The coarsening was the PLAYER BOX at each tile's centre, which walls a tile whose edge is
+// walkable. The grid now claims only what is certain — a tile wholly inside the mask is a wall, a tile with no
+// mask pixel is not claimed — and leaves a tile the mask covers in PART `manual`, exactly as before, so the
+// physics model still decides every crossing through one. That removed every one of L0's 23 building cells
+// (16 wall, the rest free — among them (10,18), where L86 lands the player) and moved no location's sphere.
+// `expandPixelMasks` and `--masks` are gone.
 // ⛓ SWIM T4 (plan R-j) — THE ONE-SIDED LOCKS. `bosslock`'s `probe: 'S'`
 // (BossLock.as:62 tests the key only against a player on the row BELOW the
 // lock) is read as `enter` gates, so each lock crosses one way, south -> north.
@@ -387,10 +353,11 @@ const gridFor = (level, options = {}) => {
 };
 const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true } = {}) => {
     const build = (extra) => SEM.buildSeedlingRegionGrid(
-        { x: 0, y: 0, w: level.width, h: level.height }, MASKS ? expandPixelMasks(level) : level,
+        { x: 0, y: 0, w: level.width, h: level.height }, level,
         {
             entityOverride,
             tileOverride: OV.overlayTileSemantics,
+            pixelMaskFootprints: true,
             ...(directionalLocks ? { directionalLocks, ...(arrivals ? { arrivalTiles: arrivalTilesFor(level.level) } : {}) } : {}),
             ...extra,
         },

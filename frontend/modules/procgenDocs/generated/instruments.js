@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 112,
-            "count": 159,
+            "browser": 113,
+            "count": 160,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 466,
-        "browser": 177,
+        "blockStyle": 467,
+        "browser": 178,
         "cited": 252,
-        "files": 480,
+        "files": 481,
         "lineStyle": 14,
-        "withDocblock": 480,
-        "withFlags": 397
+        "withDocblock": 481,
+        "withFlags": 398
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6894,10 +6894,6 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "from": "make-seedling-playthrough-rules.mjs",
-                    "name": "masks"
-                },
-                {
-                    "from": "make-seedling-playthrough-rules.mjs",
                     "name": "no-directional-locks"
                 }
             ],
@@ -6927,12 +6923,6 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "masks"
                 },
                 {
                     "how": [
@@ -12577,7 +12567,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling's L0 WAY UP to `out_teleporter_240_0` (tile [15,0], the L89 door), ON THE GAME (slice rules-l0-tighter-probe): can the player reach it from `level_0__r8c0` or `level_0__r11c19` WITHOUT the Feather?",
+            "oneLiner": "Seedling's L0 WAY UP to `out_teleporter_240_0` (tile [15,0], the L89 door), ON THE GAME (slice rules-l0-tighter-probe): can the player reach it from `level_0__r7c6` or `level_0__r11c19` WITHOUT the Feather?",
             "path": "scripts/procgen/probe-seedling-l0-tighter.mjs"
         },
         {
@@ -13324,6 +13314,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l67-reach2 — does the spear push a block from TWO tiles away, across a pit?",
             "path": "scripts/procgen/probe-seedling-l67-reach2.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l93-door.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L93 DOOR into L98 (`out_teleporter_112_80`, tile [7,5]), ON THE GAME (slice tile-primitives-pixelmask-l86): does the player need the Feather to reach it from `level_93__r10c7`?",
+            "path": "scripts/procgen/probe-seedling-l93-door.mjs"
         },
         {
             "argvHelpers": [],

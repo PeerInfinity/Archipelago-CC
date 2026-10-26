@@ -66,8 +66,8 @@ describe('a burnable tree between two exits SPLITS the region and gates the cros
         expect(mentionsFire(rowOf('level_37', 'r0c18', 'r12c6').access_rule)).toBe(true);
     });
 
-    it('L12: the tree at (480,640) walls r42c29 off from r0c37 except by Fire', () => {
-        expect(rowOf('level_12', 'r0c37', 'r42c29').access_rule).toEqual(FIRE);
+    it('L12: the tree at (480,640) walls r42c28 off from r0c37 except by Fire', () => {
+        expect(rowOf('level_12', 'r0c37', 'r42c28').access_rule).toEqual(FIRE);
     });
 });
 

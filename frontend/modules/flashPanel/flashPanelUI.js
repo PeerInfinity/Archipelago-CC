@@ -17,7 +17,7 @@ import { atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
 import { realRoomPlaybackMap } from './seedlingPlaybackController.js';
 import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
-import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
+import { PUSH_INTERVAL_MS, WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
 import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
@@ -33,6 +33,7 @@ import { DASH_SHAPE_SETTING_KEYS, dashShapeSettingValues, dashShapeSpec, dashSha
 import {
   CAMERA_SETTING_KEY, EFFECTS_SETTING_KEY, GRAPHICS_SETTING_KEY, LIGHTS_SETTING_KEY, cameraMode, effectsMode, graphicsPageParams, graphicsStack, lightsMode,
 } from './seedlingGraphicsSettings.js';
+import { SPEED_SETTING_KEY, gameSpeed, gameSpeedPageParam } from './seedlingGameSpeedSettings.js';
 import { RUFFLE_CDN } from './ruffleCdn.js';
 
 function log(level, message, ...data) {
@@ -106,6 +107,7 @@ const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'seedlingJsCamera', label: 'Camera', when: 'js' },
   { prop: 'seedlingJsLights', label: 'Lights', when: 'js' },
   { prop: 'seedlingJsEffects', label: 'Effects', when: 'js' },
+  { prop: 'seedlingJsSpeed', label: 'Game speed', when: 'js' },
   { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
   { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
 ]);
@@ -318,6 +320,11 @@ export class FlashPanelUI {
           data.key === CAMERA_SETTING_KEY ? data.value : undefined, data.key === LIGHTS_SETTING_KEY ? data.value : undefined,
           data.key === EFFECTS_SETTING_KEY ? data.value : undefined);
         this._applyJsGraphics();
+      }
+      if (data?.key === SPEED_SETTING_KEY || data?.key === '*') {
+        // ⛓ GAME SPEED — presentation only: applied to a mounted JS page LIVE, never a re-mount.
+        await this._refreshJsSpeed(data.key === SPEED_SETTING_KEY ? data.value : undefined);
+        this._applyJsSpeed();
       }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
       if (!this.isInitialized) return;
@@ -702,6 +709,36 @@ export class FlashPanelUI {
     if (c !== undefined) this._jsCamera = cameraMode(c);
     if (l !== undefined) this._jsLights = lightsMode(l);
     if (e !== undefined) this._jsEffects = effectsMode(e);
+  }
+
+  /** ⛓ GAME SPEED — cache `flashPanel.seedlingJsSpeed` (`seedlingGameSpeedSettings.js`); undefined = read it. */
+  async _refreshJsSpeed(value) {
+    let v = value;
+    try {
+      if (v === undefined) v = await settingsManager.getSetting(SPEED_SETTING_KEY, '1x');
+    } catch { /* keep the cached value */ }
+    if (v !== undefined) this._jsSpeed = gameSpeed(v);
+  }
+
+  /** ⛓ GAME SPEED — the adapter's item push interval: `PUSH_INTERVAL_MS` / the speed on the JS runtime, else the default. */
+  _jsPushIntervalMs() {
+    return this.transport === 'js' ? PUSH_INTERVAL_MS / (this._jsSpeed ?? 1) : PUSH_INTERVAL_MS;
+  }
+
+  /** ⛓ GAME SPEED — hand the cached speed to a mounted JS page and its adapter (a no-op on any other transport). */
+  _applyJsSpeed() {
+    if (this.transport !== 'js') return;
+    const speed = this._jsSpeed ?? 1;
+    this.adapter?.setPushIntervalMs?.(this._jsPushIntervalMs());
+    let handle = null;
+    try { handle = this.adapter?._getWin?.()?.__seedlingJsClock ?? null; } catch { handle = null; }
+    if (!handle?.set) return;
+    try {
+      handle.set(speed);
+      this._panelLog(`JS page game speed: ${speed}× (${handle.ticksPerSecond} ticks a second)`);
+    } catch (err) {
+      this._panelLog(`JS page game speed could not be applied: ${err.message}`);
+    }
   }
 
   /** ⛓ GRAPHICS G1 — hand the cached switches to a mounted JS page (a no-op on any other transport). */
@@ -1251,6 +1288,8 @@ export class FlashPanelUI {
       dispatcher: getDispatcher(),
       eventBus: this.eventBus,
       log: (msg, cls) => this._panelLog(msg, cls),
+      // ⛓ GAME SPEED — the item push keeps its latency in game ticks at every speed (`seedlingGameSpeedSettings.js`).
+      pushIntervalMs: this._jsPushIntervalMs(),
     });
     this.adapter = adapter;
     this._attachRegionGlue(adapter);
@@ -1586,7 +1625,8 @@ export class FlashPanelUI {
       this._initRuntime = runtime;
       for (const refresh of [this._refreshSolverWalk, this._refreshWasmSolverBudget,
         this._refreshSolverUpgradeWindow, this._refreshKillLockBodies, this._refreshContactFidelity,
-        this._refreshAxeDodgeAsk, this._refreshDashOnlyWindow, this._refreshDashShape, this._refreshJsGraphics]) {
+        this._refreshAxeDodgeAsk, this._refreshDashOnlyWindow, this._refreshDashShape, this._refreshJsGraphics,
+        this._refreshJsSpeed]) {
         await refresh.call(this);
         if (this._initStale(epoch)) return;
       }
@@ -1612,7 +1652,8 @@ export class FlashPanelUI {
           const query = [killLockPageQuery(killLock).replace(/^\?/, ''), contactPageParam(contact),
             axeDodgePageParam(this._jsPageAxeDodge), dashOnlyWindowPageParam(this._jsPageDashOnly),
             dashShapePageParam(this._jsPageDashShape),
-            graphicsPageParams(this._jsGraphics, this._jsCamera, this._jsLights, this._jsEffects)].filter(Boolean);
+            graphicsPageParams(this._jsGraphics, this._jsCamera, this._jsLights, this._jsEffects),
+            gameSpeedPageParam(this._jsSpeed)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm(epoch);

@@ -33,6 +33,7 @@
 
 import { PROFILE } from '../seedlingDemo/seedlingProfile.js';
 import { ENTITY_COLLIDERS } from './seedlingEntityColliders.js';
+import { SEEDLING_PIXEL_MASKS } from '../seedlingDemo/seedlingPixelMasks.js';
 import { blockHolderVerdict, selfHoldTiles } from './seedlingBlockPaths.js';
 
 // --- condition algebra -------------------------------------------------------
@@ -306,6 +307,9 @@ export function tileSemantics(t) {
 // tags share one class and get different rules.
 
 const G = (condition, extra = {}) => ({ kind: 'gated', condition, ...extra });
+/** A `pixelMaskFootprints` tile the mask covers in PART: the reason its `manual` claim carries. */
+const PARTIAL_MASK_REASON = 'per-pixel collision mask (Scenery/Building.as:22) covers this tile in part, and a tile grid '
+    + 'cannot hold the remainder — the physics model decides the crossing';
 const M = (reason, extra = {}) => ({ kind: 'manual', reason, ...extra });
 
 /**
@@ -462,6 +466,10 @@ const TRANSCRIBED_ENTITY_SEMANTICS = Object.freeze({
     // invented wall. `size` is the sprite rectangle: it CONTAINS the mask's
     // bounding box (the model's), so every tile the mask can block is one the
     // model is asked about — see ENTITY_SEMANTICS below.
+    // ⛓ PIXELMASK FOOTPRINTS: a grid built with `pixelMaskFootprints` takes the
+    // outline from the mask itself (`entityMaskTiles`), and a building is `manual`
+    // only on the tiles its mask covers in part (`PARTIAL_MASK_REASON`); the
+    // reason below is the sprite-rect grid's, still true there.
     building: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [4, 4], pixelMask: true }),
     building1: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [3, 3], pixelMask: true, variant: { buildingType: 1 } }),
     building2: M('per-pixel collision mask (Scenery/Building.as:22) is not transcribed — its outline has to be authored by hand', { class: 'Building', size: [4, 4], pixelMask: true, variant: { buildingType: 2 } }),
@@ -679,6 +687,36 @@ export function entitySealedTiles(entity, semantics) {
         }
     }
     return tiles;
+}
+
+/**
+ * ⛓ PIXELMASK FOOTPRINTS (session tile-primitives-pixelmask-l86) — the tiles a
+ * pixel-mask entity's BITMAP touches, each with its coverage: `'full'` (every
+ * pixel opaque), `'none'` (not one) or `'partial'`. The bitmap is the model's
+ * (`seedlingPixelMasks.js`, named per tag by `seedlingEntityColliders.js`),
+ * placed at the collider's offset from the Ogmo x/y. Null for a tag with no
+ * bitmap. `buildSeedlingRegionGrid`'s `pixelMaskFootprints` reads it.
+ */
+export function entityMaskTiles(entity) {
+    const box = ENTITY_COLLIDERS[entity.type];
+    const mask = box?.mask ? SEEDLING_PIXEL_MASKS[box.mask] : null;
+    if (!mask) return null;
+    const T = SEEDLING_TILE_SIZE;
+    const mx = entity.x + box.left;
+    const my = entity.y + box.top;
+    const out = [];
+    for (let ty = Math.floor(my / T); ty * T < my + mask.h; ty += 1) {
+        for (let tx = Math.floor(mx / T); tx * T < mx + mask.w; tx += 1) {
+            let n = 0;
+            for (let py = ty * T; py < (ty + 1) * T; py += 1) {
+                const row = mask.rows[py - my];
+                if (row === undefined) continue;
+                for (let px = tx * T; px < (tx + 1) * T; px += 1) if (row[px - mx] === '#') n += 1;
+            }
+            out.push({ tile: [tx, ty], cover: n === T * T ? 'full' : (n === 0 ? 'none' : 'partial') });
+        }
+    }
+    return out;
 }
 
 /** The player's collision box, from the physics model (playerPhysicsV2). */
@@ -951,6 +989,14 @@ export { DIRECTIONS as SEEDLING_DIRECTIONS };
  *   to keep what the tables say. Both see the BASE ruling, so an overlay can
  *   refine rather than restate, and omitting both reproduces the previous
  *   behaviour byte for byte.
+ *   `pixelMaskFootprints` (⛓ PIXELMASK FOOTPRINTS, ⚖ 2026-10-25 "3-way by coverage",
+ *   "Playthrough only") — a Building (`pixelMask: true`) claims its MASK, tile by
+ *   tile (`entityMaskTiles`), instead of its sprite rect: a fully opaque tile is a
+ *   wall, a partly covered one stays `manual` (the physics model decides the
+ *   crossing), a clear one is not claimed. L0's building1 is a 48x40 sprite over a
+ *   48x32 mask, and the free row under it is where L86 lands the player. Omitted,
+ *   nothing changes: only the playthrough generator passes it, so the starter atlas
+ *   and its presets keep the sprite rect.
  *   `cellCharges` (RULES rope-events) — `{tile, condition, open}` rows the caller
  *   charges on cells (a silenced trap's lane costs its rope's event): an open
  *   cell becomes gated material; omitted, nothing changes.
@@ -1004,8 +1050,17 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             continue;
         }
         if (semantics.kind === 'open') continue;
-        for (const [tx, ty] of entitySealedTiles(entity, semantics)) {
-            claim(tx - bounds.x, ty - bounds.y, semantics, `entity ${entity.type}`);
+        const masked = options.pixelMaskFootprints && semantics.pixelMask ? entityMaskTiles(entity) : null;
+        if (masked) {
+            for (const { tile: [tx, ty], cover } of masked) {
+                if (cover === 'none') continue;
+                const ruled = cover === 'full' ? { ...semantics, kind: 'wall' } : { ...semantics, reason: PARTIAL_MASK_REASON };
+                claim(tx - bounds.x, ty - bounds.y, ruled, `entity ${entity.type}`);
+            }
+        } else {
+            for (const [tx, ty] of entitySealedTiles(entity, semantics)) {
+                claim(tx - bounds.x, ty - bounds.y, semantics, `entity ${entity.type}`);
+            }
         }
         if (semantics.opensFrom) {
             reclosing.push({

@@ -239,11 +239,11 @@ describe('the committed playthrough — sphere legs 1.2 and 2.1', () => {
 
     it('the events are the eight game_state locations the rules carry', () => {
         expect(events.map((e) => e.eventId)).toEqual(expect.arrayContaining(['flag:L0:1', 'flag:L0:4', 'flag:L71:2']));
-        expect(L0).toMatchObject({ side: 'level_0__r8c0', across: ['level_0__r11c19'] });
+        expect(L0).toMatchObject({ side: 'level_0__r7c6', across: ['level_0__r11c19'] });
     });
 
-    it('leg 1.2 (after the Restart, r8c0 → L36) passes through breakablerock@288,176 at its own cost: it CREDITS flag:L0:1', () => {
-        const p = regionPathHops(regions, rh, 'level_0__r8c0', 'level_36', ITEMS);
+    it('leg 1.2 (after the Restart, r7c6 → L36) passes through breakablerock@288,176 at its own cost: it CREDITS flag:L0:1', () => {
+        const p = regionPathHops(regions, rh, 'level_0__r7c6', 'level_36', ITEMS);
         const credits = p.exits.flatMap((exitUsed, i) => creditsOfHop({ regions, events, from: p.path[i],
             step: { region: p.path[i + 1], exitUsed } }));
         expect(credits.map((c) => c.eventId)).toEqual(['flag:L0:1']);
