@@ -205,12 +205,6 @@
       "level": 67
     },
     {
-      "sphere": "8.3",
-      "location": "Level 069 - Lights",
-      "item": "Seal",
-      "level": 69
-    },
-    {
       "sphere": "9.1",
       "location": "Level 012 - Witch",
       "item": "Progressive Sword",
@@ -230,12 +224,18 @@
     },
     {
       "sphere": "9.4",
+      "location": "Level 069 - Lights",
+      "item": "Seal",
+      "level": 69
+    },
+    {
+      "sphere": "9.5",
       "location": "Level 071 - Chest",
       "item": "Seal",
       "level": 71
     },
     {
-      "sphere": "9.5",
+      "sphere": "9.6",
       "location": "Level 074 - Darkshield",
       "item": "Progressive Shield",
       "level": 74

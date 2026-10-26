@@ -922,7 +922,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-65de70ba');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) + r4b pit centre + block-path (L15/L16/L41 lock entries) + rope-events (L16 lanes, L28 lock, Fire cuts) + rules-l39 (rope runs, static pulsers, L39 lock run) restamps + location-crossing (L19 Boss Key 0 charged the Sword; L113 rules_source) + l55-waterfall (L52 floored by its entry gate: three pools)
+        expect(committed.atlas_id).toBe('seedling-756a2066');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) + r4b pit centre + block-path (L15/L16/L41 lock entries) + rope-events (L16 lanes, L28 lock, Fire cuts) + rules-l39 (rope runs, static pulsers, L39 lock run) restamps + location-crossing (L19 Boss Key 0 charged the Sword; L113 rules_source) + l55-waterfall (L52 floored by its entry gate: three pools) + l66-door (L66's D6 door charged the off-grid Yellow-Key lock)
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 
