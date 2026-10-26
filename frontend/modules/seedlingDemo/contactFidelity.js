@@ -1376,7 +1376,7 @@ export const CONTACT_FIDELITY = {
      * (it never closes inside a visit), `shakeAcrossLoad`'s fade and the `rebootShake` settle (`levelRun`'s
      * `CAMERA_BAND_KEPT`). OFF: byte-identical. `SEEDLING_SHAKE_EXACT_SPLIT=0|1`.
      */
-    shakeExactSplit: false,
+    shakeExactSplit: true,
     /**
      * fidelity L67BK4 D1 (wave 31) — A SPEAR BLOCK THAT IS THE ONLY HOLDER FOR AN ARMED LANE'S BUTTON IS PARKED ON THE
      * BUTTON, NOT SUNK (`solverBot.laneHolderRoute`, asked by `resolveSpearPushStrategy`).
@@ -1393,7 +1393,7 @@ export const CONTACT_FIDELITY = {
      * thrusts), which empties the same cell; the walk then meets a silent lane. OFF: byte-identical.
      * `SEEDLING_LANE_WEIGH=0|1`.
      */
-    laneWeigh: false,
+    laneWeigh: true,
     /**
      * fidelity L67BK4 D2 (wave 31) — THE TOTEM IS FOUGHT, NOT ROUTED AROUND (`solverBot.execTotemBoss`,
      * `bossTotemPolicy.js`).
@@ -1409,7 +1409,7 @@ export const CONTACT_FIDELITY = {
      * the run's own stepped fight on forks, and plays the first variant that kills with no death (hitless first). OFF:
      * no row, byte-identical. `SEEDLING_TOTEM_BOSS_FIGHT=0|1`.
      */
-    totemBossFight: false,
+    totemBossFight: true,
     /**
      * fidelity L39SHAFT (wave 31) — **L39's SHAFT, A LICENSED SPECIAL CASE** (⚖ user 2026-10-25: *"move the three blocks
      * into the three inner switches, then stand between them and use fire … For this one, we might need to give the
@@ -1421,7 +1421,7 @@ export const CONTACT_FIDELITY = {
      * between them and fires once (`runFire`'s exact set: all three blocks onto the three outer buttons), then waits out
      * the locks' fade. The game witness: `fidelityL39Shaft.js`. OFF: byte-identical. `SEEDLING_L39_SHAFT_PRESS=0|1`.
      */
-    l39ShaftPress: false,
+    l39ShaftPress: true,
     /**
      * fidelity L39SHAFT D2b (wave 31) — A COLLECT FROM A STANCE ALREADY IN THE PICKUP'S SPAN CLOSES ON ONE AXIS.
      * `runCollect` aims at the pickup's centre; `totempart@72,40` straddles x = 80 under its only free cell, and the line
@@ -1429,7 +1429,7 @@ export const CONTACT_FIDELITY = {
      * collect aims straight along the axis the box does not yet overlap (`solverBot.collectSpanAim`). OFF:
      * byte-identical. `SEEDLING_COLLECT_SPAN_AIM=0|1`.
      */
-    collectSpanAim: false,
+    collectSpanAim: true,
     /**
      * fidelity L39SHAFT D2c (wave 31) — `Spinner.friction()`'s `Point` arithmetic as the runtime spells it:
      * `v.normalize(Math.max(v.length - f, moveSpeed))` is `sqrt(x*x + y*y)` and a multiply by `t / length`
@@ -1437,7 +1437,7 @@ export const CONTACT_FIDELITY = {
      * drifts one ulp on a decaying knockback (game-measured: D2's step-66 witness, t637). ON: `spinnerPoint.js`. OFF:
      * byte-identical. `SEEDLING_SPINNER_POINT_EXACT=0|1`.
      */
-    spinnerPointExact: false,
+    spinnerPointExact: true,
     /**
      * fidelity L40BK2 D1 (wave 31) — A WEIGH'S HOLDER IS DERIVED UNDER THE REST OF THE HYPOTHESIS. Guard (iii)
      * (`stanceHypothesis`) asked each `weigh` activator's holder of the world AS IT IS, so a holder that is reachable
@@ -1449,7 +1449,7 @@ export const CONTACT_FIDELITY = {
      * no candidate reaches otherwise is asked under those admissions; a frontier order that cannot bind yet passes the
      * round to the next door; a refusal carries its `equips`. OFF: byte-identical. `SEEDLING_WEIGH_HYPOTHESIS_CHAIN=0|1`.
      */
-    weighHypothesisChain: false,
+    weighHypothesisChain: true,
     /**
      * fidelity L40BK2 D2 (wave 31) ⛓ hammer hand-over 368 — A STRUCK SPINNER IS PRICED WHERE THE STRIKE LEFT IT. The
      * transit probe (`probeSamples` → `dangerDuringTransit` → `spinnerDanger`) read the run's press-blind

@@ -40,8 +40,9 @@ const STEP67_REFUSAL = 'solverBot: no REACHABLE stance inside button@816,400 in 
     + 'box in the button and none of them plans a corridor from (488,904).';
 
 describe('L40BK2 — the switches', () => {
-    it('both ship OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.weighHypothesisChain).toBe(false);
+    // ⛓ planning-13's wave-31 flip: D1 ships ON; D2 stays OFF until L18's wall time is measured (⚖ user 2026-10-25).
+    it('D1 ships ON, D2 ships OFF', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.weighHypothesisChain).toBe(true);
         expect(CONTACT_FIDELITY_DEFAULTS.dashSpinnerForecast).toBe(false);
     });
 });

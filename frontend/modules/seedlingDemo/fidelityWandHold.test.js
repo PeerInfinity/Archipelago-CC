@@ -132,7 +132,8 @@ describe('WANDHOLD L39 — a cover held by a plain Button does not outlive the w
     });
 
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('OFF (coverWeighRefine OFF): the hold stance is hypothesised behind the cover and the walk grinds 400 ticks against it', async () => {
-        const e = await withContactFidelity({ coverWeighRefine: false }, () => caught(solveL39()));
+        // ⛓ planning-13's wave-31 flip: `l39ShaftPress` ON solves L39 (fidelityL39Shaft's rows) — pinned OFF here.
+        const e = await withContactFidelity({ coverWeighRefine: false, l39ShaftPress: false }, () => caught(solveL39()));
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toContain('hold stance (wandlock@144,64): the re-planned corridor failed too');
         expect(e.message).toContain('waypoint 1 (120,152): not reached within 400 ticks; stalled at (119.37585598070463,162.0184411286208)');
@@ -142,7 +143,9 @@ describe('WANDHOLD L39 — a cover held by a plain Button does not outlive the w
     it('ON: refused by name with no 400-tick grind — the cover is a wall guard (iii) cannot redeem durably', async () => {
         // ⛓ fireBlockRoute named OFF (planning-12's w29b flip): ON a fire block reaches button@112,144 and the refusal
         // moves three links deeper (button@144,112, fidelityFireMove); this row pins coverWeighRefine's own refusal.
-        const e = await withContactFidelity({ coverWeighRefine: true, fireBlockRoute: false }, () => caught(solveL39()));
+        // ⛓ and `l39ShaftPress` named OFF (planning-13's wave-31 flip: ON the shaft SOLVES, fidelityL39Shaft).
+        const e = await withContactFidelity({ coverWeighRefine: true, fireBlockRoute: false, l39ShaftPress: false },
+            () => caught(solveL39()));
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toContain('no REACHABLE stance inside button@112,144 in level 39');
         expect(e.message).toContain('cover@112,144 — its group t=2 publishes only while a Solid sits on button@160,144, '

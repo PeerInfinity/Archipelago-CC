@@ -68,7 +68,10 @@ describe('FIREPUSH — the switches', () => {
 describe('FIREPUSH D2 — the pulser shove (`fireBlockPulseShove`)', () => {
     it('OFF: the frontier names the fire block and refuses "Strategy \'shove\' failed to apply" (legs 869/870\'s answer)',
         async () => {
-            const { out, refusal } = await firePushTail(await prefix(), { ...FIREPUSH_SWITCHES, fireBlockPulseShove: false });
+            // ⛓ control since planning-13's wave-31 flip: `weighHypothesisChain` ON passes the round to the next door
+            // (`nextPastUnbound`, fidelityL40Bk2's ON rows); this row pins the frontier's old answer with it OFF.
+            const { out, refusal } = await firePushTail(await prefix(), { ...FIREPUSH_SWITCHES, fireBlockPulseShove: false,
+                weighHypothesisChain: false });
             expect(out).toBeNull();
             expect(refusal.message).toContain('Obstacle: solid:pushableblockfire (pushableblockfire@576,576)');
             expect(refusal.message).toContain("Strategy 'shove' failed to apply");

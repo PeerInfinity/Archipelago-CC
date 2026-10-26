@@ -62,9 +62,9 @@ const D2 = (on, fn) => withContactFidelity({ totemBossFight: on }, fn);
 
 describe('fidelity L67BK4 — the switches ship OFF', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_LANE_WEIGH
-        || process.env.SEEDLING_TOTEM_BOSS_FIGHT)('laneWeigh and totemBossFight are OFF', () => {
-        expect(CONTACT_FIDELITY.laneWeigh).toBe(false);
-        expect(CONTACT_FIDELITY.totemBossFight).toBe(false);
+        || process.env.SEEDLING_TOTEM_BOSS_FIGHT)('laneWeigh and totemBossFight are ON (planning-13\'s wave-31 flip, ⚖ user 2026-10-25)', () => {
+        expect(CONTACT_FIDELITY.laneWeigh).toBe(true);
+        expect(CONTACT_FIDELITY.totemBossFight).toBe(true);
     });
 
     it('the totem rows exist only while the switch is ON (non-enumerable, as Lights\')', () => {

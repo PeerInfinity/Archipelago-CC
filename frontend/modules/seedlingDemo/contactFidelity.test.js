@@ -294,20 +294,22 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             turretCircleKill: true,
             iceTurretDeathAnim: true,
             // ⛓ fidelity SHAKEEXACT (wave 31): a split run's camera shake stepped exactly — shipped OFF.
-            shakeExactSplit: false,
+            shakeExactSplit: true,
             // ⛓ fidelity L67BK4 (wave 31): a spear block that holds an armed lane's button is parked, not sunk; and the
             // Totem is fought — both shipped OFF.
-            laneWeigh: false,
-            totemBossFight: false,
+            laneWeigh: true,
+            totemBossFight: true,
             // ⛓ fidelity L39SHAFT (wave 31): L39's three-block shaft as a licensed solver special case — shipped OFF.
-            l39ShaftPress: false,
+            l39ShaftPress: true,
             // ⛓ fidelity L39SHAFT D2b (wave 31): a collect from a stance in the pickup's span closes on one axis — OFF.
-            collectSpanAim: false,
+            collectSpanAim: true,
             // ⛓ fidelity L39SHAFT D2c (wave 31): `Spinner.friction()` in the runtime's `Point` spelling — OFF.
-            spinnerPointExact: false,
+            spinnerPointExact: true,
             // ⛓ fidelity L40BK2 (wave 31): a weigh's holder derived under the rest of the stance hypothesis (D1), and a
             // struck spinner priced where the walk's strike left it (D2, ⛓ hammer hand-over 368) — shipped OFF.
-            weighHypothesisChain: false,
+            // ⛓ planning-13's wave-31 flip (⚖ user 2026-10-25): SHAKEEXACT, L67BK4, L39SHAFT, and L40BK2's D1 turn ON;
+            // dashSpinnerForecast waits on L18's wall time ("Chain ON; forecast after L18").
+            weighHypothesisChain: true,
             dashSpinnerForecast: false });
     });
 

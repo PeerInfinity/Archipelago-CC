@@ -68,9 +68,9 @@ function join_(w, on) {
 }
 
 describe('SHAKEEXACT — the switch and the face', () => {
-    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_SHAKE_EXACT_SPLIT)('shakeExactSplit ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.shakeExactSplit).toBe(false);
-        expect(CONTACT_FIDELITY.shakeExactSplit).toBe(false);
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_SHAKE_EXACT_SPLIT)('shakeExactSplit ships ON (planning-13\'s wave-31 flip, ⚖ user 2026-10-25)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.shakeExactSplit).toBe(true);
+        expect(CONTACT_FIDELITY.shakeExactSplit).toBe(true);
     });
 
     it('stepCameraSplit IS stepCameraJiggled at `Game.shakeJiggle(time, axis)`, and refuses an unknown time', () => {

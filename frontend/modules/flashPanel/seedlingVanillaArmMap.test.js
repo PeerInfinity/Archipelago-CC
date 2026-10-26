@@ -104,7 +104,9 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
         const wired = (r) => CONTACT_FIDELITY[BOUND_BOSS_FIGHTS[r.entityType]] === true;
         // ⛓ planning-10's lightsBossFight flip (2026-10-22) adds the Lights, its tentacleBeastFight flip the Tentacled Beast
         //   (report order: L57, L69, L82).
-        expect(LOADED.reports.filter(wired).map((r) => r.entityType)).toEqual(['tentaclebeast', 'lightbosscontroller', 'lavaboss']);
+        // ⛓ planning-13's wave-31 totemBossFight flip adds the Totem of Lacste (report order: L57, L43, L69, L82).
+        expect(LOADED.reports.filter(wired).map((r) => r.entityType))
+            .toEqual(['tentaclebeast', 'bosstotem', 'lightbosscontroller', 'lavaboss']);
         expect(goals.map((g) => g.name).sort())
             .toEqual([...LOADED.entries, ...LOADED.encounters, ...LOADED.reports.filter(wired)].map((e) => e.location).sort());
         // ⛓ R4b (rules-boss-locations) — the boss kills with no default-ON fight are REFUSED BY NAME, never dropped.

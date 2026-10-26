@@ -55,10 +55,11 @@ const d2RunAt = async (n) => {
 };
 
 describe('L39SHAFT — the switches', () => {
-    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('all three ship OFF', () => {
+    // ⛓ planning-13's wave-31 flip (⚖ user 2026-10-25, "Flip all 3 ON").
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('all three ship ON', () => {
         for (const k of KEYS) {
-            expect(CONTACT_FIDELITY_DEFAULTS[k]).toBe(false);
-            expect(CONTACT_FIDELITY[k]).toBe(false);
+            expect(CONTACT_FIDELITY_DEFAULTS[k]).toBe(true);
+            expect(CONTACT_FIDELITY[k]).toBe(true);
         }
     });
 
