@@ -1,0 +1,2 @@
+t=0..142 L59 [] |
+t=143 L67 [bosskey4] | seedling:pickup/bosskey4#3 drawImage(seedling/BossKey4, 36, 0, 50, 64) night

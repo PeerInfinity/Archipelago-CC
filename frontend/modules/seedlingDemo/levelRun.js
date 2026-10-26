@@ -16001,6 +16001,19 @@ export function createLevelRun({
             }),
         };
     };
+    /**
+     * ⛓ G9b (⚖ fidelity-14, 2026-10-26): `get machinesNow`'s body — the pulsers' and beam towers' stepped picture state,
+     * scalars only, read under `reading` (both `…StateFor` build lazily through `keptUnlessReading`, so a read stores nothing).
+     */
+    const machinesNowRead = () => {
+        if (noclip) return null;
+        return {
+            pulsers: [...pulserStateFor(level).values()].map((p) => ({ id: p.id, x: p.x, y: p.y, t: p.t, activate: p.activate,
+                radius: p.radius, pulseTimer: p.pulseTimer, anim: p.anim, animTick: p.animTick })),
+            beamTowers: [...beamTowerStateFor(level).values()].map((t) => ({ id: t.id, cx: t.cx, y: t.y, direction: t.direction,
+                anim: t.anim, index: t.index, frame: t.frame, animKnown: t.animKnown, yKnown: t.yKnown })),
+        };
+    };
     const openBridgesNow = () => noclip ? null : (openBridgeIdsNow() ?? new Set());
     const pushablesNow = () => noclip ? null : pushableRects(pushableStateFor(level));
     const brokenRocksNow = () => noclip ? null : (brokenRockIdsNow() ?? new Set());
@@ -19508,6 +19521,8 @@ export function createLevelRun({
          * game-witnessed; `alpha`/`held` frame by frame are the model's transcription, not yet compared to the game.
          */
         get activatorsNow() { return reading(activatorsNowRead); },
+        /** ⛓ G9b (⚖ fidelity-14): the pulsers' rings and the beam towers' frames, for the renderer — copies only. */
+        get machinesNow() { return reading(machinesNowRead); },
         /**
          * R4: the same thing for the two press families — the planner's only
          * legitimate view of an opened bridge and a moved block.
