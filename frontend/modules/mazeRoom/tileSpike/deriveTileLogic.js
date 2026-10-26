@@ -27,6 +27,7 @@
 
 import {
     createState, getExitAt, getObstacle, mazeVisitedKey, hasItemActions, worldInputs, USE_PREFIX, TURN_PREFIX, INPUTS, turnInput,
+    actionItems, actionUsable,
 } from '../mazeRoomEngine.js';
 import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
 import { isObstacleCleared } from '../../shared/procgen/library.js';
@@ -230,8 +231,7 @@ export function regionItems(world) {
             if (!held.has(item)) out.add(item);
         }
         for (const actionId of entry.struck_by ?? []) {
-            const item = world.actionLib?.[actionId]?.item;
-            if (item && !held.has(item)) out.add(item);
+            for (const item of actionItems(world.actionLib?.[actionId])) if (!held.has(item)) out.add(item);
         }
         if (entry.activates && entry.event) out.add(entry.event);
         for (const ev of entry.events ?? []) out.add(ev.name);
@@ -264,8 +264,7 @@ export function searchInputs(world, inventory, pickups) {
     const have = new Set(inventory);
     return all.filter((input) => {
         if (!input.startsWith(USE_PREFIX)) return true;
-        const item = world.actionLib[input.slice(USE_PREFIX.length)]?.item;
-        return !item || have.has(item);
+        return actionUsable(world.actionLib[input.slice(USE_PREFIX.length)], have);
     });
 }
 

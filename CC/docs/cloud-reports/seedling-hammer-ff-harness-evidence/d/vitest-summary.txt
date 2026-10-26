@@ -1,0 +1,10 @@
+vitest off total 1431 passed 1431 failed 0
+slow off total 12 passed 12 failed 0
+vitest on total 1431 passed 1425 failed 6
+   FAIL hammerFightFallback.test.js | ⛓⛓ OFF by default, rewind mode by default, the switch restores; the trigger is the two press-kill codes
+   FAIL hammerFightFallback.test.js | ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's
+   FAIL hammerFightFallback.test.js | ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence
+   FAIL hammerFightFallback.test.js | ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged
+   FAIL hammerFightFallback.test.js | ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged
+   FAIL hammerFightFallback.test.js | ⛓⛓⛓ ON: the rewind that solves is a plan whose `expected` IS a replay of its keys, row by row
+slow on total 12 passed 12 failed 0
