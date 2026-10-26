@@ -1,0 +1,125 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 0e5e7b16..a3f9573b 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -12004,6 +12004,13 @@ export function deriveRefuge(run, contacts, untilIndex) {
+                 continue;
+             }
+         }
++        if (PKC.refuge && chasersInPlay(run)) {
++            if (chaserContactOnSamples(run, walk.samples, Infinity) !== null
++                || chaserStandContact(run, c, Math.max(untilIndex - eta, 1) + 1, Math.max(untilIndex, eta + 1) + 1) !== null) {
++                PKC.counts.refugeRefused += 1;
++                continue;
++            }
++        }
+         if (!best || eta < best.eta
+             || (eta === best.eta && c.clearance > best.clearance)) {
+             best = { x: c.x, y: c.y, clearance: c.clearance, eta };
+@@ -12015,6 +12022,49 @@ export function deriveRefuge(run, contacts, untilIndex) {
+ /** How many clear cells a refuge derivation previews. Named, not generous. */
+ const REFUGE_CANDIDATES = 12;
+ 
++const PKC = { stand: process.env.PKC_STAND === '1', refuge: process.env.PKC_REFUGE === '1', step: process.env.PKC_STEP === '1', counts: { standAsked: 0, standRefused: 0, refugeRefused: 0, stepRefused: 0 } };
++globalThis.__PKC = PKC;
++function chasersInPlay(run) {
++    return (run.entities('chasers') ? [...run.entities('chasers').values()] : []).some((c) => !c.removed && !c.destroy);
++}
++function chaserContactOnSamples(run, samples, upTo, from = 0) {
++    for (let k = from; k < Math.min(samples.length, upTo); k += 1) {
++        const sm = samples[k];
++        if (!sm.chasers) continue;
++        const src = chaserDanger(run, playerBoxAt(sm.x, sm.y), 0, sm.chasers, { perTick: true });
++        if (src.length > 0) return { step: k, id: src[0].id, x: sm.x, y: sm.y };
++    }
++    return null;
++}
++function chaserStandContact(run, cell, standFor, upTo) {
++    let walk;
++    try {
++        walk = previewWalkOrDeath(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE, { standFor });
++    } catch (e) {
++        if (isShakeBandThrow(e)) return { step: 0, id: 'shake-band' };
++        throw e;
++    }
++    if (walk.truncated) return { step: 0, id: `truncated:${walk.truncated.kind}` };
++    return chaserContactOnSamples(run, walk.samples, upTo);
++}
++function chaserLandsClear(run, keys) {
++    const near = [...(run.entities('chasers')?.values?.() ?? [])].some((c) => !c.removed && !c.destroy
++        && Math.abs(c.x - run.state.x) < 64 && Math.abs(c.y - run.state.y) < 64);
++    if (!near) return true;
++    const next = previewOrDeath(run.previewStepper())({ ...run.state }, keys);
++    if (!next) return false;
++    const f = run.chaserForecast?.() ?? null;
++    if (!f) return true;
++    try {
++        f.step(run.state);
++        const rows = f.step(next);
++        return chaserDanger(run, playerBoxAt(next.x, next.y), 0, rows, { perTick: true }).length === 0;
++    } catch (e) {
++        if (isShakeBandThrow(e)) return true;
++        throw e;
++    }
++}
++
+ /** ⛓ hammer-phase BW (`PRESS_KILL_BOMBS`) — does the run's room hold a lobber or a bomb in flight (the only rooms the forecast below can say anything in)? */
+ function bombsInPlay(run) {
+     return (run.entities('bombPushers') ?? []).length > 0
+@@ -12648,6 +12698,18 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
+      * hit 381 took.
+      */
+     const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
++    const chased = PKC.stand && chasersInPlay(run);
++    const chaserStandAt = (c, eta, i) => {
++        if (!chased) return null;
++        PKC.counts.standAsked += 1;
++        const known = walks.get(c);
++        if (known.chaserStand === undefined) {
++            known.chaserStand = chaserStandContact(run, c, horizon + press.hitTicks + 2, horizon + press.hitTicks + 2);
++        }
++        const r = known.chaserStand !== null && known.chaserStand.step <= i + press.hitTicks + 1 ? known.chaserStand : null;
++        if (r) PKC.counts.standRefused += 1;
++        return r;
++    };
+     let bombed = 0;
+     const standBlastAt = (c, walk, i) => {
+         const known = walks.get(c);
+@@ -12736,6 +12798,12 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
+                     + `(${blast.x},${blast.y}) lands on the stance (the lobber's forecast, aimed at the previewed player)` });
+             continue;
+         }
++        const met = chaserStandAt(o.cell, eta, o.i);
++        if (met !== null) {
++            rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
++                why: `the STAND meets a chaser: ${met.id} at +${met.step}` });
++            continue;
++        }
+         // ⛓ hammer-phase A — the ESCAPE admission (`HAMMER_ESCAPE`; off ⇒ not reached).
+         if (HAMMER_ESCAPE.enabled) {
+             const esc = strikeEscape(run, { cell: o.cell, i: o.i, eta, walk, mine: forecast[o.i + 1][index], bodyId,
+@@ -12808,6 +12876,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
+                 PRESS_KILL_BOMBS_COUNTS.strikeRefused += 1;
+                 continue;
+             }
++            if (chaserStandAt(c, eta, i) !== null) continue;
+             if (HAMMER_ESCAPE.enabled) {
+                 const esc = strikeEscape(run, { cell: c, i, eta, walk, mine, bodyId, caller: 'continuation' });
+                 if (!esc.ok && esc.claim) {
+@@ -13118,7 +13187,7 @@ export function previewWalkOrDeath(run, wps, tolerance, opts) {
+  */
+ function safeStep(run, held, alternatives, what, bodyId, landsClear = landsClearOfHammers) {
+     if ((run.entities('spinnerBodies') ?? []).length === 0) return held;
+-    const lands = (keys) => landsClear(run, keys);
++    const lands = PKC.step ? (keys) => landsClear(run, keys) && (keys.has('primary') || chaserLandsClear(run, keys)) : (keys) => landsClear(run, keys);
+     if (lands(held)) return held;
+     if (held.has('primary')) {
+         return fail(`${what}: the derived PRESS tick against ${bodyId} would land the `
+@@ -17382,6 +17451,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
+              * own refusal caught it at tick 130, which is the accurate wall
+              * doing its job and not a reason to widen anything.
+              */
++            globalThis.__PKC_TRACE?.({ t: run.ticksCompleted, x: run.state.x, y: run.state.y, branch: fightKeys !== null ? 'fight' : (held === PRESS ? 'press' : (following !== null ? 'follow' : (aimed ? 'aim' : (strike ? 'strike' : (refuge ? 'refuge' : 'none'))))), strike: strike ? { cell: strike.cell, pressAt: strike.pressAt, eta: strike.eta, approach: !!strike.approach } : null, refuge, phaseStall: phaseStall ? { ...phaseStall } : null, keysPre: [...held] });
+             try {
+                 const meant = held;
+                 held = safeStep(run, held, alternativesNow(), ctx.what, plan.id,
