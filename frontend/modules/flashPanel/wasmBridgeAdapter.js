@@ -41,7 +41,7 @@ import {
 
 // Push cadence for host->game queue items. The game polls its local
 // getItemQueue every frame (~33ms); pushing less often just batches.
-const PUSH_INTERVAL_MS = 100;
+export const PUSH_INTERVAL_MS = 100;
 
 // What an aborted readiness wait throws. ⛔ ONE spelling: both waits refuse
 // with it, and `detach()` is the only thing that arms it.
@@ -51,6 +51,8 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
   constructor(opts) {
     super(opts);
     this._pushTimer = null;
+    // ⛓ GAME SPEED — the JS runtime at 2×/4× pushes as often in game ticks as at 1× (`setPushIntervalMs`).
+    this._pushIntervalMs = opts?.pushIntervalMs > 0 ? opts.pushIntervalMs : PUSH_INTERVAL_MS;
     // Stable hook identity so installStateHook can detect (and survive)
     // an iframe reload, which replaces the whole __swfBridge object.
     // Mirrors the attached-gate of the real-Flash global shim.
@@ -163,7 +165,18 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
   attach() {
     super.attach();
     if (!this._pushTimer) {
-      this._pushTimer = setInterval(() => this._pushTick(), PUSH_INTERVAL_MS);
+      this._pushTimer = setInterval(() => this._pushTick(), this._pushIntervalMs);
+    }
+  }
+
+  /** ⛓ GAME SPEED — re-time the push (a running timer restarts at the new interval). */
+  setPushIntervalMs(ms) {
+    const next = ms > 0 ? ms : PUSH_INTERVAL_MS;
+    if (next === this._pushIntervalMs) return;
+    this._pushIntervalMs = next;
+    if (this._pushTimer) {
+      clearInterval(this._pushTimer);
+      this._pushTimer = setInterval(() => this._pushTick(), this._pushIntervalMs);
     }
   }
 

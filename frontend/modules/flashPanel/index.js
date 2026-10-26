@@ -5,6 +5,7 @@ import { axeDodgeSchemaProps } from './seedlingAxeDodgeSettings.js';
 import { dashOnlyWindowSchemaProps } from './seedlingDashOnlyWindowSettings.js';
 import { dashShapeSchemaProps } from './seedlingDashShapeSettings.js';
 import { graphicsSchemaProps } from './seedlingGraphicsSettings.js';
+import { gameSpeedSchemaProps } from './seedlingGameSpeedSettings.js';
 import { SOLVE_PROGRESS_INTERVAL_MS, SOLVE_PROGRESS_INTERVALS_MS } from '../seedlingDemo/solveProgressTap.js';
 import { SOLVE_DEMO_EVENT } from './seedlingSolveDemo.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -255,6 +256,8 @@ export function register(registrationApi) {
       // ⛓ GRAPHICS G1 — the JS page's cosmetic switches: graphics (rects | a pack stack) and camera (room | follow).
       // Applied live, never a re-mount (`seedlingGraphicsSettings.js`).
       ...graphicsSchemaProps(),
+      // ⛓ GAME SPEED — the JS page's speed, 1x | 2x | 4x: presentation only, applied live (`seedlingGameSpeedSettings.js`).
+      ...gameSpeedSchemaProps(),
     },
   });
 
