@@ -101,7 +101,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_KING_OF_FIRE_FIGHT || !!process.env.SEEDLING_TENTACLE_BEAST_FIGHT
         || !!process.env.SEEDLING_LIGHTS_SORTIE_PORTFOLIO
         || !!process.env.SEEDLING_CRUSHER_BAIT_PRESS_GOAL || !!process.env.SEEDLING_FORCED_HIT_WITNESS_FIRST
-        || !!process.env.SEEDLING_WEIGH_HYPOTHESIS_CHAIN || !!process.env.SEEDLING_DASH_SPINNER_FORECAST)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_WEIGH_HYPOTHESIS_CHAIN || !!process.env.SEEDLING_DASH_SPINNER_FORECAST
+        || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -311,7 +312,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // dashSpinnerForecast waits on L18's wall time ("Chain ON; forecast after L18").
             weighHypothesisChain: true,
             // ⛓ and dashSpinnerForecast after the L18 wall-time check (OFF 6,192 vs ON 6,116 ms; hammer-2 signed).
-            dashSpinnerForecast: true });
+            dashSpinnerForecast: true,
+            // ⛓ fidelity L32BOB (wave 32): the Bob Boss forecast carries the swing in flight — ships OFF.
+            encounterSwingInFlight: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

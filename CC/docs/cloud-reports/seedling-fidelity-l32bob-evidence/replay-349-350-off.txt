@@ -1,0 +1,4 @@
+ROW {"id":349,"key":"level_32 <- in_L30_224_160 -> exit:out_pit_14_5","i":0,"run":0,"seamTime":5117,"budgetWork":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":1008,"work":39},{"pass":"full","ok":true,"kind":null,"ticks":966,"work":63}],"work":102,"ok":true,"kind":null,"answer":"1f4b3259aa09","message":null,"points":148,"trace":"cdb1defb704a","checkpoints":[],"ms":17312}
+REPLAY: leg 349 request 0 (budget 640): 1 distinct answer(s) over 1, 1 distinct trace(s)
+ROW {"id":350,"key":"level_32 <- in_L30_224_160 -> exit:out_pit_15_5","i":0,"run":0,"seamTime":5114,"budgetWork":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":1008,"work":38},{"pass":"full","ok":true,"kind":null,"ticks":967,"work":88}],"work":126,"ok":true,"kind":null,"answer":"1c20f7a2858a","message":null,"points":197,"trace":"3e0c99084285","checkpoints":[],"ms":17203}
+REPLAY: leg 350 request 0 (budget 640): 1 distinct answer(s) over 1, 1 distinct trace(s)
