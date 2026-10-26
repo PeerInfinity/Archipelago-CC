@@ -18767,8 +18767,8 @@ function keylockStandWalk(run, resolved) {
  * climbs (the kill rung's chaser arm: kill first, then the hold). ⚠ The tail stands the whole bound (the executor
  * stops on its `until`), the side to err on. A paced hold (`MOVING_WAIT`) is not this tail's: it is priced by
  * `planPacedWait` at the executor. `{}` (the walk unchanged) for a resolution without a presser, a stance or a bound.
- * The tail is marked `hold: true`: the ladder's TIME rung refuses it by name (it certifies the walk to the aim, never
- * the wait at it), where a keylock's tail is unchanged.
+ * The tail is marked `hold: true`: the ladder's TIME rung refuses a hit IN it by name (it certifies the walk to the aim,
+ * never the wait at it), where a keylock's tail is unchanged.
  */
 function holdStandWalk(run, resolved) {
     if (!(resolved?.hold?.ticks > 0) || !resolved.target || !resolved.stance) return {};
@@ -25987,12 +25987,13 @@ function solveSegmentUnder({
                 + `${TIME_RUNG.dwell}. TIME is the contested LAST-MILE tool (kickoff `
                 + '§3.1); it is not a room-crossing one, and the bound is named rather '
                 + 'than widened.';
-        } else if (stand?.hold === true) {
+        } else if (stand?.hold === true && hit.waiting === true) {
             /**
-             * ⛓ fidelity L40LATCH D1 — a HOLD's tail (`holdStandWalk`) is not this search's to certify: TIME plans the
-             * mover to the aim against the danger timeline and stops there, and a hold's danger is the WAIT that
-             * follows. MEASURED on L40's latch (the player already on `buttonroom@880,768`): the search answered 0
-             * ticks, the walk re-probed the same tail hit, and the ladder climbed again with no tick spent, forever.
+             * ⛓ fidelity L40LATCH D1 — a hit in a HOLD's tail (`holdStandWalk`; the probe marks it `waiting`) is not
+             * this search's to certify: TIME plans the mover to the aim against the danger timeline and stops there,
+             * and the danger is the WAIT that follows. MEASURED on L40's latch (the player already on
+             * `buttonroom@880,768`): the search answered 0 ticks, the walk re-probed the same tail hit, and the ladder
+             * climbed again with no tick spent, forever. A TRANSIT hit on a hold stance walk is TIME's as ever.
              */
             timeWhy = 'the walk carries a HOLD\'s still wait as its tail (`holdStandWalk`), and the danger is in that '
                 + 'wait: TIME certifies the mover TO the aim against the danger timeline, never the wait at it, so its '
