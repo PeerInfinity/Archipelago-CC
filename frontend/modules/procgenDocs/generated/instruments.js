@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 111,
-            "count": 158,
+            "browser": 112,
+            "count": 159,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 465,
-        "browser": 176,
+        "blockStyle": 466,
+        "browser": 177,
         "cited": 252,
-        "files": 479,
+        "files": 480,
         "lineStyle": 14,
-        "withDocblock": 479,
-        "withFlags": 396
+        "withDocblock": 480,
+        "withFlags": 397
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13249,6 +13249,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l65 — does a spear press actually move L65's block, and which way?",
             "path": "scripts/procgen/probe-seedling-l65.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l66-door.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L66 DOOR into Dungeon 6 (`out_teleporter_72_64` → L70), ON THE GAME (slice rules-l66-l57-probe): does the player need the Yellow Key to take it?",
+            "path": "scripts/procgen/probe-seedling-l66-door.mjs"
         },
         {
             "argvHelpers": [],
