@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 114,
-            "count": 161,
+            "browser": 115,
+            "count": 162,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 468,
-        "browser": 179,
+        "blockStyle": 469,
+        "browser": 180,
         "cited": 252,
-        "files": 482,
+        "files": 483,
         "lineStyle": 14,
-        "withDocblock": 482,
-        "withFlags": 399
+        "withDocblock": 483,
+        "withFlags": 400
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12392,6 +12392,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-iceturret-spear — ⛓⛓ SEEDLING HAMMER-PHASE C3: **L98'S ICE TURRET, KILLED BY THE GHOST SPEAR THROUGH A WALL, ASKED OF THE GAME.**",
             "path": "scripts/procgen/probe-seedling-iceturret-spear.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-inroom-darktraps.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's two OTHER in-room darktraps, ON THE GAME (slice rules-l63-darktrap-probe, step 1 of its fix): are L65's darktrap@144,144 and L101's darktrap@160,80 the class `probe-seedling-l63-darktrap.mjs` witnessed — a barrier that only an UNWIRED lightpole of the same room kills (`tset` -1, no ButtonRoom writes its t…",
+            "path": "scripts/procgen/probe-seedling-inroom-darktraps.mjs"
         },
         {
             "argvHelpers": [],
