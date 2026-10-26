@@ -46,6 +46,10 @@
                 {
                     "option": "sword-dash window: danger",
                     "why": "14 of 112 scanned preview(s) — first at walk-offset 0: the dashed corridor probes DANGEROUS at (89.7,71.3) at tick 70"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             ],
             "keys": [
