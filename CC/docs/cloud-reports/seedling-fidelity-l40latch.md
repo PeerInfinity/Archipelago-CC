@@ -347,7 +347,7 @@ each attributed by running the key alone:
   **3,454 / 3,454**. Against BEFORE, the only differences are 12 added rows: `fidelityL40Latch` 10 and the two derived settings
   rows in `contactFidelityHook`. (The first AFTER run, at `9b637ce5`, was red on the solver-surface census and one
   `lintGateLabels` row: `63436e5c` re-seals the surface and derives the label.)
-- **CI `JavaScript Unit Tests` at `5bab5247` (run 40394512433): success, 23,062 passed, 0 failed; slow battery 271/271** (269 + this slice's 2). At `994389e7` it was the same, 23,062 / 271. The commits after the code head change `CC/docs/` and `docs/` only.
+- **CI `JavaScript Unit Tests` at `5bab5247` (run 40394512433): success, 23,062 passed, 0 failed; slow battery 271/271** (269 + this slice's 2). It was the same at `994389e7`, and again at `40164ab2` (run 40402356917, the docs and the regenerated reference): 23,062 / 271. The report's own commits change `CC/docs/` only, which the path filter does not run.
 - No committed tape, producer `--check` or identity row moves, ON or OFF. No rules, AS3, wasm or gitlink edit.
 
 ## Rows to BANK
