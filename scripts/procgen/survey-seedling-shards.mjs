@@ -52,7 +52,7 @@ import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
 
-const { compareSurveys, mergeShards, partitionSteps, stepCosts } = await import('./surveyShards.js');
+const { bootCheckFailures, compareSurveys, mergeShards, partitionSteps, stepCosts } = await import('./surveyShards.js');
 const { seedlingSurveyDir, throughSurveyDir } = await import('./seedlingSurveyDir.js');
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -156,7 +156,11 @@ if (process.argv.includes('--bound')) {
     console.log(`MERGE ${mode} through ${through}: ${res.survey.rows.length}/${route.steps.length} step(s) from `
         + `${shards.length} shard(s)${baseP ? ' + base' : ''}; verdicts ${JSON.stringify(tally)}`);
     if (res.missing.length) console.log(`MERGE-PARTIAL: ${res.missing.length} step(s) have no row: ${res.missing.join(',')}`);
+    const boots = bootCheckFailures(res.survey.rows);
+    console.log(`BOOT-CHECKS: ${boots.checked - boots.failures.length}/${boots.checked} ok`);
+    for (const f of boots.failures) console.log(`BOOT-CHECK-FAIL: ${f}`);
     console.log(`wrote ${join(outDir, 'survey.json')}`);
+    if (boots.failures.length) process.exit(1);
 } else if (argOf('compare')) {
     const a = readJson(argOf('compare'));
     const withP = argOf('with');

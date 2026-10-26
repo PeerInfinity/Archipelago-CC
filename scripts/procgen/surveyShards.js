@@ -168,6 +168,22 @@ export function mergeShards(route, shards, { base = null, partial = false } = {}
 }
 
 /**
+ * ⛓ RULES survey-cleanup — **THE BOOT CHECKS ARE READ HERE.** A row's `boot.check` (the survey's two checks on the
+ * boot derivation: a committed row's boot IS the atlas arrival, and the staged construction equals `r8-solve-18`'s
+ * committed block) is `ok:false` when the derivation drifted. Before this, nothing read it, and the staged one read
+ * false on every survey for weeks. The merge CLI prints one `BOOT-CHECK-FAIL` per entry and exits 1 (the merged
+ * survey is still written).
+ *
+ * @returns {{checked: number, failures: string[]}}
+ */
+export function bootCheckFailures(rows) {
+    const checked = rows.filter((r) => r.boot?.check);
+    const failures = checked.filter((r) => r.boot.check.ok !== true).map((r) => `step ${r.step} L${r.level}: `
+        + `${r.boot.check.what}${r.boot.check.differs?.length ? ` (differs: ${r.boot.check.differs.join(', ')})` : ''}`);
+    return { checked: checked.length, failures };
+}
+
+/**
  * Two surveys of ONE route, verdict by verdict.
  *
  * @returns {{rows: Array<{step, level, a, b, familyA, familyB, msA, msB, agree}>,
