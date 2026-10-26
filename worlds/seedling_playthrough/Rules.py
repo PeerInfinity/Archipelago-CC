@@ -1988,6 +1988,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_66__r5c4 -> level_70", player),
+        Has('Yellow Key', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_66__r9c8 -> level_66__r5c4", player),
         Has('Ghost Spear', 1)
     )

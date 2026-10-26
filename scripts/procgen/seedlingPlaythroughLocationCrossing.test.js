@@ -68,6 +68,8 @@ describe('the sealed exits keep their charges', () => {
             'level_32/out_pit_15_5',
             'level_34/out_teleporter_128_0',
             'level_56/out_pit_6_10',
+            // ⛓ rules-l66-l57-probe: under the off-grid bosslock@72,64 {keyType 4} (`offGridGatedSolids`)
+            'level_66/out_teleporter_72_64',
             'level_98/out_stairsup_112_112',
         ]);
     });

@@ -186,6 +186,13 @@ const overlaps = (a, b) => a.x < b.right && b.x < a.right && a.y < b.bottom && b
 export const EXIT_TYPES = Object.freeze(['teleporter', ...STAIRS_TAGS]);
 
 /**
+ * The `why` of a boot note for a REBOOT IN PLACE (`rebootInPlace`: an item flag, a key, a seal part). The game
+ * builds no new world for one (a `Main.*` write), so no load fade either: the page's painter reads it off
+ * `events` to tell such a run from a `new Game` (graphics G7).
+ */
+export const IN_PLACE_REBOOT_WHY = 'an item flag changed';
+
+/**
  * ⛓ J3 — the `exitType` a fired door reports: the type of the room's own
  * link entity on the teleporter's `.oel` spot. `teleporter` when the record
  * names none (a delivered room always does).
@@ -627,7 +634,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     function tickOnce(held) {
         drainQueue();
         if (!session || halted) { flush(); return { stepped: false }; }
-        if (deferredReboot && !session.run.inCeremony) rebootInPlace('an item flag changed');
+        if (deferredReboot && !session.run.inCeremony) rebootInPlace(IN_PLACE_REBOOT_WHY);
         const run = session.run;
         const level0 = run.level;
         const world0 = run.world;
@@ -812,7 +819,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         const items = queue;
         queue = [];
         for (const item of items) applyItem(item);
-        if (deferredReboot && session && !session.run.inCeremony && !halted) rebootInPlace('an item flag changed');
+        if (deferredReboot && session && !session.run.inCeremony && !halted) rebootInPlace(IN_PLACE_REBOOT_WHY);
     }
 
     function valueOf(cls, property) {

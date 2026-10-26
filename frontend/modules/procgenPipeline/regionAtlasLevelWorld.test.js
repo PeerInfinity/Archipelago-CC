@@ -141,13 +141,25 @@ describe('the atlas\'s own grid — every playthrough region, compiled alone', (
         mapDoc: MAP, embedSphereLog: true, sidecarFlavor: 'maze', mazeProjection: deps,
     });
 
-    it('every region projects but the ghost rocks, which refuse by name (an And has no single strike item)', () => {
+    // ⛓ The ghost rocks (L3, L101) once refused by name — a strike was one item. Since session
+    // tile-primitives-sphere-order-1 (⚖ 2026-10-25 "action_lib `rule`") they bind the fusion's And.
+    it('every region projects — the ghost rocks bind a rule strike (And of the fusion\'s items)', () => {
         const refused = {};
+        const ghost = {};
         for (const r of ATLAS.regions) {
-            try { compileAlone(r.region_id); } catch (e) { refused[r.region_id] = e.message; }
+            try {
+                const sc = compileAlone(r.region_id).rules.preset_sidecars['1'];
+                for (const s of Object.values(sc)) {
+                    const lib = s.playable_payload?.action_lib;
+                    if (lib?.ghostsword) ghost[r.region_id] = lib.ghostsword.rule.children.map((c) => c.args.item_name);
+                }
+            } catch (e) { refused[r.region_id] = e.message; }
         }
-        expect(Object.keys(refused)).toEqual(['level_3', 'level_101']);
-        for (const m of Object.values(refused)) expect(m).toMatch(/hasGhostSword.*not one Has — a strike needs exactly one item/);
+        expect(refused).toEqual({});
+        expect(ghost).toEqual({
+            level_3: ['Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'],
+            level_101: ['Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'],
+        });
     }, 120_000);
 
     // ⛓ RULES l55-waterfall: L50 and L52 are FLOORED by their entry gate now (Swim, charged at every door), so the
