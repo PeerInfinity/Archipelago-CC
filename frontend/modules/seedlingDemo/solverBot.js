@@ -5970,8 +5970,14 @@ function lanesUnpublishedByLeaving(run) {
  * exemption cannot survive a re-plan.
  */
 function senseContacts(run) {
-    return new Set(contactsAt(run.world, run.state.x, run.state.y,
+    const contacts = new Set(contactsAt(run.world, run.state.x, run.state.y,
         { avoidVolumes: true, keys: run.progress('keys') }));
+    // ⛓ fidelity CHESTSEAL: a chest `checkBySeal()` removed has no probe line to avoid — the static world still
+    // carries its `proximity-hazard` volume (the build does not read the save), so the walk exempts it. OFF: unchanged.
+    if (CONTACT_FIDELITY.chestSealRemoval && run.chestsSealRemoved === true) {
+        for (const c of run.world.chests ?? []) contacts.add(`proximity-hazard:${c.tag}@${c.x},${c.y}`);
+    }
+    return contacts;
 }
 
 /**
@@ -28961,6 +28967,23 @@ function solveSegmentUnder({
                 });
             }
             records.push(record(taken, 'walk'));
+            continue;
+        }
+        /**
+         * ⛓ fidelity CHESTSEAL (`CONTACT_FIDELITY.chestSealRemoval`): with all sixteen seal parts held the game never
+         * builds this chest into a player-visible frame — `Chest`'s constructor runs `checkBySeal()`, whose
+         * `setPersistence(tag, false)` IS the location's check report, and `check()` removes it before the first
+         * update. So the goal is satisfied by entering the level, with no verb to bind (OFF: the `chest` verb, which
+         * refused *"NEVER OPENED"*). The flag is in `bankedClears` from the visit's first tick.
+         */
+        if (CONTACT_FIDELITY.chestSealRemoval && resolved.strategy === 'chest' && run.chestsSealRemoved === true) {
+            const c = resolved.target;
+            records.push({
+                goal: 'collect-placement', strategy: 'chest', arm: 'seal-removed',
+                chest: { id: c.id, x: c.x, y: c.y, persistTag: c.persistTag }, level: run.level,
+                why: `${c.id} is removed by \`Chest.checkBySeal()\` — the save holds all sixteen seal parts — and its `
+                    + `constructor's \`setPersistence(${c.persistTag}, false)\` is the location's check`,
+            });
             continue;
         }
         let contacts = senseContacts(run);
