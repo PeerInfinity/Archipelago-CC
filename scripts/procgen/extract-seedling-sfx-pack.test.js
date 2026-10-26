@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 import { PACKS_DIR, buildPacks } from './extract-seedling-art-packs.mjs';
 import { isSfxFile, sfxDrift } from './extract-seedling-sfx-pack.mjs';
-import { MUSIC_AS, SOUND, buildSfxLayer, mp3Seconds, parseMusicAs, sfxKeyOf } from './seedlingSfxLayer.mjs';
+import { MUSIC_AS, SOUND, buildSfxLayer, mp3Seconds, parseMusicAs, sfxKeyOf } from './seedlingSfxLayer.js';
 import { SEEDLING_SUBMODULE } from './seedlingSource.js';
 import { sfxKey } from '../../frontend/modules/seedlingDemo/seedlingSoundCues.js';
 

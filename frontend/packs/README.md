@@ -27,7 +27,7 @@ GitHub Pages serves only `frontend/`.
 `node scripts/procgen/extract-seedling-art-packs.mjs`, and check with the same command plus `--check`. The sheets
 are the `vendor/seedling` PNGs copied byte for byte, except the font sheet, which
 `scripts/procgen/make-seedling-font.mjs` builds from its glyph table (`--check` compares its bytes; the extractor's
-`--check` covers it too). The `sfx` layer comes from `scripts/procgen/seedlingSfxLayer.mjs`, which both
+`--check` covers it too). The `sfx` layer comes from `scripts/procgen/seedlingSfxLayer.js`, which both
 `extract-seedling-art-packs.mjs` (it owns `pack.json`) and `extract-seedling-sfx-pack.mjs` (the layer's own CLI and
 `--check`) build from. Its clips are the `vendor/seedling` MP3s copied byte for byte.
 

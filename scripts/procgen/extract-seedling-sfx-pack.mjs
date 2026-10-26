@@ -4,7 +4,7 @@
 // `sfx` layer (`frontend/packs/seedling/sfx/`), and writes its manifest.
 //
 // Seedling JS sound effects (⚖ the user 2026-10-26). The layer is BUILT by
-// `seedlingSfxLayer.mjs` (which says what went where, and why); this is its
+// `seedlingSfxLayer.js` (which says what went where, and why); this is its
 // CLI. The pack's `pack.json` is owned by `extract-seedling-art-packs.mjs`,
 // which builds the same layer from the same module, so the two scripts write
 // the same bytes and `--check` here is the sfx slice of the art script's.

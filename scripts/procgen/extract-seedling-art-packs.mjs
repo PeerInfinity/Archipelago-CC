@@ -22,7 +22,7 @@
 // ⛔ LEFT OUT by ruling (the same ruling): the 04B_03 font, the promotional,
 // Newgrounds and tank images, and all music and sound. (⛓ SOUND EFFECTS,
 // ⚖ the user 2026-10-26, brought the sound effects in as the seedling pack's
-// `sfx` LAYER — built by `seedlingSfxLayer.mjs`, never an art row.) They are not in the
+// `sfx` LAYER — built by `seedlingSfxLayer.js`, never an art row.) They are not in the
 // table, so they cannot reach a pack. The font seam (`seedling:font/default`)
 // is filled instead by an ORIGINAL glyph sheet (G4b, ⚖ the user 2026-10-21):
 // its row carries `authored`, and its bytes come from `make-seedling-font.mjs`
@@ -56,7 +56,7 @@ import { argvHelp } from './argvHelp.js';
 import { seedlingSourceOrExit } from './seedlingSource.js';
 import { ENEMY_ART } from '../../frontend/modules/seedlingDemo/seedlingEnemyArt.js';
 import { FONT_ART_ROW, fontSheetBytes } from './make-seedling-font.mjs';
-import { SFX_MANIFEST, buildSfxLayer } from './seedlingSfxLayer.mjs';
+import { SFX_MANIFEST, buildSfxLayer } from './seedlingSfxLayer.js';
 
 argvHelp(import.meta.url);
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
@@ -73,7 +73,7 @@ export const PACKS = Object.freeze({
         licence: 'Unlicense',
         credit: 'Seedling art by Connor Ullmann; music and sound effects by Rekcahdam (vendor/seedling/README); '
             + 'vendor/seedling/LICENSE (the Unlicense) covers the whole repository.',
-        // ⛓ SOUND EFFECTS — the `sfx` layer is built by `seedlingSfxLayer.mjs` (its own CLI and --check:
+        // ⛓ SOUND EFFECTS — the `sfx` layer is built by `seedlingSfxLayer.js` (its own CLI and --check:
         // `extract-seedling-sfx-pack.mjs`); this script owns pack.json, so it carries the layer too.
         sfx: true,
     }),
