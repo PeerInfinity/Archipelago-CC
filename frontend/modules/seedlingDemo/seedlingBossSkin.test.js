@@ -45,6 +45,8 @@ const fsJson = async (url) => JSON.parse(readFileSync(fileURLToPath(url), 'utf8'
 const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
 const GAME = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));
 const fixture = (name) => JSON.parse(readFileSync(join(HERE, 'fixtures/tapes', `${name}.json`), 'utf8'));
+/** A game witness's embedded tape (`fixtures/<dir>/<name>.json`, recorded on the game). */
+const witnessTape = (path) => JSON.parse(readFileSync(join(HERE, 'fixtures', `${path}.json`), 'utf8')).tape;
 
 let art;
 beforeAll(async () => {
@@ -57,6 +59,10 @@ export const TAPES = Object.freeze([
     { name: 'L19-shield-stab', fixture: 'r6-shield-control', want: ['shield:sit', 'shield:moveShield', 'shield:stab'] },
     { name: 'L112-owl-kill', fixture: 'r6-owl-kill', want: ['owl:intro', 'owl:walk', 'owl:sit', 'owl:hit', 'owl:die', 'owl:dead', 'owl:deadframe'] },
     { name: 'L112-owl-control', fixture: 'r6-owl-control', want: ['owl:intro', 'owl:walk', 'owl:sit'] },
+    { name: 'L82-kof-kill', witness: 'lavaboss-witness/kof-policy-kill',
+        want: ['lava:sit', 'lava:smash', 'lava:smashback', 'lava:armsup', 'lava:sweep', 'lava:sweepback', 'lava:hit', 'lava:hitplayer', 'lava:tint',
+            'lava:die', 'lava:dead', 'lava:ball'] },
+    { name: 'L82-kof-reflect', witness: 'lavaboss-witness/kof-reflect', want: ['lava:sit', 'lava:sweep', 'lava:ball'] },
     { name: 'L111-frozen', level: 111, at: [80, 200], n: 3, want: ['frozen'] },
 ]);
 
@@ -68,7 +74,8 @@ function boot(level, [x, y], onStateChanged = () => {}) {
     return rt;
 }
 
-const LEDGERS = ['transitions', 'playerHits', 'playerDeaths', 'earnedClears', 'collected', 'shieldBossKills', 'shieldBossHits', 'finalBossKills', 'owlTicks'];
+const LEDGERS = ['transitions', 'playerHits', 'playerDeaths', 'earnedClears', 'collected', 'shieldBossKills', 'shieldBossHits', 'finalBossKills', 'owlTicks',
+    'lavaBossEvents'];
 const ledgersOf = (run) => (run ? LEDGERS.map((n) => {
     const v = run[n];
     return v instanceof Map ? [...v] : v instanceof Set ? [...v] : v;
@@ -76,10 +83,10 @@ const ledgersOf = (run) => (run ? LEDGERS.map((n) => {
 
 /** Drive a tape; `each(tick, run)` after every tick. Returns what the state identity compares. */
 function drive(tape, each = () => {}) {
-    if (tape.fixture) {
+    if (tape.fixture || tape.witness) {
         let last = null;
         const stream = [];
-        const out = runFixtureTape(fixture(tape.fixture), {
+        const out = runFixtureTape(tape.witness ? witnessTape(tape.witness) : fixture(tape.fixture), {
             levelSource: atlasLevelSource(),
             onTick: (t, now, held, run) => { last = run; stream.push(JSON.stringify([t, run.level, now])); each(t, run); },
         });
@@ -124,10 +131,17 @@ function tagsOf(r) {
         else out.push(!b.started ? 'owl:intro' : (st?.sprite.anim === 'walk' ? 'owl:walk' : 'owl:sit'));
         if (st?.tint) out.push('owl:hit');
     }
+    for (const b of r.view.lavaBosses) {
+        if (b.removed) continue;
+        out.push(`lava:${b.anim}`);
+        if (r.skin?.bodies.get(b.id)?.tint) out.push('lava:tint');
+        if (b.balls.length) out.push('lava:ball');
+    }
     if (r.view.frozenBosses.length) out.push('frozen');
     return out;
 }
-const fmt = (o) => `${formatPlayerOp(o, formatOp)}${o.blend ? ` ${o.blend}` : ''}${o.nightCopy ? ' night' : ''}`;
+const fmt = (o) => `${formatPlayerOp(o, formatOp)}${o.blend ? ` ${o.blend}` : ''}${o.nightCopy ? ' night' : ''}${
+    o.nightExtra ? ` +night[${o.nightExtra.map((c) => formatPlayerOp(c, formatOp)).join(';')}]` : ''}${o.solidExtra ? ` +solid${o.solidExtra.length}` : ''}`;
 function goldenLines(rows) {
     const lines = [];
     let open = null;
@@ -196,7 +210,9 @@ describe('1. golden boss ops (frame CHOICE, not pixels)', () => {
 });
 
 describe('2. by hand from the AS3', () => {
-    const V = (over = {}) => ({ epoch: { run: 1, key: 'k' }, level: 19, gameTime: 900, shieldBosses: [], finalBosses: [], frozenBosses: [], ...over });
+    const V = (over = {}) => ({ epoch: { run: 1, key: 'k' }, level: 19, gameTime: 900, shieldBosses: [], finalBosses: [], lavaBosses: [], frozenBosses: [], ...over });
+    const kof = (over) => ({ id: 'kof', x: 160, y: 88, anim: 'sit', index: 0, hitsTimer: 0, startAttacking: true, destroy: false, alpha: 1,
+        removed: false, balls: [], ...over });
     const owl = (over) => ({ id: 'owl', x: 72, y: 104, vx: 0, vy: 0, started: true, rockfallTime: -1, hits: 0, hitsTimer: 0, destroy: false,
         anim: '', animAge: null, ...over });
     const sb = (over) => ({ id: 'sb', x: 104, y: 72, anim: 'sit', frame: 0, hitsTimer: 0, destroy: false, removed: false, ...over });
@@ -263,6 +279,37 @@ describe('2. by hand from the AS3', () => {
         expect(f('die', 0).layer).toBe(-(104 + 6));
     });
 
+    it('LavaBoss.render: main at (1, 1) then the copies at 0.8 (scaled on armsup/sweep); on "dead" main = last alpha, copies = this one', () => {
+        let s = stepBossSkin(null, V({ lavaBosses: [kof({})] }), 1);
+        let [op] = bossOps(V({ lavaBosses: [kof({ anim: 'smashback', index: 2 })] }), art, { skin: s });
+        expect([op.frame, op.dx, op.dy, op.layer, op.alpha]).toEqual([12, 80, 47, -(88 + 41), undefined]);
+        expect(op.nightExtra[0].alpha).toBe(0.8);
+        expect(op.solidExtra).toEqual(op.nightExtra);
+        expect(op.nightExtra[0].scaleX).toBeUndefined();
+        [op] = bossOps(V({ lavaBosses: [kof({ anim: 'sweep', index: 1 })] }), art, { skin: s });
+        expect(op.nightExtra[0].scaleX).toBeGreaterThanOrEqual(0.8);
+        expect(op.nightExtra[0].scaleX).toBeLessThan(1);
+        s = stepBossSkin(null, V({ lavaBosses: [kof({ anim: 'dead', destroy: true, alpha: 0.5 })] }), 1);
+        s = stepBossSkin(s, V({ lavaBosses: [kof({ anim: 'dead', destroy: true, alpha: 0.49 })] }), 2);
+        [op] = bossOps(V({ lavaBosses: [kof({ anim: 'dead', destroy: true, alpha: 0.49 })] }), art, { skin: s });
+        expect([op.frame, op.alpha, op.nightExtra[0].alpha]).toEqual([27, 0.5, 0.49]);
+        expect(bossOps(V({ lavaBosses: [kof({ removed: true })] }), art, { skin: s })).toEqual([]);
+    });
+
+    it('LavaBall: scale 0.5 about (32, 16), angle atan2(−vy, vx), "fly" at 10 fps (not updated on its spawn tick), copied onto nightBmp', () => {
+        const ball = { id: 'b1', x: 100, y: 120, vx: 0, vy: 1 };
+        let s = null;
+        const fr = [];
+        for (let t = 0; t < 7; t += 1) {
+            s = stepBossSkin(s, V({ lavaBosses: [kof({ balls: [ball] })] }), t);
+            fr.push(bossOps(V({ lavaBosses: [kof({ balls: [ball] })] }), art, { skin: s }).find((o) => o.key === KEYS.lavaBall).frame);
+        }
+        // 10 fps at the clamped 0.0333: an index every third update (0.999 < 1 after three)
+        expect(fr).toEqual([0, 0, 0, 0, 1, 1, 1]);
+        const op = bossOps(V({ lavaBosses: [kof({ balls: [ball] })] }), art, { skin: s }).find((o) => o.key === KEYS.lavaBall);
+        expect([op.rot, op.scaleX, op.pivotX, op.pivotY, op.dx, op.dy, op.nightCopy]).toEqual([-90, 0.5, 32, 16, 68, 104, true]);
+    });
+
     it('a stack without the key draws the stand-in rectangle (the hitbox)', () => {
         const none = { has: () => false };
         const skin = stepBossSkin(null, V({ shieldBosses: [sb({})] }), 1);
@@ -296,6 +343,9 @@ describe('3. one mutant per family turns a golden red', () => {
         ['FinalBoss — the walk branch never seen', 'L112-owl-kill', { rules: { owlWalked: () => false } }],
         ['FinalBoss — sit frame 0 always', 'L112-owl-kill', { rules: { worldFrame: () => 0 } }],
         ['FinalBoss — death frame 4 always', 'L112-owl-kill', { rules: { owlDeathFrame: () => 4 } }],
+        ['LavaBoss — frame 0 always', 'L82-kof-kill', { rules: { lavaFrame: () => 0 } }],
+        ['LavaBoss — the copies at full alpha', 'L82-kof-kill', { rules: { lavaCopyAlpha: () => 1 } }],
+        ['LavaBall — no angle', 'L82-kof-reflect', { rules: { ballAngle: () => 0 } }],
     ];
     for (const [name, tape, opts] of MUTANTS) it(name, () => expect(differs(T[tape], opts)).toBeGreaterThan(0), 240_000);
 });

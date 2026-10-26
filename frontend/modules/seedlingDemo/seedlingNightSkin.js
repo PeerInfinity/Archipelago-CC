@@ -325,8 +325,10 @@ export const NIGHT_COPIES = Object.freeze({
     //    (no blend, no silhouette tint); `seedlingSolidsSkin` marks it `nightCopy`.
     ...Object.fromEntries(['lock', 'wandlock', 'grasslock', 'shieldlock', 'shieldlocknorm']
         .map((k) => [`seedling:puzzlement/${k}`, { alpha: 'same', when: (op) => op.nightCopy === true, plain: true }])),
-    // ⛓ G10 — the bosses' `render()` copies, marked `nightCopy` by `seedlingBossSkin`: the FrozenBoss (the same picture).
+    // ⛓ G10 — the bosses' `render()` copies, marked `nightCopy` by `seedlingBossSkin`: the FrozenBoss and a LavaBall (the same picture;
+    //    the LavaBoss's copies differ from its main picture, so they ride `nightExtra`/`solidExtra`).
     'seedling:boss/frozenboss': { alpha: 'same', when: (op) => op.nightCopy === true },
+    'seedling:boss/lavaball': { alpha: 'same', when: (op) => op.nightCopy === true },
     // `LavaChain.as:63-73`: only while its anim is "hit".
     'seedling:puzzlement/lavachain': { alpha: 'same', when: (op, ctx) => ctx.hitChains.has(`${opCentre(op).x},${opCentre(op).y}`) },
 });
@@ -486,6 +488,8 @@ export function nightOps(view, art, { skin = null, ops = [], hazard = null, whit
         }
         // ⛓ G9a — a body's own `Draw` calls onto nightBmp before its copy (the wands' and boss key 2's `circlePlus`)
         if (op.nightExtra) night.push(...op.nightExtra);
+        // ⛓ G10 — a body's own draw onto `solidBmp` (the LavaBoss's), HARDLIGHTed onto nightBmp with the lava edges
+        if (op.solidExtra) solid.push(...op.solidExtra);
         const rule = R.copies[op.key];
         if (!rule || (rule.when && !rule.when(op, ctx))) continue;
         const k = rule.alpha === 'same' ? (op.alpha ?? 1) : (typeof rule.alpha === 'function' ? rule.alpha(op, ctx) : rule.alpha);

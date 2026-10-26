@@ -83,7 +83,7 @@ export const SKIN_CENSUS = Object.freeze([
     ['yeti', 'Yeti', 'drawn'],
     ['sensei', 'Sensei', 'drawn'],
     ['shieldlock', 'ShieldLock', 'drawn'],
-    ['lavaboss', 'LavaBoss', 'remaining'],
+    ['lavaboss', 'LavaBoss', 'drawn'],
     ['rekcahdam', 'Rekcahdam', 'drawn'],
     ['magicallockfire', 'MagicalLock', 'drawn'],
     ['frozenboss', 'FrozenBoss', 'drawn'],

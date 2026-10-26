@@ -1003,6 +1003,16 @@
       "w": 192,
       "h": 16
     },
+    "LavaBoss": {
+      "file": "sheets/LavaBoss.png",
+      "w": 4480,
+      "h": 82
+    },
+    "LavaBall": {
+      "file": "sheets/LavaBall.png",
+      "w": 144,
+      "h": 32
+    },
     "FrozenBoss": {
       "file": "sheets/FrozenBoss.png",
       "w": 160,
@@ -4383,6 +4393,39 @@
         }
       },
       "as3": "Enemies/FinalBoss.as:20-21 Spritemap(16, 16, endAnim); :40-46 super(_x + 8, _y + 8), centerOO; walk [0..3] fps 15, die [4..11] fps 5, dead [11,11] fps 1, deadframe [11] (fps 0: frame 11, no row); sitFrames [0..3] by worldFrame"
+    },
+    "seedling:boss/lavaboss": {
+      "sheet": "LavaBoss",
+      "fw": 160,
+      "fh": 82,
+      "frames": 28,
+      "origin": [
+        80,
+        41
+      ],
+      "as3": "Enemies/LavaBoss.as:20-21 Spritemap(160, 82, endAnim); :31-43 super(_x + 48, _y + 40), centerOO; sit/smash/smashback/armsup/sweep/sweepback/hit/hitplayer/die/dead"
+    },
+    "seedling:boss/lavaball": {
+      "sheet": "LavaBall",
+      "fw": 48,
+      "fh": 32,
+      "frames": 3,
+      "origin": [
+        32,
+        16
+      ],
+      "anims": {
+        "fly": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Projectiles/LavaBall.as:15-16 Spritemap(48, 32); :24-30 scale 0.5, originX 32 (x = -32), originY 16 (y = -16); fly [0,1,2] fps 10"
     },
     "seedling:boss/frozenboss": {
       "sheet": "FrozenBoss",
