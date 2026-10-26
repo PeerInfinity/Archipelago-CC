@@ -311,7 +311,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // dashSpinnerForecast waits on L18's wall time ("Chain ON; forecast after L18").
             weighHypothesisChain: true,
             // ⛓ and dashSpinnerForecast after the L18 wall-time check (OFF 6,192 vs ON 6,116 ms; hammer-2 signed).
-            dashSpinnerForecast: true });
+            dashSpinnerForecast: true,
+            // ⛓ fidelity L40LATCH D1 (wave 32): a hold's still wait priced as its stance walk's tail — shipped OFF.
+            holdWaitPriced: false,
+            // ⛓ fidelity L40LATCH D1b (wave 32): a BobSoldier killed on the move, behind its blade — shipped OFF.
+            chaserOrbitKill: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

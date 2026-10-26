@@ -1459,6 +1459,28 @@ export const CONTACT_FIDELITY = {
      * row. OFF: byte-identical. `SEEDLING_DASH_SPINNER_FORECAST=0|1`.
      */
     dashSpinnerForecast: true,
+    /**
+     * fidelity L40LATCH D1 (wave 32) — A HOLD'S STILL WAIT IS PRICED AS ITS STANCE WALK'S TAIL. `runHold` stands the
+     * player on the presser for the hold's whole bound (a latched `room = -1` ButtonRoom included: the hold waits for
+     * the lock's 101-tick fade), but the walk to the hold stance was probed in TRANSIT only. MEASURED on L40's S-door
+     * latch (`buttonroom@880,768`, the chest and the tree banked, legs 859/860's chain): `bobsoldier@880,832` walks up
+     * the pocket and its sword lands on the still holder (game and model agree, `l40latch-stand`), and the executor
+     * refused *"hold tick 93 of 131 MOVED"*. ON: the hold stance walk carries the hold as its tail (L30KEYLOCK's
+     * `stand` instrument, `holdStandWalk`), so a body that reaches the holder is a hit on that corridor and the combat
+     * ladder climbs (the kill rung's chaser arm: kill first, then hold). OFF: byte-identical. `SEEDLING_HOLD_WAIT_PRICED=0|1`.
+     */
+    holdWaitPriced: false,
+    /**
+     * fidelity L40LATCH D1b (wave 32) — A BOBSOLDIER IS KILLED ON THE MOVE, BEHIND ITS BLADE. The kill rung's chaser arm
+     * (`deriveKillByChaser`) scans STILL stances (stand and strike), and no stance kills `bobsoldier@880,832` hitless:
+     * `BobSoldier.swordHitting` tests its blade (8–16 px off the body) EVERY frame, spinning or resting, and the rest
+     * angle is the player's at the spin's end (`swordSpinningStop(ang)`), so a body walking at a still player always
+     * meets it blade first. ON: where the scan finds none, the arm plays `orbitKillPolicy` on FORKS — circle the body
+     * outside the blade, close in from behind the resting blade, strike, back off — over `ORBIT_KILL.candidates`, and the
+     * first hitless kill (the body removed, no hit, no crossing) is played on the live run key for key (TURRETCIRCLE's
+     * shape). OFF: byte-identical. `SEEDLING_CHASER_ORBIT_KILL=0|1`.
+     */
+    chaserOrbitKill: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1740,6 +1762,11 @@ if (globalThis.process?.env?.SEEDLING_WEIGH_HYPOTHESIS_CHAIN === '1') CONTACT_FI
 if (globalThis.process?.env?.SEEDLING_WEIGH_HYPOTHESIS_CHAIN === '0') CONTACT_FIDELITY.weighHypothesisChain = false;
 if (globalThis.process?.env?.SEEDLING_DASH_SPINNER_FORECAST === '1') CONTACT_FIDELITY.dashSpinnerForecast = true;
 if (globalThis.process?.env?.SEEDLING_DASH_SPINNER_FORECAST === '0') CONTACT_FIDELITY.dashSpinnerForecast = false;
+// ⛓ fidelity L40LATCH: `SEEDLING_HOLD_WAIT_PRICED=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_HOLD_WAIT_PRICED === '1') CONTACT_FIDELITY.holdWaitPriced = true;
+if (globalThis.process?.env?.SEEDLING_HOLD_WAIT_PRICED === '0') CONTACT_FIDELITY.holdWaitPriced = false;
+if (globalThis.process?.env?.SEEDLING_CHASER_ORBIT_KILL === '1') CONTACT_FIDELITY.chaserOrbitKill = true;
+if (globalThis.process?.env?.SEEDLING_CHASER_ORBIT_KILL === '0') CONTACT_FIDELITY.chaserOrbitKill = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
