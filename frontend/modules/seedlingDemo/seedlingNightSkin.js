@@ -316,6 +316,11 @@ export const NIGHT_COPIES = Object.freeze({
     //    the sheet is never copied): HealthPickup, GhostSword, TorchPickup, and the boss keys 2, 3, 4 (`BossKey.as`).
     ...Object.fromEntries(['health', 'ghostsword', 'torchpickup', 'bosskey2', 'bosskey3', 'bosskey4']
         .map((k) => [`seedling:pickup/${k}`, { alpha: 'same', when: (op) => op.nightCopy === true }])),
+    // ⛓ G9b — the machines' `render()` copies, marked `nightCopy` by `seedlingMachineSkin`: the Pulser's body, the
+    //    Moonrock and the FinalDoor (the same picture), and a lit Wire at 0.1 (`Wire.as` render).
+    ...Object.fromEntries(['machine/pulser', 'scenery/moonrock', 'scenery/finaldoor']
+        .map((k) => [`seedling:${k}`, { alpha: 'same', when: (op) => op.nightCopy === true }])),
+    'seedling:machine/wire': { alpha: 0.1, when: (op) => op.nightCopy === true },
     // `LavaChain.as:63-73`: only while its anim is "hit".
     'seedling:puzzlement/lavachain': { alpha: 'same', when: (op, ctx) => ctx.hitChains.has(`${opCentre(op).x},${opCentre(op).y}`) },
 });
@@ -445,7 +450,7 @@ export function poleAt(p, time) {
  * @param {boolean} [o.lavaGlow] ⛓ G6 — false (the effects switch OFF): the lava tiles' copies and edges are left out
  */
 export function nightOps(view, art, { skin = null, ops = [], hazard = null, whiteOut = null, whiteOutAlpha = null, cam, rules = NIGHT_RULES,
-    lavaGlow = true } = {}) {
+    lavaGlow = true, extra = [] } = {}) {
     if (!view) return null;
     const R = rules === NIGHT_RULES ? rules : { ...NIGHT_RULES, ...rules };
     const time = view.gameTime ?? 0;
@@ -481,6 +486,9 @@ export function nightOps(view, art, { skin = null, ops = [], hazard = null, whit
         if (k > 0) night.push(withAlpha(op, k));
         if (op.key === 'seedling:puzzlement/crusher') night.push(...R.crusherLanes(opCentre(op), op.layer));
     }
+
+    // ⛓ G9b — what a class draws onto nightBmp ONLY (no main-buffer body to copy): the Pull's circle
+    for (const op of extra) night.push(op);
 
     // 2. the Boss Totem: each part SCREENed at scale + 0.1 (`renderPart`, `:672-695`), its laser and its white-out
     for (const t of hazard?.view?.totems ?? []) {
@@ -612,13 +620,14 @@ export const NIGHT_COVERAGE = Object.freeze({
         'tile glows: darkStone, igneousStone, lava (+ solidBmp edges, HARDLIGHT), iceWall(s) unless snowing, ghostTile(s), bridge, igneousToLava, fuchsiaTile',
         'copies: the dark-suit body, the slash, LavaRunner, BossTotemShot, Explosion, SlashHit, Droplet, TurretSpit, Grenade, the mound (building 8), Crusher (+ its lanes), LavaChain (hit), PushableBlockFire / PushableBlockSpear (G7)',
         'the placed pickups\' copies and glows (G9a): HealthPickup, GhostSword, TorchPickup, BossKey 2–4 (+ key 2\'s circle), the Wand / Fire Wand circles',
+        'the machines (G9b): the Pulser (+ its ring), a lit Wire at 0.1, BeamTower\'s beam, the Moonrock (+ its flares), the FinalDoor, the Pull\'s circle',
         'the Boss Totem: its parts SCREENed, its LASER, its white-out rect',
         'Shadow, LightRay (night shaft + its two screen rects)',
     ]),
     remaining: Object.freeze([
-        'the PlayerLight sprite (PlayerLight.png is not in the pack)', 'Wire (not drawn by G1)', 'DarkTrap\'s die1 copy (no dark-trap picture)',
-        'the copies of classes G1–G4b draw as rectangles or not at all: Lock, RockLock, BossLock, Pulser, BeamTower, Pull, LavaTrap, LavaBoss, LightBoss, LightBossTotem, Moonrock, '
-            + 'TreeLarge, FrozenBoss, FinalDoor, SealController, Help, WandShot, RayShot, LavaBall, the spear / fire / death ray / dark shield',
+        'the PlayerLight sprite (PlayerLight.png is not in the pack)', 'DarkTrap\'s die1 copy (no dark-trap picture)',
+        'the copies of classes G1–G4b draw as rectangles or not at all: Lock, RockLock, BossLock, LavaTrap, LavaBoss, LightBoss, LightBossTotem, '
+            + 'TreeLarge, FrozenBoss, SealController, Help, WandShot, RayShot, LavaBall, the spear / fire / death ray / dark shield',
         'the slash-narrow blur copies (Player.as:1201-1212)', 'snow, the blizzard and the black-and-white pass (not nightBmp)',
         'the underwater colour transform', 'Teleporter: no graphic (renderLight copies an empty graphic)',
     ]),

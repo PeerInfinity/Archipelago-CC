@@ -150,7 +150,9 @@
  *
  * ⛓ G9a — the placed vanilla pickups (`seedlingPickupSkin.js`: each class's frame, the wand's fade gate and bob,
  * the ceremony's risen item, the night copies and glows); their stand-in rectangles are not painted. An AP slot
- * stays G3's `apItemOps` look. `__seedlingJsGraphics.pickups`.
+ * stays G3's `apItemOps` look. `__seedlingJsGraphics.pickups`. ⛓ G9b — the machines (`seedlingMachineSkin.js`: the beam
+ * towers and pulsers from `machinesNow`, the wires, whirlpools, pods, little stones, moonrock(s), the pile and the final
+ * door; the Pull's circle onto nightBmp only), `__seedlingJsGraphics.machines`.
  *
  * ⛓ KILLLOCK HOOK —`?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
@@ -186,6 +188,7 @@ import { NPC_TAGS, npcOps, npcSkinView, stepNpcSkin } from './seedlingNpcSkin.js
 import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
 import { PICKUP_TAGS, pickupOps, pickupSkinView, stepPickupSkin } from './seedlingPickupSkin.js';
+import { MACHINE_OBJECT_TAGS, machineNightOps, machineOps, machineSkinView, stepMachineSkin } from './seedlingMachineSkin.js';
 import { EFFECT_RULES } from './seedlingEffectSkin.js';
 import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
@@ -296,6 +299,8 @@ export function mountJsRuntimePage(win = window) {
         lamps: null,
         // ⛓ G9a — the placed pickups' visit count and the last paint's ops.
         pickupSkin: null, pickups: null,
+        // ⛓ G9b — the machines' per-visit state (lit wires, pull radii) and the last paint's ops.
+        machineSkin: null, machines: null,
         // ⛓ G4 — the effects' and overlays' state (one step per game tick, one hold per owed dead frame), the last paint's.
         effectSkin: null, effects: null, held: 0,
         // ⛓ G1.5 — the static tile layer (room mode; `?tileLayer=off` = none) and the last paint's inputs.
@@ -324,7 +329,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, npcSkin: null, npcs: null, trapSkin: null, traps: null, lamps: null, pickupSkin: null, pickups: null, effectSkin: null, effects: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, npcSkin: null, npcs: null, trapSkin: null, traps: null, lamps: null, pickupSkin: null, pickups: null, machineSkin: null, machines: null, effectSkin: null, effects: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -381,6 +386,8 @@ export function mountJsRuntimePage(win = window) {
         get lamps() { return graphics.lamps ? { ...graphics.lamps, ops: graphics.lamps.ops.map((o) => ({ ...o })) } : null; },
         /** ⛓ G9a — the last paint's placed pickups. */
         get pickups() { return graphics.pickups ? { ...graphics.pickups, ops: graphics.pickups.ops.map((o) => ({ ...o })) } : null; },
+        /** ⛓ G9b — the last paint's machines. */
+        get machines() { return graphics.machines ? { ...graphics.machines, ops: graphics.machines.ops.map((o) => ({ ...o })) } : null; },
         get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
         /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
         get held() { return graphics.held; },
@@ -469,6 +476,7 @@ export function mountJsRuntimePage(win = window) {
                 graphics.npcSkin = stepNpcSkin(graphics.npcSkin, npcSkinView(runtime.run), runtime.ticks);
                 graphics.trapSkin = stepTrapSkin(graphics.trapSkin, trapSkinView(runtime.run), runtime.ticks);
                 graphics.pickupSkin = stepPickupSkin(graphics.pickupSkin, pickupSkinView(runtime.run), runtime.ticks);
+                graphics.machineSkin = stepMachineSkin(graphics.machineSkin, machineView(), runtime.ticks);
                 const fv = effectView();
                 graphics.effectSkin = stepEffectSkin(carryThroughReboot(graphics.effectSkin, fv, { run: runtime.run, inPlace: lastBootInPlace }),
                     fv, runtime.ticks, { rain: effectsOn() });
@@ -498,6 +506,11 @@ export function mountJsRuntimePage(win = window) {
     function solidsView() {
         const run = runtime.run;
         return solidsSkinView(run, { record: run ? ((runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null) : null });
+    }
+    /** ⛓ G9b — the machines' view: the run, and the room's level record (the wires, whirlpools, pods, stones). */
+    function machineView() {
+        const run = runtime.run;
+        return machineSkinView(run, { record: run ? ((runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null) : null });
     }
     /** ⛓ G5 — the night layer's view: the run, and the room's level record (its lights, shadows and rays). */
     function nightView() {
@@ -629,6 +642,14 @@ export function mountJsRuntimePage(win = window) {
                 ops: pickupSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, night: !!o.nightCopy, glow: o.nightExtra?.length ?? 0,
                     pack: o.key ? art.packOf(o.key) : null })) }
             : null;
+        const mv = art ? machineView() : null;
+        const machineSprites = mv ? machineOps(mv, art, { skin: graphics.machineSkin }) : [];
+        graphics.machines = mv
+            ? { beamTowers: mv.beamTowers.length, pulsers: mv.pulsers.length, wires: mv.wires.length,
+                lit: graphics.machineSkin?.lit?.size ?? 0, pulls: mv.pulls.length, pods: mv.pods.length, rocks: mv.rocks.length, doors: mv.doors.length,
+                ops: machineSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, line: !!o.line, ring: !!o.circle,
+                    night: !!o.nightCopy, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
         const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
         // ⛓ G7 — a run the effects have not met (booted between two clock slots: the game's own first frame) is adopted
         // before its first paint, so that paint shows the cover its fade starts from; before G7 it showed the bare room
@@ -643,7 +664,7 @@ export function mountJsRuntimePage(win = window) {
         const lit = art && graphics.lights === 'on' ? nightView() : null;
         const modelCam = lit ? cameraView('follow', world, state, runtime.run) : null;
         const litMain = lit ? nightMainOps(lit, { cam: modelCam }) : [];
-        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...solidSprites, ...npcSprites, ...trapSprites, ...lampSprites, ...pickupSprites, ...effectSprites, ...litMain];
+        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...solidSprites, ...npcSprites, ...trapSprites, ...lampSprites, ...pickupSprites, ...machineSprites, ...effectSprites, ...litMain];
         const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
         graphics.enemies = ev
             ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
@@ -652,7 +673,8 @@ export function mountJsRuntimePage(win = window) {
             : null;
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
-            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag),
+            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag)
+                || MACHINE_OBJECT_TAGS.has(o.tag),
                 drawnTeleporters: (tp) => tp.isStairs === true, drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
         });
         // ⚖ follow mode jiggles inside a shake band on the renderer's own draw; the band's edges are the model's
@@ -678,12 +700,13 @@ export function mountJsRuntimePage(win = window) {
         graphics.lastPaint = { ops: all, images, view, key: [world, art, level] };
         // ⛓ G5 — the night layer goes between the room and the overlays (`Game.render()`: `bufferTransforms()` then `talk()`)
         const night = lit ? nightOps(lit, art, { skin: graphics.nightSkin, ops, hazard: hv ? { view: hv, skin: graphics.hazardSkin } : null,
-            whiteOut: fv?.whiteOut ?? null, whiteOutAlpha: EFFECT_RULES.whiteOutAlpha, cam: modelCam, lavaGlow: effectsOn() }) : null;
+            whiteOut: fv?.whiteOut ?? null, whiteOutAlpha: EFFECT_RULES.whiteOutAlpha, cam: modelCam, lavaGlow: effectsOn(),
+            extra: mv ? machineNightOps(mv, { skin: graphics.machineSkin }) : [] }) : null;
         if (night) {
             const room = paintOps(ctx, ops, images, view, canvas, { tinted, tileLayer });
             night.counts = paintNight(ctx, night, images, view, canvas, { tinted, cache: graphics.nightLayer, fill: NIGHT.fill });
             const top = paintOps(ctx, overlays, images, view, canvas, { tinted });
-            graphics.counts = { ops: all.length, ...Object.fromEntries(Object.keys(room).map((k) => [k, room[k] + top[k]])) };
+            graphics.counts = { ops: all.length, ...Object.fromEntries(Object.keys(room).map((k) => [k, room[k] + (top[k] ?? 0)])) };
         } else {
             graphics.counts = { ops: all.length, ...paintOps(ctx, all, images, view, canvas, { tinted, tileLayer }) };
         }

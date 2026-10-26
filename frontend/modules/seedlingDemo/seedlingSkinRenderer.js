@@ -565,8 +565,11 @@ export function nightSignature(night, view, canvas, images, fill) {
             if (r) sig.push(r.x, r.y, r.w ?? r.right, r.h ?? r.bottom);
             else sig.push(null, null, null, null);
             const c = op.circle;
-            if (c) sig.push(c.x, c.y, c.r);
-            else sig.push(null, null, null);
+            if (c) sig.push(c.x, c.y, c.r, c.thick ?? null);
+            else sig.push(null, null, null, null);
+            const l = op.line;
+            if (l) sig.push(l.x1, l.y1, l.x2, l.y2, l.thick);
+            else sig.push(null, null, null, null, null);
             const fb = op.fallback;
             if (fb) sig.push(fb.colour, fb.alpha, fb.rect.x, fb.rect.y, fb.rect.w ?? fb.rect.right, fb.rect.h ?? fb.rect.bottom);
             else sig.push(null, null, null, null, null, null);
@@ -580,17 +583,37 @@ export function createNightLayer(newCanvas) {
     return { newCanvas, night: null, solid: null, sig: null, solidSig: null, paints: 0, redraws: 0, reused: 0, solidRedraws: 0 };
 }
 
-/** ⛓ G5 — a circle (`Draw.circlePlus`), or any op under its `blend`. */
+/**
+ * ⛓ G5 — a circle (`Draw.circlePlus`), or any op under its `blend`. ⛓ G9b — a circle with `thick` is
+ * `circlePlus(…, fill = false, thick)`, an outline; an op with `line` is `Draw.linePlus(x1, y1, x2, y2, …, thick)`.
+ */
 function drawLit(ctx, op, pen, counts) {
     if (op.blend) ctx.globalCompositeOperation = op.blend;
     if (op.circle) {
         ctx.globalAlpha = op.alpha ?? 1;
-        ctx.fillStyle = op.colour;
         ctx.beginPath();
         ctx.arc(pen.X(op.circle.x), pen.Y(op.circle.y), op.circle.r * pen.scale, 0, 2 * Math.PI);
-        ctx.fill();
+        if (op.circle.thick !== undefined) {
+            ctx.strokeStyle = op.colour;
+            ctx.lineWidth = op.circle.thick * pen.scale;
+            ctx.stroke();
+        } else {
+            ctx.fillStyle = op.colour;
+            ctx.fill();
+        }
         ctx.globalAlpha = 1;
         counts.circles = (counts.circles ?? 0) + 1;
+    } else if (op.line) {
+        const l = op.line;
+        ctx.globalAlpha = op.alpha ?? 1;
+        ctx.strokeStyle = op.colour;
+        ctx.lineWidth = l.thick * pen.scale;
+        ctx.beginPath();
+        ctx.moveTo(pen.X(l.x1), pen.Y(l.y1));
+        ctx.lineTo(pen.X(l.x2), pen.Y(l.y2));
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        counts.lines = (counts.lines ?? 0) + 1;
     } else {
         drawOp(ctx, { ...op, blend: undefined }, pen, counts);
     }
@@ -610,7 +633,7 @@ function drawOp(ctx, op, pen, counts) {
     };
     if (isCulled(op, view)) return;
     // ⛓ G5 — a light's circle, or a blend mode (a SCREENed part, a light ray); no G1–G4b op carries either.
-    if (op.circle || op.blend) { drawLit(ctx, op, pen, counts); return; }
+    if (op.circle || op.line || op.blend) { drawLit(ctx, op, pen, counts); return; }
     if (!op.sheetRef) { fillRect(op); counts.rects += 1; return; }
     let img = images?.get(op.sheetRef);
     if (!img) {
