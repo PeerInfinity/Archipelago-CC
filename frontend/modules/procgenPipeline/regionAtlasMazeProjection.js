@@ -197,7 +197,11 @@ function bindWorldEvents(builder, events, local, inGrid) {
         const id = `${base.id}~${evs.map((e) => e.name).join('~')}`;
         if (!builder.obstacleLib[id]) {
             const names = evs.filter((e) => e.mode === 'open').map((e) => ({ rule: 'Has', args: { item_name: e.name } }));
-            const entry = { ...base, id, name: `${base.name}: ${evs.map((e) => e.name).join(' + ')}`, events: evs.map((e) => ({ name: e.name, side: e.side })) };
+            // ⛓ Two events on ONE cell (L12's magical lock on its boss lock) open by their OWN rules (a wand shot, a key
+            // touch — `MagicalLock.as`, `BossLock.as`), so each names its rule; the cell passes once both are open
+            // (session tile-primitives-sphere-order-2, ⚖ "Lay touched event cells").
+            const own = (e) => (evs.length > 1 && e.rule ? { rule: e.rule } : {});
+            const entry = { ...base, id, name: `${base.name}: ${evs.map((e) => e.name).join(' + ')}`, events: evs.map((e) => ({ name: e.name, side: e.side, ...own(e) })) };
             if (names.length > 0 && base.struck_by) {
                 entry.clear_set = [names.map((n) => n.args.item_name)];
                 if (!firstCell.has(id)) firstCell.set(id, key);
@@ -209,6 +213,34 @@ function bindWorldEvents(builder, events, local, inGrid) {
             builder.obstacleLib[id] = entry;
         }
         builder.obstacles.set(key, id);
+    }
+}
+
+/**
+ * ⛓ TOUCHED EVENT CELLS (session tile-primitives-sphere-order-2, ⚖ 2026-10-26 "Lay touched event cells"). A
+ * per-sub-region world lays its crossings on their FIRST cell only, so an event lock its component touches but no
+ * crossing runs through stayed wall, and its event was laid in no world of its own region: L12's 2-wide Red-Key
+ * doorway (26,15)+(27,15) — both opened from r0c19 in the game, the analyzer kept one route — and the magical lock
+ * stacked on a boss lock at (2,54), whose crossing (to L83) is not wired. Each such cell is floored and gated by its
+ * events' own rules (all of them, for a stacked cell: it passes once every lock on it is open), so `bindWorldEvents`
+ * binds it; it leads nowhere further in this world. A cell already floor or holding an obstacle is left as it is.
+ */
+function layTouchedEventCells(builder, events, local, component, inGrid) {
+    const mine = new Set(component.tiles.map(([x, y]) => `${x},${y}`));
+    const byCell = new Map();
+    for (const ev of events ?? []) {
+        if (!ev.rule) continue;
+        for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
+            const key = `${x},${y}`;
+            if (builder.isFloor(x, y) || builder.obstacles.has(key)) continue;
+            if (!DIRS.some(([dx, dy]) => mine.has(`${x + dx},${y + dy}`))) continue;
+            if (!byCell.has(key)) byCell.set(key, { x, y, rules: [] });
+            byCell.get(key).rules.push(ev.rule);
+        }
+    }
+    for (const { x, y, rules } of byCell.values()) {
+        builder.floor(x, y);
+        builder.gate(x, y, rules.length === 1 ? rules[0] : { rule: 'And', children: rules });
     }
 }
 
@@ -683,7 +715,10 @@ export function projectRegionToMaze(region, grid, ctx) {
             });
         }
 
-        bindWorldEvents(builder, ctx.eventsFor?.(region), local, ([x, y]) => x >= 0 && y >= 0 && x < grid.width && y < grid.height);
+        const inGrid = ([x, y]) => x >= 0 && y >= 0 && x < grid.width && y < grid.height;
+        const events = ctx.eventsFor?.(region);
+        layTouchedEventCells(builder, events, local, component, inGrid);
+        bindWorldEvents(builder, events, local, inGrid);
         const entryGates = directional > 0 ? levelWorldEntryGates(builder, grid, new Set(), resolveCondition, new Set(), note) : [];
 
         // --- assemble --------------------------------------------------------

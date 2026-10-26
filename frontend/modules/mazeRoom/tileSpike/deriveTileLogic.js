@@ -168,7 +168,8 @@ export function cutEvents(world) {
  * ⛓ EVENTS AS LOCATIONS — every event bound to a NON-struck obstacle (a gated cell, a latched lock):
  * `[{event, side, cells: ["x,y"…]}]`. The game opens such an obstacle from beside it (a burn, a wand shot, a key
  * line), so its event is reached when the player stands on a cell 4-adjacent to one of `cells` while that cell's
- * obstacle is CLEARED for the inventory (`eventAdjacentCell`) — never with the event itself in hand.
+ * obstacle is CLEARED for the inventory (`eventAdjacentCell`) — never with the event itself in hand. An event that
+ * shares its cell with another names its own `rule` (session tile-primitives-sphere-order-2), which it opens by.
  */
 export function gateEvents(world) {
     const byEvent = new Map();
@@ -176,7 +177,7 @@ export function gateEvents(world) {
         const entry = world.obstacleLib?.[id];
         if (!entry?.events || entry.struck_by) continue;
         for (const ev of entry.events) {
-            if (!byEvent.has(ev.name)) byEvent.set(ev.name, { event: ev.name, side: ev.side, cells: [] });
+            if (!byEvent.has(ev.name)) byEvent.set(ev.name, { event: ev.name, side: ev.side, cells: [], ...(ev.rule ? { rule: ev.rule } : {}) });
             byEvent.get(ev.name).cells.push(cell);
         }
     }
@@ -189,8 +190,10 @@ export function eventAdjacentCell(world, reach, t, set) {
     const inv = inventoryOf(set);
     if (inv.has(t.event)) return null;
     const own = new Set(t.cells);
+    // An event that names its own `rule` (one of several on a stacked cell) opens by it, not by the cell's.
+    const ownLib = t.rule ? { own: { clear_set_type: 'rule', clear_rule: t.rule } } : null;
     for (const cell of t.cells) {
-        if (!isObstacleCleared(world.obstacles.get(cell), inv, world.obstacleLib)) continue;
+        if (!(ownLib ? isObstacleCleared('own', inv, ownLib) : isObstacleCleared(world.obstacles.get(cell), inv, world.obstacleLib))) continue;
         const [x, y] = cell.split(',').map(Number);
         for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
             const n = `${x + dx},${y + dy}`;
@@ -316,7 +319,7 @@ export function regionTargets(world) {
         const [x, y] = g.cells[0].split(',').map(Number);
         out.push({
             id: `event:${g.event}@${g.cells[0]}`, kind: 'location', event: g.event, locationName: g.event, x, y,
-            side: g.side, adjacent: true, cells: g.cells,
+            side: g.side, adjacent: true, cells: g.cells, ...(g.rule ? { rule: g.rule } : {}),
         });
     }
     for (const exit of world.exits.values()) out.push({ id: `exit:${exit.exit_id}`, kind: 'exit', x: exit.x, y: exit.y });

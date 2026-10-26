@@ -190,8 +190,10 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     // The events the maze WORLD models (⚖ "All AP; world rocks+locks"): an obstacle's opens it once carried, a latched
     // lock's is what its far side's crossing costs. A cross-room press or a talk has no world mechanism (⚖ "Carry + name").
     const mode = new Map([...layer.obstacle.events.map((e) => [e.name, 'open']), ...layer.locks.events.map((e) => [e.name, 'latch'])]);
+    // `rule` = the event's own location rule: a sub-region world lays a touched lock no crossing uses by it (⚖ "Lay
+    // touched event cells", session tile-primitives-sphere-order-2).
     out.world = out.events.filter((e) => mode.has(e.name)).map((e) => ({
-        name: e.name, side: e.fields.side, mode: mode.get(e.name), obstacle: e.fields.obstacle,
+        name: e.name, side: e.fields.side, mode: mode.get(e.name), obstacle: e.fields.obstacle, rule: e.access_rule ?? null,
     }));
     const all = new Set(layer.events.map((e) => e.name));
     const have = new Set([...out.events.map((e) => e.name), ...minted]);

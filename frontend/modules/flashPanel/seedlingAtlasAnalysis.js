@@ -229,7 +229,7 @@ export function seedlingEventTiles(level, events) {
             for (let ty = f.y; ty < f.y + f.h; ty += 1) for (let tx = f.x; tx < f.x + f.w; tx += 1) out.push([tx, ty]);
             return out;
         })();
-        return { name: ev.name, side: ev.side, mode: ev.mode, tiles };
+        return { name: ev.name, side: ev.side, mode: ev.mode, tiles, ...(ev.rule ? { rule: ev.rule } : {}) };
     });
 }
 
