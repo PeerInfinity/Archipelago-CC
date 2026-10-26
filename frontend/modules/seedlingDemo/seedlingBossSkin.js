@@ -49,6 +49,21 @@
  *     Its LavaBalls (`Projectiles/LavaBall.as`): 48 × 32 at scale 0.5, the pivot
  *     (32, 16) on the body, `angle = atan2(−vy, vx)`, "fly" at 10 fps from its
  *     spawn, and again onto nightBmp. Its LavaRunners are chasers (G3's).
+ *   · TENTACLE BEAST (`Enemies/TentacleBeast.as`, L57) — a 46 × 44 Spritemap
+ *     centred at oel + (24, 24), `layer = -(y − 22 + 46)`. "under" [12] until it
+ *     wakes, "rise" (12 frames at 8 fps), then "" — the sitting frames
+ *     `[0,1,2,1][worldFrame(4)]` set in its update — and, once its tentacles are
+ *     spent, "dying" (2 fps) and the dead sitting frames `[17,18,19,18]
+ *     [worldFrame(4, 2)]`. The run carries the anim's NAME (`tentacleBeastFight`);
+ *     its index is counted here from the tick the name appears (an anim the view
+ *     saw start: exact; a stack switched on mid-anim: from then — a band).
+ *     Its Tentacles (`Enemies/Tentacle.as`): 80 × 49 on the pivot (8, 47),
+ *     mirrored when not `right`, `layer = -(y − 2 + 4)`; anim, index and alpha
+ *     (the cut's fade) are the run's; the tint as the others (`hitUpdate()` every
+ *     update). Its timed Whirlpools (`Whirlpool(…, true)`): grow over 150, live
+ *     60, die over 30 — scale and alpha from the run's `timer` — the frame
+ *     `whirlFrames[worldFrame(16)]` and 20° more each render from a cosmetic
+ *     start (G9b's rule).
  *   · FROZEN BOSS (`Scenery/FrozenBoss.as`, L111) — an Image at the placement
  *     (origin 0), `layer = -(y − originY + height·2/3)` with the hitbox's
  *     origin −128 and height 32; `render()` draws it again onto nightBmp.
@@ -67,7 +82,23 @@ export const KEYS = Object.freeze({
     finalBoss: 'seedling:boss/finalboss',
     lavaBoss: 'seedling:boss/lavaboss',
     lavaBall: 'seedling:boss/lavaball',
+    tentacleBeast: 'seedling:boss/tentaclebeast',
+    tentacle: 'seedling:boss/tentacle',
+    whirlpool: 'seedling:machine/whirlpool',
 });
+/** `TentacleBeast.as:20-21, 40-43`: frames and fps (`[]` → its update's own frame). */
+const BEAST_ANIMS = Object.freeze({
+    sink: { frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], fps: 8 }, rise: { frames: [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0], fps: 8 },
+    under: { frames: [12], fps: 0 }, dying: { frames: [13, 14, 15, 16], fps: 2 },
+});
+const BEAST_SIT = Object.freeze([0, 1, 2, 1]);
+const BEAST_SIT_DEAD = Object.freeze([17, 18, 19, 18]);
+/** `Tentacle.as:32-37`. */
+const TENTACLE_FRAMES = Object.freeze({
+    rise: [0, 1, 2, 3, 4], sit: [5, 6, 5, 6, 5, 6], hit: [7, 8, 9, 10, 11], hitting: [12], sink: [13, 14, 15, 16], cut: [17, 18, 19, 20],
+});
+/** `Whirlpool.as:15-25`: `whirlFrames`, `spinRate`, `maxAlpha`, the three timer spans. */
+const WHIRL = Object.freeze({ frames: [0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1], spin: 20, alpha: 0.5, grow: 150, live: 60, dies: 30 });
 /** `LavaBoss.as:23-32` — each anim's frame list (the run carries the anim and its index). */
 const LAVA_FRAMES = Object.freeze({
     sit: [0, 1, 2, 3, 4], smash: [5, 6, 7, 8, 9], smashback: [10, 11, 12, 6, 5], armsup: [6, 7, 13, 14, 14, 14, 14],
@@ -96,19 +127,21 @@ const BOSS_COLOUR = '#e04848';
 
 /** WHAT G10 DRAWS, by AS3 class. */
 export const BOSS_COVERAGE = Object.freeze({
-    drawn: Object.freeze(['ShieldBoss', 'FrozenBoss', 'FinalBoss', 'LavaBoss']),
+    drawn: Object.freeze(['ShieldBoss', 'FrozenBoss', 'FinalBoss', 'LavaBoss', 'TentacleBeast']),
 });
 /** What G10 does not draw yet, and why (the census's `remaining` rows say which classes). */
 export const BOSS_PENDING = Object.freeze({
     ShieldBoss: 'HARDLIGHT is the canvas `hard-light` composite (an approximation of BlendMode.HARDLIGHT, as G9c\'s INVERT)',
     LavaBoss: 'BAND: the copies\' scale on "armsup"/"sweep" is `Rng.cos()` (cosmetic: `cosmeticRand`); a LavaBall\'s Explosion on '
         + 'impact (the run carries the ball\'s removal, not the blast); a ball\'s "fly" phase counts from the tick the view first sees it',
+    TentacleBeast: 'BAND: the beast\'s anim index is counted from the tick the view first shows the anim (the run carries its name); '
+        + 'a timed whirlpool\'s start angle is `Rng.cos()` (cosmetic); a Tentacle\'s cut `dieEffects` (G4\'s effects, not drawn here)',
     FinalBoss: 'its RockFall rocks and Grenades in flight (the run keeps them in the Owl\'s closure; a read is a new getter = a '
         + 'design check); BAND: the layer during the intro (AS3 sets it only past the freeze) and a Game.freezeObjects other than '
         + 'the intro (a dialogue), which the reducer does not see',
 });
 /** The placed tags whose build-time rectangle a boss's sprite replaces (`roomOps`' `drawnObjects`). */
-export const BOSS_OBJECT_TAGS = new Set(['shieldboss', 'frozenboss', 'finalboss', 'lavaboss']);
+export const BOSS_OBJECT_TAGS = new Set(['shieldboss', 'frozenboss', 'finalboss', 'lavaboss', 'tentaclebeast']);
 
 // ── the adapter ─────────────────────────────────────────────────────────
 
@@ -138,6 +171,15 @@ export function bossSkinView(run) {
             return [{ id: f.id ?? 'lavaboss', x: b.x, y: b.y, anim: b.anim, index: b.index ?? 0, hitsTimer: b.hitsTimer ?? 0,
                 startAttacking: !!b.startAttacking, destroy: !!b.destroy, alpha: b.alpha ?? 1, removed: !!b.removed,
                 balls: (f.balls ?? []).map((s) => ({ id: s.id, x: s.x, y: s.y, vx: s.vx, vy: s.vy })) }];
+        })(),
+        tentacleBeasts: (() => {
+            const f = read(run, 'tentacleBeastFight', null);
+            if (!f?.beast) return [];
+            const b = f.beast;
+            return [{ id: f.id ?? 'tentaclebeast', x: b.x, y: b.y, anim: b.anim ?? '', activated: !!b.activated, dead: !!b.dead,
+                tentacles: (f.tentacles ?? []).map((t) => ({ id: t.id, x: t.x, y: t.y, right: !!t.right, anim: t.anim, index: t.index ?? 0,
+                    destroy: !!t.destroy, alpha: t.alpha ?? 1, hitsTimer: t.hitsTimer ?? 0 })),
+                whirlpools: (f.whirlpools ?? []).map((w) => ({ id: w.id, x: w.x, y: w.y, timer: w.timer })) }];
         })(),
         frozenBosses: objects.filter((o) => o.tag === 'frozenboss').map((o) => ({ id: `frozenboss@${o.x},${o.y}`, x: o.x, y: o.y })),
     };
@@ -192,7 +234,28 @@ export const BOSS_RULES = Object.freeze({
     lavaCopyAlpha: (b) => (b.destroy ? b.alpha : 0.8),
     lavaScale,
     ballAngle: (s) => (s.vx !== 0 || s.vy !== 0 ? (Math.atan2(-s.vy, s.vx) * 180) / Math.PI : 0),
+    beastFrame,
+    tentacleFrame: (t) => (TENTACLE_FRAMES[t.anim] ?? TENTACLE_FRAMES.sit)[t.index] ?? 0,
+    whirlLook,
 });
+
+/** `TentacleBeast.update` + its graphic: the run's anim name, aged here; "" = the (dead) sitting frames at `time`. */
+function beastFrame(st, b, time) {
+    if (b.anim === '') return (b.dead ? BEAST_SIT_DEAD[worldFrame(time, 4, 2)] : BEAST_SIT[worldFrame(time, 4)]);
+    const a = BEAST_ANIMS[b.anim];
+    if (!a) return 0;
+    return a.frames[a.fps > 0 ? animIndex(a.fps, st.age, a.frames.length) : 0];
+}
+
+/** `Whirlpool.update`: scale and alpha from the timer after it (grow, live, die). */
+function whirlLook(timer) {
+    if (timer >= WHIRL.live + WHIRL.dies) {
+        const k = 1 - (timer - WHIRL.live - WHIRL.dies) / WHIRL.grow;
+        return { scale: k, alpha: WHIRL.alpha * k };
+    }
+    if (timer >= WHIRL.dies) return { scale: 1, alpha: WHIRL.alpha };
+    return { scale: timer / WHIRL.dies, alpha: (WHIRL.alpha * timer) / WHIRL.dies };
+}
 
 /** One GAME tick of these pictures (call it after every `tick()`). Pure: returns a new object. */
 export function stepBossSkin(prev, view, tick, { rules = BOSS_RULES } = {}) {
@@ -235,6 +298,24 @@ export function stepBossSkin(prev, view, tick, { rules = BOSS_RULES } = {}) {
             bodies.set(`ball:${s.id}`, sp);
         }
         bodies.set(b.id, st);
+    }
+    for (const b of view.tentacleBeasts) {
+        const old = same ? prev.bodies.get(b.id) : null;
+        // the anim's age in graphic updates: 1 on the tick it is played (the update plays it, then the graphic steps)
+        const st = { anim: b.anim, age: old && old.anim === b.anim ? old.age + 1 : 1 };
+        st.frame = R.beastFrame(st, b, time);
+        bodies.set(b.id, st);
+        for (const t of b.tentacles) {
+            const o = same ? prev.bodies.get(`tentacle:${t.id}`) : null;
+            const ts = o ? { ...o } : { tint: null, prevHits: t.hitsTimer };
+            ts.tint = R.bossTint(ts, ts.prevHits, t.hitsTimer);
+            ts.prevHits = t.hitsTimer;
+            bodies.set(`tentacle:${t.id}`, ts);
+        }
+        for (const w of b.whirlpools) {
+            const o = same ? prev.bodies.get(`whirl:${w.id}`) : null;
+            bodies.set(`whirl:${w.id}`, { renders: (o?.renders ?? 0) + 1 });
+        }
     }
     return { epoch: view.epoch, gameTime: view.gameTime, tick, bodies, rules: R };
 }
@@ -288,6 +369,22 @@ export function bossOps(view, art, { skin } = {}) {
             const sp = skin.bodies.get(`ball:${s.id}`);
             push(KEYS.lavaBall, sp?.frame ?? 0, s, boxAround(s.x, s.y, 12, 12), { layer: -(s.y + 6), rot: R.ballAngle(s),
                 scaleX: LAVA_BALL_SCALE, scaleY: LAVA_BALL_SCALE, nightCopy: true });
+        }
+    }
+    for (const b of view.tentacleBeasts) {
+        const st = skin.bodies.get(b.id);
+        push(KEYS.tentacleBeast, st?.frame ?? 12, b, boxAround(b.x, b.y, 46, 44), { layer: -(b.y - 22 + 46) });
+        for (const t of b.tentacles) {
+            const ts = skin.bodies.get(`tentacle:${t.id}`);
+            push(KEYS.tentacle, R.tentacleFrame(t), t, boxAround(t.x, t.y, 16, 4), { layer: -(t.y - 2 + 4), flipX: !t.right,
+                tint: ts?.tint ?? null, alpha: t.alpha });
+        }
+        for (const w of b.whirlpools) {
+            const look = R.whirlLook(w.timer);
+            const renders = skin.bodies.get(`whirl:${w.id}`)?.renders ?? 1;
+            const rot = (cosmeticRand(view.level, w.x, w.y, 61) * 360 + WHIRL.spin * renders) % 360;
+            push(KEYS.whirlpool, WHIRL.frames[R.worldFrame(view.gameTime ?? 0, WHIRL.frames.length)], w, boxAround(w.x, w.y, 32, 32),
+                { layer: 0, alpha: look.alpha, rot: -rot, ...(look.scale !== 1 ? { scaleX: look.scale, scaleY: look.scale } : {}) });
         }
     }
     for (const f of view.frozenBosses) {

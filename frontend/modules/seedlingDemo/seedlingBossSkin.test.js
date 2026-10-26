@@ -35,7 +35,7 @@ import { LAMP_COVERAGE } from './seedlingLampSkin.js';
 import { PICKUP_COVERAGE } from './seedlingPickupSkin.js';
 import { MACHINE_COVERAGE } from './seedlingMachineSkin.js';
 import { nightOps, nightSkinView } from './seedlingNightSkin.js';
-import { BOSS_COVERAGE, KEYS, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
+import { BOSS_COVERAGE, BOSS_RULES, KEYS, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -63,6 +63,10 @@ export const TAPES = Object.freeze([
         want: ['lava:sit', 'lava:smash', 'lava:smashback', 'lava:armsup', 'lava:sweep', 'lava:sweepback', 'lava:hit', 'lava:hitplayer', 'lava:tint',
             'lava:die', 'lava:dead', 'lava:ball'] },
     { name: 'L82-kof-reflect', witness: 'lavaboss-witness/kof-reflect', want: ['lava:sit', 'lava:sweep', 'lava:ball'] },
+    { name: 'L57-tb-kill', witness: 'tentaclebeast-witness/tb-policy-s2',
+        want: ['beast:under', 'beast:rise', 'beast:sit', 'beast:dying', 'beast:dead', 'tentacle:rise', 'tentacle:sit', 'tentacle:hit', 'tentacle:hitting',
+            'tentacle:sink', 'tentacle:cut', 'tentacle:tint', 'whirl:grow', 'whirl:live', 'whirl:die'] },
+    { name: 'L57-tb-cleared', witness: 'tentaclebeast-witness/tb-enter-cleared', want: ['beast:dead'] },
     { name: 'L111-frozen', level: 111, at: [80, 200], n: 3, want: ['frozen'] },
 ]);
 
@@ -75,7 +79,7 @@ function boot(level, [x, y], onStateChanged = () => {}) {
 }
 
 const LEDGERS = ['transitions', 'playerHits', 'playerDeaths', 'earnedClears', 'collected', 'shieldBossKills', 'shieldBossHits', 'finalBossKills', 'owlTicks',
-    'lavaBossEvents'];
+    'lavaBossEvents', 'tentacleBeastEvents'];
 const ledgersOf = (run) => (run ? LEDGERS.map((n) => {
     const v = run[n];
     return v instanceof Map ? [...v] : v instanceof Set ? [...v] : v;
@@ -136,6 +140,14 @@ function tagsOf(r) {
         out.push(`lava:${b.anim}`);
         if (r.skin?.bodies.get(b.id)?.tint) out.push('lava:tint');
         if (b.balls.length) out.push('lava:ball');
+    }
+    for (const b of r.view.tentacleBeasts) {
+        out.push(b.anim === '' ? (b.dead ? 'beast:dead' : 'beast:sit') : `beast:${b.anim}`);
+        for (const t of b.tentacles) {
+            out.push(`tentacle:${t.anim}`);
+            if (r.skin?.bodies.get(`tentacle:${t.id}`)?.tint) out.push('tentacle:tint');
+        }
+        for (const w of b.whirlpools) out.push(w.timer >= 90 ? 'whirl:grow' : (w.timer >= 30 ? 'whirl:live' : 'whirl:die'));
     }
     if (r.view.frozenBosses.length) out.push('frozen');
     return out;
@@ -210,7 +222,7 @@ describe('1. golden boss ops (frame CHOICE, not pixels)', () => {
 });
 
 describe('2. by hand from the AS3', () => {
-    const V = (over = {}) => ({ epoch: { run: 1, key: 'k' }, level: 19, gameTime: 900, shieldBosses: [], finalBosses: [], lavaBosses: [], frozenBosses: [], ...over });
+    const V = (over = {}) => ({ epoch: { run: 1, key: 'k' }, level: 19, gameTime: 900, shieldBosses: [], finalBosses: [], lavaBosses: [], tentacleBeasts: [], frozenBosses: [], ...over });
     const kof = (over) => ({ id: 'kof', x: 160, y: 88, anim: 'sit', index: 0, hitsTimer: 0, startAttacking: true, destroy: false, alpha: 1,
         removed: false, balls: [], ...over });
     const owl = (over) => ({ id: 'owl', x: 72, y: 104, vx: 0, vy: 0, started: true, rockfallTime: -1, hits: 0, hitsTimer: 0, destroy: false,
@@ -310,6 +322,39 @@ describe('2. by hand from the AS3', () => {
         expect([op.rot, op.scaleX, op.pivotX, op.pivotY, op.dx, op.dy, op.nightCopy]).toEqual([-90, 0.5, 32, 16, 68, 104, true]);
     });
 
+    it('TentacleBeast: "rise" aged from its first tick at 8 fps (12 frames), then the sitting frames on worldFrame(4); dead: worldFrame(4, 2)', () => {
+        const tb = (over) => ({ id: 'tb', x: 104, y: 72, anim: 'under', activated: false, dead: false, tentacles: [], whirlpools: [], ...over });
+        let s = stepBossSkin(null, V({ tentacleBeasts: [tb({})] }), 0);
+        expect(bossOps(V({ tentacleBeasts: [tb({})] }), art, { skin: s })[0].frame).toBe(12);
+        const fr = [];
+        for (let i = 0; i < 9; i += 1) {
+            s = stepBossSkin(s, V({ tentacleBeasts: [tb({ anim: 'rise' })] }), 1 + i);
+            fr.push(bossOps(V({ tentacleBeasts: [tb({ anim: 'rise' })] }), art, { skin: s })[0].frame);
+        }
+        // 8 · 0.0333 = 0.2664 a graphic update: the index steps on the 4th, 8th, … (1.0656, 2.1312)
+        expect(fr).toEqual([11, 11, 11, 10, 10, 10, 10, 9, 9]);
+        const sitAt = (gameTime, dead) => {
+            const k = stepBossSkin(null, V({ gameTime, tentacleBeasts: [tb({ anim: '', dead })] }), 1);
+            return bossOps(V({ gameTime, tentacleBeasts: [tb({ anim: '', dead })] }), art, { skin: k })[0].frame;
+        };
+        expect([sitAt(1, false), sitAt(13, false), sitAt(25, false), sitAt(36, false)]).toEqual([0, 1, 2, 1]);
+        expect([sitAt(1, true), sitAt(25, true), sitAt(50, true), sitAt(70, true)]).toEqual([17, 18, 19, 18]);
+    });
+
+    it('Tentacle: the pivot (8, 47), mirrored when left; the run\'s frame and alpha; a timed whirlpool grows, lives and dies by its timer', () => {
+        const t = { id: 't1', x: 60, y: 140, right: false, anim: 'cut', index: 2, destroy: true, alpha: 0.7, hitsTimer: 0 };
+        const w = { id: 'w', x: 100, y: 150, timer: 165 };
+        const tb = { id: 'tb', x: 104, y: 72, anim: '', activated: true, dead: false, tentacles: [t], whirlpools: [w] };
+        const s = stepBossSkin(null, V({ tentacleBeasts: [tb] }), 1);
+        const ops = bossOps(V({ tentacleBeasts: [tb] }), art, { skin: s });
+        const op = ops.find((o) => o.key === KEYS.tentacle);
+        expect([op.frame, op.dx, op.dy, op.flipX, op.alpha, op.layer]).toEqual([19, 52, 93, true, 0.7, -142]);
+        const wo = ops.find((o) => o.key === KEYS.whirlpool);
+        expect([wo.scaleX, wo.alpha]).toEqual([0.5, 0.25]);
+        expect(BOSS_RULES.whirlLook(60)).toEqual({ scale: 1, alpha: 0.5 });
+        expect(BOSS_RULES.whirlLook(15)).toEqual({ scale: 0.5, alpha: 0.25 });
+    });
+
     it('a stack without the key draws the stand-in rectangle (the hitbox)', () => {
         const none = { has: () => false };
         const skin = stepBossSkin(null, V({ shieldBosses: [sb({})] }), 1);
@@ -346,6 +391,10 @@ describe('3. one mutant per family turns a golden red', () => {
         ['LavaBoss — frame 0 always', 'L82-kof-kill', { rules: { lavaFrame: () => 0 } }],
         ['LavaBoss — the copies at full alpha', 'L82-kof-kill', { rules: { lavaCopyAlpha: () => 1 } }],
         ['LavaBall — no angle', 'L82-kof-reflect', { rules: { ballAngle: () => 0 } }],
+        ['TentacleBeast — frame 12 always', 'L57-tb-kill', { rules: { beastFrame: () => 12 } }],
+        ['Tentacle — frame 5 always', 'L57-tb-kill', { rules: { tentacleFrame: () => 5 } }],
+        ['Whirlpool — full size from its spawn', 'L57-tb-kill', { rules: { whirlLook: () => ({ scale: 1, alpha: 0.5 }) } }],
+        ['TentacleBeast — the dead sitting frames never', 'L57-tb-cleared', { rules: { beastFrame: () => 0 } }],
     ];
     for (const [name, tape, opts] of MUTANTS) it(name, () => expect(differs(T[tape], opts)).toBeGreaterThan(0), 240_000);
 });

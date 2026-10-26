@@ -254,6 +254,10 @@ export const ENEMY_ART = Object.freeze([
     { pack: 'seedling', key: 'seedling:boss/lavaball', file: 'LavaBall.png', fw: 48, fh: 32, origin: [32, 16],
         as3: 'Projectiles/LavaBall.as:15-16 Spritemap(48, 32); :24-30 scale 0.5, originX 32 (x = -32), originY 16 (y = -16); fly [0,1,2] fps 10',
         anims: { fly: fps([0, 1, 2], 10) } },
+    { pack: 'seedling', key: 'seedling:boss/tentaclebeast', file: 'TentacleBeast.png', fw: 46, fh: 44, origin: [23, 22],
+        as3: 'Enemies/TentacleBeast.as:18-19 Spritemap(46, 44, animEnd); :38-44 super(_x + 24, _y + 24), centerOO; sink/rise fps 8, under [12], dying [13..16] fps 2; sitting [0,1,2,1], dead [17,18,19,18]' },
+    { pack: 'seedling', key: 'seedling:boss/tentacle', file: 'Tentacle.png', fw: 80, fh: 49, origin: [8, 47],
+        as3: 'Enemies/Tentacle.as:15-16 Spritemap(80, 49, animEnd); :26-29 originX 8 (x = -8), originY 47 (y = -47); rise/hit/hitting/sink/cut fps 10, sit fps 5; scaleX = right ? 1 : -1' },
     { pack: 'seedling', key: 'seedling:boss/frozenboss', file: 'FrozenBoss.png',
         as3: 'Scenery/FrozenBoss.as:13-14 Image; :18 super(_x, _y) (origin 0); :20 layer; :25-30 render, and onto nightBmp' },
     // `Game.as:432-444` `bossKeys` (Spritemap(12, 16), centerOO at `Game.as:811-813`); `APItem.as:155-162` "bosskeyN".
