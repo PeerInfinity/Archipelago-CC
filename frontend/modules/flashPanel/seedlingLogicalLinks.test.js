@@ -30,8 +30,8 @@ const TS = MAP.tileSize;
 
 /**
  * A GATED link out of the start sub-region (Sword / Ghost Spear) to the sibling that holds L12's teleporter.
- * ⚠ It stands where the Sword's route link (`level_0__r7c6 -> level_0__r1c6`, plan §5.16 D) stood: the rules arc
- * (`ce1cba867a`) bound L0's stairs to r7c6 and dropped that link, so the Sword's route opens with NO link now.
+ * ⚠ It stands where the Sword's route link (`level_0__r8c0 -> level_0__r1c6`, plan §5.16 D) stood: the rules arc
+ * (`ce1cba867a`) bound L0's stairs to r8c0 and dropped that link, so the Sword's route opens with NO link now.
  */
 const SWORD_LINK = 'level_0__r7c6 -> level_0__r11c19';
 /** The Swim link out of the start sub-region (the human-walk rows' crossing). */
@@ -299,7 +299,7 @@ describe('a door fired from a SIBLING sub-region (no position read saw the seam)
             ['level_0__r7c6', 'level_0__r11c19', true],
             ['level_0__r11c19', 'level_12__r0c19', false],
         ]);
-        // ⚖ rules `ce1cba867a`: the L2 stairs are r7c6's OWN door now — one crossing, no logical hop, no item.
+        // ⚖ rules `ce1cba867a`: the L2 stairs are r8c0's OWN door now — one crossing, no logical hop, no item.
         const stairs = standing('level_0__r7c6', {});
         expect(moves(stairs.onStateReport('level', 2)).map((m) => [m.sourceRegion, m.targetRegion, !!m.logical, m.exitName]))
             .toEqual([['level_0__r7c6', 'level_2', false, 'level_0__r7c6 -> level_2']]);

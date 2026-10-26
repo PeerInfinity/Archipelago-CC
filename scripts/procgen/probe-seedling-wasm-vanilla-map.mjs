@@ -310,7 +310,7 @@ async function main() {
                 return (getActivePanel()?.getBot?.()._queue ?? []).map((h) => h.locationName);
             });
             out('D queue first step', { head: booted.head, route: booted.route });
-            // ⛓ rules `ce1cba867a`: L0's stairs bind to r7c6 and the model-sealed `level_0__r7c6 -> level_0__r1c6` is gone,
+            // ⛓ rules `ce1cba867a`: L0's stairs bind to r8c0 and the model-sealed `level_0__r8c0 -> level_0__r1c6` is gone,
             // so the Sword's route (§5.17's logical-link row until then) is doors only.
             check('D: the sphere queue\'s first goal (level 10) routes in 9 hops opening with r7c6\'s OWN stairs — no logical sub-region link on it',
                 /^level_10(__|$)/.test(booted.head?.region ?? '') && booted.route?.length === 9 && booted.route?.nextExit === `${START} -> level_2`

@@ -13,7 +13,7 @@
  *   B  THE PLAYBACK BOT on the rules' DIRECTED graph (the rules DECLARE `exporter["1"].assume_bidirectional_exits:
  *      false` since `9a35ad8989`: the proxy's source reads `explicit`, no in-page override): the sphere queue's
  *      first goal (the Sword, level 10) in 9 hops through DOORS ONLY — since the rules' logical-links recompile
- *      (`ce1cba867a`) L0's stairs bind to r7c6 and the model-sealed `level_0__r7c6 -> level_0__r1c6` link is
+ *      (`ce1cba867a`) L0's stairs bind to r8c0 and the model-sealed `level_0__r8c0 -> level_0__r1c6` link is
  *      gone, so the route opens with `level_0__r7c6 -> level_2` and nothing is credited at r1c6. The Sword
  *      CHECKED, and the walk continues to the next named refusal (`ROW B reach`), within `--budget-s`. ⚠ On a base without fidelity F4 (the sandtraps' arrow death) the solver declines
  *      L8 → L9 by name before the Sword; the check accepts exactly that decline there.
