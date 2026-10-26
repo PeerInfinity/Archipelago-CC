@@ -21,7 +21,7 @@ import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelit
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
-import { ORBIT_KILL_CANDIDATES, orbitKillPolicy, strikePolicyFor } from './solverBot.js';
+import { ORBIT_KILL, ORBIT_KILL_CANDIDATES, orbitKillPolicy, strikePolicyFor } from './solverBot.js';
 import { compareCorpseBumpWitness } from './fidelityCorpseBump.js';
 import { L40LATCH_D1_SWITCHES, L40LATCH_WITNESS_DIR, l40LatchBoot, l40LatchModelSamples, l40LatchOrbitChecks,
     l40LatchSolve, l40LatchStandChecks, unpackL40LatchSample } from './fidelityL40Latch.js';
@@ -75,7 +75,8 @@ describe('L40LATCH W0 — the still holder, on the game (`l40latch-stand`)', () 
 });
 
 describe('L40LATCH D1b — the orbit kill', () => {
-    it('the candidates: five radii, both directions, two far-side arcs', () => {
+    it(`the candidates: ${ORBIT_KILL.radii.length} radii × 2 directions × ${ORBIT_KILL.farSides.length} far-side arcs`, () => {
+        expect(ORBIT_KILL_CANDIDATES.length).toBe(ORBIT_KILL.radii.length * 2 * ORBIT_KILL.farSides.length);
         expect(ORBIT_KILL_CANDIDATES.length).toBe(20);
         expect(ORBIT_KILL_CANDIDATES[0]).toEqual({ r: 22, dir: 1, safe: 110 * Math.PI / 180 });
     });
