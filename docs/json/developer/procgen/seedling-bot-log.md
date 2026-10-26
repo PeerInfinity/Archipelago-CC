@@ -25791,3 +25791,47 @@ is `execKillByPress`'s, not the forecast's: handed to the hammer arc.
   bodies elsewhere.
 - A greedy admission refuses a chain whose danger a later window resolves (CORRIDOR D2's shape, a second family).
 - A refused prefix without its slot selections is not replayable.
+
+### Seedling hammer-phase FF-HARNESS — the tape solver's recorder follows a rewound run
+
+⚖ User, 2026-10-25: *"Queue FF-HARNESS (Recommended)"*. It fixes the harness defect FF found (class (c)). The report is
+`CC/docs/cloud-reports/seedling-hammer-ff-harness.md`. No solver logic changed, and `HAMMER_FIGHT_FALLBACK` stays OFF.
+
+**The fix.** `jsRuntimeSolver.solveFromTape` builds a plan's `expected` / `equipsAt` / `equipItems` with a recorder
+(`recordingRun`). It now wraps every fork it hands `solveSegment` in the same recorder as the shadow (rows indexed past
+the prefix). When the result carries B3's `liveRun` (a rewind adopted a fresh fork), it reads that fork's recording, and
+it plays the trailing equip's idle tick on that fork too. No `liveRun` (every solve with the switch OFF) means the
+shadow's recording, as before. The lookup covers every `rewind.to`, including the admission arms' un-undone failures.
+
+**Measured.** Leg 371 (`level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144`, seams 5226–5280)
+with the switch ON goes from 31 of 45 phases solving with 4 divergences to **34 of 45 with 1**. With the switch OFF it is
+byte-identical (55 seams, every field but wall time). The wall-time cost is within noise. The radius (54 fresh L40 and
+spinner-room requests) has no movers.
+
+**The one divergence left is `solverBot.js`'s, not the harness's.** `withSolveDeadline` returns `{ ...out, deadline }`
+when a deadline site tripped, and that spread drops the non-enumerable `liveRun`. At 5251 the full pass rewinds, solves,
+trips its window (`sword-dash`), and the harness is handed no `liveRun`. A scratch copy that carries `liveRun` across the
+spread gives **35 of 45 with 0** (FF's prediction). That is a hand-over (out of this slice's scope).
+
+**Trap candidates.**
+- A non-enumerable result field does not survive `{ ...out }`: every wrapper between the producer and the reader is part
+  of the contract. Here that is `withSolveDeadline`, the one wrapper that spreads, and only when a deadline tripped.
+- A fresh page capture lands where the page's clock puts it: this one put 371 at seam 5262, a phase where no fallback runs,
+  so the radius could not see the fix. The census over a whole hammer period is what exercises it.
+
+### Seedling hammer-phase BX — the press kill's "nowhere to be" names the refuges the shake band hid (text only)
+
+⚖ User, 2026-10-25: BX narrowed to the refusal text (*"Narrow to the text"*, then *"Text only"* at the harvest), after the
+split shake jiggle was re-ruled exact (*"Exact for split"*). BX's cloud branch also built an executor band switch
+(`EXECUTOR_SHAKE_BAND`, OFF: a walk whose gate or corridor probe meets the band stands up to 45 ticks), which was NOT
+landed; its branch `claude/seedling-executor-shake-band-tnp9ij` and report stay for manual review.
+
+- **The change** (`solverBot.js`, `execKillByPressOnce`): `refugeNow` records `PRESS_KILL_GUARD_COUNTS.shakeRefused`'s
+  delta over its `deriveRefuge` call. When it is above 0, the *"nowhere to be"* `HAMMER_SAFETY` refusal ends
+  *" (PRESS_KILL_SHAKE_GUARD: N refuge candidate(s) whose preview the camera-shake band hid are not counted.)"*, after
+  BW's bombs suffix. With none refused the text is unchanged. No code reads the text (readers classify by the code).
+- **Measured by BX** on leg 371 (`level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144`): with
+  `PRESS_KILL_BOMBS=0`, its 9 *"nowhere to be"* phases gain the suffix at the same units (seam 5266: 12 of 12 banded);
+  at the defaults none moves, and none of L40's 47 page requests.
+- **Gate** `hammerRefugeBandText.test.js` (BX's two I2 rows), fixture `fixtures/hammer-bx-371/` (the page's 371 request
+  cut to level 40, 10 KB).

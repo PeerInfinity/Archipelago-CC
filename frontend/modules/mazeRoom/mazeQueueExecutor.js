@@ -26,10 +26,12 @@
 import { fnv1a32, stableStringify } from '../procgenCore/contentIdentity.js';
 import {
     INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
+    actionItems,
     effectiveInventory,
     facingAfterBump,
     getItem,
     getObstacle,
+    sinksBlock,
     step,
     turnInput,
     useInput,
@@ -442,15 +444,18 @@ export function deriveRequires(world, startState, actions) {
         // ⛓ ITEM ACTIONS: an accepted USE needed its item in hand (a use is
         // refused without it), unless the walk picked it up or a button holds it.
         if (entry.actionType === ACTION_USE) {
-            const item = world.actionLib?.[entry.actionId]?.item;
-            if (item && !held.has(item) && !pickedUp.has(item)) requires.add(item);
+            for (const item of actionItems(world.actionLib?.[entry.actionId])) {
+                if (!held.has(item) && !pickedUp.has(item)) requires.add(item);
+            }
         }
         if (dir !== null) {
             const target = intendedTileFor(from, dir);
             const cells = [target];
             const pushed = Array.isArray(engine.blocks)
                 && engine.blocks.includes(`${target.x},${target.y}`);
-            if (pushed) cells.push(intendedTileFor(target, dir));
+            // ⛓ BLOCK SINKS: a block pushed onto a sink cell enters whatever its clearance — nothing is needed there.
+            const beyond = pushed ? intendedTileFor(target, dir) : null;
+            if (beyond && !sinksBlock(world, beyond.x, beyond.y)) cells.push(beyond);
             for (const cell of cells) {
                 const obstacleId = getObstacle(world, cell.x, cell.y);
                 const lib = obstacleId ? world.obstacleLib?.[obstacleId] : undefined;

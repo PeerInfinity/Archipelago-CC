@@ -254,12 +254,25 @@
           }
         },
         {
-          "type": "helper",
-          "name": "cleared",
-          "args": [
+          "type": "or",
+          "conditions": [
             {
-              "type": "name",
-              "name": "tile"
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "tile"
+              },
+              "attr": "sink"
+            },
+            {
+              "type": "helper",
+              "name": "cleared",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "tile"
+                }
+              ]
             }
           ]
         },
