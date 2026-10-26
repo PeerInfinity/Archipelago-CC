@@ -86,13 +86,13 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
         //   is a split level.
         //   ⛓ RULES l66-door: 6 -> 7 — L66's door into Dungeon 6 is charged the off-grid Yellow-Key lock it stands
         //   under, and L66 is a split level (r5c4 / r9c8).
+        //   ⛓ tile-primitives-pixelmask-l86: 7 -> 6 — L0's door to L1 has its own sub-region (r6c5, the house's
+        //   Pixelmask leaves the door tile clear), so the rock is the analyzer's crossing into it and the door is True_.
         expect(LIFT.expressed.filter((o) => o.op === 'set-access-rule'))
-            .toHaveLength(atlasRules.length - 7);
+            .toHaveLength(atlasRules.length - 6);
         expect(LIFT.cannotRules).toEqual([
-            // ⛓ RULES obstacle-events: L0's door to L1 is charged the rock under the house (split level)
-            { region: 'level_0', exit_id: 'out_teleporter_80_96', sub_region: 'r8c0' },
             { region: 'level_3', exit_id: 'out_teleporter_0_64', sub_region: 'r0c4' },
-            { region: 'level_12', exit_id: 'out_teleporter_32_848', sub_region: 'r42c29' },
+            { region: 'level_12', exit_id: 'out_teleporter_32_848', sub_region: 'r42c28' },
             { region: 'level_30', exit_id: 'out_pit_3_34', sub_region: 'r2c10' },
             { region: 'level_58', exit_id: 'out_teleporter_48_112', sub_region: 'r4c1' },
             { region: 'level_58', exit_id: 'out_teleporter_64_112', sub_region: 'r6c5' },
@@ -395,8 +395,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   byte-identical).
         // ⛓ rules-l66-l57-probe (59347579… -> 5742b57c): L66's door into Dungeon 6 is charged the off-grid Yellow-Key
         //   lock it stands under (`offGridGatedSolids`). No name, exit or location moves.
+        // ⛓ tile-primitives-pixelmask-l86 (5742b57c… -> 16528639): a building's footprint is its Pixelmask — L0's house door
+        //   and L93's door into L98 are their own sub-regions, three sub-regions renamed (level_0__r8c0 -> r7c6, L12
+        //   r42c29 -> r42c28, r44c19 -> r43c21). No location moves (the overlay fixture rewrites byte-identical).
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('5742b57c04332016aefa329fb2df057f');
+            .toBe('16528639e2781c2a54400df453209d2f');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

@@ -126,7 +126,9 @@ describe('the sixth fact — `atlas`, decided by (iii)\'s own count', () => {
         // ⛓ rules-l39: 259 -> 257 — L39 +1 (r25c9, the corridor south of the rope's run); L38 and L107 each merge their
         // static pulser's empty pocket (r12c5 / r2c5) into one region (-2 each, +1 each); L40 loses r36c37 (-1).
         // ⛓ rules-l55-waterfall: 257 -> 259 — all-water L52 is floored by its entry gate and splits into its three pools.
-        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(259);
+        // ⛓ tile-primitives-pixelmask-l86: 259 -> 261 — L0's house door (r6c5) and L93's door into L98 (r5c7) are their own
+        //   sub-regions, a building's footprint being its Pixelmask.
+        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(261);
         expect(atlasRoomRegions(rulesOf('seedling'))).toHaveLength(0);
         expect(atlasRoomRegions(rulesOf('seedling_generated_room'))).toHaveLength(0);
     });

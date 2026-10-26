@@ -1,0 +1,2 @@
+{'cells': 47, 'dflt_ok': 30, 'ff_ok': 30, 'ff_div': 1, 'dflt_div': 0, 'ff_any_row': 1, 'ff_rewind_solved': 1, 'identical': 46}
+371:0 seam 5265: dflt NO (177) -> ff DIVERGE (159) returned 1775 key set(s) but the shadow advanced 1239 rows=[('rewind', 'solved', 1112, 1239)]

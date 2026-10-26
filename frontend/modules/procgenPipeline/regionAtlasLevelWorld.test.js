@@ -241,11 +241,13 @@ describe('the atlas\'s own grid — every playthrough region, compiled alone', (
         for (const e of pits) expect(p.shared_world.rows[e.y][e.x], `pit ${e.atlas_exit_id}`).toBe(r1c9);
     });
 
-    it('CONTROL: the raw transcription is refused where the overlay moves a tile (L12\'s chest), by the partition check', () => {
+    it('CONTROL: the raw transcription is refused for L12 (the overlay moves its chest, the Pixelmask its buildings)', () => {
         const raw = seedlingMazeProjectionDeps({ mapDoc: MAP, gameConfig: CONFIG, levelWorlds: { partition: PARTITION } });
         const l12 = ATLAS.regions.find((r) => r.region_id === 'level_12');
+        // ⛓ tile-primitives-pixelmask-l86: refused one check EARLIER than the partition's tile count (r42c29 226 vs 227):
+        //   without the building footprints the raw grid's sub-regions are not the atlas's at all.
         expect(() => projectRegionToMaze(l12, raw.gridFor(l12), ctxFor(raw)))
-            .toThrow(/"r42c29" computes 226 tile\(s\) but the persisted partition holds 227/);
+            .toThrow(/declares sub_regions \[r0c19, r0c37, r13c6, r40c4, r42c28, r43c21\] but its tile map computes/);
         expect(() => projectRegionToMaze(l12, deps.gridFor(l12), ctxFor(deps))).not.toThrow();
     });
 });

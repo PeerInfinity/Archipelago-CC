@@ -5,7 +5,7 @@
  * optional oracles (`manualCrossingVerdict`, `modelReach`), which `make-seedling-playthrough-rules.mjs` fills
  * from `levelWorld.collidesSolid`:
  *   - a crossing through a building's untranscribed outline was emitted as a True_ hand row. All 10 such links
- *     (L0, L12, L66, L93 x2, both ways) are ones the model cannot walk — the Sword's `level_0__r8c0 <-> r1c6`
+ *     (L0, L12, L66, L93 x2, both ways) are ones the model cannot walk — the Sword's `level_0__r7c6 <-> r1c6`
  *     among them;
  *   - an exit nothing reaches was bucketed into the FIRST sub-region — L0's L2 stairs into r1c6.
  *
@@ -32,13 +32,14 @@ beforeAll(() => { atlas = buildPlaythroughAtlas(); }, 120_000);
 const regionOf = (id) => atlas.regions.find((r) => r.region_id === id);
 
 describe('a link the physics model cannot walk is NOT emitted as True_', () => {
-    it('the model SEALS every building-only crossing: 10 links, all of them the old True_ hand rows', () => {
+    it('the model is asked only where a building\'s mask covers a tile in part: L93\'s two pools; L94\'s TreeLarge', () => {
+        // ⛓ tile-primitives-pixelmask-l86: a building's footprint is its Pixelmask, so the ten building-only crossings
+        // (L0 r1c6 <-> the hub, L12 r0c37 <-> r43c21, L66 r1c2 <-> r5c4, L93 r10c7 <-> r1c0 / r1c13) are no question any
+        // more — the model SEALED each, and the grid now walls the tiles wholly inside the mask. What is left is L93's
+        // pair across building7's partly covered edge columns, which the model walks with the Conch; both ends are
+        // still pruned pockets (below).
         expect([...modelVerdicts].sort()).toEqual([
-            'level_0/r1c6->r8c0 SEALED', 'level_0/r8c0->r1c6 SEALED',
-            'level_12/r0c37->r44c19 SEALED', 'level_12/r44c19->r0c37 SEALED',
-            'level_66/r1c2->r5c4 SEALED', 'level_66/r5c4->r1c2 SEALED',
-            'level_93/r10c7->r1c0 SEALED', 'level_93/r10c7->r1c13 SEALED',
-            'level_93/r1c0->r10c7 SEALED', 'level_93/r1c13->r10c7 SEALED',
+            'level_93/r1c0->r1c13 WALKABLE [flag:canSwim]', 'level_93/r1c13->r1c0 WALKABLE [flag:canSwim]',
             // ⛓ RULES footprints: TreeLarge's footprint became its mask's bounding box (10x12 tiles; it was a 1x1
             // placeholder), so L94's crossings through it are the model's question too — two it walks, four it seals.
             'level_94/r2c16->r3c4 WALKABLE [free]', 'level_94/r2c16->r9c4 SEALED',
@@ -49,7 +50,7 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
 
     it('the Sword\'s old link is gone, and nothing replaces it as a free row', () => {
         const rows = regionOf('level_0').subgraph.internal_exits;
-        expect(rows.filter((e) => [e.from, e.to].includes('r1c6') && [e.from, e.to].includes('r8c0'))).toEqual([]);
+        expect(rows.filter((e) => [e.from, e.to].includes('r1c6') && [e.from, e.to].includes('r7c6'))).toEqual([]);
         // r1c6 is still a place: the Sword's breakable rock at (12,2) is its real way in.
         expect(rows.find((e) => e.from === 'r1c6' && e.to === 'r2c13')).toBeTruthy();
     });
@@ -87,7 +88,8 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
 
     it('the pockets only a sealed row reached are pruned (L66 r1c2, L93 r1c0 / r1c13)', () => {
         expect(regionOf('level_66').subgraph.sub_regions).toEqual(['r5c4', 'r9c8']);
-        expect(regionOf('level_93').subgraph.sub_regions).toEqual(['r10c7', 'r14c7']);
+        // ⛓ tile-primitives-pixelmask-l86: + r5c7, building7's door into L98 (its mask leaves the door tile clear).
+        expect(regionOf('level_93').subgraph.sub_regions).toEqual(['r5c7', 'r10c7', 'r14c7']);
     });
 
     // ⚠ NOT a probe that shares the subject's assumption: §5.17 called L93's four links "model-walkable" off a
@@ -121,10 +123,10 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
 describe('an exit no component reaches binds to the component the model reaches — or is refused by name', () => {
     // ⛓ RULES patched-set: L110's pit no longer ARRIVES in L0 — its descent fires these stairs, so the fall ends in
     // L2 (`seedlingPatchedSet.test.js`); the L0 landing was never a place to stand.
-    it('L0\'s L2 stairs and its L2 arrival stand in r8c0, beside the start; no L110 pit arrives in L0', () => {
+    it('L0\'s L2 stairs and its L2 arrival stand in r7c6, beside the start; no L110 pit arrives in L0', () => {
         const at = (id) => regionOf('level_0').exits.find((e) => e.exit_id === id).sub_region;
-        expect(at('out_stairsdown_256_272')).toBe('r8c0');
-        expect(at('in_L2_48_16')).toBe('r8c0');
+        expect(at('out_stairsdown_256_272')).toBe('r7c6');
+        expect(at('in_L2_48_16')).toBe('r7c6');
         expect(regionOf('level_0').exits.filter((e) => e.exit_id.startsWith('in_pit_L110'))).toEqual([]);
     });
 
@@ -140,9 +142,9 @@ describe('an exit no component reaches binds to the component the model reaches 
 // ⛓ The playthrough's FIRST AP goal must keep a route at sphere 0 (the planner's gate). The REAL StateManager
 // (as the worker builds it) and the REAL PathFinder, over the committed rules.json; the bidirectional setting is
 // the proxy's own derivation (exporter["1"] declares false). Before this slice the route was 10 hops through the
-// sealed logical link `level_0__r8c0 -> level_0__r1c6`; now the stairs leave r8c0 itself.
+// sealed logical link `level_0__r7c6 -> level_0__r1c6`; now the stairs leave r7c6 itself.
 describe('the Sword keeps its sphere-0 route (PathFinder over the real StateManager)', () => {
-    it('level_0__r8c0 -> level_10 in 9 hops, the stairs taken straight from r8c0', async () => {
+    it('level_0__r7c6 -> level_10 in 9 hops, the stairs taken straight from r7c6', async () => {
         const { StateManager } = await import('../../frontend/modules/stateManager/stateManager.js');
         const { StateManagerProxy } = await import('../../frontend/modules/stateManager/stateManagerProxy.js');
         const { evaluateRule } = await import('../../frontend/modules/shared/ruleEngine.js');
@@ -161,13 +163,13 @@ describe('the Sword keeps its sphere-0 route (PathFinder over the real StateMana
         const pf = new PathFinder({
             getStaticData: () => sd, getLatestStateSnapshot: () => snap, getEffectiveBidirectionalSetting: () => bidir,
         });
-        expect(pf.findPath('level_0__r8c0', 'level_10')).toEqual({
-            steps: ['level_0__r8c0', 'level_2', 'level_3__r0c4', 'level_4', 'level_5__r1c5', 'level_6', 'level_7',
+        expect(pf.findPath('level_0__r7c6', 'level_10')).toEqual({
+            steps: ['level_0__r7c6', 'level_2', 'level_3__r0c4', 'level_4', 'level_5__r1c5', 'level_6', 'level_7',
                 'level_8', 'level_9', 'level_10'],
-            nextExit: 'level_0__r8c0 -> level_2',
+            nextExit: 'level_0__r7c6 -> level_2',
             length: 9,
         });
         // r1c6 is not a sphere-0 place any more: only the Sword's rock leads there.
-        expect(pf.findPath('level_0__r8c0', 'level_0__r1c6')).toBeNull();
+        expect(pf.findPath('level_0__r7c6', 'level_0__r1c6')).toBeNull();
     }, 60_000);
 });

@@ -32,7 +32,7 @@ const certify = (rules, regions) => certifyPlaythroughMaze(rules, HELPERS, { nat
 const TRUE = { rule: 'True_' };
 const has = (item) => ({ rule: 'Has', args: { item_name: item } });
 
-describe('rock events: L0 breakablerock@80,112, gating L1 → L0 r8c0', () => {
+describe('rock events: L0 breakablerock@80,112, gating L1 → L0 r6c5 (the house-door pocket the rock stands in)', () => {
     const LEVELS = ['level_0', 'level_1'];
     const E = 'L0 flag 4: breakablerock@80,112 cleared';
     const RULES = JSON.parse(buildPlaythroughMaze({ levels: LEVELS }).text);
@@ -41,27 +41,27 @@ describe('rock events: L0 breakablerock@80,112, gating L1 → L0 r8c0', () => {
     it('the AP layer carries the producer\'s event and gate, equal to seedling_playthrough (never hand-coded)', () => {
         expect(eventLayerFor(ATLAS, LEVELS).exitGates).toContainEqual(
             { region_id: 'level_1', exit_id: 'out_teleporter_64_112', rule: has(E) });
-        expect(exitRule(REGIONS, 'level_1', 'level_0__r8c0')).toEqual(has(E));
-        expect(exitRule(REGIONS, 'level_1', 'level_0__r8c0')).toEqual(exitRule(PLAYTHROUGH, 'level_1', 'level_0__r8c0'));
-        const own = location(REGIONS, 'level_0__r8c0', E);
-        expect(own.access_rule).toEqual(location(PLAYTHROUGH, 'level_0__r8c0', E).access_rule);
+        expect(exitRule(REGIONS, 'level_1', 'level_0__r6c5')).toEqual(has(E));
+        expect(exitRule(REGIONS, 'level_1', 'level_0__r6c5')).toEqual(exitRule(PLAYTHROUGH, 'level_1', 'level_0__r6c5'));
+        const own = location(REGIONS, 'level_0__r7c6', E);
+        expect(own.access_rule).toEqual(location(PLAYTHROUGH, 'level_0__r7c6', E).access_rule);
     });
 
     it('the world\'s rock carries the event: carried, it is open (struck on an earlier visit)', () => {
         const payload = RULES.preset_sidecars['1'].level_0__r1c6.playable_payload;
         const id = payload.obstacles.find((o) => o.x === 5 && o.y === 7).id;
-        expect(payload.obstacleLib[id]).toMatchObject({ kind: 'rock', clear_set: [[E]], events: [{ name: E, side: 'level_0__r8c0' }] });
+        expect(payload.obstacleLib[id]).toMatchObject({ kind: 'rock', clear_set: [[E]], events: [{ name: E, side: 'level_0__r7c6' }] });
     });
 
     it('certifies: L1 lands on the rock only once it is broken, and the event is priced by the strike', () => {
-        const out = certify(RULES, ['level_1', 'level_0__r8c0']);
+        const out = certify(RULES, ['level_1', 'level_0__r6c5', 'level_0__r7c6']);
         expect(out.problems.filter((p) => p.startsWith('level_1') || p.includes('breakablerock'))).toEqual([]);
-        expect(out.lines.some((l) => l.startsWith(`level_0__r8c0@${E}=`))).toBe(true);
+        expect(out.lines.some((l) => l.startsWith(`level_0__r7c6@${E}=`))).toBe(true);
     });
 
     it('a mutant event rule (True_) is caught', () => {
-        expect(certify(withLocationRule(RULES, 'level_0__r8c0', E, TRUE), ['level_0__r8c0']).problems
-            .some((p) => p.startsWith(`level_0__r8c0 @ ${E}`))).toBe(true);
+        expect(certify(withLocationRule(RULES, 'level_0__r7c6', E, TRUE), ['level_0__r7c6']).problems
+            .some((p) => p.startsWith(`level_0__r7c6 @ ${E}`))).toBe(true);
     });
 });
 

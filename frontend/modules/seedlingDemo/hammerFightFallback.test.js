@@ -21,6 +21,9 @@
  *   m3 the trigger widened to every refusal -> the trigger row
  *   ff-m1 (FF-HARNESS) `solveFromTape` reads the SHADOW's recording whatever `liveRun` says (FF § 6.2's step 2 dropped)
  *      -> the tape-solver row: *"the solve returned 349 key set(s) but the shadow advanced 266 time(s)"*
+ *   sdc-m1 (SDC) `withSolveDeadline` re-spreads a tripped result without its `liveRun` (FF-HARNESS hand-over 1's
+ *      carry dropped) -> the deadline-tripped tape-solver row: *"the solve returned 381 key set(s) but the shadow
+ *      advanced 266 time(s)"*, and the unit row
  */
 import { readFileSync } from 'node:fs';
 
@@ -38,7 +41,7 @@ import { SPINNER } from './spinner.js';
 import {
     FIGHT_FALLBACK_CODES, HAMMER_ESCAPE, HAMMER_FIGHT, HAMMER_FIGHT_BOUNDS, HAMMER_FIGHT_FALLBACK, HAMMER_FIGHT_FALLBACK_TRACE,
     HAMMER_SAFETY, REWIND_PROBE, STRIKE_BOUND_EXHAUSTED, SolverBotError, SolverRefusal, isFightFallbackRefusal,
-    replayOntoFork, withHammerEscape, withHammerFight, withHammerFightFallback,
+    planSwordDash, replayOntoFork, withHammerEscape, withHammerFight, withHammerFightFallback, withSolveDeadline,
 } from './solverBot.js';
 
 const SOURCE = atlasLevelSource();
@@ -302,9 +305,9 @@ const R9_TAPE_AT_4 = (() => {
     const persistence = R9.persistence.map((c) => (c.at === undefined ? c : { ...c, at: 323 }));
     return { ...R9, seam, persistence, equips: [] };
 })();
-const solveTapeR9At4 = () => solveFromTape({ staging: R9_TAPE_AT_4, perTick: [],
+const solveTapeR9At4 = (shouldStop = null) => solveFromTape({ staging: R9_TAPE_AT_4, perTick: [],
     live: liveOf(createRunForStaging(R9_TAPE_AT_4, SOURCE)), levelSource: SOURCE,
-    solverGoal: { kind: 'reach-exit', exit: { x: 176, y: 112 } } });
+    solverGoal: { kind: 'reach-exit', exit: { x: 176, y: 112 } }, shouldStop });
 /** `jsRuntimeSolver`'s per-tick row, read off a run. */
 const rowAt = (run) => ({ level: run.level, x: run.state.x, y: run.state.y, deaths: run.playerDeaths.length });
 
@@ -336,5 +339,76 @@ describe('FF-HARNESS — the tape solver\'s recorder follows a rewound run (`liv
             expect(plan.expected).toEqual(rows);
             expect(plan.equipsAt.size).toBe(0);
         });
+    }, 300_000);
+});
+
+/** A plan's rows, replayed from the tape's own boot: one before the first tick, one after each. */
+const replayRowsR9At4 = (solution) => {
+    const replay = createRunForStaging(R9_TAPE_AT_4, SOURCE);
+    const rows = [rowAt(replay)];
+    for (const h of solution) {
+        replay.advance(h);
+        rows.push(rowAt(replay));
+    }
+    return rows;
+};
+
+/**
+ * ⛓⛓ SDC — FF-HARNESS hand-over 1: a REWOUND segment whose deadline TRIPS keeps its `liveRun`. `withSolveDeadline`
+ * re-spreads a tripped result (`{ ...out, deadline }`), and a spread drops B3's non-enumerable mark, so the tape
+ * solver read the shadow and threw ShadowDivergence on a plan that replays (371's seam 5251, its full pass).
+ */
+describe('SDC — a tripped deadline keeps a rewound run\'s `liveRun`', () => {
+    it('⛓⛓⛓ ON, the deadline tripping AFTER the rewind solved: the plan\'s `expected` IS a replay of its keys', () => {
+        withHammerEscape(false, () => {
+            const fallbacks = [];
+            const asked = [];
+            // trips every site asked once the fallback has answered: the first is the full pass's `sword-dash`
+            const shouldStop = (site) => { asked.push([site, fallbacks.length]); return fallbacks.length > 0; };
+            const off = (() => { try { solveTapeR9At4(shouldStop); return null; } catch (e) { return e; } })();
+            expect(off).toBeInstanceOf(SolverBotError);
+            expect(off.code).toBe(HAMMER_SAFETY);
+            asked.length = 0;
+            HAMMER_FIGHT_FALLBACK_TRACE.sink = (row) => fallbacks.push(row);
+            let plan;
+            try {
+                plan = withHammerFightFallback(true, () => solveTapeR9At4(shouldStop));
+            } finally {
+                HAMMER_FIGHT_FALLBACK_TRACE.sink = null;
+            }
+            expect(fallbacks).toMatchObject([{ t: 0, how: 'rewind', refused: HAMMER_SAFETY, refusedAt: 266, verdict: 'solved' }]);
+            // the deadline tripped, and only after the rewind: every ask before it answered false
+            expect(plan.deadline).toMatchObject({ tripped: true, first: 'sword-dash' });
+            expect(asked.filter(([, n]) => n > 0).length).toBeGreaterThan(0);
+            expect(asked.findIndex(([, n]) => n > 0)).toBeGreaterThan(0);
+            expect(plan.solution.length).toBe(381);
+            expect(plan.expected.length - 1).toBe(plan.solution.length);
+            expect(plan.expected).toEqual(replayRowsR9At4(plan.solution));
+            expect(plan.equipsAt.size).toBe(0);
+        });
+    }, 300_000);
+
+    it('⛓⛓ `withSolveDeadline` keeps a non-enumerable `liveRun` across a tripped deadline, and adds none without one', () => {
+        const run = createRunForStaging(R9_TAPE_AT_4, SOURCE);
+        const wps = [{ x: run.state.x + 32, y: run.state.y }];
+        // `planSwordDash` asks `sword-dash` before any work: a `shouldStop` of true trips it at once
+        const tripping = (fn) => withSolveDeadline({ shouldStop: () => true }, () => {
+            expect(planSwordDash(run, wps).why).toBe('deadline');
+            return fn();
+        });
+        const fork = {};
+        const marked = { perTick: [] };
+        Object.defineProperty(marked, 'liveRun', { value: fork });
+        const kept = tripping(() => marked);
+        expect(kept).not.toBe(marked);
+        expect(kept.deadline).toEqual({ tripped: true, first: 'sword-dash', sites: { 'sword-dash': 1 } });
+        expect(kept.liveRun).toBe(fork);
+        expect(Object.getOwnPropertyDescriptor(kept, 'liveRun')).toMatchObject({ enumerable: false, writable: false });
+        expect(Object.keys(kept)).toEqual(['perTick', 'deadline']);
+        const plain = tripping(() => ({ perTick: [] }));
+        expect(plain.deadline.tripped).toBe(true);
+        expect(Object.getOwnPropertyNames(plain)).toEqual(['perTick', 'deadline']);
+        // untripped: the result is handed back as it was, mark and all
+        expect(withSolveDeadline({ shouldStop: () => false }, () => marked)).toBe(marked);
     }, 300_000);
 });

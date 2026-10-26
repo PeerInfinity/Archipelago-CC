@@ -33,9 +33,9 @@ const TS = MAP.tileSize;
  * ⚠ It stands where the Sword's route link (`level_0__r8c0 -> level_0__r1c6`, plan §5.16 D) stood: the rules arc
  * (`ce1cba867a`) bound L0's stairs to r8c0 and dropped that link, so the Sword's route opens with NO link now.
  */
-const SWORD_LINK = 'level_0__r8c0 -> level_0__r11c19';
+const SWORD_LINK = 'level_0__r7c6 -> level_0__r11c19';
 /** The Swim link out of the start sub-region (the human-walk rows' crossing). */
-const SWIM_LINK = 'level_0__r8c0 -> level_0__r14c0';
+const SWIM_LINK = 'level_0__r7c6 -> level_0__r14c0';
 
 /** A gate that evaluates the rule against `inv` (True_/Has/Or/And), the door gate's verdict shape. */
 const evalRule = (rule, inv) => {
@@ -110,7 +110,7 @@ describe('the sub-region map is DERIVED from the rules and the committed partiti
     });
 
     it('subRegionAt: a sub-region tile names its compound region; a seam tile is no news', () => {
-        for (const r of ['level_0__r8c0', 'level_0__r1c6', 'level_0__r14c0']) {
+        for (const r of ['level_0__r7c6', 'level_0__r1c6', 'level_0__r14c0']) {
             for (const p of tilesOf(r)) expect(subRegionAt(MAP, 0, p.x, p.y)).toBe(r);
         }
         expect(subRegionAt(MAP, 0, seamOf(0).x, seamOf(0).y)).toBeNull();
@@ -118,16 +118,16 @@ describe('the sub-region map is DERIVED from the rules and the committed partiti
     });
 
     it('linkPath walks only links the gate opens', () => {
-        const closed = linkPath(MAP, 'level_0__r8c0', 'level_0__r14c0', gate({}));
+        const closed = linkPath(MAP, 'level_0__r7c6', 'level_0__r14c0', gate({}));
         expect(closed.path).toBeNull();
-        expect(closed.refused.map((r) => r.link.name)).toContain('level_0__r8c0 -> level_0__r14c0');
-        const open = linkPath(MAP, 'level_0__r8c0', 'level_0__r14c0', gate({ 'Progressive Swim': 1 }));
-        expect(open.path.map((h) => h.link.name)).toEqual(['level_0__r8c0 -> level_0__r14c0']);
+        expect(closed.refused.map((r) => r.link.name)).toContain('level_0__r7c6 -> level_0__r14c0');
+        const open = linkPath(MAP, 'level_0__r7c6', 'level_0__r14c0', gate({ 'Progressive Swim': 1 }));
+        expect(open.path.map((h) => h.link.name)).toEqual(['level_0__r7c6 -> level_0__r14c0']);
     });
 });
 
 describe('a HUMAN walk across a link (position reads; no bot)', () => {
-    const IN = 'level_0__r8c0';
+    const IN = 'level_0__r7c6';
     const OUT = 'level_0__r14c0';
 
     it('moves the AP region ONCE per crossing, and the seam never flickers', () => {
@@ -263,15 +263,15 @@ describe('⛓ SAME-LEVEL LANDING — a read before our own same-level teleport l
 
 describe('the Playback Bot\'s route CREDITS a link (no walk), and the next door resolves from it', () => {
     it('a gated link, open: credited at once, no teleport, no bounce back from the player\'s tiles, then the sibling\'s door', () => {
-        const b = standing('level_0__r8c0', { 'Progressive Sword': 1 });
+        const b = standing('level_0__r7c6', { 'Progressive Sword': 1 });
         const out = b.creditLink(SWORD_LINK);
         expect(out.ok).toBe(true);
-        expect(moves(out.effects)).toEqual([expect.objectContaining({ sourceRegion: 'level_0__r8c0',
+        expect(moves(out.effects)).toEqual([expect.objectContaining({ sourceRegion: 'level_0__r7c6',
             targetRegion: 'level_0__r11c19', exitName: SWORD_LINK, logical: true })]);
         expect(b.onLoadRegion({ region_id: 'level_0__r11c19', world: world('level_0__r11c19') })
             .filter((e) => e.type === 'teleport')).toEqual([]);
-        // The player still stands in r8c0's tiles (the link is walked as part of the next door's plan).
-        expect(walk(b, tilesOf('level_0__r8c0').slice(0, 3))).toEqual([]);
+        // The player still stands in r7c6's tiles (the link is walked as part of the next door's plan).
+        expect(walk(b, tilesOf('level_0__r7c6').slice(0, 3))).toEqual([]);
         expect(b.region).toBe('level_0__r11c19');
         // The teleporter to L12 fires: resolved against the CURRENT sub-region's sidecar.
         const crossing = moves(b.onStateReport('level', 12));
@@ -280,38 +280,38 @@ describe('the Playback Bot\'s route CREDITS a link (no walk), and the next door 
     });
 
     it('refuses a link out of another region, and a link the gate keeps closed — by name', () => {
-        const b = standing('level_0__r8c0', {});
+        const b = standing('level_0__r7c6', {});
         expect(b.creditLink('level_0__r1c6 -> level_0__r2c13')).toMatchObject({ ok: false,
-            reason: expect.stringContaining('leaves level_0__r1c6, but the AP region is level_0__r8c0') });
-        const closed = b.creditLink('level_0__r8c0 -> level_0__r11c19');
+            reason: expect.stringContaining('leaves level_0__r1c6, but the AP region is level_0__r7c6') });
+        const closed = b.creditLink('level_0__r7c6 -> level_0__r11c19');
         expect(closed.ok).toBe(false);
         expect(closed.reason).toContain('is closed');
-        expect(b.region).toBe('level_0__r8c0');
+        expect(b.region).toBe('level_0__r7c6');
         expect(b.creditLink('nope')).toMatchObject({ ok: false });
     });
 });
 
 describe('a door fired from a SIBLING sub-region (no position read saw the seam)', () => {
     it('the human walks from the start to a sibling\'s door: the open link is credited, then the crossing', () => {
-        const b = standing('level_0__r8c0', { 'Progressive Sword': 1 });
+        const b = standing('level_0__r7c6', { 'Progressive Sword': 1 });
         const effects = moves(b.onStateReport('level', 12));
         expect(effects.map((m) => [m.sourceRegion, m.targetRegion, !!m.logical])).toEqual([
-            ['level_0__r8c0', 'level_0__r11c19', true],
+            ['level_0__r7c6', 'level_0__r11c19', true],
             ['level_0__r11c19', 'level_12__r0c19', false],
         ]);
         // ⚖ rules `ce1cba867a`: the L2 stairs are r8c0's OWN door now — one crossing, no logical hop, no item.
-        const stairs = standing('level_0__r8c0', {});
+        const stairs = standing('level_0__r7c6', {});
         expect(moves(stairs.onStateReport('level', 2)).map((m) => [m.sourceRegion, m.targetRegion, !!m.logical, m.exitName]))
-            .toEqual([['level_0__r8c0', 'level_2', false, 'level_0__r8c0 -> level_2']]);
+            .toEqual([['level_0__r7c6', 'level_2', false, 'level_0__r7c6 -> level_2']]);
     });
 
     it('⛔ a sibling behind a CLOSED link is not credited: no logical hop, no move to the sibling\'s door', () => {
-        // r11c19's teleporter goes to L12; r8c0 reaches r11c19 only by Sword / Ghost Spear.
-        const b = standing('level_0__r8c0', {});
+        // r11c19's teleporter goes to L12; r7c6 reaches r11c19 only by Sword / Ghost Spear.
+        const b = standing('level_0__r7c6', {});
         const effects = b.onStateReport('level', 12);
         expect(moves(effects)).toEqual([]);
         expect(effects.map((e) => e.type)).toEqual(['warn']);
-        expect(b.region).toBe('level_0__r8c0');
+        expect(b.region).toBe('level_0__r7c6');
         // An ARRIVAL row (no target region) whose level no door of its room leads to is not a way out — a warn,
         // never a move to `null` (which would park). Since the rules arc's patched set (the Moonrock removed, the
         // L110 fall CHAINED to L2) that row is `level_2`'s own `in_pit_L110_3_2`; no L0 sidecar keeps an orphan
@@ -326,7 +326,7 @@ describe('a door fired from a SIBLING sub-region (no position read saw the seam)
         const toPit = shut.onStateReport('level', 110);
         expect(moves(toPit)).toEqual([]);
         expect(toPit.map((e) => e.type)).toEqual(['warn']);
-        const armed = standing('level_0__r8c0', { 'Progressive Sword': 1 });
+        const armed = standing('level_0__r7c6', { 'Progressive Sword': 1 });
         expect(moves(armed.onStateReport('level', 12)).map((m) => m.targetRegion))
             .toEqual(['level_0__r11c19', 'level_12__r0c19']);
     });
@@ -362,12 +362,12 @@ describe('the glue reads the position, and stands down while the bot walks', () 
         glue.attachAdapter({ _getFlash: () => game, teleport: () => {} });
         glue.setSubRegions(MAP);
         glue.binding.onStateReport('level', 0);
-        glue.handleLoadRegion({ region_id: 'level_0__r8c0', world: world('level_0__r8c0') });
+        glue.handleLoadRegion({ region_id: 'level_0__r7c6', world: world('level_0__r7c6') });
         return { glue, published, ticks, setWalking: (w) => { walking = w; } };
     }
 
     it('a read in another sub-region publishes ONE user:regionMove carrying `logical: true`', () => {
-        let at = tilesOf('level_0__r8c0')[0];
+        let at = tilesOf('level_0__r7c6')[0];
         const r = rig({ status: () => ({ level: 0, x: at.x, y: at.y }) });
         r.glue.start();
         expect(r.ticks).toHaveLength(1);
@@ -377,7 +377,7 @@ describe('the glue reads the position, and stands down while the bot walks', () 
         r.ticks[0]();
         const moved = r.published.filter((p) => p.event === 'user:regionMove');
         expect(moved).toHaveLength(1);
-        expect(moved[0].data).toMatchObject({ sourceRegion: 'level_0__r8c0', targetRegion: 'level_0__r14c0', logical: true });
+        expect(moved[0].data).toMatchObject({ sourceRegion: 'level_0__r7c6', targetRegion: 'level_0__r14c0', logical: true });
         expect(r.glue.stats).toMatchObject({ logicalMoves: 1, positionReads: 3 });
     });
 
@@ -390,7 +390,7 @@ describe('the glue reads the position, and stands down while the bot walks', () 
         r.glue.readPosition();
         expect(r.published.filter((p) => p.event === 'user:regionMove')).toEqual([]);
         expect(r.glue.binding.physicalSub).toBe('level_0__r14c0');
-        at = tilesOf('level_0__r8c0')[0];
+        at = tilesOf('level_0__r7c6')[0];
         r.glue.readPosition();
         expect(r.published.filter((p) => p.event === 'user:regionMove')).toEqual([]);
         at = tilesOf('level_0__r14c0')[1];
@@ -399,21 +399,21 @@ describe('the glue reads the position, and stands down while the bot walks', () 
     });
 
     it('⛓ §5.19 — no read during the randomized load\'s mount + reset window: a TRANSIENT position there credits nothing; after the landing the edge is re-armed and a human step is exact', () => {
-        let at = tilesOf('level_0__r8c0')[0];
+        let at = tilesOf('level_0__r7c6')[0];
         const r = rig({ status: () => ({ level: 0, x: at.x, y: at.y }) });
         r.glue.readPosition();
-        expect(r.glue.binding.physicalSub).toBe('level_0__r8c0');
+        expect(r.glue.binding.physicalSub).toBe('level_0__r7c6');
         r.glue.holdPositionWatch('the randomized load (mount + reset)');
         at = tilesOf('level_0__r14c0')[0]; // the page's pre-reset boot / the mount: somewhere else, for a moment
         r.glue.readPosition();
         r.glue.readPosition();
         expect(r.glue.stats.positionReads).toBe(1);
-        at = tilesOf('level_0__r8c0')[1]; // the explicit start lands
+        at = tilesOf('level_0__r7c6')[1]; // the explicit start lands
         r.glue.releasePositionWatch();
         expect(r.glue.binding.physicalSub).toBe(null); // re-armed
         r.glue.readPosition();
         expect(r.published.filter((p) => p.event === 'user:regionMove')).toEqual([]);
-        expect(r.glue.binding).toMatchObject({ region: 'level_0__r8c0', physicalSub: 'level_0__r8c0' });
+        expect(r.glue.binding).toMatchObject({ region: 'level_0__r7c6', physicalSub: 'level_0__r7c6' });
         at = tilesOf('level_0__r14c0')[1]; // a human step
         r.glue.readPosition();
         const moved = r.published.filter((p) => p.event === 'user:regionMove');
@@ -421,7 +421,7 @@ describe('the glue reads the position, and stands down while the bot walks', () 
     });
 
     it('⛓ §5.19 — …and a reset that LANDS the player in another sub-region than the AP region moves it there on the first read (re-armed, through the gate)', () => {
-        let at = tilesOf('level_0__r8c0')[0];
+        let at = tilesOf('level_0__r7c6')[0];
         const r = rig({ status: () => ({ level: 0, x: at.x, y: at.y }) });
         r.glue.readPosition();
         r.glue.holdPositionWatch('reset');
@@ -442,7 +442,7 @@ describe('the glue reads the position, and stands down while the bot walks', () 
 });
 
 describe('the controller hands a route\'s link to the binding (wasm and JS alike)', () => {
-    const link = MAP.links.get('level_0__r8c0').find((l) => l.name === SWORD_LINK);
+    const link = MAP.links.get('level_0__r7c6').find((l) => l.name === SWORD_LINK);
     const atlas = { arm: 'vanilla', entries: [], refused: [], regions: new Map(), links: [link] };
 
     it('the resolver answers a link, not a goal', () => {

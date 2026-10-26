@@ -1,0 +1,3 @@
+{'cells': 56, 'baseoff_ok': 37, 'baseoff_div': 0, 'baseoff_ffrows': 0, 'baseon_ok': 37, 'baseon_div': 2, 'baseon_ffrows': 5, 'fixoff_ok': 37, 'fixoff_div': 0, 'fixoff_ffrows': 0, 'fixon_ok': 39, 'fixon_div': 0, 'fixon_ffrows': 5, 'off_identical': 56, 'on_identical': 54}
+371:100 seam 5251: OFF =; ON base False/divergence w408 -> fix True/None w408 t1753 ff=[('rewind', 'solved', 1112), ('rewind', 'solved', 1112)]
+371:101 seam 5251: OFF =; ON base False/divergence w408 -> fix True/None w408 t1753 ff=[('rewind', 'solved', 1112), ('rewind', 'solved', 1112)]

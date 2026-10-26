@@ -150,7 +150,9 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         // Ring 2 (session tile-primitives-grow-ring2) brings weapon gates of its own: L0's rocks (Sword | Spear) close
         // r11c19 and, past it, r1c6 (and their two rock events); L19's crossings into r1c5 / r5c5 are the Sword (and its
         // Boss Key and Shieldspire with them). Without the three weapons that set is cut off beside the rope's.
-        const RING2_WEAPON_GATED = ['level_0__r11c19', 'level_0__r1c6', 'level_19__r1c5', 'level_19__r5c5'];
+        // ⛓ tile-primitives-pixelmask-l86: + level_0__r6c5, the house-door pocket the L0 door rock stands in (the house's
+        // Pixelmask leaves the door tile clear, so the door is its own sub-region behind the rock).
+        const RING2_WEAPON_GATED = ['level_0__r11c19', 'level_0__r1c6', 'level_0__r6c5', 'level_19__r1c5', 'level_19__r5c5'];
         expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
             .toEqual({
                 unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED].sort(),
@@ -215,7 +217,7 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         const pit = ([name]) => name.startsWith('level_16__r1c9 -> level_17');
         expect(priced.filter((d) => !pit(d)).map(([name, free]) => [name, free])).toEqual([
             ['level_13 -> level_14', true],
-            ['level_13 -> level_0__r8c0', true],
+            ['level_13 -> level_0__r7c6', true],
             ['level_13 -> level_20__r3c1', true],
             ['level_14 -> level_15__r1c5', true],
             ['level_14 -> level_13', true],
