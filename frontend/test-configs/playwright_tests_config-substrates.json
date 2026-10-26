@@ -2076,9 +2076,9 @@
         },
         {
             "id": "tutorial-walk-seedling-bot-js",
-            "enabled": false,
+            "enabled": true,
             "category": "Tutorial walks: seedling",
-            "_comment": "TUTORIAL IN JS MODE (2026-10-26, user: 'Work in both'). The seedling-bot tutorial's walk with flashPanel.runtime = js for the row's session (put back after): the Start step completes with no Start to press, the bot takes its first checks on the JS page. Manual batch tutorials-seedling. STATUS: OFF until the js walk/delivery race is fixed: the Playback Bot's first walk can reach the JS page before the randomized level set mounts, and the mount clears it (the bot then waits forever on its first route). Red on CI in runs 40387718888 and 40391923232. Re-enable with the fix."
+            "_comment": "TUTORIAL IN JS MODE (2026-10-26, user: 'Work in both'). The seedling-bot tutorial's walk with flashPanel.runtime = js for the row's session (put back after): the Start step completes with no Start to press, the bot takes its first checks on the JS page. Manual batch tutorials-seedling. The js walk waits for the delivered rooms (SeedlingPlaybackController._deliveredSetGate): before it, the bot's first walk could reach the page before the level-set mount, which cleared it (red on CI in 40387718888 / 40391923232)."
         }
     ]
 }

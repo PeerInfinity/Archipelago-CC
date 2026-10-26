@@ -645,3 +645,76 @@ describe('⛓ WAVE-6 CONSUMER — an arrival inside a solid reaches the bot with
             obstacle: OBSTACLE, escape: ESCAPE, target: { kind: 'location', name: 'Starting House - Chest' } });
     });
 });
+
+// ⛓ THE DELIVERED ROOMS FIRST (JS runtime) — the name → cell map is bound before the AP load's level-set delivery
+// runs, and the page's mount clears any goal it holds. Measured on CI (tutorial-walk-seedling-bot-js, runs
+// 40387718888 / 40391923232): `bot: waiting` → `bot: idle` → `level set … mounted`, and the bot waited forever.
+describe('SeedlingPlaybackController — a JS walk waits for the delivered rooms', () => {
+    const target = { kind: 'location', name: 'region_0_0__key_blue_pickup' };
+    /** A page that is UP but plays no set yet (the delivery has not run): only the game's config. */
+    function pageBeforeDelivery() {
+        const rt = createJsRuntime({ log: () => {} });
+        rt.game.configure(JSON.stringify({ classes: GAME_CONFIG.classes, state_properties: GAME_CONFIG.state_properties }));
+        return rt;
+    }
+    const mountSet = (rt) => {
+        for (const c of planLevelSetChunks(set).chunks) rt.game.botLoadLevels(JSON.stringify(c));
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [set.start.level, set.start.x, set.start.y] }]);
+        rt.tick();
+    };
+
+    it('held while the delivery is armed and the page plays another set; handed over once the page mounts it', () => {
+        const rt = pageBeforeDelivery();
+        const delivery = { set, state: 'armed', result: null };
+        const ft = fakeTimers();
+        const c = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'js', report, jsRuntime: rt, levelSetDelivery: delivery }), timers: ft.timers, now: ft.now,
+        });
+        expect(c.walkTo(target)).toBe(true);
+        c.play();
+        expect(ft.armed, 'held').toBe(true);
+        expect(rt.playback.goal).toBeNull();
+        delivery.state = 'delivering';
+        ft.fire();
+        expect(rt.playback.goal, 'still held mid-delivery').toBeNull();
+        mountSet(rt);
+        delivery.state = 'delivered';
+        ft.fire();
+        expect(ft.armed).toBe(false);
+        expect(rt.playback.goal).toMatchObject({ kind: 'location', level: 0, tag: 0 });
+        expect(rt.playback.playing).toBe(true);
+    });
+
+    it('a REFUSED delivery is not a silent hold: the walk is refused by the delivery\'s own reason', () => {
+        const rt = pageBeforeDelivery();
+        const failed = [];
+        const ft = fakeTimers();
+        const delivery = { set, state: 'armed', result: null };
+        const c = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'js', report, jsRuntime: rt, levelSetDelivery: delivery }),
+            timers: ft.timers, now: ft.now, onWalkFailed: (e) => failed.push(e),
+        });
+        c.walkTo(target);
+        delivery.state = 'refused';
+        delivery.result = { ok: false, state: 'refused', why: 'readback disagreed' };
+        ft.fire();
+        expect(ft.armed).toBe(false);
+        expect(failed[0].reason).toBe('the generated rooms were not delivered to the JS runtime: readback disagreed');
+    });
+
+    it('no delivery (an arm that only binds) waits for nothing: handed over at once', () => {
+        const { rt } = liveRuntime();
+        const c = new SeedlingPlaybackController({ getSurface: () => ({ transport: 'js', report, jsRuntime: rt, levelSetDelivery: null }) });
+        expect(c.walkTo(target)).toBe(true);
+        expect(rt.playback.goal).toMatchObject({ kind: 'location', level: 0, tag: 0 });
+    });
+
+    it('MUTANT — the race the gate closes: a goal handed over BEFORE the mount is dropped by it', () => {
+        const { rt } = liveRuntime();   // the page playing a set (a stand-in for the vanilla rooms before the delivery)
+        const c = new SeedlingPlaybackController({ getSurface: () => ({ transport: 'js', report, jsRuntime: rt }) });
+        expect(c.walkTo(target)).toBe(true);
+        expect(rt.playback.goal).not.toBeNull();
+        mountSet(rt);   // the delivery lands after the hand-over
+        expect(rt.playback.goal, 'the mount cleared the goal').toBeNull();
+    });
+});

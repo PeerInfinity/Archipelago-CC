@@ -443,6 +443,8 @@ export class FlashPanelUI {
       // or null while it runs / once it bound one.
       apRefusal: this._apLoadRefusal ?? null,
       jsRuntime,
+      // ⛓ THE DELIVERED ROOMS FIRST — the level-set delivery the AP load armed (`{set, state, result}`), or null.
+      levelSetDelivery: this._seedlingDelivery ?? null,
       // ⛓ W2 — the wasm playback engine's handles: the game's callback surface
       // and window (re-read per call — a preset switch replaces the iframe),
       // the panel's own teleport recipe, and the map document the preset names.
@@ -775,6 +777,7 @@ export class FlashPanelUI {
     this._seedlingGenSet = null;
     this._seedlingAtlas = null;
     this._seedlingRealSet = null;
+    this._seedlingDelivery = null;
     this._apLoadRefusal = null;
     this._heldKeys?.uninstall();
     if (this.adapter) {
@@ -1362,6 +1365,7 @@ export class FlashPanelUI {
    */
   async _startSeedlingRandomizer(adapter) {
     this._apLoadRefusal = null;
+    this._seedlingDelivery = null;
     const staticData = stateManager.getStaticData?.() ?? null;
     const flashPanel = staticData?.flash_panel ?? null;
     const transport = this.transport === 'js' ? 'js' : 'wasm';
@@ -1456,6 +1460,9 @@ export class FlashPanelUI {
       // ⛓ VANILLA MAP — the REAL rooms the game plays when an arm delivered them (the vanilla rewrite; an
       // atlas arm's retag): the wasm playback engine stages these, not the map document.
       this._seedlingRealSet = !generatedArm ? (loaded.set ?? null) : null;
+      // ⛓ THE DELIVERED ROOMS FIRST — the delivery this load arms (null on an arm that only binds): the JS
+      // runtime's walks wait until the page plays its set (`SeedlingPlaybackController._deliveredSetGate`).
+      this._seedlingDelivery = loaded.delivery ?? null;
 
       const glue = getSeedlingRegionGlue();
       if (!glue) {
