@@ -7,11 +7,14 @@
  *   - the scope is mechanical, and an AP entrance from outside the world falls back to fresh-arrival pricing;
  *   - a world whose fresh arrival is STRICTER and whose inbound arrival is LOOSER than AP still reports LOOSER;
  *   - the inbound framing exposed a one-sided lock priced from its far side: BossLock tests the key only on a player
- *     BELOW it (`BossLock.update`'s `collideLine`), so its gate event opens from its `probe` side only.
+ *     BELOW it (`BossLock.update`'s `collideLine`), so its gate event opens from its `probe` side only;
+ *   - and L89's Feather, entered only from ABOVE (`r5Swim.FEATHER_BLOCKER`), which the rules leave at Swim from below: the
+ *     rules producer lists it in its own `permissiveBindings`, so a STRICTER row there is accepted by that name (⚖ 2026-10-26);
+ *     a LOOSER one is not.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { buildPlaythroughMaze } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
+import { buildPlaythroughMaze, playthroughPermissiveLocations } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
@@ -23,7 +26,7 @@ const compile = (levels) => {
     if (!texts.has(key)) texts.set(key, buildPlaythroughMaze({ levels }).text);
     return JSON.parse(texts.get(key));
 };
-const certify = (rules) => certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS });
+const certify = (rules, opts = {}) => certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS, ...opts });
 const L67 = ['level_59', 'level_67'];
 const L19 = ['level_18', 'level_19', 'level_20'];
 const KEY = 'Level 067 - Boss Key 4';
@@ -69,5 +72,27 @@ describe('a LOOSER row is never hidden', () => {
         }
         const out = certify(rules);
         expect(out.problems).toContain(`level_19__r3c3 @ ${FLAG} (from level_19__r1c1) holding [Red Key]: derived true, atlas false`);
+    });
+});
+
+describe('the rules producer\'s permissive bound', () => {
+    const L89 = ['level_0', 'level_87', 'level_89'];
+    const FEATHER = 'Level 089 - Feather';
+    const row = `level_89__r9c6 @ ${FEATHER} (from level_89__r11c12)`;
+
+    it('L89\'s Feather from below: STRICTER than the rules — a problem without the list, accepted by name with it', () => {
+        expect(certify(compile(L89)).problems).toContain(`${row} holding [Progressive Swim]: derived false, atlas true`);
+        const out = certify(compile(L89), { permissive: playthroughPermissiveLocations() });
+        expect(out.problems).toEqual([]);
+        const why = 'the rules producer leaves level_89/Level 089 - Feather uncharged (permissiveBindings)';
+        expect(out.accepted).toContainEqual({ label: row, source: 'level_89__r11c12', by: why });
+        expect(out.lines).toContain(`accepted: ${row} — ${why}`);
+    }, 120000);
+
+    it('a LOOSER row on a permissive location is still a problem', () => {
+        const rules = compile(L89);
+        rules.regions['1'].level_89__r9c6.locations.find((l) => l.name === FEATHER).access_rule = { rule: 'Has', args: { item_name: 'Fire' } };
+        const out = certify(rules, { permissive: playthroughPermissiveLocations() });
+        expect(out.problems.some((p) => p.startsWith(row) && p.endsWith('derived true, atlas false'))).toBe(true);
     });
 });

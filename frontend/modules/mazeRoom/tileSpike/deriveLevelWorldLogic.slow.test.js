@@ -14,15 +14,22 @@
  * member certifies it whole), L19 r5c5 (once "not priced", a crossing collision) and L20's Shield location (~0.05 s together).
  * And one region per sphere-0 feature (⚖ user 2026-10-25, session tile-primitives-sphere-order-1: "The 3 feature regions"):
  * L3 r0c4 (the ghost rock's rule strike), L8 (the block sink, 1.7 s scripted) and L94 r3c4 (a per-sub-region cliff's entry gates).
+ * And two of sphere 0.1's (⚖ user 2026-10-26, session tile-primitives-sphere-order-2: "r42c28 + L67 r3c2"): L12 r42c28 (the magical lock
+ * stacked on a boss lock, each opening by its own rule; 4.3 s scripted) and L67 r3c2 (the struck block, priced from r6c11 — its only way in;
+ * under 0.1 s). L12 r0c19 (the doorway's touched lock) costs 136 s scripted and stays pinned natively (`sphereOrderLevels.test.js`).
  *
  * Slow tier: ~35 s native (every region, then the sample again for its lines) + ~86 s scripted sample on one
  * core (measured 2026-10-21, L13–L17). Since the arrow trap + rope (session tile-primitives-arrow-rope, 2026-10-22)
  * L16's cut doubles its state space; with the facing-free search: native every region 43.5 s, native sample 21.5 s,
- * scripted sample 146 s. No exemption: every region agrees, the rope gate derived from the lane and the cut.
+ * scripted sample 146 s. No exemption: every region agrees, the rope gate derived from the lane and the cut — except the rows the
+ * certifier ACCEPTS by name: one implied by every AP way into its source (L0 r2c13 → r1c6, by the Swim), and one on the rules
+ * producer's own permissive bound (L89's Feather, entered only from above; `permissive`, read from the producer).
+ * Sphere 0.1 (2026-10-26, measured): native every region + the native sample 59 s, the scripted sample 256 s.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
+import { playthroughPermissiveLocations } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
 const RULES = JSON.parse(readFileSync(
@@ -30,7 +37,8 @@ const RULES = JSON.parse(readFileSync(
 const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
     'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
-    'level_3__r0c4', 'level_8', 'level_94__r3c4'];
+    'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2'];
+const PERMISSIVE = playthroughPermissiveLocations();
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
 const withExitRule = (from, to, rule) => {
@@ -44,14 +52,18 @@ const withExitRule = (from, to, rule) => {
 describe('seedling_playthrough_maze — every region certified against the atlas at every subset', () => {
     let sampleLines;
     it('native engine, every region', () => {
-        const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS });
+        const { problems, lines, accepted } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
         expect(problems).toEqual([]);
         expect(lines.length).toBeGreaterThan(0);
-        sampleLines = certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: SAMPLE, atlas: ATLAS }).lines;
+        expect(accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
+            'level_0__r2c13 → level_0__r1c6 | Progressive Swim',
+            'level_89__r9c6 @ Level 089 - Feather (from level_89__r11c12) | the rules producer leaves level_89/Level 089 - Feather uncharged (permissiveBindings)',
+        ]);
+        sampleLines = certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE }).lines;
     }, 300_000);
     it('scripted tile definition on the sample — and it agrees with the native one', () => {
         for (const r of SAMPLE) expect(Object.keys(RULES.preset_sidecars['1'])).toContain(r);
-        const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: false, regions: SAMPLE, atlas: ATLAS });
+        const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: false, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE });
         expect(problems).toEqual([]);
         expect(lines).toEqual(sampleLines);
     }, 600_000);

@@ -178,11 +178,15 @@ export function atlasLandings(atlas, rules) {
 /**
  * @param {object} rules a compiled rules document (player '1')
  * @param {object} helpers the tile helpers (`maze_tiles.helpers.json`)
- * @param {{native: boolean, regions?: string[], atlas: object}} opts `regions` = the AP regions to certify (default:
- *   all); a level world's pairs are certified when any of its members is in the sample. `atlas` (required) = the region
- *   atlas the document was compiled from — where the game lands each crossing
+ * @param {{native: boolean, regions?: string[], atlas: object, permissive?: string[]}} opts `regions` = the AP regions to
+ *   certify (default: all); a level world's pairs are certified when any of its members is in the sample. `atlas`
+ *   (required) = the region atlas the document was compiled from — where the game lands each crossing. `permissive` =
+ *   the rules producer's OWN list of locations it leaves uncharged (`"<atlas region>/<location>"`, its
+ *   `permissiveBindings`; pass it from the producer, never a copy): a row on one of those where the maze world is
+ *   STRICTER is accepted by that name (⚖ 2026-10-26, session tile-primitives-sphere-order-2 — L89's Feather, entered
+ *   only from above, which the rules leave at Swim); a LOOSER row there is still a problem
  */
-export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas } = {}) {
+export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas, permissive = [] } = {}) {
     if (!atlas) throw new Error('certifier: the atlas is required — a crossing is judged by the cell the game lands it on');
     const landings = atlasLandings(atlas, rules);
     const REGIONS = rules.regions['1'];
@@ -245,7 +249,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
      * Compare one row at every subset of `axis`: the first mismatch that is not stricter-and-implied (by entry into
      * `source`) is its problem; a row with none is accepted by every item that excused a mismatch.
      */
-    const compareRow = (label, source, items, levels, derivedAt, atlasAt, notHere = null, why = '') => {
+    const compareRow = (label, source, items, levels, derivedAt, atlasAt, notHere = null, why = '', stricterOk = null) => {
         const by = new Set();
         const axis = latticeAxis(items, levels);
         for (const inv of allPoints(axis)) {
@@ -254,11 +258,18 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
             const atlas = atlasAt(inv);
             if (derived === atlas) continue;
             const held = new Set(inv);
-            const excuse = derived ? null : items.find((i) => !held.has(i) && needs(source, i));
+            const excuse = derived ? null : items.find((i) => !held.has(i) && needs(source, i)) ?? stricterOk;
             if (!excuse) { problems.push(`${label} holding [${formatPoint(inv)}]: derived ${derived}, atlas ${atlas}${why}`); return; }
             by.add(excuse);
         }
         for (const item of by) accepted.push({ label, source, by: item });
+        if (stricterOk !== null && by.has(stricterOk)) lines.push(`accepted: ${label} — ${stricterOk}`);
+    };
+    // ⛓ The rules producer's permissive locations (see `permissive` above), by AP region name → the reason a STRICTER row is accepted.
+    const permissiveSet = new Set(permissive);
+    const permissiveWhy = (name, location) => {
+        const key = `${carrierOf(SIDECARS, name).playable_payload.atlas_region}/${location}`;
+        return permissiveSet.has(key) ? `the rules producer leaves ${key} uncharged (permissiveBindings)` : null;
     };
     const worldOf = (name) => deserializeMazeWorld(carrierOf(SIDECARS, name).playable_payload);
     /**
@@ -320,10 +331,10 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
         blocked.levels = mergeLevels(...exits.map((e) => arrivalOf(e)?.levels ?? new Map()));
         return blocked;
     };
-    const agree = (label, source, atlas, minimal, out, { notHere = null, why = '' } = {}) => {
+    const agree = (label, source, atlas, minimal, out, { notHere = null, why = '', stricterOk = null } = {}) => {
         const derived = ruleFromMinimalSets(minimal);
         compareRow(label, source, [...new Set([...out.items, ...ruleItems(atlas)])].sort(), mergeLevels(out.levels, ruleLevels(atlas)),
-            (inv) => holds(derived, inv), (inv) => holds(atlas, inv), notHere, `${explain(atlas)}${why}`);
+            (inv) => holds(derived, inv), (inv) => holds(atlas, inv), notHere, `${explain(atlas)}${why}`, stricterOk);
     };
     /** The atlas's reach over the AP exits BETWEEN `members` (one level world's sub-regions), per inventory. */
     const inWorldClosure = (members) => {
@@ -412,15 +423,17 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
                 native, arrivalBlocked: arrivalBlockedFrom(name), cache: cacheOf(world, via), arriveFrom: via,
             });
             const entered = enteredAt(world, via);
-            // The inbound member's own arrival in an armed lane is no state either (its own rows report it).
+            // The root's own arrival in an armed lane is no AP state either: such an inventory is skipped HERE because the
+            // root's own rows (priced from its fresh arrival, `notHere` there) already report every AP way in that lands
+            // it in the lane — the skip drops nothing that is not reported once.
             const notHere = entered.trapLanes ? (inv) => standsInArmedLane(entered, createState(entered), inventoryOf(inv)) : null;
             // An EVENT location is asked without the event in hand: holding it, it was collected already (no question).
-            const row = (label, atlas, minimal, event = null) => {
+            const row = (label, atlas, minimal, event = null, stricterOk = null) => {
                 const derived = ruleFromMinimalSets(minimal);
                 const { asked, levels } = rowItems(out, atlas);
                 const skip = event === null ? notHere : (inv) => inv.includes(event) || Boolean(notHere?.(inv));
                 compareRow(label, via, asked, levels, (inv) => holds(derived, inv),
-                    (inv) => closure.reaches(via, name, inv) && holds(atlas, inv), skip, explain(atlas));
+                    (inv) => closure.reaches(via, name, inv) && holds(atlas, inv), skip, explain(atlas), stricterOk);
             };
             const exitTo = new Map(REGIONS[name].exits.map((e) => [e.name, e.connected_region]));
             const byTarget = new Map();
@@ -438,7 +451,8 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
                 }
                 const loc = (REGIONS[name].locations ?? []).find((l) => l.name === t.locationName);
                 if (!loc) { problems.push(`${label}: no AP location of that name`); continue; }
-                row(label, loc.access_rule ?? { rule: 'True_' }, t.minimal, loc.event ? (loc.item?.name ?? loc.name) : null);
+                row(label, loc.access_rule ?? { rule: 'True_' }, t.minimal, loc.event ? (loc.item?.name ?? loc.name) : null,
+                    permissiveWhy(name, loc.name));
                 priced.add(loc.name);
                 lines.push(`${name}@${t.locationName}<${via}=${JSON.stringify(t.minimal)}`);
             }
@@ -516,7 +530,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
             // Two events on ONE cell (L12's magical lock under its boss lock): the world opens it only with both items.
             const stacked = t.adjacent ? (entered.obstacleLib[entered.obstacles.get(t.cells[0])]?.events ?? []) : [];
             const why = stacked.length > 1 ? ` — its cell carries ${stacked.length} events, which the world opens only together` : '';
-            agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out, { why });
+            agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out, { why, stricterOk: permissiveWhy(name, loc.name) });
             lines.push(`${name}@${t.locationName}=${JSON.stringify(t.minimal)}`);
         }
         const inWorld = new Set(world.sharedWorld?.regions ?? []);
