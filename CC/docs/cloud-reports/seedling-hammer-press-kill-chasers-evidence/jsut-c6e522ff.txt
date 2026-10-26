@@ -1,0 +1,9 @@
+CI vitest @ c6e522ff — run 40274162546 in_progress (2026-10-26T05:25:48Z)
+  job "JavaScript Unit Tests (Vitest shard 1/3)"  completed success  325/8107
+  job "JavaScript Unit Tests (Vitest shard 2/3)"  completed success  325/7812
+  job "JavaScript Unit Tests (Vitest shard 3/3)"  completed failure  324/7133 (1 failed)
+  job "JavaScript Unit Tests (slow Vitest)"  completed success  24/269
+  suite: vitest (unfiltered)  974/23052   (23051 passed | 0 skipped | 1 failed)
+  slow battery                24/269   (269 passed | 0 failed)
+⛔ red member(s): "JavaScript Unit Tests (Vitest shard 3/3)" failure
+rc=1
