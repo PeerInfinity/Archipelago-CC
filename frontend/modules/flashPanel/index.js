@@ -6,6 +6,7 @@ import { dashOnlyWindowSchemaProps } from './seedlingDashOnlyWindowSettings.js';
 import { dashShapeSchemaProps } from './seedlingDashShapeSettings.js';
 import { graphicsSchemaProps } from './seedlingGraphicsSettings.js';
 import { gameSpeedSchemaProps } from './seedlingGameSpeedSettings.js';
+import { soundSchemaProps } from './seedlingSoundSettings.js';
 import { SOLVE_PROGRESS_INTERVAL_MS, SOLVE_PROGRESS_INTERVALS_MS } from '../seedlingDemo/solveProgressTap.js';
 import { SOLVE_DEMO_EVENT } from './seedlingSolveDemo.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -258,6 +259,8 @@ export function register(registrationApi) {
       ...graphicsSchemaProps(),
       // ⛓ GAME SPEED — the JS page's speed, 1x | 2x | 4x: presentation only, applied live (`seedlingGameSpeedSettings.js`).
       ...gameSpeedSchemaProps(),
+      // ⛓ SOUND EFFECTS — the JS page's sound on/off and volume (applied live), and its ▶ Start mode (`seedlingSoundSettings.js`).
+      ...soundSchemaProps(),
     },
   });
 

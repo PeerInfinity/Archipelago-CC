@@ -1,0 +1,5 @@
+4 L0 Player.as:797 "Sword" -1 1.000 0.000
+6 L0 Player.as:790 "Sword" -1 1.000 0.000
+12 L0 Player.as:790 "Sword" -1 1.000 0.000
+18 L0 Player.as:790 "Sword" -1 1.000 0.000
+24 L0 Player.as:797 "Sword" -1 1.000 0.000

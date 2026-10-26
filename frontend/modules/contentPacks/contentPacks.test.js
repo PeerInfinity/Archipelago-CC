@@ -8,7 +8,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
-    ContentPackError, KEY_PATTERN, loadPackStack, mergeKeyed, packsBaseUrl, parsePack, parseRegistry,
+    ContentPackError, KEY_PATTERN, KNOWN_LAYERS, RESERVED_LAYERS, loadPackStack, mergeKeyed, packsBaseUrl, parsePack,
+    parseRegistry,
 } from './contentPacks.js';
 
 const PACKS = join(dirname(fileURLToPath(import.meta.url)), '../../packs');
@@ -109,5 +110,38 @@ describe('packsBaseUrl', () => {
     });
     it('bundled (`/dist/`): the page\'s packs/', () => {
         expect(packsBaseUrl('http://h/site/dist/bundle.js', 'http://h/site/index.html?bundled=true')).toBe('http://h/site/packs/');
+    });
+});
+
+// ⛓ SOUND EFFECTS (⚖ the user 2026-10-26): the `sfx` layer, the reserved `music` one, the `sfx` stacks.
+describe('the sfx layer and the reserved music layer', () => {
+    const minimal = (layers) => ({ schema_version: 1, id: 'p', title: 't', licence: 'CC0', layers });
+
+    it('KNOWN_LAYERS carries sfx; music is RESERVED, not unknown', () => {
+        expect(KNOWN_LAYERS).toEqual(['art', 'sfx']);
+        expect(RESERVED_LAYERS).toEqual(['music']);
+        expect(parsePack(minimal({ sfx: 'sfx/manifest.json' }), 'p').layers.sfx).toBe('sfx/manifest.json');
+    });
+
+    it('⛔ a pack declaring `music` is refused by name, saying it is reserved (not half-loaded)', () => {
+        expect(() => parsePack(minimal({ art: 'a.json', music: 'm.json' }), 'p'))
+            .toThrow(/content pack "p": layer "music" is reserved for a library that is not built yet/);
+    });
+
+    it('the registry\'s `sfx` stacks parse like `graphics`, and refuse an unlisted pack by name', async () => {
+        const reg = parseRegistry(await fsJson(new URL('packs.json', BASE).href));
+        expect(reg.sfxStacks.seedling).toEqual(['seedling']);
+        expect(() => parseRegistry({ schema_version: 1, packs: [{ id: 'seedling' }], sfx: { x: ['ghost'] } }))
+            .toThrow(/sfx stack "x" names "ghost"/);
+        expect(parseRegistry({ schema_version: 1, packs: [{ id: 'a' }] }).sfxStacks).toEqual({});
+    });
+
+    it('`only` reads just the named layers (a graphics stack never fetches the sound manifest)', async () => {
+        const read = [];
+        const stack = await loadPackStack(['seedling'], { base: BASE, readJson: async (u) => { read.push(u); return fsJson(u); }, only: ['art'] });
+        expect(Object.keys(stack[0].layers)).toEqual(['art']);
+        expect(read.some((u) => u.includes('/sfx/'))).toBe(false);
+        const all = await loadPackStack(['seedling'], { base: BASE, readJson: fsJson });
+        expect(Object.keys(all[0].layers)).toEqual(['art', 'sfx']);
     });
 });
