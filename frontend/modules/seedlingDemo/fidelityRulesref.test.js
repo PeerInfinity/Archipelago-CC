@@ -102,7 +102,7 @@ describe('RULESREF D2/D3 — L66: a spear bridge, then a door half a tile off th
     });
     it('leg 579\'s arrival (64,80), both ON: the doorway first — the bridge on the 16 px frontier is not on the way', () => {
         const staging = stagingOf(DOOR, { level: 66, x: 64, y: 80 });
-        expect(refalOrNull(() => solveDoor({}, staging))).toMatch(/goal tile \(5,4\).* pixelmask building8/);
+        expect(refalOrNull(() => solveDoor({ spearBridgeVerb: false, fineFrontierFlood: false }, staging))).toMatch(/goal tile \(5,4\).* pixelmask building8/);
         const out = solveDoor({ spearBridgeVerb: true, fineFrontierFlood: true }, staging);
         expect(out.perTick.length).toBe(87);
         expect(out.records.some((r) => r.strategy === 'bridge')).toBe(false);
