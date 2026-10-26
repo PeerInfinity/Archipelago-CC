@@ -2,7 +2,7 @@
 
 Each region of a generated world is drawn by a *substrate* — a kind of game that knows how to make a room, put items in it, and gate its exits. One world can mix them: the logic underneath does not care whether a key sits at the end of a maze, a text adventure's room or a platform.
 
-Seedling rooms play in the **wasm** build of the original game (the default). The **Settings** panel's Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime, where the Playback Bot already walks them; this tutorial stays on wasm.
+Seedling rooms play in the **wasm** build of the original game by default. The **Settings** panel's Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime; this tutorial works in either, and uses whichever you have set.
 
 ## Fill the scenario pool
 
@@ -29,8 +29,8 @@ Hover a substrate's name to see its card: what it can hold and how its exits are
 2. The **Bounce Demo** tab plays bounce zones: a platformer whose jumps are the progression.
 3. The **Noiz2sa** tab plays Noiz2sa regions: a bullet-hell shooter, where each region is a run of the game's scenes — choose an exit, then survive the run to leave by it.
 4. The **Flash Panel** plays the generated Seedling room in the original game.
-5. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game* (the first time, the browser fetches the game's runtime).
-6. Press **▶ Start** in the game. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
+5. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
+6. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
 
 Mazes play in the **Maze Room**, as before. When the player walks into a region, the app brings its panel forward.
 

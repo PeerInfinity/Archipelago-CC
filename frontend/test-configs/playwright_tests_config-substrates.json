@@ -2055,6 +2055,12 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "ONE FADE PER CROSSING (2026-10-26). flashPanel.runtime = js + the seedling graphics stack on seedling_atlas: the Playback Bot walks four real crossings; a sampler records the drawn black cover per animation frame. Each crossing = ONE monotone ramp of 20 held dead frames at 1 - 0.05k, with the host's arrival teleport landing inside it (it faded in twice before). seedling-js batch."
+        },
+        {
+            "id": "tutorial-walk-seedling-bot-js",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL IN JS MODE (2026-10-26, user: 'Work in both'). The seedling-bot tutorial's walk with flashPanel.runtime = js for the row's session (put back after): the Start step completes with no Start to press, the bot takes its first checks on the JS page. Manual batch tutorials-seedling."
         }
     ]
 }

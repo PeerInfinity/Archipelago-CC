@@ -254,29 +254,38 @@ export function tickParam(id, key, label) {
 const FLASH = Object.freeze({ panel: 'flashPanel' });
 const flashStatus = { ...FLASH, selector: '.flash-panel-status' };
 const WASM_START_PROMPT = 'click ▶ Start in the game';
+/**
+ * The panel's statuses once its game page is up (`flashPanelUI`): the wasm page waits on its ▶ Start; the JS page
+ * reads *JS runtime loaded* and goes straight on to *configured*.
+ */
+const PAGE_UP = Object.freeze([WASM_START_PROMPT, 'JS runtime loaded', 'configured', 'ready']);
 
 /**
- * Start the Seedling wasm game in the Flash Panel. The page waits for a click on its own ▶ Start (a browser lets
+ * Start the Seedling game in the Flash Panel, in whichever runtime the person has set (⚖ the user, 2026-10-26:
+ * "Work in both"; the setting is never changed). The wasm page waits for a click on its own ▶ Start (a browser lets
  * sound and graphics start only from one), and until then it has not loaded the world's rooms, so the Playback Bot
  * has nothing to walk ("no name → cell map for the generated rooms" — measured, tutorial-bugs 2026-10-10). Two
- * steps: wait for the page (the first load fetches the runtime), then press it.
+ * steps: wait for the page (the first load fetches the runtime), then press ▶ Start IF THE GAME SHOWS ONE. The
+ * steps key on the page's status and its button, never on the runtime: the JS page has no ▶ Start today (its
+ * Start step completes on its own), and if it gains one (⚖ planning-11: an audio-unlock gesture), it is pressed.
  */
 export function startSeedlingGame(id) {
     return [
         {
             step: {
                 id: `${id}-page`,
-                text: 'Open the **Flash Panel** tab and wait for the game page: the panel\'s status reads *click ▶ Start in the game* (the first time, the browser fetches the game\'s runtime).',
+                text: 'Open the **Flash Panel** tab and wait for the game page: the panel\'s status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game\'s runtime).',
                 actions: [{ activate: FLASH }],
-                done: (ctx) => ctx.text(flashStatus) === WASM_START_PROMPT,
+                done: (ctx) => PAGE_UP.includes(ctx.text(flashStatus)),
                 doneTimeoutMs: 120000,
             },
         },
         {
             step: {
                 id,
-                text: 'Press **▶ Start** in the game. The panel\'s status moves on to *configured*, and it loads the world\'s Seedling rooms into the game.',
-                actions: [{ click: { ...FLASH, frame: 'iframe', selector: '#btn-start' } }],
+                text: 'Press **▶ Start** in the game, if the game shows one. The panel\'s status moves on to *configured*, and it loads the world\'s Seedling rooms into the game.',
+                // `optional`: a page with no ▶ Start (the JS runtime's) skips the click
+                actions: [{ click: { ...FLASH, frame: 'iframe', selector: '#btn-start', optional: true } }],
                 done: (ctx) => ['configured', 'ready'].includes(ctx.text(flashStatus)),
                 doneTimeoutMs: 60000,
             },
@@ -284,4 +293,4 @@ export function startSeedlingGame(id) {
     ];
 }
 
-export const SEEDLING_RUNTIME_NOTE = 'Seedling rooms play in the **wasm** build of the original game (the default). The **Settings** panel\'s Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime, where the Playback Bot already walks them; this tutorial stays on wasm.';
+export const SEEDLING_RUNTIME_NOTE = 'Seedling rooms play in the **wasm** build of the original game by default. The **Settings** panel\'s Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime; this tutorial works in either, and uses whichever you have set.';

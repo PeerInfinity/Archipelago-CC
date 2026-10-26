@@ -2,7 +2,7 @@
 
 The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a stretch of Noiz2sa and *Idle Loops* — another idle game, which only runs in loop mode — in one world, every action spending the same mana.
 
-Seedling rooms play in the **wasm** build of the original game (the default). The **Settings** panel's Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime, where the Playback Bot already walks them; this tutorial stays on wasm.
+Seedling rooms play in the **wasm** build of the original game by default. The **Settings** panel's Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime; this tutorial works in either, and uses whichever you have set.
 
 ## Fill the pool, loop mode on
 
@@ -27,8 +27,8 @@ Seedling rooms play in the **wasm** build of the original game (the default). Th
 
 1. Open the **Loops** tab: loop mode is on (**Exit Loop Mode** in its controls), and every region's block is there to queue.
 2. The **Idle Loops** tab plays its region: the whole town of the idle game, spending the shared mana.
-3. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game* (the first time, the browser fetches the game's runtime).
-4. Press **▶ Start** in the game. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
+3. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
+4. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
 5. Open the **Playback Bot** tab. It says "Sphere log loaded" — it has the world's solution path, sphere by sphere.
 6. Press **▶** (Play), then open the **Loops** tab to watch the bot queue and run each region, collect each sphere's items and finish.
 
