@@ -409,7 +409,7 @@ The cross-layer rule-node kind census. See **[rule-kind-registry.md](../docs/jso
   bash scripts/release/sync-to-stable.sh /path/to/stable/Archipelago
   ```
 
-- **`release/apply-post-preset-merge.sh`** - Apply post-merge preset fix-ups after a preset regen: snapshot the canonical `preset_files.live.json` and restore the preserved dev/demo presets so the dev index = canonical + preserved (see the release checklist Phase 2.5)
+- **`release/apply-post-preset-merge.sh`** - Apply post-merge preset fix-ups after a preset regen: snapshot the canonical `preset_files.live.json` and restore the preserved dev/demo presets so the dev index = canonical + preserved (see the release checklist Phase 2.5). A list line `<id> public` (`release/preserved-dev-presets.txt`) marks a dev-built preset the deployed site must list too (one a tutorial tells a person to load): the script keeps its dev entry in `preset_files.live.json`, so live = canonical + public. `release/applyPostPresetMerge.test.js` runs it in a throwaway repo (idempotence included); `frontend/modules/tutorials/tutorialPresetsLive.test.js` fails when a tutorial loads a preset the live index lacks
   ```bash
   scripts/release/apply-post-preset-merge.sh --dry-run   # preview
   scripts/release/apply-post-preset-merge.sh             # apply

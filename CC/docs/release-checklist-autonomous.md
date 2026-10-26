@@ -383,6 +383,10 @@ It:
 2. restores the preset dirs listed in
    `scripts/release/preserved-dev-presets.txt` from the ref and merges their
    `preset_files.json` entries back, so the dev index = canonical + preserved.
+3. keeps the preserved presets marked `<id> public` in the list in
+   `preset_files.live.json` too (their dev entry, unchanged): dev-built presets
+   a person must find on the deployed site, e.g. `seedling_playthrough`, which
+   a tutorial tells them to load. Live = canonical + public.
 
 The preserved set is every preset dir on `main` that the workflow does not
 produce: the dev/demo/test presets (`jta_*_test`, `omsi_*_test`,
@@ -412,7 +416,7 @@ python3 - <<'PY'
 import json
 live=json.load(open('frontend/presets/preset_files.live.json'))
 dev =json.load(open('frontend/presets/preset_files.json'))
-print('dev - live =', sorted(set(dev)-set(live)))   # expect the preserved ids only
+print('dev - live =', sorted(set(dev)-set(live)))   # expect the preserved ids that are NOT marked public
 print('live - dev =', sorted(set(live)-set(dev)) or '(none)')
 PY
 ```
