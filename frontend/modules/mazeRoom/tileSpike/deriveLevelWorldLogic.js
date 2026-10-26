@@ -20,7 +20,7 @@ import {
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
     createState, step, getExitAt, worldInputs, sharedWorldOwnerAt, standsInArmedLane, strikeTarget, USE_PREFIX, TURN_PREFIX,
-    actionUsable,
+    actionUsable, blockWithinReach,
 } from '../mazeRoomEngine.js';
 
 /**
@@ -49,9 +49,12 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
         if (s.walkedOn) continue;
         const from = reachKey(s);
         for (const macro of inputs) {
-            // A use that strikes nothing only turns the player — the same facing-free state: skip it.
-            if (macro.length === 2 && strikeTarget(w, { ...s, facing: macro[0].slice(TURN_PREFIX.length) },
-                macro[1].slice(USE_PREFIX.length)) === null) continue;
+            // A use that strikes nothing (and moves no block) only turns the player — the same facing-free state: skip it.
+            if (macro.length === 2) {
+                const faced = { ...s, facing: macro[0].slice(TURN_PREFIX.length) };
+                const id = macro[1].slice(USE_PREFIX.length);
+                if (strikeTarget(w, faced, id) === null && !blockWithinReach(w, faced, id)) continue;
+            }
             let next = s;
             for (const input of macro) {
                 next = step(w, next, input);
@@ -167,14 +170,19 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
  * armed arrow lane (⚖ user 2026-10-21: L16 from L17 with the trap armed must refuse; never tank a hit).
  * The search over this world cannot see the target's lanes, so the certifier answers from the target's.
  *
+ * ⛓ `arriveFrom` (session tile-primitives-sphere-order-2, ⚖ "Price from inbound"): search from ANOTHER member's
+ * arrival while pricing `region`'s targets — an internal-only member is entered only by walking in from one, so the
+ * search from that member's arrival covers every state the walk can enter it in (blocks, cuts, facing).
+ *
  * @returns {{ items: string[], targets: Array<{id, kind, x, y, exitName?, locationName?, minimal: string[][],
  *   witnesses: Array<{inventory, plan}>, unreachable: boolean}>, searched: number, states: number }}
  */
 export function deriveEntryLogic(world, region, helpers, {
-    tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, arrivalBlocked = null, cache = null,
+    tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, arrivalBlocked = null, cache = null, arriveFrom = null,
 } = {}) {
     const shared = Boolean(world.sharedWorld);
-    const entered = shared ? enteredAt(world, region) : world;
+    if (arriveFrom !== null && !shared) throw new Error(`entry logic: arriveFrom "${arriveFrom}" needs a shared level world`);
+    const entered = shared ? enteredAt(world, arriveFrom ?? region) : world;
     const items = [...new Set([...regionItems(world), ...(arrivalBlocked?.items ?? [])])].sort();
     if (items.length > maxItems) {
         throw new Error(`entry logic: ${items.length} items exceed the lattice cap ${maxItems}: ${items.join(', ')}`);
