@@ -17,13 +17,13 @@
  * does not list, and when a row's status disagrees with the skins.
  */
 export const SKIN_CENSUS = Object.freeze([
-    ['torch', 'Torch', 'remaining', "the body (its light is G5's)"],
-    ['orb', 'Orb', 'remaining', "the body (its light is G5's)"],
-    ['shadow', 'Shadow', 'remaining', "the body (its light is G5's)"],
+    ['torch', 'Torch', 'drawn'],
+    ['orb', 'Orb', 'drawn'],
+    ['shadow', 'Shadow', 'none', 'no body: G5 draws it whole (nightBmp / its main-buffer rects)'],
     ['button', 'Button', 'drawn'],
-    ['lightpole', 'LightPole', 'remaining', "the body (its light is G5's)"],
+    ['lightpole', 'LightPole', 'drawn'],
     ['watcher', 'Watcher', 'drawn'],
-    ['lightray', 'LightRay', 'remaining', "the body (its light is G5's)"],
+    ['lightray', 'LightRay', 'none', 'no body: G5 draws it whole (nightBmp / its main-buffer rects)'],
     ['buttonroom', 'ButtonRoom', 'drawn'],
     ['fallrock', 'FallRock', 'drawn'],
     ['arrowtrap', 'ArrowTrap', 'drawn'],

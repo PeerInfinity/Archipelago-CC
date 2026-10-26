@@ -758,6 +758,21 @@
       "w": 32,
       "h": 32
     },
+    "Torch": {
+      "file": "sheets/Torch.png",
+      "w": 12,
+      "h": 10
+    },
+    "Orb": {
+      "file": "sheets/Orb.png",
+      "w": 40,
+      "h": 8
+    },
+    "LightPole": {
+      "file": "sheets/LightPole.png",
+      "w": 16,
+      "h": 16
+    },
     "Explosion": {
       "file": "sheets/Explosion.png",
       "w": 1024,
@@ -3704,6 +3719,39 @@
         16
       ],
       "as3": "Scenery/FallRockLarge.as:16-17 Image; :34-36 super(_x + 16, _y + 16), centerOO; :41 parked at y = -32"
+    },
+    "seedling:scenery/torch": {
+      "sheet": "Torch",
+      "fw": 4,
+      "fh": 10,
+      "frames": 3,
+      "origin": [
+        2,
+        5
+      ],
+      "as3": "Scenery/Torch.as:13-14 Spritemap(4, 10); :19-20 super(_x + 8, _y + 8), centerOO; :27-30 frame Game.worldFrame(frameCount)"
+    },
+    "seedling:scenery/orb": {
+      "sheet": "Orb",
+      "fw": 8,
+      "fh": 8,
+      "frames": 5,
+      "origin": [
+        4,
+        4
+      ],
+      "as3": "Scenery/Orb.as:13-14 Spritemap(8, 8); :36-37 centerOO, color = _c; :49-58 the float; :61-64 frame Game.worldFrame(frameCount, 4)"
+    },
+    "seedling:scenery/lightpole": {
+      "sheet": "LightPole",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Scenery/LightPole.as:15-16 Image; :33-35 super(_x + 8, _y + 8), centerOO; :59-75 the bob, and onto nightBmp while activate"
     },
     "seedling:fx/explosion": {
       "sheet": "Explosion",

@@ -144,7 +144,9 @@
  * `__seedlingJsGraphics.solids` reads them back. And the placed NPCs
  * (`seedlingNpcSkin.js`: each class's stand / talk frames, the facing, the talk
  * prompt, the Oracle's wake, the Watcher), `__seedlingJsGraphics.npcs`; and the
- * traps and falling rocks (`seedlingTrapSkin.js`), `__seedlingJsGraphics.traps`.
+ * traps and falling rocks (`seedlingTrapSkin.js`), `__seedlingJsGraphics.traps`;
+ * and the torches', orbs' and light poles' bodies (`seedlingLampSkin.js`; G5
+ * draws their lights), `__seedlingJsGraphics.lamps`.
  *
  * ⛓ KILLLOCK HOOK —`?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
@@ -178,6 +180,7 @@ import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from '.
 import { SOLIDS_OBJECT_TAGS, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
 import { NPC_TAGS, npcOps, npcSkinView, stepNpcSkin } from './seedlingNpcSkin.js';
 import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
+import { lampOps, lampSkinView } from './seedlingLampSkin.js';
 import { EFFECT_RULES } from './seedlingEffectSkin.js';
 import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
@@ -284,6 +287,8 @@ export function mountJsRuntimePage(win = window) {
         npcSkin: null, npcs: null,
         // ⛓ G8 — the traps' and falling rocks' pictures and the last paint's ops.
         trapSkin: null, traps: null,
+        // ⛓ G8 — the last paint's lamp-body ops (stateless: no per-tick step).
+        lamps: null,
         // ⛓ G4 — the effects' and overlays' state (one step per game tick, one hold per owed dead frame), the last paint's.
         effectSkin: null, effects: null, held: 0,
         // ⛓ G1.5 — the static tile layer (room mode; `?tileLayer=off` = none) and the last paint's inputs.
@@ -312,7 +317,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, npcSkin: null, npcs: null, trapSkin: null, traps: null, effectSkin: null, effects: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, npcSkin: null, npcs: null, trapSkin: null, traps: null, lamps: null, effectSkin: null, effects: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -365,6 +370,8 @@ export function mountJsRuntimePage(win = window) {
         get npcs() { return graphics.npcs ? { ...graphics.npcs, ops: graphics.npcs.ops.map((o) => ({ ...o })) } : null; },
         /** ⛓ G8 — the last paint's traps and falling rocks. */
         get traps() { return graphics.traps ? { ...graphics.traps, ops: graphics.traps.ops.map((o) => ({ ...o })) } : null; },
+        /** ⛓ G8 — the last paint's torches, orbs and light poles. */
+        get lamps() { return graphics.lamps ? { ...graphics.lamps, ops: graphics.lamps.ops.map((o) => ({ ...o })) } : null; },
         get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
         /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
         get held() { return graphics.held; },
@@ -599,6 +606,12 @@ export function mountJsRuntimePage(win = window) {
                 fallRocks: tv.fallRocks.length,
                 ops: trapSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, pack: o.key ? art.packOf(o.key) : null })) }
             : null;
+        const lv = art && runtime.run ? lampSkinView(runtime.run, { record: (runtime.mounted ?? runtime.vanilla)?.records?.get(runtime.run.level) ?? null }) : null;
+        const lampSprites = lv ? lampOps(lv, art) : [];
+        graphics.lamps = lv
+            ? { torches: lv.torches.length, orbs: lv.orbs.length, poles: lv.poles.length,
+                ops: lampSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
         const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
         // ⛓ G7 — a run the effects have not met (booted between two clock slots: the game's own first frame) is adopted
         // before its first paint, so that paint shows the cover its fade starts from; before G7 it showed the bare room
@@ -613,7 +626,7 @@ export function mountJsRuntimePage(win = window) {
         const lit = art && graphics.lights === 'on' ? nightView() : null;
         const modelCam = lit ? cameraView('follow', world, state, runtime.run) : null;
         const litMain = lit ? nightMainOps(lit, { cam: modelCam }) : [];
-        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...solidSprites, ...npcSprites, ...trapSprites, ...effectSprites, ...litMain];
+        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...solidSprites, ...npcSprites, ...trapSprites, ...lampSprites, ...effectSprites, ...litMain];
         const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
         graphics.enemies = ev
             ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,

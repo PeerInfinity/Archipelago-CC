@@ -176,6 +176,13 @@ export const ENEMY_ART = Object.freeze([
         as3: 'Scenery/FallRock.as:16-17 Image; :32-34 super(_x + 8, _y + 8), centerOO; :37 parked at y = -16' },
     { pack: 'seedling', key: 'seedling:scenery/fallrocklarge', file: 'FallRockLarge.png', origin: [16, 16],
         as3: 'Scenery/FallRockLarge.as:16-17 Image; :34-36 super(_x + 16, _y + 16), centerOO; :41 parked at y = -32' },
+    // ── G8: the lamps' bodies (`seedlingLampSkin.js`; G5 draws their lights). ──
+    { pack: 'seedling', key: 'seedling:scenery/torch', file: 'Torch.png', fw: 4, fh: 10, origin: [2, 5],
+        as3: 'Scenery/Torch.as:13-14 Spritemap(4, 10); :19-20 super(_x + 8, _y + 8), centerOO; :27-30 frame Game.worldFrame(frameCount)' },
+    { pack: 'seedling', key: 'seedling:scenery/orb', file: 'Orb.png', fw: 8, fh: 8, origin: [4, 4],
+        as3: 'Scenery/Orb.as:13-14 Spritemap(8, 8); :36-37 centerOO, color = _c; :49-58 the float; :61-64 frame Game.worldFrame(frameCount, 4)' },
+    { pack: 'seedling', key: 'seedling:scenery/lightpole', file: 'LightPole.png', origin: [8, 8],
+        as3: 'Scenery/LightPole.as:15-16 Image; :33-35 super(_x + 8, _y + 8), centerOO; :59-75 the bob, and onto nightBmp while activate' },
     // ── G4: the effects and the HUD (`seedlingEffectSkin.js`). The droplet and the heart are frame-only rows (the
     //    droplet's frame is a Number the class steps itself; the heart's is `int(i > healthc)`). ──
     { pack: 'seedling', key: 'seedling:fx/explosion', file: 'Explosion.png', fw: 128, fh: 128, origin: [64, 64],
