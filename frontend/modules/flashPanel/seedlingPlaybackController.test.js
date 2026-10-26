@@ -592,15 +592,15 @@ describe('⛓ WG — the GENERATED instance walks under the WASM runtime (the mo
  */
 describe('⛓ WAVE-6 CONSUMER — an arrival inside a solid reaches the bot with its way out', () => {
     // a level-2 region whose stairs@48,16 lands in level 0 (the playthrough's `out_stairsup_48_16`)
-    const L2 = { level: 2, exits: [{ exit_id: 'out_stairsup_48_16', exitName: 'level_2 -> level_0__r8c0',
-        targetRegion: 'level_0__r8c0', target_level: 0 }] };
+    const L2 = { level: 2, exits: [{ exit_id: 'out_stairsup_48_16', exitName: 'level_2 -> level_0__r7c6',
+        targetRegion: 'level_0__r7c6', target_level: 0 }] };
     const MAP = { ...ATLAS_MAP, regions: new Map([['region_2_2', HOUSE], ['level_2', L2]]) };
     const OBSTACLE = { kind: 'arrival-inside-solid', id: 'breakablerock@288,176', solids: ['breakablerock@288,176'],
         at: { level: 0, x: 296, y: 184 }, wayOut: [{ kind: 'restart', via: 'seedlingStartSpawn', why: 'w' },
             { kind: 'another-route', level: 0, arrivals: [{ from: 2, door: 'stairs@48,16', at: { x: 264, y: 264 } },
                 { from: 77, door: 'teleporter@1,1', at: { x: 1, y: 1 } }] }] };
     const ESCAPE = { kind: 'arrival-inside-solid', solids: ['breakablerock@288,176'], at: { level: 0, x: 296, y: 184 },
-        restart: true, arrivals: [{ region: 'level_2', exit: 'level_2 -> level_0__r8c0', landing: 'level_0__r8c0', from: 2,
+        restart: true, arrivals: [{ region: 'level_2', exit: 'level_2 -> level_0__r7c6', landing: 'level_0__r7c6', from: 2,
             door: 'stairs@48,16' }], unmapped: ['L77 teleporter@1,1'] };
     const flush = () => new Promise((r) => { setTimeout(r, 0); });
 

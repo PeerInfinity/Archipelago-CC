@@ -18,7 +18,7 @@
  *      first refusal (the auto-detected "bidirectional", a one-way door routed backwards) is gone from the data.
  *   D  WASM, ROUTED ON THE RULES' DIRECTED GRAPH (the rules' own declaration, as V; the probe-side override this
  *      row once carried is redundant and dropped), then: (1) the sphere queue's first goal, the Sword: the bot's
- *      own PathFinder routes it in 9 hops opening with r8c0's OWN stairs (`level_0__r8c0 -> level_2`) — since
+ *      own PathFinder routes it in 9 hops opening with r7c6's OWN stairs (`level_0__r7c6 -> level_2`) — since
  *      the rules' logical-links recompile (`ce1cba867a`) there is no logical link on it, and none is credited;
  *      (2) GREEDY door-only walks: the bot's manual `walkToLocation` to the queue location
  *      NEAREST through doors only (derived here from the rules: BFS over the `True_` sidecar-door exits), then
@@ -310,9 +310,9 @@ async function main() {
                 return (getActivePanel()?.getBot?.()._queue ?? []).map((h) => h.locationName);
             });
             out('D queue first step', { head: booted.head, route: booted.route });
-            // ⛓ rules `ce1cba867a`: L0's stairs bind to r8c0 and the model-sealed `level_0__r8c0 -> level_0__r1c6` is gone,
+            // ⛓ rules `ce1cba867a`: L0's stairs bind to r7c6 and the model-sealed `level_0__r7c6 -> level_0__r1c6` is gone,
             // so the Sword's route (§5.17's logical-link row until then) is doors only.
-            check('D: the sphere queue\'s first goal (level 10) routes in 9 hops opening with r8c0\'s OWN stairs — no logical sub-region link on it',
+            check('D: the sphere queue\'s first goal (level 10) routes in 9 hops opening with r7c6\'s OWN stairs — no logical sub-region link on it',
                 /^level_10(__|$)/.test(booted.head?.region ?? '') && booted.route?.length === 9 && booted.route?.nextExit === `${START} -> level_2`
                     && booted.route.steps.filter((r) => r.startsWith('level_0__')).length === 1,
                 JSON.stringify({ head: booted.head, route: booted.route }));

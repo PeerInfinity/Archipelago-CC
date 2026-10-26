@@ -6894,10 +6894,6 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "from": "make-seedling-playthrough-rules.mjs",
-                    "name": "masks"
-                },
-                {
-                    "from": "make-seedling-playthrough-rules.mjs",
                     "name": "no-directional-locks"
                 }
             ],
@@ -6927,12 +6923,6 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "masks"
                 },
                 {
                     "how": [
@@ -12577,7 +12567,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling's L0 WAY UP to `out_teleporter_240_0` (tile [15,0], the L89 door), ON THE GAME (slice rules-l0-tighter-probe): can the player reach it from `level_0__r8c0` or `level_0__r11c19` WITHOUT the Feather?",
+            "oneLiner": "Seedling's L0 WAY UP to `out_teleporter_240_0` (tile [15,0], the L89 door), ON THE GAME (slice rules-l0-tighter-probe): can the player reach it from `level_0__r7c6` or `level_0__r11c19` WITHOUT the Feather?",
             "path": "scripts/procgen/probe-seedling-l0-tighter.mjs"
         },
         {

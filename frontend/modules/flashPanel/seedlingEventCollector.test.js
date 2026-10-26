@@ -147,9 +147,9 @@ describe('the region glue — the collector is the third reader of the reports',
         const h = harness({ cleared: [{ level: 0, tag: 1 }] });
         h.glue.attachAdapter(h.adapter);
         expect(h.collected).toEqual([]);
-        h.emitLoad({ region_id: 'level_0__r8c0', world: null });
+        h.emitLoad({ region_id: 'level_0__r7c6', world: null });
         expect(h.collected).toEqual([ROCK.location]);
-        h.emitLoad({ region_id: 'level_0__r8c0', world: null });
+        h.emitLoad({ region_id: 'level_0__r7c6', world: null });
         expect(h.game.botStatus).toHaveBeenCalledTimes(1);
         // an AP load landing re-reads (setCheckBinding), and collects nothing twice
         h.glue.setCheckBinding({ hostOwnedLocations: () => new Set(), onStateReport: () => [], onGameRestart: () => {} });

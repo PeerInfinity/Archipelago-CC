@@ -56,7 +56,7 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // pocket opens through (one boundary exit rule); every count holds.
     // ⛓ RULES kill-locks — restamped (ae491163 -> 5c55890f): a decided kill-lock's rule is its room's bodies'
     // (L18/L26/L53/L60 widen to Wand | Dark Shield; L98's stairs under the lock are charged); every count holds.
-    it('115 regions, 52 carry a subgraph: 194 sub-regions, 288 internal exits, 201 of them need Progressive Swim', () => {
+    it('115 regions, 53 carry a subgraph: 199 sub-regions, 297 internal exits, 206 of them need Progressive Swim', () => {
         // ⛓ RULES game-truth-gaps — restamped (5c55890f -> db0a4f7f): L57 is lifted from never-enter (⚖ 2026-10-06),
         //   so 113 -> 114 regions (L57 is all water, no subgraph); every other count holds. The landing gates are rules-only.
         // ⛓ R4b (rules-boss-locations) — restamped (db0a4f7f -> db4c2681): L69 is lifted from never-enter (the Lights
@@ -83,23 +83,29 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // joins the swim levels (21 -> 22, uncertified 16 -> 17).
         // ⛓ rules-l66-l57-probe — restamped (65de70ba -> 756a2066): L66's door into Dungeon 6 is charged the off-grid
         // Yellow-Key lock it stands under (a boundary exit rule); no door, sub-region or internal-exit count moves.
-        expect(c.atlasId).toBe('seedling-756a2066');
+        // ⛓ tile-primitives-pixelmask-l86 — restamped (756a2066 -> d6f8f007): a building's footprint is its Pixelmask, so
+        //   L0's house door and L93's door into L98 are their own sub-regions (r6c5, r5c7): 197 -> 199 sub-regions, 294 -> 297
+        //   internal exits; L93's door is up its waterfall pool, so r10c7 <-> r5c7 is Has(Swim, 2) / Has(Swim): swim 204 -> 206,
+        //   Has(Swim) 165 -> 166, Has(Swim, 2) 31 -> 32, and L93 is a swim level again (22 -> 23). Renames: level_0__r8c0 -> r7c6,
+        //   level_12__r42c29 -> r42c28, level_12__r44c19 -> r43c21.
+        expect(c.atlasId).toBe('seedling-d6f8f007');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 53, 197, 294, 204]);
-        expect(c.swimLevels).toHaveLength(22);
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 53, 199, 297, 206]);
+        expect(c.swimLevels).toHaveLength(23);
         expect(c.byRule.slice(0, 2)).toEqual([
-            { rule: 'Has(Progressive Swim)', count: 165 },
-            { rule: 'Has(Progressive Swim, 2)', count: 31 },
+            { rule: 'Has(Progressive Swim)', count: 166 },
+            { rule: 'Has(Progressive Swim, 2)', count: 32 },
         ]);
     });
 
     // ⛓ RULES logical-links: 18 -> 17, L93 has no swim row left (above). ⛓ RULES footprints: 17 -> 16, L94 neither.
-    it('the witnessed levels are derived from the tapes: 0, 37, 47, 87, 115 — the other 17 are BOT-UNCERTIFIED', () => {
+    it('the witnessed levels are derived from the tapes: 0, 37, 47, 87, 115 — the other 18 are BOT-UNCERTIFIED', () => {
         expect([...c.witnessedLevels].sort((a, b) => a - b)).toEqual([0, 37, 47, 87, 115]);
         // ⛓ rules-l55-waterfall: 16 -> 17, L52's pools are swim rows now (uncertified: probe-seedling-l55-waterfall.mjs is a probe, not a tape).
-        expect(c.uncertifiedLevels).toHaveLength(17);
+        // ⛓ tile-primitives-pixelmask-l86: 17 -> 18, L93's door climb is a swim row again (witnessed by probe-seedling-l93-door.mjs, a probe).
+        expect(c.uncertifiedLevels).toHaveLength(18);
         expect(c.swimLevels.find((r) => r.level === 47).witnesses).toEqual(['r5-swim-cross.json', 'r5-swim-latch.json']);
         // ⛓ swim R3: `r3-drown` (L47, no conch, the drowning death) joins `r5-swim-drown`.
         expect(c.swimLevels.find((r) => r.level === 47).noSwimTapes).toEqual(['r3-drown.json', 'r5-swim-drown.json']);

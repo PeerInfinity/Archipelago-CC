@@ -295,16 +295,16 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**82 files, 6938 literals.** Class × position:
+**82 files, 6947 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 7 | 1718 | 605 | 2330 |
 | rule | 14 | 1197 | 585 | 1796 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 15 | 387 | 2334 | 2736 |
+| structural | 15 | 387 | 2343 | 2745 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 36 | 3364 | 3538 | 6938 |
+| total | 36 | 3364 | 3547 | 6947 |
 
 Class × kind (physics and rule rows only):
 
@@ -464,7 +464,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 43 derived or aliased top-level constants
+### The 44 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -510,6 +510,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `CHECK_OFFSET_Y` | seedlingDemo/playerPhysicsV1.js | `-HITBOX.originY + HITBOX.height - PROFILE.checkOffsetYInset` |
 | `DAY_LENGTH_FRAMES` | seedlingDemo/gameClock.js | `160 * GAME_FPS` |
 | `PAGE_BOOT_TIME` | seedlingDemo/gameClock.js | `DAY_LENGTH_FRAMES / 2` |
+| `PARTIAL_MASK_REASON` | flashPanel/seedlingSemantics.js | `'per-pixel collision mask (Scenery/Building.as:22) covers this tile in part, ...` |
 | `TOINT` | seedlingDemo/runtimeLibm.js | `1.5 / EPS` |
 
 ### The profile candidates outside the profile

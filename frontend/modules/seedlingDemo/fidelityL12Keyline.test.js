@@ -5,7 +5,7 @@
  * line is the row under it (y 257) and the save holds its flag {12,4}, so from
  * this side it is SEALED BEHIND ITSELF (fidelity STANCE). The frontier named
  * that lock first (nearest the aim) and the solve refused there — although
- * AP's own region chain goes round it, r0c37 →[Fire]→ r42c29 →[Progressive
+ * AP's own region chain goes round it, r0c37 →[Fire]→ r42c28 →[Progressive
  * Swim]→ r0c19, and the corridor plans with `burnabletree@480,640` gone.
  *
  * D2: the frontier passes a lock that refuses SEALED to the next door

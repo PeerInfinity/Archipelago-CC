@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
  * Seedling's L0 WAY UP to `out_teleporter_240_0` (tile [15,0], the L89 door), ON THE GAME (slice
- * rules-l0-tighter-probe): can the player reach it from `level_0__r8c0` or `level_0__r11c19` WITHOUT the Feather?
+ * rules-l0-tighter-probe): can the player reach it from `level_0__r7c6` or `level_0__r11c19` WITHOUT the Feather?
  *
- * The shipped rules charge `level_0__r8c0 -> level_0__r2c13` Has(Progressive Swim, 2): the only crossings from the
+ * The shipped rules charge `level_0__r7c6 -> level_0__r2c13` Has(Progressive Swim, 2): the only crossings from the
  * row-8 lake up into the north-east pool are the two waterfalls at [13,7] and [16,7] (`dirs: {N: hasFeather}`;
  * `Player.as:1557` makes a fall one-way down without the Feather). The rules-l55-waterfall census flood found the
  * door free without it, by walking north THROUGH the starting house (`building@64,64`, cells [4-7,4-7] `manual`:
@@ -13,11 +13,11 @@
  *
  * Tapes, each on a FRESH page on the DELIVERED set, `noHazards` EMPTY, Conch + Sword granted (the rocks and the
  * water are not the subject), so the Feather is the one variable:
- *   house-swim      boots on r8c0 under the house (96,128): north into it, east, north, east toward the exit —
+ *   house-swim      boots on r7c6 under the house (96,128): north into it, east, north, east toward the exit —
  *                   the census flood's way; stalls on the house's south face, no L89
  *   house-door-swim boots under the door (80,128), its rock (flag L0:4) cleared: the same inputs, up col 5 — the
  *                   flood's literal path; the notch is the L1 door, so it leaves for L1, never into the house
- *   falls-swim      boots on r8c0 south of the col-13 waterfall (208,144): north up it, east, north into the door —
+ *   falls-swim      boots on r7c6 south of the col-13 waterfall (208,144): north up it, east, north into the door —
  *                   stalls on the fall, no L89
  *   falls-feather   the same inputs with the Feather: climbs the fall and takes the door into L89 (the control)
  *   r11-swim        boots on r11c19 (304,176), its rock (flag L0:1) cleared: west to the torch, north into the
