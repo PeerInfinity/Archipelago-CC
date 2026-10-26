@@ -1,0 +1,3 @@
+t=0..455 L19 [bosskey0] | seedling:pickup/bosskey0#0 drawImage(seedling/BossKey, 0, 0, 98, 64)
+t=456..553 L19 [bosskey0:held] | seedling:pickup/bosskey0#0 drawImage(seedling/BossKey, 0, 0, 98, 58.6)
+t=554..654 L19 [taken] |

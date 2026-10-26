@@ -48,7 +48,7 @@
                         23
                     ],
                     "scanned": 16,
-                    "why": null
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             },
             "path": [
@@ -61,6 +61,10 @@
                 {
                     "option": "sword-dash window: not-faster",
                     "why": "13 of 16 scanned preview(s) — first at walk-offset 0: 47 tick(s) against 47 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             ],
             "keys": [

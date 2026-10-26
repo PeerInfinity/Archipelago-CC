@@ -113,3 +113,60 @@ describe('G7 — one fade per new Game', () => {
         expect(r.slice(0, 2)).toEqual([0, arrival]);
     });
 });
+
+// ⛓ GAME SPEED (slice `seedling-js-game-speed`) — the same level start on the page's REAL clock
+// (`jsRuntimeClock`: the accumulator and the one-slot-per-turn pump) at 1× and 2×, on a 60 Hz display. Each slot
+// is `play`'s; the fades are dead-frame slots, so at 2× the same covers are shown in half the wall-clock time.
+async function playClocked(script, slots, speed) {
+    const { createSlotClock, createSlotPump } = await import('./jsRuntimeClock.js');
+    const rt = createJsRuntime({ log: () => {} });
+    rt.game.configure(JSON.stringify({ classes: GAME.classes, state_properties: GAME.state_properties }));
+    rt.queueItems([{ class: 'game', property: 'menu', value: false }]);
+    rt.setVanilla(MAP);
+    const view = () => effectSkinView(rt.run, { record: recordOf(rt.run.level) });
+    let skin = null;
+    let now = 0;
+    const rows = [];
+    const slot = () => {
+        const n = rows.length;
+        if (script[n]) rt.queueItems(script[n]);
+        const s = fadeSlot(skin, view(), { run: rt.run, fresh: rt.run.ticksCompleted === 0, inPlace: () => lastBootInPlace(rt) });
+        skin = s.skin;
+        if (!s.held) {
+            rt.tick(new Set());
+            const fv = view();
+            skin = stepEffectSkin(carryThroughReboot(skin, fv, { run: rt.run, inPlace: () => lastBootInPlace(rt) }), fv, rt.ticks);
+        }
+        rows.push({ slot: n, cover: +coverOf(skin).toFixed(4), held: s.held, level: rt.run.level,
+            boots: rt.events.filter((e) => e.type === 'boot').map((e) => e.why), at: now });
+    };
+    const tasks = [];
+    const pump = createSlotPump({ clock: createSlotClock({ speed }), runSlot: slot, postTask: (fn) => tasks.push(fn) });
+    for (let f = 0; rows.length < slots; f += 1) {
+        now = f * (1000 / 60);
+        pump.frame(now);
+        while (tasks.length) tasks.shift()();
+    }
+    return rows.slice(0, slots);
+}
+
+describe('G7 × GAME SPEED — one fade per new Game at 1× and 2×, shown twice as fast', () => {
+    it('the clocked page at 1× and 2× shows the same cover on every slot as the slot loop above; the arrival\'s fade takes 20 slots, ≈ 667 ms at 1× and ≈ 333 ms at 2×', async () => {
+        const strip = (rows) => rows.map(({ at, ...r }) => r);
+        const bare = play(SCRIPT, SLOTS);
+        const fadeMs = {};
+        for (const speed of [1, 2]) {
+            const rows = await playClocked(SCRIPT, SLOTS, speed);
+            expect(strip(rows), `${speed}×`).toEqual(bare);
+            const arrival = rows.findIndex((r) => r.boots.length === 2);
+            const fade = rows.slice(arrival).filter((r) => r.held);
+            expect(fade).toHaveLength(20);
+            fadeMs[speed] = fade.at(-1).at - fade[0].at;
+        }
+        // 19 slot gaps of 1000/30 ms (1×) and 1000/60 ms (2×), quantised to the 60 Hz frames
+        expect(fadeMs[1]).toBeGreaterThan(19 * (1000 / 30) - 20);
+        expect(fadeMs[1]).toBeLessThan(19 * (1000 / 30) + 20);
+        expect(fadeMs[2]).toBeGreaterThan(19 * (1000 / 60) - 20);
+        expect(fadeMs[2]).toBeLessThan(19 * (1000 / 60) + 20);
+    });
+});

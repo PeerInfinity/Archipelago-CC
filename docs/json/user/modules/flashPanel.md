@@ -49,6 +49,7 @@ The **Settings** section holds the settings you are most likely to change. Each 
 
 - **Runtime** chooses which version of the game plays. It lists only the versions this game has: *auto* (the default, which plays the recompiled WebAssembly version and says so), *wasm*, *flash* (the original Flash file, played by Ruffle) and, for Seedling, *js* (a JavaScript copy of the game). The tutorials stay on *auto*. Changing it restarts the game.
 - **Graphics**, **Camera** and **Lights** (the *js* runtime only) change how the game is drawn, at once: rectangles or the original pictures, the whole room or the original game's view that follows the player, and the night lighting.
+- **Game speed** (the *js* runtime only) plays the game at *1x* (the default, the original speed), *2x* or *4x*, fades included. It changes only how fast the game is shown: the game, the bot and the solver do exactly the same things, frame for frame. It takes effect at once.
 - **Bot uses the solver** (Seedling) lets the Playback Bot plan each room with the solver, and **Progress refresh** sets how often the solver's progress is shown.
 - **TP on UI click** (a game that can teleport): when it is ticked, clicking a location or a region elsewhere in the app teleports the player to it.
 

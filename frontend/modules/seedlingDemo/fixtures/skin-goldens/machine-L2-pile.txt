@@ -1,0 +1,2 @@
+t=0..19 L3 [] |
+t=20..120 L2 [pile] | seedling:scenery/moonrockpile#0 drawImage(seedling/MoonrockPile, 0, 0, 40, 16)

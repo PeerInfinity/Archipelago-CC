@@ -1,0 +1,3 @@
+t=0..16 L89 [feather] | seedling:pickup/feather#0 drawImage(seedling/Feather, 0, 0, 162, 98)
+t=17..45 L89 [feather:held] | seedling:pickup/feather#0 drawImage(seedling/Feather, 0, 0, 162, 92.2)
+t=46..54 L89 [taken] |
