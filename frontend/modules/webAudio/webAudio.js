@@ -70,7 +70,7 @@ const directListen = (target, type, handler) => target.addEventListener(type, ha
  */
 export function createAudioOut({
     win = globalThis,
-    AudioContextCtor = win.AudioContext ?? win.webkitAudioContext,
+    AudioContextCtor = undefined,
     listen = directListen,
     mediaWorkaround = true,
     log = (msg) => win.console?.warn?.(msg),
@@ -119,9 +119,11 @@ export function createAudioOut({
     function unlock() {
         if (state === 'refused') return state;
         if (!ctx) {
-            if (typeof AudioContextCtor !== 'function') { refuse('this browser has no Web Audio'); return state; }
+            // Resolved HERE, at the gesture, not at construction: a page (or a test) may install it after load.
+            const Ctor = AudioContextCtor ?? win.AudioContext ?? win.webkitAudioContext;
+            if (typeof Ctor !== 'function') { refuse('this browser has no Web Audio'); return state; }
             try {
-                ctx = new AudioContextCtor();
+                ctx = new Ctor();
             } catch (err) {
                 refuse(`the AudioContext was refused (${err?.message ?? err})`);
                 return state;

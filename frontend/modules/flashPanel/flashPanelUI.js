@@ -1338,14 +1338,14 @@ export class FlashPanelUI {
       await adapter.waitForRuntime(30000);
       if (this._initStale(epoch, adapter)) return;
       this._heldKeys.install();
-      if (this.transport === 'js' && this._jsStart !== 'auto') {
+      if (this.transport === 'js' && this._jsStart === 'click') {
         // ⛓ ▶ START — the JS page waits for its ▶ Start (the tap that unlocks the sound), as the wasm page does.
         this._setStatus('click ▶ Start in the game');
         this._panelLog('JS runtime page loaded — click ▶ Start in the game to boot it (the tap turns the sound on)');
         await this._refreshSolverWalk(this._solverWalk);
         if (this._initStale(epoch, adapter)) return;
       } else if (this.transport === 'js') {
-        // ⛓ `start=auto` (an automated run): the page boots at once; its sound waits for a tap in the game.
+        // ⛓ no `start=click` (an automated run): the page boots at once; its sound waits for a tap in the game.
         this._setStatus('JS runtime loaded');
         this._panelLog('JS runtime page loaded (seedlingDemo model, rectangles)');
         // ⛓ S1 — the page is up: hand it the solver mode now (the init read raced the iframe).
@@ -1699,7 +1699,7 @@ export class FlashPanelUI {
             dashShapePageParam(this._jsPageDashShape),
             graphicsPageParams(this._jsGraphics, this._jsCamera, this._jsLights, this._jsEffects),
             gameSpeedPageParam(this._jsSpeed),
-            // ⛓ SOUND EFFECTS — the sound switch and volume (none at on / 100), and `start=auto` in an automated run.
+            // ⛓ SOUND EFFECTS — the sound switch and volume (none at on / 100), and `start=click` unless an automated run.
             soundPageParams(this._jsSound, this._jsVolume, this._jsStart)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);

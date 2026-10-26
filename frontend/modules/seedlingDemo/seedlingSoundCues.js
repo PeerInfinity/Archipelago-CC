@@ -115,9 +115,9 @@ export const SOUND_CALL_SITES = Object.freeze({
     'Puzzlements/PushableBlockFire.as:139': cued('Push Rock', 'as PushableBlock.as:87'),
     'Puzzlements/BreakableRock.as:62': cued('Rock', '`rocksBroken` (its `hitTick`): index 1'),
     'Puzzlements/ArrowTrap.as:56': cued('Arrow', '`arrowVolleys` (its own `t`; dist from the trap id): index 0'),
-    'Puzzlements/Pulser.as:65': remaining('Energy Pulse', 'no ledger records a pulse that reaches nobody; `pulserPushes` sees only pushes'),
+    'Puzzlements/Pulser.as:65': cued('Energy Pulse', '`machinesNow` (G9) pulser `anim` turns `pulse` — the same line plays it (dist 120)'),
     'Puzzlements/Crusher.as:79': remaining('Other', 'the crusher\'s slam test reads its own channel (`soundPercentage("Other", 4)`); no ledger records a slam'),
-    'Puzzlements/BeamTower.as:85': remaining('Energy Beam', 'no ledger records a beam firing'),
+    'Puzzlements/BeamTower.as:85': remaining('Energy Beam', 'the beam\'s sound point is the PLAYER clamped to the beam line under a `playedSound` latch; `machinesNow` carries the tower\'s picture, not the latch'),
     'Puzzlements/RopeStart.as:47': remaining('Other', 'the rope cut is not in a ledger with its tick (`pulledRopes` is a set)'),
     'Scenery/BurnableTree.as:33': cued('Burn', '`treeBurns` (its own `t`): index 0'),
     'Scenery/Grass.as:32': remaining('Arrow', 'grass cutting is not modelled'),
@@ -216,6 +216,7 @@ export function soundCueView(run, { record = null } = {}) {
         wandShots: run.wandShots ?? [],
         magicalLocksOpened: run.magicalLocksOpened ?? [],
         wandLive: (run.wandShotsLive ?? []).map((w) => ({ id: w.id, anim: w.anim })),
+        pulsers: (run.machinesNow?.pulsers ?? []).map((m) => ({ id: m.id, x: m.x, y: m.y, anim: m.anim })),
         pushed: (run.pushedBlocks ?? []).map((b) => ({ id: b.id, x: b.x, y: b.y })),
         chasers: (run.chasers ?? []).map((c) => ({ id: c.id, x: c.x, y: c.y, hits: c.hits ?? 0, dying: !!c.dying, destroy: !!c.destroy, alpha: c.alpha ?? 1 })),
         spinners: (run.spinnerBodies ?? []).map((b) => ({ id: b.id, x: b.x, y: b.y, hits: b.hits ?? 0, destroy: !!b.destroy })),
@@ -264,6 +265,7 @@ export function stepSoundCues(prev, view, tick, { lengthFrames = () => 1 } = {})
         pressers: new Map(view.pressers.map((p) => [p.id, p])),
         pushed: new Map(view.pushed.map((b) => [b.id, b])),
         wandLive: new Map(view.wandLive.map((w) => [w.id, w])),
+        pulsers: new Map(view.pulsers.map((m) => [m.id, m])),
         pressKeys: same ? prev.pressKeys : new Set(view.presses.map((p) => `${p.weapon}|${p.t}`)),
     };
     if (!same) return { state, cues };
@@ -318,6 +320,10 @@ export function stepSoundCues(prev, view, tick, { lengthFrames = () => 1 } = {})
     for (let i = 0; i < fresh(view.wandShots, p.lens.wandShots).length; i += 1) cue('Projectiles/WandShot.as:71', 'Wand Fire');
     for (const w of view.wandLive) {
         if (w.anim === 'die' && p.wandLive.get(w.id)?.anim !== 'die') cue('Projectiles/WandShot.as:89', 'Wand Fizzle');
+    }
+    for (const m of view.pulsers) {
+        const was = p.pulsers.get(m.id);
+        if (was && m.anim === 'pulse' && was.anim !== 'pulse') dist('Puzzlements/Pulser.as:65', 'Energy Pulse', -1, m.x, m.y, 120);
     }
     for (const l of fresh(view.magicalLocksOpened, p.lens.magicalLocksOpened)) {
         const pos = posOfId(l.id);

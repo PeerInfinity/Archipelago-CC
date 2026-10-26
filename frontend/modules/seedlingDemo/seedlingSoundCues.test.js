@@ -145,6 +145,7 @@ const CUE_TAPES = Object.freeze([
     { name: 'stance-l46-chest', want: ['Chest.as:74'] },
     { name: 'r6-watcher-talk', want: ['Game.as:1719', 'NPCs/NPC.as:198'] },
     { name: 'r2-walk-1-sword-shield', want: ['Teleporter.as:109'] },
+    { name: 'prox-l38-chest', want: ['Puzzlements/Pulser.as:65'] },
 ]);
 
 describe('2. THE CUE PINS — on real tapes the per-tick cue list is the committed golden', () => {
@@ -199,7 +200,7 @@ describe('the helpers', () => {
         const view = { run: {}, level: 1, tick: 9, player: { x: 0, y: 0 }, doors: [], terrain: 1, swim: { open: true, frames: 0 },
             fall: 'out', slashPresses: [{ outcome: 'slash' }], presses: [], playerHits: [{}], transitions: [{}], chestOpens: [{}],
             rocksBroken: [], treeBurns: [], arrowVolleys: [], spitEvents: [], bombEvents: [], wandShots: [], magicalLocksOpened: [],
-            wandLive: [], pushed: [], chasers: [], spinners: [], responders: [], pressers: [], talk: null };
+            wandLive: [], pulsers: [], pushed: [], chasers: [], spinners: [], responders: [], pressers: [], talk: null };
         expect(stepSoundCues(null, view, 9).cues).toEqual([]);
         expect(stepSoundCues({ run: {} }, view, 9).cues).toEqual([]);
     });

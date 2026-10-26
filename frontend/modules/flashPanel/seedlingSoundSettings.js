@@ -4,12 +4,13 @@
  *
  *   · `flashPanel.seedlingJsSound`  = `on` (the default) | `off`        → the page's `?sound=off`
  *   · `flashPanel.seedlingJsVolume` = 0 … 100 in tens, default 100      → the page's `?volume=<n>` (none at 100)
- *   · `flashPanel.seedlingJsStart`  = `tests-auto` (the default) | `click` | `auto` → the page's `?start=auto`
+ *   · `flashPanel.seedlingJsStart`  = `tests-auto` (the default) | `click` | `auto` → the page's `?start=click`
  *
  * ▶ START. The JS page waits for its ▶ Start (`#btn-start`, the wasm page's id) before it boots, as the wasm page
  * does: the tap is the gesture that unlocks audio (a browser — iOS above all — lets only a gesture start it).
  * AUTOMATED RUNS BYPASS IT: under `tests-auto` an app page loaded in a test mode (`?mode=test…`, every Playwright
- * run) mounts the page with `start=auto`, so the in-app rows boot it as they always have; the wasm rows press the
+ * run) mounts the page WITHOUT `start=click`, so the in-app rows boot it as they always have (and the standalone
+ * rows that open `jsRuntime.html` on their own never carry it); the wasm rows press the
  * wasm button themselves, and the JS rows (dozens, in append-only shared files) are not edited. A person never sees
  * `auto` unless they choose it; a test that wants the button sets `click` (a session override).
  *
@@ -80,11 +81,11 @@ export function startMode(value, appSearch) {
     return isAutomatedRun(appSearch) ? 'auto' : 'click';
 }
 
-/** The page's query parameters: '' at the defaults (on, 100, click). */
+/** The page's query parameters: '' for on, 100 and `auto`; `start=click` makes the page wait for ▶ Start. */
 export function soundPageParams(sound, volume, start) {
     return [
         soundMode(sound) === 'off' ? 'sound=off' : '',
         soundVolume(volume) === 100 ? '' : `volume=${soundVolume(volume)}`,
-        start === 'auto' ? 'start=auto' : '',
+        start === 'click' ? 'start=click' : '',
     ].filter(Boolean).join('&');
 }

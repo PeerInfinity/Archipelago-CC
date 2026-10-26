@@ -360,11 +360,12 @@ export function mountJsRuntimePage(win = window) {
     });
     // ⛓ SOUND EFFECTS — the page's sound (`jsRuntimeSound.js`): it reads the run after each tick and never feeds it.
     const sound = createPageSound({ win, params, listen: (target, type, handler) => life.on(target, type, handler) });
-    // ⛓ ▶ START — the page waits for its ▶ Start (`#btn-start`, the wasm page's id) before it boots, as the wasm page
-    // does: the bridge's callbacks (what the host waits for) appear only once it is pressed, and the tap unlocks the
-    // audio. `?start=auto` (an automated run, `seedlingSoundSettings.startMode`) boots at once; the audio then
-    // unlocks on the first tap or key in the page.
-    const startMode = params.get('start') === 'auto' ? 'auto' : 'click';
+    // ⛓ ▶ START — `?start=click` (the panel's, for a person: `seedlingSoundSettings.startMode`): the page waits for its
+    // ▶ Start (`#btn-start`, the wasm page's id) before it boots, as the wasm page does — the bridge's callbacks (what
+    // the host waits for) appear only once it is pressed, and the tap unlocks the audio. Without it (an automated
+    // run, or the page opened on its own, as the standalone in-app rows do) it boots at once, and the audio unlocks
+    // on the first tap or key in the page.
+    const startMode = params.get('start') === 'click' ? 'click' : 'auto';
     let started = false;
     /** Boot: expose the bridge's callbacks. Returns false if it already ran (the wasm page's `__swfBridgeStart`). */
     function start() {

@@ -15,7 +15,7 @@
  *
  * ⛔ NOTHING SOUNDS BEFORE THE UNLOCK. The clips are fetched and decoded only
  * after `unlock()` (a tap: ▶ Start, or the first tap in the game under
- * `?start=auto`), because decoding needs the context and the context needs
+ * a page booted without `?start=click`), because decoding needs the context and the context needs
  * the gesture.
  *
  * FREEZES. A tick slot (a run tick or a held dead frame) is what keeps the

@@ -2067,6 +2067,18 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "GAME SPEED. runtime = js + seedling_generated_room (session overrides): the panel's js-only \"Game speed\" Settings row is visible; seedlingJsSpeed 4x reaches the mounted page LIVE (clock 4, item push 25 ms, no re-mount) and achieves >= 100 slots/s; back to 1x it is ~30. Settings restored. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-sound-start",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "SOUND EFFECTS. Standalone jsRuntime.html?start=click: #btn-start shown, not booted; a fake AudioContext, then Start boots it, 68 sfx clips decode; at L38 the pulser's Energy Pulse cues are 51 ticks apart and each is played. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-sound-panel",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "SOUND EFFECTS. runtime = js + seedling_generated_room (session overrides): the test-mode bypass boots with no Start; Sound/Volume rows applied live; seedlingJsStart = click makes the panel ask for Start and the page wait until pressed. Settings restored. seedling-js batch."
         }
     ]
 }
