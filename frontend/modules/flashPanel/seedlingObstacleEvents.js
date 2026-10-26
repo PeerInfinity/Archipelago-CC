@@ -352,7 +352,8 @@ export function deriveButtonEvents(rows, ctx) {
             // ⛓ RULES l63-darktrap: a door whose side holds no stance for the in-room way (`arm: false`) costs the
             // event alone.
             for (const dep of ctx.gates(t, name)) {
-                exitGates.push({ region_id: dep.region_id, exit_id: dep.exit_id, rule: dep.arm === false ? has : rule });
+                exitGates.push({ region_id: dep.region_id, exit_id: dep.exit_id, kind: BUTTON_GATE_KIND,
+                    rule: dep.arm === false ? has : rule });
             }
         }
     }
@@ -432,6 +433,14 @@ export function poleKillsOf(level, target, model) {
 export const POLE_LIGHT_ARM = Object.freeze({
     item: 'hasSpear', verb: 'lit by a Spear thrust', cite: 'Player.as:1083-1088 + Scenery/LightPole.as:45',
 });
+
+/**
+ * ⛓ RULES l63-darktrap — the KIND each derivation stamps on its `exitGates` rows, so a consumer that keeps some of a
+ * layer's gates (the maze producer) selects them by what made them, never by level. The compiler reads only
+ * `region_id`, `exit_id` and `rule`, so the tag changes no rules output.
+ */
+export const BUTTON_GATE_KIND = 'cross-room-press';
+export const IN_ROOM_POLE_GATE_KIND = 'in-room-pole';
 
 /**
  * ⛓⛓ RULES l63-darktrap — **WHERE A SPEAR THRUST REACHES A POLE FROM.** The in-room arm (`POLE_LIGHT_ARM`) is not
@@ -542,7 +551,9 @@ export function deriveInRoomPoleEvents(poles, ctx) {
         });
         const has = { rule: 'Has', args: { item_name: name } };
         const or = { rule: 'Or', children: [has, ctx.arm] };
-        for (const g of cut.gates) exitGates.push({ region_id: g.region_id, exit_id: g.exit_id, rule: g.arm ? or : has });
+        for (const g of cut.gates) {
+            exitGates.push({ region_id: g.region_id, exit_id: g.exit_id, kind: IN_ROOM_POLE_GATE_KIND, rule: g.arm ? or : has });
+        }
     }
     if (refused.length > 0) {
         throw new Error(`in-room pole events: ${refused.length} pole(s) refused —\n  ${refused.join('\n  ')}`);

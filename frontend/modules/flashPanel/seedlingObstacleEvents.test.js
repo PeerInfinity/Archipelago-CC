@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 import {
     crossRoomButtonsOf, crossRoomPrerequisitesOf, deriveButtonEvents, deriveLockEvents, deriveTalkEvents, deriveObstacleEvents, persistenceEffect, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
     parseSolidId, poleKillsOf, poleLightReaches, POLE_LIGHT_ARM, rowVerdict, ruleItemNames,
-    deriveInRoomPoleEvents, inRoomPolesOf, poleThrustStances,
+    deriveInRoomPoleEvents, inRoomPolesOf, poleThrustStances, BUTTON_GATE_KIND, IN_ROOM_POLE_GATE_KIND,
     deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges, ropePeerEffect, ropesOf, ropeVerdict,
 } from './seedlingObstacleEvents.js';
 import { patchedMapDocument } from '../seedlingDemo/seedlingSetPatches.js';
@@ -191,8 +191,8 @@ describe('cross-room button events (deriveButtonEvents) — RULES l38-button-eve
         // the obstacle's level is NOT the side's: the collector keys off the flag the game writes
         expect(parseObstacleEventId(e.fields.event_id)).toEqual({ level: 39, tag: 8 });
         expect(out.exitGates).toEqual([
-            { region_id: 'level_38', exit_id: 'out_teleporter_144_0', rule: { rule: 'Has', args: { item_name: NAME } } },
-            { region_id: 'level_39', exit_id: 'out_teleporter_144_624', rule: { rule: 'Has', args: { item_name: NAME } } },
+            { region_id: 'level_38', exit_id: 'out_teleporter_144_0', kind: 'cross-room-press', rule: { rule: 'Has', args: { item_name: NAME } } },
+            { region_id: 'level_39', exit_id: 'out_teleporter_144_624', kind: 'cross-room-press', rule: { rule: 'Has', args: { item_name: NAME } } },
         ]);
     });
 
@@ -408,7 +408,7 @@ describe('a cross-room press that LIGHTS a pole (deriveButtonEvents ctx.kills / 
             action: { verb: 'press', item: null, presser: { level: 63, class: 'buttonroom', x: 32, y: 64 } }, side: 'level_63__r0c1',
         });
         const rule = { rule: 'Or', children: [{ rule: 'Has', args: { item_name: NAME } }, SPEAR] };
-        expect(out.exitGates).toEqual(GATES.map((g) => ({ ...g, rule })));
+        expect(out.exitGates).toEqual(GATES.map((g) => ({ ...g, kind: 'cross-room-press', rule })));
         // no in-room arm → the event alone
         expect(deriveButtonEvents([button()], bctx({ inRoom: () => null })).exitGates.map((g) => g.rule))
             .toEqual([{ rule: 'Has', args: { item_name: NAME } }, { rule: 'Has', args: { item_name: NAME } }]);
@@ -578,9 +578,10 @@ describe('a pole only its own room\'s Spear lights (deriveInRoomPoleEvents / pol
             action: { verb: 'lit by a Spear thrust', item: 'hasSpear' }, side: 'level_63__r6c9', across: [] });
         const has = { rule: 'Has', args: { item_name: NAME } };
         expect(out.exitGates).toEqual([
-            { region_id: 'level_63', exit_id: 'out_teleporter_128_304', rule: { rule: 'Or', children: [has, SPEAR] } },
-            { region_id: 'level_65', exit_id: 'out_teleporter_128_0', rule: has },
+            { region_id: 'level_63', exit_id: 'out_teleporter_128_304', kind: 'in-room-pole', rule: { rule: 'Or', children: [has, SPEAR] } },
+            { region_id: 'level_65', exit_id: 'out_teleporter_128_0', kind: 'in-room-pole', rule: has },
         ]);
+        expect(IN_ROOM_POLE_GATE_KIND).toBe('in-room-pole');
         // a pole that kills nothing is skipped by name; a flag already minted is refused
         expect(deriveInRoomPoleEvents([pole], { ...ctx, kills: () => null }).skipped[0]).toMatch(/kills no body/);
         expect(() => deriveInRoomPoleEvents([pole], { ...ctx, existing: [{ fields: { event_id: 'flag:L63:7' } }] }))
@@ -597,7 +598,8 @@ describe('a pole only its own room\'s Spear lights (deriveInRoomPoleEvents / pol
             gates: () => [{ region_id: 'a', exit_id: 'out_x', arm: false }, { region_id: 'b', exit_id: 'out_y', arm: true }],
         });
         const has = { rule: 'Has', args: { item_name: 'L62 flag 0: lightpole@120,200 cleared' } };
-        expect(out.exitGates).toEqual([{ region_id: 'a', exit_id: 'out_x', rule: has },
-            { region_id: 'b', exit_id: 'out_y', rule: { rule: 'Or', children: [has, SPEAR] } }]);
+        expect(out.exitGates).toEqual([{ region_id: 'a', exit_id: 'out_x', kind: BUTTON_GATE_KIND, rule: has },
+            { region_id: 'b', exit_id: 'out_y', kind: BUTTON_GATE_KIND, rule: { rule: 'Or', children: [has, SPEAR] } }]);
+        expect(BUTTON_GATE_KIND).toBe('cross-room-press');
     });
 });
