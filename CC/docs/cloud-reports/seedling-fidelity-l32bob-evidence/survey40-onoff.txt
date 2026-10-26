@@ -1,0 +1,5 @@
+== step 40 — L32 ... REFUSED — solverBot(survey-step-40) encounter (80,128)->Seal: the arena's exit (burnabletree@64,0) burns only with Fire, and under `apReportBosses` the Fire pickup grants
+  step 40 L32: REFUSED — unclassified — see the refusal text
+---ON---
+== step 40 — L32 ... REFUSED — solverBot(survey-step-40) encounter (80,128)->Seal: the arena's exit (burnabletree@64,0) burns only with Fire, and under `apReportBosses` the Fire pickup grants
+  step 40 L32: REFUSED — unclassified — see the refusal text

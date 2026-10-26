@@ -1,0 +1,12 @@
+plan-seedling-r1-dark-suit ON=0 exit 0 md5 daa19a7b
+plan-seedling-r1-dark-suit ON=1 exit 0 md5 daa19a7b
+plan-seedling-r3-death ON=0 exit 0 md5 33010b69
+plan-seedling-r3-death ON=1 exit 0 md5 33010b69
+plan-seedling-r5-bobboss ON=0 exit 0 md5 d7ffd46b
+plan-seedling-r5-bobboss ON=1 exit 0 md5 d7ffd46b
+plan-seedling-u11-dark-shield ON=0 exit 0 md5 13ff1bc6
+plan-seedling-u11-dark-shield ON=1 exit 0 md5 13ff1bc6
+plan-seedling-r5-swim ON=0 exit 0 md5 e4e4036d
+plan-seedling-r5-swim ON=1 exit 0 md5 e4e4036d
+solve-seedling-r9-campaign ON=0 exit 1 md5 e69370f6
+solve-seedling-r9-campaign ON=1 exit 1 md5 e69370f6
