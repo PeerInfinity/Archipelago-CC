@@ -3775,7 +3775,7 @@ export async function seedlingJsRuntimeSoundStart(tc) {
         document.body.appendChild(frame);
         const win = await tc.pollForValue(() => {
             const w = frame.contentWindow;
-            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsSound ? w : null;
+            return w?.__runtimeReady && w.__seedlingJsRuntime && w.__seedlingJsSound ? w : null;
         }, 'the standalone JS page is up (?start=click)', 20000, 200);
         tc.reportCondition('the standalone page is up', !!win);
         if (!win) return tc.getOverallResult();
@@ -3783,10 +3783,11 @@ export async function seedlingJsRuntimeSoundStart(tc) {
         win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
         const button = win.document.getElementById('btn-start');
         const sound = win.__seedlingJsSound;
-        tc.assertEqual('▶ Start is shown and pressable; the page has NOT booted (no bridge callbacks); the audio is locked',
-            'true/false/click/false/0/locked',
+        await new Promise((r) => setTimeout(r, 1500)); // time for the vanilla map's fetch: it must NOT boot a run yet
+        tc.assertEqual('▶ Start is shown and pressable; the page has NOT booted (no bridge callbacks, no run); the audio is locked',
+            'true/false/click/false/0/false/locked',
             `${!!button && button.style.display !== 'none'}/${button?.disabled}/${sound.startMode}/${sound.started}/`
-            + `${Object.keys(win.__swfBridge.game).length}/${sound.readout.state}`);
+            + `${Object.keys(win.__swfBridge.game).length}/${!!win.__seedlingJsRuntime.run}/${sound.readout.state}`);
         const starts = installFakeAudio(win);
         button.click();
         tc.assertEqual('▶ Start boots the page: the button hides, the callbacks appear, the audio runs', 'none/true/true/running',
@@ -3807,8 +3808,9 @@ export async function seedlingJsRuntimeSoundStart(tc) {
         tc.assertEqual('the pulses are its period apart (51 ticks, as in the node golden prox-l38-chest)', '51,51', gaps.slice(0, 2).join(','));
         tc.assertEqual('every cue the page played reached the context (a start per play)', r.player.played, starts.length);
         tc.assertEqual('the pulse played the energyPulse clip (5463 bytes)', true, starts.some((s) => s.bytes === 5463));
-        tc.assertEqual('no start was scheduled in the past or more than a tick ahead', true,
-            starts.every((s) => s.when >= s.at - 1e-6 && s.when - s.at <= 0.1 + 1e-6));
+        // `at` is the context clock when `start()` ran, a moment AFTER the tick read it (a `when` in the past means now)
+        tc.assertEqual('no start was scheduled more than 20 ms in the past or more than MAX_LEAD (0.1 s) ahead', true,
+            starts.every((s) => s.when >= s.at - 0.02 && s.when - s.at <= 0.1 + 1e-6));
         tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
         tc.assertEqual('the run is in level 38 and did not halt', '38/null',
             `${win.__seedlingJsRuntime.run?.level}/${win.__seedlingJsRuntime.halted ? win.__seedlingJsRuntime.halted.message : null}`);

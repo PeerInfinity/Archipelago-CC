@@ -367,6 +367,10 @@ export function mountJsRuntimePage(win = window) {
     // on the first tap or key in the page.
     const startMode = params.get('start') === 'click' ? 'click' : 'auto';
     let started = false;
+    // What waits for ▶ Start: the vanilla map's mount, which boots the game's own first frame (`Main.as:51`) — the
+    // wasm game runs nothing before its Start either.
+    const afterStart = [];
+    const whenStarted = (fn) => (started ? fn() : afterStart.push(fn));
     /** Boot: expose the bridge's callbacks. Returns false if it already ran (the wasm page's `__swfBridgeStart`). */
     function start() {
         if (started) return false;
@@ -375,6 +379,7 @@ export function mountJsRuntimePage(win = window) {
         const b = doc.getElementById('btn-start');
         if (b) b.style.display = 'none';
         Object.assign(bridge.game, runtime.game);
+        for (const fn of afterStart.splice(0)) fn();
         return true;
     }
     win.__swfBridgeStart = start;
@@ -463,7 +468,7 @@ export function mountJsRuntimePage(win = window) {
     // (`watchLifetime.test.js`'s one-busted-fetch rule, in spirit).
     win.fetch(new URL(VANILLA_MAP_PATH, win.location.href).href, { cache: 'no-store' })
         .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-        .then((doc) => runtime.setVanilla(doc))
+        .then((doc) => whenStarted(() => runtime.setVanilla(doc)))
         .catch((err) => {
             vanillaError = err.message;
             win.console?.error?.(`[js runtime] the vanilla map could not be loaded — ${err.message}`);
