@@ -323,8 +323,16 @@ export const NIGHT_COPIES = Object.freeze({
     'seedling:machine/wire': { alpha: 0.1, when: (op) => op.nightCopy === true },
     // ⛓ G9c — `Lock.render()`: while active, the picture onto nightBmp BEFORE its INVERT is set — so the copy is plain
     //    (no blend, no silhouette tint); `seedlingSolidsSkin` marks it `nightCopy`.
-    ...Object.fromEntries(['lock', 'wandlock', 'grasslock', 'shieldlock', 'shieldlocknorm']
+    //    ⛓ G10 — and `RockLock.render`, the same way, while its kill-lock fade runs.
+    ...Object.fromEntries(['lock', 'wandlock', 'grasslock', 'shieldlock', 'shieldlocknorm', 'rocklock']
         .map((k) => [`seedling:puzzlement/${k}`, { alpha: 'same', when: (op) => op.nightCopy === true, plain: true }])),
+    // ⛓ G10 — the bosses' `render()` copies, marked `nightCopy` by `seedlingBossSkin`: the FrozenBoss and a LavaBall (the same picture;
+    //    the LavaBoss's copies differ from its main picture, so they ride `nightExtra`/`solidExtra`).
+    'seedling:boss/frozenboss': { alpha: 'same', when: (op) => op.nightCopy === true },
+    'seedling:boss/lavaball': { alpha: 'same', when: (op) => op.nightCopy === true },
+    // `TurretSpit.render` (LightBossShot inherits it) at 0.1; `LightBossTotem.render` at 0.5.
+    'seedling:boss/lightbossshot': { alpha: 0.1, when: (op) => op.nightCopy === true },
+    'seedling:boss/lightbosstotem': { alpha: 0.5, when: (op) => op.nightCopy === true },
     // `LavaChain.as:63-73`: only while its anim is "hit".
     'seedling:puzzlement/lavachain': { alpha: 'same', when: (op, ctx) => ctx.hitChains.has(`${opCentre(op).x},${opCentre(op).y}`) },
 });
@@ -484,6 +492,8 @@ export function nightOps(view, art, { skin = null, ops = [], hazard = null, whit
         }
         // ⛓ G9a — a body's own `Draw` calls onto nightBmp before its copy (the wands' and boss key 2's `circlePlus`)
         if (op.nightExtra) night.push(...op.nightExtra);
+        // ⛓ G10 — a body's own draw onto `solidBmp` (the LavaBoss's), HARDLIGHTed onto nightBmp with the lava edges
+        if (op.solidExtra) solid.push(...op.solidExtra);
         const rule = R.copies[op.key];
         if (!rule || (rule.when && !rule.when(op, ctx))) continue;
         const k = rule.alpha === 'same' ? (op.alpha ?? 1) : (typeof rule.alpha === 'function' ? rule.alpha(op, ctx) : rule.alpha);

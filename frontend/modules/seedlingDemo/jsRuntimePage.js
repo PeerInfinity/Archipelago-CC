@@ -157,7 +157,8 @@
  * the ceremony's risen item, the night copies and glows); their stand-in rectangles are not painted. An AP slot
  * stays G3's `apItemOps` look. `__seedlingJsGraphics.pickups`. ⛓ G9b — the machines (`seedlingMachineSkin.js`: the beam
  * towers and pulsers from `machinesNow`, the wires, whirlpools, pods, little stones, moonrock(s), the pile and the final
- * door; the Pull's circle onto nightBmp only), `__seedlingJsGraphics.machines`.
+ * door; the Pull's circle onto nightBmp only), `__seedlingJsGraphics.machines`. ⛓ G10 — the bosses
+ * (`seedlingBossSkin.js`: each boss from the read its fight already exposes; no new getter), `__seedlingJsGraphics.bosses`.
  *
  * ⛓ KILLLOCK HOOK —`?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
@@ -194,6 +195,7 @@ import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
 import { PICKUP_TAGS, pickupOps, pickupSkinView, stepPickupSkin } from './seedlingPickupSkin.js';
 import { MACHINE_OBJECT_TAGS, machineNightOps, machineOps, machineSkinView, stepMachineSkin } from './seedlingMachineSkin.js';
+import { BOSS_OBJECT_TAGS, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
 import { EFFECT_RULES } from './seedlingEffectSkin.js';
 import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
 import { BASE_TICKS_PER_SECOND, createRateMeter, createSlotClock, createSlotPump, messageChannelPostTask, parseGameSpeed } from './jsRuntimeClock.js';
@@ -306,6 +308,8 @@ export function mountJsRuntimePage(win = window) {
         pickupSkin: null, pickups: null,
         // ⛓ G9b — the machines' per-visit state (lit wires, pull radii) and the last paint's ops.
         machineSkin: null, machines: null,
+        // ⛓ G10 — the bosses' hit tints and the last paint's ops.
+        bossSkin: null, bosses: null,
         // ⛓ G4 — the effects' and overlays' state (one step per game tick, one hold per owed dead frame), the last paint's.
         effectSkin: null, effects: null, held: 0,
         // ⛓ G1.5 — the static tile layer (room mode; `?tileLayer=off` = none) and the last paint's inputs.
@@ -334,7 +338,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, npcSkin: null, npcs: null, trapSkin: null, traps: null, lamps: null, pickupSkin: null, pickups: null, machineSkin: null, machines: null, effectSkin: null, effects: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, npcSkin: null, npcs: null, trapSkin: null, traps: null, lamps: null, pickupSkin: null, pickups: null, machineSkin: null, machines: null, bossSkin: null, bosses: null, effectSkin: null, effects: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -439,6 +443,8 @@ export function mountJsRuntimePage(win = window) {
         get pickups() { return graphics.pickups ? { ...graphics.pickups, ops: graphics.pickups.ops.map((o) => ({ ...o })) } : null; },
         /** ⛓ G9b — the last paint's machines. */
         get machines() { return graphics.machines ? { ...graphics.machines, ops: graphics.machines.ops.map((o) => ({ ...o })) } : null; },
+        /** ⛓ G10 — the last paint's bosses. */
+        get bosses() { return graphics.bosses ? { ...graphics.bosses, ops: graphics.bosses.ops.map((o) => ({ ...o })) } : null; },
         get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
         /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
         get held() { return graphics.held; },
@@ -541,6 +547,7 @@ export function mountJsRuntimePage(win = window) {
             graphics.trapSkin = stepTrapSkin(graphics.trapSkin, trapSkinView(runtime.run), runtime.ticks);
             graphics.pickupSkin = stepPickupSkin(graphics.pickupSkin, pickupSkinView(runtime.run), runtime.ticks);
             graphics.machineSkin = stepMachineSkin(graphics.machineSkin, machineView(), runtime.ticks);
+            graphics.bossSkin = stepBossSkin(graphics.bossSkin, bossSkinView(runtime.run), runtime.ticks);
             const fv = effectView();
             graphics.effectSkin = stepEffectSkin(carryThroughReboot(graphics.effectSkin, fv, { run: runtime.run, inPlace: lastBootInPlace }),
                 fv, runtime.ticks, { rain: effectsOn() });
@@ -729,6 +736,14 @@ export function mountJsRuntimePage(win = window) {
                 ops: machineSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, line: !!o.line, ring: !!o.circle,
                     night: !!o.nightCopy, pack: o.key ? art.packOf(o.key) : null })) }
             : null;
+        // ⛓ G10 — the bosses (`seedlingBossSkin.js`): the run's own frame, the hit tint, HARDLIGHT while dying.
+        const bv = art ? bossSkinView(runtime.run) : null;
+        const bossSprites = bv ? bossOps(bv, art, { skin: graphics.bossSkin }) : [];
+        graphics.bosses = bv
+            ? { shieldBosses: bv.shieldBosses.length, frozenBosses: bv.frozenBosses.length,
+                ops: bossSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null, blend: o.blend ?? null,
+                    night: !!o.nightCopy, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
         const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
         // ⛓ G7 — a run the effects have not met (booted between two clock slots: the game's own first frame) is adopted
         // before its first paint, so that paint shows the cover its fade starts from; before G7 it showed the bare room
@@ -743,7 +758,7 @@ export function mountJsRuntimePage(win = window) {
         const lit = art && graphics.lights === 'on' ? nightView() : null;
         const modelCam = lit ? cameraView('follow', world, state, runtime.run) : null;
         const litMain = lit ? nightMainOps(lit, { cam: modelCam }) : [];
-        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...solidSprites, ...npcSprites, ...trapSprites, ...lampSprites, ...pickupSprites, ...machineSprites, ...effectSprites, ...litMain];
+        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...solidSprites, ...npcSprites, ...trapSprites, ...lampSprites, ...pickupSprites, ...machineSprites, ...bossSprites, ...effectSprites, ...litMain];
         const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
         graphics.enemies = ev
             ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
@@ -753,9 +768,14 @@ export function mountJsRuntimePage(win = window) {
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
             ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag)
-                || MACHINE_OBJECT_TAGS.has(o.tag),
+                || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag),
                 drawnTeleporters: (tp) => tp.isStairs === true, drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
         });
+        // ⛓ G10 — the boss bodies' build-time rectangles still painted (0 once the skin draws them)
+        if (graphics.bosses) {
+            const bossRects = [...world.objectSolids, ...world.pixelmasks].filter((o) => BOSS_OBJECT_TAGS.has(o.tag)).map((o) => o.rect);
+            graphics.bosses.standIns = ops.filter((o) => o?.rect && !o.key && bossRects.some((r) => r.x === o.rect.x && r.y === o.rect.y)).length;
+        }
         // ⚖ follow mode jiggles inside a shake band on the renderer's own draw; the band's edges are the model's
         const view = cameraView(graphics.camera, world, state, runtime.run,
             { jiggle: (now) => jiggleCam(now, level, runtime.ticks) });
