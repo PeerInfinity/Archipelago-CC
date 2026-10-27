@@ -18,7 +18,8 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { l40LatchModelSamples, l40LatchSampleOf, packL40LatchSample, unpackL40LatchSample } from './fidelityL40Latch.js';
+import { l40LatchBoot, l40LatchModelSamples, l40LatchOrbitChecks, l40LatchSampleOf, l40LatchSolve, l40LatchTape,
+    packL40LatchSample, unpackL40LatchSample } from './fidelityL40Latch.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -187,9 +188,30 @@ export function l40Bk2bFreeChecks(samples) {
     }];
 }
 
+/**
+ * `l40bk2b-latch-free`: L40LATCH's latch staging (`fixtures/l40latch-witness/latch-boot.json`) solved for Boss Key 2 with
+ * `orbitFreeAim` ON — the open pocket's orbit is projected too (candidate 0 now kills, at t137; OFF candidate 1 at t184),
+ * so the chain is a different plan to the same refusal (the x≈744 corridor). Its refused prefix, on the latch boot's
+ * header with the refusal's `equips`. Built at record time (~110 s).
+ */
+export async function l40Bk2bLatchFreeTape() {
+    const boot = await l40LatchBoot();
+    const { out, refusal } = await l40LatchSolve(boot, L40BK2B_D1_SWITCHES);
+    if (out) throw new Error('l40Bk2bLatchFreeTape: the latch solve SOLVED — the witness is the refused prefix; re-derive');
+    const tape = await l40LatchTape('l40bk2b-latch-free', refusal.perTick.map((k) => [...k]), {
+        refused: refusal.message.slice(0, 600),
+        description: 'seedling-fidelity-l40bk2b D1: L40LATCH\'s latch staging (the chest, the tree and spinner@880,848 '
+            + 'banked) — the SOLVER\'s own ticks for Boss Key 2 with orbitFreeAim ON (every other switch at its default), '
+            + 'until it refused: bobsoldier@880,832 killed on the projected orbit, never hit (probe-seedling-l40bk2b.mjs)',
+    });
+    return { ...tape, equips: [...(boot.equips ?? []), ...(refusal.equips ?? [])] };
+}
+
 export const L40BK2B_WITNESSES = Object.freeze({
     'l40bk2b-orbit-plain': Object.freeze({ tape: l40Bk2bPlainTape, switches: { orbitFreeAim: false },
         checks: l40Bk2bPlainChecks }),
     'l40bk2b-orbit-free': Object.freeze({ tape: l40Bk2bFreeTape, switches: L40BK2B_D1_SWITCHES,
         checks: l40Bk2bFreeChecks }),
+    'l40bk2b-latch-free': Object.freeze({ tape: l40Bk2bLatchFreeTape, switches: L40BK2B_D1_SWITCHES,
+        checks: l40LatchOrbitChecks }),
 });

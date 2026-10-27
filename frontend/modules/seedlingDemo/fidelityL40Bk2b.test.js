@@ -24,6 +24,7 @@ import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { ORBIT_FREE_AIM, strategyBoundReached } from './solverBot.js';
 import { compareCorpseBumpWitness } from './fidelityCorpseBump.js';
+import { l40LatchOrbitChecks } from './fidelityL40Latch.js';
 import { L40BK2B_AFTER_REMOVAL, L40BK2B_D1_SWITCHES, L40BK2B_WITNESS_DIR, l40Bk2bBoot, l40Bk2bFreeChecks,
     l40Bk2bModelSamples, l40Bk2bPlainChecks, l40Bk2bRemovalTick, l40Bk2bShippedOrbit, l40Bk2bSolve,
     unpackL40Bk2bSample } from './fidelityL40Bk2b.js';
@@ -118,6 +119,28 @@ describe('L40BK2B D1 — the projected orbit, on the game (`l40bk2b-orbit-free`)
         // the next refusal is the plain world's chest proximity (a staging artifact; the AP leg's chest is an apitem)
         expect(refusal.message).toContain('the route entered a proximity-hazard — chest at (880,816)');
     }, 180_000);
+});
+
+describe('L40BK2B D1 — L40LATCH\'s latch chain with the projection, on the game (`l40bk2b-latch-free`)', () => {
+    const w = witness('l40bk2b-latch-free');
+    const game = w.samples.map(unpackL40Bk2bSample);
+
+    it('the recording: never hit, and the BobSoldier is gone (the open pocket\'s projected orbit)', () => {
+        const checks = l40LatchOrbitChecks(game);
+        expect(checks.map((c) => [c.name, c.ok])).toEqual(checks.map((c) => [c.name, true]));
+        // the same refusal as the shipped chain's (`l40latch-orbit-chain`, 271 t): the x≈744 corridor
+        expect(w.tape.tick_count).toBe(351);
+        expect(w.tape.refused).toContain('chaser:bob@736,800');
+    });
+
+    it('the model (D1 ON, and OFF: D1 is solver-only) reproduces it at 0 px', async () => {
+        for (const over of [L40BK2B_D1_SWITCHES, { orbitFreeAim: false }]) {
+            const model = await l40Bk2bModelSamples(w.tape, over);
+            expect(model.error).toBeNull();
+            expect(compareCorpseBumpWitness(game, model.samples)).toEqual([]);
+            expect(model.hits).toEqual([]);
+        }
+    });
 });
 
 describe('L40BK2B D2 — the strategy bound counts distinct applications', () => {
