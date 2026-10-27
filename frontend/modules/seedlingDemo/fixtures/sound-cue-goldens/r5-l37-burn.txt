@@ -1,0 +1,2 @@
+65 L37 Player.as:863 "Fire" -1 0.400 0.000
+65 L37 Scenery/BurnableTree.as:33 "Burn" 0 1.000 0.000

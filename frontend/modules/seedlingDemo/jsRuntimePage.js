@@ -137,7 +137,10 @@
  * ⚖ And ONE fade per `new Game`: a reboot in place (an item delivery,
  * `jsRuntimeCore.IN_PLACE_REBOOT_WHY`) is a new run object but no new world in
  * the game, so it owes no fade (`seedlingEffectSkin.fadeSlot`); before G7 it
- * faded in from black a second time.
+ * faded in from black a second time. ⚖ And ONE fade per CROSSING: each held
+ * dead frame polls the host's queue as the game does (`runtime.drainItems`),
+ * so the host's arrival teleport answering a door lands inside that door's
+ * fade, which plays on; before, it waited out the hold and faded in again.
  *
  * ⛓ G8 — the changeable solids and the buttons (`seedlingSolidsSkin.js`: the
  * chests, breakable rocks, burnable trees and magical locks at the run's live
@@ -196,6 +199,7 @@ import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './s
 import { BASE_TICKS_PER_SECOND, createRateMeter, createSlotClock, createSlotPump, messageChannelPostTask, parseGameSpeed } from './jsRuntimeClock.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
+import { createPageSound } from './jsRuntimeSound.js';
 
 /** At 1× (`jsRuntimeClock.BASE_TICKS_PER_SECOND`; ⛓ GAME SPEED: × the speed). */
 export const TICKS_PER_SECOND = BASE_TICKS_PER_SECOND;
@@ -224,7 +228,7 @@ export async function loadGraphicsStack(name, { win = window, base = packsBaseUr
     const registry = parseRegistry(await readJson(new URL('packs.json', base).href));
     const ids = registry.stacks[name];
     if (!ids) throw new Error(`no graphics stack "${name}" in packs.json (have: ${Object.keys(registry.stacks).join(', ') || 'none'})`);
-    const art = createArtLibrary(await loadPackStack(ids, { base, readJson }));
+    const art = createArtLibrary(await loadPackStack(ids, { base, readJson, only: ['art'] }));
     const { images, failed } = await loadSheetImages(art, browserDecoder(win));
     return { art, images, failed };
 }
@@ -357,7 +361,53 @@ export function mountJsRuntimePage(win = window) {
         ...(Number.isFinite(windowParam) && windowParam > 0 ? { solverUpgradeWindowWork: windowParam } : {}),
         ...(Number.isFinite(backstopParam) && backstopParam > 0 ? { solverBackstopMs: backstopParam } : {}),
     });
-    Object.assign(bridge.game, runtime.game);
+    // ⛓ SOUND EFFECTS — the page's sound (`jsRuntimeSound.js`): it reads the run after each tick and never feeds it.
+    const sound = createPageSound({ win, params, listen: (target, type, handler) => life.on(target, type, handler) });
+    // ⛓ ▶ START — `?start=click` (the panel's, for a person: `seedlingSoundSettings.startMode`): the page waits for its
+    // ▶ Start (`#btn-start`, the wasm page's id) before it boots, as the wasm page does — the bridge's callbacks (what
+    // the host waits for) appear only once it is pressed, and the tap unlocks the audio. Without it (an automated
+    // run, or the page opened on its own, as the standalone in-app rows do) it boots at once, and the audio unlocks
+    // on the first tap or key in the page.
+    const startMode = params.get('start') === 'click' ? 'click' : 'auto';
+    let started = false;
+    // What waits for ▶ Start: the vanilla map's mount, which boots the game's own first frame (`Main.as:51`) — the
+    // wasm game runs nothing before its Start either.
+    const afterStart = [];
+    const whenStarted = (fn) => (started ? fn() : afterStart.push(fn));
+    /** Boot: expose the bridge's callbacks. Returns false if it already ran (the wasm page's `__swfBridgeStart`). */
+    function start() {
+        if (started) return false;
+        started = true;
+        sound.unlock();
+        const b = doc.getElementById('btn-start');
+        if (b) b.style.display = 'none';
+        Object.assign(bridge.game, runtime.game);
+        for (const fn of afterStart.splice(0)) fn();
+        return true;
+    }
+    win.__swfBridgeStart = start;
+    const startButton = doc.getElementById('btn-start');
+    if (startMode === 'auto') {
+        // REMOVED, not hidden: a tutorial's optional ▶ Start click (`startSeedlingGame`) skips an absent button but
+        // waits on a present one
+        startButton?.remove();
+        Object.assign(bridge.game, runtime.game);
+        started = true;
+        for (const type of ['pointerdown', 'keydown']) life.on(doc, type, () => sound.unlock());
+    } else if (startButton) {
+        startButton.style.display = '';
+        startButton.disabled = false;
+        life.on(startButton, 'click', () => start());
+    } else {
+        start();
+    }
+    win.__seedlingJsSound = {
+        get startMode() { return startMode; },
+        get started() { return started; },
+        get readout() { return sound.readout(); },
+        set: (opts) => sound.set(opts),
+        unlock: () => sound.unlock(),
+    };
     win.__swfBridge = bridge;
     win.__seedlingJsRuntime = runtime;
     win.__runtimeReady = true;
@@ -423,7 +473,7 @@ export function mountJsRuntimePage(win = window) {
     // (`watchLifetime.test.js`'s one-busted-fetch rule, in spirit).
     win.fetch(new URL(VANILLA_MAP_PATH, win.location.href).href, { cache: 'no-store' })
         .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-        .then((doc) => runtime.setVanilla(doc))
+        .then((doc) => whenStarted(() => runtime.setVanilla(doc)))
         .catch((err) => {
             vanillaError = err.message;
             win.console?.error?.(`[js runtime] the vanilla map could not be loaded — ${err.message}`);
@@ -451,8 +501,10 @@ export function mountJsRuntimePage(win = window) {
     const clock = createSlotClock({ speed: initialSpeed });
     const rateMeter = createRateMeter();
     let lastFrameAt = 0;
+    let soundTicks = null;
     /** One slot of the game's clock: an owed dead frame of a load fade (the run waits), else one run tick. */
     function slot() {
+        sound.slotRan();
         // ⛓ G4 — the fade hold: an owed dead frame takes this tick slot, and the run waits.
         if (graphics.stack && runtime.run) {
             // a fresh run starts with its boot build's fade owed; a stack switched on mid-run owes nothing;
@@ -463,10 +515,20 @@ export function mountJsRuntimePage(win = window) {
             graphics.effectSkin = slot.skin;
             if (slot.held) {
                 graphics.held += 1;
+                // ⛓ the game polls the host's queue on a dead frame too (`drainItems`): the arrival teleport that
+                // answers a door lands inside that door's fade, which then plays on (`adoptRunEffectSkin`)
+                runtime.drainItems();
                 return;
             }
         }
         runtime.tick(heldFromCodes(down));
+        // ⛓ SOUND EFFECTS — after the tick, reading it: a run that did not advance plays nothing new.
+        const run = runtime.run;
+        if (run && run.ticksCompleted !== soundTicks) {
+            soundTicks = run.ticksCompleted;
+            sound.step(run, { record: (runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null,
+                tick: runtime.ticks, tickSeconds: 1 / (BASE_TICKS_PER_SECOND * clock.speed) });
+        }
         if (graphics.stack) {
             graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
             graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
@@ -533,6 +595,7 @@ export function mountJsRuntimePage(win = window) {
     function frame(now) {
         lastFrameAt = now;
         advance(now);
+        sound.frame();
         paint();
         win.requestAnimationFrame(frame);
     }

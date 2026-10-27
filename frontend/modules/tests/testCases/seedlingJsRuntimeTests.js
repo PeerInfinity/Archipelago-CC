@@ -3734,6 +3734,197 @@ registerTest({
 });
 
 /**
+ * ⛓ SOUND EFFECTS (slice `seedling-js-sound-effects`) — a FAKE AudioContext installed in a page's window before its
+ * ▶ Start: it records every clip started (its decoded bytes and its `when`), so a row can see what is played, on a
+ * machine with or without audio. `decodeAudioData` answers `{ bytes }`, the clip's size.
+ */
+function installFakeAudio(win) {
+    const starts = [];
+    win.AudioContext = class FakeAudioContext {
+        constructor() { this.state = 'running'; this.sampleRate = 44100; this.destination = {}; }
+        get currentTime() { return win.performance.now() / 1000; }
+        createGain() { return { gain: { value: 1 }, connect() {} }; }
+        createStereoPanner() { return { pan: { value: 0 }, connect() {} }; }
+        createBuffer() { return { silent: true }; }
+        createBufferSource() {
+            const s = { connect() {}, stop() {}, start: (when) => { if (!s.buffer?.silent) starts.push({ bytes: s.buffer?.bytes, when, at: this.currentTime }); } };
+            return s;
+        }
+        resume() { this.state = 'running'; return Promise.resolve(); }
+        suspend() { this.state = 'suspended'; return Promise.resolve(); }
+        decodeAudioData(ab) { return Promise.resolve({ bytes: ab.byteLength }); }
+    };
+    return starts;
+}
+
+/**
+ * ⛓ SOUND EFFECTS — the JS page's ▶ Start and its sound, standalone. `jsRuntime.html?start=click` shows `#btn-start`
+ * (the wasm page's id) and does NOT boot: the bridge has no callbacks. A fake AudioContext is installed, ▶ Start is
+ * pressed: the page boots, the output unlocks, the seedling `sfx` stack's 68 clips decode. Driven to level 38 onto the
+ * pulser's ButtonRoom (the G9 machines row's spot) through its own `__swfBridge`, the pulser's "Energy Pulse" cues
+ * arrive every 51 ticks (its pulse period, the same as the node golden `prox-l38-chest`), each one PLAYED as the
+ * energyPulse clip. No panel, preset or AP state is touched; the iframe is removed however the row ends.
+ */
+export async function seedlingJsRuntimeSoundStart(tc) {
+    const frame = document.createElement('iframe');
+    const errors = [];
+    try {
+        Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '480px', height: '480px',
+            opacity: '0.01', pointerEvents: 'none', border: '0' });
+        frame.src = './modules/seedlingDemo/jsRuntime.html?start=click';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime && w.__seedlingJsSound ? w : null;
+        }, 'the standalone JS page is up (?start=click)', 20000, 200);
+        tc.reportCondition('the standalone page is up', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        const button = win.document.getElementById('btn-start');
+        const sound = win.__seedlingJsSound;
+        await new Promise((r) => setTimeout(r, 1500)); // time for the vanilla map's fetch: it must NOT boot a run yet
+        tc.assertEqual('▶ Start is shown and pressable; the page has NOT booted (no bridge callbacks, no run); the audio is locked',
+            'true/false/click/false/0/false/locked',
+            `${!!button && button.style.display !== 'none'}/${button?.disabled}/${sound.startMode}/${sound.started}/`
+            + `${Object.keys(win.__swfBridge.game).length}/${!!win.__seedlingJsRuntime.run}/${sound.readout.state}`);
+        const starts = installFakeAudio(win);
+        button.click();
+        tc.assertEqual('▶ Start boots the page: the button hides, the callbacks appear, the audio runs', 'none/true/true/running',
+            `${button.style.display}/${sound.started}/${typeof win.__swfBridge.game.configure === 'function'}/${sound.readout.state}`);
+        const loaded = await tc.pollForValue(() => (sound.readout.loaded === 'ready' ? sound.readout : null), 'the sfx stack decoded', 15000, 100);
+        tc.assertEqual('the seedling sfx stack: 68 clips decoded, none failed', '68/[]', `${loaded?.clips}/${JSON.stringify(loaded?.failedClips)}`);
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [38, 208, 224] }]);
+        const pulses = await tc.pollForValue(() => {
+            const p = sound.readout.recent.filter((c) => c.site === 'Puzzlements/Pulser.as:65');
+            return p.length >= 3 ? p : null;
+        }, 'three "Energy Pulse" cues from the L38 pulser', 30000, 100);
+        const r = sound.readout;
+        tc.log(`sound: ${JSON.stringify({ ...r, recent: r.recent.slice(-8) })}; starts ${starts.length}`);
+        const gaps = (pulses ?? []).slice(1).map((c, i) => c.tick - pulses[i].tick);
+        tc.assertEqual('the pulses are its period apart (51 ticks, as in the node golden prox-l38-chest)', '51,51', gaps.slice(0, 2).join(','));
+        tc.assertEqual('every cue the page played reached the context (a start per play)', r.player.played, starts.length);
+        tc.assertEqual('the pulse played the energyPulse clip (5463 bytes)', true, starts.some((s) => s.bytes === 5463));
+        // `at` is the context clock when `start()` ran, a moment AFTER the tick read it (a `when` in the past means now)
+        tc.assertEqual('no start was scheduled more than 20 ms in the past or more than MAX_LEAD (0.1 s) ahead', true,
+            starts.every((s) => s.when >= s.at - 0.02 && s.when - s.at <= 0.1 + 1e-6));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 38 and did not halt', '38/null',
+            `${win.__seedlingJsRuntime.run?.level}/${win.__seedlingJsRuntime.halted ? win.__seedlingJsRuntime.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-sound-start',
+    name: 'Seedling JS runtime: ▶ Start boots the page and unlocks its sound; the L38 pulser\'s cues are played (fake AudioContext)',
+    description: 'Mounts jsRuntime.html?start=click standalone: ▶ Start (#btn-start) is shown and the page has not booted. With a '
+        + 'fake AudioContext installed, ▶ Start boots it and unlocks the sound; the 68 sfx clips decode. Driven to level 38, '
+        + 'the pulser\'s "Energy Pulse" cues come 51 ticks apart and each is played. Touches no panel, preset or AP state.',
+    testFunction: seedlingJsRuntimeSoundStart,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ SOUND EFFECTS — the panel. (1) THE BYPASS: in this automated run (`?mode=test-…`) the default start mode
+ * `tests-auto` mounts the page WITHOUT `start=click`, so it boots with no ▶ Start. (2) With `seedlingJsStart = click`
+ * (a session override) set before the mount, the panel says *click ▶ Start in the game*, the page waits, and pressing
+ * its ▶ Start boots it through to the AP load. (3) The "Sound" and "Volume" rows are js-only Settings rows, applied
+ * LIVE (no re-mount). Every setting is restored however it ends.
+ */
+export async function seedlingJsRuntimeSoundPanel(tc) {
+    const S = await import('../../flashPanel/seedlingSoundSettings.js');
+    const saved = {};
+    for (const [key, fallback] of [[RUNTIME_KEY, 'auto'], [S.START_SETTING_KEY, 'tests-auto'], [S.SOUND_SETTING_KEY, 'on'], [S.VOLUME_SETTING_KEY, 100]]) {
+        try { saved[key] = await settingsManager.getSetting(key, fallback); } catch { saved[key] = fallback; }
+    }
+    const mount = async (what, ready) => {
+        const rulesJson = await (await fetch(PRESET_PATH)).json();
+        const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+        tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: PRESET_PATH });
+        await loaded;
+        await tc.stateManager.pingWorker('after-rules-load', 5000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+        return tc.pollForValue(() => {
+            const p = getActivePanelInstance();
+            return p?.transport === 'js' && p.adapter && frameOf(p)?.__seedlingJsSound && ready(p) ? p : null;
+        }, what, 30000, 250);
+    };
+    try {
+        // (1) the bypass — the default start mode in an automated run
+        await settingsManager.updateSetting(S.START_SETTING_KEY, 'tests-auto', { persist: false });
+        await settingsManager.updateSetting(RUNTIME_KEY, 'js', { persist: false });
+        const auto = await mount('the panel mounted the JS page and it booted with no ▶ Start', (p) => p._apLoadResult && frameOf(p).__seedlingJsRuntime?.run);
+        tc.reportCondition('(1) the bypass: the page booted with no ▶ Start', !!auto);
+        if (!auto) return tc.getOverallResult();
+        const aw = frameOf(auto);
+        tc.assertEqual('(1) no start=click on the URL; the page says auto; the button is gone (a tutorial\'s optional click skips it)', 'false/auto/null',
+            `${/start=click/.test(auto.wasmPath)}/${aw.__seedlingJsSound.startMode}/${aw.document.getElementById('btn-start')}`);
+        // (3) the rows, live
+        const soundRow = auto._settingsControls?.find((c) => c.prop === 'seedlingJsSound');
+        const volumeRow = auto._settingsControls?.find((c) => c.prop === 'seedlingJsVolume');
+        tc.assertEqual('(3) "Sound" and "Volume" rows are visible on the js runtime', 'flex/flex',
+            `${soundRow?.row?.style?.display}/${volumeRow?.row?.style?.display}`);
+        await settingsManager.updateSetting(S.VOLUME_SETTING_KEY, 40, { persist: false });
+        await settingsManager.updateSetting(S.SOUND_SETTING_KEY, 'off', { persist: false });
+        const live = await tc.pollForValue(() => {
+            const r = aw.__seedlingJsSound.readout;
+            return r.volume === 0.4 && r.on === false ? r : null;
+        }, 'the volume and the switch reached the mounted page live', 5000, 50);
+        tc.assertEqual('(3) applied live: volume 0.4, sound off, the same page (no re-mount)', '0.4/false/true',
+            `${live?.volume}/${live?.on}/${frameOf(auto) === aw}`);
+        await settingsManager.updateSetting(S.SOUND_SETTING_KEY, 'on', { persist: false });
+        await settingsManager.updateSetting(S.VOLUME_SETTING_KEY, 100, { persist: false });
+        // (2) ▶ Start through the panel: the start mode is read at the mount, so re-mount with `click` (the panel's own
+        // re-mount, as its dash-shape switches do)
+        await settingsManager.updateSetting(S.START_SETTING_KEY, 'click', { persist: false });
+        auto._teardownForReinit();
+        auto._initializeAdapter();
+        const waiting = await tc.pollForValue(() => {
+            const p = getActivePanelInstance();
+            return p?.transport === 'js' && p.statusElement?.textContent === 'click ▶ Start in the game'
+                && frameOf(p) && frameOf(p) !== aw && frameOf(p).__seedlingJsSound ? p : null;
+        }, 'the panel re-mounted the JS page and asks for ▶ Start', 30000, 250);
+        tc.reportCondition('(2) the panel says "click ▶ Start in the game"', !!waiting);
+        if (!waiting) return tc.getOverallResult();
+        const ww = frameOf(waiting);
+        const button = ww.document.getElementById('btn-start');
+        tc.assertEqual('(2) start=click on the URL; ▶ Start shown; not booted (no callbacks, no run)', 'true/true/0/false',
+            `${/start=click/.test(waiting.wasmPath)}/${!!button && button.style.display !== 'none'}/`
+            + `${Object.keys(ww.__swfBridge.game).length}/${!!ww.__seedlingJsRuntime.run}`);
+        installFakeAudio(ww);
+        button.click();
+        const booted = await tc.pollForValue(() => (waiting._apLoadResult && ww.__seedlingJsRuntime.run ? waiting : null),
+            'after ▶ Start the panel finished its AP load into a live run', 30000, 250);
+        tc.assertEqual('(2) ▶ Start booted it: a live run, the sound running', 'true/running',
+            `${!!booted}/${ww.__seedlingJsSound.readout.state}`);
+    } finally {
+        for (const [key, value] of Object.entries(saved)) {
+            try { await settingsManager.updateSetting(key, value, { persist: false }); } catch { /* best effort */ }
+        }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-sound-panel',
+    name: 'Seedling JS runtime: the sound settings and ▶ Start in the panel — bypassed in a test run, waited for on `click`, applied live',
+    description: 'With flashPanel.runtime = js (session override) and seedling_generated_room loaded: the default start mode boots the '
+        + 'page with no ▶ Start in this automated run; the js-only Sound and Volume rows reach the mounted page live; with '
+        + 'seedlingJsStart = click the panel asks for ▶ Start and the page waits until it is pressed, then boots to a live run. '
+        + 'All settings are restored.',
+    testFunction: seedlingJsRuntimeSoundPanel,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
  * ⛓ TOUCH CONTROLS (slice `seedling-js-touch-controls`) — the on-screen controls in the real panel, driven by synthetic
  * TOUCH pointer events on the controls (what a finger sends; CSS / layout are the app's own). With
  * `flashPanel.touchControls = on` (a session override) on seedling_generated_room: the controls are mounted with the
@@ -3933,3 +4124,111 @@ for (const [id, name, fn] of [
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+/**
+ * ⛓ ONE FADE PER CROSSING — the user (2026-10-26): "in js mode, it does a double fade on every room transition. It
+ * doesn't do that in wasm mode." With flashPanel.runtime = js and the seedling graphics stack, the Playback Bot walks
+ * seedling_atlas's real rooms (into the starting house, out, down the owl's-nest stairs and into the dungeon). The
+ * region binding answers each door with an arrival teleport on the frame it reads the door; before the fix that
+ * teleport waited out the door's held fade and faded in from black again. A sampler inside the page records, every
+ * animation frame, the black cover the paint drew (`__seedlingJsGraphics.effects.screen`), the dead frames held and
+ * the crossings so far. The pin: each crossing's stretch has exactly ONE rise of the cover, never rises again, holds
+ * exactly the game's 20 dead frames, and the host's teleport did land inside it. The fresh start is LOGGED (the
+ * arrival's boot tick: 0 = it landed inside L0's own fade), not asserted: when the host's load lands is its own.
+ */
+export async function seedlingJsRuntimeGraphicsOneFadePerCrossing(tc) {
+    let previous = 'auto';
+    let previousGraphics = 'rects';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousGraphics = await settingsManager.getSetting(GRAPHICS_SETTING_KEY, 'rects'); } catch { /* keep rects */ }
+    let stopSampling = () => {};
+    try {
+        await settingsManager.updateSetting(GRAPHICS_SETTING_KEY, 'seedling', { persist: false });
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+        if (!ready) return tc.getOverallResult();
+        const { bot } = ready;
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt, win } = up;
+        const g = await tc.pollForValue(() => (win.__seedlingJsGraphics?.status === 'ready' ? win.__seedlingJsGraphics : null),
+            'the JS page loaded the seedling graphics stack', 20000, 200);
+        tc.reportCondition('the graphics stack is up', !!g);
+        if (!g) return tc.getOverallResult();
+        const trace = [];
+        let lastFrame = -1;
+        let on = true;
+        stopSampling = () => { on = false; };
+        const sample = () => {
+            if (!on) return;
+            if (g.frames !== lastFrame) {
+                lastFrame = g.frames;
+                const black = (g.effects?.screen ?? []).find((o) => o.colour === '#000000');
+                trace.push({ cover: black ? +black.alpha.toFixed(4) : 0, held: g.held,
+                    crossings: rt.events.filter((e) => e.type === 'transition').length,
+                    boots: rt.events.filter((e) => e.type === 'boot').length });
+            }
+            win.requestAnimationFrame(sample);
+        };
+        win.requestAnimationFrame(sample);
+        const start = await tc.pollForValue(() => (bot.getCurrentRegion?.() === 'overworld_start__r8c0' && rt.run?.level === 0 ? rt : null),
+            'the bot and the page are in the start region (overworld_start__r8c0, level 0)', 15000, 200);
+        tc.reportCondition('the bot starts in overworld_start__r8c0 on level 0', !!start);
+        if (!start) return tc.getOverallResult();
+        const bootTicks = rt.events.filter((e) => e.type === 'boot').map((e) => `${e.t ?? '?'}:${e.why}`);
+        tc.log(`the fresh start: boots ${JSON.stringify(bootTicks)} (an arrival at tick 0 landed inside L0's own fade); held ${g.held}`);
+
+        bot.walkToLocation(CHEST_LOCATION);
+        const chest = await tc.pollForCondition(() => snapshotFacts(tc).checked.has(CHEST_LOCATION) || errorStatuses(bot).length > 0,
+            `the bot walked into the starting house and checked "${CHEST_LOCATION}"`, 60000, 250);
+        tc.reportCondition('the chest was checked', !!chest && snapshotFacts(tc).checked.has(CHEST_LOCATION));
+        bot.walkToTile('dungeon1_room1__r0c4', 4, 3);
+        const deep = await tc.pollForCondition(() => walkedRegions().includes('dungeon1_room1__r0c4') || errorStatuses(bot).length > 0,
+            'the bot routed into dungeon1_room1__r0c4', 60000, 250);
+        tc.reportCondition('the dungeon was reached', !!deep);
+        // the last crossing's fade has played out
+        await tc.pollForCondition(() => !g.effects?.owed && !g.effects?.cover, 'the last fade has played out', 10000, 100);
+        stopSampling();
+
+        const FADE = Array.from({ length: 20 }, (_, k) => +Math.max(1 - 0.05 * (k + 1), 0).toFixed(4));
+        const parts = [];
+        for (let i = 1; i < trace.length; i += 1) {
+            if (trace[i].crossings > trace[i - 1].crossings) parts.push([]);
+            if (parts.length) parts.at(-1).push(trace[i]);
+        }
+        tc.assertEqual('the sampler saw the four crossings (house in, out, the stairs down, the dungeon)', 4, parts.length);
+        for (const [k, part] of parts.entries()) {
+            let rises = 0;
+            let prev = 0;
+            for (const r of part) { if (r.cover > prev) rises += 1; prev = r.cover; }
+            const held = part.at(-1).held - part[0].held;
+            tc.log(`crossing ${k + 1}: rises ${rises}, held ${held}, boots +${part.at(-1).boots - part[0].boots}, covers ${JSON.stringify([...new Set(part.map((r) => r.cover))])}`);
+            tc.assertEqual(`crossing ${k + 1}: the host's arrival teleport landed inside it (not vacuous)`, true, part.at(-1).boots > part[0].boots);
+            tc.assertEqual(`crossing ${k + 1}: ONE fade (the cover rose once)`, 1, rises);
+            tc.assertEqual(`crossing ${k + 1}: the cover never rose again (one monotone ramp)`, true,
+                part.every((r, i) => i === 0 || r.cover <= part[i - 1].cover));
+            tc.assertEqual(`crossing ${k + 1}: the game's 20 dead frames were held, once`, 20, held);
+            tc.assertEqual(`crossing ${k + 1}: every cover drawn is one of the game's 1 − 0.05k`, true,
+                part.every((r) => r.cover === 1 || r.cover === 0 || FADE.includes(r.cover)));
+        }
+        tc.assertEqual('no error: status, no death, no halt', '[]/0/null',
+            `${JSON.stringify(errorStatuses(bot))}/${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        stopSampling();
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(GRAPHICS_SETTING_KEY, previousGraphics, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-one-fade-per-crossing',
+    name: 'Seedling JS runtime: ONE fade per room crossing (the host\'s arrival teleport lands inside the door\'s fade)',
+    description: 'flashPanel.runtime = js with the seedling graphics stack on seedling_atlas: the Playback Bot walks four real '
+        + 'crossings while a sampler records the black cover each animation frame drew. Each crossing shows exactly one '
+        + 'monotone ramp of the game\'s 1 − 0.05k covers over 20 held dead frames, and the host\'s arrival teleport lands '
+        + 'inside it (before the fix every crossing faded in twice). No error: status, death or halt.',
+    testFunction: seedlingJsRuntimeGraphicsOneFadePerCrossing,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

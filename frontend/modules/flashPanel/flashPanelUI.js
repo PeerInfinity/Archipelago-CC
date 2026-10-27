@@ -36,6 +36,9 @@ import {
   CAMERA_SETTING_KEY, EFFECTS_SETTING_KEY, GRAPHICS_SETTING_KEY, LIGHTS_SETTING_KEY, cameraMode, effectsMode, graphicsPageParams, graphicsStack, lightsMode,
 } from './seedlingGraphicsSettings.js';
 import { SPEED_SETTING_KEY, gameSpeed, gameSpeedPageParam } from './seedlingGameSpeedSettings.js';
+import {
+  SOUND_SETTING_KEY, START_SETTING_KEY, VOLUME_SETTING_KEY, soundMode, soundPageParams, soundVolume, startMode,
+} from './seedlingSoundSettings.js';
 import { RUFFLE_CDN } from './ruffleCdn.js';
 
 function log(level, message, ...data) {
@@ -110,6 +113,8 @@ const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'seedlingJsLights', label: 'Lights', when: 'js' },
   { prop: 'seedlingJsEffects', label: 'Effects', when: 'js' },
   { prop: 'seedlingJsSpeed', label: 'Game speed', when: 'js' },
+  { prop: 'seedlingJsSound', label: 'Sound', when: 'js' },
+  { prop: 'seedlingJsVolume', label: 'Volume', when: 'js' },
   { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
   { prop: 'touchControls', label: 'Touch controls', when: 'touch' },
   { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
@@ -341,6 +346,12 @@ export class FlashPanelUI {
         await this._refreshJsSpeed(data.key === SPEED_SETTING_KEY ? data.value : undefined);
         this._applyJsSpeed();
       }
+      if (data?.key === SOUND_SETTING_KEY || data?.key === VOLUME_SETTING_KEY || data?.key === '*') {
+        // ⛓ SOUND EFFECTS — presentation only: applied to a mounted JS page LIVE, never a re-mount.
+        await this._refreshJsSound(data.key === SOUND_SETTING_KEY ? data.value : undefined,
+          data.key === VOLUME_SETTING_KEY ? data.value : undefined);
+        this._applyJsSound();
+      }
       if (data?.key === TOUCH_SETTING_KEY || data?.key === '*') {
         // ⛓ TOUCH CONTROLS — shown / hidden at once, never a re-mount.
         await this._refreshTouchControls(data.key === TOUCH_SETTING_KEY ? data.value : undefined);
@@ -462,6 +473,8 @@ export class FlashPanelUI {
       // or null while it runs / once it bound one.
       apRefusal: this._apLoadRefusal ?? null,
       jsRuntime,
+      // ⛓ THE DELIVERED ROOMS FIRST — the level-set delivery the AP load armed (`{set, state, result}`), or null.
+      levelSetDelivery: this._seedlingDelivery ?? null,
       // ⛓ W2 — the wasm playback engine's handles: the game's callback surface
       // and window (re-read per call — a preset switch replaces the iframe),
       // the panel's own teleport recipe, and the map document the preset names.
@@ -739,6 +752,34 @@ export class FlashPanelUI {
     if (v !== undefined) this._jsSpeed = gameSpeed(v);
   }
 
+  /** ⛓ SOUND EFFECTS — cache the sound switch, volume and start mode (`seedlingSoundSettings.js`); undefined = read it. */
+  async _refreshJsSound(sound, volume) {
+    let s = sound;
+    let v = volume;
+    let st;
+    try {
+      if (s === undefined) s = await settingsManager.getSetting(SOUND_SETTING_KEY, 'on');
+      if (v === undefined) v = await settingsManager.getSetting(VOLUME_SETTING_KEY, 100);
+      st = await settingsManager.getSetting(START_SETTING_KEY, 'tests-auto');
+    } catch { /* keep the cached values */ }
+    if (s !== undefined) this._jsSound = soundMode(s);
+    if (v !== undefined) this._jsVolume = soundVolume(v);
+    if (st !== undefined) this._jsStart = startMode(st, globalThis.location?.search);
+  }
+
+  /** ⛓ SOUND EFFECTS — hand the cached sound switch and volume to a mounted JS page (a no-op on any other transport). */
+  _applyJsSound() {
+    if (this.transport !== 'js') return;
+    let handle = null;
+    try { handle = this.adapter?._getWin?.()?.__seedlingJsSound ?? null; } catch { handle = null; }
+    if (!handle?.set) return;
+    try {
+      handle.set({ on: (this._jsSound ?? 'on') === 'on', volume: (this._jsVolume ?? 100) / 100 });
+    } catch (err) {
+      this._panelLog(`JS page sound could not be applied: ${err.message}`);
+    }
+  }
+
   /** ⛓ GAME SPEED — the adapter's item push interval: `PUSH_INTERVAL_MS` / the speed on the JS runtime, else the default. */
   _jsPushIntervalMs() {
     return this.transport === 'js' ? PUSH_INTERVAL_MS / (this._jsSpeed ?? 1) : PUSH_INTERVAL_MS;
@@ -794,6 +835,7 @@ export class FlashPanelUI {
     this._seedlingGenSet = null;
     this._seedlingAtlas = null;
     this._seedlingRealSet = null;
+    this._seedlingDelivery = null;
     this._apLoadRefusal = null;
     this._touchTransport = null;
     this._unmountTouchControls();
@@ -1424,8 +1466,14 @@ export class FlashPanelUI {
       await adapter.waitForRuntime(30000);
       if (this._initStale(epoch, adapter)) return;
       this._heldKeys.install();
-      if (this.transport === 'js') {
-        // ⛓ The JS page has no ▶ Start: no GPU or audio context to unlock.
+      if (this.transport === 'js' && this._jsStart === 'click') {
+        // ⛓ ▶ START — the JS page waits for its ▶ Start (the tap that unlocks the sound), as the wasm page does.
+        this._setStatus('click ▶ Start in the game');
+        this._panelLog('JS runtime page loaded — click ▶ Start in the game to boot it (the tap turns the sound on)');
+        await this._refreshSolverWalk(this._solverWalk);
+        if (this._initStale(epoch, adapter)) return;
+      } else if (this.transport === 'js') {
+        // ⛓ no `start=click` (an automated run): the page boots at once; its sound waits for a tap in the game.
         this._setStatus('JS runtime loaded');
         this._panelLog('JS runtime page loaded (seedlingDemo model, rectangles)');
         // ⛓ S1 — the page is up: hand it the solver mode now (the init read raced the iframe).
@@ -1487,6 +1535,7 @@ export class FlashPanelUI {
    */
   async _startSeedlingRandomizer(adapter) {
     this._apLoadRefusal = null;
+    this._seedlingDelivery = null;
     const staticData = stateManager.getStaticData?.() ?? null;
     const flashPanel = staticData?.flash_panel ?? null;
     const transport = this.transport === 'js' ? 'js' : 'wasm';
@@ -1581,6 +1630,9 @@ export class FlashPanelUI {
       // ⛓ VANILLA MAP — the REAL rooms the game plays when an arm delivered them (the vanilla rewrite; an
       // atlas arm's retag): the wasm playback engine stages these, not the map document.
       this._seedlingRealSet = !generatedArm ? (loaded.set ?? null) : null;
+      // ⛓ THE DELIVERED ROOMS FIRST — the delivery this load arms (null on an arm that only binds): the JS
+      // runtime's walks wait until the page plays its set (`SeedlingPlaybackController._deliveredSetGate`).
+      this._seedlingDelivery = loaded.delivery ?? null;
 
       const glue = getSeedlingRegionGlue();
       if (!glue) {
@@ -1751,7 +1803,7 @@ export class FlashPanelUI {
       for (const refresh of [this._refreshSolverWalk, this._refreshWasmSolverBudget,
         this._refreshSolverUpgradeWindow, this._refreshKillLockBodies, this._refreshContactFidelity,
         this._refreshAxeDodgeAsk, this._refreshDashOnlyWindow, this._refreshDashShape, this._refreshJsGraphics,
-        this._refreshJsSpeed]) {
+        this._refreshJsSpeed, this._refreshJsSound]) {
         await refresh.call(this);
         if (this._initStale(epoch)) return;
       }
@@ -1778,7 +1830,9 @@ export class FlashPanelUI {
             axeDodgePageParam(this._jsPageAxeDodge), dashOnlyWindowPageParam(this._jsPageDashOnly),
             dashShapePageParam(this._jsPageDashShape),
             graphicsPageParams(this._jsGraphics, this._jsCamera, this._jsLights, this._jsEffects),
-            gameSpeedPageParam(this._jsSpeed)].filter(Boolean);
+            gameSpeedPageParam(this._jsSpeed),
+            // ⛓ SOUND EFFECTS — the sound switch and volume (none at on / 100), and `start=click` unless an automated run.
+            soundPageParams(this._jsSound, this._jsVolume, this._jsStart)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm(epoch);

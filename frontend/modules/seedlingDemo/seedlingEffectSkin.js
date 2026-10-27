@@ -491,7 +491,13 @@ export const holdOwed = (skin) => !!skin?.fadeQueue?.length;
  * fade the delivery interrupted plays on). Before G7 the reboot started a second full fade from black.
  */
 export function adoptRunEffectSkin(prev, view, { fresh = false, inPlace = false } = {}) {
-    if (inPlace && prev) {
+    // ⛓ ONE FADE PER TRANSITION — a fresh run met while the previous one's fade is still OWED is a `new Game` the
+    // page took on a dead frame it held (`jsRuntimeCore.drainItems`): the host's arrival teleport answering the door
+    // it just crossed lands a frame or two into that door's fade. The game restarts `blackCover` there, on a screen
+    // that is still black; on the JS page the fade already showing PLAYS ON instead (what was owed carries over), so
+    // the crossing shows ONE ramp, as on the wasm page. Before this the teleport waited out the whole hold and then
+    // faded in from black a second time on every crossing.
+    if (prev && (inPlace || (fresh && holdOwed(prev)))) {
         const s = primeEffectSkin({ ...view, loadSpans: [] });
         s.seen.loadSpans = view.loadSpans.length;
         return { ...s, fadeQueue: prev.fadeQueue.slice(), cover: prev.cover };
