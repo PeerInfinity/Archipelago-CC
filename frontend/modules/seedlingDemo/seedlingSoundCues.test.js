@@ -113,7 +113,8 @@ describe.skipIf(!HAVE_SRC)('1. THE CENSUS OF RECORD — every Music.* call site,
     it('the census counts (a readout, kept honest): cued + remaining + music = every site', () => {
         const by = (st) => Object.values(SOUND_CALL_SITES).filter((r) => r.status === st).length;
         expect(by('cued') + by('remaining') + by('music')).toBe(sites.length);
-        expect(by('cued')).toBeGreaterThanOrEqual(30);
+        // THE COUNT LINE (slice `seedling-js-sfx-cues`): 71 cued, 7 remaining (each with its reason), 7 music
+        expect({ cued: by('cued'), remaining: by('remaining'), music: by('music') }).toEqual({ cued: 71, remaining: 7, music: 7 });
     });
 });
 
