@@ -71,13 +71,16 @@ export async function l30keylockStaging(x = 224, w = L30KEYLOCK_STEP52) {
  * The solver on that staging with the two switches as given (`rescan`, `waitPriced`). Every run the solve builds
  * is a RECORDING view (`Object.create(run)` with its own `advance`), so a refusal still hands back the keys the last
  * pass drove and the run they were driven on. Resolves `{staging, solved, refusal, driven, run}`.
+ * ⛓ `orbit` (planning-14's wave-32 flip): `chaserOrbitKill` as given, or the run's own value when omitted. The OFF
+ * controls name it `false` — ON, with no stance for the body, the orbit arm kills bobsoldier@48,80 hitless.
  */
-export async function l30keylockPlan(x, { rescan, waitPriced }) {
+export async function l30keylockPlan(x, { rescan, waitPriced, orbit }) {
     const w = L30KEYLOCK_STEP52;
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
     const { withKillStanceTargetRescan, withKeylockWaitPriced } = await import(join(MODULE, 'solverBot.js'));
+    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
     const staging = await l30keylockStaging(x, w);
     const levelSource = atlasLevelSource();
     let driven = null;
@@ -94,10 +97,12 @@ export async function l30keylockPlan(x, { rescan, waitPriced }) {
     let solved = null;
     let refusal = null;
     try {
-        solved = await withKillStanceTargetRescan(rescan, () => withKeylockWaitPriced(waitPriced, () => twoPassSolve({
-            makeRun, goals: w.goals.map((g) => JSON.parse(JSON.stringify(g))), name: `survey-step-${w.step}`,
-            boot: staging.boot, persistence: staging.persistence, log: () => {},
-        })));
+        const over = orbit === undefined ? {} : { chaserOrbitKill: orbit };
+        solved = await withContactFidelity(over, () => withKillStanceTargetRescan(rescan, () => withKeylockWaitPriced(
+            waitPriced, () => twoPassSolve({
+                makeRun, goals: w.goals.map((g) => JSON.parse(JSON.stringify(g))), name: `survey-step-${w.step}`,
+                boot: staging.boot, persistence: staging.persistence, log: () => {},
+            }))));
     } catch (e) {
         refusal = e;
     }
@@ -147,7 +152,7 @@ async function main() {
 
     // ── OFF: the base solver's walk is hit on the key line, and it refuses only at the next walk's gate ──
     {
-        const off = await l30keylockPlan(224, { rescan: false, waitPriced: false });
+        const off = await l30keylockPlan(224, { rescan: false, waitPriced: false, orbit: false });
         check('both switches OFF, (224,80): the staging REFUSES at the gate after the keylock (the survey\'s step-52 text)',
             off.solved === null && /the danger map forbids \(71\.77\d*,50\.11\d*\) — chaser:bobsoldier@48,80/
                 .test(off.refusal?.message ?? ''), (off.refusal?.message ?? 'it solved').slice(0, 200));
@@ -173,7 +178,7 @@ async function main() {
 
     // ── ON: the solver's own plan from each pit landing ──
     for (const x of L30_PIT_LANDINGS) {
-        const off = await l30keylockPlan(x, { rescan: false, waitPriced: false });
+        const off = await l30keylockPlan(x, { rescan: false, waitPriced: false, orbit: false });
         check(`both switches OFF, (${x},80): REFUSED, and the walk it drove was hit on the key line`,
             off.solved === null && (off.run?.playerHits?.length ?? 0) >= 2,
             `${(off.refusal?.message ?? 'it solved').slice(0, 120)} — hits ${off.run?.playerHits?.length ?? '?'}`);
