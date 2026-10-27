@@ -1,0 +1,10 @@
+== census-859-0.jsonl (45 seams)
+  16  refused at burn stance chaser:bob@736,752   [5946 5949 5950 5953 5954 5955 5960 5961 5962 5963 5964 5965 5966 5967 5968 5969]
+  13  refused at burn stance chaser:bob@736,800   [5934 5935 5944 5958 5959 5970 5971 5972 5973 5974 5975 5976 5977]
+  13  refused at burn stance chaser:bobsoldier@880,832   [5933 5936 5937 5938 5939 5940 5941 5942 5943 5951 5952 5956 5957]
+   3  press-kill refusal: every key set — the plan's own and 5 alternative(s) — lands    [5945 5947 5948]
+== census-859-1.jsonl (45 seams)
+  15  refused at burn stance chaser:bobsoldier@880,832   [5933 5936 5937 5938 5939 5940 5941 5942 5943 5951 5952 5956 5957 5970 5971]
+  15  refused at burn stance chaser:bob@736,752   [5946 5949 5950 5953 5954 5955 5960 5961 5962 5963 5964 5965 5966 5967 5968]
+  12  refused at burn stance chaser:bob@736,800   [5934 5935 5944 5958 5959 5969 5972 5973 5974 5975 5976 5977]
+   3  press-kill refusal: every key set — the plan's own and 5 alternative(s) — lands    [5945 5947 5948]

@@ -25862,6 +25862,32 @@ both: *"the solve returned 381 key set(s) but the shadow advanced 266 time(s)"*.
 **Trap candidate.** Every wrapper between a result's producer and its reader is part of a non-enumerable field's
 contract. A wrapper that spreads only when something rare happened (here, a tripped deadline) hides the loss until the
 rare thing and the field meet on one pass.
+### Seedling hammer-phase PKC — the press kill prices the chasers beside its walks
+
+⚖ User, 2026-10-26: queued (*"Yes please"*), answering fidelity L40BK2's hand-over D3. Switch
+`pressKillCost.PRESS_KILL_CHASERS`, **OFF** (`SEEDLING_PRESS_KILL_CHASERS=1`, `withPressKillChasers`).
+
+- **Where the chaser went unpriced** (measured from `fixtures/l40bk2-witness/step67-boot.json`): the press kill's
+  per-tick step, `safeStep` → `landsClearOfHammers`, asks only the spinners' rects and hammers. At t604 `deriveStrike`
+  picks the strike (744,776) +733; its walk preview prices the chasers (`dangerDuringTransit` over the samples' own
+  forecast bodies) and passes `bob@736,752` 2.9 px clear at +54. The executor's walk (`stepToward`'s spinner dodge, then
+  `safeStep`) runs 1.4 px ahead of the preview, and the bob's contact lands at t660. The strike's dwell beside the same
+  bob (priced against hammers only) then takes t749 and t780 → death → `PRESS_KILL_REBOOT_GUARD`.
+- **The change** (`solverBot.safeStep`, `landsClearOfChasers`): ON, among the key sets OFF accepts, in OFF's order, the
+  first whose next step also lands clear of every chaser (the run's chaser forecast stepped twice, as `previewWalk`
+  pairs it, then `chaserDanger`'s per-tick arm). None clear ⇒ OFF's choice (`unavoidable`); a press is never swapped; a
+  shake-band forecast is left to OFF (`banded`). OFF builds no forecast and reads nothing new.
+- **Measured not shipped:** pricing the strike's STAND against the chasers (refused 20,940 of 20,947 candidates at step
+  67, 237 s vs 49 s); pricing the refuge's walk and wait (alone it moved nothing at step 67: 0 refuges refused, the death at t780 stands).
+- **Effect ON:** step 67 (node and the survey's child): death t780 → the chain's next link, the chest stance under
+  `bobsoldier@880,832`'s sword. Leg 860 over one hammer period (45 seams, its captured request replayed): 29 press-kill
+  deaths to `bob@736,752` OFF → 0 ON; every phase then refuses on the burn stance's walk (or, 8 vs 7, `safeStep`'s
+  existing "every key set lands" spinner refusal). Leg 859: 0 deaths both ways (it refuses on the burn stance's
+  chasers at every seam). L40's 60 captured requests: 59 identical, the mover 860/1 (death → burn-stance refusal).
+  L18's 45 residues: identical. Bounded set ON: 8 rows move, every one an L40 row pinning the chest press kill's death.
+- **Gate** `hammerPressKillChasers.test.js` (step 67's boot, the chest goal, capped at t800): OFF the death with its
+  three hits; ON no hit, keys equal to OFF's through t657; "ships OFF". Mutants (no treatment / always clear / one
+  forecast step) all red. The report is `CC/docs/cloud-reports/seedling-hammer-press-kill-chasers.md`.
 
 ### Seedling fidelity L42REREC — `l40button-l42-part0` re-recorded on the game at the defaults; the `dashSpinnerForecast` INTERIM pin retired (no switch)
 
@@ -25884,3 +25910,15 @@ reproduces it at 0 px over 1,666 observations.
 those four. Compare their md5 before and after rather than reading "exit 1" as your own red.
 
 ---
+### Seedling hammer-phase PKB-OFF — the press kill's bomb pricing ships OFF again
+
+- **What:** `pressKillCost.PRESS_KILL_BOMBS` defaults OFF (`SEEDLING_PRESS_KILL_BOMBS=1` opts in); the pricing code
+  (BW's stand and refuge blasts) stays behind the switch. ⚖ The user, 2026-10-26: *"Turn it back off"*, after the
+  measurement they chose ("Measure first").
+- **Measured** (branch `hammer-measure/pkb-off` against its base, main `08aa042aa3`, CI only): full divergence sweep
+  835 = 835 done (every mover noise on ×2 re-runs per arm: the L0 race, 387/404, 584, 610, 624); route survey 0 / 70
+  movers. Leg 371 on the page, 3 runs per arm: OFF 3 / 3 done (1,736–1,888 t, 5.5–12.4 s, 0 deaths, 0 divergences), ON
+  1 / 3 (1,915 t, 17–19 s, two 90 s leg-budget timeouts). SXC's node census of 371 under the exact split shake: 33 / 45
+  OFF against 30 / 45 ON. 368 done in every run of both arms.
+- **Cost:** one JSUT row, `hammerPressBombs.test.js` "ships …", re-pinned to OFF; producer `--check`s and the slow
+  battery were green with the switch OFF.

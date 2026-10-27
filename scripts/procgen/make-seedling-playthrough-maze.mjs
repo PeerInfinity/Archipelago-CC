@@ -43,7 +43,7 @@ import { SHARED_WORLD_ALPHABET } from '../../frontend/modules/procgenPipeline/re
 import { SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
 import {
     PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
-    setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer,
+    setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
 } from './make-seedling-playthrough-rules.mjs';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
@@ -57,11 +57,15 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * tile-primitives-sphere-order-1 in the FIRST-REACH order of the `seedling_playthrough` seed-1 sphere log (⚖ 2026-10-25:
  * "Start adding levels, and the features they require, in the order of the other playthrough's sphere log"): sphere 0's
  * L2–L11 + L94 joined L0 + L13–L20; L86, the last of sphere 0, once its landing under L0's building1 was floor (the
- * playthrough grid takes a building's footprint from its Pixelmask, session tile-primitives-pixelmask-l86).
+ * playthrough grid takes a building's footprint from its Pixelmask, session tile-primitives-pixelmask-l86). Sphere 0.1 (session
+ * tile-primitives-sphere-order-2, ⚖ 2026-10-26 "All 14"): L1 L12 L33 L35 L36 L44 L59 L60 L67 L87 L88 L89 L92 L95 — L12's touched event locks
+ * and L67's struck block were built for them.
  */
 export const LEVELS = Object.freeze([
-    'level_0', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
-    'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20', 'level_86', 'level_94',
+    'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
+    'level_12', 'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20', 'level_33', 'level_35',
+    'level_36', 'level_44', 'level_59', 'level_60', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_92', 'level_94',
+    'level_95',
 ]);
 
 /**
@@ -190,8 +194,10 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     // The events the maze WORLD models (⚖ "All AP; world rocks+locks"): an obstacle's opens it once carried, a latched
     // lock's is what its far side's crossing costs. A cross-room press or a talk has no world mechanism (⚖ "Carry + name").
     const mode = new Map([...layer.obstacle.events.map((e) => [e.name, 'open']), ...layer.locks.events.map((e) => [e.name, 'latch'])]);
+    // `rule` = the event's own location rule: a sub-region world lays a touched lock no crossing uses by it (⚖ "Lay
+    // touched event cells", session tile-primitives-sphere-order-2).
     out.world = out.events.filter((e) => mode.has(e.name)).map((e) => ({
-        name: e.name, side: e.fields.side, mode: mode.get(e.name), obstacle: e.fields.obstacle,
+        name: e.name, side: e.fields.side, mode: mode.get(e.name), obstacle: e.fields.obstacle, rule: e.access_rule ?? null,
     }));
     const all = new Set(layer.events.map((e) => e.name));
     const have = new Set([...out.events.map((e) => e.name), ...minted]);
@@ -209,6 +215,16 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
         if (stray.length) throw new Error(`events: ${what} needs ${stray.join(', ')}, whose region is not in the levels`);
     }
     return out;
+}
+
+/**
+ * ⛓ The rules producer's OWN permissive bound (`permissiveBindings`, `"<atlas region>/<binding>"`: what its analysis
+ * pass leaves uncharged on purpose, e.g. L89's Feather), read from its run — never copied — for the certifier's
+ * `permissive` option (session tile-primitives-sphere-order-2, ⚖ 2026-10-26: a STRICTER maze row there is accepted by name).
+ */
+export function playthroughPermissiveLocations() {
+    wholeEventLayer(readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json')));
+    return [...permissiveBindings];
 }
 
 /** Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`. */

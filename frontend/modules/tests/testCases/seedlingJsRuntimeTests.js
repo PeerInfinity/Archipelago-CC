@@ -3864,8 +3864,8 @@ export async function seedlingJsRuntimeSoundPanel(tc) {
         tc.reportCondition('(1) the bypass: the page booted with no ▶ Start', !!auto);
         if (!auto) return tc.getOverallResult();
         const aw = frameOf(auto);
-        tc.assertEqual('(1) no start=click on the URL; the page says auto; the button is hidden', 'false/auto/none',
-            `${/start=click/.test(auto.wasmPath)}/${aw.__seedlingJsSound.startMode}/${aw.document.getElementById('btn-start')?.style.display}`);
+        tc.assertEqual('(1) no start=click on the URL; the page says auto; the button is gone (a tutorial\'s optional click skips it)', 'false/auto/null',
+            `${/start=click/.test(auto.wasmPath)}/${aw.__seedlingJsSound.startMode}/${aw.document.getElementById('btn-start')}`);
         // (3) the rows, live
         const soundRow = auto._settingsControls?.find((c) => c.prop === 'seedlingJsSound');
         const volumeRow = auto._settingsControls?.find((c) => c.prop === 'seedlingJsVolume');
@@ -3920,6 +3920,315 @@ registerTest({
         + 'seedlingJsStart = click the panel asks for ▶ Start and the page waits until it is pressed, then boots to a live run. '
         + 'All settings are restored.',
     testFunction: seedlingJsRuntimeSoundPanel,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ TOUCH CONTROLS (slice `seedling-js-touch-controls`) — the on-screen controls in the real panel, driven by synthetic
+ * TOUCH pointer events on the controls (what a finger sends; CSS / layout are the app's own). With
+ * `flashPanel.touchControls = on` (a session override) on seedling_generated_room: the controls are mounted with the
+ * runtime's buttons (Esc on wasm only) and the Settings row shows; a held d-pad press MOVES the player (its position,
+ * as the keyboard moves it) and its release STOPS it (no stuck key); a pointercancel releases too; a second finger on
+ * X while the first holds the d-pad reaches the game as a press (js: the run's `slashPresses` ledger, with the sword
+ * granted through the AP path; wasm: the keydown/keyup the frame heard). `off` unmounts them; `auto` on this browser
+ * shows them exactly when its pointer is coarse. Settings restored however it ends.
+ */
+const touchControlsRow = (runtime) => async (tc) => {
+    const { TOUCH_SETTING_KEY } = await import('../../flashPanel/touchControls.js');
+    let previousTouch = 'auto';
+    let granted = false;
+    try { previousTouch = await settingsManager.getSetting(TOUCH_SETTING_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        return await withRuntimeRestored(tc, async () => {
+            await settingsManager.updateSetting(TOUCH_SETTING_KEY, 'on', { persist: false });
+            const up = await generatedPresetOn(tc, runtime);
+            if (!up) return;
+            const { panel, win } = up;
+            const touch = await tc.pollForValue(() => panel._touch ?? null, `[${runtime}] the touch controls are mounted`, 10000, 100);
+            tc.reportCondition(`[${runtime}] touchControls = on mounts the controls`, !!touch);
+            if (!touch) return;
+            const root = touch.element;
+            const rect = root.getBoundingClientRect();
+            const stage = panel.stageElement.getBoundingClientRect();
+            tc.log(`[${runtime}] placement ${root.dataset.placement}; controls ${Math.round(rect.width)}×${Math.round(rect.height)} at `
+                + `(${Math.round(rect.left)},${Math.round(rect.top)}); stage ${Math.round(stage.width)}×${Math.round(stage.height)} at (${Math.round(stage.left)},${Math.round(stage.top)})`);
+            tc.reportCondition(`[${runtime}] the controls are in the document and drawn`, root.isConnected && rect.width > 0 && rect.height > 0);
+            const shown = [...root.querySelectorAll('.flash-touch-button')].filter((b) => b.style.display !== 'none').map((b) => b.dataset.button);
+            tc.assertEqual(`[${runtime}] the runtime's buttons (Escape on wasm only)`,
+                runtime === 'wasm' ? 'primary,secondary,inventory,menu' : 'primary,secondary,inventory', shown.join(','));
+            const row = panel._settingsControls?.find((c) => c.prop === 'touchControls') ?? null;
+            tc.assertEqual(`[${runtime}] the Settings section shows the "Touch controls" row, set to on`, 'flex/on',
+                `${row?.row?.style?.display}/${row?.input?.value}`);
+
+            // ⛓ the player's position, as each runtime reports it
+            const lastReport = (name) => {
+                const log = win.__swfBridge?.stateLog ?? [];
+                for (let i = log.length - 1; i >= 0; i -= 1) if (log[i].name === name) return Number(log[i].value);
+                return NaN;
+            };
+            // ⛔ wasm: the bridge's playerPosition reports LAG the game (measured: unchanged through a 4 s hold); one
+            // `botStatus()` per poll reads the player itself (its top-level x / y, `Bot.as` botStatus)
+            const game = runtime === 'wasm' ? panel.seedlingPlaybackSurface?.()?.wasm?.getGame?.() ?? null : null;
+            const status = () => { try { return JSON.parse(game.botStatus()); } catch { return null; } };
+            const pos = () => {
+                if (runtime === 'js') return { x: up.rt.run?.state?.x, y: up.rt.run?.state?.y };
+                const st = status();
+                return st ? { x: Number(st.x), y: Number(st.y) } : { x: lastReport('playerPositionX'), y: lastReport('playerPositionY') };
+            };
+            const POLL_MS = runtime === 'js' ? 50 : 200;
+            if (game) {
+                const st = status();
+                tc.log(`[wasm] botStatus keys ${Object.keys(st ?? {}).join(',')}; level ${st?.level} x ${st?.x} y ${st?.y}`);
+            }
+            const keysHeard = [];
+            const hear = (e) => { if (e.code) keysHeard.push(`${e.type}:${e.code}`); };
+            win.addEventListener('keydown', hear, true);
+            win.addEventListener('keyup', hear, true);
+            const pad = root.querySelector('.flash-touch-dpad');
+            const point = (el, fx = 0.5, fy = 0.5) => {
+                const r = el.getBoundingClientRect();
+                return { clientX: r.left + r.width * fx, clientY: r.top + r.height * fy };
+            };
+            const DIR_AT = { right: [0.85, 0.5], left: [0.15, 0.5], down: [0.5, 0.85], up: [0.5, 0.15] };
+            const finger = (type, el, id, at) => el.dispatchEvent(new PointerEvent(type, {
+                pointerId: id, pointerType: 'touch', isPrimary: id === 1, bubbles: true, cancelable: true, ...point(el, ...at),
+            }));
+            const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+            try {
+                // a press and hold on the d-pad moves the player; its release stops it
+                let moved = null;
+                for (const dir of ['right', 'left', 'down', 'up']) {
+                    const p0 = pos();
+                    finger('pointerdown', pad, 1, DIR_AT[dir]);
+                    // eslint-disable-next-line no-await-in-loop
+                    const p1 = await tc.pollForValue(() => {
+                        const p = pos();
+                        return Math.abs(p.x - p0.x) + Math.abs(p.y - p0.y) >= 8 ? p : null;
+                    }, `[${runtime}] the player moves ${dir} while the d-pad is held`, runtime === 'js' ? 4000 : 8000, POLL_MS);
+                    finger('pointerup', pad, 1, DIR_AT[dir]);
+                    tc.log(`[${runtime}] d-pad ${dir}: ${JSON.stringify(p0)} → ${JSON.stringify(p1 ?? pos())}; heard ${keysHeard.slice(-2).join(' ')}`);
+                    if (p1) { moved = dir; break; }
+                }
+                tc.reportCondition(`[${runtime}] a held d-pad press moved the player (${moved})`, !!moved);
+                tc.assertEqual(`[${runtime}] the d-pad sent the keyboard's own keydown/keyup pair`, true,
+                    keysHeard.some((k) => k.startsWith('keydown:Arrow')) && keysHeard.some((k) => k.startsWith('keyup:Arrow')));
+                await wait(1500); // friction's decay ends inside this (the wasm page ticks slowly headless)
+                const s0 = pos();
+                await wait(600);
+                const s1 = pos();
+                // ⛓ NO STUCK KEY = nothing the controls hold AND nothing the game heard go down without its up (the host's
+                // F3 tracker, `gameInput.createHeldKeyRelease`). The stand-still is asserted on js (measured 0.00 px); on
+                // the slow headless wasm page friction's tail still moved the player 0.95 px 1.5 s after a release, so
+                // there it is logged, not graded.
+                const drift = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+                tc.log(`[${runtime}] after the release: ${JSON.stringify(s0)} → ${JSON.stringify(s1)} (drift ${drift(s0, s1).toFixed(2)} px)`);
+                tc.assertEqual(`[${runtime}] released: no key held by the controls or by the game`, '/',
+                    `${root.dataset.held}/${panel._heldKeys.held().join(',')}`);
+                if (runtime === 'js') tc.assertEqual('[js] released: the player stands still', true, drift(s0, s1) === 0);
+
+                // ⛔ a pointercancel releases (the browser took the gesture)
+                if (moved) {
+                    finger('pointerdown', pad, 3, DIR_AT[moved]);
+                    await wait(150);
+                    const held = root.dataset.held;
+                    finger('pointercancel', pad, 3, DIR_AT[moved]);
+                    tc.assertEqual(`[${runtime}] pointercancel releases the held arrow`, `true/`, `${held.startsWith('Arrow')}/${root.dataset.held}`);
+                    await wait(1500);
+                    const c0 = pos();
+                    await wait(500);
+                    const c1 = pos();
+                    tc.log(`[${runtime}] after the cancel: ${JSON.stringify(c0)} → ${JSON.stringify(c1)}`);
+                    tc.assertEqual(`[${runtime}] after the cancel: no key held by the game`, '', panel._heldKeys.held().join(','));
+                    if (runtime === 'js') tc.assertEqual('[js] after the cancel the player stands still', true, drift(c0, c1) === 0);
+                }
+
+                // two fingers: the d-pad held, X tapped
+                if (runtime === 'js') {
+                    await tc.stateManager.addItemToInventory('Progressive Sword', 1);
+                    granted = true;
+                    await tc.stateManager.pingWorker('after-item-grant', 5000);
+                    const armed = await tc.pollForCondition(() => up.rt.run?.inventory?.hasSword === true || up.rt.run?.state?.inventory?.hasSword === true,
+                        '[js] the sword reached the run (the AP path)', 10000, 100);
+                    if (!armed) tc.log(`[js] run inventory: ${JSON.stringify(up.rt.run?.inventory ?? null)?.slice(0, 300)}`, 'warn');
+                }
+                const swings0 = runtime === 'js' ? up.rt.run?.slashPresses?.length ?? 0 : 0;
+                const heard0 = keysHeard.length;
+                const xBtn = root.querySelector('.flash-touch-button-primary');
+                finger('pointerdown', pad, 1, DIR_AT[moved ?? 'down']);
+                await wait(120);
+                finger('pointerdown', xBtn, 2, [0.5, 0.5]);
+                await wait(120);
+                const both = root.dataset.held;
+                finger('pointerup', xBtn, 2, [0.5, 0.5]);
+                await wait(120);
+                finger('pointerup', pad, 1, DIR_AT[moved ?? 'down']);
+                tc.assertEqual(`[${runtime}] two fingers hold an arrow and X at once`, true, /Arrow/.test(both) && /KeyX/.test(both));
+                tc.assertEqual(`[${runtime}] X came down and up once, inside the arrow's hold`, 'keydown:KeyX,keyup:KeyX',
+                    keysHeard.slice(heard0).filter((k) => k.endsWith('KeyX')).join(','));
+                if (runtime === 'js') {
+                    const swung = await tc.pollForValue(() => {
+                        const n = up.rt.run?.slashPresses?.length ?? 0;
+                        return n > swings0 ? up.rt.run.slashPresses.at(-1) : null;
+                    }, '[js] the X tap reached the run as a sword press', 3000, 50);
+                    tc.reportCondition(`[js] the X button swings (slashPresses ${swings0} → +1, outcome ${swung?.outcome ?? 'none'})`, !!swung);
+                }
+                tc.assertEqual(`[${runtime}] all fingers up: nothing held`, '', root.dataset.held);
+            } finally {
+                touch.releaseAll();
+                win.removeEventListener('keydown', hear, true);
+                win.removeEventListener('keyup', hear, true);
+            }
+
+            // off unmounts; auto follows this browser's pointer
+            await settingsManager.updateSetting(TOUCH_SETTING_KEY, 'off', { persist: false });
+            const gone = await tc.pollForCondition(() => !panel._touch && !root.isConnected, `[${runtime}] off unmounts the controls`, 5000, 50);
+            tc.reportCondition(`[${runtime}] touchControls = off: no controls in the document`, !!gone);
+            await settingsManager.updateSetting(TOUCH_SETTING_KEY, 'auto', { persist: false });
+            await wait(200);
+            const coarse = !!window.matchMedia?.('(pointer: coarse)').matches;
+            const urlTouch = new URLSearchParams(location.search).get('touch');
+            tc.log(`[${runtime}] auto: pointer coarse ${coarse}; ?touch=${urlTouch}`);
+            if (urlTouch === null) {
+                tc.assertEqual(`[${runtime}] auto shows the controls exactly when the pointer is coarse (${coarse ? 'coarse' : 'fine'})`,
+                    coarse, !!panel._touch);
+            }
+            assertNoDeathNoHalt(tc, runtime, up.rt);
+        });
+    } finally {
+        if (granted) { try { await tc.stateManager.removeItemFromInventory('Progressive Sword', 1); } catch { /* best effort */ } }
+        try { await settingsManager.updateSetting(TOUCH_SETTING_KEY, previousTouch, { persist: false }); } catch { /* best effort */ }
+    }
+};
+
+export const seedlingJsRuntimeTouchControls = touchControlsRow('js');
+export const seedlingWasmRuntimeTouchControls = touchControlsRow('wasm');
+
+const TOUCH_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} and touchControls = on (session overrides) on `
+    + 'seedling_generated_room: the on-screen controls mount with the runtime\'s buttons; a held d-pad touch moves the '
+    + 'player and its release (and a pointercancel) stops it; a second finger on X while the d-pad is held reaches the '
+    + 'game as one keydown/keyup (js: a sword press in the run\'s ledger); off unmounts them; auto follows the pointer.';
+
+for (const [id, name, fn] of [
+    ['seedling-js-runtime-touch-controls',
+        'Seedling JS runtime: the touch controls — a held d-pad moves, release stops, X swings, off / auto hide them',
+        seedlingJsRuntimeTouchControls],
+    ['seedling-wasm-runtime-touch-controls',
+        'Seedling (wasm runtime): the touch controls — a held d-pad moves, release stops, X reaches the game',
+        seedlingWasmRuntimeTouchControls],
+]) {
+    registerTest({
+        id, name, description: TOUCH_DESCRIPTION(id.startsWith('seedling-js') ? 'js' : 'wasm'),
+        testFunction: fn,
+        category: 'Seedling JS runtime',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/**
+ * ⛓ ONE FADE PER CROSSING — the user (2026-10-26): "in js mode, it does a double fade on every room transition. It
+ * doesn't do that in wasm mode." With flashPanel.runtime = js and the seedling graphics stack, the Playback Bot walks
+ * seedling_atlas's real rooms (into the starting house, out, down the owl's-nest stairs and into the dungeon). The
+ * region binding answers each door with an arrival teleport on the frame it reads the door; before the fix that
+ * teleport waited out the door's held fade and faded in from black again. A sampler inside the page records, every
+ * animation frame, the black cover the paint drew (`__seedlingJsGraphics.effects.screen`), the dead frames held and
+ * the crossings so far. The pin: each crossing's stretch has exactly ONE rise of the cover, never rises again, holds
+ * exactly the game's 20 dead frames, and the host's teleport did land inside it. The fresh start is LOGGED (the
+ * arrival's boot tick: 0 = it landed inside L0's own fade), not asserted: when the host's load lands is its own.
+ */
+export async function seedlingJsRuntimeGraphicsOneFadePerCrossing(tc) {
+    let previous = 'auto';
+    let previousGraphics = 'rects';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousGraphics = await settingsManager.getSetting(GRAPHICS_SETTING_KEY, 'rects'); } catch { /* keep rects */ }
+    let stopSampling = () => {};
+    try {
+        await settingsManager.updateSetting(GRAPHICS_SETTING_KEY, 'seedling', { persist: false });
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+        if (!ready) return tc.getOverallResult();
+        const { bot } = ready;
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt, win } = up;
+        const g = await tc.pollForValue(() => (win.__seedlingJsGraphics?.status === 'ready' ? win.__seedlingJsGraphics : null),
+            'the JS page loaded the seedling graphics stack', 20000, 200);
+        tc.reportCondition('the graphics stack is up', !!g);
+        if (!g) return tc.getOverallResult();
+        const trace = [];
+        let lastFrame = -1;
+        let on = true;
+        stopSampling = () => { on = false; };
+        const sample = () => {
+            if (!on) return;
+            if (g.frames !== lastFrame) {
+                lastFrame = g.frames;
+                const black = (g.effects?.screen ?? []).find((o) => o.colour === '#000000');
+                trace.push({ cover: black ? +black.alpha.toFixed(4) : 0, held: g.held,
+                    crossings: rt.events.filter((e) => e.type === 'transition').length,
+                    boots: rt.events.filter((e) => e.type === 'boot').length });
+            }
+            win.requestAnimationFrame(sample);
+        };
+        win.requestAnimationFrame(sample);
+        const start = await tc.pollForValue(() => (bot.getCurrentRegion?.() === 'overworld_start__r8c0' && rt.run?.level === 0 ? rt : null),
+            'the bot and the page are in the start region (overworld_start__r8c0, level 0)', 15000, 200);
+        tc.reportCondition('the bot starts in overworld_start__r8c0 on level 0', !!start);
+        if (!start) return tc.getOverallResult();
+        const bootTicks = rt.events.filter((e) => e.type === 'boot').map((e) => `${e.t ?? '?'}:${e.why}`);
+        tc.log(`the fresh start: boots ${JSON.stringify(bootTicks)} (an arrival at tick 0 landed inside L0's own fade); held ${g.held}`);
+
+        bot.walkToLocation(CHEST_LOCATION);
+        const chest = await tc.pollForCondition(() => snapshotFacts(tc).checked.has(CHEST_LOCATION) || errorStatuses(bot).length > 0,
+            `the bot walked into the starting house and checked "${CHEST_LOCATION}"`, 60000, 250);
+        tc.reportCondition('the chest was checked', !!chest && snapshotFacts(tc).checked.has(CHEST_LOCATION));
+        bot.walkToTile('dungeon1_room1__r0c4', 4, 3);
+        const deep = await tc.pollForCondition(() => walkedRegions().includes('dungeon1_room1__r0c4') || errorStatuses(bot).length > 0,
+            'the bot routed into dungeon1_room1__r0c4', 60000, 250);
+        tc.reportCondition('the dungeon was reached', !!deep);
+        // the last crossing's fade has played out
+        await tc.pollForCondition(() => !g.effects?.owed && !g.effects?.cover, 'the last fade has played out', 10000, 100);
+        stopSampling();
+
+        const FADE = Array.from({ length: 20 }, (_, k) => +Math.max(1 - 0.05 * (k + 1), 0).toFixed(4));
+        const parts = [];
+        for (let i = 1; i < trace.length; i += 1) {
+            if (trace[i].crossings > trace[i - 1].crossings) parts.push([]);
+            if (parts.length) parts.at(-1).push(trace[i]);
+        }
+        tc.assertEqual('the sampler saw the four crossings (house in, out, the stairs down, the dungeon)', 4, parts.length);
+        for (const [k, part] of parts.entries()) {
+            let rises = 0;
+            let prev = 0;
+            for (const r of part) { if (r.cover > prev) rises += 1; prev = r.cover; }
+            const held = part.at(-1).held - part[0].held;
+            tc.log(`crossing ${k + 1}: rises ${rises}, held ${held}, boots +${part.at(-1).boots - part[0].boots}, covers ${JSON.stringify([...new Set(part.map((r) => r.cover))])}`);
+            tc.assertEqual(`crossing ${k + 1}: the host's arrival teleport landed inside it (not vacuous)`, true, part.at(-1).boots > part[0].boots);
+            tc.assertEqual(`crossing ${k + 1}: ONE fade (the cover rose once)`, 1, rises);
+            tc.assertEqual(`crossing ${k + 1}: the cover never rose again (one monotone ramp)`, true,
+                part.every((r, i) => i === 0 || r.cover <= part[i - 1].cover));
+            tc.assertEqual(`crossing ${k + 1}: the game's 20 dead frames were held, once`, 20, held);
+            tc.assertEqual(`crossing ${k + 1}: every cover drawn is one of the game's 1 − 0.05k`, true,
+                part.every((r) => r.cover === 1 || r.cover === 0 || FADE.includes(r.cover)));
+        }
+        tc.assertEqual('no error: status, no death, no halt', '[]/0/null',
+            `${JSON.stringify(errorStatuses(bot))}/${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        stopSampling();
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(GRAPHICS_SETTING_KEY, previousGraphics, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-one-fade-per-crossing',
+    name: 'Seedling JS runtime: ONE fade per room crossing (the host\'s arrival teleport lands inside the door\'s fade)',
+    description: 'flashPanel.runtime = js with the seedling graphics stack on seedling_atlas: the Playback Bot walks four real '
+        + 'crossings while a sampler records the black cover each animation frame drew. Each crossing shows exactly one '
+        + 'monotone ramp of the game\'s 1 − 0.05k covers over 20 held dead frames, and the host\'s arrival teleport lands '
+        + 'inside it (before the fix every crossing faded in twice). No error: status, death or halt.',
+    testFunction: seedlingJsRuntimeGraphicsOneFadePerCrossing,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

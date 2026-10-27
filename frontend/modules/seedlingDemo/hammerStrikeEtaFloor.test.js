@@ -31,6 +31,8 @@ import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape }
 import { parseTape } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
 import { withPressKillRebootGuard, withPressKillShakeGuard } from './pressKillGuards.js';
+// ⛓ hammer-phase PKC: the witness is the kill across the bob's death, so `PRESS_KILL_CHASERS` is pinned OFF (it ships OFF)
+import { withPressKillChasers } from './pressKillCost.js';
 
 /** A hand-built run: the floor reads `run.state` (position, velocity, the sticky hazard flags) and `run.world`. */
 const stub = ({ x = 0, y = 0, vx = 0, vy = 0, onIce = false, tiles = [] } = {}) => ({
@@ -286,14 +288,14 @@ describe(`${WNAME} — the strike the admissible floor lets the scan see, on the
             'hammer-p1-l40-south-boot.json'), 'utf8'))));
         staging.seam = { ...staging.seam, items: { ...staging.seam.items, hasSword: true, hasGhostSword: true } };
         const run = createRunForStaging(staging, atlasLevelSource());
-        return withPressKillShakeGuard(guards, () => withPressKillRebootGuard(guards, () => withStrikeEtaFloor(true, () => {
+        return withPressKillChasers(false, () => withPressKillShakeGuard(guards, () => withPressKillRebootGuard(guards, () => withStrikeEtaFloor(true, () => {
             try {
                 return { perTick: solveSegment({ run, goals: [{ kind: 'collect-placement', placement: { x: 880, y: 816 } }],
                     name: WNAME, boot: staging.boot, dashMode: 'all' }).perTick, message: null };
             } catch (e) {
                 return { perTick: e.perTick ?? [], message: String(e?.message ?? e) };
             }
-        })));
+        }))));
     };
 
     it('⛓⛓⛓ ON: the solve\'s executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is '

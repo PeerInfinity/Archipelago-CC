@@ -2079,6 +2079,30 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "SOUND EFFECTS. runtime = js + seedling_generated_room (session overrides): the test-mode bypass boots with no Start; Sound/Volume rows applied live; seedlingJsStart = click makes the panel ask for Start and the page wait until pressed. Settings restored. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-touch-controls",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "TOUCH CONTROLS. runtime = js + touchControls = on (session overrides) on seedling_generated_room: the on-screen controls mount (X C V; no Esc on js); a held d-pad touch (synthetic touch pointer events) moves the player, release and pointercancel stop it; d-pad + X two-finger: X reaches the run as a sword press (slashPresses); off unmounts; auto = the pointer's coarseness. Settings restored. seedling-js batch."
+        },
+        {
+            "id": "seedling-wasm-runtime-touch-controls",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "TOUCH CONTROLS on the wasm runtime (WebGPU, the seedling-js batch's launch): the same row; Esc shown (wasm only); X asserted as the keydown/keyup pair the frame heard (the wasm page has no swing ledger). seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-one-fade-per-crossing",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "ONE FADE PER CROSSING (2026-10-26). flashPanel.runtime = js + the seedling graphics stack on seedling_atlas: the Playback Bot walks four real crossings; a sampler records the drawn black cover per animation frame. Each crossing = ONE monotone ramp of 20 held dead frames at 1 - 0.05k, with the host's arrival teleport landing inside it (it faded in twice before). seedling-js batch."
+        },
+        {
+            "id": "tutorial-walk-seedling-bot-js",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL IN JS MODE (2026-10-26, user: 'Work in both'). The seedling-bot tutorial's walk with flashPanel.runtime = js for the row's session (put back after): the Start step completes with no Start to press, the bot takes its first checks on the JS page. Manual batch tutorials-seedling. The js walk waits for the delivered rooms (SeedlingPlaybackController._deliveredSetGate): before it, the bot's first walk could reach the page before the level-set mount, which cleared it (red on CI in 40387718888 / 40391923232)."
         }
     ]
 }

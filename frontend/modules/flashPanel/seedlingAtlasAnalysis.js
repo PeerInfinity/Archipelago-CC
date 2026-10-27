@@ -14,6 +14,7 @@
 import { analyzeRegion, applyRegionAnalysis } from '../procgenPipeline/regionAtlasAnalyzer.js';
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import { arrowLane, arrowTrapEntityPoint } from '../seedlingDemo/arrowTrap.js';
+import { PROFILE } from '../seedlingDemo/seedlingProfile.js';
 import {
     ropesOf, ropeVerdict, ropeEventName, ropeEventCondition, ropeLaneCharges,
 } from './seedlingObstacleEvents.js';
@@ -229,7 +230,8 @@ export function seedlingEventTiles(level, events) {
             for (let ty = f.y; ty < f.y + f.h; ty += 1) for (let tx = f.x; tx < f.x + f.w; tx += 1) out.push([tx, ty]);
             return out;
         })();
-        return { name: ev.name, side: ev.side, mode: ev.mode, tiles };
+        // ⛓ A one-sided lock (`probe`: BossLock tests the key only on a player below it) is opened from that side only.
+        return { name: ev.name, side: ev.side, mode: ev.mode, tiles, ...(ev.rule ? { rule: ev.rule } : {}), ...(sem?.probe ? { probe: sem.probe } : {}) };
     });
 }
 
@@ -252,7 +254,16 @@ export const SEEDLING_LEVEL_WORLD_CLASSES = Object.freeze({
     // ⛓ ARROW TRAPS + ROPES (session tile-primitives-arrow-rope, ⚖ 2026-10-22).
     RopeStart: 'rope',
     ArrowTrap: 'trap',
+    // ⛓ STRUCK BLOCKS (session tile-primitives-sphere-order-2, ⚖ 2026-10-26 "Reach-2 strike-push").
+    PushableBlockSpear: 'block',
 });
+
+/**
+ * The cells a spear thrust reaches ahead of the player: its 32 px stab rect (`Player.as:964-989`, the model's
+ * `PROFILE.spearLength`), with no reach gate and no line test — a block two cells away is hit over the cell between
+ * (game-measured: the seedling-fidelity spear legs, L67's thrust across the pit at (10,7)).
+ */
+export const SPEAR_REACH_TILES = Math.floor(PROFILE.spearLength / TILE);
 
 
 /** `hasSword` → `sword`: an action id from the engine flag the semantics row names. */
@@ -262,7 +273,8 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  * One level's level-world entity rows (`projectLevelWorld`'s input), from the
  * semantics tables:
  *
- *   block   a PushableBlock's sealed tile
+ *   block   a PushableBlock's sealed tile; a PushableBlockSpear's carries `strike` (its condition's flag →
+ *           one action) and `reach` (`SPEAR_REACH_TILES`): moved only by a thrust, never walked into
  *   button  a Button's tile, grouped by its `tset`
  *   lock    a Lock's sealed tiles, grouped by its `tset` (⚖ enemies are not
  *           holders — the room-clear half of Lock is not modelled)
@@ -317,7 +329,9 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null } =
         const row = kind === 'rope' ? { kind, tiles: tiles.slice(0, 1), run: tiles, label } : { kind, tiles, label };
         if (kind === 'button' || kind === 'lock' || kind === 'rope') row.group = String(entity.attrs?.tset ?? '0');
         if (rope) row.event = ropeEventName(rope);
-        if (kind === 'rock' || kind === 'rope') {
+        const struckBlock = kind === 'block' && sem.class === 'PushableBlockSpear';
+        if (struckBlock) row.reach = SPEAR_REACH_TILES;
+        if (kind === 'rock' || kind === 'rope' || struckBlock) {
             const flags = sem.condition?.flag !== undefined ? [sem.condition]
                 : Array.isArray(sem.condition?.any) ? sem.condition.any : null;
             if (!flags || flags.some((c) => typeof c?.flag !== 'string')) {

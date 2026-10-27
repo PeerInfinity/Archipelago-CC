@@ -23,6 +23,8 @@ From top to bottom:
 
 Click the game first: it hears the keyboard only while it has the focus. The controls are the original game's. When you click elsewhere the game lets go of any key you were holding, so the player does not keep walking.
 
+**On a phone or tablet**, on-screen controls appear with the game: a d-pad (it reads diagonals) and the game's buttons — for Seedling **X** (your primary item, and talk), **C** (your secondary item), **V** (the inventory) and, on the *wasm* runtime, **Esc** (the pause menu). They press the same keys the keyboard does, so you can hold a direction and press a button at once. They sit under the game when the screen is upright and on either side of it when it is turned on its side. The **Touch controls** setting shows or hides them.
+
 - **Checks.** Opening a chest or picking up an item in the game checks the location it stands for. The world decides what you get for it, so the item the game would have given you is taken back, and the world's item arrives instead.
 - **Items.** The items you hold in the app are the ones you hold in the game — the sword, the shield, keys and the rest. The [Inventory](inventory.md) panel is in charge: an item removed there is taken out of the game too.
 - **Found items.** A box in the **Tools** section appears with your first find and lists what you have found, and for whom: *N placement(s) found*, then *item → you @ location* (or another player's name, in a multiworld).
@@ -54,6 +56,7 @@ The **Settings** section holds the settings you are most likely to change. Each 
   their volume. The JS game waits for its **▶ Start** button, like the wasm game: the tap is what lets a browser
   (a phone above all) play sound. Sound never changes the game: the bot and the solver do exactly the same things
   with it on or off. Both take effect at once.
+- **Touch controls** (a game with on-screen controls, such as Seedling): *auto* (the default) shows them on a touch screen, *on* and *off* show or hide them anywhere. It takes effect at once.
 - **Bot uses the solver** (Seedling) lets the Playback Bot plan each room with the solver, and **Progress refresh** sets how often the solver's progress is shown.
 - **TP on UI click** (a game that can teleport): when it is ticked, clicking a location or a region elsewhere in the app teleports the player to it.
 

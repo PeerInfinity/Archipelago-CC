@@ -62,6 +62,10 @@
                 {
                     "option": "sword-dash window: not-faster",
                     "why": "37 of 48 scanned preview(s) — first at walk-offset 20: 157 tick(s) against 140 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 5 press(es), 3 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             ],
             "keys": [
@@ -108,6 +112,10 @@
                 {
                     "option": "sword-dash window: not-faster",
                     "why": "28 of 44 scanned preview(s) — first at walk-offset 0: 210 tick(s) against 210 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             ],
             "keys": [
@@ -165,7 +173,7 @@
                         16
                     ],
                     "scanned": 28,
-                    "why": null
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             },
             "path": [
@@ -182,6 +190,10 @@
                 {
                     "option": "sword-dash window: not-faster",
                     "why": "24 of 28 scanned preview(s) — first at walk-offset 0: 61 tick(s) against 61 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             ],
             "keys": [
@@ -254,7 +266,7 @@
                         16
                     ],
                     "scanned": 16,
-                    "why": null
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             },
             "path": [
@@ -275,6 +287,10 @@
                 {
                     "option": "sword-dash window: not-faster",
                     "why": "9 of 16 scanned preview(s) — first at walk-offset 0: 113 tick(s) against 113 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             ],
             "keys": [
@@ -350,7 +366,7 @@
                         13
                     ],
                     "scanned": 32,
-                    "why": null
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             },
             "path": [
@@ -375,6 +391,10 @@
                 {
                     "option": "sword-dash window: not-faster",
                     "why": "21 of 32 scanned preview(s) — first at walk-offset 0: 126 tick(s) against 126 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "certified whole (fidelity L40BK2)"
                 }
             ],
             "keys": [

@@ -54,7 +54,8 @@
  *    reported once, `"<seq>|<level>|<tag>|0"`. ⚠ The game also reports the
  *    six RESTORING writers (`|1`); the model has no ledger of those and the
  *    host's check binding drops them anyway (it requires a clear).
- *  · `queueItems` items are drained once per tick (`getItemQueue`'s cadence):
+ *  · `queueItems` items are drained once per tick (`getItemQueue`'s cadence;
+ *    and on each dead frame the page holds, `drainItems`):
  *    `{class, property, value}` flag writes, `{class:'game', property:'menu'}`
  *    (accepted, nothing to do), and the teleport recipe
  *    `{invocation:'new_instance', className:'Game', args:[level, x, y]}`
@@ -1185,6 +1186,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             if (items == null) return;
             for (const it of Array.isArray(items) ? items : [items]) queue.push(it);
         },
+        /**
+         * ⛓ A DEAD FRAME'S POLL — the queue drained WITHOUT a tick. BridgeGeneric polls `getItemQueue` on its own
+         * `ENTER_FRAME` (`flash-ap-api` `BridgeGeneric.as:117,224`), outside `Game.update`'s `blackCover` gate, so the
+         * game takes the host's work on a load's dead frames too. The page calls this on each dead frame it HOLDS
+         * (`jsRuntimePage.advance`); the run is not stepped, and the next tick's own drain finds what came after.
+         */
+        drainItems() { drainQueue(); },
         tick,
         flush,
         setVanilla,

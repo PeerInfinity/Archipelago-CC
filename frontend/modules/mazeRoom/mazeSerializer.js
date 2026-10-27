@@ -68,7 +68,8 @@ const LEVEL_WORLD_PROJECTION = '`projectLevelWorld` (`procgenPipeline/regionAtla
  * ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2) — a third writer: the atlas
  * projection's `projectLevelWorld` emits `blocks`, `buttons`, `buttonLib`,
  * `action_lib`, `traps`, `trapLib` (arrow traps, session tile-primitives-arrow-rope), `entry_gates`
- * (session tile-primitives-water-exits), `block_sinks` (session tile-primitives-sphere-order-1) and
+ * (session tile-primitives-water-exits), `block_sinks` (session tile-primitives-sphere-order-1), `block_strike`
+ * (session tile-primitives-sphere-order-2) and
  * `shared_world` on the ONE payload a level world carries (every other sub-region of that level is a payload-less alias entry — see
  * `rules.schema.json` `presetSidecarEntry.shared_world`). Each is omitted on
  * every other payload, so the corpus they were measured on is unmoved.
@@ -235,6 +236,21 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
             + 'pit: `PushableBlock.as` destroys the block there). Read through `checkBlockSinks`. Written by `projectLevelWorld` '
             + 'from the analysis grid in a world with a block; omitted when there are none.',
         schema: Object.freeze({ items: atXY({}, []) }),
+    }),
+    block_strike: Object.freeze({
+        type: 'object', required: false,
+        description: 'Struck blocks (session tile-primitives-sphere-order-2) `{struck_by, reach}`: every block of this world '
+            + 'is moved ONLY by a use of one of the `struck_by` actions, from up to `reach` cells ahead of the facing (over any '
+            + 'cell between), one cell the way the player faces; walking into one is refused (Seedling\'s PushableBlockSpear: '
+            + 'the spear\'s stab rect). Read through `checkBlockStrike`. Written by `projectLevelWorld` for a level whose '
+            + 'blocks are struck; omitted otherwise.',
+        schema: Object.freeze({
+            properties: Object.freeze({
+                struck_by: Object.freeze({ type: 'array', items: Object.freeze({ type: 'string' }) }),
+                reach: Object.freeze({ type: 'integer' }),
+            }),
+            required: Object.freeze(['struck_by', 'reach']),
+        }),
     }),
     shared_world: Object.freeze({
         type: 'object', required: false, derived: true,

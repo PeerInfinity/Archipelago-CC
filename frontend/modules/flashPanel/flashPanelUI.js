@@ -18,7 +18,9 @@ import { realRoomPlaybackMap } from './seedlingPlaybackController.js';
 import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { PUSH_INTERVAL_MS, WasmBridgeAdapter } from './wasmBridgeAdapter.js';
-import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
+import { createHeldKeyRelease, dispatchGameKey, focusGameCanvas } from './gameInput.js';
+// ⛓ TOUCH CONTROLS — generic: the game's config declares its buttons (`touch_controls`).
+import { TOUCH_SETTING_KEY, mountTouchControls, parseTouchLayout, touchControlsVisible } from './touchControls.js';
 import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
@@ -114,10 +116,15 @@ const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'seedlingJsSound', label: 'Sound', when: 'js' },
   { prop: 'seedlingJsVolume', label: 'Volume', when: 'js' },
   { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
+  { prop: 'touchControls', label: 'Touch controls', when: 'touch' },
   { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
 ]);
 const SETTING_KEY_PREFIX = 'moduleSettings.flashPanel.';
 const CONTROL_CSS = 'background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;max-width:100%;';
+/** ⛓ TOUCH CONTROLS — the side room (px) each of the d-pad and the buttons needs to sit BESIDE the game, not under it. */
+const TOUCH_BESIDE_MIN_PX = 150;
+/** ⛓ TOUCH CONTROLS — the strip's height under the game before it is first laid out (the d-pad + its padding). */
+const TOUCH_STRIP_PX = 150;
 const BUTTON_CSS = 'background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;';
 
 let instanceCounter = 0;
@@ -203,8 +210,16 @@ export class FlashPanelUI {
      */
     this._heldKeys = createHeldKeyRelease({
       getFrame: () => document.getElementById(this.flashObjectId),
-      onRelease: (codes, why) => this._panelLog(`[game input] released ${codes.join(', ')} into the game — ${why}`),
+      onRelease: (codes, why) => {
+        // ⛓ TOUCH CONTROLS — the game has these keyups now: the on-screen controls must not send them again.
+        this._touch?.bridge.forget(codes);
+        this._panelLog(`[game input] released ${codes.join(', ')} into the game — ${why}`);
+      },
     });
+    /** ⛓ TOUCH CONTROLS — the mounted controls (`touchControls.js`), the config they were built for, the transport. */
+    this._touch = null;
+    this._touchFor = null;
+    this._touchTransport = null;
 
     this._createBaseUI();
     this._refreshSolveProgressInterval();
@@ -337,6 +352,10 @@ export class FlashPanelUI {
           data.key === VOLUME_SETTING_KEY ? data.value : undefined);
         this._applyJsSound();
       }
+      if (data?.key === TOUCH_SETTING_KEY || data?.key === '*') {
+        // ⛓ TOUCH CONTROLS — shown / hidden at once, never a re-mount.
+        await this._refreshTouchControls(data.key === TOUCH_SETTING_KEY ? data.value : undefined);
+      }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
       if (!this.isInitialized) return;
       if (this.componentState.configPath || this.componentState.swfPath
@@ -454,6 +473,8 @@ export class FlashPanelUI {
       // or null while it runs / once it bound one.
       apRefusal: this._apLoadRefusal ?? null,
       jsRuntime,
+      // ⛓ THE DELIVERED ROOMS FIRST — the level-set delivery the AP load armed (`{set, state, result}`), or null.
+      levelSetDelivery: this._seedlingDelivery ?? null,
       // ⛓ W2 — the wasm playback engine's handles: the game's callback surface
       // and window (re-read per call — a preset switch replaces the iframe),
       // the panel's own teleport recipe, and the map document the preset names.
@@ -814,7 +835,10 @@ export class FlashPanelUI {
     this._seedlingGenSet = null;
     this._seedlingAtlas = null;
     this._seedlingRealSet = null;
+    this._seedlingDelivery = null;
     this._apLoadRefusal = null;
+    this._touchTransport = null;
+    this._unmountTouchControls();
     this._heldKeys?.uninstall();
     if (this.adapter) {
       this._detachRegionGlue();
@@ -958,6 +982,8 @@ export class FlashPanelUI {
     if (typeof ResizeObserver === 'function') {
       this._stageObserver = new ResizeObserver(() => this._fitStage());
       this._stageObserver.observe(this.stageElement);
+      // ⛓ TOUCH CONTROLS — the height fit follows the panel's height too (a phone turned on its side)
+      this._stageObserver.observe(this.rootElement);
     }
 
     this.container.element.appendChild(this.rootElement);
@@ -984,10 +1010,107 @@ export class FlashPanelUI {
     const [w, h] = size;
     const avail = stage.clientWidth;
     if (!(avail > 0)) return; // a hidden tab: keep the last fit until it is shown
-    const k = Math.min(1, avail / w);
+    let k = Math.min(1, avail / w);
+    const touch = this._touchFit(avail, w, h, k);
+    if (touch) k = touch.k;
     Object.assign(box.style, { width: `${w}px`, height: `${h}px`, transform: k < 1 ? `scale(${k})` : '' });
     stage.style.height = `${Math.round(h * k * 100) / 100}px`;
     stage.dataset.scale = String(Math.round(k * 1000) / 1000);
+    this._placeTouchControls(avail, w * k, h * k, touch?.beside ?? false);
+  }
+
+  /**
+   * ⛓ TOUCH CONTROLS — while they are shown the game also fits the panel's VISIBLE height (a landscape phone is
+   * 390 px tall: at full size the game and the controls ran off the screen, measured): BESIDE the game when, fitted to
+   * that height, it leaves `TOUCH_BESIDE_MIN_PX` on each side; else UNDER it, fitted to the height left above the
+   * strip. Never scaled up, and never below the width fit's half (a panel squeezed flat keeps a playable game and
+   * scrolls). Null when no controls are shown — the width fit alone, unchanged.
+   */
+  _touchFit(avail, w, h, kWidth) {
+    if (!this._touch) return null;
+    const root = this.rootElement;
+    const top = this.stageElement.getBoundingClientRect().top - root.getBoundingClientRect().top + root.scrollTop;
+    const visible = root.clientHeight - top - 8;
+    if (!(visible > 0)) return { k: kWidth, beside: kWidth >= 1 && avail - w >= 2 * TOUCH_BESIDE_MIN_PX };
+    const floor = kWidth / 2;
+    const kBeside = Math.max(floor, Math.min(kWidth, visible / h));
+    if (avail - w * kBeside >= 2 * TOUCH_BESIDE_MIN_PX) return { k: kBeside, beside: true };
+    const strip = this._touch.element.offsetHeight > 0 && this._touch.element.dataset.placement !== 'beside'
+      ? this._touch.element.offsetHeight : TOUCH_STRIP_PX;
+    return { k: Math.max(floor, Math.min(kWidth, (visible - strip) / h)), beside: false };
+  }
+
+  /**
+   * ⛓ TOUCH CONTROLS — where the controls sit (`_touchFit` decides): BESIDE the game (the d-pad left of it, the
+   * buttons right, the game centred) — a landscape phone, a wide panel; otherwise UNDER it, in the flow, so they never
+   * cover the play area (a portrait phone). `w`/`h` are the game's drawn (scaled) size.
+   */
+  _placeTouchControls(avail, w, h, beside) {
+    const box = this.swfContainer;
+    const touch = this._touch;
+    beside = !!touch && beside;
+    box.style.marginLeft = beside ? `${Math.floor((avail - w) / 2)}px` : '';
+    this.stageElement.style.position = beside ? 'relative' : '';
+    if (!touch) return;
+    if (beside) {
+      if (touch.element.parentNode !== this.stageElement) this.stageElement.append(touch.element);
+      touch.setPlacement('beside', { width: avail, height: h, gameWidth: w });
+    } else {
+      if (touch.element.previousSibling !== this.stageElement) this.stageElement.after(touch.element);
+      touch.setPlacement('below');
+    }
+  }
+
+  /** ⛓ TOUCH CONTROLS — cache `flashPanel.touchControls` (undefined = read it) and show / hide the controls. */
+  async _refreshTouchControls(value) {
+    let v = value;
+    try {
+      if (v === undefined) v = await settingsManager.getSetting(TOUCH_SETTING_KEY, 'auto');
+    } catch { /* keep the cached value */ }
+    if (v !== undefined) this._touchSetting = v;
+    this._applyTouchControls();
+  }
+
+  /**
+   * ⛓ TOUCH CONTROLS — mount them when the loaded game declares `touch_controls`, the mounted transport takes key
+   * events on its canvas (wasm, js — ⛔ not the real-Flash / Ruffle `<object>`: it has no canvas this panel can reach)
+   * and the setting says so (`touchControlsVisible`); otherwise unmount them (releasing every key they hold).
+   */
+  _applyTouchControls() {
+    let layout = null;
+    try { layout = parseTouchLayout(this.gameConfig?.touch_controls); } catch (err) {
+      if (this._touchRefused !== this.gameConfig) this._panelLog(`touch controls refused — ${err.message}`, 'error');
+      this._touchRefused = this.gameConfig;
+    }
+    const transport = this._touchTransport;
+    const want = !!layout && (transport === 'wasm' || transport === 'js')
+      && touchControlsVisible(this._touchSetting, { matchMediaFn: window.matchMedia?.bind(window) });
+    if (!want) {
+      if (this._touch) { this._unmountTouchControls(); this._fitStage(); }
+      return;
+    }
+    if (!this._touch || this._touchFor !== this.gameConfig) {
+      this._unmountTouchControls();
+      this._touch = mountTouchControls({ doc: document, layout, send: (type, k) => this._sendTouchKey(type, k) });
+      this._touchFor = this.gameConfig;
+    }
+    this._touch.setButtons(transport);
+    this._fitStage();
+  }
+
+  _unmountTouchControls() {
+    this._touch?.destroy();
+    this._touch = null;
+    this._touchFor = null;
+    if (this.swfContainer?.style) this.swfContainer.style.marginLeft = '';
+    if (this.stageElement?.style) this.stageElement.style.position = '';
+  }
+
+  /** ⛓ TOUCH CONTROLS — one key event into the game, exactly as the keyboard's reaches it (`dispatchGameKey`). */
+  _sendTouchKey(type, k) {
+    // the F3 tracker sees the press too, so a door mid-hold releases it like a keyboard key
+    if (type === 'keydown') this._heldKeys.install();
+    dispatchGameKey(document.getElementById(this.flashObjectId), type, k);
   }
 
   /** ⛓ PANEL LAYOUT — the sections' open state, as saved for this viewer (or, the first time, the retired setting). */
@@ -1147,7 +1270,8 @@ export class FlashPanelUI {
     if (this._solveProgressLine) this._solveProgressLine.element.style.display = seedling ? 'flex' : 'none';
     if (this.sections?.solver) this.sections.solver.style.display = seedling ? '' : 'none';
     for (const c of this._settingsControls) {
-      const applies = c.when === 'always' || (c.when === 'seedling' && seedling) || (c.when === 'js' && transport === 'js');
+      const applies = c.when === 'always' || (c.when === 'seedling' && seedling) || (c.when === 'js' && transport === 'js')
+        || (c.when === 'touch' && !!this.gameConfig?.touch_controls);
       c.row.style.display = applies ? 'flex' : 'none';
       if (c.prop !== 'runtime') continue;
       for (const opt of c.input.options) {
@@ -1316,6 +1440,10 @@ export class FlashPanelUI {
 
     const [w, h] = this.gameConfig.stage_size || [480, 480];
     this._embedWasmIframe(w, h);
+    // ⛓ TOUCH CONTROLS — this transport's canvas hears key events: the game's on-screen controls can drive it.
+    this._touchTransport = this.transport;
+    await this._refreshTouchControls();
+    if (this._initStale(epoch)) return;
 
     // Local handle so the awaits below can detect a teardown/reinit
     // (preset switch) racing this flow — a stale flow must not touch
@@ -1407,6 +1535,7 @@ export class FlashPanelUI {
    */
   async _startSeedlingRandomizer(adapter) {
     this._apLoadRefusal = null;
+    this._seedlingDelivery = null;
     const staticData = stateManager.getStaticData?.() ?? null;
     const flashPanel = staticData?.flash_panel ?? null;
     const transport = this.transport === 'js' ? 'js' : 'wasm';
@@ -1501,6 +1630,9 @@ export class FlashPanelUI {
       // ⛓ VANILLA MAP — the REAL rooms the game plays when an arm delivered them (the vanilla rewrite; an
       // atlas arm's retag): the wasm playback engine stages these, not the map document.
       this._seedlingRealSet = !generatedArm ? (loaded.set ?? null) : null;
+      // ⛓ THE DELIVERED ROOMS FIRST — the delivery this load arms (null on an arm that only binds): the JS
+      // runtime's walks wait until the page plays its set (`SeedlingPlaybackController._deliveredSetGate`).
+      this._seedlingDelivery = loaded.delivery ?? null;
 
       const glue = getSeedlingRegionGlue();
       if (!glue) {
@@ -2003,8 +2135,15 @@ export class FlashPanelUI {
     this.focusGame('the panel was shown');
   }
 
+  /** Golden Layout's container 'hide': ⛓ TOUCH CONTROLS — a finger on a hidden control holds nothing. */
+  onHide() {
+    this._touch?.releaseAll();
+  }
+
   /** The glue's park hook (and any other "the game no longer owns the keys"). */
   releaseHeldKeys(reason) {
+    // ⛓ TOUCH CONTROLS — first, so their keyups reach the game as their own (the F3 tracker then holds nothing of them)
+    this._touch?.releaseAll();
     return this._heldKeys?.release(reason) ?? [];
   }
 
@@ -2027,6 +2166,7 @@ export class FlashPanelUI {
   destroy() {
     log('info', '[FlashPanelUI] Destroying');
     this._initEpoch = (this._initEpoch ?? 0) + 1;
+    this._unmountTouchControls();
     this._heldKeys?.uninstall();
     this._solveProgressView?.close();
     this._stageObserver?.disconnect();
