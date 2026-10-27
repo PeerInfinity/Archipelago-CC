@@ -12,7 +12,8 @@ import { L40LATCH_WITNESS_DIR, l40LatchBoot, l40LatchOrbitTape, l40LatchSolve } 
 
 describe('L40LATCH D1 — the latch solve under each arm', () => {
     it('holdWaitPriced alone: the hold\'s wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier', async () => {
-        const { out, refusal } = await l40LatchSolve(await l40LatchBoot(), { holdWaitPriced: true });
+        // ⛓ `chaserOrbitKill` named OFF since planning-14's wave-32 flip turned it ON (this row is the D1 arm alone).
+        const { out, refusal } = await l40LatchSolve(await l40LatchBoot(), { holdWaitPriced: true, chaserOrbitKill: false });
         expect(out).toBeNull();
         expect(refusal.message).toContain('hold stance (wandlock@480,560): the combat ladder is EXHAUSTED');
         expect(refusal.message).toContain('TIME certifies the mover TO the aim against the danger timeline');

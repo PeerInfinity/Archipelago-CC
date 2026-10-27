@@ -373,7 +373,7 @@ const RK_SOLVES = [
         v1: '485b2ac25ed8634af7606fe9bf91aaaa', kinds: { pending: 10, exhausted: 3 } },
     { what: 'L40 kill rung (the totem part at (160,640))', tape: 'r5-l40-part5', deadline: true,
         goals: [{ kind: 'collect-placement', placement: { x: 160, y: 640 } }], ticks: 679, shouldStop: 183,
-        // ⛓ planning-14's wave-32 flip (RULESREF D1 `punchGateTimed`; signed by hammer-2): the walk's gate steps the
+        // ⛓ planning-14's wave-32 flip (RULESREF D1 `punchGateTimed`; signed by hammer-2 2026-10-26): the walk's gate steps the
         //   puncher forecast (L40 holds two punchers), so 16 more `walk` asks (61 → 77; shouldStop 167 → 183) and new v1
         //   bytes; the answer (679 t) and the kinds are unchanged. Was v1 '642785a181d63fba342dea4906adc76a'.
         asks: [{ 'walk': 77, 'kill-chaser': 97, 'sword-dash': 9 }],
@@ -880,7 +880,8 @@ describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)'
             { shouldStop: 64, ticks: 445, previews: 412, previewStates: 26508, searchStates: 18362, expansions: 10444,
                 waypointsPlanned: 1, replans: 0, dashesPressed: 6 }] },
         // ⛓ planning-14's wave-32 flip (RULESREF D1 `punchGateTimed`; signed by hammer-2): one more preview (33 → 34,
-        //   15,970 → 16,506 preview states), 16 more asks, hence 18 more snapshots and new pre bytes.
+        //   15,970 → 16,506 preview states) and 16 more asks — 17 of the 18 more snapshots; the 18th is not attributed —
+        //   and new pre bytes.
         //   Was pre 'ffb863ee0a956e0489b522a266fb28a7', 372 snapshots, shouldStop 167.
         'r5-l40-part5': { pre: '2afd57e17bf1fc63aee0edba26f1caf6', snapshots: 390, work: [
             { shouldStop: 183, ticks: 679, previews: 34, previewStates: 16506, searchStates: 0, expansions: 0,
