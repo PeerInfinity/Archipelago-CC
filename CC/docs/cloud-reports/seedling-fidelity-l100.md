@@ -158,7 +158,7 @@ the planner mis-prices). Neither is an item gate.
 
 - **Bounded vitest, key ON** (`SEEDLING_FINE_SWING_STANCE=1`, the same 91 files): **2,460 / 2,461**. The one red is
   `contactFidelity.test.js` "the shipped defaults", the pin a flip owes by construction. No behaviour row moves.
-- **Standard probe battery, key ON** (a scratch worktree with the default flipped, port 9756): PROBE-RESULT-PLACEHOLDER
+- **Standard probe battery, key ON** (a scratch worktree with the default flipped, port 9756): **11/11 ALL CHECKS PASSED**. That includes `wasm-arrival-composites` (95 PASS rows) and logical-links B,R (25) (`probe-battery-standard-on.txt`).
 - **Not measured here (CI, cloud has no dispatch):**
   1. Survey A/B: `seedling-survey.yml` on this branch, `--through=end --route=full`, at the defaults and on a scratch
      commit flipping `fineSwingStance` (or `-f only=219` for the one mover). Expected: step 219's text only.
@@ -246,4 +246,7 @@ OFF is byte-identical:
 - The game witnesses: `l100-sliver-rock` (186 obs, 0 px, 0 hits), and the two jellyfish approach probes (0 px, 0
   disagreements; `w0-jellyfish-contacts.txt`).
 - The survey's ON expectation: 201/240, step 219's text only.
-- CI at my last code head: see below.
+- **CI at my last code head `a79a14fc`** (run 40559694167): suite **23,693 / 23,694**, slow battery 271/271. The ONE red is
+  `scripts/procgen/rosterCategories.test.js > the COMPOSITE checkpoint row > the LIVE row carries one part per derived
+  category` (*expected 230 to be 231*). That is the owed standing-value re-bank (the roster +1), and nothing else. The
+  `r8Acceptance` pair that was red at `bf7dd33e` is green.
