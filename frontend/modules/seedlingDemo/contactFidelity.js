@@ -1559,7 +1559,7 @@ export const CONTACT_FIDELITY = {
      * The rest of the policy (spin, blade, i-frames, the one strike policy) is unchanged. OFF: byte-identical.
      * `SEEDLING_ORBIT_FREE_AIM=0|1`.
      */
-    orbitFreeAim: false,
+    orbitFreeAim: true,
     /**
      * fidelity L40BK2B D2 (wave 33) — THE STRATEGY BOUND COUNTS DISTINCT APPLICATIONS. `MAX_STRATEGIES_PER_GOAL` (4)
      * is documented as the number of DISTINCT obstacles one goal may clear, and the check counted every application.
@@ -1570,7 +1570,7 @@ export const CONTACT_FIDELITY = {
      * `STRATEGY_BOUND_TOTAL` (8) applications in all as the loop's backstop. OFF: byte-identical.
      * `SEEDLING_STRATEGY_BOUND_DISTINCT=0|1`.
      */
-    strategyBoundDistinct: false,
+    strategyBoundDistinct: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
