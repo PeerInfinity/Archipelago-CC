@@ -67,10 +67,7 @@ export const TAPES = Object.freeze([
         want: ['beast:under', 'beast:rise', 'beast:sit', 'beast:dying', 'beast:dead', 'tentacle:rise', 'tentacle:sit', 'tentacle:hit', 'tentacle:hitting',
             'tentacle:sink', 'tentacle:cut', 'tentacle:tint', 'whirl:grow', 'whirl:live', 'whirl:die'] },
     { name: 'L57-tb-cleared', witness: 'tentaclebeast-witness/tb-enter-cleared', want: ['beast:dead'] },
-    // ⚠ `digestAcrossRuns: false` — `lightBoss.js`'s MODULE-LEVEL `flierSeq` (G10's finding, for fidelity): a flier's `seq`
-    //    is in `stateDigest`'s `visit` part and counts on across runs in one process, so two identical runs differ. Section 5
-    //    pins the defect (two OFF runs differ) instead of comparing the digest; the stream, end, ledgers and stateLog still do.
-    { name: 'L69-lights-kill', witness: 'lights-witness/lights-solve-sword', digestAcrossRuns: false,
+    { name: 'L69-lights-kill', witness: 'lights-witness/lights-solve-sword',
         want: ['totem', 'flier:sit', 'flier:red', 'flier:dark', 'flier:die', 'shot', 'totem:dying'] },
     { name: 'L69-lights-stand', witness: 'lights-witness/lights-stand', want: ['totem', 'flier:sit', 'shot'] },
     { name: 'L111-frozen', level: 111, at: [80, 200], n: 3, want: ['frozen'] },
@@ -482,12 +479,7 @@ describe('5. ⛔ STATE IDENTITY — the boss renderer never touches the run', ()
             expect(md5(on.stream.join('\n'))).toBe(md5(off.stream.join('\n')));
             expect(md5(on.end)).toBe(md5(off.end));
             expect(md5(on.stateLog)).toBe(md5(off.stateLog));
-            if (tape.digestAcrossRuns === false) {
-                // ⛔ KNOWN-DEFECT PIN, NOT A REQUIREMENT: `lightBoss.js:258` keeps `flierSeq` at MODULE level (owner:
-                // fidelity), so two identical runs in one process digest differently. The fix flips this row ON PURPOSE:
-                // then delete the pin and the tape's `digestAcrossRuns: false`, and compare the digest like every other tape.
-                expect(drive(tape).digest, 'KNOWN DEFECT (fidelity): flierSeq is module-level').not.toBe(off.digest);
-            } else expect(on.digest).toBe(off.digest);
+            expect(on.digest).toBe(off.digest);
         }, 240_000);
     }
 });
