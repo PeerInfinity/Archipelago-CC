@@ -84,6 +84,11 @@ export function withCrusherBait(enabled, fn) {
  * bounds the BFS (L42's pessimistic answer expands a few hundred states).
  */
 export const BAIT_SEARCH = Object.freeze({ lattice: 8, maxStates: 20000 });
+/**
+ * ⛓ L41TOTEM D1 — the search's flood count, for a measurement (never read by the search): `floods` every component
+ * flood, `skipped` every escape seed `baitComponentMemo` skipped before its flood. Process-wide, cumulative.
+ */
+export const BAIT_SEARCH_COUNTERS = { floods: 0, skipped: 0 };
 
 /**
  * The alignment's bounds (`alignmentCandidates`): `maxTicks` is one move's
@@ -311,7 +316,20 @@ export function searchBaitOrdering({ run, liveOpts, inventory = null, aimRect,
         };
     };
     const start = nodeOf(run.state.x, run.state.y);
-    const componentOf = (seed, cfg) => { const c = cacheFor(cfg); return floodOver(seed, (n) => safeIn(c, n)); };
+    // ⛓ L41TOTEM D1 (`baitComponentMemo`, OFF) — every node a flood of a configuration reached, on that configuration's
+    // cache (`c.flooded`): a later seed inside it would flood the same component again, only to meet its key in
+    // `seenStates` (the escape loop below skips it first). Never written while OFF.
+    const memoFloods = CONTACT_FIDELITY.baitComponentMemo;
+    const componentOf = (seed, cfg) => {
+        const c = cacheFor(cfg);
+        const comp = floodOver(seed, (n) => safeIn(c, n));
+        BAIT_SEARCH_COUNTERS.floods += 1;
+        if (memoFloods && comp.size > 0) {
+            c.flooded ??= new Set();
+            for (const n of comp) c.flooded.add(n);
+        }
+        return comp;
+    };
     const reachesAim = (seed, cfg) => {
         const c = cacheFor(cfg);
         const walk = floodOver(seed, (n) => (freeIn(c, n, allowTeleporter)
@@ -413,9 +431,13 @@ export function searchBaitOrdering({ run, liveOpts, inventory = null, aimRect,
                 const stances = stancesFor(self, d.name, state.cfg, state);
                 if (stances.length === 0) continue;
                 const next = { ...state.cfg, [self]: park };
+                const nextCache = memoFloods ? cacheFor(next) : null;
                 for (const stance of stances) {
                     const seenRegions = new Set();
                     for (const { n: e, hot } of escapesFrom(self, stance, state.cfg, next, swept)) {
+                        // ⛓ L41TOTEM D1 — a seed inside a component already flooded under `next`: its key is in
+                        // `seenStates` (every non-empty flood's is), so the flood below would end at `continue`.
+                        if (nextCache && !hot && nextCache.flooded?.has(e)) { BAIT_SEARCH_COUNTERS.skipped += 1; continue; }
                         const region = hot ? new Set([e]) : componentOf(e, next);
                         if (region.size === 0) continue;
                         const rk = `${hot ?? '-'}|${Math.min(...region)}`;
