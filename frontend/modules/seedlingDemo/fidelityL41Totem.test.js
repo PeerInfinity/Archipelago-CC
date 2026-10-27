@@ -21,7 +21,9 @@ import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { solveSegment } from './solverBot.js';
-import { BAIT_ALIGN_PROBE, BAIT_SEARCH_COUNTERS, alignmentCandidates, searchBaitOrdering } from './crusherBait.js';
+import {
+    BAIT_ALIGN_PROBE, BAIT_SEARCH_COUNTERS, alignmentCandidates, parkedTailProbe, searchBaitOrdering, trimParkedTail,
+} from './crusherBait.js';
 import { ropeStaging } from './fidelityRope.js';
 import { CRUSHERPRESS_WITNESSES } from './fidelityCrusherPress.js';
 
@@ -51,11 +53,11 @@ const counted = (memo, fn) => {
 
 describe('fidelity L41TOTEM D1 — the switches', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO
-        || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO)('both ship OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.baitComponentMemo).toBe(false);
-        expect(CONTACT_FIDELITY.baitComponentMemo).toBe(false);
-        expect(CONTACT_FIDELITY_DEFAULTS.baitAlignSafeMemo).toBe(false);
-        expect(CONTACT_FIDELITY.baitAlignSafeMemo).toBe(false);
+        || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO || !!process.env.SEEDLING_BAIT_PARKED_TAIL)('all three ship OFF', () => {
+        for (const key of ['baitComponentMemo', 'baitAlignSafeMemo', 'baitParkedTail']) {
+            expect(CONTACT_FIDELITY_DEFAULTS[key]).toBe(false);
+            expect(CONTACT_FIDELITY[key]).toBe(false);
+        }
     });
 });
 
@@ -118,5 +120,53 @@ describe('fidelity L41TOTEM D1 + D1b — the solver at L41 through the bait and 
         // D1b: every alignment's candidate list ([x, y, moves, ticks] rows, nearest first) is the same, chain by chain
         expect(off.aligned.length).toBeGreaterThanOrEqual(3);
         expect(on.aligned).toEqual(off.aligned);
+    }, 180_000);
+});
+
+describe('fidelity L41TOTEM D3 — a bait\'s idle ends when the crusher has parked', () => {
+    /** A fake run whose `crushersParked` and velocity follow `frames` (one per tick, read at each `push`). */
+    const probed = (frames) => {
+        const run = { state: { vx: 0, vy: 0 }, parked: true, entities: (k) => (k === 'crushersParked' ? run.parked : null) };
+        const probe = parkedTailProbe(run);
+        for (const [parked, moving] of frames) {
+            run.parked = parked;
+            run.state.vx = moving ? 1 : 0;
+            probe.push(new Set());
+        }
+        return probe;
+    };
+    const S = (n) => Array.from({ length: n }, () => [true, false]);
+    it('the probe marks where the TRAILING settled streak begins (parked AND at rest), and resets when it breaks', () => {
+        expect(probed([...S(2), [false, false], [false, false], ...S(5)])).toMatchObject({ ticks: 9, settledAt: 4 });
+        // re-woken after a first park: the streak that counts is the last one
+        expect(probed([[false, false], ...S(3), [false, false], ...S(2)])).toMatchObject({ ticks: 7, settledAt: 5 });
+        // parked but the player still moving is not settled
+        expect(probed([[false, false], [true, true], [true, true], ...S(2)])).toMatchObject({ ticks: 5, settledAt: 3 });
+        expect(probed([...S(2), [false, false]])).toMatchObject({ ticks: 3, settledAt: null });
+    });
+    it('only a trailing idle span is cut, never past its own length', () => {
+        const spans = [{ key: 'down', ticks: 40 }, { key: null, ticks: 160 }];
+        expect(trimParkedTail(spans, { ticks: 200, settledAt: 172 })).toEqual([{ key: 'down', ticks: 40 }, { key: null, ticks: 132 }]);
+        expect(trimParkedTail(spans, { ticks: 200, settledAt: 10 })).toEqual([{ key: 'down', ticks: 40 }]);
+        expect(trimParkedTail(spans, { ticks: 200, settledAt: null })).toBe(spans);
+        expect(trimParkedTail(spans, null)).toBe(spans);
+        const moving = [{ key: null, ticks: 5 }, { key: 'down', ticks: 40 }];
+        expect(trimParkedTail(moving, { ticks: 45, settledAt: 30 })).toBe(moving);
+    });
+    it('L41 (the SEARCHGAPS staging): ON cuts R5\'s three idles by 28 / 123 / 85 ticks, and the rest is the same walk', async () => {
+        const staging = await ropeStaging(W);
+        const solve = (on) => withContactFidelity({ baitParkedTail: on }, () => solveSegment({
+            run: createRunForStaging(staging, SRC), goals: W.goals, name: 'l41totem-d3', boot: staging.boot, dashMode: 'all',
+            forkRun: () => createRunForStaging(staging, SRC) }));
+        const off = solve(false);
+        const on = solve(true);
+        const chains = (out) => out.records.find((r) => r.verb === 'bait').chains.map((c) => [c.charges, c.ticks]);
+        expect(chains(off)).toEqual([['W', 229], ['S', 422], ['E', 312]]);
+        expect(chains(on)).toEqual([['W', 229 - 28], ['S', 422 - 123], ['E', 312 - 85]]);
+        expect(off.perTick.length).toBe(2189);
+        expect(on.perTick.length).toBe(2189 - 236);
+        // the walk before the bait is the same
+        const bait = off.records.find((r) => r.verb === 'bait').from;
+        expect(on.perTick.slice(0, bait).map((k) => [...k].join('+'))).toEqual(off.perTick.slice(0, bait).map((k) => [...k].join('+')));
     }, 180_000);
 });

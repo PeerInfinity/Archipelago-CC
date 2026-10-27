@@ -1565,6 +1565,16 @@ export const CONTACT_FIDELITY = {
      * each answer is kept for the call, keyed on (p.x, p.y). OFF: byte-identical. `SEEDLING_BAIT_ALIGN_SAFE_MEMO=0|1`.
      */
     baitAlignSafeMemo: false,
+    /**
+     * fidelity L41TOTEM D3 (wave 33) — A BAIT'S IDLE ENDS WHEN THE CRUSHER HAS PARKED (`solverBot.execBait`,
+     * `crusherBait.trimParkedTail`). The chain's escape ends in R5's fixed idle span (L41: 160 / 220 / 260 ticks), which
+     * outlasts the charge: at sweep leg 855 the player stood still 28, 123 and 85 ticks with the crusher already parked
+     * (236 of the plan's 2,505 ticks, ~8 s of the leg's game-paced play). ON: the fork that certifies the chain also
+     * records where the trailing streak begins in which every crusher is parked and the player is at rest, and the live
+     * chain's last idle span is cut to end there; `runBait` re-checks the cut chain (no contact, parked, at its park).
+     * The PLAN moves (shorter); no model term moves. OFF: byte-identical. `SEEDLING_BAIT_PARKED_TAIL=0|1`.
+     */
+    baitParkedTail: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1759,6 +1769,9 @@ if (globalThis.process?.env?.SEEDLING_BAIT_COMPONENT_MEMO === '0') CONTACT_FIDEL
 // ⛓ fidelity L41TOTEM D1b: `SEEDLING_BAIT_ALIGN_SAFE_MEMO=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_BAIT_ALIGN_SAFE_MEMO === '1') CONTACT_FIDELITY.baitAlignSafeMemo = true;
 if (globalThis.process?.env?.SEEDLING_BAIT_ALIGN_SAFE_MEMO === '0') CONTACT_FIDELITY.baitAlignSafeMemo = false;
+// ⛓ fidelity L41TOTEM D3: `SEEDLING_BAIT_PARKED_TAIL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BAIT_PARKED_TAIL === '1') CONTACT_FIDELITY.baitParkedTail = true;
+if (globalThis.process?.env?.SEEDLING_BAIT_PARKED_TAIL === '0') CONTACT_FIDELITY.baitParkedTail = false;
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;

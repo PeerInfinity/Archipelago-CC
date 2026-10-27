@@ -733,6 +733,39 @@ export function choreographyFor(level, chain) {
         && r.charges.join('') === chain.charges.join('')) ?? null;
 }
 
+/**
+ * ⛓ L41TOTEM D3 (`baitParkedTail`, OFF) — a `perTick` sink for `botDriverV2.runBait` on a FORK (it only `push`es, one key
+ * set per tick, BEFORE that tick's `advance`): `ticks` counts the ticks driven, and `settledAt` is where the trailing
+ * streak begins in which every crusher is parked and the player is at rest (null = not settled before the last tick).
+ */
+export function parkedTailProbe(run) {
+    const probe = {
+        ticks: 0,
+        settledAt: null,
+        push() {
+            const settled = run.entities('crushersParked') === true && run.state.vx === 0 && run.state.vy === 0;
+            if (!settled) probe.settledAt = null;
+            else if (probe.settledAt === null) probe.settledAt = probe.ticks;
+            probe.ticks += 1;
+        },
+    };
+    return probe;
+}
+
+/**
+ * ⛓ L41TOTEM D3 — a chain's escape spans with its trailing IDLE span cut by the ticks the fork stood settled at its end
+ * (`parkedTailProbe`): R5's idles (160 / 220 / 260 at L41) outlast the charge, and the player stood still while the
+ * crusher was already parked (measured at sweep leg 855: 28, 123 and 85 ticks). Only a trailing `key: null` span is cut,
+ * never past its own length; anything else comes back unchanged. `runBait` on the live run re-checks the cut chain.
+ */
+export function trimParkedTail(spans, probe) {
+    const last = spans.at(-1);
+    if (!last || last.key !== null || !probe || probe.settledAt === null) return spans;
+    const cut = Math.min(last.ticks, probe.ticks - probe.settledAt);
+    if (cut <= 0) return spans;
+    return [...spans.slice(0, -1), ...(last.ticks > cut ? [{ ...last, ticks: last.ticks - cut }] : [])];
+}
+
 const ALIGN_KEYS = Object.freeze([
     ['up'], ['down'], ['left'], ['right'],
     ['up', 'left'], ['up', 'right'], ['down', 'left'], ['down', 'right'],
