@@ -1496,12 +1496,12 @@
       "channel": "headless"
     },
     "roster: --tier=full": {
-      "value": "289 tapes 6382/0/0",
+      "value": "290 tapes 6465/0/0",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 39 tape(s) 905/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless] · mechanic 229 tape(s) 5028/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: run 39536515938 @fcf25a3767 (tier full, key 01d556d5e9c38979) — REUSED at fcf25a3767: the tier key at this head equals the run's (ci-skip-rules rule 3).",
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 39 tape(s) 905/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless] · mechanic 230 tape(s) 5111/0/0 MEASURED @129814e6a9c1b6b7205a2a95e216e9f85c694071 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: run 39536515938 @fcf25a3767 (tier full, key 01d556d5e9c38979) — REUSED at fcf25a3767: the tier key at this head equals the run's (ci-skip-rules rule 3).",
       "measuredAt": "fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4",
       "categories": {
         "campaign": {
@@ -1519,10 +1519,9 @@
           "channel": "headless"
         },
         "mechanic": {
-          "tapes": 229,
-          "value": "5028/0/0",
-          "measuredAt": "fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4",
-          "coveredBy": "run 39536515938 @fcf25a3767 (tier full, key 01d556d5e9c38979) — REUSED at fcf25a3767: the tier key at this head equals the run's (ci-skip-rules rule 3)",
+          "tapes": 230,
+          "value": "5111/0/0",
+          "measuredAt": "129814e6a9c1b6b7205a2a95e216e9f85c694071",
           "channel": "headless"
         }
       }
