@@ -126,31 +126,31 @@ export const SOUND_CALL_SITES = Object.freeze({
     'Scenery/RockFall.as:76': remaining('Rock', 'no ledger records the break'),
     'Scenery/Moonrock.as:94': remaining('Light', 'no ledger records the moonrock lighting'),
     'Scenery/Moonrock.as:116': remaining('Rock', 'no ledger records the moonrock landing'),
-    'Scenery/LightBossTotem.as:50': remaining('Boss Die', 'the Lights fight\'s totems are not in a ledger with a death tick'),
+    'Scenery/LightBossTotem.as:50': cued('Boss Die', '`lightsFight` `totemDie` turns true (the `die` setter): index 2, vol 0.3'),
     // ── enemies ─────────────────────────────────────────────────────────
     'Enemies/Enemy.as:80': cued('Enemy Fall', 'a chaser\'s `alpha` leaves 1 while not dying (the pit fade starts) (dist)'),
-    'Enemies/Enemy.as:160': cued('Enemy Die', 'a chaser or spinner\'s `hits` rises and it is dying / destroyed (dist; index 0)'),
-    'Enemies/Enemy.as:165': cued('Enemy Hit', 'a chaser or spinner\'s `hits` rises and it lives (dist; index 0)'),
+    'Enemies/Enemy.as:160': cued('Enemy Die', 'the class\'s `dieSound`/`dieSoundIndex` (dist): a chaser or spinner\'s `hits` rises and it is dying / destroyed (index 0); a tentacle\'s `tentacle-hit` `killed` (0); the bosses\' big index 1 — ShieldBoss `shieldBossHits` `killed`, the Owl\'s `hits` rising with a `finalBossKills` `kill`, a Lights flier\'s `hits` rising into its die animation, a Bob Boss form\'s `hits` rising with `destroy`; the BossTotem\'s `bossHits` `killed` plays its own "Boss Die" 0'),
+    'Enemies/Enemy.as:165': cued('Enemy Hit', 'the class\'s `hitSound`/`hitSoundIndex` (dist): a chaser or spinner\'s `hits` rises and it lives (index 0); a tentacle\'s landed `tentacle-hit` (0); the bosses\' index 1 — ShieldBoss `shieldBossHits` landed in `movedShield`, the Owl / a Lights flier / a Bob Boss form `hits` rising, the BossTotem\'s landed `bossHits`. The King of Fire\'s own `hit` plays nothing (`LavaBoss.as:143`)'),
     'Enemies/Bob.as:72': remaining('Enemy Hop', 'a hop is not a read'),
     'Enemies/BobSoldier.as:105': remaining('Enemy Hop', 'a hop is not a read'),
     'Enemies/Puncher.as:115': remaining('Punch', 'a punch is not a ledger row'),
     'Enemies/Drill.as:102': remaining('Drill', 'drill surfacing is not a ledger row'),
     'Enemies/Drill.as:108': remaining('Drill', 'as Drill.as:102'),
-    'Enemies/Grenade.as:135': remaining('Explosion', 'the Owl\'s grenades: `owlGrenadeEvents` / `placedGrenadeEvents` not yet mapped'),
-    'Enemies/Tentacle.as:105': remaining('Tentacle', 'not mapped'),
-    'Enemies/TentacleBeast.as:86': remaining('Boss Die', 'not mapped'),
-    'Enemies/TentacleBeast.as:96': remaining('Boss Die', 'not mapped'),
-    'Enemies/LavaBoss.as:220': remaining('Lava', 'not mapped'),
-    'Enemies/LavaBoss.as:247': remaining('Lava', 'not mapped'),
-    'Enemies/Bulb.as:61': remaining('Lava', 'not mapped'),
-    'Enemies/LightBoss.as:69': remaining('Boss 6 Move', 'a `Rng.cos()` roll on the cosmetic stream; not modelled (⚖ never model the cosmetic RNG)'),
-    'Enemies/ShieldBoss.as:146': remaining('Metal Hit', 'not mapped'),
-    'Enemies/BossTotem.as:294': remaining('Other', 'not mapped'),
-    'Enemies/BossTotem.as:369': remaining('Enemy Attack', 'not mapped'),
-    'Enemies/BossTotem.as:393': remaining('Other', 'not mapped'),
-    'Enemies/BossTotem.as:455': remaining('Enemy Attack', 'not mapped'),
-    'Enemies/BossTotem.as:456': remaining('Enemy Attack', 'not mapped'),
-    'Enemies/BossTotem.as:478': remaining('Boss Die', 'not mapped'),
+    'Enemies/Grenade.as:135': cued('Explosion', '`owlGrenadeEvents` `exploded` (its x, y) and `placedGrenadeEvents` `blast` (the `placedGrenades` body; else its id): dist 120'),
+    'Enemies/Tentacle.as:105': cued('Tentacle', 'a `tentacleBeastFight` tentacle\'s `anim` turns `hitting` (the "hit" animation\'s end plays it) (dist)'),
+    'Enemies/TentacleBeast.as:86': cued('Boss Die', '`tentacleBeastEvents` `wake`: index 3, vol 0.2'),
+    'Enemies/TentacleBeast.as:96': cued('Boss Die', '`tentacleBeastEvents` `dying`: index 4, vol 0.2'),
+    'Enemies/LavaBoss.as:220': cued('Lava', '`lavaBossFight` boss `anim` turns `smashback` (the smash\'s `endAnim`): index 0'),
+    'Enemies/LavaBoss.as:247': cued('Lava', '`lavaBossFight` boss `anim` turns `sweepback` (the sweep\'s `endAnim`): index 1'),
+    'Enemies/Bulb.as:61': cued('Lava', '`bulbEvents` `drop`: index 2'),
+    'Enemies/LightBoss.as:69': cued('Boss 6 Move', 'one roll per live `lightsFight` flier per tick, 1 in 90, on the CUES\' OWN cosmetic stream (mulberry32, `COSMETIC_CUE_SEED`) — the game rolls `Rng.cos()`, which is never modelled (⚖ never model the cosmetic RNG)', 'cosmetic: the game\'s RATE, not its ticks'),
+    'Enemies/ShieldBoss.as:146': cued('Metal Hit', 'a `shieldBossHits` row neither swallowed nor in `movedShield`, under the `playedSound` latch — set by the play, cleared by `endAnim`, read as a non-`sit` animation (`moveShield` / `movedShield` / `stab`) changing on a tick no hit of that boss aborted, retaliated or killed', '0 (the latch reconstructed from the animation chain)'),
+    'Enemies/BossTotem.as:294': cued('Other', 'a `bossesWoken` body appears (activation), same room: index 0'),
+    'Enemies/BossTotem.as:369': cued('Enemy Attack', '`bossShotsFired`: once per tick that fired (the AS3 plays once per PAIR): index 2, vol 0.2'),
+    'Enemies/BossTotem.as:393': remaining('Other', 'the walk\'s step sound is keyed to the boss\'s own `currentFrame` (2 or 6) under a `playedSound` latch; `bossesWoken` carries `anim`/`state`, not the frame'),
+    'Enemies/BossTotem.as:455': cued('Enemy Attack', '`bossLasers` (one row per firing): index 0, vol 0.15'),
+    'Enemies/BossTotem.as:456': cued('Enemy Attack', 'as BossTotem.as:455: index 1, vol 0.15'),
+    'Enemies/BossTotem.as:478': cued('Boss Die', 'a `bossesWoken` body\'s `removed` turns true, same room: index 1, vol 0.8'),
     'Enemies/LavaTrap.as:91': remaining('Enemy Attack', 'not mapped'),
     'Enemies/SandTrap.as:62': remaining('Enemy Attack', 'not mapped'),
     'Enemies/IceTrap.as:44': remaining('Enemy Attack', 'not mapped'),
@@ -160,7 +160,7 @@ export const SOUND_CALL_SITES = Object.freeze({
     'Projectiles/Arrow.as:59': remaining('Arrow', 'an arrow\'s landing (`arrowBodyHits`) is per body; the AS3 plays once per arrow per landing tick — not mapped'),
     'Projectiles/TurretSpit.as:37': cued('Turret Shoot', '`spitEvents` `spawn` (its own `t`; dist from the row)'),
     'Projectiles/IceTurretBlast.as:36': remaining('Other', 'not mapped'),
-    'Projectiles/Explosion.as:48': cued('Explosion', 'PARTIAL: `bombEvents` `blast` (Bomb.as:62\'s Explosion; dist 120). An enemy\'s death explosion (Enemy.as:205), LavaBall and BossTotemShot remain'),
+    'Projectiles/Explosion.as:48': cued('Explosion', 'PARTIAL, dist 120: `bombEvents` `blast` (Bomb.as:62); `bossBlasts` — a BossTotemShot\'s (BossTotemShot.as:71) and the BossTotem\'s wand death (Enemy.as:205); `lavaBossEvents` `ball-hit` at x + the ball\'s last v (LavaBall.as:82). Remaining: Enemy.as:205 for any OTHER body a wand kills (no ledger ties a wand kill to its body)'),
     'Projectiles/WandShot.as:71': cued('Wand Fire', '`wandShots` (its own `t`)'),
     'Projectiles/WandShot.as:89': cued('Wand Fizzle', 'a `wandShotsLive` shot\'s `anim` turns `die`'),
     'Projectiles/WandShot.as:123': cued('Wand Fizzle', 'as WandShot.as:89 (a hit plays `die` in the same update)'),
@@ -223,8 +223,62 @@ export function soundCueView(run, { record = null } = {}) {
         responders: (act.responders ?? []).map((r) => ({ id: r.id, tag: r.tag, open: !!r.open, held: r.held ?? 0 })),
         pressers: (act.pressers ?? []).map((p) => ({ id: p.id, tag: p.tag, down: !!p.down })),
         talk: talk ? { key: `${talk.source}|${talk.id}|${talk.tag}`, page: talk.page, pages: talk.pages, length: talk.text.length, at: talk.currentCharacter } : null,
+        bosses: bossCueView(run),
     };
 }
+
+/** A getter the run may not carry (an older run, a stub): its value, or `fallback`. */
+const read = (run, name, fallback) => (name in run ? run[name] ?? fallback : fallback);
+
+/** The boss ledgers the cues read new rows of (each grows within a run). */
+const BOSS_LEDGERS = Object.freeze(['shieldBossHits', 'finalBossKills', 'owlGrenadeEvents', 'placedGrenadeEvents', 'lavaBossEvents',
+    'tentacleBeastEvents', 'bossShotsFired', 'bossLasers', 'bossHits', 'bossBlasts', 'bulbEvents']);
+
+/**
+ * THE BOSSES' VIEW — the same EXISTING getters the boss skin (G10) and the music
+ * driver read, copied. ⛔ No new getter: a sound no one of these sees stays a
+ * `remaining` row with its reason.
+ */
+function bossCueView(run) {
+    const ledgers = {};
+    for (const k of BOSS_LEDGERS) ledgers[k] = read(run, k, []) ?? [];
+    const lava = read(run, 'lavaBossFight', null);
+    const beast = read(run, 'tentacleBeastFight', null);
+    return {
+        ...ledgers,
+        shield: (read(run, 'shieldBosses', []) ?? []).map((b) => ({ id: b.id, x: b.x, y: b.y, anim: b.anim, hits: b.hits ?? 0 })),
+        owl: (read(run, 'finalBosses', []) ?? []).map((b) => ({ id: b.id, x: b.x, y: b.y, hits: b.hits ?? 0 })),
+        placedGrenades: (read(run, 'placedGrenades', []) ?? []).map((g) => ({ id: g.id, x: g.x, y: g.y })),
+        lava: lava?.boss ? { anim: lava.boss.anim ?? '' } : null,
+        lavaBalls: (lava?.balls ?? []).map((s) => ({ id: s.id, x: s.x, y: s.y, vx: s.vx ?? 0, vy: s.vy ?? 0 })),
+        tentacles: (beast?.tentacles ?? []).map((t) => ({ id: t.id, x: t.x, y: t.y, anim: t.anim ?? '' })),
+        lights: (read(run, 'lightsFight', []) ?? []).map((f) => ({
+            id: f.id, totemDie: !!f.totemDie,
+            fliers: (f.bodies ?? []).filter((b) => !b.removed).map((b) => ({ id: b.id, x: b.x, y: b.y, hits: b.hits ?? 0, dying: !!b.dieAnim })),
+        })),
+        totems: (read(run, 'bossesWoken', []) ?? []).map((b) => ({ x: b.x, y: b.y, removed: !!b.removed })),
+        bob: (() => {
+            const m = read(run, 'bobBoss', null);
+            const body = m instanceof Map ? m.get('boss') : null;
+            return body ? { id: body.id, x: body.x, y: body.y, hits: body.hits ?? 0, destroy: !!body.destroy } : null;
+        })(),
+    };
+}
+
+/** mulberry32, one step, PURE (`a` in, `{ a, r }` out) — the cues' OWN cosmetic stream (never the model's). */
+export function cosmeticStep(a) {
+    const next = (a + 0x6d2b79f5) >>> 0;
+    let t = next;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return { a: next, r: ((t ^ (t >>> 14)) >>> 0) / 4294967296 };
+}
+/** The cues' cosmetic stream's seed (a constant, so a golden is reproducible). */
+export const COSMETIC_CUE_SEED = 0x6b055;
+/** `LightBoss.as:67` — `!Math.floor(Rng.cos() * 90)`: one update in 90 plays "Boss 6 Move". */
+export const LIGHT_BOSS_MOVE_ODDS = 90;
+/** The ShieldBoss animations whose end runs `endAnim` (`sit` has frame rate 0 and never ends — `ShieldBoss.as:36-40`). */
+const SHIELD_ENDING_ANIMS = Object.freeze(['moveShield', 'movedShield', 'stab']);
 
 /** The new rows of a ledger since the last tick (a ledger only grows within a run). */
 const fresh = (list, seen) => (list.length > seen ? list.slice(seen) : []);
@@ -268,7 +322,7 @@ export function stepSoundCues(prev, view, tick, { lengthFrames = () => 1 } = {})
         pulsers: new Map(view.pulsers.map((m) => [m.id, m])),
         pressKeys: same ? prev.pressKeys : new Set(view.presses.map((p) => `${p.weapon}|${p.t}`)),
     };
-    if (!same) return { state, cues };
+    if (!same) { state.boss = bossBaseline(view); return { state, cues }; }
     const p = prev;
 
     // ── the player ──
@@ -380,7 +434,173 @@ export function stepSoundCues(prev, view, tick, { lengthFrames = () => 1 } = {})
             textChannel.frames = 0;
         }
     }
+
+    stepBossCues(p, view, state, { cue, dist });
     return { state, cues };
+}
+
+/** The boss half of the state a new run baselines with. */
+function bossBaseline(view) {
+    const b = view.bosses;
+    const lens = {};
+    for (const k of BOSS_LEDGERS) lens[k] = b ? b[k].length : 0;
+    return { lens, bosses: b, shieldLatch: new Map(), cosmetic: COSMETIC_CUE_SEED };
+}
+
+/**
+ * The bosses, one family at a time (⚖ the brief: bosses first). Every family
+ * reads its own getters; a list that is LEVEL-scoped (a body's state) is only
+ * diffed while the level stays the same, so a room change cannot read as a
+ * hit, a death or a wake.
+ */
+function stepBossCues(p, view, state, { cue, dist }) {
+    const b = view.bosses;
+    const was = p.boss?.bosses;
+    if (!b || !was) { state.boss = bossBaseline(view); return; }
+    const lensBefore = p.boss.lens;
+    const fresh = (k) => (b[k].length > lensBefore[k] ? b[k].slice(lensBefore[k]) : []);
+    const sameRoom = view.level === p.level;
+    const byId = (list) => new Map((list ?? []).map((x) => [x.id, x]));
+    const shieldLatch = new Map(p.boss.shieldLatch);
+    let cosmetic = p.boss.cosmetic;
+
+    // ── ShieldBoss (L19) ── `ShieldBoss.hit` (`:130-151`): the swallowed first hit plays nothing; in "movedShield"
+    // `super.hit` (Enemy.as:160/165, the big index 1); anywhere else "Metal Hit" under the `playedSound` latch,
+    // which `endAnim` clears (`:192`) — seen as a non-`sit` animation changing with no hit of this tick to explain it.
+    const shieldNow = byId(b.shield);
+    const shieldWas = byId(was.shield);
+    const hitIds = new Set();
+    for (const r of fresh('shieldBossHits')) {
+        if (r.swallowed) continue;
+        const body = shieldNow.get(r.id) ?? shieldWas.get(r.id) ?? posOfId(r.id);
+        if (r.anim === 'movedShield') {
+            if (r.landed) dist(r.killed ? 'Enemies/Enemy.as:160' : 'Enemies/Enemy.as:165', r.killed ? 'Enemy Die' : 'Enemy Hit', 1, body.x, body.y);
+        } else if (!shieldLatch.get(r.id)) {
+            cue('Enemies/ShieldBoss.as:146', 'Metal Hit');
+            shieldLatch.set(r.id, true);
+        }
+        if (r.aborted || r.retaliated || r.killed) hitIds.add(r.id);
+    }
+    if (sameRoom) {
+        for (const s of b.shield) {
+            const before = shieldWas.get(s.id);
+            if (before && SHIELD_ENDING_ANIMS.includes(before.anim) && s.anim !== before.anim && !hitIds.has(s.id)) shieldLatch.set(s.id, false);
+        }
+    }
+
+    // ── the Owl (L112) ── `FinalBoss` keeps `Enemy.hit`: a hit plays index 1, the killing one "Enemy Die" 1.
+    const owlKills = new Set(fresh('finalBossKills').filter((r) => r.what === 'kill').map((r) => r.id));
+    if (sameRoom) {
+        const owlWas = byId(was.owl);
+        for (const o of b.owl) {
+            const before = owlWas.get(o.id);
+            if (before && o.hits > before.hits) {
+                if (owlKills.has(o.id)) dist('Enemies/Enemy.as:160', 'Enemy Die', 1, o.x, o.y);
+                else dist('Enemies/Enemy.as:165', 'Enemy Hit', 1, o.x, o.y);
+            }
+        }
+    }
+    // `Grenade.animEnd`'s "explode" (`:135`) — the Owl's and the placed ones (dist from the grenade's x, y; 120).
+    for (const r of fresh('owlGrenadeEvents')) if (r.what === 'exploded') dist('Enemies/Grenade.as:135', 'Explosion', -1, r.x, r.y, 120);
+    const placed = byId(b.placedGrenades);
+    for (const r of fresh('placedGrenadeEvents')) {
+        if (r.what !== 'blast') continue;
+        const g = placed.get(r.id) ?? posOfId(r.id);
+        if (g) dist('Enemies/Grenade.as:135', 'Explosion', -1, g.x, g.y, 120);
+    }
+
+    // ── the King of Fire (L82) ── `LavaBoss.endAnim`: "smash" ends → "smashback" + Lava 0 (`:220`); "sweep" ends →
+    // "sweepback" + Lava 1 (`:247`). Its own `hit` plays nothing. A LavaBall that hits explodes at x + v (`LavaBall.as:82`).
+    if (sameRoom && b.lava && was.lava && b.lava.anim !== was.lava.anim) {
+        if (b.lava.anim === 'smashback') cue('Enemies/LavaBoss.as:220', 'Lava', 0);
+        if (b.lava.anim === 'sweepback') cue('Enemies/LavaBoss.as:247', 'Lava', 1);
+    }
+    const ballsWas = byId(was.lavaBalls);
+    for (const r of fresh('lavaBossEvents')) {
+        if (r.kind !== 'ball-hit') continue;
+        const v = ballsWas.get(r.id) ?? { vx: 0, vy: 0 };
+        dist('Projectiles/Explosion.as:48', 'Explosion', -1, r.x + v.vx, r.y + v.vy, 120);
+    }
+
+    // ── the Tentacled Beast (L57) ── wake "Boss Die" 3 (`:86`), dying "Boss Die" 4 (`:96`), both vol 0.2; a tentacle
+    // (an Enemy, the small index) hit or cut; a tentacle's "hit" ending into "hitting" plays "Tentacle" (`Tentacle.as:105`).
+    const tentWas = byId(was.tentacles);
+    const tentNow = byId(b.tentacles);
+    for (const r of fresh('tentacleBeastEvents')) {
+        if (r.kind === 'wake') cue('Enemies/TentacleBeast.as:86', 'Boss Die', 3, 0.2);
+        else if (r.kind === 'dying') cue('Enemies/TentacleBeast.as:96', 'Boss Die', 4, 0.2);
+        else if (r.kind === 'tentacle-hit' && r.landed) {
+            const t = tentNow.get(r.id) ?? tentWas.get(r.id);
+            if (t) dist(r.killed ? 'Enemies/Enemy.as:160' : 'Enemies/Enemy.as:165', r.killed ? 'Enemy Die' : 'Enemy Hit', 0, t.x, t.y);
+        }
+    }
+    if (sameRoom) {
+        for (const t of b.tentacles) {
+            const before = tentWas.get(t.id);
+            if (before && t.anim === 'hitting' && before.anim !== 'hitting') dist('Enemies/Tentacle.as:105', 'Tentacle', -1, t.x, t.y);
+        }
+    }
+
+    // ── the Lights (L69) ── a flier keeps `Enemy.hit` (index 1); the totem's `die` setter plays "Boss Die" 2, 0.3
+    // (`LightBossTotem.as:50`); every update a flier rolls `Rng.cos()` for "Boss 6 Move" (`LightBoss.as:69`) — a roll on
+    // the COSMETIC stream, so the cues roll their OWN (⚖ never model the cosmetic RNG): the game's rate, not its ticks.
+    if (sameRoom) {
+        const lightsWas = byId(was.lights);
+        for (const f of b.lights) {
+            const before = lightsWas.get(f.id);
+            if (!before) continue;
+            if (f.totemDie && !before.totemDie) cue('Scenery/LightBossTotem.as:50', 'Boss Die', 2, 0.3);
+            const fliersWas = byId(before.fliers);
+            for (const fl of f.fliers) {
+                const fb = fliersWas.get(fl.id);
+                if (!fb) continue;
+                if (fl.hits > fb.hits) {
+                    if (fl.dying) dist('Enemies/Enemy.as:160', 'Enemy Die', 1, fl.x, fl.y);
+                    else dist('Enemies/Enemy.as:165', 'Enemy Hit', 1, fl.x, fl.y);
+                }
+                const roll = cosmeticStep(cosmetic);
+                cosmetic = roll.a;
+                if (!Math.floor(roll.r * LIGHT_BOSS_MOVE_ODDS)) cue('Enemies/LightBoss.as:69', 'Boss 6 Move');
+            }
+        }
+    }
+
+    // ── the BossTotem (L43) ── woken "Other" 0 (`:294`); a volley "Enemy Attack" 2, 0.2 once per PAIR (`:369`); the
+    // laser "Enemy Attack" 0 and 1, 0.15 (`:455-456`); a hit index 1, the kill its `dieSound` "Boss Die" 0 (Enemy.as:160);
+    // removed "Boss Die" 1, 0.8 (`:478`); a BossTotemShot's or the wand death's Explosion (dist, 120).
+    if (sameRoom) {
+        b.totems.forEach((t, i) => {
+            const before = was.totems[i];
+            if (!before) cue('Enemies/BossTotem.as:294', 'Other', 0);
+            else if (t.removed && !before.removed) cue('Enemies/BossTotem.as:478', 'Boss Die', 1, 0.8);
+        });
+    }
+    for (let i = new Set(fresh('bossShotsFired').map((r) => r.t)).size; i > 0; i -= 1) cue('Enemies/BossTotem.as:369', 'Enemy Attack', 2, 0.2);
+    for (let i = 0; i < fresh('bossLasers').length; i += 1) {
+        cue('Enemies/BossTotem.as:455', 'Enemy Attack', 0, 0.15);
+        cue('Enemies/BossTotem.as:456', 'Enemy Attack', 1, 0.15);
+    }
+    for (const r of fresh('bossHits')) {
+        if (!r.landed) continue;
+        const x = posOfId(r.id)?.x ?? view.player.x;
+        if (r.killed) dist('Enemies/Enemy.as:160', 'Boss Die', 0, x, r.bossY);
+        else dist('Enemies/Enemy.as:165', 'Enemy Hit', 1, x, r.bossY);
+    }
+    for (const r of fresh('bossBlasts')) dist('Projectiles/Explosion.as:48', 'Explosion', -1, r.x, r.y, 120);
+
+    // ── the Bulb (`Bulb.as:61`): its drop plays "Lava" 2 ──
+    for (const r of fresh('bulbEvents')) if (r.kind === 'drop') cue('Enemies/Bulb.as:61', 'Lava', 2);
+
+    // ── the Bob Boss (L32) ── `BobBoss.hit` ends in `super.hit` (index 1); each form is its own body (`bobboss#n`),
+    // and a form's last hit sets `destroy` on the same tick.
+    if (sameRoom && b.bob && was.bob && b.bob.id === was.bob.id && b.bob.hits > was.bob.hits) {
+        if (b.bob.destroy) dist('Enemies/Enemy.as:160', 'Enemy Die', 1, b.bob.x, b.bob.y);
+        else dist('Enemies/Enemy.as:165', 'Enemy Hit', 1, b.bob.x, b.bob.y);
+    }
+
+    const lens = {};
+    for (const k of BOSS_LEDGERS) lens[k] = b[k].length;
+    state.boss = { lens, bosses: b, shieldLatch, cosmetic };
 }
 
 const DOOR_TYPES = Object.freeze(['teleporter', 'stairsup', 'stairsdown']);

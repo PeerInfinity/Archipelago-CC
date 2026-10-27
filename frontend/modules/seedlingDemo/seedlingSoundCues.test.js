@@ -22,7 +22,8 @@ import { fileURLToPath } from 'node:url';
 import { runTape } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 import {
-    SOUND_CALL_SITES, distVolPan, posOfId, roomIndexOf, sfxKey, soundCueView, stepSoundCues,
+    COSMETIC_CUE_SEED, LIGHT_BOSS_MOVE_ODDS, SOUND_CALL_SITES, cosmeticStep, distVolPan, posOfId, roomIndexOf, sfxKey, soundCueView,
+    stepSoundCues,
 } from './seedlingSoundCues.js';
 import { createPageSound } from './jsRuntimeSound.js';
 
@@ -33,7 +34,11 @@ const HAVE_SRC = existsSync(join(SRC, 'Music.as'));
 const GOLDENS = join(HERE, 'fixtures/sound-cue-goldens');
 const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
 const RECORDS = new Map(MAP.levels.map((l) => [l.level, l]));
-const fixture = (name) => JSON.parse(readFileSync(join(HERE, 'fixtures/tapes', `${name}.json`), 'utf8'));
+/** A roster tape (`fixtures/tapes/<name>.json`), or a game witness's EMBEDDED tape (`<dir>/<name>` → `fixtures/<dir>/<name>.json`). */
+const fixture = (name) => {
+    if (!name.includes('/')) return JSON.parse(readFileSync(join(HERE, 'fixtures/tapes', `${name}.json`), 'utf8'));
+    return JSON.parse(readFileSync(join(HERE, 'fixtures', `${name}.json`), 'utf8')).tape;
+};
 const SFX = JSON.parse(readFileSync(join(ROOT, 'frontend/packs/seedling/sfx/manifest.json'), 'utf8'));
 
 /** A clip's length at 60 fps, from the committed manifest (what the page reads). */
@@ -146,13 +151,25 @@ const CUE_TAPES = Object.freeze([
     { name: 'r6-watcher-talk', want: ['Game.as:1719', 'NPCs/NPC.as:198'] },
     { name: 'r2-walk-1-sword-shield', want: ['Teleporter.as:109'] },
     { name: 'prox-l38-chest', want: ['Puzzlements/Pulser.as:65'] },
+    // ── the bosses (slice `seedling-js-sfx-cues`): ≥ 1 tape per boss, each family's sites in its golden ──
+    { name: 'r6-shield-kill', want: ['Enemies/ShieldBoss.as:146', 'Enemies/Enemy.as:165', 'Enemies/Enemy.as:160'] },
+    { name: 'r6-owl-kill', want: ['Enemies/Grenade.as:135', 'Enemies/Enemy.as:165', 'Enemies/Enemy.as:160'] },
+    { name: 'r6-totem-kill', want: ['Enemies/BossTotem.as:294', 'Enemies/BossTotem.as:369', 'Enemies/BossTotem.as:455', 'Enemies/BossTotem.as:456',
+        'Enemies/BossTotem.as:478', 'Projectiles/Explosion.as:48', 'Enemies/Enemy.as:160'] },
+    { name: 'lavaboss-witness/kof-policy-kill', want: ['Enemies/LavaBoss.as:220', 'Enemies/LavaBoss.as:247', 'Projectiles/Explosion.as:48'] },
+    { name: 'tentaclebeast-witness/tb-policy-s2', want: ['Enemies/TentacleBeast.as:86', 'Enemies/TentacleBeast.as:96', 'Enemies/Tentacle.as:105',
+        'Enemies/Enemy.as:160'] },
+    { name: 'lights-witness/lights-solve-sword', want: ['Scenery/LightBossTotem.as:50', 'Enemies/LightBoss.as:69', 'Enemies/Enemy.as:165',
+        'Enemies/Enemy.as:160'] },
+    { name: 'chaser-witness/bulb-l77-lava', want: ['Enemies/Bulb.as:61'] },
+    { name: 'r5-bobboss-fire', want: ['Enemies/Enemy.as:165', 'Enemies/Enemy.as:160'] },
 ]);
 
 describe('2. THE CUE PINS — on real tapes the per-tick cue list is the committed golden', () => {
     for (const tape of CUE_TAPES) {
         it(`${tape.name}: the cue list per tick; it contains ${tape.want.join(', ')}`, () => {
             const { lines, state } = cueLines(tape.name);
-            const path = join(GOLDENS, `${tape.name}.txt`);
+            const path = join(GOLDENS, `${tape.name.replaceAll('/', '__')}.txt`);
             if (process.env.UPDATE_SOUND_GOLDENS) {
                 mkdirSync(GOLDENS, { recursive: true });
                 writeFileSync(path, `${lines.join('\n')}\n`);
@@ -178,6 +195,125 @@ describe('2. THE CUE PINS — on real tapes the per-tick cue list is the committ
         // the ledger row's own `t` is the run tick the hit landed on; the cue is emitted right after that tick
         for (const [t, rowT] of at) expect(t).toBe(rowT);
     }, 120000);
+});
+
+/** Every tick's cues of a tape, with the run they were read from: `[{ t, run, cues }]` (the run is the LAST one). */
+function cuesOf(name) {
+    let st = null;
+    const out = [];
+    let last = null;
+    drive(name, (t, run) => {
+        const r = stepSoundCues(st, soundCueView(run, { record: RECORDS.get(run.level) }), t, { lengthFrames });
+        st = r.state;
+        last = run;
+        out.push(...r.cues.map((c) => ({ ...c, t })));
+    });
+    return { cues: out, run: last };
+}
+const countOf = (cues, site, set) => cues.filter((c) => c.site === site && (!set || c.set === set)).length;
+
+describe('2b. THE BOSSES — each family\'s cues tie out against its own ledger (the golden says WHEN, this says HOW MANY)', () => {
+    it('the King of Fire: a Lava 0 per smash (2 runners each), a Lava 1 per fan, an Explosion per ball-hit', () => {
+        const { cues, run } = cuesOf('lavaboss-witness/kof-policy-kill');
+        const ev = run.lavaBossEvents;
+        const n = (k) => ev.filter((r) => r.kind === k).length;
+        expect(countOf(cues, 'Enemies/LavaBoss.as:220')).toBe(n('runner') / 2);
+        expect(countOf(cues, 'Enemies/LavaBoss.as:247')).toBe(n('fan'));
+        expect(countOf(cues, 'Projectiles/Explosion.as:48')).toBe(n('ball-hit'));
+        expect(n('fan')).toBeGreaterThan(0);
+    }, 120000);
+    it('the Tentacled Beast: one wake, one dying, a Tentacle per sink, a cut per tentacle gone', () => {
+        const { cues, run } = cuesOf('tentaclebeast-witness/tb-policy-s2');
+        const ev = run.tentacleBeastEvents;
+        const n = (k) => ev.filter((r) => r.kind === k).length;
+        expect(countOf(cues, 'Enemies/TentacleBeast.as:86')).toBe(1);
+        expect(countOf(cues, 'Enemies/TentacleBeast.as:96')).toBe(1);
+        expect(countOf(cues, 'Enemies/Tentacle.as:105')).toBe(n('tentacle-sank'));
+        expect(countOf(cues, 'Enemies/Enemy.as:160', 'Enemy Die')).toBe(n('tentacle-gone'));
+    }, 120000);
+    it('the BossTotem: woken once, one volley sound per PAIR, two per laser, a hit per landed shot, removed once', () => {
+        const { cues, run } = cuesOf('r6-totem-kill');
+        expect(countOf(cues, 'Enemies/BossTotem.as:294')).toBe(1);
+        expect(countOf(cues, 'Enemies/BossTotem.as:369')).toBe(new Set(run.bossShotsFired.map((r) => r.t)).size);
+        expect(countOf(cues, 'Enemies/BossTotem.as:455')).toBe(run.bossLasers.length);
+        expect(countOf(cues, 'Enemies/BossTotem.as:456')).toBe(run.bossLasers.length);
+        const landed = run.bossHits.filter((r) => r.landed);
+        expect(countOf(cues, 'Enemies/Enemy.as:165', 'Enemy Hit')).toBe(landed.filter((r) => !r.killed).length);
+        expect(countOf(cues, 'Enemies/Enemy.as:160', 'Boss Die')).toBe(1);
+        expect(countOf(cues, 'Projectiles/Explosion.as:48')).toBe(run.bossBlasts.length);
+        expect(countOf(cues, 'Enemies/BossTotem.as:478')).toBe(1);
+    }, 120000);
+    it('the ShieldBoss: the swallowed first hit is silent; one Metal Hit per latch; three big hits, the last a death', () => {
+        const { cues } = cuesOf('r6-shield-kill');
+        expect(countOf(cues, 'Enemies/Enemy.as:165', 'Enemy Hit')).toBe(2);
+        expect(countOf(cues, 'Enemies/Enemy.as:160', 'Enemy Die')).toBe(1);
+        expect(cues.filter((c) => c.site.startsWith('Enemies/Enemy.as')).every((c) => c.index === 1)).toBe(true);
+        // each Metal Hit is the press AFTER a landed hit (the boss sits again, the latch was cleared by the moveShield's end)
+        const metal = cues.filter((c) => c.site === 'Enemies/ShieldBoss.as:146').map((c) => c.t);
+        const landed = cues.filter((c) => c.site.startsWith('Enemies/Enemy.as')).map((c) => c.t);
+        expect(metal).toEqual(landed.map((t) => t + 1));
+    }, 120000);
+    it('the Lights: a big hit or death per flier hit, the totem\'s Boss Die once, Boss 6 Move at the game\'s rate', () => {
+        // the walk wins the fight and leaves the room (its last run has no `lightsFight`): all six fliers die (`flierNumber` 6)
+        const { cues } = cuesOf('lights-witness/lights-solve-sword');
+        expect(countOf(cues, 'Enemies/Enemy.as:160')).toBe(6);
+        expect(new Set(cues.filter((c) => c.site === 'Enemies/Enemy.as:160').map((c) => c.index))).toEqual(new Set([1]));
+        expect(countOf(cues, 'Scenery/LightBossTotem.as:50')).toBe(1);
+        expect(countOf(cues, 'Enemies/LightBoss.as:69')).toBeGreaterThan(0);
+    }, 120000);
+    it('the Owl: a grenade Explosion per `exploded`; the Bob Boss: each form\'s hits, its last a death', () => {
+        const owl = cuesOf('r6-owl-kill');
+        expect(countOf(owl.cues, 'Enemies/Grenade.as:135')).toBe(owl.run.owlGrenadeEvents.filter((r) => r.what === 'exploded').length);
+        expect(countOf(owl.cues, 'Enemies/Enemy.as:160')).toBe(1);
+        const bob = cuesOf('r5-bobboss-fire');
+        expect(countOf(bob.cues, 'Enemies/Enemy.as:160')).toBe(3);   // three forms
+        expect(countOf(bob.cues, 'Enemies/Enemy.as:165')).toBe(4);   // hitsMax 2, 3, 2 → 1 + 2 + 1 survived hits
+    }, 120000);
+});
+
+describe('2c. THE SHIELDBOSS LATCH, by hand (`ShieldBoss.as:130-151`, `endAnim` `:192`)', () => {
+    const base = soundCueView({ state: { x: 80, y: 120 }, level: 19, ticksCompleted: 0 });
+    const view = (anim, hits = []) => ({ ...base, bosses: { ...base.bosses, shield: [{ id: 'sb', x: 80, y: 32, anim, hits: 0 }], shieldBossHits: hits } });
+    const row = (anim, extra = {}) => ({ id: 'sb', anim, swallowed: false, landed: false, killed: false, aborted: false, retaliated: false, ...extra });
+    it('a hit on `sit` plays Metal Hit once; the next is held by the latch; a stab chain\'s end clears it', () => {
+        const hits = [];
+        let st = stepSoundCues(null, view('sit', hits), 0).state;
+        const step = (anim, add = []) => {
+            hits.push(...add);
+            const r = stepSoundCues(st, view(anim, [...hits]), 0);
+            st = r.state;
+            return r.cues.map((c) => c.site);
+        };
+        expect(step('moveShield', [row('sit', { retaliated: true })])).toEqual(['Enemies/ShieldBoss.as:146']);
+        expect(step('moveShield', [row('moveShield')])).toEqual([]);               // latched
+        expect(step('stab')).toEqual([]);                                          // moveShield ENDS → the latch clears
+        expect(step('stab', [row('stab')])).toEqual(['Enemies/ShieldBoss.as:146']);
+        expect(step('sit')).toEqual([]);                                           // stab ends → clears
+        expect(step('sit', [row('sit', { swallowed: true })])).toEqual([]);         // the arming hit: silent
+        expect(step('movedShield', [row('movedShield', { landed: true })])).toEqual(['Enemies/Enemy.as:165']);
+    });
+});
+
+describe('2d. THE COSMETIC STREAM — the cues\' own, never the model\'s', () => {
+    it('the cue module imports nothing that carries the gameplay RNG', () => {
+        const src = readFileSync(join(HERE, 'seedlingSoundCues.js'), 'utf8');
+        const imports = [...src.matchAll(/^import .* from '([^']+)';$/gm)].map((m) => m[1]);
+        expect(imports).toEqual(['./playerPhysicsV2.js']);
+        expect(src).not.toMatch(/\b(run|state|world|s)\.rng|rngState|\.cosRng/);
+    });
+    it('cosmeticStep is mulberry32, pure; the Boss 6 Move roll hits 1 in 90', () => {
+        expect(cosmeticStep(COSMETIC_CUE_SEED)).toEqual(cosmeticStep(COSMETIC_CUE_SEED));
+        let a = COSMETIC_CUE_SEED;
+        let hits = 0;
+        const N = 90000;
+        for (let i = 0; i < N; i += 1) {
+            const r = cosmeticStep(a);
+            a = r.a;
+            if (!Math.floor(r.r * LIGHT_BOSS_MOVE_ODDS)) hits += 1;
+        }
+        expect(hits / N).toBeGreaterThan(0.9 / 90);
+        expect(hits / N).toBeLessThan(1.1 / 90);
+    });
 });
 
 describe('the helpers', () => {
@@ -237,7 +373,17 @@ const fsWin = () => ({
     },
 });
 
-const NO_FEEDBACK_TAPES = ['u15-turret-spit', 'r5-l40-part0', 'pushblock-l65-reach-l63'];
+const NO_FEEDBACK_TAPES = ['u15-turret-spit', 'r5-l40-part0', 'pushblock-l65-reach-l63', 'r6-totem-kill', 'lavaboss-witness/kof-policy-kill'];
+/** The page's modes: its query, the game speed (a tick's length), and whether ▶ Start was never pressed. */
+const MODES = Object.freeze({
+    off: { query: 'sound=off' },
+    muted: { query: 'volume=0' },
+    locked: { query: '', locked: true },
+    refused: { query: '', refused: true },
+    on: { query: '' },
+    'quarter-speed': { query: '', speed: 0.25 },
+    'speed-16': { query: '', speed: 16 },
+});
 
 /**
  * Drive `name` with the page's sound in `mode` (`none` = no sound object at all), and return what the model did:
@@ -246,18 +392,21 @@ const NO_FEEDBACK_TAPES = ['u15-turret-spit', 'r5-l40-part0', 'pushblock-l65-rea
 async function modelUnderSound(name, mode) {
     const starts = [];
     let sound = null;
+    const m = MODES[mode] ?? {};
     if (mode !== 'none') {
-        const params = new URLSearchParams(mode === 'off' ? 'sound=off' : '');
-        const Ctx = mode === 'refused' ? function Refused() { throw new Error('NotAllowedError'); } : fakeCtx(starts);
+        const params = new URLSearchParams(m.query);
+        const Ctx = m.refused ? function Refused() { throw new Error('NotAllowedError'); } : fakeCtx(starts);
         sound = createPageSound({ win: fsWin(), params, listen: () => {}, now: () => 0, AudioContextCtor: Ctx });
-        if (mode !== 'locked') sound.unlock();
+        if (!m.locked) sound.unlock();
     }
+    const tickSeconds = 1 / (30 * (m.speed ?? 1));
     // the page's load is async: let it finish before the tape runs, so the run plays cues against loaded clips
     await new Promise((r) => setTimeout(r, 0));
     for (let i = 0; i < 50 && sound && sound.readout().loaded === 'loading'; i += 1) await new Promise((r) => setTimeout(r, 20));
     const digests = [];
     const { out, last } = drive(name, (t, run) => {
-        sound?.step(run, { record: RECORDS.get(run.level), tick: t });
+        sound?.slotRan();
+        sound?.step(run, { record: RECORDS.get(run.level), tick: t, tickSeconds });
         digests.push(JSON.stringify(run.stateDigest()));
     });
     return {
@@ -268,16 +417,16 @@ async function modelUnderSound(name, mode) {
 
 describe('3. ⛔ THE NO-FEEDBACK PIN — audio never feeds the model', () => {
     for (const name of NO_FEEDBACK_TAPES) {
-        it(`${name}: digests after every tick, the checks and the ticks are identical — no sound / off / locked / refused / on`, async () => {
+        it(`${name}: digests after every tick, the checks and the ticks are identical — no sound / ${Object.keys(MODES).join(' / ')}`, async () => {
             const base = await modelUnderSound(name, 'none');
             expect(base.digests.length).toBeGreaterThan(50);
-            for (const mode of ['off', 'locked', 'refused', 'on']) {
+            for (const mode of Object.keys(MODES)) {
                 const r = await modelUnderSound(name, mode);
                 expect(r.digests, mode).toEqual(base.digests);
                 expect(r.ticks, mode).toBe(base.ticks);
                 expect(r.checks, mode).toBe(base.checks);
-                if (mode === 'on') {
-                    expect(r.readout.cues).toBeGreaterThan(0);
+                if (mode === 'on' || mode === 'muted' || mode.includes('speed')) {
+                    expect(r.readout.cues, mode).toBeGreaterThan(0);
                     expect(r.readout.state).toBe('running');
                 }
                 if (mode === 'refused') expect(r.readout.state).toBe('refused');

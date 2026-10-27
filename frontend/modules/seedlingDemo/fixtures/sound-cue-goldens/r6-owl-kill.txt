@@ -1,0 +1,9 @@
+1 L112 Game.as:1719 "Text" 0 1.000 0.000
+4 L112 NPCs/NPC.as:198 "Text" 1 0.300 0.000
+16 L112 Player.as:797 "Sword" -1 1.000 0.000
+19 L112 Enemies/Enemy.as:165 "Enemy Hit" 1 0.719 0.252
+299 L112 Player.as:797 "Sword" -1 1.000 0.000
+308 L112 Enemies/Enemy.as:165 "Enemy Hit" 1 0.544 0.163
+446 L112 Enemies/Grenade.as:135 "Explosion" -1 0.358 0.794
+698 L112 Player.as:797 "Sword" -1 1.000 0.000
+706 L112 Enemies/Enemy.as:160 "Enemy Die" 1 0.583 0.407
