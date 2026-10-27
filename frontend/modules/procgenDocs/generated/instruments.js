@@ -79,7 +79,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 4,
+            "count": 5,
             "id": "extract"
         },
         {
@@ -232,10 +232,10 @@ export const INSTRUMENTS = frz({
         "blockStyle": 470,
         "browser": 180,
         "cited": 255,
-        "files": 484,
-        "lineStyle": 14,
-        "withDocblock": 484,
-        "withFlags": 401
+        "files": 485,
+        "lineStyle": 15,
+        "withDocblock": 485,
+        "withFlags": 402
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6052,6 +6052,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling pixelmask extractor — turns the MIT mask PNGs in a Seedling source checkout into the ONE committed module `seedlingDemo/seedlingPixelMasks.js`.",
             "path": "scripts/procgen/extract-seedling-masks.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "extract",
+            "citedBy": [],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "check",
+                "source"
+            ],
+            "file": "extract-seedling-sfx-pack.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "source"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling sfx-pack extractor — copies the sound effects `src/Music.as` names out of a Seedling source checkout into the committed seedling CONTENT PACK's `sfx` layer (`frontend/packs/seedling/sfx/`), and writes its manifest.",
+            "path": "scripts/procgen/extract-seedling-sfx-pack.mjs"
         },
         {
             "argvHelpers": [
