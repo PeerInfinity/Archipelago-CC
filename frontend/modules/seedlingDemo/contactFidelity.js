@@ -1556,7 +1556,7 @@ export const CONTACT_FIDELITY = {
      * seed is skipped before its flood, with the same answer, stats and order. OFF: byte-identical.
      * `SEEDLING_BAIT_COMPONENT_MEMO=0|1`.
      */
-    baitComponentMemo: false,
+    baitComponentMemo: true,
     /**
      * fidelity L41TOTEM D1b (wave 33) — THE BAIT ALIGNMENT ASKS EACH POSITION ONCE (`crusherBait.alignmentCandidates`).
      * A COST key: no model term moves. The alignment previews from the chain's stance and never advances the run, so the
@@ -1564,7 +1564,7 @@ export const CONTACT_FIDELITY = {
      * leg 855: 57,874 of 96,384 asks over L41's six alignments repeated a position already asked in the same call. ON:
      * each answer is kept for the call, keyed on (p.x, p.y). OFF: byte-identical. `SEEDLING_BAIT_ALIGN_SAFE_MEMO=0|1`.
      */
-    baitAlignSafeMemo: false,
+    baitAlignSafeMemo: true,
     /**
      * fidelity L41TOTEM D3 (wave 33) — A BAIT'S IDLE ENDS WHEN THE CRUSHER HAS PARKED (`solverBot.execBait`,
      * `crusherBait.trimParkedTail`). The chain's escape ends in R5's fixed idle span (L41: 160 / 220 / 260 ticks), which
@@ -1574,7 +1574,7 @@ export const CONTACT_FIDELITY = {
      * chain's last idle span is cut to end there; `runBait` re-checks the cut chain (no contact, parked, at its park).
      * The PLAN moves (shorter); no model term moves. OFF: byte-identical. `SEEDLING_BAIT_PARKED_TAIL=0|1`.
      */
-    baitParkedTail: false,
+    baitParkedTail: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
