@@ -327,7 +327,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity RULESREF D3 (wave 32): a frontier with no actionable entry flooded again at 8 px — ships OFF.
             fineFrontierFlood: true,
             // ⛓ fidelity RULESREF D1 (wave 32): the walk's gate times a puncher's punch — ships OFF.
-            punchGateTimed: true });
+            punchGateTimed: true,
+            // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — ships OFF.
+            fineSwingStance: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -1546,6 +1546,19 @@ export const CONTACT_FIDELITY = {
      * body. OFF: byte-identical. `SEEDLING_PUNCH_GATE_TIMED=0|1`.
      */
     punchGateTimed: true,
+    /**
+     * fidelity L100 (wave 33) — A SWING STANCE HALF A TILE OFF THE GRID IS ASKED ON THE 8 px LATTICE
+     * (`solverBot.deriveSwingStance`, the `break` and `pull` verbs' stance).
+     *
+     * L100's `breakablerock@128,144` is the door through the wall column x 128-143, and its near side is an 8 px sliver
+     * (x 120-127) between the `cliffside` masks at x 112 and the rock. Every 16 px ring cell on that side is a
+     * cell centre x 120 whose 4x5 box meets the mask, so the only cells that put the slash rect on the rock were the
+     * far side's (survey step 219, divergence leg 907: *"no REACHABLE stance for a swing at breakablerock@128,144"*).
+     * ON: once every 16 px cell has failed, the same pixel window is asked on `FINE_LATTICE` (8 px; nodes at x 124),
+     * planned in the world as it is on the 8 px lattice, as `deriveKeylockStance`'s RULESREF arm does. OFF:
+     * byte-identical. `SEEDLING_FINE_SWING_STANCE=0|1`.
+     */
+    fineSwingStance: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1734,6 +1747,9 @@ if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '0') CONTACT_FIDEL
 // ⛓ fidelity RULESREF D1: `SEEDLING_PUNCH_GATE_TIMED=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '1') CONTACT_FIDELITY.punchGateTimed = true;
 if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '0') CONTACT_FIDELITY.punchGateTimed = false;
+// ⛓ fidelity L100: `SEEDLING_FINE_SWING_STANCE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_SWING_STANCE === '1') CONTACT_FIDELITY.fineSwingStance = true;
+if (globalThis.process?.env?.SEEDLING_FINE_SWING_STANCE === '0') CONTACT_FIDELITY.fineSwingStance = false;
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;

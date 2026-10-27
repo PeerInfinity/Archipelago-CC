@@ -406,6 +406,13 @@
       ]
     },
     {
+      "file": "l100-sliver-rock.json",
+      "tickCount": 185,
+      "bootLevel": 100,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "l12keyline-134-round.json",
       "tickCount": 1269,
       "bootLevel": 12,
