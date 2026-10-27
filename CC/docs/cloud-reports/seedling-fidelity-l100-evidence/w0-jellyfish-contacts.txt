@@ -1,0 +1,8 @@
+## straight: calibrated True fits [0] compared 456 worst 0 disagreements 0
+  t56 jellyfish@80,16: game hits 0 -> 0.5 (model 0.5), hits_timer 30, at (77.35,40.94)
+  t81 jellyfish@88,88: game hits 0 -> 0.5 (model 0.5), hits_timer 30, at (86.37,70.17)
+  t89 jellyfish@80,112: game hits 0 -> 1 (model 1), hits_timer 30, at (86.64,85.51)
+  t101 jellyfish@88,144: game hits 0 -> 0.5 (model 0.5), hits_timer 30, at (87.05,105.61)
+## swim: calibrated True fits [0] compared 600 worst 0 disagreements 0
+  t59 jellyfish@80,16: game hits 0 -> 0.5 (model 0.5), hits_timer 30, at (75.91,40.60)
+  t126 jellyfish@80,16: game hits 0.5 -> 1.5 (model 1.5), hits_timer 30, at (102.25,27.93)

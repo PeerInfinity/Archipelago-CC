@@ -339,7 +339,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L41TOTEM D1b (wave 33): the bait alignment asks each position once (a cost key) — ships OFF.
             baitAlignSafeMemo: false,
             // ⛓ fidelity L41TOTEM D3 (wave 33): a bait's idle ends when the crusher has parked — ships OFF.
-            baitParkedTail: false });
+            baitParkedTail: false,
+            // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — ships OFF.
+            fineSwingStance: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

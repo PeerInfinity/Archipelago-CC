@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 92,
+            "count": 93,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 474,
+        "blockStyle": 475,
         "browser": 183,
-        "cited": 256,
-        "files": 490,
+        "cited": 257,
+        "files": 491,
         "lineStyle": 16,
-        "withDocblock": 490,
-        "withFlags": 407
+        "withDocblock": 491,
+        "withFlags": 408
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8353,6 +8353,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-hammer-sf-strikefloor — ⛓⛓⛓ SEEDLING HAMMER-PHASE SF: THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`solverBot.STRIKE_ETA_FLOOR`, ON since hammer-phase SFF), ON THE GAME.",
             "path": "scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "from-view"
+            ],
+            "file": "plan-seedling-l100-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "from-view"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l100-witness — ⛓⛓⛓ SEEDLING FIDELITY L100: THE ROCK DOOR'S SWING STANCE IS HALF A TILE OFF THE GRID.",
+            "path": "scripts/procgen/plan-seedling-l100-witness.mjs"
         },
         {
             "argvHelpers": [],
