@@ -1304,6 +1304,13 @@
                 "item_name": "Progressive Shield"
               }
             }
+          },
+          {
+            "name": "level_12__r43c21 -> level_34",
+            "connected_region": "level_34",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -3090,6 +3097,13 @@
                 }
               ]
             }
+          },
+          {
+            "name": "level_30__r8c13 -> level_32",
+            "connected_region": "level_32",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -3239,6 +3253,94 @@
         ],
         "locations": []
       },
+      "level_32": {
+        "name": "level_32",
+        "exits": [
+          {
+            "name": "level_32 -> level_30__r8c13",
+            "connected_region": "level_30__r8c13",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_32 -> level_30__r2c10",
+            "connected_region": "level_30__r2c10",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
+            }
+          },
+          {
+            "name": "level_32 -> level_30__r2c10 #2",
+            "connected_region": "level_30__r2c10",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 032 - Bob Boss",
+            "id": 30000012,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Fire",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "Level 032 - Times",
+            "id": 30000013,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
       "level_33": {
         "name": "level_33",
         "exits": [
@@ -3247,6 +3349,57 @@
             "connected_region": "level_12__r0c19",
             "access_rule": {
               "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_34": {
+        "name": "level_34",
+        "exits": [
+          {
+            "name": "level_34 -> level_12__r43c21",
+            "connected_region": "level_12__r43c21",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_34 -> level_12__r0c37",
+            "connected_region": "level_12__r0c37",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire Wand Fusion"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -3279,7 +3432,7 @@
         "locations": [
           {
             "name": "Level 036 - Chest",
-            "id": 30000012,
+            "id": 30000014,
             "access_rule": {
               "rule": "True_"
             },
@@ -3730,7 +3883,7 @@
         "locations": [
           {
             "name": "Level 067 - Boss Key 4",
-            "id": 30000013,
+            "id": 30000015,
             "access_rule": {
               "rule": "True_"
             },
@@ -3780,7 +3933,7 @@
         "locations": [
           {
             "name": "Level 086 - Chest",
-            "id": 30000014,
+            "id": 30000016,
             "access_rule": {
               "rule": "True_"
             },
@@ -4286,7 +4439,7 @@
         "locations": [
           {
             "name": "Level 089 - Feather",
-            "id": 30000015,
+            "id": 30000017,
             "access_rule": {
               "rule": "True_"
             },
@@ -4654,9 +4807,17 @@
   },
   "items": {
     "1": {
+      "Fire": {
+        "name": "Fire",
+        "id": 30000000,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Green Key": {
         "name": "Green Key",
-        "id": 30000000,
+        "id": 30000001,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -4664,7 +4825,7 @@
       },
       "Light": {
         "name": "Light",
-        "id": 30000001,
+        "id": 30000002,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -4672,7 +4833,7 @@
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
-        "id": 30000002,
+        "id": 30000003,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -4680,7 +4841,7 @@
       },
       "Progressive Swim": {
         "name": "Progressive Swim",
-        "id": 30000003,
+        "id": 30000004,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -4688,7 +4849,7 @@
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
-        "id": 30000004,
+        "id": 30000005,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -4696,7 +4857,7 @@
       },
       "Red Key": {
         "name": "Red Key",
-        "id": 30000005,
+        "id": 30000006,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -4704,15 +4865,15 @@
       },
       "Seal": {
         "name": "Seal",
-        "id": 30000006,
+        "id": 30000007,
         "groups": [],
         "classification": "progression",
         "type": null,
-        "max_count": 8
+        "max_count": 9
       },
       "Yellow Key": {
         "name": "Yellow Key",
-        "id": 30000007,
+        "id": 30000008,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -4891,11 +5052,12 @@
   "itempool_counts": {
     "1": {
       "Progressive Sword": 2,
-      "Seal": 8,
+      "Seal": 9,
       "Red Key": 1,
       "Progressive Shield": 1,
       "Green Key": 1,
       "Light": 1,
+      "Fire": 1,
       "Yellow Key": 1,
       "Progressive Swim": 1,
       "L0 flag 1: breakablerock@288,176 cleared": 1,
@@ -4944,7 +5106,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-efb6e155",
+      "atlas_id": "seedling-a5b6e89e",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -9079,6 +9241,17 @@
           },
           "exits": [
             {
+              "exit_id": "level_12__r43c21 -> level_34",
+              "x": 21,
+              "y": 43,
+              "side": null,
+              "exitName": "level_12__r43c21 -> level_34",
+              "targetRegion": "level_34",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_336_688"
+            },
+            {
               "exit_id": "level_12__r43c21 -> level_12__r0c19",
               "x": 18,
               "y": 44,
@@ -12288,6 +12461,17 @@
               "atlas_exit_id": "out_stairsdown_192_48"
             },
             {
+              "exit_id": "level_30__r8c13 -> level_32",
+              "x": 14,
+              "y": 10,
+              "side": null,
+              "exitName": "level_30__r8c13 -> level_32",
+              "targetRegion": "level_32",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_224_160"
+            },
+            {
               "exit_id": "level_30__r2c10 -> level_31__r5c24",
               "x": 3,
               "y": 14,
@@ -12895,6 +13079,149 @@
           }
         }
       },
+      "level_32": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 10,
+          "height": 10,
+          "tiles": [1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1],
+          "entrance": {
+            "x": 2,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_32 -> level_30__r8c13",
+              "x": 4,
+              "y": 8,
+              "side": null,
+              "exitName": "level_32 -> level_30__r8c13",
+              "targetRegion": "level_30__r8c13",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_72_136"
+            },
+            {
+              "exit_id": "level_32 -> level_30__r2c10",
+              "x": 4,
+              "y": 0,
+              "side": null,
+              "exitName": "level_32 -> level_30__r2c10",
+              "targetRegion": "level_30__r2c10",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_14_5"
+            },
+            {
+              "exit_id": "level_32 -> level_30__r2c10 #2",
+              "x": 5,
+              "y": 0,
+              "side": null,
+              "exitName": "level_32 -> level_30__r2c10 #2",
+              "targetRegion": "level_30__r2c10",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_15_5"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 4,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 7,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "id": "atlas_gate_1"
+            }
+          ],
+          "items": [
+            {
+              "x": 5,
+              "y": 7,
+              "id": "Seal",
+              "locationName": "Level 032 - Times"
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "id": "Fire",
+              "locationName": "Level 032 - Bob Boss"
+            }
+          ],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Fire",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Fire"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "(Progressive Sword OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_32",
+          "level": 32,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
       "level_33": {
         "substrate": "maze",
         "playable_payload": {
@@ -12923,6 +13250,102 @@
           "obstacleLib": {},
           "atlas_region": "level_33",
           "level": 33,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_34": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 11,
+          "height": 10,
+          "tiles": [1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 7,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_34 -> level_12__r43c21",
+              "x": 2,
+              "y": 9,
+              "side": null,
+              "exitName": "level_34 -> level_12__r43c21",
+              "targetRegion": "level_12__r43c21",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_32_144"
+            },
+            {
+              "exit_id": "level_34 -> level_12__r0c37",
+              "x": 8,
+              "y": 0,
+              "side": null,
+              "exitName": "level_34 -> level_12__r0c37",
+              "targetRegion": "level_12__r0c37",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_128_0"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 8,
+              "y": 0,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Wand OR (Fire Wand Fusion AND Wand AND Fire))",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  },
+                  {
+                    "rule": "And",
+                    "children": [
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Fire Wand Fusion"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Wand"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Fire"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_34",
+          "level": 34,
           "tile_size": 16,
           "origin": {
             "x": 0,
@@ -17272,7 +17695,8 @@
           "new_accessible_locations": [],
           "new_accessible_regions": [
             "level_12__r43c21",
-            "level_20__r1c12"
+            "level_20__r1c12",
+            "level_34"
           ],
           "sphere_locations": [
             "Level 020 - Shield"
@@ -17317,10 +17741,13 @@
           "new_accessible_locations": [
             "L30 flag 0: bosslock@64,32 cleared",
             "L30 flag 2: bosslock@224,208 cleared",
-            "L31 flag 0: bosslock@192,432 cleared"
+            "L31 flag 0: bosslock@192,432 cleared",
+            "Level 032 - Bob Boss",
+            "Level 032 - Times"
           ],
           "new_accessible_regions": [
-            "level_30__r8c13"
+            "level_30__r8c13",
+            "level_32"
           ],
           "sphere_locations": [
             "Level 029 - Boss Key 1"
@@ -17408,6 +17835,120 @@
           "new_accessible_regions": [],
           "sphere_locations": [
             "Level 030 - Torchpickup"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Fire": 1
+            },
+            "resolved_items": {
+              "Fire": 1
+            }
+          },
+          "new_accessible_locations": [
+            "L12 flag 3: bosslock@80,656 cleared",
+            "L24 flag 0: burnabletree@32,128 cleared",
+            "Level 012 - Chest"
+          ],
+          "new_accessible_regions": [
+            "level_12__r40c4",
+            "level_12__r42c28",
+            "level_37__r0c18",
+            "level_44__r0c4"
+          ],
+          "sphere_locations": [
+            "Level 032 - Bob Boss"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 032 - Times"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "5.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L12 flag 3: bosslock@80,656 cleared": 1
+            },
+            "resolved_items": {
+              "L12 flag 3: bosslock@80,656 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L12 flag 3: bosslock@80,656 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "5.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L24 flag 0: burnabletree@32,128 cleared": 1
+            },
+            "resolved_items": {
+              "L24 flag 0: burnabletree@32,128 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L24 flag 0: burnabletree@32,128 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "5.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 012 - Chest"
           ]
         }
       }
