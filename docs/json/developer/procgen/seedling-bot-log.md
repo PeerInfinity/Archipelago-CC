@@ -25909,4 +25909,35 @@ reproduces it at 0 px over 1,666 observations.
 `solve-seedling-r8-battery`, `-r8-d2-chain`, `-r8-l18` and `-r9-campaign` exit 1. `ci-producer-checks.mjs` does not run
 those four. Compare their md5 before and after rather than reading "exit 1" as your own red.
 
+### Seedling hammer-phase OPP — opportunistic strikes in every executor
+
+⚖ User, 2026-10-26: *"If an enemy ever happens to be within attacking range, then the solver should attack it
+immediately, even if it isn't the current priority … This might help with level 40."* Switch
+`pressKillCost.OPPORTUNISTIC_STRIKE`, **OFF** (`SEEDLING_OPPORTUNISTIC_STRIKE=1`, `withOpportunisticStrike`). The report
+is `CC/docs/cloud-reports/seedling-hammer-opportunistic-strike.md`.
+
+- **The census** (every `advance` site read; a load hook censused every run): the walks (`previewWalk`/`drive`),
+  `guardedChaserDwell`, `execBreak`'s idle ticks and `runDwell`/`runShove` already ask `strikePolicyFor`'s policy. Two
+  executors had a body in reach without one: the **press kill** (step 67: 95 ticks, all of them; the 52 L40 legs: 400)
+  and the **axis-aligned walks** (the L40 legs: 262; strike-free ON PURPOSE — an aim key adds back the axis a skirted
+  lane forbids). L18's 45 residues and the generated controls never have a chaser in reach.
+- **The change** (`execKillByPressOnce`, `oppStrikeOffer`, `oppStrikeLandsClear`, `previewWalk`'s `strikeOffer`,
+  `deriveStrike`/`deriveRefuge`'s `strikeFor`): ON, the press kill asks the policy on its walk and refuge ticks, offering
+  only bodies whose aim and press land clear of the spinners; it takes no opportunistic aim on a tick it aims, presses,
+  follows its escape or drives the fight; its own aim waits over an owed press and while a press would dash. Its strike
+  and refuge previews walk with the same policy and offer, and the adopted strike carries its walk's strikes
+  (`previewStrikes`). Measured not shipped: the drive alone (strike-free previews) — step 67 7× slower, t1420.
+- **Effect ON:** step 67 — no hit, `bob@736,752` killed (t653/683/722), the spinner kill completes, the chain refuses at
+  the chest stance under `bobsoldier@880,832` (t771, 41 s). L40's 59 captured requests: 57 identical; `375/0` and
+  `848/1` (Boss Key 2 from `in_L43_176_464`, PKC's 860) each move one link on, and 848/1 kills BOTH x≈744 bobs. 848/1
+  over one hammer period: 29 press-kill deaths → 0. 847/1 (PKC's 859): no death either way; it refuses at the burn
+  stance's corridor before the kill runs, and ON moves 11 of 45 seams' blocker from the bobs to `bobsoldier@880,832`.
+  L18: 45/45, identical. Bounded set ON: 9 rows move, all pinning the press kill's death on `bob@736,752`. The G1/SF
+  game witnesses (kills across that death) are pinned OFF, PKC's precedent.
+- **Gate** `hammerOpportunisticStrike.test.js` (step 67's boot): OFF the death and no chaser hit; ON the hits land and
+  the bob dies, no press dashes, keys equal to OFF's through t651; the drive's strikes are a prefix of each certified
+  walk's preview strikes (parting at t698, where the drive has run 5.3 px ahead of its preview); "ships OFF". Mutants:
+  the drive's, the strike preview's and the refuge preview's policy removed, the dash wait removed, the offer
+  unfiltered — all red. The guard "no kill aim over an owed press" survives: no measured workload reaches it.
+
 ---
