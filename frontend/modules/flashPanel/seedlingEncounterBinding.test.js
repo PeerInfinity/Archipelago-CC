@@ -181,12 +181,16 @@ describe('2 · MAPPING — `solverGoalFor` / `arrivalSolverGoal` → the solver\
             .toEqual({ walker: 'the location names no entity of the room' });
     });
 
-    it('the JS PAGE refuses an encounter goal BY NAME (its walker completes a location by tag; wasm serves it)', () => {
+    it('the JS PAGE takes a bound encounter with the solver ON, and refuses it BY NAME with the solver off', () => {
+        // ⛓ ENCOUNTER LEGS (moved on purpose: it held the old blanket "walked on the wasm runtime" refusal).
         const rt = createJsRuntime();
         rt.setVanilla(new Map(indexLevels(readJson('./atlases/seedling-map.json'))));
-        const answer = rt.playback.walkTo(resolveSeedlingAtlasGoal({ kind: 'location', name: BOB }, MAP).goal);
-        expect(answer.ok).toBe(false);
-        expect(answer.reason).toMatch(/is an ENCOUNTER \(the Fire drop in level 32\).*walked on the wasm runtime/);
+        const goal = resolveSeedlingAtlasGoal({ kind: 'location', name: BOB }, MAP).goal;
+        const off = rt.playback.walkTo(goal);
+        expect(off.ok).toBe(false);
+        expect(off.reason).toMatch(/is an ENCOUNTER \(the Fire drop in level 32\).*solver mode is off/);
+        rt.playback.setSolverWalk(true);
+        expect(rt.playback.walkTo(goal)).toEqual({ ok: true });
     });
 });
 
