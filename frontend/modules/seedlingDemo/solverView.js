@@ -128,6 +128,8 @@ export {
     PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
     // ⛓⛓⛓ hammer-phase PKC: the press kill's step sees the chasers (its switch and instrument, OFF).
     PRESS_KILL_CHASERS, PRESS_KILL_CHASERS_COUNTS,
+    // ⛓⛓⛓ hammer-phase OPP: opportunistic strikes in the press kill (its switch and instrument, OFF).
+    OPPORTUNISTIC_STRIKE, OPPORTUNISTIC_STRIKE_COUNTS, OPPORTUNISTIC_STRIKE_TRACE,
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (its switch, the cut and its instrument; ON by default since the user's flip).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
 } from './pressKillCost.js';

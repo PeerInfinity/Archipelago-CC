@@ -1,0 +1,31 @@
+# OPP W0 — missed-opportunity census over the 52 captured L40 legs (59 requests), OFF, one fresh process per request
+# request | executor frame | in-reach ticks | consulted | missed | bodies
+--one=362:0 | drive@botDriverV2.js | 132 | 94 | 38 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=363:0 | drive@botDriverV2.js | 80 | 80 | 0 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=364:0 | drive@botDriverV2.js | 126 | 88 | 38 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448,L40:bob@352,416,L40:bob@352,448
+--one=365:0 | drive@botDriverV2.js | 150 | 126 | 24 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448,L40:bob@352,416,L40:bob@352,448
+--one=366:0 | drive@botDriverV2.js | 92 | 92 | 0 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=370:0 | drive@botDriverV2.js | 114 | 80 | 34 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=372:0 | drive@botDriverV2.js | 92 | 62 | 30 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496
+--one=379:0 | drive@botDriverV2.js | 85 | 79 | 6 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=380:0 | drive@botDriverV2.js | 99 | 99 | 0 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=381:0 | drive@botDriverV2.js | 135 | 97 | 38 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448,L40:bob@352,416,L40:bob@352,448
+--one=382:0 | drive@botDriverV2.js | 154 | 153 | 1 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448,L40:bob@352,416,L40:bob@352,448
+--one=383:0 | drive@botDriverV2.js | 73 | 73 | 0 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=384:0 | drive@botDriverV2.js | 70 | 70 | 0 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=385:0 | drive@botDriverV2.js | 94 | 88 | 6 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448,L40:bob@352,448,L40:bob@352,416
+--one=386:0 | drive@botDriverV2.js | 123 | 123 | 0 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448,L40:bob@352,448,L40:bob@352,416
+--one=387:0 | drive@botDriverV2.js | 87 | 64 | 23 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=388:0 | drive@botDriverV2.js | 72 | 72 | 0 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=389:0 | drive@botDriverV2.js | 82 | 58 | 24 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=390:0 | drive@botDriverV2.js | 79 | 79 | 0 | L40:puncher@128,624,L40:bob@192,480,L40:bob@224,496,L40:bob@208,448
+--one=354:0 | drive@botDriverV2.js | 13 | 13 | 0 | L40:puncher@816,128
+--one=358:0 | drive@botDriverV2.js | 12 | 12 | 0 | L40:puncher@816,128
+--one=374:0 | drive@botDriverV2.js | 6 | 6 | 0 | L40:puncher@128,624
+--one=375:0 | execKillByPressOnce@solverBot.js | 122 | 0 | 122 | L40:bob@736,752
+--one=356:0 | drive@botDriverV2.js | 94 | 94 | 0 | L40:puncher@816,128,L40:bob@288,80,L40:bob@288,112,L40:bob@272,112,L40:bob@304,144
+--one=356:0 | runDwell@botDriverV2.js | 6 | 6 | 0 | L40:puncher@816,128
+--one=391:0 | drive@botDriverV2.js | 4 | 4 | 0 | L40:puncher@128,624
+--one=848:1 | execKillByPressOnce@solverBot.js | 278 | 0 | 278 | L40:bob@736,752,L40:bob@736,800
+--one=359:0 | drive@botDriverV2.js | 131 | 131 | 0 | L40:puncher@816,128,L40:bob@288,80,L40:bob@288,112,L40:bob@304,144,L40:bob@272,112
+# drive@botDriverV2 misses: every one an axis-aligned walk (walkToUnder: strike = axisAligned ? null : …), e.g. 362:0 chain: drive < walkToUnder < walkToRun
