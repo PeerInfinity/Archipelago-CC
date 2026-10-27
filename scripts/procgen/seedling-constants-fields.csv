@@ -907,6 +907,8 @@ frontend/modules/seedlingDemo/activators.js|stepActivators|hb00a3eca|0|0,rule,bo
 frontend/modules/seedlingDemo/activators.js|stepActivators|h10cb00f9|0|0,rule,bound,,alpha <= 0 opens Cover
 frontend/modules/seedlingDemo/activators.js|stepActivators|h8b114b82|1|0,rule,magnitude,,alpha reset to 1
 frontend/modules/seedlingDemo/activators.js|stepActivators|h8b114b82|1|1,rule,magnitude,,alpha reset to 1
+frontend/modules/seedlingDemo/activators.js|stepActivators|h317cb9ca|0.1|0,rule,sentinel,Puzzlements/Cover.as:49-67,fade value used as Cover class discriminator (DETERM F1 coverHeldFade)
+frontend/modules/seedlingDemo/activators.js|stepActivators|hd0fdb151|0.1|0,rule,sentinel,Puzzlements/Lock.as:76-97,fade value used as Cover class discriminator (DETERM F2 lockRecloseLag: Locks only)
 frontend/modules/seedlingDemo/camera.js|*|*,structural,,,centre halves / zero defaults / loop bounds
 frontend/modules/seedlingDemo/camera.js|INVENTORY_TERM|(module),rule,derivation,,INVENTORY_WIDTH / 2 + INVENTORY_OFFSET_X / 2
 frontend/modules/seedlingDemo/camera.js|stepCamera|stepCamera|-1,rule,sentinel,,cameraTarget (-1 -1) = none
@@ -1906,10 +1908,9 @@ frontend/modules/seedlingDemo/igneousLava.js|igneousRendersToLava|h384e863a|1|0,
 frontend/modules/seedlingDemo/playerPhysicsV2.js|step|ha2374fd8|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
 frontend/modules/seedlingDemo/lightBoss.js|LIGHT_BOSS|(module),physics,magnitude,,fidelity LIGHTS: the fight's AS3 numbers — radius 48..64 (an int) on worldFrame(180; 4); the shot frames; spawn y -32; FP.RAD = pi/-180; flier hitbox 12x12/6; steer divisor 20; cap 1.5; lightLength 4; shotSpeed 1; hitsMax 3; i-frames 30; contact force 3; die 9 frames at rate 20; shot 4x4/2 with f 0; intro talkingSpeed 4 / lineLength 34 / talkRange 24
 frontend/modules/seedlingDemo/lightBoss.js|SPEAR_FORCE|(module),physics,magnitude,Player.as:spearForce,fidelity LIGHTS: Player.spearForce 7 — the push a spear thrust hands Enemy.hit
-frontend/modules/seedlingDemo/lightBoss.js|createLightBossFlier|createLightBossFlier|-1,rule,sentinel,Enemies/Enemy.as:maxForce,fidelity LIGHTS: Enemy.maxForce -1 = no force clamp
-frontend/modules/seedlingDemo/lightBoss.js|createLightBossFlier|createLightBossFlier,structural,,,fidelity LIGHTS: zero inits and the flier sequence counter
+frontend/modules/seedlingDemo/lightBoss.js|createLightBossFlier|h07b5d855|-1|0,rule,sentinel,Enemies/Enemy.as:maxForce,fidelity LIGHTS: Enemy.maxForce -1 = no force clamp (DETERM (a) moved the line)
+frontend/modules/seedlingDemo/lightBoss.js|createLightBossFlier|createLightBossFlier,structural,,,fidelity LIGHTS: zero inits; DETERM (a): the flier ordinal is fid + 1 / bodies.length + 1 (no counter)
 frontend/modules/seedlingDemo/lightBoss.js|createLightsFight|createLightsFight,structural,,,"fidelity LIGHTS: zero inits (spin, state, updates)"
-frontend/modules/seedlingDemo/lightBoss.js|flierSeq|(module),structural,,,fidelity LIGHTS: a monotonic id counter (not a game field)
 frontend/modules/seedlingDemo/lightBoss.js|flyPattern|flyPattern,rule,sentinel,,fidelity LIGHTS: the pattern ids (state 1 flyCircleInvert; 2 flyCircleDouble); i % 2 picks the even fliers; 2*PI
 frontend/modules/seedlingDemo/lightBoss.js|fpSign|fpSign,structural,,,FP.sign
 frontend/modules/seedlingDemo/lightBoss.js|lightsShieldBump|lightsShieldBump,structural,,,fidelity LIGHTSARR: the dark shield's gate hitsTimer <= 0 (Player.shieldBump)
