@@ -1,0 +1,5 @@
+450 L46 Player.as:551 "Swim" -1 1.000 0.000
+450 L46 Player.as:685 "Splash" -1 1.000 0.000
+733 L46 Player.as:551 "Swim" -1 1.000 0.000
+733 L46 Player.as:685 "Splash" -1 1.000 0.000
+796 L46 Chest.as:74 "Chest" -1 1.000 0.000

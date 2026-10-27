@@ -1,0 +1,853 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/procgen/extract-seedling-sfx-pack.mjs — do not edit; regenerate and --check",
+  "source": "vendor/seedling/src/Music.as (the `sounds` table) + vendor/seedling/assets/sound, copied byte for byte",
+  "bytes": 457540,
+  "clips": {
+    "Sword1": {
+      "file": "clips/Sword1.mp3",
+      "bytes": 728,
+      "seconds": 0.10449,
+      "as3": "Music.as:14"
+    },
+    "Sword2": {
+      "file": "clips/Sword2.mp3",
+      "bytes": 728,
+      "seconds": 0.10449,
+      "as3": "Music.as:15"
+    },
+    "Sword3": {
+      "file": "clips/Sword3.mp3",
+      "bytes": 1196,
+      "seconds": 0.18286,
+      "as3": "Music.as:16"
+    },
+    "Stab1": {
+      "file": "clips/Unapproved/stab1.mp3",
+      "bytes": 809,
+      "seconds": 0.13061,
+      "as3": "Music.as:17",
+      "unapproved": true
+    },
+    "Stab2": {
+      "file": "clips/Unapproved/stab2.mp3",
+      "bytes": 809,
+      "seconds": 0.13061,
+      "as3": "Music.as:18",
+      "unapproved": true
+    },
+    "Stab3": {
+      "file": "clips/Unapproved/stab3.mp3",
+      "bytes": 653,
+      "seconds": 0.10449,
+      "as3": "Music.as:19",
+      "unapproved": true
+    },
+    "Splash1": {
+      "file": "clips/splash1.mp3",
+      "bytes": 2808,
+      "seconds": 0.4702,
+      "as3": "Music.as:20"
+    },
+    "Splash2": {
+      "file": "clips/splash2.mp3",
+      "bytes": 4290,
+      "seconds": 0.78367,
+      "as3": "Music.as:21"
+    },
+    "Swim1": {
+      "file": "clips/swim.mp3",
+      "bytes": 5020,
+      "seconds": 0.78367,
+      "as3": "Music.as:22"
+    },
+    "Arrow1": {
+      "file": "clips/arrowLaunch.mp3",
+      "bytes": 546,
+      "seconds": 0.07837,
+      "as3": "Music.as:23"
+    },
+    "Arrow2": {
+      "file": "clips/arrowHit.mp3",
+      "bytes": 6319,
+      "seconds": 1.48898,
+      "as3": "Music.as:24"
+    },
+    "Switch1": {
+      "file": "clips/switch.mp3",
+      "bytes": 1458,
+      "seconds": 0.20898,
+      "as3": "Music.as:25"
+    },
+    "Drill1": {
+      "file": "clips/drill.mp3",
+      "bytes": 5720,
+      "seconds": 0.88816,
+      "as3": "Music.as:35"
+    },
+    "EnemyHit1": {
+      "file": "clips/smallEnemyHit.mp3",
+      "bytes": 1171,
+      "seconds": 0.15673,
+      "as3": "Music.as:26"
+    },
+    "EnemyHit2": {
+      "file": "clips/bigEnemyHit.mp3",
+      "bytes": 1925,
+      "seconds": 0.26122,
+      "as3": "Music.as:27"
+    },
+    "Metal1": {
+      "file": "clips/metalHit.mp3",
+      "bytes": 1300,
+      "seconds": 0.18286,
+      "as3": "Music.as:28"
+    },
+    "EnemyHop1": {
+      "file": "clips/enemyhop.mp3",
+      "bytes": 1638,
+      "seconds": 0.31347,
+      "as3": "Music.as:29"
+    },
+    "EnemyHop2": {
+      "file": "clips/bigenemyhop.mp3",
+      "bytes": 2080,
+      "seconds": 0.36571,
+      "as3": "Music.as:30"
+    },
+    "Chest1": {
+      "file": "clips/chest.mp3",
+      "bytes": 1796,
+      "seconds": 0.2351,
+      "as3": "Music.as:31"
+    },
+    "Rock1": {
+      "file": "clips/BigRockHit.mp3",
+      "bytes": 7321,
+      "seconds": 0.88816,
+      "as3": "Music.as:33"
+    },
+    "Rock2": {
+      "file": "clips/rockcrumble.mp3",
+      "bytes": 3828,
+      "seconds": 0.49633,
+      "as3": "Music.as:34"
+    },
+    "Lock1": {
+      "file": "clips/bigLock.mp3",
+      "bytes": 10140,
+      "seconds": 1.48898,
+      "as3": "Music.as:32"
+    },
+    "EnergyBeam1": {
+      "file": "clips/energyBeam.mp3",
+      "bytes": 4761,
+      "seconds": 0.75755,
+      "as3": "Music.as:36"
+    },
+    "EnergyPulse1": {
+      "file": "clips/energyPulse.mp3",
+      "bytes": 5463,
+      "seconds": 0.75755,
+      "as3": "Music.as:37"
+    },
+    "Explosion1": {
+      "file": "clips/explosion.mp3",
+      "bytes": 7768,
+      "seconds": 0.88816,
+      "as3": "Music.as:38"
+    },
+    "EnemyFall1": {
+      "file": "clips/enemyfall.mp3",
+      "bytes": 3068,
+      "seconds": 0.49633,
+      "as3": "Music.as:39"
+    },
+    "PushRock1": {
+      "file": "clips/pushrock.mp3",
+      "bytes": 5002,
+      "seconds": 0.73143,
+      "as3": "Music.as:40"
+    },
+    "EnemyDie1": {
+      "file": "clips/smallenemydie.mp3",
+      "bytes": 3488,
+      "seconds": 0.4702,
+      "as3": "Music.as:41"
+    },
+    "Room1": {
+      "file": "clips/nextroom.mp3",
+      "bytes": 2652,
+      "seconds": 0.4702,
+      "as3": "Music.as:42"
+    },
+    "Room2": {
+      "file": "clips/upstairs.mp3",
+      "bytes": 3588,
+      "seconds": 0.62694,
+      "as3": "Music.as:43"
+    },
+    "Room3": {
+      "file": "clips/downstairs.mp3",
+      "bytes": 3432,
+      "seconds": 0.62694,
+      "as3": "Music.as:44"
+    },
+    "Room4": {
+      "file": "clips/Unapproved/teleport.mp3",
+      "bytes": 5041,
+      "seconds": 0.83592,
+      "as3": "Music.as:45",
+      "unapproved": true
+    },
+    "Hurt1": {
+      "file": "clips/hurt.mp3",
+      "bytes": 911,
+      "seconds": 0.13061,
+      "as3": "Music.as:46"
+    },
+    "GroundHit1": {
+      "file": "clips/groundhit.mp3",
+      "bytes": 1742,
+      "seconds": 0.33959,
+      "as3": "Music.as:47"
+    },
+    "GroundHit2": {
+      "file": "clips/groundhit2.mp3",
+      "bytes": 833,
+      "seconds": 0.10449,
+      "as3": "Music.as:48"
+    },
+    "PlayerFall1": {
+      "file": "clips/playerfall.mp3",
+      "bytes": 8008,
+      "seconds": 1.22776,
+      "as3": "Music.as:49"
+    },
+    "BossDie1": {
+      "file": "clips/Unapproved/boss4die.mp3",
+      "bytes": 13662,
+      "seconds": 2.27265,
+      "as3": "Music.as:50",
+      "unapproved": true
+    },
+    "BossDie2": {
+      "file": "clips/Unapproved/boss4die2.mp3",
+      "bytes": 4101,
+      "seconds": 0.67918,
+      "as3": "Music.as:51",
+      "unapproved": true
+    },
+    "BossDie3": {
+      "file": "clips/Unapproved/boss6die.mp3",
+      "bytes": 3787,
+      "seconds": 0.62694,
+      "as3": "Music.as:52",
+      "unapproved": true
+    },
+    "BossDie4": {
+      "file": "clips/Unapproved/boss5rise.mp3",
+      "bytes": 15542,
+      "seconds": 2.58612,
+      "as3": "Music.as:53",
+      "unapproved": true
+    },
+    "BossDie5": {
+      "file": "clips/Unapproved/boss5die.mp3",
+      "bytes": 15542,
+      "seconds": 2.58612,
+      "as3": "Music.as:54",
+      "unapproved": true
+    },
+    "EnemyAttack1": {
+      "file": "clips/Unapproved/boss4beam.mp3",
+      "bytes": 3944,
+      "seconds": 0.65306,
+      "as3": "Music.as:55",
+      "unapproved": true
+    },
+    "EnemyAttack2": {
+      "file": "clips/Unapproved/boss4beam2.mp3",
+      "bytes": 3004,
+      "seconds": 0.49633,
+      "as3": "Music.as:56",
+      "unapproved": true
+    },
+    "EnemyAttack3": {
+      "file": "clips/Unapproved/boss4shoot.mp3",
+      "bytes": 4101,
+      "seconds": 0.67918,
+      "as3": "Music.as:57",
+      "unapproved": true
+    },
+    "EnemyAttack4": {
+      "file": "clips/Unapproved/enemyChomp.mp3",
+      "bytes": 2690,
+      "seconds": 0.44408,
+      "as3": "Music.as:58",
+      "unapproved": true
+    },
+    "Boss6Move1": {
+      "file": "clips/Unapproved/boss6move.mp3",
+      "bytes": 4101,
+      "seconds": 0.67918,
+      "as3": "Music.as:59",
+      "unapproved": true
+    },
+    "Boss6Move2": {
+      "file": "clips/Unapproved/boss6move1.mp3",
+      "bytes": 3474,
+      "seconds": 0.57469,
+      "as3": "Music.as:60",
+      "unapproved": true
+    },
+    "Boss6Move3": {
+      "file": "clips/Unapproved/boss6move2.mp3",
+      "bytes": 3317,
+      "seconds": 0.54857,
+      "as3": "Music.as:61",
+      "unapproved": true
+    },
+    "WandFire1": {
+      "file": "clips/wandfire.mp3",
+      "bytes": 2730,
+      "seconds": 0.39184,
+      "as3": "Music.as:62"
+    },
+    "WandFizzle1": {
+      "file": "clips/wandfizzle.mp3",
+      "bytes": 2574,
+      "seconds": 0.39184,
+      "as3": "Music.as:63"
+    },
+    "TurretShoot1": {
+      "file": "clips/Unapproved/turretFire.mp3",
+      "bytes": 1123,
+      "seconds": 0.18286,
+      "as3": "Music.as:64",
+      "unapproved": true
+    },
+    "Wind1": {
+      "file": "clips/wind.mp3",
+      "bytes": 89544,
+      "seconds": 14.99429,
+      "as3": "Music.as:65"
+    },
+    "Wind2": {
+      "file": "clips/ArcticWind.mp3",
+      "bytes": 61464,
+      "seconds": 10.29224,
+      "as3": "Music.as:66"
+    },
+    "Burn1": {
+      "file": "clips/TreeBurning.mp3",
+      "bytes": 9360,
+      "seconds": 1.85469,
+      "as3": "Music.as:67"
+    },
+    "Punch1": {
+      "file": "clips/punch.mp3",
+      "bytes": 546,
+      "seconds": 0.10449,
+      "as3": "Music.as:68"
+    },
+    "Tentacle1": {
+      "file": "clips/monstersplash.mp3",
+      "bytes": 7956,
+      "seconds": 1.67184,
+      "as3": "Music.as:69"
+    },
+    "Fire1": {
+      "file": "clips/fireattack.mp3",
+      "bytes": 4264,
+      "seconds": 0.8098,
+      "as3": "Music.as:70"
+    },
+    "Lava1": {
+      "file": "clips/LavaPunch.mp3",
+      "bytes": 4030,
+      "seconds": 0.75755,
+      "as3": "Music.as:71"
+    },
+    "Lava2": {
+      "file": "clips/LavaClap.mp3",
+      "bytes": 4628,
+      "seconds": 0.88816,
+      "as3": "Music.as:72"
+    },
+    "Lava3": {
+      "file": "clips/Pop.mp3",
+      "bytes": 4186,
+      "seconds": 0.8098,
+      "as3": "Music.as:73"
+    },
+    "Light1": {
+      "file": "clips/Light.mp3",
+      "bytes": 31538,
+      "seconds": 5.38122,
+      "as3": "Music.as:74"
+    },
+    "Text1": {
+      "file": "clips/text.mp3",
+      "bytes": 364,
+      "seconds": 0.05224,
+      "as3": "Music.as:75"
+    },
+    "Text2": {
+      "file": "clips/Unapproved/textNext.mp3",
+      "bytes": 1123,
+      "seconds": 0.18286,
+      "as3": "Music.as:76",
+      "unapproved": true
+    },
+    "Other1": {
+      "file": "clips/Unapproved/boss4start.mp3",
+      "bytes": 28238,
+      "seconds": 4.70204,
+      "as3": "Music.as:77",
+      "unapproved": true
+    },
+    "Other2": {
+      "file": "clips/Unapproved/boss4walk.mp3",
+      "bytes": 653,
+      "seconds": 0.10449,
+      "as3": "Music.as:78",
+      "unapproved": true
+    },
+    "Other3": {
+      "file": "clips/Unapproved/turretIceFire.mp3",
+      "bytes": 3631,
+      "seconds": 0.60082,
+      "as3": "Music.as:79",
+      "unapproved": true
+    },
+    "Other4": {
+      "file": "clips/Unapproved/ropeCut.mp3",
+      "bytes": 809,
+      "seconds": 0.13061,
+      "as3": "Music.as:80",
+      "unapproved": true
+    },
+    "Other5": {
+      "file": "clips/Unapproved/crusher.mp3",
+      "bytes": 3474,
+      "seconds": 0.57469,
+      "as3": "Music.as:81",
+      "unapproved": true
+    }
+  },
+  "sounds": {
+    "seedling:sfx/sword": {
+      "set": "Sword",
+      "clips": [
+        "Sword1",
+        "Sword2",
+        "Sword3"
+      ],
+      "as3": "Music.as:126 (soundSwords: Music.as:88)"
+    },
+    "seedling:sfx/stab": {
+      "set": "Stab",
+      "clips": [
+        "Stab1",
+        "Stab2",
+        "Stab3"
+      ],
+      "as3": "Music.as:127 (soundStabs: Music.as:89)"
+    },
+    "seedling:sfx/splash": {
+      "set": "Splash",
+      "clips": [
+        "Splash1",
+        "Splash2"
+      ],
+      "as3": "Music.as:128 (soundSplash: Music.as:90)"
+    },
+    "seedling:sfx/swim": {
+      "set": "Swim",
+      "clips": [
+        "Swim1"
+      ],
+      "as3": "Music.as:129 (soundSwim: Music.as:91)"
+    },
+    "seedling:sfx/arrow": {
+      "set": "Arrow",
+      "clips": [
+        "Arrow1",
+        "Arrow2"
+      ],
+      "as3": "Music.as:130 (soundArrow: Music.as:92)"
+    },
+    "seedling:sfx/switch": {
+      "set": "Switch",
+      "clips": [
+        "Switch1"
+      ],
+      "as3": "Music.as:131 (soundSwitch: Music.as:93)"
+    },
+    "seedling:sfx/drill": {
+      "set": "Drill",
+      "clips": [
+        "Drill1",
+        "Drill1"
+      ],
+      "as3": "Music.as:132 (soundDrill: Music.as:94)"
+    },
+    "seedling:sfx/enemy-hit": {
+      "set": "Enemy Hit",
+      "clips": [
+        "EnemyHit1",
+        "EnemyHit2"
+      ],
+      "as3": "Music.as:133 (soundEnemyHit: Music.as:95)"
+    },
+    "seedling:sfx/metal-hit": {
+      "set": "Metal Hit",
+      "clips": [
+        "Metal1"
+      ],
+      "as3": "Music.as:134 (soundMetal: Music.as:96)"
+    },
+    "seedling:sfx/enemy-hop": {
+      "set": "Enemy Hop",
+      "clips": [
+        "EnemyHop1",
+        "EnemyHop2"
+      ],
+      "as3": "Music.as:135 (soundEnemyHop: Music.as:97)"
+    },
+    "seedling:sfx/chest": {
+      "set": "Chest",
+      "clips": [
+        "Chest1"
+      ],
+      "as3": "Music.as:136 (soundChest: Music.as:98)"
+    },
+    "seedling:sfx/rock": {
+      "set": "Rock",
+      "clips": [
+        "Rock1",
+        "Rock2"
+      ],
+      "as3": "Music.as:137 (soundRock: Music.as:99)"
+    },
+    "seedling:sfx/lock": {
+      "set": "Lock",
+      "clips": [
+        "Lock1"
+      ],
+      "as3": "Music.as:138 (soundLock: Music.as:100)"
+    },
+    "seedling:sfx/energy-beam": {
+      "set": "Energy Beam",
+      "clips": [
+        "EnergyBeam1",
+        "EnergyBeam1",
+        "EnergyBeam1"
+      ],
+      "as3": "Music.as:139 (soundEnergyBeam: Music.as:101)"
+    },
+    "seedling:sfx/energy-pulse": {
+      "set": "Energy Pulse",
+      "clips": [
+        "EnergyPulse1",
+        "EnergyPulse1"
+      ],
+      "as3": "Music.as:140 (soundEnergyPulse: Music.as:102)"
+    },
+    "seedling:sfx/explosion": {
+      "set": "Explosion",
+      "clips": [
+        "Explosion1",
+        "Explosion1",
+        "Explosion1"
+      ],
+      "as3": "Music.as:141 (soundExplosion: Music.as:103)"
+    },
+    "seedling:sfx/enemy-fall": {
+      "set": "Enemy Fall",
+      "clips": [
+        "EnemyFall1",
+        "EnemyFall1",
+        "EnemyFall1"
+      ],
+      "as3": "Music.as:142 (soundEnemyFall: Music.as:104)"
+    },
+    "seedling:sfx/push-rock": {
+      "set": "Push Rock",
+      "clips": [
+        "PushRock1"
+      ],
+      "as3": "Music.as:143 (soundPushRock: Music.as:105)"
+    },
+    "seedling:sfx/enemy-die": {
+      "set": "Enemy Die",
+      "clips": [
+        "EnemyDie1",
+        "EnemyDie1"
+      ],
+      "as3": "Music.as:144 (soundEnemyDie: Music.as:106)"
+    },
+    "seedling:sfx/room": {
+      "set": "Room",
+      "clips": [
+        "Room1",
+        "Room2",
+        "Room3",
+        "Room4"
+      ],
+      "as3": "Music.as:145 (soundRoom: Music.as:107)"
+    },
+    "seedling:sfx/hurt": {
+      "set": "Hurt",
+      "clips": [
+        "Hurt1"
+      ],
+      "as3": "Music.as:146 (soundHurt: Music.as:108)"
+    },
+    "seedling:sfx/ground-hit": {
+      "set": "Ground Hit",
+      "clips": [
+        "GroundHit1",
+        "GroundHit2"
+      ],
+      "as3": "Music.as:147 (soundGroundHit: Music.as:109)"
+    },
+    "seedling:sfx/player-fall": {
+      "set": "Player Fall",
+      "clips": [
+        "PlayerFall1"
+      ],
+      "as3": "Music.as:148 (soundPlayerFall: Music.as:110)"
+    },
+    "seedling:sfx/boss-die": {
+      "set": "Boss Die",
+      "clips": [
+        "BossDie1",
+        "BossDie2",
+        "BossDie3",
+        "BossDie4",
+        "BossDie5"
+      ],
+      "as3": "Music.as:149 (soundBossDie: Music.as:111)"
+    },
+    "seedling:sfx/enemy-attack": {
+      "set": "Enemy Attack",
+      "clips": [
+        "EnemyAttack1",
+        "EnemyAttack2",
+        "EnemyAttack3",
+        "EnemyAttack4"
+      ],
+      "as3": "Music.as:150 (soundEnemyAttack: Music.as:112)"
+    },
+    "seedling:sfx/boss-6-move": {
+      "set": "Boss 6 Move",
+      "clips": [
+        "Boss6Move1",
+        "Boss6Move2",
+        "Boss6Move3",
+        "Boss6Move1",
+        "Boss6Move2",
+        "Boss6Move3"
+      ],
+      "as3": "Music.as:151 (soundBoss6Move: Music.as:113)"
+    },
+    "seedling:sfx/wand-fire": {
+      "set": "Wand Fire",
+      "clips": [
+        "WandFire1",
+        "WandFire1"
+      ],
+      "as3": "Music.as:152 (soundWandFire: Music.as:114)"
+    },
+    "seedling:sfx/wand-fizzle": {
+      "set": "Wand Fizzle",
+      "clips": [
+        "WandFizzle1",
+        "WandFizzle1"
+      ],
+      "as3": "Music.as:153 (soundWandFizzle: Music.as:115)"
+    },
+    "seedling:sfx/turret-shoot": {
+      "set": "Turret Shoot",
+      "clips": [
+        "TurretShoot1",
+        "TurretShoot1",
+        "TurretShoot1"
+      ],
+      "as3": "Music.as:154 (soundTurretShoot: Music.as:116)"
+    },
+    "seedling:sfx/wind": {
+      "set": "Wind",
+      "clips": [
+        "Wind1",
+        "Wind2"
+      ],
+      "as3": "Music.as:155 (soundWind: Music.as:117)"
+    },
+    "seedling:sfx/burn": {
+      "set": "Burn",
+      "clips": [
+        "Burn1"
+      ],
+      "as3": "Music.as:156 (soundBurn: Music.as:118)"
+    },
+    "seedling:sfx/punch": {
+      "set": "Punch",
+      "clips": [
+        "Punch1"
+      ],
+      "as3": "Music.as:157 (soundPunch: Music.as:119)"
+    },
+    "seedling:sfx/tentacle": {
+      "set": "Tentacle",
+      "clips": [
+        "Tentacle1",
+        "Tentacle1",
+        "Tentacle1",
+        "Tentacle1"
+      ],
+      "as3": "Music.as:158 (soundTentacle: Music.as:120)"
+    },
+    "seedling:sfx/fire": {
+      "set": "Fire",
+      "clips": [
+        "Fire1"
+      ],
+      "as3": "Music.as:159 (soundFire: Music.as:121)"
+    },
+    "seedling:sfx/lava": {
+      "set": "Lava",
+      "clips": [
+        "Lava1",
+        "Lava2",
+        "Lava3"
+      ],
+      "as3": "Music.as:160 (soundLava: Music.as:122)"
+    },
+    "seedling:sfx/light": {
+      "set": "Light",
+      "clips": [
+        "Light1"
+      ],
+      "as3": "Music.as:161 (soundLight: Music.as:123)"
+    },
+    "seedling:sfx/text": {
+      "set": "Text",
+      "clips": [
+        "Text1",
+        "Text2"
+      ],
+      "as3": "Music.as:162 (soundText: Music.as:124)"
+    },
+    "seedling:sfx/other": {
+      "set": "Other",
+      "clips": [
+        "Other1",
+        "Other2",
+        "Other3",
+        "Other4",
+        "Other5"
+      ],
+      "as3": "Music.as:163 (soundOther: Music.as:125)"
+    }
+  },
+  "elsewhere": [
+    {
+      "file": "Yes, Master.mp3",
+      "goes": "music",
+      "why": "Music.as:164 sndYesMaster is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "Found It!.mp3",
+      "goes": "music",
+      "why": "Music.as:167 sndFoundIt is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "One Piece.mp3",
+      "goes": "music",
+      "why": "Music.as:170 sndSealPiece is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "Of The Puzzle.mp3",
+      "goes": "music",
+      "why": "Music.as:173 sndSeal is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "The Key.mp3",
+      "goes": "music",
+      "why": "Music.as:176 sndKey is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "In The Beginning.mp3",
+      "goes": "music",
+      "why": "Music.as:179 sndMenu is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "A Warrior's Journey.mp3",
+      "goes": "music",
+      "why": "Music.as:182 sndTheme is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "Warriors Don't Sleep.mp3",
+      "goes": "music",
+      "why": "Music.as:185 sndThemeNight is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "My Life's Purpose.mp3",
+      "goes": "music",
+      "why": "Music.as:188 sndMyLifesPurpose is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "The Watcher.mp3",
+      "goes": "music",
+      "why": "Music.as:191 sndTheWatcher is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "My First Dungeon.mp3",
+      "goes": "music",
+      "why": "Music.as:194 sndMyFirstDungeon is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "Stuck In The Forest.mp3",
+      "goes": "music",
+      "why": "Music.as:197 sndStuckInTheForest is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "Mysterious Magic.mp3",
+      "goes": "music",
+      "why": "Music.as:200 sndMysteriousMagic is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "Cold Blooded.mp3",
+      "goes": "music",
+      "why": "Music.as:203 sndColdBlooded is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "How To Lose Your Shadow 101.mp3",
+      "goes": "music",
+      "why": "Music.as:206 sndShadow is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "Lava Is Hot.mp3",
+      "goes": "music",
+      "why": "Music.as:209 sndLavaIsHot is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "The Sky.mp3",
+      "goes": "music",
+      "why": "Music.as:212 sndTheSky is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "Fight Me Like A Boss.mp3",
+      "goes": "music",
+      "why": "Music.as:215 sndBoss is a song or jingle, not a `sounds` set"
+    },
+    {
+      "file": "shrumcrappyTestLoop.mp3",
+      "goes": "none",
+      "why": "Music.as does not embed it"
+    }
+  ]
+}

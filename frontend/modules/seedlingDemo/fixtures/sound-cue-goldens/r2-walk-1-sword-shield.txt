@@ -1,0 +1,16 @@
+22 L0 Player.as:685 "Splash" -1 1.000 0.000
+170 L2 Teleporter.as:109 "Room" 2 1.000 0.000
+217 L3 Teleporter.as:109 "Room" 0 1.000 0.000
+225 L3 Player.as:685 "Splash" -1 1.000 0.000
+304 L11 Teleporter.as:109 "Room" 0 1.000 0.000
+351 L10 Teleporter.as:109 "Room" 2 1.000 0.000
+358 L11 Teleporter.as:109 "Room" 1 1.000 0.000
+405 L3 Teleporter.as:109 "Room" 0 1.000 0.000
+482 L3 Player.as:685 "Splash" -1 1.000 0.000
+537 L2 Teleporter.as:109 "Room" 0 1.000 0.000
+584 L0 Teleporter.as:109 "Room" 1 1.000 0.000
+699 L0 Player.as:685 "Splash" -1 1.000 0.000
+763 L13 Teleporter.as:109 "Room" 2 1.000 0.000
+837 L20 Teleporter.as:109 "Room" 2 1.000 0.000
+844 L13 Teleporter.as:109 "Room" 1 1.000 0.000
+928 L0 Teleporter.as:109 "Room" 1 1.000 0.000
