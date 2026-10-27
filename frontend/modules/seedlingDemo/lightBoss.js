@@ -199,7 +199,8 @@ export function stepLightsController(fight, { frozen = false, time = null } = {}
     // `if (!myText && !madeFliers) { while (myFliers.length < flierNumber) push(new LightBoss(spinCenter.x, -32, …)) }`
     if (!fight.introUp && !fight.madeFliers) {
         while (fight.fliers.length < fight.flierNumber) {
-            const f = createLightBossFlier(fight.center.x, LIGHT_BOSS.controller.spawnY, fight.fliers.length);
+            const f = createLightBossFlier(fight.center.x, LIGHT_BOSS.controller.spawnY, fight.fliers.length,
+                fight.bodies.length + 1);
             fight.fliers.push(f);
             fight.bodies.push(f);
         }
@@ -255,10 +256,16 @@ function removeFlier(fight, id) {
 
 // ── the fliers ─────────────────────────────────────────────────────────────────────────────────────────────────────
 
-let flierSeq = 0;
-/** One `new LightBoss(_x, _y, _id, parent)` (`LightBoss.as:28-56`). */
-export function createLightBossFlier(x, y, fid) {
-    flierSeq += 1;
+/**
+ * One `new LightBoss(_x, _y, _id, parent)` (`LightBoss.as:28-56`).
+ *
+ * ⛓ SEEDLING FIDELITY DETERM (a) — `seq` is the flier's spawn ordinal WITHIN ITS FIGHT (the controller passes
+ * `bodies.length + 1`; `bodies` keeps every flier ever spawned, so the ordinal never repeats inside a fight). It was a
+ * MODULE-level counter, so a second L69 run in one process numbered its fliers 7..12 and its `stateDigest` `visit` part
+ * (`lightsFights`) differed from the first run's from the first spawn on. The fliers are the run's: a fork's
+ * `cloneLightsFight` copies `bodies`, so its next spawn continues the same ordinal.
+ */
+export function createLightBossFlier(x, y, fid, seq = fid + 1) {
     const fl = LIGHT_BOSS.flier;
     return {
         id: `lightboss#${fid}`,
@@ -278,7 +285,7 @@ export function createLightBossFlier(x, y, fid) {
         dieAnim: null,
         removed: false,
         diedAt: null,
-        seq: flierSeq,
+        seq,
     };
 }
 

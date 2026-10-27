@@ -1,0 +1,2 @@
+[responder census] ticks 172786, opens 76, equal 172680, lock re-close lag 6, cover held under a hitable 0, kill-lock fade 100
+ON  [responder census] ticks 172786, opens 76, equal 172686, lock re-close lag 0, cover held under a hitable 0, kill-lock fade 100
