@@ -26107,3 +26107,43 @@ or producer `--check` moves (the identity block is equal OFF; the four producer 
   forecast, leave alone.
 - A survey staging is one visit. The trap killed in visit 2 is gone in visit 3 only if its removal finished before the
   door.
+
+### Seedling fidelity DETERM — L69's flier ordinal per fight (no switch); L82's solve proven a function of its request; G9's F1/F2 responder fades (`coverHeldFade`, `lockRecloseLag`, OFF), F3 a named no-op
+
+The report is `CC/docs/cloud-reports/seedling-fidelity-determ.md` (wave 33, base `6f5916203e`).
+
+**(a) L69 `flierSeq`.** `lightBoss.js` numbered its fliers from a MODULE-level counter, so a second L69 run in one
+process numbered them 7..12 and the `visit` digest part (`lightsFights`) differed from the first run's at the first
+spawn. That broke the digest guard and the fork-run dedupe (G10, js). The controller now passes `bodies.length + 1`:
+the ordinal belongs to the fight, and a fork's `cloneLightsFight` carries `bodies`, so it continues the same ordinal.
+The first L69 run in a process numbers 1..6 exactly as before, so every committed tape, producer `--check` (94 rc 0),
+`fidelityLights.slow` (5/5) and survey step 170 (row md5 equal base vs head) is unchanged. js's KNOWN-DEFECT pin
+(`seedlingBossSkin.test.js` `L69-lights-kill` `digestAcrossRuns: false`) is flipped in the same commit. The two runs
+now digest equal every tick.
+
+**(b) L82.** Every captured L82 request of the planner's keyed ×2 (legs 629–632 at `7266baa10d`) answers ONE plan over
+8 solves in one process and 8 fresh processes. Run 1's and run 2's requests answer the SAME plan although their seam
+clocks differ (5800 vs 5713). The solver is deterministic and seam-insensitive there. The t=0 divergence of run 2's
+leg 631 is game-side. The host jump (`seedlingRoomPlay.jumpSettled`) ended with the game at the L96 landing (144,16)
+(`landed`), while the JS runtime's run, which is the request's staging and live row, stood at (152,176)/(160,184),
+where run 1's game also stood. Handed to the JS arc (arrival staging / `force-re-arrival`). A row pins the diverging
+request: two solves in one process give equal plans and an equal `stateDigest` every tick.
+
+**(c) F1–F3.** F1 (`Cover.as:49-67`): a released cover with an occupant keeps type AND alpha. The model's Lock line
+`if (!s.open) s.alpha = 1` reset it. F2 (`Lock.as:64-97`): a re-closed lock's alpha is 0 for the re-close step, since
+the `alpha = 1` line ran under `type == ""`. A re-press on the next step is then an immediate `turnOff`. F3: a BossLock's
+private alpha/scale after the open are read only by `render` (clamped, restored at `:125`), so the model's pinned 0 is
+the same game. ON, the anchor census's lock re-close lag goes 6 → 0, with drift 0 and opens/ticks unchanged. None of the
+six frames (l71-button-lock t126, r2-walk-5-darkshield/r3-walk-5-darkshield t1445, r2-walk-full t7738, r3-walk-full
+t9213, r5-shaft t2261 `wandlock@48,160`) is re-pressed on the next step. Movers ON: no producer `--check`, no
+tapeRunner row, and no survey row on 25 responder/L69/L82 steps move. Bounded set ON: the defaults pin, and
+`activators.test.js` "releasing the button re-solidifies it". That row re-presses on the step after the re-close and
+asserts 101 more steps, the model's old answer; the game re-opens at once.
+
+**Trap candidates.**
+- A module-level counter in a model module is cross-run state. If its value reaches a digest, two identical runs in
+  one process differ, and a solver's forks (each a fresh run) differed from their own parent.
+- "Diverged at t=0" with an identical plan is a staging fact, not a solver fact: compare the captured requests first.
+  Two requests that differ only in `seam.time` and answer the same plan clear the solver.
+- A "reset" line shared by two classes is two lines in the AS3. `Lock` has `if (type == normType) alpha = 1`;
+  `Cover` has none. Its alpha moves only in `reset()`.

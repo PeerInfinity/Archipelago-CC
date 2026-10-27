@@ -1,0 +1,18 @@
+REPLAY: leg 630 request 0 (budget 640): 1 distinct answer(s) over 8, 1 distinct trace(s)
+LIVE: the page's worker answered {"ok":true,"kind":null,"work":63,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":870,"ms":223,"work":29},{"pass":"full","ok":true,"kind":null,"ticks":870,"ms":101,"work":34}]}
+REPLAY: leg 632 request 0 (budget 640): 1 distinct answer(s) over 8, 1 distinct trace(s)
+LIVE: the page's worker answered {"ok":true,"kind":null,"work":63,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":870,"ms":411,"work":29},{"pass":"full","ok":true,"kind":null,"ticks":865,"ms":280,"work":34}]}
+REPLAY: leg 629 request 0 (budget 640): 1 distinct answer(s) over 8, 1 distinct trace(s)
+LIVE: the page's worker answered {"ok":true,"kind":null,"work":174,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":1079,"ms":600,"work":44},{"pass":"full","ok":true,"kind":null,"ticks":1079,"ms":562,"work":130,"deadline":"sword-dash","limit":"window"}]}
+REPLAY: leg 631 request 0 (budget 640): 1 distinct answer(s) over 8, 1 distinct trace(s)
+LIVE: the page's worker answered {"ok":true,"kind":null,"work":174,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":1079,"ms":431,"work":44},{"pass":"full","ok":true,"kind":null,"ticks":1075,"ms":434,"work":130,"deadline":"sword-dash","limit":"window"}]}
+REPLAY: leg 630 request 0 (budget 640): 1 distinct answer(s) over 8, 1 distinct trace(s)
+LIVE: the page's worker answered {"ok":true,"kind":null,"work":63,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":870,"ms":232,"work":29},{"pass":"full","ok":true,"kind":null,"ticks":870,"ms":97,"work":34}]}
+REPLAY: leg 632 request 0 (budget 640): 1 distinct answer(s) over 8, 1 distinct trace(s)
+LIVE: the page's worker answered {"ok":true,"kind":null,"work":63,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":870,"ms":698,"work":29},{"pass":"full","ok":true,"kind":null,"ticks":865,"ms":300,"work":34}]}
+REPLAY: leg 629 request 0 (budget 640): 1 distinct answer(s) over 8, 1 distinct trace(s)
+LIVE: the page's worker answered {"ok":true,"kind":null,"work":174,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":1079,"ms":314,"work":44},{"pass":"full","ok":true,"kind":null,"ticks":1079,"ms":246,"work":130,"deadline":"sword-dash","limit":"window"}]}
+REPLAY: leg 631 request 0 (budget 640): 1 distinct answer(s) over 8, 1 distinct trace(s)
+LIVE: the page's worker answered {"ok":true,"kind":null,"work":174,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":1079,"ms":313,"work":44},{"pass":"full","ok":true,"kind":null,"ticks":1075,"ms":319,"work":130,"deadline":"sword-dash","limit":"window"}]}
+REPLAY: leg 631 request 1 (budget 640): 1 distinct answer(s) over 8, 1 distinct trace(s)
+LIVE: the page's worker answered {"ok":true,"kind":null,"work":174,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":1079,"ms":110,"work":44},{"pass":"full","ok":true,"kind":null,"ticks":1075,"ms":177,"work":130,"deadline":"sword-dash","limit":"window"}]}
