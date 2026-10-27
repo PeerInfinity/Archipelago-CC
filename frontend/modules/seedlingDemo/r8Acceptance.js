@@ -1498,6 +1498,15 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'the part — 1665 ticks in L40 with its chasers stepped (1663 before L42REREC; the walk parts at '
                 + 't1310, on the approach to the rock break). Recorded on the game (p4g) with `hits` 0, model = game at 0 px.',
         }),
+        /** ⛓⛓⛓ seedling-fidelity-l100 — the rock door's 8 px stance, booted in the sliver (four jellyfish, a flyer). */
+        Object.freeze({
+            name: 'l100-sliver-rock', levels: Object.freeze([100, 101]), bobs: 5, ticks: 185,
+            addedBy: 'Seedling fidelity L100 D1 (the swing stance on the 8 px lattice, `fineSwingStance` ON)',
+            why: 'the step-219 staging booted in the 8 px sliver at (124,60): down x 124 beside the CliffSide masks, the '
+                + 'swing at `breakablerock@128,144` from (124,141), the door and `teleporter@288,96` — the jellyfish '
+                + 'cannot enter the 8 px sliver (12x12 bodies), and the walk past the rock outruns them. Recorded on '
+                + 'the game (p4g) with `hits` 0, model = game at 0 px.',
+        }),
     ]),
 
     /**
