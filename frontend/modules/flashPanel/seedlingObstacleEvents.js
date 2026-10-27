@@ -270,7 +270,8 @@ export function deriveLockEvents(projection, ctx) {
  *     barrier is those bodies, and the event is still the TARGET's flag (the flag the press writes; the solver's
  *     `execCrossRoomPress` checks `presser.room === flag.level && presser.t === flag.tag`). When the target's own
  *     level has a second way to clear it (`ctx.inRoom`: a pole is also lit by a Spear thrust), every gate is
- *     `Or(Has(<event>), <that way>)`;
+ *     `Or(Has(<event>), <that way>)` — ⛓ RULES l63-darktrap: except a door `ctx.gates` marks `arm: false` (its side
+ *     holds no STANCE for that way, `poleThrustStances`), which costs `Has(<event>)` alone;
  *   - a clear that ADDS the target's solid (a FallRock's `arm`), a target that is solid in neither state and kills
  *     nothing, or one the rules already price without the button → `skipped`, by name;
  *   - a SET (`flip` 0) of a target the clear would open → REFUSED by name (it would need `Not(event)`).
@@ -283,8 +284,9 @@ export function deriveLockEvents(projection, ctx) {
  *   only because of the button
  * @param {(presser:object) => {region_id, sub_region?, side}} ctx.place the presser's AP region
  * @param {(presser:object) => object|null} ctx.reach standing on the presser within `side` (null = True_)
- * @param {(target:object, eventName:string) => {region_id:string, exit_id:string}[]} ctx.gates the crossings
- *   through the target, as departures (throws by name when it cannot say)
+ * @param {(target:object, eventName:string) => {region_id:string, exit_id:string, arm?:boolean}[]} ctx.gates the
+ *   crossings through the target, as departures (throws by name when it cannot say); `arm: false` = the in-room way
+ *   cannot be taken from that door's side
  * @param {(target:object) => {bodies:string[], why:string}|null} [ctx.kills] the bodies a clear of a target that is
  *   solid in neither state removes (none = the target is cosmetic)
  * @param {(target:object) => object|null} [ctx.inRoom] another way, in the target's own level, to clear it (a
@@ -347,7 +349,12 @@ export function deriveButtonEvents(rows, ctx) {
             const has = { rule: 'Has', args: { item_name: name } };
             const other = ctx.inRoom?.(t) ?? null;
             const rule = other ? { rule: 'Or', children: [has, other] } : has;
-            for (const dep of ctx.gates(t, name)) exitGates.push({ ...dep, rule });
+            // ⛓ RULES l63-darktrap: a door whose side holds no stance for the in-room way (`arm: false`) costs the
+            // event alone.
+            for (const dep of ctx.gates(t, name)) {
+                exitGates.push({ region_id: dep.region_id, exit_id: dep.exit_id, kind: BUTTON_GATE_KIND,
+                    rule: dep.arm === false ? has : rule });
+            }
         }
     }
     if (refused.length > 0) {
@@ -423,7 +430,138 @@ export function poleKillsOf(level, target, model) {
  * ⚠ The ghost sword's swing also passes `"Spear"`; it is NOT an arm here (no stance is authored for it, nothing
  * witnessed it), which only makes the rule stricter than the game.
  */
-export const POLE_LIGHT_ARM = Object.freeze({ item: 'hasSpear', cite: 'Player.as:1083-1088 + Scenery/LightPole.as:45' });
+export const POLE_LIGHT_ARM = Object.freeze({
+    item: 'hasSpear', verb: 'lit by a Spear thrust', cite: 'Player.as:1083-1088 + Scenery/LightPole.as:45',
+});
+
+/**
+ * ⛓ RULES l63-darktrap — the KIND each derivation stamps on its `exitGates` rows, so a consumer that keeps some of a
+ * layer's gates (the maze producer) selects them by what made them, never by level. The compiler reads only
+ * `region_id`, `exit_id` and `rule`, so the tag changes no rules output.
+ */
+export const BUTTON_GATE_KIND = 'cross-room-press';
+export const IN_ROOM_POLE_GATE_KIND = 'in-room-pole';
+
+/**
+ * ⛓⛓ RULES l63-darktrap — **WHERE A SPEAR THRUST REACHES A POLE FROM.** The in-room arm (`POLE_LIGHT_ARM`) is not
+ * free on every side of the bodies the pole kills: the thrust is a 32 x 5 rect (`presses.spearHitRect`,
+ * `Player.as:955-990`) and the pole's press box is its bob envelope (`levelWorld.LIGHTPOLE_PRESS_BOX`), so from some
+ * tiles no facing touches it. Witnessed on the game (`probe-seedling-l63-darktrap.mjs`, `probe-seedling-inroom-darktraps.mjs`):
+ * L63's poles over its two L65 landings are lit only from the trap's NORTH side, L101's only from its landing.
+ *
+ * A STANCE is a tile the caller says can be stood on (`walkable`), not overlapping any `avoid` rect (the killed
+ * bodies: a stance inside the trap is a hit), whose centre — where a player standing on the tile is, as the game
+ * lands one (the L65 landing (128,288) puts the player at (136,296)) — thrusts a rect that touches `box` in at least
+ * one facing. Pure: the press geometry is injected (`spearHitRect`, `pressRectTouches`), so the model's switches
+ * decide it.
+ *
+ * @param {{x:number, y:number, right:number, bottom:number}} box the pole's press rect (its `pressResponders` row)
+ * @param {{width:number, height:number, origin?:{x:number,y:number}, tile:number, walkable:(tx:number, ty:number) => boolean,
+ *   avoid?:object[], spearHitRect:Function, pressRectTouches:Function, rectsOverlap:Function}} g
+ * @returns {{tile:number[], dirs:number[]}[]} the stances, row-major
+ */
+export function poleThrustStances(box, g) {
+    const ox = g.origin?.x ?? 0;
+    const oy = g.origin?.y ?? 0;
+    const out = [];
+    for (let gy = 0; gy < g.height; gy++) {
+        for (let gx = 0; gx < g.width; gx++) {
+            const tx = gx + ox;
+            const ty = gy + oy;
+            if (!g.walkable(tx, ty)) continue;
+            const r = { x: tx * g.tile, y: ty * g.tile, w: g.tile, h: g.tile, right: (tx + 1) * g.tile, bottom: (ty + 1) * g.tile };
+            if ((g.avoid ?? []).some((a) => g.rectsOverlap(r, a))) continue;
+            const cx = tx * g.tile + g.tile / 2;
+            const cy = ty * g.tile + g.tile / 2;
+            const dirs = [0, 1, 2, 3].filter((d) => g.pressRectTouches(g.spearHitRect(cx, cy, d), box));
+            if (dirs.length) out.push({ tile: [tx, ty], dirs });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓ RULES l63-darktrap — every `LightPole` of a map extract that NO cross-room `ButtonRoom` writes (its tag is in
+ * no `crossRoomButtonsOf` write): the poles only the in-room arm lights. `{level, type, x, y, tag}`; an untagged
+ * pole (tag < 0) writes nothing and is left out.
+ */
+export function inRoomPolesOf(map) {
+    const written = new Set(crossRoomButtonsOf(map).map((b) => `${b.write.level}|${b.write.tag}`));
+    return map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === 'lightpole').map((e) => ({
+        level: l.level, type: e.type, x: e.x, y: e.y, tag: Number(e.attrs?.tag),
+    }))).filter((p) => Number.isInteger(p.tag) && p.tag >= 0 && !written.has(`${p.level}|${p.tag}`));
+}
+
+/**
+ * ⛓⛓ RULES l63-darktrap — **AN IN-ROOM POLE'S LIGHT AS AN AP EVENT.** darktrap-events made the cross-room press that
+ * lights a pole an event and left the four darktraps only the room's own Spear can kill "moot": they cut landing
+ * pockets, but every region they touch needs the Ghost Spear, so `Or(<event>, Has(Ghost Spear))` was `True_`. That
+ * assumed the thrust works from either side. It does not (`poleThrustStances`): L63's landings from L65 are sealed
+ * until the pole is lit from the NORTH, and the rules let L65's doors in for free.
+ *
+ * The rows are `inRoomPolesOf(map)`, never a list. Per pole:
+ *   - its light kills no body (`ctx.kills` null) → `skipped`, by name;
+ *   - else ONE event, the cross-room shape: `obstacle` = the pole `{level, tag, class, x, y}` (the flag its hit writes,
+ *     `LightPole.as:94-97`), `action {verb, item}` = `ctx.action`, `across` = [], placed and priced by `ctx.cut`
+ *     (`{place: {region_id, sub_region?, side}, reach, gates}`: where a stance stands and what reaching it costs, and
+ *     the barrier's doors with their `arm`), and each gate `Has(<event>)`, or `Or(Has(<event>), ctx.arm)` on a door
+ *     whose side holds a stance;
+ *   - an `event_id` another derivation already minted → REFUSED by name (one flag, two meanings).
+ *
+ * @param {object[]} poles `inRoomPolesOf(map)`
+ * @param {object} ctx
+ * @param {(pole:object) => {bodies:string[], why:string}|null} ctx.kills
+ * @param {(pole:object, eventName:string) => {place:{region_id, sub_region?, side}, reach:object|null,
+ *   gates:{region_id:string, exit_id:string, arm:boolean}[]}} ctx.cut (throws by name when it cannot say)
+ * @param {object} ctx.arm the in-room way, a rules.json rule
+ * @param {{verb:string, item:string}} ctx.action
+ * @param {object[]} [ctx.existing] events already minted
+ * @returns {{events:object[], exitGates:object[], skipped:string[]}}
+ */
+export function deriveInRoomPoleEvents(poles, ctx) {
+    const existing = new Set((ctx.existing ?? []).map((e) => e.fields?.event_id));
+    const events = [];
+    const exitGates = [];
+    const skipped = [];
+    const refused = [];
+    for (const p of poles) {
+        const what = `L${p.level} ${p.type}@${p.x},${p.y} {${p.level},${p.tag}}`;
+        const kills = ctx.kills(p);
+        if (!kills?.bodies?.length) { skipped.push(`${what}: its light kills no body`); continue; }
+        const id = obstacleEventId({ level: p.level, tag: p.tag });
+        if (existing.has(id) || events.some((e) => e.fields.event_id === id)) {
+            refused.push(`${what}: ${id} is already another event`);
+            continue;
+        }
+        const name = obstacleEventName({ level: p.level, tag: p.tag, cls: p.type, x: p.x, y: p.y });
+        const cut = ctx.cut(p, name);
+        events.push({
+            region_id: cut.place.region_id,
+            ...(cut.place.sub_region === undefined ? {} : { sub_region: cut.place.sub_region }),
+            name,
+            access_rule: cut.reach ?? null,
+            fields: {
+                event_id: id,
+                event_kind: OBSTACLE_EVENT_KIND,
+                obstacle: { level: p.level, tag: p.tag, class: p.type, x: p.x, y: p.y },
+                action: { verb: ctx.action.verb, item: ctx.action.item },
+                side: cut.place.side,
+                across: [],
+            },
+        });
+        const has = { rule: 'Has', args: { item_name: name } };
+        const or = { rule: 'Or', children: [has, ctx.arm] };
+        for (const g of cut.gates) {
+            exitGates.push({ region_id: g.region_id, exit_id: g.exit_id, kind: IN_ROOM_POLE_GATE_KIND, rule: g.arm ? or : has });
+        }
+    }
+    if (refused.length > 0) {
+        throw new Error(`in-room pole events: ${refused.length} pole(s) refused —\n  ${refused.join('\n  ')}`);
+    }
+    exitGates.sort((a, b) => a.region_id.localeCompare(b.region_id, 'en', { numeric: true })
+        || a.exit_id.localeCompare(b.exit_id, 'en', { numeric: true }));
+    return { events, exitGates, skipped };
+}
 
 /**
  * Every cross-room `ButtonRoom` of a map extract (`room >= 0`) and what its write reaches: `{presser: {level, x, y,

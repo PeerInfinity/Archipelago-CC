@@ -1958,6 +1958,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_63__r6c9 -> level_65__r0c8", player),
+        And(HasAny('L63 flag 7: lightpole@112,272 cleared', 'Ghost Spear'), HasAny('L65 flag 0: lightpole@128,168 cleared', 'Ghost Spear'))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_63__r6c15 -> level_63__r5c14", player),
         Has('Dark Suit', 1)
     )
@@ -1973,13 +1978,28 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_63__r10c2 -> level_65__r0c2", player),
+        HasAny('L63 flag 6: lightpole@48,272 cleared', 'Ghost Spear')
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_64 -> level_62", player),
         HasAny('L62 flag 0: lightpole@120,200 cleared', 'Ghost Spear')
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_65__r0c2 -> level_63__r10c2", player),
+        Has('L63 flag 6: lightpole@48,272 cleared', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_65__r0c8 -> level_65__r4c13", player),
         Has('Ghost Spear', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_65__r0c8 -> level_63__r6c9", player),
+        And(HasAny('L65 flag 0: lightpole@128,168 cleared', 'Ghost Spear'), Has('L63 flag 7: lightpole@112,272 cleared'))
     )
 
     world.set_rule(
@@ -2503,6 +2523,16 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_101__r4c9 -> level_102__r5c9", player),
+        Has('L101 flag 0: lightpole@144,64 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_102__r5c9 -> level_101__r4c9", player),
+        HasAny('L101 flag 0: lightpole@144,64 cleared', 'Ghost Spear')
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_108__r2c0 -> level_108__r5c8", player),
         Has('Dark Suit', 1)
     )
@@ -2888,6 +2918,21 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("L63 flag 7: lightpole@112,272 cleared", player),
+        Has('Ghost Spear', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("L63 flag 6: lightpole@48,272 cleared", player),
+        Has('Ghost Spear', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("L65 flag 0: lightpole@128,168 cleared", player),
+        Has('Ghost Spear', 1)
+    )
+
+    world.set_rule(
         multiworld.get_location("L68 flag 0: bosslock@16,32 cleared", player),
         And(Or(HasAll('Fire Wand Fusion', 'Wand', 'Fire'), Has('Wand')), Has('Yellow Key'))
     )
@@ -2905,6 +2950,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Level 082 - King of Fire", player),
         HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_location("L101 flag 0: lightpole@144,64 cleared", player),
+        Has('Ghost Spear', 1)
     )
 
     world.set_rule(
