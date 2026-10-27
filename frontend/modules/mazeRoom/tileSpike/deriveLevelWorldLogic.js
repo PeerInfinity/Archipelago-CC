@@ -79,6 +79,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
     };
     return {
         cells, cuts, states: seen.size, planTo: (cell) => planFrom(cells.get(cell)), planToCut: (key) => planFrom(cuts.get(key)),
+        reached: (state) => seen.has(reachKey(state)),
     };
 }
 
@@ -93,6 +94,31 @@ function cachedReach(cache, entered, reach) {
         if (!cache.has(key)) cache.set(key, reach(set));
         return cache.get(key);
     };
+}
+
+/**
+ * ⛓ LANDING-ROOTED ARRIVALS (session tile-primitives-pit-sinks-landings): the arrivals of one region worth a search.
+ * `entered` = the world entered at the region's entrance; `arrivals` = cells (`null` = that entrance). An arrival is
+ * dropped when an earlier kept one reaches its FRESH arrival state holding nothing, and it reaches that one's back —
+ * reach only grows with the inventory, so from both every inventory reaches the same states and prices the same.
+ * The match is on `reachKey` — position, blocks, broken cells — so a cell reached only after a block moved is NOT
+ * the same arrival (its fresh state has the block at home). An arrival in an armed lane reaches nothing: it stays.
+ */
+export function distinctArrivals(entered, arrivals) {
+    if (arrivals.length < 2) return arrivals;
+    const at = (a) => (a ? { ...entered, entrance: { x: a.x, y: a.y } } : entered);
+    const reach = new Map();
+    const reachOf = (a) => {
+        const key = a ? `${a.x},${a.y}` : '';
+        if (!reach.has(key)) reach.set(key, nativeReachUnder(at(a), []));
+        return reach.get(key);
+    };
+    const kept = [];
+    for (const a of arrivals) {
+        const same = kept.some((k) => Boolean(reachOf(k).reached?.(createState(at(a)))) && Boolean(reachOf(a).reached?.(createState(at(k)))));
+        if (!same) kept.push(a);
+    }
+    return kept;
 }
 
 /** The same world, entered at `region`'s arrival cell. */
@@ -174,15 +200,20 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
  * arrival while pricing `region`'s targets — an internal-only member is entered only by walking in from one, so the
  * search from that member's arrival covers every state the walk can enter it in (blocks, cuts, facing).
  *
+ * ⛓ `arriveAt` (session tile-primitives-pit-sinks-landings): search from this CELL — where the game lands a crossing
+ * into `region` (the certifier's `atlasLandings`) — instead of the region's entrance cell.
+ *
  * @returns {{ items: string[], targets: Array<{id, kind, x, y, exitName?, locationName?, minimal: string[][],
  *   witnesses: Array<{inventory, plan}>, unreachable: boolean}>, searched: number, states: number }}
  */
 export function deriveEntryLogic(world, region, helpers, {
-    tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, arrivalBlocked = null, cache = null, arriveFrom = null,
+    tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, arrivalBlocked = null, cache = null, arriveFrom = null, arriveAt = null,
 } = {}) {
     const shared = Boolean(world.sharedWorld);
     if (arriveFrom !== null && !shared) throw new Error(`entry logic: arriveFrom "${arriveFrom}" needs a shared level world`);
-    const entered = shared ? enteredAt(world, arriveFrom ?? region) : world;
+    if (arriveFrom !== null && arriveAt !== null) throw new Error('entry logic: arriveFrom and arriveAt are exclusive');
+    const into = shared ? enteredAt(world, arriveFrom ?? region) : world;
+    const entered = arriveAt !== null ? { ...into, entrance: { x: arriveAt.x, y: arriveAt.y } } : into;
     const items = [...new Set([...regionItems(world), ...(arrivalBlocked?.items ?? [])])].sort();
     if (items.length > maxItems) {
         throw new Error(`entry logic: ${items.length} items exceed the lattice cap ${maxItems}: ${items.join(', ')}`);
