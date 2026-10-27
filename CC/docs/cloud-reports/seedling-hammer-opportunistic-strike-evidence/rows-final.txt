@@ -1,0 +1,181 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressKillGuards.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 42640[2mms[22m[39m
+     [33m[2m✓[22m[39m HO1: at t2439 the strike preview throws OFF; ON the band's candidates are refused by name (the strike floor OFF: the keys' own) [33m 2564[2mms[22m[39m
+     [33m[2m✓[22m[39m HO2 OFF: the press kill carries on past the death at t788 [33m 20864[2mms[22m[39m
+     [33m[2m✓[22m[39m HO2 ON: the press kill is refused by name on the tick of the first death [33m 19207[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Res.test.js [2m([22m[2m10 tests[22m[2m)[22m[33m 50581[2mms[22m[39m
+     [33m[2m✓[22m[39m the measurement behind it: the south door is in the stance hypothesis, the west door is not [33m 1199[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: survey step 93 refuses STANCE_REENTRY at the west door, the survey's text [33m 4670[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the re-entry passes to the chest (the south door's chain); the end is the chest walk's press kill [33m 42664[2mms[22m[39m
+     [33m[2m✓[22m[39m the model replays every game tick at 0 px and bills the same hit: spinner@192,144's hammer at t1222 [33m 609[2mms[22m[39m
+     [33m[2m✓[22m[39m spinnerLockLag OFF: spinner@192,160 passes wandlock@208,160 one tick early (the game reflects at t1172) [33m 396[2mms[22m[39m
+     [33m[2m✓[22m[39m spinnerLockLag ON: every spinner of the part room matches the game t1160-1230, the struck one too [33m 401[2mms[22m[39m
+     [33m[2m✓[22m[39m spinnerLockLag ON: the player still replays every game tick at 0 px with the one hammer hit at t1222 [33m 413[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressKillChasers.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 60145[2mms[22m[39m
+     [33m[2m✓[22m[39m step 67: OFF the kill walks into bob@736,752 and dies; ON it takes no hit, and the keys are OFF's until the step that met the bob [33m 60141[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Bk2.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 141801[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: none of the chain's three weigh locks is in the hypothesis at the arrival (guard iii walls them) [33m 1197[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: t2's two locks (the corpse, behind the south door) and t5's (the fire block's route, across t2) join it [33m 5956[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: survey step 67 refuses at button@816,400 with the three locks walled — the sweep's text [33m 1800[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over) [33m 51923[2mms[22m[39m
+     [33m[2m✓[22m[39m the model (D1 ON) reproduces the game at 0 px — the player, every block, every chaser and the turret [33m 776[2mms[22m[39m
+     [33m[2m✓[22m[39m the model at the shipped defaults (D1 OFF) reproduces it too: D1 is solver-only [33m 753[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF, seam 5290: the 1600 t plan, and the model takes spinner@192,144's hammer at t1222 (L40RES's hit) [33m 20596[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, seam 5290: that plan is not certified — the answer is the bomb-pusher hold's refusal, no hit plan [33m 18223[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, seam 5280: OFF's hitless 1558 t plan, the same plan byte for byte [33m 40562[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerOpportunisticStrike.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 80884[2mms[22m[39m
+     [33m[2m✓[22m[39m step 67: OFF the kill passes bob@736,752 in reach without pressing and dies; ON it strikes the bob from t651, the hits land in the model and the bob dies, the keys are OFF's until the first aim, and the walk the kill certified struck the bob on the same ticks (preview = drive) [33m 80881[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m17 tests[22m[2m)[22m[33m 76190[2mms[22m[39m
+     [33m[2m✓[22m[39m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick [33m 1382[2mms[22m[39m
+     [33m[2m✓[22m[39m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA) [33m 1668[2mms[22m[39m
+     [33m[2m✓[22m[39m K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike [33m 1934[2mms[22m[39m
+     [33m[2m✓[22m[39m the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen [33m 2787[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts [33m 585[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death) [33m 36078[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t778), and the executed prefix is the witness's first 778 ticks [33m 31741[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerFightFallback.test.js [2m([22m[2m15 tests[22m[2m)[22m[33m 61967[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte [33m 3215[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's [33m 25121[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence [33m 2638[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing [33m 4877[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ inert while the fight itself is on (the retry would be the same path) [33m 12871[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged [33m 638[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged [33m 4902[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the rewind that solves is a plan whose `expected` IS a replay of its keys, row by row [33m 3900[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON, the deadline tripping AFTER the rewind solved: the plan's `expected` IS a replay of its keys [33m 3753[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Button.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 60461[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF the hypothesis at leg 378's arrival holds the cluster's wandlocks and no rock; ON it adds the three [33m 1279[2mms[22m[39m
+     [33m[2m✓[22m[39m a run with no sword hypothesises no rock (the swing could not break it) [33m 6868[2mms[22m[39m
+     [33m[2m✓[22m[39m from the cluster's own boot, bombPusherLive ON (the default), movingWait + bombBlastBody OFF: the still hold inside the lobber's reach is refused by name [33m 2294[2mms[22m[39m
+     [33m[2m✓[22m[39m from the cluster's own boot (bombPusherLive OFF): OFF refuses with the legs' sentence, ON latches t0, breaks, latches t1, collects [33m 49078[2mms[22m[39m
+     [33m[2m✓[22m[39m l40button-l41-part0 (leg 378): the model replays it to the part, through the cluster, with no hit [33m 489[2mms[22m[39m
+     [33m[2m✓[22m[39m l40button-l42-part0 (leg 381): the model replays it to the part, through the cluster, with no hit [33m 448[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 37715[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only [33m 11902[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only [33m 25274[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ planWaypoints: the string-pull plan is byte-identical with a hook installed and without; unhooked, no heartbeat path runs [33m 390[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerRefugeBandText.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 20205[2mms[22m[39m
+     [33m[2m✓[22m[39m 371 at 5266, `PRESS_KILL_BOMBS` OFF: every one of the 12 previewed refuges is banded, and the refusal says so (shakeExactSplit OFF) [33m 6713[2mms[22m[39m
+     [33m[2m✓[22m[39m 371 at 5266, `PRESS_KILL_BOMBS` OFF, shakeExactSplit ON (the default since wave 31): no refuge is banded — the press kill is passed and the dashless pass refuses later, at the paced bomb-pusher hold [33m 7163[2mms[22m[39m
+     [33m[2m✓[22m[39m 371 at 5265, the defaults: no refuge was banded, and the refusal is the words it was (BW's suffix, no other) [33m 6326[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityLapseCost.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 21121[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 403 solves inside the page budget, with OFF's plan key for key (642 t) [33m 17364[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t) [33m 1061[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT (the companion off): ON, the same request is refused at the DETOUR rung's budget [33m 1296[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 773's request (its live digest re-derived ON, as a page with the switch sends it) solves in 426 t with no hit [33m 1007[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostKillRung.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 261841[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE) [33m 835[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death; the strike floor OFF) [33m 177315[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t1216), and the executed prefix is the witness's first 1216 ticks (the strike floor OFF) [33m 83655[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverBot.test.js [2m([22m[2m102 tests[22m[2m)[22m[33m 19175[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ derives a stance for the body that CANNOT reach where the walk stands [33m 696[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why [33m 763[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ takes the BEST stance, not the first viable one — and carries the runners-up [33m 737[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the dwell bound is the forecast's own death tick, not a per-class constant [33m 2961[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned [33m 365[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L18 spends the fade WALKING, and the wait is the subtraction [33m 1429[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin [33m 4926[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room [33m 1230[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell [33m 444[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it [33m 2478[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerFight.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 14996[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states and landings, every body of the order dies, no hit through the tail [33m 2088[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, the fight followed to its end [33m 7657[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, ONE certificate held to its end [33m 5157[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerEscape.test.js [2m([22m[2m20 tests[22m[2m)[22m[33m 12151[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ hammer-a-l18-escape21 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing (the strike floor OFF: the witness's) [33m 4732[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ hammer-a-l18-escape21's staging with the strike floor at its shipped ON (hammer-phase SFF): the escape OFF no longer refuses HAMMER_SAFETY — it solves with no hit [33m 2283[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ hammer-a-l18-escape15 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing (the strike floor OFF: the witness's) [33m 3173[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ hammer-a-l18-escape15's staging with the strike floor at its shipped ON (hammer-phase SFF): the escape OFF no longer refuses HAMMER_SAFETY — it solves with no hit [33m 1397[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerApproach.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 9957[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states with no hit, and the press it aims lands [33m 325[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shorter, with no hit, every press planned in space-time [33m 6467[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, every press planned in space-time [33m 3104[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPreviewDeathSweep.test.js [2m([22m[2m15 tests[22m[2m)[22m[33m 11759[2mms[22m[39m
+     [33m[2m✓[22m[39m G1's witness at t1251: (488,872) at eta 15; a pool there skips it for (488,856) at eta 16 [33m 3233[2mms[22m[39m
+     [33m[2m✓[22m[39m a drown latched before the preview (every walk dies): no refuge, not a throw [33m 908[2mms[22m[39m
+     [33m[2m✓[22m[39m a non-death error still throws [33m 850[2mms[22m[39m
+     [33m[2m✓[22m[39m G1's witness at t1251: the band on (488,872) skips it for (488,856) at eta 16, every banded candidate counted in shakeRefused [33m 1040[2mms[22m[39m
+     [33m[2m✓[22m[39m every preview banded: no refuge (the kill's "nowhere to be"), not a throw [33m 816[2mms[22m[39m
+     [33m[2m✓[22m[39m the shake guard OFF rethrows the band (the pre-PKB behaviour) [33m 729[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, an error that is not the forecast's band still throws (the live run's own band words included) [33m 1449[2mms[22m[39m
+     [33m[2m✓[22m[39m the encounter (L32, r5-bobboss-fire at t20): a plan that dies is touched there; a key set that dies is safe only until then [33m 2419[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostSpinner.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 8563[2mms[22m[39m
+     [33m[2m✓[22m[39m ON leaves a SWORD press's forecast byte-identical (`r9-solve-18`, every press) [33m 431[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF (the BEFORE model): refused at t0, by name — the kill arm derives a SWORD press [33m 320[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: SOLVED with no hit, crossing to L19; every landing a ghost press, two per body (2 damage each), from beyond the sword's reach [33m 2233[2mms[22m[39m
+     [33m[2m✓[22m[39m ON leaves the SWORD's solve byte-identical (the committed staging, 476 ticks; 518 with the strike floor OFF) [33m 5309[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerRefugeCut.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 7144[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF writes nothing to the instrument [33m 2096[2mms[22m[39m
+     [33m[2m✓[22m[39m at the press kill's refuge ticks ON chooses the refuge OFF chooses, and the cut is exercised [33m 3861[2mms[22m[39m
+     [33m[2m✓[22m[39m t1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168) [33m 1180[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressKillDoneOnWalk.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 8305[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: `runDwell` refuses the arm's dwell, already true, at t174 (the BEFORE) [33m 1454[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: past the dwell — the kill is recorded as the walk's, and the solve reaches L32 as the witness tape [33m 1244[2mms[22m[39m
+     [33m[2m✓[22m[39m ON keeps the dwell: the record is the dwell's own, and the solve is OFF's byte for byte [33m 1379[2mms[22m[39m
+     [33m[2m✓[22m[39m (32,112): the lapse-admitting walk solves to L32 in 509 with DD OFF and ON alike [33m 2763[2mms[22m[39m
+     [33m[2m✓[22m[39m (176,48), step 50's own staging: DD OFF refuses the dwell ALREADY TRUE at the body; DD ON solves [33m 1395[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityMovingWait.test.js [2m([22m[2m25 tests[22m[2m)[22m[33m 7900[2mms[22m[39m
+     [33m[2m✓[22m[39m the model reproduces every sampled tick at 0 px — the player, each bomb to the bit, the anim; no hit [33m 980[2mms[22m[39m
+     [33m[2m✓[22m[39m at t1007 the STILL wait is a bomb hit (why it paces), and the group is latched [33m 536[2mms[22m[39m
+     [33m[2m✓[22m[39m the planner's pacing is the one the tape drove, key for key, back on the stance at each cycle end [33m 939[2mms[22m[39m
+     [33m[2m✓[22m[39m runHold with the pace: drives it to the cycle end where the lock is open, unhit, back on the stance [33m 780[2mms[22m[39m
+     [33m[2m✓[22m[39m the model reproduces every sampled tick at 0 px — the player, each bomb to the bit, the anim; no hit [33m 405[2mms[22m[39m
+     [33m[2m✓[22m[39m the planner's pacing is the one the tape drove, key for key, back on the stance at each cycle end [33m 413[2mms[22m[39m
+     [33m[2m✓[22m[39m runHold with the pace: drives it to the cycle end where the lock is open, unhit, back on the stance [33m 546[2mms[22m[39m
+     [33m[2m✓[22m[39m a tick off the previewed path fails "not the previewed" [33m 443[2mms[22m[39m
+     [33m[2m✓[22m[39m a pace with no stopping condition is refused before a tick is spent [33m 373[2mms[22m[39m
+     [33m[2m✓[22m[39m cycles that end before the lock opens fail with the still wait's bound sentence [33m 447[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l42-part0-damage' ON: the model reproduces the whole damage walk at 0 px, through the death and the second life [33m 523[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l41-part0-damage' ON: the model reproduces the whole damage walk at 0 px, through the death and the second life [33m 365[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l42-part0-damage' OFF: the drained settle is exact and wrong — refused at the respawn by name [33m 326[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l41-part0-damage' OFF: the drained settle is exact and wrong — refused at the respawn by name [33m 362[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostSearch.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 6297[2mms[22m[39m
+     [33m[2m✓[22m[39m the SWORD's certificate is the same ON and OFF [33m 4251[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the GHOST OFF is offered only presses from ≤ 16 px; ON it presses from the 16–24 px band and kills sooner [33m 1823[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressBombs.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 5935[2mms[22m[39m
+     [33m[2m✓[22m[39m t1099, the kill's first tick: OFF stands on (248,184) to press at t1153; ON names #7's blast on that stance and strikes from (232,184) (the strike floor OFF: the witness walk's) [33m 1239[2mms[22m[39m
+     [33m[2m✓[22m[39m t1150, #7 in the air: OFF still stands on (248,184); ON has no stance #7 does not reach, and its refuge leaves the blast [33m 1561[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF asks nothing (the instrument stays at zero) [33m 937[2mms[22m[39m
+     [33m[2m✓[22m[39m the model replays the witness tape and meets the game at every sampled tick: the player to the bit, no hit, every Bomb to the bit [33m 514[2mms[22m[39m
+     [33m[2m✓[22m[39m staging A (L40 south door, 380+ px from bombpusher@112,128): the strike and the refuge are OFF's [33m 1677[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashShape.test.js [2m([22m[2m20 tests[22m[2m)[22m[33m 5892[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one refuses by name with nothing scanned [33m 793[2mms[22m[39m
+     [33m[2m✓[22m[39m the D2 counter-example: the axe corridor's 305-tick leg is not a clean run, so ON it SCANS, exactly as OFF [33m 579[2mms[22m[39m
+     [33m[2m✓[22m[39m the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-reach-l49 at 368 ticks (K = 40: 585) [33m 3794[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStrikePreviewDeath.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 3702[2mms[22m[39m
+     [33m[2m✓[22m[39m the control: no pool, staging A's first derivation strikes at (728,680) +510, the strike floor ON and OFF [33m 1511[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the strike floor ON: the bounded pass previews (728,680), the walk drowns, and the candidate is skipped — not thrown [33m 856[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the strike floor OFF: the walk loop's preview drowns at the same cell, and OFF skips it the same way [33m 800[2mms[22m[39m
+     [33m[2m✓[22m[39m an error that is NOT a previewed death still throws (only `PhysicsV2Error` is a step not taken) [33m 532[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/procgenRoam.test.js [2m([22m[2m23 tests[22m[2m)[22m[33m 3938[2mms[22m[39m
+     [33m[2m✓[22m[39m rooms s10 post-sword: COSTS — the route crosses the bodies (101 vs 69 ticks) (dashSpinnerForecast OFF) [33m 2004[2mms[22m[39m
+     [33m[2m✓[22m[39m rooms s10 post-sword: INERT — the struck bodies are priced where the strike left them (69 vs 69 ticks) [33m 797[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Guard.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 3991[2mms[22m[39m
+     [33m[2m✓[22m[39m D2: OFF the arm refuses as before; ON the approach pass is asked and its refusal names REACH / TIMING / LEASH [33m 2190[2mms[22m[39m
+       [33m[2m✓[22m[39m OFF the press at t2166 throws the line-of-sight assertion [33m 536[2mms[22m[39m
+       [33m[2m✓[22m[39m ON the blocked test is a miss row and the spinner equals the game's rows t2160–2200 [33m 428[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Contact.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 3412[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the model walks `bob@736,752` through `spinner@880,848` and parts from the game at t1801 [33m 1564[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: every watched row from t1700 to the prefix's end is the game's, to the bit [33m 848[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the chaser FORECAST meets the spinner where the drive does (t1790 + 40, both bobs, 0 px) [33m 674[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityStrikeLapse.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 3171[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: survey step 50 solves in 413 t with zero hits; the body dies on the walk, gone before the ceremony [33m 2137[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the plan is the pre-lapse witness (the retired 460-t `bobsoldier2-l30-torch`), key for key [33m 994[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/contactFidelity.test.js [2m([22m[2m62 tests[22m[2m)[22m[33m 2636[2mms[22m[39m
+     [33m[2m✓[22m[39m leg 243 — the shipped defaults: fixed rows at 0 px, residue at its tick [33m 532[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/botDriverV2.test.js [2m([22m[2m136 tests[22m[2m)[22m[33m 2180[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityHousekeep.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 369[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityBulbPlacement.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 1477[2mms[22m[39m
+     [33m[2m✓[22m[39m without needs the chaser arm kills the Bulb from the corridor's west end; WITH them every stance is refused by name [33m 1317[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityF1.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 1107[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostWall.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 177[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/placedTalk.test.js [2m([22m[2m19 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m36 passed[39m[22m[90m (36)[39m
+[2m      Tests [22m [1m[32m635 passed[39m[22m[90m (635)[39m
+[2m   Start at [22m 02:37:27
+[2m   Duration [22m 367.05s[2m (transform 6.37s, setup 0ms, import 34.85s, tests 1059.82s, environment 5ms)[22m
+
