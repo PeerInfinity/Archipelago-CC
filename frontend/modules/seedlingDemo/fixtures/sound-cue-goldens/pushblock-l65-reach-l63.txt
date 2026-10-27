@@ -1,0 +1,63 @@
+1 L65 Player.as:797 "Sword" -1 1.000 0.000
+3 L65 Player.as:790 "Sword" -1 1.000 0.000
+9 L65 Player.as:790 "Sword" -1 1.000 0.000
+39 L65 Player.as:821 "Stab" -1 1.000 0.000
+40 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+41 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+42 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+43 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+44 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+45 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+46 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+47 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+48 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+49 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+50 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+51 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+52 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+53 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+54 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+55 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+56 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+57 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+58 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+59 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+60 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+61 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+62 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+63 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+64 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+65 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+66 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+67 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+68 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+69 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+70 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+71 L65 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+82 L65 Player.as:797 "Sword" -1 1.000 0.000
+84 L65 Player.as:790 "Sword" -1 1.000 0.000
+90 L65 Player.as:790 "Sword" -1 1.000 0.000
+96 L65 Player.as:790 "Sword" -1 1.000 0.000
+102 L65 Player.as:797 "Sword" -1 1.000 0.000
+104 L65 Player.as:790 "Sword" -1 1.000 0.000
+122 L65 Player.as:797 "Sword" -1 1.000 0.000
+124 L65 Player.as:790 "Sword" -1 1.000 0.000
+130 L65 Player.as:790 "Sword" -1 1.000 0.000
+136 L65 Player.as:790 "Sword" -1 1.000 0.000
+142 L65 Player.as:797 "Sword" -1 1.000 0.000
+144 L65 Player.as:790 "Sword" -1 1.000 0.000
+150 L65 Player.as:790 "Sword" -1 1.000 0.000
+162 L65 Player.as:797 "Sword" -1 1.000 0.000
+164 L65 Player.as:790 "Sword" -1 1.000 0.000
+170 L65 Player.as:790 "Sword" -1 1.000 0.000
+182 L65 Player.as:797 "Sword" -1 1.000 0.000
+184 L65 Player.as:790 "Sword" -1 1.000 0.000
+190 L65 Player.as:790 "Sword" -1 1.000 0.000
+196 L65 Player.as:790 "Sword" -1 1.000 0.000
+202 L65 Player.as:797 "Sword" -1 1.000 0.000
+204 L65 Player.as:790 "Sword" -1 1.000 0.000
+210 L65 Player.as:790 "Sword" -1 1.000 0.000
+216 L65 Player.as:790 "Sword" -1 1.000 0.000
+222 L65 Player.as:797 "Sword" -1 1.000 0.000
+224 L65 Player.as:790 "Sword" -1 1.000 0.000
+228 L63 Teleporter.as:109 "Room" 0 1.000 0.000

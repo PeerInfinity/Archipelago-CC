@@ -29,8 +29,22 @@
  * (`fetch` in a browser, `fs` in node), so node tests drive it with no server.
  */
 
-/** The layers a pack may provide today. A new consumer adds its name here. */
-export const KNOWN_LAYERS = Object.freeze(['art']);
+/**
+ * The layers a pack may provide today. A new consumer adds its name here.
+ * `art` — the art library (`artLibrary/`); `sfx` — the sound-effect library
+ * (`sfxLibrary/`, ⛓ SOUND EFFECTS, ⚖ the user 2026-10-26).
+ */
+export const KNOWN_LAYERS = Object.freeze(['art', 'sfx']);
+
+/**
+ * Layer names RESERVED for a consumer that is planned but not built: a pack
+ * that declares one is refused with that said, rather than as an unknown
+ * name. `music` — the music library (the slice after the sound effects).
+ */
+export const RESERVED_LAYERS = Object.freeze(['music']);
+
+/** The registry's stack tables, one per consumer kind: `graphics` (the art) and `sfx`. */
+export const STACK_KINDS = Object.freeze(['graphics', 'sfx']);
 
 /** A key is `<namespace>:<path>`: lower-camel namespace, a non-empty path. */
 export const KEY_PATTERN = /^[a-z][a-zA-Z0-9-]*:[A-Za-z0-9_./-]+$/;
@@ -62,6 +76,7 @@ export function parsePack(json, expectedId = null) {
     }
     if (!json.layers || typeof json.layers !== 'object' || Array.isArray(json.layers)) fail(where, 'layers is missing');
     for (const [name, path] of Object.entries(json.layers)) {
+        if (RESERVED_LAYERS.includes(name)) fail(where, `layer "${name}" is reserved for a library that is not built yet (known: ${KNOWN_LAYERS.join(', ')})`);
         if (!KNOWN_LAYERS.includes(name)) fail(where, `layer "${name}" is not one this loader knows (${KNOWN_LAYERS.join(', ')})`);
         if (typeof path !== 'string' || !path || path.startsWith('/') || path.includes('..')) {
             fail(where, `layer "${name}" path ${JSON.stringify(path)} must be a relative path inside the pack`);
@@ -70,7 +85,10 @@ export function parsePack(json, expectedId = null) {
     return Object.freeze({ ...json, layers: Object.freeze({ ...json.layers }) });
 }
 
-/** Validate the registry `packs.json`; returns `{ packs: [ids], stacks: {name: [ids]} }`. */
+/**
+ * Validate the registry `packs.json`; returns `{ packs: [ids], stacks: {name: [ids]}, sfxStacks: {name: [ids]} }`.
+ * `stacks` is the `graphics` table (its name predates the second kind); `sfxStacks` is `sfx`'s.
+ */
 export function parseRegistry(json) {
     if (!json || json.schema_version !== 1 || !Array.isArray(json.packs)) {
         fail('registry', 'packs.json must be { schema_version: 1, packs: [...] }');
@@ -78,13 +96,18 @@ export function parseRegistry(json) {
     const ids = json.packs.map((p) => p?.id);
     for (const id of ids) if (typeof id !== 'string' || !ID_PATTERN.test(id)) fail('registry', `pack id ${JSON.stringify(id)} is not a pack id`);
     if (new Set(ids).size !== ids.length) fail('registry', 'a pack id is listed twice');
-    const stacks = {};
-    for (const [name, stack] of Object.entries(json.graphics ?? {})) {
-        if (!Array.isArray(stack) || !stack.length) fail('registry', `stack "${name}" is not a non-empty list`);
-        for (const id of stack) if (!ids.includes(id)) fail('registry', `stack "${name}" names "${id}", which packs.json does not list`);
-        stacks[name] = Object.freeze([...stack]);
+    const tables = {};
+    for (const kind of STACK_KINDS) {
+        const stacks = {};
+        for (const [name, stack] of Object.entries(json[kind] ?? {})) {
+            const where = kind === 'graphics' ? `stack "${name}"` : `${kind} stack "${name}"`;
+            if (!Array.isArray(stack) || !stack.length) fail('registry', `${where} is not a non-empty list`);
+            for (const id of stack) if (!ids.includes(id)) fail('registry', `${where} names "${id}", which packs.json does not list`);
+            stacks[name] = Object.freeze([...stack]);
+        }
+        tables[kind] = Object.freeze(stacks);
     }
-    return Object.freeze({ packs: Object.freeze(ids), stacks: Object.freeze(stacks) });
+    return Object.freeze({ packs: Object.freeze(ids), stacks: tables.graphics, sfxStacks: tables.sfx });
 }
 
 /**
@@ -102,11 +125,14 @@ export function packsBaseUrl(moduleUrl = import.meta.url, pageHref = globalThis.
  * Load a STACK of packs, in order. `ids` is the override order (later wins).
  * Each pack's layers are read too, so a stack either loads whole or refuses.
  *
+ * `only` (optional) names the layers to read: a graphics stack need not fetch
+ * the sound manifest. A pack is still validated whole.
+ *
  * @param {string[]} ids
- * @param {{ base: string, readJson: (url: string) => Promise<any> }} io
+ * @param {{ base: string, readJson: (url: string) => Promise<any>, only?: string[] }} io
  * @returns {Promise<Array<{ id, pack, base, layers: { [name]: any } }>>}
  */
-export async function loadPackStack(ids, { base, readJson }) {
+export async function loadPackStack(ids, { base, readJson, only = null }) {
     if (!Array.isArray(ids) || !ids.length) fail('stack', 'no packs named');
     if (new Set(ids).size !== ids.length) fail('stack', `a pack is named twice (${ids.join(', ')})`);
     const out = [];
@@ -121,6 +147,7 @@ export async function loadPackStack(ids, { base, readJson }) {
         const pack = parsePack(json, id);
         const layers = {};
         for (const [name, path] of Object.entries(pack.layers)) {
+            if (only && !only.includes(name)) continue;
             try {
                 layers[name] = await readJson(new URL(path, packBase).href);
             } catch (err) {

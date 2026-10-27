@@ -20,7 +20,9 @@
 // ARE, so a reskin pack can replace the pictures without touching code.
 //
 // ⛔ LEFT OUT by ruling (the same ruling): the 04B_03 font, the promotional,
-// Newgrounds and tank images, and all music and sound. They are not in the
+// Newgrounds and tank images, and all music and sound. (⛓ SOUND EFFECTS,
+// ⚖ the user 2026-10-26, brought the sound effects in as the seedling pack's
+// `sfx` LAYER — built by `seedlingSfxLayer.js`, never an art row.) They are not in the
 // table, so they cannot reach a pack. The font seam (`seedling:font/default`)
 // is filled instead by an ORIGINAL glyph sheet (G4b, ⚖ the user 2026-10-21):
 // its row carries `authored`, and its bytes come from `make-seedling-font.mjs`
@@ -54,6 +56,7 @@ import { argvHelp } from './argvHelp.js';
 import { seedlingSourceOrExit } from './seedlingSource.js';
 import { ENEMY_ART } from '../../frontend/modules/seedlingDemo/seedlingEnemyArt.js';
 import { FONT_ART_ROW, fontSheetBytes } from './make-seedling-font.mjs';
+import { SFX_MANIFEST, buildSfxLayer } from './seedlingSfxLayer.js';
 
 argvHelp(import.meta.url);
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
@@ -66,9 +69,13 @@ const WORLD_TICKS_PER_FRAME = 45;
 /** The pack-level facts that are not art rows. */
 export const PACKS = Object.freeze({
     seedling: Object.freeze({
-        title: 'Seedling — the original graphics',
+        title: 'Seedling — the original graphics and sound effects',
         licence: 'Unlicense',
-        credit: 'Seedling art by Connor Ullmann; vendor/seedling/LICENSE (the Unlicense) covers the whole repository.',
+        credit: 'Seedling art by Connor Ullmann; music and sound effects by Rekcahdam (vendor/seedling/README); '
+            + 'vendor/seedling/LICENSE (the Unlicense) covers the whole repository.',
+        // ⛓ SOUND EFFECTS — the `sfx` layer is built by `seedlingSfxLayer.js` (its own CLI and --check:
+        // `extract-seedling-sfx-pack.mjs`); this script owns pack.json, so it carries the layer too.
+        sfx: true,
     }),
     archipelago: Object.freeze({
         title: 'Archipelago — the fork\'s AP item pickup',
@@ -299,6 +306,11 @@ export function buildPacks(source) {
             source: `vendor/seedling/${GRAPHICS} (PeerInfinity/Seedling), copied byte for byte`,
             layers: { art: 'art/manifest.json' },
         };
+        if (meta.sfx) {
+            pack.source += `; vendor/seedling/assets/sound, as src/Music.as names it`;
+            pack.layers.sfx = SFX_MANIFEST;
+            for (const [rel, data] of buildSfxLayer(source).files) files.set(rel, data);
+        }
         files.set('pack.json', `${JSON.stringify(pack, null, 2)}\n`);
         files.set('art/manifest.json', `${JSON.stringify(manifest, null, 2)}\n`);
         out[id] = files;
@@ -365,6 +377,7 @@ function main() {
     for (const [id, files] of Object.entries(built)) {
         const root = join(PACKS_DIR, id);
         rmSync(join(root, 'art'), { recursive: true, force: true });
+        rmSync(join(root, 'sfx'), { recursive: true, force: true });
         for (const [rel, data] of files) {
             const path = join(root, rel);
             mkdirSync(join(path, '..'), { recursive: true });
