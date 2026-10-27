@@ -2111,6 +2111,12 @@
             "_comment": "TUTORIAL IN JS MODE (2026-10-26, user: 'Work in both'). The seedling-bot tutorial's walk with flashPanel.runtime = js for the row's session (put back after): the Start step completes with no Start to press, the bot takes its first checks on the JS page. Manual batch tutorials-seedling. The js walk waits for the delivered rooms (SeedlingPlaybackController._deliveredSetGate): before it, the bot's first walk could reach the page before the level-set mount, which cleared it (red on CI in 40387718888 / 40391923232)."
         },
         {
+            "id": "seedling-js-runtime-music",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "MUSIC (2026-10-27). Standalone jsRuntime.html?start=click + a fake AudioContext: Start unlocks the one output; L46 plays Cold Blooded (target, background, a started source); a change to L38 switches to Mysterious Magic; Music off silences it live (mixer keeps its place), on again it sounds. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-fights-bob-encounter",
             "enabled": true,
             "category": "Seedling JS runtime",

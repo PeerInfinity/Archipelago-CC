@@ -1,0 +1,5 @@
+0 L0 Game.as:1228 target song seedling:music/my-lifes-purpose
+352 L10 Game.as:1233 target song seedling:music/the-watcher
+359 L11 Game.as:1221 target stop
+585 L0 Game.as:1233 target song seedling:music/theme
+764 L13 Game.as:1233 target song seedling:music/my-first-dungeon

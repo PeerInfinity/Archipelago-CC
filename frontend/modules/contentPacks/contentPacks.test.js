@@ -113,19 +113,36 @@ describe('packsBaseUrl', () => {
     });
 });
 
-// ⛓ SOUND EFFECTS (⚖ the user 2026-10-26): the `sfx` layer, the reserved `music` one, the `sfx` stacks.
-describe('the sfx layer and the reserved music layer', () => {
+// ⛓ SOUND EFFECTS (⚖ the user 2026-10-26): the `sfx` layer, the `sfx` stacks. ⛓ MUSIC (⚖ 2026-10-27): `music`
+// was RESERVED (refused by name) until the music library landed; it is now known, and the reserved-name refusal
+// is still pinned, on an injected name.
+describe('the sfx and music layers', () => {
     const minimal = (layers) => ({ schema_version: 1, id: 'p', title: 't', licence: 'CC0', layers });
 
-    it('KNOWN_LAYERS carries sfx; music is RESERVED, not unknown', () => {
-        expect(KNOWN_LAYERS).toEqual(['art', 'sfx']);
-        expect(RESERVED_LAYERS).toEqual(['music']);
+    it('KNOWN_LAYERS carries sfx and music; nothing is reserved today', () => {
+        expect(KNOWN_LAYERS).toEqual(['art', 'sfx', 'music']);
+        expect(RESERVED_LAYERS).toEqual([]);
         expect(parsePack(minimal({ sfx: 'sfx/manifest.json' }), 'p').layers.sfx).toBe('sfx/manifest.json');
     });
 
-    it('⛔ a pack declaring `music` is refused by name, saying it is reserved (not half-loaded)', () => {
-        expect(() => parsePack(minimal({ art: 'a.json', music: 'm.json' }), 'p'))
+    it('⛓ MUSIC: a pack declaring `music` is ACCEPTED now (it was refused as reserved before the music library)', () => {
+        expect(parsePack(minimal({ art: 'a.json', music: 'music/manifest.json' }), 'p').layers.music).toBe('music/manifest.json');
+    });
+
+    it('⛔ a RESERVED layer is still refused by name, saying it is reserved (not half-loaded)', () => {
+        const opts = { known: ['art'], reserved: ['music'] };
+        expect(() => parsePack(minimal({ art: 'a.json', music: 'm.json' }), 'p', opts))
             .toThrow(/content pack "p": layer "music" is reserved for a library that is not built yet/);
+        expect(() => parsePack(minimal({ video: 'v.json' }), 'p'))
+            .toThrow(/content pack "p": layer "video" is not one this loader knows/);
+    });
+
+    it('⛓ MUSIC: the registry\'s `music` stacks parse like `sfx`, and refuse an unlisted pack by name', async () => {
+        const reg = parseRegistry(await fsJson(new URL('packs.json', BASE).href));
+        expect(reg.musicStacks.seedling).toEqual(['seedling']);
+        expect(() => parseRegistry({ schema_version: 1, packs: [{ id: 'seedling' }], music: { x: ['ghost'] } }))
+            .toThrow(/music stack "x" names "ghost"/);
+        expect(parseRegistry({ schema_version: 1, packs: [{ id: 'a' }] }).musicStacks).toEqual({});
     });
 
     it('the registry\'s `sfx` stacks parse like `graphics`, and refuse an unlisted pack by name', async () => {
@@ -142,6 +159,6 @@ describe('the sfx layer and the reserved music layer', () => {
         expect(Object.keys(stack[0].layers)).toEqual(['art']);
         expect(read.some((u) => u.includes('/sfx/'))).toBe(false);
         const all = await loadPackStack(['seedling'], { base: BASE, readJson: fsJson });
-        expect(Object.keys(all[0].layers)).toEqual(['art', 'sfx']);
+        expect(Object.keys(all[0].layers)).toEqual(['art', 'sfx', 'music']);
     });
 });

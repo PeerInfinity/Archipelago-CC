@@ -3839,7 +3839,9 @@ export async function seedlingJsRuntimeSoundStart(tc) {
         tc.log(`sound: ${JSON.stringify({ ...r, recent: r.recent.slice(-8) })}; starts ${starts.length}`);
         const gaps = (pulses ?? []).slice(1).map((c, i) => c.tick - pulses[i].tick);
         tc.assertEqual('the pulses are its period apart (51 ticks, as in the node golden prox-l38-chest)', '51,51', gaps.slice(0, 2).join(','));
-        tc.assertEqual('every cue the page played reached the context (a start per play)', r.player.played, starts.length);
+        // ⛓ MUSIC: the room's song plays through the same context, so the music player's starts are counted too
+        tc.assertEqual('every cue the page played reached the context (a start per play, + the music\'s)',
+            r.player.played + (r.music?.player?.starts ?? 0), starts.length);
         tc.assertEqual('the pulse played the energyPulse clip (5463 bytes)', true, starts.some((s) => s.bytes === 5463));
         // `at` is the context clock when `start()` ran, a moment AFTER the tick read it (a `when` in the past means now)
         tc.assertEqual('no start was scheduled more than 20 ms in the past or more than MAX_LEAD (0.1 s) ahead', true,
@@ -4308,6 +4310,94 @@ registerTest({
         + 'sitting and then stabbing, its build-time rectangle is gone, every sheet decodes, and no console error. Touches no '
         + 'panel, preset or AP state; the iframe is removed however it ends.',
     testFunction: seedlingJsRuntimeGraphicsBosses,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ MUSIC (slice `seedling-js-music`, ⚖ the user 2026-10-26 / GO 2026-10-27) — the JS page's music, standalone.
+ * `jsRuntime.html?start=click` with a fake AudioContext (the sound rows' `installFakeAudio`): ▶ Start boots it and
+ * unlocks the music too. Put into level 46 (the vanilla twin's song 9, Cold Blooded), the music's target is that song
+ * and the mixer fades it in as the background; the track is decoded and STARTED (its bytes reach the context). A
+ * room change to level 38 (song 8, Mysterious Magic) switches the target and the mixer (old out, new in). Music off
+ * (`__seedlingJsSound.set({ music: false })`, what the panel's row calls) silences it LIVE: nothing sounds, the
+ * mixer keeps its place; on again, the same song sounds again. The iframe is removed however the row ends.
+ */
+export async function seedlingJsRuntimeMusic(tc) {
+    const frame = document.createElement('iframe');
+    const errors = [];
+    try {
+        Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '480px', height: '480px',
+            opacity: '0.01', pointerEvents: 'none', border: '0' });
+        frame.src = './modules/seedlingDemo/jsRuntime.html?start=click';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime && w.__seedlingJsSound ? w : null;
+        }, 'the standalone JS page is up (?start=click)', 20000, 200);
+        tc.reportCondition('the standalone page is up', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        const sound = win.__seedlingJsSound;
+        const music = () => sound.readout.music;
+        const ready = await tc.pollForValue(() => (music().loaded === 'ready' && music().rooms > 0 ? music() : null),
+            'the music manifest and the vanilla room table loaded (no audio needed)', 15000, 100);
+        tc.assertEqual('before ▶ Start: the music manifest and the 116 vanilla rooms are read; the audio is locked', '116/locked',
+            `${ready?.rooms}/${sound.readout.state}`);
+        const starts = installFakeAudio(win);
+        win.document.getElementById('btn-start').click();
+        tc.assertEqual('▶ Start unlocks the one output (the music shares it)', 'running', sound.readout.state);
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        const goTo = (level, x, y) => win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [level, x, y] }]);
+        const COLD = 'seedling:music/cold-blooded';
+        const MAGIC = 'seedling:music/mysterious-magic';
+        goTo(46, 240, 448);
+        const playing = await tc.pollForValue(() => {
+            const m = music();
+            return win.__seedlingJsRuntime.run?.level === 46 && m.mixer?.bkgd === COLD && m.player?.sounding.includes(COLD) ? m : null;
+        }, 'level 46 plays Cold Blooded: the target, the background, a sounding source', 20000, 100);
+        tc.log(`music @L46: ${JSON.stringify({ target: playing?.target, mixer: playing?.mixer, player: playing?.player })}`);
+        tc.assertEqual('level 46: the target is its song (Game.as:1233) and it is the background', `song ${COLD}/${COLD}`,
+            `${playing?.target?.op} ${playing?.target?.key}/${playing?.mixer?.bkgd}`);
+        tc.assertEqual('the track reached the context (Cold Blooded.mp3, 419796 bytes)', true, starts.some((s) => s.bytes === 419796));
+        goTo(38, 208, 224);
+        const switched = await tc.pollForValue(() => {
+            const m = music();
+            return win.__seedlingJsRuntime.run?.level === 38 && m.mixer?.bkgd === MAGIC && m.player?.sounding.includes(MAGIC)
+                && !m.player.sounding.includes(COLD) ? m : null;
+        }, 'the room change to level 38 switches to Mysterious Magic (Cold Blooded faded out)', 20000, 100);
+        tc.assertEqual('level 38: the target, the background and the one sounding source are Mysterious Magic', `${MAGIC}/${MAGIC}/${MAGIC}`,
+            `${switched?.target?.key}/${switched?.mixer?.bkgd}/${switched?.player?.sounding.join(',')}`);
+        tc.assertEqual('the new track reached the context (Mysterious Magic.mp3, 574808 bytes)', true, starts.some((s) => s.bytes === 574808));
+        sound.set({ music: false });
+        const silent = music();
+        tc.assertEqual('Music off, LIVE: nothing sounds; the mixer keeps its song (the logic runs on)', `false/0/${MAGIC}`,
+            `${silent.on}/${silent.player.sounding.length}/${silent.mixer.bkgd}`);
+        // (the sound effects play on — the L38 pulser — so count the MUSIC player's starts, not the context's)
+        const n = music().player.starts;
+        await new Promise((r) => setTimeout(r, 500));
+        tc.assertEqual('while off, no track is started', n, music().player.starts);
+        sound.set({ music: true });
+        const back = await tc.pollForValue(() => (music().player.sounding.includes(MAGIC) ? music() : null), 'Music on again: the song sounds again', 5000, 50);
+        tc.assertEqual('Music on again: the same song sounds again, from the mixer\'s place', true, !!back && back.player.starts > n);
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-music',
+    name: 'Seedling JS runtime: the music — the room\'s song plays, a room change switches it, Music off silences it live (fake AudioContext)',
+    description: 'Mounts jsRuntime.html?start=click standalone with a fake AudioContext. ▶ Start unlocks the output; in level 46 '
+        + 'the target and the background are Cold Blooded and its track is started; a change to level 38 switches to Mysterious '
+        + 'Magic; Music off silences it live with the mixer keeping its place; on again it sounds again. Touches no panel, '
+        + 'preset or AP state.',
+    testFunction: seedlingJsRuntimeMusic,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
