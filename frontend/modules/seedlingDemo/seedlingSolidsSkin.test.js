@@ -101,7 +101,9 @@ function drive(tape, each = () => {}) {
     if (tape.fixture) {
         let last = null;
         const stream = [];
-        const out = runFixtureTape(fixture(tape.fixture), {
+        // ⛓ G11 — `extend`: the committed tape played on with no input (in memory; the fixture is untouched)
+        const base = fixture(tape.fixture);
+        const out = runFixtureTape(tape.extend ? { ...base, tick_count: base.tick_count + tape.extend } : base, {
             levelSource: atlasLevelSource(),
             onTick: (t, now, held, run) => { last = run; stream.push(JSON.stringify([t, run.level, now])); each(t, run); },
         });
@@ -363,7 +365,7 @@ describe('5. the adapter reads the run and writes nothing', () => {
         expect(v.magicalLocks).toEqual([{ id: 'magicallock@96,0', x: 96, y: 0, fire: false, k: 15 - (54 + 1 - 50), gone: false }]);
         expect(v.responders).toEqual([{ id: 'lock@112,0', tag: 'lock', x: 112, y: 0, keyType: null, open: true },
             { id: 'bosslock@128,0', tag: 'bosslock', x: 128, y: 0, keyType: 2, open: false }]);
-        expect(v.rockLocks).toEqual([{ id: 'rocklock@32,0', x: 32, y: 0, held: 0 }]);
+        expect(v.rockLocks).toEqual([{ id: 'rocklock@32,0', x: 32, y: 0, held: 0, group: null }]);
         expect(v.buttons).toEqual([{ id: 'buttonroom@144,0', tag: 'buttonroom', x: 144, y: 0, boot: false, down: true, wire: true }]);
         expect(solidsSkinView(null)).toBe(null);
     });
@@ -481,5 +483,61 @@ describe('8. ⛓ G10 — the kill locks\' and the RockLock\'s fade (tset −1), 
         const want = readFileSync(join(GOLDENS, `solids-${KILL.name}.txt`), 'utf8').trimEnd().split('\n');
         const got = goldenLines(runTape(KILL, { rules: { stepResponder: (prev, a) => ({ state: { alpha: a.open ? 0 : 1, solid: !a.open, active: false }, drift: false }) } }));
         expect(got.filter((l, i) => l !== want[i]).length + Math.abs(got.length - want.length)).toBeGreaterThan(0);
+    }, 240_000);
+});
+
+describe('9. ⛓ G11 — L112\'s GROUP RockLock (tset 0), from the Owl\'s `tagsWritten` row (`Button.activateAll(null, 0, true)`)', () => {
+    // r6-owl-kill writes the tags on its last ticks; played on 130 idle ticks so the 100-step fade completes
+    const OWL = { name: 'L112-rocklock-opens', fixture: 'r6-owl-kill', extend: 130 };
+    const lockOp = (r) => r.ops.find((op) => op.key === 'seedling:puzzlement/rocklock') ?? null;
+
+    it('the golden — shut, then active (INVERT) at alpha 1 on the tag tick, fading 0.01 a tick from the next, gone on step 100', () => {
+        const rows = runTape(OWL);
+        const lines = goldenLines(rows);
+        expect(lines).toEqual(golden(`solids-${OWL.name}.txt`, lines));
+    }, 240_000);
+
+    it('THE ANCHOR: the row\'s `t` + 1 is the first tick that sees it — alpha 1 there, 1 − 0.01k k ticks on, nothing from k = 100', () => {
+        let last = null;
+        const rows = runTape(OWL);
+        drive(OWL, (t, run) => { last = run; });
+        const row = last.finalBossKills.find((r) => r.what === 'tagsWritten');
+        const T = row.t + 1;
+        const at = (now) => rows.find((r) => r.view.now === now);
+        for (const now of [T - 3, T - 1]) {
+            const op = lockOp(at(now));
+            expect([op.alpha ?? 1, op.blend ?? null], `t${now}`).toEqual([1, null]);
+        }
+        expect([lockOp(at(T)).alpha ?? 1, lockOp(at(T)).blend]).toEqual([1, 'difference']);
+        for (const k of [1, 2, 50, 99]) expect(lockOp(at(T + k)).alpha, `k${k}`).toBeCloseTo(1 - 0.01 * k, 9);
+        for (const k of [100, 101, 120]) expect(lockOp(at(T + k)), `k${k}`).toBe(null);
+    }, 240_000);
+
+    it('no record, or a tset −1 lock, reads no group (drawn as before)', () => {
+        let run = null;
+        drive(OWL, (t, r) => { run = r; });
+        expect(solidsSkinView(run, { record: null }).rockLocks[0].group).toBe(null);
+        const minus = { entities: [{ type: 'rocklock', x: 112, y: 16, attrs: { tset: '-1', tag: '1' } }] };
+        expect(solidsSkinView(run, { record: minus }).rockLocks[0].group).toBe(null);
+        expect(solidsSkinView(run, { record: recordOf(112) }).rockLocks[0].group).toBeGreaterThan(100);
+    }, 240_000);
+
+    it('a mutant (the fade never steps) turns the golden red', () => {
+        const want = readFileSync(join(GOLDENS, `solids-${OWL.name}.txt`), 'utf8').trimEnd().split('\n');
+        const got = goldenLines(runTape(OWL, { rules: { stepRockLock: (st) => st } }));
+        expect(got.filter((l, i) => l !== want[i]).length + Math.abs(got.length - want.length)).toBeGreaterThan(0);
+    }, 240_000);
+
+    it('⛔ STATE IDENTITY: the stream, the end and stateDigest identical with the renderer on and off', () => {
+        const off = drive(OWL);
+        let skin = null;
+        const on = drive(OWL, (tick, run) => {
+            const v = solidsSkinView(run, { record: recordOf(run.level) });
+            skin = stepSolidsSkin(skin, v, tick);
+            solidsOps(v, art, { skin });
+        });
+        expect(on.stream).toEqual(off.stream);
+        expect(on.end).toBe(off.end);
+        expect(on.digest).toBe(off.digest);
     }, 240_000);
 });

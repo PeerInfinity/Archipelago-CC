@@ -1013,6 +1013,11 @@
       "w": 144,
       "h": 32
     },
+    "RockFall": {
+      "file": "sheets/RockFall.png",
+      "w": 512,
+      "h": 32
+    },
     "TentacleBeast": {
       "file": "sheets/TentacleBeast.png",
       "w": 920,
@@ -4451,6 +4456,33 @@
         }
       },
       "as3": "Projectiles/LavaBall.as:15-16 Spritemap(48, 32); :24-30 scale 0.5, originX 32 (x = -32), originY 16 (y = -16); fly [0,1,2] fps 10"
+    },
+    "seedling:boss/rockfall": {
+      "sheet": "RockFall",
+      "fw": 64,
+      "fh": 32,
+      "frames": 8,
+      "origin": [
+        32,
+        16
+      ],
+      "anims": {
+        "break": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Scenery/RockFall.as:13-14 Spritemap(64, 32, endAnim); :30-34 centerOO, scale random/2 + 0.25, scaleX FP.choose(1, -1); break [0..7] fps 15"
     },
     "seedling:boss/tentaclebeast": {
       "sheet": "TentacleBeast",

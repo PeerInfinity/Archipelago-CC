@@ -35,7 +35,8 @@ import { LAMP_COVERAGE } from './seedlingLampSkin.js';
 import { PICKUP_COVERAGE } from './seedlingPickupSkin.js';
 import { MACHINE_COVERAGE } from './seedlingMachineSkin.js';
 import { nightOps, nightSkinView } from './seedlingNightSkin.js';
-import { BOSS_COVERAGE, BOSS_RULES, KEYS, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
+import { formatNightOp } from './seedlingNightSkin.js';
+import { BOSS_COVERAGE, BOSS_RULES, KEYS, bossNightOps, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -57,8 +58,10 @@ beforeAll(async () => {
 export const TAPES = Object.freeze([
     { name: 'L19-shield-kill', fixture: 'r6-shield-kill', want: ['shield:sit', 'shield:moveShield', 'shield:movedShield', 'shield:die', 'shield:hit', 'shield:gone'] },
     { name: 'L19-shield-stab', fixture: 'r6-shield-control', want: ['shield:sit', 'shield:moveShield', 'shield:stab'] },
-    { name: 'L112-owl-kill', fixture: 'r6-owl-kill', want: ['owl:intro', 'owl:walk', 'owl:sit', 'owl:hit', 'owl:die', 'owl:dead', 'owl:deadframe'] },
-    { name: 'L112-owl-control', fixture: 'r6-owl-control', want: ['owl:intro', 'owl:walk', 'owl:sit'] },
+    { name: 'L112-owl-kill', fixture: 'r6-owl-kill', want: ['owl:intro', 'owl:walk', 'owl:sit', 'owl:hit', 'owl:die', 'owl:dead', 'owl:deadframe',
+        'rock:fall', 'rock:break'] },
+    { name: 'L112-owl-control', fixture: 'r6-owl-control', want: ['owl:intro', 'owl:walk', 'owl:sit', 'rock:fall', 'rock:break', 'grenade:sit',
+        'grenade:explode', 'grenade:hit'] },
     { name: 'L82-kof-kill', witness: 'lavaboss-witness/kof-policy-kill',
         want: ['lava:sit', 'lava:smash', 'lava:smashback', 'lava:armsup', 'lava:sweep', 'lava:sweepback', 'lava:hit', 'lava:hitplayer', 'lava:tint',
             'lava:die', 'lava:dead', 'lava:ball'] },
@@ -164,6 +167,8 @@ function tagsOf(r) {
         }
         if (f.shots.length) out.push('shot');
     }
+    for (const x of r.view.owlRocks ?? []) out.push(x.anim === 'break' ? 'rock:break' : 'rock:fall');
+    for (const g of r.view.owlGrenades ?? []) out.push(`grenade:${g.anim}`);
     if (r.view.frozenBosses.length) out.push('frozen');
     return out;
 }
@@ -237,7 +242,8 @@ describe('1. golden boss ops (frame CHOICE, not pixels)', () => {
 });
 
 describe('2. by hand from the AS3', () => {
-    const V = (over = {}) => ({ epoch: { run: 1, key: 'k' }, level: 19, gameTime: 900, shieldBosses: [], finalBosses: [], lavaBosses: [], tentacleBeasts: [], lights: [], frozenBosses: [], ...over });
+    const V = (over = {}) => ({ epoch: { run: 1, key: 'k' }, level: 19, gameTime: 900, shieldBosses: [], finalBosses: [], lavaBosses: [], tentacleBeasts: [], lights: [], frozenBosses: [],
+        owlRocks: [], owlGrenades: [], ...over });
     const kof = (over) => ({ id: 'kof', x: 160, y: 88, anim: 'sit', index: 0, hitsTimer: 0, startAttacking: true, destroy: false, alpha: 1,
         removed: false, balls: [], ...over });
     const owl = (over) => ({ id: 'owl', x: 72, y: 104, vx: 0, vy: 0, started: true, rockfallTime: -1, hits: 0, hitsTimer: 0, destroy: false,
@@ -408,6 +414,77 @@ describe('2. by hand from the AS3', () => {
         expect(totem(1).tint).toBe('#ff7272'); // 255 − 255·0.55 = 114.75 → 114 (`uint +=` truncates)
     });
 
+    // ── G11 ──
+    const rock = (over) => ({ id: 'rock1@10', x: 40, y: 20, goto: 116, scale: 0.5, width: 16, height: 8, originX: 8, originY: 0, landed: false,
+        anim: null, animAge: null, ...over });
+    it('RockFall.render: two int shadows at goto under the sprite (layer −goto), alpha min(1, 1 − (goto − y)/96), angle ±5 a falling render', () => {
+        const at = (y) => V({ level: 112, owlRocks: [rock({ y })] });
+        let s = null;
+        const looks = [];
+        for (const y of [26.05, 32.15, 32.15, 38.3]) { // the third tick did not move: a frozen frame does not turn it
+            s = stepBossSkin(s, at(y), looks.length);
+            const ops = bossOps(at(y), art, { skin: s });
+            const sp = ops.find((o) => o.key === KEYS.rockFall);
+            looks.push([Math.abs(sp.rot), +sp.alpha.toFixed(4)]);
+            if (looks.length === 1) {
+                const shadows = ops.filter((o) => o.rect && !o.key);
+                // 32 + 4 = 36, 116 − 1 − 2 + 16/3 = 118.33 → 118, 16 − 8 = 8, 4 + 4 = 8; then 32, 120.33 → 120, 16, 4
+                expect(shadows.map((o) => [o.rect.x, o.rect.y, o.rect.w, o.rect.h, o.colour, o.alpha, o.layer]))
+                    .toEqual([[36, 118, 8, 8, '#000000', 0.5, -116], [32, 120, 16, 4, '#000000', 0.5, -116]]);
+                expect(ops.indexOf(shadows[1])).toBeLessThan(ops.indexOf(sp));
+                expect([sp.scaleX, sp.scaleY, sp.layer, sp.dx, sp.dy]).toEqual([0.5, 0.5, -116, 40 - 32, 26.05 - 16]);
+            }
+        }
+        expect(looks).toEqual([[5, +(1 - (116 - 26.05) / 96).toFixed(4)], [10, +(1 - (116 - 32.15) / 96).toFixed(4)],
+            [10, +(1 - (116 - 32.15) / 96).toFixed(4)], [15, +(1 - (116 - 38.3) / 96).toFixed(4)]]);
+        // "break": alpha 1, angle 0, the frames at 15 fps from the run's age (play inside update, then the graphic: age 1 = index 0)
+        const brk = (age) => { const v = V({ level: 112, owlRocks: [rock({ y: 116, landed: true, anim: 'break', animAge: age })] });
+            return bossOps(v, art, { skin: stepBossSkin(null, v, 0) }).find((o) => o.key === KEYS.rockFall); };
+        expect([brk(1).frame, brk(1).rot, brk(1).alpha]).toEqual([0, -0, undefined]);
+        // 15 fps on the sim's 1/30 s tick: half a frame an update (`ROCKFALL_BREAK_UPDATES` 17 for 8 frames)
+        expect([brk(3).frame, brk(5).frame, brk(16).frame]).toEqual([1, 2, 7]);
+    });
+
+    it('the Owl\'s Grenade: "sit"/"explode"/"hit" from the run\'s anim and age, layer −(y + 3), copied onto nightBmp at half; its Light while "hit"', () => {
+        const at = (anim, age) => V({ level: 112, owlGrenades: [{ id: 'g', x: 70, y: 90, anim, animAge: age }] });
+        const op = (anim, age) => { const v = at(anim, age); const sk = stepBossSkin(null, v, 0);
+            return { op: bossOps(v, art, { skin: sk }).find((o) => o.key === KEYS.owlGrenade), night: bossNightOps(v, { skin: sk }) }; };
+        // sit [0,4] at 5 fps (1/6 a tick), explode [0,1,0,2,…] at 12 (0.4 a tick), hit [5,6,7] from age 0 (played in the callback)
+        expect([op('sit', 1).op.frame, op('sit', 7).op.frame, op('explode', 1).op.frame, op('explode', 3).op.frame, op('hit', 0).op.frame])
+            .toEqual([0, 4, 0, 1, 5]);
+        expect([op('sit', 1).op.layer, op('sit', 1).op.dx, op('sit', 1).op.dy]).toEqual([-93, 62, 82]);
+        expect(op('sit', 1).night).toEqual([]);
+        expect(op('hit', 0).night.map((c) => [c.circle.x, c.circle.y, c.circle.r, c.colour, c.alpha])).toEqual([[70, 90, 20, '#ffff00', 1], [70, 90, 10, '#ffff00', 1]]);
+        const nv = { ...nightSkinView({ level: 112, state: { x: 0, y: 0 }, world: null }, {}), gameTime: 900 };
+        const n = nightOps(nv, art, { ops: [op('sit', 1).op], cam: { x: 0, y: 0, w: 160, h: 160 } });
+        if (n) expect(n.ops.filter((o) => o.key === KEYS.owlGrenade).map((o) => o.alpha)).toEqual([0.5]);
+    });
+
+    it('the lights\' Lights: a flier\'s 4 px along angleFace, yellow→green by the hits its update saw, gone once dying; the totem\'s one a render, from the next', () => {
+        const fl = (over) => ({ id: 'f', x: 80, y: 60, hits: 0, hitsTimer: 0, angleFace: 0, dying: false, dieIndex: 0, ...over });
+        const L = (fliers, over = {}) => V({ gameTime: 0, lights: [{ id: 'L', x: 72, y: 40, totemDie: false, fliers, shots: [], ...over }] });
+        let s = stepBossSkin(null, L([fl({})]), 0);
+        s = stepBossSkin(s, L([fl({ hits: 1 })]), 1); // the sword lands after the update: this tick's Light is still yellow
+        const c1 = bossNightOps(L([fl({ hits: 1 })]), { skin: s });
+        // worldFrame(100, 1) at 0 → smooth: (32 − 28)(sin 0 + 1)/2 + 28 = 30, inner 15; the room's layer −160·3/2
+        expect(c1.map((c) => [c.circle.x, c.circle.y, c.circle.r, c.colour, c.alpha, c.layer])).toEqual([[84, 60, 30, '#ffff00', 0.2, -240], [84, 60, 15, '#ffff00', 0.2, -240]]);
+        s = stepBossSkin(s, L([fl({ hits: 1, angleFace: Math.PI / 2 })]), 2);
+        const c2 = bossNightOps(L([fl({ hits: 1, angleFace: Math.PI / 2 })]), { skin: s });
+        expect([c2[0].circle.x, c2[0].circle.y, c2[0].colour]).toEqual([80, 64, '#aaff00']); // 255 − 255/3 = 170
+        expect(bossNightOps(L([fl({ dying: true })]), { skin: s })).toEqual([]);
+        let t = stepBossSkin(null, L([]), 0);
+        const counts = [];
+        for (let k = 1; k <= 7; k += 1) {
+            t = stepBossSkin(t, L([], { totemDie: true }), k);
+            counts.push(bossNightOps(L([], { totemDie: true }), { skin: t }).length / 2);
+        }
+        // y 40, 30, 20, 10, then 0 (alpha 0: nothing) — render k draws the Lights of renders 1..k−1
+        expect(counts).toEqual([0, 1, 2, 3, 4, 4, 4]);
+        const last = bossNightOps(L([], { totemDie: true }), { skin: t });
+        expect(last.filter((_, i) => i % 2 === 0).map((c) => [c.circle.x, c.circle.y, c.alpha, c.circle.r])).toEqual(
+            [[80, 48, 0.25, 8], [80, 38, 0.1875, 8], [80, 28, 0.125, 8], [80, 18, 0.0625, 8]]);
+    });
+
     it('a stack without the key draws the stand-in rectangle (the hitbox)', () => {
         const none = { has: () => false };
         const skin = stepBossSkin(null, V({ shieldBosses: [sb({})] }), 1);
@@ -425,6 +502,31 @@ describe('2b. the night layer takes the FrozenBoss\'s copy', () => {
         const n2 = nightOps(nv, art, { ops: unmarked, cam: { x: 0, y: 0, w: 160, h: 160 } });
         if (n2) expect(n2.ops.filter((o) => o.key === KEYS.frozenBoss)).toHaveLength(0);
     });
+});
+
+/** The boss night extras per tick (`bossNightOps`), run-length collapsed. */
+function nightLines(rows) {
+    const lines = [];
+    let open = null;
+    for (const r of rows) {
+        const body = `L${r.view.level} | ${bossNightOps(r.view, { skin: r.skin }).map(formatNightOp).join(' ; ')}`.trimEnd();
+        if (open && open.body === body) { open.to = r.tick; continue; }
+        if (open) lines.push(open);
+        open = { from: r.tick, to: r.tick, body };
+    }
+    if (open) lines.push(open);
+    return lines.map((l) => `t=${l.from}${l.to !== l.from ? `..${l.to}` : ''} ${l.body}`);
+}
+const NIGHT_TAPES = ['L69-lights-kill', 'L69-lights-stand', 'L112-owl-control'];
+
+describe('2c. ⛓ G11 golden boss night extras (the Lights)', () => {
+    for (const name of NIGHT_TAPES) {
+        it(`the ${name} run: every tick's Light circles`, () => {
+            const lines = nightLines(rowsOf(T[name]));
+            expect(lines).toEqual(golden(`boss-night-${name}.txt`, lines));
+            expect(lines.some((l) => l.includes('circle(')), `${name}: a Light`).toBe(true);
+        }, 240_000);
+    }
 });
 
 describe('3. one mutant per family turns a golden red', () => {
@@ -452,6 +554,24 @@ describe('3. one mutant per family turns a golden red', () => {
         ['LightBossTotem — never dies', 'L69-lights-kill', { rules: { totemLook: () => ({ scaleX: 1, scaleY: 1, tint: null, dy: 0 }) } }],
     ];
     for (const [name, tape, opts] of MUTANTS) it(name, () => expect(differs(T[tape], opts)).toBeGreaterThan(0), 240_000);
+    // ⛓ G11
+    const differsNight = (tape, opts) => {
+        const want = readFileSync(join(GOLDENS, `boss-night-${tape.name}.txt`), 'utf8').trimEnd().split('\n');
+        const got = nightLines(runTape(tape, opts));
+        return got.filter((l, i) => l !== want[i]).length + Math.abs(got.length - want.length);
+    };
+    const G11 = [
+        ['RockFall — never turns', 'L112-owl-kill', { rules: { rockLook: (r) => ({ alpha: r.anim === 'break' ? 1 : Math.min(1, 1 - (r.goto - r.y) / 96), angle: 0 }) } }],
+        ['RockFall — no shadows', 'L112-owl-kill', { rules: { rockShadows: () => [] } }],
+        ['RockFall/Grenade — frame 0 always (no replay)', 'L112-owl-control', { rules: { replayFrame: () => ({ anim: '', index: 0, frame: 0 }) } }],
+    ];
+    for (const [name, tape, opts] of G11) it(name, () => expect(differs(T[tape], opts)).toBeGreaterThan(0), 240_000);
+    const G11N = [
+        ['flier Light — at the body, always yellow', 'L69-lights-kill', { rules: { flierLight: (b) => ({ x: b.x, y: b.y, frames: 100, loops: 1, smooth: true, rmin: 28, rmax: 32, alpha: 0.2, colour: '#ffff00' }) } }],
+        ['totem Lights — none', 'L69-lights-kill', { rules: { totemLights: () => [] } }],
+        ['grenade Light — never (frame 0 replay)', 'L112-owl-control', { rules: { replayFrame: () => ({ anim: 'sit', index: 0, frame: 0 }) } }],
+    ];
+    for (const [name, tape, opts] of G11N) it(name, () => expect(differsNight(T[tape], opts)).toBeGreaterThan(0), 240_000);
 });
 
 describe('4. the adapter reads the run and writes nothing', () => {
@@ -492,3 +612,52 @@ describe('5. ⛔ STATE IDENTITY — the boss renderer never touches the run', ()
     }
 });
 
+describe('6. ⛓ G11 `owlProjectilesNow` (⚖ fidelity-15 2026-10-27): digest-neutral, copies only', () => {
+    const tapeOf = (name) => fixture(name);
+    /** Every tick's `stateDigest()` (and the stream), with the getter read after every tick or never. */
+    const digests = (name, readGetter) => {
+        const out = [];
+        let seen = 0;
+        runFixtureTape(tapeOf(name), { levelSource: atlasLevelSource(), onTick: (t, now, held, run) => {
+            if (readGetter) {
+                const p = run.owlProjectilesNow;
+                seen += p.rocks.length + p.grenades.length;
+            }
+            out.push(JSON.stringify([t, run.level, now, run.stateDigest()]));
+        } });
+        return { out, seen };
+    };
+    for (const name of ['r6-owl-kill', 'r6-owl-control']) {
+        it(`${name}: the digest on EVERY tick is identical with the getter read every tick and never (the no-feedback pattern)`, () => {
+            const off = digests(name, false);
+            const on = digests(name, true);
+            expect(on.seen).toBeGreaterThan(100);
+            expect(on.out.length).toBe(off.out.length);
+            const first = on.out.findIndex((l, i) => l !== off.out[i]);
+            expect(first, `first differing tick ${first}`).toBe(-1);
+        }, 240_000);
+    }
+    it('a mutated read (top-level AND nested) changes neither the next read nor the digest', () => {
+        let checked = 0;
+        runFixtureTape(tapeOf('r6-owl-control'), { levelSource: atlasLevelSource(), onTick: (t, now, held, run) => {
+            const a = run.owlProjectilesNow;
+            if (!a.rocks.length || !a.grenades.length) return;
+            const before = JSON.stringify(a);
+            const digest = JSON.stringify(run.stateDigest());
+            a.rocks[0].y = -999;
+            a.rocks[0].anim = 'mutant';
+            a.grenades[0].animAge = 999;
+            a.rocks.push({ id: 'x' });
+            a.grenades = [];
+            expect(JSON.stringify(run.owlProjectilesNow)).toBe(before);
+            expect(JSON.stringify(run.stateDigest())).toBe(digest);
+            checked += 1;
+        } });
+        expect(checked).toBeGreaterThan(10);
+    }, 240_000);
+    it('a room without the Owl reads two empty lists', () => {
+        const rt = boot(19, [80, 120]);
+        rt.tick(new Set());
+        expect(rt.run.owlProjectilesNow).toEqual({ rocks: [], grenades: [] });
+    });
+});
