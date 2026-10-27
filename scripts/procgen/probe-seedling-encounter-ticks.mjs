@@ -11,6 +11,10 @@
  *   the player   x / y / vx / vy                    (game `Player` row; model `run.state`)
  *   the boss     every `BobBoss*` row (x, y, v, anim) (game) / `run.entities('bobBoss')` (model)
  *   the items    `hasFire`, `hasDarkSword`            (game `botStatus().items`; model `run.inventory`)
+ *   the clears   ⛓ (seedling-js-encounter-legs) the first tick each `{level, tag}` is cleared: game
+ *                `botStatus().persistence_cleared` (a SAMPLED tick, so an upper bound; the sample before it is printed
+ *                too), model `jsRuntimeCore.liveClears(run)` (every tick) — the R4 reports ({32,3} kill, {32,4} drop,
+ *                {12,1} dark sword) asked of both
  *
  * ⚠ THE SAMPLE'S TICK IS CALIBRATED, NOT ASSUMED: the player's x/y at each sample is matched against the model's, and
  * the shifts that fit every sampled tick are printed (exactly [0] = the two clocks are one).
@@ -83,6 +87,7 @@ async function main() {
     const { gameVisibleTape } = await import(join(MODULE, 'tapeFormat.js'));
     const { createTapeStepper } = await import(join(MODULE, 'tapeRunner.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+    const { liveClears } = await import(join(MODULE, 'jsRuntimeCore.js'));
 
     const tape = TAPE_FILE ? JSON.parse(readFileSync(TAPE_FILE, 'utf8')) : loadTape(TAPE);
     const name = TAPE ?? tape.name;
@@ -90,6 +95,8 @@ async function main() {
     // ── the MODEL: the run's readings after each tick (index = the observation's t) ──
     const col = [];
     let modelRun = null;
+    /** ⛓ the model's first tick per cleared `level:tag` */
+    const modelClears = new Map();
     {
         let run = null;
         const st = createTapeStepper(tape, { levelSource: atlasLevelSource(), onTick: (t, s, h, rn) => { run = rn; } });
@@ -98,6 +105,7 @@ async function main() {
             const o = r.value.observation;
             const bb = run ? run.entities('bobBoss') : new Map();
             const inv = run ? run.inventory : {};
+            for (const c of run ? liveClears(run) : []) if (!modelClears.has(`${c.level}:${c.tag}`)) modelClears.set(`${c.level}:${c.tag}`, o.t);
             col[o.t] = {
                 px: o.x, py: o.y, vx: run?.state?.vx ?? null, vy: run?.state?.vy ?? null,
                 boss: bb.get('boss') ?? null, rock: bb.get('rock') ?? null, pending: bb.get('pending') ?? null,
@@ -158,7 +166,8 @@ async function main() {
             const s = JSON.parse(raw[1]);
             for (const o of JSON.parse(raw[2]).ticks ?? []) obs.push(o);
             frames.push({ i, tick: m.tick ?? s.tick, finished: !!s.finished, level: s.level, items: s.items ?? {},
-                frozen: s.frozen ?? null, held: s.held ?? null, mobiles: m.mobiles ?? [] });
+                frozen: s.frozen ?? null, held: s.held ?? null, mobiles: m.mobiles ?? [],
+                cleared: (s.persistence_cleared ?? []).map((c) => `${c.level}:${c.tag}`) });
             if (WRITE && writes.length === 0 && Number.isInteger(s.tick) && s.tick >= WRITE.t && !s.finished) {
                 const w = { 'class': WRITE.cls, property: WRITE.property, value: WRITE.value };
                 await page.evaluate((x) => window.__swfBridge.queueItems(x), w);
@@ -278,6 +287,18 @@ async function main() {
     console.log(`INFO: the drained stream: ${obs.length} obs, worst |Δ| ${streamWorst}, first off ${JSON.stringify(streamOff)}`);
     console.log(`INFO: first SAMPLED tick off the model (a sample may straddle a frozen frame): ${firstOff ?? 'none'}`);
     console.log(`INFO: item flips (sampled ticks) — game ${JSON.stringify(flips.game)}, model ${JSON.stringify(flips.model)}`);
+    // ⛓ the clears: the first SAMPLED game tick holding each clear the tape added (the boot's own excluded), beside the model's
+    const bootCleared = new Set(frames.find((f) => Number.isInteger(f.tick))?.cleared ?? []);
+    const gameClears = new Map();
+    let prevTick = null;
+    for (const f of frames) {
+        if (!Number.isInteger(f.tick)) continue;
+        for (const k of f.cleared) if (!bootCleared.has(k) && !gameClears.has(k)) gameClears.set(k, { tick: f.tick, after: prevTick });
+        prevTick = f.tick;
+    }
+    const clearKeys = [...new Set([...gameClears.keys(), ...modelClears.keys()])].sort();
+    console.log(`INFO: clears (first tick) — ${clearKeys.map((k) => `{${k}} game ${gameClears.has(k)
+        ? `t${gameClears.get(k).tick} (prev sample t${gameClears.get(k).after})` : 'never'} / model ${modelClears.has(k) ? `t${modelClears.get(k)}` : 'never'}`).join('; ') || 'none'}`);
     console.log(`INFO: at finished — game hasFire ${status.items?.hasFire} hasDarkSword ${status.items?.hasDarkSword}; `
         + `model hasFire ${modelRun?.inventory?.hasFire} hasDarkSword ${modelRun?.inventory?.hasDarkSword}`);
     if (TAIL > 0) {
