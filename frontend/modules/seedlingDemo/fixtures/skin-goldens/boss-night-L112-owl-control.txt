@@ -1,0 +1,4 @@
+t=0..445 L112 |
+t=446..448 L112 | circle(#ffff00, 87, 103, 20) alpha=1 ; circle(#ffff00, 87, 103, 10) alpha=1
+t=449..451 L112 | circle(#ffff00, 87, 103, 20) alpha=0.5 ; circle(#ffff00, 87, 103, 10) alpha=0.5
+t=452..727 L112 |

@@ -124,8 +124,8 @@ export const SOLIDS_PENDING = Object.freeze({
     // ⛓ G10 — the kill locks and the RockLock fade from the kill-lock ledgers' removal tick (`spinnerKillLockOpens` /
     //    `chaserKillLockOpens`), opening on `declaredAt`; what stays is the MODEL's residue, named here
     'a KILL lock / RockLock (residue, model)': 'the run banks the clear and keeps the body SOLID this visit, so the picture opens on '
-        + '`declaredAt` while the run\'s wall stays; a RockLock with tset ≥ 0 (L112, `Button.activateAll` at the Owl\'s death) has '
-        + 'no read and is drawn shut',
+        + '`declaredAt` while the run\'s wall stays (⛓ G11: L112\'s tset-0 RockLock fades from the Owl\'s `tagsWritten` row, '
+        + '`Button.activateAll(null, 0, true)`; the picture is the game\'s, the wall is whatever the model keeps — not read here)',
     'a KILL lock (band)': 'its ledger row lands a tick after the removal tick, so its first faded frame (0.99) is drawn at 1; the '
         + 'reducer catches up, and the open is on `declaredAt`',
 });
@@ -181,6 +181,22 @@ export function solidsSkinView(run, { record = null } = {}) {
         for (const o of row.opens ?? []) if (!killFrom.has(o.at)) killFrom.set(o.at, row.t);
     }
     const killHeld = (id) => (killFrom.has(id) && now >= killFrom.get(id) ? now - killFrom.get(id) + 1 : null);
+    // ⛓ G11 — a GROUP RockLock (tset ≥ 0): the Owl's "dead" arm runs `Button.activateAll(null, 0, true)` (the run's
+    // `finalBossKills` `tagsWritten` row, stamped with the tick's pre-increment `ticksCompleted`), activating every
+    // tset-0 Activators. The lock updates BEFORE the Owl (`stepOwlNow`'s order), so that tick it renders active at
+    // alpha 1 and its first fade step is the next tick's: steps = now − (t + 1).
+    const groupFrom = new Map();
+    for (const row of read(run, 'finalBossKills', []) ?? []) {
+        if (row.level === level && row.what === 'tagsWritten' && row.t >= since && !groupFrom.has(0)) groupFrom.set(0, row.t + 1);
+    }
+    const tsetOf = (o) => {
+        const e = (record?.entities ?? []).find((x) => x.type === 'rocklock' && Number(x.x) === o.x && Number(x.y) === o.y);
+        return e ? Number.parseInt(e.attrs?.tset ?? e.attrs?.t ?? '-1', 10) : null;
+    };
+    const groupSteps = (o) => {
+        const t = tsetOf(o);
+        return t !== null && t >= 0 && groupFrom.has(t) && now >= groupFrom.get(t) ? now - groupFrom.get(t) : null;
+    };
     const box = playerBoxAt(run.state.x, run.state.y);
     const pushables = read(run, 'pushables', null);
     const blocks = pushables ? [...pushables.values()].filter((b) => !b.removed).map((b) => b.rect) : [];
@@ -227,7 +243,7 @@ export function solidsSkinView(run, { record = null } = {}) {
             };
         }),
         rockLocks: solids.filter((o) => o.tag === 'rocklock').map((o) => ({ id: `rocklock@${o.x},${o.y}`, x: o.x, y: o.y,
-            held: killHeld(`rocklock@${o.x},${o.y}`) ?? 0 })),
+            held: killHeld(`rocklock@${o.x},${o.y}`) ?? 0, group: groupSteps(o) })),
         buttons: (world?.pressers ?? []).map((p) => {
             const id = `${p.tag}@${p.x},${p.y}`;
             // `ButtonRoom.check()`: `_active = !checkPersistence(tag)` (the world's `bootPressed`) on the build's frame
@@ -356,6 +372,13 @@ export function stepSolidsSkin(prev, view, tick, { rules = SOLIDS_RULES } = {}) 
     const rockLocks = new Map();
     for (const r of view.rockLocks ?? []) {
         const old = same ? prev.rockLocks?.get(r.id) : null;
+        if (r.group !== null && r.group !== undefined) {
+            // ⛓ G11 — a group lock: active from its activation tick, `group` fade steps since (a pure function of the count)
+            let st = { alpha: 1, solid: true, active: true };
+            for (let i = 0; i < Math.min(r.group, KILL_FADE_STEPS + 1); i += 1) st = R.stepRockLock(st, true);
+            rockLocks.set(r.id, st);
+            continue;
+        }
         rockLocks.set(r.id, R.stepRockLock(old ?? { alpha: 1, solid: true, active: false }, r.held > 0));
     }
     return { epoch: view.epoch, tick, chests, buttons, responders, rockLocks, drift, rules: R };
