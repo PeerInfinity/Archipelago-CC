@@ -1,0 +1,15 @@
+M1
+   ['\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[31m1 failed\x1b[39m\x1b[22m\x1b[2m | \x1b[22m\x1b[1m\x1b[32m13 passed\x1b[39m\x1b[22m\x1b[90m (14)\x1b[39m']
+        × ON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape's, key for key 2368ms
+M2
+   ['\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[32m14 passed\x1b[39m\x1b[22m\x1b[90m (14)\x1b[39m']
+M3
+   ['\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[32m14 passed\x1b[39m\x1b[22m\x1b[90m (14)\x1b[39m']
+M4
+   ['\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[31m2 failed\x1b[39m\x1b[22m\x1b[2m | \x1b[22m\x1b[1m\x1b[32m12 passed\x1b[39m\x1b[22m\x1b[90m (14)\x1b[39m']
+        × ON the distinct ones count (leg 853 has three), and four distinct still refuse 30ms
+        × ON a goal that repeats one application is stopped at 8 in all (the loop's backstop) 1ms
+M5
+   ['\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[31m1 failed\x1b[39m\x1b[22m\x1b[2m | \x1b[22m\x1b[1m\x1b[32m13 passed\x1b[39m\x1b[22m\x1b[90m (14)\x1b[39m']
+        × ON a goal that repeats one application is stopped at 8 in all (the loop's backstop) 34ms
+restored clean

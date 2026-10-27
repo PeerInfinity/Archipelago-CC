@@ -2847,6 +2847,22 @@ function encounterExecutorFor(run, goal) {
  * five reports the bound rather than spinning.
  */
 const MAX_STRATEGIES_PER_GOAL = 4;
+/**
+ * ⛓ fidelity L40BK2B D2 (`CONTACT_FIDELITY.strategyBoundDistinct`, OFF) — with the bound counting DISTINCT
+ * applications, the backstop on applications in all (a repeat of the same one still spends a verb, and a goal that
+ * repeats without end is the loop the bound exists for).
+ */
+const STRATEGY_BOUND_TOTAL = 2 * MAX_STRATEGIES_PER_GOAL;
+
+/**
+ * Is the goal's strategy bound reached by the applications so far (`strategy(obstacle)` strings, in order)? OFF
+ * (`strategyBoundDistinct`): every application counts, as before. ON: the distinct ones, and `STRATEGY_BOUND_TOTAL`
+ * applications in all.
+ */
+export function strategyBoundReached(applied) {
+    if (!CONTACT_FIDELITY.strategyBoundDistinct) return applied.length >= MAX_STRATEGIES_PER_GOAL;
+    return new Set(applied).size >= MAX_STRATEGIES_PER_GOAL || applied.length >= STRATEGY_BOUND_TOTAL;
+}
 
 /**
  * ⛓ SEEDLING FIDELITY L12KEYLINE — when the frontier's nearest door is a
@@ -22310,7 +22326,8 @@ export function orbitKillPolicy(run, id, { r, dir, safe }, strike) {
     const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
     const phi = Math.atan2(s.y - c.y, s.x - c.x);
     const off = wrap(phi - Math.atan2(Math.sin(-c.swordSpin), Math.cos(-c.swordSpin)));
-    const at = (rad, turn) => ({ x: c.x + rad * Math.cos(phi + turn), y: c.y + rad * Math.sin(phi + turn) });
+    const at = CONTACT_FIDELITY.orbitFreeAim ? (rad, turn) => orbitFreeAim(run, c, phi + turn, rad)
+        : (rad, turn) => ({ x: c.x + rad * Math.cos(phi + turn), y: c.y + rad * Math.sin(phi + turn) });
     let aim;
     if (c.destroy) aim = at(Math.max(r, ORBIT_KILL.backoff), 0);
     else if (c.swordSpinning) aim = at(r, dir * ORBIT_KILL.step);
@@ -22322,6 +22339,51 @@ export function orbitKillPolicy(run, id, { r, dir, safe }, strike) {
     if (c.destroy || !strike || s.fall) return held;
     return strike.decide(s, run.entities('strikeBodies'), run.ticksCompleted, held,
         { slash: run.progress('slashInfo') }).held;
+}
+
+/**
+ * ⛓⛓ fidelity L40BK2B D1 (`CONTACT_FIDELITY.orbitFreeAim`, OFF) — the search an orbit aim is projected by: angle
+ * steps off the policy's own angle (each side, out to `turns` steps), and the radius offsets tried at each.
+ */
+export const ORBIT_FREE_AIM = Object.freeze({
+    step: 10 * Math.PI / 180,
+    turns: 18,
+    radii: Object.freeze([0, 4, -4, 8]),
+    // the straight sweep from the player to a candidate, sampled every `sweep` px
+    sweep: 1,
+});
+
+/**
+ * ⛓⛓ fidelity L40BK2B D1 — the orbit policy's aim at angle `ang`, radius `rad` round the body `c`, moved to the FREE
+ * point nearest it: the player box at the point and the straight sweep from the player to it both clear of Solids
+ * (`collidesSolid` with the run's live geometry). Measured on L40 leg 853 (`bobsoldier@880,832` in the notch above
+ * the one-tile corridor): the unprojected aim lies in the shaft wall or the corridor's floor, and `chooseHeld` pins
+ * the player there. Where no candidate is in sight (the body round a corner, out of the straight sweep), the aim is
+ * the planner's first waypoint toward the body (`planWaypoints`), so the approach walks the map, not the wall.
+ */
+function orbitFreeAim(run, c, ang, rad) {
+    const s = run.state;
+    const opts = run.liveGeometryOpts();
+    const clear = (p) => {
+        const n = Math.max(1, Math.ceil(Math.hypot(p.x - s.x, p.y - s.y) / ORBIT_FREE_AIM.sweep));
+        for (let i = 1; i <= n; i += 1) {
+            if (run.world.collidesSolid(playerBoxAt(s.x + (p.x - s.x) * (i / n), s.y + (p.y - s.y) * (i / n)), opts)) {
+                return false;
+            }
+        }
+        return true;
+    };
+    for (let k = 0; k <= ORBIT_FREE_AIM.turns; k += 1) {
+        for (const side of (k === 0 ? [1] : [1, -1])) {
+            for (const dr of ORBIT_FREE_AIM.radii) {
+                const a = ang + side * k * ORBIT_FREE_AIM.step;
+                const p = { x: c.x + (rad + dr) * Math.cos(a), y: c.y + (rad + dr) * Math.sin(a) };
+                if (clear(p)) return p;
+            }
+        }
+    }
+    const wps = planWaypointsOrNull(run.world, s, { x: c.x, y: c.y }, null, {});
+    return wps?.[0] ?? { x: c.x + rad * Math.cos(ang), y: c.y + rad * Math.sin(ang) };
 }
 
 /**
@@ -28068,7 +28130,15 @@ function solveSegmentUnder({
                      * and running it out is a refusal that says which ones it
                      * cleared.
                      */
-                    if (applied.length >= MAX_STRATEGIES_PER_GOAL) {
+                    /**
+                     * ⛓⛓ fidelity L40BK2B D2 (`CONTACT_FIDELITY.strategyBoundDistinct`, OFF) — the count is the
+                     * DISTINCT applications, as the bound says, with `STRATEGY_BOUND_TOTAL` applications in all as
+                     * the loop's backstop. MEASURED on L40 leg 853 (OPP ON, `orbitFreeAim` ON): Boss Key 2's goal
+                     * applies shove, hold(wandlock@448,432), burn, hold(wandlock@448,432) again from the far side of
+                     * the tree, and then needs the latch's hold(wandlock@480,560) — the fourth distinct obstacle,
+                     * refused as a fifth application. OFF: the plain count, byte-identical.
+                     */
+                    if (strategyBoundReached(applied)) {
                         refuse(`${what}: applied ${applied.length} strategies for one goal `
                             + `[${applied.join(', ')}] and the corridor still does not plan. `
                             + 'A policy that keeps clearing obstacles without a corridor '

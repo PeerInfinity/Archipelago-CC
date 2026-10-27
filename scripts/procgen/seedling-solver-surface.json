@@ -1023,9 +1023,9 @@
       "files": {
         "botDriverV2.js": 2,
         "dangerMap.js": 1,
-        "solverBot.js": 17
+        "solverBot.js": 18
       },
-      "sites": 20,
+      "sites": 21,
       "seen": "both",
       "via": [
         "direct"
@@ -1365,9 +1365,9 @@
         "crusherBait.js": 6,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 612
+        "solverBot.js": 613
       },
-      "sites": 751,
+      "sites": 752,
       "seen": "both",
       "via": [
         "direct",
@@ -1565,9 +1565,9 @@
         "dangerMap.js": 3,
         "lightsVerb.js": 2,
         "solveProgress.js": 2,
-        "solverBot.js": 309
+        "solverBot.js": 311
       },
-      "sites": 382,
+      "sites": 384,
       "seen": "both",
       "via": [
         "direct",
@@ -1803,9 +1803,9 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
-        "solverBot.js": 4
+        "solverBot.js": 5
       },
-      "sites": 4,
+      "sites": 5,
       "seen": "both",
       "via": [
         "direct"
@@ -2856,9 +2856,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 228
+        "solverBot.js": 231
       },
-      "sites": 298,
+      "sites": 301,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2892,9 +2892,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 232
+        "solverBot.js": 235
       },
-      "sites": 305,
+      "sites": 308,
       "seen": "both",
       "via": [
         "const-alias",
@@ -4325,10 +4325,10 @@
         "dangerMap.js": 6,
         "forcedHit.js": 5,
         "lightsVerb.js": 3,
-        "solverBot.js": 129,
+        "solverBot.js": 131,
         "strikePolicy.js": 2
       },
-      "sites": 160,
+      "sites": 162,
       "seen": "static",
       "via": [
         "import"
@@ -5915,10 +5915,10 @@
         "dangerMap.js": 1,
         "encounters.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 71,
+        "solverBot.js": 72,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 92,
+      "sites": 93,
       "seen": "static",
       "via": [
         "import"

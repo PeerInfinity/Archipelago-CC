@@ -1,0 +1,6 @@
+# verdict: SolverRefusal: solverBot(l40bk2b) chest (880,816) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,853.8) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 16 volume(s) forbidden — A* goal tile (55,52) in level 40 — for (888,834) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The at t771 in 55.0 s
+# hits: none
+# removed: bob@736,752@t759 spinner@880,848@t771
+# player at end: (744.3,795.5) level 40
+rc=0

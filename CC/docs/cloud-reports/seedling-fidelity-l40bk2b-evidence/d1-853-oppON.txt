@@ -1,0 +1,2 @@
+id 853 req 1 seam 5152 ok false kind refusal work 1988 answer a2f1d3152931 112.4s
+solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> hold stance (wandlock@448,432): applied 4 strategies for one goal [shove(pushableblockfire@576,576), hold(wandlock@448,432), burn(burnabletree@872,784), hold(wandlock@448,432)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.
