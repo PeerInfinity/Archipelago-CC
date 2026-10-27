@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect } from 'vitest';
 
-import { parseArgs, oldFramingSource, shardRegions, mergeArm, OLD_FRAMING_HOOK } from './probe-seedling-whole-game-certify.mjs';
+import { parseArgs, needsOldCert, oldFramingSource, shardRegions, mergeArm, OLD_FRAMING_HOOK } from './probe-seedling-whole-game-certify.mjs';
 import { l3Tapes, readRun, expectL3, DOOR_TO } from './probe-seedling-l3-water-door.mjs';
 import { PIN_NAMES, parseTape } from '../../frontend/modules/seedlingDemo/tapeFormat.js';
 
@@ -41,6 +41,14 @@ describe('probe-seedling-whole-game-certify — the old arm', () => {
         const out = oldFramingSource(CERT_SRC);
         expect(out).toContain(`${OLD_FRAMING_HOOK} if (true) return false;`);
         expect(out.length - CERT_SRC.length).toBe(' if (true) return false;'.length);
+    });
+    it('the scratch certifier is written only when the old arm runs', () => {
+        expect(needsOldCert(parseArgs(['node', 'x']).arms)).toBe(true);
+        expect(needsOldCert(parseArgs(['node', 'x', '--arms=new']).arms)).toBe(false);
+        expect(needsOldCert(parseArgs(['node', 'x', '--arms=old']).arms)).toBe(true);
+    });
+    it('a stranded scratch certifier is gitignored', () => {
+        expect(readFileSync(`${ROOT}.gitignore`, 'utf8').split('\n')).toContain('*.oldframing.tmp.js');
     });
     it('throws (does not silently measure the new framing twice) when the hook moved', () => {
         expect(() => oldFramingSource(CERT_SRC.replace(OLD_FRAMING_HOOK, 'const internalOnly = (w, n) => {'))).toThrow(/hook moved/);

@@ -51,6 +51,11 @@ export function oldFramingSource(src) {
     return src.replace(OLD_FRAMING_HOOK, `${OLD_FRAMING_HOOK} if (true) return false;`);
 }
 
+/** Whether a run writes the old arm's scratch certifier into the tree: only when the old arm runs. Exported for the unit rows. */
+export function needsOldCert(arms) {
+    return arms.includes('old');
+}
+
 /** Shard `shard` of `shards`: the levels i % shards === shard, and their regions (`level_N__…`). Exported for the unit rows. */
 export function shardRegions(regionNames, shard, shards) {
     const levels = [...new Set(regionNames.map((s) => s.split('__')[0]))].sort();
@@ -108,7 +113,9 @@ async function main() {
     const permissive = M.playthroughPermissiveLocations();
     console.log(`PERMISSIVE: ${permissive.length} — ${permissive.join(' | ')}`);
     // The old arm: the certifier with internal-only members priced from their fresh arrival (the framing before sphere-order-2).
-    writeFileSync(OLD_CERT, oldFramingSource(readFileSync(CERT, 'utf8')));
+    // Written only when the old arm runs; a killed run (an OOM'd worker) can strand it, so .gitignore covers `*.oldframing.tmp.js`.
+    const scratch = needsOldCert(arms);
+    if (scratch) writeFileSync(OLD_CERT, oldFramingSource(readFileSync(CERT, 'utf8')));
     const result = {};
     try {
         for (const arm of arms) {
@@ -129,7 +136,7 @@ async function main() {
             console.log(`PASS: arm ${arm} measured`);
         }
     } finally {
-        unlinkSync(OLD_CERT);
+        if (scratch) unlinkSync(OLD_CERT);
     }
     if (result.new && result.old) {
         const onlyNew = result.new.problems.filter((p) => !result.old.problems.includes(p));
