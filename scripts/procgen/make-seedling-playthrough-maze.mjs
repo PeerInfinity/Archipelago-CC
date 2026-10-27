@@ -59,13 +59,15 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * L2–L11 + L94 joined L0 + L13–L20; L86, the last of sphere 0, once its landing under L0's building1 was floor (the
  * playthrough grid takes a building's footprint from its Pixelmask, session tile-primitives-pixelmask-l86). Sphere 0.1 (session
  * tile-primitives-sphere-order-2, ⚖ 2026-10-26 "All 14"): L1 L12 L33 L35 L36 L44 L59 L60 L67 L87 L88 L89 L92 L95 — L12's touched event locks
- * and L67's struck block were built for them.
+ * and L67's struck block were built for them. Sphere 2.2 (session tile-primitives-sphere-order-3, ⚖ 2026-10-27 "All 12"): L21–L31 + L37,
+ * which needed no new feature (L28's rope holds its fallrock on the grass lock's button — a minted rope, like L16's).
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
-    'level_12', 'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20', 'level_33', 'level_35',
-    'level_36', 'level_44', 'level_59', 'level_60', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_92', 'level_94',
-    'level_95',
+    'level_12', 'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20', 'level_21', 'level_22',
+    'level_23', 'level_24', 'level_25', 'level_26', 'level_27', 'level_28', 'level_29', 'level_30', 'level_31', 'level_33', 'level_35',
+    'level_36', 'level_37', 'level_44', 'level_59', 'level_60', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_92',
+    'level_94', 'level_95',
 ]);
 
 /**
