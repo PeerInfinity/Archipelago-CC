@@ -1560,7 +1560,7 @@ export const CONTACT_FIDELITY = {
      * it while it is closed, and an opened chest is `type = ""` (`Chest.as:77`), no hitable. OFF: byte-identical.
      * `SEEDLING_COVER_HELD_FADE=0|1`.
      */
-    coverHeldFade: false,
+    coverHeldFade: true,
     /**
      * fidelity DETERM (c) F2 (wave 33) — A `Lock` RE-CLOSES WITH ITS ALPHA AT 0, RESTORED ONE STEP LATER
      * (`activators.js`' inactive arm).
@@ -1574,7 +1574,7 @@ export const CONTACT_FIDELITY = {
      * `turnOff`, and `openActivatorIdsBeforeLatestStep` counts it as the latest step's). Plain fade locks only (a touch
      * responder latches, a BossLock never re-closes). OFF: byte-identical. `SEEDLING_LOCK_RECLOSE_LAG=0|1`.
      */
-    lockRecloseLag: false,
+    lockRecloseLag: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
