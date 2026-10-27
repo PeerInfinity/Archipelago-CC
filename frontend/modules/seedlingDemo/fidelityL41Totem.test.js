@@ -9,8 +9,9 @@
  * same configuration. Every non-empty flood ends with its key in `seenStates`, so each of those floods ends at `continue`.
  *
  * D1 — `CONTACT_FIDELITY.baitComponentMemo` (OFF): such a seed is skipped before its flood. A COST key: the answer, its
- * stats and its order are the same. These rows pin that at L41 (the SEARCHGAPS staging, both press-goal arms) and the
- * solver's L41 plan through the bait, ON = OFF.
+ * stats and its order are the same. D1b — `CONTACT_FIDELITY.baitAlignSafeMemo` (OFF): the bait alignment's `safe(p)`
+ * (57,874 of 96,384 asks a repeat) answered once per position. A COST key too. These rows pin both at L41 (the SEARCHGAPS
+ * staging, both press-goal arms) and the solver's L41 plan through the bait and the fire block, ON = OFF.
  *
  * Mutants (predicted first; copy + edit + run + restore), the results in the report.
  */
@@ -20,7 +21,7 @@ import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { solveSegment } from './solverBot.js';
-import { BAIT_SEARCH_COUNTERS, searchBaitOrdering } from './crusherBait.js';
+import { BAIT_ALIGN_PROBE, BAIT_SEARCH_COUNTERS, alignmentCandidates, searchBaitOrdering } from './crusherBait.js';
 import { ropeStaging } from './fidelityRope.js';
 import { CRUSHERPRESS_WITNESSES } from './fidelityCrusherPress.js';
 
@@ -34,20 +35,28 @@ const searchShielded = (run) => {
     return searchBaitOrdering({ run, liveOpts: { ...live, brokenRocks: new Set([...(live.brokenRocks ?? []), ...SHIELD]) },
         inventory: run.progress('inventory'), aimRect: PART, allowTeleporter: null });
 };
-/** The search under `memo`, with the floods it made and the seeds it skipped. */
+/** `fn` under `memo` (both cost keys, D1 and D1b), with the floods the bait search made and the seeds it skipped. */
 const counted = (memo, fn) => {
     const f0 = BAIT_SEARCH_COUNTERS.floods;
     const s0 = BAIT_SEARCH_COUNTERS.skipped;
-    const out = withContactFidelity({ baitComponentMemo: memo }, fn);
-    return { out, floods: BAIT_SEARCH_COUNTERS.floods - f0, skipped: BAIT_SEARCH_COUNTERS.skipped - s0 };
+    const aligned = [];
+    BAIT_ALIGN_PROBE.record = aligned;
+    try {
+        const out = withContactFidelity({ baitComponentMemo: memo, baitAlignSafeMemo: memo }, fn);
+        return { out, floods: BAIT_SEARCH_COUNTERS.floods - f0, skipped: BAIT_SEARCH_COUNTERS.skipped - s0, aligned };
+    } finally {
+        BAIT_ALIGN_PROBE.record = null;
+    }
 };
 
-describe('fidelity L41TOTEM D1 — the switch', () => {
-    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO)(
-        'ships OFF', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.baitComponentMemo).toBe(false);
-            expect(CONTACT_FIDELITY.baitComponentMemo).toBe(false);
-        });
+describe('fidelity L41TOTEM D1 — the switches', () => {
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO
+        || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO)('both ship OFF', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.baitComponentMemo).toBe(false);
+        expect(CONTACT_FIDELITY.baitComponentMemo).toBe(false);
+        expect(CONTACT_FIDELITY_DEFAULTS.baitAlignSafeMemo).toBe(false);
+        expect(CONTACT_FIDELITY.baitAlignSafeMemo).toBe(false);
+    });
 });
 
 describe('fidelity L41TOTEM D1 — the bait search at L41, ON = OFF', () => {
@@ -70,7 +79,29 @@ describe('fidelity L41TOTEM D1 — the bait search at L41, ON = OFF', () => {
     }
 });
 
-describe('fidelity L41TOTEM D1 — the solver at L41 through the bait, ON = OFF', () => {
+describe('fidelity L41TOTEM D1b — the alignment asks each position once, with the same candidates', () => {
+    it('a safety that varies with x AND y: ON asks fewer and answers the same list', async () => {
+        const run = await arrival();
+        const target = { x: run.state.x + 7.3, y: run.state.y - 4.1 };
+        // stand-ins for the caller's crusher sight: unsafe on every third pixel row and every fifth column, then (a
+        // second call, as the next chain's crushers sit elsewhere) on every fourth row — each call keeps its own answers
+        const sights = [(p) => Math.floor(p.y) % 3 !== 0 && Math.floor(p.x) % 5 !== 0, (p) => Math.floor(p.y) % 4 !== 1];
+        const asked = (memo) => {
+            let asks = 0;
+            const lists = withContactFidelity({ baitAlignSafeMemo: memo }, () => sights.map((sight) => alignmentCandidates(
+                run, target, (p) => { asks += 1; return sight(p); }).map((c) => [c.at.x, c.at.y, c.moves, c.ticks.length])));
+            return { lists, asks };
+        };
+        const off = asked(false);
+        const on = asked(true);
+        for (const list of off.lists) expect(list.length).toBeGreaterThan(3);
+        expect(off.lists[1]).not.toEqual(off.lists[0]);
+        expect(on.lists).toEqual(off.lists);
+        expect(on.asks).toBeLessThan(off.asks);
+    });
+});
+
+describe('fidelity L41TOTEM D1 + D1b — the solver at L41 through the bait and the fire block, ON = OFF', () => {
     it('the plan the SEARCHGAPS staging solves is the same tick for tick', async () => {
         const staging = await ropeStaging(W);
         const solve = () => solveSegment({ run: createRunForStaging(staging, SRC), goals: W.goals, name: 'l41totem',
@@ -84,5 +115,8 @@ describe('fidelity L41TOTEM D1 — the solver at L41 through the bait, ON = OFF'
         expect(on.out.equips).toEqual(off.out.equips);
         expect([on.out.waypointsPlanned, on.out.replans]).toEqual([off.out.waypointsPlanned, off.out.replans]);
         expect(on.skipped).toBeGreaterThan(0);
+        // D1b: every alignment's candidate list ([x, y, moves, ticks] rows, nearest first) is the same, chain by chain
+        expect(off.aligned.length).toBeGreaterThanOrEqual(3);
+        expect(on.aligned).toEqual(off.aligned);
     }, 180_000);
 });

@@ -1557,6 +1557,14 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_BAIT_COMPONENT_MEMO=0|1`.
      */
     baitComponentMemo: false,
+    /**
+     * fidelity L41TOTEM D1b (wave 33) — THE BAIT ALIGNMENT ASKS EACH POSITION ONCE (`crusherBait.alignmentCandidates`).
+     * A COST key: no model term moves. The alignment previews from the chain's stance and never advances the run, so the
+     * caller's `safeAt(p)` (`solverBot.execBait`: every live crusher's sight at p) reads only (p.x, p.y). Measured at sweep
+     * leg 855: 57,874 of 96,384 asks over L41's six alignments repeated a position already asked in the same call. ON:
+     * each answer is kept for the call, keyed on (p.x, p.y). OFF: byte-identical. `SEEDLING_BAIT_ALIGN_SAFE_MEMO=0|1`.
+     */
+    baitAlignSafeMemo: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1748,6 +1756,9 @@ if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '0') CONTACT_FIDELITY
 // ⛓ fidelity L41TOTEM D1: `SEEDLING_BAIT_COMPONENT_MEMO=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_BAIT_COMPONENT_MEMO === '1') CONTACT_FIDELITY.baitComponentMemo = true;
 if (globalThis.process?.env?.SEEDLING_BAIT_COMPONENT_MEMO === '0') CONTACT_FIDELITY.baitComponentMemo = false;
+// ⛓ fidelity L41TOTEM D1b: `SEEDLING_BAIT_ALIGN_SAFE_MEMO=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BAIT_ALIGN_SAFE_MEMO === '1') CONTACT_FIDELITY.baitAlignSafeMemo = true;
+if (globalThis.process?.env?.SEEDLING_BAIT_ALIGN_SAFE_MEMO === '0') CONTACT_FIDELITY.baitAlignSafeMemo = false;
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;

@@ -89,6 +89,11 @@ export const BAIT_SEARCH = Object.freeze({ lattice: 8, maxStates: 20000 });
  * flood, `skipped` every escape seed `baitComponentMemo` skipped before its flood. Process-wide, cumulative.
  */
 export const BAIT_SEARCH_COUNTERS = { floods: 0, skipped: 0 };
+/**
+ * ⛓ L41TOTEM D1b — a measurement hook (never read by the solver): while `record` is an array, `alignmentCandidates`
+ * appends each answer to it as `[x, y, moves, ticks]` rows, so a test can compare the candidates two arms produced.
+ */
+export const BAIT_ALIGN_PROBE = { record: null };
 
 /**
  * The alignment's bounds (`alignmentCandidates`): `maxTicks` is one move's
@@ -737,7 +742,8 @@ const ALIGN_KEYS = Object.freeze([
  * ⛓⛓ THE ALIGNMENT CANDIDATES — rest states the player can reach from here in
  * at most `maxMoves` MOVES (hold one of eight key sets for 1..`maxTicks` ticks,
  * then nothing until at rest), on the run's own `previewStepper`, every
- * previewed tick checked by `safe(p)` (the caller's: outside every live lane).
+ * previewed tick checked by `safeAt(p)` (the caller's: outside every live lane;
+ * it must read only p.x and p.y, and state this call holds fixed).
  * Returned nearest-to-`target` first, the current state (zero moves) included.
  *
  * ⛔ WHY CANDIDATES AND NOT "ALIGN TO THE START". Measured: a rest state is
@@ -748,7 +754,17 @@ const ALIGN_KEYS = Object.freeze([
  * the CHAIN ITSELF is the test: the executor drives each candidate's prefix and
  * the chain on a fork, and commits the first one the fork says survives.
  */
-export function alignmentCandidates(run, target, safe, bounds = BAIT_ALIGN) {
+export function alignmentCandidates(run, target, safeAt, bounds = BAIT_ALIGN) {
+    // ⛓ L41TOTEM D1b (`baitAlignSafeMemo`, OFF) — the previews never advance `run`, and `safeAt(p)` (the caller's: every
+    // live crusher's sight at p) reads only (p.x, p.y) while this asks, so each position is asked once per call.
+    const memo = CONTACT_FIDELITY.baitAlignSafeMemo ? new Map() : null;
+    const safe = memo === null ? safeAt : (p) => {
+        const k = `${p.x},${p.y}`;
+        if (memo.has(k)) return memo.get(k);
+        const v = safeAt(p);
+        memo.set(k, v);
+        return v;
+    };
     const step = run.previewStepper();
     const NONE = new Set();
     const off = (p) => Math.hypot(p.x - target.x, p.y - target.y);
@@ -795,5 +811,7 @@ export function alignmentCandidates(run, target, safe, bounds = BAIT_ALIGN) {
         frontier = next.slice(0, bounds.beam);
     }
     out.sort((a, b) => off(a.at) - off(b.at) || a.ticks.length - b.ticks.length);
-    return out.slice(0, bounds.candidates);
+    const kept = out.slice(0, bounds.candidates);
+    if (BAIT_ALIGN_PROBE.record) BAIT_ALIGN_PROBE.record.push(kept.map((c) => [c.at.x, c.at.y, c.moves, c.ticks.length]));
+    return kept;
 }
