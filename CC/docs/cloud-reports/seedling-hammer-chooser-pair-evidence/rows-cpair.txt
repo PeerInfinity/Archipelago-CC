@@ -1,0 +1,6 @@
+ ✓ frontend/modules/seedlingDemo/hammerChooserPair.test.js (5 tests) 237154ms
+     ✓ 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the pair bob@736,752 + bobsoldier@880,832 admits, the chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill  97532ms
+     ✓ 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and ON = OFF  91279ms
+     ✓ 356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF  45245ms
+     ✓ the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1's regression stays closed)  3083ms
+      Tests  5 passed (5)
