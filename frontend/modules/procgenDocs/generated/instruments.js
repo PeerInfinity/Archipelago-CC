@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 91,
+            "count": 92,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 469,
+        "blockStyle": 470,
         "browser": 180,
-        "cited": 254,
-        "files": 483,
+        "cited": 255,
+        "files": 484,
         "lineStyle": 14,
-        "withDocblock": 483,
-        "withFlags": 400
+        "withDocblock": 484,
+        "withFlags": 401
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9957,6 +9957,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-return-l15 — ⛓⛓⛓ SEEDLING FIDELITY RETURN (D1): L15 RE-ENTERED FROM L16 ON THE WAY BACK, WITH AND WITHOUT THE FORWARD TRIP'S CLEARS.",
             "path": "scripts/procgen/plan-seedling-return-l15.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "from-view"
+            ],
+            "file": "plan-seedling-rulesref-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "from-view"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-rulesref-witness — ⛓⛓⛓ SEEDLING FIDELITY RULESREF: L66's HALF-TILE DOORWAY, BEHIND A SPEAR BRIDGE.",
+            "path": "scripts/procgen/plan-seedling-rulesref-witness.mjs"
         },
         {
             "argvHelpers": [],
