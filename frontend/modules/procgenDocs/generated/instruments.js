@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 117,
-            "count": 164,
+            "browser": 118,
+            "count": 166,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 472,
-        "browser": 182,
-        "cited": 255,
-        "files": 487,
+        "blockStyle": 474,
+        "browser": 183,
+        "cited": 256,
+        "files": 489,
         "lineStyle": 15,
-        "withDocblock": 487,
-        "withFlags": 404
+        "withDocblock": 489,
+        "withFlags": 406
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13032,6 +13032,59 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l3-water-door.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "MEASUREMENT (slices tile-primitives-whole-game-classify → tile-primitives-whole-game-tools): Seedling's L3 door to L111 (`out_teleporter_0_64`, tile [0,4], under `breakablerockghost@0,64 {tag 1}`), ON THE GAME: does the player need the Conch (Progressive Swim) to reach it?",
+            "path": "scripts/procgen/probe-seedling-l3-water-door.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
                 "out",
                 "wait-for-box"
             ],
@@ -17323,6 +17376,51 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-watch-page — does `watch.html` actually DRAW a tape, all the way through, without dying?",
             "path": "scripts/procgen/probe-seedling-watch-page.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arms",
+                "out",
+                "shards"
+            ],
+            "file": "probe-seedling-whole-game-certify.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shards"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "MEASUREMENT (slices tile-primitives-whole-game-classify → tile-primitives-whole-game-tools): the WHOLE-GAME maze certifier.",
+            "path": "scripts/procgen/probe-seedling-whole-game-certify.mjs"
         },
         {
             "argvHelpers": [

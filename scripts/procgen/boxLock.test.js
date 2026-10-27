@@ -526,7 +526,8 @@ describe('who takes the box', () => {
          * fidelity CHESTSEAL L15's chest removed by `checkBySeal()` (sixteen seals) and its one-seal control, `probe-seedling-chestseal.mjs`;
          * fidelity L40LATCH L40's S-door latch under the BobSoldier (the still holder, the orbit chain), `probe-seedling-l40latch.mjs`;
          * rules-l63-darktrap-probe L63's darktraps over the two L65 arrivals, their poles and flags, `probe-seedling-l63-darktrap.mjs`;
-         * the same slice's L65 and L101 in-room darktraps and the sides their poles are lit from, `probe-seedling-inroom-darktraps.mjs`.)
+         * the same slice's L65 and L101 in-room darktraps and the sides their poles are lit from, `probe-seedling-inroom-darktraps.mjs`;
+         * tile-primitives-whole-game-tools L3's water door into L111, without and with the Conch, `probe-seedling-l3-water-door.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -584,7 +585,8 @@ describe('who takes the box', () => {
             'probe-seedling-chestseal.mjs',
             'probe-seedling-l40latch.mjs',
             'probe-seedling-l63-darktrap.mjs',
-            'probe-seedling-inroom-darktraps.mjs'];
+            'probe-seedling-inroom-darktraps.mjs',
+            'probe-seedling-l3-water-door.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
