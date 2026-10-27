@@ -327,7 +327,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity RULESREF D3 (wave 32): a frontier with no actionable entry flooded again at 8 px — ships OFF.
             fineFrontierFlood: true,
             // ⛓ fidelity RULESREF D1 (wave 32): the walk's gate times a puncher's punch — ships OFF.
-            punchGateTimed: true });
+            punchGateTimed: true,
+            // ⛓ fidelity DETERM (c) F1 (wave 33): a released Cover under a hitable keeps its faded alpha — ships OFF.
+            coverHeldFade: false,
+            // ⛓ fidelity DETERM (c) F2 (wave 33): a Lock re-closes at alpha 0, restored a step later — ships OFF.
+            lockRecloseLag: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
