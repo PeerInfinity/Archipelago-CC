@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 118,
-            "count": 166,
+            "browser": 119,
+            "count": 167,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 474,
-        "browser": 183,
+        "blockStyle": 475,
+        "browser": 184,
         "cited": 256,
-        "files": 490,
+        "files": 491,
         "lineStyle": 16,
-        "withDocblock": 490,
-        "withFlags": 407
+        "withDocblock": 491,
+        "withFlags": 408
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12844,6 +12844,66 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l107-lane — measure-only (slice `seedling-js-l107-investigate`): **DOES L107 HAVE A ROUTE AT EVERY ARRIVAL CLOCK, ASKED OF THE GAME?**",
             "path": "scripts/procgen/probe-seedling-l107-lane.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "want"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l12-bosslock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-model"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L12 → L83 door, ON THE GAME (slice rules-l12-bosslock-probe): survey route steps 172/203 (L12 visits 14/16, `reach-exit` teleporter@32,848 → L83; 167/198 at fidelity CHESTSEAL's base) refuse KEYLOCK-SEALED on `bosslock@112,192`, \"flag {12,11} held\".",
+            "path": "scripts/procgen/probe-seedling-l12-bosslock.mjs"
         },
         {
             "argvHelpers": [],
