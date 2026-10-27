@@ -235,12 +235,25 @@
       "type": "and",
       "conditions": [
         {
-          "type": "attribute",
-          "object": {
-            "type": "name",
-            "name": "tile"
-          },
-          "attr": "floor"
+          "type": "or",
+          "conditions": [
+            {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "tile"
+              },
+              "attr": "floor"
+            },
+            {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "tile"
+              },
+              "attr": "sink"
+            }
+          ]
         },
         {
           "type": "not",

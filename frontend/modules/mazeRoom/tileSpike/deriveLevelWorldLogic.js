@@ -174,15 +174,20 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
  * arrival while pricing `region`'s targets — an internal-only member is entered only by walking in from one, so the
  * search from that member's arrival covers every state the walk can enter it in (blocks, cuts, facing).
  *
+ * ⛓ `arriveAt` (session tile-primitives-pit-sinks-landings): search from this CELL — where the game lands a crossing
+ * into `region` (the certifier's `atlasLandings`) — instead of the region's entrance cell.
+ *
  * @returns {{ items: string[], targets: Array<{id, kind, x, y, exitName?, locationName?, minimal: string[][],
  *   witnesses: Array<{inventory, plan}>, unreachable: boolean}>, searched: number, states: number }}
  */
 export function deriveEntryLogic(world, region, helpers, {
-    tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, arrivalBlocked = null, cache = null, arriveFrom = null,
+    tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, arrivalBlocked = null, cache = null, arriveFrom = null, arriveAt = null,
 } = {}) {
     const shared = Boolean(world.sharedWorld);
     if (arriveFrom !== null && !shared) throw new Error(`entry logic: arriveFrom "${arriveFrom}" needs a shared level world`);
-    const entered = shared ? enteredAt(world, arriveFrom ?? region) : world;
+    if (arriveFrom !== null && arriveAt !== null) throw new Error('entry logic: arriveFrom and arriveAt are exclusive');
+    const into = shared ? enteredAt(world, arriveFrom ?? region) : world;
+    const entered = arriveAt !== null ? { ...into, entrance: { x: arriveAt.x, y: arriveAt.y } } : into;
     const items = [...new Set([...regionItems(world), ...(arrivalBlocked?.items ?? [])])].sort();
     if (items.length > maxItems) {
         throw new Error(`entry logic: ${items.length} items exceed the lattice cap ${maxItems}: ${items.join(', ')}`);

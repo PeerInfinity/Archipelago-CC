@@ -497,24 +497,78 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             certifyFromInbound(world, name);
             continue;
         }
-        const out = deriveEntryLogic(world, name, helpers, {
-            native, arrivalBlocked: arrivalBlockedFrom(name), cache: cacheOf(world, name),
-        });
+        for (const arrival of arrivalsOf(world, name)) priceFrom(world, name, arrival);
+    }
+    return { problems, lines, accepted };
+
+    /**
+     * ⛓ LANDING-ROOTED ARRIVALS (session tile-primitives-pit-sinks-landings): a region is priced from every cell the GAME
+     * lands an AP crossing into it on (`atlasLandings`, the AP exits from outside its world), not from the region's
+     * entrance cell — a partition's representative cell no crossing need land on (L31 r5c24's (24,5) sits behind the
+     * L29 stairs exit at (24,6); the game lands at (24,7)). A crossing between two worlds of ONE level lands where
+     * `resolveMazeArrival` puts it, as `arrivalBlockedFrom` judges it. The entrance stays an arrival for a start, a
+     * region a start enters, one with an AP way in whose landing neither says, and one with no landing at all. An
+     * arrival that is not the entrance labels its rows `(landing x,y)`.
+     */
+    function arrivalsOf(world, name) {
         const entered = world.sharedWorld ? enteredAt(world, name) : world;
-        // ⛓ An inventory whose arrival here is a hit cannot be here — checked against every AP way in.
+        const members = new Set(world.sharedWorld?.regions ?? [name]);
+        const level = carrierOf(SIDECARS, name).playable_payload.atlas_region;
+        const cells = new Map();
+        let entrance = startOf(name);
+        for (const [from, r] of Object.entries(REGIONS)) {
+            if (members.has(from)) continue;
+            const sameLevel = SIDECARS[from] && carrierOf(SIDECARS, from).playable_payload.atlas_region === level;
+            for (const e of r.exits.filter((x) => x.connected_region === name)) {
+                const crossing = sameLevel ? [...worldOf(from).exits.values()].find((x) => (x.exitName ?? x.exit_id) === e.name) : null;
+                const at = sameLevel
+                    ? (crossing ? resolveMazeArrival(entered, { source_region: from, exit_id: crossing.targetExitId ?? null }) : null)
+                    : landings.get(e.name);
+                if (!at) { entrance = true; continue; }
+                if (!isFloor(entered, at.x, at.y)) continue; // a walled landing is a problem by name (`arrivalBlockedFrom`)
+                cells.set(`${at.x},${at.y}`, at);
+            }
+        }
+        const home = `${entered.entrance.x},${entered.entrance.y}`;
+        if (entrance || cells.size === 0) cells.set(home, null);
+        return [...cells.keys()].sort().map((k) => (k === home ? null : cells.get(k)));
+    }
+
+    /** Price `name`'s targets and locations from one arrival: `null` = its entrance cell, else a landing cell. */
+    function priceFrom(world, name, arrival) {
+        const out = deriveEntryLogic(world, name, helpers, {
+            native, arrivalBlocked: arrivalBlockedFrom(name), cache: cacheOf(world, name), arriveAt: arrival,
+        });
+        const into = world.sharedWorld ? enteredAt(world, name) : world;
+        const entered = arrival ? { ...into, entrance: { x: arrival.x, y: arrival.y } } : into;
+        const tag = arrival ? ` (landing ${arrival.x},${arrival.y})` : '';
+        const lineTag = arrival ? `<@${arrival.x},${arrival.y}` : '';
+        // ⛓ An inventory whose arrival here is a hit cannot be here — checked against every AP way in. A LANDING the
+        // inventory finds shut, or in an armed lane, is no arrival at all: the crossing onto it is refused at its
+        // source (`arrivalBlockedFrom`), so it is skipped here without a report.
         const inbound = Object.entries(REGIONS).flatMap(([from, r]) => r.exits.filter((e) => e.connected_region === name)
             .map((e) => ({ from, rule: e.access_rule ?? { rule: 'True_' } })));
+        const landingOb = arrival ? getObstacle(entered, arrival.x, arrival.y) : null;
+        const shutLanding = (inv) => {
+            if (!landingOb) return false;
+            const s = createState(entered);
+            const eff = effectiveInventory(entered, inventoryOf(inv), s.player_pos, s.blocks, s.broken);
+            return !isObstacleCleared(landingOb, eff, entered.obstacleLib)
+                || (entered.obstacleLib[landingOb].events ?? []).some((e) => !eff.has(e.name));
+        };
         const notHere = entered.trapLanes ? (inv) => {
+            if (shutLanding(inv)) return true;
             if (!standsInArmedLane(entered, createState(entered), inventoryOf(inv))) return false;
+            if (arrival) return true;
             for (const e of inbound) {
                 if (holds(e.rule, inv)) problems.push(`${e.from} → ${name} holding [${formatPoint(inv)}]: AP enters, but the arrival stands in an armed lane`);
             }
             return true;
-        } : null;
+        } : (landingOb ? shutLanding : null);
         const exitTo = new Map(REGIONS[name].exits.map((e) => [e.name, e.connected_region]));
         const byTarget = new Map();
         for (const t of out.targets) {
-            const label = `${name} @ ${t.exitName ?? t.locationName}`;
+            const label = `${name} @ ${t.exitName ?? t.locationName}${tag}`;
             for (const w of t.witnesses) {
                 replay(label, entered, w.inventory, w.plan, t.adjacent ? w.cell : `${t.x},${t.y}`, { cut: Boolean(t.event) && !t.adjacent });
             }
@@ -529,16 +583,16 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             if (!loc) { problems.push(`${label}: no AP location of that name`); continue; }
             // Two events on ONE cell (L12's magical lock on its boss lock) each open by their own `rule` (session
             // tile-primitives-sphere-order-2), so a stacked event is priced like any other.
-            agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out, { stricterOk: permissiveWhy(name, loc.name) });
-            lines.push(`${name}@${t.locationName}=${JSON.stringify(t.minimal)}`);
+            agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out, { stricterOk: permissiveWhy(name, loc.name), notHere: arrival ? notHere : null });
+            lines.push(`${name}@${t.locationName}${lineTag}=${JSON.stringify(t.minimal)}`);
         }
         const inWorld = new Set(world.sharedWorld?.regions ?? []);
         for (const to of new Set(REGIONS[name].exits.map((e) => e.connected_region))) {
             if (inWorld.has(to)) continue;
-            if (!byTarget.has(to)) { problems.push(`${name}: its exit(s) to ${to} are not priced`); continue; }
+            if (!byTarget.has(to)) { problems.push(`${name}: its exit(s) to ${to} are not priced${tag}`); continue; }
             const atlas = anyOf(REGIONS[name].exits.filter((e) => e.connected_region === to).map((e) => e.access_rule ?? { rule: 'True_' }));
-            agree(`${name} → ${to}`, name, atlas, byTarget.get(to), out, { notHere });
-            lines.push(`${name}->${to}=${JSON.stringify(byTarget.get(to))}`);
+            agree(`${name} → ${to}${tag}`, name, atlas, byTarget.get(to), out, { notHere });
+            lines.push(`${name}->${to}${lineTag}=${JSON.stringify(byTarget.get(to))}`);
         }
         const priced = new Set(out.targets.map((t) => t.locationName).filter(Boolean));
         for (const l of REGIONS[name].locations ?? []) {
@@ -548,8 +602,9 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             const why = unproducible.has(item) ? ` — the maze world cannot produce it (${unproducible.get(item)})`
                 : elsewhere && !elsewhere.has(name) ? ` — its obstacle is laid only in ${[...elsewhere].sort().join(', ')}, not in this region's world`
                     : '';
-            problems.push(`${name}: location ${l.name} is not priced${why}`);
+            // A reason that names no arrival (the maze cannot produce it; another world lays it) is reported once.
+            const problem = `${name}: location ${l.name} is not priced${why}${why ? '' : tag}`;
+            if (!problems.includes(problem)) problems.push(problem);
         }
     }
-    return { problems, lines, accepted };
 }
