@@ -1,0 +1,2 @@
+level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2  (id 847 here; PKC's 859)
+level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2  (id 848 here; PKC's 860)

@@ -552,9 +552,9 @@
         "crusherBait.js": 7,
         "dangerMap.js": 26,
         "lightsVerb.js": 1,
-        "solverBot.js": 200
+        "solverBot.js": 203
       },
-      "sites": 339,
+      "sites": 342,
       "seen": "both",
       "via": [
         "direct",
@@ -685,14 +685,14 @@
         },
         "spinnerBodies": {
           "dangerMap.js": 2,
-          "solverBot.js": 16
+          "solverBot.js": 18
         },
         "staticBodies": {
           "solverBot.js": 4
         },
         "strikeBodies": {
           "botDriverV2.js": 3,
-          "solverBot.js": 17
+          "solverBot.js": 18
         },
         "talkCircles": {
           "solverBot.js": 4
@@ -803,9 +803,9 @@
       "form": "forecast",
       "files": {
         "dangerMap.js": 2,
-        "solverBot.js": 10
+        "solverBot.js": 11
       },
-      "sites": 12,
+      "sites": 13,
       "seen": "both",
       "via": [
         "direct"
@@ -1112,9 +1112,9 @@
         "arrivalSolid.js": 1,
         "crusherBait.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 19
+        "solverBot.js": 21
       },
-      "sites": 22,
+      "sites": 24,
       "seen": "both",
       "via": [
         "direct"
@@ -1139,9 +1139,9 @@
         "botDriverV2.js": 29,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 143
+        "solverBot.js": 145
       },
-      "sites": 178,
+      "sites": 180,
       "seen": "both",
       "via": [
         "direct",
@@ -1196,7 +1196,7 @@
         "slashInfo": {
           "botDriverV2.js": 3,
           "lightsVerb.js": 1,
-          "solverBot.js": 13
+          "solverBot.js": 15
         },
         "takenPickups": {
           "botDriverV2.js": 1,
@@ -1280,9 +1280,9 @@
       "files": {
         "botDriverV2.js": 1,
         "dangerMap.js": 1,
-        "solverBot.js": 10
+        "solverBot.js": 11
       },
-      "sites": 12,
+      "sites": 13,
       "seen": "both",
       "via": [
         "direct"
@@ -1365,9 +1365,9 @@
         "crusherBait.js": 6,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 604
+        "solverBot.js": 612
       },
-      "sites": 743,
+      "sites": 751,
       "seen": "both",
       "via": [
         "direct",
@@ -1430,9 +1430,9 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 13,
         "lightsVerb.js": 7,
-        "solverBot.js": 120
+        "solverBot.js": 126
       },
-      "sites": 143,
+      "sites": 149,
       "seen": "both",
       "via": [
         "direct",
@@ -2555,9 +2555,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 4,
-        "solverBot.js": 15
+        "solverBot.js": 16
       },
-      "sites": 19,
+      "sites": 20,
       "seen": "both",
       "via": [
         "direct"
@@ -2607,9 +2607,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 6,
-        "solverBot.js": 8
+        "solverBot.js": 9
       },
-      "sites": 14,
+      "sites": 15,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2789,9 +2789,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 9,
-        "solverBot.js": 25
+        "solverBot.js": 26
       },
-      "sites": 36,
+      "sites": 37,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2820,9 +2820,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 9,
-        "solverBot.js": 21
+        "solverBot.js": 22
       },
-      "sites": 32,
+      "sites": 33,
       "seen": "both",
       "via": [
         "const-alias",
@@ -4245,9 +4245,10 @@
       "class": "seedling",
       "form": "forecast",
       "files": {
+        "solverBot.js": 1,
         "strikePolicy.js": 2
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
         "import"
@@ -5914,10 +5915,10 @@
         "dangerMap.js": 1,
         "encounters.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 70,
+        "solverBot.js": 71,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 91,
+      "sites": 92,
       "seen": "static",
       "via": [
         "import"
@@ -6010,11 +6011,11 @@
         "botDriverV2.js": 1,
         "lavaBossPolicy.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 21,
+        "solverBot.js": 22,
         "strikePolicy.js": 2,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 27,
+      "sites": 28,
       "seen": "static",
       "via": [
         "import"
@@ -6178,9 +6179,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 13
+        "solverBot.js": 14
       },
-      "sites": 15,
+      "sites": 16,
       "seen": "static",
       "via": [
         "import"
@@ -6413,6 +6414,60 @@
     },
     {
       "surface": "import",
+      "name": "OPPORTUNISTIC_STRIKE",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 447,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The switch (hammer-phase OPP; OFF, SEEDLING_OPPORTUNISTIC_STRIKE=1 opts in) under which the spinner press kill asks the one strike policy (strikePolicyFor) on its walk and refuge ticks, offered only bodies whose aim and press land clear of the spinners, and previews its strike and refuge walks with the same policy and offer; OFF nothing is asked."
+    },
+    {
+      "surface": "import",
+      "name": "OPPORTUNISTIC_STRIKE_COUNTS",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 475,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 6
+      },
+      "sites": 6,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "hammer-phase OPP's instrument: how many ticks the press kill consulted the policy, the aims and presses taken, the bodies withheld, the kill aims deferred and the strike/refuge previews walked with a policy; written only with the switch ON, read by nothing that decides."
+    },
+    {
+      "surface": "import",
+      "name": "OPPORTUNISTIC_STRIKE_TRACE",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 483,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 2
+      },
+      "sites": 2,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "hammer-phase OPP's trace sink: null unless a row or measurement sets it; ON, the press kill hands it each adopted strike (with its certifying walk's strikes) and each aim/press the policy took, so the preview = drive row can compare them; read by nothing that decides."
+    },
+    {
+      "surface": "import",
       "name": "PRESS_KILL_BOMBS",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
       "line": 320,
@@ -6523,7 +6578,7 @@
       "surface": "import",
       "name": "REFUGE_ETA_CUT",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 451,
+      "line": 521,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -6541,7 +6596,7 @@
       "surface": "import",
       "name": "REFUGE_ETA_CUT_COUNTS",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 486,
+      "line": 556,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -6559,7 +6614,7 @@
       "surface": "import",
       "name": "refugeEtaCut",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 477,
+      "line": 547,
       "class": "seedling",
       "form": "function",
       "files": {

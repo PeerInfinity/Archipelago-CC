@@ -18,8 +18,9 @@ import {
 import { atlasLevelSource } from './levelSource.js';
 import { SLASH_REACH } from './presses.js';
 import { withPressKillRebootGuard, withPressKillShakeGuard } from './pressKillGuards.js';
-// ⛓ hammer-phase PKC: the witness is the kill across the bob's death, so `PRESS_KILL_CHASERS` is pinned OFF (it ships OFF)
-import { withPressKillChasers } from './pressKillCost.js';
+// ⛓ hammer-phase PKC / OPP: the witness is the kill across the bob's death, so `PRESS_KILL_CHASERS` and
+// `OPPORTUNISTIC_STRIKE` are pinned OFF (both ship OFF)
+import { withOpportunisticStrike, withPressKillChasers } from './pressKillCost.js';
 import { solveSegment, withStrikeEtaFloor } from './solverBot.js';
 import { SPINNER } from './spinner.js';
 import { parseTape } from './tapeFormat.js';
@@ -102,14 +103,14 @@ function stagingA() {
 function solveA(enabled, guards = false) {
     const staging = stagingA();
     const run = createRunForStaging(staging, atlasLevelSource());
-    return withPressKillChasers(false, () => withStrikeEtaFloor(false, () => withPressKillShakeGuard(guards, () => withPressKillRebootGuard(guards, () => withGhostKillRung(enabled, () => {
+    return withOpportunisticStrike(false, () => withPressKillChasers(false, () => withStrikeEtaFloor(false, () => withPressKillShakeGuard(guards, () => withPressKillRebootGuard(guards, () => withGhostKillRung(enabled, () => {
         try {
             return { perTick: solveSegment({ run, goals: [{ kind: 'collect-placement', placement: { x: 880, y: 816 } }],
                 name: NAME, boot: staging.boot, dashMode: 'all' }).perTick, message: null };
         } catch (e) {
             return { perTick: e.perTick ?? [], message: String(e?.message ?? e) };
         }
-    })))));
+    }))))));
 }
 
 describe(`${NAME} — the kill rung's ghost press kill, on the game (hammer-phase G1, D2)`, () => {
