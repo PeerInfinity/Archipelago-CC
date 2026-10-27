@@ -278,6 +278,8 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
     /** A `new Game(level, x, y)` the glue did not ask for: the template's native jump. */
     async function jump(level, x, y) {
         await gameFrame().evaluate(({ l, px, py }) => {
+            // ⛓ the arrival trace's mark, when one is installed (`seedlingArrivalTrace.js`; measurement only)
+            if (window.__arrTrace) window.__arrTrace.push({ t: Math.round(performance.now()), ev: 'mark', jump: [l, px, py] });
             window.__swfBridge.queueItems({
                 invocation: 'new_instance',
                 className: 'Game',
