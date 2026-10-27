@@ -63,7 +63,7 @@ describe('landing gates in the maze preset (L49 + L50)', () => {
         // L50 → L49 ungated: the world still needs the Swim, but no AP state stands in L50 without it.
         const out = certifyPlaythroughMaze(withExitRule(RULES, 'level_50', 'level_49', { rule: 'True_' }), HELPERS, { native: true, atlas: ATLAS });
         expect(out.problems).toEqual([]);
-        expect(out.accepted).toEqual([{ label: 'level_50 → level_49', source: 'level_50', by: 'Progressive Swim' }]);
+        expect(out.accepted).toEqual([{ label: 'level_50 → level_49 (landing 2,1)', source: 'level_50', by: 'Progressive Swim' }]);
     }, 120_000);
 
     it('a LOOSER row is never accepted, even where the source needs the item', () => {
@@ -74,6 +74,6 @@ describe('landing gates in the maze preset (L49 + L50)', () => {
         // L50's exit asks the Swim AND a key the world never needs: looser at [Swim], in a source that needs the Swim.
         const key = { rule: 'And', children: [SWIM, { rule: 'Has', args: { item_name: 'Green Key' } }] };
         const out = certifyPlaythroughMaze(withExitRule(RULES, 'level_50', 'level_49', key), HELPERS, { native: true, atlas: ATLAS });
-        expect(out.problems).toEqual(['level_50 → level_49 holding [Progressive Swim]: derived true, atlas false']);
+        expect(out.problems).toEqual(['level_50 → level_49 (landing 2,1) holding [Progressive Swim]: derived true, atlas false']);
     }, 120_000);
 });

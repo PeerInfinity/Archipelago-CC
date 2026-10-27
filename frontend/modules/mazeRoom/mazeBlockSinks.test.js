@@ -158,7 +158,7 @@ describe('whyBlocked ⇔ step and scripted ≡ native over every reachable (stat
         const body = HELPERS.block_may_enter.body;
         const forgetful = structuredClone(HELPERS);
         // the real body is an `and` whose third conjunct is `(tile.sink or cleared(...))`: keep `cleared` only
-        const i = body.conditions.findIndex((c) => c.type === 'or');
+        const i = body.conditions.findIndex((c) => c.type === 'or' && c.conditions.some((d) => d.type === 'helper'));
         expect(i).toBeGreaterThan(-1);
         forgetful.block_may_enter.body.conditions[i] = body.conditions[i].conditions[1];
         const w = picture(['######', '#P.Bw#', '######']);

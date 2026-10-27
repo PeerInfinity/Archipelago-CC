@@ -713,7 +713,9 @@ function shutEntryAt(world, x, y, dir, inv, clearanceOpts) {
  * (`PushableBlock.as`: tile t 1 / 17 / 6 → `destroy = true`; water is a "Tile", not "Solid", so the block slides in).
  * A block pushed onto a sink cell is REMOVED from `state.blocks` for this visit (blocks are per visit); the cell keeps
  * whatever gate it has for the player (the water stays water). A sink cell takes the block whatever its own obstacle
- * says — the projection lays sinks only on terrain the game's block enters. Entry gates and walls still refuse it.
+ * says — the projection lays sinks only on terrain the game's block enters. Entry gates still refuse it.
+ * ⛓ PIT SINKS (session tile-primitives-pit-sinks-landings): a sink cell need not be FLOOR — a pit the player cannot
+ * walk still takes a block (L63's spear block dies in the pit at [8,6]); every other non-floor cell refuses it.
  * Returns the Set of posKeys.
  */
 export function checkBlockSinks(sinks, width, height, who) {
@@ -734,6 +736,11 @@ export function checkBlockSinks(sinks, width, height, who) {
 /** True iff a block pushed onto (x, y) sinks there (see `checkBlockSinks`). */
 export function sinksBlock(world, x, y) {
     return world.blockSinks?.has(posKey(x, y)) ?? false;
+}
+
+/** May a block stand on, or sink into, (x, y) at all: floor, or a sink cell (see `checkBlockSinks`, PIT SINKS). */
+function blockGround(world, x, y) {
+    return isFloor(world, x, y) || sinksBlock(world, x, y);
 }
 
 /** The blocks after the one at `from` is pushed to `to`: moved, or GONE when `to` sinks it. Sorted. */
@@ -770,7 +777,7 @@ export function checkBlockStrike(spec, actionLib, who) {
 
 /** May a block move onto (x, y) going `dir`, with `blocks` where they are now? (A walk-push's and a strike-push's test.) */
 function blockMayEnter(world, state, blocks, x, y, dir, inv, clearanceOpts) {
-    if (x < 0 || y < 0 || x >= world.width || y >= world.height || !isFloor(world, x, y)) return false;
+    if (x < 0 || y < 0 || x >= world.width || y >= world.height || !blockGround(world, x, y)) return false;
     if (blocks.includes(posKey(x, y))) return false;
     if (!sinksBlock(world, x, y) && shutObstacleAt(world, state, x, y, inv, clearanceOpts) !== null) return false;
     return !hasEntryGate(world, x, y, dir);
@@ -1374,7 +1381,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
             if (world.blockStrike) return null; // ⛓ STRUCK BLOCKS: never walk-pushed
             const bx = nx + delta.dx;
             const by = ny + delta.dy;
-            if (!isFloor(world, bx, by)) return null;
+            if (!blockGround(world, bx, by)) return null;
             const beyondKey = posKey(bx, by);
             if (state.blocks.includes(beyondKey)) return null;
             if (!sinksBlock(world, bx, by) && shutObstacleAt(world, state, bx, by, inv, clearanceOpts) !== null) {
@@ -1541,7 +1548,7 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
         if (bx < 0 || bx >= world.width || by < 0 || by >= world.height) {
             return `${cannot}: beyond is off the grid`;
         }
-        if (!isFloor(world, bx, by)) return `${cannot}: beyond is a wall`;
+        if (!blockGround(world, bx, by)) return `${cannot}: beyond is a wall`;
         if (state.blocks.includes(posKey(bx, by))) return `${cannot}: beyond is a block`;
         const beyond = sinksBlock(world, bx, by) ? null : shutObstacleAt(world, state, bx, by, inv, clearanceOpts);
         if (beyond !== null) {
