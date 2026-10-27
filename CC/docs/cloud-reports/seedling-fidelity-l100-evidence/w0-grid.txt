@@ -1,0 +1,151 @@
+state 40 104 world 23 13
+rock {"rect":{"x":128,"y":144,"w":16,"h":16,"right":144,"bottom":160},"id":"breakablerock@128,144"}
+pixelmasks 12 undefined@64,64  undefinedxundefined | undefined@48,160  undefinedxundefined | undefined@48,144  undefinedxundefined | undefined@48,128  undefinedxundefined | undefined@48,112  undefinedxundefined | undefined@112,48  undefinedxundefined | undefined@112,64  undefinedxundefined | undefined@112,80  undefinedxundefined | undefined@112,96  undefinedxundefined | undefined@112,112  undefinedxundefined | undefined@112,128  undefinedxundefined | undefined@112,144  undefinedxundefined
+
+== 16px obstacle map (cell centres), rows y, cols x; . free, letter=kind
+   8 ..AAAAAAAAAAA..........
+  24 ..AAA..AAAAAA..........
+  40 AAA.....AAAAAAA.BBBBBB.
+  56 AAA.A..CAAAAAAABBBBBBBB
+  72 AA..C..CAA..AAABBBBBBBB
+  88 AA..A..CA....AABB...BBB
+ 104 AA.DA..CA.........B.BBB
+ 120 AA.CA..CA....AABB...BBB
+ 136 AAACA..CA...AAABBBBBBBB
+ 152 AAACA..CA..AAAABBBBBBBB
+ 168 AAAC...AAAAAAAA.BBBBBB.
+ 184 ..AAAAAAAAAAA..........
+ 200 ..AAAAAAAAAAA..........
+  A solid:
+  B pit:
+  C pixelmask:
+  D teleporter:
+
+== 8px obstacle map (cell centres), rows y, cols x; . free, letter=kind
+   4 ....AAAAAAAAAAAAAAAAAAAAAA....................
+  12 ....AAAAAAAAAAAAAAAAAAAAAA....................
+  20 ....AAAAAA....AAAAAAAAAAAA....................
+  28 ....AAAAAA....AAAAAAAAAAAA....................
+  36 AAAAAA..........AAAAAAAAAAAAAA..BBBBBBBBBBBB..
+  44 AAAAAA..........AAAAAAAAAAAAAA..BBBBBBBBBBBB..
+  52 AAAAAA..AA....C.AAAAAAAAAAAAAABBBBBBBBBBBBBBBB
+  60 AAAAAA..AA....C.AAAAAAAAAAAAAABBBBBBBBBBBBBBBB
+  68 AAAA.....C....C.AAAA....AAAAAABBBBBBBBBBBBBBBB
+  76 AAAA.....C....C.AAAA....AAAAAABBBBBBBBBBBBBBBB
+  84 AAAA....AA....C.AA........AAAABBBB......BBBBBB
+  92 AAAA....AA....C.AA........AAAABBBB......BBBBBB
+ 100 AAAA..DDAA....C.AA..................BB..BBBBBB
+ 108 AAAA..DDAA....C.AA..................BB..BBBBBB
+ 116 AAAA...CAA....C.AA........AAAABBBB......BBBBBB
+ 124 AAAA...CAA....C.AA........AAAABBBB......BBBBBB
+ 132 AAAAAA.CAA....C.AA......AAAAAABBBBBBBBBBBBBBBB
+ 140 AAAAAA.CAA....C.AA......AAAAAABBBBBBBBBBBBBBBB
+ 148 AAAAAA.CAA....C.AA....AAAAAAAABBBBBBBBBBBBBBBB
+ 156 AAAAAA.CAA....C.AA....AAAAAAAABBBBBBBBBBBBBBBB
+ 164 AAAAAA.C......AAAAAAAAAAAAAAAA..BBBBBBBBBBBB..
+ 172 AAAAAA.C......AAAAAAAAAAAAAAAA..BBBBBBBBBBBB..
+ 180 ....AAAAAAAAAAAAAAAAAAAAAA....................
+ 188 ....AAAAAAAAAAAAAAAAAAAAAA....................
+ 196 ....AAAAAAAAAAAAAAAAAAAAAA....................
+ 204 ....AAAAAAAAAAAAAAAAAAAAAA....................
+  A solid:
+  B pit:
+  C pixelmask:
+  D teleporter:
+
+rock cell { tx: 8, ty: 9 }
+(104,120) d=-2,-2 PLANS
+(120,120) d=-1,-2 OBST pixelmask:
+(136,120) d=0,-2 OBST solid:
+(152,120) d=1,-2 noplan: no walkable tile path in level 100 from tile (2,6) to (9,7). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a te
+(168,120) d=2,-2 noplan: no walkable tile path in level 100 from tile (2,6) to (10,7). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a t
+(104,136) d=-2,-1 PLANS
+(120,136) d=-1,-1 OBST pixelmask:
+(136,136) d=0,-1 OBST solid:
+(152,136) d=1,-1 noplan: no walkable tile path in level 100 from tile (2,6) to (9,8). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a te
+(168,136) d=2,-1 noplan: no walkable tile path in level 100 from tile (2,6) to (10,8). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a t
+(104,152) d=-2,0 PLANS
+(120,152) d=-1,0 OBST pixelmask:
+(152,152) d=1,0 noplan: no walkable tile path in level 100 from tile (2,6) to (9,9). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a te
+(168,152) d=2,0 noplan: no walkable tile path in level 100 from tile (2,6) to (10,9). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a t
+(104,168) d=-2,1 PLANS
+(120,168) d=-1,1 OBST solid:
+(136,168) d=0,1 OBST solid:
+(152,168) d=1,1 OBST solid:
+(168,168) d=2,1 OBST solid:
+(104,184) d=-2,2 OBST solid:
+(120,184) d=-1,2 OBST solid:
+(136,184) d=0,2 OBST solid:
+(152,184) d=1,2 OBST solid:
+(168,184) d=2,2 OBST solid:
+
+entities:
+mobiles ERR levelRun.entities: unknown entity family "mobiles" — the known families are open
+enemies ERR levelRun.entities: unknown entity family "enemies" — the known families are open
+chasers [{"id":"flyer@224,96","tag":"flyer","x":232,"y":104,"vx":0,"vy":0,"hits":0,"hitsTimer":0,"dying":false,"destroy":false,"alpha":1},{"id":"jellyfish@80,112","tag":"jellyfish","x":88,"y":120,"vx":0,"vy":0,"hits":0,"hitsTimer":0,"dying":false,"destroy":false,"alpha":1},{"id":"jellyfish@88,144","tag":"jellyfish","x":96,"y":152,"vx":0,"vy":0,"hits":0,"hitsTimer":0,"dying":false,"destroy":false,"alpha":1},{"id":"jellyfish@88,88","tag":"jellyfish","x":96,"y":96,"vx":0,"vy":0,"hits":0,"hitsTimer":0,"dying":false,"destroy":false,"alpha":1},{"id":"jellyfish@80,16","tag":"jellyfish","x":88,"y":24,"vx":0,"vy":0,"hits":0,"hitsTimer":0,"dying":false,"destroy":false,"alpha":1}]
+jellyfish ERR levelRun.entities: unknown entity family "jellyfish" — the known families are op
+jellyfishes ERR levelRun.entities: unknown entity family "jellyfishes" — the known families are 
+world keys level,width,height,world,roles,tiles,walkableTiles,addedTimeRemoved,addedTimeKey,outOfBandClears,fallthrough,pitTiles,lethalTerrainTiles,waterfallTiles,solids,objectSolids,pixelmasks,teleporters,pickups,apItems,proximityHazards,entryHazards,silentHazards,watchers,talkers,oracles,finalBosses,pods,activators,pressers,pushables,chests,burnableTrees,magicalLocks,crushers,iceTurrets,bossTotems,shieldBosses,lightsControllers,finalDoors,pulsers,arrowTraps,fallRocks,spinners,pressResponders,pressEnemies,combat,bridgeTiles,avoidVolumesAt,collidesSolid,solidBoxesForMover,collidesBlast,collidesArrowCover,solidBoxesForBlast,nearestWalkableTile,nearestWalkableTileWithTie,plannerBlockerAt,teleporterHit,assertModelledTerrain
+
+tiles (terrain kinds):
+  0 aabbbbbbbbbbbaaaaaaaaaa
+  1 aabccddeccccbaaaaaaaaaa
+  2 bbbffggfccccbbbahhhhhha
+  3 bccfiggfccecccbhhhhhhhh
+  4 bcfffggfecjjecbhhhhhhhh
+  5 bcffiggfcjjjjcbhhkkkhhh
+  6 bcffiggfejjjjjkkkkhkhhh
+  7 bcffiggfcjjjjcbhhkkkhhh
+  8 bccfiddfefjjecbhhhhhhhh
+  9 bccfiddffffcccbhhhhhhhh
+ 10 bbbfdddcccecbbbahhhhhha
+ 11 aabcccccccccbaaaaaaaaaa
+ 12 aabbbbbbbbbbbaaaaaaaaaa
+  a none
+  b Stone
+  c Odd Tile (wall)
+  d Water
+  e Dark Stone
+  f Dirt
+  g Waterfall
+  h Pit
+  i Cliff
+  j Brick
+  k Odd Tile
+pm detail [{"mask":"CliffSideMaskR","x":64,"y":64},{"mask":"CliffSideMaskR","x":48,"y":160},{"mask":"CliffSideMaskR","x":48,"y":144},{"mask":"CliffSideMaskR","x":48,"y":128},{"mask":"CliffSideMaskR","x":48,"y":112},{"mask":"CliffSideMaskL","x":112,"y":48},{"mask":"CliffSideMaskL","x":112,"y":64},{"mask":"CliffSideMaskL","x":112,"y":80},{"mask":"CliffSideMaskL","x":112,"y":96},{"mask":"CliffSideMaskL","x":112,"y":112},{"mask":"CliffSideMaskL","x":112,"y":128},{"mask":"CliffSideMaskL","x":112,"y":144}]
+
+fine candidates (8px, ±4):
+(124,132) d=12.6 PLANS [[44,92],[60,44],[124,44],[124,132]]
+(148,132) d=12.6 noplan no walkable tile path in level 100 from tile (5,13) to (18,16). The two are in different connected c
+(124,140) d=5.7 PLANS [[44,92],[60,44],[124,44],[124,140]]
+(148,140) d=5.7 noplan no walkable tile path in level 100 from tile (5,13) to (18,17). The two are in different connected c
+(156,140) d=12.6 noplan no walkable tile path in level 100 from tile (5,13) to (19,17). The two are in different connected c
+(124,148) d=4.0 PLANS [[44,92],[60,44],[124,44],[124,148]]
+(148,148) d=4.0 noplan no walkable tile path in level 100 from tile (5,13) to (18,18). The two are in different connected c
+(156,148) d=12.0 noplan no walkable tile path in level 100 from tile (5,13) to (19,18). The two are in different connected c
+(124,156) d=4.0 PLANS [[44,92],[60,44],[124,44],[124,156]]
+(148,156) d=4.0 noplan no walkable tile path in level 100 from tile (5,13) to (18,19). The two are in different connected c
+(156,156) d=12.0 noplan no walkable tile path in level 100 from tile (5,13) to (19,19). The two are in different connected c
+
+mask keys [
+  'rect',  'mask',
+  'maskX', 'maskY',
+  'cls',   'tag',
+  'x',     'y'
+] [ 'w', 'h', 'opaque', 'rows' ]
+########........
+########........
+########........
+########........
+########........
+########........
+########........
+########........
+########........
+########........
+########........
+########........
+########........
+########........
+########........
+########........
