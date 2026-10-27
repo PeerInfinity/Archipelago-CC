@@ -471,11 +471,16 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
     };
 
     const sample = new Set(regions ?? Object.keys(SIDECARS));
-    // One reach cache per world (a shared world's key, else the region): pairs and entries share reaches.
+    // One reach cache per world (a shared world's key, else the region): pairs and entries share reaches. Only the
+    // CURRENT world's is kept — a world's members are certified together, and landing-rooted arrivals multiply the
+    // reaches one world holds (the whole game ran a 6 GB worker out of heap keeping every world's).
     const caches = new Map();
     const cacheOf = (world, name) => {
         const key = world.sharedWorld?.key ?? name;
-        if (!caches.has(key)) caches.set(key, new Map());
+        if (!caches.has(key)) {
+            caches.clear();
+            caches.set(key, new Map());
+        }
         return caches.get(key);
     };
     const sharedDone = new Set();

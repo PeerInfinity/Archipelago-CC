@@ -1427,12 +1427,15 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     // L8's lane block is shoved into the water to clear the lane. An entity's cell is the entity's, never a sink.
     // ⛓ PIT SINKS (session tile-primitives-pit-sinks-landings): floored or NOT — a pit the player cannot walk is
     // still a cell the block slides into and dies on (a pit is a "Tile", not "Solid": `Tile.as` `types`), as L63's
-    // spear block is struck into the pit at [8,6]. The engine lets a block onto a sink cell that is not floor.
+    // spear block is struck into the pit at [8,6]. The engine lets a block onto a sink cell that is not floor. A block
+    // arrives from a floored cell beside it (a push or a strike moves it one cell), so an unfloored sink with no floored
+    // neighbour is never entered and is not laid.
     const blockSinks = [];
     if (blocks.length > 0 && typeof ctx.blockSinkCell === 'function') {
         for (let y = 0; y < grid.height; y += 1) {
             for (let x = 0; x < grid.width; x += 1) {
                 if (claimed.has(keyOf(x, y))) continue;
+                if (!builder.isFloor(x, y) && !MOVES.some(([, dx, dy]) => builder.isFloor(x + dx, y + dy))) continue;
                 if (ctx.blockSinkCell(grid.cells[y * grid.width + x])) blockSinks.push({ x, y });
             }
         }
