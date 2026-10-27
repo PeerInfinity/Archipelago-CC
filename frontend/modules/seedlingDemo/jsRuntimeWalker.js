@@ -462,7 +462,8 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                     settle(WALK_STATES.FAILED, `the solver declined — ${s.declined}`, { obstacle: s.obstacle });
                     return null;
                 }
-                if (s?.declined && goal.event) {
+                // ⛓ ENCOUNTER LEGS — the same for an encounter: only the solver's executor fights it, so a walk clears nothing.
+                if (s?.declined && (goal.event || goal.encounter)) {
                     // ⛓ EVENT GOALS — only the solver's `clear-tag` can set the game's flag: "walking instead" walks to
                     // the obstacle's cell and clears nothing (measured: L16's rope, no weapon — the walk left by the
                     // arrival door). The goal FAILS now, by the solver's own reason.
@@ -527,7 +528,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         describe() {
             if (!goal) return 'bot: idle';
             const what = goal.kind === 'location' ? (goal.event ? `event flag {${goal.event.tag?.level},${goal.event.tag?.tag}}`
-                : `apitem tag ${goal.tag}`)
+                : goal.encounter ? `the ${goal.encounter.drop?.item} encounter` : `apitem tag ${goal.tag}`)
                 : goal.kind === 'exit' ? `door (${goalTiles(goal).map((t) => t.join(', ')).join(' | ')})` : `tile (${goal.tile.join(', ')})`;
             return `bot: ${state} → ${goal.name ?? what} in level ${goal.level}${reason ? ` — ${reason}` : ''}`
                 + `${playing ? '' : ' (paused)'}`;
