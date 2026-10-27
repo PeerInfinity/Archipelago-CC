@@ -1,0 +1,48 @@
+5172 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5173 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5174 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5175 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5176 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5177 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5178 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5179 EXH:bob@736,800 | EXH:bob@736,800 
+5180 OTHER:5 alternative(s) — lands the player box on a body's 7x7 rect | OTHER:5 alternative(s) — lands the player box on a body's 7x7 rect 
+5181 EXH:bob@736,752 | EXH:bob@736,752 
+5182 OTHER:5 alternative(s) — lands the player box on a body's 7x7 rect | OTHER:5 alternative(s) — lands the player box on a body's 7x7 rect 
+5183 OTHER:5 alternative(s) — lands the player box on a body's 7x7 rect | OTHER:5 alternative(s) — lands the player box on a body's 7x7 rect 
+5184 EXH:bob@736,752 | EXH:bob@736,752 
+5185 EXH:bob@736,752 | EXH:bob@736,752 
+5186 EXH:bob@736,800 | EXH:bob@736,800 
+5187 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5188 EXH:bob@736,752 | EXH:bob@736,752 
+5189 EXH:bob@736,752 | EXH:bob@736,752 
+5190 EXH:bob@736,752 | EXH:bob@736,752 
+5191 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5192 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5193 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 MOVED
+5194 EXH:bob@736,800 | EXH:bob@736,800 
+5195 EXH:bob@736,752 | EXH:bob@736,752 
+5196 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5197 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5198 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5199 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5200 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5201 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5202 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5203 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5204 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5205 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5206 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+5207 EXH:bob@736,800 | EXH:bobsoldier@880,832 MOVED
+5208 EXH:bob@736,800 | EXH:bobsoldier@880,832 MOVED
+5209 EXH:bob@736,800 | EXH:bob@736,800 
+5210 EXH:bob@736,800 | EXH:bobsoldier@880,832 MOVED
+5211 EXH:bob@736,800 | EXH:bob@736,800 
+5212 EXH:bob@736,800 | EXH:bob@736,800 
+5213 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 MOVED
+5214 EXH:bob@736,800 | EXH:bob@736,800 
+5215 EXH:bob@736,800 | EXH:bob@736,800 
+5216 EXH:bobsoldier@880,832 | EXH:bobsoldier@880,832 
+A {'EXH:bobsoldier@880,832': 24, 'EXH:bob@736,800': 11, "OTHER:5 alternative(s) — lands the player box on a body's 7x7 rect": 3, 'EXH:bob@736,752': 7}
+B {'EXH:bobsoldier@880,832': 27, 'EXH:bob@736,800': 8, "OTHER:5 alternative(s) — lands the player box on a body's 7x7 rect": 3, 'EXH:bob@736,752': 7}
+moved 5 of 45
