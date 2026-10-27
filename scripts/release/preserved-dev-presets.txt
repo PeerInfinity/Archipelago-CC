@@ -10,6 +10,14 @@
 # One preset game-id (frontend/presets/<id>) per line. Blank lines and
 # lines starting with '#' are ignored.
 #
+# PUBLIC: a line `<id> public` marks a dev-built preset that must ALSO appear
+# on the deployed site (GitHub Pages loads preset_files.live.json, not the dev
+# index) — typically one a tutorial tells a person to load from the Presets
+# panel. apply-post-preset-merge.sh keeps its entry (the dev index's entry,
+# unchanged) in preset_files.live.json on every run. Unmarked ids stay
+# dev-only. frontend/modules/tutorials/tutorialPresetsLive.test.js fails when
+# a tutorial names a preset the live index lacks.
+#
 # NOTE: WORKFLOW-PRODUCED worldgen worlds (worlds/*_worldgen) and their
 # *_worldgen preset dirs are intentionally NOT preserved — the workflow
 # regenerates them; do not add those here. Hand-maintained demo worldgen
@@ -46,7 +54,8 @@ seedling_generated_host
 seedling_generated_leaf
 seedling_generated_room
 seedling_generated_swim
-seedling_playthrough
+seedling_playthrough public
+seedling_playthrough_maze public
 seedling_sphere_room
 seedling_spiral_room
 concept_trial

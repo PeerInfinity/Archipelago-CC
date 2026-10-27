@@ -65,6 +65,8 @@ const POLL_MS = 100;
 const TOUR_ID = 'guided-tour';
 /** The retired Resume record (⚖ 2026-10-19). */
 const PROGRESS_SETTING = `moduleSettings.${MODULE_ID}.progress`;
+/** The Flash Panel's runtime setting (`auto` / `wasm` / `js`), which a runtime-variant walk row overrides for its session. */
+const RUNTIME_SETTING = 'moduleSettings.flashPanel.runtime';
 
 /** The live panel, opened if it is closed, back on its list and merged, its settings at `settings`. */
 async function freshPanel(tc, settings) {
@@ -390,7 +392,14 @@ async function tutorialUrlRequestStartsTheTutorial(tc) {
  * outside step: its stand-in), each `done` waited for, and the result graded
  * by the ratchet against the tutorial's record (tutorialWalk.js).
  */
-async function tutorialWalkRow(tc, tutorial) {
+async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
+    // ⛓ A RUNTIME VARIANT (`runtime`: the Flash runtime the walk plays in) is a SESSION override, put back in `finally`:
+    // the tutorial itself uses whichever runtime is set and never changes it (⚖ the user, 2026-10-26: "Work in both").
+    const runtimeBefore = runtime ? await settingsManager.getSetting(RUNTIME_SETTING, 'auto') : null;
+    if (runtime) {
+        await settingsManager.updateSetting(RUNTIME_SETTING, runtime, { persist: false });
+        tc.log?.(`${tutorial.id}: walked with ${RUNTIME_SETTING} = ${runtime} (session override; was ${runtimeBefore})`);
+    }
     const settings = await savedSettings();
     const tabs = activeTabs();
     const ctx = buildContext({ eventBus });
@@ -452,6 +461,11 @@ async function tutorialWalkRow(tc, tutorial) {
             try { await ctx.loadRulesPath(before); } catch (e) { tc.log?.(`could not reload ${before}: ${e.message}`); }
         }
         ctx.dispose();
+        if (runtime) {
+            try { await settingsManager.updateSetting(RUNTIME_SETTING, runtimeBefore, { persist: false }); } catch (e) {
+                tc.log?.(`could not put ${RUNTIME_SETTING} back: ${e.message}`);
+            }
+        }
     }
     return tc.getOverallResult();
 }
@@ -563,6 +577,28 @@ for (const { tutorial, id, kind, category } of walkRows) {
         // Named per row: the registry tells test functions apart by name.
         testFunction: { [fn]: (tc) => tutorialWalkRow(tc, tutorial) }[fn],
         category,
+        enabled: false,
+    });
+}
+
+/**
+ * ⛓ RUNTIME VARIANTS — a walk row that plays a Seedling tutorial in the OTHER Flash runtime (⚖ the user,
+ * 2026-10-26: "Work in both"). The tutorial's own row plays the default (wasm); this one plays it with the runtime
+ * set to `js` for the row's session: its ▶ Start step must complete with no Start to press, and the bot must take
+ * its checks on the JS page. Same record, same ratchet.
+ */
+const RUNTIME_VARIANTS = Object.freeze([{ tutorialId: 'seedling-bot', runtime: 'js' }]);
+for (const { tutorialId, runtime } of RUNTIME_VARIANTS) {
+    const tutorial = TUTORIALS.find((t) => t.tutorial.id === tutorialId)?.tutorial;
+    if (!tutorial) continue;
+    const fn = `walk_${tutorial.id.replace(/-/g, '_')}_${runtime}`;
+    registerTest({
+        id: `${walkId(tutorial.id)}-${runtime}`,
+        name: `Tutorial walk (${runtime} runtime): ${tutorial.title}`,
+        description: `Performs every step of "${tutorial.title}" with Do it, with the Flash runtime set to ${runtime} for the `
+            + 'row\'s session (put back after), and grades the result by its record. Reloads the world loaded before.',
+        testFunction: { [fn]: (tc) => tutorialWalkRow(tc, tutorial, { runtime }) }[fn],
+        category: walkCategory(tutorial),
         enabled: false,
     });
 }

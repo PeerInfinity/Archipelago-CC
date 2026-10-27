@@ -17,6 +17,8 @@ const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
  * `centerOO` (or the class's own `x`/`originX`): the frame pixel that sits on
  * the body's position, and the pivot of a turn or a scale.
  */
+// ⛓ G10 (G9's F4) — FlashPunk's `Image.originX/Y` are `int` (`net/flashpunk/graphics/Image.as:40-45`), so `centerOO`
+// on an odd-sized frame TRUNCATES (7 px → 3): every origin below is the truncated one, the half pixel G3–G9 drew is gone.
 export const ENEMY_ART = Object.freeze([
     { pack: 'seedling', key: 'seedling:enemy/bob', file: 'Bob.png', fw: 8, fh: 8, origin: [4, 4],
         as3: 'Enemies/Bob.as:15-16 Spritemap(8, 8); :35 centerOO; :36 walk sitFrames [0,1,2,1] fps 10 one-shot; :37 die [3..6] fps 5',
@@ -24,7 +26,7 @@ export const ENEMY_ART = Object.freeze([
     { pack: 'seedling', key: 'seedling:enemy/lavarunner', file: 'LavaRunner.png', fw: 20, fh: 20, origin: [10, 10],
         as3: 'Enemies/LavaRunner.as:13-14 Spritemap(20, 20); :31 centerOO; :32-34 walk/swim/die fps 15',
         anims: { walk: fps([0, 2, 3, 4], 15), swim: fps([5, 7, 8, 9], 15), die: fps(range(10, 18), 15) } },
-    { pack: 'seedling', key: 'seedling:enemy/jellyfish', file: 'Jellyfish.png', fw: 14, fh: 15, origin: [7, 7.5],
+    { pack: 'seedling', key: 'seedling:enemy/jellyfish', file: 'Jellyfish.png', fw: 14, fh: 15, origin: [7, 7],
         as3: 'Enemies/Jellyfish.as:14-15 Spritemap(14, 15); :28 centerOO; :29 walk [0,1,2,3,2,1] fps 15 one-shot; :30 die [4..11] fps 7 one-shot',
         anims: { walk: fps([0, 1, 2, 3, 2, 1], 15, false), die: fps(range(4, 11), 7, false) } },
     { pack: 'seedling', key: 'seedling:enemy/bulb', file: 'Bulb.png', fw: 16, fh: 16, origin: [8, 8],
@@ -48,7 +50,7 @@ export const ENEMY_ART = Object.freeze([
         as3: 'Enemies/BobSoldier.as:24-25 Spritemap(16, 5); :62-63 y = -3, originY = 3 (x = originX = 0); :187-198 angle = swordSpin deg' },
     { pack: 'seedling', key: 'seedling:enemy/spinner', file: 'Spinner.png', fw: 18, fh: 9, origin: [5, 5],
         as3: 'Enemies/Spinner.as:16-17 Spritemap(18, 9); :35-38 x = y = -5, origin 5; :97-121 frame 1 (the hammer) turned, then frame 0 (the body)' },
-    { pack: 'seedling', key: 'seedling:projectile/arrow', file: 'Arrow.png', origin: [4, 1.5],
+    { pack: 'seedling', key: 'seedling:projectile/arrow', file: 'Arrow.png', origin: [4, 1],
         as3: 'Projectiles/Arrow.as:15-16 Image; :24 centerOO; :32,41 angle = atan2(-v.y, v.x)' },
     // ── G3b: the room bodies that are not chasers (`seedlingRoomBodySkin.js`) ──
     { pack: 'seedling', key: 'seedling:enemy/wallflyer', file: 'WallFlyer.png', fw: 20, fh: 16, origin: [12, 8],
@@ -120,7 +122,7 @@ export const ENEMY_ART = Object.freeze([
         as3: 'Scenery/BurnableTree.as:13-14 Spritemap(BurnableTreeBurn, 32, 32, burnEnd); :23 centerOO; :24 burn [0..19] fps 15 (burnEnd removes it); Tree.as:20 super(_x + 16, _y + 16)',
         anims: { burn: fps(range(0, 19), 15) } },
     ...[['magicallock', 'MagicalLock.png'], ['magicallockfire', 'MagicalLockFire.png']].map(([k, file]) => ({
-        pack: 'seedling', key: `seedling:puzzlement/${k}`, file, fw: 22, fh: 21, origin: [11, 10.5],
+        pack: 'seedling', key: `seedling:puzzlement/${k}`, file, fw: 22, fh: 21, origin: [11, 10],
         as3: `Puzzlements/MagicalLock.as:15-18 Spritemap(${file}, 22, 21, animEnd); :38 centerOO; :39 destroy [3..9] fps 15; :73-77 frame Game.worldFrame(3) otherwise`,
         anims: { destroy: fps(range(3, 9), 15) } })),
     ...[['lock', 'Lock.png', 'Puzzlements/Lock.as:17-18'], ['wandlock', 'WandLock.png', 'Puzzlements/WandLock.as:13-14'],
@@ -148,7 +150,7 @@ export const ENEMY_ART = Object.freeze([
         ['witch', 'Witch', 16, 13, [0, 1], 5, 'NPCs/Witch.as:14-15,28'],
         ['yeti', 'Yeti', 10, 12, [0, 1], 5, 'NPCs/Yeti.as:14-15,25']]
         .map(([k, cls, w, h, talk, rate, as3]) => ({ pack: 'seedling', key: `seedling:npc/${k}`, file: `NPCs/${cls}.png`, fw: w, fh: h,
-            origin: [w / 2, h / 2], as3: `${as3} Spritemap(${w}, ${h}), talk [${talk}] fps ${rate}; NPC.as:57 centerOO`,
+            origin: [Math.trunc(w / 2), Math.trunc(h / 2)], as3: `${as3} Spritemap(${w}, ${h}), talk [${talk}] fps ${rate}; NPC.as:57 centerOO`,
             anims: { talk: fps(talk, rate) } })),
     { pack: 'seedling', key: 'seedling:npc/oracle', file: 'NPCs/Oracle.png', fw: 16, fh: 24, origin: [8, 16],
         as3: 'NPCs/Oracle.as:13-14 Spritemap(16, 24, animEnd); :37-38 y = -16, originY = 16 (after centerOO: x = -8); :42-46 its anims (NPC_ANIMS.oracle)' },
@@ -156,12 +158,12 @@ export const ENEMY_ART = Object.freeze([
         as3: 'NPCs/Sign.as:13-14 Spritemap(16, 16), frame 0; NPC.as:57 centerOO' },
     { pack: 'seedling', key: 'seedling:npc/totem', file: 'Totem.png', fw: 32, fh: 64, origin: [16, 48],
         as3: 'NPCs/Totem.as:13-14 Spritemap(32, 64), frame 0; :21-24 originX 16, x = -16, originY 48, y = -48' },
-    { pack: 'seedling', key: 'seedling:npc/watcher', file: 'NPCs/Watcher.png', fw: 12, fh: 15, origin: [6, 7.5],
+    { pack: 'seedling', key: 'seedling:npc/watcher', file: 'NPCs/Watcher.png', fw: 12, fh: 15, origin: [6, 7],
         as3: 'NPCs/Watcher.as:13-14 Spritemap(12, 15); NPC.as:57 centerOO; :58-95 its frame (direction, seed 6, die [7,8,9])' },
     { pack: 'seedling', key: 'seedling:npc/talk', file: 'NPCs/Talk.png', fw: 10, fh: 14, origin: [5, 14],
         as3: 'NPCs/NPC.as:17-18 Spritemap(10, 14); :59-61 centerOO, then y = -height; :174-181 frame Game.worldFrame(2, 1/1.25) at (x, y - originY - charToTalkMargin)' },
     // ── G8: the arrow traps, the ice / dark / lava traps and the falling rocks (`seedlingTrapSkin.js`). ──
-    { pack: 'seedling', key: 'seedling:puzzlement/arrowtrap', file: 'ArrowTrap.png', fw: 16, fh: 5, origin: [8, 2.5],
+    { pack: 'seedling', key: 'seedling:puzzlement/arrowtrap', file: 'ArrowTrap.png', fw: 16, fh: 5, origin: [8, 2],
         as3: 'Puzzlements/ArrowTrap.as:13-14 Spritemap(16, 5); :21-22 super(_x + 8, _y + 2.5), centerOO; :40-43 frame Game.worldFrame(frameCount)' },
     { pack: 'seedling', key: 'seedling:enemy/icetrap', file: 'IceTrap.png', fw: 16, fh: 16, origin: [8, 8],
         as3: 'Enemies/IceTrap.as:13-14 Spritemap(16, 16, endAnim); :22-24 centerOO, chomp [0,1,2,1] fps 10, hit [1]; :39-42 "" → Game.worldFrame(2)',
@@ -214,7 +216,7 @@ export const ENEMY_ART = Object.freeze([
     { pack: 'seedling', key: 'seedling:fx/slashhit', file: 'SlashHit.png', fw: 32, fh: 16, origin: [16, 8],
         as3: 'Scenery/SlashHit.as:13-14 Spritemap(32, 16, endAnim); :19-21 centerOO, slash [0,1] fps 15; :22 scale = sc/32 + 0.35',
         anims: { slash: fps([0, 1], 15) } },
-    { pack: 'seedling', key: 'seedling:fx/droplet', file: 'Droplet.png', fw: 9, fh: 5, origin: [4.5, 2.5],
+    { pack: 'seedling', key: 'seedling:fx/droplet', file: 'Droplet.png', fw: 9, fh: 5, origin: [4, 2],
         as3: 'Game.as:393-394 sprDroplet Spritemap(9, 5); :802 centerOO; Scenery/Droplet.as:92-101 frame/alpha/colour per render' },
     { pack: 'seedling', key: 'seedling:hud/heart', file: 'Health.png', fw: 12, fh: 12, origin: [0, 0],
         as3: 'Game.as:396-397 sprHealth Spritemap(12, 12); :1537-1546 drawHealth: frame int(i > healthc), screen-anchored' },
@@ -240,8 +242,32 @@ export const ENEMY_ART = Object.freeze([
         ['firewand', 'FireWandPickup.png', 5, 9], ['ghostspear', 'GhostSpear.png', 20, 7], ['ghostsword', 'GhostSwordPickup.png', 24, 7],
         ['darksuit', 'DarkSuit.png', 10, 10, 'Image'], ['torchpickup', 'TorchPickup.png', 12, 12], ['health', 'HealthPickup.png', 8, 8],
         ['totempart', 'BossTotemParts.png', 24, 24], ['chest', 'Chest.png', 16, 16], ['seed', 'Seed.png', 9, 13]]
-        .map(([look, file, w, h, image]) => ({ pack: 'seedling', key: `seedling:pickup/${look}`, file, fw: w, fh: h, origin: [w / 2, h / 2],
+        .map(([look, file, w, h, image]) => ({ pack: 'seedling', key: `seedling:pickup/${look}`, file, fw: w, fh: h, origin: [Math.trunc(w / 2), Math.trunc(h / 2)],
             as3: `Pickups/APItem.as:94-104 "${look}" → [${file}, ${image ? '0, 0] (an Image: the whole ' + w + 'x' + h + ' file)' : `${w}, ${h}]`}; :171 centerOO, frame 0` })),
+    // ── G10: the bosses (`seedlingBossSkin.js`). The anims ride the model's own tables (`shieldBossFight.SHIELD_BOSS_ANIMS`
+    //    etc.): the run carries the frame, so the rows hold the sheet, the frame size and the origin. ──
+    { pack: 'seedling', key: 'seedling:boss/shieldboss', file: 'ShieldBoss.png', fw: 56, fh: 80, origin: [28, 40],
+        as3: 'Enemies/ShieldBoss.as:15-16 Spritemap(56, 80); :35-41 super(_x + 24, _y + 32), centerOO; sit [0], stab [3..8], moveShield [0,1], movedShield [2], die [9..19]' },
+    { pack: 'seedling', key: 'seedling:boss/finalboss', file: 'FinalBoss.png', fw: 16, fh: 16, origin: [8, 8],
+        as3: 'Enemies/FinalBoss.as:20-21 Spritemap(16, 16, endAnim); :40-46 super(_x + 8, _y + 8), centerOO; walk [0..3] fps 15, die [4..11] fps 5, dead [11,11] fps 1, deadframe [11] (fps 0: frame 11, no row); sitFrames [0..3] by worldFrame',
+        anims: { walk: fps([0, 1, 2, 3], 15), die: fps(range(4, 11), 5), dead: fps([11, 11], 1) } },
+    { pack: 'seedling', key: 'seedling:boss/lavaboss', file: 'LavaBoss.png', fw: 160, fh: 82, origin: [80, 41],
+        as3: 'Enemies/LavaBoss.as:20-21 Spritemap(160, 82, endAnim); :31-43 super(_x + 48, _y + 40), centerOO; sit/smash/smashback/armsup/sweep/sweepback/hit/hitplayer/die/dead' },
+    { pack: 'seedling', key: 'seedling:boss/lavaball', file: 'LavaBall.png', fw: 48, fh: 32, origin: [32, 16],
+        as3: 'Projectiles/LavaBall.as:15-16 Spritemap(48, 32); :24-30 scale 0.5, originX 32 (x = -32), originY 16 (y = -16); fly [0,1,2] fps 10',
+        anims: { fly: fps([0, 1, 2], 10) } },
+    { pack: 'seedling', key: 'seedling:boss/tentaclebeast', file: 'TentacleBeast.png', fw: 46, fh: 44, origin: [23, 22],
+        as3: 'Enemies/TentacleBeast.as:18-19 Spritemap(46, 44, animEnd); :38-44 super(_x + 24, _y + 24), centerOO; sink/rise fps 8, under [12], dying [13..16] fps 2; sitting [0,1,2,1], dead [17,18,19,18]' },
+    { pack: 'seedling', key: 'seedling:boss/tentacle', file: 'Tentacle.png', fw: 80, fh: 49, origin: [8, 47],
+        as3: 'Enemies/Tentacle.as:15-16 Spritemap(80, 49, animEnd); :26-29 originX 8 (x = -8), originY 47 (y = -47); rise/hit/hitting/sink/cut fps 10, sit fps 5; scaleX = right ? 1 : -1' },
+    { pack: 'seedling', key: 'seedling:boss/lightboss', file: 'LightBoss.png', fw: 17, fh: 16, origin: [8, 8],
+        as3: 'Enemies/LightBoss.as:15-16 Spritemap(17, 16, animEnd); :38 centerOO (FlashPunk\'s int origin: 17/2 → 8); sit [0], die [1..9] fps 20' },
+    { pack: 'seedling', key: 'seedling:boss/lightbossshot', file: 'LightBossShot.png', fw: 8, fh: 8, origin: [4, 4],
+        as3: 'Projectiles/LightBossShot.as:14-15 Spritemap(8, 8); :21 centerOO; :32-38 angle += 10 an update; TurretSpit.render onto nightBmp at 0.1' },
+    { pack: 'seedling', key: 'seedling:boss/lightbosstotem', file: 'LightBossTotem.png', origin: [0, 8],
+        as3: 'Scenery/LightBossTotem.as:14-15 Image; :21-23 super(_x, _y), originY 8 (y = -8); render: onto nightBmp at 0.5; dying: scaleX ·0.9, scaleY +0.1, y −10 a render' },
+    { pack: 'seedling', key: 'seedling:boss/frozenboss', file: 'FrozenBoss.png',
+        as3: 'Scenery/FrozenBoss.as:13-14 Image; :18 super(_x, _y) (origin 0); :20 layer; :25-30 render, and onto nightBmp' },
     // `Game.as:432-444` `bossKeys` (Spritemap(12, 16), centerOO at `Game.as:811-813`); `APItem.as:155-162` "bosskeyN".
     ...['', '1', '2', '3', '4'].map((n, i) => ({ pack: 'seedling', key: `seedling:pickup/bosskey${i}`, file: `BossKey${n}.png`, fw: 12, fh: 16, origin: [6, 8],
         as3: `Game.as:${432 + 2 * i}-${433 + 2 * i} sprBossKey${n}; Game.as:444 bossKeys[${i}]; APItem.as:155-162 "bosskey${i}"` })),

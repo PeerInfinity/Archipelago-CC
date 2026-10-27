@@ -588,6 +588,17 @@ export class SettingsManager {
   }
 
   /**
+   * Is `key` currently a session override (set with `persist: false`)? A caller that rewrites a value it read (a
+   * migration) uses it to write back to the SAME layer, so a session value is never made persistent.
+   *
+   * @param {string} key
+   * @returns {boolean}
+   */
+  hasOverride(key) {
+    return this._overrides.has(key);
+  }
+
+  /**
    * Drop a single session override. Reads via getSetting subsequently
    * fall back to the persisted base. Fires settings:changed so
    * subscribers re-read (the effective value may have changed).

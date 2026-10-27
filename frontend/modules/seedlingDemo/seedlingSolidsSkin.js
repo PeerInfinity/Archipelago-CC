@@ -68,7 +68,8 @@
  * ⚠ Band: a frame the run does not tick (a freeze, a ceremony, dead frames) — the same
  * band as G7's sinking block. ⚠ Residue (`SOLIDS_PENDING`): a Cover's overlap counts the
  * player, the chests and the pushables, not an enemy-free Solid the run does not list;
- * the kill locks and the RockLock (tset −1: not in `activatorsNow`) stay shut until open.
+ * ⛓ G10: the kill locks and the RockLock (tset −1: not in `activatorsNow`) fade from the removal tick
+ * their kill-lock ledger row banks, the same recurrence, open on its `declaredAt`.
  * A button's PRESSED frame is drawn from `activatorsNow.pressers` (cleared as-is).
  */
 import { HIT_TO_GONE_TICKS as ROCK_CALLBACK } from './breakableRocks.js';
@@ -120,9 +121,13 @@ export const SOLIDS_COVERAGE = Object.freeze({
 /** Still drawn in their DEFAULT state (G9c drew the responders' fades). */
 export const SOLIDS_PENDING = Object.freeze({
     'Cover (residue)': 'a release under a Solid the run does not list (not the player, a chest or a pushable): drawn reset',
-    RockLock: 'the kill-lock fade and INVERT (RockLock.as:49-88); drawn shut while the world holds it',
-    'a KILL lock (tset −1, `world.killLocks`)': 'its fade after the last kill (Lock.as:109-115): the run banks the clear through its '
-        + 'kill-lock ledgers and does not open the activator this visit, so it is drawn shut until a build despawns it',
+    // ⛓ G10 — the kill locks and the RockLock fade from the kill-lock ledgers' removal tick (`spinnerKillLockOpens` /
+    //    `chaserKillLockOpens`), opening on `declaredAt`; what stays is the MODEL's residue, named here
+    'a KILL lock / RockLock (residue, model)': 'the run banks the clear and keeps the body SOLID this visit, so the picture opens on '
+        + '`declaredAt` while the run\'s wall stays; a RockLock with tset ≥ 0 (L112, `Button.activateAll` at the Owl\'s death) has '
+        + 'no read and is drawn shut',
+    'a KILL lock (band)': 'its ledger row lands a tick after the removal tick, so its first faded frame (0.99) is drawn at 1; the '
+        + 'reducer catches up, and the open is on `declaredAt`',
 });
 
 // ── the adapter ─────────────────────────────────────────────────────────
@@ -137,6 +142,15 @@ function newestBy(rows, level) {
     for (const r of rows ?? []) if (r.level === level) out.set(r.id, r);
     return out;
 }
+
+/** The tick this visit of the run's level began (its newest arrival), 0 for the boot visit. */
+function visitStartOf(run) {
+    const ts = run.transitions ?? [];
+    for (let i = ts.length - 1; i >= 0; i -= 1) if ((ts[i].to_level ?? ts[i].to) === run.level) return ts[i].t ?? 0;
+    return 0;
+}
+/** A kill lock's fade: 100 steps of 0.01, open on the 101st (`Lock.activationStep`, `RockLock.update`). */
+const KILL_FADE_STEPS = 100;
 
 /**
  * THE ADAPTER. Everything these pictures read, as plain objects (null when
@@ -158,6 +172,15 @@ export function solidsSkinView(run, { record = null } = {}) {
     const acts = read(run, 'activatorsNow', null);
     const pressed = new Map((acts?.pressers ?? []).map((p) => [p.id, p.down]));
     const live = new Map((acts?.responders ?? []).map((r) => [r.id, r]));
+    // ⛓ G10 — a KILL lock's (tset −1) activation: the removal tick the run's kill-lock ledgers bank for it THIS visit
+    // (`Lock.checkEnemies` / `RockLock.update`: `totalEnemies() == 0` from that tick on; the open is 100 later)
+    const since = visitStartOf(run);
+    const killFrom = new Map();
+    for (const row of [...(read(run, 'spinnerKillLockOpens', []) ?? []), ...(read(run, 'chaserKillLockOpens', []) ?? [])]) {
+        if (row.level !== level || row.nil || !(row.t >= since)) continue;
+        for (const o of row.opens ?? []) if (!killFrom.has(o.at)) killFrom.set(o.at, row.t);
+    }
+    const killHeld = (id) => (killFrom.has(id) && now >= killFrom.get(id) ? now - killFrom.get(id) + 1 : null);
     const box = playerBoxAt(run.state.x, run.state.y);
     const pushables = read(run, 'pushables', null);
     const blocks = pushables ? [...pushables.values()].filter((b) => !b.removed).map((b) => b.rect) : [];
@@ -197,9 +220,14 @@ export function solidsSkinView(run, { record = null } = {}) {
                 // ⛓ G9c — what the class's own update reads: the run's step count / latch, and (a Cover's reset) what overlaps it
                 ...(r ? { held: r.held, touched: !!r.touched, overlap: [box, ...blocks, ...chestBoxes].some((b) => hit(b, cell)),
                     chestUnder: chestBoxes.some((b) => hit(b, cell)) } : {}),
+                // ⛓ G10 — a kill lock: its held steps from the kill-lock ledger; it opens on the 101st (`declaredAt`).
+                // ⚠ RESIDUE (model): the run keeps it SOLID this visit (it banks the clear); the picture is the game's.
+                ...(!(r?.held > 0) && killHeld(a.id) !== null ? { held: killHeld(a.id), touched: false, overlap: false, chestUnder: false, kill: true,
+                    open: killHeld(a.id) > KILL_FADE_STEPS } : {}),
             };
         }),
-        rockLocks: solids.filter((o) => o.tag === 'rocklock').map((o) => ({ x: o.x, y: o.y })),
+        rockLocks: solids.filter((o) => o.tag === 'rocklock').map((o) => ({ id: `rocklock@${o.x},${o.y}`, x: o.x, y: o.y,
+            held: killHeld(`rocklock@${o.x},${o.y}`) ?? 0 })),
         buttons: (world?.pressers ?? []).map((p) => {
             const id = `${p.tag}@${p.x},${p.y}`;
             // `ButtonRoom.check()`: `_active = !checkPersistence(tag)` (the world's `bootPressed`) on the build's frame
@@ -280,8 +308,20 @@ export function stepResponder(prev, a) {
     return { state: s, drift };
 }
 
+/** `RockLock.update` (`RockLock.as:49-70`) for one step, `active` its `activate` (a kill lock: `totalEnemies() == 0`). */
+export function stepRockLock(prev, active) {
+    const s = { ...prev, active };
+    if (active) {
+        if (s.alpha > 0) {
+            s.alpha = clamp01(s.alpha - 0.01);
+            if (s.alpha <= 0) { s.solid = false; s.alpha = 0; }
+        }
+    } else if (!s.solid) { s.solid = true; s.alpha = 1; }
+    return s;
+}
+
 /** The reducer's rules, by name, so a test can swap ONE for a mutant (`opts.rules`). */
-export const SOLIDS_RULES = Object.freeze({ chestTimer, buttonFrame, spriteAfter, worldFrame, stepResponder });
+export const SOLIDS_RULES = Object.freeze({ chestTimer, buttonFrame, spriteAfter, worldFrame, stepResponder, stepRockLock });
 
 /** One GAME tick of these pictures (call it after every `tick()`). Pure: returns a new object. */
 export function stepSolidsSkin(prev, view, tick, { rules = SOLIDS_RULES } = {}) {
@@ -301,11 +341,24 @@ export function stepSolidsSkin(prev, view, tick, { rules = SOLIDS_RULES } = {}) 
     let drift = same ? prev.drift ?? 0 : 0;
     for (const a of view.responders) {
         if (a.held === undefined) continue;
-        const r = R.stepResponder(same ? prev.responders?.get(a.id) ?? null : null, a);
-        if (r.drift) drift += 1;
-        responders.set(a.id, r.state);
+        const before = same ? prev.responders?.get(a.id) ?? null : null;
+        // ⛓ G10 — a kill lock's ledger row lands a tick AFTER its removal tick: catch up the steps it owes, so it opens
+        // on `declaredAt` (only its first faded frame is late — a band)
+        const steps = a.kill ? Math.max(1, a.held - (before?.killHeld ?? 0)) : 1;
+        let r = { state: before, drift: false };
+        for (let k = 0; k < steps; k += 1) {
+            r = R.stepResponder(r.state, a);
+            if (r.drift) drift += 1;
+        }
+        responders.set(a.id, a.kill ? { ...r.state, killHeld: a.held } : r.state);
     }
-    return { epoch: view.epoch, tick, chests, buttons, responders, drift, rules: R };
+    // ⛓ G10 — `RockLock.update`: while active, alpha −= 0.01 (the Image clamp) and open at ≤ 0; no reset while it holds
+    const rockLocks = new Map();
+    for (const r of view.rockLocks ?? []) {
+        const old = same ? prev.rockLocks?.get(r.id) : null;
+        rockLocks.set(r.id, R.stepRockLock(old ?? { alpha: 1, solid: true, active: false }, r.held > 0));
+    }
+    return { epoch: view.epoch, tick, chests, buttons, responders, rockLocks, drift, rules: R };
 }
 
 // ── the ops ─────────────────────────────────────────────────────────────
@@ -384,7 +437,14 @@ export function solidsOps(view, art, { skin } = {}) {
             Object.assign(ops[ops.length - 1], { blend: 'difference', tint: INVERT_SILHOUETTE, nightCopy: true });
         }
     }
-    for (const r of view.rockLocks) push(KEYS.rockLock, 0, centre(r), cellBox(r.x, r.y), objectSolidColour({}), { layer: 0 });
+    for (const r of view.rockLocks) {
+        // `RockLock.render`: while active, the picture onto nightBmp (NORMAL), then INVERT on the main buffer
+        const st = skin.rockLocks?.get(r.id) ?? null;
+        const alpha = st ? clamp01(st.alpha) : 1;
+        if (alpha <= 0 && st && !st.solid) continue;
+        push(KEYS.rockLock, 0, centre(r), cellBox(r.x, r.y), objectSolidColour({}), { layer: 0, ...(alpha !== 1 ? { alpha } : {}) });
+        if (st?.active && ops.at(-1)?.sheetRef) Object.assign(ops[ops.length - 1], { blend: 'difference', tint: INVERT_SILHOUETTE, nightCopy: true });
+    }
     for (const b of view.buttons) {
         const down = skin.buttons.get(b.id)?.shown ?? b.boot;
         if (b.tag === 'button') {

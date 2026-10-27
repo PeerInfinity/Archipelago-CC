@@ -96,7 +96,7 @@ const OPENING_TAPES = Object.freeze(['axe-l71-reach-l76', 'bobsoldier2-l30-torch
     'r9-solve-20', 'r9-solve-30', 'r9-solve-31', 'robust-l16-l18-sword-conch', 'stance-l48-keylock-south']);
 
 describe('2. ⛓ the anchor on every committed tape that opens a responder', () => {
-    const totals = { ticks: 0, opens: 0, equal: 0, lag: 0, coverHeld: 0, other: [] };
+    const totals = { ticks: 0, opens: 0, equal: 0, lag: 0, coverHeld: 0, killFade: 0, other: [] };
     for (const name of OPENING_TAPES) {
         it(`${name}: no drift from the run's open; every alpha the run disagrees on is a named AS3 branch`, () => {
             totals.other = [];
@@ -122,6 +122,9 @@ describe('2. ⛓ the anchor on every committed tape that opens a responder', () 
                         if (cls === 'lock' && prevOpen.get(a.id) && !r.open && st.alpha === 0) { totals.lag += 1; continue; }
                         // (2) Cover: released while a non-Chest hitable overlaps it — no reset, the faded alpha kept
                         if (cls === 'cover' && !r.held && a.overlap && !a.chestUnder) { totals.coverHeld += 1; continue; }
+                        // (3) ⛓ G10 — a KILL lock fading from its kill-lock ledger row: the run's activator never fades it (it
+                        //     banks the clear and keeps the body this visit — the model's residue, `SOLIDS_PENDING`)
+                        if (a.kill && !r.held && !r.open && st.alpha < 1) { totals.killFade += 1; continue; }
                         totals.other.push({ name, t, id: a.id, mine: st.alpha, run: r.alpha, held: r.held, open: r.open });
                     }
                     prevOpen = new Map([...live].map(([id, r]) => [id, r.open]));
@@ -135,7 +138,7 @@ describe('2. ⛓ the anchor on every committed tape that opens a responder', () 
         expect(totals.opens).toBeGreaterThanOrEqual(42);
         expect(totals.equal).toBeGreaterThan(totals.ticks * 0.9);
         // eslint-disable-next-line no-console
-        console.log(`[responder census] ticks ${totals.ticks}, opens ${totals.opens}, equal ${totals.equal}, lock re-close lag ${totals.lag}, cover held under a hitable ${totals.coverHeld}`);
+        console.log(`[responder census] ticks ${totals.ticks}, opens ${totals.opens}, equal ${totals.equal}, lock re-close lag ${totals.lag}, cover held under a hitable ${totals.coverHeld}, kill-lock fade ${totals.killFade}`);
     });
 });
 

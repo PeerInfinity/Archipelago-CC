@@ -35,7 +35,13 @@ import { DASH_SHAPE_SETTING_KEYS, dashShapeSettingValues, dashShapeSpec, dashSha
 import {
   CAMERA_SETTING_KEY, EFFECTS_SETTING_KEY, GRAPHICS_SETTING_KEY, LIGHTS_SETTING_KEY, cameraMode, effectsMode, graphicsPageParams, graphicsStack, lightsMode,
 } from './seedlingGraphicsSettings.js';
-import { SPEED_SETTING_KEY, gameSpeed, gameSpeedPageParam } from './seedlingGameSpeedSettings.js';
+import {
+  SPEED_MAX, SPEED_MIN, SPEED_QUICK_CHOICES, SPEED_SETTING_KEY, SPEED_STEP, achievedReadout, formatSpeed, gameSpeedPageParam,
+  readGameSpeed,
+} from './seedlingGameSpeedSettings.js';
+import {
+  SOUND_SETTING_KEY, START_SETTING_KEY, VOLUME_SETTING_KEY, soundMode, soundPageParams, soundVolume, startMode,
+} from './seedlingSoundSettings.js';
 import { RUFFLE_CDN } from './ruffleCdn.js';
 
 function log(level, message, ...data) {
@@ -109,13 +115,17 @@ const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'seedlingJsCamera', label: 'Camera', when: 'js' },
   { prop: 'seedlingJsLights', label: 'Lights', when: 'js' },
   { prop: 'seedlingJsEffects', label: 'Effects', when: 'js' },
-  { prop: 'seedlingJsSpeed', label: 'Game speed', when: 'js' },
+  { prop: 'seedlingJsSpeed', label: 'Game speed', when: 'js', control: 'speed' },
+  { prop: 'seedlingJsSound', label: 'Sound', when: 'js' },
+  { prop: 'seedlingJsVolume', label: 'Volume', when: 'js' },
   { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
   { prop: 'touchControls', label: 'Touch controls', when: 'touch' },
   { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
 ]);
 const SETTING_KEY_PREFIX = 'moduleSettings.flashPanel.';
 const CONTROL_CSS = 'background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;max-width:100%;';
+/** ⛓ CUSTOM SPEED — how often the Game speed row's ACHIEVED readout re-reads the page's clock (ms). */
+const SPEED_READOUT_MS = 1000;
 /** ⛓ TOUCH CONTROLS — the side room (px) each of the d-pad and the buttons needs to sit BESIDE the game, not under it. */
 const TOUCH_BESIDE_MIN_PX = 150;
 /** ⛓ TOUCH CONTROLS — the strip's height under the game before it is first laid out (the d-pad + its padding). */
@@ -341,6 +351,12 @@ export class FlashPanelUI {
         await this._refreshJsSpeed(data.key === SPEED_SETTING_KEY ? data.value : undefined);
         this._applyJsSpeed();
       }
+      if (data?.key === SOUND_SETTING_KEY || data?.key === VOLUME_SETTING_KEY || data?.key === '*') {
+        // ⛓ SOUND EFFECTS — presentation only: applied to a mounted JS page LIVE, never a re-mount.
+        await this._refreshJsSound(data.key === SOUND_SETTING_KEY ? data.value : undefined,
+          data.key === VOLUME_SETTING_KEY ? data.value : undefined);
+        this._applyJsSound();
+      }
       if (data?.key === TOUCH_SETTING_KEY || data?.key === '*') {
         // ⛓ TOUCH CONTROLS — shown / hidden at once, never a re-mount.
         await this._refreshTouchControls(data.key === TOUCH_SETTING_KEY ? data.value : undefined);
@@ -462,6 +478,8 @@ export class FlashPanelUI {
       // or null while it runs / once it bound one.
       apRefusal: this._apLoadRefusal ?? null,
       jsRuntime,
+      // ⛓ THE DELIVERED ROOMS FIRST — the level-set delivery the AP load armed (`{set, state, result}`), or null.
+      levelSetDelivery: this._seedlingDelivery ?? null,
       // ⛓ W2 — the wasm playback engine's handles: the game's callback surface
       // and window (re-read per call — a preset switch replaces the iframe),
       // the panel's own teleport recipe, and the map document the preset names.
@@ -730,13 +748,60 @@ export class FlashPanelUI {
     if (e !== undefined) this._jsEffects = effectsMode(e);
   }
 
-  /** ⛓ GAME SPEED — cache `flashPanel.seedlingJsSpeed` (`seedlingGameSpeedSettings.js`); undefined = read it. */
+  /**
+   * ⛓ GAME SPEED — cache `flashPanel.seedlingJsSpeed` (`seedlingGameSpeedSettings.js`); undefined = read it.
+   * ⛓ CUSTOM SPEED — a stored value the page cannot take is REFUSED: the page plays 1× and the row shows why
+   * (`_jsSpeedRefused`); a stored string (the old `1x` / `2x` / `4x`) is migrated: the number is written back.
+   */
   async _refreshJsSpeed(value) {
     let v = value;
     try {
-      if (v === undefined) v = await settingsManager.getSetting(SPEED_SETTING_KEY, '1x');
+      if (v === undefined) v = await settingsManager.getSetting(SPEED_SETTING_KEY, 1);
     } catch { /* keep the cached value */ }
-    if (v !== undefined) this._jsSpeed = gameSpeed(v);
+    if (v === undefined) return;
+    // a speed set from anywhere (the Settings panel, a quick button) replaces a refused typed one
+    if (value !== undefined && this._speedControl) this._speedControl.typedRefusal = null;
+    const r = readGameSpeed(v);
+    this._jsSpeed = r.ok ? r.speed : 1;
+    this._jsSpeedRefused = r.ok ? null : `stored speed refused: ${r.reason} — playing 1×`;
+    if (!r.ok) this._panelLog(`Game speed: ${this._jsSpeedRefused}`, 'warn');
+    if (r.ok && r.legacy) {
+      // written back to the layer it came from: a session override stays one (never made persistent)
+      let session = false;
+      try { session = settingsManager.hasOverride?.(SPEED_SETTING_KEY) === true; } catch { session = false; }
+      this._panelLog(`Game speed: the stored ${JSON.stringify(v)} migrated to ${r.speed}${session ? ' (session)' : ''}`);
+      settingsManager.updateSetting(SPEED_SETTING_KEY, r.speed, { persist: !session })
+        .catch((err) => this._panelLog(`Game speed: the migration could not be written: ${err?.message ?? err}`, 'error'));
+    }
+    this._renderSpeedControl();
+  }
+
+  /** ⛓ SOUND EFFECTS — cache the sound switch, volume and start mode (`seedlingSoundSettings.js`); undefined = read it. */
+  async _refreshJsSound(sound, volume) {
+    let s = sound;
+    let v = volume;
+    let st;
+    try {
+      if (s === undefined) s = await settingsManager.getSetting(SOUND_SETTING_KEY, 'on');
+      if (v === undefined) v = await settingsManager.getSetting(VOLUME_SETTING_KEY, 100);
+      st = await settingsManager.getSetting(START_SETTING_KEY, 'tests-auto');
+    } catch { /* keep the cached values */ }
+    if (s !== undefined) this._jsSound = soundMode(s);
+    if (v !== undefined) this._jsVolume = soundVolume(v);
+    if (st !== undefined) this._jsStart = startMode(st, globalThis.location?.search);
+  }
+
+  /** ⛓ SOUND EFFECTS — hand the cached sound switch and volume to a mounted JS page (a no-op on any other transport). */
+  _applyJsSound() {
+    if (this.transport !== 'js') return;
+    let handle = null;
+    try { handle = this.adapter?._getWin?.()?.__seedlingJsSound ?? null; } catch { handle = null; }
+    if (!handle?.set) return;
+    try {
+      handle.set({ on: (this._jsSound ?? 'on') === 'on', volume: (this._jsVolume ?? 100) / 100 });
+    } catch (err) {
+      this._panelLog(`JS page sound could not be applied: ${err.message}`);
+    }
   }
 
   /** ⛓ GAME SPEED — the adapter's item push interval: `PUSH_INTERVAL_MS` / the speed on the JS runtime, else the default. */
@@ -794,6 +859,7 @@ export class FlashPanelUI {
     this._seedlingGenSet = null;
     this._seedlingAtlas = null;
     this._seedlingRealSet = null;
+    this._seedlingDelivery = null;
     this._apLoadRefusal = null;
     this._touchTransport = null;
     this._unmountTouchControls();
@@ -1139,7 +1205,12 @@ export class FlashPanelUI {
       name.textContent = c.label;
       name.style.cssText = 'flex:0 0 auto;';
       let input;
-      if (spec.type === 'boolean') {
+      let speedParts = null;
+      if (c.control === 'speed') {
+        speedParts = this._buildSpeedControl(c.prop, spec);
+        input = speedParts.input;
+        row.append(name, speedParts.box);
+      } else if (spec.type === 'boolean') {
         input = document.createElement('input');
         input.type = 'checkbox';
         input.addEventListener('change', () => this._writeSetting(c.prop, input.checked));
@@ -1161,7 +1232,7 @@ export class FlashPanelUI {
       }
       input.classList.add('flash-panel-setting-input');
       host.append(row);
-      this._settingsControls.push({ ...c, spec, row, input, key: SETTING_KEY_PREFIX + c.prop });
+      this._settingsControls.push({ ...c, spec, row, input, key: SETTING_KEY_PREFIX + c.prop, ...(speedParts ?? {}) });
     }
     // "TP on UI click" — the panel's own switch (not a setting), shown when the game can teleport
     const tp = document.createElement('label');
@@ -1172,6 +1243,102 @@ export class FlashPanelUI {
     host.append(tp);
     this.teleportOnClickRow = tp;
     this.teleportOnClickCheckbox = tp.querySelector('.flash-panel-tp-on-click');
+  }
+
+  /**
+   * ⛓ CUSTOM SPEED — the Game speed row: a number field (0.25 … 16, step 0.05), quick 1× / 2× / 4× buttons, the
+   * refusal reason and the ACHIEVED readout. The field writes on `change` (Enter / leaving it) only a speed the page
+   * can take; anything else is REFUSED in the row with its reason and nothing is written (never clamped).
+   */
+  _buildSpeedControl(prop, spec) {
+    const box = document.createElement('span');
+    box.className = 'flash-panel-speed';
+    box.style.cssText = 'display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:0;';
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = String(spec.minimum ?? SPEED_MIN);
+    input.max = String(spec.maximum ?? SPEED_MAX);
+    input.step = String(spec.multipleOf ?? SPEED_STEP);
+    input.inputMode = 'decimal';
+    input.className = 'flash-panel-speed-input';
+    input.style.cssText = `${CONTROL_CSS}width:5em;`;
+    input.setAttribute('aria-label', 'Game speed (×)');
+    const unit = document.createElement('span');
+    unit.textContent = '×';
+    box.append(input, unit);
+    const quick = [];
+    for (const q of SPEED_QUICK_CHOICES) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'flash-panel-speed-quick';
+      b.dataset.speed = String(q);
+      b.textContent = formatSpeed(q);
+      b.style.cssText = `${CONTROL_CSS}cursor:pointer;min-width:2.5em;`;
+      // the row is a <label>: a click on a button inside it must not also focus / toggle the field
+      b.addEventListener('click', (e) => { e.preventDefault(); this._enterSpeed(q); });
+      quick.push(b);
+      box.append(b);
+    }
+    const reason = document.createElement('span');
+    reason.className = 'flash-panel-speed-refused';
+    reason.style.cssText = 'color:#e9c95a;flex-basis:100%;display:none;';
+    const achieved = document.createElement('span');
+    achieved.className = 'flash-panel-speed-achieved';
+    achieved.style.cssText = 'color:#8c8;';
+    box.append(achieved, reason);
+    input.addEventListener('change', () => this._enterSpeed(input.value));
+    this._speedControl = { input, quick, reason, achieved, typedRefusal: null };
+    if (!this._speedReadoutTimer && typeof setInterval === 'function') {
+      this._speedReadoutTimer = setInterval(() => this._renderSpeedReadout(), SPEED_READOUT_MS);
+    }
+    return { input, box, quick, reason, achieved };
+  }
+
+  /** ⛓ CUSTOM SPEED — a typed / pressed speed: written when the page can take it, else refused in the row. */
+  _enterSpeed(raw) {
+    const r = readGameSpeed(typeof raw === 'number' ? raw : String(raw ?? ''));
+    const ctl = this._speedControl;
+    if (!r.ok || raw === '') {
+      if (ctl) ctl.typedRefusal = `refused: ${r.ok ? 'enter a speed' : r.reason} (${SPEED_MIN}–${SPEED_MAX}×, in steps of ${SPEED_STEP})`;
+      this._renderSpeedControl();
+      return false;
+    }
+    if (ctl) ctl.typedRefusal = null;
+    if (ctl) ctl.input.value = String(r.speed);
+    this._writeSetting('seedlingJsSpeed', r.speed);
+    this._renderSpeedControl();
+    return true;
+  }
+
+  /** ⛓ CUSTOM SPEED — the row's field, pressed quick button and refusal line, from the cached speed. */
+  _renderSpeedControl() {
+    const ctl = this._speedControl;
+    if (!ctl) return;
+    const speed = this._jsSpeed ?? 1;
+    if (!ctl.typedRefusal && document.activeElement !== ctl.input && ctl.input.value !== String(speed)) ctl.input.value = String(speed);
+    for (const b of ctl.quick) {
+      const on = Number(b.dataset.speed) === speed;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.style.background = on ? '#4a6' : '#333';
+    }
+    const why = ctl.typedRefusal ?? this._jsSpeedRefused ?? null;
+    ctl.reason.textContent = why ? `⚠ ${why}` : '';
+    ctl.reason.style.display = why ? '' : 'none';
+    this._renderSpeedReadout();
+  }
+
+  /** ⛓ CUSTOM SPEED — the ACHIEVED readout: the mounted JS page's clock over the last second (blank off js). */
+  _renderSpeedReadout() {
+    const ctl = this._speedControl;
+    if (!ctl) return;
+    let achieved = 0;
+    if (this.transport === 'js') {
+      try { achieved = Number(this.adapter?._getWin?.()?.__seedlingJsClock?.achievedSpeed ?? 0); } catch { achieved = 0; }
+    }
+    const r = achievedReadout(this._jsSpeed ?? 1, achieved);
+    if (ctl.achieved.textContent !== r.text) ctl.achieved.textContent = r.text;
+    ctl.achieved.style.color = r.short ? '#e9c95a' : '#8c8';
+    ctl.achieved.dataset.short = r.short ? 'true' : 'false';
   }
 
   _writeSetting(prop, value) {
@@ -1186,6 +1353,12 @@ export class FlashPanelUI {
       try { value = await settingsManager.getSetting(c.key); } catch { continue; }
       if (c.input.type === 'checkbox') {
         c.input.checked = value === true;
+        continue;
+      }
+      if (c.control === 'speed') {
+        // ⛓ CUSTOM SPEED — the field shows the speed being played; a refused stored value shows its reason (a typed
+        // refusal stays until the next speed is entered)
+        if (this._jsSpeed === undefined) await this._refreshJsSpeed(value); else this._renderSpeedControl();
         continue;
       }
       const v = value === undefined || value === null ? '' : String(value);
@@ -1424,8 +1597,14 @@ export class FlashPanelUI {
       await adapter.waitForRuntime(30000);
       if (this._initStale(epoch, adapter)) return;
       this._heldKeys.install();
-      if (this.transport === 'js') {
-        // ⛓ The JS page has no ▶ Start: no GPU or audio context to unlock.
+      if (this.transport === 'js' && this._jsStart === 'click') {
+        // ⛓ ▶ START — the JS page waits for its ▶ Start (the tap that unlocks the sound), as the wasm page does.
+        this._setStatus('click ▶ Start in the game');
+        this._panelLog('JS runtime page loaded — click ▶ Start in the game to boot it (the tap turns the sound on)');
+        await this._refreshSolverWalk(this._solverWalk);
+        if (this._initStale(epoch, adapter)) return;
+      } else if (this.transport === 'js') {
+        // ⛓ no `start=click` (an automated run): the page boots at once; its sound waits for a tap in the game.
         this._setStatus('JS runtime loaded');
         this._panelLog('JS runtime page loaded (seedlingDemo model, rectangles)');
         // ⛓ S1 — the page is up: hand it the solver mode now (the init read raced the iframe).
@@ -1487,6 +1666,7 @@ export class FlashPanelUI {
    */
   async _startSeedlingRandomizer(adapter) {
     this._apLoadRefusal = null;
+    this._seedlingDelivery = null;
     const staticData = stateManager.getStaticData?.() ?? null;
     const flashPanel = staticData?.flash_panel ?? null;
     const transport = this.transport === 'js' ? 'js' : 'wasm';
@@ -1581,6 +1761,9 @@ export class FlashPanelUI {
       // ⛓ VANILLA MAP — the REAL rooms the game plays when an arm delivered them (the vanilla rewrite; an
       // atlas arm's retag): the wasm playback engine stages these, not the map document.
       this._seedlingRealSet = !generatedArm ? (loaded.set ?? null) : null;
+      // ⛓ THE DELIVERED ROOMS FIRST — the delivery this load arms (null on an arm that only binds): the JS
+      // runtime's walks wait until the page plays its set (`SeedlingPlaybackController._deliveredSetGate`).
+      this._seedlingDelivery = loaded.delivery ?? null;
 
       const glue = getSeedlingRegionGlue();
       if (!glue) {
@@ -1751,7 +1934,7 @@ export class FlashPanelUI {
       for (const refresh of [this._refreshSolverWalk, this._refreshWasmSolverBudget,
         this._refreshSolverUpgradeWindow, this._refreshKillLockBodies, this._refreshContactFidelity,
         this._refreshAxeDodgeAsk, this._refreshDashOnlyWindow, this._refreshDashShape, this._refreshJsGraphics,
-        this._refreshJsSpeed]) {
+        this._refreshJsSpeed, this._refreshJsSound]) {
         await refresh.call(this);
         if (this._initStale(epoch)) return;
       }
@@ -1778,7 +1961,9 @@ export class FlashPanelUI {
             axeDodgePageParam(this._jsPageAxeDodge), dashOnlyWindowPageParam(this._jsPageDashOnly),
             dashShapePageParam(this._jsPageDashShape),
             graphicsPageParams(this._jsGraphics, this._jsCamera, this._jsLights, this._jsEffects),
-            gameSpeedPageParam(this._jsSpeed)].filter(Boolean);
+            gameSpeedPageParam(this._jsSpeed),
+            // ⛓ SOUND EFFECTS — the sound switch and volume (none at on / 100), and `start=click` unless an automated run.
+            soundPageParams(this._jsSound, this._jsVolume, this._jsStart)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm(epoch);
@@ -2117,6 +2302,7 @@ export class FlashPanelUI {
     this._solveProgressView?.close();
     this._stageObserver?.disconnect();
     this._stageObserver = null;
+    if (this._speedReadoutTimer) { clearInterval(this._speedReadoutTimer); this._speedReadoutTimer = null; }
     if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
     if (this._rulesLoadedHandler) {
       this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);

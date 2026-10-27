@@ -4,23 +4,35 @@
 
   Mounted by the flash panel as its game iframe when
   moduleSettings.flashPanel.runtime is 'js'; it speaks the wasm page's
-  __swfBridge contract (see jsRuntimeCore.js). Rectangles only, no sound.
+  __swfBridge contract (see jsRuntimeCore.js). It waits for its ▶ Start (#btn-start, the
+  wasm page's id) when the panel mounts it with ?start=click, which also turns the sound on (jsRuntimeSound.js).
   Keys: arrows move, X primary, C secondary, V/I inventory — click the
   canvas (or let the panel focus it) first.
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seedling JS runtime</title>
 <style>
   html, body { margin: 0; padding: 0; background: #000; color: #ccc; font: 11px monospace; overflow: hidden; }
   canvas { display: block; outline: none; image-rendering: pixelated; }
   #status { position: absolute; left: 4px; bottom: 2px; pointer-events: none; text-shadow: 0 0 2px #000; }
+  /* ⛓ ▶ START — the wasm page's button (id and look); big enough to tap on a phone, and FIXED, so it is centred on
+     the viewport the page has (the panel's iframe, or a phone's screen), not on the 480 px canvas. */
+  #btn-start {
+    position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font: bold 20px sans-serif; padding: 14px 38px; min-width: 44px; min-height: 44px;
+    cursor: pointer; border-radius: 8px; border: 2px solid #6c6; background: #131; color: #cfc;
+    touch-action: manipulation;
+  }
+  #btn-start:disabled { opacity: 0.4; cursor: default; }
 </style>
 </head>
 <body>
 <canvas id="game" width="480" height="480" tabindex="0"></canvas>
 <div id="status">loading…</div>
+<button id="btn-start" disabled style="display:none">▶ Start</button>
 <script type="module">
   import { mountJsRuntimePage } from './jsRuntimePage.js';
   mountJsRuntimePage(window);

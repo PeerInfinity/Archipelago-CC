@@ -2,7 +2,7 @@
 
 Here Seedling Playthrough is a slot of a multiworld you generate and host yourself, on your own computer; the app is its client.
 
-Seedling rooms play in the **wasm** build of the original game (the default). The **Settings** panel's Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime, where the Playback Bot already walks them; this tutorial stays on wasm.
+Seedling rooms play in the **wasm** build of the original game by default. The **Settings** panel's Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime; this tutorial works in either, and uses whichever you have set.
 
 ## Generate, host, connect
 
@@ -32,8 +32,8 @@ The next steps happen in a terminal, in your Archipelago folder (a source checko
 
 ## Play your slot
 
-1. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game* (the first time, the browser fetches the game's runtime).
-2. Press **▶ Start** in the game. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
+1. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game*, or, on the JS runtime, *JS runtime loaded* or *configured* (the first time, the browser fetches the game's runtime).
+2. Press **▶ Start** in the game, if the game shows one. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
 
 The checks you make arrive at the server, and the items other slots send you arrive in the game.
 

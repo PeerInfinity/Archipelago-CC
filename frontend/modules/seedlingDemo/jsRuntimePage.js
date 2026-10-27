@@ -20,7 +20,7 @@
  *     `display:none` frame gets no animation frames, so a timer PUMP keeps the
  *     clock going when rAF has been silent for `PUMP_AFTER_MS` — the panel's
  *     host glue (deliveries, crossings) must not stall behind a tab switch;
- *     ⛓ GAME SPEED — at 30 × 1 | 2 | 4 ticks a second (`?speed=`), one slot per
+ *     ⛓ GAME SPEED — at 30 × the speed (0.25 … 16) ticks a second (`?speed=`), one slot per
  *     event-loop turn (`jsRuntimeClock.js`: the speed is presentation only);
  *  4. paints the room in rectangles with the watch page's palette
  *     (`rectPalette.js`): tiles, object solids, teleporters, the AP items and
@@ -137,7 +137,10 @@
  * ⚖ And ONE fade per `new Game`: a reboot in place (an item delivery,
  * `jsRuntimeCore.IN_PLACE_REBOOT_WHY`) is a new run object but no new world in
  * the game, so it owes no fade (`seedlingEffectSkin.fadeSlot`); before G7 it
- * faded in from black a second time.
+ * faded in from black a second time. ⚖ And ONE fade per CROSSING: each held
+ * dead frame polls the host's queue as the game does (`runtime.drainItems`),
+ * so the host's arrival teleport answering a door lands inside that door's
+ * fade, which plays on; before, it waited out the hold and faded in again.
  *
  * ⛓ G8 — the changeable solids and the buttons (`seedlingSolidsSkin.js`: the
  * chests, breakable rocks, burnable trees and magical locks at the run's live
@@ -154,7 +157,8 @@
  * the ceremony's risen item, the night copies and glows); their stand-in rectangles are not painted. An AP slot
  * stays G3's `apItemOps` look. `__seedlingJsGraphics.pickups`. ⛓ G9b — the machines (`seedlingMachineSkin.js`: the beam
  * towers and pulsers from `machinesNow`, the wires, whirlpools, pods, little stones, moonrock(s), the pile and the final
- * door; the Pull's circle onto nightBmp only), `__seedlingJsGraphics.machines`.
+ * door; the Pull's circle onto nightBmp only), `__seedlingJsGraphics.machines`. ⛓ G10 — the bosses
+ * (`seedlingBossSkin.js`: each boss from the read its fight already exposes; no new getter), `__seedlingJsGraphics.bosses`.
  *
  * ⛓ KILLLOCK HOOK —`?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
@@ -191,11 +195,13 @@ import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
 import { PICKUP_TAGS, pickupOps, pickupSkinView, stepPickupSkin } from './seedlingPickupSkin.js';
 import { MACHINE_OBJECT_TAGS, machineNightOps, machineOps, machineSkinView, stepMachineSkin } from './seedlingMachineSkin.js';
+import { BOSS_OBJECT_TAGS, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
 import { EFFECT_RULES } from './seedlingEffectSkin.js';
 import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
 import { BASE_TICKS_PER_SECOND, createRateMeter, createSlotClock, createSlotPump, messageChannelPostTask, parseGameSpeed } from './jsRuntimeClock.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
+import { createPageSound } from './jsRuntimeSound.js';
 
 /** At 1× (`jsRuntimeClock.BASE_TICKS_PER_SECOND`; ⛓ GAME SPEED: × the speed). */
 export const TICKS_PER_SECOND = BASE_TICKS_PER_SECOND;
@@ -224,7 +230,7 @@ export async function loadGraphicsStack(name, { win = window, base = packsBaseUr
     const registry = parseRegistry(await readJson(new URL('packs.json', base).href));
     const ids = registry.stacks[name];
     if (!ids) throw new Error(`no graphics stack "${name}" in packs.json (have: ${Object.keys(registry.stacks).join(', ') || 'none'})`);
-    const art = createArtLibrary(await loadPackStack(ids, { base, readJson }));
+    const art = createArtLibrary(await loadPackStack(ids, { base, readJson, only: ['art'] }));
     const { images, failed } = await loadSheetImages(art, browserDecoder(win));
     return { art, images, failed };
 }
@@ -302,6 +308,8 @@ export function mountJsRuntimePage(win = window) {
         pickupSkin: null, pickups: null,
         // ⛓ G9b — the machines' per-visit state (lit wires, pull radii) and the last paint's ops.
         machineSkin: null, machines: null,
+        // ⛓ G10 — the bosses' hit tints and the last paint's ops.
+        bossSkin: null, bosses: null,
         // ⛓ G4 — the effects' and overlays' state (one step per game tick, one hold per owed dead frame), the last paint's.
         effectSkin: null, effects: null, held: 0,
         // ⛓ G1.5 — the static tile layer (room mode; `?tileLayer=off` = none) and the last paint's inputs.
@@ -330,7 +338,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, npcSkin: null, npcs: null, trapSkin: null, traps: null, lamps: null, pickupSkin: null, pickups: null, machineSkin: null, machines: null, effectSkin: null, effects: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, npcSkin: null, npcs: null, trapSkin: null, traps: null, lamps: null, pickupSkin: null, pickups: null, machineSkin: null, machines: null, bossSkin: null, bosses: null, effectSkin: null, effects: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -357,7 +365,53 @@ export function mountJsRuntimePage(win = window) {
         ...(Number.isFinite(windowParam) && windowParam > 0 ? { solverUpgradeWindowWork: windowParam } : {}),
         ...(Number.isFinite(backstopParam) && backstopParam > 0 ? { solverBackstopMs: backstopParam } : {}),
     });
-    Object.assign(bridge.game, runtime.game);
+    // ⛓ SOUND EFFECTS — the page's sound (`jsRuntimeSound.js`): it reads the run after each tick and never feeds it.
+    const sound = createPageSound({ win, params, listen: (target, type, handler) => life.on(target, type, handler) });
+    // ⛓ ▶ START — `?start=click` (the panel's, for a person: `seedlingSoundSettings.startMode`): the page waits for its
+    // ▶ Start (`#btn-start`, the wasm page's id) before it boots, as the wasm page does — the bridge's callbacks (what
+    // the host waits for) appear only once it is pressed, and the tap unlocks the audio. Without it (an automated
+    // run, or the page opened on its own, as the standalone in-app rows do) it boots at once, and the audio unlocks
+    // on the first tap or key in the page.
+    const startMode = params.get('start') === 'click' ? 'click' : 'auto';
+    let started = false;
+    // What waits for ▶ Start: the vanilla map's mount, which boots the game's own first frame (`Main.as:51`) — the
+    // wasm game runs nothing before its Start either.
+    const afterStart = [];
+    const whenStarted = (fn) => (started ? fn() : afterStart.push(fn));
+    /** Boot: expose the bridge's callbacks. Returns false if it already ran (the wasm page's `__swfBridgeStart`). */
+    function start() {
+        if (started) return false;
+        started = true;
+        sound.unlock();
+        const b = doc.getElementById('btn-start');
+        if (b) b.style.display = 'none';
+        Object.assign(bridge.game, runtime.game);
+        for (const fn of afterStart.splice(0)) fn();
+        return true;
+    }
+    win.__swfBridgeStart = start;
+    const startButton = doc.getElementById('btn-start');
+    if (startMode === 'auto') {
+        // REMOVED, not hidden: a tutorial's optional ▶ Start click (`startSeedlingGame`) skips an absent button but
+        // waits on a present one
+        startButton?.remove();
+        Object.assign(bridge.game, runtime.game);
+        started = true;
+        for (const type of ['pointerdown', 'keydown']) life.on(doc, type, () => sound.unlock());
+    } else if (startButton) {
+        startButton.style.display = '';
+        startButton.disabled = false;
+        life.on(startButton, 'click', () => start());
+    } else {
+        start();
+    }
+    win.__seedlingJsSound = {
+        get startMode() { return startMode; },
+        get started() { return started; },
+        get readout() { return sound.readout(); },
+        set: (opts) => sound.set(opts),
+        unlock: () => sound.unlock(),
+    };
     win.__swfBridge = bridge;
     win.__seedlingJsRuntime = runtime;
     win.__runtimeReady = true;
@@ -389,6 +443,8 @@ export function mountJsRuntimePage(win = window) {
         get pickups() { return graphics.pickups ? { ...graphics.pickups, ops: graphics.pickups.ops.map((o) => ({ ...o })) } : null; },
         /** ⛓ G9b — the last paint's machines. */
         get machines() { return graphics.machines ? { ...graphics.machines, ops: graphics.machines.ops.map((o) => ({ ...o })) } : null; },
+        /** ⛓ G10 — the last paint's bosses. */
+        get bosses() { return graphics.bosses ? { ...graphics.bosses, ops: graphics.bosses.ops.map((o) => ({ ...o })) } : null; },
         get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
         /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
         get held() { return graphics.held; },
@@ -423,7 +479,7 @@ export function mountJsRuntimePage(win = window) {
     // (`watchLifetime.test.js`'s one-busted-fetch rule, in spirit).
     win.fetch(new URL(VANILLA_MAP_PATH, win.location.href).href, { cache: 'no-store' })
         .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-        .then((doc) => runtime.setVanilla(doc))
+        .then((doc) => whenStarted(() => runtime.setVanilla(doc)))
         .catch((err) => {
             vanillaError = err.message;
             win.console?.error?.(`[js runtime] the vanilla map could not be loaded — ${err.message}`);
@@ -442,8 +498,9 @@ export function mountJsRuntimePage(win = window) {
     life.on(win, 'blur', () => down.clear());
 
     // ── clock ─────────────────────────────────────────────────────────────
-    // ⛓ GAME SPEED — 30 × 1 | 2 | 4 slots a second (`?speed=`, the panel's `seedlingJsSpeed`; live through
-    // `__seedlingJsClock.set`), one slot per event-loop turn (`jsRuntimeClock.createSlotPump` says why).
+    // ⛓ GAME SPEED — 30 × the speed slots a second (`?speed=`, 0.25 … 16 — ⛓ CUSTOM SPEED; the panel's
+    // `seedlingJsSpeed`; live through `__seedlingJsClock.set`), one slot per event-loop turn
+    // (`jsRuntimeClock.createSlotPump` says why).
     let initialSpeed = 1;
     try { initialSpeed = parseGameSpeed(params.get('speed')); } catch (err) {
         win.console?.warn?.(`[js runtime] ${err.message} — playing at 1×`);
@@ -451,8 +508,10 @@ export function mountJsRuntimePage(win = window) {
     const clock = createSlotClock({ speed: initialSpeed });
     const rateMeter = createRateMeter();
     let lastFrameAt = 0;
+    let soundTicks = null;
     /** One slot of the game's clock: an owed dead frame of a load fade (the run waits), else one run tick. */
     function slot() {
+        sound.slotRan();
         // ⛓ G4 — the fade hold: an owed dead frame takes this tick slot, and the run waits.
         if (graphics.stack && runtime.run) {
             // a fresh run starts with its boot build's fade owed; a stack switched on mid-run owes nothing;
@@ -463,10 +522,20 @@ export function mountJsRuntimePage(win = window) {
             graphics.effectSkin = slot.skin;
             if (slot.held) {
                 graphics.held += 1;
+                // ⛓ the game polls the host's queue on a dead frame too (`drainItems`): the arrival teleport that
+                // answers a door lands inside that door's fade, which then plays on (`adoptRunEffectSkin`)
+                runtime.drainItems();
                 return;
             }
         }
         runtime.tick(heldFromCodes(down));
+        // ⛓ SOUND EFFECTS — after the tick, reading it: a run that did not advance plays nothing new.
+        const run = runtime.run;
+        if (run && run.ticksCompleted !== soundTicks) {
+            soundTicks = run.ticksCompleted;
+            sound.step(run, { record: (runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null,
+                tick: runtime.ticks, tickSeconds: 1 / (BASE_TICKS_PER_SECOND * clock.speed) });
+        }
         if (graphics.stack) {
             graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
             graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
@@ -478,6 +547,7 @@ export function mountJsRuntimePage(win = window) {
             graphics.trapSkin = stepTrapSkin(graphics.trapSkin, trapSkinView(runtime.run), runtime.ticks);
             graphics.pickupSkin = stepPickupSkin(graphics.pickupSkin, pickupSkinView(runtime.run), runtime.ticks);
             graphics.machineSkin = stepMachineSkin(graphics.machineSkin, machineView(), runtime.ticks);
+            graphics.bossSkin = stepBossSkin(graphics.bossSkin, bossSkinView(runtime.run), runtime.ticks);
             const fv = effectView();
             graphics.effectSkin = stepEffectSkin(carryThroughReboot(graphics.effectSkin, fv, { run: runtime.run, inPlace: lastBootInPlace }),
                 fv, runtime.ticks, { rain: effectsOn() });
@@ -497,6 +567,8 @@ export function mountJsRuntimePage(win = window) {
         /** Slots and run ticks per second over the last second (a hold is a slot, not a tick). */
         get rate() { return rateMeter.rate; },
         get slots() { return pump.slots; },
+        /** ⛓ CUSTOM SPEED — the speed the clock ACHIEVED over the last second (slots / s ÷ 30), 0 before a second ran. */
+        get achievedSpeed() { return rateMeter.rate.slots / BASE_TICKS_PER_SECOND; },
         set: (speed) => clock.setSpeed(speed),
     };
     /** ⛓ G4 — the effects' view: the run, and the room's level record (the rain row the world does not keep). */
@@ -533,6 +605,7 @@ export function mountJsRuntimePage(win = window) {
     function frame(now) {
         lastFrameAt = now;
         advance(now);
+        sound.frame();
         paint();
         win.requestAnimationFrame(frame);
     }
@@ -663,6 +736,14 @@ export function mountJsRuntimePage(win = window) {
                 ops: machineSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, line: !!o.line, ring: !!o.circle,
                     night: !!o.nightCopy, pack: o.key ? art.packOf(o.key) : null })) }
             : null;
+        // ⛓ G10 — the bosses (`seedlingBossSkin.js`): the run's own frame, the hit tint, HARDLIGHT while dying.
+        const bv = art ? bossSkinView(runtime.run) : null;
+        const bossSprites = bv ? bossOps(bv, art, { skin: graphics.bossSkin }) : [];
+        graphics.bosses = bv
+            ? { shieldBosses: bv.shieldBosses.length, frozenBosses: bv.frozenBosses.length,
+                ops: bossSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null, blend: o.blend ?? null,
+                    night: !!o.nightCopy, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
         const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
         // ⛓ G7 — a run the effects have not met (booted between two clock slots: the game's own first frame) is adopted
         // before its first paint, so that paint shows the cover its fade starts from; before G7 it showed the bare room
@@ -677,7 +758,7 @@ export function mountJsRuntimePage(win = window) {
         const lit = art && graphics.lights === 'on' ? nightView() : null;
         const modelCam = lit ? cameraView('follow', world, state, runtime.run) : null;
         const litMain = lit ? nightMainOps(lit, { cam: modelCam }) : [];
-        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...solidSprites, ...npcSprites, ...trapSprites, ...lampSprites, ...pickupSprites, ...machineSprites, ...effectSprites, ...litMain];
+        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...solidSprites, ...npcSprites, ...trapSprites, ...lampSprites, ...pickupSprites, ...machineSprites, ...bossSprites, ...effectSprites, ...litMain];
         const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
         graphics.enemies = ev
             ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
@@ -687,9 +768,14 @@ export function mountJsRuntimePage(win = window) {
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
             ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag)
-                || MACHINE_OBJECT_TAGS.has(o.tag),
+                || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag),
                 drawnTeleporters: (tp) => tp.isStairs === true, drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
         });
+        // ⛓ G10 — the boss bodies' build-time rectangles still painted (0 once the skin draws them)
+        if (graphics.bosses) {
+            const bossRects = [...world.objectSolids, ...world.pixelmasks].filter((o) => BOSS_OBJECT_TAGS.has(o.tag)).map((o) => o.rect);
+            graphics.bosses.standIns = ops.filter((o) => o?.rect && !o.key && bossRects.some((r) => r.x === o.rect.x && r.y === o.rect.y)).length;
+        }
         // ⚖ follow mode jiggles inside a shake band on the renderer's own draw; the band's edges are the model's
         const view = cameraView(graphics.camera, world, state, runtime.run,
             { jiggle: (now) => jiggleCam(now, level, runtime.ticks) });

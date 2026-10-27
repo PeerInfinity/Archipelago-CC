@@ -531,6 +531,14 @@ describe('SettingsManager — session overrides ({persist: false})', () => {
     expect(await sm.getSetting('moduleSettings.loops.autoRestart')).toBe(false);
   });
 
+  it('hasOverride says whether a key is a session override (a migration writes back to the same layer)', async () => {
+    expect(sm.hasOverride('moduleSettings.loops.autoRestart')).toBe(false);
+    await sm.updateSetting('moduleSettings.loops.autoRestart', true, { persist: false });
+    expect(sm.hasOverride('moduleSettings.loops.autoRestart')).toBe(true);
+    await sm.clearOverride('moduleSettings.loops.autoRestart');
+    expect(sm.hasOverride('moduleSettings.loops.autoRestart')).toBe(false);
+  });
+
   it('clearOverride is a no-op (returns false) when no override exists', async () => {
     await expect(sm.clearOverride('nonexistent')).resolves.toBe(false);
   });

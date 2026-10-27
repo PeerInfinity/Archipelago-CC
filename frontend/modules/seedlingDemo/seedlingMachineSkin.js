@@ -91,7 +91,10 @@ export const KEYS = Object.freeze({
 export const MACHINE_COVERAGE = Object.freeze({
     drawn: Object.freeze(['BeamTower', 'Pulser', 'Wire', 'Whirlpool', 'Pull', 'Pod', 'LittleStones', 'Moonrock', 'MoonrockPile',
         'FinalDoor']),
-    pending: Object.freeze(['Grass: a cut blade (the run carries no grass cuts)']),
+    // ⛓ G10 re-examined: the cut is `Player.as:1089` (a slash's `Grass.cut`), which the model does not run; and the grass
+    //    TILES' 12 blades each (`Tile.addGrass`) sit at gameplay-stream `Math.random` positions the run does not record
+    pending: Object.freeze(['Grass: a cut blade (the run carries no grass cuts: `Player.as:1089` is not modelled), and the grass '
+        + 'tiles\' blades (`Tile.addGrass`: 12 at gameplay-stream positions the run does not record)']),
 });
 /** The `.oel` tags whose build-time rectangle this skin replaces (`roomOps`' `drawnObjects`). */
 export const MACHINE_OBJECT_TAGS = Object.freeze(new Set(['beamtower', 'pulser', 'moonrockpile', 'finaldoor', 'moonrock']));

@@ -1,0 +1,3 @@
+7 L29 Projectiles/TurretSpit.as:37 "Turret Shoot" -1 0.273 0.571
+61 L29 Projectiles/TurretSpit.as:37 "Turret Shoot" -1 0.273 0.571
+80 L29 Player.as:1388 "Hurt" -1 1.000 0.000
