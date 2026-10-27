@@ -1546,6 +1546,35 @@ export const CONTACT_FIDELITY = {
      * body. OFF: byte-identical. `SEEDLING_PUNCH_GATE_TIMED=0|1`.
      */
     punchGateTimed: true,
+    /**
+     * fidelity DETERM (c) F1 (wave 33) — A RELEASED `Cover` UNDER A HITABLE KEEPS ITS FADED ALPHA (`activators.js`'
+     * inactive arm).
+     *
+     *     Cover.as:49-67   not `activate`: `collideTypesInto(["Solid","Player"])`; a hit that is not a `Chest` → no
+     *                      `reset()` (type AND alpha kept); no hit (or a Chest) → `reset()` (Solid, alpha 1)
+     *
+     * The model snapped a closed cover's alpha to 1 on every inactive step (`if (!s.open) s.alpha = 1`, the Lock's
+     * line), so a cover released mid-fade with an occupant in its cell and pressed again re-faded from 1 (10 steps) where
+     * the game resumes from the kept alpha (≈5–6). ON: a cover's inactive step resets only when nothing occupies its
+     * cell. The Chest arm is not carried: the one chest under a cover (L38) fills the cell, so nothing else can overlap
+     * it while it is closed, and an opened chest is `type = ""` (`Chest.as:77`), no hitable. OFF: byte-identical.
+     * `SEEDLING_COVER_HELD_FADE=0|1`.
+     */
+    coverHeldFade: false,
+    /**
+     * fidelity DETERM (c) F2 (wave 33) — A `Lock` RE-CLOSES WITH ITS ALPHA AT 0, RESTORED ONE STEP LATER
+     * (`activators.js`' inactive arm).
+     *
+     *     Lock.as:64-97   not `activate`: `if (type == normType) alpha = 1` runs BEFORE `returnToNormal()`, so on the
+     *                     re-close step type is still "" and the alpha stays 0; the next step restores it — and if the
+     *                     group is active again on that step, `alpha > 0` is false and `turnOff()` re-opens at once
+     *
+     * The model set alpha 1 on the re-close step, so a lock re-pressed on the very next step took 101 steps to open
+     * again, and the drawn alpha was 1 a step early. ON: the re-close keeps the alpha at 0 (a lag re-open is a
+     * `turnOff`, and `openActivatorIdsBeforeLatestStep` counts it as the latest step's). Plain fade locks only (a touch
+     * responder latches, a BossLock never re-closes). OFF: byte-identical. `SEEDLING_LOCK_RECLOSE_LAG=0|1`.
+     */
+    lockRecloseLag: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1847,6 +1876,11 @@ if (globalThis.process?.env?.SEEDLING_CHASER_ORBIT_KILL === '0') CONTACT_FIDELIT
 // ⛓ fidelity L32BOB: `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '1') CONTACT_FIDELITY.encounterSwingInFlight = true;
 if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '0') CONTACT_FIDELITY.encounterSwingInFlight = false;
+// ⛓ fidelity DETERM (c): `SEEDLING_COVER_HELD_FADE=0|1` and `SEEDLING_LOCK_RECLOSE_LAG=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '1') CONTACT_FIDELITY.coverHeldFade = true;
+if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '0') CONTACT_FIDELITY.coverHeldFade = false;
+if (globalThis.process?.env?.SEEDLING_LOCK_RECLOSE_LAG === '1') CONTACT_FIDELITY.lockRecloseLag = true;
+if (globalThis.process?.env?.SEEDLING_LOCK_RECLOSE_LAG === '0') CONTACT_FIDELITY.lockRecloseLag = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

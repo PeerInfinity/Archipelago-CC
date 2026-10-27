@@ -2917,7 +2917,7 @@
       "surface": "import",
       "name": "fallRocksArmedBy",
       "module": "frontend/modules/seedlingDemo/activators.js",
-      "line": 548,
+      "line": 549,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2935,7 +2935,7 @@
       "surface": "import",
       "name": "groupResponders",
       "module": "frontend/modules/seedlingDemo/activators.js",
-      "line": 523,
+      "line": 524,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2953,7 +2953,7 @@
       "surface": "import",
       "name": "KEY_RESPONDERS",
       "module": "frontend/modules/seedlingDemo/activators.js",
-      "line": 263,
+      "line": 264,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2971,7 +2971,7 @@
       "surface": "import",
       "name": "keyLineTouches",
       "module": "frontend/modules/seedlingDemo/activators.js",
-      "line": 336,
+      "line": 337,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -2990,7 +2990,7 @@
       "surface": "import",
       "name": "localPublish",
       "module": "frontend/modules/seedlingDemo/activators.js",
-      "line": 410,
+      "line": 411,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -3008,7 +3008,7 @@
       "surface": "import",
       "name": "opensOnKeyTick",
       "module": "frontend/modules/seedlingDemo/activators.js",
-      "line": 311,
+      "line": 312,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -3027,7 +3027,7 @@
       "surface": "import",
       "name": "opensOnTick",
       "module": "frontend/modules/seedlingDemo/activators.js",
-      "line": 283,
+      "line": 284,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -3045,7 +3045,7 @@
       "surface": "import",
       "name": "RESPONDERS",
       "module": "frontend/modules/seedlingDemo/activators.js",
-      "line": 80,
+      "line": 81,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3063,7 +3063,7 @@
       "surface": "import",
       "name": "TOUCH_RESPONDERS",
       "module": "frontend/modules/seedlingDemo/activators.js",
-      "line": 171,
+      "line": 172,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3081,7 +3081,7 @@
       "surface": "import",
       "name": "touchApproachKey",
       "module": "frontend/modules/seedlingDemo/activators.js",
-      "line": 216,
+      "line": 217,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -5346,7 +5346,7 @@
       "surface": "import",
       "name": "cloneLightsFight",
       "module": "frontend/modules/seedlingDemo/lightBoss.js",
-      "line": 521,
+      "line": 528,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -5384,7 +5384,7 @@
       "surface": "import",
       "name": "lightBossFlierHit",
       "module": "frontend/modules/seedlingDemo/lightBoss.js",
-      "line": 361,
+      "line": 368,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -5402,7 +5402,7 @@
       "surface": "import",
       "name": "lightBossRect",
       "module": "frontend/modules/seedlingDemo/lightBoss.js",
-      "line": 286,
+      "line": 293,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -5421,7 +5421,7 @@
       "surface": "import",
       "name": "lightsShieldBump",
       "module": "frontend/modules/seedlingDemo/lightBoss.js",
-      "line": 409,
+      "line": 416,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -5439,7 +5439,7 @@
       "surface": "import",
       "name": "SPEAR_FORCE",
       "module": "frontend/modules/seedlingDemo/lightBoss.js",
-      "line": 486,
+      "line": 493,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -5457,7 +5457,7 @@
       "surface": "import",
       "name": "stepLightBossFlier",
       "module": "frontend/modules/seedlingDemo/lightBoss.js",
-      "line": 310,
+      "line": 317,
       "class": "seedling",
       "form": "stepper",
       "files": {
@@ -5476,7 +5476,7 @@
       "surface": "import",
       "name": "stepLightBossFlierGraphic",
       "module": "frontend/modules/seedlingDemo/lightBoss.js",
-      "line": 347,
+      "line": 354,
       "class": "seedling",
       "form": "stepper",
       "files": {
@@ -5495,7 +5495,7 @@
       "surface": "import",
       "name": "stepLightBossShot",
       "module": "frontend/modules/seedlingDemo/lightBoss.js",
-      "line": 459,
+      "line": 466,
       "class": "seedling",
       "form": "stepper",
       "files": {
