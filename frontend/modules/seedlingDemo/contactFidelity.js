@@ -1560,7 +1560,7 @@ export const CONTACT_FIDELITY = {
      * it while it is closed, and an opened chest is `type = ""` (`Chest.as:77`), no hitable. OFF: byte-identical.
      * `SEEDLING_COVER_HELD_FADE=0|1`.
      */
-    coverHeldFade: false,
+    coverHeldFade: true,
     /**
      * fidelity DETERM (c) F2 (wave 33) — A `Lock` RE-CLOSES WITH ITS ALPHA AT 0, RESTORED ONE STEP LATER
      * (`activators.js`' inactive arm).
@@ -1574,7 +1574,7 @@ export const CONTACT_FIDELITY = {
      * `turnOff`, and `openActivatorIdsBeforeLatestStep` counts it as the latest step's). Plain fade locks only (a touch
      * responder latches, a BossLock never re-closes). OFF: byte-identical. `SEEDLING_LOCK_RECLOSE_LAG=0|1`.
      */
-    lockRecloseLag: false,
+    lockRecloseLag: true,
     /**
      * fidelity L41TOTEM D1 (wave 33) — THE BAIT SEARCH FLOODS EACH COMPONENT ONCE (`crusherBait.searchBaitOrdering`).
      * A COST key: no model term moves. Each escape of each stance flooded its own safe component under the next
@@ -1585,7 +1585,7 @@ export const CONTACT_FIDELITY = {
      * seed is skipped before its flood, with the same answer, stats and order. OFF: byte-identical.
      * `SEEDLING_BAIT_COMPONENT_MEMO=0|1`.
      */
-    baitComponentMemo: false,
+    baitComponentMemo: true,
     /**
      * fidelity L41TOTEM D1b (wave 33) — THE BAIT ALIGNMENT ASKS EACH POSITION ONCE (`crusherBait.alignmentCandidates`).
      * A COST key: no model term moves. The alignment previews from the chain's stance and never advances the run, so the
@@ -1593,7 +1593,7 @@ export const CONTACT_FIDELITY = {
      * leg 855: 57,874 of 96,384 asks over L41's six alignments repeated a position already asked in the same call. ON:
      * each answer is kept for the call, keyed on (p.x, p.y). OFF: byte-identical. `SEEDLING_BAIT_ALIGN_SAFE_MEMO=0|1`.
      */
-    baitAlignSafeMemo: false,
+    baitAlignSafeMemo: true,
     /**
      * fidelity L41TOTEM D3 (wave 33) — A BAIT'S IDLE ENDS WHEN THE CRUSHER HAS PARKED (`solverBot.execBait`,
      * `crusherBait.trimParkedTail`). The chain's escape ends in R5's fixed idle span (L41: 160 / 220 / 260 ticks), which
@@ -1603,7 +1603,7 @@ export const CONTACT_FIDELITY = {
      * chain's last idle span is cut to end there; `runBait` re-checks the cut chain (no contact, parked, at its park).
      * The PLAN moves (shorter); no model term moves. OFF: byte-identical. `SEEDLING_BAIT_PARKED_TAIL=0|1`.
      */
-    baitParkedTail: false,
+    baitParkedTail: true,
     /**
      * fidelity L100 (wave 33) — A SWING STANCE HALF A TILE OFF THE GRID IS ASKED ON THE 8 px LATTICE
      * (`solverBot.deriveSwingStance`, the `break` and `pull` verbs' stance).
@@ -1616,7 +1616,7 @@ export const CONTACT_FIDELITY = {
      * planned in the world as it is on the 8 px lattice, as `deriveKeylockStance`'s RULESREF arm does. OFF:
      * byte-identical. `SEEDLING_FINE_SWING_STANCE=0|1`.
      */
-    fineSwingStance: false,
+    fineSwingStance: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
