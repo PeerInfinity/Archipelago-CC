@@ -58,8 +58,20 @@ function solveLeg(row, seam, on, nPasses = 1) {
         ok: answer.ok, work: answer.work,
         message: answer.ok ? null : String(answer.message),
         plan: answer.ok ? JSON.stringify(answer.plan.solution.map((k) => [...k])) : null,
+        ticks: answer.ok ? answer.plan.solution.length : null,
         counts: JSON.parse(JSON.stringify(CHOOSER_PAIR_COUNTS)),
     };
+}
+
+/** Run `fn` with `CHOOSER_PAIR`'s largest set at `size` (the measurement arm's knob), restoring it. */
+function withPairSize(size, fn) {
+    const was = CHOOSER_PAIR.size;
+    CHOOSER_PAIR.size = size;
+    try {
+        return fn();
+    } finally {
+        CHOOSER_PAIR.size = was;
+    }
 }
 
 const SILENT = 'NO LIVE BODY\'s removal admits a corridor';
@@ -106,7 +118,7 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
         expect([on.ok, on.work, on.plan]).toEqual([off.ok, off.work, off.plan]);
     }, 240_000);
 
-    it('the size-3 measurement arm: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + '
+    it('the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + '
         + 'puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit', () => {
         const off = solveLeg(LEG367, null, false, Infinity);
         expect(off.ok).toBe(false);
@@ -114,17 +126,13 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
         const pairOnly = solveLeg(LEG367, null, true, 1);
         expect(pairOnly.counts.asked).toBeGreaterThan(0);
         expect(pairOnly.counts.admitted).toBe(0);
-        const was = CHOOSER_PAIR.size;
-        CHOOSER_PAIR.size = 3;
-        try {
+        withPairSize(3, () => {
             const on = solveLeg(LEG367, null, true, Infinity);
             expect(on.ok).toBe(true);
-            expect(JSON.parse(on.plan).length).toBe(955);
+            expect(on.ticks).toBe(955);
             expect(on.counts.last).toEqual(['bob@192,480', 'bob@224,496', 'puncher@128,624']);
             expect(on.counts.kills[0]).toEqual({ id: 'bob@192,480', t: 745, how: 'dwell', dead: true });
-        } finally {
-            CHOOSER_PAIR.size = was;
-        }
+        });
     }, 360_000);
 
     it('the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1\'s regression stays closed)', () => {
