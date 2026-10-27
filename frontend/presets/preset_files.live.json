@@ -6555,6 +6555,95 @@
       }
     }
   },
+  "seedling_playthrough": {
+    "name": "Seedling Playthrough",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Seedling Playthrough",
+            "is_canonical": true
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "has_procgen_data": true
+      }
+    }
+  },
+  "seedling_playthrough_maze": {
+    "name": "Seedling Playthrough Maze",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "seedling"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
+  },
+  "procgen_maze": {
+    "name": "Procgen Maze",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Maze"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ],
+        "has_procgen_data": true
+      },
+      "AP_2": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Maze"
+          }
+        ],
+        "files": [
+          "AP_2_rules.json"
+        ],
+        "has_procgen_data": true
+      },
+      "AP_3": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Maze"
+          }
+        ],
+        "files": [
+          "AP_3_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
+  },
   "metadata": {
     "test_data_updated": "2026-08-30T17:04:46.715612+00:00",
     "games_with_test_data": 83,
