@@ -103,9 +103,14 @@ function cachedReach(cache, entered, reach) {
  * reach only grows with the inventory, so from both every inventory reaches the same states and prices the same.
  * The match is on `reachKey` — position, blocks, broken cells — so a cell reached only after a block moved is NOT
  * the same arrival (its fresh state has the block at home). An arrival in an armed lane reaches nothing: it stays.
+ * ⛓ The dedupe rests on reach GROWING with the inventory. A trap armed WHILE a token on the item axis is held
+ * (`fires: 'while_active'` on a `regionItems` token) breaks that — holding the item shrinks reach — so such a world is
+ * never deduped (designer-2's guard, 2026-10-26; no Seedling world has one today).
  */
 export function distinctArrivals(entered, arrivals) {
     if (arrivals.length < 2) return arrivals;
+    const axis = new Set(regionItems(entered));
+    if (Object.values(entered.trapLib ?? {}).some((t) => t?.fires === 'while_active' && axis.has(t.active))) return arrivals;
     const at = (a) => (a ? { ...entered, entrance: { x: a.x, y: a.y } } : entered);
     const reach = new Map();
     const reachOf = (a) => {

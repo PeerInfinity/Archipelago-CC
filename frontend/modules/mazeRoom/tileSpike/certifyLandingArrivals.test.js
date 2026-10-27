@@ -94,6 +94,19 @@ describe('distinctArrivals — one search per arrival class, matched on the fres
         expect(distinctArrivals(world, [null, C, B])).toEqual([null, B]);
     });
 
+    it('a world whose trap is armed WHILE an axis item is held is never deduped (reach would not grow with it)', () => {
+        // The guard is about the world, not the geometry: give C's world a while_active trap on an item a gate names.
+        const w = structuredClone(world);
+        w.blocks = world.blocks;
+        w.obstacleLib = { ...world.obstacleLib, door: { kind: 'terrain', clear_set: [['Lever']] } };
+        w.obstacles = new Map([['5,1', 'door']]);
+        w.trapLib = { t: { kind: 'trap', active: 'Lever', fires: 'while_active' } };
+        expect(distinctArrivals(w, [null, C, B])).toEqual([null, C, B]);
+        // …and the same trap on a token NOT on the axis leaves the dedupe on.
+        w.trapLib = { t: { kind: 'trap', active: 'Nothing', fires: 'while_active' } };
+        expect(distinctArrivals(w, [null, C, B])).toEqual([null, B]);
+    });
+
     it('MUTANT: matching by CELL (A reaches B\'s cell) would drop B and lose (6,1)', () => {
         const byCell = (arrivals) => arrivals.filter((a, i) => i === 0
             || !nativeReachUnder(world, []).cells.has(`${a.x},${a.y}`));
