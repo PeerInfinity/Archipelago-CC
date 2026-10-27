@@ -28,12 +28,20 @@
  *     group falls, then on its cell; `layer = -(fallTo − originY + height)`. The
  *     run says which: `rockFalls` (a fall this visit) or the build's `postFall`.
  *
+ *   · ⛓ G11 — THE FALL (⚖ user 2026-10-27, "hold fallrock only"): `fall()` freezes the
+ *     game for the span the run spends at once (`rockFalls`' `deadFrames`, one span
+ *     per pull: rows sharing a `t` fall together). The page HOLDS those frames
+ *     (`rockHoldSlot`, the run does not tick) and each held frame steps the rock with
+ *     the model's own pure `stepFallRock` from `publishActivate`'s state: 60 waits,
+ *     then `vy += 0.6` a frame, then the 90-frame camera hold and the release.
+ *     BAND, named: the camera's pan to the landing and `Game.shake = 30` are not
+ *     shown, and the other bodies' graphics stand still (as in a load fade's hold).
+ *
  * ⛔ NOT YET (`TRAP_PENDING`): what the run does not model — the lava trap's
- * tongue, chomp and attach (the model's lava trap is a hazard DISC), and the
- * rock's fall itself (it falls inside the dead frames the fade hold shows; the
- * run lands it in one tick).
+ * tongue, chomp and attach (the model's lava trap is a hazard DISC).
  */
 import { ANIMS, freshSprite, play, rectOp, spriteOp, updateSprite, worldFrame } from './seedlingEnemySkin.js';
+import { createFallRock, publishActivate, stepFallRock } from './fallRock.js';
 
 export const KEYS = Object.freeze({
     arrowTrap: 'seedling:puzzlement/arrowtrap',
@@ -65,8 +73,10 @@ export const TRAP_PENDING = Object.freeze({
     LavaTrap: 'the tongue ("out"/"in", angle, nightBmp copy), "chomp" [2] and "die" (LavaTrap.as:56-170): the launch ATTACHES '
         + 'the player and pulls it along the tongue to its death, and the model is a hazard disc — a drawn tongue would show a '
         + 'pull the run never makes. Needs the model (fidelity) to carry the tongue',
-    'FallRock / FallRockLarge': 'the fall itself (vy += 0.6 after 60 updates): it happens in the dead frames the fade hold shows, '
-        + 'where the page steps no skin (the hold returns before the tick); drawing it needs the held slots to step a skin',
+    // ⛓ G11: G8–G10 said the fall was inside "the dead frames the fade hold shows" — it was not: the page held only LOAD
+    //    spans, and a fall is a FREEZE span, so it played as one tick. Now held (`rockHoldSlot`); what stays:
+    'FallRock / FallRockLarge': 'BAND: the camera pan to the landing and its shake; a FallRockLarge\'s own fall (the BobBoss and '
+        + 'King of Fire rocks spend other freeze spans, which the page does not hold)',
 });
 
 // ── the adapter ─────────────────────────────────────────────────────────
@@ -90,6 +100,7 @@ export function trapSkinView(run) {
     const dark = new Map((read(run, 'darkTraps', []) ?? []).map((d) => [d.id, d]));
     const presses = world?.pressEnemies ?? [];
     const at = (e) => ({ id: `${e.tag}@${e.x},${e.y}`, x: e.x + 8, y: e.y + 8 });
+    const falls = read(run, 'rockFalls', []) ?? [];
     return {
         epoch: { run, key: `${level}|${run.transitions?.length ?? 0}|${run.playerDeaths?.length ?? 0}` },
         level,
@@ -107,6 +118,9 @@ export function trapSkinView(run) {
             const landed = r.postFall === true || fell.has(r.id);
             return { id: r.id, tag: r.tag, x: r.x + half, fallTo: r.y + half, y: landed ? r.y + half : PARKED[r.tag] ?? -16, landed };
         }),
+        // ⛓ G11 — the run's whole fall ledger (copies), so the reducer can tell a NEW span; the placements to replay one
+        rockFallRows: falls.map((f) => ({ id: f.id, level: f.level, t: f.t, deadFrames: f.deadFrames ?? 0 })),
+        rockPlacements: (world?.fallRocks ?? []).filter((r) => r.tag === 'fallrock').map((r) => ({ id: r.id, x: r.x, y: r.y })),
     };
 }
 
@@ -122,7 +136,39 @@ function chompUpdate(sp, t, ctx, key, range) {
 }
 
 /** The reducer's rules, by name, so a test can swap ONE for a mutant (`opts.rules`). */
-export const TRAP_RULES = Object.freeze({ chompUpdate, updateSprite, worldFrame });
+export const TRAP_RULES = Object.freeze({ chompUpdate, updateSprite, worldFrame, fallStep: stepFallRock });
+
+/**
+ * ⛓ G11 — the hold a NEW fall span owes: `frames` held slots, each rock replayed from its `fall()` state
+ * (`publishActivate`), parked at frame 0. Rows sharing a `t` are one span (`fallrocks-together`).
+ */
+function queueFallHold(view, rows) {
+    const mine = rows.filter((r) => r.level === view.level && r.deadFrames > 0);
+    if (!mine.length) return null;
+    const t = mine.at(-1).t;
+    const span = mine.filter((r) => r.t === t);
+    const rocks = new Map();
+    for (const r of span) {
+        const p = (view.rockPlacements ?? []).find((q) => q.id === r.id);
+        if (p) rocks.set(r.id, publishActivate(createFallRock(p.x, p.y, 0, 0, false), true).state);
+    }
+    return rocks.size ? { t, frame: 0, frames: span[0].deadFrames, rocks } : null;
+}
+
+/** Does the skin owe a held slot for a fall? */
+export const rockHoldOwed = (skin) => !!skin?.rockHold && skin.rockHold.frame < skin.rockHold.frames;
+
+/**
+ * ⛓ G11 — ONE SLOT OF THE PAGE'S CLOCK during a fall's freeze: `{ skin, held }`. Held: the rocks take one frame of
+ * `FallRock.update` (`stepFallRock`, cleared, no player — the snap is the run's) and the run does NOT tick.
+ */
+export function rockHoldSlot(skin) {
+    if (!rockHoldOwed(skin)) return { skin, held: false };
+    const R = skin.rules ?? TRAP_RULES;
+    const h = skin.rockHold;
+    const rocks = new Map([...h.rocks].map(([id, st]) => [id, R.fallStep(st, null, { cleared: true }).state]));
+    return { skin: { ...skin, rockHold: { ...h, frame: h.frame + 1, rocks } }, held: true };
+}
 
 /**
  * One GAME tick of these pictures (call it after every `tick()`). Pure: returns
@@ -149,7 +195,13 @@ export function stepTrapSkin(prev, view, tick, { rules = TRAP_RULES } = {}) {
         if (t.startDying) bodies.set(t.id, same ? (prev.bodies.get(t.id) ?? freshSprite()) : freshSprite());
         else step(t, KEYS.darkTrap, DARK_CHOMP);
     }
-    return { epoch: view.epoch, gameTime: view.gameTime, player: view.player, bodies, rules: R };
+    // ⛓ G11 — a fall this tick queues its hold; a run first met (a stack switched on, a new run) holds nothing old.
+    // A LIVE tick ends any hold still owed (the freeze is over once the run ticks again): never carried.
+    const rows = view.rockFallRows ?? [];
+    const sameRun = !!prev && prev.epoch.run === view.epoch.run;
+    const seen = sameRun ? (prev.rockSeen ?? rows.length) : rows.length;
+    const rockHold = rows.length > seen ? queueFallHold(view, rows.slice(seen)) : null;
+    return { epoch: view.epoch, gameTime: view.gameTime, player: view.player, bodies, rules: R, rockSeen: rows.length, rockHold };
 }
 
 // ── the ops ─────────────────────────────────────────────────────────────
@@ -180,7 +232,10 @@ export function trapOps(view, art, { skin } = {}) {
     for (const r of view.fallRocks) {
         const big = r.tag === 'fallrocklarge';
         const s = big ? 32 : 16;
-        push(big ? KEYS.fallRockLarge : KEYS.fallRock, 0, r, boxAround(r.x, r.y, s, s), ROCK_COLOUR, { layer: -(r.fallTo - s / 2 + s) });
+        // ⛓ G11 — inside a held fall the rock is where its replay has it (parked at frame 0, then falling, then landed)
+        const held = skin.rockHold?.rocks.get(r.id);
+        const at = held ? { ...r, y: held.y } : r;
+        push(big ? KEYS.fallRockLarge : KEYS.fallRock, 0, at, boxAround(at.x, at.y, s, s), ROCK_COLOUR, { layer: -(r.fallTo - s / 2 + s) });
     }
     return ops.filter(Boolean);
 }

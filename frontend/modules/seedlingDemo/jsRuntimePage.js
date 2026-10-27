@@ -191,7 +191,7 @@ import {
 import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from './seedlingPuzzleSkin.js';
 import { SOLIDS_OBJECT_TAGS, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
 import { NPC_TAGS, npcOps, npcSkinView, stepNpcSkin } from './seedlingNpcSkin.js';
-import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
+import { rockHoldSlot, stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
 import { PICKUP_TAGS, pickupOps, pickupSkinView, stepPickupSkin } from './seedlingPickupSkin.js';
 import { MACHINE_OBJECT_TAGS, machineNightOps, machineOps, machineSkinView, stepMachineSkin } from './seedlingMachineSkin.js';
@@ -524,6 +524,14 @@ export function mountJsRuntimePage(win = window) {
                 graphics.held += 1;
                 // ⛓ the game polls the host's queue on a dead frame too (`drainItems`): the arrival teleport that
                 // answers a door lands inside that door's fade, which then plays on (`adoptRunEffectSkin`)
+                runtime.drainItems();
+                return;
+            }
+            // ⛓ G11 — a FallRock's freeze (⚖ user 2026-10-27, "hold fallrock only"): its frames are held, the rock falls
+            const rock = rockHoldSlot(graphics.trapSkin);
+            if (rock.held) {
+                graphics.trapSkin = rock.skin;
+                graphics.held += 1;
                 runtime.drainItems();
                 return;
             }
