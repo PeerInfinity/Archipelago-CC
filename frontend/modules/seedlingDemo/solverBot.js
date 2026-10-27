@@ -2845,6 +2845,22 @@ function encounterExecutorFor(run, goal) {
  * five reports the bound rather than spinning.
  */
 const MAX_STRATEGIES_PER_GOAL = 4;
+/**
+ * ⛓ fidelity L40BK2B D2 (`CONTACT_FIDELITY.strategyBoundDistinct`, OFF) — with the bound counting DISTINCT
+ * applications, the backstop on applications in all (a repeat of the same one still spends a verb, and a goal that
+ * repeats without end is the loop the bound exists for).
+ */
+const STRATEGY_BOUND_TOTAL = 2 * MAX_STRATEGIES_PER_GOAL;
+
+/**
+ * Is the goal's strategy bound reached by the applications so far (`strategy(obstacle)` strings, in order)? OFF
+ * (`strategyBoundDistinct`): every application counts, as before. ON: the distinct ones, and `STRATEGY_BOUND_TOTAL`
+ * applications in all.
+ */
+export function strategyBoundReached(applied) {
+    if (!CONTACT_FIDELITY.strategyBoundDistinct) return applied.length >= MAX_STRATEGIES_PER_GOAL;
+    return new Set(applied).size >= MAX_STRATEGIES_PER_GOAL || applied.length >= STRATEGY_BOUND_TOTAL;
+}
 
 /**
  * ⛓ SEEDLING FIDELITY L12KEYLINE — when the frontier's nearest door is a
@@ -27979,7 +27995,15 @@ function solveSegmentUnder({
                      * and running it out is a refusal that says which ones it
                      * cleared.
                      */
-                    if (applied.length >= MAX_STRATEGIES_PER_GOAL) {
+                    /**
+                     * ⛓⛓ fidelity L40BK2B D2 (`CONTACT_FIDELITY.strategyBoundDistinct`, OFF) — the count is the
+                     * DISTINCT applications, as the bound says, with `STRATEGY_BOUND_TOTAL` applications in all as
+                     * the loop's backstop. MEASURED on L40 leg 853 (OPP ON, `orbitFreeAim` ON): Boss Key 2's goal
+                     * applies shove, hold(wandlock@448,432), burn, hold(wandlock@448,432) again from the far side of
+                     * the tree, and then needs the latch's hold(wandlock@480,560) — the fourth distinct obstacle,
+                     * refused as a fifth application. OFF: the plain count, byte-identical.
+                     */
+                    if (strategyBoundReached(applied)) {
                         refuse(`${what}: applied ${applied.length} strategies for one goal `
                             + `[${applied.join(', ')}] and the corridor still does not plan. `
                             + 'A policy that keeps clearing obstacles without a corridor '

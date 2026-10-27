@@ -1560,6 +1560,17 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_ORBIT_FREE_AIM=0|1`.
      */
     orbitFreeAim: false,
+    /**
+     * fidelity L40BK2B D2 (wave 33) — THE STRATEGY BOUND COUNTS DISTINCT APPLICATIONS. `MAX_STRATEGIES_PER_GOAL` (4)
+     * is documented as the number of DISTINCT obstacles one goal may clear, and the check counted every application.
+     * MEASURED on L40 leg 853 (OPP ON, `orbitFreeAim` ON, seam 5152): Boss Key 2's goal applies shove
+     * (`pushableblockfire@576,576`), hold (`wandlock@448,432`), burn (`burnabletree@872,784`) and the same hold again
+     * from the far side of the tree, then needs the latch's hold (`wandlock@480,560`) — its fourth distinct obstacle
+     * — and was refused as a fifth application. ON: the bound counts distinct `strategy(obstacle)` applications, with
+     * `STRATEGY_BOUND_TOTAL` (8) applications in all as the loop's backstop. OFF: byte-identical.
+     * `SEEDLING_STRATEGY_BOUND_DISTINCT=0|1`.
+     */
+    strategyBoundDistinct: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1861,6 +1872,8 @@ if (globalThis.process?.env?.SEEDLING_CHASER_ORBIT_KILL === '0') CONTACT_FIDELIT
 // ⛓ fidelity L40BK2B: `SEEDLING_ORBIT_FREE_AIM=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ORBIT_FREE_AIM === '1') CONTACT_FIDELITY.orbitFreeAim = true;
 if (globalThis.process?.env?.SEEDLING_ORBIT_FREE_AIM === '0') CONTACT_FIDELITY.orbitFreeAim = false;
+if (globalThis.process?.env?.SEEDLING_STRATEGY_BOUND_DISTINCT === '1') CONTACT_FIDELITY.strategyBoundDistinct = true;
+if (globalThis.process?.env?.SEEDLING_STRATEGY_BOUND_DISTINCT === '0') CONTACT_FIDELITY.strategyBoundDistinct = false;
 // ⛓ fidelity L32BOB: `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '1') CONTACT_FIDELITY.encounterSwingInFlight = true;
 if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '0') CONTACT_FIDELITY.encounterSwingInFlight = false;

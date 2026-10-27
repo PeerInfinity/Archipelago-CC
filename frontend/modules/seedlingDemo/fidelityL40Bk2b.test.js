@@ -8,16 +8,21 @@
  *
  * ⛓ D1 (`orbitFreeAim`): each orbit aim is projected onto the free point nearest it; the solver kills the BobSoldier
  * hitless (removed at t125): `l40bk2b-orbit-free` is those ticks on p4g at 0 px.
+ *
+ * ⛓ D2 (`strategyBoundDistinct`): `MAX_STRATEGIES_PER_GOAL` counts DISTINCT applications, with `STRATEGY_BOUND_TOTAL`
+ * (8) in all as the backstop. Measured on leg 853 with OPP ON (node only; the captured request is not committed):
+ * Boss Key 2's goal applies shove, hold(wandlock@448,432), burn, hold(wandlock@448,432) and then needs the latch's
+ * hold(wandlock@480,560); OFF that fifth application is refused, ON the chain runs to `iceturret@472,400`.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { CONTACT_FIDELITY_DEFAULTS } from './contactFidelity.js';
+import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
-import { ORBIT_FREE_AIM } from './solverBot.js';
+import { ORBIT_FREE_AIM, strategyBoundReached } from './solverBot.js';
 import { compareCorpseBumpWitness } from './fidelityCorpseBump.js';
 import { L40BK2B_AFTER_REMOVAL, L40BK2B_D1_SWITCHES, L40BK2B_WITNESS_DIR, l40Bk2bBoot, l40Bk2bFreeChecks,
     l40Bk2bModelSamples, l40Bk2bPlainChecks, l40Bk2bRemovalTick, l40Bk2bShippedOrbit, l40Bk2bSolve,
@@ -113,4 +118,35 @@ describe('L40BK2B D1 — the projected orbit, on the game (`l40bk2b-orbit-free`)
         // the next refusal is the plain world's chest proximity (a staging artifact; the AP leg's chest is an apitem)
         expect(refusal.message).toContain('the route entered a proximity-hazard — chest at (880,816)');
     }, 180_000);
+});
+
+describe('L40BK2B D2 — the strategy bound counts distinct applications', () => {
+    // ⛓ leg 853's applications (OPP ON, orbitFreeAim ON) when the latch's hold is asked for
+    const leg853 = ['shove(pushableblockfire@576,576)', 'hold(wandlock@448,432)', 'burn(burnabletree@872,784)',
+        'hold(wandlock@448,432)'];
+
+    it('strategyBoundDistinct ships OFF', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.strategyBoundDistinct).toBe(false);
+    });
+
+    it('OFF every application counts: leg 853\'s four refuse the fifth', () => {
+        withContactFidelity({ strategyBoundDistinct: false }, () => {
+            expect(strategyBoundReached(leg853.slice(0, 3))).toBe(false);
+            expect(strategyBoundReached(leg853)).toBe(true);
+        });
+    });
+
+    it('ON the distinct ones count (leg 853 has three), and four distinct still refuse', () => {
+        withContactFidelity({ strategyBoundDistinct: true }, () => {
+            expect(strategyBoundReached(leg853)).toBe(false);
+            expect(strategyBoundReached([...leg853, 'hold(wandlock@480,560)'])).toBe(true);
+        });
+    });
+
+    it('ON a goal that repeats one application is stopped at 8 in all (the loop\'s backstop)', () => {
+        withContactFidelity({ strategyBoundDistinct: true }, () => {
+            expect(strategyBoundReached(Array(7).fill('hold(wandlock@448,432)'))).toBe(false);
+            expect(strategyBoundReached(Array(8).fill('hold(wandlock@448,432)'))).toBe(true);
+        });
+    });
 });
