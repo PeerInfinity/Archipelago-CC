@@ -36,7 +36,8 @@ import { SOLIDS_COVERAGE } from './seedlingSolidsSkin.js';
 import { NPC_COVERAGE } from './seedlingNpcSkin.js';
 import { NIGHT_COPIES } from './seedlingNightSkin.js';
 import { createLevelRun } from './levelRun.js';
-import { KEYS, TRAP_COVERAGE, TRAP_RULES, stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
+import { KEYS, TRAP_COVERAGE, TRAP_RULES, rockHoldOwed, rockHoldSlot, stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
+import { FALL_ROCK, fallRockFreezeTicks } from './fallRock.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -313,4 +314,102 @@ describe('5. ⛔ STATE IDENTITY — the trap renderer never touches the run', ()
             expect(on.digest).toBe(off.digest);
         }, 240_000);
     }
+});
+
+describe('9. ⛓ G11 — the FALL, held (⚖ user 2026-10-27, "hold fallrock only"): the page\'s held slots step the rock', () => {
+    /**
+     * The page's order (`jsRuntimePage.slot`): a slot whose trap skin owes a fall hold steps it and returns BEFORE the
+     * tick; otherwise one tick, then the skin. `hold: false` is the page without the seam (the run ticks every slot).
+     * Returns per slot the run's digest and the rock's drawn y.
+     */
+    function slots(tape, { hold = true, rules } = {}) {
+        const d = tape.drive;
+        const run = createLevelRun({ levelSource: atlasLevelSource(), boot: d.boot, noDamage: true });
+        let skin = null;
+        let t = 0;
+        const out = { digests: [], heldYs: [], ticks: [], frames: [] };
+        const rockY = () => {
+            const op = trapOps(trapSkinView(run), art, { skin }).find((o) => o.key === KEYS.fallRock);
+            return op ? op.dy + 8 : null;
+        };
+        while (t < d.n) {
+            if (hold && rockHoldOwed(skin)) {
+                const before = run.ticksCompleted;
+                skin = rockHoldSlot(skin).skin;
+                expect(run.ticksCompleted, 'a held slot does not tick the run').toBe(before);
+                out.heldYs.push(rockY());
+                out.frames.push(skin.rockHold.frame);
+                continue;
+            }
+            run.advance(new Set(d.spans.filter((sp) => t >= sp.from && t <= sp.to).map((sp) => sp.key)));
+            skin = stepTrapSkin(skin, trapSkinView(run), t, rules ? { rules } : {});
+            out.digests.push(JSON.stringify([t, run.state, run.stateDigest()]));
+            out.ticks.push([t, rockY(), run.rockFalls.length]);
+            t += 1;
+        }
+        return { ...out, run };
+    }
+    const L29 = TAPES.find((x) => x.name === 'L29-rock-falls');
+
+    it('L29: exactly the run\'s `deadFrames` held; parked through the 60 waits, falling by vy += 0.6, landed through the hold', () => {
+        const s = slots(L29);
+        const [row] = s.run.rockFalls;
+        expect(row.deadFrames).toBeGreaterThan(150);
+        expect(s.heldYs.length).toBe(row.deadFrames);
+        expect(s.frames).toEqual(Array.from({ length: row.deadFrames }, (_, i) => i + 1));
+        const fallTo = 112 + 8;
+        const f = fallRockFreezeTicks(fallTo);
+        expect(f.total).toBe(row.deadFrames);
+        // the pull tick (the first that has the row) draws it parked (frame 0), then 60 parked frames, the fall, its cell
+        const pull = s.ticks.find(([, , n]) => n > 0)[0];
+        expect(s.ticks.find(([t]) => t === pull)[1]).toBe(FALL_ROCK.parkedY);
+        expect(s.heldYs.slice(0, f.wait)).toEqual(Array(f.wait).fill(FALL_ROCK.parkedY));
+        let y = FALL_ROCK.parkedY;
+        let vy = 0;
+        for (let i = 0; i < f.fall; i += 1) {
+            vy += FALL_ROCK.fallRate;
+            y = Math.min(y + vy, fallTo);
+            expect(s.heldYs[f.wait + i], `fall frame ${i + 1}`).toBeCloseTo(y, 9);
+        }
+        expect(s.heldYs.slice(f.wait + f.fall)).toEqual(Array(f.hold + f.release).fill(fallTo));
+        expect(s.ticks.filter(([t]) => t > pull).every(([, yy]) => yy === fallTo)).toBe(true);
+    });
+
+    it('⛔ the DIGEST is untouched: every tick\'s state and stateDigest identical held vs not held', () => {
+        const held = slots(L29);
+        const plain = slots(L29, { hold: false });
+        expect(held.heldYs.length).toBeGreaterThan(0);
+        expect(plain.heldYs.length).toBe(0);
+        expect(held.digests).toEqual(plain.digests);
+        expect(JSON.stringify(held.run.stateDigest())).toBe(JSON.stringify(plain.run.stateDigest()));
+    });
+
+    it('a mutant (the hold step never moves the rock) turns the frame sequence red', () => {
+        const s = slots(L29, { rules: { fallStep: (st) => ({ state: st }) } });
+        expect(s.heldYs.every((y) => y === FALL_ROCK.parkedY)).toBe(true);
+        expect(slots(L29).heldYs.some((y) => y !== FALL_ROCK.parkedY)).toBe(true);
+    });
+
+    it('by hand: two rows sharing a `t` (`fallrocks-together`, no tape reaches it) are ONE span of `deadFrames` with both rocks', () => {
+        const base = { epoch: { run: 'r', key: 'k' }, level: 43, gameTime: 0, player: { x: 0, y: 0 }, arrowTraps: [], iceTraps: [], darkTraps: [],
+            lavaTraps: [], fallRocks: [], rockPlacements: [{ id: 'a', x: 32, y: 64 }, { id: 'b', x: 96, y: 64 }] };
+        const s0 = stepTrapSkin(null, { ...base, rockFallRows: [] }, 0);
+        const rows = [{ id: 'a', level: 43, t: 5, deadFrames: 186 }, { id: 'b', level: 43, t: 5, deadFrames: 186 }];
+        let s = stepTrapSkin(s0, { ...base, rockFallRows: rows }, 1);
+        expect([s.rockHold.frames, [...s.rockHold.rocks.keys()]]).toEqual([186, ['a', 'b']]);
+        let n = 0;
+        while (rockHoldOwed(s)) { s = rockHoldSlot(s).skin; n += 1; }
+        expect(n).toBe(186);
+        expect([...s.rockHold.rocks.values()].map((r) => r.y)).toEqual([72, 72]);
+    });
+
+    it('a stack switched on mid-run (a run first met) holds no fall that already happened; a live tick ends an owed hold', () => {
+        const s = slots(L29);
+        const v = trapSkinView(s.run);
+        expect(rockHoldOwed(stepTrapSkin(null, v, 99))).toBe(false);
+        const queued = { ...stepTrapSkin(null, { ...v, rockFallRows: [] }, 0) };
+        const next = stepTrapSkin(queued, v, 1);
+        expect(rockHoldOwed(next)).toBe(true);
+        expect(rockHoldOwed(stepTrapSkin(next, v, 2))).toBe(false);
+    });
 });

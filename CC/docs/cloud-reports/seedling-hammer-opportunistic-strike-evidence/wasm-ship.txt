@@ -1,0 +1,565 @@
+# box lock: TAKEN by check-seedling-wasm-ship.mjs (browser, pid 9150) — head 888981e59, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+
+# ▶ load in wasm, SOLVE, driven to `finished` on real-GPU Windows Chrome
+  http://127.0.0.1:8000/frontend/modules/seedlingDemo/watch.html?level=4&boot=frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-4.json&goals=exit%3A64%2C16&solve=1&name=r8-solve-4
+
+  WEBGPU_ADAPTER: google / swiftshader
+  STEP 1/12: the SOLVE arm mounted and solved in the page
+  STEP 2/12: …and ▶ load in wasm became ENABLED, with what it will ship in its title
+  STEP 3/12: {"read": "document.getElementById('loadWasm').title", "as": "buttonTitle"}
+  STEP 4/12: {"read": "document.getElementById('wasmShip').hidden", "as": "buttonHiddenInSolv
+  STEP 5/12: press ▶ load in wasm
+  STEP 6/12: the ship reached `runtime` and is waiting for a REAL ▶ Start
+  STEP 7/12: press ▶ Start INSIDE the frame
+  STEP 8/12: the game accepted the tape and started running it
+  STEP 9/12: ⛓ the ship reached `finished` — the real game ran the solve to its end
+  STEP 10/12: {"read": "window.__watch.wasm", "as": "wasm"}
+  STEP 11/12: {"read": "document.getElementById('wasmVerdict').textContent", "as": "verdictTex
+  STEP 12/12: {"read": "window.__editorSolve", "as": "solve"}
+  WROTE /tmp/seedling-driver-5GfZtg/watch-ship-results.json
+
+PASS: SOLVE: the driver completed every step — 12 step(s)
+PASS: ⛓ the ▶ load-in-wasm button is UP in SOLVE (it is hidden only in REPLAY) — #wasmShip hidden = false
+PASS: …and its title NAMES what pressing it will send — ▶ ship the solve's own tape — r8-solve-4, 255 tick(s) in level 4
+PASS: SOLVE: the page published `__watch.wasm` — verdict
+PASS: SOLVE: ⛓ every stage was reached, in order, and none was skipped — ["probe","runtime","start","tape","running","finished","drain","verdict"]
+PASS: SOLVE: no stage refused — null
+PASS: SOLVE: the game reports the run FINISHED — tick 255, level 5, (88, 40)
+PASS: SOLVE: ⛓⛓⛓ end-state verdict: AGREES — the real game ended where the JS model ended — agrees · Δx 0 Δy 0 · level 5 vs 5
+PASS: SOLVE: ⛓ the game DRAINED its whole observation stream — a buffered read, once — 256 observation(s), 0 reported transition(s)
+PASS: SOLVE: ⛓⛓⛓ wasm verdict: AGREES PER TICK — the real game reproduced the model observation for observation — agrees per tick (256 observations) (kind agrees)
+PASS: SOLVE: ⛔⛔ …and the PER-TICK sentence's OWN count is the whole run — three independent accounts of how long it was — sentence 256 · drain 256 · game tick 255 + 1
+PASS: SOLVE: ⛔ …and the page prints the END-STATE bound beside it — end state: agrees  —  end state only — two runs can meet on the last frame having disagreed on every tick between
+PASS: SOLVE: ⛔⛔ …and the PER-TICK bound too — against the MODEL, and blind to what both runtimes SHARE — wasm verdict: agrees per tick (256 observations)  —  per tick against the JS MODEL of this same tape, not against a recorded expectation; and both sides share this repo’s tape and observation code, so a defect in what they SHARE is invisible here
+PASS: SOLVE: the game ran the SAME number of ticks the solve produced — game 255 vs solve 255
+PASS: SOLVE: no uncaught page errors during the ship — none
+PASS: SOLVE: and nothing the page ASKED FOR came back 4xx/5xx — none (0 ignorable, e.g. the favicon)
+
+# ▶ load in wasm, GENERATE, driven to `finished` on real-GPU Windows Chrome
+  http://127.0.0.1:8000/frontend/modules/seedlingDemo/watch.html?source=generate&seed=25&biome=post-sword&count=6&run=1
+
+  WEBGPU_ADAPTER: google / swiftshader
+  STEP 1/14: ⛔ the generator ran its WHOLE ladder — not merely its first `ok`
+  STEP 2/14: {"read": "window.__editorGenerate.step", "as": "genStep"}
+  STEP 3/14: {"read": "window.__editorGenerate.ticks", "as": "genTicks"}
+  STEP 4/14: {"read": "window.__editorGenerate.certified", "as": "genCertified"}
+  STEP 5/14: {"read": "window.__editorGenerate.elements.certified", "as": "elementCertified"}
+  STEP 6/14: {"read": "(window.__editorGenerate.elements.placed ?? []).map((p) => p.family)",
+  STEP 7/14: {"read": "document.getElementById('loadWasm').title", "as": "buttonTitle"}
+  STEP 8/14: press ▶ load in wasm
+  STEP 9/14: the ship reached `runtime` and is waiting for a REAL ▶ Start
+  STEP 10/14: press ▶ Start INSIDE the frame
+  STEP 11/14: ⛓ the ONE-ROOM level set MOUNTED and was read back out of the artifact
+  STEP 12/14: ⛓ the ship reached `finished` — the real game ran the certification tape out
+  STEP 13/14: {"read": "window.__watch.wasm", "as": "wasm"}
+  STEP 14/14: {"read": "document.getElementById('wasmVerdict').textContent", "as": "verdictTex
+  WROTE /tmp/seedling-driver-5GfZtg/watch-ship-generate-results.json
+
+PASS: GENERATE: the driver completed every step — 14 step(s)
+PASS: GENERATE: ⛔ the room that shipped is the LADDER'S LAST step, not its first — step 6 of 6
+PASS: GENERATE: ⛓ the shipped room holds a KILL GATE — a lock opened by killing a live body — placed families ["killgate"]
+PASS: …and BOTH certifications passed — the element's and the level's — element true, level true, 328 ticks
+PASS: GENERATE: …and the button title NAMES what pressing it will send — ▶ ship this room as a ONE-ROOM level set + its certification tape — seed 25, post-sword, step 6
+PASS: GENERATE: the page published `__watch.wasm` — verdict
+PASS: GENERATE: ⛓ every stage was reached, in order, `levels` included — ["probe","runtime","start","levels","tape","running","finished","drain","verdict"]
+PASS: GENERATE: no stage refused — null
+PASS: GENERATE: ⛓⛓ exactly ONE room mounted, under the set_id the exporter stamped — {"set_id":"watch-oneroom-post-sword-25-6-55809f64","rooms":1}
+PASS: GENERATE: the game reports the run FINISHED — tick 328, level 0, (133.82591720871753, 138.53188353134712)
+PASS: GENERATE: ⛓⛓ the SHIP PUBLISHES its verdict note — a field, not a painted string — "level remapped 900→0 (the generated room is room 0 of the shipped set)"
+PASS: GENERATE: ⛓⛓⛓ …and the note IS the 900→0 remap, read STRUCTURALLY — level remapped 900→0 (the generated room is room 0 of the shipped set)
+PASS: GENERATE: ⛔ …and the readout NAMES it beside the verdict, where a reader sees it — level remapped 900→0 (the generated room is room 0 of the shipped set)
+PASS: GENERATE: ⛓⛓⛓ end-state verdict: AGREES — the real game ended where the JS model ended, in the REMAPPED room — agrees · Δx 0 Δy 0 · level 0 vs 0
+PASS: GENERATE: ⛓ the game DRAINED its whole observation stream — a buffered read, once — 329 observation(s), 0 reported transition(s)
+PASS: GENERATE: ⛓⛓⛓ wasm verdict: AGREES PER TICK — the real game reproduced the model observation for observation — agrees per tick (329 observations) (kind agrees)
+PASS: GENERATE: ⛔⛔ …and the PER-TICK sentence's OWN count is the whole run — three independent accounts of how long it was — sentence 329 · drain 329 · game tick 328 + 1
+PASS: GENERATE: ⛔ …and the page prints the END-STATE bound beside it — end state: agrees  —  end state only — two runs can meet on the last frame having disagreed on every tick between
+PASS: GENERATE: ⛔⛔ …and the PER-TICK bound too — against the MODEL, and blind to what both runtimes SHARE — wasm verdict: agrees per tick (329 observations)  —  per tick against the JS MODEL of this same tape, not against a recorded expectation; and both sides share this repo’s tape and observation code, so a defect in what they SHARE is invisible here
+PASS: GENERATE: ⛔⛔ …and the GAME was in room 0 the whole time — the remap is what made a stream of 900s agree with it — game level 0, model record level 900
+PASS: GENERATE: the game ran the SAME number of ticks the certification produced — game 328 vs certification 328
+PASS: GENERATE: no uncaught page errors during the ship — none
+PASS: GENERATE: and nothing the page ASKED FOR came back 4xx/5xx — none (0 ignorable, e.g. the favicon)
+
+# ▶ load in wasm, a MULTI-SCREEN SHELL room, driven to `finished`
+  http://127.0.0.1:8000/frontend/modules/seedlingDemo/watch.html?source=generate&seed=28&biome=pre-sword&skeleton=winding&width=12&height=10&fill=shell&count=1&run=1
+
+  WEBGPU_ADAPTER: google / swiftshader
+  STEP 1/14: ⛔ the generator ran its WHOLE ladder — not merely its first `ok`
+  STEP 2/14: {"read": "window.__editorGenerate.step", "as": "genStep"}
+  STEP 3/14: {"read": "window.__editorGenerate.ticks", "as": "genTicks"}
+  STEP 4/14: {"read": "window.__editorGenerate.certified", "as": "genCertified"}
+  STEP 5/14: {"read": "window.__editorGenerate.room", "as": "room"}
+  STEP 6/14: {"read": "window.__editorGenerate.identity", "as": "identity"}
+  STEP 7/14: {"read": "document.getElementById('loadWasm').title", "as": "buttonTitle"}
+  STEP 8/14: press ▶ load in wasm
+  STEP 9/14: the ship reached `runtime` and is waiting for a REAL ▶ Start
+  STEP 10/14: press ▶ Start INSIDE the frame
+  STEP 11/14: ⛓ the ONE-ROOM level set MOUNTED and was read back out of the artifact
+  STEP 12/14: ⛓ the ship reached `finished` — the real game ran the tape out
+  STEP 13/14: {"read": "window.__watch.wasm", "as": "wasm"}
+  STEP 14/14: {"read": "document.getElementById('wasmVerdict').textContent", "as": "verdictTex
+  WROTE /tmp/seedling-driver-5GfZtg/watch-ship-room-results.json
+
+PASS: ROOM: the driver completed every step — 14 step(s)
+PASS: ROOM: ⛔ the room that shipped is the LADDER'S LAST step, not its first — step 1 of 1
+PASS: ROOM: ⛓⛓⛓ the shipped room is MULTI-SCREEN — bigger than the 10x10 pin every level shipped before it, so the CAMERA BAND is in play — 12x10, multiScreen true
+PASS: ROOM: ⛓⛓⛓ …and it is written in the SHELL fill — the strip really ran, measured rather than taken off the flag — 79 of 120 cell(s) written, fill shell
+PASS: ROOM: ⛓ the page's IDENTITY LINE names the room and the fill — seed 28 · pre-sword · step 1 · skeleton: winding;chambers=1 (CARVED, not the open room) · room: 12x10 · fill: shell  ·  density: kind=winding · chambers=1 · size=12x10 · fill=shell · element=chamber;w=2;h=3 · target=1  ·  palette: pre-sword (the WHOLE roster — no restriction)  ·  kept 1/1 over 1 attempt(s)  ·  bounds: target=1 tries=8 k=3 anchortries=1  ·  budget: 400 ticks per target (⛓ TICKS, not ms)  ·  element: guard;len=2|3|4+blockpocket+chamber;w=2;h=3 -> drew `chamber;w=2;h=3` — ⛔ REFUSED: the-entry-port-cannot-be-joined  ·  stop: TARGET_REACHED  ·  solve: SOLVED in 197 ticks
+PASS: ROOM: …and the button title NAMES what pressing it will send — ▶ ship this room as a ONE-ROOM level set + its certification tape — seed 28, pre-sword, step 1
+PASS: ROOM: the page published `__watch.wasm` — verdict
+PASS: ROOM: ⛓ every stage was reached, in order, `levels` included — ["probe","runtime","start","levels","tape","running","finished","drain","verdict"]
+PASS: ROOM: no stage refused — null
+PASS: ROOM: ⛓⛓ exactly ONE room mounted, under the set_id the exporter stamped — {"set_id":"watch-oneroom-pre-sword-28-1-9914b80a","rooms":1}
+PASS: ROOM: the game reports the run FINISHED — tick 197, level 0, (164.567184537462, 22.25991120654451)
+PASS: ROOM: ⛓⛓⛓ end-state verdict: AGREES — in a room the camera SCROLLED and whose walls are mostly not written at all — agrees · Δx 0 Δy 0
+PASS: ROOM: ⛓ the game DRAINED its whole observation stream — a buffered read, once — 198 observation(s), 0 reported transition(s)
+PASS: ROOM: ⛓⛓⛓ wasm verdict: AGREES PER TICK — the real game reproduced the model observation for observation — agrees per tick (198 observations) (kind agrees)
+PASS: ROOM: ⛔⛔ …and the PER-TICK sentence's OWN count is the whole run — three independent accounts of how long it was — sentence 198 · drain 198 · game tick 197 + 1
+PASS: ROOM: ⛔ …and the page prints the END-STATE bound beside it — end state: agrees  —  end state only — two runs can meet on the last frame having disagreed on every tick between
+PASS: ROOM: ⛔⛔ …and the PER-TICK bound too — against the MODEL, and blind to what both runtimes SHARE — wasm verdict: agrees per tick (198 observations)  —  per tick against the JS MODEL of this same tape, not against a recorded expectation; and both sides share this repo’s tape and observation code, so a defect in what they SHARE is invisible here
+PASS: ROOM: ⛔ …and the GAME was in room 0 the whole time — the 900→0 remap again, now over a room that is not one screen — game level 0, model record level 900
+PASS: ROOM: the game ran the SAME number of ticks the certification produced — game 197 vs certification 197
+PASS: ROOM: no uncaught page errors during the ship — none
+PASS: ROOM: and nothing the page ASKED FOR came back 4xx/5xx — none (0 ignorable, e.g. the favicon)
+BUILD: seedling_bot_ap_p4g — seedling_bot_ap_p4g declares `hold`
+
+# ▶ 2 WINDOWS on ONE game state — [r8-d2-19, r8-d2-20]
+  http://127.0.0.1:8000/frontend/modules/seedlingDemo/watch.html?tapes=r8-d2-19,r8-d2-20&side=wasm
+
+  WEBGPU_ADAPTER: google / swiftshader
+  STEP 1/9: the JS walk ADMITTED both windows and the ship reached `runtime`
+  STEP 2/9: {"read": "window.__editorSequence.windows.map((w) => w.label)", "as": "seqLabels
+  STEP 3/9: {"read": "window.__watch.wasm.stages", "as": "stages"}
+  STEP 4/9: press ▶ Start INSIDE the frame
+  STEP 5/9: window 1 is running in the real game
+  STEP 6/9: ⛓ the LAST boundary was crossed — every later window continues the SAME game
+  STEP 7/9: ⛓⛓⛓ every window finished and the SEQUENCE has a verdict
+  STEP 8/9: {"read": "window.__watch.wasm", "as": "wasm"}
+  STEP 9/9: {"read": "document.getElementById('wasmVerdict').textContent", "as": "verdictTex
+  WROTE /tmp/seedling-driver-5GfZtg/watch-ship-sequence-results.json
+
+PASS: SEQUENCE: the driver completed every step — 9 step(s)
+PASS: SEQUENCE: ⛓ the chain HEADLINE expanded to its 2 segments — ["r8-d2-19","r8-d2-20"]
+PASS: SEQUENCE: the page published `__watch.wasm` — verdict
+PASS: SEQUENCE: ⛓ CLAIM 1 — every stage reached IN ORDER, and ONE `start` for 2 windows: `freshFrame()` and the human press happen once — ["probe","runtime","start","tape 1/2","running 1/2","finished 1/2","drain 1/2","boundary 1/2","tape 2/2","running 2/2","finished 2/2","drain 2/2","verdict"]
+PASS: SEQUENCE: no stage refused — null
+PASS: SEQUENCE: ⛓⛓⛓ CLAIM 2 — WINDOW 2 ("r8-d2-20") IS A CONTINUATION: its dead frames are the MODEL'S OWN SHARE for that window, to the frame — a re-boot would have paid blackCover's fade (20 under the R5 pin) on top — game 170 vs the model's 170 (per-window shares [190, 170])
+PASS: SEQUENCE: ⛓ …and `continuationFindings` raises NO refusal for window 2 — it reports UNASSERTED by name, because this window crosses a door — unasserted — the window crosses a door, so its fade is not attributable
+PASS: SEQUENCE: ⚠ …and the player did NOT drift into window 2 — the `keyup`s the page dispatched released r8-d2-19's held keys — movedAtBoundary false
+PASS: SEQUENCE: ⛓⛓ CLAIM 3 — window "r8-d2-19" AGREES PER TICK with its own model stream — agrees per tick (747 observations)
+PASS: SEQUENCE: ⛓⛓ CLAIM 3 — window "r8-d2-20" AGREES PER TICK with its own model stream — agrees per tick (561 observations)
+PASS: SEQUENCE: ⛓⛓⛓ CLAIM 3 — …AND THE WHOLE CONCATENATION AGREES PER TICK with the sequence's own model stream — two windows can each agree with their own and still lose the tick between them — agrees per tick (1307 observations) (1307 observation(s))
+PASS: SEQUENCE: ⛓⛓⛓ CLAIM 4 — the END STATE is where the chain ENDS — L13 (104, 56) — agrees · Δx 0 Δy 0 · level 13 vs 13
+PASS: SEQUENCE: ⛔ …and THREE INDEPENDENT ACCOUNTS OF HOW LONG THE RUN WAS AGREE — the per-tick verdict's own count, the CONCATENATED drain, and the tapes' 1307 — per-tick 1307 · drain 1307 · windows 747 + 561
+PASS: SEQUENCE: ⛔ …and the END-STATE bound rides on the readout — end state only — two runs can meet on the last frame having disagreed on every tick between
+PASS: SEQUENCE: ⛔⛔ …and the PER-TICK verdict is against the MODEL of these same tapes — blind, by construction, to a defect both runtimes SHARE — agrees per tick (1307 observations)
+PASS: SEQUENCE: no uncaught page errors during the ship — none
+PASS: SEQUENCE: and nothing the page ASKED FOR came back 4xx/5xx — none (0 ignorable, e.g. the favicon)
+
+# CHAIN: 3 window(s), 1773 tick(s), deadline 1200s (derived: 1200s / 1773t x 1773t), ends L13 (104, 56)
+
+# ▶ CHAIN — 3 window(s) as ONE CONTINUATION — [r8-solve-18, r8-d2-19, r8-d2-20]
+  http://127.0.0.1:8000/frontend/modules/seedlingDemo/watch.html?tapes=r8-d2&side=wasm
+
+  WEBGPU_ADAPTER: google / swiftshader
+  STEP 1/6: the JS walk ADMITTED every window and the ship reached `runtime`
+  STEP 2/6: press ▶ Start INSIDE the frame
+  STEP 3/6: ⛓ the LAST boundary (2/3) was crossed — every later window continues the SAME game
+  STEP 4/6: ⛓⛓⛓ every window finished and the CHAIN has a verdict
+  STEP 5/6: {"read": "window.__watch.wasm", "as": "wasm"}
+  STEP 6/6: {"read": "window.__editorSequence.windows.map((w) => w.label)", "as": "seqLabels
+  WROTE /tmp/seedling-driver-5GfZtg/watch-ship-r8-d2-results.json
+
+PASS: CHAIN: the driver completed every step — 6 step(s)
+PASS: CHAIN: ⛓ the headline expanded to its 3 segments — ["r8-solve-18","r8-d2-19","r8-d2-20"]
+PASS: CHAIN: ⛓⛓ CLAIM 1 — every stage reached IN ORDER, and ONE ▶ Start for 3 windows — ["probe","runtime","start","tape 1/3","running 1/3","finished 1/3","drain 1/3","boundary 1/3","tape 2/3","running 2/3","finished 2/3","drain 2/3","boundary 2/3","tape 3/3","running 3/3","finished 3/3","drain 3/3","verdict"]
+PASS: CHAIN: ⛔⛔⛔ CLAIM 2 — NO STAGE REFUSED. Slice 5 measured a refusal at boundary 2/3 on `seam.time`; (d′) is what closes it — null
+PASS: CHAIN: ⛔⛔⛔ CLAIM 3 — boundary 1/3 ADMITS — zero refusals — []
+PASS: CHAIN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 1/3 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 9073 vs live 9073 (Δ 0)
+PASS: CHAIN: ⛓ …and EVERY seam row at boundary 1/3 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CHAIN: ⛔⛔ CLAIM 4 — window 2 was WRITTEN its DECLARED tick-0 state (rng.seed 1348843087, seam.time 9094) — {"seed":1348843087,"cosmetic":0,"fp":1752443622,"time":9094,"declared":{"seed":1447507847,"cosmetic":0,"fp":2069965047,"time":9073},"bootCost":21,"obeysBootCost":true}
+PASS: CHAIN: ⛓ …and window 2's tick-0 clock obeys `declared + bootCost` (9073 + 21 = 9094) — declared 9073 · bootCost 21 · obeys true · tick0 9094
+PASS: CHAIN: ⛓ …and window 2 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1447507847,"cosmetic":0,"fp":2069965047,"time":9073}
+PASS: CHAIN: ⛓ …and the player did NOT drift into window 2 — movedAtBoundary false
+PASS: CHAIN: ⛔⛔⛔ CLAIM 3 — boundary 2/3 ADMITS — zero refusals — []
+PASS: CHAIN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 2/3 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 9989 vs live 9989 (Δ 0)
+PASS: CHAIN: ⛓ …and EVERY seam row at boundary 2/3 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":1} vs live {"set":"Room","index":1} (unasserted)
+PASS: CHAIN: ⛔⛔ CLAIM 4 — window 3 was WRITTEN its DECLARED tick-0 state (rng.seed 2032220659, seam.time 10010) — {"seed":2032220659,"cosmetic":0,"fp":581736349,"time":10010,"declared":{"seed":1679857288,"cosmetic":0,"fp":1752443622,"time":9989},"bootCost":21,"obeysBootCost":true}
+PASS: CHAIN: ⛓ …and window 3's tick-0 clock obeys `declared + bootCost` (9989 + 21 = 10010) — declared 9989 · bootCost 21 · obeys true · tick0 10010
+PASS: CHAIN: ⛓ …and window 3 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1679857288,"cosmetic":0,"fp":1752443622,"time":9989}
+PASS: CHAIN: ⛓ …and the player did NOT drift into window 3 — movedAtBoundary false
+PASS: CHAIN: ⛔ WINDOW 1 IS UNTOUCHED — a fresh boot applies everything it declares — tick0Applied null
+PASS: CHAIN: ⛓ P4E — the director read the build's `hold` capability (seedling_bot_ap_p4g: true) — {"build":"seedling_bot_ap_p4g","capable":true,"why":"seedling_bot_ap_p4g declares `hold`"}
+PASS: CHAIN: ⛓ P4E — window 1 is HELD at its latch — hold true · held at finish true
+PASS: CHAIN: ⛓ P4E — window 2 is HELD at its latch — hold true · held at finish true
+PASS: CHAIN: ⛓ P4E — window 3 is not held — hold false · held at finish false
+PASS: CHAIN: ⛔⛔ CLAIM 5 — window "r8-solve-18" AGREES PER TICK with its own model stream — agrees per tick (468 observations)
+PASS: CHAIN: ⛔⛔ CLAIM 5 — window "r8-d2-19" AGREES PER TICK with its own model stream — agrees per tick (747 observations)
+PASS: CHAIN: ⛔⛔ CLAIM 5 — window "r8-d2-20" AGREES PER TICK with its own model stream — agrees per tick (561 observations)
+PASS: CHAIN: ⛔⛔⛔ CLAIM 5 — …AND THE WHOLE CONCATENATION AGREES PER TICK, over the 1774 observations the TAPES imply — agrees per tick (1774 observations) (1774)
+PASS: CHAIN: ⛓ …and the CONCATENATED DRAIN is the same number — 467 + 746 + 560 + 1 — drain 1774 · windows 468 + 747 + 561
+PASS: CHAIN: ⛔⛔ CLAIM 6 — window 1 is a FRESH BOOT and pays the model's share EXACTLY — the build arms AFTER the world swap lands, so the pre-swap frame is not counted dead — 40 — game 40 vs model 40
+PASS: CHAIN: ⛔⛔ …and window 2 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 170 — game 170 vs model 170 (shares [40,170,170])
+PASS: CHAIN: ⛔⛔ …and window 3 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 170 — game 170 vs model 170 (shares [40,170,170])
+PASS: CHAIN: ⛔⛔⛔ CLAIM 7 — the END STATE is where the chain ENDS, and the chain reached it for the first time — L13 (104, 56) — agrees · Δx 0 Δy 0 · level 13 vs 13
+
+  CHAIN — per window (3):
+  #   window            ticks  deadFrames  model  k  moved  tick0 time
+   1  r8-solve-18        467          40     40   —      —  — (fresh)
+   2  r8-d2-19           746         170    170   —  false  9073 -> 9094
+   3  r8-d2-20           560         170    170   —  false  9989 -> 10010
+PASS: CHAIN: no uncaught page errors during the ship — none
+PASS: CHAIN: and nothing the page ASKED FOR came back 4xx/5xx — none (0 ignorable, e.g. the favicon)
+
+# CAMPAIGN: 30 window(s), 10572 tick(s), deadline 7156s (derived: 1200s / 1773t x 10572t), ends L32 (80, 83.45)
+
+# ▶ CAMPAIGN — 30 window(s) as ONE CONTINUATION — [r8-solve-1, r8-solve-2, r8-solve-3, r8-solve-4, r8-solve-5, r8-solve-6, r8-solve-7, r8-solve-8, r8-solve-9, r8-solve-10, r9-solve-11, r9-solve-3, r9-solve-2, r9-solve-0, r9-solve-13, r9-solve-14, r9-solve-15, r9-solve-16, r9-solve-18, r9-solve-19, r9-solve-20, r9-solve-13-v2, r9-solve-0-v3, r9-solve-12, r9-solve-21, r9-solve-22, r9-solve-29, r9-solve-31, r9-solve-30, r9-solve-32]
+  http://127.0.0.1:8000/frontend/modules/seedlingDemo/watch.html?tapes=r9-campaign&side=wasm
+
+  WEBGPU_ADAPTER: google / swiftshader
+  STEP 1/6: the JS walk ADMITTED every window and the ship reached `runtime`
+  STEP 2/6: press ▶ Start INSIDE the frame
+  STEP 3/6: ⛓ the LAST boundary (29/30) was crossed — every later window continues the SAME game
+  STEP 4/6: ⛓⛓⛓ every window finished and the CHAIN has a verdict
+  STEP 5/6: {"read": "window.__watch.wasm", "as": "wasm"}
+  STEP 6/6: {"read": "window.__editorSequence.windows.map((w) => w.label)", "as": "seqLabels
+  WROTE /tmp/seedling-driver-5GfZtg/watch-ship-r9-campaign-results.json
+
+PASS: CAMPAIGN: the driver completed every step — 6 step(s)
+PASS: CAMPAIGN: ⛓ the headline expanded to its 30 segments — ["r8-solve-1","r8-solve-2","r8-solve-3","r8-solve-4","r8-solve-5","r8-solve-6","r8-solve-7","r8-solve-8","r8-solve-9","r8-solve-10","r9-solve-11","r9-solve-3","r9-solve-2","r9-solve-0","r9-solve-13","r9-solve-14","r9-solve-15","r9-solve-16","r9-solve-18","r9-solve-19","r9-solve-20","r9-solve-13-v2","r9-solve-0-v3","r9-solve-12","r9-solve-21","r9-solve-22","r9-solve-29","r9-solve-31","r9-solve-30","r9-solve-32"]
+PASS: CAMPAIGN: ⛓⛓ CLAIM 1 — every stage reached IN ORDER, and ONE ▶ Start for 30 windows — ["probe","runtime","start","tape 1/30","running 1/30","finished 1/30","drain 1/30","boundary 1/30","tape 2/30","running 2/30","finished 2/30","drain 2/30","boundary 2/30","tape 3/30","running 3/30","finished 3/30","drain 3/30","boundary 3/30","tape 4/30","running 4/30","finished 4/30","drain 4/30","boundary 4/30","tape 5/30","running 5/30","finished 5/30","drain 5/30","boundary 5/30","tape 6/30","running 6/30","finished 6/30","drain 6/30","boundary 6/30","tape 7/30","running 7/30","finished 7/30","drain 7/30","boundary 7/30","tape 8/30","running 8/30","finished 8/30","drain 8/30","boundary 8/30","tape 9/30","running 9/30","finished 9/30","drain 9/30","boundary 9/30","tape 10/30","running 10/30","finished 10/30","drain 10/30","boundary 10/30","tape 11/30","running 11/30","finished 11/30","drain 11/30","boundary 11/30","tape 12/30","running 12/30","finished 12/30","drain 12/30","boundary 12/30","tape 13/30","running 13/30","finished 13/30","drain 13/30","boundary 13/30","tape 14/30","running 14/30","finished 14/30","drain 14/30","boundary 14/30","tape 15/30","running 15/30","finished 15/30","drain 15/30","boundary 15/30","tape 16/30","running 16/30","finished 16/30","drain 16/30","boundary 16/30","tape 17/30","running 17/30","finished 17/30","drain 17/30","boundary 17/30","tape 18/30","running 18/30","finished 18/30","drain 18/30","boundary 18/30","tape 19/30","running 19/30","finished 19/30","drain 19/30","boundary 19/30","tape 20/30","running 20/30","finished 20/30","drain 20/30","boundary 20/30","tape 21/30","running 21/30","finished 21/30","drain 21/30","boundary 21/30","tape 22/30","running 22/30","finished 22/30","drain 22/30","boundary 22/30","tape 23/30","running 23/30","finished 23/30","drain 23/30","boundary 23/30","tape 24/30","running 24/30","finished 24/30","drain 24/30","boundary 24/30","tape 25/30","running 25/30","finished 25/30","drain 25/30","boundary 25/30","tape 26/30","running 26/30","finished 26/30","drain 26/30","boundary 26/30","tape 27/30","running 27/30","finished 27/30","drain 27/30","boundary 27/30","tape 28/30","running 28/30","finished 28/30","drain 28/30","boundary 28/30","tape 29/30","running 29/30","finished 29/30","drain 29/30","boundary 29/30","tape 30/30","running 30/30","finished 30/30","drain 30/30","verdict"]
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 2 — NO STAGE REFUSED. Slice 5 measured a refusal at boundary 29/30 on `seam.time`; (d′) is what closes it — null
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 1/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 1/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 5002 vs live 5002 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 1/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":2} vs live {"set":"Room","index":2} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 2 was WRITTEN its DECLARED tick-0 state (rng.seed 1410304934, seam.time 5023) — {"seed":1410304934,"cosmetic":279437307,"fp":293227988,"time":5023,"declared":{"seed":1410304934,"cosmetic":531366407,"fp":1657746538,"time":5002},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 2's tick-0 clock obeys `declared + bootCost` (5002 + 21 = 5023) — declared 5002 · bootCost 21 · obeys true · tick0 5023
+PASS: CAMPAIGN: ⛓ …and window 2 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1410304934,"cosmetic":531366407,"fp":1657746538,"time":5002}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 2 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 2/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 2/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 5069 vs live 5069 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 2/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 3 was WRITTEN its DECLARED tick-0 state (rng.seed 1410304934, seam.time 5090) — {"seed":1410304934,"cosmetic":649837424,"fp":1955308098,"time":5090,"declared":{"seed":1410304934,"cosmetic":279437307,"fp":293227988,"time":5069},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 3's tick-0 clock obeys `declared + bootCost` (5069 + 21 = 5090) — declared 5069 · bootCost 21 · obeys true · tick0 5090
+PASS: CAMPAIGN: ⛓ …and window 3 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1410304934,"cosmetic":279437307,"fp":293227988,"time":5069}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 3 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 3/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 3/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 5334 vs live 5334 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 3/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 4 was WRITTEN its DECLARED tick-0 state (rng.seed 705152467, seam.time 5355) — {"seed":705152467,"cosmetic":1905423410,"fp":750204808,"time":5355,"declared":{"seed":1410304934,"cosmetic":649837424,"fp":1955308098,"time":5334},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 4's tick-0 clock obeys `declared + bootCost` (5334 + 21 = 5355) — declared 5334 · bootCost 21 · obeys true · tick0 5355
+PASS: CAMPAIGN: ⛓ …and window 4 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1410304934,"cosmetic":649837424,"fp":1955308098,"time":5334}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 4 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 4/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 4/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 5609 vs live 5609 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 4/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Push Rock","index":0} vs live {"set":"Push Rock","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 5 was WRITTEN its DECLARED tick-0 state (rng.seed 859895994, seam.time 5630) — {"seed":859895994,"cosmetic":245529354,"fp":341033166,"time":5630,"declared":{"seed":705152467,"cosmetic":544565574,"fp":750204808,"time":5609},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 5's tick-0 clock obeys `declared + bootCost` (5609 + 21 = 5630) — declared 5609 · bootCost 21 · obeys true · tick0 5630
+PASS: CAMPAIGN: ⛓ …and window 5 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":705152467,"cosmetic":544565574,"fp":750204808,"time":5609}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 5 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 5/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 5/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 6032 vs live 6032 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 5/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 6 was WRITTEN its DECLARED tick-0 state (rng.seed 2051867618, seam.time 6053) — {"seed":2051867618,"cosmetic":1577414163,"fp":882360526,"time":6053,"declared":{"seed":859895994,"cosmetic":634670945,"fp":341033166,"time":6032},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 6's tick-0 clock obeys `declared + bootCost` (6032 + 21 = 6053) — declared 6032 · bootCost 21 · obeys true · tick0 6053
+PASS: CAMPAIGN: ⛓ …and window 6 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":859895994,"cosmetic":634670945,"fp":341033166,"time":6032}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 6 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 6/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 6/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 6346 vs live 6346 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 6/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":1} vs live {"set":"Room","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 7 was WRITTEN its DECLARED tick-0 state (rng.seed 2051867618, seam.time 6367) — {"seed":2051867618,"cosmetic":541735403,"fp":1458777947,"time":6367,"declared":{"seed":2051867618,"cosmetic":1577414163,"fp":882360526,"time":6346},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 7's tick-0 clock obeys `declared + bootCost` (6346 + 21 = 6367) — declared 6346 · bootCost 21 · obeys true · tick0 6367
+PASS: CAMPAIGN: ⛓ …and window 7 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":2051867618,"cosmetic":1577414163,"fp":882360526,"time":6346}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 7 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 7/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 7/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 6512 vs live 6512 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 7/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":2} vs live {"set":"Room","index":2} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 8 was WRITTEN its DECLARED tick-0 state (rng.seed 1452491000, seam.time 6533) — {"seed":1452491000,"cosmetic":1064089281,"fp":1404334271,"time":6533,"declared":{"seed":2051867618,"cosmetic":541735403,"fp":1458777947,"time":6512},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 8's tick-0 clock obeys `declared + bootCost` (6512 + 21 = 6533) — declared 6512 · bootCost 21 · obeys true · tick0 6533
+PASS: CAMPAIGN: ⛓ …and window 8 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":2051867618,"cosmetic":541735403,"fp":1458777947,"time":6512}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 8 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 8/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 8/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 7359 vs live 7359 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 8/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 9 was WRITTEN its DECLARED tick-0 state (rng.seed 1452491000, seam.time 7380) — {"seed":1452491000,"cosmetic":271086425,"fp":1800812167,"time":7380,"declared":{"seed":1452491000,"cosmetic":1230952813,"fp":1404334271,"time":7359},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 9's tick-0 clock obeys `declared + bootCost` (7359 + 21 = 7380) — declared 7359 · bootCost 21 · obeys true · tick0 7380
+PASS: CAMPAIGN: ⛓ …and window 9 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1452491000,"cosmetic":1230952813,"fp":1404334271,"time":7359}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 9 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 9/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 9/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 7501 vs live 7501 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 9/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 10 was WRITTEN its DECLARED tick-0 state (rng.seed 1452491000, seam.time 7522) — {"seed":1452491000,"cosmetic":1675622772,"fp":1763053598,"time":7522,"declared":{"seed":1452491000,"cosmetic":271086425,"fp":1800812167,"time":7501},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 10's tick-0 clock obeys `declared + bootCost` (7501 + 21 = 7522) — declared 7501 · bootCost 21 · obeys true · tick0 7522
+PASS: CAMPAIGN: ⛓ …and window 10 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1452491000,"cosmetic":271086425,"fp":1800812167,"time":7501}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 10 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 10/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 10/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 7754 vs live 7754 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 10/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":1} vs live {"set":"Room","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 11 was WRITTEN its DECLARED tick-0 state (rng.seed 1452491000, seam.time 7775) — {"seed":1452491000,"cosmetic":1111860666,"fp":662460280,"time":7775,"declared":{"seed":1452491000,"cosmetic":1148976942,"fp":1763053598,"time":7754},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 11's tick-0 clock obeys `declared + bootCost` (7754 + 21 = 7775) — declared 7754 · bootCost 21 · obeys true · tick0 7775
+PASS: CAMPAIGN: ⛓ …and window 11 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1452491000,"cosmetic":1148976942,"fp":1763053598,"time":7754}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 11 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 11/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 11/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 8202 vs live 8202 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 11/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 12 was WRITTEN its DECLARED tick-0 state (rng.seed 726245500, seam.time 8223) — {"seed":726245500,"cosmetic":1691165528,"fp":1414699912,"time":8223,"declared":{"seed":726245500,"cosmetic":1729244461,"fp":662460280,"time":8202},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 12's tick-0 clock obeys `declared + bootCost` (8202 + 21 = 8223) — declared 8202 · bootCost 21 · obeys true · tick0 8223
+PASS: CAMPAIGN: ⛓ …and window 12 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":726245500,"cosmetic":1729244461,"fp":662460280,"time":8202}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 12 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 12/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 12/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 8374 vs live 8374 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 12/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 13 was WRITTEN its DECLARED tick-0 state (rng.seed 726245500, seam.time 8395) — {"seed":726245500,"cosmetic":2084858267,"fp":2069965047,"time":8395,"declared":{"seed":726245500,"cosmetic":1084821095,"fp":1414699912,"time":8374},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 13's tick-0 clock obeys `declared + bootCost` (8374 + 21 = 8395) — declared 8374 · bootCost 21 · obeys true · tick0 8395
+PASS: CAMPAIGN: ⛓ …and window 13 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":726245500,"cosmetic":1084821095,"fp":1414699912,"time":8374}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 13 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 13/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 13/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 8417 vs live 8417 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 13/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":1} vs live {"set":"Room","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 14 was WRITTEN its DECLARED tick-0 state (rng.seed 1688770696, seam.time 8438) — {"seed":1688770696,"cosmetic":222249170,"fp":667463529,"time":8438,"declared":{"seed":726245500,"cosmetic":1650598732,"fp":2069965047,"time":8417},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 14's tick-0 clock obeys `declared + bootCost` (8417 + 21 = 8438) — declared 8417 · bootCost 21 · obeys true · tick0 8438
+PASS: CAMPAIGN: ⛓ …and window 14 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":726245500,"cosmetic":1650598732,"fp":2069965047,"time":8417}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 14 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 14/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 14/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 8582 vs live 8582 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 14/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":2} vs live {"set":"Room","index":2} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 15 was WRITTEN its DECLARED tick-0 state (rng.seed 1688770696, seam.time 8603) — {"seed":1688770696,"cosmetic":755546242,"fp":239780230,"time":8603,"declared":{"seed":1688770696,"cosmetic":1914782422,"fp":1786538712,"time":8582},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 15's tick-0 clock obeys `declared + bootCost` (8582 + 21 = 8603) — declared 8582 · bootCost 21 · obeys true · tick0 8603
+PASS: CAMPAIGN: ⛓ …and window 15 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1688770696,"cosmetic":1914782422,"fp":1786538712,"time":8582}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 15 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 15/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 15/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 8638 vs live 8638 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 15/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":2} vs live {"set":"Room","index":2} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 16 was WRITTEN its DECLARED tick-0 state (rng.seed 328376930, seam.time 8659) — {"seed":328376930,"cosmetic":1014878741,"fp":1924513024,"time":8659,"declared":{"seed":1688770696,"cosmetic":153198871,"fp":239780230,"time":8638},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 16's tick-0 clock obeys `declared + bootCost` (8638 + 21 = 8659) — declared 8638 · bootCost 21 · obeys true · tick0 8659
+PASS: CAMPAIGN: ⛓ …and window 16 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1688770696,"cosmetic":153198871,"fp":239780230,"time":8638}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 16 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 16/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 16/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 8761 vs live 8761 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 16/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Sword","index":1} vs live {"set":"Sword","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 17 was WRITTEN its DECLARED tick-0 state (rng.seed 328376930, seam.time 8782) — {"seed":328376930,"cosmetic":1647950909,"fp":2039186901,"time":8782,"declared":{"seed":328376930,"cosmetic":628985786,"fp":1924513024,"time":8761},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 17's tick-0 clock obeys `declared + bootCost` (8761 + 21 = 8782) — declared 8761 · bootCost 21 · obeys true · tick0 8782
+PASS: CAMPAIGN: ⛓ …and window 17 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":328376930,"cosmetic":628985786,"fp":1924513024,"time":8761}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 17 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 17/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 17/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 9237 vs live 9237 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 17/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":2} vs live {"set":"Room","index":2} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 18 was WRITTEN its DECLARED tick-0 state (rng.seed 463063377, seam.time 9258) — {"seed":463063377,"cosmetic":2038704650,"fp":1847462486,"time":9258,"declared":{"seed":328376930,"cosmetic":1298568318,"fp":2039186901,"time":9237},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 18's tick-0 clock obeys `declared + bootCost` (9237 + 21 = 9258) — declared 9237 · bootCost 21 · obeys true · tick0 9258
+PASS: CAMPAIGN: ⛓ …and window 18 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":328376930,"cosmetic":1298568318,"fp":2039186901,"time":9237}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 18 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 18/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 18/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 9912 vs live 9912 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 18/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":1} vs live {"set":"Room","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 19 was WRITTEN its DECLARED tick-0 state (rng.seed 146381973, seam.time 9933) — {"seed":146381973,"cosmetic":553766028,"fp":2098665036,"time":9933,"declared":{"seed":463063377,"cosmetic":1023014874,"fp":1847462486,"time":9912},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 19's tick-0 clock obeys `declared + bootCost` (9912 + 21 = 9933) — declared 9912 · bootCost 21 · obeys true · tick0 9933
+PASS: CAMPAIGN: ⛓ …and window 19 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":463063377,"cosmetic":1023014874,"fp":1847462486,"time":9912}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 19 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 19/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 19/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 10322 vs live 10322 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 19/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 20 was WRITTEN its DECLARED tick-0 state (rng.seed 1281150538, seam.time 10343) — {"seed":1281150538,"cosmetic":1011367703,"fp":1908765832,"time":10343,"declared":{"seed":146381973,"cosmetic":2101833856,"fp":2098665036,"time":10322},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 20's tick-0 clock obeys `declared + bootCost` (10322 + 21 = 10343) — declared 10322 · bootCost 21 · obeys true · tick0 10343
+PASS: CAMPAIGN: ⛓ …and window 20 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":146381973,"cosmetic":2101833856,"fp":2098665036,"time":10322}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 20 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 20/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 20/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 11238 vs live 11238 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 20/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":1} vs live {"set":"Room","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 21 was WRITTEN its DECLARED tick-0 state (rng.seed 1281150538, seam.time 11259) — {"seed":1281150538,"cosmetic":1135277646,"fp":1516619538,"time":11259,"declared":{"seed":1281150538,"cosmetic":246593575,"fp":1908765832,"time":11238},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 21's tick-0 clock obeys `declared + bootCost` (11238 + 21 = 11259) — declared 11238 · bootCost 21 · obeys true · tick0 11259
+PASS: CAMPAIGN: ⛓ …and window 21 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1281150538,"cosmetic":246593575,"fp":1908765832,"time":11238}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 21 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 21/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 21/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 11968 vs live 11968 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 21/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":1} vs live {"set":"Room","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 22 was WRITTEN its DECLARED tick-0 state (rng.seed 1281150538, seam.time 11989) — {"seed":1281150538,"cosmetic":1584033245,"fp":1341168923,"time":11989,"declared":{"seed":1281150538,"cosmetic":1432953580,"fp":1516619538,"time":11968},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 22's tick-0 clock obeys `declared + bootCost` (11968 + 21 = 11989) — declared 11968 · bootCost 21 · obeys true · tick0 11989
+PASS: CAMPAIGN: ⛓ …and window 22 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1281150538,"cosmetic":1432953580,"fp":1516619538,"time":11968}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 22 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 22/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 22/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 12036 vs live 12036 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 22/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":1} vs live {"set":"Room","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 23 was WRITTEN its DECLARED tick-0 state (rng.seed 1684541556, seam.time 12057) — {"seed":1684541556,"cosmetic":803564689,"fp":1037729949,"time":12057,"declared":{"seed":1281150538,"cosmetic":2038904118,"fp":1341168923,"time":12036},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 23's tick-0 clock obeys `declared + bootCost` (12036 + 21 = 12057) — declared 12036 · bootCost 21 · obeys true · tick0 12057
+PASS: CAMPAIGN: ⛓ …and window 23 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1281150538,"cosmetic":2038904118,"fp":1341168923,"time":12036}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 23 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 23/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 23/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 12820 vs live 12820 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 23/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 24 was WRITTEN its DECLARED tick-0 state (rng.seed 1643690930, seam.time 12841) — {"seed":1643690930,"cosmetic":231703923,"fp":885263110,"time":12841,"declared":{"seed":1684541556,"cosmetic":298799630,"fp":1925073532,"time":12820},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 24's tick-0 clock obeys `declared + bootCost` (12820 + 21 = 12841) — declared 12820 · bootCost 21 · obeys true · tick0 12841
+PASS: CAMPAIGN: ⛓ …and window 24 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1684541556,"cosmetic":298799630,"fp":1925073532,"time":12820}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 24 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 24/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 24/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 15124 vs live 15124 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 24/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Ground Hit","index":1} vs live {"set":"Ground Hit","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 25 was WRITTEN its DECLARED tick-0 state (rng.seed 1643690930, seam.time 15145) — {"seed":1643690930,"cosmetic":740459154,"fp":850383354,"time":15145,"declared":{"seed":1643690930,"cosmetic":1192717530,"fp":885263110,"time":15124},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 25's tick-0 clock obeys `declared + bootCost` (15124 + 21 = 15145) — declared 15124 · bootCost 21 · obeys true · tick0 15145
+PASS: CAMPAIGN: ⛓ …and window 25 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1643690930,"cosmetic":1192717530,"fp":885263110,"time":15124}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 25 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 25/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 25/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 15170 vs live 15170 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 25/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 26 was WRITTEN its DECLARED tick-0 state (rng.seed 1629551709, seam.time 15191) — {"seed":1629551709,"cosmetic":136942136,"fp":555752479,"time":15191,"declared":{"seed":1643690930,"cosmetic":738296912,"fp":850383354,"time":15170},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 26's tick-0 clock obeys `declared + bootCost` (15170 + 21 = 15191) — declared 15170 · bootCost 21 · obeys true · tick0 15191
+PASS: CAMPAIGN: ⛓ …and window 26 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1643690930,"cosmetic":738296912,"fp":850383354,"time":15170}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 26 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 26/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 26/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 15279 vs live 15279 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 26/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":0} vs live {"set":"Room","index":0} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 27 was WRITTEN its DECLARED tick-0 state (rng.seed 1301078681, seam.time 15300) — {"seed":1301078681,"cosmetic":1674602255,"fp":1739749473,"time":15300,"declared":{"seed":1629551709,"cosmetic":615678460,"fp":555752479,"time":15279},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 27's tick-0 clock obeys `declared + bootCost` (15279 + 21 = 15300) — declared 15279 · bootCost 21 · obeys true · tick0 15300
+PASS: CAMPAIGN: ⛓ …and window 27 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1629551709,"cosmetic":615678460,"fp":555752479,"time":15279}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 27 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 27/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 27/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 15828 vs live 15828 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 27/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":2} vs live {"set":"Room","index":2} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 28 was WRITTEN its DECLARED tick-0 state (rng.seed 1301078681, seam.time 15849) — {"seed":1301078681,"cosmetic":1996781352,"fp":1979538806,"time":15849,"declared":{"seed":1301078681,"cosmetic":592762844,"fp":1739749473,"time":15828},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 28's tick-0 clock obeys `declared + bootCost` (15828 + 21 = 15849) — declared 15828 · bootCost 21 · obeys true · tick0 15849
+PASS: CAMPAIGN: ⛓ …and window 28 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1301078681,"cosmetic":592762844,"fp":1739749473,"time":15828}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 28 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 28/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 28/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 16184 vs live 16184 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 28/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":1} vs live {"set":"Room","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 29 was WRITTEN its DECLARED tick-0 state (rng.seed 958590141, seam.time 16205) — {"seed":958590141,"cosmetic":1285917978,"fp":182115762,"time":16205,"declared":{"seed":1301078681,"cosmetic":1970067558,"fp":1979538806,"time":16184},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 29's tick-0 clock obeys `declared + bootCost` (16184 + 21 = 16205) — declared 16184 · bootCost 21 · obeys true · tick0 16205
+PASS: CAMPAIGN: ⛓ …and window 29 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":1301078681,"cosmetic":1970067558,"fp":1979538806,"time":16184}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 29 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 3 — boundary 29/30 ADMITS — zero refusals — []
+PASS: CAMPAIGN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY 29/30 IS ZERO — slice 5 measured 20 + 1 = 21 here — declared 16414 vs live 16414 (Δ 0)
+PASS: CAMPAIGN: ⛓ …and EVERY seam row at boundary 29/30 is equal, `time` included and `music` set aside (⚖ 66) — no differing row; music declared {"set":"Room","index":1} vs live {"set":"Room","index":1} (unasserted)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 4 — window 30 was WRITTEN its DECLARED tick-0 state (rng.seed 958590141, seam.time 16435) — {"seed":958590141,"cosmetic":1798109562,"fp":655414959,"time":16435,"declared":{"seed":958590141,"cosmetic":1770644942,"fp":182115762,"time":16414},"bootCost":21,"obeysBootCost":true}
+PASS: CAMPAIGN: ⛓ …and window 30's tick-0 clock obeys `declared + bootCost` (16414 + 21 = 16435) — declared 16414 · bootCost 21 · obeys true · tick0 16435
+PASS: CAMPAIGN: ⛓ …and window 30 reports the PRE-BUILD rng it declares, beside the tick-0 state it applied — {"seed":958590141,"cosmetic":1770644942,"fp":182115762,"time":16414}
+PASS: CAMPAIGN: ⛓ …and the player did NOT drift into window 30 — movedAtBoundary false
+PASS: CAMPAIGN: ⛔ WINDOW 1 IS UNTOUCHED — a fresh boot applies everything it declares — tick0Applied null
+PASS: CAMPAIGN: ⛓ P4E — the director read the build's `hold` capability (seedling_bot_ap_p4g: true) — {"build":"seedling_bot_ap_p4g","capable":true,"why":"seedling_bot_ap_p4g declares `hold`"}
+PASS: CAMPAIGN: ⛓ P4E — window 1 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 2 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 3 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 4 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 5 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 6 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 7 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 8 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 9 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 10 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 11 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 12 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 13 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 14 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 15 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 16 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 17 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 18 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 19 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 20 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 21 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 22 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 23 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 24 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 25 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 26 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 27 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 28 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 29 is HELD at its latch — hold true · held at finish true
+PASS: CAMPAIGN: ⛓ P4E — window 30 is not held — hold false · held at finish false
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r8-solve-1" AGREES PER TICK with its own model stream — agrees per tick (184 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r8-solve-2" AGREES PER TICK with its own model stream — agrees per tick (48 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r8-solve-3" AGREES PER TICK with its own model stream — agrees per tick (246 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r8-solve-4" AGREES PER TICK with its own model stream — agrees per tick (256 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r8-solve-5" AGREES PER TICK with its own model stream — agrees per tick (404 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r8-solve-6" AGREES PER TICK with its own model stream — agrees per tick (295 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r8-solve-7" AGREES PER TICK with its own model stream — agrees per tick (147 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r8-solve-8" AGREES PER TICK with its own model stream — agrees per tick (828 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r8-solve-9" AGREES PER TICK with its own model stream — agrees per tick (123 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r8-solve-10" AGREES PER TICK with its own model stream — agrees per tick (84 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-11" AGREES PER TICK with its own model stream — agrees per tick (98 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-3" AGREES PER TICK with its own model stream — agrees per tick (153 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-2" AGREES PER TICK with its own model stream — agrees per tick (24 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-0" AGREES PER TICK with its own model stream — agrees per tick (146 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-13" AGREES PER TICK with its own model stream — agrees per tick (37 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-14" AGREES PER TICK with its own model stream — agrees per tick (104 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-15" AGREES PER TICK with its own model stream — agrees per tick (457 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-16" AGREES PER TICK with its own model stream — agrees per tick (656 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-18" AGREES PER TICK with its own model stream — agrees per tick (391 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-19" AGREES PER TICK with its own model stream — agrees per tick (747 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-20" AGREES PER TICK with its own model stream — agrees per tick (561 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-13-v2" AGREES PER TICK with its own model stream — agrees per tick (49 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-0-v3" AGREES PER TICK with its own model stream — agrees per tick (314 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-12" AGREES PER TICK with its own model stream — agrees per tick (2365 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-21" AGREES PER TICK with its own model stream — agrees per tick (27 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-22" AGREES PER TICK with its own model stream — agrees per tick (90 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-29" AGREES PER TICK with its own model stream — agrees per tick (380 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-31" AGREES PER TICK with its own model stream — agrees per tick (337 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-30" AGREES PER TICK with its own model stream — agrees per tick (211 observations)
+PASS: CAMPAIGN: ⛔⛔ CLAIM 5 — window "r9-solve-32" AGREES PER TICK with its own model stream — agrees per tick (840 observations)
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 5 — …AND THE WHOLE CONCATENATION AGREES PER TICK, over the 10573 observations the TAPES imply — agrees per tick (10573 observations) (10573)
+PASS: CAMPAIGN: ⛓ …and the CONCATENATED DRAIN is the same number — 183 + 47 + 245 + 255 + 403 + 294 + 146 + 827 + 122 + 83 + 97 + 152 + 23 + 145 + 36 + 103 + 456 + 655 + 390 + 746 + 560 + 48 + 313 + 2364 + 26 + 89 + 379 + 336 + 210 + 839 + 1 — drain 10573 · windows 184 + 48 + 246 + 256 + 404 + 295 + 147 + 828 + 123 + 84 + 98 + 153 + 24 + 146 + 37 + 104 + 457 + 656 + 391 + 747 + 561 + 49 + 314 + 2365 + 27 + 90 + 380 + 337 + 211 + 840
+PASS: CAMPAIGN: ⛔⛔ CLAIM 6 — window 1 is a TRUE START and pays the model's share MINUS the k boot-fade frames already elapsed when `botStart` landed (k = `armed_at` − PAGE_BOOT_TIME, 1 ≤ k < LOAD_FADE_FRAMES) — 40 − k — game 39 vs model 40 − k 1 = 39
+PASS: CAMPAIGN: ⛔⛔ …and window 2 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 3 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 4 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 5 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 6 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 7 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 8 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 9 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 10 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 170 — game 170 vs model 170 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 11 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 351 — game 351 vs model 351 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 12 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 13 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 14 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 15 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 16 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 17 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 18 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 19 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 20 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 170 — game 170 vs model 170 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 21 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 170 — game 170 vs model 170 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 22 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 23 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 471 — game 471 vs model 471 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 24 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 25 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 26 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 27 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 170 — game 170 vs model 170 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 28 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 29 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 20 — game 20 vs model 20 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔ …and window 30 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 324 — game 324 vs model 324 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 7 — the END STATE is where the chain ENDS, and the chain reached it for the first time — L32 (80, 83.45) — agrees · Δx 0 Δy 0 · level 32 vs 32
+
+  CAMPAIGN — per window (30):
+  #   window            ticks  deadFrames  model  k  moved  tick0 time
+   1  r8-solve-1         183          39     39   1      —  — (fresh)
+   2  r8-solve-2          47          20     20   —  false  5002 -> 5023
+   3  r8-solve-3         245          20     20   —  false  5069 -> 5090
+   4  r8-solve-4         255          20     20   —  false  5334 -> 5355
+   5  r8-solve-5         403          20     20   —  false  5609 -> 5630
+   6  r8-solve-6         294          20     20   —  false  6032 -> 6053
+   7  r8-solve-7         146          20     20   —  false  6346 -> 6367
+   8  r8-solve-8         827          20     20   —  false  6512 -> 6533
+   9  r8-solve-9         122          20     20   —  false  7359 -> 7380
+  10  r8-solve-10         83         170    170   —  false  7501 -> 7522
+  11  r9-solve-11         97         351    351   —  false  7754 -> 7775
+  12  r9-solve-3         152          20     20   —  false  8202 -> 8223
+  13  r9-solve-2          23          20     20   —  false  8374 -> 8395
+  14  r9-solve-0         145          20     20   —  false  8417 -> 8438
+  15  r9-solve-13         36          20     20   —  false  8582 -> 8603
+  16  r9-solve-14        103          20     20   —  false  8638 -> 8659
+  17  r9-solve-15        456          20     20   —  false  8761 -> 8782
+  18  r9-solve-16        655          20     20   —  false  9237 -> 9258
+  19  r9-solve-18        390          20     20   —  false  9912 -> 9933
+  20  r9-solve-19        746         170    170   —  false  10322 -> 10343
+  21  r9-solve-20        560         170    170   —  false  11238 -> 11259
+  22  r9-solve-13-v2      48          20     20   —  false  11968 -> 11989
+  23  r9-solve-0-v3      313         471    471   —  false  12036 -> 12057
+  24  r9-solve-12       2364          20     20   —  false  12820 -> 12841
+  25  r9-solve-21         26          20     20   —  false  15124 -> 15145
+  26  r9-solve-22         89          20     20   —  false  15170 -> 15191
+  27  r9-solve-29        379         170    170   —  false  15279 -> 15300
+  28  r9-solve-31        336          20     20   —  false  15828 -> 15849
+  29  r9-solve-30        210          20     20   —  false  16184 -> 16205
+  30  r9-solve-32        839         324    324   —  false  16414 -> 16435
+PASS: CAMPAIGN: no uncaught page errors during the ship — none
+PASS: CAMPAIGN: and nothing the page ASKED FOR came back 4xx/5xx — none (0 ignorable, e.g. the favicon)
+
+ALL PASS

@@ -1,0 +1,6 @@
+M1 the drive asks no policy: RED | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯ | AssertionError: expected [ '660:chaser:bob@736,752', …(1) ] to deeply equal []
+M2 the strike preview walks with no policy: RED | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯ | AssertionError: expected [ '653:bob@736,752:1', …(2) ] to deeply equal [ '653:bob@736,752:1', …(2) ]
+M3 the refuge preview walks with no policy: RED | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯ | AssertionError: expected +0 to be 1044 // Object.is equality
+M4 the kill never defers its aim: RED | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯ | AssertionError: expected [ '653:bob@736,752:1', …(2) ] to deeply equal [ '653:bob@736,752:1', …(2) ]
+M5 the offer withholds nothing: RED | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯ | AssertionError: expected undefined to be true // Object.is equality
+M6 the kill aims over an owed press: GREEN (mutant survived) | Tests  2 passed (2) | 
