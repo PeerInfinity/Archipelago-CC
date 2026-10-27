@@ -355,3 +355,6 @@ frontend/world_generator/
 # converter's Exact mode fetches it from the site root). ⛔ Build output; the
 # source is exporter/ at the repo root.
 frontend/exporter/
+
+# probe-seedling-whole-game-certify.mjs: the old arm's scratch certifier (a killed run can strand it)
+*.oldframing.tmp.js
