@@ -1,0 +1,2 @@
+0 L29 Game.as:1233 target song seedling:music/stuck-in-the-forest
+93 L29 Pickups/BossKey.as:31 jingle seedling:music/key 0.5

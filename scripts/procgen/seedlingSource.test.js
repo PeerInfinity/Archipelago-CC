@@ -99,6 +99,7 @@ describe('the tools, run from a fixture repository', () => {
             ['extract-seedling-masks.mjs', ['--check']],
             ['extract-seedling-art-packs.mjs', ['--check']],
             ['extract-seedling-sfx-pack.mjs', ['--check']],
+            ['extract-seedling-music-pack.mjs', ['--check']],
             ['extract-seedling-damage-sites.mjs', ['--check']],
             ['recon-seedling-r5.mjs', ['--kill-locks']],
         ];
@@ -195,6 +196,12 @@ describe('the committed extracts are what the PINNED submodule extracts (V1)', (
 
     it.skipIf(!INITIALISED)('extract-seedling-sfx-pack.mjs --check (⛓ SOUND EFFECTS: the seedling pack\'s sfx layer)', () => {
         const r = check(process.execPath, 'extract-seedling-sfx-pack.mjs');
+        expect(`${r.stdout}${r.stderr}`).toContain('--check OK');
+        expect(r.status).toBe(0);
+    }, 120000);
+
+    it.skipIf(!INITIALISED)('extract-seedling-music-pack.mjs --check (⛓ MUSIC: the seedling pack\'s music layer)', () => {
+        const r = check(process.execPath, 'extract-seedling-music-pack.mjs');
         expect(`${r.stdout}${r.stderr}`).toContain('--check OK');
         expect(r.status).toBe(0);
     }, 120000);

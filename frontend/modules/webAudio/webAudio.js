@@ -4,8 +4,15 @@
  * 2026-10-26: "it should work on mobile").
  *
  * Generic: it knows Web Audio and browsers, never a game. The sound-effect
- * library (`sfxLibrary/`) plays through it, and the music library (the next
- * slice) is meant to share it, so one page has one context and one volume.
+ * library (`sfxLibrary/`) and the music library (`musicLibrary/`) both play
+ * through it, so one page has one context and one master volume.
+ *
+ * ── Buses ─────────────────────────────────────────────────────────────
+ * A play may name a BUS (`play(buffer, { bus: 'music' })`): a gain under the
+ * master with its own volume and mute (`setBusVolume`, `setBusMuted`), so
+ * the music can be turned down or off without the sound effects, and the
+ * reverse. A bus is made on first use; its settings may be set before the
+ * unlock and apply when it is made. No bus = straight to the master.
  *
  * ── The states ────────────────────────────────────────────────────────
  *   `locked`      no context yet. ⛔ Nothing is created and nothing sounds
@@ -84,6 +91,24 @@ export function createAudioOut({
     let held = false;
     let silentEl = null;
     let sessionWorkaround = 'none';
+    /** name → { volume, muted, node } (node null until the context exists and the bus is first used). */
+    const buses = new Map();
+    const busOf = (name) => {
+        if (!buses.has(name)) buses.set(name, { volume: 1, muted: false, node: null });
+        return buses.get(name);
+    };
+    const applyBus = (b) => { if (b.node) b.node.gain.value = b.muted ? 0 : volumeToGain(b.volume); };
+    /** The node a play on `name` connects to (the master when no bus is named). */
+    function busNode(name) {
+        if (!name) return master;
+        const b = busOf(name);
+        if (!b.node) {
+            b.node = ctx.createGain();
+            b.node.connect(master);
+            applyBus(b);
+        }
+        return b.node;
+    }
     const hidden = () => win.document?.visibilityState === 'hidden';
     const waiters = [];
 
@@ -192,15 +217,18 @@ export function createAudioOut({
 
     /**
      * Start `buffer` at context time `when` (0 / past = now) with a gain and a
-     * pan (−1..1). Returns `{ stop(), ended }`, or null when there is no audio
-     * (locked, refused) — a caller never has to check the state first.
+     * pan (−1..1), `offset` seconds into it, on `bus` (none = the master).
+     * Returns `{ stop(), setGain(v, at), ended }`, or null when there is no
+     * audio (locked, refused) — a caller never has to check the state first.
+     * `loopStart` / `loopEnd` (s) set a looping source's loop points.
      */
-    function play(buffer, { when = 0, gain = 1, pan = 0, loop = false, onEnded = null } = {}) {
+    function play(buffer, { when = 0, gain = 1, pan = 0, loop = false, loopStart = 0, loopEnd = 0, offset = 0, bus = null, onEnded = null } = {}) {
         if (!ctx || state === 'refused' || !buffer) return null;
         try {
             const src = ctx.createBufferSource();
             src.buffer = buffer;
             src.loop = !!loop;
+            if (loop && loopEnd > loopStart) { src.loopStart = loopStart; src.loopEnd = loopEnd; }
             const g = ctx.createGain();
             g.gain.value = Math.max(0, gain);
             let tail = g;
@@ -211,10 +239,22 @@ export function createAudioOut({
                 tail = p;
             }
             src.connect(g);
-            tail.connect(master);
-            const handle = { ended: false, gainNode: g, stop() { try { src.stop(); } catch { /* already stopped */ } } };
+            tail.connect(busNode(bus));
+            const handle = {
+                ended: false,
+                gainNode: g,
+                stop() { try { src.stop(); } catch { /* already stopped */ } },
+                /** Move the gain to `v`, settling from context time `at` over about `over` seconds (0 = at once). */
+                setGain(v, at = 0, over = 0) {
+                    const val = Math.max(0, v);
+                    try {
+                        if (over > 0 && typeof g.gain.setTargetAtTime === 'function') g.gain.setTargetAtTime(val, Math.max(0, at), over / 3);
+                        else g.gain.value = val;
+                    } catch { g.gain.value = val; }
+                },
+            };
             src.onended = () => { handle.ended = true; onEnded?.(handle); };
-            src.start(Math.max(0, when));
+            src.start(Math.max(0, when), Math.max(0, offset));
             return handle;
         } catch (err) {
             log(`[webAudio] a clip could not be started: ${err?.message ?? err}`);
@@ -231,6 +271,11 @@ export function createAudioOut({
         hold(on) { held = !!on; settle(); },
         setVolume(v) { volume = v; applyGain(); },
         setMuted(m) { muted = !!m; applyGain(); },
+        /** A bus's own volume (0..1, the same curve as the master) and mute; settable before the unlock. */
+        setBusVolume(name, v) { const b = busOf(name); b.volume = v; applyBus(b); },
+        setBusMuted(name, m) { const b = busOf(name); b.muted = !!m; applyBus(b); },
+        /** `{ volume, muted, made }` of a bus (made = its node exists). */
+        busState(name) { const b = busOf(name); return { volume: b.volume, muted: b.muted, made: !!b.node }; },
         /** The context clock, in seconds (0 before the unlock). */
         now: () => ctx?.currentTime ?? 0,
         get state() { return state === 'running' && ctx && ctx.state !== 'running' ? 'suspended' : state; },

@@ -27,6 +27,9 @@
  */
 import { volumeToGain } from '../webAudio/webAudio.js';
 
+/** The output bus the sound effects play on (⛓ MUSIC: the music has its own, so each can be switched alone). */
+export const SFX_BUS = 'sfx';
+
 /** How far ahead of the audio clock a tick may be scheduled before the clock re-anchors (s). */
 export const MAX_LEAD = 0.1;
 
@@ -101,7 +104,7 @@ export function createSeedlingSoundPlayer({ out, library, bufferFor, seed } = {}
                 if (!buffer || out.state !== 'running') { stats.silent += 1; continue; }
                 const ch = `${c.key}#${pick.index}`;
                 channels.get(ch)?.stop();
-                const h = out.play(buffer, { when: at, gain: c.vol, pan: c.pan });
+                const h = out.play(buffer, { when: at, gain: c.vol, pan: c.pan, bus: SFX_BUS });
                 if (!h) { stats.silent += 1; continue; }
                 channels.set(ch, h);
                 stats.played += 1;
@@ -116,6 +119,6 @@ export function createSeedlingSoundPlayer({ out, library, bufferFor, seed } = {}
         },
         get stats() { return { ...stats, missing: [...stats.missing] }; },
         /** The effective master gain the output applies (for a readout). */
-        get gain() { return out.muted ? 0 : volumeToGain(out.volume); },
+        get gain() { return out.muted || out.busState?.(SFX_BUS).muted ? 0 : volumeToGain(out.volume); },
     };
 }

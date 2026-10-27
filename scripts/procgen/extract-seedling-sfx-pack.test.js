@@ -40,7 +40,7 @@ describe.skipIf(!INITIALISED)('the sfx layer, extracted from vendor/seedling', (
         expect(fromArt.map(([r]) => r).sort()).toEqual([...layer.files.keys()].sort());
         for (const [rel, data] of fromArt) expect(Buffer.from(data).equals(Buffer.from(layer.files.get(rel)))).toBe(true);
         const pack = JSON.parse(built.seedling.get('pack.json'));
-        expect(pack.layers).toEqual({ art: 'art/manifest.json', sfx: 'sfx/manifest.json' });
+        expect(pack.layers).toEqual({ art: 'art/manifest.json', sfx: 'sfx/manifest.json', music: 'music/manifest.json' }); // ⛓ MUSIC adds its layer
         expect(pack.licence).toBe('Unlicense');
         expect(pack.credit).toMatch(/Rekcahdam/);
         expect(built.archipelago.has('sfx/manifest.json')).toBe(false);
