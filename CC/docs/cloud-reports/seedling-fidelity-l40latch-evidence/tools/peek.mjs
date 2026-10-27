@@ -1,0 +1,12 @@
+import { readFileSync } from 'node:fs';
+const M = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo/';
+const { parseTape } = await import(M + 'tapeFormat.js');
+const { createRunForStaging, stagingFromTape, solveStaging } = await import(M + 'tapeRunner.js');
+const { atlasLevelSource } = await import(M + 'levelSource.js');
+const staging = solveStaging(stagingFromTape(parseTape(readFileSync(process.argv[2], 'utf8'))));
+const run = createRunForStaging(staging, atlasLevelSource());
+for (let i = 0; i < 60; i++) run.advance(new Set());
+const c = [...run.entities('chasers').values()].find((x) => x.id.startsWith('bobsoldier'));
+console.log(JSON.stringify(c, (k, v) => (typeof v === 'number' ? +v.toFixed(3) : v)).slice(0, 1500));
+console.log('state', JSON.stringify(run.state).slice(0, 400));
+console.log('sb', JSON.stringify(run.entities('strikeBodies')).slice(0, 600));

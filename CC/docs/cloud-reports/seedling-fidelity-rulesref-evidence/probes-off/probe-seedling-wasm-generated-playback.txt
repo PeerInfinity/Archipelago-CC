@@ -1,0 +1,36 @@
+PASS: the fresh world: nothing checked — []
+PASS: the bot is mounted, in the start region, with the embedded sphere log naming a generated location — {"ok":true,"sphere":["region_0_0__key_blue_pickup"],"region":"region_0_0","GEN_LOCS":["region_0_0__key_blue_pickup"]}
+PASS: R: the Playback Bot completed seedling_generated_room from its sphere log on WASM (finished, no error:) — status "finished — 1 location visited", errors []
+PASS: R: every sphere-log location is checked in the state manager — []
+PASS: R: every generated location checked EXACTLY ONCE on the flash panel's dispatcher, nothing else on it — {"once":[],"checks":["region_0_0__key_blue_pickup"]}
+PASS: R: 0 fake checks — the binding made exactly the generated checks and caught nothing in a host botStart window — checks 1, armingWindow 0
+PASS: R: the engine stages the GENERATED set (the mounted set) and served the apitem by the SOLVER (verb apitem), on plan — {"goal":{"kind":"location","level":0,"tag":0,"name":"region_0_0__key_blue_pickup"},"outcome":"stopped","producer":"solver","phase":"playing","ticks":266,"drained":256,"verbs":["apitem"],"solvedMs":83,"divergence":null,"recoveries":0,"lastRow":{"t":255,"level":0,"x":67.52471629230547,"y":24.813174531343424},"expectedEnd":{"level":0,"x":71.37471629230551,"y":24.813174531343424,"deaths":0},"continuation":false,"prefix":0}
+PASS: R: no walker-producer leg anywhere (⛓ §5.36) — [["location","stopped","solver"]]
+PASS: R: 0 divergences, 0 recoveries — {"divergences":0,"recoveries":0}
+PASS: R: every host botStart bracketed by seq reads (freeze + plan per attempt) — [{"label":"freeze","from":0,"to":0},{"label":"plan","from":0,"to":0}]
+PASS: R: the bot took the cross-region tile target into the maze — {"ok":true}
+PASS: R: the bot arrived in the maze region (gameState) — region_1_1
+PASS: R: the generated door (→ region_0_1) and the parking door (→ region_1_1) each reported ONCE — ["region_0_1","region_1_1"]
+PASS: R: both exit legs were SOLVER tapes (verb walk), every planned tick stepped, none off the plan — [{"o":"done","p":"solver","ticks":7,"drained":7,"div":null},{"o":"stopped","p":"solver","ticks":7,"drained":7,"div":null}]
+PASS: R: no error: status at any point — []
+PASS: R: still exactly one check after the crossings (no door leg re-declared a fake one) — {"reports":5,"malformed":0,"restores":0,"unknown":0,"checks":1,"repeats":4,"armingWindow":0,"reconcile":0,"reconcileReads":1,"checked":["region_0_0__key_blue_pickup"]}
+PASS: R: every host botStart bracketed (all legs) — [{"label":"freeze","from":0,"to":0},{"label":"plan","from":0,"to":0},{"label":"freeze","from":1,"to":2},{"label":"plan","from":2,"to":3},{"label":"freeze","from":3,"to":4},{"label":"plan","from":4,"to":5}]
+PASS: the fresh world: nothing checked — []
+PASS: the bot is mounted, in the start region, with the embedded sphere log naming a generated location — {"ok":true,"sphere":["region_2_2__loc_0__5_4","region_2_3__loc_0__5_1","region_3_3__loc_0"],"region":"region_2_2","GEN_LOCS":["region_3_3__loc_0"]}
+PASS: L: the Playback Bot completed seedling_generated_leaf from its sphere log on WASM (finished, no error:) — status "finished — 3 locations visited", errors []
+PASS: L: every sphere-log location is checked in the state manager — []
+PASS: L: every generated location checked EXACTLY ONCE on the flash panel's dispatcher, nothing else on it — {"once":[],"checks":["region_3_3__loc_0"]}
+PASS: L: 0 fake checks — the binding made exactly the generated checks and caught nothing in a host botStart window — checks 1, armingWindow 0
+PASS: L: the engine stages the GENERATED set (the mounted set) and served the apitem by the SOLVER (verb apitem), on plan — {"goal":{"kind":"location","level":0,"tag":0,"name":"region_3_3__loc_0"},"outcome":"stopped","producer":"solver","phase":"playing","ticks":140,"drained":129,"verbs":["apitem"],"solvedMs":62,"divergence":null,"recoveries":0,"lastRow":{"t":128,"level":0,"x":87.90000000000003,"y":50.400000000000006},"expectedEnd":{"level":0,"x":87.90000000000003,"y":56.00000000000003,"deaths":0},"continuation":false,"prefix":0}
+PASS: L: no walker-producer leg anywhere (⛓ §5.36) — [["location","stopped","solver"]]
+PASS: L: 0 divergences, 0 recoveries — {"divergences":0,"recoveries":0}
+PASS: L: every host botStart bracketed by seq reads (freeze + plan per attempt) — [{"label":"freeze","from":0,"to":0},{"label":"plan","from":0,"to":0}]
+PASS: the fresh world: nothing checked — []
+PASS: P: the divergence injector is armed on the game window — true
+PASS: the bot is mounted, in the start region, with the embedded sphere log naming a generated location — {"ok":true,"sphere":["region_0_0__key_blue_pickup"],"region":"region_0_0","GEN_LOCS":["region_0_0__key_blue_pickup"]}
+PASS: P: the bot shows the engine's named failure (error:; the bound — or ⛓ W4 an exact repeat — named) — status "error: region_0_0: the bot cannot walk to location "region_0_0__key_blue_pickup" — the wasm playback failed: the game left the plan on region_0_0__key_blue_pickup in level 0 at the SAME tick with the SAME game row 2 times in a row (gave up after 1 forced re-arrival: an exact repeat is a deterministic model/game residue, which a re-solve from the same arrival replays); at tick 7: expected {"level":0,"x":136,"y":47.55}, game {"level":0,"x":136.8,"y":47.55}"
+PASS: P: 1 recovery then the failure, on SOLVER tapes (2 plans, 2 injections) — {"recoveries":1,"outcomes":[["diverged","solver"],["failed",null]],"ships":2,"injected":2}
+PASS: P: no STALE key at any divergence (the release pair after each botReset) — {"stale":[[]],"keyReleases":[["down"],["down"]]}
+PASS: P: NO check fired and AP state intact — {"checks":[],"binding":{"reports":0,"malformed":0,"restores":0,"unknown":0,"checks":0,"repeats":0,"armingWindow":0,"reconcile":0,"reconcileReads":0,"checked":[]}}
+PASS: P: nothing of ours left armed or held; the engine idle — {"armed":false,"held":false,"engine":"idle"}
+ALL CHECKS PASSED

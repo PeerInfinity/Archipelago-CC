@@ -1,0 +1,23 @@
+PASS: W: the Sword landed in the game (hasSword) — {"level":0,"x":24,"y":136,"hasSword":true,"cleared":[]}
+PASS: W: the collector is wired, and its load read found the rock standing (not cleared) — {"collector":{"reports":0,"restores":0,"other":0,"live":0,"load":0,"repeats":0,"armingWindow":0,"loadReads":1,"reconcile":0,"reconcileReads":0},"cleared":[]}
+PASS: W: ⛔ NEVER ON REACH — "L0 flag 1: breakablerock@288,176 cleared" sits in a reachable region with its rule held, and is NOT collected — {"reach":{"sideReachable":true,"accessible":"reachable"},"checked":false}
+PASS: W: the game BROKE breakablerock@288,176 on the walk — its flag {0,1} is in persistence_cleared — [{"tag":1,"level":0}]
+PASS: W: the collector collected "L0 flag 1: breakablerock@288,176 cleared" LIVE (checked + its event item held in the state manager) — {"collector":{"reports":2,"restores":0,"other":0,"live":1,"load":0,"repeats":0,"armingWindow":1,"loadReads":1,"reconcile":0,"reconcileReads":1},"eventsCollected":1}
+PASS: W: …as a LOCAL event check — no user:locationCheck named it — []
+PASS: W: the walk went on through the far side's door into level_12__r0c19 — {"region":"level_12__r0c19","level":12}
+PASS: W: the walk took "level_12__r0c19 -> level_0__r11c19" — the player in level_0__r11c19, level 0 — {"region":"level_0__r11c19","game":{"level":0,"x":296,"y":184,"hasSword":true,"cleared":[{"tag":1,"level":0}]}}
+PASS: W: the game's readout at the landing carries the flag (the arrival read the staging stages) — {"cleared":[{"tag":1,"level":0}],"reads":[{"level":0,"cleared":[]},{"level":12,"cleared":[{"tag":1,"level":0}]},{"level":0,"cleared":[{"tag":1,"level":0}]}]}
+PASS: W: the leg FROM the landing is solved and walked — no arrival-inside-solid (the flag staged) — {"obstacle":null,"status":"routing via \"level_0__r11c19 -> level_12__r0c19\""}
+PASS: W: the LOAD read collects "L0 flag 1: breakablerock@288,176 cleared" from the game's persistence_cleared — {"effects":[{"type":"eventCollect","location":"L0 flag 1: breakablerock@288,176 cleared","eventId":"flag:L0:1","level":0,"tag":1,"at":"load"}],"stats":{"reports":6,"restores":0,"other":0,"live":1,"load":1,"repeats":0,"armingWindow":5,"loadReads":2,"reconcile":0,"reconcileReads":1}}
+PASS: J: the Sword landed in the game (hasSword) — {"level":0,"x":24,"y":136,"hasSword":true,"cleared":[]}
+PASS: J: the collector is wired, and its load read found the rock standing (not cleared) — {"collector":{"reports":0,"restores":0,"other":0,"live":0,"load":0,"repeats":0,"armingWindow":0,"loadReads":1,"reconcile":0,"reconcileReads":0},"cleared":[]}
+PASS: J: ⛔ NEVER ON REACH — "L0 flag 1: breakablerock@288,176 cleared" sits in a reachable region with its rule held, and is NOT collected — {"reach":{"sideReachable":true,"accessible":"reachable"},"checked":false}
+PASS: J: the game BROKE breakablerock@288,176 on the walk — its flag {0,1} is in persistence_cleared — [{"level":0,"tag":1}]
+PASS: J: the collector collected "L0 flag 1: breakablerock@288,176 cleared" LIVE (checked + its event item held in the state manager) — {"collector":{"reports":1,"restores":0,"other":0,"live":1,"load":0,"repeats":0,"armingWindow":0,"loadReads":1,"reconcile":0,"reconcileReads":1},"eventsCollected":1}
+PASS: J: …as a LOCAL event check — no user:locationCheck named it — []
+PASS: J: the walk went on through the far side's door into level_12__r0c19 — {"region":"level_12__r0c19","level":12}
+PASS: J: the walk took "level_12__r0c19 -> level_0__r11c19" — the player in level_0__r11c19, level 0 — {"region":"level_0__r11c19","game":{"level":0,"x":296,"y":184,"hasSword":true,"cleared":[{"level":0,"tag":1}]}}
+PASS: J: the game's readout at the landing carries the flag (the JS boot's clears) — {"cleared":[{"level":0,"tag":1}]}
+PASS: J: the leg FROM the landing is solved and walked — no arrival-inside-solid (the flag staged) — {"obstacle":null,"status":"routing via \"level_0__r11c19 -> level_12__r0c19\""}
+PASS: J: the LOAD read collects "L0 flag 1: breakablerock@288,176 cleared" from the game's persistence_cleared — {"effects":[{"type":"eventCollect","location":"L0 flag 1: breakablerock@288,176 cleared","eventId":"flag:L0:1","level":0,"tag":1,"at":"load"}],"stats":{"reports":1,"restores":0,"other":0,"live":1,"load":1,"repeats":0,"armingWindow":0,"loadReads":2,"reconcile":0,"reconcileReads":1}}
+ALL CHECKS PASSED

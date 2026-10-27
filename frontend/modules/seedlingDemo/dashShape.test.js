@@ -200,7 +200,9 @@ describe('the solver runs inside the scopes the stamp names, and every answer ca
         const l4 = (extra) => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, ...extra }, { clock: counter() });
         const base = l4({ upgradeWindowWork: 85 });
         const noSwing = l4({ upgradeWindowWork: 85, dashShape: { noSwingPrefix: true } });
-        expect([full(base).work, full(noSwing).work]).toEqual([57, 48]);
+        // ⛓ planning-14's wave-32 flip (signed by hammer-2 2026-10-26): `holdWaitPriced` prices L4's hold tail, +4 units
+        //   each (57/48 → 61/52); the same plans.
+        expect([full(base).work, full(noSwing).work]).toEqual([61, 52]);
         expect(noSwing.plan.solution.length).toBe(219);
         expect('dashShape' in base).toBe(false);
         expect([noSwing.dashShape, noSwing.plan.dashShape]).toEqual([{ ...SHIPPED, noSwingPrefix: true }, { ...SHIPPED, noSwingPrefix: true }]);
@@ -278,7 +280,8 @@ describe('the WORKER (its own module copy) solves inside the scopes its request 
             const plain = await ask(req({ upgradeWindowWork: 20, dashOnlyWindow: true }));
             const plain85 = await ask(req({ upgradeWindowWork: 85 }));
             expect([cut.plan.solution.length, plain.plan.solution.length]).toEqual([255, 235]);
-            expect([full(noSwing).work, full(plain85).work]).toEqual([48, 57]);
+            // ⛓ wave-32 flip (signed by hammer-2): holdWaitPriced, +4 units each (48/57 → 52/61).
+            expect([full(noSwing).work, full(plain85).work]).toEqual([52, 61]);
             const read = { legPrecheck: true, noSwingPrefix: true, keepPartial: false };
             expect([cut.dashShape, cut.plan.dashShape, noSwing.dashShape]).toEqual([read, read, read]);
             expect([plain.dashShape, plain85.dashShape]).toEqual([undefined, undefined]);

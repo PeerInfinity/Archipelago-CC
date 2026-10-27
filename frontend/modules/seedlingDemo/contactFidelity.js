@@ -1459,6 +1459,93 @@ export const CONTACT_FIDELITY = {
      * row. OFF: byte-identical. `SEEDLING_DASH_SPINNER_FORECAST=0|1`.
      */
     dashSpinnerForecast: true,
+    /**
+     * fidelity CHESTSEAL (wave 32) — A CHEST `checkBySeal()` REMOVED IS NOT A WALL, AND ITS FLAG IS CLEARED. With all
+     * sixteen seal parts held (`SealController.hasAllSealParts()`), `Chest`'s CONSTRUCTOR runs `checkBySeal()`
+     * (`Chest.as:35`, `:47-57`): `Game.setPersistence(tag, false)` — the AP check report — and a `remove` that is a
+     * no-op before the add; `Chest.check()` then removes the tagged chest on the first `Game.update` (`Game.as:870-877`,
+     * which runs under the `blackCover`), and `update`'s own `checkBySeal()` an untagged one. So no player-controlled
+     * frame sees it. OFF the model marked it `gone` and left it SOLID (`openChestIdsNow` reads `solid`), the solver bound
+     * the chest verb and refused *"NEVER OPENED"*. ON: such a chest is open in `openChests` from the build, its flag is
+     * banked like `open()`'s, and a `collect-placement` at it is satisfied (`arm: 'seal-removed'`). OFF:
+     * byte-identical. `SEEDLING_CHEST_SEAL_REMOVAL=0|1`.
+     */
+    chestSealRemoval: true,
+    /**
+     * fidelity L40LATCH D1 (wave 32) — A HOLD'S STILL WAIT IS PRICED AS ITS STANCE WALK'S TAIL. `runHold` stands the
+     * player on the presser for the hold's whole bound (a latched `room = -1` ButtonRoom included: the hold waits for
+     * the lock's 101-tick fade), but the walk to the hold stance was probed in TRANSIT only. MEASURED on L40's S-door
+     * latch (`buttonroom@880,768`, the chest and the tree banked, legs 859/860's chain): `bobsoldier@880,832` walks up
+     * the pocket and its sword lands on the still holder (game and model agree, `l40latch-stand`), and the executor
+     * refused *"hold tick 93 of 131 MOVED"*. ON: the hold stance walk carries the hold as its tail (L30KEYLOCK's
+     * `stand` instrument, `holdStandWalk`), so a body that reaches the holder is a hit on that corridor and the combat
+     * ladder climbs (the kill rung's chaser arm: kill first, then hold). OFF: byte-identical. `SEEDLING_HOLD_WAIT_PRICED=0|1`.
+     */
+    holdWaitPriced: true,
+    /**
+     * fidelity L40LATCH D1b (wave 32) — A BOBSOLDIER IS KILLED ON THE MOVE, BEHIND ITS BLADE. The kill rung's chaser arm
+     * (`deriveKillByChaser`) scans STILL stances (stand and strike), and no stance kills `bobsoldier@880,832` hitless:
+     * `BobSoldier.swordHitting` tests its blade (8–16 px off the body) EVERY frame, spinning or resting, and the rest
+     * angle is the player's at the spin's end (`swordSpinningStop(ang)`), so a body walking at a still player always
+     * meets it blade first. ON: where the scan finds none, the arm plays `orbitKillPolicy` on FORKS — circle the body
+     * outside the blade, close in from behind the resting blade, strike, back off — over `ORBIT_KILL.candidates`, and the
+     * first hitless kill (the body removed, no hit, no crossing) is played on the live run key for key (TURRETCIRCLE's
+     * shape). OFF: byte-identical. `SEEDLING_CHASER_ORBIT_KILL=0|1`.
+     */
+    chaserOrbitKill: true,
+    /**
+     * fidelity L32BOB D1 (wave 32) — THE BOB BOSS FORECAST CARRIES THE SWING ALREADY IN FLIGHT. `bobBossForecast` handed
+     * the encounter's strike search the boss and the slash STATE but not the run's `swordWindow`, so a solve that starts
+     * inside a swing (a continuation whose prefix ends on a press: `Player.slash()` tests on every tick `slashing` is
+     * up, five for a swing) forecast none of that swing's remaining tests, and the run landed one the forecast never
+     * saw. Measured: `apb-l32-fresh-no-fire`'s staging solved from its own plan's tick 380 (press 376 in flight) — the
+     * run lands the 376 swing's T+5 test at t381 (form 1: 1 → 2 hits), the forecast keeps form 1 at 1 and lands its own
+     * press at +58; the executor counts 2 landings and declines ("the forecast and the run disagree"). The game agrees
+     * with the run (p4g, the tape t370–560 at 0 px: form 1's death flight starts at t426, after the THIRD landing,
+     * which needs t381's). ON: the forecast steps the live window with `advance`'s own `swordWindowStep` /
+     * `swordWindowReplace` / `swordWindowSchedule` (each thrust at its own scale), and the executor checks the run's
+     * landings against every landing the forecast made through its own press's. OFF: byte-identical.
+     * `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`.
+     */
+    encounterSwingInFlight: true,
+    /**
+     * fidelity RULESREF D2 (wave 32) — A CLOSED SPEAR BRIDGE ON THE FRONTIER IS OPENED BY A THRUST
+     * (`solverBot.resolveBridgeStrategy` / `execBridge`, through `botDriverV2.runSpear`'s `bridge` arm).
+     *
+     *     Player.as:1116-1119   genericHit's `e is Tile` arm: `bridgeOpeningTimer--` only under `t == "Spear"`
+     *     Tile.as:343-365       a Bridge (`t = 29`) is Solid until its timer has rendered down to 0
+     *
+     * The model has stepped the bridge since R4 (`bridges.js`); the solver's frontier dropped every `tile:*` blocker
+     * as a wall, so L63's `(2,9)` (survey step 161, the corridor to `teleporter@32,304`) and L66's `(7,9)` (step 163,
+     * between the L65 arrival and the doorway) had no verb. ON: the frontier names a closed bridge `solid:bridge`, the
+     * verb thrusts from a stance one or two tiles behind it, and the block-route search's relaxed proof and goal test
+     * count a bridge the run can open as open (`deriveBlockRoute`). OFF: byte-identical. `SEEDLING_SPEAR_BRIDGE_VERB=0|1`.
+     */
+    spearBridgeVerb: true,
+    /**
+     * fidelity RULESREF D3 (wave 32) — A DOOR HALF A TILE OFF THE GRID IS NAMED ON THE 8 px LATTICE
+     * (`solverBot.identifyAndSelect`'s frontier flood).
+     *
+     * L66's `teleporter@72,64` is in `building8`'s doorway — the pixel mask's notch is x 72-87, half a tile off the
+     * 16 px grid — behind `bosslock@72,64`. Every 16 px node centre beside the walk's component hits the MASK first,
+     * so the frontier held only scenery (*"No strategy row exists"*, survey step 163, divergence leg 579 on both arms).
+     * ON: a frontier with no actionable entry is flooded again at `FINE_LATTICE` (8 px; nodes at x 76, 84 fit the
+     * notch), which names the lock (`keylock`). OFF: byte-identical. `SEEDLING_FINE_FRONTIER_FLOOD=0|1`.
+     */
+    fineFrontierFlood: true,
+    /**
+     * fidelity RULESREF D1 (wave 32) — THE WALK'S DECISION GATE TIMES A PUNCHER'S PUNCH (`solverBot.punchTickAt`,
+     * `dangerMap.chaserDanger`), as `SWORD_GATE_TIMED` times a BobSoldier's blade.
+     *
+     *     Puncher.as:111-117, 172-218   the wind-up (`attack` anim) and `attackPlayer`'s box off the body's edge
+     *
+     * The gate a walk opens with priced a live puncher by `threatPad` 8 while the transit probe that follows prices it
+     * by the forecast's punch (U10 D2). L53 (survey step 79): the walk to the rock's stance arrives with
+     * `puncher@136,96` 11 px off, and the next gate refused before any corridor was probed, so the ladder's chaser kill
+     * rung never ran. ON: that gate prices a body whose one-tick forecast row carries `punch` by the punch and its bare
+     * body. OFF: byte-identical. `SEEDLING_PUNCH_GATE_TIMED=0|1`.
+     */
+    punchGateTimed: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1638,6 +1725,15 @@ if (globalThis.process?.env?.SEEDLING_IGNEOUS_DEAD_FRAMES === '0') CONTACT_FIDEL
 // ⛓ fidelity ROPESTANCE: `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '1') CONTACT_FIDELITY.ropeCutAnyWeapon = true;
 if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '0') CONTACT_FIDELITY.ropeCutAnyWeapon = false;
+// ⛓ fidelity RULESREF D2: `SEEDLING_SPEAR_BRIDGE_VERB=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SPEAR_BRIDGE_VERB === '1') CONTACT_FIDELITY.spearBridgeVerb = true;
+if (globalThis.process?.env?.SEEDLING_SPEAR_BRIDGE_VERB === '0') CONTACT_FIDELITY.spearBridgeVerb = false;
+// ⛓ fidelity RULESREF D3: `SEEDLING_FINE_FRONTIER_FLOOD=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '1') CONTACT_FIDELITY.fineFrontierFlood = true;
+if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '0') CONTACT_FIDELITY.fineFrontierFlood = false;
+// ⛓ fidelity RULESREF D1: `SEEDLING_PUNCH_GATE_TIMED=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '1') CONTACT_FIDELITY.punchGateTimed = true;
+if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '0') CONTACT_FIDELITY.punchGateTimed = false;
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;
@@ -1740,6 +1836,17 @@ if (globalThis.process?.env?.SEEDLING_WEIGH_HYPOTHESIS_CHAIN === '1') CONTACT_FI
 if (globalThis.process?.env?.SEEDLING_WEIGH_HYPOTHESIS_CHAIN === '0') CONTACT_FIDELITY.weighHypothesisChain = false;
 if (globalThis.process?.env?.SEEDLING_DASH_SPINNER_FORECAST === '1') CONTACT_FIDELITY.dashSpinnerForecast = true;
 if (globalThis.process?.env?.SEEDLING_DASH_SPINNER_FORECAST === '0') CONTACT_FIDELITY.dashSpinnerForecast = false;
+// ⛓ fidelity CHESTSEAL: `SEEDLING_CHEST_SEAL_REMOVAL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CHEST_SEAL_REMOVAL === '1') CONTACT_FIDELITY.chestSealRemoval = true;
+if (globalThis.process?.env?.SEEDLING_CHEST_SEAL_REMOVAL === '0') CONTACT_FIDELITY.chestSealRemoval = false;
+// ⛓ fidelity L40LATCH: `SEEDLING_HOLD_WAIT_PRICED=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_HOLD_WAIT_PRICED === '1') CONTACT_FIDELITY.holdWaitPriced = true;
+if (globalThis.process?.env?.SEEDLING_HOLD_WAIT_PRICED === '0') CONTACT_FIDELITY.holdWaitPriced = false;
+if (globalThis.process?.env?.SEEDLING_CHASER_ORBIT_KILL === '1') CONTACT_FIDELITY.chaserOrbitKill = true;
+if (globalThis.process?.env?.SEEDLING_CHASER_ORBIT_KILL === '0') CONTACT_FIDELITY.chaserOrbitKill = false;
+// ⛓ fidelity L32BOB: `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '1') CONTACT_FIDELITY.encounterSwingInFlight = true;
+if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '0') CONTACT_FIDELITY.encounterSwingInFlight = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

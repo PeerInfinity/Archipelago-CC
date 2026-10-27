@@ -61,6 +61,8 @@ export { SCREEN_H, SCREEN_W } from './camera.js';
 export { DRILL } from './drill.js';
 // chasers.js — dangerMap, solverBot · seedling 4
 export { bridgedChaserTags, chaserBoxAt, chaserHasSword, deathTicks, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
+// ⛓ fidelity RULESREF D1: a class with a timed attack row (the walk gate's puncher arm, `solverBot.punchTickAt`).
+export { chaserHasAttack } from './chasers.js';
 // ⛓ CEREMONYSHOVE D3: which class a shield's bump moves (`ceremonyBesideLiveBody`'s priced question).
 export { chaserKnocksBack } from './chasers.js';
 // ⛓ fidelity LAPSECOST D2: the Flyer's drop, for `dangerMap.chaserDanger`.

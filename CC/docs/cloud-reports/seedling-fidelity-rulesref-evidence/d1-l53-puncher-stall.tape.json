@@ -1,0 +1,348 @@
+{
+    "game": "seedling",
+    "name": "rulesref-d1-l53-puncher-stall",
+    "boot": {
+        "level": 53,
+        "x": 48,
+        "y": 144
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 0,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 12,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 19,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 30,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 30,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 31,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 39,
+            "tag": 8,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [
+            0,
+            1
+        ],
+        "keys": [
+            0,
+            1,
+            2
+        ],
+        "seal_parts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ]
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": true,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 200,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 8,
+            "to": 9
+        },
+        {
+            "key": "up",
+            "from": 0,
+            "to": 15
+        },
+        {
+            "key": "primary",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "down",
+            "from": 15,
+            "to": 16
+        },
+        {
+            "key": "primary",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "up",
+            "from": 16,
+            "to": 23
+        },
+        {
+            "key": "primary",
+            "from": 22,
+            "to": 23
+        },
+        {
+            "key": "down",
+            "from": 23,
+            "to": 26
+        },
+        {
+            "key": "up",
+            "from": 26,
+            "to": 28
+        },
+        {
+            "key": "down",
+            "from": 29,
+            "to": 31
+        },
+        {
+            "key": "primary",
+            "from": 40,
+            "to": 41
+        },
+        {
+            "key": "primary",
+            "from": 42,
+            "to": 43
+        },
+        {
+            "key": "right",
+            "from": 35,
+            "to": 49
+        },
+        {
+            "key": "primary",
+            "from": 48,
+            "to": 49
+        },
+        {
+            "key": "left",
+            "from": 49,
+            "to": 50
+        },
+        {
+            "key": "right",
+            "from": 50,
+            "to": 55
+        },
+        {
+            "key": "primary",
+            "from": 54,
+            "to": 55
+        },
+        {
+            "key": "left",
+            "from": 55,
+            "to": 57
+        },
+        {
+            "key": "left",
+            "from": 58,
+            "to": 61
+        },
+        {
+            "key": "primary",
+            "from": 60,
+            "to": 61
+        },
+        {
+            "key": "right",
+            "from": 62,
+            "to": 64
+        },
+        {
+            "key": "down",
+            "from": 68,
+            "to": 79
+        },
+        {
+            "key": "right",
+            "from": 79,
+            "to": 80
+        },
+        {
+            "key": "primary",
+            "from": 80,
+            "to": 81
+        },
+        {
+            "key": "left",
+            "from": 81,
+            "to": 83
+        },
+        {
+            "key": "down",
+            "from": 81,
+            "to": 85
+        },
+        {
+            "key": "primary",
+            "from": 84,
+            "to": 85
+        },
+        {
+            "key": "up",
+            "from": 85,
+            "to": 86
+        },
+        {
+            "key": "right",
+            "from": 85,
+            "to": 89
+        },
+        {
+            "key": "down",
+            "from": 86,
+            "to": 91
+        },
+        {
+            "key": "up",
+            "from": 91,
+            "to": 92
+        },
+        {
+            "key": "left",
+            "from": 91,
+            "to": 93
+        },
+        {
+            "key": "down",
+            "from": 92,
+            "to": 93
+        },
+        {
+            "key": "up",
+            "from": 93,
+            "to": 94
+        },
+        {
+            "key": "down",
+            "from": 94,
+            "to": 95
+        },
+        {
+            "key": "right",
+            "from": 99,
+            "to": 100
+        },
+        {
+            "key": "primary",
+            "from": 100,
+            "to": 101
+        }
+    ],
+    "tape_version": 8
+}

@@ -131,7 +131,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity SEALDOOR: +3 (280) — `sealdoor-l113-clear`, `sealdoor-l113-exit`, `sealdoor-l113-noseal-control`.
         // ⛓ fidelity WATCHERTALK: +2 (282) — `watchertalk-l114-clear-16`, `watchertalk-l114-clear-32`.
         // ⛓ fidelity APFLIP: −1 +8 (289) — `enc-l32-fire-return` retired; the eight `apb-*` witnesses (p4g).
-        expect(names.length).toBe(289);
+        // ⛓ fidelity RULESREF: +1 (290) — `rulesref-l66-door` (p4g).
+        expect(names.length).toBe(290);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -197,7 +198,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity SEALDOOR: 280 (measured) — the three `sealdoor-l113-*` witnesses swap too.
         // ⛓ fidelity WATCHERTALK: 282 (measured) — the two `watchertalk-l114-clear-*` witnesses swap too.
         // ⛓ fidelity APFLIP: 289 (measured) — the eight `apb-*` witnesses swap too; `enc-l32-fire-return` is retired.
-        expect(tally.swapped).toBe(289);
+        // ⛓ fidelity RULESREF: 290 (measured) — `rulesref-l66-door` swaps too.
+        expect(tally.swapped).toBe(290);
     }, 600_000);
 });
 

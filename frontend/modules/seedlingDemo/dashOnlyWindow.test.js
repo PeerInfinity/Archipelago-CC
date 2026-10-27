@@ -159,7 +159,10 @@ function l4StairsSword() {
 const counter = () => { let n = 0; return () => n++; };
 const rows = (r) => r.passes.map(({ ms, ...row }) => row);
 
-describe('the solver honours it — L4 stairs with the sword (the full pass: 57 units; today it needs a window of 76)', () => {
+describe('the solver honours it — L4 stairs with the sword (the full pass: 61 units; today it needs a window of 84)', () => {
+    // ⛓ planning-14's wave-32 flip (signed by hammer-2 2026-10-26): `holdWaitPriced` prices L4's hold tail, so each pass
+    //   does 4 more units (dashless 19 → 23, full 57 → 61; the same 255 t / 219 t). The whole-pass threshold is 84
+    //   (MEASURED: 83 ships dashless), one unit under the shipped 85 (was 76, nine under).
     // ⛓ dash flip (the user, 2026-10-16): ON is the default (unstamped), OFF the off-default value (stamped).
     it('window 75: OFF cuts the WHOLE full pass and ships the dashless 255 t — stamped; ON (the default) lets its non-dash work run on the budget and upgrades to 219 t', () => {
         const at = (dashOnlyWindow) => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: 75,
@@ -169,8 +172,8 @@ describe('the solver honours it — L4 stairs with the sword (the full pass: 57 
         expect(rows(off)[1]).toMatchObject({ pass: 'full', ok: false, kind: 'refusal', limit: 'window' });
         expect([off.dashOnlyWindow, off.plan.dashOnlyWindow]).toEqual([false, false]);
         const on = at(undefined);
-        expect(rows(on)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255, work: 19 },
-            { pass: 'full', ok: true, kind: null, ticks: 219, work: 57 }]);
+        expect(rows(on)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255, work: 23 },
+            { pass: 'full', ok: true, kind: null, ticks: 219, work: 61 }]);
         expect(on.plan.pass).toBe('full');
         expect('dashOnlyWindow' in on).toBe(false);
         expect(DASH_ONLY_WINDOW.enabled).toBe(true);
@@ -180,7 +183,7 @@ describe('the solver honours it — L4 stairs with the sword (the full pass: 57 
         const at = (w) => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: w, dashOnlyWindow: true },
             { clock: counter() });
         const fits = at(39);
-        expect(rows(fits)[1]).toEqual({ pass: 'full', ok: true, kind: null, ticks: 219, work: 57 });
+        expect(rows(fits)[1]).toEqual({ pass: 'full', ok: true, kind: null, ticks: 219, work: 61 });
         const short = at(38);
         expect(rows(short)[1]).toMatchObject({ pass: 'full', ok: true, deadline: 'sword-dash', limit: 'window' });
         expect(short.plan.solution.length).toBe(235);

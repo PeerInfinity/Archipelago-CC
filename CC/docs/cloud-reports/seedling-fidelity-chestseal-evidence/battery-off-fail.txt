@@ -1,0 +1,2 @@
+FAIL: r8-solve-11 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+1 FAILURE(S)

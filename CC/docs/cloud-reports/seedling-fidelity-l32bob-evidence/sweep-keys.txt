@@ -1,0 +1,18 @@
+level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_teleporter_0_128
+level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_stairsdown_192_48
+level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_pit_3_34
+level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - Torchpickup
+level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared
+level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_teleporter_0_128
+level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_stairsdown_192_48
+level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_pit_3_34
+level_30__r2c10 <- in_pit_L32_15_5 -> location:Level 030 - Torchpickup
+level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared
+level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared
+level_30__r8c13 <- in_L32_72_136 -> exit:out_stairsup_224_160
+level_32 <- in_L30_224_160 -> exit:out_stairsdown_72_136
+level_32 <- in_L30_224_160 -> exit:out_pit_14_5
+level_32 <- in_L30_224_160 -> exit:out_pit_15_5
+level_32 <- in_L30_224_160 -> location:Level 032 - Bob Boss
+level_32 <- in_L30_224_160 -> location:Level 032 - Times

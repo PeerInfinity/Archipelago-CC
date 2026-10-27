@@ -157,7 +157,10 @@ describe('WANDHOLD L39 — a cover held by a plain Button does not outlive the w
 
 describe.each(L40_LEGS)('WANDHOLD L40 — leg $leg', (row) => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('OFF (movingWait, bombBlastBody OFF): the sweep\'s refusal — a still hold inside the lobber\'s reach', async () => {
-        const e = await withContactFidelity({ movingWait: false, bombBlastBody: false }, () => caught(solveL40(row.boot)));
+        // ⛓ `holdWaitPriced` named OFF (planning-14's wave-32 flip: ON the still hold is priced at its stance walk and
+        // the ladder is EXHAUSTED on the tail's bomb — the same obstacle, new text); this row pins the executor's refusal.
+        const e = await withContactFidelity({ movingWait: false, bombBlastBody: false, holdWaitPriced: false },
+            () => caught(solveL40(row.boot)));
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toContain(`hold stance (wandlock@176,80) -> hold: the hold stands still for up to 131 tick(s) at ${row.still}, `
             + 'inside bombpusher@112,128\'s 256 px reach');

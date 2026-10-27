@@ -71,7 +71,8 @@ describe('BOBSOLDIER2 D3(a) — `crusher-fork` is a FINE site: asked only under 
     };
 
     it('is a row of DEADLINE_SITES, appended', () => {
-        expect(DEADLINE_SITES.at(-1)).toBe('crusher-fork');
+        // ⛓ l40latch appended `orbit-fork` (the orbit kill's fork tries) after it.
+        expect(DEADLINE_SITES.slice(-2)).toEqual(['crusher-fork', 'orbit-fork']);
     });
 
     it('coarse: never asked (L42 dashless: 0 asks at all, the base\'s sequence); fine: asked, the solve unchanged',

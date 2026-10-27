@@ -206,26 +206,29 @@ describe('⛓ SHOULD-STOP — L4 stairs with the sword (dashless 255 t, full 219
         expect(r.plan.pass).toBe('dashless');
         expect(r.plan.solution.length).toBe(255);
         expect(r.plan.verbs).toEqual(['hold', 'shove', 'walk']);
-        expect(rows(r)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255, work: 19 },
+        // ⛓ planning-14's wave-32 flip: `holdWaitPriced` ON prices the hold's tail (dashless work 19 -> 23).
+        expect(rows(r)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255, work: 23 },
             { pass: 'full', ok: false, kind: 'refusal', ticks: null, work: 1, deadline: 'walk', limit: 'window' }]);
         expect(budgetCut(r)).toBe(false);
         expect(passNote(r.plan)).toBe('pass dashless, full stopped at its deadline (walk)');
     }, 60000);
 
-    it('L4: the window that holds the WHOLE full pass (19 dashless + 57 full = 76 units) upgrades to 219 t; one unit less ships the dashless 255 t — the window bounds the pass, not its last dash ask', () => {
+    it('L4: the window that holds the WHOLE full pass (23 dashless + 61 full = 84 units) upgrades to 219 t; one unit less ships the dashless 255 t — the window bounds the pass, not its last dash ask', () => {
         // ⛓ dash flip (the user, 2026-10-16): pinned to the WHOLE-PASS window (`dashOnlyWindow` OFF), as written; ON the
         // full pass's dash asks need 39 of it (`dashOnlyWindow.test.js`), so 75 already upgrades.
         const at = (w) => withDashOnlyWindow(false, () => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: w }, { clock: counter() }));
-        const fits = at(76);
-        expect(rows(fits)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255, work: 19 },
-            { pass: 'full', ok: true, kind: null, ticks: 219, work: 57 }]);
+        // ⛓ planning-14's wave-32 flip: `holdWaitPriced` ON prices the hold's tail in both passes (19 + 57 = 76 -> 23 + 61
+        // = 84 units; the same plans, 255 t and 219 t; MEASURED: 83 ships dashless, 84 upgrades).
+        const fits = at(84);
+        expect(rows(fits)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255, work: 23 },
+            { pass: 'full', ok: true, kind: null, ticks: 219, work: 61 }]);
         expect(fits.plan.pass).toBe('full');
-        const short = at(75);
+        const short = at(83);
         expect(short.plan.pass).toBe('dashless');
         expect(short.plan.solution.length).toBe(255);
         expect(rows(short)[1]).toMatchObject({ pass: 'full', ok: false, kind: 'refusal', limit: 'window' });
-        // the shipped default (80) holds it: L4 still upgrades
-        expect(SOLVER_UPGRADE_WINDOW_WORK).toBeGreaterThanOrEqual(76);
+        // the shipped default (85) holds it: L4 still upgrades (⚠ since the wave-32 flip with ONE unit to spare)
+        expect(SOLVER_UPGRADE_WINDOW_WORK).toBeGreaterThanOrEqual(84);
     }, 120000);
 
     it('L4: a 1-unit BUDGET — the dashless pass refuses BY NAME at the `walk` site (⏱; ⛓ RECALIBRATE: the FINE checkpoints ask `walk` before the first block-route), and so does the full pass (no plan in hand: the budget still bounds it) — a budget CUT', () => {
