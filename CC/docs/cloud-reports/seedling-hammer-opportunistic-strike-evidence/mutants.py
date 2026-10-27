@@ -10,6 +10,8 @@ M = [
  ('M6 the kill aims over an owed press', "            } else if (!oppPending\n", "            } else if (true\n"),
 ]
 orig = open(F).read()
+ONLY = sys.argv[2:]
+M = [m for m in M if not ONLY or m[0].split()[0] in ONLY]
 for name, a, b in M:
     assert orig.count(a) == 1, name
     open(F, 'w').write(orig.replace(a, b))
