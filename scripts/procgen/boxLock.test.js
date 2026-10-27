@@ -524,7 +524,8 @@ describe('who takes the box', () => {
          * rules-l66-l57-probe L66's door into Dungeon 6 under the off-grid Yellow-Key lock, `probe-seedling-l66-door.mjs`;
          * tile-primitives-pixelmask-l86 L93's door into L98 up the waterfall, with and without the Feather, `probe-seedling-l93-door.mjs`;
          * fidelity CHESTSEAL L15's chest removed by `checkBySeal()` (sixteen seals) and its one-seal control, `probe-seedling-chestseal.mjs`;
-         * fidelity L40LATCH L40's S-door latch under the BobSoldier (the still holder, the orbit chain), `probe-seedling-l40latch.mjs`.)
+         * fidelity L40LATCH L40's S-door latch under the BobSoldier (the still holder, the orbit chain), `probe-seedling-l40latch.mjs`;
+         * tile-primitives-whole-game-tools L3's water door into L111, without and with the Conch, `probe-seedling-l3-water-door.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -580,7 +581,8 @@ describe('who takes the box', () => {
             'probe-seedling-l66-door.mjs',
             'probe-seedling-l93-door.mjs',
             'probe-seedling-chestseal.mjs',
-            'probe-seedling-l40latch.mjs'];
+            'probe-seedling-l40latch.mjs',
+            'probe-seedling-l3-water-door.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
