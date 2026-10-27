@@ -26037,3 +26037,16 @@ the r1/r3/r5/u11/r5-swim producers byte-equal ON vs OFF, survey step 40 equal, t
   one. A solve from boot never starts mid-swing, so every producer passed; only a continuation (the JS page's replan)
   starts there. Census the seams a continuation can start on, not only the boots.
 - A count check (`after !== before + 1`) encodes "nothing else lands in this window": an assumption, not a measurement.
+
+### Seedling hammer-phase PKB-OFF — the press kill's bomb pricing ships OFF again
+
+- **What:** `pressKillCost.PRESS_KILL_BOMBS` defaults OFF (`SEEDLING_PRESS_KILL_BOMBS=1` opts in); the pricing code
+  (BW's stand and refuge blasts) stays behind the switch. ⚖ The user, 2026-10-26: *"Turn it back off"*, after the
+  measurement they chose ("Measure first").
+- **Measured** (branch `hammer-measure/pkb-off` against its base, main `08aa042aa3`, CI only): full divergence sweep
+  835 = 835 done (every mover noise on ×2 re-runs per arm: the L0 race, 387/404, 584, 610, 624); route survey 0 / 70
+  movers. Leg 371 on the page, 3 runs per arm: OFF 3 / 3 done (1,736–1,888 t, 5.5–12.4 s, 0 deaths, 0 divergences), ON
+  1 / 3 (1,915 t, 17–19 s, two 90 s leg-budget timeouts). SXC's node census of 371 under the exact split shake: 33 / 45
+  OFF against 30 / 45 ON. 368 done in every run of both arms.
+- **Cost:** one JSUT row, `hammerPressBombs.test.js` "ships …", re-pinned to OFF; producer `--check`s and the slow
+  battery were green with the switch OFF.
