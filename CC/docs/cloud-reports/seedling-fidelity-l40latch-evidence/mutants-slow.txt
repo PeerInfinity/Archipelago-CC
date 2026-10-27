@@ -1,0 +1,10 @@
+== m1 rc=1
+[31m     [31m×[31m holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier[39m[33m 10987[2mms[22m[39m
+[31m     [31m×[31m both ON: the solve's refused prefix is the recorded tape[39m[33m 8940[2mms[22m[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+== m4 rc=1
+     [33m[2m✓[22m[39m holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier [33m 56134[2mms[22m[39m
+[31m     [31m×[31m both ON: the solve's refused prefix is the recorded tape[39m[33m 56727[2mms[22m[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m

@@ -1,0 +1,12 @@
+orbit 224 {"rescan":false,"waitPriced":false} solved 393 hits 0 r 22 ccw far 110° 213t 
+orbit 240 {"rescan":false,"waitPriced":false} solved null hits 3  solverBot(survey-step-52) reach-exit (64,0)->L22 -> keylock: bosslock@64,32 did not open inside its own derived bound of 110 ticks (`opensOnKeyTick` + slack), a
+orbit 224 {"rescan":false,"waitPriced":true} solved 393 hits 0 r 22 ccw far 110° 213t 
+orbit 240 {"rescan":false,"waitPriced":true} solved 401 hits 0 r 22 ccw far 110° 224t 
+orbit 224 {"rescan":true,"waitPriced":false} solved 347 hits 0  
+orbit 240 {"rescan":true,"waitPriced":false} solved null hits 3  solverBot(survey-step-52) reach-exit (64,0)->L22 -> keylock: bosslock@64,32 did not open inside its own derived bound of 110 ticks (`opensOnKeyTick` + slack), a
+hold 224 {"rescan":false,"waitPriced":false} solved null hits 2  solverBot(survey-step-52) reach-exit (64,0)->L22: the danger map forbids (71.77489816433159,50.115857077274356) — chaser:bobsoldier@48,80 (the BobSoldier's 8x8 
+hold 240 {"rescan":false,"waitPriced":false} solved null hits 3  solverBot(survey-step-52) reach-exit (64,0)->L22 -> keylock: bosslock@64,32 did not open inside its own derived bound of 110 ticks (`opensOnKeyTick` + slack), a
+hold 224 {"rescan":false,"waitPriced":true} solved 309 hits 0  
+hold 240 {"rescan":false,"waitPriced":true} solved null hits 0  solverBot(survey-step-52) reach-exit (64,0)->L22 -> keylock stance (bosslock@64,32): the combat ladder is EXHAUSTED. The corridor passes through danger at (72.3
+hold 224 {"rescan":true,"waitPriced":false} solved 347 hits 0  
+hold 240 {"rescan":true,"waitPriced":false} solved null hits 3  solverBot(survey-step-52) reach-exit (64,0)->L22 -> keylock: bosslock@64,32 did not open inside its own derived bound of 110 ticks (`opensOnKeyTick` + slack), a

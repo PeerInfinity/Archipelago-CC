@@ -1,0 +1,11 @@
+Predicted first, made by copy + restore (cp levelRun.js / solverBot.js to the scratchpad, python str.replace, restore, cmp).
+M1 levelRun.openChestIdsNow `if (!c.solid || sealGone)` -> `if (!c.solid)`
+   predicted red: "seal-edge: the model ON reproduces the game", "the run: ON the chest is in openChests"
+   measured:  2 failed | 5 passed (exactly those two)
+M2 solverBot collect-placement guard `run.chestsSealRemoved === true` -> `=== 'x'`
+   predicted red: "D2 ON: no verb is bound"
+   measured:  1 failed | 6 passed (exactly that one)
+M3 levelRun.stepChestsNow: drop the pendingEarnedClears bank, keep the `continue`
+   predicted red: "the run: ... {15,1} is banked on the first"
+   measured:  1 failed | 6 passed (exactly that one)
+Restored: cmp levelRun.js / solverBot.js against the copies -> identical.

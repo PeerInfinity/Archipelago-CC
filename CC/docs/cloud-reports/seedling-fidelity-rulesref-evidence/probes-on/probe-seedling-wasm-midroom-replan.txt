@@ -1,0 +1,11 @@
+PASS: D: the bot is mounted in level_0__r8c0 — {"ok":true,"region":"level_0__r8c0"}
+PASS: D: "Progressive Shield" arrived through the AP receive path (ReceivedItems from player 2) while a plan played mid-room — {"at":1067,"before":{"forcedBy":{},"forced":0,"divergences":0,"done":0,"level":0,"goal":"level_0__r8c0 -> level_2","ticks":247,"drained":10},"got":{"ok":true,"id":30000009,"count":1}}
+PASS: D: the gate HELD the item until the room froze (one delivery, mid-tape, at a named tick) — {"level":0,"goal":"level_0__r8c0 -> level_2","phase":"playing","tick":16,"of":247,"items":[{"property":"hasShield","from":false,"to":true}],"save":[],"heldKeys":["right"],"outcome":"replanned","policy":"hold-and-replan","landMs":11,"freezeMs":122,"replanMs":74,"ticks":231,"lead":[["right"]]}
+PASS: D: the item LANDED while the room was frozen, and the game holds it — {"landMs":11,"items":{"hitsMax":3,"hasTorch":false,"hasDarkSuit":false,"hasSpear":false,"hasFeather":false,"canSwim":false,"hasFireWand":false,"hasWand":false,"hasFire":false,"hasDarkShield":false,"hasShield":true,"hasGhostSword":false,"hasDarkSword":false,"hasSword":false}}
+PASS: D: the goal was REPLANNED in the room (or the interrupted plan resumed, by name) — never re-entered — {"outcome":"replanned","forcedBy":{},"forced":0}
+PASS: D: the frozen game == the shadow at the replan (the held check) — {"level":0,"shipped":17,"shadow":{"level":0,"x":42.423715200869594,"y":152.20689368660163,"deaths":0,"primary":0},"game":{"level":0,"x":42.423715200869594,"y":152.20689368660163},"held":false,"frozen":true,"equal":true}
+PASS: D: the delivered goal finished in its own room, as a continuation from the frozen tick — {"level":0,"continuation":true,"prefix":17}
+PASS: D: 0 divergences — {"divergences":0}
+PASS: D: freeze and replan times measured — {"freezeMs":122,"replanMs":74}
+PASS: D: stopping the bot removes the gate — null
+ALL CHECKS PASSED

@@ -1,0 +1,30 @@
+== m1
+     ✓ ships OFF 3ms
+     ✓ W0 — the tape: form 1 lands at 351, 381 (press 376, its T+5) and 425 — the game's death flight starts at t426  359ms
+     ✓ W0 — the seam is inside the 376 swing (slashing, its window still testing) 79ms
+     ✓ OFF: the continuation declines by the old text — the forecast lands +58, the run counts 2  3436ms
+     ✓ OFF: the forecast hands out no window, and the strike plan carries no count  3049ms
+     × ON: the strike plan counts the in-flight landing (2), and its own press is searched against the run's boss 2992ms
+     × ON: the continuation solves — both reports, untouched, still in L32 3299ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityL32Bob.test.js > fidelity L32BOB — the swing in flight > ON: the strike plan counts the in-flight landing (2), and i
+ FAIL  frontend/modules/seedlingDemo/fidelityL32Bob.test.js > fidelity L32BOB — the swing in flight > ON: the continuation solves — both reports, untouched, st
+      Tests  2 failed | 5 passed (7)
+== m2
+ ✓ frontend/modules/seedlingDemo/fidelityL32Bob.test.js (7 tests) 13679ms
+     ✓ OFF: the continuation declines by the old text — the forecast lands +58, the run counts 2  3332ms
+     ✓ OFF: the forecast hands out no window, and the strike plan carries no count  3414ms
+     ✓ ON: the strike plan counts the in-flight landing (2), and its own press is searched against the run's boss  2192ms
+     ✓ ON: the continuation solves — both reports, untouched, still in L32  4541ms
+      Tests  7 passed (7)
+== m3
+     ✓ ships OFF 1ms
+     ✓ W0 — the tape: form 1 lands at 351, 381 (press 376, its T+5) and 425 — the game's death flight starts at t426 293ms
+     ✓ W0 — the seam is inside the 376 swing (slashing, its window still testing) 108ms
+     ✓ OFF: the continuation declines by the old text — the forecast lands +58, the run counts 2  3789ms
+     ✓ OFF: the forecast hands out no window, and the strike plan carries no count  3593ms
+     ✓ ON: the strike plan counts the in-flight landing (2), and its own press is searched against the run's boss  2272ms
+     × ON: the continuation solves — both reports, untouched, still in L32 2197ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityL32Bob.test.js > fidelity L32BOB — the swing in flight > ON: the continuation solves — both reports, untouched, st
+      Tests  1 failed | 6 passed (7)

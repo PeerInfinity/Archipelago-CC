@@ -1,0 +1,19 @@
+A1 52 {'done': 39, 'failed': 12, 'timeout': 1}
+A2 52 {'done': 39, 'failed': 12, 'timeout': 1}
+B1 52 {'done': 40, 'failed': 11, 'timeout': 1}
+B2 52 {'done': 39, 'failed': 12, 'timeout': 1}
+B3 52 {'done': 40, 'failed': 11, 'timeout': 1}
+legs whose end differs across runs:
+  368 {'A1': 'done', 'A2': 'failed', 'B1': 'done', 'B2': 'failed', 'B3': 'done'} seams [6116, 6119, 6113, 6099, 6117] level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+  371 {'A1': 'failed', 'A2': 'done', 'B1': 'done', 'B2': 'done', 'B3': 'done'} seams [5603, 5600, 5597, 5589, 5601] level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+859/860:
+  A1 859 failed 5933  -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (888.5,851.2) — chaser:bobsoldier@880,83
+  A2 859 failed 5940  -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.9,854.7) — chaser:bobsoldier@880,83
+  B1 859 failed 5940  -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.9,854.7) — chaser:bobsoldier@880,83
+  B2 859 failed 5926  -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (744.5,853.3) — chaser:bob@736,800 (insi
+  B3 859 failed 5946  -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (744.5,729.2) — chaser:bob@736,752 (insi
+  A1 860 failed 5431  -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: the player died at t800 (chaser bob@736,752) while pressing spinner@880,848
+  A2 860 failed 5427  -> burn stance (burnabletree@872,784) -> kill (spinner@816,848) by press: the player died at t895 (chaser bob@736,752) while pressing spinner@816,848
+  B1 860 failed 5422  -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: the player died at t830 (chaser bob@736,752) while pressing spinner@880,848
+  B2 860 failed 5417  -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: the player died at t745 (chaser bob@736,752) while pressing spinner@880,848
+  B3 860 failed 5425  -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (insi

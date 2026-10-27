@@ -1,0 +1,64 @@
+{
+ "tape": "seal-edge",
+ "set_id": "seedling-vanilla-record-5aeefc3c",
+ "mounted": "seedling-vanilla-record-5aeefc3c",
+ "observations": 301,
+ "clears": [
+  "10,0",
+  "11,0",
+  "15,1",
+  "3,0",
+  "5,0",
+  "8,0",
+  "8,1"
+ ],
+ "game": {
+  "cleared": true,
+  "through": true,
+  "final": {
+   "t": 300,
+   "x": 40,
+   "y": 64.45,
+   "level": 16
+  },
+  "pendingCheck": []
+ },
+ "modelOff": {
+  "opened": false,
+  "through": false,
+  "final": {
+   "t": 300,
+   "x": 157.99692271842153,
+   "y": 114.34349760511718,
+   "level": 15
+  },
+  "maxDrift": null,
+  "firstDrift": {
+   "t": 200,
+   "game": {
+    "t": 200,
+    "x": 157.8950538942114,
+    "y": 113.05578222128729,
+    "level": 15
+   },
+   "model": {
+    "t": 200,
+    "x": 157.8950538942114,
+    "y": 114.34349760511718,
+    "level": 15
+   }
+  }
+ },
+ "modelOn": {
+  "opened": false,
+  "through": true,
+  "final": {
+   "t": 300,
+   "x": 40,
+   "y": 64.45,
+   "level": 16
+  },
+  "maxDrift": 0,
+  "firstDrift": null
+ }
+}

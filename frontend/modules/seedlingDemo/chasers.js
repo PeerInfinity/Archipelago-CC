@@ -570,6 +570,11 @@ export function chaserHasSword(tag) {
     return !!CHASERS[tag]?.sword;
 }
 
+/** ⛓ fidelity RULESREF D1 — does this bridged class carry a timed ATTACK row (the puncher's wind-up and punch)? */
+export function chaserHasAttack(tag) {
+    return !!CHASERS[tag]?.attack;
+}
+
 /**
  * ⛔ THE TILE TYPES `Enemy.update`'s TERRAIN SWITCH DESTROYS A BODY ON.
  *
