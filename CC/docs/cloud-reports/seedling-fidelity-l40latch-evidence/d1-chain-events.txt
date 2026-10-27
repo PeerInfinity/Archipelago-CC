@@ -1,0 +1,7 @@
+t1 p(888.8,776.8) latched:  -> 3
+t1 p(888.8,776.8) chasers:  -> bobsoldier@880,832,bob@736,752,bob@736,800
+t1 p(888.8,776.8) spinners:  -> spinner@816,848
+t101 p(908.2,812.9) open:  -> wandlock@480,560
+t184 p(871.3,782.8) chasers: bobsoldier@880,832,bob@736,752,bob@736,800 -> bob@736,752,bob@736,800
+t251 p(871.6,791.9) spinners: spinner@816,848 -> 
+end 887.4713811067359 775.607200077244 []

@@ -265,7 +265,9 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'whether every pushed block has come to rest (`levelRun.js:10729`).' },
     { family: 'openBridges', kind: RUN_ENTITIES, blocks: [],
-        solverReads: ['botDriverV2'], strategies: [],
+        // ⛓ fidelity RULESREF D2: `solverBot.resolveBridgeStrategy` asks it (the `bridge` verb, `spearBridgeVerb`; its
+        // row is switch-gated, so no strategy is listed here).
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'opened bridge ids (`levelRun.js:10578`) — terrain state, not a block.' },
     { family: 'arrowsInFlight', kind: RUN_ENTITIES, blocks: ['emitter'],
         solverReads: ['dangerMap', 'solverBot'], strategies: [],

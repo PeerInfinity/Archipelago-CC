@@ -1,0 +1,331 @@
+{
+    "game": "seedling",
+    "name": "rulesref-l66-door",
+    "boot": {
+        "level": 66,
+        "x": 128,
+        "y": 144
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 0,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 12,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 19,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 30,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 30,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 31,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 39,
+            "tag": 8,
+            "note": ""
+        },
+        {
+            "level": 40,
+            "tag": 8,
+            "note": ""
+        },
+        {
+            "level": 58,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 62,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 68,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [
+        {
+            "t": 0,
+            "slot": 3
+        },
+        {
+            "t": 64,
+            "slot": 0
+        }
+    ],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "keys": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "seal_parts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+        ]
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": true,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": true,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": true,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": true,
+            "hasFeather": true,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 230,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 5,
+            "to": 6
+        },
+        {
+            "key": "primary",
+            "from": 64,
+            "to": 65
+        },
+        {
+            "key": "primary",
+            "from": 66,
+            "to": 67
+        },
+        {
+            "key": "primary",
+            "from": 72,
+            "to": 73
+        },
+        {
+            "key": "left",
+            "from": 64,
+            "to": 85
+        },
+        {
+            "key": "right",
+            "from": 85,
+            "to": 86
+        },
+        {
+            "key": "primary",
+            "from": 85,
+            "to": 86
+        },
+        {
+            "key": "primary",
+            "from": 87,
+            "to": 88
+        },
+        {
+            "key": "primary",
+            "from": 93,
+            "to": 94
+        },
+        {
+            "key": "primary",
+            "from": 117,
+            "to": 118
+        },
+        {
+            "key": "primary",
+            "from": 131,
+            "to": 132
+        },
+        {
+            "key": "primary",
+            "from": 137,
+            "to": 138
+        },
+        {
+            "key": "up",
+            "from": 88,
+            "to": 140
+        },
+        {
+            "key": "primary",
+            "from": 139,
+            "to": 140
+        },
+        {
+            "key": "down",
+            "from": 140,
+            "to": 142
+        },
+        {
+            "key": "left",
+            "from": 145,
+            "to": 146
+        },
+        {
+            "key": "up",
+            "from": 145,
+            "to": 146
+        },
+        {
+            "key": "primary",
+            "from": 145,
+            "to": 146
+        },
+        {
+            "key": "right",
+            "from": 146,
+            "to": 147
+        },
+        {
+            "key": "down",
+            "from": 146,
+            "to": 147
+        },
+        {
+            "key": "down",
+            "from": 149,
+            "to": 151
+        },
+        {
+            "key": "left",
+            "from": 147,
+            "to": 154
+        },
+        {
+            "key": "right",
+            "from": 154,
+            "to": 155
+        },
+        {
+            "key": "up",
+            "from": 154,
+            "to": 155
+        },
+        {
+            "key": "up",
+            "from": 158,
+            "to": 160
+        },
+        {
+            "key": "right",
+            "from": 228,
+            "to": 230
+        },
+        {
+            "key": "up",
+            "from": 228,
+            "to": 230
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY RULESREF — L66 from the L65 arrival: the spear bridge (7,9) opened by one thrust, the walk up `building8`'s x 72-87 doorway notch on the 8 px lattice, `bosslock@72,64`'s key line, and `teleporter@72,64` → L70. The survey's staging (step 163's boot view). The solver's own plan with spearBridgeVerb + fineFrontierFlood ON: 230 t, equips [{\"t\":0,\"slot\":3},{\"t\":64,\"slot\":0}]. Authored by scripts/procgen/plan-seedling-rulesref-witness.mjs."
+}

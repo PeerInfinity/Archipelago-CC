@@ -1,0 +1,52 @@
+PASS: H: idle in the house the rng takes NO draw — [1410304934,1410304934,1410304934,1410304934,1410304934]
+PASS: H: p4f — the live rng EQUALS the begin record at rest (the tapeless build drew only cosmetic; echo split false) — LFSR distance 0
+PASS: H: nobody touched it — at spawn, v 0, facing down, no other Mobile, no hits: ALL true — {"atSpawn":true,"vZero":true,"facingDown":true,"rngEqBegin":true,"noOtherMobiles":true,"noHits":true}
+PASS: H: every N ≥ 1 → the SAME shadow (minus the tick count) and the SAME plan — [[0,102,""],[1,102,""],[19,102,""],[145,102,""],[2000,102,""]]
+PASS: H: the adopted plan (N=145) played ON PLAN to its held end — {"outcome":"held","rows":103,"keys":102,"div":null,"endLevel":86}
+PASS: P: idle in the house the rng takes NO draw — [1410304934,1410304934,1410304934,1410304934,1410304934]
+PASS: P: p4f — the live rng EQUALS the begin record at rest (the tapeless build drew only cosmetic; echo split false) — LFSR distance 0
+PASS: P: after the person the brief's clauses PASS — back on the spawn to the bit, v 0 (the latch), no rng draw, persistence unchanged — {"c":{"atSpawn":true,"vZero":true,"facingDown":false,"rngEqBegin":true,"noOtherMobiles":true,"noHits":true},"rngFromBegin":0}
+PASS: P: …but the player is TURNED: the facing clause (botMobiles' stand animation) FAILS — the model's shadow faces down — {"anim":"side-stand","shadow":{"x":56,"y":56,"direction":3}}
+PASS: P: every N ≥ 1 → the SAME shadow (minus the tick count) and the SAME plan — [[0,102,""],[1,102,""],[19,102,""],[225,102,""],[2000,102,""]]
+PASS: P: the adopted plan (N=225) played ON PLAN to its held end — {"outcome":"held","rows":103,"keys":102,"div":null,"endLevel":86}
+PASS: R L7: unwatched, nobody touched it — at spawn, v 0, facing down, no other Mobile, no hits — {"c":{"atSpawn":true,"vZero":true,"facingDown":true,"rngEqBegin":true,"noOtherMobiles":true,"noHits":true}}
+PASS: R L7: every N ≥ 1 → the SAME shadow (minus the tick count) and the SAME plan — [[0,95,""],[1,95,""],[71,95,""],[2000,95,""]]
+PASS: R L7: the adopted plan (N=71) played ON PLAN out of the room — {"outcome":"left-room","rows":95,"keys":95,"div":null,"endLevel":8}
+PASS: R L9: unwatched, nobody touched it — at spawn, v 0, facing down, no other Mobile, no hits — {"c":{"atSpawn":true,"vZero":true,"facingDown":true,"rngEqBegin":true,"noOtherMobiles":true,"noHits":true}}
+PASS: R L9: every N ≥ 1 → the SAME shadow (minus the tick count) and the SAME plan — [[0,66,""],[1,66,""],[71,66,""],[2000,66,""]]
+PASS: R L9: the adopted plan (N=71) played ON PLAN out of the room — {"outcome":"left-room","rows":66,"keys":66,"div":null,"endLevel":10}
+PASS: R L13: unwatched, nobody touched it — at spawn, v 0, facing down, no other Mobile, no hits — {"c":{"atSpawn":true,"vZero":true,"facingDown":true,"rngEqBegin":true,"noOtherMobiles":true,"noHits":true}}
+PASS: R L13: every N ≥ 1 → the SAME shadow (minus the tick count) and the SAME plan — [[0,82,""],[1,82,""],[72,82,""],[2000,82,""]]
+PASS: R L13: the adopted plan (N=72) played ON PLAN out of the room — {"outcome":"left-room","rows":82,"keys":82,"div":null,"endLevel":14}
+PASS: W: the bot is mounted in region_2_2 — {"ok":true,"region":"region_2_2"}
+PASS: W: the bot FINISHED — status "finished — 3 locations visited"
+PASS: W: the chest checked EXACTLY ONCE — ["Starting House - Chest"]
+PASS: W: 0 divergences, 0 recoveries — {"d":0,"r":0}
+PASS: W: the cold start was ADOPTED — 0 forced re-arrivals IN TOTAL, 0 host new Game — {"adopted":1,"forced":0,"forcedBy":{},"refused":[],"swaps":{"hostNewGame":0}}
+PASS: W: chest and door are both CONTINUATIONS (prefix 1 = the idle tick; then 1 + the chest's keys), each after an exact held check — {"legs":[{"goal":"Starting House - Chest","outcome":"done","continuation":true,"prefix":1,"ticks":102,"divergence":null,"heldEnd":true},{"goal":"exit_S","outcome":"stopped","continuation":true,"prefix":103,"ticks":25,"divergence":null,"heldEnd":null}],"heldChecks":[{"level":86,"shipped":1,"shadow":{"level":86,"x":56,"y":56,"deaths":0,"primary":0},"game":{"level":86,"x":56,"y":56},"held":true,"frozen":false,"equal":true},{"level":86,"shipped":103,"shadow":{"level":86,"x":56,"y":34.55,"deaths":0,"primary":0},"game":{"level":86,"x":56,"y":34.55},"held":true,"frozen":false,"equal":true}]}
+PASS: W: world swaps = 1 (the door) — W7 walked 2 (the cold start's new Game + the door) — host 0 + doors 1
+PASS: K: a person's real ArrowRight moved the player before the bot drove — {"moved":true,"before":{"x":56,"y":56},"after":{"x":58.15,"y":56}}
+PASS: K: the bot is mounted in region_2_2 — {"ok":true,"region":"region_2_2"}
+PASS: K: the bot FINISHED — status "finished — 3 locations visited"
+PASS: K: the chest checked EXACTLY ONCE — ["Starting House - Chest"]
+PASS: K: 0 divergences, 0 recoveries — {"d":0,"r":0}
+PASS: K: the adoption was REFUSED by name (the moved player is not "the arrival + idle ticks") — [{"level":86,"clause":"position","why":"the player stands at (61.150000000000006, 56), the arrival's shadow at (56, 56)"}]
+PASS: K: …and the named cold-start re-arrival served the walk (forced 1, cold-start) — {"cold-start":1}
+PASS: L: level 0 holds exactly introchar + statue2, v 0, idle, at (152,296) / (208,160) — unchanged over 2.5 s of ticks — [{"cls":"NPCs::Statue","x":208,"y":160,"vx":0,"vy":0,"anim":"","type":"Solid","destroy":false,"collidable":true},{"cls":"NPCs::IntroCharacter","x":152,"y":296,"vx":0,"vy":0,"anim":"","type":"Solid","destroy":false,"collidable":true}]
+PASS: L: idle in level 0 the rng takes NO draw and the player stays put — [[1930500710,168,296],[1930500710,168,296],[1930500710,168,296],[1930500710,168,296],[1930500710,168,296],[1930500710,168,296]]
+PASS: L: the bot is mounted in overworld_start__r8c0 — {"ok":true,"region":"overworld_start__r8c0"}
+PASS: L: the bot FINISHED the seedling_atlas walk from the hub — status "finished — 1 location visited"
+PASS: L: level 0's cold start ADOPTED — 0 forced re-arrivals IN TOTAL, nothing refused; host new Game 1 = the glue's redirect only — {"adopted":1,"forced":0,"forcedBy":{},"refused":[],"swaps":{"hostNewGame":1}}
+PASS: L: every held check equal (the adopted level 0 == the shadow "arrival + 1 idle tick") — [{"level":0,"shipped":1,"shadow":{"level":0,"x":168,"y":296,"deaths":0,"primary":0},"game":{"level":0,"x":168,"y":296},"held":true,"frozen":false,"equal":true}]
+PASS: L: the chest checked EXACTLY ONCE — ["Starting House - Chest"]
+PASS: L: 0 divergences, 0 recoveries — {"d":0,"r":0}
+PASS: N: the reset SKIPPED the intro — the explicit start into level 0 at the game's boot position — {"mode":"explicit-start","intro":false,"level":0,"landed":true,"args":{"x":16,"y":128},"boot":{"x":16,"y":128,"level":0,"source":"seedlingStartSpawn (the start region's arrival)"}}
+PASS: N: the begin record reads level 0 (not the arm's −1), the set starts in level 0, the game stands in level 0 — {"begin":{"begin.level":0,"begin.tick":0,"rng.gameplay":1930500710,"rng.cosmetic":1968467108,"fp.seed":1861733589,"save.time":4803},"level":0,"x":24,"y":136,"gt":4852,"cutscene":[false,false,false,false],"receive":true,"freeze":false,"startLevel":0,"set":"seedling-ap-record-01b432a9"}
+PASS: N: no ceremony on the page — no wind cutscene, input taken, no freeze (no Help) — {"cutscene":[false,false,false,false],"receive":true,"freeze":false}
+PASS: N: the vanilla arm binds the flash_seedling name → cell map (§5.16; the generated report stays null) — {"atlas":"vanilla","report":false}
+PASS: N: the first goal ADOPTED straight through — no ceremony entered, nothing dismissed — {"answer":{"ok":true,"action":"adopt"},"ceremonies":[],"dismissed":[],"hostStarts":["adopt","continuation","freeze","plan","freeze"]}
+PASS: N: both legs crossed — level 0 → L13, then out of L13 — [{"leg":"out_stairsdown_32_192","level":13,"ms":4664},{"leg":"out_stairsdown_32_32","level":14,"ms":3080}]
+PASS: N: 0 forced re-arrivals IN TOTAL, nothing refused — {"forced":0,"forcedBy":{},"refused":[]}
+PASS: N: the adoption's held check equal (the adopted room == the shadow "arrival + 1 idle tick"); the L13 and L14 arrivals HELD — {"heldChecks":[{"level":0,"shipped":1,"shadow":{"level":0,"x":24,"y":136,"deaths":0,"primary":0},"game":{"level":0,"x":24,"y":136},"held":true,"frozen":false,"equal":true}],"held":3}
+PASS: N: 0 divergences, 0 recoveries, 0 failed — {"d":0,"r":0,"f":0,"history":[{"goal":"out_stairsdown_32_192","outcome":"done","continuation":true,"prefix":1,"divergence":null,"reason":null},{"goal":"out_stairsdown_32_32","outcome":"done","continuation":false,"prefix":0,"divergence":null,"reason":null}]}
+ALL CHECKS PASSED

@@ -8,7 +8,8 @@
 # broken (struck down this visit), struck (ITEM ACTIONS: the obstacle lists the acting action in `struck_by`),
 # lane_unless / lane_while (ARROW TRAPS: group tokens of the lanes over the cell), event (ROPES: the cut's event),
 # entry (ENTRY GATES: the combos entering the cell needs MOVING this way; [] = no entry that way, None = no gate),
-# sink (BLOCK SINKS: a block pushed here sinks — water, lava, a pit — so it enters whatever the cell's clearance).
+# sink (BLOCK SINKS: a block pushed here sinks — water, lava, a pit — so it enters whatever the cell's clearance, and
+# PIT SINKS: even when the cell is not floor, a pit the player cannot walk).
 
 
 def cleared(state, player, tile):
@@ -24,7 +25,7 @@ def player_may_enter(state, player, cell, tile):
 
 
 def block_may_enter(state, player, cell, tile):
-    return tile.floor and not tile.block and (tile.sink or cleared(state, player, tile)) and tile.entry is None
+    return (tile.floor or tile.sink) and not tile.block and (tile.sink or cleared(state, player, tile)) and tile.entry is None
 
 
 def presses(state, player, cell, tile):

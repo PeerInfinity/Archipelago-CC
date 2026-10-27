@@ -523,6 +523,8 @@ describe('who takes the box', () => {
          * fidelity L40BK2 L40's Boss Key 2 chain from inside the lock room, `probe-seedling-l40bk2.mjs`;
          * rules-l66-l57-probe L66's door into Dungeon 6 under the off-grid Yellow-Key lock, `probe-seedling-l66-door.mjs`;
          * tile-primitives-pixelmask-l86 L93's door into L98 up the waterfall, with and without the Feather, `probe-seedling-l93-door.mjs`;
+         * fidelity CHESTSEAL L15's chest removed by `checkBySeal()` (sixteen seals) and its one-seal control, `probe-seedling-chestseal.mjs`;
+         * fidelity L40LATCH L40's S-door latch under the BobSoldier (the still holder, the orbit chain), `probe-seedling-l40latch.mjs`;
          * rules-l63-darktrap-probe L63's darktraps over the two L65 arrivals, their poles and flags, `probe-seedling-l63-darktrap.mjs`;
          * the same slice's L65 and L101 in-room darktraps and the sides their poles are lit from, `probe-seedling-inroom-darktraps.mjs`.)
          */
@@ -579,6 +581,8 @@ describe('who takes the box', () => {
             'probe-seedling-l40bk2.mjs',
             'probe-seedling-l66-door.mjs',
             'probe-seedling-l93-door.mjs',
+            'probe-seedling-chestseal.mjs',
+            'probe-seedling-l40latch.mjs',
             'probe-seedling-l63-darktrap.mjs',
             'probe-seedling-inroom-darktraps.mjs'];
         const isGuarded = (f) => {

@@ -1,0 +1,155 @@
+{
+ "game": "seedling",
+ "name": "l40latch-latch-boot",
+ "boot": {
+  "level": 40,
+  "x": 880,
+  "y": 768
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [
+  {
+   "level": 5,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 1,
+   "note": ""
+  },
+  {
+   "level": 10,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 0,
+   "tag": 1
+  },
+  {
+   "level": 16,
+   "tag": 0
+  },
+  {
+   "level": 19,
+   "tag": 1
+  },
+  {
+   "level": 31,
+   "tag": 0
+  },
+  {
+   "level": 30,
+   "tag": 2
+  },
+  {
+   "level": 30,
+   "tag": 0
+  },
+  {
+   "level": 12,
+   "tag": 3
+  },
+  {
+   "level": 39,
+   "tag": 8
+  },
+  {
+   "level": 40,
+   "tag": 0,
+   "note": "burnabletree@872,784 burned (staging)"
+  },
+  {
+   "level": 40,
+   "tag": 13,
+   "note": "chest@880,816 opened (staging)"
+  },
+  {
+   "level": 40,
+   "tag": 16,
+   "note": "spinner@880,848 killed (staging: the hammer arc's press kill, D3/PKC)"
+  }
+ ],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [
+   0
+  ],
+  "keys": [
+   0,
+   1
+  ],
+  "seal_parts": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ]
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": true,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": false,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": false,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": false,
+   "hasFeather": false,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 3,
+  "first_use": false,
+  "extended": false,
+  "time": 8586,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick_count": 0,
+ "inputs": [],
+ "tape_version": 8,
+ "description": "seedling-fidelity-l40latch: survey step 67's boot (fixtures/l40bk2-witness/step67-boot.json) re-pointed ON the latch of buttonroom@880,768 (L40 (880,768), the player box inside its rect), with the chest (chest@880,816, {40,13}), the tree (burnabletree@872,784, {40,0}) and spinner@880,848 ({40,16}) BANKED by persistence \u2014 the room as a re-entry finds it once those three are done, PAST the press kill of spinner@880,848 (the hammer arc's D3/PKC), so the latch and bobsoldier@880,832 (which does not persist, and respawns) are measured alone."
+}

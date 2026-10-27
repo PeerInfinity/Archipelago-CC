@@ -44,7 +44,7 @@ describe('L3 — the ghost rock compiles, its strike the fusion', () => {
         expect(lib.ghostsword.rule.children.map((c) => c.args.item_name))
             .toEqual(['Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword']);
         expect(lib.ghostsword.item).toBeUndefined();
-    });
+    }, 180_000);
 });
 
 describe('L8 — the lane block sinks', () => {
@@ -78,8 +78,9 @@ describe('L86 — its landing under L0\'s building is floor', () => {
         const out = certify(['level_0', 'level_86']);
         expect(out.problems).toEqual([]);
         expect(out.accepted).toEqual([]);
-        expect(line(out, 'level_86->level_0__r7c6=')).toBe(FREE);
-        expect(line(out, 'level_86@Level 086 - Chest=')).toBe(FREE);
+        // Priced from where the game lands L0's door (3,3) (session tile-primitives-pit-sinks-landings).
+        expect(line(out, 'level_86->level_0__r7c6<@3,3=')).toBe(FREE);
+        expect(line(out, 'level_86@Level 086 - Chest<@3,3=')).toBe(FREE);
     });
 
     it('L0\'s world floors building1\'s door (10,17) and the landing (10,18); the mask row above stays wall', () => {

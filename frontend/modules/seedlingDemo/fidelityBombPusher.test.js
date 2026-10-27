@@ -176,7 +176,9 @@ describe('BOMBPUSHER D3 — the hold inside the lobber\'s reach is refused by na
     // row pins the STILL hold's refusal, so it names the pair OFF.
     it('ON (movingWait, bombBlastBody OFF): the cluster boot\'s plan stops at buttonroom@272,208\'s hold, naming the lobber and the blast', async () => {
         let refusal = null;
-        await withContactFidelity({ bombPusherLive: true, movingWait: false, bombBlastBody: false }, async () => {
+        // ⛓ `holdWaitPriced` named OFF (planning-14's wave-32 flip: ON the still hold is priced at its stance walk and
+        // the ladder is EXHAUSTED on the tail's bomb — the same obstacle, new text); this row pins the executor's refusal.
+        await withContactFidelity({ bombPusherLive: true, movingWait: false, bombBlastBody: false, holdWaitPriced: false }, async () => {
             try { await solveFromCluster(); } catch (e) { refusal = e; }
         });
         expect(refusal).toBeInstanceOf(SolverRefusal);

@@ -1,0 +1,11 @@
+PASS — scripts/procgen/seedling-entity-witnesses.json names all 566 number leaves
+PASS — scripts/procgen/seedling-profile-witnesses.json names all 138 keys
+PASS — scripts/procgen/seedling-profile-witnesses-full.json names all 138 keys
+GREEN: 353 rows match a fresh census
+census-seedling-constants --check — 6952 literals; green drift: 0 new + 0 vanished cosmetic/structural, 0 moved
+PASS
+  File "<string>", line 1
+    import json;print('roster', len(json.load(open('frontend/modules/seedlingDemo/fixtures/tapes/index.json'))['tapes'] if isinstance(json.load(open('frontend/modules/seedlingDemo/fixtures/tapes/index.json')),dict) else len(json.load(open('frontend/modules/seedlingDemo/fixtures/tapes/index.json'))))
+                     ^
+SyntaxError: '(' was never closed
+roster 289
