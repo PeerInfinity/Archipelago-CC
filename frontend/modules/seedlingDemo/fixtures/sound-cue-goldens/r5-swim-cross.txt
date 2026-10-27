@@ -1,3 +1,5 @@
+1 L47 Game.as:1206 "Wind" 1 0.500 0.000
 14 L48 Teleporter.as:109 "Room" 0 1.000 0.000
+14 L48 Game.as:1212 "Wind" 1 0.500 0.000 op=stop
 51 L48 Player.as:551 "Swim" -1 1.000 0.000
 51 L48 Player.as:685 "Splash" -1 1.000 0.000

@@ -4,4 +4,5 @@
 110 L77 Player.as:1388 "Hurt" -1 1.000 0.000
 110 L77 Player.as:551 "Swim" -1 1.000 0.000
 110 L77 Player.as:685 "Splash" -1 1.000 0.000
+140 L77 Enemies/Bob.as:72 "Enemy Hop" 0 0.500 0.000
 192 L77 Player.as:1388 "Hurt" -1 1.000 0.000

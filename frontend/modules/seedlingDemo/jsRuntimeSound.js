@@ -214,7 +214,9 @@ export function createPageSound({ win, params, listen, now = () => win.performan
                 musicStep(m.target, m.cues, m.state, tickSeconds);
             }
             if (!on || !run) { cueState = null; return []; }
-            const r = stepSoundCues(cueState, soundCueView(run, { record }), tick, { lengthFrames });
+            // the level set's `snow_gradient` (the blizzard's fade): the mounted set's rooms, else the vanilla twin's
+            const snowGradient = !!(rooms ?? music.vanillaRooms)?.[run.level]?.snow_gradient;
+            const r = stepSoundCues(cueState, soundCueView(run, { record, snowGradient }), tick, { lengthFrames });
             cueState = r.state;
             counts.ticks += 1;
             if (!r.cues.length) return r.cues;

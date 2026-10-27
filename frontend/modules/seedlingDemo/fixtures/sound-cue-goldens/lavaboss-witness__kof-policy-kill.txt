@@ -1,6 +1,15 @@
+59 L82 Scenery/FallRockLarge.as:102 "Rock" 0 1.500 0.000
 100 L82 Enemies/LavaBoss.as:220 "Lava" 0 1.000 0.000
+105 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.259 -0.422
+105 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.256 0.428
 106 L82 Player.as:551 "Swim" -1 1.000 0.000
 106 L82 Player.as:685 "Splash" -1 1.000 0.000
+114 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.252 -0.422
+114 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.249 0.428
+123 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.305 -0.422
+123 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.302 0.428
+138 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.590 -0.402
+138 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.585 0.408
 148 L82 Enemies/LavaBoss.as:247 "Lava" 1 1.000 0.000
 154 L82 Player.as:797 "Sword" -1 1.000 0.000
 155 L82 Player.as:551 "Swim" -1 1.000 0.000
@@ -15,6 +24,14 @@
 242 L82 Projectiles/Explosion.as:48 "Explosion" -1 0.338 0.842
 249 L82 Player.as:551 "Swim" -1 1.000 0.000
 360 L82 Enemies/LavaBoss.as:220 "Lava" 0 1.000 0.000
+365 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.328 -0.422
+365 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.325 0.428
+374 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.260 -0.422
+374 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.257 0.428
+383 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.313 -0.422
+383 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.310 0.428
+398 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.591 -0.402
+398 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.586 0.408
 408 L82 Enemies/LavaBoss.as:247 "Lava" 1 1.000 0.000
 414 L82 Player.as:797 "Sword" -1 1.000 0.000
 415 L82 Player.as:551 "Swim" -1 1.000 0.000
@@ -29,6 +46,14 @@
 502 L82 Projectiles/Explosion.as:48 "Explosion" -1 0.341 0.842
 509 L82 Player.as:551 "Swim" -1 1.000 0.000
 619 L82 Enemies/LavaBoss.as:220 "Lava" 0 1.000 0.000
+624 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.327 -0.422
+624 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.324 0.428
+633 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.259 -0.422
+633 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.256 0.428
+642 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.312 -0.422
+642 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.309 0.428
+657 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.591 -0.402
+657 L82 Enemies/Bob.as:72 "Enemy Hop" 0 0.586 0.408
 667 L82 Enemies/LavaBoss.as:247 "Lava" 1 1.000 0.000
 673 L82 Player.as:797 "Sword" -1 1.000 0.000
 674 L82 Player.as:551 "Swim" -1 1.000 0.000

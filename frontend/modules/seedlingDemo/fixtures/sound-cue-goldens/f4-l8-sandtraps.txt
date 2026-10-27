@@ -1,0 +1,180 @@
+32 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+33 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+34 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+35 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+36 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+37 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+38 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+39 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+40 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+41 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+42 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+43 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+44 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+45 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+46 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+47 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+48 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+49 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+50 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+51 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+52 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+53 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+54 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+55 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+56 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+57 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+58 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+59 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+60 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+61 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+62 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+63 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+64 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+65 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+66 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+67 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+68 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+69 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+70 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+71 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+72 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+73 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+74 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+75 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+76 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+77 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+78 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+79 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+80 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+81 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+82 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+83 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+84 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+85 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+86 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+87 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+88 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+89 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+90 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+91 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+92 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+93 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+94 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+95 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+107 L8 Enemies/SandTrap.as:62 "Enemy Attack" 3 0.752 0.056
+149 L8 Puzzlements/Button.as:44 "Switch" -1 0.807 -0.109
+151 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.391 0.291
+162 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.417 0.291
+164 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.540 0.341
+164 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.502 0.391
+164 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.462 0.441
+173 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.417 0.291
+175 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.540 0.341
+175 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.502 0.391
+175 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.462 0.441
+184 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.417 0.291
+186 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.540 0.341
+186 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.502 0.391
+186 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.462 0.441
+195 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.417 0.291
+197 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.540 0.341
+197 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.502 0.391
+197 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.462 0.441
+206 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.417 0.291
+208 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.540 0.341
+208 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.502 0.391
+208 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.462 0.441
+217 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.417 0.291
+219 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.540 0.341
+219 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.502 0.391
+219 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.462 0.441
+228 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.417 0.291
+230 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.540 0.341
+230 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.502 0.391
+230 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.462 0.441
+239 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.417 0.291
+241 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.540 0.341
+241 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.502 0.391
+241 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.462 0.441
+250 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.408 0.291
+254 L8 Puzzlements/Button.as:44 "Switch" -1 0.795 -0.109
+258 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.348 0.341
+258 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.321 0.391
+258 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.291 0.441
+269 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.404 0.341
+269 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.374 0.391
+269 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.341 0.441
+404 L8 Enemies/SandTrap.as:62 "Enemy Attack" 3 0.751 -0.152
+406 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+407 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+408 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+409 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+410 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+411 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+412 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+413 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+414 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+415 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+416 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+417 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+418 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+419 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+420 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+421 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+422 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+423 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+423 L8 Enemies/SandTrap.as:62 "Enemy Attack" 3 0.776 -0.105
+424 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+425 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+426 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+427 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+428 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+429 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+430 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+431 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+432 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+433 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+434 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+435 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+436 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+437 L8 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+442 L8 Enemies/SandTrap.as:62 "Enemy Attack" 3 0.776 -0.105
+539 L8 Puzzlements/Button.as:44 "Switch" -1 0.814 -0.099
+541 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.388 0.301
+552 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.414 0.301
+563 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.414 0.301
+564 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.001 0.351
+564 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.401
+564 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.451
+574 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.414 0.301
+575 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.001 0.351
+575 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.401
+575 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.451
+585 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.414 0.301
+586 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.001 0.351
+586 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.401
+586 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.451
+596 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.414 0.301
+597 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.001 0.351
+597 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.401
+597 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.451
+607 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.414 0.301
+608 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.001 0.351
+608 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.401
+608 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.451
+618 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.414 0.301
+619 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.001 0.351
+619 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.401
+619 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.451
+629 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.414 0.301
+630 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.001 0.351
+630 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.401
+630 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.451
+640 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.414 0.301
+641 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.001 0.351
+641 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.401
+641 L8 Projectiles/Arrow.as:59 "Arrow" 1 0.000 0.451
+651 L8 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.391 0.301
+654 L8 Puzzlements/Button.as:44 "Switch" -1 0.802 -0.099
+827 L9 Teleporter.as:109 "Room" 0 1.000 0.000

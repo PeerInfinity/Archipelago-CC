@@ -20,6 +20,7 @@ import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { runTape } from './tapeRunner.js';
+import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
 import {
     COSMETIC_CUE_SEED, LIGHT_BOSS_MOVE_ODDS, SOUND_CALL_SITES, cosmeticStep, distVolPan, posOfId, roomIndexOf, sfxKey, soundCueView,
@@ -40,6 +41,9 @@ const fixture = (name) => {
     return JSON.parse(readFileSync(join(HERE, 'fixtures', `${name}.json`), 'utf8')).tape;
 };
 const SFX = JSON.parse(readFileSync(join(ROOT, 'frontend/packs/seedling/sfx/manifest.json'), 'utf8'));
+/** The vanilla level set's rooms (the page's twin): the blizzard's `snow_gradient` flag. */
+const SET_ROOMS = JSON.parse(readFileSync(join(HERE, 'fixtures/seedling-vanilla-set.json'), 'utf8')).rooms;
+const viewOf = (run) => soundCueView(run, { record: RECORDS.get(run.level), snowGradient: !!SET_ROOMS[run.level]?.snow_gradient });
 
 /** A clip's length at 60 fps, from the committed manifest (what the page reads). */
 const lengthFrames = (set, index) => {
@@ -114,8 +118,20 @@ describe.skipIf(!HAVE_SRC)('1. THE CENSUS OF RECORD — every Music.* call site,
 });
 
 // ── 2. the cue pins ─────────────────────────────────────────────────────
-/** Run a fixture tape; `each(t, run)` after every tick. */
+/**
+ * A boot STAND — a `createLevelRun` at `boot`, `n` ticks holding `keys` — for a room no committed tape reaches
+ * (the trap skin's test stands L45's ice trap the same way). Named `stand:<level>:<x>,<y>:<n>[:<keys>]`.
+ */
+const STAND = /^stand:(\d+):(-?\d+),(-?\d+):(\d+)(?::([a-z,]+))?$/;
+/** Run a fixture tape (or a stand); `each(t, run)` after every tick. */
 function drive(name, each) {
+    const m = STAND.exec(name);
+    if (m) {
+        const run = createLevelRun({ levelSource: atlasLevelSource(), boot: { level: +m[1], x: +m[2], y: +m[3] }, noDamage: true });
+        const keys = new Set((m[5] ?? '').split(',').filter(Boolean));
+        for (let t = 0; t < +m[4]; t += 1) { run.advance(keys); each(t, run); }
+        return { out: { ticks: [] }, last: run };
+    }
     let last = null;
     const out = runTape(fixture(name), {
         levelSource: atlasLevelSource(),
@@ -129,9 +145,12 @@ function cueLines(name) {
     const lines = [];
     let st = null;
     drive(name, (t, run) => {
-        const r = stepSoundCues(st, soundCueView(run, { record: RECORDS.get(run.level) }), t, { lengthFrames });
+        const r = stepSoundCues(st, viewOf(run), t, { lengthFrames });
         st = r.state;
-        for (const c of r.cues) lines.push(`${t} L${run.level} ${c.site} "${c.set}" ${c.index} ${c.vol.toFixed(3)} ${c.pan.toFixed(3)}`);
+        // a channel op and a delay are part of the line (only the rows that carry one: older lines are unchanged)
+        for (const c of r.cues) {
+            lines.push(`${t} L${run.level} ${c.site} "${c.set}" ${c.index} ${c.vol.toFixed(3)} ${c.pan.toFixed(3)}${c.op ? ` op=${c.op}` : ''}${c.delayFrames ? ` +${c.delayFrames}f` : ''}`);
+        }
     });
     return { lines, state: st };
 }
@@ -142,18 +161,19 @@ const CUE_TAPES = Object.freeze([
     { name: 'u7-puncher-kill', want: ['Enemies/Enemy.as:165', 'Enemies/Enemy.as:160'] },
     { name: 'r5-l37-burn', want: ['Player.as:863', 'Scenery/BurnableTree.as:33'] },
     { name: 'pit-fall-83', want: ['Player.as:725', 'Player.as:515'] },
+    { name: 'pit-fall-chain-85', want: ['Player.as:521', 'Player.as:515'] },
     { name: 'r5-swim-cross', want: ['Player.as:551', 'Player.as:685', 'Teleporter.as:109'] },
     { name: 'r5-l40-part0', want: ['Projectiles/Explosion.as:48', 'Puzzlements/ButtonRoom.as:72', 'Puzzlements/BreakableRock.as:62'] },
     { name: 'pushblock-l65-reach-l63', want: ['Puzzlements/PushableBlock.as:87', 'Player.as:821'] },
     { name: 'u15-turret-spit', want: ['Projectiles/TurretSpit.as:37', 'Player.as:1388'] },
-    { name: 'f1-l5-lock-removal', want: ['Puzzlements/ArrowTrap.as:56'] },
+    { name: 'f1-l5-lock-removal', want: ['Puzzlements/ArrowTrap.as:56', 'Projectiles/Arrow.as:59'] },
     { name: 'stance-l46-chest', want: ['Chest.as:74'] },
     { name: 'r6-watcher-talk', want: ['Game.as:1719', 'NPCs/NPC.as:198'] },
     { name: 'r2-walk-1-sword-shield', want: ['Teleporter.as:109'] },
     { name: 'prox-l38-chest', want: ['Puzzlements/Pulser.as:65'] },
     // ── the bosses (slice `seedling-js-sfx-cues`): ≥ 1 tape per boss, each family's sites in its golden ──
     { name: 'r6-shield-kill', want: ['Enemies/ShieldBoss.as:146', 'Enemies/Enemy.as:165', 'Enemies/Enemy.as:160'] },
-    { name: 'r6-owl-kill', want: ['Enemies/Grenade.as:135', 'Enemies/Enemy.as:165', 'Enemies/Enemy.as:160'] },
+    { name: 'r6-owl-kill', want: ['Enemies/Grenade.as:135', 'Enemies/Enemy.as:165', 'Enemies/Enemy.as:160', 'Scenery/RockFall.as:76'] },
     { name: 'r6-totem-kill', want: ['Enemies/BossTotem.as:294', 'Enemies/BossTotem.as:369', 'Enemies/BossTotem.as:455', 'Enemies/BossTotem.as:456',
         'Enemies/BossTotem.as:478', 'Projectiles/Explosion.as:48', 'Enemies/Enemy.as:160'] },
     { name: 'lavaboss-witness/kof-policy-kill', want: ['Enemies/LavaBoss.as:220', 'Enemies/LavaBoss.as:247', 'Projectiles/Explosion.as:48'] },
@@ -162,14 +182,30 @@ const CUE_TAPES = Object.freeze([
     { name: 'lights-witness/lights-solve-sword', want: ['Scenery/LightBossTotem.as:50', 'Enemies/LightBoss.as:69', 'Enemies/Enemy.as:165',
         'Enemies/Enemy.as:160'] },
     { name: 'chaser-witness/bulb-l77-lava', want: ['Enemies/Bulb.as:61'] },
-    { name: 'r5-bobboss-fire', want: ['Enemies/Enemy.as:165', 'Enemies/Enemy.as:160'] },
+    { name: 'r5-bobboss-fire', want: ['Enemies/Enemy.as:165', 'Enemies/Enemy.as:160', 'Scenery/FallRockLarge.as:102'] },
+    // ── the rest of the room (same slice): traps, chasers' animation starts, machines, falling things, the blizzard ──
+    { name: 'f4-l8-sandtraps', want: ['Enemies/SandTrap.as:62'] },
+    { name: 'darktrap-witness/darktrap2-l63-step145-light', want: ['Enemies/DarkTrap.as:35'] },
+    { name: 'stand:45:64,70:120', want: ['Enemies/IceTrap.as:44', 'Game.as:1206'] },
+    { name: 'stand:45:64,70:30:down', want: ['Game.as:1206', 'Game.as:1207'] },
+    { name: 'stand:29:112,144:60:up', want: ['Scenery/FallRock.as:82'] },
+    { name: 'u7-puncher-punch', want: ['Enemies/Puncher.as:115'] },
+    { name: 'bobsoldier-kill', want: ['Enemies/BobSoldier.as:105'] },
+    { name: 'r8-l6-bob-contact', want: ['Enemies/Bob.as:72'] },
+    { name: 'drill-witness/drill-l28-pair', want: ['Enemies/Drill.as:102', 'Enemies/Drill.as:108'] },
+    { name: 'prox-l40-turret-volley', want: ['Projectiles/IceTurretBlast.as:36'] },
+    { name: 'crusher-l42-round-trip', want: ['Puzzlements/Crusher.as:79'] },
+    { name: 'ladder2-l104-beam', want: ['Puzzlements/BeamTower.as:85'] },
+    { name: 'u14-moonrock-beam', want: ['Scenery/Moonrock.as:94', 'Scenery/Moonrock.as:116'] },
+    { name: 'rope-witness/rope-l28-cut', want: ['Puzzlements/RopeStart.as:47'] },
 ]);
 
 describe('2. THE CUE PINS — on real tapes the per-tick cue list is the committed golden', () => {
     for (const tape of CUE_TAPES) {
         it(`${tape.name}: the cue list per tick; it contains ${tape.want.join(', ')}`, () => {
             const { lines, state } = cueLines(tape.name);
-            const path = join(GOLDENS, `${tape.name.replaceAll('/', '__')}.txt`);
+            // a golden's file name: `/` → `__`, a stand's `:` and `,` → `_` (portable to every checkout)
+            const path = join(GOLDENS, `${tape.name.replaceAll('/', '__').replace(/[:,]/g, '_')}.txt`);
             if (process.env.UPDATE_SOUND_GOLDENS) {
                 mkdirSync(GOLDENS, { recursive: true });
                 writeFileSync(path, `${lines.join('\n')}\n`);
@@ -187,7 +223,7 @@ describe('2. THE CUE PINS — on real tapes the per-tick cue list is the committ
         let st = null;
         const at = [];
         drive('u15-turret-spit', (t, run) => {
-            const r = stepSoundCues(st, soundCueView(run, { record: RECORDS.get(run.level) }), t, { lengthFrames });
+            const r = stepSoundCues(st, viewOf(run), t, { lengthFrames });
             st = r.state;
             for (const c of r.cues) if (c.site === 'Player.as:1388') at.push([t, run.playerHits.at(-1).t]);
         });
@@ -203,7 +239,7 @@ function cuesOf(name) {
     const out = [];
     let last = null;
     drive(name, (t, run) => {
-        const r = stepSoundCues(st, soundCueView(run, { record: RECORDS.get(run.level) }), t, { lengthFrames });
+        const r = stepSoundCues(st, viewOf(run), t, { lengthFrames });
         st = r.state;
         last = run;
         out.push(...r.cues.map((c) => ({ ...c, t })));
@@ -271,6 +307,52 @@ describe('2b. THE BOSSES — each family\'s cues tie out against its own ledger 
     }, 120000);
 });
 
+describe('2b. THE ROOM — the other families tie out against their own ledgers', () => {
+    it('the ice turret: three IceTurretBlast cues per volley; the drill: a cue per axis a hop moved', () => {
+        const turret = cuesOf('prox-l40-turret-volley');
+        expect(countOf(turret.cues, 'Projectiles/IceTurretBlast.as:36')).toBe(3 * turret.run.volleys.length);
+        const drill = cuesOf('drill-witness/drill-l28-pair');
+        const hops = drill.run.drills.events.filter((e) => e.kind === 'hop').length;
+        const axes = countOf(drill.cues, 'Enemies/Drill.as:102') + countOf(drill.cues, 'Enemies/Drill.as:108');
+        expect(axes).toBeGreaterThanOrEqual(hops);
+        expect(axes).toBeLessThanOrEqual(2 * hops);
+    }, 120000);
+    it('the rope: one cue per `ropePulls` row; the Owl\'s rocks: one per `owlRockLandings` row', () => {
+        const rope = cuesOf('rope-witness/rope-l28-cut');
+        expect(countOf(rope.cues, 'Puzzlements/RopeStart.as:47')).toBe(rope.run.ropePulls.length);
+        const owl = cuesOf('r6-owl-kill');
+        expect(countOf(owl.cues, 'Scenery/RockFall.as:76')).toBe(owl.run.owlRockLandings.length);
+    }, 120000);
+    it('the held FallRock: its landing is DELAYED into the hold, short of the freeze\'s end', () => {
+        const { cues, run } = cuesOf('stand:29:112,144:60:up');
+        const rock = cues.filter((c) => c.site === 'Scenery/FallRock.as:82');
+        expect(rock).toHaveLength(1);
+        expect(rock[0].delayFrames).toBeGreaterThan(0);
+        expect(rock[0].delayFrames).toBeLessThanOrEqual(run.rockFalls[0].deadFrames);
+    }, 120000);
+    it('the crusher: re-played only once its ONE channel has run 10 %, never on two consecutive ticks', () => {
+        const { cues } = cuesOf('crusher-l42-round-trip');
+        const ticks = cues.filter((c) => c.site === 'Puzzlements/Crusher.as:79').map((c) => c.t);
+        expect(ticks.length).toBeGreaterThan(10);
+        const gap = Math.ceil(0.1 * lengthFrames('Other', 4));
+        for (let i = 1; i < ticks.length; i += 1) expect(ticks[i] - ticks[i - 1]).toBeGreaterThanOrEqual(gap);
+    }, 120000);
+    it('the blizzard: started once in a snowing room, re-gained as the player descends a gradient room, stopped on leaving', () => {
+        const { cues } = cuesOf('stand:45:64,70:30:down');
+        expect(countOf(cues, 'Game.as:1206')).toBe(1);
+        const vols = cues.filter((c) => c.site === 'Game.as:1207').map((c) => c.vol);
+        expect(vols.length).toBeGreaterThan(5);
+        for (let i = 1; i < vols.length; i += 1) expect(vols[i]).toBeLessThan(vols[i - 1]);   // lower in the room = fainter
+        // a hand-built exit: the same room, then a room with no snow → one stop
+        const run = { state: { x: 64, y: 70 }, level: 45, ticksCompleted: 0 };
+        const snowy = soundCueView(run, { record: RECORDS.get(45) });
+        let st = stepSoundCues(null, snowy, 0, { lengthFrames }).state;
+        st = stepSoundCues(st, snowy, 1, { lengthFrames }).state;
+        const out = stepSoundCues(st, { ...snowy, snowing: false }, 2, { lengthFrames });
+        expect(out.cues.map((c) => [c.site, c.op])).toEqual([['Game.as:1212', 'stop']]);
+    }, 120000);
+});
+
 describe('2c. THE SHIELDBOSS LATCH, by hand (`ShieldBoss.as:130-151`, `endAnim` `:192`)', () => {
     const base = soundCueView({ state: { x: 80, y: 120 }, level: 19, ticksCompleted: 0 });
     const view = (anim, hits = []) => ({ ...base, bosses: { ...base.bosses, shield: [{ id: 'sb', x: 80, y: 32, anim, hits: 0 }], shieldBossHits: hits } });
@@ -295,10 +377,12 @@ describe('2c. THE SHIELDBOSS LATCH, by hand (`ShieldBoss.as:130-151`, `endAnim` 
 });
 
 describe('2d. THE COSMETIC STREAM — the cues\' own, never the model\'s', () => {
-    it('the cue module imports nothing that carries the gameplay RNG', () => {
+    it('the cue module imports nothing that carries the gameplay RNG — the player box, three skins\' reducers, the rock replay', () => {
         const src = readFileSync(join(HERE, 'seedlingSoundCues.js'), 'utf8');
         const imports = [...src.matchAll(/^import .* from '([^']+)';$/gm)].map((m) => m[1]);
-        expect(imports).toEqual(['./playerPhysicsV2.js']);
+        // the skins are presentation reducers (pure, per tick); `fallRock.js` is the pure FallRock state machine the
+        // trap skin's hold replays — none of them draws on a model RNG stream
+        expect(imports).toEqual(['./playerPhysicsV2.js', './seedlingTrapSkin.js', './seedlingPuzzleSkin.js', './seedlingEnemySkin.js', './fallRock.js']);
         expect(src).not.toMatch(/\b(run|state|world|s)\.rng|rngState|\.cosRng/);
     });
     it('cosmeticStep is mulberry32, pure; the Boss 6 Move roll hits 1 in 90', () => {

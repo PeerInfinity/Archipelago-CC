@@ -1,0 +1,4 @@
+6 L29 Projectiles/TurretSpit.as:37 "Turret Shoot" -1 0.277 0.200
+6 L29 Projectiles/TurretSpit.as:37 "Turret Shoot" -1 0.364 -0.400
+9 L29 Puzzlements/Button.as:44 "Switch" -1 0.811 -0.100
+10 L29 Scenery/FallRock.as:82 "Rock" 0 1.000 0.000 +81f

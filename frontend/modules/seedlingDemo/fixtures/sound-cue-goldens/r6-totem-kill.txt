@@ -1,3 +1,6 @@
+63 L43 Scenery/FallRock.as:82 "Rock" 0 1.000 0.000 +95f
+63 L43 Scenery/FallRock.as:82 "Rock" 0 1.000 0.000 +95f
+63 L43 Scenery/FallRock.as:82 "Rock" 0 1.000 0.000 +97f
 63 L43 Enemies/BossTotem.as:294 "Other" 0 1.000 0.000
 221 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
 222 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000

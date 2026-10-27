@@ -1,6 +1,11 @@
 15 L12 Player.as:797 "Sword" -1 1.000 0.000
 16 L12 Enemies/Enemy.as:165 "Enemy Hit" 0 0.749 0.251
+31 L12 Enemies/Puncher.as:115 "Punch" -1 0.879 0.121
+42 L12 Enemies/Puncher.as:115 "Punch" -1 0.895 0.104
 46 L12 Player.as:797 "Sword" -1 1.000 0.000
 47 L12 Enemies/Enemy.as:165 "Enemy Hit" 0 0.898 0.102
+53 L12 Enemies/Puncher.as:115 "Punch" -1 0.898 0.102
+64 L12 Enemies/Puncher.as:115 "Punch" -1 0.898 0.102
+75 L12 Enemies/Puncher.as:115 "Punch" -1 0.898 0.102
 77 L12 Player.as:797 "Sword" -1 1.000 0.000
 78 L12 Enemies/Enemy.as:160 "Enemy Die" 0 0.898 0.102

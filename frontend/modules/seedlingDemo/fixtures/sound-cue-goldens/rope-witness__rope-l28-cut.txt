@@ -1,0 +1,15 @@
+1 L28 Player.as:797 "Sword" -1 1.000 0.000
+3 L28 Player.as:790 "Sword" -1 1.000 0.000
+9 L28 Player.as:790 "Sword" -1 1.000 0.000
+15 L28 Player.as:790 "Sword" -1 1.000 0.000
+21 L28 Player.as:797 "Sword" -1 1.000 0.000
+23 L28 Player.as:790 "Sword" -1 1.000 0.000
+29 L28 Player.as:790 "Sword" -1 1.000 0.000
+35 L28 Player.as:790 "Sword" -1 1.000 0.000
+39 L28 Enemies/Drill.as:108 "Drill" 0 1.000 0.000
+42 L28 Player.as:797 "Sword" -1 1.000 0.000
+44 L28 Player.as:790 "Sword" -1 1.000 0.000
+45 L28 Puzzlements/RopeStart.as:47 "Other" 3 1.000 0.000
+45 L28 Scenery/FallRock.as:82 "Rock" 0 1.000 0.000 +90f
+45 L28 Enemies/Drill.as:102 "Drill" 0 1.000 0.000
+45 L28 Enemies/Drill.as:108 "Drill" 0 1.000 0.000

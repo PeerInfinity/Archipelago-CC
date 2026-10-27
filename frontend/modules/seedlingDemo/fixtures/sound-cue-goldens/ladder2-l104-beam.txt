@@ -1,0 +1,45 @@
+5 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.187 0.006
+19 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.000 -1.000
+33 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.000 -0.920
+47 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.292 -0.708
+61 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.175 0.004
+75 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.145 -0.302
+89 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.194 -0.097
+103 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.931 -0.069
+113 L104 Player.as:797 "Sword" -1 1.000 0.000
+115 L104 Player.as:790 "Sword" -1 1.000 0.000
+117 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.139 -0.006
+121 L104 Player.as:790 "Sword" -1 1.000 0.000
+131 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.452 -0.006
+135 L104 Player.as:797 "Sword" -1 1.000 0.000
+137 L104 Player.as:790 "Sword" -1 1.000 0.000
+143 L104 Player.as:790 "Sword" -1 1.000 0.000
+144 L104 Enemies/Enemy.as:165 "Enemy Hit" 0 0.779 0.220
+145 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.519 -0.153
+155 L104 Player.as:797 "Sword" -1 1.000 0.000
+157 L104 Player.as:790 "Sword" -1 1.000 0.000
+159 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.792 -0.207
+163 L104 Player.as:790 "Sword" -1 1.000 0.000
+173 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.897 -0.007
+187 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.792 -0.207
+190 L104 Player.as:797 "Sword" -1 1.000 0.000
+192 L104 Player.as:790 "Sword" -1 1.000 0.000
+198 L104 Player.as:790 "Sword" -1 1.000 0.000
+201 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.565 -0.415
+204 L104 Player.as:790 "Sword" -1 1.000 0.000
+212 L104 Player.as:797 "Sword" -1 1.000 0.000
+214 L104 Player.as:790 "Sword" -1 1.000 0.000
+215 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.386 -0.604
+220 L104 Player.as:790 "Sword" -1 1.000 0.000
+226 L104 Player.as:790 "Sword" -1 1.000 0.000
+229 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.509 -0.004
+234 L104 Player.as:797 "Sword" -1 1.000 0.000
+236 L104 Player.as:790 "Sword" -1 1.000 0.000
+242 L104 Player.as:790 "Sword" -1 1.000 0.000
+243 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.540 -0.459
+248 L104 Player.as:790 "Sword" -1 1.000 0.000
+254 L104 Player.as:797 "Sword" -1 1.000 0.000
+256 L104 Player.as:790 "Sword" -1 1.000 0.000
+257 L104 Puzzlements/BeamTower.as:85 "Energy Beam" -1 0.387 0.010
+261 L105 Teleporter.as:109 "Room" 0 1.000 0.000
+261 L105 Enemies/Bob.as:72 "Enemy Hop" 0 0.368 -0.200
