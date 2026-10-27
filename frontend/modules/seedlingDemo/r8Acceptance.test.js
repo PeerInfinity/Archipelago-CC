@@ -411,6 +411,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'l12keyline-134-round',
             // ⛓ Seedling fidelity L40REREC: the two L40BUTTON witnesses retire `noDamage` (re-recorded damage on, L40).
             'l40button-l41-part0', 'l40button-l42-part0',
+            // ⛓ Seedling fidelity L100: the rock door's 8 px stance, booted in the sliver (L100's jellyfish and flyer).
+            'l100-sliver-rock',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -469,14 +471,15 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ fidelity APFLIP: −5 +6 (91) — `enc-l32-fallen-door`, `enc-l32-live-arrival`, `r9-solve-32`,
         // `swim-u5-bobboss-encounter` end in L32 now, `enc-l32-fire-return` is retired; the six `apb-*` above.
         // ⛓ Seedling fidelity L40REREC adds two (93) — `l40button-l41-part0`, `l40button-l42-part0` (L40, damage on).
-        expect(out.exposed).toBe(93);
+        // ⛓ Seedling fidelity L100 adds one (94) — `l100-sliver-rock` (L100, L101).
+        expect(out.exposed).toBe(94);
         expect(out.tapes).toEqual([
             'apb-l12-witch-reported', 'apb-l12-witch-server-sword', 'apb-l12-witch-slot-held',
             'apb-l32-both-reported', 'apb-l32-fresh-fire-held', 'apb-l43-totem-no-parts',
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
             'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch', 'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'enc-l12-witch', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
-            'ghostsword-l30-bobsoldier', 'l12keyline-134-round', 'l14-swordless-detour', 'l30keylock-pit224', 'l30keylock-pit224-before', 'l30keylock-pit240',
+            'ghostsword-l30-bobsoldier', 'l100-sliver-rock', 'l12keyline-134-round', 'l14-swordless-detour', 'l30keylock-pit224', 'l30keylock-pit224-before', 'l30keylock-pit240',
             'l40button-l41-part0', 'l40button-l42-part0',
             'ladder2-l104-beam',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
@@ -695,6 +698,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓ fidelity L40REREC's two L40 witnesses — the mirror rule.
             'l40button-l41-part0': { tape: {}, levels: [40] },
             'l40button-l42-part0': { tape: {}, levels: [40] },
+            // ⛓ fidelity L100's witness — the mirror rule.
+            'l100-sliver-rock': { tape: {}, levels: [100, 101] },
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes — the mirror rule.
             'axe-l61-reach-l63': { tape: {}, levels: [63] },
             'burn-l44-reach-exit': { tape: {}, levels: [45] },
@@ -945,7 +950,8 @@ function syntheticExposureIo(rows) {
         // ⛓ Seedling fidelity BOBSOLDIER: L30 joins — its six exposed tapes are declared there.
         // ⛓ KILLLOCK K1 at the wave-8 harvest: L45, L63, L104 and L105 join — the jellyfish rooms' declared tapes.
         // ⛓ Seedling fidelity PUSHBLOCK: L65 joins — its two spear-thrust witnesses are declared there.
-        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 30, 40, 45, 53, 63, 65, 104, 105]),
+        // ⛓ Seedling fidelity L100: L100 and L101 join — `l100-sliver-rock` is declared exposed there.
+        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 30, 40, 45, 53, 63, 65, 100, 101, 104, 105]),
     };
 }
 

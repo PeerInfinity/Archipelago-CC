@@ -26139,3 +26139,48 @@ is `CC/docs/cloud-reports/seedling-hammer-opportunistic-strike.md`.
   unfiltered — all red. The guard "no kill aim over an owed press" survives: no measured workload reaches it.
 
 ---
+
+
+### Seedling fidelity L100 — the rock door's swing stance asked on the 8 px lattice (`fineSwingStance`, OFF); the leg's waterfall and jellyfish named
+
+Wave 33, planner `seedling-fidelity-planning-15`. L100 → L101 (survey step 219, divergence leg 907). The report is
+`CC/docs/cloud-reports/seedling-fidelity-l100.md` (evidence beside it).
+
+**W0 — the grid.** `breakablerock@128,144` is the one door through L100's wall column x 128–143. Its near side is the
+8 px sliver x 120–127 between the `CliffSideMaskL` column at x 112 (opaque x 0–7 of each cell, y 48–159) and the rock.
+The 16 px ring offers that side only cell centres x 120, whose 4x5 box meets the mask, so the two cells that put the
+slash rect on the rock were both on the FAR side (x 152). The planner's mask collision was already pixel-exact
+(`plannerBlockerAt` → `maskHitsBox` at the node's box): the gap is the stance lattice, not the coverage queue's Q5.
+
+**D1 — the stance (`fineSwingStance`).** Once every 16 px cell has failed, `deriveSwingStance` asks the same pixel
+window on `FINE_LATTICE` (`breakStanceCandidates` takes a pitch; ±4 cells at 8 px), planned in the world as it is on the
+8 px lattice — `deriveKeylockStance`'s RULESREF arm, for the break and pull verbs. Witness (p4g, headless):
+`l100-sliver-rock`, the step-219 staging booted in the sliver at (124,60): down x 124 beside the masks (the brief's
+`cliffside0@112,96` among them), the swing from (124,141) breaks the rock at t84, the door, L101 at t185, 0 hits; the game
+equals the committed oracle and the model reproduces it (186 observations; `save.time` 8812 = 8812). Producer
+`plan-seedling-l100-witness.mjs` (`--check` re-derives it).
+
+**D2 — the rest of the leg (STOP, named).** From the real arrival (40,104) the stance now plans
+((40,104) → (60,44) → (124,44) → (124,140)), and the leg refuses inside the chaser kill rung instead. Two gaps, both
+game-witnessed at 0 px with `probe-seedling-chaser-mobiles --class=Jellyfish` (all four jellyfish |Δ| 0):
+- **The waterfall's top is not a corridor.** `Player.as:1557` pushes on a waterfall unless the Feather holds AND the
+  player rises; the planner's straight crossing at y 44 is carried down into the pool (with the jellyfish removed in
+  memory, the walk stalls at (110.8,140) against `cliffside0@112,128`). The crossing that exists is to swim UP into the
+  row-1 pool, along to the wall (x 110), then down-right into the sliver (model: (122.3,47.4) at t151). The planner's
+  edge model owns that (`planWaypoints`, read-only to this arc).
+- **Four jellyfish** (`Jellyfish.as`: chase within 160 px, no line test, 0.8 px/tick) hold the waterfall column at the
+  player's y; every approach meets one (game: `jellyfish@80,112` at t89 on the straight crossing, `jellyfish@80,16` at
+  t126 on the swim). The solver's chaser kill arm kills two and its dwell is hit at t308. Hammer arc.
+- A Ghost Spear thrust from the pool (x ≈ 110) does break the rock in the model (the 32x5 rect ignores the mask), but
+  the pool does not reach the door past the mask, so the sliver is owed either way.
+
+**Movers (local, full survey 240 steps, ON vs OFF).** 201/240 both arms; ONE mover, step 219 (REFUSED → REFUSED: the
+swing-stance refusal becomes the jellyfish dwell's). Bounded set ON: only the defaults pin. Identity block equal OFF
+(md5 `590b0b88`).
+
+**Trap candidates.**
+- A refusal that names a mask is not always about the mask. Draw the grid at both pitches before touching collision.
+- A corridor across a waterfall is a corridor only upward. A planner that prices a waterfall tile as floor certifies a
+  crossing the push takes away.
+- A witness booted where the trouble is not (inside the sliver) isolates a verb from its approach; say so, and witness
+  the approach on its own.
