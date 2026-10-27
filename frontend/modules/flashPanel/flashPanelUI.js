@@ -41,6 +41,7 @@ import {
 } from './seedlingGameSpeedSettings.js';
 import {
   SOUND_SETTING_KEY, START_SETTING_KEY, VOLUME_SETTING_KEY, soundMode, soundPageParams, soundVolume, startMode,
+  MUSIC_SETTING_KEY, MUSIC_VOLUME_SETTING_KEY, musicPageParams,
 } from './seedlingSoundSettings.js';
 import { RUFFLE_CDN } from './ruffleCdn.js';
 
@@ -118,6 +119,8 @@ const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'seedlingJsSpeed', label: 'Game speed', when: 'js', control: 'speed' },
   { prop: 'seedlingJsSound', label: 'Sound', when: 'js' },
   { prop: 'seedlingJsVolume', label: 'Volume', when: 'js' },
+  { prop: 'seedlingJsMusic', label: 'Music', when: 'js' },
+  { prop: 'seedlingJsMusicVolume', label: 'Music volume', when: 'js' },
   { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
   { prop: 'touchControls', label: 'Touch controls', when: 'touch' },
   { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
@@ -351,10 +354,13 @@ export class FlashPanelUI {
         await this._refreshJsSpeed(data.key === SPEED_SETTING_KEY ? data.value : undefined);
         this._applyJsSpeed();
       }
-      if (data?.key === SOUND_SETTING_KEY || data?.key === VOLUME_SETTING_KEY || data?.key === '*') {
-        // ⛓ SOUND EFFECTS — presentation only: applied to a mounted JS page LIVE, never a re-mount.
+      if (data?.key === SOUND_SETTING_KEY || data?.key === VOLUME_SETTING_KEY || data?.key === MUSIC_SETTING_KEY
+        || data?.key === MUSIC_VOLUME_SETTING_KEY || data?.key === '*') {
+        // ⛓ SOUND EFFECTS (⛓ MUSIC too) — presentation only: applied to a mounted JS page LIVE, never a re-mount.
         await this._refreshJsSound(data.key === SOUND_SETTING_KEY ? data.value : undefined,
-          data.key === VOLUME_SETTING_KEY ? data.value : undefined);
+          data.key === VOLUME_SETTING_KEY ? data.value : undefined,
+          data.key === MUSIC_SETTING_KEY ? data.value : undefined,
+          data.key === MUSIC_VOLUME_SETTING_KEY ? data.value : undefined);
         this._applyJsSound();
       }
       if (data?.key === TOUCH_SETTING_KEY || data?.key === '*') {
@@ -777,17 +783,24 @@ export class FlashPanelUI {
   }
 
   /** ⛓ SOUND EFFECTS — cache the sound switch, volume and start mode (`seedlingSoundSettings.js`); undefined = read it. */
-  async _refreshJsSound(sound, volume) {
+  async _refreshJsSound(sound, volume, music, musicVolume) {
     let s = sound;
     let v = volume;
+    let m = music;
+    let mv = musicVolume;
     let st;
     try {
       if (s === undefined) s = await settingsManager.getSetting(SOUND_SETTING_KEY, 'on');
       if (v === undefined) v = await settingsManager.getSetting(VOLUME_SETTING_KEY, 100);
+      if (m === undefined) m = await settingsManager.getSetting(MUSIC_SETTING_KEY, 'on');
+      if (mv === undefined) mv = await settingsManager.getSetting(MUSIC_VOLUME_SETTING_KEY, 100);
       st = await settingsManager.getSetting(START_SETTING_KEY, 'tests-auto');
     } catch { /* keep the cached values */ }
     if (s !== undefined) this._jsSound = soundMode(s);
     if (v !== undefined) this._jsVolume = soundVolume(v);
+    // ⛓ MUSIC — the music switch and volume (`seedlingSoundSettings.js`)
+    if (m !== undefined) this._jsMusic = soundMode(m);
+    if (mv !== undefined) this._jsMusicVolume = soundVolume(mv);
     if (st !== undefined) this._jsStart = startMode(st, globalThis.location?.search);
   }
 
@@ -798,7 +811,8 @@ export class FlashPanelUI {
     try { handle = this.adapter?._getWin?.()?.__seedlingJsSound ?? null; } catch { handle = null; }
     if (!handle?.set) return;
     try {
-      handle.set({ on: (this._jsSound ?? 'on') === 'on', volume: (this._jsVolume ?? 100) / 100 });
+      handle.set({ on: (this._jsSound ?? 'on') === 'on', volume: (this._jsVolume ?? 100) / 100,
+        music: (this._jsMusic ?? 'on') === 'on', musicVolume: (this._jsMusicVolume ?? 100) / 100 });
     } catch (err) {
       this._panelLog(`JS page sound could not be applied: ${err.message}`);
     }
@@ -1963,7 +1977,9 @@ export class FlashPanelUI {
             graphicsPageParams(this._jsGraphics, this._jsCamera, this._jsLights, this._jsEffects),
             gameSpeedPageParam(this._jsSpeed),
             // ⛓ SOUND EFFECTS — the sound switch and volume (none at on / 100), and `start=click` unless an automated run.
-            soundPageParams(this._jsSound, this._jsVolume, this._jsStart)].filter(Boolean);
+            soundPageParams(this._jsSound, this._jsVolume, this._jsStart),
+            // ⛓ MUSIC — the music switch and volume (none at on / 100).
+            musicPageParams(this._jsMusic, this._jsMusicVolume)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm(epoch);

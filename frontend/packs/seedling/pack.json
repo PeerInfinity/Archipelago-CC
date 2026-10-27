@@ -1,12 +1,13 @@
 {
   "schema_version": 1,
   "id": "seedling",
-  "title": "Seedling — the original graphics and sound effects",
+  "title": "Seedling — the original graphics, sound effects and music",
   "licence": "Unlicense",
   "credit": "Seedling art by Connor Ullmann; music and sound effects by Rekcahdam (vendor/seedling/README); vendor/seedling/LICENSE (the Unlicense) covers the whole repository.",
-  "source": "vendor/seedling/assets/graphics (PeerInfinity/Seedling), copied byte for byte; vendor/seedling/assets/sound, as src/Music.as names it",
+  "source": "vendor/seedling/assets/graphics (PeerInfinity/Seedling), copied byte for byte; vendor/seedling/assets/sound, as src/Music.as names it; its songs and jingles, as src/Music.as names them",
   "layers": {
     "art": "art/manifest.json",
-    "sfx": "sfx/manifest.json"
+    "sfx": "sfx/manifest.json",
+    "music": "music/manifest.json"
   }
 }

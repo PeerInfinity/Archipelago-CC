@@ -32,19 +32,21 @@
 /**
  * The layers a pack may provide today. A new consumer adds its name here.
  * `art` — the art library (`artLibrary/`); `sfx` — the sound-effect library
- * (`sfxLibrary/`, ⛓ SOUND EFFECTS, ⚖ the user 2026-10-26).
+ * (`sfxLibrary/`, ⛓ SOUND EFFECTS, ⚖ the user 2026-10-26); `music` — the
+ * music library (`musicLibrary/`, ⛓ MUSIC, ⚖ the user 2026-10-27; reserved
+ * until it was built).
  */
-export const KNOWN_LAYERS = Object.freeze(['art', 'sfx']);
+export const KNOWN_LAYERS = Object.freeze(['art', 'sfx', 'music']);
 
 /**
  * Layer names RESERVED for a consumer that is planned but not built: a pack
  * that declares one is refused with that said, rather than as an unknown
- * name. `music` — the music library (the slice after the sound effects).
+ * name. None today (`music` was, until the music library landed).
  */
-export const RESERVED_LAYERS = Object.freeze(['music']);
+export const RESERVED_LAYERS = Object.freeze([]);
 
-/** The registry's stack tables, one per consumer kind: `graphics` (the art) and `sfx`. */
-export const STACK_KINDS = Object.freeze(['graphics', 'sfx']);
+/** The registry's stack tables, one per consumer kind: `graphics` (the art), `sfx` and `music`. */
+export const STACK_KINDS = Object.freeze(['graphics', 'sfx', 'music']);
 
 /** A key is `<namespace>:<path>`: lower-camel namespace, a non-empty path. */
 export const KEY_PATTERN = /^[a-z][a-zA-Z0-9-]*:[A-Za-z0-9_./-]+$/;
@@ -65,7 +67,7 @@ const fail = (where, message) => { throw new ContentPackError(`content pack ${wh
  * from: a pack whose `id` disagrees with its directory is refused (two names
  * for one pack would make an override order ambiguous).
  */
-export function parsePack(json, expectedId = null) {
+export function parsePack(json, expectedId = null, { known = KNOWN_LAYERS, reserved = RESERVED_LAYERS } = {}) {
     const where = `"${expectedId ?? json?.id ?? '?'}"`;
     if (!json || typeof json !== 'object' || Array.isArray(json)) fail(where, 'pack.json is not an object');
     if (json.schema_version !== 1) fail(where, `schema_version ${JSON.stringify(json.schema_version)} (this loader reads 1)`);
@@ -76,8 +78,8 @@ export function parsePack(json, expectedId = null) {
     }
     if (!json.layers || typeof json.layers !== 'object' || Array.isArray(json.layers)) fail(where, 'layers is missing');
     for (const [name, path] of Object.entries(json.layers)) {
-        if (RESERVED_LAYERS.includes(name)) fail(where, `layer "${name}" is reserved for a library that is not built yet (known: ${KNOWN_LAYERS.join(', ')})`);
-        if (!KNOWN_LAYERS.includes(name)) fail(where, `layer "${name}" is not one this loader knows (${KNOWN_LAYERS.join(', ')})`);
+        if (reserved.includes(name)) fail(where, `layer "${name}" is reserved for a library that is not built yet (known: ${known.join(', ')})`);
+        if (!known.includes(name)) fail(where, `layer "${name}" is not one this loader knows (${known.join(', ')})`);
         if (typeof path !== 'string' || !path || path.startsWith('/') || path.includes('..')) {
             fail(where, `layer "${name}" path ${JSON.stringify(path)} must be a relative path inside the pack`);
         }
@@ -86,8 +88,8 @@ export function parsePack(json, expectedId = null) {
 }
 
 /**
- * Validate the registry `packs.json`; returns `{ packs: [ids], stacks: {name: [ids]}, sfxStacks: {name: [ids]} }`.
- * `stacks` is the `graphics` table (its name predates the second kind); `sfxStacks` is `sfx`'s.
+ * Validate the registry `packs.json`; returns `{ packs: [ids], stacks: {name: [ids]}, sfxStacks: {…}, musicStacks: {…} }`.
+ * `stacks` is the `graphics` table (its name predates the second kind); `sfxStacks` is `sfx`'s, `musicStacks` `music`'s.
  */
 export function parseRegistry(json) {
     if (!json || json.schema_version !== 1 || !Array.isArray(json.packs)) {
@@ -107,7 +109,7 @@ export function parseRegistry(json) {
         }
         tables[kind] = Object.freeze(stacks);
     }
-    return Object.freeze({ packs: Object.freeze(ids), stacks: tables.graphics, sfxStacks: tables.sfx });
+    return Object.freeze({ packs: Object.freeze(ids), stacks: tables.graphics, sfxStacks: tables.sfx, musicStacks: tables.music });
 }
 
 /**
