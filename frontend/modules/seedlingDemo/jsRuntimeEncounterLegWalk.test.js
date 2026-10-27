@@ -12,7 +12,7 @@
  *
  * ── THE MUTATION LIST (each predicted red by name) ──
  *   m1 the blanket "walked on the wasm runtime" refusal re-instated in `validateGoal`
- *        -> every walk row reds on `walkTo` (ok false).
+ *        -> 8 of 9 red (every row but the fixture: the walks on `walkTo` ok false, the refusals on their wording).
  *   m2 completion on the TAG (the encounter arm of `locationServed` dropped: `collected.has("32:null")`)
  *        -> the Bob and Witch rows red: never DONE (the plan plays out and is refuted).
  *   m3 completion on ANY of the level's reports (`wasmPlayback.encounterReportServed`: the kill {32,3} too)
