@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/procgen/extract-seedling-music-pack.mjs — do not edit; regenerate and --check",
+  "source": "vendor/seedling/src/Music.as (every `sndO…:Sfx` no `sounds` set holds) + vendor/seedling/assets/sound, copied byte for byte",
+  "bytes": 6211608,
+  "tracks": {
+    "seedling:music/yes-master": {
+      "title": "Yes, Master",
+      "file": "tracks/Yes, Master.mp3",
+      "bytes": 286754,
+      "seconds": 51.6702,
+      "as3": "Music.as:165 sndOYesMaster"
+    },
+    "seedling:music/found-it": {
+      "title": "Found It!",
+      "file": "tracks/Found It!.mp3",
+      "bytes": 80860,
+      "seconds": 14.81143,
+      "as3": "Music.as:168 sndOFoundIt"
+    },
+    "seedling:music/seal-piece": {
+      "title": "One Piece",
+      "file": "tracks/One Piece.mp3",
+      "bytes": 8684,
+      "seconds": 1.61959,
+      "as3": "Music.as:171 sndOSealPiece"
+    },
+    "seedling:music/seal": {
+      "title": "Of The Puzzle",
+      "file": "tracks/Of The Puzzle.mp3",
+      "bytes": 4680,
+      "seconds": 1.01878,
+      "as3": "Music.as:174 sndOSeal"
+    },
+    "seedling:music/key": {
+      "title": "The Key",
+      "file": "tracks/The Key.mp3",
+      "bytes": 58006,
+      "seconds": 11.65061,
+      "as3": "Music.as:177 sndOKey"
+    },
+    "seedling:music/menu": {
+      "title": "In The Beginning",
+      "file": "tracks/In The Beginning.mp3",
+      "bytes": 443326,
+      "seconds": 82.93878,
+      "as3": "Music.as:180 sndOMenu"
+    },
+    "seedling:music/theme": {
+      "title": "A Warrior's Journey",
+      "file": "tracks/A Warrior's Journey.mp3",
+      "bytes": 431262,
+      "seconds": 79.17714,
+      "as3": "Music.as:183 sndOTheme"
+    },
+    "seedling:music/theme-night": {
+      "title": "Warriors Don't Sleep",
+      "file": "tracks/Warriors Don't Sleep.mp3",
+      "bytes": 418834,
+      "seconds": 79.17714,
+      "as3": "Music.as:186 sndOThemeNight"
+    },
+    "seedling:music/my-lifes-purpose": {
+      "title": "My Life's Purpose",
+      "file": "tracks/My Life's Purpose.mp3",
+      "bytes": 608296,
+      "seconds": 109.63592,
+      "as3": "Music.as:189 sndOMyLifesPurpose"
+    },
+    "seedling:music/the-watcher": {
+      "title": "The Watcher",
+      "file": "tracks/The Watcher.mp3",
+      "bytes": 66378,
+      "seconds": 11.9902,
+      "as3": "Music.as:192 sndOTheWatcher"
+    },
+    "seedling:music/my-first-dungeon": {
+      "title": "My First Dungeon",
+      "file": "tracks/My First Dungeon.mp3",
+      "bytes": 217256,
+      "seconds": 40.01959,
+      "as3": "Music.as:195 sndOMyFirstDungeon"
+    },
+    "seedling:music/stuck-in-the-forest": {
+      "title": "Stuck In The Forest",
+      "file": "tracks/Stuck In The Forest.mp3",
+      "bytes": 580476,
+      "seconds": 106.34449,
+      "as3": "Music.as:198 sndOStuckInTheForest"
+    },
+    "seedling:music/mysterious-magic": {
+      "title": "Mysterious Magic",
+      "file": "tracks/Mysterious Magic.mp3",
+      "bytes": 574808,
+      "seconds": 105.58694,
+      "as3": "Music.as:201 sndOMysteriousMagic"
+    },
+    "seedling:music/cold-blooded": {
+      "title": "Cold Blooded",
+      "file": "tracks/Cold Blooded.mp3",
+      "bytes": 419796,
+      "seconds": 79.98694,
+      "as3": "Music.as:204 sndOColdBlooded"
+    },
+    "seedling:music/shadow": {
+      "title": "How To Lose Your Shadow 101",
+      "file": "tracks/How To Lose Your Shadow 101.mp3",
+      "bytes": 732134,
+      "seconds": 132.62367,
+      "as3": "Music.as:207 sndOShadow"
+    },
+    "seedling:music/lava-is-hot": {
+      "title": "Lava Is Hot",
+      "file": "tracks/Lava Is Hot.mp3",
+      "bytes": 532610,
+      "seconds": 97.95918,
+      "as3": "Music.as:210 sndOLavaIsHot"
+    },
+    "seedling:music/the-sky": {
+      "title": "The Sky",
+      "file": "tracks/The Sky.mp3",
+      "bytes": 572780,
+      "seconds": 103.36653,
+      "as3": "Music.as:213 sndOTheSky"
+    },
+    "seedling:music/boss": {
+      "title": "Fight Me Like A Boss",
+      "file": "tracks/Fight Me Like A Boss.mp3",
+      "bytes": 174668,
+      "seconds": 31.97388,
+      "as3": "Music.as:216 sndOBoss"
+    }
+  }
+}

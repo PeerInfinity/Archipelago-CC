@@ -1,0 +1,5 @@
+0 L112 Game.as:1237 target silence
+4 L112 Enemies/FinalBoss.as:105 levelMusics[112]=13
+5 L112 Game.as:1233 target song seedling:music/boss
+706 L112 Enemies/FinalBoss.as:235 levelMusics[112]=-1
+707 L112 Game.as:1237 target silence

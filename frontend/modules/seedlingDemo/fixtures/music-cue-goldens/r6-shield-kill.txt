@@ -1,0 +1,6 @@
+0 L19 Game.as:1237 target silence
+0 L19 Enemies/ShieldBoss.as:77 levelMusics[19]=13
+1 L19 Game.as:1233 target song seedling:music/boss
+433 L19 Enemies/ShieldBoss.as:94 levelMusics[19]=-1
+434 L19 Game.as:1237 target silence
+456 L19 Pickups/BossKey.as:31 jingle seedling:music/key 0.5
