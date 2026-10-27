@@ -1,0 +1,22 @@
+ ✓ frontend/modules/seedlingDemo/levelWorld.test.js (127 tests) 938ms
+ ✓ frontend/modules/seedlingDemo/procgenWeigh.test.js (16 tests) 3616ms
+ ✓ frontend/modules/seedlingDemo/presses.test.js (31 tests) 16ms
+ ✓ frontend/modules/seedlingDemo/chasers.test.js (34 tests) 23ms
+ ✓ frontend/modules/seedlingDemo/breakVerb.test.js (14 tests) 857ms
+ ✓ frontend/modules/seedlingDemo/fidelityLights.test.js (22 tests) 1658ms
+ ✓ frontend/modules/seedlingDemo/levelRun.test.js (136 tests) 15230ms
+ ✓ frontend/modules/seedlingDemo/fidelityProximity.test.js (16 tests) 4728ms
+ ✓ frontend/modules/seedlingDemo/fidelityWand.test.js (10 tests) 2197ms
+ ✓ frontend/modules/flashPanel/seedlingWasmPlayback.test.js (139 tests) 22758ms
+ ✓ frontend/modules/seedlingDemo/fidelityStance.test.js (15 tests) 32625ms
+ ✓ frontend/modules/seedlingDemo/fidelityAxePriced.test.js (19 tests) 46493ms
+ ✓ frontend/modules/seedlingDemo/fidelityRope.test.js (14 tests) 9566ms
+ ✓ frontend/modules/seedlingDemo/fidelityFireMove.test.js (7 tests) 11849ms
+ ✓ frontend/modules/seedlingDemo/fidelityBurn.test.js (16 tests) 2816ms
+ ✓ frontend/modules/seedlingDemo/contactFidelityHook.test.js (101 tests) 480ms
+ ✓ frontend/modules/seedlingDemo/levelWorldBroadPhase.test.js (2 tests) 4279ms
+ ✓ frontend/modules/seedlingDemo/fidelityL14.test.js (6 tests) 4085ms
+ ✓ frontend/modules/seedlingDemo/spearPush.test.js (6 tests) 8648ms
+ ✓ frontend/modules/seedlingDemo/fidelityRopeStance.test.js (18 tests) 105674ms
+ Test Files  20 passed (20)
+      Tests  749 passed (749)

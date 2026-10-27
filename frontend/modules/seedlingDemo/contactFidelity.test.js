@@ -321,7 +321,13 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L40LATCH D1b (wave 32): a BobSoldier killed on the move, behind its blade — shipped OFF.
             chaserOrbitKill: true,
             // ⛓ fidelity L32BOB (wave 32): the Bob Boss forecast carries the swing in flight — ships OFF.
-            encounterSwingInFlight: true });
+            encounterSwingInFlight: true,
+            // ⛓ fidelity RULESREF D2 (wave 32): a closed spear bridge on the frontier opened by a thrust — ships OFF.
+            spearBridgeVerb: false,
+            // ⛓ fidelity RULESREF D3 (wave 32): a frontier with no actionable entry flooded again at 8 px — ships OFF.
+            fineFrontierFlood: false,
+            // ⛓ fidelity RULESREF D1 (wave 32): the walk's gate times a puncher's punch — ships OFF.
+            punchGateTimed: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -1,0 +1,7 @@
+PASS: A: CONTROL — before the jump "Starting House - Chest" is NOT checked — []
+PASS: A: CONTROL — 16 seals in the game, still outside L86: "Starting House - Chest" is NOT checked — {"level":0,"checked":[]}
+PASS: A: 16 seals in the game, the player in L86 — {"level":86,"x":48,"y":64,"jumps":2,"replaced":{"level":86,"x":48,"y":48}}
+PASS: A: Chest.checkBySeal REMOVED the unopened chest — its flag {86,0} is cleared — [{"tag":0,"level":86}]
+PASS: A: the game REPORTED the removal — pendingCheck "<seq>|86|0|0" — "3|86|0|0"
+PASS: A: ⚖ the removal AWARDS the check — the binding marked "Starting House - Chest" checked — ["Starting House - Chest"]
+ALL CHECKS PASSED

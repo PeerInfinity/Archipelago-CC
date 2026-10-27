@@ -1193,6 +1193,28 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
             }
             continue;
         }
+        /**
+         * ⛓⛓ fidelity RULESREF D1 (`CONTACT_FIDELITY.punchGateTimed`, OFF; the walk's gate hands `swordTick` for a room
+         * with a live puncher too, `solverBot.punchTickAt`) — a body whose ONE-tick forecast row carries `punch` is priced
+         * as the TRANSIT arm prices it: the punch box on the tick its wind-up ends, and the bare body (`Puncher.solids`
+         * holds `"Player"`, so its contact needs the player to walk INTO it) unless its own gate refuses the contact.
+         */
+        if (swordTimedNow && !sworded && CONTACT_FIDELITY.punchGateTimed) {
+            const f = swordTick.find((x) => x.id === c.id);
+            if (f && f.punch !== undefined) {
+                if (c.destroy) continue;
+                if (f.punch && f.punch.live && (f.punch.hitsPlayer || rectsOverlap(box, f.punch.rect))) {
+                    out.push({ kind: 'chaser', id: c.id,
+                        why: 'the punch, timed (one forecast tick at this box): the `attackPlayer` box off the body\'s '
+                            + 'edge ends its wind-up on the walk\'s first sample' });
+                    continue;
+                }
+                if (!plannerContactFree(f, 'on').contactFree && rectsOverlap(box, chaserBoxAt(f.tag ?? c.tag, f.x, f.y))) {
+                    out.push({ kind: 'chaser', id: c.id, why: 'the body, bare, one forecast tick on (its punch is timed)' });
+                }
+                continue;
+            }
+        }
         // ⛓ fidelity CORRIDOR: a forecast body that carries its contact gate's own timer is asked with it
         // (`contactHitsTimer`, `corridorBodyPricing` ON only) — the Player's later write in the tick is not the gate's.
         const bodyFree = perTick && plannerContactFree(c.contactHitsTimer !== undefined

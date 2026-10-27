@@ -102,7 +102,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ fidelity SEALDOOR: +3 (280) — `sealdoor-l113-clear`, `sealdoor-l113-exit`, `sealdoor-l113-noseal-control`.
         // ⛓ fidelity WATCHERTALK: +2 (282) — `watchertalk-l114-clear-16`, `watchertalk-l114-clear-32`.
         // ⛓ fidelity APFLIP: −1 +8 (289) — `enc-l32-fire-return` retired; the eight `apb-*` witnesses (p4g).
-        expect(names.length).toBe(289);
+        // ⛓ fidelity RULESREF: +1 (290) — `rulesref-l66-door` (p4g).
+        expect(names.length).toBe(290);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);
