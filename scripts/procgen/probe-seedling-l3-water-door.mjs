@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * MEASUREMENT (slice tile-primitives-whole-game-classify, branch only): Seedling's L3 door to L111
+ * MEASUREMENT (slices tile-primitives-whole-game-classify → tile-primitives-whole-game-tools): Seedling's L3 door to L111
  * (`out_teleporter_0_64`, tile [0,4], under `breakablerockghost@0,64 {tag 1}`), ON THE GAME: does the player need
  * the Conch (Progressive Swim) to reach it? Its only open neighbour is [1,4], WATER (tx 32 -> `Tile(..., 1)`,
  * `Game.as:2126-2127`); [0,3]/[0,5] are tx 48 = t 2, Solid. Without `canSwim` water starts a 10-frame drown
@@ -11,6 +11,12 @@
  * so the Conch is the one variable; both boot on [2,4] (32,64) and hold LEFT:
  *   dry   no Conch — the measurement: does the player reach L111?
  *   wet   the Conch — the control: the player swims [1,4] and takes the door into L111
+ *
+ * Measured (CI run 40425654108 at main f35f6d84d9): dry 0/3 never reaches L111 (drowns at x ≈ 21.2, `restartLevel`), wet 3/3
+ * reaches it at t ≈ 30 — the game needs Swim; the rules charge only the rock, so they are LOOSER here. The dry tape is a
+ * MEASUREMENT, never asserted: if the rules side starts charging Swim, the dry ROW is what to re-read.
+ * On CI (wasm, takes the box locally):
+ *   gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f probes=probe-seedling-l3-water-door.mjs -f args=--repeat=3
  *
  * Run: node scripts/procgen/probe-seedling-l3-water-door.mjs [--host=http://localhost:8000] [--only=dry,wet] [--repeat=N] [--dump]
  */
