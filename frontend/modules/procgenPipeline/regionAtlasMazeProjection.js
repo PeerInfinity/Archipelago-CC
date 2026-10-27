@@ -172,7 +172,7 @@ function createWorldBuilder(grid) {
  * (5,8), the only such tile in the game. Writing the second over the first silently dropped one (the whole-game
  * certifier's "Bob Boss is not priced"; no maze cell could ever check it). So a location whose cell is taken goes to the
  * nearest FREE floor cell — breadth-first in N E S W order through floor cells `mine` admits (the same piece of the
- * world), free = no item, obstacle or exit (`isExit`) — gated by its OWN rule, and the report names it
+ * world) that hold no obstacle and no exit (`isExit`), free = no item either — gated by its OWN rule, and the report names it
  * (`location_stacked`). No free cell throws. `toAtlas` maps a local cell to atlas tiles for the report.
  */
 function placeLocation(builder, [x, y], loc, { mine, isExit, note, toAtlas }) {
@@ -192,9 +192,11 @@ function placeLocation(builder, [x, y], loc, { mine, isExit, note, toAtlas }) {
         const [cx, cy] = queue.shift();
         for (const [nx, ny] of [[cx, cy - 1], [cx + 1, cy], [cx, cy + 1], [cx - 1, cy]]) {
             const key = `${nx},${ny}`;
-            if (seen.has(key) || !builder.isFloor(nx, ny) || !mine(nx, ny)) continue;
+            // Never THROUGH a gate or an exit: a spill behind a lock, in a part reachable another way, would charge only
+            // its own rule — looser than the game (designer review, session tile-primitives-sphere-order-4).
+            if (seen.has(key) || !builder.isFloor(nx, ny) || !mine(nx, ny) || builder.obstacles.has(key) || isExit(nx, ny)) continue;
             seen.add(key);
-            if (!builder.items.has(key) && !builder.obstacles.has(key) && !isExit(nx, ny)) {
+            if (!builder.items.has(key)) {
                 if (loc.access_rule) builder.gate(nx, ny, loc.access_rule);
                 builder.items.set(key, entry);
                 note({

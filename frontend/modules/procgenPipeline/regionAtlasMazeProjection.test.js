@@ -569,6 +569,21 @@ describe('a location', () => {
             .toThrow(/"Vault - Drop".*"Vault - Kill".*no free floor cell/);
     });
 
+    it('a spill never crosses a gate: it takes the farther cell on the open side, or throws', () => {
+        // A level world floors a gated cell (K) in the same world. (2,0) holds both; the gate (3,0) has a free cell (4,0)
+        // behind it, nearer than the open side's (0,0) — two steps west, past (1,0), which a third location holds.
+        const region = (rows) => ({ region_id: 'falls', bounds: { x: 0, y: 0, w: rows[0].length, h: 1 }, map_ref: 9, exits: [], locations: [
+            ...(rows[0][1] === '.' ? [{ name: 'Falls - Chest', tile: [1, 0], vanilla_item: 'Ruby' }] : []),
+            { name: 'Falls - Kill', tile: [2, 0], vanilla_item: 'Seal' },
+            { name: 'Falls - Drop', tile: [2, 0], vanilla_item: 'Fire' },
+        ] });
+        const spilled = (rows) => projectLevelWorld(region(rows), gridFromAscii(rows), noWiring, []).sidecars.falls.playable_payload;
+        const p = spilled(['...K.']);
+        expect(obstacleAt(p, 3, 0)).toBeDefined();
+        expect(p.items.find((i) => i.locationName === 'Falls - Drop')).toMatchObject({ x: 0, y: 0 });
+        expect(() => spilled(['##.K.'])).toThrow(/no free floor cell/);
+    });
+
     it('a level world spills the same way', () => {
         const region = { region_id: 'falls', bounds: { x: 0, y: 0, w: 3, h: 1 }, map_ref: 9, exits: [], locations: [
             { name: 'Falls - Kill', tile: [1, 0], vanilla_item: 'Seal' },
