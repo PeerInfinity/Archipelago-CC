@@ -1546,6 +1546,20 @@ export const CONTACT_FIDELITY = {
      * body. OFF: byte-identical. `SEEDLING_PUNCH_GATE_TIMED=0|1`.
      */
     punchGateTimed: true,
+    /**
+     * fidelity L40BK2B D1 (wave 33) — THE ORBIT KILL STEERS TO A POINT THE PLAYER CAN STAND ON. `orbitKillPolicy`
+     * aims at a point on a circle round the body and steers straight at it (`chooseHeld`), which is right in an open
+     * room (L40's latch pocket) and wrong where the body stands in a notch above a one-tile corridor: MEASURED on L40
+     * leg 853 (`<- in_L39_144_0`, OPP ON, seam 5152), `bobsoldier@880,832` is met from the burn stance's walk with
+     * the player 144 px off in the x 736 shaft; the ccw candidates pin the player against the shaft wall for the
+     * whole 420-tick bound, and the cw ones land one hit, then back off INTO the corridor's floor and stand inside the
+     * blade when the spin stops on them (hit at orbit tick 180). ON: each aim is the free point (the player box at it
+     * and the straight sweep from the player both clear of Solids, `orbitFreeAim`) nearest the policy's own angle,
+     * searched in `ORBIT_FREE_AIM` steps; where none is in sight the policy follows the planner's walk toward the body.
+     * The rest of the policy (spin, blade, i-frames, the one strike policy) is unchanged. OFF: byte-identical.
+     * `SEEDLING_ORBIT_FREE_AIM=0|1`.
+     */
+    orbitFreeAim: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1844,6 +1858,9 @@ if (globalThis.process?.env?.SEEDLING_HOLD_WAIT_PRICED === '1') CONTACT_FIDELITY
 if (globalThis.process?.env?.SEEDLING_HOLD_WAIT_PRICED === '0') CONTACT_FIDELITY.holdWaitPriced = false;
 if (globalThis.process?.env?.SEEDLING_CHASER_ORBIT_KILL === '1') CONTACT_FIDELITY.chaserOrbitKill = true;
 if (globalThis.process?.env?.SEEDLING_CHASER_ORBIT_KILL === '0') CONTACT_FIDELITY.chaserOrbitKill = false;
+// ⛓ fidelity L40BK2B: `SEEDLING_ORBIT_FREE_AIM=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ORBIT_FREE_AIM === '1') CONTACT_FIDELITY.orbitFreeAim = true;
+if (globalThis.process?.env?.SEEDLING_ORBIT_FREE_AIM === '0') CONTACT_FIDELITY.orbitFreeAim = false;
 // ⛓ fidelity L32BOB: `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '1') CONTACT_FIDELITY.encounterSwingInFlight = true;
 if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '0') CONTACT_FIDELITY.encounterSwingInFlight = false;
