@@ -187,9 +187,9 @@ The rule-tree display (`commonUI.js`) never evaluates statements. It now reads t
   can never hold the item. So it never raises. It used to be a stderr print only; now it is recorded
   by name in both modes as `WorldGenerator.unobtainable_items` (`Has:<item>`), with an
   `UNOBTAINABLE:` warning. Committed hits: `Progressive Swim` in seedling_atlas (8) and
-  seedling_atlas_maze (8); seedling_playthrough_maze `Fire` (2), `Ghost Spear` (2), `Green Key` (2) and
-  `Wand` (1) — the Sword left its list when L10 joined, the Swim when L89's Feather did (measured
-  `--dry-run --lossy` 2026-10-26 after session tile-primitives-sphere-order-2).
+  seedling_atlas_maze (8); seedling_playthrough_maze `Fire` (5), `Dark Suit` (2), `Ghost Spear` (2) and
+  `Wand` (1) — the Sword left its list when L10 joined, the Swim when L89's Feather did, the Green Key when
+  L29's Boss Key 1 did (measured `--dry-run --lossy` 2026-10-27 after session tile-primitives-sphere-order-3).
 - **raft's exporter gap is fixed in the generic analyzer.** Inside a LogicMixin method, `self` is the
   CollectionState (AutoLogicRegister merges the mixin's methods onto it). So `self.<CollectionState
   method>(...)` is now a state method (`self.has("Smelter", player)` → `item_check`), while the

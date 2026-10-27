@@ -1016,6 +1016,20 @@
                 "item_name": "Fire"
               }
             }
+          },
+          {
+            "name": "level_12__r0c37 -> level_37__r12c6",
+            "connected_region": "level_37__r12c6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_12__r0c37 -> level_21",
+            "connected_region": "level_21",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -1092,6 +1106,16 @@
               "rule": "Has",
               "args": {
                 "item_name": "Green Key"
+              }
+            }
+          },
+          {
+            "name": "level_12__r40c4 -> level_24",
+            "connected_region": "level_24",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L24 flag 0: burnabletree@32,128 cleared"
               }
             }
           }
@@ -2296,6 +2320,925 @@
         ],
         "locations": []
       },
+      "level_21": {
+        "name": "level_21",
+        "exits": [
+          {
+            "name": "level_21 -> level_23",
+            "connected_region": "level_23",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_21 -> level_22",
+            "connected_region": "level_22",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_21 -> level_29__r5c0",
+            "connected_region": "level_29__r5c0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_22": {
+        "name": "level_22",
+        "exits": [
+          {
+            "name": "level_22 -> level_25",
+            "connected_region": "level_25",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_22 -> level_21",
+            "connected_region": "level_21",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_22 -> level_30__r0c4",
+            "connected_region": "level_30__r0c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_22 -> level_29__r2c2",
+            "connected_region": "level_29__r2c2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_23": {
+        "name": "level_23",
+        "exits": [
+          {
+            "name": "level_23 -> level_24",
+            "connected_region": "level_24",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_23 -> level_21",
+            "connected_region": "level_21",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_24": {
+        "name": "level_24",
+        "exits": [
+          {
+            "name": "level_24 -> level_12__r40c4",
+            "connected_region": "level_12__r40c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
+            }
+          },
+          {
+            "name": "level_24 -> level_12__r40c4 #2",
+            "connected_region": "level_12__r40c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
+            }
+          },
+          {
+            "name": "level_24 -> level_23",
+            "connected_region": "level_23",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "L24 flag 0: burnabletree@32,128 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
+            },
+            "item": {
+              "name": "L24 flag 0: burnabletree@32,128 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L24:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 24,
+              "tag": 0,
+              "class": "burnabletree",
+              "x": 32,
+              "y": 128
+            },
+            "action": {
+              "verb": "burned by fire",
+              "item": "hasFire"
+            },
+            "side": "level_24",
+            "across": []
+          }
+        ]
+      },
+      "level_25": {
+        "name": "level_25",
+        "exits": [
+          {
+            "name": "level_25 -> level_26__r2c4",
+            "connected_region": "level_26__r2c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_25 -> level_28__r0c6",
+            "connected_region": "level_28__r0c6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_25 -> level_22",
+            "connected_region": "level_22",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 025 - Chest",
+            "id": 30000009,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "level_26__r2c4": {
+        "name": "level_26__r2c4",
+        "exits": [
+          {
+            "name": "level_26__r2c4 -> level_26__r13c8",
+            "connected_region": "level_26__r13c8",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_26__r2c4 -> level_27",
+            "connected_region": "level_27",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_26__r2c4 -> level_25",
+            "connected_region": "level_25",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_26__r13c8": {
+        "name": "level_26__r13c8",
+        "exits": [
+          {
+            "name": "level_26__r13c8 -> level_26__r2c4",
+            "connected_region": "level_26__r2c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_26__r13c8 -> level_28__r0c6",
+            "connected_region": "level_28__r0c6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_27": {
+        "name": "level_27",
+        "exits": [
+          {
+            "name": "level_27 -> level_26__r2c4",
+            "connected_region": "level_26__r2c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_27 -> level_28__r11c4",
+            "connected_region": "level_28__r11c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_28__r0c6": {
+        "name": "level_28__r0c6",
+        "exits": [
+          {
+            "name": "level_28__r0c6 -> level_26__r13c8",
+            "connected_region": "level_26__r13c8",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_28__r0c6 -> level_25",
+            "connected_region": "level_25",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "L28 flag 0: rope@160,64 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "L28 flag 0: rope@160,64 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L28:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 28,
+              "tag": 0,
+              "class": "rope",
+              "x": 160,
+              "y": 64
+            },
+            "action": {
+              "verb": "cut",
+              "item": null,
+              "opens": [
+                {
+                  "class": "fallrock",
+                  "x": 112,
+                  "y": 240,
+                  "effect": "holds"
+                }
+              ]
+            },
+            "side": "level_28__r0c6",
+            "across": []
+          }
+        ]
+      },
+      "level_28__r1c18": {
+        "name": "level_28__r1c18",
+        "exits": [
+          {
+            "name": "level_28__r1c18 -> level_28__r11c4",
+            "connected_region": "level_28__r11c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L28 flag 0: rope@160,64 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_28__r1c18 -> level_30__r2c10",
+            "connected_region": "level_30__r2c10",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_28__r11c4": {
+        "name": "level_28__r11c4",
+        "exits": [
+          {
+            "name": "level_28__r11c4 -> level_28__r1c18",
+            "connected_region": "level_28__r1c18",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L28 flag 0: rope@160,64 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_28__r11c4 -> level_27",
+            "connected_region": "level_27",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_29__r2c2": {
+        "name": "level_29__r2c2",
+        "exits": [
+          {
+            "name": "level_29__r2c2 -> level_29__r5c0",
+            "connected_region": "level_29__r5c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_29__r2c2 -> level_29__r9c3",
+            "connected_region": "level_29__r9c3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_29__r2c2 -> level_22",
+            "connected_region": "level_22",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_29__r2c2 -> level_31__r5c24",
+            "connected_region": "level_31__r5c24",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 029 - Boss Key 1",
+            "id": 30000010,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Green Key",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "level_29__r5c0": {
+        "name": "level_29__r5c0",
+        "exits": [
+          {
+            "name": "level_29__r5c0 -> level_29__r2c2",
+            "connected_region": "level_29__r2c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_29__r5c0 -> level_29__r9c3",
+            "connected_region": "level_29__r9c3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_29__r5c0 -> level_21",
+            "connected_region": "level_21",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_29__r9c3": {
+        "name": "level_29__r9c3",
+        "exits": [
+          {
+            "name": "level_29__r9c3 -> level_29__r2c2",
+            "connected_region": "level_29__r2c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_29__r9c3 -> level_29__r5c0",
+            "connected_region": "level_29__r5c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_30__r0c4": {
+        "name": "level_30__r0c4",
+        "exits": [
+          {
+            "name": "level_30__r0c4 -> level_30__r2c10",
+            "connected_region": "level_30__r2c10",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L30 flag 0: bosslock@64,32 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Green Key"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_30__r0c4 -> level_22",
+            "connected_region": "level_22",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_30__r2c10": {
+        "name": "level_30__r2c10",
+        "exits": [
+          {
+            "name": "level_30__r2c10 -> level_30__r16c17",
+            "connected_region": "level_30__r16c17",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_30__r2c10 -> level_30__r17c11",
+            "connected_region": "level_30__r17c11",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_30__r2c10 -> level_30__r0c4",
+            "connected_region": "level_30__r0c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
+              }
+            }
+          },
+          {
+            "name": "level_30__r2c10 -> level_30__r8c13",
+            "connected_region": "level_30__r8c13",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
+              }
+            }
+          },
+          {
+            "name": "level_30__r2c10 -> level_28__r1c18",
+            "connected_region": "level_28__r1c18",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_30__r2c10 -> level_31__r24c10",
+            "connected_region": "level_31__r24c10",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_30__r2c10 -> level_31__r5c24",
+            "connected_region": "level_31__r5c24",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 030 - Torchpickup",
+            "id": 30000011,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Light",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "L30 flag 0: bosslock@64,32 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
+              }
+            },
+            "item": {
+              "name": "L30 flag 0: bosslock@64,32 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L30:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 30,
+              "tag": 0,
+              "class": "bosslock",
+              "x": 64,
+              "y": 32
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_30__r2c10",
+            "across": [
+              "level_30__r0c4"
+            ]
+          },
+          {
+            "name": "L30 flag 2: bosslock@224,208 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
+              }
+            },
+            "item": {
+              "name": "L30 flag 2: bosslock@224,208 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L30:2",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 30,
+              "tag": 2,
+              "class": "bosslock",
+              "x": 224,
+              "y": 208
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_30__r2c10",
+            "across": [
+              "level_30__r8c13"
+            ]
+          }
+        ]
+      },
+      "level_30__r8c13": {
+        "name": "level_30__r8c13",
+        "exits": [
+          {
+            "name": "level_30__r8c13 -> level_30__r2c10",
+            "connected_region": "level_30__r2c10",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Green Key"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L30 flag 2: bosslock@224,208 cleared"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_30__r16c17": {
+        "name": "level_30__r16c17",
+        "exits": [
+          {
+            "name": "level_30__r16c17 -> level_30__r17c11",
+            "connected_region": "level_30__r17c11",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_30__r16c17 -> level_30__r2c10",
+            "connected_region": "level_30__r2c10",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_30__r17c11": {
+        "name": "level_30__r17c11",
+        "exits": [
+          {
+            "name": "level_30__r17c11 -> level_30__r16c17",
+            "connected_region": "level_30__r16c17",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_30__r17c11 -> level_30__r2c10",
+            "connected_region": "level_30__r2c10",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_31__r5c24": {
+        "name": "level_31__r5c24",
+        "exits": [
+          {
+            "name": "level_31__r5c24 -> level_31__r24c10",
+            "connected_region": "level_31__r24c10",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
+              }
+            }
+          },
+          {
+            "name": "level_31__r5c24 -> level_29__r2c2",
+            "connected_region": "level_29__r2c2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "L31 flag 0: bosslock@192,432 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
+              }
+            },
+            "item": {
+              "name": "L31 flag 0: bosslock@192,432 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L31:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 31,
+              "tag": 0,
+              "class": "bosslock",
+              "x": 192,
+              "y": 432
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_31__r5c24",
+            "across": [
+              "level_31__r24c10"
+            ]
+          }
+        ]
+      },
+      "level_31__r24c10": {
+        "name": "level_31__r24c10",
+        "exits": [
+          {
+            "name": "level_31__r24c10 -> level_31__r5c24",
+            "connected_region": "level_31__r5c24",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Green Key"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L31 flag 0: bosslock@192,432 cleared"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_31__r24c10 -> level_30__r2c10",
+            "connected_region": "level_30__r2c10",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
       "level_33": {
         "name": "level_33",
         "exits": [
@@ -2336,7 +3279,7 @@
         "locations": [
           {
             "name": "Level 036 - Chest",
-            "id": 30000009,
+            "id": 30000012,
             "access_rule": {
               "rule": "True_"
             },
@@ -2348,6 +3291,126 @@
             }
           }
         ]
+      },
+      "level_37__r0c18": {
+        "name": "level_37__r0c18",
+        "exits": [
+          {
+            "name": "level_37__r0c18 -> level_37__r12c6",
+            "connected_region": "level_37__r12c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Swim"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_37__r0c18 -> level_37__r5c33",
+            "connected_region": "level_37__r5c33",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_37__r5c33": {
+        "name": "level_37__r5c33",
+        "exits": [
+          {
+            "name": "level_37__r5c33 -> level_37__r0c18",
+            "connected_region": "level_37__r0c18",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_37__r5c33 -> level_37__r9c36",
+            "connected_region": "level_37__r9c36",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_37__r9c36": {
+        "name": "level_37__r9c36",
+        "exits": [
+          {
+            "name": "level_37__r9c36 -> level_37__r5c33",
+            "connected_region": "level_37__r5c33",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_37__r12c6": {
+        "name": "level_37__r12c6",
+        "exits": [
+          {
+            "name": "level_37__r12c6 -> level_37__r0c18",
+            "connected_region": "level_37__r0c18",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Swim"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_37__r12c6 -> level_44__r6c4",
+            "connected_region": "level_44__r6c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_37__r12c6 -> level_12__r0c37",
+            "connected_region": "level_12__r0c37",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
       },
       "level_44__r0c4": {
         "name": "level_44__r0c4",
@@ -2495,6 +3558,13 @@
                   }
                 }
               ]
+            }
+          },
+          {
+            "name": "level_44__r6c4 -> level_37__r12c6",
+            "connected_region": "level_37__r12c6",
+            "access_rule": {
+              "rule": "True_"
             }
           }
         ],
@@ -2660,7 +3730,7 @@
         "locations": [
           {
             "name": "Level 067 - Boss Key 4",
-            "id": 30000010,
+            "id": 30000013,
             "access_rule": {
               "rule": "True_"
             },
@@ -2710,7 +3780,7 @@
         "locations": [
           {
             "name": "Level 086 - Chest",
-            "id": 30000011,
+            "id": 30000014,
             "access_rule": {
               "rule": "True_"
             },
@@ -3216,7 +4286,7 @@
         "locations": [
           {
             "name": "Level 089 - Feather",
-            "id": 30000012,
+            "id": 30000015,
             "access_rule": {
               "rule": "True_"
             },
@@ -3584,9 +4654,25 @@
   },
   "items": {
     "1": {
+      "Green Key": {
+        "name": "Green Key",
+        "id": 30000000,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Light": {
+        "name": "Light",
+        "id": 30000001,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Progressive Shield": {
         "name": "Progressive Shield",
-        "id": 30000000,
+        "id": 30000002,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -3594,7 +4680,7 @@
       },
       "Progressive Swim": {
         "name": "Progressive Swim",
-        "id": 30000001,
+        "id": 30000003,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -3602,7 +4688,7 @@
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
-        "id": 30000002,
+        "id": 30000004,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -3610,7 +4696,7 @@
       },
       "Red Key": {
         "name": "Red Key",
-        "id": 30000003,
+        "id": 30000005,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -3618,15 +4704,15 @@
       },
       "Seal": {
         "name": "Seal",
-        "id": 30000004,
+        "id": 30000006,
         "groups": [],
         "classification": "progression",
         "type": null,
-        "max_count": 7
+        "max_count": 8
       },
       "Yellow Key": {
         "name": "Yellow Key",
-        "id": 30000005,
+        "id": 30000007,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -3667,6 +4753,17 @@
       },
       "L12 flag 12: bosslock@32,864 cleared": {
         "name": "L12 flag 12: bosslock@32,864 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L24 flag 0: burnabletree@32,128 cleared": {
+        "name": "L24 flag 0: burnabletree@32,128 cleared",
         "id": null,
         "groups": [
           "Event"
@@ -3731,8 +4828,52 @@
         "type": "Event",
         "max_count": 1
       },
+      "L30 flag 0: bosslock@64,32 cleared": {
+        "name": "L30 flag 0: bosslock@64,32 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L30 flag 2: bosslock@224,208 cleared": {
+        "name": "L30 flag 2: bosslock@224,208 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L31 flag 0: bosslock@192,432 cleared": {
+        "name": "L31 flag 0: bosslock@192,432 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L16 flag 0: rope@32,16 cleared": {
         "name": "L16 flag 0: rope@32,16 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L28 flag 0: rope@160,64 cleared": {
+        "name": "L28 flag 0: rope@160,64 cleared",
         "id": null,
         "groups": [
           "Event"
@@ -3750,21 +4891,28 @@
   "itempool_counts": {
     "1": {
       "Progressive Sword": 2,
-      "Seal": 7,
+      "Seal": 8,
       "Red Key": 1,
       "Progressive Shield": 1,
+      "Green Key": 1,
+      "Light": 1,
       "Yellow Key": 1,
       "Progressive Swim": 1,
       "L0 flag 1: breakablerock@288,176 cleared": 1,
       "L0 flag 4: breakablerock@80,112 cleared": 1,
       "L12 flag 7: magicallock@32,864 cleared": 1,
       "L12 flag 12: bosslock@32,864 cleared": 1,
+      "L24 flag 0: burnabletree@32,128 cleared": 1,
       "L12 flag 3: bosslock@80,656 cleared": 1,
       "L12 flag 4: bosslock@416,240 cleared": 1,
       "L12 flag 5: bosslock@432,240 cleared": 1,
       "L12 flag 11: bosslock@112,192 cleared": 1,
       "L19 flag 1: bosslock@48,32 cleared": 1,
-      "L16 flag 0: rope@32,16 cleared": 1
+      "L30 flag 0: bosslock@64,32 cleared": 1,
+      "L30 flag 2: bosslock@224,208 cleared": 1,
+      "L31 flag 0: bosslock@192,432 cleared": 1,
+      "L16 flag 0: rope@32,16 cleared": 1,
+      "L28 flag 0: rope@160,64 cleared": 1
     }
   },
   "world": {
@@ -3796,7 +4944,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-53456612",
+      "atlas_id": "seedling-efb6e155",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -6693,12 +7841,34 @@
         "playable_payload": {
           "width": 40,
           "height": 60,
-          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
           "entrance": {
             "x": 37,
             "y": 0
           },
           "exits": [
+            {
+              "exit_id": "level_12__r0c37 -> level_37__r12c6",
+              "x": 37,
+              "y": 0,
+              "side": null,
+              "exitName": "level_12__r0c37 -> level_37__r12c6",
+              "targetRegion": "level_37__r12c6",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_592_0"
+            },
+            {
+              "exit_id": "level_12__r0c37 -> level_21",
+              "x": 36,
+              "y": 43,
+              "side": null,
+              "exitName": "level_12__r0c37 -> level_21",
+              "targetRegion": "level_21",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_5_5"
+            },
             {
               "exit_id": "level_12__r0c37 -> level_12__r0c19",
               "x": 27,
@@ -7003,12 +8173,23 @@
         "playable_payload": {
           "width": 40,
           "height": 60,
-          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
           "entrance": {
             "x": 4,
             "y": 40
           },
           "exits": [
+            {
+              "exit_id": "level_12__r40c4 -> level_24",
+              "x": 2,
+              "y": 43,
+              "side": null,
+              "exitName": "level_12__r40c4 -> level_24",
+              "targetRegion": "level_24",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_40_688"
+            },
             {
               "exit_id": "level_12__r40c4 -> level_12__r0c19",
               "x": 5,
@@ -9686,6 +10867,2034 @@
           }
         }
       },
+      "level_21": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 11,
+          "height": 11,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1],
+          "entrance": {
+            "x": 5,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_21 -> level_23",
+              "x": 0,
+              "y": 5,
+              "side": null,
+              "exitName": "level_21 -> level_23",
+              "targetRegion": "level_23",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_80"
+            },
+            {
+              "exit_id": "level_21 -> level_22",
+              "x": 5,
+              "y": 10,
+              "side": null,
+              "exitName": "level_21 -> level_22",
+              "targetRegion": "level_22",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_80_160"
+            },
+            {
+              "exit_id": "level_21 -> level_29__r5c0",
+              "x": 10,
+              "y": 5,
+              "side": null,
+              "exitName": "level_21 -> level_29__r5c0",
+              "targetRegion": "level_29__r5c0",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_160_80"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_21",
+          "level": 21,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_22": {
+        "substrate": "maze",
+        "shared_world": "level_22",
+        "playable_payload": {
+          "width": 13,
+          "height": 13,
+          "tiles": [1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,0,0,1,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,0,0,0,0,0,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1],
+          "entrance": {
+            "x": 6,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_22 -> level_25",
+              "x": 0,
+              "y": 8,
+              "side": null,
+              "exitName": "level_22 -> level_25",
+              "targetRegion": "level_25",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_128"
+            },
+            {
+              "exit_id": "level_22 -> level_21",
+              "x": 6,
+              "y": 0,
+              "side": null,
+              "exitName": "level_22 -> level_21",
+              "targetRegion": "level_21",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_96_0"
+            },
+            {
+              "exit_id": "level_22 -> level_30__r0c4",
+              "x": 6,
+              "y": 12,
+              "side": null,
+              "exitName": "level_22 -> level_30__r0c4",
+              "targetRegion": "level_30__r0c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_96_192"
+            },
+            {
+              "exit_id": "level_22 -> level_29__r2c2",
+              "x": 12,
+              "y": 4,
+              "side": null,
+              "exitName": "level_22 -> level_29__r2c2",
+              "targetRegion": "level_29__r2c2",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_192_64"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "blocks": [
+            {
+              "x": 6,
+              "y": 4
+            }
+          ],
+          "shared_world": {
+            "key": "level_22",
+            "regions": [
+              "level_22"
+            ],
+            "rows": [
+              "......A......",
+              "......A......",
+              "..AAA.A.AAA..",
+              "..AAAAAAA....",
+              "..AAAAAAAAAAA",
+              "..A.AAAAA....",
+              "..AAAA.AAAA..",
+              "...AAAAAAA...",
+              "AAAAAAAAAAA..",
+              "..A.AAAAA.A..",
+              "..AAAAAAAAA..",
+              "......A......",
+              "......A......"
+            ],
+            "entrances": {
+              "level_22": {
+                "x": 6,
+                "y": 1
+              }
+            },
+            "links": {}
+          },
+          "atlas_region": "level_22",
+          "level": 22,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_23": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 6,
+          "height": 5,
+          "tiles": [1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 2,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_23 -> level_24",
+              "x": 2,
+              "y": 2,
+              "side": null,
+              "exitName": "level_23 -> level_24",
+              "targetRegion": "level_24",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_32_32"
+            },
+            {
+              "exit_id": "level_23 -> level_21",
+              "x": 5,
+              "y": 2,
+              "side": null,
+              "exitName": "level_23 -> level_21",
+              "targetRegion": "level_21",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_80_32"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_23",
+          "level": 23,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_24": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 10,
+          "height": 10,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,1,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1],
+          "entrance": {
+            "x": 2,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_24 -> level_12__r40c4",
+              "x": 2,
+              "y": 9,
+              "side": null,
+              "exitName": "level_24 -> level_12__r40c4",
+              "targetRegion": "level_12__r40c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_32_144"
+            },
+            {
+              "exit_id": "level_24 -> level_12__r40c4 #2",
+              "x": 3,
+              "y": 9,
+              "side": null,
+              "exitName": "level_24 -> level_12__r40c4 #2",
+              "targetRegion": "level_12__r40c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_48_144"
+            },
+            {
+              "exit_id": "level_24 -> level_23",
+              "x": 6,
+              "y": 6,
+              "side": null,
+              "exitName": "level_24 -> level_23",
+              "targetRegion": "level_23",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_96_96"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 2,
+              "y": 8,
+              "id": "atlas_gate_0~L24 flag 0: burnabletree@32,128 cleared"
+            },
+            {
+              "x": 3,
+              "y": 8,
+              "id": "atlas_gate_0~L24 flag 0: burnabletree@32,128 cleared"
+            },
+            {
+              "x": 2,
+              "y": 9,
+              "id": "atlas_gate_0~L24 flag 0: burnabletree@32,128 cleared"
+            },
+            {
+              "x": 3,
+              "y": 9,
+              "id": "atlas_gate_0~L24 flag 0: burnabletree@32,128 cleared"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Fire",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Fire"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_0~L24 flag 0: burnabletree@32,128 cleared": {
+              "id": "atlas_gate_0~L24 flag 0: burnabletree@32,128 cleared",
+              "name": "Fire: L24 flag 0: burnabletree@32,128 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Fire"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L24 flag 0: burnabletree@32,128 cleared"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L24 flag 0: burnabletree@32,128 cleared",
+                  "side": "level_24"
+                }
+              ]
+            }
+          },
+          "atlas_region": "level_24",
+          "level": 24,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_25": {
+        "substrate": "maze",
+        "shared_world": "level_25",
+        "playable_payload": {
+          "width": 10,
+          "height": 9,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,1,0,1,1,1,1,0,0,0,0,1,0,1,1,1,1,0,0,0,0,0,0,1,1,0,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1],
+          "entrance": {
+            "x": 8,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_25 -> level_26__r2c4",
+              "x": 0,
+              "y": 6,
+              "side": null,
+              "exitName": "level_25 -> level_26__r2c4",
+              "targetRegion": "level_26__r2c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_96"
+            },
+            {
+              "exit_id": "level_25 -> level_28__r0c6",
+              "x": 6,
+              "y": 8,
+              "side": null,
+              "exitName": "level_25 -> level_28__r0c6",
+              "targetRegion": "level_28__r0c6",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_96_128"
+            },
+            {
+              "exit_id": "level_25 -> level_22",
+              "x": 9,
+              "y": 2,
+              "side": null,
+              "exitName": "level_25 -> level_22",
+              "targetRegion": "level_22",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_144_32"
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 6,
+              "y": 6,
+              "id": "Seal",
+              "locationName": "Level 025 - Chest"
+            }
+          ],
+          "obstacleLib": {},
+          "blocks": [
+            {
+              "x": 5,
+              "y": 4
+            }
+          ],
+          "shared_world": {
+            "key": "level_25",
+            "regions": [
+              "level_25"
+            ],
+            "rows": [
+              "..........",
+              "..........",
+              ".......AAA",
+              "..AAAA.A..",
+              "..AAAA.A..",
+              "..AAAAAA..",
+              "AAA...AA..",
+              "......A...",
+              "......A..."
+            ],
+            "entrances": {
+              "level_25": {
+                "x": 8,
+                "y": 2
+              }
+            },
+            "links": {}
+          },
+          "atlas_region": "level_25",
+          "level": 25,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_26__r2c4": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 10,
+          "height": 20,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1],
+          "entrance": {
+            "x": 4,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_26__r2c4 -> level_27",
+              "x": 4,
+              "y": 19,
+              "side": null,
+              "exitName": "level_26__r2c4 -> level_27",
+              "targetRegion": "level_27",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_64_304"
+            },
+            {
+              "exit_id": "level_26__r2c4 -> level_25",
+              "x": 9,
+              "y": 2,
+              "side": null,
+              "exitName": "level_26__r2c4 -> level_25",
+              "targetRegion": "level_25",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_144_32"
+            },
+            {
+              "exit_id": "level_26__r2c4 -> level_26__r13c8",
+              "x": 7,
+              "y": 13,
+              "side": null,
+              "exitName": "level_26__r2c4 -> level_26__r13c8",
+              "targetRegion": "level_26__r13c8",
+              "targetExitId": "level_26__r13c8 -> level_26__r2c4",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r13c8"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 7,
+              "y": 13,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Shield x2 OR Ghost Spear OR Progressive Sword OR Wand)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield",
+                      "count": 2
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_26",
+          "atlas_sub_region": "r2c4",
+          "level": 26,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_26__r13c8": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 10,
+          "height": 20,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 8,
+            "y": 13
+          },
+          "exits": [
+            {
+              "exit_id": "level_26__r13c8 -> level_28__r0c6",
+              "x": 9,
+              "y": 13,
+              "side": null,
+              "exitName": "level_26__r13c8 -> level_28__r0c6",
+              "targetRegion": "level_28__r0c6",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_144_208"
+            },
+            {
+              "exit_id": "level_26__r13c8 -> level_26__r2c4",
+              "x": 7,
+              "y": 13,
+              "side": null,
+              "exitName": "level_26__r13c8 -> level_26__r2c4",
+              "targetRegion": "level_26__r2c4",
+              "targetExitId": "level_26__r2c4 -> level_26__r13c8",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r2c4"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 7,
+              "y": 13,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Shield x2 OR Ghost Spear OR Progressive Sword OR Wand)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield",
+                      "count": 2
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_26",
+          "atlas_sub_region": "r13c8",
+          "level": 26,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_27": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 16,
+          "height": 6,
+          "tiles": [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 2,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "level_27 -> level_26__r2c4",
+              "x": 2,
+              "y": 0,
+              "side": null,
+              "exitName": "level_27 -> level_26__r2c4",
+              "targetRegion": "level_26__r2c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_32_0"
+            },
+            {
+              "exit_id": "level_27 -> level_28__r11c4",
+              "x": 10,
+              "y": 1,
+              "side": null,
+              "exitName": "level_27 -> level_28__r11c4",
+              "targetRegion": "level_28__r11c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_168_16"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_27",
+          "level": 27,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_28__r0c6": {
+        "substrate": "maze",
+        "shared_world": "level_28",
+        "playable_payload": {
+          "width": 20,
+          "height": 20,
+          "tiles": [0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1,1,0,0,0,0,0,1,0,0,1,0,0,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1,0,1,0,1,1,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,1,0,1,1,0,0,1,1,1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,1,1,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0],
+          "entrance": {
+            "x": 6,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_28__r0c6 -> level_26__r13c8",
+              "x": 0,
+              "y": 6,
+              "side": null,
+              "exitName": "level_28__r0c6 -> level_26__r13c8",
+              "targetRegion": "level_26__r13c8",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_96"
+            },
+            {
+              "exit_id": "level_28__r0c6 -> level_25",
+              "x": 6,
+              "y": 0,
+              "side": null,
+              "exitName": "level_28__r0c6 -> level_25",
+              "targetRegion": "level_25",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_96_0"
+            },
+            {
+              "exit_id": "level_28__r11c4 -> level_27",
+              "x": 8,
+              "y": 19,
+              "side": null,
+              "exitName": "level_28__r11c4 -> level_27",
+              "targetRegion": "level_27",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_128_304"
+            },
+            {
+              "exit_id": "level_28__r1c18 -> level_30__r2c10",
+              "x": 19,
+              "y": 1,
+              "side": null,
+              "exitName": "level_28__r1c18 -> level_30__r2c10",
+              "targetRegion": "level_30__r2c10",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_304_16"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 10,
+              "y": 4,
+              "id": "rope_10_4"
+            },
+            {
+              "x": 11,
+              "y": 4,
+              "id": "rope_10_4"
+            },
+            {
+              "x": 12,
+              "y": 4,
+              "id": "rope_10_4"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "rope_10_4": {
+              "id": "rope_10_4",
+              "name": "rope@160,64",
+              "kind": "rope",
+              "clear_set": [
+                [
+                  "sw_1"
+                ]
+              ],
+              "struck_by": [
+                "sword",
+                "spear",
+                "fire"
+              ],
+              "activates": "sw_1",
+              "at": "10,4",
+              "event": "L28 flag 0: rope@160,64 cleared",
+              "color": "#b08a4a"
+            },
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "L28 flag 0: rope@160,64 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L28 flag 0: rope@160,64 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "buttons": [
+            {
+              "x": 7,
+              "y": 15,
+              "id": "button_0"
+            }
+          ],
+          "buttonLib": {
+            "button_0": {
+              "kind": "button",
+              "holds": "sw_0"
+            }
+          },
+          "action_lib": {
+            "sword": {
+              "item": "Progressive Sword",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "z"
+            },
+            "spear": {
+              "item": "Ghost Spear",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "x"
+            },
+            "fire": {
+              "item": "Fire",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "c"
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 16,
+              "y": 5,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 17,
+              "y": 5,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 10,
+              "y": 6,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 6,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 16,
+              "y": 6,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 17,
+              "y": 6,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 9,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 9,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 10,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 10,
+              "y": 7,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 12,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 13,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 15,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 16,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 16,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 17,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 8,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 8,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 8,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 9,
+              "y": 8,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 9,
+              "y": 8,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 12,
+              "y": 8,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 13,
+              "y": 8,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 13,
+              "y": 8,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 8,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 8,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 15,
+              "y": 8,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 15,
+              "y": 8,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 16,
+              "y": 8,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 6,
+              "y": 9,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 9,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 9,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 9,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 13,
+              "y": 9,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 10,
+              "y": 12,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 12,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 12,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 12,
+              "y": 12,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 13,
+              "dir": "N",
+              "gate": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 13,
+              "dir": "S",
+              "gate": "atlas_gate_0"
+            }
+          ],
+          "shared_world": {
+            "key": "level_28",
+            "regions": [
+              "level_28__r0c6",
+              "level_28__r1c18",
+              "level_28__r11c4"
+            ],
+            "rows": [
+              "......A.............",
+              "......A...........BB",
+              "......A..........BB.",
+              ".....AAAAA.......BB.",
+              "....AAAAAAAAA.....B.",
+              "...AAAAAAAAAA.....B.",
+              "AAAAAAAAAAAA......B.",
+              "...AAAAAAA........B.",
+              "...AAAAAA.BB.....BB.",
+              "....AAA..BBBB..BBBB.",
+              "........BBBBBBBBBBB.",
+              "....CCC..BBBBBBBBBB.",
+              "..CCCCCC...B.B.BBBB.",
+              "..CCCCCCC.....BBBB..",
+              "..CCCC.C.C.C...BB...",
+              "...CCCCCCC.C........",
+              "...CCC.C.CCC........",
+              "...CCCCCCCCCCCCCC...",
+              "....CCCCCCCCCCCC....",
+              "........C..........."
+            ],
+            "entrances": {
+              "level_28__r0c6": {
+                "x": 6,
+                "y": 1
+              },
+              "level_28__r1c18": {
+                "x": 19,
+                "y": 1
+              },
+              "level_28__r11c4": {
+                "x": 8,
+                "y": 18
+              }
+            },
+            "links": {
+              "level_28__r11c4>level_28__r1c18": "level_28__r11c4 -> level_28__r1c18",
+              "level_28__r1c18>level_28__r11c4": "level_28__r1c18 -> level_28__r11c4"
+            }
+          },
+          "atlas_region": "level_28",
+          "level": 28,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_28__r1c18": {
+        "substrate": "maze",
+        "shared_world": "level_28"
+      },
+      "level_28__r11c4": {
+        "substrate": "maze",
+        "shared_world": "level_28"
+      },
+      "level_29__r2c2": {
+        "substrate": "maze",
+        "shared_world": "level_29",
+        "playable_payload": {
+          "width": 12,
+          "height": 20,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,1,1,1,1,1,1,0,0,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 1,
+            "y": 14
+          },
+          "exits": [
+            {
+              "exit_id": "level_29__r5c0 -> level_21",
+              "x": 0,
+              "y": 5,
+              "side": null,
+              "exitName": "level_29__r5c0 -> level_21",
+              "targetRegion": "level_21",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_80"
+            },
+            {
+              "exit_id": "level_29__r2c2 -> level_22",
+              "x": 0,
+              "y": 14,
+              "side": null,
+              "exitName": "level_29__r2c2 -> level_22",
+              "targetRegion": "level_22",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_224"
+            },
+            {
+              "exit_id": "level_29__r2c2 -> level_31__r5c24",
+              "x": 7,
+              "y": 2,
+              "side": null,
+              "exitName": "level_29__r2c2 -> level_31__r5c24",
+              "targetRegion": "level_31__r5c24",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_112_32"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 2,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 9,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 7,
+              "y": 4,
+              "id": "Green Key",
+              "locationName": "Level 029 - Boss Key 1"
+            }
+          ],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "shared_world": {
+            "key": "level_29",
+            "regions": [
+              "level_29__r2c2",
+              "level_29__r5c0",
+              "level_29__r9c3"
+            ],
+            "rows": [
+              "............",
+              "............",
+              "..AAAAAAAA..",
+              "....AA...A..",
+              ".....AAAAA..",
+              "BBB..A.A.A..",
+              ".BB..AAAAAA.",
+              ".....AAAAAA.",
+              ".......A....",
+              "...C..AA....",
+              "....AAAAAA..",
+              "....AAAAAA..",
+              "..AAAAAAAA..",
+              "..AAAAAAAA..",
+              "AAAAAAAAAA..",
+              ".AAAAAAAAA..",
+              "....AAAA....",
+              "....AAAA....",
+              "............",
+              "............"
+            ],
+            "entrances": {
+              "level_29__r2c2": {
+                "x": 1,
+                "y": 14
+              },
+              "level_29__r5c0": {
+                "x": 1,
+                "y": 5
+              },
+              "level_29__r9c3": {
+                "x": 3,
+                "y": 9
+              }
+            },
+            "links": {
+              "level_29__r2c2>level_29__r5c0": "level_29__r2c2 -> level_29__r5c0",
+              "level_29__r5c0>level_29__r2c2": "level_29__r5c0 -> level_29__r2c2",
+              "level_29__r2c2>level_29__r9c3": "level_29__r2c2 -> level_29__r9c3",
+              "level_29__r9c3>level_29__r2c2": "level_29__r9c3 -> level_29__r2c2",
+              "level_29__r5c0>level_29__r9c3": "level_29__r5c0 -> level_29__r9c3",
+              "level_29__r9c3>level_29__r5c0": "level_29__r9c3 -> level_29__r5c0"
+            }
+          },
+          "atlas_region": "level_29",
+          "level": 29,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_29__r5c0": {
+        "substrate": "maze",
+        "shared_world": "level_29"
+      },
+      "level_29__r9c3": {
+        "substrate": "maze",
+        "shared_world": "level_29"
+      },
+      "level_30__r0c4": {
+        "substrate": "maze",
+        "shared_world": "level_30",
+        "playable_payload": {
+          "width": 20,
+          "height": 20,
+          "tiles": [1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 4,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_30__r2c10 -> level_28__r1c18",
+              "x": 0,
+              "y": 8,
+              "side": null,
+              "exitName": "level_30__r2c10 -> level_28__r1c18",
+              "targetRegion": "level_28__r1c18",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_128"
+            },
+            {
+              "exit_id": "level_30__r0c4 -> level_22",
+              "x": 4,
+              "y": 0,
+              "side": null,
+              "exitName": "level_30__r0c4 -> level_22",
+              "targetRegion": "level_22",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_64_0"
+            },
+            {
+              "exit_id": "level_30__r2c10 -> level_31__r24c10",
+              "x": 12,
+              "y": 3,
+              "side": null,
+              "exitName": "level_30__r2c10 -> level_31__r24c10",
+              "targetRegion": "level_31__r24c10",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_192_48"
+            },
+            {
+              "exit_id": "level_30__r2c10 -> level_31__r5c24",
+              "x": 3,
+              "y": 14,
+              "side": null,
+              "exitName": "level_30__r2c10 -> level_31__r5c24",
+              "targetRegion": "level_31__r5c24",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_3_34"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 4,
+              "y": 2,
+              "id": "atlas_gate_0~L30 flag 0: bosslock@64,32 cleared"
+            },
+            {
+              "x": 14,
+              "y": 13,
+              "id": "atlas_gate_0~L30 flag 2: bosslock@224,208 cleared"
+            },
+            {
+              "x": 3,
+              "y": 14,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 6,
+              "y": 15,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 15,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 10,
+              "y": 15,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 11,
+              "y": 15,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 8,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 9,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 10,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 11,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 12,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 13,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 14,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 15,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 16,
+              "y": 16,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 8,
+              "y": 17,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 9,
+              "y": 17,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 10,
+              "y": 17,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 15,
+              "y": 17,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 16,
+              "y": 17,
+              "id": "atlas_gate_1"
+            }
+          ],
+          "items": [
+            {
+              "x": 4,
+              "y": 4,
+              "id": "Light",
+              "locationName": "Level 030 - Torchpickup"
+            }
+          ],
+          "obstacleLib": {
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
+              "kind": "rock",
+              "clear_set": [],
+              "struck_by": [
+                "sword",
+                "spear"
+              ],
+              "color": "#7a6a55"
+            },
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Green Key",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Green Key"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
+              "name": "(Progressive Sword OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_0~L30 flag 0: bosslock@64,32 cleared": {
+              "id": "atlas_gate_0~L30 flag 0: bosslock@64,32 cleared",
+              "name": "Green Key: L30 flag 0: bosslock@64,32 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Green Key"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L30 flag 0: bosslock@64,32 cleared",
+                  "side": "level_30__r2c10",
+                  "probe": "S"
+                }
+              ]
+            },
+            "atlas_gate_0~L30 flag 2: bosslock@224,208 cleared": {
+              "id": "atlas_gate_0~L30 flag 2: bosslock@224,208 cleared",
+              "name": "Green Key: L30 flag 2: bosslock@224,208 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Green Key"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L30 flag 2: bosslock@224,208 cleared",
+                  "side": "level_30__r2c10",
+                  "probe": "S"
+                }
+              ]
+            },
+            "atlas_gate_3": {
+              "id": "atlas_gate_3",
+              "name": "L30 flag 0: bosslock@64,32 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L30 flag 0: bosslock@64,32 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_4": {
+              "id": "atlas_gate_4",
+              "name": "L30 flag 2: bosslock@224,208 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L30 flag 2: bosslock@224,208 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "action_lib": {
+            "sword": {
+              "item": "Progressive Sword",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "z"
+            },
+            "spear": {
+              "item": "Ghost Spear",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "x"
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 4,
+              "y": 2,
+              "dir": "S",
+              "gate": "atlas_gate_3"
+            },
+            {
+              "x": 14,
+              "y": 13,
+              "dir": "S",
+              "gate": "atlas_gate_4"
+            }
+          ],
+          "shared_world": {
+            "key": "level_30",
+            "regions": [
+              "level_30__r0c4",
+              "level_30__r2c10",
+              "level_30__r8c13",
+              "level_30__r16c17",
+              "level_30__r17c11"
+            ],
+            "rows": [
+              "....A...............",
+              "....A...............",
+              "..........BBBB......",
+              "....BB....BBBB......",
+              "..BBBB..BBBBBBB.BB..",
+              "..BBBB..BBBBBBBBBB..",
+              "..BBBBBBBBBBBBBBBB..",
+              "..BBBBBBBBB.........",
+              "BBBBBBBBBBB..CCC....",
+              ".BBBBBBBBBB.CCCCCC..",
+              "..BBBBBBBBB.CCCC....",
+              "..BBBBBBBBB.CCCC....",
+              "..BBBBBBBBB...C.....",
+              "..BBBBBBBBB.........",
+              "..BBBBBBBBBBBBBB....",
+              "..BBBB..BB..BBBB....",
+              "....B............D..",
+              "....BBBB...EEEE..D..",
+              "....................",
+              "...................."
+            ],
+            "entrances": {
+              "level_30__r0c4": {
+                "x": 4,
+                "y": 1
+              },
+              "level_30__r2c10": {
+                "x": 1,
+                "y": 8
+              },
+              "level_30__r8c13": {
+                "x": 14,
+                "y": 10
+              },
+              "level_30__r16c17": {
+                "x": 17,
+                "y": 16
+              },
+              "level_30__r17c11": {
+                "x": 11,
+                "y": 17
+              }
+            },
+            "links": {
+              "level_30__r0c4>level_30__r2c10": "level_30__r0c4 -> level_30__r2c10",
+              "level_30__r16c17>level_30__r17c11": "level_30__r16c17 -> level_30__r17c11",
+              "level_30__r17c11>level_30__r16c17": "level_30__r17c11 -> level_30__r16c17",
+              "level_30__r16c17>level_30__r2c10": "level_30__r16c17 -> level_30__r2c10",
+              "level_30__r2c10>level_30__r16c17": "level_30__r2c10 -> level_30__r16c17",
+              "level_30__r17c11>level_30__r2c10": "level_30__r17c11 -> level_30__r2c10",
+              "level_30__r2c10>level_30__r17c11": "level_30__r2c10 -> level_30__r17c11",
+              "level_30__r2c10>level_30__r0c4": "level_30__r2c10 -> level_30__r0c4",
+              "level_30__r2c10>level_30__r8c13": "level_30__r2c10 -> level_30__r8c13",
+              "level_30__r8c13>level_30__r2c10": "level_30__r8c13 -> level_30__r2c10"
+            }
+          },
+          "atlas_region": "level_30",
+          "level": 30,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_30__r2c10": {
+        "substrate": "maze",
+        "shared_world": "level_30"
+      },
+      "level_30__r8c13": {
+        "substrate": "maze",
+        "shared_world": "level_30"
+      },
+      "level_30__r16c17": {
+        "substrate": "maze",
+        "shared_world": "level_30"
+      },
+      "level_30__r17c11": {
+        "substrate": "maze",
+        "shared_world": "level_30"
+      },
+      "level_31__r5c24": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 30,
+          "height": 40,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 24,
+            "y": 5
+          },
+          "exits": [
+            {
+              "exit_id": "level_31__r5c24 -> level_29__r2c2",
+              "x": 24,
+              "y": 6,
+              "side": null,
+              "exitName": "level_31__r5c24 -> level_29__r2c2",
+              "targetRegion": "level_29__r2c2",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_384_96"
+            },
+            {
+              "exit_id": "level_31__r5c24 -> level_31__r24c10",
+              "x": 12,
+              "y": 27,
+              "side": null,
+              "exitName": "level_31__r5c24 -> level_31__r24c10",
+              "targetRegion": "level_31__r24c10",
+              "targetExitId": "level_31__r24c10 -> level_31__r5c24",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r24c10"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 12,
+              "y": 27,
+              "id": "atlas_gate_0~L31 flag 0: bosslock@192,432 cleared"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Green Key",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Green Key"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_0~L31 flag 0: bosslock@192,432 cleared": {
+              "id": "atlas_gate_0~L31 flag 0: bosslock@192,432 cleared",
+              "name": "Green Key: L31 flag 0: bosslock@192,432 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Green Key"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L31 flag 0: bosslock@192,432 cleared",
+                  "side": "level_31__r5c24",
+                  "probe": "S"
+                }
+              ]
+            }
+          },
+          "atlas_region": "level_31",
+          "atlas_sub_region": "r5c24",
+          "level": 31,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_31__r24c10": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 30,
+          "height": 40,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 10,
+            "y": 24
+          },
+          "exits": [
+            {
+              "exit_id": "level_31__r24c10 -> level_30__r2c10",
+              "x": 10,
+              "y": 24,
+              "side": null,
+              "exitName": "level_31__r24c10 -> level_30__r2c10",
+              "targetRegion": "level_30__r2c10",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_160_384"
+            },
+            {
+              "exit_id": "level_31__r24c10 -> level_31__r5c24",
+              "x": 12,
+              "y": 27,
+              "side": null,
+              "exitName": "level_31__r24c10 -> level_31__r5c24",
+              "targetRegion": "level_31__r5c24",
+              "targetExitId": "level_31__r5c24 -> level_31__r24c10",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r5c24"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 12,
+              "y": 27,
+              "id": "atlas_gate_0~L31 flag 0: bosslock@192,432 cleared"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Green Key AND L31 flag 0: bosslock@192,432 cleared)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Green Key"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L31 flag 0: bosslock@192,432 cleared"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_0~L31 flag 0: bosslock@192,432 cleared": {
+              "id": "atlas_gate_0~L31 flag 0: bosslock@192,432 cleared",
+              "name": "(Green Key AND L31 flag 0: bosslock@192,432 cleared): L31 flag 0: bosslock@192,432 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Green Key"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L31 flag 0: bosslock@192,432 cleared"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L31 flag 0: bosslock@192,432 cleared",
+                  "side": "level_31__r5c24",
+                  "probe": "S"
+                }
+              ]
+            }
+          },
+          "atlas_region": "level_31",
+          "atlas_sub_region": "r24c10",
+          "level": 31,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
       "level_33": {
         "substrate": "maze",
         "playable_payload": {
@@ -9791,6 +13000,394 @@
           "obstacleLib": {},
           "atlas_region": "level_36",
           "level": 36,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_37__r0c18": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 40,
+          "height": 20,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 18,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "level_37__r0c18 -> level_37__r12c6",
+              "x": 10,
+              "y": 11,
+              "side": null,
+              "exitName": "level_37__r0c18 -> level_37__r12c6",
+              "targetRegion": "level_37__r12c6",
+              "targetExitId": "level_37__r12c6 -> level_37__r0c18",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r12c6"
+            },
+            {
+              "exit_id": "level_37__r0c18 -> level_37__r5c33",
+              "x": 25,
+              "y": 14,
+              "side": null,
+              "exitName": "level_37__r0c18 -> level_37__r5c33",
+              "targetRegion": "level_37__r5c33",
+              "targetExitId": "level_37__r5c33 -> level_37__r0c18",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r5c33"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 10,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 25,
+              "y": 14,
+              "id": "atlas_gate_1"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Swim OR Fire)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Swim"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Fire"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_37",
+          "atlas_sub_region": "r0c18",
+          "level": 37,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_37__r5c33": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 40,
+          "height": 20,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 33,
+            "y": 5
+          },
+          "exits": [
+            {
+              "exit_id": "level_37__r5c33 -> level_37__r0c18",
+              "x": 26,
+              "y": 14,
+              "side": null,
+              "exitName": "level_37__r5c33 -> level_37__r0c18",
+              "targetRegion": "level_37__r0c18",
+              "targetExitId": "level_37__r0c18 -> level_37__r5c33",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r0c18"
+            },
+            {
+              "exit_id": "level_37__r5c33 -> level_37__r9c36",
+              "x": 36,
+              "y": 11,
+              "side": null,
+              "exitName": "level_37__r5c33 -> level_37__r9c36",
+              "targetRegion": "level_37__r9c36",
+              "targetExitId": "level_37__r9c36 -> level_37__r5c33",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r9c36"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 36,
+              "y": 11,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 26,
+              "y": 14,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "Dark Suit",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 32,
+              "y": 10,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 32,
+              "y": 11,
+              "dir": "S",
+              "gate": null
+            },
+            {
+              "x": 32,
+              "y": 11,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 33,
+              "y": 11,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 28,
+              "y": 14,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 29,
+              "y": 14,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 28,
+              "y": 15,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 29,
+              "y": 15,
+              "dir": "E",
+              "gate": null
+            }
+          ],
+          "atlas_region": "level_37",
+          "atlas_sub_region": "r5c33",
+          "level": 37,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_37__r9c36": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 40,
+          "height": 20,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 36,
+            "y": 9
+          },
+          "exits": [
+            {
+              "exit_id": "level_37__r9c36 -> level_37__r5c33",
+              "x": 36,
+              "y": 10,
+              "side": null,
+              "exitName": "level_37__r9c36 -> level_37__r5c33",
+              "targetRegion": "level_37__r5c33",
+              "targetExitId": "level_37__r5c33 -> level_37__r9c36",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r5c33"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 36,
+              "y": 10,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Dark Suit",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_37",
+          "atlas_sub_region": "r9c36",
+          "level": 37,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_37__r12c6": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 40,
+          "height": 20,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 6,
+            "y": 12
+          },
+          "exits": [
+            {
+              "exit_id": "level_37__r12c6 -> level_44__r6c4",
+              "x": 0,
+              "y": 16,
+              "side": null,
+              "exitName": "level_37__r12c6 -> level_44__r6c4",
+              "targetRegion": "level_44__r6c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_256"
+            },
+            {
+              "exit_id": "level_37__r12c6 -> level_12__r0c37",
+              "x": 2,
+              "y": 19,
+              "side": null,
+              "exitName": "level_37__r12c6 -> level_12__r0c37",
+              "targetRegion": "level_12__r0c37",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_32_304"
+            },
+            {
+              "exit_id": "level_37__r12c6 -> level_37__r0c18",
+              "x": 7,
+              "y": 11,
+              "side": null,
+              "exitName": "level_37__r12c6 -> level_37__r0c18",
+              "targetRegion": "level_37__r0c18",
+              "targetExitId": "level_37__r0c18 -> level_37__r12c6",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r0c18"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 7,
+              "y": 11,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Swim OR Fire)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Swim"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Fire"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_37",
+          "atlas_sub_region": "r12c6",
+          "level": 37,
           "tile_size": 16,
           "origin": {
             "x": 0,
@@ -9990,6 +13587,17 @@
             "y": 6
           },
           "exits": [
+            {
+              "exit_id": "level_44__r6c4 -> level_37__r12c6",
+              "x": 9,
+              "y": 8,
+              "side": null,
+              "exitName": "level_44__r6c4 -> level_37__r12c6",
+              "targetRegion": "level_37__r12c6",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_144_128"
+            },
             {
               "exit_id": "level_44__r6c4 -> level_44__r0c4",
               "x": 5,
@@ -13505,12 +17113,31 @@
             "L12 flag 4: bosslock@416,240 cleared",
             "L12 flag 5: bosslock@432,240 cleared",
             "L19 flag 1: bosslock@48,32 cleared",
-            "Level 020 - Shield"
+            "L28 flag 0: rope@160,64 cleared",
+            "Level 020 - Shield",
+            "Level 025 - Chest",
+            "Level 029 - Boss Key 1"
           ],
           "new_accessible_regions": [
             "level_12__r0c37",
             "level_19__r1c1",
-            "level_20__r1c4"
+            "level_20__r1c4",
+            "level_21",
+            "level_22",
+            "level_23",
+            "level_24",
+            "level_25",
+            "level_26__r13c8",
+            "level_26__r2c4",
+            "level_27",
+            "level_28__r0c6",
+            "level_28__r11c4",
+            "level_29__r2c2",
+            "level_29__r5c0",
+            "level_30__r0c4",
+            "level_31__r5c24",
+            "level_37__r12c6",
+            "level_44__r6c4"
           ],
           "sphere_locations": [
             "Level 019 - Boss Key 0"
@@ -13609,6 +17236,33 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "L28 flag 0: rope@160,64 cleared": 1
+            },
+            "resolved_items": {
+              "L28 flag 0: rope@160,64 cleared": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Level 030 - Torchpickup"
+          ],
+          "new_accessible_regions": [
+            "level_28__r1c18",
+            "level_30__r2c10",
+            "level_31__r24c10"
+          ],
+          "sphere_locations": [
+            "L28 flag 0: rope@160,64 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "Progressive Shield": 1
             },
             "resolved_items": {
@@ -13622,6 +17276,138 @@
           ],
           "sphere_locations": [
             "Level 020 - Shield"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 025 - Chest"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.7",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Green Key": 1
+            },
+            "resolved_items": {
+              "Green Key": 1
+            }
+          },
+          "new_accessible_locations": [
+            "L30 flag 0: bosslock@64,32 cleared",
+            "L30 flag 2: bosslock@224,208 cleared",
+            "L31 flag 0: bosslock@192,432 cleared"
+          ],
+          "new_accessible_regions": [
+            "level_30__r8c13"
+          ],
+          "sphere_locations": [
+            "Level 029 - Boss Key 1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L30 flag 0: bosslock@64,32 cleared": 1
+            },
+            "resolved_items": {
+              "L30 flag 0: bosslock@64,32 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L30 flag 0: bosslock@64,32 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L30 flag 2: bosslock@224,208 cleared": 1
+            },
+            "resolved_items": {
+              "L30 flag 2: bosslock@224,208 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L30 flag 2: bosslock@224,208 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L31 flag 0: bosslock@192,432 cleared": 1
+            },
+            "resolved_items": {
+              "L31 flag 0: bosslock@192,432 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L31 flag 0: bosslock@192,432 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Light": 1
+            },
+            "resolved_items": {
+              "Light": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 030 - Torchpickup"
           ]
         }
       }
