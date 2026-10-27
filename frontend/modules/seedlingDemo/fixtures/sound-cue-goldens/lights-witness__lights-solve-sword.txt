@@ -1,0 +1,79 @@
+1 L69 Player.as:797 "Sword" -1 1.000 0.000
+3 L69 Player.as:790 "Sword" -1 1.000 0.000
+9 L69 Player.as:790 "Sword" -1 1.000 0.000
+15 L69 Player.as:790 "Sword" -1 1.000 0.000
+25 L69 Player.as:797 "Sword" -1 1.000 0.000
+26 L69 Game.as:1719 "Text" 0 1.000 0.000
+29 L69 Game.as:1719 "Text" 0 1.000 0.000
+34 L69 NPCs/NPC.as:198 "Text" 1 0.300 0.000
+34 L69 Game.as:1719 "Text" 0 1.000 0.000
+37 L69 Game.as:1719 "Text" 0 1.000 0.000
+42 L69 NPCs/NPC.as:198 "Text" 1 0.300 0.000
+51 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+52 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+53 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+53 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+64 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+79 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+86 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+95 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+113 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+133 L69 Player.as:797 "Sword" -1 1.000 0.000
+138 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+138 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.728 -0.066
+154 L69 Player.as:797 "Sword" -1 1.000 0.000
+159 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.723 -0.274
+175 L69 Player.as:797 "Sword" -1 1.000 0.000
+176 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.752 -0.243
+196 L69 Player.as:797 "Sword" -1 1.000 0.000
+197 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.820 0.158
+209 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+217 L69 Player.as:797 "Sword" -1 1.000 0.000
+218 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.775 -0.064
+238 L69 Player.as:797 "Sword" -1 1.000 0.000
+238 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+239 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.728 -0.086
+251 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+259 L69 Player.as:797 "Sword" -1 1.000 0.000
+260 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.719 -0.232
+267 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+282 L69 Player.as:797 "Sword" -1 1.000 0.000
+287 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.720 -0.273
+289 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+290 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+308 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+312 L69 Player.as:797 "Sword" -1 1.000 0.000
+317 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.705 -0.248
+323 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+336 L69 Player.as:797 "Sword" -1 1.000 0.000
+341 L69 Enemies/Enemy.as:160 "Enemy Die" 1 0.730 -0.070
+353 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+354 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+358 L69 Player.as:797 "Sword" -1 1.000 0.000
+359 L69 Enemies/Enemy.as:160 "Enemy Die" 1 0.749 -0.033
+363 L69 Enemies/Enemy.as:160 "Enemy Die" 1 0.708 0.135
+363 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+367 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+371 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+372 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+381 L69 Player.as:797 "Sword" -1 1.000 0.000
+386 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.702 0.234
+393 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+402 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+413 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+418 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+432 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+438 L69 Player.as:797 "Sword" -1 1.000 0.000
+443 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.729 -0.046
+470 L69 Player.as:797 "Sword" -1 1.000 0.000
+472 L69 Enemies/LightBoss.as:69 "Boss 6 Move" -1 1.000 0.000
+474 L69 Enemies/Enemy.as:160 "Enemy Die" 1 0.866 -0.059
+491 L69 Player.as:797 "Sword" -1 1.000 0.000
+492 L69 Enemies/Enemy.as:165 "Enemy Hit" 1 0.790 -0.053
+512 L69 Player.as:797 "Sword" -1 1.000 0.000
+514 L69 Enemies/Enemy.as:160 "Enemy Die" 1 0.749 0.205
+533 L69 Player.as:797 "Sword" -1 1.000 0.000
+534 L69 Enemies/Enemy.as:160 "Enemy Die" 1 0.869 0.055
+549 L69 Scenery/LightBossTotem.as:50 "Boss Die" 2 0.300 0.000
+551 L69 Player.as:790 "Sword" -1 1.000 0.000
+559 L36 Teleporter.as:109 "Room" 0 1.000 0.000

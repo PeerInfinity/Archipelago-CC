@@ -1,0 +1,5 @@
+13 L6 Enemies/Bob.as:72 "Enemy Hop" 0 0.631 0.004
+13 L6 Enemies/Bob.as:72 "Enemy Hop" 0 0.819 0.181
+20 L6 Player.as:1388 "Hurt" -1 1.000 0.000
+26 L6 Enemies/Bob.as:72 "Enemy Hop" 0 0.666 -0.008
+26 L6 Enemies/Bob.as:72 "Enemy Hop" 0 0.865 0.134

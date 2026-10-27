@@ -27,6 +27,9 @@
  */
 import { volumeToGain } from '../webAudio/webAudio.js';
 
+/** The output bus the sound effects play on (⛓ MUSIC: the music has its own, so each can be switched alone). */
+export const SFX_BUS = 'sfx';
+
 /** How far ahead of the audio clock a tick may be scheduled before the clock re-anchors (s). */
 export const MAX_LEAD = 0.1;
 
@@ -93,6 +96,13 @@ export function createSeedlingSoundPlayer({ out, library, bufferFor, seed } = {}
             const started = [];
             for (const c of cues) {
                 stats.cues += 1;
+                // ⛓ a cue with an `op` acts on the channel a fixed-index play opened (`Music.volumeSound` / `stopSound`)
+                if (c.op === 'stop' || c.op === 'volume') {
+                    const h = channels.get(`${c.key}#${c.index}`);
+                    if (c.op === 'stop') { h?.stop(); channels.delete(`${c.key}#${c.index}`); }
+                    else h?.setGain?.(c.vol, at);
+                    continue;
+                }
                 const count = library?.variantCount(c.key) ?? 0;
                 if (!count) { stats.missing.add(c.key); continue; }
                 const pick = pickVariant(c.set, c.index, count, last, rand);
@@ -101,11 +111,13 @@ export function createSeedlingSoundPlayer({ out, library, bufferFor, seed } = {}
                 if (!buffer || out.state !== 'running') { stats.silent += 1; continue; }
                 const ch = `${c.key}#${pick.index}`;
                 channels.get(ch)?.stop();
-                const h = out.play(buffer, { when: at, gain: c.vol, pan: c.pan });
+                // a cue may sound some frames into a HELD stretch (a FallRock's landing): one tick per held slot
+                const when = at && c.delayFrames ? at + c.delayFrames * tickSeconds : at;
+                const h = out.play(buffer, { when, gain: c.vol, pan: c.pan, bus: SFX_BUS });
                 if (!h) { stats.silent += 1; continue; }
                 channels.set(ch, h);
                 stats.played += 1;
-                started.push({ site: c.site, key: c.key, index: pick.index, at, gain: c.vol, pan: c.pan });
+                started.push({ site: c.site, key: c.key, index: pick.index, at: when, gain: c.vol, pan: c.pan });
             }
             return started;
         },
@@ -116,6 +128,6 @@ export function createSeedlingSoundPlayer({ out, library, bufferFor, seed } = {}
         },
         get stats() { return { ...stats, missing: [...stats.missing] }; },
         /** The effective master gain the output applies (for a readout). */
-        get gain() { return out.muted ? 0 : volumeToGain(out.volume); },
+        get gain() { return out.muted || out.busState?.(SFX_BUS).muted ? 0 : volumeToGain(out.volume); },
     };
 }

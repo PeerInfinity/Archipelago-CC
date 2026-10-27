@@ -1,0 +1,10 @@
+4 L40 Projectiles/IceTurretBlast.as:36 "Other" 2 0.310 0.000
+4 L40 Projectiles/IceTurretBlast.as:36 "Other" 2 0.334 -0.025
+4 L40 Projectiles/IceTurretBlast.as:36 "Other" 2 0.286 0.013
+49 L40 Projectiles/IceTurretBlast.as:36 "Other" 2 0.295 -0.013
+49 L40 Projectiles/IceTurretBlast.as:36 "Other" 2 0.293 -0.163
+49 L40 Projectiles/IceTurretBlast.as:36 "Other" 2 0.289 0.138
+94 L40 Projectiles/IceTurretBlast.as:36 "Other" 2 0.292 0.000
+94 L40 Projectiles/IceTurretBlast.as:36 "Other" 2 0.289 -0.150
+94 L40 Projectiles/IceTurretBlast.as:36 "Other" 2 0.290 0.138
+103 L40 Player.as:1388 "Hurt" -1 1.000 0.000

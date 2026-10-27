@@ -1,0 +1,41 @@
+63 L43 Scenery/FallRock.as:82 "Rock" 0 1.000 0.000 +95f
+63 L43 Scenery/FallRock.as:82 "Rock" 0 1.000 0.000 +95f
+63 L43 Scenery/FallRock.as:82 "Rock" 0 1.000 0.000 +97f
+63 L43 Enemies/BossTotem.as:294 "Other" 0 1.000 0.000
+221 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
+222 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000
+222 L43 Enemies/Enemy.as:165 "Enemy Hit" 1 0.170 0.256
+243 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
+245 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000
+245 L43 Enemies/Enemy.as:165 "Enemy Hit" 1 0.088 0.256
+265 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
+266 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000
+266 L43 Enemies/Enemy.as:165 "Enemy Hit" 1 0.147 0.256
+287 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
+288 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000
+288 L43 Enemies/Enemy.as:165 "Enemy Hit" 1 0.209 0.256
+309 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
+310 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000
+310 L43 Enemies/Enemy.as:165 "Enemy Hit" 1 0.271 0.256
+316 L43 Enemies/BossTotem.as:455 "Enemy Attack" 0 0.150 0.000
+316 L43 Enemies/BossTotem.as:456 "Enemy Attack" 1 0.150 0.000
+331 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
+332 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000
+332 L43 Enemies/Enemy.as:165 "Enemy Hit" 1 0.332 0.256
+353 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
+354 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000
+354 L43 Enemies/Enemy.as:165 "Enemy Hit" 1 0.200 0.256
+355 L43 Enemies/BossTotem.as:369 "Enemy Attack" 2 0.200 0.000
+375 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
+378 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000
+378 L43 Enemies/Enemy.as:165 "Enemy Hit" 1 0.037 0.256
+387 L43 Projectiles/Explosion.as:48 "Explosion" -1 0.362 0.631
+387 L43 Projectiles/Explosion.as:48 "Explosion" -1 0.514 -0.119
+397 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
+399 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000
+399 L43 Enemies/Enemy.as:165 "Enemy Hit" 1 0.095 0.256
+419 L43 Projectiles/WandShot.as:71 "Wand Fire" -1 1.000 0.000
+420 L43 Projectiles/WandShot.as:89 "Wand Fizzle" -1 1.000 0.000
+420 L43 Enemies/Enemy.as:160 "Boss Die" 0 0.165 0.256
+420 L43 Projectiles/Explosion.as:48 "Explosion" -1 0.443 0.256
+660 L43 Enemies/BossTotem.as:478 "Boss Die" 1 0.800 0.000

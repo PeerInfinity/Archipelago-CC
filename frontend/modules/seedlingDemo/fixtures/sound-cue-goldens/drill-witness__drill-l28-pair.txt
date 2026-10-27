@@ -1,0 +1,13 @@
+1 L28 Enemies/Drill.as:102 "Drill" 0 1.000 0.000
+1 L28 Enemies/Drill.as:108 "Drill" 0 1.000 0.000
+1 L28 Enemies/Drill.as:102 "Drill" 0 1.000 0.000
+1 L28 Enemies/Drill.as:108 "Drill" 0 1.000 0.000
+16 L28 Enemies/Drill.as:108 "Drill" 0 1.000 0.000
+16 L28 Enemies/Drill.as:108 "Drill" 0 1.000 0.000
+17 L28 Player.as:1388 "Hurt" -1 1.000 0.000
+37 L28 Player.as:1388 "Hurt" -1 1.000 0.000
+57 L28 Player.as:1388 "Hurt" -1 1.000 0.000
+58 L28 Enemies/Drill.as:102 "Drill" 0 1.000 0.000
+58 L28 Enemies/Drill.as:108 "Drill" 0 1.000 0.000
+58 L28 Enemies/Drill.as:102 "Drill" 0 1.000 0.000
+58 L28 Enemies/Drill.as:108 "Drill" 0 1.000 0.000

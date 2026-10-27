@@ -1,60 +1,240 @@
+13 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.202 -0.771
+13 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.130 -0.773
+13 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.455 -0.373
+26 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.244 -0.736
+26 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.181 -0.745
+26 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.511 -0.345
+39 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.459 -0.515
+39 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.386 -0.530
+39 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.630 -0.130
 49 L5 Puzzlements/Button.as:44 "Switch" -1 0.800 -0.171
 51 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.647 -0.338
 51 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.878 0.062
 51 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.262 -0.538
 51 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.431 0.262
+52 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.671 -0.295
+52 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.579 -0.313
+52 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.648 0.061
+54 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.745 -0.241
+54 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.792 -0.191
 54 L5 Enemies/Enemy.as:165 "Enemy Hit" 0 0.652 -0.299
+58 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.634 0.154
 58 L5 Enemies/Enemy.as:165 "Enemy Hit" 0 0.645 0.033
+61 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.534 -0.451
+61 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.582 -0.401
+61 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.629 -0.351
 62 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.682 -0.301
 62 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.855 0.099
 62 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.289 -0.501
 62 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.413 0.299
+64 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.277 -0.151
+64 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 0.199
+64 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.250 0.249
+65 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.596 -0.368
+65 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.633 -0.259
+65 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.638 -0.106
+67 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.675 -0.251
+67 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.711 -0.201
 67 L5 Enemies/Enemy.as:165 "Enemy Hit" 0 0.610 -0.257
+69 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.635 -0.151
+70 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.233 0.349
+70 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.209 0.399
+70 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.183 0.449
+72 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.582 -0.401
+72 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.629 -0.351
 73 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.682 -0.301
 73 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.855 0.099
 73 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.289 -0.501
 73 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.413 0.299
+75 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.277 0.149
+75 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 0.199
+75 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.250 0.249
+78 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.634 -0.339
+78 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.537 -0.316
+78 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.640 -0.099
+79 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.632 -0.251
+80 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.635 -0.151
+81 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.182 -0.451
+81 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.233 0.349
+81 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.209 0.399
+81 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.183 0.449
+82 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.595 -0.401
+82 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.645 -0.351
 84 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.682 -0.301
 84 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.855 0.099
 84 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.289 -0.501
 84 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.413 0.299
+86 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 -0.201
+86 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.277 0.149
+86 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 0.199
+86 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.250 0.249
+87 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.736 -0.251
 87 L5 Enemies/Enemy.as:165 "Enemy Hit" 0 0.604 -0.366
+91 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.635 -0.151
 91 L5 Enemies/Enemy.as:165 "Enemy Hit" 0 0.646 -0.029
+91 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.514 -0.449
+91 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.577 -0.287
+91 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.646 -0.029
+92 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.182 -0.451
+92 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.233 0.349
+92 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.209 0.399
+92 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.183 0.449
+94 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.534 -0.451
+94 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.582 -0.401
 95 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.682 -0.301
 95 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.855 0.099
 95 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.289 -0.501
 95 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.413 0.299
+96 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.572 -0.351
+97 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 -0.201
+97 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.277 0.149
+97 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 0.199
+97 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.250 0.249
+101 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.632 -0.251
+101 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.664 -0.201
 101 L5 Enemies/Enemy.as:165 "Enemy Hit" 0 0.559 -0.320
+102 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.635 0.149
+102 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.612 0.199
+103 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.233 0.349
+103 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.209 0.399
+103 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.183 0.449
+104 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.548 -0.422
+104 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.481 -0.421
+104 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.630 0.132
+105 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.534 -0.451
+105 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.582 -0.401
+105 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.629 -0.351
 106 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.682 -0.301
 106 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.855 0.099
 106 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.289 -0.501
 106 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.413 0.299
+108 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.277 -0.151
+108 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.250 0.249
+113 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.635 0.149
+114 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.233 0.349
+114 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.209 0.399
+114 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.183 0.449
+116 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.534 -0.451
+116 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.582 -0.401
+116 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.629 -0.351
 117 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.682 -0.301
 117 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.855 0.099
 117 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.289 -0.501
 117 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.413 0.299
+117 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.585 -0.390
+117 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.497 -0.420
+117 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.635 0.117
+119 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.249 -0.251
+119 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 -0.201
+119 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.277 -0.151
+119 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 0.199
+119 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.250 0.249
+124 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.635 0.149
 124 L5 Enemies/Enemy.as:160 "Enemy Die" 0 0.637 0.111
+125 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.233 0.349
+125 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.209 0.399
+125 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.183 0.449
+127 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.582 -0.401
+127 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.629 -0.351
 127 L5 Enemies/Enemy.as:160 "Enemy Die" 0 0.612 -0.364
 128 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.682 -0.301
 128 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.855 0.099
 128 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.289 -0.501
 128 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.413 0.299
+128 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.514 -0.451
+130 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.249 -0.251
+130 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 -0.201
+130 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.277 -0.151
+130 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 0.199
+130 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.250 0.249
+130 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.537 -0.391
+135 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.635 0.149
+136 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.233 0.349
+136 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.209 0.399
+136 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.183 0.449
+138 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.582 -0.401
+138 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.629 -0.351
 139 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.682 -0.301
 139 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.855 0.099
 139 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.289 -0.501
 139 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.413 0.299
+141 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.249 -0.251
+141 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 -0.201
+141 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.277 -0.151
+141 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 0.199
+141 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.250 0.249
+143 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.568 -0.362
+146 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.635 0.149
+147 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.182 -0.451
+147 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.233 0.349
+147 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.209 0.399
+147 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.183 0.449
+149 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.582 -0.401
+149 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.629 -0.351
 150 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.682 -0.301
 150 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.855 0.099
 150 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.289 -0.501
 150 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.413 0.299
+152 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.249 -0.251
+152 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 -0.201
+152 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.277 -0.151
+152 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 0.199
+152 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.250 0.249
+156 L5 Enemies/Bob.as:72 "Enemy Hop" 0 0.592 -0.334
+157 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.635 0.149
+158 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.182 -0.451
+158 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.233 0.349
+158 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.209 0.399
+158 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.183 0.449
+160 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.582 -0.401
+160 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.629 -0.351
 161 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.682 -0.301
 161 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.855 0.099
 161 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.289 -0.501
 161 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.413 0.299
+163 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.249 -0.251
+163 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 -0.201
+163 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.277 -0.151
+163 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 0.199
+163 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.250 0.249
+166 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.675 -0.251
 166 L5 Enemies/Enemy.as:160 "Enemy Die" 0 0.615 -0.312
+169 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.167 -0.478
+169 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.245 0.322
+169 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.222 0.372
+169 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.197 0.422
 172 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.616 -0.369
 172 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.891 0.031
 172 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.239 -0.569
 172 L5 Puzzlements/ArrowTrap.as:56 "Arrow" 0 0.445 0.231
+172 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.543 -0.419
 173 L5 Puzzlements/Button.as:44 "Switch" -1 0.788 -0.184
+174 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.233 -0.295
+174 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.251 -0.245
+174 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.290 0.055
+174 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.285 0.105
+174 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.276 0.155
+177 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.558 -0.390
+180 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.073 -0.627
+180 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.106 -0.577
+180 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.296 0.173
+180 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.282 0.223
+180 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.265 0.273
+183 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.406 -0.566
+185 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.188 -0.399
+185 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.211 -0.349
+185 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.291 -0.049
+185 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.292 0.001
+185 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.291 0.051
+191 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.090 -0.644
+191 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.125 -0.594
+191 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.340 0.156
+191 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.326 0.206
+191 L5 Projectiles/Arrow.as:59 "Arrow" 1 0.309 0.256
 303 L6 Teleporter.as:109 "Room" 0 1.000 0.000
+303 L6 Enemies/Bob.as:72 "Enemy Hop" 0 0.200 0.800
+316 L6 Enemies/Bob.as:72 "Enemy Hop" 0 0.211 0.767
+329 L6 Enemies/Bob.as:72 "Enemy Hop" 0 0.183 0.735
+342 L6 Enemies/Bob.as:72 "Enemy Hop" 0 0.184 0.707
+355 L6 Enemies/Bob.as:72 "Enemy Hop" 0 0.223 0.678
+368 L6 Enemies/Bob.as:72 "Enemy Hop" 0 0.262 0.649

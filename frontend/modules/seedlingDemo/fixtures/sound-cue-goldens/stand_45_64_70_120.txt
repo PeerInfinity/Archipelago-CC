@@ -1,0 +1,10 @@
+1 L45 Game.as:1206 "Wind" 1 0.131 0.000
+13 L45 Enemies/IceTrap.as:44 "Enemy Attack" 3 0.925 0.000
+26 L45 Enemies/IceTrap.as:44 "Enemy Attack" 3 0.925 0.000
+39 L45 Enemies/IceTrap.as:44 "Enemy Attack" 3 0.925 0.000
+52 L45 Enemies/IceTrap.as:44 "Enemy Attack" 3 0.925 0.000
+65 L45 Enemies/IceTrap.as:44 "Enemy Attack" 3 0.925 0.000
+78 L45 Enemies/IceTrap.as:44 "Enemy Attack" 3 0.925 0.000
+91 L45 Enemies/IceTrap.as:44 "Enemy Attack" 3 0.925 0.000
+104 L45 Enemies/IceTrap.as:44 "Enemy Attack" 3 0.925 0.000
+117 L45 Enemies/IceTrap.as:44 "Enemy Attack" 3 0.925 0.000
