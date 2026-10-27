@@ -214,9 +214,12 @@ describe('the committed playthrough\'s leg list', () => {
         //   RULES rope-events 1 (flag:L16:0: L17's stairs land in L16's armed lane, staged)
         // ⛓ tile-primitives-pixelmask-l86: 50 -> 43 — the L1 arrival (gated by flag:L0:4) binds to the house-door pocket
         //   level_0__r6c5, so its 8 hub legs go (7 staged, 1 skipped) and the pocket's one leg to the door arrives (staged).
-        expect(gated.length).toBe(43);
+        // ⛓ RULES l63-darktrap: 43 -> 50 — L65's landings in L63 (r6c9 <- in_L65_128_0, r10c2 <- in_L65_32_0) and L101's
+        //   in L102 (r5c9 <- in_L101_144_96) cost their pole's event: 5 staged, and 2 skipped (the L63 poles' own location
+        //   legs from those landings).
+        expect(gated.length).toBe(50);
         expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
-        expect(gated.filter((l) => l.stagedEvents).length).toBe(35);
+        expect(gated.filter((l) => l.stagedEvents).length).toBe(40);
         expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
         const plain = legs.filter((l) => !l.arrive.events && !l.goalEvents);
         expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
@@ -236,19 +239,23 @@ describe('the committed playthrough\'s leg list', () => {
         //   its three pools, so its 16 one-region legs become 6 within-pool legs (465-470).
         // ⛓ tile-primitives-pixelmask-l86: the SAME legs by key, every id from 38 on shifted by -12 — L0's 13 hub legs that
         //   touched the L1 arrival or the house door go (both bind to the new pocket level_0__r6c5) and its one leg arrives.
+        // ⛓ RULES l63-darktrap: the SAME legs by key, every id from 559 on shifted by +3 (L63's three pole location legs),
+        //   from 613 by +4 (L65's) and from 785 by +6 (L101's two); and the doors the pole events gate stage them: L65's
+        //   two teleporters into L63 (flag:L63:6 ×2, flag:L63:7) and L101's stairs up (flag:L101:0).
         expect(by).toEqual({
             'flag:L0:4': [38], 'flag:L0:1': [90, 100, 110, 120, 130, 140, 150], 'flag:L24:0': [166],
             'flag:L16:0': [192, 194, 196, 198, 200, 202, 204, 206], 'flag:L39:8': [343],
-            'flag:L62:0': [511, 516, 521, 526, 531, 559], 'flag:L63:1': [513, 518, 523, 528, 533, 537, 542, 547, 552],
-            'flag:L71:2': [613, 615], 'flag:L12:7+flag:L12:12': [633],
-            'flag:L112:1': [785, 786, 792, 793, 799, 800, 806, 807, 813, 814],
-            'flag:L114:0': [787, 788, 789, 794, 795, 796, 801, 802, 803, 808, 809, 815, 816],
-            'flag:L113:0': [824, 825, 826, 827],
+            'flag:L62:0': [511, 516, 521, 526, 531, 562], 'flag:L63:1': [513, 518, 523, 528, 533, 537, 542, 547, 552],
+            'flag:L63:6': [565, 567], 'flag:L63:7': [568],
+            'flag:L71:2': [617, 619], 'flag:L12:7+flag:L12:12': [637], 'flag:L101:0': [743],
+            'flag:L112:1': [791, 792, 798, 799, 805, 806, 812, 813, 819, 820],
+            'flag:L114:0': [793, 794, 795, 800, 801, 802, 807, 808, 809, 814, 815, 821, 822],
+            'flag:L113:0': [830, 831, 832, 833],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[788].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[794].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
         expect(legs[511].sphere.inventory).not.toContain('Ghost Spear');
         expect(legs[513].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
@@ -270,18 +277,23 @@ describe('the committed playthrough\'s leg list', () => {
         //   for are L115's (`otherLevel`), the FinalDoor's far side.
         const RULES = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
         // ⛓ RULES rope-events — and a rope CUT (`action.opens`): its barrier is an arrow lane, never a solid.
+        // ⛓ RULES l63-darktrap — and a POLE however it is lit (`obstacle.class` 'lightpole': the cross-room presses and the
+        //   in-room thrusts alike): its barrier is the darktraps it kills, never a solid.
         const PRESS = new Set(Object.values(RULES.regions['1']).flatMap((r) => r.locations)
-            .filter((x) => x.action?.presser || x.action?.gates || x.action?.opens).map((x) => x.event_id));
+            .filter((x) => x.action?.presser || x.action?.gates || x.action?.opens || x.obstacle?.class === 'lightpole')
+            .map((x) => x.event_id));
         // ⛓ RULES darktrap-events: + the two presses that light Dungeon 6's poles (their barrier is a darktrap's
         //   contact, never a solid, so their arrivals are never inside one either)
         // ⛓ RULES yeti-event: + the L58 Yeti's talk (`action.gates`: the portal to L46, never a solid)
-        expect([...PRESS].sort()).toEqual(['flag:L114:0', 'flag:L16:0', 'flag:L28:0', 'flag:L39:8', 'flag:L58:1', 'flag:L62:0', 'flag:L63:1']);
+        // ⛓ RULES l63-darktrap: + the four in-room poles (L63:6, L63:7, L65:0, L101:0)
+        expect([...PRESS].sort()).toEqual(['flag:L101:0', 'flag:L114:0', 'flag:L16:0', 'flag:L28:0', 'flag:L39:8', 'flag:L58:1',
+            'flag:L62:0', 'flag:L63:1', 'flag:L63:6', 'flag:L63:7', 'flag:L65:0']);
         // the ARRIVAL's staging only (a goal event stages for the goal, never for the landing)
         const arrivalStaged = legs.filter((l) => l.arrive.events && l.stagedEvents)
             .map((l) => ({ ...l, stagedEvents: l.stagedEvents.filter((e) => !l.goalEvents?.includes(e.eventId)) }));
         const pressed = arrivalStaged.filter((l) => l.stagedEvents.some((e) => PRESS.has(e.eventId)));
         expect([...new Set(pressed.map((l) => `${l.level},${l.arrive.x},${l.arrive.y}`))].sort())
-            .toEqual(['115,64,128', '115,80,128', '16,112,48', '38,144,16', '39,144,608']);
+            .toEqual(['102,176,96', '115,64,128', '115,80,128', '16,112,48', '38,144,16', '39,144,608', '63,128,288', '63,32,288']);
         for (const l of pressed) expect(inside(l, []), l.key).toBeNull();
         const byArrival = new Map(arrivalStaged.filter((l) => !pressed.includes(l))
             .map((l) => [`${l.level},${l.arrive.x},${l.arrive.y}`, l]));
