@@ -313,7 +313,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             weighHypothesisChain: true,
             // ⛓ and dashSpinnerForecast after the L18 wall-time check (OFF 6,192 vs ON 6,116 ms; hammer-2 signed).
             dashSpinnerForecast: true,
-            // ⛓ planning-14's wave-32 flip (⚖ user 2026-10-26): CHESTSEAL, L40LATCH and L32BOB turn ON.
+            // ⛓ planning-14's wave-32 flip (⚖ user 2026-10-26): CHESTSEAL, L40LATCH, L32BOB and RULESREF turn ON.
             // ⛓ fidelity CHESTSEAL (wave 32): a chest `checkBySeal()` removed is open and its flag banked — shipped OFF.
             chestSealRemoval: true,
             // ⛓ fidelity L40LATCH D1 (wave 32): a hold's still wait priced as its stance walk's tail — shipped OFF.
@@ -323,11 +323,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L32BOB (wave 32): the Bob Boss forecast carries the swing in flight — ships OFF.
             encounterSwingInFlight: true,
             // ⛓ fidelity RULESREF D2 (wave 32): a closed spear bridge on the frontier opened by a thrust — ships OFF.
-            spearBridgeVerb: false,
+            spearBridgeVerb: true,
             // ⛓ fidelity RULESREF D3 (wave 32): a frontier with no actionable entry flooded again at 8 px — ships OFF.
-            fineFrontierFlood: false,
+            fineFrontierFlood: true,
             // ⛓ fidelity RULESREF D1 (wave 32): the walk's gate times a puncher's punch — ships OFF.
-            punchGateTimed: false });
+            punchGateTimed: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

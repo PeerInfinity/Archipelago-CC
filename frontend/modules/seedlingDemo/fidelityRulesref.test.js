@@ -65,10 +65,10 @@ const refusalOf = (fn) => {
 };
 
 describe('RULESREF — the switches', () => {
-    it('all three ship OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.punchGateTimed).toBe(false);
-        expect(CONTACT_FIDELITY_DEFAULTS.spearBridgeVerb).toBe(false);
-        expect(CONTACT_FIDELITY_DEFAULTS.fineFrontierFlood).toBe(false);
+    it('all three ship ON (planning-14\'s wave-32 flip, ⚖ user 2026-10-26)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.punchGateTimed).toBe(true);
+        expect(CONTACT_FIDELITY_DEFAULTS.spearBridgeVerb).toBe(true);
+        expect(CONTACT_FIDELITY_DEFAULTS.fineFrontierFlood).toBe(true);
     });
 });
 

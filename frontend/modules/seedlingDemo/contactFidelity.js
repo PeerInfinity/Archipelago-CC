@@ -1521,7 +1521,7 @@ export const CONTACT_FIDELITY = {
      * verb thrusts from a stance one or two tiles behind it, and the block-route search's relaxed proof and goal test
      * count a bridge the run can open as open (`deriveBlockRoute`). OFF: byte-identical. `SEEDLING_SPEAR_BRIDGE_VERB=0|1`.
      */
-    spearBridgeVerb: false,
+    spearBridgeVerb: true,
     /**
      * fidelity RULESREF D3 (wave 32) — A DOOR HALF A TILE OFF THE GRID IS NAMED ON THE 8 px LATTICE
      * (`solverBot.identifyAndSelect`'s frontier flood).
@@ -1532,7 +1532,7 @@ export const CONTACT_FIDELITY = {
      * ON: a frontier with no actionable entry is flooded again at `FINE_LATTICE` (8 px; nodes at x 76, 84 fit the
      * notch), which names the lock (`keylock`). OFF: byte-identical. `SEEDLING_FINE_FRONTIER_FLOOD=0|1`.
      */
-    fineFrontierFlood: false,
+    fineFrontierFlood: true,
     /**
      * fidelity RULESREF D1 (wave 32) — THE WALK'S DECISION GATE TIMES A PUNCHER'S PUNCH (`solverBot.punchTickAt`,
      * `dangerMap.chaserDanger`), as `SWORD_GATE_TIMED` times a BobSoldier's blade.
@@ -1545,7 +1545,7 @@ export const CONTACT_FIDELITY = {
      * rung never ran. ON: that gate prices a body whose one-tick forecast row carries `punch` by the punch and its bare
      * body. OFF: byte-identical. `SEEDLING_PUNCH_GATE_TIMED=0|1`.
      */
-    punchGateTimed: false,
+    punchGateTimed: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
