@@ -80,7 +80,7 @@ import { runBait } from './botDriverV2.js';
 import { pacedSummary, runPace } from './botDriverV2.js';
 import {
     BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherShieldOf, crusherSightDanger,
-    searchBaitOrdering,
+    parkedTailProbe, searchBaitOrdering, trimParkedTail,
 } from './crusherBait.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
@@ -1043,10 +1043,11 @@ function execBait(run, perTick, resolved, ctx) {
         const label = `${what} chain ${i + 1}/${resolved.chains.length} ${chain.id} ${row.charges.join('')}`;
         if (i > 0) ctx.walkTo(ctx.goal, { ...row.stance }, { what: `${label} stance` });
         const [ox, oy] = chain.id.slice(chain.id.indexOf('@') + 1).split(',').map(Number);
-        const spec = (prefix = []) => ({
+        const spec = (prefix = [], tail = null) => ({
             crusher: { x: ox, y: oy },
             approach: [...prefix, ...row.approach.map((sp) => ({ ...sp }))],
-            spans: row.spans.map((sp) => ({ ...sp })),
+            // ⛓ L41TOTEM D3 — `tail` (the fork's `parkedTailProbe`, only while `baitParkedTail` is ON) cuts the idle
+            spans: trimParkedTail(row.spans.map((sp) => ({ ...sp })), tail),
             park: { ...row.park },
         });
         // The lanes are static while every crusher is parked: one solid list per crusher.
@@ -1127,8 +1128,9 @@ function execBait(run, perTick, resolved, ctx) {
                     prefix = swung.map((h) => ({ key: h.size ? [...h].join('+') : null, ticks: 1 }));
                 }
                 try {
-                    runBait(f, [], spec(prefix), `${label} (fork)`);
-                    chosen = { ...c, prefix };
+                    const tail = CONTACT_FIDELITY.baitParkedTail ? parkedTailProbe(f) : null;
+                    runBait(f, tail ?? [], spec(prefix), `${label} (fork)`);
+                    chosen = { ...c, prefix, tail };
                     break;
                 } catch (e) {
                     if (!(e instanceof BotDriverV2Error)) throw e;
@@ -1160,7 +1162,7 @@ function execBait(run, perTick, resolved, ctx) {
         }
         let rec;
         try {
-            rec = runBait(run, perTick, spec(chosen.prefix ?? []), label);
+            rec = runBait(run, perTick, spec(chosen.prefix ?? [], chosen.tail ?? null), label);
         } catch (e) {
             if (e instanceof BotDriverV2Error) refuse(e.message);
             throw e;

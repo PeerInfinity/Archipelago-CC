@@ -102,7 +102,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_LIGHTS_SORTIE_PORTFOLIO
         || !!process.env.SEEDLING_CRUSHER_BAIT_PRESS_GOAL || !!process.env.SEEDLING_FORCED_HIT_WITNESS_FIRST
         || !!process.env.SEEDLING_WEIGH_HYPOTHESIS_CHAIN || !!process.env.SEEDLING_DASH_SPINNER_FORECAST
-        || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT
+        || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO
+        || !!process.env.SEEDLING_BAIT_PARKED_TAIL)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -331,7 +333,13 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity DETERM (c) F1 (wave 33): a released Cover under a hitable keeps its faded alpha — ships OFF.
             coverHeldFade: false,
             // ⛓ fidelity DETERM (c) F2 (wave 33): a Lock re-closes at alpha 0, restored a step later — ships OFF.
-            lockRecloseLag: false });
+            lockRecloseLag: false,
+            // ⛓ fidelity L41TOTEM D1 (wave 33): the bait search floods each component once (a cost key) — ships OFF.
+            baitComponentMemo: false,
+            // ⛓ fidelity L41TOTEM D1b (wave 33): the bait alignment asks each position once (a cost key) — ships OFF.
+            baitAlignSafeMemo: false,
+            // ⛓ fidelity L41TOTEM D3 (wave 33): a bait's idle ends when the crusher has parked — ships OFF.
+            baitParkedTail: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

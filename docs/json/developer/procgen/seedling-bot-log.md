@@ -26180,3 +26180,45 @@ asserts 101 more steps, the model's old answer; the game re-opens at once.
   Two requests that differ only in `seam.time` and answer the same plan clear the solver.
 - A "reset" line shared by two classes is two lines in the AS3. `Lock` has `if (type == normType) alpha = 1`;
   `Cover` has none. Its alpha moves only in `reset()`.
+
+
+### Seedling fidelity L41TOTEM — leg 855's timeout is game-paced play; the bait search floods each component once (`baitComponentMemo`), the alignment asks each position once (`baitAlignSafeMemo`), a bait's idle ends at the park (`baitParkedTail`) — all OFF
+
+Wave 33, planner `seedling-fidelity-planning-15`. The report is `CC/docs/cloud-reports/seedling-fidelity-l41totem.md`
+(evidence beside it).
+
+**W0.** Sweep leg 855 (L41 Totem Part 240,144 from `in_L40_944_96`; 849 at 7266baa10d) has TIMED OUT in every full sweep
+since 10-24, and it was carried as a ~240 s solve. **It is not one.** On CI the page's worker solved it in 4.4 s and
+9.0 s (keyed runs 40536788606 / 40536803626). The plan is 2,505 ticks, which the game plays at its own ~30 ticks/s
+pacing cap (29.4 / 29.1 measured on CI, 28.5 here): ≥ 83.5 s of play against a 90 s leg budget. Run 1 drained 2,503 of
+2,505 rows and served the part at t2497 before the cut. Every run of the plan matches the game exactly
+(`firstDivergence`, every drained row). In the solve, the crusher-bait ordering search is 60% (8.3 of 14.9 s in node),
+run once per pass from the same arrival. Of its 68,418 component floods, 68,406 start inside a component it had already
+flooded under the same configuration: each ends at `seenStates` → `continue`.
+
+**D1 / D1b — the cost (`baitComponentMemo`, `baitAlignSafeMemo`).** D1 skips such an escape seed before its flood: an
+exact skip by the search's own invariant, the same answer, stats and order. D1b memoises `alignmentCandidates`' `safeAt(p)`
+per call on (p.x, p.y): the preview never advances the run, and 57,874 of 96,384 asks were repeats. Leg 855's request:
+14.29 s → 5.19 s (node, 4 runs each), with the same answer sha, progress trace and work units. The page worker here goes
+13.0 s → 5.6 s. The cost cut alone still left CI run 2 over budget (projected ~91 s): the floor is the play.
+
+**D3 — the plan (`baitParkedTail`).** R5's fixed chain idles (160 / 220 / 260 at L41) outlast the charge: the crusher
+parks 28, 123 and 85 ticks before they end. ON: the fork that certifies a chain's alignment records (`parkedTailProbe`,
+a `perTick` sink for `runBait`) where the trailing streak begins in which every crusher is parked and the player is at
+rest, and the live chain's last idle span is cut to end there. `runBait` re-checks the cut chain. 855: 2,505 → 2,269 t.
+Game witness (p4g, local, every key ON): leg 855 `done` inside the default 90 s budget, 2,270 rows at 0 px, served at
+t2262, 0 hits. D2: the OFF plan is game-correct too, so there is no model gap on the leg.
+
+**Movers.**
+- Survey: crushers live only in L41 / L42 / L107. Steps 96 / 98 / 228 are byte-identical under D1 + D1b. Under D3, 96
+  goes 2,346 → 2,110 t and 98 goes 1,294 → 1,285 t; no verdict or wording moves.
+- Bounded set (101 files): green under D1 + D1b. Under D3, two committed-witness pins go red, `crusher-l42-round-trip`
+  and `crusherpress-l41-bait` ("the solver's own / still plans the recorded tape"): a flip owes their re-record. No
+  `solveProgress` / `solverDeadline` / `jsRuntimeSolverShouldStop` pin moves. L4 has no crusher.
+
+**Trap candidates.**
+- A sweep `timeout` is not a slow solve. Read `solvedMs`, `rowsDrained / ticks` and the shard's play ticks/s first: a
+  2,500-tick plan cannot fit a 90 s leg at 30 ticks/s.
+- A memo guard that replays one room can be blind. At L41 every previewed position is safe, so a mis-keyed `safe` memo
+  passed the solver rows. Test the KEY with an answer that varies along every axis the key claims.
+- A choreography's fixed idle is a wait, not a requirement. The tail after the park is time the plan pays for.
