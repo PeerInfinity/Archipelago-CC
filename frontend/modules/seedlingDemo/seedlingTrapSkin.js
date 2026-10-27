@@ -61,8 +61,12 @@ export const TRAP_COVERAGE = Object.freeze({
 });
 /** Drawn in their default state: what the run does not model. */
 export const TRAP_PENDING = Object.freeze({
-    LavaTrap: 'the tongue ("out"/"in", angle, nightBmp copy), "chomp" [2] and "die" (LavaTrap.as:56-170): the model is a hazard disc',
-    'FallRock / FallRockLarge': 'the fall itself (vy += 0.6 after 60 updates): it happens in the dead frames the fade hold shows',
+    // ⛓ G10 re-examined both (draw-only): neither can be drawn from what the run carries without contradicting it.
+    LavaTrap: 'the tongue ("out"/"in", angle, nightBmp copy), "chomp" [2] and "die" (LavaTrap.as:56-170): the launch ATTACHES '
+        + 'the player and pulls it along the tongue to its death, and the model is a hazard disc — a drawn tongue would show a '
+        + 'pull the run never makes. Needs the model (fidelity) to carry the tongue',
+    'FallRock / FallRockLarge': 'the fall itself (vy += 0.6 after 60 updates): it happens in the dead frames the fade hold shows, '
+        + 'where the page steps no skin (the hold returns before the tick); drawing it needs the held slots to step a skin',
 });
 
 // ── the adapter ─────────────────────────────────────────────────────────

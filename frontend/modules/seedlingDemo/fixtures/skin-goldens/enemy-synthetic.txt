@@ -14,7 +14,7 @@ t=2012 [-] | seedling:enemy/spinner#1 drawImage(seedling/Spinner, 18, 0, 59, 59)
 t=2013 [-] | seedling:enemy/spinner#1 drawImage(seedling/Spinner, 18, 0, 59, 59) rot=112 scale=1.4000000000000004x1.4000000000000004 alpha=0.36 ; seedling:enemy/spinner#0 drawImage(seedling/Spinner, 0, 0, 59, 59) alpha=0.6
 t=2014 [-] | seedling:enemy/spinner#1 drawImage(seedling/Spinner, 18, 0, 59, 59) rot=120 scale=1.5000000000000004x1.5000000000000004 alpha=0.25 ; seedling:enemy/spinner#0 drawImage(seedling/Spinner, 0, 0, 59, 59) alpha=0.5
 t=2015 [-] | seedling:enemy/spinner#1 drawImage(seedling/Spinner, 18, 0, 59, 59) rot=128 scale=1.6000000000000005x1.6000000000000005 alpha=0.16 ; seedling:enemy/spinner#0 drawImage(seedling/Spinner, 0, 0, 59, 59) alpha=0.4
-t=2016 [-] | seedling:projectile/arrow#0 drawImage(seedling/Arrow, 0, 0, 36, 38.5)
-t=2017 [-] | seedling:projectile/arrow#0 drawImage(seedling/Arrow, 0, 0, 36, 38.5) rot=-90
-t=2018 [-] | seedling:projectile/arrow#0 drawImage(seedling/Arrow, 0, 0, 36, 38.5) rot=135
-t=2019 [-] | seedling:projectile/arrow#0 drawImage(seedling/Arrow, 0, 0, 36, 38.5) rot=135
+t=2016 [-] | seedling:projectile/arrow#0 drawImage(seedling/Arrow, 0, 0, 36, 39)
+t=2017 [-] | seedling:projectile/arrow#0 drawImage(seedling/Arrow, 0, 0, 36, 39) rot=-90
+t=2018 [-] | seedling:projectile/arrow#0 drawImage(seedling/Arrow, 0, 0, 36, 39) rot=135
+t=2019 [-] | seedling:projectile/arrow#0 drawImage(seedling/Arrow, 0, 0, 36, 39) rot=135

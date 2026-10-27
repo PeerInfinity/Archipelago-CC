@@ -1,0 +1,1 @@
+t=1..3 L111 [frozen] | seedling:boss/frozenboss#0 drawImage(seedling/FrozenBoss, 0, 0, 96, 16) night

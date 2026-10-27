@@ -1,3 +1,3 @@
-t=0..18 L64 [ghostspear] | seedling:pickup/ghostspear#0 drawImage(seedling/GhostSpear, 0, 0, 70, 28.5)
-t=19..47 L64 [ghostspear:held] | seedling:pickup/ghostspear#0 drawImage(seedling/GhostSpear, 0, 0, 70, 22.55)
+t=0..18 L64 [ghostspear] | seedling:pickup/ghostspear#0 drawImage(seedling/GhostSpear, 0, 0, 70, 29)
+t=19..47 L64 [ghostspear:held] | seedling:pickup/ghostspear#0 drawImage(seedling/GhostSpear, 0, 0, 70, 23.05)
 t=48..56 L64 [taken] |

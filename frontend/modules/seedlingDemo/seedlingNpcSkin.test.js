@@ -275,7 +275,8 @@ describe('2. by hand from the AS3', () => {
         const s = stepNpcSkin(null, V({ watchers: [w()] }), 1);
         expect(npcOps(V({ watchers: [w()] }), art, { skin: s })).toEqual([]);
         const [op] = npcOps(V({ shield: true, watchers: [w()] }), art, { skin: s });
-        expect([op.key, op.dx, op.dy, op.layer]).toEqual([WATCHER_KEY, 94, 92.5, -(100 - 8 + 32 / 3)]);
+        // ⛓ G10 (F4): the int origin — 15 px high → 7, not 7.5
+        expect([op.key, op.dx, op.dy, op.layer]).toEqual([WATCHER_KEY, 94, 93, -(100 - 8 + 32 / 3)]);
         expect(npcOps(V({ shield: true, watchers: [w({ text: false })] }), art, { skin: s })[0].layer).toBe(-(100 + 128));
     });
 });

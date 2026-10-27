@@ -1,0 +1,27 @@
+t=0..132 L19 [shield:sit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
+t=133..134 L19 [shield:moveShield] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
+t=135..136 L19 [shield:moveShield] | seedling:boss/shieldboss#1 drawImage(seedling/ShieldBoss, 56, 0, 76, 24)
+t=137..145 L19 [shield:movedShield] | seedling:boss/shieldboss#2 drawImage(seedling/ShieldBoss, 112, 0, 76, 24)
+t=146 L19 [shield:sit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
+t=147..156 L19 [shield:sit,shield:hit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24) tint=#ff0000
+t=157..166 L19 [shield:sit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
+t=167..175 L19 [shield:sit,shield:hit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24) tint=#ff0000
+t=176..265 L19 [shield:sit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
+t=266..267 L19 [shield:moveShield] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
+t=268..269 L19 [shield:moveShield] | seedling:boss/shieldboss#1 drawImage(seedling/ShieldBoss, 56, 0, 76, 24)
+t=270..277 L19 [shield:movedShield] | seedling:boss/shieldboss#2 drawImage(seedling/ShieldBoss, 112, 0, 76, 24)
+t=278 L19 [shield:sit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
+t=279..288 L19 [shield:sit,shield:hit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24) tint=#ff0000
+t=289..298 L19 [shield:sit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
+t=299..307 L19 [shield:sit,shield:hit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24) tint=#ff0000
+t=308..397 L19 [shield:sit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
+t=398..399 L19 [shield:moveShield] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
+t=400..401 L19 [shield:moveShield] | seedling:boss/shieldboss#1 drawImage(seedling/ShieldBoss, 56, 0, 76, 24)
+t=402..417 L19 [shield:movedShield] | seedling:boss/shieldboss#2 drawImage(seedling/ShieldBoss, 112, 0, 76, 24)
+t=418..420 L19 [shield:stab] | seedling:boss/shieldboss#3 drawImage(seedling/ShieldBoss, 168, 0, 76, 24)
+t=421..422 L19 [shield:stab] | seedling:boss/shieldboss#4 drawImage(seedling/ShieldBoss, 224, 0, 76, 24)
+t=423..424 L19 [shield:stab] | seedling:boss/shieldboss#5 drawImage(seedling/ShieldBoss, 280, 0, 76, 24)
+t=425..426 L19 [shield:stab] | seedling:boss/shieldboss#6 drawImage(seedling/ShieldBoss, 336, 0, 76, 24)
+t=427..428 L19 [shield:stab] | seedling:boss/shieldboss#7 drawImage(seedling/ShieldBoss, 392, 0, 76, 24)
+t=429..430 L19 [shield:stab] | seedling:boss/shieldboss#8 drawImage(seedling/ShieldBoss, 448, 0, 76, 24)
+t=431..460 L19 [shield:sit] | seedling:boss/shieldboss#0 drawImage(seedling/ShieldBoss, 0, 0, 76, 24)
