@@ -18,15 +18,22 @@
 #      restore ref, and merge their preset_files.json entries back in — so the
 #      dev index (preset_files.json) = canonical (live) + preserved dev presets.
 #
+#   3. Keep the PUBLIC preserved presets in the live index too. A line of the
+#      list that reads `<id> public` marks a preset that is dev-BUILT (the
+#      workflow never produces it) but must still appear on the deployed site
+#      — e.g. one a tutorial tells a person to load. Its live entry is the
+#      same entry the dev index gets, so the live index =
+#      canonical + public preserved presets.
+#
 # The set of preserved presets is read from preserved-dev-presets.txt (one
-# game-id per line). Workflow-produced worldgen worlds (worlds/*_worldgen) and *_worldgen preset
+# game-id per line, optionally followed by `public`). Workflow-produced worldgen worlds (worlds/*_worldgen) and *_worldgen preset
 # dirs are intentionally NOT restored; hand-maintained worldgen presets that ARE
 # listed (bounce/runner/runner_sphere) get both their preset dir and their
 # worlds/<id> package restored.
 #
 # Idempotent: re-running recomputes the canonical index by stripping the
-# preserved ids from the current preset_files.json, so it is stable no matter
-# what state preset_files.json starts in.
+# preserved ids (public ones included) from the current preset_files.json, so
+# it is stable no matter what state preset_files.json starts in.
 #
 # Usage:
 #   scripts/release/apply-post-preset-merge.sh [--from-ref REF] [--list FILE] [--dry-run]
@@ -64,16 +71,28 @@ LIVE_FILES="$PRESETS_DIR/preset_files.live.json"
 [ -f "$PRESET_FILES" ] || { echo "error: $PRESET_FILES not found (run after merging generated-presets into main)" >&2; exit 1; }
 git rev-parse --verify --quiet "$FROM_REF" >/dev/null || { echo "error: ref not found: $FROM_REF" >&2; exit 1; }
 
-# Read preserved ids (skip blanks / comments).
-mapfile -t PRESERVED < <(grep -vE '^\s*(#|$)' "$LIST_FILE" | sed 's/[[:space:]]*$//')
+# Read preserved ids (skip blanks / comments); a second field `public` marks
+# the ones the live index keeps too. Anything else in that field is an error.
+PRESERVED=()
+PUBLIC=()
+while read -r id flag extra; do
+  case "$id" in ''|'#'*) continue ;; esac
+  if [ -n "${extra:-}" ] || { [ -n "${flag:-}" ] && [ "$flag" != "public" ]; }; then
+    echo "error: $LIST_FILE: bad line for '$id' (expected '<id>' or '<id> public')" >&2; exit 1
+  fi
+  PRESERVED+=("$id")
+  [ "${flag:-}" = "public" ] && PUBLIC+=("$id")
+done < "$LIST_FILE"
 echo "Restore ref          : $FROM_REF"
 echo "Preserved presets    : ${PRESERVED[*]:-<none>}"
+echo "  of which public    : ${PUBLIC[*]:-<none>}"
 echo "Dry run              : $DRY_RUN"
 echo
 
 # --- 1 + 2 (index): recompute live (canonical) and dev (canonical + preserved) ---
 PRESERVED_CSV="$(IFS=,; echo "${PRESERVED[*]:-}")"
-FROM_REF="$FROM_REF" PRESERVED_CSV="$PRESERVED_CSV" \
+PUBLIC_CSV="$(IFS=,; echo "${PUBLIC[*]:-}")"
+FROM_REF="$FROM_REF" PRESERVED_CSV="$PRESERVED_CSV" PUBLIC_CSV="$PUBLIC_CSV" \
 PRESET_FILES="$PRESET_FILES" LIVE_FILES="$LIVE_FILES" DRY_RUN="$DRY_RUN" \
 python3 - <<'PY'
 import json, os, subprocess, sys
@@ -83,6 +102,7 @@ live_files   = os.environ["LIVE_FILES"]
 from_ref     = os.environ["FROM_REF"]
 dry_run      = os.environ["DRY_RUN"] == "1"
 preserved    = [x for x in os.environ["PRESERVED_CSV"].split(",") if x]
+public       = [x for x in os.environ["PUBLIC_CSV"].split(",") if x]
 
 with open(preset_files, encoding="utf-8") as f:
     pf = json.load(f)
@@ -110,15 +130,24 @@ if "metadata" in canonical:
 if missing:
     print(f"  WARNING: preserved ids absent from {from_ref}: {missing}", file=sys.stderr)
 
+# Live index = canonical games + the PUBLIC preserved presets (the very entries
+# the dev index gets), metadata last.
+live = {k: v for k, v in canonical.items() if k != "metadata"}
+for pid in public:
+    if pid in dev:
+        live[pid] = dev[pid]
+if "metadata" in canonical:
+    live["metadata"] = canonical["metadata"]
+
 def count(d):
     return len([k for k in d if k not in NON_GAME])
 
-print(f"  live (canonical) index : {count(canonical)} games -> {live_files}")
+print(f"  live index             : {count(live)} games -> {live_files}  (+{count(live)-count(canonical)} public)")
 print(f"  dev index              : {count(dev)} games -> {preset_files}  (+{count(dev)-count(canonical)} preserved)")
 
 if not dry_run:
     with open(live_files, "w", encoding="utf-8") as f:
-        json.dump(canonical, f, indent=2, sort_keys=False); f.write("\n")
+        json.dump(live, f, indent=2, sort_keys=False); f.write("\n")
     with open(preset_files, "w", encoding="utf-8") as f:
         json.dump(dev, f, indent=2, sort_keys=False); f.write("\n")
 PY
