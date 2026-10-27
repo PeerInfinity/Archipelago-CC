@@ -146,7 +146,8 @@ async function play({ speed, graphics = true, host = 'microtask', pump: pumpKind
         if (graphics && rt.run) {
             const s = fadeSlot(skin, view(), { run: rt.run, fresh: rt.run.ticksCompleted === 0, inPlace: () => lastBootInPlace(rt) });
             skin = s.skin;
-            if (s.held) { held += 1; return; }
+            // ⛓ the page polls the host's queue on a held dead frame too (`jsRuntimePage.slot`, `drainItems`)
+            if (s.held) { held += 1; rt.drainItems(); return; }
         }
         const out = rt.tick(new Set());
         expect(out.halted ?? null).toBeNull();

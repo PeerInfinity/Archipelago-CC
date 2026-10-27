@@ -2079,6 +2079,18 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "TOUCH CONTROLS on the wasm runtime (WebGPU, the seedling-js batch's launch): the same row; Esc shown (wasm only); X asserted as the keydown/keyup pair the frame heard (the wasm page has no swing ledger). seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-one-fade-per-crossing",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "ONE FADE PER CROSSING (2026-10-26). flashPanel.runtime = js + the seedling graphics stack on seedling_atlas: the Playback Bot walks four real crossings; a sampler records the drawn black cover per animation frame. Each crossing = ONE monotone ramp of 20 held dead frames at 1 - 0.05k, with the host's arrival teleport landing inside it (it faded in twice before). seedling-js batch."
+        },
+        {
+            "id": "tutorial-walk-seedling-bot-js",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL IN JS MODE (2026-10-26, user: 'Work in both'). The seedling-bot tutorial's walk with flashPanel.runtime = js for the row's session (put back after): the Start step completes with no Start to press, the bot takes its first checks on the JS page. Manual batch tutorials-seedling. The js walk waits for the delivered rooms (SeedlingPlaybackController._deliveredSetGate): before it, the bot's first walk could reach the page before the level-set mount, which cleared it (red on CI in 40387718888 / 40391923232)."
         }
     ]
 }
