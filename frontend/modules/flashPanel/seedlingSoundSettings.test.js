@@ -29,13 +29,29 @@ describe('seedlingSoundSettings', () => {
     });
 
     it('▶ START: tests-auto is `auto` only when the app page is in a test mode; click / auto are taken as set', () => {
-        expect(isAutomatedRun('?mode=test-substrates')).toBe(true);
-        expect(isAutomatedRun('?mode=test')).toBe(true);
-        expect(isAutomatedRun('?mode=loops')).toBe(false);
-        expect(isAutomatedRun('')).toBe(false);
-        expect(startMode('tests-auto', '?mode=test-substrates&batch=fast')).toBe('auto');
-        expect(startMode('tests-auto', '?mode=default')).toBe('click');
-        expect(startMode('click', '?mode=test-substrates')).toBe('click');
-        expect(startMode('auto', '')).toBe('auto');
+        const person = { webdriver: false };
+        expect(isAutomatedRun('?mode=test-substrates', person)).toBe(true);
+        expect(isAutomatedRun('?mode=test', person)).toBe(true);
+        expect(isAutomatedRun('?mode=loops', person)).toBe(false);
+        expect(isAutomatedRun('', person)).toBe(false);
+        expect(startMode('tests-auto', '?mode=test-substrates&batch=fast', person)).toBe('auto');
+        expect(startMode('tests-auto', '?mode=default', person)).toBe('click');
+        expect(startMode('click', '?mode=test-substrates', person)).toBe('click');
+        expect(startMode('auto', '', person)).toBe('auto');
+    });
+
+    it('▶ START: a webdriver-driven browser with NO ?mode= boots (the seedling-probe.yml probes); a person waits', () => {
+        const driven = { webdriver: true };
+        expect(isAutomatedRun('?rules=./presets/x/rules.json', driven)).toBe(true);
+        expect(startMode('tests-auto', '?rules=./presets/x/rules.json', driven)).toBe('auto');
+        expect(startMode('tests-auto', '', driven)).toBe('auto');
+        // Neither signal: a person's run is unchanged.
+        expect(startMode('tests-auto', '?rules=./presets/x/rules.json', { webdriver: false })).toBe('click');
+        expect(startMode('tests-auto', '', {})).toBe('click');
+        expect(startMode('tests-auto', '', undefined)).toBe('click');
+        // An explicit `click` still wins over automation.
+        expect(startMode('click', '', driven)).toBe('click');
+        // Only `true` counts (a string or a truthy non-boolean is not the browser's flag).
+        expect(isAutomatedRun('', { webdriver: 'true' })).toBe(false);
     });
 });

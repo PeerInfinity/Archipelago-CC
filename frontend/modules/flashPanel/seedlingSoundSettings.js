@@ -72,13 +72,19 @@ export const soundVolume = (value) => {
     return Number.isFinite(n) ? Math.min(100, Math.max(0, Math.round(n))) : 100;
 };
 
-/** Is the app page an automated test run? Its `?mode=` starts with `test` (`test`, `test-substrates`, …). */
-export const isAutomatedRun = (search) => (new URLSearchParams(search ?? '').get('mode') ?? '').startsWith('test');
+/**
+ * Is the app page an automated run? Its `?mode=` starts with `test` (`test`, `test-substrates`, …), OR the
+ * browser says it is driven by automation (`navigator.webdriver === true`: Playwright, CDP and WebDriver set
+ * it). The second covers drivers that open the app with no `?mode=` (the `seedling-probe.yml` probes), which
+ * would otherwise wait for a ▶ Start nobody presses. A person's browser leaves `webdriver` false.
+ */
+export const isAutomatedRun = (search, nav = globalThis.navigator) =>
+    (new URLSearchParams(search ?? '').get('mode') ?? '').startsWith('test') || nav?.webdriver === true;
 
-/** The start mode the page gets: `click` | `auto`. */
-export function startMode(value, appSearch) {
+/** The start mode the page gets: `click` | `auto`. `nav` defaults to this (the app) page's navigator. */
+export function startMode(value, appSearch, nav = globalThis.navigator) {
     if (value === 'click' || value === 'auto') return value;
-    return isAutomatedRun(appSearch) ? 'auto' : 'click';
+    return isAutomatedRun(appSearch, nav) ? 'auto' : 'click';
 }
 
 /** The page's query parameters: '' for on, 100 and `auto`; `start=click` makes the page wait for ▶ Start. */

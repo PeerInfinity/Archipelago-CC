@@ -76,7 +76,7 @@ const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance
 const {
     deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM, levelName, BOSS_LOCATION_ITEM, BOSS_FILLER_ITEM,
 } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
-const { buildLevelWorld, ROLES, PERSISTENCE_RESPONSE, combatCensusOf } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
+const { buildLevelWorld, ROLES, PERSISTENCE_RESPONSE, combatCensusOf, rectsOverlap } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
 const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
@@ -88,11 +88,12 @@ const { levelSourceFromAtlas } = await imp('frontend/modules/seedlingDemo/atlasS
 const {
     deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
     deriveTalkEvents, crossRoomPrerequisitesOf,
-    poleKillsOf, POLE_LIGHT_ARM,
+    poleKillsOf, POLE_LIGHT_ARM, poleThrustStances, inRoomPolesOf, deriveInRoomPoleEvents,
     ropesOf, ropeVerdict, deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges,
 } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
 const { arrowLane, arrowTrapEntityPoint } = await imp('frontend/modules/seedlingDemo/arrowTrap.js');
 const { contactRect } = await imp('frontend/modules/seedlingDemo/combat.js');
+const { spearHitRect, pressRectTouches } = await imp('frontend/modules/seedlingDemo/presses.js');
 const { DARKTRAP_LIGHT_DEATH } = await imp('frontend/modules/seedlingDemo/enemyDamage.js');
 const { FLAG_ACTIONS } = await imp('frontend/modules/seedlingDemo/arrivalSolid.js');
 const { apRegionName } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
@@ -1388,7 +1389,8 @@ export function playthroughLockEvents(doc, { existing = [] } = {}) {
  *     rects, `modelFloodTiles`' `avoid`) against the level without it (the build once the flag is cleared). A
  *     landing whose standing flood is strictly smaller is CUT OFF by the barrier. The cut-off landings group into
  *     the barrier's SIDES (landings whose standing floods share a tile). A side is a POCKET when it holds no
- *     location and no kill-lock body, stays in one sub-region, and every door of it — the landings' departures and
+ *     location and no kill-lock body, borders no item crossing (⛓ RULES l63-darktrap: a `gated`/`directional` cell
+ *     is another way out), stays in one sub-region, and every door of it — the landings' departures and
  *     the `out_` exits standing in it — connects ONE outside AP region: then crossing the barrier is exactly
  *     entering or leaving the pocket (a round trip into a location-free dead end is the one walk the gate
  *     forbids that the game allows, and it gains nothing). Its doors cost the event. One side: it must be a pocket
@@ -1399,43 +1401,19 @@ export function playthroughLockEvents(doc, { existing = [] } = {}) {
  * The atlas carries NO event or gate (a rules-layer projection, as for the obstacle and lock events).
  */
 export function playthroughButtonEvents(doc, { existing = [] } = {}) {
-    const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
-    const conns = (doc.vanilla_layout?.connections ?? []);
-    const entityOf = (t) => {
-        const e = (levelOf(t.level)?.entities ?? []).find((x) => x.type === t.type && x.x === t.x && x.y === t.y);
-        if (!e) throw new Error(`button events: L${t.level} has no ${t.type}@${t.x},${t.y}`);
-        return e;
-    };
+    const B = barrierAnalysis(doc);
+    const { entityOf, killsOf } = B;
     const ruling = (t, crossLevelOpeners) => OV.overlayEntitySemantics(entityOf(t), SEM.entitySemantics(entityOf(t)), {
         level: t.level, crossLevelOpeners, groupOpeners: GROUP_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
     });
-    const tileOf = ({ x, y }) => [Math.floor(x / TILE), Math.floor(y / TILE)];
-    const key = ([x, y]) => `${x},${y}`;
-    /** The analyzer's sub-region holding a level tile, or null (a cell no component holds). */
-    const subRegionAt = (regionId, n, [x, y]) => {
-        const grid = gridFor(levelOf(n));
-        const { indexOf, components } = regionAnalyses.get(regionId).componentsResult;
-        const gx = x - (grid.origin?.x ?? 0);
-        const gy = y - (grid.origin?.y ?? 0);
-        const i = gx >= 0 && gy >= 0 && gx < grid.width && gy < grid.height ? indexOf[gy * grid.width + gx] : -1;
-        return i >= 0 ? components[i].id : null;
-    };
-    // ⛓ darktrap-events: the bodies a cleared target removes besides itself (a lit pole's darktraps), from the
-    // model's own rows: its press responders (which entity is a `LightPole`) and its combat census (the bodies,
-    // their centres and contact rects). null = the target removes nothing but itself.
-    const killsOf = (t) => poleKillsOf(levelOf(t.level), t, { buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH });
     return deriveButtonEvents(crossRoomButtonsOf(MAP), {
         existing,
         effect: (t) => persistenceEffect(t, PERSISTENCE_RESPONSE[t.type]),
         kills: (t) => {
             const k = killsOf(t);
-            return k && {
-                bodies: k.map((b) => b.id),
-                why: `lit, its light reaches ${k.map((b) => `${b.id} (${b.min.toFixed(1)}–${b.max.toFixed(1)} px)`).join(', ')} `
-                    + `within \`radiusMin\` ${DARKTRAP_LIGHT_DEATH.pole.radiusMin}: DarkTrap.update kills them`,
-            };
+            return k && { bodies: k.map((b) => b.id), why: B.killsWhy(k) };
         },
-        inRoom: (t) => (killsOf(t) ? analyzerOptions.resolveCondition(SEM.flag(POLE_LIGHT_ARM.item)) : null),
+        inRoom: (t) => (killsOf(t) ? B.arm : null),
         pricedByButton: (t) => {
             const k = killsOf(t);
             if (k) {
@@ -1457,99 +1435,242 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
         },
         place: (p) => {
             const regionId = regionIdFor(p.level);
-            const region = regionOf(regionId);
+            const region = B.regionOf(regionId);
             if (!region) throw new Error(`button events: ${regionId} is not in the atlas`);
             const subs = region.subgraph?.sub_regions;
             if (!subs) return { region_id: regionId, side: apRegionName(regionId) };
-            const c = subRegionAt(regionId, p.level, tileOf(p));
+            const c = B.subRegionAt(regionId, p.level, B.tileOf(p));
             if (!c || !subs.includes(c)) {
                 throw new Error(`button events: L${p.level} buttonroom@${p.x},${p.y} stands in no sub-region of ${regionId} `
-                    + `(tile [${tileOf(p)}]) — where the event sits cannot be said`);
+                    + `(tile [${B.tileOf(p)}]) — where the event sits cannot be said`);
             }
             return { region_id: regionId, sub_region: c, side: apRegionName(regionId, c) };
         },
         // ButtonRoom.update: any body on it presses it — standing in its sub-region is the whole cost.
         reach: () => null,
-        gates: (t, eventName) => {
-            const level = levelOf(t.level);
-            const killed = killsOf(t);
-            const standing = killed
-                ? (seeds) => modelFloodTiles(level, seeds, all, { avoid: killed.map((b) => b.rect) })
-                : (seeds) => modelFloodTiles(level, seeds, all);
-            const without = killed ? level : { ...level, entities: level.entities.filter((e) => e !== entityOf(t)) };
-            const regionId = regionIdFor(t.level);
-            const region = regionOf(regionId);
-            // The flood enters only the cells the analyzer walks for FREE — `open`, and `manual` (a blocker the
-            // transcription leaves to the model, which is what this flood asks). A `gated`/`directional` cell is an
-            // item's crossing the rules price themselves, and a `sink` is a pit drop, so the flood measures the
-            // barrier and nothing else (L63's halves would otherwise join across its Spear-gated cells, and L62's
-            // across the pit corners its darktrap sits between).
-            const grid = gridFor(level);
-            const all = (tx, ty) => {
-                const gx = tx - (grid.origin?.x ?? 0);
-                const gy = ty - (grid.origin?.y ?? 0);
-                const kind = gx >= 0 && gy >= 0 && gx < grid.width && gy < grid.height ? grid.cells[gy * grid.width + gx]?.kind : null;
-                return kind === 'open' || kind === 'manual';
-            };
-            const cut = [];
-            for (const L of gameLandings(MAP).filter((g) => g.level === t.level)) {
-                const held = standing([tileOf(L)]);
-                const cleared = modelFloodTiles(without, [tileOf(L)], all);
-                if (held.length >= cleared.length) continue;
-                const door = parseSolidId(L.door);
-                const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
-                if (!conns.some((c) => c.from[0] === dep.region_id && c.from[1] === dep.exit_id && c.to[0] === regionId)) {
-                    throw new Error(`button events: the atlas has no connection ${dep.region_id}/${dep.exit_id} -> ${regionId} for ${eventName}`);
+        // A pole's doors carry their `arm` (⛓ RULES l63-darktrap: the Spear way only where a stance stands).
+        gates: (t, eventName) => B.barrierCut(t, eventName).pockets.flatMap((v) => v.doors),
+    });
+}
+
+/**
+ * ⛓⛓ RULES l63-darktrap — **THE POLES ONLY THE ROOM'S OWN SPEAR LIGHTS, AS AP EVENTS** (`flashPanel/seedlingObstacleEvents.js`
+ * `deriveInRoomPoleEvents` holds the schema and the why). The rows are `inRoomPolesOf(MAP)`; the barrier, its sides
+ * and pockets are the cross-room presses' (`barrierAnalysis`), and the stances decide the rest:
+ *   - GATES: each pocket's doors, a door INTO the pocket with the arm when the pocket holds a stance, a door OUT of it
+ *     (reached by crossing from the far side) with the arm when the far side does;
+ *   - PLACE: where a stance stands, in this order — the far side's sub-region when the far side holds one (the pocket
+ *     is entered from outside only with the event, so the event is lit from beyond the barrier); else a stance on
+ *     NEITHER side, elsewhere in the room (L101's pole is lit through a wall from its r4c2 column — the vanilla
+ *     route to L109); else the pocket's ONE outside sub-region, whose door is the only way to the pocket's stance
+ *     (placing it in the pocket's own sub-region would let the far side, which holds no stance, collect it). ONE
+ *     place: a stance in another sub-region is a way the rules drop, never one they add (the safe direction).
+ *     REACH = the arm. Refused by name: no stance anywhere, pockets that disagree on the place, or stances of one
+ *     rank spanning sub-regions.
+ * The atlas carries NO event or gate.
+ */
+export function playthroughInRoomPoleEvents(doc, { existing = [] } = {}) {
+    const B = barrierAnalysis(doc);
+    return deriveInRoomPoleEvents(inRoomPolesOf(MAP), {
+        existing,
+        kills: (p) => {
+            const k = B.killsOf(p);
+            return k && { bodies: k.map((b) => b.id), why: B.killsWhy(k) };
+        },
+        arm: B.arm,
+        action: { verb: POLE_LIGHT_ARM.verb, item: POLE_LIGHT_ARM.item },
+        cut: (p, eventName) => {
+            const { pockets } = B.barrierCut(p, eventName);
+            const places = pockets.map((v) => {
+                const regionId = regionIdFor(p.level);
+                for (const [subs, where] of [[v.farStanceSubs, 'beyond the barrier'], [v.elsewhereSubs, 'on neither side of it']]) {
+                    if (subs.length > 1) {
+                        throw new Error(`in-room pole events: ${eventName}'s stances ${where} span sub-regions `
+                            + `[${subs.join(', ')}] — where the event sits cannot be said`);
+                    }
+                    if (subs.length === 1) return { region_id: regionId, sub_region: subs[0], side: apRegionName(regionId, subs[0]) };
                 }
-                cut.push({ dep, tiles: new Set(held.map(key)) });
-            }
-            if (cut.length === 0) {
-                throw new Error(`button events: ${eventName} cuts off no landing of L${t.level} on the model — its crossing would be `
-                    + 'internal to the region (an atlas split, not a gate)');
-            }
-            // The SIDES: cut-off landings whose standing floods share a tile.
-            const sides = [];
-            for (const c of cut) {
-                const joined = sides.filter((sd) => [...c.tiles].some((k) => sd.tiles.has(k)));
-                const merged = { deps: [c.dep, ...joined.flatMap((sd) => sd.deps)], tiles: new Set([...c.tiles, ...joined.flatMap((sd) => [...sd.tiles])]) };
-                for (const sd of joined) sides.splice(sides.indexOf(sd), 1);
-                sides.push(merged);
-            }
-            const verdicts = sides.map((sd) => {
-                const has = (tile) => sd.tiles.has(key(tile));
-                const exits = (region.exits ?? []).filter((e) => e.exit_id.startsWith('out_') && has(e.entrance_tile))
-                    .map((e) => ({ region_id: regionId, exit_id: e.exit_id,
-                        to: conns.find((c) => c.from[0] === regionId && c.from[1] === e.exit_id)?.to[0] ?? null }));
-                const outside = [...new Set([...sd.deps.map((d) => d.region_id), ...exits.map((e) => e.to)])];
-                const subs = region.subgraph?.sub_regions
-                    ? [...new Set([...sd.tiles].map((k) => subRegionAt(regionId, t.level, k.split(',').map(Number))).filter(Boolean))] : [];
-                const why = [
-                    ...(region.locations ?? []).filter((loc) => has(loc.tile)).map((loc) => `holds "${loc.name}"`),
-                    ...(KILL_LOCKS.get(t.level)?.bodies ?? []).filter((b) => has(tileOf(parseSolidId(b.at)))).map((b) => `holds kill-lock body ${b.at}`),
-                    ...(outside.length !== 1 ? [`its doors connect [${outside.join(', ')}], not one region`] : []),
-                    ...(subs.length > 1 ? [`it spans sub-regions [${subs.join(', ')}]`] : []),
-                ];
-                return { side: sd, exits, outside, why };
+                if (v.pocketStances.length === 0) {
+                    throw new Error(`in-room pole events: ${eventName} — no tile of its room is a stance `
+                        + '(no Spear thrust reaches the pole), so nothing lights it');
+                }
+                const outside = v.outsideSubs;
+                if (outside.length !== 1) {
+                    throw new Error(`in-room pole events: ${eventName}'s pocket opens on [${outside.map((o) => o.side).join(', ')}], `
+                        + 'not one outside sub-region — where the event sits cannot be said');
+                }
+                return outside[0];
             });
-            const name = (v) => `the side of [${v.side.deps.map((d) => `${d.region_id}/${d.exit_id}`).join(', ')}]`;
-            const pockets = verdicts.filter((v) => v.why.length === 0);
-            if (sides.length === 1 && pockets.length === 0) {
-                throw new Error(`button events: ${eventName} cuts off ${name(verdicts[0])}, which is not a pocket — `
-                    + `${verdicts[0].why.join('; ')}`);
+            const keyOf = (x) => `${x.region_id}|${x.sub_region ?? ''}`;
+            if (new Set(places.map(keyOf)).size !== 1) {
+                throw new Error(`in-room pole events: ${eventName}'s pockets disagree on where it is lit `
+                    + `[${places.map((x) => x.side).join(', ')}]`);
             }
-            if (sides.length > 1 && (pockets.length === 0 || pockets.length === sides.length)) {
-                throw new Error(`button events: ${eventName} cuts L${t.level} into ${sides.length} sides and `
-                    + `${pockets.length === 0 ? 'none' : 'every one'} of them is a pocket (${verdicts.map((v) => `${name(v)}: `
-                    + `${v.why.join('; ') || 'pocket'}`).join(' · ')}) — the crossing is internal: an atlas split, not a gate`);
-            }
-            const out = [];
-            for (const v of pockets) {
-                out.push(...v.side.deps);
-                for (const e of v.exits) out.push({ region_id: e.region_id, exit_id: e.exit_id });
-            }
-            return out;
+            return { place: places[0], reach: B.arm, gates: pockets.flatMap((v) => v.doors) };
         },
     });
+}
+
+/**
+ * ⛓ The barrier analysis the cross-room presses and the in-room poles share: the atlas lookups, the bodies a pole's
+ * light kills (`poleKillsOf`) and `barrierCut` — the GATES measurement of `playthroughButtonEvents`' doc (the
+ * landings a barrier cuts off, their SIDES and POCKETS), each pocket with its DOORS (`{region_id, exit_id, arm}`) and,
+ * for a pole, its STANCES (`poleThrustStances`): those in the pocket, those beyond the barrier (the tiles the
+ * pocket's landings reach once it is cleared and not before), and the sub-regions they stand in.
+ */
+function barrierAnalysis(doc) {
+    const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
+    const conns = (doc.vanilla_layout?.connections ?? []);
+    const entityOf = (t) => {
+        const e = (levelOf(t.level)?.entities ?? []).find((x) => x.type === t.type && x.x === t.x && x.y === t.y);
+        if (!e) throw new Error(`button events: L${t.level} has no ${t.type}@${t.x},${t.y}`);
+        return e;
+    };
+    const tileOf = ({ x, y }) => [Math.floor(x / TILE), Math.floor(y / TILE)];
+    const key = ([x, y]) => `${x},${y}`;
+    /** The analyzer's sub-region holding a level tile, or null (a cell no component holds). */
+    const subRegionAt = (regionId, n, [x, y]) => {
+        const grid = gridFor(levelOf(n));
+        const { indexOf, components } = regionAnalyses.get(regionId).componentsResult;
+        const gx = x - (grid.origin?.x ?? 0);
+        const gy = y - (grid.origin?.y ?? 0);
+        const i = gx >= 0 && gy >= 0 && gx < grid.width && gy < grid.height ? indexOf[gy * grid.width + gx] : -1;
+        return i >= 0 ? components[i].id : null;
+    };
+    // ⛓ darktrap-events: the bodies a cleared target removes besides itself (a lit pole's darktraps), from the
+    // model's own rows: its press responders (which entity is a `LightPole`) and its combat census (the bodies,
+    // their centres and contact rects). null = the target removes nothing but itself.
+    const killsOf = (t) => poleKillsOf(levelOf(t.level), t, { buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH });
+    const killsWhy = (k) => `lit, its light reaches ${k.map((b) => `${b.id} (${b.min.toFixed(1)}–${b.max.toFixed(1)} px)`).join(', ')} `
+        + `within \`radiusMin\` ${DARKTRAP_LIGHT_DEATH.pole.radiusMin}: DarkTrap.update kills them`;
+    const arm = analyzerOptions.resolveCondition(SEM.flag(POLE_LIGHT_ARM.item));
+    const barrierCut = (t, eventName) => {
+        const level = levelOf(t.level);
+        const killed = killsOf(t);
+        const regionId = regionIdFor(t.level);
+        const region = regionOf(regionId);
+        // The flood enters only the cells the analyzer walks for FREE — `open`, and `manual` (a blocker the
+        // transcription leaves to the model, which is what this flood asks). A `gated`/`directional` cell is an
+        // item's crossing the rules price themselves, and a `sink` is a pit drop, so the flood measures the
+        // barrier and nothing else (L63's halves would otherwise join across its Spear-gated cells, and L62's
+        // across the pit corners its darktrap sits between).
+        const grid = gridFor(level);
+        const all = (tx, ty) => {
+            const gx = tx - (grid.origin?.x ?? 0);
+            const gy = ty - (grid.origin?.y ?? 0);
+            const kind = gx >= 0 && gy >= 0 && gx < grid.width && gy < grid.height ? grid.cells[gy * grid.width + gx]?.kind : null;
+            return kind === 'open' || kind === 'manual';
+        };
+        const standing = killed
+            ? (seeds) => modelFloodTiles(level, seeds, all, { avoid: killed.map((b) => b.rect) })
+            : (seeds) => modelFloodTiles(level, seeds, all);
+        const without = killed ? level : { ...level, entities: level.entities.filter((e) => e !== entityOf(t)) };
+        // ⛓ RULES l63-darktrap: where the pole's own Spear way can be taken from (a pole only; none otherwise).
+        const pole = killed
+            ? buildLevelWorld(level).pressResponders.find((r) => r.as3 === 'LightPole' && r.x === t.x && r.y === t.y) : null;
+        const stances = pole ? poleThrustStances(pole.rect, {
+            width: grid.width, height: grid.height, origin: grid.origin, tile: TILE, walkable: all,
+            avoid: killed.map((b) => b.rect), spearHitRect, pressRectTouches, rectsOverlap,
+        }) : [];
+        const cut = [];
+        for (const L of gameLandings(MAP).filter((g) => g.level === t.level)) {
+            const held = standing([tileOf(L)]);
+            const cleared = modelFloodTiles(without, [tileOf(L)], all);
+            if (held.length >= cleared.length) continue;
+            const door = parseSolidId(L.door);
+            const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
+            if (!conns.some((c) => c.from[0] === dep.region_id && c.from[1] === dep.exit_id && c.to[0] === regionId)) {
+                throw new Error(`button events: the atlas has no connection ${dep.region_id}/${dep.exit_id} -> ${regionId} for ${eventName}`);
+            }
+            const tiles = new Set(held.map(key));
+            cut.push({ dep, tiles, beyond: new Set(cleared.map(key).filter((k) => !tiles.has(k))) });
+        }
+        if (cut.length === 0) {
+            throw new Error(`button events: ${eventName} cuts off no landing of L${t.level} on the model — its crossing would be `
+                + 'internal to the region (an atlas split, not a gate)');
+        }
+        // The SIDES: cut-off landings whose standing floods share a tile.
+        const sides = [];
+        for (const c of cut) {
+            const joined = sides.filter((sd) => [...c.tiles].some((k) => sd.tiles.has(k)));
+            const merged = {
+                deps: [c.dep, ...joined.flatMap((sd) => sd.deps)],
+                tiles: new Set([...c.tiles, ...joined.flatMap((sd) => [...sd.tiles])]),
+                beyond: new Set([...c.beyond, ...joined.flatMap((sd) => [...sd.beyond])]),
+            };
+            for (const sd of joined) sides.splice(sides.indexOf(sd), 1);
+            sides.push(merged);
+        }
+        const verdicts = sides.map((sd) => {
+            const has = (tile) => sd.tiles.has(key(tile));
+            const exits = (region.exits ?? []).filter((e) => e.exit_id.startsWith('out_') && has(e.entrance_tile))
+                .map((e) => ({ region_id: regionId, exit_id: e.exit_id,
+                    to: conns.find((c) => c.from[0] === regionId && c.from[1] === e.exit_id)?.to[0] ?? null }));
+            const outside = [...new Set([...sd.deps.map((d) => d.region_id), ...exits.map((e) => e.to)])];
+            const subs = region.subgraph?.sub_regions
+                ? [...new Set([...sd.tiles].map((k) => subRegionAt(regionId, t.level, k.split(',').map(Number))).filter(Boolean))] : [];
+            // ⛓ RULES l63-darktrap: an item crossing bordering the side (a `gated`/`directional` cell, which the
+            // flood does not enter) is another way out of it — the side is no dead end (L63's darktrap@32,272 cuts
+            // its column below the Spear bridge [2,9]: the half with the bridge is not a pocket).
+            const crossings = [...new Set([...sd.tiles].flatMap((k) => {
+                const [x, y] = k.split(',').map(Number);
+                return [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]].filter(([nx, ny]) => {
+                    const gx = nx - (grid.origin?.x ?? 0);
+                    const gy = ny - (grid.origin?.y ?? 0);
+                    const kind = gx >= 0 && gy >= 0 && gx < grid.width && gy < grid.height ? grid.cells[gy * grid.width + gx]?.kind : null;
+                    return kind === 'gated' || kind === 'directional';
+                }).map(key);
+            }))];
+            const why = [
+                ...(region.locations ?? []).filter((loc) => has(loc.tile)).map((loc) => `holds "${loc.name}"`),
+                ...(crossings.length ? [`it borders the item crossing(s) [${crossings.join('; ')}]`] : []),
+                ...(KILL_LOCKS.get(t.level)?.bodies ?? []).filter((b) => has(tileOf(parseSolidId(b.at)))).map((b) => `holds kill-lock body ${b.at}`),
+                ...(outside.length !== 1 ? [`its doors connect [${outside.join(', ')}], not one region`] : []),
+                ...(subs.length > 1 ? [`it spans sub-regions [${subs.join(', ')}]`] : []),
+            ];
+            return { side: sd, exits, outside, why };
+        });
+        const name = (v) => `the side of [${v.side.deps.map((d) => `${d.region_id}/${d.exit_id}`).join(', ')}]`;
+        const pockets = verdicts.filter((v) => v.why.length === 0);
+        if (sides.length === 1 && pockets.length === 0) {
+            throw new Error(`button events: ${eventName} cuts off ${name(verdicts[0])}, which is not a pocket — `
+                + `${verdicts[0].why.join('; ')}`);
+        }
+        if (sides.length > 1 && (pockets.length === 0 || pockets.length === sides.length)) {
+            throw new Error(`button events: ${eventName} cuts L${t.level} into ${sides.length} sides and `
+                + `${pockets.length === 0 ? 'none' : 'every one'} of them is a pocket (${verdicts.map((v) => `${name(v)}: `
+                + `${v.why.join('; ') || 'pocket'}`).join(' · ')}) — the crossing is internal: an atlas split, not a gate`);
+        }
+        return {
+            pockets: pockets.map((v) => {
+                const pocketStances = stances.filter((st) => v.side.tiles.has(key(st.tile)));
+                const farStances = stances.filter((st) => v.side.beyond.has(key(st.tile)));
+                // A stance on neither side: the pole is lit from somewhere else in its room (L101's [7,4], a thrust E
+                // through the wall [8,4] — `collideRectInto` tests no Solid between — from the r4c2 column).
+                const elsewhere = stances.filter((st) => !v.side.tiles.has(key(st.tile)) && !v.side.beyond.has(key(st.tile)));
+                // A door INTO the pocket leads to its crossing from inside; a door OUT of it was reached by crossing
+                // from beyond. A target that is not a pole has no arm to place (`arm` stays unsaid).
+                const arm = (here) => (pole ? { arm: here.length > 0 } : {});
+                return {
+                    doors: [
+                        ...v.side.deps.map((d) => ({ ...d, ...arm(pocketStances) })),
+                        ...v.exits.map((e) => ({ region_id: e.region_id, exit_id: e.exit_id, ...arm(farStances) })),
+                    ],
+                    pocketStances,
+                    farStances,
+                    farStanceSubs: [...new Set(farStances.map((st) => subRegionAt(regionId, t.level, st.tile)).filter(Boolean))],
+                    elsewhereSubs: [...new Set(elsewhere.map((st) => subRegionAt(regionId, t.level, st.tile)).filter(Boolean))],
+                    outsideSubs: [...new Map(v.side.deps.map((d) => {
+                        const exit = regionOf(d.region_id)?.exits?.find((e) => e.exit_id === d.exit_id);
+                        const sub = exit?.sub_region;
+                        const place = { region_id: d.region_id, ...(sub === undefined ? {} : { sub_region: sub }), side: apRegionName(d.region_id, sub) };
+                        return [`${place.region_id}|${sub ?? ''}`, place];
+                    })).values()],
+                };
+            }),
+        };
+    };
+    return { regionOf, conns, entityOf, tileOf, key, subRegionAt, killsOf, killsWhy, arm, barrierCut };
 }
 
 /**
@@ -1697,15 +1818,17 @@ export function playthroughEventLayer(doc) {
     const obstacle = playthroughObstacleEvents(doc);
     const locks = playthroughLockEvents(doc, { existing: obstacle.events });
     const buttons = playthroughButtonEvents(doc, { existing: [...obstacle.events, ...locks.events] });
+    // ⛓ RULES l63-darktrap: the poles only their own room's Spear lights.
+    const poles = playthroughInRoomPoleEvents(doc, { existing: [...obstacle.events, ...locks.events, ...buttons.events] });
     // ⛓ RULES watcher-event: the gated solid's OWN event needs the prerequisite too (its flag cannot clear first).
-    const talks = playthroughTalkEvents(doc, { existing: [...obstacle.events, ...locks.events, ...buttons.events] });
-    const priorEvents = withEventGates([...obstacle.events, ...locks.events, ...buttons.events], talks.eventGates);
+    const talks = playthroughTalkEvents(doc, { existing: [...obstacle.events, ...locks.events, ...buttons.events, ...poles.events] });
+    const priorEvents = withEventGates([...obstacle.events, ...locks.events, ...buttons.events, ...poles.events], talks.eventGates);
     return {
-        obstacle, locks, buttons, talks,
+        obstacle, locks, buttons, poles, talks,
         events: [...priorEvents, ...talks.events],
         // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
         internalExitRules: locks.internalExitRules,
-        exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...talks.exitGates],
+        exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...poles.exitGates, ...talks.exitGates],
     };
 }
 
@@ -1950,7 +2073,7 @@ function main() {
     movedArrivalSpawns.length = 0;
     setPlaythroughLandingAtlas(doc);
     const layer = playthroughEventLayer(doc);
-    const { obstacle, locks, buttons, talks } = layer;
+    const { obstacle, locks, buttons, poles, talks } = layer;
     const landingGates = playthroughLandingGates(doc);
     const ropes = playthroughRopeEvents(doc);
     const { rules, report } = compileRegionAtlas(doc, {
@@ -2042,6 +2165,10 @@ function main() {
             + `(pressed at L${e.fields.action.presser.level} buttonroom@${e.fields.action.presser.x},${e.fields.action.presser.y})`).join('')}`
         + `${quiet ? '' : buttons.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}`
         + `${buttons.skipped.length ? `; ${buttons.skipped.length} skipped: ${buttons.skipped.join('; ')}` : ''}`);
+    console.log(`${poles.events.length} in-room pole event(s), ${poles.exitGates.length} crossing(s) through the bodies they kill gated`
+        + `${quiet ? '' : poles.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side}`).join('')}`
+        + `${quiet ? '' : poles.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}: ${JSON.stringify(g.rule)}`).join('')}`
+        + `${poles.skipped.length ? `; ${poles.skipped.length} skipped: ${poles.skipped.join('; ')}` : ''}`);
     console.log(`${ropes.events.length} rope cut event(s) [${ropes.events.map((e) => `${e.name} @ ${e.fields.side}`).join('; ')}]; `
         + `${ropes.exitGates.length} landing(s) in a lane gated${quiet ? '' : ropes.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}; `
         + `${ropes.refused.length} rope(s) refused${quiet ? '' : ropes.refused.map((r) => `\n  refused ${r}`).join('')}`);
