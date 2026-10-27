@@ -58,9 +58,10 @@ if (!isMainThread) {
     console.log(`PERMISSIVE: ${permissive.length} — ${permissive.join(' | ')}`);
     // The old arm: the certifier with internal-only members priced from their fresh arrival (the framing before sphere-order-2).
     const src = readFileSync(CERT, 'utf8');
-    const hook = 'const internalOnly = (world, name) => {';
-    if (!src.includes(hook)) throw new Error('old arm: the internalOnly hook moved');
-    writeFileSync(OLD_CERT, src.replace(hook, `${hook} if (true) return false;`));
+    // pit-sinks-landings measurement: the OLD arm prices every region from its entrance cell (landing-rooted arrivals off).
+    const hook = 'function arrivalsOf(world, name) {';
+    if (!src.includes(hook)) throw new Error('old arm: the arrivalsOf hook moved');
+    writeFileSync(OLD_CERT, src.replace(hook, `${hook} if (true) return [null];`));
     const result = {};
     try {
         for (const arm of arms) {
