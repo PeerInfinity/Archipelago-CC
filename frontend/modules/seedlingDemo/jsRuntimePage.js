@@ -542,7 +542,9 @@ export function mountJsRuntimePage(win = window) {
         if (run && run.ticksCompleted !== soundTicks) {
             soundTicks = run.ticksCompleted;
             sound.step(run, { record: (runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null,
-                tick: runtime.ticks, tickSeconds: 1 / (BASE_TICKS_PER_SECOND * clock.speed) });
+                tick: runtime.ticks, tickSeconds: 1 / (BASE_TICKS_PER_SECOND * clock.speed),
+                // ⛓ MUSIC — the mounted set's rooms carry each room's song (null: the vanilla twin's)
+                rooms: runtime.mounted?.set?.rooms ?? null });
         }
         if (graphics.stack) {
             graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);

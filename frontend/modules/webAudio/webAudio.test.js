@@ -138,4 +138,27 @@ describe('createAudioOut', () => {
         expect(volumeToGain(Number.NaN)).toBe(0);
         expect(silentWavDataUrl()).toMatch(/^data:audio\/wav;base64,/);
     });
+
+    it('⛓ MUSIC — BUSES: a named bus is a gain under the master with its own volume/mute, settable before the unlock', () => {
+        const f = fakeAudio();
+        const out = createAudioOut({ win: f.win, AudioContextCtor: f.Ctx, listen: f.listen, mediaWorkaround: false });
+        out.setBusVolume('music', 0.5);
+        out.setBusMuted('music', true);
+        expect(out.busState('music')).toEqual({ volume: 0.5, muted: true, made: false });
+        expect(out.play('BUF', { bus: 'music' })).toBeNull(); // still locked
+        out.unlock();
+        const h = out.play('BUF', { bus: 'music', offset: 3.5, when: 2 });
+        expect(out.busState('music').made).toBe(true);
+        expect(f.log.filter(([k]) => k === 'start').pop()).toEqual(['start', 'BUF', 2]);
+        // the bus node's gain follows its own settings, not the master's
+        out.setBusMuted('music', false);
+        out.setVolume(0.2);
+        expect(out.busState('music')).toEqual({ volume: 0.5, muted: false, made: true });
+        h.setGain(0.3);
+        expect(h.gainNode.gain.value).toBe(0.3);
+        // an unnamed play still goes straight to the master; the sfx bus is independent of the music one
+        expect(out.play('B2')).not.toBeNull();
+        out.setBusMuted('sfx', true);
+        expect(out.busState('music').muted).toBe(false);
+    });
 });

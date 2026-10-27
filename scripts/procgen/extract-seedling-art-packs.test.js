@@ -33,7 +33,8 @@ describe.skipIf(!INITIALISED)('the art packs, extracted from vendor/seedling', (
     it('⛔ the ruling\'s exclusions are not in any pack\'s ART: no font, promo, Newgrounds, tank, music or sound', () => {
         // ⛓ SOUND EFFECTS (⚖ the user 2026-10-26) brought sound in as the seedling pack's `sfx` LAYER (its own test:
         // `extract-seedling-sfx-pack.test.js`); the art layer still carries none.
-        const files = Object.values(built).flatMap((m) => [...m.keys()]).filter((f) => !f.startsWith('sfx/'));
+        // ⛓ MUSIC (2026-10-27): and the songs as its `music` LAYER (`extract-seedling-music-pack.test.js`).
+        const files = Object.values(built).flatMap((m) => [...m.keys()]).filter((f) => !f.startsWith('sfx/') && !f.startsWith('music/'));
         for (const f of files) {
             expect(f).not.toMatch(/04B_03|promo|pixel_logo|newgrounds|tank|\.mp3$|\.wav$|\.ttf$/i);
         }

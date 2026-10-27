@@ -79,7 +79,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 5,
+            "count": 6,
             "id": "extract"
         },
         {
@@ -232,10 +232,10 @@ export const INSTRUMENTS = frz({
         "blockStyle": 475,
         "browser": 184,
         "cited": 256,
-        "files": 490,
-        "lineStyle": 15,
-        "withDocblock": 490,
-        "withFlags": 407
+        "files": 491,
+        "lineStyle": 16,
+        "withDocblock": 491,
+        "withFlags": 408
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6052,6 +6052,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling pixelmask extractor — turns the MIT mask PNGs in a Seedling source checkout into the ONE committed module `seedlingDemo/seedlingPixelMasks.js`.",
             "path": "scripts/procgen/extract-seedling-masks.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "extract",
+            "citedBy": [],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "check",
+                "source"
+            ],
+            "file": "extract-seedling-music-pack.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "source"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling music-pack extractor — copies the songs and jingles `src/Music.as` names out of a Seedling source checkout into the committed seedling CONTENT PACK's `music` layer (`frontend/packs/seedling/music/`), and writes its manifest.",
+            "path": "scripts/procgen/extract-seedling-music-pack.mjs"
         },
         {
             "argvHelpers": [

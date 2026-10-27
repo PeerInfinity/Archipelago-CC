@@ -5,6 +5,11 @@
  *   · `flashPanel.seedlingJsSound`  = `on` (the default) | `off`        → the page's `?sound=off`
  *   · `flashPanel.seedlingJsVolume` = 0 … 100 in tens, default 100      → the page's `?volume=<n>` (none at 100)
  *   · `flashPanel.seedlingJsStart`  = `tests-auto` (the default) | `click` | `auto` → the page's `?start=click`
+ *   · ⛓ MUSIC (⚖ the user 2026-10-26 / GO 2026-10-27):
+ *     `flashPanel.seedlingJsMusic`       = `on` (the default) | `off`  → the page's `?music=off`
+ *     `flashPanel.seedlingJsMusicVolume` = 0 … 100 in tens, default 100 → the page's `?musicVolume=<n>` (none at 100)
+ *     The music has its own bus: Music on/off and its volume leave the sound effects alone, Sound on/off leaves the
+ *     music alone, and Volume is the master over both. The ▶ Start tap unlocks both.
  *
  * ▶ START. The JS page waits for its ▶ Start (`#btn-start`, the wasm page's id) before it boots, as the wasm page
  * does: the tap is the gesture that unlocks audio (a browser — iOS above all — lets only a gesture start it).
@@ -25,6 +30,10 @@ export const VOLUME_SETTING_PROP = 'seedlingJsVolume';
 export const VOLUME_SETTING_KEY = `moduleSettings.flashPanel.${VOLUME_SETTING_PROP}`;
 export const START_SETTING_PROP = 'seedlingJsStart';
 export const START_SETTING_KEY = `moduleSettings.flashPanel.${START_SETTING_PROP}`;
+export const MUSIC_SETTING_PROP = 'seedlingJsMusic';
+export const MUSIC_SETTING_KEY = `moduleSettings.flashPanel.${MUSIC_SETTING_PROP}`;
+export const MUSIC_VOLUME_SETTING_PROP = 'seedlingJsMusicVolume';
+export const MUSIC_VOLUME_SETTING_KEY = `moduleSettings.flashPanel.${MUSIC_VOLUME_SETTING_PROP}`;
 
 export const SOUND_SETTING_VALUES = Object.freeze(['on', 'off']);
 export const VOLUME_SETTING_VALUES = Object.freeze([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]);
@@ -48,7 +57,23 @@ export function soundSchemaProps() {
             enum: [...VOLUME_SETTING_VALUES],
             default: 100,
             label: 'Seedling JS: sound volume (%)',
-            description: "Runtime 'js' only. The sound effects' volume, 0–100. Takes effect at once.",
+            description: "Runtime 'js' only. The master volume of the sound effects and the music, 0–100. Takes effect at once.",
+        },
+        [MUSIC_SETTING_PROP]: {
+            type: 'string',
+            enum: [...SOUND_SETTING_VALUES],
+            default: 'on',
+            label: 'Seedling JS: music',
+            description: "Runtime 'js' only. The original game's music (by Rekcahdam): each room's song, the boss "
+                + 'music and the pickup jingles, changed when the game changes them. It starts after the ▶ Start tap. '
+                + 'Music never changes the game. Separate from the sound effects. Takes effect at once.',
+        },
+        [MUSIC_VOLUME_SETTING_PROP]: {
+            type: 'number',
+            enum: [...VOLUME_SETTING_VALUES],
+            default: 100,
+            label: 'Seedling JS: music volume (%)',
+            description: "Runtime 'js' only. The music's own volume, 0–100 (under the master volume). Takes effect at once.",
         },
         [START_SETTING_PROP]: {
             type: 'string',
@@ -93,5 +118,13 @@ export function soundPageParams(sound, volume, start) {
         soundMode(sound) === 'off' ? 'sound=off' : '',
         soundVolume(volume) === 100 ? '' : `volume=${soundVolume(volume)}`,
         start === 'click' ? 'start=click' : '',
+    ].filter(Boolean).join('&');
+}
+
+/** ⛓ MUSIC — the page's music parameters: '' for on and 100; `music=off`, `musicVolume=<n>` otherwise. */
+export function musicPageParams(music, volume) {
+    return [
+        soundMode(music) === 'off' ? 'music=off' : '',
+        soundVolume(volume) === 100 ? '' : `musicVolume=${soundVolume(volume)}`,
     ].filter(Boolean).join('&');
 }

@@ -1,0 +1,6 @@
+0 L43 Game.as:1237 target silence
+17 L43 Pickups/Pickup.as:81 jingle seedling:music/found-it 0.5
+63 L43 Enemies/BossTotem.as:295 levelMusics[43]=13
+64 L43 Game.as:1233 target song seedling:music/boss
+660 L43 Enemies/BossTotem.as:479 levelMusics[43]=-1
+661 L43 Game.as:1237 target silence
