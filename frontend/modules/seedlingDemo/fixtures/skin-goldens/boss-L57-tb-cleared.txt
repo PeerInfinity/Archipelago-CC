@@ -1,0 +1,7 @@
+t=0..1 L58 [] |
+t=2..22 L57 [beast:dead] | seedling:boss/tentaclebeast#17 drawImage(seedling/TentacleBeast, 782, 0, 81, 50)
+t=23..44 L57 [beast:dead] | seedling:boss/tentaclebeast#18 drawImage(seedling/TentacleBeast, 828, 0, 81, 50)
+t=45..67 L57 [beast:dead] | seedling:boss/tentaclebeast#19 drawImage(seedling/TentacleBeast, 874, 0, 81, 50)
+t=68..89 L57 [beast:dead] | seedling:boss/tentaclebeast#18 drawImage(seedling/TentacleBeast, 828, 0, 81, 50)
+t=90..112 L57 [beast:dead] | seedling:boss/tentaclebeast#17 drawImage(seedling/TentacleBeast, 782, 0, 81, 50)
+t=113..121 L57 [beast:dead] | seedling:boss/tentaclebeast#18 drawImage(seedling/TentacleBeast, 828, 0, 81, 50)

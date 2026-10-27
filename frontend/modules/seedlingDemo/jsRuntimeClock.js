@@ -4,7 +4,8 @@
  * (watchManual's "THE LOOP QUESTION"). A SLOT is one tick of the game's clock: either a run tick or, with a graphics
  * stack, one held dead frame of a load fade (`jsRuntimePage.advance`, G4/G7).
  *
- *  · SPEED is slots per wall-clock second: 30 × 1 | 2 | 4 (`GAME_SPEEDS`). It is PRESENTATION ONLY: the run is the
+ *  · SPEED is slots per wall-clock second: 30 × the speed, 0.25 … 16 (⛓ CUSTOM SPEED, below; 1 | 2 | 4 are the
+ *    quick choices, `GAME_SPEEDS`). It is PRESENTATION ONLY: the run is the
  *    same tick sequence at every speed, shown faster. The fades are dead-frame slots, so they scale with it for free.
  *  · The accumulator is the page's old one (G1–G8: `TICK_MS`, `MAX_TICKS_PER_FRAME` 5), with both scaled by the speed,
  *    so a long stall still skips the same WALL-CLOCK window (5 / 30 s) instead of replaying it. At 1× it does the
@@ -21,23 +22,57 @@
  *    scales that interval by the speed, so its latency in TICKS is the same at every speed.
  */
 
-/** The speeds the page offers: slots per second = `BASE_TICKS_PER_SECOND` × speed. */
+/**
+ * ⛓ CUSTOM SPEED (slice `seedling-js-custom-speed`, ⚖ the user 2026-10-26: "let the user enter a custom speed,
+ * instead of having just the three options"): any speed from `MIN_GAME_SPEED` to `MAX_GAME_SPEED` on a
+ * `GAME_SPEED_STEP` grid. The accumulator honours ANY positive speed exactly over time (the remainder carries, so
+ * slots per wall second average 30 × speed with no drift); the grid is only so a typed speed has one spelling and
+ * ticks per second step by 1.5. Above what the browser can deliver the page shows the ACHIEVED rate
+ * (`createRateMeter`): it never skips a tick to keep up — a slot is either run or never owed, and the paint is once
+ * per animation frame whatever the slot count, so paints are what a busy page skips.
+ */
+/** The quick choices (the old three): slots per second = `BASE_TICKS_PER_SECOND` × speed. */
 export const GAME_SPEEDS = Object.freeze([1, 2, 4]);
+export const MIN_GAME_SPEED = 0.25;
+export const MAX_GAME_SPEED = 16;
+export const GAME_SPEED_STEP = 0.05;
 /** The game's own clock (`FP.frameRate` 30): the slots per second at 1×. */
 export const BASE_TICKS_PER_SECOND = 30;
 /** At 1×, at most this many slots per frame — a long stall is skipped, not replayed. Scaled by the speed. */
 export const BASE_MAX_SLOTS_PER_FRAME = 5;
 
 /**
- * A speed as the page reads it (`?speed=`, the panel's `1x` / `2x` / `4x`, or a number). Absent = 1. Anything else
- * REFUSES by name: a mistyped speed is not silently 1×.
+ * Check a speed (a number, `1.5`, `1.5x`, `1.5×`): `{ ok: true, speed }` on the grid (normalised: `0.1 + 0.2` →
+ * 0.3), else `{ ok: false, reason }` — out of range, off the grid, or not a number. ⛔ Never clamped: a speed the
+ * page cannot take is refused with its reason, not silently moved.
+ */
+export function checkGameSpeed(value) {
+    const raw = typeof value === 'number' ? value : String(value ?? '').trim().replace(/\s*[x×]$/i, '');
+    const n = typeof raw === 'number' ? raw : (raw === '' ? NaN : Number(raw));
+    if (!Number.isFinite(n)) return { ok: false, reason: `${value} is not a number` };
+    if (n < MIN_GAME_SPEED) return { ok: false, reason: `${n}× is below the minimum ${MIN_GAME_SPEED}×` };
+    if (n > MAX_GAME_SPEED) return { ok: false, reason: `${n}× is above the maximum ${MAX_GAME_SPEED}×` };
+    const k = Math.round(n / GAME_SPEED_STEP);
+    if (Math.abs(n / GAME_SPEED_STEP - k) > 1e-6) return { ok: false, reason: `${n}× is not a multiple of ${GAME_SPEED_STEP}` };
+    return { ok: true, speed: Number((k * GAME_SPEED_STEP).toFixed(2)) };
+}
+
+/**
+ * A speed as the page reads it (`?speed=`, the panel's setting, or a number). Absent = 1. Anything else REFUSES by
+ * name and reason (`checkGameSpeed`): a mistyped speed is not silently 1×.
  */
 export function parseGameSpeed(value, where = '?speed=') {
     if (value === null || value === undefined || value === '') return 1;
-    const n = Number(String(value).trim().replace(/[x×]$/i, ''));
-    if (!GAME_SPEEDS.includes(n)) throw new Error(`${where}${value}: one of ${GAME_SPEEDS.join(' | ')}`);
-    return n;
+    const c = checkGameSpeed(value);
+    if (!c.ok) throw new Error(`${where}${value}: ${c.reason} (${MIN_GAME_SPEED}–${MAX_GAME_SPEED}, in steps of ${GAME_SPEED_STEP})`);
+    return c.speed;
 }
+
+/**
+ * The per-frame cap at a speed: `BASE_MAX_SLOTS_PER_FRAME` × speed, rounded UP to a whole slot (5 / 10 / 20 at the
+ * old three, as before; 2 at 0.25×), so the skipped stall window is never under the 1× one (5 / 30 s).
+ */
+export const maxSlotsAt = (speed) => Math.max(1, Math.ceil(BASE_MAX_SLOTS_PER_FRAME * speed - 1e-9));
 
 /**
  * The accumulator. `due(now)` adds the wall-clock time since the last call (capped at `maxSlots` slots' worth) and
@@ -46,7 +81,7 @@ export function parseGameSpeed(value, where = '?speed=') {
 export function createSlotClock({ speed = 1 } = {}) {
     let s = parseGameSpeed(speed);
     let tickMs = 1000 / (BASE_TICKS_PER_SECOND * s);
-    let maxSlots = BASE_MAX_SLOTS_PER_FRAME * s;
+    let maxSlots = maxSlotsAt(s);
     let last = null;
     let acc = 0;
     return {
@@ -70,7 +105,7 @@ export function createSlotClock({ speed = 1 } = {}) {
             acc *= s / next;
             s = next;
             tickMs = 1000 / (BASE_TICKS_PER_SECOND * s);
-            maxSlots = BASE_MAX_SLOTS_PER_FRAME * s;
+            maxSlots = maxSlotsAt(s);
             return s;
         },
     };

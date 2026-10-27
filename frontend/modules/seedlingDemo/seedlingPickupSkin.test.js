@@ -219,7 +219,7 @@ describe('2. by hand from the AS3', () => {
         for (const time of [0, 11, 22, 33]) {
             const bob = 2 * Math.sin((2 * Math.PI * (time % 45)) / 45);
             const op = one(P('firewand'), { gameTime: time });
-            expect(op.dy).toBeCloseTo(40 + bob - 4.5, 9);
+            expect(op.dy).toBeCloseTo(40 + bob - 4, 9);   // ⛓ G10 (F4): 9 px high → int origin 4
             const frame = worldFrame(time, 6);
             const r = (6 * frame) / 5 + 14;
             // cx = x + int(-2 + 3), cy = int(y) + int(-4 + bob + 1)
@@ -276,7 +276,7 @@ describe('2. by hand from the AS3', () => {
         expect(one(P('torchpickup', { held: true })).frame).toBe(1);
         // the ghost spear: hitbox 4 high (origin 2), image 7 high (int origin 3) → offY = min(2, 4)
         const s = one(P('ghostspear', { held: true, hit: { h: 4, originY: 2 } }));
-        expect(s.dy + 3.5).toBe(80 - HITBOX.originY - 2 - 5);
+        expect(s.dy + 3).toBe(80 - HITBOX.originY - 2 - 5);   // ⛓ G10 (F4): the image's int origin, 3
     });
 });
 

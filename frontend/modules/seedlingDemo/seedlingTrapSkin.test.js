@@ -204,7 +204,8 @@ describe('2. by hand from the AS3', () => {
         for (const time of [0, 22, 23, 44, 45]) {
             const v = V({ gameTime: time, arrowTraps: [{ id: 'a', x: 104, y: 34.5 }] });
             const [op] = trapOps(v, art, { skin: stepTrapSkin(null, v, 1) });
-            expect([op.frame, op.dx, op.dy, op.layer]).toEqual([worldFrame(time, 2), 96, 32, -34.5]);
+            // ⛓ G10 (F4): 5 px high → int origin 2, so the picture sits half a pixel lower than G8 drew it
+            expect([op.frame, op.dx, op.dy, op.layer]).toEqual([worldFrame(time, 2), 96, 32.5, -34.5]);
         }
     });
 

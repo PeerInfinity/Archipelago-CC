@@ -170,3 +170,20 @@ describe('G7 × GAME SPEED — one fade per new Game at 1× and 2×, shown twice
         expect(fadeMs[2]).toBeLessThan(19 * (1000 / 60) + 20);
     });
 });
+
+// ⛓ CUSTOM SPEED (slice `seedling-js-custom-speed`) — the same level start at FRACTIONAL and slow speeds: the same
+// covers on every slot, the arrival's 20-slot fade spanning 19 slot gaps of 1000 / (30 × speed) ms.
+describe('G7 × CUSTOM SPEED — one fade per new Game at 0.25× / 0.5× / 1.5× / 3× / 16×', () => {
+    it.each([0.25, 0.5, 1.5, 3, 16])('%s×: the same cover on every slot as the slot loop; the arrival\'s fade spans 19 gaps of the slot length', async (speed) => {
+        const strip = (rows) => rows.map(({ at, ...r }) => r);
+        const rows = await playClocked(SCRIPT, SLOTS, speed);
+        expect(strip(rows)).toEqual(play(SCRIPT, SLOTS));
+        const arrival = rows.findIndex((r) => r.boots.length === 2);
+        const fade = rows.slice(arrival).filter((r) => r.held);
+        expect(fade).toHaveLength(20);
+        const ms = fade.at(-1).at - fade[0].at;
+        const want = 19 * (1000 / (30 * speed));
+        // quantised to the 60 Hz frames (≥ 8 slots share a frame at 16×: the whole fade may fall in ~3 frames)
+        expect(Math.abs(ms - want), `${speed}×: ${ms} ms vs ${want}`).toBeLessThan(20);
+    });
+});

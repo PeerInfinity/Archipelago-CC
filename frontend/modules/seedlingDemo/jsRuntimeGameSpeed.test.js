@@ -19,6 +19,13 @@
  * Mutants (each must turn the pin red):
  *  m1 the PRE-SPEED loop (every due slot inside the frame callback) at 4× — the host's answer is drained a tick late;
  *  m2 a host delivery applied one slot late at 4× (the brief's mutant);
+ *  m3 ⛓ CUSTOM SPEED — a host delivery applied one slot late at a FRACTIONAL speed (1.5×). ⚠ m2's mechanism (a
+ *     posted task) is one slot late only when two slots fall in one frame (4×); at 1.5× the frame usually owes one,
+ *     so that task still runs before the next slot (measured: m2's form stays GREEN at 1.5×). m3 holds the delivery
+ *     to the END of the next slot instead — one slot late at every speed.
+ *
+ * ⛓ CUSTOM SPEED (slice `seedling-js-custom-speed`): the same pin at 0.25× / 0.5× / 1.5× / 3× / 16× (graphics on and
+ * off), and the clock's tick count exact (±1) over a minute at fractional speeds.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -28,7 +35,7 @@ import { describe, expect, it } from 'vitest';
 
 import { createJsRuntime, IN_PLACE_REBOOT_WHY } from './jsRuntimeCore.js';
 import {
-    BASE_MAX_SLOTS_PER_FRAME, BASE_TICKS_PER_SECOND, createSlotClock, createSlotPump, GAME_SPEEDS, parseGameSpeed,
+    BASE_MAX_SLOTS_PER_FRAME, BASE_TICKS_PER_SECOND, createSlotClock, createSlotPump, GAME_SPEEDS, maxSlotsAt, parseGameSpeed,
 } from './jsRuntimeClock.js';
 import { WALK_STATES } from './jsRuntimeWalker.js';
 import { planLevelSetChunks } from './levelSetValidator.js';
@@ -101,7 +108,7 @@ const turn = () => new Promise((r) => { setImmediate(r); });
  * 'microtask' | 'sync'; `pump` = 'page' (the slice's) | 'legacy' (m1); `lateAt` = a speed at which the host's
  * delivery is applied one slot late (m2). Stops once the run has ticked `untilTicks` (or the walk back is done + 30).
  */
-async function play({ speed, graphics = true, host = 'microtask', pump: pumpKind = 'page', lateAt = null, untilTicks = null }) {
+async function play({ speed, graphics = true, host = 'microtask', pump: pumpKind = 'page', lateAt = null, lateSlotAt = null, untilTicks = null }) {
     const digests = [];
     const checks = [];
     let stage = 'in';
@@ -113,8 +120,11 @@ async function play({ speed, graphics = true, host = 'microtask', pump: pumpKind
         if (host === 'sync') fn();
         else Promise.resolve().then(() => Promise.resolve()).then(fn);
     };
+    // m3: held back until the END of the next slot, so it reaches the run exactly one slot late at any speed
+    const lateSlot = [];
     const deliver = (items) => {
-        if (lateAt === speed) postTask(() => rt.queueItems(items)); else rt.queueItems(items);
+        if (lateSlotAt === speed) lateSlot.push(items);
+        else if (lateAt === speed) postTask(() => rt.queueItems(items)); else rt.queueItems(items);
     };
     const hand = (goal) => {
         expect(rt.playback.walkTo(goal)).toEqual({ ok: true });
@@ -143,6 +153,9 @@ async function play({ speed, graphics = true, host = 'microtask', pump: pumpKind
     let held = 0;
     const view = () => effectSkinView(rt.run, { record: rt.mounted?.records?.get(rt.run.level) ?? null });
     const slot = () => {
+        try { slotBody(); } finally { while (lateSlot.length) rt.queueItems(lateSlot.shift()); }
+    };
+    const slotBody = () => {
         if (graphics && rt.run) {
             const s = fadeSlot(skin, view(), { run: rt.run, fresh: rt.run.ticksCompleted === 0, inPlace: () => lastBootInPlace(rt) });
             skin = s.skin;
@@ -193,13 +206,55 @@ describe('GAME SPEED — the clock', () => {
         for (let f = 0; f < 5000; f += 1) { const now = it.next().value; expect(c1.due(now)).toBe(old(now)); }
     });
 
-    it('the speed reads `1x` / `2` / `4×`; anything else refuses by name', () => {
+    it('the speed reads `1x` / `2` / `4×` / `1.5`; outside 0.25 … 16 or off the 0.05 grid refuses by name and reason', () => {
         expect(parseGameSpeed(null)).toBe(1);
         expect(parseGameSpeed('2')).toBe(2);
         expect(parseGameSpeed('4x')).toBe(4);
         expect(parseGameSpeed('4×')).toBe(4);
-        expect(() => parseGameSpeed('3')).toThrow(/\?speed=3: one of 1 \| 2 \| 4/);
-        expect(() => parseGameSpeed('fast')).toThrow(/one of/);
+        expect(parseGameSpeed('3')).toBe(3);
+        expect(parseGameSpeed('1.5')).toBe(1.5);
+        expect(parseGameSpeed('0.25')).toBe(0.25);
+        expect(parseGameSpeed('16')).toBe(16);
+        expect(() => parseGameSpeed('16.05')).toThrow(/\?speed=16\.05: 16\.05× is above the maximum 16×/);
+        expect(() => parseGameSpeed('0.2')).toThrow(/below the minimum 0\.25×/);
+        expect(() => parseGameSpeed('1.33')).toThrow(/not a multiple of 0\.05/);
+        expect(() => parseGameSpeed('fast')).toThrow(/fast is not a number/);
+    });
+
+    it('⛓ CUSTOM SPEED — the per-frame cap is a whole slot count, the old one at 1 / 2 / 4, and never skips less wall time than 1×', () => {
+        expect([1, 2, 4].map(maxSlotsAt)).toEqual([5, 10, 20]);
+        expect([0.25, 0.5, 1.2, 1.5, 3, 16].map(maxSlotsAt)).toEqual([2, 3, 6, 8, 15, 80]);
+        for (let k = 5; k <= 320; k += 1) {
+            const c = createSlotClock({ speed: k * 0.05 });
+            expect(Number.isInteger(c.maxSlots)).toBe(true);
+            expect(c.tickMs * c.maxSlots).toBeGreaterThanOrEqual(1000 / 30 * 5 - 1e-9);
+        }
+    });
+
+    it('⛓ CUSTOM SPEED — over N simulated seconds at 0.25 / 0.5 / 1.5 / 3 / 7.35 / 16×, the slot count is exact (±1), no drift', () => {
+        for (const s of [0.25, 0.5, 1.5, 3, 7.35, 16]) {
+            for (const seconds of [10, 60, 600]) {
+                const c = createSlotClock({ speed: s });
+                let slots = 0;
+                let first = null;
+                let now = 0;
+                for (const t of frameTimes()) { first ??= t; now = t; slots += c.due(t); if (t > seconds * 1000) break; }
+                expect(Math.abs(slots - ((now - first) / 1000) * BASE_TICKS_PER_SECOND * s), `${s}× over ${seconds} s`).toBeLessThan(1);
+            }
+        }
+        // and a mid-run change keeps it exact on either side (the phase carries)
+        const c = createSlotClock({ speed: 0.5 });
+        let slots = 0;
+        let at = null;
+        for (const t of frameTimes()) {
+            if (t > 30000 && c.speed === 0.5) { at = { t, slots }; c.setSpeed(3); }
+            slots += c.due(t);
+            if (t > 60000) {
+                const want = (at.t / 1000) * 15 + ((t - at.t) / 1000) * 90;
+                expect(Math.abs(slots - want)).toBeLessThan(2);
+                break;
+            }
+        }
     });
 
     it('over 60 s of a jittery 60 Hz display, the slots run are 30 × the speed a second (4× keeps up: cap 20 > 2 a frame)', () => {
@@ -287,5 +342,34 @@ describe('GAME SPEED — a Playback-Bot walk is the same tick sequence at 1× / 
     it('MUTANT m2 — a host delivery applied one slot late at 4×: the pin goes red, from the delivery on', async () => {
         const r = await play({ speed: 4, graphics: false, lateAt: 4, untilTicks: ref.off.digests.length });
         expect(firstDiff(r, ref.off)).toBeGreaterThan(ref.off.checks[0].tick);
+    }, 240000);
+
+    // ⛓ CUSTOM SPEED — fractional and slow speeds: the same tick sequence as 1× (the 1× refs above)
+    it.each([[0.25, 'on'], [0.5, 'on'], [1.5, 'on'], [3, 'on'], [16, 'on'], [0.25, 'off'], [0.5, 'off'], [1.5, 'off'], [3, 'off'], [16, 'off']])(
+        '⛓ CUSTOM SPEED %s× (graphics %s): the same stateDigest after every tick, the same check on the same tick, the same holds', async (speed, key) => {
+            const base = ref[key];
+            const r = await play({ speed, graphics: key === 'on', untilTicks: base.digests.length });
+            expect(r.digests).toHaveLength(base.digests.length);
+            expect(firstDiff(r, base), `first differing tick at ${speed}×`).toBe(-1);
+            expect(r.checks).toEqual(base.checks);
+            expect(r.held).toBe(base.held);
+            expect(r.solves).toBe(3);
+            expect(r.reboots).toBe(2);
+            // shown at that speed: the wall time scales by 1 / speed (within the frame quantum and the walk's tail)
+            expect(r.wallMs).toBeLessThan((base.wallMs / speed) * 1.15);
+            expect(r.wallMs).toBeGreaterThan((base.wallMs / speed) * 0.85);
+        }, 240000);
+
+    it('⛓ CUSTOM SPEED — 1.5× with a SYNCHRONOUS host: the same tick sequence as 1×', async () => {
+        const a = await play({ speed: 1, graphics: false, host: 'sync' });
+        const b = await play({ speed: 1.5, graphics: false, host: 'sync', untilTicks: a.digests.length });
+        expect(firstDiff(b, a)).toBe(-1);
+        expect(b.checks).toEqual(a.checks);
+    }, 240000);
+
+    it('MUTANT m3 — a host delivery applied one slot late at a FRACTIONAL speed (1.5×): the pin goes red, from the delivery on', async () => {
+        const r = await play({ speed: 1.5, graphics: false, lateSlotAt: 1.5, untilTicks: ref.off.digests.length });
+        // digests[i] is tick i + 1: index `check tick` is the first tick after the check, where the late item lands
+        expect(firstDiff(r, ref.off)).toBe(ref.off.checks[0].tick);
     }, 240000);
 });

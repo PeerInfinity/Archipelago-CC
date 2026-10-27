@@ -1,0 +1,149 @@
+t=0..6 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112)
+t=7..14 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112)
+t=15..21 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112)
+t=22..29 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112)
+t=30..36 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112)
+t=37..44 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112)
+t=45..51 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112)
+t=52..59 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112)
+t=60..66 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112)
+t=67..74 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112)
+t=75..81 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112)
+t=82..89 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112)
+t=90..96 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112)
+t=97..104 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112)
+t=105..111 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112)
+t=112..119 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112)
+t=120..126 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112)
+t=127..134 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112)
+t=135..141 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112)
+t=142..149 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112)
+t=150..156 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112)
+t=157..164 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112)
+t=165..171 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112)
+t=172..179 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112)
+t=180..186 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112)
+t=187..194 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112)
+t=195..201 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112)
+t=202..209 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112)
+t=210..216 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112)
+t=217..224 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112)
+t=225..231 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112)
+t=232..239 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112)
+t=240..246 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112)
+t=247..254 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112)
+t=255..261 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112)
+t=262..269 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112)
+t=270..276 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112)
+t=277..284 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112)
+t=285..291 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112)
+t=292..299 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112)
+t=300..306 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112)
+t=307..314 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112)
+t=315..316 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112)
+t=317 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.98 tint==#ffffff
+t=318 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.97 tint==#ffffff
+t=319 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.96 tint==#ffffff
+t=320 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.95 tint==#ffffff
+t=321 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.94 tint==#ffffff
+t=322 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.93 tint==#ffffff
+t=323 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.92 tint==#ffffff
+t=324 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.91 tint==#ffffff
+t=325 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.9 tint==#ffffff
+t=326 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.89 tint==#ffffff
+t=327 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.88 tint==#ffffff
+t=328 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.87 tint==#ffffff
+t=329 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.86 tint==#ffffff
+t=330 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.85 tint==#ffffff
+t=331 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.84 tint==#ffffff
+t=332 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.83 tint==#ffffff
+t=333 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.82 tint==#ffffff
+t=334 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.81 tint==#ffffff
+t=335 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.8 tint==#ffffff
+t=336 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.79 tint==#ffffff
+t=337 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.78 tint==#ffffff
+t=338 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.77 tint==#ffffff
+t=339 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.76 tint==#ffffff
+t=340 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.75 tint==#ffffff
+t=341 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.74 tint==#ffffff
+t=342 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.73 tint==#ffffff
+t=343 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.72 tint==#ffffff
+t=344 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.71 tint==#ffffff
+t=345 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.7 tint==#ffffff
+t=346 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.69 tint==#ffffff
+t=347 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.68 tint==#ffffff
+t=348 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.67 tint==#ffffff
+t=349 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.66 tint==#ffffff
+t=350 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.65 tint==#ffffff
+t=351 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.64 tint==#ffffff
+t=352 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.63 tint==#ffffff
+t=353 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.62 tint==#ffffff
+t=354 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.61 tint==#ffffff
+t=355 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.6 tint==#ffffff
+t=356 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.59 tint==#ffffff
+t=357 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.58 tint==#ffffff
+t=358 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.57 tint==#ffffff
+t=359 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.56 tint==#ffffff
+t=360 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.55 tint==#ffffff
+t=361 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.54 tint==#ffffff
+t=362 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.53 tint==#ffffff
+t=363 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.52 tint==#ffffff
+t=364 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.51 tint==#ffffff
+t=365 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.5 tint==#ffffff
+t=366 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.49 tint==#ffffff
+t=367 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.48 tint==#ffffff
+t=368 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.47 tint==#ffffff
+t=369 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.46 tint==#ffffff
+t=370 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.45 tint==#ffffff
+t=371 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.44 tint==#ffffff
+t=372 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.43 tint==#ffffff
+t=373 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.42 tint==#ffffff
+t=374 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.41 tint==#ffffff
+t=375 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.4 tint==#ffffff
+t=376 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.39 tint==#ffffff
+t=377 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.38 tint==#ffffff
+t=378 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.37 tint==#ffffff
+t=379 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.36 tint==#ffffff
+t=380 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.35 tint==#ffffff
+t=381 L18 [a:lock] | seedling:puzzlement/lock#1 drawImage(seedling/Lock, 16, 0, 144, 112) alpha=0.34 tint==#ffffff
+t=382 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.33 tint==#ffffff
+t=383 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.32 tint==#ffffff
+t=384 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.31 tint==#ffffff
+t=385 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.3 tint==#ffffff
+t=386 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.29 tint==#ffffff
+t=387 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.28 tint==#ffffff
+t=388 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.27 tint==#ffffff
+t=389 L18 [a:lock] | seedling:puzzlement/lock#2 drawImage(seedling/Lock, 32, 0, 144, 112) alpha=0.26 tint==#ffffff
+t=390 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.25 tint==#ffffff
+t=391 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.24 tint==#ffffff
+t=392 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.23 tint==#ffffff
+t=393 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.22 tint==#ffffff
+t=394 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.21 tint==#ffffff
+t=395 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.2 tint==#ffffff
+t=396 L18 [a:lock] | seedling:puzzlement/lock#3 drawImage(seedling/Lock, 48, 0, 144, 112) alpha=0.19 tint==#ffffff
+t=397 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.18 tint==#ffffff
+t=398 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.17 tint==#ffffff
+t=399 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.16 tint==#ffffff
+t=400 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.15 tint==#ffffff
+t=401 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.14 tint==#ffffff
+t=402 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.13 tint==#ffffff
+t=403 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.12 tint==#ffffff
+t=404 L18 [a:lock] | seedling:puzzlement/lock#4 drawImage(seedling/Lock, 64, 0, 144, 112) alpha=0.11 tint==#ffffff
+t=405 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.1 tint==#ffffff
+t=406 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.09 tint==#ffffff
+t=407 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.08 tint==#ffffff
+t=408 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.07 tint==#ffffff
+t=409 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.06 tint==#ffffff
+t=410 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.05 tint==#ffffff
+t=411 L18 [a:lock] | seedling:puzzlement/lock#5 drawImage(seedling/Lock, 80, 0, 144, 112) alpha=0.04 tint==#ffffff
+t=412 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.03 tint==#ffffff
+t=413 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.02 tint==#ffffff
+t=414 L18 [a:lock] | seedling:puzzlement/lock#0 drawImage(seedling/Lock, 0, 0, 144, 112) alpha=0.01 tint==#ffffff
+t=415 L18 [a:lock] |
+t=416 L18 [a:lock,a:open] |
+t=417..443 L18 [] |
+t=444..449 L19 [a:bosslock] | seedling:puzzlement/bosslock0#1 drawImage(seedling/BossLock, 16, 0, 48, 32)
+t=450..456 L19 [a:bosslock] | seedling:puzzlement/bosslock0#2 drawImage(seedling/BossLock, 32, 0, 48, 32)
+t=457..462 L19 [a:bosslock] | seedling:puzzlement/bosslock0#3 drawImage(seedling/BossLock, 48, 0, 48, 32)
+t=463..469 L19 [a:bosslock] | seedling:puzzlement/bosslock0#4 drawImage(seedling/BossLock, 64, 0, 48, 32)
+t=470 L19 [a:bosslock] | seedling:puzzlement/bosslock0#5 drawImage(seedling/BossLock, 80, 0, 48, 32)

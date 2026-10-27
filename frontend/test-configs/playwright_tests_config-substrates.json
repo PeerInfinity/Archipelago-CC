@@ -2063,10 +2063,16 @@
             "_comment": "GRAPHICS G9b/G9c. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 38 onto the pulser's ButtonRoom: its wires light, the pulser ring is drawn (levelRun.machinesNow reaching the page), a cover is drawn mid-fade; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-bosses",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G10. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 19 inside the ShieldBoss's stand-under band: the boss is drawn from the seedling pack sitting, then stabbing (run.shieldBosses reaching the page), its build-time rectangle is gone; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-game-speed",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "GAME SPEED. runtime = js + seedling_generated_room (session overrides): the panel's js-only \"Game speed\" Settings row is visible; seedlingJsSpeed 4x reaches the mounted page LIVE (clock 4, item push 25 ms, no re-mount) and achieves >= 100 slots/s; back to 1x it is ~30. Settings restored. seedling-js batch."
+            "_comment": "GAME SPEED. runtime = js + seedling_generated_room (session overrides): the panel's js-only \"Game speed\" Settings row is visible; seedlingJsSpeed 4x reaches the mounted page LIVE (clock 4, item push 25 ms, no re-mount) and achieves >= 100 slots/s; back to 1x it is ~30. CUSTOM SPEED: the row is a number field 0.25-16 + 1x/2x/4x buttons; the saved legacy 2x migrates to 2 (session); 1.5 live ~45 slots/s; a typed 20 is refused with its reason; 16 live shows the achieved readout; the 1x button. Settings restored. seedling-js batch."
         },
         {
             "id": "seedling-js-runtime-sound-start",

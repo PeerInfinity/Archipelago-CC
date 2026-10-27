@@ -993,6 +993,56 @@
       "w": 27,
       "h": 13
     },
+    "ShieldBoss": {
+      "file": "sheets/ShieldBoss.png",
+      "w": 1120,
+      "h": 80
+    },
+    "FinalBoss": {
+      "file": "sheets/FinalBoss.png",
+      "w": 192,
+      "h": 16
+    },
+    "LavaBoss": {
+      "file": "sheets/LavaBoss.png",
+      "w": 4480,
+      "h": 82
+    },
+    "LavaBall": {
+      "file": "sheets/LavaBall.png",
+      "w": 144,
+      "h": 32
+    },
+    "TentacleBeast": {
+      "file": "sheets/TentacleBeast.png",
+      "w": 920,
+      "h": 44
+    },
+    "Tentacle": {
+      "file": "sheets/Tentacle.png",
+      "w": 1680,
+      "h": 49
+    },
+    "LightBoss": {
+      "file": "sheets/LightBoss.png",
+      "w": 170,
+      "h": 16
+    },
+    "LightBossShot": {
+      "file": "sheets/LightBossShot.png",
+      "w": 8,
+      "h": 8
+    },
+    "LightBossTotem": {
+      "file": "sheets/LightBossTotem.png",
+      "w": 16,
+      "h": 24
+    },
+    "FrozenBoss": {
+      "file": "sheets/FrozenBoss.png",
+      "w": 160,
+      "h": 160
+    },
     "BossKey": {
       "file": "sheets/BossKey.png",
       "w": 84,
@@ -2157,7 +2207,7 @@
       "frames": 5,
       "origin": [
         0,
-        3.5
+        3
       ],
       "anims": {
         "slash": {
@@ -2275,7 +2325,7 @@
       "frames": 12,
       "origin": [
         7,
-        7.5
+        7
       ],
       "anims": {
         "walk": {
@@ -2582,7 +2632,7 @@
       "frames": 1,
       "origin": [
         4,
-        1.5
+        1
       ],
       "as3": "Projectiles/Arrow.as:15-16 Image; :24 centerOO; :32,41 angle = atan2(-v.y, v.x)"
     },
@@ -3195,7 +3245,7 @@
       "frames": 10,
       "origin": [
         11,
-        10.5
+        10
       ],
       "anims": {
         "destroy": {
@@ -3221,7 +3271,7 @@
       "frames": 10,
       "origin": [
         11,
-        10.5
+        10
       ],
       "anims": {
         "destroy": {
@@ -3447,7 +3497,7 @@
       "frames": 2,
       "origin": [
         4,
-        4.5
+        4
       ],
       "anims": {
         "talk": {
@@ -3512,7 +3562,7 @@
       "fh": 10,
       "frames": 2,
       "origin": [
-        4.5,
+        4,
         5
       ],
       "anims": {
@@ -3559,7 +3609,7 @@
       "frames": 2,
       "origin": [
         8,
-        6.5
+        6
       ],
       "anims": {
         "talk": {
@@ -3634,7 +3684,7 @@
       "frames": 10,
       "origin": [
         6,
-        7.5
+        7
       ],
       "as3": "NPCs/Watcher.as:13-14 Spritemap(12, 15); NPC.as:57 centerOO; :58-95 its frame (direction, seed 6, die [7,8,9])"
     },
@@ -3656,7 +3706,7 @@
       "frames": 2,
       "origin": [
         8,
-        2.5
+        2
       ],
       "as3": "Puzzlements/ArrowTrap.as:13-14 Spritemap(16, 5); :21-22 super(_x + 8, _y + 2.5), centerOO; :40-43 frame Game.worldFrame(frameCount)"
     },
@@ -3967,8 +4017,8 @@
       "fh": 5,
       "frames": 6,
       "origin": [
-        4.5,
-        2.5
+        4,
+        2
       ],
       "as3": "Game.as:393-394 sprDroplet Spritemap(9, 5); :802 centerOO; Scenery/Droplet.as:92-101 frame/alpha/colour per render"
     },
@@ -4165,8 +4215,8 @@
       "fh": 7,
       "frames": 4,
       "origin": [
-        3.5,
-        3.5
+        3,
+        3
       ],
       "as3": "Pickups/APItem.as:94-104 \"shield\" → [Shield.png, 7, 7]; :171 centerOO, frame 0"
     },
@@ -4176,8 +4226,8 @@
       "fh": 9,
       "frames": 1,
       "origin": [
-        4.5,
-        4.5
+        4,
+        4
       ],
       "as3": "Pickups/APItem.as:94-104 \"darkshield\" → [DarkShield.png, 0, 0] (an Image: the whole 9x9 file); :171 centerOO, frame 0"
     },
@@ -4209,8 +4259,8 @@
       "fh": 9,
       "frames": 6,
       "origin": [
-        2.5,
-        4.5
+        2,
+        4
       ],
       "as3": "Pickups/APItem.as:94-104 \"wand\" → [WandPickup.png, 5, 9]; :171 centerOO, frame 0"
     },
@@ -4220,8 +4270,8 @@
       "fh": 9,
       "frames": 6,
       "origin": [
-        2.5,
-        4.5
+        2,
+        4
       ],
       "as3": "Pickups/APItem.as:94-104 \"firewand\" → [FireWandPickup.png, 5, 9]; :171 centerOO, frame 0"
     },
@@ -4232,7 +4282,7 @@
       "frames": 2,
       "origin": [
         10,
-        3.5
+        3
       ],
       "as3": "Pickups/APItem.as:94-104 \"ghostspear\" → [GhostSpear.png, 20, 7]; :171 centerOO, frame 0"
     },
@@ -4243,7 +4293,7 @@
       "frames": 2,
       "origin": [
         12,
-        3.5
+        3
       ],
       "as3": "Pickups/APItem.as:94-104 \"ghostsword\" → [GhostSwordPickup.png, 24, 7]; :171 centerOO, frame 0"
     },
@@ -4308,10 +4358,161 @@
       "fh": 13,
       "frames": 3,
       "origin": [
-        4.5,
-        6.5
+        4,
+        6
       ],
       "as3": "Pickups/APItem.as:94-104 \"seed\" → [Seed.png, 9, 13]; :171 centerOO, frame 0"
+    },
+    "seedling:boss/shieldboss": {
+      "sheet": "ShieldBoss",
+      "fw": 56,
+      "fh": 80,
+      "frames": 20,
+      "origin": [
+        28,
+        40
+      ],
+      "as3": "Enemies/ShieldBoss.as:15-16 Spritemap(56, 80); :35-41 super(_x + 24, _y + 32), centerOO; sit [0], stab [3..8], moveShield [0,1], movedShield [2], die [9..19]"
+    },
+    "seedling:boss/finalboss": {
+      "sheet": "FinalBoss",
+      "fw": 16,
+      "fh": 16,
+      "frames": 12,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 15
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 5
+        },
+        "dead": {
+          "clock": "fps",
+          "frames": [
+            11,
+            11
+          ],
+          "fps": 1
+        }
+      },
+      "as3": "Enemies/FinalBoss.as:20-21 Spritemap(16, 16, endAnim); :40-46 super(_x + 8, _y + 8), centerOO; walk [0..3] fps 15, die [4..11] fps 5, dead [11,11] fps 1, deadframe [11] (fps 0: frame 11, no row); sitFrames [0..3] by worldFrame"
+    },
+    "seedling:boss/lavaboss": {
+      "sheet": "LavaBoss",
+      "fw": 160,
+      "fh": 82,
+      "frames": 28,
+      "origin": [
+        80,
+        41
+      ],
+      "as3": "Enemies/LavaBoss.as:20-21 Spritemap(160, 82, endAnim); :31-43 super(_x + 48, _y + 40), centerOO; sit/smash/smashback/armsup/sweep/sweepback/hit/hitplayer/die/dead"
+    },
+    "seedling:boss/lavaball": {
+      "sheet": "LavaBall",
+      "fw": 48,
+      "fh": 32,
+      "frames": 3,
+      "origin": [
+        32,
+        16
+      ],
+      "anims": {
+        "fly": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Projectiles/LavaBall.as:15-16 Spritemap(48, 32); :24-30 scale 0.5, originX 32 (x = -32), originY 16 (y = -16); fly [0,1,2] fps 10"
+    },
+    "seedling:boss/tentaclebeast": {
+      "sheet": "TentacleBeast",
+      "fw": 46,
+      "fh": 44,
+      "frames": 20,
+      "origin": [
+        23,
+        22
+      ],
+      "as3": "Enemies/TentacleBeast.as:18-19 Spritemap(46, 44, animEnd); :38-44 super(_x + 24, _y + 24), centerOO; sink/rise fps 8, under [12], dying [13..16] fps 2; sitting [0,1,2,1], dead [17,18,19,18]"
+    },
+    "seedling:boss/tentacle": {
+      "sheet": "Tentacle",
+      "fw": 80,
+      "fh": 49,
+      "frames": 21,
+      "origin": [
+        8,
+        47
+      ],
+      "as3": "Enemies/Tentacle.as:15-16 Spritemap(80, 49, animEnd); :26-29 originX 8 (x = -8), originY 47 (y = -47); rise/hit/hitting/sink/cut fps 10, sit fps 5; scaleX = right ? 1 : -1"
+    },
+    "seedling:boss/lightboss": {
+      "sheet": "LightBoss",
+      "fw": 17,
+      "fh": 16,
+      "frames": 10,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Enemies/LightBoss.as:15-16 Spritemap(17, 16, animEnd); :38 centerOO (FlashPunk's int origin: 17/2 → 8); sit [0], die [1..9] fps 20"
+    },
+    "seedling:boss/lightbossshot": {
+      "sheet": "LightBossShot",
+      "fw": 8,
+      "fh": 8,
+      "frames": 1,
+      "origin": [
+        4,
+        4
+      ],
+      "as3": "Projectiles/LightBossShot.as:14-15 Spritemap(8, 8); :21 centerOO; :32-38 angle += 10 an update; TurretSpit.render onto nightBmp at 0.1"
+    },
+    "seedling:boss/lightbosstotem": {
+      "sheet": "LightBossTotem",
+      "fw": 16,
+      "fh": 24,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Scenery/LightBossTotem.as:14-15 Image; :21-23 super(_x, _y), originY 8 (y = -8); render: onto nightBmp at 0.5; dying: scaleX ·0.9, scaleY +0.1, y −10 a render"
+    },
+    "seedling:boss/frozenboss": {
+      "sheet": "FrozenBoss",
+      "fw": 160,
+      "fh": 160,
+      "frames": 1,
+      "as3": "Scenery/FrozenBoss.as:13-14 Image; :18 super(_x, _y) (origin 0); :20 layer; :25-30 render, and onto nightBmp"
     },
     "seedling:pickup/bosskey0": {
       "sheet": "BossKey",
