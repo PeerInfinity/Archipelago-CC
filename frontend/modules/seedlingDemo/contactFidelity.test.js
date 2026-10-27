@@ -330,18 +330,18 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             fineFrontierFlood: true,
             // ⛓ fidelity RULESREF D1 (wave 32): the walk's gate times a puncher's punch — ships OFF.
             punchGateTimed: true,
-            // ⛓ fidelity DETERM (c) F1 (wave 33): a released Cover under a hitable keeps its faded alpha — ships OFF.
-            coverHeldFade: false,
-            // ⛓ fidelity DETERM (c) F2 (wave 33): a Lock re-closes at alpha 0, restored a step later — ships OFF.
-            lockRecloseLag: false,
-            // ⛓ fidelity L41TOTEM D1 (wave 33): the bait search floods each component once (a cost key) — ships OFF.
-            baitComponentMemo: false,
-            // ⛓ fidelity L41TOTEM D1b (wave 33): the bait alignment asks each position once (a cost key) — ships OFF.
-            baitAlignSafeMemo: false,
-            // ⛓ fidelity L41TOTEM D3 (wave 33): a bait's idle ends when the crusher has parked — ships OFF.
-            baitParkedTail: false,
-            // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — ships OFF.
-            fineSwingStance: false });
+            // ⛓ fidelity DETERM (c) F1 (wave 33): a released Cover under a hitable keeps its faded alpha — ON since the W33 flip.
+            coverHeldFade: true,
+            // ⛓ fidelity DETERM (c) F2 (wave 33): a Lock re-closes at alpha 0, restored a step later — ON since the W33 flip.
+            lockRecloseLag: true,
+            // ⛓ fidelity L41TOTEM D1 (wave 33): the bait search floods each component once (a cost key) — ON since the W33 flip.
+            baitComponentMemo: true,
+            // ⛓ fidelity L41TOTEM D1b (wave 33): the bait alignment asks each position once (a cost key) — ON since the W33 flip.
+            baitAlignSafeMemo: true,
+            // ⛓ fidelity L41TOTEM D3 (wave 33): a bait's idle ends when the crusher has parked — ON since the W33 flip.
+            baitParkedTail: true,
+            // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — ON since the W33 flip.
+            fineSwingStance: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

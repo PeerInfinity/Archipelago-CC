@@ -53,10 +53,10 @@ const counted = (memo, fn) => {
 
 describe('fidelity L41TOTEM D1 — the switches', () => {
     it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO
-        || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO || !!process.env.SEEDLING_BAIT_PARKED_TAIL)('all three ship OFF', () => {
+        || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO || !!process.env.SEEDLING_BAIT_PARKED_TAIL)('all three ship ON (the W33 flip)', () => {
         for (const key of ['baitComponentMemo', 'baitAlignSafeMemo', 'baitParkedTail']) {
-            expect(CONTACT_FIDELITY_DEFAULTS[key]).toBe(false);
-            expect(CONTACT_FIDELITY[key]).toBe(false);
+            expect(CONTACT_FIDELITY_DEFAULTS[key]).toBe(true);
+            expect(CONTACT_FIDELITY[key]).toBe(true);
         }
     });
 });
