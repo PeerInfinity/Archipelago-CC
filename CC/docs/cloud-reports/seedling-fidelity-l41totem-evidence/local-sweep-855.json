@@ -1,0 +1,89 @@
+[
+ {
+  "arm": "local OFF, budget 400 s",
+  "end": [
+   247.84174907527955,
+   152.46765870174647
+  ],
+  "ms": 103066,
+  "seamTime": 5189,
+  "solvedMs": 13039,
+  "planTicks": 2505,
+  "rowsDrained": 2506,
+  "divergence": null,
+  "expectedEnd": {
+   "level": 41,
+   "x": 247.84174907527955,
+   "y": 152.46765870174647,
+   "deaths": 0
+  },
+  "served": [
+   {
+    "level": 41,
+    "goal": "Level 041 - Totem Part 240,144",
+    "tick": 2498
+   }
+  ],
+  "roomHitsMax": 0,
+  "holdAt": 68297.20000000001,
+  "latchMovedAt": 69177.30000000005,
+  "tapeAt": 82277.5,
+  "endReason": "done"
+ },
+ {
+  "arm": "local D1+D1b ON, budget 90 s",
+  "end": [
+   183.59174907527958,
+   115.46765870174649
+  ],
+  "ms": 90183,
+  "seamTime": 5203,
+  "solvedMs": 5600,
+  "planTicks": 2505,
+  "rowsDrained": 2352,
+  "divergence": null,
+  "expectedEnd": {
+   "level": 41,
+   "x": 247.84174907527955,
+   "y": 152.46765870174647,
+   "deaths": 0
+  },
+  "served": [],
+  "roomHitsMax": 0,
+  "holdAt": 43414.299999999814,
+  "latchMovedAt": 44196.799999999814,
+  "tapeAt": 49857.90000000037,
+  "endReason": "timeout"
+ },
+ {
+  "arm": "local D1+D1b+D3 ON, budget 90 s",
+  "end": [
+   247.84174907527955,
+   152.46765870174647
+  ],
+  "ms": 90107,
+  "seamTime": 5156,
+  "solvedMs": 6216,
+  "planTicks": 2269,
+  "rowsDrained": 2270,
+  "divergence": null,
+  "expectedEnd": {
+   "level": 41,
+   "x": 247.84174907527955,
+   "y": 152.46765870174647,
+   "deaths": 0
+  },
+  "served": [
+   {
+    "level": 41,
+    "goal": "Level 041 - Totem Part 240,144",
+    "tick": 2262
+   }
+  ],
+  "roomHitsMax": 0,
+  "holdAt": 45664.89999999944,
+  "latchMovedAt": 46777.89999999944,
+  "tapeAt": 53022.699999999255,
+  "endReason": "done"
+ }
+]

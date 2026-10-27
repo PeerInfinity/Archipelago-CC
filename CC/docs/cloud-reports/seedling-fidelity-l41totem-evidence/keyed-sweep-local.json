@@ -1,0 +1,318 @@
+[
+ {
+  "arm": "off",
+  "id": 394,
+  "key": "level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160",
+  "end": "done",
+  "ms": 1660,
+  "seamTime": 5194,
+  "solvedMs": 184,
+  "planTicks": 5,
+  "verbs": [
+   "walk"
+  ],
+  "rowsDrained": 5,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": null
+ },
+ {
+  "arm": "off",
+  "id": 395,
+  "key": "level_42 <- in_L40_848_0 -> exit:out_teleporter_240_336",
+  "end": "done",
+  "ms": 7619,
+  "seamTime": 5173,
+  "solvedMs": 271,
+  "planTicks": 4,
+  "verbs": [
+   "walk"
+  ],
+  "rowsDrained": 4,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": null
+ },
+ {
+  "arm": "off",
+  "id": 767,
+  "key": "level_107 <- in_L102_224_96 -> exit:out_teleporter_0_48",
+  "end": "done",
+  "ms": 1284,
+  "seamTime": 5525,
+  "solvedMs": 152,
+  "planTicks": 5,
+  "verbs": [
+   "walk"
+  ],
+  "rowsDrained": 5,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": null
+ },
+ {
+  "arm": "off",
+  "id": 768,
+  "key": "level_107 <- in_L102_224_96 -> exit:out_teleporter_304_176",
+  "end": "failed",
+  "ms": 1378,
+  "seamTime": 5523,
+  "solvedMs": null,
+  "planTicks": null,
+  "verbs": null,
+  "rowsDrained": 0,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": "the solver declined level_107 -> level_108__r2c0 in level 107 (refusal): solverBot(wasm-exit-107) reach-exit (304,176)->L108 -> hold stance (buttonroom@288,176): the combat ladder is EXHAUSTED. The corridor passes through danger at (30.7,56.0) \u2014 crusher:crusher@32,0 (trigger lane S with a clear sigh"
+ },
+ {
+  "arm": "off",
+  "id": 769,
+  "key": "level_107 <- in_L108_0_32 -> exit:out_teleporter_0_48",
+  "end": "done",
+  "ms": 13093,
+  "seamTime": 5546,
+  "solvedMs": 666,
+  "planTicks": 338,
+  "verbs": [
+   "dodge",
+   "walk"
+  ],
+  "rowsDrained": 338,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": null
+ },
+ {
+  "arm": "off",
+  "id": 770,
+  "key": "level_107 <- in_L108_0_32 -> exit:out_teleporter_304_176",
+  "end": "done",
+  "ms": 1357,
+  "seamTime": 5530,
+  "solvedMs": 149,
+  "planTicks": 5,
+  "verbs": [
+   "walk"
+  ],
+  "rowsDrained": 5,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": null
+ },
+ {
+  "arm": "off",
+  "id": 396,
+  "key": "level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152",
+  "end": "done",
+  "ms": 65709,
+  "seamTime": 5185,
+  "solvedMs": 16060,
+  "planTicks": 1340,
+  "verbs": [
+   "bait",
+   "walk"
+  ],
+  "rowsDrained": 1341,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [
+   {
+    "level": 42,
+    "goal": "Level 042 - Totem Part 184,152",
+    "tick": 1333
+   }
+  ],
+  "failed": null
+ },
+ {
+  "arm": "off",
+  "id": 855,
+  "key": "level_41__r7c15 <- in_L40_944_96 ~> level_41__r4c3 ~> level_41__r4c15 -> location:Level 041 - Totem Part 240,144",
+  "end": "done",
+  "ms": 105890,
+  "seamTime": 5171,
+  "solvedMs": 13386,
+  "planTicks": 2505,
+  "verbs": [
+   "bait",
+   "walk",
+   "weigh"
+  ],
+  "rowsDrained": 2506,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [
+   {
+    "level": 41,
+    "goal": "Level 041 - Totem Part 240,144",
+    "tick": 2498
+   }
+  ],
+  "failed": null
+ },
+ {
+  "arm": "on",
+  "id": 394,
+  "key": "level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160",
+  "end": "done",
+  "ms": 1455,
+  "seamTime": 5162,
+  "solvedMs": 195,
+  "planTicks": 5,
+  "verbs": [
+   "walk"
+  ],
+  "rowsDrained": 5,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": null
+ },
+ {
+  "arm": "on",
+  "id": 395,
+  "key": "level_42 <- in_L40_848_0 -> exit:out_teleporter_240_336",
+  "end": "done",
+  "ms": 1516,
+  "seamTime": 5177,
+  "solvedMs": 207,
+  "planTicks": 4,
+  "verbs": [
+   "walk"
+  ],
+  "rowsDrained": 4,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": null
+ },
+ {
+  "arm": "on",
+  "id": 767,
+  "key": "level_107 <- in_L102_224_96 -> exit:out_teleporter_0_48",
+  "end": "done",
+  "ms": 1336,
+  "seamTime": 5566,
+  "solvedMs": 185,
+  "planTicks": 5,
+  "verbs": [
+   "walk"
+  ],
+  "rowsDrained": 5,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": null
+ },
+ {
+  "arm": "on",
+  "id": 768,
+  "key": "level_107 <- in_L102_224_96 -> exit:out_teleporter_304_176",
+  "end": "failed",
+  "ms": 1309,
+  "seamTime": 5544,
+  "solvedMs": null,
+  "planTicks": null,
+  "verbs": null,
+  "rowsDrained": 0,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": "the solver declined level_107 -> level_108__r2c0 in level 107 (refusal): solverBot(wasm-exit-107) reach-exit (304,176)->L108 -> hold stance (buttonroom@288,176): the combat ladder is EXHAUSTED. The corridor passes through danger at (30.7,56.0) \u2014 crusher:crusher@32,0 (trigger lane S with a clear sigh"
+ },
+ {
+  "arm": "on",
+  "id": 769,
+  "key": "level_107 <- in_L108_0_32 -> exit:out_teleporter_0_48",
+  "end": "done",
+  "ms": 13563,
+  "seamTime": 5542,
+  "solvedMs": 844,
+  "planTicks": 341,
+  "verbs": [
+   "dodge",
+   "walk"
+  ],
+  "rowsDrained": 341,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": null
+ },
+ {
+  "arm": "on",
+  "id": 770,
+  "key": "level_107 <- in_L108_0_32 -> exit:out_teleporter_304_176",
+  "end": "done",
+  "ms": 1395,
+  "seamTime": 5536,
+  "solvedMs": 169,
+  "planTicks": 5,
+  "verbs": [
+   "walk"
+  ],
+  "rowsDrained": 5,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [],
+  "failed": null
+ },
+ {
+  "arm": "on",
+  "id": 396,
+  "key": "level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152",
+  "end": "done",
+  "ms": 58276,
+  "seamTime": 5203,
+  "solvedMs": 7006,
+  "planTicks": 1331,
+  "verbs": [
+   "bait",
+   "walk"
+  ],
+  "rowsDrained": 1332,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [
+   {
+    "level": 42,
+    "goal": "Level 042 - Totem Part 184,152",
+    "tick": 1324
+   }
+  ],
+  "failed": null
+ },
+ {
+  "arm": "on",
+  "id": 855,
+  "key": "level_41__r7c15 <- in_L40_944_96 ~> level_41__r4c3 ~> level_41__r4c15 -> location:Level 041 - Totem Part 240,144",
+  "end": "done",
+  "ms": 86632,
+  "seamTime": 5185,
+  "solvedMs": 4685,
+  "planTicks": 2269,
+  "verbs": [
+   "bait",
+   "walk",
+   "weigh"
+  ],
+  "rowsDrained": 2270,
+  "divergence": null,
+  "roomHitsMax": 0,
+  "served": [
+   {
+    "level": 41,
+    "goal": "Level 041 - Totem Part 240,144",
+    "tick": 2262
+   }
+  ],
+  "failed": null
+ }
+]

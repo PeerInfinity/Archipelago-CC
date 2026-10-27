@@ -1,0 +1,3 @@
+failed	frontend/modules/seedlingDemo/fidelityCrusher.test.js > fidelity CRUSHER D3 — the witness `crusher-l42-round-trip` > is the solver's own plan with the flag ON, and the flag OFF refuses the sa
+failed	frontend/modules/seedlingDemo/fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the game witness (p4g, fixtures/crusherpress-witness) > the solver still plans the recorded tape (the ba
+failed	frontend/modules/seedlingDemo/fidelityL41Totem.test.js > fidelity L41TOTEM D1 + D1b — the solver at L41 through the bait and the fire block, ON = OFF > the plan the SEARCHGAPS staging solves 
