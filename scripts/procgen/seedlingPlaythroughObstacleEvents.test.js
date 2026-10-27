@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    buildPlaythroughAtlas, playthroughButtonEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged,
+    buildPlaythroughAtlas, playthroughButtonEvents, playthroughInRoomPoleEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged,
     withEventGates,
 } from './make-seedling-playthrough-rules.mjs';
 
@@ -39,6 +39,7 @@ let locks;
 let buttons;
 let talks;
 let ropes;
+let poles;
 beforeAll(() => {
     atlas = buildPlaythroughAtlas();
     derived = playthroughObstacleEvents(atlas);
@@ -46,8 +47,10 @@ beforeAll(() => {
     locks = playthroughLockEvents(atlas, { existing: derived.events });
     // ⛓ RULES l38-button-event: and the cross-room button presses
     buttons = playthroughButtonEvents(atlas, { existing: [...derived.events, ...locks.events] });
+    // ⛓ RULES l63-darktrap: and the poles only their own room's Spear lights
+    poles = playthroughInRoomPoleEvents(atlas, { existing: [...derived.events, ...locks.events, ...buttons.events] });
     // ⛓ RULES watcher-event: and the cross-room prerequisites (the Watcher's talk)
-    talks = playthroughTalkEvents(atlas, { existing: [...derived.events, ...locks.events, ...buttons.events] });
+    talks = playthroughTalkEvents(atlas, { existing: [...derived.events, ...locks.events, ...buttons.events, ...poles.events] });
     // ⛓ RULES rope-events: and the rope cuts
     ropes = playthroughRopeEvents(atlas);
 }, 180_000);
@@ -62,7 +65,7 @@ describe('the playthrough\'s obstacle events', () => {
 
     it('the committed rules carry exactly the fresh derivation\'s events, each an AP event in the open side', () => {
         const committed = eventsOf(RULES);
-        const all = [...withEventGates([...derived.events, ...locks.events, ...buttons.events], talks.eventGates), ...talks.events,
+        const all = [...withEventGates([...derived.events, ...locks.events, ...buttons.events, ...poles.events], talks.eventGates), ...talks.events,
             ...ropes.events];
         expect(committed.map((e) => e.name).sort()).toEqual(all.map((e) => e.name).sort());
         for (const ev of all) {
@@ -188,6 +191,36 @@ describe('the playthrough\'s obstacle events', () => {
         expect(exit('level_62', 'level_64')).toEqual([orOf(ev['flag:L62:0'].name)]);
         expect(exit('level_62', 'level_63__r0c1')).toEqual([{ rule: 'True_' }, orOf(ev['flag:L63:1'].name)]);
         expect(exit('level_62', 'level_61__r0c7')).toEqual([{ rule: 'True_' }]);
+    });
+
+    it('rules l63-darktrap: the in-room poles of L63, L65 and L101 are events where a stance lights them; the doors with no stance cost the event alone', () => {
+        const ev = Object.fromEntries(poles.events.map((x) => [x.fields.event_id, x]));
+        expect(Object.keys(ev)).toEqual(['flag:L63:6', 'flag:L63:7', 'flag:L65:0', 'flag:L101:0']);
+        const SPEAR = { rule: 'Has', args: { item_name: 'Ghost Spear' } };
+        // placed where a stance stands: beyond the barrier (L63's north halves, L65's own sub-region), or — L101's far
+        // side holds none — elsewhere in the room: the r4c2 column's [7,4], a thrust THROUGH the wall [8,4] (the probe's
+        // l101-wall-thrust; the vanilla route to L109's Firewand)
+        expect(Object.values(ev).map((e) => [e.fields.event_id, e.fields.side, e.access_rule])).toEqual([
+            ['flag:L63:6', 'level_63__r10c2', SPEAR], ['flag:L63:7', 'level_63__r6c9', SPEAR],
+            ['flag:L65:0', 'level_65__r0c8', SPEAR], ['flag:L101:0', 'level_101__r4c2', SPEAR]]);
+        expect(ev['flag:L63:7'].fields).toMatchObject({ obstacle: { level: 63, tag: 7, class: 'lightpole', x: 112, y: 272 },
+            action: { verb: 'lit by a Spear thrust', item: 'hasSpear' }, across: [] });
+        const has = (id) => ({ rule: 'Has', args: { item_name: ev[id].name } });
+        const or = (id) => ({ rule: 'Or', children: [has(id), SPEAR] });
+        const exit = (from, to) => RULES.regions['1'][from].exits.filter((x) => x.connected_region === to).map((x) => x.access_rule);
+        // L63's two L65 landings are sealed until the pole is lit from the north: in = the event, out = the Spear too
+        expect(exit('level_65__r0c2', 'level_63__r10c2')).toEqual([has('flag:L63:6')]);
+        expect(exit('level_63__r10c2', 'level_65__r0c2')).toEqual([or('flag:L63:6')]);
+        // L65's column is lit from both sides: Or both ways (ANDed with L63's on the shared door)
+        expect(exit('level_65__r0c8', 'level_63__r6c9')).toEqual([{ rule: 'And', children: [has('flag:L63:7'), or('flag:L65:0')] }]);
+        expect(exit('level_63__r6c9', 'level_65__r0c8')).toEqual([{ rule: 'And', children: [or('flag:L63:7'), or('flag:L65:0')] }]);
+        // L101's landing lights it, the far side does not: in = the Spear way, out (after crossing from beyond) = the
+        // event, lit from r4c2
+        expect(exit('level_102__r5c9', 'level_101__r4c9')).toEqual([or('flag:L101:0')]);
+        expect(exit('level_101__r4c9', 'level_102__r5c9')).toEqual([has('flag:L101:0')]);
+        // nothing else asks for them
+        expect(gatesOf(RULES, new Set(Object.values(ev).map((e) => e.name))).length).toBe(6);
+        expect(poles.skipped.every((x) => /its light kills no body/.test(x))).toBe(true);
     });
 
     it('rules watcher-event: the Watcher\'s talk is ONE event in L114\'s flag, gating the FinalDoor\'s event and its two crossings', () => {

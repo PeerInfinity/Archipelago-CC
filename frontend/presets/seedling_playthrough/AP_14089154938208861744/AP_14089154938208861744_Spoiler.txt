@@ -76,7 +76,10 @@ L58 flag 1: yeti@56,56 cleared: L58 flag 1: yeti@56,56 cleared
 L63 flag 1: lightpole@64,88 cleared: L63 flag 1: lightpole@64,88 cleared
 L62 flag 0: lightpole@120,200 cleared: L62 flag 0: lightpole@120,200 cleared
 Level 063 - Chest: Seal
+L63 flag 7: lightpole@112,272 cleared: L63 flag 7: lightpole@112,272 cleared
+L63 flag 6: lightpole@48,272 cleared: L63 flag 6: lightpole@48,272 cleared
 Level 064 - Ghostspear: Ghost Spear
+L65 flag 0: lightpole@128,168 cleared: L65 flag 0: lightpole@128,168 cleared
 Level 067 - Boss Key 4: Yellow Key
 Level 068 - Health: Health
 L68 flag 0: bosslock@16,32 cleared: L68 flag 0: bosslock@16,32 cleared
@@ -91,6 +94,7 @@ Level 086 - Chest: Seal
 Level 089 - Feather: Progressive Swim
 Level 090 - Chest: Seal
 Level 098 - Chest: Seal
+L101 flag 0: lightpole@144,64 cleared: L101 flag 0: lightpole@144,64 cleared
 Level 106 - Ghostsword: Ghost Sword Fusion
 Level 109 - Firewand: Fire Wand Fusion
 Level 112 - Owl: Seal
@@ -170,6 +174,9 @@ Playthrough:
   Level 064 - Ghostspear: Ghost Spear
 }
 9: {
+  L63 flag 6: lightpole@48,272 cleared: L63 flag 6: lightpole@48,272 cleared
+  L63 flag 7: lightpole@112,272 cleared: L63 flag 7: lightpole@112,272 cleared
+  L65 flag 0: lightpole@128,168 cleared: L65 flag 0: lightpole@128,168 cleared
   Level 043 - Wand: Wand
   Level 067 - Boss Key 4: Yellow Key
 }
@@ -190,6 +197,7 @@ Playthrough:
   Level 079 - Darksuit: Dark Suit
 }
 12: {
+  L101 flag 0: lightpole@144,64 cleared: L101 flag 0: lightpole@144,64 cleared
   Level 063 - Chest: Seal
   Level 080 - Chest: Seal
   Level 082 - King of Fire: Seal
