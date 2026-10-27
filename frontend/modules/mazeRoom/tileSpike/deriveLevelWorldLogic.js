@@ -79,6 +79,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
     };
     return {
         cells, cuts, states: seen.size, planTo: (cell) => planFrom(cells.get(cell)), planToCut: (key) => planFrom(cuts.get(key)),
+        reached: (state) => seen.has(reachKey(state)),
     };
 }
 

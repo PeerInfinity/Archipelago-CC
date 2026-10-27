@@ -57,7 +57,7 @@ import {
     ropeEvents, allPoints, latticeAxis, ruleLevels, inventoryOf, pointCounts, formatPoint,
 } from './deriveTileLogic.js';
 import { evaluateRuleAgainstInventory, isObstacleCleared } from '../../shared/procgen/library.js';
-import { deriveLevelWorldLogic, deriveEntryLogic, enteredAt } from './deriveLevelWorldLogic.js';
+import { deriveLevelWorldLogic, deriveEntryLogic, enteredAt, nativeReachUnder } from './deriveLevelWorldLogic.js';
 import { ruleFromMinimalSets } from './deriveTileLogic.js';
 
 const ruleItems = (rule, out = new Set()) => {
@@ -502,7 +502,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             certifyFromInbound(world, name);
             continue;
         }
-        for (const arrival of arrivalsOf(world, name)) priceFrom(world, name, arrival);
+        for (const arrival of distinctArrivals(world, name, arrivalsOf(world, name))) priceFrom(world, name, arrival);
     }
     return { problems, lines, accepted };
 
@@ -535,14 +535,40 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             }
         }
         const home = `${entered.entrance.x},${entered.entrance.y}`;
-        if (entrance || cells.size === 0) cells.set(home, null);
-        return [...cells.keys()].sort().map((k) => (k === home ? null : cells.get(k)));
+        const out = [...cells.keys()].filter((k) => k !== home).sort().map((k) => cells.get(k));
+        return entrance || cells.size === 0 || cells.has(home) ? [null, ...out] : out;
+    }
+
+    /**
+     * The arrivals worth a search: an arrival that an earlier one reaches, and that reaches it back, holding NOTHING, is
+     * dropped — reach only grows with the inventory, so from both every inventory reaches the same states, and the
+     * pricing is the same (L12 r0c19, the hub: seven landings, one search each of the world's largest). Asked on the
+     * native engine (the scripted step ≡ the native one); an arrival standing in an armed lane reaches nothing and
+     * stays its own.
+     */
+    function distinctArrivals(world, name, arrivals) {
+        if (arrivals.length < 2) return arrivals;
+        const into = world.sharedWorld ? enteredAt(world, name) : world;
+        const at = (a) => (a ? { ...into, entrance: { x: a.x, y: a.y } } : into);
+        const reach = new Map();
+        const reachOf = (a) => {
+            const key = a ? `${a.x},${a.y}` : '';
+            if (!reach.has(key)) reach.set(key, nativeReachUnder(at(a), []));
+            return reach.get(key);
+        };
+        const kept = [];
+        for (const a of arrivals) {
+            const same = kept.some((k) => reachOf(k).reached?.(createState(at(a))) && reachOf(a).reached?.(createState(at(k))));
+            if (!same) kept.push(a);
+        }
+        return kept;
     }
 
     /** Price `name`'s targets and locations from one arrival: `null` = its entrance cell, else a landing cell. */
     function priceFrom(world, name, arrival) {
+        // A landing's reaches are its own (the cache is keyed by the arrival cell): a throwaway cache, not the world's.
         const out = deriveEntryLogic(world, name, helpers, {
-            native, arrivalBlocked: arrivalBlockedFrom(name), cache: cacheOf(world, name), arriveAt: arrival,
+            native, arrivalBlocked: arrivalBlockedFrom(name), cache: arrival ? new Map() : cacheOf(world, name), arriveAt: arrival,
         });
         const into = world.sharedWorld ? enteredAt(world, name) : world;
         const entered = arrival ? { ...into, entrance: { x: arrival.x, y: arrival.y } } : into;
