@@ -106,8 +106,9 @@ describe('fidelity L41TOTEM D1b — the alignment asks each position once, with 
 describe('fidelity L41TOTEM D1 + D1b — the solver at L41 through the bait and the fire block, ON = OFF', () => {
     it('the plan the SEARCHGAPS staging solves is the same tick for tick', async () => {
         const staging = await ropeStaging(W);
-        const solve = () => solveSegment({ run: createRunForStaging(staging, SRC), goals: W.goals, name: 'l41totem',
-            boot: staging.boot, dashMode: 'all', forkRun: () => createRunForStaging(staging, SRC) });
+        // D3 named OFF: its own row below moves this plan
+        const solve = () => withContactFidelity({ baitParkedTail: false }, () => solveSegment({ run: createRunForStaging(staging, SRC),
+            goals: W.goals, name: 'l41totem', boot: staging.boot, dashMode: 'all', forkRun: () => createRunForStaging(staging, SRC) }));
         const keys = (out) => out.perTick.map((k) => [...k].sort().join('+'));
         const off = counted(false, solve);
         const on = counted(true, solve);
