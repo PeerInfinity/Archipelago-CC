@@ -22,6 +22,7 @@ const SWIM = 'Progressive Swim';
 
 /**
  *   #  wall   P entrance   X exit   B block   w water (Swim) that SINKS a block   v water that does not
+ *   o  a PIT: not floor (the player cannot walk it), but a sink — a block enters it and dies (PIT SINKS)
  */
 function picture(rows, { sinks = true } = {}) {
     const height = rows.length;
@@ -41,6 +42,10 @@ function picture(rows, { sinks = true } = {}) {
             if (c === 'B') setBlock(w, x, y);
             if (c === 'w' || c === 'v') setObstacle(w, x, y, 'water');
             if (c === 'w' && sinks) sinkCells.push({ x, y });
+            if (c === 'o') {
+                setTile(w, x, y, TILE_WALL);
+                if (sinks) sinkCells.push({ x, y });
+            }
         }
     }
     if (sinkCells.length > 0) w.blockSinks = checkBlockSinks(sinkCells, width, height, 'test');
@@ -133,8 +138,43 @@ describe('a block pushed onto a sink is gone; the water stays water', () => {
     });
 });
 
+/**
+ * PIT SINKS (session tile-primitives-pit-sinks-landings): a sink need not be floor. Seedling's pit is a "Tile", not
+ * "Solid" (`Tile.as` `types`), so a block slides onto it and `PushableBlockFire.as:43-46` destroys it there — L63's
+ * spear block is struck E into the pit at [8,6], which opens the only lane from r0c1 to r6c9. The player still cannot
+ * walk the pit.
+ */
+const PIT = [
+    '#######',
+    '#P.Bo##',
+    '##.####',
+    '##.####',
+    '##X####',
+    '#######',
+];
+
+describe('a block pushed into an unfloored PIT sink is gone; the pit stays unwalkable', () => {
+    it('the push into the pit is legal, the block leaves the state, and the pit refuses the player', () => {
+        const w = picture(PIT);
+        const s = step(w, createState(w), INPUT_E);
+        const pushed = step(w, s, INPUT_E);
+        expect(pushed).not.toBeNull();
+        expect(pushed.player_pos).toEqual({ x: 3, y: 1 });
+        expect(pushed.blocks).toEqual([]);
+        expect(step(w, pushed, INPUT_E)).toBeNull();
+        expect(whyBlocked(w, pushed, INPUT_E)).toBe('wall at (4,1)');
+    });
+
+    it('without the sink the same push is refused as a wall, by name', () => {
+        const w = picture(PIT, { sinks: false });
+        const s = step(w, createState(w), INPUT_E);
+        expect(step(w, s, INPUT_E)).toBeNull();
+        expect(whyBlocked(w, s, INPUT_E)).toBe('block at (3,1) cannot move: beyond is a wall');
+    });
+});
+
 describe('whyBlocked ⇔ step and scripted ≡ native over every reachable (state, input) with sinks', () => {
-    for (const [name, rows] of [['lane', LANE], ['two blocks, one sink', ['########', '#P.B.Bw#', '#......#', '########']]]) {
+    for (const [name, rows] of [['lane', LANE], ['two blocks, one sink', ['########', '#P.B.Bw#', '#......#', '########']], ['pit', PIT]]) {
         for (const inv of [[], [SWIM]]) {
             it(`${name}, holding [${inv}]`, () => {
                 const w = picture(rows);
@@ -153,6 +193,20 @@ describe('whyBlocked ⇔ step and scripted ≡ native over every reachable (stat
             });
         }
     }
+
+    it('a scripted block_may_enter that asks for FLOOR alone (forgets the unfloored pit) is caught', () => {
+        const body = HELPERS.block_may_enter.body;
+        const floorOnly = structuredClone(HELPERS);
+        // the real first conjunct is `(tile.floor or tile.sink)`: keep `tile.floor` only
+        const i = body.conditions.findIndex((c) => c.type === 'or' && c.conditions.some((d) => d.attr === 'floor'));
+        expect(i).toBe(0);
+        floorOnly.block_may_enter.body.conditions[i] = body.conditions[i].conditions[0];
+        const w = picture(PIT);
+        const s = step(w, createState(w), INPUT_E);
+        expect(step(w, s, INPUT_E)).not.toBeNull();
+        expect(scriptedStep(w, s, INPUT_E, floorOnly).next).toBeNull();
+        expect(scriptedStep(w, s, INPUT_E, HELPERS).next).not.toBeNull();
+    });
 
     it('a scripted block_may_enter that forgets the sink is caught', () => {
         const body = HELPERS.block_may_enter.body;

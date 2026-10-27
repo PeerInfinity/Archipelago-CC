@@ -29,13 +29,20 @@ if (!isMainThread) {
     const SC = RULES.preset_sidecars['1'];
     const levels = [...new Set(Object.keys(SC).map((s) => s.split('__')[0]))].sort();
     const mine = levels.filter((_, i) => i % shards === shard);
-    const regions = Object.keys(SC).filter((s) => mine.includes(s.split('__')[0]));
     const t0 = Date.now();
-    let out;
-    try {
-        out = mod.certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions, atlas: ATLAS, permissive: arm === 'old' ? [] : permissive });
-    } catch (e) {
-        out = { threw: String(e.stack ?? e).slice(0, 2000), problems: [], lines: [], accepted: [] };
+    // pit-sinks-landings measurement: one level at a time, with its time and heap, so a blow-up names its level.
+    const out = { problems: [], lines: [], accepted: [] };
+    for (const level of mine) {
+        const regions = Object.keys(SC).filter((s) => s.split('__')[0] === level);
+        const t1 = Date.now();
+        process.stderr.write(`LEVEL-START ${arm} ${level} (${regions.length} regions)\n`);
+        try {
+            const r = mod.certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions, atlas: ATLAS, permissive: arm === 'old' ? [] : permissive });
+            out.problems.push(...r.problems); out.lines.push(...r.lines); out.accepted.push(...r.accepted);
+        } catch (e) {
+            out.threw = `${out.threw ?? ''}${level}: ${String(e.stack ?? e).slice(0, 600)}\n`;
+        }
+        process.stderr.write(`LEVEL-DONE ${arm} ${level} ${Date.now() - t1} ms heap ${Math.round(process.memoryUsage().heapUsed / 1e6)} MB\n`);
     }
     parentPort.postMessage({ shard, arm, ms: Date.now() - t0, levels: mine, ...out });
 } else {
