@@ -137,7 +137,28 @@ import { BUILD_SPAWN, INVENTORY_ITEM_IDS, ITEM_PROPERTIES, SAVE_SLOTS } from './
 import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
 import { createRuntimeSolver } from './jsRuntimeSolver.js';
 import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
-import { locationGoalServed } from './wasmPlayback.js';
+import { encounterReportServed, locationGoalServed } from './wasmPlayback.js';
+import { R7_GOAL_LEDGER } from './r7Acceptance.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
+import { ENCOUNTER_EXECUTORS } from './solverBot.js';
+
+/**
+ * ⛓ ENCOUNTER LEGS — the CHECK of an encounter location: the fixed report address of the `R7_GOAL_LEDGER`
+ * `kind: 'encounter'` row in the goal's level, `{level, tag}`, or null (no such row: the encounter is unbound).
+ * L32's Bob Boss → {32,4}, L12's Witch → {12,1}. That clear IS the game's own check on a `bossreport` build
+ * (R4, vendor/seedling `ccdf189776`): `Pickups/Fire.as:49-55` — `removed()` is `setPersistence(tag, false)` alone
+ * (tag = `BOSS_DROP_TAG` 4), and `Pickups/DarkSword.as:49-57` — `if (checkPersistence(tag)) setPersistence(tag,
+ * false)` (tag = `WITCH_TAG` 1); neither sets `Player.hasFire` / `hasDarkSword` any more (`apReportBosses.js`'s head).
+ * So the row's `flag` (`hasFire`, `hasDarkSword`) is NOT the check: on that build only the host's grant writes it
+ * (`seedlingCheckBinding`'s R4b part 2 head), and reading it would check the location off the server's item.
+ * ⚠ Not `wasmPlayback.encounterReportAddresses`: that also names the KILL {32,3} (the `Times` boss row), which is
+ * another location — the Bob Boss location is the drop.
+ */
+export function encounterCheckAddress(goal) {
+    if (goal?.kind !== 'location' || !goal.encounter) return null;
+    const row = R7_GOAL_LEDGER.find((r) => r.kind === 'encounter' && r.level === goal.level && r.address);
+    return row ? { level: row.address.level, tag: row.address.tag } : null;
+}
 
 /**
  * The pins every JS-runtime run carries. ⛔ `sound` is not optional: without
@@ -409,6 +430,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             // ⛓ EVENT GOALS — the leg is the solver's `clear-tag`; the walk's own point (only walked on a decline) is the
             // presser when the flag is pressed from this room (cross-room), else the obstacle's cell.
             if (goal.event) return goal.event.presser ?? goal.event.at;
+            // ⛓ ENCOUNTER LEGS — the leg is the solver's `encounter`; the point is the location's atlas tile.
+            if (goal.encounter) return goal.encounter.at ?? null;
             // ⛔ A mounted set's locations are its apitems ONLY (validateGoal's rule).
             if (mounted) {
                 const a = (mounted.apItems.get(goal.level) ?? []).find((x) => x.tag === goal.tag);
@@ -420,7 +443,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ EVENT GOALS — an event leg completes the wasm runtime's way: `wasmPlayback.locationGoalServed` over the
         // game's cleared slots (`botStatus().persistence_cleared` — this page's `persistenceCleared()`), never on the
         // plan finishing. Any other location keeps the J2/J3 check.
+        // ⛓ ENCOUNTER LEGS — an encounter completes on ITS OWN report address (`encounterCheckAddress`: the drop's
+        // pickup clearing {32,4} / {12,1}), read off the same cleared table, never on the plan finishing.
         locationServed: (goal) => (goal.event ? locationGoalServed(goal, { persistence_cleared: persistenceCleared() })
+            : goal.encounter ? encounterServed(goal)
             : collected.has(`${goal.level}:${goal.tag}`) || reportedClears.has(`${goal.level}:${goal.tag}`)),
         onEvent: (e) => {
             note({ type: 'walk', state: e.state, message: `[js runtime] ${walker.describe()}` });
@@ -635,7 +661,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     function tickOnce(held) {
         drainQueue();
         if (!session || halted) { flush(); return { stepped: false }; }
-        if (deferredReboot && !session.run.inCeremony) rebootInPlace(IN_PLACE_REBOOT_WHY);
+        if (deferredReboot && !session.run.inCeremony && !encounterHoldsDelivery()) rebootInPlace(IN_PLACE_REBOOT_WHY);
         const run = session.run;
         const level0 = run.level;
         const world0 = run.world;
@@ -726,6 +752,12 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
      * ⛓ OBSTACLE EVENTS — every slot cleared so far, `[{level, tag}]` sorted: what earlier runs carried, the live
      * run's clears, and the collected apitems (the game clears their slot too).
      */
+    /** ⛓ ENCOUNTER LEGS — whether the encounter's own report address is in the game's cleared table. */
+    function encounterServed(goal) {
+        const a = encounterCheckAddress(goal);
+        return !!a && persistenceCleared().some((c) => c.level === a.level && c.tag === a.tag);
+    }
+
     function persistenceCleared() {
         const all = new Map(carried);
         for (const k of collected) {
@@ -820,7 +852,21 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         const items = queue;
         queue = [];
         for (const item of items) applyItem(item);
-        if (deferredReboot && session && !session.run.inCeremony && !halted) rebootInPlace(IN_PLACE_REBOOT_WHY);
+        if (deferredReboot && session && !session.run.inCeremony && !halted && !encounterHoldsDelivery()) {
+            rebootInPlace(IN_PLACE_REBOOT_WHY);
+        }
+    }
+
+    /**
+     * ⛓ ENCOUNTER LEGS — an encounter leg's OWN reports (the kill {32,3}, the drop {32,4}) deliver their items mid-leg,
+     * and those are the leg SUCCEEDING, not news: the item's reboot in place waits until the leg settles. Measured
+     * (CI 40541497513): L32's Times report delivered its Seal (`hasSealPartSet`) at the kill, the page rebooted in
+     * place and the solver's plan was refuted (2/0/1). The game does not rebuild the room for a delivery, and the wasm
+     * runtime's delivery gate waits on the same predicate (`wasmPlayback.encounterReportServed`, R7 24fe0309d2).
+     */
+    function encounterHoldsDelivery() {
+        const goal = walker.state === WALK_STATES.WALKING ? walker.goal : null;
+        return !!goal?.encounter && encounterReportServed(goal, { persistence_cleared: persistenceCleared() });
     }
 
     function valueOf(cls, property) {
@@ -1038,11 +1084,28 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         const record = roomRecord(goal.level);
         if (!record) return { ok: false, reason: `the ${mounted ? 'mounted set' : 'vanilla map'} has no level ${goal.level}` };
         if (goal.kind === 'location' && goal.encounter) {
-            // ⛓ ENCOUNTERS — the page's walker completes a location by its collected TAG; an encounter has none
-            // (its check is the game's flag). The wasm runtime serves it (the solver's plan is the whole leg).
-            return { ok: false, reason: `"${goal.name ?? 'the location'}" is an ENCOUNTER (the ${goal.encounter.drop?.item} `
-                + `drop in level ${goal.level}): the JS page's walker completes a location by its collected tag, and an `
-                + 'encounter has none — it is walked on the wasm runtime' };
+            // ⛓ ENCOUNTER LEGS — the leg is the solver's `encounter` (`jsRuntimeSolver.solverGoalFor` →
+            // `solverBot.ENCOUNTER_EXECUTORS`); its check is the encounter's own report address turning cleared
+            // (`encounterCheckAddress`, `locationServed`). Each refusal is by name.
+            const what = `"${goal.name ?? 'the location'}" is an ENCOUNTER (the ${goal.encounter.drop?.item} drop in level ${goal.level})`;
+            if (!Object.hasOwn(ENCOUNTER_EXECUTORS, goal.encounter.drop?.item ?? '')) {
+                return { ok: false, reason: `${what}: the solver has no encounter executor for that drop `
+                    + `(it serves ${Object.keys(ENCOUNTER_EXECUTORS).join(', ')})` };
+            }
+            const address = encounterCheckAddress(goal);
+            if (!address) {
+                return { ok: false, reason: `${what}: level ${goal.level} has no encounter row with a fixed report address `
+                    + '(R7_GOAL_LEDGER), so nothing here could tell its check fired' };
+            }
+            if (CONTACT_FIDELITY.apReportBosses !== true) {
+                return { ok: false, reason: `${what}: its check is the report clear {${address.level},${address.tag}}, `
+                    + 'which only the boss-report AS3 writes, and `CONTACT_FIDELITY.apReportBosses` is off' };
+            }
+            if (!solver.enabled) {
+                return { ok: false, reason: `${what}: it is walked by the solver's encounter executor, and the solver `
+                    + 'mode is off (`flashPanel.seedlingSolverWalk`)' };
+            }
+            return { ok: true };
         }
         if (goal.kind === 'location' && goal.event) {
             // ⛓ EVENT GOALS — the leg is the solver's `clear-tag` (`jsRuntimeSolver.solverGoalFor`, which refuses BY THE

@@ -4401,3 +4401,134 @@ registerTest({
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/**
+ * ⛓ ENCOUNTER LEGS (slice `seedling-js-encounter-legs`) — the Playback Bot, on the vanilla arm in js mode with the
+ * solver ON, asks for "Level 032 - Bob Boss" BY NAME; the JS page walks the solver's `encounter` executor (the fight,
+ * the dialogue, the Fire drop collected) and the leg completes on the encounter's own report clear {32,4}
+ * (`Pickups/Fire.as:49-55`), checked in the state manager by the load's check binding. The sword and the shield come
+ * through the AP item path (removed after); the page is teleported to L32 @ (72,120), `apb-l32-fresh-no-fire`'s boot.
+ */
+const BOB_ENCOUNTER = Object.freeze({ location: 'Level 032 - Bob Boss', boot: [32, 72, 120], drop: { level: 32, tag: 4 },
+    kill: { level: 32, tag: 3 },
+    // ⛔ The state manager checks only an ACCESSIBLE location (measured: without the keys, "checkLocation failed for
+    // \"Level 032 - Bob Boss\": … not_accessible" — the teleport skips the route). The fewest items the playthrough
+    // rules need for level_32 (a BFS over its exits, greedily reduced): the sword, the Green and the Red key; the
+    // shield is the fight's (`apb-l32-fresh-no-fire`'s staging holds it).
+    grants: Object.freeze(['Progressive Sword', 'Green Key', 'Red Key', 'Progressive Shield']) });
+
+export async function seedlingJsRuntimeSolverFightsBobEncounter(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = true;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
+    let rt = null;
+    const granted = [];
+    try {
+        await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
+        const ready = await botOnLargeSeedlingPreset(tc, PLAYTHROUGH_PATH);
+        if (!ready) return tc.getOverallResult();
+        const { bot, panel } = ready;
+        const bound = await tc.pollForValue(() => (panel._apLoadResult && panel.seedlingPlaybackSurface()?.atlas ? panel : null),
+            'the panel finished its AP load and holds the name → goal map', 30000, 250);
+        tc.reportCondition('the panel\'s AP load finished', !!bound);
+        const entry = (panel.seedlingPlaybackSurface()?.atlas?.entries ?? []).find((e) => e.location === BOB_ENCOUNTER.location) ?? null;
+        tc.assertEqual('the map binds the Bob Boss ENCOUNTER (drop Fire)', 'encounter|Fire', `${entry?.kind}|${entry?.drop?.item}`);
+        if (!bound || !entry) return tc.getOverallResult();
+        rt = await tc.pollForValue(() => {
+            const r = frameOf(panel)?.__seedlingJsRuntime ?? null;
+            return r?.run && r.vanilla ? r : null;
+        }, 'the JS runtime page is running a room of the vanilla map', 15000, 200);
+        tc.reportCondition('the JS page runs the vanilla map', !!rt);
+        if (!rt) return tc.getOverallResult();
+        const win = frameOf(panel);
+        const isCleared = ({ level, tag }) => (JSON.parse(rt.game.botStatus()).persistence_cleared ?? [])
+            .some((c) => c.level === level && c.tag === tag);
+        tc.assertEqual('fresh game: {32,4} unset and the location unchecked', 'false/false',
+            `${isCleared(BOB_ENCOUNTER.drop)}/${snapshotFacts(tc).checked.has(BOB_ENCOUNTER.location)}`);
+        const pushed = await tc.pollForCondition(() => rt.playback.solverWalk === true,
+            'the setting reached the JS page (playback.solverWalk)', 5000, 100);
+        tc.reportCondition('the page is in solver mode', !!pushed);
+
+        for (const item of BOB_ENCOUNTER.grants) {
+            await tc.stateManager.addItemToInventory(item, 1);
+            granted.push(item);
+        }
+        await tc.stateManager.pingWorker('after-item-grant', 5000);
+        const armed = await tc.pollForCondition(() => rt.flags?.hasSword === true && rt.flags?.hasShield === true,
+            'the host delivered the sword and the shield to the page', 10000, 100);
+        tc.reportCondition('the page holds the sword and the shield', !!armed);
+        if (!armed) return tc.getOverallResult();
+        // ⛔ A grant's in-place reboot can be DEFERRED (`jsRuntimeCore`'s `deferredReboot`, past a ceremony / dead
+        // frames) and land after the teleport — measured: "boot level 32 at (72, 109.85) — an item flag changed"
+        // refuted the first plan (2/0/1). So the row waits for the page's boots to go quiet, before and after.
+        const quiet = (what) => {
+            let seen = -1;
+            let since = 0;
+            return tc.pollForCondition(() => {
+                const n = rt.events.filter((e) => e.type === 'boot').length;
+                if (n !== seen) { seen = n; since = Date.now(); return false; }
+                return Date.now() - since >= 2000;
+            }, what, 20000, 100);
+        };
+        tc.reportCondition('the grants\' reboots settled', !!(await quiet('no page boot for 2 s after the grants')));
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [...BOB_ENCOUNTER.boot] }]);
+        const there = await tc.pollForCondition(() => rt.run?.level === 32 && rt.flags?.hasSword === true,
+            'the page is in level 32 with the sword', 10000, 100);
+        tc.reportCondition('teleported into level 32', !!there);
+        if (!there) return tc.getOverallResult();
+        tc.reportCondition('the teleport settled', !!(await quiet('no page boot for 2 s after the teleport')));
+        tc.assertEqual('… still in level 32', 32, rt.run?.level ?? null);
+
+        const checksBefore = reportedChecks(win).length;
+        bot._publishWalkTo({ kind: 'location', name: BOB_ENCOUNTER.location });
+        const accepted = await tc.pollForCondition(() => rt.playback.goal?.encounter?.drop?.item === 'Fire',
+            'the page took the ENCOUNTER goal (it used to refuse it: "walked on the wasm runtime")', 10000, 100);
+        tc.assertEqual('the page accepted the ENCOUNTER goal', true, !!accepted);
+        if (!accepted) {
+            tc.log(`controller refusal: ${JSON.stringify(bot._resolveController?.()?.lastRefusal ?? null)}`, 'error');
+            return tc.getOverallResult();
+        }
+        const s = await settledSolverWalk(tc, rt, 240000);
+        tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
+        tc.assertEqual('the walk is DONE', 'done', rt.playback.state);
+        tc.assertEqual('… on the drop\'s report clear {32,4}, after the kill {32,3}', 'true/true',
+            `${isCleared(BOB_ENCOUNTER.drop)}/${isCleared(BOB_ENCOUNTER.kill)}`);
+        tc.assertEqual('the SOLVER drove it: solved once, no decline, no refutation', '1/0/0',
+            `${s.solves}/${s.declines}/${s.refutations}`);
+        tc.assertEqual('the solver goal was the Fire encounter', 'encounter|Fire', `${s.lastSolve?.goal?.kind}|${s.lastSolve?.goal?.drop?.item}`);
+        tc.assertEqual('the drop\'s clear was reported once as pendingCheck <seq>|32|4|0', 1,
+            reportedChecks(win).slice(checksBefore).filter((c) => c.level === 32 && c.tag === 4).length);
+        const checked = await tc.pollForCondition(() => snapshotFacts(tc).checked.has(BOB_ENCOUNTER.location),
+            `"${BOB_ENCOUNTER.location}" is checked in the state manager`, 10000, 100);
+        tc.assertEqual('the Bob Boss location is checked', true, !!checked);
+        if (!checked) {
+            const cb = getSeedlingRegionGlue()?.checkBinding ?? null;
+            tc.log(`check binding: ${JSON.stringify({ stats: cb?.stats ?? null, entry: cb?.table?.get?.('32:4') ?? cb?.table?.get?.('32|4') ?? null,
+                keys: cb ? [...(cb.table?.keys?.() ?? [])].filter((k) => String(k).startsWith('32')) : null,
+                checked: cb ? [...(cb.checked ?? [])] : null, unearned: cb ? [...(cb.unearned ?? [])] : null })}`, 'error');
+            tc.log(`reported: ${JSON.stringify(reportedChecks(win).slice(checksBefore))}`, 'error');
+        }
+        tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
+    } finally {
+        for (const item of granted) { try { await tc.stateManager.removeItemFromInventory(item, 1); } catch { /* best effort */ } }
+        try { rt?.playback.reset(); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-fights-bob-encounter',
+    name: 'Seedling JS runtime: the solver mode walks the L32 Bob Boss ENCOUNTER to its drop\'s report {32,4}',
+    description: 'With flashPanel.runtime = js and the solver mode ON, on seedling_playthrough (the vanilla arm): the '
+        + 'sword, shield and the Green/Red keys (level_32\'s logical access) granted through the AP item path (removed '
+        + 'after), the page teleported to L32 @ (72,120), and '
+        + 'the Playback Bot asks for "Level 032 - Bob Boss" by name. The page walks the solver\'s encounter executor (it '
+        + 'used to refuse every encounter: "walked on the wasm runtime"); the leg completes on the Fire drop\'s report '
+        + 'clear {32,4} (one pendingCheck <seq>|32|4|0) and the location is checked. 0 HALT, solved 1/0/0.',
+    testFunction: seedlingJsRuntimeSolverFightsBobEncounter,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
