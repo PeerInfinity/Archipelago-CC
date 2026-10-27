@@ -3935,6 +3935,114 @@ for (const [id, name, fn] of [
 }
 
 /**
+ * ⛓ ONE FADE PER CROSSING — the user (2026-10-26): "in js mode, it does a double fade on every room transition. It
+ * doesn't do that in wasm mode." With flashPanel.runtime = js and the seedling graphics stack, the Playback Bot walks
+ * seedling_atlas's real rooms (into the starting house, out, down the owl's-nest stairs and into the dungeon). The
+ * region binding answers each door with an arrival teleport on the frame it reads the door; before the fix that
+ * teleport waited out the door's held fade and faded in from black again. A sampler inside the page records, every
+ * animation frame, the black cover the paint drew (`__seedlingJsGraphics.effects.screen`), the dead frames held and
+ * the crossings so far. The pin: each crossing's stretch has exactly ONE rise of the cover, never rises again, holds
+ * exactly the game's 20 dead frames, and the host's teleport did land inside it. The fresh start is LOGGED (the
+ * arrival's boot tick: 0 = it landed inside L0's own fade), not asserted: when the host's load lands is its own.
+ */
+export async function seedlingJsRuntimeGraphicsOneFadePerCrossing(tc) {
+    let previous = 'auto';
+    let previousGraphics = 'rects';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousGraphics = await settingsManager.getSetting(GRAPHICS_SETTING_KEY, 'rects'); } catch { /* keep rects */ }
+    let stopSampling = () => {};
+    try {
+        await settingsManager.updateSetting(GRAPHICS_SETTING_KEY, 'seedling', { persist: false });
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+        if (!ready) return tc.getOverallResult();
+        const { bot } = ready;
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt, win } = up;
+        const g = await tc.pollForValue(() => (win.__seedlingJsGraphics?.status === 'ready' ? win.__seedlingJsGraphics : null),
+            'the JS page loaded the seedling graphics stack', 20000, 200);
+        tc.reportCondition('the graphics stack is up', !!g);
+        if (!g) return tc.getOverallResult();
+        const trace = [];
+        let lastFrame = -1;
+        let on = true;
+        stopSampling = () => { on = false; };
+        const sample = () => {
+            if (!on) return;
+            if (g.frames !== lastFrame) {
+                lastFrame = g.frames;
+                const black = (g.effects?.screen ?? []).find((o) => o.colour === '#000000');
+                trace.push({ cover: black ? +black.alpha.toFixed(4) : 0, held: g.held,
+                    crossings: rt.events.filter((e) => e.type === 'transition').length,
+                    boots: rt.events.filter((e) => e.type === 'boot').length });
+            }
+            win.requestAnimationFrame(sample);
+        };
+        win.requestAnimationFrame(sample);
+        const start = await tc.pollForValue(() => (bot.getCurrentRegion?.() === 'overworld_start__r8c0' && rt.run?.level === 0 ? rt : null),
+            'the bot and the page are in the start region (overworld_start__r8c0, level 0)', 15000, 200);
+        tc.reportCondition('the bot starts in overworld_start__r8c0 on level 0', !!start);
+        if (!start) return tc.getOverallResult();
+        const bootTicks = rt.events.filter((e) => e.type === 'boot').map((e) => `${e.t ?? '?'}:${e.why}`);
+        tc.log(`the fresh start: boots ${JSON.stringify(bootTicks)} (an arrival at tick 0 landed inside L0's own fade); held ${g.held}`);
+
+        bot.walkToLocation(CHEST_LOCATION);
+        const chest = await tc.pollForCondition(() => snapshotFacts(tc).checked.has(CHEST_LOCATION) || errorStatuses(bot).length > 0,
+            `the bot walked into the starting house and checked "${CHEST_LOCATION}"`, 60000, 250);
+        tc.reportCondition('the chest was checked', !!chest && snapshotFacts(tc).checked.has(CHEST_LOCATION));
+        bot.walkToTile('dungeon1_room1__r0c4', 4, 3);
+        const deep = await tc.pollForCondition(() => walkedRegions().includes('dungeon1_room1__r0c4') || errorStatuses(bot).length > 0,
+            'the bot routed into dungeon1_room1__r0c4', 60000, 250);
+        tc.reportCondition('the dungeon was reached', !!deep);
+        // the last crossing's fade has played out
+        await tc.pollForCondition(() => !g.effects?.owed && !g.effects?.cover, 'the last fade has played out', 10000, 100);
+        stopSampling();
+
+        const FADE = Array.from({ length: 20 }, (_, k) => +Math.max(1 - 0.05 * (k + 1), 0).toFixed(4));
+        const parts = [];
+        for (let i = 1; i < trace.length; i += 1) {
+            if (trace[i].crossings > trace[i - 1].crossings) parts.push([]);
+            if (parts.length) parts.at(-1).push(trace[i]);
+        }
+        tc.assertEqual('the sampler saw the four crossings (house in, out, the stairs down, the dungeon)', 4, parts.length);
+        for (const [k, part] of parts.entries()) {
+            let rises = 0;
+            let prev = 0;
+            for (const r of part) { if (r.cover > prev) rises += 1; prev = r.cover; }
+            const held = part.at(-1).held - part[0].held;
+            tc.log(`crossing ${k + 1}: rises ${rises}, held ${held}, boots +${part.at(-1).boots - part[0].boots}, covers ${JSON.stringify([...new Set(part.map((r) => r.cover))])}`);
+            tc.assertEqual(`crossing ${k + 1}: the host's arrival teleport landed inside it (not vacuous)`, true, part.at(-1).boots > part[0].boots);
+            tc.assertEqual(`crossing ${k + 1}: ONE fade (the cover rose once)`, 1, rises);
+            tc.assertEqual(`crossing ${k + 1}: the cover never rose again (one monotone ramp)`, true,
+                part.every((r, i) => i === 0 || r.cover <= part[i - 1].cover));
+            tc.assertEqual(`crossing ${k + 1}: the game's 20 dead frames were held, once`, 20, held);
+            tc.assertEqual(`crossing ${k + 1}: every cover drawn is one of the game's 1 − 0.05k`, true,
+                part.every((r) => r.cover === 1 || r.cover === 0 || FADE.includes(r.cover)));
+        }
+        tc.assertEqual('no error: status, no death, no halt', '[]/0/null',
+            `${JSON.stringify(errorStatuses(bot))}/${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        stopSampling();
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(GRAPHICS_SETTING_KEY, previousGraphics, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-one-fade-per-crossing',
+    name: 'Seedling JS runtime: ONE fade per room crossing (the host\'s arrival teleport lands inside the door\'s fade)',
+    description: 'flashPanel.runtime = js with the seedling graphics stack on seedling_atlas: the Playback Bot walks four real '
+        + 'crossings while a sampler records the black cover each animation frame drew. Each crossing shows exactly one '
+        + 'monotone ramp of the game\'s 1 − 0.05k covers over 20 held dead frames, and the host\'s arrival teleport lands '
+        + 'inside it (before the fix every crossing faded in twice). No error: status, death or halt.',
+    testFunction: seedlingJsRuntimeGraphicsOneFadePerCrossing,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
  * ⛓ GRAPHICS G10 — the bosses in a real browser (the user's sighting: L19's ShieldBoss, beside the red key): the standalone
  * page driven to `Game(19, 104, 96)` — inside the ShieldBoss's stand-under band, so after 120 updates it moves its shield
  * and stabs. The boss is drawn from the seedling pack as its class (`seedlingBossSkin`), sitting and then stabbing, and its

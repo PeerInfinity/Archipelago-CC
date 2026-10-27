@@ -845,6 +845,8 @@ export class SeedlingPlaybackController {
         const map = this._mapOf(s);
         if (s?.transport && !map) return this._noMap(s);
         if (!s || !s.transport || !page || !map) return 'pending';
+        const delivered = this._deliveredSetGate(s);
+        if (delivered !== true) return delivered;
         const liveLevel = s.jsRuntime?.run?.level ?? null;
         const r = this._resolve(target, map, { liveLevel, region: s.region ?? null });
         if (r.refused) return this._refuse(r.refused);
@@ -862,6 +864,26 @@ export class SeedlingPlaybackController {
         this._watch(page);
         if (this._playing) this._go(page);
         return true;
+    }
+
+    /**
+     * ⛓ THE DELIVERED ROOMS FIRST (JS runtime) — true once the page PLAYS the set the AP load delivers; 'pending'
+     * until then; a refusal by the delivery's own reason if it was refused. The name → cell map is bound BEFORE the
+     * delivery runs (`flashPanelUI._startSeedlingRandomizer`), and the page's mount clears any goal it holds
+     * (`jsRuntimeCore.mount` → `walker.setGoal(null)`), so a walk handed over in that window was dropped and the
+     * bot waited on it forever (measured on CI: `bot: waiting` → `bot: idle` → `level set … mounted`). The wasm
+     * engine waits the same way: it is built for the set the game plays (`_engineFor`). No delivery = nothing to wait for.
+     */
+    _deliveredSetGate(s) {
+        const delivery = s?.levelSetDelivery ?? null;
+        const want = delivery?.set?.set_id ?? null;
+        if (!want) return true;
+        if (s.jsRuntime?.mounted?.set?.set_id === want) return true;
+        if (delivery.state === 'refused') {
+            return this._refuse(`the ${ROOMS_OF[this.substrate] ?? this.substrate} were not delivered to the JS runtime: `
+                + `${delivery.result?.why ?? 'the level-set delivery was refused'}`);
+        }
+        return 'pending';
     }
 
     /** Start the page's walk: `instant` (a solved plan in one burst) when asked and offered, else `play`. */
