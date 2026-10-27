@@ -79,6 +79,29 @@
  *     point on the pivot (0, 8), `layer = -(y + 8)`, copied onto nightBmp at 0.5;
  *     once `die` (the run's `totemDie`), each render scales it (x · 0.9, y + 0.1),
  *     reddens it (`colorLerp(white, red, min(1, scaleY/2))`) and lifts it 10 px.
+ *   · THE OWL'S ROCKS (`Scenery/RockFall.as`, G11) — `run.owlProjectilesNow` (⚖ fidelity-15
+ *     2026-10-27): the drawable set (the pending spawns join at the next frame's
+ *     `updateLists`, so a rock is first drawn after its first update). A 64 × 32
+ *     Spritemap centred, at the rock's `scale`; `layer = -goto`. `render()`: two
+ *     `Draw.rect` shadows at `goto` (int args, black 0.5) under the sprite, then —
+ *     unless `Game.freezeObjects` — on "break" alpha 1 and angle 0, else angle +=
+ *     `angleRate` and alpha `min(1, 1 − (goto − y) / 96)`. The break frames are the
+ *     run's anim and age (15 fps). A frozen frame is one the rock did not move (the
+ *     model steps it only unfrozen), so the angle counts the ticks it fell.
+ *     BAND (cosmetic, ⚖ fidelity-15: FlashPunk's `FP.choose`, never modelled): the
+ *     sign of `angleRate` (±5) and of `scaleX` (the mirror), `cosmeticRand` by id.
+ *   · THE OWL'S GRENADES (`Enemies/Grenade.as`, `new Grenade(…, true, 30)`) — the
+ *     same getter: 16 × 16 centred, `layer = -(y + 3)`, alpha 1 (`_active` puts it
+ *     at `endY`), "sit"/"explode"/"hit" from the run's anim and age, copied onto
+ *     nightBmp at half (G5's `grenade` rule); its Light while "hit" as G5's
+ *     placed grenade (`bossNightOps`).
+ *   · THE LIGHTS' LIGHTS (G11, `bossNightOps`; nightBmp only, G5's `lightCircles`):
+ *     each living flier's `Light(x, y, 100, 1, yellow, smooth)` (28–32, 0.2), moved
+ *     by its update to 4 px along `angleFace` and coloured `colorLerp(yellow,
+ *     green, hits / 3)` with the hits that update saw; removed at `startDeath`.
+ *     Each dying totem render k adds a Light that is never removed: (x + 8, y_k +
+ *     8), 6–10, alpha y_k / FP.height (160), y_k = y − 10(k − 1) — drawn from the
+ *     NEXT frame (`FP.world.add` queues), and nothing once y_k ≤ 0.
  *   · FROZEN BOSS (`Scenery/FrozenBoss.as`, L111) — an Image at the placement
  *     (origin 0), `layer = -(y − originY + height·2/3)` with the hitbox's
  *     origin −128 and height 32; `render()` draws it again onto nightBmp.
@@ -87,9 +110,10 @@
  * stream, ledgers, stateLog and `stateDigest` identical with it on and off.
  * NOT YET: `BOSS_PENDING` (per class, why) and the census's `remaining` rows.
  */
-import { ANIMS, ENEMY_HIT_TINT, freshSprite, hitTint, play, rectOp, spriteOp, updateSprite, worldFrame } from './seedlingEnemySkin.js';
+import { ANIMS, ENEMY_HIT_TINT, freshSprite, hashId, hitTint, play, rectOp, spriteOp, updateSprite, worldFrame } from './seedlingEnemySkin.js';
 import { animIndex } from './seedlingMachineSkin.js';
 import { cosmeticRand } from './seedlingSkinRenderer.js';
+import { colorLerp, lightCircles, lightLayer } from './seedlingNightSkin.js';
 
 export const KEYS = Object.freeze({
     shieldBoss: 'seedling:boss/shieldboss',
@@ -103,7 +127,20 @@ export const KEYS = Object.freeze({
     lightBoss: 'seedling:boss/lightboss',
     lightShot: 'seedling:boss/lightbossshot',
     lightTotem: 'seedling:boss/lightbosstotem',
+    rockFall: 'seedling:boss/rockfall',
+    owlGrenade: 'seedling:enemy/grenade',
 });
+/** `RockFall.as:17-21` `fallHeight`, `angleRate`. */
+const ROCK_FALL_HEIGHT = 96;
+const ROCK_ANGLE_RATE = 5;
+const SHADOW = '#000000';
+/** `LightBoss.as:19, 49, 78`: `lightLength`, the flier's Light, its colour ramp; `LightBossTotem.as:33` the totem's. */
+const FLIER_LIGHT = Object.freeze({ length: 4, frames: 100, loops: 1, smooth: true, rmin: 28, rmax: 32, alpha: 0.2 });
+const TOTEM_LIGHT = Object.freeze({ frames: 100, loops: 1, smooth: true, rmin: 6, rmax: 10 });
+const YELLOW = '#ffff00';
+const GREEN = '#00ff00';
+/** `Main.as:36` `super(160, 160, …)`: `FP.height`, the totem lights' alpha divisor. */
+const FP_HEIGHT = 160;
 /** `LightBoss.as:39` "die" frames, `:76` the death scale; `LightBossShot.as:15` `angleSpinRate`. */
 const LIGHT_DIE = Object.freeze([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 const LIGHT_DIE_SCALE = 1.1;
@@ -150,7 +187,8 @@ const BOSS_COLOUR = '#e04848';
 
 /** WHAT G10 DRAWS, by AS3 class. */
 export const BOSS_COVERAGE = Object.freeze({
-    drawn: Object.freeze(['ShieldBoss', 'FrozenBoss', 'FinalBoss', 'LavaBoss', 'TentacleBeast', 'LightBossController']),
+    drawn: Object.freeze(['ShieldBoss', 'FrozenBoss', 'FinalBoss', 'LavaBoss', 'TentacleBeast', 'LightBossController', 'RockFall',
+        'Grenade (the Owl\'s)', 'Light (the fliers\' and the dying totem\'s)']),
 });
 /** What G10 does not draw yet, and why (the census's `remaining` rows say which classes). */
 export const BOSS_PENDING = Object.freeze({
@@ -159,11 +197,13 @@ export const BOSS_PENDING = Object.freeze({
         + 'impact (the run carries the ball\'s removal, not the blast); a ball\'s "fly" phase counts from the tick the view first sees it',
     TentacleBeast: 'BAND: the beast\'s anim index is counted from the tick the view first shows the anim (the run carries its name); '
         + 'a timed whirlpool\'s start angle is `Rng.cos()` (cosmetic); a Tentacle\'s cut `dieEffects` (G4\'s effects, not drawn here)',
-    LightBossController: 'the fliers\' and the dying totem\'s Lights (night-layer circles G5 does not see: a runtime `Light` per '
-        + 'flier, coloured by its hits, and one per totem render); BAND: a flier\'s tint whose hit landed while it was frozen',
-    FinalBoss: 'its RockFall rocks and Grenades in flight (the run keeps them in the Owl\'s closure; a read is a new getter = a '
-        + 'design check); BAND: the layer during the intro (AS3 sets it only past the freeze) and a Game.freezeObjects other than '
+    LightBossController: 'BAND: a flier\'s tint whose hit landed while it was frozen; a flier\'s Light before its first update '
+        + '(drawn at the body) and through a freeze (the Light keeps its last place; the view moves it with the body)',
+    FinalBoss: 'BAND: the layer during the intro (AS3 sets it only past the freeze) and a Game.freezeObjects other than '
         + 'the intro (a dialogue), which the reducer does not see',
+    RockFall: 'BAND (cosmetic, ⚖ fidelity-15 2026-10-27 — FlashPunk\'s `FP.choose`, never modelled): the sign of `angleRate` and of '
+        + '`scaleX`, `cosmeticRand` by the rock\'s id',
+    Grenade: 'its Light as G5\'s placed grenade: from the tick "hit" plays, alpha 1 − index / 2 (the game adds it at `animEnd`)',
 });
 /** The placed tags whose build-time rectangle a boss's sprite replaces (`roomOps`' `drawnObjects`). */
 export const BOSS_OBJECT_TAGS = new Set(['shieldboss', 'frozenboss', 'finalboss', 'lavaboss', 'tentaclebeast']);
@@ -212,6 +252,15 @@ export function bossSkinView(run) {
                 hitsTimer: b.hitsTimer ?? 0, angleFace: b.angleFace ?? null, dying: !!b.dieAnim, dieIndex: b.dieAnim?.index ?? 0 })),
             shots: (f.shots ?? []).filter((x) => !x.removed).map((x) => ({ id: x.id, x: x.x, y: x.y })),
         })),
+        ...(() => {
+            // ⛓ G11 (⚖ fidelity-15): the drawable rocks and grenades, copies of copies
+            const p = read(run, 'owlProjectilesNow', null);
+            return {
+                owlRocks: (p?.rocks ?? []).map((r) => ({ id: r.id, x: r.x, y: r.y, goto: r.goto, scale: r.scale, width: r.width,
+                    height: r.height, originX: r.originX, originY: r.originY, landed: !!r.landed, anim: r.anim ?? null, animAge: r.animAge ?? null })),
+                owlGrenades: (p?.grenades ?? []).map((g) => ({ id: g.id, x: g.x, y: g.y, anim: g.anim ?? null, animAge: g.animAge ?? null })),
+            };
+        })(),
         frozenBosses: objects.filter((o) => o.tag === 'frozenboss').map((o) => ({ id: `frozenboss@${o.x},${o.y}`, x: o.x, y: o.y })),
     };
 }
@@ -270,7 +319,57 @@ export const BOSS_RULES = Object.freeze({
     totemLook,
     tentacleFrame: (t) => (TENTACLE_FRAMES[t.anim] ?? TENTACLE_FRAMES.sit)[t.index] ?? 0,
     whirlLook,
+    rockLook,
+    rockShadows,
+    replayFrame,
+    flierLight,
+    totemLights,
 });
+
+/** A Spritemap's frame after `play(anim)` and `age` graphic updates (the run carries both). */
+function replayFrame(key, anim, age) {
+    const sp = freshSprite();
+    play(sp, ANIMS[key], anim);
+    for (let k = 0; k < (age ?? 0); k += 1) updateSprite(sp, ANIMS[key], () => {});
+    return sp;
+}
+
+/** `RockFall.render`'s pose after `falls` unfrozen renders while falling (`sign` the cosmetic `FP.choose`). */
+function rockLook(r, falls, sign) {
+    if (r.anim === 'break') return { alpha: 1, angle: 0 };
+    return { alpha: Math.min(1, 1 - (r.goto - r.y) / ROCK_FALL_HEIGHT), angle: sign * ROCK_ANGLE_RATE * falls };
+}
+
+/** `RockFall.render`'s two `Draw.rect` shadows (int arguments, toward zero). */
+function rockShadows(r) {
+    const m = 4;
+    const t = Math.trunc;
+    const rect = (x, y, w, h) => ({ x: t(x), y: t(y), w: t(w), h: t(h), right: t(x) + t(w), bottom: t(y) + t(h) });
+    return [
+        rect(r.x - r.originX + m, r.goto - 1 - m / 2 + (r.height * 2) / 3, r.width - m * 2, r.height / 2 + m),
+        rect(r.x - r.originX, r.goto - 1 + (r.height * 2) / 3, r.width, r.height / 2),
+    ];
+}
+
+/** `LightBoss.update`'s Light: 4 px along `angleFace`, `colorLerp(yellow, green, hits / 3)` (null before its first update). */
+function flierLight(b, hits) {
+    // before its first update `angleFace` is AS3's Number default, NaN (the run says so); the Light is where the ctor put it
+    if (!Number.isFinite(b.angleFace)) return { ...FLIER_LIGHT, x: b.x, y: b.y, colour: YELLOW };
+    return { ...FLIER_LIGHT, x: b.x + FLIER_LIGHT.length * Math.cos(b.angleFace), y: b.y + FLIER_LIGHT.length * Math.sin(b.angleFace),
+        colour: colorLerp(YELLOW, GREEN, hits / LIGHT_HITS_MAX) };
+}
+
+/** The Lights the dying totem's renders 1..k−1 added (render k's joins next frame); those with alpha ≤ 0 draw nothing. */
+function totemLights(f, k) {
+    const out = [];
+    for (let i = 1; i < k; i += 1) {
+        const y = f.y - 10 * (i - 1);
+        const alpha = y / FP_HEIGHT;
+        if (alpha <= 0) break;
+        out.push({ ...TOTEM_LIGHT, x: f.x + 8, y: y + 8, colour: YELLOW, alpha });
+    }
+    return out;
+}
 
 /** `TentacleBeast.update` + its graphic: the run's anim name, aged here; "" = the (dead) sitting frames at `time`. */
 function beastFrame(st, b, time) {
@@ -341,6 +440,16 @@ export function stepBossSkin(prev, view, tick, { rules = BOSS_RULES } = {}) {
         st.body = b;
         bodies.set(b.id, st);
     }
+    for (const r of view.owlRocks) {
+        const o = same ? prev.bodies.get(`rock:${r.id}`) : null;
+        // a render while falling and unfrozen turns it: the model moves a falling rock only unfrozen
+        const fell = !r.landed && (!o || r.y !== o.y);
+        bodies.set(`rock:${r.id}`, { y: r.y, falls: (o?.falls ?? 0) + (fell ? 1 : 0),
+            sprite: r.anim === 'break' ? R.replayFrame(KEYS.rockFall, 'break', r.animAge) : null });
+    }
+    for (const g of view.owlGrenades) {
+        bodies.set(`grenade:${g.id}`, { anim: g.anim, sprite: R.replayFrame(KEYS.owlGrenade, g.anim, g.animAge) });
+    }
     for (const b of view.lavaBosses) {
         const old = same ? prev.bodies.get(b.id) : null;
         const st = old ? { ...old } : { tint: null, prevHits: b.hitsTimer, prevAlpha: b.alpha };
@@ -384,6 +493,7 @@ export function stepBossSkin(prev, view, tick, { rules = BOSS_RULES } = {}) {
             st.colour = R.flierTint(st.colour, st.prevHits, b.hitsTimer, st.normal);
             // the END of its update: the colour from the hits it had then (a sword lands later, in the player's update)
             st.normal = flierNormal(st.hitsAtUpdate);
+            st.lightHits = st.hitsAtUpdate;
             st.prevHits = b.hitsTimer;
             st.hitsAtUpdate = b.hits;
             bodies.set(`flier:${b.id}`, st);
@@ -427,6 +537,20 @@ export function bossOps(view, art, { skin } = {}) {
         const st = skin.bodies.get(b.id);
         const frame = OWL_DEATH.has(b.anim) ? R.owlDeathFrame(b) : (st?.sprite.frame ?? 0);
         push(KEYS.finalBoss, frame, b, boxAround(b.x, b.y, OWL_BOX, OWL_BOX), { layer: -(b.y - OWL_BOX / 2 + OWL_BOX), tint: st?.tint ?? null });
+    }
+    for (const r of view.owlRocks) {
+        const st = skin.bodies.get(`rock:${r.id}`);
+        const layer = -r.goto;
+        for (const rect of R.rockShadows(r)) ops.push(rectOp(rect, SHADOW, 0.5, layer));
+        const sign = cosmeticRand(view.level, hashId(r.id), 0, 113) < 0.5 ? 1 : -1;
+        const mirror = cosmeticRand(view.level, hashId(r.id), 1, 113) < 0.5;
+        const look = R.rockLook(r, st?.falls ?? 0, sign);
+        const box = { x: r.x - r.originX, y: r.y - r.originY, w: r.width, h: r.height, right: r.x - r.originX + r.width, bottom: r.y - r.originY + r.height };
+        push(KEYS.rockFall, st?.sprite?.frame ?? 0, r, box, { layer, alpha: look.alpha, rot: -look.angle, flipX: mirror, scaleX: r.scale, scaleY: r.scale });
+    }
+    for (const g of view.owlGrenades) {
+        const st = skin.bodies.get(`grenade:${g.id}`);
+        push(KEYS.owlGrenade, st?.sprite.frame ?? 0, g, boxAround(g.x, g.y, 6, 6), { layer: -(g.y + 3) });
     }
     for (const b of view.lavaBosses) {
         if (b.removed) continue;
@@ -474,7 +598,7 @@ export function bossOps(view, art, { skin } = {}) {
             ...(look.scaleX !== 1 || look.scaleY !== 1 ? { scaleX: look.scaleX, scaleY: look.scaleY } : {}) });
         for (const b of f.fliers) {
             const st = skin.bodies.get(`flier:${b.id}`);
-            const rot = b.angleFace === null ? 0 : -(b.angleFace * 180) / Math.PI;
+            const rot = Number.isFinite(b.angleFace) ? -(b.angleFace * 180) / Math.PI : 0; // NaN before its first update
             push(KEYS.lightBoss, b.dying ? LIGHT_DIE[Math.min(b.dieIndex, LIGHT_DIE.length - 1)] : 0, b, boxAround(b.x, b.y, 12, 12), {
                 layer: -(b.y + 6), rot, tint: st?.colour ?? null, ...(b.dying ? { scaleX: LIGHT_DIE_SCALE, scaleY: LIGHT_DIE_SCALE } : {}) });
         }
@@ -488,4 +612,32 @@ export function bossOps(view, art, { skin } = {}) {
             { layer: -(f.y + FROZEN_LAYER_DY), nightCopy: true });
     }
     return ops.filter(Boolean);
+}
+
+/**
+ * ⛓ G11 — what the bosses draw onto nightBmp ONLY (no main-buffer body to copy): the fliers' Lights, the dying
+ * totem's Lights and the Owl's grenade Lights. `nightOps` takes them as `extra`; `roomHeight` sets the Light layer.
+ */
+export function bossNightOps(view, { skin = null, roomHeight = 160 } = {}) {
+    if (!view || !skin) return [];
+    const R = skin.rules ?? BOSS_RULES;
+    const time = view.gameTime ?? 0;
+    const L = lightLayer(roomHeight);
+    const out = [];
+    for (const f of view.lights) {
+        for (const b of f.fliers) {
+            if (b.dying) continue; // `startDeath` removes it
+            const st = skin.bodies.get(`flier:${b.id}`);
+            out.push(...lightCircles(R.flierLight(b, st?.lightHits ?? b.hits), time, L));
+        }
+        for (const l of R.totemLights(f, skin.bodies.get(`totem:${f.id}`)?.dyingRenders ?? 0)) out.push(...lightCircles(l, time, L));
+    }
+    for (const g of view.owlGrenades) {
+        // `Grenade.as:93-99, 136`: Light(x, endY, 2, 1, yellow, false, 20, 20, 1), alpha 1 − index / 2 while "hit" (G5's rule)
+        const st = skin.bodies.get(`grenade:${g.id}`);
+        if (st?.anim !== 'hit') continue;
+        const k = 1 - st.sprite.index / 2;
+        if (k > 0) out.push(...lightCircles({ x: g.x, y: g.y, frames: 2, loops: 1, colour: YELLOW, smooth: false, rmin: 20, rmax: 20, alpha: k }, time, L));
+    }
+    return out;
 }

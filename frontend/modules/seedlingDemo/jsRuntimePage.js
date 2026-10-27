@@ -191,11 +191,11 @@ import {
 import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from './seedlingPuzzleSkin.js';
 import { SOLIDS_OBJECT_TAGS, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
 import { NPC_TAGS, npcOps, npcSkinView, stepNpcSkin } from './seedlingNpcSkin.js';
-import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
+import { rockHoldSlot, stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
 import { PICKUP_TAGS, pickupOps, pickupSkinView, stepPickupSkin } from './seedlingPickupSkin.js';
 import { MACHINE_OBJECT_TAGS, machineNightOps, machineOps, machineSkinView, stepMachineSkin } from './seedlingMachineSkin.js';
-import { BOSS_OBJECT_TAGS, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
+import { BOSS_OBJECT_TAGS, bossNightOps, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
 import { EFFECT_RULES } from './seedlingEffectSkin.js';
 import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
 import { BASE_TICKS_PER_SECOND, createRateMeter, createSlotClock, createSlotPump, messageChannelPostTask, parseGameSpeed } from './jsRuntimeClock.js';
@@ -527,6 +527,14 @@ export function mountJsRuntimePage(win = window) {
                 runtime.drainItems();
                 return;
             }
+            // ⛓ G11 — a FallRock's freeze (⚖ user 2026-10-27, "hold fallrock only"): its frames are held, the rock falls
+            const rock = rockHoldSlot(graphics.trapSkin);
+            if (rock.held) {
+                graphics.trapSkin = rock.skin;
+                graphics.held += 1;
+                runtime.drainItems();
+                return;
+            }
         }
         runtime.tick(heldFromCodes(down));
         // ⛓ SOUND EFFECTS — after the tick, reading it: a run that did not advance plays nothing new.
@@ -802,7 +810,8 @@ export function mountJsRuntimePage(win = window) {
         // ⛓ G5 — the night layer goes between the room and the overlays (`Game.render()`: `bufferTransforms()` then `talk()`)
         const night = lit ? nightOps(lit, art, { skin: graphics.nightSkin, ops, hazard: hv ? { view: hv, skin: graphics.hazardSkin } : null,
             whiteOut: fv?.whiteOut ?? null, whiteOutAlpha: EFFECT_RULES.whiteOutAlpha, cam: modelCam, lavaGlow: effectsOn(),
-            extra: mv ? machineNightOps(mv, { skin: graphics.machineSkin }) : [] }) : null;
+            extra: [...(mv ? machineNightOps(mv, { skin: graphics.machineSkin }) : []),
+                ...(bv ? bossNightOps(bv, { skin: graphics.bossSkin, roomHeight: lit.room.height }) : [])] }) : null;
         if (night) {
             const room = paintOps(ctx, ops, images, view, canvas, { tinted, tileLayer });
             night.counts = paintNight(ctx, night, images, view, canvas, { tinted, cache: graphics.nightLayer, fill: NIGHT.fill });

@@ -16033,6 +16033,17 @@ export function createLevelRun({
                 anim: t.anim, index: t.index, frame: t.frame, animKnown: t.animKnown, yKnown: t.yKnown })),
         };
     };
+    /**
+     * ⛓ G11 (⚖ fidelity-15, 2026-10-27): `get owlProjectilesNow`'s body — the Owl's rocks and grenades the RENDER sees
+     * (the drained + filtered lists, never the pending ones: FlashPunk adds a queued entity at the next frame's
+     * `updateLists()`), scalars only. Reads the two closure lets and calls no builder, so a read stores nothing.
+     */
+    const owlProjectilesNowRead = () => ({
+        rocks: owlRocks.map((r) => ({ id: r.id, x: r.x, y: r.y, goto: r.goto, scale: r.scale, width: r.width, height: r.height,
+            originX: r.originX, originY: r.originY, landed: r.landed, anim: r.anim, animAge: r.animAge })),
+        grenades: owlGrenades.map((g) => ({ id: g.id, x: g.x, y: g.y, explodeTime: g.explodeTime, anim: g.anim, animAge: g.animAge,
+            exploded: g.exploded })),
+    });
     const openBridgesNow = () => noclip ? null : (openBridgeIdsNow() ?? new Set());
     const pushablesNow = () => noclip ? null : pushableRects(pushableStateFor(level));
     const brokenRocksNow = () => noclip ? null : (brokenRockIdsNow() ?? new Set());
@@ -19542,6 +19553,8 @@ export function createLevelRun({
         get activatorsNow() { return reading(activatorsNowRead); },
         /** ⛓ G9b (⚖ fidelity-14): the pulsers' rings and the beam towers' frames, for the renderer — copies only. */
         get machinesNow() { return reading(machinesNowRead); },
+        /** ⛓ G11 (⚖ fidelity-15): the Owl's rocks and grenades in flight, for the renderer — copies only. */
+        get owlProjectilesNow() { return reading(owlProjectilesNowRead); },
         /**
          * R4: the same thing for the two press families — the planner's only
          * legitimate view of an opened bridge and a moved block.

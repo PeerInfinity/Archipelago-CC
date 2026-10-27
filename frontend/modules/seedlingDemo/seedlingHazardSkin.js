@@ -92,7 +92,8 @@ export const KEYS = Object.freeze({
  */
 export const HAZARD_COVERAGE = Object.freeze({
     drawn: Object.freeze(['SpinningAxe', 'Crusher', 'LavaChain', 'BossTotem', 'BossTotemShot', 'BombPusher', 'Bomb', 'Grenade']),
-    remaining: Object.freeze(['the Owl\'s grenades (no run state)', 'nightBmp-only draws: the totem laser, crusher rects, glow (G5)',
+    // ⛓ G11: the Owl's grenades are the boss skin's (`seedlingBossSkin.js`, `run.owlProjectilesNow`), no longer here
+    remaining: Object.freeze(['nightBmp-only draws: the totem laser, crusher rects, glow (G5)',
         'explosions, the grenade light, the white-out cover (G4)']),
 });
 
