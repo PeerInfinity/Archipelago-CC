@@ -138,12 +138,12 @@ describe('DETERM (c) — the responder fades, model vs AS3', () => {
         return st;
     }
 
-    it('F2 OFF (the default): the re-close step restores alpha 1, and a re-press on the next step re-fades from 1', () => {
+    it('F2 OFF (the default): the re-close step restores alpha 1, and a re-press on the next step re-fades from 1', () => withContactFidelity({ lockRecloseLag: false }, () => {
         const st = reclosed();
         expect([s(st, lock).open, s(st, lock).alpha]).toEqual([false, 1]);
         expect(step(st, ON_BUTTON).filter((e) => e.id === lock.id)).toEqual([]);
         expect(s(st, lock).open).toBe(false);
-    });
+    }));
 
     it('F2 ON: alpha 0 on the re-close step (the AS3), and a re-press on the next step is an immediate turnOff', () => withContactFidelity({ lockRecloseLag: true }, () => {
         const st = reclosed();
@@ -185,11 +185,11 @@ describe('DETERM (c) — the responder fades, model vs AS3', () => {
         return n;
     }
 
-    it('F1 OFF (the default): an occupied, released cover snaps to alpha 1 and a re-press takes the full 10 steps', () => {
+    it('F1 OFF (the default): an occupied, released cover snaps to alpha 1 and a re-press takes the full 10 steps', () => withContactFidelity({ coverHeldFade: false }, () => {
         const { st } = coverHeld(5);
         expect([s(st, cover).open, s(st, cover).alpha]).toEqual([false, 1]);
         expect(reopenSteps(st)).toBe(opensOnTick(0.1));
-    });
+    }));
 
     it('F1 ON: it keeps the faded alpha (Cover.as:49-67), and a re-press resumes — the skin\'s count, < 10', () => withContactFidelity({ coverHeldFade: true }, () => {
         const { st, faded } = coverHeld(5);
