@@ -14,7 +14,9 @@
  *     moves on to the `spinner@816,848` press kill, where `bob@736,800` kills the player (the press kill's own chaser
  *     death, `PRESS_KILL_REBOOT_GUARD`'s refusal: OPP's and PKC's).
  *   - 5172: every empty climb is a TRIPLE (`bobsoldier@880,832` and both x≈744 bobs): no pair admits, and ON = OFF.
- * Every row but 356's (which solves on its full pass) asks the dashless pass alone.
+ * Leg 367 (`level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21`, cut to levels 40 and 43) is the measurement arm's
+ * (`size: 3`): its empty climb needs three bodies, and a triple's first kill opens the walk to the L43 pit.
+ * Every row but 356's and 367's (which solve on their full pass) asks the dashless pass alone.
  * The L16 guard re-derives `r9-solve-16` with the switch ON: C1's measured regression (`bob@208,32` handed to BAIT).
  */
 import { readFileSync } from 'node:fs';
@@ -41,6 +43,7 @@ const ENV = globalThis.process?.env ?? {};
 const leg = (name) => JSON.parse(gunzipSync(readFileSync(join(FIX, name))).toString('utf8'));
 const LEG853 = leg('leg853-l40-request.json.gz');
 const LEG356 = leg('leg356-l40-request.json.gz');
+const LEG367 = leg('leg367-l40-l43-request.json.gz');
 
 /** A captured request at arrival clock `seam` (`null` = its own), the switch at `on`, its first `nPasses` passes. */
 function solveLeg(row, seam, on, nPasses = 1) {
@@ -102,6 +105,27 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
         expect(on.counts.asked).toBe(0);
         expect([on.ok, on.work, on.plan]).toEqual([off.ok, off.work, off.plan]);
     }, 240_000);
+
+    it('the size-3 measurement arm: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + '
+        + 'puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit', () => {
+        const off = solveLeg(LEG367, null, false, Infinity);
+        expect(off.ok).toBe(false);
+        expect(off.message).toContain('the caller\'s anytime deadline');
+        const pairOnly = solveLeg(LEG367, null, true, 1);
+        expect(pairOnly.counts.asked).toBeGreaterThan(0);
+        expect(pairOnly.counts.admitted).toBe(0);
+        const was = CHOOSER_PAIR.size;
+        CHOOSER_PAIR.size = 3;
+        try {
+            const on = solveLeg(LEG367, null, true, Infinity);
+            expect(on.ok).toBe(true);
+            expect(JSON.parse(on.plan).length).toBe(955);
+            expect(on.counts.last).toEqual(['bob@192,480', 'bob@224,496', 'puncher@128,624']);
+            expect(on.counts.kills[0]).toEqual({ id: 'bob@192,480', t: 745, how: 'dwell', dead: true });
+        } finally {
+            CHOOSER_PAIR.size = was;
+        }
+    }, 360_000);
 
     it('the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1\'s regression stays closed)', () => {
         const raw = JSON.parse(readFileSync(join(HERE, 'fixtures', 'tapes', 'r9-solve-16.json'), 'utf8'));
