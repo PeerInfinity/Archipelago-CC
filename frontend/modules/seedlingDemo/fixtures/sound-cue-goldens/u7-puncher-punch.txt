@@ -1,0 +1,6 @@
+34 L12 Enemies/Puncher.as:115 "Punch" -1 0.883 0.117
+44 L12 Player.as:1388 "Hurt" -1 1.000 0.000
+98 L12 Enemies/Puncher.as:115 "Punch" -1 0.879 0.121
+108 L12 Player.as:1388 "Hurt" -1 1.000 0.000
+109 L12 Enemies/Puncher.as:115 "Punch" -1 0.897 0.103
+120 L12 Enemies/Puncher.as:115 "Punch" -1 0.898 0.101

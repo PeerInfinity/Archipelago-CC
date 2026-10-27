@@ -1,0 +1,18 @@
+13 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.377 -0.520
+26 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.465 -0.457
+39 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.549 -0.392
+52 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.632 -0.320
+65 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.715 -0.249
+68 L30 Player.as:797 "Sword" -1 1.000 0.000
+69 L30 Enemies/Enemy.as:165 "Enemy Hit" 0 0.740 -0.226
+78 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.664 -0.301
+91 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.746 -0.226
+99 L30 Player.as:797 "Sword" -1 1.000 0.000
+100 L30 Player.as:1388 "Hurt" -1 1.000 0.000
+100 L30 Enemies/Enemy.as:165 "Enemy Hit" 0 0.775 -0.204
+104 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.587 -0.396
+117 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.621 -0.363
+130 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.701 -0.285
+137 L30 Player.as:797 "Sword" -1 1.000 0.000
+138 L30 Enemies/Enemy.as:160 "Enemy Die" 0 0.752 -0.237
+143 L30 Enemies/BobSoldier.as:105 "Enemy Hop" 0 0.752 -0.237

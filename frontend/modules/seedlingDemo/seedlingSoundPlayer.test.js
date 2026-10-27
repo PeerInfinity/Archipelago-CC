@@ -98,6 +98,29 @@ describe('the channel and the time', () => {
         expect(log.filter(([k]) => k === 'play').pop()[2]).toBe(50);
     });
 
+    // ⛓ slice `seedling-js-sfx-cues`: a delayed cue (a FallRock's landing in a held fall) and the channel ops
+    it('a cue\'s `delayFrames` starts it that many ticks after the tick\'s time (one tick per held slot)', () => {
+        const { out, log } = fakeOut();
+        const p = createSeedlingSoundPlayer({ out, library, bufferFor });
+        const started = p.playTick([{ ...cue('Hurt'), delayFrames: 81 }], { tickSeconds: 1 / 30 });
+        expect(log[0][2]).toBeCloseTo(10 + 81 / 30, 10);
+        expect(started[0].at).toBeCloseTo(10 + 81 / 30, 10);
+    });
+    it('`op: volume` re-gains the channel a fixed-index play opened; `op: stop` stops it; neither plays anything', () => {
+        const { out, log } = fakeOut();
+        const gains = [];
+        const play = out.play;
+        out.play = (buffer, opts) => Object.assign(play(buffer, opts), { setGain: (v, at) => gains.push([v, at]) });
+        const p = createSeedlingSoundPlayer({ out, library: { variantCount: () => 2 }, bufferFor });
+        const wind = (extra) => ({ site: 'Game.as:1206', set: 'Wind', key: 'seedling:sfx/wind', index: 1, vol: 0.5, pan: 0, at: 0, ...extra });
+        p.playTick([wind()]);
+        p.playTick([wind({ op: 'volume', vol: 0.25 })]);
+        p.playTick([wind({ op: 'stop' })]);
+        p.playTick([wind({ op: 'volume', vol: 0.1 })]); // no open channel: nothing
+        expect(log.map((l) => l.slice(0, 2))).toEqual([['play', 'seedling:sfx/wind#1'], ['stop', 'seedling:sfx/wind#1']]);
+        expect(gains.map(([v]) => v)).toEqual([0.25]);
+    });
+
     it('a key the stack does not carry, or a variant that failed to load, is silent and counted — never a throw', () => {
         const { out } = fakeOut();
         const p = createSeedlingSoundPlayer({ out, library, bufferFor: (k) => (k.endsWith('hurt') ? null : 'b') });

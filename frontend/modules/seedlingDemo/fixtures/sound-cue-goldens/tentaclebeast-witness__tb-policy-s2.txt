@@ -1,0 +1,56 @@
+1 L57 Player.as:685 "Splash" -1 1.000 0.000
+2 L57 Player.as:551 "Swim" -1 1.000 0.000
+49 L57 Player.as:551 "Swim" -1 1.000 0.000
+91 L57 Enemies/TentacleBeast.as:86 "Boss Die" 3 0.200 0.000
+96 L57 Player.as:551 "Swim" -1 1.000 0.000
+143 L57 Player.as:551 "Swim" -1 1.000 0.000
+181 L57 Player.as:797 "Sword" -1 1.000 0.000
+182 L57 Enemies/Enemy.as:160 "Enemy Die" 0 0.739 0.174
+190 L57 Player.as:551 "Swim" -1 1.000 0.000
+195 L57 Player.as:790 "Sword" -1 1.000 0.000
+196 L57 Enemies/Enemy.as:160 "Enemy Die" 0 0.770 -0.219
+206 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.698 -0.162
+213 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.000 1.000
+219 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.219 0.253
+222 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.028 -0.447
+237 L57 Player.as:551 "Swim" -1 1.000 0.000
+279 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.634 0.355
+284 L57 Player.as:551 "Swim" -1 1.000 0.000
+302 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.330 -0.540
+306 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.189 0.046
+330 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.746 0.058
+331 L57 Player.as:551 "Swim" -1 1.000 0.000
+338 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.077 -0.342
+339 L57 Player.as:797 "Sword" -1 1.000 0.000
+340 L57 Enemies/Enemy.as:160 "Enemy Die" 0 0.733 0.178
+355 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.000 1.000
+378 L57 Player.as:551 "Swim" -1 1.000 0.000
+392 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.507 0.491
+393 L57 Player.as:1388 "Hurt" -1 1.000 0.000
+425 L57 Player.as:551 "Swim" -1 1.000 0.000
+443 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.000 -1.000
+446 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.191 0.298
+449 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.056 0.737
+459 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.213 0.760
+472 L57 Player.as:551 "Swim" -1 1.000 0.000
+478 L57 Player.as:797 "Sword" -1 1.000 0.000
+479 L57 Enemies/Enemy.as:160 "Enemy Die" 0 0.912 -0.015
+511 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.147 0.586
+519 L57 Player.as:551 "Swim" -1 1.000 0.000
+534 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.209 -0.030
+542 L57 Player.as:797 "Sword" -1 1.000 0.000
+542 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.000 -1.000
+543 L57 Enemies/Enemy.as:160 "Enemy Die" 0 0.725 0.267
+566 L57 Player.as:551 "Swim" -1 1.000 0.000
+578 L57 Player.as:797 "Sword" -1 1.000 0.000
+579 L57 Enemies/Enemy.as:160 "Enemy Die" 0 0.767 0.088
+596 L57 Player.as:790 "Sword" -1 1.000 0.000
+598 L57 Enemies/Enemy.as:160 "Enemy Die" 0 0.784 -0.181
+613 L57 Player.as:551 "Swim" -1 1.000 0.000
+632 L57 Enemies/Tentacle.as:105 "Tentacle" -1 0.553 0.250
+660 L57 Player.as:551 "Swim" -1 1.000 0.000
+686 L57 Player.as:797 "Sword" -1 1.000 0.000
+687 L57 Enemies/Enemy.as:160 "Enemy Die" 0 0.792 -0.015
+707 L57 Player.as:551 "Swim" -1 1.000 0.000
+754 L57 Player.as:551 "Swim" -1 1.000 0.000
+787 L57 Enemies/TentacleBeast.as:96 "Boss Die" 4 0.200 0.000

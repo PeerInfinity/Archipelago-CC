@@ -1,0 +1,10 @@
+144 L19 Player.as:797 "Sword" -1 1.000 0.000
+146 L19 Enemies/Enemy.as:165 "Enemy Hit" 1 0.674 0.000
+147 L19 Enemies/ShieldBoss.as:146 "Metal Hit" -1 1.000 0.000
+277 L19 Player.as:797 "Sword" -1 1.000 0.000
+278 L19 Enemies/Enemy.as:165 "Enemy Hit" 1 0.674 0.000
+279 L19 Enemies/ShieldBoss.as:146 "Metal Hit" -1 1.000 0.000
+409 L19 Player.as:797 "Sword" -1 1.000 0.000
+410 L19 Enemies/Enemy.as:160 "Enemy Die" 1 0.674 0.000
+411 L19 Enemies/ShieldBoss.as:146 "Metal Hit" -1 1.000 0.000
+584 L19 Player.as:797 "Sword" -1 1.000 0.000

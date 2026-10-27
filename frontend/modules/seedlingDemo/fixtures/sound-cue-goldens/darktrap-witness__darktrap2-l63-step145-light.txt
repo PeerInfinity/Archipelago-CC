@@ -1,0 +1,52 @@
+1 L63 Player.as:797 "Sword" -1 1.000 0.000
+3 L63 Player.as:790 "Sword" -1 1.000 0.000
+21 L63 Player.as:797 "Sword" -1 1.000 0.000
+23 L63 Player.as:790 "Sword" -1 1.000 0.000
+42 L63 Player.as:821 "Stab" -1 1.000 0.000
+43 L63 Enemies/DarkTrap.as:35 "Enemy Die" 0 1.000 0.000
+43 L63 Enemies/DarkTrap.as:35 "Enemy Die" 0 1.000 0.000
+52 L63 Player.as:797 "Sword" -1 1.000 0.000
+58 L63 Player.as:790 "Sword" -1 1.000 0.000
+65 L63 Player.as:790 "Sword" -1 1.000 0.000
+73 L63 Player.as:797 "Sword" -1 1.000 0.000
+79 L63 Player.as:790 "Sword" -1 1.000 0.000
+85 L63 Player.as:790 "Sword" -1 1.000 0.000
+93 L63 Player.as:797 "Sword" -1 1.000 0.000
+99 L63 Player.as:790 "Sword" -1 1.000 0.000
+110 L63 Player.as:790 "Sword" -1 1.000 0.000
+118 L63 Player.as:797 "Sword" -1 1.000 0.000
+124 L63 Player.as:790 "Sword" -1 1.000 0.000
+130 L63 Player.as:790 "Sword" -1 1.000 0.000
+151 L63 Player.as:821 "Stab" -1 1.000 0.000
+152 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+153 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+154 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+155 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+156 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+157 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+158 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+159 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+160 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+161 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+162 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+163 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+164 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+165 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+166 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+167 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+168 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+169 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+170 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+171 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+172 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+173 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+174 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+175 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+176 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+177 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+178 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+179 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+180 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+181 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+182 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
+183 L63 Puzzlements/PushableBlock.as:87 "Push Rock" -1 0.500 0.000
