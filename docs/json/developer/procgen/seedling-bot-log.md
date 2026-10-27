@@ -25909,6 +25909,135 @@ reproduces it at 0 px over 1,666 observations.
 `solve-seedling-r8-battery`, `-r8-d2-chain`, `-r8-l18` and `-r9-campaign` exit 1. `ci-producer-checks.mjs` does not run
 those four. Compare their md5 before and after rather than reading "exit 1" as your own red.
 
+---
+
+
+### Seedling fidelity CHESTSEAL — a chest `checkBySeal()` removed is not a wall, and its location is checked (`chestSealRemoval`, OFF)
+
+⚖ User, 2026-10-16: a seal-removed chest's location is AUTO-CHECKED (not a refusal). The report is
+`CC/docs/cloud-reports/seedling-fidelity-chestseal.md`.
+
+**The game.** `Chest`'s CONSTRUCTOR runs `checkBySeal()` (`Chest.as:35`, `:47-57`). With all sixteen seal parts held
+(`SealController.hasAllSealParts()`: the save's last slot) it writes `Game.setPersistence(tag, false)` — the AP check
+report — and its `FP.world.remove(this)` is a no-op before the add. `Chest.check()` then removes the tagged chest on the
+first `Game.update` (`Game.as:870-877`, which runs under the `blackCover`); `update`'s own `checkBySeal()` removes an
+untagged one. So no frame the player moves in sees the chest.
+
+**The gap.** `chest.stepChests` marked the chest `gone` but left `solid` true, `levelRun.openChestIdsNow` reads `solid`,
+and `stepChestsNow` dropped the `chestgone` event. The vanished chest was a wall and the solver bound the chest verb:
+*"NEVER OPENED"* (route survey steps 167, 198, 203 at `1e17f44738`).
+
+**D1 (model).** ON: `openChestIdsNow` reads every chest of the level as open from the build — `run.chestsSealRemoved`, a
+derivation of the boot save, so no new run state and no digest row (`chestStates` and `pendingEarnedClears` were
+already IN). `stepChestsNow` banks the `checkBySeal` write into `pendingEarnedClears`, so `run.bankedClears` holds the
+flag from the visit's first tick. Witness (p4g headless, `probe-seedling-chestseal.mjs`, `fixtures/chestseal-witness/`):
+L15 `chest@144,96` with sixteen seals — the player walks up through its cell into L16, {15,1} is cleared, no `open()`;
+model ON 0 px, OFF stops under the chest (first drift t200). The one-seal control agrees in both arms.
+
+**D2 (solver).** ON: a `collect-placement` at such a chest records `{strategy: 'chest', arm: 'seal-removed'}` in 0 ticks;
+`senseContacts` exempts each chest's static `proximity-hazard` line (the world build does not read the save).
+
+**Movers (local, full route).** 191 → 194 SOLVED; exactly six steps move, all after the 16th Seal (step 150): 193 (L63),
+203 (L80), 212 (L98) REFUSED → SOLVED; 167/198 (L12 → L83) NEVER OPENED → KEYLOCK-SEALED `bosslock@112,192`; 171 (L71)
+reaches the reach-exit and keeps the lavarunner refusal. Bounded vitest ON: only the defaults pin. Identity block and
+tapeRunner pairs: ON = OFF.
+
+**Trap candidates.**
+- A removal in a CONSTRUCTOR is not a removal: `FP.world.remove` before `add` does nothing (`World.remove` returns when
+  `e._world !== this`), so the ctor's half of `checkBySeal` is only its persistence write, and the removal is `check()`'s.
+- A chest's static `proximity-hazard` line outlives the chest: the world build has no save, so a state that removes the
+  chest must also exempt its volume, or the walk avoids a line nothing can fire.
+- The run reads the seal count at BOOT only (`sealParts`, `HAS_ALL_SEAL_PARTS`): a run that banks the sixteenth part
+  mid-run and then builds a chest room is not modelled (the JS runtime reboots on a seal delivery).
+
+### Seedling fidelity L40LATCH — L40's S-door latch held under `bobsoldier@880,832`: the hold's still wait priced (`holdWaitPriced`), a BobSoldier killed on the move behind its blade (`chaserOrbitKill`) — both OFF
+
+Planner `seedling-fidelity-planning-14`, wave 32. The report is `CC/docs/cloud-reports/seedling-fidelity-l40latch.md`.
+
+**W0.** Legs 859/860 (`level_40__r32c36 <- in_L39_144_0 / in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss
+Key 2`) at the base `1e17f44738`, captured and replayed in node (the page's answers, byte for byte): both die before the latch,
+in the x≈744 corridor — 859 at the burn stance's ladder (`chaser bob@736,752`), 860 in the hammer arc's press kill of
+`spinner@880,848` ("every key set …"). The latch is reached only from a staging. `fixtures/l40latch-witness/latch-boot.json`
+is step 67's boot ON the latch with the chest {40,13}, the tree {40,0} and `spinner@880,848` {40,16} banked: the room as a
+re-entry finds it once those three are done (the BobSoldier does not persist). Standing still there, the game and the model
+agree at 0 px (`l40latch-stand`, p4g): the BobSoldier walks up the pocket from t49 and its blade lands at t93 and t113, and the
+holder dies at t133. The solver OFF stands for the fade and refuses *"hold tick 93 of 131 MOVED"*. No model gap.
+
+**D1a — `holdWaitPriced`.** The hold stance walk carries the hold as its tail (`holdStandWalk`: L30KEYLOCK's `stand`, keys
+empty as `runHold`'s), so the wait is a corridor hit and the combat ladder climbs. MEASURED on the first cut: from a player
+already on the stance the TIME rung answered 0 ticks, the walk re-probed the same tail hit, and the climb looped forever (300 s
+without a tick spent, mutant m2). A hold's tail is marked, and TIME refuses it by name. The ladder then reaches the kill rung,
+whose chaser arm finds no stance: all 16 in the leash are hit at tick 93–100.
+
+**D1b — `chaserOrbitKill`.** `BobSoldier.swordHitting` tests the blade (8–16 px off the body) every frame, spinning or resting,
+and a spin ends pointing at the player (`swordSpinningStop(ang)`): a body walking at a still player always meets it blade first.
+The rest angle holds until the next spin, which waits on 60 ticks inside `attackRange`. `orbitKillPolicy`: circle outside the
+blade while it spins, round the resting blade to its far side, close in and let the one strike policy press, back off past
+`attackRange` in the body's i-frames, keep away from the swinging corpse. The kill rung tries it on forks over 20 candidates
+(radius × direction × far-side arc; 8 of the 20 are hitless from the staging, 257 of 720 in a wider scratch grid) and plays the
+first hitless one live. Both ON from the staging: the latch publishes {t 3} on tick 1, the BobSoldier dies on the orbit (removed
+t184), `spinner@816,848` by the press arm (t251), `wandlock@480,560` fades open at t101 during the fight, never hit; the game
+reproduces the 271 ticks at 0 px (`l40latch-orbit-chain`).
+
+**D2 — the rest of the chain, named.** Next: the walk back west through the x≈744 corridor, where `bob@736,752` and
+`bob@736,800` stand together. AVOID finds the components disconnected, and `chooseBodyToRemove` names no body (no SINGLE
+removal admits a corridor; `CHOOSER_HIT_SOURCES` never takes a chaser): the hammer arc's chooser. A scratch measurement
+(`hitSourceBodies` admitting the probe's chaser sources, not landed) walks it, and the walk to `wandlock@448,432`'s hold stance
+then meets `iceturret@472,400` as a static "Enemy" the kill rung has no arm for (TURRETCIRCLE's circling kill lives in the
+weigh's `killForCorpse`, not the rung's static arm).
+
+**Movers (both keys ON).** The full survey: 0 rows of 235 differ. The 52-leg L40 sweep ×2 per arm: 0 verdicts by key (368/371
+flip inside arm A too, and their captured requests answer A = B). The bounded set shows 10 reds:
+- four `movingWait`-OFF controls whose still hold's bomb is now priced at the stance walk;
+- L4's `jsRuntimeSolverShouldStop` work pins (+4 units, the same plans);
+- two L30 rescan-OFF controls that the orbit arm now solves hitless (393 t / 401 t, model-only);
+- two env artifacts.
+
+Two findings were fixed before the movers were taken:
+- a latched hold under `MOVING_WAIT` drops the bombs from its tail, because the executor paces them (WANDHOLD 368/371 had lost
+  their plans);
+- TIME refuses only a hit IN the tail (leg 371's transit hit).
+
+**Trap candidates.**
+- A rung that succeeds by spending nothing is a loop: the TIME rung's 0-tick certificate re-entered the same climb forever.
+- A still stance is the wrong question for a chaser whose weapon rests where the player last was; the answer moves.
+- A staging past a hand-over must bank what that hand-over kills (`spinner@880,848`, left alive in the first staging, wandered
+  into the latch room and hit the first scratch fight policy).
+- A tail that prices what the executor would not do is a false refusal: a latched hold under `MOVING_WAIT` paces its bombs, so
+  its still tail must not price them.
+
+
+### Seedling fidelity L32BOB — the Bob Boss forecast carries the swing already in flight (`encounterSwingInFlight`, OFF)
+
+Wave 32, the L32BOB slice (report `CC/docs/cloud-reports/seedling-fidelity-l32bob.md`, base main `1e17f44738`).
+
+**The decline, reproduced.** The JS arc's L32 Bob encounter declined *"the forecast landed form N's hit at +k and the
+run's boss reports M landing(s) — the forecast and the run disagree"* (`execBobBossEncounter`). Every L32 staging SOLVES
+from its boot; the decline is a CONTINUATION whose prefix ends inside a swing. `apb-l32-fresh-no-fire`'s staging continued
+from its own tape at t380 (the 376 press still testing): the run fires that swing's T+5 test at t381 and it lands (form 1:
+1 → 2 hits). `forecastEncounterPlan` built its tests from an empty map, so it kept form 1 at 1 and landed its own press at
++58; the run counted 2. First disagreement: +1, the forecast's.
+
+**The game agrees with the run.** p4g headless, `probe-seedling-encounter-ticks.mjs --tape=apb-l32-fresh-no-fire
+--from=370 --to=560`: 191 sampled ticks, game and model boss rows 0 px apart; form 1's death flight starts at t426 on
+both, after the THIRD landing (351, 381, 425 — the 381 one is the in-flight test).
+
+**The fix (OFF).** `bobBossForecast()` hands out the run's `swordWindow` and a `slash` at a thrust's own scale;
+`forecastEncounterPlan` steps that window with `advance`'s `swordWindowStep` / `swordWindowReplace` /
+`swordWindowSchedule`, and counts every landing through its own press's (`landings`); the executor checks the run against
+that count. OFF: byte-identical (no `window`, the old text). `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`.
+
+**Measured.** The census: every prefix of each of the four L32 stagings' own plans that ends inside a swing (4 × 35).
+OFF declines at exactly three per staging (the ones whose T+5 test still lands); ON solves 140/140. The U5 plan every
+10 ticks: OFF 82/83 (k 380), ON 83/83. From boot, nothing moves ON: `plan-seedling-encounters --check` 31/31,
+the r1/r3/r5/u11/r5-swim producers byte-equal ON vs OFF, survey step 40 equal, the arena-prefix legs 349/350 equal.
+
+**Trap candidates.**
+- A forecast seeded from a run's STATE but not its PENDING EVENTS is right from every quiet tick and wrong from a busy
+  one. A solve from boot never starts mid-swing, so every producer passed; only a continuation (the JS page's replan)
+  starts there. Census the seams a continuation can start on, not only the boots.
+- A count check (`after !== before + 1`) encodes "nothing else lands in this window": an assumption, not a measurement.
+
 ### Seedling hammer-phase PKB-OFF — the press kill's bomb pricing ships OFF again
 
 - **What:** `pressKillCost.PRESS_KILL_BOMBS` defaults OFF (`SEEDLING_PRESS_KILL_BOMBS=1` opts in); the pricing code
@@ -25922,6 +26051,62 @@ those four. Compare their md5 before and after rather than reading "exit 1" as y
 - **Cost:** one JSUT row, `hammerPressBombs.test.js` "ships …", re-pinned to OFF; producer `--check`s and the slow
   battery were green with the switch OFF.
 
+
+### Seedling fidelity RULESREF — a spear bridge opened by a thrust (`spearBridgeVerb`); a half-tile door named on the 8 px lattice (`fineFrontierFlood`); the walk's gate times a puncher's punch (`punchGateTimed`) — all OFF
+
+Wave 32, planner `seedling-fidelity-planning-14`. Three walk-model refusals the rules arc exposed. The report is
+`CC/docs/cloud-reports/seedling-fidelity-rulesref.md` (evidence beside it).
+
+**D2 — L63's spear block, and the bridge behind it (`spearBridgeVerb`).** Survey step 161 (L63 visit 3, arrival
+(128,288) → `teleporter@32,304`) named `pushableblockspear@112,96` and refused *"shove failed to apply"*. The block-route
+search's SF3 proof was right: the room does not connect even with every pushable removed, because the spear BRIDGE tile
+(2,9) cuts it as well. The model has stepped the bridge since R4 (`bridges.js`), but the frontier dropped every `tile:*`
+blocker as a wall, so no verb could be selected. ON: the frontier names a closed bridge `solid:bridge` (`bridge@tx,ty`); the
+`bridge` verb (`resolveBridgeStrategy` / `execBridge`) thrusts from a stance one or two tiles behind it (`runSpear`'s
+bridge arm, the spear slot selected and restored; no spear is a by-name refusal); and `deriveBlockRoute` plans in a bag
+where every bridge the run can open is open. Step 161 then resolves the block (four W thrusts, the last sinking it at
+(3,6)) and refuses on a third wall: `darktrap@128,272` (tag 4) fills the one-tile column above the arrival, and no stance
+below it puts the spear on `lightpole@112,272` (computed). Visit 2 (step 157) kills that very trap with the light arm at
+t469–472 and leaves at t504, before the trap's removal (`deathCounter` 30 + the 14-frame die anim) writes {63,4}. Handed
+to the rules arc. Elsewhere: L93 step 211 goes REFUSED → SOLVED (362 t, 0 hits; FRONTIER3's other spear-bridge cut) and
+step 157 goes 504 → 497 t (0 hits).
+
+**D3 — L66's half-tile door (`fineFrontierFlood`).** Step 163 / leg 579 refused on both arms: *"A* goal tile (5,4) … is
+not walkable: pixelmask building8"*. `building8`'s door notch is x 72–87, half a tile off the grid, and
+`bosslock@72,64` stands in it. Every 16 px node centre beside the component hits the mask first, so the frontier held
+only scenery. ON: a frontier with no actionable entry, or a 16 px plan that failed on a masked goal tile, is flooded again
+at `FINE_LATTICE` (nodes x 76, 84 fit the notch), which names the lock; its key-line cells are asked at 8 px too. The goal
+tile arm matters on leg 579's arrival (64,80): the coarse frontier also holds L66's bridge, which is not on the way (271 t
+without it, 87 t with it). Witness (p4g, headless): `rulesref-l66-door` (step 163 with both keys: the bridge thrust,
+open t64; the key line, open t228; L70 at t230; 0 hits); the game equals the committed oracle, and the model is 0 px over
+231 observations. Producer `plan-seedling-rulesref-witness.mjs` (`--check` re-derives it from the committed tape).
+
+**D1 — L53's puncher (`punchGateTimed`).** Step 79 refused at the walk's decision gate: *"inside leash 80 (d=11.1) … pad
+8"*. The gate priced the live puncher by `threatPad`, while the transit probe prices it by the forecast's punch (U10 D2).
+Game witness first (`fixtures/chaser-witness/rulesref-d1-l53-stall`, p4g): the solver's 120-tick prefix plus an 80-tick
+idle stand. The puncher, hit once by the dash, stalls 0.17 px above the player's box, and the game bills nothing (201
+samples, puncher |Δ| 0, player hits 0). ON: the walk-opening gate hands `chaserDanger` the chaser forecast stepped one tick
+(`punchTickAt`, the `SWORD_GATE_TIMED` shape) and prices a body whose row carries `punch` by that punch and its bare body.
+A corridor whose every hit source is an attack chaser is also asked once axis-aligned: the controller's diagonal first
+tick moves 0.8 px up into the pinned body (the model bills a hit at t122), while RIGHT alone slides out hitless. The step
+then walks 560 ticks hitless (both rocks broken) and refuses inside the hammer arc's press-kill dwell, waiting for a
+puncher pinned at (115.6,119.4) that never reaches the stance. Handed to the hammer arc.
+
+**Movers (local, all three ON).** Survey 191/44 → 193/42 (163 and 211 SOLVED; 79, 161 and 214 change refusal; 157 −7 t).
+Bounded set ON: 5 `solveProgress.test.js` L40 kill-rung pins move (asks 167 → 183, `punchGateTimed`). No committed tape
+or producer `--check` moves (the identity block is equal OFF; the four producer reds there are the base's own).
+
+**Trap candidates.**
+- A frontier that drops `tile:*` blockers drops the one terrain that has a verb. Ask what moves a tile before calling it
+  stone.
+- SF3's "no route even with every pushable removed" is a proof about the PUSH, not the room. When it fires, the next
+  question is which non-pushable cut it, and that cut is the real work order.
+- A frontier with ONE actionable entry is not a frontier that is on the way. A masked goal tile hid the doorway behind a
+  bridge that led nowhere.
+- A gate and the probe after it must ask one question. A pad at the gate refused a box that the game, and the probe's own
+  forecast, leave alone.
+- A survey staging is one visit. The trap killed in visit 2 is gone in visit 3 only if its removal finished before the
+  door.
 ### Seedling hammer-phase OPP — opportunistic strikes in every executor
 
 ⚖ User, 2026-10-26: *"If an enemy ever happens to be within attacking range, then the solver should attack it

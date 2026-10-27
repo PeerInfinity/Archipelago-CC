@@ -84,7 +84,9 @@ describe('L40BUTTON D2 — the switch and the hypothesis', () => {
     // row pins the STILL hold's refusal, so it names the pair OFF.
     it('from the cluster\'s own boot, bombPusherLive ON (the default), movingWait + bombBlastBody OFF: the still hold inside the lobber\'s reach is refused by name', async () => {
         let refusal = null;
-        try { await withContactFidelity({ movingWait: false, bombBlastBody: false }, () => solveFrom(CLUSTER_BOOT, true)); } catch (e) { refusal = e; }
+        // ⛓ `holdWaitPriced` named OFF (planning-14's wave-32 flip: ON the still hold is priced at its stance walk and
+        // the ladder is EXHAUSTED on the tail's bomb — the same obstacle, new text); this row pins the executor's refusal.
+        try { await withContactFidelity({ movingWait: false, bombBlastBody: false, holdWaitPriced: false }, () => solveFrom(CLUSTER_BOOT, true)); } catch (e) { refusal = e; }
         expect(refusal).toBeInstanceOf(SolverRefusal);
         expect(refusal.message).toMatch(/inside bombpusher@112,128's 256 px reach/);
     }, 360_000);

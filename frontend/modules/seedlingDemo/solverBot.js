@@ -105,6 +105,8 @@ import {
     WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
     ARROW, arrowLaneForPlacement, arrowLaneRect, arrowTrapFires,
     bridgedChaserTags, chaserBoxAt, chaserHasSword, killWindowTicks,
+    // ⛓ fidelity RULESREF D1: a chaser whose class carries a timed attack (the puncher), for the walk's gate.
+    chaserHasAttack,
     // ⛓ STRIKELAPSE D1: a corpse's removal clock (`createCorpseClock`).
     deathTicks, removalTicksAfterHit,
     // ⛓ CEREMONYSHOVE D3: the classes a shield's bump moves (`ceremonyBesideLiveBody`).
@@ -512,7 +514,7 @@ const fail = (m, opts) => { throw new SolverBotError(m, opts); };
  *   rather than guessed. Registering an executor is one row here; that is
  *   the "adds policies rather than restructuring" contract.
  */
-export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
+export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     'solid:pushableblock': 'shove',
     'solid:pushableblockfire': 'shove',
     /**
@@ -728,7 +730,14 @@ export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(s
  * the kill. The verb (`execTotemBoss`) plays `bossTotemPolicy` against the run's own stepped fight. OFF no row: the
  * frontier keeps *"No strategy row exists for this obstacle"*.
  */
-'solid:bosstotem', () => (CONTACT_FIDELITY.totemBossFight ? 'totem' : undefined)));
+'solid:bosstotem', () => (CONTACT_FIDELITY.totemBossFight ? 'totem' : undefined)),
+/**
+ * ⛓⛓⛓ fidelity RULESREF (wave 32, `CONTACT_FIDELITY.spearBridgeVerb`) — **A CLOSED SPEAR BRIDGE IS OPENED.** The frontier
+ * names a closed `Bridge` tile (`t = 29`) `solid:bridge` (`bridge@tx,ty`) only while the switch is on; the verb
+ * (`resolveBridgeStrategy` / `execBridge`) is a spear thrust from a stance one or two tiles behind it, and the wait until
+ * the run's `openBridges` holds it. OFF no row: the tile stays a wall to the frontier.
+ */
+'solid:bridge', () => (CONTACT_FIDELITY.spearBridgeVerb ? 'bridge' : undefined)));
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — **THE SECOND SELECTION PATH, AS DATA.**
@@ -920,6 +929,8 @@ export function frontierExecutor(strategy) {
     if (strategy === 'bait' && CRUSHER_BAIT.enabled) return execBait;
     // ⛓ fidelity SEALDOOR D2 — registered only while `CONTACT_FIDELITY.sealDoorApproach` is on.
     if (strategy === 'approach' && CONTACT_FIDELITY.sealDoorApproach) return execApproach;
+    // ⛓ fidelity RULESREF — registered only while `CONTACT_FIDELITY.spearBridgeVerb` is on.
+    if (strategy === 'bridge' && CONTACT_FIDELITY.spearBridgeVerb) return execBridge;
     // ⛓ SEEDLING FIDELITY WAND — registered only while `WAND_VERB` is on.
     return strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined;
 }
@@ -1246,36 +1257,68 @@ function forecastEncounterPlan(run, fc, stepper, { approach, n, retreat, tail, p
     let landedAt = null;
     let killed = false;
     let pressOutcome = null;
+    /**
+     * ⛓ fidelity L32BOB D1 (`CONTACT_FIDELITY.encounterSwingInFlight`) — THE SWING ALREADY IN FLIGHT. ON, the tests
+     * are the run's own window (`fc.window`), stepped at the top of each tick by `swordWindowStep` as `advance` steps
+     * it, so a swing pressed before this forecast keeps testing (each thrust at its own scale); this plan's press
+     * REPLACES that swing's remaining tests and schedules its own (`advance`'s two places). Every landing through the
+     * plan's own is counted (`landings`): the executor checks the run against that count. OFF: the plan's own tests
+     * alone, from an empty map, as before.
+     */
+    const inFlight = CONTACT_FIDELITY.encounterSwingInFlight;
+    const t0 = run.ticksCompleted;
+    let win = inFlight ? (fc.window ?? EMPTY_SWORD_WINDOW) : null;
+    let landings = 0;
+    const done = (o) => (inFlight ? { ...o, landings } : o);
     const total = press ? n + 1 + tail : n + tail;
     for (let k = 0; k < total; k += 1) {
         const r = fc.step(b, p);
-        if (r.playerHits.length > 0) return { touchedAt: k, landedAt, killed, pressOutcome, end: p };
-        if (b.removed) return { touchedAt: null, landedAt, killed, pressOutcome, end: p };
+        if (r.playerHits.length > 0) return done({ touchedAt: k, landedAt, killed, pressOutcome, end: p });
+        if (b.removed) return done({ touchedAt: null, landedAt, killed, pressOutcome, end: p });
         // `Player.update`: `shieldBump()`, then `slash()`'s timer and test.
         fc.shieldBump(b, p, slash.slashing);
         slash = slashTimerTick(slash);
-        const due = tests.get(k);
-        if (due !== undefined && landedAt === null) {
-            const v = fc.slash(b, p, due);
-            if (v.landed) { landedAt = k; killed = v.killed; }
+        if (inFlight) {
+            const fired = swordWindowStep(win, t0 + k);
+            win = fired.window;
+            for (const th of fired.fires) {
+                // Only a sword's tests are this forecast's; any other thrust in flight is not modelled here: the plan
+                // is not taken (a touch at this tick, as a previewed death is).
+                if (th.weapon !== 'sword') return done({ touchedAt: k, landedAt, killed, pressOutcome, end: p });
+                const v = fc.slash(b, p, th.direction, th.scale);
+                if (!v.landed || landedAt !== null) continue;
+                landings += 1;
+                if (press && th.pressTick === t0 + n) { landedAt = k; killed = v.killed; }
+            }
+        } else {
+            const due = tests.get(k);
+            if (due !== undefined && landedAt === null) {
+                const v = fc.slash(b, p, due);
+                if (v.landed) { landedAt = k; killed = v.killed; }
+            }
         }
         const keys = k < n ? approach : (press && k === n ? [...approach, 'primary'] : retreat);
         if (press && k === n) {
             const out = slashSet(slash, { pressed: true, hasSword: true, direction: p.direction });
             pressOutcome = out.outcome;
-            if (out.outcome !== 'slash') return { touchedAt: null, landedAt: null, killed, pressOutcome, end: p };
+            if (out.outcome !== 'slash') return done({ touchedAt: null, landedAt: null, killed, pressOutcome, end: p });
             slash = out.state;
             endsAt = k + SLASH_ANIM_TICKS[slash.anim];
-            for (let i = 1; i <= SLASH_HIT_TICKS; i += 1) tests.set(k + i, out.slashDirection);
+            if (inFlight) {
+                win = swordWindowSchedule(swordWindowReplace(win), { weapon: 'sword', direction: out.slashDirection,
+                    pressTick: t0 + k, anim: slash.anim, scale: slashScaleFor(slash.anim) });
+            } else {
+                for (let i = 1; i <= SLASH_HIT_TICKS; i += 1) tests.set(k + i, out.slashDirection);
+            }
         }
         p = stepper(p, new Set(keys));
-        if (p === null) return { touchedAt: k, landedAt, killed, pressOutcome, end: null };
+        if (p === null) return done({ touchedAt: k, landedAt, killed, pressOutcome, end: null });
         if (endsAt !== null && k + 1 >= endsAt) {
             endsAt = null;
             slash = slashSet(slash, { pressed: false, hasSword: true }).state;
         }
     }
-    return { touchedAt: null, landedAt, killed, pressOutcome, end: p };
+    return done({ touchedAt: null, landedAt, killed, pressOutcome, end: p });
 }
 
 /** The earliest-landing admissible strike plan, or null. (Exported for hammer-phase PDS's rows.) */
@@ -1300,7 +1343,9 @@ export function searchEncounterStrike(run) {
                     { approach, n, retreat, tail: ENCOUNTER_SAFE_TAIL, press: true });
                 if (f.touchedAt !== null || f.landedAt === null) continue;
                 if (!best || f.landedAt < best.landedAt) {
-                    best = { approach, n, retreat, landedAt: f.landedAt, killed: f.killed };
+                    best = { approach, n, retreat, landedAt: f.landedAt, killed: f.killed,
+                        // ⛓ fidelity L32BOB D1: ON, every landing through this plan's own (a swing in flight's too)
+                        ...(f.landings !== undefined ? { landings: f.landings } : {}) };
                 }
             }
         }
@@ -1447,12 +1492,14 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
             tick(keys);
         }
         const after = bobLandings(run);
-        if (after !== before + 1) {
+        // ⛓ fidelity L32BOB D1: ON, the forecast's count (a swing in flight lands too); OFF, this plan's one.
+        const forecastLandings = plan.landings ?? 1;
+        if (after !== before + forecastLandings) {
             refuse(`${what}: the forecast landed form ${formBefore}'s hit at +${plan.landedAt} and `
                 + `the run's boss reports ${after - before} landing(s) — the forecast and the run `
-                + 'disagree.', { goal });
+                + `disagree.${forecastLandings === 1 ? '' : ` (the forecast's landings: ${forecastLandings})`}`, { goal });
         }
-        landings += 1;
+        landings += forecastLandings;
         records.push({ goal: 'encounter', leg: 'strike', form: formBefore, landings, pages,
             killed: plan.killed, t: perTick.length });
         if (hitsTaken() !== hits0) {
@@ -3045,6 +3092,8 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'totem') return resolveTotemBossStrategy(run, obstacle);
     // ⛓ fidelity L39SHAFT — reached only while `l39ShaftPress` refines a shaft member to it (`refineStrategy`).
     if (strategy === 'l39shaft') return resolveL39ShaftStrategy(run, obstacle);
+    // ⛓ fidelity RULESREF — reached only while `spearBridgeVerb` registers the verb (`frontierExecutor`).
+    if (strategy === 'bridge') return resolveBridgeStrategy(run, obstacle, contacts);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -5974,8 +6023,14 @@ function lanesUnpublishedByLeaving(run) {
  * exemption cannot survive a re-plan.
  */
 function senseContacts(run) {
-    return new Set(contactsAt(run.world, run.state.x, run.state.y,
+    const contacts = new Set(contactsAt(run.world, run.state.x, run.state.y,
         { avoidVolumes: true, keys: run.progress('keys') }));
+    // ⛓ fidelity CHESTSEAL: a chest `checkBySeal()` removed has no probe line to avoid — the static world still
+    // carries its `proximity-hazard` volume (the build does not read the save), so the walk exempts it. OFF: unchanged.
+    if (CONTACT_FIDELITY.chestSealRemoval && run.chestsSealRemoved === true) {
+        for (const c of run.world.chests ?? []) contacts.add(`proximity-hazard:${c.tag}@${c.x},${c.y}`);
+    }
+    return contacts;
 }
 
 /**
@@ -6270,6 +6325,13 @@ export function previewWalk(run, wps, tolerance = 0,
          * changes nothing.
          */
         standKeys = null,
+        /**
+         * ⛓ fidelity L40LATCH D1a — an OPT-IN tail without the lobbers' bombs: `false` drops every `kind: 'bomb'` spit
+         * from the tail's samples (the forecast still steps). A LATCHED hold under `MOVING_WAIT` paces exactly when its
+         * still wait prices a bomb (`pacedHoldPlan`, at the executor), so its tail prices the rest (`holdStandWalk`).
+         * `true` (every other caller) changes nothing.
+         */
+        standBombs = true,
         /**
          * ⛓ fidelity BEAMLANE D1 — an OPT-IN steered aim: `(state, wp, tick, intermediate) => true | {x, y}`, asked
          * once per transit tick (`tick` = the tick whose sample is about to be taken). `true` = this waypoint is
@@ -6892,6 +6954,7 @@ export function previewWalk(run, wps, tolerance = 0,
                 phase: 'dwell', wp: wpIndex };
             if (spitForecast) {
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
+                if (!standBombs && sample.spits) sample.spits = [...sample.spits].filter((b) => b.kind !== 'bomb');
             }
             if (grenadeForecast) sample.grenades = grenadeForecast.step(st);
             if (corridorForecast) {
@@ -7400,7 +7463,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     const previewFor = (dashPlan) => {
         const strike = strikePolicyFor(run, { dashPlan, dashMode, iframeLapse });
         if (!stand) return { walk: previewWalkOrDeath(run, wps, tolerance, { strike }), strike };
-        const whole = previewWalkOrDeath(run, wps, tolerance, { strike, standFor: stand.ticks, standKeys: stand.keys });
+        const whole = previewWalkOrDeath(run, wps, tolerance, { strike, ...standTailOpts(stand) });
         const walk = { ...whole, samples: whole.samples.filter((sm) => sm.phase !== 'dwell'),
             tail: whole.samples.filter((sm) => sm.phase === 'dwell') };
         return { walk, strike };
@@ -7824,6 +7887,15 @@ const NO_HELD_PREVIEW = new Set();
  */
 function dangerNow(run, x, y, except = null, { timedSword = false, timedAxe = false } = {}) {
     const swordTick = timedSword && SWORD_GATE_TIMED.enabled ? swordTickAt(run, x, y) : null;
+    // ⛓ fidelity RULESREF D1 (`punchGateTimed`, OFF): the walk's gate times a puncher's punch too (`punchTickAt`).
+    if (timedSword && swordTick === null && CONTACT_FIDELITY.punchGateTimed) {
+        const punchTick = punchTickAt(run, x, y);
+        if (punchTick) {
+            const d = withoutSources(dangerAt(run, run.ticksCompleted, playerBoxAt(x, y), { swordTick: punchTick }),
+                except);
+            return timedAxe && CONTACT_FIDELITY.axeGateTransit ? axeGateTimed(run, x, y, d) : d;
+        }
+    }
     const d = withoutSources(dangerAt(run, run.ticksCompleted, playerBoxAt(x, y),
         swordTick ? { swordTick } : {}), except);
     return timedAxe && CONTACT_FIDELITY.axeGateTransit ? axeGateTimed(run, x, y, d) : d;
@@ -7901,6 +7973,24 @@ export function withSwordGateTimed(enabled, fn) {
  * One chaser-forecast tick against a player standing at (x, y) — the bodies `previewWalk`'s first sample would
  * carry. `null` when the run steps no sworded body (the gate is then the code it was) or has no forecast.
  */
+/**
+ * ⛓⛓ fidelity RULESREF D1 (`CONTACT_FIDELITY.punchGateTimed`, OFF) — **THE WALK'S DECISION GATE TIMES A PUNCHER'S
+ * PUNCH**, as BOBSOLDIER2 D2b timed a BobSoldier's blade. The gate asks the WAIT question at horizon 0 and prices a
+ * live puncher by `threatPad` 8 ("a reach without a clock"); the walk's transit probe prices the same body by the
+ * forecast's punch (U10 D2, game-witnessed by `u10-puncher-dwell`). MEASURED (survey step 79, L53 → L54): the walk to
+ * `breakablerock@112,128`'s stance arrives with `puncher@136,96` 11 px away and the next walk's gate refuses
+ * *"inside leash 80 (d=11.1) … pad 8"*, so no corridor is ever probed and the ladder's chaser KILL rung never runs.
+ * ON, a walk-opening gate (`timedSword`) in a room with a live chaser whose class carries an `attack` row hands
+ * `chaserDanger` the chaser forecast stepped ONE tick against the player standing at the box (the walk's first transit
+ * sample), and a body whose row carries `punch` is priced by that punch and its bare body. `null` when no such body.
+ */
+export function punchTickAt(run, x, y) {
+    if (!(run.entities('chasers') ?? []).some((c) => !c.destroy && chaserHasAttack(c.tag))) return null;
+    const fc = run.chaserForecast?.() ?? null;
+    if (!fc) return null;
+    return fc.step({ ...run.state, x, y }, { slashing: run.progress('slashInfo')?.slashing === true });
+}
+
 export function swordTickAt(run, x, y) {
     if (!(run.entities('chasers') ?? []).some((c) => chaserHasSword(c.tag))) return null;
     const fc = run.chaserForecast?.() ?? null;
@@ -8446,6 +8536,21 @@ function groupsHeldOpenBySolids(run, bag) {
     return opened;
 }
 
+/**
+ * ⛓⛓ fidelity RULESREF D2 (`CONTACT_FIDELITY.spearBridgeVerb`, OFF) — **A BRIDGE THE RUN CAN OPEN IS NOT A WALL TO THE
+ * BLOCK-ROUTE SEARCH.** L63's route to `teleporter@32,304` needs `pushableblockspear@112,96` moved AND the spear bridge
+ * (2,9) opened: the frontier names the block (nearer), and the search's SF3 proof refused it because the bridge cut the
+ * relaxed room too (survey step 161). The bridge is the `bridge` verb's (the walk meets it on the frontier after the
+ * push), so the search plans in a world where every bridge the run holds a spear for is open. `bag` unchanged when the
+ * switch is off, the run holds no spear, or the room has no closed bridge.
+ */
+function spearOpenableBridges(run, bag) {
+    if (!CONTACT_FIDELITY.spearBridgeVerb || !run.progress('inventory')?.hasSpear) return bag;
+    const ids = (run.world.bridgeTiles ?? []).map((t) => `${t.tx},${t.ty}`);
+    if (ids.length === 0 || ids.every((id) => bag.openBridges?.has(id))) return bag;
+    return { ...bag, openBridges: new Set([...(bag.openBridges ?? []), ...ids]) };
+}
+
 export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
     { discharged = [], phrase = SHOVE_PHRASE, liveBag = null } = {}) {
     const live = run.entities('pushables')?.get(row.id);
@@ -8453,7 +8558,8 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
         return { steps: null, rejected: [], found: [], expansions: 0, refused: null, census: [] };
     }
     // ⛓ L40BK2 (`weighHypothesisChain`): a hypothesis bag (guard (iii)'s second ask) is the search's world; absent, live.
-    const base = liveBag ?? run.liveGeometryOpts();
+    // ⛓ fidelity RULESREF D2 (`spearBridgeVerb`, OFF): and a closed bridge the run can open is open in it.
+    const base = spearOpenableBridges(run, liveBag ?? run.liveGeometryOpts());
     const liveRocks = base.brokenRocks ?? new Set();
     const start = {
         block: { tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE) },
@@ -10821,6 +10927,148 @@ function execSpearPress(run, perTick, p, ctx, what) {
         verb: 'press', target: p.blockId, dir: p.dir, to: { ...p.to }, destroys: p.destroys,
         weapon: 'spear', slot: p.slot, restoredSlot: prior !== p.slot ? prior : null,
         from, pressTick, ticks: perTick.length - from,
+    };
+}
+
+/**
+ * ⛓⛓⛓ fidelity RULESREF (wave 32, `CONTACT_FIDELITY.spearBridgeVerb`) — **A CLOSED SPEAR BRIDGE ON THE FRONTIER IS
+ * OPENED BY A THRUST, NOT ROUTED AROUND.**
+ *
+ *     Player.as:1116-1119   genericHit's `e is Tile` arm: `if (t == "Spear") bridgeOpeningTimer--`
+ *     Tile.as:343-365       case 29: Solid while the timer is >= 60 or > 0 (one decrement per render), "Tile" at <= 0
+ *
+ * The model has stepped the bridge since R4 (`bridges.js`, `probe-seedling-bridge.mjs`: one press, the tile walkable
+ * 60 on-screen frames later) and `botDriverV2.runSpear`'s `bridge` arm drives it; the solver had no row, and its
+ * frontier drops every `tile:*` blocker as a wall. Measured (RULESREF D2/D3): L63's `(2,9)` cuts the route to
+ * `teleporter@32,304` (survey step 161, which named the spear BLOCK because the block is nearer; with every pushable
+ * removed the room still does not connect), and L66's `(7,9)` stands between the L65 arrival and the doorway.
+ *
+ * A stance is a floor cell ONE or TWO tiles behind the bridge on an axis (the spear's 32x5 rect, `spearHitRect`,
+ * reaches two tiles with no line gate) whose rect touches the tile from every point within `SPEAR_STANCE_SLACK` of the
+ * cell centre, reaches no other press responder (`auditPress`), and is reachable. The nearest such stance is taken.
+ * ⛔ No spear: `held: false`, refused by name (the Spear is the work order). OFF: no row, byte-identical.
+ */
+function resolveBridgeStrategy(run, obstacle, contacts) {
+    const [tx, ty] = String(obstacle.bridgeId ?? '').split(',').map(Number);
+    const tile = (run.world.bridgeTiles ?? []).find((t) => t.tx === tx && t.ty === ty);
+    if (!tile) return null;
+    const bridge = { tx, ty };
+    const target = { id: obstacle.id, x: tile.x, y: tile.y };
+    const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.spear);
+    if (!run.progress('inventory')?.hasSpear || slot < 0) {
+        return {
+            strategy: 'bridge', held: false, target, bridge,
+            rejected: [{
+                option: `thrust at ${obstacle.id}`,
+                why: 'the run holds NO SPEAR. `genericHit`\'s `Tile` arm decrements `bridgeOpeningTimer` only under '
+                    + '`t == "Spear"`, so no other weapon opens the bridge. ⇒ the Spear is the work order.',
+            }],
+        };
+    }
+    if ((run.entities('openBridges') ?? new Set()).has(`${tx},${ty}`)) return null;
+    const floorOpts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    const pushables = run.entities('pushables') ?? null;
+    const tried = [];
+    const found = [];
+    for (const [dir, step] of Object.entries(SHOVE_STEP)) {
+        const facing = PRESS_FACING[dir];
+        for (const d of [1, 2]) {
+            const c = nodeCentre(tx - step.dx * d, ty - step.dy * d, DEFAULT_LATTICE);
+            const at = `(${c.x},${c.y}) facing ${dir}`;
+            if (c.x < 0 || c.y < 0 || c.x > run.world.width * TILE_SIZE || c.y > run.world.height * TILE_SIZE) {
+                tried.push(`${at} is off the level`);
+                continue;
+            }
+            if (plannerObstacleAt(run.world, c.x, c.y, null, floorOpts)) { tried.push(`${at} is not floor`); continue; }
+            const shifts = [[0, 0], [SPEAR_STANCE_SLACK, 0], [-SPEAR_STANCE_SLACK, 0],
+                [0, SPEAR_STANCE_SLACK], [0, -SPEAR_STANCE_SLACK]];
+            if (!shifts.every(([sx, sy]) => pressRectTouches(spearHitRect(c.x + sx, c.y + sy, facing), tile.rect))) {
+                tried.push(`${at}'s rect misses the tile within ±${SPEAR_STANCE_SLACK} px`);
+                continue;
+            }
+            const stray = auditPress(run.world, spearHitRect(c.x, c.y, facing), {
+                weapon: 'spear', intended: [{ as3: 'Tile', tx, ty }], pushables,
+            }).illegal.filter((r) => PRESS_ARM_POLICY[r.as3]?.policy !== 'inert');
+            if (stray.length) {
+                tried.push(`${at}'s rect also reaches ${stray.map((r) => `${r.tag}@${r.x},${r.y}`).join(', ')}`);
+                continue;
+            }
+            const here = run.state.x === c.x && run.state.y === c.y;
+            if (!here) {
+                let ok = false;
+                for (const lattice of [DEFAULT_LATTICE, FINE_LATTICE]) {
+                    try {
+                        planWaypoints(run.world, run.state, c, null, solverPlanOpts(run, contacts, { lattice }));
+                        ok = true;
+                        break;
+                    } catch (e) {
+                        if (!(e instanceof BotDriverV2Error)) throw e;
+                    }
+                }
+                if (!ok) { tried.push(`no corridor reaches ${at}`); continue; }
+            }
+            found.push({ stance: { x: c.x, y: c.y }, dir, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+        }
+    }
+    if (found.length === 0) {
+        throw new SolverRefusal(`solverBot: bridge ${obstacle.id} in level ${run.level} — no floor cell one or two `
+            + `tiles behind it puts the spear's 32x5 rect on it and is reachable: ${tried.join('; ')}`,
+        { obstacle: { kind: 'solid', tag: 'bridge', id: obstacle.id } });
+    }
+    found.sort((a, b) => a.d - b.d);
+    const pick = found[0];
+    return {
+        strategy: 'bridge',
+        postCondition: 'open',
+        held: true,
+        target,
+        bridge,
+        slot,
+        dir: pick.dir,
+        stance: pick.stance,
+        rejected: [{
+            option: 'a sword slash / a lean',
+            why: 'only a SPEAR thrust reaches `genericHit`\'s `Tile` arm (`t == "Spear"`); the tile is Solid to the '
+                + 'player until 60 on-screen frames after that one decrement (`bridges.framesToOpen`)',
+        }, ...found.slice(1).map((f) => ({
+            option: `stance (${f.stance.x},${f.stance.y}) facing ${f.dir}`,
+            why: `farther from the live position (${f.d.toFixed(1)} px vs ${pick.d.toFixed(1)})`,
+        }))],
+    };
+}
+
+/**
+ * ⛓⛓⛓ fidelity RULESREF — the `bridge` verb's executor: SETTLE, SELECT the spear's slot, re-ask the REACH where the
+ * walk stopped, then `runSpear`'s `bridge` arm (face tap, the press on an unfrozen tick, the wait until the run's
+ * `openBridges` holds the tile, its positive control) and the old slot selected again.
+ */
+function execBridge(run, perTick, resolved, ctx) {
+    const id = resolved.target.id;
+    const refuse = (why) => {
+        throw new SolverRefusal(`${ctx.what}: ${why}`, { obstacle: { kind: 'solid', tag: 'bridge', id } });
+    };
+    if (resolved.held === false) refuse(`${id} cannot be opened by this run — ${resolved.rejected[0].why}`);
+    const IDLE = new Set();
+    const from = perTick.length;
+    for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+        if (i > 60) refuse('the walk to the bridge stance never came to rest.');
+        perTick.push(IDLE);
+        const { transition } = run.advance(IDLE);
+        if (transition) refuse(`the settle crossed to level ${transition.to_level} — a bridge is PER VISIT.`);
+    }
+    const tile = run.world.bridgeTiles.find((t) => t.tx === resolved.bridge.tx && t.ty === resolved.bridge.ty);
+    if (!pressRectTouches(spearHitRect(run.state.x, run.state.y, PRESS_FACING[resolved.dir]), tile.rect)) {
+        refuse(`the walk settled at (${run.state.x},${run.state.y}) and the spear's 32x5 rect facing ${resolved.dir} `
+            + `from there misses ${id} — a stance finding, not a bridge one.`);
+    }
+    const prior = run.progress('primary');
+    if (prior !== resolved.slot) ctx.equip(resolved.slot);
+    const rec = runSpear(run, perTick, { bridge: { ...resolved.bridge }, facing: resolved.dir }, `${ctx.what} (${id})`);
+    if (prior !== resolved.slot) ctx.equip(prior);
+    return {
+        verb: 'bridge', target: id, bridge: { ...resolved.bridge }, dir: resolved.dir, weapon: 'spear',
+        slot: resolved.slot, restoredSlot: prior !== resolved.slot ? prior : null,
+        from, pressTick: rec?.pressTick ?? null, ticks: perTick.length - from,
     };
 }
 
@@ -18713,6 +18961,22 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
     }
+    /**
+     * ⛓⛓ fidelity RULESREF D3 (`CONTACT_FIDELITY.fineFrontierFlood`, OFF) — a lock in a doorway half a tile off the grid
+     * (L66's `bosslock@72,64` in `building8`'s x 72-87 notch) has no 16 px cell whose pinned box meets its key line; its
+     * 8 px cells do, and are asked (in the world as it is, on the 8 px lattice) once every 16 px cell has failed.
+     */
+    if (CONTACT_FIDELITY.fineFrontierFlood) {
+        for (const c of keylockCandidates(run, row, contacts, FINE_LATTICE)) {
+            try {
+                planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
+                    solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
+                return { stance: { x: c.x, y: c.y }, discharged: [] };
+            } catch (e) {
+                if (!(e instanceof BotDriverV2Error)) throw e;
+            }
+        }
+    }
     const siblings = base().filter((h) => keylockOutOfReach(run, h, contacts));
     const sealed = keyLineBehindLock(run, row, candidates, contacts, siblings);
     const refusal = new SolverRefusal(
@@ -18731,8 +18995,7 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
  * sibling's reach can be asked with the same cells): a free lattice cell from
  * which a walk into the lock pins the box on the key line, nearest first.
  */
-function keylockCandidates(run, row, contacts) {
-    const pitch = DEFAULT_LATTICE;
+function keylockCandidates(run, row, contacts, pitch = DEFAULT_LATTICE) {
     const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
     const cell = nodeAt((row.rect.x + row.rect.right) / 2,
         (row.rect.y + row.rect.bottom) / 2, pitch);
@@ -18931,6 +19194,39 @@ function keylockStandWalk(run, resolved) {
         };
     };
     return { stand: { ticks: resolved.hold.ticks, keys } };
+}
+
+/**
+ * ⛓⛓⛓ fidelity L40LATCH D1 (`CONTACT_FIDELITY.holdWaitPriced`, OFF) — the walk options that price a HOLD's still
+ * wait as its stance walk's tail, by `KEYLOCK_WAIT_PRICED`'s instrument: `stand` = `{ticks: hold.ticks, keys}`, where
+ * `keys` presses nothing (`runHold` pushes `NO_HELD` for every tick of its bound and refuses a tick that MOVED).
+ * MEASURED on L40's S-door latch (`buttonroom@880,768`, `l40latch-stand`): the transit probe of the walk onto the
+ * latch is clean, the holder stands for the 101-tick fade (+ slack), and `bobsoldier@880,832` walks up the pocket and
+ * lands its sword at hold tick 93. With the tail that wait is a hit on the stance corridor, so the combat ladder
+ * climbs (the kill rung's chaser arm: kill first, then the hold). ⚠ The tail stands the whole bound (the executor
+ * stops on its `until`), the side to err on. A paced hold (`MOVING_WAIT`) is not this tail's: it is priced by
+ * `planPacedWait` at the executor. `{}` (the walk unchanged) for a resolution without a presser, a stance or a bound.
+ * The tail is marked `hold: true`: the ladder's TIME rung refuses a hit IN it by name (it certifies the walk to the aim,
+ * never the wait at it), where a keylock's tail is unchanged.
+ */
+function holdStandWalk(run, resolved) {
+    if (!(resolved?.hold?.ticks > 0) || !resolved.target || !resolved.stance) return {};
+    const NO_KEYS = new Set();
+    // ⛓ a LATCHED hold under MOVING_WAIT paces where its still wait meets a bomb (`pacedHoldPlan`): its tail prices
+    // everything but the bombs (measured: WANDHOLD's legs 368/371, two paced holds, refused with the bombs in the tail)
+    const paces = MOVING_WAIT.enabled && Boolean(resolved.hold.until)
+        && (resolved.hold.latched === true || resolved.latched === true);
+    return { stand: { ticks: resolved.hold.ticks, keys: () => () => NO_KEYS, hold: true,
+        ...(paces ? { bombs: false } : {}) } };
+}
+
+/**
+ * The `previewWalk` options a stance walk's tail (`stand`, `KEYLOCK_WAIT_PRICED`'s instrument) asks for: `standFor`,
+ * `standKeys`, and — only for a `holdStandWalk` tail that paces its bombs — `standBombs: false`. `{}` for no tail.
+ */
+function standTailOpts(stand) {
+    if (!stand) return {};
+    return { standFor: stand.ticks, standKeys: stand.keys, ...(stand.bombs === false ? { standBombs: false } : {}) };
 }
 
 /**
@@ -21972,6 +22268,112 @@ export function killedOnWalk(run, id, from) {
     return kill ? { pressedAt: kill.t, firedAt: kill.fired, weapon: kill.weapon, direction: kill.direction } : null;
 }
 
+/**
+ * ⛓⛓⛓ fidelity L40LATCH D1b (`CONTACT_FIDELITY.chaserOrbitKill`, OFF) — **A BOBSOLDIER IS KILLED ON THE MOVE, BEHIND
+ * ITS BLADE.**
+ *
+ * `BobSoldier.swordHitting` tests the blade every frame, spinning or not (`collideLine` from `weaponLength / 2` to
+ * `weaponLength` = 8..16 px off the body, `BobSoldier.as:161-171`), and a spin ends with the blade pointing at the
+ * player (`swordSpinningStop(ang)`), so a body walking at a STILL player always meets it blade first: no stance the
+ * chaser arm scans kills one hitless (measured on L40's latch, `bobsoldier@880,832`: every one of the 16 candidates is
+ * hit at tick 93–100). But the rest angle does not move until the next spin, which begins only once the body has been
+ * within `attackRange` (32 px) for `swordSpinResetTimerMax` (60) ticks after the last one. So the policy:
+ *   - a spinning blade, or one about to begin: circle at `r` (outside the 8..16 px sweep), the spin is let run;
+ *   - a resting blade on the player's side: circle round it, at `r`, to the far side;
+ *   - the body in its hit i-frames: back off to `rw` (past `attackRange`, so the reset timer stands);
+ *   - the far side and the body hittable: close in (`close` px) — the run's one strike policy presses (⚖ 30(c));
+ *   - a corpse (`destroy`, it still swings until `Mobile.death`'s fade removes it): keep away, strike nothing.
+ * The steering is `chooseHeld` toward that point, each tick. ⚖ The user, of the ice turret (2026-10-24): *"The way to
+ * not get hit is to keep moving while attacking."* Tried on FORKS only (`orbitKillChaser`).
+ */
+export const ORBIT_KILL = Object.freeze({
+    // the radii (px, centre to centre), the circling step (rad per steering aim), the far-side arc (rad off the blade)
+    radii: Object.freeze([22, 24, 20, 26, 28]),
+    trigger: 28,
+    backoff: 34,
+    close: 10,
+    step: 25 * Math.PI / 180,
+    farSides: Object.freeze([110 * Math.PI / 180, 90 * Math.PI / 180]),
+    // the kill's bound (ticks, the removal included): three cadences and two spins with room, MEASURED ≤ 260 on L40
+    ticks: 420,
+});
+
+/** Every candidate `orbitKillChaser` tries, in order: radius, then direction, then far-side arc. */
+export const ORBIT_KILL_CANDIDATES = Object.freeze(ORBIT_KILL.radii.flatMap((r) => [1, -1]
+    .flatMap((dir) => ORBIT_KILL.farSides.map((safe) => Object.freeze({ r, dir, safe })))));
+
+/** The orbit policy's held set for this tick against the body `c` (a `chasers` row), or `null` once it is removed. */
+export function orbitKillPolicy(run, id, { r, dir, safe }, strike) {
+    const c = (run.entities('chasers') ?? []).find((b) => b.id === id);
+    if (!c) return null;
+    const s = run.state;
+    const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+    const phi = Math.atan2(s.y - c.y, s.x - c.x);
+    const off = wrap(phi - Math.atan2(Math.sin(-c.swordSpin), Math.cos(-c.swordSpin)));
+    const at = (rad, turn) => ({ x: c.x + rad * Math.cos(phi + turn), y: c.y + rad * Math.sin(phi + turn) });
+    let aim;
+    if (c.destroy) aim = at(Math.max(r, ORBIT_KILL.backoff), 0);
+    else if (c.swordSpinning) aim = at(r, dir * ORBIT_KILL.step);
+    else if (c.swordSpinResetTimer === 0) aim = at(ORBIT_KILL.trigger, dir * ORBIT_KILL.step);
+    else if (Math.abs(off) < safe) aim = at(r, (off >= 0 ? 1 : -1) * ORBIT_KILL.step);
+    else if (c.hitsTimer > 0) aim = at(ORBIT_KILL.backoff, 0);
+    else aim = at(ORBIT_KILL.close, 0);
+    const held = chooseHeld(s, aim, DEFAULT_TOLERANCE);
+    if (c.destroy || !strike || s.fall) return held;
+    return strike.decide(s, run.entities('strikeBodies'), run.ticksCompleted, held,
+        { slash: run.progress('slashInfo') }).held;
+}
+
+/**
+ * The orbit kill of `id` (a live BobSoldier) from the run's current tick: each `ORBIT_KILL_CANDIDATES` entry is played
+ * on a FORK until the body is removed, rejected at the first player hit or death, level crossing, or the bound; the
+ * first clean one is played on the live run key for key and must kill there too. `{record}` or `{why}` (no tick spent).
+ * Each fork try asks the FINE deadline site `orbit-fork`. ⚠ A live replay that does not kill as its fork did fails by
+ * name AFTER the live run has advanced those ticks: the run is not rewound (the solve is refused, never continued).
+ */
+function orbitKillChaser(run, perTick, id, { fork, dashMode, what }) {
+    if (typeof fork !== 'function') return { why: 'no fork to try the orbit on (the solve has no `forkRun`)' };
+    const play = (r, keys, cand) => {
+        const strike = strikePolicyFor(r, { dashMode });
+        const hits = (r.ledger('playerHits') ?? []).length;
+        const deaths = (r.ledger('playerDeaths') ?? []).length;
+        for (let i = 0; i < ORBIT_KILL.ticks; i += 1) {
+            const held = orbitKillPolicy(r, id, cand, strike);
+            if (held === null) return { ok: true, ticks: i };
+            keys.push(held);
+            const { transition } = r.advance(held);
+            if (transition) return { why: `crossed to level ${transition.to_level} at orbit tick ${i + 1}` };
+            const h = (r.ledger('playerHits') ?? []).slice(hits)[0];
+            if (h || (r.ledger('playerDeaths') ?? []).length !== deaths) {
+                return { why: `hit at orbit tick ${i + 1}${h ? ` (${h.source}:${h.id})` : ''}` };
+            }
+        }
+        return { why: `${id} not removed inside the ${ORBIT_KILL.ticks}-tick bound` };
+    };
+    const whys = [];
+    let forks = 0;
+    for (const cand of ORBIT_KILL_CANDIDATES) {
+        const label = `r ${cand.r} ${cand.dir > 0 ? 'ccw' : 'cw'} far ${Math.round(cand.safe * 180 / Math.PI)}°`;
+        const f = fineDeadlineReached('orbit-fork') ? null : fork();
+        if (f === null) { whys.push(`the deadline, after ${forks} fork(s)`); break; }
+        forks += 1;
+        const keys = [];
+        const out = play(f, keys, cand);
+        if (!out.ok) { if (whys.length < 4) whys.push(`${label}: ${out.why}`); continue; }
+        const from = perTick.length;
+        const live = [];
+        const again = play(run, live, cand);
+        for (const k of live) perTick.push(k);
+        if (!again.ok || live.length !== keys.length) {
+            fail(`${what}: the fork's orbit kill of ${id} (${label}, ${keys.length} t) did not replay on the live run — `
+                + `${again.why ?? `${live.length} t`} (the fork is not this run).`);
+        }
+        return { record: { kind: 'orbit', from, ticks: live.length, candidate: label, forks } };
+    }
+    return { why: `no orbit kill of ${id} is hitless (${forks} fork(s) of ${ORBIT_KILL_CANDIDATES.length}): `
+        + `${whys.join(' | ')}` };
+}
+
 export function deriveKillByChaser(run, body, contacts,
     /**
      * ⛓ R9 slice 12i — `dashMode` rides down here for the same reason ⚖ 46's
@@ -23149,6 +23551,10 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  *    without `fineCheckpoints` it is never asked. A trip refuses the bait verb by name. CAN turn a solve into a
  *    refusal.
  *
+ *  - `orbit-fork` — (seedling-fidelity-l40latch) the orbit kill's fork tries (`orbitKillChaser`, `chaserOrbitKill`):
+ *    asked before each candidate's fork. FINE (opt-in), as `crusher-fork`. A trip ends the candidates and the orbit
+ *    kill answers `why` (the deadline, after N forks); the arm's other verbs are asked as before.
+ *
  * ⛓ FIDELITY CHECKPOINTS also ask `detour` inside the DETOUR rung's via set
  * (opt-in, as above), once per lattice cell it plans to (L16's ~225 legs ran
  * ~19–50 s between the rung's first two asks; L40's thousands, ~230 s after
@@ -23166,7 +23572,7 @@ export { withSolveProgress };
 
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
     'block-route', 'kill-chaser', 'detour', 'axe-dodge', 'time', 'walk', 'phase-dodge', 'hammer-escape',
-    'hammer-approach', 'hammer-fight', 'crusher-fork']);
+    'hammer-approach', 'hammer-fight', 'crusher-fork', 'orbit-fork']);
 
 /**
  * ⛓ FIDELITY CHECKPOINTS — the ticks a segment drives between two asks of the
@@ -24212,8 +24618,10 @@ function solveSegmentUnder({
     const identifyAndSelect = (goal, aim, contacts, planError, allowTeleporter) => {
         const opts = solverPlanOpts(run, contacts,
             { ...goalPlanExtra, nodeMargin: 0, triggerMargin: 0 });
-        const pitch = DEFAULT_LATTICE;
         const w = run.world;
+        // ⛓ fidelity RULESREF D3 (`fineFrontierFlood`, OFF): the flood is a function of its pitch so it can be asked
+        // again on the 8 px lattice (below). OFF it runs once, at `DEFAULT_LATTICE`, as it always did.
+        const floodFrontier = (pitch) => {
         const nx = w.width * TILE_SIZE / pitch;
         const ny = w.height * TILE_SIZE / pitch;
         const start = nodeAt(run.state.x, run.state.y, pitch);
@@ -24244,6 +24652,15 @@ function solveSegmentUnder({
                 if (hit.kind === 'terrain' || hit.kind === 'pit'
                     || hit.kind === 'lethal-terrain' || hit.kind === 'teleporter') continue;
                 const b = hit.blocker;
+                // ⛓ fidelity RULESREF (`spearBridgeVerb`, OFF): a closed spear bridge is a door, `solid:bridge`.
+                if (CONTACT_FIDELITY.spearBridgeVerb && b.bridgeId && hit.kind === 'solid') {
+                    const bid = `bridge@${b.bridgeId}`;
+                    if (!frontier.has(bid)) {
+                        frontier.set(bid, { kind: 'solid', tag: 'bridge', id: bid, bridgeId: b.bridgeId,
+                            d: Math.hypot(c.x - aim.x, c.y - aim.y) });
+                    }
+                    continue;
+                }
                 const tag = b.tag ?? b.cls?.as3 ?? b.name ?? null;
                 if (typeof tag === 'string' && tag.startsWith('tile:')) continue;
                 const id = b.id ?? `${tag ?? '?'}@${b.x ?? '?'},${b.y ?? '?'}`;
@@ -24255,6 +24672,30 @@ function solveSegmentUnder({
                         d: Math.hypot(c.x - aim.x, c.y - aim.y),
                     });
                 }
+            }
+        }
+        return frontier;
+        };
+        let frontier = floodFrontier(DEFAULT_LATTICE);
+        /**
+         * ⛓⛓ fidelity RULESREF D3 (`CONTACT_FIDELITY.fineFrontierFlood`, OFF) — **A DOOR HALF A TILE OFF THE GRID IS
+         * NAMED ON THE 8 px LATTICE.** L66's `teleporter@72,64` stands in `building8`'s doorway (the mask's notch is
+         * x 72-87) behind `bosslock@72,64`: every 16 px node centre next to the walk's component (x 72, x 88) hits the
+         * MASK first, so the frontier held only scenery and refused *"No strategy row exists"* (survey step 163, sweep
+         * leg 579), and FRONTIER3's 8 px retry plans no corridor while the lock stands. ON, a frontier with no
+         * actionable entry is flooded again at `FINE_LATTICE` (nodes x 76, x 84 fit the notch), which meets the lock.
+         * ⚠ And so is one whose 16 px plan failed on a MASKED GOAL TILE (the planner's own words): from leg 579's arrival
+         * (64,80) the coarse frontier also holds L66's spear bridge, which is actionable and NOT on the way, so without
+         * this the walk opened the bridge first (271 t against the fine flood's 87 t, measured).
+         */
+        if (CONTACT_FIDELITY.fineFrontierFlood) {
+            const actionableIn = (f) => [...f.values()].some((o) => frontierExecutor(refineStrategy(run,
+                OBSTACLE_STRATEGIES[o.tag ? `${o.kind}:${o.tag}` : o.kind] ?? OBSTACLE_STRATEGIES[o.kind] ?? null, o)));
+            const goalMasked = /^A\* goal tile \(\d+,\d+\) in level \d+ — .* is not walkable: pixelmask /
+                .test(String(planError?.message ?? ''));
+            if (!actionableIn(frontier) || goalMasked) {
+                const fine = floodFrontier(FINE_LATTICE);
+                if (actionableIn(fine)) frontier = fine;
             }
         }
         /**
@@ -24602,7 +25043,7 @@ function solveSegmentUnder({
          * the key line counts down is a hit on THIS corridor (trap 154: a stance safe to pass is not safe to wait
          * in). `null` (every other walk) previews exactly what it did.
          */
-        const tail = stand ? { standFor: stand.ticks, standKeys: stand.keys } : {};
+        const tail = standTailOpts(stand);
         const walk = previewWalk(run, wps, tolerance, axisAligned
             ? { strike: null, axisAligned, ...tail }
             : { strike: strikePolicyFor(run, { dashMode, iframeLapse }), ...tail });
@@ -26039,6 +26480,17 @@ function solveSegmentUnder({
                 + `${TIME_RUNG.dwell}. TIME is the contested LAST-MILE tool (kickoff `
                 + '§3.1); it is not a room-crossing one, and the bound is named rather '
                 + 'than widened.';
+        } else if (stand?.hold === true && hit.waiting === true) {
+            /**
+             * ⛓ fidelity L40LATCH D1 — a hit in a HOLD's tail (`holdStandWalk`; the probe marks it `waiting`) is not
+             * this search's to certify: TIME plans the mover to the aim against the danger timeline and stops there,
+             * and the danger is the WAIT that follows. MEASURED on L40's latch (the player already on
+             * `buttonroom@880,768`): the search answered 0 ticks, the walk re-probed the same tail hit, and the ladder
+             * climbed again with no tick spent, forever. A TRANSIT hit on a hold stance walk is TIME's as ever.
+             */
+            timeWhy = 'the walk carries a HOLD\'s still wait as its tail (`holdStandWalk`), and the danger is in that '
+                + 'wait: TIME certifies the mover TO the aim against the danger timeline, never the wait at it, so its '
+                + 'answer would leave the tail hit where it was (L40LATCH).';
         } else if (fineDeadlineReached('time')) {
             // ⛓ FIDELITY CHECKPOINTS — the `time` site, latched: the search is
             // not run and the ladder falls through to the next rung.
@@ -26728,6 +27180,21 @@ function solveSegmentUnder({
                 }
             } else {
                 killWhy = `${kill.why}\n         chaser arm: ${hunt.why}`;
+                /**
+                 * ⛓⛓ fidelity L40LATCH D1b (`chaserOrbitKill`, OFF) — no stance kills a BobSoldier hitless (its blade
+                 * meets a still player first); the orbit kill, tried on forks, may (`orbitKillChaser`).
+                 */
+                if (CONTACT_FIDELITY.chaserOrbitKill && !swordless && hunted.id.startsWith('bobsoldier@')) {
+                    const orbit = orbitKillChaser(run, perTick, hunted.id,
+                        { fork, dashMode, what: `${what} -> kill (${hunted.id}) by orbit` });
+                    if (orbit.record) {
+                        rowFor('kill', refused, { arm: 'orbit', target: hunted.id, candidate: orbit.record.candidate });
+                        records.push({ goal: goal.kind, strategy: 'kill', arm: 'orbit', target: hunted.id,
+                            ...orbit.record });
+                        return { escalations };
+                    }
+                    killWhy += `\n         orbit arm: ${orbit.why}`;
+                }
             }
             if (!killWhy) killWhy = kill.why;
         }
@@ -26822,8 +27289,7 @@ function solveSegmentUnder({
                     // ⛓ L30KEYLOCK — a WHOLE candidate (it ends at the aim) carries the stance wait; a prefix
                     // (it ends at a via) does not, because nobody waits at a via.
                     const end = wps[wps.length - 1];
-                    const tail = stand && end && end.x === aim.x && end.y === aim.y
-                        ? { standFor: stand.ticks, standKeys: stand.keys } : {};
+                    const tail = stand && end && end.x === aim.x && end.y === aim.y ? standTailOpts(stand) : {};
                     const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
                         ? { strike: null, axisAligned, stopWhen: dangerous, ...tail }
                         : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous, ...tail });
@@ -27689,6 +28155,9 @@ function solveSegmentUnder({
                                 // every dash candidate's (BOBSOLDIER2's lesson: the drive is a priced walk).
                                 ...(plan.strategy === 'keylock' && KEYLOCK_WAIT_PRICED.enabled
                                     ? keylockStandWalk(run, plan.resolved) : {}),
+                                // ⛓ fidelity L40LATCH D1: a hold's still wait, likewise (`holdWaitPriced`, OFF).
+                                ...(plan.strategy === 'hold' && CONTACT_FIDELITY.holdWaitPriced
+                                    ? holdStandWalk(run, plan.resolved) : {}),
                                 // ⛓ SEARCHGAPS D-A: a dash's swing would break the bait's SHIELD on the way to the
                                 // stance (measured: rocks gone at t127, the crusher charging before the bait), so this
                                 // walk is undashed. `shield` exists only while `crusherBaitPressGoal` is ON.
@@ -27777,6 +28246,35 @@ function solveSegmentUnder({
              */
             const dashFirst = corridorDashRescue(wps, hit, except, { stand, axisAligned, undashed });
             if (dashFirst) hit = null;
+            /**
+             * ⛓⛓ fidelity RULESREF D1 (`CONTACT_FIDELITY.punchGateTimed`, OFF) — **A WALK THAT STARTS BESIDE A PINNED
+             * PUNCHER LEAVES ALONG ONE AXIS.** Game-witnessed (survey step 79, L53; `d1-l53-puncher-stall`): after the
+             * dashed walk to the rock's stance, `puncher@136,96` stalls 0.17 px above the player's box with one hit on it
+             * and the game bills NOTHING over an 80-tick stand. The next corridor's first tick is the bang-bang
+             * controller's diagonal (RIGHT+UP: 0.8 px up, into the body — the model bills a contact at t122), while RIGHT
+             * alone slides out from under it hitless. So when every reason the probe gave is an attack chaser (the
+             * puncher's class), the same aim is asked once as an axis-aligned walk (`planWaypoints`' `manhattan`, the
+             * drive's `holdOneAxis` — swim U2's mode) and probed by the same predicate; a clean probe is this attempt's
+             * corridor. Otherwise the ladder is climbed as before. OFF: not asked.
+             */
+            if (hit && CONTACT_FIDELITY.punchGateTimed && !axisAligned && hit.sources.length > 0
+                && hit.sources.every((sx) => sx.kind === 'chaser' && chaserHasAttack(
+                    (run.entities('chasers') ?? []).find((c) => c.id === sx.id)?.tag))) {
+                let aligned = null;
+                try {
+                    aligned = planWaypoints(run.world, run.state, aim, allowTeleporter, {
+                        ...solverPlanOpts(run, contacts, { ...goalPlanExtra, ...(fine ? { lattice: FINE_LATTICE } : {}) }),
+                        manhattan: true });
+                } catch (e) {
+                    if (!(e instanceof BotDriverV2Error)) throw e;
+                }
+                if (aligned && !probeCorridor(aligned, except,
+                    { axisAligned: true, walkCheck: true, ...(stand ? { stand } : {}) })) {
+                    wps = aligned;
+                    axisAligned = true;
+                    hit = null;
+                }
+            }
             /**
              * ⛓ fidelity CORRIDOR D2 (`corridorBodyPricing` ON only) — THE CLIMB IS NOT RE-ENTERED WITHOUT BOUND.
              * The KILL rung's chaser arm walks to its stance through this same `walkTo`, and a stance corridor a
@@ -29158,6 +29656,23 @@ function solveSegmentUnder({
                 });
             }
             records.push(record(taken, 'walk'));
+            continue;
+        }
+        /**
+         * ⛓ fidelity CHESTSEAL (`CONTACT_FIDELITY.chestSealRemoval`): with all sixteen seal parts held the game never
+         * builds this chest into a player-visible frame — `Chest`'s constructor runs `checkBySeal()`, whose
+         * `setPersistence(tag, false)` IS the location's check report, and `check()` removes it before the first
+         * update. So the goal is satisfied by entering the level, with no verb to bind (OFF: the `chest` verb, which
+         * refused *"NEVER OPENED"*). The flag is in `bankedClears` from the visit's first tick.
+         */
+        if (CONTACT_FIDELITY.chestSealRemoval && resolved.strategy === 'chest' && run.chestsSealRemoved === true) {
+            const c = resolved.target;
+            records.push({
+                goal: 'collect-placement', strategy: 'chest', arm: 'seal-removed',
+                chest: { id: c.id, x: c.x, y: c.y, persistTag: c.persistTag }, level: run.level,
+                why: `${c.id} is removed by \`Chest.checkBySeal()\` — the save holds all sixteen seal parts — and its `
+                    + `constructor's \`setPersistence(${c.persistTag}, false)\` is the location's check`,
+            });
             continue;
         }
         let contacts = senseContacts(run);
