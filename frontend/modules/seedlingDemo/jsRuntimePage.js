@@ -20,7 +20,7 @@
  *     `display:none` frame gets no animation frames, so a timer PUMP keeps the
  *     clock going when rAF has been silent for `PUMP_AFTER_MS` — the panel's
  *     host glue (deliveries, crossings) must not stall behind a tab switch;
- *     ⛓ GAME SPEED — at 30 × 1 | 2 | 4 ticks a second (`?speed=`), one slot per
+ *     ⛓ GAME SPEED — at 30 × the speed (0.25 … 16) ticks a second (`?speed=`), one slot per
  *     event-loop turn (`jsRuntimeClock.js`: the speed is presentation only);
  *  4. paints the room in rectangles with the watch page's palette
  *     (`rectPalette.js`): tiles, object solids, teleporters, the AP items and
@@ -498,8 +498,9 @@ export function mountJsRuntimePage(win = window) {
     life.on(win, 'blur', () => down.clear());
 
     // ── clock ─────────────────────────────────────────────────────────────
-    // ⛓ GAME SPEED — 30 × 1 | 2 | 4 slots a second (`?speed=`, the panel's `seedlingJsSpeed`; live through
-    // `__seedlingJsClock.set`), one slot per event-loop turn (`jsRuntimeClock.createSlotPump` says why).
+    // ⛓ GAME SPEED — 30 × the speed slots a second (`?speed=`, 0.25 … 16 — ⛓ CUSTOM SPEED; the panel's
+    // `seedlingJsSpeed`; live through `__seedlingJsClock.set`), one slot per event-loop turn
+    // (`jsRuntimeClock.createSlotPump` says why).
     let initialSpeed = 1;
     try { initialSpeed = parseGameSpeed(params.get('speed')); } catch (err) {
         win.console?.warn?.(`[js runtime] ${err.message} — playing at 1×`);
@@ -566,6 +567,8 @@ export function mountJsRuntimePage(win = window) {
         /** Slots and run ticks per second over the last second (a hold is a slot, not a tick). */
         get rate() { return rateMeter.rate; },
         get slots() { return pump.slots; },
+        /** ⛓ CUSTOM SPEED — the speed the clock ACHIEVED over the last second (slots / s ÷ 30), 0 before a second ran. */
+        get achievedSpeed() { return rateMeter.rate.slots / BASE_TICKS_PER_SECOND; },
         set: (speed) => clock.setSpeed(speed),
     };
     /** ⛓ G4 — the effects' view: the run, and the room's level record (the rain row the world does not keep). */

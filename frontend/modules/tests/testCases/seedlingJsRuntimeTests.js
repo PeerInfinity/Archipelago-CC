@@ -3662,14 +3662,18 @@ registerTest({
  * (a js-only row); a speed saved before the mount (`2x`) is on the page's URL and its clock; `flashPanel.seedlingJsSpeed = 4x` (a session override) reaches the mounted page LIVE: its
  * clock reads 4, the adapter's item push is re-timed to 100/4 ms, and the page achieves ≈ 120 ticks a second. Back
  * to `1x`: ≈ 30. The run never halts. Both settings are restored however it ends.
+ * ⛓ CUSTOM SPEED (slice `seedling-js-custom-speed`): the row is a NUMBER field + 1× / 2× / 4× buttons + an
+ * ACHIEVED readout. The `2x` saved before the mount is the OLD spelling: it is migrated (written back as 2, still a
+ * session override). 1.5× live ≈ 45 slots a second; a typed 20 is REFUSED with its reason (nothing written); 16× live
+ * shows its achieved speed; a quick button writes its speed.
  */
 export async function seedlingJsRuntimeGameSpeed(tc) {
     const { SPEED_SETTING_KEY } = await import('../../flashPanel/seedlingGameSpeedSettings.js');
     const { PUSH_INTERVAL_MS } = await import('../../flashPanel/wasmBridgeAdapter.js');
     let previousRuntime = 'auto';
-    let previousSpeed = '1x';
+    let previousSpeed = 1;
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
-    try { previousSpeed = await settingsManager.getSetting(SPEED_SETTING_KEY, '1x'); } catch { /* keep 1x */ }
+    try { previousSpeed = await settingsManager.getSetting(SPEED_SETTING_KEY, 1); } catch { /* keep 1 */ }
     try {
         // the speed is set BEFORE the mount: the mount reads it onto the page's URL
         await settingsManager.updateSetting(SPEED_SETTING_KEY, '2x', { persist: false });
@@ -3691,10 +3695,19 @@ export async function seedlingJsRuntimeGameSpeed(tc) {
         const rt = win.__seedlingJsRuntime;
         const row = panel._settingsControls?.find((c) => c.prop === 'seedlingJsSpeed') ?? null;
         tc.log(`mounted: wasmPath ${panel.wasmPath}; frame ${win.location.href}; _jsSpeed ${panel._jsSpeed}`);
-        tc.assertEqual('the Settings section has a visible "Game speed" row on the js runtime', 'flex/1x,2x,4x',
-            `${row?.row?.style?.display}/${row ? [...row.input.options].map((o) => o.value).join(',') : null}`);
-        tc.assertEqual('mounted at the saved 2×: the page clock, its URL, the push and the control', `2/2/${PUSH_INTERVAL_MS / 2}/2x`,
+        tc.assertEqual('the Settings section has a visible "Game speed" row on the js runtime: a number field 0.25–16 + 1× / 2× / 4×',
+            'flex/number/0.25/16/0.05/1,2,4',
+            `${row?.row?.style?.display}/${row?.input?.type}/${row?.input?.min}/${row?.input?.max}/${row?.input?.step}/`
+            + `${(row?.quick ?? []).map((b) => b.dataset.speed).join(',')}`);
+        tc.assertEqual('mounted at the saved 2×: the page clock, its URL, the push and the control', `2/2/${PUSH_INTERVAL_MS / 2}/2`,
             `${clock.speed}/${new URLSearchParams(win.location.search).get('speed')}/${panel.adapter._pushIntervalMs}/${row?.input?.value}`);
+        // ⛓ CUSTOM SPEED — the old spelling migrates: written back as the number, in the same (session) layer
+        const migrated = await tc.pollForValue(async () => {
+            const v = await settingsManager.getSetting(SPEED_SETTING_KEY);
+            return v === 2 ? v : null;
+        }, 'the stored 2x migrated to 2', 5000, 50);
+        tc.assertEqual('the old `2x` migrated to the number 2, still a session override', '2/number/true',
+            `${migrated}/${typeof migrated}/${settingsManager.hasOverride(SPEED_SETTING_KEY)}`);
         const rateOver = async (ms) => {
             const s0 = clock.slots;
             const t0 = performance.now();
@@ -3703,13 +3716,33 @@ export async function seedlingJsRuntimeGameSpeed(tc) {
         };
         await settingsManager.updateSetting(SPEED_SETTING_KEY, '4x', { persist: false });
         const at4 = await tc.pollForValue(() => (clock.speed === 4 ? clock : null), 'the page clock took 4× live', 5000, 50);
-        tc.assertEqual('4× live: the page clock, the control and the push (no re-mount)', `4/4x/${PUSH_INTERVAL_MS / 4}/true`,
+        tc.assertEqual('4× live: the page clock, the control and the push (no re-mount)', `4/4/${PUSH_INTERVAL_MS / 4}/true`,
             `${at4?.speed}/${row?.input?.value}/${panel.adapter._pushIntervalMs}/${frameOf(panel) === win}`);
         const r4 = await rateOver(2000);
         tc.log(`4×: ${r4.toFixed(1)} slots a second (target 120); clock.rate ${JSON.stringify(clock.rate)}`);
         tc.reportCondition(`4× achieves ≥ 100 slots a second (measured ${r4.toFixed(1)})`, r4 >= 100);
-        await settingsManager.updateSetting(SPEED_SETTING_KEY, '1x', { persist: false });
-        await tc.pollForCondition(() => clock.speed === 1, 'the page clock back at 1×', 5000, 50);
+        // ⛓ CUSTOM SPEED — a fractional speed live, a refusal, 16× with its achieved readout, a quick button
+        await settingsManager.updateSetting(SPEED_SETTING_KEY, 1.5, { persist: false });
+        await tc.pollForCondition(() => clock.speed === 1.5, 'the page clock took 1.5× live', 5000, 50);
+        const r15 = await rateOver(2000);
+        tc.log(`1.5×: ${r15.toFixed(1)} slots a second (target 45); push ${panel.adapter._pushIntervalMs}`);
+        tc.reportCondition(`1.5× is 45 slots a second (measured ${r15.toFixed(1)})`, r15 > 40 && r15 < 50);
+        tc.assertEqual('1.5×: the control and the push', `1.5/${PUSH_INTERVAL_MS / 1.5}`, `${row?.input?.value}/${panel.adapter._pushIntervalMs}`);
+        const typed = panel._enterSpeed('20');
+        await new Promise((r) => setTimeout(r, 100));
+        tc.assertEqual('a typed 20× is REFUSED with its reason, nothing written (the clock stays at 1.5×)',
+            'false/true/1.5/1.5', `${typed}/${/20× is above the maximum 16×/.test(row?.reason?.textContent ?? '')}/`
+            + `${await settingsManager.getSetting(SPEED_SETTING_KEY)}/${clock.speed}`);
+        tc.log(`refusal shown: ${row?.reason?.textContent}`);
+        await settingsManager.updateSetting(SPEED_SETTING_KEY, 16, { persist: false });
+        await tc.pollForCondition(() => clock.speed === 16, 'the page clock took 16× live', 5000, 50);
+        const r16 = await rateOver(2000);
+        panel._renderSpeedReadout();
+        tc.log(`16×: ${r16.toFixed(1)} slots a second (target 480); achieved ${clock.achievedSpeed.toFixed(2)}×; readout "${row?.achieved?.textContent}"`);
+        tc.reportCondition('16×: the achieved readout is shown', /^achieved \d/.test(row?.achieved?.textContent ?? ''));
+        tc.reportCondition('the refusal line cleared once a speed was entered', (row?.reason?.style?.display ?? '') === 'none');
+        row?.quick?.find((b) => b.dataset.speed === '1')?.click();
+        await tc.pollForCondition(() => clock.speed === 1, 'the 1× quick button put the page clock back at 1×', 5000, 50);
         const r1 = await rateOver(2000);
         tc.log(`1×: ${r1.toFixed(1)} slots a second (target 30)`);
         tc.reportCondition(`1× is 30 slots a second again (measured ${r1.toFixed(1)})`, r1 > 25 && r1 < 35);
