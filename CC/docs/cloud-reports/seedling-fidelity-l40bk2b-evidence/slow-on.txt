@@ -1,0 +1,9 @@
+# 7/8 passed, 1 failed, 0 skipped
+failed	fidelityL40Latch.slow.test.js :: L40LATCH D1 — the latch solve under each arm both ON: the solve's refused prefix is the recorded tape
+passed	fidelityL32ArenaPrefix.slow.test.js :: L32 arena prefix — the pit legs from the L30 door fight Bob first leg 349, the 'dashless' pass: solves through the kill and the burn, and lands on L30
+passed	fidelityL32ArenaPrefix.slow.test.js :: L32 arena prefix — the pit legs from the L30 door fight Bob first leg 349, the 'full' pass: solves through the kill and the burn, and lands on L30
+passed	fidelityL32ArenaPrefix.slow.test.js :: L32 arena prefix — the pit legs from the L30 door fight Bob first leg 350, the 'dashless' pass: solves through the kill and the burn, and lands on L30
+passed	fidelityL32ArenaPrefix.slow.test.js :: L32 arena prefix — the pit legs from the L30 door fight Bob first leg 350, the 'full' pass: solves through the kill and the burn, and lands on L30
+passed	fidelityL32ArenaPrefix.slow.test.js :: L32 arena prefix — the pit legs from the L30 door fight Bob first the fixture is the two legs, staged at the door with Fire held
+passed	fidelityL40Bk2.slow.test.js :: L40BK2 D1 — the pocket chain witness is the solver's plan the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape
+passed	fidelityL40Latch.slow.test.js :: L40LATCH D1 — the latch solve under each arm holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier

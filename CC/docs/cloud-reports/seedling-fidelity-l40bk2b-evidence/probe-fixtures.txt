@@ -1,0 +1,25 @@
+=== l40bk2b --from-fixture @ 9751 (/home/user/Archipelago-CC)
+exit 0
+PASS: l40bk2b-orbit-plain: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 85 sampled tick(s)
+PASS: l40bk2b-orbit-free: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 131 sampled tick(s)
+PASS: l40bk2b-latch-free: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 350 sampled tick(s)
+ALL CHECKS PASSED
+=== l40latch --from-fixture @ 9751 (/home/user/Archipelago-CC)
+exit 0
+PASS: l40latch-stand: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 160 sampled tick(s)
+PASS: l40latch-orbit-chain: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 271 sampled tick(s)
+ALL CHECKS PASSED
+=== l40bk2 --from-fixture @ 9751 (/home/user/Archipelago-CC)
+exit 0
+PASS: l40bk2-pocket-chain: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 2650 sampled tick(s)
+ALL CHECKS PASSED
+=== l40latch --from-fixture @ 9753 (/tmp/claude-0/on)
+exit 0
+PASS: l40latch-stand: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 160 sampled tick(s)
+PASS: l40latch-orbit-chain: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 271 sampled tick(s)
+ALL CHECKS PASSED
+=== l40bk2 --from-fixture @ 9753 (/tmp/claude-0/on)
+exit 0
+PASS: l40bk2-pocket-chain: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 2647 sampled tick(s)
+ALL CHECKS PASSED
+DONE

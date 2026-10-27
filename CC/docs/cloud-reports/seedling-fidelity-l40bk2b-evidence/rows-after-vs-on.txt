@@ -1,0 +1,6 @@
+/tmp/claude-0/w/rows-after.json: 6196/6207 failed 1; /tmp/claude-0/w/rows-on.json: 6191/6207 failed 6
+passed   -> failed   contactFidelity.test.js :: contact witnesses (fixtures/contact-witness) the shipped defaults: all three ON
+passed   -> failed   dashOnlyWindow.test.js :: the request: byte-identical at the default, stamped only off-default `stampHooks` is the service's one stamping door, exported for the sweep's request CAPTURE: it adds exactly what the service p
+passed   -> failed   dashOnlyWindow.test.js :: the request: byte-identical at the default, stamped only off-default the default adds no field (today's request key list exactly)
+passed   -> failed   dashShape.test.js :: the request: byte-identical at the defaults, stamped only off-default (in `stampHooks`, the one door) the defaults add no field (today's request key list exactly)
+passed   -> failed   fidelityL40Latch.test.js :: L40LATCH D1b — the orbit kill candidate 1, driven from the latch boot in the model, kills bobsoldier@880,832 by t184 and is never hit
