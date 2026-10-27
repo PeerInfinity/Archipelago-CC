@@ -105,3 +105,51 @@ describe('the channel and the time', () => {
         expect(p.stats).toMatchObject({ cues: 3, played: 1, silent: 1, missing: ['seedling:sfx/nope'] });
     });
 });
+
+// ⛓ CUSTOM SPEED (slice `seedling-js-custom-speed`) — the time at fractional, slow and high speeds, on the page's
+// REAL clock and pump (a 60 Hz display, the audio clock = the wall clock): every tick's sound starts at or after the
+// moment it is scheduled and never more than MAX_LEAD ahead; at 16× the 8 ticks of a frame are spread one game tick
+// apart; a re-played variant (the push rock, every tick) still holds ONE live channel — at high speed the long sounds
+// are TRUNCATED by their own re-play, never stacked.
+describe('⛓ CUSTOM SPEED — sound stays on the ticks at 0.25× / 0.5× / 1.5× / 3× / 16×', () => {
+    it.each([0.25, 0.5, 1.5, 3, 16])('%s×', async (speed) => {
+        const { createSlotClock, createSlotPump, BASE_TICKS_PER_SECOND } = await import('./jsRuntimeClock.js');
+        const { out } = fakeOut();
+        const live = new Set();
+        const play = out.play;
+        out.play = (buffer, opts) => {
+            const h = play(buffer, opts);
+            const stop = h.stop;
+            live.add(h);
+            h.stop = () => { live.delete(h); stop(); };
+            return h;
+        };
+        const p = createSeedlingSoundPlayer({ out, library, bufferFor, seed: 1 });
+        const tickSeconds = 1 / (BASE_TICKS_PER_SECOND * speed);
+        const starts = [];
+        let maxLive = 0;
+        const slot = () => {
+            const at = out.now();
+            const s = p.playTick([cue('Push Rock', 0)], { tickSeconds });
+            expect(s).toHaveLength(1);
+            expect(s[0].at).toBeGreaterThanOrEqual(at);
+            expect(s[0].at - at).toBeLessThanOrEqual(MAX_LEAD + 1e-9);
+            starts.push(s[0].at);
+            maxLive = Math.max(maxLive, live.size);
+        };
+        const tasks = [];
+        const pump = createSlotPump({ clock: createSlotClock({ speed }), runSlot: slot, postTask: (fn) => tasks.push(fn) });
+        for (let f = 0; f < 60 * 20; f += 1) {
+            out.t = 10 + f / 60;
+            pump.frame(f * (1000 / 60));
+            while (tasks.length) tasks.shift()();
+        }
+        // 1199 frame gaps' worth of ticks at that speed (±1: the slot in progress)
+        expect(Math.abs(starts.length - (1199 / 60) * BASE_TICKS_PER_SECOND * speed)).toBeLessThanOrEqual(1);
+        // the sounds start one game tick apart on average (within one 60 Hz frame of the ideal grid)
+        const span = starts.at(-1) - starts[0];
+        expect(Math.abs(span - (starts.length - 1) * tickSeconds)).toBeLessThan(1 / 60 + 1e-9);
+        for (let i = 1; i < starts.length; i += 1) expect(starts[i]).toBeGreaterThanOrEqual(starts[i - 1]);
+        expect(maxLive).toBe(1);
+    });
+});
