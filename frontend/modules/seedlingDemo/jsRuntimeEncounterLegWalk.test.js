@@ -19,6 +19,8 @@
  *        -> the Bob row reds: DONE at the kill, before the drop {32,4} is collected.
  *   m4 the encounter decline walks instead (`goal.encounter` dropped from the walker's decline arm)
  *        -> the no-wand row reds: WALKING, not FAILED.
+ *   m5 the encounter's delivery hold dropped (`encounterHoldsDelivery` → false)
+ *        -> the Bob row reds: the kill's Seal reboots the room mid-leg and the plan is refuted (2/0/1).
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -73,7 +75,7 @@ function page({ boot, items, solver = true }) {
 }
 
 /** Tick to a settle, recording the first tick each address in `watch` is cleared and DONE's tick. */
-function walk(rt, goal, watch, maxTicks = 3000) {
+function walk(rt, goal, watch, maxTicks = 3000, onTick = null) {
     expect(rt.playback.walkTo(goal)).toEqual({ ok: true });
     rt.playback.play();
     const first = new Map();
@@ -81,6 +83,7 @@ function walk(rt, goal, watch, maxTicks = 3000) {
     let t = 0;
     for (; t < maxTicks && !SETTLED.includes(rt.playback.state); t += 1) {
         rt.tick();
+        onTick?.(t);
         for (const a of watch) if (!first.has(`${a.level}:${a.tag}`) && has(rt, a)) first.set(`${a.level}:${a.tag}`, t);
         if (rt.playback.state === WALK_STATES.DONE) doneAt = t;
     }
@@ -138,7 +141,22 @@ describe('⛓ ENCOUNTER LEGS — the walks', () => {
     it('L32 Bob Boss (sword + shield): solved once as the encounter, DONE on the tick after the DROP {32,4} — not at the kill {32,3}', () => {
         const rt = page({ boot: [32, 72, 120], items: ['hasSword', 'hasShield'] });
         expect(has(rt, { level: 32, tag: 4 })).toBe(false);
-        const { first, doneAt } = walk(rt, BOB, [{ level: 32, tag: 3 }, { level: 32, tag: 4 }]);
+        // The kill's own report delivers its item mid-leg, as the server does (playthrough: Times holds a Seal):
+        // the delivery's reboot in place waits for the leg (`encounterHoldsDelivery`), then lands.
+        let sealAt = null;
+        const boots = () => rt.events.filter((e) => e.type === 'boot').length;
+        let bootsAtSeal = null;
+        const { first, doneAt } = walk(rt, BOB, [{ level: 32, tag: 3 }, { level: 32, tag: 4 }], 3000, (t) => {
+            if (sealAt === null && has(rt, { level: 32, tag: 3 })) {
+                sealAt = t;
+                bootsAtSeal = boots();
+                rt.queueItems([{ invocation: 'method_call', path: [{ class: 'Main' }], method: 'hasSealPartSet', args: [0, 3] }]);
+            }
+        });
+        expect(sealAt).not.toBeNull();
+        expect(boots()).toBe(bootsAtSeal); // held while the leg walked
+        rt.tick();
+        expect(boots()).toBe(bootsAtSeal + 1); // … and landed once it settled
         expect(rt.playback.state).toBe(WALK_STATES.DONE);
         const kill = first.get('32:3');
         const drop = first.get('32:4');

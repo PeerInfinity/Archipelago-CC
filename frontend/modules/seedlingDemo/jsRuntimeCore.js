@@ -137,7 +137,7 @@ import { BUILD_SPAWN, INVENTORY_ITEM_IDS, ITEM_PROPERTIES, SAVE_SLOTS } from './
 import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
 import { createRuntimeSolver } from './jsRuntimeSolver.js';
 import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
-import { locationGoalServed } from './wasmPlayback.js';
+import { encounterReportServed, locationGoalServed } from './wasmPlayback.js';
 import { R7_GOAL_LEDGER } from './r7Acceptance.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
 import { ENCOUNTER_EXECUTORS } from './solverBot.js';
@@ -661,7 +661,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     function tickOnce(held) {
         drainQueue();
         if (!session || halted) { flush(); return { stepped: false }; }
-        if (deferredReboot && !session.run.inCeremony) rebootInPlace(IN_PLACE_REBOOT_WHY);
+        if (deferredReboot && !session.run.inCeremony && !encounterHoldsDelivery()) rebootInPlace(IN_PLACE_REBOOT_WHY);
         const run = session.run;
         const level0 = run.level;
         const world0 = run.world;
@@ -852,7 +852,21 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         const items = queue;
         queue = [];
         for (const item of items) applyItem(item);
-        if (deferredReboot && session && !session.run.inCeremony && !halted) rebootInPlace(IN_PLACE_REBOOT_WHY);
+        if (deferredReboot && session && !session.run.inCeremony && !halted && !encounterHoldsDelivery()) {
+            rebootInPlace(IN_PLACE_REBOOT_WHY);
+        }
+    }
+
+    /**
+     * ⛓ ENCOUNTER LEGS — an encounter leg's OWN reports (the kill {32,3}, the drop {32,4}) deliver their items mid-leg,
+     * and those are the leg SUCCEEDING, not news: the item's reboot in place waits until the leg settles. Measured
+     * (CI 40541497513): L32's Times report delivered its Seal (`hasSealPartSet`) at the kill, the page rebooted in
+     * place and the solver's plan was refuted (2/0/1). The game does not rebuild the room for a delivery, and the wasm
+     * runtime's delivery gate waits on the same predicate (`wasmPlayback.encounterReportServed`, R7 24fe0309d2).
+     */
+    function encounterHoldsDelivery() {
+        const goal = walker.state === WALK_STATES.WALKING ? walker.goal : null;
+        return !!goal?.encounter && encounterReportServed(goal, { persistence_cleared: persistenceCleared() });
     }
 
     function valueOf(cls, property) {
