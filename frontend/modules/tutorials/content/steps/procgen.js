@@ -266,8 +266,9 @@ const PAGE_UP = Object.freeze([WASM_START_PROMPT, 'JS runtime loaded', 'configur
  * sound and graphics start only from one), and until then it has not loaded the world's rooms, so the Playback Bot
  * has nothing to walk ("no name → cell map for the generated rooms" — measured, tutorial-bugs 2026-10-10). Two
  * steps: wait for the page (the first load fetches the runtime), then press ▶ Start IF THE GAME SHOWS ONE. The
- * steps key on the page's status and its button, never on the runtime: the JS page has no ▶ Start today (its
- * Start step completes on its own), and if it gains one (⚖ planning-11: an audio-unlock gesture), it is pressed.
+ * steps key on the page's status and its button, never on the runtime: the JS page shows a ▶ Start (its audio-unlock
+ * gesture) only in click mode (`seedlingSoundSettings.startMode`, a person's run), and then it is pressed; in an
+ * automated run it boots at once with no button in its DOM, so the optional click skips it.
  */
 export function startSeedlingGame(id) {
     return [
