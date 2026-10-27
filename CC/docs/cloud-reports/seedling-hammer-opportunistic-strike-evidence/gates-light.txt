@@ -1,0 +1,8 @@
+instruments: 481 files over 41 categories, 178 browser rows, 398 with flags, 252 cited by a doc, 0 FINDING(S)
+capabilities: 29 statements × 9 substrates, 39 fields read, 51 not yet read
+docsIndex:  28 documents (459,867 words) + 4 pages
+
+ALL CHECKS PASSED
+OK: frontend/modules/quickLaunch/generated/docsIndex.js is current (191 docs, 9 sections, 12 categories).
+
+ALL CHECKS PASSED

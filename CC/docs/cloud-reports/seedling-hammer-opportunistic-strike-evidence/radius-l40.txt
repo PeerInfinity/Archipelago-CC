@@ -1,0 +1,7 @@
+57 identical of 59; 2 mover(s)
+MOVER 375/0 level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+   OFF refusal 8a3527101d4c solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (743.1,779.7) — chaser:bob@736,752 (inside leash 80 (d=6.4), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order ref
+   ON  refusal 073fb1ff9b44 solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.6,853.7) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses t
+MOVER 848/1 level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+   OFF refusal 5e87559af080 solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: the player died at t822 (chaser bob@736,752) while pres
+   ON  refusal 1af858e58cf4 solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.6,853.9) — chas

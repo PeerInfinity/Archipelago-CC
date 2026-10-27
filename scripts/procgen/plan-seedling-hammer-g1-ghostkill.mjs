@@ -75,8 +75,9 @@ export async function ghostKillSolve(staging, enabled) {
     const { withGhostKillRung } = await import(join(MODULE, 'ghostSpinnerPress.js'));
     const { withPressKillRebootGuard, withPressKillShakeGuard } = await import(join(MODULE, 'pressKillGuards.js'));
     const run = createRunForStaging(staging, atlasLevelSource());
-    const { withPressKillChasers } = await import(join(MODULE, 'pressKillCost.js'));
-    const guardsOff = (fn) => withPressKillChasers(false, () => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, fn)));
+    // ⛓ hammer-phase OPP: the witness is the kill across the bob's death, so `OPPORTUNISTIC_STRIKE` is pinned OFF too (it ships OFF)
+    const { withOpportunisticStrike, withPressKillChasers } = await import(join(MODULE, 'pressKillCost.js'));
+    const guardsOff = (fn) => withOpportunisticStrike(false, () => withPressKillChasers(false, () => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, fn))));
     return withStrikeEtaFloor(false, () => guardsOff(() => withGhostKillRung(enabled, () => {
         try {
             const out = solveSegment({ run, goals: [JSON.parse(JSON.stringify(GOAL))], name: NAME, boot: staging.boot,

@@ -1,0 +1,21 @@
+== leg 848 request 1, OFF (45 seams)
+   29  press-kill DEATH (chaser bob@736,752)   [5261 5262 5263 5264 5265 5266 5272 5277 5278 5281 5282 5283 5284 5285 5286 5287 5288 5291 5292 5296 5297 5298 5299 5300 5301 5302 5303 5304 5305]
+    7  press-kill refusal: every key set lands   [5267 5268 5269 5270 5271 5279 5280]
+    6  refused at burn stance chaser:bob@736,752   [5273 5274 5275 5293 5294 5295]
+    2  refused at burn stance chaser:bobsoldier@880,832   [5276 5289]
+    1  refused at burn stance chaser:bob@736,800   [5290]
+== leg 848 request 1, ON (45 seams)
+   29  refused at burn stance chaser:bobsoldier@880,832   [5261 5262 5263 5265 5266 5276 5281 5282 5283 5286 5287 5288 5289 5290 5291 5292 5293 5294 5295 5296 5297 5298 5299 5300 5301 5302 5303 5304 5305]
+    9  press-kill refusal: every key set lands   [5264 5267 5268 5269 5270 5271 5272 5279 5280]
+    4  refused at burn stance spinner:spinner@816,848   [5277 5278 5284 5285]
+    3  refused at burn stance chaser:bob@736,752   [5273 5274 5275]
+== leg 847 request 1, OFF (45 seams)
+   16  refused at burn stance chaser:bob@736,752   [5949 5950 5953 5954 5955 5960 5961 5962 5963 5964 5965 5966 5967 5968 5969 5991]
+   13  refused at burn stance chaser:bobsoldier@880,832   [5951 5952 5956 5957 5978 5981 5982 5983 5984 5985 5986 5987 5988]
+   13  refused at burn stance chaser:bob@736,800   [5958 5959 5970 5971 5972 5973 5974 5975 5976 5977 5979 5980 5989]
+    3  press-kill refusal: every key set lands   [5990 5992 5993]
+== leg 847 request 1, ON (45 seams)
+   24  refused at burn stance chaser:bobsoldier@880,832   [5952 5956 5957 5958 5961 5962 5963 5964 5965 5966 5967 5968 5969 5970 5971 5978 5981 5982 5983 5984 5985 5986 5987 5988]
+   11  refused at burn stance chaser:bob@736,800   [5951 5959 5972 5973 5974 5975 5976 5977 5979 5980 5989]
+    7  refused at burn stance chaser:bob@736,752   [5949 5950 5953 5954 5955 5960 5991]
+    3  press-kill refusal: every key set lands   [5990 5992 5993]

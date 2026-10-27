@@ -416,6 +416,76 @@ export function resetPressKillChasersCounts() {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE OPP — OPPORTUNISTIC STRIKES IN THE EXECUTORS THAT RUN THEIR OWN TICKS
+ * (`OPPORTUNISTIC_STRIKE`, OFF).
+ *
+ * ⚖ The user, 2026-10-26: *"Currently, when the solver decides to attack an enemy, it plans all of the hits for that
+ * enemy until it is defeated, treating other enemies as obstacles to move around. One feature that I would like to add,
+ * if possible, is opportunistic attacking. If an enemy ever happens to be within attacking range, then the solver
+ * should attack it immediately, even if it isn't the current priority. We might already have this at least partly
+ * working. This might help with level 40."*
+ *
+ * It was partly working: every walk built through `previewWalk` / `drive` is handed `solverBot.strikePolicyFor`'s policy
+ * (⚖ ruling 30(b)/(c)), and `guardedChaserDwell`, `execBreak`'s idle and `runDwell`/`runShove` ask it too. The press
+ * kill (`execKillByPressOnce`) did not: it drives its own ticks (`chooseHeld` → `stepToward` → `safeStep`), and its
+ * strike and refuge previews (`deriveStrike`, `deriveRefuge`) walk with no policy. MEASURED (OPP § W0, survey step 67,
+ * L40 Boss Key 2): 95 ticks with `bob@736,752` / `bob@736,800` inside the sword's reach, every one in the press kill.
+ *
+ * ⇒ ON, the press kill asks the ONE policy (`strikePolicyFor`, the single construction site) on its walk and refuge
+ * ticks, and its strike and refuge previews are walked with a policy from the same site, so the corridor they certify
+ * strikes as the drive does (⚖ 30(c)). The policy keeps every cost it already prices (the aim tick, the talk circle of
+ * ⚖ 53, the Bulb veto, the dash rules, the i-frame lapse). The executor offers it only the bodies whose aim and press
+ * both land clear of the spinners' rects and hammers (`safeStep`'s own test, one and two ticks on), never takes an
+ * aim on a tick it presses the spinner, and defers its own spinner aim while a press would DASH because of an
+ * opportunistic swing (the train it certified is a plain swing's).
+ *
+ * ⛓ THE SWITCH — `OPPORTUNISTIC_STRIKE`, OFF by default. `SEEDLING_OPPORTUNISTIC_STRIKE=1` turns it on in a node
+ * process (the page's worker has no `process`, so it is OFF there), and `withOpportunisticStrike(enabled, fn)` is for
+ * a test or a witness. OFF, nothing new is read or built and every walk is byte-identical. ON in a room with no
+ * strikeable body (`strikePolicyFor` null) nothing new is asked either.
+ */
+export const OPPORTUNISTIC_STRIKE = {
+    enabled: globalThis.process?.env?.SEEDLING_OPPORTUNISTIC_STRIKE === '1',
+};
+export const OPPORTUNISTIC_STRIKE_DEFAULT = false;
+
+/** Run `fn` with `OPPORTUNISTIC_STRIKE` set to `enabled`, restoring the previous value (`withPressKillCost`'s shape). */
+export function withOpportunisticStrike(enabled, fn) {
+    const was = OPPORTUNISTIC_STRIKE.enabled;
+    OPPORTUNISTIC_STRIKE.enabled = enabled === true;
+    const restore = () => { OPPORTUNISTIC_STRIKE.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * The switch's instrument (`PRESS_KILL_CHASERS_COUNTS`' shape), written only with it ON and read by nothing that
+ * decides: `asked` ticks the press kill consulted the policy, `aimed` / `pressed` the aims and presses it took,
+ * `withheld` bodies in reach the executor did not offer (an aim or a press that would land in a hammer), `deferred`
+ * ticks the kill's own spinner aim waited out a swing window an opportunistic press opened, `strikePreviews` /
+ * `refugePreviews` the strike and refuge walks previewed with a policy.
+ */
+export const OPPORTUNISTIC_STRIKE_COUNTS = {
+    asked: 0, aimed: 0, pressed: 0, withheld: 0, deferred: 0, strikePreviews: 0, refugePreviews: 0,
+};
+/**
+ * The switch's trace (`HAMMER_FIGHT_FALLBACK_TRACE`'s shape): `sink` is `null` (nothing is built) unless a row or a
+ * measurement sets it; ON, the press kill hands it `{kind: 'strike', t, cell, pressAt, previewStrikes}` for every strike
+ * it adopts and `{kind: 'drive', t, decision, target}` for every aim and press the policy took on the kill's ticks.
+ */
+export const OPPORTUNISTIC_STRIKE_TRACE = { sink: null };
+export function resetOpportunisticStrikeCounts() {
+    for (const k of Object.keys(OPPORTUNISTIC_STRIKE_COUNTS)) OPPORTUNISTIC_STRIKE_COUNTS[k] = 0;
+}
+
+/**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE RE — THE REFUGE'S BEST-ETA CUT (`REFUGE_ETA_CUT`, ON by default since the user's flip).
  *
  * `deriveRefuge` previews its `REFUGE_CANDIDATES` (12) nearest clear cells on every tick the press kill has nowhere to

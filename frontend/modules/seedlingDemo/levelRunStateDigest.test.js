@@ -258,8 +258,8 @@ export const DIGEST_EXEMPT = Object.freeze({
     // ⛓ fidelity SPEARRECT D2: member-reach (`--members-of=spearRepeats`) — readers freshVisitState, applyThrust,
     // spearRepeatsNow; members [advance].
     spearRepeats: 'UNREAD: read via advance only (spearRepeatsNow, applyThrust)',
-    owlRocks: 'UNREAD: read via advance only (stepOwlNow)',
-    owlGrenades: 'UNREAD: read via advance only (stepOwlNow)',
+    owlRocks: 'UNREAD: read via advance (stepOwlNow) + owlProjectilesNow (skin getter, reading(), no solver family)',
+    owlGrenades: 'UNREAD: read via advance (stepOwlNow) + owlProjectilesNow (skin getter, reading(), no solver family)',
     owlPendingRocks: 'UNREAD: read via advance only (stepOwlNow)',
     owlPendingGrenades: 'UNREAD: read via advance only (stepOwlNow)',
     sealPiece: 'UNREAD: read via advance, sealPiece',
