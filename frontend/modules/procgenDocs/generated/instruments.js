@@ -13910,6 +13910,59 @@ export const INSTRUMENTS = frz({
                 "only",
                 "repeat"
             ],
+            "file": "probe-seedling-l89-waterfall.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L89 TELEPORTER to L91 (`out_teleporter_208_0`, tile [13,0]), ON THE GAME (slice rules-l89-waterfall-probe): can a Swim-only player (the Conch, no Feather) touch it?",
+            "path": "scripts/procgen/probe-seedling-l89-waterfall.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
             "file": "probe-seedling-l93-door.mjs",
             "flags": [
                 {
