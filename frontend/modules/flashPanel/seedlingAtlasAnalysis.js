@@ -218,8 +218,11 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
  */
 export function seedlingEventTiles(level, events) {
     if (!level) return [];
-    return events.filter((ev) => ev.obstacle.level === level.level).map((ev) => {
-        const { class: cls, x, y } = ev.obstacle;
+    // ⛓ A cross-room PRESS (mode 'press', session tile-primitives-sphere-order-5) sits on its PRESSER's entity, in the
+    // presser's level; every other event on its obstacle's.
+    const at = (ev) => (ev.mode === 'press' ? ev.presser : ev.obstacle);
+    return events.filter((ev) => at(ev).level === level.level).map((ev) => {
+        const { class: cls, x, y } = at(ev);
         const entity = (level.entities ?? []).find((e) => e.type === cls && e.x === x && e.y === y);
         if (!entity) throw new Error(`event "${ev.name}": L${level.level} has no ${cls}@${x},${y}`);
         const sem = entitySemantics(entity);

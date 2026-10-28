@@ -141,3 +141,27 @@ describe('L32 — two locations on the boss rock\'s tile', () => {
             .toEqual(['Level 032 - Bob Boss@5,8', 'Level 032 - Times@5,7']);
     });
 });
+
+describe('L38 — a cross-room press is a location on its button', () => {
+    const PRESS = 'L39 flag 8: wandlock@144,592 cleared';
+
+    it('L37 + L38 certify clean; the press for L39\'s wand lock is reached empty-handed', () => {
+        const out = certify(['level_37', 'level_38']);
+        expect(out.problems).toEqual([]);
+        expect(out.accepted).toEqual([]);
+        expect(out.lines.filter((l) => l.startsWith(`level_38@${PRESS}`))).not.toEqual([]);
+        for (const l of out.lines.filter((x) => x.startsWith(`level_38@${PRESS}`))) expect(l.slice(l.indexOf('=') + 1)).toBe(FREE);
+    });
+
+    it('a mutant AP rule on the press (Wand) is caught: the world reaches the button without it', () => {
+        const rules = structuredClone(compile(['level_37', 'level_38']));
+        rules.regions['1'].level_38.locations.find((l) => l.name === PRESS).access_rule = { rule: 'Has', args: { item_name: 'Wand' } };
+        const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS });
+        expect(out.problems.some((p) => p.startsWith(`level_38 @ ${PRESS}`) || (p.includes(PRESS) && p.includes('derived true, atlas false')))).toBe(true);
+    });
+
+    it('the press sits on the ButtonRoom\'s own cell (32,48) → (2,3), granting the event', () => {
+        const items = compile(['level_37', 'level_38']).preset_sidecars['1'].level_38.playable_payload.items;
+        expect(items.filter((i) => i.locationName === PRESS)).toEqual([{ x: 2, y: 3, id: PRESS, locationName: PRESS }]);
+    });
+});
