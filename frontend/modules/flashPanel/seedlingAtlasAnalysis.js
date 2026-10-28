@@ -220,8 +220,10 @@ export function seedlingEventTiles(level, events) {
     if (!level) return [];
     // ⛓ A cross-room PRESS (mode 'press', session tile-primitives-sphere-order-5) sits on its PRESSER's entity, in the
     // presser's level; every other event on its obstacle's.
-    const at = (ev) => (ev.mode === 'press' ? ev.presser : ev.obstacle);
+    // A press's pocket DOOR (mode 'door', session tile-primitives-sphere-order-6) names an atlas exit, not an entity.
+    const at = (ev) => (ev.mode === 'press' ? ev.presser : ev.mode === 'door' ? ev.door : ev.obstacle);
     return events.filter((ev) => at(ev).level === level.level).map((ev) => {
+        if (ev.mode === 'door') return { name: ev.name, side: ev.side, mode: ev.mode, exit_id: ev.door.exit_id, tiles: [] };
         const { class: cls, x, y } = at(ev);
         const entity = (level.entities ?? []).find((e) => e.type === cls && e.x === x && e.y === y);
         if (!entity) throw new Error(`event "${ev.name}": L${level.level} has no ${cls}@${x},${y}`);

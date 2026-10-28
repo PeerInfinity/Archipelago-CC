@@ -216,15 +216,20 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         }
     }
     // ⛓ A cross-room PRESS is a location on its button (session tile-primitives-sphere-order-5): produced where its item
-    // cell stands. Its far side — the target the event opens, in another level — is not modelled yet, so a row that needs
-    // it says so instead of "cannot produce".
+    // cell stands. Its far side is the target the event opens in another level, laid there as an obstacle `opened_by` it
+    // (session tile-primitives-sphere-order-6). A row needing a press no world opens by says so instead of "cannot produce".
     const pressed = new Set();
-    for (const sc of Object.values(SIDECARS)) for (const it of sc.playable_payload?.items ?? []) pressed.add(it.locationName);
+    const opened = new Set();
+    for (const sc of Object.values(SIDECARS)) {
+        for (const it of sc.playable_payload?.items ?? []) pressed.add(it.locationName);
+        for (const entry of Object.values(sc.playable_payload?.obstacleLib ?? {})) if (entry.opened_by) opened.add(entry.opened_by);
+    }
     const unproducible = new Map();
     const unconsumed = new Map();
     for (const r of Object.values(REGIONS)) {
         for (const l of r.locations ?? []) {
             if (l.event && l.action?.presser && pressed.has(l.name)) {
+                if (opened.has(l.item?.name ?? l.name)) continue;
                 unconsumed.set(l.item?.name ?? l.name, `${l.obstacle.class}@${l.obstacle.x},${l.obstacle.y} in L${l.obstacle.level}`);
                 continue;
             }
