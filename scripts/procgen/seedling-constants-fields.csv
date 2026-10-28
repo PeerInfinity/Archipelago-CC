@@ -462,9 +462,9 @@ frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|hc132f264|0|0,rule,b
 frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|h4bc360d2|1|0,rule,magnitude,,shake decays 1 per frame; each frame of shake costs jiggle draws
 frontend/modules/seedlingDemo/tapeFormat.js|*|*,structural,,,default: versions / parser limits / validation floors / indices
 frontend/modules/seedlingDemo/tapeFormat.js|RNG_FP_SEED_MAX|(module),structural,,,FP.randomSeed setter clamp (FP.as:392) as a parser limit
-frontend/modules/seedlingDemo/tapeFormat.js|BUILD_SPAWN|(module)|0,rule,sentinel,,boot level id (Main.as:51)
-frontend/modules/seedlingDemo/tapeFormat.js|BUILD_SPAWN|(module)|80,physics,magnitude,,boot spawn x (Main.as:51)
-frontend/modules/seedlingDemo/tapeFormat.js|BUILD_SPAWN|(module)|128,physics,magnitude,,boot spawn y (Main.as:51)
+frontend/modules/seedlingDemo/seedlingBootSpawn.js|BUILD_SPAWN|(module)|0,rule,sentinel,,boot level id (Main.as:51)
+frontend/modules/seedlingDemo/seedlingBootSpawn.js|BUILD_SPAWN|(module)|80,physics,magnitude,,boot spawn x (Main.as:51)
+frontend/modules/seedlingDemo/seedlingBootSpawn.js|BUILD_SPAWN|(module)|128,physics,magnitude,,boot spawn y (Main.as:51)
 frontend/modules/seedlingDemo/tapeFormat.js|KEY_CODES|(module),rule,sentinel,,Player.as keys[] codes the game input reads
 frontend/modules/seedlingDemo/tapeFormat.js|FORBIDDEN_KEYS|(module),structural,,,REVIEW: key codes used only by the validator to refuse a tape; never fed to the sim
 frontend/modules/seedlingDemo/tapeFormat.js|HAZARD_STATES|(module),rule,sentinel,,tile types the noHazards coercion branches on

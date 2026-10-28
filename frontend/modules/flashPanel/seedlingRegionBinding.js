@@ -94,6 +94,8 @@ import { parseSeqPayload } from './seqPayload.js';
 import { returnKey } from './seedlingReturnSpawns.js';
 import { DOOR_GATE_ERROR_DEFAULT, lockedDoorMessage, ruleItemNames } from './seedlingDoorGate.js';
 import { levelHasSubRegions, linkPath, subRegionAt } from './seedlingSubRegions.js';
+// ⛓ LIGHT: imports nothing (`Main.as:51`'s boot position, census-pinned).
+import { BUILD_SPAWN } from '../seedlingDemo/seedlingBootSpawn.js';
 
 /** How long an in-flight arrival teleport stays armed before it is written off. */
 export const ARRIVAL_ECHO_TIMEOUT_MS = 15000;
@@ -173,6 +175,43 @@ export function resolveArrivalSpawn(world, arrivedFrom, returnSpawns = null) {
 }
 
 /**
+ * ⛓⛓ **DOES THIS REGION HOLD THE GAME'S OWN BOOT POSITION?** (⚖ the user, 2026-10-28: *"Yes, start in
+ * front"* — a new game starts where the game itself starts, in front of the house.)
+ *
+ * `world` is a region payload; `partition` is the sub-region partition document
+ * (`atlases/seedling-subregion-partition.json`, injected: this module does no fetch); `boot` is
+ * `Main.as:51`'s `new Game(level, x, y)`. The boot position answers for the region only when:
+ *   - the region's level IS the level the game boots into, and
+ *   - the PLAYER BOX at the boot position — one cell of the atlas's grid, top-left at (x, y), the
+ *     `resolveArrivalSpawn` convention — lies wholly in this region's OWN sub-region, by the payload's
+ *     own `atlas_ref` / `atlas_region` / `atlas_sub_region` read in the partition.
+ *
+ * Anything the partition cannot vouch for (no partition yet, an atlas or region it does not carry, a
+ * payload with no sub-region, a generated room) is null: the caller keeps its old answer. Not a
+ * literal, and not a region id: the playthrough's `level_0__r7c6`, the atlas's `overworld_start__r8c0`
+ * and the spiral's `region_0_0` (which is that same sub-region placed) all answer by the same test.
+ *
+ * @returns {{level:number, x:number, y:number}|null}
+ */
+export function bootSpawnIn(world, partition, boot = BUILD_SPAWN) {
+    if (!world || !boot || world.level !== boot.level) return null;
+    const atlas = partition?.atlases?.[world.atlas_ref];
+    const entry = atlas?.regions?.[world.atlas_region];
+    const ts = atlas?.tile_size;
+    if (!entry || entry.level !== boot.level || !Number.isInteger(ts) || ts <= 0 || !world.atlas_sub_region) return null;
+    const index = entry.sub_regions?.indexOf(world.atlas_sub_region) ?? -1;
+    const mine = index >= 0 ? partition.alphabet?.[index] : null;
+    if (!mine) return null;
+    const [ox, oy] = entry.origin ?? [0, 0];
+    for (const px of [boot.x, boot.x + ts - 1]) {
+        for (const py of [boot.y, boot.y + ts - 1]) {
+            if (entry.rows?.[Math.floor(py / ts) - oy]?.[Math.floor(px / ts) - ox] !== mine) return null;
+        }
+    }
+    return { level: boot.level, x: boot.x, y: boot.y };
+}
+
+/**
  * ⛓⛓ **WHERE A NEW GAME STARTS — THE ONE ANSWER** (the Menu panel's Restart,
  * 2026-10-05). `world` is the START region's payload (the region the declared
  * start's hop enters: `level_0__r7c6`, `overworld_start__r8c0`, …); `set` is
@@ -188,21 +227,28 @@ export function resolveArrivalSpawn(world, arrivedFrom, returnSpawns = null) {
  *   1. a delivered set that names its own start POSITION (the generated arm:
  *      `summary.startCell`) — the reset sends exactly that, so a new game ends
  *      there;
- *   2. otherwise the start region's arrival spawn with no "came from"
+ *   2. the game's OWN boot position (`Main.as:51`, `bootSpawnIn`), when the
+ *      start region holds it — in front of the house (⚖ 2026-10-28). The start
+ *      hop still teleports there: the game booted on that spot, so the landing
+ *      is no visible move, and every arrival watcher still sees one;
+ *   3. otherwise the start region's arrival spawn with no "came from"
  *      (`resolveArrivalSpawn(world, null, …)`: its FIRST exit's return spawn,
  *      else its entrance spawn) — where the start hop's arrival teleports, and
- *      what a level-only set's reset re-sends as its boot position.
+ *      what a level-only set's reset re-sends as its boot position. (Before
+ *      2026-10-28 this answered the playthrough too: (16, 128), the west edge.)
  *
  * `source` says which answered. null = the region carries no spawn.
  *
- * @returns {{level:number, x:number, y:number, source:'set'|'arrival',
+ * @returns {{level:number, x:number, y:number, source:'set'|'boot'|'arrival',
  *   exitId?:string, landing?:string}|null}
  */
-export function seedlingStartSpawn({ world = null, returnSpawns = null, set = null } = {}) {
+export function seedlingStartSpawn({ world = null, returnSpawns = null, set = null, partition = null, boot = BUILD_SPAWN } = {}) {
     const start = set?.start ?? null;
     if (start && Number.isInteger(start.level) && Number.isInteger(start.x) && Number.isInteger(start.y)) {
         return { level: start.level, x: start.x, y: start.y, source: 'set' };
     }
+    const booted = bootSpawnIn(world, partition, boot);
+    if (booted) return { ...booted, source: 'boot' };
     const arrival = resolveArrivalSpawn(world, null, returnSpawns);
     if (!arrival) return null;
     return { level: arrival.level, x: arrival.x, y: arrival.y, source: 'arrival',
@@ -411,6 +457,8 @@ export class SeedlingRegionBinding {
         this.warnedLevels = new Set();
         /** T2b U2b — the game's own return spawns (`setReturnSpawns`); null = door tiles. */
         this.returnSpawns = null;
+        /** ⛓ START IN FRONT — the sub-region partition document (`setPartition`); null = the boot position unproven. */
+        this.partition = null;
         /** ⛓ LOGICAL LINKS — `seedlingSubRegions.buildSubRegionMap`'s map (null = no sub-regions known). */
         this.subRegions = null;
         /** The sub-region the player was last SEEN in (a position read); the edge the watcher fires on. */
@@ -445,7 +493,7 @@ export class SeedlingRegionBinding {
     /** Where the current region's arrival lands: a start hop's is `seedlingStartSpawn`, any other the door's. */
     _arrivalSpawn() {
         return this.arrivedByStartHop
-            ? seedlingStartSpawn({ world: this.world, returnSpawns: this.returnSpawns, set: this.startSet })
+            ? seedlingStartSpawn({ world: this.world, returnSpawns: this.returnSpawns, set: this.startSet, partition: this.partition })
             : resolveArrivalSpawn(this.world, this.arrivedFrom, this.returnSpawns);
     }
 
@@ -461,7 +509,7 @@ export class SeedlingRegionBinding {
      */
     startSpawn({ set = this.startSet } = {}) {
         if (!this.startWorld) return null;
-        return seedlingStartSpawn({ world: this.startWorld, returnSpawns: this.returnSpawns, set });
+        return seedlingStartSpawn({ world: this.startWorld, returnSpawns: this.returnSpawns, set, partition: this.partition });
     }
 
     /** ⛓ LOGICAL LINKS — the host hands over the sub-region map once the rules and the partition are in. */
@@ -595,6 +643,18 @@ export class SeedlingRegionBinding {
         }
     }
 
+    /**
+     * ⛓ START IN FRONT — the host hands over the sub-region partition document (the same fetch as the
+     * sub-region map), which is what proves the start region holds the game's boot position. Like the
+     * return spawns, an arrival already QUEUED is resolved again.
+     */
+    setPartition(doc) {
+        this.partition = doc ?? null;
+        if (this.pendingSpawn && this.world) {
+            this.pendingSpawn = this._arrivalSpawn();
+        }
+    }
+
     /** procgen loaded a region into this substrate. */
     onLoadRegion({ region_id: regionId, world, arrivedFrom, startHop = false, restart = false } = {}) {
         /**
@@ -640,7 +700,7 @@ export class SeedlingRegionBinding {
         const effects = [];
         if (restart) {
             effects.push({ type: 'info', message: `[region atlas] Restart: back to the start region "${this.region}" — `
-                + `level ${spawn.level} (${spawn.x}, ${spawn.y}), ${spawn.source === 'set' ? 'the delivered set\'s start' : 'its arrival spawn'}` });
+                + `level ${spawn.level} (${spawn.x}, ${spawn.y}), ${{ set: 'the delivered set\'s start', boot: 'the game\'s own boot position' }[spawn.source] ?? 'its arrival spawn'}` });
         } else if (!startHop && this.arrivedFrom?.exit_id && !spawn.matchedArrivedFrom) {
             // Not a defect, and deliberately not loud: it is what the
             // synthesized Menu -> start-region hop looks like (its exit is
