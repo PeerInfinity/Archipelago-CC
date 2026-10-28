@@ -2337,7 +2337,8 @@ function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
             missed += 1;
             continue;
         }
-        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis)
+            ?? (CONTACT_FIDELITY.fineWandStance ? fineWandStanceReaches(run, c, contacts) : null);
         if (!reached) { unreached += 1; continue; }
         const here = run.state.x === c.x && run.state.y === c.y;
         return {
@@ -2364,6 +2365,26 @@ function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
         + `tiles; ${missed} lean into a shot whose first blocker is not the lock, and ${unreached} plan no corridor `
         + `from (${run.state.x},${run.state.y}). ⇒ the lock is on the frontier and the room offers nowhere to stand and `
         + 'shoot it.', { obstacle: { kind: 'solid', tag: obstacle.tag ?? null, id: lock.id } });
+}
+
+/**
+ * ⛓⛓ fidelity L12DOORS D3 (`CONTACT_FIDELITY.fineWandStance`, OFF) — **A WAND STANCE REACHED ONLY ON THE 8 px LATTICE.**
+ * L12's stacked doors at `@32,864` are shot from the strip under them, and that strip is reached through a cliffside
+ * gap (player x 202..214 at y 896) no 16 px node centre fits: `stanceReaches` (the run's lattice, then the hypothesis)
+ * plans no corridor to any of the six candidates, though the player fits. ON: a candidate the 16 px ask refuses is
+ * asked once more on `FINE_LATTICE`, in the world as it is (no hypothesis), and the walk to it is the FRONTIER3 fine
+ * walk `walkTo` already plans. OFF: byte-identical. `SEEDLING_FINE_WAND_STANCE=0|1`.
+ */
+function fineWandStanceReaches(run, c, contacts) {
+    if ((solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) <= FINE_LATTICE) return null;
+    try {
+        planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
+            solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
+        return { discharged: [] };
+    } catch (e) {
+        if (!(e instanceof BotDriverV2Error)) throw e;
+    }
+    return null;
 }
 
 /**

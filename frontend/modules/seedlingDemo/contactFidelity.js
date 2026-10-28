@@ -1682,6 +1682,15 @@ export const CONTACT_FIDELITY = {
      * byte-identical. `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`.
      */
     fineFrontierHiddenDoor: false,
+    /**
+     * fidelity L12DOORS D3 (wave 34) — A WAND STANCE THE 8 px LATTICE REACHES (`solverBot.resolveWandStrategy`).
+     *
+     * The strip under L12's stacked doors (`@32,864`) is reached through a 13 px cliffside gap: `stanceReaches` plans
+     * at the run's 16 px lattice and found no corridor to any wand stance under `magicallock@32,864`. ON: a candidate
+     * it refuses is asked once more on `FINE_LATTICE` in the world as it is. OFF: byte-identical.
+     * `SEEDLING_FINE_WAND_STANCE=0|1`.
+     */
+    fineWandStance: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2009,6 +2018,9 @@ if (globalThis.process?.env?.SEEDLING_WAND_SHOT_CHASER_BODIES === '0') CONTACT_F
 // ⛓ fidelity L12DOORS D2: `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_HIDDEN_DOOR === '1') CONTACT_FIDELITY.fineFrontierHiddenDoor = true;
 if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_HIDDEN_DOOR === '0') CONTACT_FIDELITY.fineFrontierHiddenDoor = false;
+// ⛓ fidelity L12DOORS D3: `SEEDLING_FINE_WAND_STANCE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_WAND_STANCE === '1') CONTACT_FIDELITY.fineWandStance = true;
+if (globalThis.process?.env?.SEEDLING_FINE_WAND_STANCE === '0') CONTACT_FIDELITY.fineWandStance = false;
 // ⛓ fidelity DETERM (c): `SEEDLING_COVER_HELD_FADE=0|1` and `SEEDLING_LOCK_RECLOSE_LAG=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '1') CONTACT_FIDELITY.coverHeldFade = true;
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '0') CONTACT_FIDELITY.coverHeldFade = false;
