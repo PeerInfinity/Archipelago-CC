@@ -100,6 +100,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 1,
+            "id": "inventory"
+        },
+        {
+            "browser": 0,
+            "count": 1,
             "id": "lint"
         },
         {
@@ -133,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 121,
-            "count": 169,
+            "browser": 122,
+            "count": 170,
             "id": "probe"
         },
         {
@@ -229,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 478,
-        "browser": 186,
+        "blockStyle": 479,
+        "browser": 187,
         "cited": 258,
-        "files": 494,
-        "lineStyle": 16,
-        "withDocblock": 494,
-        "withFlags": 411
+        "files": 496,
+        "lineStyle": 17,
+        "withDocblock": 496,
+        "withFlags": 412
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6776,6 +6781,24 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/help.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "inventory",
+            "citedBy": [],
+            "docblockStyle": "line",
+            "documentedFlags": [],
+            "file": "inventory-menu-identity.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "inventory-menu-identity — the V inventory menu slice's BYTE-IDENTITY measurement.",
+            "path": "scripts/procgen/inventory-menu-identity.mjs"
+        },
+        {
             "argvHelpers": [
                 "arg",
                 "isGateFinding"
@@ -12647,6 +12670,40 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's two OTHER in-room darktraps, ON THE GAME (slice rules-l63-darktrap-probe, step 1 of its fix): are L65's darktrap@144,144 and L101's darktrap@160,80 the class `probe-seedling-l63-darktrap.mjs` witnessed — a barrier that only an UNWIRED lightpole of the same room kills (`tset` -1, no ButtonRoom writes its t…",
             "path": "scripts/procgen/probe-seedling-inroom-darktraps.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-inventory-menu.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-inventory-menu — the GAME WITNESS for the V inventory menu (slice seedling-js-inventory-menu).",
+            "path": "scripts/procgen/probe-seedling-inventory-menu.mjs"
         },
         {
             "argvHelpers": [],
