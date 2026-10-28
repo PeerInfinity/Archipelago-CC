@@ -199,3 +199,12 @@ six exit 0; tapeRunner pairs **`c2260ed7`**. **Byte-inert OFF.**
 - tapeRunner pairs `c2260ed7` (639).
 - Constants 6,999, entities 566, profile 138, surface 360 rows.
 - Survey full 201/39 in both arms, one mover (step 219).
+
+## Head and CI
+
+- **Commits:** `108335c2` (D1) → `9503728e` (surface) → `46e48c53` (log + evidence) → this report commit (head).
+- **CI:** the only `JavaScript Unit Tests` run on this branch is at `108335c2`: 23,941 passed, 1 failed (the surface row
+  above), slow battery 271 / 271. The later commits touch only `scripts/procgen/*.json` and docs, so they did not trigger it
+  (`ci-vitest-summary.mjs 9503728e`: *"no JavaScript Unit Tests run"*).
+- **Before harvest, the planner should re-read CI** once a code-path push triggers it. Expected: green, since the one red is
+  fixed by `9503728e` (re-measured locally: `seedlingSolverSurface` 36 / 36).
