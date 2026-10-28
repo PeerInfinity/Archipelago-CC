@@ -10396,9 +10396,12 @@ function bagWithDischarged(run, bag, hypothesis) {
  * derivation that leaned on optimism it did not need would make guard (ii)
  * fire for nothing.
  */
-function stanceReaches(run, aim, contacts, hypothesisOf) {
+function stanceReaches(run, aim, contacts, hypothesisOf, lattice = null) {
+    // ⛓ L100FIX: `lattice` plans both questions on that pitch (the swing's 8 px arm); absent, the opts are the ones
+    // they always were.
+    const onLattice = lattice === null ? {} : { lattice };
     try {
-        planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, contacts));
+        planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, contacts, onLattice));
         return { discharged: [] };
     } catch (e) {
         if (!(e instanceof BotDriverV2Error)) throw e;
@@ -10427,6 +10430,7 @@ function stanceReaches(run, aim, contacts, hypothesisOf) {
     try {
         planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, exempt, {
             liveBag: bagWithDischarged(run, run.liveGeometryOpts(), hypothesis),
+            ...onLattice,
         }));
         return { discharged: hypothesis.map((h) => h.id), exempt };
     } catch (e) {
@@ -19996,19 +20000,38 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
      * between the `cliffside` masks and the rock: every 16 px cell there is a centre x 120 whose 4x5 box meets the
      * mask. Once every 16 px cell has failed, the same pixel window is asked on the 8 px lattice (nodes x 124), in the
      * world as it is and planned on that lattice — `deriveKeylockStance`'s RULESREF arm, for a swing.
+     *
+     * ⛓⛓ L100FIX (wave 34) — THE ARM ASKS ONLY THE CELLS THE 16 px RING CANNOT NAME, BY THE RING'S OWN TEST.
+     * MEASURED on L40 leg 371 (`fidelityWandHold`, staging `l40buttonStaging({level:40,x:848,y:16})`): at t1286 the
+     * walk to the break stance (200,136) re-derives it from (270.6,174.2), whose 16 px tile is not walkable
+     * (`ruinedpillar@264,136`), so all three ring cells (168,136) (200,136) (200,152) failed on the START, not on
+     * themselves. The 8 px plan from that same start is a straight line to (196,132) — a cell INSIDE the ring cell
+     * (200,136)'s tile — and admitting it replaced the ring's refusal (OFF: the ladder kills `spinner@192,128`, then
+     * breaks from (200,136)) with a fifth application of `break`, refused by `MAX_STRATEGIES_PER_GOAL`. All eleven
+     * 8 px candidates there sit inside a ring cell's tile. ⇒ a fine cell whose 16 px node is itself a ring candidate
+     * was ALREADY ASKED, and a different answer on the finer lattice is the start's lattice, not a new stance; L100's
+     * sliver cells (124,y) have 16 px nodes (120,y) that are mask obstacles, so they are the cells this arm is for.
+     * Each new cell is then admitted by `stanceReaches` — the ring's test, direct then under the same ownless
+     * hypothesis — planned on the 8 px lattice.
      */
     if (CONTACT_FIDELITY.fineSwingStance) {
         const fine = breakStanceCandidates(run, target,
             solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }), FINE_LATTICE);
-        for (const c of fine.candidates) {
-            if (admit && !admit(c)) continue;
-            try {
-                planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
-                    solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
-                return { stance: { x: c.x, y: c.y }, discharged: [] };
-            } catch (e) {
-                if (!(e instanceof BotDriverV2Error)) throw e;
+        const named = new Set(candidates.map((c) => `${c.x},${c.y}`));
+        const fresh = fine.candidates.filter((c) => {
+            const n = nodeAt(c.x, c.y, DEFAULT_LATTICE);
+            const ring = nodeCentre(n.tx, n.ty, DEFAULT_LATTICE);
+            return !named.has(`${ring.x},${ring.y}`) && !(admit && !admit(c));
+        });
+        if (STANCE_ROCKS.enabled) {
+            for (const c of fresh) {
+                const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, () => [], FINE_LATTICE);
+                if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
             }
+        }
+        for (const c of fresh) {
+            const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis, FINE_LATTICE);
+            if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
         }
     }
     throw new SolverRefusal(refusal({ candidates, outOfReach, noRect, unsafe }),
