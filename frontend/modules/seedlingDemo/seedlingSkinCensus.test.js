@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { CENSUS_REMAINING, SKIN_CENSUS, censusGaps } from './seedlingSkinCensus.js';
-import { SCENERY } from './seedlingSkinRenderer.js';
+import { PORTAL_COVERAGE, SCENERY } from './seedlingSkinRenderer.js';
 import { ENEMY_COVERAGE } from './seedlingEnemySkin.js';
 import { ROOM_BODY_COVERAGE } from './seedlingRoomBodySkin.js';
 import { HAZARD_COVERAGE } from './seedlingHazardSkin.js';
@@ -27,7 +27,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const MAP = JSON.parse(readFileSync(join(HERE, '../flashPanel/atlases/seedling-map.json'), 'utf8'));
 const DRAWN = new Set([...ENEMY_COVERAGE.drawn, ...ROOM_BODY_COVERAGE.drawn, ...HAZARD_COVERAGE.drawn, ...PUZZLE_COVERAGE.drawn,
     ...SOLIDS_COVERAGE.drawn, ...NPC_COVERAGE.drawn, ...TRAP_COVERAGE.drawn, ...LAMP_COVERAGE.drawn,
-    ...PICKUP_COVERAGE.drawn, ...MACHINE_COVERAGE.drawn, ...BOSS_COVERAGE.drawn]);
+    ...PICKUP_COVERAGE.drawn, ...MACHINE_COVERAGE.drawn, ...BOSS_COVERAGE.drawn, ...PORTAL_COVERAGE.drawn]);
 const drawnBySkin = (r) => !!SCENERY[r.tag] || DRAWN.has(r.as3);
 
 describe('the census of record', () => {

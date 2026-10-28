@@ -302,6 +302,9 @@ export const NIGHT_COPIES = Object.freeze({
     'seedling:enemy/grenade': { alpha: (op) => (op.alpha ?? 1) * 0.5 },
     // `Building.as:46-57`: the mound (building 8) only.
     'seedling:scenery/building8': { alpha: 'same' },
+    // ⛓ seedling-js-portal-sprite — `Teleporter.as:129-137` `renderLit`: a SHOWN portal again onto nightBmp (an invisible one
+    //    is never rendered, `World.as:78`; a deactivated one returns first, `:122-125`; the stairs set `renderLight = false`).
+    'seedling:object/portal': { alpha: 'same' },
     // `Crusher.as:107-123`: the picture (and its four lanes, `crusherLanes`).
     'seedling:puzzlement/crusher': { alpha: 'same' },
     // ⛓ G7 — `PushableBlockFire.as:163-171`: the same picture again onto nightBmp (`PushableBlockSpear` inherits it).
@@ -632,7 +635,7 @@ export const NIGHT_COVERAGE = Object.freeze({
         'the night composite (lightalpha, daynight; Game.bufferTransforms)',
         'Light: Torch, BoneTorch, PlantTorch (player-distance alpha), Orb (float), LightPole (lit / darkLight, lightPolesNow), the grenade light, PlayerLight (hasTorch)',
         'tile glows: darkStone, igneousStone, lava (+ solidBmp edges, HARDLIGHT), iceWall(s) unless snowing, ghostTile(s), bridge, igneousToLava, fuchsiaTile',
-        'copies: the dark-suit body, the slash, LavaRunner, BossTotemShot, Explosion, SlashHit, Droplet, TurretSpit, Grenade, the mound (building 8), Crusher (+ its lanes), LavaChain (hit), PushableBlockFire / PushableBlockSpear (G7)',
+        'copies: the dark-suit body, the slash, LavaRunner, BossTotemShot, Explosion, SlashHit, Droplet, TurretSpit, Grenade, the mound (building 8), Crusher (+ its lanes), LavaChain (hit), PushableBlockFire / PushableBlockSpear (G7), a shown Teleporter\'s portal',
         'the placed pickups\' copies and glows (G9a): HealthPickup, GhostSword, TorchPickup, BossKey 2–4 (+ key 2\'s circle), the Wand / Fire Wand circles',
         'the machines (G9b): the Pulser (+ its ring), a lit Wire at 0.1, BeamTower\'s beam, the Moonrock (+ its flares), the FinalDoor, the Pull\'s circle',
         'the Boss Totem: its parts SCREENed, its LASER, its white-out rect',
@@ -643,7 +646,7 @@ export const NIGHT_COVERAGE = Object.freeze({
         'the copies of classes G1–G4b draw as rectangles or not at all: Lock, RockLock, BossLock, LavaTrap, LavaBoss, LightBoss, LightBossTotem, '
             + 'TreeLarge, FrozenBoss, SealController, Help, WandShot, RayShot, LavaBall, the spear / fire / death ray / dark shield',
         'the slash-narrow blur copies (Player.as:1201-1212)', 'snow, the blizzard and the black-and-white pass (not nightBmp)',
-        'the underwater colour transform', 'Teleporter: no graphic (renderLight copies an empty graphic)',
+        'the underwater colour transform',
     ]),
 });
 
