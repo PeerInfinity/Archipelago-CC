@@ -453,6 +453,12 @@
             "_comment": "Tile-primitives Stage 2: Seedling L15 as ONE shared level world — sword refused, then granted; rocks struck, block pushed onto the button, the held lock crossed into r1c9 with the level's state kept."
         },
         {
+            "id": "maze-seedling-art-static-room",
+            "enabled": true,
+            "category": "Maze Seedling art",
+            "_comment": "maze-seedling-art-1 (S1): the playthrough maze over its level's room in the Seedling graphics; sheets decoded, the static layer's build/hit counts, the toggle; logs the render cost art on vs off (L0, L12). No batch claims this category, so it rides `fast`."
+        },
+        {
             "id": "seedling-atlas-sphere-placed-region",
             "enabled": true,
             "category": "Seedling atlas maze",

@@ -50,7 +50,9 @@ import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { nativeReachUnder } from '../../mazeRoom/tileSpike/deriveLevelWorldLogic.js';
-import { sharedWorldOwnerAt, TURN_PREFIX, USE_PREFIX } from '../../mazeRoom/mazeRoomEngine.js';
+import { createState, sharedWorldOwnerAt, TURN_PREFIX, USE_PREFIX } from '../../mazeRoom/mazeRoomEngine.js';
+import { substrateRegistryEntry } from '../../mazeRoom/mazeRoomLibrary.js';
+import { getLastRawJsonData } from '../../stateManager/index.js';
 
 const PRESET_PATH = './presets/seedling_atlas_maze/AP_1/AP_1_rules.json';
 // A world sphere growth GREW with pieces of the same map hung off it
@@ -952,5 +954,133 @@ registerTest({
                + 'way, since a silent stall is indistinguishable from slow progress.',
     testFunction: sphereWorldBotCompletion,
     category: 'Seedling atlas maze',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ MAZE SEEDLING ART S1 (slice maze-seedling-art-1, ⚖ 2026-10-28 rulings 1–3 + 6): the playthrough preset's
+ * maze worlds are drawn over the level's own room in the Seedling graphics (the content-pack stack
+ * `graphics.seedling`), switched on by the DATA. The row SETS its own state (the toggle on), then reads: the art
+ * loaded with every sheet decoded, the canvas at 32 px a cell, the room baked ONCE (a move and a toggle round
+ * trip are cache hits, not rebuilds), the toggle turning it off (20 px, no layer). It also LOGS the canvas cost
+ * per render, art on vs off, on L0 and on the biggest level (L12, adopted for the measurement only).
+ */
+const ART_L12 = 'level_12__r0c19';
+
+async function seedlingArtStaticRoom(testController) {
+    testController.log('Loading seedling_playthrough_maze with the Seedling art on…');
+    await testController.loadRulesFromFile(L15_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 5000);
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
+    const panel = await testController.pollForValue(
+        () => {
+            const p = getPanelInstance();
+            return (p?.world && p.state && p.currentRegionId === L0_R8C0) ? p : null;
+        },
+        `maze panel mounted in ${L0_R8C0}`, 20000, 250);
+    testController.assertEqual('the preset put the player in L0', true, !!panel);
+    if (!panel) return testController.getOverallResult();
+    panel.seedlingArtEnabled = true;
+    panel.render();
+
+    const status = await testController.pollForValue(
+        () => {
+            const s = getPanelInstance()?.getSeedlingArtStatus?.();
+            return (s && (s.status === 'failed' || (s.status === 'ready' && s.builds >= 1))) ? s : null;
+        },
+        'the Seedling art loaded and the L0 room was baked', 30000, 200);
+    testController.assertEqual('the art loaded', 'ready', status?.status ?? null);
+    if (status?.status !== 'ready') {
+        testController.log(`art status: ${JSON.stringify(status)}`);
+        return testController.getOverallResult();
+    }
+    testController.log(`art: ${JSON.stringify(status)}`);
+    testController.assertEqual('switched on by the data: L0 of a Seedling atlas', 0, status.skin?.level ?? null);
+    testController.assertEqual('sheets decoded (> 0)', true, status.sheets > 0);
+    testController.assertEqual('no sheet failed', 0, status.failedSheets);
+    testController.assertEqual('the room is mostly sprites', true, (status.last?.sprites ?? 0) > (status.last?.rects ?? 0));
+
+    const canvasOf = () => getPanelInstance()?.rootElement?.querySelector('.maze-room-canvas') ?? null;
+    testController.assertEqual('the canvas is 32 px a cell', panel.world.width * 32, canvasOf()?.width ?? null);
+    const toggle = () => getPanelInstance()?.rootElement?.querySelector('[data-toggle="seedling-art"] input') ?? null;
+    testController.assertEqual('the "Seedling art" toggle is shown, checked', true, toggle()?.checked === true);
+
+    // ── a move re-renders with ONE blit: a cache hit, not a rebuild ──
+    const before = panel.getSeedlingArtStatus();
+    const from = { ...panel.state.player_pos };
+    for (const key of ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']) {
+        press(panel, key);
+        if (panel.state.player_pos.x !== from.x || panel.state.player_pos.y !== from.y) break;
+    }
+    const moved = panel.state.player_pos.x !== from.x || panel.state.player_pos.y !== from.y;
+    testController.assertEqual('one step moved the player', true, moved);
+    const after = panel.getSeedlingArtStatus();
+    testController.assertEqual('the move rebuilt nothing', before.builds, after.builds);
+    testController.assertEqual('the move hit the baked room', true, after.hits > before.hits);
+
+    // ── the toggle: off is today's 20 px draw; on again is a cache hit ──
+    const off = toggle();
+    off.checked = false;
+    off.dispatchEvent(new Event('change'));
+    testController.assertEqual('toggle off: the canvas is 20 px a cell', panel.world.width * 20, canvasOf()?.width ?? null);
+    const on = toggle();
+    on.checked = true;
+    on.dispatchEvent(new Event('change'));
+    testController.assertEqual('toggle on again: 32 px a cell', panel.world.width * 32, canvasOf()?.width ?? null);
+    testController.assertEqual('toggle on again rebuilt nothing', after.builds, panel.getSeedlingArtStatus().builds);
+
+    // ── the canvas cost per render, art on vs off (logged: the latency spot-check) ──
+    const median = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
+    const timeArms = (label) => {
+        const arm = (enabled) => {
+            panel.seedlingArtEnabled = enabled;
+            panel._renderMaze();
+            const ms = [];
+            for (let i = 0; i < 15; i++) {
+                const t0 = performance.now();
+                panel._renderMaze();
+                ms.push(performance.now() - t0);
+            }
+            return median(ms);
+        };
+        const tOff = arm(false);
+        const tOn = arm(true);
+        testController.log(`[latency] ${label}: _renderMaze median art OFF ${tOff.toFixed(2)} ms, art ON ${tOn.toFixed(2)} ms`);
+        return { tOff, tOn };
+    };
+    timeArms(`L0 ${panel.world.width}x${panel.world.height}`);
+    const raw = getLastRawJsonData()?.rawJsonData;
+    const l12Payload = raw?.preset_sidecars?.['1']?.[ART_L12]?.playable_payload;
+    testController.assertEqual(`the preset carries ${ART_L12}`, true, !!l12Payload);
+    if (l12Payload) {
+        const saved = { world: panel.world, state: panel.state };
+        try {
+            panel.world = substrateRegistryEntry.deserializeWorld(JSON.parse(JSON.stringify(l12Payload)));
+            panel.state = createState(panel.world);
+            const b0 = panel.getSeedlingArtStatus().builds;
+            const t0 = performance.now();
+            panel._renderMaze();
+            testController.log(`[latency] L12 bake (first art render) ${(performance.now() - t0).toFixed(1)} ms`);
+            testController.assertEqual('L12 baked once', b0 + 1, panel.getSeedlingArtStatus().builds);
+            timeArms(`L12 ${panel.world.width}x${panel.world.height}`);
+            testController.assertEqual('L12 timed without a rebuild', b0 + 1, panel.getSeedlingArtStatus().builds);
+        } finally {
+            Object.assign(panel, saved);
+            panel.seedlingArtEnabled = true;
+            panel.render();
+        }
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'maze-seedling-art-static-room',
+    name: 'Maze: the Seedling playthrough drawn in the Seedling graphics (static room)',
+    description: 'maze-seedling-art-1 (S1): a Seedling-atlas maze world is drawn over its level\'s own room from '
+               + 'the content-pack art library, switched on by the data; sheets decoded, 32 px cells, the room '
+               + 'baked once and blitted per render; the toggle turns it off. Logs the per-render canvas cost '
+               + 'art on vs off on L0 and L12.',
+    testFunction: seedlingArtStaticRoom,
+    category: 'Maze Seedling art',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
