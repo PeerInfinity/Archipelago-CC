@@ -295,7 +295,7 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**83 files, 6999 literals.** Class × position:
+**84 files, 6999 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
@@ -682,7 +682,6 @@ None: a name declared in several files now reads one profile key (the table belo
 | `ARROW_ENEMY_HIT` | seedlingDemo/arrowTrap.js | 7 | 7 | physics/rule | count/derivation/magnitude | Enemies/Enemy.as:hitsMax Enemies/Enemy.as:hitsTimerMax |
 | `ARROW_PLAYER_ARM` | seedlingDemo/arrowTrap.js | 2 | 2 | physics/rule | magnitude | Arrow.as:51 |
 | `ARROW_KILL_PLAN` | seedlingDemo/arrowTrap.js | 10 | 9 | rule | derivation/magnitude |  |
-| `BUILD_SPAWN` | seedlingDemo/tapeFormat.js | 3 | 3 | physics/rule | magnitude/sentinel | Main.as:51 Bot.as |
 | `KEY_CODES` | seedlingDemo/tapeFormat.js | 8 | 8 | rule | sentinel | Player.as:59 Key.as |
 | `HAZARD_STATES` | seedlingDemo/tapeFormat.js | 5 | 5 | rule | sentinel |  |
 | `ITEM_PROPERTIES` | seedlingDemo/tapeFormat.js | 2 | 2 | rule | count/magnitude | Player.as:hitsMaxDef |
@@ -726,6 +725,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `ATANLO` | seedlingDemo/runtimeLibm.js | 8 | 8 | physics | derivation |  |
 | `PI` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
 | `PI_LO` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `BUILD_SPAWN` | seedlingDemo/seedlingBootSpawn.js | 3 | 3 | physics/rule | magnitude/sentinel | Main.as:51 Bot.as |
 | `BLOCK_FATAL_TILES` | flashPanel/seedlingBlockPaths.js | 3 | 3 | rule | sentinel | Puzzlements/PushableBlock.as:destroy |
 
 <!-- CENSUS:seedling-constants END -->

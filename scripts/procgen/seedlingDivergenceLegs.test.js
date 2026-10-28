@@ -242,23 +242,26 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ RULES l63-darktrap: the SAME legs by key, every id from 559 on shifted by +3 (L63's three pole location legs),
         //   from 613 by +4 (L65's) and from 785 by +6 (L101's two); and the doors the pole events gate stage them: L65's
         //   two teleporters into L63 (flag:L63:6 ×2, flag:L63:7) and L101's stairs up (flag:L101:0).
+        // ⛓ rules-start-in-front: the SAME legs by key, every id from 37 on shifted by +7 — the start arrival is the game's
+        //   boot position (80, 128) (`seedlingStartSpawn`), no longer merged into in_L94_304_160's (16, 128) landing, so
+        //   level_0__r7c6 gains its seven `<- start` legs (37-43, no goal events).
         expect(by).toEqual({
-            'flag:L0:4': [38], 'flag:L0:1': [90, 100, 110, 120, 130, 140, 150], 'flag:L24:0': [166],
-            'flag:L16:0': [192, 194, 196, 198, 200, 202, 204, 206], 'flag:L39:8': [343],
-            'flag:L62:0': [511, 516, 521, 526, 531, 562], 'flag:L63:1': [513, 518, 523, 528, 533, 537, 542, 547, 552],
-            'flag:L63:6': [565, 567], 'flag:L63:7': [568],
-            'flag:L71:2': [617, 619], 'flag:L12:7+flag:L12:12': [637], 'flag:L101:0': [743],
-            'flag:L112:1': [791, 792, 798, 799, 805, 806, 812, 813, 819, 820],
-            'flag:L114:0': [793, 794, 795, 800, 801, 802, 807, 808, 809, 814, 815, 821, 822],
-            'flag:L113:0': [830, 831, 832, 833],
+            'flag:L0:4': [45], 'flag:L0:1': [97, 107, 117, 127, 137, 147, 157], 'flag:L24:0': [173],
+            'flag:L16:0': [199, 201, 203, 205, 207, 209, 211, 213], 'flag:L39:8': [350],
+            'flag:L62:0': [518, 523, 528, 533, 538, 569], 'flag:L63:1': [520, 525, 530, 535, 540, 544, 549, 554, 559],
+            'flag:L63:6': [572, 574], 'flag:L63:7': [575],
+            'flag:L71:2': [624, 626], 'flag:L12:7+flag:L12:12': [644], 'flag:L101:0': [750],
+            'flag:L112:1': [798, 799, 805, 806, 812, 813, 819, 820, 826, 827],
+            'flag:L114:0': [800, 801, 802, 807, 808, 809, 814, 815, 816, 821, 822, 828, 829],
+            'flag:L113:0': [837, 838, 839, 840],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[794].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[801].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
-        expect(legs[511].sphere.inventory).not.toContain('Ghost Spear');
-        expect(legs[513].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
+        expect(legs[518].sphere.inventory).not.toContain('Ghost Spear');
+        expect(legs[520].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
         // a goal that needs no event keeps no goalEvents key at all (its row is byte-identical)
         expect(legs.filter((l) => !l.goalEvents).every((l) => !('goalEvents' in l))).toBe(true);
     });
