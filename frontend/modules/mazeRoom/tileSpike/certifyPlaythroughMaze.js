@@ -215,9 +215,19 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             }
         }
     }
+    // ⛓ A cross-room PRESS is a location on its button (session tile-primitives-sphere-order-5): produced where its item
+    // cell stands. Its far side — the target the event opens, in another level — is not modelled yet, so a row that needs
+    // it says so instead of "cannot produce".
+    const pressed = new Set();
+    for (const sc of Object.values(SIDECARS)) for (const it of sc.playable_payload?.items ?? []) pressed.add(it.locationName);
     const unproducible = new Map();
+    const unconsumed = new Map();
     for (const r of Object.values(REGIONS)) {
         for (const l of r.locations ?? []) {
+            if (l.event && l.action?.presser && pressed.has(l.name)) {
+                unconsumed.set(l.item?.name ?? l.name, `${l.obstacle.class}@${l.obstacle.x},${l.obstacle.y} in L${l.obstacle.level}`);
+                continue;
+            }
             if (!l.event || bound.has(l.name) || !l.obstacle) continue;
             const why = l.action?.presser ? `a press in L${l.action.presser.level}, another level`
                 : l.action?.verb === 'talk' ? 'a talk' : `its ${l.obstacle.class} is not in the maze world`;
@@ -235,8 +245,9 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         const held = pointCounts(inv);
         return inv.some((i) => eventRule.has(i) && !optimistic(eventRule.get(i), held));
     };
-    const unproducibleIn = (rule) => [...ruleItems(rule)].filter((i) => unproducible.has(i));
-    const explain = (rule) => unproducibleIn(rule).map((i) => ` — needs "${i}", which the maze world cannot produce (${unproducible.get(i)})`).join('');
+    const explain = (rule) => [...ruleItems(rule)].map((i) => (unproducible.has(i)
+        ? ` — needs "${i}", which the maze world cannot produce (${unproducible.get(i)})`
+        : unconsumed.has(i) ? ` — needs "${i}", a press the maze world produces, but no world opens its target (${unconsumed.get(i)}) by it` : '')).join('');
     const reachWithout = new Map();
     /** Does every AP route into `region` need `item`? */
     const needs = (region, item) => {
