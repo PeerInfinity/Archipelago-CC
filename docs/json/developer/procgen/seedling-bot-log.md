@@ -26297,3 +26297,46 @@ measurement arm). The report is `CC/docs/cloud-reports/seedling-hammer-chooser-p
   The L16 guard reds under none: at this base no climb on `r9-solve-16` reaches an empty list, even unscoped.
 
 ---
+
+### Seedling fidelity L40BK2B — `bobsoldier@880,832` in its notch: the orbit kill steers to a point the player can stand on (`orbitFreeAim`), the strategy bound counts distinct applications (`strategyBoundDistinct`) — both OFF
+
+Planner `seedling-fidelity-planning-15`, wave 33. The report is `CC/docs/cloud-reports/seedling-fidelity-l40bk2b.md`.
+
+**W0.** Boss Key 2's legs at the base `6f5916203e` (853 `<- in_L39_144_0`, 854 `<- in_L43_176_464`), captured on the page
+(seams 5152 / 5155) and replayed in node under two arms. Shipped: 853 refuses at the burn stance on `bob@736,752` and 854 on
+`bob@736,800` (the x≈744 pair, the chooser silent); survey step 67 dies at t780 in the press kill. With the hammer arc's OPP ON
+(its branch's three code files on this base, node only): 853 kills both x≈744 bobs in the press kill and refuses at the burn
+stance on `bobsoldier@880,832` with the chooser naming it, the chaser arm finding no stance and the orbit arm (L40LATCH) failing
+every candidate; 854 and step 67 refuse on the BobSoldier too, but with an x≈744 bob still alive and the chooser silent.
+
+**The notch.** The BobSoldier stands in a one-tile notch (x 880–896, y 832–848), the only way into the tree/latch pocket, above
+a one-tile corridor (y 848–864) that the x 736 shaft feeds. The orbit policy steers straight at a point on a circle round the
+body: from the shaft that point is in the wall (the ccw candidates stand pinned for the whole 420-tick bound), and from the
+corridor the back-off point is in the floor (the cw candidates land one hit, are pinned there, and the spin stops on them).
+
+**D1 — `orbitFreeAim`.** Each orbit aim is projected onto the free point nearest the policy's angle (the player box and the
+straight sweep from the player clear of Solids; 10° steps out to 180° each side, radius offsets 0/+4/−4/+8), the planner's first
+waypoint toward the body where none is in sight. From leg 853's hook state 6 of 20 candidates kill hitless, and 14 of 20 from the
+corridor. Witnessed on the plain world from `fixtures/l40bk2b-witness/corridor-boot.json` (step 67's boot west of the notch, both
+corridor spinners banked; the AP leg's chest is an `apitem`, which the probe page does not stage): the shipped orbit's candidate is
+hit at t55 and t75 (`l40bk2b-orbit-plain`), and the solver's own plan with the key ON kills the BobSoldier hitless, removed at t125
+(`l40bk2b-orbit-free`); p4g reproduces both at 0 px.
+
+**D2 — `strategyBoundDistinct`.** Past the BobSoldier, 853's goal applies shove, hold(`wandlock@448,432`), burn and the same hold
+again, and needs the latch's hold(`wandlock@480,560`): the fourth distinct obstacle, refused as a fifth application by a bound
+documented as distinct. ON: distinct `strategy(obstacle)` applications count, with 8 in all as the backstop. With OPP and both
+keys, 853 runs on to `iceturret@472,400` (a static "Enemy": the hammer arc's static arm).
+
+**Movers.** Survey full: 0 of 240 rows differ (201 / 39 both arms). The OPP arm's seam census (853/854 request 1, seam ±3):
+OPP alone 0 of 14 past the BobSoldier; OPP + both keys 4 of 14 on to the ice turret — exactly the seams where both x≈744 bobs
+died in the press kill; the other 10 have one or both alive and the chooser silent (the hammer chooser's pair). The bounded set
+with both keys ON: one real mover, L40LATCH's latch orbit (the open pocket's candidate 0 now kills at t137; its solve reaches the
+same x≈744 refusal over 351 ticks, not 271 — game-witnessed at 0 px as `l40bk2b-latch-free`), plus env artifacts. The 52-leg L40
+sweep ×2 per arm: 0 verdicts by key (356/853/854 flip inside both arms; their captured requests answer A = B byte for byte). Probes
+standard with both keys ON: 11/11. The L4 dash-window rows stay green ON (the margin is untouched).
+
+**Trap candidates.**
+- An aim is a place to stand only if the player can stand there: a geometric policy (a circle round a body) needs its points
+  projected onto the free space before `chooseHeld` steers at them, or it pins the player against the wall it aimed through.
+- A bound documented in one unit and counted in another is a false refusal waiting for the room that needs one more.
+- A measurement tree built from `git diff HEAD` loses the slice's code the moment it is committed: diff against the base.

@@ -342,6 +342,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             baitParkedTail: true,
             // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — ships OFF (held out of the W33 flip: leg 371's L42→L40 walk refuses with it ON).
             fineSwingStance: false,
+            // ⛓ fidelity L40BK2B D1 (wave 33): the orbit kill steers to a point the player can stand on — ships OFF.
+            orbitFreeAim: false,
+            // ⛓ fidelity L40BK2B D2 (wave 33): the strategy bound counts distinct applications — ships OFF.
+            strategyBoundDistinct: false,
             // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — ships OFF.
             secondaryUse: false });
     });

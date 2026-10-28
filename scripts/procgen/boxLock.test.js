@@ -528,7 +528,8 @@ describe('who takes the box', () => {
          * rules-l63-darktrap-probe L63's darktraps over the two L65 arrivals, their poles and flags, `probe-seedling-l63-darktrap.mjs`;
          * the same slice's L65 and L101 in-room darktraps and the sides their poles are lit from, `probe-seedling-inroom-darktraps.mjs`;
          * tile-primitives-whole-game-tools L3's water door into L111, without and with the Conch, `probe-seedling-l3-water-door.mjs`;
-         * rules-l12-bosslock-probe L12's sealed bosslock@112,192 and the stacked key + wand doors into L83, `probe-seedling-l12-bosslock.mjs`.)
+         * rules-l12-bosslock-probe L12's sealed bosslock@112,192 and the stacked key + wand doors into L83, `probe-seedling-l12-bosslock.mjs`;
+         * fidelity L40BK2B L40's BobSoldier in its notch above the corridor (the shipped and the projected orbit), `probe-seedling-l40bk2b.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -589,6 +590,7 @@ describe('who takes the box', () => {
             'probe-seedling-inroom-darktraps.mjs',
             'probe-seedling-l3-water-door.mjs',
             'probe-seedling-l12-bosslock.mjs',
+            'probe-seedling-l40bk2b.mjs',
             // seedling-js-mobile-polish: the phone-viewport fit witness (import door: `isEntryPoint` → main())
             'probe-seedling-mobile-fit.mjs',
             // seedling-js-inventory-menu: the V menu's game witness (import door: `isEntryPoint` → main())
