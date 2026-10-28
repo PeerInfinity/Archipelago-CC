@@ -1,0 +1,2 @@
+census-seedling-constants --check — 6977 literals; green drift: 0 new + 0 vanished cosmetic/structural, 254 moved
+PASS

@@ -1,0 +1,9 @@
+== mode=chooser
+verdict SOLVED ticks 263
+ICEST {"handed":[{"id":"iceturret@64,16","t":0,"via":"chooser"}],"kills":[{"id":"iceturret@64,16","t":0,"dead":true,"ticks":140}]}
+== mode=hit
+verdict SOLVED ticks 263
+ICEST {"handed":[{"id":"iceturret@64,16","t":0,"via":"hit"}],"kills":[{"id":"iceturret@64,16","t":0,"dead":true,"ticks":140}]}
+== mode=both
+verdict SOLVED ticks 263
+ICEST {"handed":[{"id":"iceturret@64,16","t":0,"via":"chooser"}],"kills":[{"id":"iceturret@64,16","t":0,"dead":true,"ticks":140}]}

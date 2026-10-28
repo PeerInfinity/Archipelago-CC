@@ -26340,3 +26340,38 @@ standard with both keys ON: 11/11. The L4 dash-window rows stay green ON (the ma
   projected onto the free space before `chooseHeld` steers at them, or it pins the player against the wall it aimed through.
 - A bound documented in one unit and counted in another is a false refusal waiting for the room that needs one more.
 - A measurement tree built from `git diff HEAD` loses the slice's code the moment it is committed: diff against the base.
+### Seedling hammer-phase ICEST — the walk's kill rung kills a static IceTurret
+
+⚖ User, queued 2026-10-26: *"Ice turret static kill"* (CPAIR's hand-over; fidelity L40LATCH's D2.2). Switch
+`solverBot.ICETURRET_STATIC_KILL`, **OFF** (`SEEDLING_ICETURRET_STATIC_KILL=1`, `withIceTurretStaticKill`;
+`SEEDLING_ICETURRET_STATIC_KILL_MODE=chooser|hit` is a measurement arm). The report is
+`CC/docs/cloud-reports/seedling-hammer-iceturret-static.md`.
+
+- **The census** (an answer-neutral scratch patch logs every climb with a live turret in the room: is it in the hit's
+  sources, or in the smallest set whose removal admits?): the 60 captured L40 requests (56 climbs) and the route survey
+  (44 climbs over 240 rows) have **no** such climb. The latch chain's walk back west has one: at t271 the smallest set is
+  `bob@736,800` + `bob@736,752` + `iceturret@472,400`; with chasers unscoped (CPAIR's scratch) it reaches t577 with the
+  turret the hit's only source (`bob@736,800` dying there, `bob@736,752` alive). The generated control
+  (`census-seedling-enemies`' corridor room) has the turret as its only source, a single removal that admits.
+- **The change** (`liveIceTurretBodies`, the chooser's and `hitSourceBodies`' admission, the kill rung's
+  `killIceTurretOnWalk`): a live turret is hypothesised (single, and as a CPAIR set partner) and admitted from the hit;
+  the arm walks to a staging point outside the turret's range, then tries each start delay × (the standing kill
+  approached on the fork, the circling kills) on FORKS and plays the first hitless try. The side comes off the snapped
+  box (the 8 px `input()` snap). The corpse stays: dead, not removed, a 16x16 Solid. A re-entry is refused by name.
+- **Effect ON:** the generated corridor (1 tile tall) refuses OFF and **SOLVES** ON (263 t), the turret dead in the
+  model and the keys replaying hitless; the 2-tall corridor refuses by name (no hitless try). L40's pocket boot with the
+  weigh unarmed (`blockSweepBodies` OFF): OFF refuses at t0 on `iceturret@472,400`, ON kills it (69 t, hitless) and stalls
+  next on `wandlock@448,432` (its button wants the corpse). The 60 L40 requests and the
+  240 survey rows are unchanged. The latch chain ON alone = OFF; with CPAIR size 3 the walk meets the turret at t577 and
+  **no try is hitless** (490 forks: the turret's body on the approach, a blast while circling). On the `l40bk2b` scratch
+  (OPP + `orbitFreeAim` + `strategyBoundDistinct`), 2 of 14 853/854 seams move (refusal text: the chooser names the turret,
+  the arm has no staging point, the run ends on `spinner@816,848`); with CPAIR size 3, 14 of 14 hand the turret to the
+  arm, which mostly runs out of the anytime deadline at the `crusher-fork` site (each fork replays the whole segment).
+- **The room's own answer** is the corpse weigh from the pocket: booted at (480,456) with the latch persistence, Boss
+  Key 2 SOLVES OFF (4495 t) with the circling kill and the corpse pushed onto `button@480,384`.
+- **Gate** `hammerIceTurretStatic.test.js` (ships OFF; the 1-tall corridor OFF/ON and its replay; the 2-tall refusal;
+  no turret = OFF; the L40 pocket row; TURRETCIRCLE's weigh unchanged ON) and `hammerIceTurretStatic.slow.test.js` (the latch chain: ON alone
+  = OFF; with CPAIR size 3, handed at t577 and refused by name). Mutants (no arm, an unreachable turret, the unsnapped
+  side, the corpse removed on death): all red.
+
+---

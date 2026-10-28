@@ -154,9 +154,9 @@
       "files": {
         "botDriverV2.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 69
+        "solverBot.js": 70
       },
-      "sites": 97,
+      "sites": 98,
       "seen": "both",
       "via": [
         "direct",
@@ -553,9 +553,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 26,
         "lightsVerb.js": 1,
-        "solverBot.js": 206
+        "solverBot.js": 211
       },
-      "sites": 346,
+      "sites": 351,
       "seen": "both",
       "via": [
         "direct",
@@ -709,7 +709,7 @@
         "turrets": {
           "botDriverV2.js": 8,
           "dangerMap.js": 1,
-          "solverBot.js": 19
+          "solverBot.js": 24
         },
         "turretsSettled": {
           "botDriverV2.js": 2
@@ -851,9 +851,9 @@
         "dangerMap.js": 3,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 112
+        "solverBot.js": 116
       },
-      "sites": 175,
+      "sites": 179,
       "seen": "both",
       "via": [
         "direct",
@@ -923,7 +923,7 @@
         "playerHits": {
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
-          "solverBot.js": 56
+          "solverBot.js": 60
         },
         "presses": {
           "botDriverV2.js": 1,
@@ -1140,9 +1140,9 @@
         "botDriverV2.js": 29,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 145
+        "solverBot.js": 147
       },
-      "sites": 180,
+      "sites": 182,
       "seen": "both",
       "via": [
         "direct",
@@ -1176,7 +1176,7 @@
           "solverBot.js": 52
         },
         "inventorySlots": {
-          "solverBot.js": 20
+          "solverBot.js": 21
         },
         "keys": {
           "botDriverV2.js": 6,
@@ -1184,7 +1184,7 @@
         },
         "primary": {
           "botDriverV2.js": 1,
-          "solverBot.js": 22
+          "solverBot.js": 23
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
@@ -1366,9 +1366,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 616
+        "solverBot.js": 624
       },
-      "sites": 757,
+      "sites": 765,
       "seen": "both",
       "via": [
         "direct",
@@ -1566,9 +1566,9 @@
         "dangerMap.js": 3,
         "lightsVerb.js": 2,
         "solveProgress.js": 2,
-        "solverBot.js": 314
+        "solverBot.js": 318
       },
-      "sites": 387,
+      "sites": 391,
       "seen": "both",
       "via": [
         "direct",
@@ -1829,9 +1829,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 4,
-        "solverBot.js": 16
+        "solverBot.js": 17
       },
-      "sites": 20,
+      "sites": 21,
       "seen": "both",
       "via": [
         "direct",
@@ -2859,9 +2859,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 231
+        "solverBot.js": 234
       },
-      "sites": 301,
+      "sites": 304,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2895,9 +2895,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 235
+        "solverBot.js": 238
       },
-      "sites": 308,
+      "sites": 311,
       "seen": "both",
       "via": [
         "const-alias",
@@ -4328,10 +4328,10 @@
         "dangerMap.js": 6,
         "forcedHit.js": 5,
         "lightsVerb.js": 3,
-        "solverBot.js": 133,
+        "solverBot.js": 134,
         "strikePolicy.js": 2
       },
-      "sites": 166,
+      "sites": 167,
       "seen": "static",
       "via": [
         "import"
@@ -4857,9 +4857,10 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "botDriverV2.js": 10
+        "botDriverV2.js": 10,
+        "solverBot.js": 1
       },
-      "sites": 10,
+      "sites": 11,
       "seen": "static",
       "via": [
         "import"
@@ -5317,9 +5318,9 @@
         "botDriverV2.js": 49,
         "bulbPlacement.js": 2,
         "crusherBait.js": 4,
-        "solverBot.js": 217
+        "solverBot.js": 220
       },
-      "sites": 272,
+      "sites": 275,
       "seen": "static",
       "via": [
         "import"
@@ -7200,9 +7201,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 24
+        "solverBot.js": 29
       },
-      "sites": 24,
+      "sites": 29,
       "seen": "static",
       "via": [
         "import"
