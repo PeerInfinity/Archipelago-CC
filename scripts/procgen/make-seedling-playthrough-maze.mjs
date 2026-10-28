@@ -24,6 +24,8 @@
  * rooms, so the projection recomputes on exactly that (`playthroughGridFor` + `playthroughAnalyzerOptions`,
  * the pair the partition generator re-runs) and reads the entity rows off the delivered rooms too. On the
  * raw transcription 45 of the 115 regions disagreed with their own atlas (overlay cells, pruned pockets).
+ * The grid is the hand-ruled one (`playthroughHandRuledGridFor`, session tile-primitives-sphere-order-6): it moves only the
+ * conditions of L40's Fire cells, never which cells are gated, so the partition still holds.
  *
  * Deterministic, so `--check` is an exact byte gate.
  *
@@ -41,8 +43,10 @@ import { seedlingMazeProjectionDeps } from '../../frontend/modules/flashPanel/se
 import { apRegionName } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
 import { SHARED_WORLD_ALPHABET } from '../../frontend/modules/procgenPipeline/regionAtlasMazeProjection.js';
 import { SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
+import { crossRoomButtonsOf, persistenceEffect } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
+import { PERSISTENCE_RESPONSE } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 import {
-    PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
+    PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
     setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
 } from './make-seedling-playthrough-rules.mjs';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
@@ -64,14 +68,17 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * (session tile-primitives-sphere-order-4, ⚖ 2026-10-27 "L34 + L32"): L34 and L32 — L32's two locations on one tile spill one to the
  * nearest free floor cell (the projection's `location_stacked`); its boss fight stays the rules' static weapon gate. Sphere 4.5
  * (session tile-primitives-sphere-order-5, ⚖ 2026-10-27 "All 6"): L38 L45 L46 L47 L48 L49 — L38's ButtonRoom, which opens L39's wand lock,
- * is a location on its own cell (⚖ "Location on the cell"); the lock's side waits for L39.
+ * is a location on its own cell (⚖ "Location on the cell"); the lock's side waits for L39. Sphere 5.3 (session
+ * tile-primitives-sphere-order-6, ⚖ 2026-10-28 "All 3"): L39 L40 L43 — L39's wand lock is laid on its own cell, opened by that press
+ * (⚖ "Lock cell opened by event"), and the pocket it seals has its doors gated on it (⚖ "Lay the producer's door gates"); L40's
+ * Fire cells carry the rules' corpse ruling, Fire AND a weapon (`playthroughHandRuledGridFor`, ⚖ "Static now, mechanism later").
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
     'level_12', 'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20', 'level_21', 'level_22',
     'level_23', 'level_24', 'level_25', 'level_26', 'level_27', 'level_28', 'level_29', 'level_30', 'level_31', 'level_32', 'level_33', 'level_34',
-    'level_35', 'level_36', 'level_37', 'level_38', 'level_44', 'level_45', 'level_46', 'level_47', 'level_48', 'level_49', 'level_59',
-    'level_60', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_92', 'level_94', 'level_95',
+    'level_35', 'level_36', 'level_37', 'level_38', 'level_39', 'level_40', 'level_43', 'level_44', 'level_45', 'level_46', 'level_47',
+    'level_48', 'level_49', 'level_59', 'level_60', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_92', 'level_94', 'level_95',
 ]);
 
 /**
@@ -212,6 +219,37 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
         name: e.name, side: e.fields.side, mode: mode.get(e.name), obstacle: e.fields.obstacle, rule: e.access_rule ?? null,
         ...(mode.get(e.name) === 'press' ? { presser: e.fields.action.presser } : {}),
     }));
+    // ⛓ A press's FAR side (session tile-primitives-sphere-order-6, ⚖ 2026-10-28 "Lock cell opened by event"): a target the press
+    // REMOVES — the producer's own `persistenceEffect` says 'opens' (L39's wand lock, `tSet < 0`: built gone once {39,8} is in
+    // `persistence_cleared`) — stands on its own cell in its own level's world (mode 'target'), opened by the event alone, when that
+    // level is listed. A target the press does NOT remove is not laid: a cross-room LIGHTPOLE is lit, not gone (its light kills the
+    // DarkTraps it reaches), which the maze does not model yet, so its rows still say no world opens it.
+    const targets = crossRoomButtonsOf(PLAYTHROUGH_MAP).flatMap((b) => b.targets);
+    const opens = (o) => {
+        const t = targets.find((x) => x.level === o.level && x.type === o.class && x.x === o.x && x.y === o.y);
+        if (!t) throw new Error(`press target ${o.class}@${o.x},${o.y} in L${o.level} is no cross-room button's target`);
+        return persistenceEffect(t, PERSISTENCE_RESPONSE[t.type]).effect === 'opens';
+    };
+    const opened = new Set();
+    for (const e of out.world.filter((w) => w.mode === 'press')) {
+        if (!atlas.regions.some((r) => r.map_ref === e.obstacle.level && keep.has(r.region_id)) || !opens(e.obstacle)) continue;
+        out.world.push({ name: e.name, side: null, mode: 'target', obstacle: e.obstacle, rule: null });
+        opened.add(e.name);
+    }
+    // ⛓ ... and the pocket it seals (⚖ 2026-10-28 "Lay the producer's door gates"): each of the producer's cross-room-press
+    // gates on a kept, wired door of a laid target is laid on that exit's cell in its world (mode 'door'), on the press's event.
+    const pressNames = new Set(layer.buttons.events.filter((e) => e.fields.action?.presser).map((e) => e.name));
+    for (const g of out.exitGates.filter((x) => x.kind === 'cross-room-press')) {
+        const named = [];
+        (function walk(r) { if (r?.rule === 'Has' && pressNames.has(r.args.item_name)) named.push(r.args.item_name); for (const c of r?.children ?? []) walk(c); })(g.rule);
+        if (named.length === 0) throw new Error(`${g.region_id}/${g.exit_id}: a cross-room-press gate on ${JSON.stringify(g.rule)} names no press`);
+        if (!named.some((n) => opened.has(n))) continue;
+        if (g.rule.rule !== 'Has') {
+            throw new Error(`${g.region_id}/${g.exit_id}: the door of a laid press target is gated on ${JSON.stringify(g.rule)}, not on the press alone`);
+        }
+        const level = atlas.regions.find((r) => r.region_id === g.region_id).map_ref;
+        out.world.push({ name: g.rule.args.item_name, side: null, mode: 'door', door: { level, exit_id: g.exit_id }, rule: null });
+    }
     const all = new Set(layer.events.map((e) => e.name));
     const have = new Set([...out.events.map((e) => e.name), ...minted]);
     const named = (rule, acc = []) => {
@@ -258,7 +296,7 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
         gameConfig,
         levelWorlds: { partition },
         analysis: {
-            gridForLevel: (level) => playthroughGridFor(level),
+            gridForLevel: (level) => playthroughHandRuledGridFor(level),
             conditionKey: playthroughAnalyzerOptions.conditionKey,
             resolveCondition: playthroughAnalyzerOptions.resolveCondition,
         },

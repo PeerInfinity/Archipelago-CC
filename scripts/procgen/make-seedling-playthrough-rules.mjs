@@ -430,6 +430,29 @@ function stampOffGridGatedSolids(level, grid) {
 /** ⛓ SWIM T4 — the analyzer grid this generator builds for one level (the census's read). Additive. */
 export const playthroughGridFor = (level, options) => gridFor(level, options);
 /**
+ * ⛓ L40's HAND RULING ON THE GRID (session tile-primitives-sphere-order-6, ⚖ 2026-10-28 "Static now, mechanism later") — the
+ * grid a cell-level reader (the maze world) plays, with `OV.L40_EAST_RULE` applied as this generator applies it to the
+ * atlas: every L40 crossing whose rule is FIRE_RULE becomes Fire AND a weapon (the IceTurret's corpse on the t2 button
+ * costs a kill), so every L40 cell whose conditions resolve to FIRE_RULE takes the ruling's condition. The corpse, the
+ * fire-pushed block and the grouped locks are not modelled. Every other level's grid is `playthroughGridFor`'s.
+ */
+export const playthroughHandRuledGridFor = (level, options) => {
+    const grid = gridFor(level, options);
+    if (level.level !== OV.L40_EAST_RULE.level) return grid;
+    const ruled = resolveFull(OV.L40_EAST_RULE.condition);
+    if (JSON.stringify(ruled) !== JSON.stringify({ rule: 'And', children: [FIRE_RULE, WEAPON_RULE] })) {
+        throw new Error(`L40_EAST_RULE resolves to ${JSON.stringify(ruled)}, not the Fire AND weapon its crossings take`);
+    }
+    // A cell's rule as the projection reads it (`occupancyRule`): its conditions resolved and conjoined.
+    const cellRule = (c) => {
+        const parts = (c.conditions ?? []).map(resolveFull);
+        if (parts.length === 0 || parts.some((r) => !r)) return null;
+        return simplifyRule(parts.length === 1 ? parts[0] : { rule: 'And', children: parts });
+    };
+    const fireOnly = (c) => JSON.stringify(cellRule(c)) === JSON.stringify(FIRE_RULE);
+    return { ...grid, cells: grid.cells.map((c) => (fireOnly(c) ? { ...c, conditions: [OV.L40_EAST_RULE.condition] } : c)) };
+};
+/**
  * ⛓ LOGICAL LINKS — the analyzer options this generator runs with, so a reader that re-runs the analysis
  * (`make-seedling-subregion-partition.mjs`: which tile is in which sub-region) gets this run's components
  * exactly. Additive.
