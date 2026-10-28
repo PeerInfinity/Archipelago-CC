@@ -26189,7 +26189,9 @@ measurement arm). The report is `CC/docs/cloud-reports/seedling-hammer-chooser-p
   approached on the fork, the circling kills) on FORKS and plays the first hitless try. The side comes off the snapped
   box (the 8 px `input()` snap). The corpse stays: dead, not removed, a 16x16 Solid. A re-entry is refused by name.
 - **Effect ON:** the generated corridor (1 tile tall) refuses OFF and **SOLVES** ON (263 t), the turret dead in the
-  model and the keys replaying hitless; the 2-tall corridor refuses by name (no hitless try). The 60 L40 requests and the
+  model and the keys replaying hitless; the 2-tall corridor refuses by name (no hitless try). L40's pocket boot with the
+  weigh unarmed (`blockSweepBodies` OFF): OFF refuses at t0 on `iceturret@472,400`, ON kills it (69 t, hitless) and stalls
+  next on `wandlock@448,432` (its button wants the corpse). The 60 L40 requests and the
   240 survey rows are unchanged. The latch chain ON alone = OFF; with CPAIR size 3 the walk meets the turret at t577 and
   **no try is hitless** (490 forks: the turret's body on the approach, a blast while circling). On the `l40bk2b` scratch
   (OPP + `orbitFreeAim` + `strategyBoundDistinct`), 2 of 14 853/854 seams move (refusal text: the chooser names the turret,
@@ -26198,7 +26200,7 @@ measurement arm). The report is `CC/docs/cloud-reports/seedling-hammer-chooser-p
 - **The room's own answer** is the corpse weigh from the pocket: booted at (480,456) with the latch persistence, Boss
   Key 2 SOLVES OFF (4495 t) with the circling kill and the corpse pushed onto `button@480,384`.
 - **Gate** `hammerIceTurretStatic.test.js` (ships OFF; the 1-tall corridor OFF/ON and its replay; the 2-tall refusal;
-  no turret = OFF; TURRETCIRCLE's weigh unchanged ON) and `hammerIceTurretStatic.slow.test.js` (the latch chain: ON alone
+  no turret = OFF; the L40 pocket row; TURRETCIRCLE's weigh unchanged ON) and `hammerIceTurretStatic.slow.test.js` (the latch chain: ON alone
   = OFF; with CPAIR size 3, handed at t577 and refused by name). Mutants (no arm, an unreachable turret, the unsnapped
   side, the corpse removed on death): all red.
 

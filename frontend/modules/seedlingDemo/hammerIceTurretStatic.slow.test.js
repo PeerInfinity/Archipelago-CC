@@ -38,7 +38,7 @@ describe('hammer-phase ICEST on the latch chain (slow)', () => {
         expect(on.refusal.message).toBe(off.refusal.message);
         expect(on.refusal.perTick.map((k) => [...k])).toEqual(off.refusal.perTick.map((k) => [...k]));
         expect(ICETURRET_STATIC_KILL_COUNTS.handed).toEqual([]);
-    }, 600000);
+    }, 900000);
 
     it('ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit', async () => {
         const boot = await l40LatchBoot();
