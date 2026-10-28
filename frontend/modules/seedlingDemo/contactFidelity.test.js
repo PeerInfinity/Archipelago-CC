@@ -340,8 +340,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             baitAlignSafeMemo: true,
             // ⛓ fidelity L41TOTEM D3 (wave 33): a bait's idle ends when the crusher has parked — ON since the W33 flip.
             baitParkedTail: true,
-            // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — ON since the W33 flip.
-            fineSwingStance: true });
+            // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — ships OFF (held out of the W33 flip: leg 371's L42→L40 walk refuses with it ON).
+            fineSwingStance: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

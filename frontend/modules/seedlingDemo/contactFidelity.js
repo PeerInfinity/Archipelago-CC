@@ -1616,7 +1616,7 @@ export const CONTACT_FIDELITY = {
      * planned in the world as it is on the 8 px lattice, as `deriveKeylockStance`'s RULESREF arm does. OFF:
      * byte-identical. `SEEDLING_FINE_SWING_STANCE=0|1`.
      */
-    fineSwingStance: true,
+    fineSwingStance: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
