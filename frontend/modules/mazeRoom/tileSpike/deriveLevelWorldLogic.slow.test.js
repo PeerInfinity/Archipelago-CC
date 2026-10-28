@@ -19,6 +19,8 @@
  * under 0.1 s). L12 r0c19 (the doorway's touched lock) costs 136 s scripted and stays pinned natively (`sphereOrderLevels.test.js`).
  * And two of sphere 2.2's (⚖ user 2026-10-27, session tile-primitives-sphere-order-3: "Add L28 r0c6 + L30 r0c4"): L28 r0c6 (the rope
  * and the button its fallrock holds, one shared world; 0.9 s scripted) and L30 r0c4 (a struck rock beside two boss-lock events; 1.6 s).
+ * And sphere 3.7's L32 (⚖ user 2026-10-27, session tile-primitives-sphere-order-4: "Re-record + add L32"): its two locations on one tile,
+ * one spilled to the nearest free floor cell, each behind the boss fight's static weapon gate.
  *
  * Slow tier: ~35 s native (every region, then the sample again for its lines) + ~86 s scripted sample on one
  * core (measured 2026-10-21, L13–L17). Since the arrow trap + rope (session tile-primitives-arrow-rope, 2026-10-22)
@@ -39,7 +41,7 @@ const RULES = JSON.parse(readFileSync(
 const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
     'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
-    'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4'];
+    'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32'];
 const PERMISSIVE = playthroughPermissiveLocations();
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */

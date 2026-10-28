@@ -1,0 +1,6 @@
+PASS: r9-solve-16: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-16: ends at the L18 ARRIVAL (§3.5) — ["655:L18"]
+PASS: r9-solve-16: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-16 is byte-identical to what this solver derives — 21093 bytes
+PASS: r9-solve-16 trace is byte-identical to what this solver derives — 14042 bytes
+EXIT 0

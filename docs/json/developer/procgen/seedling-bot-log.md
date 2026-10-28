@@ -26139,3 +26139,33 @@ is `CC/docs/cloud-reports/seedling-hammer-opportunistic-strike.md`.
   unfiltered — all red. The guard "no kill aim over an owed press" survives: no measured workload reaches it.
 
 ---
+### Seedling hammer-phase CPAIR — the removal chooser answers a chaser pair
+
+⚖ User, queued 2026-10-26: *"Chooser: chaser pair"* (fidelity L40LATCH's hand-over D2.1). Switch
+`solverBot.CHOOSER_PAIR`, **OFF** (`SEEDLING_CHOOSER_PAIR=1`, `withChooserPair`; `SEEDLING_CHOOSER_PAIR_SIZE=3` is the
+measurement arm). The report is `CC/docs/cloud-reports/seedling-hammer-chooser-pair.md`.
+
+- **The census** (an answer-neutral scratch patch logs every climb whose chooser list is empty and asks which sets of
+  live chasers admit a corridor): the x≈744 pair `bob@736,752` + `bob@736,800` **never admits by itself**. Every empty
+  climb on the L40 Boss Key 2 legs needs a third body: `bobsoldier@880,832`, whose volume covers the burn stance's aim
+  (leg 853, all 45 arrival clocks), or `iceturret@472,400`, a static (the latch chain's walk back, t271). On the 60
+  captured L40 requests no pair admits (36 empty climbs need ≥3 chasers: the west bobs with `puncher@128,624`, and the
+  x≈744 trio). On 853's seams, pairs admit only as one bob plus the bobsoldier. The route survey (14 empty climbs), the r9
+  campaign (none), killgate s2/s5/s9 and the ENEMY census (never ≥2 live chasers) have no pair-blocked climb.
+- **The change** (`choosePairToRemove`, the climb's use after C1): where the list is still empty, each live chaser the hit
+  names is partnered with the 4 live chasers nearest the hit point; the first set whose joint removal admits a corridor
+  is the list, the hit's body first. A set that admits nothing is never offered. OFF nothing new is read.
+- **Effect ON (pairs):** the 60 L40 requests and the route survey are identical. Leg 853 over one hammer period moves on
+  7 of 45 seams (5 with `OPPORTUNISTIC_STRIKE` ON); the arm kills one bob on 2 (5196: dead at t855, then the press kill
+  of `spinner@816,848` dies to `bob@736,800`, which OPP removes), and the rest refuse on `bobsoldier@880,832` instead of a
+  bob. Nothing solves. `r9-solve-16` and the r9 campaign (161 PASS) are unchanged.
+- **The size-3 arm** asks triples too: 853 → 42 of 45 seams on to the bobsoldier (byte-identical to an unscoped
+  hit-chaser arm, L40LATCH's scratch, but scoped), and **legs 367/371/373** (L40 → the L43 pits from `in_L39_144_0`)
+  **SOLVE** (all 6 requests; 909–989 t): `bob@192,480` + `bob@224,496` + `puncher@128,624` admit, the arm kills
+  `bob@192,480` and the walk crosses. Model only; the game witness is the planner's dispatch.
+- **Gate** `hammerChooserPair.test.js` (three captured requests cut to their levels, `fixtures/hammer-cpair/`): ships
+  OFF; 853 at 5196 (OFF silent, ON the pair and the kill); 853 at 5172 (triples only: ON = OFF); 356 (singles: never
+  asked); 367 (size 3 solves); the L16 guard. Mutants (no pair, no empty scope, non-admitting sets offered): all red.
+  The L16 guard reds under none: at this base no climb on `r9-solve-16` reaches an empty list, even unscoped.
+
+---

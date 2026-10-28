@@ -1,0 +1,17 @@
+rooms offering no candidate, by refusal: {}
+
+md5(rows) = 4926635b734891624e87ed7c6a70c1b3
+EXIT 0
+rooms offering no candidate, by refusal: {}
+
+md5(rows) = 69f421d4939641e4bcc4544ac756cd89
+EXIT 0
+rooms offering no candidate, by refusal: {}
+
+md5(rows) = 02445c3433b632c43a2a075bb36510a3
+EXIT 0
+⛓⛓ **15 of 23 CHAMBER rows solve at the CONTROL'S OWN TICK COUNT (155)** — the body was never on the route. A 6x6 chamber does not make a body an obstacle; the corridor arm is where the question is actually asked.
+
+⛔ Nothing here promotes a class. Design §5 marks several of these `?` or `R9+`; a row that SOLVED is reported as having solved THIS room at THIS budget, which is not the same claim as "the generator may place it".
+EXIT 0
+census-killgate.jsonl: not written (no climb reached the chooser on s2/s5/s9)

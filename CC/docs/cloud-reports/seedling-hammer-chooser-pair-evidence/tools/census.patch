@@ -1,0 +1,56 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index ea3010d6..a001d3f2 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -26560,6 +26560,51 @@ function solveSegmentUnder({
+          */
+         if (activeProgress !== null) progressRung('bait');
+         let removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
++        if (globalThis.process?.env?.SEEDLING_CPAIR_CENSUS) {
++            // SCRATCH (CPAIR W0 census): where the chooser is EMPTY, which PAIRS of live chasers admit a corridor?
++            const fs = globalThis.process.getBuiltinModule('node:fs');
++            const liveC = [...(run.entities('chasers') ?? [])];
++            const liveIds = new Set(liveC.map((c) => c.id));
++            const hitCh = [...new Set((hit.sources ?? []).filter((sx) => sx.kind === 'chaser' && liveIds.has(sx.id))
++                .map((sx) => sx.id))];
++            const row = { level: run.level, what, t: perTick.length, empty: removable.length === 0,
++                single: removable.map((b) => b.id), hit: { x: hit.x, y: hit.y, t: hit.t ?? null },
++                sources: (hit.sources ?? []).map((sx) => `${sx.kind}:${sx.id}`), live: liveC.length, hitChasers: hitCh };
++            if (removable.length === 0 && liveC.length >= 2) {
++                const admitsWithout = (ids) => {
++                    const without = dangerVolumes(run, 0).filter((v) => !ids.includes(v.id));
++                    const opts = solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: without });
++                    const reach = plansReach(run.world, allowTeleporter, opts);
++                    if (reach) return reach.from(run.state)(aim);
++                    try { planWaypoints(run.world, run.state, aim, allowTeleporter, opts); return true; }
++                    catch (e) { if (!(e instanceof BotDriverV2Error)) throw e; return false; }
++                };
++                const near = [...liveC].sort((a, b) => Math.hypot(a.x - hit.x, a.y - hit.y)
++                    - Math.hypot(b.x - hit.x, b.y - hit.y) || (a.id < b.id ? -1 : 1)).slice(0, 6).map((c) => c.id);
++                const cand = [...new Set([...hitCh, ...near])];
++                const pairs = [];
++                for (let i = 0; i < cand.length; i++) for (let j = i + 1; j < cand.length; j++) {
++                    if (admitsWithout([cand[i], cand[j]])) pairs.push([cand[i], cand[j]]);
++                }
++                row.near = near;
++                row.pairsAdmit = pairs;
++                row.hitPairsAdmit = pairs.filter(([a, b]) => hitCh.includes(a) && hitCh.includes(b));
++                row.hitXnearAdmit = pairs.filter(([a, b]) => hitCh.includes(a) || hitCh.includes(b));
++                if (globalThis.process.env.SEEDLING_CPAIR_DEEP) {
++                    const vols = dangerVolumes(run, 0);
++                    row.volumes = vols.map((v) => v.id);
++                    row.allChasersAdmit = admitsWithout(liveC.map((c) => c.id));
++                    row.allVolumesAdmit = admitsWithout(vols.map((v) => v.id));
++                    const base = hitCh.length >= 1 ? [...new Set([...hitCh, near[0], near[1]])].slice(0, 2) : near.slice(0, 2);
++                    row.base = base;
++                    row.basePlusOne = vols.map((v) => v.id).filter((id) => !base.includes(id))
++                        .filter((id) => admitsWithout([...base, id]));
++                    row.singlesAgain = vols.map((v) => v.id).filter((id) => admitsWithout([id]));
++                }
++            }
++            fs.appendFileSync(globalThis.process.env.SEEDLING_CPAIR_CENSUS, JSON.stringify({
++                tag: globalThis.process.env.SEEDLING_CPAIR_TAG ?? null, ...row }) + '\n');
++        }
+         /**
+          * ⛓⛓ HAMMER-PHASE C1 (`CHOOSER_HIT_SOURCES`) — where the chooser cannot speak (an EMPTY list: no body's
+          * removal admits a corridor, which a body with no danger volume never can), the probe's own hit can: its

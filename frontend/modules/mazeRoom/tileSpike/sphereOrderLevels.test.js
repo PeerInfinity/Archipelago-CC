@@ -16,6 +16,10 @@
  *     ⚖ "Lay touched event cells";
  *   - L67: the spear block was a static Ghost Spear gate; the game spears it onto the button that silences the key's lane,
  *     from two cells away across a wall — ⚖ "Reach-2 strike-push".
+ * ⛓ SPHERES 3.5 + 3.7 (session tile-primitives-sphere-order-4):
+ *   - L32: the atlas puts Times (the third BobBoss's kill) and Bob Boss (its Fire drop) on ONE tile, the boss rock's (5,8);
+ *     the projection wrote the second over the first and Bob Boss had no cell — ⚖ "Spill to nearest floor". The fight is
+ *     the rules' own weapon gate, laid static (⚖ "Keep static, name it").
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -121,5 +125,19 @@ describe('L67 — the spear block is speared onto the button', () => {
         expect(out.problems).toEqual([]);
         expect(out.accepted).toEqual([]);
         expect(line(out, 'level_67__r3c2@Level 067 - Boss Key 4<level_67__r6c11=')).toBe(JSON.stringify([['Ghost Spear']]));
+    });
+});
+
+describe('L32 — two locations on the boss rock\'s tile', () => {
+    it('L30 + L32 certify clean; Bob Boss spills to (5,7), each priced by the weapon from the landing', () => {
+        const out = certify(['level_30', 'level_32']);
+        expect(out.problems).toEqual([]);
+        expect(out.accepted).toEqual([]);
+        const WEAPON = JSON.stringify([['Ghost Spear'], ['Progressive Sword']]);
+        expect(line(out, 'level_32@Level 032 - Bob Boss<@4,7=')).toBe(WEAPON);
+        expect(line(out, 'level_32@Level 032 - Times<@4,7=')).toBe(WEAPON);
+        const items = compile(['level_30', 'level_32']).preset_sidecars['1'].level_32.playable_payload.items;
+        expect(items.map((i) => `${i.locationName}@${i.x},${i.y}`).sort())
+            .toEqual(['Level 032 - Bob Boss@5,8', 'Level 032 - Times@5,7']);
     });
 });
