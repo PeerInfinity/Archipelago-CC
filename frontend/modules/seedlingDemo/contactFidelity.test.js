@@ -347,7 +347,13 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L40BK2B D2 (wave 33): the strategy bound counts distinct applications — ships OFF.
             strategyBoundDistinct: false,
             // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — ships OFF.
-            secondaryUse: false });
+            secondaryUse: false,
+            // ⛓ fidelity L12DOORS D1 (wave 34): a WandShot in a room with a stepped chaser — ships OFF.
+            wandShotChaserBodies: false,
+            // ⛓ fidelity L12DOORS D2 (wave 34): a hidden door nearer the aim asks the 8 px frontier — ships OFF.
+            fineFrontierHiddenDoor: false,
+            // ⛓ fidelity L12DOORS D3 (wave 34): a wand stance the 8 px lattice reaches — ships OFF.
+            fineWandStance: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

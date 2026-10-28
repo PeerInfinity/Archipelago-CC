@@ -26340,3 +26340,47 @@ standard with both keys ON: 11/11. The L4 dash-window rows stay green ON (the ma
   projected onto the free space before `chooseHeld` steers at them, or it pins the player against the wall it aimed through.
 - A bound documented in one unit and counted in another is a false refusal waiting for the room that needs one more.
 - A measurement tree built from `git diff HEAD` loses the slice's code the moment it is committed: diff against the base.
+
+### Seedling fidelity L12DOORS — L12 → L83 through the stacked doors behind the 13 px gap: a wand shot in a room with a stepped chaser (`wandShotChaserBodies`), a hidden door nearer the aim asks the 8 px frontier (`fineFrontierHiddenDoor`), a wand stance the 8 px lattice reaches (`fineWandStance`) — all OFF
+
+Planner `seedling-fidelity-planning-16`, wave 34. The report is `CC/docs/cloud-reports/seedling-fidelity-l12doors.md`.
+
+**W0.** Survey steps 172/203 (L12 visits 14/16, `reach-exit` teleporter@32,848 → L83) at the base `caa42ea5df` refuse
+KEYLOCK-SEALED on `bosslock@112,192` {12,11} from (440,258), as CI 40617953040 says (local full survey OFF = that run, 0 of 240
+rows differ). rules-4's facts hold: the real door is the stacked `bosslock@32,864` (key 4) + `magicallock@32,864` (Wand), whose
+south strip is reached through a cliffside gap (player x 202..214 at y 896).
+
+**G1, measured.** The solver from (40,888), under the doors, dies in `levelRun.assertWandShotSolidsBound` on the Wand press:
+the guard refuses every shot in a room whose press census holds an Enemy-typed body outside the totem / ice-turret / spinner
+rosters, and L12's `puncher@416,256` is a bridged chaser. Not a placement test at all: a room-level guard.
+
+**G2, measured.** The frontier at each of the five rounds from the arrival: the 16 px flood always holds actionable doors
+(`shieldlocknorm@288,704`, `burnabletree@480,640`, `bosslock@112,192`, `@416,240`, `@432,240`), so `fineFrontierFlood` (no
+actionable entry, or a masked goal tile; the plan error here is "different connected components") never fires; the 8 px flood
+names `magicallock@32,864` 20 px from the aim on every round. The solver spends touch, burn, keylock ×2 on doors that do not lead
+to the aim, then the sealed lock refuses.
+
+**D1 — `wandShotChaserBodies`.** A bridged chaser the run steps (`chaserStateFor`, behind `stepChasersNow`'s `noclip ||
+noDamage` gate) counts as placed for the guard, and its live box joins `wandShotBlockerAt`'s "Enemy" arm (a shot that meets it
+stops there and `applyWandShotToBoss` refuses by name, as before). Under the doors: wand (through the standing bosslock, as the
+game does), keylock, walk — 114 t.
+
+**D2 — `fineFrontierHiddenDoor`.** When the 8 px flood holds an actionable door the 16 px frontier lacks, nearer the aim than
+every 16 px actionable door, the 8 px frontier is asked. **D3 — `fineWandStance`.** `resolveWandStrategy` asks a candidate
+`stanceReaches` refuses once more on `FINE_LATTICE`, in the world as it is (`stanceReaches` untouched; L100FIX owns it). With all
+three, step 172 SOLVES in 1301 t: wand, keylock, walk into L83, `bosslock@112,192` never touched.
+
+**Witnesses.** The solver's own plans on rules-4's step-172 staging, p4g headless, delivered set: `l12doors-under-locks` (114 t,
+D1) and `l12doors-arrival` (1302 observations, D1+D2+D3) reproduce at 0 px on every tick, hitless, {12,12} and {12,7} written,
+{12,11} never (`fixtures/l12doors-witness/`, `probe-seedling-l12doors.mjs`, `plan-seedling-l12doors-witness.mjs`,
+`fidelityL12Doors.test.js`). OFF the model refuses the shot.
+
+**Movers.** Survey full ON vs OFF, local: exactly steps 172 (SOLVED 1301 t) and 203 (SOLVED 1479 t); 201/39 → 203/37, every other
+row equal ticks included. The sweep ×2 per arm and the probes standard are the planner's dispatches (the report names them).
+
+**Trap candidates.**
+- A refusal that names a body 650 px away is a ROOM guard, not a placement test: read the stack before reading the message.
+- A fallback gated on "no actionable entry" never fires in a room full of doors that lead elsewhere; the condition that matters
+  is whether the finer flood sees a door the coarse one cannot, nearer the aim.
+- A survey that runs each step in a child process reads the files on disk at that step: a mutant made mid-survey contaminates
+  the steps it overlaps. Run mutants after, or restart the arm.

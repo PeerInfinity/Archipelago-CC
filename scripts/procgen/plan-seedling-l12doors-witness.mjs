@@ -27,13 +27,51 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { ARRIVAL, DOOR_LOCK, DOOR_MAGIC, GOAL, LOCK11, TO, UNDER_DOORS, l12Staging, solveFrom }
-    from './probe-seedling-l12-bosslock.mjs';
+import { l12keylineStaging } from './plan-seedling-l12keyline-witness.mjs';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
+
+/**
+ * rules-4's facts (`probe-seedling-l12-bosslock.mjs`, which imports playwright, so this headless script does not
+ * import it): the boots, the locks, the goal and step 172's save. `fidelityL12Doors.test.js` pins every one of them,
+ * and `l12Staging`, equal to the probe's.
+ */
+export const ARRIVAL = Object.freeze({ level: 12, x: 168, y: 384 });
+export const UNDER_DOORS = Object.freeze({ level: 12, x: 32, y: 880 });
+export const LOCK11 = Object.freeze({ id: 'bosslock@112,192', tag: 11, top: 192, bottom: 208 });
+export const DOOR_LOCK = Object.freeze({ id: 'bosslock@32,864', tag: 12 });
+export const DOOR_MAGIC = Object.freeze({ id: 'magicallock@32,864', tag: 7 });
+export const GOAL = Object.freeze({ kind: 'reach-exit', exit: Object.freeze({ x: 32, y: 848 }) });
+export const TO = 83;
+export const STEP172 = Object.freeze({
+    keys: [0, 1, 2, 3, 4],
+    items: ['canSwim', 'hasDarkSword', 'hasFeather', 'hasFire', 'hasShield', 'hasSpear', 'hasTorch', 'hasWand'],
+    seal_parts: [...Array(16).keys()],
+    totem_parts: [0, 1, 2, 3, 4],
+    clears: [[0, 1], [16, 0], [19, 1], [31, 0], [30, 2], [30, 0], [12, 3], [39, 8], [40, 8], [58, 1], [62, 0], [68, 0]]
+        .map(([level, tag]) => Object.freeze({ level, tag })),
+});
+
+/** The survey's staging at step 172 for one boot (rules-4's `l12Staging`, pinned equal by the test). */
+export async function l12Staging(boot) {
+    const staging = await l12keylineStaging({ boot, keys: [], items: STEP172.items, clears: [...STEP172.clears] });
+    staging.save = { ...staging.save, keys: [...STEP172.keys], seal_parts: [...STEP172.seal_parts],
+        totem_parts: [...STEP172.totem_parts] };
+    return staging;
+}
+
+/** The solver from one staging (the survey's `twoPassSolve`). Throws its refusal. */
+export async function solveFrom(staging, goals, name) {
+    const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+    const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
+    const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
+    const levelSource = atlasLevelSource();
+    return twoPassSolve({ makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource),
+        goals, name, boot: staging.boot, dashMode: 'all', persistence: staging.persistence, log: () => {} });
+}
 
 /** Where the game recordings live (`probe-seedling-l12doors.mjs --record`). */
 export const L12DOORS_WITNESS_DIR = join(MODULE, 'fixtures', 'l12doors-witness');

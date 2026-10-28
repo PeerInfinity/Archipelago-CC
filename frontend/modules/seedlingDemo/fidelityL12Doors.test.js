@@ -20,6 +20,9 @@ import {
     l12doorsPlan, l12doorsTape, unpackL12DoorsTick, verbsOf,
 } from '../../../scripts/procgen/plan-seedling-l12doors-witness.mjs';
 
+import * as RULES4 from '../../../scripts/procgen/probe-seedling-l12-bosslock.mjs';
+import * as PLAN from '../../../scripts/procgen/plan-seedling-l12doors-witness.mjs';
+
 const W = Object.fromEntries(L12DOORS_WITNESSES.map((w) => [w.name, w]));
 const OFF = Object.fromEntries(Object.keys(L12DOORS_SWITCHES).map((k) => [k, false]));
 const DOOR_VERBS = ['wand(magicallock@32,864)', 'keylock(bosslock@32,864)', 'walk'];
@@ -33,6 +36,20 @@ async function verdict(w, switches) {
         return { refusal: String(e.message) };
     }
 }
+
+describe('fidelity L12DOORS — the staging is rules-4\'s', () => {
+    it('every fact the plan script carries equals probe-seedling-l12-bosslock.mjs\'s', () => {
+        for (const k of ['ARRIVAL', 'UNDER_DOORS', 'LOCK11', 'DOOR_LOCK', 'DOOR_MAGIC', 'GOAL', 'TO', 'STEP172']) {
+            expect(PLAN[k], k).toEqual(RULES4[k]);
+        }
+    });
+
+    it('l12Staging equals rules-4\'s for both boots', async () => {
+        for (const w of L12DOORS_WITNESSES) {
+            expect(JSON.stringify(await PLAN.l12Staging(w.boot))).toBe(JSON.stringify(await RULES4.l12Staging(w.boot)));
+        }
+    });
+});
 
 describe('fidelity L12DOORS — the switches ship OFF', () => {
     it('all three default OFF', () => {
