@@ -10,7 +10,7 @@ is to expand the model to include everything in the game."*
 | Harness branch | `claude/seedling-fidelity-wave-34-sjpkne` |
 | Commits | D1 `6dfb3c87` · D2 `c1bca360` · D3 + witnesses `4e13c320` · records `81816d2d` · this report |
 | Servers | `serve-nocache.py 9763` (this tree) · `9764` (a base worktree at `caa42ea5df`, W0 only) · `9765` (a scratch worktree of `81816d2d` with the three keys' defaults flipped ON, never committed: the probe battery ON) |
-| Verdicts | **W0 PASS · D1 PASS · D2 PASS · D3 PASS** — steps 172/203 SOLVE with all three keys ON; all three ship **OFF** (byte-identical) |
+| Verdicts | **W0 PASS · D1 PASS · D2 PASS · D3 PASS** · probes standard ON 11/11 — steps 172/203 SOLVE with all three keys ON; all three ship **OFF** (byte-identical) |
 
 ## The one thing to know first
 
@@ -175,8 +175,24 @@ Totals: **201/39 → 203/37**. D2's trigger *can* move any reach-exit step, and 
 **46/46 green**. The env run red three request-shape rows only because the process is non-default; that is an artifact. The
 84-vs-85 margin is untouched.
 
-**Probe battery `standard`, keys ON** (the scratch worktree with the three defaults flipped, port 9765, sequential):
-see the table at the end of this report.
+**Probe battery `standard`, keys ON** (the scratch worktree of `81816d2d` with the three defaults flipped, port 9765,
+sequential, each probe with its battery args; `evidence/probes-standard-on.txt`): **11 / 11 ALL CHECKS PASSED, 0 FAIL, 0 SKIP**:
+
+| probe (args) | PASS |
+|---|---|
+| wasm-logical-links (`--only=B,R`) | 24 |
+| wasm-vanilla-map | 23 |
+| wasm-arrival-composites | 95 |
+| wasm-midroom-replan (`--only=D`) | 10 |
+| restart-route (`--only=W,J`) | 18 |
+| restart-warp (`--only=W,J`) | 28 |
+| wasm-adopt | 51 |
+| obstacle-events (`--only=W,J`) | 22 |
+| wasm-generated-playback | 35 |
+| loop-restart | 30 |
+| seal-delivery (`--only=A`) | 6 |
+
+At the defaults (keys OFF) the battery is byte-inert by gate: every hunk is behind its key.
 
 ### The dispatches for the planner
 
