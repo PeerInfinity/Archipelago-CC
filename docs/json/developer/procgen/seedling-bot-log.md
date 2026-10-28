@@ -26375,3 +26375,43 @@ standard with both keys ON: 11/11. The L4 dash-window rows stay green ON (the ma
   side, the corpse removed on death): all red.
 
 ---
+
+
+### Seedling fidelity L100FIX — the 8 px swing arm asks only the cells the 16 px ring cannot name (`fineSwingStance` stays OFF; flip-ready list measured)
+
+Wave 34, planner `seedling-fidelity-planning-16`. The report is `CC/docs/cloud-reports/seedling-fidelity-l100fix.md`
+(evidence beside it). Base main `caa42ea5df`, 97 default-ON keys of 109.
+
+**W0 — leg 371's divergence, measured.** `fidelityWandHold`'s leg 371 (staging `l40buttonStaging({level:40,x:848,y:16})`,
+`movingWait` + `bombBlastBody` ON, strike floor OFF) runs in ~7 s per arm in node. OFF: SOLVED 1,667 t, [brave, hold, kill
+`spinner@192,128`, break `breakablerock@176,128` from (200,136), hold, collect]. ON: REFUSED, *"applied 4 strategies for one
+goal [brave, hold(wandlock@176,80), hold(wandlock@208,128), break(breakablerock@176,128)]"*. Both arms are identical up to
+t1286. There the walk to the break stance (200,136) re-derives that stance from (270.6,174.2). That point's 16 px tile is
+not walkable (`ruinedpillar@264,136`: *"A\* start tile (16,10) … is not walkable"*), so all three ring cells (168,136),
+(200,136), (200,152) fail on the START, not on themselves. OFF, the ring's refusal sends the ladder to the spinner first.
+ON, the fine arm's 8 px plan from the same start is a straight line to (196,132), and the arm admitted it. (196,132) is
+inside the ring cell (200,136)'s tile, and the ladder's fifth `break` then hit `MAX_STRATEGIES_PER_GOAL`. All 11 fine
+candidates there sit inside a ring cell's tile. The brief's suspect (the missing hypothesis test) is not the mechanism: the
+16 px `stanceReaches` also rejects (196,132), but only because of that same start tile, and an 8 px `stanceReaches` admits it.
+
+**D1 — the fix (`fineSwingStance`, still OFF).** In `deriveSwingStance`, the fine arm now skips any fine cell whose 16 px node
+is a ring candidate, since the ring already asked that cell. A different answer there only reflects the start's lattice, not
+a new stance. Every remaining cell is admitted by `stanceReaches`, the ring's own test (direct, then under the same ownless
+hypothesis), planned on the 8 px lattice. `stanceReaches` takes an optional `lattice`; without it the opts are unchanged.
+L100's sliver cells (124,y) have 16 px nodes (120,y), which are mask obstacles and never ring candidates, so they are still
+asked. With the key ON: leg 371 SOLVED 1,667 t, key for key with `wandhold-l42-371-paced` (new row `fidelityL100Fix.test.js`).
+`plan-seedling-hammer-bw-bombstand --check` and `plan-seedling-l100-witness --check` are green. The `l100-sliver-rock` rows
+are green, and step 219's refusal is byte-identical to W33's (jellyfish@88,144's dwell, HIT at tick 193). Mutants: without
+the "named by the ring" filter, leg 371 reds; planning the fine `stanceReaches` on 16 px reds L100's sliver row; `if (true)`
+reds L100's OFF rows.
+
+**D2 / movers (key ON).** Bounded set: 2,298 / 2,299. The one red is `contactFidelity` "the shipped defaults", the pin a flip
+owes. Identity block and all six chain `--check`s are equal (`590b0b88`), and the tapeRunner pairs are equal (639,
+`c2260ed7`). `ci-producer-checks --jobs=3`: 95 run, 0 red. Full route survey: one mover, step 219 (as W33 measured). The standard probe battery, with the default flipped locally, is 11/11 ALL
+CHECKS PASSED, and `r7-ends-meet --check` is CLEAN. The default is NOT flipped (the user licenses it on this list).
+
+**Trap candidates.**
+- A ring that failed on its START has not answered for its cells. Before a finer lattice "finds" a stance there, ask whether
+  the coarse lattice refused the stance or refused the start point.
+- A finer-lattice arm should add only the cells the coarse lattice cannot name. If it re-asks the cells the coarse lattice
+  already offered, it is a second opinion that overrides the first.
