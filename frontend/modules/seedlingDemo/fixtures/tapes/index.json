@@ -158,7 +158,7 @@
     },
     {
       "file": "crusher-l42-round-trip.json",
-      "tickCount": 1468,
+      "tickCount": 1459,
       "bootLevel": 42,
       "tapeVersion": 8,
       "noHazards": []
