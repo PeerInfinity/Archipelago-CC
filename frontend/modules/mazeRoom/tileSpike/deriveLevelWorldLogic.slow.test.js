@@ -23,6 +23,11 @@
  * one spilled to the nearest free floor cell, each behind the boss fight's static weapon gate.
  * And sphere 5.3's (session tile-primitives-sphere-order-6): L39 r25c9 (the press's target and the pocket's gated doors; 1.5 s scripted)
  * and L40 r23c29 (the shared world whose Fire cells carry the corpse ruling; 7.5 s native, 78 s scripted, measured 2026-10-28).
+ * And sphere 5.6's two cross-room presses (session tile-primitives-sphere-order-7): L61 r0c10 (it lights L63's pole) and L63 r0c1 (it lights
+ * L62's), each a location on its ButtonRoom's cell.
+ * L89 r1c10 → L91, the one open problem sphere-order-7 named (⚖ 2026-10-28 "Ask for a game probe"), is CLOSED: the L91 teleporter
+ * stands on a waterfall tile, the game probe sided with the world's Feather (Swim×2), and the rules producer now charges it
+ * (session rules-waterfall-door).
  *
  * Slow tier: ~35 s native (every region, then the sample again for its lines) + ~86 s scripted sample on one
  * core (measured 2026-10-21, L13–L17). Since the arrow trap + rope (session tile-primitives-arrow-rope, 2026-10-22)
@@ -45,7 +50,7 @@ const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
     'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
     'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32', 'level_38',
-    'level_39__r25c9', 'level_40__r23c29'];
+    'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1'];
 const PERMISSIVE = playthroughPermissiveLocations();
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -68,6 +73,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_39__r25c9 → level_39__r0c9 | L39 flag 8: wandlock@144,592 cleared',
             'level_39__r25c9 → level_39__r2c11 | L39 flag 8: wandlock@144,592 cleared',
             'level_89__r9c6 @ Level 089 - Feather (from level_89__r11c12) | the rules producer leaves level_89/Level 089 - Feather uncharged (permissiveBindings)',
+            'level_91 → level_89__r1c10 (landing 15,4) | Progressive Swim',
         ]);
         sampleLines = certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE }).lines;
         // ⛓ Sphere 2.2 (session tile-primitives-sphere-order-3): L28's rope drops its fallrock on the grass lock's button. The maze

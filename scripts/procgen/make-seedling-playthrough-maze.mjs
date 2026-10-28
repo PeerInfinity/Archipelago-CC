@@ -72,13 +72,18 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * tile-primitives-sphere-order-6, ⚖ 2026-10-28 "All 3"): L39 L40 L43 — L39's wand lock is laid on its own cell, opened by that press
  * (⚖ "Lock cell opened by event"), and the pocket it seals has its doors gated on it (⚖ "Lay the producer's door gates"); L40's
  * Fire cells carry the rules' corpse ruling, Fire AND a weapon (`playthroughHandRuledGridFor`, ⚖ "Static now, mechanism later").
+ * Sphere 5.6 (session tile-primitives-sphere-order-7, ⚖ 2026-10-28 "All 13"): L50–L56 L61–L63 L90 L91 L93 — L61's and L63's ButtonRooms light
+ * L63's and L62's poles (press locations, as L38's); L63's two in-room poles, lit by a Spear thrust from a stance that is not the faced
+ * cell, gate only the L65 landings, so they are not carried here (⚖ "5.6 now, footprints next, then poles").
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
     'level_12', 'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20', 'level_21', 'level_22',
     'level_23', 'level_24', 'level_25', 'level_26', 'level_27', 'level_28', 'level_29', 'level_30', 'level_31', 'level_32', 'level_33', 'level_34',
     'level_35', 'level_36', 'level_37', 'level_38', 'level_39', 'level_40', 'level_43', 'level_44', 'level_45', 'level_46', 'level_47',
-    'level_48', 'level_49', 'level_59', 'level_60', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_92', 'level_94', 'level_95',
+    'level_48', 'level_49', 'level_50', 'level_51', 'level_52', 'level_53', 'level_54', 'level_55', 'level_56', 'level_59', 'level_60', 'level_61',
+    'level_62', 'level_63', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_90', 'level_91', 'level_92', 'level_93', 'level_94',
+    'level_95',
 ]);
 
 /**
@@ -170,6 +175,48 @@ export function landingGatesFor(atlas, levels) {
         || (c.one_way !== true && c.to[0] === g.region_id && c.to[1] === g.exit_id && keep.has(c.from[0])))));
 }
 
+/** The rule kinds whose args name items (`item_name`, `item_names`/`items` lists, `item_counts`/`items` maps), and those naming none. */
+const ITEM_RULE_KINDS = new Set(['Has', 'HasAll', 'HasAny', 'HasAllCounts', 'HasAnyCount', 'HasFromList', 'HasFromListUnique']);
+const ITEMLESS_RULE_KINDS = new Set(['True_', 'False_', 'Constant', 'And', 'Or', 'Not', 'CanReachRegion', 'CanReachLocation', 'CanReachEntrance']);
+
+/**
+ * ⛓ An event no world can produce is carried only while a kept rule NEEDS it (session tile-primitives-sphere-order-7, ⚖ 2026-10-28
+ * "5.6 now, footprints next, then poles"): L63's in-room LIGHTPOLES are lit by a Spear thrust from a stance that is not the faced
+ * cell, which the maze cannot do yet, and their light kills only the darktraps over L63's L65 landings — with L65 unlisted the
+ * events gate nothing, and carrying them would only add locations no world prices. Dropping one can leave another unneeded, so
+ * to a fixpoint. The whole-game compile, where L65 is listed, still carries and names them. A rule names an item through any
+ * item-bearing kind (a multi-item node naming an event keeps it, designer review); a kind whose items cannot be read is refused by
+ * name rather than read as naming none. Pure: returns the kept `layer.events`.
+ * @param {{events:object[], internalExitRules:object[], exitGates:object[]}} layer
+ * @param {(name:string) => boolean} produced does a maze world produce this event
+ */
+export function neededEvents(layer, produced) {
+    const ruleNames = (rule, acc) => {
+        if (!rule || typeof rule !== 'object') return acc;
+        const a = rule.args ?? {};
+        if (ITEM_RULE_KINDS.has(rule.rule)) {
+            if (typeof a.item_name === 'string') acc.add(a.item_name);
+            for (const list of [a.item_names, a.items]) if (Array.isArray(list)) for (const n of list) acc.add(n);
+            for (const map of [a.item_counts, a.items]) if (map && typeof map === 'object' && !Array.isArray(map)) for (const n of Object.keys(map)) acc.add(n);
+        } else if (!ITEMLESS_RULE_KINDS.has(rule.rule)) {
+            throw new Error(`events: a kept rule has a "${rule.rule}" node, whose items this layer cannot read — ${JSON.stringify(rule)}`);
+        }
+        for (const c of rule.children ?? []) ruleNames(c, acc);
+        return acc;
+    };
+    let events = layer.events;
+    for (let dropped = true; dropped;) {
+        const needed = new Set();
+        for (const e of events) ruleNames(e.access_rule, needed);
+        for (const r of layer.internalExitRules) ruleNames(r.rule, needed);
+        for (const g of layer.exitGates) ruleNames(g.rule, needed);
+        const before = events.length;
+        events = events.filter((e) => produced(e.name) || needed.has(e.name));
+        dropped = events.length < before;
+    }
+    return events;
+}
+
 /** The rules producer's event layer over the WHOLE playthrough atlas, built once per process (its analysis pass). */
 let producerLayer = null;
 function wholeEventLayer(atlas) {
@@ -213,6 +260,7 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
         ...layer.obstacle.events.map((e) => [e.name, 'open']), ...layer.locks.events.map((e) => [e.name, 'latch']),
         ...layer.buttons.events.filter((e) => e.fields.action?.presser).map((e) => [e.name, 'press']),
     ]);
+    out.events = neededEvents(out, (name) => mode.has(name));
     // `rule` = the event's own location rule: a sub-region world lays a touched lock no crossing uses by it (⚖ "Lay
     // touched event cells", session tile-primitives-sphere-order-2).
     out.world = out.events.filter((e) => mode.has(e.name)).map((e) => ({

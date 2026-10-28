@@ -273,3 +273,57 @@ describe('L43 — clean; its locations wait for five Totem Shards', () => {
         }
     }, 180_000);
 });
+
+/**
+ * ⛓ SPHERE 5.6 (session tile-primitives-sphere-order-7, ⚖ 2026-10-28 "All 13"): L50–L56 L61–L63 L90 L91 L93.
+ *   - L61 / L63: their ButtonRooms light L63's and L62's poles — press locations, as L38's. A lit pole's light kills the DarkTraps it
+ *     reaches, which the maze does not lay yet (⚖ "5.6 now, footprints next, then poles"); L63's two IN-ROOM poles, lit by a Spear
+ *     thrust from a stance that is not the faced cell, gate only the L65 landings, so with L65 unlisted they are not carried;
+ *   - L91: L89 r1c10 → L91 was the one open row — the teleporter stands on a waterfall (the world: Feather; the rules: Swim), left to
+ *     the rules arc's game probe (⚖ "Ask for a game probe"). The probe sided with the world and the rules now charge Swim×2
+ *     (session rules-waterfall-door), which the whole preset certifies clean.
+ */
+describe('L61–L63 — the lightpole presses are locations; the in-room poles are not carried', () => {
+    const LV = ['level_61', 'level_62', 'level_63'];
+    const F1 = 'L63 flag 1: lightpole@64,88 cleared';
+    const F0 = 'L62 flag 0: lightpole@120,200 cleared';
+
+    it('L61–L63 certify clean; each press is reached empty-handed on its ButtonRoom\'s cell', () => {
+        const out = certify(LV);
+        expect(out.problems).toEqual([]);
+        expect(out.accepted).toEqual([]);
+        const sc = compile(LV).preset_sidecars['1'];
+        expect(sc.level_61__r0c10.playable_payload.items.filter((i) => i.locationName === F1).map((i) => [i.x, i.y])).toEqual([[11, 3]]);
+        expect(sc.level_63__r0c1.playable_payload.items.filter((i) => i.locationName === F0).map((i) => [i.x, i.y])).toEqual([[2, 4]]);
+        for (const name of [F1, F0]) {
+            const rows = out.lines.filter((l) => l.includes(`@${name}`));
+            expect(rows, name).not.toEqual([]);
+            for (const l of rows) expect(l.slice(l.indexOf('=') + 1), l).toBe(FREE);
+        }
+    }, 180_000);
+
+    it('L63\'s in-room pole events gate nothing here and are not carried; L62\'s door #2 still costs the press or the Spear', () => {
+        const regions = compile(LV).regions['1'];
+        const names = Object.values(regions).flatMap((r) => (r.locations ?? []).map((l) => l.name));
+        expect(names.filter((n) => /^L63 flag [67]:/.test(n))).toEqual([]);
+        const doors = regions.level_62.exits.filter((e) => e.connected_region === 'level_63__r0c1').map((e) => JSON.stringify(e.access_rule));
+        expect(doors).toEqual(['{"rule":"True_"}', JSON.stringify({ rule: 'Or', children: [
+            { rule: 'Has', args: { item_name: F1 } }, { rule: 'Has', args: { item_name: 'Ghost Spear' } }] })]);
+    }, 180_000);
+});
+
+describe('L91 — the waterfall teleporter row, priced Swim×2 on both sides', () => {
+    // ⛓ This three-level cut has no start of its own and no level that leads into r1c10's landings, so its one arrival is the region's
+    // first tile, (13,0): the teleporter itself. From there the world crosses free while the rules (rightly) charge Swim×2, so the row
+    // reads "derived true, atlas false" here and only here; the whole preset, where r1c10 is entered from below, certifies clean.
+    it('L89 + L91 + L92: the world climbs the fall on Swim×2, as the rules now charge; the cut\'s door-tile arrival is the one row', () => {
+        const LV = ['level_89', 'level_91', 'level_92'];
+        const out = certify(LV);
+        expect(out.problems).toEqual(['level_89__r1c10 → level_91 holding [Progressive Swim]: derived true, atlas false']);
+        expect(line(out, 'level_89__r1c10->level_91<@13,1=')).toBe(JSON.stringify([['Progressive Swim', 'Progressive Swim']]));
+        const p = compile(LV).preset_sidecars['1'].level_89__r1c10.playable_payload;
+        expect(p.exits.find((e) => e.targetRegion === 'level_91')).toMatchObject({ x: 13, y: 0 });
+        const fall = p.obstacleLib[p.entry_gates.find((g) => g.x === 13 && g.y === 0 && g.dir === 'N').gate].clear_rule;
+        expect(fall).toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim', count: 2 } });
+    }, 180_000);
+});

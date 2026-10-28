@@ -125,8 +125,11 @@ describe('the level-world flaws the conversion exposed (L58, L19)', () => {
         expect(gateAt(wired, 4, 7).children).toContainEqual(has(SWIM)); // r6c5's teleporter to L57
     });
 
-    it('certifies with only the named talk left (the yeti)', () => {
-        expect(certify(['level_58']).problems).toEqual([
+    // ⛓ tile-primitives-sphere-order-7: alone, L58's talk gates nothing (its crossing to L46 is unwired), so it is not carried
+    // (`eventLayerFor`); with L46 listed it is, and the certifier names it.
+    it('certifies clean alone, and with L46 with only the named talk left (the yeti)', () => {
+        expect(certify(['level_58']).problems).toEqual([]);
+        expect(certify(['level_46', 'level_58']).problems.filter((p) => p.startsWith('level_58__r3c3: location'))).toEqual([
             'level_58__r3c3: location L58 flag 1: yeti@56,56 cleared is not priced — the maze world cannot produce it (a talk)',
         ]);
     });
