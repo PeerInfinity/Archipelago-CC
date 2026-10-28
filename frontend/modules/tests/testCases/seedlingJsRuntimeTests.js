@@ -4688,10 +4688,13 @@ async function toolsSettledIn(tc, label, region, level, ms = 30000) {
  * Hold the arrow key toward tile (tx, ty) until the game leaves its level (the door fires). Sent the way the panel's
  * touch controls send it (`_sendTouchKey` → `dispatchGameKey`, with the keyCode the wasm game reads).
  */
-async function toolsWalkInto(panel, tx, ty, maxMs = 10000) {
+async function toolsWalkInto(tc, panel, tx, ty, maxMs = 10000) {
     const f = toolsFacts();
-    const dx = tx * 16 - f.ctor.x;
-    const dy = ty * 16 - f.ctor.y;
+    // ⛔ wasm: `readState`'s position can LAG the game (the touch-controls row's note); `botStatus` reads the player
+    // itself, its centre (+8), so the direction comes from it when it reports
+    const at = f.x !== null && f.y !== null ? { x: f.x - 8, y: f.y - 8 } : f.ctor;
+    const dx = tx * 16 - at.x;
+    const dy = ty * 16 - at.y;
     const code = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'ArrowLeft' : 'ArrowRight') : (dy < 0 ? 'ArrowUp' : 'ArrowDown');
     const k = { key: code, code, keyCode: { ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40 }[code] };
     const from = f.level;
@@ -4703,7 +4706,10 @@ async function toolsWalkInto(panel, tx, ty, maxMs = 10000) {
             await new Promise((r) => setTimeout(r, STEP_MS));
         }
     } finally { panel._sendTouchKey('keyup', k); }
-    return toolsFacts().level !== from;
+    const end = toolsFacts();
+    tc.log(`walk ${code} to tile (${tx},${ty}): from ${JSON.stringify({ level: f.level, x: f.x, y: f.y, ctor: f.ctor })} `
+        + `→ ${JSON.stringify({ level: end.level, x: end.x, y: end.y, ctor: end.ctor })} in ${Math.round(performance.now() - t0)} ms`);
+    return end.level !== from;
 }
 
 /** Record every `user:regionMove` published through the flash panel's dispatcher; `stop()` restores it. */
@@ -4757,7 +4763,7 @@ const toolsRestartAndTeleport = (runtime) => async (tc) => withRuntimeRestored(t
         const nest = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the walk`, TOOLS_OWLS, 2);
         if (!nest) { tc.reportCondition(`[${runtime}] in the owl's nest for the walk`, false); return; }
         const movesBefore = recorder.moves.length;
-        const walkedOut = await toolsWalkInto(panel, 3, 1);
+        const walkedOut = await toolsWalkInto(tc, panel, 3, 1, runtime === 'wasm' ? 20000 : 10000);
         const walked = walkedOut ? await toolsSettledIn(tc, `[${runtime}] the walked stairs landed in the start`, TOOLS_START, 0) : null;
         tc.reportCondition(`[${runtime}] WALKED: the stairs up crossed into ${TOOLS_START} (gameState, binding, game)`, !!walked);
         if (!walked) return;
