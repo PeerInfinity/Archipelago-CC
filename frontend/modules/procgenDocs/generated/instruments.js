@@ -134,7 +134,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 93,
+            "count": 94,
             "id": "plan"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 480,
+        "blockStyle": 481,
         "browser": 188,
-        "cited": 259,
-        "files": 497,
+        "cited": 260,
+        "files": 498,
         "lineStyle": 17,
-        "withDocblock": 497,
-        "withFlags": 413
+        "withDocblock": 498,
+        "withFlags": 414
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8573,6 +8573,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-ladder2-witness — ⛓⛓⛓ SEEDLING FIDELITY LADDER2: THE SOLVER CROSSES A PLACED GRENADE, A LAVA CHAIN AND A BEAM TOWER, AND THE GAME LETS IT THROUGH.",
             "path": "scripts/procgen/plan-seedling-ladder2-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "from-view"
+            ],
+            "file": "plan-seedling-lightpole-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "from-view"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-lightpole-witness — ⛓⛓⛓ SEEDLING FIDELITY LIGHTPOLE (wave 34): AN IN-ROOM POLE IS LIT FROM ITS OWN ROOM.",
+            "path": "scripts/procgen/plan-seedling-lightpole-witness.mjs"
         },
         {
             "argvHelpers": [],
