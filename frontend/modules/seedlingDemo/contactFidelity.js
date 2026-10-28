@@ -1669,7 +1669,7 @@ export const CONTACT_FIDELITY = {
      * Under `noclip`/`noDamage` (no chaser position) the room still refuses. OFF: byte-identical.
      * `SEEDLING_WAND_SHOT_CHASER_BODIES=0|1`.
      */
-    wandShotChaserBodies: false,
+    wandShotChaserBodies: true,
     /**
      * fidelity L12DOORS D2 (wave 34) — A DOOR THE 16 px FRONTIER CANNOT SEE, NEARER THE AIM, IS ASKED ON THE 8 px
      * LATTICE (`solverBot.identifyAndSelect`'s frontier flood).
@@ -1681,7 +1681,7 @@ export const CONTACT_FIDELITY = {
      * door the 16 px one lacks, nearer the aim than every 16 px actionable door, the 8 px frontier is asked. OFF:
      * byte-identical. `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`.
      */
-    fineFrontierHiddenDoor: false,
+    fineFrontierHiddenDoor: true,
     /**
      * fidelity L12DOORS D3 (wave 34) — A WAND STANCE THE 8 px LATTICE REACHES (`solverBot.resolveWandStrategy`).
      *
@@ -1690,7 +1690,7 @@ export const CONTACT_FIDELITY = {
      * it refuses is asked once more on `FINE_LATTICE` in the world as it is. OFF: byte-identical.
      * `SEEDLING_FINE_WAND_STANCE=0|1`.
      */
-    fineWandStance: false,
+    fineWandStance: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
