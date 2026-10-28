@@ -1616,7 +1616,7 @@ export const CONTACT_FIDELITY = {
      * planned in the world as it is on the 8 px lattice, as `deriveKeylockStance`'s RULESREF arm does. OFF:
      * byte-identical. `SEEDLING_FINE_SWING_STANCE=0|1`.
      */
-    fineSwingStance: false,
+    fineSwingStance: true,
     /**
      * fidelity L40BK2B D1 (wave 33) — THE ORBIT KILL STEERS TO A POINT THE PLAYER CAN STAND ON. `orbitKillPolicy`
      * aims at a point on a circle round the body and steers straight at it (`chooseHeld`), which is right in an open
