@@ -126,7 +126,7 @@ describe('latched-lock events: L19\'s Red Key boss lock', () => {
     });
 });
 
-describe('events the maze world cannot produce are carried and named (⚖ "Carry + name"): L38\'s press opens L39', () => {
+describe('L38\'s press opens L39: carried (⚖ "Carry + name"), produced on its button, its far side named', () => {
     const LEVELS = ['level_38', 'level_39'];
     const E = 'L39 flag 8: wandlock@144,592 cleared';
     const RULES = JSON.parse(buildPlaythroughMaze({ levels: LEVELS }).text);
@@ -140,12 +140,14 @@ describe('events the maze world cannot produce are carried and named (⚖ "Carry
         }
     });
 
-    it('the certifier names the location and each row that needs it', () => {
-        const named = certify(RULES, ['level_38', 'level_39__r25c9']).problems.filter((p) => p.includes('cannot produce'));
-        expect(named).toEqual([
-            `level_38 → level_39__r25c9 holding []: derived true, atlas false — needs "${E}", which the maze world cannot produce (a press in L38, another level)`,
-            `level_38: location ${E} is not priced — the maze world cannot produce it (a press in L38, another level)`,
-            `level_39__r25c9 → level_38 holding []: derived true, atlas false — needs "${E}", which the maze world cannot produce (a press in L38, another level)`,
+    // ⛓ session tile-primitives-sphere-order-5 (⚖ "Location on the cell"): L38's world produces the press on its button; the
+    // target (L39's wand lock) is not opened by it in L39's world yet (⚖ "Later, with L39"), and each row that needs it says so.
+    it('the press is priced free in L38; each crossing that needs it names its unmodelled far side', () => {
+        const out = certify(RULES, ['level_38', 'level_39__r25c9']);
+        expect(out.lines).toContain(`level_38@${E}=[[]]`);
+        expect(out.problems.filter((p) => p.includes(E))).toEqual([
+            `level_38 → level_39__r25c9 holding []: derived true, atlas false — needs "${E}", a press the maze world produces, but no world opens its target (wandlock@144,592 in L39) by it`,
+            `level_39__r25c9 → level_38 holding []: derived true, atlas false — needs "${E}", a press the maze world produces, but no world opens its target (wandlock@144,592 in L39) by it`,
         ]);
     });
 });

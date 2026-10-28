@@ -62,14 +62,16 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * and L67's struck block were built for them. Sphere 2.2 (session tile-primitives-sphere-order-3, ⚖ 2026-10-27 "All 12"): L21–L31 + L37,
  * which needed no new feature (L28's rope holds its fallrock on the grass lock's button — a minted rope, like L16's). Spheres 3.5 + 3.7
  * (session tile-primitives-sphere-order-4, ⚖ 2026-10-27 "L34 + L32"): L34 and L32 — L32's two locations on one tile spill one to the
- * nearest free floor cell (the projection's `location_stacked`); its boss fight stays the rules' static weapon gate.
+ * nearest free floor cell (the projection's `location_stacked`); its boss fight stays the rules' static weapon gate. Sphere 4.5
+ * (session tile-primitives-sphere-order-5, ⚖ 2026-10-27 "All 6"): L38 L45 L46 L47 L48 L49 — L38's ButtonRoom, which opens L39's wand lock,
+ * is a location on its own cell (⚖ "Location on the cell"); the lock's side waits for L39.
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
     'level_12', 'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20', 'level_21', 'level_22',
     'level_23', 'level_24', 'level_25', 'level_26', 'level_27', 'level_28', 'level_29', 'level_30', 'level_31', 'level_32', 'level_33', 'level_34',
-    'level_35', 'level_36', 'level_37', 'level_44', 'level_59', 'level_60', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_92',
-    'level_94', 'level_95',
+    'level_35', 'level_36', 'level_37', 'level_38', 'level_44', 'level_45', 'level_46', 'level_47', 'level_48', 'level_49', 'level_59',
+    'level_60', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_92', 'level_94', 'level_95',
 ]);
 
 /**
@@ -197,11 +199,18 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     };
     // The events the maze WORLD models (⚖ "All AP; world rocks+locks"): an obstacle's opens it once carried, a latched
     // lock's is what its far side's crossing costs. A cross-room press or a talk has no world mechanism (⚖ "Carry + name").
-    const mode = new Map([...layer.obstacle.events.map((e) => [e.name, 'open']), ...layer.locks.events.map((e) => [e.name, 'latch'])]);
+    // ⛓ A cross-room PRESS (session tile-primitives-sphere-order-5, ⚖ 2026-10-27 "Location on the cell") is produced in its
+    // PRESSER's world: the event is a location on the ButtonRoom's own cell (`ButtonRoom.update`: a body standing on it presses
+    // it, and the press latches). Its far side — the target the event opens in another level — is not modelled yet (⚖ "Later, with L39").
+    const mode = new Map([
+        ...layer.obstacle.events.map((e) => [e.name, 'open']), ...layer.locks.events.map((e) => [e.name, 'latch']),
+        ...layer.buttons.events.filter((e) => e.fields.action?.presser).map((e) => [e.name, 'press']),
+    ]);
     // `rule` = the event's own location rule: a sub-region world lays a touched lock no crossing uses by it (⚖ "Lay
     // touched event cells", session tile-primitives-sphere-order-2).
     out.world = out.events.filter((e) => mode.has(e.name)).map((e) => ({
         name: e.name, side: e.fields.side, mode: mode.get(e.name), obstacle: e.fields.obstacle, rule: e.access_rule ?? null,
+        ...(mode.get(e.name) === 'press' ? { presser: e.fields.action.presser } : {}),
     }));
     const all = new Set(layer.events.map((e) => e.name));
     const have = new Set([...out.events.map((e) => e.name), ...minted]);
