@@ -205,7 +205,7 @@ export function createTouchKeyBridge({ zones, send }) {
 
 const STRIP_CSS = 'display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 4px;'
     + 'box-sizing:border-box;width:100%;touch-action:none;user-select:none;-webkit-user-select:none;'
-    + '-webkit-touch-callout:none;flex-shrink:0;';
+    + '-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;flex-shrink:0;';
 const PAD_CSS = 'position:relative;flex:0 0 auto;border-radius:50%;background:rgba(255,255,255,0.06);'
     + 'border:1px solid rgba(255,255,255,0.18);pointer-events:auto;';
 const BUTTON_CSS = 'flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;'
@@ -319,12 +319,23 @@ export function mountTouchControls({ doc, layout, send, size = 132 } = {}) {
     const releaseAll = () => { bridge.releaseAll(); paint(); };
     const onVisibility = () => { if (doc.visibilityState === 'hidden') releaseAll(); };
     const onContext = (e) => e.preventDefault(); // a long press opens no menu
+    /**
+     * ⚖ (the user 2026-10-27: *"While holding down the on screen direction pad, it registers as a tap and hold on
+     * the cellphone, and gives the haptic feedback for that."*) A phone recognises its long press (and buzzes for it)
+     * from the TOUCH events, which a cancelled pointerdown does not cancel. So a touch on a control is cancelled
+     * too, NON-passively (a passive listener's preventDefault is ignored). Only a control takes a touch at all
+     * (`pointer-events: none` elsewhere), so a tap on the game beside them is untouched. The pointer events have
+     * already fired by then: the held-key semantics above are unchanged.
+     */
+    const onTouch = (e) => { if (e.cancelable) e.preventDefault(); };
+    const TOUCH_EVENTS = ['touchstart', 'touchmove', 'touchend'];
     root.addEventListener('pointerdown', onDown);
     root.addEventListener('pointermove', onMove);
     root.addEventListener('pointerup', onUp);
     root.addEventListener('pointercancel', onCancel);
     root.addEventListener('lostpointercapture', onUp);
     root.addEventListener('contextmenu', onContext);
+    for (const t of TOUCH_EVENTS) root.addEventListener(t, onTouch, { passive: false });
     doc.addEventListener('visibilitychange', onVisibility);
     win?.addEventListener?.('pagehide', releaseAll);
 
@@ -372,6 +383,7 @@ export function mountTouchControls({ doc, layout, send, size = 132 } = {}) {
             root.removeEventListener('pointercancel', onCancel);
             root.removeEventListener('lostpointercapture', onUp);
             root.removeEventListener('contextmenu', onContext);
+            for (const t of TOUCH_EVENTS) root.removeEventListener(t, onTouch, { passive: false });
             doc.removeEventListener('visibilitychange', onVisibility);
             win?.removeEventListener?.('pagehide', releaseAll);
             root.remove();

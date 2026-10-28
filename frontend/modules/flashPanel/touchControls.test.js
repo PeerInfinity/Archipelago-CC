@@ -6,8 +6,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import {
-    DPAD_DIRECTIONS, TOUCH_SETTING_KEY, createTouchKeyBridge, dpadDirection, dpadDirectionKeys, parseTouchLayout,
-    touchControlsSchemaProps, touchControlsVisible,
+    DPAD_DIRECTIONS, TOUCH_SETTING_KEY, createTouchKeyBridge, dpadDirection, dpadDirectionKeys, mountTouchControls,
+    parseTouchLayout, touchControlsSchemaProps, touchControlsVisible,
 } from './touchControls.js';
 import { createHeldKeyRelease, dispatchGameKey } from './gameInput.js';
 import { KEYBOARD_BINDINGS } from '../seedlingDemo/watchManual.js';
@@ -238,5 +238,59 @@ describe('the setting', () => {
         expect(touchControlsVisible('auto', { search: '', matchMediaFn: fine })).toBe(false);
         expect(touchControlsVisible('auto', { search: '?touch=1', matchMediaFn: fine })).toBe(true);
         expect(touchControlsVisible('auto', { search: '?touch=0', matchMediaFn: coarse })).toBe(false);
+    });
+});
+
+/**
+ * A minimal fake document for the DOM binder (vitest runs in node here): elements record their listeners WITH the
+ * options they were added with, so a row can read whether a listener is passive.
+ */
+function fakeDoc() {
+    const listeners = (target) => {
+        target.listeners = [];
+        target.addEventListener = (type, fn, opts) => target.listeners.push({ type, fn, opts });
+        target.removeEventListener = (type, fn) => { target.listeners = target.listeners.filter((l) => l.type !== type || l.fn !== fn); };
+        return target;
+    };
+    const el = () => listeners({
+        style: {}, dataset: {}, children: [], className: '', textContent: '',
+        append(...c) { this.children.push(...c); }, remove() {}, setPointerCapture() {},
+        getBoundingClientRect: () => ({ left: 0, top: 0, right: 132, bottom: 132, width: 132, height: 132 }),
+    });
+    const win = listeners({});
+    return listeners({ defaultView: win, visibilityState: 'visible', createElement: el });
+}
+const touchEvent = (type) => ({ type, cancelable: true, defaultPrevented: false, preventDefault() { this.defaultPrevented = true; } });
+
+describe('the DOM binder: a held control is no long press (slice seedling-js-mobile-polish)', () => {
+    const mount = () => mountTouchControls({ doc: fakeDoc(), layout: LAYOUT, send: () => {} });
+    for (const type of ['touchstart', 'touchmove', 'touchend']) {
+        it(`${type} on the controls is cancelled by a NON-passive listener`, () => {
+            const { element } = mount();
+            const ls = element.listeners.filter((l) => l.type === type);
+            expect(ls.length).toBe(1);
+            // ⛔ a passive listener's preventDefault is ignored by the browser: the long press (and its buzz) would stay
+            expect(ls[0].opts?.passive).toBe(false);
+            const e = touchEvent(type);
+            ls[0].fn(e);
+            expect(e.defaultPrevented).toBe(true);
+        });
+    }
+    it('an uncancelable touch (a scroll already under way) is left alone', () => {
+        const { element } = mount();
+        const e = { ...touchEvent('touchmove'), cancelable: false };
+        element.listeners.find((l) => l.type === 'touchmove').fn(e);
+        expect(e.defaultPrevented).toBe(false);
+    });
+    it('no tap highlight, no callout, no browser touch action on the strip', () => {
+        const { element } = mount();
+        for (const css of ['touch-action:none', '-webkit-touch-callout:none', '-webkit-tap-highlight-color:transparent']) {
+            expect(element.style.cssText).toContain(css);
+        }
+    });
+    it('destroy removes the touch listeners', () => {
+        const c = mount();
+        c.destroy();
+        expect(c.element.listeners.filter((l) => l.type.startsWith('touch'))).toEqual([]);
     });
 });

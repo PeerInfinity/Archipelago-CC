@@ -36,7 +36,7 @@ import { runTape as runFixtureTape } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 import { buildLevelWorld } from './levelWorld.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
-import { formatOp, roomOps } from './seedlingSkinRenderer.js';
+import { TELEPORTER_COLOUR, formatOp, roomOps, teleporterArtFilter } from './seedlingSkinRenderer.js';
 import { formatPlayerOp } from './seedlingPlayerSkin.js';
 import { ENEMY_COVERAGE, worldFrame } from './seedlingEnemySkin.js';
 import { ROOM_BODY_COVERAGE } from './seedlingRoomBodySkin.js';
@@ -327,4 +327,44 @@ describe('6. the room\'s own ops: only the replaced rectangles leave', () => {
             expect(base.filter((l) => !kept.has(l)).every((l) => l.startsWith('fillRect('))).toBe(true);
         });
     }
+});
+
+describe('7. the teleporters with art: only the game\'s SHOWN portals keep a stand-in (slice seedling-js-mobile-polish)', () => {
+    const roomOf = (level) => buildLevelWorld(levelSourceFromAtlas(MAP)(level));
+    const tpRects = (ops) => ops.filter((o) => o?.colour === TELEPORTER_COLOUR && !o.key);
+    const shownIn = (level) => (recordOf(level)?.entities ?? []).filter((e) => e.type === 'teleporter' && Number(e.attrs?.show ?? 0) !== 0);
+    it('the vanilla map shows exactly six portals (L43 L58 L100 L101 L106 L109)', () => {
+        const levels = MAP.levels.filter((l) => shownIn(l.level).length > 0).map((l) => l.level);
+        expect(levels).toEqual([43, 58, 100, 101, 106, 109]);
+    });
+    for (const level of [8, 16, 40, 43, 101]) {
+        it(`L${level}: with art no invisible teleporter is painted; the debug (art-less) view paints every active one`, () => {
+            const world = roomOf(level);
+            const active = world.teleporters.filter((tp) => !tp.deactivated);
+            expect(active.length).toBeGreaterThan(0);
+            const shown = new Set(shownIn(level).map((e) => `${Number(e.x)},${Number(e.y)}`));
+            const shownActive = active.filter((tp) => !tp.isStairs && shown.has(`${tp.x},${tp.y}`));
+            // the record's x,y ARE the world's: a shown portal in the record is found in the world
+            expect(shownActive.length > 0).toBe(shown.size > 0);
+            const withArt = roomOps(world, art, { level, drawnTeleporters: teleporterArtFilter(recordOf(level)) });
+            expect(tpRects(withArt).map((o) => `${o.rect.x},${o.rect.y}`).sort())
+                .toEqual(shownActive.map((tp) => `${tp.rect.x},${tp.rect.y}`).sort());
+            // only the teleporter rectangles left: every other op is the old list's, in order
+            const old = roomOps(world, art, { level, drawnTeleporters: (tp) => tp.isStairs === true });
+            const isTp = (o) => o?.colour === TELEPORTER_COLOUR && !o.key;
+            expect(withArt.filter((o) => !isTp(o)).map(formatOp)).toEqual(old.filter((o) => !isTp(o)).map(formatOp));
+            const debug = roomOps(world, null, { level });
+            expect(tpRects(debug).length).toBe(active.length);
+        });
+    }
+    it('MUTANT: the old filter (stairs only) paints the invisible ones — the row above would be red', () => {
+        const world = roomOf(8);
+        const old = roomOps(world, art, { level: 8, drawnTeleporters: (tp) => tp.isStairs === true });
+        expect(tpRects(old).length).toBeGreaterThan(0);
+    });
+    it('THE PAGE passes the filter with art (jsRuntimePage.js)', () => {
+        const src = readFileSync(join(HERE, 'jsRuntimePage.js'), 'utf8');
+        expect(src).toContain('drawnTeleporters: teleporterArtFilter(');
+        expect(src).not.toContain('drawnTeleporters: (tp) => tp.isStairs === true');
+    });
 });

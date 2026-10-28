@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 119,
-            "count": 167,
+            "browser": 120,
+            "count": 168,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 476,
-        "browser": 184,
+        "blockStyle": 477,
+        "browser": 185,
         "cited": 257,
-        "files": 492,
+        "files": 493,
         "lineStyle": 16,
-        "withDocblock": 492,
-        "withFlags": 409
+        "withDocblock": 493,
+        "withFlags": 410
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14098,6 +14098,61 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-mask-lines — ⛓⛓⛓ seedling-fidelity-masks: THE SWING'S LINE OF SIGHT SAMPLES THE \"Solid\" PIXELMASKS (`CONTACT_FIDELITY.pixelMaskSightLines`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-mask-lines.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arms",
+                "host",
+                "screens",
+                "taller-px",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-mobile-fit.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "screens"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "taller-px"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling MOBILE FIT (slice `seedling-js-mobile-polish`, ⚖ the user 2026-10-27: *\"On mobile, the bottom of the Seedling panel is covered by the panel select bar at the bottom of the screen.\"*) — in a phone viewport, the Seedling panel's bottom edge, and the game + touch strip inside it, are at or above the panel sele…",
+            "path": "scripts/procgen/probe-seedling-mobile-fit.mjs"
         },
         {
             "argvHelpers": [
