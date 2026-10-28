@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 122,
-            "count": 170,
+            "browser": 123,
+            "count": 171,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 479,
-        "browser": 187,
+        "blockStyle": 480,
+        "browser": 188,
         "cited": 259,
-        "files": 496,
+        "files": 497,
         "lineStyle": 17,
-        "withDocblock": 496,
-        "withFlags": 412
+        "withDocblock": 497,
+        "withFlags": 413
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13896,6 +13896,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l67-reach2 — does the spear push a block from TWO tiles away, across a pit?",
             "path": "scripts/procgen/probe-seedling-l67-reach2.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l89-waterfall.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L89 TELEPORTER to L91 (`out_teleporter_208_0`, tile [13,0]), ON THE GAME (slice rules-l89-waterfall-probe): can a Swim-only player (the Conch, no Feather) touch it?",
+            "path": "scripts/procgen/probe-seedling-l89-waterfall.mjs"
         },
         {
             "argvHelpers": [
