@@ -213,6 +213,25 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
         ...layer.obstacle.events.map((e) => [e.name, 'open']), ...layer.locks.events.map((e) => [e.name, 'latch']),
         ...layer.buttons.events.filter((e) => e.fields.action?.presser).map((e) => [e.name, 'press']),
     ]);
+    // ⛓ An event no world can produce is carried only while a kept rule NEEDS it (session tile-primitives-sphere-order-7, ⚖ 2026-10-28
+    // "5.6 now, footprints next, then poles"): L63's in-room LIGHTPOLES are lit by a Spear thrust from a stance that is not the faced
+    // cell, which the maze cannot do yet, and their light kills only the darktraps over L63's L65 landings — with L65 unlisted the
+    // events gate nothing, and carrying them would only add locations no world prices. Dropping one can leave another unneeded, so
+    // to a fixpoint. The whole-game compile, where L65 is listed, still carries and names them.
+    const ruleNames = (rule, acc) => {
+        if (rule?.rule === 'Has' && typeof rule.args?.item_name === 'string') acc.add(rule.args.item_name);
+        for (const c of rule?.children ?? []) ruleNames(c, acc);
+        return acc;
+    };
+    for (let dropped = true; dropped;) {
+        const needed = new Set();
+        for (const e of out.events) ruleNames(e.access_rule, needed);
+        for (const r of out.internalExitRules) ruleNames(r.rule, needed);
+        for (const g of out.exitGates) ruleNames(g.rule, needed);
+        const before = out.events.length;
+        out.events = out.events.filter((e) => mode.has(e.name) || needed.has(e.name));
+        dropped = out.events.length < before;
+    }
     // `rule` = the event's own location rule: a sub-region world lays a touched lock no crossing uses by it (⚖ "Lay
     // touched event cells", session tile-primitives-sphere-order-2).
     out.world = out.events.filter((e) => mode.has(e.name)).map((e) => ({

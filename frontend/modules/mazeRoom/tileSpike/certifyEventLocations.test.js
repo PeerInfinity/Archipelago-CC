@@ -178,6 +178,23 @@ describe('eventLayerFor', () => {
         ]);
     });
 
+    // ⛓ session tile-primitives-sphere-order-7 (⚖ 2026-10-28 "5.6 now, footprints next, then poles"): an event no maze world can
+    // produce (an in-room LIGHTPOLE: lit by a Spear thrust from a stance that is not the faced cell) is carried only while a kept
+    // rule needs it. L63's two in-room poles kill the darktraps over its L65 landings, so with L65 unlisted they gate nothing.
+    const L63_POLES = ['L63 flag 6: lightpole@48,272 cleared', 'L63 flag 7: lightpole@112,272 cleared'];
+    it('an unproducible event no kept rule names is not carried (L63\'s in-room poles without L65)', () => {
+        const names = eventLayerFor(ATLAS, ['level_61', 'level_62', 'level_63']).events.map((e) => e.name);
+        for (const n of L63_POLES) expect(names).not.toContain(n);
+        // the producible presses stay: L61's lights L63's pole, L63's lights L62's
+        expect(names).toEqual(expect.arrayContaining(['L63 flag 1: lightpole@64,88 cleared', 'L62 flag 0: lightpole@120,200 cleared']));
+    });
+
+    it('... and is carried, named, once a kept rule needs it (L65 listed: its doors cost the poles)', () => {
+        const layer = eventLayerFor(ATLAS, ['level_63', 'level_65']);
+        expect(layer.events.map((e) => e.name)).toEqual(expect.arrayContaining(L63_POLES));
+        expect(layer.exitGates.some((g) => JSON.stringify(g.rule).includes(L63_POLES[0]))).toBe(true);
+    });
+
     it('refuses BY NAME a kept event that needs an event of a level not in the compile', () => {
         // L113's final door opens only after the Watcher's talk, in L114.
         expect(() => eventLayerFor(ATLAS, ['level_113', 'level_112'])).toThrow(/L113 flag 0: finaldoor.*needs L114 flag 0: watcher.*not in the levels/);
