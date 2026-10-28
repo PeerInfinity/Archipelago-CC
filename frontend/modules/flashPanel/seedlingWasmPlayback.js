@@ -107,7 +107,7 @@ import {
     adoptedClockStaging, heldArrivalClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, crossingArrivalVerdict, endsHeld, exactDeclarationRefusal, legEndRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, latchExpired, latchWatch, locationGoalServed, encounterReportServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     observeLatch,
-    primarySplitRefusal, shadowMismatch, ctorMismatch, bootAtCtor, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
+    primarySplitRefusal, shadowMismatch, ctorMismatch, arrivalRowRefusal, ARRIVAL_ROW_WAIT_MS, bootAtCtor, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
 } from '../seedlingDemo/wasmPlayback.js';
 import {
@@ -297,6 +297,8 @@ export function createWasmPlayback({
     /** W3: the forced re-arrivals this goal has spent, and the spawn its arrival recorded. */
     let recoveries = 0;
     let spawn = null;
+    /** ⛓ ARRIVAL ROW — this goal's arrival-row fallbacks (a second one fails by name: the re-arrival did not cure it). */
+    let arrivalRowFallbacks = 0;
     /** ⛓ W4 — this goal's last divergence (an exact repeat fails at once). */
     let lastDivergence = null;
     /**
@@ -356,6 +358,8 @@ export function createWasmPlayback({
         recoveries: 0, keyReleases: [],
         // ⛓ W7 — why each forced re-arrival was spent, the held arrivals, the continuations, the glue query's refusals
         forcedBy: {}, held: 0, continuations: 0, fallbacks: [], heldChecks: [], holdBlocked: [], releasedForSwap: 0,
+        // ⛓ ARRIVAL ROW — every arrival plan that found the game off its first row: `{goal, level, expected, waitedMs, outcome}`
+        arrivalRow: [],
         // ⛓ W8 — cold starts adopted as they stand, and the clause each refused one failed
         adopted: 0, adoptRefused: [],
         // ⛓ L74 SILENT STALL — a throw that left an engine timer callback (`guarded`): `{at, phase, message}`, each one failed by name
@@ -605,6 +609,7 @@ export function createWasmPlayback({
         }
         goal = g;
         recoveries = 0;
+        arrivalRowFallbacks = 0;
         lastDivergence = null;
         if (action === 'continue') {
             token += 1;
@@ -1602,6 +1607,9 @@ export function createWasmPlayback({
             solveInRoom();
             return;
         }
+        // ⛓ ARRIVAL ROW — an arrival plan's first tape waits (bounded) for the game to stand on the live run's row,
+        // then is refused BY NAME: never shipped into a t=0 divergence (`arrivalRowRefusal`).
+        if (!play.continuation && !isFrozen && !arrivalRowReady(st)) return;
         // ⛓ MID-ROOM REPLAN — the lead tick (`solveInRoom`) goes first, its row the held one.
         const lead = play.lead ?? [];
         if (lead.length && !play.leadShipped) {
@@ -1702,6 +1710,39 @@ export function createWasmPlayback({
         // ⛓ W7 — an exit plan's crossing: hold the arrival it leads to (the glue's redirect landing, if any).
         if (glueQuery && !hold) { arriving = true; startWatch(); }
         schedule(watch, DRAIN_MS);
+    }
+
+    /**
+     * ⛓ ARRIVAL ROW — true when the arrival plan may ship (the game on the live run's row, at once or after a wait);
+     * false when it waits (`ship` re-scheduled) or was refused (a named fallback, or a named failure the second time).
+     */
+    function arrivalRowReady(st) {
+        const why = arrivalRowRefusal(play.request?.live?.row ?? null, st);
+        const w = play.arrivalRow;
+        if (!why) {
+            if (w) stats.arrivalRow.push({ ...w.row, waitedMs: Math.round(now() - w.since), outcome: 'matched' });
+            play.arrivalRow = null;
+            return true;
+        }
+        if (!w) {
+            play.arrivalRow = { since: now(), row: { goal: goal?.name ?? goal?.kind ?? null, level: goal?.level ?? null, why } };
+            tl('arrival-row-wait', { why });
+            note(`waiting for the game to stand where the plan starts (${why})`);
+        }
+        const since = play.arrivalRow.since;
+        if (now() - since < ARRIVAL_ROW_WAIT_MS) { schedule(ship, DRAIN_MS); return false; }
+        const waitedMs = Math.round(now() - since);
+        const refusal = `the arrival plan was not shipped — ${why}, still after ${waitedMs} ms`;
+        play.arrivalRow = null;
+        arrivalRowFallbacks += 1;
+        if (arrivalRowFallbacks > 1) {
+            stats.arrivalRow.push({ goal: goal?.name ?? goal?.kind ?? null, level: goal?.level ?? null, why, waitedMs, outcome: 'failed' });
+            fail(`${refusal} (a second time on this goal: the forced re-arrival did not put the player on the plan's first row)`);
+            return false;
+        }
+        stats.arrivalRow.push({ goal: goal?.name ?? goal?.kind ?? null, level: goal?.level ?? null, why, waitedMs, outcome: 'fallback' });
+        fallback(refusal, 'arrival-row');
+        return false;
     }
 
     // ── 6: watch ──────────────────────────────────────────────────────────

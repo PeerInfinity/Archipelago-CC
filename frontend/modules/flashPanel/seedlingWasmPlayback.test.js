@@ -18,7 +18,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { ADOPT_WAIT_MS, ARRIVAL_WAIT_MS, createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
-import { LATCH_FRAME_BOUND, SHIPPED_RNG, SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
+import { ARRIVAL_ROW_WAIT_MS, LATCH_FRAME_BOUND, SHIPPED_RNG, SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES, arrivalRowRefusal } from '../seedlingDemo/wasmPlayback.js';
 import { ANYTIME_PASSES, solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK } from '../seedlingDemo/jsRuntimeSolver.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
@@ -1013,7 +1013,10 @@ describe('W7 — continuations from a held room, and their named fallbacks', () 
         e.engine.walkTo(CHEST);
         runUntil(e, () => e.engine.status().phase === 'held');
         const live = e.game.readState;
-        e.game.readState = () => JSON.stringify({ ...JSON.parse(live()), playerPositionX: A.state.playerPositionX + 8 });
+        // ⛓ ARRIVAL ROW — a MID-VISIT rewrite: the fallback's re-arrival rebuilds the room, so the game's pair is the
+        // arrival's again (left patched, the re-arrival's staging boots x+8 with the player at x: the arrival-row guard)
+        e.game.readState = () => (e.teleports.length > 1 ? live()
+            : JSON.stringify({ ...JSON.parse(live()), playerPositionX: A.state.playerPositionX + 8 }));
         e.engine.walkTo(DOOR);
         runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
         expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ equal: false })]);
@@ -2140,5 +2143,85 @@ describe('⛓ L74 SILENT STALL — a throw the room build makes is a NAMED failu
         expect(e.failures).toHaveLength(1);
         expect(e.failures[0]).toMatch(/the wasm playback engine threw in .*: the solve service is gone/);
         expect(e.engine.status().phase).toBe('idle');
+    });
+});
+
+/**
+ * ⛓ ARRIVAL ROW (slice seedling-js-l82-arrival-race) — an arrival plan's first tape ships only when the HELD game
+ * stands on the request's live row. MEASURED on L82 (keyed sweeps on 7a6e0c5f0d): the host jump's room rewrote its
+ * checkpoint at load (`LavaBoss.as:53`) with the player left at the jump's spot, so the staging booted where the
+ * player was not, and the tape left the plan at t=0 — an ordinary divergence, unnamed. `offHeld(e, when)` moves the
+ * game's `botStatus` row 16 px off while the room is HELD and `when()` says so: the shape of that arrival.
+ */
+describe('⛓ ARRIVAL ROW — an arrival plan ships only onto its live run\'s row: a named wait, then a named refusal', () => {
+    const offHeld = (e, when) => {
+        const read = e.game.botStatus;
+        e.game.botStatus = () => {
+            const st = JSON.parse(read());
+            return JSON.stringify(st.held && when() ? { ...st, x: st.x + 16 } : st);
+        };
+    };
+
+    it('the pure check: equal → null; another row → named, both rows; no live row (a walker) → null', () => {
+        const row = { level: 82, x: 160, y: 184, deaths: 0 };
+        expect(arrivalRowRefusal(row, { level: 82, x: 160, y: 184 })).toBeNull();
+        expect(arrivalRowRefusal(row, { level: 82, x: 152, y: 24 })).toBe('the game is not where the arrival plan starts '
+            + '(live run {"level":82,"x":160,"y":184}, game {"level":82,"x":152,"y":24})');
+        expect(arrivalRowRefusal(row, null)).toMatch(/game null/);
+        expect(arrivalRowRefusal(null, { level: 82, x: 0, y: 0 })).toBeNull();
+    });
+
+    it('MATCH → ships at once: nothing waited, nothing recorded', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.engine.stats.arrivalRow).toEqual([]);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+    });
+
+    it('MISMATCH that clears inside the wait → WAITS, then ships on plan (outcome matched, waited > 0)', () => {
+        const e = engineOver(A);
+        let polls = 0;
+        offHeld(e, () => e.game.tapes.length === 1 && (polls += 1) <= 6);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length > 0 || e.failures.length > 0, 20000);
+        expect(e.failures).toEqual([]);
+        expect(e.dones[0].divergence).toBeNull();
+        expect(e.engine.stats.arrivalRow).toEqual([expect.objectContaining({ level: HOUSE, outcome: 'matched' })]);
+        expect(e.engine.stats.arrivalRow[0].waitedMs).toBeGreaterThan(0);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan']);
+    });
+
+    it('MISMATCH that holds → waits ARRIVAL_ROW_WAIT_MS, then the NAMED fallback (forced re-arrival), never a t=0 divergence', () => {
+        const e = engineOver(A);
+        offHeld(e, () => e.game.tapes.length === 1);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length > 0 || e.failures.length > 0, 20000);
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.engine.stats.divergences).toBe(0);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['arrival-row']);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(/^the arrival plan was not shipped — the game is not where the arrival plan starts \(live run .*, game .*\), still after \d+ ms$/);
+        expect(e.engine.stats.arrivalRow).toEqual([expect.objectContaining({ outcome: 'fallback' })]);
+        expect(e.engine.stats.arrivalRow[0].waitedMs).toBeGreaterThanOrEqual(ARRIVAL_ROW_WAIT_MS);
+        // the refused plan never started: freeze, then (after the re-arrival) freeze + plan
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'freeze', 'plan']);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1, 'arrival-row': 1 });
+    });
+
+    it('MISMATCH again after the re-arrival → FAILED by name (bounded: one arrival-row fallback per goal)', () => {
+        const e = engineOver(A);
+        offHeld(e, () => true);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length > 0 || e.failures.length > 0, 40000);
+        expect(e.dones).toEqual([]);
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/^the arrival plan was not shipped — .*, still after \d+ ms \(a second time on this goal: the forced re-arrival did not put the player on the plan's first row\)$/);
+        expect(e.engine.stats.arrivalRow.map((r) => r.outcome)).toEqual(['fallback', 'failed']);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'freeze']);
+        expect(e.timers.pending).toBe(0);
     });
 });

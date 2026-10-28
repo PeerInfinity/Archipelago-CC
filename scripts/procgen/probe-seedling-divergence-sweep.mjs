@@ -74,6 +74,10 @@
  *                        item-only `queueItems` pushes dropped), `run-arrival=<s>` / `hold-arrival=<s>` (the
  *                        arrival room run unheld, then frozen, before the serve), `live-objects` (the runtime's per-frame
  *                        live AVM2 counts, kept by a one-token rewrite of the served glue JS; the wasm is untouched).
+ *   --arrival-trace-ms=<ms>  ⛓ ARRIVAL TRACE (slice `seedling-js-l82-arrival-race`, default OFF — nothing wrapped, no row
+ *                        field). MEASUREMENT ONLY: from each leg's host jump to its serve's end, the game frame's non-empty
+ *                        `getItemQueue` drains, its `botLoadTape`/`botStart`/`botHold` calls, the jump marks, and the
+ *                        checkpoint + live player sampled every <ms> (kept when either moved): `row.arrivalTrace`.
  *   --capture-requests=<jsonl>  ⛓ REQUEST CAPTURE (default OFF): append every solve request each leg made, in order, AS THE
  *                        WORKER RECEIVED IT (`seedlingSolveRequestCodec.captureRequest`: no `levelSource`; Map/Set tagged), with
  *                        its pass rows and work units — one line per leg `{id, key, requests}`. The rows are unchanged
@@ -115,7 +119,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--upgrade-window-work=<units>] [--dash-only-window=on|off] [--dash-shape=<spec>] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--memory-probe-ms=<ms> [--memory-out=<jsonl>]] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--upgrade-window-work=<units>] [--dash-only-window=on|off] [--dash-shape=<spec>] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--arrival-trace-ms=<ms>] [--memory-probe-ms=<ms> [--memory-out=<jsonl>]] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -127,6 +131,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf, withSlotBlock } from './seedlingRoomPlay.js';
 import { legSelectors, pickLegs } from './seedling-divergence-legs.mjs';
+import { compactArrivalTrace, installArrivalTraceInPage, takeArrivalTraceInPage } from './seedlingArrivalTrace.js';
 import { callDelta, createMemorySampler, formatMemorySample, memoryArmStamp, parseMemoryProbe, readGameMemoryInPage, summarizeMemory,
     withLiveObjects } from './seedlingMemoryProbe.js';
 
@@ -451,6 +456,9 @@ async function main() {
     const MEM = parseMemoryProbe(arg('memory-probe-ms', ''));
     const { ms: MEM_PROBE, hitSampleMs: HIT_SAMPLE } = MEM;
     const MEM_OUT = arg('memory-out', '');
+    // ⛓ ARRIVAL TRACE — 0 = off (today's run: nothing wrapped, no row field); MEASUREMENT ONLY
+    const ARRIVAL_TRACE = Number(arg('arrival-trace-ms', '0')) || 0;
+    if (ARRIVAL_TRACE && !(ARRIVAL_TRACE >= 10)) throw new Error(`--arrival-trace-ms=${ARRIVAL_TRACE}: the sample interval is >= 10 ms`);
     const FROM = Number(arg('from', '0'));
     const LIMIT = Number(arg('limit', '100000'));
     const PAGE_LEGS = Number(arg('page-legs', '60'));
@@ -830,6 +838,9 @@ async function main() {
                         }
                     }
                 }
+                // ⛓ ARRIVAL TRACE — the game frame's drains, tape calls, checkpoint + live player, jump → serve end
+                // eslint-disable-next-line no-await-in-loop
+                if (ARRIVAL_TRACE) await rp.gameFrame().evaluate(installArrivalTraceInPage, ARRIVAL_TRACE);
                 // eslint-disable-next-line no-await-in-loop
                 const landed = await rp.jumpSettled(leg.level, leg.arrive.x, leg.arrive.y);
                 if (leg.stagedEvents?.length) {
@@ -852,6 +863,8 @@ async function main() {
                 const { requests, ...served } = r;
                 if (CAPTURE) appendFileSync(CAPTURE, `${JSON.stringify({ id: leg.id, key: leg.key ?? null, requests: requests ?? [] })}\n`);
                 Object.assign(row, served);
+                // eslint-disable-next-line no-await-in-loop
+                if (ARRIVAL_TRACE) row.arrivalTrace = compactArrivalTrace(await rp.gameFrame().evaluate(takeArrivalTraceInPage));
                 swaps += (r.history ?? []).length;
             }); } catch (e) {
                 if (e instanceof SweepHang) throw e;

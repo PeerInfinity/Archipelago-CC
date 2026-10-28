@@ -780,6 +780,31 @@ export function shadowMismatch(shadowRow, status) {
 }
 
 /**
+ * ⛓ ARRIVAL ROW (slice seedling-js-l82-arrival-race) — how long an arrival plan waits for the game to stand on its
+ * first row before it is refused by name (`arrivalRowRefusal`), polled at the ship's drain cadence.
+ */
+export const ARRIVAL_ROW_WAIT_MS = 1000;
+
+/**
+ * ⛓ ARRIVAL ROW — the ARRIVAL plan's first tape ships only when the held game stands where the request's live run
+ * does (`request.live.row`: the fresh boot of the staging the plan was solved from). A continuation has its own check
+ * (`shadowMismatch` against the shadow, before it is solved); an arrival had none, so a game standing elsewhere
+ * played the tape off its plan from t=0 and the drain named it as an ordinary divergence. MEASURED (L82, keyed
+ * sweeps on 7a6e0c5f0d): the host's `new Game(82,144,16)` landed with `LavaBoss`'s constructor rewriting the
+ * checkpoint to (152,176) (`LavaBoss.as:53`) and the player left at the jump's (144,16); `botStart` CONTINUES a world
+ * whose checkpoint is the tape's boot (`ctorMismatch`'s pair), so the staging's (160,184) and the game's (152,24)
+ * disagreed before the first key.
+ *
+ * null when the game's `botStatus` row is the live run's (level, x, y), or when the request carries no live row (a
+ * walker's tape); otherwise the refusal, naming both rows.
+ */
+export function arrivalRowRefusal(liveRow, status) {
+    if (!liveRow) return null;
+    const m = shadowMismatch(liveRow, status);
+    return m ? `the game is not where the arrival plan starts (live run ${JSON.stringify(m.expected)}, game ${JSON.stringify(m.got)})` : null;
+}
+
+/**
  * ⛓ DELIVERY DEFERRAL — THE HOST'S CONTINUE-OR-REBUILD PAIR. `Bot.botStart` builds a NEW world unless
  * `bootLevel == Main.level && atBootPosition()`, and `atBootPosition` compares the tape's boot with
  * `Main.playerPositionX/Y` (`Bot.as:1950`): the SPAWN the current `Game` was built at, which the room itself may

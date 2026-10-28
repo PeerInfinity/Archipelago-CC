@@ -275,16 +275,41 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
         if (!wrapped) throw new Error('could not wrap the flashPanel dispatcher — the watcher would be silent');
     }
 
-    /** A `new Game(level, x, y)` the glue did not ask for: the template's native jump. */
+    /**
+     * A `new Game(level, x, y)` the glue did not ask for: the template's native jump. Returns the game frame's
+     * non-empty `getItemQueue` drain count BEFORE the jump was queued (`jumpDrained` waits for it to rise: the queue
+     * drains whole, so any later drain carried the jump), or null when the frame has no `getItemQueue` to count.
+     */
     async function jump(level, x, y) {
-        await gameFrame().evaluate(({ l, px, py }) => {
+        return gameFrame().evaluate(({ l, px, py }) => {
+            // ⛓ THE JUMP'S DRAIN, COUNTED (L82 ARRIVAL RACE) — the shim's queue is private, so its drains are counted
+            if (window.__rpDrains === undefined && typeof window.getItemQueue === 'function') {
+                const drain = window.getItemQueue;
+                window.__rpDrains = 0;
+                window.getItemQueue = function rpCountedDrain() {
+                    const out = drain.apply(this, arguments);
+                    if (out) window.__rpDrains += 1;
+                    return out;
+                };
+            }
+            // ⛓ the arrival trace's mark, when one is installed (`seedlingArrivalTrace.js`; measurement only)
+            if (window.__arrTrace) window.__arrTrace.push({ t: Math.round(performance.now()), ev: 'mark', jump: [l, px, py] });
+            const before = window.__rpDrains ?? null;
             window.__swfBridge.queueItems({
                 invocation: 'new_instance',
                 className: 'Game',
                 args: [l, px, py],
                 assignTo: { class: 'net.flashpunk.FP', property: 'world' },
             });
+            return before;
         }, { l: level, px: x, py: y });
+    }
+
+    /** Wait until the game drained the jump `jump` queued (`before` = its pre-queue drain count; null = not countable). */
+    async function jumpDrained(before, label, timeoutMs) {
+        if (before === null || before === undefined) return;
+        await waitFor(`${label} drained into the game`,
+            async () => ((await gameFrame().evaluate(() => window.__rpDrains ?? 0)) > before ? 'drained' : null), timeoutMs);
     }
 
     /**
@@ -341,7 +366,7 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
         // landed in L87 and the late teleport moved the game back (`new Game(2,48,32)` ~140 ms after the jump), so
         // "the player in L87" never held. So: the binding has finished with the level the game reports, and the
         // game's checkpoint stands still across a window longer than that teleport's lag.
-        await waitFor('the previous crossing settled before the jump', async () => {
+        const settled = (label) => waitFor(label, async () => {
             const g0 = await readGameState();
             if (!await bindingSettled(g0.level)) return null;
             await page.waitForTimeout(SETTLE_STILL_MS);
@@ -349,14 +374,16 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
             return g1.level === g0.level && g1.playerPositionX === g0.playerPositionX
                 && g1.playerPositionY === g0.playerPositionY ? 'settled' : null;
         }, timeoutMs);
+        await settled('the previous crossing settled before the jump');
         let replaced = null;
         let jumps = 0;
+        let confirmed = false;
         for (;;) {
             // eslint-disable-next-line no-await-in-loop
             const teleports0 = (await glueStats())?.teleports ?? 0;
             jumps += 1;
             // eslint-disable-next-line no-await-in-loop
-            await jump(level, x, y);
+            await jumpDrained(await jump(level, x, y), `the jump to L${level} (${x}, ${y})`, timeoutMs);
             // eslint-disable-next-line no-await-in-loop
             // ⛔ a string, not the level: `waitFor` reads a FALSY answer as "not yet", and the hub is level 0
             // eslint-disable-next-line no-await-in-loop
@@ -370,11 +397,20 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
                     throw new Error(`the binding re-placed the jump to L${level} (${x}, ${y}) at (${s.spawn.x}, ${s.spawn.y}) `
                         + `in L${s.spawn.level}, and the game never stood there (${timeoutMs} ms)`);
                 }
+                confirmed = true;
             // eslint-disable-next-line no-await-in-loop
-            } else if (await gameAt(level, x, y, 3000)) break;
+            } else if (await gameAt(level, x, y, 3000)) { confirmed = true; break; } else confirmed = false;
             if (jumps >= 2) break;
         }
-        // eslint-disable-next-line no-await-in-loop
+        // ⛓ THE LAST JUMP SETTLES TOO (L82 ARRIVAL RACE, CI runs 40596245635 … 40596268889: 5 of 16 L82 legs). A room
+        // whose load REWRITES the checkpoint (L82's `LavaBoss` ctor: `playerPosition = (152,176)`, `LavaBoss.as:53`;
+        // the room's begin) never shows `gameAt` the jump's own spot past its first frame, so the second jump was
+        // ALWAYS taken, and returned unwaited: the read below caught that jump's one-frame checkpoint (144,16), the
+        // engine's cold start re-arrived THERE, and the staging booted the rewritten (152,176) — t=0 off the plan.
+        // ⛔ ONLY an UNCONFIRMED last jump settles: a jump `gameAt` saw land keeps its arrival clock. Settling every
+        // jump moved every leg's seam ~+15 ticks (full sweep 40598361042 vs main 40598352770), and the seam-sensitive
+        // L40 Totem legs (356, 359) flipped to a solver refusal on that clock alone.
+        if (!confirmed) await settled(`the jump to L${level} (${x}, ${y}) settled`);
         const g = await readGameState();
         return { level: g.level, x: g.playerPositionX, y: g.playerPositionY, jumps, replaced };
     }
