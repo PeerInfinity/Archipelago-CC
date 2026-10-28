@@ -163,21 +163,29 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         // Chest and boss lock and L49's Conch.
         // ⛓ tile-primitives-sphere-order-6 (sphere 5.3 joined): L39 past r25c9 (its Fire and weapon crossings), all of L40 and L43
         // (reached only through L39 r0c9: L43's stairs to L37 are one way) join the set, with every location in them and L40's boss lock.
+        // ⛓ tile-primitives-sphere-order-7 (sphere 5.6 joined): L50–L56 hang off L49, so they join the set with L55's Boss Key; so do
+        // L61 r13c12 and L63 past r0c1 (Ghost Spear crossings; L63's Chest) and L93 below r14c7. L92 r1c7 / r4c2 / r7c8 LEAVE it: L91
+        // (from L89 r1c10, by the Swim) enters L92 r4c2 free.
         const RING2_WEAPON_GATED = ['level_0__r1c6', 'level_0__r6c5', 'level_19__r1c5', 'level_19__r5c5'];
-        const SPHERE01_WEAPON_GATED = ['level_1', 'level_67__r3c2', 'level_92__r1c7', 'level_92__r3c12', 'level_92__r4c2', 'level_92__r7c8'];
+        const SPHERE01_WEAPON_GATED = ['level_1', 'level_67__r3c2', 'level_92__r3c12'];
         const SPHERE45_WEAPON_GATED = ['level_48__r11c9', 'level_48__r2c10', 'level_48__r4c3', 'level_48__r7c0', 'level_49'];
         const SPHERE53_WEAPON_GATED = ['level_39__r0c9', 'level_39__r2c11', 'level_40__r0c53', 'level_40__r23c29', 'level_40__r32c36',
             'level_40__r36c35', 'level_40__r48c54', 'level_43__r13c7', 'level_43__r3c8', 'level_43__r8c7'];
+        const SPHERE56_WEAPON_GATED = ['level_50', 'level_51__r14c6', 'level_51__r2c6', 'level_51__r3c10', 'level_51__r3c4', 'level_52__r0c7',
+            'level_52__r2c2', 'level_52__r5c10', 'level_53__r14c9', 'level_53__r2c2', 'level_53__r9c10', 'level_54__r10c5', 'level_54__r13c9',
+            'level_54__r16c8', 'level_54__r18c15', 'level_54__r18c19', 'level_54__r19c13', 'level_54__r1c8', 'level_54__r27c8', 'level_54__r8c11',
+            'level_55', 'level_56', 'level_61__r13c12', 'level_63__r10c2', 'level_63__r5c14', 'level_63__r6c15', 'level_63__r6c9',
+            'level_93__r10c7', 'level_93__r5c7'];
         expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
             .toEqual({
                 unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED, ...SPHERE01_WEAPON_GATED, ...SPHERE45_WEAPON_GATED,
-                    ...SPHERE53_WEAPON_GATED].sort(),
+                    ...SPHERE53_WEAPON_GATED, ...SPHERE56_WEAPON_GATED].sort(),
                 unchecked: ['L0 flag 1: breakablerock@288,176 cleared', 'L0 flag 4: breakablerock@80,112 cleared', ROPE,
                     'L24 flag 0: burnabletree@32,128 cleared', 'L28 flag 0: rope@160,64 cleared', 'L40 flag 8: bosslock@480,352 cleared',
                     'L48 flag 1: bosslock@48,144 cleared', 'Level 017 - Chest', 'Level 019 - Boss Key 0', 'Level 019 - Shieldspire',
                     'Level 032 - Bob Boss', 'Level 032 - Times', 'Level 039 - Totem Part 72,40', 'Level 040 - Boss Key 2', 'Level 040 - Chest',
                     'Level 040 - Totem Part 160,640', 'Level 040 - Totem Part 64,144', 'Level 043 - Totem of Lacste', 'Level 043 - Wand',
-                    'Level 048 - Chest', 'Level 049 - Conch', 'Level 067 - Boss Key 4'],
+                    'Level 048 - Chest', 'Level 049 - Conch', 'Level 055 - Boss Key 3', 'Level 063 - Chest', 'Level 067 - Boss Key 4'],
             });
         expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'constant', value: true });
     });
