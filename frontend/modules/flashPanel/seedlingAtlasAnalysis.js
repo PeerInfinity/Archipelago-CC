@@ -218,10 +218,18 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
  */
 export function seedlingEventTiles(level, events) {
     if (!level) return [];
-    return events.filter((ev) => ev.obstacle.level === level.level).map((ev) => {
-        const { class: cls, x, y } = ev.obstacle;
+    // ⛓ A cross-room PRESS (mode 'press', session tile-primitives-sphere-order-5) sits on its PRESSER's entity, in the
+    // presser's level; every other event on its obstacle's.
+    const at = (ev) => (ev.mode === 'press' ? ev.presser : ev.obstacle);
+    return events.filter((ev) => at(ev).level === level.level).map((ev) => {
+        const { class: cls, x, y } = at(ev);
         const entity = (level.entities ?? []).find((e) => e.type === cls && e.x === x && e.y === y);
         if (!entity) throw new Error(`event "${ev.name}": L${level.level} has no ${cls}@${x},${y}`);
+        // A press is made where the button IS: `ButtonRoom` centres itself on (x + Tile.w/2, y + Tile.h/2), and its 8x6
+        // hitbox straddles two tiles when it stands off the grid (L61's at y = 40), so its cell is the tile of that centre.
+        if (ev.mode === 'press') {
+            return { name: ev.name, side: ev.side, mode: ev.mode, tiles: [[Math.floor((x + TILE / 2) / TILE), Math.floor((y + TILE / 2) / TILE)]], ...(ev.rule ? { rule: ev.rule } : {}) };
+        }
         const sem = entitySemantics(entity);
         const sealed = sem ? entitySealedTiles(entity, sem) : [];
         const tiles = sealed.length > 0 ? sealed : (() => {

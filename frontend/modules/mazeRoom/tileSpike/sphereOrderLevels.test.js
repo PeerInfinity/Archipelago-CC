@@ -25,6 +25,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { buildPlaythroughMaze } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
+import { pressLocations } from '../../procgenPipeline/regionAtlasMazeProjection.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
 const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
@@ -139,5 +140,45 @@ describe('L32 — two locations on the boss rock\'s tile', () => {
         const items = compile(['level_30', 'level_32']).preset_sidecars['1'].level_32.playable_payload.items;
         expect(items.map((i) => `${i.locationName}@${i.x},${i.y}`).sort())
             .toEqual(['Level 032 - Bob Boss@5,8', 'Level 032 - Times@5,7']);
+    });
+});
+
+describe('L38 — a cross-room press is a location on its button', () => {
+    const PRESS = 'L39 flag 8: wandlock@144,592 cleared';
+
+    it('L37 + L38 certify clean; the press for L39\'s wand lock is reached empty-handed', () => {
+        const out = certify(['level_37', 'level_38']);
+        expect(out.problems).toEqual([]);
+        expect(out.accepted).toEqual([]);
+        expect(out.lines.filter((l) => l.startsWith(`level_38@${PRESS}`))).not.toEqual([]);
+        for (const l of out.lines.filter((x) => x.startsWith(`level_38@${PRESS}`))) expect(l.slice(l.indexOf('=') + 1)).toBe(FREE);
+    });
+
+    it('a mutant AP rule on the press (Wand) is caught: the world reaches the button without it', () => {
+        const rules = structuredClone(compile(['level_37', 'level_38']));
+        rules.regions['1'].level_38.locations.find((l) => l.name === PRESS).access_rule = { rule: 'Has', args: { item_name: 'Wand' } };
+        const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS });
+        expect(out.problems.some((p) => p.startsWith(`level_38 @ ${PRESS}`) || (p.includes(PRESS) && p.includes('derived true, atlas false')))).toBe(true);
+    });
+
+    it('a button off the grid presses from the tile of its centre: L61\'s (176,40) → (11,3), one cell', () => {
+        // Its 8x6 hitbox straddles tiles y 2 and 3; the whole-game compile threw on the two-tile footprint before this.
+        const items = compile(['level_61']).preset_sidecars['1'].level_61__r0c10.playable_payload.items;
+        const POLE = 'L63 flag 1: lightpole@64,88 cleared';
+        expect(items.filter((i) => i.locationName === POLE)).toEqual([{ x: 11, y: 3, id: POLE, locationName: POLE }]);
+    });
+
+    it('a press whose own rule is not True_ is refused by name (its location carries no rule, so it would be looser)', () => {
+        const region = { region_id: 'level_38' };
+        const ev = (rule) => ({ name: PRESS, side: 'level_38', mode: 'press', tiles: [[2, 3]], ...(rule ? { rule } : {}) });
+        const loc = { name: PRESS, tile: [2, 3], vanilla_item: PRESS };
+        expect(pressLocations(region, [ev(null)])).toEqual([loc]);
+        expect(pressLocations(region, [ev({ rule: 'True_' })])).toEqual([loc]);
+        expect(() => pressLocations(region, [ev({ rule: 'Has', args: { item_name: 'Wand' } })])).toThrow(/its own rule .*Wand.* is not True_/);
+    });
+
+    it('the press sits on the ButtonRoom\'s own cell (32,48) → (2,3), granting the event', () => {
+        const items = compile(['level_37', 'level_38']).preset_sidecars['1'].level_38.playable_payload.items;
+        expect(items.filter((i) => i.locationName === PRESS)).toEqual([{ x: 2, y: 3, id: PRESS, locationName: PRESS }]);
     });
 });
