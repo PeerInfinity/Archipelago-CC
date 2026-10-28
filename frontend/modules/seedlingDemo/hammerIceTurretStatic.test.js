@@ -33,7 +33,11 @@ import {
     resetIceTurretStaticKillCounts, withIceTurretStaticKill,
 } from './solverBot.js';
 import { l40PocketBoot, TURRETCIRCLE_D3_SWITCHES } from './fidelityTurretCircle.js';
-import { l40PocketTail } from './fidelityCorpseBump.js';
+import { CORPSEBUMP_D2_SWITCHES, l40PocketBootTape, l40PocketTail } from './fidelityCorpseBump.js';
+import { withContactFidelity } from './contactFidelity.js';
+import { parseTape } from './tapeFormat.js';
+import { stagingFromTape } from './tapeRunner.js';
+import { atlasLevelSource } from './levelSource.js';
 
 const ENV = globalThis.process?.env ?? {};
 
@@ -127,6 +131,34 @@ describe('hammer-phase ICEST — the walk\'s kill rung kills a static ice turret
         expect(on.counts).toEqual({ handed: [], kills: [] });
         expect({ ...on, counts: null }).toEqual({ ...off, counts: null });
     }, 120000);
+
+    it('L40\'s pocket, the weigh unarmed (`blockSweepBodies` OFF): OFF the walk refuses at t0 on iceturret@472,400; ON the arm kills it, and the walk next stalls on wandlock@448,432', async () => {
+        const over = { ...CORPSEBUMP_D2_SWITCHES, blockSweepBodies: false };
+        const boot = await l40PocketBootTape();
+        resetIceTurretStaticKillCounts();
+        const off = await withIceTurretStaticKill(false, () => l40PocketTail(boot, over));
+        expect(off.refusal.perTick ?? []).toHaveLength(0);
+        expect(off.refusal.message).toMatch(/hold stance \(wandlock@448,432\): the combat ladder is EXHAUSTED\. The corridor passes through danger at \([\d.]+,[\d.]+\) — enemy:iceturret@472,400/);
+        const on = await withIceTurretStaticKill(true, () => l40PocketTail(boot, over));
+        expect(ICETURRET_STATIC_KILL_COUNTS.handed).toEqual([{ id: 'iceturret@472,400', t: 0, via: 'chooser' }]);
+        expect(ICETURRET_STATIC_KILL_COUNTS.kills).toEqual([{ id: 'iceturret@472,400', t: 0, dead: true, ticks: 69 }]);
+        // the chain's next gap: the lock whose button wants the corpse as its weight (the weigh's job, unarmed here)
+        expect(on.refusal.message).toMatch(/stalled at \([\d.]+,[\d.]+\) .* after grazing \d+ solid\(s\): wandlock at \(448,432\)/);
+        // the death is the MODEL's: the refused prefix replays on a fresh run to the same death, hitless, the corpse a body
+        const run = withContactFidelity(over, () => {
+            const r = createRunForStaging(stagingFromTape(parseTape(JSON.stringify(boot))), atlasLevelSource());
+            let deadAt = null;
+            on.refusal.perTick.forEach((k, i) => {
+                r.advance(k);
+                if (deadAt === null && r.entities('turrets').get('iceturret@472,400')?.dead) deadAt = i;
+            });
+            return { deadAt, hits: r.ledger('playerHits'), turret: r.entities('turrets').get('iceturret@472,400') };
+        });
+        expect(run.deadAt).not.toBeNull();
+        expect(run.deadAt).toBeLessThan(69);
+        expect(run.hits).toEqual([]);
+        expect(run.turret).toMatchObject({ dead: true, removed: false });
+    }, 240000);
 
     it('TURRETCIRCLE\'s corpse weigh (`killIceTurretInPlace`, the circling kill) is unchanged ON', async () => {
         const boot = await l40PocketBoot({});

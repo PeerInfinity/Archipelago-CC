@@ -1,14 +1,18 @@
-M1 drop the arm: 3 ⎯⎯⎯⎯⎯⎯⎯
+M1 drop the arm: 4 ⎯⎯⎯⎯⎯⎯⎯
+    RED: L40's pocket, the weigh unarmed (`blockSweepBodies` OFF): OFF the walk refuses at t0 on iceturret@472,400; ON the arm kills it, and the walk next stalls on wandlock@448,432
     RED: the 1-tall corridor ON: the shipped keys replay on a fresh run to the same death, hitless, and the corpse stays
     RED: the 1-tall corridor: OFF the kill rung refuses on iceturret@64,16; ON the arm kills it and the walk SOLVES
     RED: the 2-tall corridor ON: no try is hitless — the arm refuses by name, every failure a blast or no ring
-M2 hand the arm a turret it cannot reach (an id no run steps): 3 ⎯⎯⎯⎯⎯⎯⎯
+M2 hand the arm a turret it cannot reach (an id no run steps): 4 ⎯⎯⎯⎯⎯⎯⎯
+    RED: L40's pocket, the weigh unarmed (`blockSweepBodies` OFF): OFF the walk refuses at t0 on iceturret@472,400; ON the arm kills it, and the walk next stalls on wandlock@448,432
     RED: the 1-tall corridor ON: the shipped keys replay on a fresh run to the same death, hitless, and the corpse stays
     RED: the 1-tall corridor: OFF the kill rung refuses on iceturret@64,16; ON the arm kills it and the walk SOLVES
     RED: the 2-tall corridor ON: no try is hitless — the arm refuses by name, every failure a blast or no ring
-M2b the side off the UNSNAPPED box (a stance inside the live body): 2 ⎯⎯⎯⎯⎯⎯⎯
+M2b the side off the UNSNAPPED box (a stance inside the live body): 3 ⎯⎯⎯⎯⎯⎯⎯
+    RED: L40's pocket, the weigh unarmed (`blockSweepBodies` OFF): OFF the walk refuses at t0 on iceturret@472,400; ON the arm kills it, and the walk next stalls on wandlock@448,432
     RED: the 1-tall corridor ON: the shipped keys replay on a fresh run to the same death, hitless, and the corpse stays
     RED: the 1-tall corridor: OFF the kill rung refuses on iceturret@64,16; ON the arm kills it and the walk SOLVES
-M3 treat the corpse as gone (removed on the death tick): 2 ⎯⎯⎯⎯⎯⎯⎯
+M3 treat the corpse as gone (removed on the death tick): 3 ⎯⎯⎯⎯⎯⎯⎯
+    RED: L40's pocket, the weigh unarmed (`blockSweepBodies` OFF): OFF the walk refuses at t0 on iceturret@472,400; ON the arm kills it, and the walk next stalls on wandlock@448,432
     RED: TURRETCIRCLE's corpse weigh (`killIceTurretInPlace`, the circling kill) is unchanged ON
     RED: the 1-tall corridor ON: the shipped keys replay on a fresh run to the same death, hitless, and the corpse stays
