@@ -1062,13 +1062,17 @@ export class FlashPanelUI {
    * 390 px tall: at full size the game and the controls ran off the screen, measured): BESIDE the game when, fitted to
    * that height, it leaves `TOUCH_BESIDE_MIN_PX` on each side; else UNDER it, fitted to the height left above the
    * strip. Never scaled up, and never below the width fit's half (a panel squeezed flat keeps a playable game and
-   * scrolls). Null when no controls are shown — the width fit alone, unchanged.
+   * scrolls). With no controls shown: in the MOBILE layout the game fits the visible height too (⚖ the user
+   * 2026-10-27, slice `seedling-js-mobile-polish`: a landscape phone's game ran 178–200 px past the bar's top edge, off the panel's visible area,
+   * measured); elsewhere null — the width fit alone, unchanged.
    */
   _touchFit(avail, w, h, kWidth) {
-    if (!this._touch) return null;
+    const mobile = !!this.rootElement?.closest?.('.mobile-panel-instance');
+    if (!this._touch && !mobile) return null;
     const root = this.rootElement;
     const top = this.stageElement.getBoundingClientRect().top - root.getBoundingClientRect().top + root.scrollTop;
     const visible = root.clientHeight - top - 8;
+    if (!this._touch) return visible > 0 ? { k: Math.max(kWidth / 2, Math.min(kWidth, visible / h)), beside: false } : null;
     if (!(visible > 0)) return { k: kWidth, beside: kWidth >= 1 && avail - w >= 2 * TOUCH_BESIDE_MIN_PX };
     const floor = kWidth / 2;
     const kBeside = Math.max(floor, Math.min(kWidth, visible / h));

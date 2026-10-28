@@ -590,7 +590,9 @@ describe('who takes the box', () => {
             'probe-seedling-inroom-darktraps.mjs',
             'probe-seedling-l3-water-door.mjs',
             'probe-seedling-l12-bosslock.mjs',
-            'probe-seedling-l40bk2b.mjs'];
+            'probe-seedling-l40bk2b.mjs',
+            // seedling-js-mobile-polish: the phone-viewport fit witness (import door: `isEntryPoint` → main())
+            'probe-seedling-mobile-fit.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

@@ -223,6 +223,41 @@ class MobileLayoutManager {
 
     // Store navigation buttons reference
     this.navigationButtons = { left: leftNavBtn, right: rightNavBtn };
+    this.bottomBar = bottomBar;
+    this.watchBarReserve();
+  }
+
+  /**
+   * ⛓ THE BAR'S RESERVE (slice `seedling-js-mobile-polish`, ⚖ the user 2026-10-27: *"On mobile, the bottom of the
+   * Seedling panel is covered by the panel select bar at the bottom of the screen."*). The panels stop where the bar
+   * ACTUALLY starts, measured, not where the CSS says it should: `--mobile-bar-reserve` (on the container) is how much
+   * of the content area the fixed bar covers — the content's bottom minus the bar's top. The CSS height alone
+   * (`--mobile-bar-h`) missed the bar's 1 px border, and it cannot see a container taller than the visible screen
+   * (a browser without `dvh`, a bottom toolbar): the bar is fixed to the visible bottom, the container is not, and the
+   * difference was covered. Re-measured on every resize of the window, the visual viewport, the container or the bar.
+   */
+  watchBarReserve() {
+    const measure = () => {
+      if (!this.bottomBar || !this.contentArea || !this.container) return;
+      const bar = this.bottomBar.getBoundingClientRect();
+      const content = this.contentArea.getBoundingClientRect();
+      if (!(bar.height > 0) || !(content.height > 0)) return;
+      const reserve = Math.max(0, Math.ceil(content.bottom - bar.top));
+      const value = `${reserve}px`;
+      if (this.container.style.getPropertyValue('--mobile-bar-reserve') !== value) {
+        this.container.style.setProperty('--mobile-bar-reserve', value);
+      }
+      this.barReserve = reserve;
+    };
+    this.measureBarReserve = measure;
+    measure();
+    window.addEventListener('resize', measure);
+    window.visualViewport?.addEventListener?.('resize', measure);
+    if (typeof ResizeObserver === 'function') {
+      this.barReserveObserver = new ResizeObserver(measure);
+      this.barReserveObserver.observe(this.container);
+      this.barReserveObserver.observe(this.bottomBar);
+    }
   }
 
   /**
@@ -631,6 +666,7 @@ class MobileLayoutManager {
    * Handle device orientation changes
    */
   handleOrientationChange() {
+    this.measureBarReserve?.();
     // Refresh current panel layout if needed
     if (this.activePanel) {
       const panel = this.panels.get(this.activePanel);

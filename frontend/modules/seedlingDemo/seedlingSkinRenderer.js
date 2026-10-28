@@ -81,6 +81,22 @@ export const AP_ITEM_COLOUR = '#e8c040';
 export const TELEPORTER_COLOUR = '#3fd8ce';
 export const PLAYER_COLOUR = '#ffffff';
 
+/**
+ * ⚖ THE TELEPORTERS WITH ART (the user 2026-10-27: *"The js version of Seedling shows the exit tiles with a green
+ * color. Is there a way for it to not do that?"*; slice `seedling-js-mobile-polish`). A `Teleporter` draws its
+ * spinning `Portal.png` only when its map entity says `show="1"` (`Teleporter.as:54` `visible = _show`; six in the
+ * vanilla map); every other one is invisible in the game. So with art loaded the page paints a teleporter's
+ * `TELEPORTER_COLOUR` stand-in ONLY for a shown one (the pack has no Portal picture yet), and the stairs are G7's
+ * sprites. The art-less (rect) view keeps every rectangle: that is the debug view.
+ * Returns the page's `roomOps` `drawnTeleporters` for the room's map `record` (true = not painted as a rectangle).
+ */
+export function teleporterArtFilter(record) {
+    const shown = new Set((record?.entities ?? [])
+        .filter((e) => e.type === 'teleporter' && Number(e.attrs?.show ?? 0) !== 0)
+        .map((e) => `${Number(e.x)},${Number(e.y)}`));
+    return (tp) => tp.isStairs === true || !shown.has(`${tp.x},${tp.y}`);
+}
+
 /** The camera modes (the flash panel setting `seedlingJsCamera`, the page's `?camera=`). */
 export const CAMERA_MODES = Object.freeze(['room', 'follow']);
 

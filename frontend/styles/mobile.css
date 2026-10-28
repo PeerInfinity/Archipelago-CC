@@ -17,6 +17,12 @@ body.mobile-layout-active .mobile-layout-container {
   height: 100vh;
   height: 100dvh;
   width: 100%;
+  /* The bottom bar's declared height (the landscape and tablet rules below
+     change it). The panels stop at --mobile-bar-reserve: the bar's MEASURED
+     cover of the content area (mobileLayoutManager.watchBarReserve), which
+     also counts its border and any container taller than the visible screen;
+     the declared height is only the fallback before the first measure. */
+  --mobile-bar-h: 60px;
   background-color: #2d2d2d;
   color: #cecece;
   position: relative;
@@ -27,7 +33,7 @@ body.mobile-layout-active .mobile-panel-content {
   flex: 1;
   position: relative;
   overflow: hidden;
-  padding-bottom: 60px;
+  padding-bottom: var(--mobile-bar-reserve, var(--mobile-bar-h));
   background-color: #2d2d2d;
 }
 
@@ -36,7 +42,7 @@ body.mobile-layout-active .mobile-bottom-bar {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: var(--mobile-bar-h);
   background-color: #1a1a1a;
   border-top: 1px solid #666;
   display: flex !important;
@@ -92,14 +98,14 @@ body.mobile-layout-active .mobile-nav-right {
 }
 
 /* Panel instance styling when mobile is active. Height stops above the
-   fixed bottom bar (60px portrait / 50px landscape — keep in sync with
-   .mobile-bottom-bar): the wrapper is absolutely positioned, so the
+   fixed bottom bar (--mobile-bar-reserve, measured; see the container
+   rule): the wrapper is absolutely positioned, so the
    content area's padding-bottom does NOT keep it out from under the
    bar — without the calc, the bottom strip of every panel (e.g. the
    options panel's build-stamp footer) renders behind the tab bar. */
 body.mobile-layout-active .mobile-panel-instance {
   width: 100%;
-  height: calc(100% - 60px);
+  height: calc(100% - var(--mobile-bar-reserve, var(--mobile-bar-h)));
   position: absolute;
   top: 0;
   left: 0;
@@ -360,8 +366,8 @@ body.mobile-layout-active .mobile-tab-bar::-webkit-scrollbar-thumb:hover {
 
 /* Landscape mode adjustments */
 @media (orientation: landscape) {
-  body.mobile-layout-active .mobile-bottom-bar {
-    height: 50px;
+  body.mobile-layout-active .mobile-layout-container {
+    --mobile-bar-h: 50px;
   }
 
   body.mobile-layout-active .mobile-nav-btn {
@@ -386,31 +392,16 @@ body.mobile-layout-active .mobile-tab-bar::-webkit-scrollbar-thumb:hover {
   body.mobile-layout-active .mobile-tab-label {
     font-size: 10px;
   }
-
-  body.mobile-layout-active .mobile-panel-content {
-    padding-bottom: 50px;
-  }
-
-  body.mobile-layout-active .mobile-panel-instance {
-    height: calc(100% - 50px);
-  }
 }
 
 /* Tablet adjustments (larger touch devices) */
 @media (min-width: 769px) and (pointer: coarse) {
-  /* The bar, the content reservation, and the panel-instance clamp must
-     all track the 70px tab bar — a taller tab bar inside a 60px fixed
-     bar overflows UPWARD over the bottom strip of every panel. */
-  body.mobile-layout-active .mobile-bottom-bar {
-    height: 70px;
-  }
-
-  body.mobile-layout-active .mobile-panel-content {
-    padding-bottom: 70px;
-  }
-
-  body.mobile-layout-active .mobile-panel-instance {
-    height: calc(100% - 70px);
+  /* The bar must track the 70px tab bar — a taller tab bar inside a 60px
+     fixed bar overflows UPWARD over the bottom strip of every panel. The
+     content reservation and the panel-instance clamp follow the bar
+     (--mobile-bar-h, then the measured --mobile-bar-reserve). */
+  body.mobile-layout-active .mobile-layout-container {
+    --mobile-bar-h: 70px;
   }
 
   body.mobile-layout-active .mobile-tab-bar {
