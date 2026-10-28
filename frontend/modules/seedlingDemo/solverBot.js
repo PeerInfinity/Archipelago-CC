@@ -14900,6 +14900,69 @@ export function withChooserHitSources(enabled, fn, mode = null) {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE CPAIR — THE REMOVAL CHOOSER ANSWERS A CHASER PAIR (⚖ the user queued the slice on
+ * 2026-10-26: *"Chooser: chaser pair"*; fidelity L40LATCH's hand-over D2.1).
+ *
+ * `chooseBodyToRemove` admits a body when ITS removal admits a corridor. L40LATCH found the x≈744 pair `bob@736,752` +
+ * `bob@736,800` in that corridor with the list EMPTY: no single removal admits a corridor, `CHOOSER_HIT_SOURCES` never
+ * takes a chaser (see `hitSourceBodies`), and the kill rung gets no target. With this switch, where the list is still
+ * empty after C1, the climb asks PAIRS (`choosePairToRemove`): each live chaser the probe's hit names, in the hit's
+ * order, with each of the `CHOOSER_PAIR.near` live chasers nearest the hit point (ties by id). The first pair whose
+ * JOINT removal admits a corridor is the list, the hit's body first, so BAIT and the kill rung take one body and the
+ * next climb (a world edit re-plans) asks again of the room the kill left. A pair whose joint removal admits nothing is
+ * never offered, so nothing is handed out that the chooser's own question does not answer (C1 measured what an
+ * unscoped chaser does: `bob@208,32` on `r9-solve-16` taken to a BAIT that was hit).
+ *
+ * MEASURED (CPAIR, `CC/docs/cloud-reports/seedling-hammer-chooser-pair.md`): the two bobs together never admit — every
+ * empty climb on the L40 Boss Key 2 legs needs a THIRD body as well (`bobsoldier@880,832`, whose volume covers the burn
+ * stance's aim; on the latch chain `iceturret@472,400`, a static). The pairs that DO admit, on some arrival clocks of
+ * leg 853, are one x≈744 bob with the bobsoldier. There the arm kills the bob (5196: dead at t855) and the chain meets
+ * the next blocker: the bobsoldier, or the press kill's chaser death that OPP removes. `size: 3` (env
+ * `SEEDLING_CHOOSER_PAIR_SIZE=3`) is the measurement arm that asks triples too.
+ *
+ * OFF by default. `SEEDLING_CHOOSER_PAIR=1` turns it on in a node process (the page's worker has no `process`, so it is
+ * OFF there), and `withChooserPair(enabled, fn)` is for a test or a witness. OFF, no pair is asked and every walk and
+ * trace is byte-identical. ON where the chooser or C1 already admits a body, no pair is asked either.
+ */
+export const CHOOSER_PAIR = {
+    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR === '1',
+    /** How many live chasers nearest the hit point are partnered with each of the hit's own chasers. */
+    near: 4,
+    /** The largest set asked: 2 (a pair). `SEEDLING_CHOOSER_PAIR_SIZE=3` is the measurement arm (a triple too). */
+    size: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR_SIZE === '3' ? 3 : 2,
+};
+export const CHOOSER_PAIR_DEFAULT = false;
+
+/** Run `fn` with `CHOOSER_PAIR` set to `enabled`, restoring the previous value (`withChooserHitSources`'s shape). */
+export function withChooserPair(enabled, fn) {
+    const was = CHOOSER_PAIR.enabled;
+    CHOOSER_PAIR.enabled = enabled === true;
+    const restore = () => { CHOOSER_PAIR.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `asked` climbs that asked pairs,
+ * `sets` sets tested, `admitted` climbs a set answered, `last` the last admitted set (the hit's body first), `gone` each
+ * admitted body the MODEL's run no longer steps when a later climb (ON) looks (`{id, t}`, `t` the climb's tick), `kills`
+ * each chaser-arm kill of a set's body (`{id, t, dead, how}`: `dead` read off the run's `strikeBodies` as the arm ends).
+ */
+export const CHOOSER_PAIR_COUNTS = { asked: 0, sets: 0, admitted: 0, last: null, gone: [], kills: [] };
+
+/** Zero `CHOOSER_PAIR_COUNTS` (a test's or a witness's, before a solve). */
+export function resetChooserPairCounts() {
+    Object.assign(CHOOSER_PAIR_COUNTS, { asked: 0, sets: 0, admitted: 0, last: null, gone: [], kills: [] });
+}
+
+/**
  * ⛓ C1 — the trace's danger obstacle: `sources[0]`'s id, as ever, and with `CHOOSER_HIT_SOURCES` ON the whole
  * `sources` array (`kind:id`), so a reader sees every body the probe named and not only the first.
  */
@@ -25251,6 +25314,59 @@ function solveSegmentUnder({
         return admits;
     };
 
+    /**
+     * ⛓⛓ CPAIR (`CHOOSER_PAIR`) — the chooser's own question asked of a PAIR of live chasers: the hit's chasers (in the
+     * hit's order) each partnered with the `CHOOSER_PAIR.near` live chasers nearest the hit point. Returns the first
+     * pair whose joint removal admits a corridor, the hit's body first, or `[]`.
+     */
+    const choosePairToRemove = (aim, contacts, allowTeleporter, hit) => {
+        const live = [...(run.entities('chasers') ?? [])];
+        const byId = new Map(live.map((c) => [c.id, c]));
+        const heads = [...new Set((hit.sources ?? []).filter((sx) => sx.kind === 'chaser' && byId.has(sx.id))
+            .map((sx) => sx.id))];
+        if (heads.length === 0) return [];
+        CHOOSER_PAIR_COUNTS.asked += 1;
+        const near = [...live].sort((a, b) => Math.hypot(a.x - hit.x, a.y - hit.y)
+            - Math.hypot(b.x - hit.x, b.y - hit.y) || (a.id < b.id ? -1 : 1))
+            .slice(0, CHOOSER_PAIR.near).map((c) => c.id);
+        const volumes = dangerVolumes(run, 0);
+        const admitsWithout = (ids) => {
+            CHOOSER_PAIR_COUNTS.sets += 1;
+            const without = volumes.filter((v) => !ids.includes(v.id));
+            const opts = solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: without });
+            const reach = plansReach(run.world, allowTeleporter, opts);
+            if (reach) return reach.from(run.state)(aim);
+            try {
+                planWaypoints(run.world, run.state, aim, allowTeleporter, opts);
+                return true;
+            } catch (e) {
+                if (!(e instanceof BotDriverV2Error)) throw e;
+                return false;
+            }
+        };
+        // the sets, smallest first: each hit body with one partner, then (size 3) with two, partners in `near` order
+        const sets = [];
+        for (const h of heads) {
+            const others = near.filter((p) => p !== h);
+            for (const p of others) sets.push([h, p]);
+        }
+        if (CHOOSER_PAIR.size >= 3) {
+            for (const h of heads) {
+                const others = near.filter((p) => p !== h);
+                for (let i = 0; i < others.length; i++) {
+                    for (let j = i + 1; j < others.length; j++) sets.push([h, others[i], others[j]]);
+                }
+            }
+        }
+        for (const set of sets) {
+            if (!admitsWithout(set)) continue;
+            CHOOSER_PAIR_COUNTS.admitted += 1;
+            CHOOSER_PAIR_COUNTS.last = set;
+            return set.map((id) => ({ ...byId.get(id), stepped: true, viaPair: set }));
+        }
+        return [];
+    };
+
     const reasonsOf = (d) => d.sources
         .map((x) => `${x.kind}:${x.id ?? '?'} (${x.why})`).join('; ');
 
@@ -26594,6 +26710,20 @@ function solveSegmentUnder({
             const ids = new Set(admitted.map((b) => b.id));
             removable = [...admitted, ...removable.filter((b) => !ids.has(b.id))];
         }
+        /**
+         * ⛓⛓ CPAIR (`CHOOSER_PAIR`, OFF) — where the list is STILL empty, a pair of live chasers whose joint removal
+         * admits a corridor (`choosePairToRemove`), the hit's body first: the kill rung takes one, and the re-climb
+         * finds the other a single removal.
+         */
+        if (CHOOSER_PAIR.enabled) {
+            const stepping = new Set((run.entities('chasers') ?? []).map((c) => c.id));
+            for (const id of CHOOSER_PAIR_COUNTS.last ?? []) {
+                if (!stepping.has(id) && !CHOOSER_PAIR_COUNTS.gone.some((g) => g.id === id)) {
+                    CHOOSER_PAIR_COUNTS.gone.push({ id, t: perTick.length });
+                }
+            }
+            if (removable.length === 0) removable = choosePairToRemove(aim, contacts, allowTeleporter, hit);
+        }
         // ⛓ BAIT and the ceiling arm read the head of the ordered set, which
         // is the body the single-return chooser used to hand them.
         const body = removable[0] ?? null;
@@ -27141,6 +27271,9 @@ function solveSegmentUnder({
                     const walkKill = PRESS_KILL_DONE_ON_WALK.enabled
                         && !(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)
                         ? killedOnWalk(run, hunted.id, walkFrom) : null;
+                    if (walkKill && hunted.viaPair) {
+                        CHOOSER_PAIR_COUNTS.kills.push({ id: hunted.id, t: perTick.length, dead: true, how: 'walk' });
+                    }
                     if (walkKill) {
                         records.push({
                             goal: goal.kind, strategy: 'kill', arm: 'chaser',
@@ -27181,6 +27314,10 @@ function solveSegmentUnder({
                                 .some((c) => c.id === hunted.id),
                         },
                     }, `${what} -> kill (${hunted.id}) by press`);
+                    if (hunted.viaPair) {
+                        CHOOSER_PAIR_COUNTS.kills.push({ id: hunted.id, t: perTick.length, how: 'dwell',
+                            dead: !(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id) });
+                    }
                     // ⛓ `record.strikes` is the dwell's own — `runDwell` reads
                     // it off the policy it was armed with, so there is one
                     // owner of the number rather than two spellings of it.

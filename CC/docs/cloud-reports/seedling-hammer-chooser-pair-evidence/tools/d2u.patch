@@ -1,0 +1,16 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index ea3010d6..f25a1aba 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -14933,6 +14933,11 @@ function hitSourceBodies(run, hit) {
+             const e = (run.world.combat?.enemies ?? []).find((r) => `${r.tag}@${r.x},${r.y}` === id);
+             if (!e || !STATIC_SWORD_DEATH[e.as3]) continue;
+             out.push({ id, tag: e.tag, x: e.cx ?? e.x, y: e.cy ?? e.y, row: e, stepped: false, viaHit: true });
++        } else if (sx.kind === 'chaser' && globalThis.process?.env?.SEEDLING_D2U === '1'
++            && (run.entities('chasers') ?? []).some((c) => c.id === id)) {
++            // SCRATCH D2u: L40LATCH's arm — the hit's live chaser sources, unscoped.
++            const c = (run.entities('chasers') ?? []).find((b) => b.id === id);
++            out.push({ ...c, stepped: true, viaHit: true });
+         } else continue;
+         seen.add(id);
+     }

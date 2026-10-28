@@ -552,9 +552,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 26,
         "lightsVerb.js": 1,
-        "solverBot.js": 203
+        "solverBot.js": 206
       },
-      "sites": 343,
+      "sites": 346,
       "seen": "both",
       "via": [
         "direct",
@@ -615,7 +615,7 @@
         },
         "chasers": {
           "dangerMap.js": 2,
-          "solverBot.js": 17
+          "solverBot.js": 19
         },
         "crushers": {
           "botDriverV2.js": 8,
@@ -692,7 +692,7 @@
         },
         "strikeBodies": {
           "botDriverV2.js": 3,
-          "solverBot.js": 18
+          "solverBot.js": 19
         },
         "talkCircles": {
           "solverBot.js": 4
@@ -1365,9 +1365,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 613
+        "solverBot.js": 615
       },
-      "sites": 754,
+      "sites": 756,
       "seen": "both",
       "via": [
         "direct",
@@ -1565,9 +1565,9 @@
         "dangerMap.js": 3,
         "lightsVerb.js": 2,
         "solveProgress.js": 2,
-        "solverBot.js": 310
+        "solverBot.js": 312
       },
-      "sites": 383,
+      "sites": 385,
       "seen": "both",
       "via": [
         "direct",

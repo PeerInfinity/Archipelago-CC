@@ -1,0 +1,7 @@
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 50068ms
+     ✓ ON, sweep request 392:0 solved whole ships the same ticks for less work  50066ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 44210ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  44209ms
+ Test Files  2 passed (2)
+      Tests  2 passed (2)
+EXIT 0
