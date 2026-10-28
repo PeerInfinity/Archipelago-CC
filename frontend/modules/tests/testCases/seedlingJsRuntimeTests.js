@@ -4709,6 +4709,18 @@ async function toolsWalkInto(tc, panel, tx, ty, maxMs = 10000) {
     const end = toolsFacts();
     tc.log(`walk ${code} to tile (${tx},${ty}): from ${JSON.stringify({ level: f.level, x: f.x, y: f.y, ctor: f.ctor })} `
         + `→ ${JSON.stringify({ level: end.level, x: end.x, y: end.y, ctor: end.ctor })} in ${Math.round(performance.now() - t0)} ms`);
+    if (end.level === from) {
+        // a walk that did not cross: what gates the game's input, and where the key went
+        let st = null;
+        try { st = JSON.parse(getSeedlingRegionGlue()?.adapter?._getFlash?.()?.botStatus?.() ?? 'null'); } catch { st = null; }
+        const pick = (o, ks) => Object.fromEntries(ks.filter((n) => o && n in o).map((n) => [n, o[n]]));
+        const sameId = document.querySelectorAll(`[id="${panel.flashObjectId}"]`).length;
+        tc.log(`walk did not cross: status ${JSON.stringify(pick(st, ['receive_input', 'saw_input_refused', 'input', 'held',
+            'armed', 'arm', 'loaded', 'menu', 'menu_state', 'cutscene', 'frozen', 'finished', 'dead_frames', 'tick_count', 'buffered']))}; `
+            + `elements with the frame's id ${sameId}; `
+            + `its canvases ${document.getElementById(panel.flashObjectId)?.contentDocument?.querySelectorAll?.('canvas')?.length ?? 'none'}; `
+            + `focus ${document.activeElement?.tagName}#${document.activeElement?.id ?? ''}; held ${JSON.stringify(panel._heldKeys?.held?.() ?? null)}`);
+    }
     return end.level !== from;
 }
 
