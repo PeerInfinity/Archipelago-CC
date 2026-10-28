@@ -26375,3 +26375,42 @@ standard with both keys ON: 11/11. The L4 dash-window rows stay green ON (the ma
   side, the corpse removed on death): all red.
 
 ---
+### Seedling hammer-phase LWEIGH — the L40 latch chain reaches the corpse weigh
+
+⚖ User, queued 2026-10-28: *"L40: reach the corpse weigh"* (ICEST's hand-over, its report § 9). Switch
+`solverBot.LATCH_WEIGH_FIRST`, **OFF** (`SEEDLING_LATCH_WEIGH_FIRST=1`, `withLatchWeighFirst`). The report is
+`CC/docs/cloud-reports/seedling-hammer-latch-weigh.md`.
+
+- **The census** (an env-gated scratch trace of every weigh resolution for `wandlock@448,432`): the latch chain and 853/854
+  request 0 and 1 (of the 60 captured L40 requests) and survey steps 67/95 resolve `weigh(wandlock@448,432)` live; it has no
+  block, so it falls to the hold. **Every one asked the corpse weigh first**, and every one was refused by the same named
+  reject: *"its first press's stance (488,440) plans no corridor from (x,y) — the corpse is not on this side"*. The hold
+  stance (488,392) is derived under the stance hypothesis through the latched south door `wandlock@480,560`; the corpse's
+  gate is asked live. That asymmetry, not the order of the two asks, is what picks the hold.
+- **The design.** (1) ask the corpse weigh again, under the hypothesis bag, where the hold's stance is in a live turret's
+  range — chosen. (2) fix the reject inside `deriveCorpseWeigh` for every caller (the hypothesis and the caller's contacts):
+  the chain then refuses at **t0** on `button@816,400`'s hold (guard (iii)'s base hypothesis now admits the t2 lock), and it
+  changes CORPSEBUMP's answer for its existing callers. The "always" arm of (1) (no range test) equals (1) on the latch.
+- **The change** (`latchWeighFirst`, in `resolveWeighStrategy`'s hold fallback): the order carries the kill stance (off the
+  snapped box), so the frontier walks it as a registered stance walk — without it, `killForCorpse`'s own walk named the same
+  lock on its frontier and raised the same weigh every two ticks until the strategy bound. A hit from the stance walk to the
+  verb's end refuses by name (the approach into the range is not fork-certified). `deriveCorpseWeigh` /
+  `execCorpseWeigh` are called, not changed.
+- **Effect ON.** Latch chain: `weigh stance` instead of `hold stance`, the same `bob@736,800` refusal at t271 (ICEST or OPP
+  alone the same; `orbitFreeAim` + `strategyBoundDistinct` at t351). With CPAIR size 3 (± ICEST ± OPP): past the bobs, the
+  turret dead (t966), the corpse (30,26) → (30,25) → (30,24), `wandlock@448,432` open (t1245), all on a fresh replay of the
+  model — and a blast at t917 on the arrival at the kill stance, refused by name. Past the hit (guard off, scratch):
+  `wandlock@800,400` opens (t3416) and the 4-strategy bound stops it (`strategyBoundDistinct` does not lift it: all four are
+  distinct); with `orbitFreeAim` instead, `execCorpseWeigh`'s second bump refuses *"ALREADY on (30,24)"*. Boss Key 2 solves
+  in no arm. Radius: 2 of 60 L40 requests and 2 of 240 survey rows move, refusal text only; the pocket boot unchanged.
+- **Gate** `hammerLatchWeigh.test.js` (ships OFF; `C2-no-block` with no turret, with a turret in range and no Fire, with a
+  turret out of range; L16's block weigh; ICEST's pocket boot) and `hammerLatchWeigh.slow.test.js` (the latch chain OFF/ON;
+  ON + CPAIR size 3 replayed in the model). Mutants (drop the reorder, invert the range test, offer a weigh with no corpse
+  route): all red.
+
+**Trap candidates.**
+- Two asks of the same room under two different worlds (live vs hypothesis) make one answer look preferred when it is only
+  the one asked more optimistically; compare the worlds before reordering the asks.
+- An executor that walks inside itself is invisible to the frontier's re-entry guard: give the order its stance.
+
+---
