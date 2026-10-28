@@ -189,9 +189,14 @@ import {
     traceSidecarPath, worldChangesAt, dialogueAt,
 } from './watchOverlays.js';
 import {
-    clampTick, createManualSession, foldRoundTrip, heldFromCodes, KEYBOARD_ROWS,
-    liveOverlaysFor, parseTapeText, readViewParams, serializeTapeText, tapeKeyForCode,
+    clampTick, createManualKeys, createManualSession, foldRoundTrip, KEYBOARD_ROWS,
+    liveOverlaysFor, parseTapeText, readViewParams, serializeTapeText, touchSendFor,
 } from './watchManual.js';
+/**
+ * ⛓ THE ON-SCREEN CONTROLS (slice `seedling-lab-touch-controls`) — the flash panel's, imported AS IS: the d-pad and
+ * buttons Seedling's `games/seedling.json` declares, shown by the same auto/on/off rule (`?touch=1`, a coarse pointer).
+ */
+import { mountTouchControls, parseTouchLayout, touchControlsVisible } from '../flashPanel/touchControls.js';
 import {
     agreementWithPayload, agreementWithTrace, BIOME_NAMES, describeState, displaySolve,
     DIRECTED_ANCHOR_TRIES, applyDirective, describeKeptKind, directedCost, displayStaging,
@@ -5075,7 +5080,13 @@ async function runManual(params, lifetime) {
     let session = null;
     let driving = false;
     let speed = params.speed;
-    const codes = new Set();
+    /**
+     * ⛓⛓ THE ONE WRITER of the held set (`createManualKeys`): the keyboard
+     * below and the on-screen controls both press through `keys.key`, behind
+     * the same `driving` gate, so a touch session folds to the tape the same
+     * presses on the keyboard would.
+     */
+    const keys = createManualKeys({ isDriving: () => driving });
     let renderer = null;
     let worldFor = null;
 
@@ -5088,10 +5099,7 @@ async function runManual(params, lifetime) {
      * typing a boot block into the textarea must not press X.
      */
     const onKey = (down) => (e) => {
-        if (!driving) return;
-        if (!tapeKeyForCode(e.code)) return;
-        e.preventDefault();
-        if (down) codes.add(e.code); else codes.delete(e.code);
+        if (keys.key(down, e.code)) e.preventDefault();
     };
     /**
      * ⛔⛔ THESE THREE ARE THE ARM-SWITCH HAZARD IN ITS SHARPEST FORM. They
@@ -5106,7 +5114,17 @@ async function runManual(params, lifetime) {
     lifetime.on(window, 'keyup', onKey(false));
     // A window that loses focus mid-press would otherwise hold that key for
     // the rest of the session — the tape would record a hold nobody made.
-    lifetime.on(window, 'blur', () => codes.clear());
+    lifetime.on(window, 'blur', () => keys.release('blur'));
+    // …and so would a page that is hidden or left mid-press (a phone's app
+    // switch is the common case once the on-screen controls are in play).
+    lifetime.on(document, 'visibilitychange', () => {
+        if (document.visibilityState === 'hidden') keys.release('hidden');
+    });
+    lifetime.on(window, 'pagehide', () => keys.release('pagehide'));
+    // ⛔ A RETIRED MANUAL LEAVES NO HELD KEY — and no controls (below).
+    lifetime.onRetire(() => keys.release('retire'));
+    await mountManualTouch(lifetime, keys, canvas);
+    if (!lifetime.alive()) return;
 
     const drawLive = () => {
         const world = worldFor(session.run.level);
@@ -5145,7 +5163,7 @@ async function runManual(params, lifetime) {
             manualRow('tick', String(session.tick)),
             manualRow('level', `${last.level} (${world.width}x${world.height})`),
             manualRow('position', `${fmt(last.x)}, ${fmt(last.y)}`),
-            manualRow('held', [...heldFromCodes(codes)].sort().join(' + ') || '—'),
+            manualRow('held', [...keys.held()].sort().join(' + ') || '—'),
             manualRow('hits', `${session.run.playerHits.length}`),
             manualRow('deaths', `${session.run.playerDeaths.length}`),
             manualRow('clears', `${session.run.earnedClears.length}`),
@@ -5195,7 +5213,7 @@ async function runManual(params, lifetime) {
                      * because that is the part that can be wrong and therefore
                      * the part that has tests.
                      */
-                    const { held } = session.heldFor(heldFromCodes(codes),
+                    const { held } = session.heldFor(keys.held(),
                         { autoAdvanceText: autoAdvanceTextNow() });
                     session.step(held);
                     renderer.mark(session.run.state, session.run.level);
@@ -5274,6 +5292,9 @@ async function runManual(params, lifetime) {
     $('manualStop').onclick = async () => {
         if (!session) return;
         driving = false;
+        // ⛔ EVERY HELD KEY IS LET GO AT STOP — a key still down here would
+        // otherwise be down at the next START, held by nobody.
+        keys.release('stop');
         $('manualStart').disabled = false;
         $('manualStop').disabled = true;
 
@@ -5312,6 +5333,10 @@ async function runManual(params, lifetime) {
             error: trip.error ? trip.error.message : null,
             inputs: trip.tape.inputs,
             clears: session.run.earnedClears.length,
+            // ⛓ the touch row reads these: the controls are mounted, and STOP released.
+            touch: Boolean(document.querySelector('#stage .flash-touch-controls')),
+            released: keys.lastRelease(),
+            held: keys.codes(),
         };
         $('status').className = trip.ok ? 'ok' : 'bad';
         $('status').textContent = `${name} — ${session.tick} tick(s) driven, folded into `
@@ -5357,6 +5382,54 @@ async function runManual(params, lifetime) {
 
     $('status').textContent = `ready — level ${staging.boot.level} from ${origin}. `
         + 'Press START, then drive with the arrow keys and X/C.';
+}
+
+/**
+ * ⛓⛓ THE ON-SCREEN CONTROLS FOR MANUAL (slice `seedling-lab-touch-controls`).
+ *
+ * `flashPanel/touchControls.js` as is — the layout from `games/seedling.json`'s `touch_controls`, the buttons for the
+ * `js` transport (Esc is wasm-only: the JS run has no pause menu) — mounted under the canvas and wired to `keys`
+ * through `touchSendFor`, so a tap is a `keys.key` press like a keystroke. Shown by `touchControlsVisible` (auto =
+ * `?touch=1` or a coarse pointer; `?touch=0` hides them), with the `#manualTouch` checkbox to flip it by hand.
+ *
+ * ⛔ LIFETIME: the mount is destroyed on retire (its own listeners go with it, every held key released first), and
+ * it is `attach`ed to `keys`, so STOP / blur / hidden release a finger still on the d-pad too.
+ */
+async function mountManualTouch(lifetime, keys, canvas) {
+    const box = $('manualTouch');
+    let layout = null;
+    try {
+        const r = await fetchArtifact(new URL('../flashPanel/games/seedling.json', import.meta.url));
+        layout = parseTouchLayout((await r.json()).touch_controls);
+    } catch (e) {
+        box.disabled = true;
+        box.parentNode.title = `on-screen controls unavailable — ${e.message}`;
+        return;
+    }
+    if (!lifetime.alive() || !layout) return;
+    let mounted = null;
+    let detach = null;
+    const unmount = () => {
+        detach?.();
+        mounted?.destroy();
+        mounted = null;
+        detach = null;
+    };
+    const apply = () => {
+        if (!lifetime.alive()) return;
+        if (!box.checked) { unmount(); return; }
+        if (mounted) return;
+        mounted = mountTouchControls({ doc: document, layout, send: touchSendFor(keys) });
+        mounted.setButtons('js');
+        mounted.setPlacement('below');
+        canvas.after(mounted.element);
+        detach = keys.attach(mounted);
+    };
+    box.disabled = false;
+    box.checked = touchControlsVisible('auto', { matchMediaFn: window.matchMedia?.bind(window) });
+    box.onchange = apply;
+    lifetime.onRetire(unmount);
+    apply();
 }
 
 const manualRow = (k, v) => `<div class="r"><span>${k}</span><b>${v}</b></div>`;
