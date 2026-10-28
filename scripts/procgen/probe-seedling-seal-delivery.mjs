@@ -105,6 +105,22 @@ export function censusPlan(cfg) {
     return rows;
 }
 
+/**
+ * What the AP inventory can HOLD of each census row after its grants: `copies`, capped by the preset's own
+ * `max_count` for the item (the state manager clamps an add there — `inventoryManager._addItemToInventory`).
+ * `Nothing` is a filler with `max_count: 0` since the R4b regen (378bb35d57), so its grant lands as 0, and a
+ * wait for `copies` alone never ends. Returns the rows still short: `[{item, want, have}]` (empty = all held).
+ */
+export function inventoryShortfall(plan, ap, itemDefs) {
+    const short = [];
+    for (const r of plan) {
+        const want = Math.min(r.copies, itemDefs?.[r.item]?.max_count ?? Infinity);
+        const have = ap[r.item] ?? 0;
+        if (have < want) short.push({ item: r.item, want, have });
+    }
+    return short;
+}
+
 /** Is one readout set in `state`? (`empty` = a slot read; `bit` = a mask; `want` = a value.) */
 export function readoutSet(r, state) {
     if (!r.read) return false;
@@ -238,10 +254,17 @@ async function main() {
                 // eslint-disable-next-line no-await-in-loop
                 await grant(page, row.item, row.copies);
             }
-            await waitFor('every grant in the AP inventory', async () => {
-                const s = await snap();
-                return PLAN.every((r) => (s.ap[r.item] ?? 0) >= r.copies) ? s : null;
-            }, 30000);
+            let short = [];
+            try {
+                await waitFor('every grant in the AP inventory', async () => {
+                    const s = await snap();
+                    short = inventoryShortfall(PLAN, s.ap, PRESET.items['1']);
+                    return short.length === 0 ? s : null;
+                }, 30000);
+            } catch (e) {
+                out('shortfall', short);
+                throw e;
+            }
             // Settle: the writes land on the next queue ticks; a fill writes slot by slot as its readouts echo.
             let s = null;
             const deadline = Date.now() + 20000;
