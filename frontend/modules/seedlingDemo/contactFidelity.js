@@ -1546,6 +1546,18 @@ export const CONTACT_FIDELITY = {
      * body. OFF: byte-identical. `SEEDLING_PUNCH_GATE_TIMED=0|1`.
      */
     punchGateTimed: true,
+    /**
+     * seedling-js-inventory-menu (C4 of fidelity-15's W0 ACK) — A C PRESS IS `useItem(Main.secondary)`.
+     *
+     *     Player.as:1561-1568   input(): `Input.pressed(keys[4])` → useItem(Main.primary);
+     *                                    `Input.pressed(keys[5])` → useItem(Main.secondary)
+     *
+     * The model reads only the X press, so a C press on a live tick was a silent nothing where the game swings the
+     * secondary slot (`Main.secondary`, 0 = the first slot, by default the sword). ON: a C press is routed through the
+     * X press's own `useItem` arms against `secondary`'s slot, and in the same frame an X press goes first. OFF:
+     * byte-identical (no committed tape presses C). `SEEDLING_SECONDARY_USE=0|1`.
+     */
+    secondaryUse: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1734,6 +1746,9 @@ if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '0') CONTACT_FIDEL
 // ⛓ fidelity RULESREF D1: `SEEDLING_PUNCH_GATE_TIMED=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '1') CONTACT_FIDELITY.punchGateTimed = true;
 if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '0') CONTACT_FIDELITY.punchGateTimed = false;
+// ⛓ seedling-js-inventory-menu C4: `SEEDLING_SECONDARY_USE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SECONDARY_USE === '1') CONTACT_FIDELITY.secondaryUse = true;
+if (globalThis.process?.env?.SEEDLING_SECONDARY_USE === '0') CONTACT_FIDELITY.secondaryUse = false;
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;
