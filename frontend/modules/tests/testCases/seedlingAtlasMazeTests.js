@@ -52,7 +52,6 @@ import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { nativeReachUnder } from '../../mazeRoom/tileSpike/deriveLevelWorldLogic.js';
 import { createState, sharedWorldOwnerAt, TURN_PREFIX, USE_PREFIX } from '../../mazeRoom/mazeRoomEngine.js';
 import { substrateRegistryEntry } from '../../mazeRoom/mazeRoomLibrary.js';
-import { getLastRawJsonData } from '../../stateManager/index.js';
 
 const PRESET_PATH = './presets/seedling_atlas_maze/AP_1/AP_1_rules.json';
 // A world sphere growth GREW with pieces of the same map hung off it
@@ -1049,7 +1048,8 @@ async function seedlingArtStaticRoom(testController) {
         return { tOff, tOn };
     };
     timeArms(`L0 ${panel.world.width}x${panel.world.height}`);
-    const raw = getLastRawJsonData()?.rawJsonData;
+    // the panel's own copy of the load: the runner's publish bypasses stateManager's getLastRawJsonData cache
+    const raw = panel._loadedRules().rules;
     const l12Payload = raw?.preset_sidecars?.['1']?.[ART_L12]?.playable_payload;
     testController.assertEqual(`the preset carries ${ART_L12}`, true, !!l12Payload);
     if (l12Payload) {

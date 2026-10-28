@@ -245,6 +245,7 @@ export class MazeRoomUI {
         // for the saved-queue store. Refreshed on
         // stateManager:rawJsonDataLoaded.
         this._cachedRulesData = null;
+        this._cachedRulesPlayer = null;
         this._unsubRulesLoaded = null;
 
         // Phase 6: substrate-handled completion. Non-null while the
@@ -625,6 +626,12 @@ export class MazeRoomUI {
         if (!eventBus?.subscribe) return;
         const handler = (payload) => {
             this._cachedRulesData = payload?.rawJsonData ?? null;
+            // ⛓ SEEDLING ART: the slot whose `region_atlas` the art reads. The
+            // in-app runner publishes this event WITHOUT going through
+            // stateManager's own cache (`getLastRawJsonData` would still answer
+            // the boot rules), so the panel keeps its own copy.
+            this._cachedRulesPlayer = playerOfRawPayload(payload);
+            if (this._seedlingArt?.status !== 'loading') this._seedlingArt = null;
         };
         eventBus.subscribe('stateManager:rawJsonDataLoaded', handler, 'mazeRoom');
         this._unsubRulesLoaded =
@@ -3686,11 +3693,18 @@ export class MazeRoomUI {
     _seedlingSkin() {
         if (!this.world?.atlas) return null;
         try {
-            const payload = getLastRawJsonData?.();
-            return seedlingSkinFor(this.world, regionAtlasOf(rulesOfRawPayload(payload), playerOfRawPayload(payload)));
+            const { rules, player } = this._loadedRules();
+            return seedlingSkinFor(this.world, regionAtlasOf(rules, player));
         } catch (err) {
             return null;
         }
+    }
+
+    /** The loaded rules and slot: the panel's own copy of the last load, else stateManager's catch-up. */
+    _loadedRules() {
+        if (this._cachedRulesData) return { rules: this._cachedRulesData, player: this._cachedRulesPlayer ?? null };
+        const payload = getLastRawJsonData?.();
+        return { rules: rulesOfRawPayload(payload), player: playerOfRawPayload(payload) };
     }
 
     /**
@@ -3738,8 +3752,8 @@ export class MazeRoomUI {
 
     _startSeedlingArtLoad() {
         this._seedlingArt = { status: 'loading' };
-        const payload = getLastRawJsonData?.();
-        const { path } = mapDocumentPath(rulesOfRawPayload(payload), playerOfRawPayload(payload));
+        const { rules, player } = this._loadedRules();
+        const { path } = mapDocumentPath(rules, player);
         const mapUrl = new URL(path, document.baseURI).href;
         const map = fetch(mapUrl, { cache: 'no-store' })
             .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${path}: HTTP ${r.status}`))));
