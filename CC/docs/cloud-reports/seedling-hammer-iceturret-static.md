@@ -232,7 +232,7 @@ per site, the `ICETURRET_STATIC_KILL.enabled` test.
 | `derive-seedling-tick0 --check` | ALL CHECKS PASSED |
 | `check-seedling-wasm-ship` headless (:8000) | **ALL PASS, 415 PASS, 0 FAIL** (`wasm-ship.txt`) |
 | JSUT at `3e8dafe1` (run 40630915564) | slow battery **273/273**; 28 red in shard 1 (before the D commit's `census-seedling-solver-surface --write`) |
-| JSUT at `2ba8b244` (run 40636864822) | the three vitest shards, the producer `--check`s and the headless gates **green**; the slow battery was still running at this commit (read it with `ci-summary.mjs --run=40636864822`) |
+| **JSUT at `2ba8b244` (run 40636864822)** | **success**: vitest 23835/23835 (0 failed), **slow battery 273/273** (my two latch rows included) |
 
 ## 7. What the planner's harvest A/B should expect
 
