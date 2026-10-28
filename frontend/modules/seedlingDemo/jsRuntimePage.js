@@ -199,6 +199,7 @@ import { PICKUP_TAGS, pickupOps, pickupSkinView, stepPickupSkin } from './seedli
 import { MACHINE_OBJECT_TAGS, machineNightOps, machineOps, machineSkinView, stepMachineSkin } from './seedlingMachineSkin.js';
 import { BOSS_OBJECT_TAGS, bossNightOps, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
 import { EFFECT_RULES } from './seedlingEffectSkin.js';
+import { inventoryView } from './seedlingInventorySkin.js';
 import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
 import { BASE_TICKS_PER_SECOND, createRateMeter, createSlotClock, createSlotPump, messageChannelPostTask, parseGameSpeed } from './jsRuntimeClock.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
@@ -796,7 +797,9 @@ export function mountJsRuntimePage(win = window) {
         // ⚖ CLAMPED to the canvas there when the room is narrower than the screen (G4b F1, `overlayRect`)
         const roomMode = graphics.camera !== 'follow';
         const cam = roomMode ? cameraView('follow', world, state, runtime.run) : view;
-        const overlays = fv ? screenOps(fv, art, { skin: graphics.effectSkin, cam, fitTo: roomMode ? world.world : null }) : [];
+        // ⛓ seedling-js-inventory-menu: the V menu (`Inventory.render`), in `screenOps`' own slot of `Game.render()`'s order
+        const overlays = fv ? screenOps(fv, art, { skin: graphics.effectSkin, cam, fitTo: roomMode ? world.world : null,
+            inventory: inventoryView(runtime.run, runtime.inventoryMenu) }) : [];
         graphics.effects = fv
             ? { explosions: graphics.effectSkin.explosions.length, slashes: graphics.effectSkin.slashes.length, droplets: graphics.effectSkin.droplets.length,
                 hearts: { ...graphics.effectSkin.hearts }, cover: graphics.effectSkin.cover, owed: graphics.effectSkin.fadeQueue.length,

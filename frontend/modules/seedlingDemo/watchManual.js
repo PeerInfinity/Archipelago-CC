@@ -140,6 +140,31 @@ export function heldFromCodes(codes) {
  *   convenience: `watchViewer` sets it only for a level the GENERATE arm
  *   handed over, and says so in the panel when it does.
  */
+/**
+ * ⛓ seedling-js-inventory-menu — the staging a fold writes, with the V menu's writes on it.
+ *
+ * A menu session is zero tape ticks (its frames are the Bot's dead frames), so all it can leave on a tape is its
+ * outcome. An X write is `Main.primary = selected`, which IS a tape `equips` row (`{t, slot}` at the tick the run had
+ * reached), so the menu's rows join the staging's (a menu row wins on a shared tick, as the later store does). A C
+ * write is `Main.secondary`, which no tape field carries yet: the Bot directive `secondaries: [{t, slot}]` is queued
+ * for the next wasm rebuild. Until it lands the fold REFUSES by name rather than drop the write; once it does, this
+ * is the one place that emits `secondaries` instead. Untouched sessions return the staging itself.
+ */
+export function withMenuWrites(staging, run) {
+    const secondaries = run.secondariesFired ?? [];
+    if (secondaries.length > 0) {
+        throw new Error(`watchManual.fold: this session set \`Main.secondary\` from the inventory menu `
+            + `(${secondaries.map((r) => `slot ${r.slot} at tick ${r.t}`).join(', ')}), and a tape has no field for it yet. `
+            + 'The Bot directive `secondaries: [{t, slot}]` (mirroring `equips`) is queued for the next wasm rebuild; '
+            + 'until then the fold refuses rather than write a tape the game would replay with a different C slot.');
+    }
+    const menu = run.inventoryMenuEquips ?? [];
+    if (menu.length === 0) return staging;
+    const byTick = new Map((staging.equips ?? []).map((e) => [e.t, e]));
+    for (const e of menu) byTick.set(e.t, { t: e.t, slot: e.slot });
+    return { ...staging, equips: [...byTick.values()].sort((a, b) => a.t - b.t) };
+}
+
 export function createManualSession({
     levelSource, staging, name = 'manual', scratchPersistence = false,
 }) {
@@ -292,7 +317,7 @@ export function createManualSession({
          * one of them met a one-tick press.
          */
         fold() {
-            return buildStagedTape({ staging: honest, perTick, name });
+            return buildStagedTape({ staging: withMenuWrites(honest, run), perTick, name });
         },
         /**
          * ⛓ The DECLARED despawns, checked against what this drive computed

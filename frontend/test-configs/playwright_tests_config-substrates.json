@@ -2121,6 +2121,12 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "seedling-js-encounter-legs. Runtime js + the solver mode ON on seedling_playthrough (the vanilla arm): sword + shield granted, the page teleported to L32 @ (72,120), and the Playback Bot asks for Level 032 - Bob Boss by name; the page walks the solver's encounter executor and completes on the Fire drop's report clear {32,4} (one pendingCheck <seq>|32|4|0; the location checked). Batch seedling-js."
+        },
+        {
+            "id": "seedling-js-runtime-inventory-menu",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "seedling-js-inventory-menu. Standalone jsRuntime.html?graphics=seedling&camera=follow driven to L86 holding Fire then the sword (slots [1, 0]); real keyboard events V, Down, X, V: the menu opens, its panel is drawn as seedling:ui/inventory, the tape holds (one inventoryHolds row at the opening tick), X equips slot 1 (the sword), every sheet decodes, zero console errors. Batch seedling-js."
         }
     ]
 }

@@ -125,6 +125,7 @@
  */
 
 import { createManualSession } from './watchManual.js';
+import { TOGGLE_KEYS, createInventoryMenu, inventoryMenuFrame } from './inventoryMenu.js';
 import { bootStaging } from './procgenOracle.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 import { parseOelLevel } from './procgenLevelOel.js';
@@ -540,7 +541,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             .map(([name, id]) => [id, ITEM_PROPERTIES[name].property]));
         // (`foldGainedItems` ran first: a weapon picked up in play is in the flags already.)
         const slots = run.inventorySlots.filter((id) => flags[flagOf[id]] === true);
-        return { slots, primary: Number.isInteger(run.primary) ? run.primary : 0 };
+        return { slots, primary: Number.isInteger(run.primary) ? run.primary : 0,
+            // ⛓ seedling-js-inventory-menu: `Main.secondary` / `Main.firstUse` are save data, and survive a boot too.
+            secondary: Number.isInteger(run.secondary) ? run.secondary : 0, firstUse: run.firstUse === true };
     }
 
     function boot({ level, x, y }, why, { playerDamage = null } = {}) {
@@ -566,6 +569,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (slots) {
             staging.inventory_slots = slots.slots;
             staging.seam = { ...(staging.seam ?? {}), primary: slots.primary };
+            // Only when they differ from what the boot derives (0; and `firstUse` re-derives itself from two slots),
+            // so a session that never touched the menu stages exactly what it did before.
+            if (slots.secondary > 0 && slots.secondary < slots.slots.length) staging.seam.secondary = slots.secondary;
+            if (slots.firstUse && slots.slots.length < 2) staging.seam.first_use = true;
         }
         // ⛓ STAGEDHITS CONSUMER — an in-place reboot keeps the game's `Player` (an item flag rebuilds no world), so
         // its damage is STAGED (`playerDamage.stagedPlayerDamage`); absent everywhere else (a new `Player`, 0 hits).
@@ -658,17 +665,114 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         return { ...out, burst };
     }
 
-    function tickOnce(held) {
+    /**
+     * ⛓⛓ seedling-js-inventory-menu — THE V MENU, HELD BY THE CORE (fidelity-15's W0 ACK).
+     *
+     * `Inventory.set open` is `Game.freezeObjects`, so while the menu is up every frame is a Bot DEAD frame: the
+     * tape does not advance and the room is HELD here (no `session.step`, as `solverHolding` holds it), while the
+     * menu's own `Inventory.update` runs each frame (`inventoryMenu.inventoryMenuFrame`). The opening frame is a LIVE
+     * one (`inventory.update()` runs in the frame's tail), so the open edge is read after that frame's step; every
+     * later frame through the closing one is held, and the close hands the run its frames (`run.inventoryHold`).
+     *
+     * V and I never reach the run or the tape (they drive nothing else under the Bot: `Help(0)` needs
+     * `Inventory.help`, which the Bot clears). An X or C that went down during a hold is MASKED until released: its
+     * `Input.pressed` edge fired on a dead frame, where `Mobile.input` never ran, and must not fire again on the
+     * first live tick. The arrows are not masked (`Input.check`, not an edge). Only a hand-driven tick opens it;
+     * a walk or a solve never presses V.
+     */
+    const invMenu = createInventoryMenu();
+    let menuHeldFrames = 0;
+    let menuPrevHeld = new Set();
+    const menuMasked = new Set();
+    const MENU_EDGE_KEYS = Object.freeze(['primary', 'secondary']);
+    /**
+     * `extended` (`offsetMax.x` 0, not -23: the side tab) goes true at the first `Inventory.update` with `firstUse` and
+     * the conch, the feather or a totem part (`Inventory.as:178-181`); the help it would raise is the Bot's off.
+     */
+    const menuCtxFor = (run) => {
+        const inv = run.inventory ?? {};
+        const totems = run.saveState?.totem_parts ?? [];
+        return { openable: run.inventoryOpenable, firstUse: run.firstUse, slotCount: run.inventorySlots.length,
+            extended: run.firstUse && (inv.canSwim === true || inv.hasFeather === true || totems.some(Boolean)) };
+    };
+    const menuWrites = (run, writes) => {
+        for (const w of writes) {
+            try {
+                run.inventoryMenuWrite(w);
+                note({ type: 'inventory', write: w, message: `[js runtime] inventory: ${w.kind === 'primary' ? 'X' : 'C'} `
+                    + `→ slot ${w.slot} (item ${run.inventorySlots[w.slot]})` });
+            } catch (err) {
+                note({ type: 'inventory', refused: err.message, message: `[js runtime] inventory write refused — ${err.message}` });
+            }
+        }
+    };
+    const releasedSince = (held) => {
+        const released = new Set([...menuPrevHeld].filter((k) => !held.has(k)));
+        menuPrevHeld = new Set(held);
+        for (const k of [...menuMasked]) if (!held.has(k)) menuMasked.delete(k);
+        return released;
+    };
+    /** The keys the run sees: no V/I, and no masked X/C. */
+    const menuStripped = (held) => {
+        if (!TOGGLE_KEYS.some((k) => held.has(k)) && menuMasked.size === 0) return held;
+        return new Set([...held].filter((k) => !TOGGLE_KEYS.includes(k) && !menuMasked.has(k)));
+    };
+    /** One HELD frame (the menu is up): the menu's update, and on the closing frame the hold is spent. */
+    function menuHeldTick(run, released, held) {
+        menuHeldFrames += 1;
+        const r = inventoryMenuFrame(invMenu, released, menuCtxFor(run));
+        menuWrites(run, r.writes);
+        if (!invMenu.open) {
+            const frames = menuHeldFrames;
+            menuHeldFrames = 0;
+            try {
+                run.inventoryHold(frames);
+            } catch (err) {
+                halted = { tick: ticks, message: err.message };
+                note({ type: 'halt', message: `[js runtime] HALTED — the model refused the inventory hold: ${err.message.split('\n')[0]}` });
+            }
+            for (const k of MENU_EDGE_KEYS) if (held.has(k)) menuMasked.add(k);
+            note({ type: 'inventory', closed: true, frames, message: `[js runtime] inventory closed after ${frames} frozen frame(s)` });
+        }
+        flush();
+        return { stepped: false, inventory: true };
+    }
+    /** The live frame's tail: `inventory.update()` (the open edge, and the slide). */
+    function menuLiveTail(run, released) {
+        const ctx = menuCtxFor(run);
+        if (!ctx.openable && TOGGLE_KEYS.some((k) => released.has(k)) && run.firstUse) {
+            note({ type: 'inventory', refused: run.inventoryRefusal,
+                message: `[js runtime] the inventory menu cannot open here — ${run.inventoryRefusal}` });
+        }
+        const r = inventoryMenuFrame(invMenu, released, ctx);
+        if (r.toggled && invMenu.open) {
+            note({ type: 'inventory', opened: true, message: '[js runtime] inventory opened (the room is held)' });
+        }
+        menuWrites(run, r.writes);
+    }
+
+    function tickOnce(rawHeld) {
         drainQueue();
         if (!session || halted) { flush(); return { stepped: false }; }
         if (deferredReboot && !session.run.inCeremony && !encounterHoldsDelivery()) rebootInPlace(IN_PLACE_REBOOT_WHY);
         const run = session.run;
+        // (`heldFor` is asked ONCE per tick — the walker's contract — and reused below.)
+        const walkHeld = walker.heldFor(run);
+        const manual = !walker.solverDriving && walkHeld === null;
+        const released = releasedSince(rawHeld);
+        if (invMenu.open) {
+            if (manual) return menuHeldTick(run, released, rawHeld);
+            // a walk or solve took over: the game would still hold, but nothing here presses V; close it now
+            invMenu.open = false;
+            run.inventoryHold(Math.max(menuHeldFrames, 1));
+            menuHeldFrames = 0;
+        }
+        const held = menuStripped(rawHeld);
         const level0 = run.level;
         const world0 = run.world;
         const box0 = playerBoxAt(run.state.x, run.state.y);
         const n0 = run.transitions.length;
         const inCeremony0 = Boolean(run.inCeremony);
-        const walkHeld = walker.heldFor(run);
         if (walker.solverHolding) {
             // ⛓ S2 — a solve is in flight: the room is HELD (the run does not
             // step, so the plan is played from the state it was solved from);
@@ -725,6 +829,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             // left (`World.addUpdate` prepends; the Player is added first).
             apItemContact(level0, box0);
         }
+        // ⛓ seedling-js-inventory-menu: the frame's tail, `inventory.update()` — after the step, as the game runs it.
+        if (manual) menuLiveTail(run, released);
         reportClears(run);
         walker.observe({ crossing });
         flush();
@@ -1269,6 +1375,11 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         get deaths() { return deaths.map((d) => ({ ...d })); },
         get events() { return events.slice(); },
         get halted() { return halted; },
+        /** ⛓ seedling-js-inventory-menu: the V menu's state, for the page's draw (`inventoryMenu.js`). */
+        get inventoryMenu() {
+            return { open: invMenu.open, selected: invMenu.selected, offset: { ...invMenu.offset }, scale: invMenu.scale,
+                textScale: [...invMenu.textScale], heldFrames: menuHeldFrames };
+        },
         get ticks() { return ticks; },
         get configured() { return config !== null; },
         /** The current room's record and its uncollected apitems, for the painter. */
