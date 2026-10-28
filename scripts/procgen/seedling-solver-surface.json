@@ -1366,9 +1366,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 616
+        "solverBot.js": 615
       },
-      "sites": 757,
+      "sites": 756,
       "seen": "both",
       "via": [
         "direct",
@@ -1566,9 +1566,9 @@
         "dangerMap.js": 3,
         "lightsVerb.js": 2,
         "solveProgress.js": 2,
-        "solverBot.js": 314
+        "solverBot.js": 313
       },
-      "sites": 387,
+      "sites": 386,
       "seen": "both",
       "via": [
         "direct",
