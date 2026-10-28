@@ -377,6 +377,7 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
         await settled('the previous crossing settled before the jump');
         let replaced = null;
         let jumps = 0;
+        let confirmed = false;
         for (;;) {
             // eslint-disable-next-line no-await-in-loop
             const teleports0 = (await glueStats())?.teleports ?? 0;
@@ -396,8 +397,9 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
                     throw new Error(`the binding re-placed the jump to L${level} (${x}, ${y}) at (${s.spawn.x}, ${s.spawn.y}) `
                         + `in L${s.spawn.level}, and the game never stood there (${timeoutMs} ms)`);
                 }
+                confirmed = true;
             // eslint-disable-next-line no-await-in-loop
-            } else if (await gameAt(level, x, y, 3000)) break;
+            } else if (await gameAt(level, x, y, 3000)) { confirmed = true; break; } else confirmed = false;
             if (jumps >= 2) break;
         }
         // ⛓ THE LAST JUMP SETTLES TOO (L82 ARRIVAL RACE, CI runs 40596245635 … 40596268889: 5 of 16 L82 legs). A room
@@ -405,7 +407,10 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
         // the room's begin) never shows `gameAt` the jump's own spot past its first frame, so the second jump was
         // ALWAYS taken, and returned unwaited: the read below caught that jump's one-frame checkpoint (144,16), the
         // engine's cold start re-arrived THERE, and the staging booted the rewritten (152,176) — t=0 off the plan.
-        await settled(`the jump to L${level} (${x}, ${y}) settled`);
+        // ⛔ ONLY an UNCONFIRMED last jump settles: a jump `gameAt` saw land keeps its arrival clock. Settling every
+        // jump moved every leg's seam ~+15 ticks (full sweep 40598361042 vs main 40598352770), and the seam-sensitive
+        // L40 Totem legs (356, 359) flipped to a solver refusal on that clock alone.
+        if (!confirmed) await settled(`the jump to L${level} (${x}, ${y}) settled`);
         const g = await readGameState();
         return { level: g.level, x: g.playerPositionX, y: g.playerPositionY, jumps, replaced };
     }
