@@ -182,6 +182,8 @@ import {
     WHIRLPOOL,
     // ⛓ fidelity YETI D3: the second tag `Yeti.doneTalking()` clears (L58's portal).
     YETI_PORTAL_TAG,
+    // ⛓ hammer-phase ICEST: the turret's attack range bounds the arm's staging point (`killIceTurretOnWalk`).
+    ICE_TURRET,
 } from './solverView.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -11416,6 +11418,191 @@ function killForCorpse(run, perTick, c, exempt, ctx) {
         + `(${side.x},${side.y}) without a hit — ${whys.join(' | ')}`);
 }
 
+/** ICEST: the arm's staging point stands this far past the turret's attack range, px (outside it no volley starts). */
+const ICE_TURRET_STAGE_CLEAR = 8;
+/** ICEST: the farthest the staging point is sought along the side's outward normal, px. */
+const ICE_TURRET_STAGE_REACH = 240;
+/** ICEST: the longest start delay the tries take, ticks. Inside the range it moves the volley (measured: the generated corridor kills at delay 5); outside it the turret's clock re-arms, so it moves only the room's other bodies. */
+const ICE_TURRET_APPROACH_DELAY_MAX = 48;
+
+/**
+ * ⛓⛓ HAMMER-PHASE ICEST (`ICETURRET_STATIC_KILL`, OFF) — THE WALK'S KILL RUNG'S ICE-TURRET ARM.
+ *
+ * ⛔ THE APPROACH AND THE KILL ARE ONE CERTIFICATE. `killForCorpse` walks to its stance on the live run with the
+ * turret's range braved and then tries the kill on forks; that is right where the player already stands by the body
+ * (the corpse weigh), and wrong for a walk that comes from outside the range. Measured on the latch chain: the walk to
+ * the below side meets a volley the walk's certificate never saw (a blast's `Player.freeze` and hit are not on a
+ * walk's preview), arriving frozen or hit. So, per side of the SNAPPED box (nearest first; see below):
+ *   1. the LIVE run walks — the loop's own `walkTo`, nothing exempt — to a STAGING point on the side's outward normal,
+ *      `ICE_TURRET_STAGE_CLEAR` px past `ICE_TURRET.attackRange`, where no volley starts;
+ *   2. each start delay `d` = 0 … `ICE_TURRET_APPROACH_DELAY_MAX`, and each kill, is tried on a FORK: the standing
+ *      kill (`killIceTurretInPlace`), approached on the fork (`planWaypoints` + `previewWalk`'s own held sets, the
+ *      drive's keys) with `d` stood before the approach or at the stance after it; then, with `turretCircleKill` ON and
+ *      the plain Sword, the circling kills (`circleKillIceTurret`, each direction × first corner, nearest the stance
+ *      first) from where the player stands after `d`; each followed by the stand until no blast is in flight;
+ *   3. the first try with the turret dead, no hit and no blast in flight is played on the live run, key for key, and
+ *      read back (`dead`).
+ * ⛔ THE SIDE IS DERIVED FROM THE SNAPPED BOX. A turret off screen has not taken `input()`'s stationary-axis snap
+ * (`floor(v/16)*16 + 8`, `iceTurret.js`), and the approach brings it on screen: L40's `iceturret@472,400` sits at y 416
+ * and snaps to 424, so the below side of the unsnapped box is INSIDE the snapped one (measured: three body contacts).
+ * A side with no staging point, no staging walk, or no hitless try gives way to the next; a refusal after a live tick
+ * propagates (the tries' failures are tallied by kind in its words). `{record}` is a kill the live run observed,
+ * `{why}` means no tick was spent. ⛓ MEASURED: from the latch chain's arrival (t577) no try is hitless (490 forks:
+ * the turret's body on the approach, a blast while circling); the plain `killForCorpse` route (the live stance walk
+ * braved) is refused there by the danger map's placement-priced body and was hit by the volley before it.
+ */
+function killIceTurretOnWalk(run, perTick, id, contacts, ctx) {
+    const t = run.entities('turrets')?.get?.(id) ?? null;
+    if (!t || t.dead) return { why: `${id} is not a live turret this run steps` };
+    if (typeof ctx.fork !== 'function') return { why: `the hitless kill of ${id} is chosen on a fork, and this solve has none` };
+    const slots = run.progress('inventorySlots') ?? [];
+    const blade = slots.includes(INVENTORY_ITEM_IDS.ghostsword) ? INVENTORY_ITEM_IDS.ghostsword
+        : (slots.includes(INVENTORY_ITEM_IDS.sword) ? INVENTORY_ITEM_IDS.sword : null);
+    if (blade === null) return { why: `the inventory has no Sword or Ghost Sword slot to kill ${id} with` };
+    const circling = CONTACT_FIDELITY.turretCircleKill && blade === INVENTORY_ITEM_IDS.sword;
+    const exempt = new Set([...(contacts ?? []), `proximity-hazard:${id}`]);
+    const opts = solverPlanOpts(run, exempt);
+    const snap = (v) => Math.floor(v / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+    const sx = Math.abs(snap(t.x) - t.x) >= 1 ? snap(t.x) - t.x : 0;
+    const sy = Math.abs(snap(t.y) - t.y) >= 1 ? snap(t.y) - t.y : 0;
+    const r = { ...t.rect, x: t.rect.x + sx, right: t.rect.right + sx, y: t.rect.y + sy, bottom: t.rect.bottom + sy };
+    const at = { x: t.x + sx, y: t.y + sy };
+    const clear = ICE_TURRET.attackRange + 1 + ICE_TURRET_STAGE_CLEAR;
+    const NORMAL = { up: [0, 1], down: [0, -1], left: [1, 0], right: [-1, 0] };
+    const sides = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }]
+        .map((dir) => corpseKillSide(r, dir))
+        .filter((c) => plannerObstacleAt(run.world, c.x, c.y, null, opts) === null)
+        .map((c) => ({ ...c, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) }))
+        .sort((a, b) => a.d - b.d);
+    if (sides.length === 0) return { why: `no side of ${id}'s live box is plannable floor` };
+    const from = perTick.length;
+    const hitsBefore = run.ledger('playerHits').length;
+    const refuse = (msg) => {
+        throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'danger', id }, perTick: [...perTick] });
+    };
+    const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
+    const whys = [];
+    for (const side of sides) {
+        // 1. the staging point, outside the range, on the side's outward normal
+        const [nx, ny] = NORMAL[side.key];
+        const walkOpts = solverPlanOpts(run, contacts ?? new Set());
+        // ⛓ a player already inside the range is its own staging point (the tries' delays meet the volley there)
+        let stage = Math.hypot(run.state.x - at.x, run.state.y - at.y) < clear ? { x: run.state.x, y: run.state.y } : null;
+        for (let k = 0; k <= ICE_TURRET_STAGE_REACH && stage === null; k += 2) {
+            const p = { x: side.x + nx * k, y: side.y + ny * k };
+            if (Math.hypot(p.x - at.x, p.y - at.y) < clear) continue;
+            if (plannerObstacleAt(run.world, p.x, p.y, null, walkOpts) !== null) break;
+            if (planWaypointsOrNull(run.world, run.state, p, null, walkOpts) !== null) stage = p;
+        }
+        if (stage === null) {
+            whys.push(`${side.key}: no plannable staging point outside the range on the side's normal`);
+            continue;
+        }
+        if (!hasArrived(run.state, stage, DEFAULT_TOLERANCE)) {
+            const before = perTick.length;
+            try {
+                ctx.walkTo(ctx.goal, stage, { what: `${ctx.what} -> ${id} staging (${side.key})` });
+            } catch (e) {
+                if (!(e instanceof SolverRefusal) || perTick.length !== before) throw e;
+                whys.push(`${side.key}: the staging walk refused: ${e.message.split('\n')[0].slice(0, 200)}`);
+                continue;
+            }
+        }
+        if (run.ledger('playerHits').length !== hitsBefore) refuse(`the player was HIT on the staging walk to ${id}'s ${side.key} side`);
+        if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
+        // 2. the tries, each on a fork: delay, approach, kill, the stand until no blast is in flight
+        const kills = circling
+            ? [true, false].flatMap((cw) => [0, 1, 2, 3].map((start) => {
+                const ring = cw ? [[r.x - CIRCLE_LANE_X, r.bottom + CIRCLE_LANE_Y], [r.x - CIRCLE_LANE_X, r.y - CIRCLE_LANE_Y],
+                    [r.right + CIRCLE_LANE_X, r.y - CIRCLE_LANE_Y], [r.right + CIRCLE_LANE_X, r.bottom + CIRCLE_LANE_Y]]
+                    : [[r.right + CIRCLE_LANE_X, r.bottom + CIRCLE_LANE_Y], [r.right + CIRCLE_LANE_X, r.y - CIRCLE_LANE_Y],
+                        [r.x - CIRCLE_LANE_X, r.y - CIRCLE_LANE_Y], [r.x - CIRCLE_LANE_X, r.bottom + CIRCLE_LANE_Y]];
+                const [x, y] = ring[start];
+                return { circle: { cw, start }, d: Math.hypot(x - side.x, y - side.y) };
+            })).sort((a, b) => a.d - b.d || Number(b.circle.cw) - Number(a.circle.cw) || a.circle.start - b.circle.start)
+            : [];
+        /**
+         * ⛓ The standing kill first (approached to the stance, the delay stood BEFORE the approach — `pre` — or AT the
+         * stance after it — `post`, the corpse weigh's shape), then the circling kills from where the player stands.
+         */
+        kills.unshift({ circle: null, approach: true, when: 'pre' }, { circle: null, approach: true, when: 'post' });
+        const tryWhys = [];
+        const tally = {};
+        const count = (k) => { tally[k] = (tally[k] ?? 0) + 1; };
+        let forks = 0;
+        for (let d = 0; d <= ICE_TURRET_APPROACH_DELAY_MAX; d += 1) {
+            for (const k of kills) {
+                const f = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
+                if (f === null) refuse(`deadline at the \`crusher-fork\` site after ${forks} ice-turret tr(ies)`);
+                forks += 1;
+                const hits = f.ledger('playerHits').length;
+                const keys = [];
+                const step = (held) => {
+                    keys.push(held);
+                    return !f.advance(held).transition && f.ledger('playerHits').length === hits;
+                };
+                let ok = true;
+                // ⛓ the delay: inside the range it re-times the kill against the volley; outside it the clock re-arms
+                if (k.when !== 'post') for (let i = 0; i < d && ok; i += 1) ok = step(NONE_KEYS);
+                if (!ok) { count('delay-hit'); continue; }
+                /**
+                 * ⛓ The circling kill's own follower walks to its first corner (moving, it is never where a frozen aim
+                 * points). The standing kill is approached by the drive's own keys (`previewWalk`'s held sets along
+                 * `planWaypoints`' plan) ON THE FORK: the fork's run, not the danger map, says whether the turret's
+                 * snapped body or a blast touches the approach (the map prices the body at its unsnapped placement).
+                 */
+                const wps = k.approach ? planWaypointsOrNull(f.world, f.state, { x: side.x, y: side.y }, null, solverPlanOpts(f, exempt)) : null;
+                if (k.approach && wps === null) {
+                    count('no-plan');
+                    if (tryWhys.length < 3) tryWhys.push(`delay ${d}: no approach plans to the stance`);
+                    continue;
+                }
+                const approach = k.approach ? previewWalk(f, wps, DEFAULT_TOLERANCE) : null;
+                if (approach) for (const sm of approach.samples) if (ok && sm.held) ok = step(sm.held);
+                if (k.when === 'post' && ok && hasArrived(f.state, side, DEFAULT_TOLERANCE)) for (let i = 0; i < d && ok; i += 1) ok = step(NONE_KEYS);
+                if (!ok || (k.approach && !hasArrived(f.state, side, DEFAULT_TOLERANCE))) {
+                    const h = f.ledger('playerHits').at(-1);
+                    count(ok ? 'approach-stalled' : `approach-hit:${h?.source ?? 'door'}`);
+                    if (tryWhys.length < 3) {
+                        tryWhys.push(`delay ${d}: the approach ${ok ? `did not arrive (${f.state.x.toFixed(1)},${f.state.y.toFixed(1)}; frozen ${f.progress('frozenTimer')}, ${f.blastsInFlight.length} blast(s) in flight, ${approach?.samples.length ?? 0} sample(s), truncated ${approach?.truncated ? `${approach.truncated.kind}: ${String(approach.truncated.why ?? '').slice(0, 120)}` : 'no'})`
+                            : `was hit or crossed a door (${h ? `t${h.t} ${h.source} ${h.id ?? ''}` : 'no hit'} at (${f.state.x.toFixed(1)},${f.state.y.toFixed(1)}))`}`);
+                    }
+                    continue;
+                }
+                let rec;
+                try {
+                    rec = killIceTurretInPlace(f, keys, id, { contacts: exempt, corpseOnly: true, ...(k.circle ? { circle: k.circle } : {}) },
+                        { ...ctx, walkTo: noWalk, what: `${ctx.what} (fork, ${k.circle ? `circle ${k.circle.cw ? 'cw' : 'ccw'} ${k.circle.start}` : 'standing'}, delay ${d})` });
+                } catch (e) {
+                    if (!(e instanceof SolverRefusal) && !/^levelRun: /.test(e?.message ?? '')) throw e;
+                    count(`${k.circle ? 'circle' : 'standing'}:${/HIT/.test(e.message) ? `hit:${(/source (\w+)/.exec(e.message) ?? [])[1] ?? '?'}`
+                        : (/FROZEN/.test(e.message) ? 'frozen-press' : (/not dead/.test(e.message) ? 'not-dead' : 'other'))}`);
+                    if (tryWhys.length < 3) tryWhys.push(`delay ${d}: ${e.message.split('\n')[0].split(ctx.what).join('').slice(0, 200)}`);
+                    continue;
+                }
+                for (let w = 0; (f.blastsInFlight.length > 0 || w < CORPSE_POST_KILL_STAND) && w < CORPSE_BLAST_WAIT && ok; w += 1) {
+                    ok = step(NONE_KEYS);
+                }
+                if (!ok || f.blastsInFlight.length > 0 || !f.entities('turrets').get(id)?.dead) { count('after-kill'); continue; }
+                // 3. the try is played on the live run, key for key, and read back
+                for (const held of keys) {
+                    perTick.push(held);
+                    if (run.advance(held).transition) refuse(`the ice-turret kill crossed a door on the live run`);
+                }
+                if (!run.entities('turrets').get(id)?.dead || run.ledger('playerHits').length !== hitsBefore) {
+                    refuse(`the fork's kill of ${id} (delay ${d}) did not replay on the live run — dead `
+                        + `${Boolean(run.entities('turrets').get(id)?.dead)}, hits ${run.ledger('playerHits').length - hitsBefore}`);
+                }
+                return { record: { ...rec, side: side.key, stance: { x: side.x, y: side.y }, staging: stage, delay: d, forks } };
+            }
+        }
+        whys.push(`${side.key}: no try is hitless (${forks} fork(s); ${JSON.stringify(tally)}) — ${tryWhys.join(' | ')}`);
+    }
+    // ⛔ a staging walk spent ticks: the refusal is the arm's, not a `{why}` (no tick spent is the `{why}` contract)
+    if (perTick.length !== from) refuse(`no side of ${id} gives a hitless kill — ${whys.join(' | ')}`);
+    return { why: `no side of ${id} gives a hitless kill — ${whys.join(' | ')}` };
+}
+
 /** The longest start delay the circling rung tries, ticks: half a volley cycle (the loop itself dodges the rest). */
 const CIRCLE_KILL_DELAY_MAX = 12;
 
@@ -14961,6 +15148,82 @@ export function resetChooserPairCounts() {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE ICEST — THE WALK'S KILL RUNG KILLS A STATIC ICE TURRET (⚖ the user queued the slice on
+ * 2026-10-26: *"Ice turret static kill"*; CPAIR's hand-over, fidelity L40LATCH's D2.2).
+ *
+ * On L40 the latch chain's walk back west to `wandlock@448,432`'s hold stance meets `iceturret@472,400`: the smallest
+ * set whose removal admits a corridor at t271 is `bob@736,800` + `bob@736,752` + the turret, and with chasers unscoped
+ * the walk refuses at t577 with the turret as the hit's only source. The climb had no IceTurret death: a stepped room's
+ * chooser never hypothesises a static body, `hitSourceBodies` admits only `STATIC_SWORD_DEATH` classes, and the kill
+ * rung's static arm is the ceiling's. The kill already existed off the walk, in the corpse weigh (`killForCorpse`:
+ * the player beside the box, then on FORKS the circling Sword kill, `circleKillIceTurret`, or the standing kill,
+ * `killIceTurretInPlace`; the first hitless try is played on the live run).
+ *
+ * With this switch a LIVE turret the run steps (`run.entities('turrets')`, not `dead`) is:
+ *   - hypothesised by the chooser in a stepped room (`mode` `chooser`/`both`), as a single removal and, with
+ *     `CHOOSER_PAIR` ON, as a set partner after the near chasers;
+ *   - admitted from the hit's sources where the list is empty (`mode` `hit`/`both`, `hitSourceBodies`);
+ * and the kill rung hands it to `killIceTurretOnWalk`: a staging walk outside the turret's range, then the approach
+ * and the existing kills (`killIceTurretInPlace`, `circleKillIceTurret`) tried together on forks, the first hitless
+ * try played on the live run. The death is the MODEL's (`turrets.get(id).dead`, read back on the live run). ⛔ THE
+ * CORPSE STAYS: dead, not removed (only a fatal tile under it removes it), a 16x16 Solid where the run left it
+ * (`levelWorld.collidesSolid`'s turret arm), and harmless to the danger map with `corpseBumpWeigh` ON
+ * (`dangerMap.darkTrapsHarmless`). A refusal with no tick spent falls to the old words with the arm's why; one after
+ * a tick propagates. A re-entry (the stance walk's own climb handing the same turret back) is refused by name.
+ *
+ * OFF by default. `SEEDLING_ICETURRET_STATIC_KILL=1` turns it on in a node process (the page's worker has no
+ * `process`), `..._MODE=chooser|hit` selects one half (the measurement arms), and `withIceTurretStaticKill(enabled,
+ * fn)` is for a test or a witness. OFF, nothing below is asked and every walk and trace is byte-identical.
+ */
+export const ICETURRET_STATIC_KILL = {
+    enabled: globalThis.process?.env?.SEEDLING_ICETURRET_STATIC_KILL === '1',
+    mode: ['chooser', 'hit'].includes(globalThis.process?.env?.SEEDLING_ICETURRET_STATIC_KILL_MODE)
+        ? globalThis.process.env.SEEDLING_ICETURRET_STATIC_KILL_MODE : 'both',
+};
+export const ICETURRET_STATIC_KILL_DEFAULT = false;
+
+/** Run `fn` with `ICETURRET_STATIC_KILL` set (and `mode`, if given), restoring both (`withChooserHitSources`'s shape). */
+export function withIceTurretStaticKill(enabled, fn, mode = null) {
+    const was = { ...ICETURRET_STATIC_KILL };
+    ICETURRET_STATIC_KILL.enabled = enabled === true;
+    if (mode !== null) ICETURRET_STATIC_KILL.mode = mode;
+    const restore = () => Object.assign(ICETURRET_STATIC_KILL, was);
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `handed` each turret the climb
+ * handed the arm (`{id, t, via}`, `via` `chooser`/`pair`/`hit`), `kills` each arm's end (`{id, t, dead, ticks, why}`:
+ * `dead` read off the live run's `turrets` as the arm returns; a refusal carries `why`).
+ */
+export const ICETURRET_STATIC_KILL_COUNTS = { handed: [], kills: [] };
+
+/** Zero `ICETURRET_STATIC_KILL_COUNTS` (a test's or a witness's, before a solve). */
+export function resetIceTurretStaticKillCounts() {
+    Object.assign(ICETURRET_STATIC_KILL_COUNTS, { handed: [], kills: [] });
+}
+
+/** ICEST — the LIVE ice turrets this run steps, as chooser entries (`stepped: false`: a static census body). */
+function liveIceTurretBodies(run) {
+    const out = [];
+    for (const [id, t] of (run.entities('turrets') ?? [])) {
+        if (t.dead || t.removed) continue;
+        const e = (run.world.combat?.enemies ?? []).find((r) => `${r.tag}@${r.x},${r.y}` === id);
+        if (!e) continue;
+        out.push({ id, tag: e.tag, x: e.cx ?? e.x, y: e.cy ?? e.y, row: e, stepped: false, iceTurret: true });
+    }
+    return out;
+}
+
+/**
  * ⛓ C1 — the trace's danger obstacle: `sources[0]`'s id, as ever, and with `CHOOSER_HIT_SOURCES` ON the whole
  * `sources` array (`kind:id`), so a reader sees every body the probe named and not only the first.
  */
@@ -14991,6 +15254,10 @@ function hitSourceBodies(run, hit) {
         if (sx.kind === 'spinner' && spinners.has(id)) {
             const b = spinners.get(id);
             out.push({ id, tag: id.slice(0, id.indexOf('@')), x: b.x, y: b.y, kind: 'spinner', stepped: true, viaHit: true });
+        } else if (sx.kind === 'enemy' && ICETURRET_STATIC_KILL.enabled && ICETURRET_STATIC_KILL.mode !== 'chooser'
+            && liveIceTurretBodies(run).some((t) => t.id === id)) {
+            // ⛓ ICEST — a LIVE ice turret the run steps (`liveIceTurretBodies`), for `killIceTurretOnWalk`
+            out.push({ ...liveIceTurretBodies(run).find((t) => t.id === id), viaHit: true });
         } else if (sx.kind === 'enemy' && STATIC_SWORD_ARM.enabled && !dying.has(id)
             && (run.chaserRoomVerdict?.(run.level)?.stepped) === true) {
             const e = (run.world.combat?.enemies ?? []).find((r) => `${r.tag}@${r.x},${r.y}` === id);
@@ -25248,6 +25515,10 @@ function solveSegmentUnder({
             .filter((e) => !spinnerIds.has(`${e.tag}@${e.x},${e.y}`))
             .map((e) => ({ id: `${e.tag}@${e.x},${e.y}`, tag: e.tag, x: e.cx ?? e.x,
                 y: e.cy ?? e.y, row: e, stepped: false }));
+        // ⛓ ICEST (`ICETURRET_STATIC_KILL`, OFF) — a stepped room's LIVE ice turrets are hypothesised too
+        if (stepped && ICETURRET_STATIC_KILL.enabled && ICETURRET_STATIC_KILL.mode !== 'hit') {
+            statics.push(...liveIceTurretBodies(run));
+        }
         const all = [...live, ...spinners, ...statics];
         all.sort((a, b) => Math.hypot(a.x - aim.x, a.y - aim.y)
             - Math.hypot(b.x - aim.x, b.y - aim.y) || (a.id < b.id ? -1 : 1));
@@ -25305,6 +25576,13 @@ function solveSegmentUnder({
         const near = [...live].sort((a, b) => Math.hypot(a.x - hit.x, a.y - hit.y)
             - Math.hypot(b.x - hit.x, b.y - hit.y) || (a.id < b.id ? -1 : 1))
             .slice(0, CHOOSER_PAIR.near).map((c) => c.id);
+        // ⛓ ICEST (`ICETURRET_STATIC_KILL`, OFF) — a LIVE ice turret is a set partner too, after the near chasers
+        if (ICETURRET_STATIC_KILL.enabled && ICETURRET_STATIC_KILL.mode !== 'hit') {
+            for (const b of liveIceTurretBodies(run)) {
+                byId.set(b.id, b);
+                near.push(b.id);
+            }
+        }
         const volumes = dangerVolumes(run, 0);
         const admitsWithout = (ids) => {
             CHOOSER_PAIR_COUNTS.sets += 1;
@@ -25338,7 +25616,7 @@ function solveSegmentUnder({
             if (!admitsWithout(set)) continue;
             CHOOSER_PAIR_COUNTS.admitted += 1;
             CHOOSER_PAIR_COUNTS.last = set;
-            return set.map((id) => ({ ...byId.get(id), stepped: true, viaPair: set }));
+            return set.map((id) => ({ ...byId.get(id), stepped: byId.get(id).iceTurret !== true, viaPair: set }));
         }
         return [];
     };
@@ -25366,6 +25644,8 @@ function solveSegmentUnder({
     const baitingBodies = new Set();
     /** ⛓ STATICLADDER D2 — the light-arm stance walks in flight (`body#tick`): a re-entry is refused. */
     const lightingBodies = new Set();
+    /** ⛓ ICEST — the ice-turret arm's walks in flight (`body#tick`): a re-entry is refused (BAIT_REENTRY's shape). */
+    const killingTurrets = new Set();
     /**
      * ⛓ Seedling fidelity STANCE — the frontier stance walks in flight
      * (`verb(obstacle)#tick`). A stance walk whose own frontier names the same
@@ -26782,7 +27062,51 @@ function solveSegmentUnder({
         if (activeProgress !== null) progressRung('kill');
         let killWhy = null;
         const target = body ?? null;
-        if (target && target.stepped === false) {
+        if (target && target.iceTurret === true && ICETURRET_STATIC_KILL.enabled) {
+            /**
+             * ⛓⛓ HAMMER-PHASE ICEST (`ICETURRET_STATIC_KILL`, OFF) — a LIVE ice turret (the chooser's, a set's head,
+             * or the hit's): killed where it stands (`killIceTurretOnWalk`), the death the model's, and the ladder
+             * re-plans against the room it left (the corpse a Solid). No tick spent ⇒ the arm's why is the rung's.
+             */
+            const via = target.viaPair ? 'pair' : (target.viaHit ? 'hit' : 'chooser');
+            const from = perTick.length;
+            const reentry = `${target.id}#${from}`;
+            let done;
+            if (killingTurrets.has(reentry)) {
+                /**
+                 * ⛔ THE ARM MAY NOT RE-ENTER ITSELF. Its stance walk is an ordinary `walkTo`, whose corridor meets the
+                 * same turret, so the inner climb hands it to this arm again at the same tick with nothing spent between
+                 * (measured: the generated corridor recursed until the stack ran out). Refused by name, as BAIT_REENTRY.
+                 */
+                done = { why: `${target.id}: the walk to its kill stance is itself a corridor that needs ${target.id} `
+                    + `killed — the ladder re-entered the ice-turret arm at tick ${from} with nothing spent between (ICEST_REENTRY)` };
+            } else {
+                ICETURRET_STATIC_KILL_COUNTS.handed.push({ id: target.id, t: from, via });
+                killingTurrets.add(reentry);
+                try {
+                    done = killIceTurretOnWalk(run, perTick, target.id, contacts,
+                        { walkTo, goal, equip, fork, what: `${what} -> kill (${target.id})` });
+                } catch (e) {
+                    ICETURRET_STATIC_KILL_COUNTS.kills.push({ id: target.id, t: from, dead: false,
+                        ticks: perTick.length - from, why: String(e?.message ?? e).split('\n')[0].slice(0, 240) });
+                    throw e;
+                } finally {
+                    killingTurrets.delete(reentry);
+                }
+            }
+            if (done.record) {
+                const dead = run.entities('turrets')?.get?.(target.id)?.dead === true;
+                ICETURRET_STATIC_KILL_COUNTS.kills.push({ id: target.id, t: from, dead, ticks: perTick.length - from });
+                if (!dead) fail(`${what} -> kill (${target.id}): the ice-turret arm returned and the run's turret is not dead`);
+                rowFor('kill', refused, { arm: 'iceturret', target: target.id, stance: done.record.stance });
+                records.push({ goal: goal.kind, strategy: 'kill', arm: 'iceturret', target: target.id, ...done.record });
+                return { escalations };
+            }
+            if (!killingTurrets.has(reentry) && !/ICEST_REENTRY\)$/.test(done.why)) {
+                ICETURRET_STATIC_KILL_COUNTS.kills.push({ id: target.id, t: from, dead: false, ticks: 0, why: done.why.slice(0, 240) });
+            }
+            killWhy = `${target.id} is a live IceTurret, and the ice-turret arm refused: ${done.why}`;
+        } else if (target && target.stepped === false) {
             /**
              * ⛓⛓⛓ THE STATIC ARM — the room's ceiling kills it and the GAME
              * writes the flag. ⛔ §11.4 IS NOT WEAKENED: this model still
