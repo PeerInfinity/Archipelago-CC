@@ -4532,3 +4532,95 @@ registerTest({
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/**
+ * ⛓ seedling-js-inventory-menu — THE V MENU ON THE PAGE, G3's shape: the JS page mounted STANDALONE in this row's
+ * own iframe, driven through its own `__swfBridge` to `Game(86, 56, 56)` holding Fire and the sword (slots [1, 0],
+ * so `firstUse`), then by REAL keyboard events (the page's own `keydown`/`keyup` handlers): V opens, Down, X equips,
+ * V closes. No panel, preset or AP state is touched; the iframe is removed however the row ends.
+ *
+ * It asserts what node cannot: the keys reach the core through the page, the menu's panel is DRAWN from the
+ * seedling pack (`seedling:ui/inventory` in the screen ops, every sheet decoded), the tape never advances while it
+ * is up, and the X write lands (`run.primary` 1, one `inventoryHolds` row).
+ */
+export async function seedlingJsRuntimeInventoryMenu(tc) {
+    const frame = document.createElement('iframe');
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    const errors = [];
+    try {
+        frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling&camera=follow';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+        }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+        tc.reportCondition('the standalone page is up with its pack', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [86, 56, 56] }]);
+        const rt = win.__seedlingJsRuntime;
+        await tc.pollForValue(() => (rt.run?.level === 86 ? true : null), 'the run booted level 86', 10000, 50);
+        win.__swfBridge.queueItems([{ class: 'Main', property: 'hasFire', value: true }]);
+        await tc.pollForValue(() => (rt.run?.inventorySlots?.length === 1 ? true : null), 'Fire is in the slots', 5000, 50);
+        win.__swfBridge.queueItems([{ class: 'Main', property: 'hasSword', value: true }]);
+        const armed = await tc.pollForValue(() => (rt.run?.inventorySlots?.length === 2 && rt.run.inventoryOpenable ? true : null),
+            'Fire then the sword: two slots, the menu openable', 5000, 50);
+        tc.reportCondition(`the menu can open in level 86 (${rt.run?.inventoryRefusal ?? 'openable'})`, !!armed);
+        if (!armed) return tc.getOverallResult();
+        const doc = frame.contentDocument;
+        // Each phase is held until the page has run TWO more frames (a live tick, or a held frame while the menu is
+        // up), so a down/up pair can never fall between two frames however the iframe is scheduled.
+        const frameCount = () => rt.ticks + (rt.inventoryMenu?.heldFrames ?? 0) * 1e6;
+        const twoFrames = async (what) => {
+            const seen = new Set([frameCount()]);
+            await tc.pollForValue(() => { seen.add(frameCount()); return seen.size >= 3 ? true : null; }, what, 5000, 10);
+        };
+        const press = async (code) => {
+            doc.dispatchEvent(new win.KeyboardEvent('keydown', { code, bubbles: true }));
+            await twoFrames(`${code} held for two frames`);
+            doc.dispatchEvent(new win.KeyboardEvent('keyup', { code, bubbles: true }));
+            await twoFrames(`${code} released for two frames`);
+        };
+        await press('KeyV');
+        const open = await tc.pollForValue(() => (rt.inventoryMenu.open ? true : null), 'V opened the menu', 3000, 20);
+        tc.reportCondition('V opened the inventory menu', !!open);
+        const t0 = rt.run.ticksCompleted;
+        const g = win.__seedlingJsGraphics;
+        const drawn = await tc.pollForValue(() => ((g.effects?.screen ?? []).some((o) => o.key === 'seedling:ui/inventory') ? true : null),
+            'the panel is drawn from the pack', 3000, 20);
+        tc.reportCondition('the menu panel is drawn as seedling:ui/inventory', !!drawn);
+        await press('ArrowDown');
+        await press('KeyX');
+        await press('KeyV');
+        const closed = await tc.pollForValue(() => (!rt.inventoryMenu.open ? true : null), 'V closed the menu', 3000, 20);
+        tc.reportCondition('V closed the inventory menu', !!closed);
+        const holds = rt.run.inventoryHolds;
+        tc.assertEqual('the tape did not advance while the menu was up (one hold, at the opening tick)', `1/${t0}`,
+            `${holds.length}/${holds[0]?.t}`);
+        tc.assertEqual('X equipped the selected slot (the sword, slot 1)', '1/0', `${rt.run.primary}/${rt.run.inventorySlots[rt.run.primary]}`);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run did not halt', 'null', `${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-inventory-menu',
+    name: 'Seedling JS runtime: the V inventory menu (open, select, equip, close)',
+    description: 'Mounts jsRuntime.html?graphics=seedling&camera=follow standalone in its own iframe, drives it to level 86 '
+        + 'holding Fire and the sword, then presses V, Down, X, V as keyboard events: the menu opens and is drawn from the '
+        + 'seedling pack, the tape holds while it is up, X equips slot 1, and no console error. Touches no panel, preset '
+        + 'or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeInventoryMenu,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
