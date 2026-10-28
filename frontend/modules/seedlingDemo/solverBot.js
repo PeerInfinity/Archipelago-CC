@@ -24848,6 +24848,25 @@ function solveSegmentUnder({
             }
         }
         /**
+         * ⛓⛓ fidelity L12DOORS D2 (`CONTACT_FIDELITY.fineFrontierHiddenDoor`, OFF) — **A DOOR THE 16 px FLOOD CANNOT
+         * SEE, NEARER THE AIM THAN EVERY DOOR IT CAN, IS ASKED ON THE 8 px LATTICE.** L12's `teleporter@32,848` is shut
+         * by `bosslock@32,864` + `magicallock@32,864`, stacked, and the way to their south side passes a cliffside gap
+         * (player x 202..214 at y 896) no 16 px node centre fits. From the L36 arrival (survey steps 172/203) the coarse
+         * frontier always holds an actionable door (`shieldlocknorm@288,704`, `burnabletree@480,640`, three bosslocks),
+         * so `fineFrontierFlood`'s trigger (no actionable entry) never fires, and every round spends a strategy on a
+         * door that does not lead to the aim until the sealed `bosslock@112,192` refuses. MEASURED: the 8 px flood names
+         * `magicallock@32,864` at 20 px from the aim on every one of those rounds. ON: when the 8 px flood holds an
+         * actionable door absent from the 16 px frontier and nearer the aim than every 16 px actionable door, the 8 px
+         * frontier is the one asked. OFF: byte-identical. `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`.
+         */
+        if (CONTACT_FIDELITY.fineFrontierHiddenDoor && frontier.size > 0) {
+            const doorD = (f, keep) => Math.min(...[...f.values()].filter((o) => keep(o) && frontierExecutor(
+                refineStrategy(run, OBSTACLE_STRATEGIES[o.tag ? `${o.kind}:${o.tag}` : o.kind]
+                    ?? OBSTACLE_STRATEGIES[o.kind] ?? null, o))).map((o) => o.d));
+            const fine = floodFrontier(FINE_LATTICE);
+            if (doorD(fine, (o) => !frontier.has(o.id)) < doorD(frontier, () => true)) frontier = fine;
+        }
+        /**
          * ⛓⛓ U12-swim D2 — AN UNMODELLED PULL NEAREST THE AIM IS NAMED, not
          * passed over for the nearest resolvable sub-order. U11's wall 5 was
          * that misattribution: the funnel's pulls were the cut, and the

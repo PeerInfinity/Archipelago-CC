@@ -1670,6 +1670,18 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_WAND_SHOT_CHASER_BODIES=0|1`.
      */
     wandShotChaserBodies: false,
+    /**
+     * fidelity L12DOORS D2 (wave 34) — A DOOR THE 16 px FRONTIER CANNOT SEE, NEARER THE AIM, IS ASKED ON THE 8 px
+     * LATTICE (`solverBot.identifyAndSelect`'s frontier flood).
+     *
+     * `fineFrontierFlood` re-floods at 8 px only when the 16 px frontier has NO actionable entry. L12's stacked doors
+     * at `@32,864` (the goal `teleporter@32,848`, survey steps 172/203) are reached through a 13 px cliffside gap no
+     * 16 px node fits, and the 16 px frontier always holds some other door (a shield lock, a tree, three bosslocks), so
+     * the fine flood never ran and the sealed `bosslock@112,192` refused. ON: when the 8 px flood holds an actionable
+     * door the 16 px one lacks, nearer the aim than every 16 px actionable door, the 8 px frontier is asked. OFF:
+     * byte-identical. `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`.
+     */
+    fineFrontierHiddenDoor: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1994,6 +2006,9 @@ if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '0') CONTACT
 // ⛓ fidelity L12DOORS D1: `SEEDLING_WAND_SHOT_CHASER_BODIES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_WAND_SHOT_CHASER_BODIES === '1') CONTACT_FIDELITY.wandShotChaserBodies = true;
 if (globalThis.process?.env?.SEEDLING_WAND_SHOT_CHASER_BODIES === '0') CONTACT_FIDELITY.wandShotChaserBodies = false;
+// ⛓ fidelity L12DOORS D2: `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_HIDDEN_DOOR === '1') CONTACT_FIDELITY.fineFrontierHiddenDoor = true;
+if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_HIDDEN_DOOR === '0') CONTACT_FIDELITY.fineFrontierHiddenDoor = false;
 // ⛓ fidelity DETERM (c): `SEEDLING_COVER_HELD_FADE=0|1` and `SEEDLING_LOCK_RECLOSE_LAG=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '1') CONTACT_FIDELITY.coverHeldFade = true;
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '0') CONTACT_FIDELITY.coverHeldFade = false;
