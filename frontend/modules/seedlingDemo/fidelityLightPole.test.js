@@ -11,10 +11,11 @@
  * ── THE MUTATION LIST (each predicted red by name) ──
  *   m1 the row unconditional (`'solid:lightpole': 'pole'` with the switch OFF)
  *        -> "OFF: no row" reds (verb 'pole', not null) and the OFF solve stops refusing `no-verb`.
- *   m2 the flush points dropped (offsets 2..12 / 2..12 only on the perpendicular axis)
- *        -> the L101 rows refuse `unresolved` (no stance in r4c2 reaches the core).
+ *   m2 the flush points dropped (offsets 4..12 only)
+ *        -> the L101 geometry rows and BOTH witness rows (measured: the ghost stance x 126 is the flush column too —
+ *           only the FACING axis drops flush points).
  *   m3 a SECOND primary press after the first
- *        -> "one thrust" reds (two `primary` ticks), and the pole ends inactive at the next toggle.
+ *        -> every "ONE thrust" row and both witness rows (two `primary` ticks).
  *   m4 the boot-active check dropped
  *        -> "already active at the build" reds: the verb thrusts and the run's pole ends inactive.
  */
