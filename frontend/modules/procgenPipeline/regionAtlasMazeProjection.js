@@ -250,7 +250,8 @@ function placeLocation(builder, [x, y], loc, { mine, isExit, note, toAtlas }) {
 function bindWorldEvents(builder, events, local, inGrid) {
     const byCell = new Map();
     for (const ev of events ?? []) {
-        if (ev.mode === 'press') continue; // a location on its button (`pressLocations`), not an obstacle's
+        // a press is a location on its button (`pressLocations`); its target is opened by it (`layPressTargets`)
+        if (ev.mode === 'press' || ev.mode === 'target') continue;
         for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
             const key = `${x},${y}`;
             const base = builder.obstacleLib[builder.obstacles.get(key)];
@@ -284,6 +285,54 @@ function bindWorldEvents(builder, events, local, inGrid) {
             builder.obstacleLib[id] = entry;
         }
         builder.obstacles.set(key, id);
+    }
+}
+
+/**
+ * ⛓ A PRESS's POCKET DOORS (session tile-primitives-sphere-order-6, ⚖ 2026-10-28 "Lay the producer's door gates"). A press
+ * target that seals a landing pocket (L39's wand lock: the L38 teleporter lands in the 2 tiles below it) has its pocket's
+ * doors priced on the event by the rules producer (its cross-room-press `exitGates`, mode 'door' rows naming the atlas
+ * exit): crossing the barrier is exactly entering or leaving the pocket. The world gates those exit cells on the event
+ * too, so it refuses the one walk the rules forbid and the game allows, a round trip into the dead end, which gains
+ * nothing. Returns the exit's own rule with every door event joined, or the rule unchanged.
+ */
+function withPressDoor(exit, events) {
+    const doors = (events ?? []).filter((ev) => ev.mode === 'door' && ev.exit_id === exit.exit_id)
+        .map((ev) => ({ rule: 'Has', args: { item_name: ev.name } }));
+    if (doors.length === 0) return exit.access_rule ?? null;
+    const parts = [...(exit.access_rule ? [exit.access_rule] : []), ...doors];
+    return simplifyRule(parts.length === 1 ? parts[0] : { rule: 'And', children: parts });
+}
+
+/**
+ * ⛓ A PRESS's TARGET (session tile-primitives-sphere-order-6, ⚖ 2026-10-28 "Lock cell opened by event"). A cross-room
+ * press clears its target for good — the game builds L39's wand lock gone once its flag is in `persistence_cleared` — so
+ * the target's cells (mode 'target': the obstacle's entity, in its own level) are laid in this world as one obstacle
+ * opened by the event alone, `opened_by` naming it. The analyzer grid has the cell OPEN (the rules charge the exits of the
+ * pocket it seals), so a floor cell is gated here; a cell this world does not floor is left out (another world lays it). A
+ * cell that already holds an obstacle is refused by name — what a stacked target costs is not settled.
+ */
+function layPressTargets(builder, events, local, inGrid) {
+    for (const ev of events ?? []) {
+        if (ev.mode !== 'target') continue;
+        const id = `press_target~${ev.name}`;
+        for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
+            if (!builder.isFloor(x, y)) continue;
+            const held = builder.obstacles.get(`${x},${y}`);
+            if (held !== undefined) {
+                throw new Error(`press target "${ev.name}": its cell (${x},${y}) already holds obstacle "${held}"`);
+            }
+            builder.obstacleLib[id] ??= {
+                id,
+                name: ev.name,
+                clear_set_type: 'rule',
+                clear_rule: { rule: 'Has', args: { item_name: ev.name } },
+                opened_by: ev.name,
+                color: '#b06eb8',
+                display: { mode: 'tree' },
+            };
+            builder.obstacles.set(`${x},${y}`, id);
+        }
     }
 }
 
@@ -725,7 +774,8 @@ export function projectRegionToMaze(region, grid, ctx) {
             // survivor's rule stands, never the loser's (L89's r11c12 tile named r1c10, Swim×2, and carried Swim).
             const before = builder.obstacles.get(`${x},${y}`);
             for (const n of openTileTowards(builder, grid, component, [x, y], `exit "${exit.exit_id}"`, resolveCondition)) note(n);
-            if (exit.access_rule) builder.gate(x, y, exit.access_rule);
+            const exitRule = withPressDoor(exit, ctx.eventsFor?.(region));
+            if (exitRule) builder.gate(x, y, exitRule);
             const kept = addExit({
                 x,
                 y,
@@ -789,6 +839,7 @@ export function projectRegionToMaze(region, grid, ctx) {
 
         const inGrid = ([x, y]) => x >= 0 && y >= 0 && x < grid.width && y < grid.height;
         layTouchedEventCells(builder, events, local, component, inGrid);
+        layPressTargets(builder, events, local, inGrid);
         bindWorldEvents(builder, events, local, inGrid);
         const entryGates = directional > 0 ? levelWorldEntryGates(builder, grid, new Set(), resolveCondition, new Set(), note) : [];
 
@@ -1379,9 +1430,10 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         // level world WALKS over an exit tile into its neighbours, so a teleporter in water must still cost the Swim
         // (L58 r4c1's (3,7) → r6c5's (4,7) walked the water holding only a weapon).
         const terrain = builder.obstacleLib[builder.obstacles.get(keyOf(x, y))];
-        if (exit.access_rule) {
+        const exitRule = withPressDoor(exit, ctx.eventsFor?.(region));
+        if (exitRule) {
             builder.gate(x, y, terrain?.clear_set_type === 'rule' && terrain.clear_rule
-                ? simplifyRule({ rule: 'And', children: [terrain.clear_rule, exit.access_rule] }) : exit.access_rule);
+                ? simplifyRule({ rule: 'And', children: [terrain.clear_rule, exitRule] }) : exitRule);
         }
         exitAt.add(keyOf(x, y));
         exits.push({
@@ -1477,6 +1529,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         }
     }
 
+    layPressTargets(builder, ctx.eventsFor?.(region), local, inGrid);
     bindWorldEvents(builder, ctx.eventsFor?.(region), local, inGrid);
     // ⛓ An exit OPENED on a cell the partition does not own (a pit, a teleporter in water) is bound to one
     // sub-region (⚖ "Own opened exit cells"), so it is taken from that sub-region only: stepping onto it from
