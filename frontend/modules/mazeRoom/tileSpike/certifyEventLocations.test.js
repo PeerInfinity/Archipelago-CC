@@ -140,15 +140,29 @@ describe('L38\'s press opens L39: carried (⚖ "Carry + name"), produced on its 
         }
     });
 
-    // ⛓ session tile-primitives-sphere-order-5 (⚖ "Location on the cell"): L38's world produces the press on its button; the
-    // target (L39's wand lock) is not opened by it in L39's world yet (⚖ "Later, with L39"), and each row that needs it says so.
-    it('the press is priced free in L38; each crossing that needs it names its unmodelled far side', () => {
+    // ⛓ session tile-primitives-sphere-order-5 (⚖ "Location on the cell"): L38's world produces the press on its button.
+    // ⛓ session tile-primitives-sphere-order-6 (⚖ "Lock cell opened by event" + "Lay the producer's door gates"): L39's world
+    // opens the wand lock by it, and both of the pocket's doors cost it, so every crossing that needs it certifies.
+    it('the press is priced free in L38; L39\'s world opens its target by it, and both crossings cost it', () => {
         const out = certify(RULES, ['level_38', 'level_39__r25c9']);
         expect(out.lines).toContain(`level_38@${E}=[[]]`);
-        expect(out.problems.filter((p) => p.includes(E))).toEqual([
-            `level_38 → level_39__r25c9 holding []: derived true, atlas false — needs "${E}", a press the maze world produces, but no world opens its target (wandlock@144,592 in L39) by it`,
-            `level_39__r25c9 → level_38 holding []: derived true, atlas false — needs "${E}", a press the maze world produces, but no world opens its target (wandlock@144,592 in L39) by it`,
-        ]);
+        expect(out.problems).toEqual([]);
+        expect(out.lines).toContain(`level_38->level_39__r25c9=${JSON.stringify([[E]])}`);
+        expect(out.lines).toContain(`level_39__r25c9->level_38=${JSON.stringify([[E]])}`);
+    });
+
+    it('a press NO world opens by is named on the rows that need it (its target and doors stripped from the worlds)', () => {
+        const copy = structuredClone(RULES);
+        for (const sc of Object.values(copy.preset_sidecars['1'])) {
+            const p = sc.playable_payload;
+            if (!p) continue;
+            const names = new Set(Object.values(p.obstacleLib ?? {}).filter((x) => JSON.stringify(x.clear_rule ?? null).includes(E)).map((x) => x.id));
+            p.obstacles = p.obstacles.filter((o) => !names.has(o.id));
+            for (const id of names) delete p.obstacleLib[id].opened_by;
+        }
+        const rows = certify(copy, ['level_38', 'level_39__r25c9']).problems;
+        expect(rows.filter((p) => p.endsWith(
+            `needs "${E}", a press the maze world produces, but no world opens its target (wandlock@144,592 in L39) by it`)).length, JSON.stringify(rows)).toBe(2);
     });
 });
 

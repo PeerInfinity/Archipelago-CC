@@ -24,6 +24,8 @@
  * rooms, so the projection recomputes on exactly that (`playthroughGridFor` + `playthroughAnalyzerOptions`,
  * the pair the partition generator re-runs) and reads the entity rows off the delivered rooms too. On the
  * raw transcription 45 of the 115 regions disagreed with their own atlas (overlay cells, pruned pockets).
+ * The grid is the hand-ruled one (`playthroughHandRuledGridFor`, session tile-primitives-sphere-order-6): it moves only the
+ * conditions of L40's Fire cells, never which cells are gated, so the partition still holds.
  *
  * Deterministic, so `--check` is an exact byte gate.
  *
@@ -42,7 +44,7 @@ import { apRegionName } from '../../frontend/modules/procgenPipeline/regionAtlas
 import { SHARED_WORLD_ALPHABET } from '../../frontend/modules/procgenPipeline/regionAtlasMazeProjection.js';
 import { SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
 import {
-    PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
+    PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
     setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
 } from './make-seedling-playthrough-rules.mjs';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
@@ -212,6 +214,22 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
         name: e.name, side: e.fields.side, mode: mode.get(e.name), obstacle: e.fields.obstacle, rule: e.access_rule ?? null,
         ...(mode.get(e.name) === 'press' ? { presser: e.fields.action.presser } : {}),
     }));
+    // ⛓ A press's FAR side (session tile-primitives-sphere-order-6, ⚖ 2026-10-28 "Lock cell opened by event"): the target it
+    // clears — L39's wand lock, built gone once {39,8} is in `persistence_cleared` — stands on its own cell in its own level's
+    // world (mode 'target'), opened by the event alone, when that level is listed.
+    for (const e of out.world.filter((w) => w.mode === 'press')) {
+        if (!atlas.regions.some((r) => r.map_ref === e.obstacle.level && keep.has(r.region_id))) continue;
+        out.world.push({ name: e.name, side: null, mode: 'target', obstacle: e.obstacle, rule: null });
+    }
+    // ⛓ ... and the pocket it seals (⚖ 2026-10-28 "Lay the producer's door gates"): each of the producer's cross-room-press
+    // gates on a kept, wired door is laid on that exit's cell in its world (mode 'door'), on the press's own event.
+    const presses = new Set(out.world.filter((w) => w.mode === 'press').map((w) => w.name));
+    for (const g of out.exitGates.filter((x) => x.kind === 'cross-room-press')) {
+        const name = g.rule?.rule === 'Has' ? g.rule.args.item_name : null;
+        if (!presses.has(name)) throw new Error(`${g.region_id}/${g.exit_id}: a cross-room-press gate on ${JSON.stringify(g.rule)}, which is no press of the levels`);
+        const level = atlas.regions.find((r) => r.region_id === g.region_id).map_ref;
+        out.world.push({ name, side: null, mode: 'door', door: { level, exit_id: g.exit_id }, rule: null });
+    }
     const all = new Set(layer.events.map((e) => e.name));
     const have = new Set([...out.events.map((e) => e.name), ...minted]);
     const named = (rule, acc = []) => {
@@ -258,7 +276,7 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
         gameConfig,
         levelWorlds: { partition },
         analysis: {
-            gridForLevel: (level) => playthroughGridFor(level),
+            gridForLevel: (level) => playthroughHandRuledGridFor(level),
             conditionKey: playthroughAnalyzerOptions.conditionKey,
             resolveCondition: playthroughAnalyzerOptions.resolveCondition,
         },
