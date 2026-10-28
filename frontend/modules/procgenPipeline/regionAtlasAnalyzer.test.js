@@ -54,6 +54,7 @@ const OPTIONS = {
  *   'k' one-sided lock: gated on `a`, ENTERED only moving north (from below)
  *   'K' the same lock, LATCHED: once opened it stays open (RULES (A))
  *   'O' a pit under a solid gated on `a` (RULES burnable-trees)
+ *   'w' a waterfall: free down, moving north on it costs `f` (RULES waterfall-door)
  */
 function gridOf(rows, origin = { x: 0, y: 0 }) {
     const width = rows[0].length;
@@ -66,6 +67,7 @@ function gridOf(rows, origin = { x: 0, y: 0 }) {
             else if (ch === '~') { cell.kind = 'gated'; cell.conditions = ['a']; }
             else if (ch === '=') { cell.kind = 'gated'; cell.conditions = ['b']; }
             else if (ch === 'v') { cell.kind = 'directional'; cell.dirs = { N: null }; }
+            else if (ch === 'w') { cell.kind = 'directional'; cell.dirs = { N: ['f'] }; }
             else if (ch === 'o') { cell.kind = 'sink'; cell.labels = ['pit']; }
             else if (ch === 'O') { cell.kind = 'sink'; cell.labels = ['pit']; cell.conditions = ['a']; }
             else if (ch === '?') { cell.kind = 'manual'; cell.manual = ['a puzzle']; }
@@ -547,6 +549,39 @@ describe('placing exits and locations', () => {
         expect(hit.component.id).toBe('r0c0');
         expect(hit.reachable).toBe(true);
         expect(hit.conditionSets).toEqual([{ conditions: ['b'] }]);
+    });
+
+    // ⛓ RULES waterfall-door — `necessary`: what EVERY way onto the tile pays, from any component or landing.
+    describe('necessary — the conditions every way onto the tile pays', () => {
+        it('a door atop a fall, reached only by climbing it from the pool, needs the climb and the pool', () => {
+            const g = gridOf(['w', 'w', '~', '.']);
+            const hit = componentForTile(g, findComponents(g), [0, 0], OPTIONS);
+            expect(hit.conditionSets.map((w) => [...w.conditions].sort())).toEqual([['a', 'f']]);
+            expect([...hit.necessary].sort()).toEqual(['a', 'f']);
+        });
+
+        it('a landing on the fall below is a way in: the climb stays necessary, the pool does not', () => {
+            const g = gridOf(['w', 'w', '~', '.']);
+            const hit = componentForTile(g, findComponents(g), [0, 0], { ...OPTIONS, arrivalTiles: () => [[0, 1]] });
+            expect(hit.necessary).toEqual(['f']);
+        });
+
+        it('a landing ON the door, or a way down the fall, needs nothing', () => {
+            const g = gridOf(['w', 'w', '~', '.']);
+            expect(componentForTile(g, findComponents(g), [0, 0], { ...OPTIONS, arrivalTiles: () => [[0, 0]] }).necessary)
+                .toEqual([]);
+            const down = gridOf(['.', 'w', '~', '.']);
+            const hit = componentForTile(down, findComponents(down), [0, 1], OPTIONS);
+            expect(hit.free).toBe(true);
+            expect(hit.necessary).toEqual([]);
+        });
+
+        it('two approaches share only what both pay', () => {
+            // from the left through `b` then up; from the right through `a` then up: only the climb is common
+            const g = gridOf(['#w#', '#w#', '=w~', '.#.']);
+            const hit = componentForTile(g, findComponents(g), [1, 0], OPTIONS);
+            expect(hit.necessary).toEqual(['f']);
+        });
     });
 
     it('refuses to reach THROUGH a pit, and says the binding is a finding', () => {
