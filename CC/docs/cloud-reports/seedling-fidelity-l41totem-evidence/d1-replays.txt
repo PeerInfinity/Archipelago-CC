@@ -1,0 +1,26 @@
+rep 1 seam 5280 BAIT_COMPONENT_MEMO=0 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 14139
+rep 1 seam 5282 BAIT_COMPONENT_MEMO=0 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 14325
+rep 1 seam 5280 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 6730
+rep 1 seam 5282 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 6322
+rep 1 seam 5280 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=1 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 5255
+rep 1 seam 5282 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=1 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 4950
+rep 2 seam 5280 BAIT_COMPONENT_MEMO=0 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 14199
+rep 2 seam 5282 BAIT_COMPONENT_MEMO=0 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 14489
+rep 2 seam 5280 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 6339
+rep 2 seam 5282 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 6237
+rep 2 seam 5280 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=1 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 5129
+rep 2 seam 5282 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=1 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 5438
+seam 5280 BAIT_COMPONENT_MEMO=0 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 14982
+seam 5280 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 7134
+seam 5280 BAIT_COMPONENT_MEMO=0 BAIT_ALIGN_SAFE_MEMO=1 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 16009
+seam 5280 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=1 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 5618
+seam 5282 BAIT_COMPONENT_MEMO=0 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 15715
+seam 5282 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=0 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 6465
+seam 5282 BAIT_COMPONENT_MEMO=0 BAIT_ALIGN_SAFE_MEMO=1 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 14595
+seam 5282 BAIT_COMPONENT_MEMO=1 BAIT_ALIGN_SAFE_MEMO=1 work 560 ticks [2563, 2505] answer 7fea55beb436 trace f8f4f53985c9 pts 776 ms 5825
+rep 1 D1b 0 answer 7fea55beb436 trace f8f4f53985c9 ms 6515
+rep 1 D1b 1 answer 7fea55beb436 trace f8f4f53985c9 ms 5512
+rep 2 D1b 0 answer 7fea55beb436 trace f8f4f53985c9 ms 6835
+rep 2 D1b 1 answer 7fea55beb436 trace f8f4f53985c9 ms 5746
+rep 3 D1b 0 answer 7fea55beb436 trace f8f4f53985c9 ms 6890
+rep 3 D1b 1 answer 7fea55beb436 trace f8f4f53985c9 ms 5818

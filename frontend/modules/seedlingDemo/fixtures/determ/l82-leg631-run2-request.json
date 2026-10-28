@@ -1,0 +1,142 @@
+{
+ "about": "DETERM (b): the divergence sweep's captured worker request for leg 631 (level_82 <- in_L96_32_64 -> exit:out_teleporter_144_0), keyed run 2 of 2 (40536803626, main 7266baa10d), the request whose play diverged at t=0. `source` (the page's atlas records, 662 kB) is dropped: the test serves atlasLevelSource(), which answers byte-identically (measured: every captured L82 request).",
+ "run": 40536803626,
+ "leg": 631,
+ "key": "level_82 <- in_L96_32_64 -> exit:out_teleporter_144_0",
+ "i": 0,
+ "request": {
+  "staging": {
+   "boot": {
+    "level": 82,
+    "x": 152,
+    "y": 176
+   },
+   "noclip": false,
+   "noDamage": false,
+   "noHazards": [],
+   "grants": [],
+   "persistence": [
+    {
+     "level": 82,
+     "tag": 1
+    }
+   ],
+   "despawn": [],
+   "equips": [],
+   "pins": [
+    "sound",
+    "dead_frames"
+   ],
+   "save": {
+    "totem_parts": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "seal_parts": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   },
+   "rng": {
+    "seed": 1228935730,
+    "split": true,
+    "cosmetic": 0
+   },
+   "seam": {
+    "items": {
+     "hasSword": true,
+     "hasGhostSword": false,
+     "hasShield": true,
+     "hasFire": true,
+     "hasWand": true,
+     "hasFireWand": false,
+     "canSwim": true,
+     "hasSpear": true,
+     "hasDarkShield": true,
+     "hasDarkSuit": true,
+     "hasDarkSword": true,
+     "hasFeather": true,
+     "hasTorch": true
+    },
+    "beam": false,
+    "rock_set": false,
+    "hits_max": 4,
+    "time": 5713,
+    "primary": 0,
+    "secondary": 0,
+    "cutscene": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "menu_state": 0
+   },
+   "inventory_slots": [
+    0,
+    1,
+    3,
+    2
+   ]
+  },
+  "perTick": [],
+  "live": {
+   "digest": "{\"L\":82,\"s\":{\"x\":160,\"y\":184,\"vx\":0,\"vy\":0,\"terrain\":0,\"hazard\":{\"onIce\":false,\"onWaterfall\":false,\"inWater\":false,\"inLava\":false},\"drown\":{\"timer\":0,\"drowning\":false},\"direction\":3,\"latched\":{},\"hitX\":null,\"hitY\":null},\"t\":0,\"d\":0,\"p\":0,\"tr\":0,\"c\":[],\"sb\":[]}",
+   "row": {
+    "level": 82,
+    "x": 160,
+    "y": 184,
+    "deaths": 0
+   }
+  },
+  "solverGoal": {
+   "kind": "reach-exit",
+   "exit": {
+    "x": 144,
+    "y": 0
+   }
+  },
+  "name": "wasm-exit-82",
+  "scratchPersistence": true,
+  "equips": null,
+  "passes": [
+   {
+    "pass": "dashless",
+    "dashMode": "none",
+    "stop": "all"
+   },
+   {
+    "pass": "full",
+    "dashMode": "all",
+    "adds": "sword-dash",
+    "stop": "window"
+   }
+  ],
+  "budgetWork": 640,
+  "upgradeWindowWork": 85
+ }
+}
