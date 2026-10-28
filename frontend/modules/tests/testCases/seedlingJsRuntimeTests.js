@@ -4746,6 +4746,13 @@ const toolsRestartAndTeleport = (runtime) => async (tc) => withRuntimeRestored(t
     const born = await toolsSettledIn(tc, `[${runtime}] the new game stands in ${TOOLS_START}`, TOOLS_START, 0, 60000);
     tc.reportCondition(`[${runtime}] the new game stands in ${TOOLS_START} (level 0)`, !!born);
     if (!born) return;
+    // ⛓ THIS ROW'S OWN STATE: the Playback Bot stopped. An earlier row can leave it running; on wasm its playback
+    // then adopts this row's arrivals and HOLDS the room (Bot.as `holding`), so the walk's keys move nothing.
+    // Measured in the seedling-js batch on CI: `held: true`, `tick_count: 0`, the Up key held for 20 s.
+    const botPanel = getBotPanel();
+    const bot = botPanel?.getBot?.() ?? botPanel ?? null;
+    tc.log(`[${runtime}] the Playback Bot before this row: ${bot ? `active ${!!bot.isActive?.()}` : 'not mounted'}; stopped`);
+    bot?.stop?.();
     const recorder = toolsMoveRecorder();
     const tpCheckbox = panel.teleportOnClickCheckbox;
     const tpWas = tpCheckbox?.checked ?? false;
