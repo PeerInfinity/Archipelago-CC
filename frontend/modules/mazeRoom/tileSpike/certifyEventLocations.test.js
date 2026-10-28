@@ -167,6 +167,17 @@ describe('L38\'s press opens L39: carried (⚖ "Carry + name"), produced on its 
 });
 
 describe('eventLayerFor', () => {
+    // ⛓ session tile-primitives-sphere-order-6: the whole-game compile THREW on the cross-room LIGHTPOLE doors (L62/L64, gated
+    // Or(event, Ghost Spear)). A press target is laid only when the press REMOVES it (`persistenceEffect` 'opens'): a lit pole stays.
+    it('over the whole atlas, only a target the press removes is laid, with its pocket doors — no lightpole', () => {
+        const rows = eventLayerFor(ATLAS, ATLAS.regions.map((r) => r.region_id)).world.filter((w) => w.mode === 'target' || w.mode === 'door');
+        expect(rows.map((w) => `${w.mode} ${w.name} ${w.door?.exit_id ?? ''}`.trim())).toEqual([
+            'target L39 flag 8: wandlock@144,592 cleared',
+            'door L39 flag 8: wandlock@144,592 cleared out_teleporter_144_0',
+            'door L39 flag 8: wandlock@144,592 cleared out_teleporter_144_624',
+        ]);
+    });
+
     it('refuses BY NAME a kept event that needs an event of a level not in the compile', () => {
         // L113's final door opens only after the Watcher's talk, in L114.
         expect(() => eventLayerFor(ATLAS, ['level_113', 'level_112'])).toThrow(/L113 flag 0: finaldoor.*needs L114 flag 0: watcher.*not in the levels/);
