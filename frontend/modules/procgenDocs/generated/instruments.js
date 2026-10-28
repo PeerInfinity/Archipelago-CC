@@ -236,7 +236,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 479,
         "browser": 187,
-        "cited": 258,
+        "cited": 259,
         "files": 496,
         "lineStyle": 17,
         "withDocblock": 496,
@@ -15231,7 +15231,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "quick"

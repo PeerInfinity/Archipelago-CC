@@ -161,16 +161,23 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         // fight's Or(Sword, Ghost Spear)).
         // ⛓ tile-primitives-sphere-order-5 (sphere 4.5 joined): L48's four sub-regions and L49 (past L48) join the set, with L48's
         // Chest and boss lock and L49's Conch.
+        // ⛓ tile-primitives-sphere-order-6 (sphere 5.3 joined): L39 past r25c9 (its Fire and weapon crossings), all of L40 and L43
+        // (reached only through L39 r0c9: L43's stairs to L37 are one way) join the set, with every location in them and L40's boss lock.
         const RING2_WEAPON_GATED = ['level_0__r1c6', 'level_0__r6c5', 'level_19__r1c5', 'level_19__r5c5'];
         const SPHERE01_WEAPON_GATED = ['level_1', 'level_67__r3c2', 'level_92__r1c7', 'level_92__r3c12', 'level_92__r4c2', 'level_92__r7c8'];
         const SPHERE45_WEAPON_GATED = ['level_48__r11c9', 'level_48__r2c10', 'level_48__r4c3', 'level_48__r7c0', 'level_49'];
+        const SPHERE53_WEAPON_GATED = ['level_39__r0c9', 'level_39__r2c11', 'level_40__r0c53', 'level_40__r23c29', 'level_40__r32c36',
+            'level_40__r36c35', 'level_40__r48c54', 'level_43__r13c7', 'level_43__r3c8', 'level_43__r8c7'];
         expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
             .toEqual({
-                unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED, ...SPHERE01_WEAPON_GATED, ...SPHERE45_WEAPON_GATED].sort(),
+                unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED, ...SPHERE01_WEAPON_GATED, ...SPHERE45_WEAPON_GATED,
+                    ...SPHERE53_WEAPON_GATED].sort(),
                 unchecked: ['L0 flag 1: breakablerock@288,176 cleared', 'L0 flag 4: breakablerock@80,112 cleared', ROPE,
-                    'L24 flag 0: burnabletree@32,128 cleared', 'L28 flag 0: rope@160,64 cleared', 'L48 flag 1: bosslock@48,144 cleared',
-                    'Level 017 - Chest', 'Level 019 - Boss Key 0', 'Level 019 - Shieldspire', 'Level 032 - Bob Boss',
-                    'Level 032 - Times', 'Level 048 - Chest', 'Level 049 - Conch', 'Level 067 - Boss Key 4'],
+                    'L24 flag 0: burnabletree@32,128 cleared', 'L28 flag 0: rope@160,64 cleared', 'L40 flag 8: bosslock@480,352 cleared',
+                    'L48 flag 1: bosslock@48,144 cleared', 'Level 017 - Chest', 'Level 019 - Boss Key 0', 'Level 019 - Shieldspire',
+                    'Level 032 - Bob Boss', 'Level 032 - Times', 'Level 039 - Totem Part 72,40', 'Level 040 - Boss Key 2', 'Level 040 - Chest',
+                    'Level 040 - Totem Part 160,640', 'Level 040 - Totem Part 64,144', 'Level 043 - Totem of Lacste', 'Level 043 - Wand',
+                    'Level 048 - Chest', 'Level 049 - Conch', 'Level 067 - Boss Key 4'],
             });
         expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'constant', value: true });
     });

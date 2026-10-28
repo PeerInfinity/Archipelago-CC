@@ -66,14 +66,17 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * (session tile-primitives-sphere-order-4, ⚖ 2026-10-27 "L34 + L32"): L34 and L32 — L32's two locations on one tile spill one to the
  * nearest free floor cell (the projection's `location_stacked`); its boss fight stays the rules' static weapon gate. Sphere 4.5
  * (session tile-primitives-sphere-order-5, ⚖ 2026-10-27 "All 6"): L38 L45 L46 L47 L48 L49 — L38's ButtonRoom, which opens L39's wand lock,
- * is a location on its own cell (⚖ "Location on the cell"); the lock's side waits for L39.
+ * is a location on its own cell (⚖ "Location on the cell"); the lock's side waits for L39. Sphere 5.3 (session
+ * tile-primitives-sphere-order-6, ⚖ 2026-10-28 "All 3"): L39 L40 L43 — L39's wand lock is laid on its own cell, opened by that press
+ * (⚖ "Lock cell opened by event"), and the pocket it seals has its doors gated on it (⚖ "Lay the producer's door gates"); L40's
+ * Fire cells carry the rules' corpse ruling, Fire AND a weapon (`playthroughHandRuledGridFor`, ⚖ "Static now, mechanism later").
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
     'level_12', 'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20', 'level_21', 'level_22',
     'level_23', 'level_24', 'level_25', 'level_26', 'level_27', 'level_28', 'level_29', 'level_30', 'level_31', 'level_32', 'level_33', 'level_34',
-    'level_35', 'level_36', 'level_37', 'level_38', 'level_44', 'level_45', 'level_46', 'level_47', 'level_48', 'level_49', 'level_59',
-    'level_60', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_92', 'level_94', 'level_95',
+    'level_35', 'level_36', 'level_37', 'level_38', 'level_39', 'level_40', 'level_43', 'level_44', 'level_45', 'level_46', 'level_47',
+    'level_48', 'level_49', 'level_59', 'level_60', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_92', 'level_94', 'level_95',
 ]);
 
 /**

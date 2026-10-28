@@ -21,12 +21,15 @@
  * and the button its fallrock holds, one shared world; 0.9 s scripted) and L30 r0c4 (a struck rock beside two boss-lock events; 1.6 s).
  * And sphere 3.7's L32 (⚖ user 2026-10-27, session tile-primitives-sphere-order-4: "Re-record + add L32"): its two locations on one tile,
  * one spilled to the nearest free floor cell, each behind the boss fight's static weapon gate.
+ * And sphere 5.3's (session tile-primitives-sphere-order-6): L39 r25c9 (the press's target and the pocket's gated doors; 1.5 s scripted)
+ * and L40 r23c29 (the shared world whose Fire cells carry the corpse ruling; 7.5 s native, 78 s scripted, measured 2026-10-28).
  *
  * Slow tier: ~35 s native (every region, then the sample again for its lines) + ~86 s scripted sample on one
  * core (measured 2026-10-21, L13–L17). Since the arrow trap + rope (session tile-primitives-arrow-rope, 2026-10-22)
  * L16's cut doubles its state space; with the facing-free search: native every region 43.5 s, native sample 21.5 s,
  * scripted sample 146 s. No exemption: every region agrees, the rope gate derived from the lane and the cut — except the rows the
- * certifier ACCEPTS by name: one implied by every AP way into its source (L0 r2c13 → r1c6, by the Swim), and one on the rules
+ * certifier ACCEPTS by name: those implied by every AP way into their source (L0 r2c13 → r1c6, by the Swim; L39 r25c9 → r0c9 and
+ * → r2c11, by the press, priced from the pocket the L38 teleporter lands in), and one on the rules
  * producer's own permissive bound (L89's Feather, entered only from above; `permissive`, read from the producer).
  * Sphere 0.1 (2026-10-26, measured): native every region + the native sample 59 s, the scripted sample 256 s.
  */
@@ -41,7 +44,8 @@ const RULES = JSON.parse(readFileSync(
 const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
     'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
-    'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32', 'level_38'];
+    'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32', 'level_38',
+    'level_39__r25c9', 'level_40__r23c29'];
 const PERMISSIVE = playthroughPermissiveLocations();
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -61,6 +65,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         expect(lines.length).toBeGreaterThan(0);
         expect(accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
             'level_0__r2c13 → level_0__r1c6 | Progressive Swim',
+            'level_39__r25c9 → level_39__r0c9 | L39 flag 8: wandlock@144,592 cleared',
+            'level_39__r25c9 → level_39__r2c11 | L39 flag 8: wandlock@144,592 cleared',
             'level_89__r9c6 @ Level 089 - Feather (from level_89__r11c12) | the rules producer leaves level_89/Level 089 - Feather uncharged (permissiveBindings)',
         ]);
         sampleLines = certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE }).lines;
