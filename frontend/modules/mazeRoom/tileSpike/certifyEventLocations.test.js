@@ -213,6 +213,18 @@ describe('eventLayerFor', () => {
             const layer = { events: [ev('A', { rule: 'Has', args: { item_name: 'B' } }), ev('B'), ev('P')], internalExitRules: [], exitGates: [] };
             expect(neededEvents(layer, (n) => n === 'P').map((e) => e.name)).toEqual(['P']);
         });
+        it('keeps an event named under Not\'s condition, args.rules or a Compare side (designer review: not only `children`)', () => {
+            const layer = { events: [ev('E'), ev('F'), ev('G'), ev('X')], internalExitRules: [], exitGates: [
+                gate({ rule: 'Not', args: { condition: { rule: 'Has', args: { item_name: 'E' } } } }),
+                gate({ rule: 'And', args: { rules: [{ rule: 'Has', args: { item_name: 'F' } }] } }),
+                gate({ rule: 'Compare', args: { left: { rule: 'CountItem', args: { item_name: 'G' } }, op: '>=', right: 1 } }),
+            ] };
+            expect(neededEvents(layer, none).map((e) => e.name)).toEqual(['E', 'F', 'G']);
+        });
+        it('refuses an unknown kind nested under a rule-valued arg too', () => {
+            const layer = { events: [ev('A')], internalExitRules: [], exitGates: [gate({ rule: 'Not', args: { condition: { rule: 'HasGroup', args: { item_name_group: 'K' } } } })] };
+            expect(() => neededEvents(layer, none)).toThrow(/"HasGroup" node/);
+        });
         it('refuses a kind whose items it cannot read (HasGroup)', () => {
             const layer = { events: [ev('A')], internalExitRules: [], exitGates: [gate({ rule: 'HasGroup', args: { item_name_group: 'Keys' } })] };
             expect(() => neededEvents(layer, none)).toThrow(/"HasGroup" node, whose items this layer cannot read/);
