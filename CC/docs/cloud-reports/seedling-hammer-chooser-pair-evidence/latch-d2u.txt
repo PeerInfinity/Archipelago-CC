@@ -1,0 +1,5 @@
+ms 83240
+playerHits []
+REFUSED solverBot(cpair) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432): the combat ladder is EXHAUSTED. The corridor passes through danger at (472.0,433.4) — enemy:iceturret@472,400 (a static "Enemy" body at its placement (this room is stepped, so this class is unbridged and does not move), priced "stepped" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 16 volume(s) forbidden — no walkable tile path in level 40 from tile (46,51) to (30,24). The two are in different connected components of the tiles the player box f
+obstacle {"kind":"danger","id":"iceturret@472,400","sources":["enemy:iceturret@472,400"]} perTick 577
