@@ -2339,7 +2339,8 @@ function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
             missed += 1;
             continue;
         }
-        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis)
+            ?? (CONTACT_FIDELITY.fineWandStance ? fineWandStanceReaches(run, c, contacts) : null);
         if (!reached) { unreached += 1; continue; }
         const here = run.state.x === c.x && run.state.y === c.y;
         return {
@@ -2366,6 +2367,26 @@ function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
         + `tiles; ${missed} lean into a shot whose first blocker is not the lock, and ${unreached} plan no corridor `
         + `from (${run.state.x},${run.state.y}). ⇒ the lock is on the frontier and the room offers nowhere to stand and `
         + 'shoot it.', { obstacle: { kind: 'solid', tag: obstacle.tag ?? null, id: lock.id } });
+}
+
+/**
+ * ⛓⛓ fidelity L12DOORS D3 (`CONTACT_FIDELITY.fineWandStance`, OFF) — **A WAND STANCE REACHED ONLY ON THE 8 px LATTICE.**
+ * L12's stacked doors at `@32,864` are shot from the strip under them, and that strip is reached through a cliffside
+ * gap (player x 202..214 at y 896) no 16 px node centre fits: `stanceReaches` (the run's lattice, then the hypothesis)
+ * plans no corridor to any of the six candidates, though the player fits. ON: a candidate the 16 px ask refuses is
+ * asked once more on `FINE_LATTICE`, in the world as it is (no hypothesis), and the walk to it is the FRONTIER3 fine
+ * walk `walkTo` already plans. OFF: byte-identical. `SEEDLING_FINE_WAND_STANCE=0|1`.
+ */
+function fineWandStanceReaches(run, c, contacts) {
+    if ((solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) <= FINE_LATTICE) return null;
+    try {
+        planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
+            solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
+        return { discharged: [] };
+    } catch (e) {
+        if (!(e instanceof BotDriverV2Error)) throw e;
+    }
+    return null;
 }
 
 /**
@@ -25113,6 +25134,25 @@ function solveSegmentUnder({
                 const fine = floodFrontier(FINE_LATTICE);
                 if (actionableIn(fine)) frontier = fine;
             }
+        }
+        /**
+         * ⛓⛓ fidelity L12DOORS D2 (`CONTACT_FIDELITY.fineFrontierHiddenDoor`, OFF) — **A DOOR THE 16 px FLOOD CANNOT
+         * SEE, NEARER THE AIM THAN EVERY DOOR IT CAN, IS ASKED ON THE 8 px LATTICE.** L12's `teleporter@32,848` is shut
+         * by `bosslock@32,864` + `magicallock@32,864`, stacked, and the way to their south side passes a cliffside gap
+         * (player x 202..214 at y 896) no 16 px node centre fits. From the L36 arrival (survey steps 172/203) the coarse
+         * frontier always holds an actionable door (`shieldlocknorm@288,704`, `burnabletree@480,640`, three bosslocks),
+         * so `fineFrontierFlood`'s trigger (no actionable entry) never fires, and every round spends a strategy on a
+         * door that does not lead to the aim until the sealed `bosslock@112,192` refuses. MEASURED: the 8 px flood names
+         * `magicallock@32,864` at 20 px from the aim on every one of those rounds. ON: when the 8 px flood holds an
+         * actionable door absent from the 16 px frontier and nearer the aim than every 16 px actionable door, the 8 px
+         * frontier is the one asked. OFF: byte-identical. `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`.
+         */
+        if (CONTACT_FIDELITY.fineFrontierHiddenDoor && frontier.size > 0) {
+            const doorD = (f, keep) => Math.min(...[...f.values()].filter((o) => keep(o) && frontierExecutor(
+                refineStrategy(run, OBSTACLE_STRATEGIES[o.tag ? `${o.kind}:${o.tag}` : o.kind]
+                    ?? OBSTACLE_STRATEGIES[o.kind] ?? null, o))).map((o) => o.d));
+            const fine = floodFrontier(FINE_LATTICE);
+            if (doorD(fine, (o) => !frontier.has(o.id)) < doorD(frontier, () => true)) frontier = fine;
         }
         /**
          * ⛓⛓ U12-swim D2 — AN UNMODELLED PULL NEAREST THE AIM IS NAMED, not
