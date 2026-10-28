@@ -157,6 +157,26 @@ describe('teleportTool — the AP move with no door, then the binding\'s own arr
         expect(h.moves).toEqual([]);
     });
 
+    /**
+     * MEASURED (in-app, both runtimes): the owl's-nest stairs land the player on (256, 256) of level 0, the stairs'
+     * approach cell — crossing material, in NO sub-region of the partition. The spot then belongs to the nearest
+     * ring of tiles that holds one, when that ring agrees; two sub-regions at the same distance are refused.
+     */
+    it('a spot on crossing material takes the nearest sub-region (the ring agrees), and is refused between two', () => {
+        const h = harness();
+        // level 0, 4 x 1 tiles: a | . | . | b  (origin 0,0; one entry, two sub-regions)
+        const map = { tileSize: 16, alphabet: 'ab', levels: new Map([[0, [{ region: 'overworld_start', origin: [0, 0],
+            rows: ['a..b'], subs: ['r8c0', 'r1c6'] }]]]), worlds: new Map(), links: new Map() };
+        h.glue.binding.subRegions = map;
+        // constructor (0,0) → centre (8,8): tile 0, sub-region a, directly
+        expect(h.glue._regionAtSpot({ level: 0, x: 0, y: 0 })).toBe('overworld_start__r8c0');
+        // tile 1 is crossing material: ring 1 holds only a (tile 0) and the empty tile 2
+        expect(h.glue._regionAtSpot({ level: 0, x: 16, y: 0 })).toBe('overworld_start__r8c0');
+        // a 5-tile row with the middle tile two away from both: refused, by name
+        map.levels.get(0)[0].rows = ['a...b'];
+        expect(h.glue._regionAtSpot({ level: 0, x: 32, y: 0 }).why).toMatch(/between sub-regions/);
+    });
+
     it('a level of SEVERAL regions with no partition is refused, never guessed (the dungeon is two)', () => {
         const h = harness();
         expect(h.glue.teleportTool({ level: 3, x: 64, y: 32 }).why).toMatch(/level 3 is 2 regions/);

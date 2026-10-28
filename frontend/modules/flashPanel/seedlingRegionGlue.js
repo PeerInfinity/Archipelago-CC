@@ -61,6 +61,10 @@ export const ACTIVE_SUBSTRATE_EVENT = 'procgen:activeSubstrateChanged';
 export const AP_ITEM_FOUND_EVENT = 'flashSeedling:apItemFound';
 /** The `source` of the AP move a Tools teleport makes (`teleportTool`). */
 export const TELEPORT_TOOL_SOURCE = 'flashPanel-teleport';
+/** The player's centre (what a position read reports) from its constructor position (`new Game(level, x, y)`). */
+const PLAYER_CENTRE_PX = 8;
+/** How many tiles out a spot on crossing material looks for its sub-region. */
+const SPOT_SEARCH_TILES = 2;
 
 /**
  * ⛓ SEEDLING GENERATED G4 — a door the HOST refused: `{sourceRegion, region,
@@ -524,12 +528,33 @@ export class SeedlingRegionGlue {
         return decide(true, null, { from, region: target, spot, stoppedWalks: stopped, watching, pushed });
     }
 
-    /** The region of ours that holds `spot`: its sub-region by tile, else the one region on that level. `{why}` if none. */
+    /**
+     * The region of ours that holds `spot` (a CONSTRUCTOR position, `new Game(level, x, y)`: the player's centre, which
+     * a position read reports, is 8 px further). A level with sub-regions: the one under the centre, else the nearest
+     * ring of tiles that holds any (a door's approach cell is crossing material, in none), when that ring agrees.
+     * Otherwise the one region on that level. `{why}` when there is no single answer.
+     */
     _regionAtSpot({ level, x, y }, procgen) {
         const map = this.binding.subRegions;
         if (levelHasSubRegions(map, level)) {
-            return subRegionAt(map, level, x, y)
-                ?? { why: `level ${level} (${x}, ${y}) stands in no sub-region (a wall, or a pocket no region holds)` };
+            const cx = x + PLAYER_CENTRE_PX;
+            const cy = y + PLAYER_CENTRE_PX;
+            const t = map.tileSize;
+            for (let ring = 0; ring <= SPOT_SEARCH_TILES; ring += 1) {
+                const hits = new Set();
+                for (let dy = -ring; dy <= ring; dy += 1) {
+                    for (let dx = -ring; dx <= ring; dx += 1) {
+                        if (Math.max(Math.abs(dx), Math.abs(dy)) !== ring) continue;
+                        const sub = subRegionAt(map, level, cx + dx * t, cy + dy * t);
+                        if (sub) hits.add(sub);
+                    }
+                }
+                if (hits.size === 1) return [...hits][0];
+                if (hits.size > 1) {
+                    return { why: `level ${level} (${x}, ${y}) is between sub-regions (${[...hits].sort().join(', ')})` };
+                }
+            }
+            return { why: `level ${level} (${x}, ${y}) stands in no sub-region (a wall, or a pocket no region holds)` };
         }
         const warehouse = procgen?.getWarehouse?.() ?? null;
         const found = [];

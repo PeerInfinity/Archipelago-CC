@@ -4624,3 +4624,198 @@ registerTest({
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+// ── ⛓ THE SEEDLING PANEL'S TOOLS: RESTART, AND THE TELEPORT TOOL THROUGH THE ARRIVAL PATH ──────────────────────────
+//
+// ⚖ the user, 2026-10-28: copy the Menu panel's reset button into the Seedling panel's Tools, and check the teleport
+// tool against a walked exit. On seedling_atlas (start hop Menu → overworld_start__r8c0, level 0):
+//   RESTART — the Menu's Restart from the owl's nest is the reference spot; Tools ▸ Restart from the same place lands
+//     on it, with gameState, the binding and the glue's verdict agreeing (the Tools button calls the Menu's own
+//     `restart`, so the warp is the same handler's).
+//   TELEPORT — a WALKED exit (the owl's nest's stairs up, by keys) against Tools ▸ Go to the very spot the walk landed
+//     on, from the same room: the same AP region in gameState and the binding, the same spot, no warning, no check.
+//     The two differences are the point: the teleport names no door (the binding's `arrivedFrom` is null, the move's
+//     exit is null — main's read the stairs: a door nobody took) and adds no path entry (the Restart's warp shape).
+//     Then "TP on UI click" from a region-graph click into the dungeon, which the start has NO door to: gameState,
+//     the binding and the game all reach it (main: the vanilla `region_coords` has no atlas ids, nothing moved).
+
+const TOOLS_START = 'overworld_start__r8c0';
+const TOOLS_OWLS = 'owls_nest_entrance';
+const TOOLS_DUNGEON = 'dungeon1_room1__r0c4';
+
+/** What a walked exit or a teleport updates, read in one place: gameState, the binding, the glue, the game. */
+function toolsFacts() {
+    const glue = getSeedlingRegionGlue();
+    const game = glue?.adapter?._getFlash?.() ?? null;
+    let st = null;
+    try { const raw = game?.botStatus?.(); st = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch { st = null; }
+    // the constructor position (`new Game(level, x, y)`: what the binding teleports to, and what Go takes)
+    let rs = null;
+    try { const raw = game?.readState?.(); rs = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch { rs = null; }
+    const path = window.centralRegistry?.getPublicFunction?.('gameState', 'getPath')?.() ?? [];
+    return {
+        region: readCurrentRegion(),
+        binding: glue?.binding?.region ?? null,
+        arrivedFrom: glue?.binding?.arrivedFrom?.exit_id ?? null,
+        level: st?.level ?? null, x: st?.x ?? null, y: st?.y ?? null,
+        ctor: rs ? { x: rs.playerPositionX ?? null, y: rs.playerPositionY ?? null } : null,
+        pathLength: Array.isArray(path) ? path.length : null,
+        warnings: glue?.stats?.warnings ?? null,
+        locationChecks: glue?.stats?.locationChecks ?? null,
+    };
+}
+
+/** An AP move, the way a substrate publishes one (the binding's arrival teleports the game). */
+function toolsMove(from, to, exitName = null) {
+    getSeedlingRegionGlue()?.getDispatcher?.()?.publish?.('user:regionMove',
+        { sourceRegion: from, targetRegion: to, exitName, source: 'tests-tools-teleport' }, { initialTarget: 'bottom' });
+}
+
+/** The game, gameState and the binding all in `region` on `level`, and the spot still for 600 ms. */
+async function toolsSettledIn(tc, label, region, level, ms = 30000) {
+    let last = null;
+    let still = 0;
+    return tc.pollForValue(() => {
+        const f = toolsFacts();
+        const ok = f.region === region && f.binding === region && f.level === level;
+        still = ok && last && last.x === f.x && last.y === f.y ? still + 1 : 0;
+        last = f;
+        return ok && still >= 3 ? f : null;
+    }, label, ms, 200);
+}
+
+/**
+ * Hold the arrow key toward tile (tx, ty) until the game leaves its level (the door fires). Sent the way the panel's
+ * touch controls send it (`_sendTouchKey` → `dispatchGameKey`, with the keyCode the wasm game reads).
+ */
+async function toolsWalkInto(panel, tx, ty, maxMs = 10000) {
+    const f = toolsFacts();
+    const dx = tx * 16 - f.ctor.x;
+    const dy = ty * 16 - f.ctor.y;
+    const code = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'ArrowLeft' : 'ArrowRight') : (dy < 0 ? 'ArrowUp' : 'ArrowDown');
+    const k = { key: code, code, keyCode: { ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40 }[code] };
+    const from = f.level;
+    panel._sendTouchKey('keydown', k);
+    const t0 = performance.now();
+    try {
+        while (performance.now() - t0 < maxMs && (toolsFacts().level === from || toolsFacts().level === null)) {
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, STEP_MS));
+        }
+    } finally { panel._sendTouchKey('keyup', k); }
+    return toolsFacts().level !== from;
+}
+
+/** Record every `user:regionMove` published through the flash panel's dispatcher; `stop()` restores it. */
+function toolsMoveRecorder() {
+    const d = getSeedlingRegionGlue()?.getDispatcher?.();
+    const moves = [];
+    if (!d?.publish) return { moves, stop: () => {} };
+    const orig = d.publish;
+    d.publish = function publish(name, data, opts) {
+        if (name === 'user:regionMove') moves.push({ ...data });
+        return orig.call(this, name, data, opts);
+    };
+    return { moves, stop: () => { d.publish = orig; } };
+}
+
+const toolsRestartAndTeleport = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
+    const up = await atlasPresetOn(tc, runtime, ATLAS_PATH, TOOLS_START);
+    if (!up) return;
+    const { panel } = up;
+    const glue = getSeedlingRegionGlue();
+    const sameSpot = (a, b) => !!a && !!b && a.level === b.level && a.x === b.x && a.y === b.y;
+    const born = await toolsSettledIn(tc, `[${runtime}] the new game stands in ${TOOLS_START}`, TOOLS_START, 0, 60000);
+    tc.reportCondition(`[${runtime}] the new game stands in ${TOOLS_START} (level 0)`, !!born);
+    if (!born) return;
+    const recorder = toolsMoveRecorder();
+    const tpCheckbox = panel.teleportOnClickCheckbox;
+    const tpWas = tpCheckbox?.checked ?? false;
+    try {
+        // ── RESTART: the Menu's, then the Tools button's, each from the owl's nest ──
+        toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+        tc.reportCondition(`[${runtime}] the AP move reached the owl's nest`, !!await toolsSettledIn(tc, `[${runtime}] in the owl's nest`, TOOLS_OWLS, 2));
+        window.centralRegistry.getPublicFunction('menuPanel', 'restart')();
+        const menu = await toolsSettledIn(tc, `[${runtime}] the Menu's Restart landed at the start`, TOOLS_START, 0);
+        tc.reportCondition(`[${runtime}] the Menu's Restart landed in ${TOOLS_START}`, !!menu);
+        const menuVerdict = glue.lastRestart;
+        toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+        await toolsSettledIn(tc, `[${runtime}] back in the owl's nest`, TOOLS_OWLS, 2);
+        const button = panel.rootElement?.querySelector('.flash-panel-restart') ?? null;
+        tc.assertEqual(`[${runtime}] Tools shows a Restart button on a Seedling preset`, true, !!button && button.style.display !== 'none');
+        if (!button) return;
+        const restartsBefore = glue.stats.restarts;
+        button.click();
+        const tools = await toolsSettledIn(tc, `[${runtime}] Tools ▸ Restart landed at the start`, TOOLS_START, 0);
+        tc.log(`[${runtime}] Restart: Menu ${JSON.stringify(menu)} / Tools ${JSON.stringify(tools)}`);
+        tc.assertEqual(`[${runtime}] Tools ▸ Restart lands where the Menu's Restart lands (level/x/y)`, true, sameSpot(menu, tools));
+        tc.assertEqual(`[${runtime}] the glue's own Restart handler took it (a new verdict, the hop re-taken, one more restart)`,
+            'true/true/1', `${glue.lastRestart !== menuVerdict}/${glue.lastRestart?.taken}/${glue.stats.restarts - restartsBefore}`);
+
+        // ── A WALKED EXIT: the owl's nest's stairs up, by keys ──
+        toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+        const nest = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the walk`, TOOLS_OWLS, 2);
+        if (!nest) { tc.reportCondition(`[${runtime}] in the owl's nest for the walk`, false); return; }
+        const movesBefore = recorder.moves.length;
+        const walkedOut = await toolsWalkInto(panel, 3, 1);
+        const walked = walkedOut ? await toolsSettledIn(tc, `[${runtime}] the walked stairs landed in the start`, TOOLS_START, 0) : null;
+        tc.reportCondition(`[${runtime}] WALKED: the stairs up crossed into ${TOOLS_START} (gameState, binding, game)`, !!walked);
+        if (!walked) return;
+        const walkedMove = recorder.moves.slice(movesBefore).find((m) => m.targetRegion === TOOLS_START) ?? null;
+
+        // ── THE TOOL TELEPORT to the spot the walk landed on, from the same room ──
+        toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+        const nest2 = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the teleport`, TOOLS_OWLS, 2);
+        if (!nest2) { tc.reportCondition(`[${runtime}] in the owl's nest for the teleport`, false); return; }
+        const pre = toolsFacts();
+        const tpBefore = recorder.moves.length;
+        panel.teleportLevelInput.value = String(walked.level);
+        panel.teleportXInput.value = String(walked.ctor?.x);
+        panel.teleportYInput.value = String(walked.ctor?.y);
+        panel.rootElement.querySelector('.flash-panel-tp-go').click();
+        const tp = await toolsSettledIn(tc, `[${runtime}] the Tools teleport landed in the start`, TOOLS_START, 0);
+        const tpMoves = recorder.moves.slice(tpBefore);
+        tc.log(`[${runtime}] WALKED ${JSON.stringify({ ...walked, move: walkedMove })}`);
+        tc.log(`[${runtime}] TELEPORTED ${JSON.stringify({ ...(tp ?? toolsFacts()), moves: tpMoves, verdict: glue.lastTeleport })}`);
+        tc.assertEqual(`[${runtime}] the teleport moved the AP region as the walk did (gameState and the binding in ${TOOLS_START})`,
+            `${TOOLS_START}/${TOOLS_START}`, `${tp?.region ?? toolsFacts().region}/${tp?.binding ?? toolsFacts().binding}`);
+        // the TILE: a walk's read can catch the player still sliding (measured y 262.3 on the JS page)
+        const tileOf = (f) => (f ? `${f.level}:${Math.floor(f.x / 16)},${Math.floor(f.y / 16)}` : null);
+        tc.assertEqual(`[${runtime}] the teleport landed on the walk's tile`, tileOf(walked), tileOf(tp));
+        tc.assertEqual(`[${runtime}] ⚖ a teleport has no door: the move names none, and the binding's arrivedFrom is null (the walk's: the stairs)`,
+            'null/null', `${JSON.stringify(tpMoves.map((m) => m.exitName).filter(Boolean)[0] ?? null)}/${JSON.stringify(tp ? tp.arrivedFrom : 'unsettled')}`);
+        tc.assertEqual(`[${runtime}] the teleport adds no path entry (the Restart's warp shape)`, pre.pathLength, tp?.pathLength ?? null);
+        tc.assertEqual(`[${runtime}] no warning and no location check from the teleport`, `${pre.warnings}/${pre.locationChecks}`,
+            `${tp?.warnings ?? null}/${tp?.locationChecks ?? null}`);
+
+        // ── "TP on UI click": a region-graph click into the dungeon, which the start has no door to ──
+        if (tpCheckbox) tpCheckbox.checked = true;
+        // the region graph's own click (`graphInteractionManager`): published as its module, the registered publisher
+        tc.eventBus.publishAs('regionGraph:nodeSelected', { nodeId: TOOLS_DUNGEON, data: {} }, 'regionGraph');
+        const dungeon = await toolsSettledIn(tc, `[${runtime}] the region-graph teleport reached the dungeon`, TOOLS_DUNGEON, 3);
+        tc.log(`[${runtime}] REGION CLICK ${JSON.stringify({ ...(dungeon ?? toolsFacts()), verdict: glue.lastTeleport })}`);
+        tc.reportCondition(`[${runtime}] TP on UI click into ${TOOLS_DUNGEON} (no door from the start): gameState, the binding and the game reach it`, !!dungeon);
+        tc.assertEqual(`[${runtime}] no warning from the region-graph teleport`, pre.warnings, toolsFacts().warnings);
+        assertNoDeathNoHalt(tc, runtime, up.rt);
+    } finally {
+        recorder.stop();
+        if (tpCheckbox) tpCheckbox.checked = tpWas;
+    }
+});
+
+export const seedlingJsRuntimeToolsRestartTeleport = toolsRestartAndTeleport('js');
+export const seedlingWasmRuntimeToolsRestartTeleport = toolsRestartAndTeleport('wasm');
+
+for (const [runtime, fn] of [['js', seedlingJsRuntimeToolsRestartTeleport], ['wasm', seedlingWasmRuntimeToolsRestartTeleport]]) {
+    registerTest({
+        id: `seedling-${runtime}-runtime-tools-restart-teleport`,
+        name: `Seedling ${runtime === 'js' ? 'JS' : 'wasm'} runtime: Tools ▸ Restart lands as the Menu's; a Tools teleport updates what a walked exit does`,
+        description: `On seedling_atlas with flashPanel.runtime = ${runtime}: the Menu's Restart from the owl's nest sets the reference spot `
+            + 'and Tools ▸ Restart lands on it (the glue\'s own handler re-took the hop). Then a WALKED exit (the owl\'s nest stairs, '
+            + 'by keys) against Tools ▸ Go to the spot it landed on: the same AP region in gameState and the binding, the same spot, '
+            + 'no door named, no path entry, no warning. Then TP on UI click into the dungeon (no door from the start) reaches it.',
+        testFunction: fn,
+        category: 'Seedling JS runtime',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
