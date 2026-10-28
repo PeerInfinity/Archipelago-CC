@@ -155,6 +155,8 @@ import {
     KILLLOCK_BODIES,
     // ⛓⛓⛓ seedling-fidelity-ghostsword D2: the break verb's ghostsword row (the switch and the no-sword refusal).
     GHOSTSWORD_PRESS, ghostSwingRefusal,
+    // ⛓ fidelity LIGHTPOLE D2: the ghost swing's rect and reach (the pole verb's ghost arm).
+    GHOST_SWORD_REACH, ghostSlashRect,
     // ⛓⛓ seedling-fidelity-pushblock: the spear push's stance audit (what else the thrust's rect reaches).
     auditPress, PRESS_ARM_POLICY,
     // ⛓ fidelity FIREMOVE: the fire route's push and its flame audit (`deriveBlockRoute`'s fire arm).
@@ -11103,37 +11105,51 @@ function execBridge(run, perTick, resolved, ctx) {
 
 /**
  * ⛓⛓⛓ fidelity LIGHTPOLE D2 (wave 34, `CONTACT_FIDELITY.inRoomPoleThrust`) — **AN IN-ROOM POLE IS LIT BY ONE SPEAR
- * THRUST, FROM WHEREVER THE THRUST'S RECT LIES ON IT.**
+ * THRUST — OR ONE GHOST SWING — FROM WHEREVER THE PRESS'S RECT LIES ON IT.**
  *
  *     Player.as:955-990     spear(): a 32x5 rect from the player's spear origin, by facing (`spearHitRect`)
  *     Player.as:1083-1088   genericHit: `if (t == "Spear") (e as LightPole).hit()`
+ *     Player.as:917         slash(): `genericHit(e, hasGhostSword ? "Spear" : "Sword", …)` — the ghost swing is "Spear"
  *     LightPole.as:77-84    hit(): `activate = !activate` behind a 25-tick `hitsTimer`
  *     LightPole.as:46,61    the hitbox, re-anchored and bobbing ±2 by `render()` (`LIGHTPOLE_PRESS_BOX`, the envelope)
  *
- * The stance is GEOMETRY, never a table: every point of every walkable tile within a thrust's reach of the pole
- * (sampled every 2 px, plus the edge a box stands FLUSH against — the L101 thrust THROUGH the wall [8,4] is from [7,4]
- * pressed up, y 66, the rules' witness), in each facing whose rect touches the pole's bob-invariant core (the envelope
- * less 2 * `bob` top and bottom, as the dark-trap light arm reads it, `deriveLightPole`). The rect ignores walls, as
+ * THE ARM is the bag's: the Spear's thrust, or — once the Ghost Sword has FUSED the Sword and Spear slots into one
+ * (`appendInventorySlots`: the spear slot is removed) — the ghost swing, whose arm is "Spear" too and which the run
+ * steps against a pole (`ghostSword.GHOST_PRESS_ARMS.LightPole`, modelled): `ghostSlashRect`, the reach
+ * `GHOST_SWORD_REACH` measured to the pole's core, the line waived. A plain sword swing is "Sword": no arm.
+ *
+ * The stance is GEOMETRY, never a table: every point of every walkable tile within reach of the pole (sampled every
+ * 2 px, plus the edge a box stands FLUSH against — the L101 thrust THROUGH the wall [8,4] is from [7,4] pressed up,
+ * y 66, the rules' witness), in each facing whose rect touches the pole's bob-invariant core (the envelope less
+ * 2 * `bob` top and bottom, as the dark-trap light arm reads it, `deriveLightPole`). The rect ignores walls, as
  * `collideRectInto` does. A point flush on the FACING axis is left out: a box pinned against what it faces gets no
- * velocity from the face tap, so no facing (`Player.direction` comes from velocity). Then, as the light arm:
- * no other press responder and no non-`DarkTrap` body in the rect, the player box clear of every live dark trap and of
- * every solid, and a corridor (the 16 px planner, then the 8 px one). Deep stances (`LIGHT_ARM_CORE_MARGIN` px on
- * both axes) first — the walk settles NEAR a stance — then the lattice's own points, then distance.
- * ⛔ No Spear: `held: false` (the Spear is the work order). No stance: refused by name, with the counts.
+ * velocity from the face tap, so no facing (`Player.direction` comes from velocity). Then, as the light arm: no other
+ * press responder, no bridge tile and no non-`DarkTrap` body in the rect, the player box clear of every live dark trap
+ * and of every solid, and a corridor (the 16 px planner, then the 8 px one). Deep stances (`LIGHT_ARM_CORE_MARGIN` px
+ * on both axes) first — the walk settles NEAR a stance — then the lattice's own points, then distance.
+ * ⛔ No arm: `held: false` (the Spear is the work order). No stance: refused by name, with the counts.
  */
 function resolvePoleThrustStrategy(run, obstacle, contacts) {
     const pole = (run.world.pressResponders ?? []).find((r) => r.as3 === 'LightPole'
         && `${r.tag}@${r.x},${r.y}` === obstacle.id);
     if (!pole) return null;
     const target = { id: obstacle.id, x: pole.x, y: pole.y };
-    const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.spear);
-    if (!run.progress('inventory')?.hasSpear || slot < 0) {
+    const inv = run.progress('inventory') ?? {};
+    const slots = run.progress('inventorySlots') ?? [];
+    const ghost = inv.hasGhostSword && GHOSTSWORD_PRESS.enabled && !ghostSwingRefusal(inv);
+    const arm = ghost ? { weapon: 'ghostsword', slot: slots.indexOf(INVENTORY_ITEM_IDS.ghostsword),
+        rectAt: ghostSlashRect, reach: GHOST_SWORD_REACH }
+        : { weapon: 'spear', slot: inv.hasSpear ? slots.indexOf(INVENTORY_ITEM_IDS.spear) : -1,
+            rectAt: spearHitRect, reach: Infinity };
+    if (arm.slot < 0) {
         return {
             strategy: 'pole', held: false, target,
             rejected: [{
                 option: `thrust at ${obstacle.id}`,
-                why: 'the run holds NO SPEAR. `genericHit` calls `(e as LightPole).hit()` only under `t == "Spear"`, '
-                    + 'so no other weapon lights a pole. ⇒ the Spear is the work order.',
+                why: `the run holds NO SPEAR${inv.hasGhostSword ? ' and its ghost swing is refused '
+                    + `(${!GHOSTSWORD_PRESS.enabled ? 'GHOSTSWORD_PRESS is off' : ghostSwingRefusal(inv)})` : ''}. `
+                    + '`genericHit` calls `(e as LightPole).hit()` only under `t == "Spear"` (the thrust, or the ghost '
+                    + 'swing), so no other weapon lights a pole. ⇒ the Spear is the work order.',
             }],
         };
     }
@@ -11150,8 +11166,8 @@ function resolvePoleThrustStrategy(run, obstacle, contacts) {
     const ys = [2, 4, 6, 8, 10, 12, 13];
     const flushX = new Set([H.originX, TILE_SIZE - (H.width - H.originX)]);
     const flushY = new Set([H.originY, TILE_SIZE - (H.height - H.originY)]);
-    const thrust = spearHitRect(0, 0, RIGHT);
-    const reach = (thrust.right - thrust.x) + TILE_SIZE;
+    const along = (r) => Math.max(r.right - r.x, r.bottom - r.y);
+    const reach = Math.min(arm.reach, along(arm.rectAt(0, 0, RIGHT)) + TILE_SIZE) + TILE_SIZE;
     const cands = [];
     for (const t of run.world.walkableTiles ?? []) {
         if (Math.hypot(t.rect.x + 8 - cx, t.rect.y + 8 - cy) > reach + TILE_SIZE) continue;
@@ -11159,10 +11175,11 @@ function resolvePoleThrustStrategy(run, obstacle, contacts) {
             for (const oy of ys) {
                 const x = t.rect.x + ox;
                 const y = t.rect.y + oy;
+                if (distanceRectPoint(x, y, core) > arm.reach) continue;
                 for (const dir of [RIGHT, UP, LEFT, DOWN]) {
                     const horizontal = dir === RIGHT || dir === LEFT;
                     if (horizontal ? flushX.has(ox) : flushY.has(oy)) continue;
-                    const sr = spearHitRect(x, y, dir);
+                    const sr = arm.rectAt(x, y, dir);
                     if (!pressRectTouches(sr, core)) continue;
                     const lattice = (ox === 8 && oy === 8) ? 0 : ([4, 12].includes(ox) && [4, 12].includes(oy) ? 1 : 2);
                     cands.push({ x, y, dir, sr, deep: depth(sr) >= LIGHT_ARM_CORE_MARGIN ? 0 : 1, lattice,
@@ -11177,9 +11194,13 @@ function resolvePoleThrustStrategy(run, obstacle, contacts) {
     let unreached = 0;
     for (const c of cands) {
         const others = run.world.pressResponders.filter((r) => r !== pole && pressRectTouches(c.sr, r.rect));
+        const bridges = (run.world.bridgeTiles ?? []).filter((b) => pressRectTouches(c.sr, b.rect));
         const bodies = (run.world.combat?.enemies ?? []).filter((e) => e.as3 !== 'DarkTrap'
             && contactRect(e) && pressRectTouches(c.sr, contactRect(e)));
-        if (others.length > 0 || bodies.length > 0 || solidsAt(run.world, c.x, c.y).length > 0) { crowded += 1; continue; }
+        if (others.length > 0 || bridges.length > 0 || bodies.length > 0 || solidsAt(run.world, c.x, c.y).length > 0) {
+            crowded += 1;
+            continue;
+        }
         if (traps.some((b) => rectsOverlapLocal(playerBoxAt(c.x, c.y), b.rect))) { unsafe += 1; continue; }
         const here = Math.abs(run.state.x - c.x) < 0.5 && Math.abs(run.state.y - c.y) < 0.5;
         let ok = here;
@@ -11198,21 +11219,24 @@ function resolvePoleThrustStrategy(run, obstacle, contacts) {
             postCondition: 'lit',
             held: true,
             target,
-            slot,
+            weapon: arm.weapon,
+            slot: arm.slot,
+            reach: arm.reach,
             dir: c.dir,
             stance: { x: c.x, y: c.y },
             core,
             rejected: [{
-                option: 'a sword slash / a second thrust',
-                why: 'only a SPEAR hit reaches `LightPole.hit()` (`t == "Spear"`), and the hit TOGGLES: a second one '
-                    + 'puts the light out and writes the tag back (`set activate`)',
+                option: ghost ? 'a plain sword swing / a second swing' : 'a sword slash / a second thrust',
+                why: 'only a "Spear" hit reaches `LightPole.hit()` (the thrust, or the ghost swing), and the hit '
+                    + 'TOGGLES: a second one puts the light out and writes the tag back (`set activate`)',
             }],
         };
     }
-    throw new SolverRefusal(`solverBot: pole ${obstacle.id} in level ${run.level} — no stance thrusts at its core and `
-        + `is reachable: ${cands.length} point/facing pair(s) put the spear's 32x5 rect on the core; ${crowded} also hit `
-        + `another responder or body or stand in a solid, ${unsafe} stand inside a live dark trap, and ${unreached} plan `
-        + `no corridor from (${run.state.x},${run.state.y}).`,
+    throw new SolverRefusal(`solverBot: pole ${obstacle.id} in level ${run.level} — no stance ${arm.weapon === 'spear'
+        ? 'thrusts' : 'swings the ghost sword'} at its core and is reachable: ${cands.length} point/facing pair(s) put `
+        + `the ${arm.weapon}'s rect on the core; ${crowded} also hit another responder, a bridge or a body or stand in a `
+        + `solid, ${unsafe} stand inside a live dark trap, and ${unreached} plan no corridor from `
+        + `(${run.state.x},${run.state.y}).`,
     { obstacle: { kind: 'solid', tag: 'lightpole', id: obstacle.id } });
 }
 
@@ -11220,8 +11244,8 @@ function resolvePoleThrustStrategy(run, obstacle, contacts) {
 export const POLE_THRUST_WRITE_TICKS = 4;
 
 /**
- * ⛓⛓⛓ fidelity LIGHTPOLE D2 — the `pole` verb's executor: SETTLE, the face tap (the light arm's), RE-ASK the rect from
- * where the walk stopped, the POSITIVE CONTROL (the pole unlit-active and its `hitsTimer` 0 — a thrust then is the one
+ * ⛓⛓⛓ fidelity LIGHTPOLE D2 — the `pole` verb's executor: SETTLE, the face tap (the light arm's), RE-ASK the rect (and
+ * the ghost swing's reach) from where the walk stopped, the POSITIVE CONTROL (the pole unlit-active and its `hitsTimer` 0 — a thrust then is the one
  * toggle), SELECT the spear's slot, ONE `primary` tick, then wait (idle) until the run's pole state is `activate`, and
  * the old slot selected again. ⛔ Exactly one press: the repeats a thrust's rect gets (`SPEAR_REPEAT_OFFSETS`) are
  * inside the pole's 25-tick `hitsTimer`, so the one press is one toggle — and the record names the run's `hitsTimer`.
@@ -11251,9 +11275,11 @@ function execPoleThrust(run, perTick, resolved, ctx) {
         step(new Set([FACING_KEYS[resolved.dir]]), 'the face tap');
         settle('the face tap');
     }
-    const sr = spearHitRect(run.state.x, run.state.y, run.state.direction);
-    if (run.state.direction !== resolved.dir || !pressRectTouches(sr, resolved.core)) {
-        refuse(`the stance settled at (${run.state.x},${run.state.y}) facing ${run.state.direction}, and the spear rect `
+    const rectAt = resolved.weapon === 'ghostsword' ? ghostSlashRect : spearHitRect;
+    const sr = rectAt(run.state.x, run.state.y, run.state.direction);
+    if (run.state.direction !== resolved.dir || !pressRectTouches(sr, resolved.core)
+        || distanceRectPoint(run.state.x, run.state.y, resolved.core) > resolved.reach) {
+        refuse(`the stance settled at (${run.state.x},${run.state.y}) facing ${run.state.direction}, and the ${resolved.weapon} rect `
             + `from there does not reach ${id}'s core — the derivation's stance was (${resolved.stance.x},`
             + `${resolved.stance.y}) facing ${resolved.dir}.`);
     }
@@ -11280,7 +11306,7 @@ function execPoleThrust(run, perTick, resolved, ctx) {
     if (prior !== resolved.slot) ctx.equip(prior);
     return {
         verb: 'pole', target: id, dir: resolved.dir, stance: { ...resolved.stance },
-        at: { x: run.state.x, y: run.state.y }, weapon: 'spear', slot: resolved.slot,
+        at: { x: run.state.x, y: run.state.y }, weapon: resolved.weapon, slot: resolved.slot,
         restoredSlot: prior !== resolved.slot ? prior : null, from, pressTick,
         hitsTimer: live()?.hitsTimer ?? null, ticks: perTick.length - from,
     };

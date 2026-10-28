@@ -1,0 +1,396 @@
+{
+    "game": "seedling",
+    "name": "lightpole-l101-spear",
+    "boot": {
+        "level": 101,
+        "x": 288,
+        "y": 240
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 0,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 12,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 19,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 30,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 30,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 31,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 39,
+            "tag": 8,
+            "note": ""
+        },
+        {
+            "level": 40,
+            "tag": 8,
+            "note": ""
+        },
+        {
+            "level": 58,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 62,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 68,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 71,
+            "tag": 2,
+            "note": ""
+        }
+    ],
+    "equips": [
+        {
+            "t": 278,
+            "slot": 3
+        },
+        {
+            "t": 280,
+            "slot": 0
+        }
+    ],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "keys": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "seal_parts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+        ]
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": true,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": true,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": true,
+            "hasDarkShield": true,
+            "hasDarkSuit": true,
+            "hasDarkSword": true,
+            "hasFeather": true,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 281,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 112
+        },
+        {
+            "key": "primary",
+            "from": 112,
+            "to": 113
+        },
+        {
+            "key": "left",
+            "from": 113,
+            "to": 138
+        },
+        {
+            "key": "up",
+            "from": 138,
+            "to": 139
+        },
+        {
+            "key": "primary",
+            "from": 139,
+            "to": 140
+        },
+        {
+            "key": "down",
+            "from": 140,
+            "to": 142
+        },
+        {
+            "key": "up",
+            "from": 144,
+            "to": 146
+        },
+        {
+            "key": "down",
+            "from": 149,
+            "to": 150
+        },
+        {
+            "key": "left",
+            "from": 140,
+            "to": 155
+        },
+        {
+            "key": "primary",
+            "from": 154,
+            "to": 155
+        },
+        {
+            "key": "right",
+            "from": 155,
+            "to": 157
+        },
+        {
+            "key": "left",
+            "from": 157,
+            "to": 162
+        },
+        {
+            "key": "primary",
+            "from": 162,
+            "to": 163
+        },
+        {
+            "key": "right",
+            "from": 163,
+            "to": 165
+        },
+        {
+            "key": "primary",
+            "from": 168,
+            "to": 169
+        },
+        {
+            "key": "primary",
+            "from": 174,
+            "to": 175
+        },
+        {
+            "key": "primary",
+            "from": 182,
+            "to": 183
+        },
+        {
+            "key": "primary",
+            "from": 188,
+            "to": 189
+        },
+        {
+            "key": "primary",
+            "from": 196,
+            "to": 197
+        },
+        {
+            "key": "primary",
+            "from": 204,
+            "to": 205
+        },
+        {
+            "key": "primary",
+            "from": 210,
+            "to": 211
+        },
+        {
+            "key": "primary",
+            "from": 216,
+            "to": 217
+        },
+        {
+            "key": "primary",
+            "from": 224,
+            "to": 225
+        },
+        {
+            "key": "primary",
+            "from": 230,
+            "to": 231
+        },
+        {
+            "key": "primary",
+            "from": 236,
+            "to": 237
+        },
+        {
+            "key": "up",
+            "from": 169,
+            "to": 255
+        },
+        {
+            "key": "down",
+            "from": 255,
+            "to": 256
+        },
+        {
+            "key": "primary",
+            "from": 256,
+            "to": 257
+        },
+        {
+            "key": "up",
+            "from": 258,
+            "to": 259
+        },
+        {
+            "key": "primary",
+            "from": 258,
+            "to": 259
+        },
+        {
+            "key": "down",
+            "from": 259,
+            "to": 261
+        },
+        {
+            "key": "up",
+            "from": 261,
+            "to": 262
+        },
+        {
+            "key": "down",
+            "from": 262,
+            "to": 263
+        },
+        {
+            "key": "up",
+            "from": 263,
+            "to": 264
+        },
+        {
+            "key": "right",
+            "from": 258,
+            "to": 270
+        },
+        {
+            "key": "left",
+            "from": 270,
+            "to": 271
+        },
+        {
+            "key": "right",
+            "from": 271,
+            "to": 272
+        },
+        {
+            "key": "left",
+            "from": 272,
+            "to": 273
+        },
+        {
+            "key": "right",
+            "from": 273,
+            "to": 274
+        },
+        {
+            "key": "primary",
+            "from": 278,
+            "to": 279
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY LIGHTPOLE — L101 from the survey's step-226 arrival (288,240), the route's bag WITHOUT the Ghost Sword (the Spear's own slot): the walk to [7,4], flush against the wall above, and ONE Spear thrust facing E through the wall [8,4] at `lightpole@144,64` — the pole activate, {101,0} written. The survey's step-226 staging. The solver's own plan with inRoomPoleThrust ON: 280 t + 1 idle (the trailing equip), equips [{\"t\":278,\"slot\":3},{\"t\":280,\"slot\":0}]. Authored by scripts/procgen/plan-seedling-lightpole-witness.mjs."
+}

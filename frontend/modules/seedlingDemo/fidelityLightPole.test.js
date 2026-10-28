@@ -19,17 +19,21 @@
  *        -> "already active at the build" reds: the verb thrusts and the run's pole ends inactive.
  */
 import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
 import { atlasEventGoal, runtimeEventsOf } from '../flashPanel/seedlingPlaybackController.js';
 import { clearTagVerbOf, solverGoalFor } from './jsRuntimeSolver.js';
 import { atlasLevelSource } from './levelSource.js';
-import { createRunForStaging } from './tapeRunner.js';
+import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
+import { parseTape } from './tapeFormat.js';
 import { arrivalStaging } from './fidelityArrival.js';
 import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 import { OBSTACLE_STRATEGIES, solveSegment, SolverRefusal, STRATEGY_EXECUTORS } from './solverBot.js';
-import { RIGHT } from './presses.js';
+import { RIGHT, UP } from './presses.js';
+import { DEFAULT_DASH_MODE } from '../../../scripts/procgen/dashMode.js';
 
 const PT = JSON.parse(readFileSync(new URL('../../presets/seedling_playthrough/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 const SIDECARS = PT.preset_sidecars['1'];
@@ -136,5 +140,46 @@ describe('fidelity LIGHTPOLE — refusals and the build\'s own state', () => {
             expect(run.ticksCompleted).toBe(before);
             expect(run.lightPolesNow.find((p) => p.id === 'lightpole@128,168')).toMatchObject({ activate: true });
         });
+    });
+});
+
+/**
+ * The committed game witnesses (`plan-seedling-lightpole-witness.mjs`, p4g, model = game at 0 px over every
+ * observation — `tapeRunner.test.js`'s fixture differential): the survey's step-226 staging, each tape IS the solver's
+ * own plan with the switch ON (the Spear tape adds one idle tick, its trailing re-equip's).
+ */
+describe('fidelity LIGHTPOLE — the game witnesses are the solver\'s own plans', () => {
+    const HERE = dirname(fileURLToPath(import.meta.url));
+    const tapeOf = (name) => parseTape(readFileSync(join(HERE, 'fixtures', 'tapes', `${name}.json`), 'utf8'));
+    const keysOf = (t) => {
+        const out = [];
+        for (let i = 0; i < t.tick_count; i += 1) out.push([...(t.inputs ?? [])
+            .filter((x) => x.from <= i && i < x.to).map((x) => x.key)].sort().join('+'));
+        return out;
+    };
+    it.each([
+        ['lightpole-l101-ghost', 'ghostsword', UP, 0],
+        ['lightpole-l101-spear', 'spear', RIGHT, 1],
+    ])('%s: the %s arm, facing %i, from [7,4]; the plan is the tape key for key', (name, weapon, dir, idle) => {
+        const t = tapeOf(name);
+        const staging = solveStaging(stagingFromTape({ ...t, inputs: [], tick_count: 0 }));
+        staging.equips = [];
+        const out = withContactFidelity({ inRoomPoleThrust: true }, () => {
+            const run = createRunForStaging(staging, SRC);
+            return solveSegment({ run, goals: [{ kind: 'clear-tag', tag: { level: 101, tag: 0 }, at: { x: 144, y: 64 },
+                obstacle: 'lightpole@144,64' }], name, boot: staging.boot, dashMode: DEFAULT_DASH_MODE });
+        });
+        const rec = out.records.find((r) => r.goal === 'clear-tag');
+        expect(rec).toMatchObject({ strategy: 'pole', weapon, dir });
+        expect([Math.floor(rec.at.x / 16), Math.floor(rec.at.y / 16)]).toEqual([7, 4]);
+        expect(out.perTick.length + idle).toBe(t.tick_count);
+        expect(out.perTick.map((k) => [...k].sort().join('+'))).toEqual(keysOf(t).slice(0, out.perTick.length));
+    }, 120_000);
+
+    it('the ghost tape\'s bag has no Spear slot (the Ghost Sword fused it) — the arm is the bag\'s, not a choice', () => {
+        const t = tapeOf('lightpole-l101-ghost');
+        const run = createRunForStaging(solveStaging(stagingFromTape({ ...t, inputs: [], tick_count: 0 })), SRC);
+        expect(run.progress('inventory')).toMatchObject({ hasGhostSword: true, hasSpear: true });
+        expect(run.progress('inventorySlots')).not.toContain(3);
     });
 });
