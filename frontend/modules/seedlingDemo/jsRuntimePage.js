@@ -180,7 +180,9 @@ import { createLifetime } from './watchLifetime.js';
 import {
     FLOOR_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
-import { CAMERA_MODES, cameraView, createNightLayer, createTileLayer, paintNight, paintOps, roomOps } from './seedlingSkinRenderer.js';
+import {
+    CAMERA_MODES, cameraView, createNightLayer, createTileLayer, paintNight, paintOps, roomOps, teleporterArtFilter,
+} from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
 import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
@@ -779,7 +781,8 @@ export function mountJsRuntimePage(win = window) {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
             ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag)
                 || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag),
-                drawnTeleporters: (tp) => tp.isStairs === true, drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
+                // ⚖ only the game's SHOWN portals keep a stand-in; the invisible teleporters draw nothing (`teleporterArtFilter`)
+                drawnTeleporters: teleporterArtFilter((runtime.mounted ?? runtime.vanilla)?.records?.get(level) ?? null), drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
         });
         // ⛓ G10 — the boss bodies' build-time rectangles still painted (0 once the skin draws them)
         if (graphics.bosses) {
