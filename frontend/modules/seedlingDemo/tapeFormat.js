@@ -99,6 +99,7 @@ import { validateProfile } from './tapeEnvelope.js';
 // the charter: the profile is itself dependency-free and browser-safe (it
 // imports only `md5.js`), so this module takes on no physics.
 import { PROFILE } from './seedlingProfile.js';
+import { BUILD_SPAWN } from './seedlingBootSpawn.js';
 
 /**
  * ── Version 2: the subtractive ladder's relaxations ───────────────────
@@ -317,24 +318,12 @@ export const PIN_NAMES = Object.freeze(['sound', 'dead_frames']);
 export const PIN_FRAME_RATE = PROFILE.pinFrameRate;
 
 /**
- * ⚠ THE SPAWN IS BAKED INTO THE BUILD, so a tape's `boot` block is a CLAIM
- * about the build rather than an instruction to it.
- *
- * `Main.as:51` is `FP.world = new Game(0, 80, 128)`, and `Bot.as` assigns
- * `bootLevel = int(t.boot.level)` and then never reads it — `boot.x`/`boot.y`
- * it does not look at at all. So a tape declaring anything else is silently
- * HONOURED by the JS engine and silently IGNORED by the game, and the
- * differential blames the physics for a disagreement that is entirely
- * bookkeeping. That is exactly the asymmetric interpretation this format
- * exists to make impossible, so it is a named error like every other
- * ambiguity here (found in v2 slice 0; the check is slice 4's).
- *
- * When the build gains a parameterised boot — an AS3 edit, and therefore
- * something to batch — this constant is the ONE place that changes, and
- * `parseTape` becomes a check that the tape names a boot the build can
- * actually take rather than the single one it always takes.
+ * ⚠ THE SPAWN IS BAKED INTO THE BUILD (`Main.as:51`), so a tape's `boot` block
+ * is a CLAIM about the build rather than an instruction to it. The constant and
+ * the reason live in `seedlingBootSpawn.js` (dependency-free, so the flash
+ * panel's region binding can read the game's boot position without this file).
  */
-export const BUILD_SPAWN = Object.freeze({ level: 0, x: 80, y: 128 });
+export { BUILD_SPAWN };
 
 /**
  * The ONE canonical key-name → AS3 keycode table, asserted by both

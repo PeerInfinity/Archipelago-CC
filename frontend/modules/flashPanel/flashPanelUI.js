@@ -2120,18 +2120,26 @@ export class FlashPanelUI {
    * sub-regions: the generated partition (which tile is in which sub-region, by the rules' `atlas_id`) and
    * the rules' logical links. Without it the binding cannot tell a seam was crossed (it still learns the
    * bot's credited links and a door's sibling), and the log says so.
+   *
+   * ⛓ START IN FRONT — the same document is what proves the start region holds the game's own boot
+   * position (`seedlingRegionBinding.bootSpawnIn`), so the binding gets it whether or not a map results
+   * (a spiral's start room is a placed sub-region with no `__` id). Until it is in, a new game starts
+   * at the start region's first exit, as before.
    */
   async _loadSubRegions(adapter) {
     const raw = rulesOfRawPayload(getLastRawJsonData?.());
     const player = playerOfRawPayload(getLastRawJsonData?.());
     const glue = getSeedlingRegionGlue();
     glue?.setSubRegions?.(null);
+    glue?.binding?.setPartition?.(null);
     if (!raw?.region_atlas?.[player]) return;
     try {
       const res = await fetch(new URL(SUB_REGION_PARTITION_PATH, document.baseURI).href);
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-      const { map, why } = buildSubRegionMap({ rules: raw, partition: await res.json(), player });
+      const partition = await res.json();
       if (this.adapter !== adapter) return;
+      glue?.binding?.setPartition?.(partition);
+      const { map, why } = buildSubRegionMap({ rules: raw, partition, player });
       if (!map) {
         if (why) this._panelLog(`[region atlas] ${why}`, 'error');
         return;

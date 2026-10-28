@@ -19,7 +19,8 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect, vi } from 'vitest';
 
-import { SeedlingRegionBinding, resolveArrivalSpawn, seedlingStartSpawn } from './seedlingRegionBinding.js';
+import { SeedlingRegionBinding, bootSpawnIn, resolveArrivalSpawn, seedlingStartSpawn } from './seedlingRegionBinding.js';
+import { BUILD_SPAWN } from '../seedlingDemo/seedlingBootSpawn.js';
 import { SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { resetTargetFor } from './seedlingRandomizerWiring.js';
@@ -33,6 +34,7 @@ const FRONTEND = fileURLToPath(new URL('../../', import.meta.url));
 const PRESETS = `${FRONTEND}presets/`;
 const OURS = new Set([FLASH_SEEDLING_SUBSTRATE_ID, FLASH_SEEDLING_GEN_SUBSTRATE_ID]);
 const rulesOf = (preset) => JSON.parse(readFileSync(`${PRESETS}${preset}/AP_1/AP_1_rules.json`, 'utf8'));
+const PARTITION = JSON.parse(readFileSync(`${FRONTEND}modules/flashPanel/atlases/seedling-subregion-partition.json`, 'utf8'));
 
 /** The start hop of a preset, the way procgenPlayer resolves it (every sidecar counts as warehoused). */
 function startOf(rules) {
@@ -74,13 +76,19 @@ describe('seedlingStartSpawn — the one start', () => {
     const world = seedlingEntry.deserializeWorld(rules.preset_sidecars['1'].level_0__r7c6.playable_payload);
     const map = JSON.parse(readFileSync(`${FRONTEND}${mapDocumentPath(rules, '1').path}`, 'utf8'));
     const returnSpawns = returnSpawnTable(map);
+    const partition = PARTITION;
 
-    it('the playthrough: level 0 at (16, 128) — the first exit\'s return spawn, MEASURED as the boot position (§5.18)', () => {
+    it('⚖ START IN FRONT (2026-10-28): the playthrough starts where the GAME boots — Main.as:51, level 0 at (80, 128)', () => {
+        expect(BUILD_SPAWN).toEqual({ level: 0, x: 80, y: 128 });
+        expect(seedlingStartSpawn({ world, returnSpawns, partition })).toEqual({ level: 0, x: 80, y: 128, source: 'boot' });
+    });
+
+    it('without the partition (not loaded yet) the old answer stands: the first exit\'s return spawn, (16, 128)', () => {
         expect(seedlingStartSpawn({ world, returnSpawns })).toEqual({
             level: 0, x: 16, y: 128, source: 'arrival', exitId: 'out_teleporter_0_128', landing: 'return-spawn' });
     });
 
-    it('it IS the arrival with no "came from" — and the GameStart hop\'s arrivedFrom resolves the same exit', () => {
+    it('the arrival with no "came from" is unchanged — and the GameStart hop\'s arrivedFrom resolves the same exit', () => {
         const plain = resolveArrivalSpawn(world, null, returnSpawns);
         const viaHop = resolveArrivalSpawn(world, { exit_id: 'GameStart', source_region: 'Menu' }, returnSpawns);
         for (const a of [plain, viaHop]) {
@@ -88,20 +96,50 @@ describe('seedlingStartSpawn — the one start', () => {
         }
     });
 
-    it('a set that names its start POSITION wins (the generated arm); a level-only set does not', () => {
-        expect(seedlingStartSpawn({ world, returnSpawns, set: { start: { level: 0, x: 48, y: 64 } } }))
+    it('a set that names its start POSITION wins (the generated arm); a level-only set gets the boot position', () => {
+        expect(seedlingStartSpawn({ world, returnSpawns, partition, set: { start: { level: 0, x: 48, y: 64 } } }))
             .toEqual({ level: 0, x: 48, y: 64, source: 'set' });
-        expect(seedlingStartSpawn({ world, returnSpawns, set: { start: { level: 0 } } }))
-            .toMatchObject({ level: 0, x: 16, y: 128, source: 'arrival' });
+        expect(seedlingStartSpawn({ world, returnSpawns, partition, set: { start: { level: 0 } } }))
+            .toMatchObject({ level: 0, x: 80, y: 128, source: 'boot' });
     });
 
     it('the randomized reset lands on it: resetTargetFor(set, its boot position) === seedlingStartSpawn(set)', () => {
         for (const set of [{ start: { level: 0 } }, { start: { level: 0, x: 48, y: 64 } }]) {
-            const boot = seedlingStartSpawn({ world, returnSpawns, set: null });
+            const boot = seedlingStartSpawn({ world, returnSpawns, partition, set: null });
             const t = resetTargetFor(set, boot);
-            const s = seedlingStartSpawn({ world, returnSpawns, set });
+            const s = seedlingStartSpawn({ world, returnSpawns, partition, set });
             expect([t.level, t.x, t.y]).toEqual([s.level, s.x, s.y]);
         }
+    });
+});
+
+describe('bootSpawnIn — the PLAYER BOX at the boot position, in the start region\'s OWN sub-region', () => {
+    const payload = (preset, region) => seedlingEntry.deserializeWorld(rulesOf(preset).preset_sidecars['1'][region].playable_payload);
+    const hub = payload('seedling_playthrough', 'level_0__r7c6');
+
+    it('MEASURED: the partition puts the boot cell in the playthrough\'s start hub, r7c6', () => {
+        const atlas = PARTITION.atlases[hub.atlas_ref];
+        const e = atlas.regions[hub.atlas_region];
+        const ch = e.rows[BUILD_SPAWN.y / atlas.tile_size][BUILD_SPAWN.x / atlas.tile_size];
+        expect(e.sub_regions[PARTITION.alphabet.indexOf(ch)]).toBe('r7c6');
+    });
+
+    it('the box, not the point: a box straddling the hub\'s edge is refused though its top-left is inside', () => {
+        // row 8 of level_0 is `EEEEEEEEE.` — column 8 is the hub, column 9 is not.
+        expect(bootSpawnIn(hub, PARTITION, { level: 0, x: 128, y: 128 })).toEqual({ level: 0, x: 128, y: 128 });
+        expect(bootSpawnIn(hub, PARTITION, { level: 0, x: 136, y: 128 })).toBe(null);
+    });
+
+    it('another sub-region of the boot level, another level, no partition, no atlas: null (the caller keeps its answer)', () => {
+        expect(bootSpawnIn(payload('seedling_playthrough', 'level_0__r1c6'), PARTITION)).toBe(null);
+        expect(bootSpawnIn({ ...hub, level: 3 }, PARTITION)).toBe(null);
+        expect(bootSpawnIn(hub, null)).toBe(null);
+        expect(bootSpawnIn({ level: 0, tile_size: 16, exits: hub.exits }, PARTITION)).toBe(null);
+    });
+
+    it('the same test answers the starter atlas\'s r8c0 and the spiral\'s placed copy of it (region_0_0)', () => {
+        expect(bootSpawnIn(payload('seedling_atlas', 'overworld_start__r8c0'), PARTITION)).toEqual(BUILD_SPAWN);
+        expect(bootSpawnIn(payload('seedling_spiral_room', 'region_0_0'), PARTITION)).toEqual(BUILD_SPAWN);
     });
 });
 
@@ -132,6 +170,19 @@ describe('the binding — a start-hop load arrives at seedlingStartSpawn', () =>
         expect(b.restarts).toBe(1);
         // ⛔ no check, no region move: a Restart is a warp.
         expect(effects.filter((e) => ['locationCheck', 'regionMove'].includes(e.type))).toEqual([]);
+    });
+
+    it('⚖ START IN FRONT — a queued start-hop arrival is re-resolved when the partition arrives (like the return spawns)', () => {
+        const rules = rulesOf('seedling_playthrough');
+        const hub = seedlingEntry.deserializeWorld(rules.preset_sidecars['1'].level_0__r7c6.playable_payload);
+        const b = new SeedlingRegionBinding();
+        b.onLoadRegion({ region_id: 'level_0__r7c6', world: hub, arrivedFrom: { exit_id: 'GameStart', source_region: 'Menu' }, startHop: true });
+        expect(b.pendingSpawn).toMatchObject({ level: 0, source: 'arrival' });
+        b.setPartition(PARTITION);
+        expect(b.pendingSpawn).toEqual({ level: 0, x: 80, y: 128, source: 'boot' });
+        expect(b.startSpawn({ set: null })).toEqual({ level: 0, x: 80, y: 128, source: 'boot' });
+        // ⛓ the game's own first frame (the baseline) releases it: the teleport is still sent, to the spot it booted on.
+        expect(teleports(b.onStateReport('level', 0))).toEqual([[0, 80, 128]]);
     });
 
     it('a teleport from another level arms the echo, so the landing is not read as a crossing', () => {
