@@ -25,6 +25,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { buildPlaythroughMaze } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
+import { pressLocations } from '../../procgenPipeline/regionAtlasMazeProjection.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
 const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
@@ -165,6 +166,15 @@ describe('L38 — a cross-room press is a location on its button', () => {
         const items = compile(['level_61']).preset_sidecars['1'].level_61__r0c10.playable_payload.items;
         const POLE = 'L63 flag 1: lightpole@64,88 cleared';
         expect(items.filter((i) => i.locationName === POLE)).toEqual([{ x: 11, y: 3, id: POLE, locationName: POLE }]);
+    });
+
+    it('a press whose own rule is not True_ is refused by name (its location carries no rule, so it would be looser)', () => {
+        const region = { region_id: 'level_38' };
+        const ev = (rule) => ({ name: PRESS, side: 'level_38', mode: 'press', tiles: [[2, 3]], ...(rule ? { rule } : {}) });
+        const loc = { name: PRESS, tile: [2, 3], vanilla_item: PRESS };
+        expect(pressLocations(region, [ev(null)])).toEqual([loc]);
+        expect(pressLocations(region, [ev({ rule: 'True_' })])).toEqual([loc]);
+        expect(() => pressLocations(region, [ev({ rule: 'Has', args: { item_name: 'Wand' } })])).toThrow(/its own rule .*Wand.* is not True_/);
     });
 
     it('the press sits on the ButtonRoom\'s own cell (32,48) → (2,3), granting the event', () => {

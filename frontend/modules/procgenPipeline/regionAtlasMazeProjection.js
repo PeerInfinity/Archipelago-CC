@@ -105,13 +105,19 @@ function bindingsFor(region) {
  * cell"). The compile's press events (`ctx.eventsFor`, mode 'press': a button in this region that latches a flag of
  * ANOTHER level — L38's ButtonRoom opens L39's wand lock) are produced where the game produces them: standing on the
  * button's cell. Each becomes a location of the sub-region its event names (`side`), on that cell, granting the event and
- * gated by nothing of its own — the rules price it as reaching the button. Pure: `region.locations` is not touched.
+ * gated by nothing of its own — the rules price it as reaching the button (a press with a rule other than True_ is refused
+ * by name). Pure: `region.locations` is not touched. Exported for the unit rows.
  */
-function pressLocations(region, events) {
+export function pressLocations(region, events) {
     const bySide = new Map(bindingsFor(region).map((b) => [b.apName, b.sub]));
     return (events ?? []).filter((ev) => ev.mode === 'press').map((ev) => {
         if (ev.tiles.length !== 1) throw new Error(`press event "${ev.name}": ${ev.tiles.length} cells, not the button's one`);
         if (!bySide.has(ev.side)) throw new Error(`press event "${ev.name}": its side "${ev.side}" is no (sub-)region of ${region.region_id}`);
+        // The location takes no rule of its own, so a press the rules charge more than its reach would be LOOSER here than
+        // there; refused by name until that is a decision (designer review, session tile-primitives-sphere-order-5).
+        if (ev.rule && ev.rule.rule !== 'True_') {
+            throw new Error(`press event "${ev.name}": its own rule ${JSON.stringify(ev.rule)} is not True_ — a press location carries none`);
+        }
         const sub = bySide.get(ev.side);
         return { name: ev.name, tile: ev.tiles[0], vanilla_item: ev.name, ...(sub === null ? {} : { sub_region: sub }) };
     });
