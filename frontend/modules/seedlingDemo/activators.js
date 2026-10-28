@@ -49,6 +49,7 @@
  */
 
 import { rectsOverlap } from './levelWorld.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export class ActivatorError extends Error {
     constructor(message) {
@@ -825,6 +826,8 @@ export function stepActivators(state, world, playerBox, opts = {}) {
         const s = state.byId.get(a.id);
         if (!s) fail(`activator ${a.id} has no state — was createActivatorState called `
             + `for level ${world.level}?`);
+        // ⛓ fidelity DETERM (c) F2: the lag re-open's mark lives one step (only ever written with `lockRecloseLag` ON)
+        if (s.lagReopen) delete s.lagReopen;
         const responder = RESPONDERS[a.tag];
         // `p` in the AS3: re-collided EVERY tick, which is what makes the
         // `turnOff` guard below a live question rather than a formality.
@@ -944,6 +947,9 @@ export function stepActivators(state, world, playerBox, opts = {}) {
                 if (!s.open && writesPersistence) {
                     events.push({ kind: 'lockopen', id: a.id, persistTag: a.persistTag });
                 }
+                // ⛓ fidelity DETERM (c) F2: a turnOff on the step after a lag re-close (alpha still 0) — not the
+                // 101st active step, so `openActivatorIdsBeforeLatestStep` is told by name.
+                if (!s.open && s.held === 0 && CONTACT_FIDELITY.lockRecloseLag) s.lagReopen = true;
                 s.open = true;   // Lock.turnOff()
                 // ⚠ AND IT KEEPS BEING CALLED. `activate` is still true and
                 // `alpha` is pinned at 0, so this branch runs on EVERY
@@ -959,7 +965,10 @@ export function stepActivators(state, world, playerBox, opts = {}) {
             s.held += 1;
         } else {
             s.held = 0;
-            if (!s.open) s.alpha = 1;   // `if (type == normType) alpha = 1`
+            // ⛓ fidelity DETERM (c) F1: `Cover.update` has no `alpha = 1` line of its own — an occupied cover keeps
+            // type AND alpha (`Cover.as:49-67`); only its `reset()` below restores them.
+            const coverHeld = responder.fade === 0.1 && CONTACT_FIDELITY.coverHeldFade;
+            if (!s.open && !coverHeld) s.alpha = 1;   // `if (type == normType) alpha = 1`
             // returnToNormal / reset — BOTH are guarded by occupancy, and
             // the guard is why a crossing is possible at all.
             if (!occupied(a.rect)) {
@@ -969,8 +978,11 @@ export function stepActivators(state, world, playerBox, opts = {}) {
                 if (s.open && writesPersistence) {
                     events.push({ kind: 'lockclose', id: a.id, persistTag: a.persistTag });
                 }
+                // ⛓ fidelity DETERM (c) F2: `returnToNormal()` restores the TYPE only; the alpha line ran first,
+                // under `type == ""`, so a re-closed lock's alpha is still 0 until the next step's `alpha = 1`.
+                const lag = s.open && writesPersistence && responder.fade !== 0.1 && CONTACT_FIDELITY.lockRecloseLag;
                 s.open = false;
-                s.alpha = 1;
+                if (!lag) s.alpha = 1;
             }
         }
     }
@@ -1004,7 +1016,7 @@ export function openActivatorIdsBeforeLatestStep(state, world) {
         const s = state.byId.get(a.id);
         const responder = RESPONDERS[a.tag];
         if (!s?.open || !responder || TOUCH_RESPONDERS[a.tag] || KEY_RESPONDERS[a.tag]) continue;
-        if (s.held === opensOnTickOnce(responder.fade)) open.delete(a.id);
+        if (s.held === opensOnTickOnce(responder.fade) || s.lagReopen) open.delete(a.id);
     }
     return open;
 }

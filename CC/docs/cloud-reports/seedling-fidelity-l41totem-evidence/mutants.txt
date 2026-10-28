@@ -1,0 +1,28 @@
+L41TOTEM mutants: each predicted BEFORE it ran; copy + edit + run fidelityL41Totem.test.js + restore (cp from a kept copy).
+
+D1 (baitComponentMemo, crusherBait.searchBaitOrdering)
+M1 key ablation: one flooded-node set for EVERY configuration     predicted RED (states lost)    measured RED: 3 rows (both search rows + the solver row)
+M2 hot escapes skipped too (drop `!hot`)                          predicted RED                  measured GREEN: EQUIVALENT. A hot escape is one its
+                                                                                                 mover sees under `next`, so it is never SAFE under
+                                                                                                 `next` and never inside a flooded component. The
+                                                                                                 guard is redundant (kept, documented).
+M3 floods never recorded (memo a no-op)                           predicted RED (skipped > 0)    measured RED: 3 rows
+M4 default ON                                                     predicted RED (switch row)     measured RED: 1 row
+
+D1b (baitAlignSafeMemo), FIRST placement (in solverBot.execBait's `safe`): guarded only by the L41 solve rows
+M5 key on p.x only                                                predicted RED                  measured GREEN (the guard was blind)
+M6 one memo shared across the three chains                        predicted RED                  measured GREEN (the guard was blind)
+  -> cause: at L41 every previewed position is safe (the bait stances are outside every lane), so a mis-keyed memo still
+     answers `true` correctly. The memo moved into crusherBait.alignmentCandidates (per call by construction; solverBot no
+     longer touched by D1b), and a row with a y-and-x-varying safety, asked twice with two predicates, was added:
+M5' key on p.x only (in alignmentCandidates)                      predicted RED                  measured RED (the safety row)
+M6' one memo for every call (alignmentCandidates.__m)             predicted RED                  measured RED (the safety row: list 2 = list 1)
+M7 default ON                                                     predicted RED (switch row)     measured RED: 1 row
+
+D3 (baitParkedTail, crusherBait.parkedTailProbe / trimParkedTail, solverBot.execBait)
+M8 the probe never resets its streak                              predicted RED (probe row)      measured RED: the probe row AND the L41 solver row
+M9 at-rest condition dropped (crushersParked only)                predicted RED (probe row)      measured RED: the probe row (the L41 solver row stays
+                                                                                                 green: the player rests long before the crusher parks)
+M10 any trailing span cut (drop `key !== null`)                   predicted RED (trim row)       measured RED: the trim row
+M11 cut one tick more                                             predicted RED (solver row)     measured RED: the trim row AND the L41 solver row
+M12 default ON                                                    predicted RED (switch row)     measured RED: 1 row

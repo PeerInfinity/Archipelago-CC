@@ -102,7 +102,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_LIGHTS_SORTIE_PORTFOLIO
         || !!process.env.SEEDLING_CRUSHER_BAIT_PRESS_GOAL || !!process.env.SEEDLING_FORCED_HIT_WITNESS_FIRST
         || !!process.env.SEEDLING_WEIGH_HYPOTHESIS_CHAIN || !!process.env.SEEDLING_DASH_SPINNER_FORECAST
-        || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT
+        || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO
+        || !!process.env.SEEDLING_BAIT_PARKED_TAIL)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -328,6 +330,18 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             fineFrontierFlood: true,
             // ⛓ fidelity RULESREF D1 (wave 32): the walk's gate times a puncher's punch — ships OFF.
             punchGateTimed: true,
+            // ⛓ fidelity DETERM (c) F1 (wave 33): a released Cover under a hitable keeps its faded alpha — ON since the W33 flip.
+            coverHeldFade: true,
+            // ⛓ fidelity DETERM (c) F2 (wave 33): a Lock re-closes at alpha 0, restored a step later — ON since the W33 flip.
+            lockRecloseLag: true,
+            // ⛓ fidelity L41TOTEM D1 (wave 33): the bait search floods each component once (a cost key) — ON since the W33 flip.
+            baitComponentMemo: true,
+            // ⛓ fidelity L41TOTEM D1b (wave 33): the bait alignment asks each position once (a cost key) — ON since the W33 flip.
+            baitAlignSafeMemo: true,
+            // ⛓ fidelity L41TOTEM D3 (wave 33): a bait's idle ends when the crusher has parked — ON since the W33 flip.
+            baitParkedTail: true,
+            // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — ships OFF (held out of the W33 flip: leg 371's L42→L40 walk refuses with it ON).
+            fineSwingStance: false,
             // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — ships OFF.
             secondaryUse: false });
     });

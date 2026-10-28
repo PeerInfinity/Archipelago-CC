@@ -80,7 +80,7 @@ import { runBait } from './botDriverV2.js';
 import { pacedSummary, runPace } from './botDriverV2.js';
 import {
     BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherShieldOf, crusherSightDanger,
-    searchBaitOrdering,
+    parkedTailProbe, searchBaitOrdering, trimParkedTail,
 } from './crusherBait.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
@@ -1043,10 +1043,11 @@ function execBait(run, perTick, resolved, ctx) {
         const label = `${what} chain ${i + 1}/${resolved.chains.length} ${chain.id} ${row.charges.join('')}`;
         if (i > 0) ctx.walkTo(ctx.goal, { ...row.stance }, { what: `${label} stance` });
         const [ox, oy] = chain.id.slice(chain.id.indexOf('@') + 1).split(',').map(Number);
-        const spec = (prefix = []) => ({
+        const spec = (prefix = [], tail = null) => ({
             crusher: { x: ox, y: oy },
             approach: [...prefix, ...row.approach.map((sp) => ({ ...sp }))],
-            spans: row.spans.map((sp) => ({ ...sp })),
+            // ⛓ L41TOTEM D3 — `tail` (the fork's `parkedTailProbe`, only while `baitParkedTail` is ON) cuts the idle
+            spans: trimParkedTail(row.spans.map((sp) => ({ ...sp })), tail),
             park: { ...row.park },
         });
         // The lanes are static while every crusher is parked: one solid list per crusher.
@@ -1127,8 +1128,9 @@ function execBait(run, perTick, resolved, ctx) {
                     prefix = swung.map((h) => ({ key: h.size ? [...h].join('+') : null, ticks: 1 }));
                 }
                 try {
-                    runBait(f, [], spec(prefix), `${label} (fork)`);
-                    chosen = { ...c, prefix };
+                    const tail = CONTACT_FIDELITY.baitParkedTail ? parkedTailProbe(f) : null;
+                    runBait(f, tail ?? [], spec(prefix), `${label} (fork)`);
+                    chosen = { ...c, prefix, tail };
                     break;
                 } catch (e) {
                     if (!(e instanceof BotDriverV2Error)) throw e;
@@ -1160,7 +1162,7 @@ function execBait(run, perTick, resolved, ctx) {
         }
         let rec;
         try {
-            rec = runBait(run, perTick, spec(chosen.prefix ?? []), label);
+            rec = runBait(run, perTick, spec(chosen.prefix ?? [], chosen.tail ?? null), label);
         } catch (e) {
             if (e instanceof BotDriverV2Error) refuse(e.message);
             throw e;
@@ -19837,8 +19839,9 @@ const swingReaches = (at, rock) => distanceRectPoint(at.x, at.y, rock.rect) <= S
  * have derived on arrival. `opts` decides which world the candidate is
  * tested in (the live bag, or a route state's).
  */
-function breakStanceCandidates(run, rock, opts) {
-    const pitch = DEFAULT_LATTICE;
+function breakStanceCandidates(run, rock, opts, pitch = DEFAULT_LATTICE) {
+    // ⛓ fidelity L100: the same pixel window at any pitch (±2 cells at 16 px, ±4 at 8 px).
+    const span = Math.round((2 * DEFAULT_LATTICE) / pitch);
     const cell = nodeAt((rock.rect.x + rock.rect.right) / 2,
         (rock.rect.y + rock.rect.bottom) / 2, pitch);
     const candidates = [];
@@ -19854,8 +19857,8 @@ function breakStanceCandidates(run, rock, opts) {
      */
     const levelW = Number.isFinite(run.world.width) ? run.world.width * TILE_SIZE : Infinity;
     const levelH = Number.isFinite(run.world.height) ? run.world.height * TILE_SIZE : Infinity;
-    for (let dy = -2; dy <= 2; dy += 1) {
-        for (let dx = -2; dx <= 2; dx += 1) {
+    for (let dy = -span; dy <= span; dy += 1) {
+        for (let dx = -span; dx <= span; dx += 1) {
             if (dx === 0 && dy === 0) continue;
             const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
             if (c.x < 0 || c.y < 0 || c.x > levelW || c.y > levelH) { offLevel += 1; continue; }
@@ -19970,6 +19973,27 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
         if (admit && !admit(c)) { unsafe += 1; continue; }
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+    }
+    /**
+     * ⛓⛓ fidelity L100 (`CONTACT_FIDELITY.fineSwingStance`, OFF) — A STANCE HALF A TILE OFF THE GRID. L100's
+     * `breakablerock@128,144` is the door through a wall column, and its near side is the 8 px sliver x 120-127
+     * between the `cliffside` masks and the rock: every 16 px cell there is a centre x 120 whose 4x5 box meets the
+     * mask. Once every 16 px cell has failed, the same pixel window is asked on the 8 px lattice (nodes x 124), in the
+     * world as it is and planned on that lattice — `deriveKeylockStance`'s RULESREF arm, for a swing.
+     */
+    if (CONTACT_FIDELITY.fineSwingStance) {
+        const fine = breakStanceCandidates(run, target,
+            solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }), FINE_LATTICE);
+        for (const c of fine.candidates) {
+            if (admit && !admit(c)) continue;
+            try {
+                planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
+                    solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
+                return { stance: { x: c.x, y: c.y }, discharged: [] };
+            } catch (e) {
+                if (!(e instanceof BotDriverV2Error)) throw e;
+            }
+        }
     }
     throw new SolverRefusal(refusal({ candidates, outOfReach, noRect, unsafe }),
         { obstacle: { kind: 'solid', id: target.id } });
