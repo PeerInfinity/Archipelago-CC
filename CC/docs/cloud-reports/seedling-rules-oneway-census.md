@@ -101,7 +101,7 @@ collisions over all 116 levels). The only implicit writers are `Yeti.as:48` (`{5
 | `wandlock` | 15 | 1 priced · 14 harmless | `L39 flag 8` (the cross-level latch from L38); the rest are button/cover puzzles (B) |
 | `rocklock` | 2 | priced | L26 tset −1 (room clear; `check()` removes it once cleared; the rules charge the kill per crossing); `L112 flag 1` (FinalBoss's `activateAll(t0)`) |
 | `magicallock` / `…fire` / `breakablerock` / `…ghost` / `burnabletree` / `karlore` / `finaldoor` / `teleporter`(L58) / `yeti` | 4/2/22/2/6/1/1/1/1 | priced | item- or talk-gated persistent openers, openable from any side (wand shot / strike / fire / talk); events where a flag matters (`L0 flag 1/4`, `L12 flag 7`, `L24 flag 0`, `L58 flag 1`, `L113 flag 0`) |
-| `chest` | 16 | harmless | opens, never closes; a location chest is an `apitem` (not Solid) in the AP delivery |
+| `chest` | 16 | harmless | opens, never closes; a location chest is an `apitem` (8×8, not Solid) in the AP delivery, so its tile is at most more open (the rules price `chest` open). Its *pickup side* is a separate, already-queued item: a vanilla Chest opens only from the line under it (`Chest.as:63`), an `apitem` from any side (the rules arc's 2026-10-27 FUTURE row, held for the next AS3 recompile) |
 | `lightpole` / `darktrap` | 20 / 7 | 6+7 priced · 14 harmless | the dark-trap pole events (`L62 flag 0`, `L63 flag 1/6/7`, `L65 flag 0`, `L101 flag 0`); 14 poles have no darktrap reading them (lighting only, which is fidelity W34 LIGHTPOLE's ground) |
 | `watcher` / `oracle` | 11 / 1 | harmless (`L114 flag 0` priced) | talk writers. No other entity in their level reads the tag; invisible and not Solid. `L114 flag 0` is the FinalDoor's watcher event |
 | bosses (`lavaboss`, `shieldboss`, `tentaclebeast`, `bosstotem`, `lightbosscontroller`, `finalboss`) | 6 | priced | encounter / boss-report rows; they open (mouth and exit teleporters, L112's rock lock) and never close |
@@ -133,7 +133,7 @@ INVISIBLE Wand: `Wand.as:78` shows it only once the save holds every totem part 
 the staging is ROCKMOVE's `l43-wand-stairs`. The first L82 lock tape pushed east along row 17, which is three tiles wide;
 the button's column opens on row 16.
 
-**CI:** `seedling-probe.yml` ×8 at this branch, `probes=probe-seedling-oneway-census.mjs`: [CI].
+**CI:** `seedling-probe.yml` ×8 at this branch, `probes=probe-seedling-oneway-census.mjs`: **8/8 green, 80 checks / 0 failed** (10 per run, `ALL CHECKS PASSED`, `CHANNEL: headless logic-only`) at `2cb4ab8e22`: runs 40732057190, 40732062358, 40732067564, 40732071932, 40732076209, 40732081599, 40732085908, 40732090790.
 
 ## D4: the fix list
 
