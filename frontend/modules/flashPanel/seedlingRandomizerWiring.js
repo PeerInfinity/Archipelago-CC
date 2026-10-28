@@ -681,7 +681,8 @@ async function runSeedlingRandomizerLoadSteps({
      * ⛓⛓ RESTART (2026-10-05) — **AND BEFORE BOTH, THE ONE START-SPAWN SOURCE.** When the load hopped
      * into the start region (the binding saw a `startHop` load), the boot position IS the start region's
      * arrival — `seedlingStartSpawn` with no set, the spawn the binding's arrival already teleported to
-     * (MEASURED (16, 128) on the playthrough, §5.18; the declared report reads the same numbers). Asking
+     * (on the playthrough the game's own boot position, `Main.as:51`'s (80, 128), since ⚖ 2026-10-28 *"start
+     * in front"*; MEASURED (16, 128) before, the first exit's return spawn, §5.18/§5.163). Asking
      * the function rather than reading its echo is what lets a Restart, which asks it WITH the set, land
      * exactly where this reset puts a new game: `resetTargetFor` sends `set.start` when it carries a
      * position, else this.
@@ -692,7 +693,7 @@ async function runSeedlingRandomizerLoadSteps({
     const fromDeclared = Number.isFinite(declaredSpawn?.x) && Number.isFinite(declaredSpawn?.y);
     const bootPosition = startArrival
         ? { x: startArrival.x, y: startArrival.y, level: startArrival.level,
-            source: 'seedlingStartSpawn (the start region\'s arrival)' }
+            source: `seedlingStartSpawn (${startArrival.source})` }
         : fromDeclared
         ? {
             x: declaredSpawn.x,
