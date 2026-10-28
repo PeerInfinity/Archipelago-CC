@@ -8,7 +8,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { buildPlaythroughMaze, eventLayerFor } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
+import { buildPlaythroughMaze, eventLayerFor, neededEvents } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
@@ -193,6 +193,30 @@ describe('eventLayerFor', () => {
         const layer = eventLayerFor(ATLAS, ['level_63', 'level_65']);
         expect(layer.events.map((e) => e.name)).toEqual(expect.arrayContaining(L63_POLES));
         expect(layer.exitGates.some((g) => JSON.stringify(g.rule).includes(L63_POLES[0]))).toBe(true);
+    });
+
+    // ⛓ designer review (sphere-order-7): a multi-item node naming an event must keep it carried, and a kind whose items the
+    // filter cannot read is refused by name — never read as naming none.
+    describe('neededEvents', () => {
+        const ev = (name, access_rule = null) => ({ name, access_rule });
+        const gate = (rule) => ({ region_id: 'r', exit_id: 'x', rule });
+        const none = () => false;
+        it('keeps an event named only inside a HasAll, a HasAny list, or a count map; drops the unnamed', () => {
+            const layer = { events: [ev('A'), ev('B'), ev('C'), ev('D')], internalExitRules: [], exitGates: [
+                gate({ rule: 'And', children: [{ rule: 'HasAll', args: { item_names: ['Blue Key', 'A'] } }] }),
+                gate({ rule: 'HasAny', args: { items: ['B'] } }),
+                gate({ rule: 'HasAllCounts', args: { item_counts: { C: 1 } } }),
+            ] };
+            expect(neededEvents(layer, none).map((e) => e.name)).toEqual(['A', 'B', 'C']);
+        });
+        it('to a fixpoint: an event needed only by a dropped event goes too; a produced one stays', () => {
+            const layer = { events: [ev('A', { rule: 'Has', args: { item_name: 'B' } }), ev('B'), ev('P')], internalExitRules: [], exitGates: [] };
+            expect(neededEvents(layer, (n) => n === 'P').map((e) => e.name)).toEqual(['P']);
+        });
+        it('refuses a kind whose items it cannot read (HasGroup)', () => {
+            const layer = { events: [ev('A')], internalExitRules: [], exitGates: [gate({ rule: 'HasGroup', args: { item_name_group: 'Keys' } })] };
+            expect(() => neededEvents(layer, none)).toThrow(/"HasGroup" node, whose items this layer cannot read/);
+        });
     });
 
     it('refuses BY NAME a kept event that needs an event of a level not in the compile', () => {

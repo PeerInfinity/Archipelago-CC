@@ -175,6 +175,48 @@ export function landingGatesFor(atlas, levels) {
         || (c.one_way !== true && c.to[0] === g.region_id && c.to[1] === g.exit_id && keep.has(c.from[0])))));
 }
 
+/** The rule kinds whose args name items (`item_name`, `item_names`/`items` lists, `item_counts`/`items` maps), and those naming none. */
+const ITEM_RULE_KINDS = new Set(['Has', 'HasAll', 'HasAny', 'HasAllCounts', 'HasAnyCount', 'HasFromList', 'HasFromListUnique']);
+const ITEMLESS_RULE_KINDS = new Set(['True_', 'False_', 'Constant', 'And', 'Or', 'Not', 'CanReachRegion', 'CanReachLocation', 'CanReachEntrance']);
+
+/**
+ * ⛓ An event no world can produce is carried only while a kept rule NEEDS it (session tile-primitives-sphere-order-7, ⚖ 2026-10-28
+ * "5.6 now, footprints next, then poles"): L63's in-room LIGHTPOLES are lit by a Spear thrust from a stance that is not the faced
+ * cell, which the maze cannot do yet, and their light kills only the darktraps over L63's L65 landings — with L65 unlisted the
+ * events gate nothing, and carrying them would only add locations no world prices. Dropping one can leave another unneeded, so
+ * to a fixpoint. The whole-game compile, where L65 is listed, still carries and names them. A rule names an item through any
+ * item-bearing kind (a multi-item node naming an event keeps it, designer review); a kind whose items cannot be read is refused by
+ * name rather than read as naming none. Pure: returns the kept `layer.events`.
+ * @param {{events:object[], internalExitRules:object[], exitGates:object[]}} layer
+ * @param {(name:string) => boolean} produced does a maze world produce this event
+ */
+export function neededEvents(layer, produced) {
+    const ruleNames = (rule, acc) => {
+        if (!rule || typeof rule !== 'object') return acc;
+        const a = rule.args ?? {};
+        if (ITEM_RULE_KINDS.has(rule.rule)) {
+            if (typeof a.item_name === 'string') acc.add(a.item_name);
+            for (const list of [a.item_names, a.items]) if (Array.isArray(list)) for (const n of list) acc.add(n);
+            for (const map of [a.item_counts, a.items]) if (map && typeof map === 'object' && !Array.isArray(map)) for (const n of Object.keys(map)) acc.add(n);
+        } else if (!ITEMLESS_RULE_KINDS.has(rule.rule)) {
+            throw new Error(`events: a kept rule has a "${rule.rule}" node, whose items this layer cannot read — ${JSON.stringify(rule)}`);
+        }
+        for (const c of rule.children ?? []) ruleNames(c, acc);
+        return acc;
+    };
+    let events = layer.events;
+    for (let dropped = true; dropped;) {
+        const needed = new Set();
+        for (const e of events) ruleNames(e.access_rule, needed);
+        for (const r of layer.internalExitRules) ruleNames(r.rule, needed);
+        for (const g of layer.exitGates) ruleNames(g.rule, needed);
+        const before = events.length;
+        events = events.filter((e) => produced(e.name) || needed.has(e.name));
+        dropped = events.length < before;
+    }
+    return events;
+}
+
 /** The rules producer's event layer over the WHOLE playthrough atlas, built once per process (its analysis pass). */
 let producerLayer = null;
 function wholeEventLayer(atlas) {
@@ -218,25 +260,7 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
         ...layer.obstacle.events.map((e) => [e.name, 'open']), ...layer.locks.events.map((e) => [e.name, 'latch']),
         ...layer.buttons.events.filter((e) => e.fields.action?.presser).map((e) => [e.name, 'press']),
     ]);
-    // ⛓ An event no world can produce is carried only while a kept rule NEEDS it (session tile-primitives-sphere-order-7, ⚖ 2026-10-28
-    // "5.6 now, footprints next, then poles"): L63's in-room LIGHTPOLES are lit by a Spear thrust from a stance that is not the faced
-    // cell, which the maze cannot do yet, and their light kills only the darktraps over L63's L65 landings — with L65 unlisted the
-    // events gate nothing, and carrying them would only add locations no world prices. Dropping one can leave another unneeded, so
-    // to a fixpoint. The whole-game compile, where L65 is listed, still carries and names them.
-    const ruleNames = (rule, acc) => {
-        if (rule?.rule === 'Has' && typeof rule.args?.item_name === 'string') acc.add(rule.args.item_name);
-        for (const c of rule?.children ?? []) ruleNames(c, acc);
-        return acc;
-    };
-    for (let dropped = true; dropped;) {
-        const needed = new Set();
-        for (const e of out.events) ruleNames(e.access_rule, needed);
-        for (const r of out.internalExitRules) ruleNames(r.rule, needed);
-        for (const g of out.exitGates) ruleNames(g.rule, needed);
-        const before = out.events.length;
-        out.events = out.events.filter((e) => mode.has(e.name) || needed.has(e.name));
-        dropped = out.events.length < before;
-    }
+    out.events = neededEvents(out, (name) => mode.has(name));
     // `rule` = the event's own location rule: a sub-region world lays a touched lock no crossing uses by it (⚖ "Lay
     // touched event cells", session tile-primitives-sphere-order-2).
     out.world = out.events.filter((e) => mode.has(e.name)).map((e) => ({
