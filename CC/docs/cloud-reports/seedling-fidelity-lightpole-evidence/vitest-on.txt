@@ -1,0 +1,8 @@
+     × the LIVE row carries one part per derived category, each with its own head 17ms
+     × ships OFF 16ms
+     × the shipped defaults: all three ON 27ms
+ FAIL  scripts/procgen/rosterCategories.test.js > the COMPOSITE checkpoint row (⚖ 70 (c)) > the LIVE row carries one part per derived category, each with its own head
+ FAIL  frontend/modules/seedlingDemo/contactFidelity.test.js > contact witnesses (fixtures/contact-witness) > the shipped defaults: all three ON
+ FAIL  frontend/modules/seedlingDemo/fidelityLightPole.test.js > fidelity LIGHTPOLE — the switch > ships OFF
+ Test Files  3 failed | 99 passed (102)
+      Tests  3 failed | 3117 passed (3120)
