@@ -693,7 +693,7 @@ async function runSeedlingRandomizerLoadSteps({
     const fromDeclared = Number.isFinite(declaredSpawn?.x) && Number.isFinite(declaredSpawn?.y);
     const bootPosition = startArrival
         ? { x: startArrival.x, y: startArrival.y, level: startArrival.level,
-            source: 'seedlingStartSpawn (the start region\'s arrival)' }
+            source: `seedlingStartSpawn (${startArrival.source})` }
         : fromDeclared
         ? {
             x: declaredSpawn.x,
