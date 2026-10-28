@@ -26375,3 +26375,43 @@ standard with both keys ON: 11/11. The L4 dash-window rows stay green ON (the ma
   side, the corpse removed on death): all red.
 
 ---
+
+
+### Seedling fidelity LIGHTPOLE — an in-room pole lit by one "Spear" hit from its own room (`inRoomPoleThrust`, OFF)
+
+Wave 34, planner `seedling-fidelity-planning-16`. Sweep 10's four unserved in-room pole edges (L63 f6 @(16,208), L65 f0
+@(128,16), L101 f0 @(288,240) and @(32,96)); legs 558/569/740/742 at `caa42ea5df`. The report is
+`CC/docs/cloud-reports/seedling-fidelity-lightpole.md` (evidence beside it).
+
+**W0 — the model already steps it.** The four legs refused before any solve (`jsRuntimeSolver.eventSolverGoal`: *"no
+strategy row exists for solid:lightpole"*). The run steps `LightPole.hit()` (the toggle behind its 25-tick `hitsTimer`,
+`set activate` writing the tag at the hit, `earnedClears` from the FINAL state) and the dark trap's death from a lit
+pole (STATICLADDER D2 / DARKTRAP2); a ghost swing's "Spear" arm is modelled too (`GHOST_PRESS_ARMS.LightPole`). No D1.
+⚠ A `LightPole` is `notSolid`, so `execClearTag`'s generic arm would have called the goal `already-clear` once a row
+existed — the arm has to bind the pole from the press census.
+
+**D2 — the verb (`inRoomPoleThrust`).** `solid:lightpole` → `pole` (switch-gated rows in both tables).
+`resolvePoleThrustStrategy` derives the stance from geometry only: every point of every walkable tile within reach
+(every 2 px plus the FLUSH edges a 4x5 box can stand against), each facing whose rect touches the pole's bob-invariant
+core, no other responder / bridge / body in the rect, clear of live dark traps, a corridor at 16 then 8 px; deep
+stances first. The ARM is the bag's: the Spear's thrust, or — once the Ghost Sword has fused the Sword and Spear slots —
+the ghost swing (`ghostSlashRect`, reach 24 to the core). `execPoleThrust` settles, taps the facing, re-asks the rect,
+checks the pole unlit-active with `hitsTimer` 0, presses ONCE and waits for `activate`. A pole already active at the
+build is `already-clear` (a thrust would toggle it out); `levelRun`'s pole view gained the game's own `activate`.
+Game witnesses (p4g): the four sweep legs ON, twice (done, the game's flag set, 0 hits, game end = model end); and two
+committed tapes from survey step 226's boot view, `lightpole-l101-ghost` (ghost swing facing N from [7,4]) and
+`lightpole-l101-spear` (thrust facing E THROUGH the wall [8,4], flush at y 66), JS stream = recording exactly. Producer
+`plan-seedling-lightpole-witness.mjs`.
+
+**Movers.** Full survey ON vs OFF: 201/39 both, 0 movers (step 226 now runs the verb, then refuses at the same Fire-Wand
+ITEM-GATE with the same text — OFF it reached it through a false `already-clear`). Keyed sweep over the 53 L63/L65/
+L101/L102 + pole legs ON vs sweep 10: exactly 558/569/740/742 failed → done.
+
+**Trap candidates.**
+- A clear-tag on a class that is no Solid falls through to `already-clear`, which reads like success. Check a new
+  row's class is in `world.solids` before trusting the generic arm.
+- "No Spear" can be a slot fact, not a bag fact: the Ghost Sword removes the Spear's SLOT and its swing is the "Spear"
+  arm. Read the slot array, not the item flag, and ask what the fused weapon does.
+- A stance that only exists flush against a wall is invisible to a lattice; sample the box's own standable extremes.
+- A plan's last act may be an equip AT `perTick.length`; a witness tape ends there and the game applies it while the
+  mirror does not. Give the tape one idle tick.
