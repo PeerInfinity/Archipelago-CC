@@ -341,7 +341,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L41TOTEM D3 (wave 33): a bait's idle ends when the crusher has parked — ON since the W33 flip.
             baitParkedTail: true,
             // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — ships OFF (held out of the W33 flip: leg 371's L42→L40 walk refuses with it ON).
-            fineSwingStance: false });
+            fineSwingStance: false,
+            // ⛓ fidelity L40BK2B D1 (wave 33): the orbit kill steers to a point the player can stand on — ships OFF.
+            orbitFreeAim: false,
+            // ⛓ fidelity L40BK2B D2 (wave 33): the strategy bound counts distinct applications — ships OFF.
+            strategyBoundDistinct: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -1,0 +1,5 @@
+# verdict: SolverRefusal: solverBot(l40bk2b) chest (880,816) stance -> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752) while pressing spinner@880,848, after 1 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound). at t780 in 22.4 s
+# hits: 660:chaser:bob@736,752 749:chaser:bob@736,752 780:chaser:bob@736,752
+# removed: none
+# player at end: (488.0,904.0) level 40
+solverBot(l40bk2b) chest (880,816) stance -> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752) while pressing spinner@880,848, after 1 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound).

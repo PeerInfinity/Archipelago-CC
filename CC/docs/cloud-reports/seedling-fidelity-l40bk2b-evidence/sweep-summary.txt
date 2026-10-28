@@ -1,0 +1,7 @@
+A1 52 {'done': 38, 'failed': 11, 'timeout': 3}
+A2 52 {'done': 38, 'failed': 11, 'timeout': 3}
+B1 52 {'done': 38, 'failed': 10, 'timeout': 4}
+B2 52 {'done': 39, 'failed': 11, 'timeout': 2}
+MOVES 356 ['failed', 'timeout', 'timeout', 'done'] level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+MOVES 853 ['failed', 'failed', 'timeout', 'failed'] level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+MOVES 854 ['timeout', 'failed', 'failed', 'failed'] level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2

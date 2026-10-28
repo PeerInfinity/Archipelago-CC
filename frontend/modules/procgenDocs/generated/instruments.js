@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 119,
-            "count": 167,
+            "browser": 120,
+            "count": 168,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 476,
-        "browser": 184,
-        "cited": 257,
-        "files": 492,
+        "blockStyle": 477,
+        "browser": 185,
+        "cited": 258,
+        "files": 493,
         "lineStyle": 16,
-        "withDocblock": 492,
-        "withFlags": 409
+        "withDocblock": 493,
+        "withFlags": 410
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13466,6 +13466,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l40bk2 — ⛓⛓⛓ seedling-fidelity-l40bk2: L40'S BOSS KEY 2 CHAIN AS THE SOLVER BUILDS IT FROM INSIDE THE LOCK ROOM (the Sword's circling kill, the corpse on t2, 35 Fire presses onto t5, the hold on `button@816,400`, the pulser's push), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-l40bk2.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l40bk2b.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "from-fixture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l40bk2b — ⛓⛓⛓ seedling-fidelity-l40bk2b: L40 BOSS KEY 2'S `bobsoldier@880,832` MET IN ITS NOTCH ABOVE THE ONE-TILE CORRIDOR (the orbit kill, shipped and with `orbitFreeAim`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-l40bk2b.mjs"
         },
         {
             "argvHelpers": [],

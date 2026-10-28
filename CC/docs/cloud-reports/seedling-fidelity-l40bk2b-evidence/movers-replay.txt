@@ -1,0 +1,12 @@
+== B2 356 req 0
+arm A: id 356 req 0 seam 6125 ok true kind undefined work 596 answer 32f29414cd8e 23.5s SOLVED 1558 verbs ["break","kill","walk"] 
+arm B: id 356 req 0 seam 6125 ok true kind undefined work 596 answer 32f29414cd8e 21.6s SOLVED 1558 verbs ["break","kill","walk"] 
+== B2 853 req 1
+arm A: id 853 req 1 seam 5961 ok false kind refusal work 1348 answer 869d798818b5 58.2s solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED 
+arm B: id 853 req 1 seam 5961 ok false kind refusal work 1348 answer 869d798818b5 63.1s solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED 
+== B2 854 req 1
+arm A: id 854 req 1 seam 5427 ok false kind refusal work 1338 answer 19012280fce9 68.9s solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784) -> kill (spinner@816,848) by pr 
+arm B: id 854 req 1 seam 5427 ok false kind refusal work 1338 answer 19012280fce9 66.4s solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784) -> kill (spinner@816,848) by pr 
+== B1 854 req 1
+arm A: id 854 req 1 seam 5409 ok false kind refusal work 1360 answer e13017ae9efd 59.1s solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED 
+arm B: id 854 req 1 seam 5409 ok false kind refusal work 1360 answer e13017ae9efd 58.0s solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED 

@@ -1,0 +1,2 @@
+id 854 req 1 seam 5154 ok false kind refusal work 1366 answer 1e67e7219ac9 104.0s
+solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.7,854.5) — chas
