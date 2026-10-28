@@ -182,3 +182,94 @@ describe('L38 — a cross-room press is a location on its button', () => {
         expect(items.filter((i) => i.locationName === PRESS)).toEqual([{ x: 2, y: 3, id: PRESS, locationName: PRESS }]);
     });
 });
+
+/**
+ * ⛓ SPHERE 5.3 (session tile-primitives-sphere-order-6, ⚖ 2026-10-28 "All 3"):
+ *   - L39: the far side of L38's press. Its wand lock (9,37) is laid on its own cell, opened by the event (⚖ "Lock cell opened
+ *     by event"), and the 2-tile pocket the L38 teleporter lands in has its doors gated on it from the rules' own
+ *     cross-room-press `exitGates` (⚖ "Lay the producer's door gates"): the rules forbid the dead-end round trip on purpose;
+ *   - L40: the IceTurret's corpse on the t2 button costs a kill, which the rules' `L40_EAST_RULE` adds to every Fire crossing;
+ *     the maze's Fire cells carry it statically (⚖ "Static now, mechanism later");
+ *   - L43: clean (its two locations need five Totem Shards).
+ */
+describe('L39 — the press opens its target; the pocket\'s doors cost it', () => {
+    const PRESS = 'L39 flag 8: wandlock@144,592 cleared';
+    const LV = ['level_38', 'level_39'];
+    const payload = (rules, name) => rules.preset_sidecars['1'][name].playable_payload;
+    const ruleAt = (p, x, y) => p.obstacleLib[p.obstacles.find((o) => o.x === x && o.y === y)?.id]?.clear_rule;
+    const doorOf = (p, target) => p.exits.find((e) => e.targetRegion === target);
+
+    it('the wand lock (9,37) is opened by the press alone; both doors are gated on it; L38 + L39 certify clean', () => {
+        const rules = compile(LV);
+        const l39 = payload(rules, 'level_39__r0c9');
+        const lock = l39.obstacleLib[l39.obstacles.find((o) => o.x === 9 && o.y === 37).id];
+        expect(lock).toMatchObject({ opened_by: PRESS, clear_rule: { rule: 'Has', args: { item_name: PRESS } } });
+        const back = doorOf(l39, 'level_38');
+        expect(ruleAt(l39, back.x, back.y)).toEqual({ rule: 'Has', args: { item_name: PRESS } });
+        const l38 = payload(rules, 'level_38');
+        const into = doorOf(l38, 'level_39__r25c9');
+        expect(JSON.stringify(ruleAt(l38, into.x, into.y))).toContain(PRESS);
+        const out = certify(LV);
+        expect(out.problems).toEqual([]);
+        expect(line(out, 'level_38->level_39__r25c9=')).toBe(JSON.stringify([[PRESS]]));
+        expect(line(out, 'level_39__r25c9->level_38=')).toBe(JSON.stringify([[PRESS]]));
+    }, 180_000);
+
+    it('a mutant world without the door gates walks the pocket round trip: both rows come back LOOSER', () => {
+        const rules = structuredClone(compile(LV));
+        for (const [name, target] of [['level_39__r0c9', 'level_38'], ['level_38', 'level_39__r25c9']]) {
+            const p = payload(rules, name);
+            const d = doorOf(p, target);
+            p.obstacles = p.obstacles.filter((o) => o.x !== d.x || o.y !== d.y);
+        }
+        const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS });
+        expect(out.problems.filter((p) => p.endsWith('holding []: derived true, atlas false')).sort()).toEqual([
+            'level_38 → level_39__r25c9 holding []: derived true, atlas false',
+            'level_39__r25c9 → level_38 holding []: derived true, atlas false',
+        ]);
+    }, 180_000);
+});
+
+describe('L40 — the corpse\'s kill rides on the Fire cells, from the rules\' own ruling', () => {
+    const LV = ['level_38', 'level_39', 'level_40'];
+    const AND = { rule: 'And', children: [{ rule: 'Has', args: { item_name: 'Fire' } }, { rule: 'Or', children: [
+        { rule: 'Has', args: { item_name: 'Progressive Sword' } }, { rule: 'Has', args: { item_name: 'Ghost Spear' } }] }] };
+    const l40 = (rules) => rules.preset_sidecars['1'].level_40__r0c53.playable_payload;
+    const fireCells = (p, rule) => p.obstacles.filter((o) => JSON.stringify(p.obstacleLib[o.id].clear_rule) === JSON.stringify(rule))
+        .map((o) => `${o.x},${o.y}`).sort();
+
+    it('every L40 cell the grid gates on Fire alone takes Fire AND a weapon; L38–L40 certify clean', () => {
+        const p = l40(compile(LV));
+        expect(fireCells(p, { rule: 'Has', args: { item_name: 'Fire' } })).toEqual([]);
+        expect(fireCells(p, AND)).toEqual(['30,30', '36,36', '55,49', '55,50']);
+        const out = certify(LV);
+        expect(out.problems).toEqual([]);
+        expect(out.accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
+            `level_39__r25c9 → level_39__r0c9 | L39 flag 8: wandlock@144,592 cleared`,
+            `level_39__r25c9 → level_39__r2c11 | L39 flag 8: wandlock@144,592 cleared`,
+        ]);
+    }, 300_000);
+
+    it('a mutant world with the cells back at Fire alone is caught LOOSER, as before the ruling', () => {
+        const rules = structuredClone(compile(LV));
+        const p = l40(rules);
+        for (const entry of Object.values(p.obstacleLib)) {
+            if (JSON.stringify(entry.clear_rule) === JSON.stringify(AND)) entry.clear_rule = { rule: 'Has', args: { item_name: 'Fire' } };
+        }
+        const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS });
+        expect(out.problems.filter((x) => x.startsWith('level_40__r23c29 → ') && x.includes('holding [Fire]: derived true, atlas false')).length,
+            JSON.stringify(out.problems)).toBeGreaterThan(0);
+    }, 300_000);
+});
+
+describe('L43 — clean; its locations wait for five Totem Shards', () => {
+    it('L37 + L43 certify clean; Wand and Totem of Lacste each need Totem Shard ×5', () => {
+        const out = certify(['level_37', 'level_43']);
+        expect(out.problems).toEqual([]);
+        const regions = compile(['level_37', 'level_43']).regions['1'];
+        for (const [region, name] of [['level_43__r13c7', 'Level 043 - Wand'], ['level_43__r8c7', 'Level 043 - Totem of Lacste']]) {
+            expect(JSON.stringify(regions[region].locations.find((l) => l.name === name).access_rule), name)
+                .toContain('{"rule":"Has","args":{"item_name":"Totem Shard","count":5}}');
+        }
+    }, 180_000);
+});

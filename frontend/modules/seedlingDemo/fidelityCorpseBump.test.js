@@ -24,6 +24,7 @@ import { enemiesUnseenByBlockSweep } from './spinner.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { parseTape } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
+import { withIceTurretStaticKill } from './solverBot.js';
 
 const load = (name) => JSON.parse(readFileSync(join(CORPSEBUMP_WITNESS_DIR, `${name}.json`), 'utf8'));
 const L4 = load('corpsebump-l4-bob-wedge');
@@ -144,8 +145,11 @@ describe('CORPSEBUMP D2/D3 — the ice turret\'s corpse is L40\'s t2 holder (the
         expect(compareCorpseBumpWitness(L40_GAME, model.samples)).toEqual([]);
     });
 
+    // ⛓ hammer-phase ICEST pins its switch OFF here: ON, the walk's ice-turret arm kills the turret where it stands and the
+    // refusal moves on to wandlock@448,432 (that ON answer is hammerIceTurretStatic.test.js's pocket row)
     it('it needs `blockSweepBodies` ON (the bump arm\'s enemy-room refusal): OFF, the corpse source is not raised', async () => {
-        const r = await l40PocketTail(await l40PocketBootTape(), { ...CORPSEBUMP_D2_SWITCHES, blockSweepBodies: false });
+        const r = await withIceTurretStaticKill(false, async () => l40PocketTail(await l40PocketBootTape(),
+            { ...CORPSEBUMP_D2_SWITCHES, blockSweepBodies: false }));
         expect(r.refusal.message).toMatch(/hold stance \(wandlock@448,432\)/);
     });
 

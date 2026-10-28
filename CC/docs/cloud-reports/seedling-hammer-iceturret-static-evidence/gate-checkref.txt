@@ -1,0 +1,6 @@
+PASS: …and that link LOADS from this page's own host — http://127.0.0.1:45787/frontend/modules/procgenDocs/reference.html → 200
+PASS: ⛓ /frontend/modules/mazeRoom/lab.html RESOLVES (HTTP 200) — status 200
+PASS: …and its header links the REFERENCE page — #docLinks → [../procgenDocs/glossary.html, ../procgenDocs/demos.html, ../procgenDocs/reference.html]
+PASS: …and that link LOADS from this page's own host — http://127.0.0.1:45787/frontend/modules/procgenDocs/reference.html → 200
+
+ALL CHECKS PASSED

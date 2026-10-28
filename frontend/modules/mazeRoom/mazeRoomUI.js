@@ -170,6 +170,12 @@ export class MazeRoomUI {
         this.container?.on?.('show', () => this.onPanelShow());
         this.params = { ...DEFAULT_PARAMS };
         this.world = null;
+        // Rules readout (_renderRules): computed only while a block is open.
+        this._rulesReadout = null;
+        this._openRulesBlocks = new Set();
+        // _batchRenders: renders asked for inside one keypress fold into one.
+        this._renderBatchDepth = 0;
+        this._renderPending = false;
         /**
          * ⛓ T4 (finding 3) — where the current visit came in, as TWO facts.
          * `arrivedFromExitId` is the saved-queue STORE's key: the recording's
@@ -1648,6 +1654,8 @@ export class MazeRoomUI {
         // the clear it gates is idempotent, so the only thing a dropped
         // memo can cost is a redundant no-op.
         this._lastConsumableResetCount = null;
+        // An ordinary entry may hand back the same world object, changed.
+        this._invalidateRulesReadout();
         this.world = payload.world;
         this.state = createState(this.world);
         // ⛓ T2b F1 — `exit_id`, else the exit leading back to
@@ -1762,6 +1770,10 @@ export class MazeRoomUI {
             this._focusTimer = null;
             const el = this.rootElement;
             if (!el) return;
+            // Already focused (keyboard play): nothing to do, and the probe
+            // below forces a synchronous page layout — measured ~80 ms of a
+            // region-crossing keypress in the Seedling playthrough.
+            if (typeof document !== 'undefined' && document.activeElement === el) return;
             const shown = typeof el.getClientRects !== 'function' || el.getClientRects().length > 0;
             if (shown) { el.focus?.(); return; }
             if (i + 1 < delays.length) {
@@ -1773,6 +1785,30 @@ export class MazeRoomUI {
     onPanelResize() {}
 
     render() {
+        // Inside _batchRenders (one keypress) only the LAST render matters:
+        // a press that crosses regions asked for four, each a full rebuild.
+        if (this._renderBatchDepth > 0) { this._renderPending = true; return; }
+        this._renderNow();
+    }
+
+    /**
+     * Run `fn`, folding every render() it asks for into ONE at its end,
+     * still synchronously (so the DOM is current when the caller returns).
+     */
+    _batchRenders(fn) {
+        this._renderBatchDepth = (this._renderBatchDepth ?? 0) + 1;
+        try {
+            return fn();
+        } finally {
+            this._renderBatchDepth -= 1;
+            if (this._renderBatchDepth === 0 && this._renderPending) {
+                this._renderPending = false;
+                this._renderNow();
+            }
+        }
+    }
+
+    _renderNow() {
         if (!this.rootElement) return;
         this.rootElement.innerHTML = '';
         // Top toolbar: "Show generator controls" toggle. Always visible
@@ -3222,23 +3258,52 @@ export class MazeRoomUI {
             return container;
         }
 
-        const extracted = extractPathsAndObstacles(this.world);
-        const compiled = compileRegion(extracted, {
-            obstacleLib: this.world.obstacleLib ?? DEFAULT_OBSTACLES,
-        });
-
+        // ⛓ maze-keypress-latency — the readout is computed only while a
+        // block is OPEN, once per world (see _rulesReadoutData). It used to
+        // run the whole extraction + compile on every render, i.e. every
+        // keypress, for JSON inside a closed <details>: measured ~97% of a
+        // Seedling-room press (hundreds of ms).
         container.appendChild(this._renderJsonBlock(
+            'extracted',
             'Paths & obstacles (extracted)',
-            extracted,
+            () => this._rulesReadoutData().extracted,
         ));
         container.appendChild(this._renderJsonBlock(
+            'compiled',
             'Compiled rules (Rule Builder JSON)',
-            compiled,
+            () => this._rulesReadoutData().compiled,
         ));
         return container;
     }
 
-    _renderJsonBlock(title, data) {
+    /**
+     * The rules readout for the current world, computed on first use and
+     * kept until the world object changes or `_invalidateRulesReadout()`
+     * (an edit mutates the world in place, so identity alone cannot see it).
+     */
+    _rulesReadoutData() {
+        const cached = this._rulesReadout;
+        if (cached && cached.world === this.world) return cached;
+        this._rulesReadout = { world: this.world, ...this._computeRulesReadout() };
+        return this._rulesReadout;
+    }
+
+    _computeRulesReadout() {
+        const extracted = extractPathsAndObstacles(this.world);
+        const compiled = compileRegion(extracted, {
+            obstacleLib: this.world.obstacleLib ?? DEFAULT_OBSTACLES,
+        });
+        return { extracted, compiled };
+    }
+
+    _invalidateRulesReadout() { this._rulesReadout = null; }
+
+    /**
+     * One collapsible JSON block. `getData` runs only while the block is
+     * open; which blocks are open is kept on the panel, so a re-render
+     * (every keypress) no longer closes an opened one.
+     */
+    _renderJsonBlock(key, title, getData) {
         const section = document.createElement('details');
         section.className = 'maze-room-rules';
 
@@ -3246,39 +3311,56 @@ export class MazeRoomUI {
         summary.textContent = title;
         section.appendChild(summary);
 
-        const json = JSON.stringify(data, null, 2);
+        let json = null;
+        const fill = () => {
+            if (json !== null) return;
+            json = JSON.stringify(getData(), null, 2);
 
-        const btnRow = document.createElement('div');
-        btnRow.className = 'maze-room-btn-row';
-        const copyBtn = document.createElement('button');
-        copyBtn.className = 'maze-room-btn';
-        copyBtn.textContent = 'Copy JSON';
-        copyBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Fall back to the legacy execCommand path if clipboard API
-            // isn't available — some embedded contexts (iframes without
-            // focus, older browsers) don't expose navigator.clipboard.
-            if (navigator.clipboard?.writeText) {
-                navigator.clipboard.writeText(json)
-                    .then(() => { copyBtn.textContent = 'Copied'; setTimeout(() => { copyBtn.textContent = 'Copy JSON'; }, 1200); })
-                    .catch(() => { copyBtn.textContent = 'Copy failed'; });
+            const btnRow = document.createElement('div');
+            btnRow.className = 'maze-room-btn-row';
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'maze-room-btn';
+            copyBtn.textContent = 'Copy JSON';
+            copyBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Fall back to the legacy execCommand path if clipboard API
+                // isn't available — some embedded contexts (iframes without
+                // focus, older browsers) don't expose navigator.clipboard.
+                if (navigator.clipboard?.writeText) {
+                    navigator.clipboard.writeText(json)
+                        .then(() => { copyBtn.textContent = 'Copied'; setTimeout(() => { copyBtn.textContent = 'Copy JSON'; }, 1200); })
+                        .catch(() => { copyBtn.textContent = 'Copy failed'; });
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = json;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    try { document.execCommand('copy'); copyBtn.textContent = 'Copied'; setTimeout(() => { copyBtn.textContent = 'Copy JSON'; }, 1200); }
+                    catch (err) { copyBtn.textContent = 'Copy failed'; }
+                    document.body.removeChild(ta);
+                }
+            });
+            btnRow.appendChild(copyBtn);
+            section.appendChild(btnRow);
+
+            const pre = document.createElement('pre');
+            pre.className = 'maze-room-rules-json';
+            pre.textContent = json;
+            section.appendChild(pre);
+        };
+
+        if (this._openRulesBlocks.has(key)) {
+            section.open = true;
+            fill();
+        }
+        section.addEventListener('toggle', () => {
+            if (section.open) {
+                this._openRulesBlocks.add(key);
+                fill();
             } else {
-                const ta = document.createElement('textarea');
-                ta.value = json;
-                document.body.appendChild(ta);
-                ta.select();
-                try { document.execCommand('copy'); copyBtn.textContent = 'Copied'; setTimeout(() => { copyBtn.textContent = 'Copy JSON'; }, 1200); }
-                catch (err) { copyBtn.textContent = 'Copy failed'; }
-                document.body.removeChild(ta);
+                this._openRulesBlocks.delete(key);
             }
         });
-        btnRow.appendChild(copyBtn);
-        section.appendChild(btnRow);
-
-        const pre = document.createElement('pre');
-        pre.className = 'maze-room-rules-json';
-        pre.textContent = json;
-        section.appendChild(pre);
         return section;
     }
 
@@ -3364,10 +3446,17 @@ export class MazeRoomUI {
             return;
         }
 
+        this._applyEditAt(x, y);
+    }
+
+    /** Apply the editor's selected op at tile (x, y) and re-verify. */
+    _applyEditAt(x, y) {
         const editor = this._ensureEditor();
         const result = editor.applyAt(this.world, x, y);
         this._editorMessage = result.description;
         if (result.ok && result.type !== 'noop') {
+            // The edit mutated this.world in place: the cached readout is stale.
+            this._invalidateRulesReadout();
             this._runVerifier();
         }
         this.render();
@@ -3480,10 +3569,7 @@ export class MazeRoomUI {
             return;
         }
         try {
-            const extracted = extractPathsAndObstacles(this.world);
-            const compiled = compileRegion(extracted, {
-                obstacleLib: this.world.obstacleLib ?? DEFAULT_OBSTACLES,
-            });
+            const { compiled } = this._rulesReadoutData();
             const falseRules = countFalseRules(compiled);
             this._verifierResult = {
                 compiled,
@@ -3968,6 +4054,10 @@ export class MazeRoomUI {
      */
     _pressEntry(spec) {
         if (!this.world || !this.state || this._loopsDrivenAction) return;
+        this._batchRenders(() => this._pressEntryNow(spec));
+    }
+
+    _pressEntryNow(spec) {
         // Cancel an active replay so direct input takes over. Pressed
         // key still routes through the queue as normal — replay's
         // pending tail is preserved, but the user is now in control.

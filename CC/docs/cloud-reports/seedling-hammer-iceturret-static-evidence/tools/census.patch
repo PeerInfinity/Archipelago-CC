@@ -1,0 +1,125 @@
+diff --git a/frontend/modules/flashPanel/wasm b/frontend/modules/flashPanel/wasm
+deleted file mode 160000
+index 9968c7dd..00000000
+--- a/frontend/modules/flashPanel/wasm
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 9968c7dda4c08397e93b0900d73a9e8126cda8b6
+diff --git a/frontend/modules/flashPanel/wasm b/frontend/modules/flashPanel/wasm
+new file mode 120000
+index 00000000..b6ccbebc
+--- /dev/null
++++ b/frontend/modules/flashPanel/wasm
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/flashPanel/wasm
+\ No newline at end of file
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 3501b60a..26d18a88 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -14996,6 +14996,11 @@ function hitSourceBodies(run, hit) {
+             const e = (run.world.combat?.enemies ?? []).find((r) => `${r.tag}@${r.x},${r.y}` === id);
+             if (!e || !STATIC_SWORD_DEATH[e.as3]) continue;
+             out.push({ id, tag: e.tag, x: e.cx ?? e.x, y: e.cy ?? e.y, row: e, stepped: false, viaHit: true });
++        } else if (sx.kind === 'chaser' && globalThis.process?.env?.SEEDLING_D2U === '1'
++            && (run.entities('chasers') ?? []).some((c) => c.id === id)) {
++            // SCRATCH D2u: L40LATCH's arm — the hit's live chaser sources, unscoped.
++            const c = (run.entities('chasers') ?? []).find((b) => b.id === id);
++            out.push({ ...c, stepped: true, viaHit: true });
+         } else continue;
+         seen.add(id);
+     }
+@@ -26676,6 +26681,63 @@ function solveSegmentUnder({
+          */
+         if (activeProgress !== null) progressRung('bait');
+         let removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
++        if (globalThis.process?.env?.SEEDLING_ICEST_CENSUS) {
++            // SCRATCH (ICEST W0 census): is a LIVE IceTurret in the hit's sources, or in the smallest set whose removal admits?
++            const fs = globalThis.process.getBuiltinModule('node:fs');
++            const liveC = [...(run.entities('chasers') ?? [])];
++            const liveIds = new Set(liveC.map((c) => c.id));
++            const turrets = [...(run.entities('turrets') ?? new Map())].filter(([, t]) => !t.dead && !t.removed).map(([id]) => id);
++            const hitCh = [...new Set((hit.sources ?? []).filter((sx) => sx.kind === 'chaser' && liveIds.has(sx.id)).map((sx) => sx.id))];
++            const sources = (hit.sources ?? []).map((sx) => `${sx.kind}:${sx.id}`);
++            const turretInHit = (hit.sources ?? []).filter((sx) => turrets.includes(sx.id)).map((sx) => sx.id);
++            const row = { level: run.level, what: String(what).slice(0, 200), t: perTick.length, single: removable.map((b) => b.id),
++                hit: { x: hit.x, y: hit.y }, sources, liveTurrets: turrets, turretInHit, live: liveC.length,
++                player: { x: run.state.x, y: run.state.y }, aim, chasersAt: liveC.filter((c) => Math.hypot(c.x - hit.x, c.y - hit.y) < 4000).map((c) => `${c.id}:(${c.x.toFixed(1)},${c.y.toFixed(1)})h${c.hits}${c.dying ? ":dying" : ""}`) };
++            if (removable.length === 0 && turrets.length > 0) {
++                const vols = dangerVolumes(run, 0);
++                const admitsWithout = (ids) => {
++                    const without = vols.filter((v) => !ids.includes(v.id));
++                    const opts = solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: without });
++                    const reach = plansReach(run.world, allowTeleporter, opts);
++                    if (reach) return reach.from(run.state)(aim);
++                    try { planWaypoints(run.world, run.state, aim, allowTeleporter, opts); return true; }
++                    catch (e) { if (!(e instanceof BotDriverV2Error)) throw e; return false; }
++                };
++                const near = [...liveC].sort((a, b) => Math.hypot(a.x - hit.x, a.y - hit.y)
++                    - Math.hypot(b.x - hit.x, b.y - hit.y) || (a.id < b.id ? -1 : 1)).slice(0, 4).map((c) => c.id);
++                const cand = [...new Set([...turretInHit, ...hitCh, ...near, ...turrets])];
++                let minimal = [];
++                let size = null;
++                for (let k = 1; k <= 3 && size === null; k += 1) {
++                    const combos = [];
++                    const rec = (i, acc) => { if (acc.length === k) { combos.push([...acc]); return; }
++                        for (let j = i; j < cand.length; j++) { acc.push(cand[j]); rec(j + 1, acc); acc.pop(); } };
++                    rec(0, []);
++                    for (const c of combos) if (admitsWithout(c)) minimal.push(c);
++                    if (minimal.length) size = k;
++                }
++                row.cand = cand;
++                row.minSize = size;
++                row.minimal = minimal;
++                row.turretInMinimal = minimal.some((c) => c.some((id) => turrets.includes(id)));
++                row.allChasersAdmit = admitsWithout(liveC.map((c) => c.id));
++                row.allChasersAndTurretsAdmit = admitsWithout([...liveC.map((c) => c.id), ...turrets]);
++                row.allVolumesAdmit = admitsWithout(vols.map((v) => v.id));
++                row.volumes = vols.map((v) => v.id);
++                // an inclusion-MINIMAL admitting set: every volume removed, then each put back (farthest from the hit first)
++                if (admitsWithout(vols.map((v) => v.id))) {
++                    const pos = new Map([...liveC.map((c) => [c.id, c]), ...turrets.map((id) => [id, run.entities('turrets').get(id)])]);
++                    const dist = (id) => { const b = pos.get(id); return b ? Math.hypot(b.x - hit.x, b.y - hit.y) : 1e9; };
++                    let set = vols.map((v) => v.id).sort((p2, q) => dist(q) - dist(p2) || (p2 < q ? -1 : 1));
++                    for (const id of [...set]) { const less = set.filter((x) => x !== id); if (admitsWithout(less)) set = less; }
++                    row.greedyMinimal = set;
++                    row.greedyDetail = vols.filter((v) => set.includes(v.id)).map((v) => JSON.stringify(v, (k, x) => (typeof x === 'number' ? Math.round(x * 10) / 10 : x)).slice(0, 400));
++                    row.turretRect = run.entities('turrets').get('iceturret@472,400')?.rect ?? null;
++                }
++            }
++            fs.appendFileSync(globalThis.process.env.SEEDLING_ICEST_CENSUS, JSON.stringify({
++                tag: globalThis.process.env.SEEDLING_ICEST_TAG ?? null, ...row }) + '\n');
++        }
+         /**
+          * ⛓⛓ HAMMER-PHASE C1 (`CHOOSER_HIT_SOURCES`) — where the chooser cannot speak (an EMPTY list: no body's
+          * removal admits a corridor, which a body with no danger volume never can), the probe's own hit can: its
+diff --git a/frontend/modules/shared b/frontend/modules/shared
+deleted file mode 160000
+index daee222c..00000000
+--- a/frontend/modules/shared
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit daee222ce4a38936e0145d5e3b9bc3ae059c8596
+diff --git a/frontend/modules/shared b/frontend/modules/shared
+new file mode 120000
+index 00000000..5f63ff5b
+--- /dev/null
++++ b/frontend/modules/shared
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/shared
+\ No newline at end of file
+diff --git a/vendor/seedling b/vendor/seedling
+deleted file mode 160000
+index ccdf1897..00000000
+--- a/vendor/seedling
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit ccdf189776471fa57be8c0568c6e881a2d5acc18
+diff --git a/vendor/seedling b/vendor/seedling
+new file mode 120000
+index 00000000..7ace5a79
+--- /dev/null
++++ b/vendor/seedling
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/vendor/seedling
+\ No newline at end of file
