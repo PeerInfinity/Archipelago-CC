@@ -282,17 +282,17 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
     level: Object.freeze({
         type: 'integer', required: false, derived: true,
         description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas region's \`map_ref\`. `
-            + 'The maze runtime ignores it.',
+            + 'No rule or move reads it; the panel draws that level\'s room under the maze (world.atlas).',
     }),
     tile_size: Object.freeze({
         type: 'integer', required: false, derived: true,
-        description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas's tile size. The `
-            + 'maze runtime ignores it.',
+        description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas's tile size. No `
+            + 'rule or move reads it; the room is drawn under the maze only at 16 (world.atlas).',
     }),
     origin: Object.freeze({
         type: 'object', required: false, derived: true,
         description: `Atlas provenance written by ${ATLAS_PROJECTION}: the room's origin in the `
-            + 'atlas map. The maze runtime ignores it.',
+            + 'atlas map. No rule or move reads it; the room is drawn under the maze only at (0,0) (world.atlas).',
         schema: Object.freeze({ required: Object.freeze(['x', 'y']), properties: xy }),
     }),
 });

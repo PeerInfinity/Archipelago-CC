@@ -434,6 +434,18 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.shared_world !== undefined) {
         world.sharedWorld = checkSharedWorld(sidecar.shared_world, width, height, 'deserializeMazeWorld');
     }
+    // ⛓ ATLAS PROVENANCE (maze-seedling-art-1): which level of its atlas map the
+    // grid IS, kept so the panel can paint that level's room under the maze
+    // (`mazeSeedlingSkin.seedlingSkinFor`). Drawing only — no rule, move or BFS
+    // reads it. Absent (no integer `level`) on every other sidecar, so
+    // `world.atlas` stays undefined.
+    if (Number.isInteger(sidecar.level)) {
+        world.atlas = Object.freeze({
+            level: sidecar.level,
+            tileSize: sidecar.tile_size ?? null,
+            origin: sidecar.origin ? Object.freeze({ x: sidecar.origin.x, y: sidecar.origin.y }) : null,
+        });
+    }
     // ⛓ ARROW TRAPS: absent on every other sidecar, so `world.traps` stays
     // undefined and `armedTrapAt` answers null without looking.
     if (sidecar.traps !== undefined) {
