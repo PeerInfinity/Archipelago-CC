@@ -166,6 +166,52 @@ function createWorldBuilder(grid) {
 }
 
 /**
+ * ⛓ ONE CELL, ONE LOCATION — A STACKED LOCATION SPILLS, BY NAME (session tile-primitives-sphere-order-4, ⚖ 2026-10-27
+ * "Spill to nearest floor"). A maze cell grants one location (`world.items` is posKey → item), but the atlas may put two
+ * on one tile: L32's Times (the third BobBoss's kill) and Bob Boss (its Fire drop) both stand on the boss rock's tile
+ * (5,8), the only such tile in the game. Writing the second over the first silently dropped one (the whole-game
+ * certifier's "Bob Boss is not priced"; no maze cell could ever check it). So a location whose cell is taken goes to the
+ * nearest FREE floor cell — breadth-first in N E S W order through floor cells `mine` admits (the same piece of the
+ * world) that hold no obstacle and no exit (`isExit`), free = no item either — gated by its OWN rule, and the report names it
+ * (`location_stacked`). No free cell throws. `toAtlas` maps a local cell to atlas tiles for the report.
+ */
+function placeLocation(builder, [x, y], loc, { mine, isExit, note, toAtlas }) {
+    const entry = {
+        id: typeof loc.vanilla_item === 'string' && loc.vanilla_item.length > 0 ? loc.vanilla_item : ATLAS_LOCATION_SLOT_ITEM,
+        locationName: loc.name,
+    };
+    const taken = builder.items.get(`${x},${y}`);
+    if (!taken) {
+        if (loc.access_rule) builder.gate(x, y, loc.access_rule);
+        builder.items.set(`${x},${y}`, entry);
+        return;
+    }
+    const seen = new Set([`${x},${y}`]);
+    const queue = [[x, y]];
+    while (queue.length > 0) {
+        const [cx, cy] = queue.shift();
+        for (const [nx, ny] of [[cx, cy - 1], [cx + 1, cy], [cx, cy + 1], [cx - 1, cy]]) {
+            const key = `${nx},${ny}`;
+            // Never THROUGH a gate or an exit: a spill behind a lock, in a part reachable another way, would charge only
+            // its own rule — looser than the game (designer review, session tile-primitives-sphere-order-4).
+            if (seen.has(key) || !builder.isFloor(nx, ny) || !mine(nx, ny) || builder.obstacles.has(key) || isExit(nx, ny)) continue;
+            seen.add(key);
+            if (!builder.items.has(key)) {
+                if (loc.access_rule) builder.gate(nx, ny, loc.access_rule);
+                builder.items.set(key, entry);
+                note({
+                    kind: 'location_stacked', tile: loc.tile, label: `location "${loc.name}"`,
+                    message: `location "${loc.name}" shares [${loc.tile}] with "${taken.locationName}" — one cell grants one location, so it SPILLS to [${toAtlas([nx, ny])}], the nearest free floor cell, gated by its own rule`,
+                });
+                return;
+            }
+            queue.push([nx, ny]);
+        }
+    }
+    throw new Error(`location "${loc.name}" shares [${loc.tile}] with "${taken.locationName}" and there is no free floor cell to spill it to`);
+}
+
+/**
  * ⛓ EVENTS AS LOCATIONS (session tile-primitives-events-as-locations, ⚖ 2026-10-23 "All AP; world rocks+locks").
  * Bind the compile's AP EVENTS to the obstacles standing on their entity's cells (`ctx.eventsFor(region)` →
  * `[{name, side, mode, tiles}]`, atlas tiles). Each bound cell gets its OWN library entry — the obstacle it had plus
@@ -708,11 +754,11 @@ export function projectRegionToMaze(region, grid, ctx) {
             if (!boundTo(loc, sub)) continue;
             const [x, y] = local(loc.tile);
             for (const n of openTileTowards(builder, grid, component, [x, y], `location "${loc.name}"`, resolveCondition)) note(n);
-            if (loc.access_rule) builder.gate(x, y, loc.access_rule);
-            builder.items.set(`${x},${y}`, {
-                id: typeof loc.vanilla_item === 'string' && loc.vanilla_item.length > 0
-                    ? loc.vanilla_item : ATLAS_LOCATION_SLOT_ITEM,
-                locationName: loc.name,
+            placeLocation(builder, [x, y], loc, {
+                mine: () => true, // this builder floors only this sub-region's world
+                isExit: (cx, cy) => builder.exits.some((e) => e.x === cx && e.y === cy),
+                note,
+                toAtlas: ([cx, cy]) => [cx + (grid.origin?.x ?? 0), cy + (grid.origin?.y ?? 0)],
             });
         }
 
@@ -1338,11 +1384,12 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         }
         openAt([x, y], `location "${loc.name}"`);
         if (owner === -1 && bound !== -1) boundAt.set(keyOf(x, y), bound);
-        if (loc.access_rule) builder.gate(x, y, loc.access_rule);
-        builder.items.set(keyOf(x, y), {
-            id: typeof loc.vanilla_item === 'string' && loc.vanilla_item.length > 0
-                ? loc.vanilla_item : ATLAS_LOCATION_SLOT_ITEM,
-            locationName: loc.name,
+        const own = owner !== -1 ? owner : bound;
+        placeLocation(builder, [x, y], loc, {
+            mine: (cx, cy) => (ownerOf([cx + ox, cy + oy]) === -1 ? boundAt.get(keyOf(cx, cy)) : ownerOf([cx + ox, cy + oy])) === own,
+            isExit: (cx, cy) => exitAt.has(keyOf(cx, cy)),
+            note,
+            toAtlas: ([cx, cy]) => [cx + ox, cy + oy],
         });
     }
 
