@@ -1078,6 +1078,26 @@
       "w": 64,
       "h": 48,
       "authored": "scripts/procgen/make-seedling-font.mjs — ORIGINAL glyphs (not 04B_03), MIT (the repository licence)"
+    },
+    "Inventory": {
+      "file": "sheets/Inventory.png",
+      "w": 66,
+      "h": 148
+    },
+    "InventoryItems": {
+      "file": "sheets/InventoryItems.png",
+      "w": 119,
+      "h": 17
+    },
+    "InventoryItemsSide": {
+      "file": "sheets/InventoryItemsSide.png",
+      "w": 64,
+      "h": 8
+    },
+    "InventoryItemsTotem": {
+      "file": "sheets/InventoryItemsTotem.png",
+      "w": 80,
+      "h": 24
     }
   },
   "sprites": {
@@ -4607,6 +4627,38 @@
       "fh": 8,
       "frames": 96,
       "as3": "Game.as:1677-1757 talk(), Text.size = 8 (04B_03, Preloader.as:30, not shipped); frame = char code − 32"
+    },
+    "seedling:ui/inventory": {
+      "sheet": "Inventory",
+      "fw": 66,
+      "fh": 148,
+      "frames": 1,
+      "as3": "Inventory.as:21-22 sprInventory (an Image); render :339 at offset, offsetMin (-70, mid-screen), offsetMax.x 0 / -23 unextended"
+    },
+    "seedling:ui/inventoryItems": {
+      "sheet": "InventoryItems",
+      "fw": 17,
+      "fh": 17,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Inventory.as:23-24 sprInventoryItems Spritemap(17, 17); :77 centerOO; frame = item id, 6 = the dark sword (:345-348)"
+    },
+    "seedling:ui/inventoryItemsSide": {
+      "sheet": "InventoryItemsSide",
+      "fw": 8,
+      "fh": 8,
+      "frames": 8,
+      "as3": "Inventory.as:25-26 sprInventoryItemsSide Spritemap(8, 8); :369-399 conch, torch, feather, then keys 0..4"
+    },
+    "seedling:ui/inventoryItemsTotem": {
+      "sheet": "InventoryItemsTotem",
+      "fw": 16,
+      "fh": 24,
+      "frames": 5,
+      "as3": "Inventory.as:27-28 sprInventoryItemsTotem Spritemap(16, 24); :361-367 one frame per totem part at (5, 19)"
     }
   }
 }
