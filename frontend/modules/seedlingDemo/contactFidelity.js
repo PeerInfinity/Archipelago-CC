@@ -1546,6 +1546,114 @@ export const CONTACT_FIDELITY = {
      * body. OFF: byte-identical. `SEEDLING_PUNCH_GATE_TIMED=0|1`.
      */
     punchGateTimed: true,
+    /**
+     * fidelity DETERM (c) F1 (wave 33) — A RELEASED `Cover` UNDER A HITABLE KEEPS ITS FADED ALPHA (`activators.js`'
+     * inactive arm).
+     *
+     *     Cover.as:49-67   not `activate`: `collideTypesInto(["Solid","Player"])`; a hit that is not a `Chest` → no
+     *                      `reset()` (type AND alpha kept); no hit (or a Chest) → `reset()` (Solid, alpha 1)
+     *
+     * The model snapped a closed cover's alpha to 1 on every inactive step (`if (!s.open) s.alpha = 1`, the Lock's
+     * line), so a cover released mid-fade with an occupant in its cell and pressed again re-faded from 1 (10 steps) where
+     * the game resumes from the kept alpha (≈5–6). ON: a cover's inactive step resets only when nothing occupies its
+     * cell. The Chest arm is not carried: the one chest under a cover (L38) fills the cell, so nothing else can overlap
+     * it while it is closed, and an opened chest is `type = ""` (`Chest.as:77`), no hitable. OFF: byte-identical.
+     * `SEEDLING_COVER_HELD_FADE=0|1`.
+     */
+    coverHeldFade: true,
+    /**
+     * fidelity DETERM (c) F2 (wave 33) — A `Lock` RE-CLOSES WITH ITS ALPHA AT 0, RESTORED ONE STEP LATER
+     * (`activators.js`' inactive arm).
+     *
+     *     Lock.as:64-97   not `activate`: `if (type == normType) alpha = 1` runs BEFORE `returnToNormal()`, so on the
+     *                     re-close step type is still "" and the alpha stays 0; the next step restores it — and if the
+     *                     group is active again on that step, `alpha > 0` is false and `turnOff()` re-opens at once
+     *
+     * The model set alpha 1 on the re-close step, so a lock re-pressed on the very next step took 101 steps to open
+     * again, and the drawn alpha was 1 a step early. ON: the re-close keeps the alpha at 0 (a lag re-open is a
+     * `turnOff`, and `openActivatorIdsBeforeLatestStep` counts it as the latest step's). Plain fade locks only (a touch
+     * responder latches, a BossLock never re-closes). OFF: byte-identical. `SEEDLING_LOCK_RECLOSE_LAG=0|1`.
+     */
+    lockRecloseLag: true,
+    /**
+     * fidelity L41TOTEM D1 (wave 33) — THE BAIT SEARCH FLOODS EACH COMPONENT ONCE (`crusherBait.searchBaitOrdering`).
+     * A COST key: no model term moves. Each escape of each stance flooded its own safe component under the next
+     * configuration, and every non-empty component the search floods ends with its key in `seenStates` (or skipped by
+     * `seenRegions`, whose key is already there). So a flood seeded INSIDE a component this search already flooded for
+     * that configuration always ends at `continue`. Measured at sweep leg 855 (L41 Totem Part 240,144, request at seam
+     * 5280): 68,406 of 68,418 floods were that duplicate, 6.96 s of the search's 9.5 s (node, both passes). ON: such a
+     * seed is skipped before its flood, with the same answer, stats and order. OFF: byte-identical.
+     * `SEEDLING_BAIT_COMPONENT_MEMO=0|1`.
+     */
+    baitComponentMemo: true,
+    /**
+     * fidelity L41TOTEM D1b (wave 33) — THE BAIT ALIGNMENT ASKS EACH POSITION ONCE (`crusherBait.alignmentCandidates`).
+     * A COST key: no model term moves. The alignment previews from the chain's stance and never advances the run, so the
+     * caller's `safeAt(p)` (`solverBot.execBait`: every live crusher's sight at p) reads only (p.x, p.y). Measured at sweep
+     * leg 855: 57,874 of 96,384 asks over L41's six alignments repeated a position already asked in the same call. ON:
+     * each answer is kept for the call, keyed on (p.x, p.y). OFF: byte-identical. `SEEDLING_BAIT_ALIGN_SAFE_MEMO=0|1`.
+     */
+    baitAlignSafeMemo: true,
+    /**
+     * fidelity L41TOTEM D3 (wave 33) — A BAIT'S IDLE ENDS WHEN THE CRUSHER HAS PARKED (`solverBot.execBait`,
+     * `crusherBait.trimParkedTail`). The chain's escape ends in R5's fixed idle span (L41: 160 / 220 / 260 ticks), which
+     * outlasts the charge: at sweep leg 855 the player stood still 28, 123 and 85 ticks with the crusher already parked
+     * (236 of the plan's 2,505 ticks, ~8 s of the leg's game-paced play). ON: the fork that certifies the chain also
+     * records where the trailing streak begins in which every crusher is parked and the player is at rest, and the live
+     * chain's last idle span is cut to end there; `runBait` re-checks the cut chain (no contact, parked, at its park).
+     * The PLAN moves (shorter); no model term moves. OFF: byte-identical. `SEEDLING_BAIT_PARKED_TAIL=0|1`.
+     */
+    baitParkedTail: true,
+    /**
+     * fidelity L100 (wave 33) — A SWING STANCE HALF A TILE OFF THE GRID IS ASKED ON THE 8 px LATTICE
+     * (`solverBot.deriveSwingStance`, the `break` and `pull` verbs' stance).
+     *
+     * L100's `breakablerock@128,144` is the door through the wall column x 128-143, and its near side is an 8 px sliver
+     * (x 120-127) between the `cliffside` masks at x 112 and the rock. Every 16 px ring cell on that side is a
+     * cell centre x 120 whose 4x5 box meets the mask, so the only cells that put the slash rect on the rock were the
+     * far side's (survey step 219, divergence leg 907: *"no REACHABLE stance for a swing at breakablerock@128,144"*).
+     * ON: once every 16 px cell has failed, the same pixel window is asked on `FINE_LATTICE` (8 px; nodes at x 124),
+     * planned in the world as it is on the 8 px lattice, as `deriveKeylockStance`'s RULESREF arm does. OFF:
+     * byte-identical. `SEEDLING_FINE_SWING_STANCE=0|1`.
+     */
+    fineSwingStance: false,
+    /**
+     * fidelity L40BK2B D1 (wave 33) — THE ORBIT KILL STEERS TO A POINT THE PLAYER CAN STAND ON. `orbitKillPolicy`
+     * aims at a point on a circle round the body and steers straight at it (`chooseHeld`), which is right in an open
+     * room (L40's latch pocket) and wrong where the body stands in a notch above a one-tile corridor: MEASURED on L40
+     * leg 853 (`<- in_L39_144_0`, OPP ON, seam 5152), `bobsoldier@880,832` is met from the burn stance's walk with
+     * the player 144 px off in the x 736 shaft; the ccw candidates pin the player against the shaft wall for the
+     * whole 420-tick bound, and the cw ones land one hit, then back off INTO the corridor's floor and stand inside the
+     * blade when the spin stops on them (hit at orbit tick 180). ON: each aim is the free point (the player box at it
+     * and the straight sweep from the player both clear of Solids, `orbitFreeAim`) nearest the policy's own angle,
+     * searched in `ORBIT_FREE_AIM` steps; where none is in sight the policy follows the planner's walk toward the body.
+     * The rest of the policy (spin, blade, i-frames, the one strike policy) is unchanged. OFF: byte-identical.
+     * `SEEDLING_ORBIT_FREE_AIM=0|1`.
+     */
+    orbitFreeAim: false,
+    /**
+     * fidelity L40BK2B D2 (wave 33) — THE STRATEGY BOUND COUNTS DISTINCT APPLICATIONS. `MAX_STRATEGIES_PER_GOAL` (4)
+     * is documented as the number of DISTINCT obstacles one goal may clear, and the check counted every application.
+     * MEASURED on L40 leg 853 (OPP ON, `orbitFreeAim` ON, seam 5152): Boss Key 2's goal applies shove
+     * (`pushableblockfire@576,576`), hold (`wandlock@448,432`), burn (`burnabletree@872,784`) and the same hold again
+     * from the far side of the tree, then needs the latch's hold (`wandlock@480,560`) — its fourth distinct obstacle
+     * — and was refused as a fifth application. ON: the bound counts distinct `strategy(obstacle)` applications, with
+     * `STRATEGY_BOUND_TOTAL` (8) applications in all as the loop's backstop. OFF: byte-identical.
+     * `SEEDLING_STRATEGY_BOUND_DISTINCT=0|1`.
+     */
+    strategyBoundDistinct: false,
+    /**
+     * seedling-js-inventory-menu (C4 of fidelity-15's W0 ACK) — A C PRESS IS `useItem(Main.secondary)`.
+     *
+     *     Player.as:1561-1568   input(): `Input.pressed(keys[4])` → useItem(Main.primary);
+     *                                    `Input.pressed(keys[5])` → useItem(Main.secondary)
+     *
+     * The model reads only the X press, so a C press on a live tick was a silent nothing where the game swings the
+     * secondary slot (`Main.secondary`, 0 = the first slot, by default the sword). ON: a C press is routed through the
+     * X press's own `useItem` arms against `secondary`'s slot, and in the same frame an X press goes first. OFF:
+     * byte-identical (no committed tape presses C). `SEEDLING_SECONDARY_USE=0|1`.
+     */
+    secondaryUse: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1734,6 +1842,21 @@ if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_FLOOD === '0') CONTACT_FIDEL
 // ⛓ fidelity RULESREF D1: `SEEDLING_PUNCH_GATE_TIMED=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '1') CONTACT_FIDELITY.punchGateTimed = true;
 if (globalThis.process?.env?.SEEDLING_PUNCH_GATE_TIMED === '0') CONTACT_FIDELITY.punchGateTimed = false;
+// ⛓ fidelity L41TOTEM D1: `SEEDLING_BAIT_COMPONENT_MEMO=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BAIT_COMPONENT_MEMO === '1') CONTACT_FIDELITY.baitComponentMemo = true;
+if (globalThis.process?.env?.SEEDLING_BAIT_COMPONENT_MEMO === '0') CONTACT_FIDELITY.baitComponentMemo = false;
+// ⛓ fidelity L41TOTEM D1b: `SEEDLING_BAIT_ALIGN_SAFE_MEMO=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BAIT_ALIGN_SAFE_MEMO === '1') CONTACT_FIDELITY.baitAlignSafeMemo = true;
+if (globalThis.process?.env?.SEEDLING_BAIT_ALIGN_SAFE_MEMO === '0') CONTACT_FIDELITY.baitAlignSafeMemo = false;
+// ⛓ fidelity L41TOTEM D3: `SEEDLING_BAIT_PARKED_TAIL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BAIT_PARKED_TAIL === '1') CONTACT_FIDELITY.baitParkedTail = true;
+if (globalThis.process?.env?.SEEDLING_BAIT_PARKED_TAIL === '0') CONTACT_FIDELITY.baitParkedTail = false;
+// ⛓ fidelity L100: `SEEDLING_FINE_SWING_STANCE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_SWING_STANCE === '1') CONTACT_FIDELITY.fineSwingStance = true;
+if (globalThis.process?.env?.SEEDLING_FINE_SWING_STANCE === '0') CONTACT_FIDELITY.fineSwingStance = false;
+// ⛓ seedling-js-inventory-menu C4: `SEEDLING_SECONDARY_USE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SECONDARY_USE === '1') CONTACT_FIDELITY.secondaryUse = true;
+if (globalThis.process?.env?.SEEDLING_SECONDARY_USE === '0') CONTACT_FIDELITY.secondaryUse = false;
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;
@@ -1844,9 +1967,19 @@ if (globalThis.process?.env?.SEEDLING_HOLD_WAIT_PRICED === '1') CONTACT_FIDELITY
 if (globalThis.process?.env?.SEEDLING_HOLD_WAIT_PRICED === '0') CONTACT_FIDELITY.holdWaitPriced = false;
 if (globalThis.process?.env?.SEEDLING_CHASER_ORBIT_KILL === '1') CONTACT_FIDELITY.chaserOrbitKill = true;
 if (globalThis.process?.env?.SEEDLING_CHASER_ORBIT_KILL === '0') CONTACT_FIDELITY.chaserOrbitKill = false;
+// ⛓ fidelity L40BK2B: `SEEDLING_ORBIT_FREE_AIM=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ORBIT_FREE_AIM === '1') CONTACT_FIDELITY.orbitFreeAim = true;
+if (globalThis.process?.env?.SEEDLING_ORBIT_FREE_AIM === '0') CONTACT_FIDELITY.orbitFreeAim = false;
+if (globalThis.process?.env?.SEEDLING_STRATEGY_BOUND_DISTINCT === '1') CONTACT_FIDELITY.strategyBoundDistinct = true;
+if (globalThis.process?.env?.SEEDLING_STRATEGY_BOUND_DISTINCT === '0') CONTACT_FIDELITY.strategyBoundDistinct = false;
 // ⛓ fidelity L32BOB: `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '1') CONTACT_FIDELITY.encounterSwingInFlight = true;
 if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '0') CONTACT_FIDELITY.encounterSwingInFlight = false;
+// ⛓ fidelity DETERM (c): `SEEDLING_COVER_HELD_FADE=0|1` and `SEEDLING_LOCK_RECLOSE_LAG=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '1') CONTACT_FIDELITY.coverHeldFade = true;
+if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '0') CONTACT_FIDELITY.coverHeldFade = false;
+if (globalThis.process?.env?.SEEDLING_LOCK_RECLOSE_LAG === '1') CONTACT_FIDELITY.lockRecloseLag = true;
+if (globalThis.process?.env?.SEEDLING_LOCK_RECLOSE_LAG === '0') CONTACT_FIDELITY.lockRecloseLag = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

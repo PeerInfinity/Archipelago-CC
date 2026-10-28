@@ -34,6 +34,7 @@ import {
 import { loadExpectation, loadTape } from './fixtures/index.js';
 import { runTapeToStream } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
+import { withContactFidelity } from './contactFidelity.js';
 import {
     KEY_RESPONDERS,
     PRESSERS,
@@ -256,11 +257,24 @@ describe('the fades, which are float questions', () => {
         const clearOfBoth = playerBox(120, 140);
         step(state, L71, clearOfBoth);
         expect(openActivatorIds(state).has(lock.id)).toBe(false);
-        // ...and re-opening costs the full 101 again — the fade RESETS,
-        // it does not resume, because the else-arm restores alpha to 1.
+        // ...and a re-press on the very next step re-opens it: the game's
+        // re-close keeps alpha 0 (`lockRecloseLag`, default ON since W33).
+        step(state, L71, onButton);
+        expect(openActivatorIds(state).has(lock.id)).toBe(true);
+    });
+
+    it('...with `lockRecloseLag` OFF the re-close restores alpha 1, so a re-press costs the full 101 again', () => withContactFidelity({ lockRecloseLag: false }, () => {
+        const state = createActivatorState(L71);
+        const lock = L71.activators.find((a) => a.tag === 'lock' && a.t === 0);
+        const onButton = playerBox(120, 184);
+        for (let tick = 1; tick <= 101; tick++) step(state, L71, onButton);
+        step(state, L71, playerBox(120, 140));
+        expect(openActivatorIds(state).has(lock.id)).toBe(false);
         for (let tick = 1; tick <= 100; tick++) step(state, L71, onButton);
         expect(openActivatorIds(state).has(lock.id)).toBe(false);
-    });
+        step(state, L71, onButton);
+        expect(openActivatorIds(state).has(lock.id)).toBe(true);
+    }));
 });
 
 describe('L71: the crossing R2\'s claim rests on', () => {

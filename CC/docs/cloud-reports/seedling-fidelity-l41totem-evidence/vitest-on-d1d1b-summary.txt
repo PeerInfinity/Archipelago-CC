@@ -1,0 +1,3 @@
+bounded set (99 BEFORE files + fidelityL41Totem), SEEDLING_BAIT_COMPONENT_MEMO=1 SEEDLING_BAIT_ALIGN_SAFE_MEMO=1, at faafe980:
+3,389 passed / 2 skipped / 0 failed. The two skipped rows are the default pins that skip under the env override
+(contactFidelity "the shipped defaults", fidelityL41Totem "ships OFF"). Every other row equals BEFORE, row for row.

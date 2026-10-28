@@ -67,6 +67,7 @@ import { ANIMS, ENEMY_COLOUR, familyOf, freshSprite, hashId, play, rectOp, sprit
 import { ENEMY_ART } from './seedlingEnemyArt.js';
 import { BOSS_TOTEM_DEATH_BLAST } from './bossTotemFight.js';
 import { PLACED_NPC_TALK } from './dialogue.js';
+import { inventoryOps } from './seedlingInventorySkin.js';
 
 export const KEYS = Object.freeze({
     explosion: 'seedling:fx/explosion',
@@ -668,8 +669,8 @@ function talkOps(view, art, cam, font, R) {
  * and the black fade (`cover()`). `cam` is the camera rect's top-left in room
  * pixels (⚖ the model's camera in room mode too).
  */
-export function screenOps(view, art, { skin, cam, font = resolveFont(art), rules = EFFECT_RULES, fitTo = null } = {}) {
-    const ops = screenOpsAt(view, art, { skin, cam, font, rules });
+export function screenOps(view, art, { skin, cam, font = resolveFont(art), rules = EFFECT_RULES, fitTo = null, inventory = null } = {}) {
+    const ops = screenOpsAt(view, art, { skin, cam, font, rules, inventory });
     return fitTo && cam ? fitOverlayOps(ops, cam, overlayRect(cam, fitTo)) : ops;
 }
 
@@ -707,12 +708,18 @@ export function fitOverlayOps(ops, cam, rect) {
     });
 }
 
-function screenOpsAt(view, art, { skin, cam, font, rules }) {
+function screenOpsAt(view, art, { skin, cam, font, rules, inventory = null }) {
     if (!view || !skin || !cam) return [];
     const R = rules === EFFECT_RULES ? rules : { ...EFFECT_RULES, ...rules };
     const ops = [...talkOps(view, art, cam, font, R)];
     const full = (colour, alpha) => ({ rect: { x: cam.x, y: cam.y, w: SCREEN, h: SCREEN, right: cam.x + SCREEN, bottom: cam.y + SCREEN }, colour, alpha, layer: 0 });
     if (view.whiteOut) ops.push(full('#ffffff', R.whiteOutAlpha(view.whiteOut)));
+    // ⛓ seedling-js-inventory-menu: `inventory.render()` (`Game.as:1078-1081`), between the cover and the hearts. Absent
+    // (`inventory` null, every caller before this slice), the ops are the ones they were.
+    if (inventory) {
+        ops.push(...inventoryOps(inventory, art, { cam,
+            textOps: (text, x, y, colour) => textOps(text, x, y, font, art, colour, R) }));
+    }
     // `drawHealth` (`Game.as:1537-1546`): heart i at (160 − 12 − (i % 2)·11, int(i / 2)·11), frame int(i > healthc).
     const { hits, hitsMax } = skin.hearts;
     const healthc = hitsMax - hits - 1;

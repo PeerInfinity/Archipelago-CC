@@ -84,6 +84,16 @@ export function withCrusherBait(enabled, fn) {
  * bounds the BFS (L42's pessimistic answer expands a few hundred states).
  */
 export const BAIT_SEARCH = Object.freeze({ lattice: 8, maxStates: 20000 });
+/**
+ * ⛓ L41TOTEM D1 — the search's flood count, for a measurement (never read by the search): `floods` every component
+ * flood, `skipped` every escape seed `baitComponentMemo` skipped before its flood. Process-wide, cumulative.
+ */
+export const BAIT_SEARCH_COUNTERS = { floods: 0, skipped: 0 };
+/**
+ * ⛓ L41TOTEM D1b — a measurement hook (never read by the solver): while `record` is an array, `alignmentCandidates`
+ * appends each answer to it as `[x, y, moves, ticks]` rows, so a test can compare the candidates two arms produced.
+ */
+export const BAIT_ALIGN_PROBE = { record: null };
 
 /**
  * The alignment's bounds (`alignmentCandidates`): `maxTicks` is one move's
@@ -311,7 +321,20 @@ export function searchBaitOrdering({ run, liveOpts, inventory = null, aimRect,
         };
     };
     const start = nodeOf(run.state.x, run.state.y);
-    const componentOf = (seed, cfg) => { const c = cacheFor(cfg); return floodOver(seed, (n) => safeIn(c, n)); };
+    // ⛓ L41TOTEM D1 (`baitComponentMemo`, OFF) — every node a flood of a configuration reached, on that configuration's
+    // cache (`c.flooded`): a later seed inside it would flood the same component again, only to meet its key in
+    // `seenStates` (the escape loop below skips it first). Never written while OFF.
+    const memoFloods = CONTACT_FIDELITY.baitComponentMemo;
+    const componentOf = (seed, cfg) => {
+        const c = cacheFor(cfg);
+        const comp = floodOver(seed, (n) => safeIn(c, n));
+        BAIT_SEARCH_COUNTERS.floods += 1;
+        if (memoFloods && comp.size > 0) {
+            c.flooded ??= new Set();
+            for (const n of comp) c.flooded.add(n);
+        }
+        return comp;
+    };
     const reachesAim = (seed, cfg) => {
         const c = cacheFor(cfg);
         const walk = floodOver(seed, (n) => (freeIn(c, n, allowTeleporter)
@@ -413,9 +436,13 @@ export function searchBaitOrdering({ run, liveOpts, inventory = null, aimRect,
                 const stances = stancesFor(self, d.name, state.cfg, state);
                 if (stances.length === 0) continue;
                 const next = { ...state.cfg, [self]: park };
+                const nextCache = memoFloods ? cacheFor(next) : null;
                 for (const stance of stances) {
                     const seenRegions = new Set();
                     for (const { n: e, hot } of escapesFrom(self, stance, state.cfg, next, swept)) {
+                        // ⛓ L41TOTEM D1 — a seed inside a component already flooded under `next`: its key is in
+                        // `seenStates` (every non-empty flood's is), so the flood below would end at `continue`.
+                        if (nextCache && !hot && nextCache.flooded?.has(e)) { BAIT_SEARCH_COUNTERS.skipped += 1; continue; }
                         const region = hot ? new Set([e]) : componentOf(e, next);
                         if (region.size === 0) continue;
                         const rk = `${hot ?? '-'}|${Math.min(...region)}`;
@@ -706,6 +733,39 @@ export function choreographyFor(level, chain) {
         && r.charges.join('') === chain.charges.join('')) ?? null;
 }
 
+/**
+ * ⛓ L41TOTEM D3 (`baitParkedTail`, OFF) — a `perTick` sink for `botDriverV2.runBait` on a FORK (it only `push`es, one key
+ * set per tick, BEFORE that tick's `advance`): `ticks` counts the ticks driven, and `settledAt` is where the trailing
+ * streak begins in which every crusher is parked and the player is at rest (null = not settled before the last tick).
+ */
+export function parkedTailProbe(run) {
+    const probe = {
+        ticks: 0,
+        settledAt: null,
+        push() {
+            const settled = run.entities('crushersParked') === true && run.state.vx === 0 && run.state.vy === 0;
+            if (!settled) probe.settledAt = null;
+            else if (probe.settledAt === null) probe.settledAt = probe.ticks;
+            probe.ticks += 1;
+        },
+    };
+    return probe;
+}
+
+/**
+ * ⛓ L41TOTEM D3 — a chain's escape spans with its trailing IDLE span cut by the ticks the fork stood settled at its end
+ * (`parkedTailProbe`): R5's idles (160 / 220 / 260 at L41) outlast the charge, and the player stood still while the
+ * crusher was already parked (measured at sweep leg 855: 28, 123 and 85 ticks). Only a trailing `key: null` span is cut,
+ * never past its own length; anything else comes back unchanged. `runBait` on the live run re-checks the cut chain.
+ */
+export function trimParkedTail(spans, probe) {
+    const last = spans.at(-1);
+    if (!last || last.key !== null || !probe || probe.settledAt === null) return spans;
+    const cut = Math.min(last.ticks, probe.ticks - probe.settledAt);
+    if (cut <= 0) return spans;
+    return [...spans.slice(0, -1), ...(last.ticks > cut ? [{ ...last, ticks: last.ticks - cut }] : [])];
+}
+
 const ALIGN_KEYS = Object.freeze([
     ['up'], ['down'], ['left'], ['right'],
     ['up', 'left'], ['up', 'right'], ['down', 'left'], ['down', 'right'],
@@ -715,7 +775,8 @@ const ALIGN_KEYS = Object.freeze([
  * ⛓⛓ THE ALIGNMENT CANDIDATES — rest states the player can reach from here in
  * at most `maxMoves` MOVES (hold one of eight key sets for 1..`maxTicks` ticks,
  * then nothing until at rest), on the run's own `previewStepper`, every
- * previewed tick checked by `safe(p)` (the caller's: outside every live lane).
+ * previewed tick checked by `safeAt(p)` (the caller's: outside every live lane;
+ * it must read only p.x and p.y, and state this call holds fixed).
  * Returned nearest-to-`target` first, the current state (zero moves) included.
  *
  * ⛔ WHY CANDIDATES AND NOT "ALIGN TO THE START". Measured: a rest state is
@@ -726,7 +787,17 @@ const ALIGN_KEYS = Object.freeze([
  * the CHAIN ITSELF is the test: the executor drives each candidate's prefix and
  * the chain on a fork, and commits the first one the fork says survives.
  */
-export function alignmentCandidates(run, target, safe, bounds = BAIT_ALIGN) {
+export function alignmentCandidates(run, target, safeAt, bounds = BAIT_ALIGN) {
+    // ⛓ L41TOTEM D1b (`baitAlignSafeMemo`, OFF) — the previews never advance `run`, and `safeAt(p)` (the caller's: every
+    // live crusher's sight at p) reads only (p.x, p.y) while this asks, so each position is asked once per call.
+    const memo = CONTACT_FIDELITY.baitAlignSafeMemo ? new Map() : null;
+    const safe = memo === null ? safeAt : (p) => {
+        const k = `${p.x},${p.y}`;
+        if (memo.has(k)) return memo.get(k);
+        const v = safeAt(p);
+        memo.set(k, v);
+        return v;
+    };
     const step = run.previewStepper();
     const NONE = new Set();
     const off = (p) => Math.hypot(p.x - target.x, p.y - target.y);
@@ -773,5 +844,7 @@ export function alignmentCandidates(run, target, safe, bounds = BAIT_ALIGN) {
         frontier = next.slice(0, bounds.beam);
     }
     out.sort((a, b) => off(a.at) - off(b.at) || a.ticks.length - b.ticks.length);
-    return out.slice(0, bounds.candidates);
+    const kept = out.slice(0, bounds.candidates);
+    if (BAIT_ALIGN_PROBE.record) BAIT_ALIGN_PROBE.record.push(kept.map((c) => [c.at.x, c.at.y, c.moves, c.ticks.length]));
+    return kept;
 }

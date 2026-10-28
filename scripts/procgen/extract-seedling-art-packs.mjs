@@ -240,6 +240,17 @@ export const ART_TABLE = Object.freeze([
     // ── G4b: the dialogue font — ORIGINAL glyphs authored in `make-seedling-font.mjs` (not 04B_03) ──
     FONT_ART_ROW,
 
+    // ── the V inventory menu: `Inventory.as:21-28`; drawn in SCREEN space by `Inventory.render` (`:334-435`).
+    //    The Newgrounds tank (`:29-30`) stays out with the other promotional images. ──
+    { pack: 'seedling', key: 'seedling:ui/inventory', file: 'Inventory.png',
+        as3: 'Inventory.as:21-22 sprInventory (an Image); render :339 at offset, offsetMin (-70, mid-screen), offsetMax.x 0 / -23 unextended' },
+    { pack: 'seedling', key: 'seedling:ui/inventoryItems', file: 'InventoryItems.png', fw: 17, fh: 17, origin: [8, 8],
+        as3: 'Inventory.as:23-24 sprInventoryItems Spritemap(17, 17); :77 centerOO; frame = item id, 6 = the dark sword (:345-348)' },
+    { pack: 'seedling', key: 'seedling:ui/inventoryItemsSide', file: 'InventoryItemsSide.png', fw: 8, fh: 8,
+        as3: 'Inventory.as:25-26 sprInventoryItemsSide Spritemap(8, 8); :369-399 conch, torch, feather, then keys 0..4' },
+    { pack: 'seedling', key: 'seedling:ui/inventoryItemsTotem', file: 'InventoryItemsTotem.png', fw: 16, fh: 24,
+        as3: 'Inventory.as:27-28 sprInventoryItemsTotem Spritemap(16, 24); :361-367 one frame per totem part at (5, 19)' },
+
     // ── the fork's AP item:`APItem.as:74` (`look` "ap" → the logo, 0x0 = an Image, centred) ──
     { pack: 'archipelago', key: 'archipelago:pickup/item', file: 'ArchipelagoLogo.png',
         as3: 'Pickups/APItem.as:74 imgAP; APItem(x+8, y+8) with a centred Image', origin: [8, 8] },

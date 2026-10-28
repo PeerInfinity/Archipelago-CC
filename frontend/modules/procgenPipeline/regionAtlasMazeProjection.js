@@ -100,6 +100,29 @@ function bindingsFor(region) {
         : [{ sub: null, apName: apRegionName(region.region_id) }];
 }
 
+/**
+ * ⛓ A CROSS-ROOM PRESS IS A LOCATION ON ITS BUTTON (session tile-primitives-sphere-order-5, ⚖ 2026-10-27 "Location on the
+ * cell"). The compile's press events (`ctx.eventsFor`, mode 'press': a button in this region that latches a flag of
+ * ANOTHER level — L38's ButtonRoom opens L39's wand lock) are produced where the game produces them: standing on the
+ * button's cell. Each becomes a location of the sub-region its event names (`side`), on that cell, granting the event and
+ * gated by nothing of its own — the rules price it as reaching the button (a press with a rule other than True_ is refused
+ * by name). Pure: `region.locations` is not touched. Exported for the unit rows.
+ */
+export function pressLocations(region, events) {
+    const bySide = new Map(bindingsFor(region).map((b) => [b.apName, b.sub]));
+    return (events ?? []).filter((ev) => ev.mode === 'press').map((ev) => {
+        if (ev.tiles.length !== 1) throw new Error(`press event "${ev.name}": ${ev.tiles.length} cells, not the button's one`);
+        if (!bySide.has(ev.side)) throw new Error(`press event "${ev.name}": its side "${ev.side}" is no (sub-)region of ${region.region_id}`);
+        // The location takes no rule of its own, so a press the rules charge more than its reach would be LOOSER here than
+        // there; refused by name until that is a decision (designer review, session tile-primitives-sphere-order-5).
+        if (ev.rule && ev.rule.rule !== 'True_') {
+            throw new Error(`press event "${ev.name}": its own rule ${JSON.stringify(ev.rule)} is not True_ — a press location carries none`);
+        }
+        const sub = bySide.get(ev.side);
+        return { name: ev.name, tile: ev.tiles[0], vanilla_item: ev.name, ...(sub === null ? {} : { sub_region: sub }) };
+    });
+}
+
 /** Does an exit/location belong to sub-region `sub`? (null sub = region has no subgraph.) */
 const boundTo = (member, sub) => (sub === null ? true : member.sub_region === sub);
 
@@ -227,6 +250,7 @@ function placeLocation(builder, [x, y], loc, { mine, isExit, note, toAtlas }) {
 function bindWorldEvents(builder, events, local, inGrid) {
     const byCell = new Map();
     for (const ev of events ?? []) {
+        if (ev.mode === 'press') continue; // a location on its button (`pressLocations`), not an obstacle's
         for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
             const key = `${x},${y}`;
             const base = builder.obstacleLib[builder.obstacles.get(key)];
@@ -276,7 +300,7 @@ function layTouchedEventCells(builder, events, local, component, inGrid) {
     const mine = new Set(component.tiles.map(([x, y]) => `${x},${y}`));
     const byCell = new Map();
     for (const ev of events ?? []) {
-        if (!ev.rule) continue;
+        if (!ev.rule || ev.mode === 'press') continue;
         for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
             const key = `${x},${y}`;
             if (builder.isFloor(x, y) || builder.obstacles.has(key)) continue;
@@ -750,7 +774,8 @@ export function projectRegionToMaze(region, grid, ctx) {
         }
 
         // --- locations ------------------------------------------------------
-        for (const loc of region.locations ?? []) {
+        const events = ctx.eventsFor?.(region);
+        for (const loc of [...(region.locations ?? []), ...pressLocations(region, events)]) {
             if (!boundTo(loc, sub)) continue;
             const [x, y] = local(loc.tile);
             for (const n of openTileTowards(builder, grid, component, [x, y], `location "${loc.name}"`, resolveCondition)) note(n);
@@ -763,7 +788,6 @@ export function projectRegionToMaze(region, grid, ctx) {
         }
 
         const inGrid = ([x, y]) => x >= 0 && y >= 0 && x < grid.width && y < grid.height;
-        const events = ctx.eventsFor?.(region);
         layTouchedEventCells(builder, events, local, component, inGrid);
         bindWorldEvents(builder, events, local, inGrid);
         const entryGates = directional > 0 ? levelWorldEntryGates(builder, grid, new Set(), resolveCondition, new Set(), note) : [];
@@ -1374,7 +1398,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     }
 
     // --- locations -----------------------------------------------------------
-    for (const loc of region.locations ?? []) {
+    for (const loc of [...(region.locations ?? []), ...pressLocations(region, ctx.eventsFor?.(region))]) {
         const [x, y] = local(loc.tile);
         const owner = ownerOf(loc.tile);
         const bound = bindings.findIndex((b) => boundTo(loc, b.sub));

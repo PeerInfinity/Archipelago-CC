@@ -940,12 +940,15 @@ export function inventorySlotsFor(items) {
  *
  * @param {number[]} slots  the game's array now (not mutated)
  * @param {object} items    the item flags now
- * @param {{primary?: number}} [selected]  `Main.primary` now
- * @returns {{slots: number[], primary: number}}
+ * @param {{primary?: number, secondary?: number}} [selected]  `Main.primary` (and `Main.secondary`) now
+ * @returns {{slots: number[], primary: number, secondary?: number}}
  */
-export function appendInventorySlots(slots, items, { primary = 0 } = {}) {
+export function appendInventorySlots(slots, items, { primary = 0, secondary } = {}) {
     const s = [...(slots ?? [])];
     let p = primary;
+    // `Main.secondary` takes the same modulo (`Inventory.as:119`); returned beside `primary` only to a caller that
+    // passes it (seedling-js-inventory-menu), so every older caller's result is unchanged.
+    let q = secondary ?? 0;
     const ids = INVENTORY_ITEM_IDS;
     const has = (id) => s.includes(id);
     const add = (id, pos = -1) => {
@@ -955,6 +958,7 @@ export function appendInventorySlots(slots, items, { primary = 0 } = {}) {
     const remove = (id) => {
         for (let i = 0; i < s.length; i += 1) if (s[i] === id) s.splice(i, 1);
         p = s.length > 0 ? p % s.length : 0;
+        q = s.length > 0 ? q % s.length : 0;
     };
     if (!items.hasGhostSword) {
         if (items.hasSword && !has(ids.sword)) add(ids.sword);
@@ -974,7 +978,7 @@ export function appendInventorySlots(slots, items, { primary = 0 } = {}) {
     if (!items.hasGhostSword) {
         if (items.hasSpear && !has(ids.spear)) add(ids.spear);
     }
-    return { slots: s, primary: p };
+    return secondary === undefined ? { slots: s, primary: p } : { slots: s, primary: p, secondary: q };
 }
 
 /**

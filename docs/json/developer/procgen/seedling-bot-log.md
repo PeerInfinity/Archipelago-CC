@@ -26139,6 +26139,134 @@ is `CC/docs/cloud-reports/seedling-hammer-opportunistic-strike.md`.
   unfiltered — all red. The guard "no kill aim over an owed press" survives: no measured workload reaches it.
 
 ---
+
+
+### Seedling fidelity DETERM — L69's flier ordinal per fight (no switch); L82's solve proven a function of its request; G9's F1/F2 responder fades (`coverHeldFade`, `lockRecloseLag`, OFF), F3 a named no-op
+
+The report is `CC/docs/cloud-reports/seedling-fidelity-determ.md` (wave 33, base `6f5916203e`).
+
+**(a) L69 `flierSeq`.** `lightBoss.js` numbered its fliers from a MODULE-level counter, so a second L69 run in one
+process numbered them 7..12 and the `visit` digest part (`lightsFights`) differed from the first run's at the first
+spawn. That broke the digest guard and the fork-run dedupe (G10, js). The controller now passes `bodies.length + 1`:
+the ordinal belongs to the fight, and a fork's `cloneLightsFight` carries `bodies`, so it continues the same ordinal.
+The first L69 run in a process numbers 1..6 exactly as before, so every committed tape, producer `--check` (94 rc 0),
+`fidelityLights.slow` (5/5) and survey step 170 (row md5 equal base vs head) is unchanged. js's KNOWN-DEFECT pin
+(`seedlingBossSkin.test.js` `L69-lights-kill` `digestAcrossRuns: false`) is flipped in the same commit. The two runs
+now digest equal every tick.
+
+**(b) L82.** Every captured L82 request of the planner's keyed ×2 (legs 629–632 at `7266baa10d`) answers ONE plan over
+8 solves in one process and 8 fresh processes. Run 1's and run 2's requests answer the SAME plan although their seam
+clocks differ (5800 vs 5713). The solver is deterministic and seam-insensitive there. The t=0 divergence of run 2's
+leg 631 is game-side. The host jump (`seedlingRoomPlay.jumpSettled`) ended with the game at the L96 landing (144,16)
+(`landed`), while the JS runtime's run, which is the request's staging and live row, stood at (152,176)/(160,184),
+where run 1's game also stood. Handed to the JS arc (arrival staging / `force-re-arrival`). A row pins the diverging
+request: two solves in one process give equal plans and an equal `stateDigest` every tick.
+
+**(c) F1–F3.** F1 (`Cover.as:49-67`): a released cover with an occupant keeps type AND alpha. The model's Lock line
+`if (!s.open) s.alpha = 1` reset it. F2 (`Lock.as:64-97`): a re-closed lock's alpha is 0 for the re-close step, since
+the `alpha = 1` line ran under `type == ""`. A re-press on the next step is then an immediate `turnOff`. F3: a BossLock's
+private alpha/scale after the open are read only by `render` (clamped, restored at `:125`), so the model's pinned 0 is
+the same game. ON, the anchor census's lock re-close lag goes 6 → 0, with drift 0 and opens/ticks unchanged. None of the
+six frames (l71-button-lock t126, r2-walk-5-darkshield/r3-walk-5-darkshield t1445, r2-walk-full t7738, r3-walk-full
+t9213, r5-shaft t2261 `wandlock@48,160`) is re-pressed on the next step. Movers ON: no producer `--check`, no
+tapeRunner row, and no survey row on 25 responder/L69/L82 steps move. Bounded set ON: the defaults pin, and
+`activators.test.js` "releasing the button re-solidifies it". That row re-presses on the step after the re-close and
+asserts 101 more steps, the model's old answer; the game re-opens at once.
+
+**Trap candidates.**
+- A module-level counter in a model module is cross-run state. If its value reaches a digest, two identical runs in
+  one process differ, and a solver's forks (each a fresh run) differed from their own parent.
+- "Diverged at t=0" with an identical plan is a staging fact, not a solver fact: compare the captured requests first.
+  Two requests that differ only in `seam.time` and answer the same plan clear the solver.
+- A "reset" line shared by two classes is two lines in the AS3. `Lock` has `if (type == normType) alpha = 1`;
+  `Cover` has none. Its alpha moves only in `reset()`.
+
+
+### Seedling fidelity L41TOTEM — leg 855's timeout is game-paced play; the bait search floods each component once (`baitComponentMemo`), the alignment asks each position once (`baitAlignSafeMemo`), a bait's idle ends at the park (`baitParkedTail`) — all OFF
+
+Wave 33, planner `seedling-fidelity-planning-15`. The report is `CC/docs/cloud-reports/seedling-fidelity-l41totem.md`
+(evidence beside it).
+
+**W0.** Sweep leg 855 (L41 Totem Part 240,144 from `in_L40_944_96`; 849 at 7266baa10d) has TIMED OUT in every full sweep
+since 10-24, and it was carried as a ~240 s solve. **It is not one.** On CI the page's worker solved it in 4.4 s and
+9.0 s (keyed runs 40536788606 / 40536803626). The plan is 2,505 ticks, which the game plays at its own ~30 ticks/s
+pacing cap (29.4 / 29.1 measured on CI, 28.5 here): ≥ 83.5 s of play against a 90 s leg budget. Run 1 drained 2,503 of
+2,505 rows and served the part at t2497 before the cut. Every run of the plan matches the game exactly
+(`firstDivergence`, every drained row). In the solve, the crusher-bait ordering search is 60% (8.3 of 14.9 s in node),
+run once per pass from the same arrival. Of its 68,418 component floods, 68,406 start inside a component it had already
+flooded under the same configuration: each ends at `seenStates` → `continue`.
+
+**D1 / D1b — the cost (`baitComponentMemo`, `baitAlignSafeMemo`).** D1 skips such an escape seed before its flood: an
+exact skip by the search's own invariant, the same answer, stats and order. D1b memoises `alignmentCandidates`' `safeAt(p)`
+per call on (p.x, p.y): the preview never advances the run, and 57,874 of 96,384 asks were repeats. Leg 855's request:
+14.29 s → 5.19 s (node, 4 runs each), with the same answer sha, progress trace and work units. The page worker here goes
+13.0 s → 5.6 s. The cost cut alone still left CI run 2 over budget (projected ~91 s): the floor is the play.
+
+**D3 — the plan (`baitParkedTail`).** R5's fixed chain idles (160 / 220 / 260 at L41) outlast the charge: the crusher
+parks 28, 123 and 85 ticks before they end. ON: the fork that certifies a chain's alignment records (`parkedTailProbe`,
+a `perTick` sink for `runBait`) where the trailing streak begins in which every crusher is parked and the player is at
+rest, and the live chain's last idle span is cut to end there. `runBait` re-checks the cut chain. 855: 2,505 → 2,269 t.
+Game witness (p4g, local, every key ON): leg 855 `done` inside the default 90 s budget, 2,270 rows at 0 px, served at
+t2262, 0 hits. D2: the OFF plan is game-correct too, so there is no model gap on the leg.
+
+**Movers.**
+- Survey: crushers live only in L41 / L42 / L107. Steps 96 / 98 / 228 are byte-identical under D1 + D1b. Under D3, 96
+  goes 2,346 → 2,110 t and 98 goes 1,294 → 1,285 t; no verdict or wording moves.
+- Bounded set (101 files): green under D1 + D1b. Under D3, two committed-witness pins go red, `crusher-l42-round-trip`
+  and `crusherpress-l41-bait` ("the solver's own / still plans the recorded tape"): a flip owes their re-record. No
+  `solveProgress` / `solverDeadline` / `jsRuntimeSolverShouldStop` pin moves. L4 has no crusher.
+
+**Trap candidates.**
+- A sweep `timeout` is not a slow solve. Read `solvedMs`, `rowsDrained / ticks` and the shard's play ticks/s first: a
+  2,500-tick plan cannot fit a 90 s leg at 30 ticks/s.
+- A memo guard that replays one room can be blind. At L41 every previewed position is safe, so a mis-keyed `safe` memo
+  passed the solver rows. Test the KEY with an answer that varies along every axis the key claims.
+- A choreography's fixed idle is a wait, not a requirement. The tail after the park is time the plan pays for.
+
+### Seedling fidelity L100 — the rock door's swing stance asked on the 8 px lattice (`fineSwingStance`, OFF); the leg's waterfall and jellyfish named
+
+Wave 33, planner `seedling-fidelity-planning-15`. L100 → L101 (survey step 219, divergence leg 907). The report is
+`CC/docs/cloud-reports/seedling-fidelity-l100.md` (evidence beside it).
+
+**W0 — the grid.** `breakablerock@128,144` is the one door through L100's wall column x 128–143. Its near side is the
+8 px sliver x 120–127 between the `CliffSideMaskL` column at x 112 (opaque x 0–7 of each cell, y 48–159) and the rock.
+The 16 px ring offers that side only cell centres x 120, whose 4x5 box meets the mask, so the two cells that put the
+slash rect on the rock were both on the FAR side (x 152). The planner's mask collision was already pixel-exact
+(`plannerBlockerAt` → `maskHitsBox` at the node's box): the gap is the stance lattice, not the coverage queue's Q5.
+
+**D1 — the stance (`fineSwingStance`).** Once every 16 px cell has failed, `deriveSwingStance` asks the same pixel
+window on `FINE_LATTICE` (`breakStanceCandidates` takes a pitch; ±4 cells at 8 px), planned in the world as it is on the
+8 px lattice — `deriveKeylockStance`'s RULESREF arm, for the break and pull verbs. Witness (p4g, headless):
+`l100-sliver-rock`, the step-219 staging booted in the sliver at (124,60): down x 124 beside the masks (the brief's
+`cliffside0@112,96` among them), the swing from (124,141) breaks the rock at t84, the door, L101 at t185, 0 hits; the game
+equals the committed oracle and the model reproduces it (186 observations; `save.time` 8812 = 8812). Producer
+`plan-seedling-l100-witness.mjs` (`--check` re-derives it).
+
+**D2 — the rest of the leg (STOP, named).** From the real arrival (40,104) the stance now plans
+((40,104) → (60,44) → (124,44) → (124,140)), and the leg refuses inside the chaser kill rung instead. Two gaps, both
+game-witnessed at 0 px with `probe-seedling-chaser-mobiles --class=Jellyfish` (all four jellyfish |Δ| 0):
+- **The waterfall's top is not a corridor.** `Player.as:1557` pushes on a waterfall unless the Feather holds AND the
+  player rises; the planner's straight crossing at y 44 is carried down into the pool (with the jellyfish removed in
+  memory, the walk stalls at (110.8,140) against `cliffside0@112,128`). The crossing that exists is to swim UP into the
+  row-1 pool, along to the wall (x 110), then down-right into the sliver (model: (122.3,47.4) at t151). The planner's
+  edge model owns that (`planWaypoints`, read-only to this arc).
+- **Four jellyfish** (`Jellyfish.as`: chase within 160 px, no line test, 0.8 px/tick) hold the waterfall column at the
+  player's y; every approach meets one (game: `jellyfish@80,112` at t89 on the straight crossing, `jellyfish@80,16` at
+  t126 on the swim). The solver's chaser kill arm kills two and its dwell is hit at t308. Hammer arc.
+- A Ghost Spear thrust from the pool (x ≈ 110) does break the rock in the model (the 32x5 rect ignores the mask), but
+  the pool does not reach the door past the mask, so the sliver is owed either way.
+
+**Movers (local, full survey 240 steps, ON vs OFF).** 201/240 both arms; ONE mover, step 219 (REFUSED → REFUSED: the
+swing-stance refusal becomes the jellyfish dwell's). Bounded set ON: only the defaults pin. Identity block equal OFF
+(md5 `590b0b88`).
+
+**Trap candidates.**
+- A refusal that names a mask is not always about the mask. Draw the grid at both pitches before touching collision.
+- A corridor across a waterfall is a corridor only upward. A planner that prices a waterfall tile as floor certifies a
+  crossing the push takes away.
+- A witness booted where the trouble is not (inside the sliver) isolates a verb from its approach; say so, and witness
+  the approach on its own.
+
 ### Seedling hammer-phase CPAIR — the removal chooser answers a chaser pair
 
 ⚖ User, queued 2026-10-26: *"Chooser: chaser pair"* (fidelity L40LATCH's hand-over D2.1). Switch
@@ -26170,6 +26298,48 @@ measurement arm). The report is `CC/docs/cloud-reports/seedling-hammer-chooser-p
 
 ---
 
+### Seedling fidelity L40BK2B — `bobsoldier@880,832` in its notch: the orbit kill steers to a point the player can stand on (`orbitFreeAim`), the strategy bound counts distinct applications (`strategyBoundDistinct`) — both OFF
+
+Planner `seedling-fidelity-planning-15`, wave 33. The report is `CC/docs/cloud-reports/seedling-fidelity-l40bk2b.md`.
+
+**W0.** Boss Key 2's legs at the base `6f5916203e` (853 `<- in_L39_144_0`, 854 `<- in_L43_176_464`), captured on the page
+(seams 5152 / 5155) and replayed in node under two arms. Shipped: 853 refuses at the burn stance on `bob@736,752` and 854 on
+`bob@736,800` (the x≈744 pair, the chooser silent); survey step 67 dies at t780 in the press kill. With the hammer arc's OPP ON
+(its branch's three code files on this base, node only): 853 kills both x≈744 bobs in the press kill and refuses at the burn
+stance on `bobsoldier@880,832` with the chooser naming it, the chaser arm finding no stance and the orbit arm (L40LATCH) failing
+every candidate; 854 and step 67 refuse on the BobSoldier too, but with an x≈744 bob still alive and the chooser silent.
+
+**The notch.** The BobSoldier stands in a one-tile notch (x 880–896, y 832–848), the only way into the tree/latch pocket, above
+a one-tile corridor (y 848–864) that the x 736 shaft feeds. The orbit policy steers straight at a point on a circle round the
+body: from the shaft that point is in the wall (the ccw candidates stand pinned for the whole 420-tick bound), and from the
+corridor the back-off point is in the floor (the cw candidates land one hit, are pinned there, and the spin stops on them).
+
+**D1 — `orbitFreeAim`.** Each orbit aim is projected onto the free point nearest the policy's angle (the player box and the
+straight sweep from the player clear of Solids; 10° steps out to 180° each side, radius offsets 0/+4/−4/+8), the planner's first
+waypoint toward the body where none is in sight. From leg 853's hook state 6 of 20 candidates kill hitless, and 14 of 20 from the
+corridor. Witnessed on the plain world from `fixtures/l40bk2b-witness/corridor-boot.json` (step 67's boot west of the notch, both
+corridor spinners banked; the AP leg's chest is an `apitem`, which the probe page does not stage): the shipped orbit's candidate is
+hit at t55 and t75 (`l40bk2b-orbit-plain`), and the solver's own plan with the key ON kills the BobSoldier hitless, removed at t125
+(`l40bk2b-orbit-free`); p4g reproduces both at 0 px.
+
+**D2 — `strategyBoundDistinct`.** Past the BobSoldier, 853's goal applies shove, hold(`wandlock@448,432`), burn and the same hold
+again, and needs the latch's hold(`wandlock@480,560`): the fourth distinct obstacle, refused as a fifth application by a bound
+documented as distinct. ON: distinct `strategy(obstacle)` applications count, with 8 in all as the backstop. With OPP and both
+keys, 853 runs on to `iceturret@472,400` (a static "Enemy": the hammer arc's static arm).
+
+**Movers.** Survey full: 0 of 240 rows differ (201 / 39 both arms). The OPP arm's seam census (853/854 request 1, seam ±3):
+OPP alone 0 of 14 past the BobSoldier; OPP + both keys 4 of 14 on to the ice turret — exactly the seams where both x≈744 bobs
+died in the press kill; the other 10 have one or both alive and the chooser silent (the hammer chooser's pair). The bounded set
+with both keys ON: one real mover, L40LATCH's latch orbit (the open pocket's candidate 0 now kills at t137; its solve reaches the
+same x≈744 refusal over 351 ticks, not 271 — game-witnessed at 0 px as `l40bk2b-latch-free`), plus env artifacts. The 52-leg L40
+sweep ×2 per arm: 0 verdicts by key (356/853/854 flip inside both arms; their captured requests answer A = B byte for byte). Probes
+standard with both keys ON: 11/11. The L4 dash-window rows stay green ON (the margin is untouched).
+
+**Trap candidates.**
+- An aim is a place to stand only if the player can stand there: a geometric policy (a circle round a body) needs its points
+  projected onto the free space before `chooseHeld` steers at them, or it pins the player against the wall it aimed through.
+- A bound documented in one unit and counted in another is a false refusal waiting for the room that needs one more.
+- A measurement tree built from `git diff HEAD` loses the slice's code the moment it is committed: diff against the base.
 ### Seedling hammer-phase ICEST — the walk's kill rung kills a static IceTurret
 
 ⚖ User, queued 2026-10-26: *"Ice turret static kill"* (CPAIR's hand-over; fidelity L40LATCH's D2.2). Switch

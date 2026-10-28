@@ -1,0 +1,18 @@
+import { readFileSync } from 'node:fs';
+const B = '/home/user/Archipelago-CC/';
+const SD = B + 'frontend/modules/seedlingDemo/';
+const { restoreRequest } = await import(B + 'scripts/procgen/seedlingSolveRequestCodec.js');
+const { levelSourceFromAtlas } = await import(SD + 'atlasSource.js');
+const { atlasLevelSource } = await import(SD + 'levelSource.js');
+const [file, id, i] = process.argv.slice(2);
+const r = readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).find((x) => String(x.id) === id);
+const req = restoreRequest(r.requests.find((x) => String(x.i) === i).request);
+const a = levelSourceFromAtlas(req.source.records); const b = atlasLevelSource();
+console.log('source records', Array.isArray(req.source.records) ? req.source.records.length : Object.keys(req.source.records).length, 'keys', Object.keys(a).join(','));
+const la = a.level ? a.level(40) : a(40); const lb = b.level ? b.level(40) : b(40);
+const ka = JSON.stringify(la); const kb = JSON.stringify(lb);
+console.log('L40 equal?', ka === kb, ka.length, kb.length);
+const ea = new Set((la.entities ?? []).map((e) => JSON.stringify(e))); const eb = new Set((lb.entities ?? []).map((e) => JSON.stringify(e)));
+for (const e of ea) if (!eb.has(e)) console.log(' only page:', e.slice(0, 200));
+for (const e of eb) if (!ea.has(e)) console.log(' only repo:', e.slice(0, 200));
+for (const k of Object.keys(la)) if (JSON.stringify(la[k]) !== JSON.stringify(lb[k])) console.log(' field differs:', k);

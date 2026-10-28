@@ -1,0 +1,5 @@
+# verdict: SolverRefusal: solverBot(l40bk2b) chest (880,816) stance: the re-planned corridor failed too — solverBot(l40bk2b) chest (880,816) stance waypoint 2 (888,834): the route entered a proximity-hazard — chest at (880,816) in level 40 — at (887.5384682840569,834.8943794353387). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught. at t175 in 7.7 s
+# hits: none
+# removed: bobsoldier@880,832@t125
+# player at end: (887.5,834.9) level 40
+solverBot(l40bk2b) chest (880,816) stance: the re-planned corridor failed too — solverBot(l40bk2b) chest (880,816) stance waypoint 2 (888,834): the route entered a proximity-hazard — chest at (880,816) in level 40 — at (887.5384682840569,834.8943794353387). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.

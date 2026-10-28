@@ -180,7 +180,9 @@ import { createLifetime } from './watchLifetime.js';
 import {
     FLOOR_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
-import { CAMERA_MODES, cameraView, createNightLayer, createTileLayer, paintNight, paintOps, roomOps } from './seedlingSkinRenderer.js';
+import {
+    CAMERA_MODES, cameraView, createNightLayer, createTileLayer, paintNight, paintOps, roomOps, teleporterArtFilter,
+} from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
 import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
@@ -197,6 +199,7 @@ import { PICKUP_TAGS, pickupOps, pickupSkinView, stepPickupSkin } from './seedli
 import { MACHINE_OBJECT_TAGS, machineNightOps, machineOps, machineSkinView, stepMachineSkin } from './seedlingMachineSkin.js';
 import { BOSS_OBJECT_TAGS, bossNightOps, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
 import { EFFECT_RULES } from './seedlingEffectSkin.js';
+import { inventoryView } from './seedlingInventorySkin.js';
 import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
 import { BASE_TICKS_PER_SECOND, createRateMeter, createSlotClock, createSlotPump, messageChannelPostTask, parseGameSpeed } from './jsRuntimeClock.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
@@ -779,7 +782,8 @@ export function mountJsRuntimePage(win = window) {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
             ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag)
                 || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag),
-                drawnTeleporters: (tp) => tp.isStairs === true, drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
+                // ⚖ only the game's SHOWN portals keep a stand-in; the invisible teleporters draw nothing (`teleporterArtFilter`)
+                drawnTeleporters: teleporterArtFilter((runtime.mounted ?? runtime.vanilla)?.records?.get(level) ?? null), drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
         });
         // ⛓ G10 — the boss bodies' build-time rectangles still painted (0 once the skin draws them)
         if (graphics.bosses) {
@@ -793,7 +797,9 @@ export function mountJsRuntimePage(win = window) {
         // ⚖ CLAMPED to the canvas there when the room is narrower than the screen (G4b F1, `overlayRect`)
         const roomMode = graphics.camera !== 'follow';
         const cam = roomMode ? cameraView('follow', world, state, runtime.run) : view;
-        const overlays = fv ? screenOps(fv, art, { skin: graphics.effectSkin, cam, fitTo: roomMode ? world.world : null }) : [];
+        // ⛓ seedling-js-inventory-menu: the V menu (`Inventory.render`), in `screenOps`' own slot of `Game.render()`'s order
+        const overlays = fv ? screenOps(fv, art, { skin: graphics.effectSkin, cam, fitTo: roomMode ? world.world : null,
+            inventory: inventoryView(runtime.run, runtime.inventoryMenu) }) : [];
         graphics.effects = fv
             ? { explosions: graphics.effectSkin.explosions.length, slashes: graphics.effectSkin.slashes.length, droplets: graphics.effectSkin.droplets.length,
                 hearts: { ...graphics.effectSkin.hearts }, cover: graphics.effectSkin.cover, owed: graphics.effectSkin.fadeQueue.length,

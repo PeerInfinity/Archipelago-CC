@@ -888,6 +888,21 @@ export function createLevelRun({
      * dead frames' `inventory.update` would.
      */
     let primary = seamBoot['save.primary'] ?? 0;
+    /**
+     * ⛓⛓ seedling-js-inventory-menu — `Main.secondary` and `Main.firstUse`, the run's own (fidelity-15's W0 ACK).
+     *
+     * `secondary` is the slot a C press uses (`Player.as:1565`, read only under `CONTACT_FIDELITY.secondaryUse`) and
+     * the V menu's C release writes (`Inventory.as:213-217`); it takes `removeItem`'s modulo with `primary`
+     * (`Inventory.as:118-119`). `firstUse` gates the menu's toggle (`Inventory.as:193`) and goes sticky-true at the
+     * first tail holding two slots (`:170-177`; under the Bot `Inventory.help` is false, so no tutorial rides on it).
+     * Both are seeded from the seam, where they were carried and compared only. Nothing at the defaults reads either
+     * on a tape that never presses C, V or I; `menuTouched` says when the digest starts carrying them (C5).
+     */
+    let secondary = seamBoot['save.secondary'] ?? 0;
+    /** The tape's name for C (`tapeFormat.KEY_CODES.secondary`, `Player.keys[5]`). */
+    const SECONDARY_KEY = 'secondary';
+    let firstUse = seamBoot['save.firstUse'] === true;
+    let menuTouched = false;
     let slotOrder = [];
     if (inventorySlots !== null) {
         const why = inventorySlotsRefusal(inventorySlots, inventory);
@@ -895,9 +910,11 @@ export function createLevelRun({
         slotOrder = [...inventorySlots];
     }
     const syncSlots = () => {
-        const next = appendInventorySlots(slotOrder, inventory, { primary });
+        const next = appendInventorySlots(slotOrder, inventory, { primary, secondary });
         slotOrder = next.slots;
         primary = next.primary;
+        secondary = next.secondary;
+        if (slotOrder.length >= 2) firstUse = true;
     };
     syncSlots();
     /** `Game.update`'s tail: `inventory.update()` → `addItemsFromSave`, every frame. */
@@ -5746,6 +5763,45 @@ export function createLevelRun({
         equipsByTick.set(ticksCompleted, slot);
         applyEquipsAt(ticksCompleted);
     };
+    /**
+     * ⛓⛓ seedling-js-inventory-menu — `Main.secondary = selected` (`Inventory.as:213-217`), at the tick the run has
+     * reached. The tape has no field for it (the Bot has `equips` → `Main.primary` only; a `secondaries` directive is
+     * queued for the next wasm rebuild), so it lives in this run-local ledger, and a fold that meets a row here
+     * refuses by name rather than drop it. The bound is `equipNow`'s: `useItem` on an out-of-range slot is a silent
+     * sword slash.
+     */
+    const firedSecondaries = [];
+    const menuEquipRows = new WeakSet();
+    const secondaryNow = (slot) => {
+        if (!Number.isInteger(slot) || slot < 0 || slot >= slotOrder.length) {
+            throw new Error(`levelRun: a menu write selects secondary slot ${slot} at tick ${ticksCompleted}, but the `
+                + `run holds ${slotOrder.length} item(s) (slots [${slotOrder.join(', ')}]). \`Inventory.getItem\` `
+                + 'on an out-of-range slot is `undefined`, which `useItem` coerces to 0 (a silent sword slash).');
+        }
+        secondary = slot;
+        menuTouched = true;
+        firedSecondaries.push({ t: ticksCompleted, slot });
+    };
+    /**
+     * One menu write (`inventoryMenu.inventoryMenuFrame`'s `writes`): X → `equipNow`, C → `secondaryNow`.
+     *
+     * ⚠ A hold is zero ticks, so two X releases in one hold are two writes at ONE tick, and the game keeps the last
+     * (`Main.primary = selected`, a plain store). The earlier row at this tick is dropped from the ledger first, so
+     * the folded `equips` never carries a duplicate tick (`parseEquips` refuses one).
+     */
+    const menuWriteNow = ({ kind, slot }) => {
+        menuTouched = true;
+        if (kind === 'primary') {
+            // Only a row an earlier MENU write made (a tape's own `equips` row at this tick stays, and is overridden).
+            if (menuEquipRows.has(firedEquips.at(-1)) && firedEquips.at(-1).t === ticksCompleted) firedEquips.pop();
+            equipNow(slot);
+            menuEquipRows.add(firedEquips.at(-1));
+        } else if (kind === 'secondary') {
+            if (firedSecondaries.at(-1)?.t === ticksCompleted) firedSecondaries.pop();
+            secondaryNow(slot);
+        }
+        else throw new Error(`levelRun: an inventory menu write of kind ${JSON.stringify(kind)} — only primary/secondary.`);
+    };
 
     // ── the PRESS (R4) ────────────────────────────────────────────────
     /**
@@ -5856,9 +5912,9 @@ export function createLevelRun({
      * item the run does not hold has no slot, and `getItem` on a missing
      * slot returns `undefined`, which the switch does not match.
      */
-    const weaponForPress = () => {
+    const weaponForPress = (slotIndex = primary) => {
         const slots = slotOrder;
-        const item = slots[primary];
+        const item = slots[slotIndex];
         // ⛓⛓⛓ SEEDLING FIDELITY SLOTS: `getItem(i):int` on an index past the
         // end is `undefined` coerced to 0 — the SWORD's id — so the switch's
         // case 0 runs `slashing = true`, which `set slashing` gates on
@@ -5901,13 +5957,13 @@ export function createLevelRun({
         // a lock this one cannot.
         if (item === 2) return 'wand';
         if (item === 5) {
-            throw new Error(`levelRun: the tape presses X with slot ${primary} holding the `
+            throw new Error(`levelRun: the tape presses X with slot ${slotIndex} holding the `
                 + 'FIREWAND (item 5). `useItem` case 5 sets `wanding` AND `firing` from '
                 + 'one press — two verbs, two windows — and the fire wand is not on this '
                 + "rung's honest item chain (R6 §2.1). The plain wand (item 2) is "
                 + 'modelled; this is refused rather than approximated by it.');
         }
-        throw new Error(`levelRun: the tape presses X with slot ${primary} holding item `
+        throw new Error(`levelRun: the tape presses X with slot ${slotIndex} holding item `
             + `${item}, which no arm of \`useItem\` matches. An unmodelled weapon is `
             + 'refused rather than silently dropped.');
     };
@@ -13780,6 +13836,157 @@ export function createLevelRun({
     }
     const ceremonyLumps = [];
     /**
+     * ⛓⛓⛓ seedling-js-inventory-menu — THE V MENU'S HOLD: the frozen frames a menu session spends, which the TAPE
+     * never sees and the WORLD does (fidelity-15's W0 ACK, C1-C3).
+     *
+     * `Inventory.set open` IS `Game.freezeObjects = _open` (`Inventory.as:151-153`), so every frame the menu is up is
+     * a `Bot` DEAD frame — no tick, no dispatch — and still one `Game.update()`: `super.update()` runs every entity
+     * (`Game.as:880-883`, gated on `blackCover` only), `view()` runs (`:889`) and `time += timeRate` (`:890`). Only
+     * the classes that test the flag stop. So a hold is NOT a pause, and its frames are attributed to the NEXT tick's
+     * observation (they fall between two `Bot` observations), which is the tick `ticksCompleted` names here.
+     *
+     * The census (`inventoryHoldCensus`) classifies every family `advance` steps, by its AS3 update under the flag:
+     *   `stepped`  the hold steps it, frame by frame, as its frozen update (the lines below);
+     *   `inert`    it runs, but with the player frozen nothing it changes reaches gameplay (the reason says why);
+     *   `refuse`   it runs and moves tick-keyed state this hold does not step, so the menu REFUSES to open while
+     *              the room holds a live one (`inventoryHoldRefusalNow`): the residue is unreachable, not approximated.
+     * A FIRE / WAND / SWORD / SPEAR window still open is refused the same way: `runFrozenTick` shows a freeze BURNS
+     * those, keyed to tick numbers a hold does not advance.
+     */
+    const INVENTORY_FREEZE = Object.freeze({ inventoryHold: true });
+    /** The entries a per-level slot holds, whatever its shape: a list, a Map by id, `{byId}`, or one fight object. */
+    const entriesOf = (x) => {
+        if (x === null || x === undefined) return [];
+        if (Array.isArray(x)) return x;
+        if (x instanceof Map) return [...x.values()];
+        if (x.byId instanceof Map) return [...x.byId.values()];
+        return [x];
+    };
+    const notRemoved = (e) => Boolean(e) && !(e.removed || e.destroy || e.gone || e.dead || e.exploded);
+    /**
+     * `[family, map, treatment, why, live?]`; a `refuse` row refuses when one of the room's entries is `live` (by
+     * default: present and not removed). A FUNCTION, not a constant: two of its maps (`talkerStates`,
+     * `lightsFights`) are declared further down this closure.
+     */
+    const inventoryHoldCensus = () => [
+        ['chasers', chaserStates, 'stepped', 'Bob/BobSoldier: the Enemy chain (hitUpdate, fade, terrain) runs, the move is gated — `stepCeremonyDeadFrameNow`'],
+        ['shooters', shooterStates, 'stepped', 'Turret: the Enemy chain, then the gate; endAnim still spits — `stepShootersThroughFreeze`'],
+        ['spits', spitStates, 'stepped', 'TurretSpit: the move is gated, collision runs — `stepShootersThroughFreeze`'],
+        ['bombs', bombStates, 'stepped', 'Bomb: the fuse `t--` is ungated — `stepBombsThroughFreeze`'],
+        ['bombPushers', bombPusherStates, 'stepped', 'BombPusher: `shotTime--` is ungated — `stepBombsThroughFreeze`'],
+        ['beamTowers', beamTowerStates, 'stepped', 'BeamTower: update gated, its graphic still advances — `stepBeamTowersNow({frozen})`'],
+        ['activators', activatorStates, 'stepped', 'Activators extend Entity, ungated (a Button stays pressed, a Lock fade runs) — `stepActivators`'],
+        ['bossShots', bossShotStates, 'inert', 'BossTotemShot: the move is gated; a still shot cannot newly reach a still player'],
+        ['blasts', blastStates, 'inert', 'IceTurretBlast: the move is gated; an overlapping blast was removed on its first overlap'],
+        ['lavaChains', lavaChainStates, 'inert', 'LavaChain: phase is `Game.worldFrame`; the model resyncs it from the clock the hold spends'],
+        ['talkers', talkerStates, 'inert', 'NPC: Mobile gated, and `startTalking` requires `!Game.inventory.open` (NPC.as:225)'],
+        ['watchers', watcherStates, 'inert', 'Watcher: `hitsTimer--` only; the talk is blocked as for an NPC'],
+        ['finalDoors', finalDoorStates, 'inert', 'FinalDoor: reads a still player; its `open` anim is a freeze of its own (no menu then)'],
+        ['wandShots', wandShotStates, 'refuse', 'WandShot: `life--` and the MOVE are ungated (WandShot.as:82-110)'],
+        ['magicalLocks', magicalLockStates, 'refuse', 'MagicalLock: a struck lock\'s fade runs to its removal frame',
+            (l) => l.hitTick !== null && !l.removed],
+        ['spinners', spinnerStates, 'refuse', 'Spinner: `v` steering accumulates while the move is gated (Spinner.as:87-91)'],
+        ['wallFlyers', wallFlyerStates, 'refuse', 'WallFlyer: the Enemy chain (i-frames, fade) and `endAnim` run'],
+        ['drills', drillStates, 'refuse', 'Drill: update gated, but its graphic still runs `endAnim` (Drill.as:121-139)'],
+        ['shieldBosses', shieldBossStates, 'refuse', 'ShieldBoss: `swingTime++` and the stab are ungated (ShieldBoss.as:105-128)'],
+        ['pulsers', pulserStates, 'refuse', 'Pulser: `pulseTimer`/`radius` and `hit()` are ungated (Pulser.as:51-107)'],
+        ['pulls', pullsByLevel, 'refuse', 'Pull: MOVES an overlapping player (Pull.as:38-42)'],
+        ['arrowTraps', arrowTrapStates, 'refuse', 'ArrowTrap: `shootTimer--` and the volley are ungated (ArrowTrap.as:50-61)'],
+        ['staticBodies', staticBodyStates, 'refuse', 'SandTrap: the Enemy chain (i-frames, fade) runs'],
+        ['darkTraps', darkTrapStates, 'refuse', 'DarkTrap: a dying trap counts down to removal (DarkTrap.as:39-48)'],
+        ['crushers', crusherStates, 'refuse', 'Crusher: the charge moves, ungated (Crusher.as:81-82)'],
+        ['iceTurrets', turretStates, 'refuse', 'IceTurret: the Enemy chain, and `endAnim` spawns blasts (IceTurret.as:155-163)'],
+        // keyed on the room's placements: the per-level row is a counter, built only while its switch is ON
+        ['spinningAxes', new Map([[level, (world.combat?.hazards ?? []).filter((h) => h.tag === 'spinningaxe')]]), 'refuse',
+            'SpinningAxe: `angle += spinRate` every frame (SpinningAxe.as:52)'],
+        ['placedGrenades', placedGrenadeStates, 'refuse', 'Grenade: `explodeTime--` is ungated (Grenade.as:86-94)'],
+        ['owl', finalBossStates, 'refuse', 'FinalBoss/Orb/Pod/RockLock: mixed, the Orbs ride `Game.worldFrame`'],
+        ['lightsFight', lightsFights, 'refuse', 'LightBoss: the circle phase jumps with `Game.worldFrame`'],
+        ['lavaBoss', lavaBossFights, 'refuse', 'LavaBoss and its arena rock (FallRockLarge, ungated)'],
+        ['lavaArenaRocks', lavaArenaRocks, 'refuse', 'FallRockLarge: `waitToFallTimer`, the fall, `cameraTimer` (FallRockLarge.as:82-127)',
+            (r) => r.armed && !r.landed],
+        ['tentacleBeast', tentacleFights, 'refuse', 'TentacleBeast: update gated, `animEnd` still fires; the Whirlpool pulls the player',
+            (f) => !f.beast?.dead],
+    ];
+    function inventoryHoldRefusalNow() {
+        for (const w of [fireWindows, wandWindows]) {
+            if (w.some((x) => ticksCompleted <= x.endTick)) return 'a fire/wand window is open (a freeze burns it)';
+        }
+        if (swordWindow.pending || slashEndsAt > ticksCompleted || spearingAt(ticksCompleted)) {
+            return 'a sword/spear swing is in flight (a freeze burns it)';
+        }
+        if (pendingButtonFalls !== null) return 'a button-dropped rock is falling';
+        // The arena's rock is inert until armed, and a room with no `thirdBoss` rock reads `none` (`bobArenaNow`).
+        const a = bobArena?.level === level && !bobArena.none ? bobArena : null;
+        if (a && (a.boss || a.pending || (a.armed && !a.landed))) {
+            return 'the Bob Boss fight is up (BobBoss, or its FallRockLarge falling: FallRockLarge.as:82-127)';
+        }
+        for (const [family, map, treatment, why, isLive = notRemoved] of inventoryHoldCensus()) {
+            if (treatment !== 'refuse') continue;
+            const live = entriesOf(map.get(level)).filter((e) => e && isLive(e));
+            if (live.length > 0) {
+                return `the room holds a live ${family} (${live.length}); the hold does not step it — ${why}`;
+            }
+        }
+        for (const c of chestStates.get(level)?.values() ?? []) {
+            if (c.openTimer > 0 && !c.gone) return 'a chest is opening (Chest.as:95-102, ungated)';
+        }
+        return null;
+    }
+    /** ONE held frame: the stepped families' frozen update, in `Game.update`'s order. `frame` is 1-based. */
+    function inventoryHoldFrameNow(activators, frame) {
+        stepSpitsNow();
+        stepBombsNow({ frozen: true });
+        stepShootersNow();
+        if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: true });
+        if (!noclip) {
+            applyLockEvents(stepActivators(activators, world, playerBoxAt(state.x, state.y),
+                { inventory, keys, movingSolids: movingSolidsNow() }));
+            if (pendingButtonFalls === null) {
+                armButtonFallRocks(playerBoxAt(state.x, state.y));
+                if (pendingButtonFalls !== null) {
+                    throw new Error(`levelRun: a button is pressed DURING the inventory hold at tick ${ticksCompleted} `
+                        + `and drops [${pendingButtonFalls.join(', ')}]. A fall inside another freeze is not modelled.`);
+                }
+            }
+        }
+        // the chasers' frozen update, then the player's ungated lines (`shieldBump`, `hitUpdate`)
+        stepCeremonyDeadFrameNow();
+        syncSlotsAtTail();
+        stepCameraNow(state, world.world, viewTimeInSpan(frame));
+        if (!noclip) renderIgneousNow();
+        slashState = slashTimerTick(slashState);
+    }
+    const inventoryHolds = [];
+    /**
+     * Spend a hold of `frames` frozen frames at this tick boundary (the page core calls it on CLOSE, with the frames
+     * the menu was up). Refused by name when `inventoryRefusalNow` refuses: the core only opens where this holds.
+     * The clock spends them as a freeze (C2: `time += timeRate` runs every frozen frame), and the camera steps
+     * through them at each frame's own `Game.time` (C3).
+     */
+    function inventoryHoldNow(frames) {
+        if (!Number.isInteger(frames) || frames < 0) {
+            throw new Error(`levelRun.inventoryHold: ${frames} is not a frame count.`);
+        }
+        if (frames === 0) return;
+        const why = inventoryRefusalNow();
+        if (why !== null) {
+            throw new Error(`levelRun: an inventory hold of ${frames} frame(s) at tick ${ticksCompleted} in level `
+                + `${level}, but the menu cannot be open here: ${why}.`);
+        }
+        menuTouched = true;
+        const activators = activatorStateFor(level);
+        const held = ceremony;
+        ceremony = INVENTORY_FREEZE;
+        try {
+            for (let k = 1; k <= frames; k += 1) inventoryHoldFrameNow(activators, k);
+        } finally {
+            ceremony = held;
+        }
+        spendFrozen(frames, 'inventory');
+        inventoryHolds.push({ t: ticksCompleted, level, frames });
+    }
+    /**
      * ⛓ CEREMONYSHOVE D2 (ON) — THE CEREMONIES WHOSE DEAD FRAMES ARE STILL A LUMP: a text-less pickup (it finishes on
      * its start tick; a chest's seal piece is stepped instead, `armSealLumpNow`). Their frames
      * run `Player.shieldBump` exactly as a stepped ceremony's do, so a body the moving shield box touches would be
@@ -17774,6 +17981,32 @@ export function createLevelRun({
     const unfiredGrantLevelsNow = () => [...grantsByLevel.keys()];
     const frozenTimerNow = () => frozenTimer;
     const inCeremonyNow = () => ceremony !== null;
+    /**
+     * ⛓⛓ seedling-js-inventory-menu — why the V menu cannot open at this tick boundary, or null.
+     *
+     * `Game.update` runs `inventory.update()` only while `canInventory()` — `!talking && p.receiveInput &&
+     * !p.destroy` (`Game.as:1549-1553`) — and the toggle only under `!Game.freezeObjects || open`
+     * (`Inventory.as:191`); `firstUse` gates it last (`:193`). Each clause is read off the run's own state at the END
+     * of the tick, which is where `inventory.update()` runs (the frame's tail). A freeze the model spends INSIDE a
+     * tick (a fade, a fall, a lump) is over by then; the ones still up at the boundary are named here.
+     */
+    const inventoryRefusalNow = () => {
+        if (ceremony !== null) return 'a pickup ceremony holds `Game.freezeObjects`';
+        if (pendingPickupHelp !== null) return 'a `Help` is up (it holds `Game.freezeObjects`)';
+        // `talkingNow`'s own reading of `Game.talking`.
+        const talks = (w) => w.talking && w.dialogue && !w.dialogue.done;
+        for (const w of talkerStates.get(level)?.values() ?? []) if (talks(w)) return '`Game.talking` (an NPC)';
+        for (const w of watcherStates.get(level)?.values() ?? []) if (talks(w)) return '`Game.talking` (the Watcher)';
+        if (bobArena?.level === level && bobArena.npc?.d && !bobArena.npc.d.done) return '`Game.talking` (the Bob Boss)';
+        if (lockSnap !== null || bobNoInput || cutsceneWalk !== null || cutscene[1] || cutscene[2]) {
+            return '`p.receiveInput` is false';
+        }
+        if (pendingDeath !== null) return 'the player is dying (`p.destroy`)';
+        if (slotOrder.length === 0) return 'the inventory holds no item';
+        if (!firstUse) return '`Main.firstUse` is false (the run has never held two items)';
+        return inventoryHoldRefusalNow();
+    };
+    const inventoryOpenableNow = () => inventoryRefusalNow() === null;
     const primaryNow = () => primary;
     const inventorySlotsNow = () => [...slotOrder];
     const saveStateNow = () => ({
@@ -18143,6 +18376,14 @@ export function createLevelRun({
             return undefined;
         };
         const part = (v) => digestOfText(canonicalDigestText(v, hook));
+        /**
+         * ⛓ DIGEST CONDITIONAL (seedling-js-inventory-menu, C5): `secondary` and `firstUse` join `player` only once a
+         * C press, a menu write or a hold has touched them (`menuTouched`). Until then nothing reads either (the C
+         * press is the only reader of `secondary`, the menu the only reader of `firstUse`), and an unconditional key
+         * would move every committed digest: `canonicalDigestText` spells `undefined` 'u'. Spread from a binding so
+         * the part literal stays brace-free (`levelRunStateDigest.test.js`'s `digestCoverage` reads it as text).
+         */
+        const menuDigest = menuTouched ? { secondary, firstUse } : {};
         return {
             /** the parameters the reach reads (constant for the run; another run's may differ) */
             staging: part({ boot, noclip, noHazards, noDamage, grants, equips, roles, pins, save, seam }),
@@ -18152,7 +18393,7 @@ export function createLevelRun({
             clock: part({ now: clock.now(), clockRefusal }),
             /** the player: the body, the hit, the swing, the freeze, the items, the slots and the queued equips */
             player: part({ state, damage, frozenTimer, swordWindow, slashState, slashEndsAt, spearEndsAt, ceremony,
-                bobArena, bobNoInput, primary, slotOrder, inventory, grantsByLevel, equipsByTick }),
+                bobArena, bobNoInput, primary, slotOrder, inventory, grantsByLevel, equipsByTick, ...menuDigest }),
             /** the save-side state the builds and the activators read */
             persist: part({ clearedByLevel, pendingEarnedClears, despawnedByLevel, staticRemovedTags, unreadRoomWrites,
                 totemParts, keys, collectedPickups, lockSnap, moonrockSet, chestOpens, rockFalls }),
@@ -19015,6 +19256,31 @@ export function createLevelRun({
         get unfiredEquipTicks() { return unfiredEquipTicksNow(); },
         /** Select `Main.primary` at the tick the run has reached (R4). */
         equipNow,
+        /**
+         * ⛓⛓ seedling-js-inventory-menu — THE V MENU'S FACE OF THE RUN (fidelity-15's W0 ACK; the menu's own state
+         * is `inventoryMenu.js`'s, held by the page core, because a menu session is zero tape ticks).
+         *
+         *   `secondary` / `firstUse`   `Main.secondary` / `Main.firstUse`, the run's own
+         *   `secondariesFired`         the run-local ledger of `secondaryNow` (no tape field yet)
+         *   `inventoryOpenable`        `canInventory()` and no freeze, at this tick boundary (`Game.as:1044-1051`,
+         *                              `:1549-1553`; `Inventory.as:191`)
+         *   `inventoryMenuWrite(w)`    one `{kind, slot}` write
+         *   `inventoryHold(frames)`    the frozen frames a hold spent, stepped and charged (C1-C3)
+         */
+        get secondary() { return secondary; },
+        get firstUse() { return firstUse; },
+        get secondariesFired() { return firedSecondaries.map((r) => ({ ...r })); },
+        /** The `equipsFired` rows a MENU write made (the fold adds them to the tape's `equips`). */
+        get inventoryMenuEquips() { return firedEquips.filter((r) => menuEquipRows.has(r)).map((r) => ({ ...r })); },
+        get inventoryOpenable() { return inventoryOpenableNow(); },
+        /** Why `inventoryOpenable` is false, by name, or null. */
+        get inventoryRefusal() { return inventoryRefusalNow(); },
+        secondaryNow,
+        inventoryMenuWrite: menuWriteNow,
+        inventoryHold: inventoryHoldNow,
+        get inventoryHolds() { return inventoryHolds.map((r) => ({ ...r })); },
+        /** The C1 census as data: `{family, treatment, why}` per family `advance` steps. */
+        get inventoryHoldCensus() { return inventoryHoldCensus().map(([family, , treatment, why]) => ({ family, treatment, why })); },
         /**
          * The key types this run has collected — `Main.SAVE_FILE.data.hasKey`
          * as a set. A `BossLock` opens on exactly this.
@@ -22464,7 +22730,23 @@ export function createLevelRun({
              * runs after `super.update()`).
              */
             const pressKeys = (CONTACT_FIDELITY.fallBurnsPress && state.fall) ? NO_KEYS : acting;
-            const pressed = pressKeys.has(TALK_KEY) && !wasHeld.has(TALK_KEY);
+            /**
+             * ⛓⛓ seedling-js-inventory-menu C4 (`CONTACT_FIDELITY.secondaryUse`): `input()` is
+             * `if (Input.pressed(keys[4])) useItem(Main.primary); if (Input.pressed(keys[5])) useItem(Main.secondary);`
+             * (`Player.as:1561-1568`). ON, a C edge is a press through the same arms against `secondary`'s slot
+             * (`useSlot`); X and C on ONE tick are two `useItem` calls, two verbs this model would have to open
+             * together, and are refused by name. OFF, `useSlot` is `primary` and C is read by nothing.
+             */
+            const xPressed = pressKeys.has(TALK_KEY) && !wasHeld.has(TALK_KEY);
+            const cPressed = CONTACT_FIDELITY.secondaryUse && pressKeys.has(SECONDARY_KEY) && !wasHeld.has(SECONDARY_KEY);
+            if (xPressed && cPressed && !noclip) {
+                throw new Error(`levelRun: X and C are both pressed at tick ${ticksCompleted}. \`Player.input()\` then `
+                    + 'calls `useItem(Main.primary)` and `useItem(Main.secondary)` in one frame: two verbs on one tick, '
+                    + 'which this model does not open together. Press them on different ticks.');
+            }
+            const pressed = xPressed || cPressed;
+            const useSlot = cPressed && !xPressed ? secondary : primary;
+            if (cPressed) menuTouched = true;
             // ⛔⛔⛔ R5 SLICE 22: A FREEZE FRAME BURNS A PRESS, LOUDLY.
             //
             // The line above already models the loss — `acting` is
@@ -22475,7 +22757,8 @@ export function createLevelRun({
             // other gate on the same `if`, and it is a REFUSAL rather than
             // a warning because the cure is arithmetic the planner owns:
             // the freeze span is derivable from the volley clock.
-            if (frozenTimer > 0 && held.has(TALK_KEY) && !wasHeld.has(TALK_KEY) && !noclip) {
+            if (frozenTimer > 0 && !noclip && ((held.has(TALK_KEY) && !wasHeld.has(TALK_KEY))
+                || (CONTACT_FIDELITY.secondaryUse && held.has(SECONDARY_KEY) && !wasHeld.has(SECONDARY_KEY)))) {
                 throw Object.assign(new Error(`levelRun: a \`primary\` press at tick ${ticksCompleted} `
                     + `lands on a FROZEN tick (frozenTimer ${frozenTimer} after this `
                     + 'tick\'s `freezeStep`). `Player.input()` returns at its first line '
@@ -22506,8 +22789,8 @@ export function createLevelRun({
              * that case is the throw above.
              */
             let slashPress = null;
-            if (pressKeys.has(TALK_KEY) && !wasHeld.has(TALK_KEY) && !noclip
-                && (weaponForPress() === 'sword' || weaponForPress() === 'ghostsword')) {
+            if (pressed && !noclip
+                && (weaponForPress(useSlot) === 'sword' || weaponForPress(useSlot) === 'ghostsword')) {
                 slashPress = slashSet(slashState, {
                     pressed: true,
                     hasSword: inventory?.hasSword ?? false,
@@ -22554,7 +22837,7 @@ export function createLevelRun({
                      * on 18 sweep legs the game swallowed (`ghostSword.
                      * slashEndTicksFor`, behind `GHOSTSWORD_MOTION`).
                      */
-                    slashEndsAt = ticksCompleted + slashEndTicksFor(slashState.anim, weaponForPress());
+                    slashEndsAt = ticksCompleted + slashEndTicksFor(slashState.anim, weaponForPress(useSlot));
                     /**
                      * ⛓⛓⛓ R9 SLICE 12c — **AND THE PENDING HIT TICKS ARE
                      * REPLACED, NOT APPENDED.** §23.15 named this and left it;
@@ -22716,7 +22999,7 @@ export function createLevelRun({
             // ordering within `input()` is invisible: nothing this schedules
             // is read again before the next tick.
             if (pressed && !noclip) {
-                const weapon = weaponForPress();
+                const weapon = weaponForPress(useSlot);
                 // A slot holding nothing is a SILENT no-op in the game
                 // (`getItem` returns `undefined` and the switch matches
                 // nothing), so it is a silent no-op here — the loud version

@@ -100,6 +100,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 1,
+            "id": "inventory"
+        },
+        {
+            "browser": 0,
+            "count": 1,
             "id": "lint"
         },
         {
@@ -129,12 +134,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 92,
+            "count": 93,
             "id": "plan"
         },
         {
-            "browser": 119,
-            "count": 167,
+            "browser": 122,
+            "count": 170,
             "id": "probe"
         },
         {
@@ -229,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 475,
-        "browser": 184,
-        "cited": 256,
-        "files": 491,
-        "lineStyle": 16,
-        "withDocblock": 491,
-        "withFlags": 408
+        "blockStyle": 479,
+        "browser": 187,
+        "cited": 258,
+        "files": 496,
+        "lineStyle": 17,
+        "withDocblock": 496,
+        "withFlags": 412
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6776,6 +6781,24 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/help.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "inventory",
+            "citedBy": [],
+            "docblockStyle": "line",
+            "documentedFlags": [],
+            "file": "inventory-menu-identity.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "inventory-menu-identity — the V inventory menu slice's BYTE-IDENTITY measurement.",
+            "path": "scripts/procgen/inventory-menu-identity.mjs"
+        },
+        {
             "argvHelpers": [
                 "arg",
                 "isGateFinding"
@@ -8353,6 +8376,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-hammer-sf-strikefloor — ⛓⛓⛓ SEEDLING HAMMER-PHASE SF: THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`solverBot.STRIKE_ETA_FLOOR`, ON since hammer-phase SFF), ON THE GAME.",
             "path": "scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "from-view"
+            ],
+            "file": "plan-seedling-l100-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "from-view"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l100-witness — ⛓⛓⛓ SEEDLING FIDELITY L100: THE ROCK DOOR'S SWING STANCE IS HALF A TILE OFF THE GRID.",
+            "path": "scripts/procgen/plan-seedling-l100-witness.mjs"
         },
         {
             "argvHelpers": [],
@@ -11830,6 +11889,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "arrival-trace-ms",
                 "axe-dodge",
                 "capture-requests",
                 "contact-fidelity",
@@ -11857,6 +11917,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-divergence-sweep.mjs",
             "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arrival-trace-ms"
+                },
                 {
                     "how": [
                         "arg"
@@ -12604,6 +12670,40 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's two OTHER in-room darktraps, ON THE GAME (slice rules-l63-darktrap-probe, step 1 of its fix): are L65's darktrap@144,144 and L101's darktrap@160,80 the class `probe-seedling-l63-darktrap.mjs` witnessed — a barrier that only an UNWIRED lightpole of the same room kills (`tset` -1, no ButtonRoom writes its t…",
             "path": "scripts/procgen/probe-seedling-inroom-darktraps.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-inventory-menu.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-inventory-menu — the GAME WITNESS for the V inventory menu (slice seedling-js-inventory-menu).",
+            "path": "scripts/procgen/probe-seedling-inventory-menu.mjs"
         },
         {
             "argvHelpers": [],
@@ -13425,6 +13525,58 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-l40bk2.mjs"
         },
         {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l40bk2b.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "from-fixture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l40bk2b — ⛓⛓⛓ seedling-fidelity-l40bk2b: L40 BOSS KEY 2'S `bobsoldier@880,832` MET IN ITS NOTCH ABOVE THE ONE-TILE CORRIDOR (the orbit kill, shipped and with `orbitFreeAim`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-l40bk2b.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "probe",
@@ -14055,6 +14207,61 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-mask-lines — ⛓⛓⛓ seedling-fidelity-masks: THE SWING'S LINE OF SIGHT SAMPLES THE \"Solid\" PIXELMASKS (`CONTACT_FIDELITY.pixelMaskSightLines`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-mask-lines.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "arms",
+                "host",
+                "screens",
+                "taller-px",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-mobile-fit.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "arms"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "screens"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "taller-px"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling MOBILE FIT (slice `seedling-js-mobile-polish`, ⚖ the user 2026-10-27: *\"On mobile, the bottom of the Seedling panel is covered by the panel select bar at the bottom of the screen.\"*) — in a phone viewport, the Seedling panel's bottom edge, and the game + touch strip inside it, are at or above the panel sele…",
+            "path": "scripts/procgen/probe-seedling-mobile-fit.mjs"
         },
         {
             "argvHelpers": [
