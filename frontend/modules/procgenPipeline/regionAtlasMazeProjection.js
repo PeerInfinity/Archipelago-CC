@@ -110,7 +110,7 @@ function bindingsFor(region) {
 function pressLocations(region, events) {
     const bySide = new Map(bindingsFor(region).map((b) => [b.apName, b.sub]));
     return (events ?? []).filter((ev) => ev.mode === 'press').map((ev) => {
-        if (ev.tiles.length !== 1) throw new Error(`press event "${ev.name}": its button covers ${ev.tiles.length} tiles, not one`);
+        if (ev.tiles.length !== 1) throw new Error(`press event "${ev.name}": ${ev.tiles.length} cells, not the button's one`);
         if (!bySide.has(ev.side)) throw new Error(`press event "${ev.name}": its side "${ev.side}" is no (sub-)region of ${region.region_id}`);
         const sub = bySide.get(ev.side);
         return { name: ev.name, tile: ev.tiles[0], vanilla_item: ev.name, ...(sub === null ? {} : { sub_region: sub }) };

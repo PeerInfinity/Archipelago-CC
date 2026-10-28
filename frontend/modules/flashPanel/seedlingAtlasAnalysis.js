@@ -225,6 +225,11 @@ export function seedlingEventTiles(level, events) {
         const { class: cls, x, y } = at(ev);
         const entity = (level.entities ?? []).find((e) => e.type === cls && e.x === x && e.y === y);
         if (!entity) throw new Error(`event "${ev.name}": L${level.level} has no ${cls}@${x},${y}`);
+        // A press is made where the button IS: `ButtonRoom` centres itself on (x + Tile.w/2, y + Tile.h/2), and its 8x6
+        // hitbox straddles two tiles when it stands off the grid (L61's at y = 40), so its cell is the tile of that centre.
+        if (ev.mode === 'press') {
+            return { name: ev.name, side: ev.side, mode: ev.mode, tiles: [[Math.floor((x + TILE / 2) / TILE), Math.floor((y + TILE / 2) / TILE)]] };
+        }
         const sem = entitySemantics(entity);
         const sealed = sem ? entitySealedTiles(entity, sem) : [];
         const tiles = sealed.length > 0 ? sealed : (() => {

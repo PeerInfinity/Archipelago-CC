@@ -160,6 +160,13 @@ describe('L38 — a cross-room press is a location on its button', () => {
         expect(out.problems.some((p) => p.startsWith(`level_38 @ ${PRESS}`) || (p.includes(PRESS) && p.includes('derived true, atlas false')))).toBe(true);
     });
 
+    it('a button off the grid presses from the tile of its centre: L61\'s (176,40) → (11,3), one cell', () => {
+        // Its 8x6 hitbox straddles tiles y 2 and 3; the whole-game compile threw on the two-tile footprint before this.
+        const items = compile(['level_61']).preset_sidecars['1'].level_61__r0c10.playable_payload.items;
+        const POLE = 'L63 flag 1: lightpole@64,88 cleared';
+        expect(items.filter((i) => i.locationName === POLE)).toEqual([{ x: 11, y: 3, id: POLE, locationName: POLE }]);
+    });
+
     it('the press sits on the ButtonRoom\'s own cell (32,48) → (2,3), granting the event', () => {
         const items = compile(['level_37', 'level_38']).preset_sidecars['1'].level_38.playable_payload.items;
         expect(items.filter((i) => i.locationName === PRESS)).toEqual([{ x: 2, y: 3, id: PRESS, locationName: PRESS }]);
