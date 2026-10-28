@@ -49,6 +49,7 @@ import {
     PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
     setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
 } from './make-seedling-playthrough-rules.mjs';
+import { itemNamesInRule } from '../../frontend/modules/procgenCore/ruleItemNames.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
@@ -176,8 +177,8 @@ export function landingGatesFor(atlas, levels) {
 }
 
 /** The rule kinds whose args name items (`item_name`, `item_names`/`items` lists, `item_counts`/`items` maps), and those naming none. */
-const ITEM_RULE_KINDS = new Set(['Has', 'HasAll', 'HasAny', 'HasAllCounts', 'HasAnyCount', 'HasFromList', 'HasFromListUnique']);
-const ITEMLESS_RULE_KINDS = new Set(['True_', 'False_', 'Constant', 'And', 'Or', 'Not', 'CanReachRegion', 'CanReachLocation', 'CanReachEntrance']);
+const ITEM_RULE_KINDS = new Set(['Has', 'HasAll', 'HasAny', 'HasAllCounts', 'HasAnyCount', 'HasFromList', 'HasFromListUnique', 'CountItem']);
+const ITEMLESS_RULE_KINDS = new Set(['True_', 'False_', 'Constant', 'And', 'Or', 'Not', 'Compare', 'CanReachRegion', 'CanReachLocation', 'CanReachEntrance']);
 
 /**
  * ⛓ An event no world can produce is carried only while a kept rule NEEDS it (session tile-primitives-sphere-order-7, ⚖ 2026-10-28
@@ -191,17 +192,23 @@ const ITEMLESS_RULE_KINDS = new Set(['True_', 'False_', 'Constant', 'And', 'Or',
  * @param {(name:string) => boolean} produced does a maze world produce this event
  */
 export function neededEvents(layer, produced) {
+    // The names: `itemNamesInRule` (keyed on the ARG, walking every nesting — children, args.rules, Not's condition, Compare's
+    // sides), plus the count kinds' item MAPS, which it does not read; every nested rule node's kind must be one we know.
     const ruleNames = (rule, acc) => {
-        if (!rule || typeof rule !== 'object') return acc;
-        const a = rule.args ?? {};
-        if (ITEM_RULE_KINDS.has(rule.rule)) {
-            if (typeof a.item_name === 'string') acc.add(a.item_name);
-            for (const list of [a.item_names, a.items]) if (Array.isArray(list)) for (const n of list) acc.add(n);
-            for (const map of [a.item_counts, a.items]) if (map && typeof map === 'object' && !Array.isArray(map)) for (const n of Object.keys(map)) acc.add(n);
-        } else if (!ITEMLESS_RULE_KINDS.has(rule.rule)) {
-            throw new Error(`events: a kept rule has a "${rule.rule}" node, whose items this layer cannot read — ${JSON.stringify(rule)}`);
-        }
-        for (const c of rule.children ?? []) ruleNames(c, acc);
+        for (const n of itemNamesInRule(rule)) acc.add(n);
+        (function walk(v) {
+            if (Array.isArray(v)) { for (const x of v) walk(x); return; }
+            if (!v || typeof v !== 'object') return;
+            if (typeof v.rule === 'string') {
+                if (!ITEM_RULE_KINDS.has(v.rule) && !ITEMLESS_RULE_KINDS.has(v.rule)) {
+                    throw new Error(`events: a kept rule has a "${v.rule}" node, whose items this layer cannot read — ${JSON.stringify(v)}`);
+                }
+                for (const map of [v.args?.item_counts, v.args?.items]) {
+                    if (map && typeof map === 'object' && !Array.isArray(map)) for (const n of Object.keys(map)) acc.add(n);
+                }
+            }
+            for (const x of Object.values(v)) walk(x);
+        })(rule);
         return acc;
     };
     let events = layer.events;
