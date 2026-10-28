@@ -1654,6 +1654,21 @@ export const CONTACT_FIDELITY = {
      * byte-identical (no committed tape presses C). `SEEDLING_SECONDARY_USE=0|1`.
      */
     secondaryUse: false,
+    /**
+     * fidelity LIGHTPOLE D2 (wave 34) — AN IN-ROOM POLE IS LIT BY A SPEAR THRUST FROM ITS OWN ROOM.
+     *
+     *     Player.as:1083-1088   genericHit: `if (t == "Spear") (e as LightPole).hit()`
+     *     LightPole.as:77-84    hit(): `activate = !activate` behind a 25-tick `hitsTimer`
+     *     LightPole.as:94-97    set activate → `Game.setPersistence(tag, !activate)`: the flag is written AT the hit
+     *
+     * The rules place an in-room pole's light as a `clear-tag` event on the pole itself, with no presser
+     * (`seedlingObstacleEvents.IN_ROOM_POLE_GATE_KIND`), and the solver had no row: *"no strategy row exists for
+     * solid:lightpole"*. ON: `solid:lightpole` → `pole` (`resolvePoleThrustStrategy` / `execPoleThrust`): a stance whose
+     * thrust rect (`spearHitRect`) lies on the pole's bob-invariant core in one of the four facings — through a wall
+     * where the rect reaches across one — walked to, ONE thrust (a second would toggle the light out), finished on the
+     * run's own pole write (`earnedClears`). OFF: no row, byte-identical. `SEEDLING_IN_ROOM_POLE_THRUST=0|1`.
+     */
+    inRoomPoleThrust: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1857,6 +1872,9 @@ if (globalThis.process?.env?.SEEDLING_FINE_SWING_STANCE === '0') CONTACT_FIDELIT
 // ⛓ seedling-js-inventory-menu C4: `SEEDLING_SECONDARY_USE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_SECONDARY_USE === '1') CONTACT_FIDELITY.secondaryUse = true;
 if (globalThis.process?.env?.SEEDLING_SECONDARY_USE === '0') CONTACT_FIDELITY.secondaryUse = false;
+// ⛓ fidelity LIGHTPOLE D2: `SEEDLING_IN_ROOM_POLE_THRUST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_IN_ROOM_POLE_THRUST === '1') CONTACT_FIDELITY.inRoomPoleThrust = true;
+if (globalThis.process?.env?.SEEDLING_IN_ROOM_POLE_THRUST === '0') CONTACT_FIDELITY.inRoomPoleThrust = false;
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;
