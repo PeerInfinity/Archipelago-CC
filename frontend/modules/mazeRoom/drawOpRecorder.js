@@ -32,7 +32,9 @@ import { createHash } from 'node:crypto';
 const PROPS = ['fillStyle', 'strokeStyle', 'lineWidth', 'globalAlpha', 'font',
     'textAlign', 'textBaseline', 'lineCap', 'lineJoin'];
 const METHODS = ['fillRect', 'strokeRect', 'save', 'restore', 'setLineDash', 'beginPath',
-    'arc', 'fill', 'stroke', 'moveTo', 'lineTo', 'closePath', 'fillText', 'clearRect', 'rect'];
+    'arc', 'fill', 'stroke', 'moveTo', 'lineTo', 'closePath', 'fillText', 'clearRect', 'rect',
+    // maze-seedling-art-1: the Seedling room layer's blit (a stand-in layer object logs as its JSON).
+    'drawImage'];
 
 export function recordingContext() {
     const log = [];
