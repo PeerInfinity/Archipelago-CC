@@ -1,0 +1,16 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js (2 tests) 503213ms
+     ✓ ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte  325487ms
+     ✓ ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit  177723ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 42250ms
+     ✓ ON, sweep request 392:0 solved whole ships the same ticks for less work  42248ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 42365ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  42363ms
+
+ Test Files  3 passed (3)
+      Tests  4 passed (4)
+   Start at  04:35:51
+   Duration  593.08s (transform 2.60s, setup 0ms, import 4.88s, tests 587.83s, environment 0ms)
+
