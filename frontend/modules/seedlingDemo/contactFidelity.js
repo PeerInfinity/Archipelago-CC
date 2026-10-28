@@ -1668,7 +1668,7 @@ export const CONTACT_FIDELITY = {
      * where the rect reaches across one — walked to, ONE thrust (a second would toggle the light out), finished on the
      * run's own pole write (`earnedClears`). OFF: no row, byte-identical. `SEEDLING_IN_ROOM_POLE_THRUST=0|1`.
      */
-    inRoomPoleThrust: false,
+    inRoomPoleThrust: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
