@@ -45,23 +45,26 @@ export const MIXES = Object.freeze({
 /**
  * The scenes: a pole, the player's position (`at`, px — a tile centre is `tile·16 + 8`), a facing, and what the census
  * says each mix does there (`lit`; a mix not named is not played). Exported for the unit rows.
- *   centre   the rules' own stance (`poleThrustStances`: tile centre, the facing it charges) — the thrust lights it, the
- *            ghost swing from the SAME point and facing does not (the census's closest calls);
+ *   centre   the rules' own stance (`poleThrustStances`: tile centre, the facing it charges) — the thrust lights it; the
+ *            census's centre swing (`centreSwing`, the census's claim) does not reach from there, and the game agrees
+ *            at L101 and L63 [2,5] but LIGHTS it at L62 [7,14] and L63 [4,7] (8/8 at 7f2d7eed99): the census is
+ *            STRICTER than the game there (the face tap carries the player before the swing tests — `swingAt`), the
+ *            safe direction, so `lit` is the game's answer and `centreSwing` the census's;
  *   fine     the ghost swing from the deepest point of that same tile (`poleFineStances`) — it lights it, so the tile
  *            the rules charge is a stance for a Ghost Sword holder too;
  *   pocket   the L65 landing pockets of L63 (TIGHTER): the ghost swing lights the pole, no thrust does.
  */
 export const SCENES = Object.freeze({
-    'L101-7-4-centre-E': { level: 101, tag: 0, tile: [7, 4], at: [120, 72], dir: 'right', lit: { 'spear': true, 'ghost-spear-sword': false } },
+    'L101-7-4-centre-E': { level: 101, tag: 0, tile: [7, 4], at: [120, 72], dir: 'right', centreSwing: false, lit: { 'spear': true, 'ghost-spear-sword': false } },
     'L101-7-4-fine-N': { level: 101, tag: 0, tile: [7, 4], at: [126, 72], dir: 'up', lit: { 'ghost-spear-sword': true } },
-    'L62-7-14-centre-N': { level: 62, tag: 0, tile: [7, 14], at: [120, 232], dir: 'up', lit: { 'spear': true, 'ghost-spear-sword': false } },
+    'L62-7-14-centre-N': { level: 62, tag: 0, tile: [7, 14], at: [120, 232], dir: 'up', centreSwing: false, lit: { 'spear': true, 'ghost-spear-sword': true } },
     'L62-7-14-fine-E': { level: 62, tag: 0, tile: [7, 14], at: [120, 226], dir: 'right', lit: { 'ghost-spear-sword': true } },
-    'L63-2-5-centre-E': { level: 63, tag: 1, tile: [2, 5], at: [40, 88], dir: 'right', lit: { 'spear': true, 'ghost-spear-sword': false } },
+    'L63-2-5-centre-E': { level: 63, tag: 1, tile: [2, 5], at: [40, 88], dir: 'right', centreSwing: false, lit: { 'spear': true, 'ghost-spear-sword': false } },
     'L63-2-5-fine-N': { level: 63, tag: 1, tile: [2, 5], at: [46, 88], dir: 'up', lit: { 'ghost-spear-sword': true } },
-    'L63-4-7-centre-N': { level: 63, tag: 1, tile: [4, 7], at: [72, 120], dir: 'up', lit: { 'spear': true, 'ghost-spear-sword': false } },
+    'L63-4-7-centre-N': { level: 63, tag: 1, tile: [4, 7], at: [72, 120], dir: 'up', centreSwing: false, lit: { 'spear': true, 'ghost-spear-sword': true } },
     'L63-4-7-fine-E': { level: 63, tag: 1, tile: [4, 7], at: [72, 114], dir: 'right', lit: { 'ghost-spear-sword': true } },
-    'L63-2-18-pocket-N': { level: 63, tag: 6, tile: [2, 18], at: [40, 296], dir: 'up', lit: { 'spear': false, 'ghost-spear-sword': true } },
-    'L63-8-18-pocket-N': { level: 63, tag: 7, tile: [8, 18], at: [136, 296], dir: 'up', lit: { 'spear': false, 'ghost-spear-sword': true } },
+    'L63-2-18-pocket-N': { level: 63, tag: 6, tile: [2, 18], at: [40, 296], dir: 'up', centreSwing: true, lit: { 'spear': false, 'ghost-spear-sword': true } },
+    'L63-8-18-pocket-N': { level: 63, tag: 7, tile: [8, 18], at: [136, 296], dir: 'up', centreSwing: true, lit: { 'spear': false, 'ghost-spear-sword': true } },
 });
 
 /** The tapes: one per scene × the mixes it names. Exported for the unit rows. */
@@ -96,9 +99,12 @@ export function readRun(scene, ticks, status) {
     const s = SCENES[scene];
     const cleared = (status?.persistence_cleared ?? []).map((c) => (typeof c === 'string' ? c : `${c.level}:${c.tag}`));
     const first = ticks[0] ?? null;
+    // Where the player stands when the press fires (the primary span opens at tick 4): the face tap may have moved it.
+    const press = ticks.find((o) => o.t === 5) ?? null;
     return {
         levels: [...new Set(ticks.map((o) => o.level))],
         at: first ? [first.x, first.y] : null,
+        swingAt: press ? [press.x, press.y] : null,
         slots: status?.inventory_slots ?? null,
         slash: status?.slash ?? null,
         lit: cleared.includes(`${s.level}:${s.tag}`),
@@ -197,7 +203,7 @@ async function main() {
             check(`${name}: the slots are ${JSON.stringify(want.slots)}`, JSON.stringify(read.slots) === JSON.stringify(want.slots),
                 JSON.stringify(read.slots));
             check(`${name}: pole {${SCENES[scene].level},${SCENES[scene].tag}} lit = ${want.lit}`, read.lit === want.lit,
-                JSON.stringify({ at: read.at, slash: read.slash }));
+                JSON.stringify({ at: read.at, swingAt: read.swingAt, slash: read.slash }));
         }
     } catch (e) {
         console.log(`PAGE LOGS (last 20):\n${logs.slice(-20).join('\n')}`);

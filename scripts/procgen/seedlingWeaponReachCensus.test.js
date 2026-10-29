@@ -68,7 +68,9 @@ describe('the weapon reach census', () => {
             if (centre) {
                 // The rules' stance (thrust) and the centre swing, from the tile centre in the scene's facing.
                 if ('spear' in s.lit) expect(has(pole.thrust), `${scene} thrust`).toBe(s.lit.spear);
-                expect(has(pole.centreSwing), `${scene} centre swing`).toBe(s.lit['ghost-spear-sword']);
+                // The census's own centre-swing claim (the game may light MORE: see the probe's SCENES note).
+                expect(has(pole.centreSwing), `${scene} centre swing`).toBe(s.centreSwing);
+                if (s.centreSwing) expect(s.lit['ghost-spear-sword'], scene).toBe(true);
             } else {
                 // A fine point: the census's deepest swing point of that tile in that facing.
                 expect(pole.swingPoints[`${s.tile}`]?.[F]?.slice(0, 2), scene).toEqual(s.at);
