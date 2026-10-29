@@ -511,7 +511,10 @@ export class SeedlingRegionGlue {
         const dispatcher = this.getDispatcher();
         if (!dispatcher?.publish) return decide(false, 'no dispatcher');
         const stopped = this.stopBotWalks();
-        const watching = this.expectBotArrivals();
+        // ⛔ the wasm engine's arrival watch HOLDS the landing until the bot's next goal: only a stopped walk has one
+        // coming (the bot re-plans). With no walk, a hold would strand a player who walks by hand (CI, seedling-js batch:
+        // `held: true`, 0 ticks through a held key)
+        const watching = stopped > 0 ? this.expectBotArrivals() : 0;
         const from = this.getLoop()?.getCurrentRegion?.() ?? this.binding.region;
         this._toolSpot = spot ? { region: target, ...spot } : null;
         this.stats.toolTeleports += 1;

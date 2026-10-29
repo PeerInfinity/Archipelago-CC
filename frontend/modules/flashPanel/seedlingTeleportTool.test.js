@@ -43,7 +43,7 @@ const DUNGEON = 'dungeon1_room1__r0c4'; // level 3: the start has no door to it
  * The glue between two stand-ins: procgenPlayer (a move loads its target with the `arrivedFrom` procgenPlayer would
  * resolve — a teleport's is null) and gameState (the region a move lands in). The warehouse is the preset's.
  */
-function harness({ loop = false } = {}) {
+function harness({ loop = false, walks = 1 } = {}) {
     const subs = new Map();
     const eventBus = { subscribe: (n, fn) => { subs.set(n, fn); return () => subs.delete(n); }, publish: () => {} };
     const moves = [];
@@ -59,7 +59,8 @@ function harness({ loop = false } = {}) {
                 arrivedFrom: exit?.targetExitId ? { exit_id: exit.targetExitId, source_region: data.sourceRegion } : null });
         },
     };
-    const stops = vi.fn(() => 1);
+    const stops = vi.fn(() => walks);
+    const expects = vi.fn(() => 1);
     const glue = new SeedlingRegionGlue({
         eventBus,
         getDispatcher: () => dispatcher,
@@ -71,6 +72,7 @@ function harness({ loop = false } = {}) {
         }),
         getLoop: () => ({ isLoopModeActive: () => loop, getCurrentRegion: () => here }),
         stopBotWalks: stops,
+        expectBotArrivals: expects,
     });
     glue.start();
     const adapter = { teleport: vi.fn(() => true), pushNow: vi.fn(() => true), onStateReport: null };
@@ -81,7 +83,7 @@ function harness({ loop = false } = {}) {
     report('level', 0);
     adapter.teleport.mockClear();
     moves.length = 0;
-    return { glue, adapter, moves, report, stops, region: () => here };
+    return { glue, adapter, moves, report, stops, expects, region: () => here };
 }
 
 vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -286,4 +288,20 @@ describe('Tools ▸ Restart — the Menu panel\'s own Restart, one code path', (
         expect(glue.handleMenuRestart).not.toHaveBeenCalled();
     });
 
+});
+
+describe('teleportTool — the arrival watch only behind a stopped walk', () => {
+    it('a walk in flight was stopped: the engines watch for the landing (the bot re-plans and its next goal releases it)', () => {
+        const h = harness({ walks: 1 });
+        const r = h.glue.teleportTool({ region: DUNGEON });
+        expect(h.expects).toHaveBeenCalledTimes(1);
+        expect(r).toMatchObject({ taken: true, stoppedWalks: 1, watching: 1 });
+    });
+    it('no walk: nothing watches, so no hold strands a player who walks by hand', () => {
+        const h = harness({ walks: 0 });
+        const r = h.glue.teleportTool({ region: DUNGEON });
+        expect(h.expects).not.toHaveBeenCalled();
+        expect(r).toMatchObject({ taken: true, stoppedWalks: 0, watching: 0 });
+        expect(h.glue.binding.region).toBe(DUNGEON);
+    });
 });

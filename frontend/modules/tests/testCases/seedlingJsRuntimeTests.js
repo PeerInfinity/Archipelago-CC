@@ -4746,9 +4746,7 @@ const toolsRestartAndTeleport = (runtime) => async (tc) => withRuntimeRestored(t
     const born = await toolsSettledIn(tc, `[${runtime}] the new game stands in ${TOOLS_START}`, TOOLS_START, 0, 60000);
     tc.reportCondition(`[${runtime}] the new game stands in ${TOOLS_START} (level 0)`, !!born);
     if (!born) return;
-    // ⛓ THIS ROW'S OWN STATE: the Playback Bot stopped. An earlier row can leave it running; on wasm its playback
-    // then adopts this row's arrivals and HOLDS the room (Bot.as `holding`), so the walk's keys move nothing.
-    // Measured in the seedling-js batch on CI: `held: true`, `tick_count: 0`, the Up key held for 20 s.
+    // ⛓ THIS ROW'S OWN STATE: the Playback Bot stopped (an earlier row may leave it running; this row walks by hand)
     const botPanel = getBotPanel();
     const bot = botPanel?.getBot?.() ?? botPanel ?? null;
     tc.log(`[${runtime}] the Playback Bot before this row: ${bot ? `active ${!!bot.isActive?.()}` : 'not mounted'}; stopped`);
@@ -4757,26 +4755,6 @@ const toolsRestartAndTeleport = (runtime) => async (tc) => withRuntimeRestored(t
     const tpCheckbox = panel.teleportOnClickCheckbox;
     const tpWas = tpCheckbox?.checked ?? false;
     try {
-        // ── RESTART: the Menu's, then the Tools button's, each from the owl's nest ──
-        toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
-        tc.reportCondition(`[${runtime}] the AP move reached the owl's nest`, !!await toolsSettledIn(tc, `[${runtime}] in the owl's nest`, TOOLS_OWLS, 2));
-        window.centralRegistry.getPublicFunction('menuPanel', 'restart')();
-        const menu = await toolsSettledIn(tc, `[${runtime}] the Menu's Restart landed at the start`, TOOLS_START, 0);
-        tc.reportCondition(`[${runtime}] the Menu's Restart landed in ${TOOLS_START}`, !!menu);
-        const menuVerdict = glue.lastRestart;
-        toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
-        await toolsSettledIn(tc, `[${runtime}] back in the owl's nest`, TOOLS_OWLS, 2);
-        const button = panel.rootElement?.querySelector('.flash-panel-restart') ?? null;
-        tc.assertEqual(`[${runtime}] Tools shows a Restart button on a Seedling preset`, true, !!button && button.style.display !== 'none');
-        if (!button) return;
-        const restartsBefore = glue.stats.restarts;
-        button.click();
-        const tools = await toolsSettledIn(tc, `[${runtime}] Tools ▸ Restart landed at the start`, TOOLS_START, 0);
-        tc.log(`[${runtime}] Restart: Menu ${JSON.stringify(menu)} / Tools ${JSON.stringify(tools)}`);
-        tc.assertEqual(`[${runtime}] Tools ▸ Restart lands where the Menu's Restart lands (level/x/y)`, true, sameSpot(menu, tools));
-        tc.assertEqual(`[${runtime}] the glue's own Restart handler took it (a new verdict, the hop re-taken, one more restart)`,
-            'true/true/1', `${glue.lastRestart !== menuVerdict}/${glue.lastRestart?.taken}/${glue.stats.restarts - restartsBefore}`);
-
         // ── A WALKED EXIT: the owl's nest's stairs up, by keys ──
         toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
         const nest = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the walk`, TOOLS_OWLS, 2);
@@ -4821,6 +4799,32 @@ const toolsRestartAndTeleport = (runtime) => async (tc) => withRuntimeRestored(t
         tc.log(`[${runtime}] REGION CLICK ${JSON.stringify({ ...(dungeon ?? toolsFacts()), verdict: glue.lastTeleport })}`);
         tc.reportCondition(`[${runtime}] TP on UI click into ${TOOLS_DUNGEON} (no door from the start): gameState, the binding and the game reach it`, !!dungeon);
         tc.assertEqual(`[${runtime}] no warning from the region-graph teleport`, pre.warnings, toolsFacts().warnings);
+
+        // ── RESTART: the Menu's, then the Tools button's, each from the owl's nest ──
+        // ⛔ LAST, after the walk: the Restart's `expectBotArrivals` arms a wasm engine's arrival watch whenever one
+        // exists (an earlier row's), and the watch HOLDS the landing until a bot goal that never comes here, so a
+        // walk after it moves nothing (CI, seedling-js batch: `held: true`, 0 ticks). Main's handler; named, not fixed.
+        toolsMove(readCurrentRegion(), TOOLS_OWLS, null);
+        tc.reportCondition(`[${runtime}] the AP move reached the owl's nest`, !!await toolsSettledIn(tc, `[${runtime}] in the owl's nest`, TOOLS_OWLS, 2));
+        window.centralRegistry.getPublicFunction('menuPanel', 'restart')();
+        const menu = await toolsSettledIn(tc, `[${runtime}] the Menu's Restart landed at the start`, TOOLS_START, 0);
+        tc.reportCondition(`[${runtime}] the Menu's Restart landed in ${TOOLS_START}`, !!menu);
+        const menuVerdict = glue.lastRestart;
+        toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+        await toolsSettledIn(tc, `[${runtime}] back in the owl's nest`, TOOLS_OWLS, 2);
+        const button = panel.rootElement?.querySelector('.flash-panel-restart') ?? null;
+        tc.assertEqual(`[${runtime}] Tools shows a Restart button on a Seedling preset`, true, !!button && button.style.display !== 'none');
+        if (!button) return;
+        const restartsBefore = glue.stats.restarts;
+        button.click();
+        const tools = await toolsSettledIn(tc, `[${runtime}] Tools ▸ Restart landed at the start`, TOOLS_START, 0);
+        tc.log(`[${runtime}] Restart: Menu ${JSON.stringify(menu)} / Tools ${JSON.stringify(tools)}`);
+        tc.assertEqual(`[${runtime}] Tools ▸ Restart lands where the Menu's Restart lands (level/x/y)`, true, sameSpot(menu, tools));
+        tc.assertEqual(`[${runtime}] the glue's own Restart handler took it (a new verdict, the hop re-taken, one more restart)`,
+            'true/true/1', `${glue.lastRestart !== menuVerdict}/${glue.lastRestart?.taken}/${glue.stats.restarts - restartsBefore}`);
+        let held = null;
+        try { held = JSON.parse(glue.adapter?._getFlash?.()?.botStatus?.() ?? 'null')?.held ?? null; } catch { held = null; }
+        tc.log(`[${runtime}] after Tools ▸ Restart: the engines watching ${glue.lastRestart?.watching}; the game held ${held}`);
         assertNoDeathNoHalt(tc, runtime, up.rt);
     } finally {
         recorder.stop();
