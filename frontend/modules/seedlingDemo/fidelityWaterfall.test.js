@@ -12,8 +12,9 @@
  * and leaves it down-right into the sliver — the crossing the L100 slice found by hand.
  *
  * Game witnesses (`fixtures/waterfall-witness/`, p4g headless, the player's (x,y) at the first frame per tick):
- * `l100-on-route` — the ON corridor driven with the jellyfish present until 24 ticks past their first hit; and
- * `l100-exit` — its exit leg from the pool down the sliver, 0 hits. The model equals the game at every tick.
+ * `l100-on-route` — the ON corridor driven with the jellyfish present until 24 ticks past their first hit;
+ * `l100-exit` — its exit leg from the pool down the sliver, 0 hits; and `l89-step89-on` — route survey step 89's ON
+ * plan (the survey's one SOLVED mover: 639 → 291 ticks). The model equals the game at every tick.
  * Ships OFF (`contactFidelity.test.js` pins the defaults).
  */
 import { describe, expect, it } from 'vitest';
@@ -26,6 +27,8 @@ import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { withContactFidelity } from './contactFidelity.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
+import { solveSegment } from './solverBot.js';
+import { DEFAULT_DASH_MODE } from '../../../scripts/procgen/dashMode.js';
 import {
     driveStepHeld, livePerVisitOpts, planTilePath, planWaypoints, plansReach, waypointReached, BotDriverV2Error,
 } from './botDriverV2.js';
@@ -35,6 +38,7 @@ const SRC = atlasLevelSource();
 const witness = (name) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'waterfall-witness', `${name}.json`), 'utf8'));
 const ROUTE = witness('l100-on-route');
 const EXIT = witness('l100-exit');
+const L89 = witness('l89-step89-on');
 
 const runOf = (tape) => createRunForStaging(solveStaging(stagingFromTape(parseTape({ ...tape, inputs: [], tick_count: 0 }))), SRC);
 const optsOf = (run, lattice) => ({ ...livePerVisitOpts(run), inventory: run.inventory, lattice });
@@ -135,6 +139,24 @@ describe('L100 — the waterfall\'s push in the corridor planner (waterfallPushP
         expect(keys).toHaveLength(300);
         expect(waypointReached(run.state, { x: 108, y: 36 }, DEFAULT_TOLERANCE, false)).toBe(false);
     });
+
+    it('survey step 89 (L89 → L87): OFF keeps a stop ON the waterfall and re-plans; ON descends the column — the game witness', () => {
+        const solve = (on) => withContactFidelity({ waterfallPushPricing: on }, () => {
+            const run = runOf(L89.tape);
+            return solveSegment({ run, goals: [{ kind: 'reach-exit', exit: { x: 288, y: 240 } }], name: 'l89',
+                boot: L89.tape.boot, dashMode: DEFAULT_DASH_MODE });
+        });
+        const off = solve(false);
+        expect(off.perTick).toHaveLength(639);
+        // the first corridor's stop (232,104) is on L89's waterfall tile (14,6): it stalls, and the walk re-plans
+        expect(off.trace.rows[0].path).toContainEqual({ x: 232, y: 104 });
+        const on = solve(true);
+        expect(on.perTick.map((k) => [...k].sort().join('+'))).toEqual(tapeKeys(L89.tape));
+        const r = replay(L89);
+        expect(r.worst).toBe(0);
+        expect(r.hits).toBe(0);
+        expect(r.run.level).toBe(87);
+    }, 120_000);
 
     it('ON: a price, not a refusal — `plansReach` still answers `planWaypoints` cell for cell on L100', () => {
         withContactFidelity({ waterfallPushPricing: true }, () => {
