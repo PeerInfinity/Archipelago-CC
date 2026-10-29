@@ -146,7 +146,9 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: false, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE });
         expect(problems).toEqual([]);
         expect(lines).toEqual(sampleLines);
-    }, 600_000);
+        // ⛓ RULES l63-pole-crossings: the poles' Ghost Sword arm grows L63's subset universe 4x; measured scripted on its two
+        // sample regions, main's preset 18.6 + 17.8 s → 61.7 + 58.8 s (+84 s over the ~450 s pass), so 600 s left too thin a margin.
+    }, 900_000);
     // ⛓ The in-world CLOSURE comparison is two-sided: a mutated in-world AP row that makes the atlas stricter than
     // the world (the world LOOSER), or looser than it, is still caught (rules-rope-events; asked by
     // tile-primitives-design). L15 alone: its world is certified when any member is in the sample.

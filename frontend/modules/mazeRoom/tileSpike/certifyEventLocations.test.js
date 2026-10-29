@@ -195,7 +195,11 @@ describe('eventLayerFor', () => {
     });
 
     it('... and is carried, named, once a kept rule needs it (L65 listed: its doors cost the poles)', () => {
-        const layer = eventLayerFor(ATLAS, ['level_63', 'level_65']);
+        // ⛓ RULES l63-pole-crossings: L63's struck block crossing r6c9 -> r0c1 costs L61's press (`L63 flag 1`), so a level
+        // list holding L63 without L61 is refused by name (the gate's event is not minted there); L61 is listed.
+        expect(() => eventLayerFor(ATLAS, ['level_63', 'level_65']))
+            .toThrow(/level_63 r6c9 -> r0c1 \(gate\) needs L63 flag 1: lightpole@64,88 cleared, whose region is not in the levels/);
+        const layer = eventLayerFor(ATLAS, ['level_61', 'level_63', 'level_65']);
         expect(layer.events.map((e) => e.name)).toEqual(expect.arrayContaining(L63_POLES));
         expect(layer.exitGates.some((g) => JSON.stringify(g.rule).includes(L63_POLES[0]))).toBe(true);
     });

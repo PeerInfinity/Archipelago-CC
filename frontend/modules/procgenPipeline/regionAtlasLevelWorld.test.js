@@ -162,10 +162,10 @@ describe('the atlas\'s own grid — every playthrough region, compiled alone', (
             } catch (e) { refused[r.region_id] = e.message; }
         }
         expect(refused).toEqual({});
-        expect(ghost).toEqual({
-            level_3: ['Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'],
-            level_101: ['Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'],
-        });
+        // ⛓ RULES l63-pole-crossings: and every pole a Ghost Sword swing reaches (`POLE_GHOST_ARM`) binds the same And.
+        const FUSION = ['Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'];
+        expect(ghost).toEqual(Object.fromEntries(Object.keys(ghost).map((k) => [k, FUSION])));
+        expect(Object.keys(ghost).sort()).toEqual(['level_101', 'level_3', 'level_62', 'level_63', 'level_65']);
     }, 120_000);
 
     // ⛓ RULES l55-waterfall: L50 and L52 are FLOORED by their entry gate now (Swim, charged at every door), so the

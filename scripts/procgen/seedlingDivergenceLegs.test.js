@@ -217,9 +217,11 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ RULES l63-darktrap: 43 -> 50 — L65's landings in L63 (r6c9 <- in_L65_128_0, r10c2 <- in_L65_32_0) and L101's
         //   in L102 (r5c9 <- in_L101_144_96) cost their pole's event: 5 staged, and 2 skipped (the L63 poles' own location
         //   legs from those landings).
-        expect(gated.length).toBe(50);
+        // ⛓ RULES l63-pole-crossings: 50 -> 45 — L63's two L65 landings open on Or(the pole's event, hasGhostSword) now (the
+        //   swing lights the pole from the landing), so their legs are no longer gated on the event alone.
+        expect(gated.length).toBe(45);
         expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
-        expect(gated.filter((l) => l.stagedEvents).length).toBe(40);
+        expect(gated.filter((l) => l.stagedEvents).length).toBe(37); // l63-pole-crossings: 40 -> 37 (+ 2 skips gone)
         expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
         const plain = legs.filter((l) => !l.arrive.events && !l.goalEvents);
         expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
@@ -296,7 +298,7 @@ describe('the committed playthrough\'s leg list', () => {
             .map((l) => ({ ...l, stagedEvents: l.stagedEvents.filter((e) => !l.goalEvents?.includes(e.eventId)) }));
         const pressed = arrivalStaged.filter((l) => l.stagedEvents.some((e) => PRESS.has(e.eventId)));
         expect([...new Set(pressed.map((l) => `${l.level},${l.arrive.x},${l.arrive.y}`))].sort())
-            .toEqual(['102,176,96', '115,64,128', '115,80,128', '16,112,48', '38,144,16', '39,144,608', '63,128,288', '63,32,288']);
+            .toEqual(['102,176,96', '115,64,128', '115,80,128', '16,112,48', '38,144,16', '39,144,608']);
         for (const l of pressed) expect(inside(l, []), l.key).toBeNull();
         const byArrival = new Map(arrivalStaged.filter((l) => !pressed.includes(l))
             .map((l) => [`${l.level},${l.arrive.x},${l.arrive.y}`, l]));

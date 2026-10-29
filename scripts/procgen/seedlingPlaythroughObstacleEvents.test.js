@@ -183,7 +183,8 @@ describe('the playthrough\'s obstacle events', () => {
         expect(fresh(ev['flag:L63:1'])).toEqual(['level_62/out_teleporter_240_304', 'level_63/out_teleporter_64_0']);
         // the committed rules ask the same, as AP exits
         for (const [id, want] of [['flag:L62:0', ['level_62->level_64', 'level_64->level_62']],
-            ['flag:L63:1', ['level_62->level_63__r0c1', 'level_63__r0c1->level_62']]]) {
+            // ⛓ RULES l63-pole-crossings: + the struck block's crossing r6c9 -> r0c1, which the darktrap@64,96 it parks on costs
+            ['flag:L63:1', ['level_62->level_63__r0c1', 'level_63__r0c1->level_62', 'level_63__r6c9->level_63__r0c1']]]) {
             const gates = gatesOf(RULES, new Set([ev[id].name]));
             expect(gates.map((g) => `${g.from}->${g.to}`).sort(), id).toEqual(want);
         }
@@ -208,11 +209,14 @@ describe('the playthrough\'s obstacle events', () => {
         const has = (id) => ({ rule: 'Has', args: { item_name: ev[id].name } });
         const or = (id) => ({ rule: 'Or', children: [has(id), SPEAR] });
         const exit = (from, to) => RULES.regions['1'][from].exits.filter((x) => x.connected_region === to).map((x) => x.access_rule);
-        // L63's two L65 landings are sealed until the pole is lit from the north: in = the event, out = the Spear too
-        expect(exit('level_65__r0c2', 'level_63__r10c2')).toEqual([has('flag:L63:6')]);
+        // L63's two L65 landings are sealed until the pole is lit from the north: in = the event, out = the Spear too.
+        // ⛓ RULES l63-pole-crossings: in = the event OR the Ghost Sword swing from the landing (`POLE_GHOST_ARM`).
+        const GHOST = { rule: 'And', children: ['Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'].map((n) => ({ rule: 'Has', args: { item_name: n } })) };
+        const swing = (id) => ({ rule: 'Or', children: [has(id), GHOST] });
+        expect(exit('level_65__r0c2', 'level_63__r10c2')).toEqual([swing('flag:L63:6')]);
         expect(exit('level_63__r10c2', 'level_65__r0c2')).toEqual([or('flag:L63:6')]);
         // L65's column is lit from both sides: Or both ways (ANDed with L63's on the shared door)
-        expect(exit('level_65__r0c8', 'level_63__r6c9')).toEqual([{ rule: 'And', children: [has('flag:L63:7'), or('flag:L65:0')] }]);
+        expect(exit('level_65__r0c8', 'level_63__r6c9')).toEqual([{ rule: 'And', children: [swing('flag:L63:7'), or('flag:L65:0')] }]);
         expect(exit('level_63__r6c9', 'level_65__r0c8')).toEqual([{ rule: 'And', children: [or('flag:L63:7'), or('flag:L65:0')] }]);
         // L101's landing lights it, the far side does not: in = the Spear way, out (after crossing from beyond) = the
         // event, lit from r4c2

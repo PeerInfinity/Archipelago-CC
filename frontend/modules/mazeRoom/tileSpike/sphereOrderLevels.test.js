@@ -314,7 +314,8 @@ describe('L61–L64 — the poles are laid; the press lights L62\'s, L63\'s in-r
     it('L62\'s pole: its DarkTrap (7,13) is one obstacle, opened by the L63 press or a thrust from a stance on either side', () => {
         const rules = compile(LV);
         const e = pole(rules, 'level_62', 'pole_120_200');
-        expect(e).toMatchObject({ kind: 'pole', at: '7,13', opened_by: F0, struck_by: ['spear'], clear_set: [['lit_120_200']] });
+        // ⛓ RULES l63-pole-crossings: and by a Ghost Sword swing from its own stances (`POLE_GHOST_ARM`).
+        expect(e).toMatchObject({ kind: 'pole', at: '7,13', opened_by: F0, struck_by: ['spear', 'ghostsword'], clear_set: [['lit_120_200']] });
         expect(e.event).toBeUndefined();
         expect(e.struck_from.spear).toEqual(['8,10,S', '8,11,S', '7,12,E', '7,12,N', '8,12,W', '8,12,S', '7,14,N']);
         expect(rules.preset_sidecars['1'].level_62.playable_payload.obstacles.filter((o) => o.id === 'pole_120_200')).toEqual([{ x: 7, y: 13, id: 'pole_120_200' }]);
