@@ -26498,3 +26498,39 @@ row equal ticks included. The sweep ×2 per arm and the probes standard are the 
   is whether the finer flood sees a door the coarse one cannot, nearer the aim.
 - A survey that runs each step in a child process reads the files on disk at that step: a mutant made mid-survey contaminates
   the steps it overlaps. Run mutants after, or restart the arm.
+
+### Seedling fidelity WATERFALL — the corridor planner prices the waterfall's push (`waterfallPushPricing`, OFF)
+
+Planner `seedling-fidelity-planning-16`, wave 35. The report is `CC/docs/cloud-reports/seedling-fidelity-waterfall.md`.
+
+**W0.** `Player.as:1557`: every motion on a waterfall but a Feather-held rise is pushed (`v.y += 0.8`). The planner refused
+only the featherless climb (`climbsArmedWaterfall`) and priced every other waterfall step as floor. Census: 201 armed waterfall
+tiles in 20 levels (L0, 46, 52, 54, 56, 57, 59, 60, 63, 65, 66, 87, 89, 91, 93, 94, 95, 98, 100, 115), most of them one to
+three rows deep. The carry, measured in the model on L100 from rest (Feather or not): held right, 4 px of waterfall → 11.4 px
+down, 8 px → 63.6 px, 16 px → 127.2 px; right+up with the Feather rises 4.4 / 8.2 / 16.4 px; without it 5.3 / 25.1 / 96.5 px
+down. A flat crossing of half a lattice cell leaves its row, at either lattice.
+
+**D1.** ON, a flat A* step INTO an unpinned waterfall node costs `1 + 2 × depth` (the fall and the climb back; a floor under
+it pins the player, cost 1); a flat EXIT costs the same unless its half-cell carry lands on walkable nodes on the far side.
+A price, not a refusal: `plansReach` stays exact, and the R4 lesson (refusing waterfall motion cut L0 from 53 nodes to 12)
+holds. The string-pull keeps no shortcut whose flat or down-diagonal leg crosses an armed waterfall over an open drop, and no
+waterfall point as a stop. L100's 8 px corridor: (76,44) → (108,28) → (116,36) → (124,140).
+
+**Witnesses.** p4g headless, `fixtures/waterfall-witness/`: the ON corridor with the jellyfish present (176 ticks, 19 over
+the waterfall, jellyfish@80,16's hit at t151), its exit leg from the pool down the sliver (117 ticks, 0 hits), and survey step
+89's ON plan (292 ticks, L87 at t291). The model equals the game at every tick, 0 px.
+
+**D2.** Step 219 (L100) stays REFUSED, with a new text: the break-stance walk is planned on the run's 16 px lattice, where
+the sliver has no node, so it is carried to the pool and stalls against `cliffside0@112,128` instead of meeting the jellyfish
+dwell. The 8 px corridor that exists is the walk's lattice choice (the L100 swing-stance code's), not the edge model's.
+
+**Movers.** Local full survey ON vs OFF: 203/37 on both arms; step 89 (L89) SOLVED 639 → 291 t (OFF kept a stop at
+(232,104) on the waterfall, stalled and re-planned), step 219's refusal text. Bounded set ON: the defaults pin only. Six
+`--check`s ON identical; producers ON 97 run, 0 red.
+
+**Trap candidates.**
+- A waypoint on a waterfall is a stop the walk can never make: `hasArrived` needs a stop and the push never lets one happen.
+  A planner that prices waterfall tiles as floor emits such stops, and the walk "stalls" there with nothing in the way.
+- A 16 px route to an 8 px target appends the target to the nearest 16 px node, and the last segment can cross a wall the
+  smoother's fallback never checked. A stance found on the 8 px lattice needs its walk planned on it.
+- Concurrent surveys share one views directory (`.cache/seedling-survey/through-end/views`): run a step alone to read its walk.
