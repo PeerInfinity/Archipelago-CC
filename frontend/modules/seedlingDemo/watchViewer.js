@@ -373,6 +373,9 @@ import {
  * buttons Seedling's `games/seedling.json` declares, shown by the same auto/on/off rule (`?touch=1`, a coarse pointer).
  */
 import { mountTouchControls, parseTouchLayout, touchControlsVisible } from '../flashPanel/touchControls.js';
+// ⛓ LAB L3: ▶ load in JS — the same ship over the JS transport, and the key path into its frame.
+import { JS_STAGES, shipToJs } from './watchWasm.js';
+import { dispatchGameKey } from '../flashPanel/gameInput.js';
 
 /**
  * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL, NOT FROM
@@ -764,6 +767,8 @@ function resetPageChrome() {
      * outlives the press that started it.
      */
     delete window.__editorWasm;
+    // ⛓ LAB L3: and the JS ship's, for the same reason.
+    delete window.__editorJs;
     $('wasmPanel').hidden = true;
     $('wasmStage').textContent = '';
     $('wasmStages').textContent = '';
@@ -10110,6 +10115,32 @@ function setShippable(next) {
     btn.disabled = !shippable;
     btn.title = shippable ? shippable.what : (next?.why ?? 'nothing to ship');
     $('loadWasmNote').textContent = shippable ? '' : (next?.why ?? '');
+    // ⛓ LAB L3: ▶ load in JS ships what ▶ load in wasm would — except in REPLAY,
+    // where `wireShipButton` gives it a builder of its own.
+    if (!replayJsShip) setJsShippable(shippable ? { ...shippable } : next);
+}
+
+/**
+ * ── ⛓⛓⛓ LAB L3 — ▶ LOAD IN JS: THE SAME BUILDER, THE JS TRANSPORT ──────
+ *
+ * In SOLVE, MANUAL, GENERATE and EDIT it is `shippable` itself (`setShippable`
+ * mirrors it): the same payload, re-read at press time, shipped by
+ * `watchWasm.shipToJs` to `jsRuntime.html` — where the tape's BOOT becomes the
+ * start spot and the person plays live. In REPLAY it is the tape's own spot
+ * (`replayJsShip`), and the note says it is LIVE PLAY, not a replay of the tape
+ * (tape replay in the JS frame is Phase B, a js-arc slice).
+ */
+let jsShippable = null;
+let replayJsShip = null;
+
+function setJsShippable(next) {
+    jsShippable = next && next.build ? next : null;
+    const btn = $('loadJs');
+    if (!btn) return;
+    btn.disabled = !jsShippable;
+    btn.title = jsShippable ? `${jsShippable.what} — in the JS runtime, live`
+        : (next?.why ?? 'nothing to ship');
+    $('loadJsNote').textContent = jsShippable ? (jsShippable.jsNote ?? '') : (next?.why ?? '');
 }
 
 /**
@@ -10151,8 +10182,8 @@ function expectFromFrames(frames) {
  * one arm and not the other would make a REPLAY per-tick verdict unassertable
  * — which is exactly the witness ⚖ D4 wants it for.
  */
-function publishShip(state, source, lifetime) {
-    window.__editorWasm = {
+function publishShip(state, source, lifetime, transport = 'wasm') {
+    const projected = {
         stage: state.stage ?? null,
         stages: state.stages ?? [],
         reached: [...(state.reached ?? [])],
@@ -10193,20 +10224,38 @@ function publishShip(state, source, lifetime) {
          */
         hold: state.hold ?? null,
     };
+    /**
+     * ⛓ LAB L3 — A JS SHIP PUBLISHES THE SAME PROJECTION UNDER ITS OWN NAME,
+     * plus what only it has: the spot it asked for (and where the player
+     * arrived) and the frame's sound readout. ⛔ Never under `__editorWasm`: a
+     * JS ship is not a statement about the real game.
+     */
+    if (transport === 'js') {
+        window.__editorJs = {
+            ...projected, transport: 'js', spot: state.spot ?? null, sound: state.sound ?? null,
+        };
+    } else window.__editorWasm = projected;
     if (lifetime.alive()) publishWatch(source);
 }
 
-function shipReadout(source, lifetime) {
+function shipReadout(source, lifetime, transport = 'wasm') {
     const paintStages = (state) => {
         $('wasmStages').textContent = state.stages
             .map((s) => (state.reached.includes(s) ? `✓ ${s}` : `· ${s}`)).join('   ');
     };
-    const publish = (state) => publishShip(state, source, lifetime);
+    const publish = (state) => publishShip(state, source, lifetime, transport);
+    // ⛓ LAB L3: the button the ship came from is the one a refusal re-arms.
+    const button = transport === 'js' ? 'loadJs' : 'loadWasm';
+    const rearm = () => { $(button).disabled = transport === 'js' ? !jsShippable : !shippable; };
     return {
         onStage(stage, message, state) {
             $('wasmStage').textContent = `${stage} — ${message}`;
             paintStages(state);
             publish(state);
+            // ⛓ LAB L3: the frame sits under the lab's canvas, below the fold — and its ▶ Start is the person's to
+            // press, so the ship brings it into view (measured: at 1400×1100 a real click could not reach it).
+            if (transport === 'js' && stage === 'start') $('frame').scrollIntoView({ block: 'center' });
+            if (stage === 'play') rearm();
         },
         onRefusal(stage, reason, detail, state) {
             $('wasmStage').textContent = `⛔ REFUSED at ${stage}: ${reason}`;
@@ -10214,16 +10263,28 @@ function shipReadout(source, lifetime) {
             $('wasmVerdict').className = 'bad';
             paintStages(state);
             publish(state);
-            $('loadWasm').disabled = !shippable;
+            rearm();
         },
-        onTick(st, tape) {
+        onTick(st, tape, state) {
             // ⛔ NO `state.status = st` HERE. `shipToWasm`'s poll already wrote
             // it before calling this; a second writer of one field is exactly
             // the shape this page keeps paying for.
+            if (transport === 'js') {
+                $('wasmHud').innerHTML = jsHudRows(st, state);
+                publish(state);
+                return;
+            }
             $('wasmHud').innerHTML = wasmHudRows(st, tape);
         },
         onVerdict(v, state) {
             paintStages(state);
+            // ⛓ LAB L3: a JS ship has no verdict to paint — only a refusal's,
+            // whose detail `onRefusal` already printed.
+            if (transport === 'js') {
+                publish(state);
+                rearm();
+                return;
+            }
             $('wasmVerdict').className = v.agrees === false ? 'bad' : (v.agrees ? 'ok' : '');
             /**
              * ⛔⛔ THE SCOPE RIDES WITH THE VERDICT, ALWAYS. An `agrees` with no
@@ -10241,7 +10302,7 @@ function shipReadout(source, lifetime) {
              */
             $('wasmVerdict').textContent = verdictBlock(v, state.note);
             publish(state);
-            $('loadWasm').disabled = !shippable;
+            rearm();
         },
     };
 }
@@ -10259,6 +10320,8 @@ async function shipToWasmNow(source, lifetime) {
     const btn = $('loadWasm');
     btn.disabled = true;
     $('wasmPanel').hidden = false;
+    $('wasmPanel').querySelector('h2').textContent = 'THE REAL GAME';
+    jsTouch?.unmount();
     $('wasmVerdict').className = '';
     $('wasmVerdict').textContent = '';
     $('wasmHud').innerHTML = '';
@@ -10288,13 +10351,136 @@ async function shipToWasmNow(source, lifetime) {
 }
 
 /**
+ * ⛓ LAB L3 — PRESS ▶ LOAD IN JS. `shipToWasmNow`'s shape over the other
+ * transport: the same panel, the same readout (`shipReadout(…, 'js')`), the
+ * same named `payload` refusal. ⛔ The parent never presses the frame's
+ * ▶ Start; the readout says to.
+ */
+async function shipToJsNow(source, lifetime) {
+    if (!jsShippable || !lifetime.alive()) return null;
+    const btn = $('loadJs');
+    btn.disabled = true;
+    $('wasmPanel').hidden = false;
+    $('wasmPanel').querySelector('h2').textContent = 'THE JS GAME — live play';
+    $('wasmVerdict').className = '';
+    $('wasmVerdict').textContent = jsShippable.jsNote ?? '';
+    $('wasmHud').innerHTML = '';
+    const readout = shipReadout(source, lifetime, 'js');
+    let payload;
+    let gameConfig;
+    try {
+        [payload, gameConfig] = await Promise.all([jsShippable.build(), seedlingGameConfig()]);
+    } catch (e) {
+        readout.onRefusal('payload', 'the page could not build a payload', e.message, {
+            stage: 'payload', stages: JS_STAGES, reached: [],
+            refusal: { stage: 'payload', reason: 'payload-would-not-build', detail: e.message },
+            verdict: null, label: jsShippable.what, set: null, status: null,
+        });
+        return null;
+    }
+    mountJsTouch(lifetime);
+    return shipToJs(payload, { frame: $('frame'), lifetime, readout, gameConfig });
+}
+
+/** `games/seedling.json` — the spot's item defs and teleport recipe; one fetch per page. */
+let gameConfigLoad = null;
+function seedlingGameConfig() {
+    gameConfigLoad ??= fetchJson(new URL('../flashPanel/games/seedling.json', import.meta.url), 'game config')
+        .catch((e) => { gameConfigLoad = null; throw e; });
+    return gameConfigLoad;
+}
+
+/** The JS game's live `botStatus` as HUD rows (its own fields: no tape, no `finished`). */
+function jsHudRows(st, state) {
+    const snd = state?.sound;
+    return [
+        wasmRow('ticks', st.ticks ?? '?'),
+        wasmRow('level', st.level ?? '?'),
+        wasmRow('position', `${fmt(st.x)}, ${fmt(st.y)}`),
+        wasmRow('hits', `${st.hits ?? 0}`),
+        wasmRow('deaths', st.deaths ?? 0),
+        wasmRow('sound', snd ? `${snd.state ?? '?'} · ${snd.cues ?? 0} cue(s) · music ${snd.music?.loaded ?? '?'}` : '—'),
+        ...(st.halted ? [wasmRow('HALTED', esc(st.halted))] : []),
+    ].join('');
+}
+
+/**
+ * ⛓ LAB L3 — THE ON-SCREEN CONTROLS FOR THE JS FRAME. `jsRuntime.html` has
+ * none of its own (measured: no touch strip in the page), so the lab mounts the
+ * panel's (`touchControls`) under the frame, on the panel's own path: each key
+ * is dispatched on the frame's canvas (`gameInput.dispatchGameKey`), which
+ * bubbles to the document the JS page listens on. `setButtons('js')` (no Esc).
+ * Shown by the `#jsTouch` box; it starts on a coarse pointer or `?touch=1`
+ * (`touchControlsVisible`, MANUAL's rule).
+ */
+async function mountJsTouch(lifetime) {
+    const box = $('jsTouch');
+    let layout = null;
+    try {
+        layout = parseTouchLayout((await seedlingGameConfig()).touch_controls);
+    } catch (e) {
+        box.disabled = true;
+        box.parentNode.title = `on-screen controls unavailable — ${e.message}`;
+        return;
+    }
+    if (!lifetime.alive() || !layout) return;
+    jsTouch?.unmount();
+    let mounted = null;
+    const unmount = () => { mounted?.destroy(); mounted = null; };
+    const apply = () => {
+        if (!lifetime.alive()) return;
+        if (!box.checked) { unmount(); return; }
+        if (mounted) return;
+        mounted = mountTouchControls({
+            doc: document, layout, send: (type, k) => dispatchGameKey($('frame'), type, k),
+        });
+        mounted.setButtons('js');
+        mounted.setPlacement('below');
+        $('frame').after(mounted.element);
+    };
+    jsTouch = { unmount };
+    box.disabled = false;
+    box.checked = box.dataset.touched === '1' ? box.checked
+        : touchControlsVisible('auto', { matchMediaFn: window.matchMedia?.bind(window) });
+    box.onchange = () => { box.dataset.touched = '1'; apply(); };
+    lifetime.onRetire(() => { unmount(); jsTouch = null; });
+    apply();
+}
+let jsTouch = null;
+
+/**
+ * ⛓ LAB L3 — REPLAY'S ▶ LOAD IN JS: the tape's START SPOT, played live. ⛔ It
+ * is NOT a replay of the tape — the JS bridge has no tape verbs (Phase B) — and
+ * the note beside the button says so before anyone presses it.
+ */
+function replayJsShipFor(params) {
+    if (params.side === 'wasm') {
+        return { why: 'the frame holds the wasm replay — set ENGINE to js to load this tape\'s start in JS' };
+    }
+    const path = params.tape ?? null;
+    if (!path) return { why: 'a ?tapes= sequence — open one tape (?tape=) to load its start spot in JS' };
+    return {
+        what: `\u25b6 play LIVE from ${path}'s start spot`,
+        jsNote: 'LIVE PLAY from the tape\'s start spot — NOT a replay of the tape '
+            + '(tape replay in the JS frame is a later slice)',
+        build: async () => ({
+            tape: await fetchJson(repoUrl(path), 'tape'),
+            label: `${path} — its start spot, live`,
+        }),
+    };
+}
+
+/**
  * ⛓ WIRE THE BUTTON FOR THIS MOUNT — and RESET it, which is the half that
  * matters. An arm that arrives holding nothing must not inherit the previous
  * arm's `shippable`: pressing it would ship the run you switched away from.
  */
 function wireShipButton(params, lifetime) {
+    replayJsShip = params.source === 'replay' ? replayJsShipFor(params) : null;
+    if (replayJsShip) setJsShippable(replayJsShip);
     setShippable({ why: NOTHING_TO_SHIP[params.source] ?? 'this arm holds nothing shippable' });
     $('loadWasm').onclick = () => shipToWasmNow(params.source, lifetime);
+    $('loadJs').onclick = () => shipToJsNow(params.source, lifetime);
 }
 
 // ── side=wasm ────────────────────────────────────────────────────────────
@@ -10929,6 +11115,8 @@ const PANELS = Object.freeze({
      * the SIDE selector.
      */
     wasmShip: (s) => s !== 'replay',
+    // ⛓ LAB L3: ▶ load in JS is up for EVERY arm — REPLAY included, as live play.
+    jsShip: () => true,
     // ⛓ The generation pane only exists for the arm that produces one — a
     // permanently empty "GENERATION TRACE" heading on the REPLAY page would
     // be a channel with nothing in it and no way to tell why.

@@ -600,6 +600,17 @@
       <button id="loadWasm" disabled>&#9654; load in wasm</button>
       <span id="loadWasmNote" class="note"></span>
     </span>
+    <!-- ⛓⛓ LAB L3 — ▶ LOAD IN JS (⚖ user, 2026-10-28: "a 'Load in JS' button" …
+         "I want sound"). The same ship over the JS transport (`watchWasm.shipToJs`):
+         the frame becomes `jsRuntime.html` with Seedling art, and YOU press its
+         ▶ Start (that click turns the sound on). It ships what ▶ load in wasm would;
+         in REPLAY it is LIVE PLAY from the tape's start spot, not a replay.
+         `#jsTouch` puts the on-screen controls under the frame. -->
+    <span id="jsShip">
+      <button id="loadJs" disabled>&#9654; load in JS</button>
+      <label class="note"><input id="jsTouch" type="checkbox" disabled> on-screen controls</label>
+      <span id="loadJsNote" class="note"></span>
+    </span>
   </div>
   <!-- ⛓⛓⛓ ONE BOOT PANEL, SHARED BY SOLVE AND MANUAL (switch slice 3).
        Both arms start from a staging block, and until now each had its own
