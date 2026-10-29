@@ -2143,8 +2143,8 @@
         {
             "id": "seedling-wasm-runtime-tools-restart-teleport",
             "enabled": true,
-            "category": "Seedling JS runtime",
-            "_comment": "seedling-js-panel-restart. The JS row's Restart and teleport checks on the WASM runtime (WebGPU). Batch seedling-js."
+            "category": "Seedling wasm runtime",
+            "_comment": "seedling-js-panel-restart. The JS row's Restart and teleport checks on the WASM runtime (WebGPU). Batch seedling-wasm."
         }
     ]
 }

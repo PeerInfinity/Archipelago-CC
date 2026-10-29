@@ -4873,7 +4873,7 @@ for (const [runtime, fn] of [['js', seedlingJsRuntimeToolsRestartTeleport], ['wa
             + 'by keys) against Tools ▸ Go to the spot it landed on: the same AP region in gameState and the binding, the same spot, '
             + 'no door named, no path entry, no warning. Then TP on UI click into the dungeon (no door from the start) reaches it.',
         testFunction: fn,
-        category: 'Seedling JS runtime',
+        category: seedlingRuntimeCategory(`seedling-${runtime}-runtime-tools-restart-teleport`),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
