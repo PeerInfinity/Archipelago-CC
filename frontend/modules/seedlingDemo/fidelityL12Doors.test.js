@@ -51,9 +51,9 @@ describe('fidelity L12DOORS — the staging is rules-4\'s', () => {
     });
 });
 
-describe('fidelity L12DOORS — the switches ship OFF', () => {
-    it('all three default OFF', () => {
-        for (const k of Object.keys(L12DOORS_SWITCHES)) expect(CONTACT_FIDELITY_DEFAULTS[k], k).toBe(false);
+describe('fidelity L12DOORS — the switches ship ON (the W34 flip, ⚖ user 2026-10-28)', () => {
+    it('all three default ON', () => {
+        for (const k of Object.keys(L12DOORS_SWITCHES)) expect(CONTACT_FIDELITY_DEFAULTS[k], k).toBe(true);
     });
 });
 
