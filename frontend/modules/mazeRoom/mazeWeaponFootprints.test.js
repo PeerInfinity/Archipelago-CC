@@ -60,6 +60,7 @@ describe('action_lib footprint — checked, round-tripped', () => {
         expect(bad({ N: [[0, -1]], E: [[1, 0]], S: [[0, 1]] })).toThrow(/footprint\.W/);
         expect(bad({ ...SWORD_FP, E: [[1, 0.5]] })).toThrow(/footprint\.E/);
         expect(bad({ ...SWORD_FP, E: [[0, 0]] })).toThrow(/the player's own cell/);
+        expect(bad({ ...SWORD_FP, E: [[1, 0], [1, 0]] })).toThrow(/names a cell twice/);
         expect(() => checkActionLib(withFootprint(SWORD_FP), 't')).not.toThrow();
     });
 });

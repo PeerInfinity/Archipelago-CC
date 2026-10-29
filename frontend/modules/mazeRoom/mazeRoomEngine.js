@@ -576,7 +576,7 @@ export function checkActionLib(lib, who) {
  * player's cell, per facing. Seedling's are DERIVED from the game's hit rects at the tile-centre stance
  * (`flashPanel/seedlingWeaponFootprints.js`): a sword swing also hits the two side cells and the faced cell's
  * diagonals, a spear thrust two cells ahead, Fire all eight neighbours. Absent, a use hits the faced cell — every
- * world before this slice. ⛔ A missing facing, a non-integer offset or the player's own cell is refused BY NAME.
+ * world before this slice. ⛔ A missing facing, a non-integer offset, a repeated one or the player's own cell is refused BY NAME.
  */
 function checkFootprint(fp, id, who) {
     if (!fp || typeof fp !== 'object' || Array.isArray(fp)) {
@@ -589,6 +589,9 @@ function checkFootprint(fp, id, who) {
         }
         if (cells.some(([dx, dy]) => dx === 0 && dy === 0)) {
             throw new Error(`${who}: action_lib.${id}.footprint.${dir} names [0, 0], the player's own cell`);
+        }
+        if (new Set(cells.map((c) => c.join(','))).size !== cells.length) {
+            throw new Error(`${who}: action_lib.${id}.footprint.${dir} names a cell twice: ${JSON.stringify(cells)}`);
         }
     }
 }
