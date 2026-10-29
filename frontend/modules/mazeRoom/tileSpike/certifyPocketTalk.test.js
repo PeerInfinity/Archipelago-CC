@@ -22,7 +22,10 @@ const YETI = 'L58 flag 1: yeti@56,56 cleared';
 const F6 = 'L63 flag 6: lightpole@48,272 cleared';
 const F7 = 'L63 flag 7: lightpole@112,272 cleared';
 const L65F0 = 'L65 flag 0: lightpole@128,168 cleared';
+const F1 = 'L63 flag 1: lightpole@64,88 cleared';
 const has = (item_name) => ({ rule: 'Has', args: { item_name } });
+// ⛓ RULES l63-pole-crossings: the L65 side of each pocket door has only Ghost Sword swing stances, so its gate is Or(event, the fusion).
+const GHOST = { rule: 'And', children: [has('Ghost Sword Fusion'), has('Ghost Spear'), has('Progressive Sword')] };
 const payloadOf = (rules, level) => Object.values(rules.preset_sidecars['1'])
     .find((s) => s.playable_payload?.atlas_region === level).playable_payload;
 const cellRule = (pp, x, y) => pp.obstacleLib[pp.obstacles.find((o) => o.x === x && o.y === y)?.id]?.clear_rule;
@@ -63,29 +66,37 @@ describe('the L58 Yeti talk in the maze (L57 + L58)', () => {
     }, 120_000);
 });
 
-describe('the L63/L65 pocket landings (L63 + L65)', () => {
-    const RULES = JSON.parse(buildPlaythroughMaze({ levels: ['level_63', 'level_65'] }).text);
+// ⛓ RULES l63-pole-crossings: r6c9 -> r0c1 also costs L63 flag 1 (the spear block parks on darktrap@64,96 unlit), whose pole L61's
+// press lights — so the smallest compile with the pockets lists L61 (L63 + L65 alone is refused by name, `certifyEventLocations`).
+describe('the L63/L65 pocket landings (L61 + L63 + L65)', () => {
+    const RULES = JSON.parse(buildPlaythroughMaze({ levels: ['level_61', 'level_63', 'level_65'] }).text);
     const run = (rules) => certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS });
 
     it('the world lays the producer\'s in-room-pole gates on both pockets\' exit cells, the rule as it stands', () => {
         const l65 = payloadOf(RULES, 'level_65');
-        expect(cellRule(l65, 2, 0)).toEqual(has(F6));
-        expect(cellRule(l65, 8, 0)).toEqual({ rule: 'And', children: [has(F7), { rule: 'Or', children: [has(L65F0), has('Ghost Spear')] }] });
+        expect(cellRule(l65, 2, 0)).toEqual({ rule: 'Or', children: [has(F6), GHOST] });
+        expect(cellRule(l65, 8, 0)).toEqual({ rule: 'And', children: [
+            { rule: 'Or', children: [has(F7), GHOST] }, { rule: 'Or', children: [has(L65F0), has('Ghost Spear')] }] });
         const l63 = payloadOf(RULES, 'level_63');
         expect(cellRule(l63, 2, 19)).toEqual({ rule: 'Or', children: [has(F6), has('Ghost Spear')] });
         expect(cellRule(l63, 8, 19)).toEqual({ rule: 'And', children: [
             { rule: 'Or', children: [has(F7), has('Ghost Spear')] }, { rule: 'Or', children: [has(L65F0), has('Ghost Spear')] }] });
     });
 
-    it('one named problem (the rules\' r0c1 is cut for an arrival from the east); the pocket rows are excused or skipped by name', () => {
+    // ⛓ RULES l63-pole-crossings: main's one problem here (r6c9 → r10c2 [Ghost Spear, f7] derived false) now AGREES — both sides
+    // cost f1 — and the named problem is its mirror, the ACCEPTED framing row (design-2): r6c9's world entrance is the L65 pocket cell (8,19), so
+    // the maze charges f7 (or the swing) to leave it; its witness pushes the block from (7,6) to (5,6), where it stops at the dark
+    // trap (4,6), and stands on (6,6) — a cell of the 3-cell dead end the partition gives r0c1. The game agrees (the probe's
+    // east-no-f1 tape: the block halts on [5,6]); the AP crossing into r0c1 proper still needs f1.
+    it('one named problem (r0c1 is entered on its dead end, east of the parked block); the pocket rows are excused or skipped by name', () => {
         const out = run(RULES);
         expect(out.problems).toEqual([
-            `level_63__r6c9 → level_63__r10c2 holding [Ghost Spear,${F7}]: derived false, atlas true`,
+            `level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,${F7}]: derived true, atlas false`,
         ]);
         const fresh = 'no AP crossing into level_63__r6c9 from outside its world admits this arrival';
         const excused = out.accepted.filter((a) => a.by === fresh).map((a) => a.label).sort();
         expect(excused).toEqual([
-            'level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)', 'level_63__r6c9 → level_63__r0c1',
+            'level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9)', 'level_63__r6c9 → level_63__r10c2',
             'level_63__r6c9 → level_63__r5c14', 'level_63__r6c9 → level_63__r6c15',
         ]);
         const named = (label, why) => out.skipped.some((k) => k.label === label && (k.why ?? null) === why);
@@ -97,6 +108,6 @@ describe('the L63/L65 pocket landings (L63 + L65)', () => {
         const copy = structuredClone(RULES);
         copy.regions['1'].level_65__r0c8.exits.find((e) => e.connected_region === 'level_63__r6c9').access_rule = { rule: 'True_' };
         const { problems } = run(copy);
-        expect(problems).toContain('level_63__r6c9 → level_63__r0c1 holding [Ghost Spear]: derived false, atlas true');
+        expect(problems).toContain(`level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,${F1}]: derived false, atlas true`);
     }, 180_000);
 });

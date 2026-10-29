@@ -59,11 +59,16 @@ const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8'
     'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32', 'level_38',
     'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1', 'level_62', 'level_63__r10c2', 'level_58__r3c3', 'level_65__r0c8'];
 /**
- * The one OPEN row (⚖ 2026-10-29 "Land, name it; route to rules", session tile-primitives-sphere-order-8): from the L65 pocket landing, L63
- * r0c1's east end is cut from its west by the DarkTrap at (4,6) and the spear block that jams (5,6) (a block never enters an Enemy's tile,
- * `PushableBlock.as:28`), so the world needs L61's press (L63 flag 1); the atlas keeps r0c1 whole. Suspected rules-looser; a rules slice.
+ * The one OPEN row (⚖ 2026-10-29 "Land, name it; route to rules", session tile-primitives-sphere-order-8) was r6c9 → r10c2 derived
+ * false: from the L65 pocket landing, L63 r0c1's east end is cut from its west by the DarkTrap at (4,6) and the spear block that jams
+ * (5,6) (a block never enters an Enemy's tile, `PushableBlock.as:28`), so the world needs L61's press (L63 flag 1). ⛓ RULES
+ * l63-pole-crossings closed it: the rules charge r6c9 -> r0c1 that flag too (`playthroughBlockCrossings`), and r10c2 now agrees. The
+ * row left is its mirror, the ACCEPTED framing row (design-2): r6c9's world entrance is the L65 pocket cell (8,19), whose dark trap
+ * (8,17) costs f7 (or the swing); the witness pushes the block (7,6) → (5,6), where it stops at the trap, and stands on (6,6), a cell
+ * of the dead end (5,5)/(5,6)/(6,6) the partition gives r0c1 — per-cell ownership, which the game agrees with (the probe's
+ * east-no-f1 tape halts the block on [5,6]). AP's crossing into r0c1 proper still costs f1.
  */
-const OPEN_L63 = 'level_63__r6c9 → level_63__r10c2 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared,Progressive Swim]: derived false, atlas true';
+const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false';
 const PERMISSIVE = playthroughPermissiveLocations();
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -89,8 +94,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9) | Ghost Spear',
             'level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9) | Progressive Swim',
             'level_63__r5c14 @ Level 063 - Chest (from level_63__r6c9) | no AP crossing into level_63__r6c9 from outside its world admits this arrival',
-            'level_63__r6c9 → level_63__r0c1 | Progressive Swim',
-            'level_63__r6c9 → level_63__r0c1 | no AP crossing into level_63__r6c9 from outside its world admits this arrival',
+            'level_63__r6c9 → level_63__r10c2 | Progressive Swim',
+            'level_63__r6c9 → level_63__r10c2 | no AP crossing into level_63__r6c9 from outside its world admits this arrival',
             'level_63__r6c9 → level_63__r5c14 | Ghost Spear',
             'level_63__r6c9 → level_63__r5c14 | Progressive Swim',
             'level_63__r6c9 → level_63__r5c14 | no AP crossing into level_63__r6c9 from outside its world admits this arrival',
@@ -105,7 +110,9 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // pockets; the rest are landings whose AP crossings already cost an item (water, a lock, a weapon) at that cell. `[own event]`
         // (session tile-primitives-sphere-order-8): an event location's points holding its OWN event at a landing are not asked.
         // ⛓ RULES l63-pole-crossings: the poles' Ghost Sword arm (the fusion's three items) puts Ghost Sword Fusion and
-        // Progressive Sword into L62's and L63's subset universe, so their rows count 4x the subsets — same rows, same fractions.
+        // Progressive Sword into L62's and L63's subset universe, so their rows count 4x the subsets — same rows. The fractions stay,
+        // but for the L65 pocket landings (8,18)/(2,18): 60/192 → 192/768, since the L65 door now also admits the swing (fewer
+        // unadmitted points); their [own event] rows are exactly 4x (48 → 192).
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
@@ -153,21 +160,21 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_57 @ Level 057 - Tentacled Beast (landing 6,4) | 10/24',
             'level_57 → level_58__r4c1 (landing 6,4) | 10/24',
             'level_58__r4c1 → level_57 (landing 3,6) | 18/32',
-            'level_62 → level_61__r0c7 (landing 7,5) | 1/4',
-            'level_62 → level_61__r0c10 (landing 7,5) | 1/4',
-            'level_62 → level_64 (landing 7,5) | 1/4',
-            'level_62 → level_63__r0c1 (landing 7,5) | 2/8',
-            'level_63__r0c1 @ L62 flag 0: lightpole@120,200 cleared (landing 4,1) | 6/192',
-            'level_63__r0c1 → level_61__r0c10 (landing 4,1) | 6/192',
-            'level_63__r0c1 → level_61__r0c7 (landing 4,1) | 6/192',
-            'level_63__r0c1 → level_62 (landing 4,1) | 6/192',
-            'level_63__r6c9 @ L63 flag 7: lightpole@112,272 cleared (landing 8,18) | 60/192',
-            'level_63__r6c9 @ L63 flag 7: lightpole@112,272 cleared (landing 8,18) | 48/192 [own event]',
-            'level_63__r6c9 → level_65__r0c8 (landing 8,18) | 60/192',
-            'level_63__r10c2 @ L63 flag 6: lightpole@48,272 cleared (landing 2,18) | 60/192',
-            'level_63__r10c2 @ L63 flag 6: lightpole@48,272 cleared (landing 2,18) | 48/192 [own event]',
-            'level_63__r10c2 → level_61__r13c12 (landing 2,18) | 60/192',
-            'level_63__r10c2 → level_65__r0c2 (landing 2,18) | 60/192',
+            'level_62 → level_61__r0c7 (landing 7,5) | 4/16',
+            'level_62 → level_61__r0c10 (landing 7,5) | 4/16',
+            'level_62 → level_64 (landing 7,5) | 4/16',
+            'level_62 → level_63__r0c1 (landing 7,5) | 8/32',
+            'level_63__r0c1 @ L62 flag 0: lightpole@120,200 cleared (landing 4,1) | 24/768',
+            'level_63__r0c1 → level_61__r0c10 (landing 4,1) | 24/768',
+            'level_63__r0c1 → level_61__r0c7 (landing 4,1) | 24/768',
+            'level_63__r0c1 → level_62 (landing 4,1) | 24/768',
+            'level_63__r6c9 @ L63 flag 7: lightpole@112,272 cleared (landing 8,18) | 192/768',
+            'level_63__r6c9 @ L63 flag 7: lightpole@112,272 cleared (landing 8,18) | 192/768 [own event]',
+            'level_63__r6c9 → level_65__r0c8 (landing 8,18) | 192/768',
+            'level_63__r10c2 @ L63 flag 6: lightpole@48,272 cleared (landing 2,18) | 192/768',
+            'level_63__r10c2 @ L63 flag 6: lightpole@48,272 cleared (landing 2,18) | 192/768 [own event]',
+            'level_63__r10c2 → level_61__r13c12 (landing 2,18) | 192/768',
+            'level_63__r10c2 → level_65__r0c2 (landing 2,18) | 192/768',
             'level_64 → level_62 (landing 2,5) | 1/4',
             'level_68__r3c1 @ L68 flag 0: bosslock@16,32 cleared (landing 1,4) | 4/32 [own event]',
             'level_89__r11c12 → level_0__r2c13 (landing 10,18) | 1/3',

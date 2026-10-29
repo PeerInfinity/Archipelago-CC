@@ -8809,10 +8809,38 @@
             "name": "level_65__r0c2 -> level_63__r10c2",
             "connected_region": "level_63__r10c2",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "L63 flag 6: lightpole@48,272 cleared"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L63 flag 6: lightpole@48,272 cleared"
+                  }
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Sword Fusion"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -8838,10 +8866,38 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "L63 flag 7: lightpole@112,272 cleared"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L63 flag 7: lightpole@112,272 cleared"
+                      }
+                    },
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Sword Fusion"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "rule": "Or",
@@ -52519,7 +52575,8 @@
                 ]
               ],
               "struck_by": [
-                "spear"
+                "spear",
+                "ghostsword"
               ],
               "struck_from": {
                 "spear": [
@@ -52527,6 +52584,14 @@
                   "8,9,S",
                   "9,10,W",
                   "10,10,W"
+                ],
+                "ghostsword": [
+                  "8,9,E",
+                  "8,9,W",
+                  "8,9,S",
+                  "9,10,N",
+                  "9,10,W",
+                  "9,10,S"
                 ]
               },
               "activates": "lit_128_168",
@@ -52551,13 +52616,41 @@
             },
             "atlas_gate_1": {
               "id": "atlas_gate_1",
-              "name": "L63 flag 6: lightpole@48,272 cleared",
+              "name": "(L63 flag 6: lightpole@48,272 cleared OR (Ghost Sword Fusion AND Ghost Spear AND Progressive Sword))",
               "clear_set_type": "rule",
               "clear_rule": {
-                "rule": "Has",
-                "args": {
-                  "item_name": "L63 flag 6: lightpole@48,272 cleared"
-                }
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L63 flag 6: lightpole@48,272 cleared"
+                    }
+                  },
+                  {
+                    "rule": "And",
+                    "children": [
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Ghost Sword Fusion"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Ghost Spear"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Progressive Sword"
+                        }
+                      }
+                    ]
+                  }
+                ]
               },
               "color": "#b06eb8",
               "display": {
@@ -52566,16 +52659,44 @@
             },
             "atlas_gate_2": {
               "id": "atlas_gate_2",
-              "name": "(L63 flag 7: lightpole@112,272 cleared AND (L65 flag 0: lightpole@128,168 cleared OR Ghost Spear))",
+              "name": "((L63 flag 7: lightpole@112,272 cleared OR (Ghost Sword Fusion AND Ghost Spear AND Progressive Sword)) AND (L65 flag 0: lightpole@128,168 cleared OR Ghost Spear))",
               "clear_set_type": "rule",
               "clear_rule": {
                 "rule": "And",
                 "children": [
                   {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "L63 flag 7: lightpole@112,272 cleared"
-                    }
+                    "rule": "Or",
+                    "children": [
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "L63 flag 7: lightpole@112,272 cleared"
+                        }
+                      },
+                      {
+                        "rule": "And",
+                        "children": [
+                          {
+                            "rule": "Has",
+                            "args": {
+                              "item_name": "Ghost Sword Fusion"
+                            }
+                          },
+                          {
+                            "rule": "Has",
+                            "args": {
+                              "item_name": "Ghost Spear"
+                            }
+                          },
+                          {
+                            "rule": "Has",
+                            "args": {
+                              "item_name": "Progressive Sword"
+                            }
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
                     "rule": "Or",
@@ -52669,6 +52790,124 @@
                   [
                     -1,
                     0
+                  ]
+                ]
+              }
+            },
+            "ghostsword": {
+              "rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Sword Fusion"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  }
+                ]
+              },
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "x",
+              "footprint": {
+                "N": [
+                  [
+                    -1,
+                    -1
+                  ],
+                  [
+                    0,
+                    -1
+                  ],
+                  [
+                    1,
+                    -1
+                  ],
+                  [
+                    -1,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "E": [
+                  [
+                    0,
+                    -1
+                  ],
+                  [
+                    1,
+                    -1
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ],
+                "S": [
+                  [
+                    -1,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    -1,
+                    1
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ],
+                "W": [
+                  [
+                    -1,
+                    -1
+                  ],
+                  [
+                    0,
+                    -1
+                  ],
+                  [
+                    -1,
+                    0
+                  ],
+                  [
+                    -1,
+                    1
+                  ],
+                  [
+                    0,
+                    1
                   ]
                 ]
               }
