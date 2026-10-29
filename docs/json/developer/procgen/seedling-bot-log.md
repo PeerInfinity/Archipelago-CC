@@ -26498,3 +26498,36 @@ row equal ticks included. The sweep ×2 per arm and the probes standard are the 
   is whether the finer flood sees a door the coarse one cannot, nearer the aim.
 - A survey that runs each step in a child process reads the files on disk at that step: a mutant made mid-survey contaminates
   the steps it overlaps. Run mutants after, or restart the arm.
+
+### Seedling fidelity SECUSE — the X+C tick is a same-frame slash-dash on the game; the forced-hit proof's refusal of it is the honest verdict (`secondaryUse` stays OFF, D1 STOPPED)
+
+Wave 35, planner `seedling-fidelity-planning-16`. Base main `9dadbdfc4b`. The report is
+`CC/docs/cloud-reports/seedling-fidelity-secuse.md` (evidence beside it).
+
+**W0 — the game answers.** `Player.input()` calls `useItem(Main.primary)` then `useItem(Main.secondary)` on one frame. The
+verbs' setters exclude each other, so for two different verbs the tick is the first verb's. Two SWORD calls are not
+excluded: the first starts the slash (`slashTimer = slashTimerMax`), and the second finds `slashTimer > 0 && !slashDashed`
+and dashes (`knockback(2, …)`) on the same frame. A fresh game's `Main.secondary` is slot 0, the same as `Main.primary`.
+The game witness `secondary-use-witness/secuse-l73-622-xc` (p4g, `probe-seedling-secondary-use.mjs`, leg 622 with `up`
+held and t0 pressing nothing / X / C / X+C): none, X and C take the lavarunner's hit at t2. X+C goes vy −2.8 at t1 and
+crosses to L74 at t4 with **0 hits**. With the secondary on Fire, X+C is X sample for sample. So FORCEDHIT's "every input
+over 36 held sets is hit by t2" is false on the game: OFF it holds only because the model reads C as nothing.
+
+**D1 — STOPPED by the brief's own rule.** X+C can escape the hit, so an alphabet without it is not a sound proof. Under the
+flag, the proof dying at node 4 on the refused X+C entry is the correct verdict. The cure is js's C4 arm: model the tick as
+two `useItem` calls through the setters' exclusions. That is a hand-over, with `fidelitySecondaryUse.test.js`' rows as its
+acceptance rows. ⛓ Even after C4, L73 needs the forced-hit rung to PLAY a hitless proof leaf that crosses (today a hitless
+leaf ends the proof as "not proven", and the ladder refuses).
+
+**D2 — refusal reading, measured.** Across js-12's four full sweeps, OFF: 0 proofs end on a model refusal. ON: 1 proof does
+(L73, X+C). A state refusal, where every input is refused (housekeep's L74 staging: a sword window pending into a
+button-drop freeze), ends the proof at node 1, which is correct. The ice-blast `FROZEN_TICK_PRESS` (a press the game LOSES,
+the same as its press-free twin) would end a proof the same way, but was measured on 0 legs. Nothing changed.
+Residue (not this slice's): a fire window rides a door, so its hit tick is refused on the next room's arrival freeze, where
+the game's new Player has no window.
+
+**Trap candidates.**
+- An input the model refuses is not automatically an input that changes nothing. Ask the game before you drop it from an
+  exhaustive search.
+- "C is inert" OFF makes X+C the same as X. That is the model's gap, not the game's rule, and a proof built on it inherits it.
+- `Main.secondary` defaults to the PRIMARY's slot, so "the secondary item" is the same item unless a menu moved it.
