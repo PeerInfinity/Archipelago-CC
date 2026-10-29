@@ -4915,10 +4915,21 @@ const restartNoWalkHandWalk = (runtime) => async (tc) => withRuntimeRestored(tc,
         + `status ${JSON.stringify(controller?.status?.() ?? null)}`);
     tc.reportCondition(`[${runtime}] the bot walk (the earlier engine use) crossed into ${TOOLS_START}`, !!botWalked);
     if (!botWalked) return;
-    controller.stop();
-    const idle = await tc.pollForCondition(() => controller.busy?.() === false,
-        `[${runtime}] the controller is idle after its walk`, 15000, 100);
-    tc.reportCondition(`[${runtime}] the controller is idle after its walk (no walk in flight for the Restart)`, !!idle);
+    // ⛓ THIS ROW'S OWN STATE: BOTH Seedling controllers stopped, not only this walk's. An earlier row can leave the
+    // generated-room controller non-idle (measured in the seedling-wasm batch: the Restart counted 1 walk, 2 watching),
+    // and a busy controller IS a walk to `stopBotWalks`. Its engine stays, so the unconditional arm still had one.
+    const controllers = ['flash_seedling', 'flash_seedling_gen']
+        .map((id) => [id, substrateRegistry.get(id)?.getPlaybackController?.() ?? null]).filter(([, c]) => !!c);
+    const phases = () => Object.fromEntries(controllers.map(([id, c]) => {
+        const w = c.status?.()?.wasm ?? null;
+        return [id, { busy: c.busy?.() ?? null, engine: w && { phase: w.phase, driving: w.driving, gate: w.gate, frozen: w.frozen } }];
+    }));
+    tc.log(`[${runtime}] the controllers after the bot walk: ${JSON.stringify(phases())}; stopped`);
+    for (const [, c] of controllers) c.stop();
+    const idle = await tc.pollForCondition(() => controllers.every(([, c]) => c.busy?.() === false),
+        `[${runtime}] every Seedling controller is idle after the stop`, 15000, 100);
+    tc.log(`[${runtime}] the controllers before the Restart: ${JSON.stringify(phases())}`);
+    tc.reportCondition(`[${runtime}] every Seedling controller is idle (no walk in flight for the Restart)`, !!idle);
     if (runtime === 'wasm') {
         tc.assertEqual(`[${runtime}] a wasm engine exists (the Restart has something it could arm)`, true,
             !!controller?.status?.()?.wasm);
