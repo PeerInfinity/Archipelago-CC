@@ -209,6 +209,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
     const problems = [];
     const lines = [];
     const accepted = [];
+    const skipped = [];
     const starts = rules.start_regions?.['1']?.default ?? ['Menu'];
     const everyItem = new Set();
     for (const r of Object.values(REGIONS)) {
@@ -283,16 +284,27 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
     const compareRow = (label, source, items, levels, derivedAt, atlasAt, notHere = null, why = '', stricterOk = null) => {
         const by = new Set();
         const axis = latticeAxis(items, levels);
+        // ⛓ An UNADMITTED landing's points are counted and the row named (`skipped`), never removed in silence (designer review).
+        let unadmitted = 0;
+        let points = 0;
         for (const inv of allPoints(axis)) {
-            if (impossible(inv) || notHere?.(inv)) continue;
+            points += 1;
+            if (impossible(inv)) continue;
+            if (notHere?.unadmitted?.(inv)) { unadmitted += 1; continue; }
+            if (notHere?.(inv)) continue;
             const derived = derivedAt(inv);
             const atlas = atlasAt(inv);
             if (derived === atlas) continue;
             const held = new Set(inv);
             const excuse = derived ? null : items.find((i) => !held.has(i) && needs(source, i)) ?? stricterOk;
-            if (!excuse) { problems.push(`${label} holding [${formatPoint(inv)}]: derived ${derived}, atlas ${atlas}${why}`); return; }
+            if (!excuse) {
+                problems.push(`${label} holding [${formatPoint(inv)}]: derived ${derived}, atlas ${atlas}${why}`);
+                if (unadmitted > 0) skipped.push({ label, points: unadmitted, of: points, partial: true });
+                return;
+            }
             by.add(excuse);
         }
+        if (unadmitted > 0) skipped.push({ label, points: unadmitted, of: points });
         for (const item of by) accepted.push({ label, source, by: item });
         if (stricterOk !== null && by.has(stricterOk)) lines.push(`accepted: ${label} — ${stricterOk}`);
     };
@@ -536,7 +548,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         const into = world.sharedWorld ? enteredAt(world, name) : world;
         for (const arrival of distinctArrivals(into, arrivalsOf(world, name))) priceFrom(world, name, arrival);
     }
-    return { problems, lines, accepted };
+    return { problems, lines, accepted, skipped };
 
     /**
      * ⛓ LANDING-ROOTED ARRIVALS (session tile-primitives-pit-sinks-landings): a region is priced from every cell the GAME
@@ -613,7 +625,10 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             if (landsHere.length === 0) return notHereBefore;
             const axis = new Set([...out.items, ...ruleItems(rowRule)]);
             const unadmitted = (inv) => !landsHere.some((r) => admitsOnAxis(r, pointCounts(inv), axis));
-            return notHereBefore ? (inv) => unadmitted(inv) || notHereBefore(inv) : unadmitted;
+            // `compareRow` asks `.unadmitted` first and COUNTS those points (`skipped`); the rest is the old `notHere`.
+            const notHere = notHereBefore ? (inv) => unadmitted(inv) || notHereBefore(inv) : unadmitted;
+            notHere.unadmitted = unadmitted;
+            return notHere;
         };
         const exitTo = new Map(REGIONS[name].exits.map((e) => [e.name, e.connected_region]));
         const byTarget = new Map();
