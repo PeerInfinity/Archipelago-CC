@@ -80,7 +80,8 @@ describe('TURRETSNAP D1 — the game touches the SNAPPED body (L40, the game wit
 
     it('the danger map at the boot (the turret not yet updated): OFF reads both strips backwards, ON reads them as the game', () => {
         for (const ticks of [0, 1, 2]) {
-            const off = atBoot(BELOW.tape, ticks, (run) => ({ below: turretIds(run, 488, 440), above: turretIds(run, 488, 400) }));
+            const off = withContactFidelity({ turretSnapPricing: false }, () => atBoot(BELOW.tape, ticks,
+                (run) => ({ below: turretIds(run, 488, 440), above: turretIds(run, 488, 400) })));
             const on = withContactFidelity(TURRETSNAP_D1_SWITCHES, () => atBoot(BELOW.tape, ticks,
                 (run) => ({ below: turretIds(run, 488, 440), above: turretIds(run, 488, 400) })));
             expect(off).toEqual({ below: [], above: [L40_TURRET] });
