@@ -131,9 +131,10 @@ describe('SECUSE D1 — the forced-hit proof at leg 622 (STOP: X+C escapes the h
         expect(both({ secondaryUse: false })).toMatchObject({ proven: true, depth: 2, nodes: 1332, minHits: 1 });
     });
     it('ON: the proof stays OPEN at node 4, on the X+C entry the model refuses — the honest verdict', () => {
+        const before = CONTACT_FIDELITY.secondaryUse;
         const p = both({ secondaryUse: true });
         expect(p).toMatchObject({ proven: false, depth: 1, nodes: 4, unmodelled: 'primary+secondary' });
         expect(p.why).toMatch(/the model refuses to step \[primary\+secondary\] \(tick 1: levelRun: X and C are both pressed/);
-        expect(CONTACT_FIDELITY.secondaryUse).toBe(false);
+        expect(CONTACT_FIDELITY.secondaryUse).toBe(before);
     });
 });
