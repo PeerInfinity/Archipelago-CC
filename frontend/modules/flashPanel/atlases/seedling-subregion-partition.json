@@ -3,7 +3,7 @@
   "description": "GENERATED — do not edit. Which tile of a level is in which sub-region, per atlas; one character per tile, the sub-region's index in \"sub_regions\" over \"ABC…\", \".\" for none. Regenerate after either atlas changes.",
   "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
   "atlases": {
-    "seedling-665fd3dc": {
+    "seedling-203feafc": {
       "atlas": "seedling-playthrough.json",
       "tile_size": 16,
       "regions": {
@@ -92,7 +92,7 @@
             "....AA........AAAAAAAA..............BB..",
             "....AA........AAAAAAAA..............BB..",
             "AAAAAA........AAAA..AAAAAA.A........BB..",
-            "AAAAAA........AAAA..AAAAAAAAAA......BB..",
+            "AAAAAA....AA..AAAA..AAAAAAAAAA......BB..",
             "..AAAAAA..AA..AA....AAAAAAAA.A......BB..",
             "..AAAAAA..AA..AA....AAAAAAAAAA......BB..",
             "......AAAAAAAAAA......AA..........BBBB..",
@@ -112,7 +112,7 @@
             "....D.AA....AAAA....................B...",
             "....D.AA....AAAA....................BB..",
             "....DD....AAAAAA............EEEE...BBB..",
-            "....DD....AAAAAA.....F......EEEE...B.B..",
+            "..DDDD....AAAAAA.....F......EEEE...B.B..",
             "..DDDD..AAAAAAAAAA.FFFFF....EE.....BBB..",
             "..DDDD..AAAAAAAAA.FFFFFF....EE.....BBB..",
             "......AAAAAAAA............EEEEEE........",
@@ -709,7 +709,7 @@
             "........BBBBBBBBBBBB..........",
             ".......BBBBB.....BBB..........",
             "......BBBBBB.....BBB..........",
-            "...CC.BB.BBB.....BB...........",
+            "...CC.BB.BBB.BB..BB...........",
             "...CC.B..BBB.BBBBBB.DDD.......",
             ".........BBBBBBBBBB.DDD.......",
             ".....E.....BBBB.BBB..DD.......",
@@ -962,13 +962,13 @@
           "origin": [0,0],
           "width": 15,
           "height": 15,
-          "sub_regions": ["r0c2","r0c8","r4c13"],
+          "sub_regions": ["r0c2","r0c8","r4c11"],
           "rows": [
             "..A.....B......",
             "..A.....B......",
             "..A.....B......",
             "..A.....B......",
-            "..A.....B....C.",
+            "..A.....B..CCC.",
             "..A.....B..CCC.",
             "..A.....B.CC...",
             "..A.....B.C.B..",

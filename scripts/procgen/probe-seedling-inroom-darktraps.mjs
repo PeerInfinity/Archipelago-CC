@@ -6,7 +6,7 @@
  * thrust from a stance on only some sides?
  *
  * ⛓ L65. darktrap@144,144 (tag 1) on [9,9] is the one way from column 8 (the L63 landing (128,16), its teleporter@128,0
- * back) into the loop [9,10]..[12,9] toward the Spear bridge [11,8] and r4c13. lightpole@128,168 (tag 0) over the pit
+ * back) into the loop [9,10]..[12,9] toward the Spear bridge [11,8] and r4c11. lightpole@128,168 (tag 0) over the pit
  * [8,10] is 22.6 px from the trap's centre (lightpole@176,120, tag 2, is 32+ px: out of `radiusMin` 28).
  * ⛓ L101. darktrap@160,80 (tag 1) on [10,5] is the one way from L102's stairs landing (144,80) on [9,5] (its
  * stairsup@144,96 back) east into the rest of `level_101__r4c9`. lightpole@144,64 (tag 0) on [9,4] reaches it only at

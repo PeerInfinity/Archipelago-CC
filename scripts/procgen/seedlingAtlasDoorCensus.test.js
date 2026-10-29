@@ -90,7 +90,10 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   level_12__r42c29 -> r42c28, level_12__r44c19 -> r43c21.
         // ⛓ rules-waterfall-door — restamped (d6f8f007 -> 665fd3dc): L89's door to L91 is charged the Feather (a boundary
         //   exit rule); no door, sub-region or internal-exit count moves.
-        expect(c.atlasId).toBe('seedling-665fd3dc');
+        // ⛓ rules-collider-mismatch — restamped (665fd3dc -> 203feafc): a pixel-mask WALL seals its mask's opaque tiles,
+        //   not its bounding rect, so L47's notch and the open trees' doorways are floor. One rename (level_65__r4c13 ->
+        //   r4c11: the doorway tile [11,4] is now the sub-region's first); no door, sub-region or internal-exit count moves.
+        expect(c.atlasId).toBe('seedling-203feafc');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
