@@ -25,9 +25,9 @@
  * and L40 r23c29 (the shared world whose Fire cells carry the corpse ruling; 7.5 s native, 78 s scripted, measured 2026-10-28).
  * And sphere 5.6's two cross-room presses (session tile-primitives-sphere-order-7): L61 r0c10 (it lights L63's pole) and L63 r0c1 (it lights
  * L62's), each a location on its ButtonRoom's cell.
- * ONE OPEN PROBLEM, named (session tile-primitives-sphere-order-7, ⚖ 2026-10-28 "Ask for a game probe"): L89 r1c10 → L91. The L91
- * teleporter stands on a waterfall tile, so the world charges the Feather (Swim×2); the rules charge Swim. The rules arc's game probe
- * (rules-l89-waterfall-probe) decides which side moves.
+ * L89 r1c10 → L91, the one open problem sphere-order-7 named (⚖ 2026-10-28 "Ask for a game probe"), is CLOSED: the L91 teleporter
+ * stands on a waterfall tile, the game probe sided with the world's Feather (Swim×2), and the rules producer now charges it
+ * (session rules-waterfall-door).
  *
  * Slow tier: ~35 s native (every region, then the sample again for its lines) + ~86 s scripted sample on one
  * core (measured 2026-10-21, L13–L17). Since the arrow trap + rope (session tile-primitives-arrow-rope, 2026-10-22)
@@ -66,7 +66,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     let sampleLines;
     it('native engine, every region', () => {
         const { problems, lines, accepted } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
-        expect(problems).toEqual(['level_89__r1c10 → level_91 (landing 13,1) holding [Progressive Swim]: derived false, atlas true']);
+        expect(problems).toEqual([]);
         expect(lines.length).toBeGreaterThan(0);
         expect(accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
             'level_0__r2c13 → level_0__r1c6 | Progressive Swim',

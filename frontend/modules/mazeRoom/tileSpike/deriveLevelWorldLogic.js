@@ -19,7 +19,7 @@ import {
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
-    createState, step, getExitAt, worldInputs, sharedWorldOwnerAt, standsInArmedLane, strikeTarget, USE_PREFIX, TURN_PREFIX,
+    createState, step, getExitAt, worldInputs, sharedWorldOwnerAt, standsInArmedLane, strikeTargets, USE_PREFIX, TURN_PREFIX,
     actionUsable, blockWithinReach,
 } from '../mazeRoomEngine.js';
 
@@ -53,7 +53,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
             if (macro.length === 2) {
                 const faced = { ...s, facing: macro[0].slice(TURN_PREFIX.length) };
                 const id = macro[1].slice(USE_PREFIX.length);
-                if (strikeTarget(w, faced, id) === null && !blockWithinReach(w, faced, id)) continue;
+                if (strikeTargets(w, faced, id).length === 0 && !blockWithinReach(w, faced, id)) continue;
             }
             let next = s;
             for (const input of macro) {
