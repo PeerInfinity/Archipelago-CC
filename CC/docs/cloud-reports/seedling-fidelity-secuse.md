@@ -185,6 +185,9 @@ Expected then: L73 done ON with 0 hits.
 
 ## Rows to BANK
 
+- **CI** `JavaScript Unit Tests` at the last code head `25f3789419` (run 40922234306): **success** — vitest (unfiltered)
+  24,181 passed / 0 failed, slow battery 273 / 0 (the later commits are docs only; the path filter skips them).
+
 - `fidelitySecondaryUse.test.js` 12/12 in both arms.
 - The game witness `secuse-l73-622-xc`: XC t1 vy −2.8, hits all 0, L74 at t4.
 - Identity block at head = the base block.
