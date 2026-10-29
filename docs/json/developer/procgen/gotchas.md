@@ -179,6 +179,8 @@ The solids that count are the transcription's own item-gated rows, the kill-lock
 
 The cost of the WAY to a location is not charged. L89's Feather lies on water between two waterfalls. Its binding carries Swim + Feather (climbing the south fall), but the arrivals from L90 and L91 come down the north fall on Swim alone. Charging one approach's conjunction is the `--charge-crossings` defect that sealed the map, so such a location is counted in `permissiveBindings` instead.
 
+What every way pays IS charged to a door, when a direction gate prices it. Besides one component's `conditionSets`, the analyzer's binding carries `necessary`: the conditions shared by every way onto the tile, from every component and from every landing the caller names (`arrivalTiles`). Charging those is never stricter than the game. A departure is charged the ones that one of its grid's direction gates (`cell.dirs`) prices. L89's teleporter to L91 stands atop a two-tile waterfall, and its only way in is up the fall, so it costs the Feather (`probe-seedling-l89-waterfall.mjs`). L91's door back stands on a fall too, but it is reached going down, so it stays free. The water is necessary as well, but the landing gates already charge it on every way in, so it is not charged again.
+
 ### An all-water level is analysed with its entry gate as floor
 
 The analyzer's components are dry cells. A level whose exits and locations all stand on water reaches none of them ("binds to NO walkable component"), so it used to ship as one region, and its waterfalls were never priced. L52 is three pools split by waterfalls, and a waterfall is one-way down without the Feather (`Player.as:1557`). As one region, the bottom pool reached the L55 door, and Boss Key 3 behind it, on Swim alone.

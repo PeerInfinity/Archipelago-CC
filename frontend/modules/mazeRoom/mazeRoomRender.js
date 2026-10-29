@@ -64,6 +64,12 @@
  *   armedTraps            boolean[]|null  ARROW TRAPS: per `world.traps` entry, is its
  *                                  lane live (engine `armedTraps`); null = none drawn as
  *                                  armed (a world with traps then shows them silent)
+ *   seedlingSkin          {layer, markerAlpha}|null  SEEDLING ART (maze-seedling-art-1):
+ *                                  `layer` is the level's room baked once at `tilePx`
+ *                                  per cell (`mazeSeedlingSkin.bakeSeedlingLayer`); it is
+ *                                  blitted INSTEAD of the floor/wall fill and the grid,
+ *                                  and the markers are drawn at `markerAlpha` over it.
+ *                                  null = today's draw, op for op.
  *
  * ── ⛓ THE GATE IS AN ORDERED DRAW-OP LOG, AND WHY THAT IS THE PIXELS ──
  *
@@ -152,7 +158,7 @@ export function consumableTileColor(substrateId) {
 export const VIEW_FIELDS = Object.freeze([
     'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations', 'ruleEvaluator',
     'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible', 'isLocationVisible',
-    'isConsumableCollected', 'broken', 'facing', 'armedTraps',
+    'isConsumableCollected', 'broken', 'facing', 'armedTraps', 'seedlingSkin',
 ]);
 
 /**
@@ -227,6 +233,11 @@ export function assertView(view) {
             + `${JSON.stringify(view.tilePx)} — the canvas is sized from it by the caller, so `
             + 'a renderer that picked its own would draw outside the element.');
     }
+    const skin = view.seedlingSkin;
+    if (skin !== null && (!skin?.layer || !(skin.markerAlpha > 0 && skin.markerAlpha <= 1))) {
+        fail('mazeRoomRender: view.seedlingSkin must be null or {layer, markerAlpha} with a baked '
+            + `layer and 0 < markerAlpha <= 1, got ${JSON.stringify(skin)}.`);
+    }
     for (const key of ['isTileVisible', 'isExitVisible', 'isLocationVisible']) {
         if (typeof view[key] !== 'function') {
             fail(`mazeRoomRender: view.${key} must be a function, got `
@@ -246,7 +257,7 @@ export function assertView(view) {
  */
 export function plainView({
     tilePx = TILE_PX, playerPos = null, inventory = null, ruleEvaluator = null,
-    broken = null, facing = null, armedTraps = null,
+    broken = null, facing = null, armedTraps = null, seedlingSkin = null,
 } = {}) {
     return {
         tilePx,
@@ -264,6 +275,7 @@ export function plainView({
         broken,
         facing,
         armedTraps,
+        seedlingSkin,
     };
 }
 
@@ -292,12 +304,20 @@ export function drawWorld(ctx, world, view) {
     // evaluator handles Has/And/Or/True_/False_ as before.
     const clearOpts = view.ruleEvaluator ? { evaluateRule: view.ruleEvaluator } : undefined;
 
-    // Tile base layer: floor / wall.
-    for (let y = 0; y < w.height; y++) {
-        for (let x = 0; x < w.width; x++) {
-            const tile = getTile(w, x, y);
-            ctx.fillStyle = tile === TILE_WALL ? COLORS.wall : COLORS.floor;
-            ctx.fillRect(x * px, y * px, px, px);
+    // ⛓ SEEDLING ART: the level's own room, baked once by the caller, is the
+    // base layer; the maze's markers go over it at `markerAlpha`.
+    const skin = view.seedlingSkin;
+    if (skin) {
+        ctx.drawImage(skin.layer, 0, 0);
+        ctx.globalAlpha = skin.markerAlpha;
+    } else {
+        // Tile base layer: floor / wall.
+        for (let y = 0; y < w.height; y++) {
+            for (let x = 0; x < w.width; x++) {
+                const tile = getTile(w, x, y);
+                ctx.fillStyle = tile === TILE_WALL ? COLORS.wall : COLORS.floor;
+                ctx.fillRect(x * px, y * px, px, px);
+            }
         }
     }
 
@@ -511,19 +531,22 @@ export function drawWorld(ctx, world, view) {
         }
     }
 
-    ctx.strokeStyle = COLORS.grid;
-    ctx.lineWidth = 1;
-    for (let x = 0; x <= w.width; x++) {
-        ctx.beginPath();
-        ctx.moveTo(x * px + 0.5, 0);
-        ctx.lineTo(x * px + 0.5, w.height * px);
-        ctx.stroke();
-    }
-    for (let y = 0; y <= w.height; y++) {
-        ctx.beginPath();
-        ctx.moveTo(0, y * px + 0.5);
-        ctx.lineTo(w.width * px, y * px + 0.5);
-        ctx.stroke();
+    // No grid over the art: the tiles are the grid.
+    if (!skin) {
+        ctx.strokeStyle = COLORS.grid;
+        ctx.lineWidth = 1;
+        for (let x = 0; x <= w.width; x++) {
+            ctx.beginPath();
+            ctx.moveTo(x * px + 0.5, 0);
+            ctx.lineTo(x * px + 0.5, w.height * px);
+            ctx.stroke();
+        }
+        for (let y = 0; y <= w.height; y++) {
+            ctx.beginPath();
+            ctx.moveTo(0, y * px + 0.5);
+            ctx.lineTo(w.width * px, y * px + 0.5);
+            ctx.stroke();
+        }
     }
 
     // Hazard overlays — red paths + facing triangles. Drawn after
@@ -550,6 +573,9 @@ export function drawWorld(ctx, world, view) {
             ctx.fillRect(trap.x * px + 2, trap.y * px, px - 4, Math.max(2, Math.floor(px / 5)));
         });
     }
+
+    // The fog and the player are drawn opaque over the art.
+    if (skin) ctx.globalAlpha = 1;
 
     // Fog overlay — paint solid black over every unseen tile. Runs
     // after grid lines so the grid doesn't leak the unexplored

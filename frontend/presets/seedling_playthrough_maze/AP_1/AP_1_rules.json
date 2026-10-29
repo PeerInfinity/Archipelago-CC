@@ -8127,7 +8127,8 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Swim"
+                "item_name": "Progressive Swim",
+                "count": 2
               }
             }
           }
@@ -9277,7 +9278,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-78fdcf70",
+      "atlas_id": "seedling-d602dee1",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -47893,6 +47894,11 @@
             }
           ],
           "obstacles": [
+            {
+              "x": 13,
+              "y": 0,
+              "id": "atlas_gate_1"
+            },
             {
               "x": 8,
               "y": 2,

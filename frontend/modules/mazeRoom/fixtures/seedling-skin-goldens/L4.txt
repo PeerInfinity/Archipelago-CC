@@ -1,0 +1,42 @@
+drawImage(seedling/Stone, 16, 0, 0, 0)
+drawImage(seedling/Stone, 128, 0, 0, 32)
+drawImage(seedling/Stone, 32, 0, 0, 48)
+drawImage(seedling/Stone, 16, 0, 0, 80)
+drawImage(seedling/Stone, 80, 0, 16, 80)
+drawImage(seedling/Stone, 80, 0, 32, 80)
+drawImage(seedling/Stone, 80, 0, 48, 80)
+drawImage(seedling/Stone, 80, 0, 64, 80)
+drawImage(seedling/Stone, 80, 0, 80, 80)
+drawImage(seedling/Stone, 48, 0, 80, 48)
+drawImage(seedling/Stone, 176, 0, 80, 32)
+drawImage(seedling/Stone, 176, 0, 80, 16)
+drawImage(seedling/Stone, 208, 0, 80, 0)
+drawImage(seedling/Stone, 80, 0, 64, 0)
+drawImage(seedling/Stone, 80, 0, 48, 0)
+drawImage(seedling/Stone, 208, 0, 32, 0)
+drawImage(seedling/Stone, 80, 0, 16, 0)
+drawImage(seedling/Stone, 160, 0, 32, 16)
+drawImage(seedling/Stone, 32, 0, 32, 48)
+drawImage(seedling/Stone, 160, 0, 32, 32)
+drawImage(seedling/DungeonTile, 0, 0, 0, 16) rot=90
+drawImage(seedling/DungeonTile, 0, 0, 16, 16) rot=270
+drawImage(seedling/DungeonTile, 0, 0, 16, 32) rot=180
+drawImage(seedling/DungeonTile, 0, 0, 16, 48) rot=180
+drawImage(seedling/DungeonTile, 0, 0, 16, 64) rot=270
+drawImage(seedling/DungeonTile, 0, 0, 32, 64)
+drawImage(seedling/DungeonTile, 0, 0, 48, 64) rot=180
+drawImage(seedling/DungeonTile, 0, 0, 64, 64) rot=270
+drawImage(seedling/DungeonTile, 0, 0, 64, 48) rot=90
+drawImage(seedling/DungeonTile, 0, 0, 64, 32) rot=90
+drawImage(seedling/DungeonTile, 0, 0, 64, 16) rot=180
+drawImage(seedling/Stone, 96, 0, 96, 80)
+drawImage(seedling/Stone, 160, 0, 96, 64)
+drawImage(seedling/Stone, 224, 0, 96, 48)
+drawImage(seedling/Stone, 224, 0, 96, 32)
+drawImage(seedling/Stone, 224, 0, 96, 16)
+drawImage(seedling/Stone, 192, 0, 96, 0)
+drawImage(seedling/Pit, 0, 0, 80, 64)
+drawImage(seedling/DungeonTile, 0, 0, 48, 48) rot=270
+drawImage(seedling/DungeonTile, 0, 0, 48, 32) rot=180
+drawImage(seedling/DungeonTile, 0, 0, 48, 16) rot=180
+drawImage(seedling/Pit, 0, 0, 0, 64)

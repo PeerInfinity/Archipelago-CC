@@ -35,6 +35,8 @@ Click into the panel so it has the keyboard, then:
 | Diamond | A mana pickup (Loop mode). |
 | Black | Fog: tiles you have not seen yet (with **Fog of war** on). |
 
+In a Seedling world, the room is drawn in the original Seedling graphics, with the marks above on top. See **Seedling art** below.
+
 ## The controls
 
 ### Show generator controls
@@ -57,6 +59,7 @@ Every move you make is an entry here: ↑ ↓ → ← for moves, ◌ for waits, 
 
 - **Fog of war** hides what you have not seen yet. You see your own tile and its four neighbours.
 - **Explore** walks to the nearest tile you have not seen, again and again, until the room is uncovered. (With fog off, there is nothing to uncover.)
+- **Seedling art** (shown only in a Seedling world, such as the Seedling playthrough maze presets): draws the room in the original Seedling graphics, from the same art library the Seedling JS runtime uses. The maze is then drawn at 32 pixels a tile, and the marks above sit on top of the picture, slightly see-through. It is on by default. Untick it for the plain grid. The picture is the room as the level starts, with no animation. Rocks, chests, blocks and the other things the maze tracks are drawn only as their marks. Hover the checkbox for the art's credit.
 - **Edit mode** lets you paint the room: choose a tile in the palette — floor, wall, entrance, item, obstacle, block, button, flag — and click the map. Its **Verifier** checks that every exit and location can still be reached.
 
 The **Paths & obstacles** and **Compiled rules** boxes at the bottom show the room's rules as data, for the curious.
