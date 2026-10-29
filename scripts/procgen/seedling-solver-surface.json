@@ -1019,8 +1019,8 @@
       "name": "lightPolesNow",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
       "line": 19598,
-      "class": "UNCLASSIFIED",
-      "form": null,
+      "class": "seedling",
+      "form": "live-state",
       "files": {
         "solverBot.js": 2
       },
@@ -1030,7 +1030,7 @@
         "direct"
       ],
       "dynamic": null,
-      "why": null
+      "why": "Returns fresh copies of the current level's LightPole rows {id, x, y0, lit, hitsTimer, rect, activate} from the run's per-visit pole state (LightPole.hit toggles activate behind its 25-tick hitsTimer); the in-room pole verb (fidelity LIGHTPOLE) reads activate before and after its one thrust, and the clear-tag arm answers a pole active at the build already-clear."
     },
     {
       "surface": "run",
@@ -4800,8 +4800,8 @@
       "name": "GHOST_SWORD_REACH",
       "module": "frontend/modules/seedlingDemo/ghostSword.js",
       "line": 88,
-      "class": "UNCLASSIFIED",
-      "form": null,
+      "class": "seedling",
+      "form": "constant",
       "files": {
         "solverBot.js": 1
       },
@@ -4811,7 +4811,7 @@
         "import"
       ],
       "dynamic": null,
-      "why": null
+      "why": "The ghost swing's reach, 24 px (getSlashRect's ghost arm, slash()'s distanceRectPoint gate): the in-room pole verb's ghost arm (fidelity LIGHTPOLE) keeps a stance within it of the pole's core."
     },
     {
       "surface": "import",
@@ -4836,8 +4836,8 @@
       "name": "ghostSlashRect",
       "module": "frontend/modules/seedlingDemo/ghostSword.js",
       "line": 117,
-      "class": "UNCLASSIFIED",
-      "form": null,
+      "class": "seedling",
+      "form": "function",
       "files": {
         "solverBot.js": 2
       },
@@ -4847,7 +4847,7 @@
         "import"
       ],
       "dynamic": null,
-      "why": null
+      "why": "The ghost swing's hit rect by facing (24 along, 48 across, getSlashRect's ghost arm): the in-room pole verb's ghost arm (fidelity LIGHTPOLE) derives a stance whose rect lies on the pole's core, and re-asks it where the walk settled."
     },
     {
       "surface": "import",
