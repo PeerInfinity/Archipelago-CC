@@ -18,6 +18,7 @@
 -   Establishes and maintains a WebSocket connection to an Archipelago server.
 -   Handles the authentication handshake (`Connect` command).
 -   Requests and processes the game's `DataPackage` for ID-to-name mappings.
+-   On connect, scouts every one of the slot's locations (`LocationScouts` with `create_as_hint: 0`, so no hints are created) and records what the server says each one holds.
 -   Listens for and processes all incoming server messages.
 -   Updates the `StateManager` (via commands to its proxy) with state changes received from the server, such as received items or locations checked by other players.
 -   Sends commands to the server, such as location checks (`LocationChecks`), chat messages (`Say`), and status updates.
@@ -30,6 +31,7 @@ While most of its actions result in calls to the `StateManager` (which then publ
 
 -   `game:connected`: Published when the connection and authentication handshake is successfully completed.
 -   `game:roomInfo`: Published when server room information is received.
+-   `game:locationsScouted`: Published when the server answers the connect-time scout. The payload is `{ locations }`, one entry per location: `{ locationId, locationName, itemId, itemName, player, playerName, game, flags, progression, useful, trap }`. `player`, `playerName` and `game` describe the slot that receives the item. `itemName` comes from that slot's game in the DataPackage, and is `null` if the DataPackage doesn't have it.
 -   `network:connectionRefused`: Published when the server refuses the connection attempt.
 
 #### Events Subscribed To
@@ -42,7 +44,9 @@ While most of its actions result in calls to the `StateManager` (which then publ
 
 #### Public Functions (`centralRegistry`)
 
-This module does not register any public functions for other modules to call. Interactions are primarily handled through the `eventDispatcher`.
+Most interactions go through the `eventDispatcher`. Among the public functions:
+
+-   `getScoutedLocations()`: the entries from the last `game:locationsScouted` on this connection, or `[]` before the server has answered. They are cleared when the connection opens or closes.
 
 #### Dependencies & Interactions
 
