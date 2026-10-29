@@ -1,0 +1,932 @@
+{
+ "name": "secuse-l73-622-xc",
+ "page": "seedling_bot_ap_p4g",
+ "base": "forcedhit-l73-622-plan",
+ "tick_count": 6,
+ "recordedBy": "scripts/procgen/probe-seedling-secondary-use.mjs --record",
+ "note": "seedling-fidelity-secuse W0 — leg 622 (L73, the arrival from L74, lavarunner@72,24): `up` held t0..t6, and on t0 nothing, X, C, or X+C. Arms *-fire stage `secondary` = slot 1 (Fire) instead of the seam's default slot 0 (the Sword, = primary).",
+ "arms": {
+  "none": {
+   "inputs": [
+    {
+     "key": "up",
+     "from": 0,
+     "to": 6
+    }
+   ],
+   "seam": {},
+   "tape": {
+    "game": "seedling",
+    "name": "secuse-l73-622-xc-none",
+    "boot": {
+     "level": 73,
+     "x": 64,
+     "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+     "dead_frames",
+     "sound"
+    ],
+    "save": {
+     "totem_parts": [],
+     "keys": [],
+     "seal_parts": []
+    },
+    "rng": {
+     "seed": 0,
+     "split": false,
+     "cosmetic": 0,
+     "fp": 987286273
+    },
+    "seam": {
+     "items": {
+      "hasSword": true,
+      "hasDarkSword": false,
+      "hasGhostSword": false,
+      "hasShield": true,
+      "hasDarkShield": false,
+      "hasFire": true,
+      "hasWand": true,
+      "hasFireWand": false,
+      "canSwim": true,
+      "hasFeather": true,
+      "hasSpear": true,
+      "hasDarkSuit": false,
+      "hasTorch": true
+     },
+     "time": 4800,
+     "primary": 0
+    },
+    "tick_count": 6,
+    "inputs": [
+     {
+      "key": "up",
+      "from": 0,
+      "to": 6
+     }
+    ],
+    "tape_version": 8,
+    "description": "⛓ seedling-fidelity-forcedhit D3 — leg 622's FORCED-HIT plan (FORCED_HITS ON): L73, the arrival from L74, the solver's crossing `up up down+right down+right` into teleporter@64,0, cut before the teleport (t4). `lavarunner@72,24` is proven to hit every input; the plan bills it at t2."
+   },
+   "samples": [
+    {
+     "t": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 1,
+     "level": 73,
+     "x": 72,
+     "y": 23.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 2,
+     "level": 73,
+     "x": 70.13236663306107,
+     "y": 20.377433657575743,
+     "vx": -1.867633366938937,
+     "vy": -2.8225663424242553,
+     "hits": 1,
+     "hits_timer": 19
+    },
+    {
+     "t": 3,
+     "level": 73,
+     "x": 68.40268758954751,
+     "y": 17.76335857311749,
+     "vx": -1.7296790435135594,
+     "vy": -2.6140750844582525,
+     "hits": 1,
+     "hits_timer": 18
+    },
+    {
+     "t": 4,
+     "level": 74,
+     "x": 296,
+     "y": 136,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 5,
+     "level": 74,
+     "x": 296,
+     "y": 135.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 6,
+     "level": 74,
+     "x": 296,
+     "y": 133.85,
+     "vx": 0,
+     "vy": -1.35,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  "X": {
+   "inputs": [
+    {
+     "key": "up",
+     "from": 0,
+     "to": 6
+    },
+    {
+     "key": "primary",
+     "from": 0,
+     "to": 1
+    }
+   ],
+   "seam": {},
+   "tape": {
+    "game": "seedling",
+    "name": "secuse-l73-622-xc-X",
+    "boot": {
+     "level": 73,
+     "x": 64,
+     "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+     "dead_frames",
+     "sound"
+    ],
+    "save": {
+     "totem_parts": [],
+     "keys": [],
+     "seal_parts": []
+    },
+    "rng": {
+     "seed": 0,
+     "split": false,
+     "cosmetic": 0,
+     "fp": 987286273
+    },
+    "seam": {
+     "items": {
+      "hasSword": true,
+      "hasDarkSword": false,
+      "hasGhostSword": false,
+      "hasShield": true,
+      "hasDarkShield": false,
+      "hasFire": true,
+      "hasWand": true,
+      "hasFireWand": false,
+      "canSwim": true,
+      "hasFeather": true,
+      "hasSpear": true,
+      "hasDarkSuit": false,
+      "hasTorch": true
+     },
+     "time": 4800,
+     "primary": 0
+    },
+    "tick_count": 6,
+    "inputs": [
+     {
+      "key": "up",
+      "from": 0,
+      "to": 6
+     },
+     {
+      "key": "primary",
+      "from": 0,
+      "to": 1
+     }
+    ],
+    "tape_version": 8,
+    "description": "⛓ seedling-fidelity-forcedhit D3 — leg 622's FORCED-HIT plan (FORCED_HITS ON): L73, the arrival from L74, the solver's crossing `up up down+right down+right` into teleporter@64,0, cut before the teleport (t4). `lavarunner@72,24` is proven to hit every input; the plan bills it at t2."
+   },
+   "samples": [
+    {
+     "t": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 1,
+     "level": 73,
+     "x": 72,
+     "y": 23.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 2,
+     "level": 73,
+     "x": 70.13236663306107,
+     "y": 20.377433657575743,
+     "vx": -1.867633366938937,
+     "vy": -2.8225663424242553,
+     "hits": 1,
+     "hits_timer": 19
+    },
+    {
+     "t": 3,
+     "level": 73,
+     "x": 68.40268758954751,
+     "y": 17.76335857311749,
+     "vx": -1.7296790435135594,
+     "vy": -2.6140750844582525,
+     "hits": 1,
+     "hits_timer": 18
+    },
+    {
+     "t": 4,
+     "level": 74,
+     "x": 296,
+     "y": 136,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 5,
+     "level": 74,
+     "x": 296,
+     "y": 135.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 6,
+     "level": 74,
+     "x": 296,
+     "y": 133.85,
+     "vx": 0,
+     "vy": -1.35,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  "C": {
+   "inputs": [
+    {
+     "key": "up",
+     "from": 0,
+     "to": 6
+    },
+    {
+     "key": "secondary",
+     "from": 0,
+     "to": 1
+    }
+   ],
+   "seam": {},
+   "tape": {
+    "game": "seedling",
+    "name": "secuse-l73-622-xc-C",
+    "boot": {
+     "level": 73,
+     "x": 64,
+     "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+     "dead_frames",
+     "sound"
+    ],
+    "save": {
+     "totem_parts": [],
+     "keys": [],
+     "seal_parts": []
+    },
+    "rng": {
+     "seed": 0,
+     "split": false,
+     "cosmetic": 0,
+     "fp": 987286273
+    },
+    "seam": {
+     "items": {
+      "hasSword": true,
+      "hasDarkSword": false,
+      "hasGhostSword": false,
+      "hasShield": true,
+      "hasDarkShield": false,
+      "hasFire": true,
+      "hasWand": true,
+      "hasFireWand": false,
+      "canSwim": true,
+      "hasFeather": true,
+      "hasSpear": true,
+      "hasDarkSuit": false,
+      "hasTorch": true
+     },
+     "time": 4800,
+     "primary": 0
+    },
+    "tick_count": 6,
+    "inputs": [
+     {
+      "key": "up",
+      "from": 0,
+      "to": 6
+     },
+     {
+      "key": "secondary",
+      "from": 0,
+      "to": 1
+     }
+    ],
+    "tape_version": 8,
+    "description": "⛓ seedling-fidelity-forcedhit D3 — leg 622's FORCED-HIT plan (FORCED_HITS ON): L73, the arrival from L74, the solver's crossing `up up down+right down+right` into teleporter@64,0, cut before the teleport (t4). `lavarunner@72,24` is proven to hit every input; the plan bills it at t2."
+   },
+   "samples": [
+    {
+     "t": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 1,
+     "level": 73,
+     "x": 72,
+     "y": 23.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 2,
+     "level": 73,
+     "x": 70.13236663306107,
+     "y": 20.377433657575743,
+     "vx": -1.867633366938937,
+     "vy": -2.8225663424242553,
+     "hits": 1,
+     "hits_timer": 19
+    },
+    {
+     "t": 3,
+     "level": 73,
+     "x": 68.40268758954751,
+     "y": 17.76335857311749,
+     "vx": -1.7296790435135594,
+     "vy": -2.6140750844582525,
+     "hits": 1,
+     "hits_timer": 18
+    },
+    {
+     "t": 4,
+     "level": 74,
+     "x": 296,
+     "y": 136,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 5,
+     "level": 74,
+     "x": 296,
+     "y": 135.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 6,
+     "level": 74,
+     "x": 296,
+     "y": 133.85,
+     "vx": 0,
+     "vy": -1.35,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  "XC": {
+   "inputs": [
+    {
+     "key": "up",
+     "from": 0,
+     "to": 6
+    },
+    {
+     "key": "primary",
+     "from": 0,
+     "to": 1
+    },
+    {
+     "key": "secondary",
+     "from": 0,
+     "to": 1
+    }
+   ],
+   "seam": {},
+   "tape": {
+    "game": "seedling",
+    "name": "secuse-l73-622-xc-XC",
+    "boot": {
+     "level": 73,
+     "x": 64,
+     "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+     "dead_frames",
+     "sound"
+    ],
+    "save": {
+     "totem_parts": [],
+     "keys": [],
+     "seal_parts": []
+    },
+    "rng": {
+     "seed": 0,
+     "split": false,
+     "cosmetic": 0,
+     "fp": 987286273
+    },
+    "seam": {
+     "items": {
+      "hasSword": true,
+      "hasDarkSword": false,
+      "hasGhostSword": false,
+      "hasShield": true,
+      "hasDarkShield": false,
+      "hasFire": true,
+      "hasWand": true,
+      "hasFireWand": false,
+      "canSwim": true,
+      "hasFeather": true,
+      "hasSpear": true,
+      "hasDarkSuit": false,
+      "hasTorch": true
+     },
+     "time": 4800,
+     "primary": 0
+    },
+    "tick_count": 6,
+    "inputs": [
+     {
+      "key": "up",
+      "from": 0,
+      "to": 6
+     },
+     {
+      "key": "primary",
+      "from": 0,
+      "to": 1
+     },
+     {
+      "key": "secondary",
+      "from": 0,
+      "to": 1
+     }
+    ],
+    "tape_version": 8,
+    "description": "⛓ seedling-fidelity-forcedhit D3 — leg 622's FORCED-HIT plan (FORCED_HITS ON): L73, the arrival from L74, the solver's crossing `up up down+right down+right` into teleporter@64,0, cut before the teleport (t4). `lavarunner@72,24` is proven to hit every input; the plan bills it at t2."
+   },
+   "samples": [
+    {
+     "t": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 1,
+     "level": 73,
+     "x": 72,
+     "y": 21.2,
+     "vx": 0,
+     "vy": -2.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 2,
+     "level": 73,
+     "x": 72,
+     "y": 18.65,
+     "vx": 0,
+     "vy": -2.55,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 3,
+     "level": 73,
+     "x": 72,
+     "y": 16.349999999999998,
+     "vx": 0,
+     "vy": -2.3,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 4,
+     "level": 74,
+     "x": 296,
+     "y": 136,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 5,
+     "level": 74,
+     "x": 296,
+     "y": 135.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 6,
+     "level": 74,
+     "x": 296,
+     "y": 133.85,
+     "vx": 0,
+     "vy": -1.35,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  "C-fire": {
+   "inputs": [
+    {
+     "key": "up",
+     "from": 0,
+     "to": 6
+    },
+    {
+     "key": "secondary",
+     "from": 0,
+     "to": 1
+    }
+   ],
+   "seam": {
+    "secondary": 1
+   },
+   "tape": {
+    "game": "seedling",
+    "name": "secuse-l73-622-xc-C-fire",
+    "boot": {
+     "level": 73,
+     "x": 64,
+     "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+     "dead_frames",
+     "sound"
+    ],
+    "save": {
+     "totem_parts": [],
+     "keys": [],
+     "seal_parts": []
+    },
+    "rng": {
+     "seed": 0,
+     "split": false,
+     "cosmetic": 0,
+     "fp": 987286273
+    },
+    "seam": {
+     "items": {
+      "hasSword": true,
+      "hasDarkSword": false,
+      "hasGhostSword": false,
+      "hasShield": true,
+      "hasDarkShield": false,
+      "hasFire": true,
+      "hasWand": true,
+      "hasFireWand": false,
+      "canSwim": true,
+      "hasFeather": true,
+      "hasSpear": true,
+      "hasDarkSuit": false,
+      "hasTorch": true
+     },
+     "time": 4800,
+     "primary": 0,
+     "secondary": 1
+    },
+    "tick_count": 6,
+    "inputs": [
+     {
+      "key": "up",
+      "from": 0,
+      "to": 6
+     },
+     {
+      "key": "secondary",
+      "from": 0,
+      "to": 1
+     }
+    ],
+    "tape_version": 8,
+    "description": "⛓ seedling-fidelity-forcedhit D3 — leg 622's FORCED-HIT plan (FORCED_HITS ON): L73, the arrival from L74, the solver's crossing `up up down+right down+right` into teleporter@64,0, cut before the teleport (t4). `lavarunner@72,24` is proven to hit every input; the plan bills it at t2."
+   },
+   "samples": [
+    {
+     "t": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 1,
+     "level": 73,
+     "x": 72,
+     "y": 23.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 2,
+     "level": 73,
+     "x": 70.13236663306107,
+     "y": 20.377433657575743,
+     "vx": -1.867633366938937,
+     "vy": -2.8225663424242553,
+     "hits": 1,
+     "hits_timer": 19
+    },
+    {
+     "t": 3,
+     "level": 73,
+     "x": 68.40268758954751,
+     "y": 17.76335857311749,
+     "vx": -1.7296790435135594,
+     "vy": -2.6140750844582525,
+     "hits": 1,
+     "hits_timer": 18
+    },
+    {
+     "t": 4,
+     "level": 74,
+     "x": 296,
+     "y": 136,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 5,
+     "level": 74,
+     "x": 296,
+     "y": 135.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 6,
+     "level": 74,
+     "x": 296,
+     "y": 133.85,
+     "vx": 0,
+     "vy": -1.35,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  "XC-fire": {
+   "inputs": [
+    {
+     "key": "up",
+     "from": 0,
+     "to": 6
+    },
+    {
+     "key": "primary",
+     "from": 0,
+     "to": 1
+    },
+    {
+     "key": "secondary",
+     "from": 0,
+     "to": 1
+    }
+   ],
+   "seam": {
+    "secondary": 1
+   },
+   "tape": {
+    "game": "seedling",
+    "name": "secuse-l73-622-xc-XC-fire",
+    "boot": {
+     "level": 73,
+     "x": 64,
+     "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+     "dead_frames",
+     "sound"
+    ],
+    "save": {
+     "totem_parts": [],
+     "keys": [],
+     "seal_parts": []
+    },
+    "rng": {
+     "seed": 0,
+     "split": false,
+     "cosmetic": 0,
+     "fp": 987286273
+    },
+    "seam": {
+     "items": {
+      "hasSword": true,
+      "hasDarkSword": false,
+      "hasGhostSword": false,
+      "hasShield": true,
+      "hasDarkShield": false,
+      "hasFire": true,
+      "hasWand": true,
+      "hasFireWand": false,
+      "canSwim": true,
+      "hasFeather": true,
+      "hasSpear": true,
+      "hasDarkSuit": false,
+      "hasTorch": true
+     },
+     "time": 4800,
+     "primary": 0,
+     "secondary": 1
+    },
+    "tick_count": 6,
+    "inputs": [
+     {
+      "key": "up",
+      "from": 0,
+      "to": 6
+     },
+     {
+      "key": "primary",
+      "from": 0,
+      "to": 1
+     },
+     {
+      "key": "secondary",
+      "from": 0,
+      "to": 1
+     }
+    ],
+    "tape_version": 8,
+    "description": "⛓ seedling-fidelity-forcedhit D3 — leg 622's FORCED-HIT plan (FORCED_HITS ON): L73, the arrival from L74, the solver's crossing `up up down+right down+right` into teleporter@64,0, cut before the teleport (t4). `lavarunner@72,24` is proven to hit every input; the plan bills it at t2."
+   },
+   "samples": [
+    {
+     "t": 0,
+     "level": 73,
+     "x": 72,
+     "y": 24,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 1,
+     "level": 73,
+     "x": 72,
+     "y": 23.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 2,
+     "level": 73,
+     "x": 70.13236663306107,
+     "y": 20.377433657575743,
+     "vx": -1.867633366938937,
+     "vy": -2.8225663424242553,
+     "hits": 1,
+     "hits_timer": 19
+    },
+    {
+     "t": 3,
+     "level": 73,
+     "x": 68.40268758954751,
+     "y": 17.76335857311749,
+     "vx": -1.7296790435135594,
+     "vy": -2.6140750844582525,
+     "hits": 1,
+     "hits_timer": 18
+    },
+    {
+     "t": 4,
+     "level": 74,
+     "x": 296,
+     "y": 136,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 5,
+     "level": 74,
+     "x": 296,
+     "y": 135.2,
+     "vx": 0,
+     "vy": -0.8,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "t": 6,
+     "level": 74,
+     "x": 296,
+     "y": 133.85,
+     "vx": 0,
+     "vy": -1.35,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  }
+ }
+}
