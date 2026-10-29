@@ -7,6 +7,8 @@ import {
   getItemNameFromServerId,
   getLocationNameFromServerId,
   getServerLocationId,
+  getItemNameForGame,
+  getLocationNameForGame,
   initializeMappingsFromDataPackage,
 } from '../utils/idMapping.js';
 import {
@@ -40,6 +42,11 @@ export class MessageHandler {
     this.clientTeam = null;
     this.clientGameName = null; // Store the game name for this client's slot
     this.players = [];
+    // Connected.slot_info: slot number (as a string key) -> { name, game, type, group_members }
+    this.slotInfo = {};
+    // What the server says is in each of our locations, from LocationScouts:
+    // server location ID -> scouted entry (see _handleLocationInfo)
+    this.scoutedLocations = new Map();
 
     // Use the imported stateManagerProxySingleton directly
     this.stateManager = stateManagerProxySingleton;
@@ -92,6 +99,7 @@ export class MessageHandler {
       this.players = [];
       this.clientSlot = null;
       this.clientTeam = null;
+      this._resetScouts();
     });
     this.eventBus.subscribe('connection:close', () => {
       // The session is over: stop reporting a slot, or isHandshakeComplete()
@@ -99,6 +107,7 @@ export class MessageHandler {
       this.clientSlot = null;
       this.clientTeam = null;
       this.players = [];
+      this._resetScouts();
     });
     this.eventBus.subscribe('connection:message', (commands) => {
       commands.forEach((command) => this.processMessage(command));
@@ -141,6 +150,10 @@ export class MessageHandler {
 
       case 'Bounced':
         this._handleBounced(command);
+        break;
+
+      case 'LocationInfo':
+        this._handleLocationInfo(command);
         break;
 
       default:
@@ -312,6 +325,7 @@ export class MessageHandler {
     this.clientSlot = data.slot;
     this.clientTeam = data.team;
     this.players = data.players;
+    this.slotInfo = data.slot_info || {};
     this.missingLocationIds = data.missing_locations || [];
     this.checkedLocationIds = data.checked_locations || [];
 
@@ -409,6 +423,69 @@ export class MessageHandler {
       serverCheckedLocationNames: serverCheckedLocationNames,
       serverUncheckedLocationNames: serverUncheckedLocationNames,
     });
+
+    this._scoutAllLocations();
+  }
+
+  _resetScouts() {
+    this.slotInfo = {};
+    this.scoutedLocations = new Map();
+  }
+
+  /**
+   * Ask the server what is in every one of our locations, checked or not.
+   * create_as_hint 0 scouts silently: no hints are created or announced.
+   * The answer arrives as one LocationInfo packet.
+   */
+  _scoutAllLocations() {
+    this.scoutedLocations = new Map();
+    const ids = [...new Set([...this.missingLocationIds, ...this.checkedLocationIds])];
+    if (ids.length === 0) return;
+    log('info', `[MessageHandler] Scouting ${ids.length} locations`);
+    connection.send([{ cmd: 'LocationScouts', locations: ids, create_as_hint: 0 }]);
+  }
+
+  /**
+   * Record the scouted contents of our locations. Each NetworkItem names the
+   * item ID, our location ID, the slot that receives the item and its flags.
+   * The item ID belongs to the RECEIVING slot's game, so it is named from that
+   * game's DataPackage, not ours.
+   */
+  _handleLocationInfo(data) {
+    const networkItems = Array.isArray(data.locations) ? data.locations : [];
+    const ownGame = this.slotInfo?.[String(this.clientSlot)]?.game ?? this.clientGameName;
+    const scouted = [];
+    for (const networkItem of networkItems) {
+      const receiver = this.slotInfo?.[String(networkItem.player)];
+      const flags = networkItem.flags ?? 0;
+      const entry = {
+        locationId: networkItem.location,
+        locationName:
+          getLocationNameForGame(ownGame, networkItem.location) ??
+          getLocationNameFromServerId(networkItem.location, this.stateManager),
+        itemId: networkItem.item,
+        itemName: getItemNameForGame(receiver?.game, networkItem.item),
+        player: networkItem.player,
+        playerName: receiver?.name ?? null,
+        game: receiver?.game ?? null,
+        flags,
+        progression: (flags & 0b001) !== 0,
+        useful: (flags & 0b010) !== 0,
+        trap: (flags & 0b100) !== 0,
+      };
+      if (entry.itemName === null) {
+        log('warn', `[MessageHandler] Scouted item ${networkItem.item} for slot ${networkItem.player} has no name in the DataPackage`);
+      }
+      this.scoutedLocations.set(entry.locationId, entry);
+      scouted.push(entry);
+    }
+    log('info', `[MessageHandler] Scouted ${scouted.length} locations`);
+    this.eventBus?.publish('game:locationsScouted', { locations: scouted });
+  }
+
+  /** Every scouted entry received on this connection (empty before LocationInfo arrives). */
+  getScoutedLocations() {
+    return [...this.scoutedLocations.values()];
   }
 
   _handleConnectionRefused(data) {

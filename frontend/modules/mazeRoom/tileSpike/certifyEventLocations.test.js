@@ -91,8 +91,11 @@ describe('gated-cell events: L24\'s burnable tree, gating L12 r40c4 → L24', ()
     it('mutants are caught: the gate dropped (the game lands IN the tree), and the event made free', () => {
         expect(certify(withExitRule(RULES, 'level_12__r40c4', 'level_24', TRUE), SAMPLE).problems
             .some((p) => p.startsWith('level_12__r40c4 → level_24'))).toBe(true);
-        expect(certify(withLocationRule(RULES, 'level_24', E, TRUE), SAMPLE).problems
-            .some((p) => p.startsWith(`level_24 @ ${E}`))).toBe(true);
+        // ⛓ The free event is caught by L24's DEPARTURES (session tile-primitives-sphere-order-8): the location itself is no longer
+        // asked at a landing holding its own event (`why: own event`), and holding the event is no longer an impossible state once its
+        // rule is True_, so L24 → L12 r40c4 holding only the event walks out free where the atlas says no.
+        expect(certify(withLocationRule(RULES, 'level_24', E, TRUE), SAMPLE).problems)
+            .toContain(`level_24 → level_12__r40c4 (landing 6,5) holding [${E}]: derived true, atlas false`);
     });
 });
 
@@ -169,12 +172,26 @@ describe('L38\'s press opens L39: carried (⚖ "Carry + name"), produced on its 
 describe('eventLayerFor', () => {
     // ⛓ session tile-primitives-sphere-order-6: the whole-game compile THREW on the cross-room LIGHTPOLE doors (L62/L64, gated
     // Or(event, Ghost Spear)). A press target is laid only when the press REMOVES it (`persistenceEffect` 'opens'): a lit pole stays.
-    it('over the whole atlas, only a target the press removes is laid, with its pocket doors — no lightpole', () => {
+    it('over the whole atlas, only a target the press removes is laid, with its pocket doors — no lightpole target', () => {
         const rows = eventLayerFor(ATLAS, ATLAS.regions.map((r) => r.region_id)).world.filter((w) => w.mode === 'target' || w.mode === 'door');
         expect(rows.map((w) => `${w.mode} ${w.name} ${w.door?.exit_id ?? ''}`.trim())).toEqual([
             'target L39 flag 8: wandlock@144,592 cleared',
             'door L39 flag 8: wandlock@144,592 cleared out_teleporter_144_0',
             'door L39 flag 8: wandlock@144,592 cleared out_teleporter_144_624',
+            // ⛓ session tile-primitives-sphere-order-8 (⚖ 2026-10-29 "World doors + framing", "Talk location + portal door"): the
+            // producer's in-room-pole gates (the L63/L65 pocket landings, L101's stairs) and talk gates (L58's portal, L113's
+            // FinalDoor on the L114 Watcher) are laid as doors too, each carrying the producer's rule (`gate`)
+            'door L63 flag 6: lightpole@48,272 cleared out_teleporter_32_304',
+            'door L63 flag 7: lightpole@112,272 cleared out_teleporter_128_304',
+            'door L65 flag 0: lightpole@128,168 cleared out_teleporter_128_304',
+            'door L63 flag 6: lightpole@48,272 cleared out_teleporter_32_0',
+            'door L63 flag 7: lightpole@112,272 cleared out_teleporter_128_0',
+            'door L65 flag 0: lightpole@128,168 cleared out_teleporter_128_0',
+            'door L101 flag 0: lightpole@144,64 cleared out_stairsup_144_96',
+            'door L101 flag 0: lightpole@144,64 cleared out_stairsdown_160_96',
+            'door L58 flag 1: yeti@56,56 cleared out_teleporter_80_16',
+            'door L114 flag 0: watcher@72,72 cleared out_teleporter_112_0',
+            'door L114 flag 0: watcher@72,72 cleared out_teleporter_128_0',
         ]);
     });
 

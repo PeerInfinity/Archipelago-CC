@@ -963,6 +963,8 @@ registerTest({
  * loaded with every sheet decoded, the canvas at 32 px a cell, the room baked ONCE (a move and a toggle round
  * trip are cache hits, not rebuilds), the toggle turning it off (20 px, no layer). It also LOGS the canvas cost
  * per render, art on vs off, on L0 and on the biggest level (L12, adopted for the measurement only).
+ * ⛓ S2 (maze-seedling-art-2): after the move, the live sprites drew (the census matched every maze object of the
+ * room, the player is its sprite) — the per-state frame choice is pinned in node (`mazeSeedlingSprites.test.js`).
  */
 const ART_L12 = 'level_12__r0c19';
 
@@ -1016,6 +1018,10 @@ async function seedlingArtStaticRoom(testController) {
     const after = panel.getSeedlingArtStatus();
     testController.assertEqual('the move rebuilt nothing', before.builds, after.builds);
     testController.assertEqual('the move hit the baked room', true, after.hits > before.hits);
+    // ⛓ S2 (maze-seedling-art-2): the maze's own things are LIVE sprites over the room, the player one of them
+    testController.assertEqual('S2: the census matched every maze object of the room', 0, after.censusRefusals ?? null);
+    testController.assertEqual('S2: the player is drawn as its sprite', true, after.playerSprite === true);
+    testController.log(`S2: ${after.sprites} live sprite(s) over the L0 room`);
 
     // ── the toggle: off is today's 20 px draw; on again is a cache hit ──
     const off = toggle();

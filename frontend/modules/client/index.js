@@ -176,6 +176,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('game:roomUpdate');
   registrationApi.registerEventBusPublisher('game:itemsReceived');
   registrationApi.registerEventBusPublisher('game:dataPackageReceived');
+  registrationApi.registerEventBusPublisher('game:locationsScouted');
   registrationApi.registerEventBusPublisher('game:chatMessage');
   registrationApi.registerEventBusPublisher('ui:printToConsole');
   registrationApi.registerEventBusPublisher('ui:printFormattedToConsole');
@@ -325,6 +326,12 @@ export function register(registrationApi) {
       isConnected: coreConnection ? coreConnection.isConnected() : false,
       isHandshakeComplete: coreMessageHandler.getClientSlot() !== null && coreMessageHandler.getClientSlot() !== undefined,
     };
+  });
+
+  // Register public function returning what the server says is in each of our
+  // locations (scouted silently on connect). Empty before the answer arrives.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getScoutedLocations', () => {
+    return coreMessageHandler ? coreMessageHandler.getScoutedLocations() : [];
   });
 
   // Register public function for batch-sending location checks to the server

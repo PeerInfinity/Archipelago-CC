@@ -6,8 +6,9 @@
  *   2. Every Seedling maze payload's grid IS its level (size checked against the patched map).
  *   3. GOLDEN static draw lists (`formatOp`) for L0, L4 and L12 — a CHANGE DETECTOR of the frame choice.
  *      Re-record after a deliberate change: `UPDATE_MAZE_SKIN_GOLDENS=1 npx vitest run <this file>`.
- *   4. What the maze models is left to its markers: no object of the baked room sits on a modelled cell, and
- *      no placed pickup is drawn.
+ *   4. What the maze models is left to the maze (its live sprites, else its markers): no object the census
+ *      matched to a maze object is baked (⛓ S2 — S1's rule was "no object centred on a modelled cell"), and no
+ *      placed pickup is drawn.
  */
 import { beforeAll, describe, expect, it } from 'vitest';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -19,7 +20,8 @@ import { createArtLibrary } from '../artLibrary/artLibrary.js';
 import { formatOp } from '../seedlingDemo/seedlingSkinRenderer.js';
 import { regionAtlasOf } from '../flashPanel/mapDocumentPath.js';
 import { deserializeMazeWorld } from './mazeRoomEngine.js';
-import { levelWorldFor, mazeModelledCells, seedlingSkinFor, staticOps } from './mazeSeedlingSkin.js';
+import { levelWorldFor, seedlingSkinFor, staticOps } from './mazeSeedlingSkin.js';
+import { censusEntityIds, seedlingCensus } from './mazeSeedlingSprites.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -108,7 +110,7 @@ const opsOf = (level) => {
     const [, payload] = payloadsOf(PLAYTHROUGH).find(([k]) => k === GOLDEN_REGIONS[level]);
     const mazeWorld = worldOf(payload);
     const { record, world } = levelWorldFor(MAP, level, mazeWorld);
-    return { mazeWorld, world, ops: staticOps(world, art, { level, record, mazeWorld }) };
+    return { mazeWorld, world, record, ops: staticOps(world, art, { level, record, mazeWorld }) };
 };
 
 describe('3. golden static draw lists (frame CHOICE at tick 0, not pixels)', () => {
@@ -130,18 +132,18 @@ describe('3. golden static draw lists (frame CHOICE at tick 0, not pixels)', () 
 
 describe('4. what the maze models is drawn by the maze, not baked into the room', () => {
     for (const level of Object.keys(GOLDEN_REGIONS).map(Number)) {
-        it(`level ${level}: no baked object on a modelled cell; no placed pickup`, () => {
-            const { mazeWorld, world, ops } = opsOf(level);
-            const modelled = mazeModelledCells(mazeWorld);
-            const objectRects = new Set([...world.objectSolids, ...world.pixelmasks].map((o) => o.rect));
+        it(`level ${level}: no baked object the census drew; no placed pickup`, () => {
+            const { mazeWorld, world, record, ops } = opsOf(level);
+            const drawn = censusEntityIds(seedlingCensus(mazeWorld, record));
+            const byRect = new Map([...world.objectSolids, ...world.pixelmasks].map((o) => [o.rect, o]));
             const pickupRects = new Set((world.pickups ?? []).map((p) => p.rect));
+            // not vacuous: the census claims objects of this room, and the baked list is checked against them
+            expect([...byRect.values()].filter((o) => drawn.has(`${o.tag}@${o.x},${o.y}`)).length).toBeGreaterThan(0);
             for (const op of ops) {
                 const r = op.rect ?? op.fallback?.rect;
                 expect(pickupRects.has(r)).toBe(false);
-                if (!objectRects.has(r)) continue;
-                const cx = Math.floor((r.x + (r.right ?? r.x + r.w)) / 2 / 16);
-                const cy = Math.floor((r.y + (r.bottom ?? r.y + r.h)) / 2 / 16);
-                expect(modelled.has(`${cx},${cy}`), `${formatOp(op)} on a modelled cell`).toBe(false);
+                const o = byRect.get(r);
+                if (o) expect(drawn.has(`${o.tag}@${o.x},${o.y}`), `${formatOp(op)} is the maze's to draw`).toBe(false);
             }
         });
     }
