@@ -88,7 +88,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   internal exits; L93's door is up its waterfall pool, so r10c7 <-> r5c7 is Has(Swim, 2) / Has(Swim): swim 204 -> 206,
         //   Has(Swim) 165 -> 166, Has(Swim, 2) 31 -> 32, and L93 is a swim level again (22 -> 23). Renames: level_0__r8c0 -> r7c6,
         //   level_12__r42c29 -> r42c28, level_12__r44c19 -> r43c21.
-        expect(c.atlasId).toBe('seedling-d6f8f007');
+        // ⛓ rules-waterfall-door — restamped (d6f8f007 -> 665fd3dc): L89's door to L91 is charged the Feather (a boundary
+        //   exit rule); no door, sub-region or internal-exit count moves.
+        expect(c.atlasId).toBe('seedling-665fd3dc');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.

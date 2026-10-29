@@ -89,6 +89,13 @@
 //                    caller to charge. Unlike `conditionSets` (one path's whole
 //                    conjunction) this is never stricter than the game. Water
 //                    and a bare pit are not solid, so they never answer true.
+//   arrivalTiles()   (RULES waterfall-door) the atlas tiles the game can PUT
+//                    the player on in this grid (its landings), asked lazily
+//                    and only for a tile no component holds. A way onto that
+//                    tile starting from a landing counts as a way in, so the
+//                    binding's `necessary` (the conditions EVERY way onto the
+//                    tile pays, from any component or landing) never charges
+//                    what a player landing past it skips.
 //
 // Deterministic: components are named for their own geometry and everything is
 // emitted in sorted order, so re-running on unchanged input reproduces the
@@ -721,6 +728,13 @@ export function buildInternalExits(crossings, options = {}) {
  * The step rules are `stepCost`'s — the same faces, the same direction gates,
  * the same refusal to walk out of a sink — which is why a one-way face is
  * honoured here and proximity never was.
+ *
+ * ⛓ RULES waterfall-door — it also answers what EVERY way onto the cell pays
+ * (`necessary`): the conditions common to the masks of all ways, from every
+ * component and from every landing (`options.arrivalTiles`) the search walks
+ * through. Unlike one component's `conditionSets` (each a whole path's
+ * conjunction), this is never stricter than the game. Empty when a way
+ * overflowed `MAX_DISTINCT_CONDITIONS`: that way's mask is unknown.
  */
 function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
     const conditionKey = options.conditionKey ?? ((c) => JSON.stringify(c));
@@ -753,9 +767,19 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
     };
 
     const hits = new Map(); // component index -> ways
+    const ox = grid.origin?.x ?? 0;
+    const oy = grid.origin?.y ?? 0;
+    const landings = new Set((options.arrivalTiles?.() ?? [])
+        .map(([ax, ay]) => [ax - ox, ay - oy])
+        .filter(([gx, gy]) => gx >= 0 && gy >= 0 && gx < width && gy < height)
+        .map(([gx, gy]) => gy * width + gx));
+    let necessaryMask = ~0;
+    let waysIn = 0;
+    let overflowedAny = false;
     push({ cellIndex: sy * width + sx, mask: 0, manual: false, reasons: [], depth: 0 });
     while (queue.length > 0) {
         const state = queue.shift();
+        if (landings.has(state.cellIndex)) { necessaryMask &= state.mask; waysIn += 1; }
         const cx = state.cellIndex % width;
         const cy = (state.cellIndex - cx) / width;
         for (const dir of DIR_NAMES) {
@@ -774,7 +798,7 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
                 if (bit >= MAX_DISTINCT_CONDITIONS) { overflowed = true; break; }
                 mask |= 1 << bit;
             }
-            if (overflowed) continue;
+            if (overflowed) { overflowedAny = true; continue; }
             const next = {
                 cellIndex: n,
                 mask,
@@ -783,6 +807,8 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
                 depth: state.depth + 1,
             };
             if (indexOf[n] >= 0) {
+                necessaryMask &= mask;
+                waysIn += 1;
                 if (!hits.has(indexOf[n])) hits.set(indexOf[n], []);
                 hits.get(indexOf[n]).push(next);
                 continue;
@@ -791,7 +817,9 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
         }
     }
 
-    return [...hits.entries()]
+    const necessary = overflowedAny || waysIn === 0 ? []
+        : conditionOf.filter((_, bit) => (necessaryMask >> bit) & 1);
+    const reaching = [...hits.entries()]
         .map(([index, ways]) => {
             const labelled = paretoMinimal(ways.filter((w) => !w.manual));
             const manualWays = ways.filter((w) => w.manual);
@@ -819,6 +847,7 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
             || a.depth - b.depth
             || a.component.id.localeCompare(b.component.id)
         ));
+    return { reaching, necessary };
 }
 
 /** Nearest component by proximity, ignoring whether you could ever walk there. */
@@ -896,7 +925,7 @@ export function componentForTile(grid, componentsResult, tile, options = {}) {
     const direct = indexOf[y * width + x];
     if (direct >= 0) return { component: components[direct], exact: true, reachable: true };
 
-    const reaching = componentsReaching(grid, componentsResult, x, y, options);
+    const { reaching, necessary } = componentsReaching(grid, componentsResult, x, y, options);
     if (reaching.length > 0) {
         const [chosen] = reaching;
         const how = chosen.free
@@ -911,6 +940,7 @@ export function componentForTile(grid, componentsResult, tile, options = {}) {
             free: chosen.free,
             manual: chosen.manual,
             conditionSets: chosen.conditionSets,
+            necessary,
             manualReasons: chosen.manualReasons,
             ...(chosen.manual && chosen.manualNecessary.length > 0 ? { manualNecessary: chosen.manualNecessary } : {}),
             reason: `tile is not walkable; assigned to the component that reaches it ${how}`

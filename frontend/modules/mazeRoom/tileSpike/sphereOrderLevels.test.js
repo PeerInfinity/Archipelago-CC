@@ -279,8 +279,9 @@ describe('L43 — clean; its locations wait for five Totem Shards', () => {
  *   - L61 / L63: their ButtonRooms light L63's and L62's poles — press locations, as L38's. A lit pole's light kills the DarkTraps it
  *     reaches, which the maze does not lay yet (⚖ "5.6 now, footprints next, then poles"); L63's two IN-ROOM poles, lit by a Spear
  *     thrust from a stance that is not the faced cell, gate only the L65 landings, so with L65 unlisted they are not carried;
- *   - L91: L89 r1c10 → L91 is the one open row — the teleporter stands on a waterfall (the world: Feather; the rules: Swim), left to
- *     the rules arc's game probe (⚖ "Ask for a game probe").
+ *   - L91: L89 r1c10 → L91 was the one open row — the teleporter stands on a waterfall (the world: Feather; the rules: Swim), left to
+ *     the rules arc's game probe (⚖ "Ask for a game probe"). The probe sided with the world and the rules now charge Swim×2
+ *     (session rules-waterfall-door), which the whole preset certifies clean.
  */
 describe('L61–L63 — the lightpole presses are locations; the in-room poles are not carried', () => {
     const LV = ['level_61', 'level_62', 'level_63'];
@@ -311,11 +312,14 @@ describe('L61–L63 — the lightpole presses are locations; the in-room poles a
     }, 180_000);
 });
 
-describe('L91 — the waterfall teleporter row, named and open', () => {
-    it('L89 + L91 + L92: the one problem is r1c10 → L91 (the world climbs the fall: Swim×2; the rules: Swim)', () => {
+describe('L91 — the waterfall teleporter row, priced Swim×2 on both sides', () => {
+    // ⛓ This three-level cut has no start of its own and no level that leads into r1c10's landings, so its one arrival is the region's
+    // first tile, (13,0): the teleporter itself. From there the world crosses free while the rules (rightly) charge Swim×2, so the row
+    // reads "derived true, atlas false" here and only here; the whole preset, where r1c10 is entered from below, certifies clean.
+    it('L89 + L91 + L92: the world climbs the fall on Swim×2, as the rules now charge; the cut\'s door-tile arrival is the one row', () => {
         const LV = ['level_89', 'level_91', 'level_92'];
         const out = certify(LV);
-        expect(out.problems).toEqual(['level_89__r1c10 → level_91 (landing 13,1) holding [Progressive Swim]: derived false, atlas true']);
+        expect(out.problems).toEqual(['level_89__r1c10 → level_91 holding [Progressive Swim]: derived true, atlas false']);
         expect(line(out, 'level_89__r1c10->level_91<@13,1=')).toBe(JSON.stringify([['Progressive Swim', 'Progressive Swim']]));
         const p = compile(LV).preset_sidecars['1'].level_89__r1c10.playable_payload;
         expect(p.exits.find((e) => e.targetRegion === 'level_91')).toMatchObject({ x: 13, y: 0 });

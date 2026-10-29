@@ -368,6 +368,11 @@
       "w": 96,
       "h": 64
     },
+    "Portal": {
+      "file": "sheets/Portal.png",
+      "w": 72,
+      "h": 18
+    },
     "ShrumBlue": {
       "file": "sheets/ShrumBlue.png",
       "w": 144,
@@ -1916,6 +1921,29 @@
         8
       ],
       "as3": "SnowHill.as: Game.sprSnowHill y = -8"
+    },
+    "seedling:object/portal": {
+      "sheet": "Portal",
+      "fw": 18,
+      "fh": 18,
+      "frames": 4,
+      "origin": [
+        1,
+        1
+      ],
+      "anims": {
+        "spin": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Teleporter.as:14-15 sprPortal 18x18; :47-50 x/y = -1; :51-52 spin [0,1,2,3] fps 15; :54 visible = _show"
     },
     "seedling:player/shrum": {
       "sheet": "ShrumBlue",

@@ -181,7 +181,7 @@ import {
     FLOOR_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
 import {
-    CAMERA_MODES, cameraView, createNightLayer, createTileLayer, paintNight, paintOps, roomOps, teleporterArtFilter,
+    CAMERA_MODES, cameraView, createNightLayer, createTileLayer, paintNight, paintOps, portalVisitTick, roomOps, shownTeleporters, teleporterArtFilter,
 } from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
@@ -778,12 +778,14 @@ export function mountJsRuntimePage(win = window) {
                 ops: [...enemySprites, ...apItemSprites].map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null,
                     pack: o.key ? art.packOf(o.key) : null })) }
             : null;
+        const roomRecord = (runtime.mounted ?? runtime.vanilla)?.records?.get(level) ?? null;
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
             ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag)
                 || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag),
-                // ⚖ only the game's SHOWN portals keep a stand-in; the invisible teleporters draw nothing (`teleporterArtFilter`)
-                drawnTeleporters: teleporterArtFilter((runtime.mounted ?? runtime.vanilla)?.records?.get(level) ?? null), drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
+                // ⚖ only the game's SHOWN portals are drawn, as the spinning Portal.png; the invisible teleporters draw nothing
+                drawnTeleporters: teleporterArtFilter(roomRecord), shownTeleporter: shownTeleporters(roomRecord), visitTick: portalVisitTick(runtime.run),
+                drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
         });
         // ⛓ G10 — the boss bodies' build-time rectangles still painted (0 once the skin draws them)
         if (graphics.bosses) {
