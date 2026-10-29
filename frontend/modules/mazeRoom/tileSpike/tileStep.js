@@ -29,7 +29,7 @@
 import { evaluateRule } from '../../shared/ruleEngine/index.js';
 import {
     INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory, actionItems, actionUsable,
-    blocksAfterPush, sinksBlock, footprintCells, blockStrikeCells,
+    blocksAfterPush, sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch,
 } from '../mazeRoomEngine.js';
 
 const DELTAS = { N: { dx: 0, dy: -1 }, S: { dx: 0, dy: 1 }, E: { dx: 1, dy: 0 }, W: { dx: -1, dy: 0 } };
@@ -93,13 +93,15 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         // ⛓ rules-l39: an obstacle's cut is recorded at its canonical cell (`at`, a rope's run), so that is where
         // this cell's `broken` is read — the native `strikeTargets` / `isOpen` agree.
         broken: broken?.includes(rope?.at ?? key) ?? false,
-        struck: actionId !== null && obstacle !== null
+        // ⛓ An entry struck from its stances (`struck_from`, session tile-primitives-lightpoles) is never struck through its cells.
+        struck: actionId !== null && obstacle !== null && world.obstacleLib?.[obstacle]?.struck_from === undefined
             && (world.obstacleLib?.[obstacle]?.struck_by ?? []).includes(actionId),
         // ARROW TRAPS: the group tokens of the traps whose lane holds this cell, by how they fire.
         lane_unless: lanes.filter((e) => e.fires === 'unless_active').map((e) => e.active),
         lane_while: lanes.filter((e) => e.fires === 'while_active').map((e) => e.active),
-        // ROPES: the event a cut of this obstacle is (null when it is not a rope).
-        event: rope?.activates ? (rope.event ?? null) : null,
+        // ROPES: the carried item that keeps this obstacle cut — the event its cut is, or the one that opens it from
+        // elsewhere (`ropeLatch`; null when it is not a rope).
+        event: rope?.activates ? ropeLatch(rope) : null,
         entry,
         // BLOCK SINKS: a block pushed here sinks (water, lava, a pit).
         sink: sinksBlock(world, x, y),
@@ -230,6 +232,15 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
             // cut once (whether it was cut before is the helper's question, never answered here).
             const key = world.obstacleLib?.[getObstacle(world, fx, fy)]?.at ?? posKey(fx, fy);
             if (!struck.has(key)) next.broken.push(key);
+            struck.add(key);
+        }
+        // ⛓ STRUCK FROM A STANCE (session tile-primitives-lightpoles): the native `stanceStrikes` names the obstacles this
+        // stance + facing reaches (a pole's bob box); the condition is asked of each one's canonical cell, as struck.
+        for (const key of stanceStrikes(world, state, actionId)) {
+            const [ax, ay] = key.split(',').map(Number);
+            const cell = { ...tileAt(world, ax, ay, state.blocks, state.player_pos, state.broken, actionId), struck: true };
+            if (!callHelper(ctx, entry.condition, { x: ax, y: ay }, cell) || struck.has(key)) continue;
+            next.broken.push(key);
             struck.add(key);
         }
         next.broken.sort();
