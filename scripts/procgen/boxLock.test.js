@@ -601,6 +601,8 @@ describe('who takes the box', () => {
             'probe-seedling-mobile-fit.mjs',
             // seedling-js-inventory-menu: the V menu's game witness (import door: `isEntryPoint` → main())
             'probe-seedling-inventory-menu.mjs',
+            // fidelity L12DOORS: the solver's L12 → L83 plans on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-l12doors.mjs',
             // seedling-lab-static-art: the lab page's art row (import door: `isEntryPoint` → main())
             'check-seedling-lab-art.mjs'];
         const isGuarded = (f) => {

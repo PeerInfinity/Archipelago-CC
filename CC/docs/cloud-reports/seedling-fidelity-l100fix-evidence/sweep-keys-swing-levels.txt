@@ -1,0 +1,169 @@
+level_0__r2c13 <- in_L89_160_304 -> exit:out_teleporter_240_0
+level_0__r6c5 <- in_L1_64_112 -> exit:out_teleporter_80_96
+level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_0_128
+level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_0_144
+level_0__r7c6 <- in_L2_48_16 -> exit:out_stairsdown_32_192
+level_0__r7c6 <- in_L2_48_16 -> exit:out_teleporter_160_272
+level_0__r7c6 <- in_L2_48_16 -> exit:out_stairsdown_256_272
+level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 1: breakablerock@288,176 cleared
+level_0__r7c6 <- in_L2_48_16 -> location:L0 flag 4: breakablerock@80,112 cleared
+level_0__r7c6 <- in_L13_64_144 -> exit:out_teleporter_0_128
+level_0__r7c6 <- in_L13_64_144 -> exit:out_teleporter_0_144
+level_0__r7c6 <- in_L13_64_144 -> exit:out_stairsdown_32_192
+level_0__r7c6 <- in_L13_64_144 -> exit:out_teleporter_160_272
+level_0__r7c6 <- in_L13_64_144 -> exit:out_stairsdown_256_272
+level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 1: breakablerock@288,176 cleared
+level_0__r7c6 <- in_L13_64_144 -> location:L0 flag 4: breakablerock@80,112 cleared
+level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_0_128
+level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_0_144
+level_0__r7c6 <- in_L86_48_64 -> exit:out_stairsdown_32_192
+level_0__r7c6 <- in_L86_48_64 -> exit:out_teleporter_160_272
+level_0__r7c6 <- in_L86_48_64 -> exit:out_stairsdown_256_272
+level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 1: breakablerock@288,176 cleared
+level_0__r7c6 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,112 cleared
+level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_0_128
+level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_0_144
+level_0__r7c6 <- in_L94_304_160 -> exit:out_stairsdown_32_192
+level_0__r7c6 <- in_L94_304_160 -> exit:out_teleporter_160_272
+level_0__r7c6 <- in_L94_304_160 -> exit:out_stairsdown_256_272
+level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 1: breakablerock@288,176 cleared
+level_0__r7c6 <- in_L94_304_160 -> location:L0 flag 4: breakablerock@80,112 cleared
+level_0__r7c6 <- in_L94_304_176 -> exit:out_teleporter_0_128
+level_0__r7c6 <- in_L94_304_176 -> exit:out_teleporter_0_144
+level_0__r7c6 <- in_L94_304_176 -> exit:out_stairsdown_32_192
+level_0__r7c6 <- in_L94_304_176 -> exit:out_teleporter_160_272
+level_0__r7c6 <- in_L94_304_176 -> exit:out_stairsdown_256_272
+level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 1: breakablerock@288,176 cleared
+level_0__r7c6 <- in_L94_304_176 -> location:L0 flag 4: breakablerock@80,112 cleared
+level_0__r11c19 <- in_L12_0_80 -> exit:out_teleporter_304_176
+level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_0_64
+level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_64_0
+level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_128_48
+level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_0_64
+level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_64_0
+level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_128_48
+level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_0_64
+level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_64_0
+level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_128_48
+level_3__r8c6 <- in_L11_32_0 -> exit:out_teleporter_96_128
+level_15__r1c5 <- in_L14_32_64 -> exit:out_stairsup_32_64
+level_15__r1c9 <- in_L16_16_64 -> exit:out_stairsdown_144_16
+level_16__r1c1 <- in_L15_144_16 -> exit:out_stairsup_16_64
+level_16__r1c1 <- in_L15_144_16 -> location:L16 flag 0: rope@32,16 cleared
+level_16__r3c7 <- in_L17_32_48 -> exit:out_stairsdown_112_64
+level_16__r4c21 <- in_L18_16_16 -> exit:out_stairsup_352_80
+level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96
+level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0
+level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared
+level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96
+level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0
+level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared
+level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16
+level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304
+level_30__r0c4 <- in_L22_96_192 -> exit:out_teleporter_64_0
+level_30__r2c10 <- in_L28_304_16 -> exit:out_teleporter_0_128
+level_30__r2c10 <- in_L28_304_16 -> exit:out_stairsdown_192_48
+level_30__r2c10 <- in_L28_304_16 -> exit:out_pit_3_34
+level_30__r2c10 <- in_L28_304_16 -> location:Level 030 - Torchpickup
+level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 2: bosslock@224,208 cleared
+level_30__r2c10 <- in_L31_160_384 -> exit:out_teleporter_0_128
+level_30__r2c10 <- in_L31_160_384 -> exit:out_stairsdown_192_48
+level_30__r2c10 <- in_L31_160_384 -> exit:out_pit_3_34
+level_30__r2c10 <- in_L31_160_384 -> location:Level 030 - Torchpickup
+level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 0: bosslock@64,32 cleared
+level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 2: bosslock@224,208 cleared
+level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_teleporter_0_128
+level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_stairsdown_192_48
+level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_pit_3_34
+level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - Torchpickup
+level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared
+level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_teleporter_0_128
+level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_stairsdown_192_48
+level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_pit_3_34
+level_30__r2c10 <- in_pit_L32_15_5 -> location:Level 030 - Torchpickup
+level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared
+level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared
+level_30__r8c13 <- in_L32_72_136 -> exit:out_stairsup_224_160
+level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0
+level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40
+level_39__r25c9 <- in_L38_144_0 -> exit:out_teleporter_144_624
+level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
+level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160
+level_53__r2c2 <- in_L48_0_112 -> exit:out_stairsdown_32_144
+level_53__r2c2 <- in_L48_0_112 -> exit:out_teleporter_208_64
+level_53__r2c2 <- in_L51_176_144 -> exit:out_stairsdown_32_144
+level_53__r2c2 <- in_L51_176_144 -> exit:out_teleporter_208_64
+level_53__r14c9 <- in_L54_144_0 -> exit:out_teleporter_144_240
+level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0
+level_73__r3c7 <- in_L72_176_0 -> exit:out_teleporter_32_144
+level_92__r4c2 <- in_L91_240_48 -> exit:out_teleporter_32_144
+level_92__r7c17 <- in_L87_16_32 -> exit:out_teleporter_272_144
+level_100__r2c3 <- in_L99_48_96 -> exit:out_stairsdown_48_96
+level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96
+level_101__r4c2 <- in_L100_288_96 -> location:L101 flag 0: lightpole@144,64 cleared
+level_101__r4c2 <- in_L102_64_96 -> exit:out_stairsup_48_96
+level_101__r4c2 <- in_L102_64_96 -> location:L101 flag 0: lightpole@144,64 cleared
+level_101__r4c9 <- in_L102_160_96 -> exit:out_stairsup_144_96
+level_15__r6c8 <- in_L14_32_64 ~> level_15__r1c5 -> location:Level 015 - Chest
+level_15__r6c8 <- in_L16_16_64 ~> level_15__r1c9 -> location:Level 015 - Chest
+level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_7_2
+level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_8_2
+level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_9_2
+level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_7_3
+level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_8_3
+level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_9_3
+level_16__r1c9 <- in_L15_144_16 ~> level_16__r1c1 -> exit:out_pit_8_4
+level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_7_2
+level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_8_2
+level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_9_2
+level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_7_3
+level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_8_3
+level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_9_3
+level_16__r1c9 <- in_L17_32_48 ~> level_16__r3c7 -> exit:out_pit_8_4
+level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+level_41__r7c15 <- in_L40_944_96 ~> level_41__r4c3 ~> level_41__r4c15 -> location:Level 041 - Totem Part 240,144
+level_100__r4c10 <- in_L99_48_96 ~> level_100__r2c3 -> exit:out_teleporter_288_96
+level_101__r0c6 <- in_L100_288_96 ~> level_101__r4c2 -> exit:out_teleporter_104_24
+level_101__r0c6 <- in_L102_64_96 ~> level_101__r4c2 -> exit:out_teleporter_104_24

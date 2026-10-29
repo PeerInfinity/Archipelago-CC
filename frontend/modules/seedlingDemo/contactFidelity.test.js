@@ -340,14 +340,22 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             baitAlignSafeMemo: true,
             // ⛓ fidelity L41TOTEM D3 (wave 33): a bait's idle ends when the crusher has parked — ON since the W33 flip.
             baitParkedTail: true,
-            // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — ships OFF (held out of the W33 flip: leg 371's L42→L40 walk refuses with it ON).
-            fineSwingStance: false,
+            // ⛓ fidelity L100 (wave 33): a swing stance asked on the 8 px lattice once every 16 px cell fails — OFF at the W33 flip (leg 371's L42→L40 walk refused with it ON); L100FIX (wave 34) asks only the cells the 16 px ring cannot name — ON since the W34 flip.
+            fineSwingStance: true,
             // ⛓ fidelity L40BK2B D1 (wave 33): the orbit kill steers to a point the player can stand on — ships OFF.
             orbitFreeAim: false,
             // ⛓ fidelity L40BK2B D2 (wave 33): the strategy bound counts distinct applications — ships OFF.
             strategyBoundDistinct: false,
             // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — ships OFF.
-            secondaryUse: false });
+            secondaryUse: false,
+            // ⛓ fidelity LIGHTPOLE D2 (wave 34): an in-room pole's clear-tag is a Spear thrust — ON since the W34 flip.
+            inRoomPoleThrust: true,
+            // ⛓ fidelity L12DOORS D1 (wave 34): a WandShot in a room with a stepped chaser — ON since the W34 flip.
+            wandShotChaserBodies: true,
+            // ⛓ fidelity L12DOORS D2 (wave 34): a hidden door nearer the aim asks the 8 px frontier — ON since the W34 flip.
+            fineFrontierHiddenDoor: true,
+            // ⛓ fidelity L12DOORS D3 (wave 34): a wand stance the 8 px lattice reaches — ON since the W34 flip.
+            fineWandStance: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

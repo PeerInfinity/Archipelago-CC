@@ -1,0 +1,5 @@
+survey-off.json Counter({'SOLVED': 201, 'REFUSED': 39})
+survey-on.json Counter({'SOLVED': 203, 'REFUSED': 37})
+172 12 REFUSED None | solverBot: no REACHABLE stance on bosslock@112,192's key line in level 12 — 2 cell(s) put the player box on the line whe => SOLVED 1301 | 
+203 12 REFUSED None | solverBot: no REACHABLE stance on bosslock@112,192's key line in level 12 — 2 cell(s) put the player box on the line whe => SOLVED 1479 | 
+diffs 2
