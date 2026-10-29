@@ -20,6 +20,10 @@ const mappingCache = {
   locationMappings: new Map(),    // serverId -> locationName
   itemNameToId: new Map(),        // itemName -> serverId
   locationNameToId: new Map(),    // locationName -> serverId
+  // Every game in the DataPackage, kept apart so IDs from different games
+  // never collide: gameName -> { items: Map(id -> name), locations: Map(id -> name) }.
+  // Needed for items placed in our locations that belong to another player's game.
+  gameMappings: new Map(),
 };
 
 /**
@@ -39,6 +43,20 @@ export function initializeMappingsFromDataPackage(dataPackage, clientGameName = 
     mappingCache.locationMappings.clear();
     mappingCache.itemNameToId.clear();
     mappingCache.locationNameToId.clear();
+    mappingCache.gameMappings.clear();
+
+    for (const [gameName, gameData] of Object.entries(dataPackage.games)) {
+      if (!gameData) continue;
+      const items = new Map();
+      const locations = new Map();
+      for (const [name, id] of Object.entries(gameData.item_name_to_id || {})) {
+        items.set(Number(id), name);
+      }
+      for (const [name, id] of Object.entries(gameData.location_name_to_id || {})) {
+        locations.set(Number(id), name);
+      }
+      mappingCache.gameMappings.set(gameName, { items, locations });
+    }
 
     // If clientGameName is provided, only load mappings for that game
     // Otherwise, load all games (legacy behavior, but can cause ID collisions in multiworld)
@@ -87,6 +105,27 @@ export function initializeMappingsFromDataPackage(dataPackage, clientGameName = 
     log('error', 'Error initializing mappings from data package:', error);
     return false;
   }
+}
+
+/**
+ * Get an item name from a server item ID within one game's DataPackage.
+ * Unlike getItemNameFromServerId, this works for any game in the multiworld.
+ * @param {string} gameName - The game the item belongs to
+ * @param {number} serverId - Server item ID
+ * @returns {string|null} - The item name, or null if unknown
+ */
+export function getItemNameForGame(gameName, serverId) {
+  return mappingCache.gameMappings.get(gameName)?.items.get(Number(serverId)) ?? null;
+}
+
+/**
+ * Get a location name from a server location ID within one game's DataPackage.
+ * @param {string} gameName - The game the location belongs to
+ * @param {number} serverId - Server location ID
+ * @returns {string|null} - The location name, or null if unknown
+ */
+export function getLocationNameForGame(gameName, serverId) {
+  return mappingCache.gameMappings.get(gameName)?.locations.get(Number(serverId)) ?? null;
 }
 
 /**
