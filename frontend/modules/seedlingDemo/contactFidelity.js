@@ -1717,7 +1717,7 @@ export const CONTACT_FIDELITY = {
      * one. A rising step stays free with the Feather. OFF: byte-identical. ⚠ FIXED PER PROCESS: hammer XC's cross-pass
      * escape cache keys on the digest, not on this flag — never flip it mid-solve. `SEEDLING_WATERFALL_PUSH_PRICING=0|1`.
      */
-    waterfallPushPricing: false,
+    waterfallPushPricing: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
