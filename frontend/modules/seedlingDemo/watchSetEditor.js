@@ -79,6 +79,8 @@ import {
     ruleTargetKeys as coreRuleTargetKeys, ruleTargetsOver,
 } from '../procgenCore/setEditorCore.js';
 import { mountSetEditor } from '../procgenCore/setEditorView.js';
+// ⛓ LAB L2: a still drawn with the art and one drawn as rectangles are two pictures of one room.
+import { labStillKey } from './watchArt.js';
 
 export class WatchSetEditorError extends Error {
     constructor(message) {
@@ -543,7 +545,9 @@ export function mountWatchSetEditor({
         drawRoomStill: drawRoomStill === null ? null : (canvas, cell, index) => drawRoomStill(
             canvas, { ...roomRecordOf(cell.room, { parseOel: deps.parseOel }), level: index },
         ),
-        stillKey: (cell) => cell.room.source ?? null,
+        // ⛓ LAB L2: the SAME `source` identity, one key object per draw mode (art / rectangles), so a
+        // toggle re-draws every still and an unchanged room in the same mode still hits.
+        stillKey: (cell) => labStillKey(cell.room.source ?? null),
         /**
          * ⛓⛓ **WHERE THE ROOM'S CONTENTS LIVE — `roomSourceKind`, THE ONE
          * ANSWER THIS SUBSTRATE ALREADY HAS** (EDITOR v3 E3a, trap 722).
