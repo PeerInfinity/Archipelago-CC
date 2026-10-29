@@ -24,7 +24,7 @@ describe('the committed batteries', () => {
             'probe-seedling-obstacle-events.mjs --only=W,J',
             'probe-seedling-wasm-generated-playback.mjs',
             'probe-seedling-loop-restart.mjs',
-            'probe-seedling-seal-delivery.mjs --only=A',
+            'probe-seedling-seal-delivery.mjs',
         ]);
     });
     it('long is logical-links B alone, on a budget past standard\'s 900 s (§5.128)', () => {

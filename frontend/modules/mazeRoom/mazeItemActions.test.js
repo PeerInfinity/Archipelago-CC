@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest';
 import {
     createState, createWorld, step, whyBlocked, mazeVisitedKey, INPUTS, INPUT_WAIT,
     INPUT_N, INPUT_E, INPUT_S, INPUT_W,
-    turnInput, useInput, worldInputs, hasItemActions, facingAfterBump, strikeTarget,
+    turnInput, useInput, worldInputs, hasItemActions, facingAfterBump, strikeTargets,
     serializeMazeEntities, deserializeMazeWorld, setTile, TILE_WALL, checkActionLib,
 } from './mazeRoomEngine.js';
 import {
@@ -154,11 +154,11 @@ describe('facing, turn, use, strike', () => {
         expect(air.broken).toEqual([]);                 // ⚖ use at air is legal
         expect(air.turn).toBe(s.turn + 1);
         s = walk(w, s, [turnInput('E')]);
-        expect(strikeTarget(w, s, 'sword')).toBe('4,1');
+        expect(strikeTargets(w, s, 'sword')).toEqual(['4,1']);
         s = walk(w, s, [useInput('sword')]);
         expect(s.broken).toEqual(['4,1']);
         expect(mazeVisitedKey(s)).toMatch(/\|fE\|4,1$/);
-        expect(strikeTarget(w, s, 'sword')).toBeNull();  // already broken
+        expect(strikeTargets(w, s, 'sword')).toEqual([]);  // already broken
         s = walk(w, s, [INPUT_E, INPUT_E]);
         expect(s.player_pos).toEqual({ x: 5, y: 1 });
         // per visit: a fresh state has the rock back
