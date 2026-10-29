@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 126,
-            "count": 174,
+            "browser": 127,
+            "count": 175,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 487,
-        "browser": 192,
+        "blockStyle": 488,
+        "browser": 193,
         "cited": 263,
-        "files": 504,
+        "files": 505,
         "lineStyle": 17,
-        "withDocblock": 504,
-        "withFlags": 420
+        "withDocblock": 505,
+        "withFlags": 421
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11537,6 +11537,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity CLEARTAG (D1/D2): **A SAVED OBSTACLE BROKEN FROM ITS OPEN SIDE, ASKED OF THE GAME.** Every arm runs on a FRESH page of the headless game (default build p4f, logic-only), one arm per page.",
             "path": "scripts/procgen/probe-seedling-cleartag.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-collider-cells.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump-all"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's SIX SEALED-WITH-ROOM CELLS, ON THE GAME (slice rules-collider-mismatch): the cells `seedlingSemantics.entitySealedTiles` seals whole where the model flood (`census-seedling-offgrid-blockers.mjs`, its `sealed [...] has room for the box` lines) finds a free pixel for the player.",
+            "path": "scripts/procgen/probe-seedling-collider-cells.mjs"
         },
         {
             "argvHelpers": [
