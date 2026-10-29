@@ -1496,12 +1496,12 @@
       "channel": "headless"
     },
     "roster: --tier=full": {
-      "value": "291 tapes 6428/0/0",
+      "value": "293 tapes 6474/0/0",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 39 tape(s) 905/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless] · mechanic 231 tape(s) 5074/0/0 MEASURED @b047524815f815b9a151a9ada7908c90401d1c15 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: run 39536515938 @fcf25a3767 (tier full, key 01d556d5e9c38979) — REUSED at fcf25a3767: the tier key at this head equals the run's (ci-skip-rules rule 3).",
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 39 tape(s) 905/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless] · mechanic 233 tape(s) 5120/0/0 MEASURED @a13d1302acdd6e5c79f8787f282fc888d8fda639 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: run 39536515938 @fcf25a3767 (tier full, key 01d556d5e9c38979) — REUSED at fcf25a3767: the tier key at this head equals the run's (ci-skip-rules rule 3).",
       "measuredAt": "fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4",
       "categories": {
         "campaign": {
@@ -1519,9 +1519,9 @@
           "channel": "headless"
         },
         "mechanic": {
-          "tapes": 231,
-          "value": "5074/0/0",
-          "measuredAt": "b047524815f815b9a151a9ada7908c90401d1c15",
+          "tapes": 233,
+          "value": "5120/0/0",
+          "measuredAt": "a13d1302acdd6e5c79f8787f282fc888d8fda639",
           "channel": "headless"
         }
       }

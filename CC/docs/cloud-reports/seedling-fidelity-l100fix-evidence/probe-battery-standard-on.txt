@@ -1,0 +1,13 @@
+### probe-seedling-wasm-logical-links.mjs --only=B,R | rc=0 | ALL CHECKS PASSED | PASS 25 FAIL 0 | wall 962s
+### probe-seedling-wasm-vanilla-map.mjs  | rc=0 | ALL CHECKS PASSED | PASS 23 FAIL 0 | wall 874s
+### probe-seedling-wasm-arrival-composites.mjs  | rc=0 | ALL CHECKS PASSED | PASS 95 FAIL 0 | wall 136s
+### probe-seedling-wasm-midroom-replan.mjs --only=D | rc=0 | ALL CHECKS PASSED | PASS 10 FAIL 0 | wall 31s
+### probe-seedling-restart-route.mjs --only=W,J | rc=0 | ALL CHECKS PASSED | PASS 18 FAIL 0 | wall 64s
+### probe-seedling-restart-warp.mjs --only=W,J | rc=0 | ALL CHECKS PASSED | PASS 28 FAIL 0 | wall 88s
+### probe-seedling-wasm-adopt.mjs  | rc=0 | ALL CHECKS PASSED | PASS 51 FAIL 0 | wall 183s
+### probe-seedling-obstacle-events.mjs --only=W,J | rc=0 | ALL CHECKS PASSED | PASS 22 FAIL 0 | wall 91s
+### probe-seedling-wasm-generated-playback.mjs  | rc=0 | ALL CHECKS PASSED | PASS 35 FAIL 0 | wall 49s
+### probe-seedling-loop-restart.mjs  | rc=0 | ALL CHECKS PASSED | PASS 30 FAIL 0 | wall 71s
+### probe-seedling-seal-delivery.mjs --only=A | rc=0 | ALL CHECKS PASSED | PASS 6 FAIL 0 | wall 12s
+### r7-ends-meet --check rc=0
+PROBESDONE (default restored)

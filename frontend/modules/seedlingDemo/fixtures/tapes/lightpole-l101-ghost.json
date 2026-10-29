@@ -1,0 +1,417 @@
+{
+    "game": "seedling",
+    "name": "lightpole-l101-ghost",
+    "boot": {
+        "level": 101,
+        "x": 288,
+        "y": 240
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 0,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 12,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 19,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 30,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 30,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 31,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 39,
+            "tag": 8,
+            "note": ""
+        },
+        {
+            "level": 40,
+            "tag": 8,
+            "note": ""
+        },
+        {
+            "level": 58,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 62,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 68,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 71,
+            "tag": 2,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "keys": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "seal_parts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+        ]
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": true,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": true,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": true,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": true,
+            "hasDarkShield": true,
+            "hasDarkSuit": true,
+            "hasDarkSword": true,
+            "hasFeather": true,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 307,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 112
+        },
+        {
+            "key": "primary",
+            "from": 112,
+            "to": 113
+        },
+        {
+            "key": "left",
+            "from": 113,
+            "to": 138
+        },
+        {
+            "key": "up",
+            "from": 138,
+            "to": 139
+        },
+        {
+            "key": "primary",
+            "from": 139,
+            "to": 140
+        },
+        {
+            "key": "down",
+            "from": 140,
+            "to": 142
+        },
+        {
+            "key": "up",
+            "from": 144,
+            "to": 146
+        },
+        {
+            "key": "down",
+            "from": 149,
+            "to": 150
+        },
+        {
+            "key": "left",
+            "from": 140,
+            "to": 151
+        },
+        {
+            "key": "primary",
+            "from": 150,
+            "to": 151
+        },
+        {
+            "key": "right",
+            "from": 151,
+            "to": 152
+        },
+        {
+            "key": "left",
+            "from": 152,
+            "to": 159
+        },
+        {
+            "key": "right",
+            "from": 159,
+            "to": 160
+        },
+        {
+            "key": "left",
+            "from": 160,
+            "to": 161
+        },
+        {
+            "key": "primary",
+            "from": 160,
+            "to": 161
+        },
+        {
+            "key": "primary",
+            "from": 168,
+            "to": 169
+        },
+        {
+            "key": "primary",
+            "from": 180,
+            "to": 181
+        },
+        {
+            "key": "primary",
+            "from": 188,
+            "to": 189
+        },
+        {
+            "key": "primary",
+            "from": 196,
+            "to": 197
+        },
+        {
+            "key": "primary",
+            "from": 206,
+            "to": 207
+        },
+        {
+            "key": "primary",
+            "from": 214,
+            "to": 215
+        },
+        {
+            "key": "primary",
+            "from": 226,
+            "to": 227
+        },
+        {
+            "key": "primary",
+            "from": 234,
+            "to": 235
+        },
+        {
+            "key": "primary",
+            "from": 246,
+            "to": 247
+        },
+        {
+            "key": "primary",
+            "from": 254,
+            "to": 255
+        },
+        {
+            "key": "up",
+            "from": 165,
+            "to": 262
+        },
+        {
+            "key": "primary",
+            "from": 261,
+            "to": 262
+        },
+        {
+            "key": "down",
+            "from": 262,
+            "to": 264
+        },
+        {
+            "key": "up",
+            "from": 264,
+            "to": 271
+        },
+        {
+            "key": "down",
+            "from": 273,
+            "to": 275
+        },
+        {
+            "key": "primary",
+            "from": 279,
+            "to": 280
+        },
+        {
+            "key": "down",
+            "from": 279,
+            "to": 281
+        },
+        {
+            "key": "right",
+            "from": 279,
+            "to": 282
+        },
+        {
+            "key": "primary",
+            "from": 281,
+            "to": 282
+        },
+        {
+            "key": "up",
+            "from": 281,
+            "to": 283
+        },
+        {
+            "key": "left",
+            "from": 282,
+            "to": 283
+        },
+        {
+            "key": "down",
+            "from": 283,
+            "to": 284
+        },
+        {
+            "key": "up",
+            "from": 284,
+            "to": 285
+        },
+        {
+            "key": "down",
+            "from": 285,
+            "to": 287
+        },
+        {
+            "key": "up",
+            "from": 288,
+            "to": 290
+        },
+        {
+            "key": "right",
+            "from": 283,
+            "to": 293
+        },
+        {
+            "key": "left",
+            "from": 293,
+            "to": 294
+        },
+        {
+            "key": "down",
+            "from": 293,
+            "to": 294
+        },
+        {
+            "key": "right",
+            "from": 294,
+            "to": 295
+        },
+        {
+            "key": "up",
+            "from": 300,
+            "to": 301
+        },
+        {
+            "key": "primary",
+            "from": 305,
+            "to": 306
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY LIGHTPOLE — L101 from the survey's step-226 arrival (288,240) with the route's bag (the Ghost Sword fused the Sword and Spear slots): the walk to [7,4] and ONE ghost swing facing N, whose 48 px-wide rect reaches across the wall corner [8,3]/[8,4] to `lightpole@144,64` — the pole activate, {101,0} written. The survey's step-226 staging. The solver's own plan with inRoomPoleThrust ON: 307 t, equips []. Authored by scripts/procgen/plan-seedling-lightpole-witness.mjs."
+}

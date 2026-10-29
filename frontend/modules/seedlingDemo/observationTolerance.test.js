@@ -133,7 +133,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity APFLIP: −1 +8 (289) — `enc-l32-fire-return` retired; the eight `apb-*` witnesses (p4g).
         // ⛓ fidelity RULESREF: +1 (290) — `rulesref-l66-door` (p4g).
         // ⛓ fidelity L100: +1 (291) — `l100-sliver-rock` (p4g).
-        expect(names.length).toBe(291);
+        // ⛓ fidelity LIGHTPOLE: +2 (293) — `lightpole-l101-ghost`, `lightpole-l101-spear` (p4g).
+        expect(names.length).toBe(293);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -201,7 +202,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity APFLIP: 289 (measured) — the eight `apb-*` witnesses swap too; `enc-l32-fire-return` is retired.
         // ⛓ fidelity RULESREF: 290 (measured) — `rulesref-l66-door` swaps too.
         // ⛓ fidelity L100: 291 (measured) — `l100-sliver-rock` swaps too.
-        expect(tally.swapped).toBe(291);
+        // ⛓ fidelity LIGHTPOLE: 293 (measured) — `lightpole-l101-ghost` and `lightpole-l101-spear` swap too.
+        expect(tally.swapped).toBe(293);
     }, 600_000);
 });
 
