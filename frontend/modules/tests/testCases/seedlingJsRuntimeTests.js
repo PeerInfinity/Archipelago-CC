@@ -2597,31 +2597,6 @@ async function withRuntimeRestored(tc, body) {
     return tc.getOverallResult();
 }
 
-/** A Bot block walks the starting house: the queued chest check, then its door into the maze child. */
-const loopBotWalksAtlasRoom = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
-    const up = await atlasPresetOn(tc, runtime, ATLAS_LOCATION_PATH, HOUSE_REGION);
-    if (!up) return;
-    const r = await seedlingLoopBotQueue(tc, runtime, [
-        { check: CHEST_LOCATION, region: HOUSE_REGION },
-        { exit: HOUSE_EXIT, from: HOUSE_REGION, to: MAZE_CHILD },
-    ]);
-    if (!r) return;
-    await tc.stateManager.pingWorker('after-loop', 5000);
-    tc.assertEqual(`[${runtime}] the Bot block walked to the chest: the game's own check reached the state manager`, true,
-        snapshotFacts(tc).checked.has(CHEST_LOCATION));
-    tc.assertEqual(`[${runtime}] the controller took the chest, then the house door`,
-        JSON.stringify([`location:${CHEST_LOCATION}`, `exit:${HOUSE_EXIT}`]), JSON.stringify(r.goals));
-    tc.assertEqual(`[${runtime}] the game took the house door itself (a pendingExit from level 86)`, true,
-        reportedExits(up.win).some((e) => e.fromLevel === 86 && e.type === 'teleporter'));
-    tc.assertEqual(`[${runtime}] gameState moved into the maze child`, MAZE_CHILD, readCurrentRegion());
-    assertLoopEndedOnItsOwn(tc, runtime, r);
-    assertSeedlingCharged(tc, runtime, r, [HOUSE_REGION]);
-    assertNoDeathNoHalt(tc, runtime, up.rt);
-});
-
-export const seedlingJsRuntimeLoopBotBlockWalksAtlasRoom = loopBotWalksAtlasRoom('js');
-export const seedlingWasmRuntimeLoopBotBlockWalksAtlasRoom = loopBotWalksAtlasRoom('wasm');
-
 const OVERWORLD = 'overworld_start__r8c0';
 const OWLS_NEST = 'owls_nest_entrance';
 const DUNGEON = 'dungeon1_room1__r0c4';
@@ -2993,6 +2968,15 @@ const loopPlayClockDrains = (runtime) => async (tc) => withRuntimeRestored(tc, a
     tc.log(`[${runtime}] hold ${JSON.stringify(hold.record)}`);
     tc.assertEqual(`[${runtime}] the row's hold took the solves (a real worker, answers delayed ${PLAY_CLOCK_HOLD_MS} ms)`,
         true, hold.record.wrapped > 0 && hold.record.started > 0 && hold.record.delivered > 0);
+    // ⛓ FOLDED from loop-bot-block-walks-atlas-room (the same queue on the same preset): the walk's own witnesses.
+    await tc.stateManager.pingWorker('after-loop', 5000);
+    tc.assertEqual(`[${runtime}] the Bot block walked to the chest: the game's own check reached the state manager`, true,
+        snapshotFacts(tc).checked.has(CHEST_LOCATION));
+    tc.assertEqual(`[${runtime}] the controller took the chest, then the house door`,
+        JSON.stringify([`location:${CHEST_LOCATION}`, `exit:${HOUSE_EXIT}`]), JSON.stringify(r.goals));
+    tc.assertEqual(`[${runtime}] the game took the house door itself (a pendingExit from level 86)`, true,
+        reportedExits(up.win).some((e) => e.fromLevel === 86 && e.type === 'teleporter'));
+    tc.assertEqual(`[${runtime}] gameState moved into the maze child`, MAZE_CHILD, readCurrentRegion());
     assertLoopEndedOnItsOwn(tc, runtime, r);
     const charged = assertSeedlingCharged(tc, runtime, r, [HOUSE_REGION]);
     tc.assertEqual(`[${runtime}] mana FELL with the game's seconds: ${charged[HOUSE_REGION].drain} for `
@@ -3075,7 +3059,8 @@ export const seedlingWasmRuntimeLoopPlayClockManaOut = loopPlayClockManaOut('was
 const PLAY_CLOCK_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on and `
     + 'the house\'s block Bot (⚖ "Drain play time too"), every solve held 3 s by the row: the reported clock stops for '
     + 'the hold and nothing is charged; the house is charged its drain price per GAME second reported (substrate:playClock), '
-    + 'each queued action its own price; the queue ends on its own.';
+    + 'each queued action its own price; the game\'s own chest check reaches the state manager, the controller takes the chest then '
+    + 'the house door, the game reports the door (a level-86 pendingExit) and gameState lands in the maze child; the queue ends on its own.';
 const MANA_OUT_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on and `
     + 'the house\'s block MANUAL with nobody at the keys: the pool cut to half a second\'s drain once parked — the idle '
     + 'game\'s clock runs, its first whole second runs the pool out by the drain alone, and the loop ends '
@@ -3103,22 +3088,12 @@ for (const [id, name, fn, description] of [
     });
 }
 
-const LOOP_ROOM_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on `
-    + 'and the house\'s block set to Bot: loops hands the queued chest check and the departure to the flash_seedling '
-    + 'controller (executeVia solver); the game\'s own check completes the first, the door crossing\'s user:regionMove '
-    + 'the second, and the queue ends on its own. Mana: one charge per action at its own price, plus the play clock\'s drain per GAME second.';
 const LOOP_CROSS_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas, loop mode on and every `
     + 'Seedling block set to Bot (the sword granted through the AP item path, removed after): the owl\'s-nest stairs, the '
     + 'descent into the dungeon, then the sword-gated LOGICAL link to its far sub-region (credited by the region binding, '
     + 'its user:regionMove on the next turn) — each resuming its park; the queue ends on its own; one charge per action, plus the play clock\'s drain.';
 
 for (const [id, name, fn, description] of [
-    ['seedling-js-runtime-loop-bot-block-walks-atlas-room',
-        'Seedling JS runtime: a Loops Bot block walks a real atlas room (its check, then its door)',
-        seedlingJsRuntimeLoopBotBlockWalksAtlasRoom, LOOP_ROOM_DESCRIPTION('js')],
-    ['seedling-wasm-runtime-loop-bot-block-walks-atlas-room',
-        'Seedling (wasm runtime): a Loops Bot block walks a real atlas room (its check, then its door)',
-        seedlingWasmRuntimeLoopBotBlockWalksAtlasRoom, LOOP_ROOM_DESCRIPTION('wasm')],
     ['seedling-js-runtime-loop-bot-blocks-cross-atlas-rooms',
         'Seedling JS runtime: Loops Bot blocks cross real atlas rooms and a logical link',
         seedlingJsRuntimeLoopBotBlocksCrossAtlasRooms, LOOP_CROSS_DESCRIPTION('js')],
@@ -4877,3 +4852,95 @@ for (const [runtime, fn] of [['js', seedlingJsRuntimeToolsRestartTeleport], ['wa
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+// ── ⛔ THE RESTART HOLD: a Restart with no walk arms nothing, so a hand walk after it moves (wasm) ─────────────────
+//
+// `handleMenuRestart` used to arm the wasm engine's arrival watch (`expectBotArrivals`) unconditionally. The watch
+// HOLDS the landing until the bot's next goal, and with no walk none comes: a hand walk after a Restart heard its key
+// and did not tick (CI, seedling-js batch: `held: true`, `tick_count` 0). The engines are module-level, so it shows
+// only after an EARLIER engine use. This row makes that use itself: a Playback Bot walk (the owl's nest stairs, by the
+// controller), stopped once it lands. Then the Menu's Restart with no bot walking, an AP move into the owl's nest, and
+// the same stairs by KEYS. The fix arms only behind a stopped walk, as `teleportTool` does.
+
+const restartNoWalkHandWalk = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
+    const up = await atlasPresetOn(tc, runtime, ATLAS_PATH, TOOLS_START);
+    if (!up) return;
+    const { panel } = up;
+    const glue = getSeedlingRegionGlue();
+    const born = await toolsSettledIn(tc, `[${runtime}] the new game stands in ${TOOLS_START}`, TOOLS_START, 0, 60000);
+    tc.reportCondition(`[${runtime}] the new game stands in ${TOOLS_START} (level 0)`, !!born);
+    if (!born) return;
+    // ⛓ THIS ROW'S OWN STATE: the Playback Bot stopped (this row's walks are the controller's and the keys')
+    const botPanel = getBotPanel();
+    const bot = botPanel?.getBot?.() ?? botPanel ?? null;
+    tc.log(`[${runtime}] the Playback Bot before this row: ${bot ? `active ${!!bot.isActive?.()}` : 'not mounted'}; stopped`);
+    bot?.stop?.();
+    const heldNow = () => {
+        try { return JSON.parse(glue.adapter?._getFlash?.()?.botStatus?.() ?? 'null')?.held ?? null; } catch { return null; }
+    };
+
+    // ── THE EARLIER ENGINE USE: a controller walk up the owl's nest stairs ──
+    toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+    const nest = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the bot walk`, TOOLS_OWLS, 2);
+    if (!nest) { tc.reportCondition(`[${runtime}] in the owl's nest for the bot walk`, false); return; }
+    const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
+    const answer = controller?.walkTo?.({ kind: 'exit', name: `${TOOLS_OWLS} -> ${TOOLS_START}` }) ?? null;
+    const botWalked = await toolsSettledIn(tc, `[${runtime}] the bot walk landed in the start`, TOOLS_START, 0, 90000);
+    tc.log(`[${runtime}] the bot walk: answer ${JSON.stringify(answer)}; refusal ${JSON.stringify(controller?.lastRefusal ?? null)}; `
+        + `status ${JSON.stringify(controller?.status?.() ?? null)}`);
+    tc.reportCondition(`[${runtime}] the bot walk (the earlier engine use) crossed into ${TOOLS_START}`, !!botWalked);
+    if (!botWalked) return;
+    // ⛓ THIS ROW'S OWN STATE: BOTH Seedling controllers stopped, not only this walk's. An earlier row can leave the
+    // generated-room controller non-idle (measured in the seedling-wasm batch: the Restart counted 1 walk, 2 watching),
+    // and a busy controller IS a walk to `stopBotWalks`. Its engine stays, so the unconditional arm still had one.
+    const controllers = ['flash_seedling', 'flash_seedling_gen']
+        .map((id) => [id, substrateRegistry.get(id)?.getPlaybackController?.() ?? null]).filter(([, c]) => !!c);
+    const phases = () => Object.fromEntries(controllers.map(([id, c]) => {
+        const w = c.status?.()?.wasm ?? null;
+        return [id, { busy: c.busy?.() ?? null, engine: w && { phase: w.phase, driving: w.driving, gate: w.gate, frozen: w.frozen } }];
+    }));
+    tc.log(`[${runtime}] the controllers after the bot walk: ${JSON.stringify(phases())}; stopped`);
+    for (const [, c] of controllers) c.stop();
+    const idle = await tc.pollForCondition(() => controllers.every(([, c]) => c.busy?.() === false),
+        `[${runtime}] every Seedling controller is idle after the stop`, 15000, 100);
+    tc.log(`[${runtime}] the controllers before the Restart: ${JSON.stringify(phases())}`);
+    tc.reportCondition(`[${runtime}] every Seedling controller is idle (no walk in flight for the Restart)`, !!idle);
+    if (runtime === 'wasm') {
+        tc.assertEqual(`[${runtime}] a wasm engine exists (the Restart has something it could arm)`, true,
+            !!controller?.status?.()?.wasm);
+    }
+
+    // ── THE RESTART, no bot walking ──
+    toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+    tc.reportCondition(`[${runtime}] the AP move reached the owl's nest`, !!await toolsSettledIn(tc, `[${runtime}] in the owl's nest`, TOOLS_OWLS, 2));
+    window.centralRegistry.getPublicFunction('menuPanel', 'restart')();
+    const landed = await toolsSettledIn(tc, `[${runtime}] the Menu's Restart landed at the start`, TOOLS_START, 0);
+    tc.reportCondition(`[${runtime}] the Menu's Restart landed in ${TOOLS_START}`, !!landed);
+    tc.log(`[${runtime}] the Restart: ${JSON.stringify(glue.lastRestart)}; the game held ${heldNow()}`);
+    tc.assertEqual(`[${runtime}] the Restart stopped no walk and armed no arrival watch (stoppedWalks/watching)`,
+        '0/0', `${glue.lastRestart?.stoppedWalks}/${glue.lastRestart?.watching}`);
+
+    // ── A HAND WALK after it: the same stairs, by keys ──
+    toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+    const nest2 = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the hand walk`, TOOLS_OWLS, 2);
+    if (!nest2) { tc.reportCondition(`[${runtime}] in the owl's nest for the hand walk`, false); return; }
+    tc.assertEqual(`[${runtime}] nothing is held before the hand walk`, false, heldNow() === true);
+    const walkedOut = await toolsWalkInto(tc, panel, 3, 1, runtime === 'wasm' ? 20000 : 10000);
+    const walked = walkedOut ? await toolsSettledIn(tc, `[${runtime}] the hand walk landed in the start`, TOOLS_START, 0) : null;
+    tc.reportCondition(`[${runtime}] after the Restart, the hand walk up the stairs crossed into ${TOOLS_START} (the player moved)`, !!walked);
+    tc.assertEqual(`[${runtime}] nothing is held after the hand walk`, false, heldNow() === true);
+    assertNoDeathNoHalt(tc, runtime, up.rt);
+});
+
+export const seedlingWasmRuntimeRestartNoWalkHandWalk = restartNoWalkHandWalk('wasm');
+
+registerTest({
+    id: 'seedling-wasm-runtime-restart-no-walk-hand-walk',
+    name: 'Seedling wasm runtime: a Restart with no bot walking arms no arrival hold; a hand walk after it moves',
+    description: 'On seedling_atlas with flashPanel.runtime = wasm: a controller walk up the owl\'s nest stairs (the earlier '
+        + 'engine use), stopped; then the Menu\'s Restart with no walk in flight (lastRestart stoppedWalks 0, watching 0); '
+        + 'then the same stairs by keys: the player crosses and the game is not held.',
+    testFunction: seedlingWasmRuntimeRestartNoWalkHandWalk,
+    category: seedlingRuntimeCategory('seedling-wasm-runtime-restart-no-walk-hand-walk'),
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
