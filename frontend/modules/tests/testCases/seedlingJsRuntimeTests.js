@@ -2597,31 +2597,6 @@ async function withRuntimeRestored(tc, body) {
     return tc.getOverallResult();
 }
 
-/** A Bot block walks the starting house: the queued chest check, then its door into the maze child. */
-const loopBotWalksAtlasRoom = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
-    const up = await atlasPresetOn(tc, runtime, ATLAS_LOCATION_PATH, HOUSE_REGION);
-    if (!up) return;
-    const r = await seedlingLoopBotQueue(tc, runtime, [
-        { check: CHEST_LOCATION, region: HOUSE_REGION },
-        { exit: HOUSE_EXIT, from: HOUSE_REGION, to: MAZE_CHILD },
-    ]);
-    if (!r) return;
-    await tc.stateManager.pingWorker('after-loop', 5000);
-    tc.assertEqual(`[${runtime}] the Bot block walked to the chest: the game's own check reached the state manager`, true,
-        snapshotFacts(tc).checked.has(CHEST_LOCATION));
-    tc.assertEqual(`[${runtime}] the controller took the chest, then the house door`,
-        JSON.stringify([`location:${CHEST_LOCATION}`, `exit:${HOUSE_EXIT}`]), JSON.stringify(r.goals));
-    tc.assertEqual(`[${runtime}] the game took the house door itself (a pendingExit from level 86)`, true,
-        reportedExits(up.win).some((e) => e.fromLevel === 86 && e.type === 'teleporter'));
-    tc.assertEqual(`[${runtime}] gameState moved into the maze child`, MAZE_CHILD, readCurrentRegion());
-    assertLoopEndedOnItsOwn(tc, runtime, r);
-    assertSeedlingCharged(tc, runtime, r, [HOUSE_REGION]);
-    assertNoDeathNoHalt(tc, runtime, up.rt);
-});
-
-export const seedlingJsRuntimeLoopBotBlockWalksAtlasRoom = loopBotWalksAtlasRoom('js');
-export const seedlingWasmRuntimeLoopBotBlockWalksAtlasRoom = loopBotWalksAtlasRoom('wasm');
-
 const OVERWORLD = 'overworld_start__r8c0';
 const OWLS_NEST = 'owls_nest_entrance';
 const DUNGEON = 'dungeon1_room1__r0c4';
@@ -2993,6 +2968,15 @@ const loopPlayClockDrains = (runtime) => async (tc) => withRuntimeRestored(tc, a
     tc.log(`[${runtime}] hold ${JSON.stringify(hold.record)}`);
     tc.assertEqual(`[${runtime}] the row's hold took the solves (a real worker, answers delayed ${PLAY_CLOCK_HOLD_MS} ms)`,
         true, hold.record.wrapped > 0 && hold.record.started > 0 && hold.record.delivered > 0);
+    // ⛓ FOLDED from loop-bot-block-walks-atlas-room (the same queue on the same preset): the walk's own witnesses.
+    await tc.stateManager.pingWorker('after-loop', 5000);
+    tc.assertEqual(`[${runtime}] the Bot block walked to the chest: the game's own check reached the state manager`, true,
+        snapshotFacts(tc).checked.has(CHEST_LOCATION));
+    tc.assertEqual(`[${runtime}] the controller took the chest, then the house door`,
+        JSON.stringify([`location:${CHEST_LOCATION}`, `exit:${HOUSE_EXIT}`]), JSON.stringify(r.goals));
+    tc.assertEqual(`[${runtime}] the game took the house door itself (a pendingExit from level 86)`, true,
+        reportedExits(up.win).some((e) => e.fromLevel === 86 && e.type === 'teleporter'));
+    tc.assertEqual(`[${runtime}] gameState moved into the maze child`, MAZE_CHILD, readCurrentRegion());
     assertLoopEndedOnItsOwn(tc, runtime, r);
     const charged = assertSeedlingCharged(tc, runtime, r, [HOUSE_REGION]);
     tc.assertEqual(`[${runtime}] mana FELL with the game's seconds: ${charged[HOUSE_REGION].drain} for `
@@ -3075,7 +3059,8 @@ export const seedlingWasmRuntimeLoopPlayClockManaOut = loopPlayClockManaOut('was
 const PLAY_CLOCK_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on and `
     + 'the house\'s block Bot (⚖ "Drain play time too"), every solve held 3 s by the row: the reported clock stops for '
     + 'the hold and nothing is charged; the house is charged its drain price per GAME second reported (substrate:playClock), '
-    + 'each queued action its own price; the queue ends on its own.';
+    + 'each queued action its own price; the game\'s own chest check reaches the state manager, the controller takes the chest then '
+    + 'the house door, the game reports the door (a level-86 pendingExit) and gameState lands in the maze child; the queue ends on its own.';
 const MANA_OUT_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on and `
     + 'the house\'s block MANUAL with nobody at the keys: the pool cut to half a second\'s drain once parked — the idle '
     + 'game\'s clock runs, its first whole second runs the pool out by the drain alone, and the loop ends '
@@ -3103,22 +3088,12 @@ for (const [id, name, fn, description] of [
     });
 }
 
-const LOOP_ROOM_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on `
-    + 'and the house\'s block set to Bot: loops hands the queued chest check and the departure to the flash_seedling '
-    + 'controller (executeVia solver); the game\'s own check completes the first, the door crossing\'s user:regionMove '
-    + 'the second, and the queue ends on its own. Mana: one charge per action at its own price, plus the play clock\'s drain per GAME second.';
 const LOOP_CROSS_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas, loop mode on and every `
     + 'Seedling block set to Bot (the sword granted through the AP item path, removed after): the owl\'s-nest stairs, the '
     + 'descent into the dungeon, then the sword-gated LOGICAL link to its far sub-region (credited by the region binding, '
     + 'its user:regionMove on the next turn) — each resuming its park; the queue ends on its own; one charge per action, plus the play clock\'s drain.';
 
 for (const [id, name, fn, description] of [
-    ['seedling-js-runtime-loop-bot-block-walks-atlas-room',
-        'Seedling JS runtime: a Loops Bot block walks a real atlas room (its check, then its door)',
-        seedlingJsRuntimeLoopBotBlockWalksAtlasRoom, LOOP_ROOM_DESCRIPTION('js')],
-    ['seedling-wasm-runtime-loop-bot-block-walks-atlas-room',
-        'Seedling (wasm runtime): a Loops Bot block walks a real atlas room (its check, then its door)',
-        seedlingWasmRuntimeLoopBotBlockWalksAtlasRoom, LOOP_ROOM_DESCRIPTION('wasm')],
     ['seedling-js-runtime-loop-bot-blocks-cross-atlas-rooms',
         'Seedling JS runtime: Loops Bot blocks cross real atlas rooms and a logical link',
         seedlingJsRuntimeLoopBotBlocksCrossAtlasRooms, LOOP_CROSS_DESCRIPTION('js')],
