@@ -76,6 +76,16 @@ describe('probe-seedling-whole-game-certify — shards and merge', () => {
         expect(m.lines).toEqual(['l1', 'l2']);
         expect(m.threw).toEqual(['shard 2: boom']);
         expect([m.clean, m.levels]).toEqual([1, 3]);
+        expect(m.skipped).toEqual([]);
+    });
+    it('merges the unadmitted-landing skips across shards, deduped (session tile-primitives-lightpoles)', () => {
+        const k = { label: 'level_62 → level_64 (landing 7,5)', points: 3, of: 4 };
+        const parts = [
+            { shard: 0, problems: [], accepted: [], lines: [], skipped: [k] },
+            { shard: 1, problems: [], accepted: [], lines: [], skipped: [{ ...k }] },
+            { shard: 2, problems: [], accepted: [], lines: [] },
+        ];
+        expect(mergeArm(parts, new Set(['level_62'])).skipped).toEqual([k]);
     });
 });
 

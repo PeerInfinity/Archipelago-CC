@@ -447,6 +447,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       getResolvedStartRegion: initializationApi.getModuleFunction?.('procgenPlayer', 'getResolvedStartRegion'),
       getRegionInfo: initializationApi.getModuleFunction?.('procgenPlayer', 'getRegionInfo'),
       retakeStartHop: initializationApi.getModuleFunction?.('procgenPlayer', 'retakeStartHop'),
+      // ⛓ TELEPORT TOOL — which region of ours is a level (`teleportTool`'s spot → region).
+      getWarehouse: initializationApi.getModuleFunction?.('procgenPlayer', 'getWarehouse'),
     }),
     // ⛓ RESTART — a walk in flight is stopped before the warp (the bot re-plans from the start), and so is a wasm
     // engine that is idle but still DRIVING: its mid-room delivery gate stays installed (and a tape may stay frozen)

@@ -47,6 +47,7 @@ import { FLASH_SEEDLING_GEN_SUBSTRATE_ID } from './flashSeedlingGenLibrary.js';
 import { SeedlingRegionBinding } from './seedlingRegionBinding.js';
 import { RESTARTED_EVENT, restartTargetOf } from '../menuPanel/menuPanelEngine.js';
 import { SeedlingEventCollector } from './seedlingEventCollector.js';
+import { levelHasSubRegions, subRegionAt } from './seedlingSubRegions.js';
 
 /** procgenPlayer's own broadcast of "which substrate owns the player now". */
 export const ACTIVE_SUBSTRATE_EVENT = 'procgen:activeSubstrateChanged';
@@ -58,6 +59,12 @@ export const ACTIVE_SUBSTRATE_EVENT = 'procgen:activeSubstrateChanged';
  * without this file knowing what a panel is.
  */
 export const AP_ITEM_FOUND_EVENT = 'flashSeedling:apItemFound';
+/** The `source` of the AP move a Tools teleport makes (`teleportTool`). */
+export const TELEPORT_TOOL_SOURCE = 'flashPanel-teleport';
+/** The player's centre (what a position read reports) from its constructor position (`new Game(level, x, y)`). */
+const PLAYER_CENTRE_PX = 8;
+/** How many tiles out a spot on crossing material looks for its sub-region. */
+const SPOT_SEARCH_TILES = 2;
 
 /**
  * ⛓ SEEDLING GENERATED G4 — a door the HOST refused: `{sourceRegion, region,
@@ -143,11 +150,14 @@ export class SeedlingRegionGlue {
         this.stopBotWalks = stopBotWalks ?? (() => 0);
         this.expectBotArrivals = expectBotArrivals ?? (() => 0);
         this.lastRestart = null;
+        /** ⛓ TELEPORT TOOL — the last Tools teleport's decision (`teleportTool`), and its spot awaiting the region load. */
+        this.lastTeleport = null;
+        this._toolSpot = null;
         // Diagnostics — the verify script reads these rather than inferring
         // behaviour from console text.
         this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0,
             resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0, doorsLocked: 0, bounces: 0,
-            logicalMoves: 0, positionReads: 0, restarts: 0, eventsCollected: 0, loopResets: 0,
+            logicalMoves: 0, positionReads: 0, restarts: 0, eventsCollected: 0, loopResets: 0, toolTeleports: 0,
             // ⛓ WALK IDENTITY — a Restart's start-hop teleport pushed in the turn it was queued (`at`: the site)
             restartPushes: [] };
         /** ⛓ LOGICAL LINKS — is a Playback Bot walk in flight (its route credits its own links)? */
@@ -458,6 +468,108 @@ export class SeedlingRegionGlue {
     }
 
     /**
+     * ⛓⛓ **THE TELEPORT TOOL THROUGH THE ARRIVAL PATH** (⚖ the user, 2026-10-28: *"check if the teleport tool is
+     * missing any of the updates that would happen if the player manually walked through an exit"*).
+     *
+     * The panel's Tools teleports (Go, Location, "TP on UI click") used to call `adapter.teleport` alone. The game
+     * moved; nothing else did. Its level report then reached the binding as a crossing nobody walked: into a level
+     * the AP region had an exit to, it was read as THAT DOOR (a "came from" the player never used, and the door's
+     * arrival teleport overrode the spot asked for); into any other level it warned and the AP region stayed
+     * behind, so every later door resolved against the wrong room. A walking bot kept walking a room the player had
+     * left.
+     *
+     * Routed now the way Restart is: a walk in flight is stopped, then the AP player is MOVED to the region that owns
+     * the spot (`user:regionMove`, procgenPlayer's load → the binding's ordinary arrival, which arms its own echo
+     * mark). ⚖ A teleport has no door, so the move names none (`exitName: null`): procgenPlayer hands the binding
+     * no `arrivedFrom`, and the binding lands a no-door arrival at the region's FIRST declared exit's spawn
+     * (`resolveArrivalSpawn(world, null)`, the rule a load with no "came from" has always had). A spot asked for
+     * (Go / Location) is then the second teleport, inside that level, once the load arrives (`handleLoadRegion`).
+     * The move has the WARP's shape the Menu's Restart uses (`fromReset: true, updatePath: false`): no path entry,
+     * not a performed action.
+     *
+     * DECLINED BY NAME (the caller then teleports the game alone, as before): no game; this substrate parked;
+     * loop mode (a teleport there skips the queue and its price — not decided here); the spot in no region of ours.
+     * `{region}` or `{level, x, y}` (+ `region` to name which) → the decision, kept on `lastTeleport`.
+     */
+    teleportTool({ region = null, level = null, x = null, y = null } = {}) {
+        const decide = (taken, why, extra = {}) => {
+            this.lastTeleport = { taken, why, ...extra, at: Date.now() };
+            return this.lastTeleport;
+        };
+        const spot = Number.isInteger(level) && Number.isFinite(x) && Number.isFinite(y) ? { level, x, y } : null;
+        if (!this.adapter?.teleport) return decide(false, 'no game is attached');
+        if (!this.binding.active) return decide(false, 'another substrate owns the region (the binding is parked)');
+        if (!this.binding.baselineSeen) return decide(false, 'the game is not reporting yet');
+        if (this.getLoop()?.isLoopModeActive?.() === true) {
+            return decide(false, 'loop mode is on — a Tools teleport there is not routed through the queue (an open question)');
+        }
+        const procgen = this.getProcgen() ?? null;
+        const target = region ?? (spot ? this._regionAtSpot(spot, procgen) : null);
+        if (typeof target !== 'string') return decide(false, typeof target?.why === 'string' ? target.why : 'no target region');
+        const substrate = procgen?.getRegionInfo?.(target)?.substrate ?? null;
+        if (!this.substrateIds.has(substrate)) return decide(false, `"${target}" is not a Seedling region of this preset`);
+        const dispatcher = this.getDispatcher();
+        if (!dispatcher?.publish) return decide(false, 'no dispatcher');
+        const stopped = this.stopBotWalks();
+        // ⛔ the wasm engine's arrival watch HOLDS the landing until the bot's next goal: only a stopped walk has one
+        // coming (the bot re-plans). With no walk, a hold would strand a player who walks by hand (CI, seedling-js batch:
+        // `held: true`, 0 ticks through a held key)
+        const watching = stopped > 0 ? this.expectBotArrivals() : 0;
+        const from = this.getLoop()?.getCurrentRegion?.() ?? this.binding.region;
+        this._toolSpot = spot ? { region: target, ...spot } : null;
+        this.stats.toolTeleports += 1;
+        dispatcher.publish('user:regionMove', {
+            sourceRegion: from,
+            targetRegion: target,
+            exitName: null,
+            source: TELEPORT_TOOL_SOURCE,
+            fromReset: true,
+            updatePath: false,
+        }, { initialTarget: 'bottom' });
+        const pushed = this.pushQueuedTeleports();
+        this._log(`[teleport] the AP player moved "${from}" -> "${target}" (no door)${spot ? `; the spot: level ${spot.level} (${spot.x}, ${spot.y})` : ''}`);
+        return decide(true, null, { from, region: target, spot, stoppedWalks: stopped, watching, pushed });
+    }
+
+    /**
+     * The region of ours that holds `spot` (a CONSTRUCTOR position, `new Game(level, x, y)`: the player's centre, which
+     * a position read reports, is 8 px further). A level with sub-regions: the one under the centre, else the nearest
+     * ring of tiles that holds any (a door's approach cell is crossing material, in none), when that ring agrees.
+     * Otherwise the one region on that level. `{why}` when there is no single answer.
+     */
+    _regionAtSpot({ level, x, y }, procgen) {
+        const map = this.binding.subRegions;
+        if (levelHasSubRegions(map, level)) {
+            const cx = x + PLAYER_CENTRE_PX;
+            const cy = y + PLAYER_CENTRE_PX;
+            const t = map.tileSize;
+            for (let ring = 0; ring <= SPOT_SEARCH_TILES; ring += 1) {
+                const hits = new Set();
+                for (let dy = -ring; dy <= ring; dy += 1) {
+                    for (let dx = -ring; dx <= ring; dx += 1) {
+                        if (Math.max(Math.abs(dx), Math.abs(dy)) !== ring) continue;
+                        const sub = subRegionAt(map, level, cx + dx * t, cy + dy * t);
+                        if (sub) hits.add(sub);
+                    }
+                }
+                if (hits.size === 1) return [...hits][0];
+                if (hits.size > 1) {
+                    return { why: `level ${level} (${x}, ${y}) is between sub-regions (${[...hits].sort().join(', ')})` };
+                }
+            }
+            return { why: `level ${level} (${x}, ${y}) stands in no sub-region (a wall, or a pocket no region holds)` };
+        }
+        const warehouse = procgen?.getWarehouse?.() ?? null;
+        const found = [];
+        for (const [name, entry] of warehouse?.entries?.() ?? []) {
+            if (this.substrateIds.has(entry?.substrate) && entry?.world?.level === level) found.push(name);
+        }
+        if (found.length === 1) return found[0];
+        return { why: found.length === 0 ? `no Seedling region of this preset is level ${level}`
+            : `level ${level} is ${found.length} regions (${found.join(', ')}) and has no partition to tell them apart` };
+    }
+
+    /**
      * ⛓⛓ **LOOP-MODE RESTART — THE FALLBACK** (⚖ the user, 2026-10-06: *"The start region should always be menu, not a
      * Seedling region. But we can go ahead and set up code to handle the case where it is a Seedling region, if that
      * would be cheap and safe to implement."*).
@@ -538,6 +650,15 @@ export class SeedlingRegionGlue {
             }
         }
         this.apply(this.binding.onLoadRegion(payload ?? {}));
+        // ⛓ TELEPORT TOOL — the spot asked for, inside the level the arrival just entered.
+        // ⛔ ANY load ends it: a move that produced no load (a gate swallowed it) must not leave a spot for a later
+        // ordinary arrival into that region (a walk, a Restart) to land on. Only the move's own load lands it.
+        const spot = this._toolSpot;
+        this._toolSpot = null;
+        if (spot && spot.region === payload?.region_id) {
+            this._teleport(spot);
+            this.pushQueuedTeleports();
+        }
         // ⛓ WALK IDENTITY — a Restart's start hop reaches this load through the dispatcher, after the Restart's own
         // turn: the room was released (the bot walks' stop) and its teleport was queued just now — push it now.
         if (payload?.startHop && payload?.restart && this.pushQueuedTeleports()) this.stats.restartPushes.push({ at: 'start-hop' });

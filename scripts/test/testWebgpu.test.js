@@ -9,9 +9,9 @@ const WASM_ROW = 'seedling-wasm-runtime-loop-play-clock-drains-mana';
 const APWORLD_ROW = 'apworld-document-tab-lists-every-schema-key';
 
 describe('runNeedsWebgpu — a --test row takes WebGPU from its batch', () => {
-    it('a Seedling wasm row resolves to seedling-js and asks for WebGPU (the 0/8 of run 38202293385)', () => {
+    it('a Seedling wasm row resolves to seedling-wasm and asks for WebGPU (the 0/8 of run 38202293385)', () => {
         const d = runNeedsWebgpu({ mode: 'test-substrates', testIds: WASM_ROW });
-        expect(d.batches).toEqual([{ id: WASM_ROW, batch: 'seedling-js', webgpu: true }]);
+        expect(d.batches).toEqual([{ id: WASM_ROW, batch: 'seedling-wasm', webgpu: true }]);
         expect(d.webgpu).toBe(true);
     });
 
@@ -31,7 +31,8 @@ describe('runNeedsWebgpu — a --test row takes WebGPU from its batch', () => {
     });
 
     it('the batch path and the explicit flag are unchanged', () => {
-        expect(runNeedsWebgpu({ mode: 'test-substrates', batch: 'seedling-js' }).webgpu).toBe(true);
+        expect(runNeedsWebgpu({ mode: 'test-substrates', batch: 'seedling-wasm' }).webgpu).toBe(true);
+        expect(runNeedsWebgpu({ mode: 'test-substrates', batch: 'seedling-js' }).webgpu).toBe(false);
         expect(runNeedsWebgpu({ mode: 'test-substrates', batch: 'apworld' }).webgpu).toBe(false);
         expect(runNeedsWebgpu({ mode: 'test-substrates' }).webgpu).toBe(false);
         // --webgpu skips the lookup, so even an id no config knows does not refuse.

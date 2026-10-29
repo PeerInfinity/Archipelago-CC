@@ -464,6 +464,8 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.block_strike !== undefined) {
         world.blockStrike = checkBlockStrike(sidecar.block_strike, world.actionLib, 'deserializeMazeWorld');
     }
+    // ⛓ STRUCK FROM A STANCE: an obstacle entry without `struck_from` is struck through its cells, as before.
+    checkStruckFrom(obstacleLib, world.actionLib, width, height, 'deserializeMazeWorld');
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
     // immutable shape (tiles + cycleLength + length + shape); phase
@@ -594,6 +596,51 @@ function checkFootprint(fp, id, who) {
             throw new Error(`${who}: action_lib.${id}.footprint.${dir} names a cell twice: ${JSON.stringify(cells)}`);
         }
     }
+}
+
+/**
+ * ⛓⛓ STRUCK FROM A STANCE (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances"). A rope-shaped
+ * obstacle entry (it `activates` a token, at one canonical cell `at`) may carry `struck_from: {<actionId>: ["x,y,F"…]}`:
+ * the STANCES — a cell and a facing — from which a use of that action strikes it. Such an entry is struck ONLY from
+ * them, never through its own cells: Seedling's LightPole is hit in its 10×16 bob box, which no 16×16 cell holds (L62's
+ * straddles two columns), and its cells are the DarkTraps its light kills, whose `hit()` is empty (`DarkTrap.as:56-59`).
+ * The stances are derived by the producer from the game's hit rect against the real box (`poleThrustStances`, the rules'
+ * own), so maze and rules read one set. ⛔ An entry that is not rope-shaped, an action it is not `struck_by` or the world
+ * lacks, a malformed stance or one off the grid is refused BY NAME.
+ */
+function checkStruckFrom(lib, actionLib, width, height, who) {
+    for (const [id, entry] of Object.entries(lib ?? {})) {
+        if (entry?.struck_from === undefined) continue;
+        const bad = (m) => new Error(`${who}: obstacleLib.${id}.struck_from ${m}`);
+        if (!entry.activates || typeof entry.at !== 'string') throw bad('needs a rope-shaped entry (`activates` + `at`)');
+        const sf = entry.struck_from;
+        if (!sf || typeof sf !== 'object' || Array.isArray(sf) || Object.keys(sf).length === 0) {
+            throw bad(`must be a non-empty object {actionId: ["x,y,F"…]}, got ${JSON.stringify(sf)}`);
+        }
+        for (const [actionId, stances] of Object.entries(sf)) {
+            if (!(entry.struck_by ?? []).includes(actionId)) throw bad(`names "${actionId}", which the entry is not struck_by`);
+            if (!actionLib?.[actionId]) throw bad(`names "${actionId}", which the action_lib does not hold`);
+            if (!Array.isArray(stances) || stances.length === 0) throw bad(`.${actionId} must be a non-empty list`);
+            for (const st of stances) {
+                const m = typeof st === 'string' ? /^(\d+),(\d+),([NESW])$/.exec(st) : null;
+                if (!m || Number(m[1]) >= width || Number(m[2]) >= height) {
+                    throw bad(`.${actionId} holds ${JSON.stringify(st)}, not an in-grid "x,y,F" stance`);
+                }
+            }
+        }
+    }
+}
+
+/**
+ * The canonical cells (`at`) of the obstacles a use of `actionId` strikes FROM this stance + facing (`struck_from`),
+ * sorted; `[]` without a facing. Not filtered by `broken` (the caller's).
+ */
+export function stanceStrikes(world, state, actionId) {
+    if (state?.facing === undefined) return [];
+    const stance = `${state.player_pos.x},${state.player_pos.y},${state.facing}`;
+    const out = new Set();
+    for (const { entry } of ropesOf(world)) if (entry.struck_from?.[actionId]?.includes(stance)) out.add(entry.at);
+    return [...out].sort();
 }
 
 /**
@@ -1171,11 +1218,15 @@ export function strikeTargets(world, state, actionId) {
     for (const cell of footprintCells(world, state, actionId)) {
         const obstacleId = getObstacle(world, cell.x, cell.y);
         if (!obstacleId) continue;
-        const struckBy = world.obstacleLib?.[obstacleId]?.struck_by;
+        const entry = world.obstacleLib?.[obstacleId];
+        // ⛓ An entry struck from its stances (`struck_from`) is never struck through its own cells.
+        if (entry?.struck_from !== undefined) continue;
+        const struckBy = entry?.struck_by;
         if (!Array.isArray(struckBy) || !struckBy.includes(actionId)) continue;
-        const key = world.obstacleLib?.[obstacleId]?.at ?? posKey(cell.x, cell.y);
+        const key = entry?.at ?? posKey(cell.x, cell.y);
         if (!state.broken?.includes(key)) out.add(key);
     }
+    for (const key of stanceStrikes(world, state, actionId)) if (!state.broken?.includes(key)) out.add(key);
     return [...out].sort();
 }
 
@@ -1277,11 +1328,20 @@ export function ropeTokens(world, inventory, broken) {
     if (ropes.length === 0) return null;
     let out = null;
     for (const { key, entry } of ropes) {
-        if (!(broken?.includes(key) || (entry.event && inventory.has(entry.event)))) continue;
+        if (!(broken?.includes(key) || (ropeLatch(entry) && inventory.has(ropeLatch(entry))))) continue;
         if (out === null) out = [];
         out.push(entry.activates);
     }
     return out;
+}
+
+/**
+ * The carried item that keeps a rope-shaped obstacle cut on a later visit: its own `event` (the cut IS that AP event —
+ * a rope, an in-room pole), else `opened_by` (⛓ session tile-primitives-lightpoles: an event made ELSEWHERE — the
+ * cross-room press that lights L62's pole — whose location is not this cut). `null` when nothing does.
+ */
+export function ropeLatch(entry) {
+    return entry?.event ?? entry?.opened_by ?? null;
 }
 
 /**
@@ -1543,7 +1603,14 @@ function shutBecause(world, obstacleId, inv) {
     if (best.length === 0) return head;
     const phrases = best.map((token) => {
         const button = buttonHolding(world, token);
-        return button === null ? `needs ${token}` : `nothing on ${button}`;
+        if (button !== null) return `nothing on ${button}`;
+        // ⛓ A pole's token (session tile-primitives-lightpoles): light it from a stance, or carry what lights it.
+        const pole = Object.values(world.obstacleLib ?? {}).find((e) => e?.activates === token && e.struck_from);
+        if (pole) {
+            const latch = ropeLatch(pole);
+            return `light ${pole.name ?? pole.id} (${Object.keys(pole.struck_from).join(' or ')} from a stance${latch ? `, or ${latch}` : ''})`;
+        }
+        return `needs ${token}`;
     });
     return `${head} — ${phrases.join(', ')}`;
 }
@@ -2086,6 +2153,7 @@ function blockWorldAccessRules(world) {
     for (const id of new Set(world.obstacles.values())) {
         const entry = lib[id];
         if (!entry) continue;
+        if (entry.opened_by) axis.add(entry.opened_by);
         if ((entry.clear_set_type ?? 'combo_list') === 'rule') clearRuleItems(entry.clear_rule, id, axis);
         else for (const combo of entry.clear_set ?? []) for (const item of combo) axis.add(item);
         for (const actionId of entry.struck_by ?? []) {
