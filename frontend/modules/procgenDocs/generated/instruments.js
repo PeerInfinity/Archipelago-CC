@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 20,
+            "count": 21,
             "id": "census"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 482,
+        "blockStyle": 483,
         "browser": 190,
         "cited": 260,
-        "files": 499,
+        "files": 500,
         "lineStyle": 17,
-        "withDocblock": 499,
-        "withFlags": 415
+        "withDocblock": 500,
+        "withFlags": 416
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1419,6 +1419,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-killgate-clears — **WHAT ACTUALLY OPENS THE KILL GATE'S LOCK**, and where the body was when it stopped being alive.",
             "path": "scripts/procgen/census-seedling-killgate-clears.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-offgrid-blockers.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "charge-crossings"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "no-directional-locks"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "quiet"
+                }
+            ],
+            "oneLiner": "⛓ RULES offgrid-blockers — DOES A BLOCKER PLACED OFF THE 16 px GRID SPLIT WHAT THE CELL GRID CALLS ONE ROOM?",
+            "path": "scripts/procgen/census-seedling-offgrid-blockers.mjs"
         },
         {
             "argvHelpers": [
