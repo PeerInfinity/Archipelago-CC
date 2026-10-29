@@ -175,10 +175,14 @@ describe('C4 — a C press is `useItem(Main.secondary)` behind `secondaryUse` (P
             expect(run.slashPresses.map((d) => d.t)).toEqual([4]);
         });
     });
-    it('ON: X and C on one tick are refused by name', () => {
+    it('ON (seedling-js-xc-model): X and C on one tick are `useItem(primary)` then `useItem(secondary)` — the Fire '
+        + 'press, then a sword call `set slashing` GATES on `firing` (Player.as:782); the tick is X\'s', () => {
         withContactFidelity({ secondaryUse: true }, () => {
-            expect(() => drive([{ key: 'secondary', from: 4, to: 6 }, { key: 'primary', from: 4, to: 6 }]))
-                .toThrow(/X and C are both pressed/);
+            const xc = drive([{ key: 'secondary', from: 4, to: 6 }, { key: 'primary', from: 4, to: 6 }]);
+            const x = drive([{ key: 'primary', from: 4, to: 6 }]);
+            expect(xc.slashPresses.map((d) => [d.t, d.outcome])).toEqual([[4, 'gated']]);
+            expect({ x: xc.state.x, y: xc.state.y }).toEqual({ x: x.state.x, y: x.state.y });
+            expect(xc.presses).toEqual(x.presses);
         });
     });
 });
