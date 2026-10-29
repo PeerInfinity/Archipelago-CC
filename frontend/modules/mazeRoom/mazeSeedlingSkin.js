@@ -23,8 +23,11 @@ import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/cont
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 import { buildLevelWorld } from '../seedlingDemo/levelWorld.js';
 import { patchedMapDocument } from '../seedlingDemo/seedlingSetPatches.js';
-import { TILE, paintOps, roomOps, teleporterArtFilter } from '../seedlingDemo/seedlingSkinRenderer.js';
-import { posKey } from './mazeRoomEngine.js';
+import { TILE, paintOps, roomOps, shownTeleporters, teleporterArtFilter } from '../seedlingDemo/seedlingSkinRenderer.js';
+import { puzzleOps } from '../seedlingDemo/seedlingPuzzleSkin.js';
+import { TILE_WALL, posKey } from './mazeRoomEngine.js';
+import { COLORS } from './mazeRoomRender.js';
+import { censusEntityIds, seedlingCensus } from './mazeSeedlingSprites.js';
 
 /** The `packs.json` graphics stack (⚖ ruling 1). */
 export const SEEDLING_GRAPHICS_STACK = 'graphics.seedling';
@@ -78,24 +81,65 @@ export function mazeModelledCells(mazeWorld) {
     return cells;
 }
 
-/** The cell under a renderer rect's centre. */
-const cellOf = (r) => posKey(Math.floor((r.x + (r.right ?? r.x + r.w)) / 2 / TILE),
-    Math.floor((r.y + (r.bottom ?? r.y + r.h)) / 2 / TILE));
+/**
+ * The cells whose maze tile an EDIT changed: every cell where `mazeWorld.tiles` differs from `baseTiles` (the world's
+ * tiles before its first edit; null = never edited). The level's art cannot show a wall the editor added or removed,
+ * so the bake paints these cells in the maze's own wall/floor fill. `[{x, y, wall}]`, row-major.
+ */
+export function editedTiles(mazeWorld, baseTiles) {
+    if (!baseTiles) return [];
+    const out = [];
+    const { width, tiles } = mazeWorld;
+    for (let i = 0; i < tiles.length; i++) {
+        if (tiles[i] !== baseTiles[i]) out.push({ x: i % width, y: Math.floor(i / width), wall: tiles[i] === TILE_WALL });
+    }
+    return out;
+}
+
+/**
+ * ⛓ WHAT THE BAKED LAYER DEPENDS ON, as one string: the level, the cells the maze models (left out of the bake) and
+ * the edited tiles (painted over it). The panel keeps a layer only while this key is unchanged — an IN-PLACE edit of
+ * the same world object (`mazeRoomUI._applyEditAt`; an entry that hands back the same object, changed) changes the
+ * key and rebakes, where S1's cache keyed on the object alone kept the stale room. Play never changes it: a push or a
+ * break is `state`, not `world`.
+ */
+export function seedlingLayerKey(mazeWorld, level, baseTiles = null) {
+    const cells = [...mazeModelledCells(mazeWorld)].sort().join(' ');
+    const edits = editedTiles(mazeWorld, baseTiles).map((t) => `${t.x},${t.y}${t.wall ? 'W' : 'F'}`).join(' ');
+    return `${level}|${mazeWorld.width}x${mazeWorld.height}|${cells}|${edits}`;
+}
 
 /**
  * THE BAKED ROOM'S DRAW LIST, PURE: tiles, cliffsides and scenery at tick 0. Every placed pickup is hidden (the
  * maze's items are the locations); a teleporter keeps a stand-in only where the game SHOWS one
- * (`teleporterArtFilter`, the JS page's rule); an object on a cell the maze models is left to the maze's marker.
+ * (`teleporterArtFilter`, the JS page's rule). ⛓ S2: an object the CENSUS matched to a maze object is left out —
+ * the live sprites draw it at the maze's state (S1 left out every object whose centre was on a modelled cell, which
+ * also dropped a wire under a rock or a cover over a button; the census names exactly the maze's own). A SHOWN
+ * teleporter is the game's portal at frame 0 (`shownTeleporter`, the js portal-sprite slice), and the stairs — which
+ * `teleporterArtFilter` leaves to G7 — are G7's own sprites (`puzzleOps`' stairs, read off the record as
+ * `puzzleSkinView` reads them; no block, no trap: those are the maze's).
  */
-export function staticOps(levelWorld, art, { level, record, mazeWorld }) {
-    const modelled = mazeModelledCells(mazeWorld);
+export function staticOps(levelWorld, art, { level, record, mazeWorld, census = seedlingCensus(mazeWorld, record) }) {
+    const drawn = censusEntityIds(census);
     return roomOps(levelWorld, art, {
         level,
         tick: 0,
         drawnPickups: () => true,
         drawnTeleporters: teleporterArtFilter(record),
-        drawnObjects: (o) => modelled.has(cellOf(o.rect)),
+        shownTeleporter: shownTeleporters(record),
+        drawnObjects: (o) => drawn.has(`${o.tag}@${o.x},${o.y}`),
+        entitySprites: stairsOps(record, art),
     });
+}
+
+/** `seedlingPuzzleSkin`'s `STAIRS` and its view's stairs rows (`puzzleSkinView`), from the record alone. */
+const STAIRS = Object.freeze({ stairsup: true, stairsdown: false });
+function stairsOps(record, art) {
+    if (!art) return null;
+    const stairs = (record?.entities ?? []).filter((e) => e.type in STAIRS).map((e) => ({
+        x: Number(e.x), y: Number(e.y), up: STAIRS[e.type], flip: Boolean(Number(e.attrs?.flip ?? 0)),
+    }));
+    return puzzleOps({ stairs, blocks: [], traps: [], gameTime: 0 }, art, { skin: { bodies: new Map() } });
 }
 
 /**
@@ -125,21 +169,67 @@ export function loadSeedlingArt({ win = globalThis, base = packsBaseUrl() } = {}
     return artPromise;
 }
 
+/**
+ * ⛓ FlashPunk's `Image.color` MULTIPLIES the sprite (a fire / spear block's tint) — `jsRuntimePage`'s own
+ * `tinted`, which is private to the page (⛔ importing the page would pull it all in): one cached copy per
+ * (sheet, tint); `=colour` is a silhouette. `doc` makes the canvases.
+ */
+export function createTinter(doc = globalThis.document) {
+    const cache = new WeakMap();
+    return (img, tint) => {
+        let byTint = cache.get(img);
+        if (!byTint) cache.set(img, byTint = new Map());
+        if (!byTint.has(tint)) {
+            const c = doc.createElement('canvas');
+            c.width = img.width;
+            c.height = img.height;
+            const t = c.getContext('2d');
+            t.drawImage(img, 0, 0);
+            const silhouette = tint.startsWith('=');
+            t.globalCompositeOperation = silhouette ? 'source-in' : 'multiply';
+            t.fillStyle = silhouette ? tint.slice(1) : tint;
+            t.fillRect(0, 0, c.width, c.height);
+            t.globalCompositeOperation = 'destination-in';
+            t.drawImage(img, 0, 0);
+            byTint.set(tint, c);
+        }
+        return byTint.get(tint);
+    };
+}
+
+/**
+ * The live sprites' painter for a canvas of `mazeWorld` at `cellPx` per cell: `(ctx, ops) => counts`, the ops in
+ * level pixels (16 per cell), scaled by `paintOps` from the canvas size.
+ */
+export function spritePainter({ canvas, mazeWorld, images, tinted = null }) {
+    const view = { x: 0, y: 0, w: mazeWorld.width * TILE, h: mazeWorld.height * TILE };
+    return (ctx, ops) => paintOps(ctx, ops, images, view, canvas, { tinted });
+}
+
 /** Test-only: forget the loaded art. */
 export function _resetSeedlingArtForTests() { artPromise = null; }
 
 /**
  * Paint the static room once onto a canvas `newCanvas(w, h)` makes, `cellPx` per maze cell. Returns
- * `{ canvas, counts, ops }` — the caller keeps it and blits `canvas` on every render (`view.seedlingSkin.layer`).
+ * `{ canvas, counts, ops, edits, census }` — the caller keeps it, blits `canvas` on every render
+ * (`view.seedlingSkin.layer`) and draws the census's live sprites over it (`mazeSeedlingSprites.seedlingSprites`).
  */
-export function bakeSeedlingLayer({ newCanvas, mapDoc, level, mazeWorld, art, images, cellPx = SEEDLING_CELL_PX }) {
+export function bakeSeedlingLayer({
+    newCanvas, mapDoc, level, mazeWorld, art, images, cellPx = SEEDLING_CELL_PX, baseTiles = null,
+}) {
     const { record, world } = levelWorldFor(mapDoc, level, mazeWorld);
-    const ops = staticOps(world, art, { level, record, mazeWorld });
+    const census = seedlingCensus(mazeWorld, record);
+    const ops = staticOps(world, art, { level, record, mazeWorld, census });
     const canvas = newCanvas(mazeWorld.width * cellPx, mazeWorld.height * cellPx);
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = SEEDLING_BACKGROUND;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     const view = { x: 0, y: 0, w: world.world.width, h: world.world.height };
     const counts = paintOps(ctx, ops, images, view, canvas);
-    return { canvas, counts, ops: ops.length };
+    const edits = editedTiles(mazeWorld, baseTiles);
+    for (const t of edits) {
+        ctx.fillStyle = t.wall ? COLORS.wall : COLORS.floor;
+        ctx.fillRect(t.x * cellPx, t.y * cellPx, cellPx, cellPx);
+    }
+    return { canvas, counts, ops: ops.length, edits: edits.length, census };
 }
