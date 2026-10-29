@@ -286,25 +286,29 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         const axis = latticeAxis(items, levels);
         // ⛓ An UNADMITTED landing's points are counted and the row named (`skipped`), never removed in silence (designer review).
         let unadmitted = 0;
+        let ownEvent = 0;
         let points = 0;
         for (const inv of allPoints(axis)) {
             points += 1;
             if (impossible(inv)) continue;
             if (notHere?.unadmitted?.(inv)) { unadmitted += 1; continue; }
+            if (notHere?.ownEvent?.(inv)) { ownEvent += 1; continue; }
             if (notHere?.(inv)) continue;
             const derived = derivedAt(inv);
             const atlas = atlasAt(inv);
             if (derived === atlas) continue;
             const held = new Set(inv);
-            const excuse = derived ? null : items.find((i) => !held.has(i) && needs(source, i)) ?? stricterOk;
+            const excuse = derived ? null : items.find((i) => !held.has(i) && needs(source, i)) ?? stricterOk ?? notHere?.unadmittedFresh?.(inv) ?? null;
             if (!excuse) {
                 problems.push(`${label} holding [${formatPoint(inv)}]: derived ${derived}, atlas ${atlas}${why}`);
                 if (unadmitted > 0) skipped.push({ label, points: unadmitted, of: points, partial: true });
+                if (ownEvent > 0) skipped.push({ label, points: ownEvent, of: points, partial: true, why: 'own event' });
                 return;
             }
             by.add(excuse);
         }
         if (unadmitted > 0) skipped.push({ label, points: unadmitted, of: points });
+        if (ownEvent > 0) skipped.push({ label, points: ownEvent, of: points, why: 'own event' });
         for (const item of by) accepted.push({ label, source, by: item });
         if (stricterOk !== null && by.has(stricterOk)) lines.push(`accepted: ${label} — ${stricterOk}`);
     };
@@ -402,14 +406,36 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         };
         return { edges: [...edges, ...events], reaches };
     };
-    const agreeWithClosure = (label, closure, pair, out) => {
+    const agreeWithClosure = (label, closure, pair, out, members) => {
         const derived = ruleFromMinimalSets(pair.minimal);
         const asked = new Set(out.items);
         const levels = mergeLevels(out.levels);
         for (const e of closure.edges) { ruleItems(e.rule, asked); ruleLevels(e.rule, levels); }
         compareRow(label, pair.from, [...asked].sort(), levels,
-            (inv) => holds(derived, inv), (inv) => closure.reaches(pair.from, pair.to, inv), null,
+            (inv) => holds(derived, inv), (inv) => closure.reaches(pair.from, pair.to, inv), admittedFresh(members, pair.from, asked),
             [...new Set(closure.edges.map((e) => explain(e.rule)))].join(''));
+    };
+    /**
+     * ⛓ IN-WORLD PAIRS FROM AN ADMITTED ARRIVAL (session tile-primitives-sphere-order-8, ⚖ 2026-10-29 "World doors + framing").
+     * A member's pairs are searched from its FRESH arrival (its `shared_world` entrance), which is an AP state only for the
+     * inventories some AP crossing into it from OUTSIDE its world admits: L63 r6c9's entrance is the pocket below the
+     * DarkTrap (8,17), entered only from L65 r0c8 on Has(flag 7) ∧ (Ghost Spear ∨ L65 flag 0) — holding the Ghost Spear
+     * alone, no AP state stands there (the rest of r6c9 is walked into from another member, whose own pairs carry it). So a
+     * STRICTER mismatch at a point no such crossing admits is EXCUSED, by name (`accepted`, ⚖ 2026-10-29 "Excuse on mismatch":
+     * a row that agrees is never touched, so the levels already certified keep their rows); a looser one stays a problem.
+     * An item off the row's axis reads as held (`admitsOnAxis`). A start, or a member nothing outside enters, excuses nothing.
+     */
+    const admittedFresh = (members, name, asked) => {
+        if (startOf(name)) return null;
+        const inside = new Set(members);
+        const ways = Object.entries(REGIONS).filter(([from]) => !inside.has(from))
+            .flatMap(([, r]) => r.exits.filter((e) => e.connected_region === name).map((e) => e.access_rule ?? { rule: 'True_' }));
+        if (ways.length === 0) return null;
+        const axis = new Set(asked);
+        const notHere = () => false;
+        notHere.unadmittedFresh = (inv) => (ways.some((r) => admitsOnAxis(r, pointCounts(inv), axis)) ? null
+            : `no AP crossing into ${name} from outside its world admits this arrival`);
+        return notHere;
     };
     const replay = (label, world, inventory, plan, cell, { cut = false } = {}) => {
         const w = { ...world, items: new Map() };
@@ -474,7 +500,10 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             const row = (label, atlas, minimal, event = null, stricterOk = null) => {
                 const derived = ruleFromMinimalSets(minimal);
                 const { asked, levels } = rowItems(out, atlas);
-                const skip = event === null ? notHere : (inv) => inv.includes(event) || Boolean(notHere?.(inv));
+                const own = event === null ? notHere : (inv) => inv.includes(event) || Boolean(notHere?.(inv));
+                // ⛓ The root's fresh arrival is an AP state only where a crossing into it admits the point (`admittedFresh`).
+                const fresh = admittedFresh(world.sharedWorld.regions, via, asked);
+                const skip = fresh === null ? own : Object.assign((inv) => Boolean(own?.(inv)), { unadmittedFresh: fresh.unadmittedFresh });
                 compareRow(label, via, asked, levels, (inv) => holds(derived, inv),
                     (inv) => closure.reaches(via, name, inv) && holds(atlas, inv), skip, explain(atlas), stricterOk);
             };
@@ -536,7 +565,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             for (const p of out.pairs) {
                 // An internal-only member's own arrival is no AP state: what it reaches, its inbound members' pairs reach.
                 if (internalOnly(world, p.from)) continue;
-                agreeWithClosure(`${p.from} → ${p.to}`, closure, p, out);
+                agreeWithClosure(`${p.from} → ${p.to}`, closure, p, out, world.sharedWorld.regions);
                 for (const w of p.witnesses) replay(`${p.from} → ${p.to}`, enteredAt(world, p.from), w.inventory, w.plan, w.cell);
                 lines.push(`${p.from}>${p.to}=${JSON.stringify(p.minimal)}`);
             }
@@ -648,8 +677,19 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             if (!loc) { problems.push(`${label}: no AP location of that name`); continue; }
             // Two events on ONE cell (L12's magical lock on its boss lock) each open by their own `rule` (session
             // tile-primitives-sphere-order-2), so a stacked event is priced like any other.
+            // ⛓ An EVENT location is not asked, at a landing, holding its own event (session tile-primitives-sphere-order-8, ⚖
+            // "World doors + framing"): the crossing that lands there may need it (L65 → L63's pocket needs the pole lit), and
+            // holding it, it was collected already — a cut is never reached again holding its item. Named (`why: own event`).
+            const own = arrival && loc.event ? (loc.item?.name ?? loc.name) : null;
+            let notHere = arrival ? notHereFor(loc.access_rule) : null;
+            if (own !== null) {
+                const base = notHere;
+                notHere = (inv) => Boolean(base?.(inv));
+                if (base?.unadmitted) notHere.unadmitted = base.unadmitted;
+                notHere.ownEvent = (inv) => inv.includes(own);
+            }
             agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out, {
-                stricterOk: permissiveWhy(name, loc.name), notHere: arrival ? notHereFor(loc.access_rule) : null,
+                stricterOk: permissiveWhy(name, loc.name), notHere,
             });
             lines.push(`${name}@${t.locationName}${lineTag}=${JSON.stringify(t.minimal)}`);
         }
