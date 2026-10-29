@@ -30,7 +30,7 @@ import {
     resolveCondition,
     conditionKey,
     entitySemantics,
-    entitySealedTiles,
+    entityClaims,
     entityFootprint,
     BLOCK_SINK_LABELS,
     SEEDLING_TILE_SIZE as TILE,
@@ -238,7 +238,7 @@ export function seedlingEventTiles(level, events) {
             return { name: ev.name, side: ev.side, mode: ev.mode, tiles: [[Math.floor((x + TILE / 2) / TILE), Math.floor((y + TILE / 2) / TILE)]], ...(ev.rule ? { rule: ev.rule } : {}) };
         }
         const sem = entitySemantics(entity);
-        const sealed = sem ? entitySealedTiles(entity, sem) : [];
+        const sealed = sem ? entityClaims(entity, sem, { pixelMaskFootprints: true }).map((c) => c.tile) : [];
         const tiles = sealed.length > 0 ? sealed : (() => {
             const f = entityFootprint(entity, sem);
             const out = [];
@@ -339,7 +339,7 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null } =
         }
         const rope = kind === 'rope' ? minted.find((r) => r.x === entity.x && r.y === entity.y) : null;
         if (kind === 'rope' && !rope) continue;
-        const sealed = entitySealedTiles(entity, sem);
+        const sealed = entityClaims(entity, sem, { pixelMaskFootprints: true }).map((c) => c.tile);
         const tiles = sealed.length > 0 ? sealed : (() => {
             const f = entityFootprint(entity, sem);
             const out = [];

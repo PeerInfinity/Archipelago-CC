@@ -690,6 +690,35 @@ export function entitySealedTiles(entity, semantics) {
 }
 
 /**
+ * The tiles one entity CLAIMS on a region grid, each with the semantics it claims there — the one place
+ * `buildSeedlingRegionGrid` and the census (`census-seedling-offgrid-blockers.mjs`) both read, so the grid's
+ * seal and the census's question are the same tiles.
+ *
+ * With `pixelMaskFootprints`, a Building (`pixelMask: true`) and every entity that SEALS (any kind but
+ * `manual`) whose model collider is a pixel mask claim by the MASK (`entityMaskTiles`, the same
+ * `seedlingEntityColliders` row the model collides with) instead of its bounding rect, each tile getting what
+ * the entity's own law gives a tile its body covers whole or in part:
+ *   - a Building: a fully opaque tile is a wall, a partly covered one stays `manual` (`PARTIAL_MASK_REASON`) —
+ *     the 3-way law, ⚖ 2026-10-25;
+ *   - a sealing entity (a pixel-mask wall: snowhill, opentree): a fully opaque tile is sealed as the entity's
+ *     kind, a partly covered one is walkable — the rounding law `entitySealedTiles` applies to a rect.
+ * A clear tile is never claimed. A `manual` set piece (TreeLarge, the TentacleBeast) keeps its rect: it seals
+ * nothing, and its rect is where the model is asked. ⛓ RULES collider-mismatch: this used to be the Buildings
+ * only, so a pixel-mask wall sealed its mask's bounding rect, and the notch the game lets the player into (L47's
+ * door, the open trees' doorways) was a wall (`probe-seedling-collider-cells.mjs`).
+ */
+export function entityClaims(entity, semantics, { pixelMaskFootprints = false } = {}) {
+    const byMask = pixelMaskFootprints && (semantics.pixelMask || semantics.kind !== 'manual');
+    const masked = byMask ? entityMaskTiles(entity) : null;
+    if (!masked) return entitySealedTiles(entity, semantics).map((tile) => ({ tile, semantics }));
+    const manual = semantics.kind === 'manual';
+    return masked.filter(({ cover }) => cover === 'full' || (cover === 'partial' && manual)).map(({ tile, cover }) => ({
+        tile,
+        semantics: !manual ? semantics : (cover === 'full' ? { ...semantics, kind: 'wall' } : { ...semantics, reason: PARTIAL_MASK_REASON }),
+    }));
+}
+
+/**
  * ⛓ PIXELMASK FOOTPRINTS (session tile-primitives-pixelmask-l86) — the tiles a
  * pixel-mask entity's BITMAP touches, each with its coverage: `'full'` (every
  * pixel opaque), `'none'` (not one) or `'partial'`. The bitmap is the model's
@@ -990,10 +1019,12 @@ export { DIRECTIONS as SEEDLING_DIRECTIONS };
  *   refine rather than restate, and omitting both reproduces the previous
  *   behaviour byte for byte.
  *   `pixelMaskFootprints` (⛓ PIXELMASK FOOTPRINTS, ⚖ 2026-10-25 "3-way by coverage",
- *   "Playthrough only") — a Building (`pixelMask: true`) claims its MASK, tile by
- *   tile (`entityMaskTiles`), instead of its sprite rect: a fully opaque tile is a
- *   wall, a partly covered one stays `manual` (the physics model decides the
- *   crossing), a clear one is not claimed. L0's building1 is a 48x40 sprite over a
+ *   "Playthrough only") — a Building (`pixelMask: true`), and since RULES
+ *   collider-mismatch every pixel-mask wall, claims its MASK, tile by tile
+ *   (`entityClaims`), instead of its rect: for a Building a fully opaque tile is
+ *   a wall, a partly covered one stays `manual` (the physics model decides the
+ *   crossing), a clear one is not claimed; a pixel-mask wall keeps the rounding
+ *   law over its mask. L0's building1 is a 48x40 sprite over a
  *   48x32 mask, and the free row under it is where L86 lands the player. Omitted,
  *   nothing changes: only the playthrough generator passes it, so the starter atlas
  *   and its presets keep the sprite rect.
@@ -1050,21 +1081,12 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             continue;
         }
         if (semantics.kind === 'open') continue;
-        const masked = options.pixelMaskFootprints && semantics.pixelMask ? entityMaskTiles(entity) : null;
-        if (masked) {
-            for (const { tile: [tx, ty], cover } of masked) {
-                if (cover === 'none') continue;
-                const ruled = cover === 'full' ? { ...semantics, kind: 'wall' } : { ...semantics, reason: PARTIAL_MASK_REASON };
-                claim(tx - bounds.x, ty - bounds.y, ruled, `entity ${entity.type}`);
-            }
-        } else {
-            for (const [tx, ty] of entitySealedTiles(entity, semantics)) {
-                claim(tx - bounds.x, ty - bounds.y, semantics, `entity ${entity.type}`);
-            }
+        for (const { tile: [tx, ty], semantics: ruled } of entityClaims(entity, semantics, options)) {
+            claim(tx - bounds.x, ty - bounds.y, ruled, `entity ${entity.type}`);
         }
         if (semantics.opensFrom) {
             reclosing.push({
-                tiles: entitySealedTiles(entity, semantics), opensFrom: semantics.opensFrom, heldBy: semantics.heldBy ?? null,
+                tiles: entityClaims(entity, semantics, options).map((c) => c.tile), opensFrom: semantics.opensFrom, heldBy: semantics.heldBy ?? null,
             });
         }
         for (const [tx, ty] of entityStrandedTiles(entity, semantics)) {

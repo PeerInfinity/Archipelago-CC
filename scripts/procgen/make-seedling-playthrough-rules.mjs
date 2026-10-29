@@ -400,7 +400,7 @@ export function offGridGatedSolids(level) {
     for (const entity of level.entities ?? []) {
         const base = SEM.entitySemantics(entity);
         if (base?.kind !== 'gated' || !base.condition) continue;
-        if (SEM.entitySealedTiles(entity, base).length > 0) continue;
+        if (SEM.entityClaims(entity, base, { pixelMaskFootprints: true }).map((c) => c.tile).length > 0) continue;
         const f = SEM.entityFootprint(entity, base);
         const tiles = [];
         for (let ty = f.y; ty < f.y + f.h; ty += 1) for (let tx = f.x; tx < f.x + f.w; tx += 1) tiles.push([tx, ty]);
@@ -495,7 +495,7 @@ function gameGatedSolidTiles(level) {
         // row cites the source for both halves; a policy pricing (a puzzle, a kill-lock) is never marked.
         const solidBody = Boolean(OV.PLAYTHROUGH_ENTITY_OVERLAY[entity.type]?.solidBody);
         if (base?.kind !== 'gated' && !killLock && !solidBody) continue;
-        for (const [tx, ty] of SEM.entitySealedTiles(entity, base)) tiles.add(`${tx},${ty}`);
+        for (const [tx, ty] of SEM.entityClaims(entity, base, { pixelMaskFootprints: true }).map((c) => c.tile)) tiles.add(`${tx},${ty}`);
     }
     // ⛓ RULES l66-door — and the overlapped tiles of a gated solid that claims no whole tile (`offGridGatedSolids`).
     for (const { tiles: overlapped } of offGridGatedSolids(level)) for (const [tx, ty] of overlapped) tiles.add(`${tx},${ty}`);
@@ -516,7 +516,7 @@ function latchLocksOf(level) {
         if (!sem?.persists) continue;
         const lock = { level: level.level, tag: Number(e.attrs[sem.persistAttr]), cls: e.type, x: e.x, y: e.y };
         lock.name = obstacleEventName(lock);
-        for (const [tx, ty] of SEM.entitySealedTiles(e, sem)) out.set(`${tx},${ty}`, lock);
+        for (const [tx, ty] of SEM.entityClaims(e, sem, { pixelMaskFootprints: true }).map((c) => c.tile)) out.set(`${tx},${ty}`, lock);
     }
     latchLocksMemo.set(level.level, out);
     return out;
@@ -1342,7 +1342,7 @@ export function playthroughObstacleEvents(doc, { rows = arrivalSolidCensus(MAP, 
                 return i >= 0 && subs.includes(components[i].id) ? components[i].id : null;
             };
             const entity = entityOf(level, solid);
-            const tiles = SEM.entitySealedTiles(entity, rowOf(entity, level));
+            const tiles = SEM.entityClaims(entity, rowOf(entity, level), { pixelMaskFootprints: true }).map((c) => c.tile);
             const own = new Set(tiles.map(([x, y]) => `${x},${y}`));
             const touching = new Set();
             for (const [x, y] of tiles) {
@@ -1787,7 +1787,7 @@ export function playthroughTalkEvents(doc, { existing = [] } = {}) {
             const entity = (level?.entities ?? []).find((e) => e.type === g.type && e.x === g.x && e.y === g.y);
             if (!entity) throw new Error(`talk events: L${g.level} has no ${g.type}@${g.x},${g.y}`);
             const base = SEM.entitySemantics(entity);
-            const footprint = new Set(SEM.entitySealedTiles(entity, entityOverride(entity, base, level) ?? base)
+            const footprint = new Set(SEM.entityClaims(entity, entityOverride(entity, base, level) ?? base, { pixelMaskFootprints: true }).map((c) => c.tile)
                 .map(([x, y]) => `${x},${y}`));
             const regionId = regionIdFor(g.level);
             return (regionOf(regionId)?.exits ?? [])

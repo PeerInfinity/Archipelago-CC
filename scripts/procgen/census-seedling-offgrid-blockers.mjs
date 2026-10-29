@@ -19,6 +19,9 @@
  * tile claimed whole has no free pixel for the box), and the one stamped case (`offGridGatedSolids`) is
  * witnessed by `probe-seedling-l66-door.mjs`.
  *
+ * ⛓ RULES collider-mismatch: and the same TIGHTER test over EVERY sealed tile, on the grid or off it
+ * (`censusSealedRoom`), the seal read through `entityClaims` exactly as the grid claims it.
+ *
  * Run:
  *   node scripts/procgen/census-seedling-offgrid-blockers.mjs           # the table
  *   node scripts/procgen/census-seedling-offgrid-blockers.mjs --json    # every row, as JSON
@@ -31,26 +34,57 @@ import {
 import { findComponents } from '../../frontend/modules/procgenPipeline/regionAtlasAnalyzer.js';
 import { modelFloodTiles } from '../../frontend/modules/seedlingDemo/seedlingModelOracles.js';
 import {
-    entitySemantics, entityPixelRect, entityFootprint, entitySealedTiles, conditionKey, SEEDLING_TILE_SIZE,
+    entitySemantics, entityPixelRect, entityFootprint, entityClaims, entityMaskTiles, conditionKey, SEEDLING_TILE_SIZE,
 } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
+import { ENTITY_COLLIDERS } from '../../frontend/modules/flashPanel/seedlingEntityColliders.js';
 
 argvHelp(import.meta.url);
 
 const T = SEEDLING_TILE_SIZE;
 const key = ([x, y]) => `${x},${y}`;
 
-/** Every non-open entity of a level whose hitbox is not on the 16 px grid. */
+/**
+ * The tiles an entity SEALS on the playthrough grid: its `entityClaims` (the grid's own claim, a pixel mask's
+ * included, as `playthroughGridFor` passes `pixelMaskFootprints`) whose kind is a wall or a gate. A `manual`
+ * claim is not a seal: the analyzer hands it to the model anyway.
+ */
+export const sealedTiles = (entity, sem) => entityClaims(entity, sem, { pixelMaskFootprints: true })
+    .filter((c) => c.semantics.kind === 'wall' || c.semantics.kind === 'gated').map((c) => c.tile);
+
+/**
+ * Every pixel-mask tile a SEALING entity leaves walkable: the mask covers it in part, and `entityClaims` rounds it
+ * open (⛓ RULES collider-mismatch). The converse of the TIGHTER test: each must hold the player's box.
+ */
+export function maskPartialTiles(level) {
+    const out = [];
+    for (const entity of level.entities ?? []) {
+        const sem = entitySemantics(entity);
+        if (!sem || sem.kind === 'open' || sem.kind === 'manual' || sem.pixelMask) continue;
+        for (const { tile, cover } of entityMaskTiles(entity) ?? []) {
+            if (cover !== 'partial') continue;
+            out.push({ level: level.level, blocker: `${entity.type}@${entity.x},${entity.y}`, tile,
+                fits: modelFloodTiles(level, [tile], () => false).length > 0 });
+        }
+    }
+    return out;
+}
+
+/**
+ * Every non-open entity of a level whose hitbox is not on the 16 px grid — and every SEALING pixel-mask entity
+ * (⛓ RULES collider-mismatch), whose claim is its mask's opaque tiles and so as off the grid as its outline.
+ */
 export function offGridBlockers(level) {
     const out = [];
     for (const entity of level.entities ?? []) {
         const sem = entitySemantics(entity);
         if (!sem || sem.kind === 'open') continue;
         const r = entityPixelRect(entity, sem);
-        if (r.x % T === 0 && r.y % T === 0 && r.w % T === 0 && r.h % T === 0) continue;
+        const masked = sem.kind !== 'manual' && !sem.pixelMask && ENTITY_COLLIDERS[entity.type]?.collider === 'pixelmask';
+        if (!masked && r.x % T === 0 && r.y % T === 0 && r.w % T === 0 && r.h % T === 0) continue;
         const f = entityFootprint(entity, sem);
         const touched = [];
         for (let ty = f.y; ty < f.y + f.h; ty += 1) for (let tx = f.x; tx < f.x + f.w; tx += 1) touched.push([tx, ty]);
-        out.push({ entity, sem, rect: r, touched, sealed: entitySealedTiles(entity, sem) });
+        out.push({ entity, sem, rect: r, touched, sealed: sealedTiles(entity, sem) });
     }
     return out;
 }
@@ -114,15 +148,12 @@ function materialGroups(grid) {
     return groupOf;
 }
 
-/** The census rows for one level. `region` is the playthrough atlas region (exits, locations). */
-export function censusLevel(level, region) {
-    const blockers = offGridBlockers(level);
-    if (blockers.length === 0) return [];
+/** The playthrough grid of one level, its components, and the atlas members (exits, locations) on it. */
+function levelContext(level, region) {
     const grid = playthroughGridFor(level);
     const { components } = findComponents(grid);
     const componentOf = new Map();
     components.forEach((c, i) => { for (const t of c.tiles) componentOf.set(key(t), i); });
-    const groupOf = materialGroups(grid);
     const members = [
         ...(region?.exits ?? []).map((e) => ({ what: `exit ${e.exit_id}`, tile: e.entrance_tile ?? e.exit_tiles[0], sub: e.sub_region })),
         ...(region?.locations ?? []).map((l) => ({ what: `location "${l.name}"`, tile: l.tile, sub: l.sub_region })),
@@ -132,6 +163,45 @@ export function censusLevel(level, region) {
         return [[x, y - 1], [x - 1, y], [x + 1, y], [x, y + 1]]
             .filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < grid.width && ny < grid.height);
     };
+    return { grid, components, componentOf, members, neighbours };
+}
+
+/**
+ * ⛔ TIGHTER, the mirror test: a tile the grid lets an entity seal whole as a wall or a gate (`sealedTiles`: never
+ * a `manual` claim, which the analyzer hands to the model anyway) where the box still has a place in the model. It
+ * is a finding when the box JOINS two grid components through it, or a door or location on it is bound where the
+ * box cannot walk from it: no other member of its atlas sub-region (of the region, when unsplit) is in the box's
+ * reach.
+ */
+function tighterRows(level, sealed, { grid, components, componentOf, members, neighbours }) {
+    const out = [];
+    for (const t of sealed) {
+        if (modelFloodTiles(level, [t], () => false).length === 0) continue;
+        const around = new Set();
+        for (const [nx, ny] of neighbours(key(t))) if (componentOf.has(`${nx},${ny}`)) around.add(componentOf.get(`${nx},${ny}`));
+        const allowed = new Set([key(t), ...[...around].flatMap((ci) => components[ci].tiles.map(key))]);
+        const reached = modelFloodTiles(level, [t], (x, y) => allowed.has(`${x},${y}`));
+        const joined = new Set(reached.map(key).filter((k) => componentOf.has(k)).map((k) => componentOf.get(k)));
+        const on = members.filter((m) => key(m.tile) === key(t));
+        const walk = on.length === 0 ? new Set() : new Set(modelFloodTiles(level, [t], (x, y) => x === t[0] && y === t[1]
+            || grid.cells[y * grid.width + x]?.kind === 'open').map(key));
+        const misbound = on.filter((m) => !members.some((o) => o !== m && o.sub === m.sub && key(o.tile) !== key(t)
+            && walk.has(key(o.tile))));
+        out.push({
+            tile: t, joins: joined.size, members: on.map((m) => m.what), misbound: misbound.map((m) => m.what),
+            finding: joined.size > 1 || misbound.length > 0,
+        });
+    }
+    return out;
+}
+
+/** The census rows for one level. `region` is the playthrough atlas region (exits, locations). */
+export function censusLevel(level, region) {
+    const blockers = offGridBlockers(level);
+    if (blockers.length === 0) return [];
+    const ctx = levelContext(level, region);
+    const { grid, components, componentOf, members, neighbours } = ctx;
+    const groupOf = materialGroups(grid);
     const rows = [];
     for (const b of blockers) {
         const near = new Set();
@@ -192,35 +262,47 @@ export function censusLevel(level, region) {
                 sides, looser: short.length > 0,
             });
         }
-        // ⛔ TIGHTER, the mirror test: a tile the grid lets this entity seal whole as a wall or a gate (never a
-        // `manual` claim, which the analyzer hands to the model anyway, nor a pixel-mask Building's, whose grid
-        // claim is its mask) where the box still has a place in the model. It is a finding when the box JOINS
-        // two grid components through it, or a door or location on it is bound where the box cannot walk from
-        // it: no other member of its atlas sub-region (of the region, when unsplit) is in the box's reach.
-        row.tighter = [];
-        if (!b.sem.pixelMask && (b.sem.kind === 'wall' || b.sem.kind === 'gated')) {
-            for (const t of b.sealed) {
-                if (modelFloodTiles(level, [t], () => false).length === 0) continue;
-                const around = new Set();
-                for (const [nx, ny] of neighbours(key(t))) if (componentOf.has(`${nx},${ny}`)) around.add(componentOf.get(`${nx},${ny}`));
-                const allowed = new Set([key(t), ...[...around].flatMap((ci) => components[ci].tiles.map(key))]);
-                const reached = modelFloodTiles(level, [t], (x, y) => allowed.has(`${x},${y}`));
-                const joined = new Set(reached.map(key).filter((k) => componentOf.has(k)).map((k) => componentOf.get(k)));
-                const on = members.filter((m) => key(m.tile) === key(t));
-                const walk = on.length === 0 ? new Set() : new Set(modelFloodTiles(level, [t], (x, y) => x === t[0] && y === t[1]
-                    || grid.cells[y * grid.width + x]?.kind === 'open').map(key));
-                const misbound = on.filter((m) => !members.some((o) => o !== m && o.sub === m.sub && key(o.tile) !== key(t)
-                    && walk.has(key(o.tile))));
-                row.tighter.push({
-                    tile: t, joins: joined.size, members: on.map((m) => m.what), misbound: misbound.map((m) => m.what),
-                    finding: joined.size > 1 || misbound.length > 0,
-                });
-            }
-        }
+        // ⛔ TIGHTER, the mirror test (`tighterRows`).
+        row.tighter = tighterRows(level, b.sealed, ctx);
         rows.push(row);
     }
     return rows;
 }
+
+/**
+ * ⛓ RULES collider-mismatch — EVERY SEALED TILE, ON or off the grid: the TIGHTER test (`tighterRows`) over every
+ * non-open entity of every level, not only the off-grid ones. A row is a tile the grid seals whole where the
+ * model's box still has room. The geometry cannot disagree any more (`entityClaims` reads the collider the model
+ * collides with, a pixel mask included), so a row here is the model's PRESENCE or SOLIDITY differing from a wall
+ * the transcription keeps on purpose (`seedlingOffGridBlockersCensus.test.js` counts them).
+ */
+export function censusSealedRoom({ levels = PLAYTHROUGH_MAP.levels, atlas = buildPlaythroughAtlas() } = {}) {
+    const rows = [];
+    for (const level of levels) {
+        let ctx = null;
+        for (const entity of level.entities ?? []) {
+            const sem = entitySemantics(entity);
+            if (!sem || sem.kind === 'open') continue;
+            const sealed = sealedTiles(entity, sem).filter((t) => modelFloodTiles(level, [t], () => false).length > 0);
+            if (sealed.length === 0) continue;
+            ctx ??= levelContext(level, atlas.regions.find((r) => r.map_ref === level.level));
+            for (const t of tighterRows(level, sealed, ctx)) {
+                rows.push({ level: level.level, blocker: `${entity.type}@${entity.x},${entity.y}`, kind: sem.kind, ...t });
+            }
+        }
+    }
+    return rows;
+}
+
+/**
+ * Why a sealed tile the model leaves room on is KEPT sealed, per class (⛓ RULES collider-mismatch, witnessed by
+ * `probe-seedling-collider-cells.mjs`). Not geometry — `entityClaims` reads the model's collider — so a row the
+ * table cannot explain is printed UNEXPLAINED.
+ */
+export const SEAL_KEPT = Object.freeze({
+    moonrockpile: 'PRESENCE: built only once {2,0} is cleared, which the delivered set never does',
+    iceturret: 'SOLIDITY: alive it is an "Enemy", whose blasts and contact hold a hitless walk off; its corpse latches "Solid"',
+});
 
 /** A split is a FINDING (LOOSER) when some member or bordering group of the component reaches less of it in the model. */
 export const isFinding = (split) => split.looser;
@@ -237,8 +319,9 @@ export function censusOffGridBlockers({ levels = PLAYTHROUGH_MAP.levels, atlas =
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) {
     const rows = censusOffGridBlockers();
+    const room = censusSealedRoom();
     if (process.argv.includes('--json')) {
-        console.log(JSON.stringify(rows, null, 1));
+        console.log(JSON.stringify({ offGrid: rows, sealedRoom: room }, null, 1));
     } else {
         const levels = new Set(rows.map((r) => r.level));
         console.log(`${rows.length} off-grid blockers in ${levels.size} levels`);
@@ -254,6 +337,17 @@ if (isEntryPoint(import.meta.url)) {
                 console.log(`   component @${s.component} (${s.tiles} tiles): ${s.without} pocket(s) without -> ${s.with} with`);
                 for (const side of s.sides) console.log(`      ${side.tiles} tiles @${side.at}: ${side.members.join('; ') || '-'} | groups ${side.groups.join(' ') || '-'}`);
             }
+        }
+        const partial = PLAYTHROUGH_MAP.levels.flatMap(maskPartialTiles);
+        console.log(`\nevery pixel-mask tile a wall leaves walkable: ${partial.length}, `
+            + `${partial.filter((t) => !t.fits).length} without room for the box`);
+        for (const t of partial.filter((p) => !p.fits)) console.log(`L${t.level} ${t.blocker} [${t.tile}]: NO ROOM`);
+        console.log(`\nevery sealed tile, on or off the grid: ${room.length} with room for the box, `
+            + `${room.filter((t) => t.finding).length} TIGHTER`);
+        for (const t of room) {
+            console.log(`L${t.level} ${t.blocker} [${t.kind}] sealed [${t.tile}] (${SEAL_KEPT[t.blocker.split('@')[0]] ?? 'UNEXPLAINED'}): joins ${t.joins} component(s)`
+                + `${t.members.length ? `, holds ${t.members.join('; ')} (misbound: ${t.misbound.join('; ') || 'none'})` : ''}`
+                + `${t.finding ? ' -> TIGHTER' : ''}`);
         }
     }
 }
