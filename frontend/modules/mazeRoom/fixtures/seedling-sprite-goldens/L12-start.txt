@@ -1,0 +1,7 @@
+drawImage(seedling/BossLock4, 0, 0, 112, 192)
+drawImage(seedling/BossLock, 0, 0, 416, 240)
+drawImage(seedling/BossLock, 0, 0, 432, 240)
+drawImage(seedling/Sword, 0, 0, 416, 384)
+drawImage(seedling/BossLock1, 0, 0, 80, 656)
+drawImage(seedling/ShieldLockNorm, 0, 0, 288, 704)
+player drawImage(seedling/ShrumBlue, 0, 0, 304, 0)

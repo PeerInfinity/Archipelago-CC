@@ -69,7 +69,12 @@
  *                                  per cell (`mazeSeedlingSkin.bakeSeedlingLayer`); it is
  *                                  blitted INSTEAD of the floor/wall fill and the grid,
  *                                  and the markers are drawn at `markerAlpha` over it.
- *                                  null = today's draw, op for op.
+ *                                  null = today's draw, op for op. ⛓ S2 (maze-seedling-art-2):
+ *                                  `sprites` {ops, cells, player, paint}|null — the live
+ *                                  sprites (`mazeSeedlingSprites.seedlingSprites`): `paint(ctx,
+ *                                  ops)` draws `ops` over the layer, the marker of every cell in
+ *                                  `cells` is not drawn (the art owns it, shown or cleared), and
+ *                                  `player` replaces the player's disc and facing tick.
  *
  * ── ⛓ THE GATE IS AN ORDERED DRAW-OP LOG, AND WHY THAT IS THE PIXELS ──
  *
@@ -238,6 +243,12 @@ export function assertView(view) {
         fail('mazeRoomRender: view.seedlingSkin must be null or {layer, markerAlpha} with a baked '
             + `layer and 0 < markerAlpha <= 1, got ${JSON.stringify(skin)}.`);
     }
+    const sprites = skin?.sprites ?? null;
+    if (sprites !== null && (!Array.isArray(sprites.ops) || !(sprites.cells instanceof Set)
+        || typeof sprites.paint !== 'function' || !(sprites.player === null || Array.isArray(sprites.player)))) {
+        fail('mazeRoomRender: view.seedlingSkin.sprites must be null or {ops: [], cells: Set, player: []|null, '
+            + 'paint: (ctx, ops) => void}.');
+    }
     for (const key of ['isTileVisible', 'isExitVisible', 'isLocationVisible']) {
         if (typeof view[key] !== 'function') {
             fail(`mazeRoomRender: view.${key} must be a function, got `
@@ -307,8 +318,12 @@ export function drawWorld(ctx, world, view) {
     // ⛓ SEEDLING ART: the level's own room, baked once by the caller, is the
     // base layer; the maze's markers go over it at `markerAlpha`.
     const skin = view.seedlingSkin;
+    // ⛓ S2: the live sprites, over the room and under the markers; a cell they own draws no marker.
+    const sprites = skin?.sprites ?? null;
+    const spriteCells = sprites?.cells ?? null;
     if (skin) {
         ctx.drawImage(skin.layer, 0, 0);
+        if (sprites?.ops.length) sprites.paint(ctx, sprites.ops);
         ctx.globalAlpha = skin.markerAlpha;
     } else {
         // Tile base layer: floor / wall.
@@ -349,6 +364,7 @@ export function drawWorld(ctx, world, view) {
             // here so undiscovered items / exits / gate borders
             // don't even render before the blackout.
             if (view.fogEnabled && !view.isTileVisible(x, y)) continue;
+            const artOwned = spriteCells?.has(key) ?? false;
             const obstacleId = broken?.has(key) ? undefined : w.obstacles.get(key);
             const obstacle = obstacleId ? obstacleLib[obstacleId] : null;
             const isLogicGate = obstacle?.clear_set_type === 'rule';
@@ -393,7 +409,7 @@ export function drawWorld(ctx, world, view) {
             // existing rendering. Logic gates are NOT painted as
             // tile-fill obstacles — their visual is handled
             // through the exit-fill / location-border paths.
-            if (obstacle && !isLogicGate) {
+            if (obstacle && !isLogicGate && !artOwned) {
                 const color = obstacle.color ?? '#b84040';
                 // combo_list obstacles (colored doors) don't use
                 // the rule engine — clearOpts is harmless here
@@ -430,7 +446,7 @@ export function drawWorld(ctx, world, view) {
             // (no library entry) get a hash-derived color and a
             // first-letter label so they're visually distinguishable
             // from each other and from known items.
-            if (itemHere && locationVisible) {
+            if (itemHere && locationVisible && !artOwned) {
                 const hints = getItemRenderHints(itemId, itemLib);
                 ctx.fillStyle = hints.color;
                 const cx = x * px + px / 2;
@@ -569,6 +585,7 @@ export function drawWorld(ctx, world, view) {
                 ctx.fillRect(lx * px, ly * px, px, px);
             }
             ctx.globalAlpha = 1;
+            if (spriteCells?.has(`${trap.x},${trap.y}`)) return;
             ctx.fillStyle = COLORS.trap;
             ctx.fillRect(trap.x * px + 2, trap.y * px, px - 4, Math.max(2, Math.floor(px / 5)));
         });
@@ -594,7 +611,9 @@ export function drawWorld(ctx, world, view) {
         }
     }
 
-    if (view.playerPos) {
+    if (view.playerPos && sprites?.player) {
+        sprites.paint(ctx, sprites.player);
+    } else if (view.playerPos) {
         const { x, y } = view.playerPos;
         ctx.fillStyle = COLORS.player;
         ctx.beginPath();
