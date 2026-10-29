@@ -1,0 +1,6 @@
+INFO: enc-l32-live-arrival: 8587 page answers, 863 sampled tick(s) of 862; shifts that fit every player x/y: []
+INFO: the drained stream: 863 obs, worst |Δ| 0, first off null
+INFO: first SAMPLED tick off the model (a sample may straddle a frozen frame): 2
+INFO: item flips (sampled ticks) — game {}, model {}
+INFO: clears (first tick) — {32:1} game t2 (prev sample t1) / model t2; {32:3} game t771 (prev sample t770) / model t771; {32:4} game t832 (prev sample t832) / model t832
+INFO: at finished — game hasFire false hasDarkSword false; model hasFire false hasDarkSword false
