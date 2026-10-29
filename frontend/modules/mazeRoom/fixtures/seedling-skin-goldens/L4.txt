@@ -40,3 +40,4 @@ drawImage(seedling/DungeonTile, 0, 0, 48, 48) rot=270
 drawImage(seedling/DungeonTile, 0, 0, 48, 32) rot=180
 drawImage(seedling/DungeonTile, 0, 0, 48, 16) rot=180
 drawImage(seedling/Pit, 0, 0, 0, 64)
+drawImage(seedling/Stairs, 16, 0, 64, 16)

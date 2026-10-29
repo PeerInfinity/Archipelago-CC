@@ -39,6 +39,17 @@ import { playerOps, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { enemyOps, freshSprite } from './seedlingEnemySkin.js';
 import { PICKUP_TAGS, pickupOps, pickupSkinView } from './seedlingPickupSkin.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
+// ⛓ LAB L2b: the room's other objects, through the js arc's skins (imported as is) and the page's own run pair.
+import { createRunForStaging, solveStaging } from './tapeRunner.js';
+import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
+import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from './seedlingHazardSkin.js';
+import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from './seedlingPuzzleSkin.js';
+import { SOLIDS_OBJECT_TAGS, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
+import { NPC_TAGS, npcOps, npcSkinView, stepNpcSkin } from './seedlingNpcSkin.js';
+import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
+import { lampOps, lampSkinView } from './seedlingLampSkin.js';
+import { MACHINE_OBJECT_TAGS, machineOps, machineSkinView, stepMachineSkin } from './seedlingMachineSkin.js';
+import { BOSS_OBJECT_TAGS, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
 
 /** The `packs.json` graphics stack (the JS page's `?graphics=seedling`, the maze's ruling 1). */
 export const LAB_ART_STACK = 'graphics.seedling';
@@ -55,8 +66,15 @@ export const LAB_ART_BACKGROUND = '#101014';
  * registers each world's record here. A world with none draws every live teleporter as the stand-in.
  */
 const roomRecords = new WeakMap();
-export function rememberRoomRecord(world, record) {
+/**
+ * ⛓ LAB L2b: and, optionally, the room's CONTEXT `{levelSource, staging, scratchPersistence}` — what
+ * `placementRunOf` builds the room's tick-0 run from (the same `createRunForStaging(solveStaging(…))` pair the
+ * page runs with, booted in this room). A world registered without one draws the world-derived half only.
+ */
+const roomContexts = new WeakMap();
+export function rememberRoomRecord(world, record, context = null) {
     if (world && record) roomRecords.set(world, record);
+    if (world && context?.levelSource && context?.staging) roomContexts.set(world, context);
     return world;
 }
 export const roomRecordOf = (world) => roomRecords.get(world) ?? null;
@@ -124,21 +142,185 @@ export function staticPickupOps(world, art) {
     return pickupOps(view, art);
 }
 
+// ── LAB L2b: the room's other objects (blocks, hazards, NPCs, machines, static enemies, bosses) ──
+
+/**
+ * ⛓ THE PLACEMENT RUN — the room's run at tick 0, NEVER ADVANCED, built the way the page builds every run
+ * (`createRunForStaging(solveStaging(staging))`, the boot moved into this room). It is the source of the rows a
+ * skin reads off a run rather than off the world: a crusher's centre, a shield boss's `sit`, a watcher, a
+ * shooter, a pulser, a lava boss, the tentacle beast's `under`… — the game's own first frame of each, so the
+ * lab writes no second copy of their shapes. Memoised per world (an edit is a new world). A room whose run
+ * refuses to build (or a world registered without a context) is `null`: its skins draw the world-derived half
+ * (stairs, blocks, rocks, locks, buttons, traps, lamps, axes, chains, talkers…) and nothing run-only.
+ *
+ * ⚠ `solveStaging` = `noDamage: false`: the wallflyer stepper's own gate (`roomBodySkinView`'s `stepped`).
+ */
+const placementRuns = new WeakMap();
+export const PLACEMENT_BOOT = Object.freeze({ x: 0, y: 0 });
+export function placementRunOf(world) {
+    if (!world || typeof world !== 'object') return null;
+    if (placementRuns.has(world)) return placementRuns.get(world);
+    const ctx = roomContexts.get(world) ?? null;
+    let run = null;
+    if (ctx) {
+        try {
+            const staging = { ...ctx.staging, boot: { ...ctx.staging.boot, level: world.level, ...PLACEMENT_BOOT } };
+            run = createRunForStaging(solveStaging(staging), ctx.levelSource, { scratchPersistence: !!ctx.scratchPersistence });
+        } catch (e) {
+            run = null;
+        }
+    }
+    placementRuns.set(world, run);
+    return run;
+}
+
+/** The run rows the skins read (`read(run, name)`), copied ONCE off the placement run. */
+const RUN_ROWS = Object.freeze([
+    'crushers', 'bossesWoken', 'bossShots', 'bombPushers', 'bombs', 'placedGrenades', 'pushables', 'staticBodies',
+    'talkCircles', 'talkingNow', 'watchers', 'inventory', 'rockFalls', 'darkTraps', 'wallFlyers', 'drills', 'turrets',
+    'turretDamage', 'bobBoss', 'blastsInFlight', 'shooters', 'shieldBosses', 'finalBosses', 'lavaBossFight',
+    'tentacleBeastFight', 'lightsFight', 'owlProjectilesNow', 'machinesNow', 'activatorsNow', 'owlPods', 'moonrock',
+    'pulls', 'finalDoors', 'lightPolesNow', 'gameTime', 'transitions', 'playerDeaths', 'noDamage',
+]);
+const placementRows = new WeakMap();
+function placementRowsOf(world) {
+    if (placementRows.has(world)) return placementRows.get(world);
+    const run = placementRunOf(world);
+    const rows = {};
+    if (run) {
+        for (const k of RUN_ROWS) {
+            try { if (k in run) rows[k] = run[k]; } catch (e) { /* a getter that refuses at tick 0: absent */ }
+        }
+    }
+    placementRows.set(world, rows);
+    return rows;
+}
+
+/** The families of a sample's `changes` (`watchOverlays.sampleMovers`) that are a run SET the skins read. */
+const CHANGE_SETS = Object.freeze(['openActivators', 'openChests', 'brokenRocks', 'burnedTrees']);
+
+/**
+ * ⛓ THE STATIC RUN — a run-shaped object for the skins' views: the placement rows, the lab's own world and
+ * the player's state, OVERLAID with what the sample at the cursor says the run has changed (a pushed block at
+ * its sampled position, a sunk one gone; a broken rock, an opened chest or lock, a burned tree; a dead ice
+ * turret). A sample that does not carry a channel (`changeCounts: null`, the v1 engine) leaves the build look.
+ * ⚠ Not carried by the sample, so drawn as built: a pressed button, a taken pickup, a woken boss.
+ */
+export function staticRunOf(world, state, sample = null) {
+    const rows = placementRowsOf(world);
+    const run = { ...rows, world, level: world.level, state: state ?? { x: 0, y: 0 }, ticksCompleted: LAB_ART_TICK };
+    const s = sample && sample.level === world.level ? sample : null;
+    if (s?.changeCounts) {
+        for (const set of CHANGE_SETS) run[set] = new Set();
+        for (const c of s.changes ?? []) if (CHANGE_SETS.includes(c.family)) run[c.family].add(c.id);
+    }
+    if (s && Array.isArray(s.pushables) && s.changeCounts) {
+        const pushables = new Map();
+        for (const b of s.pushables) pushables.set(b.id, { rect: { x: b.x, y: b.y, w: b.w, h: b.h }, removed: false, destroy: false });
+        for (const c of s.changes ?? []) if (c.family === 'pushables' && c.effect === 'gone') pushables.set(c.id, { rect: c.base, removed: true });
+        run.pushables = pushables;
+    }
+    if (s?.changeCounts && rows.turrets instanceof Map) {
+        const dead = new Set((s.changes ?? []).filter((c) => c.family === 'turrets' && c.effect === 'swapped').map((c) => c.id));
+        if (dead.size) run.turrets = new Map([...rows.turrets].map(([id, t]) => [id, dead.has(id) ? { ...t, dead: true, solid: true } : t]));
+    }
+    return run;
+}
+
+/**
+ * The skin families, each `[name, view(run, record), step | null, ops]`, in the JS page's paint order
+ * (`jsRuntimePage.paintSkinned`). Every one is read at ONE fresh step (`step(null, view, LAB_ART_TICK)`): the
+ * frame a fresh game shows, never stepped again.
+ */
+export const LAB_SKIN_FAMILIES = Object.freeze([
+    ['roomBody', (r) => roomBodySkinView(r), stepRoomBodySkin, roomBodyOps],
+    ['hazard', (r) => hazardSkinView(r), stepHazardSkin, hazardOps],
+    ['puzzle', (r, record) => puzzleSkinView(r, { record }), stepPuzzleSkin, puzzleOps],
+    ['solids', (r, record) => solidsSkinView(r, { record }), stepSolidsSkin, solidsOps],
+    ['npc', (r) => npcSkinView(r), stepNpcSkin, npcOps],
+    ['trap', (r) => trapSkinView(r), stepTrapSkin, trapOps],
+    ['lamp', (r, record) => lampSkinView(r, { record }), null, lampOps],
+    ['machine', (r, record) => machineSkinView(r, { record }), stepMachineSkin, machineOps],
+    ['boss', (r) => bossSkinView(r), stepBossSkin, bossOps],
+].map(Object.freeze));
+
+/**
+ * The `roomOps` objects each family's skin draws instead of the rectangle stand-in (the JS page's own
+ * `drawnObjects`, split by family so a family whose skin refused keeps ITS stand-ins only).
+ */
+export const FAMILY_OBJECT_TAGS = Object.freeze({
+    hazard: HAZARD_OBJECT_TAGS, puzzle: PUZZLE_OBJECT_TAGS, solids: SOLIDS_OBJECT_TAGS, npc: NPC_TAGS,
+    machine: MACHINE_OBJECT_TAGS, boss: BOSS_OBJECT_TAGS,
+    // ⚠ LAB-SIDE (not the JS page's predicate, which keeps it): the ice turret's object solid is its CORPSE wall
+    // (`sampleMovers`: "ALIVE — an ice turret is an Enemy, not a wall"), so with the room-body skin drawing the
+    // turret the stand-in goes — but only when that skin drew something (no placement run: the stand-in stays).
+    roomBody: Object.freeze(new Set(['iceturret'])),
+});
+export function labDrawnObjects(byFamily) {
+    const sets = Object.entries(FAMILY_OBJECT_TAGS)
+        .filter(([name]) => byFamily[name] !== null && (name !== 'roomBody' || byFamily[name]?.length > 0)).map(([, tags]) => tags);
+    return (o) => sets.some((tags) => tags.has(o.tag));
+}
+
+/**
+ * The room's objects as ONE static frame each, per family: `{name: ops}`. `stepSkin` is the test seam for the
+ * tick-independence mutant (the default is the one fresh step).
+ */
+export function staticEntityOpsByFamily(world, art, { record = null, state = null, sample = null,
+    stepSkin = (step, view) => step(null, view, LAB_ART_TICK) } = {}) {
+    const out = {};
+    if (!art || !world) return out;
+    const run = staticRunOf(world, state, sample);
+    for (const [name, view, step, ops] of LAB_SKIN_FAMILIES) {
+        try {
+            const v = view(run, record);
+            out[name] = v ? ops(v, art, { skin: step ? stepSkin(step, v) : undefined }) : [];
+        } catch (e) {
+            // ⚠ a skin that refuses this room draws nothing; the stand-in stays (below)
+            out[name] = null;
+        }
+    }
+    return out;
+}
+
+/**
+ * The bodies to draw when the sample has none for this room (the editor, a still, a scrub off the tape's
+ * rooms): the placement run's chasers and spinners, in the sample's body shape.
+ */
+export function placementBodies(world) {
+    const run = placementRunOf(world);
+    if (!run) return [];
+    const bodies = [];
+    try {
+        for (const c of run.chasers ?? []) if (c.tag) bodies.push({ id: c.id, kind: 'chaser', tag: c.tag, x: c.x, y: c.y });
+        for (const s of run.spinnerBodies ?? []) bodies.push({ id: s.id, kind: 'spinner', tag: 'spinner', x: s.x, y: s.y });
+    } catch (e) { return []; }
+    return bodies;
+}
+
 /**
  * THE DRAW LIST for one viewer paint: the room at tick 0 (tiles, cliffsides, scenery, shown portals), the
- * pickups, the bodies and the player, Y-sorted by `roomOps`. `record` (the room's map record) decides which
- * teleporters are SHOWN, as on the JS page; without it every live teleporter is its stand-in.
+ * pickups, the room's objects (L2b), the bodies and the player, Y-sorted by `roomOps`. `record` (the room's map
+ * record) decides which teleporters are SHOWN, as on the JS page; without it every live teleporter is its
+ * stand-in. A family whose skin refused keeps its objects' rectangle stand-ins.
  */
-export function labArtOps(world, art, { record = null, state = null, bodies = [] } = {}) {
+export function labArtOps(world, art, { record = null, state = null, bodies = [], sample = null } = {}) {
     const level = world.level;
     const playerSprites = state ? staticPlayerOps(state, art, { level }) : null;
-    const entitySprites = [...staticPickupOps(world, art), ...staticBodyOps(bodies, art, { level })];
-    return roomOps(world, art, {
+    const byFamily = staticEntityOpsByFamily(world, art, { record, state, sample });
+    const entitySprites = [...staticPickupOps(world, art), ...Object.values(byFamily).flatMap((o) => o ?? []),
+        ...staticBodyOps(bodies, art, { level })];
+    const ops = roomOps(world, art, {
         // `player`: the white box `roomOps` draws when there are no player sprites (a stack without the suit).
         level, tick: LAB_ART_TICK, playerSprites, entitySprites, player: state ? playerBoxAt(state.x, state.y) : null,
         drawnPickups: art ? (p) => PICKUP_TAGS.has(p.tag) : null,
+        drawnObjects: art ? labDrawnObjects(byFamily) : null,
         ...(art && record ? { drawnTeleporters: teleporterArtFilter(record), shownTeleporter: shownTeleporters(record) } : {}),
     });
+    // ⛓ the readout's per-family SPRITE counts (null = that family's skin refused), carried on the list unenumerated
+    Object.defineProperty(ops, 'families', { value: Object.fromEntries(Object.entries(byFamily)
+        .map(([name, o]) => [name, o === null ? null : o.filter((x) => x?.sheetRef).length])) });
+    return ops;
 }
 
 // ── the set editor's still key ───────────────────────────────────────────

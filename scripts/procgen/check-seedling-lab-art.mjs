@@ -17,6 +17,10 @@
  *   checkbox) draws rectangles: `drawn: null` and at least `RECT_MIN` of the canvas in the palette. The replay arm
  *   also scrubs BACKWARDS. The set editor's strip draws its room stills, and the toggle re-draws them.
  *
+ *   ⛓ L2b (seedling-lab-static-art-2): one vanilla room per newly drawn family (blocks, hazards, an NPC, a
+ *   machine, a turret, a boss), art on and off — every family the room holds reports sprites in the readout
+ *   (`drawn.families`), and in the boxes L2 drew as rectangles at most `SAME_MAX` of the pixels are unchanged.
+ *
  * Prereqs: a dev server at the REPO ROOT. SKIPs (exit 0) without one, like its siblings.
  * Run: node scripts/procgen/check-seedling-lab-art.mjs [--host=http://localhost:8000] [--shots=<dir>]
  */
@@ -186,6 +190,97 @@ async function main() {
             `${on.length} → ${off.length} colours`);
         check(errors.length === 0, 'set editor: no page errors', errors.slice(0, 2).join(' | '));
         await page.close();
+    }
+
+    // ── ⛓ LAB L2b (seedling-lab-static-art-2): the room's OTHER objects, where L2 drew rectangles ──
+    //
+    // Per room (the editor arm, a vanilla level): the objects the skins now draw (`watchArt.labDrawnObjects` over
+    // the world `buildLevelWorld` makes in node, the page's own builder) — and in each object's own box, the share
+    // of canvas pixels that are IDENTICAL with the art on and off. With the art off that box is the stand-in fill;
+    // with it on it is the sprite (and the tiles around it), so an identical pixel is a rectangle the art left.
+    console.log('\n## L2b — blocks, hazards, NPCs, machines, static enemies, bosses');
+    {
+        const R = new URL('../../frontend/modules/seedlingDemo/', import.meta.url).href;
+        const { ROLES, buildLevelWorld } = await import(`${R}levelWorld.js`);
+        const { atlasLevelSource } = await import(`${R}levelSource.js`);
+        const { FAMILY_OBJECT_TAGS } = await import(`${R}watchArt.js`);
+        const source = atlasLevelSource();
+        const drawnTags = new Set(Object.values(FAMILY_OBJECT_TAGS).flatMap((s) => [...s]));
+        /** ⛔ the share of a box's pixels left identical by the art: at most this many (a sprite's transparent edge
+         *  over a tile that happens to match is not a rectangle, so it is not zero). */
+        const SAME_MAX = 0.1;
+        /** `families`: the skin families that must report sprites in the renderer's readout (`drawn.families`). */
+        const ROOMS = Object.freeze([
+            { name: 'blocks', level: 16, families: ['puzzle', 'solids', 'trap', 'lamp'],
+                why: 'a pushable block, breakable rocks, a lock, a button, sand traps, arrow traps' },
+            { name: 'hazards', level: 72, families: ['hazard'], why: 'the lava chains' },
+            { name: 'npc', level: 34, families: ['npc'], why: 'the talkers' },
+            { name: 'machine', level: 107, families: ['machine', 'hazard', 'solids'], why: 'the beam towers, a pulser, a crusher, a button-room' },
+            { name: 'turret', level: 29, families: ['roomBody'], why: 'the turrets (static "Enemy" placements: never rectangles, drawn by nothing before)' },
+            { name: 'boss', level: 19, families: ['boss'], why: 'the shield boss' },
+        ]);
+        /** The canvas pixels inside each box (room units → canvas px), as packed RGB per box. */
+        const boxPixels = (page, boxes, roomW) => page.evaluate(({ boxes, roomW }) => {
+            const c = document.getElementById('canvas');
+            const s = c.width / roomW;
+            const ctx = c.getContext('2d');
+            return boxes.map((b) => {
+                const x = Math.max(0, Math.round(b.x * s));
+                const y = Math.max(0, Math.round(b.y * s));
+                const w = Math.max(1, Math.min(c.width - x, Math.round(b.w * s)));
+                const h = Math.max(1, Math.min(c.height - y, Math.round(b.h * s)));
+                const d = ctx.getImageData(x, y, w, h).data;
+                const out = [];
+                for (let i = 0; i < d.length; i += 4) out.push((d[i] << 16) | (d[i + 1] << 8) | d[i + 2]);
+                return out;
+            });
+        }, { boxes, roomW });
+        for (const room of ROOMS) {
+            const world = buildLevelWorld(source(room.level), { roles: ROLES });
+            const boxes = [...world.objectSolids, ...world.pixelmasks].filter((o) => drawnTags.has(o.tag))
+                .map((o) => ({ tag: o.tag, x: o.rect.x, y: o.rect.y, w: o.rect.w, h: o.rect.h }));
+            const shots = {};
+            for (const mode of ['on', 'off']) {
+                const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+                const errors = [];
+                page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+                await page.goto(`${PAGE}?source=edit&level=${room.level}${mode === 'off' ? '&art=off' : ''}`, { waitUntil: 'domcontentloaded' });
+                await page.waitForFunction((want) => {
+                    const a = window.__labArt;
+                    return !!a && a.status === 'ready' && (want === 'off' ? a.drawn === null : a.drawn !== null);
+                }, mode, { timeout: 90000 }).catch(() => {});
+                await page.waitForTimeout(1200);
+                shots[mode] = { art: await page.evaluate(() => window.__labArt ?? null),
+                    px: await boxPixels(page, boxes, world.world.width) };
+                if (SHOTS) {
+                    await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-2-${room.name}-L${room.level}${mode === 'off' ? '-off' : ''}.png`) });
+                }
+                check(errors.length === 0, `L${room.level} ${room.name} (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+                await page.close();
+            }
+            const { art } = shots.on;
+            check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && art.drawn.fallbacks === 0
+                && room.families.every((f) => (art.drawn.families?.[f] ?? 0) > 0),
+                `L${room.level} ${room.name}: drawn in sprites, no missing-key fallback, and ${room.families.join(' + ')} each drew (${room.why})`,
+                JSON.stringify(art?.drawn));
+            if (boxes.length === 0) continue;   // nothing there was ever a rectangle: the readout row above is the check
+            let same = 0;
+            let total = 0;
+            const worst = [];
+            boxes.forEach((b, i) => {
+                const on = shots.on.px[i];
+                const off = shots.off.px[i];
+                let k = 0;
+                for (let j = 0; j < on.length; j += 1) if (on[j] === off[j]) k += 1;
+                same += k;
+                total += on.length;
+                worst.push([k / Math.max(1, on.length), b.tag]);
+            });
+            worst.sort((a, b) => b[0] - a[0]);
+            check(same / Math.max(1, total) <= SAME_MAX,
+                `L${room.level} ${room.name}: ≤ ${SAME_MAX * 100}% of the ${boxes.length} object box(es)' pixels are the rectangles L2 drew there`,
+                `${((same / Math.max(1, total)) * 100).toFixed(1)}% identical; worst ${worst.slice(0, 3).map(([s, t]) => `${t} ${(s * 100).toFixed(0)}%`).join(', ')}`);
+        }
     }
 
     await browser.close();
