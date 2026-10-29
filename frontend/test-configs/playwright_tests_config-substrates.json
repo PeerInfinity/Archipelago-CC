@@ -2133,6 +2133,18 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "seedling-js-inventory-menu. Standalone jsRuntime.html?graphics=seedling&camera=follow driven to L86 holding Fire then the sword (slots [1, 0]); real keyboard events V, Down, X, V: the menu opens, its panel is drawn as seedling:ui/inventory, the tape holds (one inventoryHolds row at the opening tick), X equips slot 1 (the sword), every sheet decodes, zero console errors. Batch seedling-js."
+        },
+        {
+            "id": "seedling-js-runtime-tools-restart-teleport",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "seedling-js-panel-restart. seedling_atlas on js: Tools ▸ Restart lands where the Menu's Restart lands; a walked exit (the owl's nest stairs, by keys) vs Tools ▸ Go to its spot from the same room: same AP region, same spot, no door named (arrivedFrom null), no path entry, no warning; TP on UI click into the dungeon (no door from the start) reaches it. Batch seedling-js."
+        },
+        {
+            "id": "seedling-wasm-runtime-tools-restart-teleport",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "seedling-js-panel-restart. The JS row's Restart and teleport checks on the WASM runtime (WebGPU). Batch seedling-js."
         }
     ]
 }
