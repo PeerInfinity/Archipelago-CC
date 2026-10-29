@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 124,
-            "count": 172,
+            "browser": 125,
+            "count": 173,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 482,
-        "browser": 189,
+        "blockStyle": 483,
+        "browser": 190,
         "cited": 260,
-        "files": 499,
+        "files": 500,
         "lineStyle": 17,
-        "withDocblock": 499,
-        "withFlags": 415
+        "withDocblock": 500,
+        "withFlags": 416
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12532,6 +12532,53 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-fire-push — ⛓⛓⛓ seedling-fidelity-firepush: L40's BOSS KEY 2 BEHIND `pushableblockfire@576,576`, THE ROOM'S PULSER MOVING IT (`CONTACT_FIDELITY.fireBlockPulseShove`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-fire-push.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-ghostsword-items.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "The Ghost Sword Fusion ON ITS OWN (slice rules-ghostsword-probe): what does each mix of the Fusion, the Ghost Spear and the Sword let the player do, and do the playthrough rules agree?",
+            "path": "scripts/procgen/probe-seedling-ghostsword-items.mjs"
         },
         {
             "argvHelpers": [
