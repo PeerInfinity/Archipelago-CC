@@ -18,6 +18,10 @@ import { fileURLToPath } from 'node:url';
 
 import { createManualKeys, createManualSession, foldRoundTrip, touchSendFor } from './watchManual.js';
 import {
+    initialLabTouchSetting, LAB_TOUCH_STORAGE_KEY, readLabTouchSetting, writeLabTouchSetting,
+} from './watchTouchOption.js';
+import { TOUCH_SETTING_VALUES, touchControlsVisible } from '../flashPanel/touchControls.js';
+import {
     createTouchKeyBridge, DPAD_DIRECTIONS, dpadDirectionKeys, parseTouchLayout,
 } from '../flashPanel/touchControls.js';
 import { parseTape } from './tapeFormat.js';
@@ -214,5 +218,102 @@ describe('⛔ the PAGE wires it that way (pinned on `watchViewer.js`\'s source)'
         // the mount is attached to `keys` and torn down on retire
         expect(manual).toContain('keys.attach(mounted)');
         expect(manual).toContain('lifetime.onRetire(unmount)');
+    });
+});
+
+/**
+ * ⛓⛓ THE "ON-SCREEN CONTROLS" OPTION (slice `seedling-lab-touch-visible`). The lab's auto / on / off is the flash
+ * panel's setting, remembered per browser, and visibility is the panel's own `touchControlsVisible` — never a rule of
+ * the page's. The TABLE below is written out by hand from the panel's documented semantics, so a page that grew its
+ * own rule (or a panel rule that changed) disagrees with it on some row.
+ */
+describe('⛓ the on-screen controls option — auto / on / off, remembered, the panel\'s rule', () => {
+    const memStorage = (init = {}) => {
+        const m = new Map(Object.entries(init));
+        return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), m };
+    };
+    const throwing = { getItem() { throw new Error('denied'); }, setItem() { throw new Error('denied'); } };
+    const pointer = (coarse) => () => ({ matches: coarse });
+
+    // stored choice × pointer × ?touch=  →  shown?
+    const TABLE = [];
+    for (const stored of [null, 'auto', 'on', 'off']) {
+        for (const coarse of [false, true]) {
+            for (const search of ['', '?touch=1', '?touch=0']) {
+                // a ?touch= link starts at auto, where ?touch= decides; else the choice (none = auto)
+                let want;
+                if (search === '?touch=1') want = true;
+                else if (search === '?touch=0') want = false;
+                else if (stored === 'on') want = true;
+                else if (stored === 'off') want = false;
+                else want = coarse;
+                TABLE.push({ stored, coarse, search, want });
+            }
+        }
+    }
+    const pageRule = (rule) => ({ stored, coarse, search }) => {
+        const storage = memStorage(stored === null ? {} : { [LAB_TOUCH_STORAGE_KEY]: stored });
+        const setting = initialLabTouchSetting({ storage, search });
+        return rule(setting, { search, matchMediaFn: pointer(coarse) });
+    };
+
+    it('every value × pointer × ?touch= shows exactly what the panel\'s rule says', () => {
+        const shown = pageRule(touchControlsVisible);
+        for (const row of TABLE) expect(shown(row), JSON.stringify(row)).toBe(row.want);
+        expect(TABLE.length).toBe(24);
+    });
+
+    it('⛔ MUTANT: a rule of the page\'s own (auto = a coarse pointer, ?touch= ignored) fails the table', () => {
+        const own = (setting, { matchMediaFn }) => setting === 'on'
+            || (setting === 'auto' && matchMediaFn('(pointer: coarse)').matches);
+        const wrong = TABLE.filter((row) => pageRule(own)(row) !== row.want);
+        expect(wrong.length).toBeGreaterThan(0);
+    });
+
+    /** The page pin: `mountManualTouch` decides with the panel's function on the select's value, and nothing else. */
+    const pinsPanelRule = (src) => {
+        const body = src.slice(src.indexOf('async function mountManualTouch('),
+            src.indexOf('const manualRow = (k, v) =>'));
+        return body.includes('touchControlsVisible(box.value,')
+            && body.includes('initialLabTouchSetting(')
+            && !/pointer:\s*coarse|resolveTouchOverride|URLSearchParams|get\('touch'\)|maxTouchPoints|ontouchstart/
+                .test(body);
+    };
+
+    it('⛔ the PAGE calls the panel\'s rule on the select — and a mutant page with its own rule fails the pin', () => {
+        expect(pinsPanelRule(VIEWER)).toBe(true);
+        const ownRule = VIEWER.replace('touchControlsVisible(box.value,',
+            "(box.value === 'on' || matchMedia('(pointer: coarse)').matches) || touchControlsVisible(box.value,");
+        expect(ownRule).not.toBe(VIEWER);
+        expect(pinsPanelRule(ownRule)).toBe(false);
+        const urlRule = VIEWER.replace('initialLabTouchSetting(',
+            "new URLSearchParams(location.search).get('touch') ?? initialLabTouchSetting(");
+        expect(urlRule).not.toBe(VIEWER);
+        expect(pinsPanelRule(urlRule)).toBe(false);
+    });
+
+    it('the values and default are the panel\'s', () => {
+        expect(readLabTouchSetting(memStorage())).toBe('auto');
+        for (const v of TOUCH_SETTING_VALUES) {
+            const st = memStorage();
+            expect(writeLabTouchSetting(st, v)).toBe(true);
+            expect(readLabTouchSetting(st)).toBe(v);
+            expect(st.m.get(LAB_TOUCH_STORAGE_KEY)).toBe(v);
+        }
+        const st = memStorage();
+        expect(writeLabTouchSetting(st, 'sometimes')).toBe(false);
+        expect(st.m.size).toBe(0);
+        expect(readLabTouchSetting(memStorage({ [LAB_TOUCH_STORAGE_KEY]: 'sometimes' }))).toBe('auto');
+    });
+
+    it('a persisted choice round-trips; storage that throws (or is absent) degrades to auto, never a throw', () => {
+        const st = memStorage();
+        writeLabTouchSetting(st, 'off');
+        expect(initialLabTouchSetting({ storage: st, search: '' })).toBe('off');
+        expect(initialLabTouchSetting({ storage: st, search: '?touch=1' })).toBe('auto');
+        expect(readLabTouchSetting(throwing)).toBe('auto');
+        expect(writeLabTouchSetting(throwing, 'on')).toBe(false);
+        expect(readLabTouchSetting(null)).toBe('auto');
+        expect(writeLabTouchSetting(null, 'on')).toBe(false);
     });
 });
