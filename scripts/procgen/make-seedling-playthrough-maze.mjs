@@ -43,7 +43,7 @@ import { seedlingMazeProjectionDeps } from '../../frontend/modules/flashPanel/se
 import { apRegionName } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
 import { SHARED_WORLD_ALPHABET } from '../../frontend/modules/procgenPipeline/regionAtlasMazeProjection.js';
 import { SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
-import { crossRoomButtonsOf, persistenceEffect } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
+import { crossRoomButtonsOf, persistenceEffect, IN_ROOM_POLE_GATE_KIND } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
 import { PERSISTENCE_RESPONSE } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 import {
     PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
@@ -272,6 +272,9 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
         ...layer.obstacle.events.map((e) => [e.name, 'open']), ...layer.locks.events.map((e) => [e.name, 'latch']),
         ...layer.buttons.events.filter((e) => e.fields.action?.presser).map((e) => [e.name, 'press']),
         ...layer.poles.events.map((e) => [e.name, 'pole']),
+        // ⛓ A TALK (session tile-primitives-sphere-order-8, ⚖ 2026-10-29 "Talk location + portal door") is produced in its
+        // writer's world: a location on a tile inside the NPC's talk circle (the L58 Yeti; the L114 Watcher).
+        ...layer.talks.events.map((e) => [e.name, 'talk']),
     ]);
     out.events = neededEvents(out, (name) => mode.has(name));
     // `rule` = the event's own location rule: a sub-region world lays a touched lock no crossing uses by it (⚖ "Lay
@@ -305,6 +308,7 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     }
     // ⛓ ... and the pocket it seals (⚖ 2026-10-28 "Lay the producer's door gates"): each of the producer's cross-room-press
     // gates on a kept, wired door of a laid target is laid on that exit's cell in its world (mode 'door'), on the press's event.
+    const all = new Set(layer.events.map((e) => e.name));
     const pressNames = new Set(layer.buttons.events.filter((e) => e.fields.action?.presser).map((e) => e.name));
     for (const g of out.exitGates.filter((x) => x.kind === 'cross-room-press')) {
         const named = [];
@@ -317,7 +321,21 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
         const level = atlas.regions.find((r) => r.region_id === g.region_id).map_ref;
         out.world.push({ name: g.rule.args.item_name, side: null, mode: 'door', door: { level, exit_id: g.exit_id }, rule: null });
     }
-    const all = new Set(layer.events.map((e) => e.name));
+    // ⛓ ... and the producer's IN-ROOM POLE and TALK gates (session tile-primitives-sphere-order-8, ⚖ 2026-10-29 "World doors +
+    // framing", "Talk location + portal door"): a kept, wired exit the producer gates on a pole's light (the L63/L65 pocket
+    // landings: no round trip into the dead end below a dark trap) or on a talk (the L58 Yeti's portal) carries that gate on its
+    // cell in its world, the producer's rule as it stands (`gate`), once every event it names is produced here — a gate on an
+    // event no world makes would only shut a door the certifier already names.
+    const talkNames = new Set(layer.talks.events.map((e) => e.name));
+    for (const g of out.exitGates) {
+        const talk = (() => { const n = []; (function walk(r) { if (r?.rule === 'Has' && talkNames.has(r.args.item_name)) n.push(r.args.item_name); for (const c of r?.children ?? []) walk(c); })(g.rule); return n; })();
+        if (g.kind !== IN_ROOM_POLE_GATE_KIND && talk.length === 0) continue;
+        const events = [...itemNamesInRule(g.rule)].filter((n) => all.has(n));
+        if (events.length === 0) throw new Error(`${g.region_id}/${g.exit_id}: a ${g.kind ?? 'talk'} gate on ${JSON.stringify(g.rule)} names no event`);
+        if (!events.every((n) => out.world.some((w) => w.name === n && w.mode !== 'door'))) continue;
+        const level = atlas.regions.find((r) => r.region_id === g.region_id).map_ref;
+        out.world.push({ name: events.join(' + '), side: null, mode: 'door', door: { level, exit_id: g.exit_id }, rule: null, gate: g.rule });
+    }
     const have = new Set([...out.events.map((e) => e.name), ...minted]);
     const named = (rule, acc = []) => {
         if (rule?.rule === 'Has' && all.has(rule.args.item_name)) acc.push(rule.args.item_name);

@@ -481,6 +481,32 @@ export function poleThrustStances(box, g) {
 }
 
 /**
+ * ⛓ WHERE A TALK IS STARTED FROM (session tile-primitives-sphere-order-8, ⚖ 2026-10-29 "Talk location + portal door"). A
+ * placed NPC centres itself on its tile (`NPCs/NPC.as:47`, `super(_x + Tile.w / 2, _y + Tile.h / 2)`) and opens its dialogue
+ * while `FP.distance(x, y, p.x, p.y) <= talkRange` (`NPC.as:190`; 24, `NPC.as:27`, the Statue's 32): a circle on ENTITY
+ * positions. A stance is a tile whose centre — where a player standing on it is, the convention `poleThrustStances` keeps —
+ * lies inside that circle. Pure: the range is injected (the class's own, `endingChain.talkRangeOf`).
+ *
+ * @param {{x:number, y:number}} npc the NPC's placement (its `.oel` x/y, the tile's top-left)
+ * @param {{range:number, tile:number}} g
+ * @returns {number[][]} the stance tiles, nearest first, then row-major
+ */
+export function talkStances(npc, g) {
+    const cx = npc.x + g.tile / 2;
+    const cy = npc.y + g.tile / 2;
+    const reach = Math.ceil(g.range / g.tile) + 1;
+    const out = [];
+    for (let ty = Math.floor(cy / g.tile) - reach; ty <= Math.floor(cy / g.tile) + reach; ty++) {
+        for (let tx = Math.floor(cx / g.tile) - reach; tx <= Math.floor(cx / g.tile) + reach; tx++) {
+            if (tx < 0 || ty < 0) continue;
+            const d = Math.hypot(tx * g.tile + g.tile / 2 - cx, ty * g.tile + g.tile / 2 - cy);
+            if (d <= g.range) out.push({ tile: [tx, ty], d });
+        }
+    }
+    return out.sort((a, b) => (a.d - b.d) || (a.tile[1] - b.tile[1]) || (a.tile[0] - b.tile[0])).map((s) => s.tile);
+}
+
+/**
  * ⛓⛓ RULES l63-darktrap — every `LightPole` of a map extract that NO cross-room `ButtonRoom` writes (its tag is in
  * no `crossRoomButtonsOf` write): the poles only the in-room arm lights. `{level, type, x, y, tag}`; an untagged
  * pole (tag < 0) writes nothing and is left out.
