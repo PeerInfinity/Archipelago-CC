@@ -1034,7 +1034,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchViewer.js",
                     "fn": "readParams",
-                    "line": 600,
+                    "line": 604,
                     "role": "read"
                 },
                 {
@@ -1046,7 +1046,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchManual.js",
                     "fn": "readViewParams",
-                    "line": 524,
+                    "line": 576,
                     "role": "read"
                 }
             ],
