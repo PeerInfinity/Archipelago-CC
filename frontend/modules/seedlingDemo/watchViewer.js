@@ -363,6 +363,11 @@ import { applyGlossaryTips, legendTipFor } from '../procgenDocs/glossaryTips.js'
 import {
     FLOOR_COLOUR, OBJECT_SOLID_FAMILIES, SCENERY_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
+// ⛓ LAB L2 (seedling-lab-static-art): the original graphics, static — see `watchArt.js`.
+import {
+    createLabArtPainter, labArt, labArtActive, labArtOps, mountLabArtToggle, publishLabArtDraw, rememberRoomRecord,
+    roomRecordOf, setLabArtRedraw,
+} from './watchArt.js';
 
 
 /**
@@ -882,6 +887,17 @@ async function stagingForMount(boxEl, params) {
  * `runTape` picks it — a viewer that consulted a different census could
  * refuse to draw a level the run happily walks through.
  */
+/**
+ * ⛓ LAB L2 — the art pass's painter, ONE per page: its tile-layer cache is per
+ * CANVAS, because `previewLevel` builds a new renderer for every still.
+ */
+const labArtPainter = createLabArtPainter((w, h) => {
+    const c = document.createElement('canvas');
+    c.width = w;
+    c.height = h;
+    return c;
+});
+
 function makeRenderer(canvas) {
     const ctx = canvas.getContext('2d');
     const trail = [];
@@ -908,8 +924,13 @@ function makeRenderer(canvas) {
     function fit(world) {
         const w = world.width * TILE_SIZE;
         const h = world.height * TILE_SIZE;
+        // ⛓ LAB L2: a DETACHED canvas (the set editor's stills: `setEditorView`
+        // creates one and blits it) has no parent to measure — it is drawn at
+        // scale 1 and the strip scales the blit. Measured before: every still
+        // threw here (`null.clientWidth`), so the strip never showed a room.
+        const room = canvas.parentElement ? canvas.parentElement.clientWidth - 8 : w;
         scale = Math.max(1, Math.min(
-            Math.floor((canvas.parentElement.clientWidth - 8) / w),
+            Math.floor(room / w),
             Math.floor(560 / h),
         ));
         canvas.width = w * scale;
@@ -1050,6 +1071,8 @@ function makeRenderer(canvas) {
     };
 
     const unknownGlyphs = new Set();
+    // ⛓ LAB L2: what the last draw's art pass painted (`paintOps`' counts), or null for rectangles.
+    let artDrawn = null;
     function glyph(kind, x, y, colour, source) {
         const r = Math.max(3, 2 * scale);
         const px = Math.round(x * scale);
@@ -1095,31 +1118,51 @@ function makeRenderer(canvas) {
         fit,
         draw(world, state, opts) {
             if (!fitted(world)) fit(world);
-            ctx.fillStyle = '#101014';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Tiles. A SOLID leaves the getState candidate list, so it is
-            // drawn as a wall regardless of its type — that IS the fact the
-            // resolver acts on.
-            const solidRects = new Set(world.solids.map((s) => `${s.rect.x},${s.rect.y}`));
-            for (const t of world.tiles) {
-                const isSolid = solidRects.has(`${t.rect.x},${t.rect.y}`);
-                rect(t.rect, isSolid ? SOLID_COLOUR : (TILE_COLOURS[t.t] ?? FLOOR_COLOUR));
+            /**
+             * ⛓ LAB L2 — THE ORIGINAL GRAPHICS, STATIC (`watchArt.js`). With the
+             * art on, the room, its pickups, the sample's bodies and the player
+             * are ONE `roomOps` list at tick 0 over the cached tile layer; the
+             * rectangle fills below are the fallback (art off, or not loaded).
+             * ⛔ Every overlay after this point draws on top either way; only the
+             * FILLS change (the teleporter, pit and pixelmask outlines stay).
+             */
+            const artOn = labArtActive();
+            artDrawn = null;
+            if (artOn) {
+                const ops = labArtOps(world, labArt.art, {
+                    record: roomRecordOf(world), state,
+                    bodies: bodiesAt(opts.samples ?? [], opts.cursor ?? 0, world.level).bodies,
+                });
+                artDrawn = labArtPainter.paint(ctx, canvas, world, ops, labArt.images, labArt.art);
             }
-            // A HOLE is a cell with no tile at all — walkable, and the only
-            // place the sticky resolver is observable. Left as background.
+            if (canvas.id === 'canvas') publishLabArtDraw(artDrawn);
+            if (!artOn) {
+                ctx.fillStyle = '#101014';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Object solids (buildings, statues, NPCs...) and pixelmasks.
-            // ⛓ GROUP B: coloured by the run's own family join, not by tag —
-            // see `OBJECT_SOLID_FAMILIES`. Scenery keeps the old grey.
-            for (const s of world.objectSolids) rect(s.rect, objectSolidColour(s), 0.85);
+                // Tiles. A SOLID leaves the getState candidate list, so it is
+                // drawn as a wall regardless of its type — that IS the fact the
+                // resolver acts on.
+                const solidRects = new Set(world.solids.map((s) => `${s.rect.x},${s.rect.y}`));
+                for (const t of world.tiles) {
+                    const isSolid = solidRects.has(`${t.rect.x},${t.rect.y}`);
+                    rect(t.rect, isSolid ? SOLID_COLOUR : (TILE_COLOURS[t.t] ?? FLOOR_COLOUR));
+                }
+                // A HOLE is a cell with no tile at all — walkable, and the only
+                // place the sticky resolver is observable. Left as background.
+
+                // Object solids (buildings, statues, NPCs...).
+                // ⛓ GROUP B: coloured by the run's own family join, not by tag —
+                // see `OBJECT_SOLID_FAMILIES`. Scenery keeps the old grey.
+                for (const s of world.objectSolids) rect(s.rect, objectSolidColour(s), 0.85);
+            }
             for (const p of world.pixelmasks) outline(p.rect, '#a06060');
 
             // Volumes. Teleporters and pits are TRANSPORT; the rest are
             // avoid volumes the planner routes around.
             for (const tp of world.teleporters) {
                 if (tp.deactivated) continue;
-                rect(tp.rect, '#2fa8a0', 0.35);
+                if (!artOn) rect(tp.rect, '#2fa8a0', 0.35);
                 outline(tp.rect, '#3fd8ce');
             }
             for (const t of world.tiles) {
@@ -1479,7 +1522,9 @@ function makeRenderer(canvas) {
              * a player can be collision-clear of a pit and reading `pit`.
              */
             outline(terrainProbeRect(state.x, state.y), '#ffd75f');
-            rect(playerBoxAt(state.x, state.y), '#ffffff', 0.9);
+            // ⛓ LAB L2: over the sprite the hitbox is an OUTLINE, so the art shows.
+            if (artOn) outline(playerBoxAt(state.x, state.y), '#ffffff');
+            else rect(playerBoxAt(state.x, state.y), '#ffffff', 0.9);
 
             // Markers LAST, so the one the player is standing on is not
             // painted over by the player.
@@ -1544,6 +1589,8 @@ function makeRenderer(canvas) {
         },
         /** Shapes met that this renderer has no arm for; empty is the norm. */
         get unknownShapes() { return [...unknownShapes]; },
+        /** ⛓ LAB L2: the last draw's art counts (`{sprites, rects, fallbacks}`), or null when it drew rectangles. */
+        get artDrawn() { return artDrawn; },
         /** Marker sources met that this renderer has no GLYPH for; same law. */
         get unknownGlyphs() { return [...unknownGlyphs]; },
     };
@@ -2376,8 +2423,10 @@ function makeWorldFor(levelSource, staging) {
     return (n) => {
         if (!worlds.has(n)) {
             const cleared = clearedByLevel.get(n);
-            worlds.set(n, buildLevelWorld(levelSource(n),
-                cleared ? { roles, cleared } : { roles }));
+            const record = levelSource(n);
+            // ⛓ LAB L2: the record rides with the world, for the shown portals.
+            worlds.set(n, rememberRoomRecord(buildLevelWorld(record,
+                cleared ? { roles, cleared } : { roles }), record));
         }
         return worlds.get(n);
     };
@@ -2526,6 +2575,9 @@ function mountLayerControls(on, redraw) {
     autoLabel.appendChild(document.createTextNode(
         ' auto-advance ceremony text while driving (records the X releases)'));
     knobBox.appendChild(autoLabel);
+    // ⛓ LAB L2: this arm's redraw is what an art change repaints (the toggle is
+    // `mountArm`'s, in its own box `#labArtBox`).
+    setLabArtRedraw(redraw);
     const swatch = (colour, text) =>
         `<span class="sw"><i style="background:${colour}"></i>${text}</span>`;
     $('legend').innerHTML = [
@@ -7094,6 +7146,11 @@ async function runGenerate(params, lifetime) {
         } else {
             stillWhy = previewLevel(levelSource, displayStaging(state),
                 layerSetFor(params), lifetime, afterDrawGen).why;
+            // ⛓ LAB L2: an art change repaints this still (a solved level's
+            // scrub registers its own, through `mountLayerControls`).
+            const still = displayStaging(state);
+            setLabArtRedraw(() => previewLevel(levelSource, still, layerSetFor(params), lifetime,
+                afterDrawGen), lifetime);
         }
 
         $('status').className = stillWhy ? 'bad' : 'ok';
@@ -8993,6 +9050,9 @@ async function runEditor(params, lifetime) {
         };
         if (params.shot) document.body.dataset.shotReady = '1';
     };
+    // ⛓ LAB L2: an art change repaints the room and the set strip (its stills
+    // re-key on the mode — `watchArt.labStillKey`); the status line is untouched.
+    setLabArtRedraw(() => { drawRoom(); setUi?.render(); }, lifetime);
 
     /* ── THE SHIP ─────────────────────────────────────────────────── */
 
@@ -10185,6 +10245,21 @@ function wireShipButton(params, lifetime) {
  * readout writes there.
  */
 async function runWasm(params, lifetime) {
+    /**
+     * ⛓ LAB L2 — THE FRAME IS BLANKED ON RETIRE FROM THE ARM'S FIRST LINE.
+     * `shipToWasm` registers its own `about:blank` teardown, but only after the
+     * tape fetch, the atlas, the synchronous `collectRun` and the probe: an arm
+     * retired before then left the frame untouched (`src` = null), and
+     * `check-seedling-editor-switch`'s "the iframe is blanked" row read that
+     * whenever the switch back landed early (2/2 with the art's heavier replay
+     * frames, 0/2 without). Blanking from here makes the retired state one
+     * state, whenever the retire lands.
+     */
+    lifetime.onRetire(() => {
+        const frame = $('frame');
+        frame.src = 'about:blank';
+        frame.style.display = 'none';
+    });
     // ⛓ R9 slice 2: `?tapes=` selects the SEQUENCE, on this side too.
     if (params.tapes !== null) return runWasmSequence(params, lifetime);
     const tape = await fetchJson(repoUrl(params.tape), 'tape');
@@ -10917,6 +10992,10 @@ async function mountArm(params, lifetime) {
      * readout around it.
      */
     wireShipButton(params, lifetime);
+    // ⛓ LAB L2: the "Seedling art" toggle is mounted for EVERY arm (idempotent;
+    // it starts the one load), and no arm owns its redraw until it registers one.
+    mountLabArtToggle($('labArtBox'));
+    setLabArtRedraw(null);
     try {
         await mountArmBody(params, lifetime);
     } finally {
