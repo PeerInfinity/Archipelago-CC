@@ -530,7 +530,8 @@ describe('who takes the box', () => {
          * tile-primitives-whole-game-tools L3's water door into L111, without and with the Conch, `probe-seedling-l3-water-door.mjs`;
          * rules-l12-bosslock-probe L12's sealed bosslock@112,192 and the stacked key + wand doors into L83, `probe-seedling-l12-bosslock.mjs`;
          * fidelity L40BK2B L40's BobSoldier in its notch above the corridor (the shipped and the projected orbit), `probe-seedling-l40bk2b.mjs`;
-         * rules-oneway-event-census L82's boss rock (top entry, the L71 pit pocket shut and its lock exit) and L43's apitem wand, `probe-seedling-oneway-census.mjs`.)
+         * rules-oneway-event-census L82's boss rock (top entry, the L71 pit pocket shut and its lock exit) and L43's apitem wand, `probe-seedling-oneway-census.mjs`;
+         * rules-l89-waterfall-probe L89's teleporter to L91 atop the waterfall, Swim-only and with the Feather, `probe-seedling-l89-waterfall.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -593,6 +594,7 @@ describe('who takes the box', () => {
             'probe-seedling-l12-bosslock.mjs',
             'probe-seedling-l40bk2b.mjs',
             'probe-seedling-oneway-census.mjs',
+            'probe-seedling-l89-waterfall.mjs',
             // seedling-js-mobile-polish: the phone-viewport fit witness (import door: `isEntryPoint` → main())
             'probe-seedling-mobile-fit.mjs',
             // seedling-js-inventory-menu: the V menu's game witness (import door: `isEntryPoint` → main())

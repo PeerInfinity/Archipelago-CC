@@ -249,6 +249,7 @@ describe('mazeRoomRender — the extraction is behaviour-preserving', () => {
                 broken: panel.state?.broken ?? null,
                 facing: panel.state?.facing ?? null,
                 armedTraps: null,
+                seedlingSkin: null,
             });
             expect(hashOf(ctx.__log), `${name}: direct drawWorld`).toBe(BEFORE[name].hash);
         });
@@ -276,6 +277,7 @@ describe('mazeRoomRender — the view is the WHOLE input', () => {
             'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations',
             'ruleEvaluator', 'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible',
             'isLocationVisible', 'isConsumableCollected', 'broken', 'facing', 'armedTraps',
+            'seedlingSkin',
         ]);
     });
 
@@ -323,6 +325,55 @@ describe('mazeRoomRender — the view is the WHOLE input', () => {
         expect(a[1]).toBe('fillRect(0,0,20,20)');
         expect(b[1]).toBe('fillRect(0,0,40,40)');
         expect(hashOf(a)).not.toBe(hashOf(b));
+    });
+});
+
+describe('mazeRoomRender — the Seedling art layer (maze-seedling-art-1)', () => {
+    const LAYER = Object.freeze({ stand: 'baked room' });
+    const skinned = (name, markerAlpha = 0.8) => {
+        const panel = panelFor(name);
+        const ctx = recordingContext();
+        panel._drawWorld({ getContext: () => ctx }, { layer: LAYER, markerAlpha });
+        return ctx.__log;
+    };
+
+    it('`seedlingSkin: null` is today\'s draw, op for op — the panel default for every non-Seedling world', () => {
+        // ⛓ The BEFORE hashes above already run with the panel's own derivation (no rules → null);
+        // this pins that an EXPLICIT null is the same picture.
+        for (const name of Object.keys(CASES)) {
+            const panel = panelFor(name);
+            const ctx = recordingContext();
+            panel._drawWorld({ getContext: () => ctx }, null);
+            expect(hashOf(ctx.__log), name).toBe(BEFORE[name].hash);
+        }
+    });
+
+    it('with a layer: ONE blit replaces the floor/wall fill and the grid; markers at markerAlpha; player opaque', () => {
+        const log = skinned('plain');
+        expect(log[0]).toBe(`drawImage(${JSON.stringify(LAYER)},0,0)`);
+        expect(log[1]).toBe('globalAlpha=0.8');
+        expect(log.filter((l) => l.startsWith('drawImage'))).toHaveLength(1);
+        // no floor/wall cells and no grid lines
+        expect(log.filter((l) => l === `fillStyle="${COLORS.floor}"` || l === `strokeStyle="${COLORS.grid}"`)).toEqual([]);
+        // the player is drawn after alpha returns to 1
+        const player = log.lastIndexOf(`fillStyle="${COLORS.player}"`);
+        expect(player).toBeGreaterThan(0);
+        expect(log.lastIndexOf('globalAlpha=1', player)).toBeGreaterThan(1);
+        // the skinned draw is at 32 px a cell
+        expect(log.some((l) => /^arc\(.*,11.2,/.test(l))).toBe(true);
+    });
+
+    it('the fog stays opaque over the art', () => {
+        const log = skinned('fog');
+        const fog = log.indexOf('fillStyle="#000"', log.lastIndexOf('globalAlpha=1'));
+        expect(fog).toBeGreaterThan(0);
+    });
+
+    it('refuses a malformed seedlingSkin by name', () => {
+        expect(() => assertView({ ...plainView(), seedlingSkin: {} })).toThrow(/seedlingSkin must be null or/);
+        expect(() => assertView({ ...plainView(), seedlingSkin: { layer: LAYER, markerAlpha: 0 } }))
+            .toThrow(/seedlingSkin must be null or/);
+        expect(plainView().seedlingSkin).toBe(null);
     });
 });
 
