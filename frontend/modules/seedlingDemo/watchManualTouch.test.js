@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { createManualKeys, createManualSession, foldRoundTrip, touchSendFor } from './watchManual.js';
 import {
     initialLabTouchSetting, LAB_TOUCH_STORAGE_KEY, readLabTouchSetting, writeLabTouchSetting,
-} from './watchManual.js';
+} from './watchTouchOption.js';
 import { TOUCH_SETTING_VALUES, touchControlsVisible } from '../flashPanel/touchControls.js';
 import {
     createTouchKeyBridge, DPAD_DIRECTIONS, dpadDirectionKeys, parseTouchLayout,

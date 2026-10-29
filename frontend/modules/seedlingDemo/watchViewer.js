@@ -377,7 +377,7 @@ import { mountTouchControls, parseTouchLayout, touchControlsVisible } from '../f
  * ⛓ THE "ON-SCREEN CONTROLS" OPTION (slice `seedling-lab-touch-visible`) — the panel's auto/on/off setting, its
  * remembered per-browser value and the `?touch=` start; the visibility rule stays `touchControlsVisible`.
  */
-import { initialLabTouchSetting, writeLabTouchSetting } from './watchManual.js';
+import { initialLabTouchSetting, writeLabTouchSetting } from './watchTouchOption.js';
 
 /**
  * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL, NOT FROM
