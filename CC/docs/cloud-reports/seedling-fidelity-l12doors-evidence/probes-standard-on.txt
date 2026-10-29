@@ -1,0 +1,13 @@
+probe-seedling-loop-restart pass=30 fail=0 skip=0 ALL CHECKS PASSED
+probe-seedling-obstacle-events pass=22 fail=0 skip=0 ALL CHECKS PASSED
+probe-seedling-restart-route pass=18 fail=0 skip=0 ALL CHECKS PASSED
+probe-seedling-restart-warp pass=28 fail=0 skip=0 ALL CHECKS PASSED
+probe-seedling-seal-delivery pass=6 fail=0 skip=0 ALL CHECKS PASSED
+probe-seedling-wasm-adopt pass=51 fail=0 skip=0 ALL CHECKS PASSED
+probe-seedling-wasm-arrival-composites pass=95 fail=0 skip=0 ALL CHECKS PASSED
+probe-seedling-wasm-generated-playback pass=35 fail=0 skip=0 ALL CHECKS PASSED
+probe-seedling-wasm-logical-links pass=24 fail=0 skip=0 ALL CHECKS PASSED
+probe-seedling-wasm-midroom-replan pass=10 fail=0 skip=0 ALL CHECKS PASSED
+probe-seedling-wasm-vanilla-map pass=23 fail=0 skip=0 ALL CHECKS PASSED
+
+[exited with code 0]

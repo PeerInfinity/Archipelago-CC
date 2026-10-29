@@ -1507,6 +1507,21 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'cannot enter the 8 px sliver (12x12 bodies), and the walk past the rock outruns them. Recorded on '
                 + 'the game (p4g) with `hits` 0, model = game at 0 px.',
         }),
+        /** ⛓⛓⛓ seedling-fidelity-lightpole — L101's in-room pole lit through the wall from [7,4] (three flyers). */
+        Object.freeze({
+            name: 'lightpole-l101-ghost', levels: Object.freeze([101]), bobs: 3, ticks: 307,
+            addedBy: 'Seedling fidelity LIGHTPOLE D2 (the in-room pole verb, `inRoomPoleThrust` ON — the ghost arm)',
+            why: 'the survey\'s step-226 staging (L101 from (288,240), the route\'s bag with the Ghost Sword): the walk past '
+                + 'the flyers to [7,4] and ONE ghost swing facing N at `lightpole@144,64`. Recorded on the game (p4g) with '
+                + '`hits` 0, model = game at 0 px.',
+        }),
+        Object.freeze({
+            name: 'lightpole-l101-spear', levels: Object.freeze([101]), bobs: 3, ticks: 281,
+            addedBy: 'Seedling fidelity LIGHTPOLE D2 (the in-room pole verb, `inRoomPoleThrust` ON — the Spear arm)',
+            why: 'the survey\'s step-226 staging without the Ghost Sword: the walk past the flyers to [7,4], flush against '
+                + 'the wall above, and ONE Spear thrust facing E through the wall [8,4] at `lightpole@144,64`. Recorded on '
+                + 'the game (p4g) with `hits` 0, model = game at 0 px.',
+        }),
     ]),
 
     /**

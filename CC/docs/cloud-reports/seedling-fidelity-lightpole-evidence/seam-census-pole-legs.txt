@@ -1,0 +1,5 @@
+SEAM-SWEEP: leg 558: 1 distinct answer(s) over 7 seam time(s)
+SEAM-SWEEP: leg 569: 1 distinct answer(s) over 7 seam time(s)
+SEAM-SWEEP: leg 742: 1 distinct answer(s) over 7 seam time(s)
+SEAM-SWEEP: leg 740: 1 distinct answer(s) over 7 seam time(s)
+SEAM-SWEEP: leg 740: 1 distinct answer(s) over 7 seam time(s)

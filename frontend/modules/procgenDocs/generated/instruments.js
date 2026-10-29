@@ -134,12 +134,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 93,
+            "count": 95,
             "id": "plan"
         },
         {
-            "browser": 125,
-            "count": 173,
+            "browser": 126,
+            "count": 174,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 484,
-        "browser": 191,
-        "cited": 260,
-        "files": 501,
+        "blockStyle": 487,
+        "browser": 192,
+        "cited": 263,
+        "files": 504,
         "lineStyle": 17,
-        "withDocblock": 501,
-        "withFlags": 417
+        "withDocblock": 504,
+        "withFlags": 420
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8501,6 +8501,39 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "plan",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-l12doors-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "plan-seedling-l12keyline-witness.mjs",
+                    "name": "dry"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l12doors-witness — ⛓⛓⛓ SEEDLING FIDELITY L12DOORS: THE SOLVER'S OWN L12 → L83 PLANS, AS TAPES THE GAME PLAYS (`probe-seedling-l12doors.mjs`) AND THE MODEL REPRODUCES (`fidelityL12Doors.test.js`).",
+            "path": "scripts/procgen/plan-seedling-l12doors-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -8656,6 +8689,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-ladder2-witness — ⛓⛓⛓ SEEDLING FIDELITY LADDER2: THE SOLVER CROSSES A PLACED GRENADE, A LAVA CHAIN AND A BEAM TOWER, AND THE GAME LETS IT THROUGH.",
             "path": "scripts/procgen/plan-seedling-ladder2-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "from-view"
+            ],
+            "file": "plan-seedling-lightpole-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "from-view"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-lightpole-witness — ⛓⛓⛓ SEEDLING FIDELITY LIGHTPOLE (wave 34): AN IN-ROOM POLE IS LIT FROM ITS OWN ROOM.",
+            "path": "scripts/procgen/plan-seedling-lightpole-witness.mjs"
         },
         {
             "argvHelpers": [],
@@ -13134,6 +13203,75 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's L12 → L83 door, ON THE GAME (slice rules-l12-bosslock-probe): survey route steps 172/203 (L12 visits 14/16, `reach-exit` teleporter@32,848 → L83; 167/198 at fidelity CHESTSEAL's base) refuse KEYLOCK-SEALED on `bosslock@112,192`, \"flag {12,11} held\".",
             "path": "scripts/procgen/probe-seedling-l12-bosslock.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only"
+            ],
+            "file": "probe-seedling-l12doors.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "from-fixture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "plan-seedling-l12doors-witness.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "probe-seedling-l12-bosslock.mjs",
+                    "name": "dump"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "probe-seedling-l12-bosslock.mjs",
+                    "name": "host"
+                },
+                {
+                    "from": "probe-seedling-l12-bosslock.mjs",
+                    "name": "no-model"
+                },
+                {
+                    "from": "probe-seedling-l12-bosslock.mjs",
+                    "name": "repeat"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l12doors — ⛓⛓⛓ SEEDLING FIDELITY L12DOORS: THE SOLVER'S OWN L12 → L83 PLANS, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-l12doors.mjs"
         },
         {
             "argvHelpers": [],
