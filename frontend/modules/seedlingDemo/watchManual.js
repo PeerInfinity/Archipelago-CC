@@ -108,6 +108,58 @@ export function heldFromCodes(codes) {
 }
 
 /**
+ * ⛓⛓ THE ONE WRITER OF THE MANUAL ARM'S HELD SET (slice `seedling-lab-touch-controls`).
+ *
+ * The keyboard listener and the on-screen controls (`flashPanel/touchControls.js`) BOTH press through `key`, so a
+ * touch press is a keyboard press: the same `KeyboardEvent.code`, the same driving gate, the same unbound-key
+ * refusal. ⛔ There is no second door into `codes` — it is not exposed, only read (`held`, `codes()` as a copy) — so a
+ * touch path with its own rules would have to be written here, where the tests are.
+ *
+ * `release(why)` is the one release: it releases every attached control (so a finger still on the d-pad stops
+ * counting as held and its next move presses afresh) and then empties the set. STOP, an arm switch, a window blur
+ * and a hidden page each call it; `lastRelease` names the most recent, for the browser row to assert on.
+ *
+ * @param {{isDriving: () => boolean}} o
+ */
+export function createManualKeys({ isDriving }) {
+    const codes = new Set();
+    const controls = new Set();
+    let lastRelease = null;
+    return {
+        /** A press (`down`) or release of a physical key. True when it drove the run (the caller may preventDefault). */
+        key(down, code) {
+            if (!isDriving()) return false;
+            if (!tapeKeyForCode(code)) return false;
+            if (down) codes.add(code); else codes.delete(code);
+            return true;
+        },
+        /** The tape keys held right now. */
+        held: () => heldFromCodes(codes),
+        /** The physical codes held right now, as a copy. */
+        codes: () => [...codes],
+        /** An on-screen control (anything with `releaseAll`) whose held keys `release` must also let go. */
+        attach(control) {
+            controls.add(control);
+            return () => controls.delete(control);
+        },
+        release(why) {
+            lastRelease = String(why);
+            for (const c of [...controls]) c.releaseAll();
+            codes.clear();
+        },
+        lastRelease: () => lastRelease,
+    };
+}
+
+/**
+ * The `send` an on-screen control is mounted with: its `keydown`/`keyup` of a key spec (`{key, code, keyCode}`, the
+ * shape `touchControls` sends) becomes a `key` press on the ONE writer. Nothing else.
+ */
+export const touchSendFor = (keys) => (type, k) => {
+    keys.key(type === 'keydown', k?.code);
+};
+
+/**
  * ⛓⛓⛓ A MANUAL SESSION — the run, driven by hand, recorded as it goes.
  *
  * ⚠ RECORD-THEN-ACT, the same rule `createTapeStepper` obeys and for the
