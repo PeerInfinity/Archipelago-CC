@@ -310,3 +310,62 @@ describe('the glue — menuPanel:restarted re-takes the start hop when the start
         expect(h.glue.stats.restarts).toBe(0);
     });
 });
+
+/**
+ * ⛔ THE RESTART HOLD (found by `seedling-js-panel-restart`; ⚖ the user 2026-10-28, "Fix it"): the arrival watch
+ * `expectBotArrivals` arms HOLDS the landing until the bot's next goal. Only a stopped walk has one coming, so a
+ * Restart arms it only when `stopBotWalks()` stopped one — the same gate as `teleportTool`. Before, it armed
+ * unconditionally, and on wasm a hand walk after a Restart was stranded (`held: true`, 0 ticks).
+ */
+describe('handleMenuRestart — the arrival watch only behind a stopped walk', () => {
+    function harness({ walks }) {
+        const subs = new Map();
+        const eventBus = { subscribe: (n, fn) => { subs.set(n, fn); return () => subs.delete(n); }, publish: () => {} };
+        const expects = vi.fn(() => 1);
+        const glue = new SeedlingRegionGlue({
+            eventBus,
+            getDispatcher: () => ({ publish: () => {} }),
+            loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
+            getProcgen: () => ({
+                getResolvedStartRegion: () => 's',
+                getRegionInfo: (r) => (r === 's' ? { substrate: FLASH_SEEDLING_SUBSTRATE_ID } : null),
+                retakeStartHop: () => ({ taken: true, why: null, region: 's' }),
+            }),
+            stopBotWalks: () => walks,
+            expectBotArrivals: expects,
+        });
+        glue.start();
+        return { glue, expects, restart: (p) => subs.get(RESTARTED_EVENT)(p) };
+    }
+    /** The row's claim: a Restart with no walk arms nothing, and records `watching: 0`. */
+    const noWalkArmsNothing = (h) => {
+        h.restart({ mode: 'world' });
+        return h.expects.mock.calls.length === 0 && h.glue.lastRestart.watching === 0 && h.glue.lastRestart.taken === true;
+    };
+
+    it('no walk in flight: nothing watches, so no hold strands a player who walks by hand', () => {
+        const h = harness({ walks: 0 });
+        expect(noWalkArmsNothing(h)).toBe(true);
+        expect(h.glue.lastRestart).toMatchObject({ taken: true, stoppedWalks: 0, watching: 0 });
+    });
+
+    it('a walk in flight was stopped (Restart mid-walk): the engines watch for the hop\'s landing', () => {
+        const h = harness({ walks: 1 });
+        h.restart({ mode: 'world' });
+        expect(h.expects).toHaveBeenCalledTimes(1);
+        expect(h.glue.lastRestart).toMatchObject({ taken: true, stoppedWalks: 1, watching: 1 });
+    });
+
+    it('MUTANT: the unconditional arm (main before this fix) fails the no-walk row', () => {
+        const h = harness({ walks: 0 });
+        const real = SeedlingRegionGlue.prototype.handleMenuRestart;
+        // the pre-fix shape: whatever the stop returned, the watch is armed after it
+        h.glue.handleMenuRestart = function unconditional(payload) {
+            const stop = this.stopBotWalks;
+            this.stopBotWalks = () => { const n = stop(); this.expectBotArrivals(); return n; };
+            try { return real.call(this, payload); } finally { this.stopBotWalks = stop; }
+        };
+        expect(noWalkArmsNothing(h)).toBe(false);
+        expect(h.expects).toHaveBeenCalledTimes(1);
+    });
+});

@@ -456,7 +456,9 @@ export class SeedlingRegionGlue {
         // start on the region move that follows.
         const stopped = this.stopBotWalks();
         // ⛓ WALK IDENTITY — the stopped engines watch for the hop's arrival BEFORE it is queued (its landing is held).
-        const watching = this.expectBotArrivals();
+        // ⛔ Only behind a stopped walk, as in `teleportTool`: the watch HOLDS the landing until the bot's next goal, and
+        // with no walk stopped none is coming, so a player who then walks by hand is stranded (wasm: `held: true`, 0 ticks).
+        const watching = stopped > 0 ? this.expectBotArrivals() : 0;
         const r = procgen?.retakeStartHop?.() ?? { taken: false, why: 'procgenPlayer has no retakeStartHop' };
         if (r.taken) this.stats.restarts += 1;
         // ⛓ WALK IDENTITY — the stop above released the room BEFORE the hop queued its teleport, so nothing pushed it:
