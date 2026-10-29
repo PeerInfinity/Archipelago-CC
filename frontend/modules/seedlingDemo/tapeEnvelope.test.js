@@ -104,7 +104,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ fidelity APFLIP: −1 +8 (289) — `enc-l32-fire-return` retired; the eight `apb-*` witnesses (p4g).
         // ⛓ fidelity RULESREF: +1 (290) — `rulesref-l66-door` (p4g).
         // ⛓ fidelity L100: +1 (291) — `l100-sliver-rock` (p4g).
-        expect(names.length).toBe(291);
+        // ⛓ fidelity LIGHTPOLE: +2 (293) — `lightpole-l101-ghost`, `lightpole-l101-spear` (p4g).
+        expect(names.length).toBe(293);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);
