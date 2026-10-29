@@ -59,11 +59,18 @@ describe('landing gates in the maze preset (L49 + L50)', () => {
             .toEqual(['level_49 → level_50 holding []: derived false, atlas true']);
     }, 120_000);
 
-    it('a stricter row is ACCEPTED when every AP route into its source needs the missing item — and named', () => {
-        // L50 → L49 ungated: the world still needs the Swim, but no AP state stands in L50 without it.
-        const out = certifyPlaythroughMaze(withExitRule(RULES, 'level_50', 'level_49', { rule: 'True_' }), HELPERS, { native: true, atlas: ATLAS });
+    // ⛓ session tile-primitives-lightpoles: a LANDING is priced only at the inventories an AP crossing that lands there admits. L50's
+    // landing (2,1) is entered only by L49 → L50, which costs the Swim, so the row holding [] is no AP state and is skipped — before,
+    // the stricter-but-implied rule (⚖ "Accept if implied") accepted it by name; that rule still names the rows no landing skips
+    // (L0 r2c13 → r1c6, the slow tier).
+    it('a stricter row at a landing no AP crossing admits is skipped; admit it (L49 → L50 free) and it is a problem', () => {
+        const free = withExitRule(RULES, 'level_50', 'level_49', { rule: 'True_' });
+        const out = certifyPlaythroughMaze(free, HELPERS, { native: true, atlas: ATLAS });
         expect(out.problems).toEqual([]);
-        expect(out.accepted).toEqual([{ label: 'level_50 → level_49 (landing 2,1)', source: 'level_50', by: 'Progressive Swim' }]);
+        expect(out.accepted).toEqual([]);
+        const both = withExitRule(free, 'level_49', 'level_50', { rule: 'True_' });
+        expect(certifyPlaythroughMaze(both, HELPERS, { native: true, atlas: ATLAS }).problems)
+            .toContain('level_50 → level_49 (landing 2,1) holding []: derived false, atlas true');
     }, 120_000);
 
     it('a LOOSER row is never accepted, even where the source needs the item', () => {

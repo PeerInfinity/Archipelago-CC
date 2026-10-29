@@ -182,11 +182,16 @@ describe('eventLayerFor', () => {
     // produce (an in-room LIGHTPOLE: lit by a Spear thrust from a stance that is not the faced cell) is carried only while a kept
     // rule needs it. L63's two in-room poles kill the darktraps over its L65 landings, so with L65 unlisted they gate nothing.
     const L63_POLES = ['L63 flag 6: lightpole@48,272 cleared', 'L63 flag 7: lightpole@112,272 cleared'];
-    it('an unproducible event no kept rule names is not carried (L63\'s in-room poles without L65)', () => {
-        const names = eventLayerFor(ATLAS, ['level_61', 'level_62', 'level_63']).events.map((e) => e.name);
-        for (const n of L63_POLES) expect(names).not.toContain(n);
-        // the producible presses stay: L61's lights L63's pole, L63's lights L62's
-        expect(names).toEqual(expect.arrayContaining(['L63 flag 1: lightpole@64,88 cleared', 'L62 flag 0: lightpole@120,200 cleared']));
+    // ⛓ session tile-primitives-lightpoles (⚖ 2026-10-28 "Rope-shaped, stances"): the maze now PRODUCES an in-room pole's event — a
+    // Spear thrust from one of its stances (mode 'pole') — so the filter keeps it even with L65 unlisted (it was dropped here before);
+    // a press that lights a pole in a listed level is that pole's `opened_by` (mode 'lit').
+    it('a produced event is carried whether or not a kept rule names it (L63\'s in-room poles without L65)', () => {
+        const layer = eventLayerFor(ATLAS, ['level_61', 'level_62', 'level_63']);
+        expect(layer.events.map((e) => e.name)).toEqual(expect.arrayContaining([...L63_POLES,
+            'L63 flag 1: lightpole@64,88 cleared', 'L62 flag 0: lightpole@120,200 cleared']));
+        expect(layer.world.filter((w) => w.mode === 'pole').map((w) => w.name).sort()).toEqual([...L63_POLES].sort());
+        expect(layer.world.filter((w) => w.mode === 'lit').map((w) => `${w.name} in L${w.obstacle.level}`).sort()).toEqual([
+            'L62 flag 0: lightpole@120,200 cleared in L62', 'L63 flag 1: lightpole@64,88 cleared in L63']);
     });
 
     it('... and is carried, named, once a kept rule needs it (L65 listed: its doors cost the poles)', () => {
