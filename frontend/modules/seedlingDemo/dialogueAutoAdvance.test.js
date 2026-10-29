@@ -186,8 +186,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // inert (the three Witch tapes' sword is no auto-advance arrival, as `enc-l12-witch`'s).
         // ⛓ fidelity RULESREF: +1 (290) — `rulesref-l66-door` (no dialogue), inert.
         // ⛓ fidelity L100: +1 (291) — `l100-sliver-rock` (no dialogue), inert.
-        expect(rows).toHaveLength(291);
-        expect(rows.length - parted.length).toBe(290);
+        // ⛓ fidelity LIGHTPOLE: +2 (293) — `lightpole-l101-ghost`, `lightpole-l101-spear` (no dialogue), inert.
+        expect(rows).toHaveLength(293);
+        expect(rows.length - parted.length).toBe(292);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

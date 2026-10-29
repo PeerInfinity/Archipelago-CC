@@ -1,0 +1,18 @@
+L12DBG frontier from 176 392 aim 40 856 lvl 12 planError: no walkable tile path in level 12 from tile (11,24) to (2,53). The two are in different connected components of the tiles the player box fits in — which at the
+L12DBG coarse entries 228 actionable ['shieldlocknorm@288,704|solid|shieldlocknorm|d=294|act=touch', 'burnabletree@480,640|solid|burnabletree|d=487|act=burn', 'bosslock@112,192|solid|bosslock|d=661|act=keylock', 'bosslock@416,240|solid|bosslock|d=719|act=keylock', 'bosslock@432,240|solid|bosslock|d=728|act=keylock']
+L12DBG fine entries 235 actionable ['magicallock@32,864|solid|magicallock|d=20|act=wand', 'shieldlocknorm@288,704|solid|shieldlocknorm|d=288|act=touch', 'burnabletree@480,640|solid|burnabletree|d=497|act=burn', 'bosslock@112,192|solid|bosslock|d=665|act=keylock', 'bosslock@416,240|solid|bosslock|d=714|act=keylock', 'bosslock@432,240|solid|bosslock|d=722|act=keylock']
+L12DBG frontier from 285.9844646492926 711 aim 40 856 lvl 12 planError: no walkable tile path in level 12 from tile (17,44) to (2,53). The two are in different connected components of the tiles the player box fits in — which at the
+L12DBG coarse entries 232 actionable ['burnabletree@480,640|solid|burnabletree|d=487|act=burn', 'bosslock@112,192|solid|bosslock|d=661|act=keylock', 'bosslock@416,240|solid|bosslock|d=719|act=keylock', 'bosslock@432,240|solid|bosslock|d=728|act=keylock']
+L12DBG fine entries 239 actionable ['magicallock@32,864|solid|magicallock|d=20|act=wand', 'burnabletree@480,640|solid|burnabletree|d=497|act=burn', 'bosslock@112,192|solid|bosslock|d=665|act=keylock', 'bosslock@416,240|solid|bosslock|d=714|act=keylock', 'bosslock@432,240|solid|bosslock|d=722|act=keylock']
+L12DBG frontier from 471.0056556953243 679.6802481316433 aim 40 856 lvl 12 planError: no walkable tile path in level 12 from tile (29,42) to (2,53). The two are in different connected components of the tiles the player box fits in — which at the
+L12DBG coarse entries 284 actionable ['bosslock@112,192|solid|bosslock|d=661|act=keylock', 'bosslock@416,240|solid|bosslock|d=719|act=keylock', 'bosslock@432,240|solid|bosslock|d=728|act=keylock']
+L12DBG fine entries 291 actionable ['magicallock@32,864|solid|magicallock|d=20|act=wand', 'bosslock@112,192|solid|bosslock|d=665|act=keylock', 'bosslock@416,240|solid|bosslock|d=720|act=keylock', 'bosslock@432,240|solid|bosslock|d=729|act=keylock']
+L12DBG nextPastSealed bound bosslock@416,240 passed []
+L12DBG frontier from 424.55224082882194 258.0435978884486 aim 40 856 lvl 12 planError: no walkable tile path in level 12 from tile (26,16) to (2,53). The two are in different connected components of the tiles the player box fits in — which at the
+L12DBG coarse entries 283 actionable ['bosslock@112,192|solid|bosslock|d=661|act=keylock', 'bosslock@432,240|solid|bosslock|d=728|act=keylock']
+L12DBG fine entries 290 actionable ['magicallock@32,864|solid|magicallock|d=20|act=wand', 'bosslock@112,192|solid|bosslock|d=664|act=keylock', 'bosslock@432,240|solid|bosslock|d=727|act=keylock']
+L12DBG nextPastSealed bound bosslock@432,240 passed []
+L12DBG frontier from 439.99400908767626 258.13123903392494 aim 40 856 lvl 12 planError: no walkable tile path in level 12 from tile (27,16) to (2,53). The two are in different connected components of the tiles the player box fits in — which at the
+L12DBG coarse entries 282 actionable ['bosslock@112,192|solid|bosslock|d=661|act=keylock']
+L12DBG fine entries 289 actionable ['magicallock@32,864|solid|magicallock|d=20|act=wand', 'bosslock@112,192|solid|bosslock|d=664|act=keylock']
+L12DBG nextPastSealed NONE; passed []
