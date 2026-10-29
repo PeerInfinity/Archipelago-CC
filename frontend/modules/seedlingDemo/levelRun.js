@@ -2741,7 +2741,12 @@ export function createLevelRun({
         for (const b of w.bossTotems ?? []) boxed.add(`${b.x},${b.y}`);
         for (const t of w.iceTurrets ?? []) boxed.add(`${t.x},${t.y}`);
         for (const s of w.spinners ?? []) boxed.add(`${s.x},${s.y}`);
-        const unboxed = (w.pressEnemies ?? []).filter((e) => !boxed.has(`${e.x},${e.y}`));
+        // ⛓ fidelity L12DOORS D1 (`wandShotChaserBodies`, OFF): a bridged chaser the run STEPS has a live box
+        // (`chaserRectsNow`, read by `wandShotBlockerAt`); under `noclip || noDamage` it has none and still refuses.
+        const chaserIds = CONTACT_FIDELITY.wandShotChaserBodies && !noclip && !noDamage
+            ? new Set(chaserStateFor(n).keys()) : null;
+        const unboxed = (w.pressEnemies ?? []).filter((e) => !boxed.has(`${e.x},${e.y}`)
+            && !(chaserIds && chaserIds.has(`${e.tag}@${e.x},${e.y}`)));
         if (unboxed.length > 0) {
             const names = unboxed.map((e) => `${e.tag}@${e.x},${e.y}`).join(', ');
             throw new Error(`levelRun: a WandShot in level ${n} would collide with `
@@ -2821,6 +2826,12 @@ export function createLevelRun({
         }
         for (const sp of spinnerRectsNow() ?? []) {
             if (rectsOverlap(box, sp.rect)) return { kind: 'enemy', id: sp.id, spinner: true };
+        }
+        // ⛓ fidelity L12DOORS D1 (`wandShotChaserBodies`, OFF): a live bridged chaser, behind the stepper's own gate.
+        if (CONTACT_FIDELITY.wandShotChaserBodies && !noclip && !noDamage) {
+            for (const c of chaserRectsNow() ?? []) {
+                if (rectsOverlap(box, c.rect)) return { kind: 'enemy', id: c.id, chaser: true };
+            }
         }
         return null;
     };

@@ -1669,6 +1669,43 @@ export const CONTACT_FIDELITY = {
      * run's own pole write (`earnedClears`). OFF: no row, byte-identical. `SEEDLING_IN_ROOM_POLE_THRUST=0|1`.
      */
     inRoomPoleThrust: false,
+    /**
+     * fidelity L12DOORS D1 (wave 34) — A WAND SHOT STOPS ON A LIVE CHASER, AND A ROOM WITH ONE MAY FIRE.
+     *
+     *     WandShot.as:69     solids.push("Enemy")       the shot's own list (`Mobile.as:17` + "Enemy")
+     *     WandShot.as        checkEntity: `_e is Enemy` → hit(…, "Wand")   (a puncher / bob is `type = "Enemy"`)
+     *
+     * `levelRun.assertWandShotSolidsBound` refused EVERY shot in a room whose press census holds an Enemy-typed body
+     * outside the totem / ice-turret / spinner rosters — L12's `puncher@416,256`, ~650 px from the stacked doors at
+     * `@32,864` (survey steps 172/203, the solver under the locks: *"cannot place: puncher@416,256"*). The run DOES hold
+     * a live box for a bridged chaser while it steps them (`chaserStateFor`, behind `stepChasersNow`'s own
+     * `noclip || noDamage` gate). ON: such a chaser counts as placed, and its live box joins the shot's "Enemy" arm
+     * (`wandShotBlockerAt`), so a shot that MEETS it stops there and `applyWandShotToBoss` refuses by name, as before.
+     * Under `noclip`/`noDamage` (no chaser position) the room still refuses. OFF: byte-identical.
+     * `SEEDLING_WAND_SHOT_CHASER_BODIES=0|1`.
+     */
+    wandShotChaserBodies: false,
+    /**
+     * fidelity L12DOORS D2 (wave 34) — A DOOR THE 16 px FRONTIER CANNOT SEE, NEARER THE AIM, IS ASKED ON THE 8 px
+     * LATTICE (`solverBot.identifyAndSelect`'s frontier flood).
+     *
+     * `fineFrontierFlood` re-floods at 8 px only when the 16 px frontier has NO actionable entry. L12's stacked doors
+     * at `@32,864` (the goal `teleporter@32,848`, survey steps 172/203) are reached through a 13 px cliffside gap no
+     * 16 px node fits, and the 16 px frontier always holds some other door (a shield lock, a tree, three bosslocks), so
+     * the fine flood never ran and the sealed `bosslock@112,192` refused. ON: when the 8 px flood holds an actionable
+     * door the 16 px one lacks, nearer the aim than every 16 px actionable door, the 8 px frontier is asked. OFF:
+     * byte-identical. `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`.
+     */
+    fineFrontierHiddenDoor: false,
+    /**
+     * fidelity L12DOORS D3 (wave 34) — A WAND STANCE THE 8 px LATTICE REACHES (`solverBot.resolveWandStrategy`).
+     *
+     * The strip under L12's stacked doors (`@32,864`) is reached through a 13 px cliffside gap: `stanceReaches` plans
+     * at the run's 16 px lattice and found no corridor to any wand stance under `magicallock@32,864`. ON: a candidate
+     * it refuses is asked once more on `FINE_LATTICE` in the world as it is. OFF: byte-identical.
+     * `SEEDLING_FINE_WAND_STANCE=0|1`.
+     */
+    fineWandStance: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1993,6 +2030,15 @@ if (globalThis.process?.env?.SEEDLING_STRATEGY_BOUND_DISTINCT === '0') CONTACT_F
 // ⛓ fidelity L32BOB: `SEEDLING_ENCOUNTER_SWING_IN_FLIGHT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '1') CONTACT_FIDELITY.encounterSwingInFlight = true;
 if (globalThis.process?.env?.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT === '0') CONTACT_FIDELITY.encounterSwingInFlight = false;
+// ⛓ fidelity L12DOORS D1: `SEEDLING_WAND_SHOT_CHASER_BODIES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_CHASER_BODIES === '1') CONTACT_FIDELITY.wandShotChaserBodies = true;
+if (globalThis.process?.env?.SEEDLING_WAND_SHOT_CHASER_BODIES === '0') CONTACT_FIDELITY.wandShotChaserBodies = false;
+// ⛓ fidelity L12DOORS D2: `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_HIDDEN_DOOR === '1') CONTACT_FIDELITY.fineFrontierHiddenDoor = true;
+if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_HIDDEN_DOOR === '0') CONTACT_FIDELITY.fineFrontierHiddenDoor = false;
+// ⛓ fidelity L12DOORS D3: `SEEDLING_FINE_WAND_STANCE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_WAND_STANCE === '1') CONTACT_FIDELITY.fineWandStance = true;
+if (globalThis.process?.env?.SEEDLING_FINE_WAND_STANCE === '0') CONTACT_FIDELITY.fineWandStance = false;
 // ⛓ fidelity DETERM (c): `SEEDLING_COVER_HELD_FADE=0|1` and `SEEDLING_LOCK_RECLOSE_LAG=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '1') CONTACT_FIDELITY.coverHeldFade = true;
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '0') CONTACT_FIDELITY.coverHeldFade = false;
