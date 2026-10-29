@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 127,
-            "count": 175,
+            "browser": 128,
+            "count": 176,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 489,
-        "browser": 193,
+        "blockStyle": 490,
+        "browser": 194,
         "cited": 263,
-        "files": 506,
+        "files": 507,
         "lineStyle": 17,
-        "withDocblock": 506,
-        "withFlags": 422
+        "withDocblock": 507,
+        "withFlags": 423
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14090,6 +14090,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's L63 darktraps over the two L65 arrivals, ON THE GAME (slice rules-l63-darktrap-probe): does darktrap@128,272 (tag 4) seal the arrival (128,288), what kills it, and which flag carries the kill to the next visit?",
             "path": "scripts/procgen/probe-seedling-l63-darktrap.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l63-spear-block.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L63 spear block against its DarkTrap, ON THE GAME (slice rules-l63-pole-crossings, Part A): can a Spear holder cross from the r6c9 side (east of the block) into r0c1 WITHOUT lightpole@64,88 lit ({63,1})?",
+            "path": "scripts/procgen/probe-seedling-l63-spear-block.mjs"
         },
         {
             "argvHelpers": [],

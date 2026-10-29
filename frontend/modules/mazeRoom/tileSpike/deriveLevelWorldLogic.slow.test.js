@@ -81,6 +81,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // ⛓ THE SKIP CENSUS (session tile-primitives-lightpoles, designer review): every row whose LANDING arrival has points no AP
         // crossing landing there admits — counted and named, so a new skip is a diff here, never silence. L62/L63/L64 are the pole
         // pockets; the rest are landings whose AP crossings already cost an item (water, a lock, a weapon) at that cell.
+        // ⛓ RULES l63-pole-crossings: the poles' Ghost Sword arm (the fusion's three items) puts Ghost Sword Fusion and
+        // Progressive Sword into L62's and L63's subset universe, so their rows count 4x the subsets — same rows, same fractions.
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
@@ -117,14 +119,14 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_55 @ Level 055 - Boss Key 3 (landing 4,3) | 1/2',
             'level_55 → level_52__r2c2 (landing 4,3) | 1/2',
             'level_56 → level_52__r5c10 (landing 1,7) | 1/2',
-            'level_62 → level_61__r0c7 (landing 7,5) | 1/4',
-            'level_62 → level_61__r0c10 (landing 7,5) | 1/4',
-            'level_62 → level_64 (landing 7,5) | 1/4',
-            'level_62 → level_63__r0c1 (landing 7,5) | 2/8',
-            'level_63__r0c1 @ L62 flag 0: lightpole@120,200 cleared (landing 4,1) | 6/96',
-            'level_63__r0c1 → level_61__r0c10 (landing 4,1) | 6/96',
-            'level_63__r0c1 → level_61__r0c7 (landing 4,1) | 6/96',
-            'level_63__r0c1 → level_62 (landing 4,1) | 6/96',
+            'level_62 → level_61__r0c7 (landing 7,5) | 4/16',
+            'level_62 → level_61__r0c10 (landing 7,5) | 4/16',
+            'level_62 → level_64 (landing 7,5) | 4/16',
+            'level_62 → level_63__r0c1 (landing 7,5) | 8/32',
+            'level_63__r0c1 @ L62 flag 0: lightpole@120,200 cleared (landing 4,1) | 24/384',
+            'level_63__r0c1 → level_61__r0c10 (landing 4,1) | 24/384',
+            'level_63__r0c1 → level_61__r0c7 (landing 4,1) | 24/384',
+            'level_63__r0c1 → level_62 (landing 4,1) | 24/384',
             'level_64 → level_62 (landing 2,5) | 1/4',
             'level_89__r11c12 → level_0__r2c13 (landing 10,18) | 1/3',
             'level_89__r11c12 → level_87__r1c3 (landing 10,18) | 1/3',

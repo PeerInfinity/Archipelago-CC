@@ -8616,10 +8616,21 @@
             "name": "level_63__r6c9 -> level_63__r0c1",
             "connected_region": "level_63__r0c1",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Ghost Spear"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L63 flag 1: lightpole@64,88 cleared"
+                  }
+                }
+              ]
             }
           },
           {
@@ -8881,10 +8892,38 @@
             "name": "level_65__r0c2 -> level_63__r10c2",
             "connected_region": "level_63__r10c2",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "L63 flag 6: lightpole@48,272 cleared"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L63 flag 6: lightpole@48,272 cleared"
+                  }
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Sword Fusion"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -8910,10 +8949,38 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "L63 flag 7: lightpole@112,272 cleared"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "L63 flag 7: lightpole@112,272 cleared"
+                      }
+                    },
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Sword Fusion"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Ghost Spear"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Progressive Sword"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "rule": "Or",

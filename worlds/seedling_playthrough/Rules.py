@@ -1944,7 +1944,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_63__r6c9 -> level_63__r0c1", player),
-        Has('Ghost Spear', 1)
+        HasAll('Ghost Spear', 'L63 flag 1: lightpole@64,88 cleared')
     )
 
     world.set_rule(
@@ -1989,7 +1989,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_65__r0c2 -> level_63__r10c2", player),
-        Has('L63 flag 6: lightpole@48,272 cleared', 1)
+        Or(HasAll('Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'), Has('L63 flag 6: lightpole@48,272 cleared'))
     )
 
     world.set_rule(
@@ -1999,7 +1999,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_65__r0c8 -> level_63__r6c9", player),
-        And(HasAny('L65 flag 0: lightpole@128,168 cleared', 'Ghost Spear'), Has('L63 flag 7: lightpole@112,272 cleared'))
+        And(Or(HasAll('Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'), Has('L63 flag 7: lightpole@112,272 cleared')), HasAny('L65 flag 0: lightpole@128,168 cleared', 'Ghost Spear'))
     )
 
     world.set_rule(
