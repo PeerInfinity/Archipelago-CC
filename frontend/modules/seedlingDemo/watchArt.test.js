@@ -19,18 +19,19 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { loadPackStack } from '../contentPacks/contentPacks.js';
 import { createArtLibrary } from '../artLibrary/artLibrary.js';
-import { buildLevelWorld } from './levelWorld.js';
+import { ROLES, buildLevelWorld } from './levelWorld.js';
+import { atlasLevelSource } from './levelSource.js';
 import { formatOp, PORTAL_KEY } from './seedlingSkinRenderer.js';
 import { playerOps, stepPlayerSkin, SUIT_KEYS } from './seedlingPlayerSkin.js';
 import { ENEMY_COLOUR, enemyOps, stepEnemySkin } from './seedlingEnemySkin.js';
 import { generateSeedlingLevel } from './procgenSeedling.js';
-import { POST_SWORD_PALETTE } from './procgenPalette.js';
+import { POST_SWORD_PALETTE, PRE_SWORD_PALETTE } from './procgenPalette.js';
 import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
 import { parseElementSpec } from '../procgenCore/elementSpec.js';
 import {
     LAB_ART_TICK, _labArtRedrawForTests, _resetLabArtForTests, artParamOn, createLabArtPainter, labArt, labArtActive, labArtOps,
     labStillKey, rememberRoomRecord, roomRecordOf, setLabArtRedraw, staticBodyOps, staticPlayerOps,
-    staticPlayerView,
+    staticPlayerView, labDrawnObjects, placementBodies, placementRunOf, staticEntityOpsByFamily,
 } from './watchArt.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -77,7 +78,8 @@ beforeAll(async () => {
 
 describe('1. golden draw lists (a change detector of the lab\'s picture)', () => {
     const GOLDEN = Object.freeze({
-        vanillaL4: { ops: 47, sprites: 46, digest: 'e43981c20c203035' },
+        // ⛓ L2b re-recorded (47/46/e43981c20c203035 → this): L4's block, button, arrow traps and torch are sprites now
+        vanillaL4: { ops: 52, sprites: 52, digest: '1d35a21a5888b205' },
         generated: { ops: 50, sprites: 50, digest: '82236f89fe3ec577' },
     });
     const check = (name, ops) => {
@@ -257,5 +259,184 @@ describe('4. fallbacks', () => {
         retire.forEach((fn) => fn());
         expect(_labArtRedrawForTests()).toBe(null);
         _resetLabArtForTests();
+    });
+});
+
+/**
+ * ⛓ LAB L2b (seedling-lab-static-art-2): the room's OTHER objects — blocks, rocks, locks, buttons, traps, lamps,
+ * hazards, NPCs, machines, the static enemies and the bosses — each ONE static frame through the js arc's own
+ * skins, its run-only rows read off the room's tick-0 placement run (`placementRunOf`), overlaid with the sample.
+ */
+describe('5. L2b — the room\'s other objects, static', () => {
+    const SOURCE = atlasLevelSource();
+    const STAGING = Object.freeze({ boot: { level: 0, x: 0, y: 0 }, noclip: false, noHazards: [], noDamage: false,
+        grants: [], persistence: [], equips: [] });
+    /** A lab world as `makeWorldFor` builds it: the combat roles, the record AND the room's context. */
+    const labWorld = (rec, levelSource = SOURCE) => rememberRoomRecord(buildLevelWorld(rec, { roles: ROLES }), rec,
+        { levelSource, staging: { ...STAGING, boot: { ...STAGING.boot, level: rec.level } } });
+    const without = (key) => ({ ...art, has: (q) => q !== key && art.has(q) });
+    let guarded;
+    beforeAll(() => {
+        // a generated room with a pushable block, a button, a button-room and two locks (`guard;len=2`, seed 12)
+        guarded = generateSeedlingLevel({
+            seed: 12, palette: PRE_SWORD_PALETTE,
+            skeleton: parseSkeleton('empty', { simulator: false, substrate: 'seedling' }),
+            elements: parseElementSpec('guard;len=2'),
+        }).record;
+    }, 60000);
+
+    /** ONE vanilla room per newly drawn family (and its golden), + the generated room. */
+    const ROOMS = Object.freeze({
+        L16: { level: 16, families: ['puzzle', 'solids', 'trap', 'lamp'] },   // block, rocks, lock, button, sandtraps, arrow traps
+        L107: { level: 107, families: ['hazard', 'machine', 'solids'] },       // crusher, beam towers, pulser, button-room
+        L34: { level: 34, families: ['npc'] },                                // the talkers
+        L29: { level: 29, families: ['roomBody'] },                           // the turrets (static "Enemy" placements)
+        L19: { level: 19, families: ['boss'] },                               // the shield boss
+    });
+    const GOLDEN = Object.freeze({
+        L16: { ops: 253, sprites: 252, digest: 'f83191db9364eaa1' },
+        L107: { ops: 219, sprites: 209, digest: '1717df1a32f39cec' },
+        L34: { ops: 102, sprites: 102, digest: '8d786297011148f8' },
+        L29: { ops: 286, sprites: 286, digest: '2646371c41d100f7' },
+        L19: { ops: 129, sprites: 129, digest: 'c36b0833c03baee2' },
+        guarded: { ops: 107, sprites: 107, digest: '36b4a2b5993a5aa5' },
+    });
+    const check = (name, ops) => {
+        const got = { ops: ops.length, sprites: ops.filter((o) => o.sheetRef).length, digest: digest(ops) };
+        if (process.env.PRINT_WATCH_ART_DIGESTS) console.log(name, JSON.stringify(got));
+        expect(got).toEqual(GOLDEN[name]);
+    };
+
+    for (const [name, { level, families }] of Object.entries(ROOMS)) {
+        it(`${name}: golden, and every family it holds (${families.join(', ')}) draws sprites, no stand-in left`, () => {
+            const rec = recordOf(level);
+            const world = labWorld(rec);
+            expect(placementRunOf(world), 'the placement run builds').not.toBeNull();
+            const by = staticEntityOpsByFamily(world, art, { record: rec, state: STATE });
+            for (const f of families) expect(by[f].filter((o) => o.sheetRef).length, f).toBeGreaterThan(0);
+            const ops = labArtOps(world, art, { record: rec, state: STATE, bodies: placementBodies(world) });
+            const objects = [...world.objectSolids, ...world.pixelmasks].filter(labDrawnObjects(by));
+            const standIns = ops.filter((o) => !o.key && o.rect && objects.some((s) => s.rect.x === o.rect.x && s.rect.y === o.rect.y));
+            expect(standIns).toEqual([]);
+            check(name, ops);
+        });
+    }
+
+    it('the generated room (seed 12, `guard;len=2`): block, button, button-room and locks are sprites', () => {
+        const world = labWorld(guarded, (n) => (n === guarded.level ? guarded : null));
+        const ops = labArtOps(world, art, { record: guarded, state: { ...STATE, x: 40, y: 40 } });
+        const keys = new Set(ops.map((o) => o.key).filter(Boolean));
+        for (const k of ['seedling:puzzlement/pushableblock', 'seedling:puzzlement/button', 'seedling:puzzlement/buttonroom',
+            'seedling:puzzlement/lock']) expect(keys.has(k), k).toBe(true);
+        check('guarded', ops);
+    });
+
+    it('a world registered WITHOUT a context draws the world-derived half; a refusing build is null, not a throw', () => {
+        const rec = recordOf(16);
+        const bare = rememberRoomRecord(buildLevelWorld(rec, { roles: ROLES }), rec);
+        expect(placementRunOf(bare)).toBeNull();
+        const by = staticEntityOpsByFamily(bare, art, { record: rec });
+        expect(by.puzzle.some((o) => o.key === 'seedling:puzzlement/pushableblock')).toBe(true);
+        const broken = rememberRoomRecord(buildLevelWorld(rec, { roles: ROLES }), rec,
+            { levelSource: () => { throw new Error('no such room'); }, staging: STAGING });
+        expect(placementRunOf(broken)).toBeNull();
+    });
+
+    describe('state from the sample at the cursor (what the lab already knows)', () => {
+        const rec = () => recordOf(16);
+        const BLOCK = 'pushableblock@256,80';
+        const ROCK = 'breakablerock@112,80';
+        const LOCK = 'lock@320,112';
+        /** A sample in `sampleMovers`' shape: the block's position, and the run's changes. */
+        const sample = ({ block = { x: 256, y: 80 }, changes = [] } = {}) => ({
+            level: 16, pushables: block ? [{ id: BLOCK, ...block, w: 16, h: 16 }] : [],
+            changes, changeCounts: { placed: 6, byFamily: {}, changed: changes.length, blind: 0, families: 8 },
+        });
+        const opsOf = (s) => {
+            const world = labWorld(rec());
+            return staticEntityOpsByFamily(world, art, { record: rec(), state: STATE, sample: s });
+        };
+        const at = (ops, key) => ops.filter((o) => o.key === key);
+
+        it('a PUSHED block is drawn at its sampled position; a SUNK one is gone', () => {
+            const built = at(opsOf(sample()).puzzle, 'seedling:puzzlement/pushableblock');
+            const pushed = at(opsOf(sample({ block: { x: 272, y: 80 } })).puzzle, 'seedling:puzzlement/pushableblock');
+            expect(built).toHaveLength(1);
+            expect(pushed).toHaveLength(1);
+            expect(pushed[0].dx - built[0].dx).toBe(16);
+            const sunk = opsOf(sample({ block: null, changes: [{ id: BLOCK, family: 'pushables', effect: 'gone', base: { x: 256, y: 80, w: 16, h: 16 } }] }));
+            expect(at(sunk.puzzle, 'seedling:puzzlement/pushableblock')).toHaveLength(0);
+        });
+
+        it('a BROKEN rock is gone; an OPENED lock is gone; the others stay', () => {
+            const before = opsOf(sample()).solids;
+            const after = opsOf(sample({ changes: [{ id: ROCK, family: 'brokenRocks' }, { id: LOCK, family: 'openActivators' }] })).solids;
+            expect(at(after, 'seedling:puzzlement/breakablerock')).toHaveLength(at(before, 'seedling:puzzlement/breakablerock').length - 1);
+            expect(at(before, 'seedling:puzzlement/lock').length).toBeGreaterThan(0);
+            expect(at(after, 'seedling:puzzlement/lock')).toHaveLength(0);
+        });
+
+        it('a sample of ANOTHER room, or one without a world census (`changeCounts: null`), leaves the build look', () => {
+            const built = opsOf(null);
+            const other = opsOf({ ...sample({ block: { x: 272, y: 80 }, changes: [{ id: ROCK, family: 'brokenRocks' }] }), level: 15 });
+            const blind = opsOf({ ...sample({ changes: [{ id: ROCK, family: 'brokenRocks' }] }), changeCounts: null });
+            expect(digest(other.solids)).toBe(digest(built.solids));
+            expect(digest(other.puzzle)).toBe(digest(built.puzzle));
+            expect(digest(blind.solids)).toBe(digest(built.solids));
+        });
+    });
+
+    describe('STATIC over the new kinds — a scrub draws one frame set; the stepping MUTANT does not', () => {
+        const TICKS = [0, 1, 7, 30, 59, 60, 61, 119, 240, 37, 3];
+        /** Per room, the frames a scrub over `TICKS` draws, through `stepSkin`. */
+        const scrub = (stepSkin) => Object.values(ROOMS).map(({ level }) => {
+            const rec = recordOf(level);
+            const world = labWorld(rec);
+            return TICKS.map((tick) => {
+                const by = staticEntityOpsByFamily(world, art, { record: rec, state: STATE, stepSkin: (step, view) => stepSkin(step, view, tick) });
+                return Object.values(by).flatMap((o) => o ?? []).map((o) => `${o.key}#${o.frame}`).join(',');
+            });
+        });
+        const real = (step, view) => step(null, view, LAB_ART_TICK);
+        /** ⛔ THE MUTANT: steps every skin up to the scrub's tick (the animation the slice leaves out). */
+        const mutant = (step, view, tick) => {
+            let skin = null;
+            for (let t = 0; t <= tick; t += 1) skin = step(skin, view, t);
+            return skin;
+        };
+        it('the real builders: ONE frame set per room across the whole scrub', () => {
+            for (const frames of scrub(real)) expect(new Set(frames).size).toBe(1);
+        });
+        it('⛔ the stepping MUTANT gives more than one in some room (so the check can see animation)', () => {
+            expect(scrub(mutant).some((frames) => new Set(frames).size > 1)).toBe(true);
+        });
+    });
+
+    describe('fallback: each new kind with its sheet missing is its rectangle', () => {
+        const CASES = [
+            [16, 'puzzle', 'seedling:puzzlement/pushableblock'], [16, 'puzzle', 'seedling:enemy/sandtrap'],
+            [16, 'solids', 'seedling:puzzlement/lock'], [16, 'solids', 'seedling:puzzlement/breakablerock'],
+            [16, 'solids', 'seedling:puzzlement/button'], [16, 'trap', 'seedling:puzzlement/arrowtrap'],
+            [16, 'lamp', 'seedling:scenery/torch'], [107, 'hazard', 'seedling:puzzlement/crusher'],
+            [72, 'hazard', 'seedling:puzzlement/lavachain'], [107, 'machine', 'seedling:machine/pulser'],
+            [107, 'machine', 'seedling:machine/beamtower'], [113, 'machine', 'seedling:scenery/finaldoor'],
+            [34, 'npc', 'seedling:npc/introchar'], [29, 'roomBody', 'seedling:enemy/turret'],
+            [22, 'roomBody', 'seedling:enemy/wallflyer'], [98, 'roomBody', 'seedling:enemy/iceturret'],
+            [19, 'boss', 'seedling:boss/shieldboss'], [57, 'boss', 'seedling:boss/tentaclebeast'],
+            [82, 'boss', 'seedling:boss/lavaboss'],
+        ];
+        for (const [level, family, key] of CASES) {
+            it(`L${level} ${family}: ${key}`, () => {
+                const rec = recordOf(level);
+                const world = labWorld(rec);
+                const withArt = staticEntityOpsByFamily(world, art, { record: rec })[family];
+                const missing = staticEntityOpsByFamily(world, without(key), { record: rec })[family];
+                const drawn = withArt.filter((o) => o.key === key).length;
+                expect(drawn).toBeGreaterThan(0);
+                expect(missing.filter((o) => o.key === key)).toHaveLength(0);
+                const rects = (ops) => ops.filter((o) => !o.key && o.rect).length;
+                expect(rects(missing) - rects(withArt)).toBe(drawn);
+            });
+        }
     });
 });
