@@ -192,6 +192,8 @@ import {
     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
     // ⛓ fidelity IGNEOUS D3: the type-31 tiles' clocks along a previewed walk.
     igneousWalkDanger,
+    // ⛓ fidelity TURRETSNAP D1: a live ice turret's contact box (the pole thrust's crowd test).
+    liveTurretContactRect,
 } from './dangerMap.js';
 import { axeCanReach, axeHitsPlayer, BEAM_BOB_SPAN, SPINNING_AXE } from './hazards.js';
 import { planDash } from './mover.js';
@@ -11222,8 +11224,9 @@ function resolvePoleThrustStrategy(run, obstacle, contacts) {
     for (const c of cands) {
         const others = run.world.pressResponders.filter((r) => r !== pole && pressRectTouches(c.sr, r.rect));
         const bridges = (run.world.bridgeTiles ?? []).filter((b) => pressRectTouches(c.sr, b.rect));
+        // ⛓ fidelity TURRETSNAP D1: a live ice turret at its snapped box (`turretSnapPricing`; OFF: `contactRect`)
         const bodies = (run.world.combat?.enemies ?? []).filter((e) => e.as3 !== 'DarkTrap'
-            && contactRect(e) && pressRectTouches(c.sr, contactRect(e)));
+            && contactRect(e) && pressRectTouches(c.sr, liveTurretContactRect(run, e)?.rect ?? contactRect(e)));
         if (others.length > 0 || bridges.length > 0 || bodies.length > 0 || solidsAt(run.world, c.x, c.y).length > 0) {
             crowded += 1;
             continue;
@@ -24091,8 +24094,9 @@ function deriveLightPole(run, body, contacts, blocked = []) {
             tried += 1;
             const others = run.world.pressResponders.filter((r) => `${r.tag}@${r.x},${r.y}` !== pole.id
                 && pressRectTouches(sr, r.rect));
+            // ⛓ fidelity TURRETSNAP D1: a live ice turret at its snapped box (`turretSnapPricing`; OFF: `contactRect`)
             const bodies = (run.world.combat?.enemies ?? []).filter((e) => e.as3 !== 'DarkTrap'
-                && contactRect(e) && pressRectTouches(sr, contactRect(e)));
+                && contactRect(e) && pressRectTouches(sr, liveTurretContactRect(run, e)?.rect ?? contactRect(e)));
             if (others.length > 0 || bodies.length > 0) { crowded += 1; continue; }
             if (rectsOverlapLocal(playerBoxAt(c.x, c.y), body.rect)) { unsafe += 1; continue; }
             // A stance the player box cannot occupy (a solid under it) is not a stance, whatever a lattice says.

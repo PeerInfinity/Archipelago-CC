@@ -505,6 +505,50 @@ function moveAxis(state, axis, rel, blockedAt) {
 }
 
 /**
+ * ⛓⛓ fidelity TURRETSNAP D1 — **THE BOXES A LIVE TURRET'S CONTACT IS TESTED ON**, which are not its ctor box.
+ *
+ * `Enemy.update`'s tail tests `hitPlayer` AFTER `Mobile.mobileUpdate`, whose `input()` snaps a stationary axis onto
+ * `floor(v/16)*16 + 8` (`stepIceTurret`'s order). So the first update that runs at all (the turret on screen) snaps
+ * BEFORE the contact, and the unsnapped ctor box is never tested against the player: off screen nothing below
+ * `Enemy.update`'s first line runs, contact included. After that first `input()` a live turret sits in its rest
+ * two-cycle for the visit (it is undisplaceable: `bump` is gated on "dead", `knockback` is empty), so the contact's
+ * whole set is those two boxes.
+ *
+ * Derived here from the ctor point by `input()` itself (no terrain, no solid: a half-pixel cycle meets neither in a
+ * placed room), three ticks, and the third must equal the first (the cycle) or this refuses by name.
+ * Measured on the game (p4g): L40's `iceturret@472,400` reads (488,416) at t0, (487.5,424) at t1, (488,423.5) at t2
+ * (`turretcircle-l40-shield-stand`), the cycle this returns.
+ *
+ * @param {number} ex the ctor's entity x (`createIceTurret`'s `x`, the census `cx`)
+ * @param {number} ey likewise y
+ * @returns {{points: {x:number,y:number}[], rects: object[], hull: object}} the cycle's two entity points, their 32x32
+ *   boxes, and the hull of both (the box a clockless reader prices)
+ */
+export function iceTurretLiveContactCycle(ex, ey) {
+    const s = { x: ex, y: ey, v: { x: 0, y: 0 }, tile: { x: Math.floor(ex / TILE), y: Math.floor(ey / TILE) } };
+    s.cTile = { ...s.tile };
+    s.lTile = { ...s.tile };
+    const at = [];
+    for (let i = 0; i < 3; i += 1) {
+        iceTurretInput(s, null);
+        moveAxis(s, 'x', s.v.x, null);
+        moveAxis(s, 'y', s.v.y, null);
+        at.push({ x: s.x, y: s.y });
+    }
+    if (at[2].x !== at[0].x || at[2].y !== at[0].y) {
+        fail(`iceTurretLiveContactCycle: from (${ex},${ey}) the body is not in a two-cycle after one input() `
+            + `(${at.map((p) => `${p.x},${p.y}`).join(' → ')})`);
+    }
+    const points = [at[0], at[1]];
+    const rects = points.map((p) => iceTurretRect({ dead: false, x: p.x, y: p.y }));
+    const x = Math.min(rects[0].x, rects[1].x);
+    const y = Math.min(rects[0].y, rects[1].y);
+    const right = Math.max(rects[0].right, rects[1].right);
+    const bottom = Math.max(rects[0].bottom, rects[1].bottom);
+    return { points, rects, hull: { x, y, w: right - x, h: bottom - y, right, bottom } };
+}
+
+/**
  * `FP.angle_difference(a0, a1)` — and it wraps ONCE, not to a canonical
  * range.
  *
