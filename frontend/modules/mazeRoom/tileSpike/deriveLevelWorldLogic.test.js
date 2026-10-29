@@ -170,6 +170,7 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         // L63's two in-room pole events do — each is a Ghost Spear thrust from one of its stances.
         // ⛓ tile-primitives-sphere-order-8 (spheres 6.5/6.10/7.8 joined): every new region hangs off a member of the set — L41/L42 off L40,
         // L57/L58 off L56 (and L46), L65/L66/L68 off L63's pockets — so all join it, with their locations and the Yeti / L65 pole / L68 lock events.
+        // ⛓ rules-collider-mismatch: level_65__r4c13 -> r4c11 (the open tree's doorway [11,4] is floor; a pixel-mask wall seals its mask).
         const RING2_WEAPON_GATED = ['level_0__r1c6', 'level_0__r6c5', 'level_19__r1c5', 'level_19__r5c5'];
         const SPHERE01_WEAPON_GATED = ['level_1', 'level_67__r3c2', 'level_92__r3c12'];
         const SPHERE45_WEAPON_GATED = ['level_48__r11c9', 'level_48__r2c10', 'level_48__r4c3', 'level_48__r7c0', 'level_49'];
@@ -182,7 +183,7 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
             'level_93__r10c7', 'level_93__r5c7'];
         const SPHERE8_WEAPON_GATED = ['level_41__r4c15', 'level_41__r4c3', 'level_41__r7c15', 'level_42', 'level_57', 'level_58__r1c2',
             'level_58__r1c4', 'level_58__r2c1', 'level_58__r2c5', 'level_58__r3c3', 'level_58__r4c1', 'level_58__r6c5', 'level_65__r0c2',
-            'level_65__r0c8', 'level_65__r4c13', 'level_66__r5c4', 'level_66__r9c8', 'level_68__r1c1', 'level_68__r3c1'];
+            'level_65__r0c8', 'level_65__r4c11', 'level_66__r5c4', 'level_66__r9c8', 'level_68__r1c1', 'level_68__r3c1'];
         expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
             .toEqual({
                 unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED, ...SPHERE01_WEAPON_GATED, ...SPHERE45_WEAPON_GATED,
