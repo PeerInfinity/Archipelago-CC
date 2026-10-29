@@ -218,6 +218,12 @@ arc.
 - The 16 px corridor's "nearest node + appended target" fallback can cross a wall unchecked (the trap below). That is not
   WATERFALL's to change.
 
+## CI (push, `JavaScript Unit Tests`)
+
+- `ab2049cc` (D1), run for that SHA: vitest unfiltered **24,178 passed / 0 failed**; slow battery 273 / 273.
+- `0dd87eb8` (the last head with code, test or docs changes), run 40921532084: **24,179 passed / 0 failed**; slow battery
+  273 / 273. The report commits after it touch only `CC/docs/`, which the workflow's path filter skips.
+
 ## Byte-inertia
 
 OFF is byte-identical:
