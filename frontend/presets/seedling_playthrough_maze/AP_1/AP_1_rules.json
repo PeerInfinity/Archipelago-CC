@@ -7515,6 +7515,27 @@
             }
           },
           {
+            "name": "level_62 -> level_64",
+            "connected_region": "level_64",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L62 flag 0: lightpole@120,200 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
             "name": "level_62 -> level_63__r0c1",
             "connected_region": "level_63__r0c1",
             "access_rule": {
@@ -7724,7 +7745,41 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L63 flag 7: lightpole@112,272 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Ghost Spear"
+              }
+            },
+            "item": {
+              "name": "L63 flag 7: lightpole@112,272 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L63:7",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 63,
+              "tag": 7,
+              "class": "lightpole",
+              "x": 112,
+              "y": 272
+            },
+            "action": {
+              "verb": "lit by a Spear thrust",
+              "item": "hasSpear"
+            },
+            "side": "level_63__r6c9",
+            "across": []
+          }
+        ]
       },
       "level_63__r6c15": {
         "name": "level_63__r6c15",
@@ -7773,7 +7828,82 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L63 flag 6: lightpole@48,272 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Ghost Spear"
+              }
+            },
+            "item": {
+              "name": "L63 flag 6: lightpole@48,272 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L63:6",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 63,
+              "tag": 6,
+              "class": "lightpole",
+              "x": 48,
+              "y": 272
+            },
+            "action": {
+              "verb": "lit by a Spear thrust",
+              "item": "hasSpear"
+            },
+            "side": "level_63__r10c2",
+            "across": []
+          }
+        ]
+      },
+      "level_64": {
+        "name": "level_64",
+        "exits": [
+          {
+            "name": "level_64 -> level_62",
+            "connected_region": "level_62",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L62 flag 0: lightpole@120,200 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 064 - Ghostspear",
+            "id": 30000028,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Ghost Spear",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "level_67__r3c2": {
         "name": "level_67__r3c2",
@@ -7792,7 +7922,7 @@
         "locations": [
           {
             "name": "Level 067 - Boss Key 4",
-            "id": 30000028,
+            "id": 30000029,
             "access_rule": {
               "rule": "True_"
             },
@@ -7842,7 +7972,7 @@
         "locations": [
           {
             "name": "Level 086 - Chest",
-            "id": 30000029,
+            "id": 30000030,
             "access_rule": {
               "rule": "True_"
             },
@@ -8373,7 +8503,7 @@
         "locations": [
           {
             "name": "Level 089 - Feather",
-            "id": 30000030,
+            "id": 30000031,
             "access_rule": {
               "rule": "True_"
             },
@@ -8475,7 +8605,7 @@
         "locations": [
           {
             "name": "Level 090 - Chest",
-            "id": 30000031,
+            "id": 30000032,
             "access_rule": {
               "rule": "True_"
             },
@@ -8899,9 +9029,17 @@
         "type": null,
         "max_count": 1
       },
+      "Ghost Spear": {
+        "name": "Ghost Spear",
+        "id": 30000002,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Green Key": {
         "name": "Green Key",
-        "id": 30000002,
+        "id": 30000003,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -8909,7 +9047,7 @@
       },
       "Light": {
         "name": "Light",
-        "id": 30000003,
+        "id": 30000004,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -8917,7 +9055,7 @@
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
-        "id": 30000004,
+        "id": 30000005,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -8925,7 +9063,7 @@
       },
       "Progressive Swim": {
         "name": "Progressive Swim",
-        "id": 30000005,
+        "id": 30000006,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -8933,7 +9071,7 @@
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
-        "id": 30000006,
+        "id": 30000007,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -8941,7 +9079,7 @@
       },
       "Purple Key": {
         "name": "Purple Key",
-        "id": 30000007,
+        "id": 30000008,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -8949,7 +9087,7 @@
       },
       "Red Key": {
         "name": "Red Key",
-        "id": 30000008,
+        "id": 30000009,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -8957,7 +9095,7 @@
       },
       "Seal": {
         "name": "Seal",
-        "id": 30000009,
+        "id": 30000010,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -8965,7 +9103,7 @@
       },
       "Totem Shard": {
         "name": "Totem Shard",
-        "id": 30000010,
+        "id": 30000011,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -8973,7 +9111,7 @@
       },
       "Wand": {
         "name": "Wand",
-        "id": 30000011,
+        "id": 30000012,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -8981,7 +9119,7 @@
       },
       "Yellow Key": {
         "name": "Yellow Key",
-        "id": 30000012,
+        "id": 30000013,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -9185,6 +9323,28 @@
         "type": "Event",
         "max_count": 1
       },
+      "L63 flag 6: lightpole@48,272 cleared": {
+        "name": "L63 flag 6: lightpole@48,272 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L63 flag 7: lightpole@112,272 cleared": {
+        "name": "L63 flag 7: lightpole@112,272 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L16 flag 0: rope@32,16 cleared": {
         "name": "L16 flag 0: rope@32,16 cleared",
         "id": null,
@@ -9226,6 +9386,7 @@
       "Wand": 1,
       "Progressive Swim": 2,
       "Blue Key": 1,
+      "Ghost Spear": 1,
       "Yellow Key": 1,
       "L0 flag 1: breakablerock@288,176 cleared": 1,
       "L0 flag 4: breakablerock@80,112 cleared": 1,
@@ -9245,6 +9406,8 @@
       "L39 flag 8: wandlock@144,592 cleared": 1,
       "L62 flag 0: lightpole@120,200 cleared": 1,
       "L63 flag 1: lightpole@64,88 cleared": 1,
+      "L63 flag 6: lightpole@48,272 cleared": 1,
+      "L63 flag 7: lightpole@112,272 cleared": 1,
       "L16 flag 0: rope@32,16 cleared": 1,
       "L28 flag 0: rope@160,64 cleared": 1
     }
@@ -9278,7 +9441,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-d602dee1",
+      "atlas_id": "seedling-e3012bb3",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -47032,13 +47195,14 @@
       },
       "level_62": {
         "substrate": "maze",
+        "shared_world": "level_62",
         "playable_payload": {
           "width": 20,
           "height": 20,
-          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,1,1,0,0,0,0,1,0,1,1,1,0,1,1,1,1,1,1,1,0,1,0,0,1,1,0,0,0,0,1,1,0,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1],
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,1,1,0,0,0,0,1,0,1,1,1,0,1,1,1,1,1,1,1,0,1,0,0,1,1,0,0,0,0,1,1,0,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1],
           "entrance": {
-            "x": 7,
-            "y": 5
+            "x": 3,
+            "y": 18
           },
           "exits": [
             {
@@ -47064,6 +47228,17 @@
               "atlas_exit_id": "out_teleporter_96_304"
             },
             {
+              "exit_id": "level_62 -> level_64",
+              "x": 7,
+              "y": 4,
+              "side": null,
+              "exitName": "level_62 -> level_64",
+              "targetRegion": "level_64",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_112_64"
+            },
+            {
               "exit_id": "level_62 -> level_63__r0c1",
               "x": 12,
               "y": 19,
@@ -47086,9 +47261,129 @@
               "atlas_exit_id": "out_teleporter_240_304"
             }
           ],
-          "obstacles": [],
+          "obstacles": [
+            {
+              "x": 7,
+              "y": 13,
+              "id": "pole_120_200"
+            }
+          ],
           "items": [],
-          "obstacleLib": {},
+          "obstacleLib": {
+            "pole_120_200": {
+              "id": "pole_120_200",
+              "name": "lightpole@120,200",
+              "kind": "pole",
+              "clear_set": [
+                [
+                  "lit_120_200"
+                ]
+              ],
+              "struck_by": [
+                "spear"
+              ],
+              "struck_from": {
+                "spear": [
+                  "8,10,S",
+                  "8,11,S",
+                  "7,12,E",
+                  "7,12,N",
+                  "8,12,W",
+                  "8,12,S",
+                  "7,14,N"
+                ]
+              },
+              "activates": "lit_120_200",
+              "at": "7,13",
+              "opened_by": "L62 flag 0: lightpole@120,200 cleared",
+              "color": "#d8c84a"
+            }
+          },
+          "action_lib": {
+            "spear": {
+              "item": "Ghost Spear",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "z",
+              "footprint": {
+                "N": [
+                  [
+                    0,
+                    -2
+                  ],
+                  [
+                    0,
+                    -1
+                  ]
+                ],
+                "E": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "S": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    0,
+                    2
+                  ]
+                ],
+                "W": [
+                  [
+                    -2,
+                    0
+                  ],
+                  [
+                    -1,
+                    0
+                  ]
+                ]
+              }
+            }
+          },
+          "shared_world": {
+            "key": "level_62",
+            "regions": [
+              "level_62"
+            ],
+            "rows": [
+              "....................",
+              "....................",
+              "....................",
+              "....................",
+              ".......A............",
+              ".......A............",
+              ".......A............",
+              ".......A............",
+              ".......A............",
+              ".......AA...........",
+              ".......AA...........",
+              "........A...........",
+              ".......AA...........",
+              ".......AA...........",
+              ".......A............",
+              "...AAAAAAAAAAAAA....",
+              "...A...AA.....AA....",
+              "...A..AAAA.A...A....",
+              "...A.AA..AAAA..A....",
+              "...A..A.....A..A...."
+            ],
+            "entrances": {
+              "level_62": {
+                "x": 3,
+                "y": 18
+              }
+            },
+            "links": {}
+          },
           "atlas_region": "level_62",
           "level": 62,
           "tile_size": 16,
@@ -47218,6 +47513,16 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 5,
+              "y": 4,
+              "id": "pole_64_88"
+            },
+            {
+              "x": 4,
+              "y": 6,
+              "id": "pole_64_88"
+            },
+            {
               "x": 14,
               "y": 6,
               "id": "atlas_gate_1"
@@ -47241,6 +47546,16 @@
               "x": 2,
               "y": 9,
               "id": "atlas_gate_2"
+            },
+            {
+              "x": 2,
+              "y": 17,
+              "id": "pole_48_272"
+            },
+            {
+              "x": 8,
+              "y": 17,
+              "id": "pole_112_272"
             }
           ],
           "items": [
@@ -47258,6 +47573,86 @@
             }
           ],
           "obstacleLib": {
+            "pole_64_88": {
+              "id": "pole_64_88",
+              "name": "lightpole@64,88",
+              "kind": "pole",
+              "clear_set": [
+                [
+                  "lit_64_88"
+                ]
+              ],
+              "struck_by": [
+                "spear"
+              ],
+              "struck_from": {
+                "spear": [
+                  "4,3,S",
+                  "4,4,S",
+                  "2,5,E",
+                  "5,5,W",
+                  "4,7,N"
+                ]
+              },
+              "activates": "lit_64_88",
+              "at": "4,6",
+              "opened_by": "L63 flag 1: lightpole@64,88 cleared",
+              "color": "#d8c84a"
+            },
+            "pole_48_272": {
+              "id": "pole_48_272",
+              "name": "lightpole@48,272",
+              "kind": "pole",
+              "clear_set": [
+                [
+                  "lit_48_272"
+                ]
+              ],
+              "struck_by": [
+                "spear"
+              ],
+              "struck_from": {
+                "spear": [
+                  "3,15,S",
+                  "2,16,E",
+                  "3,16,E",
+                  "3,16,N",
+                  "3,16,W",
+                  "3,16,S"
+                ]
+              },
+              "activates": "lit_48_272",
+              "at": "2,17",
+              "event": "L63 flag 6: lightpole@48,272 cleared",
+              "color": "#d8c84a"
+            },
+            "pole_112_272": {
+              "id": "pole_112_272",
+              "name": "lightpole@112,272",
+              "kind": "pole",
+              "clear_set": [
+                [
+                  "lit_112_272"
+                ]
+              ],
+              "struck_by": [
+                "spear"
+              ],
+              "struck_from": {
+                "spear": [
+                  "7,15,S",
+                  "7,16,E",
+                  "7,16,N",
+                  "7,16,W",
+                  "7,16,S",
+                  "8,16,W"
+                ]
+              },
+              "activates": "lit_112_272",
+              "at": "8,17",
+              "event": "L63 flag 7: lightpole@112,272 cleared",
+              "color": "#d8c84a"
+            },
             "atlas_gate_0": {
               "id": "atlas_gate_0",
               "name": "Progressive Swim",
@@ -47939,6 +48334,48 @@
       "level_63__r10c2": {
         "substrate": "maze",
         "shared_world": "level_63"
+      },
+      "level_64": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 7,
+          "height": 7,
+          "tiles": [1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1,1],
+          "entrance": {
+            "x": 1,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_64 -> level_62",
+              "x": 2,
+              "y": 6,
+              "side": null,
+              "exitName": "level_64 -> level_62",
+              "targetRegion": "level_62",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_32_96"
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 4,
+              "y": 1,
+              "id": "Ghost Spear",
+              "locationName": "Level 064 - Ghostspear"
+            }
+          ],
+          "obstacleLib": {},
+          "atlas_region": "level_64",
+          "level": 64,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
       },
       "level_67__r3c2": {
         "substrate": "maze",
@@ -52354,8 +52791,12 @@
               "L62 flag 0: lightpole@120,200 cleared": 1
             }
           },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
+          "new_accessible_locations": [
+            "Level 064 - Ghostspear"
+          ],
+          "new_accessible_regions": [
+            "level_64"
+          ],
           "sphere_locations": [
             "L62 flag 0: lightpole@120,200 cleared"
           ]
@@ -52659,6 +53100,144 @@
           "new_accessible_regions": [],
           "sphere_locations": [
             "Level 040 - Totem Part 64,144"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "7.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Ghost Spear": 1
+            },
+            "resolved_items": {
+              "Ghost Spear": 1
+            }
+          },
+          "new_accessible_locations": [
+            "L63 flag 6: lightpole@48,272 cleared",
+            "L63 flag 7: lightpole@112,272 cleared",
+            "Level 067 - Boss Key 4"
+          ],
+          "new_accessible_regions": [
+            "level_61__r13c12",
+            "level_63__r10c2",
+            "level_63__r6c9",
+            "level_67__r3c2"
+          ],
+          "sphere_locations": [
+            "Level 064 - Ghostspear"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L63 flag 6: lightpole@48,272 cleared": 1
+            },
+            "resolved_items": {
+              "L63 flag 6: lightpole@48,272 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L63 flag 6: lightpole@48,272 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L63 flag 7: lightpole@112,272 cleared": 1
+            },
+            "resolved_items": {
+              "L63 flag 7: lightpole@112,272 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L63 flag 7: lightpole@112,272 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Yellow Key": 1
+            },
+            "resolved_items": {
+              "Yellow Key": 1
+            }
+          },
+          "new_accessible_locations": [
+            "L12 flag 11: bosslock@112,192 cleared",
+            "L12 flag 12: bosslock@32,864 cleared"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 067 - Boss Key 4"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L12 flag 11: bosslock@112,192 cleared": 1
+            },
+            "resolved_items": {
+              "L12 flag 11: bosslock@112,192 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L12 flag 11: bosslock@112,192 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "L12 flag 12: bosslock@32,864 cleared": 1
+            },
+            "resolved_items": {
+              "L12 flag 12: bosslock@32,864 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L12 flag 12: bosslock@32,864 cleared"
           ]
         }
       }

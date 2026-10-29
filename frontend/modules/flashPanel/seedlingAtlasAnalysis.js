@@ -14,10 +14,15 @@
 import { analyzeRegion, applyRegionAnalysis } from '../procgenPipeline/regionAtlasAnalyzer.js';
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import { arrowLane, arrowTrapEntityPoint } from '../seedlingDemo/arrowTrap.js';
-import { weaponFootprint } from './seedlingWeaponFootprints.js';
+import { weaponFootprint, FOOTPRINT_FACINGS } from './seedlingWeaponFootprints.js';
 import {
     ropesOf, ropeVerdict, ropeEventName, ropeEventCondition, ropeLaneCharges,
+    poleKillsOf, poleThrustStances, POLE_LIGHT_ARM, obstacleEventName,
 } from './seedlingObstacleEvents.js';
+import { buildLevelWorld, combatCensusOf, rectsOverlap } from '../seedlingDemo/levelWorld.js';
+import { contactRect } from '../seedlingDemo/combat.js';
+import { spearHitRect, pressRectTouches } from '../seedlingDemo/presses.js';
+import { DARKTRAP_LIGHT_DEATH } from '../seedlingDemo/enemyDamage.js';
 
 import {
     buildSeedlingRegionGrid,
@@ -266,6 +271,8 @@ export const SEEDLING_LEVEL_WORLD_CLASSES = Object.freeze({
     ArrowTrap: 'trap',
     // ⛓ STRUCK BLOCKS (session tile-primitives-sphere-order-2, ⚖ 2026-10-26 "Reach-2 strike-push").
     PushableBlockSpear: 'block',
+    // ⛓ LIGHTPOLES (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances").
+    LightPole: 'pole',
 });
 
 /** `hasSword` → `sword`: an action id from the engine flag the semantics row names. */
@@ -292,6 +299,13 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *           wall, rocks included, doors INCLUDED: an arrival there is in the lane)
  *           over `grid`; `charges` = the conditions the atlas charged that lane
  *           with (a minted rope's event), which the trap now MODELS
+ *   pole    a LightPole whose light, lit, kills DarkTraps (`poleKillsOf`, the rules' own; an `invert`ed pole or one
+ *           that reaches none is no row): `tiles` = the killed bodies' cells (each DarkTrap's contact rect is its one
+ *           tile — refused by name otherwise), `event` = the pole's flag event (`obstacleEventName`), and ONE strike —
+ *           the arm (`POLE_LIGHT_ARM`: a Spear thrust; the Ghost Sword is not an arm, as in the rules) — carrying its
+ *           `stances` `[[x, y, F]…]`: the rules' own `poleThrustStances` over `grid` (tile centre, the pole's real
+ *           bob box, the bodies avoided). A pole is not tile-aligned, so no footprint class can stand for it
+ *           (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances").
  *
  * A rock (or rope) whose condition is not a flag or an any-of flags is REFUSED by
  * name. Each flag binds one strike: one item (`item`), or for a ROCK a conjunction
@@ -316,6 +330,11 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null } =
         const label = `${entity.type}@${entity.x},${entity.y}`;
         if (kind === 'trap') {
             rows.push(trapRow(entity, label, minted, grid));
+            continue;
+        }
+        if (kind === 'pole') {
+            const row = poleRow(level, entity, label, resolveCondition, grid);
+            if (row) rows.push(row);
             continue;
         }
         const rope = kind === 'rope' ? minted.find((r) => r.x === entity.x && r.y === entity.y) : null;
@@ -359,6 +378,50 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null } =
         rows.push(row);
     }
     return rows;
+}
+
+/** The model the rules' pole functions read (`poleKillsOf`), injected as the rules producer does. */
+const POLE_MODEL = Object.freeze({ buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH });
+/** The maze facing of a game `direction` (`FOOTPRINT_FACINGS`, inverted). */
+const FACING_OF_DIR = new Map(Object.entries(FOOTPRINT_FACINGS).map(([f, d]) => [d, f]));
+
+/** One LightPole's level-world row, or null when its light kills nothing (see `seedlingLevelEntities`). */
+function poleRow(level, entity, label, resolveCondition, grid) {
+    const bodies = poleKillsOf(level, entity, POLE_MODEL);
+    if (!bodies) return null;
+    if (!grid) throw new Error(`${label}: a pole's stances need the level's grid`);
+    if ((grid.origin?.x ?? 0) !== 0 || (grid.origin?.y ?? 0) !== 0) {
+        throw new Error(`${label}: the stances are read on a whole-level grid (origin 0), got ${JSON.stringify(grid.origin)}`);
+    }
+    const tiles = bodies.map((b) => {
+        const [x, y] = [b.rect.x / TILE, b.rect.y / TILE];
+        if (!Number.isInteger(x) || !Number.isInteger(y) || b.rect.w !== TILE || b.rect.h !== TILE) {
+            throw new Error(`${label}: the body ${b.id} it kills is ${JSON.stringify(b.rect)}, not one tile — a maze cell cannot hold it`);
+        }
+        return [x, y];
+    });
+    const pole = buildLevelWorld(level).pressResponders.find((r) => r.as3 === 'LightPole' && r.x === entity.x && r.y === entity.y);
+    const walkable = (tx, ty) => {
+        const kind = tx >= 0 && ty >= 0 && tx < grid.width && ty < grid.height ? grid.cells[ty * grid.width + tx]?.kind : null;
+        return kind === 'open' || kind === 'manual';
+    };
+    const stances = poleThrustStances(pole.rect, {
+        width: grid.width, height: grid.height, origin: grid.origin, tile: TILE, walkable,
+        avoid: bodies.map((b) => b.rect), spearHitRect, pressRectTouches, rectsOverlap,
+    }).flatMap(({ tile: [x, y], dirs }) => dirs.map((d) => [x, y, FACING_OF_DIR.get(d)]));
+    if (stances.length === 0) throw new Error(`${label}: no tile of its level is a stance — nothing lights it`);
+    const rule = resolveCondition({ flag: POLE_LIGHT_ARM.item });
+    if (rule?.rule !== 'Has' || (rule.args?.count ?? 1) !== 1) {
+        throw new Error(`${label}: the arm ${POLE_LIGHT_ARM.item} resolves to ${JSON.stringify(rule)}, not one Has`);
+    }
+    const action = actionIdOfFlag(POLE_LIGHT_ARM.item);
+    return {
+        kind: 'pole',
+        tiles,
+        label,
+        event: obstacleEventName({ level: level.level, tag: Number(entity.attrs?.tag), cls: entity.type, x: entity.x, y: entity.y }),
+        strike: [{ action, item: rule.args.item_name, footprint: weaponFootprint(action), stances }],
+    };
 }
 
 /** One ArrowTrap's level-world row (see `seedlingLevelEntities`). */

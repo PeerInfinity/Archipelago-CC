@@ -25,6 +25,9 @@
  * and L40 r23c29 (the shared world whose Fire cells carry the corpse ruling; 7.5 s native, 78 s scripted, measured 2026-10-28).
  * And sphere 5.6's two cross-room presses (session tile-primitives-sphere-order-7): L61 r0c10 (it lights L63's pole) and L63 r0c1 (it lights
  * L62's), each a location on its ButtonRoom's cell.
+ * And sphere 6.1's poles (⚖ user 2026-10-28, session tile-primitives-lightpoles: "Add L62 + L63 r10c2"): L62 (the cross-room pole's DarkTrap,
+ * opened by L63's press or a thrust from a stance, priced from the L64 pocket landing too) and L63 r10c2 (an in-room pole's event, a thrust
+ * from its stances); ~15 s scripted with L63's other two regions, measured 2026-10-28.
  * L89 r1c10 → L91, the one open problem sphere-order-7 named (⚖ 2026-10-28 "Ask for a game probe"), is CLOSED: the L91 teleporter
  * stands on a waterfall tile, the game probe sided with the world's Feather (Swim×2), and the rules producer now charges it
  * (session rules-waterfall-door).
@@ -50,7 +53,7 @@ const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
     'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
     'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32', 'level_38',
-    'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1'];
+    'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1', 'level_62', 'level_63__r10c2'];
 const PERMISSIVE = playthroughPermissiveLocations();
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
