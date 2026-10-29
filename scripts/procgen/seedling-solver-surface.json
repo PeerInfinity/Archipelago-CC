@@ -2493,9 +2493,9 @@
       "class": "seedling",
       "form": "geometry-query",
       "files": {
-        "botDriverV2.js": 1
+        "botDriverV2.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "both",
       "via": [
         "param"
@@ -4341,7 +4341,7 @@
       "files": {
         "arrowLaneCrossing.js": 4,
         "axePricedCrossing.js": 4,
-        "botDriverV2.js": 5,
+        "botDriverV2.js": 6,
         "crusherBait.js": 4,
         "dangerMap.js": 6,
         "forcedHit.js": 5,
@@ -4349,7 +4349,7 @@
         "solverBot.js": 139,
         "strikePolicy.js": 2
       },
-      "sites": 172,
+      "sites": 173,
       "seen": "static",
       "via": [
         "import"
@@ -5369,12 +5369,12 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "botDriverV2.js": 49,
+        "botDriverV2.js": 54,
         "bulbPlacement.js": 2,
         "crusherBait.js": 4,
         "solverBot.js": 225
       },
-      "sites": 280,
+      "sites": 285,
       "seen": "static",
       "via": [
         "import"
@@ -7201,9 +7201,9 @@
       "class": "seedling",
       "form": "function",
       "files": {
-        "botDriverV2.js": 3
+        "botDriverV2.js": 4
       },
-      "sites": 3,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"
