@@ -25,6 +25,9 @@
  * and L40 r23c29 (the shared world whose Fire cells carry the corpse ruling; 7.5 s native, 78 s scripted, measured 2026-10-28).
  * And sphere 5.6's two cross-room presses (session tile-primitives-sphere-order-7): L61 r0c10 (it lights L63's pole) and L63 r0c1 (it lights
  * L62's), each a location on its ButtonRoom's cell.
+ * And sphere 6.1's poles (⚖ user 2026-10-28, session tile-primitives-lightpoles: "Add L62 + L63 r10c2"): L62 (the cross-room pole's DarkTrap,
+ * opened by L63's press or a thrust from a stance, priced from the L64 pocket landing too) and L63 r10c2 (an in-room pole's event, a thrust
+ * from its stances); ~15 s scripted with L63's other two regions, measured 2026-10-28.
  * L89 r1c10 → L91, the one open problem sphere-order-7 named (⚖ 2026-10-28 "Ask for a game probe"), is CLOSED: the L91 teleporter
  * stands on a waterfall tile, the game probe sided with the world's Feather (Swim×2), and the rules producer now charges it
  * (session rules-waterfall-door).
@@ -50,7 +53,7 @@ const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
     'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
     'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32', 'level_38',
-    'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1'];
+    'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1', 'level_62', 'level_63__r10c2'];
 const PERMISSIVE = playthroughPermissiveLocations();
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -65,7 +68,7 @@ const withExitRule = (from, to, rule) => {
 describe('seedling_playthrough_maze — every region certified against the atlas at every subset', () => {
     let sampleLines;
     it('native engine, every region', () => {
-        const { problems, lines, accepted } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
+        const { problems, lines, accepted, skipped } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
         expect(problems).toEqual([]);
         expect(lines.length).toBeGreaterThan(0);
         expect(accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
@@ -74,6 +77,59 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_39__r25c9 → level_39__r2c11 | L39 flag 8: wandlock@144,592 cleared',
             'level_89__r9c6 @ Level 089 - Feather (from level_89__r11c12) | the rules producer leaves level_89/Level 089 - Feather uncharged (permissiveBindings)',
             'level_91 → level_89__r1c10 (landing 15,4) | Progressive Swim',
+        ]);
+        // ⛓ THE SKIP CENSUS (session tile-primitives-lightpoles, designer review): every row whose LANDING arrival has points no AP
+        // crossing landing there admits — counted and named, so a new skip is a diff here, never silence. L62/L63/L64 are the pole
+        // pockets; the rest are landings whose AP crossings already cost an item (water, a lock, a weapon) at that cell.
+        expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}`)).toEqual([
+            'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
+            'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
+            'level_0__r11c19 → level_12__r0c19 (landing 18,11) | 21/48',
+            'level_5__r1c1 → level_12__r13c6 (landing 1,2) | 1/2',
+            'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 3/16',
+            'level_12__r40c4 → level_12__r0c19 (landing 2,44) | 3/16',
+            'level_12__r40c4 → level_24 (landing 2,44) | 3/16',
+            'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
+            'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 2/4',
+            'level_24 → level_12__r40c4 (landing 3,8) | 2/4',
+            'level_24 → level_23 (landing 3,8) | 2/4',
+            'level_48__r7c0 → level_48__r4c3 (landing 1,7) | 1/2',
+            'level_48__r7c0 → level_53__r2c2 (landing 1,7) | 1/2',
+            'level_49 @ Level 049 - Conch (landing 2,7) | 1/2',
+            'level_49 → level_50 (landing 2,7) | 1/2',
+            'level_50 → level_49 (landing 2,1) | 1/2',
+            'level_50 → level_51__r3c10 (landing 2,1) | 1/2',
+            'level_51__r3c10 → level_50 (landing 9,1) | 1/2',
+            'level_51__r3c10 → level_53__r2c2 (landing 9,1) | 1/2',
+            'level_51__r14c6 → level_52__r5c10 (landing 15,16) | 1/2',
+            'level_52__r0c7 → level_52__r2c2 (landing 7,1) | 1/3',
+            'level_52__r0c7 → level_52__r5c10 (landing 7,1) | 1/3',
+            'level_52__r0c7 → level_54__r27c8 (landing 7,1) | 1/3',
+            'level_52__r2c2 → level_52__r0c7 (landing 1,3) | 1/3',
+            'level_52__r2c2 → level_52__r5c10 (landing 1,3) | 1/3',
+            'level_52__r2c2 → level_55 (landing 1,3) | 1/3',
+            'level_52__r5c10 → level_52__r0c7 (landing 1,7) | 1/3',
+            'level_52__r5c10 → level_52__r2c2 (landing 1,7) | 1/3',
+            'level_52__r5c10 → level_51__r14c6 (landing 1,7) | 1/3',
+            'level_52__r5c10 → level_56 (landing 1,7) | 1/3',
+            'level_54__r1c8 → level_53__r14c9 (landing 9,1) | 1/3',
+            'level_54__r27c8 → level_52__r0c7 (landing 8,28) | 1/3',
+            'level_55 @ Level 055 - Boss Key 3 (landing 4,3) | 1/2',
+            'level_55 → level_52__r2c2 (landing 4,3) | 1/2',
+            'level_56 → level_52__r5c10 (landing 1,7) | 1/2',
+            'level_62 → level_61__r0c7 (landing 7,5) | 1/4',
+            'level_62 → level_61__r0c10 (landing 7,5) | 1/4',
+            'level_62 → level_64 (landing 7,5) | 1/4',
+            'level_62 → level_63__r0c1 (landing 7,5) | 2/8',
+            'level_63__r0c1 @ L62 flag 0: lightpole@120,200 cleared (landing 4,1) | 6/96',
+            'level_63__r0c1 → level_61__r0c10 (landing 4,1) | 6/96',
+            'level_63__r0c1 → level_61__r0c7 (landing 4,1) | 6/96',
+            'level_63__r0c1 → level_62 (landing 4,1) | 6/96',
+            'level_64 → level_62 (landing 2,5) | 1/4',
+            'level_89__r11c12 → level_0__r2c13 (landing 10,18) | 1/3',
+            'level_89__r11c12 → level_87__r1c3 (landing 10,18) | 1/3',
+            'level_91 → level_89__r1c10 (landing 1,8) | 2/3',
+            'level_91 → level_92__r4c2 (landing 1,8) | 2/3',
         ]);
         sampleLines = certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE }).lines;
         // ⛓ Sphere 2.2 (session tile-primitives-sphere-order-3): L28's rope drops its fallrock on the grass lock's button. The maze

@@ -310,3 +310,131 @@ describe('the glue — menuPanel:restarted re-takes the start hop when the start
         expect(h.glue.stats.restarts).toBe(0);
     });
 });
+
+/**
+ * ⛔ THE RESTART HOLD (found by `seedling-js-panel-restart`; ⚖ the user 2026-10-28, "Fix it"): the arrival watch
+ * `expectBotArrivals` arms HOLDS the landing until the bot's next goal. Only a stopped walk has one coming, so a
+ * Restart arms it only when `stopBotWalks()` stopped one — the same gate as `teleportTool`. Before, it armed
+ * unconditionally, and on wasm a hand walk after a Restart was stranded (`held: true`, 0 ticks).
+ */
+describe('handleMenuRestart — the arrival watch only behind a stopped walk', () => {
+    function harness({ walks }) {
+        const subs = new Map();
+        const eventBus = { subscribe: (n, fn) => { subs.set(n, fn); return () => subs.delete(n); }, publish: () => {} };
+        const expects = vi.fn(() => 1);
+        const glue = new SeedlingRegionGlue({
+            eventBus,
+            getDispatcher: () => ({ publish: () => {} }),
+            loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
+            getProcgen: () => ({
+                getResolvedStartRegion: () => 's',
+                getRegionInfo: (r) => (r === 's' ? { substrate: FLASH_SEEDLING_SUBSTRATE_ID } : null),
+                retakeStartHop: () => ({ taken: true, why: null, region: 's' }),
+            }),
+            stopBotWalks: () => walks,
+            expectBotArrivals: expects,
+        });
+        glue.start();
+        return { glue, expects, restart: (p) => subs.get(RESTARTED_EVENT)(p) };
+    }
+    /** The row's claim: a Restart with no walk arms nothing, and records `watching: 0`. */
+    const noWalkArmsNothing = (h) => {
+        h.restart({ mode: 'world' });
+        return h.expects.mock.calls.length === 0 && h.glue.lastRestart.watching === 0 && h.glue.lastRestart.taken === true;
+    };
+
+    it('no walk in flight: nothing watches, so no hold strands a player who walks by hand', () => {
+        const h = harness({ walks: 0 });
+        expect(noWalkArmsNothing(h)).toBe(true);
+        expect(h.glue.lastRestart).toMatchObject({ taken: true, stoppedWalks: 0, watching: 0 });
+    });
+
+    it('a walk in flight was stopped (Restart mid-walk): the engines watch for the hop\'s landing', () => {
+        const h = harness({ walks: 1 });
+        h.restart({ mode: 'world' });
+        expect(h.expects).toHaveBeenCalledTimes(1);
+        expect(h.glue.lastRestart).toMatchObject({ taken: true, stoppedWalks: 1, watching: 1 });
+    });
+
+    it('MUTANT: the unconditional arm (main before this fix) fails the no-walk row', () => {
+        const h = harness({ walks: 0 });
+        const real = SeedlingRegionGlue.prototype.handleMenuRestart;
+        // the pre-fix shape: whatever the stop returned, the watch is armed after it
+        h.glue.handleMenuRestart = function unconditional(payload) {
+            const stop = this.stopBotWalks;
+            this.stopBotWalks = () => { const n = stop(); this.expectBotArrivals(); return n; };
+            try { return real.call(this, payload); } finally { this.stopBotWalks = stop; }
+        };
+        expect(noWalkArmsNothing(h)).toBe(false);
+        expect(h.expects).toHaveBeenCalledTimes(1);
+    });
+});
+
+/**
+ * ⛔ THE RESTART HOLD, part 2 (⚖ js-12 2026-10-28, option (a)): `stopBotWalks` (`stopBotWalksOf`) COUNTS only the
+ * controllers that were `busy()`. An idle wasm engine left driving / gated / frozen by earlier work is still stopped
+ * (its gate released) but is no walk: it counted once, and in the seedling-wasm batch a Restart with no walk read
+ * 1 stopped / 2 watching and held the hand walk after it (TT 40812209196).
+ */
+describe('stopBotWalksOf — only a busy controller is a stopped walk; the Restart arms on that count', () => {
+    const controller = ({ busy = false, wasm = null } = {}) => ({ busy: () => busy, status: () => (wasm ? { wasm } : null), stop: vi.fn() });
+    const idleDriving = () => controller({ wasm: { phase: 'idle', driving: true, gate: false, frozen: false } });
+    const walking = () => controller({ busy: true, wasm: { phase: 'latching', driving: true, gate: false, frozen: false } });
+    /** The pre-(a) count (main's `flashPanel/index.js`): every controller it stopped. */
+    const countEveryStop = (cs) => cs.filter((c) => {
+        if (c?.busy?.() === true) return true;
+        const w = c?.status?.()?.wasm ?? null;
+        return !!(w && (w.driving || w.gate || w.frozen));
+    }).map((c) => c.stop()).length;
+    const restartOver = (stopBotWalks) => {
+        const subs = new Map();
+        const expects = vi.fn(() => 1);
+        const glue = new SeedlingRegionGlue({
+            eventBus: { subscribe: (n, fn) => { subs.set(n, fn); return () => subs.delete(n); }, publish: () => {} },
+            getDispatcher: () => ({ publish: () => {} }),
+            loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
+            getProcgen: () => ({
+                getResolvedStartRegion: () => 's',
+                getRegionInfo: (r) => (r === 's' ? { substrate: FLASH_SEEDLING_SUBSTRATE_ID } : null),
+                retakeStartHop: () => ({ taken: true, why: null, region: 's' }),
+            }),
+            stopBotWalks,
+            expectBotArrivals: expects,
+        });
+        glue.start();
+        subs.get(RESTARTED_EVENT)({ mode: 'world' });
+        return { verdict: glue.lastRestart, expects };
+    };
+
+    it('an idle-but-driving engine is STOPPED (its gate released) but counted 0: the Restart arms nothing', async () => {
+        const { stopBotWalksOf } = await import('./seedlingRegionGlue.js');
+        const cs = [idleDriving(), controller()];
+        const r = restartOver(() => stopBotWalksOf(cs));
+        expect(cs[0].stop).toHaveBeenCalledTimes(1);
+        expect(cs[1].stop).not.toHaveBeenCalled();
+        expect(r.expects).not.toHaveBeenCalled();
+        expect(r.verdict).toMatchObject({ taken: true, stoppedWalks: 0, watching: 0 });
+    });
+
+    it('a busy engine is a walk: counted 1, and the Restart arms', async () => {
+        const { stopBotWalksOf } = await import('./seedlingRegionGlue.js');
+        const cs = [walking(), idleDriving()];
+        const r = restartOver(() => stopBotWalksOf(cs));
+        expect(cs[0].stop).toHaveBeenCalledTimes(1);
+        expect(cs[1].stop).toHaveBeenCalledTimes(1);
+        expect(r.expects).toHaveBeenCalledTimes(1);
+        expect(r.verdict).toMatchObject({ taken: true, stoppedWalks: 1, watching: 1 });
+    });
+
+    it('MUTANT: counting every stop (main\'s count) arms behind the idle engine — the batch\'s 1 stopped, held', () => {
+        const r = restartOver(() => countEveryStop([idleDriving(), controller()]));
+        expect(r.verdict.stoppedWalks).toBe(1);
+        expect(r.expects).toHaveBeenCalledTimes(1);
+    });
+
+    it('MUTANT: counting no walk at all loses the busy walk\'s arm (the Restart mid-walk on JS)', () => {
+        const r = restartOver(() => { walking().stop(); return 0; });
+        expect(r.verdict).toMatchObject({ stoppedWalks: 0, watching: 0 });
+        expect(r.expects).not.toHaveBeenCalled();
+    });
+});

@@ -202,7 +202,8 @@ The in-app runner races the whole roster against one wall-clock budget
 `test-substrates` outgrew it, so run it in batches instead:
 ```
 npm test -- --mode=test-substrates --batch=fast          # everything no other batch claims (+ the smoke rows)
-npm test -- --mode=test-substrates --batch=seedling-js   # the Seedling JS/wasm runtime rows
+npm test -- --mode=test-substrates --batch=seedling-js   # the Seedling JS runtime rows
+npm test -- --mode=test-substrates --batch=seedling-wasm # the Seedling wasm (and Flash) runtime rows (WebGPU)
 npm test -- --mode=test-substrates --batch=playback-bot  # the Playback Bot rows (generated worlds played to the end, Loop mode too)
 npm test -- --mode=test-substrates --batch=apworld       # the apworld editor rows only (on push only when its pushPaths hit)
 npm test -- --mode=test-substrates --batch=bot-walks     # MANUAL: the real-time bot legs only

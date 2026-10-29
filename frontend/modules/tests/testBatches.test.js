@@ -77,6 +77,13 @@ describe('testBatches', () => {
         expect(listOnPushBatches()).toContain('seedling-js');
     });
 
+    it('seedling-wasm claims the Seedling wasm runtime rows, on push (split from seedling-js, 2026-10-28)', () => {
+        expect(categoryInBatch('Seedling wasm runtime', 'seedling-wasm')).toBe(true);
+        expect(categoryInBatch('Seedling wasm runtime', 'seedling-js')).toBe(false);
+        expect(categoryInBatch('Seedling wasm runtime', 'fast')).toBe(false);
+        expect(listOnPushBatches()).toContain('seedling-wasm');
+    });
+
     it('noiz2sa and runner claim their categories, and fast no longer does', () => {
         expect(categoryInBatch('noiz2saSubstrate', 'noiz2sa')).toBe(true);
         expect(categoryInBatch('runnerDemo', 'runner')).toBe(true);
@@ -99,9 +106,9 @@ describe('testBatches', () => {
         expect(batchNeedsWebgpu('tutorials-procgen-loops')).toBe(true);
     });
 
-    it('seedling-js asks for WebGPU: its Loops Bot rows boot the wasm game (Seedling loop mode, 2026-10-11)', () => {
-        expect(batchNeedsWebgpu('seedling-js')).toBe(true);
-        expect(categoryInBatch('Seedling JS runtime', 'seedling-js')).toBe(true);
+    it('seedling-wasm asks for WebGPU: its Loops Bot rows boot the wasm game (Seedling loop mode, 2026-10-11); seedling-js no longer does', () => {
+        expect(batchNeedsWebgpu('seedling-wasm')).toBe(true);
+        expect(batchNeedsWebgpu('seedling-js')).toBe(false);
     });
 
     it('tutorials-seedling claims the Seedling walk rows and asks for WebGPU (2026-10-11)', () => {

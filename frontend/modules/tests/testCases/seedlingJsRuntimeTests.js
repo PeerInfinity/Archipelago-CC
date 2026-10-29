@@ -54,6 +54,13 @@ const RUNTIME_KEY = 'moduleSettings.flashPanel.runtime';
 const CODE_FOR = Object.freeze({ left: 'ArrowLeft', right: 'ArrowRight', up: 'ArrowUp', down: 'ArrowDown' });
 const STEP_MS = 40;
 
+/**
+ * The row's CATEGORY, which picks its CI batch (testBatches.js): the JS-runtime rows are `seedling-js`; the wasm
+ * and Flash rows (a wasm row boots the recompiled game, which needs the WebGPU launch) are `seedling-wasm`. Split on
+ * 2026-10-28, when the one batch reached 94 % of its budget. Batch membership only: no row's logic depends on it.
+ */
+const seedlingRuntimeCategory = (id) => (id.startsWith('seedling-js-') ? 'Seedling JS runtime' : 'Seedling wasm runtime');
+
 function readCurrentRegion() {
     try {
         const gs = getGameStateSingleton();
@@ -416,7 +423,7 @@ registerTest({
         + 'controller (⛓ §5.36: the solver serves a location or an exit) and the bot\'s status names it '
         + '— never a silent wait. The wasm page is never started.',
     testFunction: seedlingWasmRuntimeBotNamesItsRefusal,
-    category: 'Seedling JS runtime',
+    category: 'Seedling wasm runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -2590,31 +2597,6 @@ async function withRuntimeRestored(tc, body) {
     return tc.getOverallResult();
 }
 
-/** A Bot block walks the starting house: the queued chest check, then its door into the maze child. */
-const loopBotWalksAtlasRoom = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
-    const up = await atlasPresetOn(tc, runtime, ATLAS_LOCATION_PATH, HOUSE_REGION);
-    if (!up) return;
-    const r = await seedlingLoopBotQueue(tc, runtime, [
-        { check: CHEST_LOCATION, region: HOUSE_REGION },
-        { exit: HOUSE_EXIT, from: HOUSE_REGION, to: MAZE_CHILD },
-    ]);
-    if (!r) return;
-    await tc.stateManager.pingWorker('after-loop', 5000);
-    tc.assertEqual(`[${runtime}] the Bot block walked to the chest: the game's own check reached the state manager`, true,
-        snapshotFacts(tc).checked.has(CHEST_LOCATION));
-    tc.assertEqual(`[${runtime}] the controller took the chest, then the house door`,
-        JSON.stringify([`location:${CHEST_LOCATION}`, `exit:${HOUSE_EXIT}`]), JSON.stringify(r.goals));
-    tc.assertEqual(`[${runtime}] the game took the house door itself (a pendingExit from level 86)`, true,
-        reportedExits(up.win).some((e) => e.fromLevel === 86 && e.type === 'teleporter'));
-    tc.assertEqual(`[${runtime}] gameState moved into the maze child`, MAZE_CHILD, readCurrentRegion());
-    assertLoopEndedOnItsOwn(tc, runtime, r);
-    assertSeedlingCharged(tc, runtime, r, [HOUSE_REGION]);
-    assertNoDeathNoHalt(tc, runtime, up.rt);
-});
-
-export const seedlingJsRuntimeLoopBotBlockWalksAtlasRoom = loopBotWalksAtlasRoom('js');
-export const seedlingWasmRuntimeLoopBotBlockWalksAtlasRoom = loopBotWalksAtlasRoom('wasm');
-
 const OVERWORLD = 'overworld_start__r8c0';
 const OWLS_NEST = 'owls_nest_entrance';
 const DUNGEON = 'dungeon1_room1__r0c4';
@@ -2776,7 +2758,7 @@ for (const [id, name, fn] of [
     registerTest({
         id, name, description: LOOP_GEN_DESCRIPTION(id.startsWith('seedling-js') ? 'js' : 'wasm'),
         testFunction: restoresSavedQueues(fn),
-        category: 'Seedling JS runtime',
+        category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
@@ -2909,7 +2891,7 @@ registerTest({
         + 'mode on, the house block Bot. The flash_seedling controller refuses the walk synchronously, naming the Flash '
         + 'runtime, and loops publishes loopState:botWalkFailed carrying that lastRefusal; the park is dropped.',
     testFunction: restoresSavedQueues(seedlingFlashRuntimeLoopBotBlockNamesItsStop),
-    category: 'Seedling JS runtime',
+    category: 'Seedling wasm runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -2986,6 +2968,15 @@ const loopPlayClockDrains = (runtime) => async (tc) => withRuntimeRestored(tc, a
     tc.log(`[${runtime}] hold ${JSON.stringify(hold.record)}`);
     tc.assertEqual(`[${runtime}] the row's hold took the solves (a real worker, answers delayed ${PLAY_CLOCK_HOLD_MS} ms)`,
         true, hold.record.wrapped > 0 && hold.record.started > 0 && hold.record.delivered > 0);
+    // ⛓ FOLDED from loop-bot-block-walks-atlas-room (the same queue on the same preset): the walk's own witnesses.
+    await tc.stateManager.pingWorker('after-loop', 5000);
+    tc.assertEqual(`[${runtime}] the Bot block walked to the chest: the game's own check reached the state manager`, true,
+        snapshotFacts(tc).checked.has(CHEST_LOCATION));
+    tc.assertEqual(`[${runtime}] the controller took the chest, then the house door`,
+        JSON.stringify([`location:${CHEST_LOCATION}`, `exit:${HOUSE_EXIT}`]), JSON.stringify(r.goals));
+    tc.assertEqual(`[${runtime}] the game took the house door itself (a pendingExit from level 86)`, true,
+        reportedExits(up.win).some((e) => e.fromLevel === 86 && e.type === 'teleporter'));
+    tc.assertEqual(`[${runtime}] gameState moved into the maze child`, MAZE_CHILD, readCurrentRegion());
     assertLoopEndedOnItsOwn(tc, runtime, r);
     const charged = assertSeedlingCharged(tc, runtime, r, [HOUSE_REGION]);
     tc.assertEqual(`[${runtime}] mana FELL with the game's seconds: ${charged[HOUSE_REGION].drain} for `
@@ -3068,7 +3059,8 @@ export const seedlingWasmRuntimeLoopPlayClockManaOut = loopPlayClockManaOut('was
 const PLAY_CLOCK_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on and `
     + 'the house\'s block Bot (⚖ "Drain play time too"), every solve held 3 s by the row: the reported clock stops for '
     + 'the hold and nothing is charged; the house is charged its drain price per GAME second reported (substrate:playClock), '
-    + 'each queued action its own price; the queue ends on its own.';
+    + 'each queued action its own price; the game\'s own chest check reaches the state manager, the controller takes the chest then '
+    + 'the house door, the game reports the door (a level-86 pendingExit) and gameState lands in the maze child; the queue ends on its own.';
 const MANA_OUT_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on and `
     + 'the house\'s block MANUAL with nobody at the keys: the pool cut to half a second\'s drain once parked — the idle '
     + 'game\'s clock runs, its first whole second runs the pool out by the drain alone, and the loop ends '
@@ -3091,27 +3083,17 @@ for (const [id, name, fn, description] of [
     registerTest({
         id, name, description,
         testFunction: restoresSavedQueues(fn),
-        category: 'Seedling JS runtime',
+        category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
 
-const LOOP_ROOM_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas_location, loop mode on `
-    + 'and the house\'s block set to Bot: loops hands the queued chest check and the departure to the flash_seedling '
-    + 'controller (executeVia solver); the game\'s own check completes the first, the door crossing\'s user:regionMove '
-    + 'the second, and the queue ends on its own. Mana: one charge per action at its own price, plus the play clock\'s drain per GAME second.';
 const LOOP_CROSS_DESCRIPTION = (runtime) => `With flashPanel.runtime = ${runtime} on seedling_atlas, loop mode on and every `
     + 'Seedling block set to Bot (the sword granted through the AP item path, removed after): the owl\'s-nest stairs, the '
     + 'descent into the dungeon, then the sword-gated LOGICAL link to its far sub-region (credited by the region binding, '
     + 'its user:regionMove on the next turn) — each resuming its park; the queue ends on its own; one charge per action, plus the play clock\'s drain.';
 
 for (const [id, name, fn, description] of [
-    ['seedling-js-runtime-loop-bot-block-walks-atlas-room',
-        'Seedling JS runtime: a Loops Bot block walks a real atlas room (its check, then its door)',
-        seedlingJsRuntimeLoopBotBlockWalksAtlasRoom, LOOP_ROOM_DESCRIPTION('js')],
-    ['seedling-wasm-runtime-loop-bot-block-walks-atlas-room',
-        'Seedling (wasm runtime): a Loops Bot block walks a real atlas room (its check, then its door)',
-        seedlingWasmRuntimeLoopBotBlockWalksAtlasRoom, LOOP_ROOM_DESCRIPTION('wasm')],
     ['seedling-js-runtime-loop-bot-blocks-cross-atlas-rooms',
         'Seedling JS runtime: Loops Bot blocks cross real atlas rooms and a logical link',
         seedlingJsRuntimeLoopBotBlocksCrossAtlasRooms, LOOP_CROSS_DESCRIPTION('js')],
@@ -3122,7 +3104,7 @@ for (const [id, name, fn, description] of [
     registerTest({
         id, name, description,
         testFunction: restoresSavedQueues(fn),
-        category: 'Seedling JS runtime',
+        category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
@@ -4155,7 +4137,7 @@ for (const [id, name, fn] of [
     registerTest({
         id, name, description: TOUCH_DESCRIPTION(id.startsWith('seedling-js') ? 'js' : 'wasm'),
         testFunction: fn,
-        category: 'Seedling JS runtime',
+        category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
@@ -4622,5 +4604,343 @@ registerTest({
         + 'or AP state; the iframe is removed however it ends.',
     testFunction: seedlingJsRuntimeInventoryMenu,
     category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── ⛓ THE SEEDLING PANEL'S TOOLS: RESTART, AND THE TELEPORT TOOL THROUGH THE ARRIVAL PATH ──────────────────────────
+//
+// ⚖ the user, 2026-10-28: copy the Menu panel's reset button into the Seedling panel's Tools, and check the teleport
+// tool against a walked exit. On seedling_atlas (start hop Menu → overworld_start__r8c0, level 0):
+//   RESTART — the Menu's Restart from the owl's nest is the reference spot; Tools ▸ Restart from the same place lands
+//     on it, with gameState, the binding and the glue's verdict agreeing (the Tools button calls the Menu's own
+//     `restart`, so the warp is the same handler's).
+//   TELEPORT — a WALKED exit (the owl's nest's stairs up, by keys) against Tools ▸ Go to the very spot the walk landed
+//     on, from the same room: the same AP region in gameState and the binding, the same spot, no warning, no check.
+//     The two differences are the point: the teleport names no door (the binding's `arrivedFrom` is null, the move's
+//     exit is null — main's read the stairs: a door nobody took) and adds no path entry (the Restart's warp shape).
+//     Then "TP on UI click" from a region-graph click into the dungeon, which the start has NO door to: gameState,
+//     the binding and the game all reach it (main: the vanilla `region_coords` has no atlas ids, nothing moved).
+
+const TOOLS_START = 'overworld_start__r8c0';
+const TOOLS_OWLS = 'owls_nest_entrance';
+const TOOLS_DUNGEON = 'dungeon1_room1__r0c4';
+
+/** What a walked exit or a teleport updates, read in one place: gameState, the binding, the glue, the game. */
+function toolsFacts() {
+    const glue = getSeedlingRegionGlue();
+    const game = glue?.adapter?._getFlash?.() ?? null;
+    let st = null;
+    try { const raw = game?.botStatus?.(); st = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch { st = null; }
+    // the constructor position (`new Game(level, x, y)`: what the binding teleports to, and what Go takes)
+    let rs = null;
+    try { const raw = game?.readState?.(); rs = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch { rs = null; }
+    const path = window.centralRegistry?.getPublicFunction?.('gameState', 'getPath')?.() ?? [];
+    return {
+        region: readCurrentRegion(),
+        binding: glue?.binding?.region ?? null,
+        arrivedFrom: glue?.binding?.arrivedFrom?.exit_id ?? null,
+        level: st?.level ?? null, x: st?.x ?? null, y: st?.y ?? null,
+        ctor: rs ? { x: rs.playerPositionX ?? null, y: rs.playerPositionY ?? null } : null,
+        pathLength: Array.isArray(path) ? path.length : null,
+        warnings: glue?.stats?.warnings ?? null,
+        locationChecks: glue?.stats?.locationChecks ?? null,
+    };
+}
+
+/** An AP move, the way a substrate publishes one (the binding's arrival teleports the game). */
+function toolsMove(from, to, exitName = null) {
+    getSeedlingRegionGlue()?.getDispatcher?.()?.publish?.('user:regionMove',
+        { sourceRegion: from, targetRegion: to, exitName, source: 'tests-tools-teleport' }, { initialTarget: 'bottom' });
+}
+
+/** The game, gameState and the binding all in `region` on `level`, and the spot still for 600 ms. */
+async function toolsSettledIn(tc, label, region, level, ms = 30000) {
+    let last = null;
+    let still = 0;
+    return tc.pollForValue(() => {
+        const f = toolsFacts();
+        const ok = f.region === region && f.binding === region && f.level === level;
+        still = ok && last && last.x === f.x && last.y === f.y ? still + 1 : 0;
+        last = f;
+        return ok && still >= 3 ? f : null;
+    }, label, ms, 200);
+}
+
+/**
+ * Hold the arrow key toward tile (tx, ty) until the game leaves its level (the door fires). Sent the way the panel's
+ * touch controls send it (`_sendTouchKey` → `dispatchGameKey`, with the keyCode the wasm game reads).
+ */
+async function toolsWalkInto(tc, panel, tx, ty, maxMs = 10000) {
+    const f = toolsFacts();
+    // ⛔ wasm: `readState`'s position can LAG the game (the touch-controls row's note); `botStatus` reads the player
+    // itself, its centre (+8), so the direction comes from it when it reports
+    const at = f.x !== null && f.y !== null ? { x: f.x - 8, y: f.y - 8 } : f.ctor;
+    const dx = tx * 16 - at.x;
+    const dy = ty * 16 - at.y;
+    const code = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'ArrowLeft' : 'ArrowRight') : (dy < 0 ? 'ArrowUp' : 'ArrowDown');
+    const k = { key: code, code, keyCode: { ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40 }[code] };
+    const from = f.level;
+    panel._sendTouchKey('keydown', k);
+    const t0 = performance.now();
+    try {
+        while (performance.now() - t0 < maxMs && (toolsFacts().level === from || toolsFacts().level === null)) {
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, STEP_MS));
+        }
+    } finally { panel._sendTouchKey('keyup', k); }
+    const end = toolsFacts();
+    tc.log(`walk ${code} to tile (${tx},${ty}): from ${JSON.stringify({ level: f.level, x: f.x, y: f.y, ctor: f.ctor })} `
+        + `→ ${JSON.stringify({ level: end.level, x: end.x, y: end.y, ctor: end.ctor })} in ${Math.round(performance.now() - t0)} ms`);
+    if (end.level === from) {
+        // a walk that did not cross: what gates the game's input, and where the key went
+        let st = null;
+        try { st = JSON.parse(getSeedlingRegionGlue()?.adapter?._getFlash?.()?.botStatus?.() ?? 'null'); } catch { st = null; }
+        const pick = (o, ks) => Object.fromEntries(ks.filter((n) => o && n in o).map((n) => [n, o[n]]));
+        const sameId = document.querySelectorAll(`[id="${panel.flashObjectId}"]`).length;
+        tc.log(`walk did not cross: status ${JSON.stringify(pick(st, ['receive_input', 'saw_input_refused', 'input', 'held',
+            'armed', 'arm', 'loaded', 'menu', 'menu_state', 'cutscene', 'frozen', 'finished', 'dead_frames', 'tick_count', 'buffered']))}; `
+            + `elements with the frame's id ${sameId}; `
+            + `its canvases ${document.getElementById(panel.flashObjectId)?.contentDocument?.querySelectorAll?.('canvas')?.length ?? 'none'}; `
+            + `focus ${document.activeElement?.tagName}#${document.activeElement?.id ?? ''}; held ${JSON.stringify(panel._heldKeys?.held?.() ?? null)}`);
+    }
+    return end.level !== from;
+}
+
+/** Record every `user:regionMove` published through the flash panel's dispatcher; `stop()` restores it. */
+function toolsMoveRecorder() {
+    const d = getSeedlingRegionGlue()?.getDispatcher?.();
+    const moves = [];
+    if (!d?.publish) return { moves, stop: () => {} };
+    const orig = d.publish;
+    d.publish = function publish(name, data, opts) {
+        if (name === 'user:regionMove') moves.push({ ...data });
+        return orig.call(this, name, data, opts);
+    };
+    return { moves, stop: () => { d.publish = orig; } };
+}
+
+const toolsRestartAndTeleport = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
+    const up = await atlasPresetOn(tc, runtime, ATLAS_PATH, TOOLS_START);
+    if (!up) return;
+    const { panel } = up;
+    const glue = getSeedlingRegionGlue();
+    const sameSpot = (a, b) => !!a && !!b && a.level === b.level && a.x === b.x && a.y === b.y;
+    const born = await toolsSettledIn(tc, `[${runtime}] the new game stands in ${TOOLS_START}`, TOOLS_START, 0, 60000);
+    tc.reportCondition(`[${runtime}] the new game stands in ${TOOLS_START} (level 0)`, !!born);
+    if (!born) return;
+    // ⛓ THIS ROW'S OWN STATE: the Playback Bot stopped (an earlier row may leave it running; this row walks by hand)
+    const botPanel = getBotPanel();
+    const bot = botPanel?.getBot?.() ?? botPanel ?? null;
+    tc.log(`[${runtime}] the Playback Bot before this row: ${bot ? `active ${!!bot.isActive?.()}` : 'not mounted'}; stopped`);
+    bot?.stop?.();
+    const recorder = toolsMoveRecorder();
+    const tpCheckbox = panel.teleportOnClickCheckbox;
+    const tpWas = tpCheckbox?.checked ?? false;
+    try {
+        // ── A WALKED EXIT: the owl's nest's stairs up, by keys ──
+        toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+        const nest = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the walk`, TOOLS_OWLS, 2);
+        if (!nest) { tc.reportCondition(`[${runtime}] in the owl's nest for the walk`, false); return; }
+        const movesBefore = recorder.moves.length;
+        const walkedOut = await toolsWalkInto(tc, panel, 3, 1, runtime === 'wasm' ? 20000 : 10000);
+        const walked = walkedOut ? await toolsSettledIn(tc, `[${runtime}] the walked stairs landed in the start`, TOOLS_START, 0) : null;
+        tc.reportCondition(`[${runtime}] WALKED: the stairs up crossed into ${TOOLS_START} (gameState, binding, game)`, !!walked);
+        if (!walked) return;
+        const walkedMove = recorder.moves.slice(movesBefore).find((m) => m.targetRegion === TOOLS_START) ?? null;
+
+        // ── THE TOOL TELEPORT to the spot the walk landed on, from the same room ──
+        toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+        const nest2 = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the teleport`, TOOLS_OWLS, 2);
+        if (!nest2) { tc.reportCondition(`[${runtime}] in the owl's nest for the teleport`, false); return; }
+        const pre = toolsFacts();
+        const tpBefore = recorder.moves.length;
+        panel.teleportLevelInput.value = String(walked.level);
+        panel.teleportXInput.value = String(walked.ctor?.x);
+        panel.teleportYInput.value = String(walked.ctor?.y);
+        panel.rootElement.querySelector('.flash-panel-tp-go').click();
+        const tp = await toolsSettledIn(tc, `[${runtime}] the Tools teleport landed in the start`, TOOLS_START, 0);
+        const tpMoves = recorder.moves.slice(tpBefore);
+        tc.log(`[${runtime}] WALKED ${JSON.stringify({ ...walked, move: walkedMove })}`);
+        tc.log(`[${runtime}] TELEPORTED ${JSON.stringify({ ...(tp ?? toolsFacts()), moves: tpMoves, verdict: glue.lastTeleport })}`);
+        tc.assertEqual(`[${runtime}] the teleport moved the AP region as the walk did (gameState and the binding in ${TOOLS_START})`,
+            `${TOOLS_START}/${TOOLS_START}`, `${tp?.region ?? toolsFacts().region}/${tp?.binding ?? toolsFacts().binding}`);
+        // the TILE: a walk's read can catch the player still sliding (measured y 262.3 on the JS page)
+        const tileOf = (f) => (f ? `${f.level}:${Math.floor(f.x / 16)},${Math.floor(f.y / 16)}` : null);
+        tc.assertEqual(`[${runtime}] the teleport landed on the walk's tile`, tileOf(walked), tileOf(tp));
+        tc.assertEqual(`[${runtime}] ⚖ a teleport has no door: the move names none, and the binding's arrivedFrom is null (the walk's: the stairs)`,
+            'null/null', `${JSON.stringify(tpMoves.map((m) => m.exitName).filter(Boolean)[0] ?? null)}/${JSON.stringify(tp ? tp.arrivedFrom : 'unsettled')}`);
+        tc.assertEqual(`[${runtime}] the teleport adds no path entry (the Restart's warp shape)`, pre.pathLength, tp?.pathLength ?? null);
+        tc.assertEqual(`[${runtime}] no warning and no location check from the teleport`, `${pre.warnings}/${pre.locationChecks}`,
+            `${tp?.warnings ?? null}/${tp?.locationChecks ?? null}`);
+
+        // ── "TP on UI click": a region-graph click into the dungeon, which the start has no door to ──
+        if (tpCheckbox) tpCheckbox.checked = true;
+        // the region graph's own click (`graphInteractionManager`): published as its module, the registered publisher
+        tc.eventBus.publishAs('regionGraph:nodeSelected', { nodeId: TOOLS_DUNGEON, data: {} }, 'regionGraph');
+        const dungeon = await toolsSettledIn(tc, `[${runtime}] the region-graph teleport reached the dungeon`, TOOLS_DUNGEON, 3);
+        tc.log(`[${runtime}] REGION CLICK ${JSON.stringify({ ...(dungeon ?? toolsFacts()), verdict: glue.lastTeleport })}`);
+        tc.reportCondition(`[${runtime}] TP on UI click into ${TOOLS_DUNGEON} (no door from the start): gameState, the binding and the game reach it`, !!dungeon);
+        tc.assertEqual(`[${runtime}] no warning from the region-graph teleport`, pre.warnings, toolsFacts().warnings);
+
+        // ── ⛓ THE ORDERING WITNESS (rules-4's review): the binding's no-door arrival teleport goes first, the spot
+        // second; the game must END at the spot, never at the region's first exit's spawn. A CROSS-level Go (from the
+        // dungeon, level 3) and a SAME-level Go (inside the start region, level 0), each read off `botStatus` (the
+        // player's centre = the spot + 8) once still. ──
+        const goTo = async (label, spot) => {
+            panel.teleportLevelInput.value = String(spot.level);
+            panel.teleportXInput.value = String(spot.x);
+            panel.teleportYInput.value = String(spot.y);
+            panel.rootElement.querySelector('.flash-panel-tp-go').click();
+            const at = await toolsSettledIn(tc, `[${runtime}] ${label} settled in ${TOOLS_START}`, TOOLS_START, spot.level);
+            const noDoor = glue.binding?._arrivalSpawn?.() ?? null;
+            tc.log(`[${runtime}] ORDER ${label}: asked ctor (${spot.x}, ${spot.y}); settled ${JSON.stringify(at ?? toolsFacts())}; `
+                + `the no-door spawn ${JSON.stringify(noDoor && { level: noDoor.level, x: noDoor.x, y: noDoor.y, exit: noDoor.exitId })}; `
+                + `verdict ${JSON.stringify(glue.lastTeleport)}`);
+            tc.assertEqual(`[${runtime}] ORDER ${label}: the spot asked for is not the region's no-door spawn (the witness can tell them apart)`,
+                true, !!noDoor && (noDoor.x !== spot.x || noDoor.y !== spot.y));
+            tc.assertEqual(`[${runtime}] ORDER ${label}: the game settled at the spot (botStatus centre = spot + 8), not the no-door spawn`,
+                `${spot.level}:${spot.x + 8},${spot.y + 8}`, at ? `${at.level}:${at.x},${at.y}` : 'unsettled');
+        };
+        await goTo('cross-level Go (level 3 -> 0)', { level: 0, x: 80, y: 128 });
+        await goTo('same-level Go (level 0 -> 0)', { level: 0, x: 256, y: 256 });
+
+        // ── RESTART: the Menu's, then the Tools button's, each from the owl's nest ──
+        // ⛔ LAST, after the walk: the Restart's `expectBotArrivals` arms a wasm engine's arrival watch whenever one
+        // exists (an earlier row's), and the watch HOLDS the landing until a bot goal that never comes here, so a
+        // walk after it moves nothing (CI, seedling-js batch: `held: true`, 0 ticks). Main's handler; named, not fixed.
+        toolsMove(readCurrentRegion(), TOOLS_OWLS, null);
+        tc.reportCondition(`[${runtime}] the AP move reached the owl's nest`, !!await toolsSettledIn(tc, `[${runtime}] in the owl's nest`, TOOLS_OWLS, 2));
+        window.centralRegistry.getPublicFunction('menuPanel', 'restart')();
+        const menu = await toolsSettledIn(tc, `[${runtime}] the Menu's Restart landed at the start`, TOOLS_START, 0);
+        tc.reportCondition(`[${runtime}] the Menu's Restart landed in ${TOOLS_START}`, !!menu);
+        const menuVerdict = glue.lastRestart;
+        toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+        await toolsSettledIn(tc, `[${runtime}] back in the owl's nest`, TOOLS_OWLS, 2);
+        const button = panel.rootElement?.querySelector('.flash-panel-restart') ?? null;
+        tc.assertEqual(`[${runtime}] Tools shows a Restart button on a Seedling preset`, true, !!button && button.style.display !== 'none');
+        if (!button) return;
+        const restartsBefore = glue.stats.restarts;
+        button.click();
+        const tools = await toolsSettledIn(tc, `[${runtime}] Tools ▸ Restart landed at the start`, TOOLS_START, 0);
+        tc.log(`[${runtime}] Restart: Menu ${JSON.stringify(menu)} / Tools ${JSON.stringify(tools)}`);
+        tc.assertEqual(`[${runtime}] Tools ▸ Restart lands where the Menu's Restart lands (level/x/y)`, true, sameSpot(menu, tools));
+        tc.assertEqual(`[${runtime}] the glue's own Restart handler took it (a new verdict, the hop re-taken, one more restart)`,
+            'true/true/1', `${glue.lastRestart !== menuVerdict}/${glue.lastRestart?.taken}/${glue.stats.restarts - restartsBefore}`);
+        let held = null;
+        try { held = JSON.parse(glue.adapter?._getFlash?.()?.botStatus?.() ?? 'null')?.held ?? null; } catch { held = null; }
+        tc.log(`[${runtime}] after Tools ▸ Restart: the engines watching ${glue.lastRestart?.watching}; the game held ${held}`);
+        assertNoDeathNoHalt(tc, runtime, up.rt);
+    } finally {
+        recorder.stop();
+        if (tpCheckbox) tpCheckbox.checked = tpWas;
+    }
+});
+
+export const seedlingJsRuntimeToolsRestartTeleport = toolsRestartAndTeleport('js');
+export const seedlingWasmRuntimeToolsRestartTeleport = toolsRestartAndTeleport('wasm');
+
+for (const [runtime, fn] of [['js', seedlingJsRuntimeToolsRestartTeleport], ['wasm', seedlingWasmRuntimeToolsRestartTeleport]]) {
+    registerTest({
+        id: `seedling-${runtime}-runtime-tools-restart-teleport`,
+        name: `Seedling ${runtime === 'js' ? 'JS' : 'wasm'} runtime: Tools ▸ Restart lands as the Menu's; a Tools teleport updates what a walked exit does`,
+        description: `On seedling_atlas with flashPanel.runtime = ${runtime}: the Menu's Restart from the owl's nest sets the reference spot `
+            + 'and Tools ▸ Restart lands on it (the glue\'s own handler re-took the hop). Then a WALKED exit (the owl\'s nest stairs, '
+            + 'by keys) against Tools ▸ Go to the spot it landed on: the same AP region in gameState and the binding, the same spot, '
+            + 'no door named, no path entry, no warning. Then TP on UI click into the dungeon (no door from the start) reaches it.',
+        testFunction: fn,
+        category: seedlingRuntimeCategory(`seedling-${runtime}-runtime-tools-restart-teleport`),
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+// ── ⛔ THE RESTART HOLD: a Restart with no walk arms nothing, so a hand walk after it moves (wasm) ─────────────────
+//
+// `handleMenuRestart` used to arm the wasm engine's arrival watch (`expectBotArrivals`) unconditionally. The watch
+// HOLDS the landing until the bot's next goal, and with no walk none comes: a hand walk after a Restart heard its key
+// and did not tick (CI, seedling-js batch: `held: true`, `tick_count` 0). The engines are module-level, so it shows
+// only after an EARLIER engine use. This row makes that use itself: a Playback Bot walk (the owl's nest stairs, by the
+// controller), stopped once it lands. Then the Menu's Restart with no bot walking, an AP move into the owl's nest, and
+// the same stairs by KEYS. The fix arms only behind a stopped walk, as `teleportTool` does.
+
+const restartNoWalkHandWalk = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
+    const up = await atlasPresetOn(tc, runtime, ATLAS_PATH, TOOLS_START);
+    if (!up) return;
+    const { panel } = up;
+    const glue = getSeedlingRegionGlue();
+    const born = await toolsSettledIn(tc, `[${runtime}] the new game stands in ${TOOLS_START}`, TOOLS_START, 0, 60000);
+    tc.reportCondition(`[${runtime}] the new game stands in ${TOOLS_START} (level 0)`, !!born);
+    if (!born) return;
+    // ⛓ THIS ROW'S OWN STATE: the Playback Bot stopped (this row's walks are the controller's and the keys')
+    const botPanel = getBotPanel();
+    const bot = botPanel?.getBot?.() ?? botPanel ?? null;
+    tc.log(`[${runtime}] the Playback Bot before this row: ${bot ? `active ${!!bot.isActive?.()}` : 'not mounted'}; stopped`);
+    bot?.stop?.();
+    const heldNow = () => {
+        try { return JSON.parse(glue.adapter?._getFlash?.()?.botStatus?.() ?? 'null')?.held ?? null; } catch { return null; }
+    };
+
+    // ── THE EARLIER ENGINE USE: a controller walk up the owl's nest stairs ──
+    toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+    const nest = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the bot walk`, TOOLS_OWLS, 2);
+    if (!nest) { tc.reportCondition(`[${runtime}] in the owl's nest for the bot walk`, false); return; }
+    const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
+    const answer = controller?.walkTo?.({ kind: 'exit', name: `${TOOLS_OWLS} -> ${TOOLS_START}` }) ?? null;
+    const botWalked = await toolsSettledIn(tc, `[${runtime}] the bot walk landed in the start`, TOOLS_START, 0, 90000);
+    tc.log(`[${runtime}] the bot walk: answer ${JSON.stringify(answer)}; refusal ${JSON.stringify(controller?.lastRefusal ?? null)}; `
+        + `status ${JSON.stringify(controller?.status?.() ?? null)}`);
+    tc.reportCondition(`[${runtime}] the bot walk (the earlier engine use) crossed into ${TOOLS_START}`, !!botWalked);
+    if (!botWalked) return;
+    // ⛓ THIS ROW'S OWN STATE: BOTH Seedling controllers stopped, not only this walk's. An earlier row can leave the
+    // generated-room controller non-idle (measured in the seedling-wasm batch: the Restart counted 1 walk, 2 watching),
+    // and a busy controller IS a walk to `stopBotWalks`. Its engine stays, so the unconditional arm still had one.
+    const controllers = ['flash_seedling', 'flash_seedling_gen']
+        .map((id) => [id, substrateRegistry.get(id)?.getPlaybackController?.() ?? null]).filter(([, c]) => !!c);
+    const phases = () => Object.fromEntries(controllers.map(([id, c]) => {
+        const w = c.status?.()?.wasm ?? null;
+        return [id, { busy: c.busy?.() ?? null, engine: w && { phase: w.phase, driving: w.driving, gate: w.gate, frozen: w.frozen } }];
+    }));
+    tc.log(`[${runtime}] the controllers after the bot walk: ${JSON.stringify(phases())}; stopped`);
+    for (const [, c] of controllers) c.stop();
+    const idle = await tc.pollForCondition(() => controllers.every(([, c]) => c.busy?.() === false),
+        `[${runtime}] every Seedling controller is idle after the stop`, 15000, 100);
+    tc.log(`[${runtime}] the controllers before the Restart: ${JSON.stringify(phases())}`);
+    tc.reportCondition(`[${runtime}] every Seedling controller is idle (no walk in flight for the Restart)`, !!idle);
+    if (runtime === 'wasm') {
+        tc.assertEqual(`[${runtime}] a wasm engine exists (the Restart has something it could arm)`, true,
+            !!controller?.status?.()?.wasm);
+    }
+
+    // ── THE RESTART, no bot walking ──
+    toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+    tc.reportCondition(`[${runtime}] the AP move reached the owl's nest`, !!await toolsSettledIn(tc, `[${runtime}] in the owl's nest`, TOOLS_OWLS, 2));
+    window.centralRegistry.getPublicFunction('menuPanel', 'restart')();
+    const landed = await toolsSettledIn(tc, `[${runtime}] the Menu's Restart landed at the start`, TOOLS_START, 0);
+    tc.reportCondition(`[${runtime}] the Menu's Restart landed in ${TOOLS_START}`, !!landed);
+    tc.log(`[${runtime}] the Restart: ${JSON.stringify(glue.lastRestart)}; the game held ${heldNow()}`);
+    tc.assertEqual(`[${runtime}] the Restart stopped no walk and armed no arrival watch (stoppedWalks/watching)`,
+        '0/0', `${glue.lastRestart?.stoppedWalks}/${glue.lastRestart?.watching}`);
+
+    // ── A HAND WALK after it: the same stairs, by keys ──
+    toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+    const nest2 = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the hand walk`, TOOLS_OWLS, 2);
+    if (!nest2) { tc.reportCondition(`[${runtime}] in the owl's nest for the hand walk`, false); return; }
+    tc.assertEqual(`[${runtime}] nothing is held before the hand walk`, false, heldNow() === true);
+    const walkedOut = await toolsWalkInto(tc, panel, 3, 1, runtime === 'wasm' ? 20000 : 10000);
+    const walked = walkedOut ? await toolsSettledIn(tc, `[${runtime}] the hand walk landed in the start`, TOOLS_START, 0) : null;
+    tc.reportCondition(`[${runtime}] after the Restart, the hand walk up the stairs crossed into ${TOOLS_START} (the player moved)`, !!walked);
+    tc.assertEqual(`[${runtime}] nothing is held after the hand walk`, false, heldNow() === true);
+    assertNoDeathNoHalt(tc, runtime, up.rt);
+});
+
+export const seedlingWasmRuntimeRestartNoWalkHandWalk = restartNoWalkHandWalk('wasm');
+
+registerTest({
+    id: 'seedling-wasm-runtime-restart-no-walk-hand-walk',
+    name: 'Seedling wasm runtime: a Restart with no bot walking arms no arrival hold; a hand walk after it moves',
+    description: 'On seedling_atlas with flashPanel.runtime = wasm: a controller walk up the owl\'s nest stairs (the earlier '
+        + 'engine use), stopped; then the Menu\'s Restart with no walk in flight (lastRestart stoppedWalks 0, watching 0); '
+        + 'then the same stairs by keys: the player crosses and the game is not held.',
+    testFunction: seedlingWasmRuntimeRestartNoWalkHandWalk,
+    category: seedlingRuntimeCategory('seedling-wasm-runtime-restart-no-walk-hand-walk'),
     enabled: false, // off by default — runs only in the test-substrates mode
 });

@@ -485,7 +485,7 @@
         {
             "id": "seedling-wasm-runtime-bot-names-refusal",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Seedling JS J2; ⛓ WG: generated rooms ARE walked on wasm now, so the row names the refusal that REMAINS — a tile target in a generated room (no tape producer serves it) is refused and the bot's status NAMES it (P0's rule: never a silent wait). The wasm page is loaded but never started."
         },
         {
@@ -615,22 +615,10 @@
             "_comment": "Seedling solver-walk S4. Runtime js + the solver mode ON on seedling_atlas: the page handle teleports to seedling_playthrough's level 17 arrival and the bot opens the chest (tag 0) through collect-placement (the chest verb); the clear reported once as pendingCheck <seq>|17|0|0, 0 HALT, no refutation."
         },
         {
-            "id": "seedling-js-runtime-loop-bot-block-walks-atlas-room",
-            "enabled": true,
-            "category": "Seedling JS runtime",
-            "_comment": "Seedling loop mode. Runtime js on seedling_atlas_location, loop mode on, the house block set to Bot: loops' walkTo (executeVia solver) walks the queued chest check (the game's own check completes it) and the door (its user:regionMove resumes the park); the queue ends on its own (queueEnd); one mana charge per action at its own price, plus the play clock's drain per GAME second (flash_seedling declares playClock)."
-        },
-        {
             "id": "seedling-js-runtime-loop-bot-blocks-cross-atlas-rooms",
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "Seedling loop mode. Runtime js on seedling_atlas, every Seedling block Bot, the sword granted (AP item path) and removed after: the owl's-nest stairs, the descent, then the sword-gated LOGICAL link (credited, its regionMove on the next turn); the queue ends on its own; one charge per action, plus the play clock's drain per game second."
-        },
-        {
-            "id": "seedling-wasm-runtime-loop-bot-block-walks-atlas-room",
-            "enabled": true,
-            "category": "Seedling JS runtime",
-            "_comment": "Seedling loop mode, the WASM runtime (WebGPU — the batch launches Chromium with it): the JS row's house walk under a Bot block, the tapes from the wasm playback engine."
         },
         {
             "id": "seedling-js-runtime-loop-bot-block-walks-generated-room",
@@ -641,14 +629,14 @@
         {
             "id": "seedling-wasm-runtime-loop-bot-block-walks-generated-room",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Re-enabled (2026-10-12) with the seedling-js-tutorial-walk-regression fix: its 2/14 CI flake (tick-1 exact-repeat divergence on region_0_0__key_blue_pickup, expected y 40.8, game y 40) was the wind cutscene leaking past the skip under the explicit start's record; the cold start now waits a showing scene out (seedlingWasmPlayback adoptLive) instead of re-arriving into it. The JS row's generated-room walk on the WASM runtime (WebGPU — the batch launches Chromium with it): the WG engine stages the mounted set, the solver produces the tapes; the game's Game.time drains the start room."
         },
         {
             "id": "seedling-js-runtime-loop-play-clock-drains-mana",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "Seedling play clock (⚖ Drain play time too). Runtime js on seedling_atlas_location, loop mode, the house block Bot, every solve held 3 s by the row: the reported clock stops and nothing is charged; the house is charged its drain price per GAME second (substrate:playClock), each action its own price; the queue ends on its own."
+            "_comment": "Seedling play clock (⚖ Drain play time too). Runtime js on seedling_atlas_location, loop mode, the house block Bot, every solve held 3 s by the row: the reported clock stops and nothing is charged; the house is charged its drain price per GAME second (substrate:playClock), each action its own price; the game's own chest check reaches the state manager, the controller takes the chest then the house door, a level-86 pendingExit, gameState in the maze child (folded from loop-bot-block-walks-atlas-room); the queue ends on its own."
         },
         {
             "id": "seedling-js-runtime-loop-play-clock-mana-out",
@@ -659,25 +647,25 @@
         {
             "id": "seedling-wasm-runtime-loop-play-clock-drains-mana",
             "enabled": true,
-            "category": "Seedling JS runtime",
-            "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's drain and stopped-clock checks; the game's Game.time off botStatus, its solves held by the row (the engine freezes the room)."
+            "category": "Seedling wasm runtime",
+            "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's drain, stopped-clock and walk checks (chest check, goals, the level-86 pendingExit, the maze child); the game's Game.time off botStatus, its solves held by the row (the engine freezes the room)."
         },
         {
             "id": "seedling-wasm-runtime-loop-play-clock-mana-out",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's mana-out — the idle game's Game.time runs the cut pool out and the loop ends."
         },
         {
             "id": "seedling-wasm-runtime-loop-bot-blocks-cross-atlas-rooms",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Seedling loop mode, the WASM runtime (WebGPU): the JS row's stairs, descent and logical-link credit under Bot blocks."
         },
         {
             "id": "seedling-flash-runtime-loop-bot-block-names-its-stop",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Seedling loop mode, the Flash (Ruffle) runtime: a Bot block's walkTo is refused by name (no feet), and loops' named stop (loopState:botWalkFailed, loop-mode-bot's fix) carries the controller's lastRefusal. Ruffle is fetched from its CDN; the SWF is not committed, so no game boots."
         },
         {
@@ -2101,7 +2089,7 @@
         {
             "id": "seedling-wasm-runtime-touch-controls",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "TOUCH CONTROLS on the wasm runtime (WebGPU, the seedling-js batch's launch): the same row; Esc shown (wasm only); X asserted as the keydown/keyup pair the frame heard (the wasm page has no swing ledger). seedling-js batch."
         },
         {
@@ -2133,6 +2121,24 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "seedling-js-inventory-menu. Standalone jsRuntime.html?graphics=seedling&camera=follow driven to L86 holding Fire then the sword (slots [1, 0]); real keyboard events V, Down, X, V: the menu opens, its panel is drawn as seedling:ui/inventory, the tape holds (one inventoryHolds row at the opening tick), X equips slot 1 (the sword), every sheet decodes, zero console errors. Batch seedling-js."
+        },
+        {
+            "id": "seedling-js-runtime-tools-restart-teleport",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "seedling-js-panel-restart. seedling_atlas on js: Tools ▸ Restart lands where the Menu's Restart lands; a walked exit (the owl's nest stairs, by keys) vs Tools ▸ Go to its spot from the same room: same AP region, same spot, no door named (arrivedFrom null), no path entry, no warning; TP on UI click into the dungeon (no door from the start) reaches it. Batch seedling-js."
+        },
+        {
+            "id": "seedling-wasm-runtime-tools-restart-teleport",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "seedling-js-panel-restart. The JS row's Restart and teleport checks on the WASM runtime (WebGPU). Batch seedling-wasm."
+        },
+        {
+            "id": "seedling-wasm-runtime-restart-no-walk-hand-walk",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "seedling-js-restart-arm-fix. seedling_atlas on wasm: a controller walk up the owl's nest stairs (the earlier engine use), stopped; the Menu's Restart with no walk in flight arms no arrival watch (stoppedWalks 0, watching 0); the same stairs by keys then cross and nothing is held. Red on main (the unconditional arm). Batch seedling-wasm."
         }
     ]
 }
