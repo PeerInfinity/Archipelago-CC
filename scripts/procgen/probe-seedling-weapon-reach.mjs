@@ -1,27 +1,24 @@
 #!/usr/bin/env node
 /**
  * The WEAPON REACH witnesses (slice rules-weapon-reach-census): a stance from which the Spear THRUST lights a pole and
- * the Ghost Sword SWING does not (LOOSER: the rules charge the pole's door `Or(<event>, Ghost Spear)` there, and a
+ * the Ghost Sword SWING may not (LOOSER: the rules charge the pole's door `Or(<event>, Ghost Spear)` there, and a
  * Ghost Sword holder holds the Ghost Spear but can no longer thrust it), and the reverse (TIGHTER).
  *
- * The stances are `census-seedling-weapon-reach.mjs`'s rows (a tile, a facing; the player at the tile's centre as the
- * game lands one). Each scene is played twice, each on a FRESH page on the DELIVERED set with the items GRANTED on arrival:
+ * The stances are `census-seedling-weapon-reach.mjs`'s rows (a tile, a facing, a point in it). Each scene is played with
+ * the mixes it names, each on a FRESH page on the DELIVERED set with the items GRANTED on arrival:
  *   spear              ['spear']                        — the thrust (slot 3)
  *   ghost-spear-sword  ['ghostsword', 'spear', 'sword'] — what AP delivers with all three items: the swing (slot 4),
  *                                                          the thrust gone (`Inventory.addItemsFromSave`)
  *
- *   L101-7-4-E    lightpole@144,64  tag 0, from [7,4] facing E — thrust through the wall [8,4]; LOOSER (the in-room event's place)
- *   L62-7-14-N    lightpole@120,200 tag 0, from [7,14] facing N — the far side's only stance; LOOSER (door out_teleporter_112_64)
- *   L63-2-5-E     lightpole@64,88   tag 1, from [2,5] facing E  — the far side; LOOSER (door out_teleporter_64_0)
- *   L63-4-7-N     lightpole@64,88   tag 1, from [4,7] facing N  — the far side's other stance; LOOSER
- *   L63-2-18-N    lightpole@48,272  tag 6, from [2,18] facing N — the L65 landing pocket; TIGHTER
- *   L63-8-18-N    lightpole@112,272 tag 7, from [8,18] facing N — the L65 landing pocket; TIGHTER
+ * The scenes (`SCENES`): at each of the three poles the centre-stance census called LOOSER (L101 lightpole@144,64,
+ * L62 lightpole@120,200, L63 lightpole@64,88), the rules' own stance (tile centre, the charged facing) with both mixes,
+ * and the ghost swing from the deepest point of the same tile; and the two TIGHTER L65 landing pockets of L63.
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW {json}`, and `ALL CHECKS PASSED` / `N CHECK(S) FAILED`.
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build, or SKIP.
  * Takes the box lock. Headless LOGIC-ONLY (`CHANNEL: headless logic-only`), so it runs in CI too.
  *
- * Run: node scripts/procgen/probe-seedling-weapon-reach.mjs [--host=http://localhost:8000] [--only=L101-7-4-E,…] [--repeat=N]
+ * Run: node scripts/procgen/probe-seedling-weapon-reach.mjs [--host=http://localhost:8000] [--only=L101-7-4-centre-E,…] [--repeat=N]
  * `--repeat=N` runs every tape N times, each on its own fresh page.
  */
 import { chromium } from 'playwright';
@@ -45,22 +42,35 @@ export const MIXES = Object.freeze({
     'ghost-spear-sword': ['ghostsword', 'spear', 'sword'],
 });
 
-/** The scenes: a pole, a stance tile, a facing, and which weapon the census says lights it. Exported for the unit rows. */
+/**
+ * The scenes: a pole, the player's position (`at`, px — a tile centre is `tile·16 + 8`), a facing, and what the census
+ * says each mix does there (`lit`; a mix not named is not played). Exported for the unit rows.
+ *   centre   the rules' own stance (`poleThrustStances`: tile centre, the facing it charges) — the thrust lights it, the
+ *            ghost swing from the SAME point and facing does not (the census's closest calls);
+ *   fine     the ghost swing from the deepest point of that same tile (`poleFineStances`) — it lights it, so the tile
+ *            the rules charge is a stance for a Ghost Sword holder too;
+ *   pocket   the L65 landing pockets of L63 (TIGHTER): the ghost swing lights the pole, no thrust does.
+ */
 export const SCENES = Object.freeze({
-    'L101-7-4-E': { level: 101, tag: 0, tile: [7, 4], dir: 'right', thrust: true, swing: false },
-    'L62-7-14-N': { level: 62, tag: 0, tile: [7, 14], dir: 'up', thrust: true, swing: false },
-    'L63-2-5-E': { level: 63, tag: 1, tile: [2, 5], dir: 'right', thrust: true, swing: false },
-    'L63-4-7-N': { level: 63, tag: 1, tile: [4, 7], dir: 'up', thrust: true, swing: false },
-    'L63-2-18-N': { level: 63, tag: 6, tile: [2, 18], dir: 'up', thrust: false, swing: true },
-    'L63-8-18-N': { level: 63, tag: 7, tile: [8, 18], dir: 'up', thrust: false, swing: true },
+    'L101-7-4-centre-E': { level: 101, tag: 0, tile: [7, 4], at: [120, 72], dir: 'right', lit: { 'spear': true, 'ghost-spear-sword': false } },
+    'L101-7-4-fine-N': { level: 101, tag: 0, tile: [7, 4], at: [126, 72], dir: 'up', lit: { 'ghost-spear-sword': true } },
+    'L62-7-14-centre-N': { level: 62, tag: 0, tile: [7, 14], at: [120, 232], dir: 'up', lit: { 'spear': true, 'ghost-spear-sword': false } },
+    'L62-7-14-fine-E': { level: 62, tag: 0, tile: [7, 14], at: [120, 226], dir: 'right', lit: { 'ghost-spear-sword': true } },
+    'L63-2-5-centre-E': { level: 63, tag: 1, tile: [2, 5], at: [40, 88], dir: 'right', lit: { 'spear': true, 'ghost-spear-sword': false } },
+    'L63-2-5-fine-N': { level: 63, tag: 1, tile: [2, 5], at: [46, 88], dir: 'up', lit: { 'ghost-spear-sword': true } },
+    'L63-4-7-centre-N': { level: 63, tag: 1, tile: [4, 7], at: [72, 120], dir: 'up', lit: { 'spear': true, 'ghost-spear-sword': false } },
+    'L63-4-7-fine-E': { level: 63, tag: 1, tile: [4, 7], at: [72, 114], dir: 'right', lit: { 'ghost-spear-sword': true } },
+    'L63-2-18-pocket-N': { level: 63, tag: 6, tile: [2, 18], at: [40, 296], dir: 'up', lit: { 'spear': false, 'ghost-spear-sword': true } },
+    'L63-8-18-pocket-N': { level: 63, tag: 7, tile: [8, 18], at: [136, 296], dir: 'up', lit: { 'spear': false, 'ghost-spear-sword': true } },
 });
 
-/** The tapes: one per scene × mix. Exported for the unit rows. */
+/** The tapes: one per scene × the mixes it names. Exported for the unit rows. */
 export function weaponReachTapes() {
     const out = {};
     for (const [scene, s] of Object.entries(SCENES)) {
-        for (const mix of Object.keys(MIXES)) {
-            const boot = { level: s.level, x: s.tile[0] * TILE, y: s.tile[1] * TILE };
+        for (const mix of Object.keys(s.lit)) {
+            // `spawnFromBoot`: the player stands at the boot + (8, 8).
+            const boot = { level: s.level, x: s.at[0] - 8, y: s.at[1] - 8 };
             out[`${scene}-${mix}`] = {
                 scene, mix,
                 tape: {
@@ -78,8 +88,7 @@ export function weaponReachTapes() {
 
 /** What the census says each mix does at a scene. Exported for the unit rows. */
 export function expected(scene, mix) {
-    const s = SCENES[scene];
-    return { lit: mix === 'spear' ? s.thrust : s.swing, slots: mix === 'spear' ? [3] : [4] };
+    return { lit: SCENES[scene].lit[mix], slots: mix === 'spear' ? [3] : [4] };
 }
 
 /** What one run says. Exported for the unit rows. */
@@ -182,6 +191,9 @@ async function main() {
                 g.ticks.length === tape.tick_count + 1 && g.mounted?.active === set.set_id
                     && read.levels.length === 1 && read.levels[0] === SCENES[scene].level,
                 `${g.ticks.length} obs, ${g.mounted?.active}, levels ${JSON.stringify(read.levels)}`);
+            const s = SCENES[scene];
+            check(`${name}: the player starts on its stance (${s.at})`,
+                !!read.at && Math.abs(read.at[0] - s.at[0]) < 1 && Math.abs(read.at[1] - s.at[1]) < 1, JSON.stringify(read.at));
             check(`${name}: the slots are ${JSON.stringify(want.slots)}`, JSON.stringify(read.slots) === JSON.stringify(want.slots),
                 JSON.stringify(read.slots));
             check(`${name}: pole {${SCENES[scene].level},${SCENES[scene].tag}} lit = ${want.lit}`, read.lit === want.lit,

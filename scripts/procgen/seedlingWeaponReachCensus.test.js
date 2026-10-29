@@ -26,14 +26,18 @@ describe('the weapon reach census', () => {
         const kinds = {};
         for (const r of rows) kinds[r.kind] = (kinds[r.kind] ?? 0) + 1;
         expect(kinds).toEqual({ pole: 20, block: 12, bridge: 4, rock: 2 });
-        expect(rows.filter(isFinding).length).toBe(23);
+        expect(rows.filter(isFinding).length).toBe(13);
     });
 
-    it('3 RULES-LOOSER: charged poles the thrust lights from a side the swing cannot', () => {
-        expect(rows.filter(isRulesLooser).map(name)).toEqual([
-            'L62 lightpole@120,200',
-            'L63 lightpole@64,88',
-            'L101 lightpole@144,64',
+    it('0 RULES-LOOSER: every charged pole the thrust lights from a side, the ghost swing lights from that side too', () => {
+        // At the tile CENTRE three did not (L62 lightpole@120,200, L63 lightpole@64,88, L101 lightpole@144,64: the
+        // thrust's facing from the centre is not one the 24 px swing reaches in). Over the fidelity model's fine lattice
+        // (`poleFineStances`) the swing lights each from a point of the SAME tile — the probe witnesses both halves.
+        expect(rows.filter(isRulesLooser).map(name)).toEqual([]);
+        // The two that remain LOOSER per side are poles the rules do not charge (their light kills nothing gated).
+        expect(rows.filter((r) => /LOOSER/.test(r.verdict)).map((r) => [name(r), r.charged])).toEqual([
+            ['L66 lightpole@96,80', false],
+            ['L66 lightpole@48,80', false],
         ]);
     });
 
@@ -54,12 +58,22 @@ describe('the weapon reach census', () => {
             .toEqual([['L3 breakablerockghost@0,64', true], ['L101 breakablerockghost@224,96', true]]);
     });
 
-    it('the probe\'s scenes are census stances: thrust-only or swing-only as each scene claims', () => {
+    it('the probe\'s scenes are census stances, each mix lit or not as the census says', () => {
         for (const [scene, s] of Object.entries(SCENES)) {
             const pole = rows.find((r) => r.kind === 'pole' && r.level === s.level && r.tag === s.tag);
             expect(pole, scene).toBeTruthy();
-            const at = (list) => list.some((x) => x.startsWith(`[${s.tile}]`) && x.split('@')[0].includes(FACING[s.dir]));
-            expect([at(pole.thrust), at(pole.swing)], scene).toEqual([s.thrust, s.swing]);
+            const F = FACING[s.dir];
+            const has = (list) => list.some((x) => x.startsWith(`[${s.tile}]`) && x.split('@')[0].includes(F));
+            const centre = s.at[0] === s.tile[0] * 16 + 8 && s.at[1] === s.tile[1] * 16 + 8;
+            if (centre) {
+                // The rules' stance (thrust) and the centre swing, from the tile centre in the scene's facing.
+                if ('spear' in s.lit) expect(has(pole.thrust), `${scene} thrust`).toBe(s.lit.spear);
+                expect(has(pole.centreSwing), `${scene} centre swing`).toBe(s.lit['ghost-spear-sword']);
+            } else {
+                // A fine point: the census's deepest swing point of that tile in that facing.
+                expect(pole.swingPoints[`${s.tile}`]?.[F]?.slice(0, 2), scene).toEqual(s.at);
+                expect(s.lit['ghost-spear-sword'], scene).toBe(true);
+            }
         }
     });
 });

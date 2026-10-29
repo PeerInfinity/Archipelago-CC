@@ -19,8 +19,11 @@
  *           first, so a struck spear block moves along the FACING (`combatVerbs.swingHits`, `sword: 'ghostsword'`).
  *
  * The Spear-typed targets (`Player.genericHit`, :1073-1130; every other class ignores `t` or only draws a SlashHit):
- *   pole    `LightPole.hit()` only under `t == "Spear"` (:1105) — not tile-aligned, so its press box (the bob envelope,
- *           `levelWorld.pressResponders`) is tested from every tile centre, as `poleThrustStances` does for the thrust.
+ *   pole    `LightPole.hit()` only under `t == "Spear"` (:1105) — not tile-aligned. The THRUST column is the rules' own
+ *           stances (`poleThrustStances`: tile centre, the bob envelope — what the rules charge); the SWING column is
+ *           the fidelity model's fine lattice (`poleFineStances`: any 2 px point of a tile, the bob-invariant core),
+ *           because a Ghost Sword holder stands anywhere in a tile. At the centre alone three charged poles read
+ *           LOOSER (L62, L63 tag 1, L101) — the swing reaches each from another point of the same tile.
  *   block   `PushableBlockSpear` (`moveTypes ["Spear"]`, `PushableBlockSpear.as:14`) — tile-aligned: the stances are the
  *           weapon footprints (`seedlingWeaponFootprints.deriveWeaponFootprint(<action>, 'block')`) per push facing,
  *           at the block's START tile (a pushed block's later tiles are the block search's, not this census's).
@@ -59,6 +62,10 @@ import { contactRect } from '../../frontend/modules/seedlingDemo/combat.js';
 import { DARKTRAP_LIGHT_DEATH } from '../../frontend/modules/seedlingDemo/enemyDamage.js';
 import { spearHitRect, pressRectTouches } from '../../frontend/modules/seedlingDemo/presses.js';
 import { swingHits } from '../../frontend/modules/seedlingDemo/combatVerbs.js';
+import { ghostSlashRect, GHOST_SWORD_REACH } from '../../frontend/modules/seedlingDemo/ghostSword.js';
+import { distanceRectPoint } from '../../frontend/modules/seedlingDemo/presses.js';
+import { playerBoxAt } from '../../frontend/modules/seedlingDemo/playerPhysicsV2.js';
+import { HITBOX } from '../../frontend/modules/seedlingDemo/playerPhysicsV1.js';
 import { poleKillsOf, poleThrustStances } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
 import { deriveWeaponFootprint, FOOTPRINT_FACINGS } from '../../frontend/modules/flashPanel/seedlingWeaponFootprints.js';
 import { tileTypeForPlacement, SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
@@ -126,7 +133,7 @@ export function bridgeRuns(tiles) {
     return runs;
 }
 
-/** The ghost-swing analogue of `poleThrustStances`: tile centres whose 24×48 swing (reach 24, no line test) collects `box`. */
+/** The ghost-swing analogue of `poleThrustStances` AT THE TILE CENTRE only (reference; the rows read `poleFineStances`): tile centres whose 24×48 swing (reach 24, no line test) collects `box`. */
 export function poleSwingStances(box, { width, height, walkable, avoid = [] }) {
     const out = [];
     for (let ty = 0; ty < height; ty++) {
@@ -138,6 +145,66 @@ export function poleSwingStances(box, { width, height, walkable, avoid = [] }) {
             const target = { id: 'pole', box, type: 'LightPole', cx: (box.x + box.right) / 2, cy: (box.y + box.bottom) / 2 };
             const dirs = [0, 1, 2, 3].filter((d) => swingHits(p, d, [target], { sword: 'ghostsword' }).length > 0);
             if (dirs.length) out.push({ tile: [tx, ty], dirs });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓ THE FINE STANCES — the fidelity model's own pole-stance geometry (`solverBot.resolvePoleThrustStrategy`, fidelity
+ * LIGHTPOLE D2, `inRoomPoleThrust` ON at b606efd8d4), transcribed here because it lives inside a run: every point of
+ * every walkable tile, sampled every 2 px plus the edge a box stands FLUSH against, in each facing whose press rect
+ * touches the pole's bob-invariant CORE (the envelope less 2·`bob` top and bottom); a point flush on the FACING axis is
+ * left out (a box pinned against what it faces gets no velocity from the face tap, so no facing); the ghost arm within
+ * `GHOST_SWORD_REACH` of the core (the thrust has no reach gate); the player box clear of every solid (the model's
+ * `collidesSolid`) and of the killed bodies. Not carried over: the solver's "crowded" refusal (another press responder
+ * in the rect — a CHOICE to avoid side effects, not the game refusing the hit) and its corridor search (the census's
+ * sides stand for reach). `{tile, dirs, points}` per tile, so the rows read like the centre stances.
+ */
+export function poleFineStances(level, box, { weapon, width, height, walkable, avoid = [] }) {
+    const world = buildLevelWorld(level);
+    const bob = DARKTRAP_LIGHT_DEATH.pole.bob;
+    const core = { x: box.x, y: box.y + bob * 2, right: box.right, bottom: box.bottom - bob * 2 };
+    const rectAt = weapon === 'ghostsword' ? ghostSlashRect : spearHitRect;
+    const reach = weapon === 'ghostsword' ? GHOST_SWORD_REACH : Infinity;
+    const xs = [2, 4, 6, 8, 10, 12, 14];
+    const ys = [2, 4, 6, 8, 10, 12, 13];
+    const flushX = new Set([HITBOX.originX, T - (HITBOX.width - HITBOX.originX)]);
+    const flushY = new Set([HITBOX.originY, T - (HITBOX.height - HITBOX.originY)]);
+    const out = [];
+    for (let ty = 0; ty < height; ty++) {
+        for (let tx = 0; tx < width; tx++) {
+            if (!walkable(tx, ty)) continue;
+            const dirs = new Set();
+            const best = {};
+            let points = 0;
+            for (const ox of xs) {
+                for (const oy of ys) {
+                    const x = tx * T + ox;
+                    const y = ty * T + oy;
+                    if (distanceRectPoint(x, y, core) > reach) continue;
+                    const pb = playerBoxAt(x, y);
+                    if (world.collidesSolid(pb, {}) !== null || avoid.some((a) => rectsOverlap(pb, a))) continue;
+                    for (const d of [0, 1, 2, 3]) {
+                        if ((d % 2 === 0) ? flushX.has(ox) : flushY.has(oy)) continue;
+                        const r = rectAt(x, y, d);
+                        if (!pressRectTouches(r, core)) continue;
+                        dirs.add(d);
+                        points += 1;
+                        // The point a witness stands on: the deepest overlap with the core (the solver's
+                        // `LIGHT_ARM_CORE_MARGIN` ordering), then the nearest the tile centre.
+                        const depth = Math.min(Math.min(r.right, core.right) - Math.max(r.x, core.x),
+                            Math.min(r.bottom, core.bottom) - Math.max(r.y, core.y));
+                        const off = Math.hypot(ox - T / 2, oy - T / 2);
+                        const b = best[d];
+                        if (!b || depth > b.depth || (depth === b.depth && off < b.off)) best[d] = { x, y, depth, off };
+                    }
+                }
+            }
+            if (dirs.size) {
+                out.push({ tile: [tx, ty], dirs: [...dirs].sort(), points,
+                    best: Object.fromEntries(Object.entries(best).map(([d, b]) => [FACING_OF_DIR.get(Number(d)), [b.x, b.y, b.depth]])) });
+            }
         }
     }
     return out;
@@ -245,13 +312,21 @@ export function censusLevel(level, region, ctx) {
                 width: grid.width, height: grid.height, origin: grid.origin, tile: T, walkable,
                 avoid, spearHitRect, pressRectTouches, rectsOverlap,
             });
-            const swing = poleSwingStances(pole.rect, { width: grid.width, height: grid.height, walkable, avoid });
+            // The rules' stances are the thrust's at the tile centre (`poleThrustStances`, as charged); a Ghost Sword
+            // holder swings from anywhere in a tile (the fine lattice). The fine thrust is carried for reference.
+            const fineArgs = { width: grid.width, height: grid.height, walkable, avoid };
+            const swing = poleFineStances(level, pole.rect, { ...fineArgs, weapon: 'ghostsword' });
+            const fineThrust = poleFineStances(level, pole.rect, { ...fineArgs, weapon: 'spear' });
+            const centreSwing = poleSwingStances(pole.rect, { width: grid.width, height: grid.height, walkable, avoid });
             const sideOf = sideNamer(level, walkable, avoid, members);
+            const tilesOf = (list) => list.map((r) => `[${r.tile}]${r.dirs.map((d) => FACING_OF_DIR.get(d)).join("")}@${sideOf(r.tile).id}`);
             const ev = ctx.poleEvents.filter((e) => e.level === level.level && e.x === entity.x && e.y === entity.y);
             rows.push({
                 ...base, kind: 'pole', target: label, tag: Number(entity.attrs?.tag), charged: ev.length > 0,
                 kills: killed.map((b) => b.id),
                 gates: ev.length ? ev.flatMap((e) => [`event ${e.name} (${e.via})`, ...e.gates]) : ['no pole event (its light kills nothing the rules charge)'],
+                fineThrust: tilesOf(fineThrust), centreSwing: tilesOf(centreSwing),
+                swingPoints: Object.fromEntries(swing.map((r) => [`${r.tile}`, r.best])),
                 ...compare(thrust, swing, sideOf),
             });
         } else if (entity.type === 'pushableblockspear') {

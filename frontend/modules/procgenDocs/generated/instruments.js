@@ -18146,7 +18146,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "The WEAPON REACH witnesses (slice rules-weapon-reach-census): a stance from which the Spear THRUST lights a pole and the Ghost Sword SWING does not (LOOSER: the rules charge the pole's door `Or(<event>, Ghost Spear)` there, and a Ghost Sword holder holds the Ghost Spear but can no longer thrust it), and the reverse …",
+            "oneLiner": "The WEAPON REACH witnesses (slice rules-weapon-reach-census): a stance from which the Spear THRUST lights a pole and the Ghost Sword SWING may not (LOOSER: the rules charge the pole's door `Or(<event>, Ghost Spear)` there, and a Ghost Sword holder holds the Ghost Spear but can no longer thrust it), and the reverse (…",
             "path": "scripts/procgen/probe-seedling-weapon-reach.mjs"
         },
         {
