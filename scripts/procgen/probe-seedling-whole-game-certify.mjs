@@ -68,7 +68,8 @@ export function mergeArm(parts, allLevels) {
     const problems = [...new Set(parts.flatMap((p) => p.problems))].sort();
     const acceptedKeys = [...new Set(parts.flatMap((p) => p.accepted.map((a) => JSON.stringify({ label: a.label, source: a.source, by: a.by }))))].sort();
     const lines = [...new Set(parts.flatMap((p) => p.lines))].sort();
-    // ⛓ The rows an UNADMITTED landing skipped points of (session tile-primitives-lightpoles), named — never silent.
+    // ⛓ The rows an UNADMITTED landing skipped points of (session tile-primitives-lightpoles), named — never silent; and (session
+    // tile-primitives-sphere-order-8) an event location's points holding its own event at a landing (`why: 'own event'`).
     const skipped = [...new Set(parts.flatMap((p) => (p.skipped ?? []).map((k) => JSON.stringify(k))))].sort().map((k) => JSON.parse(k));
     const threw = parts.filter((p) => p.threw).map((p) => `shard ${p.shard}: ${p.threw}`);
     const problemLevels = new Set(problems.map((p) => p.match(/^(level_\d+)/)?.[1]).filter(Boolean));
@@ -134,7 +135,7 @@ async function main() {
             console.log(`ARM ${arm}: ${problems.length} problems (derived-true/atlas-false ${looser}, derived-false/atlas-true ${stricter}, other ${problems.length - looser - stricter}) / ${accepted.length} accepted / ${threw.length} threw; ${skipped.length} row(s) skip unadmitted landing points; clean ${clean}/${allLevels.size} levels; ${lines.length} lines; wall ${Date.now() - t0} ms`);
             for (const p of problems) console.log(`  PROBLEM[${arm}] ${p}`);
             for (const a of accepted) console.log(`  ACCEPTED[${arm}] ${JSON.stringify(a)}`);
-            for (const k of skipped) console.log(`  SKIPPED[unadmitted][${arm}] ${k.label}: ${k.points} of ${k.of} points${k.partial ? ' (row also a problem)' : ''}`);
+            for (const k of skipped) console.log(`  SKIPPED[${k.why ?? 'unadmitted'}][${arm}] ${k.label}: ${k.points} of ${k.of} points${k.partial ? ' (row also a problem)' : ''}`);
             for (const t of threw) console.log(`  THREW[${arm}] ${t}`);
             console.log(`PASS: arm ${arm} measured`);
         }

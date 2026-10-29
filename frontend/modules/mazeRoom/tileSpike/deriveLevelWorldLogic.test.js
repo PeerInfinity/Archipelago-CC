@@ -168,6 +168,8 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         // (from L89 r1c10, by the Swim) enters L92 r4c2 free.
         // ⛓ tile-primitives-lightpoles (sphere 6.1 + every pole): no region joins the set (L62's trap opens by L63's press, free), but
         // L63's two in-room pole events do — each is a Ghost Spear thrust from one of its stances.
+        // ⛓ tile-primitives-sphere-order-8 (spheres 6.5/6.10/7.8 joined): every new region hangs off a member of the set — L41/L42 off L40,
+        // L57/L58 off L56 (and L46), L65/L66/L68 off L63's pockets — so all join it, with their locations and the Yeti / L65 pole / L68 lock events.
         const RING2_WEAPON_GATED = ['level_0__r1c6', 'level_0__r6c5', 'level_19__r1c5', 'level_19__r5c5'];
         const SPHERE01_WEAPON_GATED = ['level_1', 'level_67__r3c2', 'level_92__r3c12'];
         const SPHERE45_WEAPON_GATED = ['level_48__r11c9', 'level_48__r2c10', 'level_48__r4c3', 'level_48__r7c0', 'level_49'];
@@ -178,16 +180,23 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
             'level_54__r16c8', 'level_54__r18c15', 'level_54__r18c19', 'level_54__r19c13', 'level_54__r1c8', 'level_54__r27c8', 'level_54__r8c11',
             'level_55', 'level_56', 'level_61__r13c12', 'level_63__r10c2', 'level_63__r5c14', 'level_63__r6c15', 'level_63__r6c9',
             'level_93__r10c7', 'level_93__r5c7'];
+        const SPHERE8_WEAPON_GATED = ['level_41__r4c15', 'level_41__r4c3', 'level_41__r7c15', 'level_42', 'level_57', 'level_58__r1c2',
+            'level_58__r1c4', 'level_58__r2c1', 'level_58__r2c5', 'level_58__r3c3', 'level_58__r4c1', 'level_58__r6c5', 'level_65__r0c2',
+            'level_65__r0c8', 'level_65__r4c13', 'level_66__r5c4', 'level_66__r9c8', 'level_68__r1c1', 'level_68__r3c1'];
         expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
             .toEqual({
                 unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED, ...SPHERE01_WEAPON_GATED, ...SPHERE45_WEAPON_GATED,
-                    ...SPHERE53_WEAPON_GATED, ...SPHERE56_WEAPON_GATED].sort(),
+                    ...SPHERE53_WEAPON_GATED, ...SPHERE56_WEAPON_GATED, ...SPHERE8_WEAPON_GATED].sort(),
                 unchecked: ['L0 flag 1: breakablerock@288,176 cleared', 'L0 flag 4: breakablerock@80,112 cleared', ROPE,
                     'L24 flag 0: burnabletree@32,128 cleared', 'L28 flag 0: rope@160,64 cleared', 'L40 flag 8: bosslock@480,352 cleared',
-                    'L48 flag 1: bosslock@48,144 cleared', 'L63 flag 6: lightpole@48,272 cleared', 'L63 flag 7: lightpole@112,272 cleared', 'Level 017 - Chest', 'Level 019 - Boss Key 0', 'Level 019 - Shieldspire',
+                    'L48 flag 1: bosslock@48,144 cleared', 'L58 flag 1: yeti@56,56 cleared', 'L63 flag 6: lightpole@48,272 cleared',
+                    'L63 flag 7: lightpole@112,272 cleared', 'L65 flag 0: lightpole@128,168 cleared', 'L68 flag 0: bosslock@16,32 cleared',
+                    'Level 017 - Chest', 'Level 019 - Boss Key 0', 'Level 019 - Shieldspire',
                     'Level 032 - Bob Boss', 'Level 032 - Times', 'Level 039 - Totem Part 72,40', 'Level 040 - Boss Key 2', 'Level 040 - Chest',
-                    'Level 040 - Totem Part 160,640', 'Level 040 - Totem Part 64,144', 'Level 043 - Totem of Lacste', 'Level 043 - Wand',
-                    'Level 048 - Chest', 'Level 049 - Conch', 'Level 055 - Boss Key 3', 'Level 063 - Chest', 'Level 067 - Boss Key 4'],
+                    'Level 040 - Totem Part 160,640', 'Level 040 - Totem Part 64,144', 'Level 041 - Totem Part 240,144',
+                    'Level 042 - Totem Part 184,152', 'Level 043 - Totem of Lacste', 'Level 043 - Wand',
+                    'Level 048 - Chest', 'Level 049 - Conch', 'Level 055 - Boss Key 3', 'Level 057 - Tentacled Beast', 'Level 063 - Chest',
+                    'Level 067 - Boss Key 4', 'Level 068 - Health'],
             });
         expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'constant', value: true });
     });
