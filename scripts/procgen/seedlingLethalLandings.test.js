@@ -63,11 +63,16 @@ describe('landings on lethal terrain', () => {
         }
     });
 
-    it('the one exemption holds by name: a departure that already asks for the item (L96 into the lava)', () => {
+    // ⛓ RULES waterfall-door: + L89's door to L91, charged the Feather (Swim x2) by its climb, which implies the Swim
+    // its water landing needs.
+    it('the exemptions hold by name: a departure that already asks for the item (L96 into the lava, L89 up the fall)', () => {
         const row = (prefix) => lethalLandings.find((l) => l.where.startsWith(prefix));
-        expect(row('level_96/out_teleporter_32_64 ')).toMatchObject({ gated: false });
-        expect(row('level_96/out_teleporter_32_64 ').why).toMatch(/already requires/);
-        expect(lethalLandings.filter((l) => !l.gated).map((l) => l.where.split(' ')[0])).toEqual(['level_96/out_teleporter_32_64']);
+        for (const door of ['level_96/out_teleporter_32_64 ', 'level_89/out_teleporter_208_0 ']) {
+            expect(row(door)).toMatchObject({ gated: false });
+            expect(row(door).why).toMatch(/already requires/);
+        }
+        expect(lethalLandings.filter((l) => !l.gated).map((l) => l.where.split(' ')[0]))
+            .toEqual(['level_89/out_teleporter_208_0', 'level_96/out_teleporter_32_64']);
     });
 
     it('⚖ game truth first: the shores the model walked off are gated (L53 -> L54 (144,16), the mouth -> L58)', () => {

@@ -2264,7 +2264,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_89__r1c10 -> level_91", player),
-        Has('Progressive Swim', 1)
+        Has('Progressive Swim', 2)
     )
 
     world.set_rule(
