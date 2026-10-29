@@ -60,6 +60,10 @@
  * `opts.entitySprites`; the blocks' build-time rectangles through `drawnObjects` and the stairs' teleporter
  * rectangles through `drawnTeleporters` are then not painted.
  *
+ * ⛓ seedling-js-portal-sprite: a SHOWN teleporter (`shownTeleporters`, `opts.shownTeleporter`) is the game's spinning
+ * `Portal.png` (`PORTAL_KEY`), at layer 0, framed from the visit's start (`opts.visitTick`); its stand-in rectangle is
+ * the fallback when the art lacks the key.
+ *
  * ⛔ NOT YET (G4+ of the ladder, and G3's remaining classes): broken rocks / opened chests / burned trees (every
  * solid with a run-changeable id stays a rectangle, at its START position —
  * the rect view's known limitation), grass blades, the bridge's opening, the
@@ -84,17 +88,59 @@ export const PLAYER_COLOUR = '#ffffff';
 /**
  * ⚖ THE TELEPORTERS WITH ART (the user 2026-10-27: *"The js version of Seedling shows the exit tiles with a green
  * color. Is there a way for it to not do that?"*; slice `seedling-js-mobile-polish`). A `Teleporter` draws its
- * spinning `Portal.png` only when its map entity says `show="1"` (`Teleporter.as:54` `visible = _show`; six in the
- * vanilla map); every other one is invisible in the game. So with art loaded the page paints a teleporter's
- * `TELEPORTER_COLOUR` stand-in ONLY for a shown one (the pack has no Portal picture yet), and the stairs are G7's
- * sprites. The art-less (rect) view keeps every rectangle: that is the debug view.
- * Returns the page's `roomOps` `drawnTeleporters` for the room's map `record` (true = not painted as a rectangle).
+ * spinning `Portal.png` only when it is SHOWN (`Teleporter.as:54` `visible = _show`; FlashPunk's `World.render`
+ * skips an invisible entity): a map entity with `show="1"` (six in the vanilla map), or the Light Boss's exit, the
+ * one runtime teleporter built with `_show = true` (`LightBossController.as:104`; `lightBossWorld`'s `lightsExit`
+ * row). The other runtime ones (`Moonrock.as:134`, `TentacleBeast.as:213`) pass no `_show`, so they are invisible.
+ * Returns `(teleporter) → boolean` for the room's map `record`.
  */
-export function teleporterArtFilter(record) {
+export function shownTeleporters(record) {
     const shown = new Set((record?.entities ?? [])
         .filter((e) => e.type === 'teleporter' && Number(e.attrs?.show ?? 0) !== 0)
         .map((e) => `${Number(e.x)},${Number(e.y)}`));
-    return (tp) => tp.isStairs === true || !shown.has(`${tp.x},${tp.y}`);
+    return (tp) => tp.isStairs !== true && (tp.lightsExit === true || shown.has(`${tp.x},${tp.y}`));
+}
+
+/**
+ * With art loaded the page leaves to `roomOps` ONLY the shown teleporters (`shownTeleporters`), which it draws as
+ * `PORTAL_KEY` (the `TELEPORTER_COLOUR` stand-in is their fallback); the invisible ones draw nothing, and the stairs
+ * are G7's sprites. The art-less (rect) view keeps every rectangle: that is the debug view.
+ * Returns the page's `roomOps` `drawnTeleporters` for the room's map `record` (true = not painted by `roomOps`).
+ */
+export function teleporterArtFilter(record) {
+    const shown = shownTeleporters(record);
+    return (tp) => !shown(tp);
+}
+
+/**
+ * ⛓ seedling-js-portal-sprite — THE SHOWN TELEPORTER'S PICTURE. `Teleporter.as:14-15,47-52`: an 18×18 Spritemap of
+ * `Portal.png` at `x = y = -1` (the pack's origin [1, 1]: the frame overhangs the 16×16 hitbox by a pixel each side),
+ * "spin" [0,1,2,3] at 15 fps, PLAYED IN THE CONSTRUCTOR — so the cycle restarts with every new `Game` (a door, a
+ * death) and its frame after `n` updates of the room is `frameAt(…, n)`. LAYER 0: `Teleporter` never sets `layer`,
+ * and FlashPunk's `Entity._layer` defaults to 0 (`net/flashpunk/Entity.as:505`) — over the tiles (100), under every
+ * Y-sorted body (`-(y + k)`). (`Stairs` sets `layer = -y`, `Stairs.as:46`, but the stairs are G7's.) `render()` draws
+ * it twice on the main buffer (`:126` then `renderLit` `:133`) and once onto `nightBmp`; Portal.png's alpha is only 0
+ * or 255, so the second main-buffer copy changes no pixel and is one op here; the night copy is `NIGHT_COPIES`'.
+ * A deactivated teleporter returns before `super.render()` (`:122-125`): nothing.
+ */
+export const PORTAL_KEY = 'seedling:object/portal';
+export const PORTAL_ANIM = 'spin';
+/** `Teleporter`'s own `layer` (never set: FlashPunk's default). */
+export const PORTAL_LAYER = 0;
+
+/** The skin census's join (`seedlingSkinCensus.test.js`): the classes `roomOps` itself draws as bodies. */
+export const PORTAL_COVERAGE = Object.freeze({ drawn: Object.freeze(['Teleporter']) });
+
+/**
+ * The tick this visit's `Game` was built — the run's newest arrival into its level, or the newest death in it
+ * (`restartLevel()` builds a new `Game` too); 0 for the boot visit. A pure read of the run's ledgers.
+ */
+export function portalVisitTick(run) {
+    if (!run) return 0;
+    let since = 0;
+    for (const t of run.transitions ?? []) if ((t.to_level ?? t.to) === run.level) since = Math.max(since, t.t ?? 0);
+    for (const d of run.playerDeaths ?? []) if (d.level === run.level) since = Math.max(since, d.t ?? 0);
+    return since;
 }
 
 /** The camera modes (the flash panel setting `seedlingJsCamera`, the page's `?camera=`). */
@@ -315,11 +361,16 @@ const sprite = (art, key, frame, at, extra = {}) => {
  * @param {function} [opts.drawnPickups] `(pickup) → boolean`: a placed pickup the caller draws itself (G9a's
  *   `seedlingPickupSkin`, taken ones included: it draws nothing for those), so its stand-in rectangle is not painted.
  *   Omitted: every one is.
+ * @param {function} [opts.shownTeleporter] `(teleporter) → boolean`: a teleporter the game SHOWS (`shownTeleporters`);
+ *   with `PORTAL_KEY` in the art it is drawn as the spinning portal, its stand-in rectangle the fallback. Omitted:
+ *   every teleporter `roomOps` paints is the stand-in.
+ * @param {number} [opts.visitTick] the tick this visit's `Game` was built (`portalVisitTick`): the portal's "spin"
+ *   has run `tick − visitTick` updates. Default 0.
  * @param {Function} [opts.mask] the autotiler (a test's MUTANT; default `autotileMask`)
  */
 export function roomOps(world, art, {
     level, tick = 0, player = null, playerSprites = null, apItems = [], apItemSprites = null, entitySprites = null, mask = autotileMask,
-    drawnObjects = null, drawnTeleporters = null, drawnPickups = null,
+    drawnObjects = null, drawnTeleporters = null, drawnPickups = null, shownTeleporter = null, visitTick = 0,
 } = {}) {
     const plan = planFor(world, level, mask);
     const ops = [];
@@ -359,7 +410,15 @@ export function roomOps(world, art, {
         ops.push(sprite(art, spec.key, frame, o, { layer: spec.layer(o), fallback }));
     }
 
-    for (const tp of world.teleporters) if (!tp.deactivated && !drawnTeleporters?.(tp)) ops.push(rectOp(tp.rect, TELEPORTER_COLOUR, 0.45, -Infinity));
+    for (const tp of world.teleporters) {
+        if (tp.deactivated || drawnTeleporters?.(tp)) continue;
+        const fallback = rectOp(tp.rect, TELEPORTER_COLOUR, 0.45, -Infinity);
+        // ⛓ seedling-js-portal-sprite — a shown teleporter in the game's picture (`PORTAL_KEY`); the stand-in otherwise
+        if (shownTeleporter?.(tp) && has(PORTAL_KEY)) {
+            const frame = art.frameAt(PORTAL_KEY, PORTAL_ANIM, Math.max(0, tick - visitTick)) ?? 0;
+            ops.push(sprite(art, PORTAL_KEY, frame, tp, { layer: PORTAL_LAYER, fallback }));
+        } else ops.push(fallback);
+    }
     for (const p of world.pickups ?? []) if (!drawnPickups?.(p)) ops.push(rectOp(p.rect, AP_ITEM_COLOUR, 0.5, -p.rect.bottom));
     if (apItemSprites) ops.push(...apItemSprites);
     else for (const a of apItems) {
