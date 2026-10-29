@@ -1616,7 +1616,7 @@ export const CONTACT_FIDELITY = {
      * planned in the world as it is on the 8 px lattice, as `deriveKeylockStance`'s RULESREF arm does. OFF:
      * byte-identical. `SEEDLING_FINE_SWING_STANCE=0|1`.
      */
-    fineSwingStance: false,
+    fineSwingStance: true,
     /**
      * fidelity L40BK2B D1 (wave 33) — THE ORBIT KILL STEERS TO A POINT THE PLAYER CAN STAND ON. `orbitKillPolicy`
      * aims at a point on a circle round the body and steers straight at it (`chooseHeld`), which is right in an open
@@ -1668,7 +1668,7 @@ export const CONTACT_FIDELITY = {
      * where the rect reaches across one — walked to, ONE thrust (a second would toggle the light out), finished on the
      * run's own pole write (`earnedClears`). OFF: no row, byte-identical. `SEEDLING_IN_ROOM_POLE_THRUST=0|1`.
      */
-    inRoomPoleThrust: false,
+    inRoomPoleThrust: true,
     /**
      * fidelity L12DOORS D1 (wave 34) — A WAND SHOT STOPS ON A LIVE CHASER, AND A ROOM WITH ONE MAY FIRE.
      *
@@ -1684,7 +1684,7 @@ export const CONTACT_FIDELITY = {
      * Under `noclip`/`noDamage` (no chaser position) the room still refuses. OFF: byte-identical.
      * `SEEDLING_WAND_SHOT_CHASER_BODIES=0|1`.
      */
-    wandShotChaserBodies: false,
+    wandShotChaserBodies: true,
     /**
      * fidelity L12DOORS D2 (wave 34) — A DOOR THE 16 px FRONTIER CANNOT SEE, NEARER THE AIM, IS ASKED ON THE 8 px
      * LATTICE (`solverBot.identifyAndSelect`'s frontier flood).
@@ -1696,7 +1696,7 @@ export const CONTACT_FIDELITY = {
      * door the 16 px one lacks, nearer the aim than every 16 px actionable door, the 8 px frontier is asked. OFF:
      * byte-identical. `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`.
      */
-    fineFrontierHiddenDoor: false,
+    fineFrontierHiddenDoor: true,
     /**
      * fidelity L12DOORS D3 (wave 34) — A WAND STANCE THE 8 px LATTICE REACHES (`solverBot.resolveWandStrategy`).
      *
@@ -1705,7 +1705,7 @@ export const CONTACT_FIDELITY = {
      * it refuses is asked once more on `FINE_LATTICE` in the world as it is. OFF: byte-identical.
      * `SEEDLING_FINE_WAND_STANCE=0|1`.
      */
-    fineWandStance: false,
+    fineWandStance: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

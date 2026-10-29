@@ -31,7 +31,7 @@ import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { parseTape } from './tapeFormat.js';
 import { arrivalStaging } from './fidelityArrival.js';
-import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
+import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { OBSTACLE_STRATEGIES, solveSegment, SolverRefusal, STRATEGY_EXECUTORS } from './solverBot.js';
 import { RIGHT, UP } from './presses.js';
 import { DEFAULT_DASH_MODE } from '../../../scripts/procgen/dashMode.js';
@@ -68,8 +68,8 @@ const solveOn = (id, boot, { items = BAG, cleared = [] } = {}) => {
 };
 
 describe('fidelity LIGHTPOLE — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY.inRoomPoleThrust).toBe(false);
+    it('ships ON (the W34 flip, ⚖ user 2026-10-28)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.inRoomPoleThrust).toBe(true);
     });
 
     it('OFF: no row (both tables read as before), and the JS side and the solver both refuse no-verb', () => {
