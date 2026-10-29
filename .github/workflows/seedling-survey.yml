@@ -67,6 +67,8 @@ permissions:
   actions: read
 
 env:
+  # MEASUREMENT ARM (seedling-js-xc-model): CONTACT_FIDELITY.secondaryUse ON for every survey child.
+  SEEDLING_SECONDARY_USE: '1'
   # ⛓ the push-ref trigger has no inputs: these are its defaults (the dispatch defaults, spelled once more)
   ROUTE_IN: ${{ inputs.route || 'both' }}
   TIMEOUT_IN: ${{ inputs.timeout || 1500 }}
