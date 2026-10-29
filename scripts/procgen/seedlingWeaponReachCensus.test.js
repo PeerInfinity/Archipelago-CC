@@ -1,0 +1,65 @@
+/**
+ * ⛓ RULES weapon-reach-census — ONCE THE GHOST SWORD IS HELD THE THRUST IS GONE: the census
+ * (`census-seedling-weapon-reach.mjs`) compares, for every Spear-typed target and ghost rock, the stances the Spear
+ * thrust hits it from with the stances the Ghost Sword swing does.
+ *
+ * Pinned so the count cannot drift silently: a new pole event, a moved stance, or a model change that turns a "same"
+ * into a LOOSER reds a row here and has to be read. The probe's scenes (`probe-seedling-weapon-reach.mjs`) are pinned
+ * to the census's own stances, so a witness can never test a stance the census no longer names.
+ */
+import { describe, it, expect, beforeAll } from 'vitest';
+
+import { buildPlaythroughAtlas } from './make-seedling-playthrough-rules.mjs';
+import { censusWeaponReach, isFinding, isRulesLooser } from './census-seedling-weapon-reach.mjs';
+import { SCENES } from './probe-seedling-weapon-reach.mjs';
+
+let rows;
+beforeAll(() => {
+    rows = censusWeaponReach({ atlas: buildPlaythroughAtlas() });
+}, 300_000);
+
+const name = (r) => `L${r.level} ${r.target}`;
+const FACING = { right: 'E', up: 'N', left: 'W', down: 'S' };
+
+describe('the weapon reach census', () => {
+    it('counts 38 rows: 20 poles, 12 spear-block push facings, 4 bridge runs, 2 ghost rocks', () => {
+        const kinds = {};
+        for (const r of rows) kinds[r.kind] = (kinds[r.kind] ?? 0) + 1;
+        expect(kinds).toEqual({ pole: 20, block: 12, bridge: 4, rock: 2 });
+        expect(rows.filter(isFinding).length).toBe(23);
+    });
+
+    it('3 RULES-LOOSER: charged poles the thrust lights from a side the swing cannot', () => {
+        expect(rows.filter(isRulesLooser).map(name)).toEqual([
+            'L62 lightpole@120,200',
+            'L63 lightpole@64,88',
+            'L101 lightpole@144,64',
+        ]);
+    });
+
+    it('2 charged poles are TIGHTER: the swing lights them from the L65 landing pocket, no thrust does', () => {
+        expect(rows.filter((r) => r.kind === 'pole' && r.charged && /TIGHTER/.test(r.verdict)).map(name)).toEqual([
+            'L63 lightpole@48,272',
+            'L63 lightpole@112,272',
+        ]);
+    });
+
+    it('the block search\'s one stance (behind the block) is the same for both weapons, every block, every facing', () => {
+        for (const r of rows.filter((x) => x.kind === 'block')) expect(r.rulesStanceSwing, name(r)).toBe(r.rulesStanceThrust);
+    });
+
+    it('every bridge run opens from the same banks with either weapon; every ghost rock has a swing stance', () => {
+        expect(rows.filter((r) => r.kind === 'bridge').map((r) => r.verdict)).toEqual(['same', 'same', 'same', 'same']);
+        expect(rows.filter((r) => r.kind === 'rock').map((r) => [name(r), r.swing.length > 0]))
+            .toEqual([['L3 breakablerockghost@0,64', true], ['L101 breakablerockghost@224,96', true]]);
+    });
+
+    it('the probe\'s scenes are census stances: thrust-only or swing-only as each scene claims', () => {
+        for (const [scene, s] of Object.entries(SCENES)) {
+            const pole = rows.find((r) => r.kind === 'pole' && r.level === s.level && r.tag === s.tag);
+            expect(pole, scene).toBeTruthy();
+            const at = (list) => list.some((x) => x.startsWith(`[${s.tile}]`) && x.split('@')[0].includes(FACING[s.dir]));
+            expect([at(pole.thrust), at(pole.swing)], scene).toEqual([s.thrust, s.swing]);
+        }
+    });
+});
