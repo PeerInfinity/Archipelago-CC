@@ -70,7 +70,7 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 | Vitest benchmarks | `npm run bench` | **No workflow** | Performance benchmarks |
 | Playwright (spoilers) | `npm test -- --mode=test-spoilers` | `test-templates.yml` + others | Invoked indirectly by Python test scripts |
 | Playwright (regression) | `npm test -- --mode=test-regression` | `test-templates.yml` | push/PR trigger |
-| Playwright (substrates, on-push batches) | `npm test -- --mode=test-substrates --batch=<fast\|seedling-js\|apworld>` | `test-templates.yml` | push/PR trigger |
+| Playwright (substrates, on-push batches) | `npm test -- --mode=test-substrates --batch=<fast\|seedling-js\|seedling-wasm\|playback-bot\|apworld>` | `test-templates.yml` | push/PR trigger |
 | Playwright (substrates, manual batches) | `npm test -- --mode=test-substrates --batch=<bot-walks\|noiz2sa\|runner>` | `test-substrates-manual.yml` | manual only |
 | Playwright (multiclient) | `npm run test:multiclient` | `test-all-sequential.yml` | dispatch only |
 | Health check | `npm run test:health` | **No workflow** | |

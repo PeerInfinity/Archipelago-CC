@@ -54,6 +54,13 @@ const RUNTIME_KEY = 'moduleSettings.flashPanel.runtime';
 const CODE_FOR = Object.freeze({ left: 'ArrowLeft', right: 'ArrowRight', up: 'ArrowUp', down: 'ArrowDown' });
 const STEP_MS = 40;
 
+/**
+ * The row's CATEGORY, which picks its CI batch (testBatches.js): the JS-runtime rows are `seedling-js`; the wasm
+ * and Flash rows (a wasm row boots the recompiled game, which needs the WebGPU launch) are `seedling-wasm`. Split on
+ * 2026-10-28, when the one batch reached 94 % of its budget. Batch membership only: no row's logic depends on it.
+ */
+const seedlingRuntimeCategory = (id) => (id.startsWith('seedling-js-') ? 'Seedling JS runtime' : 'Seedling wasm runtime');
+
 function readCurrentRegion() {
     try {
         const gs = getGameStateSingleton();
@@ -416,7 +423,7 @@ registerTest({
         + 'controller (⛓ §5.36: the solver serves a location or an exit) and the bot\'s status names it '
         + '— never a silent wait. The wasm page is never started.',
     testFunction: seedlingWasmRuntimeBotNamesItsRefusal,
-    category: 'Seedling JS runtime',
+    category: 'Seedling wasm runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -2776,7 +2783,7 @@ for (const [id, name, fn] of [
     registerTest({
         id, name, description: LOOP_GEN_DESCRIPTION(id.startsWith('seedling-js') ? 'js' : 'wasm'),
         testFunction: restoresSavedQueues(fn),
-        category: 'Seedling JS runtime',
+        category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
@@ -2909,7 +2916,7 @@ registerTest({
         + 'mode on, the house block Bot. The flash_seedling controller refuses the walk synchronously, naming the Flash '
         + 'runtime, and loops publishes loopState:botWalkFailed carrying that lastRefusal; the park is dropped.',
     testFunction: restoresSavedQueues(seedlingFlashRuntimeLoopBotBlockNamesItsStop),
-    category: 'Seedling JS runtime',
+    category: 'Seedling wasm runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
@@ -3091,7 +3098,7 @@ for (const [id, name, fn, description] of [
     registerTest({
         id, name, description,
         testFunction: restoresSavedQueues(fn),
-        category: 'Seedling JS runtime',
+        category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
@@ -3122,7 +3129,7 @@ for (const [id, name, fn, description] of [
     registerTest({
         id, name, description,
         testFunction: restoresSavedQueues(fn),
-        category: 'Seedling JS runtime',
+        category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
@@ -4155,7 +4162,7 @@ for (const [id, name, fn] of [
     registerTest({
         id, name, description: TOUCH_DESCRIPTION(id.startsWith('seedling-js') ? 'js' : 'wasm'),
         testFunction: fn,
-        category: 'Seedling JS runtime',
+        category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }

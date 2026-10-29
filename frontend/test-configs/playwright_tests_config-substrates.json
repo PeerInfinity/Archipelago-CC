@@ -485,7 +485,7 @@
         {
             "id": "seedling-wasm-runtime-bot-names-refusal",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Seedling JS J2; ⛓ WG: generated rooms ARE walked on wasm now, so the row names the refusal that REMAINS — a tile target in a generated room (no tape producer serves it) is refused and the bot's status NAMES it (P0's rule: never a silent wait). The wasm page is loaded but never started."
         },
         {
@@ -629,7 +629,7 @@
         {
             "id": "seedling-wasm-runtime-loop-bot-block-walks-atlas-room",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Seedling loop mode, the WASM runtime (WebGPU — the batch launches Chromium with it): the JS row's house walk under a Bot block, the tapes from the wasm playback engine."
         },
         {
@@ -641,7 +641,7 @@
         {
             "id": "seedling-wasm-runtime-loop-bot-block-walks-generated-room",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Re-enabled (2026-10-12) with the seedling-js-tutorial-walk-regression fix: its 2/14 CI flake (tick-1 exact-repeat divergence on region_0_0__key_blue_pickup, expected y 40.8, game y 40) was the wind cutscene leaking past the skip under the explicit start's record; the cold start now waits a showing scene out (seedlingWasmPlayback adoptLive) instead of re-arriving into it. The JS row's generated-room walk on the WASM runtime (WebGPU — the batch launches Chromium with it): the WG engine stages the mounted set, the solver produces the tapes; the game's Game.time drains the start room."
         },
         {
@@ -659,25 +659,25 @@
         {
             "id": "seedling-wasm-runtime-loop-play-clock-drains-mana",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's drain and stopped-clock checks; the game's Game.time off botStatus, its solves held by the row (the engine freezes the room)."
         },
         {
             "id": "seedling-wasm-runtime-loop-play-clock-mana-out",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's mana-out — the idle game's Game.time runs the cut pool out and the loop ends."
         },
         {
             "id": "seedling-wasm-runtime-loop-bot-blocks-cross-atlas-rooms",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Seedling loop mode, the WASM runtime (WebGPU): the JS row's stairs, descent and logical-link credit under Bot blocks."
         },
         {
             "id": "seedling-flash-runtime-loop-bot-block-names-its-stop",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "Seedling loop mode, the Flash (Ruffle) runtime: a Bot block's walkTo is refused by name (no feet), and loops' named stop (loopState:botWalkFailed, loop-mode-bot's fix) carries the controller's lastRefusal. Ruffle is fetched from its CDN; the SWF is not committed, so no game boots."
         },
         {
@@ -2101,7 +2101,7 @@
         {
             "id": "seedling-wasm-runtime-touch-controls",
             "enabled": true,
-            "category": "Seedling JS runtime",
+            "category": "Seedling wasm runtime",
             "_comment": "TOUCH CONTROLS on the wasm runtime (WebGPU, the seedling-js batch's launch): the same row; Esc shown (wasm only); X asserted as the keydown/keyup pair the frame heard (the wasm page has no swing ledger). seedling-js batch."
         },
         {
