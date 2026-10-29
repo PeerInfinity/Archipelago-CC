@@ -1,0 +1,2 @@
+124  L63 visit 1  boot=staged:r8-solve-11  goals: clear-tag(L62 flag 0: lightpole@120,200 cleared (flag:L62:0) — broken before row 7.5 walks its landing) then reach-exit(teleporter@16,0 → L62)
+226  L101 visit 2  boot=staged:r8-solve-11  goals: clear-tag(L101 flag 0: lightpole@144,64 cleared (flag:L101:0) — broken before row 12.1 walks its landing) then reach-exit(stairsup@144,96 → L102)

@@ -155,6 +155,8 @@ import {
     KILLLOCK_BODIES,
     // ⛓⛓⛓ seedling-fidelity-ghostsword D2: the break verb's ghostsword row (the switch and the no-sword refusal).
     GHOSTSWORD_PRESS, ghostSwingRefusal,
+    // ⛓ fidelity LIGHTPOLE D2: the ghost swing's rect and reach (the pole verb's ghost arm).
+    GHOST_SWORD_REACH, ghostSlashRect,
     // ⛓⛓ seedling-fidelity-pushblock: the spear push's stance audit (what else the thrust's rect reaches).
     auditPress, PRESS_ARM_POLICY,
     // ⛓ fidelity FIREMOVE: the fire route's push and its flame audit (`deriveBlockRoute`'s fire arm).
@@ -516,7 +518,7 @@ const fail = (m, opts) => { throw new SolverBotError(m, opts); };
  *   rather than guessed. Registering an executor is one row here; that is
  *   the "adds policies rather than restructuring" contract.
  */
-export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
+export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     'solid:pushableblock': 'shove',
     'solid:pushableblockfire': 'shove',
     /**
@@ -739,7 +741,14 @@ export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(s
  * (`resolveBridgeStrategy` / `execBridge`) is a spear thrust from a stance one or two tiles behind it, and the wait until
  * the run's `openBridges` holds it. OFF no row: the tile stays a wall to the frontier.
  */
-'solid:bridge', () => (CONTACT_FIDELITY.spearBridgeVerb ? 'bridge' : undefined)));
+'solid:bridge', () => (CONTACT_FIDELITY.spearBridgeVerb ? 'bridge' : undefined)),
+/**
+ * ⛓⛓⛓ fidelity LIGHTPOLE D2 (wave 34, `CONTACT_FIDELITY.inRoomPoleThrust`) — **AN IN-ROOM POLE IS LIT BY A THRUST.** A
+ * `LightPole` is no Solid (`levelWorld`'s `notSolid`), so only a `clear-tag` on its own tag names it: the rules' in-room
+ * pole event. The verb (`resolvePoleThrustStrategy` / `execPoleThrust`) is ONE Spear thrust from a stance whose rect
+ * lies on the pole's core. OFF no row: the clear-tag keeps *"no strategy row exists for solid:lightpole"*.
+ */
+'solid:lightpole', () => (CONTACT_FIDELITY.inRoomPoleThrust ? 'pole' : undefined)));
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — **THE SECOND SELECTION PATH, AS DATA.**
@@ -804,7 +813,7 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
  * row that had to DERIVE its own parameters rather than bind a placement: a
  * leg spec carried `{presser, ticks}` and a live policy has to work out both.
  */
-export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
+export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     collect: execCollect,
     chest: execChest,
     hold: execHold,
@@ -912,7 +921,9 @@ export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(sw
 // ⛓ fidelity L67BK4 D2 — `totem` (switch-gated on `totemBossFight`): the L43 fight. See `execTotemBoss`.
 'totem', () => (CONTACT_FIDELITY.totemBossFight ? execTotemBoss : undefined)),
 // ⛓ fidelity L39SHAFT — `l39shaft` (switch-gated on `l39ShaftPress`): L39's licensed special case. See `execL39Shaft`.
-'l39shaft', () => (CONTACT_FIDELITY.l39ShaftPress ? execL39Shaft : undefined)));
+'l39shaft', () => (CONTACT_FIDELITY.l39ShaftPress ? execL39Shaft : undefined)),
+// ⛓ fidelity LIGHTPOLE D2 — `pole` (switch-gated on `inRoomPoleThrust`): one Spear thrust at a pole. See `execPoleThrust`.
+'pole', () => (CONTACT_FIDELITY.inRoomPoleThrust ? execPoleThrust : undefined)));
 
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — **THE FRONTIER'S EXECUTOR LOOKUP**, and the
@@ -2339,7 +2350,8 @@ function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
             missed += 1;
             continue;
         }
-        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis)
+            ?? (CONTACT_FIDELITY.fineWandStance ? fineWandStanceReaches(run, c, contacts) : null);
         if (!reached) { unreached += 1; continue; }
         const here = run.state.x === c.x && run.state.y === c.y;
         return {
@@ -2366,6 +2378,26 @@ function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
         + `tiles; ${missed} lean into a shot whose first blocker is not the lock, and ${unreached} plan no corridor `
         + `from (${run.state.x},${run.state.y}). ⇒ the lock is on the frontier and the room offers nowhere to stand and `
         + 'shoot it.', { obstacle: { kind: 'solid', tag: obstacle.tag ?? null, id: lock.id } });
+}
+
+/**
+ * ⛓⛓ fidelity L12DOORS D3 (`CONTACT_FIDELITY.fineWandStance`, OFF) — **A WAND STANCE REACHED ONLY ON THE 8 px LATTICE.**
+ * L12's stacked doors at `@32,864` are shot from the strip under them, and that strip is reached through a cliffside
+ * gap (player x 202..214 at y 896) no 16 px node centre fits: `stanceReaches` (the run's lattice, then the hypothesis)
+ * plans no corridor to any of the six candidates, though the player fits. ON: a candidate the 16 px ask refuses is
+ * asked once more on `FINE_LATTICE`, in the world as it is (no hypothesis), and the walk to it is the FRONTIER3 fine
+ * walk `walkTo` already plans. OFF: byte-identical. `SEEDLING_FINE_WAND_STANCE=0|1`.
+ */
+function fineWandStanceReaches(run, c, contacts) {
+    if ((solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) <= FINE_LATTICE) return null;
+    try {
+        planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
+            solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
+        return { discharged: [] };
+    } catch (e) {
+        if (!(e instanceof BotDriverV2Error)) throw e;
+    }
+    return null;
 }
 
 /**
@@ -3114,6 +3146,8 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'l39shaft') return resolveL39ShaftStrategy(run, obstacle);
     // ⛓ fidelity RULESREF — reached only while `spearBridgeVerb` registers the verb (`frontierExecutor`).
     if (strategy === 'bridge') return resolveBridgeStrategy(run, obstacle, contacts);
+    // ⛓ fidelity LIGHTPOLE D2 — reached only while `inRoomPoleThrust` registers the verb (the row is switch-gated).
+    if (strategy === 'pole') return resolvePoleThrustStrategy(run, obstacle, contacts);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -10398,9 +10432,12 @@ function bagWithDischarged(run, bag, hypothesis) {
  * derivation that leaned on optimism it did not need would make guard (ii)
  * fire for nothing.
  */
-function stanceReaches(run, aim, contacts, hypothesisOf) {
+function stanceReaches(run, aim, contacts, hypothesisOf, lattice = null) {
+    // ⛓ L100FIX: `lattice` plans both questions on that pitch (the swing's 8 px arm); absent, the opts are the ones
+    // they always were.
+    const onLattice = lattice === null ? {} : { lattice };
     try {
-        planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, contacts));
+        planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, contacts, onLattice));
         return { discharged: [] };
     } catch (e) {
         if (!(e instanceof BotDriverV2Error)) throw e;
@@ -10429,6 +10466,7 @@ function stanceReaches(run, aim, contacts, hypothesisOf) {
     try {
         planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, exempt, {
             liveBag: bagWithDischarged(run, run.liveGeometryOpts(), hypothesis),
+            ...onLattice,
         }));
         return { discharged: hypothesis.map((h) => h.id), exempt };
     } catch (e) {
@@ -11089,6 +11127,215 @@ function execBridge(run, perTick, resolved, ctx) {
         verb: 'bridge', target: id, bridge: { ...resolved.bridge }, dir: resolved.dir, weapon: 'spear',
         slot: resolved.slot, restoredSlot: prior !== resolved.slot ? prior : null,
         from, pressTick: rec?.pressTick ?? null, ticks: perTick.length - from,
+    };
+}
+
+/**
+ * ⛓⛓⛓ fidelity LIGHTPOLE D2 (wave 34, `CONTACT_FIDELITY.inRoomPoleThrust`) — **AN IN-ROOM POLE IS LIT BY ONE SPEAR
+ * THRUST — OR ONE GHOST SWING — FROM WHEREVER THE PRESS'S RECT LIES ON IT.**
+ *
+ *     Player.as:955-990     spear(): a 32x5 rect from the player's spear origin, by facing (`spearHitRect`)
+ *     Player.as:1083-1088   genericHit: `if (t == "Spear") (e as LightPole).hit()`
+ *     Player.as:917         slash(): `genericHit(e, hasGhostSword ? "Spear" : "Sword", …)` — the ghost swing is "Spear"
+ *     LightPole.as:77-84    hit(): `activate = !activate` behind a 25-tick `hitsTimer`
+ *     LightPole.as:46,61    the hitbox, re-anchored and bobbing ±2 by `render()` (`LIGHTPOLE_PRESS_BOX`, the envelope)
+ *
+ * THE ARM is the bag's: the Spear's thrust, or — once the Ghost Sword has FUSED the Sword and Spear slots into one
+ * (`appendInventorySlots`: the spear slot is removed) — the ghost swing, whose arm is "Spear" too and which the run
+ * steps against a pole (`ghostSword.GHOST_PRESS_ARMS.LightPole`, modelled): `ghostSlashRect`, the reach
+ * `GHOST_SWORD_REACH` measured to the pole's core, the line waived. A plain sword swing is "Sword": no arm.
+ *
+ * The stance is GEOMETRY, never a table: every point of every walkable tile within reach of the pole (sampled every
+ * 2 px, plus the edge a box stands FLUSH against — the L101 thrust THROUGH the wall [8,4] is from [7,4] pressed up,
+ * y 66, the rules' witness), in each facing whose rect touches the pole's bob-invariant core (the envelope less
+ * 2 * `bob` top and bottom, as the dark-trap light arm reads it, `deriveLightPole`). The rect ignores walls, as
+ * `collideRectInto` does. A point flush on the FACING axis is left out: a box pinned against what it faces gets no
+ * velocity from the face tap, so no facing (`Player.direction` comes from velocity). Then, as the light arm: no other
+ * press responder, no bridge tile and no non-`DarkTrap` body in the rect, the player box clear of every live dark trap
+ * and of every solid, and a corridor (the 16 px planner, then the 8 px one). Deep stances (`LIGHT_ARM_CORE_MARGIN` px
+ * on both axes) first — the walk settles NEAR a stance — then the lattice's own points, then distance.
+ * ⛔ No arm: `held: false` (the Spear is the work order). No stance: refused by name, with the counts.
+ */
+function resolvePoleThrustStrategy(run, obstacle, contacts) {
+    const pole = (run.world.pressResponders ?? []).find((r) => r.as3 === 'LightPole'
+        && `${r.tag}@${r.x},${r.y}` === obstacle.id);
+    if (!pole) return null;
+    const target = { id: obstacle.id, x: pole.x, y: pole.y };
+    const inv = run.progress('inventory') ?? {};
+    const slots = run.progress('inventorySlots') ?? [];
+    const ghost = inv.hasGhostSword && GHOSTSWORD_PRESS.enabled && !ghostSwingRefusal(inv);
+    const arm = ghost ? { weapon: 'ghostsword', slot: slots.indexOf(INVENTORY_ITEM_IDS.ghostsword),
+        rectAt: ghostSlashRect, reach: GHOST_SWORD_REACH }
+        : { weapon: 'spear', slot: inv.hasSpear ? slots.indexOf(INVENTORY_ITEM_IDS.spear) : -1,
+            rectAt: spearHitRect, reach: Infinity };
+    if (arm.slot < 0) {
+        return {
+            strategy: 'pole', held: false, target,
+            rejected: [{
+                option: `thrust at ${obstacle.id}`,
+                why: `the run holds NO SPEAR${inv.hasGhostSword ? ' and its ghost swing is refused '
+                    + `(${!GHOSTSWORD_PRESS.enabled ? 'GHOSTSWORD_PRESS is off' : ghostSwingRefusal(inv)})` : ''}. `
+                    + '`genericHit` calls `(e as LightPole).hit()` only under `t == "Spear"` (the thrust, or the ghost '
+                    + 'swing), so no other weapon lights a pole. ⇒ the Spear is the work order.',
+            }],
+        };
+    }
+    const D = DARKTRAP_LIGHT_DEATH;
+    const core = { x: pole.rect.x, y: pole.rect.y + D.pole.bob * 2,
+        right: pole.rect.right, bottom: pole.rect.bottom - D.pole.bob * 2 };
+    const cx = (core.x + core.right) / 2;
+    const cy = (core.y + core.bottom) / 2;
+    const depth = (r) => Math.min(Math.min(r.right, core.right) - Math.max(r.x, core.x),
+        Math.min(r.bottom, core.bottom) - Math.max(r.y, core.y));
+    const traps = (run.entities('darkTraps') ?? []).filter((b) => !b.removed && !b.startDying);
+    const H = HITBOX;
+    const xs = [2, 4, 6, 8, 10, 12, 14];
+    const ys = [2, 4, 6, 8, 10, 12, 13];
+    const flushX = new Set([H.originX, TILE_SIZE - (H.width - H.originX)]);
+    const flushY = new Set([H.originY, TILE_SIZE - (H.height - H.originY)]);
+    const along = (r) => Math.max(r.right - r.x, r.bottom - r.y);
+    const reach = Math.min(arm.reach, along(arm.rectAt(0, 0, RIGHT)) + TILE_SIZE) + TILE_SIZE;
+    const cands = [];
+    for (const t of run.world.walkableTiles ?? []) {
+        if (Math.hypot(t.rect.x + 8 - cx, t.rect.y + 8 - cy) > reach + TILE_SIZE) continue;
+        for (const ox of xs) {
+            for (const oy of ys) {
+                const x = t.rect.x + ox;
+                const y = t.rect.y + oy;
+                if (distanceRectPoint(x, y, core) > arm.reach) continue;
+                for (const dir of [RIGHT, UP, LEFT, DOWN]) {
+                    const horizontal = dir === RIGHT || dir === LEFT;
+                    if (horizontal ? flushX.has(ox) : flushY.has(oy)) continue;
+                    const sr = arm.rectAt(x, y, dir);
+                    if (!pressRectTouches(sr, core)) continue;
+                    const lattice = (ox === 8 && oy === 8) ? 0 : ([4, 12].includes(ox) && [4, 12].includes(oy) ? 1 : 2);
+                    cands.push({ x, y, dir, sr, deep: depth(sr) >= LIGHT_ARM_CORE_MARGIN ? 0 : 1, lattice,
+                        d: Math.hypot(x - run.state.x, y - run.state.y) });
+                }
+            }
+        }
+    }
+    cands.sort((a, b) => (a.deep - b.deep) || (a.lattice - b.lattice) || (a.d - b.d));
+    let crowded = 0;
+    let unsafe = 0;
+    let unreached = 0;
+    for (const c of cands) {
+        const others = run.world.pressResponders.filter((r) => r !== pole && pressRectTouches(c.sr, r.rect));
+        const bridges = (run.world.bridgeTiles ?? []).filter((b) => pressRectTouches(c.sr, b.rect));
+        const bodies = (run.world.combat?.enemies ?? []).filter((e) => e.as3 !== 'DarkTrap'
+            && contactRect(e) && pressRectTouches(c.sr, contactRect(e)));
+        if (others.length > 0 || bridges.length > 0 || bodies.length > 0 || solidsAt(run.world, c.x, c.y).length > 0) {
+            crowded += 1;
+            continue;
+        }
+        if (traps.some((b) => rectsOverlapLocal(playerBoxAt(c.x, c.y), b.rect))) { unsafe += 1; continue; }
+        const here = Math.abs(run.state.x - c.x) < 0.5 && Math.abs(run.state.y - c.y) < 0.5;
+        let ok = here;
+        for (const lattice of here ? [] : [DEFAULT_LATTICE, FINE_LATTICE]) {
+            try {
+                planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null, solverPlanOpts(run, contacts, { lattice }));
+                ok = true;
+                break;
+            } catch (e) {
+                if (!(e instanceof BotDriverV2Error)) throw e;
+            }
+        }
+        if (!ok) { unreached += 1; continue; }
+        return {
+            strategy: 'pole',
+            postCondition: 'lit',
+            held: true,
+            target,
+            weapon: arm.weapon,
+            slot: arm.slot,
+            reach: arm.reach,
+            dir: c.dir,
+            stance: { x: c.x, y: c.y },
+            core,
+            rejected: [{
+                option: ghost ? 'a plain sword swing / a second swing' : 'a sword slash / a second thrust',
+                why: 'only a "Spear" hit reaches `LightPole.hit()` (the thrust, or the ghost swing), and the hit '
+                    + 'TOGGLES: a second one puts the light out and writes the tag back (`set activate`)',
+            }],
+        };
+    }
+    throw new SolverRefusal(`solverBot: pole ${obstacle.id} in level ${run.level} — no stance ${arm.weapon === 'spear'
+        ? 'thrusts' : 'swings the ghost sword'} at its core and is reachable: ${cands.length} point/facing pair(s) put `
+        + `the ${arm.weapon}'s rect on the core; ${crowded} also hit another responder, a bridge or a body or stand in a `
+        + `solid, ${unsafe} stand inside a live dark trap, and ${unreached} plan no corridor from `
+        + `(${run.state.x},${run.state.y}).`,
+    { obstacle: { kind: 'solid', tag: 'lightpole', id: obstacle.id } });
+}
+
+/** ⛓ fidelity LIGHTPOLE D2 — ticks after the thrust within which the pole's write must show (the fire is T + 1). */
+export const POLE_THRUST_WRITE_TICKS = 4;
+
+/**
+ * ⛓⛓⛓ fidelity LIGHTPOLE D2 — the `pole` verb's executor: SETTLE, the face tap (the light arm's), RE-ASK the rect (and
+ * the ghost swing's reach) from where the walk stopped, the POSITIVE CONTROL (the pole unlit-active and its `hitsTimer` 0 — a thrust then is the one
+ * toggle), SELECT the spear's slot, ONE `primary` tick, then wait (idle) until the run's pole state is `activate`, and
+ * the old slot selected again. ⛔ Exactly one press: the repeats a thrust's rect gets (`SPEAR_REPEAT_OFFSETS`) are
+ * inside the pole's 25-tick `hitsTimer`, so the one press is one toggle — and the record names the run's `hitsTimer`.
+ */
+function execPoleThrust(run, perTick, resolved, ctx) {
+    const id = resolved.target.id;
+    const refuse = (why) => {
+        throw new SolverRefusal(`${ctx.what}: ${why}`, { obstacle: { kind: 'solid', tag: 'lightpole', id } });
+    };
+    if (resolved.held === false) refuse(`${id} cannot be lit by this run — ${resolved.rejected[0].why}`);
+    const IDLE = new Set();
+    const from = perTick.length;
+    const step = (keys, why) => {
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) refuse(`${why} crossed to level ${transition.to_level} — a pole is lit in its own room.`);
+    };
+    const settle = (why) => {
+        for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+            if (i > 60) refuse(`${why} never came to rest.`);
+            step(IDLE, why);
+        }
+    };
+    settle('the walk to the pole stance');
+    // The facing is `Player.direction`, the last tick with velocity: a one-tick tap, then the coast.
+    if (run.state.direction !== resolved.dir) {
+        step(new Set([FACING_KEYS[resolved.dir]]), 'the face tap');
+        settle('the face tap');
+    }
+    const rectAt = resolved.weapon === 'ghostsword' ? ghostSlashRect : spearHitRect;
+    const sr = rectAt(run.state.x, run.state.y, run.state.direction);
+    if (run.state.direction !== resolved.dir || !pressRectTouches(sr, resolved.core)
+        || distanceRectPoint(run.state.x, run.state.y, resolved.core) > resolved.reach) {
+        refuse(`the stance settled at (${run.state.x},${run.state.y}) facing ${run.state.direction}, and the ${resolved.weapon} rect `
+            + `from there does not reach ${id}'s core — the derivation's stance was (${resolved.stance.x},`
+            + `${resolved.stance.y}) facing ${resolved.dir}.`);
+    }
+    const live = () => (run.lightPolesNow ?? []).find((p) => p.id === id) ?? null;
+    if (!live() || live().activate || live().hitsTimer > 0) {
+        refuse(`the positive control failed before the thrust: ${id} is ${live() ? `activate ${live().activate}, `
+            + `hitsTimer ${live().hitsTimer}` : 'not in the run\'s pole state'} — a thrust would not be the one toggle.`);
+    }
+    for (let i = 0; (run.progress('frozenTimer') ?? 0) > 1; i += 1) {
+        if (i > 105) refuse(`still frozen after ${i} ticks.`);
+        step(IDLE, 'the freeze wait');
+    }
+    const prior = run.progress('primary');
+    if (prior !== resolved.slot) ctx.equip(resolved.slot);
+    const pressTick = perTick.length;
+    step(new Set(['primary']), 'the thrust');
+    for (let i = 0; !live()?.activate; i += 1) {
+        if (i >= POLE_THRUST_WRITE_TICKS) {
+            refuse(`${id} is not activate ${i} tick(s) after the thrust from (${run.state.x},${run.state.y}) facing `
+                + `${run.state.direction} — the model's own hit did not land, so this is a refusal, not a wait.`);
+        }
+        step(IDLE, 'the wait for the toggle');
+    }
+    if (prior !== resolved.slot) ctx.equip(prior);
+    return {
+        verb: 'pole', target: id, dir: resolved.dir, stance: { ...resolved.stance },
+        at: { x: run.state.x, y: run.state.y }, weapon: resolved.weapon, slot: resolved.slot,
+        restoredSlot: prior !== resolved.slot ? prior : null, from, pressTick,
+        hitsTimer: live()?.hitsTimer ?? null, ticks: perTick.length - from,
     };
 }
 
@@ -20263,19 +20510,38 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
      * between the `cliffside` masks and the rock: every 16 px cell there is a centre x 120 whose 4x5 box meets the
      * mask. Once every 16 px cell has failed, the same pixel window is asked on the 8 px lattice (nodes x 124), in the
      * world as it is and planned on that lattice — `deriveKeylockStance`'s RULESREF arm, for a swing.
+     *
+     * ⛓⛓ L100FIX (wave 34) — THE ARM ASKS ONLY THE CELLS THE 16 px RING CANNOT NAME, BY THE RING'S OWN TEST.
+     * MEASURED on L40 leg 371 (`fidelityWandHold`, staging `l40buttonStaging({level:40,x:848,y:16})`): at t1286 the
+     * walk to the break stance (200,136) re-derives it from (270.6,174.2), whose 16 px tile is not walkable
+     * (`ruinedpillar@264,136`), so all three ring cells (168,136) (200,136) (200,152) failed on the START, not on
+     * themselves. The 8 px plan from that same start is a straight line to (196,132) — a cell INSIDE the ring cell
+     * (200,136)'s tile — and admitting it replaced the ring's refusal (OFF: the ladder kills `spinner@192,128`, then
+     * breaks from (200,136)) with a fifth application of `break`, refused by `MAX_STRATEGIES_PER_GOAL`. All eleven
+     * 8 px candidates there sit inside a ring cell's tile. ⇒ a fine cell whose 16 px node is itself a ring candidate
+     * was ALREADY ASKED, and a different answer on the finer lattice is the start's lattice, not a new stance; L100's
+     * sliver cells (124,y) have 16 px nodes (120,y) that are mask obstacles, so they are the cells this arm is for.
+     * Each new cell is then admitted by `stanceReaches` — the ring's test, direct then under the same ownless
+     * hypothesis — planned on the 8 px lattice.
      */
     if (CONTACT_FIDELITY.fineSwingStance) {
         const fine = breakStanceCandidates(run, target,
             solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }), FINE_LATTICE);
-        for (const c of fine.candidates) {
-            if (admit && !admit(c)) continue;
-            try {
-                planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
-                    solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
-                return { stance: { x: c.x, y: c.y }, discharged: [] };
-            } catch (e) {
-                if (!(e instanceof BotDriverV2Error)) throw e;
+        const named = new Set(candidates.map((c) => `${c.x},${c.y}`));
+        const fresh = fine.candidates.filter((c) => {
+            const n = nodeAt(c.x, c.y, DEFAULT_LATTICE);
+            const ring = nodeCentre(n.tx, n.ty, DEFAULT_LATTICE);
+            return !named.has(`${ring.x},${ring.y}`) && !(admit && !admit(c));
+        });
+        if (STANCE_ROCKS.enabled) {
+            for (const c of fresh) {
+                const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, () => [], FINE_LATTICE);
+                if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
             }
+        }
+        for (const c of fresh) {
+            const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis, FINE_LATTICE);
+            if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
         }
     }
     throw new SolverRefusal(refusal({ candidates, outOfReach, noRect, unsafe }),
@@ -25115,6 +25381,25 @@ function solveSegmentUnder({
             }
         }
         /**
+         * ⛓⛓ fidelity L12DOORS D2 (`CONTACT_FIDELITY.fineFrontierHiddenDoor`, OFF) — **A DOOR THE 16 px FLOOD CANNOT
+         * SEE, NEARER THE AIM THAN EVERY DOOR IT CAN, IS ASKED ON THE 8 px LATTICE.** L12's `teleporter@32,848` is shut
+         * by `bosslock@32,864` + `magicallock@32,864`, stacked, and the way to their south side passes a cliffside gap
+         * (player x 202..214 at y 896) no 16 px node centre fits. From the L36 arrival (survey steps 172/203) the coarse
+         * frontier always holds an actionable door (`shieldlocknorm@288,704`, `burnabletree@480,640`, three bosslocks),
+         * so `fineFrontierFlood`'s trigger (no actionable entry) never fires, and every round spends a strategy on a
+         * door that does not lead to the aim until the sealed `bosslock@112,192` refuses. MEASURED: the 8 px flood names
+         * `magicallock@32,864` at 20 px from the aim on every one of those rounds. ON: when the 8 px flood holds an
+         * actionable door absent from the 16 px frontier and nearer the aim than every 16 px actionable door, the 8 px
+         * frontier is the one asked. OFF: byte-identical. `SEEDLING_FINE_FRONTIER_HIDDEN_DOOR=0|1`.
+         */
+        if (CONTACT_FIDELITY.fineFrontierHiddenDoor && frontier.size > 0) {
+            const doorD = (f, keep) => Math.min(...[...f.values()].filter((o) => keep(o) && frontierExecutor(
+                refineStrategy(run, OBSTACLE_STRATEGIES[o.tag ? `${o.kind}:${o.tag}` : o.kind]
+                    ?? OBSTACLE_STRATEGIES[o.kind] ?? null, o))).map((o) => o.d));
+            const fine = floodFrontier(FINE_LATTICE);
+            if (doorD(fine, (o) => !frontier.has(o.id)) < doorD(frontier, () => true)) frontier = fine;
+        }
+        /**
          * ⛓⛓ U12-swim D2 — AN UNMODELLED PULL NEAREST THE AIM IS NAMED, not
          * passed over for the nearest resolvable sub-order. U11's wall 5 was
          * that misattribution: the funnel's pulls were the cut, and the
@@ -29814,7 +30099,31 @@ function solveSegmentUnder({
                 + '(shrunk to the pulley cell, its group re-published) — the boot\'s persistence holds the cut' });
             return;
         }
-        if (!solid && !watcher) {
+        /**
+         * ⛓⛓⛓ fidelity LIGHTPOLE D2 (behind `CONTACT_FIDELITY.inRoomPoleThrust`) — **A POLE IS NO SOLID EITHER.** A
+         * `LightPole`'s type is in no solids list, so `world.solids` never holds it and OFF the arm below calls the
+         * rules' in-room pole event `already-clear` with the flag never written (the JS side refuses it first, `no-verb`).
+         * ON the world's press census binds it (`pressResponders`, the pole's own `persistTag`) and its state is the
+         * run's (`lightPolesNow`): `activate` already true at the build is the game's own `already-clear` (the boot's
+         * persistence holds the tag cleared — and a thrust would put it OUT); else the generic arm below runs the
+         * table's verb (`pole`) and finishes on the run's pole write.
+         */
+        const poleRow = CONTACT_FIDELITY.inRoomPoleThrust && cls === 'lightpole' && !solid
+            ? (run.world.pressResponders ?? []).find((r) => r.as3 === 'LightPole' && `${r.tag}@${r.x},${r.y}` === id)
+                ?? null : null;
+        if (poleRow) {
+            if (poleRow.persistTag !== flag.tag) {
+                refuseCT('cannot-act', `${id}'s own tag is ${poleRow.persistTag}, not ${flag.tag}: its hit writes `
+                    + `{${run.level},${poleRow.persistTag}} (\`set activate\`), never {${flag.level},${flag.tag}}`);
+            }
+            const live = (run.lightPolesNow ?? []).find((p) => p.id === id);
+            if (live?.activate) {
+                done('already-clear', { why: `${id} is built LIT-ACTIVE (\`activate = !checkPersistence(tag)\`): the `
+                    + `boot's persistence holds {${flag.level},${flag.tag}} cleared, and a thrust now would toggle it back` });
+                return;
+            }
+        }
+        if (!solid && !watcher && !poleRow) {
             done('already-clear', { why: `no ${cls ?? 'solid'} stands at (${goal.at.x},${goal.at.y}) in level `
                 + `${run.level}'s live world and the ledger is silent: the build left it out, which is the `
                 + 'game\'s own `check()` for a flag the boot\'s persistence holds cleared' });
