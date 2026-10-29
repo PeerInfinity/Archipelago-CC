@@ -1,0 +1,33 @@
+     ✓ both of this slice's switches are ON by default (⚖ user 2026-10-24, planning-12's flip) 1ms
+     ✓ the measurement behind it: the south door is in the stance hypothesis, the west door is not  817ms
+     × OFF: survey step 93 refuses STANCE_REENTRY at the west door, the survey's text 8422ms
+     × ON: the re-entry passes to the chest (the south door's chain); the end is the chest walk's press kill 46453ms
+     ✓ the witness: p4g, the solver's 1600 t plan, the game hit once — t1222 at (209.20,147.77) 1ms
+     ✓ the model replays every game tick at 0 px and bills the same hit: spinner@192,144's hammer at t1222  652ms
+     ✓ spinnerLockLag OFF: spinner@192,160 passes wandlock@208,160 one tick early (the game reflects at t1172)  374ms
+     ✓ spinnerLockLag ON: every spinner of the part room matches the game t1160-1230, the struck one too  397ms
+     ✓ spinnerLockLag ON: the player still replays every game tick at 0 px with the one hammer hit at t1222  434ms
+     ✓ THE GAP (handed to the hammer arc): the press-blind forecast from before the strike misplaces it by 28.3 px 234ms
+     ✓ both ship ON 1ms
+     ✓ OFF: none of the chain's three weigh locks is in the hypothesis at the arrival (guard iii walls them)  880ms
+     ✓ ON: t2's two locks (the corpse, behind the south door) and t5's (the fire block's route, across t2) join it  5006ms
+     ✓ OFF: survey step 67 refuses at button@816,400 with the three locks walled — the sweep's text  1391ms
+     × ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over) 51268ms
+     ✓ the recording: p4g, every sampled tick, the game's chain checks 7ms
+     ✓ the model (D1 ON) reproduces the game at 0 px — the player, every block, every chaser and the turret  900ms
+     ✓ the model at the shipped defaults (D1 OFF) reproduces it too: D1 is solver-only  589ms
+     ✓ the capture: leg 368, captured at seam 5280 (the sweep's), L40's records only 0ms
+     ✓ OFF, seam 5290: the 1600 t plan, and the model takes spinner@192,144's hammer at t1222 (L40RES's hit)  20123ms
+     ✓ ON, seam 5290: that plan is not certified — the answer is the bomb-pusher hold's refusal, no hit plan  18325ms
+     ✓ ON, seam 5280: OFF's hitless 1558 t plan, the same plan byte for byte  38447ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityL40Bk2.test.js > L40BK2 D1 — a weigh's holder derived under the rest of the stance hypothesis > ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)
+Expected: "-> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> chest stance (chest@880,816) -> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752)"
+Received: "solverBot(l40bk2) collect (656,528) stance (ladder-routed: no corridor from (488,904) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh stance (wandlock@448,432) -> chest stance (chest@880,816) -> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752) while pressing spinner@880,848, after 1 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound)."
+ FAIL  frontend/modules/seedlingDemo/fidelityL40Res.test.js > L40RES D2 — a stance walk that re-enters its own order walks on along its frontier > OFF: survey step 93 refuses STANCE_REENTRY at the west door, the survey's text
+Expected: "-> hold stance (wandlock@448,432): STANCE_REENTRY — the walk to wandlock@448,432's `hold` stance (488,392) is itself blocked by wandlock@448,432 at tick 0"
+Received: "solverBot(l40res) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 — 22 walkable candidate(s) in range, 15 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> weigh stance (wandlock@448,432): STANCE_REENTRY — the walk to wandlock@448,432's `weigh` stance (488,445) is itself blocked by wandlock@448,432 at tick 0, with nothing spent between, and the 8 px lattice plans no corridor to it either. Applying `weigh` again would be the same walk again: the stance is on the far side of the obstacle it is the stance of."
+ FAIL  frontend/modules/seedlingDemo/fidelityL40Res.test.js > L40RES D2 — a stance walk that re-enters its own order walks on along its frontier > ON: the re-entry passes to the chest (the south door's chain); the end is the chest walk's press kill
+Expected: "-> hold stance (wandlock@448,432) -> chest stance (chest@880,816) -> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752)"
+Received: "solverBot(l40res) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 — 22 walkable candidate(s) in range, 15 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> weigh stance (wandlock@448,432) -> chest stance (chest@880,816) -> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752) while pressing spinner@880,848, after 1 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound)."
+      Tests  3 failed | 19 passed (22)

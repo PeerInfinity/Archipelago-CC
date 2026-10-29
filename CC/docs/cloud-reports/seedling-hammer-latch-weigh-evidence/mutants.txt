@@ -1,0 +1,12 @@
+M1 drop the reorder :: frontend/modules/seedlingDemo/hammerLatchWeigh.test.js :: exit 1 :: ['\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[31m1 failed\x1b[39m\x1b[22m\x1b[2m | \x1b[22m\x1b[1m\x1b[32m5 passed\x1b[39m\x1b[22m\x1b[90m (6)\x1b[39m', '\x1b[31m⎯⎯⎯⎯⎯⎯⎯\x1b[39m\x1b[1m\x1b[41m Failed Tests 1 \x1b[49m\x1b[22m\x1b[31m⎯⎯⎯⎯⎯⎯⎯\x1b[39m']
+    RED      × the hold stance inside a live turret's range, and no corpse route (no Fire): asked, not taken, ON = OFF 187ms
+M1 drop the reorder :: slow row 1 :: exit 1 :: ['\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[31m1 failed\x1b[39m\x1b[22m\x1b[2m | \x1b[22m\x1b[33m1 skipped\x1b[39m\x1b[90m (2)\x1b[39m', '\x1b[31m⎯⎯⎯⎯⎯⎯⎯\x1b[39m\x1b[1m\x1b[41m Failed Tests 1 \x1b[49m\x1b[22m\x1b[31m⎯⎯⎯⎯⎯⎯⎯\x1b[39m']
+    RED      × OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271 404833ms
+M2 the range test inverted :: frontend/modules/seedlingDemo/hammerLatchWeigh.test.js :: exit 1 :: ['\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[31m2 failed\x1b[39m\x1b[22m\x1b[2m | \x1b[22m\x1b[1m\x1b[32m4 passed\x1b[39m\x1b[22m\x1b[90m (6)\x1b[39m', '\x1b[31m⎯⎯⎯⎯⎯⎯⎯\x1b[39m\x1b[1m\x1b[41m Failed Tests 2 \x1b[49m\x1b[22m\x1b[31m⎯⎯⎯⎯⎯⎯⎯\x1b[39m']
+    RED      × the hold stance inside a live turret's range, and no corpse route (no Fire): asked, not taken, ON = OFF 191ms
+    RED      × the hold stance outside every live turret's range: nothing asked, ON = OFF 80ms
+M2 the range test inverted :: slow row 1 :: exit 1 :: ['\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[31m1 failed\x1b[39m\x1b[22m\x1b[2m | \x1b[22m\x1b[33m1 skipped\x1b[39m\x1b[90m (2)\x1b[39m', '\x1b[31m⎯⎯⎯⎯⎯⎯⎯\x1b[39m\x1b[1m\x1b[41m Failed Tests 1 \x1b[49m\x1b[22m\x1b[31m⎯⎯⎯⎯⎯⎯⎯\x1b[39m']
+    RED      × OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271 390491ms
+M3 offer the weigh where no corpse route exists :: frontend/modules/seedlingDemo/hammerLatchWeigh.test.js :: exit 1 :: ['\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[31m1 failed\x1b[39m\x1b[22m\x1b[2m | \x1b[22m\x1b[1m\x1b[32m5 passed\x1b[39m\x1b[22m\x1b[90m (6)\x1b[39m', '\x1b[31m⎯⎯⎯⎯⎯⎯⎯\x1b[39m\x1b[1m\x1b[41m Failed Tests 1 \x1b[49m\x1b[22m\x1b[31m⎯⎯⎯⎯⎯⎯⎯\x1b[39m']
+    RED      × the hold stance inside a live turret's range, and no corpse route (no Fire): asked, not taken, ON = OFF 227ms
+restored True
