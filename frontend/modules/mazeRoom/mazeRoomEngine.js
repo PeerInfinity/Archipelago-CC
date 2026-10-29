@@ -565,8 +565,49 @@ export function checkActionLib(lib, who) {
             throw new Error(`${who}: action_lib.${id} names primitive ${JSON.stringify(entry.primitive)}; `
                 + `only '${PRIMITIVE_STRIKE}' is modelled`);
         }
+        if (entry.footprint !== undefined) checkFootprint(entry.footprint, id, who);
     }
     return { ...lib };
+}
+
+/**
+ * ⛓ WEAPON FOOTPRINTS (session tile-primitives-weapon-footprints, ⚖ 2026-10-28 "Tile centre", "All 4, one slice"). An
+ * `action_lib` entry may carry `footprint: {N, E, S, W}` → `[[dx, dy]…]`: the cells a use hits, as offsets from the
+ * player's cell, per facing. Seedling's are DERIVED from the game's hit rects at the tile-centre stance
+ * (`flashPanel/seedlingWeaponFootprints.js`): a sword swing also hits the two side cells and the faced cell's
+ * diagonals, a spear thrust two cells ahead, Fire all eight neighbours. Absent, a use hits the faced cell — every
+ * world before this slice. ⛔ A missing facing, a non-integer offset, a repeated one or the player's own cell is refused BY NAME.
+ */
+function checkFootprint(fp, id, who) {
+    if (!fp || typeof fp !== 'object' || Array.isArray(fp)) {
+        throw new Error(`${who}: action_lib.${id}.footprint must be an object {N, E, S, W}, got ${JSON.stringify(fp)}`);
+    }
+    for (const dir of INPUTS) {
+        const cells = fp[dir];
+        if (!Array.isArray(cells) || cells.some((c) => !Array.isArray(c) || c.length !== 2 || !c.every(Number.isInteger))) {
+            throw new Error(`${who}: action_lib.${id}.footprint.${dir} must be a list of [dx, dy] integer pairs, got ${JSON.stringify(cells)}`);
+        }
+        if (cells.some(([dx, dy]) => dx === 0 && dy === 0)) {
+            throw new Error(`${who}: action_lib.${id}.footprint.${dir} names [0, 0], the player's own cell`);
+        }
+        if (new Set(cells.map((c) => c.join(','))).size !== cells.length) {
+            throw new Error(`${who}: action_lib.${id}.footprint.${dir} names a cell twice: ${JSON.stringify(cells)}`);
+        }
+    }
+}
+
+/**
+ * The cells a use of `actionId` hits from `state` (its stance + facing), in the grid: the entry's `footprint` for the
+ * facing, else the faced cell. `[]` when the state carries no facing or the world has no such action.
+ */
+export function footprintCells(world, state, actionId) {
+    const d = DELTAS[state?.facing];
+    const entry = world.actionLib?.[actionId];
+    if (!d || !entry) return [];
+    const offsets = entry.footprint?.[state.facing] ?? [[d.dx, d.dy]];
+    const { x, y } = state.player_pos;
+    return offsets.map(([dx, dy]) => ({ x: x + dx, y: y + dy }))
+        .filter((c) => c.x >= 0 && c.y >= 0 && c.x < world.width && c.y < world.height);
 }
 
 /**
@@ -764,27 +805,55 @@ export function blocksAfterPush(world, blocks, from, to) {
 
 /**
  * ⛓ STRUCK BLOCKS (session tile-primitives-sphere-order-2, ⚖ 2026-10-26 "Reach-2 strike-push"): `block_strike:
- * {struck_by: [actionId…], reach}` — every block of this world is one the game moves only by a HIT: Seedling's
+ * {struck_by: [actionId…], reach?}` — every block of this world is one the game moves only by a HIT: Seedling's
  * `PushableBlockSpear` (`Puzzlements/PushableBlockSpear.as`: `moveTypes = ["Spear"]`, type "Solid"). Walking into
- * one is refused: it is never walk-pushed. A `USE:<id>` of a listed action hits every block within `reach` cells
- * ahead of the facing — the spear's 32 px stab rect (`Player.as:964-989`: no reach gate, no line test, so over any
- * cell between) — and moves each ONE cell the way the player faces (`Player.as:1121-1123`: the hit is relative to
- * the thrust), farthest first. A block whose next cell is off the grid, a wall, a block, a shut obstacle (unless it
- * sinks there) or an entry gate stays put (`PushableBlockFire.update`: a collided move resets its target). Game-
- * measured by the seedling-fidelity spear legs (L63, L65, L67 — L67's five thrusts park the block on its button)
- * and the spearrect witnesses. The world's `action_lib` must hold every listed action. Returns `{struckBy, reach}`.
+ * one is refused: it is never walk-pushed. A `USE:<id>` of a listed action hits every block in its FOOTPRINT — the
+ * spear's 32 px stab rect (`Player.as:954-993`: no reach gate, no line test, so over any cell between) — and moves
+ * each ONE cell the way the player faces (`Player.as:1121-1123`: the hit is relative to the thrust), farthest first.
+ * A block whose next cell is off the grid, a wall, a block, a shut obstacle (unless it sinks there) or an entry gate
+ * stays put (`PushableBlockFire.update`: a collided move resets its target). Game-measured by the seedling-fidelity
+ * spear legs (L63, L65, L67 — L67's five thrusts park the block on its button) and the spearrect witnesses.
+ * ⛓ WEAPON FOOTPRINTS (session tile-primitives-weapon-footprints): the footprint is the action's own
+ * (`action_lib.<id>.footprint`); `reach` — the cells straight ahead, the shape before footprints — is for a world
+ * whose struck actions carry none. ⛔ Both, or neither, is refused by name: one shape per world.
+ * The world's `action_lib` must hold every listed action. Returns `{struckBy}` or `{struckBy, reach}`.
  */
 export function checkBlockStrike(spec, actionLib, who) {
     const bad = (why) => new Error(`${who}: "block_strike" ${why}`);
-    if (!spec || typeof spec !== 'object' || Array.isArray(spec)) throw bad('must be an object {struck_by, reach}');
+    if (!spec || typeof spec !== 'object' || Array.isArray(spec)) throw bad('must be an object {struck_by, reach?}');
     const struckBy = spec.struck_by;
     if (!Array.isArray(struckBy) || struckBy.length === 0 || struckBy.some((id) => typeof id !== 'string')) {
         throw bad(`struck_by must be a non-empty list of action ids, got ${JSON.stringify(struckBy)}`);
     }
     const missing = struckBy.filter((id) => !actionLib?.[id]);
     if (missing.length > 0) throw bad(`names ${missing.join(', ')}, which the action_lib does not hold`);
+    const withFootprint = struckBy.filter((id) => actionLib[id].footprint !== undefined);
+    if (withFootprint.length > 0) {
+        if (withFootprint.length !== struckBy.length || spec.reach !== undefined) {
+            throw bad(`mixes a reach (${JSON.stringify(spec.reach)}) with the footprint of ${withFootprint.join(', ')} — `
+                + 'a world whose struck actions carry a footprint takes no reach');
+        }
+        return { struckBy: [...struckBy] };
+    }
     if (!Number.isInteger(spec.reach) || spec.reach < 1) throw bad(`reach must be a positive integer, got ${JSON.stringify(spec.reach)}`);
     return { struckBy: [...struckBy], reach: spec.reach };
+}
+
+/**
+ * The cells a `USE:<actionId>` hits a struck block on, FARTHEST first along the facing (the order the pushes are
+ * made in): the action's footprint, or — a `reach` world — the `reach` cells straight ahead. `[]` when the action
+ * moves no block.
+ */
+export function blockStrikeCells(world, state, actionId) {
+    const spec = world.blockStrike;
+    const d = DELTAS[state.facing];
+    if (!spec || !d || !spec.struckBy.includes(actionId)) return [];
+    const { x, y } = state.player_pos;
+    const cells = spec.reach !== undefined
+        ? Array.from({ length: spec.reach }, (_, i) => ({ x: x + d.dx * (i + 1), y: y + d.dy * (i + 1) }))
+        : footprintCells(world, state, actionId);
+    const along = (c) => (c.x - x) * d.dx + (c.y - y) * d.dy;
+    return cells.slice().sort((p, q) => along(q) - along(p) || p.y - q.y || p.x - q.x);
 }
 
 /** May a block move onto (x, y) going `dir`, with `blocks` where they are now? (A walk-push's and a strike-push's test.) */
@@ -801,14 +870,11 @@ function blockMayEnter(world, state, blocks, x, y, dir, inv, clearanceOpts) {
  * effective inventory the use is asked with.
  */
 export function strikePushes(world, state, actionId, inv, clearanceOpts) {
-    const spec = world.blockStrike;
     const d = DELTAS[state.facing];
-    if (!spec || !d || !spec.struckBy.includes(actionId) || !state.blocks?.length) return [];
+    if (!state.blocks?.length) return [];
     let blocks = state.blocks;
     const out = [];
-    for (let k = spec.reach; k >= 1; k -= 1) {
-        const x = state.player_pos.x + d.dx * k;
-        const y = state.player_pos.y + d.dy * k;
+    for (const { x, y } of blockStrikeCells(world, state, actionId)) {
         const from = posKey(x, y);
         if (!blocks.includes(from)) continue;
         if (!blockMayEnter(world, state, blocks, x + d.dx, y + d.dy, state.facing, inv, clearanceOpts)) continue;
@@ -819,15 +885,10 @@ export function strikePushes(world, state, actionId, inv, clearanceOpts) {
     return out;
 }
 
-/** Might `USE:<actionId>` move a block from `state` — does one stand within the world's strike reach ahead? (Position only.) */
+/** Might `USE:<actionId>` move a block from `state` — does one stand in its strike cells? (Position only.) */
 export function blockWithinReach(world, state, actionId) {
-    const spec = world.blockStrike;
-    const d = DELTAS[state.facing];
-    if (!spec || !d || !spec.struckBy.includes(actionId) || !state.blocks?.length) return false;
-    for (let k = 1; k <= spec.reach; k += 1) {
-        if (state.blocks.includes(posKey(state.player_pos.x + d.dx * k, state.player_pos.y + d.dy * k))) return true;
-    }
-    return false;
+    if (!state.blocks?.length) return false;
+    return blockStrikeCells(world, state, actionId).some((c) => state.blocks.includes(posKey(c.x, c.y)));
 }
 
 /** Does any entry gate stand on entering (x, y) moving `dir`? A pushed block never crosses one (it carries nothing). */
@@ -922,7 +983,10 @@ export function serializeMazeEntities(world) {
         out.block_sinks = [...world.blockSinks].map(unposKey).sort(rowMajor);
     }
     if (world.blockStrike) {
-        out.block_strike = { struck_by: [...world.blockStrike.struckBy], reach: world.blockStrike.reach };
+        out.block_strike = {
+            struck_by: [...world.blockStrike.struckBy],
+            ...(world.blockStrike.reach !== undefined ? { reach: world.blockStrike.reach } : {}),
+        };
     }
     return out;
 }
@@ -1075,7 +1139,7 @@ function cloneState(state) {
  * The obstacle id standing SHUT at (x, y) for this inventory, or `null` — the
  * one clearance question `step` and `whyBlocked` both ask. ⛓ An obstacle in
  * `state.broken` is open whatever its `clear_set` says — read at its canonical
- * cell (`at`, where `strikeTarget` records a multi-cell obstacle's strike; the
+ * cell (`at`, where `strikeTargets` records a multi-cell obstacle's strike; the
  * scripted `tileAt` reads the same key), so every cell of a struck rope run opens.
  */
 function shutObstacleAt(world, state, x, y, inv, clearanceOpts) {
@@ -1086,38 +1150,33 @@ function shutObstacleAt(world, state, x, y, inv, clearanceOpts) {
     return isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts) ? null : obstacleId;
 }
 
-/** The cell the player faces, or `null` when the state carries no facing. */
-export function facingCell(state) {
-    const d = DELTAS[state?.facing];
-    if (!d) return null;
-    return { x: state.player_pos.x + d.dx, y: state.player_pos.y + d.dy };
-}
-
 /**
- * ⛓ STRIKE — the posKey a `strike` with `actionId` would break from this
- * state, or `null` when it hits nothing it breaks (⚖ "use at air" is LEGAL —
- * a turn passes). It breaks the facing cell's obstacle iff that obstacle's
- * library entry lists the action in `struck_by` and it is not broken already.
+ * ⛓ STRIKE — the posKeys a `strike` with `actionId` would break from this
+ * state, sorted, or `[]` when it hits nothing it breaks (⚖ "use at air" is
+ * LEGAL — a turn passes). It breaks every obstacle in the use's footprint
+ * (`footprintCells`: the faced cell unless the action carries a `footprint`)
+ * whose library entry lists the action in `struck_by` and is not broken already.
  *
  * ⛓ rules-l39 (⚖ 2026-10-23 "(a) One obstacle"): an obstacle spanning several
  * cells (a rope's run) names its ONE canonical cell in `at`, and a strike on
- * any of its cells is recorded THERE — one cut state, whichever cell was hit.
- * An obstacle without `at` (a rock) records the struck cell, as before.
+ * any of its cells is recorded THERE — one cut state, however many of its
+ * cells were hit. An obstacle without `at` (a rock) records the struck cell.
  *
  * ⚠ The entry's `condition` names the HELPER the scripted step asks
  * (`tileSpike/`, ⚖ Q2 iii); this native path is that helper's built-in
  * default (⚖ Q6 "native default") and the parity suite holds the two equal.
  */
-export function strikeTarget(world, state, actionId) {
-    const cell = facingCell(state);
-    if (cell === null) return null;
-    const obstacleId = getObstacle(world, cell.x, cell.y);
-    if (!obstacleId) return null;
-    const struckBy = world.obstacleLib?.[obstacleId]?.struck_by;
-    if (!Array.isArray(struckBy) || !struckBy.includes(actionId)) return null;
-    const key = world.obstacleLib?.[obstacleId]?.at ?? posKey(cell.x, cell.y);
-    if (state.broken?.includes(key)) return null;
-    return key;
+export function strikeTargets(world, state, actionId) {
+    const out = new Set();
+    for (const cell of footprintCells(world, state, actionId)) {
+        const obstacleId = getObstacle(world, cell.x, cell.y);
+        if (!obstacleId) continue;
+        const struckBy = world.obstacleLib?.[obstacleId]?.struck_by;
+        if (!Array.isArray(struckBy) || !struckBy.includes(actionId)) continue;
+        const key = world.obstacleLib?.[obstacleId]?.at ?? posKey(cell.x, cell.y);
+        if (!state.broken?.includes(key)) out.add(key);
+    }
+    return [...out].sort();
 }
 
 /**
@@ -1359,9 +1418,9 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
         if (actionItems(entry).length > 0 && !actionUsable(entry, inv)) return null;
         const used = cloneState(state);
         used.turn += 1;
-        const hit = strikeTarget(world, state, actionId);
-        if (hit !== null) {
-            used.broken.push(hit);
+        const hits = strikeTargets(world, state, actionId);
+        if (hits.length > 0) {
+            used.broken.push(...hits);
             used.broken.sort();
         }
         // ⛓ STRUCK BLOCKS: the use moves every block it hits; a block moved off a button may arm the lane the player

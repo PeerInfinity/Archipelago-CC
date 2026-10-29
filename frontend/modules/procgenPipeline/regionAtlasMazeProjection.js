@@ -1056,6 +1056,11 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
     return out;
 }
 
+/** A world's `block_strike` from its blocks' one push `{by, reach}`: `reach` only when the row named one (no footprint). */
+function blockStrikeOf({ by, reach }) {
+    return { struck_by: by, ...(reach !== undefined ? { reach } : {}) };
+}
+
 /**
  * Project ONE atlas region with an interaction into a shared level world.
  *
@@ -1064,8 +1069,8 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
  * @param {object} ctx `projectRegionToMaze`'s, plus `partitionFor(region)` →
  *   `{sub_regions, rows, origin:[x,y]}` (the atlas's persisted partition)
  * @param {Array<object>} entities `levelEntitiesFor`'s rows:
- *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item} | {action, rule}], reach?, label}` — a
- *   block with a `strike` is moved only by it, from up to `reach` cells (`block_strike`)
+ *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item, footprint?} | {action, rule, footprint?}], reach?, label}`
+ *   — a block with a `strike` is moved only by it, on its action's `footprint` or from up to `reach` cells (`block_strike`)
  * @returns {{ sidecars: object, notes: Array, analysis: null, sharedWorld: string }}
  */
 export function projectLevelWorld(region, grid, ctx, entities) {
@@ -1136,6 +1141,8 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     for (const e of entities) if (e.kind === 'button') groupsWithButton.add(String(e.group));
     // A strike needs one `item` or, for a fusion, a `rule` (an And of Has — ⚖ 2026-10-25 "action_lib `rule`").
     const needOf = (strike) => (strike.rule !== undefined ? { rule: strike.rule } : { item: strike.item });
+    // ⛓ WEAPON FOOTPRINTS (session tile-primitives-weapon-footprints): a strike may carry the cells its use hits
+    // (`footprint`, derived by the producer from the game's hit rects); the action carries it, one per action.
     const actionFor = (strike) => {
         if (!actionLib[strike.action]) {
             const used = Object.keys(actionLib).length;
@@ -1144,13 +1151,18 @@ export function projectLevelWorld(region, grid, ctx, entities) {
                 primitive: 'strike',
                 condition: 'strikes',
                 ...(used < LEVEL_WORLD_USE_KEYS.length ? { key: LEVEL_WORLD_USE_KEYS[used] } : {}),
+                ...(strike.footprint !== undefined ? { footprint: strike.footprint } : {}),
             };
         } else {
-            const { item, rule } = actionLib[strike.action];
+            const { item, rule, footprint } = actionLib[strike.action];
             const had = JSON.stringify(rule ?? item);
             const now = JSON.stringify(strike.rule ?? strike.item);
             if (had !== now) {
                 throw new Error(`atlas region "${regionId}": action "${strike.action}" names two items (${had}, ${now})`);
+            }
+            if (JSON.stringify(footprint) !== JSON.stringify(strike.footprint)) {
+                throw new Error(`atlas region "${regionId}": action "${strike.action}" has two footprints `
+                    + `(${JSON.stringify(footprint)}, ${JSON.stringify(strike.footprint)})`);
             }
         }
         return strike.action;
@@ -1590,7 +1602,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         ...(entryGates.length > 0 ? { entry_gates: entryGates } : {}),
         ...(blockSinks.length > 0 ? { block_sinks: blockSinks } : {}),
         ...(blockPush !== null && blockPush !== 'walk'
-            ? { block_strike: { struck_by: JSON.parse(blockPush).by, reach: JSON.parse(blockPush).reach } } : {}),
+            ? { block_strike: blockStrikeOf(JSON.parse(blockPush)) } : {}),
         shared_world: {
             key: regionId,
             regions: bindings.map((b) => b.apName),

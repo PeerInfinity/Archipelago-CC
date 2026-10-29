@@ -14,7 +14,7 @@
 import { analyzeRegion, applyRegionAnalysis } from '../procgenPipeline/regionAtlasAnalyzer.js';
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import { arrowLane, arrowTrapEntityPoint } from '../seedlingDemo/arrowTrap.js';
-import { PROFILE } from '../seedlingDemo/seedlingProfile.js';
+import { weaponFootprint } from './seedlingWeaponFootprints.js';
 import {
     ropesOf, ropeVerdict, ropeEventName, ropeEventCondition, ropeLaneCharges,
 } from './seedlingObstacleEvents.js';
@@ -268,14 +268,6 @@ export const SEEDLING_LEVEL_WORLD_CLASSES = Object.freeze({
     PushableBlockSpear: 'block',
 });
 
-/**
- * The cells a spear thrust reaches ahead of the player: its 32 px stab rect (`Player.as:964-989`, the model's
- * `PROFILE.spearLength`), with no reach gate and no line test — a block two cells away is hit over the cell between
- * (game-measured: the seedling-fidelity spear legs, L67's thrust across the pit at (10,7)).
- */
-export const SPEAR_REACH_TILES = Math.floor(PROFILE.spearLength / TILE);
-
-
 /** `hasSword` → `sword`: an action id from the engine flag the semantics row names. */
 const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
 
@@ -284,7 +276,7 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  * semantics tables:
  *
  *   block   a PushableBlock's sealed tile; a PushableBlockSpear's carries `strike` (its condition's flag →
- *           one action) and `reach` (`SPEAR_REACH_TILES`): moved only by a thrust, never walked into
+ *           one action): moved only by a thrust, never walked into
  *   button  a Button's tile, grouped by its `tset`
  *   lock    a Lock's sealed tiles, grouped by its `tset` (⚖ enemies are not
  *           holders — the room-clear half of Lock is not modelled)
@@ -304,7 +296,9 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  * A rock (or rope) whose condition is not a flag or an any-of flags is REFUSED by
  * name. Each flag binds one strike: one item (`item`), or for a ROCK a conjunction
  * of items (`rule`, an And of Has — the ghost rock's fusion flag); anything else is
- * refused by name.
+ * refused by name. ⛓ WEAPON FOOTPRINTS (session tile-primitives-weapon-footprints, ⚖ 2026-10-28 "Tile centre"):
+ * every strike carries its action's `footprint` (`weaponFootprint`, derived from the game's hit rects) — the cells
+ * a use hits from the player's tile, which the struck block's old `reach` (the spear's two cells ahead) now is.
  *
  * @param {object} level a map-document level
  * @param {(condition:object)=>object|null} resolveCondition
@@ -340,7 +334,6 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null } =
         if (kind === 'button' || kind === 'lock' || kind === 'rope') row.group = String(entity.attrs?.tset ?? '0');
         if (rope) row.event = ropeEventName(rope);
         const struckBlock = kind === 'block' && sem.class === 'PushableBlockSpear';
-        if (struckBlock) row.reach = SPEAR_REACH_TILES;
         if (kind === 'rock' || kind === 'rope' || struckBlock) {
             const flags = sem.condition?.flag !== undefined ? [sem.condition]
                 : Array.isArray(sem.condition?.any) ? sem.condition.any : null;
@@ -351,11 +344,13 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null } =
             row.strike = flags.map((c) => {
                 const rule = resolveCondition(c);
                 const one = (h) => h?.rule === 'Has' && (h.args?.count ?? 1) === 1;
-                if (one(rule)) return { action: actionIdOfFlag(c.flag), item: rule.args.item_name };
+                const action = actionIdOfFlag(c.flag);
+                const footprint = weaponFootprint(action);
+                if (one(rule)) return { action, item: rule.args.item_name, footprint };
                 // ⛓ A FUSION (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "action_lib `rule`"): hasGhostSword
                 // resolves to And(Ghost Sword Fusion, Ghost Spear, Progressive Sword) — the strike needs all of them.
                 if (kind === 'rock' && rule?.rule === 'And' && rule.children?.length > 0 && rule.children.every(one)) {
-                    return { action: actionIdOfFlag(c.flag), rule };
+                    return { action, rule, footprint };
                 }
                 throw new Error(`${label}: flag "${c.flag}" resolves to ${JSON.stringify(rule)}, not one Has or an And `
                     + 'of Has — a strike needs a set of items');

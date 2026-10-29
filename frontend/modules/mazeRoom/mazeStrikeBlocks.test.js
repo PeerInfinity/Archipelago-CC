@@ -161,10 +161,12 @@ describe('a struck block moves only by a thrust', () => {
 });
 
 describe('L67 — the spear block projects as a struck block', () => {
-    it('its world carries block_strike (spear, reach 2) and the block, not a Ghost Spear gate', () => {
+    it('its world carries block_strike (spear, on its footprint: two cells ahead) and the block, not a Ghost Spear gate', () => {
         const rules = JSON.parse(buildPlaythroughMaze({ levels: ['level_59', 'level_67'] }).text);
         const p = Object.values(rules.preset_sidecars['1']).find((s) => s.playable_payload?.atlas_region === 'level_67').playable_payload;
-        expect(p.block_strike).toEqual({ struck_by: ['spear'], reach: 2 });
+        // ⛓ WEAPON FOOTPRINTS (session tile-primitives-weapon-footprints): the reach is the spear's footprint now.
+        expect(p.block_strike).toEqual({ struck_by: ['spear'] });
+        expect(p.action_lib.spear.footprint.E).toEqual([[1, 0], [2, 0]]);
         expect(p.blocks).toEqual([{ x: 9, y: 7 }]);
         expect(p.action_lib.spear.item).toBe(SPEAR);
         expect(p.obstacles.find((o) => o.x === 9 && o.y === 7)).toBeUndefined();
