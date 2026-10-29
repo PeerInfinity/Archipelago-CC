@@ -88,16 +88,19 @@ const { levelSourceFromAtlas } = await imp('frontend/modules/seedlingDemo/atlasS
 const {
     deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
     deriveTalkEvents, crossRoomPrerequisitesOf,
-    poleKillsOf, POLE_LIGHT_ARM, poleThrustStances, inRoomPolesOf, deriveInRoomPoleEvents,
+    poleKillsOf, POLE_LIGHT_ARM, POLE_GHOST_ARM, poleThrustStances, poleSwingStances, inRoomPolesOf, deriveInRoomPoleEvents,
     ropesOf, ropeVerdict, deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges,
 } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
 const { arrowLane, arrowTrapEntityPoint } = await imp('frontend/modules/seedlingDemo/arrowTrap.js');
 const { contactRect } = await imp('frontend/modules/seedlingDemo/combat.js');
 const { spearHitRect, pressRectTouches } = await imp('frontend/modules/seedlingDemo/presses.js');
+const { swingHits } = await imp('frontend/modules/seedlingDemo/combatVerbs.js');
 const { DARKTRAP_LIGHT_DEATH } = await imp('frontend/modules/seedlingDemo/enemyDamage.js');
 const { FLAG_ACTIONS } = await imp('frontend/modules/seedlingDemo/arrivalSolid.js');
 const { apRegionName } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
 const { pitChainsFromCensus } = await import('./seedlingPitChains.js');
+const { PUSHABLE_KINDS, blockCrossingCost } = await imp('frontend/modules/flashPanel/seedlingBlockPaths.js');
+const { deriveWeaponFootprint } = await imp('frontend/modules/flashPanel/seedlingWeaponFootprints.js');
 
 /**
  * ⛓⛓ RULES patched-set — **THE PLAYTHROUGH READS THE DELIVERED SET.** `seedling_playthrough` is the one
@@ -1528,7 +1531,8 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
  * `deriveInRoomPoleEvents` holds the schema and the why). The rows are `inRoomPolesOf(MAP)`; the barrier, its sides
  * and pockets are the cross-room presses' (`barrierAnalysis`), and the stances decide the rest:
  *   - GATES: each pocket's doors, a door INTO the pocket with the arm when the pocket holds a stance, a door OUT of it
- *     (reached by crossing from the far side) with the arm when the far side does;
+ *     (reached by crossing from the far side) with the arm when the far side does — ⛓ RULES l63-pole-crossings: and
+ *     with the Ghost Sword swing's arm (`POLE_GHOST_ARM`) when that side holds no thrust stance but a swing one;
  *   - PLACE: where a stance stands, in this order — the far side's sub-region when the far side holds one (the pocket
  *     is entered from outside only with the event, so the event is lit from beyond the barrier); else a stance on
  *     NEITHER side, elsewhere in the room (L101's pole is lit through a wall from its r4c2 column — the vanilla
@@ -1582,6 +1586,112 @@ export function playthroughInRoomPoleEvents(doc, { existing = [] } = {}) {
 }
 
 /**
+ * ⛓⛓ RULES l63-pole-crossings — **A STRUCK BLOCK'S CROSSING, PRICED BY ITS PUSH PATHS.** The transcription claims a
+ * fire/spear block's start cell as a crossing gated on its push item; the analyzer joins the sub-regions on either side
+ * with that item and nothing else. `seedlingBlockPaths.blockCrossingCost` holds the model and the why: a block stops at
+ * a body that never moves and cannot be killed by a hit (the model's combat rows: `aggro.kind` static, `speed` 0, `kill`
+ * null — a DarkTrap), so a crossing whose only way pushes the block onto one needs that body GONE, which only the light
+ * of a pole that kills it does (`poleKillsOf`): that pole's event. Per pushable whose start cell borders two
+ * sub-regions, per direction of the atlas row between them, the Pareto-minimal stopper sets the crossing needs; a
+ * direction that needs one is gated `Or` over them (`internalExitGates`, ANDed onto that one direction by the compiler,
+ * so the atlas row is not edited). The stances are the push action's weapon footprint (`deriveWeaponFootprint`); a
+ * walk-in block (no item) claims no crossing and is not read, and a room with no stopper is left to the claim (named).
+ * Refused by name: a row between the two sides whose rule is not the push item's (another crossing joins them too),
+ * a stopper whose body is not one tile, and a direction no stopper set opens (the model and the analyzer disagree).
+ */
+export function playthroughBlockCrossings(doc, { events = [] } = {}) {
+    const minted = new Set(events.map((e) => e.name));
+    const internalExitGates = [];
+    const notes = [];
+    const key = ([x, y]) => `${x},${y}`;
+    for (const level of MAP.levels) {
+        const pushables = (level.entities ?? []).filter((e) => PUSHABLE_KINDS[e.type]?.push);
+        if (pushables.length === 0) continue;
+        const regionId = regionIdFor(level.level);
+        const region = doc.regions.find((r) => r.region_id === regionId);
+        const analysis = regionAnalyses.get(regionId);
+        if (!region?.subgraph?.sub_regions || !analysis) continue;
+        const grid = gridFor(level);
+        if ((grid.origin?.x ?? 0) !== 0 || (grid.origin?.y ?? 0) !== 0) throw new Error(`block crossings: L${level.level}'s grid is not whole-level`);
+        const { indexOf, components } = analysis.componentsResult;
+        const subOf = (i) => (indexOf[i] >= 0 && region.subgraph.sub_regions.includes(components[indexOf[i]].id) ? components[indexOf[i]].id : null);
+        const tileTypes = new Map();
+        for (const layer of level.layers ?? []) {
+            if (layer.name === 'cliffsides') continue;
+            for (const placement of layer.tiles ?? []) {
+                const t = SEM.tileTypeForPlacement(placement);
+                if (t !== null) tileTypes.set(placement[1] * grid.width + placement[0], t);
+            }
+        }
+        // The stoppers: static, unkillable bodies, each removed by the events of the poles whose light kills it.
+        const poles = (level.entities ?? []).filter((e) => e.type === 'lightpole');
+        const kills = poles.map((p) => ({ pole: p, bodies: poleKillsOf(level, p, { buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH }) ?? [] }));
+        const stoppers = combatCensusOf(level).enemies.filter((e) => e.row?.aggro?.kind === 'static' && e.row?.speed === 0 && e.row?.kill === null)
+            .map((e) => {
+                const r = contactRect(e);
+                const [tx, ty] = [r.x / TILE, r.y / TILE];
+                if (!Number.isInteger(tx) || !Number.isInteger(ty) || r.w !== TILE || r.h !== TILE) {
+                    throw new Error(`block crossings: L${level.level} ${e.tag}@${e.x},${e.y}'s body ${JSON.stringify(r)} is not one tile`);
+                }
+                const keys = kills.filter((k) => k.bodies.some((b) => b.id === `${e.tag}@${e.x},${e.y}`))
+                    .map((k) => obstacleEventName({ level: level.level, tag: Number(k.pole.attrs?.tag), cls: k.pole.type, x: k.pole.x, y: k.pole.y }))
+                    .filter((n) => minted.has(n));
+                return { tx, ty, keys, label: `${e.tag}@${e.x},${e.y}` };
+            });
+        // No stopper in the room: the transcription's claim is all a push could cost here (this derivation adds nothing).
+        if (stoppers.length === 0) { notes.push(`L${level.level}: ${pushables.length} struck block(s), no stopper`); continue; }
+        for (const b of pushables) {
+            const [bx, by] = [Math.floor(b.x / TILE), Math.floor(b.y / TILE)];
+            const at = by * grid.width + bx;
+            const label = `L${level.level} ${b.type}@${b.x},${b.y}`;
+            const pushFlag = PUSHABLE_KINDS[b.type].push;
+            const pushRule = analyzerOptions.resolveCondition(SEM.flag(pushFlag));
+            const fp = deriveWeaponFootprint(pushFlag.replace(/^has/, '').toLowerCase(), 'block');
+            const sides = new Map();
+            for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+                const [nx, ny] = [bx + dx, by + dy];
+                if (nx < 0 || ny < 0 || nx >= grid.width || ny >= grid.height) continue;
+                const sub = subOf(ny * grid.width + nx);
+                if (sub && !sides.has(sub)) sides.set(sub, ny * grid.width + nx);
+            }
+            if (sides.size < 2) { notes.push(`${label}: its cell borders ${sides.size} sub-region(s) — no crossing`); continue; }
+            for (const [from, start] of sides) {
+                for (const to of sides.keys()) {
+                    if (to === from) continue;
+                    const row = region.subgraph.internal_exits.find((r) => (r.from === from && r.to === to) || (r.bidirectional && r.from === to && r.to === from));
+                    if (!row) { notes.push(`${label}: no internal exit ${from} -> ${to}`); continue; }
+                    if (JSON.stringify(row.access_rule) !== JSON.stringify(pushRule)) {
+                        throw new Error(`block crossings: ${label}'s crossing ${regionId} ${from} -> ${to} is priced `
+                            + `${JSON.stringify(row.access_rule)}, not its push item's ${JSON.stringify(pushRule)} — another crossing joins the sides`);
+                    }
+                    const goal = new Set();
+                    for (let i = 0; i < indexOf.length; i += 1) if (subOf(i) === to) goal.add(i);
+                    const cost = blockCrossingCost(grid, {
+                        block: { tx: bx, ty: by, condition: SEM.flag(pushFlag) }, stances: fp, stoppers, tileTypes,
+                        keyOf: SEM.conditionKey, held: [SEM.conditionKey(SEM.flag(pushFlag))],
+                    }, start, goal);
+                    if (cost.refused) throw new Error(`block crossings: ${label} ${from} -> ${to}: ${cost.refused}`);
+                    if (cost.sets.length === 0) {
+                        throw new Error(`block crossings: ${label} ${from} -> ${to}: no stopper set opens the crossing the analyzer `
+                            + `prices ${JSON.stringify(pushRule)} — the push model and the analyzer disagree`);
+                    }
+                    if (cost.sets.some((set) => set.length === 0)) { notes.push(`${label}: ${from} -> ${to} free beyond the push item`); continue; }
+                    const ways = cost.sets.map((set) => simplifyRule(set.length === 1 ? { rule: 'Has', args: { item_name: set[0] } }
+                        : { rule: 'And', children: set.map((n) => ({ rule: 'Has', args: { item_name: n } })) }));
+                    const rule = ways.length === 1 ? ways[0] : { rule: 'Or', children: ways };
+                    const named = new Set(cost.sets.flat());
+                    const why = `${label}: pushed from ${from} it stops at ${stoppers.filter((st) => st.keys.some((k) => named.has(k))).map((st) => st.label).join(', ')} unless `
+                        + `${cost.sets.map((set) => set.join(' + ')).join(' OR ')}`;
+                    internalExitGates.push({ region_id: regionId, from, to, rule, why });
+                    notes.push(why);
+                }
+            }
+        }
+    }
+    return { internalExitGates, notes };
+}
+
+/**
  * ⛓ The barrier analysis the cross-room presses and the in-room poles share: the atlas lookups, the bodies a pole's
  * light kills (`poleKillsOf`) and `barrierCut` — the GATES measurement of `playthroughButtonEvents`' doc (the
  * landings a barrier cuts off, their SIDES and POCKETS), each pocket with its DOORS (`{region_id, exit_id, arm}`) and,
@@ -1614,6 +1724,7 @@ function barrierAnalysis(doc) {
     const killsWhy = (k) => `lit, its light reaches ${k.map((b) => `${b.id} (${b.min.toFixed(1)}–${b.max.toFixed(1)} px)`).join(', ')} `
         + `within \`radiusMin\` ${DARKTRAP_LIGHT_DEATH.pole.radiusMin}: DarkTrap.update kills them`;
     const arm = analyzerOptions.resolveCondition(SEM.flag(POLE_LIGHT_ARM.item));
+    const ghostArm = analyzerOptions.resolveCondition(SEM.flag(POLE_GHOST_ARM.item));
     const barrierCut = (t, eventName) => {
         const level = levelOf(t.level);
         const killed = killsOf(t);
@@ -1641,6 +1752,11 @@ function barrierAnalysis(doc) {
         const stances = pole ? poleThrustStances(pole.rect, {
             width: grid.width, height: grid.height, origin: grid.origin, tile: TILE, walkable: all,
             avoid: killed.map((b) => b.rect), spearHitRect, pressRectTouches, rectsOverlap,
+        }) : [];
+        // ⛓ RULES l63-pole-crossings: the Ghost Sword swing's stances (`POLE_GHOST_ARM`), for a side no thrust reaches.
+        const swings = pole ? poleSwingStances(pole.rect, {
+            width: grid.width, height: grid.height, origin: grid.origin, tile: TILE, walkable: all,
+            avoid: killed.map((b) => b.rect), swingHits, rectsOverlap,
         }) : [];
         const cut = [];
         for (const L of gameLandings(MAP).filter((g) => g.level === t.level)) {
@@ -1720,11 +1836,15 @@ function barrierAnalysis(doc) {
                 const elsewhere = stances.filter((st) => !v.side.tiles.has(key(st.tile)) && !v.side.beyond.has(key(st.tile)));
                 // A door INTO the pocket leads to its crossing from inside; a door OUT of it was reached by crossing
                 // from beyond. A target that is not a pole has no arm to place (`arm` stays unsaid).
-                const arm = (here) => (pole ? { arm: here.length > 0 } : {});
+                // ⛓ RULES l63-pole-crossings: a side with no thrust stance but a Ghost Sword swing stance takes the swing's arm.
+                const onPocket = (st) => v.side.tiles.has(key(st.tile));
+                const onFar = (st) => v.side.beyond.has(key(st.tile));
+                const arm = (here, on) => (!pole ? {} : here.length > 0 ? { arm: true }
+                    : swings.some(on) ? { arm: true, armRule: ghostArm } : { arm: false });
                 return {
                     doors: [
-                        ...v.side.deps.map((d) => ({ ...d, ...arm(pocketStances) })),
-                        ...v.exits.map((e) => ({ region_id: e.region_id, exit_id: e.exit_id, ...arm(farStances) })),
+                        ...v.side.deps.map((d) => ({ ...d, ...arm(pocketStances, onPocket) })),
+                        ...v.exits.map((e) => ({ region_id: e.region_id, exit_id: e.exit_id, ...arm(farStances, onFar) })),
                     ],
                     pocketStances,
                     farStances,
@@ -1893,11 +2013,14 @@ export function playthroughEventLayer(doc) {
     // ⛓ RULES watcher-event: the gated solid's OWN event needs the prerequisite too (its flag cannot clear first).
     const talks = playthroughTalkEvents(doc, { existing: [...obstacle.events, ...locks.events, ...buttons.events, ...poles.events] });
     const priorEvents = withEventGates([...obstacle.events, ...locks.events, ...buttons.events, ...poles.events], talks.eventGates);
+    // ⛓ RULES l63-pole-crossings: a struck block's crossing costs the events that clear the bodies it would stop at.
+    const blocks = playthroughBlockCrossings(doc, { events: [...priorEvents, ...talks.events] });
     return {
-        obstacle, locks, buttons, poles, talks,
+        obstacle, locks, buttons, poles, talks, blocks,
         events: [...priorEvents, ...talks.events],
         // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
         internalExitRules: locks.internalExitRules,
+        internalExitGates: blocks.internalExitGates,
         exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...poles.exitGates, ...talks.exitGates],
     };
 }
@@ -2168,6 +2291,8 @@ function main() {
         events: [...layer.events, ...ropes.events],
         // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
         internalExitRules: layer.internalExitRules,
+        // ⛓ RULES l63-pole-crossings: and a struck block's crossings, priced by its push paths.
+        internalExitGates: layer.internalExitGates,
         // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
         exitGates: [...layer.exitGates, ...landingGates, ...ropes.exitGates],
     });

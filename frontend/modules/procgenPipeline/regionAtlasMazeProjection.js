@@ -921,8 +921,8 @@ export function projectRegionToMaze(region, grid, ctx) {
 //                  models them (session tile-primitives-arrow-rope)
 //   pole           a LightPole whose light kills DarkTraps: ONE rope-shaped obstacle on
 //                  the bodies' cells, ACTIVATING the pole's token, struck ONLY from
-//                  its `stances` (`struck_from`: the spear's thrust reaches its bob
-//                  box), latched by its own event (an in-room pole, mode 'pole') or
+//                  its `stances` per arm (`struck_from`: the spear's thrust, and the
+//                  Ghost Sword's swing, reach its bob box), latched by its own event (an in-room pole, mode 'pole') or
 //                  opened by the press that lights it from another room (mode
 //                  'lit', `opened_by`) (session tile-primitives-lightpoles)
 //   ownership      `shared_world.rows`: which AP sub-region owns each cell, from
@@ -1261,24 +1261,28 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             // its own (an in-room pole, mode 'pole' — the cut IS that AP event), or a cross-room press's (mode 'lit',
             // `opened_by` — the press is a location in another level). The bodies' cells are NOT claimed: the terrain pass
             // lays them as the grid has them, and the obstacle is set on every one it floored (below).
-            const [strike, ...more] = e.strike ?? [];
-            if (!strike || more.length > 0 || !Array.isArray(strike.stances)) {
-                throw new Error(`atlas region "${regionId}": ${e.label} must name ONE strike with its stances`);
+            // ⛓ RULES l63-pole-crossings: a strike per ARM (the Spear thrust, the Ghost Sword swing), each from its stances.
+            const strikes = e.strike ?? [];
+            if (strikes.length === 0 || strikes.some((st) => !Array.isArray(st.stances))) {
+                throw new Error(`atlas region "${regionId}": ${e.label} must name its strikes, each with its stances`);
             }
-            const action = actionFor(strike);
             const key = poleKey(e.label);
             const id = `pole_${key}`;
             const ev = (ctx.eventsFor?.(region) ?? []).find((v) => v.name === e.event && (v.mode === 'pole' || v.mode === 'lit'));
-            const stances = strike.stances.map(([x, y, f]) => [...local([x, y]), f]).filter(([x, y]) => inGrid([x, y]))
-                .map(([x, y, f]) => `${x},${y},${f}`);
-            if (stances.length === 0) throw new Error(`atlas region "${regionId}": ${e.label} has no stance inside the region`);
+            const struckFrom = {};
+            for (const strike of strikes) {
+                const here = strike.stances.map(([x, y, f]) => [...local([x, y]), f]).filter(([x, y]) => inGrid([x, y]))
+                    .map(([x, y, f]) => `${x},${y},${f}`);
+                if (here.length > 0) struckFrom[actionFor(strike)] = here;
+            }
+            if (Object.keys(struckFrom).length === 0) throw new Error(`atlas region "${regionId}": ${e.label} has no stance inside the region`);
             builder.obstacleLib[id] = {
                 id,
                 name: e.label,
                 kind: 'pole',
                 clear_set: [[`lit_${key}`]],
-                struck_by: [action],
-                struck_from: { [action]: stances },
+                struck_by: Object.keys(struckFrom),
+                struck_from: struckFrom,
                 activates: `lit_${key}`,
                 at: keyOf(...tiles[0]),
                 ...(ev?.mode === 'pole' ? { event: ev.name } : ev?.mode === 'lit' ? { opened_by: ev.name } : {}),

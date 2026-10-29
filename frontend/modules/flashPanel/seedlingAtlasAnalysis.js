@@ -17,11 +17,12 @@ import { arrowLane, arrowTrapEntityPoint } from '../seedlingDemo/arrowTrap.js';
 import { weaponFootprint, FOOTPRINT_FACINGS } from './seedlingWeaponFootprints.js';
 import {
     ropesOf, ropeVerdict, ropeEventName, ropeEventCondition, ropeLaneCharges,
-    poleKillsOf, poleThrustStances, POLE_LIGHT_ARM, obstacleEventName,
+    poleKillsOf, poleThrustStances, poleSwingStances, POLE_LIGHT_ARM, POLE_GHOST_ARM, obstacleEventName,
 } from './seedlingObstacleEvents.js';
 import { buildLevelWorld, combatCensusOf, rectsOverlap } from '../seedlingDemo/levelWorld.js';
 import { contactRect } from '../seedlingDemo/combat.js';
 import { spearHitRect, pressRectTouches } from '../seedlingDemo/presses.js';
+import { swingHits } from '../seedlingDemo/combatVerbs.js';
 import { DARKTRAP_LIGHT_DEATH } from '../seedlingDemo/enemyDamage.js';
 
 import {
@@ -301,11 +302,13 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *           with (a minted rope's event), which the trap now MODELS
  *   pole    a LightPole whose light, lit, kills DarkTraps (`poleKillsOf`, the rules' own; an `invert`ed pole or one
  *           that reaches none is no row): `tiles` = the killed bodies' cells (each DarkTrap's contact rect is its one
- *           tile — refused by name otherwise), `event` = the pole's flag event (`obstacleEventName`), and ONE strike —
- *           the arm (`POLE_LIGHT_ARM`: a Spear thrust; the Ghost Sword is not an arm, as in the rules) — carrying its
- *           `stances` `[[x, y, F]…]`: the rules' own `poleThrustStances` over `grid` (tile centre, the pole's real
- *           bob box, the bodies avoided). A pole is not tile-aligned, so no footprint class can stand for it
- *           (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances").
+ *           tile — refused by name otherwise), `event` = the pole's flag event (`obstacleEventName`), and a strike per
+ *           ARM, each carrying its `stances` `[[x, y, F]…]` over `grid` (tile centre, the pole's real bob box, the bodies
+ *           avoided): the Spear thrust (`POLE_LIGHT_ARM`, the rules' own `poleThrustStances`) and — ⛓ RULES
+ *           l63-pole-crossings — the Ghost Sword swing (`POLE_GHOST_ARM`, the rules' own `poleSwingStances`; its rule
+ *           the fusion's And, as the ghost rock's), so the maze lights L63's poles from the L65 pockets as the rules do.
+ *           A pole is not tile-aligned, so no footprint class can stand for it (session tile-primitives-lightpoles,
+ *           ⚖ 2026-10-28 "Rope-shaped, stances").
  *
  * A rock (or rope) whose condition is not a flag or an any-of flags is REFUSED by
  * name. Each flag binds one strike: one item (`item`), or for a ROCK a conjunction
@@ -405,22 +408,33 @@ function poleRow(level, entity, label, resolveCondition, grid) {
         const kind = tx >= 0 && ty >= 0 && tx < grid.width && ty < grid.height ? grid.cells[ty * grid.width + tx]?.kind : null;
         return kind === 'open' || kind === 'manual';
     };
-    const stances = poleThrustStances(pole.rect, {
-        width: grid.width, height: grid.height, origin: grid.origin, tile: TILE, walkable,
-        avoid: bodies.map((b) => b.rect), spearHitRect, pressRectTouches, rectsOverlap,
-    }).flatMap(({ tile: [x, y], dirs }) => dirs.map((d) => [x, y, FACING_OF_DIR.get(d)]));
+    const g = { width: grid.width, height: grid.height, origin: grid.origin, tile: TILE, walkable, avoid: bodies.map((b) => b.rect), rectsOverlap };
+    const asStances = (rows) => rows.flatMap(({ tile: [x, y], dirs }) => dirs.map((d) => [x, y, FACING_OF_DIR.get(d)]));
+    const stances = asStances(poleThrustStances(pole.rect, { ...g, spearHitRect, pressRectTouches }));
     if (stances.length === 0) throw new Error(`${label}: no tile of its level is a stance — nothing lights it`);
     const rule = resolveCondition({ flag: POLE_LIGHT_ARM.item });
     if (rule?.rule !== 'Has' || (rule.args?.count ?? 1) !== 1) {
         throw new Error(`${label}: the arm ${POLE_LIGHT_ARM.item} resolves to ${JSON.stringify(rule)}, not one Has`);
     }
     const action = actionIdOfFlag(POLE_LIGHT_ARM.item);
+    const strike = [{ action, item: rule.args.item_name, footprint: weaponFootprint(action), stances }];
+    // ⛓ RULES l63-pole-crossings: the Ghost Sword swing, from its own stances; its item is the fusion's And of Has.
+    const swing = asStances(poleSwingStances(pole.rect, { ...g, swingHits }));
+    if (swing.length > 0) {
+        const ghost = resolveCondition({ flag: POLE_GHOST_ARM.item });
+        const one = (h) => h?.rule === 'Has' && (h.args?.count ?? 1) === 1;
+        if (!(ghost?.rule === 'And' && ghost.children?.length > 0 && ghost.children.every(one))) {
+            throw new Error(`${label}: the arm ${POLE_GHOST_ARM.item} resolves to ${JSON.stringify(ghost)}, not an And of Has`);
+        }
+        const ghostAction = actionIdOfFlag(POLE_GHOST_ARM.item);
+        strike.push({ action: ghostAction, rule: ghost, footprint: weaponFootprint(ghostAction), stances: swing });
+    }
     return {
         kind: 'pole',
         tiles,
         label,
         event: obstacleEventName({ level: level.level, tag: Number(entity.attrs?.tag), cls: entity.type, x: entity.x, y: entity.y }),
-        strike: [{ action, item: rule.args.item_name, footprint: weaponFootprint(action), stances }],
+        strike,
     };
 }
 

@@ -26,7 +26,7 @@ describe('the weapon reach census', () => {
         const kinds = {};
         for (const r of rows) kinds[r.kind] = (kinds[r.kind] ?? 0) + 1;
         expect(kinds).toEqual({ pole: 20, block: 12, bridge: 4, rock: 2 });
-        expect(rows.filter(isFinding).length).toBe(13);
+        expect(rows.filter(isFinding).length).toBe(11);
     });
 
     it('0 RULES-LOOSER: every charged pole the thrust lights from a side, the ghost swing lights from that side too', () => {
@@ -41,8 +41,10 @@ describe('the weapon reach census', () => {
         ]);
     });
 
-    it('2 charged poles are TIGHTER: the swing lights them from the L65 landing pocket, no thrust does', () => {
-        expect(rows.filter((r) => r.kind === 'pole' && r.charged && /TIGHTER/.test(r.verdict)).map(name)).toEqual([
+    it('0 charged poles are TIGHTER: the 2 the swing lights from the L65 landing pockets are credited (the rules\' ghost arm)', () => {
+        // ⛓ RULES l63-pole-crossings: `POLE_GHOST_ARM` charges a side no thrust reaches with the swing's centre stances.
+        expect(rows.filter((r) => r.kind === 'pole' && r.charged && /TIGHTER/.test(r.verdict)).map(name)).toEqual([]);
+        expect(rows.filter((r) => r.kind === 'pole' && /swing-credited/.test(r.verdict)).map(name)).toEqual([
             'L63 lightpole@48,272',
             'L63 lightpole@112,272',
         ]);

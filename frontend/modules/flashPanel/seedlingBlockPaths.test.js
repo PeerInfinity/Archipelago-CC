@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { blockHolderSearch, blockHolderVerdict, selfHoldTiles } from './seedlingBlockPaths.js';
+import { blockCrossingCost, blockHolderSearch, blockHolderVerdict, selfHoldTiles } from './seedlingBlockPaths.js';
 import { anyOf, buildSeedlingRegionGrid, conditionKey, entitySemantics, flag } from './seedlingSemantics.js';
 import { ropeEventCondition } from './seedlingObstacleEvents.js';
 import {
@@ -329,5 +329,50 @@ describe('the rope RUN is solid at the cut\'s condition — L39 (the corridor), 
     it('L28: the run (10..12, 4) costs the cut on every tile', () => {
         const grid = gridOf(MAP, 28);
         expect([10, 11, 12].map((x) => priced(grid, x, 4))).toEqual([CUT, CUT, CUT]);
+    });
+});
+
+/**
+ * ⛓ RULES l63-pole-crossings — a struck block's crossing, priced by its push paths: the block stops at a STOPPER (a static,
+ * unkillable body) unless one of its keys is held, is destroyed on a pit, and the crossing must reach the WHOLE far side.
+ */
+describe('blockCrossingCost — the far side behind a pushed block', () => {
+    // Row 1: the near side (x 5..6), the block (x 4), the far side (x 1..3), a pit at x 0. A stopper at x 2 when asked.
+    const SPEAR = flag('hasSpear');
+    const corridor = () => {
+        const r = room(['#######', '#......', '#######']);
+        r.grid.cells[r.at(4, 1)] = { ...r.grid.cells[r.at(4, 1)], kind: 'gated', conditions: [SPEAR] };
+        r.grid.cells[r.at(1, 1)].kind = 'sink';
+        r.tileTypes.set(r.at(1, 1), 6);
+        return r;
+    };
+    const behind = { N: [[0, -1]], E: [[1, 0]], S: [[0, 1]], W: [[-1, 0]] };
+    const cost = (r, { stoppers = [], stances = behind, start, goal }) => blockCrossingCost(r.grid, {
+        block: { tx: 4, ty: 1, condition: SPEAR }, stances, stoppers, tileTypes: r.tileTypes, keyOf: conditionKey,
+        held: [conditionKey(SPEAR)],
+    }, r.at(...start), new Set(goal.map((t) => r.at(...t))));
+    const WEST = [[2, 1], [3, 1]];
+
+    it('free beyond the push item when nothing stops the block: it goes on into the pit', () => {
+        expect(cost(corridor(), { start: [5, 1], goal: WEST }).sets).toEqual([[]]);
+    });
+
+    it('a stopper on the far side parks the block in the way: the crossing costs the stopper\'s key', () => {
+        const stoppers = [{ tx: 2, ty: 1, keys: ['lit'], label: 'darktrap' }];
+        expect(cost(corridor(), { stoppers, start: [5, 1], goal: WEST }).sets).toEqual([['lit']]);
+    });
+
+    it('a stopper no key removes: no way (the caller refuses it by name)', () => {
+        const stoppers = [{ tx: 2, ty: 1, keys: [], label: 'darktrap' }];
+        expect(cost(corridor(), { stoppers, start: [5, 1], goal: WEST }).sets).toEqual([]);
+    });
+
+    it('a thrust\'s stance two cells back (over a pit) still pushes, and the player stays on that stance', () => {
+        const r = corridor();
+        r.grid.cells[r.at(5, 1)].kind = 'sink';
+        expect(cost(r, { start: [6, 1], goal: WEST }).sets).toEqual([]);
+        const thrust = { N: [[0, -1], [0, -2]], E: [[1, 0], [2, 0]], S: [[0, 1], [0, 2]], W: [[-1, 0], [-2, 0]] };
+        // Pushed W from [6,1] across the pit [5,1]; the player cannot follow it, so the far side stays out of reach.
+        expect(cost(r, { stances: thrust, start: [6, 1], goal: WEST }).sets).toEqual([]);
     });
 });

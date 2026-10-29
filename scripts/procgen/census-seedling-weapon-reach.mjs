@@ -41,7 +41,9 @@
  * Verdicts, per target (per push facing for a block):
  *   LOOSER   the thrust has a stance and the swing none (or, per side: a side the thrust stands on that the swing does
  *            not — the rules' `Or(<event>, Ghost Spear)` door on that side lets a Ghost Sword holder through);
- *   TIGHTER  the reverse (the swing reaches where no thrust does; the rules simply never credit it);
+ *   TIGHTER  the reverse (the swing reaches where no thrust does; the rules simply never credit it) — ⛓ RULES
+ *            l63-pole-crossings: unless the rules' ghost arm (`POLE_GHOST_ARM`, a centre swing stance on that side)
+ *            charges it, which reads `swing-credited`;
  *   same     every side with a thrust stance has a swing stance and vice versa.
  *
  * Run:
@@ -66,7 +68,7 @@ import { ghostSlashRect, GHOST_SWORD_REACH } from '../../frontend/modules/seedli
 import { distanceRectPoint } from '../../frontend/modules/seedlingDemo/presses.js';
 import { playerBoxAt } from '../../frontend/modules/seedlingDemo/playerPhysicsV2.js';
 import { HITBOX } from '../../frontend/modules/seedlingDemo/playerPhysicsV1.js';
-import { poleKillsOf, poleThrustStances } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
+import { poleKillsOf, poleThrustStances, poleSwingStances } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
 import { deriveWeaponFootprint, FOOTPRINT_FACINGS } from '../../frontend/modules/flashPanel/seedlingWeaponFootprints.js';
 import { tileTypeForPlacement, SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
 
@@ -131,23 +133,6 @@ export function bridgeRuns(tiles) {
         runs.push(run.sort((a, b) => a[1] - b[1] || a[0] - b[0]));
     }
     return runs;
-}
-
-/** The ghost-swing analogue of `poleThrustStances` AT THE TILE CENTRE only (reference; the rows read `poleFineStances`): tile centres whose 24×48 swing (reach 24, no line test) collects `box`. */
-export function poleSwingStances(box, { width, height, walkable, avoid = [] }) {
-    const out = [];
-    for (let ty = 0; ty < height; ty++) {
-        for (let tx = 0; tx < width; tx++) {
-            if (!walkable(tx, ty)) continue;
-            const r = { x: tx * T, y: ty * T, w: T, h: T, right: (tx + 1) * T, bottom: (ty + 1) * T };
-            if (avoid.some((a) => rectsOverlap(r, a))) continue;
-            const p = { x: tx * T + T / 2, y: ty * T + T / 2 };
-            const target = { id: 'pole', box, type: 'LightPole', cx: (box.x + box.right) / 2, cy: (box.y + box.bottom) / 2 };
-            const dirs = [0, 1, 2, 3].filter((d) => swingHits(p, d, [target], { sword: 'ghostsword' }).length > 0);
-            if (dirs.length) out.push({ tile: [tx, ty], dirs });
-        }
-    }
-    return out;
 }
 
 /**
@@ -317,17 +302,27 @@ export function censusLevel(level, region, ctx) {
             const fineArgs = { width: grid.width, height: grid.height, walkable, avoid };
             const swing = poleFineStances(level, pole.rect, { ...fineArgs, weapon: 'ghostsword' });
             const fineThrust = poleFineStances(level, pole.rect, { ...fineArgs, weapon: 'spear' });
-            const centreSwing = poleSwingStances(pole.rect, { width: grid.width, height: grid.height, walkable, avoid });
+            // The rules' own swing stances (`poleSwingStances`, tile centre): what `POLE_GHOST_ARM` charges a side with.
+            const centreSwing = poleSwingStances(pole.rect, {
+                width: grid.width, height: grid.height, origin: grid.origin, tile: T, walkable, avoid, swingHits, rectsOverlap,
+            });
             const sideOf = sideNamer(level, walkable, avoid, members);
             const tilesOf = (list) => list.map((r) => `[${r.tile}]${r.dirs.map((d) => FACING_OF_DIR.get(d)).join("")}@${sideOf(r.tile).id}`);
             const ev = ctx.poleEvents.filter((e) => e.level === level.level && e.x === entity.x && e.y === entity.y);
+            const verdict = compare(thrust, swing, sideOf);
+            // ⛓ RULES l63-pole-crossings: a charged pole's swing-only side the rules' ghost arm reaches (a centre swing
+            // stance on it) is credited — `Or(<event>, hasGhostSword)` on its doors — so it is no longer TIGHTER.
+            const creditedSides = new Set(centreSwing.map((r) => sideOf(r.tile).id));
+            if (ev.length > 0 && /TIGHTER/.test(verdict.verdict) && verdict.swingOnlySides.every((id) => creditedSides.has(id))) {
+                verdict.verdict = `swing-credited (${verdict.swingOnlySides.join(' ')}: the rules' ghost arm)`;
+            }
             rows.push({
                 ...base, kind: 'pole', target: label, tag: Number(entity.attrs?.tag), charged: ev.length > 0,
                 kills: killed.map((b) => b.id),
                 gates: ev.length ? ev.flatMap((e) => [`event ${e.name} (${e.via})`, ...e.gates]) : ['no pole event (its light kills nothing the rules charge)'],
                 fineThrust: tilesOf(fineThrust), centreSwing: tilesOf(centreSwing),
                 swingPoints: Object.fromEntries(swing.map((r) => [`${r.tile}`, r.best])),
-                ...compare(thrust, swing, sideOf),
+                ...verdict,
             });
         } else if (entity.type === 'pushableblockspear') {
             const tile = [Math.floor(entity.x / T), Math.floor(entity.y / T)];

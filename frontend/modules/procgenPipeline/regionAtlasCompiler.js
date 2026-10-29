@@ -433,6 +433,9 @@ function deriveIdentifiers(atlas, options) {
  *   the ONE-WAY internal exit `from -> to` of that region compiles with `rule` instead of its own, which must
  *   still equal `expect` (else it throws by name). A row naming no such exit throws. The atlas is not edited:
  *   this is the rules layer's projection (a latched lock's return priced as its event).
+ * @param {Array<object>} [options.internalExitGates] RULES l63-pole-crossings — `{region_id, from, to, rule}`: the
+ *   DIRECTED internal crossing `from -> to` of that region (either direction of a bidirectional row) carries
+ *   `And(<its rule>, rule)`. A gate naming no such crossing throws; the atlas is not edited.
  * @param {boolean} [options.embedSphereLog] embed the forward simulator's
  *   `generateSphereLog` walk of the compiled graph as `sphere_log` (default
  *   false — opt-in, so every existing compile stays byte-identical). The same
@@ -470,6 +473,29 @@ function internalRuleFor(rules, regionId, ie) {
     }
     r.used = true;
     return r.rule;
+}
+
+/** `options.internalExitGates` → `region|from|to` → `{rule, used}`; a second gate for one crossing throws. */
+function internalExitGatesOf(list = []) {
+    const out = new Map();
+    for (const g of list) {
+        if (!g?.region_id || !g?.from || !g?.to || !g?.rule) {
+            throw new Error(`internal exit gate needs region_id, from, to and rule: ${JSON.stringify(g)}`);
+        }
+        const key = `${g.region_id}|${g.from}|${g.to}`;
+        if (out.has(key)) throw new Error(`two internal exit gates for ${key}`);
+        out.set(key, { rule: g.rule, used: false });
+    }
+    return out;
+}
+
+/** A directed internal crossing's rule with its gate ANDed on, if it has one. */
+function internalGated(own, gates, regionId, from, to) {
+    const gate = gates.get(`${regionId}|${from}|${to}`);
+    if (!gate) return own;
+    gate.used = true;
+    if (own === undefined || own === null) return gate.rule;
+    return { rule: 'And', children: [own, gate.rule] };
 }
 
 /** `options.exitGates` → endpoint key → `{rule, used}`, several gates on one endpoint ANDed in order. */
@@ -561,17 +587,19 @@ export function compileRegionAtlas(atlas, options = {}) {
     // and all, because that name is how procgenPlayer resolves the crossing.
     const internalInfo = new Map();
     const internalRules = internalExitRulesOf(options.internalExitRules);
+    const internalGates = internalExitGatesOf(options.internalExitGates);
     for (const region of atlasRegions) {
         for (const ie of region.subgraph?.internal_exits ?? []) {
             const from = apRegionName(region.region_id, ie.from);
             const to = apRegionName(region.region_id, ie.to);
-            const forward = addExit(from, to, internalRuleFor(internalRules, region.region_id, ie));
+            const forward = addExit(from, to, internalGated(internalRuleFor(internalRules, region.region_id, ie),
+                internalGates, region.region_id, ie.from, ie.to));
             const fkey = `${region.region_id}|${ie.from}|${ie.to}`;
             if (!internalInfo.has(fkey)) internalInfo.set(fkey, forward);
             // rules.json exits are strictly one-way ({name, connected_region,
             // access_rule}) — a bidirectional internal exit is two of them.
             if (ie.bidirectional === true) {
-                const back = addExit(to, from, ie.access_rule);
+                const back = addExit(to, from, internalGated(ie.access_rule, internalGates, region.region_id, ie.to, ie.from));
                 const bkey = `${region.region_id}|${ie.to}|${ie.from}`;
                 if (!internalInfo.has(bkey)) internalInfo.set(bkey, back);
             }
@@ -580,6 +608,9 @@ export function compileRegionAtlas(atlas, options = {}) {
 
     for (const [key, r] of internalRules) {
         if (!r.used) throw new Error(`internal exit rule for ${key} names no one-way internal exit of this atlas`);
+    }
+    for (const [key, g] of internalGates) {
+        if (!g.used) throw new Error(`internal exit gate for ${key} names no internal crossing of this atlas`);
     }
 
     // --- boundary exits, wired by the vanilla layout ---------------------

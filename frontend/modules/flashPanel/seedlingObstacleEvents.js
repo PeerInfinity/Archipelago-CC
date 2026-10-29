@@ -351,9 +351,10 @@ export function deriveButtonEvents(rows, ctx) {
             const rule = other ? { rule: 'Or', children: [has, other] } : has;
             // ⛓ RULES l63-darktrap: a door whose side holds no stance for the in-room way (`arm: false`) costs the
             // event alone.
+            // ⛓ RULES l63-pole-crossings: a door whose side holds only a SECOND arm's stances (`armRule`) costs that.
             for (const dep of ctx.gates(t, name)) {
                 exitGates.push({ region_id: dep.region_id, exit_id: dep.exit_id, kind: BUTTON_GATE_KIND,
-                    rule: dep.arm === false ? has : rule });
+                    rule: dep.arm === false ? has : dep.armRule ? { rule: 'Or', children: [has, dep.armRule] } : rule });
             }
         }
     }
@@ -427,11 +428,25 @@ export function poleKillsOf(level, target, model) {
  * cross-room press does, from the pole's own room. Nothing derives the inventory flag: the model states the arm in
  * prose (`levelWorld`'s press-responder `arm`) and `solverBot.deriveLightPole` tests `hasSpear` by name. Witnessed
  * on the game (rules-darktrap-events W0): the Spear alone crosses L62's and L63's darktraps both ways.
- * ⚠ The ghost sword's swing also passes `"Spear"`; it is NOT an arm here (no stance is authored for it, nothing
- * witnessed it), which only makes the rule stricter than the game.
+ * ⛓ RULES l63-pole-crossings: the Ghost Sword's swing passes `"Spear"` too — `POLE_GHOST_ARM`, from its own stances
+ * (`poleSwingStances`).
  */
 export const POLE_LIGHT_ARM = Object.freeze({
     item: 'hasSpear', verb: 'lit by a Spear thrust', cite: 'Player.as:1083-1088 + Scenery/LightPole.as:45',
+});
+
+/**
+ * ⛓⛓ RULES l63-pole-crossings — **THE GHOST SWORD SWING AS A SECOND POLE ARM.** `Player.slash` with `hasGhostSword`
+ * (`Player.as:892-929`) hits as `"Spear"` (:924) with a 24 x 48 rect (`h = width·2`, :934), a 24 px reach gate (:915)
+ * and NO line test (`|| hasGhostSword`, :917), so it lights a pole as the thrust does — from other tiles: L63's two
+ * L65 landing pockets light lightpole@48,272 and @112,272 from their arrivals [2,18] and [8,18] facing N, which no
+ * thrust reaches (`census-seedling-weapon-reach.mjs`, witnessed 8x by `probe-seedling-weapon-reach.mjs`). The item is
+ * the fusion flag (`hasGhostSword` = the Fusion with the Spear and a Sword). A side whose doors hold a thrust stance
+ * keeps the thrust's arm (the Ghost Sword implies the Spear, so nothing is lost); a side with only swing stances gets
+ * this one.
+ */
+export const POLE_GHOST_ARM = Object.freeze({
+    item: 'hasGhostSword', verb: 'lit by a Ghost Sword swing', cite: 'Player.as:892-929,934 + Scenery/LightPole.as:45',
 });
 
 /**
@@ -481,6 +496,39 @@ export function poleThrustStances(box, g) {
 }
 
 /**
+ * ⛓⛓ RULES l63-pole-crossings — **WHERE A GHOST SWORD SWING REACHES A POLE FROM**, the `POLE_GHOST_ARM` analogue of
+ * `poleThrustStances`, on the same convention: a tile the caller says can be stood on, clear of every `avoid` rect,
+ * whose CENTRE swings (`swingHits` with `sword: 'ghostsword'`, the game's slash: reach gate, no line test) into `box`
+ * in at least one facing. The centre is a stance the game allows, so this is never looser than the game; a holder
+ * off-centre reaches more (the fine lattice of `census-seedling-weapon-reach.mjs`), which only makes it stricter.
+ * Pure: the swing is injected.
+ *
+ * @param {{x:number, y:number, right:number, bottom:number}} box the pole's press rect
+ * @param {{width:number, height:number, origin?:{x:number,y:number}, tile:number, walkable:(tx:number, ty:number) => boolean,
+ *   avoid?:object[], swingHits:Function, rectsOverlap:Function}} g
+ * @returns {{tile:number[], dirs:number[]}[]} the stances, row-major
+ */
+export function poleSwingStances(box, g) {
+    const ox = g.origin?.x ?? 0;
+    const oy = g.origin?.y ?? 0;
+    const target = { id: 'pole', box, type: 'LightPole', cx: (box.x + box.right) / 2, cy: (box.y + box.bottom) / 2 };
+    const out = [];
+    for (let gy = 0; gy < g.height; gy++) {
+        for (let gx = 0; gx < g.width; gx++) {
+            const tx = gx + ox;
+            const ty = gy + oy;
+            if (!g.walkable(tx, ty)) continue;
+            const r = { x: tx * g.tile, y: ty * g.tile, w: g.tile, h: g.tile, right: (tx + 1) * g.tile, bottom: (ty + 1) * g.tile };
+            if ((g.avoid ?? []).some((a) => g.rectsOverlap(r, a))) continue;
+            const p = { x: tx * g.tile + g.tile / 2, y: ty * g.tile + g.tile / 2 };
+            const dirs = [0, 1, 2, 3].filter((d) => g.swingHits(p, d, [target], { sword: 'ghostsword' }).length > 0);
+            if (dirs.length) out.push({ tile: [tx, ty], dirs });
+        }
+    }
+    return out;
+}
+
+/**
  * ⛓⛓ RULES l63-darktrap — every `LightPole` of a map extract that NO cross-room `ButtonRoom` writes (its tag is in
  * no `crossRoomButtonsOf` write): the poles only the in-room arm lights. `{level, type, x, y, tag}`; an untagged
  * pole (tag < 0) writes nothing and is left out.
@@ -512,7 +560,8 @@ export function inRoomPolesOf(map) {
  * @param {object} ctx
  * @param {(pole:object) => {bodies:string[], why:string}|null} ctx.kills
  * @param {(pole:object, eventName:string) => {place:{region_id, sub_region?, side}, reach:object|null,
- *   gates:{region_id:string, exit_id:string, arm:boolean}[]}} ctx.cut (throws by name when it cannot say)
+ *   gates:{region_id:string, exit_id:string, arm:boolean, armRule?:object}[]}} ctx.cut (throws by name when it cannot
+ *   say; `armRule` = a door whose side holds only a second arm's stances, `Or(Has(<event>), armRule)`)
  * @param {object} ctx.arm the in-room way, a rules.json rule
  * @param {{verb:string, item:string}} ctx.action
  * @param {object[]} [ctx.existing] events already minted
@@ -551,8 +600,10 @@ export function deriveInRoomPoleEvents(poles, ctx) {
         });
         const has = { rule: 'Has', args: { item_name: name } };
         const or = { rule: 'Or', children: [has, ctx.arm] };
+        // ⛓ RULES l63-pole-crossings: a door whose side holds only a second arm's stances (`armRule`) costs that.
         for (const g of cut.gates) {
-            exitGates.push({ region_id: g.region_id, exit_id: g.exit_id, kind: IN_ROOM_POLE_GATE_KIND, rule: g.arm ? or : has });
+            const rule = !g.arm ? has : g.armRule ? { rule: 'Or', children: [has, g.armRule] } : or;
+            exitGates.push({ region_id: g.region_id, exit_id: g.exit_id, kind: IN_ROOM_POLE_GATE_KIND, rule });
         }
     }
     if (refused.length > 0) {

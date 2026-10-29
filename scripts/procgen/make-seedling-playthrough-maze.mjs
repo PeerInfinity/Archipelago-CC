@@ -219,6 +219,7 @@ export function neededEvents(layer, produced) {
         const needed = new Set();
         for (const e of events) ruleNames(e.access_rule, needed);
         for (const r of layer.internalExitRules) ruleNames(r.rule, needed);
+        for (const g of layer.internalExitGates ?? []) ruleNames(g.rule, needed);
         for (const g of layer.exitGates) ruleNames(g.rule, needed);
         const before = events.length;
         events = events.filter((e) => produced(e.name) || needed.has(e.name));
@@ -258,6 +259,7 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     const out = {
         events: layer.events.filter((e) => keep.has(e.region_id)),
         internalExitRules: layer.internalExitRules.filter((r) => keep.has(r.region_id)),
+        internalExitGates: (layer.internalExitGates ?? []).filter((g) => keep.has(g.region_id)),
         exitGates: layer.exitGates.filter((g) => keep.has(g.region_id) && conns.some((c) => c.from[0] === g.region_id
             && c.from[1] === g.exit_id && keep.has(c.to[0]))),
     };
@@ -327,6 +329,7 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     for (const [what, rule] of [
         ...out.events.map((e) => [`event "${e.name}"`, e.access_rule]),
         ...out.internalExitRules.map((r) => [`${r.region_id} ${r.from} -> ${r.to}`, r.rule]),
+        ...out.internalExitGates.map((g) => [`${g.region_id} ${g.from} -> ${g.to} (gate)`, g.rule]),
         ...out.exitGates.map((g) => [`${g.region_id}/${g.exit_id}`, g.rule]),
     ]) {
         const stray = named(rule).filter((n) => !have.has(n));
@@ -375,6 +378,7 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
         mazeProjection,
         events: [...layer.events, ...ropes.events],
         internalExitRules: layer.internalExitRules,
+        internalExitGates: layer.internalExitGates,
         exitGates: [...layer.exitGates, ...landingGatesFor(atlas, levels), ...ropes.exitGates],
     });
     return { text: `${stringifyRulesJson(rules)}\n`, report, unresolved: mazeProjection.unresolved ?? [] };

@@ -335,3 +335,136 @@ export function blockHolderVerdict(grid, { heldBy, holders, lockCells, closedCel
     if (search.refused) return { decided: false, why: `refused: ${search.refused}`, search: null };
     return { decided: true, why: null, search };
 }
+
+/**
+ * ⛓ RULES l63-pole-crossings — WHAT CROSSING A PUSHABLE BLOCK'S OWN CELL COSTS, read off the push geometry.
+ *
+ * The transcription claims a fire/spear block's start cell as a crossing gated on its push item (`seedlingSemantics`
+ * `pushableblockspear: G(flag('hasSpear'))`): "the item moves it, so the cell is passable". That holds only when the
+ * pushed block can get OUT OF THE WAY. A block stops at Enemy as at any solid (`PushableBlockFire.as:31`,
+ * `solids.push("Enemy", "Player")`), so a body that never moves and cannot be killed by a hit — a DarkTrap
+ * (`aggro.kind` static, `speed` 0, `kill` null in the model's combat rows) — is a wall to the block until something
+ * else removes it: the light of a pole that kills it (`poleKillsOf`), an AP event. Game-witnessed on L63
+ * (`probe-seedling-l63-spear-block.mjs`): from the east, pushed W the block halts on [5,6] against darktrap@64,96 and
+ * seals the far side; with `{63,1}` (the pole lit) it goes on into the pit [3,6] and the far side opens.
+ *
+ * THE MODEL (Sokoban on the analyzer's grid, as `blockHolderSearch`): the player walks four-connected through cells
+ * whose conditions `held` covers (less the block's own claim on its start cell), never through the block; the block
+ * moves one tile per push in the push FACING, from any stance the caller's `stances` names for that facing (the
+ * weapon's footprint: a Spear thrust collects the block from two cells back, over any cell between, so L63's block is
+ * pushed W across the pit [8,6] from [9,6]); it is DESTROYED on Water, Pit and Lava (`BLOCK_FATAL_TILES`), stops at a
+ * wall/manual/sink cell, an item-gated cell `held` does not cover, a face/direction/entry-gated cell, and a STOPPER cell
+ * none of whose `keys` is held.
+ *
+ * THE GOAL: the player stands on every cell of `goal` (the far sub-region, the analyzer's own component) that no block
+ * occupies. A block parked so that it cuts the far side in two has not been crossed (L63: the block on [5,6] leaves
+ * the pole's stance [5,5] and everything west of the trap out of reach).
+ *
+ * The answer: the Pareto-minimal sets of STOPPER keys under which the crossing succeeds ([] = free beyond `held`).
+ * Pure, headless-safe, no imports.
+ *
+ * @param {{width:number,height:number,cells:object[]}} grid the analyzer's cells
+ * @param {object} opts
+ * @param {{tx:number,ty:number,condition?:object}} opts.block the pushable (its `condition` = its claim on its cell)
+ * @param {Record<'N'|'E'|'S'|'W', number[][]>} opts.stances per push facing, the player-to-block offsets a push
+ *   comes from (`[[-dx,-dy]]` for a walk-in block; a weapon's footprint for a struck one)
+ * @param {Array<{tx:number,ty:number,keys:string[],label:string}>} [opts.stoppers] the bodies a block stops at
+ * @param {Map<number,number>} opts.tileTypes cell index -> tile type
+ * @param {(c:object)=>string} opts.keyOf
+ * @param {string[]} opts.held the condition keys the crossing already pays (the push item)
+ * @param {number} start the cell the player starts on (the near side)
+ * @param {Set<number>} goal the far side's cells
+ * @returns {{sets: string[][], states: number, refused: string|null}}
+ */
+export function blockCrossingCost(grid, { block, stances, stoppers = [], tileTypes, keyOf, held = [] }, start, goal) {
+    const { width, height, cells } = grid;
+    const inside = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
+    const blockAt = block.ty * width + block.tx;
+    const own = block.condition ? keyOf(block.condition) : null;
+    const cellKeys = cells.map((cell, i) => {
+        const ks = (cell.conditions ?? []).map(keyOf);
+        return i === blockAt && own !== null ? ks.filter((k) => k !== own) : ks;
+    });
+    const stopperAt = new Map(stoppers.map((s) => [s.ty * width + s.tx, s]));
+    const keys = [...new Set(stoppers.flatMap((s) => s.keys))].sort();
+    if (keys.length > BLOCK_SEARCH_MAX_KEYS) return { sets: [], states: 0, refused: `${keys.length} stopper keys (bound ${BLOCK_SEARCH_MAX_KEYS})` };
+    const gateKeys = (list) => (list === null ? null : (list ?? []).map(keyOf));
+    let states = 0;
+    const crosses = (extra) => {
+        const has = new Set([...held, ...extra]);
+        const covered = (ks) => ks.every((k) => has.has(k));
+        const standable = (i) => !BLOCKING.has(cells[i].kind) && covered(cellKeys[i]);
+        const stepOk = (i, n, dir) => [cells[i].faces?.[dir], cells[n].faces?.[OPP[dir]], cells[i].dirs?.[dir], cells[n].enter?.[dir]]
+            .map(gateKeys).every((g) => g !== null && covered(g));
+        const stopped = (i) => {
+            const s = stopperAt.get(i);
+            return s !== undefined && !s.keys.some((k) => has.has(k));
+        };
+        const blockOk = (i) => standable(i) && !stopped(i)
+            && !['faces', 'dirs', 'enter'].some((k) => Object.keys(cells[i][k] ?? {}).length > 0);
+        const reach = (from, occupied) => {
+            const seen = new Set([from]);
+            const stack = [from];
+            while (stack.length) {
+                const i = stack.pop();
+                const x = i % width;
+                const y = (i - x) / width;
+                for (const [dir, dx, dy] of STEPS) {
+                    if (!inside(x + dx, y + dy)) continue;
+                    const n = (y + dy) * width + x + dx;
+                    if (seen.has(n) || n === occupied || !standable(n) || !stepOk(i, n, dir)) continue;
+                    seen.add(n);
+                    stack.push(n);
+                }
+            }
+            return seen;
+        };
+        if (!standable(start)) return false;
+        const seenStates = new Set();
+        const queue = [[blockAt, start]];
+        while (queue.length) {
+            const [pos, from] = queue.shift();
+            if (pos === from) continue;
+            const region = reach(from, pos);
+            const sk = `${pos}|${Math.min(...region)}`;
+            if (seenStates.has(sk)) continue;
+            seenStates.add(sk);
+            states += 1;
+            if (states > BLOCK_SEARCH_MAX_STATES) throw new Error(`block crossing: over ${BLOCK_SEARCH_MAX_STATES} states`);
+            if ([...goal].every((i) => i === pos || region.has(i))) return true;
+            if (pos < 0) continue;
+            const x = pos % width;
+            const y = (pos - x) / width;
+            for (const [dir, dx, dy] of STEPS) {
+                const tx = x + dx;
+                const ty = y + dy;
+                if (!inside(tx, ty)) continue;
+                // The player stays on the stance it pushed from (a thrust's stance can be two cells back, over a pit).
+                const stance = (stances[dir] ?? []).map(([ox, oy]) => (inside(x - ox, y - oy) ? (y - oy) * width + x - ox : -1))
+                    .find((s) => s >= 0 && region.has(s));
+                if (stance === undefined) continue;
+                const target = ty * width + tx;
+                if (BLOCK_FATAL_TILES.includes(tileTypes.get(target)) && !stopped(target)) {
+                    queue.push([-1, stance]);
+                } else if (blockOk(target) && stepOk(pos, target, dir)) {
+                    queue.push([target, stance]);
+                }
+            }
+        }
+        return false;
+    };
+    const sets = [];
+    for (let size = 0; size <= keys.length; size += 1) {
+        const combos = [];
+        const pick = (from, acc) => {
+            if (acc.length === size) { combos.push(acc); return; }
+            for (let i = from; i < keys.length; i += 1) pick(i + 1, [...acc, keys[i]]);
+        };
+        pick(0, []);
+        for (const set of combos) {
+            if (sets.some((f) => f.every((k) => set.includes(k)))) continue;
+            if (crosses(set)) sets.push(set);
+        }
+    }
+    return { sets, states, refused: null };
+}

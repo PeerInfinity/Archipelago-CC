@@ -1106,3 +1106,30 @@ describe('compileRegionAtlas — internal exit rules', () => {
             .toThrow(/two internal exit rules/);
     });
 });
+
+/**
+ * ⛓ RULES l63-pole-crossings — `options.internalExitGates`: ONE DIRECTION of an internal crossing (either direction of a
+ * bidirectional row) carries `And(<its rule>, gate)` — a struck block's crossing that one side pays more for.
+ */
+describe('compileRegionAtlas — internal exit gates', () => {
+    const has = (n) => ({ rule: 'Has', args: { item_name: n } });
+    const name = (sub) => apRegionName('overworld_south', sub);
+
+    it('gates exactly the named direction of a bidirectional row; the other direction and the atlas are untouched', () => {
+        const atlas = clone(FIXTURE);
+        const before = JSON.stringify(atlas);
+        const plain = compileRegionAtlas(clone(FIXTURE)).rules;
+        const gated = compileRegionAtlas(atlas, { internalExitGates: [{ region_id: 'overworld_south', from: 'island', to: 'shore', rule: has('E') }] }).rules;
+        expect(JSON.stringify(atlas)).toBe(before);
+        const own = exitTo(plain, name('island'), name('shore')).access_rule;
+        expect(exitTo(gated, name('island'), name('shore')).access_rule).toEqual({ rule: 'And', children: [own, has('E')] });
+        expect(exitTo(gated, name('shore'), name('island')).access_rule).toEqual(exitTo(plain, name('shore'), name('island')).access_rule);
+    });
+
+    it('refuses by name: a gate naming no crossing, a second gate for one crossing', () => {
+        expect(() => compileFixture({ internalExitGates: [{ region_id: 'overworld_south', from: 'shore', to: 'nowhere', rule: has('E') }] }))
+            .toThrow(/names no internal crossing/);
+        const g = { region_id: 'overworld_south', from: 'island', to: 'shore', rule: has('E') };
+        expect(() => compileFixture({ internalExitGates: [g, g] })).toThrow(/two internal exit gates/);
+    });
+});
