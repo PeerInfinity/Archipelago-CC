@@ -9,6 +9,7 @@ import {
     projectRegionToMaze, projectLevelWorld, levelHasInteraction, MAZE_TILE_FLOOR, SHARED_WORLD_ALPHABET,
 } from './regionAtlasMazeProjection.js';
 import { seedlingMazeProjectionDeps, seedlingLevelEntities } from '../flashPanel/seedlingAtlasAnalysis.js';
+import { weaponFootprint } from '../flashPanel/seedlingWeaponFootprints.js';
 import {
     buildPlaythroughMaze, OUT_FILE, LEVELS, restrictAtlas,
 } from '../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
@@ -20,6 +21,9 @@ import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 import { nativeReachUnder } from '../mazeRoom/tileSpike/deriveLevelWorldLogic.js';
 import { regionItems } from '../mazeRoom/tileSpike/deriveTileLogic.js';
 
+// ⛓ WEAPON FOOTPRINTS (session tile-primitives-weapon-footprints): each strike carries its action's derived footprint.
+const SWORD_STRIKE = { action: 'sword', item: 'Progressive Sword', footprint: weaponFootprint('sword') };
+const SPEAR_STRIKE = { action: 'spear', item: 'Ghost Spear', footprint: weaponFootprint('spear') };
 const J = (rel) => JSON.parse(readFileSync(new URL(rel, import.meta.url), 'utf8'));
 const ATLAS = J('../flashPanel/atlases/seedling-playthrough.json');
 const MAP = J('../flashPanel/atlases/seedling-map.json');
@@ -41,8 +45,8 @@ describe('Seedling level-world entity rows — from the semantics tables', () =>
         const rows = seedlingLevelEntities(LEVEL15, deps.resolveCondition);
         expect(rows.map(({ label, ...r }) => r)).toEqual([
             { kind: 'block', tiles: [[4, 4]] },
-            { kind: 'rock', tiles: [[6, 5]], strike: [{ action: 'sword', item: 'Progressive Sword' }, { action: 'spear', item: 'Ghost Spear' }] },
-            { kind: 'rock', tiles: [[6, 1]], strike: [{ action: 'sword', item: 'Progressive Sword' }, { action: 'spear', item: 'Ghost Spear' }] },
+            { kind: 'rock', tiles: [[6, 5]], strike: [SWORD_STRIKE, SPEAR_STRIKE] },
+            { kind: 'rock', tiles: [[6, 1]], strike: [SWORD_STRIKE, SPEAR_STRIKE] },
             { kind: 'button', tiles: [[7, 2]], group: '0' },
             { kind: 'lock', tiles: [[8, 3]], group: '0' },
         ]);
@@ -93,7 +97,9 @@ describe('projectLevelWorld — L15', () => {
         expect(idAt(6, 1)).toBe(idAt(6, 5));
         expect(payload.obstacleLib[idAt(8, 3)].clear_set).toEqual([['sw_0']]);
         expect(payload.buttonLib).toEqual({ button_0: { kind: 'button', holds: 'sw_0' } });
-        expect(payload.action_lib.sword).toEqual({ item: 'Progressive Sword', primitive: 'strike', condition: 'strikes', key: 'z' });
+        expect(payload.action_lib.sword).toEqual({
+            item: 'Progressive Sword', primitive: 'strike', condition: 'strikes', key: 'z', footprint: weaponFootprint('sword'),
+        });
         expect(payload.action_lib.spear.key).toBe('x');
     });
 
