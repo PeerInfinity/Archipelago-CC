@@ -153,6 +153,7 @@ clear through the existing `persist` part, so no new field is uncovered.
   - `seedlingAtlasArm`: the uninitialised `bulletml-dodge` submodule, environmental.
   - `seedlingConstantsCensus` (b): this slice's two new literals, before the census `--write`.
 - **Survey OFF** = CI `40811598699`, 0 / 240 rows.
+- **CI** at `57b2203a` (the last head whose paths trigger it; the report commits after it touch `CC/docs` only), run 40918613766: vitest unfiltered **24,174 passed / 0 failed**; slow battery **273 / 273**.
 - **Committed tapes:** none moved; roster 293; no tapeRunner pair moves (positions are byte-equal ON too).
 - **Surface:** `--write` gave line moves only (55/55), then GREEN 363. **Constants:** `--write` gave the 2 new structural literals plus line moves, then PASS 7,001.
 - **Shared tables:** untouched. `contactFidelity.js` gained one key at the END of the defaults.
