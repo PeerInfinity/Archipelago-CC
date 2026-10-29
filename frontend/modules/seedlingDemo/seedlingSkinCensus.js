@@ -88,7 +88,7 @@ export const SKIN_CENSUS = Object.freeze([
     ['magicallockfire', 'MagicalLock', 'drawn'],
     ['frozenboss', 'FrozenBoss', 'drawn'],
     ['finaldoor', 'FinalDoor', 'drawn'],
-    ['teleporter', 'Teleporter', 'none', 'the game draws no picture (_show = false)'],
+    ['teleporter', 'Teleporter', 'drawn', 'a show="1" one is the spinning Portal.png (roomOps, PORTAL_KEY); the others are invisible (_show = false)'],
     ['lightalpha', '-', 'none', 'a setting or effect, not a body'],
     ['daynight', '-', 'none', 'a setting or effect, not a body'],
     ['droplet', 'Rectangle', 'none', 'a setting or effect, not a body'],
