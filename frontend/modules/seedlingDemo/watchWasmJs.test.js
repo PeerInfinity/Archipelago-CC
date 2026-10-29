@@ -15,6 +15,7 @@ import { readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createLifetime } from '../procgenCore/pageLifetime.js';
+import { labTouchShownInitially, LAB_TOUCH_STORAGE_KEY } from './watchTouchOption.js';
 import {
     JS_STAGES, WASM_STAGES, atSpot, jsPageFor, shipToJs, shipToWasm, spotItemsOf, stagesOf,
 } from './watchWasm.js';
@@ -300,5 +301,47 @@ describe('⛔ mutants: a parent that presses Start, a ship that skips the read-b
             expect(state.refusal).toBeNull();
             expect(state.reached).toContain('play');
         });
+    });
+});
+
+/**
+ * ⛓ LAB L3 × L1b — `#jsTouch` STARTS FROM THE LAB'S ONE OPTION. The stored `seedlingLab.touchControls` (auto / on /
+ * off, MANUAL's select) decides the JS frame's controls box default, `?touch=` overriding as it does for MANUAL; the
+ * box is a per-ship override and never writes the stored choice.
+ */
+describe('⛓ #jsTouch follows the lab\'s on-screen-controls option', () => {
+    const VIEWER = readFileSync(join(HERE, 'watchViewer.js'), 'utf8');
+    const memStorage = (stored) => {
+        const m = new Map(stored == null ? [] : [[LAB_TOUCH_STORAGE_KEY, stored]]);
+        return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)) };
+    };
+    const shown = (stored, coarse, search = '') => labTouchShownInitially({
+        storage: memStorage(stored), search, matchMediaFn: () => ({ matches: coarse }),
+    });
+
+    it('changing the stored option changes the default; ?touch= overrides it', () => {
+        expect(shown('on', false)).toBe(true);
+        expect(shown('off', true)).toBe(false);
+        expect(shown('auto', true)).toBe(true);
+        expect(shown('auto', false)).toBe(false);
+        expect(shown(null, true)).toBe(true);
+        expect(shown('off', false, '?touch=1')).toBe(true);
+        expect(shown('on', true, '?touch=0')).toBe(false);
+    });
+
+    const body = (src) => src.slice(src.indexOf('async function mountJsTouch('), src.indexOf('let jsTouch = null;'));
+    const pinned = (src) => /box\.checked = [^;]*labTouchShownInitially\(\{\s*storage: labStorage\(\), search: location\.search/
+        .test(body(src)) && !/writeLabTouchSetting|setItem|touchControlsVisible\('auto'/.test(body(src));
+
+    it('⛔ the page starts #jsTouch from the option and never writes it — mutants fail the pin', () => {
+        expect(pinned(VIEWER)).toBe(true);
+        const ownRule = VIEWER.replace(/labTouchShownInitially\(\{\s*storage: labStorage\(\), search: location\.search,/,
+            "touchControlsVisible('auto', {");
+        expect(ownRule).not.toBe(VIEWER);
+        expect(pinned(ownRule)).toBe(false);
+        const writes = VIEWER.replace("box.onchange = () => { box.dataset.touched = '1'; apply(); };",
+            "box.onchange = () => { box.dataset.touched = '1'; writeLabTouchSetting(labStorage(), box.checked ? 'on' : 'off'); apply(); };");
+        expect(writes).not.toBe(VIEWER);
+        expect(pinned(writes)).toBe(false);
     });
 });

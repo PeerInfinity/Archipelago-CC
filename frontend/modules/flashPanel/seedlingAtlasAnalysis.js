@@ -17,8 +17,9 @@ import { arrowLane, arrowTrapEntityPoint } from '../seedlingDemo/arrowTrap.js';
 import { weaponFootprint, FOOTPRINT_FACINGS } from './seedlingWeaponFootprints.js';
 import {
     ropesOf, ropeVerdict, ropeEventName, ropeEventCondition, ropeLaneCharges,
-    poleKillsOf, poleThrustStances, POLE_LIGHT_ARM, obstacleEventName,
+    poleKillsOf, poleThrustStances, POLE_LIGHT_ARM, obstacleEventName, talkStances,
 } from './seedlingObstacleEvents.js';
+import { talkRangeOf } from '../seedlingDemo/endingChain.js';
 import { buildLevelWorld, combatCensusOf, rectsOverlap } from '../seedlingDemo/levelWorld.js';
 import { contactRect } from '../seedlingDemo/combat.js';
 import { spearHitRect, pressRectTouches } from '../seedlingDemo/presses.js';
@@ -228,7 +229,9 @@ export function seedlingEventTiles(level, events) {
     // A press's pocket DOOR (mode 'door', session tile-primitives-sphere-order-6) names an atlas exit, not an entity.
     const at = (ev) => (ev.mode === 'press' ? ev.presser : ev.mode === 'door' ? ev.door : ev.obstacle);
     return events.filter((ev) => at(ev).level === level.level).map((ev) => {
-        if (ev.mode === 'door') return { name: ev.name, side: ev.side, mode: ev.mode, exit_id: ev.door.exit_id, tiles: [] };
+        // A door may carry the producer's own gate (`gate`: an in-room pole's Or(event, Ghost Spear), session
+        // tile-primitives-sphere-order-8); a press's door is gated on its event alone.
+        if (ev.mode === 'door') return { name: ev.name, side: ev.side, mode: ev.mode, exit_id: ev.door.exit_id, tiles: [], ...(ev.gate ? { gate: ev.gate } : {}) };
         const { class: cls, x, y } = at(ev);
         const entity = (level.entities ?? []).find((e) => e.type === cls && e.x === x && e.y === y);
         if (!entity) throw new Error(`event "${ev.name}": L${level.level} has no ${cls}@${x},${y}`);
@@ -236,6 +239,12 @@ export function seedlingEventTiles(level, events) {
         // hitbox straddles two tiles when it stands off the grid (L61's at y = 40), so its cell is the tile of that centre.
         if (ev.mode === 'press') {
             return { name: ev.name, side: ev.side, mode: ev.mode, tiles: [[Math.floor((x + TILE / 2) / TILE), Math.floor((y + TILE / 2) / TILE)]], ...(ev.rule ? { rule: ev.rule } : {}) };
+        }
+        // ⛓ A TALK (session tile-primitives-sphere-order-8, ⚖ 2026-10-29 "Talk location + portal door") is started from any
+        // tile inside the NPC's talk circle (`talkStances`, the class's own radius); the projection puts its location on the
+        // nearest one its side owns.
+        if (ev.mode === 'talk') {
+            return { name: ev.name, side: ev.side, mode: ev.mode, tiles: talkStances({ x, y }, { range: talkRangeOf(cls), tile: TILE }), ...(ev.rule ? { rule: ev.rule } : {}) };
         }
         const sem = entitySemantics(entity);
         const sealed = sem ? entitySealedTiles(entity, sem) : [];

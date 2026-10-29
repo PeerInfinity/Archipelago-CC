@@ -373,9 +373,15 @@ import {
  * buttons Seedling's `games/seedling.json` declares, shown by the same auto/on/off rule (`?touch=1`, a coarse pointer).
  */
 import { mountTouchControls, parseTouchLayout, touchControlsVisible } from '../flashPanel/touchControls.js';
+/**
+ * ⛓ THE "ON-SCREEN CONTROLS" OPTION (slice `seedling-lab-touch-visible`) — the panel's auto/on/off setting, its
+ * remembered per-browser value and the `?touch=` start; the visibility rule stays `touchControlsVisible`.
+ */
+import { initialLabTouchSetting, writeLabTouchSetting } from './watchTouchOption.js';
 // ⛓ LAB L3: ▶ load in JS — the same ship over the JS transport, and the key path into its frame.
 import { JS_STAGES, shipToJs } from './watchWasm.js';
 import { dispatchGameKey } from '../flashPanel/gameInput.js';
+import { labTouchShownInitially } from './watchTouchOption.js';
 
 /**
  * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL, NOT FROM
@@ -5453,8 +5459,10 @@ async function runManual(params, lifetime) {
  *
  * `flashPanel/touchControls.js` as is — the layout from `games/seedling.json`'s `touch_controls`, the buttons for the
  * `js` transport (Esc is wasm-only: the JS run has no pause menu) — mounted under the canvas and wired to `keys`
- * through `touchSendFor`, so a tap is a `keys.key` press like a keystroke. Shown by `touchControlsVisible` (auto =
- * `?touch=1` or a coarse pointer; `?touch=0` hides them), with the `#manualTouch` checkbox to flip it by hand.
+ * through `touchSendFor`, so a tap is a `keys.key` press like a keystroke. Shown by `touchControlsVisible` over the
+ * `#manualTouch` select — the panel's auto / on / off (auto = `?touch=1` or a coarse pointer; `?touch=0` hides them),
+ * remembered per browser (`initialLabTouchSetting`). Mounted when MANUAL is the source, before START: a press is
+ * inert until the run drives (the `driving` gate), and the page dims the strip until then.
  *
  * ⛔ LIFETIME: the mount is destroyed on retire (its own listeners go with it, every held key released first), and
  * it is `attach`ed to `keys`, so STOP / blur / hidden release a finger still on the d-pad too.
@@ -5481,7 +5489,10 @@ async function mountManualTouch(lifetime, keys, canvas) {
     };
     const apply = () => {
         if (!lifetime.alive()) return;
-        if (!box.checked) { unmount(); return; }
+        if (!touchControlsVisible(box.value, { matchMediaFn: window.matchMedia?.bind(window) })) {
+            unmount();
+            return;
+        }
         if (mounted) return;
         mounted = mountTouchControls({ doc: document, layout, send: touchSendFor(keys) });
         mounted.setButtons('js');
@@ -5490,10 +5501,22 @@ async function mountManualTouch(lifetime, keys, canvas) {
         detach = keys.attach(mounted);
     };
     box.disabled = false;
-    box.checked = touchControlsVisible('auto', { matchMediaFn: window.matchMedia?.bind(window) });
-    box.onchange = apply;
+    box.value = initialLabTouchSetting({ storage: labStorage(), search: location.search });
+    box.onchange = () => {
+        writeLabTouchSetting(labStorage(), box.value);
+        apply();
+    };
     lifetime.onRetire(unmount);
     apply();
+}
+
+/** `localStorage`, or null where even touching it throws (a sandboxed frame, blocked site data). */
+function labStorage() {
+    try {
+        return window.localStorage;
+    } catch {
+        return null;
+    }
 }
 
 const manualRow = (k, v) => `<div class="r"><span>${k}</span><b>${v}</b></div>`;
@@ -10418,8 +10441,9 @@ function jsHudRows(st, state) {
  * panel's (`touchControls`) under the frame, on the panel's own path: each key
  * is dispatched on the frame's canvas (`gameInput.dispatchGameKey`), which
  * bubbles to the document the JS page listens on. `setButtons('js')` (no Esc).
- * Shown by the `#jsTouch` box; it starts on a coarse pointer or `?touch=1`
- * (`touchControlsVisible`, MANUAL's rule).
+ * Shown by the `#jsTouch` box; it starts from the lab's ONE on-screen-controls
+ * option (MANUAL's auto / on / off, remembered; `?touch=` overrides —
+ * `labTouchShownInitially`), and is a per-ship override: it never writes it.
  */
 async function mountJsTouch(lifetime) {
     const box = $('jsTouch');
@@ -10448,8 +10472,9 @@ async function mountJsTouch(lifetime) {
     };
     jsTouch = { unmount };
     box.disabled = false;
-    box.checked = box.dataset.touched === '1' ? box.checked
-        : touchControlsVisible('auto', { matchMediaFn: window.matchMedia?.bind(window) });
+    box.checked = box.dataset.touched === '1' ? box.checked : labTouchShownInitially({
+        storage: labStorage(), search: location.search, matchMediaFn: window.matchMedia?.bind(window),
+    });
     box.onchange = () => { box.dataset.touched = '1'; apply(); };
     lifetime.onRetire(() => { unmount(); jsTouch = null; });
     apply();
