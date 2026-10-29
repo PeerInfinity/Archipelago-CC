@@ -13,6 +13,7 @@ import { PLAYTHROUGH_MAP, playthroughAnalyzerOptions, playthroughHandRuledGridFo
 import { lavaTrapPulls } from '../../flashPanel/seedlingPlaythroughOverlay.js';
 import { seedlingLevelEntities } from '../../flashPanel/seedlingAtlasAnalysis.js';
 import { deserializeMazeWorld } from '../mazeRoomEngine.js';
+import { chainedPull } from '../../procgenPipeline/regionAtlasMazeProjection.js';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
@@ -75,6 +76,15 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         expect([...scripted.lines].sort()).toEqual([...native.lines].sort());
     });
 
+    it('mutant control: a broken `pulled` helper makes the scripted arm disagree with the native one', () => {
+        const regions = Object.keys(RULES.preset_sidecars['1']).filter((n) => n.startsWith('level_80'));
+        const native = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, regions });
+        const broken = { ...HELPERS, pulled: { ...HELPERS.pulled, body: { type: 'constant', value: false } } };
+        const scripted = certifyPlaythroughMaze(RULES, broken, { native: false, atlas: ATLAS, regions });
+        expect(scripted.problems).toContain('level_80__r16c1 → level_80__r12c3 holding [Dark Suit]: derived false, atlas true');
+        expect([...scripted.lines].sort()).not.toEqual([...native.lines].sort());
+    });
+
     it('mutant control: with the pulls stripped from the world the lifts are not priced again', () => {
         const copy = structuredClone(RULES);
         delete payloadOf(copy, 'level_80').pulls;
@@ -82,6 +92,20 @@ describe('L80 in the maze (L71 + L79 + L80)', () => {
         const out = certifyPlaythroughMaze(copy, HELPERS, { native: true, atlas: ATLAS, regions });
         expect(out.problems).toContain('level_80__r16c1 → level_80__r12c3 holding [Dark Suit]: derived false, atlas true');
         expect(out.problems).toHaveLength(6);
+    });
+});
+
+describe('chained pulls are refused by name, and no level of the whole game has one', () => {
+    it('`chainedPull` names a trap standing in another\'s disc', () => {
+        expect(chainedPull([{ x: 5, y: 1, from: [{ x: 3, y: 1 }] }, { x: 3, y: 1, from: [{ x: 2, y: 1 }] }]))
+            .toBe('trap at (3,1) lies in the disc of trap at (5,1): chained pulls are not modelled');
+        expect(chainedPull([{ x: 5, y: 1, from: [{ x: 4, y: 1 }] }, { x: 1, y: 1, from: [{ x: 2, y: 1 }] }])).toBeNull();
+    });
+    it('L77, L78, L80, L108: no trap lies in another\'s disc (L108\'s are 48 px apart, the disc 32)', () => {
+        for (const n of [77, 78, 80, 108]) {
+            const rows = lavaTrapPulls(levelOf(n), 16).map((p) => ({ x: p.tile[0], y: p.tile[1], from: p.from.map(([x, y]) => ({ x, y })) }));
+            expect(chainedPull(rows), `L${n}`).toBeNull();
+        }
     });
 });
 

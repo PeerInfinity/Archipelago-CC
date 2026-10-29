@@ -9,7 +9,8 @@
 # lane_unless / lane_while (ARROW TRAPS: group tokens of the lanes over the cell), event (ROPES: the cut's event),
 # entry (ENTRY GATES: the combos entering the cell needs MOVING this way; [] = no entry that way, None = no gate),
 # sink (BLOCK SINKS: a block pushed here sinks — water, lava, a pit — so it enters whatever the cell's clearance, and
-# PIT SINKS: even when the cell is not floor, a pit the player cannot walk).
+# PIT SINKS: even when the cell is not floor, a pit the player cannot walk),
+# pull (PULLS: the combos the trap whose disc this step enters from outside needs to reel the player in; None = no pull).
 
 
 def cleared(state, player, tile):
@@ -42,3 +43,7 @@ def lane_armed(state, player, cell, tile):
 
 def rope_cut(state, player, cell, tile):
     return tile.broken or (tile.event is not None and state.has(tile.event, player))
+
+
+def pulled(state, player, cell, tile):
+    return tile.pull is not None and any(all(state.count(p[0], player) >= p[1] for p in combo) for combo in tile.pull)

@@ -845,7 +845,8 @@ export function checkBlockSinks(sinks, width, height, who) {
  * is not pulled until it has left. Without the gate nothing happens — the rules producer's own bound (the disc is not
  * lethal there either), named. Discs may overlap (L108's ferry: released on one trap, the next step enters the next
  * trap's disc from outside it, so that trap fires). Refused by name: a disc cell that is an exit tile, a trap cell that
- * is not floor, ONE step that enters two discs from outside both (which trap wins is not settled), and a world with
+ * is not floor, ONE step that enters two discs from outside both (which trap wins is not settled), a trap whose cell
+ * lies in another's disc (the landing would fire the next tongue: chained pulls are not modelled), and a world with
  * arrow traps too.
  * Returns `[{x, y, gate, disc: Set<posKey>}]` (the disc INCLUDES the trap's cell).
  */
@@ -872,6 +873,13 @@ export function checkPulls(pulls, world, who) {
         }
         return { x: p.x, y: p.y, gate: p.gate, disc };
     });
+    for (const a of out) {
+        for (const b of out) {
+            if (a !== b && b.disc.has(posKey(a.x, a.y))) {
+                throw bad(`trap at (${a.x},${a.y}) lies in the disc of trap at (${b.x},${b.y}): chained pulls are not modelled`);
+            }
+        }
+    }
     for (const [i, a] of out.entries()) {
         for (const b of out.slice(i + 1)) {
             for (const key of a.disc) {
@@ -889,18 +897,24 @@ export function checkPulls(pulls, world, who) {
 }
 
 /**
- * The trap cell a move from `from` to `to` is pulled onto, holding `inv` — or null (see `checkPulls`): `to` in a disc,
- * `from` outside it, and the trap's gate cleared.
+ * The GEOMETRY of a pull, shared by both steps: the trap whose disc a move from `from` to `to` enters from outside it
+ * (`{x, y, gate}`), or null (see `checkPulls`; at most one, as the load refuses an ambiguous step).
  */
-export function pullAfterMove(world, from, to, inv, clearanceOpts) {
+export function pullCatching(world, from, to) {
     if (!world.pulls) return null;
     const t = posKey(to.x, to.y);
     const f = posKey(from.x, from.y);
-    for (const p of world.pulls) {
-        if (!p.disc.has(t) || p.disc.has(f)) continue;
-        return isObstacleCleared(p.gate, inv, world.obstacleLib, clearanceOpts) ? { x: p.x, y: p.y } : null;
-    }
-    return null;
+    return world.pulls.find((p) => p.disc.has(t) && !p.disc.has(f)) ?? null;
+}
+
+/**
+ * The trap cell a move from `from` to `to` is pulled onto, holding `inv` — or null: the trap `pullCatching` names, its
+ * gate cleared NATIVELY. The scripted step asks the same question of the `pulled` helper (`tileStep.js`).
+ */
+export function pullAfterMove(world, from, to, inv, clearanceOpts) {
+    const p = pullCatching(world, from, to);
+    if (p === null) return null;
+    return isObstacleCleared(p.gate, inv, world.obstacleLib, clearanceOpts) ? { x: p.x, y: p.y } : null;
 }
 
 /** True iff a block pushed onto (x, y) sinks there (see `checkBlockSinks`). */

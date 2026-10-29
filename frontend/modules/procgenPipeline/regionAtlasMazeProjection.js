@@ -1009,6 +1009,18 @@ function ambiguousPullStep(pullRows, isFloor) {
     return null;
 }
 
+/** The first trap whose cell lies in another pull's disc (`"trap at … lies in the disc of …"`), or null — `checkPulls`' refusal. */
+export function chainedPull(pullRows) {
+    for (const a of pullRows) {
+        for (const b of pullRows) {
+            if (a !== b && b.from.some((c) => c.x === a.x && c.y === a.y)) {
+                return `trap at (${a.x},${a.y}) lies in the disc of trap at (${b.x},${b.y}): chained pulls are not modelled`;
+            }
+        }
+    }
+    return null;
+}
+
 /** A step's direction, its delta and the face it crosses on the cell it enters. */
 const MOVES = Object.freeze([['N', 0, -1, 'S'], ['E', 1, 0, 'W'], ['S', 0, 1, 'N'], ['W', -1, 0, 'E']]);
 
@@ -1697,11 +1709,17 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     });
     // ⛓ ONE step into two discs from outside both: which trap wins is not settled (the engine refuses it), so such a level's
     // pulls are DROPPED by name and it projects as it did without them (L78's (6,5) and (9,6) both grab (8,4) → (8,5)).
+    // ⛓ A trap whose cell lies in another's disc would fire that tongue on landing: CHAINED pulls are not modelled either
+    // (designer review, session tile-primitives-sphere-order-9) — dropped the same way, by name.
     const ambiguous = ambiguousPullStep(pullRows, (x, y) => builder.isFloor(x, y));
-    if (ambiguous) {
+    const chained = ambiguous ? null : chainedPull(pullRows);
+    if (ambiguous || chained) {
         const rest = entities.filter((e) => e.kind !== 'pull');
         const out = projectRegionToMaze(region, grid, { ...ctx, levelEntitiesFor: () => rest });
-        out.notes.unshift({ region_id: regionId, kind: 'pull_ambiguous_dropped', message: `${ambiguous} — its ${pulls.length} pull(s) are not modelled` });
+        out.notes.unshift({
+            region_id: regionId, kind: ambiguous ? 'pull_ambiguous_dropped' : 'pull_chain_dropped',
+            message: `${ambiguous ?? chained} — its ${pulls.length} pull(s) are not modelled`,
+        });
         return out;
     }
 

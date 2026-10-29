@@ -105,6 +105,9 @@ describe('a malformed pull is refused by name', () => {
         // (2,1) → (3,1) enters both discs from outside both
         expect(bad({ pulls: [PULL, { ...PULL, x: 1, from: [{ x: 3, y: 1 }] }] })).toThrow(/traps at \(5,1\) and \(1,1\) both grab a step from 2,1 into 3,1/);
         expect(bad({ pulls: [{ ...PULL, from: [] }] })).toThrow(/grabs from no cell/);
+        // trap (3,1)'s cell lies in (5,1)'s disc: landing on it would fire the next tongue
+        expect(bad({ pulls: [PULL, { x: 3, y: 1, from: [{ x: 2, y: 1 }], gate: 'pull_5_1' }] }))
+            .toThrow(/trap at \(3,1\) lies in the disc of trap at \(5,1\): chained pulls are not modelled/);
     });
 
     it('round-trips through the sidecar', () => {
