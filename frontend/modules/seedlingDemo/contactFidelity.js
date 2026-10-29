@@ -1718,7 +1718,7 @@ export const CONTACT_FIDELITY = {
      * position is unchanged. The pole thrust's crowd test (`solverBot.resolvePoleThrustStrategy`, `deriveLightPole`)
      * reads the same box. OFF: byte-identical. `SEEDLING_TURRET_SNAP_PRICING=0|1`.
      */
-    turretSnapPricing: false,
+    turretSnapPricing: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
