@@ -19,8 +19,8 @@
  *   · secondary = slot 1 (Fire): C and X+C read exactly as none and X (the slash's flag refuses the fire).
  *
  * The model at the defaults (`secondaryUse` OFF) reads C as nothing and X+C as X, so it reproduces every arm but the
- * sword X+C one — the OFF proof's soundness gap, named here. ON, it refuses X+C by name (the C4 arm), so the proof is
- * left open, which is the honest verdict. ⛓ Hand-over (js's C4 arm): model the X+C tick as `useItem(primary)` then
+ * sword X+C one — the OFF proof's soundness gap, named here. ON, it refused X+C by name until the C4 arm, so the
+ * proof was left open. ⛓ js's C4 arm (seedling-js-xc-model) models the X+C tick as `useItem(primary)` then
  * `useItem(secondary)` through the setters' exclusions; the rows marked C4 below are its acceptance rows.
  */
 import { describe, expect, it } from 'vitest';
@@ -29,10 +29,11 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { atlasLevelSource } from './levelSource.js';
-import { parseTape } from './tapeFormat.js';
+import { inventorySlotsFor, parseTape } from './tapeFormat.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 import { proveForcedHit } from './forcedHit.js';
+import { xcSecondCallAdmitted } from './levelRun.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const W = JSON.parse(readFileSync(join(HERE, 'fixtures', 'secondary-use-witness', 'secuse-l73-622-xc.json'), 'utf8'));
@@ -109,10 +110,24 @@ describe('SECUSE W0 — the model against the witness', () => {
         });
         expect(W.arms['C-fire'].samples.slice(4).map((s) => s.level)).toEqual([74, 74, 74]);
     });
-    it('ON (C4, today): both X+C arms are refused by name — the sword one the game dashes, the Fire one the game reads as X', () => {
+    it('ON (C4, seedling-js-xc-model): both X+C arms are the game\'s at every sample — the sword one a same-frame '
+        + 'slash-dash that crosses HITLESS, the Fire one X (0 px)', () => {
+        withContactFidelity({ secondaryUse: true }, () => {
+            for (const name of ['XC', 'XC-fire']) expect(modelRows(W.arms[name])).toEqual(gameRows(name));
+        });
+    });
+    it('ON (C4): the X+C velocities are the game\'s too, and the sword X+C tick is ONE slash then ONE dash, at t0', () => {
         withContactFidelity({ secondaryUse: true }, () => {
             for (const name of ['XC', 'XC-fire']) {
-                expect(() => modelRows(W.arms[name])).toThrow(/X and C are both pressed at tick 0/);
+                const arm = W.arms[name];
+                const run = createRunForStaging(stagingFromTape(parseTape(JSON.stringify(arm.tape))), levelSource);
+                for (let t = 0; t < W.tick_count; t += 1) {
+                    run.advance(heldAt(arm.inputs, t));
+                    const g = arm.samples[t + 1];
+                    expect({ vx: run.state.vx, vy: run.state.vy }).toEqual({ vx: g.vx, vy: g.vy });
+                }
+                expect(run.slashPresses.map((d) => [d.t, d.outcome])).toEqual(name === 'XC'
+                    ? [[0, 'slash'], [0, 'dash']] : [[0, 'slash']]);
             }
         });
     });
@@ -130,11 +145,76 @@ describe('SECUSE D1 — the forced-hit proof at leg 622 (STOP: X+C escapes the h
     it('OFF: "proven" at depth 2 over 36 held sets — a verdict the game refutes (its X+C+up crossing is hitless)', () => {
         expect(both({ secondaryUse: false })).toMatchObject({ proven: true, depth: 2, nodes: 1332, minHits: 1 });
     });
-    it('ON: the proof stays OPEN at node 4, on the X+C entry the model refuses — the honest verdict', () => {
+    it('ON (C4 modelled): the proof is no longer refused — it finds the game\'s hitless [up+primary+secondary] '
+        + 'and stays OPEN on it (the hitless-leaf crossing is fidelity\'s follow-up)', () => {
         const before = CONTACT_FIDELITY.secondaryUse;
         const p = both({ secondaryUse: true });
-        expect(p).toMatchObject({ proven: false, depth: 1, nodes: 4, unmodelled: 'primary+secondary' });
-        expect(p.why).toMatch(/the model refuses to step \[primary\+secondary\] \(tick 1: levelRun: X and C are both pressed/);
+        expect(p).toMatchObject({ proven: false, hitless: 'up+primary+secondary ·' });
+        expect(p.unmodelled).toBeUndefined();
         expect(CONTACT_FIDELITY.secondaryUse).toBe(before);
+    });
+});
+
+describe('C4 (seedling-js-xc-model) — the X+C tick\'s exclusions, each transcribed from `Player.as`', () => {
+    /** The XC witness's tape re-staged with other slots / items, only X+C on t0, stepped 3 ticks (short of the door). */
+    function xcRun(primary, secondary, items = {}) {
+        const base = W.arms.XC.tape;
+        const inputs = [{ key: 'primary', from: 0, to: 1 }, { key: 'secondary', from: 0, to: 1 }];
+        const tape = { ...base, tick_count: 3, inputs,
+            seam: { ...base.seam, primary, secondary, items: { ...base.seam.items, ...items } } };
+        const run = createRunForStaging(stagingFromTape(parseTape(JSON.stringify(tape))), levelSource);
+        for (let t = 0; t < 3; t += 1) run.advance(heldAt(tape.inputs, t));
+        return run;
+    }
+    const none = { firing: false, wanding: false, spearing: false };
+    const flags = (over = {}) => ({ earlier: none, slashing: false, firing: false, wanding: false, spearing: false,
+        hasFireWand: false, ...over });
+    it('the gate: a second non-sword call is refused by the first verb\'s flag (`set firing` :858, `set wanding` :834, '
+        + '`set spearing` :815)', () => {
+        for (const w of ['fire', 'wand', 'spear']) {
+            expect(xcSecondCallAdmitted(w, flags())).toBe(true);
+            expect(xcSecondCallAdmitted(w, flags({ slashing: true }))).toBe(false);
+        }
+        expect(xcSecondCallAdmitted('spear', flags({ earlier: { ...none, firing: true }, firing: true }))).toBe(false);
+        expect(xcSecondCallAdmitted('spear', flags({ earlier: { ...none, wanding: true }, wanding: true }))).toBe(false);
+        expect(xcSecondCallAdmitted('fire', flags({ earlier: { ...none, spearing: true }, spearing: true }))).toBe(false);
+        expect(xcSecondCallAdmitted('wand', flags({ earlier: { ...none, spearing: true }, spearing: true }))).toBe(false);
+    });
+    it('the gate: Fire⇄Wand — refused by each other, and BOTH run under `hasFireWand` (the `|| hasFireWand` terms)', () => {
+        const afterWand = flags({ earlier: { ...none, wanding: true }, wanding: true });
+        const afterFire = flags({ earlier: { ...none, firing: true }, firing: true });
+        expect(xcSecondCallAdmitted('fire', afterWand)).toBe(false);
+        expect(xcSecondCallAdmitted('wand', afterFire)).toBe(false);
+        expect(xcSecondCallAdmitted('fire', { ...afterWand, hasFireWand: true })).toBe(true);
+        expect(xcSecondCallAdmitted('wand', { ...afterFire, hasFireWand: true })).toBe(true);
+    });
+    it('the gate: the same verb twice is `useItem`\'s own `if (!firing)` / `if (!wanding)` / `if (!spearing)` — a no-op, '
+        + 'even under `hasFireWand`', () => {
+        expect(xcSecondCallAdmitted('fire', flags({ earlier: { ...none, firing: true }, firing: true, hasFireWand: true })))
+            .toBe(false);
+        expect(xcSecondCallAdmitted('wand', flags({ earlier: { ...none, wanding: true }, wanding: true, hasFireWand: true })))
+            .toBe(false);
+        expect(xcSecondCallAdmitted('spear', flags({ earlier: { ...none, spearing: true }, spearing: true }))).toBe(false);
+    });
+    it('in the run: Fire then Sword, and Spear then Sword — the sword call is GATED by the first verb\'s flag', () => {
+        withContactFidelity({ secondaryUse: true }, () => {
+            expect(xcRun(1, 0).slashPresses.map((d) => d.outcome)).toEqual(['gated']);
+            const spear = xcRun(3, 0);
+            expect(spear.slashPresses.map((d) => d.outcome)).toEqual(['gated']);
+            expect(spear.presses.filter((p) => p.t === 0).map((p) => p.weapon)).toEqual(['spear']);
+        });
+    });
+    it('in the run: Sword then Spear — the spear is refused by `slashing`; the tick is the sword\'s alone', () => {
+        withContactFidelity({ secondaryUse: true }, () => {
+            const r = xcRun(0, 3);
+            expect(r.slashPresses.map((d) => d.outcome)).toEqual(['slash']);
+            expect(new Set(r.presses.map((p) => p.weapon))).toEqual(new Set(['sword']));
+        });
+    });
+    it('`hasFireWand` FUSES items 1 and 2 into 5 (`Inventory.as:306-321`, `appendInventorySlots`), so the Fire⇄Wand '
+        + 'pair is unreachable through slots and the gate above is its only pin', () => {
+        const slots = inventorySlotsFor({ ...W.arms.XC.tape.seam.items, hasFireWand: true });
+        expect(slots).toContain(5);
+        expect(slots.filter((id) => id === 1 || id === 2)).toEqual([]);
     });
 });
