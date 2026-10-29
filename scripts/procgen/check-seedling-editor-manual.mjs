@@ -603,7 +603,7 @@ async function holdFor(page, codes, ms) {
             return Boolean(el) && getComputedStyle(el).display !== 'none';
         };
         return {
-            box: document.getElementById('manualTouch').checked,
+            box: document.getElementById('manualTouch').value,
             afterCanvas: root.previousElementSibling?.id ?? null,
             pad: shown('.flash-touch-dpad'),
             x: shown('.flash-touch-button-primary'),
@@ -612,8 +612,8 @@ async function holdFor(page, codes, ms) {
             esc: shown('.flash-touch-button-menu'),
         };
     });
-    check(mount.box && mount.afterCanvas === 'canvas' && mount.pad && mount.x && mount.c && mount.v,
-        '?touch=1 mounts the d-pad and X/C/V UNDER the canvas, and the box says so',
+    check(mount.box === 'auto' && mount.afterCanvas === 'canvas' && mount.pad && mount.x && mount.c && mount.v,
+        '?touch=1 mounts the d-pad and X/C/V UNDER the canvas, the option at auto (where ?touch= decides)',
         JSON.stringify(mount));
     check(mount.esc === false, '⚠ …and no Esc: the JS run has no pause menu (`transports: ["wasm"]`)',
         `esc shown=${mount.esc}`);
@@ -697,21 +697,154 @@ async function holdFor(page, codes, ms) {
     await page.close();
 
     // ?touch=0 (and a fine pointer, as headless chromium has) — no controls until asked.
+    // ⛓ (L1b) the checkbox became the panel's auto / on / off select; "asked" = choosing `on`.
     const { page: p2, errors: e2 } = await open(
         `${PAGE}?source=manual&boot=${TAPES}/r8-hammer-control.json&touch=0`);
     await p2.waitForSelector('#manualStart:not([disabled])', { timeout: 60000 });
     await p2.waitForFunction(() => !document.getElementById('manualTouch').disabled, null, { timeout: 30000 });
     const off = await p2.evaluate(() => ({
-        box: document.getElementById('manualTouch').checked,
+        box: document.getElementById('manualTouch').value,
         n: document.querySelectorAll('.flash-touch-controls').length,
     }));
-    await p2.check('#manualTouch');
+    await p2.selectOption('#manualTouch', 'on');
     const on = await p2.evaluate(() => document.querySelectorAll('#stage .flash-touch-controls').length);
-    check(off.box === false && off.n === 0 && on === 1,
-        '?touch=0 shows none, and the "on-screen controls" box mounts them by hand',
-        `before: box=${off.box} mounted=${off.n}; after ticking: ${on}`);
+    check(off.box === 'auto' && off.n === 0 && on === 1,
+        '?touch=0 shows none, and choosing "on" in the on-screen controls option mounts them by hand',
+        `before: option=${off.box} mounted=${off.n}; after choosing on: ${on}`);
     check(e2.length === 0, 'no page errors', e2.join(' | ') || 'clean');
     await p2.close();
+}
+
+// ── ROW 6 (seedling-lab-touch-visible): THE OPTION, VISIBLE BEFORE START ─────
+/**
+ * ⚖ The user (2026-10-29): *"I don't see the touch controls on the lab page. I
+ * want it to work similarly to the frontend page, with the controls below the
+ * canvas, and an option to enable or disable them."* MEASURED first: on a fine
+ * pointer the L1 default (auto) hid them, and nothing on the page said so.
+ *
+ * The flash panel's own auto / on / off, remembered per browser. With a FINE
+ * pointer (headless chromium) and NO `?touch=`: auto shows none; `on` shows the
+ * strip under the canvas AT ONCE — no START — dimmed and inert until START;
+ * a reload keeps `on`; `off` hides; a reload keeps `off`. Then a phone-sized
+ * touch context (a COARSE pointer): auto shows them.
+ */
+{
+    const url = `${PAGE}?source=manual&boot=${TAPES}/r8-hammer-control.json`;
+    console.log(`\n## SOURCE=MANUAL — the on-screen controls OPTION (fine pointer, no ?touch=)\n   ${url}`);
+    const { page, errors } = await open(url);
+    const ready = async () => {
+        await page.waitForSelector('#manualStart:not([disabled])', { timeout: 60000 });
+        await page.waitForFunction(() => !document.getElementById('manualTouch').disabled, null,
+            { timeout: 30000 });
+    };
+    const state = () => page.evaluate(() => {
+        const sel = document.getElementById('manualTouch');
+        const root = document.querySelector('#stage .flash-touch-controls');
+        const c = document.getElementById('canvas').getBoundingClientRect();
+        const r = root?.getBoundingClientRect();
+        return {
+            option: sel.value,
+            optionShown: Boolean(sel.offsetParent),
+            stored: (() => { try { return localStorage.getItem('seedlingLab.touchControls'); } catch { return '?'; } })(),
+            n: document.querySelectorAll('.flash-touch-controls').length,
+            coarse: matchMedia('(pointer: coarse)').matches,
+            below: r ? r.top >= c.bottom - 1 && r.height > 0 : false,
+            afterCanvas: root?.previousElementSibling?.id ?? null,
+            opacity: root ? getComputedStyle(root).opacity : null,
+            driving: document.getElementById('manualStart').disabled,
+        };
+    });
+    await ready();
+    const auto = await state();
+    check(auto.coarse === false && auto.option === 'auto' && auto.optionShown && auto.n === 0,
+        'a fine pointer with no ?touch= starts at auto: the option is ON THE PAGE beside START, and no controls',
+        JSON.stringify(auto));
+
+    await page.selectOption('#manualTouch', 'on');
+    const on = await state();
+    check(on.n === 1 && on.below && on.afterCanvas === 'canvas' && on.stored === 'on' && !on.driving,
+        '⛓ choosing `on` shows the controls UNDER the canvas at once — before START — and remembers it',
+        JSON.stringify(on));
+    check(Number(on.opacity) < 1, '…dimmed while no run is going (a press is inert until START)',
+        `opacity ${on.opacity}`);
+    if (SHOT) {
+        await page.locator('#stage').scrollIntoViewIfNeeded();
+        await page.screenshot({ path: `${SHOT}/option-on-desktop.png` });
+    }
+    // ⛔ inert before START: a press on the d-pad holds nothing
+    await page.locator('#stage .flash-touch-controls').scrollIntoViewIfNeeded();
+    const g = await page.evaluate(() => {
+        const p = document.querySelector('.flash-touch-dpad').getBoundingClientRect();
+        return { x: p.left + p.width * 0.85, y: p.top + p.height / 2 };
+    });
+    await page.mouse.move(g.x, g.y);
+    await page.mouse.down();
+    await page.waitForTimeout(150);
+    const idleHud = await page.evaluate(() => document.getElementById('hud').textContent);
+    await page.mouse.up();
+    check(!/heldright/.test(idleHud.replace(/\s+/g, '')),
+        '⛔ before START a press reaches nothing (the one writer\'s driving gate)', 'no held right');
+    await page.click('#manualStart');
+    await page.waitForFunction(() => document.getElementById('manualStart').disabled, null, { timeout: 30000 });
+    const live = await state();
+    check(Number(live.opacity) === 1, '…and full strength once the run drives', `opacity ${live.opacity}`);
+    await page.evaluate(() => document.getElementById('manualStop').click());
+    await page.waitForFunction(() => window.__editorManual?.roundTrip !== undefined, null, { timeout: 60000 });
+
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await ready();
+    const kept = await state();
+    check(kept.option === 'on' && kept.n === 1 && kept.below,
+        'a reload keeps `on` — the controls are back under the canvas with no ?touch=', JSON.stringify(kept));
+
+    await page.selectOption('#manualTouch', 'off');
+    const off = await state();
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await ready();
+    const keptOff = await state();
+    check(off.n === 0 && off.stored === 'off' && keptOff.option === 'off' && keptOff.n === 0,
+        '`off` hides them, and a reload keeps `off`',
+        `after off: ${off.n} mounted; after reload: option=${keptOff.option} mounted=${keptOff.n}`);
+
+    // ⛓ ?touch=1 still decides over a remembered `off` (the link starts at auto, where ?touch= is read)
+    await page.goto(`${url}&touch=1`, { waitUntil: 'domcontentloaded' });
+    await ready();
+    const linked = await state();
+    check(linked.option === 'auto' && linked.n === 1 && linked.stored === 'off',
+        '?touch=1 still shows them over a remembered `off` — without overwriting the choice',
+        JSON.stringify(linked));
+    check(errors.length === 0, 'no page errors', errors.join(' | ') || 'clean');
+    await page.close();
+
+    // A phone: a touch context (a COARSE pointer), phone width, nothing remembered — auto shows them.
+    const phone = await browser.newContext({
+        viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2,
+    });
+    const pp = await phone.newPage();
+    const pErr = [];
+    pp.on('pageerror', (e) => pErr.push(`pageerror: ${e.message}`));
+    await pp.goto(url, { waitUntil: 'domcontentloaded' });
+    await pp.waitForSelector('#manualStart:not([disabled])', { timeout: 60000 });
+    await pp.waitForSelector('#stage .flash-touch-controls', { timeout: 30000 });
+    const ph = await pp.evaluate(() => {
+        const root = document.querySelector('#stage .flash-touch-controls');
+        const c = document.getElementById('canvas').getBoundingClientRect();
+        const r = root.getBoundingClientRect();
+        return {
+            coarse: matchMedia('(pointer: coarse)').matches,
+            option: document.getElementById('manualTouch').value,
+            below: r.top >= c.bottom - 1, fits: r.right <= window.innerWidth + 1,
+        };
+    });
+    check(ph.coarse && ph.option === 'auto' && ph.below && ph.fits,
+        'a phone (coarse pointer) at auto shows them under the canvas, within the screen width',
+        JSON.stringify(ph));
+    if (SHOT) {
+        await pp.locator('#stage').scrollIntoViewIfNeeded();
+        await pp.screenshot({ path: `${SHOT}/option-auto-phone.png` });
+    }
+    check(pErr.length === 0, 'no page errors (phone)', pErr.join(' | ') || 'clean');
+    await phone.close();
 }
 
 await browser.close();
