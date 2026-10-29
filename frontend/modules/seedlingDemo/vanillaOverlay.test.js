@@ -88,8 +88,10 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
         //   under, and L66 is a split level (r5c4 / r9c8).
         //   ⛓ tile-primitives-pixelmask-l86: 7 -> 6 — L0's door to L1 has its own sub-region (r6c5, the house's
         //   Pixelmask leaves the door tile clear), so the rock is the analyzer's crossing into it and the door is True_.
+        //   ⛓ RULES waterfall-door: 6 -> 7 — L89's door to L91 is charged the Feather (every way onto it climbs the
+        //   fall), and L89 is a split level (r1c10).
         expect(LIFT.expressed.filter((o) => o.op === 'set-access-rule'))
-            .toHaveLength(atlasRules.length - 6);
+            .toHaveLength(atlasRules.length - 7);
         expect(LIFT.cannotRules).toEqual([
             { region: 'level_3', exit_id: 'out_teleporter_0_64', sub_region: 'r0c4' },
             { region: 'level_12', exit_id: 'out_teleporter_32_848', sub_region: 'r42c28' },
@@ -98,6 +100,8 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
             { region: 'level_58', exit_id: 'out_teleporter_64_112', sub_region: 'r6c5' },
             // ⛓ RULES l66-door: the only door into Dungeon 6, under bosslock@72,64 {keyType 4}
             { region: 'level_66', exit_id: 'out_teleporter_72_64', sub_region: 'r5c4' },
+            // ⛓ RULES waterfall-door: the teleporter atop L89's fall, reached only by climbing it
+            { region: 'level_89', exit_id: 'out_teleporter_208_0', sub_region: 'r1c10' },
         ]);
     });
 
@@ -398,8 +402,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ tile-primitives-pixelmask-l86 (5742b57c… -> 16528639): a building's footprint is its Pixelmask — L0's house door
         //   and L93's door into L98 are their own sub-regions, three sub-regions renamed (level_0__r8c0 -> r7c6, L12
         //   r42c29 -> r42c28, r44c19 -> r43c21). No location moves (the overlay fixture rewrites byte-identical).
+        // ⛓ rules-waterfall-door (16528639… -> 650d4539): L89's door to L91 is charged the Feather (the waterfall's
+        //   direction gate, which every way onto its tile climbs). No name, exit or location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('16528639e2781c2a54400df453209d2f');
+            .toBe('650d45394e2e0c1df65ab7308fae2191');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
