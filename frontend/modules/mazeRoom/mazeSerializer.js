@@ -192,9 +192,11 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
     }),
     action_lib: Object.freeze({
         type: 'object', required: false,
-        description: 'Item actions (⚖ ITEM ACTIONS): action id → `{item, primitive: \'strike\', condition, key}`; '
-            + 'an obstacle whose lib entry lists the id in `struck_by` breaks when struck. Read through '
-            + '`checkActionLib`. Written by `projectLevelWorld` from the game\'s rock rows; omitted when empty.',
+        description: 'Item actions (⚖ ITEM ACTIONS): action id → `{item, primitive: \'strike\', condition, key, footprint?}`; '
+            + 'an obstacle whose lib entry lists the id in `struck_by` breaks when struck. `footprint` (session '
+            + 'tile-primitives-weapon-footprints) = `{N, E, S, W}` → `[[dx, dy]…]`, the cells a use hits from the player\'s '
+            + 'cell per facing (absent: the faced cell). Read through `checkActionLib`. Written by `projectLevelWorld` from '
+            + 'the game\'s rock rows, each footprint derived from the game\'s hit rects; omitted when empty.',
     }),
     traps: Object.freeze({
         type: 'array', required: false,
@@ -239,17 +241,17 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
     }),
     block_strike: Object.freeze({
         type: 'object', required: false,
-        description: 'Struck blocks (session tile-primitives-sphere-order-2) `{struck_by, reach}`: every block of this world '
-            + 'is moved ONLY by a use of one of the `struck_by` actions, from up to `reach` cells ahead of the facing (over any '
-            + 'cell between), one cell the way the player faces; walking into one is refused (Seedling\'s PushableBlockSpear: '
-            + 'the spear\'s stab rect). Read through `checkBlockStrike`. Written by `projectLevelWorld` for a level whose '
-            + 'blocks are struck; omitted otherwise.',
+        description: 'Struck blocks (session tile-primitives-sphere-order-2) `{struck_by, reach?}`: every block of this world '
+            + 'is moved ONLY by a use of one of the `struck_by` actions, on a cell of the action\'s `footprint` (over any '
+            + 'cell between) — or, for actions without one, up to `reach` cells ahead of the facing — one cell the way the '
+            + 'player faces; walking into one is refused (Seedling\'s PushableBlockSpear: the spear\'s stab rect). Read '
+            + 'through `checkBlockStrike`. Written by `projectLevelWorld` for a level whose blocks are struck; omitted otherwise.',
         schema: Object.freeze({
             properties: Object.freeze({
                 struck_by: Object.freeze({ type: 'array', items: Object.freeze({ type: 'string' }) }),
                 reach: Object.freeze({ type: 'integer' }),
             }),
-            required: Object.freeze(['struck_by', 'reach']),
+            required: Object.freeze(['struck_by']),
         }),
     }),
     shared_world: Object.freeze({
@@ -282,17 +284,17 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
     level: Object.freeze({
         type: 'integer', required: false, derived: true,
         description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas region's \`map_ref\`. `
-            + 'The maze runtime ignores it.',
+            + 'No rule or move reads it; the panel draws that level\'s room under the maze (world.atlas).',
     }),
     tile_size: Object.freeze({
         type: 'integer', required: false, derived: true,
-        description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas's tile size. The `
-            + 'maze runtime ignores it.',
+        description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas's tile size. No `
+            + 'rule or move reads it; the room is drawn under the maze only at 16 (world.atlas).',
     }),
     origin: Object.freeze({
         type: 'object', required: false, derived: true,
         description: `Atlas provenance written by ${ATLAS_PROJECTION}: the room's origin in the `
-            + 'atlas map. The maze runtime ignores it.',
+            + 'atlas map. No rule or move reads it; the room is drawn under the maze only at (0,0) (world.atlas).',
         schema: Object.freeze({ required: Object.freeze(['x', 'y']), properties: xy }),
     }),
 });

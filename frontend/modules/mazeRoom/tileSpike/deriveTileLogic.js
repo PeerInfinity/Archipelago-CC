@@ -27,7 +27,7 @@
 
 import {
     createState, getExitAt, getObstacle, mazeVisitedKey, hasItemActions, worldInputs, USE_PREFIX, TURN_PREFIX, INPUTS, turnInput,
-    actionItems, actionUsable, blockWithinReach,
+    actionItems, actionUsable, blockWithinReach, footprintCells, stanceStrikes,
 } from '../mazeRoomEngine.js';
 import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
 import { isObstacleCleared } from '../../shared/procgen/library.js';
@@ -246,6 +246,7 @@ export function regionItems(world) {
             for (const item of actionItems(world.actionLib?.[actionId])) if (!held.has(item)) out.add(item);
         }
         if (entry.activates && entry.event) out.add(entry.event);
+        if (entry.activates && entry.opened_by) out.add(entry.opened_by);
         for (const ev of entry.events ?? []) out.add(ev.name);
     }
     // ⛓ STRUCK BLOCKS: the items of the actions that move the world's blocks.
@@ -297,16 +298,17 @@ export function reachKey(state) {
     return state.facing === undefined ? mazeVisitedKey(state) : mazeVisitedKey({ ...state, facing: '' });
 }
 
-const DIRS = { N: [0, -1], S: [0, 1], E: [1, 0], W: [-1, 0] };
 /**
- * Does the cell a `TURN_<d>` faces from `at` hold an obstacle (what a use there could break)? — or, on a STRUCK-BLOCK
- * world, does a block stand within its `reach` that way (what a use there could move)?
+ * Does a cell the use hits after a `TURN_<d>` hold an obstacle (what it could break)? — its footprint
+ * (`footprintCells`: the faced cell unless the action carries one, ⛓ WEAPON FOOTPRINTS) — or, on a
+ * STRUCK-BLOCK world, does a block stand in its strike cells (what it could move)?
  */
 function obstacleToward(world, state, macro) {
-    const at = state.player_pos;
-    const [dx, dy] = DIRS[macro[0].slice(TURN_PREFIX.length)];
-    if (getObstacle(world, at.x + dx, at.y + dy)) return true;
-    return blockWithinReach(world, { ...state, facing: macro[0].slice(TURN_PREFIX.length) }, macro[1].slice(USE_PREFIX.length));
+    const faced = { ...state, facing: macro[0].slice(TURN_PREFIX.length) };
+    const id = macro[1].slice(USE_PREFIX.length);
+    if (footprintCells(world, faced, id).some((c) => getObstacle(world, c.x, c.y))) return true;
+    if (stanceStrikes(world, faced, id).length > 0) return true;
+    return blockWithinReach(world, faced, id);
 }
 
 /** A search's branches: the moves, and each use input as `[TURN_<d>, use]` for the four directions. */

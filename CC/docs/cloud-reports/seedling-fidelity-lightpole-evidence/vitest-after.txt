@@ -1,0 +1,4 @@
+     × the LIVE row carries one part per derived category, each with its own head 43ms
+ FAIL  scripts/procgen/rosterCategories.test.js > the COMPOSITE checkpoint row (⚖ 70 (c)) > the LIVE row carries one part per derived category, each with its own head
+ Test Files  1 failed | 101 passed (102)
+      Tests  1 failed | 3119 passed (3120)

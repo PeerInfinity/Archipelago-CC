@@ -8,7 +8,8 @@
  *   arrivals   for every door INTO a region (another region's sidecar exit naming it as `targetRegion` +
  *              `targetExitId`), `seedlingRegionBinding.resolveArrivalSpawn` over that door — the binding's
  *              own answer (the game's return spawn, else the door's entrance spawn); a start region also
- *              gets its no-"came from" arrival. Distinct (x, y) per region.
+ *              gets its start arrival, `seedlingStartSpawn` (the game's boot position when the region holds
+ *              it, else the no-"came from" arrival). Distinct (x, y) per region.
  *   goals      every sidecar exit that is not an `in_` (arrival-only) door, and every rules location of the
  *              region. A logical link (no door) is not walked, so it is not a leg.
  *   sphere     the preset's sphere log (embedded; `seedling_playthrough` carries none, so
@@ -323,7 +324,7 @@ async function main() {
     if (!OUT) { console.log('FAIL: --out=<legs.jsonl> is required'); process.exit(2); }
     const presets = arg('presets', PRESETS.join(',')).split(',');
     const BLOCKS = process.argv.includes('--blocks');
-    const { resolveArrivalSpawn } = await M('flashPanel/seedlingRegionBinding.js');
+    const { resolveArrivalSpawn, seedlingStartSpawn } = await M('flashPanel/seedlingRegionBinding.js');
     const { returnSpawnTable } = await M('flashPanel/seedlingReturnSpawns.js');
     const { atlasRoomRegions } = await M('seedlingDemo/seedlingAtlasCheckTable.js');
     const { generateSphereLog } = await M('shared/procgen/forwardSimulator.js');
@@ -331,6 +332,9 @@ async function main() {
     const { gameStateEventsOf } = await M('procgenCore/eventRoute.js');
     const MAP = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
     const RETURNS = returnSpawnTable(MAP);
+    // ⛓ START IN FRONT — the start arrival is the binding's own `seedlingStartSpawn` (the game's boot position
+    // where the start region holds it), read with the partition the panel hands the binding.
+    const PARTITION = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-subregion-partition.json'), 'utf8'));
 
     const seen = new Map();
     const legs = [];
@@ -390,7 +394,7 @@ async function main() {
                 arrivals.push({ x: a.x, y: a.y, exitId: a.exitId, landing: a.landing, via, needs: [...needs] });
             };
             for (const [id, needs] of into.get(region) ?? []) add(resolveArrivalSpawn(pl, { exit_id: id }, RETURNS), id, needs);
-            if (starts.has(region)) add(resolveArrivalSpawn(pl, null, RETURNS), 'start', [[]]);
+            if (starts.has(region)) add(seedlingStartSpawn({ world: pl, returnSpawns: RETURNS, partition: PARTITION }), 'start', [[]]);
             for (const a of arrivals) {
                 const events = arrivalEventNeeds(a.needs);
                 delete a.needs;

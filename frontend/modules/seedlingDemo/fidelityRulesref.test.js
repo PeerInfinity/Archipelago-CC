@@ -73,13 +73,15 @@ describe('RULESREF — the switches', () => {
 });
 
 describe('RULESREF D2/D3 — L66: a spear bridge, then a door half a tile off the grid', () => {
+    // ⛓ W34 flip: L12DOORS' `fineFrontierHiddenDoor` (ON) also asks the 8 px frontier at this doorway, so a row that stages the
+    // 8 px flood OFF stages it OFF too (its verdict stays REFUSED; only the text would move to the key line's stance).
     it('OFF: the goal tile under building8 refuses (survey step 163), with no tick spent', () => {
-        const e = refusalOf(() => solveDoor({ spearBridgeVerb: false, fineFrontierFlood: false }));
+        const e = refusalOf(() => solveDoor({ spearBridgeVerb: false, fineFrontierFlood: false, fineFrontierHiddenDoor: false }));
         expect(e?.message).toMatch(/goal tile \(5,4\) in level 66 .* not walkable: pixelmask building8/);
         expect(e.perTick.length).toBe(0);
     });
     it('the bridge alone: opened by one thrust at t64, and the doorway still refuses', () => {
-        const e = refusalOf(() => solveDoor({ spearBridgeVerb: true, fineFrontierFlood: false }));
+        const e = refusalOf(() => solveDoor({ spearBridgeVerb: true, fineFrontierFlood: false, fineFrontierHiddenDoor: false }));
         expect(e?.message).toMatch(/pixelmask:building8/);
         expect(e.perTick.length).toBe(64);
         expect(e.rows.some((r) => r.strategy?.verb === 'bridge' && r.obstacle?.id === 'bridge@7,9')).toBe(true);
@@ -102,7 +104,7 @@ describe('RULESREF D2/D3 — L66: a spear bridge, then a door half a tile off th
     });
     it('leg 579\'s arrival (64,80), both ON: the doorway first — the bridge on the 16 px frontier is not on the way', () => {
         const staging = stagingOf(DOOR, { level: 66, x: 64, y: 80 });
-        expect(refalOrNull(() => solveDoor({ spearBridgeVerb: false, fineFrontierFlood: false }, staging))).toMatch(/goal tile \(5,4\).* pixelmask building8/);
+        expect(refalOrNull(() => solveDoor({ spearBridgeVerb: false, fineFrontierFlood: false, fineFrontierHiddenDoor: false }, staging))).toMatch(/goal tile \(5,4\).* pixelmask building8/);
         const out = solveDoor({ spearBridgeVerb: true, fineFrontierFlood: true }, staging);
         expect(out.perTick.length).toBe(87);
         expect(out.records.some((r) => r.strategy === 'bridge')).toBe(false);

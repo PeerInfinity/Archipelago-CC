@@ -943,6 +943,7 @@ export class FlashPanelUI {
           <button class="flash-panel-wirecheck" style="${BUTTON_CSS}">Wire Check</button>
           <button class="flash-panel-readstate" style="${BUTTON_CSS}">Read State</button>
           <button class="flash-panel-configure" style="${BUTTON_CSS}">Configure Bridge</button>
+          <button class="flash-panel-restart" style="${BUTTON_CSS}display:none;" title="Return to the start region (the Menu panel's Restart)">Restart</button>
         </div>
         <div class="flash-panel-teleport" style="margin-top: 6px; font-size: 12px; display: none;">
           <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px;">
@@ -1002,6 +1003,8 @@ export class FlashPanelUI {
       .addEventListener('click', () => this._readState());
     this.rootElement.querySelector('.flash-panel-configure')
       .addEventListener('click', () => this._configureBridge());
+    this.restartButton = this.rootElement.querySelector('.flash-panel-restart');
+    this.restartButton.addEventListener('click', () => this._toolsRestart());
     this.rootElement.querySelector('.flash-panel-tp-go')
       .addEventListener('click', () => this._manualTeleport());
     this.rootElement.querySelector('.flash-panel-tp-region-go')
@@ -1418,6 +1421,7 @@ export class FlashPanelUI {
     const transport = this.isInitialized && this._initRuntime !== undefined ? this.transport : null;
     if (this._solveProgressLine) this._solveProgressLine.element.style.display = seedling ? 'flex' : 'none';
     if (this.sections?.solver) this.sections.solver.style.display = seedling ? '' : 'none';
+    if (this.restartButton) this.restartButton.style.display = seedling && getSeedlingRegionGlue() ? '' : 'none';
     for (const c of this._settingsControls) {
       const applies = c.when === 'always' || (c.when === 'seedling' && seedling) || (c.when === 'js' && transport === 'js')
         || (c.when === 'touch' && !!this.gameConfig?.touch_controls);
@@ -1496,6 +1500,43 @@ export class FlashPanelUI {
   // by the time that happens, so the player shows at the new
   // position as soon as the game unpauses.
 
+  /**
+   * ⛓ RESTART IN TOOLS (⚖ the user, 2026-10-28: copy the Menu panel's reset button into the Seedling panel). NOT a
+   * second Restart: it calls the Menu panel's own `restart` (its public function), so the AP move, the
+   * `menuPanel:restarted` event and every listener of it (the region glue's warp, the Playback Bot's re-plan, the
+   * loops' delegation in loop mode) are the Menu button's, one code path. The glue's verdict (`lastRestart`) is
+   * read back into the log: a decline names itself there.
+   */
+  _toolsRestart() {
+    const restart = centralRegistry.getPublicFunction?.('menuPanel', 'restart');
+    if (typeof restart !== 'function') {
+      this._panelLog('Restart: the Menu panel module is not loaded, so there is no Restart to press', 'error');
+      return null;
+    }
+    const glue = getSeedlingRegionGlue();
+    const before = glue?.lastRestart ?? null;
+    const r = restart();
+    const verdict = glue?.lastRestart ?? null;
+    if (verdict && verdict !== before && !verdict.taken && !verdict.why) {
+      this._panelLog(`Restart: the AP player is back at "${r?.target ?? '?'}"; the start region `
+        + `"${verdict.start ?? '?'}" is not a Seedling room, so the game was not moved`);
+    }
+    return { restart: r, verdict };
+  }
+
+  /**
+   * ⛓ TELEPORT TOOL — every Tools teleport asks the region glue first (`teleportTool`: the AP move + the binding's
+   * arrival, the walked exit's bookkeeping). A decline is logged by name and the game is teleported alone, as
+   * before (another game, loop mode, a spot no Seedling region holds).
+   */
+  _toolTeleport(target, fallback) {
+    const glue = getSeedlingRegionGlue();
+    const r = glue && this.adapter && glue.adapter === this.adapter ? glue.teleportTool(target) : null;
+    if (r?.taken) return true;
+    if (r?.why) this._panelLog(`teleport: the AP region was not moved — ${r.why}`);
+    return fallback();
+  }
+
   _manualTeleport() {
     if (!this.adapter) return;
     const level = parseInt(this.teleportLevelInput.value, 10);
@@ -1507,7 +1548,7 @@ export class FlashPanelUI {
     }
     const params = { x, y };
     if (!Number.isNaN(level)) params.level = level;
-    this.adapter.teleport(params);
+    this._toolTeleport(params, () => this.adapter.teleport(params));
   }
 
   _regionTeleport() {
@@ -1519,7 +1560,11 @@ export class FlashPanelUI {
 
   _teleportToRegion(regionName) {
     if (!this.adapter) return;
-    const ok = this.adapter.teleportToRegion(regionName);
+    // A region of the loaded preset (a region-graph node) goes through the glue; `region_coords` (the vanilla
+    // display names) is the fallback.
+    const coords = this.gameConfig?.region_coords?.[regionName] ?? null;
+    const ok = this._toolTeleport(coords ? { ...coords, region: null } : { region: regionName },
+      () => this.adapter.teleportToRegion(regionName));
     if (!ok) {
       this._panelLog(`teleport: no coords for region "${regionName}"`);
     }
@@ -1534,7 +1579,10 @@ export class FlashPanelUI {
 
   _teleportToLocation(locationName) {
     if (!this.adapter) return;
-    const ok = this.adapter.teleportToLocation(locationName);
+    const coords = this.gameConfig?.location_coords?.[locationName] ?? null;
+    const ok = coords
+      ? this._toolTeleport({ ...coords }, () => this.adapter.teleportToLocation(locationName))
+      : this.adapter.teleportToLocation(locationName);
     if (!ok) {
       this._panelLog(`teleport: no coords for location "${locationName}"`);
     }
@@ -2120,18 +2168,26 @@ export class FlashPanelUI {
    * sub-regions: the generated partition (which tile is in which sub-region, by the rules' `atlas_id`) and
    * the rules' logical links. Without it the binding cannot tell a seam was crossed (it still learns the
    * bot's credited links and a door's sibling), and the log says so.
+   *
+   * ⛓ START IN FRONT — the same document is what proves the start region holds the game's own boot
+   * position (`seedlingRegionBinding.bootSpawnIn`), so the binding gets it whether or not a map results
+   * (a spiral's start room is a placed sub-region with no `__` id). Until it is in, a new game starts
+   * at the start region's first exit, as before.
    */
   async _loadSubRegions(adapter) {
     const raw = rulesOfRawPayload(getLastRawJsonData?.());
     const player = playerOfRawPayload(getLastRawJsonData?.());
     const glue = getSeedlingRegionGlue();
     glue?.setSubRegions?.(null);
+    glue?.binding?.setPartition?.(null);
     if (!raw?.region_atlas?.[player]) return;
     try {
       const res = await fetch(new URL(SUB_REGION_PARTITION_PATH, document.baseURI).href);
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-      const { map, why } = buildSubRegionMap({ rules: raw, partition: await res.json(), player });
+      const partition = await res.json();
       if (this.adapter !== adapter) return;
+      glue?.binding?.setPartition?.(partition);
+      const { map, why } = buildSubRegionMap({ rules: raw, partition, player });
       if (!map) {
         if (why) this._panelLog(`[region atlas] ${why}`, 'error');
         return;

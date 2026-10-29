@@ -574,6 +574,146 @@ async function holdFor(page, codes, ms) {
     await page.close();
 }
 
+// ── ROW 5 (seedling-lab-touch-controls): THE ON-SCREEN CONTROLS DRIVE MANUAL ─
+/**
+ * ⚖ The user (2026-10-28): *"I also want the manual section of the lab page to
+ * have on screen controls."* The flash panel's `touchControls.js`, mounted under
+ * the canvas, pressing through the page's ONE writer (`createManualKeys`).
+ *
+ * ⚠ REAL POINTER EVENTS (Playwright's mouse is a pointer like a finger, and
+ * `touchControls` reads pointer events), on the controls' REAL geometry — not a
+ * call into the page. The vitest rows (`watchManualTouch.test.js`) prove the
+ * touch-built tape equals the keyboard-built one; this row proves the page's
+ * path to it: the mount, the d-pad hit test, the held set, STOP's release, the
+ * fold, and the controls leaving with the arm.
+ *
+ * The room and the oscillating script are ROW 1's, for ROW 1's reason.
+ */
+{
+    const url = `${PAGE}?source=manual&boot=${TAPES}/r8-hammer-control.json&speed=1&touch=1`;
+    const { page, errors } = await open(url);
+    console.log(`\n## SOURCE=MANUAL — driven by the ON-SCREEN controls (?touch=1)\n   ${url}`);
+    await page.waitForSelector('#manualStart:not([disabled])', { timeout: 60000 });
+    await page.waitForSelector('#stage .flash-touch-controls', { timeout: 30000 });
+
+    const mount = await page.evaluate(() => {
+        const root = document.querySelector('#stage .flash-touch-controls');
+        const shown = (sel) => {
+            const el = root.querySelector(sel);
+            return Boolean(el) && getComputedStyle(el).display !== 'none';
+        };
+        return {
+            box: document.getElementById('manualTouch').checked,
+            afterCanvas: root.previousElementSibling?.id ?? null,
+            pad: shown('.flash-touch-dpad'),
+            x: shown('.flash-touch-button-primary'),
+            c: shown('.flash-touch-button-secondary'),
+            v: shown('.flash-touch-button-inventory'),
+            esc: shown('.flash-touch-button-menu'),
+        };
+    });
+    check(mount.box && mount.afterCanvas === 'canvas' && mount.pad && mount.x && mount.c && mount.v,
+        '?touch=1 mounts the d-pad and X/C/V UNDER the canvas, and the box says so',
+        JSON.stringify(mount));
+    check(mount.esc === false, '⚠ …and no Esc: the JS run has no pause menu (`transports: ["wasm"]`)',
+        `esc shown=${mount.esc}`);
+
+    // ⚠ UNDER the canvas is below the fold at this viewport (the canvas is tall):
+    // a pointer outside the viewport hits nothing, so the strip is scrolled in first
+    // — AFTER START, whose click scrolls the page back up to the button.
+    await page.click('#manualStart');
+    await page.locator('#stage .flash-touch-controls').scrollIntoViewIfNeeded();
+    const geo = await page.evaluate(() => {
+        const r = (sel) => document.querySelector(sel).getBoundingClientRect();
+        const p = r('.flash-touch-dpad');
+        const x = r('.flash-touch-button-primary');
+        return {
+            cx: p.left + p.width / 2, cy: p.top + p.height / 2, rad: p.width / 2,
+            xx: x.left + x.width / 2, xy: x.top + x.height / 2,
+        };
+    });
+    const pad = (dx, dy) => [geo.cx + dx * geo.rad * 0.7, geo.cy + dy * geo.rad * 0.7];
+    const heldNow = () => page.evaluate(() => ({
+        attr: document.querySelector('#stage .flash-touch-controls').dataset.held ?? '',
+        hud: document.getElementById('hud').textContent,
+    }));
+
+    await page.mouse.move(...pad(1, 0));
+    await page.mouse.down();
+    await page.waitForTimeout(250);
+    const right = await heldNow();
+    check(right.attr === 'ArrowRight' && /heldright/.test(right.hud.replace(/\s+/g, '')),
+        '⛓ a press on the d-pad\'s RIGHT holds ArrowRight — and the HUD\'s held row (the one writer) says right',
+        `${right.attr} · ${(right.hud.match(/held[^h]*/) ?? ['?'])[0]}`);
+    // A slide round the RIM to the left (through down): the bridge releases Right
+    // before pressing Left. ⚠ Not straight across — the centre is the dead zone,
+    // and a pointer that slides off every control is let go (the panel's rule).
+    for (let a = 0; a <= 180; a += 15) {
+        await page.mouse.move(...pad(Math.cos(a * Math.PI / 180), Math.sin(a * Math.PI / 180)));
+    }
+    await page.waitForTimeout(250);
+    const left = await heldNow();
+    check(left.attr === 'ArrowLeft', 'sliding the thumb across the pad releases Right and holds Left',
+        left.attr);
+    await page.mouse.up();
+    await page.mouse.move(geo.xx, geo.xy);
+    await page.mouse.down();
+    await page.waitForTimeout(60);
+    await page.mouse.up();
+    await page.waitForTimeout(100);
+
+    // ⛔ STOP WITH A FINGER STILL ON THE PAD. The click goes through the DOM, not
+    // the mouse, so the pointer stays down on the d-pad while STOP runs.
+    await page.mouse.move(...pad(1, 0));
+    await page.mouse.down();
+    await page.waitForTimeout(150);
+    await page.evaluate(() => document.getElementById('manualStop').click());
+    await page.waitForFunction(() => window.__editorManual?.roundTrip !== undefined,
+        null, { timeout: 60000 });
+    const afterStop = await heldNow();
+    await page.mouse.up();
+    const m = await page.evaluate(() => window.__editorManual);
+    check(m.touch === true && m.released === 'stop' && m.held.length === 0 && afterStop.attr === '',
+        '⛔ STOP released EVERY held key — the keyboard set AND the finger still on the pad',
+        `released=${m.released} held=${JSON.stringify(m.held)} controls held="${afterStop.attr}"`);
+    const keysIn = new Set(m.inputs.map((i) => i.key));
+    check(m.ticks > 20 && ['right', 'left', 'primary'].every((k) => keysIn.has(k)),
+        '⛓ the TAPE carries the touch presses — right, left and X — as tape keys',
+        `${m.ticks} tick(s); keys in the tape: ${[...keysIn].sort().join(', ')}`);
+    check(m.roundTrip === true && m.faithful === true && m.mismatches.length === 0
+        && m.refusal === null && m.error === null,
+        '⛓⛓ …and the touch-driven fold replays frame-for-frame',
+        m.roundTrip ? `${m.observations} driven == ${m.frames} replayed`
+            : JSON.stringify(m.mismatches.slice(0, 4)));
+    if (SHOT) await page.screenshot({ path: `${SHOT}/manual-touch.png` });
+
+    // ⛔ A RETIRED MANUAL LEAVES NO CONTROLS. Switch the arm in place.
+    await page.evaluate(() => { delete window.__editorArm; });
+    await page.selectOption('#source', 'solve');
+    await page.waitForFunction(() => window.__editorArm?.source === 'solve', null, { timeout: 120000 });
+    const gone = await page.evaluate(() => document.querySelectorAll('.flash-touch-controls').length);
+    check(gone === 0, '⛔ switching the arm to SOLVE takes the controls with it', `${gone} left`);
+    check(errors.length === 0, 'no page errors', errors.join(' | ') || 'clean');
+    await page.close();
+
+    // ?touch=0 (and a fine pointer, as headless chromium has) — no controls until asked.
+    const { page: p2, errors: e2 } = await open(
+        `${PAGE}?source=manual&boot=${TAPES}/r8-hammer-control.json&touch=0`);
+    await p2.waitForSelector('#manualStart:not([disabled])', { timeout: 60000 });
+    await p2.waitForFunction(() => !document.getElementById('manualTouch').disabled, null, { timeout: 30000 });
+    const off = await p2.evaluate(() => ({
+        box: document.getElementById('manualTouch').checked,
+        n: document.querySelectorAll('.flash-touch-controls').length,
+    }));
+    await p2.check('#manualTouch');
+    const on = await p2.evaluate(() => document.querySelectorAll('#stage .flash-touch-controls').length);
+    check(off.box === false && off.n === 0 && on === 1,
+        '?touch=0 shows none, and the "on-screen controls" box mounts them by hand',
+        `before: box=${off.box} mounted=${off.n}; after ticking: ${on}`);
+    check(e2.length === 0, 'no page errors', e2.join(' | ') || 'clean');
+    await p2.close();
+}
+
 await browser.close();
 if (SHOT) console.log(`\nscreenshots (EVIDENCE, not gates) in ${SHOT}`);
 console.log(failed === 0 ? '\nALL CHECKS PASSED' : `\n${failed} CHECK(S) FAILED`);

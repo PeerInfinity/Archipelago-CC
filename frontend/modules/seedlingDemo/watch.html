@@ -653,6 +653,10 @@
         <button id="manualStart">START</button>
         <button id="manualStop" disabled>STOP &amp; fold</button>
         <span id="manualKeys"></span>
+        <!-- ⛓ The on-screen controls (a d-pad + X/C/V under the canvas, the
+             flash panel's `touchControls.js`): on by default on a touch device
+             or with ?touch=1, off with ?touch=0, and this box flips them. -->
+        <label title="a d-pad and the X/C/V buttons under the canvas — they press the same keys the keyboard does"><input id="manualTouch" type="checkbox" disabled> on-screen controls</label>
       </span>
     </div>
     <div class="line" id="solveGoalLine">
@@ -1420,6 +1424,10 @@
       once. ⚠ The container is the contract — see `mountLayerControls`.
     -->
     <div id="viewknobs"></div>
+    <!-- ⛓ LAB L2 (seedling-lab-static-art): the "Seedling art" toggle, in its OWN
+         box — not a layer (`#layers` is enumerated) and not a knob of the arm
+         (`#viewknobs` is rebuilt per arm); `watchArt.mountLabArtToggle` owns it. -->
+    <div id="labArtBox"></div>
     </details>
     <!--
       ⛓⛓⛓ GROUP B — THE CEREMONY TEXT BOX.

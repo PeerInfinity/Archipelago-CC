@@ -413,6 +413,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'l40button-l41-part0', 'l40button-l42-part0',
             // ⛓ Seedling fidelity L100: the rock door's 8 px stance, booted in the sliver (L100's jellyfish and flyer).
             'l100-sliver-rock',
+            // ⛓ Seedling fidelity LIGHTPOLE: L101's in-room pole, lit through the wall (L101's flyers).
+            'lightpole-l101-ghost', 'lightpole-l101-spear',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -472,7 +474,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // `swim-u5-bobboss-encounter` end in L32 now, `enc-l32-fire-return` is retired; the six `apb-*` above.
         // ⛓ Seedling fidelity L40REREC adds two (93) — `l40button-l41-part0`, `l40button-l42-part0` (L40, damage on).
         // ⛓ Seedling fidelity L100 adds one (94) — `l100-sliver-rock` (L100, L101).
-        expect(out.exposed).toBe(94);
+        // ⛓ Seedling fidelity LIGHTPOLE adds two (96) — `lightpole-l101-ghost`, `lightpole-l101-spear` (L101).
+        expect(out.exposed).toBe(96);
         expect(out.tapes).toEqual([
             'apb-l12-witch-reported', 'apb-l12-witch-server-sword', 'apb-l12-witch-slot-held',
             'apb-l32-both-reported', 'apb-l32-fresh-fire-held', 'apb-l43-totem-no-parts',
@@ -482,6 +485,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'ghostsword-l30-bobsoldier', 'l100-sliver-rock', 'l12keyline-134-round', 'l14-swordless-detour', 'l30keylock-pit224', 'l30keylock-pit224-before', 'l30keylock-pit240',
             'l40button-l41-part0', 'l40button-l42-part0',
             'ladder2-l104-beam',
+            'lightpole-l101-ghost', 'lightpole-l101-spear',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
             'pushblock-l65-reach-l63', 'pushblock-l65-reach-l68',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
@@ -700,6 +704,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'l40button-l42-part0': { tape: {}, levels: [40] },
             // ⛓ fidelity L100's witness — the mirror rule.
             'l100-sliver-rock': { tape: {}, levels: [100, 101] },
+            // ⛓ fidelity LIGHTPOLE's two witnesses — the mirror rule.
+            'lightpole-l101-ghost': { tape: {}, levels: [101] },
+            'lightpole-l101-spear': { tape: {}, levels: [101] },
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes — the mirror rule.
             'axe-l61-reach-l63': { tape: {}, levels: [63] },
             'burn-l44-reach-exit': { tape: {}, levels: [45] },

@@ -49,12 +49,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 20,
+            "count": 21,
             "id": "census"
         },
         {
-            "browser": 61,
-            "count": 101,
+            "browser": 62,
+            "count": 102,
             "id": "check"
         },
         {
@@ -134,12 +134,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 93,
+            "count": 95,
             "id": "plan"
         },
         {
-            "browser": 123,
-            "count": 171,
+            "browser": 126,
+            "count": 174,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 480,
-        "browser": 188,
-        "cited": 259,
-        "files": 497,
+        "blockStyle": 487,
+        "browser": 192,
+        "cited": 263,
+        "files": 504,
         "lineStyle": 17,
-        "withDocblock": 497,
-        "withFlags": 413
+        "withDocblock": 504,
+        "withFlags": 420
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1419,6 +1419,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-killgate-clears — **WHAT ACTUALLY OPENS THE KILL GATE'S LOCK**, and where the body was when it stopped being alive.",
             "path": "scripts/procgen/census-seedling-killgate-clears.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-offgrid-blockers.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "charge-crossings"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "no-directional-locks"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "quiet"
+                }
+            ],
+            "oneLiner": "⛓ RULES offgrid-blockers — DOES A BLOCKER PLACED OFF THE 16 px GRID SPLIT WHAT THE CELL GRID CALLS ONE ROOM?",
+            "path": "scripts/procgen/census-seedling-offgrid-blockers.mjs"
         },
         {
             "argvHelpers": [
@@ -4199,6 +4242,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-hammer-monotonicity — ⛓ SEEDLING HAMMER-PHASE B2 (W0): NO RECORD SOLVED OFF MAY BE REFUSED ON.",
             "path": "scripts/procgen/check-seedling-hammer-monotonicity.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "shots"
+            ],
+            "file": "check-seedling-lab-art.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shots"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-seedling-lab-art — THE LAB ARC L2 ACCEPTANCE ROW (seedling-lab-static-art): does `watch.html` boot, load the Seedling art, and draw the room in it (statically) in every arm — and fall back to the rectangles when told?",
+            "path": "scripts/procgen/check-seedling-lab-art.mjs"
         },
         {
             "argvHelpers": [],
@@ -8418,6 +8501,39 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "plan",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-l12doors-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "plan-seedling-l12keyline-witness.mjs",
+                    "name": "dry"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l12doors-witness — ⛓⛓⛓ SEEDLING FIDELITY L12DOORS: THE SOLVER'S OWN L12 → L83 PLANS, AS TAPES THE GAME PLAYS (`probe-seedling-l12doors.mjs`) AND THE MODEL REPRODUCES (`fidelityL12Doors.test.js`).",
+            "path": "scripts/procgen/plan-seedling-l12doors-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -8573,6 +8689,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-ladder2-witness — ⛓⛓⛓ SEEDLING FIDELITY LADDER2: THE SOLVER CROSSES A PLACED GRENADE, A LAVA CHAIN AND A BEAM TOWER, AND THE GAME LETS IT THROUGH.",
             "path": "scripts/procgen/plan-seedling-ladder2-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "from-view"
+            ],
+            "file": "plan-seedling-lightpole-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "from-view"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-lightpole-witness — ⛓⛓⛓ SEEDLING FIDELITY LIGHTPOLE (wave 34): AN IN-ROOM POLE IS LIT FROM ITS OWN ROOM.",
+            "path": "scripts/procgen/plan-seedling-lightpole-witness.mjs"
         },
         {
             "argvHelpers": [],
@@ -12494,6 +12646,53 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [
                 "arg"
             ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-ghostsword-items.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "The Ghost Sword Fusion ON ITS OWN (slice rules-ghostsword-probe): what does each mix of the Fusion, the Ghost Spear and the Sword let the player do, and do the playthrough rules agree?",
+            "path": "scripts/procgen/probe-seedling-ghostsword-items.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
             "browser": false,
             "category": "probe",
             "citedBy": [],
@@ -13004,6 +13203,75 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's L12 → L83 door, ON THE GAME (slice rules-l12-bosslock-probe): survey route steps 172/203 (L12 visits 14/16, `reach-exit` teleporter@32,848 → L83; 167/198 at fidelity CHESTSEAL's base) refuse KEYLOCK-SEALED on `bosslock@112,192`, \"flag {12,11} held\".",
             "path": "scripts/procgen/probe-seedling-l12-bosslock.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only"
+            ],
+            "file": "probe-seedling-l12doors.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "from-fixture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "plan-seedling-l12doors-witness.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "probe-seedling-l12-bosslock.mjs",
+                    "name": "dump"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "probe-seedling-l12-bosslock.mjs",
+                    "name": "host"
+                },
+                {
+                    "from": "probe-seedling-l12-bosslock.mjs",
+                    "name": "no-model"
+                },
+                {
+                    "from": "probe-seedling-l12-bosslock.mjs",
+                    "name": "repeat"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l12doors — ⛓⛓⛓ SEEDLING FIDELITY L12DOORS: THE SOLVER'S OWN L12 → L83 PLANS, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-l12doors.mjs"
         },
         {
             "argvHelpers": [],
@@ -13896,6 +14164,61 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l67-reach2 — does the spear push a block from TWO tiles away, across a pit?",
             "path": "scripts/procgen/probe-seedling-l67-reach2.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/gotchas.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l89-waterfall.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L89 TELEPORTER to L91 (`out_teleporter_208_0`, tile [13,0]), ON THE GAME (slice rules-l89-waterfall-probe): can a Swim-only player (the Conch, no Feather) touch it?",
+            "path": "scripts/procgen/probe-seedling-l89-waterfall.mjs"
         },
         {
             "argvHelpers": [

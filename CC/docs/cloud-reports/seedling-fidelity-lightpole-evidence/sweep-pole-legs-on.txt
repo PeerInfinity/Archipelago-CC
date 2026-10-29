@@ -1,0 +1,4 @@
+558 done flag {'level': 63, 'tag': 6, 'set': True, 'collected': True} hits 0 divs 0 verbs ['pole'] ticks 65 game end (55.5, 250.3) model end (55.5, 250.3) seam 5409
+569 done flag {'level': 65, 'tag': 0, 'set': True, 'collected': True} hits 0 divs 0 verbs ['pole'] ticks 58 game end (136, 137.3) model end (136, 137.3) seam 5391
+740 done flag {'level': 101, 'tag': 0, 'set': True, 'collected': True} hits 0 divs 0 verbs ['dodge', 'kill', 'walk'] ticks 709 game end (124.28, 66.062) model end (124.28, 66.062) seam 5578
+742 done flag {'level': 101, 'tag': 0, 'set': True, 'collected': True} hits 0 divs 0 verbs ['dodge', 'walk'] ticks 252 game end (119.196, 66.074) model end (119.196, 66.074) seam 5573

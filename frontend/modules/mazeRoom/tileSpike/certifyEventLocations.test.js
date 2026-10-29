@@ -8,7 +8,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { buildPlaythroughMaze, eventLayerFor } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
+import { buildPlaythroughMaze, eventLayerFor, neededEvents } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
@@ -176,6 +176,64 @@ describe('eventLayerFor', () => {
             'door L39 flag 8: wandlock@144,592 cleared out_teleporter_144_0',
             'door L39 flag 8: wandlock@144,592 cleared out_teleporter_144_624',
         ]);
+    });
+
+    // ⛓ session tile-primitives-sphere-order-7 (⚖ 2026-10-28 "5.6 now, footprints next, then poles"): an event no maze world can
+    // produce (an in-room LIGHTPOLE: lit by a Spear thrust from a stance that is not the faced cell) is carried only while a kept
+    // rule needs it. L63's two in-room poles kill the darktraps over its L65 landings, so with L65 unlisted they gate nothing.
+    const L63_POLES = ['L63 flag 6: lightpole@48,272 cleared', 'L63 flag 7: lightpole@112,272 cleared'];
+    // ⛓ session tile-primitives-lightpoles (⚖ 2026-10-28 "Rope-shaped, stances"): the maze now PRODUCES an in-room pole's event — a
+    // Spear thrust from one of its stances (mode 'pole') — so the filter keeps it even with L65 unlisted (it was dropped here before);
+    // a press that lights a pole in a listed level is that pole's `opened_by` (mode 'lit').
+    it('a produced event is carried whether or not a kept rule names it (L63\'s in-room poles without L65)', () => {
+        const layer = eventLayerFor(ATLAS, ['level_61', 'level_62', 'level_63']);
+        expect(layer.events.map((e) => e.name)).toEqual(expect.arrayContaining([...L63_POLES,
+            'L63 flag 1: lightpole@64,88 cleared', 'L62 flag 0: lightpole@120,200 cleared']));
+        expect(layer.world.filter((w) => w.mode === 'pole').map((w) => w.name).sort()).toEqual([...L63_POLES].sort());
+        expect(layer.world.filter((w) => w.mode === 'lit').map((w) => `${w.name} in L${w.obstacle.level}`).sort()).toEqual([
+            'L62 flag 0: lightpole@120,200 cleared in L62', 'L63 flag 1: lightpole@64,88 cleared in L63']);
+    });
+
+    it('... and is carried, named, once a kept rule needs it (L65 listed: its doors cost the poles)', () => {
+        const layer = eventLayerFor(ATLAS, ['level_63', 'level_65']);
+        expect(layer.events.map((e) => e.name)).toEqual(expect.arrayContaining(L63_POLES));
+        expect(layer.exitGates.some((g) => JSON.stringify(g.rule).includes(L63_POLES[0]))).toBe(true);
+    });
+
+    // ⛓ designer review (sphere-order-7): a multi-item node naming an event must keep it carried, and a kind whose items the
+    // filter cannot read is refused by name — never read as naming none.
+    describe('neededEvents', () => {
+        const ev = (name, access_rule = null) => ({ name, access_rule });
+        const gate = (rule) => ({ region_id: 'r', exit_id: 'x', rule });
+        const none = () => false;
+        it('keeps an event named only inside a HasAll, a HasAny list, or a count map; drops the unnamed', () => {
+            const layer = { events: [ev('A'), ev('B'), ev('C'), ev('D')], internalExitRules: [], exitGates: [
+                gate({ rule: 'And', children: [{ rule: 'HasAll', args: { item_names: ['Blue Key', 'A'] } }] }),
+                gate({ rule: 'HasAny', args: { items: ['B'] } }),
+                gate({ rule: 'HasAllCounts', args: { item_counts: { C: 1 } } }),
+            ] };
+            expect(neededEvents(layer, none).map((e) => e.name)).toEqual(['A', 'B', 'C']);
+        });
+        it('to a fixpoint: an event needed only by a dropped event goes too; a produced one stays', () => {
+            const layer = { events: [ev('A', { rule: 'Has', args: { item_name: 'B' } }), ev('B'), ev('P')], internalExitRules: [], exitGates: [] };
+            expect(neededEvents(layer, (n) => n === 'P').map((e) => e.name)).toEqual(['P']);
+        });
+        it('keeps an event named under Not\'s condition, args.rules or a Compare side (designer review: not only `children`)', () => {
+            const layer = { events: [ev('E'), ev('F'), ev('G'), ev('X')], internalExitRules: [], exitGates: [
+                gate({ rule: 'Not', args: { condition: { rule: 'Has', args: { item_name: 'E' } } } }),
+                gate({ rule: 'And', args: { rules: [{ rule: 'Has', args: { item_name: 'F' } }] } }),
+                gate({ rule: 'Compare', args: { left: { rule: 'CountItem', args: { item_name: 'G' } }, op: '>=', right: 1 } }),
+            ] };
+            expect(neededEvents(layer, none).map((e) => e.name)).toEqual(['E', 'F', 'G']);
+        });
+        it('refuses an unknown kind nested under a rule-valued arg too', () => {
+            const layer = { events: [ev('A')], internalExitRules: [], exitGates: [gate({ rule: 'Not', args: { condition: { rule: 'HasGroup', args: { item_name_group: 'K' } } } })] };
+            expect(() => neededEvents(layer, none)).toThrow(/"HasGroup" node/);
+        });
+        it('refuses a kind whose items it cannot read (HasGroup)', () => {
+            const layer = { events: [ev('A')], internalExitRules: [], exitGates: [gate({ rule: 'HasGroup', args: { item_name_group: 'Keys' } })] };
+            expect(() => neededEvents(layer, none)).toThrow(/"HasGroup" node, whose items this layer cannot read/);
+        });
     });
 
     it('refuses BY NAME a kept event that needs an event of a level not in the compile', () => {

@@ -250,8 +250,9 @@ function placeLocation(builder, [x, y], loc, { mine, isExit, note, toAtlas }) {
 function bindWorldEvents(builder, events, local, inGrid) {
     const byCell = new Map();
     for (const ev of events ?? []) {
-        // a press is a location on its button (`pressLocations`); its target is opened by it (`layPressTargets`)
-        if (ev.mode === 'press' || ev.mode === 'target') continue;
+        // a press is a location on its button (`pressLocations`); its target is opened by it (`layPressTargets`);
+        // a pole's event (its own, or the press that lights it) is the pole row's (`projectLevelWorld`)
+        if (ev.mode === 'press' || ev.mode === 'target' || ev.mode === 'pole' || ev.mode === 'lit') continue;
         for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
             const key = `${x},${y}`;
             const base = builder.obstacleLib[builder.obstacles.get(key)];
@@ -349,7 +350,7 @@ function layTouchedEventCells(builder, events, local, component, inGrid) {
     const mine = new Set(component.tiles.map(([x, y]) => `${x},${y}`));
     const byCell = new Map();
     for (const ev of events ?? []) {
-        if (!ev.rule || ev.mode === 'press') continue;
+        if (!ev.rule || ev.mode === 'press' || ev.mode === 'pole' || ev.mode === 'lit') continue;
         for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
             const key = `${x},${y}`;
             if (builder.isFloor(x, y) || builder.obstacles.has(key)) continue;
@@ -918,6 +919,12 @@ export function projectRegionToMaze(region, grid, ctx) {
 //                  'while_active'); the conditions the atlas charged that lane
 //                  with (`charges`) are DROPPED from its cells — the trap
 //                  models them (session tile-primitives-arrow-rope)
+//   pole           a LightPole whose light kills DarkTraps: ONE rope-shaped obstacle on
+//                  the bodies' cells, ACTIVATING the pole's token, struck ONLY from
+//                  its `stances` (`struck_from`: the spear's thrust reaches its bob
+//                  box), latched by its own event (an in-room pole, mode 'pole') or
+//                  opened by the press that lights it from another room (mode
+//                  'lit', `opened_by`) (session tile-primitives-lightpoles)
 //   ownership      `shared_world.rows`: which AP sub-region owns each cell, from
 //                  the atlas's own partition — walking from a cell of one into
 //                  a cell of another IS the crossing (`user:regionMove`), and
@@ -936,7 +943,7 @@ export function projectRegionToMaze(region, grid, ctx) {
 // which keeps it sound (never a solution the game refuses).
 
 /** The interaction primitives a level-world entity row may name. */
-export const LEVEL_WORLD_ENTITY_KINDS = Object.freeze(['block', 'button', 'lock', 'rock', 'rope', 'trap']);
+export const LEVEL_WORLD_ENTITY_KINDS = Object.freeze(['block', 'button', 'lock', 'rock', 'rope', 'trap', 'pole']);
 
 /** The maze's default use keys, in order (mazeKeys DEFAULT_USE_KEYS — kept in sync by test). */
 export const LEVEL_WORLD_USE_KEYS = Object.freeze(['z', 'x', 'c', 'v']);
@@ -951,6 +958,8 @@ const lockId = (group) => `lock_${group}`;
 const rockId = (actions) => `rock_${actions.join('_')}`;
 const ropeId = ([x, y]) => `rope_${x}_${y}`;
 const trapId = (group, fires) => `trap_${group}_${fires}`;
+/** A pole's obstacle id and the token its light is, from its label (`lightpole@x,y`, the placement). */
+const poleKey = (label) => label.replace(/^[^@]*@/, '').replace(',', '_');
 
 /**
  * Does this level's entity list carry an interaction (a block, a button, a
@@ -959,7 +968,7 @@ const trapId = (group, fires) => `trap_${group}_${fires}`;
  */
 export function levelHasInteraction(entities) {
     return Array.isArray(entities)
-        && entities.some((e) => ['block', 'button', 'rock', 'rope', 'trap'].includes(e.kind));
+        && entities.some((e) => ['block', 'button', 'rock', 'rope', 'trap', 'pole'].includes(e.kind));
 }
 
 /** A step's direction, its delta and the face it crosses on the cell it enters. */
@@ -1056,6 +1065,11 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
     return out;
 }
 
+/** A world's `block_strike` from its blocks' one push `{by, reach}`: `reach` only when the row named one (no footprint). */
+function blockStrikeOf({ by, reach }) {
+    return { struck_by: by, ...(reach !== undefined ? { reach } : {}) };
+}
+
 /**
  * Project ONE atlas region with an interaction into a shared level world.
  *
@@ -1064,8 +1078,8 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
  * @param {object} ctx `projectRegionToMaze`'s, plus `partitionFor(region)` →
  *   `{sub_regions, rows, origin:[x,y]}` (the atlas's persisted partition)
  * @param {Array<object>} entities `levelEntitiesFor`'s rows:
- *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item} | {action, rule}], reach?, label}` — a
- *   block with a `strike` is moved only by it, from up to `reach` cells (`block_strike`)
+ *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item, footprint?} | {action, rule, footprint?}], reach?, label}`
+ *   — a block with a `strike` is moved only by it, on its action's `footprint` or from up to `reach` cells (`block_strike`)
  * @returns {{ sidecars: object, notes: Array, analysis: null, sharedWorld: string }}
  */
 export function projectLevelWorld(region, grid, ctx, entities) {
@@ -1119,6 +1133,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     const traps = [];
     const trapLib = {};
     const ropeCells = [];
+    const poleCells = [];
     // A rope run's cells, by key → the items whose strike cuts it (its cut condition, dropped by the terrain pass).
     const ropeRun = new Map();
     /** True iff `c` resolves to exactly a Has, or an Or of Has, over the item set `items` (a rope's cut). */
@@ -1136,6 +1151,8 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     for (const e of entities) if (e.kind === 'button') groupsWithButton.add(String(e.group));
     // A strike needs one `item` or, for a fusion, a `rule` (an And of Has — ⚖ 2026-10-25 "action_lib `rule`").
     const needOf = (strike) => (strike.rule !== undefined ? { rule: strike.rule } : { item: strike.item });
+    // ⛓ WEAPON FOOTPRINTS (session tile-primitives-weapon-footprints): a strike may carry the cells its use hits
+    // (`footprint`, derived by the producer from the game's hit rects); the action carries it, one per action.
     const actionFor = (strike) => {
         if (!actionLib[strike.action]) {
             const used = Object.keys(actionLib).length;
@@ -1144,13 +1161,18 @@ export function projectLevelWorld(region, grid, ctx, entities) {
                 primitive: 'strike',
                 condition: 'strikes',
                 ...(used < LEVEL_WORLD_USE_KEYS.length ? { key: LEVEL_WORLD_USE_KEYS[used] } : {}),
+                ...(strike.footprint !== undefined ? { footprint: strike.footprint } : {}),
             };
         } else {
-            const { item, rule } = actionLib[strike.action];
+            const { item, rule, footprint } = actionLib[strike.action];
             const had = JSON.stringify(rule ?? item);
             const now = JSON.stringify(strike.rule ?? strike.item);
             if (had !== now) {
                 throw new Error(`atlas region "${regionId}": action "${strike.action}" names two items (${had}, ${now})`);
+            }
+            if (JSON.stringify(footprint) !== JSON.stringify(strike.footprint)) {
+                throw new Error(`atlas region "${regionId}": action "${strike.action}" has two footprints `
+                    + `(${JSON.stringify(footprint)}, ${JSON.stringify(strike.footprint)})`);
             }
         }
         return strike.action;
@@ -1229,6 +1251,40 @@ export function projectLevelWorld(region, grid, ctx, entities) {
                 if (!modelled.has(keyOf(x, y))) modelled.set(keyOf(x, y), new Set());
                 for (const c of e.charges ?? []) modelled.get(keyOf(x, y)).add(condKey(c));
             }
+            continue;
+        }
+        if (e.kind === 'pole') {
+            // ⛓⛓ LIGHTPOLES (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances"). The DarkTraps a lit
+            // pole kills are the barrier (contact; a DarkTrap's `hit()` is empty), so the pole is ONE obstacle on their cells
+            // whose `clear_set` is its token, as a rope's run. It is struck only from its STANCES (`struck_from`, the
+            // producer's `poleThrustStances` — the box is not a cell), this visit, and latched by the event that lights it:
+            // its own (an in-room pole, mode 'pole' — the cut IS that AP event), or a cross-room press's (mode 'lit',
+            // `opened_by` — the press is a location in another level). The bodies' cells are NOT claimed: the terrain pass
+            // lays them as the grid has them, and the obstacle is set on every one it floored (below).
+            const [strike, ...more] = e.strike ?? [];
+            if (!strike || more.length > 0 || !Array.isArray(strike.stances)) {
+                throw new Error(`atlas region "${regionId}": ${e.label} must name ONE strike with its stances`);
+            }
+            const action = actionFor(strike);
+            const key = poleKey(e.label);
+            const id = `pole_${key}`;
+            const ev = (ctx.eventsFor?.(region) ?? []).find((v) => v.name === e.event && (v.mode === 'pole' || v.mode === 'lit'));
+            const stances = strike.stances.map(([x, y, f]) => [...local([x, y]), f]).filter(([x, y]) => inGrid([x, y]))
+                .map(([x, y, f]) => `${x},${y},${f}`);
+            if (stances.length === 0) throw new Error(`atlas region "${regionId}": ${e.label} has no stance inside the region`);
+            builder.obstacleLib[id] = {
+                id,
+                name: e.label,
+                kind: 'pole',
+                clear_set: [[`lit_${key}`]],
+                struck_by: [action],
+                struck_from: { [action]: stances },
+                activates: `lit_${key}`,
+                at: keyOf(...tiles[0]),
+                ...(ev?.mode === 'pole' ? { event: ev.name } : ev?.mode === 'lit' ? { opened_by: ev.name } : {}),
+                color: '#d8c84a',
+            };
+            poleCells.push({ id, tiles, label: e.label });
             continue;
         }
         // rock / rope
@@ -1341,6 +1397,21 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     for (const { id, tiles } of ropeCells) {
         for (const [x, y] of tiles) {
             if (builder.isFloor(x, y) && !builder.obstacles.has(keyOf(x, y))) builder.obstacles.set(keyOf(x, y), id);
+        }
+    }
+    // ⛓ The pole obstacle on every body cell the terrain floored; a body on a cell another obstacle holds is refused by
+    // name (what a stacked barrier costs is not settled). A pole event of this level no pole row took is refused too.
+    for (const { id, tiles, label } of poleCells) {
+        for (const [x, y] of tiles) {
+            if (!builder.isFloor(x, y)) continue;
+            const held = builder.obstacles.get(keyOf(x, y));
+            if (held !== undefined) throw new Error(`atlas region "${regionId}": ${label}'s body at (${x},${y}) stands on obstacle "${held}"`);
+            builder.obstacles.set(keyOf(x, y), id);
+        }
+    }
+    for (const ev of (ctx.eventsFor?.(region) ?? []).filter((v) => v.mode === 'pole' || v.mode === 'lit')) {
+        if (!Object.values(builder.obstacleLib).some((o) => o.kind === 'pole' && (o.event === ev.name || o.opened_by === ev.name))) {
+            throw new Error(`atlas region "${regionId}": the pole event "${ev.name}" (mode ${ev.mode}) has no pole in this world`);
         }
     }
 
@@ -1590,7 +1661,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         ...(entryGates.length > 0 ? { entry_gates: entryGates } : {}),
         ...(blockSinks.length > 0 ? { block_sinks: blockSinks } : {}),
         ...(blockPush !== null && blockPush !== 'walk'
-            ? { block_strike: { struck_by: JSON.parse(blockPush).by, reach: JSON.parse(blockPush).reach } } : {}),
+            ? { block_strike: blockStrikeOf(JSON.parse(blockPush)) } : {}),
         shared_world: {
             key: regionId,
             regions: bindings.map((b) => b.apName),
@@ -1613,7 +1684,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         kind: 'level_world',
         message: `projected as ONE shared level world "${regionId}" (${bindings.length} AP region(s), carried by "${carrier}"): `
             + `${blocks.length} block(s), ${buttons.length} button(s), ${Object.keys(actionLib).length} action(s)`
-            + `${traps.length > 0 ? `, ${traps.length} arrow trap(s)` : ''}${ropeCells.length > 0 ? `, ${ropeCells.length} rope(s)` : ''}`,
+            + `${traps.length > 0 ? `, ${traps.length} arrow trap(s)` : ''}${ropeCells.length > 0 ? `, ${ropeCells.length} rope(s)` : ''}${poleCells.length > 0 ? `, ${poleCells.length} pole(s)` : ''}`,
     });
     return { sidecars, notes, analysis: null, sharedWorld: regionId };
 }

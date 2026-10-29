@@ -536,6 +536,8 @@ export function playthroughAnalyzerOptionsFor(level) {
             const lock = locks.get(`${x},${y}`);
             return lock ? { rule: 'Has', args: { item_name: lock.name } } : null;
         },
+        // ⛓ RULES waterfall-door: a landing is a way in, so an approach cost is never charged past one.
+        arrivalTiles: () => arrivalTilesFor(level.level),
     };
 }
 
@@ -678,6 +680,7 @@ export function buildPlaythroughAtlas() {
     modelVerdicts.length = 0;
     crossingCharged.length = 0;
     sealedDoorsCharged.length = 0;
+    directionalDoorsCharged.length = 0;
     pocketDoorsCharged.length = 0;
     sealedLocationsCharged.length = 0;
     arrivalsUncharged.length = 0;
@@ -734,6 +737,7 @@ export function buildPlaythroughAtlas() {
         exitComponents.set(regionId, componentTestsFor(level, analysis));
         regionAnalyses.set(regionId, analysis);
         applyCrossingCostToBindings(session.atlas, regionId, analysis);
+        chargeDirectionalApproaches(session.atlas, regionId, level, analysis);
         chargeSealedPockets(session.atlas, regionId, level, analysis, levelOptions);
         applyLavaTrapPulls(session.atlas, regionId, level, analysis);
         pruneUnreachableSubRegions(session.atlas, regionId);
@@ -862,6 +866,46 @@ function chargeSealedDoor(region, regionId, b) {
     note(`${regionId}: exit "${b.id}" at [${b.tile}] sits INSIDE an item-gated solid (the physics model has no `
         + `place for the body on it) — CHARGED its own cell (${own.map((c) => SEM.conditionKey(c)).join(' + ')})`
         + (whole ? '' : '; the rest of its approach stays uncharged (permissive)'));
+}
+
+/**
+ * ⛓ RULES waterfall-door — **A DOOR ONLY REACHED BY MOVING A GATED WAY COSTS THAT WAY.**
+ *
+ * The general charge stays off (one path's conjunction). What the analyzer also answers is the binding's
+ * `necessary`: the conditions EVERY way onto the door's tile pays, from every component and every landing
+ * (`arrivalTiles`), so charging any of them is never stricter than the game. Of those, a departure is charged
+ * the ones a DIRECTION gate of its grid prices (`cell.dirs`, today the waterfall's `N: hasFeather`,
+ * `Player.as:1557`): the door is touched only by moving that way on that tile. L89's teleporter to L91 sits atop a
+ * two-tile fall whose one way up is the fall itself, and shipped on Swim alone; the game needs the Feather
+ * (probe-seedling-l89-waterfall.mjs). Other necessary conditions (the water the fall stands in) are the region's
+ * entry gates, already charged on every way in, and are left alone.
+ */
+function chargeDirectionalApproaches(atlas, regionId, level, analysis) {
+    const region = atlas.regions.find((r) => r.region_id === regionId);
+    const directional = new Set(gridFor(level).cells
+        .flatMap((c) => Object.values(c.dirs ?? {}))
+        .flatMap((g) => (Array.isArray(g) ? g : g ? [g] : []))
+        .map((c) => analyzerOptions.conditionKey(c)));
+    if (directional.size === 0) return;
+    for (const b of analysis.bindings) {
+        if (b.kind !== 'exit' || !b.id.startsWith('out_') || !b.reachable || b.exact) continue;
+        const own = new Set((b.sealedIn?.conditions ?? []).map((c) => analyzerOptions.conditionKey(c)));
+        const due = (b.necessary ?? []).filter((c) => directional.has(analyzerOptions.conditionKey(c))
+            && !own.has(analyzerOptions.conditionKey(c)));
+        const exit = (region.exits ?? []).find((e) => e.exit_id === b.id);
+        if (due.length === 0 || !exit) continue;
+        const parts = due.map((c) => analyzerOptions.resolveCondition(c));
+        if (parts.some((p) => !p)) {
+            note(`${regionId}: exit "${b.id}" is reached only by moving a direction-gated way whose conditions do NOT `
+                + 'resolve to items — left uncharged (permissive)');
+            continue;
+        }
+        const cost = parts.length === 1 ? parts[0] : { rule: 'And', children: parts };
+        exit.access_rule = exit.access_rule === undefined ? cost : { rule: 'And', children: [exit.access_rule, cost] };
+        directionalDoorsCharged.push(`${regionId}/${b.id}`);
+        note(`${regionId}: exit "${b.id}" at [${b.tile}] is reached only by moving a direction-gated way — CHARGED `
+            + `${due.map((c) => SEM.conditionKey(c)).join(' + ')} (every way onto the tile pays it)`);
+    }
 }
 
 /**
@@ -1196,6 +1240,9 @@ export const crossingCharged = [];
 
 /** ⛓ RULES burnable-trees — every departure charged its OWN cell because it sits inside an item-gated solid. */
 export const sealedDoorsCharged = [];
+
+/** ⛓ RULES waterfall-door — every departure charged the direction gate every way onto its tile pays. */
+export const directionalDoorsCharged = [];
 
 /** ⛓ RULES obstacle-events — every departure charged the solids that alone open its model pocket. */
 export const pocketDoorsCharged = [];

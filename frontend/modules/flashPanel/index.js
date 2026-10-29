@@ -36,7 +36,7 @@ import {
 } from './seedlingPlaybackController.js';
 import { playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { PLAYBACK_WALK_FAILED_EVENT, PLAYBACK_WALK_NOTE_EVENT } from '../procgenCore/playbackEvents.js';
-import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, LOOP_RESET_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, LOOP_RESET_EVENT, SeedlingRegionGlue, stopBotWalksOf } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
 import { PLAY_CLOCK_EVENT, PLAY_CLOCK_SAMPLE_EVENTS, SeedlingPlayClock } from './seedlingPlayClock.js';
 import { getLastRawJsonData, stateManagerProxySingleton } from '../stateManager/index.js';
@@ -447,15 +447,12 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       getResolvedStartRegion: initializationApi.getModuleFunction?.('procgenPlayer', 'getResolvedStartRegion'),
       getRegionInfo: initializationApi.getModuleFunction?.('procgenPlayer', 'getRegionInfo'),
       retakeStartHop: initializationApi.getModuleFunction?.('procgenPlayer', 'retakeStartHop'),
+      // ⛓ TELEPORT TOOL — which region of ours is a level (`teleportTool`'s spot → region).
+      getWarehouse: initializationApi.getModuleFunction?.('procgenPlayer', 'getWarehouse'),
     }),
     // ⛓ RESTART — a walk in flight is stopped before the warp (the bot re-plans from the start), and so is a wasm
-    // engine that is idle but still DRIVING: its mid-room delivery gate stays installed (and a tape may stay frozen)
-    // until `stop()`, which releases the hold and lets the held delivery through.
-    stopBotWalks: () => playbackControllers.filter((c) => {
-      if (c?.busy?.() === true) return true;
-      const w = c?.status?.()?.wasm ?? null;
-      return !!(w && (w.driving || w.gate || w.frozen));
-    }).map((c) => c.stop()).length,
+    // engine that is idle but still DRIVING; only the walks are counted (`stopBotWalksOf`).
+    stopBotWalks: () => stopBotWalksOf(playbackControllers),
     // ⛓ WALK IDENTITY — after that stop, the wasm engines watch for the Restart's start-hop arrival (held at its landing).
     expectBotArrivals: () => playbackControllers.filter((c) => c?.expectArrival?.() === true).length,
     // ⛓ OBSTACLE EVENTS — the runtime collector: the loaded slot's game-state events, collected on the GAME's flag

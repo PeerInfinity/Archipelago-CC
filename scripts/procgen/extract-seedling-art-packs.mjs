@@ -214,6 +214,12 @@ export const ART_TABLE = Object.freeze([
     { pack: 'seedling', key: 'seedling:scenery/bonetorch2', file: 'BoneTorch2.png', fw: 16, fh: 24,
         as3: 'BoneTorch.as type 1: as type 0', origin: [0, 8], anims: { burn: world([0, 1, 2, 1], 2) } },
     { pack: 'seedling', key: 'seedling:scenery/snowhill', file: 'SnowHill.png', as3: 'SnowHill.as: Game.sprSnowHill y = -8', origin: [0, 8] },
+    // ── the shown teleporter (⛓ seedling-js-portal-sprite): `Teleporter.as:14-15` an 18×18 Spritemap of Portal.png,
+    //    `x = y = -1` (:47-50), "spin" [0,1,2,3] at 15 fps played in the constructor (:51-52); drawn only when the
+    //    map says `show="1"` (:54 `visible = _show`) or a class passes `true` (`LightBossController.as:104`). ──
+    { pack: 'seedling', key: 'seedling:object/portal', file: 'Portal.png', fw: 18, fh: 18,
+        as3: 'Teleporter.as:14-15 sprPortal 18x18; :47-50 x/y = -1; :51-52 spin [0,1,2,3] fps 15; :54 visible = _show',
+        origin: [1, 1], anims: { spin: fps([0, 1, 2, 3], 15) } },
 
     // ── the player (G2): `Player.as:35-45`. A suit is a 9-column grid, one ROW per `states` prefix
     //    (`Player.as:83-86`: row 0 "", row 1 "swim-"); `addAnimations` (`Player.as:635-660`) adds each row's six

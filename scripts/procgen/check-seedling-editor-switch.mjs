@@ -283,9 +283,17 @@ try {
      * ONE `change` listener that re-attributes the start position and then
      * redraws; a second one for the new half would have been a second thing to
      * retire and a second ordering to reason about.
+     *
+     * ⛓ NOW ELEVEN (slice `seedling-lab-touch-controls`): `document`
+     * `visibilitychange` and `window` `pagehide` each release every held key
+     * (`keys.release`), so a page hidden mid-press records no hold nobody
+     * made. ⛔ Replaced, not relaxed — the same reason as above. The on-screen
+     * controls' own listeners are NOT on this lifetime: `touchControls.js`
+     * binds them and its `destroy()` (an `onRetire` hook) removes them; the
+     * touch row in check-seedling-editor-manual asserts they are gone.
      */
-    check(retiredManual?.alive === false && retiredManual?.listeners === 9,
-        'it is retired, and it held all nine listeners it registered',
+    check(retiredManual?.alive === false && retiredManual?.listeners === 11,
+        'it is retired, and it held all eleven listeners it registered',
         `alive ${retiredManual?.alive}, ${retiredManual?.listeners} listener(s)`);
     check((retiredManual?.stopped ?? []).includes('manual-frame'),
         '⛓⛓ THE LOOP STOPPED, and being NAMED is what proves it was both running and '
