@@ -366,7 +366,7 @@ import {
 // ⛓ LAB L2 (seedling-lab-static-art): the original graphics, static — see `watchArt.js`.
 import {
     createLabArtPainter, labArt, labArtActive, labArtOps, mountLabArtToggle, publishLabArtDraw, rememberRoomRecord,
-    roomRecordOf, setLabArtRedraw,
+    roomRecordOf, setLabArtRedraw, placementBodies,
 } from './watchArt.js';
 /**
  * ⛓ THE ON-SCREEN CONTROLS (slice `seedling-lab-touch-controls`) — the flash panel's, imported AS IS: the d-pad and
@@ -1138,11 +1138,17 @@ function makeRenderer(canvas) {
             const artOn = labArtActive();
             artDrawn = null;
             if (artOn) {
+                // ⛓ LAB L2b: the sample at the cursor carries the run's changes (pushed blocks, broken
+                // rocks, opened locks…); a room the samples do not cover draws its placement bodies.
+                const sample = (opts.samples ?? [])[opts.cursor ?? 0] ?? null;
                 const ops = labArtOps(world, labArt.art, {
-                    record: roomRecordOf(world), state,
-                    bodies: bodiesAt(opts.samples ?? [], opts.cursor ?? 0, world.level).bodies,
+                    record: roomRecordOf(world), state, sample,
+                    bodies: sample?.level === world.level
+                        ? bodiesAt(opts.samples, opts.cursor ?? 0, world.level).bodies
+                        : placementBodies(world),
                 });
                 artDrawn = labArtPainter.paint(ctx, canvas, world, ops, labArt.images, labArt.art);
+                if (ops.families) artDrawn = { ...artDrawn, families: ops.families };
             }
             if (canvas.id === 'canvas') publishLabArtDraw(artDrawn);
             if (!artOn) {
@@ -2434,8 +2440,10 @@ function makeWorldFor(levelSource, staging) {
             const cleared = clearedByLevel.get(n);
             const record = levelSource(n);
             // ⛓ LAB L2: the record rides with the world, for the shown portals.
+            // ⛓ LAB L2b: and the room's context, for its tick-0 placement run (`watchArt.placementRunOf`).
             worlds.set(n, rememberRoomRecord(buildLevelWorld(record,
-                cleared ? { roles, cleared } : { roles }), record));
+                cleared ? { roles, cleared } : { roles }), record,
+            { levelSource, staging, scratchPersistence: isHeldLevel(n) }));
         }
         return worlds.get(n);
     };
