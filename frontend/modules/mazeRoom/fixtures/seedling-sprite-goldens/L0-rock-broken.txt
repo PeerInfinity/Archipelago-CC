@@ -1,0 +1,3 @@
+drawImage(seedling/BreakableRock, 0, 0, 80, 112)
+drawImage(seedling/BreakableRock, 0, 0, 288, 176)
+player drawImage(seedling/ShrumBlue, 0, 0, 96, 16)
