@@ -1,0 +1,12 @@
+LIGHTPOLE D2 mutants — fidelityLightPole.test.js (14 rows), each made by copy of solverBot.js + restore (cmp OK after).
+Predicted (in the test's docblock) → measured:
+m1 the row unconditional ('solid:lightpole', () => 'pole')
+   predicted: "OFF: no row" reds            measured: 1 failed | 13 passed — "OFF: no row … refuse no-verb"
+m2 the flush points dropped (xs [4..12], ys [4..12])
+   predicted: the L101 rows refuse          measured: 4 failed — both L101 geometry rows + BOTH witness rows
+              ⚠ the ghost witness also reds: its stance x 126 IS the flush column (only the FACING axis drops flush
+              points), so the prediction under-counted by one row.
+m3 a second primary press (idle, primary) after the first
+   predicted: "one thrust" reds             measured: 6 failed — the four edges' ONE-thrust rows + both witness rows
+m4 the boot-active check dropped (if (false && live?.activate))
+   predicted: "already active" reds         measured: 1 failed — "the pole already active at the build"
