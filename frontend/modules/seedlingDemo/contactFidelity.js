@@ -1706,6 +1706,16 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_FINE_WAND_STANCE=0|1`.
      */
     fineWandStance: true,
+    /**
+     * fidelity L32ROCK D1 (wave 35) — THE BOBBOSS ARENA ROCK'S ARM IS A CLEAR (`levelRun.stepBobBossArenaNow`).
+     *
+     * `FallRockLarge.fall()` (`FallRockLarge.as:137-143`) writes `setPersistence(tag, false)` on the frame the rock
+     * arms (the player above `fallTo - 24`, not falling from the ceiling). The model stepped the arm (`bobBossEvents`'
+     * `rock-armed`) but banked no clear, so `liveClears` never reported L32's {32,1}, which the game clears at t9 of
+     * `apb-l32-fresh-no-fire`. ON: the arm banks the write as L82's arena rock does (`rockFlags` by `fallrocklarge` +
+     * `pendingEarnedClears`). OFF: byte-identical. `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`.
+     */
+    bobArenaRockClear: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2044,6 +2054,9 @@ if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '1') CONTACT_FIDELITY.
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '0') CONTACT_FIDELITY.coverHeldFade = false;
 if (globalThis.process?.env?.SEEDLING_LOCK_RECLOSE_LAG === '1') CONTACT_FIDELITY.lockRecloseLag = true;
 if (globalThis.process?.env?.SEEDLING_LOCK_RECLOSE_LAG === '0') CONTACT_FIDELITY.lockRecloseLag = false;
+// ⛓ fidelity L32ROCK D1: `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '1') CONTACT_FIDELITY.bobArenaRockClear = true;
+if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '0') CONTACT_FIDELITY.bobArenaRockClear = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
