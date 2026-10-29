@@ -107,19 +107,27 @@ function bindingsFor(region) {
  * button's cell. Each becomes a location of the sub-region its event names (`side`), on that cell, granting the event and
  * gated by nothing of its own — the rules price it as reaching the button (a press with a rule other than True_ is refused
  * by name). Pure: `region.locations` is not touched. Exported for the unit rows.
+ *
+ * ⛓ A TALK is a location the same way (session tile-primitives-sphere-order-8, ⚖ 2026-10-29 "Talk location + portal door"):
+ * mode 'talk' (the L58 Yeti opens its portal when its dialogue ends) carries every tile inside the NPC's talk circle
+ * (`seedlingObstacleEvents.talkStances`, nearest first); the location stands on the first its side owns (`owns(tile, sub)`).
+ * A talk with no stance in its side is refused by name, as is one whose own rule is not True_ (the rules price reaching it).
  */
-export function pressLocations(region, events) {
+export function pressLocations(region, events, owns = () => true) {
     const bySide = new Map(bindingsFor(region).map((b) => [b.apName, b.sub]));
-    return (events ?? []).filter((ev) => ev.mode === 'press').map((ev) => {
-        if (ev.tiles.length !== 1) throw new Error(`press event "${ev.name}": ${ev.tiles.length} cells, not the button's one`);
-        if (!bySide.has(ev.side)) throw new Error(`press event "${ev.name}": its side "${ev.side}" is no (sub-)region of ${region.region_id}`);
+    return (events ?? []).filter((ev) => ev.mode === 'press' || ev.mode === 'talk').map((ev) => {
+        const what = ev.mode === 'talk' ? 'talk' : 'press';
+        if (ev.mode === 'press' && ev.tiles.length !== 1) throw new Error(`press event "${ev.name}": ${ev.tiles.length} cells, not the button's one`);
+        if (!bySide.has(ev.side)) throw new Error(`${what} event "${ev.name}": its side "${ev.side}" is no (sub-)region of ${region.region_id}`);
         // The location takes no rule of its own, so a press the rules charge more than its reach would be LOOSER here than
         // there; refused by name until that is a decision (designer review, session tile-primitives-sphere-order-5).
         if (ev.rule && ev.rule.rule !== 'True_') {
-            throw new Error(`press event "${ev.name}": its own rule ${JSON.stringify(ev.rule)} is not True_ — a press location carries none`);
+            throw new Error(`${what} event "${ev.name}": its own rule ${JSON.stringify(ev.rule)} is not True_ — a ${what} location carries none`);
         }
         const sub = bySide.get(ev.side);
-        return { name: ev.name, tile: ev.tiles[0], vanilla_item: ev.name, ...(sub === null ? {} : { sub_region: sub }) };
+        const tile = ev.mode === 'press' ? ev.tiles[0] : ev.tiles.find((t) => owns(t, sub));
+        if (!tile) throw new Error(`talk event "${ev.name}": none of its ${ev.tiles.length} stance tile(s) is in its side "${ev.side}"`);
+        return { name: ev.name, tile, vanilla_item: ev.name, ...(sub === null ? {} : { sub_region: sub }) };
     });
 }
 
@@ -252,7 +260,7 @@ function bindWorldEvents(builder, events, local, inGrid) {
     for (const ev of events ?? []) {
         // a press is a location on its button (`pressLocations`); its target is opened by it (`layPressTargets`);
         // a pole's event (its own, or the press that lights it) is the pole row's (`projectLevelWorld`)
-        if (ev.mode === 'press' || ev.mode === 'target' || ev.mode === 'pole' || ev.mode === 'lit') continue;
+        if (ev.mode === 'press' || ev.mode === 'talk' || ev.mode === 'target' || ev.mode === 'pole' || ev.mode === 'lit') continue;
         for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
             const key = `${x},${y}`;
             const base = builder.obstacleLib[builder.obstacles.get(key)];
@@ -299,7 +307,7 @@ function bindWorldEvents(builder, events, local, inGrid) {
  */
 function withPressDoor(exit, events) {
     const doors = (events ?? []).filter((ev) => ev.mode === 'door' && ev.exit_id === exit.exit_id)
-        .map((ev) => ({ rule: 'Has', args: { item_name: ev.name } }));
+        .map((ev) => ev.gate ?? { rule: 'Has', args: { item_name: ev.name } });
     if (doors.length === 0) return exit.access_rule ?? null;
     const parts = [...(exit.access_rule ? [exit.access_rule] : []), ...doors];
     return simplifyRule(parts.length === 1 ? parts[0] : { rule: 'And', children: parts });
@@ -350,7 +358,7 @@ function layTouchedEventCells(builder, events, local, component, inGrid) {
     const mine = new Set(component.tiles.map(([x, y]) => `${x},${y}`));
     const byCell = new Map();
     for (const ev of events ?? []) {
-        if (!ev.rule || ev.mode === 'press' || ev.mode === 'pole' || ev.mode === 'lit') continue;
+        if (!ev.rule || ev.mode === 'press' || ev.mode === 'talk' || ev.mode === 'pole' || ev.mode === 'lit') continue;
         for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
             const key = `${x},${y}`;
             if (builder.isFloor(x, y) || builder.obstacles.has(key)) continue;
@@ -826,7 +834,8 @@ export function projectRegionToMaze(region, grid, ctx) {
 
         // --- locations ------------------------------------------------------
         const events = ctx.eventsFor?.(region);
-        for (const loc of [...(region.locations ?? []), ...pressLocations(region, events)]) {
+        const inComponent = new Set(component.tiles.map(([cx, cy]) => `${cx},${cy}`));
+        for (const loc of [...(region.locations ?? []), ...pressLocations(region, events, (t, s) => s === sub && inComponent.has(local(t).join(',')))]) {
             if (!boundTo(loc, sub)) continue;
             const [x, y] = local(loc.tile);
             for (const n of openTileTowards(builder, grid, component, [x, y], `location "${loc.name}"`, resolveCondition)) note(n);
@@ -1521,7 +1530,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     }
 
     // --- locations -----------------------------------------------------------
-    for (const loc of [...(region.locations ?? []), ...pressLocations(region, ctx.eventsFor?.(region))]) {
+    for (const loc of [...(region.locations ?? []), ...pressLocations(region, ctx.eventsFor?.(region), (t, s) => bindings[ownerOf(t)]?.sub === s)]) {
         const [x, y] = local(loc.tile);
         const owner = ownerOf(loc.tile);
         const bound = bindings.findIndex((b) => boundTo(loc, b.sub));
