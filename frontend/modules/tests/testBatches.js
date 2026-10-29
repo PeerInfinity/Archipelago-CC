@@ -44,14 +44,24 @@ export const TEST_BATCHES = Object.freeze({
     }),
     'seedling-js': Object.freeze({
         description:
-            'The Seedling JS/wasm runtime rows: real game boots and bot/solver '
-            + 'walks, the costliest on-push category, so they get a budget of '
-            + 'their own instead of starving the tail of fast. On push.',
+            'The Seedling JS runtime rows: real game boots and bot/solver '
+            + 'walks on the JS runtime, the costliest on-push category, so they '
+            + 'get a budget of their own instead of starving the tail of fast. '
+            + 'On push.',
         categories: Object.freeze(['Seedling JS runtime']),
-        // ⛓ SEEDLING LOOP MODE (2026-10-11): its wasm rows (`seedling-wasm-runtime-loop-*`)
-        // boot the recompiled game, which needs a WebGPU adapter — the same headless
-        // WebGPU launch as tutorials-procgen. The JS rows do not need it and are
-        // unaffected (the JS page draws no WebGPU).
+        // No WebGPU: the JS page draws no WebGPU. Its wasm rows (which did need
+        // it, ⛓ SEEDLING LOOP MODE 2026-10-11) moved to seedling-wasm.
+    }),
+    'seedling-wasm': Object.freeze({
+        description:
+            'The Seedling wasm (and Flash) runtime rows: the recompiled game '
+            + 'booted for Loops Bot blocks, the play clock, touch controls and '
+            + 'refusals. Split from seedling-js on 2026-10-28, when the one batch '
+            + 'reached 94 % of its budget. On push.',
+        categories: Object.freeze(['Seedling wasm runtime']),
+        // ⛓ SEEDLING LOOP MODE (2026-10-11): a wasm row boots the recompiled
+        // game, which needs a WebGPU adapter — the same headless WebGPU launch
+        // as tutorials-procgen.
         webgpu: true,
     }),
     'playback-bot': Object.freeze({
