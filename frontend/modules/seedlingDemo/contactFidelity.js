@@ -1715,7 +1715,7 @@ export const CONTACT_FIDELITY = {
      * `apb-l32-fresh-no-fire`. ON: the arm banks the write as L82's arena rock does (`rockFlags` by `fallrocklarge` +
      * `pendingEarnedClears`). OFF: byte-identical. `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`.
      */
-    bobArenaRockClear: false,
+    bobArenaRockClear: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
