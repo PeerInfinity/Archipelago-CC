@@ -1,0 +1,6 @@
+solve-seedling-r8-battery ON 7486f32e [exit 0]
+solve-seedling-r8-d2-chain ON 93f75467 [exit 0]
+solve-seedling-r8-l18 ON 88e33db7 [exit 0]
+solve-seedling-r8-tail ON 35456fbc [exit 0]
+solve-seedling-r9-l3 ON 6cd35fe1 [exit 0]
+solve-seedling-r9-campaign ON be9c19c8 [exit 0]

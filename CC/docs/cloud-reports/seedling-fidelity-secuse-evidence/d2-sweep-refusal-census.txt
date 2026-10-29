@@ -1,0 +1,4 @@
+OFF run 40770736276: forced-hit "not proven" texts by cause: {'the hitless input [..] survives N tick(s) ': 28}; legs whose proof ends on a model refusal: []
+OFF run 40771324380: forced-hit "not proven" texts by cause: {'the hitless input [..] survives N tick(s) ': 28}; legs whose proof ends on a model refusal: []
+ON run 40770739656: forced-hit "not proven" texts by cause: {'the hitless input [..] survives N tick(s) ': 28, 'the model refuses to step [..] (tick N: level': 2}; legs whose proof ends on a model refusal: ['level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0']
+ON run 40771334408: forced-hit "not proven" texts by cause: {'the hitless input [..] survives N tick(s) ': 28, 'the model refuses to step [..] (tick N: level': 2}; legs whose proof ends on a model refusal: ['level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0']

@@ -1,0 +1,15 @@
+ × frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly when the room is "its arrival + idle ticks" > clause FADE — too few frames since the begin record, and the clock never moves → WAITED, then not adopted (named) 89031ms
+ × frontend/modules/seedlingDemo/dangerMap.test.js > the danger map drives mover.findEarliestArrival > ⛓ the map really constrains the search — the two plans differ 65499ms
+ × scripts/procgen/boxLock.test.js > the box lock > lets a QUEUED taker die on SIGTERM — it never takes the box later 5859ms
+ × scripts/procgen/boxLock.test.js > who takes the box > takes conditionally exactly where a headless arm would have been queued 448ms
+ ✓ frontend/modules/seedlingDemo/seedlingNightSkin.test.js > 2. the independent stratum, from the AS3 > the crusher's four lanes: a 96 × 32 / 32 × 96 white rect each, from the body's top-left 1ms
+ ✓ frontend/modules/seedlingDemo/fidelityMovingWait.test.js > MOVINGWAIT D4 — the totem shot's Explosion is an int (`totemShotBlastInt`, OFF) > ships ON (the wave-14 flip); the int radius is int(24 × 0.65) = 15 beside the Number reading 15.6 1ms
+ ✓ frontend/modules/seedlingDemo/fidelityClearTag.test.js > fidelity CLEARTAG — D1/D2: the game witnesses (the oracle replays at 0 px) > the oracle holds every arm (four witnesses × the solve and its two cuts), all PASS on the game 1ms
+ ✓ frontend/modules/seedlingDemo/fidelityArrival.test.js > fidelity ARRIVAL — D1: the game, a landing inside a solid > the oracle holds every arm (four landings; held/cleared × stand + 4 holds; 2 Sword presses) 6ms
+ ✓ frontend/modules/seedlingDemo/bobSoldier.test.js > the bridge — `chasers.CHASERS.bobsoldier` × `MODELLED_ENEMY_CLASSES.BobSoldier`, under W4 > ON (the default): bridged, stepped and priced by `stepChasersNow` 2ms
+ ✓ frontend/modules/seedlingDemo/bobSoldier.test.js > the bridge — `chasers.CHASERS.bobsoldier` × `MODELLED_ENEMY_CLASSES.BobSoldier`, under W4 > OFF: the class is the `mover` it was — not bridged, priced nowhere 3ms
+ ✓ frontend/modules/seedlingDemo/bobSoldier.test.js > the bridge — `chasers.CHASERS.bobsoldier` × `MODELLED_ENEMY_CLASSES.BobSoldier`, under W4 > ⛔ NOT Bob's row: no die animation, a corpse that chases, the base solids, a sword 1ms
+ ✓ frontend/modules/seedlingDemo/bobSoldier.test.js > the bridge — `chasers.CHASERS.bobsoldier` × `MODELLED_ENEMY_CLASSES.BobSoldier`, under W4 > the kill policy, the corpse row and the side write 1ms
+ Test Files  3 failed | 108 passed (111)
+      Tests  4 failed | 3422 passed (3426)
+      Tests  6 passed (6)
