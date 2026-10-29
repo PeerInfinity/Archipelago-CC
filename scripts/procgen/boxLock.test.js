@@ -533,7 +533,8 @@ describe('who takes the box', () => {
          * rules-oneway-event-census L82's boss rock (top entry, the L71 pit pocket shut and its lock exit) and L43's apitem wand, `probe-seedling-oneway-census.mjs`;
          * rules-l89-waterfall-probe L89's teleporter to L91 atop the waterfall, Swim-only and with the Feather, `probe-seedling-l89-waterfall.mjs`;
          * rules-ghostsword-probe the Ghost Sword Fusion with and without the Spear and the Sword (rock, pole, spear block), `probe-seedling-ghostsword-items.mjs`;
-         * rules-weapon-reach-census the Spear thrust vs the Ghost Sword swing at the census's pole stances, `probe-seedling-weapon-reach.mjs`.)
+         * rules-weapon-reach-census the Spear thrust vs the Ghost Sword swing at the census's pole stances, `probe-seedling-weapon-reach.mjs`;
+         * rules-l63-pole-crossings L63's spear block against its DarkTrap, `probe-seedling-l63-spear-block.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -599,6 +600,7 @@ describe('who takes the box', () => {
             'probe-seedling-l89-waterfall.mjs',
             'probe-seedling-ghostsword-items.mjs',
             'probe-seedling-weapon-reach.mjs',
+            'probe-seedling-l63-spear-block.mjs',
             // seedling-js-mobile-polish: the phone-viewport fit witness (import door: `isEntryPoint` → main())
             'probe-seedling-mobile-fit.mjs',
             // seedling-js-inventory-menu: the V menu's game witness (import door: `isEntryPoint` → main())
