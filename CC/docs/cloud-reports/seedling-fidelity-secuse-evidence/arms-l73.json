@@ -1,0 +1,10 @@
+{"base": "forcedhit-l73-622-plan", "tick_count": 6,
+ "note": "seedling-fidelity-secuse W0 — leg 622 (L73, the arrival from L74, lavarunner@72,24): `up` held t0..t6, and on t0 nothing, X, C, or X+C. Arms *-fire stage `secondary` = slot 1 (Fire) instead of the seam's default slot 0 (the Sword, = primary).",
+ "arms": {
+  "none": {"inputs": [{"key": "up", "from": 0, "to": 6}]},
+  "X": {"inputs": [{"key": "up", "from": 0, "to": 6}, {"key": "primary", "from": 0, "to": 1}]},
+  "C": {"inputs": [{"key": "up", "from": 0, "to": 6}, {"key": "secondary", "from": 0, "to": 1}]},
+  "XC": {"inputs": [{"key": "up", "from": 0, "to": 6}, {"key": "primary", "from": 0, "to": 1}, {"key": "secondary", "from": 0, "to": 1}]},
+  "C-fire": {"seam": {"secondary": 1}, "inputs": [{"key": "up", "from": 0, "to": 6}, {"key": "secondary", "from": 0, "to": 1}]},
+  "XC-fire": {"seam": {"secondary": 1}, "inputs": [{"key": "up", "from": 0, "to": 6}, {"key": "primary", "from": 0, "to": 1}, {"key": "secondary", "from": 0, "to": 1}]}
+ }}
