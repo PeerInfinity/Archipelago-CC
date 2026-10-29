@@ -651,9 +651,11 @@ export class SeedlingRegionGlue {
         }
         this.apply(this.binding.onLoadRegion(payload ?? {}));
         // ⛓ TELEPORT TOOL — the spot asked for, inside the level the arrival just entered.
+        // ⛔ ANY load ends it: a move that produced no load (a gate swallowed it) must not leave a spot for a later
+        // ordinary arrival into that region (a walk, a Restart) to land on. Only the move's own load lands it.
         const spot = this._toolSpot;
+        this._toolSpot = null;
         if (spot && spot.region === payload?.region_id) {
-            this._toolSpot = null;
             this._teleport(spot);
             this.pushQueuedTeleports();
         }

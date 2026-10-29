@@ -4800,6 +4800,28 @@ const toolsRestartAndTeleport = (runtime) => async (tc) => withRuntimeRestored(t
         tc.reportCondition(`[${runtime}] TP on UI click into ${TOOLS_DUNGEON} (no door from the start): gameState, the binding and the game reach it`, !!dungeon);
         tc.assertEqual(`[${runtime}] no warning from the region-graph teleport`, pre.warnings, toolsFacts().warnings);
 
+        // ── ⛓ THE ORDERING WITNESS (rules-4's review): the binding's no-door arrival teleport goes first, the spot
+        // second; the game must END at the spot, never at the region's first exit's spawn. A CROSS-level Go (from the
+        // dungeon, level 3) and a SAME-level Go (inside the start region, level 0), each read off `botStatus` (the
+        // player's centre = the spot + 8) once still. ──
+        const goTo = async (label, spot) => {
+            panel.teleportLevelInput.value = String(spot.level);
+            panel.teleportXInput.value = String(spot.x);
+            panel.teleportYInput.value = String(spot.y);
+            panel.rootElement.querySelector('.flash-panel-tp-go').click();
+            const at = await toolsSettledIn(tc, `[${runtime}] ${label} settled in ${TOOLS_START}`, TOOLS_START, spot.level);
+            const noDoor = glue.binding?._arrivalSpawn?.() ?? null;
+            tc.log(`[${runtime}] ORDER ${label}: asked ctor (${spot.x}, ${spot.y}); settled ${JSON.stringify(at ?? toolsFacts())}; `
+                + `the no-door spawn ${JSON.stringify(noDoor && { level: noDoor.level, x: noDoor.x, y: noDoor.y, exit: noDoor.exitId })}; `
+                + `verdict ${JSON.stringify(glue.lastTeleport)}`);
+            tc.assertEqual(`[${runtime}] ORDER ${label}: the spot asked for is not the region's no-door spawn (the witness can tell them apart)`,
+                true, !!noDoor && (noDoor.x !== spot.x || noDoor.y !== spot.y));
+            tc.assertEqual(`[${runtime}] ORDER ${label}: the game settled at the spot (botStatus centre = spot + 8), not the no-door spawn`,
+                `${spot.level}:${spot.x + 8},${spot.y + 8}`, at ? `${at.level}:${at.x},${at.y}` : 'unsettled');
+        };
+        await goTo('cross-level Go (level 3 -> 0)', { level: 0, x: 80, y: 128 });
+        await goTo('same-level Go (level 0 -> 0)', { level: 0, x: 256, y: 256 });
+
         // ── RESTART: the Menu's, then the Tools button's, each from the owl's nest ──
         // ⛔ LAST, after the walk: the Restart's `expectBotArrivals` arms a wasm engine's arrival watch whenever one
         // exists (an earlier row's), and the watch HOLDS the landing until a bot goal that never comes here, so a

@@ -48,10 +48,11 @@ function harness({ loop = false, walks = 1 } = {}) {
     const eventBus = { subscribe: (n, fn) => { subs.set(n, fn); return () => subs.delete(n); }, publish: () => {} };
     const moves = [];
     let here = 'Menu';
+    let drop = false;
     const warehouse = new Map(Object.entries(SIDECARS).map(([id, sc]) => [id, { substrate: sc.substrate, world: worldFor(id) }]));
     const dispatcher = {
         publish: (name, data) => {
-            if (name !== 'user:regionMove') return;
+            if (name !== 'user:regionMove' || drop) return;
             moves.push(data);
             here = data.targetRegion;
             const exit = data.exitName && SIDECARS[data.sourceRegion] ? worldFor(data.sourceRegion).exits.get(data.exitName) : null;
@@ -83,7 +84,9 @@ function harness({ loop = false, walks = 1 } = {}) {
     report('level', 0);
     adapter.teleport.mockClear();
     moves.length = 0;
-    return { glue, adapter, moves, report, stops, expects, region: () => here };
+    return { glue, adapter, moves, report, stops, expects, region: () => here, dispatcher,
+        /** procgenPlayer declines the next moves (its loop-mode gate swallows them whole: no load). */
+        setDrop: (v) => { drop = v; } };
 }
 
 vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -303,5 +306,39 @@ describe('teleportTool — the arrival watch only behind a stopped walk', () => 
         expect(h.expects).not.toHaveBeenCalled();
         expect(r).toMatchObject({ taken: true, stoppedWalks: 0, watching: 0 });
         expect(h.glue.binding.region).toBe(DUNGEON);
+    });
+});
+
+describe('teleportTool — a spot whose move produced no load is dropped, never landed later (rules-4 review)', () => {
+    const SPOT = { level: 2, x: 200, y: 200 };
+    const walkInto = (h, from, to, exitName = null) => h.dispatcher.publish('user:regionMove', { sourceRegion: from, targetRegion: to, exitName });
+    const spotTeleports = (h) => h.adapter.teleport.mock.calls.map((c) => c[0]).filter((t) => t.x === SPOT.x && t.y === SPOT.y);
+
+    it('a tool spot -> a NON-matching load -> a matching load: no spot teleport', () => {
+        const h = harness();
+        h.setDrop(true);
+        expect(h.glue.teleportTool(SPOT)).toMatchObject({ taken: true, region: OWLS });
+        h.setDrop(false);
+        walkInto(h, START, DUNGEON); // a load of another region
+        walkInto(h, DUNGEON, OWLS); // later, an ordinary arrival into the spot's region
+        expect(h.glue.binding.region).toBe(OWLS);
+        expect(spotTeleports(h)).toEqual([]);
+    });
+
+    it('MUTANT: a spot cleared only when consumed lands on that later arrival (the review\'s stale spot)', () => {
+        const h = harness();
+        // main-of-this-slice's release: the spot survives a load that is not its region
+        h.glue.handleLoadRegion = function stale(payload) {
+            this.stats.loads += 1;
+            this.apply(this.binding.onLoadRegion(payload ?? {}));
+            const spot = this._toolSpot;
+            if (spot && spot.region === payload?.region_id) { this._toolSpot = null; this._teleport(spot); }
+        };
+        h.setDrop(true);
+        h.glue.teleportTool(SPOT);
+        h.setDrop(false);
+        walkInto(h, START, DUNGEON);
+        walkInto(h, DUNGEON, OWLS);
+        expect(spotTeleports(h)).toEqual([SPOT]);
     });
 });
