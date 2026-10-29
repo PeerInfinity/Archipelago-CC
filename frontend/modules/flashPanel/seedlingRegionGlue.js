@@ -61,6 +61,29 @@ export const ACTIVE_SUBSTRATE_EVENT = 'procgen:activeSubstrateChanged';
 export const AP_ITEM_FOUND_EVENT = 'flashSeedling:apItemFound';
 /** The `source` of the AP move a Tools teleport makes (`teleportTool`). */
 export const TELEPORT_TOOL_SOURCE = 'flashPanel-teleport';
+
+/**
+ * ⛓ RESTART — the `stopBotWalks` the panel hands the glue: stop every Playback Bot controller with a walk in flight,
+ * and every wasm engine that is idle but still DRIVING (its mid-room delivery gate stays installed, and a tape may stay
+ * frozen, until `stop()`, which releases the hold and lets the held delivery through).
+ * ⛔ Only the controllers that were `busy()` are COUNTED as stopped walks. The count gates the arrival watch
+ * (`handleMenuRestart`, `teleportTool`), and an idle engine has no next goal coming to release a hold: one left driving
+ * by earlier work counted once, and the hand walk after a Restart was held (CI, seedling-wasm batch: 1 stopped, 2 watching).
+ */
+export function stopBotWalksOf(controllers) {
+    let walks = 0;
+    for (const c of controllers) {
+        if (c?.busy?.() === true) {
+            walks += 1;
+            c.stop();
+            continue;
+        }
+        const w = c?.status?.()?.wasm ?? null;
+        if (w && (w.driving || w.gate || w.frozen)) c.stop();
+    }
+    return walks;
+}
+
 /** The player's centre (what a position read reports) from its constructor position (`new Game(level, x, y)`). */
 const PLAYER_CENTRE_PX = 8;
 /** How many tiles out a spot on crossing material looks for its sub-region. */

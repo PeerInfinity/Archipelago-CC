@@ -342,3 +342,51 @@ describe('teleportTool — a spot whose move produced no load is dropped, never 
         expect(spotTeleports(h)).toEqual([SPOT]);
     });
 });
+
+describe('teleportTool — stopBotWalksOf counts only a busy controller (⚖ js-12, option (a))', () => {
+    const controller = ({ busy = false, wasm = null } = {}) => ({ busy: () => busy, status: () => (wasm ? { wasm } : null), stop: vi.fn() });
+    const idleDriving = () => controller({ wasm: { phase: 'idle', driving: true, gate: false, frozen: false } });
+    const walking = () => controller({ busy: true, wasm: { phase: 'latching', driving: true, gate: false, frozen: false } });
+    /** The pre-(a) count (main's `flashPanel/index.js`): every controller it stopped. */
+    const countEveryStop = (cs) => cs.filter((c) => {
+        if (c?.busy?.() === true) return true;
+        const w = c?.status?.()?.wasm ?? null;
+        return !!(w && (w.driving || w.gate || w.frozen));
+    }).map((c) => c.stop()).length;
+
+    it('an idle-but-driving engine: stopped, counted 0, nothing watches', async () => {
+        const { stopBotWalksOf } = await import('./seedlingRegionGlue.js');
+        const h = harness();
+        const cs = [idleDriving()];
+        h.glue.stopBotWalks = () => stopBotWalksOf(cs);
+        const r = h.glue.teleportTool({ region: DUNGEON });
+        expect(cs[0].stop).toHaveBeenCalledTimes(1);
+        expect(h.expects).not.toHaveBeenCalled();
+        expect(r).toMatchObject({ taken: true, stoppedWalks: 0, watching: 0 });
+    });
+
+    it('a busy engine: counted 1, the engines watch', async () => {
+        const { stopBotWalksOf } = await import('./seedlingRegionGlue.js');
+        const h = harness();
+        h.glue.stopBotWalks = () => stopBotWalksOf([walking(), idleDriving()]);
+        const r = h.glue.teleportTool({ region: DUNGEON });
+        expect(h.expects).toHaveBeenCalledTimes(1);
+        expect(r).toMatchObject({ taken: true, stoppedWalks: 1, watching: 1 });
+    });
+
+    it('MUTANT: counting every stop arms behind the idle engine', () => {
+        const h = harness();
+        h.glue.stopBotWalks = () => countEveryStop([idleDriving()]);
+        const r = h.glue.teleportTool({ region: DUNGEON });
+        expect(r.stoppedWalks).toBe(1);
+        expect(h.expects).toHaveBeenCalledTimes(1);
+    });
+
+    it('MUTANT: counting no walk at all loses the busy walk\'s arm', () => {
+        const h = harness();
+        h.glue.stopBotWalks = () => { walking().stop(); return 0; };
+        const r = h.glue.teleportTool({ region: DUNGEON });
+        expect(r).toMatchObject({ stoppedWalks: 0, watching: 0 });
+        expect(h.expects).not.toHaveBeenCalled();
+    });
+});
