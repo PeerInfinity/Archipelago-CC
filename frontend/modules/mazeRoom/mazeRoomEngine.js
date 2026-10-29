@@ -466,6 +466,8 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     }
     // ⛓ STRUCK FROM A STANCE: an obstacle entry without `struck_from` is struck through its cells, as before.
     checkStruckFrom(obstacleLib, world.actionLib, width, height, 'deserializeMazeWorld');
+    // ⛓ PULLS: absent on every other sidecar, so `world.pulls` stays undefined and a move is never pulled.
+    if (sidecar.pulls !== undefined) world.pulls = checkPulls(sidecar.pulls, world, 'deserializeMazeWorld');
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
     // immutable shape (tiles + cycleLength + length + shape); phase
@@ -833,6 +835,74 @@ export function checkBlockSinks(sinks, width, height, who) {
     return out;
 }
 
+/**
+ * ⛓ PULLS (session tile-primitives-sphere-order-9, ⚖ 2026-10-29 "Forced pull, rules' disc"): a trap that reels the player
+ * onto its own cell — `[{x, y, from: [{x, y}], gate}]`, `(x, y)` the trap's cell, `from` the cells it grabs from (its
+ * DISC, the trap's cell excluded), `gate` the id of an `obstacleLib` entry whose clearance survives the ride. Seedling's
+ * `LavaTrap` (`LavaTrap.as:22,56-90`): within 32 px its tongue reels the player onto the trap's tile across lava or a
+ * pit, released with the Dark Suit (else killed), and it re-arms only once the player is out of range again. So a MOVE
+ * from outside a disc into it, holding the gate, ends on the trap's cell (`pullAfterMove`); an arrival inside the disc
+ * is not pulled until it has left. Without the gate nothing happens — the rules producer's own bound (the disc is not
+ * lethal there either), named. Discs may overlap (L108's ferry: released on one trap, the next step enters the next
+ * trap's disc from outside it, so that trap fires). Refused by name: a disc cell that is an exit tile, a trap cell that
+ * is not floor, ONE step that enters two discs from outside both (which trap wins is not settled), and a world with
+ * arrow traps too.
+ * Returns `[{x, y, gate, disc: Set<posKey>}]` (the disc INCLUDES the trap's cell).
+ */
+export function checkPulls(pulls, world, who) {
+    const bad = (why) => new Error(`${who}: "pulls" ${why}`);
+    if (!Array.isArray(pulls)) throw bad('must be a list');
+    const { width, height } = world;
+    const inGrid = (c) => Number.isInteger(c?.x) && Number.isInteger(c?.y) && c.x >= 0 && c.y >= 0 && c.x < width && c.y < height;
+    if (pulls.length > 0 && world.traps?.length) throw bad('and arrow traps in one world are not modelled');
+    const exitCells = new Set([...(world.exits?.values() ?? [])].map((e) => posKey(e.x, e.y)));
+    const out = pulls.map((p) => {
+        if (!inGrid(p)) throw bad(`entry ${JSON.stringify(p)} is not a cell of the ${width}x${height} grid`);
+        const at = posKey(p.x, p.y);
+        if (!isFloor(world, p.x, p.y)) throw bad(`trap at (${p.x},${p.y}) is not on floor`);
+        if (!world.obstacleLib?.[p.gate]) throw bad(`trap at (${p.x},${p.y}) names gate "${p.gate}", which the obstacleLib does not hold`);
+        if (!Array.isArray(p.from) || p.from.length === 0) throw bad(`trap at (${p.x},${p.y}) grabs from no cell`);
+        const disc = new Set([at]);
+        for (const c of p.from) {
+            if (!inGrid(c)) throw bad(`trap at (${p.x},${p.y}) grabs from ${JSON.stringify(c)}, not a cell of the grid`);
+            const key = posKey(c.x, c.y);
+            if (disc.has(key)) throw bad(`trap at (${p.x},${p.y}) lists (${c.x},${c.y}) twice (or its own cell)`);
+            if (exitCells.has(key)) throw bad(`trap at (${p.x},${p.y}) grabs from the exit tile (${c.x},${c.y}) — which comes first is not settled`);
+            disc.add(key);
+        }
+        return { x: p.x, y: p.y, gate: p.gate, disc };
+    });
+    for (const [i, a] of out.entries()) {
+        for (const b of out.slice(i + 1)) {
+            for (const key of a.disc) {
+                if (!b.disc.has(key)) continue;
+                const { x, y } = unposKey(key);
+                const outside = Object.values(DELTAS).filter(({ dx, dy }) => isFloor(world, x - dx, y - dy))
+                    .map(({ dx, dy }) => posKey(x - dx, y - dy)).find((k) => !a.disc.has(k) && !b.disc.has(k));
+                if (outside !== undefined) {
+                    throw bad(`traps at (${a.x},${a.y}) and (${b.x},${b.y}) both grab a step from ${outside} into ${key} — which wins is not settled`);
+                }
+            }
+        }
+    }
+    return out;
+}
+
+/**
+ * The trap cell a move from `from` to `to` is pulled onto, holding `inv` — or null (see `checkPulls`): `to` in a disc,
+ * `from` outside it, and the trap's gate cleared.
+ */
+export function pullAfterMove(world, from, to, inv, clearanceOpts) {
+    if (!world.pulls) return null;
+    const t = posKey(to.x, to.y);
+    const f = posKey(from.x, from.y);
+    for (const p of world.pulls) {
+        if (!p.disc.has(t) || p.disc.has(f)) continue;
+        return isObstacleCleared(p.gate, inv, world.obstacleLib, clearanceOpts) ? { x: p.x, y: p.y } : null;
+    }
+    return null;
+}
+
 /** True iff a block pushed onto (x, y) sinks there (see `checkBlockSinks`). */
 export function sinksBlock(world, x, y) {
     return world.blockSinks?.has(posKey(x, y)) ?? false;
@@ -1034,6 +1104,11 @@ export function serializeMazeEntities(world) {
             struck_by: [...world.blockStrike.struckBy],
             ...(world.blockStrike.reach !== undefined ? { reach: world.blockStrike.reach } : {}),
         };
+    }
+    if (world.pulls?.length) {
+        out.pulls = world.pulls.map((p) => ({
+            x: p.x, y: p.y, from: [...p.disc].filter((k) => k !== posKey(p.x, p.y)).map(unposKey).sort(rowMajor), gate: p.gate,
+        }));
     }
     return out;
 }
@@ -1537,6 +1612,19 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     if (inventoryOverride === undefined) {
         const itemId = getItem(world, nx, ny);
         if (itemId) holdInInventory(next.inventory, itemId);
+    }
+    // ⛓ PULLS — after the move lands (a pickup there included): into a trap's disc from outside it, holding its gate,
+    // the player is reeled onto the trap's cell (`pullAfterMove`) and picks up what lies there.
+    if (world.pulls) {
+        const pulled = pullAfterMove(world, state.player_pos, next.player_pos,
+            effectiveInventory(world, inventoryOverride !== undefined ? inventoryOverride : next.inventory, next.player_pos, next.blocks, next.broken),
+            clearanceOpts);
+        if (pulled !== null) {
+            next.player_pos.x = pulled.x;
+            next.player_pos.y = pulled.y;
+            const itemId = inventoryOverride === undefined ? getItem(world, pulled.x, pulled.y) : null;
+            if (itemId) holdInInventory(next.inventory, itemId);
+        }
     }
     return next;
 }

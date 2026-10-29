@@ -29,7 +29,7 @@
 import { evaluateRule } from '../../shared/ruleEngine/index.js';
 import {
     INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory, actionItems, actionUsable,
-    blocksAfterPush, sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch,
+    blocksAfterPush, sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch, pullAfterMove,
 } from '../mazeRoomEngine.js';
 
 const DELTAS = { N: { dx: 0, dy: -1 }, S: { dx: 0, dy: 1 }, E: { dx: 1, dy: 0 }, W: { dx: -1, dy: 0 } };
@@ -299,6 +299,17 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     }
     const itemId = latch ? getItem(world, nx, ny) : null;
     if (itemId) holdInInventory(next.inventory, itemId);
+    // ⛓ PULLS (session tile-primitives-sphere-order-9): the native `pullAfterMove` — a move into a trap's disc from outside
+    // it, holding its gate (the scripted effective inventory), ends on the trap's cell.
+    if (world.pulls) {
+        const pulled = pullAfterMove(world, state.player_pos, next.player_pos,
+            scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken));
+        if (pulled !== null) {
+            next.player_pos = { ...pulled };
+            const there = latch ? getItem(world, pulled.x, pulled.y) : null;
+            if (there) holdInInventory(next.inventory, there);
+        }
+    }
     return { next, refused: null };
 }
 
