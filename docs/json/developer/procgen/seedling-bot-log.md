@@ -26375,3 +26375,126 @@ standard with both keys ON: 11/11. The L4 dash-window rows stay green ON (the ma
   side, the corpse removed on death): all red.
 
 ---
+
+
+### Seedling fidelity L100FIX — the 8 px swing arm asks only the cells the 16 px ring cannot name (`fineSwingStance` stays OFF; flip-ready list measured)
+
+Wave 34, planner `seedling-fidelity-planning-16`. The report is `CC/docs/cloud-reports/seedling-fidelity-l100fix.md`
+(evidence beside it). Base main `caa42ea5df`, 97 default-ON keys of 109.
+
+**W0 — leg 371's divergence, measured.** `fidelityWandHold`'s leg 371 (staging `l40buttonStaging({level:40,x:848,y:16})`,
+`movingWait` + `bombBlastBody` ON, strike floor OFF) runs in ~7 s per arm in node. OFF: SOLVED 1,667 t, [brave, hold, kill
+`spinner@192,128`, break `breakablerock@176,128` from (200,136), hold, collect]. ON: REFUSED, *"applied 4 strategies for one
+goal [brave, hold(wandlock@176,80), hold(wandlock@208,128), break(breakablerock@176,128)]"*. Both arms are identical up to
+t1286. There the walk to the break stance (200,136) re-derives that stance from (270.6,174.2). That point's 16 px tile is
+not walkable (`ruinedpillar@264,136`: *"A\* start tile (16,10) … is not walkable"*), so all three ring cells (168,136),
+(200,136), (200,152) fail on the START, not on themselves. OFF, the ring's refusal sends the ladder to the spinner first.
+ON, the fine arm's 8 px plan from the same start is a straight line to (196,132), and the arm admitted it. (196,132) is
+inside the ring cell (200,136)'s tile, and the ladder's fifth `break` then hit `MAX_STRATEGIES_PER_GOAL`. All 11 fine
+candidates there sit inside a ring cell's tile. The brief's suspect (the missing hypothesis test) is not the mechanism: the
+16 px `stanceReaches` also rejects (196,132), but only because of that same start tile, and an 8 px `stanceReaches` admits it.
+
+**D1 — the fix (`fineSwingStance`, still OFF).** In `deriveSwingStance`, the fine arm now skips any fine cell whose 16 px node
+is a ring candidate, since the ring already asked that cell. A different answer there only reflects the start's lattice, not
+a new stance. Every remaining cell is admitted by `stanceReaches`, the ring's own test (direct, then under the same ownless
+hypothesis), planned on the 8 px lattice. `stanceReaches` takes an optional `lattice`; without it the opts are unchanged.
+L100's sliver cells (124,y) have 16 px nodes (120,y), which are mask obstacles and never ring candidates, so they are still
+asked. With the key ON: leg 371 SOLVED 1,667 t, key for key with `wandhold-l42-371-paced` (new row `fidelityL100Fix.test.js`).
+`plan-seedling-hammer-bw-bombstand --check` and `plan-seedling-l100-witness --check` are green. The `l100-sliver-rock` rows
+are green, and step 219's refusal is byte-identical to W33's (jellyfish@88,144's dwell, HIT at tick 193). Mutants: without
+the "named by the ring" filter, leg 371 reds; planning the fine `stanceReaches` on 16 px reds L100's sliver row; `if (true)`
+reds L100's OFF rows.
+
+**D2 / movers (key ON).** Bounded set: 2,298 / 2,299. The one red is `contactFidelity` "the shipped defaults", the pin a flip
+owes. Identity block and all six chain `--check`s are equal (`590b0b88`), and the tapeRunner pairs are equal (639,
+`c2260ed7`). `ci-producer-checks --jobs=3`: 95 run, 0 red. Full route survey: one mover, step 219 (as W33 measured). The standard probe battery, with the default flipped locally, is 11/11 ALL
+CHECKS PASSED, and `r7-ends-meet --check` is CLEAN. The default is NOT flipped (the user licenses it on this list).
+
+**Trap candidates.**
+- A ring that failed on its START has not answered for its cells. Before a finer lattice "finds" a stance there, ask whether
+  the coarse lattice refused the stance or refused the start point.
+- A finer-lattice arm should add only the cells the coarse lattice cannot name. If it re-asks the cells the coarse lattice
+  already offered, it is a second opinion that overrides the first.
+
+### Seedling fidelity LIGHTPOLE — an in-room pole lit by one "Spear" hit from its own room (`inRoomPoleThrust`, OFF)
+
+Wave 34, planner `seedling-fidelity-planning-16`. Sweep 10's four unserved in-room pole edges (L63 f6 @(16,208), L65 f0
+@(128,16), L101 f0 @(288,240) and @(32,96)); legs 558/569/740/742 at `caa42ea5df`. The report is
+`CC/docs/cloud-reports/seedling-fidelity-lightpole.md` (evidence beside it).
+
+**W0 — the model already steps it.** The four legs refused before any solve (`jsRuntimeSolver.eventSolverGoal`: *"no
+strategy row exists for solid:lightpole"*). The run steps `LightPole.hit()` (the toggle behind its 25-tick `hitsTimer`,
+`set activate` writing the tag at the hit, `earnedClears` from the FINAL state) and the dark trap's death from a lit
+pole (STATICLADDER D2 / DARKTRAP2); a ghost swing's "Spear" arm is modelled too (`GHOST_PRESS_ARMS.LightPole`). No D1.
+⚠ A `LightPole` is `notSolid`, so `execClearTag`'s generic arm would have called the goal `already-clear` once a row
+existed — the arm has to bind the pole from the press census.
+
+**D2 — the verb (`inRoomPoleThrust`).** `solid:lightpole` → `pole` (switch-gated rows in both tables).
+`resolvePoleThrustStrategy` derives the stance from geometry only: every point of every walkable tile within reach
+(every 2 px plus the FLUSH edges a 4x5 box can stand against), each facing whose rect touches the pole's bob-invariant
+core, no other responder / bridge / body in the rect, clear of live dark traps, a corridor at 16 then 8 px; deep
+stances first. The ARM is the bag's: the Spear's thrust, or — once the Ghost Sword has fused the Sword and Spear slots —
+the ghost swing (`ghostSlashRect`, reach 24 to the core). `execPoleThrust` settles, taps the facing, re-asks the rect,
+checks the pole unlit-active with `hitsTimer` 0, presses ONCE and waits for `activate`. A pole already active at the
+build is `already-clear` (a thrust would toggle it out); `levelRun`'s pole view gained the game's own `activate`.
+Game witnesses (p4g): the four sweep legs ON, twice (done, the game's flag set, 0 hits, game end = model end); and two
+committed tapes from survey step 226's boot view, `lightpole-l101-ghost` (ghost swing facing N from [7,4]) and
+`lightpole-l101-spear` (thrust facing E THROUGH the wall [8,4], flush at y 66), JS stream = recording exactly. Producer
+`plan-seedling-lightpole-witness.mjs`.
+
+**Movers.** Full survey ON vs OFF: 201/39 both, 0 movers (step 226 now runs the verb, then refuses at the same Fire-Wand
+ITEM-GATE with the same text — OFF it reached it through a false `already-clear`). Keyed sweep over the 53 L63/L65/
+L101/L102 + pole legs ON vs sweep 10: exactly 558/569/740/742 failed → done.
+
+**Trap candidates.**
+- A clear-tag on a class that is no Solid falls through to `already-clear`, which reads like success. Check a new
+  row's class is in `world.solids` before trusting the generic arm.
+- "No Spear" can be a slot fact, not a bag fact: the Ghost Sword removes the Spear's SLOT and its swing is the "Spear"
+  arm. Read the slot array, not the item flag, and ask what the fused weapon does.
+- A stance that only exists flush against a wall is invisible to a lattice; sample the box's own standable extremes.
+- A plan's last act may be an equip AT `perTick.length`; a witness tape ends there and the game applies it while the
+  mirror does not. Give the tape one idle tick.
+
+### Seedling fidelity L12DOORS — L12 → L83 through the stacked doors behind the 13 px gap: a wand shot in a room with a stepped chaser (`wandShotChaserBodies`), a hidden door nearer the aim asks the 8 px frontier (`fineFrontierHiddenDoor`), a wand stance the 8 px lattice reaches (`fineWandStance`) — all OFF
+
+Planner `seedling-fidelity-planning-16`, wave 34. The report is `CC/docs/cloud-reports/seedling-fidelity-l12doors.md`.
+
+**W0.** Survey steps 172/203 (L12 visits 14/16, `reach-exit` teleporter@32,848 → L83) at the base `caa42ea5df` refuse
+KEYLOCK-SEALED on `bosslock@112,192` {12,11} from (440,258), as CI 40617953040 says (local full survey OFF = that run, 0 of 240
+rows differ). rules-4's facts hold: the real door is the stacked `bosslock@32,864` (key 4) + `magicallock@32,864` (Wand), whose
+south strip is reached through a cliffside gap (player x 202..214 at y 896).
+
+**G1, measured.** The solver from (40,888), under the doors, dies in `levelRun.assertWandShotSolidsBound` on the Wand press:
+the guard refuses every shot in a room whose press census holds an Enemy-typed body outside the totem / ice-turret / spinner
+rosters, and L12's `puncher@416,256` is a bridged chaser. Not a placement test at all: a room-level guard.
+
+**G2, measured.** The frontier at each of the five rounds from the arrival: the 16 px flood always holds actionable doors
+(`shieldlocknorm@288,704`, `burnabletree@480,640`, `bosslock@112,192`, `@416,240`, `@432,240`), so `fineFrontierFlood` (no
+actionable entry, or a masked goal tile; the plan error here is "different connected components") never fires; the 8 px flood
+names `magicallock@32,864` 20 px from the aim on every round. The solver spends touch, burn, keylock ×2 on doors that do not lead
+to the aim, then the sealed lock refuses.
+
+**D1 — `wandShotChaserBodies`.** A bridged chaser the run steps (`chaserStateFor`, behind `stepChasersNow`'s `noclip ||
+noDamage` gate) counts as placed for the guard, and its live box joins `wandShotBlockerAt`'s "Enemy" arm (a shot that meets it
+stops there and `applyWandShotToBoss` refuses by name, as before). Under the doors: wand (through the standing bosslock, as the
+game does), keylock, walk — 114 t.
+
+**D2 — `fineFrontierHiddenDoor`.** When the 8 px flood holds an actionable door the 16 px frontier lacks, nearer the aim than
+every 16 px actionable door, the 8 px frontier is asked. **D3 — `fineWandStance`.** `resolveWandStrategy` asks a candidate
+`stanceReaches` refuses once more on `FINE_LATTICE`, in the world as it is (`stanceReaches` untouched; L100FIX owns it). With all
+three, step 172 SOLVES in 1301 t: wand, keylock, walk into L83, `bosslock@112,192` never touched.
+
+**Witnesses.** The solver's own plans on rules-4's step-172 staging, p4g headless, delivered set: `l12doors-under-locks` (114 t,
+D1) and `l12doors-arrival` (1302 observations, D1+D2+D3) reproduce at 0 px on every tick, hitless, {12,12} and {12,7} written,
+{12,11} never (`fixtures/l12doors-witness/`, `probe-seedling-l12doors.mjs`, `plan-seedling-l12doors-witness.mjs`,
+`fidelityL12Doors.test.js`). OFF the model refuses the shot.
+
+**Movers.** Survey full ON vs OFF, local: exactly steps 172 (SOLVED 1301 t) and 203 (SOLVED 1479 t); 201/39 → 203/37, every other
+row equal ticks included. The sweep ×2 per arm and the probes standard are the planner's dispatches (the report names them).
+
+**Trap candidates.**
+- A refusal that names a body 650 px away is a ROOM guard, not a placement test: read the stack before reading the message.
+- A fallback gated on "no actionable entry" never fires in a room full of doors that lead elsewhere; the condition that matters
+  is whether the finer flood sees a door the coarse one cannot, nearer the aim.
+- A survey that runs each step in a child process reads the files on disk at that step: a mutant made mid-survey contaminates
+  the steps it overlaps. Run mutants after, or restart the arm.

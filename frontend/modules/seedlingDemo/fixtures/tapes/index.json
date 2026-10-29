@@ -548,6 +548,20 @@
       "noHazards": []
     },
     {
+      "file": "lightpole-l101-ghost.json",
+      "tickCount": 307,
+      "bootLevel": 101,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "lightpole-l101-spear.json",
+      "tickCount": 281,
+      "bootLevel": 101,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "pit-fall-83.json",
       "tickCount": 80,
       "bootLevel": 83,
