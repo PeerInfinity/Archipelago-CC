@@ -1,0 +1,2 @@
+REFUSED solverBot(l100) reach-exit (288,96)->L101 -> break stance (breakablerock@128,144) -> kill (jellyfish@88,144) by press: the dwell was HIT at tick 193 (hits 0 -> 1, deaths 0 -> 0). The stance was derived to be outside every danger the map can name; the GAME says otherwise, which is the map being a heuristic and the run being the oracle.
+name "BotDriverV2Error"

@@ -1,0 +1,37 @@
+# W0 — leg 371, the first divergent stance call (base caa42ea5df, scratch instrumentation in deriveSwingStance; not committed)
+# arms: tools/leg371-arms.mjs <0|1>  (movingWait+bombBlastBody ON, strike floor OFF, CHOOSER_PAIR/OPP/ICEST at defaults = OFF)
+
+OFF  SOLVED 1667 t  [brave iceturret@472,400] [hold] [kill spinner@192,128] [break breakablerock@176,128 @ (200,136)] [hold] [collect]   7.7 s
+ON   REFUSED: ... -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128): applied 4 strategies for one goal
+     [brave(iceturret@472,400), hold(wandlock@176,80), hold(wandlock@208,128), break(breakablerock@176,128)] and the corridor
+     still does not plan.   6.4 s
+
+Ladder applications (both arms identical up to t1286):
+ t0     apply hold(wandlock@208,128) stance (280,216)   applied=[brave, hold(wandlock@176,80)]
+ t1112  apply break(breakablerock@176,128) stance (200,136)   applied=[brave, hold, hold]
+ t1286  nested walk "-> break stance (breakablerock@176,128)" re-derives the break stance (deriveBreakStance <- resolveBreakStrategy
+        <- resolveObstacleStrategy <- identifyAndSelect <- walkToUnder) from (270.6191259655506,174.1733660845898)
+        16 px ring candidates: (168,136) (200,136) (200,152) — ALL fail (directly and under the hypothesis
+        [wandlock@176,80, wandlock@176,208, wandlock@480,560, bosslock@480,352, breakablerock@160,144, breakablerock@176,144])
+  OFF: SolverRefusal (no REACHABLE stance) -> the ladder takes kill(spinner@192,128), then break from (200,136): SOLVED
+  ON:  fine arm admits (196,132), discharged [] -> ladder would apply break a 5th time -> MAX_STRATEGIES_PER_GOAL refusal
+
+Why the 16 px ring failed at t1286 (planWaypoints from the live point to the fine stance):
+ lattice 16: ERR "A* start tile (16,10) in level 40 — for (270.62,174.17) — is not walkable: solid ruinedpillar at (264,136)"
+ lattice 8:  [(260,172), (196,132)]
+ stanceReaches(run, (196,132), contacts, hypothesis) [16 px]: null  (the same start-tile failure)
+
+All 11 fine (8 px) candidates at t1286 and their 16 px node:
+ (172,132)->(168,136) ring cand, 8px plan ERR no walkable tile path
+ (164,132)->(168,136) ring cand, 8px ERR
+ (172,140)->(168,136) ring cand, 8px ERR
+ (164,140)->(168,136) ring cand, 8px ERR
+ (196,132)->(200,136) ring cand, 8px ok   <- admitted ON (first in order)
+ (196,140)->(200,136) ring cand, 8px ok
+ (204,132)->(200,136) ring cand, 8px ok
+ (196,148)->(200,152) ring cand, 8px ok
+ (204,140)->(200,136) ring cand, 8px ok
+ (204,148)->(200,152) ring cand, 8px ok
+ (196,156)->(200,152) ring cand, 8px ok
+=> every fine candidate lies inside a tile the 16 px ring already offered. L100's sliver cells (124,y) have 16 px nodes (120,y),
+   mask obstacles (`OBST pixelmask`, W33 w0-grid.txt), never ring candidates.

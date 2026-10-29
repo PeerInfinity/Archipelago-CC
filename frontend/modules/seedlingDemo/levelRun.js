@@ -2741,7 +2741,12 @@ export function createLevelRun({
         for (const b of w.bossTotems ?? []) boxed.add(`${b.x},${b.y}`);
         for (const t of w.iceTurrets ?? []) boxed.add(`${t.x},${t.y}`);
         for (const s of w.spinners ?? []) boxed.add(`${s.x},${s.y}`);
-        const unboxed = (w.pressEnemies ?? []).filter((e) => !boxed.has(`${e.x},${e.y}`));
+        // ⛓ fidelity L12DOORS D1 (`wandShotChaserBodies`, OFF): a bridged chaser the run STEPS has a live box
+        // (`chaserRectsNow`, read by `wandShotBlockerAt`); under `noclip || noDamage` it has none and still refuses.
+        const chaserIds = CONTACT_FIDELITY.wandShotChaserBodies && !noclip && !noDamage
+            ? new Set(chaserStateFor(n).keys()) : null;
+        const unboxed = (w.pressEnemies ?? []).filter((e) => !boxed.has(`${e.x},${e.y}`)
+            && !(chaserIds && chaserIds.has(`${e.tag}@${e.x},${e.y}`)));
         if (unboxed.length > 0) {
             const names = unboxed.map((e) => `${e.tag}@${e.x},${e.y}`).join(', ');
             throw new Error(`levelRun: a WandShot in level ${n} would collide with `
@@ -2821,6 +2826,12 @@ export function createLevelRun({
         }
         for (const sp of spinnerRectsNow() ?? []) {
             if (rectsOverlap(box, sp.rect)) return { kind: 'enemy', id: sp.id, spinner: true };
+        }
+        // ⛓ fidelity L12DOORS D1 (`wandShotChaserBodies`, OFF): a live bridged chaser, behind the stepper's own gate.
+        if (CONTACT_FIDELITY.wandShotChaserBodies && !noclip && !noDamage) {
+            for (const c of chaserRectsNow() ?? []) {
+                if (rectsOverlap(box, c.rect)) return { kind: 'enemy', id: c.id, chaser: true };
+            }
         }
         return null;
     };
@@ -8205,6 +8216,9 @@ export function createLevelRun({
             return {
                 id: `${p.tag}@${p.x},${p.y}`, x: p.x + DARKTRAP_LIGHT_DEATH.pole.originY, y0: p.y,
                 lit: !!ps && ps.activate !== invert, hitsTimer: ps?.hitsTimer ?? 0, rect: p.rect,
+                // ⛓ fidelity LIGHTPOLE D2: `activate` itself — the flag is `!activate` (`set activate`), so an
+                // INVERTED pole's clear is an unlit one; `lit` alone cannot answer "is the tag cleared".
+                activate: !!ps && ps.activate,
             };
         });
     };
@@ -19576,7 +19590,7 @@ export function createLevelRun({
          */
         /**
          * ⛓ JS G5 (cleared by fidelity-12 through planning-10, 2026-10-24): this level's `LightPole`s as their
-         * `Light` sees them — `{id, x, y0, lit, hitsTimer, rect}` (`darkTrapPolesFor`: `activate` XOR `invert`).
+         * `Light` sees them — `{id, x, y0, lit, hitsTimer, rect, activate}` (`darkTrapPolesFor`: `activate` XOR `invert`).
          * ⚠ It reads through `poleStateFor`, which builds the visit's pole entries on a first read — the same pure
          * boot value a tick builds (and `darkTrapsNow` already reads it lazily); `poleStates` is DIGEST_EXEMPT.
          * COPIES only: the rows are fresh, and each `rect` is copied.
