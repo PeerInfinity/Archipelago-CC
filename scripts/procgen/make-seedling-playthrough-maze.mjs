@@ -82,6 +82,9 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * and 7.8 (session tile-primitives-sphere-order-8, ⚖ 2026-10-29 "All 7"): L41 L42 (off L40), L57 L58 and L65 L66 L68 — L58's Yeti talk is
  * a location on its talk circle and its portal's cell carries the producer's gate (⚖ "Talk location + portal door"); L65's landings in
  * L63's two pole pockets carry the producer's in-room-pole gates on their exit cells in both worlds (⚖ "World doors + framing").
+ * Sphere 8.5 (session tile-primitives-sphere-order-9, ⚖ 2026-10-29 "All 11 + LavaTrap pull"): L69–L75 L80 L83–L85 — L80's LavaTraps
+ * reel the player across the lava onto their own cells (the rules producer's one-way Dark Suit lifts), so L80 plays as one level world
+ * whose `pulls` are the producer's own discs (⚖ "Forced pull, rules' disc").
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
@@ -89,8 +92,9 @@ export const LEVELS = Object.freeze([
     'level_23', 'level_24', 'level_25', 'level_26', 'level_27', 'level_28', 'level_29', 'level_30', 'level_31', 'level_32', 'level_33', 'level_34',
     'level_35', 'level_36', 'level_37', 'level_38', 'level_39', 'level_40', 'level_41', 'level_42', 'level_43', 'level_44', 'level_45', 'level_46',
     'level_47', 'level_48', 'level_49', 'level_50', 'level_51', 'level_52', 'level_53', 'level_54', 'level_55', 'level_56', 'level_57', 'level_58',
-    'level_59', 'level_60', 'level_61', 'level_62', 'level_63', 'level_64', 'level_65', 'level_66', 'level_67', 'level_68', 'level_86', 'level_87',
-    'level_88', 'level_89', 'level_90', 'level_91', 'level_92', 'level_93', 'level_94',
+    'level_59', 'level_60', 'level_61', 'level_62', 'level_63', 'level_64', 'level_65', 'level_66', 'level_67', 'level_68', 'level_69',
+    'level_70', 'level_71', 'level_72', 'level_73', 'level_74', 'level_75', 'level_80', 'level_83', 'level_84', 'level_85', 'level_86',
+    'level_87', 'level_88', 'level_89', 'level_90', 'level_91', 'level_92', 'level_93', 'level_94',
     'level_95',
 ]);
 

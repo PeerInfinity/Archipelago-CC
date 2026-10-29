@@ -30,6 +30,8 @@
  * from its stances); ~15 s scripted with L63's other two regions, measured 2026-10-28.
  * And spheres 6.10/7.8's two features (session tile-primitives-sphere-order-8): L58 r3c3 (the Yeti's talk location; its world's portal door)
  * and L65 r0c8 (an in-room pole and the pocket door into L63's r6c9).
+ * And sphere 8.5's two (⚖ user 2026-10-29, session tile-primitives-sphere-order-9: "Add L80 r0c2 + L71 r0c6"): L80 r0c2 (the level world its
+ * LavaTraps' pulls made of it; 0.9 s scripted) and L71 r0c6 (the shield lock, its own event skipped at its landing; 13.6 s scripted, load ~24).
  * L89 r1c10 → L91, the one open problem sphere-order-7 named (⚖ 2026-10-28 "Ask for a game probe"), is CLOSED: the L91 teleporter
  * stands on a waterfall tile, the game probe sided with the world's Feather (Swim×2), and the rules producer now charges it
  * (session rules-waterfall-door).
@@ -57,7 +59,8 @@ const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
     'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
     'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32', 'level_38',
-    'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1', 'level_62', 'level_63__r10c2', 'level_58__r3c3', 'level_65__r0c8'];
+    'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1', 'level_62', 'level_63__r10c2', 'level_58__r3c3', 'level_65__r0c8',
+    'level_80__r0c2', 'level_71__r0c6'];
 /**
  * The one OPEN row (⚖ 2026-10-29 "Land, name it; route to rules", session tile-primitives-sphere-order-8): from the L65 pocket landing, L63
  * r0c1's east end is cut from its west by the DarkTrap at (4,6) and the spear block that jams (5,6) (a block never enters an Enemy's tile,
@@ -104,6 +107,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // crossing landing there admits — counted and named, so a new skip is a diff here, never silence. L62/L63/L64 are the pole
         // pockets; the rest are landings whose AP crossings already cost an item (water, a lock, a weapon) at that cell. `[own event]`
         // (session tile-primitives-sphere-order-8): an event location's points holding its OWN event at a landing are not asked.
+        // Sphere 8.5 (session tile-primitives-sphere-order-9) adds 13: L12 r42c28's landing from L83 (2,54), wired now, admits only
+        // with its two stacked lock events (8 rows); L69's from L70 (2); L71's shield lock at its landing (14,18) [own event] (1); L83's (2).
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
@@ -116,6 +121,14 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 2/16 [own event]',
             'level_12__r40c4 → level_12__r0c19 (landing 2,44) | 3/16',
             'level_12__r40c4 → level_24 (landing 2,44) | 3/16',
+            'level_12__r42c28 @ Level 012 - Chest (landing 2,54) | 64/128',
+            'level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54) | 64/128',
+            'level_12__r42c28 @ L12 flag 7: magicallock@32,864 cleared (landing 2,54) | 8/128 [own event]',
+            'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 64/128',
+            'level_12__r42c28 @ L12 flag 12: bosslock@32,864 cleared (landing 2,54) | 8/128 [own event]',
+            'level_12__r42c28 → level_12__r0c19 (landing 2,54) | 64/128',
+            'level_12__r42c28 → level_12__r0c37 (landing 2,54) | 64/128',
+            'level_12__r42c28 → level_83 (landing 2,54) | 64/128',
             'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 2/4',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 1/4 [own event]',
@@ -168,6 +181,11 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_63__r10c2 → level_65__r0c2 (landing 2,18) | 60/192',
             'level_64 → level_62 (landing 2,5) | 1/4',
             'level_68__r3c1 @ L68 flag 0: bosslock@16,32 cleared (landing 1,4) | 4/32 [own event]',
+            'level_69 @ Level 069 - Lights (landing 3,8) | 1/8',
+            'level_69 → level_36 (landing 3,8) | 1/8',
+            'level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 14,18) | 8/48 [own event]',
+            'level_83 → level_12__r42c28 (landing 2,3) | 20/64',
+            'level_83 → level_84__r2c4 (landing 2,3) | 20/64',
             'level_89__r11c12 → level_0__r2c13 (landing 10,18) | 1/3',
             'level_89__r11c12 → level_87__r1c3 (landing 10,18) | 1/3',
             'level_91 → level_89__r1c10 (landing 1,8) | 2/3',
