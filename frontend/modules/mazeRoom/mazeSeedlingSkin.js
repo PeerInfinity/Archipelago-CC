@@ -24,7 +24,8 @@ import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary
 import { buildLevelWorld } from '../seedlingDemo/levelWorld.js';
 import { patchedMapDocument } from '../seedlingDemo/seedlingSetPatches.js';
 import { TILE, paintOps, roomOps, teleporterArtFilter } from '../seedlingDemo/seedlingSkinRenderer.js';
-import { posKey } from './mazeRoomEngine.js';
+import { TILE_WALL, posKey } from './mazeRoomEngine.js';
+import { COLORS } from './mazeRoomRender.js';
 
 /** The `packs.json` graphics stack (⚖ ruling 1). */
 export const SEEDLING_GRAPHICS_STACK = 'graphics.seedling';
@@ -76,6 +77,34 @@ export function mazeModelledCells(mazeWorld) {
     }
     for (const t of mazeWorld.traps ?? []) cells.add(posKey(t.x, t.y));
     return cells;
+}
+
+/**
+ * The cells whose maze tile an EDIT changed: every cell where `mazeWorld.tiles` differs from `baseTiles` (the world's
+ * tiles before its first edit; null = never edited). The level's art cannot show a wall the editor added or removed,
+ * so the bake paints these cells in the maze's own wall/floor fill. `[{x, y, wall}]`, row-major.
+ */
+export function editedTiles(mazeWorld, baseTiles) {
+    if (!baseTiles) return [];
+    const out = [];
+    const { width, tiles } = mazeWorld;
+    for (let i = 0; i < tiles.length; i++) {
+        if (tiles[i] !== baseTiles[i]) out.push({ x: i % width, y: Math.floor(i / width), wall: tiles[i] === TILE_WALL });
+    }
+    return out;
+}
+
+/**
+ * ⛓ WHAT THE BAKED LAYER DEPENDS ON, as one string: the level, the cells the maze models (left out of the bake) and
+ * the edited tiles (painted over it). The panel keeps a layer only while this key is unchanged — an IN-PLACE edit of
+ * the same world object (`mazeRoomUI._applyEditAt`; an entry that hands back the same object, changed) changes the
+ * key and rebakes, where S1's cache keyed on the object alone kept the stale room. Play never changes it: a push or a
+ * break is `state`, not `world`.
+ */
+export function seedlingLayerKey(mazeWorld, level, baseTiles = null) {
+    const cells = [...mazeModelledCells(mazeWorld)].sort().join(' ');
+    const edits = editedTiles(mazeWorld, baseTiles).map((t) => `${t.x},${t.y}${t.wall ? 'W' : 'F'}`).join(' ');
+    return `${level}|${mazeWorld.width}x${mazeWorld.height}|${cells}|${edits}`;
 }
 
 /** The cell under a renderer rect's centre. */
@@ -132,7 +161,9 @@ export function _resetSeedlingArtForTests() { artPromise = null; }
  * Paint the static room once onto a canvas `newCanvas(w, h)` makes, `cellPx` per maze cell. Returns
  * `{ canvas, counts, ops }` — the caller keeps it and blits `canvas` on every render (`view.seedlingSkin.layer`).
  */
-export function bakeSeedlingLayer({ newCanvas, mapDoc, level, mazeWorld, art, images, cellPx = SEEDLING_CELL_PX }) {
+export function bakeSeedlingLayer({
+    newCanvas, mapDoc, level, mazeWorld, art, images, cellPx = SEEDLING_CELL_PX, baseTiles = null,
+}) {
     const { record, world } = levelWorldFor(mapDoc, level, mazeWorld);
     const ops = staticOps(world, art, { level, record, mazeWorld });
     const canvas = newCanvas(mazeWorld.width * cellPx, mazeWorld.height * cellPx);
@@ -141,5 +172,10 @@ export function bakeSeedlingLayer({ newCanvas, mapDoc, level, mazeWorld, art, im
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     const view = { x: 0, y: 0, w: world.world.width, h: world.world.height };
     const counts = paintOps(ctx, ops, images, view, canvas);
-    return { canvas, counts, ops: ops.length };
+    const edits = editedTiles(mazeWorld, baseTiles);
+    for (const t of edits) {
+        ctx.fillStyle = t.wall ? COLORS.wall : COLORS.floor;
+        ctx.fillRect(t.x * cellPx, t.y * cellPx, cellPx, cellPx);
+    }
+    return { canvas, counts, ops: ops.length, edits: edits.length };
 }
