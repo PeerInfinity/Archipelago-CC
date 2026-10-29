@@ -551,11 +551,11 @@
         "arrowLaneCrossing.js": 1,
         "botDriverV2.js": 104,
         "crusherBait.js": 8,
-        "dangerMap.js": 26,
+        "dangerMap.js": 27,
         "lightsVerb.js": 1,
         "solverBot.js": 212
       },
-      "sites": 352,
+      "sites": 353,
       "seen": "both",
       "via": [
         "direct",
@@ -708,7 +708,7 @@
         },
         "turrets": {
           "botDriverV2.js": 8,
-          "dangerMap.js": 1,
+          "dangerMap.js": 2,
           "solverBot.js": 24
         },
         "turretsSettled": {
@@ -4343,13 +4343,13 @@
         "axePricedCrossing.js": 4,
         "botDriverV2.js": 5,
         "crusherBait.js": 4,
-        "dangerMap.js": 6,
+        "dangerMap.js": 7,
         "forcedHit.js": 5,
         "lightsVerb.js": 3,
         "solverBot.js": 139,
         "strikePolicy.js": 2
       },
-      "sites": 172,
+      "sites": 173,
       "seen": "static",
       "via": [
         "import"
@@ -4926,7 +4926,7 @@
       "surface": "import",
       "name": "ICE_TURRET_PLAN",
       "module": "frontend/modules/seedlingDemo/iceTurret.js",
-      "line": 834,
+      "line": 878,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -4939,6 +4939,24 @@
       ],
       "dynamic": null,
       "why": "Plan descriptor for the fire.bumps verb against an ice turret, recording that bump parity is not load-bearing."
+    },
+    {
+      "surface": "import",
+      "name": "iceTurretLiveContactCycle",
+      "module": "frontend/modules/seedlingDemo/iceTurret.js",
+      "line": 527,
+      "class": "seedling",
+      "form": "geometry-query",
+      "files": {
+        "dangerMap.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "IceTurret.input()'s stationary-axis snap from the ctor point: the rest two-cycle a live turret's hitPlayer is tested on (iceTurret.js); dangerMap prices its hull with turretSnapPricing ON."
     },
     {
       "surface": "import",
