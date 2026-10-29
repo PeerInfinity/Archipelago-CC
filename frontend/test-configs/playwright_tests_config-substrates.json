@@ -2145,6 +2145,12 @@
             "enabled": true,
             "category": "Seedling wasm runtime",
             "_comment": "seedling-js-panel-restart. The JS row's Restart and teleport checks on the WASM runtime (WebGPU). Batch seedling-wasm."
+        },
+        {
+            "id": "seedling-wasm-runtime-restart-no-walk-hand-walk",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "seedling-js-restart-arm-fix. seedling_atlas on wasm: a controller walk up the owl's nest stairs (the earlier engine use), stopped; the Menu's Restart with no walk in flight arms no arrival watch (stoppedWalks 0, watching 0); the same stairs by keys then cross and nothing is held. Red on main (the unconditional arm). Batch seedling-wasm."
         }
     ]
 }

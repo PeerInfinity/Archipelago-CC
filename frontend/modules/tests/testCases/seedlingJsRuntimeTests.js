@@ -4877,3 +4877,84 @@ for (const [runtime, fn] of [['js', seedlingJsRuntimeToolsRestartTeleport], ['wa
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+// ── ⛔ THE RESTART HOLD: a Restart with no walk arms nothing, so a hand walk after it moves (wasm) ─────────────────
+//
+// `handleMenuRestart` used to arm the wasm engine's arrival watch (`expectBotArrivals`) unconditionally. The watch
+// HOLDS the landing until the bot's next goal, and with no walk none comes: a hand walk after a Restart heard its key
+// and did not tick (CI, seedling-js batch: `held: true`, `tick_count` 0). The engines are module-level, so it shows
+// only after an EARLIER engine use. This row makes that use itself: a Playback Bot walk (the owl's nest stairs, by the
+// controller), stopped once it lands. Then the Menu's Restart with no bot walking, an AP move into the owl's nest, and
+// the same stairs by KEYS. The fix arms only behind a stopped walk, as `teleportTool` does.
+
+const restartNoWalkHandWalk = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
+    const up = await atlasPresetOn(tc, runtime, ATLAS_PATH, TOOLS_START);
+    if (!up) return;
+    const { panel } = up;
+    const glue = getSeedlingRegionGlue();
+    const born = await toolsSettledIn(tc, `[${runtime}] the new game stands in ${TOOLS_START}`, TOOLS_START, 0, 60000);
+    tc.reportCondition(`[${runtime}] the new game stands in ${TOOLS_START} (level 0)`, !!born);
+    if (!born) return;
+    // ⛓ THIS ROW'S OWN STATE: the Playback Bot stopped (this row's walks are the controller's and the keys')
+    const botPanel = getBotPanel();
+    const bot = botPanel?.getBot?.() ?? botPanel ?? null;
+    tc.log(`[${runtime}] the Playback Bot before this row: ${bot ? `active ${!!bot.isActive?.()}` : 'not mounted'}; stopped`);
+    bot?.stop?.();
+    const heldNow = () => {
+        try { return JSON.parse(glue.adapter?._getFlash?.()?.botStatus?.() ?? 'null')?.held ?? null; } catch { return null; }
+    };
+
+    // ── THE EARLIER ENGINE USE: a controller walk up the owl's nest stairs ──
+    toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+    const nest = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the bot walk`, TOOLS_OWLS, 2);
+    if (!nest) { tc.reportCondition(`[${runtime}] in the owl's nest for the bot walk`, false); return; }
+    const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
+    const answer = controller?.walkTo?.({ kind: 'exit', name: `${TOOLS_OWLS} -> ${TOOLS_START}` }) ?? null;
+    const botWalked = await toolsSettledIn(tc, `[${runtime}] the bot walk landed in the start`, TOOLS_START, 0, 90000);
+    tc.log(`[${runtime}] the bot walk: answer ${JSON.stringify(answer)}; refusal ${JSON.stringify(controller?.lastRefusal ?? null)}; `
+        + `status ${JSON.stringify(controller?.status?.() ?? null)}`);
+    tc.reportCondition(`[${runtime}] the bot walk (the earlier engine use) crossed into ${TOOLS_START}`, !!botWalked);
+    if (!botWalked) return;
+    controller.stop();
+    const idle = await tc.pollForCondition(() => controller.busy?.() === false,
+        `[${runtime}] the controller is idle after its walk`, 15000, 100);
+    tc.reportCondition(`[${runtime}] the controller is idle after its walk (no walk in flight for the Restart)`, !!idle);
+    if (runtime === 'wasm') {
+        tc.assertEqual(`[${runtime}] a wasm engine exists (the Restart has something it could arm)`, true,
+            !!controller?.status?.()?.wasm);
+    }
+
+    // ── THE RESTART, no bot walking ──
+    toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+    tc.reportCondition(`[${runtime}] the AP move reached the owl's nest`, !!await toolsSettledIn(tc, `[${runtime}] in the owl's nest`, TOOLS_OWLS, 2));
+    window.centralRegistry.getPublicFunction('menuPanel', 'restart')();
+    const landed = await toolsSettledIn(tc, `[${runtime}] the Menu's Restart landed at the start`, TOOLS_START, 0);
+    tc.reportCondition(`[${runtime}] the Menu's Restart landed in ${TOOLS_START}`, !!landed);
+    tc.log(`[${runtime}] the Restart: ${JSON.stringify(glue.lastRestart)}; the game held ${heldNow()}`);
+    tc.assertEqual(`[${runtime}] the Restart stopped no walk and armed no arrival watch (stoppedWalks/watching)`,
+        '0/0', `${glue.lastRestart?.stoppedWalks}/${glue.lastRestart?.watching}`);
+
+    // ── A HAND WALK after it: the same stairs, by keys ──
+    toolsMove(TOOLS_START, TOOLS_OWLS, `${TOOLS_START} -> ${TOOLS_OWLS}`);
+    const nest2 = await toolsSettledIn(tc, `[${runtime}] in the owl's nest for the hand walk`, TOOLS_OWLS, 2);
+    if (!nest2) { tc.reportCondition(`[${runtime}] in the owl's nest for the hand walk`, false); return; }
+    tc.assertEqual(`[${runtime}] nothing is held before the hand walk`, false, heldNow() === true);
+    const walkedOut = await toolsWalkInto(tc, panel, 3, 1, runtime === 'wasm' ? 20000 : 10000);
+    const walked = walkedOut ? await toolsSettledIn(tc, `[${runtime}] the hand walk landed in the start`, TOOLS_START, 0) : null;
+    tc.reportCondition(`[${runtime}] after the Restart, the hand walk up the stairs crossed into ${TOOLS_START} (the player moved)`, !!walked);
+    tc.assertEqual(`[${runtime}] nothing is held after the hand walk`, false, heldNow() === true);
+    assertNoDeathNoHalt(tc, runtime, up.rt);
+});
+
+export const seedlingWasmRuntimeRestartNoWalkHandWalk = restartNoWalkHandWalk('wasm');
+
+registerTest({
+    id: 'seedling-wasm-runtime-restart-no-walk-hand-walk',
+    name: 'Seedling wasm runtime: a Restart with no bot walking arms no arrival hold; a hand walk after it moves',
+    description: 'On seedling_atlas with flashPanel.runtime = wasm: a controller walk up the owl\'s nest stairs (the earlier '
+        + 'engine use), stopped; then the Menu\'s Restart with no walk in flight (lastRestart stoppedWalks 0, watching 0); '
+        + 'then the same stairs by keys: the player crosses and the game is not held.',
+    testFunction: seedlingWasmRuntimeRestartNoWalkHandWalk,
+    category: seedlingRuntimeCategory('seedling-wasm-runtime-restart-no-walk-hand-walk'),
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
