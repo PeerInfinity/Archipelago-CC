@@ -1,0 +1,5 @@
+ms 92429
+REFUSED solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (wandlock@448,432): the reordered corpse weigh took a hit at t917 (blast:iceturret@472,400#2.2) on its way to iceturret@472,400's kill stance (488,445) — the approach into the turret's range is not certified (⛓ LWEIGH: a volley-aware approach is the unbuilt arm)
+obstacle {"kind":"danger","id":"iceturret@472,400"} perTick 1245
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]},{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}

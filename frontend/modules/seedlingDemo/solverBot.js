@@ -5200,6 +5200,12 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
          * still says which blocks were considered and why none of them
          * served. [[feedback_conservative_ingredient_hides_bound_defects]]
          */
+        // ⛓ hammer-phase LWEIGH (`LATCH_WEIGH_FIRST`, OFF): a hold stance inside a live turret's range asks the corpse
+        // weigh again under the stance hypothesis the hold was derived under (`latchWeighFirst`).
+        if (LATCH_WEIGH_FIRST.enabled) {
+            const hold = resolveHoldStrategy(run, obstacle, contacts, blocked, derived.rejected);
+            return latchWeighFirst(run, obstacle, opener, onto, hold, contacts, blocked) ?? hold;
+        }
         return resolveHoldStrategy(run, obstacle, contacts, blocked, derived.rejected);
     }
     const { plan, rejected } = derived;
@@ -5482,6 +5488,89 @@ export function deriveWeigh(run, onto, contacts, blocked = [], { liveBag = null 
             })),
             ...rejected,
         ],
+    };
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE LWEIGH (`LATCH_WEIGH_FIRST`, OFF) — **A HOLD STANCE IN A LIVE TURRET'S RANGE ASKS THE CORPSE
+ * WEIGH UNDER THE SAME HYPOTHESIS.** `resolveWeighStrategy` asks the corpse weigh (`deriveWeighSource`) of the world as
+ * it is, and falls back to the hold, whose stance `deriveHoldStance` derives under the stance hypothesis. On L40 from
+ * the latch (`fixtures/l40latch-witness/latch-boot.json`, (888,776)) that asymmetry decides the room: the corpse's first
+ * press's stance (488,440) is behind the latched south door `wandlock@480,560` {t 3}, so the live ask rejects it ("the
+ * corpse is not on this side"), while the hold stance (488,392) — the player ON `button@480,384`, 24 px from
+ * `iceturret@472,400` — is derived through that same door. So the chain walks west to stand inside the turret's range.
+ *
+ * ON, and only where the hold has a stance within a LIVE turret's `attackRange` (the game's `int` distance): the corpse
+ * weigh is asked again with the hypothesis bag (`bagWithDischarged`, the discharged doors' volumes exempt — the bag
+ * `chainWeighHypothesis` hands it), and a corpse plan OF THAT TURRET is the order, its exemptions riding out to
+ * `execCorpseWeigh`'s walks. Anything else (a block plan under the hypothesis, no corpse route, a corpse of another
+ * turret, a bound hit) is the hold, unchanged. `deriveCorpseWeigh` and `execCorpseWeigh` are called, not changed.
+ */
+function latchWeighFirst(run, obstacle, opener, onto, hold, contacts, blocked) {
+    const stance = hold?.stance ?? null;
+    if (!stance) return null;
+    const inRange = [...(run.entities('turrets') ?? new Map())]
+        .filter(([, t]) => !t.dead && !t.removed
+            && Math.trunc(Math.hypot(stance.x - t.x, stance.y - t.y)) <= ICE_TURRET.attackRange)
+        .map(([id]) => id);
+    if (inRange.length === 0) return null;
+    const hypothesis = stanceHypothesis(run, blocked, contacts);
+    const liveBag = bagWithDischarged(run, run.liveGeometryOpts(), hypothesis);
+    const exempt = new Set([...contacts, ...hypothesis.filter((h) => h.kind === 'activator' || h.kind === 'rock')
+        .map((h) => `proximity-hazard:${h.id}`)]);
+    let derived;
+    try {
+        derived = deriveWeighSource(run, onto, exempt, blocked, { liveBag });
+    } catch (e) {
+        if (!(e instanceof SolverRefusal) || !e.bound) throw e;
+        LATCH_WEIGH_FIRST_COUNTS.asked.push({ id: obstacle.id, t: run.ticksCompleted, taken: false, why: 'bound' });
+        return null;
+    }
+    const c = derived.corpse ?? null;
+    const taken = !derived.plan && !derived.parked && c !== null && inRange.includes(c.turret);
+    LATCH_WEIGH_FIRST_COUNTS.asked.push({ id: obstacle.id, t: run.ticksCompleted, taken,
+        turret: c?.turret ?? null, inRange });
+    if (!taken) return null;
+    const presser = opener.presser;
+    const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
+        `solverBot weigh/corpse (${obstacle.id})`);
+    const fade = deriveHold(run, resolvedPresser, opener);
+    /**
+     * ⛔ THE KILL STANCE IS THE ORDER'S STANCE, so the frontier walks it as a registered stance walk: measured without
+     * it (the latch boot), `killForCorpse`'s own walk there named `wandlock@448,432` on its frontier (nearest its aim)
+     * and raised this same weigh again, two snap-wait ticks later each time, until the strategy bound — a re-entry the
+     * loop's `STANCE_REENTRY` (and L40RES's next door, the south door's latched wait) never saw. Off the SNAPPED box
+     * (`killIceTurretOnWalk`'s snap), so the side `killForCorpse` derives after its snap wait is this one.
+     */
+    const t = run.entities('turrets').get(c.turret);
+    const snap = (v) => Math.floor(v / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+    const sy = !t.dead && Math.abs(snap(t.y) - t.y) >= 1 ? snap(t.y) - t.y : 0;
+    const sx = !t.dead && Math.abs(snap(t.x) - t.x) >= 1 ? snap(t.x) - t.x : 0;
+    const side = t.dead ? null : corpseKillSide({ x: t.rect.x + sx, right: t.rect.right + sx, y: t.rect.y + sy,
+        bottom: t.rect.bottom + sy }, c.dir);
+    return {
+        strategy: 'weigh',
+        postCondition: 'press',
+        target: { x: presser.x, y: presser.y },
+        corpse: c,
+        ...(side ? { stance: { x: side.x, y: side.y } } : {}),
+        // the turret's range is braved, as `killForCorpse`'s own walk (and `deriveCorpseWeigh`'s stances) brave it
+        exempt: [...exempt, `proximity-hazard:${c.turret}`],
+        latchWeighFirst: { holdStance: { ...stance }, inRange },
+        dwell: {
+            ticks: fade.ticks,
+            until: fade.until,
+            why: `${c.turret}'s corpse is parked on ${presser.tag}@${presser.x},${presser.y} and is not going to `
+                + 'walk off it — `Button.update` re-collides `["Player","Enemy","Solid"]` EVERY tick '
+                + '(`Button.as:27-39`), and a corpse is an "Enemy" that turns "Solid" once the player is off it '
+                + '(`IceTurret.as:92-95`).',
+        },
+        rejected: [{
+            option: `hold (stance (${stance.x},${stance.y}))`,
+            why: `the stance is inside ${inRange.join(', ')}'s range (${ICE_TURRET.attackRange} px): the player would `
+                + `stand in the volley, and the corpse weigh, asked under the hypothesis the stance was derived under, `
+                + `reaches ${c.turret}'s first press stance (⛓ LWEIGH)`,
+        }, ...(hold.rejected ?? [])],
     };
 }
 
@@ -15462,6 +15551,35 @@ export function withIceTurretStaticKill(enabled, fn, mode = null) {
         restore();
         throw e;
     }
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE LWEIGH — THE L40 LATCH CHAIN REACHES THE CORPSE WEIGH, NOT THE HOLD STANCE (⚖ the user
+ * queued the slice on 2026-10-28: *"L40: reach the corpse weigh"*; ICEST's hand-over, its report § 9: *"The chain
+ * should reach the weigh, not the hold; that is an order choice, not a kill arm."*).
+ *
+ * `resolveWeighStrategy` falls back to the hold when the corpse weigh is refused live; ON, a hold whose stance is in a
+ * live turret's range asks the corpse weigh again under the stance hypothesis (`latchWeighFirst`). OFF by default.
+ * `SEEDLING_LATCH_WEIGH_FIRST=1` turns it on in a node process (the page's worker has no `process`), and
+ * `withLatchWeighFirst(enabled, fn)` is for a test or a witness. OFF, nothing is asked and every walk is byte-identical.
+ */
+export const LATCH_WEIGH_FIRST = { enabled: globalThis.process?.env?.SEEDLING_LATCH_WEIGH_FIRST === '1' };
+export const LATCH_WEIGH_FIRST_DEFAULT = false;
+
+/** Run `fn` with `LATCH_WEIGH_FIRST` set to `enabled`, restoring the previous value. */
+export function withLatchWeighFirst(enabled, fn) {
+    return withSwitch(LATCH_WEIGH_FIRST, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `asked` each hold the reorder
+ * looked at (`{id, t, taken, turret, inRange}`, or `why: 'bound'`).
+ */
+export const LATCH_WEIGH_FIRST_COUNTS = { asked: [] };
+
+/** Zero `LATCH_WEIGH_FIRST_COUNTS`. */
+export function resetLatchWeighFirstCounts() {
+    LATCH_WEIGH_FIRST_COUNTS.asked = [];
 }
 
 /**
@@ -28980,6 +29098,8 @@ function solveSegmentUnder({
                     // strategy's own resolution earned (trap 147: a hold is what
                     // ADDS its presser to the exemptions, so the stance and the
                     // exemption are one decision).
+                    // ⛓ hammer-phase LWEIGH: the hits before the reordered weigh's stance walk (OFF: null, nothing read)
+                    const hitsBeforeStance = plan.resolved.latchWeighFirst ? run.ledger('playerHits').length : null;
                     if (plan.resolved.stance) {
                         // ⛓ STANCE: the walk is registered so its own frontier can
                         // see a re-entry (`STANCE_REENTRY`, above).
@@ -29028,6 +29148,21 @@ function solveSegmentUnder({
                         // ⛓ CRUSHER — a try-before-commit run (`forkRun`); null without one.
                         fork, rewind,
                     });
+                    /**
+                     * ⛓ hammer-phase LWEIGH: the reordered weigh's kill stance is inside the turret's range, and the
+                     * walk there is not fork-certified (`killForCorpse` certifies the kill, from the stance), so a
+                     * volley the walk draws can land after it arrives. A hit from the walk's first tick to the verb's
+                     * end is refused by name, so the switch never ships a hit (measured: the latch boot with CPAIR
+                     * size 3 — the walk arrived hitless at t916, a blast landed at t917 on `execCorpseWeigh`'s snap tick).
+                     */
+                    if (hitsBeforeStance !== null && run.ledger('playerHits').length > hitsBeforeStance) {
+                        const h = run.ledger('playerHits')[hitsBeforeStance];
+                        refuse(`${what} -> ${plan.strategy} (${plan.obstacle.id}): the reordered corpse weigh took a `
+                            + `hit at t${h.t} (${h.source}:${h.id}) on its way to ${plan.resolved.corpse.turret}'s kill `
+                            + `stance (${plan.resolved.stance?.x},${plan.resolved.stance?.y}) — the approach into the `
+                            + 'turret\'s range is not certified (⛓ LWEIGH: a volley-aware approach is the unbuilt arm)',
+                        { goal, obstacle: { kind: 'danger', id: plan.resolved.corpse.turret } });
+                    }
                     records.push({ goal: goal.kind, strategy: plan.strategy, ...record });
                     if (verbFrame !== null) progressLeave(verbFrame);
                     // ⛓ THE EXEMPTION SURVIVES THE VERB. A `hold` leaves the
