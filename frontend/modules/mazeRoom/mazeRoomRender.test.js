@@ -369,7 +369,48 @@ describe('mazeRoomRender — the Seedling art layer (maze-seedling-art-1)', () =
         expect(fog).toBeGreaterThan(0);
     });
 
+    // ⛓ S2 (maze-seedling-art-2): the live sprites seam
+    const spritesSkin = (world, { cells = [], player = null } = {}) => {
+        const painted = [];
+        const ctx = recordingContext();
+        const sprites = {
+            ops: [{ stand: 'body' }], cells: new Set(cells), player,
+            paint: (c, ops) => { painted.push({ at: c.__log.length, ops }); },
+        };
+        drawWorld(ctx, world, { ...plainView({ tilePx: 32, playerPos: { x: 0, y: 0 } }), seedlingSkin: { layer: LAYER, markerAlpha: 0.8, sprites } });
+        return { log: ctx.__log, painted };
+    };
+
+    it('S2: the sprites are painted right after the blit, before the markers\' alpha', () => {
+        const { world } = CASES.plain();
+        const { log, painted } = spritesSkin(world);
+        expect(painted[0]).toEqual({ at: 1, ops: [{ stand: 'body' }] });
+        expect(log[1]).toBe('globalAlpha=0.8');
+    });
+
+    it('S2: a cell the art owns draws no marker (the door fill, the item disc); others keep theirs', () => {
+        const { world } = CASES.plain();
+        const door = `fillStyle="${OBSTACLE_LIB.door_red.color}"`;
+        const discAt = (x, y) => `arc(${x * 32 + 16},${y * 32 + 16},9.6,0,${Math.PI * 2})`;
+        const bare = spritesSkin(world).log;
+        expect(bare).toContain(door);
+        expect(bare).toContain(discAt(1, 3));
+        const owned = spritesSkin(world, { cells: ['4,2', '1,3'] }).log;
+        expect(owned).not.toContain(door);
+        expect(owned).not.toContain(discAt(1, 3));
+        expect(owned).toContain(discAt(5, 0));
+    });
+
+    it('S2: the player sprite replaces the disc and the facing tick', () => {
+        const { world } = CASES.plain();
+        const { log, painted } = spritesSkin(world, { player: [{ stand: 'player' }] });
+        expect(painted.at(-1).ops).toEqual([{ stand: 'player' }]);
+        expect(log).not.toContain(`fillStyle="${COLORS.player}"`);
+    });
+
     it('refuses a malformed seedlingSkin by name', () => {
+        expect(() => assertView({ ...plainView(), seedlingSkin: { layer: LAYER, markerAlpha: 0.8, sprites: { ops: [] } } }))
+            .toThrow(/seedlingSkin.sprites must be null or/);
         expect(() => assertView({ ...plainView(), seedlingSkin: {} })).toThrow(/seedlingSkin must be null or/);
         expect(() => assertView({ ...plainView(), seedlingSkin: { layer: LAYER, markerAlpha: 0 } }))
             .toThrow(/seedlingSkin must be null or/);
