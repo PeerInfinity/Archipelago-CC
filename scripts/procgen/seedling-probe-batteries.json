@@ -12,7 +12,7 @@
       { "probe": "probe-seedling-obstacle-events.mjs", "args": "--only=W,J" },
       { "probe": "probe-seedling-wasm-generated-playback.mjs", "args": "" },
       { "probe": "probe-seedling-loop-restart.mjs", "args": "" },
-      { "probe": "probe-seedling-seal-delivery.mjs", "args": "--only=A" }
+      { "probe": "probe-seedling-seal-delivery.mjs", "args": "" }
     ],
     "long": [
       { "probe": "probe-seedling-wasm-logical-links.mjs", "args": "--only=B --budget-s=1200" }
