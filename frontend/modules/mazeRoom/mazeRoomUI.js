@@ -82,8 +82,9 @@ import {
 // builds `drawWorld`'s `view` out of this panel's own state.
 import { TILE_PX, drawWorld } from './mazeRoomRender.js';
 import {
-    SEEDLING_CELL_PX, bakeSeedlingLayer, loadSeedlingArt, seedlingSkinFor,
+    SEEDLING_CELL_PX, bakeSeedlingLayer, createTinter, loadSeedlingArt, seedlingLayerKey, seedlingSkinFor, spritePainter,
 } from './mazeSeedlingSkin.js';
+import { seedlingSprites } from './mazeSeedlingSprites.js';
 import { getLastRawJsonData } from '../stateManager/index.js';
 import {
     mapDocumentPath, playerOfRawPayload, regionAtlasOf, rulesOfRawPayload,
@@ -355,8 +356,12 @@ export class MazeRoomUI {
         this.seedlingArtEnabled = true;
         // The art + map load: null (not asked), {status:'loading'|'ready'|'failed', …}.
         this._seedlingArt = null;
-        // world object → its baked room; the stats the in-app row reads.
+        // world object → its baked room (kept while `seedlingLayerKey` is
+        // unchanged); the stats the in-app row reads.
         this._seedlingLayers = new WeakMap();
+        // world object → its tiles before its FIRST edit (maze-seedling-art-2):
+        // the art cannot show an edited wall, so the bake paints those cells.
+        this._seedlingBaseTiles = new WeakMap();
         this._seedlingLayerStats = { builds: 0, hits: 0 };
         this.seenTilesByRegion = new Map(); // regionId -> Set<posKey>
         // Direct-explore button state: set true while a user-initiated
@@ -3452,6 +3457,9 @@ export class MazeRoomUI {
     /** Apply the editor's selected op at tile (x, y) and re-verify. */
     _applyEditAt(x, y) {
         const editor = this._ensureEditor();
+        if (this.world?.tiles && !this._seedlingBaseTiles.has(this.world)) {
+            this._seedlingBaseTiles.set(this.world, Int8Array.from(this.world.tiles));
+        }
         const result = editor.applyAt(this.world, x, y);
         this._editorMessage = result.description;
         if (result.ok && result.type !== 'noop') {
@@ -3797,8 +3805,9 @@ export class MazeRoomUI {
      * The `seedlingSkin` view field: null (draw as today) unless the world is
      * a Seedling world, the toggle is on, and the art and map have loaded. The
      * first ask starts the load and re-renders once when it lands. The room is
-     * baked ONCE per world object (the maze's own state never changes it: what
-     * the maze models is drawn by its markers), so a render costs one blit.
+     * baked once per world object AND `seedlingLayerKey` (play never changes
+     * it: what the maze models is drawn by the maze; an in-place EDIT does, and
+     * rebakes — maze-seedling-art-2), so a render costs one blit.
      */
     _seedlingSkinView() {
         if (!this.seedlingArtEnabled) return null;
@@ -3807,8 +3816,10 @@ export class MazeRoomUI {
         if (!this._seedlingArt) this._startSeedlingArtLoad();
         const loaded = this._seedlingArt;
         if (loaded?.status !== 'ready') return null;
+        const baseTiles = this._seedlingBaseTiles.get(this.world) ?? null;
+        const key = seedlingLayerKey(this.world, skin.level, baseTiles);
         const hit = this._seedlingLayers.get(this.world);
-        if (hit && hit.art === loaded.art && hit.level === skin.level) {
+        if (hit && hit.art === loaded.art && hit.key === key) {
             this._seedlingLayerStats.hits += 1;
             return hit.view;
         }
@@ -3822,17 +3833,17 @@ export class MazeRoomUI {
                     return c;
                 },
                 mapDoc: loaded.mapDoc, level: skin.level, mazeWorld: this.world,
-                art: loaded.art, images: loaded.images, cellPx: SEEDLING_CELL_PX,
+                art: loaded.art, images: loaded.images, cellPx: SEEDLING_CELL_PX, baseTiles,
             });
         } catch (err) {
             console.error(`[mazeRoom] Seedling art: level ${skin.level} not drawn — ${err.message}`);
-            this._seedlingLayers.set(this.world, { art: loaded.art, level: skin.level, view: null, error: err.message });
+            this._seedlingLayers.set(this.world, { art: loaded.art, key, view: null, error: err.message });
             return null;
         }
         const view = Object.freeze({ layer: baked.canvas, markerAlpha: SEEDLING_MARKER_ALPHA });
-        this._seedlingLayers.set(this.world, { art: loaded.art, level: skin.level, view, counts: baked.counts });
+        this._seedlingLayers.set(this.world, { art: loaded.art, key, view, counts: baked.counts, census: baked.census });
         this._seedlingLayerStats.builds += 1;
-        this._seedlingLayerStats.last = { level: skin.level, ops: baked.ops, ...baked.counts };
+        this._seedlingLayerStats.last = { level: skin.level, ops: baked.ops, edits: baked.edits, ...baked.counts };
         return view;
     }
 
@@ -3936,7 +3947,7 @@ export class MazeRoomUI {
      */
     _drawWorld(canvas, seedlingSkin = this._seedlingSkinView()) {
         const ctx = canvas.getContext('2d');
-        drawWorld(ctx, this.world, {
+        const view = {
             tilePx: seedlingSkin ? SEEDLING_CELL_PX : TILE_PX,
             playerPos: this.state ? this.state.player_pos : null,
             inventory: this._currentInventory(),
@@ -3953,8 +3964,37 @@ export class MazeRoomUI {
             broken: this.state?.broken ?? null,
             facing: this.state?.facing ?? null,
             armedTraps: this.state ? armedTraps(this.world, this.state, this.externalInventory ?? undefined) : null,
-            seedlingSkin,
+            seedlingSkin: null,
+        };
+        view.seedlingSkin = seedlingSkin ? this._withSeedlingSprites(seedlingSkin, view, canvas) : null;
+        drawWorld(ctx, this.world, view);
+    }
+
+    /**
+     * ⛓ S2 (maze-seedling-art-2) — the baked room plus this render's LIVE sprites
+     * (`mazeSeedlingSprites.seedlingSprites`), read off the very `view` the draw
+     * gets, so a sprite and the marker it replaces cannot disagree about the
+     * state. Per press: the census is the bake's (cached with the layer), the
+     * ops are a few dozen.
+     */
+    _withSeedlingSprites(skin, view, canvas) {
+        const entry = this._seedlingLayers.get(this.world);
+        const loaded = this._seedlingArt;
+        if (!entry?.census || loaded?.status !== 'ready') return skin;
+        const { rules, player } = this._loadedRules();
+        const items = rules?.items?.[player] ?? null;
+        const sprites = seedlingSprites(entry.census, loaded.art, {
+            mazeWorld: this.world,
+            view,
+            blocks: this.state?.blocks ?? null,
+            isEvent: (name) => items?.[name]?.event === true,
         });
+        this._seedlingTinter ??= createTinter(document);
+        const paint = spritePainter({ canvas, mazeWorld: this.world, images: loaded.images, tinted: this._seedlingTinter });
+        this._seedlingLayerStats.sprites = sprites.ops.length;
+        this._seedlingLayerStats.playerSprite = !!sprites.player;
+        this._seedlingLayerStats.censusRefusals = entry.census.refusals.length;
+        return { ...skin, sprites: { ...sprites, paint } };
     }
 
     // --- Generation ---
