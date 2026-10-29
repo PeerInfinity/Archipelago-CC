@@ -488,6 +488,11 @@
   #trace .rj.none { opacity: .55; }
   #trace .traceNone { padding: 6px; color: #8a8a98; font-size: 11px; }
   [hidden] { display: none !important; }
+
+  /* ⛓ MANUAL's on-screen controls (slice seedling-lab-touch-visible): shown
+     under the canvas from the moment MANUAL is the source, dimmed until START
+     — a press only reaches the run while it is driving. */
+  body:has(#manualStart:not([disabled])) #stage .flash-touch-controls { opacity: .45; }
 </style>
 </head>
 <body>
@@ -654,9 +659,16 @@
         <button id="manualStop" disabled>STOP &amp; fold</button>
         <span id="manualKeys"></span>
         <!-- ⛓ The on-screen controls (a d-pad + X/C/V under the canvas, the
-             flash panel's `touchControls.js`): on by default on a touch device
-             or with ?touch=1, off with ?touch=0, and this box flips them. -->
-        <label title="a d-pad and the X/C/V buttons under the canvas — they press the same keys the keyboard does"><input id="manualTouch" type="checkbox" disabled> on-screen controls</label>
+             flash panel's `touchControls.js`), with the panel's own setting:
+             auto (a touch device, or ?touch=1; ?touch=0 hides) / on / off.
+             Here, beside START, because it shows the moment MANUAL is the
+             source — the controls it governs appear at that moment too.
+             Remembered per browser (slice seedling-lab-touch-visible). -->
+        <label title="a d-pad and the X/C/V buttons under the canvas — they press the same keys the keyboard does, while a run is going">on-screen controls <select id="manualTouch" disabled>
+          <option value="auto">auto (touch screens)</option>
+          <option value="on">on</option>
+          <option value="off">off</option>
+        </select></label>
       </span>
     </div>
     <div class="line" id="solveGoalLine">
