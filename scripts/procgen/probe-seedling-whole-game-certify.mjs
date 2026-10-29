@@ -68,12 +68,14 @@ export function mergeArm(parts, allLevels) {
     const problems = [...new Set(parts.flatMap((p) => p.problems))].sort();
     const acceptedKeys = [...new Set(parts.flatMap((p) => p.accepted.map((a) => JSON.stringify({ label: a.label, source: a.source, by: a.by }))))].sort();
     const lines = [...new Set(parts.flatMap((p) => p.lines))].sort();
+    // ⛓ The rows an UNADMITTED landing skipped points of (session tile-primitives-lightpoles), named — never silent.
+    const skipped = [...new Set(parts.flatMap((p) => (p.skipped ?? []).map((k) => JSON.stringify(k))))].sort().map((k) => JSON.parse(k));
     const threw = parts.filter((p) => p.threw).map((p) => `shard ${p.shard}: ${p.threw}`);
     const problemLevels = new Set(problems.map((p) => p.match(/^(level_\d+)/)?.[1]).filter(Boolean));
     const clean = [...allLevels].filter((l) => !problemLevels.has(l)).length;
     const looser = problems.filter((p) => /derived true, atlas false/.test(p)).length;
     const stricter = problems.filter((p) => /derived false, atlas true/.test(p)).length;
-    return { problems, accepted: acceptedKeys.map((k) => JSON.parse(k)), lines, threw, clean, levels: allLevels.size, looser, stricter };
+    return { problems, accepted: acceptedKeys.map((k) => JSON.parse(k)), skipped, lines, threw, clean, levels: allLevels.size, looser, stricter };
 }
 
 if (!isMainThread) await worker();
@@ -91,7 +93,7 @@ async function worker() {
     try {
         out = mod.certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions, atlas: ATLAS, permissive: arm === 'old' ? [] : permissive });
     } catch (e) {
-        out = { threw: String(e.stack ?? e).slice(0, 2000), problems: [], lines: [], accepted: [] };
+        out = { threw: String(e.stack ?? e).slice(0, 2000), problems: [], lines: [], accepted: [], skipped: [] };
     }
     parentPort.postMessage({ shard, arm, ms: Date.now() - t0, levels: mine, ...out });
 }
@@ -127,11 +129,12 @@ async function main() {
             })));
             const allLevels = new Set(Object.keys(rules.preset_sidecars['1']).map((s) => s.split('__')[0]));
             const { looser, stricter, ...merged } = mergeArm(parts, allLevels);
-            const { problems, accepted, lines, threw, clean } = merged;
+            const { problems, accepted, skipped, lines, threw, clean } = merged;
             result[arm] = { ...merged, shardMs: parts.map((p) => p.ms), wallMs: Date.now() - t0 };
-            console.log(`ARM ${arm}: ${problems.length} problems (derived-true/atlas-false ${looser}, derived-false/atlas-true ${stricter}, other ${problems.length - looser - stricter}) / ${accepted.length} accepted / ${threw.length} threw; clean ${clean}/${allLevels.size} levels; ${lines.length} lines; wall ${Date.now() - t0} ms`);
+            console.log(`ARM ${arm}: ${problems.length} problems (derived-true/atlas-false ${looser}, derived-false/atlas-true ${stricter}, other ${problems.length - looser - stricter}) / ${accepted.length} accepted / ${threw.length} threw; ${skipped.length} row(s) skip unadmitted landing points; clean ${clean}/${allLevels.size} levels; ${lines.length} lines; wall ${Date.now() - t0} ms`);
             for (const p of problems) console.log(`  PROBLEM[${arm}] ${p}`);
             for (const a of accepted) console.log(`  ACCEPTED[${arm}] ${JSON.stringify(a)}`);
+            for (const k of skipped) console.log(`  SKIPPED[unadmitted][${arm}] ${k.label}: ${k.points} of ${k.of} points${k.partial ? ' (row also a problem)' : ''}`);
             for (const t of threw) console.log(`  THREW[${arm}] ${t}`);
             console.log(`PASS: arm ${arm} measured`);
         }

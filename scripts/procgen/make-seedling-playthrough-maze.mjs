@@ -75,7 +75,10 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * Fire cells carry the rules' corpse ruling, Fire AND a weapon (`playthroughHandRuledGridFor`, ⚖ "Static now, mechanism later").
  * Sphere 5.6 (session tile-primitives-sphere-order-7, ⚖ 2026-10-28 "All 13"): L50–L56 L61–L63 L90 L91 L93 — L61's and L63's ButtonRooms light
  * L63's and L62's poles (press locations, as L38's); L63's two in-room poles, lit by a Spear thrust from a stance that is not the faced
- * cell, gate only the L65 landings, so they are not carried here (⚖ "5.6 now, footprints next, then poles").
+ * cell, gate only the L65 landings, so they are not carried here (⚖ "5.6 now, footprints next, then poles"). Sphere 6.1 (session
+ * tile-primitives-lightpoles, ⚖ 2026-10-28 "L64 + every pole"): L64 — and every LightPole whose light kills a DarkTrap is laid in its
+ * level's world (⚖ "Rope-shaped, stances"): the DarkTraps are one obstacle, opened by a Spear thrust from one of the pole's stances or by
+ * the event that lights it (L62's: L63's ButtonRoom press; L63's: their own in-room events, now produced and carried).
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
@@ -83,7 +86,7 @@ export const LEVELS = Object.freeze([
     'level_23', 'level_24', 'level_25', 'level_26', 'level_27', 'level_28', 'level_29', 'level_30', 'level_31', 'level_32', 'level_33', 'level_34',
     'level_35', 'level_36', 'level_37', 'level_38', 'level_39', 'level_40', 'level_43', 'level_44', 'level_45', 'level_46', 'level_47',
     'level_48', 'level_49', 'level_50', 'level_51', 'level_52', 'level_53', 'level_54', 'level_55', 'level_56', 'level_59', 'level_60', 'level_61',
-    'level_62', 'level_63', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_90', 'level_91', 'level_92', 'level_93', 'level_94',
+    'level_62', 'level_63', 'level_64', 'level_67', 'level_86', 'level_87', 'level_88', 'level_89', 'level_90', 'level_91', 'level_92', 'level_93', 'level_94',
     'level_95',
 ]);
 
@@ -263,9 +266,12 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     // ⛓ A cross-room PRESS (session tile-primitives-sphere-order-5, ⚖ 2026-10-27 "Location on the cell") is produced in its
     // PRESSER's world: the event is a location on the ButtonRoom's own cell (`ButtonRoom.update`: a body standing on it presses
     // it, and the press latches). Its far side — the target the event opens in another level — is not modelled yet (⚖ "Later, with L39").
+    // ⛓ An IN-ROOM POLE's event (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances") is produced in its
+    // own level's world: a Spear thrust from one of the pole's stances lights it, and the cut IS the event (mode 'pole').
     const mode = new Map([
         ...layer.obstacle.events.map((e) => [e.name, 'open']), ...layer.locks.events.map((e) => [e.name, 'latch']),
         ...layer.buttons.events.filter((e) => e.fields.action?.presser).map((e) => [e.name, 'press']),
+        ...layer.poles.events.map((e) => [e.name, 'pole']),
     ]);
     out.events = neededEvents(out, (name) => mode.has(name));
     // `rule` = the event's own location rule: a sub-region world lays a touched lock no crossing uses by it (⚖ "Lay
@@ -278,7 +284,8 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     // REMOVES — the producer's own `persistenceEffect` says 'opens' (L39's wand lock, `tSet < 0`: built gone once {39,8} is in
     // `persistence_cleared`) — stands on its own cell in its own level's world (mode 'target'), opened by the event alone, when that
     // level is listed. A target the press does NOT remove is not laid: a cross-room LIGHTPOLE is lit, not gone (its light kills the
-    // DarkTraps it reaches), which the maze does not model yet, so its rows still say no world opens it.
+    // DarkTraps it reaches): its level's world takes the press as the pole's `opened_by` instead (mode 'lit', session
+    // tile-primitives-lightpoles) — the pole's bodies open by the press, or by a thrust from one of its stances.
     const targets = crossRoomButtonsOf(PLAYTHROUGH_MAP).flatMap((b) => b.targets);
     const opens = (o) => {
         const t = targets.find((x) => x.level === o.level && x.type === o.class && x.x === o.x && x.y === o.y);
@@ -287,7 +294,12 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     };
     const opened = new Set();
     for (const e of out.world.filter((w) => w.mode === 'press')) {
-        if (!atlas.regions.some((r) => r.map_ref === e.obstacle.level && keep.has(r.region_id)) || !opens(e.obstacle)) continue;
+        if (!atlas.regions.some((r) => r.map_ref === e.obstacle.level && keep.has(r.region_id))) continue;
+        if (e.obstacle.class === 'lightpole') {
+            out.world.push({ name: e.name, side: null, mode: 'lit', obstacle: e.obstacle, rule: null });
+            continue;
+        }
+        if (!opens(e.obstacle)) continue;
         out.world.push({ name: e.name, side: null, mode: 'target', obstacle: e.obstacle, rule: null });
         opened.add(e.name);
     }

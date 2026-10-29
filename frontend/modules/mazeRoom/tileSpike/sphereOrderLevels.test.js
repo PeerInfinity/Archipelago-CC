@@ -276,39 +276,81 @@ describe('L43 — clean; its locations wait for five Totem Shards', () => {
 
 /**
  * ⛓ SPHERE 5.6 (session tile-primitives-sphere-order-7, ⚖ 2026-10-28 "All 13"): L50–L56 L61–L63 L90 L91 L93.
- *   - L61 / L63: their ButtonRooms light L63's and L62's poles — press locations, as L38's. A lit pole's light kills the DarkTraps it
- *     reaches, which the maze does not lay yet (⚖ "5.6 now, footprints next, then poles"); L63's two IN-ROOM poles, lit by a Spear
- *     thrust from a stance that is not the faced cell, gate only the L65 landings, so with L65 unlisted they are not carried;
+ *   - L61 / L63: their ButtonRooms light L63's and L62's poles — press locations, as L38's;
  *   - L91: L89 r1c10 → L91 was the one open row — the teleporter stands on a waterfall (the world: Feather; the rules: Swim), left to
  *     the rules arc's game probe (⚖ "Ask for a game probe"). The probe sided with the world and the rules now charge Swim×2
  *     (session rules-waterfall-door), which the whole preset certifies clean.
+ * ⛓ SPHERE 6.1 (session tile-primitives-lightpoles, ⚖ 2026-10-28 "L64 + every pole", "Rope-shaped, stances"): L64, and every LightPole
+ * whose light kills a DarkTrap is laid in its level's world — the DarkTraps one obstacle (their `hit()` is empty), opened by a Spear
+ * thrust from one of the pole's STANCES (`struck_from`, the rules' own `poleThrustStances`: a pole's bob box is no cell) or by the event
+ * that lights it. L62's is lit from L63's ButtonRoom (`opened_by`); L63's flags 6/7 are lit in their own room, so their events are now
+ * produced and carried (⛔ overturns sphere-order-7's "the in-room poles are not carried"). L62 is ONE region, and the rules price its
+ * pocket's doors (the L64 landing) on Or(the press, Ghost Spear): the certifier prices a landing only at inventories an AP crossing that
+ * lands there admits.
  */
-describe('L61–L63 — the lightpole presses are locations; the in-room poles are not carried', () => {
-    const LV = ['level_61', 'level_62', 'level_63'];
+describe('L61–L64 — the poles are laid; the press lights L62\'s, L63\'s in-room poles are their own events', () => {
+    const LV = ['level_61', 'level_62', 'level_63', 'level_64'];
     const F1 = 'L63 flag 1: lightpole@64,88 cleared';
     const F0 = 'L62 flag 0: lightpole@120,200 cleared';
+    const F6 = 'L63 flag 6: lightpole@48,272 cleared';
+    const F7 = 'L63 flag 7: lightpole@112,272 cleared';
+    const SPEAR = JSON.stringify([['Ghost Spear']]);
+    const pole = (rules, region, id) => rules.preset_sidecars['1'][region].playable_payload.obstacleLib[id];
 
-    it('L61–L63 certify clean; each press is reached empty-handed on its ButtonRoom\'s cell', () => {
+    it('L61–L64 certify clean; each press is reached empty-handed on its ButtonRoom\'s cell', () => {
         const out = certify(LV);
         expect(out.problems).toEqual([]);
         expect(out.accepted).toEqual([]);
         const sc = compile(LV).preset_sidecars['1'];
         expect(sc.level_61__r0c10.playable_payload.items.filter((i) => i.locationName === F1).map((i) => [i.x, i.y])).toEqual([[11, 3]]);
         expect(sc.level_63__r0c1.playable_payload.items.filter((i) => i.locationName === F0).map((i) => [i.x, i.y])).toEqual([[2, 4]]);
-        for (const name of [F1, F0]) {
-            const rows = out.lines.filter((l) => l.includes(`@${name}`));
-            expect(rows, name).not.toEqual([]);
-            for (const l of rows) expect(l.slice(l.indexOf('=') + 1), l).toBe(FREE);
-        }
+        // L61's press from its landing; L63's from its entrance — from the L62 door #2 landing (4,1), behind L63 flag 1's own trap,
+        // it costs that pole's press or the Spear
+        expect(line(out, `level_61__r0c10@${F1}<@10,1=`)).toBe(FREE);
+        expect(line(out, `level_63__r0c1@${F0}=`)).toBe(FREE);
+        expect(line(out, `level_63__r0c1@${F0}<@4,1=`)).toBe(JSON.stringify([['Ghost Spear'], [F1]]));
     }, 180_000);
 
-    it('L63\'s in-room pole events gate nothing here and are not carried; L62\'s door #2 still costs the press or the Spear', () => {
-        const regions = compile(LV).regions['1'];
-        const names = Object.values(regions).flatMap((r) => (r.locations ?? []).map((l) => l.name));
-        expect(names.filter((n) => /^L63 flag [67]:/.test(n))).toEqual([]);
-        const doors = regions.level_62.exits.filter((e) => e.connected_region === 'level_63__r0c1').map((e) => JSON.stringify(e.access_rule));
-        expect(doors).toEqual(['{"rule":"True_"}', JSON.stringify({ rule: 'Or', children: [
-            { rule: 'Has', args: { item_name: F1 } }, { rule: 'Has', args: { item_name: 'Ghost Spear' } }] })]);
+    it('L62\'s pole: its DarkTrap (7,13) is one obstacle, opened by the L63 press or a thrust from a stance on either side', () => {
+        const rules = compile(LV);
+        const e = pole(rules, 'level_62', 'pole_120_200');
+        expect(e).toMatchObject({ kind: 'pole', at: '7,13', opened_by: F0, struck_by: ['spear'], clear_set: [['lit_120_200']] });
+        expect(e.event).toBeUndefined();
+        expect(e.struck_from.spear).toEqual(['8,10,S', '8,11,S', '7,12,E', '7,12,N', '8,12,W', '8,12,S', '7,14,N']);
+        expect(rules.preset_sidecars['1'].level_62.playable_payload.obstacles.filter((o) => o.id === 'pole_120_200')).toEqual([{ x: 7, y: 13, id: 'pole_120_200' }]);
+        const out = certify(LV);
+        // from L61's landings the trap stands between L62 and the L64 door: the press, or the Spear from (7,14)
+        expect(line(out, 'level_62->level_64=')).toBe(JSON.stringify([['Ghost Spear'], [F0]]));
+        // from the pocket (the L64 landing (7,5)) the way out costs the same; the L64 door beside it is free
+        expect(line(out, 'level_62->level_61__r0c7<@7,5=')).toBe(JSON.stringify([['Ghost Spear'], [F0]]));
+        expect(line(out, 'level_62->level_64<@7,5=')).toBe(FREE);
+    }, 180_000);
+
+    it('L63\'s in-room poles are produced and carried: each event is a thrust from its stances, priced Ghost Spear', () => {
+        const rules = compile(LV);
+        expect(pole(rules, 'level_63__r0c1', 'pole_48_272')).toMatchObject({ at: '2,17', event: F6 });
+        expect(pole(rules, 'level_63__r0c1', 'pole_112_272')).toMatchObject({ at: '8,17', event: F7 });
+        expect(pole(rules, 'level_63__r0c1', 'pole_64_88')).toMatchObject({ at: '4,6', opened_by: F1 });
+        const out = certify(LV);
+        expect(line(out, `level_63__r10c2@${F6}=`)).toBe(SPEAR);
+        expect(line(out, `level_63__r6c9@${F7}<level_63__r0c1=`)).toBe(SPEAR);
+        const names = Object.values(rules.regions['1']).flatMap((r) => (r.locations ?? []).map((l) => l.name));
+        expect(names.filter((n) => /lightpole/.test(n)).sort()).toEqual([F0, F1, F6, F7].sort());
+    }, 180_000);
+
+    it('a mutant without the pole (its DarkTrap gone) is caught: the world walks L62 → L64 empty-handed', () => {
+        const rules = structuredClone(compile(LV));
+        const p = rules.preset_sidecars['1'].level_62.playable_payload;
+        p.obstacles = p.obstacles.filter((o) => o.id !== 'pole_120_200');
+        const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS, regions: ['level_62'] });
+        expect(out.problems).toContain('level_62 → level_64 holding []: derived true, atlas false');
+    }, 180_000);
+
+    it('a mutant L64 → L62 rule (free) is caught: the pocket landing is then an arrival holding nothing, and the trap seals it', () => {
+        const rules = structuredClone(compile(LV));
+        rules.regions['1'].level_64.exits.find((e) => e.connected_region === 'level_62').access_rule = { rule: 'True_' };
+        const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS, regions: ['level_62', 'level_64'] });
+        expect(out.problems).toContain('level_62 → level_61__r0c7 (landing 7,5) holding []: derived false, atlas true');
     }, 180_000);
 });
 

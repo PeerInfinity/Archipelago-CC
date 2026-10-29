@@ -27,7 +27,7 @@
 
 import {
     createState, getExitAt, getObstacle, mazeVisitedKey, hasItemActions, worldInputs, USE_PREFIX, TURN_PREFIX, INPUTS, turnInput,
-    actionItems, actionUsable, blockWithinReach, footprintCells,
+    actionItems, actionUsable, blockWithinReach, footprintCells, stanceStrikes,
 } from '../mazeRoomEngine.js';
 import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
 import { isObstacleCleared } from '../../shared/procgen/library.js';
@@ -246,6 +246,7 @@ export function regionItems(world) {
             for (const item of actionItems(world.actionLib?.[actionId])) if (!held.has(item)) out.add(item);
         }
         if (entry.activates && entry.event) out.add(entry.event);
+        if (entry.activates && entry.opened_by) out.add(entry.opened_by);
         for (const ev of entry.events ?? []) out.add(ev.name);
     }
     // ⛓ STRUCK BLOCKS: the items of the actions that move the world's blocks.
@@ -306,6 +307,7 @@ function obstacleToward(world, state, macro) {
     const faced = { ...state, facing: macro[0].slice(TURN_PREFIX.length) };
     const id = macro[1].slice(USE_PREFIX.length);
     if (footprintCells(world, faced, id).some((c) => getObstacle(world, c.x, c.y))) return true;
+    if (stanceStrikes(world, faced, id).length > 0) return true;
     return blockWithinReach(world, faced, id);
 }
 
