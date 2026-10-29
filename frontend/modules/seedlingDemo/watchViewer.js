@@ -192,11 +192,6 @@ import {
     clampTick, createManualKeys, createManualSession, foldRoundTrip, KEYBOARD_ROWS,
     liveOverlaysFor, parseTapeText, readViewParams, serializeTapeText, touchSendFor,
 } from './watchManual.js';
-/**
- * ⛓ THE ON-SCREEN CONTROLS (slice `seedling-lab-touch-controls`) — the flash panel's, imported AS IS: the d-pad and
- * buttons Seedling's `games/seedling.json` declares, shown by the same auto/on/off rule (`?touch=1`, a coarse pointer).
- */
-import { mountTouchControls, parseTouchLayout, touchControlsVisible } from '../flashPanel/touchControls.js';
 import {
     agreementWithPayload, agreementWithTrace, BIOME_NAMES, describeState, displaySolve,
     DIRECTED_ANCHOR_TRIES, applyDirective, describeKeptKind, directedCost, displayStaging,
@@ -368,7 +363,11 @@ import { applyGlossaryTips, legendTipFor } from '../procgenDocs/glossaryTips.js'
 import {
     FLOOR_COLOUR, OBJECT_SOLID_FAMILIES, SCENERY_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
-
+/**
+ * ⛓ THE ON-SCREEN CONTROLS (slice `seedling-lab-touch-controls`) — the flash panel's, imported AS IS: the d-pad and
+ * buttons Seedling's `games/seedling.json` declares, shown by the same auto/on/off rule (`?touch=1`, a coarse pointer).
+ */
+import { mountTouchControls, parseTouchLayout, touchControlsVisible } from '../flashPanel/touchControls.js';
 
 /**
  * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL, NOT FROM
