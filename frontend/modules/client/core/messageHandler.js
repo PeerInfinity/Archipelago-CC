@@ -11,6 +11,7 @@ import {
   getLocationNameForGame,
   initializeMappingsFromDataPackage,
 } from '../utils/idMapping.js';
+import { findPresetsForRoom } from '../../../utils/presetResolver.js';
 import {
   generateInaccessibleLocationSphereLog,
   generateRegressionTestSphereLog,
@@ -22,6 +23,16 @@ import { stateManagerProxySingleton } from '../../stateManager/index.js';
 
 // Module name constant - avoids circular import with ../index.js
 const MODULE_NAME = 'client';
+
+// How long the connect flow waits for an auto-loaded preset's rules to load.
+const PRESET_LOAD_TIMEOUT_MS = 60_000;
+
+/** RoomInfo's games without the 'Archipelago' meta-game. */
+export function roomGamesOf(roomInfo) {
+  const games = roomInfo?.games;
+  if (!games) return [];
+  return [...games].filter((g) => typeof g === 'string' && g !== 'Archipelago');
+}
 
 
 // Helper function for logging with fallback
@@ -41,6 +52,14 @@ export class MessageHandler {
     this.clientSlot = null;
     this.clientTeam = null;
     this.clientGameName = null; // Store the game name for this client's slot
+    // The game the player picked in the connect form, used when the loaded
+    // rules don't fit the room (see chooseGame).
+    this.chosenGame = null;
+    // The last RoomInfo, and a counter that lets a slow preset load notice a
+    // newer RoomInfo (a reconnect) and stand down.
+    this.roomInfo = null;
+    this._roomInfoSeq = 0;
+    this._awaitingGameChoice = false;
     this.players = [];
     // Connected.slot_info: slot number (as a string key) -> { name, game, type, group_members }
     this.slotInfo = {};
@@ -250,50 +269,204 @@ export class MessageHandler {
       this.clientSlotName = this.getDefaultSlotName();
     }
 
-    const slotName = this.clientSlotName;
-
-    // Determine the game name - prefer stateManager's loaded rules over RoomInfo
-    // This ensures multiworld scenarios use the correct player-specific game
-    let gameName = null;
-
-    // First, try to get game name from stateManager (most reliable for multiworld)
-    gameName = this.getClientGameName();
-    if (gameName) {
-      log('info', `[MessageHandler] Using game name from stateManager: ${gameName}`);
+    this.roomInfo = data;
+    const roomInfoSeq = ++this._roomInfoSeq;
+    const roomGames = roomGamesOf(data);
+    if (roomGames.length > 0) {
+      log('info', `[MessageHandler] RoomInfo.games:`, roomGames);
     }
 
-    // Log RoomInfo structure for debugging
-    log('info', `[MessageHandler] RoomInfo keys:`, Object.keys(data));
-    if (data.games) {
-      log('info', `[MessageHandler] RoomInfo.games:`, data.games);
+    // The loaded rules decide the game, as long as they are for a game this
+    // room has. Rules for another game can't describe this slot (the app
+    // always boots with SOME preset loaded, so "no rules" alone never
+    // happens); those are treated as no usable rules.
+    const loadedGame = this.getClientGameName();
+    if (loadedGame && (roomGames.length === 0 || roomGames.includes(loadedGame))) {
+      log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
+      this._warnOnSeedMismatch(data.seed_name);
+      this._sendConnect(loadedGame);
+      return;
     }
-    if (data.slot_info) {
-      log('info', `[MessageHandler] RoomInfo.slot_info:`, data.slot_info);
+    if (loadedGame) {
+      this._printToConsole(
+        `The loaded rules are for ${loadedGame}, which this room does not have (${roomGames.join(', ')}).`,
+        'warning'
+      );
     }
-    if (data.players) {
-      log('info', `[MessageHandler] RoomInfo.players:`, data.players);
-    }
+    return this._connectWithoutRules(data, roomGames, roomInfoSeq);
+  }
 
-    // Fallback: if stateManager didn't have the game name, try RoomInfo
-    if (!gameName && data.games && Array.isArray(data.games) && data.games.length > 0) {
-      // Filter out 'Archipelago' which is the meta-game
-      const actualGames = data.games.filter(g => g !== 'Archipelago');
-      if (actualGames.length > 0) {
-        gameName = actualGames[0];
-        log('info', `[MessageHandler] Fallback: using first available game from RoomInfo: ${gameName}`);
+  /**
+   * Connect when the loaded rules don't fit the room: load the preset made
+   * from this room's own seed if there is exactly one, otherwise use the game
+   * the player picked (or the room's only game), otherwise ask for one.
+   */
+  async _connectWithoutRules(roomInfo, roomGames, roomInfoSeq) {
+    const isStale = () => roomInfoSeq !== this._roomInfoSeq;
+    const chosen = this.chosenGame || null;
+
+    const preset = await this._findPresetForRoom(
+      roomInfo.seed_name,
+      chosen ? [chosen] : roomGames,
+      chosen ? roomGames : null
+    );
+    if (isStale()) return;
+    if (preset) {
+      this._printToConsole(
+        `Found preset ${preset.gameKey}/${preset.folderName} for this room; loading it before connecting…`,
+        'info'
+      );
+      const loaded = await this._loadPresetRules(preset);
+      if (isStale()) return;
+      if (loaded) {
+        this._printToConsole(`Loaded ${preset.path} (player ${preset.playerId}).`, 'success');
+        this._sendConnect(preset.game);
+        return;
       }
+      this._printToConsole(`Could not load ${preset.path}; choose the game instead.`, 'warning');
     }
 
-    // Final fallback
-    if (!gameName) {
-      gameName = 'A Link to the Past';
-      log('warn', `[MessageHandler] No game name found, using default: ${gameName}`);
+    const game = chosen || (roomGames.length === 1 ? roomGames[0] : null);
+    if (game) {
+      log('info', `[MessageHandler] No usable rules; connecting as ${game}.`);
+      this._sendConnect(game);
+      return;
     }
 
+    // Wait for the player's pick (chooseGame); the socket stays open.
+    this._awaitingGameChoice = true;
+    this.eventBus?.publish('client:gameChoiceNeeded', { games: roomGames });
+    this._printToConsole(
+      roomGames.length > 0
+        ? `This room has several games (${roomGames.join(', ')}). Choose yours in the Game field to connect.`
+        : 'The server did not list its games. Type your game in the Game field to connect.',
+      'warning'
+    );
+  }
+
+  /**
+   * The game the player picked in the connect form. Used for the Connect
+   * packet whenever the loaded rules don't fit the room; if a RoomInfo is
+   * waiting on this choice, connects now.
+   *
+   * @param {string} game
+   */
+  chooseGame(game) {
+    const trimmed = typeof game === 'string' ? game.trim() : '';
+    this.chosenGame = trimmed || null;
+    if (!this.chosenGame || !this._awaitingGameChoice) return;
+    if (!connection.isConnected?.()) return;
+    this._awaitingGameChoice = false;
+    // Try the room's preset for this game first, as at RoomInfo time.
+    this._connectWithoutRules(this.roomInfo || {}, roomGamesOf(this.roomInfo), ++this._roomInfoSeq);
+  }
+
+  /** @returns {boolean} Whether a RoomInfo is waiting for chooseGame(). */
+  isAwaitingGameChoice() {
+    return this._awaitingGameChoice;
+  }
+
+  /**
+   * A server seed that differs from the loaded rules' is allowed (the rules
+   * may still describe it), but the player is told. Rules without a
+   * `seed_name` — or with an empty one — are seedless: no warning.
+   */
+  _warnOnSeedMismatch(serverSeedName) {
+    const rulesSeedName = stateManagerProxySingleton?.getStaticData?.()?.seed_name;
+    if (!rulesSeedName || !serverSeedName) return;
+    if (String(rulesSeedName) === String(serverSeedName)) return;
+    const message =
+      `Warning: the server's seed (${serverSeedName}) is not the loaded rules' seed (${rulesSeedName}). ` +
+      'Connecting anyway; placements and logic may not match the server.';
+    log('warn', `[MessageHandler] ${message}`);
+    this._printToConsole(message, 'warning');
+  }
+
+  /**
+   * The one preset made from this room's seed for this slot, or null (none,
+   * or several — the console says which).
+   *
+   * @param {string} seedName - RoomInfo.seed_name
+   * @param {string[]} games - Games the slot may be playing
+   * @param {string[]|null} roomGames - The room's games when `games` is
+   *   narrowed to the player's pick; null when `games` IS the room's games
+   */
+  async _findPresetForRoom(seedName, games, roomGames = null) {
+    const slotName = this.clientSlotName;
+    if (!seedName || !slotName || typeof fetch !== 'function') return null;
+    let presetFilesData;
+    try {
+      const response = await fetch('./presets/preset_files.json');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      presetFilesData = await response.json();
+    } catch (e) {
+      log('warn', `[MessageHandler] Could not read preset_files.json: ${e.message}`);
+      return null;
+    }
+    const matches = findPresetsForRoom(presetFilesData, {
+      seedName,
+      slotName,
+      games: roomGames || games,
+    }).filter((m) => games.length === 0 || games.includes(m.game));
+    if (matches.length === 1) return matches[0];
+    if (matches.length === 0) {
+      this._printToConsole(`No preset matches this room (seed ${seedName}, slot ${slotName}).`, 'info');
+    } else {
+      this._printToConsole(
+        `Several presets match this room (${matches.map((m) => m.gameKey).join(', ')}); load one in the Presets panel, or choose the game.`,
+        'warning'
+      );
+    }
+    return null;
+  }
+
+  /**
+   * Loads a preset's rules the way the Presets panel does (files:jsonLoaded),
+   * and resolves once the state manager confirms them.
+   *
+   * @returns {Promise<boolean>} true when stateManager:rulesLoaded arrived
+   */
+  async _loadPresetRules(preset) {
+    let jsonData;
+    try {
+      const response = await fetch(preset.path);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      jsonData = await response.json();
+    } catch (e) {
+      log('warn', `[MessageHandler] Could not fetch ${preset.path}: ${e.message}`);
+      return false;
+    }
+    if (!this.eventBus) return false;
+    return new Promise((resolve) => {
+      let unsubscribe = null;
+      const timer = setTimeout(() => {
+        unsubscribe?.();
+        resolve(false);
+      }, PRESET_LOAD_TIMEOUT_MS);
+      unsubscribe = this.eventBus.subscribe('stateManager:rulesLoaded', (event) => {
+        if (event?.source && event.source !== preset.path) return;
+        clearTimeout(timer);
+        unsubscribe?.();
+        resolve(true);
+      });
+      this.eventBus.publish('files:jsonLoaded', {
+        jsonData,
+        selectedPlayerId: preset.playerId,
+        sourceName: preset.path,
+      });
+    });
+  }
+
+  _printToConsole(message, type = 'info') {
+    this.eventBus?.publish('ui:printToConsole', { message, type });
+  }
+
+  _sendConnect(gameName) {
+    this._awaitingGameChoice = false;
     // Store the game name for this client
     this.clientGameName = gameName;
 
-    log('info', `[MessageHandler] Connecting as game: ${gameName}, player: ${slotName}`);
+    log('info', `[MessageHandler] Connecting as game: ${gameName}, player: ${this.clientSlotName}`);
 
     // Authenticate with the server
     const connectionData = {

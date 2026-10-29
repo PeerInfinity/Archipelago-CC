@@ -107,6 +107,21 @@ class MainContentUI {
       this.setConnectionState('error', `Connection refused: ${reason}`);
     });
 
+    // The game picker: RoomInfo's games are its options; it shows itself
+    // when the loaded rules don't fit the room and the handler needs a pick.
+    this._roomGames = [];
+    this._gamePickerShown = false;
+    this.eventBus.subscribe('game:roomInfo', (data) => {
+      this._roomGames = [...(data?.games || [])].filter((g) => g !== 'Archipelago');
+      this._renderGamePicker();
+    });
+    this.eventBus.subscribe('client:gameChoiceNeeded', (data) => {
+      if (Array.isArray(data?.games)) this._roomGames = data.games;
+      this._gamePickerShown = true;
+      this._renderGamePicker();
+      this.gameInput?.focus();
+    });
+
     // ADDED: Subscribe to the game:connected event to show the final success message
     this.eventBus.subscribe('game:connected', (data) => {
       // The AP handshake completed — this, and only this, is "connected".
@@ -202,6 +217,11 @@ class MainContentUI {
               <input id="server-address" value="ws://localhost:38281" style="background-color: #333; color: #eee; border: 1px solid #555; padding: 4px;" />
               <button class="connect-button" style="padding: 4px 10px;">Connect</button>
             </div>
+            <div id="client-game-picker" style="display: none; align-items: center; gap: 5px; width: 100%; justify-content: flex-end;">
+              <label for="client-game" title="Used when the loaded rules are not for a game in this room">Game:</label>
+              <input id="client-game" list="client-game-options" placeholder="Choose your game" style="background-color: #333; color: #eee; border: 1px solid #555; padding: 4px;" />
+              <datalist id="client-game-options"></datalist>
+            </div>
           </div>
           
           <div id="console-checks-line" style="font-size: 0.9em;"></div>
@@ -245,6 +265,9 @@ class MainContentUI {
     this.statusIndicator = root.querySelector('#server-status');
     this.connectButton = root.querySelector('.connect-button');
     this.serverAddressInput = root.querySelector('#server-address');
+    this.gamePicker = root.querySelector('#client-game-picker');
+    this.gameInput = root.querySelector('#client-game');
+    this.gameOptions = root.querySelector('#client-game-options');
 
     this.attachEventListeners();
     this.initializeConsole();
@@ -253,6 +276,7 @@ class MainContentUI {
     // arrived before the elements existed (updateConnectionStatus keeps the
     // state but has nothing to draw on until now).
     this.updateConnectionStatus(this._connectionState, this._connectionDetail);
+    this._renderGamePicker();
 
     this.checksLine?.dispose();
     this.checksLine = mountChecksLine(root.querySelector('#console-checks-line'), {
@@ -302,7 +326,36 @@ class MainContentUI {
     return slotName;
   }
 
+  _renderGamePicker() {
+    if (this.gameOptions) {
+      this.gameOptions.replaceChildren(
+        ...this._roomGames.map((game) => {
+          const option = document.createElement('option');
+          option.value = game;
+          return option;
+        })
+      );
+    }
+    if (this.gamePicker) {
+      this.gamePicker.style.display = this._gamePickerShown ? 'flex' : 'none';
+    }
+  }
+
+  /** Hands the Game field's value to the handler (connects if it is waiting). */
+  _submitGameChoice() {
+    const game = this.gameInput?.value?.trim();
+    if (!game) return;
+    this.messageHandler?.chooseGame?.(game);
+  }
+
   attachEventListeners() {
+    if (this.gameInput) {
+      this.gameInput.addEventListener('change', () => this._submitGameChoice());
+      this.gameInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') this._submitGameChoice();
+      });
+    }
+
     if (this.connectButton && this.serverAddressInput) {
       this.connectButton.addEventListener('click', () => {
         log('info',
@@ -321,6 +374,7 @@ class MainContentUI {
         } else {
           const slotName = this._promptPlayerName();
           if (!slotName) return; // User cancelled the prompt
+          if (this._gamePickerShown) this._submitGameChoice();
 
           // A deliberate retry: report its outcome even if it fails the same
           // way the last attempt did.
