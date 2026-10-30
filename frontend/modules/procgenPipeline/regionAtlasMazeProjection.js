@@ -938,7 +938,9 @@ export function projectRegionToMaze(region, grid, ctx) {
 //                  gate}] — a move into its disc from outside it, holding the gate, ends
 //                  on the trap's cell (Seedling's LavaTrap; session
 //                  tile-primitives-sphere-order-9). Its cells are not claimed: the terrain
-//                  pass lays them as the grid has them, and the disc keeps its floor cells
+//                  pass lays them as the grid has them, and the disc keeps its floor cells;
+//                  `yields` [{from, to}] = the floor steps into two discs it loses to the disc
+//                  the walk enters first (session tile-primitives-sphere-order-10)
 //   ownership      `shared_world.rows`: which AP sub-region owns each cell, from
 //                  the atlas's own partition — walking from a cell of one into
 //                  a cell of another IS the crossing (`user:regionMove`), and
@@ -986,12 +988,15 @@ export function levelHasInteraction(entities) {
 }
 
 /**
- * The first step that enters two pulls' discs from outside both (`"traps at … both grab …"`), or null — the engine's
- * `checkPulls` refusal, read on the projection's own floor.
+ * The first step that enters two pulls' discs from outside both and that all but one of the traps it enters do not
+ * `yield` (`"traps at … both grab …"`, or every one yields it), or null — the engine's `checkPulls` refusal, read on the
+ * projection's own floor.
  */
 function ambiguousPullStep(pullRows, isFloor) {
     const discOf = (p) => new Set([`${p.x},${p.y}`, ...p.from.map((c) => `${c.x},${c.y}`)]);
-    const discs = pullRows.map((p) => ({ p, disc: discOf(p) }));
+    const discs = pullRows.map((p) => ({
+        p, disc: discOf(p), yields: new Set((p.yields ?? []).map((st) => `${st.from.x},${st.from.y}>${st.to.x},${st.to.y}`)),
+    }));
     for (const [i, a] of discs.entries()) {
         for (const b of discs.slice(i + 1)) {
             for (const key of a.disc) {
@@ -999,8 +1004,13 @@ function ambiguousPullStep(pullRows, isFloor) {
                 const [x, y] = key.split(',').map(Number);
                 for (const [, dx, dy] of MOVES) {
                     const k = `${x - dx},${y - dy}`;
-                    if (isFloor(x - dx, y - dy) && !a.disc.has(k) && !b.disc.has(k)) {
-                        return `traps at (${a.p.x},${a.p.y}) and (${b.p.x},${b.p.y}) both grab the step ${k} → ${key}`;
+                    if (!isFloor(x - dx, y - dy) || a.disc.has(k) || b.disc.has(k)) continue;
+                    // ⛓ the traps that take the step: a trap that YIELDS it (the producer's first-entered order) does not
+                    const takers = discs.filter((d) => d.disc.has(key) && !d.disc.has(k) && !d.yields.has(`${k}>${key}`));
+                    if (takers.length !== 1) {
+                        return takers.length > 1
+                            ? `traps at (${takers[0].p.x},${takers[0].p.y}) and (${takers[1].p.x},${takers[1].p.y}) both grab the step ${k} → ${key}`
+                            : `the step ${k} → ${key} is yielded by every trap it enters`;
                     }
                 }
             }
@@ -1350,7 +1360,10 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             const [x, y] = tiles[0];
             const id = `pull_${x}_${y}`;
             builder.obstacleLib[id] = { id, name: e.label ?? id, kind: 'pull', clear_set_type: 'rule', clear_rule: e.rule, color: '#d0602a' };
-            pulls.push({ x, y, from: (e.from ?? []).map(local).filter(inGrid), gate: id, label: e.label ?? id });
+            pulls.push({
+                x, y, from: (e.from ?? []).map(local).filter(inGrid), gate: id, label: e.label ?? id,
+                yields: (e.yields ?? []).map((st) => ({ from: local(st.from), to: local(st.to) })).filter((st) => inGrid(st.from) && inGrid(st.to)),
+            });
             continue;
         }
         // rock / rope
@@ -1704,15 +1717,23 @@ export function projectLevelWorld(region, grid, ctx, entities) {
 
     // ⛓ A pull's disc keeps the cells the world floors (a wall or a pit in it is never stood on); its trap's cell must be
     // floor, and a disc cell no exit stands on (refused by name otherwise — the engine's `checkPulls` says why).
-    const pullRows = pulls.map(({ x, y, from, gate, label }) => {
+    // ⛓ ... and its `yields` (session tile-primitives-sphere-order-10, ⚖ 2026-10-30 "First range entered") keep the steps the
+    // world walks: floor to floor, into the kept disc (the producer measures every step of the level, the lava's included).
+    const pullRows = pulls.map(({ x, y, from, gate, label, yields }) => {
         if (!builder.isFloor(x, y)) throw new Error(`atlas region "${regionId}": ${label} stands on a cell the level world walls`);
         const disc = from.filter(([fx, fy]) => builder.isFloor(fx, fy));
         const onExit = disc.find(([fx, fy]) => exitAt.has(keyOf(fx, fy)));
         if (onExit) throw new Error(`atlas region "${regionId}": ${label} grabs from the exit tile (${onExit}) — not settled`);
-        return { x, y, from: disc.map(([fx, fy]) => ({ x: fx, y: fy })).sort((a, b) => (a.y - b.y) || (a.x - b.x)), gate };
+        const walked = yields.filter((st) => builder.isFloor(...st.from) && builder.isFloor(...st.to))
+            .map((st) => ({ from: { x: st.from[0], y: st.from[1] }, to: { x: st.to[0], y: st.to[1] } }));
+        return {
+            x, y, from: disc.map(([fx, fy]) => ({ x: fx, y: fy })).sort((a, b) => (a.y - b.y) || (a.x - b.x)), gate,
+            ...(walked.length > 0 ? { yields: walked } : {}),
+        };
     });
-    // ⛓ ONE step into two discs from outside both: which trap wins is not settled (the engine refuses it), so such a level's
-    // pulls are DROPPED by name and it projects as it did without them (L78's (6,5) and (9,6) both grab (8,4) → (8,5)).
+    // ⛓ ONE step into two discs from outside both that no yield settles (an exact tie of the producer's first-entered
+    // order): the engine refuses it, so such a level's pulls are DROPPED by name and it projects as it did without them.
+    // (L78's (6,5) and (9,6) both grab (8,4) → (8,5); (6,5) yields it, session tile-primitives-sphere-order-10.)
     // ⛓ A trap whose cell lies in another's disc would fire that tongue on landing: CHAINED pulls are not modelled either
     // (designer review, session tile-primitives-sphere-order-9) — dropped the same way, by name.
     const ambiguous = ambiguousPullStep(pullRows, (x, y) => builder.isFloor(x, y));
