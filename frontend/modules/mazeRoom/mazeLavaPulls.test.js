@@ -95,6 +95,74 @@ describe('overlapping discs (L108\'s ferry)', () => {
     });
 });
 
+/**
+ * ONE step into two discs from outside both (session tile-primitives-sphere-order-10, ⚖ 2026-10-30 "First range entered"):
+ * the game's tongues race, and the trap whose disc the walk enters FIRST wins (L78: (9,6) over (6,5) on (8,4) → (8,5),
+ * `probe-seedling-l78-pull-order.mjs`). The producer measures that; the engine reads it as data — the losing trap
+ * `yields` the step — and still refuses a step two traps would both take.
+ */
+describe('a step into two discs: the trap that yields it does not take it', () => {
+    // trap (1,1) grabs (3,1) too: (2,1) → (3,1) enters both discs from outside both
+    const OTHER = Object.freeze({ x: 1, y: 1, from: [{ x: 3, y: 1 }], gate: 'pull_5_1' });
+    const STEP = Object.freeze({ from: { x: 2, y: 1 }, to: { x: 3, y: 1 } });
+    it('the yielding trap is passed over: the step lands on the other one', () => {
+        const toFar = pullPicture({ pulls: [PULL, { ...OTHER, yields: [STEP] }] });
+        expect(walk(toFar, withInv(createState(toFar), [SUIT]), [INPUT_E, INPUT_E]).player_pos).toEqual({ x: 5, y: 1 });
+        const toNear = pullPicture({ pulls: [{ ...PULL, yields: [STEP] }, OTHER] });
+        expect(walk(toNear, withInv(createState(toNear), [SUIT]), [INPUT_E, INPUT_E]).player_pos).toEqual({ x: 1, y: 1 });
+        expect(pullAfterMove(toNear, STEP.from, STEP.to, new Set([SUIT]))).toEqual({ x: 1, y: 1 });
+    });
+
+    it('a yield is only for the step it names: the trap still takes every other step into its disc', () => {
+        const w = pullPicture({ start: { x: 4, y: 1 }, pulls: [{ ...PULL, yields: [STEP] }, OTHER] });
+        // (4,1) is inside (5,1)'s disc: left onto (3,1) enters only (1,1)'s disc
+        expect(walk(w, withInv(createState(w), [SUIT]), [INPUT_W]).player_pos).toEqual({ x: 1, y: 1 });
+    });
+
+    it('both yielding, or a malformed yield, is refused by name', () => {
+        const bad = (pulls) => () => pullPicture({ pulls });
+        expect(bad([{ ...PULL, yields: [STEP] }, { ...OTHER, yields: [STEP] }]))
+            .toThrow(/the step from 2,1 into 3,1 is yielded by every trap it enters/);
+        expect(bad([PULL, { ...OTHER, yields: [{ from: { x: 2, y: 1 }, to: { x: 4, y: 1 } }] }]))
+            .toThrow(/trap at \(1,1\) yields a step into \(4,1\), which is not in its disc/);
+        expect(bad([PULL, { ...OTHER, yields: [{ from: { x: 3, y: 1 }, to: { x: 3, y: 1 } }] }]))
+            .toThrow(/trap at \(1,1\) yields a step from \(3,1\), which is in its disc/);
+        expect(bad([PULL, { ...OTHER, yields: [{ from: { x: 1, y: 2 }, to: { x: 3, y: 1 } }] }]))
+            .toThrow(/trap at \(1,1\) yields a step from \(1,2\) into \(3,1\), which is not one move/);
+        expect(bad([PULL, { ...OTHER, yields: 'no' }])).toThrow(/trap at \(1,1\) "yields" must be a list/);
+    });
+
+    it('round-trips through the sidecar', () => {
+        const world = pullPicture({ pulls: [PULL, { ...OTHER, yields: [STEP] }] });
+        const sc = {
+            width: world.width, height: world.height, tiles: [...world.tiles], entrance: world.entrance, exits: [...world.exits.values()],
+            obstacles: [], items: [], obstacleLib: world.obstacleLib, ...serializeMazeEntities(world),
+        };
+        expect(sc.pulls).toEqual([PULL, { ...OTHER, yields: [STEP] }]);
+        const back = deserializeMazeWorld(sc);
+        expect(walk(back, withInv(createState(back), [SUIT]), [INPUT_E, INPUT_E]).player_pos).toEqual({ x: 5, y: 1 });
+    });
+
+    for (const [name, pulls] of Object.entries({ 'to the far trap': [PULL, { ...OTHER, yields: [STEP] }], 'to the near trap': [{ ...PULL, yields: [STEP] }, OTHER] })) {
+        it(`scripted ≡ native over every reachable state (${name})`, () => {
+            const world = pullPicture({ pulls });
+            const start = withInv(createState(world), [SUIT]);
+            const seen = new Map([[mazeVisitedKey(start), start]]);
+            const queue = [start];
+            while (queue.length) {
+                const s = queue.shift();
+                for (const input of worldInputs(world)) {
+                    const native = step(world, s, input);
+                    const { next } = scriptedStep(world, s, input, HELPERS);
+                    expect(next === null ? null : mazeVisitedKey(next), `${input}@${mazeVisitedKey(s)}`)
+                        .toBe(native === null ? null : mazeVisitedKey(native));
+                    if (native && !seen.has(mazeVisitedKey(native))) { seen.set(mazeVisitedKey(native), native); queue.push(native); }
+                }
+            }
+        });
+    }
+});
+
 describe('a malformed pull is refused by name', () => {
     const bad = (opts) => () => pullPicture(opts);
     it('a missing gate, a non-floor trap, a doubled cell, an exit in the disc, overlapping discs', () => {

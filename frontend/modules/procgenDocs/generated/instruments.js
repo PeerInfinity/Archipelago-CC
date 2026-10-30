@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 130,
-            "count": 179,
+            "browser": 132,
+            "count": 181,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 494,
-        "browser": 197,
-        "cited": 263,
-        "files": 511,
+        "blockStyle": 496,
+        "browser": 199,
+        "cited": 264,
+        "files": 513,
         "lineStyle": 17,
-        "withDocblock": 511,
-        "withFlags": 427
+        "withDocblock": 513,
+        "withFlags": 429
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13170,6 +13170,49 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-js-vs-wasm-tape.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "build"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-js-vs-wasm-tape.mjs — ⛓ PHASE B (`seedling-js-tape-bridge`): ONE TAPE, RUN THE SAME WAY ON BOTH RUNTIMES, and the two drains diffed.",
+            "path": "scripts/procgen/probe-seedling-js-vs-wasm-tape.mjs"
+        },
+        {
+            "argvHelpers": [
                 "SEEDS",
                 "arg"
             ],
@@ -14459,6 +14502,61 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l67-reach2 — does the spear push a block from TWO tiles away, across a pit?",
             "path": "scripts/procgen/probe-seedling-l67-reach2.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l78-pull-order.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L78 LAVATRAPS on ONE step, ON THE GAME (session tile-primitives-sphere-order-10): when one tile step enters the discs of two traps at once, which trap reels the player in?",
+            "path": "scripts/procgen/probe-seedling-l78-pull-order.mjs"
         },
         {
             "argvHelpers": [

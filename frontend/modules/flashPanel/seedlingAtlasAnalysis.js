@@ -324,7 +324,9 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *   pull    a LavaTrap: `tiles` = its own cell, `from` = the cells its tongue grabs from and `rule` = what survives the
  *           ride — the rules producer's own `lavaTrapPulls` disc (32 px centre to centre, no line test) and
  *           `LAVATRAP_PULL.condition` (the Dark Suit), so maze and rules read one disc (session
- *           tile-primitives-sphere-order-9, ⚖ 2026-10-29 "Forced pull, rules' disc")
+ *           tile-primitives-sphere-order-9, ⚖ 2026-10-29 "Forced pull, rules' disc"); `yields` (when any) = the
+ *           steps into two discs it loses to the disc the walk enters first (session tile-primitives-sphere-order-10,
+ *           ⚖ 2026-10-30 "First range entered")
  *
  * A rock (or rope) whose condition is not a flag or an any-of flags is REFUSED by
  * name. Each flag binds one strike: one item (`item`), or for a ROCK a conjunction
@@ -361,7 +363,7 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null } =
             const pull = lavaTrapPulls(level, TILE).find((p) => p.tile[0] === x && p.tile[1] === y);
             const rule = resolveCondition(LAVATRAP_PULL.condition);
             if (!pull || !rule) throw new Error(`${label}: no pull of the rules producer's at (${x},${y}), or its condition has no AP rule`);
-            rows.push({ kind, tiles: [pull.tile], from: pull.from, rule, label });
+            rows.push({ kind, tiles: [pull.tile], from: pull.from, ...(pull.yields.length > 0 ? { yields: pull.yields } : {}), rule, label });
             continue;
         }
         const rope = kind === 'rope' ? minted.find((r) => r.x === entity.x && r.y === entity.y) : null;

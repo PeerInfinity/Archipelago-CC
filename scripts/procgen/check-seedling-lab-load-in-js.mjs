@@ -15,7 +15,20 @@
  *   5. a key press moves the player (a real keyboard press on the frame's canvas).
  *
  * Cases: a GENERATED room (GENERATE, one-room set, so `levels` runs), a VANILLA level (MANUAL's boot block, no set)
- * and REPLAY (the tape's start spot, LIVE — not a replay; the note says so).
+ * and REPLAY — ⛓ PHASE B (`seedling-js-tape-bridge`): the tape REPLAYED in the JS frame through the wasm tail
+ * (`probe runtime start tape running finished drain verdict`), and instead of 1 and 3 above:
+ *
+ *   R1. the stages are the JS REPLAY list, in order, and the note says it is a REPLAY against the JS model;
+ *   R2. the frame's `botStatus` is `finished` at the tape's `tick_count`, and the drain held `tick_count + 1`
+ *       observations (the ship's own count);
+ *   R3. the per-tick verdict — JS FRAME vs JS MODEL — AGREES at every tick, and the painted verdict names the JS
+ *       frame (never `wasm verdict`);
+ *   R4. LIVE INPUT MID-REPLAY does not reach the run: while the tape is ARMED (read before and after), a real key
+ *       press on the frame (an arrow, X and V) and a tap on the `#jsTouch` d-pad go in — and R3's verdict still
+ *       agrees per tick. (`#jsTouch` stays mounted on a replay ship: its taps are KeyboardEvents on the frame's
+ *       canvas, the same held set the keyboard fills, which a tape tick never steps — pinned in Node by
+ *       `jsRuntimeTape.test.js`'s live-keys row.)
+ *   then 4 and 5 as before: after `finished` the frame goes on LIVE.
  *
  *   node scripts/procgen/check-seedling-lab-load-in-js.mjs [--host=http://localhost:8000] [--shots=<dir>]
  *
@@ -30,8 +43,9 @@ import { argvHelp, isEntryPoint } from './argvHelp.js';
 argvHelp(import.meta.url);
 
 /** The JS ship's stages, as `watchWasm.JS_STAGES` spells them (typed here on purpose: a row that imported them would
- *  read its own subject). */
+ *  read its own subject). ⛓ PHASE B: and a REPLAY's, `watchWasm.JS_REPLAY_STAGES` (no set, so no `levels`). */
 const JS_STAGES = ['probe', 'runtime', 'start', 'levels', 'spot', 'play'];
+const JS_REPLAY_STAGES = ['probe', 'runtime', 'start', 'tape', 'running', 'finished', 'drain', 'verdict'];
 const HALF_TILE = 8;
 
 async function main() {
@@ -102,8 +116,8 @@ async function main() {
                     });
                 const note = await page.textContent('#loadJsNote');
                 if (c.live) {
-                    check(/LIVE PLAY/.test(note) && /NOT a replay/.test(note),
-                        `${c.name}: the button's note says it is LIVE PLAY from the start spot, not a replay`, note);
+                    check(/REPLAY of the tape/.test(note) && /JS model/.test(note),
+                        `${c.name}: the button's note says it is a REPLAY, judged against the JS model`, note);
                 }
                 await page.click('#loadJs');
                 await page.waitForFunction(() => window.__editorJs?.reached?.includes('runtime'), null,
@@ -113,15 +127,62 @@ async function main() {
                     `${c.name}: the frame is the JS runtime page with art and its own ▶ Start`, frame?.url());
                 // ⛔ THE ONE CLICK THE PAGE MAY NEVER MAKE — a real click, inside the frame.
                 await frame.click('#btn-start');
-                await page.waitForFunction(() => window.__editorJs?.stage === 'play'
-                    || window.__editorJs?.refusal, null, { timeout: 60000 });
+                if (c.live) {
+                    // R4 — a key and a tap MID-REPLAY (the tape armed before the first and after the last).
+                    await page.waitForFunction(() => window.__editorJs?.reached?.includes('running')
+                        || window.__editorJs?.refusal, null, { timeout: 120000 });
+                    const armedAt = async () => frame.evaluate(() => JSON.parse(window.__swfBridge.game.botStatus()));
+                    // `running` can be reached before the first tape tick (CI measured tick 0→0 over a fixed 300 ms):
+                    // wait for the tape to STEP, then hold the input until it has stepped again — by tick, not time.
+                    const tickPast = (n) => frame.waitForFunction((k) => {
+                        const st = JSON.parse(window.__swfBridge.game.botStatus());
+                        return st.tick > k || st.finished;
+                    }, n, { timeout: 60000 }).catch(() => null);
+                    await tickPast(0);
+                    const pre = await armedAt();
+                    for (const key of ['ArrowLeft', 'KeyX', 'KeyV']) await page.keyboard.down(key);
+                    const pad = await page.evaluate(() => {
+                        const r = document.getElementById('frame').nextElementSibling
+                            ?.querySelector('.flash-touch-left')?.firstElementChild?.getBoundingClientRect();
+                        return r ? { x: r.x, y: r.y, w: r.width, h: r.height } : null;
+                    });
+                    if (pad) {
+                        await page.mouse.move(pad.x + pad.w * 0.88, pad.y + pad.h / 2);
+                        await page.mouse.down();
+                    }
+                    await tickPast(pre.tick + 4);
+                    if (pad) await page.mouse.up();
+                    for (const key of ['ArrowLeft', 'KeyX', 'KeyV']) await page.keyboard.up(key);
+                    const post = await armedAt();
+                    check(pre.armed && post.armed && Boolean(pad) && post.tick > pre.tick,
+                        `${c.name}: a key (left, X, V) and a #jsTouch tap went in MID-REPLAY (the tape armed throughout)`,
+                        `armed ${pre.armed}→${post.armed} tick ${pre.tick}→${post.tick}/${pre.tick_count} pad=${Boolean(pad)}`);
+                }
+                const last = c.live ? 'verdict' : 'play';
+                await page.waitForFunction((stage) => window.__editorJs?.stage === stage
+                    || window.__editorJs?.refusal, last, { timeout: 120000 });
                 const js = await page.evaluate(() => window.__editorJs);
-                check(js.stage === 'play' && !js.refusal, `${c.name}: the ship reached play`,
+                check(js.stage === last && !js.refusal, `${c.name}: the ship reached ${last}`,
                     js.refusal ? JSON.stringify(js.refusal) : js.reached.join(' → '));
-                const want = JS_STAGES.filter((s) => s !== 'levels' || c.set);
+                const want = c.live ? JS_REPLAY_STAGES : JS_STAGES.filter((s) => s !== 'levels' || c.set);
                 check(JSON.stringify(js.stages) === JSON.stringify(want)
                     && JSON.stringify(js.reached) === JSON.stringify(want),
-                    `${c.name}: the stages are the JS list, in order`, js.reached.join(' '));
+                    `${c.name}: the stages are the JS ${c.live ? 'REPLAY ' : ''}list, in order`, js.reached.join(' '));
+                if (c.live) {
+                    const tape = await (await fetch(`${HOST}/${TAPE}`)).json();
+                    const fin = await frame.evaluate(() => JSON.parse(window.__swfBridge.game.botStatus()));
+                    check(fin.finished === true && fin.tick === tape.tick_count && fin.tick_count === tape.tick_count
+                        && !fin.error && js.drain?.observations === tape.tick_count + 1,
+                        `${c.name}: the frame finished at tick_count and drained tick_count + 1 observations`,
+                        `finished=${fin.finished} tick=${fin.tick}/${tape.tick_count} error=${JSON.stringify(fin.error)} `
+                        + `drained=${js.drain?.observations}`);
+                    const verdictText = await page.textContent('#wasmVerdict');
+                    check(js.verdict?.perTick?.kind === 'agrees' && /^js frame verdict:/.test(verdictText)
+                        && !/wasm verdict/.test(verdictText),
+                        `${c.name}: JS frame vs JS model AGREES at every tick (live input fed mid-replay), and the `
+                        + 'verdict names the JS frame',
+                        `${js.verdict?.perTick?.text} | ${verdictText.split('\n')[0].slice(0, 120)}`);
+                }
                 if (c.set) {
                     const ls = await frame.evaluate(() => JSON.parse(window.__swfBridge.game.botLevelSet()));
                     check(ls.active === js.set?.set_id && ls.active === shipped?.set
@@ -131,7 +192,7 @@ async function main() {
                 }
                 const st = await frame.evaluate(() => JSON.parse(window.__swfBridge.game.botStatus()));
                 const b = shipped?.boot;
-                check(Boolean(b) && st.level === b.level && st.x === b.x + HALF_TILE && st.y === b.y + HALF_TILE,
+                if (!c.live) check(Boolean(b) && st.level === b.level && st.x === b.x + HALF_TILE && st.y === b.y + HALF_TILE,
                     `${c.name}: the player is at the spot`,
                     `boot L${b?.level} (${b?.x}, ${b?.y}); botStatus L${st.level} (${st.x}, ${st.y})`);
                 // The sound: the context RUNNING (the Start click unlocked it) and both libraries loaded.
