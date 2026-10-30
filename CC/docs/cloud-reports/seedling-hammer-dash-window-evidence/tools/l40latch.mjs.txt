@@ -1,0 +1,10 @@
+// The L40 latch chain (fidelity L40LATCH's boot, shipped defaults) with the stand-tail audit, OFF arm + the alt answer.
+const TREE = process.argv[2];
+const M = (p) => import(`${TREE}/frontend/modules/seedlingDemo/${p}`);
+const sb = await M('solverBot.js');
+const L = await M('fidelityL40Latch.js');
+sb.DASH_STAND_WHOLE.audit = [];
+const t0 = Date.now();
+const { out, refusal } = await L.l40LatchSolve(await L.l40LatchBoot());
+console.log('ticks', out?.perTick?.length ?? null, 'refusal', refusal ? String(refusal.message).slice(0, 200) : null, Date.now() - t0, 'ms');
+for (const r of sb.DASH_STAND_WHOLE.audit) console.log(JSON.stringify(r));

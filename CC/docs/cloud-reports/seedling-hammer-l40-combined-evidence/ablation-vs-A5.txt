@@ -1,0 +1,66 @@
+== A5 vs A5-CP: 9 mover(s); solved 48 -> 42
+  374/0 out_pit_5_21: S955 -> B:refusal
+     A5: 
+     A5-CP: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own work is bounded there,
+  374/1 out_pit_5_21: S955 -> B:refusal
+     A5: 
+     A5-CP: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own work is bounded there,
+  378/0 out_pit_5_22: S938 -> B:refusal
+     A5: 
+     A5-CP: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own work is bounded there,
+  378/1 out_pit_5_22: S938 -> B:refusal
+     A5: 
+     A5-CP: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own work is bounded there,
+  380/0 out_pit_5_23: S909 -> B:refusal
+     A5: 
+     A5-CP: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own work is bounded there,
+  380/1 out_pit_5_23: S909 -> B:refusal
+     A5: 
+     A5-CP: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own work is bounded there,
+  382/0 Level 040 - Chest: B:refusal -> R:refusal
+     A5: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segment's own work is boun
+     A5-CP: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,853.2) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A5: weigh stance (wandlock@448,432) waypoint 6 (472,440): not reached within 400 ticks; stalled at (472.84759916490606,674.1774849591337) v=(0,-1.0127655672593185) in level 40, aiming at (472,440), after grazing 284 solid(s)
+     A5-CP: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0) — and every rung o
+  861/1 Level 040 - Boss Key 2: B:refusal -> R:refusal
+     A5: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is boun
+     A5-CP: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.0) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px 
+== A5 vs A5-IC: 1 mover(s); solved 48 -> 48
+  861/1 Level 040 - Boss Key 2: B:refusal -> R:refusal
+     A5: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is boun
+     A5-IC: weigh stance (wandlock@448,432): the combat ladder is EXHAUSTED. The corridor passes through danger at (618.8,680.9) — spinner:spinner@816,848 (a live Spinner BODY at (614.7,676.4) at horizon 467 — `Enemy.hitPlayer`'s 7x
+== A5 vs A5-OP: 4 mover(s); solved 48 -> 48
+  366/0 Level 040 - Totem Part 64,144: B:refusal -> R:refusal
+     A5: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (64,144) contact's corridor (attempt 1) — the segment's own work is bound
+     A5-OP: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (258.3,129.8) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosion.as:52-56`: the squ
+  366/1 Level 040 - Totem Part 64,144: R:refusal -> R:refusal
+     A5: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (232.1,130.1) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (235,118), r 15 (`Explosion.as:52-56`: the squ
+     A5-OP: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (247.3,131.7) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosion.as:52-56`: the squ
+  382/0 Level 040 - Chest: B:refusal -> S1321!
+     A5: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segment's own work is boun
+     A5-OP: 
+  399/0 Level 040 - Chest: S1914! -> R:refusal
+     A5: 
+     A5-OP: kill (spinner@880,848) by press: the player died at t800 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the 
+== A5 vs A5-LW: 1 mover(s); solved 48 -> 48
+  860/1 Level 040 - Boss Key 2: R:refusal -> B:refusal
+     A5: weigh stance (wandlock@448,432) waypoint 6 (472,440): not reached within 400 ticks; stalled at (472.84759916490606,674.1774849591337) v=(0,-1.0127655672593185) in level 40, aiming at (472,440), after grazing 284 solid(s)
+     A5-LW: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is boun
+== A5 vs A5-OF: 3 mover(s); solved 48 -> 47
+  399/0 Level 040 - Chest: S1914! -> B:refusal
+     A5: 
+     A5-OF: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segment's own work is boun
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A5: weigh stance (wandlock@448,432) waypoint 6 (472,440): not reached within 400 ticks; stalled at (472.84759916490606,674.1774849591337) v=(0,-1.0127655672593185) in level 40, aiming at (472,440), after grazing 284 solid(s)
+     A5-OF: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.5) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px 
+  861/1 Level 040 - Boss Key 2: B:refusal -> R:refusal
+     A5: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is boun
+     A5-OF: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.0) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px 
+== A5 vs A5-SB: 2 mover(s); solved 48 -> 48
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A5: weigh stance (wandlock@448,432) waypoint 6 (472,440): not reached within 400 ticks; stalled at (472.84759916490606,674.1774849591337) v=(0,-1.0127655672593185) in level 40, aiming at (472,440), after grazing 284 solid(s)
+     A5-SB: weigh stance (wandlock@448,432): applied 4 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), burn(burnabletree@872,784), weigh(wandlock@448,432)] and the corridor still does not plan. A 
+  861/1 Level 040 - Boss Key 2: B:refusal -> R:refusal
+     A5: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is boun
+     A5-SB: weigh stance (wandlock@448,432): applied 4 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), burn(burnabletree@872,784), weigh(wandlock@448,432)] and the corridor still does not plan. A 
