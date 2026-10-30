@@ -26603,3 +26603,38 @@ dwell. The 8 px corridor that exists is the walk's lattice choice (the L100 swin
 - A 16 px route to an 8 px target appends the target to the nearest 16 px node, and the last segment can cross a wall the
   smoother's fallback never checked. A stance found on the 8 px lattice needs its walk planned on it.
 - Concurrent surveys share one views directory (`.cache/seedling-survey/through-end/views`): run a step alone to read its walk.
+
+
+### Seedling fidelity L32ROCK — the BobBoss arena rock's arm banks its {32,1} clear (`bobArenaRockClear`, OFF)
+
+Wave 35, planner `seedling-fidelity-planning-16`, base `9dadbdfc4b` (102 ON of 113). js `seedling-js-encounter-legs`
+measured (CI 40579343337) that on `apb-l32-fresh-no-fire` the game clears {32,1} at t9 and `liveClears` never reports
+it. The report is `CC/docs/cloud-reports/seedling-fidelity-l32rock.md` (evidence beside it).
+
+**W0 — the model steps the event; it does not record it.** {32,1} is `fallrocklarge@64,128` (`bossrock`, `thirdboss`).
+`FallRockLarge.fall()` (`:137-143`) runs `setPersistence(tag, false)` on the frame the rock arms: the nearest Player
+above `fallTo - 24` (y < 120 in L32), not `fallFromCeiling`, the tag still held (a cleared tag builds the rock fallen with
+`_active` set, so it never re-arms). That is every L32 build with {32,1} held, on the first frame the player rises past
+the line, whatever the boot. `levelRun.stepBobBossArenaNow` already stepped the arm (`bobBossEvents` `rock-armed`, the
+freeze, the 174 dead frames, the landing) and wrote `bobRocksFallen`, but banked nothing in a clear ledger. L82's arena
+rock (`stepLavaArenaRockNow`) did bank. So the fix belongs to `levelRun`; `liveClears` reads the ledgers correctly.
+
+**D1 — the switch.** ON, the arm banks the write as L82's does: `rockFlags` by `fallrocklarge` (so `earnedClears`) plus
+`pendingEarnedClears`, stamped `ticksCompleted + 1`. It is keyed on the arena rock row, not on level 32. No new run map
+(both ledgers are existing digest members). A re-entry then builds the rock fallen through the cleared tag
+(`arenaRockOf` → `fallenAtBuild`), the same arena `bobRocksFallen` already gave it. Game = model on p4g
+(`probe-seedling-encounter-ticks.mjs`, key ON): `apb-l32-fresh-no-fire` t9, `enc-l32-live-arrival` t2, `r5-bobboss-arm` t13, each with
+the prior sample one tick earlier. Roster: positions byte-equal ON vs OFF on all 293 tapes. ON adds {32,1} to exactly
+9 tapes' clears.
+
+**Movers.** Full survey ON vs OFF: 203/37 both, 0 rows differ (step 40 fights, then refuses at the burn as before).
+Local keyed sweep (L32 legs 324/330–334, inv/solver): the same ends ON and OFF. D3 reds ON: three pins of the old,
+unbanked set (`contactFidelity` defaults row, `fidelityApBosses.test.js:175`, JS's `jsRuntimeEncounterLegWalk.test.js:172`).
+
+**Trap candidates.**
+- A ledger row with a `flag` field (`bobBossEvents`' `rock-armed`) is not a clear: only the clear ledgers reach
+  `liveClears` / `earnedClears`. Check which ledger a write lands in, not whether some row names it.
+- Two instances of one AS3 class can be modelled by two code paths with different banking; when one is fixed, ask the
+  other (L82's rock banked, L32's did not).
+- A mutant made while a background gate battery reads the same tree can contaminate it. Run mutants between batteries,
+  and re-measure anything that overlapped.

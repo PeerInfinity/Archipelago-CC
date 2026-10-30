@@ -359,7 +359,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity TURRETSNAP D1 (wave 35): a live ice turret priced at its snapped two-cycle — ships OFF.
             turretSnapPricing: false,
             // ⛓ fidelity WATERFALL D1 (wave 35): the corridor planner prices the waterfall's push — ships OFF.
-            waterfallPushPricing: false });
+            waterfallPushPricing: false,
+            // ⛓ fidelity L32ROCK D1 (wave 35): the BobBoss arena rock's arm banks its {32,1} clear — ships OFF.
+            bobArenaRockClear: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

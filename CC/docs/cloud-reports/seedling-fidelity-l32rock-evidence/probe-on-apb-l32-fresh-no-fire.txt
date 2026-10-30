@@ -1,0 +1,6 @@
+INFO: apb-l32-fresh-no-fire: 9480 page answers, 870 sampled tick(s) of 869; shifts that fit every player x/y: []
+INFO: the drained stream: 870 obs, worst |Δ| 0, first off null
+INFO: first SAMPLED tick off the model (a sample may straddle a frozen frame): 9
+INFO: item flips (sampled ticks) — game {}, model {}
+INFO: clears (first tick) — {32:1} game t9 (prev sample t8) / model t9; {32:3} game t778 (prev sample t777) / model t778; {32:4} game t839 (prev sample t839) / model t839
+INFO: at finished — game hasFire false hasDarkSword false; model hasFire false hasDarkSword false
