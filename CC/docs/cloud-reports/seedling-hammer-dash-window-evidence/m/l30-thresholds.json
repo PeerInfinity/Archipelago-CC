@@ -1,0 +1,1 @@
+{"leg":"l30","rows":[{"pass":"dashless","ok":true,"ticks":207,"units":12,"dashAsks":0,"at":12,"better":true},{"pass":"full","ok":true,"ticks":97,"units":30,"dashAsks":21,"at":42,"better":true}],"target":97,"off":{"counted":42,"loss":42,"below":207,"at85":97,"margin":43},"on":{"counted":21,"loss":21,"below":108,"at85":97,"margin":64}}
