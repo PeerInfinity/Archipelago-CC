@@ -1916,6 +1916,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "includes"
                     ],
+                    "name": "bundled"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
                     "name": "keep"
                 },
                 {
