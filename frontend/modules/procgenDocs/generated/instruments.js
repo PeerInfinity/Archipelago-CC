@@ -274,6 +274,10 @@ export const INSTRUMENTS = frz({
                     "name": "check"
                 },
                 {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
                     "from": "extract-seedling-masks.mjs",
                     "name": "out"
                 },

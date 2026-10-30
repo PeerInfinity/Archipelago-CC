@@ -15,6 +15,9 @@ import { extname, join, resolve, sep } from 'node:path';
 
 import { DEFAULT_OUT, readRecord } from '../setup/fetch-cloudberry-site.mjs';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 
 // https: the page hashes with crypto.subtle, which only a secure context has (nothing is fetched over TLS:
 // Playwright fulfils every request itself).

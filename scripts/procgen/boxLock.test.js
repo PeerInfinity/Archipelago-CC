@@ -618,7 +618,10 @@ describe('who takes the box', () => {
             // seedling-lab-load-in-js: the lab page's ▶ load in JS row (import door: `isEntryPoint` → main())
             'check-seedling-lab-load-in-js.mjs',
             // seedling-js-tape-bridge: one tape on the JS core and the wasm game, drains diffed (import door: `isEntryPoint` → main())
-            'probe-seedling-js-vs-wasm-tape.mjs'];
+            'probe-seedling-js-vs-wasm-tape.mjs',
+            // cloudberry P2a: the embed gate and the pack maker (import door: `isEntryPoint` → main())
+            'check-cloudberry-embed.mjs',
+            'make-demo-cloudberry-pack.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

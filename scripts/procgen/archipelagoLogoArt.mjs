@@ -14,6 +14,9 @@ import { fileURLToPath } from 'node:url';
 
 import { decodePng } from './extract-seedling-masks.mjs';
 import { rgbaPngBytes } from './make-seedling-font.mjs';
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 export const LOGO_SOURCE = 'data/icon.png';
