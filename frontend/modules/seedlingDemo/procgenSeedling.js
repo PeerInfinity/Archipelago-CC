@@ -47,7 +47,8 @@
 import { TILE_SIZE, tagOf } from './levelWorld.js';
 import {
     FILL_DENSE, FILL_SHELL, ProcgenLevelError, SINGLE_SCREEN_TILES, assertRoomSize, bootAtTile,
-    emptyLevel, fillByName, hasTile, oelAtTile, recordHoldsWater, shellOf, terrainAt, withEntities,
+    emptyLevel, fillByName, floodTerrainsFor, hasTile, oelAtTile, recordOwesSoundPin, shellOf, terrainAt,
+    withEntities,
     withTerrain,
 } from './procgenLevel.js';
 import {
@@ -852,8 +853,12 @@ export function seedlingModel({
     seed, defaults = SEEDLING_DEFAULTS, skeleton: skeletonSpec = DEFAULT_SKELETON,
     elements: elementSpec = DEFAULT_ELEMENTS, areas: areaSpec = DEFAULT_AREAS,
     dropElement = false, ledger: recordLedger = true,
+    /** ⛓ seedling-gen-terrains (C3) — the terrains the floods walk (`procgenLevel.floodTerrainsFor`);
+     *  the seam passes its boot's. A caller with no boot gets the item-free set. */
+    floodTerrains = floodTerrainsFor(null),
 } = {}) {
     const d = { ...SEEDLING_DEFAULTS, ...defaults };
+    const floodWalks = new Set(floodTerrains);
     /**
      * ⛓⛓⛓ **THE ROOM CONTRACT'S SIZE, ADJUDICATED ONCE** (arc 5, slice 1;
      * ⚖ ruling 1). ⛔ Size is a CONSTANT INPUT and not a draw — it is read here,
@@ -1135,7 +1140,7 @@ export function seedlingModel({
         const bits = new Uint8Array(record.width * record.height);
         for (let ty = 0; ty < record.height; ty += 1) {
             for (let tx = 0; tx < record.width; tx += 1) {
-                if (terrainAt(record, tx, ty) === 'ground') bits[tx + ty * record.width] = 1;
+                if (floodWalks.has(terrainAt(record, tx, ty))) bits[tx + ty * record.width] = 1;
             }
         }
         maskRecord = record;
@@ -1161,7 +1166,7 @@ export function seedlingModel({
             const key = `${x},${y}`;
             if (walled && walled.has(key)) return false;
             const p = painted.get(key);
-            return p === undefined ? bits[x + y * w] === 1 : p === 'ground';
+            return p === undefined ? bits[x + y * w] === 1 : floodWalks.has(p);
         };
     };
 
@@ -3259,7 +3264,7 @@ export function seedlingModel({
      */
     const sealRefusal = (record, template, tx, ty) => {
         const painted = paintedOf(template, tx, ty);
-        const blocking = [...painted.values()].filter((t) => t !== 'ground').length;
+        const blocking = [...painted.values()].filter((t) => !floodWalks.has(t)).length;
         // ⛔ A candidate that paints no blocking terrain cannot seal anything —
         // painting `ground` only ever ADDS walkable cells.
         if (blocking === 0) return null;
@@ -3868,7 +3873,7 @@ export function seedlingModel({
 export function pinsForRecord(record, templates = []) {
     const pins = new Set(['dead_frames']);
     for (const t of templates ?? []) for (const p of t.pins ?? []) pins.add(p);
-    if (record && recordHoldsWater(record)) pins.add('sound');
+    if (record && recordOwesSoundPin(record)) pins.add('sound');
     return [...pins];
 }
 
@@ -4253,7 +4258,10 @@ export function seedlingSeam({
      * every caller that spells "no element" already writes.
      */
     if (elements === undefined) elements = defaultElementsFor(items);
-    let model = seedlingModel({ seed, defaults, skeleton, elements, areas });
+    /** ⛓ seedling-gen-terrains (C3) — the boot decides which terrains the floods walk (lava only with
+     *  the dark suit). Every model this seam builds takes the same set. */
+    const floodTerrains = floodTerrainsFor(items);
+    let model = seedlingModel({ seed, floodTerrains, defaults, skeleton, elements, areas });
     let oracle = wrapOracle(seedlingOracle({ model, items, budget, dashMode }));
     /**
      * ⛓⛓⛓ **THE CERTIFICATION SOLVE — PROCGEN ELEMENTS arc 3, slice 3 (D4), AND
@@ -4328,7 +4336,7 @@ export function seedlingSeam({
             gap: 'the-element-needs-an-item-this-biome-does-not-grant',
             needs: Object.freeze(needed),
         });
-        model = seedlingModel({ seed, defaults, skeleton, elements, areas, dropElement: true });
+        model = seedlingModel({ seed, floodTerrains, defaults, skeleton, elements, areas, dropElement: true });
         oracle = wrapOracle(seedlingOracle({ model, items, budget, dashMode }));
     } else if (model.elements.ran) {
         const cert = oracle.solve(model.skeleton(), { templates: [] });
@@ -4365,7 +4373,7 @@ export function seedlingSeam({
                 ? 'the-solver-cannot-cross-the-roaming-body' : certificationGap(cert),
         });
         if (!certification.certified) {
-            model = seedlingModel({ seed, defaults, skeleton, elements, areas, dropElement: true });
+            model = seedlingModel({ seed, floodTerrains, defaults, skeleton, elements, areas, dropElement: true });
             oracle = wrapOracle(seedlingOracle({ model, items, budget, dashMode }));
         }
     }
@@ -4430,7 +4438,7 @@ export function seedlingSeam({
              * own drop is the branch above's decision and is preserved
              * verbatim; this one only takes the graph away.
              */
-            model = seedlingModel({ seed, defaults, skeleton, elements,
+            model = seedlingModel({ seed, floodTerrains, defaults, skeleton, elements,
                 areas: { keys: 0 },
                 dropElement: certification !== null && !certification.certified });
             oracle = wrapOracle(seedlingOracle({ model, items, budget, dashMode }));

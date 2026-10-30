@@ -3267,6 +3267,61 @@ export const CATALOGUE = frz({
                     ],
                     "site": "chamber",
                     "why": "Pit cells; `world.pitTiles` gains them and the corridor planner prices them as a fall"
+                },
+                {
+                    "family": "lava",
+                    "name": "lava-pool",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "h",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Lava cells (type 17): lethal without the dark suit. Pins `sound`: a lava tick runs the swim term, and without the pin the dark-suit walk THREW `PhysicsV2Error` (design §3.2). Before the dark suit the floods block it, so it never cuts"
+                },
+                {
+                    "family": "melt",
+                    "name": "melt-patch",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 1,
+                            "domain": [
+                                1,
+                                2
+                            ],
+                            "key": "h",
+                            "why": "a thin crust: it breaks once the walk comes near"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Igneous-to-Lava cells (type 31): the cell breaks apart once the player has been within half a diagonal for 8 frames and is lava ~5 animation steps later (`Tile.as` case 31). Pins `sound` (it becomes lava). Blocks the floods before the dark suit, as lava does"
                 }
             ]
         },
@@ -3742,6 +3797,61 @@ export const CATALOGUE = frz({
                     ],
                     "site": "chamber",
                     "why": "Pit cells; `world.pitTiles` gains them and the corridor planner prices them as a fall"
+                },
+                {
+                    "family": "lava",
+                    "name": "lava-pool",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "h",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Lava cells (type 17): lethal without the dark suit. Pins `sound`: a lava tick runs the swim term, and without the pin the dark-suit walk THREW `PhysicsV2Error` (design §3.2). Before the dark suit the floods block it, so it never cuts"
+                },
+                {
+                    "family": "melt",
+                    "name": "melt-patch",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 1,
+                            "domain": [
+                                1,
+                                2
+                            ],
+                            "key": "h",
+                            "why": "a thin crust: it breaks once the walk comes near"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Igneous-to-Lava cells (type 31): the cell breaks apart once the player has been within half a diagonal for 8 frames and is lava ~5 animation steps later (`Tile.as` case 31). Pins `sound` (it becomes lava). Blocks the floods before the dark suit, as lava does"
                 }
             ]
         },
@@ -4219,6 +4329,61 @@ export const CATALOGUE = frz({
                     ],
                     "site": "chamber",
                     "why": "Pit cells; `world.pitTiles` gains them and the corridor planner prices them as a fall"
+                },
+                {
+                    "family": "lava",
+                    "name": "lava-pool",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "h",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Lava cells (type 17): lethal without the dark suit. Pins `sound`: a lava tick runs the swim term, and without the pin the dark-suit walk THREW `PhysicsV2Error` (design §3.2). Before the dark suit the floods block it, so it never cuts"
+                },
+                {
+                    "family": "melt",
+                    "name": "melt-patch",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 1,
+                            "domain": [
+                                1,
+                                2
+                            ],
+                            "key": "h",
+                            "why": "a thin crust: it breaks once the walk comes near"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Igneous-to-Lava cells (type 31): the cell breaks apart once the player has been within half a diagonal for 8 frames and is lava ~5 animation steps later (`Tile.as` case 31). Pins `sound` (it becomes lava). Blocks the floods before the dark suit, as lava does"
                 }
             ]
         },

@@ -30,6 +30,10 @@
  *   ⛓ gen-biomes-1: the generate arm's LOOK select — one generated room in every look, the canvas's floor and
  *   wall pixels following each look's COLUMN (stills `look-<name>.png`) — and the four new item presets boot.
  *
+ *   ⛓ gen-terrains: one generated room per walk-changing terrain (ice, stairs, ghost step, lava, igneous), art
+ *   on, the terrain's canvas pixels unlike the floor's (stills `terrain-<name>.png`), and the `#genTerrains`
+ *   select offering each biome's `TERRAIN_OFFERS`.
+ *
  * Prereqs: a dev server at the REPO ROOT. SKIPs (exit 0) without one, like its siblings.
  * Run: node scripts/procgen/check-seedling-lab-art.mjs [--host=http://localhost:8000] [--shots=<dir>]
  */
@@ -471,6 +475,91 @@ async function main() {
                 `${biome}: the generate arm builds, solves and draws it in its own look`,
                 JSON.stringify(g && { status: g.status, biome: g.biome, look: g.look, step: g.step }) + errs.slice(0, 1).join(''));
             if (SHOTS) await p.locator('#canvas').screenshot({ path: join(SHOTS, `preset-${biome}.png`) });
+            await p.close();
+        }
+    }
+
+    // ── ⛓ seedling-gen-terrains (C3): the walk-changing terrains, one generated room each, art on ──
+    //
+    // Each room is a seed whose six-obstacle ladder paints the terrain (measured with `generateStep` before this
+    // row was written). The terrain's cells (read off the generator's record) are averaged off the CANVAS and must
+    // differ from the floor's: the art draws the terrain's own column. The `#genTerrains` select offers exactly
+    // the biome's `TERRAIN_OFFERS` (none, each, all) and is disabled where a biome offers none.
+    console.log('\n## gen-terrains — the generate arm offers and draws each walk-changing terrain');
+    {
+        const R = new URL('../../frontend/modules/seedlingDemo/', import.meta.url).href;
+        const { TERRAIN } = await import(`${R}procgenLevel.js`);
+        const { TERRAIN_OFFERS } = await import(`${R}procgenPalette.js`);
+        const DIFFER = 12;
+        const ROOMS = [
+            { terrain: 'ice', biome: 'post-swim', terrains: 'ice', seed: 1 },
+            { terrain: 'stairs', biome: 'post-feather', terrains: 'stairs', seed: 1 },
+            { terrain: 'ghoststep', biome: 'post-feather', terrains: 'ghoststep', seed: 1 },
+            { terrain: 'lava', biome: 'post-dark-suit', terrains: '', seed: 2 },
+            { terrain: 'melt', biome: 'post-dark-suit', terrains: '', seed: 1 },
+        ];
+        let offersChecked = false;
+        for (const room of ROOMS) {
+            const p = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errs = [];
+            p.on('pageerror', (e) => errs.push(`pageerror: ${e.message}`));
+            await p.goto(`${PAGE}?source=generate&seed=${room.seed}&biome=${room.biome}&count=6&tries=8&k=3&run=1`
+                + `${room.terrains ? `&terrains=${room.terrains}` : ''}`, { waitUntil: 'domcontentloaded' });
+            const g = await p.waitForFunction(() => (window.__editorGenerate?.status === 'ok'
+                && window.__editorGenerate.step === 6 && window.__labArt?.drawn !== null ? window.__editorGenerate : null),
+            null, { timeout: 180000 }).then((h) => h.jsonValue()).catch(() => null);
+            await p.waitForTimeout(800);
+            check(g?.status === 'ok' && g.terrains === room.terrains && errs.length === 0,
+                `${room.terrain}: the ${room.biome} room${room.terrains ? ` with ?terrains=${room.terrains}` : ''} builds to step 6 and draws`,
+                JSON.stringify(g && { status: g.status, step: g.step, palette: g.palette, terrains: g.terrains }) + errs.slice(0, 1).join(''));
+            const record = await p.evaluate(() => window.__editorGenerated?.level ?? null);
+            const cells = { terrain: [], floor: [] };
+            for (const [tx, ty, px] of record?.layers?.[0]?.tiles ?? []) {
+                if (px / 16 === TERRAIN[room.terrain].column) cells.terrain.push([tx, ty]);
+                if (px / 16 === TERRAIN.ground.column) cells.floor.push([tx, ty]);
+            }
+            const colours = await p.evaluate(({ cells, w }) => {
+                const c = document.getElementById('canvas');
+                const s = c.width / w;
+                const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+                const out = {};
+                for (const [cls, list] of Object.entries(cells)) {
+                    const sum = [0, 0, 0];
+                    let n = 0;
+                    for (const [tx, ty] of list) {
+                        for (let y = Math.round((ty + 0.25) * s); y < Math.round((ty + 0.75) * s); y += 1) {
+                            for (let x = Math.round((tx + 0.25) * s); x < Math.round((tx + 0.75) * s); x += 1) {
+                                const i = (y * c.width + x) * 4;
+                                sum[0] += d[i]; sum[1] += d[i + 1]; sum[2] += d[i + 2]; n += 1;
+                            }
+                        }
+                    }
+                    out[cls] = sum.map((v) => v / Math.max(1, n));
+                }
+                return out;
+            }, { cells, w: record?.width ?? 1 });
+            const delta = Math.hypot(...colours.terrain.map((v, i) => v - colours.floor[i]));
+            check(cells.terrain.length > 0 && cells.floor.length > 0 && delta >= DIFFER,
+                `${room.terrain}: the record holds ${cells.terrain.length} ${room.terrain} cell(s) (column `
+                + `${TERRAIN[room.terrain].column}) and the canvas draws them unlike the floor (Δ ≥ ${DIFFER})`,
+                `Δ ${delta.toFixed(1)}`);
+            if (SHOTS) await p.locator('#canvas').screenshot({ path: join(SHOTS, `terrain-${room.terrain}.png`) });
+            if (!offersChecked) {
+                offersChecked = true;
+                const offers = {};
+                for (const biome of ['post-sword', 'post-swim', 'post-feather', 'post-dark-suit']) {
+                    await p.selectOption('#genBiome', biome);
+                    offers[biome] = await p.$eval('#genTerrains', (s) => ({ disabled: s.disabled,
+                        values: [...s.options].map((o) => o.value) }));
+                }
+                const want = (b) => {
+                    const o = TERRAIN_OFFERS[b] ?? [];
+                    return { disabled: o.length === 0, values: ['', ...o, ...(o.length > 1 ? [o.join(',')] : [])] };
+                };
+                check(Object.keys(offers).every((b) => JSON.stringify(offers[b]) === JSON.stringify(want(b))),
+                    'the #genTerrains select offers each biome\'s TERRAIN_OFFERS (none, each, all) and is disabled where there are none',
+                    JSON.stringify(offers));
+            }
             await p.close();
         }
     }

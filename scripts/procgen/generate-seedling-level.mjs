@@ -104,7 +104,7 @@ const {
 } = await M('procgenLevel.js');
 const {
     DEFAULT_SKELETON, GENERATE_BIOMES, describeKeptKind, directedCost, generateWithDirectives,
-    paletteFor, parseDirectives,
+    paletteWithTerrains, parseDirectives, terrainsSpelling,
 } = await M('watchGenerate.js');
 const { restrictPalette } = await M('procgenPalette.js');
 const {
@@ -119,6 +119,8 @@ const num = (name, fallback) => Number(arg(name, fallback));
 
 const SEED = num('seed', 1);
 const BIOME = arg('biome', 'pre-sword');
+/** ⛓ seedling-gen-terrains (C3) — `--terrains=ice` opts the biome's offered terrains in (absent = none). */
+const TERRAINS = terrainsSpelling(arg('terrains', ''));
 const COUNT = num('count', 6);
 const TRIES = num('tries', 8);
 const SATURATION_K = num('k', 3);
@@ -379,7 +381,7 @@ if (!BIOMES[BIOME]) {
  */
 let PALETTE;
 try {
-    PALETTE = restrictPalette(BIOMES[BIOME], ROSTER);
+    PALETTE = restrictPalette(paletteWithTerrains(BIOME, TERRAINS), ROSTER);
 } catch (e) {
     process.stderr.write(`generate-seedling-level: ${e.message}\n`);
     process.exit(2);
@@ -403,7 +405,7 @@ if (has('cost')) {
     process.exit(0);
 }
 
-const DIRECTED = DIRECTED_ARG === '' ? null : parseDirectives(DIRECTED_ARG, paletteFor(BIOME));
+const DIRECTED = DIRECTED_ARG === '' ? null : parseDirectives(DIRECTED_ARG, paletteWithTerrains(BIOME, TERRAINS));
 /**
  * ⛔ `--elements=` AND `--directed=` DO NOT COMPOSE THIS SLICE, and it refuses
  * BY NAME rather than silently dropping one. `generateWithDirectives` is the
@@ -462,7 +464,7 @@ try {
         // with the same per-directive stream derivation the page uses.
         ? generateWithDirectives({
             seed: SEED, biome: BIOME, step: bounds.obstacleTarget, bounds, budget: BUDGET,
-            roster: ROSTER, directed: DIRECTED, skeleton: SKELETON,
+            roster: ROSTER, terrains: TERRAINS, directed: DIRECTED, skeleton: SKELETON,
             dashMode: DASH_MODE,
         })
         : generateSeedlingLevel({
@@ -516,6 +518,8 @@ const payload = {
      * real cause is the question, not the generator.
      */
     roster: PALETTE.roster ?? null,
+    /** ⛓ seedling-gen-terrains (C3) — an identity field, written only when some are opted in. */
+    ...(TERRAINS ? { terrains: TERRAINS } : {}),
     /**
      * ⛓ SLICE 5: THE DIRECTIVES, in order — ⚖ §3.5's *"the level becomes ladder
      * + directives"*. An identity field like the roster, compared by
