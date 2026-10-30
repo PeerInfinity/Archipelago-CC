@@ -508,7 +508,8 @@ export const REFUSALS = frz({
         {
             "alsoFiresIn": [
                 "block-pocket",
-                "solo-door"
+                "solo-door",
+                "rope-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "KILL_GATE_REFUSALS",
@@ -526,7 +527,8 @@ export const REFUSALS = frz({
         {
             "alsoFiresIn": [
                 "kill-gate",
-                "solo-door"
+                "solo-door",
+                "rope-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BLOCK_POCKET_REFUSALS",
@@ -544,7 +546,8 @@ export const REFUSALS = frz({
         {
             "alsoFiresIn": [
                 "kill-gate",
-                "block-pocket"
+                "block-pocket",
+                "rope-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "SOLO_DOOR_REFUSALS",
@@ -558,6 +561,25 @@ export const REFUSALS = frz({
             "source": "solo-door",
             "sourceTitle": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
             "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket",
+                "solo-door"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "ROPE_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/ropeGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "goal-too-close",
+            "named": true,
+            "scanFound": true,
+            "source": "rope-gate",
+            "sourceTitle": "The ROPE GATE — an armed arrow trap on a cut and the rope that silences it",
+            "where": "frontend/modules/procgenCore/elements/ropeGate.js — `ROPE_GATE_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -818,6 +840,21 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "ROPE_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/ropeGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "no column the …-cell main path crosses can carry a ROPE GATE: … column(s) tried, the deepest stage any reached was \"…\". ⛓ A lane is a column's BOTTOM-MOST floor run, because the danger map prices a lane to the level's floor through walls (`arrowLaneRect`); its rope hangs within … step(s) of the gate on the start side.",
+            "name": "no-lane-cell",
+            "named": true,
+            "scanFound": true,
+            "source": "rope-gate",
+            "sourceTitle": "The ROPE GATE — an armed arrow trap on a cut and the rope that silences it",
+            "where": "frontend/modules/procgenCore/elements/ropeGate.js — `ROPE_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
             "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `lab.html`",
             "constant": "MAZE_REFUSALS",
             "file": "frontend/modules/mazeRoom/procgenMaze.js",
@@ -897,6 +934,21 @@ export const REFUSALS = frz({
             "source": "block-pocket",
             "sourceTitle": "The BLOCK POCKET element",
             "where": "frontend/modules/procgenCore/elements/blockPocket.js — `BLOCK_POCKET_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "ROPE_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/ropeGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "no column the …-cell main path crosses can carry a ROPE GATE: … column(s) tried, the deepest stage any reached was \"…\". ⛓ A lane is a column's BOTTOM-MOST floor run, because the danger map prices a lane to the level's floor through walls (`arrowLaneRect`); its rope hangs within … step(s) of the gate on the start side.",
+            "name": "no-rope-cell",
+            "named": true,
+            "scanFound": true,
+            "source": "rope-gate",
+            "sourceTitle": "The ROPE GATE — an armed arrow trap on a cut and the rope that silences it",
+            "where": "frontend/modules/procgenCore/elements/ropeGate.js — `ROPE_GATE_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -1764,6 +1816,36 @@ export const REFUSALS = frz({
             "where": "procgenMaze.js (the whole module)"
         },
         {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "ROPE_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/ropeGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-lane-holds-the-start-or-the-goal",
+            "named": true,
+            "scanFound": true,
+            "source": "rope-gate",
+            "sourceTitle": "The ROPE GATE — an armed arrow trap on a cut and the rope that silences it",
+            "where": "frontend/modules/procgenCore/elements/ropeGate.js — `ROPE_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "ROPE_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/ropeGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-lane-is-not-a-cut",
+            "named": true,
+            "scanFound": true,
+            "source": "rope-gate",
+            "sourceTitle": "The ROPE GATE — an armed arrow trap on a cut and the rope that silences it",
+            "where": "frontend/modules/procgenCore/elements/ropeGate.js — `ROPE_GATE_REFUSALS`"
+        },
+        {
             "alsoFiresIn": [
                 "maze-area-binding"
             ],
@@ -2392,6 +2474,21 @@ export const REFUSALS = frz({
             "spansModules": false,
             "title": "The shared room-door geometry (`pocketFor`)",
             "where": "frontend/modules/procgenCore/elements/roomDoor.js — `ROOM_DOOR_REFUSALS`"
+        },
+        {
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "ROPE_GATE_REFUSALS",
+            "declaredCount": 5,
+            "file": "frontend/modules/procgenCore/elements/ropeGate.js",
+            "id": "rope-gate",
+            "kind": "constant",
+            "patterns": [
+                "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
+            ],
+            "scannedCount": 5,
+            "spansModules": false,
+            "title": "The ROPE GATE — an armed arrow trap on a cut and the rope that silences it",
+            "where": "frontend/modules/procgenCore/elements/ropeGate.js — `ROPE_GATE_REFUSALS`"
         },
         {
             "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `watch.html`",
