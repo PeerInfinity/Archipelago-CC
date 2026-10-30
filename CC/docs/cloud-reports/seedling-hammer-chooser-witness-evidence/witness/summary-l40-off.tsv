@@ -1,0 +1,52 @@
+358	done	hits=0	divs=0	end=40:488,904	exp=40:488,904	plans=[ok:5]	env=default	level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0		
+359	done	hits=0	divs=0	end=39:80.41396103067902,48.06396103067894	exp=39:80.41396103067902,48.06396103067894	plans=[ok:75]	env=default	level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40		
+361	done	hits=0	divs=0	end=42:248,328	exp=42:248,328	plans=[ok:70]	env=default	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0		
+362	done	hits=0	divs=0	end=41:24,168	exp=41:24,168	plans=[ok:5]	env=default	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96		
+363	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal]	env=default	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144	solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.31999915943214,135.13770516537005), inside bomb	
+364	done	hits=0	divs=0	end=42:248,328	exp=42:248,328	plans=[ok:5]	env=default	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0		
+365	done	hits=0	divs=0	end=41:24,168	exp=41:24,168	plans=[ok:70]	env=default	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96		
+366	timeout	hits=0	divs=0	end=undefined:undefined,undefined	exp=40:71.81045211710807,151.69449809254183	plans=[ok:1888]	env=default	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144		
+367	done	hits=0	divs=0	end=43:184,456	exp=43:184,456	plans=[ok:172]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576		
+368	done	hits=0	divs=0	end=39:152,24	exp=39:152,24	plans=[ok:4]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912		
+369	done	hits=0	divs=0	end=43:72,328	exp=43:72,328	plans=[ok:861]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20		
+370	done	hits=0	divs=0	end=43:88,328	exp=43:88,328	plans=[ok:913]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20		
+371	done	hits=0	divs=0	end=43:216,328	exp=43:216,328	plans=[ok:1025]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20		
+372	done	hits=0	divs=0	end=43:232,328	exp=43:232,328	plans=[ok:1088]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20		
+373	done	hits=0	divs=0	end=43:72,344	exp=43:72,344	plans=[ok:844]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21		
+374	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal,refusal]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21	solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's cor	
+375	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal,refusal]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21	solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (23,28)->L43's cor	
+376	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal,refusal]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21	solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (24,28)->L43's cor	
+377	done	hits=0	divs=0	end=43:72,360	exp=43:72,360	plans=[ok:828]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22		
+378	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal,refusal]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22	solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's cor	
+379	done	hits=0	divs=0	end=43:72,376	exp=43:72,376	plans=[ok:809]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23		
+380	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal,refusal]	env=default	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23	solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's cor	
+381	done	hits=0	divs=0	end=40:167.79881273950977,648.5809924981394	exp=40:167.79881273950977,648.5809924981394	plans=[ok:494]	env=default	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640		
+382	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal]	env=default	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest	solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player 	
+383	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal]	env=default	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared	solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (488,904): solverBot: no REACHABLE stance on bosslock@480,35	
+384	done	hits=0	divs=0	end=43:184,456	exp=43:184,456	plans=[ok:5]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576		
+385	done	hits=0	divs=0	end=39:152,24	exp=39:152,24	plans=[ok:417]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912		
+386	done	hits=0	divs=0	end=43:72,328	exp=43:72,328	plans=[ok:416]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20		
+387	done	hits=0	divs=0	end=43:88,328	exp=43:88,328	plans=[ok:480]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20		
+388	done	hits=0	divs=0	end=43:216,328	exp=43:216,328	plans=[ok:642]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20		
+389	done	hits=0	divs=0	end=43:232,328	exp=43:232,328	plans=[ok:718]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20		
+390	done	hits=0	divs=0	end=43:72,344	exp=43:72,344	plans=[ok:482]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21		
+391	done	hits=0	divs=0	end=43:88,344	exp=43:88,344	plans=[ok:527]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21		
+392	done	hits=0	divs=0	end=43:216,344	exp=43:216,344	plans=[ok:598]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21		
+393	done	hits=0	divs=0	end=43:232,344	exp=43:232,344	plans=[ok:637]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21		
+394	done	hits=0	divs=0	end=43:72,360	exp=43:72,360	plans=[ok:340]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22		
+395	done	hits=0	divs=0	end=43:88,360	exp=43:88,360	plans=[ok:476]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22		
+396	done	hits=0	divs=0	end=43:72,376	exp=43:72,376	plans=[ok:433]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23		
+397	done	hits=0	divs=0	end=43:88,376	exp=43:88,376	plans=[ok:499]	env=default	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23		
+398	done	hits=0	divs=0	end=40:168.65957603812677,647.9601850912047	exp=40:168.65957603812677,647.9601850912047	plans=[ok:118]	env=default	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640		
+399	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal]	env=default	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest	solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t819 (chaser bob@736,752) while pressing spinner@880	
+400	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal]	env=default	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared	solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (328,600): solverBot: no REACHABLE stance on bosslock@480,35	
+401	done	hits=0	divs=0	end=40:936,104	exp=40:936,104	plans=[ok:5]	env=default	level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160		
+402	done	hits=0	divs=0	end=40:856,24	exp=40:856,24	plans=[ok:4]	env=default	level_42 <- in_L40_848_0 -> exit:out_teleporter_240_336		
+403	done	hits=0	divs=0	end=42:192.42318420038163,160.64077896380425	exp=42:192.42318420038163,160.64077896380425	plans=[ok:1331]	env=default	level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152		
+404	done	hits=0	divs=0	end=40:328,600	exp=40:328,600	plans=[ok:4]	env=default	level_43__r13c7 <- in_L40_320_576 -> exit:out_stairsup_176_464		
+405	done	hits=0	divs=0	end=43:152.60000000000008,231.0499999999989	exp=43:152.60000000000008,231.0499999999989	plans=[ok:96]	env=default	level_43__r13c7 <- in_L40_320_576 -> location:Level 043 - Wand		
+860	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal,refusal]	env=default	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@	
+861	failed	hits=0	divs=0	end=undefined:undefined,undefined	exp=-	plans=[refusal,refusal]	env=default	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2	solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@	
+862	done	hits=0	divs=0	end=41:247.84174907527955,152.46765870174647	exp=41:247.84174907527955,152.46765870174647	plans=[ok:2269]	env=default	level_41__r7c15 <- in_L40_944_96 ~> level_41__r4c3 ~> level_41__r4c15 -> location:Level 041 - Totem Part 240,144		
+863	done	hits=0	divs=0	end=37:296,184	exp=37:296,184	plans=[ok:1054,ok:389]	env=default	level_43__r3c8 <- in_L40_320_576 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64		
+876	done	hits=0	divs=0	end=43:131.7055878000769,337.34057470276673	exp=43:131.7055878000769,337.34057470276673	plans=[ok:808]	env=default	level_43__r8c7 <- in_L40_320_576 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste		

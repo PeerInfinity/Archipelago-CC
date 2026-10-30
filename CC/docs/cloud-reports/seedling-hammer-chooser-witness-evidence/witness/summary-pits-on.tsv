@@ -1,0 +1,3 @@
+374	done	hits=0	divs=0	end=43:88,344	exp=43:88,344	plans=[ok:955]	env=SEEDLING_CHOOSER_PAIR=1;SEEDLING_CHOOSER_PAIR_SIZE=3	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21		
+378	done	hits=0	divs=0	end=43:88,360	exp=43:88,360	plans=[ok:938]	env=SEEDLING_CHOOSER_PAIR=1;SEEDLING_CHOOSER_PAIR_SIZE=3	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22		
+380	done	hits=0	divs=0	end=43:88,376	exp=43:88,376	plans=[ok:909]	env=SEEDLING_CHOOSER_PAIR=1;SEEDLING_CHOOSER_PAIR_SIZE=3	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23		
