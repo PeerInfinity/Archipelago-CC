@@ -185,7 +185,7 @@ import {
 } from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
-import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
+import { roomBodyDrawnObjects, roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
 import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from './seedlingHazardSkin.js';
 import {
     adoptRunEffectSkin, carryThroughReboot, effectOps, effectSkinView, fadeSlot, jiggleCam, screenOps, stepEffectSkin,
@@ -781,10 +781,12 @@ export function mountJsRuntimePage(win = window) {
                     pack: o.key ? art.packOf(o.key) : null })) }
             : null;
         const roomRecord = (runtime.mounted ?? runtime.vanilla)?.records?.get(level) ?? null;
+        // ⛓ the ice turret's corpse-wall stand-in goes when the room-body skin draws (the lab's rule, one shared set)
+        const roomBodyDrawn = roomBodyDrawnObjects(bodySprites);
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
             ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag)
-                || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag),
+                || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag) || roomBodyDrawn(o),
                 // ⚖ only the game's SHOWN portals are drawn, as the spinning Portal.png; the invisible teleporters draw nothing
                 drawnTeleporters: teleporterArtFilter(roomRecord), shownTeleporter: shownTeleporters(roomRecord), visitTick: portalVisitTick(runtime.run),
                 drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
