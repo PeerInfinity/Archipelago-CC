@@ -1706,6 +1706,19 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_FINE_WAND_STANCE=0|1`.
      */
     fineWandStance: true,
+    /**
+     * fidelity TURRETSNAP D1 (wave 35) — A LIVE ICE TURRET PRICED WHERE ITS CONTACT IS TESTED (`dangerMap`).
+     *
+     * `staticEnemyDanger` and `dangerVolumes` priced a live `IceTurret` at its census box (`contactRect`, the ctor
+     * point). The game never tests that box: `input()` snaps a stationary axis 8 px onto `floor(v/16)*16 + 8` in the
+     * same update, BEFORE `hitPlayer`, and off screen the update (contact included) does not run at all. L40's
+     * `iceturret@472,400` stands at y 416 and is touched at 424 / 423.5 (hammer ICEST measured both halves of the
+     * error: a stance inside the snapped body, and a stance walk refused by the unsnapped one). ON: a live turret the
+     * run steps is priced at the hull of its rest two-cycle (`iceTurret.iceTurretLiveContactCycle`), and its run
+     * position is unchanged. The pole thrust's crowd test (`solverBot.resolvePoleThrustStrategy`, `deriveLightPole`)
+     * reads the same box. OFF: byte-identical. `SEEDLING_TURRET_SNAP_PRICING=0|1`.
+     */
+    turretSnapPricing: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2039,6 +2052,9 @@ if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_HIDDEN_DOOR === '0') CONTACT
 // ⛓ fidelity L12DOORS D3: `SEEDLING_FINE_WAND_STANCE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FINE_WAND_STANCE === '1') CONTACT_FIDELITY.fineWandStance = true;
 if (globalThis.process?.env?.SEEDLING_FINE_WAND_STANCE === '0') CONTACT_FIDELITY.fineWandStance = false;
+// ⛓ fidelity TURRETSNAP D1: `SEEDLING_TURRET_SNAP_PRICING=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_TURRET_SNAP_PRICING === '1') CONTACT_FIDELITY.turretSnapPricing = true;
+if (globalThis.process?.env?.SEEDLING_TURRET_SNAP_PRICING === '0') CONTACT_FIDELITY.turretSnapPricing = false;
 // ⛓ fidelity DETERM (c): `SEEDLING_COVER_HELD_FADE=0|1` and `SEEDLING_LOCK_RECLOSE_LAG=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '1') CONTACT_FIDELITY.coverHeldFade = true;
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '0') CONTACT_FIDELITY.coverHeldFade = false;

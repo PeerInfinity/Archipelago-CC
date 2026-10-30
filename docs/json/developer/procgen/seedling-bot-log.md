@@ -26537,3 +26537,32 @@ row equal ticks included. The sweep ×2 per arm and the probes standard are the 
 - An executor that walks inside itself is invisible to the frontier's re-entry guard: give the order its stance.
 
 ---
+
+
+### Seedling fidelity TURRETSNAP — a live ice turret priced where its contact is tested, not at its placement (`turretSnapPricing`, OFF)
+
+Planner `seedling-fidelity-planning-16`, wave 35. The report is `CC/docs/cloud-reports/seedling-fidelity-turretsnap.md`.
+
+**The gap (hammer ICEST's hand-over).** `dangerMap.staticEnemyDanger` and `dangerVolumes` priced a live IceTurret at its census
+box (the ctor point). `IceTurret.input()` snaps a stationary axis onto `floor(v/16)*16 + 8` in the same update and BEFORE
+`hitPlayer`, and an off-screen turret runs neither, so the ctor box is never a contact. L40's `iceturret@472,400` stands at
+(488,416) and cycles (487.5,424) / (488,423.5) from its first update; L98's already sits on a snap centre.
+
+**D1.** `iceTurret.iceTurretLiveContactCycle` derives the two-cycle from the ctor by `input()` itself; with the key ON
+`dangerMap.liveTurretContactRect` prices a live turret the run steps at the cycle's hull (both danger readers and the pole
+thrust's crowd test). The run's turret is not moved. Game witnesses (`fixtures/turretsnap-witness/`,
+`probe-seedling-turret-snap.mjs`): inside only the snapped body the game bills on t1; inside only the ctor box, never. OFF the map
+reads both backwards.
+
+**D2.** ICEST's generated corridor: the refusal point moves 8 px and ICEST's stance (88,18) turns calm on the map, but no verdict
+moves (the 16 px lattice centre is inside the snapped body too). The latch chain (OFF, CPAIR 3, CPAIR 3 + ICEST) is equal ON.
+
+**Movers.** Local survey full OFF = ON (203/37, 0 of 240 rows). Producers ON 97/0 red. The bounded set ON owes one re-pin
+(`contactFidelity.test.js`'s defaults table).
+
+**Trap candidates.**
+- An entity that snaps in its first update is never touched at its ctor box: price the box the contact TESTS, not the one the
+  body stands in before it has updated. "Do not snap early" is a rule for the run's state, not for a pricing.
+- A two-axis rest cycle: one axis on its snap centre each tick, the other half a pixel off; a static reader prices the hull.
+- `identity-block.sh` and the surveys die with the worker: a restart mid-block leaves a partial file that reads as complete
+  unless the row count is checked.

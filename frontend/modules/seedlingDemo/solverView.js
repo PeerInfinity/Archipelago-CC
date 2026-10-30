@@ -137,6 +137,8 @@ export {
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (its switch, the cut and its instrument; ON by default since the user's flip).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
 } from './pressKillCost.js';
+// iceTurret.js — dangerMap · seedling 1 (fidelity TURRETSNAP: the boxes a live turret's contact is tested on)
+export { iceTurretLiveContactCycle } from './iceTurret.js';
 // igneousLava.js — dangerMap · seedling 3 (fidelity IGNEOUS: the type-31 tile's render clock)
 export { igneousInRange, igneousRendersToLava, stepIgneousRender } from './igneousLava.js';
 // iceTurret.js — botDriverV2 · seedling 2
