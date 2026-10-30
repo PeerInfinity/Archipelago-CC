@@ -197,8 +197,8 @@ import {
     DIRECTED_ANCHOR_TRIES, applyDirective, describeKeptKind, directedCost, displayStaging,
     ELEMENTS_CONTROL_DEFAULT, ELEMENTS_CONTROL_LIST, elementsAskSpelling, elementsControlValue,
     elementsFromControl,
-    generateStep, generationRows, ladderCost, paletteFor, readGenerateParams,
-    skeletonCatalogue, tileAtPoint, writeGenerateParams,
+    generateStep, generationRows, ladderCost, paletteWithTerrains, readGenerateParams,
+    skeletonCatalogue, terrainsSpelling, tileAtPoint, writeGenerateParams,
 } from './watchGenerate.js';
 // ⛓ SLICE 7: the ONE formatter/normalizer for a skeleton spec — the identity
 // line, the URL bar and this form all spell a room the same way.
@@ -258,7 +258,7 @@ import {
 // ⛓ SLICE 4: the catalogue is DATA (`catalogueRows`) and the restriction is a
 // palette operation (`restrictPalette`) — both live where palettes live, and
 // this file only renders and wires them.
-import { catalogueRows, restrictPalette } from './procgenPalette.js';
+import { TERRAIN_OFFERS, catalogueRows, restrictPalette } from './procgenPalette.js';
 // ⛓ EDITOR v3 C1: `TERRAIN_NAMES` LEFT with the picker it filled — the edit
 // section is shared with the EDIT arm now, and `watchEditor` mounts it, so
 // this file keeps no second list of what a terrain is.
@@ -6012,6 +6012,8 @@ async function runGenerate(params, lifetime) {
      * control on this panel.
      */
     let roster = gp.roster;
+    /** ⛓ seedling-gen-terrains (C3) — the opted-in terrains (`?terrains=`), `''` = none. */
+    let terrains = gp.terrains ?? '';
     /**
      * ⛓ Set once, when a press takes the URL back off `?gen=` — so the detail
      * line can say the reproduction claim GONE rather than just stop printing
@@ -6063,6 +6065,7 @@ async function runGenerate(params, lifetime) {
          * run has.
          */
         roster = payload.roster ?? null;
+        terrains = terrainsSpelling(payload.terrains ?? '');
         /**
          * ⛓⛓⛓ SLICE 12 — THE PAYLOAD IS THE DIRECTIVE CHANNEL. ⚠ `?? null`
          * because a payload written before slice 5 names none, and "no
@@ -6134,6 +6137,28 @@ async function runGenerate(params, lifetime) {
     lookLabel.htmlFor = 'genLook';
     lookLabel.textContent = 'look';
     biomeSel.after(lookLabel, lookSel);
+    /**
+     * ⛓ seedling-gen-terrains (C3) — THE TERRAINS SELECT, built here like the look's. Its
+     * choices are the terrains the SELECTED biome offers opt-in (`TERRAIN_OFFERS`): none,
+     * each alone, and all of them. Unlike the look it is a GENERATOR input, so it is read
+     * at the press, written to the URL (`?terrains=`) and carried by the payload.
+     */
+    const terrainsSel = document.createElement('select');
+    terrainsSel.id = 'genTerrains';
+    terrainsSel.title = 'Walk-changing terrains the biome offers opt-in (ice, cliff stairs, ghost step)';
+    const fillTerrains = (forBiome, keep) => {
+        const offered = TERRAIN_OFFERS[forBiome] ?? [];
+        const choices = ['', ...offered, ...(offered.length > 1 ? [offered.join(',')] : [])];
+        terrainsSel.innerHTML = choices.map((c) => `<option value="${c}">${c === '' ? '(none)' : c}</option>`)
+            .join('');
+        terrainsSel.value = choices.includes(keep) ? keep : '';
+        terrainsSel.disabled = offered.length === 0;
+    };
+    fillTerrains(biome, terrains);
+    const terrainsLabel = document.createElement('label');
+    terrainsLabel.htmlFor = 'genTerrains';
+    terrainsLabel.textContent = 'terrains';
+    lookSel.after(terrainsLabel, terrainsSel);
     const shownLook = () => labLookOf(lookSel.value, state?.biome ?? biome);
 
     /**
@@ -6617,7 +6642,7 @@ async function runGenerate(params, lifetime) {
      * draw rewrites.
      */
     const renderCatalogue = () => {
-        const full = paletteFor(biomeSel.value);
+        const full = paletteWithTerrains(biomeSel.value, terrainsSel.value);
         const selected = new Set(roster
             ? restrictPalette(full, roster).templates.map((t) => t.name)
             : full.templates.map((t) => t.name));
@@ -6734,6 +6759,13 @@ async function runGenerate(params, lifetime) {
      * this is that law applied to the roster.
      */
     biomeSel.onchange = () => {
+        roster = null;
+        fillTerrains(biomeSel.value, terrainsSel.value);
+        renderCatalogue();
+        updateRunButtons();
+    };
+    /** ⛓ seedling-gen-terrains (C3) — a terrain changes the roster, so it drops a restriction as the biome does. */
+    terrainsSel.onchange = () => {
         roster = null;
         renderCatalogue();
         updateRunButtons();
@@ -7059,6 +7091,7 @@ async function runGenerate(params, lifetime) {
             // palette the record on screen was really drawn from carries it,
             // so the link cannot name a roster the run did not have.
             roster: state.roster,
+            terrains: state.terrains,
             // ⛔ SLICE 12: NO `directives` ARGUMENT — ⚖ §3.9 took the list off
             // the bar, so the writer has no such parameter and a link names the
             // LADDER alone. `describeState` says so as soon as there is one.
@@ -7181,6 +7214,8 @@ async function runGenerate(params, lifetime) {
             // ⛓ SLICE 4: an IDENTITY field beside seed and biome — see
             // `agreementWithPayload`. The CLI's payload carries the same one.
             roster: state.roster,
+            // ⛓ seedling-gen-terrains (C3) — an identity field too, written only when some are opted in.
+            ...(state.terrains ? { terrains: state.terrains } : {}),
             /**
              * ⛓ SLICE 5: the construction beside the ladder — ⚖ §3.5, and an
              * IDENTITY field `agreementWithPayload` compares. The CLI's payload
@@ -7351,6 +7386,7 @@ async function runGenerate(params, lifetime) {
              */
             palette: state.palette.name,
             roster: state.roster,
+            terrains: state.terrains,
             catalogue: catalogueReadout,
             /**
              * ⛓ CONSTRUCTIVE SLICE 5: the ROOM this level was built in, and
@@ -7784,6 +7820,7 @@ async function runGenerate(params, lifetime) {
         payload = null;
         const nextSeed = Number($('genSeed').value);
         const nextBiome = $('genBiome').value;
+        const nextTerrains = terrainsSpelling(terrainsSel.value);
         /**
          * ⛓⛓ CONSTRUCTIVE-MODE SLICE 5 — THE SKELETON KIND JOINS THE
          * IDENTITY, so a change to it RESETS the ladder exactly as a changed
@@ -7865,6 +7902,7 @@ async function runGenerate(params, lifetime) {
         const changedControls = [];
         if (nextSeed !== seed) changedControls.push('seed');
         if (nextBiome !== biome) changedControls.push('biome');
+        if (nextTerrains !== terrains) changedControls.push('terrains');
         if (spell(nextSkeleton) !== spell(skeleton)) changedControls.push('skeleton');
         if (nextSize.width !== size.width || nextSize.height !== size.height) {
             changedControls.push('room size');
@@ -7879,6 +7917,7 @@ async function runGenerate(params, lifetime) {
         }
         seed = nextSeed;
         biome = nextBiome;
+        terrains = nextTerrains;
         skeleton = nextSkeleton;
         size = nextSize;
         fill = nextFill;
@@ -7912,7 +7951,7 @@ async function runGenerate(params, lifetime) {
             roster = null;
         } else {
             const coarse = roster?.axis === 'families'
-                ? restrictPalette(paletteFor(biome), roster).templates.map((t) => t.name)
+                ? restrictPalette(paletteWithTerrains(biome, terrains), roster).templates.map((t) => t.name)
                 : null;
             const same = coarse !== null && coarse.length === checked.length
                 && coarse.every((n) => checked.includes(n));
@@ -7953,7 +7992,7 @@ async function runGenerate(params, lifetime) {
                 // with the old text on it, which is a lie about what it does.
                 await new Promise((r) => requestAnimationFrame(r));
                 if (!lifetime.alive()) return;
-                state = generateStep({ seed, biome, step: k, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
+                state = generateStep({ seed, biome, step: k, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
                 step = k;
                 const out = await show(why);
                 if (!out.drew) return;
@@ -7982,7 +8021,7 @@ async function runGenerate(params, lifetime) {
         // ⛓ A FRESH `generateStep` STATE CARRIES AN EMPTY DIRECTIVE LIST, so
         // the reset drops them BY CONSTRUCTION rather than by a second line
         // somebody could forget to write.
-        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
+        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
         await show(why);
     };
     /**
@@ -8197,7 +8236,7 @@ async function runGenerate(params, lifetime) {
             if (step === 0) {
                 await resetToSkeleton(`${cleared} — back to the skeleton`);
             } else {
-                state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
+                state = generateStep({ seed, biome, step, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
                 await show(`${cleared} — back to seed ${seed}'s ladder at step ${step}`);
             }
         } finally {
@@ -8498,7 +8537,7 @@ async function runGenerate(params, lifetime) {
     };
 
     // ── the skeleton, before anything is drawn ───────────────────────────
-    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
+    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
 
     const ogmoSchema = await loadOgmoSchema();
     if (!lifetime.alive()) return;
