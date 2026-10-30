@@ -23,8 +23,10 @@ import {
 // generated levels G1: a static path would put +94 files / +4.96 MB here).
 import {
   substrateRegistryEntry as flashSeedlingGenEntry,
+  installSeedlingGenLooks,
   installSeedlingGenRoom,
   seedlingGenRoomInstalled,
+  SEEDLING_GEN_LOOK_MODULE_PATH,
   SEEDLING_GEN_ROOM_MODULE_PATH,
   setSeedlingPlaybackController,
 } from './flashSeedlingGenLibrary.js';
@@ -95,11 +97,25 @@ export const moduleInfo = {
  * nothing to do — callers import `flashSeedlingGenBuild.js`.
  */
 let seedlingGeneratorLoad = null;
+
+/**
+ * ⛓ seedling-js-panel-look — the look row's names (`procgenLook.GEN_LOOK_NAMES`), from the module the room
+ * just loaded (a cache hit). Best effort: without them the row still offers "(none)" and the region's own
+ * look, and the room builds either way, so a failure is a warning, not a failed load.
+ */
+function installLooks(importer, baseURI) {
+  return Promise.resolve()
+    .then(() => importer(new URL(SEEDLING_GEN_LOOK_MODULE_PATH, baseURI).href))
+    .then((looks) => { installSeedlingGenLooks(looks); })
+    .catch((err) => log('warn', `[FlashPanel Module] the Seedling look names (${SEEDLING_GEN_LOOK_MODULE_PATH}) `
+      + `did not load — the generated room's Look row offers only (none) and the region's own look: ${err?.message ?? err}`))
+    .then(() => true);
+}
 export function loadSeedlingGenerator({ baseURI = globalThis.document?.baseURI, importer = (url) => import(/* @vite-ignore */ url) } = {}) {
   if (seedlingGenRoomInstalled()) return Promise.resolve(true);
   if (!baseURI) return Promise.resolve(false);
   seedlingGeneratorLoad ??= importer(new URL(SEEDLING_GEN_ROOM_MODULE_PATH, baseURI).href)
-    .then((room) => { installSeedlingGenRoom(room); return true; })
+    .then((room) => { installSeedlingGenRoom(room); return installLooks(importer, baseURI); })
     .catch((err) => {
       seedlingGeneratorLoad = null;
       log('error', `[FlashPanel Module] the Seedling generator (${SEEDLING_GEN_ROOM_MODULE_PATH}) did not load — `
