@@ -77,7 +77,7 @@ export function mazeModelledCells(mazeWorld) {
     for (const m of [mazeWorld.obstacles, mazeWorld.blocks, mazeWorld.buttons, mazeWorld.items]) {
         for (const key of m?.keys?.() ?? []) cells.add(key);
     }
-    for (const t of mazeWorld.traps ?? []) cells.add(posKey(t.x, t.y));
+    for (const t of [...(mazeWorld.traps ?? []), ...(mazeWorld.pulls ?? [])]) cells.add(posKey(t.x, t.y));
     return cells;
 }
 
