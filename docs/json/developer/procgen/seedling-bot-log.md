@@ -26558,15 +26558,20 @@ row equal ticks included. The sweep ×2 per arm and the probes standard are the 
   `hammerDashWindow.test.js` reds if L4's margin drops under 40 (ON) / 1 (OFF) or leg 108's under 0 (ON).
 - **The stand tail.** ON, `walkTo` asks `spinnerDashWhole(wps, except, stand)` for a corridor that ends standing; the
   certificate is the dashed walk and its whole stand (every tick, or to the collect tail's ceremony), untruncated; less falls
-  back. Measured on 60 stand-tail corridors (survey 44, r9 9, the spinner-room requests 6, the L40 latch chain 1; 7 in a
-  spinner room): ON plans the same ticks on every one, and the survey is identical ON (237/237). Gain: 0 ticks today.
+  back. Measured on 60 stand-tail corridors on the route (survey 44, r9 9, the spinner-room requests 6, the L40 latch
+  chain 1; 7 in a spinner room): ON plans the same ticks on every one, and the survey is identical ON (237/237). The
+  generated levels do move (`carved pairs c4`): a collect approach beside one spinner, bushy post-feather s9 96 → 80 t,
+  loopy post-shield s2 88 → 86 t, winding post-feather s9 199 → 204 t (the blind chain is taken whenever it certifies,
+  never compared: ON is not monotone). Nine trace sidecars re-word (`why` only; tapes byte-identical); the L40 kill-rung
+  progress rows count one more preview.
 - **Gate** `hammerDashWindow.test.js` (L4's thresholds per arm; the margin pins; L20's hold and collect tails OFF / ON;
-  L4's hold ON, same keys and units; leg 108 ON = OFF). Mutants (drop the stand from the certificate, shorten it by a tick,
+  L4's hold ON, same keys and units; the two generated movers, bushy s9 and winding s9; leg 108 ON = OFF). Mutants (drop the stand from the certificate, shorten it by a tick,
   the window 85 → 83): all red.
 
 **Trap candidates.**
 - A margin quoted without its arm: the same window counts different things under `DASH_ONLY_WINDOW` ON and OFF.
 - A "no stand tail" witness that has one: L4's stairs leg carries `holdWaitPriced`'s hold. Read the audit before naming a
   control.
+- A radius that stops at the route misses the generated levels: the identity block's kind pairs were the only movers.
 
 ---

@@ -21,11 +21,17 @@
  * and its whole stand, previewed once. L4's stairs leg (Part 1's) carries a stand tail too (`holdWaitPriced`'s hold on
  * `button@16,64`, 126 ticks): ON it is certified whole with the same keys and the SAME units, so the switch does not
  * move Part 1's thresholds. Leg 108 has no stand-tail corridor: ON = OFF there, unit for unit.
+ * Where ON DOES plan differently: a stand-tail corridor in a room with a live spinner. The route, the r9 campaign and the
+ * page requests have none that differs; the generated levels of the identity block's `carved pairs c4` row have three:
+ * a collect approach (its tail ends on the ceremony's 7th tick) beside one spinner. Bushy post-feather seed 9: OFF's
+ * window-by-window chain 96 t, ON's press-blind chain certified whole 80 t. Winding post-feather seed 9: 199 t OFF,
+ * 204 t ON — `spinnerDashWhole` takes the blind chain when it certifies, without comparing it to the other (ON is not
+ * monotone; the third, loopy post-shield seed 2, is 88 → 86 t).
  *
  * ── THE MUTATION LIST (each row's catcher named) ──
  *   m1 drop the stand from the certificate (`spinnerDashWhole`'s whole preview without `standTailOpts(stand)`)
- *        → 'ON: … certified whole with its stand' and 'ON under the window: L4 …' red (0 stood ticks: the corridor
- *          falls back, `why` null, and L4's full pass spends the fallback's units)
+ *        → 'ON: … certified whole with its stand', 'ON under the window: L4 …' and the two generated rows red (0
+ *          stood ticks: the corridor falls back, `why` null, and L4's full pass spends the fallback's units)
  *   m2 shorten the certified stand by one tick (`standTailOpts({ ...stand, ticks: stand.ticks - 1 })`)
  *        → 'ON: … certified whole with its stand' and 'ON under the window: L4 …' red (130 of 131, 125 of 126)
  *   m3 move the window across L4's OFF threshold (`SOLVER_UPGRADE_WINDOW_WORK` 85 → 83)
@@ -47,6 +53,8 @@ import { loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
+import { paletteFor } from './watchGenerate.js';
+import { generateSeedlingLevel, seedlingSkeletonSpec } from './procgenSeedling.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -137,6 +145,25 @@ async function l20(on) {
     }
 }
 
+/**
+ * A generated post-feather level (`dump-seedling-kind-pairs`' `carved pairs c4` row: count 4) with `DASH_STAND_WHOLE`
+ * at `on`: its skeleton and final ticks, and the audit of its first skeleton solve's stand-tail corridors.
+ */
+function generated(kind, seed, on) {
+    const audit = [];
+    DASH_STAND_WHOLE.audit = audit;
+    try {
+        const out = withDashStandWhole(on, () => generateSeedlingLevel({ seed, palette: paletteFor('post-feather'),
+            bounds: { obstacleTarget: 4 }, skeleton: seedlingSkeletonSpec(kind) }));
+        return { skeletonTicks: out.summary.skeletonTicks, ticks: out.summary.finalTicks,
+            audit: audit.map(({ what, standTicks, whole, ticks, baseline, why }) => ({
+                what: what.replace(/^solverBot\([^)]*\) /, ''), standTicks, whole, ticks, baseline, why })) };
+    } finally {
+        DASH_STAND_WHOLE.audit = null;
+    }
+}
+const bushyS9 = (on) => generated('bushy', 9, on);
+
 describe('PART 2 — the whole-chain dash under a `stand` tail (`DASH_STAND_WHOLE`, OFF)', () => {
     it.skipIf(ENV.SEEDLING_DASH_STAND_WHOLE !== undefined)('ships OFF, with no audit installed', () => {
         expect(DASH_STAND_WHOLE.enabled).toBe(false);
@@ -185,6 +212,23 @@ describe('PART 2 — the whole-chain dash under a `stand` tail (`DASH_STAND_WHOL
         expect(off.audit).toEqual([{ standTicks: 126, whole: false, ticks: 27, baseline: 43, why: null }]);
         expect(on.audit).toEqual([{ standTicks: 126, whole: true, ticks: 27, baseline: 43,
             why: 'certified whole with its 126-tick stand (hammer DASH)' }]);
+    }, 120000);
+
+    it('ON dashes where it should: generated bushy post-feather seed 9 — the collect approach in a spinner room, 96 → 80 t, certified with its 7-tick stand; the level 102 → 86 t', () => {
+        const off = bushyS9(false);
+        const on = bushyS9(true);
+        expect([off.ticks, on.ticks]).toEqual([102, 86]);
+        expect(off.audit[0]).toEqual({ what: 'collect (32,96) stance', standTicks: 50, whole: false, ticks: 96, baseline: 120, why: null });
+        expect(on.audit[0]).toEqual({ what: 'collect (32,96) stance', standTicks: 50, whole: true, ticks: 80, baseline: 120,
+            why: 'certified whole with its 7-tick stand (hammer DASH)' });
+    }, 120000);
+
+    it('ON is not monotone: generated winding post-feather seed 9 — the whole-certified press-blind chain is 204 t where OFF\'s is 199 t (the skeleton walk 205 → 210 t)', () => {
+        const off = generated('winding', 9, false);
+        const on = generated('winding', 9, true);
+        expect([off.skeletonTicks, on.skeletonTicks, off.ticks, on.ticks]).toEqual([205, 210, 233, 233]);
+        expect([off.audit[0].ticks, on.audit[0].ticks, on.audit[0].why])
+            .toEqual([199, 204, 'certified whole with its 7-tick stand (hammer DASH)']);
     }, 120000);
 
     it('ON with no stand tail = OFF: leg 108 (no corridor of it ends standing), key for key and unit for unit', () => {

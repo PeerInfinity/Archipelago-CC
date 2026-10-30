@@ -1,18 +1,20 @@
 == m1 drop the stand from the certificate
-     × ON: the same keys; each stand-tail dash is certified whole with its stand — the hold's all 131 ticks, the collect's to its ceremony 1029ms
-     × ON under the window: L4's hold stance (button@16,64, a 126-tick stand) — the same keys AND the same units (the window does not move) 968ms
-⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
-      Tests  2 failed | 8 passed (10)
+     × ON: the same keys; each stand-tail dash is certified whole with its stand — the hold's all 131 ticks, the collect's to its ceremony 513ms
+     × ON under the window: L4's hold stance (button@16,64, a 126-tick stand) — the same keys AND the same units (the window does not move) 523ms
+     × ON dashes where it should: generated bushy post-feather seed 9 — the collect approach in a spinner room, 96 → 80 t, certified with its 7-tick stand; the level 102 → 86 t 3472ms
+     × ON is not monotone: generated winding post-feather seed 9 — the whole-certified press-blind chain is 204 t where OFF's is 199 t (the skeleton walk 205 → 210 t) 5535ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 8 passed (12)
 == m2 shorten the certified stand by one tick
-     × ON: the same keys; each stand-tail dash is certified whole with its stand — the hold's all 131 ticks, the collect's to its ceremony 795ms
-     × ON under the window: L4's hold stance (button@16,64, a 126-tick stand) — the same keys AND the same units (the window does not move) 931ms
+     × ON: the same keys; each stand-tail dash is certified whole with its stand — the hold's all 131 ticks, the collect's to its ceremony 480ms
+     × ON under the window: L4's hold stance (button@16,64, a 126-tick stand) — the same keys AND the same units (the window does not move) 517ms
 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
-      Tests  2 failed | 8 passed (10)
+      Tests  2 failed | 10 passed (12)
 == m3 the window across L4's OFF threshold (85 -> 83)
-     × the window and the arm are today's: 85, the dash-only window ON 23ms
-     × THE MARGIN PIN: L4 ships its full 219 t at the window minus each arm's floor (ON 40, OFF 1) 783ms
-     × THE MARGIN PIN: leg 108 ships 328 t at the window minus its floor (ON 0); OFF, its dashless 561 t 1699ms
+     × the window and the arm are today's: 85, the dash-only window ON 14ms
+     × THE MARGIN PIN: L4 ships its full 219 t at the window minus each arm's floor (ON 40, OFF 1) 439ms
+     × THE MARGIN PIN: leg 108 ships 328 t at the window minus its floor (ON 0); OFF, its dashless 561 t 912ms
 ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
-      Tests  3 failed | 7 passed (10)
+      Tests  3 failed | 9 passed (12)
 == restored
-      Tests  10 passed (10)
+      Tests  12 passed (12)
