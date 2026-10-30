@@ -1,0 +1,8 @@
+// SCRATCH preload: install DASH_STAND_WHOLE.audit and append its rows (one JSON line each, tagged with argv) on exit.
+import { appendFileSync } from 'node:fs';
+const sb = await import(`${process.env.AUDIT_TREE}/frontend/modules/seedlingDemo/solverBot.js`);
+sb.DASH_STAND_WHOLE.audit = [];
+const tag = process.argv.slice(2).join(' ');
+process.on('exit', () => {
+    for (const r of sb.DASH_STAND_WHOLE.audit) appendFileSync(process.env.AUDIT_OUT, `${JSON.stringify({ argv: tag, ...r })}\n`);
+});

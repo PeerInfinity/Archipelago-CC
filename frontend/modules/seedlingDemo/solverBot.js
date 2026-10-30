@@ -7443,6 +7443,29 @@ export function withDashKeepPartial(enabled, fn) {
     return withSwitch(DASH_KEEP_PARTIAL, enabled, fn);
 }
 
+/**
+ * ⛓ SEEDLING HAMMER-PHASE DASH (`seedling-hammer-dash-window`; ⚖ the user queued it 2026-10-30, planner
+ * `seedling-hammer-phase-planning-2`) — **THE WHOLE-CHAIN DASH IS ASKED UNDER A `stand` TAIL TOO.** OFF by default.
+ *  - OFF (today): `walkTo` asks `spinnerDashWhole` (fidelity L40BK2 D2, `dashSpinnerForecast`) only for a corridor with
+ *    no `stand` tail. A stance walk that ends standing (`holdWaitPriced`'s hold, `KEYLOCK_WAIT_PRICED`'s keylock, the
+ *    collect approach) is planned window by window with the spinner rows, so a chain whose struck spinner a LATER
+ *    window turns back is refused.
+ *  - ON: such a corridor is asked `spinnerDashWhole(wps, except, stand)`. The chain is planned press-blind with the tail
+ *    (as without one), then the WHOLE dashed walk AND ITS WHOLE STAND (`standTailOpts`, every one of `stand.ticks`) is
+ *    previewed once and certified through `probeSamples` (⚖ 30(c): the walk certified is the walk driven, and the wait
+ *    is driven after it). A tail cut short (a death, or fewer stood ticks than `stand.ticks`) is not a certificate: the
+ *    corridor is planned as OFF plans it. ON with no tail is OFF exactly.
+ * `stand` and `standTailOpts` are fidelity's (L30KEYLOCK / L40LATCH): called here, never changed.
+ * `audit` (null, or an array a measurement installs) hears one row per corridor a `stand` tail kept away from the
+ * whole-chain ask (OFF) or sent to it (ON); it changes nothing the solver decides.
+ */
+export const DASH_STAND_WHOLE = { enabled: globalThis.process?.env?.SEEDLING_DASH_STAND_WHOLE === '1', audit: null };
+
+/** Run `fn` with `DASH_STAND_WHOLE` set to `enabled`, restoring the previous value (also on a throw). */
+export function withDashStandWhole(enabled, fn) {
+    return withSwitch(DASH_STAND_WHOLE, enabled, fn);
+}
+
 /** The `all` sets without the swing-only prefix (`DASH_NO_SWING_PREFIX`), derived: a length-1 prefix is the swing. */
 const DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
 const GHOST_DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(GHOST_DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
@@ -25985,16 +26008,30 @@ function solveSegmentUnder({
      * sample's own spinner row set aside, the press-blind forecast), and the WHOLE dashed walk is then certified with the
      * rows — the walk the drive takes with that plan (⚖ ruling 30(c)). A chain that fails whole is planned again with the
      * rows window by window (seam 5290's chain, which the game and the model both hit at t1222).
+     * ⛓ hammer DASH (`DASH_STAND_WHOLE`, OFF): `stand` — a corridor's tail, asked here only ON. The chain is planned with
+     * it, and the certificate is the dashed walk followed by its WHOLE stand (every `stand.ticks`, or to a collect tail's
+     * ceremony sample), untruncated; anything less falls back to the window-by-window plan, as a failed chain does.
      */
-    const spinnerDashWhole = (wps, except) => {
-        const opts = { tolerance, dashMode };
+    const spinnerDashWhole = (wps, except, stand = null) => {
+        // ⛓ hammer DASH (`DASH_STAND_WHOLE`, OFF): a `stand` tail reaches here only ON; null is the shape before it.
+        const opts = { tolerance, dashMode, ...(stand ? { stand } : {}) };
         const blind = (samples) => probeSamples(samples.map((sm) => (sm.spinners ? { ...sm, spinners: null } : sm)),
             except);
         const c = planSwordDash(run, wps, { ...opts, certify: blind });
         if (!c.plan) return c;
-        const walk = previewWalkOrDeath(run, wps, tolerance, { strike: strikePolicyFor(run, { dashPlan: c.plan, dashMode }) });
-        const arrived = !walk.truncated || walk.truncated.kind === 'crossed';
-        if (arrived && !probeSamples(walk.samples, except)) return { ...c, why: 'certified whole (fidelity L40BK2)' };
+        const walk = previewWalkOrDeath(run, wps, tolerance, { strike: strikePolicyFor(run, { dashPlan: c.plan, dashMode }),
+            ...standTailOpts(stand) });
+        // ⛓ hammer DASH: under a tail the certificate holds the WHOLE stand after the dashed walk — every one of its
+        // ticks (or up to the ceremony sample a collect tail ends on), and no truncation: a `crossed` there is a dwell
+        // that left the room (trap 150), not an arrival.
+        const tail = stand ? walk.samples.filter((sm) => sm.phase === 'dwell') : null;
+        const stood = tail ? tail.length : null;
+        const arrived = stand ? !walk.truncated && (stood === stand.ticks || tail.at(-1)?.ceremony === true)
+            : !walk.truncated || walk.truncated.kind === 'crossed';
+        if (arrived && !probeSamples(walk.samples, except)) {
+            return { ...c, why: stand ? `certified whole with its ${stood}-tick stand (hammer DASH)`
+                : 'certified whole (fidelity L40BK2)' };
+        }
         return planSwordDash(run, wps, { ...opts, certify: (samples) => probeSamples(samples, except) });
     };
 
@@ -29357,15 +29394,23 @@ function solveSegmentUnder({
              * exactly that and every campaign trace lost its waypoint list.
              */
             // ⛓ ARROWLANE D2: an engaged lane walk is driven undashed (the certificate is that walk).
+            // ⛓ hammer DASH: the whole-chain ask's own gate, read once (the audit below names the same corridors).
+            const wholeAsk = CONTACT_FIDELITY.dashSpinnerForecast && !narrow;
             const dash = (dashMode === 'none' || axisAligned || undashed || laneWalk)
                 ? null
                 : (dashFirst && !narrow) ? dashFirst
                     : (!narrow && corridorDashCertified?.wps === wps) ? corridorDashCertified.d
-                        : (CONTACT_FIDELITY.dashSpinnerForecast && !narrow && !stand)
-                            ? spinnerDashWhole(wps, except)
+                        : (wholeAsk && (!stand || DASH_STAND_WHOLE.enabled))
+                            ? spinnerDashWhole(wps, except, stand)
                             : planSwordDash(run, wps, { tolerance, dashMode,
                                 certify: (samples) => probeSamples(samples, except),
                                 ...(stand ? { stand } : {}), ...(narrow ? { iframeLapse: false } : {}) });
+            // ⛓ hammer DASH: a measurement's row per corridor whose `stand` tail decided which dash ask it got.
+            if (DASH_STAND_WHOLE.audit && dash && stand && wholeAsk && !dashFirst && corridorDashCertified?.wps !== wps) {
+                DASH_STAND_WHOLE.audit.push({ tick: perTick.length, what, standTicks: stand.ticks,
+                    hold: stand.hold === true, whole: DASH_STAND_WHOLE.enabled, planned: Boolean(dash.plan),
+                    ticks: dash.ticks, baseline: dash.baseline, saved: dash.saved, why: dash.why });
+            }
             seeRow({
                 tick: perTick.length,
                 saw: saw(),

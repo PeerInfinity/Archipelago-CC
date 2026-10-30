@@ -72,7 +72,7 @@ import { generateSeedlingLevel, placementTagId, seedlingOracle } from './procgen
 import { VERDICT, collectGoal } from './procgenOracle.js';
 import {
     ENDGAME_PALETTE, POST_DARK_SUIT_PALETTE, POST_FEATHER_PALETTE, POST_FIRE_PALETTE, POST_SHIELD_PALETTE,
-    POST_SPEAR_PALETTE, POST_SWIM_PALETTE, PRE_SWORD_PALETTE, POST_SWORD_PALETTE,
+    POST_SPEAR_PALETTE, POST_SWIM_PALETTE, PRE_SWORD_PALETTE, POST_SWORD_PALETTE, parseTerrainList, withTerrains,
 } from './procgenPalette.js';
 import { pickDoorCells } from './levelSetExits.js';
 import { TILE_SIZE, buildLevelWorld, tagOf } from './levelWorld.js';
@@ -132,6 +132,9 @@ function knobsOf(params) {
         ...(String(bag.require ?? '').trim() !== '' ? { require: String(bag.require).trim() } : {}),
         /** ⛓ seedling-gen-biomes-1 (C1) — the look, ONLY WHEN GIVEN, as `require`. */
         ...(String(bag.look ?? '').trim() !== '' ? { look: String(bag.look).trim() } : {}),
+        /** ⛓ seedling-gen-terrains (C3) — the opted-in terrains (`'ice'`, `'stairs,ghoststep'`), ONLY WHEN
+         *  GIVEN, as `require`: absent, `generation` is byte-identical. Normalized sorted, comma-joined. */
+        ...(parseTerrainList(bag.terrains).length > 0 ? { terrains: parseTerrainList(bag.terrains).join(',') } : {}),
     };
 }
 
@@ -141,10 +144,14 @@ function knobsOf(params) {
  * the generator as `undefined` — its own default, the CLI's.
  */
 function generatorInput(regionId, seed, size, knobs) {
-    const palette = GEN_ROOM_BIOMES[knobs.biome];
-    if (!palette) {
+    const biomePalette = GEN_ROOM_BIOMES[knobs.biome];
+    if (!biomePalette) {
         throw new Error(GEN_ROOM_REFUSALS.badKnob(regionId, 'biome', knobs.biome,
             `the biomes are [${Object.keys(GEN_ROOM_BIOMES).join(', ')}]`));
+    }
+    let palette = biomePalette;
+    try { palette = withTerrains(biomePalette, knobs.terrains); } catch (e) {
+        throw new Error(GEN_ROOM_REFUSALS.badKnob(regionId, 'terrains', knobs.terrains, e.message));
     }
     if (knobs.look !== undefined && !GEN_LOOK_NAMES.includes(knobs.look)) {
         throw new Error(GEN_ROOM_REFUSALS.badKnob(regionId, 'look', knobs.look,
