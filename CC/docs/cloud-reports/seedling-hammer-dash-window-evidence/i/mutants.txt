@@ -1,0 +1,18 @@
+== m1 drop the stand from the certificate
+     × ON: the same keys; each stand-tail dash is certified whole with its stand — the hold's all 131 ticks, the collect's to its ceremony 1029ms
+     × ON under the window: L4's hold stance (button@16,64, a 126-tick stand) — the same keys AND the same units (the window does not move) 968ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 8 passed (10)
+== m2 shorten the certified stand by one tick
+     × ON: the same keys; each stand-tail dash is certified whole with its stand — the hold's all 131 ticks, the collect's to its ceremony 795ms
+     × ON under the window: L4's hold stance (button@16,64, a 126-tick stand) — the same keys AND the same units (the window does not move) 931ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 8 passed (10)
+== m3 the window across L4's OFF threshold (85 -> 83)
+     × the window and the arm are today's: 85, the dash-only window ON 23ms
+     × THE MARGIN PIN: L4 ships its full 219 t at the window minus each arm's floor (ON 40, OFF 1) 783ms
+     × THE MARGIN PIN: leg 108 ships 328 t at the window minus its floor (ON 0); OFF, its dashless 561 t 1699ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 7 passed (10)
+== restored
+      Tests  10 passed (10)
