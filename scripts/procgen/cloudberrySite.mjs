@@ -14,13 +14,14 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, resolve, sep } from 'node:path';
 
 import { DEFAULT_OUT, readRecord } from '../setup/fetch-cloudberry-site.mjs';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 
 // https: the page hashes with crypto.subtle, which only a secure context has (nothing is fetched over TLS:
 // Playwright fulfils every request itself).
 export const SITE_ORIGIN = 'https://cloudberry.local';
 const READY_TIMEOUT_MS = 240000;
-// Headless Chromium has no GPU: SwiftShader gives WebGL 2 (the Cloudberry repo's own tools do the same).
-export const CHROMIUM_ARGS = Object.freeze(['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']);
+// Headless Chromium has no GPU: SwiftShader gives the page its WebGL 2 — the directory's one spelling of the switches.
+export const CHROMIUM_ARGS = HEADLESS_LOGIC_ONLY_ARGS;
 
 const MIME = {
     '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json',

@@ -53,7 +53,7 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 63,
+            "browser": 64,
             "count": 104,
             "id": "check"
         },
@@ -108,7 +108,7 @@ export const INSTRUMENTS = frz({
             "id": "lint"
         },
         {
-            "browser": 0,
+            "browser": 1,
             "count": 12,
             "id": "make"
         },
@@ -235,7 +235,7 @@ export const INSTRUMENTS = frz({
     ],
     "counts": {
         "blockStyle": 499,
-        "browser": 199,
+        "browser": 201,
         "cited": 267,
         "files": 517,
         "lineStyle": 18,
@@ -1903,7 +1903,7 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [
                 "arg"
             ],
-            "browser": false,
+            "browser": true,
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/cloudberry.md"
@@ -7176,7 +7176,7 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [
                 "arg"
             ],
-            "browser": false,
+            "browser": true,
             "category": "make",
             "citedBy": [
                 "docs/json/developer/procgen/cloudberry.md"

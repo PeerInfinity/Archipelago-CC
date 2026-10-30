@@ -39,9 +39,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { chromium } from 'playwright';
+
 import { argvHelp } from './argvHelp.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { failOnCrash, totalLine } from './gateTotal.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { generatePythonOrExit } from './repoPython.js';
 
 argvHelp(import.meta.url);
@@ -174,8 +177,7 @@ try {
     ok(placedAt(freeName) === needed, `Generate.py (canonical): ${freeName} still holds ${needed}`);
 
     // ── the frontend ─────────────────────────────────────────────────────
-    const { chromium } = await import('playwright');
-    browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+    browser = await chromium.launch({ args: [...HEADLESS_LOGIC_ONLY_ARGS] });
     const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
     const logs = [];
     page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));

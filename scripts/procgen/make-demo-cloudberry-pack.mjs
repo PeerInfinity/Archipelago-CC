@@ -30,6 +30,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { chromium } from 'playwright';
+
 import { argvHelp } from './argvHelp.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
@@ -47,7 +49,6 @@ const CHECK = argv.includes('--check');
 const PER_PIECE = Number(arg('--checks-per-piece') ?? 1);
 
 const imp = (p) => import(pathToFileURL(path.join(repoRoot, p)));
-const { chromium } = await import('playwright');
 const site = await import('./cloudberrySite.mjs');
 const rules = await imp('frontend/modules/cloudberryDemo/cloudberryRules.js');
 const { substrateRegistry } = await imp('frontend/modules/shared/procgen/substrateRegistry.js');
