@@ -51,6 +51,8 @@ for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
         if (args.i !== undefined && String(c.i) !== String(args.i)) continue;
         const req = restoreRequest(c.request);
         const { passes = ANYTIME_PASSES, source, ...tape } = req;
+        // SCRATCH: L40C_BUDGET_WORK=<units> raises the request's anytime budget (the deadline arm); unset = as captured.
+        if (process.env.L40C_BUDGET_WORK) tape.budgetWork = Number(process.env.L40C_BUDGET_WORK);
         SB.resetIceTurretStaticKillCounts?.();
         SB.resetLatchWeighFirstCounts?.();
         SB.resetChooserPairCounts?.();
@@ -69,7 +71,7 @@ for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
         }
         const out = { id: row.id, key: row.key, i: c.i, seam: c.request.staging?.seam?.time, arm, ok: answer.ok,
             kind: answer.kind ?? null, work: answer.work ?? null, ticks: answer.ok ? answer.plan.solution.length : null,
-            digest: md5(answer.ok ? plan : msg), ms, head: msg ? msg.slice(0, 1200) : null, gm,
+            digest: md5(answer.ok ? plan : msg), ms, head: msg ? msg.slice(0, 6000) : null, gm,
             verbs: answer.ok ? answer.plan.verbs : null,
             obstacle: answer.obstacle ?? null,
             danger: msg ? (/passes through danger at \(([^)]*)\) — ([a-z]+:[A-Za-z0-9@,]+)/.exec(msg)?.slice(1).join(' ') ?? null) : null,
