@@ -1,0 +1,4 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityL40Latch.test.js > L40LATCH D1b — the orbit kill > candidate 1, driven from the latch boot in the model, kills bobsoldier@880,832 by t184 and is never hit
+ Test Files  1 failed | 7 passed (8)
+      Tests  1 failed | 68 passed (69)

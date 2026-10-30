@@ -363,6 +363,11 @@ export function blockHolderVerdict(grid, { heldBy, holders, lockCells, closedCel
  * The answer: the Pareto-minimal sets of STOPPER keys under which the crossing succeeds ([] = free beyond `held`).
  * Pure, headless-safe, no imports.
  *
+ * ⛓ RULES rules-block-stoppers — the KILLABLE and MOBILE Enemy bodies are not stoppers here, by measurement:
+ * `census-seedling-block-stoppers.mjs` parks each one on the cells the block takes and finds no crossing whose price a
+ * static one changes, and one mobile one that can stand on a critical cell (L65's Bob, killable by the push item the
+ * crossing holds); `probe-seedling-l65-bob-block.mjs` crosses on the game with that Bob alive and with it dead.
+ *
  * @param {{width:number,height:number,cells:object[]}} grid the analyzer's cells
  * @param {object} opts
  * @param {{tx:number,ty:number,condition?:object}} opts.block the pushable (its `condition` = its claim on its cell)
@@ -377,81 +382,13 @@ export function blockHolderVerdict(grid, { heldBy, holders, lockCells, closedCel
  * @returns {{sets: string[][], states: number, refused: string|null}}
  */
 export function blockCrossingCost(grid, { block, stances, stoppers = [], tileTypes, keyOf, held = [] }, start, goal) {
-    const { width, height, cells } = grid;
-    const inside = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
-    const blockAt = block.ty * width + block.tx;
-    const own = block.condition ? keyOf(block.condition) : null;
-    const cellKeys = cells.map((cell, i) => {
-        const ks = (cell.conditions ?? []).map(keyOf);
-        return i === blockAt && own !== null ? ks.filter((k) => k !== own) : ks;
-    });
-    const stopperAt = new Map(stoppers.map((s) => [s.ty * width + s.tx, s]));
     const keys = [...new Set(stoppers.flatMap((s) => s.keys))].sort();
     if (keys.length > BLOCK_SEARCH_MAX_KEYS) return { sets: [], states: 0, refused: `${keys.length} stopper keys (bound ${BLOCK_SEARCH_MAX_KEYS})` };
-    const gateKeys = (list) => (list === null ? null : (list ?? []).map(keyOf));
     let states = 0;
     const crosses = (extra) => {
-        const has = new Set([...held, ...extra]);
-        const covered = (ks) => ks.every((k) => has.has(k));
-        const standable = (i) => !BLOCKING.has(cells[i].kind) && covered(cellKeys[i]);
-        const stepOk = (i, n, dir) => [cells[i].faces?.[dir], cells[n].faces?.[OPP[dir]], cells[i].dirs?.[dir], cells[n].enter?.[dir]]
-            .map(gateKeys).every((g) => g !== null && covered(g));
-        const stopped = (i) => {
-            const s = stopperAt.get(i);
-            return s !== undefined && !s.keys.some((k) => has.has(k));
-        };
-        const blockOk = (i) => standable(i) && !stopped(i)
-            && !['faces', 'dirs', 'enter'].some((k) => Object.keys(cells[i][k] ?? {}).length > 0);
-        const reach = (from, occupied) => {
-            const seen = new Set([from]);
-            const stack = [from];
-            while (stack.length) {
-                const i = stack.pop();
-                const x = i % width;
-                const y = (i - x) / width;
-                for (const [dir, dx, dy] of STEPS) {
-                    if (!inside(x + dx, y + dy)) continue;
-                    const n = (y + dy) * width + x + dx;
-                    if (seen.has(n) || n === occupied || !standable(n) || !stepOk(i, n, dir)) continue;
-                    seen.add(n);
-                    stack.push(n);
-                }
-            }
-            return seen;
-        };
-        if (!standable(start)) return false;
-        const seenStates = new Set();
-        const queue = [[blockAt, start]];
-        while (queue.length) {
-            const [pos, from] = queue.shift();
-            if (pos === from) continue;
-            const region = reach(from, pos);
-            const sk = `${pos}|${Math.min(...region)}`;
-            if (seenStates.has(sk)) continue;
-            seenStates.add(sk);
-            states += 1;
-            if (states > BLOCK_SEARCH_MAX_STATES) throw new Error(`block crossing: over ${BLOCK_SEARCH_MAX_STATES} states`);
-            if ([...goal].every((i) => i === pos || region.has(i))) return true;
-            if (pos < 0) continue;
-            const x = pos % width;
-            const y = (pos - x) / width;
-            for (const [dir, dx, dy] of STEPS) {
-                const tx = x + dx;
-                const ty = y + dy;
-                if (!inside(tx, ty)) continue;
-                // The player stays on the stance it pushed from (a thrust's stance can be two cells back, over a pit).
-                const stance = (stances[dir] ?? []).map(([ox, oy]) => (inside(x - ox, y - oy) ? (y - oy) * width + x - ox : -1))
-                    .find((s) => s >= 0 && region.has(s));
-                if (stance === undefined) continue;
-                const target = ty * width + tx;
-                if (BLOCK_FATAL_TILES.includes(tileTypes.get(target)) && !stopped(target)) {
-                    queue.push([-1, stance]);
-                } else if (blockOk(target) && stepOk(pos, target, dir)) {
-                    queue.push([target, stance]);
-                }
-            }
-        }
-        return false;
+        const r = blockPushSearch(grid, { block, stances, stoppers, tileTypes, keyOf, held: [...held, ...extra] }, start, goal);
+        states += r.states;
+        return r.ok;
     };
     const sets = [];
     for (let size = 0; size <= keys.length; size += 1) {
@@ -467,4 +404,92 @@ export function blockCrossingCost(grid, { block, stances, stoppers = [], tileTyp
         }
     }
     return { sets, states, refused: null };
+}
+
+/**
+ * ⛓ RULES rules-block-stoppers — `blockCrossingCost`'s ONE search under ONE held set, exported so a census reads the
+ * same push model (no third physics). `goal` null searches every state (nothing is ever "crossed"); the answer is
+ * whether the goal was met, the states searched, and `cells` — every cell the block stood on in a searched state
+ * (its start included; a block destroyed on a fatal tile is not a cell) — and `fatal`, the fatal tiles it was pushed
+ * onto.
+ *
+ * @returns {{ok:boolean, states:number, cells:Set<number>, fatal:Set<number>}}
+ */
+export function blockPushSearch(grid, { block, stances, stoppers = [], tileTypes, keyOf, held = [] }, start, goal = null) {
+    const { width, height, cells } = grid;
+    const inside = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
+    const blockAt = block.ty * width + block.tx;
+    const own = block.condition ? keyOf(block.condition) : null;
+    const cellKeys = cells.map((cell, i) => {
+        const ks = (cell.conditions ?? []).map(keyOf);
+        return i === blockAt && own !== null ? ks.filter((k) => k !== own) : ks;
+    });
+    const stopperAt = new Map(stoppers.map((s) => [s.ty * width + s.tx, s]));
+    const gateKeys = (list) => (list === null ? null : (list ?? []).map(keyOf));
+    const has = new Set(held);
+    const covered = (ks) => ks.every((k) => has.has(k));
+    const standable = (i) => !BLOCKING.has(cells[i].kind) && covered(cellKeys[i]);
+    const stepOk = (i, n, dir) => [cells[i].faces?.[dir], cells[n].faces?.[OPP[dir]], cells[i].dirs?.[dir], cells[n].enter?.[dir]]
+        .map(gateKeys).every((g) => g !== null && covered(g));
+    const stopped = (i) => {
+        const s = stopperAt.get(i);
+        return s !== undefined && !s.keys.some((k) => has.has(k));
+    };
+    const blockOk = (i) => standable(i) && !stopped(i)
+        && !['faces', 'dirs', 'enter'].some((k) => Object.keys(cells[i][k] ?? {}).length > 0);
+    const reach = (from, occupied) => {
+        const seen = new Set([from]);
+        const stack = [from];
+        while (stack.length) {
+            const i = stack.pop();
+            const x = i % width;
+            const y = (i - x) / width;
+            for (const [dir, dx, dy] of STEPS) {
+                if (!inside(x + dx, y + dy)) continue;
+                const n = (y + dy) * width + x + dx;
+                if (seen.has(n) || n === occupied || !standable(n) || !stepOk(i, n, dir)) continue;
+                seen.add(n);
+                stack.push(n);
+            }
+        }
+        return seen;
+    };
+    const blockCells = new Set();
+    const fatal = new Set();
+    let states = 0;
+    if (!standable(start)) return { ok: false, states, cells: blockCells, fatal };
+    const seenStates = new Set();
+    const queue = [[blockAt, start]];
+    while (queue.length) {
+        const [pos, from] = queue.shift();
+        if (pos === from) continue;
+        const region = reach(from, pos);
+        const sk = `${pos}|${Math.min(...region)}`;
+        if (seenStates.has(sk)) continue;
+        seenStates.add(sk);
+        states += 1;
+        if (states > BLOCK_SEARCH_MAX_STATES) throw new Error(`block crossing: over ${BLOCK_SEARCH_MAX_STATES} states`);
+        if (pos >= 0) blockCells.add(pos);
+        if (goal && [...goal].every((i) => i === pos || region.has(i))) return { ok: true, states, cells: blockCells, fatal };
+        if (pos < 0) continue;
+        const x = pos % width;
+        const y = (pos - x) / width;
+        for (const [dir, dx, dy] of STEPS) {
+            const tx = x + dx;
+            const ty = y + dy;
+            if (!inside(tx, ty)) continue;
+            // The player stays on the stance it pushed from (a thrust's stance can be two cells back, over a pit).
+            const stance = (stances[dir] ?? []).map(([ox, oy]) => (inside(x - ox, y - oy) ? (y - oy) * width + x - ox : -1))
+                .find((s) => s >= 0 && region.has(s));
+            if (stance === undefined) continue;
+            const target = ty * width + tx;
+            if (BLOCK_FATAL_TILES.includes(tileTypes.get(target)) && !stopped(target)) {
+                fatal.add(target);
+                queue.push([-1, stance]);
+            } else if (blockOk(target) && stepOk(pos, target, dir)) {
+                queue.push([target, stance]);
+            }
+        }
+    }
+    return { ok: false, states, cells: blockCells, fatal };
 }

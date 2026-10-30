@@ -1,0 +1,318 @@
+⚠ The 'tick totals' block at the end of this file assumes a non-upgrader ships its unwindowed best at 85. It does not on 31
+requests (a kept partial beats both the dashless and the unwindowed full plan). The corrected totals are
+window-options-table.txt (85: 107,824 t = 80.3 % of window 0's savings).
+
+requests: 870 measured, 0 failed to run []
+upgraders (full plan strictly shorter than a dashless plan in hand): 529
+
+== ON (dash-only window, the default)
+  threshold > 85 (ships less than window 0 today): 95
+    170:0 L12 thr 369 (margin -284) best 474 t, at 85: 672 t (full), dashless 713 t  level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,
+    525:1 L61 thr 361 (margin -276) best 296 t, at 85: 423 t (full), dashless 462 t  level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96
+    451:0 L45 thr 349 (margin -264) best 215 t, at 85: 249 t (full), dashless 258 t  level_45__r0c7 <- in_L46_240_464 -> exit:out_teleporter_112_304
+    58:0 L3 thr 346 (margin -261) best 166 t, at 85: 181 t (full), dashless 199 t  level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_0_64
+    484:0 L52 thr 325 (margin -240) best 175 t, at 85: 190 t (dashless), dashless 190 t  level_52 <- in_L55_80_48 -> exit:out_teleporter_0_112
+    448:0 L45 thr 325 (margin -240) best 239 t, at 85: 273 t (full), dashless 307 t  level_45__r0c7 <- in_L44_64_0 -> exit:out_teleporter_112_0
+    482:0 L52 thr 317 (margin -232) best 213 t, at 85: 243 t (dashless), dashless 243 t  level_52 <- in_L54_128_464 -> exit:out_teleporter_224_112
+    772:0 L104 thr 305 (margin -220) best 291 t, at 85: 364 t (full), dashless 365 t  level_104 <- in_L105_224_64 -> exit:out_teleporter_144_128
+    173:0 L12 thr 301 (margin -216) best 252 t, at 85: 258 t (full), dashless 309 t  level_12__r0c37 <- in_L34_128_0 -> exit:out_pit_5_5
+    171:0 L12 thr 301 (margin -216) best 464 t, at 85: 675 t (full), dashless 716 t  level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,
+    408:0 L40 thr 281 (margin -196) best 620 t, at 85: 637 t (full), dashless 841 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+    747:0 L98 thr 277 (margin -192) best 177 t, at 85: 194 t (full), dashless 236 t  level_98 <- in_L93_112_80 -> location:Level 098 - Chest
+    672:0 L87 thr 273 (margin -188) best 443 t, at 85: 606 t (full), dashless 671 t  level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_16_32
+    161:0 L12 thr 269 (margin -184) best 481 t, at 85: 610 t (full), dashless 696 t  level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,
+    677:0 L87 thr 261 (margin -176) best 333 t, at 85: 350 t (full), dashless 504 t  level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_16_32
+    605:0 L71 thr 257 (margin -172) best 333 t, at 85: 401 t (full), dashless 475 t  level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Chest
+    745:1 L98 thr 254 (margin -169) best 724 t, at 85: 807 t (dashless), dashless 807 t  level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112
+    682:0 L87 thr 253 (margin -168) best 445 t, at 85: 668 t (full), dashless 683 t  level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_16_32
+    695:0 L87 thr 249 (margin -164) best 411 t, at 85: 598 t (full), dashless 682 t  level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_464_272
+    295:0 L26 thr 249 (margin -164) best 134 t, at 85: 286 t (dashless), dashless 286 t  level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_64_304
+    47:0 L0 thr 241 (margin -156) best 253 t, at 85: 281 t (full), dashless 377 t  level_0__r8c0 <- in_L94_304_176 -> location:L0 flag 1: breakablerock@2
+    160:0 L12 thr 237 (margin -152) best 478 t, at 85: 632 t (full), dashless 680 t  level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,
+    402:0 L40 thr 233 (margin -148) best 427 t, at 85: 480 t (full), dashless 655 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+    117:0 L12 thr 225 (margin -140) best 292 t, at 85: 492 t (dashless), dashless 492 t  level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_304_0
+    113:0 L12 thr 217 (margin -132) best 305 t, at 85: 483 t (dashless), dashless 483 t  level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352
+    115:0 L12 thr 213 (margin -128) best 246 t, at 85: 418 t (dashless), dashless 418 t  level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96
+    7:0 L0 thr 213 (margin -128) best 196 t, at 85: 243 t (full), dashless 313 t  level_0__r8c0 <- in_L1_64_112 -> location:L0 flag 1: breakablerock@288
+    403:0 L40 thr 213 (margin -128) best 455 t, at 85: 642 t (full), dashless 776 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+    345:0 L31 thr 209 (margin -124) best 336 t, at 85: 524 t (full), dashless 577 t  level_31__r5c24 <- in_pit_L30_3_34 -> exit:out_stairsup_384_96
+    39:0 L0 thr 209 (margin -124) best 244 t, at 85: 282 t (full), dashless 380 t  level_0__r8c0 <- in_L94_304_160 -> location:L0 flag 1: breakablerock@2
+    157:0 L12 thr 205 (margin -120) best 249 t, at 85: 405 t (full), dashless 443 t  level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_304_0
+    131:0 L12 thr 201 (margin -116) best 406 t, at 85: 541 t (full), dashless 571 t  level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,2
+    116:0 L12 thr 197 (margin -112) best 248 t, at 85: 380 t (dashless), dashless 380 t  level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_168_368
+    691:0 L87 thr 193 (margin -108) best 187 t, at 85: 211 t (full), dashless 287 t  level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_0_144
+    106:0 L12 thr 189 (margin -104) best 328 t, at 85: 475 t (full), dashless 521 t  level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_168_368
+    410:0 L40 thr 189 (margin -104) best 418 t, at 85: 476 t (full), dashless 658 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+    501:0 L56 thr 189 (margin -104) best 262 t, at 85: 280 t (dashless), dashless 280 t  level_56 <- in_L52_224_112 -> exit:out_pit_6_10
+    471:0 L51 thr 185 (margin -100) best 101 t, at 85: 136 t (dashless), dashless 136 t  level_51__r3c10 <- in_L50_48_304 -> exit:out_stairsup_176_144
+    407:0 L40 thr 185 (margin -100) best 603 t, at 85: 598 t (full), dashless 796 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+    23:0 L0 thr 185 (margin -100) best 220 t, at 85: 237 t (full), dashless 320 t  level_0__r8c0 <- in_L13_64_144 -> location:L0 flag 1: breakablerock@28
+    455:0 L46 thr 185 (margin -100) best 221 t, at 85: 354 t (full), dashless 366 t  level_46__r0c11 <- in_L47_240_464 -> exit:out_teleporter_240_464
+    368:0 L38 thr 183 (margin -98) best 333 t, at 85: 474 t (full), dashless 619 t  level_38__r0c9 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,59
+    175:0 L12 thr 181 (margin -96) best 431 t, at 85: 571 t (full), dashless 709 t  level_12__r0c37 <- in_L37_32_304 -> exit:out_pit_5_5
+    159:0 L12 thr 181 (margin -96) best 377 t, at 85: 450 t (full), dashless 535 t  level_12__r0c19 <- in_L95_624_64 -> location:Level 012 - Witch
+    687:0 L87 thr 173 (margin -88) best 215 t, at 85: 233 t (full), dashless 304 t  level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_16_32
+    694:0 L87 thr 173 (margin -88) best 418 t, at 85: 596 t (full), dashless 682 t  level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_432_304
+    114:0 L12 thr 169 (margin -84) best 292 t, at 85: 493 t (dashless), dashless 493 t  level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368
+    603:0 L71 thr 169 (margin -84) best 274 t, at 85: 317 t (full), dashless 415 t  level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_304
+    412:0 L40 thr 165 (margin -80) best 397 t, at 85: 499 t (full), dashless 621 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+    693:0 L87 thr 161 (margin -76) best 300 t, at 85: 427 t (full), dashless 499 t  level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_272_304
+    405:0 L40 thr 157 (margin -72) best 367 t, at 85: 482 t (full), dashless 595 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+    172:0 L12 thr 149 (margin -64) best 370 t, at 85: 415 t (full), dashless 691 t  level_12__r0c37 <- in_L34_128_0 -> exit:out_teleporter_592_0
+    411:0 L40 thr 149 (margin -64) best 330 t, at 85: 433 t (full), dashless 549 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+    459:0 L47 thr 149 (margin -64) best 182 t, at 85: 204 t (full), dashless 308 t  level_47__r2c9 <- in_L48_112_304 -> exit:out_teleporter_240_464
+    130:0 L12 thr 137 (margin -52) best 393 t, at 85: 494 t (full), dashless 565 t  level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,2
+    346:0 L31 thr 137 (margin -52) best 255 t, at 85: 270 t (full), dashless 331 t  level_31__r5c24 <- in_pit_L30_3_34 -> location:L31 flag 0: bosslock@19
+    406:0 L40 thr 133 (margin -48) best 479 t, at 85: 527 t (full), dashless 674 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+    169:0 L12 thr 133 (margin -48) best 352 t, at 85: 437 t (full), dashless 535 t  level_12__r0c19 <- in_L95_624_80 -> location:Level 012 - Witch
+    167:0 L12 thr 133 (margin -48) best 245 t, at 85: 364 t (full), dashless 452 t  level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_0
+    239:0 L19 thr 130 (margin -45) best 496 t, at 85: 508 t (full), dashless 529 t  level_19__r5c5 <- in_L18_176_112 -> location:Level 019 - Boss Key 0
+    626:0 L74 thr 129 (margin -44) best 284 t, at 85: 286 t (full), dashless 368 t  level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield
+    681:0 L87 thr 129 (margin -44) best 272 t, at 85: 326 t (full), dashless 483 t  level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_0_144
+    155:0 L12 thr 129 (margin -44) best 225 t, at 85: 256 t (full), dashless 362 t  level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_112_96
+    750:0 L98 thr 125 (margin -40) best 177 t, at 85: 194 t (dashless), dashless 194 t  level_98 <- in_L99_112_112 -> location:Level 098 - Chest
+    103:0 L12 thr 125 (margin -40) best 274 t, at 85: 291 t (full), dashless 449 t  level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_352
+    104:0 L12 thr 125 (margin -40) best 274 t, at 85: 291 t (full), dashless 449 t  level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_368
+    137:0 L12 thr 125 (margin -40) best 286 t, at 85: 341 t (full), dashless 533 t  level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0
+    158:0 L12 thr 121 (margin -36) best 270 t, at 85: 331 t (full), dashless 465 t  level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_432_352
+    109:0 L12 thr 121 (margin -36) best 423 t, at 85: 527 t (full), dashless 620 t  level_12__r0c19 <- in_L0_304_176 -> location:Level 012 - Witch
+    20:0 L0 thr 118 (margin -33) best 94 t, at 85: 96 t (full), dashless 146 t  level_0__r8c0 <- in_L13_64_144 -> exit:out_teleporter_80_96
+    128:0 L12 thr 117 (margin -32) best 270 t, at 85: 290 t (full), dashless 435 t  level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_432_352
+    165:0 L12 thr 117 (margin -32) best 217 t, at 85: 312 t (full), dashless 371 t  level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_112_96
+    456:0 L47 thr 113 (margin -28) best 204 t, at 85: 266 t (full), dashless 337 t  level_47__r2c9 <- in_L46_176_0 -> exit:out_teleporter_216_112
+    689:0 L87 thr 105 (margin -20) best 269 t, at 85: 301 t (full), dashless 512 t  level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_432_304
+    365:0 L38 thr 103 (margin -18) best 265 t, at 85: 411 t (full), dashless 549 t  level_38__r0c9 <- in_L37_288_0 -> exit:out_teleporter_144_0
+    129:0 L12 thr 101 (margin -16) best 320 t, at 85: 348 t (full), dashless 489 t  level_12__r0c19 <- in_L35_32_64 -> location:Level 012 - Witch
+    452:0 L46 thr 101 (margin -16) best 208 t, at 85: 222 t (full), dashless 403 t  level_46__r0c11 <- in_L45_112_0 -> exit:out_teleporter_176_0
+    401:0 L40 thr 101 (margin -16) best 368 t, at 85: 416 t (full), dashless 611 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+    168:0 L12 thr 101 (margin -16) best 304 t, at 85: 328 t (full), dashless 475 t  level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_432_352
+    418:0 L42 thr 100 (margin -15) best 1289 t, at 85: 1331 t (full), dashless 1558 t  level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152
+    367:0 L38 thr 99 (margin -14) best 254 t, at 85: 324 t (full), dashless 462 t  level_38__r0c9 <- in_L37_288_0 -> location:Level 038 - Chest
+    156:0 L12 thr 97 (margin -12) best 122 t, at 85: 133 t (full), dashless 193 t  level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_168_368
+    612:0 L71 thr 97 (margin -12) best 311 t, at 85: 344 t (full), dashless 414 t  level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0
+    265:0 L22 thr 97 (margin -12) best 103 t, at 85: 116 t (full), dashless 215 t  level_22 <- in_L29_0_224 -> exit:out_teleporter_96_192
+    126:0 L12 thr 97 (margin -12) best 242 t, at 85: 259 t (full), dashless 407 t  level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_168_368
+    690:0 L87 thr 97 (margin -12) best 250 t, at 85: 294 t (full), dashless 505 t  level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_464_272
+    145:0 L12 thr 93 (margin -8) best 125 t, at 85: 147 t (full), dashless 248 t  level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_112_96
+    135:0 L12 thr 93 (margin -8) best 252 t, at 85: 277 t (full), dashless 447 t  level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_112_96
+    148:0 L12 thr 93 (margin -8) best 296 t, at 85: 317 t (full), dashless 497 t  level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_352
+    31:0 L0 thr 93 (margin -8) best 175 t, at 85: 180 t (full), dashless 242 t  level_0__r8c0 <- in_L86_48_64 -> location:L0 flag 1: breakablerock@288
+    123:0 L12 thr 93 (margin -8) best 210 t, at 85: 234 t (full), dashless 357 t  level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352
+    124:0 L12 thr 93 (margin -8) best 213 t, at 85: 234 t (full), dashless 357 t  level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368
+    683:0 L87 thr 93 (margin -8) best 181 t, at 85: 191 t (full), dashless 276 t  level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_272_304
+    28:0 L0 thr 90 (margin -5) best 207 t, at 85: 209 t (full), dashless 330 t  level_0__r8c0 <- in_L86_48_64 -> exit:out_teleporter_80_96
+    540:0 L62 thr 89 (margin -4) best 176 t, at 85: 178 t (full), dashless 257 t  level_62 <- in_L61_112_0 -> exit:out_teleporter_192_304
+  threshold within 10 under the window (76..85): 17
+    769:0 L104 thr 85 (margin 0) best 259 t, one under: 284 t  level_104 <- in_L103_0_64 -> exit:out_teleporter_0_16
+    146:0 L12 thr 85 (margin 0) best 247 t, one under: 259 t  level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_168_368
+    409:0 L40 thr 85 (margin 0) best 340 t, one under: 343 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+    32:0 L0 thr 85 (margin 0) best 181 t, one under: 183 t  level_0__r8c0 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,
+    108:0 L12 thr 85 (margin 0) best 328 t, one under: 343 t  level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352
+    671:0 L87 thr 85 (margin 0) best 243 t, one under: 252 t  level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_0_144
+    311:0 L29 thr 85 (margin 0) best 342 t, one under: 349 t  level_29__r2c2 <- in_L22_192_64 -> exit:out_stairsdown_112_32
+    149:0 L12 thr 81 (margin 4) best 376 t, one under: 401 t  level_12__r0c19 <- in_L88_96_304 -> location:Level 012 - Witch
+    607:0 L71 thr 81 (margin 4) best 303 t, one under: 323 t  level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0
+    107:0 L12 thr 81 (margin 4) best 232 t, one under: 233 t  level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_304_0
+    354:0 L34 thr 81 (margin 4) best 188 t, one under: 192 t  level_34 <- in_L12_336_688 -> exit:out_teleporter_128_0
+    555:0 L62 thr 78 (margin 7) best 252 t, one under: 255 t  level_62 <- in_L63_64_0 -> exit:out_teleporter_192_304
+    127:0 L12 thr 77 (margin 8) best 141 t, one under: 145 t  level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_304_0
+    606:0 L71 thr 77 (margin 8) best 319 t, one under: 336 t  level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288
+    288:0 L25 thr 77 (margin 8) best 106 t, one under: 117 t  level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128
+    673:0 L87 thr 77 (margin 8) best 148 t, one under: 155 t  level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_272_304
+    138:0 L12 thr 77 (margin 8) best 238 t, one under: 252 t  level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_432_352
+  margin histogram over the upgraders: {'>=40': 353, '10-39': 64, '<0': 95, '1-9': 10, '0': 7}
+
+== OFF (whole pass)
+  threshold > 85 (ships less than window 0 today): 166
+    525:1 L61 thr 1854 (margin -1769) best 296 t, at 85: 462 t (dashless), dashless 462 t  level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96
+    745:1 L98 thr 1764 (margin -1679) best 724 t, at 85: 807 t (dashless), dashless 807 t  level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112
+    482:0 L52 thr 580 (margin -495) best 213 t, at 85: 243 t (dashless), dashless 243 t  level_52 <- in_L54_128_464 -> exit:out_teleporter_224_112
+    484:0 L52 thr 573 (margin -488) best 175 t, at 85: 190 t (dashless), dashless 190 t  level_52 <- in_L55_80_48 -> exit:out_teleporter_0_112
+    472:0 L51 thr 516 (margin -431) best 142 t, at 85: 167 t (dashless), dashless 167 t  level_51__r3c10 <- in_L53_32_144 -> exit:out_teleporter_144_0
+    170:0 L12 thr 447 (margin -362) best 474 t, at 85: 713 t (dashless), dashless 713 t  level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,
+    418:0 L42 thr 446 (margin -361) best 1289 t, at 85: 1558 t (dashless), dashless 1558 t  level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152
+    772:0 L104 thr 441 (margin -356) best 291 t, at 85: 365 t (dashless), dashless 365 t  level_104 <- in_L105_224_64 -> exit:out_teleporter_144_128
+    141:0 L12 thr 436 (margin -351) best 872 t, at 85: 897 t (dashless), dashless 897 t  level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,
+    408:0 L40 thr 430 (margin -345) best 620 t, at 85: 841 t (dashless), dashless 841 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+    111:0 L12 thr 422 (margin -337) best 777 t, at 85: 802 t (dashless), dashless 802 t  level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,
+    121:0 L12 thr 404 (margin -319) best 842 t, at 85: 867 t (dashless), dashless 867 t  level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,2
+    140:0 L12 thr 404 (margin -319) best 864 t, at 85: 886 t (dashless), dashless 886 t  level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,
+    110:0 L12 thr 395 (margin -310) best 771 t, at 85: 787 t (dashless), dashless 787 t  level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,
+    58:0 L3 thr 385 (margin -300) best 166 t, at 85: 199 t (dashless), dashless 199 t  level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_0_64
+    451:0 L45 thr 383 (margin -298) best 215 t, at 85: 258 t (dashless), dashless 258 t  level_45__r0c7 <- in_L46_240_464 -> exit:out_teleporter_112_304
+    171:0 L12 thr 379 (margin -294) best 464 t, at 85: 716 t (dashless), dashless 716 t  level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,
+    120:0 L12 thr 377 (margin -292) best 836 t, at 85: 852 t (dashless), dashless 852 t  level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,2
+    626:0 L74 thr 372 (margin -287) best 284 t, at 85: 368 t (dashless), dashless 368 t  level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield
+    407:0 L40 thr 369 (margin -284) best 603 t, at 85: 796 t (dashless), dashless 796 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+    161:0 L12 thr 367 (margin -282) best 481 t, at 85: 696 t (dashless), dashless 696 t  level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,
+    448:0 L45 thr 363 (margin -278) best 239 t, at 85: 307 t (dashless), dashless 307 t  level_45__r0c7 <- in_L44_64_0 -> exit:out_teleporter_112_0
+    709:0 L89 thr 359 (margin -274) best 140 t, at 85: 204 t (dashless), dashless 204 t  level_89__r11c12 <- in_L87_0_144 -> exit:out_teleporter_160_304
+    672:0 L87 thr 350 (margin -265) best 443 t, at 85: 671 t (dashless), dashless 671 t  level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_16_32
+    403:0 L40 thr 349 (margin -264) best 455 t, at 85: 776 t (dashless), dashless 776 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+    334:0 L30 thr 345 (margin -260) best 298 t, at 85: 301 t (dashless), dashless 301 t  level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64
+    410:0 L40 thr 344 (margin -259) best 418 t, at 85: 658 t (dashless), dashless 658 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+    682:0 L87 thr 341 (margin -256) best 445 t, at 85: 683 t (dashless), dashless 683 t  level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_16_32
+    402:0 L40 thr 334 (margin -249) best 427 t, at 85: 655 t (dashless), dashless 655 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+    173:0 L12 thr 333 (margin -248) best 252 t, at 85: 309 t (dashless), dashless 309 t  level_12__r0c37 <- in_L34_128_0 -> exit:out_pit_5_5
+    769:0 L104 thr 331 (margin -246) best 259 t, at 85: 337 t (dashless), dashless 337 t  level_104 <- in_L103_0_64 -> exit:out_teleporter_0_16
+    148:0 L12 thr 331 (margin -246) best 296 t, at 85: 497 t (dashless), dashless 497 t  level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_352
+    695:0 L87 thr 328 (margin -243) best 411 t, at 85: 682 t (dashless), dashless 682 t  level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_464_272
+    405:0 L40 thr 328 (margin -243) best 367 t, at 85: 595 t (dashless), dashless 595 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+    677:0 L87 thr 328 (margin -243) best 333 t, at 85: 504 t (dashless), dashless 504 t  level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_16_32
+    605:0 L71 thr 325 (margin -240) best 333 t, at 85: 475 t (dashless), dashless 475 t  level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Chest
+    151:0 L12 thr 324 (margin -239) best 447 t, at 85: 472 t (dashless), dashless 472 t  level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,
+    333:0 L30 thr 315 (margin -230) best 202 t, at 85: 203 t (dashless), dashless 203 t  level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - Torchpickup
+    150:0 L12 thr 312 (margin -227) best 444 t, at 85: 464 t (dashless), dashless 464 t  level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,
+    160:0 L12 thr 312 (margin -227) best 478 t, at 85: 680 t (dashless), dashless 680 t  level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,
+    747:0 L98 thr 309 (margin -224) best 177 t, at 85: 236 t (dashless), dashless 236 t  level_98 <- in_L93_112_80 -> location:Level 098 - Chest
+    501:0 L56 thr 302 (margin -217) best 262 t, at 85: 280 t (dashless), dashless 280 t  level_56 <- in_L52_224_112 -> exit:out_pit_6_10
+    158:0 L12 thr 299 (margin -214) best 270 t, at 85: 465 t (dashless), dashless 465 t  level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_432_352
+    339:0 L30 thr 297 (margin -212) best 213 t, at 85: 216 t (dashless), dashless 216 t  level_30__r2c10 <- in_pit_L32_15_5 -> location:Level 030 - Torchpickup
+    128:0 L12 thr 296 (margin -211) best 270 t, at 85: 435 t (dashless), dashless 435 t  level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_432_352
+    368:0 L38 thr 294 (margin -209) best 333 t, at 85: 619 t (dashless), dashless 619 t  level_38__r0c9 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,59
+    47:0 L0 thr 293 (margin -208) best 253 t, at 85: 377 t (dashless), dashless 377 t  level_0__r8c0 <- in_L94_304_176 -> location:L0 flag 1: breakablerock@2
+    113:0 L12 thr 291 (margin -206) best 305 t, at 85: 483 t (dashless), dashless 483 t  level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352
+    159:0 L12 thr 286 (margin -201) best 377 t, at 85: 535 t (dashless), dashless 535 t  level_12__r0c19 <- in_L95_624_64 -> location:Level 012 - Witch
+    131:0 L12 thr 284 (margin -199) best 406 t, at 85: 571 t (dashless), dashless 571 t  level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,2
+    168:0 L12 thr 284 (margin -199) best 304 t, at 85: 475 t (dashless), dashless 475 t  level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_432_352
+    117:0 L12 thr 283 (margin -198) best 292 t, at 85: 492 t (dashless), dashless 492 t  level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_304_0
+    295:0 L26 thr 281 (margin -196) best 134 t, at 85: 286 t (dashless), dashless 286 t  level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_64_304
+    345:0 L31 thr 277 (margin -192) best 336 t, at 85: 577 t (dashless), dashless 577 t  level_31__r5c24 <- in_pit_L30_3_34 -> exit:out_stairsup_384_96
+    406:0 L40 thr 276 (margin -191) best 479 t, at 85: 674 t (dashless), dashless 674 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+    115:0 L12 thr 275 (margin -190) best 246 t, at 85: 418 t (dashless), dashless 418 t  level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96
+    750:0 L98 thr 274 (margin -189) best 177 t, at 85: 194 t (dashless), dashless 194 t  level_98 <- in_L99_112_112 -> location:Level 098 - Chest
+    629:0 L74 thr 263 (margin -178) best 255 t, at 85: 276 t (dashless), dashless 276 t  level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield
+    39:0 L0 thr 261 (margin -176) best 244 t, at 85: 380 t (dashless), dashless 380 t  level_0__r8c0 <- in_L94_304_160 -> location:L0 flag 1: breakablerock@2
+    411:0 L40 thr 260 (margin -175) best 330 t, at 85: 549 t (dashless), dashless 549 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+    412:0 L40 thr 260 (margin -175) best 397 t, at 85: 621 t (dashless), dashless 621 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+    175:0 L12 thr 258 (margin -173) best 431 t, at 85: 709 t (dashless), dashless 709 t  level_12__r0c37 <- in_L37_32_304 -> exit:out_pit_5_5
+    157:0 L12 thr 255 (margin -170) best 249 t, at 85: 443 t (dashless), dashless 443 t  level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_304_0
+    694:0 L87 thr 253 (margin -168) best 418 t, at 85: 682 t (dashless), dashless 682 t  level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_432_304
+    109:0 L12 thr 253 (margin -168) best 423 t, at 85: 620 t (dashless), dashless 620 t  level_12__r0c19 <- in_L0_304_176 -> location:Level 012 - Witch
+    106:0 L12 thr 251 (margin -166) best 328 t, at 85: 521 t (dashless), dashless 521 t  level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_168_368
+    7:0 L0 thr 250 (margin -165) best 196 t, at 85: 313 t (dashless), dashless 313 t  level_0__r8c0 <- in_L1_64_112 -> location:L0 flag 1: breakablerock@288
+    455:0 L46 thr 244 (margin -159) best 221 t, at 85: 366 t (dashless), dashless 366 t  level_46__r0c11 <- in_L47_240_464 -> exit:out_teleporter_240_464
+    116:0 L12 thr 241 (margin -156) best 248 t, at 85: 380 t (dashless), dashless 380 t  level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_168_368
+    108:0 L12 thr 238 (margin -153) best 328 t, at 85: 561 t (dashless), dashless 561 t  level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352
+    138:0 L12 thr 234 (margin -149) best 238 t, at 85: 340 t (dashless), dashless 340 t  level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_432_352
+    23:0 L0 thr 230 (margin -145) best 220 t, at 85: 320 t (dashless), dashless 320 t  level_0__r8c0 <- in_L13_64_144 -> location:L0 flag 1: breakablerock@28
+    130:0 L12 thr 230 (margin -145) best 393 t, at 85: 565 t (dashless), dashless 565 t  level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,2
+    114:0 L12 thr 227 (margin -142) best 292 t, at 85: 493 t (dashless), dashless 493 t  level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368
+    172:0 L12 thr 227 (margin -142) best 370 t, at 85: 691 t (dashless), dashless 691 t  level_12__r0c37 <- in_L34_128_0 -> exit:out_teleporter_592_0
+    691:0 L87 thr 226 (margin -141) best 187 t, at 85: 287 t (dashless), dashless 287 t  level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_0_144
+    693:0 L87 thr 219 (margin -134) best 300 t, at 85: 499 t (dashless), dashless 499 t  level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_272_304
+    603:0 L71 thr 217 (margin -132) best 274 t, at 85: 415 t (dashless), dashless 415 t  level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_304
+    687:0 L87 thr 214 (margin -129) best 215 t, at 85: 304 t (dashless), dashless 304 t  level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_16_32
+    149:0 L12 thr 209 (margin -124) best 376 t, at 85: 570 t (dashless), dashless 570 t  level_12__r0c19 <- in_L88_96_304 -> location:Level 012 - Witch
+    129:0 L12 thr 205 (margin -120) best 320 t, at 85: 489 t (dashless), dashless 489 t  level_12__r0c19 <- in_L35_32_64 -> location:Level 012 - Witch
+    471:0 L51 thr 204 (margin -119) best 101 t, at 85: 136 t (dashless), dashless 136 t  level_51__r3c10 <- in_L50_48_304 -> exit:out_stairsup_176_144
+    401:0 L40 thr 203 (margin -118) best 368 t, at 85: 611 t (dashless), dashless 611 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+    169:0 L12 thr 189 (margin -104) best 352 t, at 85: 535 t (dashless), dashless 535 t  level_12__r0c19 <- in_L95_624_80 -> location:Level 012 - Witch
+    367:0 L38 thr 186 (margin -101) best 254 t, at 85: 462 t (dashless), dashless 462 t  level_38__r0c9 <- in_L37_288_0 -> location:Level 038 - Chest
+    167:0 L12 thr 186 (margin -101) best 245 t, at 85: 452 t (dashless), dashless 452 t  level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_0
+    681:0 L87 thr 186 (margin -101) best 272 t, at 85: 483 t (dashless), dashless 483 t  level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_0_144
+    137:0 L12 thr 185 (margin -100) best 286 t, at 85: 533 t (dashless), dashless 533 t  level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0
+    459:0 L47 thr 185 (margin -100) best 182 t, at 85: 308 t (dashless), dashless 308 t  level_47__r2c9 <- in_L48_112_304 -> exit:out_teleporter_240_464
+    155:0 L12 thr 185 (margin -100) best 225 t, at 85: 362 t (dashless), dashless 362 t  level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_112_96
+    327:0 L30 thr 184 (margin -99) best 160 t, at 85: 165 t (dashless), dashless 165 t  level_30__r2c10 <- in_L31_160_384 -> location:Level 030 - Torchpickup
+    346:0 L31 thr 184 (margin -99) best 255 t, at 85: 331 t (dashless), dashless 331 t  level_31__r5c24 <- in_pit_L30_3_34 -> location:L31 flag 0: bosslock@19
+    103:0 L12 thr 179 (margin -94) best 274 t, at 85: 449 t (dashless), dashless 449 t  level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_352
+    104:0 L12 thr 179 (margin -94) best 274 t, at 85: 449 t (dashless), dashless 449 t  level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_368
+    239:0 L19 thr 177 (margin -92) best 496 t, at 85: 529 t (dashless), dashless 529 t  level_19__r5c5 <- in_L18_176_112 -> location:Level 019 - Boss Key 0
+    365:0 L38 thr 176 (margin -91) best 265 t, at 85: 549 t (dashless), dashless 549 t  level_38__r0c9 <- in_L37_288_0 -> exit:out_teleporter_144_0
+    689:0 L87 thr 162 (margin -77) best 269 t, at 85: 512 t (dashless), dashless 512 t  level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_432_304
+    165:0 L12 thr 160 (margin -75) best 217 t, at 85: 371 t (dashless), dashless 371 t  level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_112_96
+    612:0 L71 thr 158 (margin -73) best 311 t, at 85: 414 t (dashless), dashless 414 t  level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0
+    139:0 L12 thr 155 (margin -70) best 254 t, at 85: 365 t (dashless), dashless 365 t  level_12__r0c19 <- in_L36_32_128 -> location:Level 012 - Witch
+    456:0 L47 thr 153 (margin -68) best 204 t, at 85: 337 t (dashless), dashless 337 t  level_47__r2c9 <- in_L46_176_0 -> exit:out_teleporter_216_112
+    690:0 L87 thr 153 (margin -68) best 250 t, at 85: 505 t (dashless), dashless 505 t  level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_464_272
+    135:0 L12 thr 147 (margin -62) best 252 t, at 85: 447 t (dashless), dashless 447 t  level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_112_96
+    409:0 L40 thr 147 (margin -62) best 340 t, at 85: 585 t (dashless), dashless 585 t  level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+    452:0 L46 thr 147 (margin -62) best 208 t, at 85: 403 t (dashless), dashless 403 t  level_46__r0c11 <- in_L45_112_0 -> exit:out_teleporter_176_0
+    126:0 L12 thr 144 (margin -59) best 242 t, at 85: 407 t (dashless), dashless 407 t  level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_168_368
+    606:0 L71 thr 140 (margin -55) best 319 t, at 85: 457 t (dashless), dashless 457 t  level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288
+    20:0 L0 thr 140 (margin -55) best 94 t, at 85: 146 t (dashless), dashless 146 t  level_0__r8c0 <- in_L13_64_144 -> exit:out_teleporter_80_96
+    311:0 L29 thr 140 (margin -55) best 342 t, at 85: 381 t (dashless), dashless 381 t  level_29__r2c2 <- in_L22_192_64 -> exit:out_stairsdown_112_32
+    146:0 L12 thr 138 (margin -53) best 247 t, at 85: 464 t (dashless), dashless 464 t  level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_168_368
+    671:0 L87 thr 138 (margin -53) best 243 t, at 85: 454 t (dashless), dashless 454 t  level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_0_144
+    123:0 L12 thr 136 (margin -51) best 210 t, at 85: 357 t (dashless), dashless 357 t  level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352
+    124:0 L12 thr 136 (margin -51) best 213 t, at 85: 357 t (dashless), dashless 357 t  level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368
+    354:0 L34 thr 135 (margin -50) best 188 t, at 85: 251 t (dashless), dashless 251 t  level_34 <- in_L12_336_688 -> exit:out_teleporter_128_0
+    607:0 L71 thr 134 (margin -49) best 303 t, at 85: 399 t (dashless), dashless 399 t  level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0
+    28:0 L0 thr 132 (margin -47) best 207 t, at 85: 330 t (dashless), dashless 330 t  level_0__r8c0 <- in_L86_48_64 -> exit:out_teleporter_80_96
+    181:0 L12 thr 131 (margin -46) best 230 t, at 85: 366 t (dashless), dashless 366 t  level_12__r42c29 <- in_L83_32_64 -> location:Level 012 - Chest
+    540:0 L62 thr 130 (margin -45) best 176 t, at 85: 257 t (dashless), dashless 257 t  level_62 <- in_L61_112_0 -> exit:out_teleporter_192_304
+    265:0 L22 thr 130 (margin -45) best 103 t, at 85: 215 t (dashless), dashless 215 t  level_22 <- in_L29_0_224 -> exit:out_teleporter_96_192
+    350:0 L32 thr 126 (margin -41) best 981 t, at 85: 1022 t (dashless), dashless 1022 t  level_32 <- in_L30_224_160 -> exit:out_pit_15_5
+    683:0 L87 thr 126 (margin -41) best 181 t, at 85: 276 t (dashless), dashless 276 t  level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_272_304
+    107:0 L12 thr 125 (margin -40) best 232 t, at 85: 367 t (dashless), dashless 367 t  level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_304_0
+    546:0 L62 thr 125 (margin -40) best 233 t, at 85: 335 t (dashless), dashless 335 t  level_62 <- in_L61_160_0 -> exit:out_teleporter_240_304
+    555:0 L62 thr 124 (margin -39) best 252 t, at 85: 361 t (dashless), dashless 361 t  level_62 <- in_L63_64_0 -> exit:out_teleporter_192_304
+    144:0 L12 thr 123 (margin -38) best 209 t, at 85: 400 t (dashless), dashless 400 t  level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_368
+    156:0 L12 thr 122 (margin -37) best 122 t, at 85: 193 t (dashless), dashless 193 t  level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_168_368
+    145:0 L12 thr 121 (margin -36) best 125 t, at 85: 248 t (dashless), dashless 248 t  level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_112_96
+    31:0 L0 thr 121 (margin -36) best 175 t, at 85: 242 t (dashless), dashless 242 t  level_0__r8c0 <- in_L86_48_64 -> location:L0 flag 1: breakablerock@288
+    788:0 L109 thr 120 (margin -35) best 101 t, at 85: 142 t (dashless), dashless 142 t  level_109 <- in_L108_224_224 -> location:Level 109 - Firewand
+    143:0 L12 thr 119 (margin -34) best 208 t, at 85: 400 t (dashless), dashless 400 t  level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_352
+    32:0 L0 thr 119 (margin -34) best 181 t, at 85: 305 t (dashless), dashless 305 t  level_0__r8c0 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,
+    499:0 L55 thr 113 (margin -28) best 45 t, at 85: 51 t (dashless), dashless 51 t  level_55 <- in_L52_0_48 -> location:Level 055 - Boss Key 3
+    298:0 L26 thr 108 (margin -23) best 143 t, at 85: 295 t (dashless), dashless 295 t  level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_144_32
+    517:0 L59 thr 108 (margin -23) best 151 t, at 85: 300 t (dashless), dashless 300 t  level_59 <- in_L95_48_0 -> exit:out_teleporter_0_128
+    341:0 L30 thr 107 (margin -22) best 217 t, at 85: 334 t (dashless), dashless 334 t  level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@22
+    676:0 L87 thr 106 (margin -21) best 163 t, at 85: 266 t (dashless), dashless 266 t  level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_0_144
+    127:0 L12 thr 106 (margin -21) best 141 t, at 85: 248 t (dashless), dashless 248 t  level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_304_0
+    673:0 L87 thr 106 (margin -21) best 148 t, at 85: 247 t (dashless), dashless 247 t  level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_272_304
+    511:0 L59 thr 105 (margin -20) best 176 t, at 85: 317 t (dashless), dashless 317 t  level_59 <- in_L67_224_112 -> exit:out_teleporter_160_304
+    506:0 L59 thr 104 (margin -19) best 150 t, at 85: 317 t (dashless), dashless 317 t  level_59 <- in_L60_0_80 -> exit:out_teleporter_144_304
+    610:0 L71 thr 104 (margin -19) best 134 t, at 85: 180 t (dashless), dashless 180 t  level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest
+    349:0 L32 thr 102 (margin -17) best 980 t, at 85: 1022 t (dashless), dashless 1022 t  level_32 <- in_L30_224_160 -> exit:out_pit_14_5
+    679:0 L87 thr 98 (margin -13) best 164 t, at 85: 261 t (dashless), dashless 261 t  level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_432_304
+    553:0 L62 thr 98 (margin -13) best 220 t, at 85: 326 t (dashless), dashless 326 t  level_62 <- in_L63_64_0 -> exit:out_teleporter_96_304
+    166:0 L12 thr 98 (margin -13) best 116 t, at 85: 194 t (dashless), dashless 194 t  level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_168_368
+    547:0 L62 thr 98 (margin -13) best 153 t, at 85: 243 t (dashless), dashless 243 t  level_62 <- in_L63_16_0 -> exit:out_teleporter_48_304
+    680:0 L87 thr 98 (margin -13) best 150 t, at 85: 254 t (dashless), dashless 254 t  level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_464_272
+    604:0 L71 thr 97 (margin -12) best 352 t, at 85: 390 t (dashless), dashless 390 t  level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_304_96
+    288:0 L25 thr 96 (margin -11) best 106 t, at 85: 150 t (dashless), dashless 150 t  level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128
+    512:0 L59 thr 96 (margin -11) best 151 t, at 85: 298 t (dashless), dashless 298 t  level_59 <- in_L67_224_112 -> exit:out_teleporter_304_128
+    12:0 L0 thr 95 (margin -10) best 147 t, at 85: 253 t (dashless), dashless 253 t  level_0__r8c0 <- in_L2_48_16 -> exit:out_teleporter_80_96
+    421:0 L43 thr 94 (margin -9) best 97 t, at 85: 203 t (dashless), dashless 203 t  level_43__r13c7 <- in_pit_L40_4_20 -> exit:out_stairsup_176_464
+    437:0 L43 thr 94 (margin -9) best 99 t, at 85: 202 t (dashless), dashless 202 t  level_43__r13c7 <- in_pit_L40_4_22 -> exit:out_stairsup_176_464
+    494:0 L53 thr 93 (margin -8) best 138 t, at 85: 266 t (dashless), dashless 266 t  level_53__r2c2 <- in_L51_176_144 -> exit:out_teleporter_208_64
+    580:0 L63 thr 92 (margin -7) best 89 t, at 85: 139 t (dashless), dashless 139 t  level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304
+    516:0 L59 thr 92 (margin -7) best 150 t, at 85: 301 t (dashless), dashless 301 t  level_59 <- in_L95_32_0 -> exit:out_teleporter_304_128
+    441:0 L43 thr 90 (margin -5) best 115 t, at 85: 221 t (dashless), dashless 221 t  level_43__r13c7 <- in_pit_L40_4_23 -> exit:out_stairsup_176_464
+    283:0 L25 thr 90 (margin -5) best 182 t, at 85: 197 t (dashless), dashless 197 t  level_25 <- in_L22_0_128 -> exit:out_teleporter_0_96
+    443:0 L43 thr 89 (margin -4) best 110 t, at 85: 226 t (dashless), dashless 226 t  level_43__r13c7 <- in_pit_L40_5_23 -> exit:out_stairsup_176_464
+    429:0 L43 thr 89 (margin -4) best 92 t, at 85: 203 t (dashless), dashless 203 t  level_43__r13c7 <- in_pit_L40_4_21 -> exit:out_stairsup_176_464
+    374:0 L39 thr 88 (margin -3) best 75 t, at 85: 112 t (dashless), dashless 112 t  level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72
+    552:0 L62 thr 88 (margin -3) best 209 t, at 85: 347 t (dashless), dashless 347 t  level_62 <- in_L63_64_0 -> exit:out_teleporter_48_304
+    344:0 L31 thr 88 (margin -3) best 264 t, at 85: 448 t (dashless), dashless 448 t  level_31__r5c24 <- in_L29_112_32 -> location:L31 flag 0: bosslock@192,
+    800:0 L113 thr 87 (margin -2) best 88 t, at 85: 132 t (dashless), dashless 132 t  level_113 <- in_L112_112_0 -> exit:out_teleporter_16_0
+    257:0 L22 thr 87 (margin -2) best 120 t, at 85: 234 t (dashless), dashless 234 t  level_22 <- in_L21_80_160 -> exit:out_teleporter_96_192
+    312:0 L29 thr 86 (margin -1) best 278 t, at 85: 296 t (dashless), dashless 296 t  level_29__r2c2 <- in_L22_192_64 -> location:Level 029 - Boss Key 1
+  threshold within 10 under the window (76..85): 18
+    382:0 L40 thr 85 (margin 0) best 172 t, one under: 417 t  level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+    513:0 L59 thr 84 (margin 1) best 143 t, one under: 295 t  level_59 <- in_L95_32_0 -> exit:out_teleporter_0_128
+    526:0 L61 thr 84 (margin 1) best 303 t, one under: 330 t  level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_0_160
+    335:0 L30 thr 83 (margin 2) best 209 t, one under: 323 t  level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@22
+    16:0 L0 thr 83 (margin 2) best 121 t, one under: 228 t  level_0__r8c0 <- in_L2_48_16 -> location:L0 flag 4: breakablerock@80,1
+    538:0 L62 thr 83 (margin 2) best 120 t, one under: 179 t  level_62 <- in_L61_112_0 -> exit:out_teleporter_96_304
+    789:0 L110 thr 83 (margin 2) best 173 t, one under: 233 t  level_110 <- in_L101_104_24 -> exit:out_pit_3_2
+    133:0 L12 thr 82 (margin 3) best 95 t, one under: 165 t  level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_352
+    134:0 L12 thr 82 (margin 3) best 94 t, one under: 167 t  level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_368
+    55:0 L3 thr 81 (margin 4) best 82 t, one under: 108 t  level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_0_64
+    520:0 L59 thr 80 (margin 5) best 147 t, one under: 295 t  level_59 <- in_L95_48_0 -> exit:out_teleporter_304_128
+    24:0 L0 thr 80 (margin 5) best 75 t, one under: 122 t  level_0__r8c0 <- in_L13_64_144 -> location:L0 flag 4: breakablerock@80
+    424:0 L43 thr 78 (margin 7) best 90 t, one under: 162 t  level_43__r13c7 <- in_pit_L40_5_20 -> location:Level 043 - Wand
+    426:0 L43 thr 78 (margin 7) best 90 t, one under: 162 t  level_43__r13c7 <- in_pit_L40_13_20 -> location:Level 043 - Wand
+    701:0 L88 thr 78 (margin 7) best 86 t, one under: 178 t  level_88 <- in_L87_272_304 -> exit:out_teleporter_192_0
+    505:0 L59 thr 76 (margin 9) best 155 t, one under: 301 t  level_59 <- in_L60_0_80 -> exit:out_teleporter_0_128
+    779:0 L106 thr 76 (margin 9) best 125 t, one under: 274 t  level_106 <- in_L105_80_144 -> location:Level 106 - Ghostsword
+    793:0 L111 thr 76 (margin 9) best 131 t, one under: 191 t  level_111 <- in_L112_32_224 -> exit:out_teleporter_304_176
+  margin histogram over the upgraders: {'10-39': 68, '<0': 166, '>=40': 277, '0': 1, '1-9': 17}
+
+== tick totals over the 719 requests whose dashless pass answered
+  dashless    133322 t     0.0 % of window 0's savings
+  w0          101559 t   100.0 % of window 0's savings
+  on85        108332 t    78.7 % of window 0's savings
+  off85       123410 t    31.2 % of window 0's savings
