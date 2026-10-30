@@ -81,9 +81,17 @@ const REGIONS = [
 ];
 const SIDES = ['N', 'E', 'S', 'W'];
 
+/**
+ * The entry whose LAST check coin carries Victory (it needs the most of its level),
+ * so a world made of the pack alone has a goal. Captured items matter only to the
+ * spiral content source (it keeps them); the sphere driver reassigns every slot.
+ */
+const VICTORY_ENTRY = 'cb_falling_cloud';
+
 /** A captured slot's item: the AP name of an item the NEXT piece adds (null → the engine's filler). */
-function slotItems(facts, checks) {
-    return checks.map((c) => {
+function slotItems(id, facts, checks) {
+    return checks.map((c, k) => {
+        if (id === VICTORY_ENTRY && k === checks.length - 1) return rules.CLOUDBERRY_VICTORY_ITEM;
         const next = facts.pieceItems[c.piece + 1] ?? [];
         const have = new Set(facts.pieceItems.slice(0, c.piece + 1).flat());
         const add = next.find((it) => !have.has(it));
@@ -116,7 +124,7 @@ try {
             exits: [], sidePortals: {}, entrySide: null };
         const played = await site.configurePayload(page, params, { regionId: r.id });
         if (played.refusal) throw new Error(`region ${r.id}: the page REFUSED the payload: ${played.refusal}`);
-        const items = slotItems(facts, chosen);
+        const items = slotItems(r.id, facts, chosen);
         const checks = chosen.map((c) => ({ name: c.name, coin: c.coin, piece: c.piece }));
         const { locations, exitPaths, obstacleDefs } = rules.emitCloudberryRules(
             { pieceItems: facts.pieceItems, jetpack: facts.jetpack },

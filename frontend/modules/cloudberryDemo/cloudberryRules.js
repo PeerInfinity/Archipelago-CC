@@ -266,8 +266,9 @@ export function buildCloudberryPayload(region_id, { generate, docSha256, checks,
 /**
  * Load-time translation of a Cloudberry world into the page's vocabulary (the entry's
  * deserializeWorld runs it on the flash-deserialized world, whose `exits` is a Map):
- *   params.exits       ← the world's exits [{side: page side, exitName}] (the bridge
- *                        resolves the page's sendExit(exitName, side) by exitName)
+ *   params.exits       ← the world's exits [{side: page side, exitName, label}] (the bridge
+ *                        resolves the page's sendExit(exitName, side) by exitName; the
+ *                        menu shows the label: the exit's own, else "to <target region>")
  *   params.sidePortals ← {grid side: page side} (the bridge's walkTo: portal id = side)
  *   params.entrySide   ← params.backExitSide as a page side (the start door's way back), else null
  */
@@ -275,11 +276,11 @@ export function pageParamsForWorld(world) {
     const params = { ...(world.params ?? {}) };
     const exits = world.exits instanceof Map ? [...world.exits.values()]
         : (Array.isArray(world.exits) ? world.exits : []);
-    params.exits = exits.filter((e) => PAGE_SIDE[e?.side]).map((e) => ({
-        side: PAGE_SIDE[e.side],
-        exitName: e.exitName ?? e.exit_id,
-        ...(typeof e.label === 'string' ? { label: e.label } : {}),
-    }));
+    params.exits = exits.filter((e) => PAGE_SIDE[e?.side]).map((e) => {
+        const label = typeof e.label === 'string' ? e.label
+            : (typeof e.targetRegion === 'string' && e.targetRegion ? `to ${e.targetRegion}` : null);
+        return { side: PAGE_SIDE[e.side], exitName: e.exitName ?? e.exit_id, ...(label ? { label } : {}) };
+    });
     params.sidePortals = { ...PAGE_SIDE };
     params.entrySide = PAGE_SIDE[params.backExitSide] ?? null;
     return params;

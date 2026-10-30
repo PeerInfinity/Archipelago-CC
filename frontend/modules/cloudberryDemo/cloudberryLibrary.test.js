@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 import { validateRegionLibrary } from '../procgenPipeline/regionLibraryValidator.js';
 import {
-    substrateRegistryEntry as entry, instantiateCloudberryLibraryEntry, instantiateCloudberryLibraryEntryForSpecs,
+    CLOUDBERRY_EXIT_SIDES, substrateRegistryEntry as entry, instantiateCloudberryLibraryEntry, instantiateCloudberryLibraryEntryForSpecs,
     validateCloudberryLibraryEntry, captureCloudberryLibraryEntry,
 } from './cloudberryLibrary.js';
 
@@ -59,7 +59,7 @@ describe('instantiate (spiral)', () => {
         expect([...r.exits.keys()]).toEqual(['exit_E', 'exit_S']);
         expect(r.extracted_rules.exits.map((x) => x.paths[0].obstacles)).toEqual([
             ['cloudberry_gate_FallingBlock', 'cloudberry_gate_Cloud'], ['cloudberry_gate_FallingBlock', 'cloudberry_gate_Cloud']]);
-        expect(r.extracted_rules.locations.map((l) => l.item)).toEqual(['Falling Blocks', 'Clouds', null]);
+        expect(r.extracted_rules.locations.map((l) => l.item)).toEqual(['Falling Blocks', 'Clouds', 'Victory']);
         expect(r.playable_payload.params.payload).toBe('cloudberry-region/1');
         expect(r.playable_payload.ap_locations.coin55).toBe('region_1_2__coin55');
         expect(r.obstacle_defs.cloudberry_gate_Cloud.clear_set).toEqual([['Clouds']]);
@@ -97,5 +97,19 @@ describe('the entry\'s world round trip', () => {
         expect(world.params.entrySide).toBe('west');
         const out = entry.serializeWorld(world);
         expect(Object.keys(out.params).sort()).toEqual(['backExitSide', 'checks', 'docSha256', 'generate', 'items', 'payload']);
+    });
+});
+
+describe('CLOUDBERRY_EXIT_SIDES (the stored payload\'s side-keyed facts)', () => {
+    it('moves the back-exit side with its exit and renames the authored portal lock\'s page side', () => {
+        const payload = {
+            params: { backExitSide: 'W' },
+            gate_rules: { portals: { west: { rule: 'Has', args: { item_name: 'K' } }, north: { rule: 'True_' } }, pickups: {} },
+            exits: [{ exit_id: 'exit_W', side: 'W', isBackExit: true }],
+        };
+        const out = CLOUDBERRY_EXIT_SIDES.relabel(payload, [{ exitId: 'exit_W', from: 'W', to: 'S' }]);
+        expect(out.params.backExitSide).toBe('S');
+        expect(Object.keys(out.gate_rules.portals)).toEqual(['south', 'north']);
+        expect(payload.params.backExitSide).toBe('W');
     });
 });

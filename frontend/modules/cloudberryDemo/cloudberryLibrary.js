@@ -19,7 +19,7 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { createFlashSubstrateEntry, FLASH_SIDECAR_FIELDS, flashZoneExitSides } from '../flashSubstrate/flashSubstrateLibrary.js';
+import { createFlashSubstrateEntry, FLASH_SIDECAR_FIELDS } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 import { assembleZoneRegion } from '../procgenPipeline/procgenPipelineEngine.js';
@@ -85,6 +85,33 @@ export const CLOUDBERRY_SIDECAR_FIELDS = Object.freeze({
             + '`emitCloudberryRules` (`cloudberryDemo/cloudberryRules.js`); portals keyed by the page\'s side name. '
             + 'OMITTED when nothing is authored.',
     }),
+});
+
+/**
+ * ⛓ PRESET SIDECARS M3 — what a STORED Cloudberry payload keys by an exit's side:
+ * the engine's back-portal side (`params.backExitSide`) and the authored portal locks
+ * (`gate_rules.portals`, keyed by the page's side name). No portal map: the page's
+ * `sidePortals`/`exits` are derived at load (`pageParamsForWorld`), never written.
+ */
+export const CLOUDBERRY_EXIT_SIDES = Object.freeze({
+    keys: Object.freeze(['params.backExitSide', 'gate_rules.portals']),
+    relabel(payload, moves) {
+        const next = JSON.parse(JSON.stringify(payload));
+        const params = next?.params;
+        if (params && Object.hasOwn(params, 'backExitSide')) {
+            const exits = Array.isArray(next.exits) ? next.exits : [];
+            for (const m of moves) {
+                if (exits.find((x) => x?.exit_id === m.exitId)?.isBackExit === true) params.backExitSide = m.to;
+            }
+        }
+        const portals = next?.gate_rules?.portals;
+        if (portals && typeof portals === 'object') {
+            const renamed = new Map(moves.map((m) => [PAGE_SIDE[m.from], PAGE_SIDE[m.to]]));
+            next.gate_rules.portals = Object.fromEntries(Object.entries(portals)
+                .map(([side, rule]) => [renamed.get(side) ?? side, rule]));
+        }
+        return next;
+    },
 });
 
 // ── Region-library hooks ──
@@ -234,7 +261,7 @@ export function createCloudberrySubstrateEntry({ id = CLOUDBERRY_SUBSTRATE_ID, l
         // Exits are routed by side (the page's exit menu is a cross of the four sides);
         // the engine mints no tile for them.
         regionGeometry: REGION_GEOMETRY.SIDES,
-        exitSides: flashZoneExitSides(),
+        exitSides: CLOUDBERRY_EXIT_SIDES,
 
         // Flash's exits-Map world + the page's own vocabulary (exits by page side,
         // side portals, entrySide), derived at load and stripped again on save.
@@ -278,9 +305,8 @@ export function createCloudberrySubstrateEntry({ id = CLOUDBERRY_SUBSTRATE_ID, l
         // back (the start door) is free.
         backPortalGated: () => false,
         hostsSurplusExitsNatively: () => true,
-
-        // Generating a region is a page boot + a reroll search (seconds): heavy.
-        generationCost: 'heavy',
+        // No `generationCost` yet: nothing generates a Cloudberry region in the
+        // pipeline until P2b (a page boot + a reroll search per region: 'heavy').
     });
 }
 

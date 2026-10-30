@@ -150,12 +150,12 @@ describe('buildCloudberryPayload', () => {
 describe('pageParamsForWorld', () => {
     it('derives the page\'s exits, side portals and entrySide from the world', () => {
         const exits = new Map([
-            ['exit_E', { exit_id: 'exit_E', side: 'E', exitName: 'exit_E' }],
+            ['exit_E', { exit_id: 'exit_E', side: 'E', exitName: 'exit_E', targetRegion: 'region_1_0' }],
             ['exit_W', { exit_id: 'exit_W', side: 'W', exitName: 'exit_W' }],
             ['odd', { exit_id: 'odd', side: null, exitName: 'odd' }],
         ]);
         const params = pageParamsForWorld({ params: { payload: CLOUDBERRY_PAYLOAD_VERSION, backExitSide: 'W' }, exits });
-        expect(params.exits).toEqual([{ side: 'east', exitName: 'exit_E' }, { side: 'west', exitName: 'exit_W' }]);
+        expect(params.exits).toEqual([{ side: 'east', exitName: 'exit_E', label: 'to region_1_0' }, { side: 'west', exitName: 'exit_W' }]);
         expect(params.sidePortals).toEqual({ N: 'north', E: 'east', S: 'south', W: 'west' });
         expect(params.entrySide).toBe('west');
         expect(pageParamsForWorld({ params: {}, exits: [] }).entrySide).toBeNull();

@@ -372,13 +372,14 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         },
     },
     {
-        id: 'G2', group: 'generate', universal: true,
+        id: 'G2', group: 'generate',
         statement: 'How many ready-made rooms / levels it brings',
         fields: ['zoneCount', 'zoneSourceLabel', 'generateRegionCore'],
         /* ⛓ n/a where the pipeline grows its rooms to order (G1): there is no
          * ready-made set to count. ✗ only where nothing is declared.
-         * ⛓ UNIVERSAL since the generic `flash` entry went (⚖ user, 2026-10-18):
-         * it was the only ✗; every real entry now counts or grows its rooms. */
+         * ⛓ It was UNIVERSAL from the generic `flash` entry's removal (⚖ user,
+         * 2026-10-18) until 2026-10-30: a substrate whose levels come only from a
+         * region-library pack declares no zone table, and is ✗. */
         answer: (e) => {
             if (regionRealiserKind(e) === REALISER_KINDS.PROCEDURAL) return cell(CELL_KINDS.NA);
             const n = e.zoneCount;
