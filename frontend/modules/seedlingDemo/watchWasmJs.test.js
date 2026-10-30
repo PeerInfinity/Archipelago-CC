@@ -404,16 +404,45 @@ describe('⛓ PHASE B — ▶ load in JS on a REPLAY replays the tape to a per-t
         }
     }, 30000);
 
-    it('a JS replay of a SEQUENCE refuses by name (the JS frame has no continuation)', async () => {
+    it('⛓ a JS replay of a SEQUENCE chains on ONE run: toy-west-pair, every window agreeing per tick, held between', async () => {
         serveAll();
         const { createJsRuntime } = await import('./jsRuntimeCore.js');
+        const { levelSourceFromAtlas } = await import('./atlasSource.js');
+        const { PAGE_CHAINS } = await import('./director.js');
+        const { walkChainModel } = await import('./jsRuntimeSequence.js');
+        const names = PAGE_CHAINS['toy-west-pair'];
+        const tapes = names.map(tapeOf);
+        const model = walkChainModel(tapes, levelSourceFromAtlas(MAP));
+        expect(model.error).toBeNull();
+        // the whole sequence's stream, `walkSequence`'s concatenation: each window's duplicated last frame dropped
+        let off = 0;
+        const whole = { ticks: [], transitions: [] };
+        model.windows.forEach((w, k) => {
+            const keep = k < model.windows.length - 1 ? w.modelStream.ticks.slice(0, -1) : w.modelStream.ticks;
+            whole.ticks.push(...keep.map((o) => ({ ...o, t: o.t + off })));
+            whole.transitions.push(...w.modelStream.transitions.map((t) => ({ ...t, t: t.t + off })));
+            off += w.tickCount;
+        });
         const frame = realJsFrame(createJsRuntime);
-        const t = tapeOf('collide-up-rock');
         try {
-            const { state } = await shipAndPress(shipToJs, { replay: true, windows: [{ tape: t }, { tape: t }] }, frame);
-            expect(state.refusal).toMatchObject({ stage: 'tape', reason: 'js-sequence-unsupported' });
+            const { state } = await shipAndPress(shipToJs, {
+                replay: true, label: 'toy-west-pair', modelStream: whole,
+                windows: tapes.map((tape, k) => ({ tape, label: names[k], modelStream: model.windows[k].modelStream })),
+            }, frame);
+            expect(state.refusal).toBeNull();
+            expect(state.hold).toMatchObject({ capable: true });
+            expect(state.reached).toEqual(stagesOf({ windows: 2, transport: 'js', replay: true }));
+            expect(state.reached).toContain('boundary 1/2');
+            expect(state.windows.map((w) => w.hold)).toEqual([true, false]);
+            expect(state.windows.map((w) => w.heldAtFinish)).toEqual([true, false]);
+            // the boundary's live world is the frame's own latch, and the window was ADMITTED on it
+            expect(state.windows[1].live).toMatchObject({ level: tapes[1].boot.level,
+                ctor: { x: tapes[1].boot.x, y: tapes[1].boot.y } });
+            for (const w of state.windows) expect(w.verdict.perTick).toMatchObject({ kind: 'agrees', agrees: true });
+            expect(state.verdict.perTick).toMatchObject({ kind: 'agrees', agrees: true });
+            expect(state.drain.observations).toBe(tapes[0].tick_count + tapes[1].tick_count + 1);
         } finally {
-            for (const t2 of frame.timers.splice(0)) clearInterval(t2);
+            for (const t of frame.timers.splice(0)) clearInterval(t);
         }
     }, 30000);
 

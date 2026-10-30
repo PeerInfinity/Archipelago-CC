@@ -2287,6 +2287,8 @@ async function runJsSequence(params, lifetime) {
     const { levelSource } = await armPrelude(params, lifetime);
     const walked = await walkSequence(params, lifetime, levelSource);
     if (!walked || walked.stopped || !walked.seq.admitted) return walked?.seq ?? null;
+    // ⛓ seedling-js-replay-continuation: the admitted walk is what ▶ load in JS ships (`replayJsShipFor`).
+    if (lifetime.alive()) jsSequenceWalk = walked;
     return replayTape(walked.combinedParsed, walked.label, params, levelSource, null, null,
         { precollected: walked.combined, sequence: walked.seq });
 }
@@ -10522,8 +10524,9 @@ function replayJsShipFor(params) {
     if (params.side === 'wasm') {
         return { why: 'the frame holds the wasm replay — set ENGINE to js to load this tape\'s start in JS' };
     }
+    if (params.tapes !== null) return replayJsSequenceShip();
     const path = params.tape ?? null;
-    if (!path) return { why: 'a ?tapes= sequence — open one tape (?tape=) to load its start spot in JS' };
+    if (!path) return { why: 'no tape to replay — open one (?tape=) or a sequence (?tapes=)' };
     return {
         what: `\u25b6 replay ${path} in the JS game`,
         replay: true,
@@ -10549,11 +10552,38 @@ function replayJsShipFor(params) {
 }
 
 /**
+ * ⛓ seedling-js-replay-continuation — a `?tapes=` SEQUENCE's ▶ load in JS: the windows `runJsSequence` ADMITTED
+ * (`jsSequenceWalk`, its own walk — never a second one), shipped as the wasm arm ships them (`runWasmSequence`'s
+ * payload, without the posture's atlas: the JS frame carries no `rng` row). The verdict is per window, JS frame vs
+ * JS model.
+ */
+let jsSequenceWalk = null;
+function replayJsSequenceShip() {
+    return {
+        what: '\u25b6 replay this sequence in the JS game',
+        replay: true,
+        jsNote: 'REPLAY of the sequence in the JS frame, on ONE run — each window\'s per-tick verdict is the JS frame '
+            + 'against the JS model (not the real game)',
+        build: async () => {
+            const walked = jsSequenceWalk;
+            if (!walked) throw new Error('the sequence walk has not admitted this queue (yet) — nothing to ship');
+            return {
+                windows: walked.perWindow, label: walked.label, replay: true,
+                expect: walked.perWindow[walked.perWindow.length - 1].expect, expectWhy: null,
+                modelStream: modelStreamOf(walked.combined), modelStreamWhy: null,
+                note: `${walked.perWindow.length} window(s) on ONE JS run — ${walked.names.join(' → ')}`,
+            };
+        },
+    };
+}
+
+/**
  * ⛓ WIRE THE BUTTON FOR THIS MOUNT — and RESET it, which is the half that
  * matters. An arm that arrives holding nothing must not inherit the previous
  * arm's `shippable`: pressing it would ship the run you switched away from.
  */
 function wireShipButton(params, lifetime) {
+    jsSequenceWalk = null;
     replayJsShip = params.source === 'replay' ? replayJsShipFor(params) : null;
     if (replayJsShip) setJsShippable(replayJsShip);
     setShippable({ why: NOTHING_TO_SHIP[params.source] ?? 'this arm holds nothing shippable' });

@@ -13086,6 +13086,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "chain"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "host"
                 },
                 {
