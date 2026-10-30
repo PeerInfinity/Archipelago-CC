@@ -134,3 +134,47 @@ slots are dead frames, as the game's `blackCover` frames are.
 - The JS frame refuses a multi-window JS replay (`js-sequence-unsupported`). A continuation needs the JS core to
   read and apply a latch instead of rebuilding. That would be a js-arc slice of its own.
 - `hold` (v12) is refused by name on the JS core.
+
+## Local finish
+
+Slice `seedling-js-tape-bridge-pin` (local, launched by `seedling-js-planning-13`). Worktree base:
+`git merge-base HEAD origin/claude/seedling-js-tape-bridge-ndn5n8` → `abd96e36a26b340a91eaf3fa79c84306906b84dc`.
+There is no core or lab-code edit: the planner's reading, that a tape tick takes no live input by construction, now has pins.
+
+- **Unit pin** (`jsRuntimeTape.test.js`, row 4, `slots-l24-fire-first`). The tape has two items and `firstUse`, so the V menu is
+  openable on most of its ticks. It plays with arrows, X, C, V and I fed into every tape tick. The pin requires all of
+  the following against the same tape with no live keys:
+  - the drain (`botDrain` text) is byte-identical;
+  - the `stateDigest`, slots and `primary` are equal;
+  - the menu never opens;
+  - no `inventory` events.
+
+  The finishing frame is a live frame (`Bot.as:3330-3333`), so both legs feed it nothing. The last tape tick carries
+  no toggle, because a V held into that frame is released on it, which is a live-frame edge.
+  - Mutant M1, the step on `held` instead of `tapeHeld`: **RED**, 4 rows (this one, both drain-vs-model rows, and the
+    relaxed tape).
+  - Mutant M2, `menuLiveTail` also on a tape tick: **RED**, this row only (the noisy replay ends on L24, the quiet one
+    on L12).
+  - Restored: green.
+- **`#jsTouch` on a replay ship: kept mounted, no lab change.** Its taps are `KeyboardEvent`s dispatched on the frame's
+  canvas (`flashPanel/gameInput.js:67-73` `dispatchGameKey`). They bubble to the JS page's document `keydown`/`keyup`
+  (`jsRuntimePage.js:499-500`), into the same `down` set the keyboard fills. That set reaches the core only through
+  `runtime.tick(heldFromCodes(down))` (`jsRuntimePage.js:542`), which is exactly the input the unit pin feeds.
+- **Browser assert, R4** (`check-seedling-lab-load-in-js.mjs`, REPLAY case). A key (left, X, V) and a d-pad tap go in
+  mid-replay, with the tape armed before and after. The test waits by tick, not time: CI measured `tick 0→0` over a
+  fixed 300 ms, because `running` is reached before the first tape tick. R3's verdict still reads `agrees per tick
+  (184 observations)`. Local result: ALL CHECKS PASSED (30).
+- **Re-merge** of `origin/main` `c32c924748` (render-fixes landed): clean, with no conflicts. `generate-procgen-reference
+  --check`: ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH THE CODE. The `boxLock.test.js` rows auto-merged.
+- **Gates at `733e147fb7`:**
+  - JSUT `41098904625`: success.
+    - `seedling-editor-manual | 63/0`
+    - `seedling-editor-switch | 62/0`
+    - `seedling-lab-load-in-js | 30/0`
+    - `seedling-lab-art | 63/0`
+  - unittests `41098904676`: success.
+- **Gates at `33ee232e6f`** (the same core and lab code; only the check script moved after it):
+  - TT `41091467987`: success.
+  - `seedling-probe.yml battery=standard` `41091486052`: success, 11 probes.
+  - `seedling-wasm-ship | 415/0`. It was path-filtered at the tip.
+- Bounded vitest (the tape, `watchWasmJs`, inventory menu, `boxLock`, `procgenDocs`): 12 files, 552 tests, all passed.
