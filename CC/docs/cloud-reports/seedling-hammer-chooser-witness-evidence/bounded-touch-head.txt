@@ -1,0 +1,333 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+[90mstdout[2m | frontend/modules/procgenDocs/docsRender.test.js[2m > [22m[2m⛓ the biggest document — the one the budget is about[2m > [22m[2mprints what it costs to render, so a page budget is not a guess
+[22m[39mseedling-bot-log.md: 1787086 bytes, 26572 lines → 642ms in node
+
+ [31m❯[39m frontend/modules/procgenDocs/docsRender.test.js [2m([22m[2m46 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 923[2mms[22m[39m
+     [32m✓[39m README.md — no refusal, and it produced HTML[32m 1[2mms[22m[39m
+     [32m✓[39m architecture.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m substrate-registry.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m demos.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m gotchas.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m editing-core.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m seedling-editor.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m bounce.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m runner.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m playback-and-debugging.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m loop-recording.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m maze.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m maze-lab.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m sphere-growth.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m paths-and-obstacles.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m concepts.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m stepped-pipeline.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m pipeline-presets.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m text-adventure.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m seedling-bot.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m seedling-solver-surface.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m seedling-solve-progress.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m seedling-bot-log.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m seedling-constants.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m tape-envelope.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m flash.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m jta.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m omsi.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m noiz2sa.md — no refusal, and it produced HTML[32m 0[2mms[22m[39m
+     [32m✓[39m renders every file the index allows, and the corpus IS those files[32m 3[2mms[22m[39m
+[31m     [31m×[31m the page's heading ids ARE ghSlug's, document by document[39m[32m 102[2mms[22m[39m
+     [32m✓[39m ⛔ uses OUR rule, not marked's slugger — they differ, and here is where[32m 1[2mms[22m[39m
+     [32m✓[39m numbers duplicate headings per document, restarting for the next one[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓ every heading id is reachable as an anchor link the render also emits[32m 1[2mms[22m[39m
+     [32m✓[39m ⛔ REFUSES BY NAME if the two readers ever disagree[32m 0[2mms[22m[39m
+[31m     [31m×[31m every `<a href>` is exactly what the resolver answers for its source link[39m[32m 116[2mms[22m[39m
+     [32m✓[39m tags each link with the kind that produced it[32m 4[2mms[22m[39m
+     [32m✓[39m opens GitHub and the web in a new tab, and keeps sibling docs in the viewer[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓ the host reaches the render — a page link differs on Pages[32m 1[2mms[22m[39m
+     [32m✓[39m renders GFM tables, fenced code with a language, blockquotes and strikethrough[32m 0[2mms[22m[39m
+     [32m✓[39m escapes code content rather than trusting it[32m 0[2mms[22m[39m
+     [32m✓[39m ⛓ the corpus has 643 table rows and 66 fenced blocks, and they all arrive[32m 6[2mms[22m[39m
+     [32m✓[39m ⚖ no prose text is EATEN as a tag — the 3 placeholders are inside code[32m 4[2mms[22m[39m
+     [32m✓[39m renders the GENERATED-region comments as comments, the way GitHub does[32m 0[2mms[22m[39m
+[31m     [31m×[31m seedling-bot-log.md renders its headings and its slugs are unique[39m[32m 4[2mms[22m[39m
+     [33m[2m✓[22m[39m prints what it costs to render, so a page budget is not a guess [33m 669[2mms[22m[39m
+ [32m✓[39m scripts/procgen/ciSummary.test.js [2m([22m[2m46 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+[90mstdout[2m | frontend/modules/procgenDocs/docLinks.test.js[2m > [22m[2mthe corpus census — printed, then pinned[2m > [22m[2mresolves all 368 links into five kinds and no others
+[22m[39mthe procgen corpus: 29 documents, 368 links — 283 doc, 22 external, 40 repo, 23 same-doc
+
+ [31m❯[39m frontend/modules/procgenDocs/docLinks.test.js [2m([22m[2m15 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 115[2mms[22m[39m
+[31m     [31m×[31m resolves all 368 links into five kinds and no others[39m[32m 49[2mms[22m[39m
+[31m     [31m×[31m sends every sibling `.md` to the VIEWER, never to GitHub[39m[32m 7[2mms[22m[39m
+     [32m✓[39m sends every other repo path to GitHub, fragment kept[32m 12[2mms[22m[39m
+     [32m✓[39m leaves `http(s)://` and same-doc fragments exactly as written[32m 7[2mms[22m[39m
+     [32m✓[39m ⛓ every repo-relative path is a real file in this tree[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓ every SAME-DOC fragment names a heading of its own document[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓ every CROSS-DOC fragment names a heading of the document it targets[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓ every fragment on an OUTSIDE `.md` names a heading of that file too[32m 14[2mms[22m[39m
+     [32m✓[39m normalizes `..` without node, and does not clamp an escape[32m 1[2mms[22m[39m
+     [32m✓[39m answers each of the five kinds[32m 2[2mms[22m[39m
+     [32m✓[39m ⛓ a `frontend/**.html` goes through the ONE Pages mapping, on both hosts[32m 0[2mms[22m[39m
+     [32m✓[39m ⛔ a `.md` in this directory that the INDEX does not list is NOT a viewer link[32m 0[2mms[22m[39m
+     [32m✓[39m is the generated index — README plus every document on disk, in reading order[32m 1[2mms[22m[39m
+     [32m✓[39m defaults to README and accepts every listed file[32m 9[2mms[22m[39m
+     [32m✓[39m ⛔ refuses a traversal, an absolute path and an unlisted name[32m 1[2mms[22m[39m
+file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172
+        throw new Error(`boxLock: unknown kind ${JSON.stringify(kind)} — one of `
+              ^
+
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+    at takeBoxLock (file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172:15)
+    at file:///tmp/p3b-boxlock-2bhdGf/snippet-11398570.mjs:3:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.22.0
+ [32m✓[39m scripts/procgen/boxLock.test.js [2m([22m[2m26 tests[22m[2m)[22m[33m 26894[2mms[22m[39m
+     [33m[2m✓[22m[39m takes the box, naming who took it and the head it froze [33m 376[2mms[22m[39m
+     [33m[2m✓[22m[39m releases on exit, so the next taker takes it cleanly [33m 2224[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses a second taker BY NAME, printing holder / pid / since / head [33m 1158[2mms[22m[39m
+     [33m[2m✓[22m[39m reclaims a stale lock by `kill -0`, naming whom it reclaimed from [33m 821[2mms[22m[39m
+     [33m[2m✓[22m[39m lets exactly ONE of eight simultaneous takers hold the box; the rest refuse [33m 3576[2mms[22m[39m
+     [33m[2m✓[22m[39m serialises four QUEUED simultaneous takers — every one takes, no two hold at once [33m 6535[2mms[22m[39m
+     [33m[2m✓[22m[39m lets the holder's own child pass through, and says that is what happened [33m 441[2mms[22m[39m
+     [33m[2m✓[22m[39m lets a QUEUED taker die on SIGTERM — it never takes the box later [33m 2622[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses an unknown kind rather than recording a word nothing means [33m 781[2mms[22m[39m
+     [33m[2m✓[22m[39m passes when nothing moved, and refuses BY ROW when the head does [33m 1166[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses on a tracked-porcelain move at an UNCHANGED head [33m 1272[2mms[22m[39m
+     [33m[2m✓[22m[39m is exactly the machine drivers — every one carries the preamble [33m 462[2mms[22m[39m
+     [33m[2m✓[22m[39m reaches instruments that are not gates at all [33m 429[2mms[22m[39m
+     [33m[2m✓[22m[39m and NO headless instrument carries it [33m 372[2mms[22m[39m
+     [33m[2m✓[22m[39m and each named holder really does take the lock [33m 563[2mms[22m[39m
+     [33m[2m✓[22m[39m exempts the Windows driver BY NAME, and the exemption is checked [33m 425[2mms[22m[39m
+     [33m[2m✓[22m[39m makes a REAL browser gate refuse before it spends anything [33m 2855[2mms[22m[39m
+     [33m[2m✓[22m[39m is DECLARED by the gate, not detected from its text [33m 340[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingTrapSkin.test.js [2m([22m[2m31 tests[22m[2m)[22m[33m 6889[2mms[22m[39m
+     [33m[2m✓[22m[39m the L8-arrow-traps tape: every tick's traps and rocks [33m 958[2mms[22m[39m
+     [33m[2m✓[22m[39m the L32-large-rock tape: every tick's traps and rocks [33m 373[2mms[22m[39m
+     [33m[2m✓[22m[39m the skin dropped (arrow traps) [33m 444[2mms[22m[39m
+     [33m[2m✓[22m[39m ArrowTrap — worldFrame: frame 0 always [33m 550[2mms[22m[39m
+     [33m[2m✓[22m[39m L8-arrow-traps: the stream, the end state, the ledgers, the stateLog and stateDigest identical with the renderer on and off [33m 1100[2mms[22m[39m
+     [33m[2m✓[22m[39m L32-large-rock: the stream, the end state, the ledgers, the stateLog and stateDigest identical with the renderer on and off [33m 434[2mms[22m[39m
+     [33m[2m✓[22m[39m L63-dark-trap-light: the stream, the end state, the ledgers, the stateLog and stateDigest identical with the renderer on and off [33m 676[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingPuzzleSkin.test.js [2m([22m[2m32 tests[22m[2m)[22m[33m 7273[2mms[22m[39m
+     [33m[2m✓[22m[39m the L8-blocks-traps tape: every tick's stairs, blocks and sand traps [33m 952[2mms[22m[39m
+     [33m[2m✓[22m[39m the L65-spear-sinks tape: every tick's stairs, blocks and sand traps [33m 378[2mms[22m[39m
+     [33m[2m✓[22m[39m the L38-fire-block tape: every tick's stairs, blocks and sand traps [33m 409[2mms[22m[39m
+     [33m[2m✓[22m[39m the L16-stand tape: every tick's stairs, blocks and sand traps [33m 389[2mms[22m[39m
+     [33m[2m✓[22m[39m the skin dropped: nothing drawn [33m 586[2mms[22m[39m
+     [33m[2m✓[22m[39m PushableBlock — blockAlpha: never fades [33m 312[2mms[22m[39m
+     [33m[2m✓[22m[39m SandTrap — trapUpdate: never chomps [33m 449[2mms[22m[39m
+     [33m[2m✓[22m[39m SandTrap — hitTint: never tinted [33m 497[2mms[22m[39m
+     [33m[2m✓[22m[39m L8-blocks-traps: the stream, the end state, the ledgers, the stateLog and stateDigest byte-identical with the renderer on and off [33m 941[2mms[22m[39m
+     [33m[2m✓[22m[39m L38-fire-block: the stream, the end state, the ledgers, the stateLog and stateDigest byte-identical with the renderer on and off [33m 688[2mms[22m[39m
+     [33m[2m✓[22m[39m L16-stand: the stream, the end state, the ledgers, the stateLog and stateDigest byte-identical with the renderer on and off [33m 602[2mms[22m[39m
+ [32m✓[39m scripts/procgen/ciGatePlan.test.js [2m([22m[2m83 tests[22m[2m)[22m[33m 62972[2mms[22m[39m
+     [33m[2m✓[22m[39m the browser set is the browser gates, their declared arms and the browser IDENTITY arms [33m 345[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ every selected row has an arm publishing a line under the SAME key [33m 546[2mms[22m[39m
+     [33m[2m✓[22m[39m does NOT refuse a DUAL gate as a Windows row — it has a headless channel [33m 7774[2mms[22m[39m
+     [33m[2m✓[22m[39m REFUSES a gate that is not on the roster at all, exit 5 [33m 2320[2mms[22m[39m
+     [33m[2m✓[22m[39m REFUSES a @ci-face gate asked under its `gate:` key, exit 5 [33m 1178[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ does NOT refuse any key `ciSourced` selects — arm labels included [33m 25605[2mms[22m[39m
+     [33m[2m✓[22m[39m REFUSES a @ci-shallow gate by name, exit 5, before any network call [33m 1587[2mms[22m[39m
+     [33m[2m✓[22m[39m REFUSES a Windows-driving IDENTITY row by name, exit 5, off-network [33m 888[2mms[22m[39m
+     [33m[2m✓[22m[39m does NOT refuse a browser key any more — it goes on to ask CI [33m 821[2mms[22m[39m
+     [33m[2m✓[22m[39m the tree's own headless plan is fixed and covers every headless arm [33m 586[2mms[22m[39m
+     [33m[2m✓[22m[39m D1 — every producer row Producer --checks runs has no arm, unless the bank quotes CI for it [33m 18663[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/entityBlocks.test.js [2m([22m[2m30 tests[22m[2m)[22m[33m 7984[2mms[22m[39m
+     [33m[2m✓[22m[39m is in neither the simulation closure nor the solver-family closure [33m 4941[2mms[22m[39m
+     [33m[2m✓[22m[39m is imported by nothing but its own test [33m 1439[2mms[22m[39m
+     [33m[2m✓[22m[39m loads in isolation [33m 688[2mms[22m[39m
+     [33m[2m✓[22m[39m …and a grep of `entities('<family>')` over the family files finds the same files [33m 848[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeGameSpeed.test.js [2m([22m[2m28 tests[22m[2m)[22m[33m 25051[2mms[22m[39m
+     [33m[2m✓[22m[39m 1× (graphics on, microtask host): solved and played — L0 → L86, the chest checked, two items delivered, out to L0 [33m 1972[2mms[22m[39m
+     [33m[2m✓[22m[39m 1× (graphics off, microtask host): solved and played — L0 → L86, the chest checked, two items delivered, out to L0 [33m 1336[2mms[22m[39m
+     [33m[2m✓[22m[39m 2× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 974[2mms[22m[39m
+     [33m[2m✓[22m[39m 4× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 1108[2mms[22m[39m
+     [33m[2m✓[22m[39m 2× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 1154[2mms[22m[39m
+     [33m[2m✓[22m[39m 4× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 1067[2mms[22m[39m
+     [33m[2m✓[22m[39m 4× with a SYNCHRONOUS host (answers inside the report): the same tick sequence as 1× [33m 1613[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT m1 — the pre-speed loop (every due slot inside the frame callback) at 4×: a host answer lands a tick late, the pin goes red [33m 1067[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT m2 — a host delivery applied one slot late at 4×: the pin goes red, from the delivery on [33m 947[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 0.25× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 1638[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 0.5× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 1486[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 1.5× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 1279[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 3× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 1208[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 16× (graphics on): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 950[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 0.25× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 647[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 0.5× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 540[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 1.5× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 545[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 3× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 1112[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED 16× (graphics off): the same stateDigest after every tick, the same check on the same tick, the same holds [33m 735[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ CUSTOM SPEED — 1.5× with a SYNCHRONOUS host: the same tick sequence as 1× [33m 1915[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT m3 — a host delivery applied one slot late at a FRACTIONAL speed (1.5×): the pin goes red, from the delivery on [33m 1506[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingHitTicks.test.js [2m([22m[2m16 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingFadeOncePerCrossing.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 5050[2mms[22m[39m
+     [33m[2m✓[22m[39m three crossings, two walked by keys and one by the bot, the host answering each at once: ONE ramp each [33m 1096[2mms[22m[39m
+     [33m[2m✓[22m[39m the host answering a slot late, with an item delivery beside its teleport: still ONE ramp each [33m 672[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT — today's page (the queue drained on a tick only): TWO ramps per crossing, and the pin goes red [33m 472[2mms[22m[39m
+     [33m[2m✓[22m[39m GAME SPEED — the page's real clock at 1×, 2× and 4×, the host answering by a posted task: ONE ramp each [33m 1533[2mms[22m[39m
+     [33m[2m✓[22m[39m GAME SPEED — the host 100 ms late at 4× (≈ 12 slots into the fade): absorbed, ONE ramp each; today's page still TWO [33m 870[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingDivergenceSweep.test.js [2m([22m[2m37 tests[22m[2m)[22m[32m 61[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingFadeOnce.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 3624[2mms[22m[39m
+     [33m[2m✓[22m[39m the level start: one ramp per `new Game` (L0's first frame, the arrival) and none at a reboot in place [33m 756[2mms[22m[39m
+     [33m[2m✓[22m[39m the clocked page at 1× and 2× shows the same cover on every slot as the slot loop above; the arrival's fade takes 20 slots, ≈ 667 ms at 1× and ≈ 333 ms at 2× [33m 654[2mms[22m[39m
+     [33m[2m✓[22m[39m 0.25×: the same cover on every slot as the slot loop; the arrival's fade spans 19 gaps of the slot length [33m 485[2mms[22m[39m
+     [33m[2m✓[22m[39m 0.5×: the same cover on every slot as the slot loop; the arrival's fade spans 19 gaps of the slot length [33m 420[2mms[22m[39m
+     [33m[2m✓[22m[39m 1.5×: the same cover on every slot as the slot loop; the arrival's fade spans 19 gaps of the slot length [33m 309[2mms[22m[39m
+     [33m[2m✓[22m[39m 3×: the same cover on every slot as the slot loop; the arrival's fade spans 19 gaps of the slot length [33m 322[2mms[22m[39m
+     [33m[2m✓[22m[39m 16×: the same cover on every slot as the slot loop; the arrival's fade spans 19 gaps of the slot length [33m 485[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingDivergenceLegBudget.test.js [2m([22m[2m18 tests[22m[2m)[22m[33m 5410[2mms[22m[39m
+     [33m[2m✓[22m[39m --leg-budget-ms=90000 is byte-identical to no flag (the default plan has no stamp) [33m 4488[2mms[22m[39m
+     [33m[2m✓[22m[39m off the default the plan is stamped and its timeout covers the budget [33m 868[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingPortalSkin.test.js [2m([22m[2m21 tests[22m[2m)[22m[32m 193[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingPlayClock.test.js [2m([22m[2m16 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32m✓[39m scripts/procgen/fullTierKey.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 3128[2mms[22m[39m
+     [33m[2m✓[22m[39m deadFrameFiles equals the list check-seedling-full-tier-owed prints [33m 3096[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingSolveRequestCodec.test.js [2m([22m[2m16 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingDivergenceRunnerStamp.test.js [2m([22m[2m17 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingSolverSurface.test.js [2m([22m[2m36 tests[22m[2m)[22m[33m 111152[2mms[22m[39m
+     [33m[2m✓[22m[39m (iv) the family file list equals the import closure [33m 2585[2mms[22m[39m
+     [33m[2m✓[22m[39m the import door's closure is the simulation's: solverView.js pulls in no family file [33m 2469[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED [33m 5615[2mms[22m[39m
+     [33m[2m✓[22m[39m (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files` [33m 4694[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door [33m 4136[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED" [33m 4563[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments) [33m 5249[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule [33m 5013[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED" [33m 3682[2mms[22m[39m
+     [33m[2m✓[22m[39m (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice [33m 2743[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table" [33m 5616[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) a COMMENT naming a simulation module in a family file ⇒ GREEN [33m 3933[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once [33m 4781[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family" [33m 5093[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) run.entities(name) with a variable ⇒ RED, a named blind spot [33m 3384[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table [33m 3961[2mms[22m[39m
+     [33m[2m✓[22m[39m (e) a COMMENT naming run.pushables in a family file ⇒ GREEN [33m 4207[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once [33m 5104[2mms[22m[39m
+     [33m[2m✓[22m[39m (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once [33m 3683[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS [33m 5918[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name) [33m 4585[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table [33m 3320[2mms[22m[39m
+     [33m[2m✓[22m[39m (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values [33m 3858[2mms[22m[39m
+     [33m[2m✓[22m[39m (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN [33m 2712[2mms[22m[39m
+     [33m[2m✓[22m[39m (f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both" [33m 3468[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingDivergenceSweepHang.test.js [2m([22m[2m18 tests[22m[2m)[22m[32m 239[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingFullTierWorkflow.test.js [2m([22m[2m7 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m scripts/procgen/ciPathFilter.test.js [2m([22m[2m8 tests[22m[2m)[22m[32m 131[2mms[22m[39m
+ [32m✓[39m scripts/procgen/ciDocsOnly.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 6496[2mms[22m[39m
+     [33m[2m✓[22m[39m every browser arm reaching docs/ or CC/ is box-measured, not CI-sourced [33m 6481[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityLapseCost.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 57478[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 403 solves inside the page budget, with OFF's plan key for key (642 t) [33m 51661[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t) [33m 1498[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT (the companion off): ON, the same request is refused at the DETOUR rung's budget [33m 2134[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 773's request (its live digest re-derived ON, as a page with the switch sends it) solves in 426 t with no hit [33m 1712[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 5 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/procgenDocs/docLinks.test.js[2m > [22mthe corpus census — printed, then pinned[2m > [22mresolves all 368 links into five kinds and no others
+[31m[1mAssertionError[22m: expected { doc: 283, external: 22, …(2) } to deeply equal { 'same-doc': 23, doc: 282, …(2) }[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[32m-   "doc": 282,[39m
+[31m+   "doc": 283,[39m
+[2m    "external": 22,[22m
+[2m    "repo": 40,[22m
+[2m    "same-doc": 23,[22m
+[2m  }[22m
+
+[36m [2m❯[22m frontend/modules/procgenDocs/docLinks.test.js:[2m296:20[22m[39m
+    [90m294| [39m         *              persistence bullet → its own § Shared level wo…
+    [90m295| [39m         */[39m
+    [90m296| [39m        [34mexpect[39m(by)[33m.[39m[34mtoEqual[39m({
+    [90m   | [39m                   [31m^[39m
+    [90m297| [39m            [32m'same-doc'[39m[33m:[39m [34m23[39m[33m,[39m
+    [90m298| [39m            doc[33m:[39m [34m282[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/procgenDocs/docLinks.test.js[2m > [22mthe corpus census — printed, then pinned[2m > [22msends every sibling `.md` to the VIEWER, never to GitHub
+[31m[1mAssertionError[22m: expected [ { doc: 'README.md', …(4) }, …(282) ] to have a length of 282 but got 283[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 282[39m
+[31m+ 283[39m
+
+[36m [2m❯[22m frontend/modules/procgenDocs/docLinks.test.js:[2m308:22[22m[39m
+    [90m306| [39m    it('sends every sibling `.md` to the VIEWER, never to GitHub', () …
+    [90m307| [39m        [35mconst[39m docs [33m=[39m [33mRESOLVED[39m[33m.[39m[34mfilter[39m((r) [33m=>[39m r[33m.[39mkind [33m===[39m [32m'doc'[39m)[33m;[39m
+    [90m308| [39m        [34mexpect[39m(docs)[33m.[39m[34mtoHaveLength[39m([34m282[39m)[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m309| [39m        [35mfor[39m ([35mconst[39m r [35mof[39m docs) {
+    [90m310| [39m            expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/procgenDocs/docsRender.test.js[2m > [22m⛓⛓ the anchors — two readers, one answer (the count is in the pin, not here)[2m > [22mthe page's heading ids ARE ghSlug's, document by document
+[31m[1mAssertionError[22m: expected 1212 to be 1211 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1211[39m
+[31m+ 1212[39m
+
+[36m [2m❯[22m frontend/modules/procgenDocs/docsRender.test.js:[2m174:23[22m[39m
+    [90m172| [39m        //   because the page renders it), while `counts.docs` counts …
+    [90m173| [39m        [90m//   carries both and says why.[39m
+    [90m174| [39m        [34mexpect[39m(total)[33m.[39m[34mtoBe[39m([33mDOCS_INDEX[39m[33m.[39mcounts[33m.[39mheadings)[33m;[39m
+    [90m   | [39m                      [31m^[39m
+    [90m175| [39m    })[33m;[39m
+    [90m176| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/procgenDocs/docsRender.test.js[2m > [22m⛓ the links the render emits[2m > [22mevery `<a href>` is exactly what the resolver answers for its source link
+[31m[1mAssertionError[22m: expected 368 to be 367 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 367[39m
+[31m+ 368[39m
+
+[36m [2m❯[22m frontend/modules/procgenDocs/docsRender.test.js:[2m287:25[22m[39m
+    [90m285| [39m        //   364 → 366: generic `flash` entry removed — architecture.m…
+    [90m286| [39m        //   366 → 367: shared level worlds — maze.md's persistence bu…
+    [90m287| [39m        [34mexpect[39m(checked)[33m.[39m[34mtoBe[39m([34m367[39m)[33m;[39m
+    [90m   | [39m                        [31m^[39m
+    [90m288| [39m    })[33m;[39m
+    [90m289| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/procgenDocs/docsRender.test.js[2m > [22m⛓ the biggest document — the one the budget is about[2m > [22mseedling-bot-log.md renders its headings and its slugs are unique
+[31m[1mAssertionError[22m: expected [ …(721) ] to have a length of 720 but got 721[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 720[39m
+[31m+ 721[39m
+
+[36m [2m❯[22m frontend/modules/procgenDocs/docsRender.test.js:[2m465:21[22m[39m
+    [90m463| [39m        const want = DOCS_INDEX.docs.find((d) => d.file === 'seedling-…
+    [90m464| [39m        [35mconst[39m ids [33m=[39m [34midsOf[39m([33mRENDERS[39m[33m.[39m[35mget[39m([32m'seedling-bot-log.md'[39m)[33m.[39mhtml)[33m;[39m
+    [90m465| [39m        [34mexpect[39m(ids)[33m.[39m[34mtoHaveLength[39m(want)[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m466| [39m        [34mexpect[39m([35mnew[39m [33mSet[39m(ids)[33m.[39msize)[33m.[39m[34mtoBe[39m(want)[33m;[39m
+    [90m467| [39m        [34mexpect[39m(ids[33m.[39m[34mfilter[39m((i) [33m=>[39m i [33m!==[39m [34mghSlug[39m(i)))[33m.[39m[34mtoEqual[39m([])[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m23 passed[39m[22m[90m (25)[39m
+[2m      Tests [22m [1m[31m5 failed[39m[22m[2m | [22m[1m[32m589 passed[39m[22m[90m (594)[39m
+[2m   Start at [22m 20:36:00
+[2m   Duration [22m 137.96s[2m (transform 15.85s, setup 0ms, import 52.91s, tests 331.27s, environment 8ms)[22m
+

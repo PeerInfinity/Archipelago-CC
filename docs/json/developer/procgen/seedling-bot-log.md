@@ -26537,3 +26537,35 @@ row equal ticks included. The sweep ×2 per arm and the probes standard are the 
 - An executor that walks inside itself is invisible to the frontier's re-entry guard: give the order its stance.
 
 ---
+
+### Seedling hammer-phase CPWIT — a page channel for OFF switches; CHOOSER_PAIR size 3 witnessed
+
+⚖ User, queued 2026-10-30 (one of four parallel hammer slices). The report is
+`CC/docs/cloud-reports/seedling-hammer-chooser-witness.md`. **Prepares a flip; flips nothing.**
+
+- **The gap.** The solver's switches are read from `process.env.SEEDLING_*` when their module loads, and the page's solve
+  worker (`jsRuntimeSolveWorker.js`) has no `process`: OPP, CPAIR, ICEST and LWEIGH all shipped node-witnessed only. No
+  existing channel set a `solverBot.js` switch in the page (the five request stamps — `killLockBodies`,
+  `contactFidelity`, `axeDodgeAskPerPreview`, `dashOnlyWindow`, `dashShape` — each carry one module's own set, through
+  a flashPanel setting).
+- **The channel** (`solverEnvChannel.js`, `solverEnvShim.js`): a page URL `?seedlingSolverEnv=NAME=VALUE;…` → the solve
+  service's worker URL (canonical spec) → the worker's FIRST import installs `process.env` before any solver module is
+  evaluated. One table, `SOLVER_ENV_NAMES`: every `SEEDLING_*` name the worker's import closure reads (150; a row holds
+  the two equal). Unknown names refuse by name; every answer and plan carries `solverEnv`. No param: the worker URL is
+  `SOLVE_WORKER_URL` itself, nothing installed, nothing stamped. Weighed against a per-solve request stamp (needs a
+  setter per switch in `solverBot.js`) and a flashPanel setting (persisted, out of bounds). The divergence sweep takes it
+  as `--solver-env` / input `solver_env` (rows + plan stamped, `SOLVER_ENV:` read-back, a mismatched plan fails its leg,
+  mixed merges refused).
+- **The witness** (the sweep's page half, headless wasm `seedling_bot_ap_p4g`, `SEEDLING_CHOOSER_PAIR=1;
+  SEEDLING_CHOOSER_PAIR_SIZE=3`): legs 374 / 378 / 380 (`out_pit_5_21/22/23` ← L39) **done in the game**, 955 / 938 /
+  909 t, 0 room hits, no divergence, the game's end = the plan's (L43 (88,344/360/376)); OFF they refuse at the anytime
+  deadline. The 52 L40 keys: ON 42 done / 9 failed / 1 timeout, OFF 39 / 12 / 1, and the three pits are the only verdict
+  movers. 363 / 366 (Totem 64,144) trade solved/refused with the arrival clock (±20 t between runs): the same captured
+  request replayed in node gives ON = OFF. 382 / 399 (Chest) and 860 / 861 (BK2) move only their refusal (to the anytime
+  deadline or `bobsoldier@880,832`'s sword), as L40C measured in node. Node replay = the page's work units on 18/18.
+- **The flip packet** (`…-evidence/flip/cpair3-flip.patch`, NOT applied): ON at size 3 by default (`=0` opts out,
+  `_SIZE=2` pairs only); the G1 and SF witnesses pin `withChooserPair(false)` as they pin their other switches, so both
+  producer pins stay byte-identical (no re-record); the CPAIR rows ask the pair arm at size 2 explicitly. Measured on a
+  worktree with it applied: producer roster 97 run, 0 red; the bounded set 635/635. Re-recording instead
+  (`variant-rerecord.patch`) lengthens both witness tapes past their game samples (2195 → 2317 t, 1629 → 1796 t) and
+  reds 7 rows.
