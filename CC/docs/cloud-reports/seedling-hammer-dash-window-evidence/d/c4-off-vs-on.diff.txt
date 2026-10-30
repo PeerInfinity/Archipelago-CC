@@ -1,0 +1,12 @@
+58c58
+< winding post-feather seed=  9 level=1ba24a7048ee400e699ab1452a0ddf06 kept=b763432b7d45d0c92e4aa9d8dc4fa640 stop=TARGET_REACHED attempts=10 ticks=205->233 goal=2,6
+---
+> winding post-feather seed=  9 level=1ba24a7048ee400e699ab1452a0ddf06 kept=b763432b7d45d0c92e4aa9d8dc4fa640 stop=TARGET_REACHED attempts=10 ticks=210->233 goal=2,6
+238c238
+< bushy post-feather seed=  9 level=92bf0afd6cf016fb3ea29bc0fcac9e3a kept=500e5d874358fdd09885784559a0f409 stop=TARGET_REACHED attempts=7 ticks=102->102 goal=2,6
+---
+> bushy post-feather seed=  9 level=92bf0afd6cf016fb3ea29bc0fcac9e3a kept=500e5d874358fdd09885784559a0f409 stop=TARGET_REACHED attempts=7 ticks=86->86 goal=2,6
+267c267
+< loopy post-shield seed=  2 level=e93bd76e39a26f026a7a79516fa2a814 kept=e69106524c734f69e289aa90d91a6daa stop=SATURATED attempts=32 ticks=94->94 goal=6,5
+---
+> loopy post-shield seed=  2 level=e93bd76e39a26f026a7a79516fa2a814 kept=e69106524c734f69e289aa90d91a6daa stop=SATURATED attempts=32 ticks=93->93 goal=6,5
