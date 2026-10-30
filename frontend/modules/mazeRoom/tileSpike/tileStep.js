@@ -29,7 +29,7 @@
 import { evaluateRule } from '../../shared/ruleEngine/index.js';
 import {
     INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory, actionItems, actionUsable,
-    blocksAfterPush, sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch,
+    blocksAfterPush, sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch, pullCatching,
 } from '../mazeRoomEngine.js';
 
 const DELTAS = { N: { dx: 0, dy: -1 }, S: { dx: 0, dy: 1 }, E: { dx: 1, dy: 0 }, W: { dx: -1, dy: 0 } };
@@ -41,6 +41,7 @@ export const MAZE_TILE_LIB = {
     button: { primitive: 'hold', pressed: 'presses' },
     trap: { primitive: 'lane', armed: 'lane_armed' },
     rope: { primitive: 'cut', cut: 'rope_cut' },
+    pull: { primitive: 'pull', fires: 'pulled' },
 };
 
 /**
@@ -83,6 +84,9 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         entry = gate === null ? [] : clearSetOf(world, gate);
     }
     const rope = obstacle !== null ? world.obstacleLib?.[obstacle] : null;
+    // ⛓ PULLS: the trap whose disc this STEP (from `playerPos`, moving `dir`) enters from outside — the native geometry
+    // (`pullCatching`) — and its gate's combos, which the `pulled` helper asks; null when no trap catches the step.
+    const catching = dir === null ? null : pullCatching(world, playerPos, { x, y });
     return {
         floor: isFloor(world, x, y),
         block: blocks?.includes(key) ?? false,
@@ -105,6 +109,7 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         entry,
         // BLOCK SINKS: a block pushed here sinks (water, lava, a pit).
         sink: sinksBlock(world, x, y),
+        pull: catching === null ? null : clearSetOf(world, catching.gate),
     };
 }
 
@@ -299,6 +304,18 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     }
     const itemId = latch ? getItem(world, nx, ny) : null;
     if (itemId) holdInInventory(next.inventory, itemId);
+    // ⛓ PULLS (session tile-primitives-sphere-order-9): the entered tile's `pull` fact (the native geometry) asked of the
+    // `pulled` helper, against the effective inventory after the move landed (a pickup there included) — the native
+    // `pullAfterMove`'s clearance, answered by the tile definition. Pulled, the step ends on the trap's cell.
+    if (target.pull !== null) {
+        const after = makeContext(helpers, scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken));
+        if (callHelper(after, tileLib.pull.fires, { x: nx, y: ny }, target)) {
+            const trap = pullCatching(world, state.player_pos, next.player_pos);
+            next.player_pos = { x: trap.x, y: trap.y };
+            const there = latch ? getItem(world, trap.x, trap.y) : null;
+            if (there) holdInInventory(next.inventory, there);
+        }
+    }
     return { next, refused: null };
 }
 

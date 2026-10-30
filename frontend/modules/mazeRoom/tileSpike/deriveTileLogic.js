@@ -221,8 +221,9 @@ function noteCuts(world, ropes, cuts, state, key) {
 /** The reach of an arrival that stands in an armed lane: nothing (no cell, no cut). */
 export const NOTHING_REACHED = Object.freeze({ cells: new Map(), cuts: new Map(), states: 1, planTo: () => null, planToCut: () => null });
 
-/** The obstacle-lib ids a world gates on: its placed obstacles' and its ENTRY GATES' (a null entry gate names none). */
-const gateIds = (world) => new Set([...world.obstacles.values(), ...[...(world.entryGates?.values() ?? [])].filter((g) => g !== null)]);
+/** The obstacle-lib ids a world gates on: its placed obstacles', its ENTRY GATES' (a null entry gate names none) and its PULLS'. */
+const gateIds = (world) => new Set([...world.obstacles.values(), ...[...(world.entryGates?.values() ?? [])].filter((g) => g !== null),
+    ...(world.pulls ?? []).map((p) => p.gate)]);
 
 /**
  * The region's item axis: every item an obstacle's (or an entry gate's) clear set or rule names, plus every rope's
