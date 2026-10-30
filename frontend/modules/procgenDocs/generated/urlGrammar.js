@@ -1028,13 +1028,13 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchGenerate.js",
                     "fn": "readGenerateParams",
-                    "line": 254,
+                    "line": 260,
                     "role": "read"
                 },
                 {
                     "file": "frontend/modules/seedlingDemo/watchViewer.js",
                     "fn": "readParams",
-                    "line": 613,
+                    "line": 615,
                     "role": "read"
                 },
                 {
@@ -1055,7 +1055,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchGenerate.js",
                     "fn": "writeGenerateParams",
-                    "line": 506,
+                    "line": 512,
                     "role": "write"
                 }
             ],

@@ -536,7 +536,8 @@ describe('who takes the box', () => {
          * rules-ghostsword-probe the Ghost Sword Fusion with and without the Spear and the Sword (rock, pole, spear block), `probe-seedling-ghostsword-items.mjs`;
          * rules-weapon-reach-census the Spear thrust vs the Ghost Sword swing at the census's pole stances, `probe-seedling-weapon-reach.mjs`;
          * rules-l63-pole-crossings L63's spear block against its DarkTrap, `probe-seedling-l63-spear-block.mjs`;
-         * rules-block-stoppers L65's spear block against its Bob (alive, and killed first), `probe-seedling-l65-bob-block.mjs`.)
+         * rules-block-stoppers L65's spear block against its Bob (alive, and killed first), `probe-seedling-l65-bob-block.mjs`;
+         * tile-primitives-sphere-order-10 L78's LavaTraps on one step into two discs (the disc entered first wins), `probe-seedling-l78-pull-order.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -605,6 +606,7 @@ describe('who takes the box', () => {
             'probe-seedling-weapon-reach.mjs',
             'probe-seedling-l63-spear-block.mjs',
             'probe-seedling-l65-bob-block.mjs',
+            'probe-seedling-l78-pull-order.mjs',
             // seedling-js-mobile-polish: the phone-viewport fit witness (import door: `isEntryPoint` → main())
             'probe-seedling-mobile-fit.mjs',
             // seedling-js-inventory-menu: the V menu's game witness (import door: `isEntryPoint` → main())
