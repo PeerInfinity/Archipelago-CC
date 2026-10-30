@@ -29,7 +29,7 @@
  * dev server serving this tree. Runs in a throwaway world/preset and cleans up (restores
  * preset_files.json). Screenshots: `--shots <dir>`.
  *
- *   node scripts/procgen/check-cloudberry-embed.mjs [--port <n>] [--shots <dir>] [--keep]
+ *   node scripts/procgen/check-cloudberry-embed.mjs [--port <n>] [--shots <dir>] [--keep] [--bundled]
  *
  * @ci-box V3b adopted this script's NAME, not its RUN: it shells out to this tree's Python venv and `Generate.py`, and needs the fetched Cloudberry site and a dev server.
  * @tree-writes frontend/presets/preset_files.json: `Generate.py` registers this gate's export there, and the gate restores the file's bytes in its `finally` — which a SIGKILL skips.
@@ -57,6 +57,10 @@ const arg = (name) => {
 const PORT = Number(arg('--port') ?? process.env.TEST_PORT ?? 8000);
 const SHOTS = arg('--shots') ? path.resolve(arg('--shots')) : null;
 const KEEP = argv.includes('--keep');
+// --bundled: the deployed boot (frontend/dist/bundle.js; build it first with `npm run build`). Only step 1
+// runs there (the module is in the bundle and the region configures through the bridge): the play steps'
+// helpers import frontend modules into the page, which under the bundle are SECOND copies, not the app's.
+const BUNDLED = argv.includes('--bundled');
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
@@ -184,7 +188,7 @@ try {
     };
 
     const base = `http://localhost:${PORT}/frontend/`;
-    await page.goto(`${base}?rules=${encodeURIComponent(exportRel)}`);
+    await page.goto(`${base}?rules=${encodeURIComponent(exportRel)}${BUNDLED ? '&bundled=true' : ''}`);
     const frame = () => page.frames().find((f) => f.url().includes('/external/cloudberry/index.html'));
     const game = (fn, a) => frame().evaluate(fn, a);
     const app = () => game(() => {
@@ -234,6 +238,10 @@ try {
         `1. the check coins draw the Archipelago logo from THIS server's art library (${look.sheet ?? look.reason})`);
     await page.waitForTimeout(3000);
     await shot('1-start-region');
+    if (BUNDLED) {
+        console.log('(--bundled: steps 2–5 skipped — their helpers would read a second copy of the modules)');
+        throw Object.assign(new Error('bundled stop'), { bundledStop: true });
+    }
 
     const flashName = (apName) => apName.slice(start.length + 2);
     const freeCheck = flashName(freeName);
@@ -317,7 +325,7 @@ try {
     const errors = logs.filter((l) => l.startsWith('[pageerror]') && !l.includes('unwind'));
     ok(errors.length === 0, `no page errors (${errors.slice(0, 3).join(' | ')})`);
 } catch (err) {
-    ok(false, `crashed: ${err.stack ?? err}`);
+    if (!err?.bundledStop) ok(false, `crashed: ${err.stack ?? err}`);
 } finally {
     if (browser) await browser.close();
     cleanup();
