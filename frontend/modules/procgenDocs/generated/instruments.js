@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 22,
+            "count": 23,
             "id": "census"
         },
         {
@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 130,
-            "count": 178,
+            "browser": 131,
+            "count": 179,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 493,
-        "browser": 197,
+        "blockStyle": 495,
+        "browser": 198,
         "cited": 263,
-        "files": 510,
+        "files": 512,
         "lineStyle": 17,
-        "withDocblock": 510,
-        "withFlags": 426
+        "withDocblock": 512,
+        "withFlags": 428
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -851,6 +851,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-atlas-doors — **THE ATLAS DOOR CENSUS**: every INTERNAL exit of a Seedling region atlas (the crossings between sub-regions of one level) by rule and by level, the `Progressive Swim` rows flagged BOT-UNCERTIFIED unless a committed tape witnesses that level with water armed, and whether the pipeline's …",
             "path": "scripts/procgen/census-seedling-atlas-doors.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-block-stoppers.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "charge-crossings"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "no-directional-locks"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "quiet"
+                }
+            ],
+            "oneLiner": "⛓ RULES rules-block-stoppers — DO KILLABLE OR MOBILE ENEMIES STOP A PUSHED BLOCK WHERE THE RULES LET THE CROSSING THROUGH?",
+            "path": "scripts/procgen/census-seedling-block-stoppers.mjs"
         },
         {
             "argvHelpers": [
@@ -14233,6 +14276,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's L63 spear block against its DarkTrap, ON THE GAME (slice rules-l63-pole-crossings, Part A): can a Spear holder cross from the r6c9 side (east of the block) into r0c1 WITHOUT lightpole@64,88 lit ({63,1})?",
             "path": "scripts/procgen/probe-seedling-l63-spear-block.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l65-bob-block.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L65 spear block against its Bob, ON THE GAME (slice rules-block-stoppers): does a chasing Bob stop the pushed block where the rules let the crossing r0c8 -> r4c11 through on the Spear alone?",
+            "path": "scripts/procgen/probe-seedling-l65-bob-block.mjs"
         },
         {
             "argvHelpers": [],
