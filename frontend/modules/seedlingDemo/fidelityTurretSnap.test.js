@@ -34,9 +34,9 @@ const turretIds = (run, x, y) => staticEnemyDanger(run, playerBoxAt(x, y)).map((
 
 describe('TURRETSNAP — the switch', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_TURRET_SNAP_PRICING)(
-        'turretSnapPricing ships OFF', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.turretSnapPricing).toBe(false);
-            expect(CONTACT_FIDELITY.turretSnapPricing).toBe(false);
+        'turretSnapPricing ships ON (the W35 flip, ⚖ user 2026-10-30)', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.turretSnapPricing).toBe(true);
+            expect(CONTACT_FIDELITY.turretSnapPricing).toBe(true);
         });
 });
 

@@ -1718,7 +1718,7 @@ export const CONTACT_FIDELITY = {
      * position is unchanged. The pole thrust's crowd test (`solverBot.resolvePoleThrustStrategy`, `deriveLightPole`)
      * reads the same box. OFF: byte-identical. `SEEDLING_TURRET_SNAP_PRICING=0|1`.
      */
-    turretSnapPricing: false,
+    turretSnapPricing: true,
     /**
      * fidelity WATERFALL D1 (wave 35) — THE CORRIDOR PLANNER PRICES THE WATERFALL'S PUSH (`botDriverV2.planTilePath`'s
      * step cost, `waterfallCarriesLeg` in its string-pull).
@@ -1730,7 +1730,7 @@ export const CONTACT_FIDELITY = {
      * one. A rising step stays free with the Feather. OFF: byte-identical. ⚠ FIXED PER PROCESS: hammer XC's cross-pass
      * escape cache keys on the digest, not on this flag — never flip it mid-solve. `SEEDLING_WATERFALL_PUSH_PRICING=0|1`.
      */
-    waterfallPushPricing: false,
+    waterfallPushPricing: true,
     /**
      * fidelity L32ROCK D1 (wave 35) — THE BOBBOSS ARENA ROCK'S ARM IS A CLEAR (`levelRun.stepBobBossArenaNow`).
      *
@@ -1740,7 +1740,7 @@ export const CONTACT_FIDELITY = {
      * `apb-l32-fresh-no-fire`. ON: the arm banks the write as L82's arena rock does (`rockFlags` by `fallrocklarge` +
      * `pendingEarnedClears`). OFF: byte-identical. `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`.
      */
-    bobArenaRockClear: false,
+    bobArenaRockClear: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

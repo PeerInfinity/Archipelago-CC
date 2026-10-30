@@ -15,7 +15,7 @@
  * `l100-on-route` — the ON corridor driven with the jellyfish present until 24 ticks past their first hit;
  * `l100-exit` — its exit leg from the pool down the sliver, 0 hits; and `l89-step89-on` — route survey step 89's ON
  * plan (the survey's one SOLVED mover: 639 → 291 ticks). The model equals the game at every tick.
- * Ships OFF (`contactFidelity.test.js` pins the defaults).
+ * ON since the W35 flip (`contactFidelity.test.js` pins the defaults).
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
