@@ -1,0 +1,25 @@
+#!/bin/bash
+# run each mutant in the wt2 worktree; restore after each.
+cd "$1"; F=frontend/modules/seedlingDemo/solverBot.js; J=frontend/modules/seedlingDemo/jsRuntimeSolver.js
+T=frontend/modules/seedlingDemo/hammerDashWindow.test.js
+run() { npx vitest run $T 2>&1 | grep -aE "✗|×|FAIL|Tests " | sed 's/\x1b\[[0-9;]*m//g' | head -12; }
+cp $F /tmp/sb.bak; cp $J /tmp/js.bak
+echo "== m1 drop the stand from the certificate"
+python3 - <<'P'
+p='frontend/modules/seedlingDemo/solverBot.js'; s=open(p).read()
+old="""{ strike: strikePolicyFor(run, { dashPlan: c.plan, dashMode }),
+            ...standTailOpts(stand) });"""
+assert old in s; s=s.replace(old,"""{ strike: strikePolicyFor(run, { dashPlan: c.plan, dashMode }) });"""); open(p,'w').write(s)
+P
+run; cp /tmp/sb.bak $F
+echo "== m2 shorten the certified stand by one tick"
+python3 - <<'P'
+p='frontend/modules/seedlingDemo/solverBot.js'; s=open(p).read()
+old="""            ...standTailOpts(stand) });"""
+assert s.count(old)==1; s=s.replace(old,"""            ...standTailOpts(stand && { ...stand, ticks: stand.ticks - 1 }) });"""); open(p,'w').write(s)
+P
+run; cp /tmp/sb.bak $F
+echo "== m3 the window across L4's OFF threshold (85 -> 83)"
+sed -i 's/^export const SOLVER_UPGRADE_WINDOW_WORK = 85;/export const SOLVER_UPGRADE_WINDOW_WORK = 83;/' $J; grep -c "WINDOW_WORK = 83" $J
+run; cp /tmp/js.bak $J
+echo "== restored"; run

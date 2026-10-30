@@ -1,0 +1,425 @@
+id/i	A0	A1	A2	A3	A4	A5	A5-CP	A5-IC	A5-OP	A5-LW	A5-OF	A5-SB	goal
+358/0	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	out_teleporter_144_0
+359/0	S75	S75	S75	S75	S75	S75	S75	S75	S75	S75	S75	S75	Level 039 - Totem Part 72,40
+361/0	S70	S70	S70	S70	S70	S70	S70	S70	S70	S70	S70	S70	out_teleporter_848_0
+362/0	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	out_teleporter_944_96
+363/0	S1558	S1558	S1558	S1558	S1558	S1558	S1558	S1558	S1558	S1558	S1558	S1558	Level 040 - Totem Part 64,144
+364/0	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	out_teleporter_848_0
+365/0	S70	S70	S70	S70	S70	S70	S70	S70	S70	S70	S70	S70	out_teleporter_944_96
+366/0	R:refusal	R:refusal	R:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	R:refusal	B:refusal	B:refusal	B:refusal	Level 040 - Totem Part 64,144
+366/1	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	Level 040 - Totem Part 64,144
+367/0	S172	S172	S172	S172	S172	S172	S172	S172	S172	S172	S172	S172	out_stairsdown_320_576
+368/0	S4	S4	S4	S4	S4	S4	S4	S4	S4	S4	S4	S4	out_teleporter_480_912
+369/0	S861	S861	S861	S861	S861	S861	S861	S861	S861	S861	S861	S861	out_pit_4_20
+370/0	S913	S913	S913	S913	S913	S913	S913	S913	S913	S913	S913	S913	out_pit_5_20
+371/0	S1025	S1025	S1025	S1025	S1025	S1025	S1025	S1025	S1025	S1025	S1025	S1025	out_pit_13_20
+372/0	S1088	S1088	S1088	S1088	S1088	S1088	S1088	S1088	S1088	S1088	S1088	S1088	out_pit_14_20
+373/0	S844	S844	S844	S844	S844	S844	S844	S844	S844	S844	S844	S844	out_pit_4_21
+374/0	B:refusal	S955	S955	S955	S955	S955	B:refusal	S955	S955	S955	S955	S955	out_pit_5_21
+374/1	B:refusal	S955	S955	S955	S955	S955	B:refusal	S955	S955	S955	S955	S955	out_pit_5_21
+375/0	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	out_pit_13_21
+375/1	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	out_pit_13_21
+376/0	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	out_pit_14_21
+376/1	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	out_pit_14_21
+377/0	S828	S828	S828	S828	S828	S828	S828	S828	S828	S828	S828	S828	out_pit_4_22
+378/0	B:refusal	S938	S938	S938	S938	S938	B:refusal	S938	S938	S938	S938	S938	out_pit_5_22
+378/1	B:refusal	S938	S938	S938	S938	S938	B:refusal	S938	S938	S938	S938	S938	out_pit_5_22
+379/0	S809	S809	S809	S809	S809	S809	S809	S809	S809	S809	S809	S809	out_pit_4_23
+380/0	B:refusal	S909	S909	S909	S909	S909	B:refusal	S909	S909	S909	S909	S909	out_pit_5_23
+380/1	B:refusal	S909	S909	S909	S909	S909	B:refusal	S909	S909	S909	S909	S909	out_pit_5_23
+381/0	S494	S494	S494	S494	S494	S494	S494	S494	S494	S494	S494	S494	Level 040 - Totem Part 160,640
+382/0	R:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	R:refusal	B:refusal	S1321!	B:refusal	B:refusal	B:refusal	Level 040 - Chest
+383/0	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	L40 flag 8: bosslock@480,352 cleared
+384/0	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	out_stairsdown_320_576
+385/0	S417	S417	S417	S417	S417	S417	S417	S417	S417	S417	S417	S417	out_teleporter_480_912
+386/0	S416	S416	S416	S416	S416	S416	S416	S416	S416	S416	S416	S416	out_pit_4_20
+387/0	S480	S480	S480	S480	S480	S480	S480	S480	S480	S480	S480	S480	out_pit_5_20
+388/0	S642	S642	S642	S642	S642	S642	S642	S642	S642	S642	S642	S642	out_pit_13_20
+389/0	S718	S718	S718	S718	S718	S718	S718	S718	S718	S718	S718	S718	out_pit_14_20
+390/0	S482	S482	S482	S482	S482	S482	S482	S482	S482	S482	S482	S482	out_pit_4_21
+391/0	S527	S527	S527	S527	S527	S527	S527	S527	S527	S527	S527	S527	out_pit_5_21
+392/0	S598	S598	S598	S598	S598	S598	S598	S598	S598	S598	S598	S598	out_pit_13_21
+393/0	S637	S637	S637	S637	S637	S637	S637	S637	S637	S637	S637	S637	out_pit_14_21
+394/0	S340	S340	S340	S340	S340	S340	S340	S340	S340	S340	S340	S340	out_pit_4_22
+395/0	S476	S476	S476	S476	S476	S476	S476	S476	S476	S476	S476	S476	out_pit_5_22
+396/0	S433	S433	S433	S433	S433	S433	S433	S433	S433	S433	S433	S433	out_pit_4_23
+397/0	S499	S499	S499	S499	S499	S499	S499	S499	S499	S499	S499	S499	out_pit_5_23
+398/0	S118	S118	S118	S118	S118	S118	S118	S118	S118	S118	S118	S118	Level 040 - Totem Part 160,640
+399/0	R:refusal	R:refusal	R:refusal	B:refusal	B:refusal	S1914!	S1914!	S1914!	R:refusal	S1914!	B:refusal	S1914!	Level 040 - Chest
+400/0	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	L40 flag 8: bosslock@480,352 cleared
+401/0	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	S5	out_teleporter_0_160
+402/0	S4	S4	S4	S4	S4	S4	S4	S4	S4	S4	S4	S4	out_teleporter_240_336
+403/0	S1331	S1331	S1331	S1331	S1331	S1331	S1331	S1331	S1331	S1331	S1331	S1331	Level 042 - Totem Part 184,152
+404/0	S4	S4	S4	S4	S4	S4	S4	S4	S4	S4	S4	S4	out_stairsup_176_464
+405/0	S96	S96	S96	S96	S96	S96	S96	S96	S96	S96	S96	S96	Level 043 - Wand
+860/0	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	Level 040 - Boss Key 2
+860/1	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	B:refusal	R:refusal	R:refusal	Level 040 - Boss Key 2
+861/0	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	B:refusal	Level 040 - Boss Key 2
+861/1	R:refusal	R:refusal	R:refusal	R:refusal	R:refusal	B:refusal	R:refusal	R:refusal	B:refusal	B:refusal	R:refusal	R:refusal	Level 040 - Boss Key 2
+862/0	S2269	S2269	S2269	S2269	S2269	S2269	S2269	S2269	S2269	S2269	S2269	S2269	Level 041 - Totem Part 240,144
+863/0	S1054	S1054	S1054	S1054	S1054	S1054	S1054	S1054	S1054	S1054	S1054	S1054	out_teleporter_144_64
+863/1	S389	S389	S389	S389	S389	S389	S389	S389	S389	S389	S389	S389	out_teleporter_144_64
+876/0	S808	S808	S808	S808	S808	S808	S808	S808	S808	S808	S808	S808	Level 043 - Totem of Lacste
+
+== A1: 9 mover(s) vs A0; solved 47/61
+  374/0 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A1: 
+  374/1 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A1: 
+  378/0 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A1: 
+  378/1 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A1: 
+  380/0 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A1: 
+  380/1 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A1: 
+  382/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A1: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A1: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.5) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A1: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,852.7) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+== A2: 9 mover(s) vs A0; solved 47/61
+  374/0 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A2: 
+  374/1 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A2: 
+  378/0 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A2: 
+  378/1 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A2: 
+  380/0 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A2: 
+  380/1 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A2: 
+  382/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A2: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A2: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.5) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A2: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,852.7) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+== A3: 12 mover(s) vs A0; solved 47/61
+  366/0 Level 040 - Totem Part 64,144: R:refusal -> B:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (258.3,129.8) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A3: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (64,144) contact's corridor (attempt 1) — the segment
+  366/1 Level 040 - Totem Part 64,144: R:refusal -> R:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (247.3,131.7) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A3: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (232.1,130.1) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (235,118), r 15 (`Explosio
+  374/0 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A3: 
+  374/1 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A3: 
+  378/0 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A3: 
+  378/1 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A3: 
+  380/0 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A3: 
+  380/1 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A3: 
+  382/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A3: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  399/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: kill (spinner@880,848) by press: the player died at t800 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hi
+     A3: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A3: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.5) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A3: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.0) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+== A4: 12 mover(s) vs A0; solved 47/61
+  366/0 Level 040 - Totem Part 64,144: R:refusal -> B:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (258.3,129.8) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A4: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (64,144) contact's corridor (attempt 1) — the segment
+  366/1 Level 040 - Totem Part 64,144: R:refusal -> R:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (247.3,131.7) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A4: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (232.1,130.1) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (235,118), r 15 (`Explosio
+  374/0 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A4: 
+  374/1 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A4: 
+  378/0 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A4: 
+  378/1 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A4: 
+  380/0 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A4: 
+  380/1 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A4: 
+  382/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A4: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  399/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: kill (spinner@880,848) by press: the player died at t800 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hi
+     A4: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A4: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.5) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A4: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.0) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+== A5: 12 mover(s) vs A0; solved 48/61
+  366/0 Level 040 - Totem Part 64,144: R:refusal -> B:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (258.3,129.8) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (64,144) contact's corridor (attempt 1) — the segment
+  366/1 Level 040 - Totem Part 64,144: R:refusal -> R:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (247.3,131.7) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (232.1,130.1) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (235,118), r 15 (`Explosio
+  374/0 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5: 
+  374/1 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5: 
+  378/0 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5: 
+  378/1 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5: 
+  380/0 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5: 
+  380/1 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5: 
+  382/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A5: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  399/0 Level 040 - Chest: R:refusal -> S1914!
+     A0: kill (spinner@880,848) by press: the player died at t800 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hi
+     A5: 
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A5: weigh stance (wandlock@448,432) waypoint 6 (472,440): not reached within 400 ticks; stalled at (472.84759916490606,674.1774849591337) v=(0,-1.0127655672593185) in level 40, aiming at (472,440), after 
+  861/1 Level 040 - Boss Key 2: R:refusal -> B:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A5: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segmen
+== A5-CP: 6 mover(s) vs A0; solved 42/61
+  366/0 Level 040 - Totem Part 64,144: R:refusal -> B:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (258.3,129.8) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5-CP: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (64,144) contact's corridor (attempt 1) — the segment
+  366/1 Level 040 - Totem Part 64,144: R:refusal -> R:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (247.3,131.7) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5-CP: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (232.1,130.1) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (235,118), r 15 (`Explosio
+  382/0 Level 040 - Chest: R:refusal -> R:refusal
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A5-CP: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,853.2) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `coll
+  399/0 Level 040 - Chest: R:refusal -> S1914!
+     A0: kill (spinner@880,848) by press: the player died at t800 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hi
+     A5-CP: 
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A5-CP: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A5-CP: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.0) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+== A5-IC: 12 mover(s) vs A0; solved 48/61
+  366/0 Level 040 - Totem Part 64,144: R:refusal -> B:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (258.3,129.8) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5-IC: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (64,144) contact's corridor (attempt 1) — the segment
+  366/1 Level 040 - Totem Part 64,144: R:refusal -> R:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (247.3,131.7) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5-IC: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (232.1,130.1) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (235,118), r 15 (`Explosio
+  374/0 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5-IC: 
+  374/1 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5-IC: 
+  378/0 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5-IC: 
+  378/1 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5-IC: 
+  380/0 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5-IC: 
+  380/1 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5-IC: 
+  382/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A5-IC: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  399/0 Level 040 - Chest: R:refusal -> S1914!
+     A0: kill (spinner@880,848) by press: the player died at t800 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hi
+     A5-IC: 
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A5-IC: weigh stance (wandlock@448,432) waypoint 6 (472,440): not reached within 400 ticks; stalled at (472.84759916490606,674.1774849591337) v=(0,-1.0127655672593185) in level 40, aiming at (472,440), after 
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A5-IC: weigh stance (wandlock@448,432): the combat ladder is EXHAUSTED. The corridor passes through danger at (618.8,680.9) — spinner:spinner@816,848 (a live Spinner BODY at (614.7,676.4) at horizon 467 — `E
+== A5-OP: 9 mover(s) vs A0; solved 48/61
+  374/0 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OP: 
+  374/1 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OP: 
+  378/0 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OP: 
+  378/1 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OP: 
+  380/0 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OP: 
+  380/1 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OP: 
+  382/0 Level 040 - Chest: R:refusal -> S1321!
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A5-OP: 
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A5-OP: weigh stance (wandlock@448,432) waypoint 6 (472,440): not reached within 400 ticks; stalled at (472.84759916490606,674.1774849591337) v=(0,-1.0127655672593185) in level 40, aiming at (472,440), after 
+  861/1 Level 040 - Boss Key 2: R:refusal -> B:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A5-OP: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segmen
+== A5-LW: 12 mover(s) vs A0; solved 48/61
+  366/0 Level 040 - Totem Part 64,144: R:refusal -> B:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (258.3,129.8) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5-LW: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (64,144) contact's corridor (attempt 1) — the segment
+  366/1 Level 040 - Totem Part 64,144: R:refusal -> R:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (247.3,131.7) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5-LW: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (232.1,130.1) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (235,118), r 15 (`Explosio
+  374/0 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5-LW: 
+  374/1 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5-LW: 
+  378/0 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5-LW: 
+  378/1 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5-LW: 
+  380/0 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5-LW: 
+  380/1 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5-LW: 
+  382/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A5-LW: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  399/0 Level 040 - Chest: R:refusal -> S1914!
+     A0: kill (spinner@880,848) by press: the player died at t800 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hi
+     A5-LW: 
+  860/1 Level 040 - Boss Key 2: R:refusal -> B:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A5-LW: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segmen
+  861/1 Level 040 - Boss Key 2: R:refusal -> B:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A5-LW: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segmen
+== A5-OF: 12 mover(s) vs A0; solved 47/61
+  366/0 Level 040 - Totem Part 64,144: R:refusal -> B:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (258.3,129.8) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5-OF: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (64,144) contact's corridor (attempt 1) — the segment
+  366/1 Level 040 - Totem Part 64,144: R:refusal -> R:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (247.3,131.7) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5-OF: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (232.1,130.1) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (235,118), r 15 (`Explosio
+  374/0 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OF: 
+  374/1 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OF: 
+  378/0 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OF: 
+  378/1 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OF: 
+  380/0 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OF: 
+  380/1 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5-OF: 
+  382/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A5-OF: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  399/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: kill (spinner@880,848) by press: the player died at t800 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hi
+     A5-OF: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A5-OF: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.5) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A5-OF: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.8,853.0) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", 
+== A5-SB: 12 mover(s) vs A0; solved 48/61
+  366/0 Level 040 - Totem Part 64,144: R:refusal -> B:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (258.3,129.8) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5-SB: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (64,144) contact's corridor (attempt 1) — the segment
+  366/1 Level 040 - Totem Part 64,144: R:refusal -> R:refusal
+     A0: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (247.3,131.7) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (251,119), r 15 (`Explosio
+     A5-SB: break stance (breakablerock@176,128): the combat ladder is EXHAUSTED. The corridor passes through danger at (232.1,130.1) — bomb:bombpusher@112,128#11 (a Bomb's Explosion at (235,118), r 15 (`Explosio
+  374/0 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5-SB: 
+  374/1 out_pit_5_21: B:refusal -> S955
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,28)->L43's corridor (attempt 1) — the segment's own wo
+     A5-SB: 
+  378/0 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5-SB: 
+  378/1 out_pit_5_22: B:refusal -> S938
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,29)->L43's corridor (attempt 1) — the segment's own wo
+     A5-SB: 
+  380/0 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5-SB: 
+  380/1 out_pit_5_23: B:refusal -> S909
+     A0: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (15,30)->L43's corridor (attempt 1) — the segment's own wo
+     A5-SB: 
+  382/0 Level 040 - Chest: R:refusal -> B:refusal
+     A0: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,788.3) — chaser:bob@736,752 (inside leash 80 (d=7.6), box grown 0.5 p
+     A5-SB: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen
+  399/0 Level 040 - Chest: R:refusal -> S1914!
+     A0: kill (spinner@880,848) by press: the player died at t800 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hi
+     A5-SB: 
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,801.5) — chaser:bob@736,752 (inside leash 80 (d=5.6), box grown 0.5 px/tick x 0 + pad 0
+     A5-SB: weigh stance (wandlock@448,432): applied 4 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), burn(burnabletree@872,784), weigh(wandlock@448,432)] and the corridor sti
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+     A0: burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (743.8,853.9) — chaser:bob@736,800 (inside leash 80 (d=5.8), box grown 0.5 px/tick x 0 + pad 0
+     A5-SB: weigh stance (wandlock@448,432): applied 4 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), burn(burnabletree@872,784), weigh(wandlock@448,432)] and the corridor sti

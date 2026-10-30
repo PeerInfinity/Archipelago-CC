@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+"""M Part 1 — the window's margin per leg, from thr.jsonl (one row per captured request of sweep 38845773709)."""
+import json, sys, collections
+
+W = 85
+rows, fails, seen = [], [], set()
+for line in open(sys.argv[1]):
+    r = json.loads(line)
+    if 'fail' in r:
+        fails.append(r['fail']); continue
+    k = (r['id'], r['i'])
+    if k in seen: continue
+    seen.add(k); rows.append(r)
+fails = [f for f in fails if tuple(map(int, f.split(':'))) not in seen]
+print(f'requests: {len(rows)} measured, {len(fails)} failed to run {fails[:10]}')
+up = [r for r in rows if r['upgrade']]
+print(f'upgraders (full plan strictly shorter than a dashless plan in hand): {len(up)}')
+
+def loss_thr(r, arm):
+    l = r['loss'].get(arm, {})
+    return l.get('thr', l.get('upper'))
+
+def exact(r, arm):
+    return 'thr' in r['loss'].get(arm, {})
+
+def ticks_at_window(r, arm):
+    if not r['upgrade']:
+        return r['bestTicks']
+    return r['loss'][arm]['atWindow']
+
+for arm, name in (('on', 'ON (dash-only window, the default)'), ('off', 'OFF (whole pass)')):
+    print(f'\n== {name}')
+    over = sorted([r for r in up if exact(r, arm) and r['loss'][arm]['thr'] > W], key=lambda r: -r['loss'][arm]['thr'])
+    near = sorted([r for r in up if exact(r, arm) and W - 10 < r['loss'][arm]['thr'] <= W], key=lambda r: -r['loss'][arm]['thr'])
+    print(f'  threshold > {W} (ships less than window 0 today): {len(over)}')
+    for r in over:
+        l = r['loss'][arm]
+        print(f"    {r['id']}:{r['i']} L{r['level']} thr {l['thr']} (margin {W - l['thr']}) best {r['bestTicks']} t, at {W}: {l['atWindow']} t ({l['atWindowPass']}), dashless {r['rows'][0]['ticks']} t  {r['key'][:70]}")
+    print(f'  threshold within 10 under the window ({W - 9}..{W}): {len(near)}')
+    for r in near:
+        l = r['loss'][arm]
+        print(f"    {r['id']}:{r['i']} L{r['level']} thr {l['thr']} (margin {W - l['thr']}) best {r['bestTicks']} t, one under: {l['below']} t  {r['key'][:70]}")
+    m = collections.Counter()
+    for r in up:
+        t = loss_thr(r, arm)
+        b = 'exact' if exact(r, arm) else 'bound'
+        g = W - t
+        m['<0' if g < 0 else '0' if g == 0 else '1-9' if g < 10 else '10-39' if g < 40 else '>=40'] += 1
+    print('  margin histogram over the upgraders:', dict(m))
+
+# the tick totals: dashless, window 0 (the unwindowed best), today (ON @ 85), OFF @ 85
+tot = collections.Counter()
+for r in rows:
+    d = r['rows'][0]
+    if not (d['ok'] and r['bestTicks'] is not None):
+        continue
+    tot['n'] += 1
+    tot['dashless'] += d['ticks']
+    tot['w0'] += r['bestTicks']
+    tot['on85'] += ticks_at_window(r, 'on')
+    tot['off85'] += ticks_at_window(r, 'off')
+sav = tot['dashless'] - tot['w0']
+print(f"\n== tick totals over the {tot['n']} requests whose dashless pass answered")
+for k in ('dashless', 'w0', 'on85', 'off85'):
+    pct = 100 * (tot['dashless'] - tot[k]) / sav if sav else 0
+    print(f'  {k:9s} {tot[k]:8d} t   {pct:5.1f} % of window 0\'s savings')
