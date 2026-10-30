@@ -9644,6 +9644,13 @@
                 "count": 2
               }
             }
+          },
+          {
+            "name": "level_71__r16c19 -> level_76",
+            "connected_region": "level_76",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -9802,6 +9809,189 @@
         ],
         "locations": []
       },
+      "level_76": {
+        "name": "level_76",
+        "exits": [
+          {
+            "name": "level_76 -> level_71__r0c6",
+            "connected_region": "level_71__r0c6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L71 flag 2: shieldlock@288,256 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_76 -> level_77",
+            "connected_region": "level_77",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_77": {
+        "name": "level_77",
+        "exits": [
+          {
+            "name": "level_77 -> level_76",
+            "connected_region": "level_76",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_77 -> level_78__r0c16",
+            "connected_region": "level_78__r0c16",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_78__r0c2": {
+        "name": "level_78__r0c2",
+        "exits": [
+          {
+            "name": "level_78__r0c2 -> level_78__r0c16",
+            "connected_region": "level_78__r0c16",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r0c2 -> level_79__r8c4",
+            "connected_region": "level_79__r8c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_78__r0c16": {
+        "name": "level_78__r0c16",
+        "exits": [
+          {
+            "name": "level_78__r0c16 -> level_78__r0c2",
+            "connected_region": "level_78__r0c2",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_78__r0c16 -> level_77",
+            "connected_region": "level_77",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_79__r0c4": {
+        "name": "level_79__r0c4",
+        "exits": [
+          {
+            "name": "level_79__r0c4 -> level_79__r8c4",
+            "connected_region": "level_79__r8c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_79__r0c4 -> level_80__r16c1",
+            "connected_region": "level_80__r16c1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_79__r8c4": {
+        "name": "level_79__r8c4",
+        "exits": [
+          {
+            "name": "level_79__r8c4 -> level_79__r0c4",
+            "connected_region": "level_79__r0c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dark Suit"
+              }
+            }
+          },
+          {
+            "name": "level_79__r8c4 -> level_78__r0c2",
+            "connected_region": "level_78__r0c2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 079 - Darksuit",
+            "id": 30000037,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Dark Suit",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
       "level_80__r0c2": {
         "name": "level_80__r0c2",
         "exits": [
@@ -9888,7 +10078,7 @@
         "locations": [
           {
             "name": "Level 080 - Chest",
-            "id": 30000037,
+            "id": 30000038,
             "access_rule": {
               "rule": "True_"
             },
@@ -9954,6 +10144,20 @@
               "args": {
                 "item_name": "Dark Suit"
               }
+            }
+          },
+          {
+            "name": "level_80__r16c1 -> level_79__r0c4",
+            "connected_region": "level_79__r0c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_80__r16c1 -> level_79__r0c4 #2",
+            "connected_region": "level_79__r0c4",
+            "access_rule": {
+              "rule": "True_"
             }
           }
         ],
@@ -10101,7 +10305,7 @@
         "locations": [
           {
             "name": "Level 086 - Chest",
-            "id": 30000038,
+            "id": 30000039,
             "access_rule": {
               "rule": "True_"
             },
@@ -10632,7 +10836,7 @@
         "locations": [
           {
             "name": "Level 089 - Feather",
-            "id": 30000039,
+            "id": 30000040,
             "access_rule": {
               "rule": "True_"
             },
@@ -10734,7 +10938,7 @@
         "locations": [
           {
             "name": "Level 090 - Chest",
-            "id": 30000040,
+            "id": 30000041,
             "access_rule": {
               "rule": "True_"
             },
@@ -11150,9 +11354,17 @@
         "type": null,
         "max_count": 1
       },
+      "Dark Suit": {
+        "name": "Dark Suit",
+        "id": 30000001,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Fire": {
         "name": "Fire",
-        "id": 30000001,
+        "id": 30000002,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11160,7 +11372,7 @@
       },
       "Ghost Spear": {
         "name": "Ghost Spear",
-        "id": 30000002,
+        "id": 30000003,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11168,7 +11380,7 @@
       },
       "Green Key": {
         "name": "Green Key",
-        "id": 30000003,
+        "id": 30000004,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11176,7 +11388,7 @@
       },
       "Health": {
         "name": "Health",
-        "id": 30000004,
+        "id": 30000005,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11184,7 +11396,7 @@
       },
       "Light": {
         "name": "Light",
-        "id": 30000005,
+        "id": 30000006,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11192,7 +11404,7 @@
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
-        "id": 30000006,
+        "id": 30000007,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11200,7 +11412,7 @@
       },
       "Progressive Swim": {
         "name": "Progressive Swim",
-        "id": 30000007,
+        "id": 30000008,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11208,7 +11420,7 @@
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
-        "id": 30000008,
+        "id": 30000009,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11216,7 +11428,7 @@
       },
       "Purple Key": {
         "name": "Purple Key",
-        "id": 30000009,
+        "id": 30000010,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11224,7 +11436,7 @@
       },
       "Red Key": {
         "name": "Red Key",
-        "id": 30000010,
+        "id": 30000011,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11232,7 +11444,7 @@
       },
       "Seal": {
         "name": "Seal",
-        "id": 30000011,
+        "id": 30000012,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11240,7 +11452,7 @@
       },
       "Totem Shard": {
         "name": "Totem Shard",
-        "id": 30000012,
+        "id": 30000013,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11248,7 +11460,7 @@
       },
       "Wand": {
         "name": "Wand",
-        "id": 30000013,
+        "id": 30000014,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11256,7 +11468,7 @@
       },
       "Yellow Key": {
         "name": "Yellow Key",
-        "id": 30000014,
+        "id": 30000015,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11570,6 +11782,7 @@
       "Ghost Spear": 1,
       "Yellow Key": 1,
       "Health": 1,
+      "Dark Suit": 1,
       "L0 flag 1: breakablerock@288,176 cleared": 1,
       "L0 flag 4: breakablerock@80,112 cleared": 1,
       "L12 flag 7: magicallock@32,864 cleared": 1,
@@ -11627,7 +11840,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-61306562",
+      "atlas_id": "seedling-f4b9738e",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -55312,6 +55525,17 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_304_96"
+            },
+            {
+              "exit_id": "level_71__r16c19 -> level_76",
+              "x": 19,
+              "y": 16,
+              "side": null,
+              "exitName": "level_71__r16c19 -> level_76",
+              "targetRegion": "level_76",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_304_256"
             }
           ],
           "obstacles": [
@@ -56881,6 +57105,2504 @@
           }
         }
       },
+      "level_76": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 20,
+          "height": 10,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,1,0,1,1,0,1,1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,1,1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 10,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_76 -> level_71__r0c6",
+              "x": 0,
+              "y": 5,
+              "side": null,
+              "exitName": "level_76 -> level_71__r0c6",
+              "targetRegion": "level_71__r0c6",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_80"
+            },
+            {
+              "exit_id": "level_76 -> level_77",
+              "x": 19,
+              "y": 7,
+              "side": null,
+              "exitName": "level_76 -> level_77",
+              "targetRegion": "level_77",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_304_112"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_76",
+          "level": 76,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_77": {
+        "substrate": "maze",
+        "shared_world": "level_77",
+        "playable_payload": {
+          "width": 15,
+          "height": 20,
+          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+          "entrance": {
+            "x": 1,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_77 -> level_76",
+              "x": 0,
+              "y": 2,
+              "side": null,
+              "exitName": "level_77 -> level_76",
+              "targetRegion": "level_76",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_32"
+            },
+            {
+              "exit_id": "level_77 -> level_78__r0c16",
+              "x": 6,
+              "y": 19,
+              "side": null,
+              "exitName": "level_77 -> level_78__r0c16",
+              "targetRegion": "level_78__r0c16",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_96_304"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 0,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 19,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "pull_6_12": {
+              "id": "pull_6_12",
+              "name": "lavatrap@96,192",
+              "kind": "pull",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#d0602a"
+            },
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Dark Suit",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "pulls": [
+            {
+              "x": 6,
+              "y": 12,
+              "from": [
+                {
+                  "x": 6,
+                  "y": 10
+                },
+                {
+                  "x": 7,
+                  "y": 11
+                },
+                {
+                  "x": 4,
+                  "y": 12
+                },
+                {
+                  "x": 5,
+                  "y": 12
+                },
+                {
+                  "x": 7,
+                  "y": 12
+                },
+                {
+                  "x": 8,
+                  "y": 12
+                },
+                {
+                  "x": 5,
+                  "y": 13
+                },
+                {
+                  "x": 6,
+                  "y": 13
+                },
+                {
+                  "x": 7,
+                  "y": 13
+                },
+                {
+                  "x": 6,
+                  "y": 14
+                }
+              ],
+              "gate": "pull_6_12"
+            }
+          ],
+          "shared_world": {
+            "key": "level_77",
+            "regions": [
+              "level_77"
+            ],
+            "rows": [
+              "AAAAAAAAAAAAAAA",
+              "AAAAAA..AAAAAAA",
+              "AAAAAA..AAAAAAA",
+              "AAAA.AA..AAAAAA",
+              "AAAA.AAA.AAAAAA",
+              "AA.A.AAAAAAAAAA",
+              "AA...AAAAAAAAAA",
+              "AAAAAAAAAAAAAAA",
+              "AAAAAAAAAAAAAAA",
+              "A..AAAAAAA.AAAA",
+              "A..AAAAAAA..AAA",
+              "AAAAA..AAA..AAA",
+              "AAAAAAAAAAAAAAA",
+              "AAAAAAAAAAAAAAA",
+              "AAAAAAA..AAAAAA",
+              "AAAAAAA..AAAAAA",
+              "AAAAAAAAAAAAAAA",
+              "AAAAAAAAAAAAAAA",
+              "AAAAA.AAAAAAAAA",
+              "AAAAA.AAAAAAAAA"
+            ],
+            "entrances": {
+              "level_77": {
+                "x": 1,
+                "y": 2
+              }
+            },
+            "links": {}
+          },
+          "atlas_region": "level_77",
+          "level": 77,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_78__r0c2": {
+        "substrate": "maze",
+        "shared_world": "level_78",
+        "playable_payload": {
+          "width": 20,
+          "height": 10,
+          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          "entrance": {
+            "x": 2,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "level_78__r0c2 -> level_79__r8c4",
+              "x": 2,
+              "y": 0,
+              "side": null,
+              "exitName": "level_78__r0c2 -> level_79__r8c4",
+              "targetRegion": "level_79__r8c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_32_0"
+            },
+            {
+              "exit_id": "level_78__r0c16 -> level_77",
+              "x": 16,
+              "y": 0,
+              "side": null,
+              "exitName": "level_78__r0c16 -> level_77",
+              "targetRegion": "level_77",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_256_0"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 0,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 2,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 9,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "pull_6_5": {
+              "id": "pull_6_5",
+              "name": "lavatrap@96,80",
+              "kind": "pull",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#d0602a"
+            },
+            "pull_9_3": {
+              "id": "pull_9_3",
+              "name": "lavatrap@144,48",
+              "kind": "pull",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#d0602a"
+            },
+            "pull_9_6": {
+              "id": "pull_9_6",
+              "name": "lavatrap@144,96",
+              "kind": "pull",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#d0602a"
+            },
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Dark Suit",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "(Progressive Sword OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "pulls": [
+            {
+              "x": 6,
+              "y": 5,
+              "from": [
+                {
+                  "x": 6,
+                  "y": 3
+                },
+                {
+                  "x": 5,
+                  "y": 4
+                },
+                {
+                  "x": 6,
+                  "y": 4
+                },
+                {
+                  "x": 7,
+                  "y": 4
+                },
+                {
+                  "x": 4,
+                  "y": 5
+                },
+                {
+                  "x": 5,
+                  "y": 5
+                },
+                {
+                  "x": 7,
+                  "y": 5
+                },
+                {
+                  "x": 8,
+                  "y": 5
+                },
+                {
+                  "x": 5,
+                  "y": 6
+                },
+                {
+                  "x": 6,
+                  "y": 6
+                },
+                {
+                  "x": 7,
+                  "y": 6
+                },
+                {
+                  "x": 6,
+                  "y": 7
+                }
+              ],
+              "gate": "pull_6_5",
+              "yields": [
+                {
+                  "from": {
+                    "x": 8,
+                    "y": 4
+                  },
+                  "to": {
+                    "x": 8,
+                    "y": 5
+                  }
+                }
+              ]
+            },
+            {
+              "x": 9,
+              "y": 3,
+              "from": [
+                {
+                  "x": 9,
+                  "y": 1
+                },
+                {
+                  "x": 9,
+                  "y": 2
+                },
+                {
+                  "x": 10,
+                  "y": 2
+                },
+                {
+                  "x": 7,
+                  "y": 3
+                },
+                {
+                  "x": 8,
+                  "y": 3
+                },
+                {
+                  "x": 10,
+                  "y": 3
+                },
+                {
+                  "x": 11,
+                  "y": 3
+                },
+                {
+                  "x": 8,
+                  "y": 4
+                },
+                {
+                  "x": 9,
+                  "y": 4
+                },
+                {
+                  "x": 10,
+                  "y": 4
+                },
+                {
+                  "x": 9,
+                  "y": 5
+                }
+              ],
+              "gate": "pull_9_3"
+            },
+            {
+              "x": 9,
+              "y": 6,
+              "from": [
+                {
+                  "x": 9,
+                  "y": 4
+                },
+                {
+                  "x": 8,
+                  "y": 5
+                },
+                {
+                  "x": 9,
+                  "y": 5
+                },
+                {
+                  "x": 10,
+                  "y": 5
+                },
+                {
+                  "x": 7,
+                  "y": 6
+                },
+                {
+                  "x": 8,
+                  "y": 6
+                },
+                {
+                  "x": 11,
+                  "y": 6
+                },
+                {
+                  "x": 8,
+                  "y": 7
+                },
+                {
+                  "x": 9,
+                  "y": 8
+                }
+              ],
+              "gate": "pull_9_6",
+              "yields": [
+                {
+                  "from": {
+                    "x": 7,
+                    "y": 7
+                  },
+                  "to": {
+                    "x": 7,
+                    "y": 6
+                  }
+                }
+              ]
+            }
+          ],
+          "shared_world": {
+            "key": "level_78",
+            "regions": [
+              "level_78__r0c2",
+              "level_78__r0c16"
+            ],
+            "rows": [
+              "..A.............B...",
+              "..A......BBB....B...",
+              ".........BBB...BB...",
+              ".BB....BBBBBBB.BB...",
+              ".BB.BBBBBBBBBBBBB...",
+              "..BBBBBBBBBBBBBB....",
+              "......BBBB.BBB......",
+              "........B...B.......",
+              "........BBBBB.......",
+              "...................."
+            ],
+            "entrances": {
+              "level_78__r0c2": {
+                "x": 2,
+                "y": 0
+              },
+              "level_78__r0c16": {
+                "x": 16,
+                "y": 1
+              }
+            },
+            "links": {
+              "level_78__r0c16>level_78__r0c2": "level_78__r0c16 -> level_78__r0c2",
+              "level_78__r0c2>level_78__r0c16": "level_78__r0c2 -> level_78__r0c16"
+            }
+          },
+          "atlas_region": "level_78",
+          "level": 78,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_78__r0c16": {
+        "substrate": "maze",
+        "shared_world": "level_78"
+      },
+      "level_79__r0c4": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 10,
+          "height": 15,
+          "tiles": [1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 4,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "level_79__r0c4 -> level_80__r16c1",
+              "x": 4,
+              "y": 0,
+              "side": null,
+              "exitName": "level_79__r0c4 -> level_80__r16c1",
+              "targetRegion": "level_80__r16c1",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_64_0"
+            },
+            {
+              "exit_id": "level_79__r0c4 -> level_79__r8c4",
+              "x": 4,
+              "y": 6,
+              "side": null,
+              "exitName": "level_79__r0c4 -> level_79__r8c4",
+              "targetRegion": "level_79__r8c4",
+              "targetExitId": "level_79__r8c4 -> level_79__r0c4",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r8c4"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 4,
+              "y": 6,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Dark Suit",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_79",
+          "atlas_sub_region": "r0c4",
+          "level": 79,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_79__r8c4": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 10,
+          "height": 15,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1],
+          "entrance": {
+            "x": 4,
+            "y": 8
+          },
+          "exits": [
+            {
+              "exit_id": "level_79__r8c4 -> level_78__r0c2",
+              "x": 4,
+              "y": 14,
+              "side": null,
+              "exitName": "level_79__r8c4 -> level_78__r0c2",
+              "targetRegion": "level_78__r0c2",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_64_224"
+            },
+            {
+              "exit_id": "level_79__r8c4 -> level_79__r0c4",
+              "x": 4,
+              "y": 7,
+              "side": null,
+              "exitName": "level_79__r8c4 -> level_79__r0c4",
+              "targetRegion": "level_79__r0c4",
+              "targetExitId": "level_79__r0c4 -> level_79__r8c4",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r0c4"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 4,
+              "y": 7,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 2,
+              "y": 9,
+              "id": "Dark Suit",
+              "locationName": "Level 079 - Darksuit"
+            }
+          ],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Dark Suit",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_79",
+          "atlas_sub_region": "r8c4",
+          "level": 79,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
       "level_80__r0c2": {
         "substrate": "maze",
         "shared_world": "level_80",
@@ -56903,6 +59625,28 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_32_0"
+            },
+            {
+              "exit_id": "level_80__r16c1 -> level_79__r0c4",
+              "x": 2,
+              "y": 19,
+              "side": null,
+              "exitName": "level_80__r16c1 -> level_79__r0c4",
+              "targetRegion": "level_79__r0c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_32_304"
+            },
+            {
+              "exit_id": "level_80__r16c1 -> level_79__r0c4 #2",
+              "x": 3,
+              "y": 19,
+              "side": null,
+              "exitName": "level_80__r16c1 -> level_79__r0c4 #2",
+              "targetRegion": "level_79__r0c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_48_304"
             }
           ],
           "obstacles": [
@@ -62790,10 +65534,16 @@
             }
           },
           "new_accessible_locations": [
-            "L71 flag 2: shieldlock@288,256 cleared"
+            "L71 flag 2: shieldlock@288,256 cleared",
+            "Level 079 - Darksuit"
           ],
           "new_accessible_regions": [
-            "level_71__r16c19"
+            "level_71__r16c19",
+            "level_76",
+            "level_77",
+            "level_78__r0c16",
+            "level_78__r0c2",
+            "level_79__r8c4"
           ],
           "sphere_locations": [
             "Level 074 - Darkshield"
@@ -62818,6 +65568,85 @@
           "new_accessible_regions": [],
           "sphere_locations": [
             "L71 flag 2: shieldlock@288,256 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Dark Suit": 1
+            },
+            "resolved_items": {
+              "Dark Suit": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Level 063 - Chest",
+            "Level 080 - Chest"
+          ],
+          "new_accessible_regions": [
+            "level_37__r9c36",
+            "level_63__r5c14",
+            "level_63__r6c15",
+            "level_71__r14c12",
+            "level_79__r0c4",
+            "level_80__r12c3",
+            "level_80__r16c1",
+            "level_80__r6c4",
+            "level_80__r8c1",
+            "level_80__r8c4",
+            "level_93__r10c7",
+            "level_93__r5c7"
+          ],
+          "sphere_locations": [
+            "Level 079 - Darksuit"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 063 - Chest"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 080 - Chest"
           ]
         }
       }

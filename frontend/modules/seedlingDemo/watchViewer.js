@@ -197,8 +197,8 @@ import {
     DIRECTED_ANCHOR_TRIES, applyDirective, describeKeptKind, directedCost, displayStaging,
     ELEMENTS_CONTROL_DEFAULT, ELEMENTS_CONTROL_LIST, elementsAskSpelling, elementsControlValue,
     elementsFromControl,
-    generateStep, generationRows, ladderCost, paletteFor, readGenerateParams,
-    skeletonCatalogue, tileAtPoint, writeGenerateParams,
+    generateStep, generationRows, ladderCost, paletteWithTerrains, readGenerateParams,
+    skeletonCatalogue, terrainsSpelling, tileAtPoint, writeGenerateParams,
 } from './watchGenerate.js';
 // ⛓ SLICE 7: the ONE formatter/normalizer for a skeleton spec — the identity
 // line, the URL bar and this form all spell a room the same way.
@@ -258,7 +258,7 @@ import {
 // ⛓ SLICE 4: the catalogue is DATA (`catalogueRows`) and the restriction is a
 // palette operation (`restrictPalette`) — both live where palettes live, and
 // this file only renders and wires them.
-import { catalogueRows, restrictPalette } from './procgenPalette.js';
+import { TERRAIN_OFFERS, catalogueRows, restrictPalette } from './procgenPalette.js';
 // ⛓ EDITOR v3 C1: `TERRAIN_NAMES` LEFT with the picker it filled — the edit
 // section is shared with the EDIT arm now, and `watchEditor` mounts it, so
 // this file keeps no second list of what a terrain is.
@@ -368,6 +368,8 @@ import {
     createLabArtPainter, labArt, labArtActive, labArtOps, mountLabArtToggle, publishLabArtDraw, rememberRoomRecord,
     roomRecordOf, setLabArtRedraw, placementBodies,
 } from './watchArt.js';
+// ⛓ seedling-gen-biomes-1 (C1): the generated room's LOOK, drawn by the generate arm (never written to its record).
+import { LAB_LOOK_CHOICES, LAB_LOOK_OWN, applyLook, labLookOf } from './procgenLook.js';
 /**
  * ⛓ THE ON-SCREEN CONTROLS (slice `seedling-lab-touch-controls`) — the flash panel's, imported AS IS: the d-pad and
  * buttons Seedling's `games/seedling.json` declares, shown by the same auto/on/off rule (`?touch=1`, a coarse pointer).
@@ -6010,6 +6012,8 @@ async function runGenerate(params, lifetime) {
      * control on this panel.
      */
     let roster = gp.roster;
+    /** ⛓ seedling-gen-terrains (C3) — the opted-in terrains (`?terrains=`), `''` = none. */
+    let terrains = gp.terrains ?? '';
     /**
      * ⛓ Set once, when a press takes the URL back off `?gen=` — so the detail
      * line can say the reproduction claim GONE rather than just stop printing
@@ -6061,6 +6065,7 @@ async function runGenerate(params, lifetime) {
          * run has.
          */
         roster = payload.roster ?? null;
+        terrains = terrainsSpelling(payload.terrains ?? '');
         /**
          * ⛓⛓⛓ SLICE 12 — THE PAYLOAD IS THE DIRECTIVE CHANNEL. ⚠ `?? null`
          * because a payload written before slice 5 names none, and "no
@@ -6115,6 +6120,46 @@ async function runGenerate(params, lifetime) {
     biomeSel.innerHTML = BIOME_NAMES
         .map((b) => `<option value="${b}">${b}</option>`).join('');
     biomeSel.value = biome;
+    /**
+     * ⛓ seedling-gen-biomes-1 (C1) — THE LOOK SELECT, built here beside the biome
+     * select rather than in watch.html. It defaults to the biome's OWN look; `none`
+     * is the generator's Ground / Stone. ⛔ It changes only what `show` DRAWS
+     * (`applyLook` over the displayed record): the state's record, the payload, the
+     * URL and the `?gen=` check are the generator's, whatever the select says.
+     */
+    const lookSel = document.createElement('select');
+    lookSel.id = 'genLook';
+    lookSel.title = 'The tileset the room is DRAWN in: the biome\'s own area, none (Ground / Stone), or any area';
+    lookSel.innerHTML = LAB_LOOK_CHOICES.map((l) => `<option value="${l}">${l === LAB_LOOK_OWN
+        ? '(biome\'s own)' : l}</option>`).join('');
+    lookSel.value = LAB_LOOK_OWN;
+    const lookLabel = document.createElement('label');
+    lookLabel.htmlFor = 'genLook';
+    lookLabel.textContent = 'look';
+    biomeSel.after(lookLabel, lookSel);
+    /**
+     * ⛓ seedling-gen-terrains (C3) — THE TERRAINS SELECT, built here like the look's. Its
+     * choices are the terrains the SELECTED biome offers opt-in (`TERRAIN_OFFERS`): none,
+     * each alone, and all of them. Unlike the look it is a GENERATOR input, so it is read
+     * at the press, written to the URL (`?terrains=`) and carried by the payload.
+     */
+    const terrainsSel = document.createElement('select');
+    terrainsSel.id = 'genTerrains';
+    terrainsSel.title = 'Walk-changing terrains the biome offers opt-in (ice, cliff stairs, ghost step)';
+    const fillTerrains = (forBiome, keep) => {
+        const offered = TERRAIN_OFFERS[forBiome] ?? [];
+        const choices = ['', ...offered, ...(offered.length > 1 ? [offered.join(',')] : [])];
+        terrainsSel.innerHTML = choices.map((c) => `<option value="${c}">${c === '' ? '(none)' : c}</option>`)
+            .join('');
+        terrainsSel.value = choices.includes(keep) ? keep : '';
+        terrainsSel.disabled = offered.length === 0;
+    };
+    fillTerrains(biome, terrains);
+    const terrainsLabel = document.createElement('label');
+    terrainsLabel.htmlFor = 'genTerrains';
+    terrainsLabel.textContent = 'terrains';
+    lookSel.after(terrainsLabel, terrainsSel);
+    const shownLook = () => labLookOf(lookSel.value, state?.biome ?? biome);
 
     /**
      * ── ⛓⛓⛓ CONSTRUCTIVE-MODE SLICE 5 — THE SKELETON SELECTOR ──────────
@@ -6597,7 +6642,7 @@ async function runGenerate(params, lifetime) {
      * draw rewrites.
      */
     const renderCatalogue = () => {
-        const full = paletteFor(biomeSel.value);
+        const full = paletteWithTerrains(biomeSel.value, terrainsSel.value);
         const selected = new Set(roster
             ? restrictPalette(full, roster).templates.map((t) => t.name)
             : full.templates.map((t) => t.name));
@@ -6714,6 +6759,13 @@ async function runGenerate(params, lifetime) {
      * this is that law applied to the roster.
      */
     biomeSel.onchange = () => {
+        roster = null;
+        fillTerrains(biomeSel.value, terrainsSel.value);
+        renderCatalogue();
+        updateRunButtons();
+    };
+    /** ⛓ seedling-gen-terrains (C3) — a terrain changes the roster, so it drops a restriction as the biome does. */
+    terrainsSel.onchange = () => {
         roster = null;
         renderCatalogue();
         updateRunButtons();
@@ -7039,6 +7091,7 @@ async function runGenerate(params, lifetime) {
             // palette the record on screen was really drawn from carries it,
             // so the link cannot name a roster the run did not have.
             roster: state.roster,
+            terrains: state.terrains,
             // ⛔ SLICE 12: NO `directives` ARGUMENT — ⚖ §3.9 took the list off
             // the bar, so the writer has no such parameter and a link names the
             // LADDER alone. `describeState` says so as soon as there is one.
@@ -7161,6 +7214,8 @@ async function runGenerate(params, lifetime) {
             // ⛓ SLICE 4: an IDENTITY field beside seed and biome — see
             // `agreementWithPayload`. The CLI's payload carries the same one.
             roster: state.roster,
+            // ⛓ seedling-gen-terrains (C3) — an identity field too, written only when some are opted in.
+            ...(state.terrains ? { terrains: state.terrains } : {}),
             /**
              * ⛓ SLICE 5: the construction beside the ladder — ⚖ §3.5, and an
              * IDENTITY field `agreementWithPayload` compares. The CLI's payload
@@ -7215,7 +7270,8 @@ async function runGenerate(params, lifetime) {
             return { solved, agreement, drew: false };
         }
 
-        const levelSource = levelSourceFromAtlas(atlasOf(state.record));
+        // ⛓ seedling-gen-biomes-1 (C1): the room is DRAWN in its look; `state.record` stays the generator's.
+        const levelSource = levelSourceFromAtlas(atlasOf(applyLook(state.record, shownLook())));
         /**
          * ⛓⛓ MOVED UP BY SLICE 11, and only past the refusal check above: the
          * STILL-FRAME path below asks `isHeldLevel(staging.boot.level)` for its
@@ -7312,6 +7368,8 @@ async function runGenerate(params, lifetime) {
             seed,
             biome,
             step,
+            /** ⛓ seedling-gen-biomes-1 (C1): the look the room is DRAWN in (null: Ground / Stone). */
+            look: shownLook(),
             /**
              * ⛓ SLICE 4 (constructive-mode arc): the IDENTITY LINE, the same
              * string the detail line prints. ⛔ Carried rather than rebuilt —
@@ -7328,6 +7386,7 @@ async function runGenerate(params, lifetime) {
              */
             palette: state.palette.name,
             roster: state.roster,
+            terrains: state.terrains,
             catalogue: catalogueReadout,
             /**
              * ⛓ CONSTRUCTIVE SLICE 5: the ROOM this level was built in, and
@@ -7761,6 +7820,7 @@ async function runGenerate(params, lifetime) {
         payload = null;
         const nextSeed = Number($('genSeed').value);
         const nextBiome = $('genBiome').value;
+        const nextTerrains = terrainsSpelling(terrainsSel.value);
         /**
          * ⛓⛓ CONSTRUCTIVE-MODE SLICE 5 — THE SKELETON KIND JOINS THE
          * IDENTITY, so a change to it RESETS the ladder exactly as a changed
@@ -7842,6 +7902,7 @@ async function runGenerate(params, lifetime) {
         const changedControls = [];
         if (nextSeed !== seed) changedControls.push('seed');
         if (nextBiome !== biome) changedControls.push('biome');
+        if (nextTerrains !== terrains) changedControls.push('terrains');
         if (spell(nextSkeleton) !== spell(skeleton)) changedControls.push('skeleton');
         if (nextSize.width !== size.width || nextSize.height !== size.height) {
             changedControls.push('room size');
@@ -7856,6 +7917,7 @@ async function runGenerate(params, lifetime) {
         }
         seed = nextSeed;
         biome = nextBiome;
+        terrains = nextTerrains;
         skeleton = nextSkeleton;
         size = nextSize;
         fill = nextFill;
@@ -7889,7 +7951,7 @@ async function runGenerate(params, lifetime) {
             roster = null;
         } else {
             const coarse = roster?.axis === 'families'
-                ? restrictPalette(paletteFor(biome), roster).templates.map((t) => t.name)
+                ? restrictPalette(paletteWithTerrains(biome, terrains), roster).templates.map((t) => t.name)
                 : null;
             const same = coarse !== null && coarse.length === checked.length
                 && coarse.every((n) => checked.includes(n));
@@ -7930,7 +7992,7 @@ async function runGenerate(params, lifetime) {
                 // with the old text on it, which is a lie about what it does.
                 await new Promise((r) => requestAnimationFrame(r));
                 if (!lifetime.alive()) return;
-                state = generateStep({ seed, biome, step: k, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
+                state = generateStep({ seed, biome, step: k, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
                 step = k;
                 const out = await show(why);
                 if (!out.drew) return;
@@ -7959,7 +8021,7 @@ async function runGenerate(params, lifetime) {
         // ⛓ A FRESH `generateStep` STATE CARRIES AN EMPTY DIRECTIVE LIST, so
         // the reset drops them BY CONSTRUCTION rather than by a second line
         // somebody could forget to write.
-        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
+        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
         await show(why);
     };
     /**
@@ -8174,7 +8236,7 @@ async function runGenerate(params, lifetime) {
             if (step === 0) {
                 await resetToSkeleton(`${cleared} — back to the skeleton`);
             } else {
-                state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
+                state = generateStep({ seed, biome, step, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
                 await show(`${cleared} — back to seed ${seed}'s ladder at step ${step}`);
             }
         } finally {
@@ -8379,6 +8441,10 @@ async function runGenerate(params, lifetime) {
         else selectedFacts.delete(id);
         await showPhase();
     });
+    // ⛓ seedling-gen-biomes-1 (C1): a look change only REDRAWS (the record is not regenerated).
+    lifetime.on(lookSel, 'change', async () => {
+        if (phaseIndex === null && state) await show(`look: ${lookSel.value}`);
+    });
     const setLayer = async (next) => {
         genLayer = next;
         $('genLayer').value = next;
@@ -8471,7 +8537,7 @@ async function runGenerate(params, lifetime) {
     };
 
     // ── the skeleton, before anything is drawn ───────────────────────────
-    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
+    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
 
     const ogmoSchema = await loadOgmoSchema();
     if (!lifetime.alive()) return;
@@ -10157,9 +10223,9 @@ function setShippable(next) {
  * In SOLVE, MANUAL, GENERATE and EDIT it is `shippable` itself (`setShippable`
  * mirrors it): the same payload, re-read at press time, shipped by
  * `watchWasm.shipToJs` to `jsRuntime.html` — where the tape's BOOT becomes the
- * start spot and the person plays live. In REPLAY it is the tape's own spot
- * (`replayJsShip`), and the note says it is LIVE PLAY, not a replay of the tape
- * (tape replay in the JS frame is Phase B, a js-arc slice).
+ * start spot and the person plays live. ⛓ PHASE B: in REPLAY it is the tape
+ * itself, REPLAYED in the JS frame (`replayJsShip`, `replay: true`) to a
+ * per-tick verdict against the JS model — and the note says so.
  */
 let jsShippable = null;
 let replayJsShip = null;
@@ -10169,7 +10235,7 @@ function setJsShippable(next) {
     const btn = $('loadJs');
     if (!btn) return;
     btn.disabled = !jsShippable;
-    btn.title = jsShippable ? `${jsShippable.what} — in the JS runtime, live`
+    btn.title = jsShippable ? `${jsShippable.what} — in the JS runtime${jsShippable.replay ? '' : ', live'}`
         : (next?.why ?? 'nothing to ship');
     $('loadJsNote').textContent = jsShippable ? (jsShippable.jsNote ?? '') : (next?.why ?? '');
 }
@@ -10309,9 +10375,10 @@ function shipReadout(source, lifetime, transport = 'wasm') {
         },
         onVerdict(v, state) {
             paintStages(state);
-            // ⛓ LAB L3: a JS ship has no verdict to paint — only a refusal's,
-            // whose detail `onRefusal` already printed.
-            if (transport === 'js') {
+            // ⛓ LAB L3: a LIVE JS ship has no verdict to paint — only a refusal's,
+            // whose detail `onRefusal` already printed. ⛓ PHASE B: a JS REPLAY's is painted, named as the JS frame's.
+            const jsReplay = transport === 'js' && state.stages.includes('verdict');
+            if (transport === 'js' && !jsReplay) {
                 publish(state);
                 rearm();
                 return;
@@ -10331,7 +10398,7 @@ function shipReadout(source, lifetime, transport = 'wasm') {
              * dropped: it is the check that ran FIRST and the one a
              * `verdict-internally-inconsistent` is inconsistent WITH.
              */
-            $('wasmVerdict').textContent = verdictBlock(v, state.note);
+            $('wasmVerdict').textContent = verdictBlock(v, state.note, jsReplay ? 'js frame' : 'wasm');
             publish(state);
             rearm();
         },
@@ -10392,7 +10459,8 @@ async function shipToJsNow(source, lifetime) {
     const btn = $('loadJs');
     btn.disabled = true;
     $('wasmPanel').hidden = false;
-    $('wasmPanel').querySelector('h2').textContent = 'THE JS GAME — live play';
+    $('wasmPanel').querySelector('h2').textContent = jsShippable.replay ? 'THE JS GAME — tape replay'
+        : 'THE JS GAME — live play';
     $('wasmVerdict').className = '';
     $('wasmVerdict').textContent = jsShippable.jsNote ?? '';
     $('wasmHud').innerHTML = '';
@@ -10482,9 +10550,12 @@ async function mountJsTouch(lifetime) {
 let jsTouch = null;
 
 /**
- * ⛓ LAB L3 — REPLAY'S ▶ LOAD IN JS: the tape's START SPOT, played live. ⛔ It
- * is NOT a replay of the tape — the JS bridge has no tape verbs (Phase B) — and
- * the note beside the button says so before anyone presses it.
+ * ⛓ LAB L3 + PHASE B — REPLAY'S ▶ LOAD IN JS: the tape, REPLAYED in the JS
+ * frame. The payload is the wasm replay's (`replayOnWasm`'s): the tape, the JS
+ * model's stream and end state from the SAME `collectRun`, and `replay: true`,
+ * which sends `shipToJs` down the wasm tail (`tape → … → verdict`). ⛔ The
+ * verdict is JS FRAME vs JS MODEL — both are this repo's model, so it pins the
+ * bridge (the frame's tick/drain bookkeeping), never the physics.
  */
 function replayJsShipFor(params) {
     if (params.side === 'wasm') {
@@ -10493,13 +10564,26 @@ function replayJsShipFor(params) {
     const path = params.tape ?? null;
     if (!path) return { why: 'a ?tapes= sequence — open one tape (?tape=) to load its start spot in JS' };
     return {
-        what: `\u25b6 play LIVE from ${path}'s start spot`,
-        jsNote: 'LIVE PLAY from the tape\'s start spot — NOT a replay of the tape '
-            + '(tape replay in the JS frame is a later slice)',
-        build: async () => ({
-            tape: await fetchJson(repoUrl(path), 'tape'),
-            label: `${path} — its start spot, live`,
-        }),
+        what: `\u25b6 replay ${path} in the JS game`,
+        replay: true,
+        jsNote: 'REPLAY of the tape in the JS frame — the per-tick verdict is the JS frame against the JS model '
+            + '(not the real game)',
+        build: async () => {
+            const tape = await fetchJson(repoUrl(path), 'tape');
+            let modelStream = null;
+            let modelStreamWhy = null;
+            let expect = null;
+            try {
+                const collected = collectRun(tape, pageLevelSource(await loadAtlas()));
+                if (collected.error) throw collected.error;
+                modelStream = modelStreamOf(collected);
+                expect = expectFromFrames(collected.frames);
+            } catch (e) {
+                modelStreamWhy = `the JS model would not walk this tape — ${e.message}`;
+            }
+            return { tape, label: path, replay: true, expect,
+                expectWhy: expect ? null : (modelStreamWhy ?? 'replay'), modelStream, modelStreamWhy };
+        },
     };
 }
 
