@@ -303,7 +303,7 @@
     },
     "seed_name": {
       "type": "string",
-      "description": "The seed name string for this generation."
+      "description": "The seed name string for this generation: the same string as the AP server's RoomInfo.seed_name, and the preset folder `AP_<seed_name>`. OPTIONAL: a document WITHOUT it is SEEDLESS (not tied to one generated seed); an empty string is treated the same way. Consumers must handle its absence. The client compares it with RoomInfo.seed_name at connect time and warns on a mismatch (connecting anyway); a seedless document gets no warning (frontend/modules/client/core/messageHandler.js `_warnOnSeedMismatch`, reading statePersistence.js `getStaticGameData().seed_name`, null when absent)."
     },
     "is_vanilla": {
       "type": "object",
