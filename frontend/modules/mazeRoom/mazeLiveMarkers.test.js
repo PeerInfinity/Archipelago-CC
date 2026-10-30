@@ -40,8 +40,9 @@ const PAYLOADS = Object.entries(PLAYTHROUGH.preset_sidecars['1']).filter(([, v])
     .map(([k, v]) => [k, v.playable_payload]);
 const worldOf = (payload) => deserializeMazeWorld(JSON.parse(JSON.stringify(payload)));
 const regionWorld = (id) => worldOf(PLAYTHROUGH.preset_sidecars['1'][id].playable_payload);
-/** The first payload with pulls (L80 today) — found, not named, so a re-recorded preset keeps the row honest. */
-const PULL_REGION = PAYLOADS.find(([, p]) => p.pulls?.length)?.[0];
+/** L80's two pulls (sphere-order-9). Named, so a re-record that ADDS a pull level (L77, L78 at sphere 9.10) moves no
+ *  golden; section 4 walks every pull of the preset. */
+const PULL_REGION = 'level_80__r0c2';
 
 let art;
 beforeAll(async () => {
