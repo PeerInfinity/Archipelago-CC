@@ -393,6 +393,16 @@ export function certifyCollects(goals, records) {
     };
 }
 
+/**
+ * The ARROW hits a finished run took — its own `playerHits` rows whose source
+ * is an arrow (`levelRun`'s `applyArrowHit` → `applyPlayerHit({source:
+ * 'arrow'})`). `[]` for a run with none, or a run object without the field.
+ */
+export function arrowHitsOf(run) {
+    return (run?.playerHits ?? []).filter((h) => h?.source === 'arrow')
+        .map((h) => Object.freeze({ t: h.t ?? null, id: h.id ?? null }));
+}
+
 /** Does a refusal message name the tick budget this call passed in? */
 const namesTickBudget = (message, maxTicksPerTarget) => new RegExp(
     `\\b${maxTicksPerTarget} ticks?\\b`).test(message ?? '');
@@ -711,6 +721,43 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
             + `no collect record for ${cert.missing.join(', ')}. \`solveSegment\` is `
             + 'supposed to refuse rather than return short, so this is a seam defect, '
             + 'not a rejected candidate.');
+    }
+    /**
+     * ⛓⛓⛓ **NO CERTIFICATE TANKS AN ARROW** (seedling gen A1, the rope gate;
+     * ⚖ L16, 2026-10-21: *"the logic shouldn't expect the player to have to
+     * do this"*). With `ARROW_LANE_CROSSING` on, the walk crosses a lane by
+     * BILLING the arrows that reach it — a true model of the game, and an
+     * inadmissible route for a GENERATED level: the generator's rooms are
+     * certified by their intended route, and a hit is never one. ⇒ a solve
+     * that reached its goals while the player took ANY arrow hit is REFUSED
+     * here, whichever arm let it through (the crossing's billed rows, a
+     * forced hit, or an unbilled graze the drive took).
+     *
+     * ⛔ It reads the RUN's own `playerHits` rows (`source: 'arrow'`), never the
+     * refusal prose. A level with no arrow trap cannot produce one, so every
+     * committed room's verdict is unchanged by a branch that never fires.
+     */
+    const arrowHits = arrowHitsOf(result.run);
+    if (arrowHits.length > 0) {
+        return {
+            ...base,
+            verdict: VERDICT.REFUSED,
+            ms,
+            reasonText: `procgenOracle: the solve reached its goals by TANKING ${arrowHits.length} `
+                + `arrow hit(s) [${arrowHits.map((h) => `t${h.t} ${h.id}`).join(', ')}]. ⚖ L16: a `
+                + 'generated level is certified by a route that takes no arrow, so this '
+                + 'certificate is refused (`ARROW_LANE_CROSSING` off is the grading default).',
+            errorName: null,
+            classifiedBy: 'the certificate bills an ARROW hit — refused by the oracle\'s '
+                + 'no-tank rule (⚖ L16), not by the solver',
+            refusalGoal: null,
+            obstacle: Object.freeze({ kind: 'arrow-hit', hits: arrowHits.length,
+                id: arrowHits[0].id }),
+            considered: [],
+            pending: null,
+            rows: [],
+            ticksSpent: result.out.perTick.length,
+        };
     }
     /**
      * ⛓⛓⛓ NOTHING STANDS BETWEEN A CERTIFIED SOLVE AND `SOLVED` — THE FIX.
