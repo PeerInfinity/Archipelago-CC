@@ -1,0 +1,9 @@
+SPINAIM t539 ok=true claim=true bound=- why=
+SPINAIM t871 ok=true claim=true bound=- why=
+SPINAIM t904 ok=true claim=true bound=- why=
+SPINAIM t539 ok=true claim=true bound=- why=
+SPINAIM t871 ok=true claim=true bound=- why=
+SPINAIM t904 ok=true claim=true bound=- why=
+SPINAIM t2624 ok=true claim=true bound=- why=
+SPINAIM t2759 ok=false claim=false bound=- why=the forecast names shield bump (`shieldBumpNow`) as unmodelled, and the path's shield envelope meets a body at index 32
+SPINAIM t2815 ok=true claim=true bound=- why=
