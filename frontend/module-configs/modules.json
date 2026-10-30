@@ -300,6 +300,10 @@
       "path": "./modules/runnerDemo/index.js",
       "enabled": true
     },
+    "cloudberryDemo": {
+      "path": "./modules/cloudberryDemo/index.js",
+      "enabled": true
+    },
     "noiz2saSubstrate": {
       "path": "./modules/noiz2saSubstrate/index.js",
       "enabled": true
@@ -400,6 +404,7 @@
     "flashSubstrate",
     "bounceDemo",
     "runnerDemo",
+    "cloudberryDemo",
     "noiz2saSubstrate",
     "procgenPipeline",
     "bounceRegionEditor",
