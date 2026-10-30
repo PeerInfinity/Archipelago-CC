@@ -10184,9 +10184,9 @@ function setShippable(next) {
  * In SOLVE, MANUAL, GENERATE and EDIT it is `shippable` itself (`setShippable`
  * mirrors it): the same payload, re-read at press time, shipped by
  * `watchWasm.shipToJs` to `jsRuntime.html` — where the tape's BOOT becomes the
- * start spot and the person plays live. In REPLAY it is the tape's own spot
- * (`replayJsShip`), and the note says it is LIVE PLAY, not a replay of the tape
- * (tape replay in the JS frame is Phase B, a js-arc slice).
+ * start spot and the person plays live. ⛓ PHASE B: in REPLAY it is the tape
+ * itself, REPLAYED in the JS frame (`replayJsShip`, `replay: true`) to a
+ * per-tick verdict against the JS model — and the note says so.
  */
 let jsShippable = null;
 let replayJsShip = null;
@@ -10196,7 +10196,7 @@ function setJsShippable(next) {
     const btn = $('loadJs');
     if (!btn) return;
     btn.disabled = !jsShippable;
-    btn.title = jsShippable ? `${jsShippable.what} — in the JS runtime, live`
+    btn.title = jsShippable ? `${jsShippable.what} — in the JS runtime${jsShippable.replay ? '' : ', live'}`
         : (next?.why ?? 'nothing to ship');
     $('loadJsNote').textContent = jsShippable ? (jsShippable.jsNote ?? '') : (next?.why ?? '');
 }
@@ -10336,9 +10336,10 @@ function shipReadout(source, lifetime, transport = 'wasm') {
         },
         onVerdict(v, state) {
             paintStages(state);
-            // ⛓ LAB L3: a JS ship has no verdict to paint — only a refusal's,
-            // whose detail `onRefusal` already printed.
-            if (transport === 'js') {
+            // ⛓ LAB L3: a LIVE JS ship has no verdict to paint — only a refusal's,
+            // whose detail `onRefusal` already printed. ⛓ PHASE B: a JS REPLAY's is painted, named as the JS frame's.
+            const jsReplay = transport === 'js' && state.stages.includes('verdict');
+            if (transport === 'js' && !jsReplay) {
                 publish(state);
                 rearm();
                 return;
@@ -10358,7 +10359,7 @@ function shipReadout(source, lifetime, transport = 'wasm') {
              * dropped: it is the check that ran FIRST and the one a
              * `verdict-internally-inconsistent` is inconsistent WITH.
              */
-            $('wasmVerdict').textContent = verdictBlock(v, state.note);
+            $('wasmVerdict').textContent = verdictBlock(v, state.note, jsReplay ? 'js frame' : 'wasm');
             publish(state);
             rearm();
         },
@@ -10419,7 +10420,8 @@ async function shipToJsNow(source, lifetime) {
     const btn = $('loadJs');
     btn.disabled = true;
     $('wasmPanel').hidden = false;
-    $('wasmPanel').querySelector('h2').textContent = 'THE JS GAME — live play';
+    $('wasmPanel').querySelector('h2').textContent = jsShippable.replay ? 'THE JS GAME — tape replay'
+        : 'THE JS GAME — live play';
     $('wasmVerdict').className = '';
     $('wasmVerdict').textContent = jsShippable.jsNote ?? '';
     $('wasmHud').innerHTML = '';
@@ -10509,9 +10511,12 @@ async function mountJsTouch(lifetime) {
 let jsTouch = null;
 
 /**
- * ⛓ LAB L3 — REPLAY'S ▶ LOAD IN JS: the tape's START SPOT, played live. ⛔ It
- * is NOT a replay of the tape — the JS bridge has no tape verbs (Phase B) — and
- * the note beside the button says so before anyone presses it.
+ * ⛓ LAB L3 + PHASE B — REPLAY'S ▶ LOAD IN JS: the tape, REPLAYED in the JS
+ * frame. The payload is the wasm replay's (`replayOnWasm`'s): the tape, the JS
+ * model's stream and end state from the SAME `collectRun`, and `replay: true`,
+ * which sends `shipToJs` down the wasm tail (`tape → … → verdict`). ⛔ The
+ * verdict is JS FRAME vs JS MODEL — both are this repo's model, so it pins the
+ * bridge (the frame's tick/drain bookkeeping), never the physics.
  */
 function replayJsShipFor(params) {
     if (params.side === 'wasm') {
@@ -10520,13 +10525,26 @@ function replayJsShipFor(params) {
     const path = params.tape ?? null;
     if (!path) return { why: 'a ?tapes= sequence — open one tape (?tape=) to load its start spot in JS' };
     return {
-        what: `\u25b6 play LIVE from ${path}'s start spot`,
-        jsNote: 'LIVE PLAY from the tape\'s start spot — NOT a replay of the tape '
-            + '(tape replay in the JS frame is a later slice)',
-        build: async () => ({
-            tape: await fetchJson(repoUrl(path), 'tape'),
-            label: `${path} — its start spot, live`,
-        }),
+        what: `\u25b6 replay ${path} in the JS game`,
+        replay: true,
+        jsNote: 'REPLAY of the tape in the JS frame — the per-tick verdict is the JS frame against the JS model '
+            + '(not the real game)',
+        build: async () => {
+            const tape = await fetchJson(repoUrl(path), 'tape');
+            let modelStream = null;
+            let modelStreamWhy = null;
+            let expect = null;
+            try {
+                const collected = collectRun(tape, pageLevelSource(await loadAtlas()));
+                if (collected.error) throw collected.error;
+                modelStream = modelStreamOf(collected);
+                expect = expectFromFrames(collected.frames);
+            } catch (e) {
+                modelStreamWhy = `the JS model would not walk this tape — ${e.message}`;
+            }
+            return { tape, label: path, replay: true, expect,
+                expectWhy: expect ? null : (modelStreamWhy ?? 'replay'), modelStream, modelStreamWhy };
+        },
     };
 }
 

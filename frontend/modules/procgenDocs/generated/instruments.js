@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 132,
-            "count": 180,
+            "browser": 133,
+            "count": 181,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 496,
-        "browser": 199,
+        "blockStyle": 497,
+        "browser": 200,
         "cited": 264,
-        "files": 513,
+        "files": 514,
         "lineStyle": 17,
-        "withDocblock": 513,
-        "withFlags": 429
+        "withDocblock": 514,
+        "withFlags": 430
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13107,6 +13107,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-inventory — can a TAPE drive the real inventory UI?",
             "path": "scripts/procgen/probe-seedling-inventory.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-js-vs-wasm-tape.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "build"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-js-vs-wasm-tape.mjs — ⛓ PHASE B (`seedling-js-tape-bridge`): ONE TAPE, RUN THE SAME WAY ON BOTH RUNTIMES, and the two drains diffed.",
+            "path": "scripts/procgen/probe-seedling-js-vs-wasm-tape.mjs"
         },
         {
             "argvHelpers": [
