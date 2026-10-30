@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-665fd3dc",
+  "atlas_id": "seedling-203feafc",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "665fd3dc" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "203feafc" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -5548,7 +5548,7 @@
           "kind": "teleporter",
           "exit_tiles": [[11,4]],
           "entrance_tile": [11,4],
-          "sub_region": "r4c13"
+          "sub_region": "r4c11"
         },
         {
           "exit_id": "in_L66_144_144",
@@ -5562,17 +5562,17 @@
           "kind": "teleporter",
           "exit_tiles": [[11,5]],
           "entrance_tile": [11,5],
-          "sub_region": "r4c13"
+          "sub_region": "r4c11"
         }
       ],
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r0c2","r0c8","r4c13"],
+        "sub_regions": ["r0c2","r0c8","r4c11"],
         "internal_exits": [
           {
             "from": "r0c8",
-            "to": "r4c13",
+            "to": "r4c11",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Ghost Spear" } }

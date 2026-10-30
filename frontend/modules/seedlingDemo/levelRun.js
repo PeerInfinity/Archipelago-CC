@@ -335,6 +335,31 @@ export function initialInventory() {
     return inv;
 }
 
+/**
+ * ⛓⛓⛓ seedling-js-xc-model — WHETHER THE SECOND (non-sword) `useItem` CALL OF AN X+C TICK RUNS (`Player.as:1561-1568`
+ * calls `useItem(Main.primary)` then `useItem(Main.secondary)` in one `input()`), against the flags the first call left.
+ * `earlier` is what that first call raised (`{firing, wanding, spearing}`); the other four are the live flags
+ * INCLUDING it. A sword second call is not asked here: `slashSet` is its gate.
+ *   · `useItem`'s own guard (`:1587`, `:1593`, `:1609`): the SAME verb the first call just raised is a silent no-op.
+ *     (A window open from an EARLIER tick is left to the arm, which refuses it as it refuses a lone press.)
+ *   · the setter's gate: `set firing` `(hasFire || hasFireWand) && !slashing && (!wanding || hasFireWand) &&
+ *     !deathRaying && !spearing` (`:858`); `set wanding` `(hasWand || hasFireWand) && !slashing && (!firing ||
+ *     hasFireWand) && !deathRaying && !spearing` (`:834`); `set spearing` `hasSpear && !wanding && !firing &&
+ *     !deathRaying && !slashing` (`:815`). The `|| hasFireWand` terms are the Fire⇄Wand pair that BOTH run.
+ *     (`deathRaying` has no modelled writer; the `has*` terms are the slot's existence.)
+ * ⚠ The Fire⇄Wand exception is UNREACHABLE through slots today: `Inventory.addItemsFromSave` (`Inventory.as:306-321`)
+ * replaces items 1 and 2 with item 5 once `hasFireWand` is up, and `weaponForPress` refuses item 5 by name. It is
+ * transcribed rather than dropped so the first rung that models item 5 inherits the gate, and pinned in
+ * `fidelitySecondaryUse.test.js`.
+ * Any other weapon (an empty slot's `null`) returns true: its arm is a no-op.
+ */
+export function xcSecondCallAdmitted(weapon, { earlier, slashing, firing, wanding, spearing, hasFireWand }) {
+    if (weapon === 'fire') return !earlier.firing && !slashing && (!wanding || hasFireWand) && !spearing;
+    if (weapon === 'wand') return !earlier.wanding && !slashing && (!firing || hasFireWand) && !spearing;
+    if (weapon === 'spear') return !earlier.spearing && !wanding && !firing && !slashing;
+    return true;
+}
+
 /** Apply one item name to an inventory mirror, in place. */
 function applyItem(inventory, name) {
     const spec = ITEM_PROPERTIES[name];
@@ -5978,6 +6003,35 @@ export function createLevelRun({
             + `${item}, which no arm of \`useItem\` matches. An unmodelled weapon is `
             + 'refused rather than silently dropped.');
     };
+    /**
+     * ⛓⛓⛓ seedling-js-xc-model — THE FLAGS AN EARLIER `useItem` CALL OF THIS TICK RAISED, for the second call of an
+     * X+C tick (`Player.as:1561-1568`). Only the non-sword verbs: a sword call's `slashing` is already in
+     * `slashState`, which `slashSet` advanced in place. A fire or wand call raises its flag exactly when this model
+     * opens its window (a lone press does the same); a spear call when `set spearing`'s gate is open — `hasSpear &&
+     * !wanding && !firing && !deathRaying && !slashing` (`:815`; the slot is the `hasSpear`).
+     */
+    const xcFlagsRaisedBy = (calls, t) => {
+        const f = { firing: false, wanding: false, spearing: false };
+        for (const c of calls) {
+            if (!c.admitted) continue;
+            if (c.weapon === 'fire') f.firing = true;
+            else if (c.weapon === 'wand') f.wanding = true;
+            else if (c.weapon === 'spear') {
+                f.spearing = !slashState.slashing && !f.wanding && !f.firing
+                    && !wandWindows.some((w) => t <= w.endTick) && !fireWindows.some((w) => t <= w.endTick);
+            }
+        }
+        return f;
+    };
+    /** ⛓⛓⛓ seedling-js-xc-model — `xcSecondCallAdmitted` against this run's live flags at tick `t`. */
+    const xcSecondAdmitted = (weapon, earlier, t) => xcSecondCallAdmitted(weapon, {
+        earlier,
+        slashing: slashState.slashing,
+        firing: earlier.firing || fireWindows.some((w) => t <= w.endTick),
+        wanding: earlier.wanding || wandWindows.some((w) => t <= w.endTick),
+        spearing: earlier.spearing || spearingAt(t),
+        hasFireWand: inventory?.hasFireWand ?? false,
+    });
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY GHOSTSWORD — `genericHit`'s `t` and `d` for a press, ONE spelling for every arm.
      * `Player.slash` passes `hasGhostSword ? "Spear" : "Sword"` and `ghostSwordDamage` (2); `Player.spear` passes
@@ -22748,18 +22802,31 @@ export function createLevelRun({
              * ⛓⛓ seedling-js-inventory-menu C4 (`CONTACT_FIDELITY.secondaryUse`): `input()` is
              * `if (Input.pressed(keys[4])) useItem(Main.primary); if (Input.pressed(keys[5])) useItem(Main.secondary);`
              * (`Player.as:1561-1568`). ON, a C edge is a press through the same arms against `secondary`'s slot
-             * (`useSlot`); X and C on ONE tick are two `useItem` calls, two verbs this model would have to open
-             * together, and are refused by name. OFF, `useSlot` is `primary` and C is read by nothing.
+             * (`useSlot`). OFF, `useSlot` is `primary` and C is read by nothing.
+             *
+             * ⛓⛓⛓ seedling-js-xc-model: X and C on ONE tick are the two calls IN THAT ORDER (`pressSlots`), both
+             * inside `input()`, so both above the move. The FIRST is exactly the X press it would be alone; the
+             * SECOND meets the flags the first just wrote, through each setter's own gate (`xcSecondAdmitted`):
+             *   · Sword-family twice (`useItem` cases 0/4, `Player.as:1579-1585`): the first `set slashing` takes
+             *     `slashTimer = slashTimerMax` (`:796`), so the second finds `slashTimer > 0 && _s &&
+             *     !slashDashed` (`:784`) and DASHES — `knockback(2, Point(x - v.x, y - v.y))` (`:788`), above the
+             *     move. A first DASH leaves the second swallowed (`slashDashed` and `slashing` both up). This is
+             *     `slashSet` run twice, nothing new.
+             *   · two different verbs: the first's flag closes the second's gate — `set slashing` needs `!wanding &&
+             *     !firing && !spearing` (`:782`), `set spearing` `!wanding && !firing && !slashing` (`:815`), `set
+             *     wanding` `!slashing && (!firing || hasFireWand) && !spearing` (`:834`), `set firing` `!slashing &&
+             *     (!wanding || hasFireWand) && !spearing` (`:858`) — and the tick is the first verb's.
+             *   · Fire⇄Wand under `hasFireWand`: those two gates carry the `|| hasFireWand` exception, so BOTH run
+             *     (unreachable through slots today — see `xcSecondCallAdmitted`).
+             *   · the same non-sword verb twice: `useItem`'s own `if (!firing)` / `if (!wanding)` / `if
+             *     (!spearing)` (`:1587`, `:1593`, `:1609`) — the second is a silent no-op.
+             * OFF (`secondaryUse` false) `cPressed` is false and `pressSlots` is the one X press: byte-identical.
              */
             const xPressed = pressKeys.has(TALK_KEY) && !wasHeld.has(TALK_KEY);
             const cPressed = CONTACT_FIDELITY.secondaryUse && pressKeys.has(SECONDARY_KEY) && !wasHeld.has(SECONDARY_KEY);
-            if (xPressed && cPressed && !noclip) {
-                throw new Error(`levelRun: X and C are both pressed at tick ${ticksCompleted}. \`Player.input()\` then `
-                    + 'calls `useItem(Main.primary)` and `useItem(Main.secondary)` in one frame: two verbs on one tick, '
-                    + 'which this model does not open together. Press them on different ticks.');
-            }
             const pressed = xPressed || cPressed;
             const useSlot = cPressed && !xPressed ? secondary : primary;
+            const pressSlots = !pressed ? [] : (xPressed && cPressed ? [primary, secondary] : [useSlot]);
             if (cPressed) menuTouched = true;
             // ⛔⛔⛔ R5 SLICE 22: A FREEZE FRAME BURNS A PRESS, LOUDLY.
             //
@@ -22802,10 +22869,22 @@ export function createLevelRun({
              * keys before `input()` ever reads them, and the loud refusal for
              * that case is the throw above.
              */
-            let slashPress = null;
-            if (pressed && !noclip
-                && (weaponForPress(useSlot) === 'sword' || weaponForPress(useSlot) === 'ghostsword')) {
-                slashPress = slashSet(slashState, {
+            /**
+             * ⛓⛓⛓ seedling-js-xc-model: one entry per `useItem` call, in call order — `{slot, weapon, slashPress,
+             * admitted}`. A lone press is one entry and walks this block exactly as before; an X+C tick is two, and
+             * `admitted` is false for a second call its setter's gate refuses (see `pressSlots`).
+             */
+            const pressCalls = [];
+            for (const callSlot of (noclip ? [] : pressSlots)) {
+                const weapon = weaponForPress(callSlot);
+                // the flags an EARLIER call of this tick raised (none for a lone press, or for the first call)
+                const earlier = xcFlagsRaisedBy(pressCalls, ticksCompleted);
+                if (!(weapon === 'sword' || weapon === 'ghostsword')) {
+                    pressCalls.push({ slot: callSlot, weapon, slashPress: null,
+                        admitted: pressCalls.length === 0 || xcSecondAdmitted(weapon, earlier, ticksCompleted) });
+                    continue;
+                }
+                const slashPress = slashSet(slashState, {
                     pressed: true,
                     hasSword: inventory?.hasSword ?? false,
                     hasGhostSword: inventory?.hasGhostSword ?? false,
@@ -22814,12 +22893,13 @@ export function createLevelRun({
                     // writer, so it is FALSE by construction rather than by
                     // assumption — a rung that models the death ray owes this
                     // line the flag.
-                    wanding: wandWindows.some((w) => ticksCompleted <= w.endTick),
-                    firing: fireWindows.some((w) => ticksCompleted <= w.endTick),
+                    wanding: wandWindows.some((w) => ticksCompleted <= w.endTick) || earlier.wanding,
+                    firing: fireWindows.some((w) => ticksCompleted <= w.endTick) || earlier.firing,
                     deathRaying: false,
-                    spearing: spearingAt(ticksCompleted),
+                    spearing: spearingAt(ticksCompleted) || earlier.spearing,
                     direction: pressFacing,
                 });
+                pressCalls.push({ slot: callSlot, weapon, slashPress, admitted: true });
                 slashState = slashPress.state;
                 slashPresses.push({
                     t: ticksCompleted,
@@ -22851,7 +22931,7 @@ export function createLevelRun({
                      * on 18 sweep legs the game swallowed (`ghostSword.
                      * slashEndTicksFor`, behind `GHOSTSWORD_MOTION`).
                      */
-                    slashEndsAt = ticksCompleted + slashEndTicksFor(slashState.anim, weaponForPress(useSlot));
+                    slashEndsAt = ticksCompleted + slashEndTicksFor(slashState.anim, weapon);
                     /**
                      * ⛓⛓⛓ R9 SLICE 12c — **AND THE PENDING HIT TICKS ARE
                      * REPLACED, NOT APPENDED.** §23.15 named this and left it;
@@ -22889,7 +22969,8 @@ export function createLevelRun({
                 openActivators: noclip ? null : openActivatorIds(activators),
                 inputBlocked: frozenTimer > 0,
                 steerBlocked: !canSteer(damage),
-                dashImpulse: slashPress?.outcome === 'dash' ? slashPress.impulse : null,
+                // ⛓ seedling-js-xc-model: the tick's ONE dash, whichever call took it (`slashDashed` allows one)
+                dashImpulse: pressCalls.find((c) => c.slashPress?.outcome === 'dash')?.slashPress.impulse ?? null,
                 // ⛓ U11-swim D2 — this tick's hits have landed above (the
                 // enemies update first), so this is the facing `sprites()` pins.
                 directionFace: damage.directionFace,
@@ -23012,8 +23093,10 @@ export function createLevelRun({
             // fires on the next one. Recorded after the step because the
             // ordering within `input()` is invisible: nothing this schedules
             // is read again before the next tick.
-            if (pressed && !noclip) {
-                const weapon = weaponForPress(useSlot);
+            // ⛓ seedling-js-xc-model: one pass per `useItem` call (`pressCalls`, empty under noclip), in call order;
+            // a second call its setter's gate refused does nothing at all.
+            for (const { weapon, slashPress, admitted } of pressCalls) {
+                if (!admitted) continue;
                 // A slot holding nothing is a SILENT no-op in the game
                 // (`getItem` returns `undefined` and the switch matches
                 // nothing), so it is a silent no-op here — the loud version

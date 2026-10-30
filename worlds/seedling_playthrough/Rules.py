@@ -1993,7 +1993,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_65__r0c8 -> level_65__r4c13", player),
+        multiworld.get_entrance("level_65__r0c8 -> level_65__r4c11", player),
         Has('Ghost Spear', 1)
     )
 
@@ -2003,7 +2003,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_65__r4c13 -> level_65__r0c8", player),
+        multiworld.get_entrance("level_65__r4c11 -> level_65__r0c8", player),
         Has('Ghost Spear', 1)
     )
 

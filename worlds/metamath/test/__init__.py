@@ -116,5 +116,39 @@ class TestProofParsing(unittest.TestCase):
         self.assertEqual(ps.dependency_graph[by_label["con3i.a"]], set())
 
 
+@unittest.skipUnless(_set_mm_available(), "set.mm database not available locally")
+class TestStartingStatementDeterminism(unittest.TestCase):
+    """Randomized starting statements must come from the world's own RNG.
+
+    They used to come from Python's module-level `random`, so the result
+    depended on how many draws other code (option rolling, other worlds) had
+    made first. `self.random` is seeded from the multiworld seed alone.
+    """
+
+    OPTIONS = {"theorem": "wilth", "starting_statements": 30, "randomize_starting_statements": True}
+
+    def _starting(self, seed):
+        from test.general import setup_multiworld
+        from worlds.metamath import MetamathWorld
+
+        multiworld = setup_multiworld(MetamathWorld, ("generate_early",), seed, self.OPTIONS)
+        return sorted(multiworld.worlds[1].starting_statements)
+
+    def test_independent_of_module_random_state(self):
+        import random
+
+        random.seed(1)
+        first = self._starting(1)
+        random.seed(2)
+        for _ in range(100):
+            random.random()
+        second = self._starting(1)
+        self.assertGreater(len(first), 1, "expected randomized starting statements beyond statement 1")
+        self.assertEqual(first, second)
+
+    def test_differs_across_seeds(self):
+        self.assertNotEqual(self._starting(1), self._starting(2))
+
+
 if __name__ == "__main__":
     unittest.main()

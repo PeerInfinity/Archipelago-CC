@@ -934,6 +934,11 @@ export function projectRegionToMaze(region, grid, ctx) {
 //                  Ghost Sword's swing, reach its bob box), latched by its own event (an in-room pole, mode 'pole') or
 //                  opened by the press that lights it from another room (mode
 //                  'lit', `opened_by`) (session tile-primitives-lightpoles)
+//   pull           a trap that reels the player onto its own cell: `pulls` [{x, y, from,
+//                  gate}] — a move into its disc from outside it, holding the gate, ends
+//                  on the trap's cell (Seedling's LavaTrap; session
+//                  tile-primitives-sphere-order-9). Its cells are not claimed: the terrain
+//                  pass lays them as the grid has them, and the disc keeps its floor cells
 //   ownership      `shared_world.rows`: which AP sub-region owns each cell, from
 //                  the atlas's own partition — walking from a cell of one into
 //                  a cell of another IS the crossing (`user:regionMove`), and
@@ -952,7 +957,7 @@ export function projectRegionToMaze(region, grid, ctx) {
 // which keeps it sound (never a solution the game refuses).
 
 /** The interaction primitives a level-world entity row may name. */
-export const LEVEL_WORLD_ENTITY_KINDS = Object.freeze(['block', 'button', 'lock', 'rock', 'rope', 'trap', 'pole']);
+export const LEVEL_WORLD_ENTITY_KINDS = Object.freeze(['block', 'button', 'lock', 'rock', 'rope', 'trap', 'pole', 'pull']);
 
 /** The maze's default use keys, in order (mazeKeys DEFAULT_USE_KEYS — kept in sync by test). */
 export const LEVEL_WORLD_USE_KEYS = Object.freeze(['z', 'x', 'c', 'v']);
@@ -977,7 +982,43 @@ const poleKey = (label) => label.replace(/^[^@]*@/, '').replace(',', '_');
  */
 export function levelHasInteraction(entities) {
     return Array.isArray(entities)
-        && entities.some((e) => ['block', 'button', 'rock', 'rope', 'trap', 'pole'].includes(e.kind));
+        && entities.some((e) => ['block', 'button', 'rock', 'rope', 'trap', 'pole', 'pull'].includes(e.kind));
+}
+
+/**
+ * The first step that enters two pulls' discs from outside both (`"traps at … both grab …"`), or null — the engine's
+ * `checkPulls` refusal, read on the projection's own floor.
+ */
+function ambiguousPullStep(pullRows, isFloor) {
+    const discOf = (p) => new Set([`${p.x},${p.y}`, ...p.from.map((c) => `${c.x},${c.y}`)]);
+    const discs = pullRows.map((p) => ({ p, disc: discOf(p) }));
+    for (const [i, a] of discs.entries()) {
+        for (const b of discs.slice(i + 1)) {
+            for (const key of a.disc) {
+                if (!b.disc.has(key)) continue;
+                const [x, y] = key.split(',').map(Number);
+                for (const [, dx, dy] of MOVES) {
+                    const k = `${x - dx},${y - dy}`;
+                    if (isFloor(x - dx, y - dy) && !a.disc.has(k) && !b.disc.has(k)) {
+                        return `traps at (${a.p.x},${a.p.y}) and (${b.p.x},${b.p.y}) both grab the step ${k} → ${key}`;
+                    }
+                }
+            }
+        }
+    }
+    return null;
+}
+
+/** The first trap whose cell lies in another pull's disc (`"trap at … lies in the disc of …"`), or null — `checkPulls`' refusal. */
+export function chainedPull(pullRows) {
+    for (const a of pullRows) {
+        for (const b of pullRows) {
+            if (a !== b && b.from.some((c) => c.x === a.x && c.y === a.y)) {
+                return `trap at (${a.x},${a.y}) lies in the disc of trap at (${b.x},${b.y}): chained pulls are not modelled`;
+            }
+        }
+    }
+    return null;
 }
 
 /** A step's direction, its delta and the face it crosses on the cell it enters. */
@@ -1143,6 +1184,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     const trapLib = {};
     const ropeCells = [];
     const poleCells = [];
+    const pulls = [];
     // A rope run's cells, by key → the items whose strike cuts it (its cut condition, dropped by the terrain pass).
     const ropeRun = new Map();
     /** True iff `c` resolves to exactly a Has, or an Or of Has, over the item set `items` (a rope's cut). */
@@ -1298,6 +1340,17 @@ export function projectLevelWorld(region, grid, ctx, entities) {
                 color: '#d8c84a',
             };
             poleCells.push({ id, tiles, label: e.label });
+            continue;
+        }
+        if (e.kind === 'pull') {
+            // ⛓⛓ PULLS (session tile-primitives-sphere-order-9, ⚖ 2026-10-29 "Forced pull, rules' disc"). The producer's
+            // disc (`from`) and survival rule (`rule`) are one gate entry and one `pulls` row; the crossing it makes — the
+            // rules producer's one-way LavaTrap lift — is WALKED here, so the level is a level world. Nothing is claimed:
+            // the trap's cell and its disc keep the grid's terrain.
+            const [x, y] = tiles[0];
+            const id = `pull_${x}_${y}`;
+            builder.obstacleLib[id] = { id, name: e.label ?? id, kind: 'pull', clear_set_type: 'rule', clear_rule: e.rule, color: '#d0602a' };
+            pulls.push({ x, y, from: (e.from ?? []).map(local).filter(inGrid), gate: id, label: e.label ?? id });
             continue;
         }
         // rock / rope
@@ -1649,6 +1702,31 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         }
     }
 
+    // ⛓ A pull's disc keeps the cells the world floors (a wall or a pit in it is never stood on); its trap's cell must be
+    // floor, and a disc cell no exit stands on (refused by name otherwise — the engine's `checkPulls` says why).
+    const pullRows = pulls.map(({ x, y, from, gate, label }) => {
+        if (!builder.isFloor(x, y)) throw new Error(`atlas region "${regionId}": ${label} stands on a cell the level world walls`);
+        const disc = from.filter(([fx, fy]) => builder.isFloor(fx, fy));
+        const onExit = disc.find(([fx, fy]) => exitAt.has(keyOf(fx, fy)));
+        if (onExit) throw new Error(`atlas region "${regionId}": ${label} grabs from the exit tile (${onExit}) — not settled`);
+        return { x, y, from: disc.map(([fx, fy]) => ({ x: fx, y: fy })).sort((a, b) => (a.y - b.y) || (a.x - b.x)), gate };
+    });
+    // ⛓ ONE step into two discs from outside both: which trap wins is not settled (the engine refuses it), so such a level's
+    // pulls are DROPPED by name and it projects as it did without them (L78's (6,5) and (9,6) both grab (8,4) → (8,5)).
+    // ⛓ A trap whose cell lies in another's disc would fire that tongue on landing: CHAINED pulls are not modelled either
+    // (designer review, session tile-primitives-sphere-order-9) — dropped the same way, by name.
+    const ambiguous = ambiguousPullStep(pullRows, (x, y) => builder.isFloor(x, y));
+    const chained = ambiguous ? null : chainedPull(pullRows);
+    if (ambiguous || chained) {
+        const rest = entities.filter((e) => e.kind !== 'pull');
+        const out = projectRegionToMaze(region, grid, { ...ctx, levelEntitiesFor: () => rest });
+        out.notes.unshift({
+            region_id: regionId, kind: ambiguous ? 'pull_ambiguous_dropped' : 'pull_chain_dropped',
+            message: `${ambiguous ?? chained} — its ${pulls.length} pull(s) are not modelled`,
+        });
+        return out;
+    }
+
     // --- assemble: ONE payload, carried by the first sub-region --------------
     const carrier = bindings[0].apName;
     const sortRows = (a, b) => (a.y - b.y) || (a.x - b.x);
@@ -1675,6 +1753,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         ...(blockSinks.length > 0 ? { block_sinks: blockSinks } : {}),
         ...(blockPush !== null && blockPush !== 'walk'
             ? { block_strike: blockStrikeOf(JSON.parse(blockPush)) } : {}),
+        ...(pulls.length > 0 ? { pulls: pullRows } : {}),
         shared_world: {
             key: regionId,
             regions: bindings.map((b) => b.apName),
@@ -1697,7 +1776,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         kind: 'level_world',
         message: `projected as ONE shared level world "${regionId}" (${bindings.length} AP region(s), carried by "${carrier}"): `
             + `${blocks.length} block(s), ${buttons.length} button(s), ${Object.keys(actionLib).length} action(s)`
-            + `${traps.length > 0 ? `, ${traps.length} arrow trap(s)` : ''}${ropeCells.length > 0 ? `, ${ropeCells.length} rope(s)` : ''}${poleCells.length > 0 ? `, ${poleCells.length} pole(s)` : ''}`,
+            + `${traps.length > 0 ? `, ${traps.length} arrow trap(s)` : ''}${ropeCells.length > 0 ? `, ${ropeCells.length} rope(s)` : ''}${poleCells.length > 0 ? `, ${poleCells.length} pole(s)` : ''}${pulls.length > 0 ? `, ${pulls.length} pull(s)` : ''}`,
     });
     return { sidecars, notes, analysis: null, sharedWorld: regionId };
 }

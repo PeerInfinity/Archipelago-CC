@@ -1,0 +1,12 @@
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js (2 tests) 491954ms
+     ✓ OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271  373014ms
+     ✓ ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name  118937ms
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js (2 tests) 538744ms
+     ✓ ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte  351972ms
+     ✓ ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit  186769ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 43129ms
+     ✓ ON, sweep request 392:0 solved whole ships the same ticks for less work  43127ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 37888ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  37886ms
+ Test Files  4 passed (4)
+      Tests  6 passed (6)

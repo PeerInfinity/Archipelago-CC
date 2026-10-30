@@ -166,9 +166,8 @@ class MetamathWorld(World):
             self.starting_statements = {1}  # Always start with first axiom
             remaining = num_starting - 1
             if remaining > 0:
-                import random
                 candidates = list(range(2, self.num_statements))  # exclude final statement
-                random.shuffle(candidates)
+                self.random.shuffle(candidates)
                 self.starting_statements.update(candidates[:remaining])
 
         # Build canonical placements dict (location -> item for vanilla placement)

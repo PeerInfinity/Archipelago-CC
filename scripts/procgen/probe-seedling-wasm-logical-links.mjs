@@ -29,11 +29,12 @@
  *      pass tripped is listed by the site that tripped first and the bound that tripped (`ROW B passes` →
  *      `deadlines`), and checked to play on plan (0 divergences); 0 backstops.
  *      A Restart B takes in its budget is checked as R's is (since rope events it takes none: R is the subject).
- *   R  THE FORCED RESTART (§5.125) — the restart-hold check's GUARANTEED subject: the new game, a warm-up leg to
+ *   R  THE FORCED RESTART (§5.125) — the restart check's GUARANTEED subject: the new game, a warm-up leg to
  *      level_2 (the wasm engine is built by the first walk), then an AP move into a
  *      Restart-only pocket (`--pocket=`, default `level_17`, probe-seedling-restart-route.mjs's), the bot plays from
  *      there, its route BEGINS with RESTART, and it walks on from the start. The Restart is TAKEN (else a hard FAIL),
- *      and its start-hop arrival is HELD: ≥ 1 expected arrival, each ends `held`, 0 `no-held-arrival` fallbacks.
+ *      and, Bot-driven, it arms NO arrival hold (§5.169 F1: 0 expected arrivals, no `expect` rows, 0 `no-held-arrival`
+ *      fallbacks, no fallback on the start hop).
  *
  * B also prints ONE `B ENDED: <refusal at <goal> | finished | budget exhausted> (…)` line: why its walk stopped (§5.128).
  *
@@ -447,28 +448,36 @@ async function main() {
         }
 
         /**
-         * ⛓ RESTART HOLD — every Restart's start-hop arrival is HELD: no `no-held-arrival` fallback, at least one
-         * expected arrival, and each expected arrival ends in a `held` row (measured before the fix: 3/10 runs fell back
-         * at the L19 Restart, whose route opens on a logical link, so its goal came in the landing's own turn and the
-         * watch was re-based over the landing). ⛔ An empty set is a FAIL here (expectedArrivals ≥ 1, held ≥ 1).
+         * ⛓ RESTART, NO HOLD (§5.169 F1) — a Bot-driven Restart arms NO arrival hold: the Playback Bot stops the old
+         * substrate's walk itself on its move to `Menu`, so the glue's Restart counts 0 stopped walks and expects no
+         * arrival (`expectedArrivals === 0`, no `expect` rows; ⚖ the hold there is unwanted). It still has 0
+         * `no-held-arrival` fallbacks, and the start hop it pushes plays without ANY fallback (a fallback on a leg out of
+         * START is the cost a missing hold would show). That the walk then goes on from the start is the caller's
+         * `walksOn` check, named in this row. Other fallbacks (e.g. a continuation's own `continuation-declined`, on a
+         * leg that is not the start hop) are listed in the detail, not judged here: the divergence and end checks own them.
+         * ⛔ The subject is never empty: the caller runs this only when a Restart was TAKEN (R: hard FAIL if not).
          */
-        function restartHeld(tag, eng) {
+        function restartUnheld(tag, eng, walksOn) {
             const rows = eng.arrivalWatch ?? [];
             const expect = rows.filter((r) => r.at === 'expect').length;
-            const held = rows.filter((r) => r.at === 'held').length;
-            check(`${tag}: every Restart's start-hop arrival is HELD (0 \`no-held-arrival\` fallbacks; ≥ 1 expected arrival, each ends \`held\`)`,
-                !(eng.forcedBy?.['no-held-arrival'] > 0) && (eng.expectedArrivals ?? 0) >= 1 && expect >= 1 && expect === held,
-                JSON.stringify({ forcedBy: eng.forcedBy, expectedArrivals: eng.expectedArrivals, expect, held, rows: rows.map((r) => r.at) }));
+            const fallbacks = (eng.history ?? []).filter((h) => h.outcome === 'fallback')
+                .map((h) => ({ goal: h.goal, level: h.level, reason: (h.reason ?? '').slice(0, 80) }));
+            const startHop = fallbacks.filter((f) => f.goal?.startsWith(`${START} -> `));
+            check(`${tag}: every Bot-driven Restart arms NO arrival hold (0 expected arrivals, no \`expect\` rows, 0 \`no-held-arrival\` fallbacks) and its start hop plays with no fallback — the walk on from the start: "${walksOn}"`,
+                !(eng.forcedBy?.['no-held-arrival'] > 0) && (eng.expectedArrivals ?? 0) === 0 && expect === 0 && startHop.length === 0,
+                JSON.stringify({ expectedArrivals: eng.expectedArrivals, expect, rows: rows.map((r) => r.at), forcedBy: eng.forcedBy,
+                    startHopFallbacks: startHop, otherFallbacks: fallbacks.filter((f) => !startHop.includes(f)) }));
         }
 
         /**
-         * R — THE FORCED RESTART (§5.125): the restart-hold check's GUARANTEED subject. The new game at the start; the bot
+         * R — THE FORCED RESTART (§5.125): the restart check's GUARANTEED subject. The new game at the start; the bot
          * plays the first leg (B's own first move, `START -> level_2`) so the wasm engine EXISTS (it loads on the first walk:
          * measured, a Restart before it is expected by nobody — `watching: 0`), then stops; an AP move into a Restart-only
          * pocket (`--pocket=`, default `level_17`: probe-seedling-restart-route.mjs's pocket, whose planner route BEGINS with
          * RESTART on a fresh game's inventory), then the bot plays the derived sphere queue from there: it
-         * takes the Menu panel's Restart (nothing playing, so in that turn), the glue stops the engines and EXPECTS the
-         * start hop's arrival, and the bot walks on from the start. Deterministic: a fresh page, a fixed pocket, a fresh
+         * takes the Menu panel's Restart (nothing playing, so in that turn), the glue stops the engines and arms NO
+         * arrival hold (§5.169 F1: the Bot has already stopped its walk, so 0 stopped walks, `watching: 0`), and the bot
+         * walks on from the start. Deterministic: a fresh page, a fixed pocket, a fresh
          * game's inventory; no wall-clock trigger. A Restart that is not taken is a hard FAIL, never a skip.
          */
         async function runRestart() {
@@ -528,13 +537,13 @@ async function main() {
                 held: eng.held, divergences: eng.divergences, history: eng.history, lastRefusal: eng.lastRefusal });
             out('R walk', { seconds: Math.round((Date.now() - t0) / 1000), status: end.status, region: end.region, restartDeferrals: end.restartDeferrals,
                 glue: g, moves });
-            // ⛔ The SUBJECT: a Restart not taken is a hard FAIL (the check below would otherwise read an empty set).
+            // ⛔ The SUBJECT: a Restart not taken is a hard FAIL (the restart check would otherwise judge no Restart at all).
             check(`R: the bot TOOK the Restart out of ${POCKET} (the glue's Restart was taken and the start hop pushed)`,
                 g.lastRestart?.taken === true && (g.restarts ?? 0) >= 1, JSON.stringify(g));
-            check('R: the bot walks on from the start after the Restart (a region past the start, no error)',
-                !!walked && !walked.status.startsWith('error'), JSON.stringify(walked ?? end));
-            restartHeld('R', eng);
-            check('R: 0 divergences (the leg solved from the held start hop stayed on plan)', eng.divergences === 0,
+            const walksOn = 'R: the bot walks on from the start after the Restart (a region past the start, no error)';
+            check(walksOn, !!walked && !walked.status.startsWith('error'), JSON.stringify(walked ?? end));
+            restartUnheld('R', eng, walksOn);
+            check('R: 0 divergences (the leg solved from the start hop stayed on plan)', eng.divergences === 0,
                 JSON.stringify({ divergences: eng.divergences }));
         }
 
@@ -662,17 +671,22 @@ async function main() {
             out('B restart deferrals', { deferrals });
             check('B: every Restart that met a playing leg waited for its end (none cut)', deferrals.every((d) => d.ended),
                 JSON.stringify(deferrals));
-            // ⛓ RESTART HOLD — every Restart's start-hop arrival is HELD: no `no-held-arrival` fallback, and each expected
-            // arrival ends in a `held` row (measured before the fix: 3/10 runs fell back at the L19 Restart, whose route opens
-            // on a logical link, so its goal came in the landing's own turn and the watch was re-based over the landing).
-            const watchRows = eng.arrivalWatch ?? [];
-            // ⛓ RESTART SUBJECT (§5.125) — B's own walk no longer Restarts in its budget since rope events (L16's rope
-            // opens L17 → L16, so L19 → L36 needs no Restart). When it does, its Restart is checked here; the GUARANTEED
-            // subject is session R (a forced Restart out of a pocket), never an empty set read as green.
-            if ((eng.expectedArrivals ?? 0) === 0 && watchRows.length === 0 && deferrals.length === 0
+            // ⛓ RESTART, NO HOLD (§5.169 F1) — B's Restarts are Bot-driven, so each arms no arrival hold (`restartUnheld`).
+            // ⛓ RESTART SUBJECT (§5.125) — the glue's own count of Restarts TAKEN; when B took none in its budget the
+            // GUARANTEED subject is session R (a forced Restart out of a pocket), never an empty set read as green.
+            const restartsTaken = g.stats?.restarts ?? 0;
+            if (restartsTaken === 0 && deferrals.length === 0 && (eng.expectedArrivals ?? 0) === 0
                 && !(eng.forcedBy?.['no-held-arrival'] > 0)) {
-                console.log(`INFO: B took no Restart in its budget — the restart-hold check's subject is session R${SESSIONS.includes('R') ? '' : ' (NOT selected: --only lacks R, so the check does not run)'}`);
-            } else restartHeld('B', eng);
+                console.log(`INFO: B took no Restart in its budget — the restart check's subject is session R${SESSIONS.includes('R') ? '' : ' (NOT selected: --only lacks R, so the check does not run)'}`);
+            } else {
+                // The walk goes on from the start after each Restart: a move out of START that does not follow a move into
+                // it (the Restart's jump) — at least one per Restart taken.
+                const hops = moves.map((m) => m.replace(/^~/, '').split(' -> '));
+                const jumps = hops.filter(([from], k) => from === START && k > 0 && hops[k - 1][1] !== START).length;
+                const walksOn = 'B: the walk goes on from the start after every Restart (one jump out of START per Restart taken)';
+                check(walksOn, restartsTaken >= 1 && jumps >= restartsTaken, JSON.stringify({ restartsTaken, jumps, deferrals }));
+                restartUnheld('B', eng, walksOn);
+            }
             // ⛓ CROSS-LEVEL END — a location leg whose plan ends in another level (L32 Bob Boss → L30) is HELD at its
             // landing (no `held-end` / `unheld-end` fallback, no `cross-level-end` re-arrival), and its own check SETTLES.
             const cross = eng.crossLevelEnds ?? [];

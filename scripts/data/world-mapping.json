@@ -87,6 +87,17 @@
     "template_file": "APQuest.yaml",
     "world_directory": "apquest"
   },
+  "APQuest ServerData": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "APQuest ServerData",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "APQuest ServerData.yaml",
+    "world_directory": "apquest_serverdata"
+  },
   "APWorld Manager": {
     "exporter_path": null,
     "exporter_size": 0,

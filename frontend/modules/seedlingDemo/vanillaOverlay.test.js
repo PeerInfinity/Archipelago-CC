@@ -404,8 +404,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   r42c29 -> r42c28, r44c19 -> r43c21). No location moves (the overlay fixture rewrites byte-identical).
         // ⛓ rules-waterfall-door (16528639… -> 650d4539): L89's door to L91 is charged the Feather (the waterfall's
         //   direction gate, which every way onto its tile climbs). No name, exit or location moves.
+        // ⛓ rules-collider-mismatch (650d4539… -> e1b1c33a): a pixel-mask wall seals its mask's opaque tiles, not its
+        //   rect — L65's open-tree doorway is floor, one sub-region renamed (level_65__r4c13 -> r4c11). No exit or
+        //   location moves (the overlay fixture rewrites byte-identical).
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('650d45394e2e0c1df65ab7308fae2191');
+            .toBe('e1b1c33a2f90060a48af8bd3f8eb52fb');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

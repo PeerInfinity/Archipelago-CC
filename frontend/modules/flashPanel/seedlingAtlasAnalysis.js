@@ -25,6 +25,7 @@ import { contactRect } from '../seedlingDemo/combat.js';
 import { spearHitRect, pressRectTouches } from '../seedlingDemo/presses.js';
 import { swingHits } from '../seedlingDemo/combatVerbs.js';
 import { DARKTRAP_LIGHT_DEATH } from '../seedlingDemo/enemyDamage.js';
+import { lavaTrapPulls, LAVATRAP_PULL } from './seedlingPlaythroughOverlay.js';
 
 import {
     buildSeedlingRegionGrid,
@@ -32,7 +33,7 @@ import {
     resolveCondition,
     conditionKey,
     entitySemantics,
-    entitySealedTiles,
+    entityClaims,
     entityFootprint,
     BLOCK_SINK_LABELS,
     SEEDLING_TILE_SIZE as TILE,
@@ -248,7 +249,7 @@ export function seedlingEventTiles(level, events) {
             return { name: ev.name, side: ev.side, mode: ev.mode, tiles: talkStances({ x, y }, { range: talkRangeOf(cls), tile: TILE }), ...(ev.rule ? { rule: ev.rule } : {}) };
         }
         const sem = entitySemantics(entity);
-        const sealed = sem ? entitySealedTiles(entity, sem) : [];
+        const sealed = sem ? entityClaims(entity, sem, { pixelMaskFootprints: true }).map((c) => c.tile) : [];
         const tiles = sealed.length > 0 ? sealed : (() => {
             const f = entityFootprint(entity, sem);
             const out = [];
@@ -283,6 +284,8 @@ export const SEEDLING_LEVEL_WORLD_CLASSES = Object.freeze({
     PushableBlockSpear: 'block',
     // ⛓ LIGHTPOLES (session tile-primitives-lightpoles, ⚖ 2026-10-28 "Rope-shaped, stances").
     LightPole: 'pole',
+    // ⛓ PULLS (session tile-primitives-sphere-order-9, ⚖ 2026-10-29 "Forced pull, rules' disc").
+    LavaTrap: 'pull',
 });
 
 /** `hasSword` → `sword`: an action id from the engine flag the semantics row names. */
@@ -318,6 +321,10 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *           the fusion's And, as the ghost rock's), so the maze lights L63's poles from the L65 pockets as the rules do.
  *           A pole is not tile-aligned, so no footprint class can stand for it (session tile-primitives-lightpoles,
  *           ⚖ 2026-10-28 "Rope-shaped, stances").
+ *   pull    a LavaTrap: `tiles` = its own cell, `from` = the cells its tongue grabs from and `rule` = what survives the
+ *           ride — the rules producer's own `lavaTrapPulls` disc (32 px centre to centre, no line test) and
+ *           `LAVATRAP_PULL.condition` (the Dark Suit), so maze and rules read one disc (session
+ *           tile-primitives-sphere-order-9, ⚖ 2026-10-29 "Forced pull, rules' disc")
  *
  * A rock (or rope) whose condition is not a flag or an any-of flags is REFUSED by
  * name. Each flag binds one strike: one item (`item`), or for a ROCK a conjunction
@@ -349,9 +356,17 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null } =
             if (row) rows.push(row);
             continue;
         }
+        if (kind === 'pull') {
+            const [x, y] = [Math.floor(entity.x / TILE), Math.floor(entity.y / TILE)];
+            const pull = lavaTrapPulls(level, TILE).find((p) => p.tile[0] === x && p.tile[1] === y);
+            const rule = resolveCondition(LAVATRAP_PULL.condition);
+            if (!pull || !rule) throw new Error(`${label}: no pull of the rules producer's at (${x},${y}), or its condition has no AP rule`);
+            rows.push({ kind, tiles: [pull.tile], from: pull.from, rule, label });
+            continue;
+        }
         const rope = kind === 'rope' ? minted.find((r) => r.x === entity.x && r.y === entity.y) : null;
         if (kind === 'rope' && !rope) continue;
-        const sealed = entitySealedTiles(entity, sem);
+        const sealed = entityClaims(entity, sem, { pixelMaskFootprints: true }).map((c) => c.tile);
         const tiles = sealed.length > 0 ? sealed : (() => {
             const f = entityFootprint(entity, sem);
             const out = [];

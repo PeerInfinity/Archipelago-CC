@@ -522,6 +522,7 @@ describe('who takes the box', () => {
          * fidelity L39SHAFT the three-block shaft's witnesses (the scripted solution, the solver's plan), `probe-seedling-l39-shaft.mjs`;
          * fidelity L40BK2 L40's Boss Key 2 chain from inside the lock room, `probe-seedling-l40bk2.mjs`;
          * rules-l66-l57-probe L66's door into Dungeon 6 under the off-grid Yellow-Key lock, `probe-seedling-l66-door.mjs`;
+         * rules-collider-mismatch the six sealed-with-room cells on the game (moonrockpile, snowhill notch, ice turrets), `probe-seedling-collider-cells.mjs`;
          * tile-primitives-pixelmask-l86 L93's door into L98 up the waterfall, with and without the Feather, `probe-seedling-l93-door.mjs`;
          * fidelity CHESTSEAL L15's chest removed by `checkBySeal()` (sixteen seals) and its one-seal control, `probe-seedling-chestseal.mjs`;
          * fidelity L40LATCH L40's S-door latch under the BobSoldier (the still holder, the orbit chain), `probe-seedling-l40latch.mjs`;
@@ -588,6 +589,7 @@ describe('who takes the box', () => {
             'probe-seedling-l39-shaft.mjs',
             'probe-seedling-l40bk2.mjs',
             'probe-seedling-l66-door.mjs',
+            'probe-seedling-collider-cells.mjs',
             'probe-seedling-l93-door.mjs',
             'probe-seedling-chestseal.mjs',
             'probe-seedling-l40latch.mjs',
@@ -607,8 +609,12 @@ describe('who takes the box', () => {
             'probe-seedling-inventory-menu.mjs',
             // fidelity L12DOORS: the solver's L12 → L83 plans on the game (import door: `isEntryPoint` → main())
             'probe-seedling-l12doors.mjs',
+            // fidelity SECUSE: the X+C tick's game witness (import door: `isEntryPoint` → main())
+            'probe-seedling-secondary-use.mjs',
             // seedling-lab-static-art: the lab page's art row (import door: `isEntryPoint` → main())
-            'check-seedling-lab-art.mjs'];
+            'check-seedling-lab-art.mjs',
+            // seedling-lab-load-in-js: the lab page's ▶ load in JS row (import door: `isEntryPoint` → main())
+            'check-seedling-lab-load-in-js.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

@@ -40,7 +40,7 @@
 //
 // Headless-safe: no top-level await, no literal node: imports.
 
-import { allOf, anyOf, entitySealedTiles, entitySemantics, flag, key, tileTypeForPlacement } from './seedlingSemantics.js';
+import { allOf, anyOf, entityClaims, entitySemantics, flag, key, tileTypeForPlacement } from './seedlingSemantics.js';
 import { PUSHABLE_KINDS } from './seedlingBlockPaths.js';
 import { ropeEventCondition } from './seedlingObstacleEvents.js';
 
@@ -238,7 +238,7 @@ export function buildBlockHolders(mapDoc, { tileSize = 16 } = {}) {
                     } : {}),
                     triggers: opener.map((o) => {
                         const sem = entitySemantics(o);
-                        return { tiles: entitySealedTiles(o, sem), condition: sem?.condition ?? null };
+                        return { tiles: entityClaims(o, sem, { pixelMaskFootprints: true }).map((c) => c.tile), condition: sem?.condition ?? null };
                     }),
                 }];
             }),
