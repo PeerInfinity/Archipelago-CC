@@ -60,7 +60,7 @@ const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8'
     'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
     'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32', 'level_38',
     'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1', 'level_62', 'level_63__r10c2', 'level_58__r3c3', 'level_65__r0c8',
-    'level_80__r0c2', 'level_71__r0c6'];
+    'level_80__r0c2', 'level_71__r0c6', 'level_78__r0c2'];
 /**
  * The one OPEN row (⚖ 2026-10-29 "Land, name it; route to rules", session tile-primitives-sphere-order-8) was r6c9 → r10c2 derived
  * false: from the L65 pocket landing, L63 r0c1's east end is cut from its west by the DarkTrap at (4,6) and the spear block that jams
@@ -118,6 +118,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // Progressive Sword into L62's and L63's subset universe, so their rows count 4x the subsets — same rows. The fractions stay,
         // but for the L65 pocket landings (8,18)/(2,18): 60/192 → 192/768, since the L65 door now also admits the swing (fewer
         // unadmitted points); their [own event] rows are exactly 4x (48 → 192).
+        // Sphere 9.10 (session tile-primitives-sphere-order-10) adds 6: L71 r0c6's landing from L76 (18,16), wired now, whose AP
+        // crossing costs L71's shield lock (flag 2) — admitted only holding it, as its other landing (14,18).
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
@@ -193,6 +195,12 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_69 @ Level 069 - Lights (landing 3,8) | 1/8',
             'level_69 → level_36 (landing 3,8) | 1/8',
             'level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 14,18) | 8/48 [own event]',
+            'level_71__r0c6 @ Level 071 - Chest (landing 18,16) | 24/48',
+            'level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 18,16) | 24/48',
+            'level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 18,16) | 8/48 [own event]',
+            'level_71__r0c6 → level_75 (landing 18,16) | 24/48',
+            'level_71__r0c6 → level_80__r0c2 (landing 18,16) | 24/48',
+            'level_71__r0c6 → level_72 (landing 18,16) | 24/48',
             'level_83 → level_12__r42c28 (landing 2,3) | 20/64',
             'level_83 → level_84__r2c4 (landing 2,3) | 20/64',
             'level_89__r11c12 → level_0__r2c13 (landing 10,18) | 1/3',
