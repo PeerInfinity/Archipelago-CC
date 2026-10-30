@@ -139,7 +139,7 @@ function disagreementsUncached(w, items, helpers) {
             const b = next === null ? null : mazeVisitedKey(next);
             if (a !== b) out.push(`${at} native=${a} scripted=${b}`);
             // After any step the world is settled: a WAIT changes nothing (the searches never branch on one).
-            if (input === INPUT_WAIT && s.turn > 0 && a !== null && a !== mazeVisitedKey(s)) out.push(`${at} a wait moved the world: ${a}`);
+            if (input === INPUT_WAIT && a !== null && a !== mazeVisitedKey(s)) out.push(`${at} a wait moved the world: ${a}`);
             if (native === null) { if (why?.startsWith('pulse of')) seen.pulseRefusals += 1; continue; }
             if (native.blocks.join(';') !== s.blocks.join(';')) {
                 if (input.startsWith('USE:')) seen.moved += 1;
@@ -348,6 +348,21 @@ describe('PULSERS: a held token pushes the pulsed blocks on its reach away; the 
         expect(s.blocks).toEqual(['4,2', '5,3']);
         expect(step(w, s, INPUT_WAIT).blocks).toEqual(s.blocks);
         expect(scriptedStep(w, holding(w, []), 'S', HELPERS).next.blocks).toEqual(s.blocks);
+    });
+
+    it('the START is settled: entered with the token held and a pulsed block on the reach, it is shoved before any step', () => {
+        // A plain block already parks on q (4,1) → sw_1 is held from the start; F (3,4) sits on Q (3,3)'s reach.
+        const rows = ['########', '#P..B..#', '#......#', '#.#Q####', '#..F..X#', '###.####', '########'].map((r, y) => (y === 1 ? '#P..q..#' : r));
+        const sc = sidecar(rows);
+        const w = deserializeMazeWorld({ ...sc, blocks: [...sc.blocks, { x: 4, y: 1, kind: 'plain' }] });
+        const start = createState(w);
+        expect(start.blocks).toEqual(['3,5', '4,1']);
+        expect(start.blockKinds).toEqual({ '3,5': 'fire', '4,1': 'plain' });
+        const waited = step(w, start, INPUT_WAIT);
+        expect(mazeVisitedKey(waited)).toBe(mazeVisitedKey(start));
+        expect(mazeVisitedKey(scriptedStep(w, start, INPUT_WAIT, HELPERS).next)).toBe(mazeVisitedKey(start));
+        // The world's INITIAL layout is untouched (a sidecar round-trips as written).
+        expect(serializeMazeEntities(w).blocks).toEqual([{ x: 4, y: 1, kind: 'plain' }, { x: 3, y: 4, kind: 'fire' }]);
     });
 
     it('the gadget plays: park the block on q → the pulse shoves F south → step off q → walk through to the exit', () => {

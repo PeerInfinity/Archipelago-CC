@@ -991,7 +991,9 @@ export function blocksAfterPush(world, blocks, from, to) {
  *   pulsed     a live pulser whose reach holds it pushes it away (`checkPulsers`; `moveTypes = ["Fire","Pulse"]`)
  *   wake       `{struck_by, becomes}`: a use of a listed action on it turns it into kind `becomes`, PER VISIT like its
  *              position (Seedling's IceTurret: a weapon kills it into its corpse, `IceTurret.as:136-148`, which only Fire
- *              and pulses move, `:172-200`; the turret has no tag, so the game re-arms it on every visit)
+ *              and pulses move, `:172-200`; the turret has no tag, so the game re-arms it on every visit). The killing
+ *              hit does not move it — `IceTurret.knockback` is empty (`:114-117`) — so a woken block is not moved by the
+ *              same use, and an action that both moves and wakes one kind is refused.
  * Pushed blocks go farthest first, each applied before the next is asked; a block whose next cell is off the grid, a
  * wall, a block, the player, a shut obstacle (unless it sinks there) or an entry gate stays put (`PushableBlockFire.update`:
  * a collided move resets its target). It retired sphere-order-2's world-level `block_strike` (one kind for every block),
@@ -1202,7 +1204,9 @@ export function blockWithinReach(world, state, actionId) {
  * the order of the pulsers does not matter). A block moves at most once per settle — no pushed block lands on a reach
  * cell (refused below) — so it ends, and a WAIT after any step is a self-loop again (the searches never branch on one).
  * Then the lane is asked of the settled stance. The pulser is a SOLID body (`type = "Solid"`): its cell must not be floor.
- * `reach` is the producer's (its cells from the game's hit radius); the engine reads cells.
+ * (`Pulser.as:48`: `type = "Solid"`; the projection lays its cell as a wall.)
+ * `reach` is the producer's (its cells from the game's hit radius); the engine reads cells. A START state is settled
+ * too (`createState`).
  * ⛔ Refused BY NAME: a pulser cell that is floor or off the grid, an empty token, an empty reach, a reach cell off the
  * grid, repeated or the pulser's own, a cell in two pulsers' reach (which pushes first is not settled), two reach cells
  * pushed onto one cell, and a reach cell pushed onto a reach cell (chained pulses are not modelled — the pulls'
@@ -1512,6 +1516,11 @@ export function createState(world) {
         state.facing = world.startFacing ?? DEFAULT_FACING;
         state.broken = [];
     }
+    // ⛓ PULSERS (designer review, session tile-mechanisms-m1): the START is settled too — a world entered with a token
+    // already held and a pulsed block on its reach is shoved before the first step, so a WAIT from the start is a
+    // self-loop like every other (the searches never branch on one). Asked with the fresh state's own (empty) carried
+    // inventory: a pulser's token is a held token, derived from the stance.
+    if (world.pulsers) settlePulses(world, state, state.inventory);
     return state;
 }
 
