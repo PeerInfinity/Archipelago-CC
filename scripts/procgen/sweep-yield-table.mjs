@@ -657,6 +657,10 @@ if (CELL !== '') {
              *  docblock for what it read before, and why. */
             guarded: seedlingCertification?.certified ? 1 : 0,
             heldAtDoor: seedlingCertification?.heldAtDoor ?? null,
+            /** ⛓ Seedling gen A1 — the certification solve's verbs, JSON only (the
+             *  rope gate's `[pull, …]` count is read off it). Absent with no solve. */
+            ...(seedlingCertification?.strategies
+                ? { certVerbs: [...seedlingCertification.strategies] } : {}),
             params: p ? p.params : null,
             ...shape,
         };
