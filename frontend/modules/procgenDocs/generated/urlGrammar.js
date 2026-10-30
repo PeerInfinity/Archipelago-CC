@@ -105,6 +105,7 @@ export const URL_GRAMMAR = frz({
                 "speed": 1,
                 "tape": null,
                 "tapes": null,
+                "terrains": "",
                 "tick": null,
                 "tickWhy": null
             },
@@ -932,6 +933,34 @@ export const URL_GRAMMAR = frz({
                 },
                 {
                     "absentMeans": null,
+                    "atDefault": "DELETED at the default",
+                    "codec": "a comma list, validated against the biome's terrain offers",
+                    "defaultField": "terrains",
+                    "defaultIsUndefined": false,
+                    "defaultValue": "",
+                    "name": "terrains",
+                    "retired": false,
+                    "terms": [
+                        "biome",
+                        "palette"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/seedlingDemo/watchGenerate.js",
+                            "fn": "readGenerateParams",
+                            "how": "get",
+                            "role": "read"
+                        },
+                        {
+                            "file": "frontend/modules/seedlingDemo/watchGenerate.js",
+                            "fn": "writeGenerateParams",
+                            "how": "delete+set",
+                            "role": "write"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
                     "atDefault": "not written by this page",
                     "codec": "readViewParams (a whole tick index)",
                     "defaultField": "tick",
@@ -1028,7 +1057,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchGenerate.js",
                     "fn": "readGenerateParams",
-                    "line": 260,
+                    "line": 270,
                     "role": "read"
                 },
                 {
@@ -1055,7 +1084,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchGenerate.js",
                     "fn": "writeGenerateParams",
-                    "line": 512,
+                    "line": 526,
                     "role": "write"
                 }
             ],
