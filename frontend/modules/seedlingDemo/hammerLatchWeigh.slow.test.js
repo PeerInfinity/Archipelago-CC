@@ -14,6 +14,7 @@
  * `blockSweepBodies`, `corpseBumpWeigh`) refuses the whole chain at t0 on `button@816,400`, before the reorder is asked.
  */
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 
 import { l40LatchBoot, l40LatchSolve } from './fidelityL40Latch.js';
 import {
@@ -74,22 +75,27 @@ describe('hammer-phase LWEIGH on the latch chain (slow)', () => {
     }, 900000);
 
     it('ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name', async () => {
-        const boot = await l40LatchBoot();
-        const r = await withPairSize(3, () => withChooserPair(true, () => withLatchWeighFirst(true,
-            () => l40LatchSolve(boot))));
-        expect(r.out).toBeNull();
-        expect(r.refusal.message).toMatch(/-> weigh \(wandlock@448,432\): the reordered corpse weigh took a hit at t917 \(blast:iceturret@472,400#[0-9.]+\) on its way to iceturret@472,400's kill stance \(488,445\)/);
-        expect(r.refusal.obstacle).toEqual({ kind: 'danger', id: TURRET });
-        // the steps are the model's: the refused prefix on a fresh run
-        const { rows, hits } = await replayLatch(r.refusal.perTick.map((k) => [...k]), r.refusal.equips);
-        expect(hits).toEqual([{ t: 917, source: 'blast', id: expect.stringMatching(/^iceturret@472,400#/) }]);
-        const death = rows.find((g) => g.dead);
-        expect(death.tile).toEqual({ tx: 30, ty: 26 });
-        expect(death.t).toBeGreaterThan(917);
-        const tiles = [...new Set(rows.filter((g) => g.dead).map((g) => `${g.tile.tx},${g.tile.ty}`))];
-        expect(tiles).toEqual(['30,26', '30,25', '30,24']);
-        const opened = rows.find((g) => g.open);
-        expect(opened.tile).toEqual({ tx: 30, ty: 24 });
-        expect(rows.at(-1)).toMatchObject({ dead: true, removed: false, tile: { tx: 30, ty: 24 }, open: true });
+        // ⛓ hammer-2 signed (2026-10-30, W35): LWEIGH's row measures the uncertified stance walk into the t917 blast. Under
+        // fidelity TURRETSNAP (`turretSnapPricing`, ON since W35) that walk refuses earlier, on the snapped hull's danger at
+        // (472.0,441.8) — the more faithful refusal — so this row is LWEIGH's own control with the switch OFF.
+        await withContactFidelity({ turretSnapPricing: false }, async () => {
+            const boot = await l40LatchBoot();
+            const r = await withPairSize(3, () => withChooserPair(true, () => withLatchWeighFirst(true,
+                () => l40LatchSolve(boot))));
+            expect(r.out).toBeNull();
+            expect(r.refusal.message).toMatch(/-> weigh \(wandlock@448,432\): the reordered corpse weigh took a hit at t917 \(blast:iceturret@472,400#[0-9.]+\) on its way to iceturret@472,400's kill stance \(488,445\)/);
+            expect(r.refusal.obstacle).toEqual({ kind: 'danger', id: TURRET });
+            // the steps are the model's: the refused prefix on a fresh run
+            const { rows, hits } = await replayLatch(r.refusal.perTick.map((k) => [...k]), r.refusal.equips);
+            expect(hits).toEqual([{ t: 917, source: 'blast', id: expect.stringMatching(/^iceturret@472,400#/) }]);
+            const death = rows.find((g) => g.dead);
+            expect(death.tile).toEqual({ tx: 30, ty: 26 });
+            expect(death.t).toBeGreaterThan(917);
+            const tiles = [...new Set(rows.filter((g) => g.dead).map((g) => `${g.tile.tx},${g.tile.ty}`))];
+            expect(tiles).toEqual(['30,26', '30,25', '30,24']);
+            const opened = rows.find((g) => g.open);
+            expect(opened.tile).toEqual({ tx: 30, ty: 24 });
+            expect(rows.at(-1)).toMatchObject({ dead: true, removed: false, tile: { tx: 30, ty: 24 }, open: true });
+        });
     }, 900000);
 });
