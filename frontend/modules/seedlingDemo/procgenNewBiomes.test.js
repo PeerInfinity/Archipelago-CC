@@ -12,6 +12,7 @@
  *    and its MUTANT (the same tape, waiting on the crust) dies in lava and is refused
  *    by the oracle's `lavaDeathRefusal`.
  */
+import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 
 import {
@@ -90,6 +91,18 @@ describe('C4 — caldera\'s flood (`floodWalks`), and that it moves no other bio
         expect(floodTerrainsFor(CALDERA_PALETTE.items, CALDERA_PALETTE.floodWalks))
             .toEqual(['ground', 'ice', 'stairs', 'ghoststep', 'melt']);
         expect(() => floodTerrainsFor(POST_SWORD_ITEMS, ['magma'])).toThrow(/"magma" is not a TERRAIN name/);
+    });
+
+    it('every caller of `seedlingSeam` with a palette forwards its `floodWalks` (a dropped one is caldera without its cuts)', () => {
+        const root = new URL('../../../', import.meta.url);
+        const callers = ['frontend/modules/seedlingDemo/procgenSeedling.js', 'frontend/modules/seedlingDemo/watchGenerate.js',
+            'scripts/procgen/sweep-yield-table.mjs'];
+        for (const f of callers) {
+            const src = readFileSync(new URL(f, root), 'utf8');
+            const calls = src.split('seedlingSeam({').slice(1).filter((c) => !/^\s*\n\s*seed, items = null/.test(c));
+            expect(calls.length, f).toBeGreaterThan(0);
+            for (const c of calls) expect(c.slice(0, c.indexOf('});')), f).toMatch(/floodWalks: palette\.floodWalks/);
+        }
     });
 
     it('a roster restriction keeps the flood; other palettes gain no key', () => {
