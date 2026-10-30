@@ -177,6 +177,9 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('game:itemsReceived');
   registrationApi.registerEventBusPublisher('game:dataPackageReceived');
   registrationApi.registerEventBusPublisher('game:locationsScouted');
+  // Connect flow: ask the connect form for a game, and load the room's preset
+  registrationApi.registerEventBusPublisher('client:gameChoiceNeeded');
+  registrationApi.registerEventBusPublisher('files:jsonLoaded');
   registrationApi.registerEventBusPublisher('game:chatMessage');
   registrationApi.registerEventBusPublisher('ui:printToConsole');
   registrationApi.registerEventBusPublisher('ui:printFormattedToConsole');
