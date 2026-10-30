@@ -1,0 +1,125 @@
+## PRODUCER-SKIPPED | plan-seedling-r7-ends-meet | drives the SWFRecomp wasm game in Chromium inside its own --check (`latchOf` -> page.goto on SEEDLING_PORT): it needs the `frontend/modules/flashPanel/wasm` submodule, a browser and a dev server. It already runs in CI as a browser ARM of the `browser-gates` matrix (a standing identity row). Measured green locally with a server on :8000 at this slice's head.
+## PRODUCER-PLANNED | 97 to run | 1 skipped | jobs 4
+## PRODUCER | plan-seedling-bobsoldier | 0 | 1.4 | 
+## PRODUCER | plan-seedling-bulb | 0 | 1.7 | 
+## PRODUCER | plan-seedling-burn-witness | 0 | 3.8 | 
+## PRODUCER | plan-seedling-bobsoldier2 | 0 | 10.4 | 
+## PRODUCER | plan-seedling-crusher-witness | 0 | 19.0 | 
+## PRODUCER | plan-seedling-f1-l5-lock | 0 | 1.6 | 
+## PRODUCER | plan-seedling-f1-l5-open-lock | 0 | 3.5 | 
+## PRODUCER | plan-seedling-f1c-l18-lock | 0 | 2.2 | 
+## PRODUCER | plan-seedling-axe-witness | 0 | 32.4 | 
+## PRODUCER | plan-seedling-f4-l8-sandtraps | 0 | 5.0 | 
+## PRODUCER | plan-seedling-f6-reentry | 0 | 0.9 | 
+## PRODUCER | plan-seedling-f7-reentry | 0 | 1.4 | 
+## PRODUCER | plan-seedling-c1-static-sword | 0 | 38.2 | 
+## PRODUCER | plan-seedling-ghostmotion | 0 | 0.6 | 
+## PRODUCER | plan-seedling-ghostsword | 0 | 1.8 | 
+## PRODUCER | plan-seedling-frontier3-witness | 0 | 3.4 | 
+## PRODUCER | plan-seedling-hammer-b1-approach | 0 | 23.9 | 
+## PRODUCER | plan-seedling-hammer-a-escape | 0 | 25.7 | 
+## PRODUCER | plan-seedling-f1c-l18-phase | 0 | 39.7 | 
+## PRODUCER | plan-seedling-hammer-c2-ghost | 0 | 0.7 | 
+## PRODUCER | plan-seedling-hammer-d-ghostwall | 0 | 3.6 | 
+## PRODUCER | plan-seedling-hammer-dd-walkkill | 0 | 10.6 | 
+## PRODUCER | plan-seedling-hammer-b2-fight | 0 | 33.1 | 
+## PRODUCER | plan-seedling-encounters | 0 | 108.0 | 
+## PRODUCER | plan-seedling-l100-witness | 0 | 5.7 | 
+## PRODUCER | plan-seedling-l12doors-witness | 0 | 7.2 | 
+## PRODUCER | plan-seedling-l12keyline-witness | 0 | 9.3 | 
+## PRODUCER | plan-seedling-l14-swordless | 0 | 5.2 | 
+## PRODUCER | plan-seedling-l30keylock | 0 | 20.2 | 
+## PRODUCER | plan-seedling-hammer-bw-bombstand | 0 | 99.0 | 
+## PRODUCER | plan-seedling-ladder2-witness | 0 | 6.6 | 
+## PRODUCER | plan-seedling-lightpole-witness | 0 | 39.7 | 
+## PRODUCER | plan-seedling-proximity-witness | 0 | 9.3 | 
+## PRODUCER | plan-seedling-pushblock-witness | 0 | 8.3 | 
+## PRODUCER | plan-seedling-r1-dark-suit | 0 | 2.6 | 
+## PRODUCER | plan-seedling-r1-route | 0 | 3.4 | 
+## PRODUCER | plan-seedling-l40button-witness | 0 | 81.1 | 
+## PRODUCER | plan-seedling-r2-singles | 0 | 0.5 | 
+## PRODUCER | plan-seedling-r2-wallflyer | 0 | 1.2 | 
+## PRODUCER | plan-seedling-r3-death | 0 | 0.7 | 
+## PRODUCER | plan-seedling-r3-route | 0 | 13.4 | 
+## PRODUCER | plan-seedling-r2-route | 0 | 29.2 | 
+## PRODUCER | plan-seedling-r4 | 0 | 0.6 | 
+## PRODUCER | plan-seedling-r5-bobboss | 0 | 0.3 | 
+## PRODUCER | plan-seedling-r5-bosskey | 0 | 1.0 | 
+## PRODUCER | plan-seedling-r4-route | 0 | 10.1 | 
+## PRODUCER | plan-seedling-r5-conch | 0 | 5.3 | 
+## PRODUCER | plan-seedling-r5-karlore | 0 | 1.1 | 
+## PRODUCER | plan-seedling-r5-l37-burn | 0 | 3.1 | 
+## PRODUCER | plan-seedling-r5-feather | 0 | 8.6 | 
+## PRODUCER | plan-seedling-r5-l40-join | 0 | 8.0 | 
+## PRODUCER | plan-seedling-r5-l40-part0 | 0 | 5.2 | 
+## PRODUCER | plan-seedling-r5-l40-part1 | 0 | 3.0 | 
+## PRODUCER | plan-seedling-r5-l41-part3 | 0 | 8.5 | 
+## PRODUCER | plan-seedling-r5-l40-part5 | 0 | 12.9 | 
+## PRODUCER | plan-seedling-r5-l43-wand | 0 | 0.8 | 
+## PRODUCER | plan-seedling-r5-l60-kill | 0 | 0.3 | 
+## PRODUCER | plan-seedling-r5-l42-part4 | 0 | 9.2 | 
+## PRODUCER | plan-seedling-r5-shaft | 0 | 6.2 | 
+## PRODUCER | plan-seedling-r5-swim | 0 | 1.3 | 
+## PRODUCER | plan-seedling-r5-waterfall | 0 | 1.0 | 
+## PRODUCER | plan-seedling-r6-shieldboss | 0 | 1.3 | 
+## PRODUCER | plan-seedling-r5-totem-entrance | 0 | 3.1 | 
+## PRODUCER | plan-seedling-r6-wdoor | 0 | 1.1 | 
+## PRODUCER | plan-seedling-r6-wblood | 0 | 3.1 | 
+## PRODUCER | plan-seedling-r6-wowl | 0 | 2.3 | 
+## PRODUCER | plan-seedling-r6-wseed | 0 | 1.1 | 
+## PRODUCER | plan-seedling-r6-wtalk | 0 | 0.7 | 
+## PRODUCER | plan-seedling-r8-hammer-pair | 0 | 6.2 | 
+## PRODUCER | plan-seedling-r8-l18-spinner | 0 | 3.0 | 
+## PRODUCER | plan-seedling-r9-l0-sword-dash | 0 | 1.2 | 
+## PRODUCER | plan-seedling-r9-l6-bob-press | 0 | 1.0 | 
+## PRODUCER | plan-seedling-r9-l6-harmless-window | 0 | 2.4 | 
+## PRODUCER | plan-seedling-r9-l6-sword-dash-hit | 0 | 1.4 | 
+## PRODUCER | plan-seedling-return-l15 | 0 | 1.3 | 
+## PRODUCER | plan-seedling-rulesref-witness | 0 | 3.9 | 
+## PRODUCER | plan-seedling-sealdoor-witness | 0 | 2.8 | 
+## PRODUCER | plan-seedling-slots-witness | 0 | 5.8 | 
+## PRODUCER | plan-seedling-stance-witness | 0 | 14.1 | 
+## PRODUCER | plan-seedling-u10-puncher-dwell | 0 | 1.9 | 
+## PRODUCER | plan-seedling-u11-dark-shield | 0 | 0.7 | 
+## PRODUCER | plan-seedling-u11-facing | 0 | 1.2 | 
+## PRODUCER | plan-seedling-u12-pull | 0 | 1.5 | 
+## PRODUCER | plan-seedling-u14-moonrock | 0 | 1.2 | 
+## PRODUCER | plan-seedling-u15-turret | 0 | 1.3 | 
+## PRODUCER | plan-seedling-u7-puncher | 0 | 1.3 | 
+## PRODUCER | plan-seedling-u9-shield-bump | 0 | 1.2 | 
+## PRODUCER | plan-seedling-wallflyer | 0 | 1.9 | 
+## PRODUCER | plan-seedling-r7-attribution | 0 | 58.0 | 
+## PRODUCER | plan-seedling-wand-witness | 0 | 3.6 | 
+## PRODUCER | plan-seedling-watchertalk-witness | 0 | 1.5 | 
+## PRODUCER | plan-seedling-watcher-witness | 0 | 6.1 | 
+## PRODUCER | regenerate-r2-tapes | 0 | 14.9 | 
+## PRODUCER | regenerate-r3-tapes | 0 | 16.0 | 
+## PRODUCER | regenerate-r4-tapes | 0 | 12.7 | 
+## PRODUCER | plan-seedling-hammer-g1-ghostkill | 1 | 319.3 | FAIL: ⛓ the committed hammer-g1-l40-ghostkill is what this script produces today — ⛔ DRIFT — re-run without --check
+## PRODUCER | plan-seedling-hammer-sf-strikefloor | 1 | 346.5 | FAIL: OFF: the solve refuses on the chaser bob@736,752, past the press kill — REFUSED at t2317 on bobsoldier@880,832
+
+── scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs (rc 1) — last 30 lines ──
+PASS: the per-weapon press is ON (`GHOST_SPINNER_PRESS`, its default) — enabled true
+PASS: OFF: the kill rung refuses the ghost primary at t0, by name — REFUSED at 0
+PASS: ⛓ ON: the solve gets past the gate (its prefix is the walk; the rung's refusal is not in its message) — REFUSED at 2317
+PASS: ⛓⛓ every landing is a ghost press, and every press the walk made is the ghost sword's — 5 landing(s), weapons ["ghostsword"]
+PASS: ⛓⛓⛓ the ghost press kills spinner@880,848, and the body leaves `spinnerBodies` — killed at t2114 (hits 4, 23.786 px), removed at t2127
+PASS: ⛓⛓⛓ the ghost press kills spinner@816,848, and the body leaves `spinnerBodies` — killed at t2182 (hits 4, 11.579 px), removed at t2195
+FAIL: ⛓ the committed hammer-g1-l40-ghostkill is what this script produces today — ⛔ DRIFT — re-run without --check
+## hammer-g1-l40-ghostkill: 2317 ticks; ⛓⛓⛓ SEEDLING HAMMER-PHASE G1, D2 — THE KILL RUNG'S GHOST PRESS KILL (`GHOST_KILL_RUNG` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON (the solve then refuses on the chaser bob@736,752). Landings t501 spinner@880,848 hits 2 · t2078 spinner@880,848 hits 2 · t2114 spinner@880,848 hits 4 (kill) · t2149 spinner@816,848 hits 2 · t2182 spinner@816,848 hits 4 (kill), all ghost presses; spinner@880,848 killed at t2114 and removed at t2127, spinner@816,848 at t2182 / t2195. Player hits t972 bob@736,752 · t1184 bob@736,752 · t1216 bob@736,752 (death). 2317 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs.
+
+1 CHECK(S) FAILED
+
+
+── scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs (rc 1) — last 30 lines ──
+PASS: the switch ships ON (`STRIKE_ETA_FLOOR_DEFAULT`, hammer-phase SFF; this script pins each solve's floor) — default true
+FAIL: OFF: the solve refuses on the chaser bob@736,752, past the press kill — REFUSED at t2317 on bobsoldier@880,832
+FAIL: ON: the solve refuses on the chaser bob@736,752, past the press kill — REFUSED at t1796 on bobsoldier@880,832
+PASS: ⛓⛓ ON's press kill moved: its landings on spinner@880,848 are not OFF's (the first, at the kill's start, is shared) — ON t501, t1583, t1616 · OFF t501, t2078, t2114
+PASS: ⛓⛓⛓ ON kills spinner@880,848 sooner than OFF, and the body leaves `spinnerBodies` — ON killed t1616 (removed t1629), OFF t2114
+FAIL: ⛓ the committed hammer-sf-l40-strikefloor is what this script produces today — ⛔ DRIFT — re-run without --check
+## hammer-sf-l40-strikefloor: 1796 ticks; ⛓⛓⛓ SEEDLING HAMMER-PHASE SF — THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`STRIKE_ETA_FLOOR` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON (the solve then refuses on the chaser bob@736,752, as OFF does). Landings t501 spinner@880,848 hits 2 · t1583 spinner@880,848 hits 2 · t1616 spinner@880,848 hits 4 (kill); spinner@880,848 killed at t1616 and removed at t1629 (OFF: killed at t2114). Player hits t658 bob@736,752 · t747 bob@736,752 · t778 bob@736,752 (death). 1796 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs.
+
+3 CHECK(S) FAILED
+
+## PRODUCER-DONE | 97 run | 2 red | 1 skipped | 0 known-red
