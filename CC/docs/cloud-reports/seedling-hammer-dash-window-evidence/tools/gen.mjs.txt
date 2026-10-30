@@ -1,0 +1,13 @@
+const M = (p) => import(`/home/user/Archipelago-CC/frontend/modules/seedlingDemo/${p}`);
+const { paletteFor } = await M('watchGenerate.js');
+const { generateSeedlingLevel, seedlingSkeletonSpec } = await M('procgenSeedling.js');
+const sb = await M('solverBot.js');
+const [kind, biome, seed] = process.argv.slice(2);
+for (const on of [false, true]) {
+    sb.DASH_STAND_WHOLE.audit = [];
+    const t0 = Date.now();
+    const out = sb.withDashStandWhole(on, () => generateSeedlingLevel({ seed: Number(seed), palette: paletteFor(biome),
+        bounds: { obstacleTarget: 4 }, skeleton: seedlingSkeletonSpec(kind) }));
+    const a = sb.DASH_STAND_WHOLE.audit.map(({ what, standTicks, whole, ticks, baseline, why }) => [what.slice(-30), standTicks, whole, ticks, baseline, why]);
+    console.log(on, out.summary.skeletonTicks, out.summary.finalTicks, Date.now() - t0, 'ms', a.length, JSON.stringify(a.slice(0, 3)));
+}

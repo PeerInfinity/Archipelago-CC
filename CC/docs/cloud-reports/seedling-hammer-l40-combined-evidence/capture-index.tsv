@@ -1,0 +1,62 @@
+id	end	leg_seam	req_i	req_seam	prefix	solverGoal	page_answer	key
+358	done	5140	0	5140	0	{"kind": "reach-exit", "exit": {"x": 144, "y": 0}}	ok	level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0
+367	done	5197	0	5197	0	{"kind": "reach-exit", "exit": {"x": 320, "y": 576}}	ok	level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+368	done	5460	0	5460	0	{"kind": "reach-exit", "exit": {"x": 480, "y": 912}}	ok	level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912
+369	done	5531	0	5531	0	{"kind": "reach-pit", "pit": {"tx": 14, "ty": 27, "x": 224, "y": 432}}	ok	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20
+370	done	6393	0	6393	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 27, "x": 240, "y": 432}}	ok	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20
+371	done	7311	0	7311	0	{"kind": "reach-pit", "pit": {"tx": 23, "ty": 27, "x": 368, "y": 432}}	ok	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20
+372	done	8333	0	8333	0	{"kind": "reach-pit", "pit": {"tx": 24, "ty": 27, "x": 384, "y": 432}}	ok	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+373	done	9431	0	9431	0	{"kind": "reach-pit", "pit": {"tx": 14, "ty": 28, "x": 224, "y": 448}}	ok	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21
+374	failed	10275	0	10275	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 28, "x": 240, "y": 448}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+374	failed	10275	1	10275	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 28, "x": 240, "y": 448}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+375	failed	10373	0	10373	0	{"kind": "reach-pit", "pit": {"tx": 23, "ty": 28, "x": 368, "y": 448}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+375	failed	10373	1	10373	0	{"kind": "reach-pit", "pit": {"tx": 23, "ty": 28, "x": 368, "y": 448}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+376	failed	10470	0	10470	0	{"kind": "reach-pit", "pit": {"tx": 24, "ty": 28, "x": 384, "y": 448}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+376	failed	10470	1	10470	0	{"kind": "reach-pit", "pit": {"tx": 24, "ty": 28, "x": 384, "y": 448}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+377	done	10560	0	10560	0	{"kind": "reach-pit", "pit": {"tx": 14, "ty": 29, "x": 224, "y": 464}}	ok	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22
+378	failed	11391	0	11391	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 29, "x": 240, "y": 464}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+378	failed	11391	1	11391	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 29, "x": 240, "y": 464}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+379	done	11473	0	11473	0	{"kind": "reach-pit", "pit": {"tx": 14, "ty": 30, "x": 224, "y": 480}}	ok	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23
+380	failed	12286	0	12286	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 30, "x": 240, "y": 480}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+380	failed	12286	1	12286	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 30, "x": 240, "y": 480}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+384	done	12379	0	12379	0	{"kind": "reach-exit", "exit": {"x": 320, "y": 576}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+385	done	12465	0	12465	0	{"kind": "reach-exit", "exit": {"x": 480, "y": 912}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912
+386	done	12956	0	12956	0	{"kind": "reach-pit", "pit": {"tx": 14, "ty": 27, "x": 224, "y": 432}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+387	done	13375	0	13375	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 27, "x": 240, "y": 432}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+388	done	13861	0	13861	0	{"kind": "reach-pit", "pit": {"tx": 23, "ty": 27, "x": 368, "y": 432}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+389	done	14509	0	14509	0	{"kind": "reach-pit", "pit": {"tx": 24, "ty": 27, "x": 384, "y": 432}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20
+390	done	15227	0	15227	0	{"kind": "reach-pit", "pit": {"tx": 14, "ty": 28, "x": 224, "y": 448}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+391	done	15715	0	15715	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 28, "x": 240, "y": 448}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+392	done	16245	0	16245	0	{"kind": "reach-pit", "pit": {"tx": 23, "ty": 28, "x": 368, "y": 448}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+393	done	16848	0	16848	0	{"kind": "reach-pit", "pit": {"tx": 24, "ty": 28, "x": 384, "y": 448}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+394	done	17486	0	17486	0	{"kind": "reach-pit", "pit": {"tx": 14, "ty": 29, "x": 224, "y": 464}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+395	done	17831	0	17831	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 29, "x": 240, "y": 464}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+396	done	18318	0	18318	0	{"kind": "reach-pit", "pit": {"tx": 14, "ty": 30, "x": 224, "y": 480}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+397	done	18758	0	18758	0	{"kind": "reach-pit", "pit": {"tx": 15, "ty": 30, "x": 240, "y": 480}}	ok	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+404	done	19268	0	19268	0	{"kind": "reach-exit", "exit": {"x": 176, "y": 464}}	ok	level_43__r13c7 <- in_L40_320_576 -> exit:out_stairsup_176_464
+361	done	19392	0	19392	0	{"kind": "reach-exit", "exit": {"x": 848, "y": 0}}	ok	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+362	done	19547	0	19547	0	{"kind": "reach-exit", "exit": {"x": 944, "y": 96}}	ok	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+364	done	19630	0	19630	0	{"kind": "reach-exit", "exit": {"x": 848, "y": 0}}	ok	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+365	done	19716	0	19716	0	{"kind": "reach-exit", "exit": {"x": 944, "y": 96}}	ok	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+401	done	19866	0	19866	0	{"kind": "reach-exit", "exit": {"x": 0, "y": 160}}	ok	level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160
+402	done	19918	0	19918	0	{"kind": "reach-exit", "exit": {"x": 240, "y": 336}}	ok	level_42 <- in_L40_848_0 -> exit:out_teleporter_240_336
+863	done	20122	0	20122	0	{"kind": "reach-exit", "exit": {"x": 144, "y": 64}}	ok	level_43__r3c8 <- in_L40_320_576 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64
+863	done	20122	1	20952	0	{"kind": "reach-exit", "exit": {"x": 144, "y": 64}}	ok	level_43__r3c8 <- in_L40_320_576 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64
+359	done	5141	0	5141	0	{"kind": "collect-placement", "placement": {"x": 72, "y": 40}}	ok	level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40
+381	done	5311	0	5311	0	{"kind": "collect-placement", "placement": {"x": 160, "y": 640}}	ok	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+382	failed	5879	0	5879	0	{"kind": "collect-placement", "placement": {"x": 880, "y": 816}}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+860	failed	5950	0	5950	0	{"kind": "collect-placement", "placement": {"x": 656, "y": 528}}	refused:refusal	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+860	failed	5950	1	5950	0	{"kind": "collect-placement", "placement": {"x": 656, "y": 528}}	refused:refusal	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+363	timeout	6083	0	6083	0	{"kind": "collect-placement", "placement": {"x": 64, "y": 144}}	ok	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+383	failed	7393	0	7393	0	{"kind": "clear-tag", "tag": {"level": 40, "tag": 8}, "at": {"x": 480, "y": 352}, "obstacle": "bosslock@480,352"}	refused:refusal	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+403	done	7459	0	7459	0	{"kind": "collect-placement", "placement": {"x": 184, "y": 152}}	ok	level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152
+862	done	8858	0	8858	0	{"kind": "collect-placement", "placement": {"x": 240, "y": 144}}	ok	level_41__r7c15 <- in_L40_944_96 ~> level_41__r4c3 ~> level_41__r4c15 -> location:Level 041 - Totem Part 240,144
+405	done	11324	0	11324	0	{"kind": "collect-placement", "placement": {"x": 144, "y": 224}}	ok	level_43__r13c7 <- in_L40_320_576 -> location:Level 043 - Wand
+876	done	11563	0	11563	0	{"kind": "clear-tag", "tag": {"level": 43, "tag": 5}, "at": {"x": 152, "y": 168}, "obstacle": "bosstotem@152,168"}	ok	level_43__r8c7 <- in_L40_320_576 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste
+398	done	5154	0	5154	0	{"kind": "collect-placement", "placement": {"x": 160, "y": 640}}	ok	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+399	failed	5341	0	5341	0	{"kind": "collect-placement", "placement": {"x": 880, "y": 816}}	refused:refusal	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+861	failed	5425	0	5425	0	{"kind": "collect-placement", "placement": {"x": 656, "y": 528}}	refused:refusal	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+861	failed	5425	1	5425	0	{"kind": "collect-placement", "placement": {"x": 656, "y": 528}}	refused:refusal	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+366	failed	5574	0	5574	0	{"kind": "collect-placement", "placement": {"x": 64, "y": 144}}	refused:refusal	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+366	failed	5574	1	5574	0	{"kind": "collect-placement", "placement": {"x": 64, "y": 144}}	refused:refusal	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+400	failed	5669	0	5669	0	{"kind": "clear-tag", "tag": {"level": 40, "tag": 8}, "at": {"x": 480, "y": 352}, "obstacle": "bosslock@480,352"}	refused:refusal	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared

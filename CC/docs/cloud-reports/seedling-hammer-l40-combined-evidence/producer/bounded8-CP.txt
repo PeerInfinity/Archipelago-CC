@@ -1,0 +1,7 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/hammerChooserPair.test.js > hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHOOSER_PAIR`) > 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and ON = OFF
+ FAIL  frontend/modules/seedlingDemo/hammerChooserPair.test.js > hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHOOSER_PAIR`) > the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit
+ FAIL  frontend/modules/seedlingDemo/hammerGhostKillRung.test.js > hammer-g1-l40-ghostkill — the kill rung's ghost press kill, on the game (hammer-phase G1, D2) > ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death; the strike floor OFF)
+ FAIL  frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js > hammer-sf-l40-strikefloor — the strike the admissible floor lets the scan see, on the game (hammer-phase SF, D1) > ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death)
+ Test Files  3 failed | 5 passed (8)
+      Tests  4 failed | 65 passed (69)
