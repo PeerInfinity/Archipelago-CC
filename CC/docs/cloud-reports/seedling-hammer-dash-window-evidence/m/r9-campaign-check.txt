@@ -1,0 +1,3 @@
+
+all checks green
+EXIT 0

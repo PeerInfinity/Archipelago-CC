@@ -1,0 +1,18 @@
+719 requests; dashless 133322 t, window 0 101559 t; 138 requests re-solved per window (full pass counted > 85 ON asks, a plan in hand)
+window | ticks | % of window 0 savings | requests short of window 0 | Δ work units vs 85 (the re-solved requests)
+    85 | 107824 |  80.3 % |   94 |     +0 (23662)
+    89 | 107390 |  81.6 % |   93 |   +537 (24199)
+    97 | 107039 |  82.7 % |   80 |  +1610 (25272)
+   129 | 104964 |  89.3 % |   59 |  +5105 (28767)
+   193 | 102837 |  96.0 % |   33 | +10725 (34387)
+   257 | 101877 |  99.0 % |   15 | +14636 (38298)
+   353 | 101523 | 100.1 % |    2 | +17844 (41506)
+
+legs whose ON threshold is exactly 85, at 85 / 89:
+  769:0 L104 best 259  85:{'ticks': 259, 'work': 324}  89:{'ticks': 259, 'work': 328}
+  146:0 L12 best 247  85:None  89:None
+  409:0 L40 best 340  85:None  89:None
+  32:0 L0 best 181  85:None  89:None
+  108:0 L12 best 328  85:{'ticks': 328, 'work': 151}  89:{'ticks': 328, 'work': 155}
+  671:0 L87 best 243  85:None  89:None
+  311:0 L29 best 342  85:None  89:None
