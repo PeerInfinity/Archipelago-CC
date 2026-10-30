@@ -1,0 +1,37 @@
+== OFF (default)
+{"x":124,"y":140} [{"x":44,"y":92},{"x":60,"y":44},{"x":124,"y":44},{"x":124,"y":140}]
+{"x":122,"y":47} [{"x":44,"y":68},{"x":52,"y":68},{"x":60,"y":44},{"x":124,"y":44},{"x":122,"y":47}]
+{"x":124,"y":140} [{"x":40,"y":88},{"x":56,"y":40},{"x":104,"y":40},{"x":104,"y":136},{"x":124,"y":140}]
+{"x":122,"y":47} [{"x":40,"y":72},{"x":56,"y":72},{"x":56,"y":40},{"x":120,"y":40},{"x":122,"y":47}]
+== ON
+lethal kinds [ '1:Water' ]
+   4 ....SSSSSSSSSSSSSSSSSSSSSS....................
+  12 ....SSSSSSSSSSSSSSSSSSSSSS....................
+  20 ....SSSSSS~~~~SSSSSSSSSSSS....................
+  28 ....SSSSSS~~~~SSSSSSSSSSSS....................
+  36 SSSSSS....wwww..SSSSSSSSSSSSSS..PPPPPPPPPPPP..
+  44 SSSSSS....wwww..SSSSSSSSSSSSSS..PPPPPPPPPPPP..
+  52 SSSSSS..SSwwwwP.SSSSSSSSSSSSSSPPPPPPPPPPPPPPPP
+  60 SSSSSS..SSwwwwP.SSSSSSSSSSSSSSPPPPPPPPPPPPPPPP
+  68 SSSS.....PwwwwP.SSSS....SSSSSSPPPPPPPPPPPPPPPP
+  76 SSSS.....PwwwwP.SSSS....SSSSSSPPPPPPPPPPPPPPPP
+  84 SSSS....SSwwwwP.SS........SSSSPPPP......PPPPPP
+  92 SSSS....SSwwwwP.SS........SSSSPPPP......PPPPPP
+ 100 SSSS..TTSSwwwwP.SS..................PP..PPPPPP
+ 108 SSSS..TTSSwwwwP.SS..................PP..PPPPPP
+ 116 SSSS...PSSwwwwP.SS........SSSSPPPP......PPPPPP
+ 124 SSSS...PSSwwwwP.SS........SSSSPPPP......PPPPPP
+ 132 SSSSSS.PSS~~~~P.SS......SSSSSSPPPPPPPPPPPPPPPP
+ 140 SSSSSS.PSS~~~~P.SS......SSSSSSPPPPPPPPPPPPPPPP
+ 148 SSSSSS.PSS~~~~P.SS....SSSSSSSSPPPPPPPPPPPPPPPP
+ 156 SSSSSS.PSS~~~~P.SS....SSSSSSSSPPPPPPPPPPPPPPPP
+ 164 SSSSSS.P~~~~~~SSSSSSSSSSSSSSSS..PPPPPPPPPPPP..
+ 172 SSSSSS.P~~~~~~SSSSSSSSSSSSSSSS..PPPPPPPPPPPP..
+ 180 ....SSSSSSSSSSSSSSSSSSSSSS....................
+ 188 ....SSSSSSSSSSSSSSSSSSSSSS....................
+ 196 ....SSSSSSSSSSSSSSSSSSSSSS....................
+ 204 ....SSSSSSSSSSSSSSSSSSSSSS....................
+{"x":124,"y":140} [{"x":44,"y":92},{"x":60,"y":44},{"x":76,"y":44},{"x":108,"y":28},{"x":116,"y":36},{"x":124,"y":140}]
+{"x":122,"y":47} [{"x":44,"y":68},{"x":52,"y":68},{"x":60,"y":44},{"x":76,"y":44},{"x":108,"y":28},{"x":116,"y":36},{"x":122,"y":47}]
+{"x":124,"y":140} [{"x":40,"y":88},{"x":56,"y":40},{"x":72,"y":40},{"x":88,"y":136},{"x":104,"y":136},{"x":124,"y":140}]
+{"x":122,"y":47} [{"x":40,"y":72},{"x":56,"y":72},{"x":56,"y":40},{"x":72,"y":40},{"x":88,"y":24},{"x":104,"y":24},{"x":120,"y":40},{"x":122,"y":47}]

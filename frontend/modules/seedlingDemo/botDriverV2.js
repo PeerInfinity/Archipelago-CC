@@ -778,6 +778,136 @@ export function climbsArmedWaterfall(level, from, to, opts = {}) {
 }
 
 /**
+ * ⛓⛓ fidelity WATERFALL D1 (`CONTACT_FIDELITY.waterfallPushPricing`, OFF → never asked) — **THE PUSH, PRICED.**
+ *
+ * `climbsArmedWaterfall` is the one directed REFUSAL and it stays the only one. What it left out is the other half of
+ * `Player.as:1557`: every motion on a waterfall that is not a Feather-held rise is pushed (`v.y += 0.8`, no friction
+ * on the push). Measured in the model (W0, L100's x 80–111 column, held from rest, Feather or not):
+ *
+ *     held          4 px of waterfall      8 px            16 px
+ *     right         6 t, 11.4 px down      17 t, 63.6 px   32 t, 127.2 px
+ *     right+down    6 t, 17.7 px           17 t, 78.8 px   29 t, 128.1 px
+ *     right+up      F: 8 t, 4.4 px UP      F: 14 t, 8.2 up F: 26 t, 16.4 up
+ *                   no F: 9 t, 5.3 down    21 t, 25.1 down 45 t, 96.5 down
+ *
+ * So a FLAT crossing of even half a lattice cell leaves its row: the step's destination is not where a held-flat walk
+ * ends, unless a floor right under the waterfall stops the push (the player is pinned and walks on). The price is the
+ * carry: `1 + 2 × depth`, depth being the walkable nodes the push falls through below the waterfall endpoint — the
+ * fall, and (with the Feather) the climb back. Pinned (the node below is not walkable): depth 0, cost 1. An EXIT is
+ * priced by where its half-cell's carry lands (`waterfallStepSurcharge`).
+ *
+ * ⚠ A PRICE, NOT A REFUSAL — so `plansReach` (which answers existence) stays exact with no change, and the R4 lesson
+ * holds: refusing waterfall motion cut level 0 from 53 nodes to 12. Without the Feather a flat step over an open drop
+ * IS a fall; the price stands for it rather than cutting the map.
+ * ⚠ Integer costs, so the route's g-score stays an exact sum (see `WATER_STEP_COST`'s quarter rounding).
+ * ⚠ The key is read INSIDE the call and must stay fixed per process: hammer XC's cross-pass escape cache keys on the
+ * run's digest, not on flags (hammer-2's licence, 2026-10-27).
+ *
+ * Returns null when the key is off or the level has no armed waterfall, else `{ armed, pitch, onArmed, walkable,
+ * depthOf }`: the armed tile keys and a memoised per-node depth under `opts` (one call — `opts` fixed).
+ */
+function waterfallPushModel(level, allowTeleporter, opts) {
+    if (!CONTACT_FIDELITY.waterfallPushPricing) return null;
+    const { noHazards = [] } = opts;
+    const armed = new Set();
+    for (const tile of level.waterfallTiles) {
+        if (coerceTerrainState(tile.t, noHazards) !== tile.t) continue;
+        armed.add(`${tile.tx},${tile.ty}`);
+    }
+    if (armed.size === 0) return null;
+    const pitch = opts.lattice ?? DEFAULT_LATTICE;
+    const cells = TILE_SIZE / pitch;
+    const onArmed = (tx, ty) => armed.has(`${Math.floor(tx / cells)},${Math.floor(ty / cells)}`);
+    const walkable = (tx, ty) => isWalkableTile(level, tx, ty, allowTeleporter, opts);
+    const depths = new Map();
+    const depthOf = (tx, ty) => {
+        const k = `${tx},${ty}`;
+        let d = depths.get(k);
+        if (d === undefined) {
+            d = 0;
+            // the push carries while the node it leaves is on the waterfall and the node below is walkable
+            while (onArmed(tx, ty + d) && walkable(tx, ty + d + 1)) d += 1;
+            depths.set(k, d);
+        }
+        return d;
+    };
+    return { armed, pitch, onArmed, walkable, depthOf };
+}
+
+/**
+ * How far the push carries a flat EXIT (a step from a waterfall node to one that is not): the player's centre
+ * crosses half a lattice cell of waterfall. W0's table, held flat from rest: 4 px → 11.4 px (the 8 px lattice),
+ * 8 px → 63.6 px (the 16 px lattice). A wider half-cell takes the 8 px row (the larger carry).
+ */
+export const WATERFALL_EXIT_CARRY_PX = Object.freeze({ 4: 11.4, 8: 63.6 });
+
+/**
+ * The carry's price for one A* step (`waterfallPushModel`): 0 unless the step is FLAT and touches an armed waterfall.
+ *   · INTO a waterfall node (from the side, or along it): the walk cannot stand there, it is carried down the
+ *     column — `2 × depth(to)` (0 when a floor pins it).
+ *   · OUT of one: the half-cell's carry (`WATERFALL_EXIT_CARRY_PX`) lands the player that much lower on the far side.
+ *     Free when the source is pinned or the destination's column is walkable down to that depth (it lands there);
+ *     else the box meets a blocker on the far side, stays on the waterfall and is carried down it — `2 × depth(from)`.
+ */
+function waterfallStepSurcharge(push, from, to) {
+    if (push === null || to.ty !== from.ty) return 0;
+    if (push.onArmed(to.tx, to.ty)) return 2 * push.depthOf(to.tx, to.ty);
+    if (!push.onArmed(from.tx, from.ty)) return 0;
+    const depth = push.depthOf(from.tx, from.ty);
+    if (depth === 0) return 0;
+    const carry = WATERFALL_EXIT_CARRY_PX[push.pitch / 2] ?? WATERFALL_EXIT_CARRY_PX[8];
+    const below = Math.round(carry / push.pitch);
+    for (let k = 1; k <= below; k++) {
+        if (!push.walkable(to.tx, to.ty + k)) return 2 * depth;
+    }
+    return 0;
+}
+
+/** A point on an armed waterfall with an open drop under it: the walk cannot stop there (`stringPull`). */
+function waterfallNoStop(level, p, allowTeleporter, opts, push) {
+    if (!push.armed.has(`${Math.floor(p.x / TILE_SIZE)},${Math.floor(p.y / TILE_SIZE)}`)) return false;
+    return plannerObstacleAt(level, p.x, p.y + push.pitch, allowTeleporter, opts) === null;
+}
+
+/**
+ * ⛓⛓ fidelity WATERFALL D1 — **THE STRING-PULL'S HALF**: would the controller's walk from `a` to `b` be carried by an
+ * armed waterfall? The A* price keeps the ROUTE off a flat crossing; without this the pull would take the straight
+ * shortcut straight back across it (`controllerPathClear` asks obstacles only, and a waterfall is not one). Same
+ * two-leg geometry as `controllerPathClearBy` (45 degrees for min(|dx|,|dy|), then axis-aligned), same sample step.
+ * A leg is carried when it samples an armed waterfall point and it is:
+ *   · rising without the Feather (the climb `climbsArmedWaterfall` refuses on the lattice), or
+ *   · flat or down-diagonal (the push beats the held axis: W0's table) with an open drop under the point.
+ * A rise with the Feather and a straight descent are never carried. ⚠ Separate from SP's point memo: this asks
+ * direction, which no point query can, and leaves the memo's asks and their order untouched.
+ */
+function waterfallCarriesLeg(level, a, b, allowTeleporter, opts, push) {
+    const feather = (opts.inventory ?? EMPTY_INVENTORY).hasFeather === true;
+    const pitch = opts.lattice ?? DEFAULT_LATTICE;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const diagonal = Math.min(Math.abs(dx), Math.abs(dy));
+    const corner = { x: a.x + Math.sign(dx) * diagonal, y: a.y + Math.sign(dy) * diagonal };
+    for (const [from, to] of [[a, corner], [corner, b]]) {
+        const ldx = to.x - from.x;
+        const ldy = to.y - from.y;
+        if (ldx === 0 && ldy === 0) continue;
+        if (ldy < 0 && feather) continue;
+        if (ldy > 0 && ldx === 0) continue;
+        const dist = Math.hypot(ldx, ldy);
+        const steps = Math.max(1, Math.ceil(dist / SEGMENT_SAMPLE_STEP));
+        for (let i = 0; i <= steps; i++) {
+            const f = i / steps;
+            const x = from.x + ldx * f;
+            const y = from.y + ldy * f;
+            if (!push.armed.has(`${Math.floor(x / TILE_SIZE)},${Math.floor(y / TILE_SIZE)}`)) continue;
+            if (ldy < 0) return true;
+            if (plannerObstacleAt(level, x, y + pitch, allowTeleporter, opts) === null) return true;
+        }
+    }
+    return false;
+}
+
+/**
  * ⛓⛓⛓ **THE SWIMMER'S PRICE** (seedling swim T2, D1) — the step cost of a
  * lattice node whose tile is ARMED WATER that the inventory makes walkable
  * (`canSwim`). Every other node costs 1, exactly as before.
@@ -918,6 +1048,8 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
     const stepCost = (tx, ty) => (swim.size > 0
         && swim.has(`${Math.floor(tx / cellsPerTile)},${Math.floor(ty / cellsPerTile)}`)
         ? WATER_STEP_COST : 1);
+    // ⛓ fidelity WATERFALL D1 — the push's price on a flat step (see `waterfallPushModel`; null with the key off).
+    const push = waterfallPushModel(level, allowTeleporter, opts);
 
     const gScore = new Map([[key(start.tx, start.ty), 0]]);
     const cameFrom = new Map();
@@ -974,7 +1106,8 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
                 climbsRefused += 1;
                 continue;
             }
-            const g = cur.g + stepCost(nx, ny);
+            const g = cur.g + stepCost(nx, ny)
+                + (push === null ? 0 : waterfallStepSurcharge(push, cur, { tx: nx, ty: ny }));
             if (gScore.has(nk) && gScore.get(nk) <= g) continue;
             gScore.set(nk, g);
             cameFrom.set(nk, { tx: cur.tx, ty: cur.ty });
@@ -1148,21 +1281,32 @@ function stringPullBlockedAt(level, allowTeleporter, opts) {
  * `fast` picks the query (`STRING_PULL_FAST`); `beat` emits the HB heartbeat.
  */
 function stringPull(level, points, allowTeleporter, opts, fast, beat) {
-    const clear = fast
+    const clearPath = fast
         ? ((blockedAt) => (a, b) => controllerPathClearBy(blockedAt, a, b))(
             stringPullBlockedAt(level, allowTeleporter, opts))
         : (a, b) => controllerPathClear(level, a, b, allowTeleporter, opts);
+    // ⛓ fidelity WATERFALL D1 — asked AFTER the obstacle test, so SP's memo sees the same asks in the same order.
+    const push = waterfallPushModel(level, allowTeleporter, opts);
+    const clear = push === null ? clearPath
+        : (a, b) => clearPath(a, b) && !waterfallCarriesLeg(level, a, b, allowTeleporter, opts, push);
+    // ⛓ fidelity WATERFALL D1 — a point on an armed waterfall over an open drop is no STOP: the walk cannot stand
+    // there (W0: the drive to (108,36) on L100 stalls at (107.6,39.4)). Never a candidate but the target itself, and
+    // the fallback steps past it to the first point that is one.
+    const noStop = push === null ? null
+        : (i) => i < points.length - 1 && waterfallNoStop(level, points[i], allowTeleporter, opts, push);
     const kept = [];
     let anchor = 0;
     while (anchor < points.length - 1) {
         let next = anchor + 1;
         for (let j = points.length - 1; j > anchor; j--) {
+            if (noStop !== null && noStop(j)) continue;
             if (beat) { if (activeProgress !== null) progressHeartbeat('plan-pull'); } // ⛓ HB: emit-only, once a string-pull ask
             if (clear(points[anchor], points[j])) {
                 next = j;
                 break;
             }
         }
+        if (noStop !== null && next === anchor + 1) while (noStop(next)) next += 1;
         kept.push(points[next]);
         anchor = next;
     }

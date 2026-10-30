@@ -1,0 +1,7 @@
+feather keys | first-push tick x,y | +4px: ticks drift | +8px: ticks drift | +16px: ticks drift | v.y after 8 ticks
+F right      | t7 80.88,44.85 | 6t 11.4px | 17t 63.6px | 32t 127.2px | 3.23 | hazardKeys=onIce,onWaterfall,inWater,inLava
+F right+down | t7 81.72,44.85 | 6t 17.7px | 17t 78.8px | 29t 128.1px | 4.04 | hazardKeys=onIce,onWaterfall,inWater,inLava
+F right+up   | t7 81.72,34.78 | 8t -4.4px | 14t -8.2px | 26t -16.4px | -0.23 | hazardKeys=onIce,onWaterfall,inWater,inLava
+- right      | t7 80.88,44.85 | 6t 11.4px | 17t 63.6px | 32t 127.2px | 3.23 | hazardKeys=onIce,onWaterfall,inWater,inLava
+- right+down | t7 81.72,44.85 | 6t 17.7px | 17t 78.8px | 29t 128.1px | 4.04 | hazardKeys=onIce,onWaterfall,inWater,inLava
+- right+up   | t7 81.72,35.58 | 9t 5.3px | 21t 25.1px | 45t 96.5px | 0.83 | hazardKeys=onIce,onWaterfall,inWater,inLava

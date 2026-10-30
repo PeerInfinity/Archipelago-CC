@@ -1719,6 +1719,18 @@ export const CONTACT_FIDELITY = {
      * reads the same box. OFF: byte-identical. `SEEDLING_TURRET_SNAP_PRICING=0|1`.
      */
     turretSnapPricing: false,
+    /**
+     * fidelity WATERFALL D1 (wave 35) — THE CORRIDOR PLANNER PRICES THE WATERFALL'S PUSH (`botDriverV2.planTilePath`'s
+     * step cost, `waterfallCarriesLeg` in its string-pull).
+     *
+     * `Player.as:1557`: `if (onWaterfall && (!hasFeather || v.y >= 0)) v.y += 0.8`. Only a RISING player holding the
+     * Feather is not pushed. Measured in the model (L100, held right from rest): 4 px of waterfall carries the player
+     * 11.4 px down, 8 px carries it 63.6 px. ON: a FLAT A* step on an armed waterfall over an open drop costs the carry
+     * (`1 + 2 × WATERFALL_CARRY_DEPTH`), and the string-pull keeps no shortcut whose flat or down-diagonal leg crosses
+     * one. A rising step stays free with the Feather. OFF: byte-identical. ⚠ FIXED PER PROCESS: hammer XC's cross-pass
+     * escape cache keys on the digest, not on this flag — never flip it mid-solve. `SEEDLING_WATERFALL_PUSH_PRICING=0|1`.
+     */
+    waterfallPushPricing: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2060,6 +2072,9 @@ if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '1') CONTACT_FIDELITY.
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '0') CONTACT_FIDELITY.coverHeldFade = false;
 if (globalThis.process?.env?.SEEDLING_LOCK_RECLOSE_LAG === '1') CONTACT_FIDELITY.lockRecloseLag = true;
 if (globalThis.process?.env?.SEEDLING_LOCK_RECLOSE_LAG === '0') CONTACT_FIDELITY.lockRecloseLag = false;
+// ⛓ fidelity WATERFALL D1: `SEEDLING_WATERFALL_PUSH_PRICING=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WATERFALL_PUSH_PRICING === '1') CONTACT_FIDELITY.waterfallPushPricing = true;
+if (globalThis.process?.env?.SEEDLING_WATERFALL_PUSH_PRICING === '0') CONTACT_FIDELITY.waterfallPushPricing = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
