@@ -53,8 +53,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 62,
-            "count": 102,
+            "browser": 63,
+            "count": 103,
             "id": "check"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 490,
-        "browser": 194,
+        "blockStyle": 491,
+        "browser": 195,
         "cited": 263,
-        "files": 507,
+        "files": 508,
         "lineStyle": 17,
-        "withDocblock": 507,
-        "withFlags": 423
+        "withDocblock": 508,
+        "withFlags": 424
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4331,6 +4331,43 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-lab-art — THE LAB ARC L2 ACCEPTANCE ROW (seedling-lab-static-art): does `watch.html` boot, load the Seedling art, and draw the room in it (statically) in every arm — and fall back to the rectangles when told?",
             "path": "scripts/procgen/check-seedling-lab-art.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-lab-load-in-js.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shots"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-seedling-lab-load-in-js.mjs — LAB L3: **▶ load in JS** on the Seedling lab page (`watch.html`), driven in a real browser.",
+            "path": "scripts/procgen/check-seedling-lab-load-in-js.mjs"
         },
         {
             "argvHelpers": [],
