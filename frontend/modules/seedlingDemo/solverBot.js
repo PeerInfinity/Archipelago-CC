@@ -2894,8 +2894,13 @@ const STRATEGY_BOUND_TOTAL = 2 * MAX_STRATEGIES_PER_GOAL;
  * Is the goal's strategy bound reached by the applications so far (`strategy(obstacle)` strings, in order)? OFF
  * (`strategyBoundDistinct`): every application counts, as before. ON: the distinct ones, and `STRATEGY_BOUND_TOTAL`
  * applications in all.
+ *
+ * ⛓ hammer-phase APPROACH (`FIFTH_ORDER`, OFF): `next`, the application about to be made, is admitted as a FIFTH when
+ * the four before it are distinct and it is distinct from all four (`fifthOrderAdmits`). OFF (or `next` omitted):
+ * byte-identical.
  */
-export function strategyBoundReached(applied) {
+export function strategyBoundReached(applied, next = null) {
+    if (FIFTH_ORDER.enabled && fifthOrderAdmits(applied, next)) return false;
     if (!CONTACT_FIDELITY.strategyBoundDistinct) return applied.length >= MAX_STRATEGIES_PER_GOAL;
     return new Set(applied).size >= MAX_STRATEGIES_PER_GOAL || applied.length >= STRATEGY_BOUND_TOTAL;
 }
@@ -11714,7 +11719,9 @@ function killForCorpse(run, perTick, c, exempt, ctx) {
         : (slots.includes(INVENTORY_ITEM_IDS.sword) ? INVENTORY_ITEM_IDS.sword : null);
     if (blade === null) refuse(`the inventory has no Sword or Ghost Sword slot to kill ${c.turret} with`);
     if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
-    const side = corpseKillSide(run.entities('turrets').get(c.turret).rect, c.dir);
+    // ⛓ hammer-phase APPROACH (`TURRET_APPROACH`, OFF): off the SNAPPED box, as `killIceTurretOnWalk` derives it
+    const killBox = run.entities('turrets').get(c.turret);
+    const side = corpseKillSide(iceTurretKillBox(killBox), c.dir);
     if (!hasArrived(run.state, side, DEFAULT_TOLERANCE)) {
         ctx.walkTo(ctx.goal, { x: side.x, y: side.y }, { what: `${ctx.what} -> ${c.turret} kill stance (${side.key})`,
             contactsOverride: exempt });
@@ -11770,6 +11777,232 @@ function killForCorpse(run, perTick, c, exempt, ctx) {
     }
     return refuse(`no start delay 0 … ${CORPSE_KILL_DELAY_MAX} kills ${c.turret} from the ${side.key} side `
         + `(${side.x},${side.y}) without a hit — ${whys.join(' | ')}`);
+}
+
+/** APPROACH: the staging point stands this far past the turret's attack range, px (outside it no volley starts). */
+const TURRET_APPROACH_STAGE_CLEAR = 8;
+/** APPROACH: the farthest the staging point is sought along the push side's outward normal, px. */
+const TURRET_APPROACH_STAGE_REACH = 240;
+/**
+ * APPROACH: the longest wait a try takes inside the range, ticks: past one volley cycle (`shootTimerMax` 25, the
+ * 4-tick `startshot`, the 16-tick `finishshot`, and slack). Measured on the latch chain: the hitless waits are 30 and 31.
+ */
+const TURRET_APPROACH_WAIT_MAX = 48;
+/** APPROACH: a via point stands this far outside the snapped live box, on the kill stance's line, px. */
+const TURRET_APPROACH_VIA = 6;
+
+/**
+ * The live box of an ice turret on its stationary-axis snap (`floor(v/16)*16 + 8`, `iceTurret.js`'s `input()`): the
+ * box its first on-screen update gives a body still at its ctor point. A body that has updated sits within 0.5 px of
+ * its snap (the rest two-cycle), so its box is returned as it is.
+ */
+function iceTurretSnappedRect(t) {
+    const snap = (v) => Math.floor(v / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+    const sx = !t.dead && Math.abs(snap(t.x) - t.x) >= 1 ? snap(t.x) - t.x : 0;
+    const sy = !t.dead && Math.abs(snap(t.y) - t.y) >= 1 ? snap(t.y) - t.y : 0;
+    return { ...t.rect, x: t.rect.x + sx, right: t.rect.right + sx, y: t.rect.y + sy, bottom: t.rect.bottom + sy };
+}
+
+/**
+ * The box a kill derives its stance from (`killForCorpse`'s `corpseKillSide`, `killIceTurretInPlace`'s sides): OFF the
+ * run's rect, as before; ON (`TURRET_APPROACH`) the SNAPPED box. ⛓ TURRETSNAP's hand-over: a turret that has not yet
+ * taken an on-screen `input()` still has its ctor box, 8 px off the snapped body the game contact-tests (L40's
+ * `iceturret@472,400`: y 400..432 against 408..440), so a kill side derived from it stands inside the live body. Once the
+ * turret has updated the two are the same box (its rest cycle is 0.5 px), which is why no shipped caller moves.
+ */
+export function iceTurretKillBox(t) {
+    return TURRET_APPROACH.enabled ? iceTurretSnappedRect(t) : t.rect;
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE APPROACH (`TURRET_APPROACH`, OFF) — THE REORDERED CORPSE WEIGH'S APPROACH AND KILL, ONE
+ * CERTIFICATE.
+ *
+ * LWEIGH's order (`latchWeighFirst`) carries `killForCorpse`'s kill stance, and the frontier walks it as a plain stance
+ * walk with the turret's range braved; `killForCorpse` then certifies only the kill, from the stance. Measured on the
+ * latch chain with CPAIR size 3 (`clock-off-cp3-lwf.txt`): the player enters the range at t822, the walk's own swing
+ * lands on the turret at t879 (`hitsTimer` 30 holds `shootTimer` at 0), the player stops on the stance at t909, the
+ * startshot begins at t910 as the i-frame runs out, and blast #2.2 lands at t917 on `execCorpseWeigh`'s snap tick.
+ *
+ * ON, in place of that stance walk:
+ *   1. the LIVE run walks — the loop's own `walkTo`, the order's exemptions — to a STAGING point on the push side's
+ *      outward normal `TURRET_APPROACH_STAGE_CLEAR` px past `ICE_TURRET.attackRange` (the first plannable floor there;
+ *      the walk's own ladder opens what stands between), or stays where it is if already inside the range;
+ *   2. the tries, each on a FORK, per side of the SNAPPED box (the push side first, then nearest), per route (the
+ *      planned corridor, then a via point beside the box on the stance's line), per wait `w` = 0 …
+ *      `TURRET_APPROACH_WAIT_MAX`: walk to the route's first waypoint, STAND `w` ticks there, walk the rest to the
+ *      stance (`planWaypoints` + `previewWalk`'s held sets, the drive's keys), the snap wait, settle on the side the
+ *      kill derives off the live box, then `killIceTurretInPlace` (`corpseOnly`) and the stand until no blast is in
+ *      flight;
+ *   3. the first try with the turret dead, no hit and no blast in flight is played on the live run, key for key, and
+ *      read back. `execCorpseWeigh` then finds the turret dead and goes straight to the bumps.
+ *
+ * ⛔ THE WAIT IS THE TURRET'S CLOCK, AND IT IS SPENT INSIDE THE RANGE. Out of range `IceTurret.update`'s `else`
+ * re-arms `shootTimer` every tick, so a wait at the staging point moves nothing the turret does (ICEST's note); a wait
+ * inside the range runs the volley clock against the walk that follows. Measured on the latch chain: the route's
+ * first waypoint (488,504) is in the range (d 80) and COVERED — `pushableblockfire@480,480` stands on the bearing and
+ * a blast dies on the first `Solid` it meets (`iceTurretBlast.js`'s `hitables`) — and of the waits 1 … 48 there only
+ * 30 and 31 bring the player to the west stance (467,424) between volleys with the kill's first landing ahead of the
+ * next `startshot` (`latch-ta8.txt`: the others are caught by volley 2 leaving the cover or by volley 4 at the stance).
+ * A wait before entering the range, or standing at the stance after arriving, was measured too and adds nothing.
+ *
+ * ⛔ THE SIDE IS FREE. The corpse is where the turret died (an `IceTurret` takes no knockback), so the side the kill
+ * is struck from moves only the player; `execCorpseWeigh` walks to its first bump's stance off the corpse itself.
+ * The push side's stance (488,445) is not reachable hitless here: the column below it is shut by
+ * `pushableblockfire@480,480`, so its corridor dog-legs up x 472 into the snapped body's corner, and its via routes
+ * slide past the barrel under a volley (`latch-ta7.txt`).
+ *
+ * A turret already dead, or not a run turret, is not this arm's (it returns null and the stance walk runs as OFF).
+ * No hitless try refuses by name with the tries tallied; LWEIGH's guard on a hit by the verb's end stands behind it.
+ * `deriveCorpseWeigh`, `execCorpseWeigh` and `killForCorpse`'s own search are called, not changed.
+ */
+function approachKillForCorpse(run, perTick, resolved, ctx) {
+    const c = resolved.corpse;
+    const id = c.turret;
+    const t = run.entities('turrets')?.get?.(id) ?? null;
+    if (!t || t.dead) return null;
+    const refuse = (msg) => {
+        throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'danger', id },
+            perTick: [...perTick] });
+    };
+    if (typeof ctx.fork !== 'function') refuse(`the approach to ${id} is certified on a fork, and this solve has none`);
+    const slots = run.progress('inventorySlots') ?? [];
+    const blade = slots.includes(INVENTORY_ITEM_IDS.ghostsword) ? INVENTORY_ITEM_IDS.ghostsword
+        : (slots.includes(INVENTORY_ITEM_IDS.sword) ? INVENTORY_ITEM_IDS.sword : null);
+    if (blade === null) refuse(`the inventory has no Sword or Ghost Sword slot to kill ${id} with`);
+    const exempt = new Set([...(resolved.exempt ?? []), `proximity-hazard:${id}`]);
+    const r = iceTurretSnappedRect(t);
+    const at = { x: (r.x + r.right) / 2, y: (r.y + r.bottom) / 2 };
+    const clear = ICE_TURRET.attackRange + 1 + TURRET_APPROACH_STAGE_CLEAR;
+    const opts = solverPlanOpts(run, exempt);
+    const DIRS = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
+    const push = corpseKillSide(r, c.dir);
+    const sides = [push, ...DIRS.map((d) => ({ ...corpseKillSide(r, d), dir: d })).filter((s) => s.key !== push.key)
+        .sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y) - Math.hypot(b.x - run.state.x, b.y - run.state.y))]
+        .map((s) => (s.dir ? s : { ...s, dir: c.dir }))
+        .filter((s) => plannerObstacleAt(run.world, s.x, s.y, null, opts) === null);
+    if (sides.length === 0) refuse(`no side of ${id}'s snapped box is plannable floor`);
+    // 1. the staging point, past the range on the push side's outward normal
+    const NORMAL = { up: [0, 1], down: [0, -1], left: [1, 0], right: [-1, 0] };
+    const [nx, ny] = NORMAL[push.key];
+    let stage = Math.hypot(run.state.x - at.x, run.state.y - at.y) < clear ? { x: run.state.x, y: run.state.y } : null;
+    for (let k = 0; k <= TURRET_APPROACH_STAGE_REACH && stage === null; k += 2) {
+        const p = { x: push.x + nx * k, y: push.y + ny * k };
+        if (Math.hypot(p.x - at.x, p.y - at.y) < clear) continue;
+        if (plannerObstacleAt(run.world, p.x, p.y, null, opts) === null) stage = p;
+    }
+    if (stage === null) refuse(`no plannable floor past ${id}'s range on its ${push.key} side's normal`);
+    const hitsBefore = run.ledger('playerHits').length;
+    if (!hasArrived(run.state, stage, DEFAULT_TOLERANCE)) {
+        ctx.walkTo(ctx.goal, stage, { what: `${ctx.what} -> ${id} approach staging (${stage.x},${stage.y})`,
+            contactsOverride: new Set(resolved.exempt ?? []) });
+    }
+    if (run.ledger('playerHits').length !== hitsBefore) refuse(`the player was HIT on the staging walk to ${id}`);
+    if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
+    // 2. the tries, each on a fork
+    const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
+    const onSnap = (f) => {
+        const u = f.entities('turrets')?.get?.(id);
+        return !u || u.dead || u.y === Math.floor(u.y / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+    };
+    const tally = {};
+    const whys = [];
+    let forks = 0;
+    for (const side of sides) {
+        const V = TURRET_APPROACH_VIA;
+        const vias = side.key === 'up' || side.key === 'down'
+            ? [{ x: r.x - V, y: side.y }, { x: r.right + V, y: side.y }]
+            : [{ x: side.x, y: r.y - V }, { x: side.x, y: r.bottom + V }];
+        vias.sort((a, b) => Math.hypot(a.x - stage.x, a.y - stage.y) - Math.hypot(b.x - stage.x, b.y - stage.y));
+        for (const via of [null, ...vias.filter((v) => plannerObstacleAt(run.world, v.x, v.y, null, opts) === null)]) {
+            for (let w = 0; w <= TURRET_APPROACH_WAIT_MAX; w += 1) {
+                const what = `${side.key} ${via ? `via (${via.x},${via.y})` : 'corridor'}, wait ${w}`;
+                const count = (k, why = null) => {
+                    tally[k] = (tally[k] ?? 0) + 1;
+                    if (why && whys.length < 3) whys.push(`${what}: ${why}`);
+                };
+                const f = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
+                if (f === null) refuse(`deadline at the \`crusher-fork\` site after ${forks} approach tr(ies)`);
+                forks += 1;
+                const hits = f.ledger('playerHits').length;
+                const keys = [];
+                const step = (held) => {
+                    keys.push(held);
+                    return !f.advance(held).transition && f.ledger('playerHits').length === hits;
+                };
+                const walkOn = (wps) => {
+                    let ok = true;
+                    for (const sm of previewWalk(f, wps, DEFAULT_TOLERANCE).samples) if (ok && sm.held) ok = step(sm.held);
+                    return ok;
+                };
+                const hitWhy = () => {
+                    const h = f.ledger('playerHits').at(-1);
+                    return h ? `hit t${h.t} by ${h.source}:${h.id} at (${f.state.x.toFixed(1)},${f.state.y.toFixed(1)})`
+                        : 'crossed a door';
+                };
+                const aim = via ?? { x: side.x, y: side.y };
+                const wps = planWaypointsOrNull(f.world, f.state, aim, null, solverPlanOpts(f, exempt));
+                if (wps === null) { count('no-plan', `no corridor to (${aim.x},${aim.y})`); continue; }
+                // ⛓ the wait, at the route's first waypoint: inside the range it runs the turret's volley clock
+                let ok = true;
+                let rest = wps;
+                if (w > 0) {
+                    ok = walkOn(wps.slice(0, 1));
+                    for (let i = 0; i < w && ok; i += 1) ok = step(NONE_KEYS);
+                    if (!ok) { count('wait-hit', hitWhy()); continue; }
+                    rest = planWaypointsOrNull(f.world, f.state, aim, null, solverPlanOpts(f, exempt));
+                    if (rest === null) { count('no-plan', `no corridor on from the wait to (${aim.x},${aim.y})`); continue; }
+                }
+                ok = walkOn(via ? [...rest, { x: side.x, y: side.y }] : rest);
+                if (!ok) { count('approach-hit', hitWhy()); continue; }
+                for (let i = 0; ok && !onSnap(f) && i < CORPSE_SNAP_WAIT; i += 1) ok = step(NONE_KEYS);
+                // ⛓ the kill derives its side off the LIVE box (its 0.5 px rest cycle): settle on that one
+                const live = corpseKillSide(f.entities('turrets').get(id).rect, side.dir);
+                if (ok && !hasArrived(f.state, live, DEFAULT_TOLERANCE)) ok = walkOn([{ x: live.x, y: live.y }]);
+                if (!ok) { count('stance-hit', hitWhy()); continue; }
+                if (!hasArrived(f.state, live, DEFAULT_TOLERANCE)) {
+                    count('not-arrived', `stopped at (${f.state.x.toFixed(1)},${f.state.y.toFixed(1)})`);
+                    continue;
+                }
+                let rec;
+                try {
+                    rec = killIceTurretInPlace(f, keys, id, { contacts: exempt, corpseOnly: true },
+                        { ...ctx, walkTo: noWalk, what: `${ctx.what} (fork, ${what})` });
+                } catch (e) {
+                    // a fork is disposable: the model's own refusals there end the try
+                    if (!(e instanceof SolverRefusal) && !/^levelRun: /.test(e?.message ?? '')) throw e;
+                    count(/HIT/.test(e.message) ? 'kill-hit' : 'kill-refused',
+                        e.message.split('\n')[0].split(ctx.what).join('').slice(0, 160));
+                    continue;
+                }
+                for (let i = 0; (f.blastsInFlight.length > 0 || i < CORPSE_POST_KILL_STAND) && i < CORPSE_BLAST_WAIT && ok;
+                    i += 1) {
+                    ok = step(NONE_KEYS);
+                }
+                if (!ok || f.blastsInFlight.length > 0 || !f.entities('turrets').get(id)?.dead) {
+                    count('after-kill', ok ? 'a blast still in flight' : hitWhy());
+                    continue;
+                }
+                // 3. played on the live run, key for key, and read back
+                for (const held of keys) {
+                    perTick.push(held);
+                    if (run.advance(held).transition) refuse(`the approach to ${id} crossed a door on the live run`);
+                }
+                if (!run.entities('turrets').get(id)?.dead || run.ledger('playerHits').length !== hitsBefore) {
+                    refuse(`the fork's approach and kill of ${id} (${what}) did not replay on the live run — dead `
+                        + `${Boolean(run.entities('turrets').get(id)?.dead)}, hits ${run.ledger('playerHits').length - hitsBefore}`);
+                }
+                const record = { ...rec, side: side.key, stance: { x: live.x, y: live.y }, staging: stage,
+                    via: via ? { ...via } : null, wait: w, forks };
+                TURRET_APPROACH_COUNTS.approaches.push({ turret: id, t: run.ticksCompleted, side: side.key,
+                    via: record.via, wait: w, forks });
+                return record;
+            }
+        }
+    }
+    TURRET_APPROACH_COUNTS.approaches.push({ turret: id, t: run.ticksCompleted, side: null, forks, tally });
+    return refuse(`no approach to ${id} from the staging point (${stage.x},${stage.y}) is hitless — ${forks} fork(s), `
+        + `${JSON.stringify(tally)}: ${whys.join(' | ')}`);
 }
 
 /** ICEST: the arm's staging point stands this far past the turret's attack range, px (outside it no volley starts). */
@@ -15583,6 +15816,68 @@ export function resetLatchWeighFirstCounts() {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE APPROACH — A HITLESS APPROACH INTO AN ICE TURRET'S RANGE, AND THE LATCH CHAIN'S FIFTH ORDER
+ * (⚖ the user queued the slice on 2026-10-30, one of four hammer slices run in parallel; LWEIGH's hand-over, its report
+ * § 9: *"a volley-aware approach (an entry timed to the turret's clock, or the stance walk tried on forks as
+ * `killIceTurretOnWalk` does) is the arm this needs"*; L40C's, its § 6 item 3: *"the approach volley + a 5th order,
+ * together … the volley fix must make the approach hitless, not just admit the hit"*).
+ *
+ * `TURRET_APPROACH` (OFF): the reordered corpse weigh's stance walk and kill become one fork-certified approach
+ * (`approachKillForCorpse`), and `killForCorpse` / `killIceTurretInPlace` derive their stance off the turret's SNAPPED
+ * box (TURRETSNAP's hand-over: before its first on-screen update the run's rect is the ctor box). Measured: the latch
+ * chain with CPAIR size 3 + `LATCH_WEIGH_FIRST` solves Boss Key 2 hitless at 4142 ticks.
+ * `SEEDLING_TURRET_APPROACH=1` turns it on in a node process (the page's worker has no `process`), and
+ * `withTurretApproach(enabled, fn)` is for a test or a witness. OFF, nothing is asked and every walk is byte-identical.
+ */
+export const TURRET_APPROACH = { enabled: globalThis.process?.env?.SEEDLING_TURRET_APPROACH === '1' };
+export const TURRET_APPROACH_DEFAULT = false;
+
+/** Run `fn` with `TURRET_APPROACH` set to `enabled`, restoring the previous value. */
+export function withTurretApproach(enabled, fn) {
+    return withSwitch(TURRET_APPROACH, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `approaches`, each approach made
+ * (`{turret, t, side, via, wait, forks}`) or refused (`{turret, t, side: null, forks, tally}`).
+ */
+export const TURRET_APPROACH_COUNTS = { approaches: [] };
+
+/** Zero `TURRET_APPROACH_COUNTS`. */
+export function resetTurretApproachCounts() {
+    TURRET_APPROACH_COUNTS.approaches = [];
+}
+
+/**
+ * `FIFTH_ORDER` (OFF): the strategy bound admits a FIFTH application when the four before it are distinct and it is
+ * a fifth distinct one (`fifthOrderAdmits`); a repeat is still bounded at four, and nothing is admitted past five.
+ * ⚖ The bound is named rather than generous (`MAX_STRATEGIES_PER_GOAL`), so the fifth is its own switch, argued from
+ * measurement: on the latch chain with LWEIGH's guard off (L40C's scratch arm) the chain applies `shove`,
+ * `weigh(wandlock@448,432)`, `hold(wandlock@480,560)` and `weigh(wandlock@800,400)` and then needs
+ * `shove(pushableblock@576,560)` — four distinct orders, so `strategyBoundDistinct` does not lift it. Every applied
+ * order has succeeded (an executor that fails refuses the segment), so "distinct" is the narrowest claim: a bound of
+ * 5 would also admit a repeat, and "do not re-count a succeeded order" is no bound at all. With `TURRET_APPROACH` ON
+ * the latch chain applies four orders (the `hold(wandlock@480,560)` was the uncertified stance walk's) and the bound
+ * is not met. `SEEDLING_FIFTH_ORDER=1` / `withFifthOrder(enabled, fn)`.
+ */
+export const FIFTH_ORDER = { enabled: globalThis.process?.env?.SEEDLING_FIFTH_ORDER === '1' };
+export const FIFTH_ORDER_DEFAULT = false;
+
+/** Run `fn` with `FIFTH_ORDER` set to `enabled`, restoring the previous value. */
+export function withFifthOrder(enabled, fn) {
+    return withSwitch(FIFTH_ORDER, enabled, fn);
+}
+
+/**
+ * Does the fifth-order rule admit `next` after `applied` (`strategy(obstacle)` strings)? Only at exactly
+ * `MAX_STRATEGIES_PER_GOAL` applications, all distinct, and `next` distinct from every one of them.
+ */
+export function fifthOrderAdmits(applied, next) {
+    return next !== null && applied.length === MAX_STRATEGIES_PER_GOAL && new Set(applied).size === applied.length
+        && !applied.includes(next);
+}
+
+/**
  * The switch's instrument, written only with it ON and read by nothing that decides: `handed` each turret the climb
  * handed the arm (`{id, t, via}`, `via` `chooser`/`pair`/`hit`), `kills` each arm's end (`{id, t, dead, ticks, why}`:
  * `dead` read off the live run's `turrets` as the arm returns; a refusal carries `why`).
@@ -16941,7 +17236,9 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
     }
     // ⛓ fidelity TURRETCIRCLE D2: the circling kill (`killForCorpse`'s Sword rung, `turretCircleKill` ON) — no stance
     if (resolved.circle) return circleKillIceTurret(run, perTick, id, resolved, ctx);
-    const r = t0.rect;
+    // ⛓ hammer-phase APPROACH (`TURRET_APPROACH`, OFF): off the SNAPPED box — before its first on-screen update a turret
+    // still has its ctor box, 8 px off the body the game tests (TURRETSNAP's hand-over); OFF the run's rect.
+    const r = iceTurretKillBox(t0);
     const opts = solverPlanOpts(run, resolved.contacts ?? new Set());
     const sides = [
         // ⚠ THE MARGIN IS MEASURED, NOT A TIDY 1 px: a live turret's `input()` oscillates its box by 0.5 px
@@ -29026,7 +29323,7 @@ function solveSegmentUnder({
                      * the tree, and then needs the latch's hold(wandlock@480,560) — the fourth distinct obstacle,
                      * refused as a fifth application. OFF: the plain count, byte-identical.
                      */
-                    if (strategyBoundReached(applied)) {
+                    if (strategyBoundReached(applied, `${plan.strategy}(${plan.obstacle.id})`)) {
                         refuse(`${what}: applied ${applied.length} strategies for one goal `
                             + `[${applied.join(', ')}] and the corridor still does not plan. `
                             + 'A policy that keeps clearing obstacles without a corridor '
@@ -29100,7 +29397,12 @@ function solveSegmentUnder({
                     // exemption are one decision).
                     // ⛓ hammer-phase LWEIGH: the hits before the reordered weigh's stance walk (OFF: null, nothing read)
                     const hitsBeforeStance = plan.resolved.latchWeighFirst ? run.ledger('playerHits').length : null;
-                    if (plan.resolved.stance) {
+                    // ⛓ hammer-phase APPROACH (`TURRET_APPROACH`, OFF): the reordered weigh's approach and kill, on forks
+                    const approached = TURRET_APPROACH.enabled && plan.resolved.latchWeighFirst && plan.resolved.corpse
+                        ? approachKillForCorpse(run, perTick, plan.resolved, { what: `${what} -> ${plan.strategy}`,
+                            goal, walkTo, fork, equip })
+                        : null;
+                    if (plan.resolved.stance && approached === null) {
                         // ⛓ STANCE: the walk is registered so its own frontier can
                         // see a re-entry (`STANCE_REENTRY`, above).
                         const walking = `${plan.strategy}(${plan.obstacle.id})#${perTick.length}`;

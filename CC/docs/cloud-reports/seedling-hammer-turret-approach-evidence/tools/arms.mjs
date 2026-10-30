@@ -18,7 +18,8 @@ const ids = args.ids ? new Set(args.ids.split(',')) : null;
 const md5 = (s) => createHash('md5').update(s).digest('hex').slice(0, 12);
 const arm = { cpair: SB.CHOOSER_PAIR?.enabled ? SB.CHOOSER_PAIR.size : 0, icest: !!SB.ICETURRET_STATIC_KILL?.enabled,
     opp: !!PK.OPPORTUNISTIC_STRIKE?.enabled, lwf: !!SB.LATCH_WEIGH_FIRST?.enabled,
-    ofa: !!CONTACT_FIDELITY.orbitFreeAim, sbd: !!CONTACT_FIDELITY.strategyBoundDistinct };
+    ofa: !!CONTACT_FIDELITY.orbitFreeAim, sbd: !!CONTACT_FIDELITY.strategyBoundDistinct,
+    ta: !!SB.TURRET_APPROACH?.enabled, fo: !!SB.FIFTH_ORDER?.enabled };
 console.log('ARM', JSON.stringify(arm));
 const rowOf = (run) => ({ level: run.level, x: run.state.x, y: run.state.y, deaths: run.playerDeaths.length });
 const same = (a, b) => a.level === b.level && a.x === b.x && a.y === b.y && a.deaths === b.deaths;
@@ -56,6 +57,7 @@ for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
         SB.resetIceTurretStaticKillCounts?.();
         SB.resetLatchWeighFirstCounts?.();
         SB.resetChooserPairCounts?.();
+        SB.resetTurretApproachCounts?.();
         const levelSource = levelSourceFromAtlas(source.records);
         const t0 = Date.now();
         let answer;
@@ -77,7 +79,8 @@ for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
             danger: msg ? (/passes through danger at \(([^)]*)\) — ([a-z]+:[A-Za-z0-9@,]+)/.exec(msg)?.slice(1).join(' ') ?? null) : null,
             icest: SB.ICETURRET_STATIC_KILL_COUNTS ? JSON.parse(JSON.stringify(SB.ICETURRET_STATIC_KILL_COUNTS)) : null,
             lwf: SB.LATCH_WEIGH_FIRST_COUNTS ? JSON.parse(JSON.stringify(SB.LATCH_WEIGH_FIRST_COUNTS.asked)) : null,
-            cpair: SB.CHOOSER_PAIR_COUNTS ? { admitted: SB.CHOOSER_PAIR_COUNTS.admitted } : null };
+            cpair: SB.CHOOSER_PAIR_COUNTS ? { admitted: SB.CHOOSER_PAIR_COUNTS.admitted } : null,
+            ta: SB.TURRET_APPROACH_COUNTS ? JSON.parse(JSON.stringify(SB.TURRET_APPROACH_COUNTS.approaches)) : null };
         appendFileSync(args.out, JSON.stringify(out) + '\n');
         console.log(`${row.id}/${c.i} ${out.ok ? `SOLVED ${out.ticks} gm=${gm?.gm}` : `REFUSED ${out.kind}`} ${out.digest} ${ms}ms`);
     }
