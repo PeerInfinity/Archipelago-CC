@@ -28,11 +28,12 @@ import { createJsRuntime } from './jsRuntimeCore.js';
 import { md5 } from './md5.js';
 import { runTape as runFixtureTape } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
-import { formatOp } from './seedlingSkinRenderer.js';
+import { formatOp, roomOps } from './seedlingSkinRenderer.js';
 import { formatPlayerOp } from './seedlingPlayerSkin.js';
 import { ENEMY_ART, ENEMY_COVERAGE, ENEMY_HIT_TINT } from './seedlingEnemySkin.js';
 import {
-    BOB_BOSS_RATE, KEYS, ROOM_BODY_COVERAGE, ROOM_BODY_RULES, roomBodyOps, roomBodySkinView, stepRoomBodySkin,
+    BOB_BOSS_RATE, KEYS, ROOM_BODY_COVERAGE, ROOM_BODY_OBJECT_TAGS, ROOM_BODY_RULES, roomBodyDrawnObjects, roomBodyOps,
+    roomBodySkinView, stepRoomBodySkin,
 } from './seedlingRoomBodySkin.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -396,4 +397,42 @@ describe('6. ⛔ STATE IDENTITY — the room-body renderer never touches the run
             expect(md5(on.stateLog)).toBe(md5(off.stateLog));
         }, 240_000);
     }
+});
+
+describe('7. the ice turret\'s corpse-wall stand-in (the JS page\'s `drawnObjects`, `roomBodyDrawnObjects`)', () => {
+    // ⛓ seedling-js-render-fixes — the page painted the build-time 32x32 stand-in under the live IceTurret sprite (L40, L98).
+    // The page's composition: `roomOps` with the room-body ops as entity sprites and `roomBodyDrawnObjects(those ops)`.
+    const ROOMS = Object.freeze([{ level: 40, at: [488, 464] }, { level: 98, at: [100, 80] }]);
+    const GOLDEN = Object.freeze({
+        40: { turrets: 1, turretSprites: 1, standIns: 0, mutantStandIns: 1 },
+        98: { turrets: 1, turretSprites: 1, standIns: 0, mutantStandIns: 1 },
+    });
+    const pageOps = (level, at, tags) => {
+        const rt = boot(level, at);
+        let skin = null;
+        for (let i = 0; i < 5; i += 1) {
+            rt.tick(new Set());
+            skin = stepRoomBodySkin(skin, roomBodySkinView(rt.run), rt.ticks);
+        }
+        const run = rt.run;
+        const bodyOps = roomBodyOps(roomBodySkinView(run), art, { skin });
+        const ops = roomOps(run.world, art, { level, tick: rt.ticks, entitySprites: bodyOps, drawnObjects: roomBodyDrawnObjects(bodyOps, tags) });
+        const turrets = run.world.objectSolids.filter((o) => o.tag === 'iceturret');
+        const standIns = ops.filter((o) => !o.key && o.rect && turrets.some((t) => t.rect.x === o.rect.x && t.rect.y === o.rect.y
+            && t.rect.w === o.rect.w && t.rect.h === o.rect.h));
+        return { turrets: turrets.length, turretSprites: ops.filter((o) => o.key === KEYS.iceTurret).length, standIns: standIns.length };
+    };
+    for (const { level, at } of ROOMS) {
+        it(`L${level}: no stand-in rect under the live IceTurret; ⛔ the mutant (iceturret dropped from the set) paints it`, () => {
+            const got = pageOps(level, at, ROOM_BODY_OBJECT_TAGS);
+            const mutant = pageOps(level, at, new Set([...ROOM_BODY_OBJECT_TAGS].filter((t) => t !== 'iceturret')));
+            expect({ ...got, mutantStandIns: mutant.standIns }).toEqual(GOLDEN[level]);
+        });
+    }
+    it('no room-body ops → the stand-in stays (the lab\'s rule: a skin that drew nothing keeps its stand-ins)', () => {
+        const drawn = roomBodyDrawnObjects([]);
+        expect(drawn({ tag: 'iceturret' })).toBe(false);
+        expect(roomBodyDrawnObjects([{}])({ tag: 'iceturret' })).toBe(true);
+        expect(roomBodyDrawnObjects([{}])({ tag: 'bob' })).toBe(false);
+    });
 });
