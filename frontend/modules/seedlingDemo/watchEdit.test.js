@@ -106,8 +106,8 @@ describe('the op set — closed, and normalized before anything is applied', () 
             .toThrow(/needs an integer ty/);
     });
 
-    it('a terrain outside the four-terrain vocabulary refuses, and names them', () => {
-        expect(() => normalizeEdit({ op: 'paint', tx: 1, ty: 1, terrain: 'lava' }))
+    it('a terrain outside the terrain vocabulary refuses, and names them', () => {
+        expect(() => normalizeEdit({ op: 'paint', tx: 1, ty: 1, terrain: 'magma' }))
             .toThrow(new RegExp(`\\[${TERRAIN_NAMES.join(', ')}\\]`));
     });
 

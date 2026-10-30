@@ -6830,6 +6830,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "arg"
+                    ],
+                    "name": "terrains"
+                },
+                {
+                    "how": [
                         "num"
                     ],
                     "name": "ticks"
@@ -21499,6 +21505,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "substrate"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "terrains"
                 },
                 {
                     "how": [

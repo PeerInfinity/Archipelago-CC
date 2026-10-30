@@ -145,9 +145,14 @@ describe('C2 — the four later item presets', () => {
         expect(DEFAULT_CENSUS_BIOMES).toEqual(OLD);
     });
 
-    it('the roster is post-sword\'s by reference (C2 adds no template)', () => {
+    it('the roster is post-sword\'s (C2 adds no template; C3 appends lava + igneous from D7 on)', () => {
+        const sword = GEN_ROOM_BIOMES['post-sword'].templates;
         for (const name of NEW) {
-            expect(GEN_ROOM_BIOMES[name].templates).toBe(GEN_ROOM_BIOMES['post-sword'].templates);
+            const { templates } = GEN_ROOM_BIOMES[name];
+            // ⛓ seedling-gen-terrains (C3): post-fire keeps post-sword's roster by reference; D7 and
+            // later append `lava-pool` and `melt-patch` after it, so its members keep their order.
+            if (name === 'post-fire') expect(templates).toBe(sword);
+            else expect(templates.map((t) => t.name)).toEqual([...sword.map((t) => t.name), 'lava-pool', 'melt-patch']);
             expect(GEN_ROOM_BIOMES[name].excluded).toBe(GEN_ROOM_BIOMES['post-sword'].excluded);
         }
     });
