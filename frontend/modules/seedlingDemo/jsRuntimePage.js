@@ -181,7 +181,7 @@ import {
     FLOOR_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
 import {
-    CAMERA_MODES, cameraView, createNightLayer, createTileLayer, paintNight, paintOps, portalVisitTick, roomOps, shownTeleporters, teleporterArtFilter,
+    CAMERA_MODES, cameraView, createNightLayer, createTileLayer, createTinter, paintNight, paintOps, portalVisitTick, roomOps, shownTeleporters, teleporterArtFilter,
 } from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
@@ -240,6 +240,8 @@ export async function loadGraphicsStack(name, { win = window, base = packsBaseUr
 
 export function mountJsRuntimePage(win = window) {
     const doc = win.document;
+    /** ⛓ G2 — FlashPunk's multiplying `Image.color`, one cached copy per (sheet, tint) (`seedlingSkinRenderer.createTinter`). */
+    const tinted = createTinter(doc);
     const canvas = doc.getElementById('game');
     const status = doc.getElementById('status');
     const ctx = canvas.getContext('2d');
@@ -893,32 +895,6 @@ export function mountJsRuntimePage(win = window) {
             if ((i & 3) !== 3) { sumA += a[i]; sumB += b[i]; }
         }
         return { lights: graphics.lights, alpha: graphics.night?.alpha ?? 0, pixels: a.length / 4, differ, darker: sumB < sumA };
-    }
-
-    /**
-     * ⛓ G2 — FlashPunk's `Image.color` MULTIPLIES the sprite (`Image.as` colour transform): the sheet
-     * times the tint, keeping its own alpha. One cached copy per (sheet, tint).
-     */
-    const tintCache = new WeakMap();
-    function tinted(img, tint) {
-        let byTint = tintCache.get(img);
-        if (!byTint) tintCache.set(img, byTint = new Map());
-        if (!byTint.has(tint)) {
-            const c = doc.createElement('canvas');
-            c.width = img.width;
-            c.height = img.height;
-            const t = c.getContext('2d');
-            t.drawImage(img, 0, 0);
-            // ⛓ G9c — `=colour` is a SILHOUETTE (the picture's alpha, filled): a Lock's INVERT is a white one under `difference`
-            const silhouette = tint.startsWith('=');
-            t.globalCompositeOperation = silhouette ? 'source-in' : 'multiply';
-            t.fillStyle = silhouette ? tint.slice(1) : tint;
-            t.fillRect(0, 0, c.width, c.height);
-            t.globalCompositeOperation = 'destination-in';
-            t.drawImage(img, 0, 0);
-            byTint.set(tint, c);
-        }
-        return byTint.get(tint);
     }
 
     life.on(canvas, 'mousedown', () => canvas.focus());
