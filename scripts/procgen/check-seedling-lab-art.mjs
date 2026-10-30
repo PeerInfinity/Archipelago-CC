@@ -21,6 +21,9 @@
  *   machine, a turret, a boss), art on and off — every family the room holds reports sprites in the readout
  *   (`drawn.families`), and in the boxes L2 drew as rectangles at most `SAME_MAX` of the pixels are unchanged.
  *
+ *   ⛓ seedling-gen-ropegate: a generated ROPE GATE room (`?elements=ropegate`, post-sword) certifies, holds its trap
+ *   and rope, and draws the trap in sprites.
+ *
  * Prereqs: a dev server at the REPO ROOT. SKIPs (exit 0) without one, like its siblings.
  * Run: node scripts/procgen/check-seedling-lab-art.mjs [--host=http://localhost:8000] [--shots=<dir>]
  */
@@ -281,6 +284,46 @@ async function main() {
                 `L${room.level} ${room.name}: ≤ ${SAME_MAX * 100}% of the ${boxes.length} object box(es)' pixels are the rectangles L2 drew there`,
                 `${((same / Math.max(1, total)) * 100).toFixed(1)}% identical; worst ${worst.slice(0, 3).map(([s, t]) => `${t} ${(s * 100).toFixed(0)}%`).join(', ')}`);
         }
+    }
+
+    // ── ⛓ seedling-gen-ropegate: a generated ROPE GATE room, art on ──
+    //
+    // The generate arm with `?elements=ropegate` (post-sword): the room the lab generates holds the element's two
+    // parts — an armed `arrowtrap` and a `rope` with its node, one `tset` — it certifies, and the art draws the trap
+    // in sprites (the `trap` family). ⚠ The rope has NO skin in the art library yet, so it draws as the renderer's
+    // stand-in rect; the row records that rather than asserting a sprite nothing draws.
+    console.log('\n## ropegate — a generated rope gate room');
+    for (const mode of ['on', 'off']) {
+        const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+        const errors = [];
+        page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+        await page.goto(`${PAGE}?source=generate&seed=1&biome=post-sword&elements=ropegate${mode === 'off' ? '&art=off' : ''}`,
+            { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction((want) => {
+            const a = window.__labArt;
+            return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                && (want === 'off' ? a.drawn === null : a.drawn !== null);
+        }, mode, { timeout: 180000 }).catch(() => {});
+        await page.waitForTimeout(1200);
+        const { art, payload } = await page.evaluate(() => ({ art: window.__labArt ?? null,
+            payload: window.__watch?.payload ? { certified: window.__watch.payload.certified,
+                entities: window.__watch.payload.level.entities } : null }));
+        if (mode === 'on') {
+            const trap = (payload?.entities ?? []).filter((e) => e.type === 'arrowtrap');
+            const rope = (payload?.entities ?? []).filter((e) => e.type === 'rope');
+            check(payload?.certified === true && trap.length === 1 && rope.length === 1
+                && trap[0].attrs?.shoot === '1' && trap[0].attrs.tset === rope[0].attrs?.tset
+                && (rope[0].nodes ?? []).length === 1,
+                'ropegate: the generated room CERTIFIES and holds an armed trap and a rope of ONE group, the rope with its node',
+                JSON.stringify({ certified: payload?.certified, trap, rope }));
+            check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && (art.drawn.families?.trap ?? 0) > 0,
+                'ropegate: drawn in sprites, the arrow trap among them (`trap` family)', JSON.stringify(art?.drawn));
+        } else {
+            check(art?.drawn === null, 'ropegate ?art=off: the rectangles', JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+        }
+        if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-ropegate${mode === 'off' ? '-off' : ''}.png`) });
+        check(errors.length === 0, `ropegate (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+        await page.close();
     }
 
     await browser.close();
