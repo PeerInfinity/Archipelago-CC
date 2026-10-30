@@ -4,7 +4,9 @@
 // committed CONTENT PACKS, and writes their manifests:
 //
 //   frontend/packs/seedling/      the original Seedling art (Unlicense)
-//   frontend/packs/archipelago/   the fork's ArchipelagoLogo pickup (MIT)
+//   frontend/packs/archipelago/   the fork's ArchipelagoLogo pickup (MIT), and the same logo at
+//                                 64x64 from Archipelago's data/icon.png (Cloudberry's check
+//                                 coins, ⚖ R17) — an AUTHORED row (`archipelagoLogoArt.mjs`)
 //
 // Seedling JS graphics, slices G0+G1 (⚖ the user, 2026-10-16: the packs live
 // under `frontend/` because GitHub Pages serves only `frontend/`, and
@@ -57,6 +59,7 @@ import { argvHelp } from './argvHelp.js';
 import { seedlingSourceOrExit } from './seedlingSource.js';
 import { ENEMY_ART } from '../../frontend/modules/seedlingDemo/seedlingEnemyArt.js';
 import { FONT_ART_ROW, fontSheetBytes } from './make-seedling-font.mjs';
+import { LOGO64_ART_ROW } from './archipelagoLogoArt.mjs';
 import { SFX_MANIFEST, buildSfxLayer } from './seedlingSfxLayer.js';
 import { MUSIC_MANIFEST, buildMusicLayer } from './seedlingMusicLayer.js';
 
@@ -85,8 +88,12 @@ export const PACKS = Object.freeze({
     archipelago: Object.freeze({
         title: 'Archipelago — the fork\'s AP item pickup',
         licence: 'MIT',
-        credit: 'The Archipelago application icon (data/icon.png), downscaled to 16x16 by the Seedling fork; '
-            + 'MIT per the Archipelago repository\'s root LICENSE (vendor/seedling/src/Pickups/APItem.as:67-73).',
+        credit: 'The Archipelago application icon (data/icon.png, 512x512), MIT per the Archipelago repository\'s '
+            + 'root LICENSE: downscaled to 16x16 by the Seedling fork (ArchipelagoLogo.png; '
+            + 'vendor/seedling/src/Pickups/APItem.as:67-73), and to 64x64 by scripts/procgen/archipelagoLogoArt.mjs '
+            + '(ArchipelagoLogo64.png, an 8x8 box filter; the Cloudberry check coins).',
+        source: 'vendor/seedling/assets/graphics (PeerInfinity/Seedling), copied byte for byte; '
+            + 'data/icon.png (this repository), downscaled',
     }),
 });
 
@@ -260,6 +267,8 @@ export const ART_TABLE = Object.freeze([
     // ── the fork's AP item:`APItem.as:74` (`look` "ap" → the logo, 0x0 = an Image, centred) ──
     { pack: 'archipelago', key: 'archipelago:pickup/item', file: 'ArchipelagoLogo.png',
         as3: 'Pickups/APItem.as:74 imgAP; APItem(x+8, y+8) with a centred Image', origin: [8, 8] },
+    // ── the same logo at 64x64 (⚖ R17), for a renderer that draws it large (Cloudberry's check coins) ──
+    LOGO64_ART_ROW,
 ]);
 
 /** Width and height out of a PNG's IHDR (bytes 16..23), or a refusal by name. */
@@ -290,7 +299,7 @@ export function buildPacks(source) {
             if (!sheets[sheetId]) {
                 let bytes;
                 if (row.authored) {
-                    bytes = fontSheetBytes();
+                    bytes = row.sheetBytes ? row.sheetBytes() : fontSheetBytes();
                 } else {
                     const path = join(dir, row.file);
                     if (!existsSync(path)) throw new Error(`${row.key}: ${GRAPHICS}/${row.file} is not in ${source}`);
@@ -325,7 +334,7 @@ export function buildPacks(source) {
             title: meta.title,
             licence: meta.licence,
             credit: meta.credit,
-            source: `vendor/seedling/${GRAPHICS} (PeerInfinity/Seedling), copied byte for byte`,
+            source: meta.source ?? `vendor/seedling/${GRAPHICS} (PeerInfinity/Seedling), copied byte for byte`,
             layers: { art: 'art/manifest.json' },
         };
         if (meta.sfx) {
