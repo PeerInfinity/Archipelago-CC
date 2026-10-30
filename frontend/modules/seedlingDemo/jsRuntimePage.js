@@ -169,6 +169,7 @@
 
 import { createJsRuntime, IN_PLACE_REBOOT_WHY } from './jsRuntimeCore.js';
 import { createWorkerSolveService } from './jsRuntimeSolveService.js';
+import { solveWorkerUrl } from './solverEnvChannel.js';
 import { applyKillLockBodies, parseKillLockBodies } from './killLockBodies.js';
 import { applyContactFidelity, parseContactFidelity } from './contactFidelity.js';
 import { applyAxeDodgeAsk, parseAxeDodgeAsk } from './axeDodgeAskHook.js';
@@ -259,7 +260,9 @@ export function mountJsRuntimePage(win = window) {
     let solveService = null;
     if (typeof win.Worker === 'function') {
         solveService = createWorkerSolveService({
-            createWorker: () => new win.Worker(new URL('./jsRuntimeSolveWorker.js', import.meta.url), { type: 'module', name: 'seedling-js-solver' }),
+            // ⛓ CPWIT — `?seedlingSolverEnv=` on THIS page reaches the worker's URL (`solverEnvChannel.js`); absent = today's
+            createWorker: () => new win.Worker(solveWorkerUrl(new URL('./jsRuntimeSolveWorker.js', import.meta.url), win.location?.search),
+                { type: 'module', name: 'seedling-js-solver' }),
             clock: () => win.performance.now(),
         });
     } else {

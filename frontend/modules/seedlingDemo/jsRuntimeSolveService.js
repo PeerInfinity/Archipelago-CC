@@ -65,6 +65,7 @@ import { axeDodgeAskStamp } from './axeDodgeAskHook.js';
 import { dashOnlyWindowStamp } from './dashOnlyWindowHook.js';
 import { dashShapeStamp } from './dashShapeHook.js';
 import { progressIntervalMs, SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
+import { solveWorkerUrl } from './solverEnvChannel.js';
 
 /**
  * The hook stamps THIS module instance adds to a request before it is posted (in place, on `tape`; returned). Each is
@@ -104,7 +105,10 @@ export function explicitAttempt(attempt) {
 
 export const SOLVE_WORKER_URL = new URL('./jsRuntimeSolveWorker.js', import.meta.url);
 
-const defaultCreateWorker = () => new Worker(SOLVE_WORKER_URL, { type: 'module', name: 'seedling-js-solver' });
+// ⛓ CPWIT — the page's `?seedlingSolverEnv=` (measurement only) rides the worker's URL (`solverEnvChannel.js`); with no
+// param the URL is `SOLVE_WORKER_URL` itself (today's worker exactly).
+const defaultCreateWorker = () => new Worker(solveWorkerUrl(SOLVE_WORKER_URL, globalThis.location?.search),
+    { type: 'module', name: 'seedling-js-solver' });
 const defaultClock = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now());
 
 /**
