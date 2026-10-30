@@ -1,0 +1,200 @@
+diff --git a/frontend/modules/seedlingDemo/fixtures/hammer-g1-ghostkill-witness/hammer-g1-l40-ghostkill.tape.json b/frontend/modules/seedlingDemo/fixtures/hammer-g1-ghostkill-witness/hammer-g1-l40-ghostkill.tape.json
+index 534e6e85..f6111a07 100644
+--- a/frontend/modules/seedlingDemo/fixtures/hammer-g1-ghostkill-witness/hammer-g1-l40-ghostkill.tape.json
++++ b/frontend/modules/seedlingDemo/fixtures/hammer-g1-ghostkill-witness/hammer-g1-l40-ghostkill.tape.json
+@@ -123,7 +123,7 @@
+             "index": 1
+         }
+     },
+-    "tick_count": 2195,
++    "tick_count": 2317,
+     "inputs": [
+         {
+             "key": "right",
+@@ -864,8 +864,58 @@
+             "key": "up",
+             "from": 2184,
+             "to": 2185
++        },
++        {
++            "key": "right",
++            "from": 2195,
++            "to": 2206
++        },
++        {
++            "key": "left",
++            "from": 2206,
++            "to": 2207
++        },
++        {
++            "key": "right",
++            "from": 2207,
++            "to": 2209
++        },
++        {
++            "key": "left",
++            "from": 2210,
++            "to": 2212
++        },
++        {
++            "key": "down",
++            "from": 2216,
++            "to": 2260
++        },
++        {
++            "key": "primary",
++            "from": 2260,
++            "to": 2261
++        },
++        {
++            "key": "down",
++            "from": 2261,
++            "to": 2287
++        },
++        {
++            "key": "primary",
++            "from": 2287,
++            "to": 2288
++        },
++        {
++            "key": "down",
++            "from": 2288,
++            "to": 2298
++        },
++        {
++            "key": "up",
++            "from": 2300,
++            "to": 2302
+         }
+     ],
+     "tape_version": 8,
+-    "description": "⛓⛓⛓ SEEDLING HAMMER-PHASE G1, D2 — THE KILL RUNG'S GHOST PRESS KILL (`GHOST_KILL_RUNG` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON (the solve then refuses on the chaser bob@736,752). Landings t501 spinner@880,848 hits 2 · t2078 spinner@880,848 hits 2 · t2114 spinner@880,848 hits 4 (kill) · t2149 spinner@816,848 hits 2 · t2182 spinner@816,848 hits 4 (kill), all ghost presses; spinner@880,848 killed at t2114 and removed at t2127, spinner@816,848 at t2182 / t2195. Player hits t972 bob@736,752 · t1184 bob@736,752 · t1216 bob@736,752 (death). 2195 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs."
++    "description": "⛓⛓⛓ SEEDLING HAMMER-PHASE G1, D2 — THE KILL RUNG'S GHOST PRESS KILL (`GHOST_KILL_RUNG` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON (the solve then refuses on the bobsoldier@880,832). Landings t501 spinner@880,848 hits 2 · t2078 spinner@880,848 hits 2 · t2114 spinner@880,848 hits 4 (kill) · t2149 spinner@816,848 hits 2 · t2182 spinner@816,848 hits 4 (kill), all ghost presses; spinner@880,848 killed at t2114 and removed at t2127, spinner@816,848 at t2182 / t2195. Player hits t972 bob@736,752 · t1184 bob@736,752 · t1216 bob@736,752 (death). 2317 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs."
+ }
+diff --git a/frontend/modules/seedlingDemo/fixtures/hammer-sf-strikefloor-witness/hammer-sf-l40-strikefloor.tape.json b/frontend/modules/seedlingDemo/fixtures/hammer-sf-strikefloor-witness/hammer-sf-l40-strikefloor.tape.json
+index 7c0406a4..a9e6fd28 100644
+--- a/frontend/modules/seedlingDemo/fixtures/hammer-sf-strikefloor-witness/hammer-sf-l40-strikefloor.tape.json
++++ b/frontend/modules/seedlingDemo/fixtures/hammer-sf-strikefloor-witness/hammer-sf-l40-strikefloor.tape.json
+@@ -123,7 +123,7 @@
+             "index": 1
+         }
+     },
+-    "tick_count": 1629,
++    "tick_count": 1796,
+     "inputs": [
+         {
+             "key": "right",
+@@ -979,8 +979,68 @@
+             "key": "up",
+             "from": 1618,
+             "to": 1619
++        },
++        {
++            "key": "down",
++            "from": 1629,
++            "to": 1675
++        },
++        {
++            "key": "primary",
++            "from": 1675,
++            "to": 1676
++        },
++        {
++            "key": "down",
++            "from": 1676,
++            "to": 1702
++        },
++        {
++            "key": "primary",
++            "from": 1702,
++            "to": 1703
++        },
++        {
++            "key": "down",
++            "from": 1703,
++            "to": 1723
++        },
++        {
++            "key": "up",
++            "from": 1723,
++            "to": 1724
++        },
++        {
++            "key": "down",
++            "from": 1732,
++            "to": 1739
++        },
++        {
++            "key": "primary",
++            "from": 1739,
++            "to": 1740
++        },
++        {
++            "key": "down",
++            "from": 1740,
++            "to": 1766
++        },
++        {
++            "key": "primary",
++            "from": 1766,
++            "to": 1767
++        },
++        {
++            "key": "down",
++            "from": 1767,
++            "to": 1788
++        },
++        {
++            "key": "up",
++            "from": 1789,
++            "to": 1791
+         }
+     ],
+     "tape_version": 8,
+-    "description": "⛓⛓⛓ SEEDLING HAMMER-PHASE SF — THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`STRIKE_ETA_FLOOR` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON (the solve then refuses on the chaser bob@736,752, as OFF does). Landings t501 spinner@880,848 hits 2 · t1583 spinner@880,848 hits 2 · t1616 spinner@880,848 hits 4 (kill); spinner@880,848 killed at t1616 and removed at t1629 (OFF: killed at t2114). Player hits t658 bob@736,752 · t747 bob@736,752 · t778 bob@736,752 (death). 1629 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs."
++    "description": "⛓⛓⛓ SEEDLING HAMMER-PHASE SF — THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`STRIKE_ETA_FLOOR` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON (the solve then refuses on bobsoldier@880,832, as OFF does). Landings t501 spinner@880,848 hits 2 · t1583 spinner@880,848 hits 2 · t1616 spinner@880,848 hits 4 (kill); spinner@880,848 killed at t1616 and removed at t1629 (OFF: killed at t2114). Player hits t658 bob@736,752 · t747 bob@736,752 · t778 bob@736,752 (death). 1796 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs."
+ }
+diff --git a/scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs b/scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs
+index 2866cdd0..23ff2f2b 100644
+--- a/scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs
++++ b/scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs
+@@ -149,7 +149,7 @@ async function main() {
+     const description = '⛓⛓⛓ SEEDLING HAMMER-PHASE G1, D2 — THE KILL RUNG\'S GHOST PRESS KILL (`GHOST_KILL_RUNG` ON). '
+         + "C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword "
+         + 'granted, the sword kept; `solveSegment`\'s executed prefix with the switch ON (the solve then refuses on the '
+-        + `chaser bob@736,752). Landings ${a.landed.map((h) => `t${h.t} ${h.id} hits ${h.hits}`
++        + `bobsoldier@880,832). Landings ${a.landed.map((h) => `t${h.t} ${h.id} hits ${h.hits}`
+             + `${h.killed ? ' (kill)' : ''}`).join(' · ')}, all ghost presses; ${TARGETS[0]} killed at t${k1?.t} and `
+         + `removed at t${a.removed[TARGETS[0]]}, ${TARGETS[1]} at t${k2?.t} / t${a.removed[TARGETS[1]]}. Player hits `
+         + `${a.hits.map((h) => `t${h.t} ${h.id}${h.died ? ' (death)' : ''}`).join(' · ') || 'none'}. ${keys.length} t. `
+diff --git a/scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs b/scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs
+index b70dce33..86bb5f7e 100644
+--- a/scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs
++++ b/scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs
+@@ -55,7 +55,7 @@ export const NAME = 'hammer-sf-l40-strikefloor';
+ export const GOAL = Object.freeze({ kind: 'collect-placement', placement: Object.freeze({ x: 880, y: 816 }) });
+ export const TARGET = 'spinner@880,848';
+ /** The obstacle both solves refuse on (the chaser the press kill does not fight). */
+-export const OBSTACLE = 'bob@736,752';
++export const OBSTACLE = 'bobsoldier@880,832';
+ 
+ /** Staging A with the ghost sword granted, the sword kept (G1's witness staging, `ghostKillStaging`'s). */
+ export async function strikeFloorStaging() {
+@@ -128,7 +128,7 @@ async function main() {
+     const off = await strikeFloorSolve(staging, false);
+     const on = await strikeFloorSolve(staging, true);
+     for (const [name, r] of [['OFF', off], ['ON', on]]) {
+-        check(`${name}: the solve refuses on the chaser ${OBSTACLE}, past the press kill`,
++        check(`${name}: the solve refuses on ${OBSTACLE}, past the press kill`,
+             r.verdict === 'REFUSED' && r.obstacle === OBSTACLE, `${r.verdict} at t${r.perTick.length} on ${r.obstacle}`);
+     }
+     const keys = on.perTick.map((k) => new Set(k));
+@@ -148,7 +148,7 @@ async function main() {
+     const description = '⛓⛓⛓ SEEDLING HAMMER-PHASE SF — THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA '
+         + "(`STRIKE_ETA_FLOOR` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest "
+         + "(880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON "
+-        + `(the solve then refuses on the chaser ${OBSTACLE}, as OFF does). Landings ${a.landed.map((h) => `t${h.t} ${h.id} hits ${h.hits}`
++        + `(the solve then refuses on ${OBSTACLE}, as OFF does). Landings ${a.landed.map((h) => `t${h.t} ${h.id} hits ${h.hits}`
+             + `${h.killed ? ' (kill)' : ''}`).join(' · ')}; ${TARGET} killed at t${kill(a)?.t} and removed at `
+         + `t${a.removed[TARGET]} (OFF: killed at t${kill(b)?.t}). Player hits `
+         + `${a.hits.map((h) => `t${h.t} ${h.id}${h.died ? ' (death)' : ''}`).join(' · ') || 'none'}. ${keys.length} t. `
