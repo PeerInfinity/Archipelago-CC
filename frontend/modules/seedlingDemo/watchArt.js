@@ -41,7 +41,7 @@ import { PICKUP_TAGS, pickupOps, pickupSkinView } from './seedlingPickupSkin.js'
 import { playerBoxAt } from './playerPhysicsV2.js';
 // ⛓ LAB L2b: the room's other objects, through the js arc's skins (imported as is) and the page's own run pair.
 import { createRunForStaging, solveStaging } from './tapeRunner.js';
-import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
+import { ROOM_BODY_OBJECT_TAGS, roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
 import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from './seedlingHazardSkin.js';
 import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from './seedlingPuzzleSkin.js';
 import { SOLIDS_OBJECT_TAGS, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
@@ -251,10 +251,10 @@ export const LAB_SKIN_FAMILIES = Object.freeze([
 export const FAMILY_OBJECT_TAGS = Object.freeze({
     hazard: HAZARD_OBJECT_TAGS, puzzle: PUZZLE_OBJECT_TAGS, solids: SOLIDS_OBJECT_TAGS, npc: NPC_TAGS,
     machine: MACHINE_OBJECT_TAGS, boss: BOSS_OBJECT_TAGS,
-    // ⚠ LAB-SIDE (not the JS page's predicate, which keeps it): the ice turret's object solid is its CORPSE wall
-    // (`sampleMovers`: "ALIVE — an ice turret is an Enemy, not a wall"), so with the room-body skin drawing the
-    // turret the stand-in goes — but only when that skin drew something (no placement run: the stand-in stays).
-    roomBody: Object.freeze(new Set(['iceturret'])),
+    // the ice turret's object solid is its CORPSE wall (`sampleMovers`: "ALIVE — an ice turret is an Enemy, not a
+    // wall"), so with the room-body skin drawing the turret the stand-in goes — but only when that skin drew something
+    // (no placement run: the stand-in stays). The JS page's rule too (`seedlingRoomBodySkin.roomBodyDrawnObjects`).
+    roomBody: ROOM_BODY_OBJECT_TAGS,
 });
 export function labDrawnObjects(byFamily) {
     const sets = Object.entries(FAMILY_OBJECT_TAGS)

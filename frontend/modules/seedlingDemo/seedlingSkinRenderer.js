@@ -562,6 +562,35 @@ export function paintOps(ctx, ops, images, view, canvas, { tinted = null, tileLa
 }
 
 /**
+ * ⛓ G2 — FlashPunk's `Image.color` MULTIPLIES the sprite (`Image.as` colour transform): the sheet
+ * times the tint, keeping its own alpha. One cached copy per (sheet, tint). Returns `paintOps`' `tinted`
+ * (`(img, tint) → canvas`); `doc` makes the canvases. The JS page and the maze's Seedling skin share it.
+ */
+export function createTinter(doc = globalThis.document) {
+    const tintCache = new WeakMap();
+    return function tinted(img, tint) {
+        let byTint = tintCache.get(img);
+        if (!byTint) tintCache.set(img, byTint = new Map());
+        if (!byTint.has(tint)) {
+            const c = doc.createElement('canvas');
+            c.width = img.width;
+            c.height = img.height;
+            const t = c.getContext('2d');
+            t.drawImage(img, 0, 0);
+            // ⛓ G9c — `=colour` is a SILHOUETTE (the picture's alpha, filled): a Lock's INVERT is a white one under `difference`
+            const silhouette = tint.startsWith('=');
+            t.globalCompositeOperation = silhouette ? 'source-in' : 'multiply';
+            t.fillStyle = silhouette ? tint.slice(1) : tint;
+            t.fillRect(0, 0, c.width, c.height);
+            t.globalCompositeOperation = 'destination-in';
+            t.drawImage(img, 0, 0);
+            byTint.set(tint, c);
+        }
+        return byTint.get(tint);
+    };
+}
+
+/**
  * ⛓ G5 — THE NIGHT LAYER (`seedlingNightSkin.nightOps`' `{ alpha, ops, solid }`), drawn the way
  * `Game.bufferTransforms()` draws it: the night canvas filled `fill` and given `ops` (normal blend unless an op
  * names one), the `solid` ops on a clear canvas HARDLIGHTed onto it, then the night canvas MULTIPLIED onto `ctx`

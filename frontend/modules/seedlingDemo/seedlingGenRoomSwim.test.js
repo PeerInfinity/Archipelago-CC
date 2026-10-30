@@ -96,10 +96,11 @@ describe('SWIM T1 D1 — hazardCells(record, items): one arm per item', () => {
         expect(h.has('7,7')).toBe(true);
     });
     // ⛓ SWIM T4 — `post-feather` (post-swim + the feather) joined the gen room and grants canSwim too.
-    it('byte-inertia: no biome but post-swim and post-feather grants canSwim or hasDarkSuit, so every other room reads the item-less set', () => {
+    // ⛓ seedling-gen-biomes-1 (C2) — post-spear, post-dark-suit and endgame hold the conch too (the census boots).
+    it('byte-inertia: no biome but post-swim, post-feather and the C2 presets past D5 grants canSwim or hasDarkSuit, so every other room reads the item-less set', () => {
         const granting = Object.entries(GEN_ROOM_BIOMES)
             .filter(([, p]) => p.items?.canSwim || p.items?.hasDarkSuit).map(([name]) => name);
-        expect(granting).toEqual(['post-swim', 'post-feather']);
+        expect(granting).toEqual(['post-swim', 'post-feather', 'post-spear', 'post-dark-suit', 'endgame']);
         for (const [name, p] of Object.entries(GEN_ROOM_BIOMES)) {
             if (!granting.includes(name)) expect(hazardCells(record, p.items ?? null), name).toEqual(hazardCells(record));
         }

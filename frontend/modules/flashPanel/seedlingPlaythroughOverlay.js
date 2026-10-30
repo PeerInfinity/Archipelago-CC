@@ -1352,6 +1352,17 @@ export const LAVATRAP_PULL = Object.freeze({
  * The line-of-sight test (`collideLine("Solid", ...)`) is NOT applied: it needs
  * the per-pixel solid set, and leaving it out can only ADD pulls, which is the
  * permissive direction. Named here rather than folded into the result.
+ *
+ * ⛓ `yields` (session tile-primitives-sphere-order-10, ⚖ 2026-10-30 "First
+ * range entered"): the one-tile steps into this trap's disc from outside it
+ * that it does NOT take, because the walk enters another trap's disc first.
+ * A tile step is a walk from centre to centre; each trap arms as soon as the
+ * player is inside its range (`:81-82`), and its tongue reaches 32 px a few
+ * ticks later, so the disc entered FIRST wins the race — L78's step
+ * (8,4) -> (8,5) enters (9,6)'s at y 75.1 and (6,5)'s at y 79.9, and the game
+ * reels the player onto (9,6) (`probe-seedling-l78-pull-order.mjs`). A step whose
+ * discs are entered at the same point is yielded by none of them: the maze
+ * refuses it by name.
  */
 export function lavaTrapPulls(level, tileSize = 16) {
     const out = [];
@@ -1375,9 +1386,58 @@ export function lavaTrapPulls(level, tileSize = 16) {
                 from.push([x, y]);
             }
         }
-        out.push({ tile: [tx, ty], from });
+        out.push({ tile: [tx, ty], from, yields: [] });
     }
-    return out.sort((a, b) => (a.tile[1] - b.tile[1]) || (a.tile[0] - b.tile[0]));
+    out.sort((a, b) => (a.tile[1] - b.tile[1]) || (a.tile[0] - b.tile[0]));
+    lavaTrapStepYields(out, level, tileSize);
+    return out;
+}
+
+/** The pixel centre of tile `[x, y]`. */
+const tileCentre = ([x, y], tileSize) => [x * tileSize + tileSize / 2, y * tileSize + tileSize / 2];
+
+/**
+ * How far along the walk from `a` to `b` (pixel centres, 0..1) the player first stands within the trap's range: the
+ * least `s` with `|a + s(b - a) - c| < chompRange + 1`, the int-truncated `FP.distance` reading ≤ chompRange
+ * (`LavaTrap.as:81-82`). `a` lies outside the range and `b` inside it.
+ */
+function rangeEntry(a, b, c) {
+    const R = LAVATRAP_PULL.chompRange + 1;
+    const d = [b[0] - a[0], b[1] - a[1]];
+    const ac = [a[0] - c[0], a[1] - c[1]];
+    const qa = d[0] * d[0] + d[1] * d[1];
+    const qb = 2 * (d[0] * ac[0] + d[1] * ac[1]);
+    const qc = ac[0] * ac[0] + ac[1] * ac[1] - R * R;
+    return (-qb - Math.sqrt(qb * qb - 4 * qa * qc)) / (2 * qa);
+}
+
+/** Fill each pull's `yields` (see `lavaTrapPulls`): every step into two or more discs from outside all of them. */
+function lavaTrapStepYields(pulls, level, tileSize) {
+    const inDisc = (p, [x, y]) => (x === p.tile[0] && y === p.tile[1]) || p.from.some((t) => t[0] === x && t[1] === y);
+    const steps = new Set();
+    for (const p of pulls) {
+        for (const to of [p.tile, ...p.from]) {
+            for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+                const from = [to[0] - dx, to[1] - dy];
+                if (from[0] < 0 || from[1] < 0 || from[0] >= level.width || from[1] >= level.height) continue;
+                const key = `${from}>${to}`;
+                if (steps.has(key)) continue;
+                steps.add(key);
+                const takers = pulls.filter((q) => inDisc(q, to) && !inDisc(q, from));
+                if (takers.length < 2) continue;
+                const a = tileCentre(from, tileSize);
+                const b = tileCentre(to, tileSize);
+                const entries = takers.map((q) => rangeEntry(a, b, tileCentre(q.tile, tileSize)));
+                const first = Math.min(...entries);
+                // a tie at the first entry settles nothing: no trap yields, and the maze refuses the step by name
+                if (entries.filter((e) => e === first).length > 1) continue;
+                takers.forEach((q, i) => {
+                    if (entries[i] !== first) q.yields.push({ from: [...from], to: [...to] });
+                });
+            }
+        }
+    }
+    for (const p of pulls) p.yields.sort((u, v) => (u.to[1] - v.to[1]) || (u.to[0] - v.to[0]) || (u.from[1] - v.from[1]) || (u.from[0] - v.from[0]));
 }
 
 /**

@@ -3,8 +3,8 @@
  * compiles that have them. A LavaTrap's tongue reels the player onto its own tile across lava or a pit within 32 px, released with the
  * Dark Suit (`LavaTrap.as:22,56-90`); the rules producer prices each one as a one-way Dark Suit lift (`applyLavaTrapPulls` over
  * `lavaTrapPulls`). Its rows are walked by the world's `pulls`, so L80 is one level world — where its two crossings out of r8c1 no longer
- * share one exit cell (main walled r8c1 → r6c4 there). L78's three traps have two whose discs one step enters at once: their pulls are
- * DROPPED by name and L78 projects as before.
+ * share one exit cell (main walled r8c1 → r6c4 there). L78's three traps have two whose discs one step enters at once: the trap whose
+ * disc the walk enters first takes it (session tile-primitives-sphere-order-10, below).
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -12,7 +12,7 @@ import { buildPlaythroughMaze } from '../../../../scripts/procgen/make-seedling-
 import { PLAYTHROUGH_MAP, playthroughAnalyzerOptions, playthroughHandRuledGridFor } from '../../../../scripts/procgen/make-seedling-playthrough-rules.mjs';
 import { lavaTrapPulls } from '../../flashPanel/seedlingPlaythroughOverlay.js';
 import { seedlingLevelEntities } from '../../flashPanel/seedlingAtlasAnalysis.js';
-import { deserializeMazeWorld } from '../mazeRoomEngine.js';
+import { deserializeMazeWorld, pullAfterMove } from '../mazeRoomEngine.js';
 import { chainedPull } from '../../procgenPipeline/regionAtlasMazeProjection.js';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
@@ -109,12 +109,50 @@ describe('chained pulls are refused by name, and no level of the whole game has 
     });
 });
 
-describe('L78: one step into two discs at once is not settled', () => {
-    const built = buildPlaythroughMaze({ levels: ['level_78'] });
-    it('its pulls are dropped by name and it projects as it did without them', () => {
-        const notes = (built.report.maze_notes ?? []).filter((n) => n.region_id === 'level_78' && n.kind === 'pull_ambiguous_dropped');
-        expect(notes.map((n) => n.message)).toEqual(['traps at (6,5) and (9,6) both grab the step 8,4 → 8,5 — its 3 pull(s) are not modelled']);
-        const rules = JSON.parse(built.text);
-        expect(Object.values(rules.preset_sidecars['1']).some((s) => s.playable_payload?.pulls)).toBe(false);
+/**
+ * L78 (session tile-primitives-sphere-order-10, ⚖ 2026-10-30 "First range entered"): its traps (6,5) and (9,6) both take the step
+ * (8,4) → (8,5) from outside both discs. The walk enters (9,6)'s first and the game reels the player onto it
+ * (`probe-seedling-l78-pull-order.mjs`), so (6,5) YIELDS that step (the producer's `yields`) and L78 is one level world with all
+ * three pulls. Main dropped them by name (`pull_ambiguous_dropped`).
+ */
+describe('L78: the step into two discs goes to the disc entered first', () => {
+    const RULES = JSON.parse(buildPlaythroughMaze({ levels: ['level_77', 'level_78', 'level_79'] }).text);
+    const pp = payloadOf(RULES, 'level_78');
+    const regions = Object.keys(RULES.preset_sidecars['1']).filter((n) => n.startsWith('level_78'));
+
+    it('is ONE level world with its three pulls; (6,5) yields (8,4) → (8,5), and (9,6) the lava step (7,7) → (7,6)', () => {
+        expect(pp, 'L78 is a level world').toBeDefined();
+        expect(pp.pulls.map((p) => [p.x, p.y, p.yields ?? null])).toEqual([
+            [6, 5, [{ from: { x: 8, y: 4 }, to: { x: 8, y: 5 } }]], [9, 3, null], [9, 6, [{ from: { x: 7, y: 7 }, to: { x: 7, y: 6 } }]],
+        ]);
+        const world = deserializeMazeWorld(pp);
+        const suit = new Set(['Dark Suit']);
+        // holding the Dark Suit, the step down from (8,4) is reeled onto (9,6) — the trap the game chose
+        expect(pullAfterMove(world, { x: 8, y: 4 }, { x: 8, y: 5 }, suit)).toEqual({ x: 9, y: 6 });
+        expect(pullAfterMove(world, { x: 8, y: 4 }, { x: 8, y: 5 }, new Set())).toBeNull();
+        // the mirror, on the lava the suit walks: (7,7) → (7,6) enters (6,5)'s disc first (main named only the first such step)
+        expect(pullAfterMove(world, { x: 7, y: 7 }, { x: 7, y: 6 }, suit)).toEqual({ x: 6, y: 5 });
+    });
+
+    it('certifies clean, natively and scripted alike; the crossing is priced as the atlas prices it', () => {
+        const native = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, regions });
+        expect(native.problems).toEqual([]);
+        expect(native.accepted).toEqual([]);
+        expect(native.lines).toEqual(expect.arrayContaining([
+            'level_78__r0c2>level_78__r0c16=[["Dark Suit"],["Ghost Spear"],["Progressive Sword"]]',
+            'level_78__r0c16>level_78__r0c2=[["Dark Suit"],["Ghost Spear"],["Progressive Sword"]]',
+        ]));
+        const scripted = certifyPlaythroughMaze(RULES, HELPERS, { native: false, atlas: ATLAS, regions });
+        expect(scripted.problems).toEqual([]);
+        expect([...scripted.lines].sort()).toEqual([...native.lines].sort());
+    });
+
+    it('mutant control: without the yield the step is unsettled again and the pulls are dropped by name', () => {
+        const notes = (buildPlaythroughMaze({ levels: ['level_78'] }).report.maze_notes ?? [])
+            .filter((n) => n.region_id === 'level_78' && /^pull_/.test(n.kind));
+        expect(notes).toEqual([]);
+        const world = structuredClone(pp);
+        delete world.pulls.find((p) => p.x === 6 && p.y === 5).yields;
+        expect(() => deserializeMazeWorld(world)).toThrow(/traps at \(6,5\) and \(9,6\) both grab a step from 8,4 into 8,5/);
     });
 });
