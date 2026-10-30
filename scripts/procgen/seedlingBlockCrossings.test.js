@@ -27,8 +27,8 @@ describe('the struck blocks\' crossings', () => {
     it('every other crossing through a struck block in a room with a stopper is free beyond the push item, by name', () => {
         expect(layer.blocks.notes.filter((n) => /free beyond/.test(n))).toEqual([
             'L63 pushableblockspear@112,96: r0c1 -> r6c9 free beyond the push item',
-            'L65 pushableblockspear@176,128: r0c8 -> r4c13 free beyond the push item',
-            'L65 pushableblockspear@176,128: r4c13 -> r0c8 free beyond the push item',
+            'L65 pushableblockspear@176,128: r0c8 -> r4c11 free beyond the push item',
+            'L65 pushableblockspear@176,128: r4c11 -> r0c8 free beyond the push item',
         ]);
     });
 
