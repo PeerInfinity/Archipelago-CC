@@ -1,0 +1,63 @@
+#!/usr/bin/env node
+// L4 (and the calibration legs) — the window thresholds per arm, as thr.mjs measures them, on a fresh JS boot.
+// node l4.mjs --lab=<tree> --leg=l4|l30|l40
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+const arg = (n, f) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3) ?? f;
+const LAB = arg('lab'); const LEG = arg('leg', 'l4');
+const M = (p) => import(join(LAB, 'frontend/modules/seedlingDemo', p));
+const { createJsRuntime } = await M('jsRuntimeCore.js');
+const js = await M('jsRuntimeSolver.js');
+const dow = await M('dashOnlyWindowHook.js');
+const { indexLevels, levelSourceFromAtlas } = await M('atlasSource.js');
+const { arrivalSolveRequest, arrivalSolverGoal } = await M('wasmArrival.js');
+const MAP = JSON.parse(readFileSync(join(LAB, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+const SRC = levelSourceFromAtlas(indexLevels(MAP));
+function boot(level, x, y, sword) {
+    const rt = createJsRuntime();
+    rt.setVanilla(MAP);
+    if (sword) rt.queueItems([{ class: 'Main', property: 'hasSword', value: true }]);
+    rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [level, x, y] }]);
+    rt.tick();
+    return rt;
+}
+let tape;
+if (LEG === 'l4') {
+    const rt = boot(4, 16, 16, true);
+    const s = rt.session; const tp = rt.run.world.teleporters[0];
+    tape = { staging: s.staging, perTick: s.perTick, live: js.liveOf(rt.run), levelSource: SRC, name: 'dash-only-L4',
+        solverGoal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } }, scratchPersistence: rt.run.scratchPersistence === true };
+} else {
+    // the calibration legs (jsRuntimeSolverCalibration.slow.test.js `leg`): L30 (240,80) → teleporter, L40 (480,896) → stairs
+    const spec = LEG === 'l30' ? { level: 30, at: { x: 240, y: 80 }, sword: true } : { level: 40, at: { x: 480, y: 896 }, sword: true };
+    const src = readFileSync(join(LAB, 'frontend/modules/seedlingDemo/jsRuntimeSolverCalibration.slow.test.js'), 'utf8');
+    const body = src.slice(src.indexOf('function leg('), src.indexOf('\n}\n', src.indexOf('function leg(')) + 2);
+    // eslint-disable-next-line no-new-func
+    const leg = new Function('createJsRuntime', 'MAP', 'arrivalSolveRequest', 'arrivalSolverGoal', 'SRC', 'RECORDS', 'stageItems', 'expect',
+        `${body}; return leg;`)(createJsRuntime, MAP, arrivalSolveRequest, arrivalSolverGoal, SRC, indexLevels(MAP),
+        (await M('wasmDelivery.js')).stageItems, () => ({ toBeTruthy() {} }));
+    const tiles = LEG === 'l30' ? [[0, 8]] : [[20, 36]];
+    tape = leg({ ...spec, tiles });
+}
+const budgetWork = js.SOLVER_BUDGET_WORK;
+let units = 0; let best = null; const rows = [];
+for (const p of js.ANYTIME_PASSES) {
+    let u = 0; let dash = 0;
+    const shouldStop = (site) => { units += 1; u += 1; if (site === 'sword-dash') dash += 1; return units > budgetWork; };
+    const a = js.settleSolve(() => js.solveFromTape({ ...tape, clock: () => 0, dashMode: p.dashMode, adds: p.adds ?? null,
+        shouldStop, fineCheckpoints: js.FINE_CHECKPOINTS }));
+    const better = js.betterAnswer(best, a);
+    rows.push({ pass: p.pass, ok: a.ok, ticks: a.ok ? a.plan.solution.length : null, units: u, dashAsks: dash, at: units, better });
+    if (better) best = a;
+}
+if (!best?.ok) { console.log(JSON.stringify({ rows, best })); process.exit(1); }
+const target = best.plan.solution.length;
+const at = (arm, w) => dow.withDashOnlyWindow(arm === 'on', () => js.solveAnytime({ ...tape, budgetWork, upgradeWindowWork: w },
+    { clock: (() => { let n = 0; return () => n++; })() })).plan.solution.length;
+const out = { leg: LEG, rows, target };
+for (const [arm, thr] of [['off', rows[1].at], ['on', rows[1].dashAsks]]) {
+    let lo = 1; let hi = thr;
+    while (lo < hi) { const mid = (lo + hi) >> 1; if (at(arm, mid) === target) hi = mid; else lo = mid + 1; }
+    out[arm] = { counted: thr, loss: lo, below: lo > 1 ? at(arm, lo - 1) : null, at85: at(arm, 85), margin: 85 - lo };
+}
+console.log(JSON.stringify(out));

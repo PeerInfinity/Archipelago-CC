@@ -92,8 +92,9 @@ import {
     writeRosterParam, writeRunFlag, writeSizeParams, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
-    POST_FEATHER_PALETTE, POST_SHIELD_PALETTE, POST_SWIM_PALETTE, POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
-    instantiateKept, normalizeRoster, restrictPalette,
+    ENDGAME_PALETTE, POST_DARK_SUIT_PALETTE, POST_FEATHER_PALETTE, POST_FIRE_PALETTE, POST_SHIELD_PALETTE,
+    POST_SPEAR_PALETTE, POST_SWIM_PALETTE, POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
+    instantiateKept, normalizeRoster, parseTerrainList, restrictPalette, withTerrains,
 } from './procgenPalette.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, formatSkeleton, normalizeSkeleton,
@@ -149,6 +150,11 @@ export const GENERATE_BIOMES = Object.freeze({
     'post-swim': POST_SWIM_PALETTE,
     /** ⛓ seedling swim T2 (D3) — the feather (and the conch) in the boot; opt-in. */
     'post-feather': POST_FEATHER_PALETTE,
+    /** ⛓ seedling-gen-biomes-1 (C2) — the census boots of D4, D7, D8 and the End; opt-in. */
+    'post-fire': POST_FIRE_PALETTE,
+    'post-spear': POST_SPEAR_PALETTE,
+    'post-dark-suit': POST_DARK_SUIT_PALETTE,
+    endgame: ENDGAME_PALETTE,
 });
 
 export const BIOME_NAMES = Object.freeze(Object.keys(GENERATE_BIOMES));
@@ -183,6 +189,16 @@ export function paletteFor(biome) {
     }
     return palette;
 }
+
+/**
+ * ⛓ seedling-gen-terrains (C3) — the biome's palette with the opted-in terrains
+ * (`procgenPalette.withTerrains`), and the one normal spelling of that list (sorted,
+ * comma-joined; `''` = none). ⛔ A terrain the biome does not offer refuses BY NAME.
+ */
+export function paletteWithTerrains(biome, terrains = '') {
+    return withTerrains(paletteFor(biome), terrains);
+}
+export const terrainsSpelling = (terrains) => parseTerrainList(terrains).join(',');
 
 /**
  * ⚖ Ruling 9(b): the payload RESERVES a skeleton block, so the constructive
@@ -257,6 +273,7 @@ export function readGenerateParams(search) {
     const source = (q.get('source') || '').toLowerCase();
     const gen = q.get('gen');
     const biome = (q.get('biome') || 'pre-sword').toLowerCase();
+    const terrainsAsked = q.get('terrains') ?? '';
     /**
      * ⛓⛓⛓ CONSTRUCTIVE SLICE 12 — `?directed=` IS REFUSED BY NAME, FIRST.
      *
@@ -292,7 +309,10 @@ export function readGenerateParams(search) {
          * in it (and `summary.bounds` stays the four numbers a reader can
          * compare across runs).
          */
-        roster: normalizeRoster(paletteFor(biome), readRosterSpec(q)),
+        roster: normalizeRoster(paletteWithTerrains(biome, terrainsAsked), readRosterSpec(q)),
+        /** ⛓ seedling-gen-terrains (C3) — `?terrains=ice`: the opted-in terrains, `''` when absent
+         *  (validated against the biome by the `paletteWithTerrains` call above). */
+        terrains: terrainsSpelling(terrainsAsked),
         /**
          * ⛔⛔ SLICE 12 — **THERE IS NO `directed` FIELD HERE ANY MORE.** Slice
          * 5's verb 2 is alive (the ATTEMPT button, the CLI's `--directed=`, the
@@ -504,7 +524,7 @@ export function readGenerateParams(search) {
  * the budget the run on screen was certified under.
  */
 export function writeGenerateParams(search, {
-    seed, biome, bounds, step, roster = null, payloadOwned = false,
+    seed, biome, bounds, step, roster = null, payloadOwned = false, terrains = '',
     skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS, require = null,
     size = SEEDLING_DEFAULTS, fill = FILL_DENSE, phase = null,
 } = {}) {
@@ -575,7 +595,10 @@ export function writeGenerateParams(search, {
     // ⚠ The palette is only consulted when there IS a restriction: a writer
     // that resolved the biome unconditionally would start refusing calls that
     // name no roster at all, which is a different claim than this one.
-    writeRosterParam(q, roster ? normalizeRoster(paletteFor(biome), roster) : null);
+    writeRosterParam(q, roster ? normalizeRoster(paletteWithTerrains(biome, terrains), roster) : null);
+    /** ⛓ seedling-gen-terrains (C3) — written only when some are opted in; absent otherwise. */
+    if (terrainsSpelling(terrains) !== '') q.set('terrains', terrainsSpelling(terrains));
+    else q.delete('terrains');
     /**
      * ── ⛓⛓⛓ SLICE 12: THE DIRECTIVES ARE **NOT** WRITTEN, EVER ──────────
      *
@@ -784,7 +807,7 @@ const elementsBlockOf = (model, certification) => {
 };
 
 export function generateStep({
-    seed, biome, step, bounds, budget, roster = null, skeleton = DEFAULT_SKELETON,
+    seed, biome, step, bounds, budget, roster = null, terrains = '', skeleton = DEFAULT_SKELETON,
     elements, areas = DEFAULT_AREAS, require = null,
     // ⛓ R9 slice 12i: forwarded undefined to the seam — the solver owns the
     // default, and this is the hop `batch-seedling-acceptance` reaches through.
@@ -856,7 +879,7 @@ export function generateStep({
      * learns whether it was restricted. ⛔ A second place that filtered the
      * roster would be a second answer to "what could this run draw from".
      */
-    const palette = restrictPalette(paletteFor(biome), roster);
+    const palette = restrictPalette(paletteWithTerrains(biome, terrains), roster);
     const b = assertBudget(budget ?? DEFAULT_BUDGET);
     if (!Number.isInteger(step) || step < 0) {
         fail(`watchGenerate: step must be a non-negative integer, got ${JSON.stringify(step)}. `
@@ -880,6 +903,7 @@ export function generateStep({
             // ⛓ The restriction the palette above CARRIES — one derivation, so
             // the URL writer and the payload cannot disagree with the loop.
             roster: palette.roster ?? null,
+            terrains: terrainsSpelling(terrains),
             step,
             model,
             /**
@@ -970,6 +994,7 @@ export function generateStep({
         biome,
         palette,
         roster: palette.roster ?? null,
+        terrains: terrainsSpelling(terrains),
         step,
         model: out.model,
         record: out.record,
@@ -1077,7 +1102,7 @@ export function applyDirective(state, spec, index) {
             + 'exactly one thing only because the rule is ladder → directives → edits. '
             + 'UNDO the edits, or download the payload first.');
     }
-    const palette = paletteFor(state.biome);
+    const palette = paletteWithTerrains(state.biome, state.terrains ?? '');
     const base = palette.templates.find((t) => t.name === spec?.template);
     if (!base) {
         fail(`watchGenerate: a directive names template ${JSON.stringify(spec?.template)}, `
@@ -1198,7 +1223,7 @@ export function applyDirective(state, spec, index) {
  * would be a second answer to *"what does this link mean"*.
  */
 export function generateWithDirectives({
-    seed, biome, step, bounds, budget, roster = null, directed = null,
+    seed, biome, step, bounds, budget, roster = null, terrains = '', directed = null,
     skeleton = DEFAULT_SKELETON, edits = null, size = SEEDLING_DEFAULTS, fill = FILL_DENSE,
     // ⛓ R9 slice 12i: forwarded undefined onto the LADDER it runs, so the CLI's
     // `--dash` reaches the same build whichever of the two arms it takes.
@@ -1212,7 +1237,7 @@ export function generateWithDirectives({
      * `carveCellRefusal`) rather than misreading them as terrain an earlier
      * template wrote.
      */
-    let state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton, size, fill,
+    let state = generateStep({ seed, biome, step, bounds, budget, roster, terrains, skeleton, size, fill,
         dashMode });
     (directed ?? []).forEach((spec, i) => { state = applyDirective(state, spec, i); });
     /**
@@ -1365,6 +1390,8 @@ export function agreementWithPayload(payload, state) {
      * unrestricted run has, so an OLD payload does not diverge here.
      */
     cmp('roster', payload.roster ?? null, state.roster ?? null);
+    /** ⛓ seedling-gen-terrains (C3) — an identity field, `''` on both sides when absent. */
+    cmp('terrains', terrainsSpelling(payload.terrains ?? ''), state.terrains ?? '');
     /**
      * ⛓⛓ ARC 5, SLICE 1 — **THE ROOM CONTRACT IS AN IDENTITY FIELD**, for the
      * roster's own reason: a payload built at 20x12 and reproduced at the

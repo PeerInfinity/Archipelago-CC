@@ -182,11 +182,11 @@ import {
     FLOOR_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
 import {
-    CAMERA_MODES, cameraView, createNightLayer, createTileLayer, paintNight, paintOps, portalVisitTick, roomOps, shownTeleporters, teleporterArtFilter,
+    CAMERA_MODES, cameraView, createNightLayer, createTileLayer, createTinter, paintNight, paintOps, portalVisitTick, roomOps, shownTeleporters, teleporterArtFilter,
 } from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
-import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
+import { roomBodyDrawnObjects, roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
 import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from './seedlingHazardSkin.js';
 import {
     adoptRunEffectSkin, carryThroughReboot, effectOps, effectSkinView, fadeSlot, jiggleCam, screenOps, stepEffectSkin,
@@ -241,6 +241,8 @@ export async function loadGraphicsStack(name, { win = window, base = packsBaseUr
 
 export function mountJsRuntimePage(win = window) {
     const doc = win.document;
+    /** ⛓ G2 — FlashPunk's multiplying `Image.color`, one cached copy per (sheet, tint) (`seedlingSkinRenderer.createTinter`). */
+    const tinted = createTinter(doc);
     const canvas = doc.getElementById('game');
     const status = doc.getElementById('status');
     const ctx = canvas.getContext('2d');
@@ -782,10 +784,12 @@ export function mountJsRuntimePage(win = window) {
                     pack: o.key ? art.packOf(o.key) : null })) }
             : null;
         const roomRecord = (runtime.mounted ?? runtime.vanilla)?.records?.get(level) ?? null;
+        // ⛓ the ice turret's corpse-wall stand-in goes when the room-body skin draws (the lab's rule, one shared set)
+        const roomBodyDrawn = roomBodyDrawnObjects(bodySprites);
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
             ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag)
-                || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag),
+                || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag) || roomBodyDrawn(o),
                 // ⚖ only the game's SHOWN portals are drawn, as the spinning Portal.png; the invisible teleporters draw nothing
                 drawnTeleporters: teleporterArtFilter(roomRecord), shownTeleporter: shownTeleporters(roomRecord), visitTick: portalVisitTick(runtime.run),
                 drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
@@ -896,32 +900,6 @@ export function mountJsRuntimePage(win = window) {
             if ((i & 3) !== 3) { sumA += a[i]; sumB += b[i]; }
         }
         return { lights: graphics.lights, alpha: graphics.night?.alpha ?? 0, pixels: a.length / 4, differ, darker: sumB < sumA };
-    }
-
-    /**
-     * ⛓ G2 — FlashPunk's `Image.color` MULTIPLIES the sprite (`Image.as` colour transform): the sheet
-     * times the tint, keeping its own alpha. One cached copy per (sheet, tint).
-     */
-    const tintCache = new WeakMap();
-    function tinted(img, tint) {
-        let byTint = tintCache.get(img);
-        if (!byTint) tintCache.set(img, byTint = new Map());
-        if (!byTint.has(tint)) {
-            const c = doc.createElement('canvas');
-            c.width = img.width;
-            c.height = img.height;
-            const t = c.getContext('2d');
-            t.drawImage(img, 0, 0);
-            // ⛓ G9c — `=colour` is a SILHOUETTE (the picture's alpha, filled): a Lock's INVERT is a white one under `difference`
-            const silhouette = tint.startsWith('=');
-            t.globalCompositeOperation = silhouette ? 'source-in' : 'multiply';
-            t.fillStyle = silhouette ? tint.slice(1) : tint;
-            t.fillRect(0, 0, c.width, c.height);
-            t.globalCompositeOperation = 'destination-in';
-            t.drawImage(img, 0, 0);
-            byTint.set(tint, c);
-        }
-        return byTint.get(tint);
     }
 
     life.on(canvas, 'mousedown', () => canvas.focus());

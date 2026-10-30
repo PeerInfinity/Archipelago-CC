@@ -1,0 +1,225 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/flashPanel/seedlingSolveProgressView.test.js (59 tests) 98ms
+stderr | frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly when the room is "its arrival + idle ticks" > ⛓ CUTSCENE UNDER ANY RECORD — the wind scene showing under a RESOLVED record (the explicit start's level, no −1) is WAITED OUT, not re-arrived into
+[wasm playback] SCENE LEAK #1 at level 86 (begin.level 86)
+
+stderr | frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly when the room is "its arrival + idle ticks" > ⛓ CUTSCENE UNDER ANY RECORD — a long scene re-says how far into its bounded wait it is (a same-words stall reader sees it move)
+[wasm playback] SCENE LEAK #1 at level 86 (begin.level 86)
+
+ ✓ frontend/modules/flashPanel/seedlingWasmPlayback.test.js (144 tests) 15407ms
+     ✓ clause BEGIN — the begin record names another level (a swap pending) and never lands → WAITED, then not adopted (named)  321ms
+     ✓ clause FADE — too few frames since the begin record, and the clock never moves → WAITED, then not adopted (named)  12132ms
+ ✓ frontend/modules/seedlingDemo/contactFidelity.test.js (62 tests) 2094ms
+     ✓ leg 243 — the shipped defaults: fixed rows at 0 px, residue at its tick  500ms
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 21485ms
+     ✓ ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more  343ms
+     ✓ ⛔ derives a stance for the body that CANNOT reach where the walk stands  707ms
+     ✓ ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why  852ms
+     ✓ ⛓ takes the BEST stance, not the first viable one — and carries the runners-up  703ms
+     ✓ ⛔ the dwell bound is the forecast's own death tick, not a per-class constant  4786ms
+     ✓ ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned  382ms
+     ✓ ⛓ L18 spends the fade WALKING, and the wait is the subtraction  1670ms
+     ✓ ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin  4878ms
+     ✓ ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room  1293ms
+     ✓ ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell  451ms
+     ✓ ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it  2435ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolveService.test.js (18 tests) 7213ms
+     ✓ L6 bare (bait — ENEMIES), 150 walker ticks in: same keys, same end digest, the room HELD while the worker thinks  1111ms
+     ✓ L4 kit (hold + shove), 40 walker ticks in: same keys, same end digest, the room HELD while the worker thinks  1616ms
+     ✓ L12 (the solver's walk), 120 walker ticks in: same keys, same end digest, the room HELD while the worker thinks  1058ms
+     ✓ a solve that runs out of its WORK budget DECLINES BY NAME (the ⏱ clause) — the worker answered, nothing was terminated, and the walker takes the goal  371ms
+     ✓ the BACKSTOP (default 300000 ms): a solve past it is TERMINATED and the goal FAILS BY NAME — never walked, never played  325ms
+     ✓ decline → retry → SOLVED on the L6 W=71 leg (each retry named)  803ms
+     ✓ a re-boot while the worker thinks: the answer is STALE — refuted, never played — and the goal re-solves  662ms
+     ✓ the REAL worker: the dashless plan lands first as the PROVISIONAL answer, then the full plan (fewer ticks) settles  605ms
+stderr | frontend/modules/seedlingDemo/dashShape.test.js
+[centralRegistry] CentralRegistry initialized
+
+stderr | frontend/modules/seedlingDemo/dashShape.test.js
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:247:25)
+    at new StateManagerProxy (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:115:10)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+    at VitestModuleRunner.cachedRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1053:73)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+
+stdout | frontend/modules/seedlingDemo/dashShape.test.js > the hook, the settings and the page query > the switches default to the dash flip's shape (legPrecheck ON, noSwingPrefix OFF, keepPartial ON; no env here), read once at import; three settings, each default | on | off, schema default `default`
+[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+ ✓ frontend/modules/seedlingDemo/hammerFightFallback.test.js (15 tests) 71218ms
+     ✓ ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte  3891ms
+     ✓ ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's  27327ms
+     ✓ ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence  2831ms
+     ✓ ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing  6443ms
+     ✓ ⛓⛓ inert while the fight itself is on (the retry would be the same path)  15066ms
+     ✓ ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged  715ms
+     ✓ ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged  5899ms
+     ✓ ⛓⛓⛓ ON: the rewind that solves is a plan whose `expected` IS a replay of its keys, row by row  4623ms
+     ✓ ⛓⛓⛓ ON, the deadline tripping AFTER the rewind solved: the plan's `expected` IS a replay of its keys  4367ms
+ ✓ frontend/modules/seedlingDemo/solverDeadline.test.js (16 tests) 6554ms
+     ✓ swordless L14: the chaser arm refuses on the missing sword without its stance scan; DETOUR then solves; with the sword it still solves  2552ms
+     ✓ `detour` is a named site, and a trip there refuses swordless L14 BY NAME (no hook: it solves)  1093ms
+     ✓ `time` in a solve: bare L6 from (208,32) runs the TIME rung's search; a trip there FALLS THROUGH to BAIT, and the climb says why  309ms
+     ✓ untripped, opted out: one ask (the entry), the stance unchanged; opted in: one ask per cell and per candidate, the stance unchanged  1573ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverShouldStop.test.js (18 tests) 2359ms
+     ✓ a window of the whole budget: the full plan (219 t) replaces the dashless one, nothing tripped; the units are counted  602ms
+     ✓ the clock decides nothing: the default budgets on a clock that jumps a DAY per read answer exactly as on a counter  467ms
+     ✓ L4: the window that holds the WHOLE full pass (23 dashless + 61 full = 84 units) upgrades to 219 t; one unit less ships the dashless 255 t — the window bounds the pass, not its last dash ask  426ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (58 tests) 108415ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  14523ms
+     ✓ ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  345ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21), the strike floor at its shipped ON: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  10275ms
+     ✓ ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count  5583ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall  3482ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises  620ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  5174ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  12351ms
+     ✓ ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message  1546ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  7370ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  12801ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  7223ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  11522ms
+     ✓ ⛓⛓⛓ non-vacuous, the cross-pass escape cache ON (the test only, wired by its hook): L18's segments report the solve's own hits and misses  6593ms
+     ✓ ⛓⛓ the solver wires the escape member: counted with the switch ON and no installer, null with it OFF; a null hand-in is null  7651ms
+ ✓ frontend/modules/seedlingDemo/solveProgressTap.test.js (34 tests) 39ms
+stderr | frontend/modules/seedlingDemo/dashOnlyWindow.test.js
+[centralRegistry] CentralRegistry initialized
+
+stderr | frontend/modules/seedlingDemo/dashOnlyWindow.test.js
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:247:25)
+    at new StateManagerProxy (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:115:10)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+    at VitestModuleRunner.cachedRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1053:73)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.test.js (20 tests) 5550ms
+     ✓ ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one refuses by name with nothing scanned  672ms
+     ✓ the D2 counter-example: the axe corridor's 305-tick leg is not a clean run, so ON it SCANS, exactly as OFF  543ms
+     ✓ the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-reach-l49 at 368 ticks (K = 40: 585)  3468ms
+stdout | frontend/modules/seedlingDemo/dashOnlyWindow.test.js > the switch, the setting and the page query > the default is ON (no env opt-out here), read once at import; the setting is default | on | off, schema default `default`
+[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+ ✓ frontend/modules/seedlingDemo/jsRuntimeGeneratedSolver.test.js (22 tests) 736ms
+ ✓ frontend/modules/seedlingDemo/dashOnlyWindow.test.js (14 tests) 2760ms
+     ✓ window 75: OFF cuts the WHOLE full pass and ships the dashless 255 t — stamped; ON (the default) lets its non-dash work run on the budget and upgrades to 219 t  957ms
+     ✓ ON: the smallest window that holds the full pass's dash asks is 39 (219 t); at 38 the full pass trips at `sword-dash` (never `walk`), keeping the partial schedule that dash scan returns  672ms
+     ✓ L4 at window 75 through a real worker: the posting instance OFF → the worker ships the dashless 255 t and stamps `dashOnlyWindow: false`; at the default (ON) it upgrades to 219 t, unstamped  1109ms
+ ✓ frontend/modules/seedlingDemo/dashShape.test.js (14 tests) 88068ms
+     ✓ in process: each key has its own witness — noSwingPrefix L4 full pass 57 → 48 units; keepPartial (dash-only window 20) 255 → 235 t; legPrecheck 392:0 the same ticks for less work  47937ms
+     ✓ through a real worker: the posting instance's shape rides on the request; the worker's plan moves as in process and is stamped with what it READ; at the defaults unstamped  40093ms
+ ✓ frontend/modules/seedlingDemo/hammerDashWindow.test.js (10 tests) 10209ms
+     ✓ L4: the thresholds — ON 39 (38 keeps the partial 235 t), OFF 84 (83 ships the dashless 255 t)  1514ms
+     ✓ THE MARGIN PIN: L4 ships its full 219 t at the window minus each arm's floor (ON 40, OFF 1)  506ms
+     ✓ leg 108 (L12) on the shipped arm: 328 t at 85 (the full pass, a kept partial), 343 t at 84 — the threshold IS the window  2422ms
+     ✓ THE MARGIN PIN: leg 108 ships 328 t at the window minus its floor (ON 0); OFF, its dashless 561 t  1684ms
+     ✓ OFF reproduces today: L20 in 560 t; both stand-tail corridors are planned window by window (no whole-chain ask)  412ms
+     ✓ ON: the same keys; each stand-tail dash is certified whole with its stand — the hold's all 131 ticks, the collect's to its ceremony  541ms
+     ✓ ON under the window: L4's hold stance (button@16,64, a 126-tick stand) — the same keys AND the same units (the window does not move)  622ms
+     ✓ ON with no stand tail = OFF: leg 108 (no corridor of it ends standing), key for key and unit for unit  2498ms
+ ✓ frontend/modules/seedlingDemo/fidelityLapseCost.test.js (13 tests) 23172ms
+     ✓ ON: leg 403 solves inside the page budget, with OFF's plan key for key (642 t)  19655ms
+     ✓ ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t)  995ms
+     ✓ MUTANT (the companion off): ON, the same request is refused at the DETOUR rung's budget  1305ms
+     ✓ ON: leg 773's request (its live digest re-derived ON, as a page with the switch sends it) solves in 426 t with no hit  1028ms
+ ✓ frontend/modules/seedlingDemo/hammerPreviewDeathSweep.test.js (15 tests) 14080ms
+     ✓ G1's witness at t1251: (488,872) at eta 15; a pool there skips it for (488,856) at eta 16  3283ms
+     ✓ a drown latched before the preview (every walk dies): no refuge, not a throw  927ms
+     ✓ a non-death error still throws  1027ms
+     ✓ G1's witness at t1251: the band on (488,872) skips it for (488,856) at eta 16, every banded candidate counted in shakeRefused  1381ms
+     ✓ every preview banded: no refuge (the kill's "nowhere to be"), not a throw  852ms
+     ✓ the shake guard OFF rethrows the band (the pre-PKB behaviour)  981ms
+     ✓ ON, an error that is not the forecast's band still throws (the live run's own band words included)  2014ms
+     ✓ the encounter (L32, r5-bobboss-fire at t20): a plan that dies is touched there; a key set that dies is safe only until then  3151ms
+ ✓ frontend/modules/seedlingDemo/seedlingGenRegionRoundTrip.test.js (5 tests) 3415ms
+     ✓ (4) a harmless edit is certified; walling the goal in is SAVED and flagged  500ms
+     ✓ (5) certifyGenRoom certifies every committed room unedited, and not one whose goal is walled in  1173ms
+ ✓ frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js (13 tests) 6266ms
+     ✓ both ON: the dwell kills from the stance (88,56) inside its bound, 460 t  984ms
+     ✓ both OFF: the dwell refuses (the survey's text), and the keys it drove are `bobsoldier2-l30-dash-stance`  638ms
+     ✓ D2a alone: the stance walk keeps the forecast, and the corpse's PAD refuses the next walk's gate  358ms
+     ✓ D2b alone: the dashed stance walk still runs the dwell out  521ms
+     ✓ both ON: the solver's own plan IS the witness `bobsoldier2-l30-torch` (395 t); the collect first, then the walk towards the stance (72,88) kills the body with its own press  1249ms
+     ✓ D2b alone: 404 t, the same kill on the walk (the stance walk dashed)  1128ms
+     ✓ both OFF: the exit walk's gate refuses the LIVE body by its pad at 168 t, after the collect  554ms
+     ✓ D2a alone: the exit walk's gate refuses the LIVE body by its pad at 168 t, after the collect  580ms
+ ✓ frontend/modules/seedlingDemo/fidelityBombPusher.test.js (12 tests) 5745ms
+     ✓ ON: the model reproduces every sampled tick through the respawn at 0 px — the player, each bomb to the bit, the anim  913ms
+     ✓ OFF: the quiet room — no bomb, and the model leaves the game the tick after the first hit  553ms
+     ✓ ON: the model reproduces every sampled tick through the respawn at 0 px — the player, each bomb to the bit, the anim  740ms
+     ✓ OFF: the quiet room — no bomb, and the model leaves the game the tick after the first hit  393ms
+     ✓ ON (movingWait, bombBlastBody OFF): the cluster boot's plan stops at buttonroom@272,208's hold, naming the lobber and the blast  3067ms
+ ✓ frontend/modules/seedlingDemo/fidelityAxeTiming.test.js (24 tests) 10004ms
+     ✓ OFF: the ladder EXHAUSTS on the blade (the AXE arm's stalls are hit at every phase)  2415ms
+     ✓ ON: SOLVED in 227 t — the witnessed plan  806ms
+     ✓ ON beside spinningAxePlayerHit: the same 227 t (the run bills no hit on the crossing)  798ms
+     ✓ OFF: refused — the full pass is cut at `axe-dodge` inside the AXE arm's stall search  2796ms
+     ✓ ON: SOLVED 227 t in the full pass, inside its budget  2760ms
+ ✓ scripts/procgen/seedlingDivergenceWindow.test.js (12 tests) 1421ms
+     ✓ empty flags are byte-identical to no flag (no stamp); set, the plan is stamped  1408ms
+ ✓ frontend/modules/seedlingDemo/fidelityWandHold.test.js (10 tests) 46889ms
+     ✓ OFF (coverWeighRefine OFF): the hold stance is hypothesised behind the cover and the walk grinds 400 ticks against it  5258ms
+     ✓ ON: refused by name with no 400-tick grind — the cover is a wall guard (iii) cannot redeem durably  473ms
+     ✓ OFF (movingWait, bombBlastBody OFF): the sweep's refusal — a still hold inside the lobber's reach  9719ms
+     ✓ ON (movingWait + bombBlastBody): SOLVED, two paced holds, and the plan is the witness tape key for key  14843ms
+     ✓ the GAME (p4g, damage on) played the ON plan to the part with 0 hits; the ON model reproduces every sampled tick at 0 px  439ms
+     ✓ OFF (movingWait, bombBlastBody OFF): the sweep's refusal — a still hold inside the lobber's reach  5014ms
+     ✓ ON (movingWait + bombBlastBody): SOLVED, two paced holds, and the plan is the witness tape key for key  10654ms
+     ✓ the GAME (p4g, damage on) played the ON plan to the part with 0 hits; the ON model reproduces every sampled tick at 0 px  351ms
+ ✓ frontend/modules/flashPanel/seedlingSolveDemo.test.js (5 tests) 1550ms
+     ✓ pushing the DEFAULT window leaves the L6 demo's solve REQUEST byte-identical; a pushed window is stamped  1540ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Latch.test.js (10 tests) 16140ms
+     ✓ OFF the solver stands on the latch for the fade and is moved at hold tick 93 (the brief's refusal)  15249ms
+     ✓ the model (D1 ON, and OFF: D1 is solver-only) reproduces it at 0 px  394ms
+stderr | frontend/modules/flashPanel/flashPanelSolverBudgetSettings.test.js
+[centralRegistry] CentralRegistry initialized
+
+stderr | frontend/modules/flashPanel/flashPanelSolverBudgetSettings.test.js
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:247:25)
+    at new StateManagerProxy (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:115:10)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+    at VitestModuleRunner.cachedRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1053:73)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+
+stdout | frontend/modules/flashPanel/flashPanelSolverBudgetSettings.test.js
+[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+ ✓ frontend/modules/flashPanel/flashPanelSolverBudgetSettings.test.js (3 tests) 5ms
+ ✓ frontend/modules/seedlingDemo/hammerRefugeBandText.test.js (3 tests) 19408ms
+     ✓ 371 at 5266, `PRESS_KILL_BOMBS` OFF: every one of the 12 previewed refuges is banded, and the refusal says so (shakeExactSplit OFF)  7133ms
+     ✓ 371 at 5266, `PRESS_KILL_BOMBS` OFF, shakeExactSplit ON (the default since wave 31): no refuge is banded — the press kill is passed and the dashless pass refuses later, at the paced bomb-pusher hold  6294ms
+     ✓ 371 at 5265, the defaults: no refuge was banded, and the refusal is the words it was (BW's suffix, no other)  5978ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Button.test.js (7 tests) 62997ms
+     ✓ OFF the hypothesis at leg 378's arrival holds the cluster's wandlocks and no rock; ON it adds the three  1196ms
+     ✓ a run with no sword hypothesises no rock (the swing could not break it)  7562ms
+     ✓ from the cluster's own boot, bombPusherLive ON (the default), movingWait + bombBlastBody OFF: the still hold inside the lobber's reach is refused by name  2480ms
+     ✓ from the cluster's own boot (bombPusherLive OFF): OFF refuses with the legs' sentence, ON latches t0, breaks, latches t1, collects  50339ms
+     ✓ l40button-l41-part0 (leg 378): the model replays it to the part, through the cluster, with no hit  823ms
+     ✓ l40button-l42-part0 (leg 381): the model replays it to the part, through the cluster, with no hit  594ms
+
+ Test Files  28 passed (28)
+      Tests  738 passed (738)
+   Start at  16:40:46
+   Duration  217.26s (transform 8.20s, setup 0ms, import 30.36s, tests 553.30s, environment 4ms)
+

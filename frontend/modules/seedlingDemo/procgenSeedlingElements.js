@@ -113,6 +113,7 @@ import {
     CORRIDOR_BODY_DOOR_ID, ROCK_GATE_DOOR_ID, ROCK_SHORTCUT_DOOR_ID, SHIELD_GATE_DOOR_ID,
     WATER_GATE_DOOR_ID, WATER_SHORTCUT_DOOR_ID, WATERFALL_GATE_DOOR_ID,
 } from '../procgenCore/elements/soloDoor.js';
+import { ROPE_GATE_ROPE_ID, ROPE_GATE_TRAP_ID } from '../procgenCore/elements/ropeGate.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
 
@@ -1143,9 +1144,19 @@ export function compositeSeedlingOnConnector({
  * carries no tag, so the block pocket is the first element in the arc that
  * costs nothing out of `TAGS_PER_LEVEL`'s 30.
  */
-export function seedlingOnConnectorEntities({ placed, tagFor }) {
+export function seedlingOnConnectorEntities({ placed, tagFor, groupIdFor = null }) {
     const tags = {};
     const entities = [];
+    /** ⛓ Seedling gen A1 — the rope gate's ONE group: the TRAP cell's
+     *  (`placementGroupId`, the anchor arithmetic every group here uses). */
+    const trapCell = placed.entities.find((e) => e.id === ROPE_GATE_TRAP_ID);
+    const ropeGroup = trapCell ? (() => {
+        if (typeof groupIdFor !== 'function') {
+            fail('procgenSeedlingElements: a ROPE GATE needs `groupIdFor` — its trap and its rope '
+                + 'share a `tset` group, and the group is the binding\'s allocation.');
+        }
+        return String(groupIdFor({ tx: trapCell.x, ty: trapCell.y }));
+    })() : null;
     for (const e of placed.entities) {
         if (e.role === 'block') {
             entities.push({ type: 'pushableblock', tx: e.x, ty: e.y });
@@ -1230,6 +1241,30 @@ export function seedlingOnConnectorEntities({ placed, tagFor }) {
             entities.push({ type: 'spinner', tx: e.x, ty: e.y, attrs: { tag: '-1' } });
             continue;
         }
+        /**
+         * ⛓⛓⛓ Seedling gen A1 — **THE ROPE GATE'S TWO**, the L16 pattern:
+         *   `ropegate_trap` -> `arrowtrap {tset: g, shoot: '1'}`  armed while
+         *                      `activate XOR shootDefault` (`ArrowTrap.as:31-62`),
+         *                      so `shoot 1` fires until its group is activated.
+         *                      ⛔ NO TAG: a trap holds no persistence slot.
+         *   `ropegate_rope` -> `rope {tset: g, tag: <own>}` + its `<node>`
+         *                      (`RopeStart`: a sword cut activates the group and
+         *                      LATCHES it by persistence, so a cut rope stays
+         *                      cut on a revisit) — ONE tag from the 30.
+         */
+        if (e.id === ROPE_GATE_TRAP_ID) {
+            entities.push({ type: 'arrowtrap', tx: e.x, ty: e.y,
+                attrs: { tset: ropeGroup, shoot: '1' } });
+            continue;
+        }
+        if (e.id === ROPE_GATE_ROPE_ID) {
+            const tag = tagFor();
+            tags.rope = tag;
+            entities.push({ type: 'rope', tx: e.x, ty: e.y,
+                attrs: { tset: ropeGroup, tag: String(tag) },
+                nodes: [{ tx: e.node.x, ty: e.node.y }] });
+            continue;
+        }
         fail(`procgenSeedlingElements: the on-connector element named the id `
             + `${JSON.stringify(e.id)} and this binding has no Seedling part for it. ⛔ The `
             + 'mapping is a TABLE and an id it does not carry is an element the binding '
@@ -1239,6 +1274,7 @@ export function seedlingOnConnectorEntities({ placed, tagFor }) {
         tags: Object.freeze(tags),
         entities: Object.freeze(entities.map((e) => Object.freeze({
             ...e, ...(e.attrs ? { attrs: Object.freeze(e.attrs) } : {}),
+            ...(e.nodes ? { nodes: Object.freeze(e.nodes.map((n) => Object.freeze(n))) } : {}),
         }))),
     };
 }

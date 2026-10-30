@@ -217,10 +217,16 @@ export function withMenuWrites(staging, run) {
     return { ...staging, equips: [...byTick.values()].sort((a, b) => a.t - b.t) };
 }
 
+/**
+ * @param {boolean} [o.declared] ⛓ PHASE B (`jsRuntimeCore`'s `botStart`) — run the staging AS DECLARED, without
+ *   `solveStaging`: a TAPE replayed in the JS frame plays the world the tape (and `runTape`) declares, relaxations
+ *   included. ⛔ Such a session is a REPLAY, not a producer: `fold()` refuses it by name, so the ONE-CONSTRUCTION
+ *   law above still holds for every tape a manual drive writes. Default false: every other caller is unchanged.
+ */
 export function createManualSession({
-    levelSource, staging, name = 'manual', scratchPersistence = false,
+    levelSource, staging, name = 'manual', scratchPersistence = false, declared = false,
 }) {
-    const honest = solveStaging(staging);
+    const honest = declared ? staging : solveStaging(staging);
     const run = createRunForStaging(honest, levelSource, { scratchPersistence });
     const perTick = [];
     const observations = [];
@@ -369,6 +375,11 @@ export function createManualSession({
          * one of them met a one-tick press.
          */
         fold() {
+            if (declared) {
+                throw new Error('watchManual.fold: this session replays a DECLARED staging (a tape in the JS frame), '
+                    + 'not an honest one — it is not a producer, and a tape folded from it would claim a world it '
+                    + 'was not built under');
+            }
             return buildStagedTape({ staging: withMenuWrites(honest, run), perTick, name });
         },
         /**

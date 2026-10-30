@@ -1,0 +1,32 @@
+goal	legs	A0	A1	A2	A3	A4	A5	A5-CP	A5-IC	A5-OP	A5-LW	A5-OF	A5-SB
+L40 flag 8: bosslock@480,352 cleared	2	0	0	0	0	0	0	0	0	0	0	0	0
+Level 039 - Totem Part 72,40	1	1	1	1	1	1	1	1	1	1	1	1	1
+Level 040 - Boss Key 2	2	0	0	0	0	0	0	0	0	0	0	0	0
+Level 040 - Chest	2	0	0	0	0	0	1h	1h	1h	1h	1h	0	1h
+Level 040 - Totem Part 160,640	2	2	2	2	2	2	2	2	2	2	2	2	2
+Level 040 - Totem Part 64,144	2	1	1	1	1	1	1	1	1	1	1	1	1
+Level 041 - Totem Part 240,144	1	1	1	1	1	1	1	1	1	1	1	1	1
+Level 042 - Totem Part 184,152	1	1	1	1	1	1	1	1	1	1	1	1	1
+Level 043 - Totem of Lacste	1	1	1	1	1	1	1	1	1	1	1	1	1
+Level 043 - Wand	1	1	1	1	1	1	1	1	1	1	1	1	1
+out_pit_13_20	2	2	2	2	2	2	2	2	2	2	2	2	2
+out_pit_13_21	2	1	1	1	1	1	1	1	1	1	1	1	1
+out_pit_14_20	2	2	2	2	2	2	2	2	2	2	2	2	2
+out_pit_14_21	2	1	1	1	1	1	1	1	1	1	1	1	1
+out_pit_4_20	2	2	2	2	2	2	2	2	2	2	2	2	2
+out_pit_4_21	2	2	2	2	2	2	2	2	2	2	2	2	2
+out_pit_4_22	2	2	2	2	2	2	2	2	2	2	2	2	2
+out_pit_4_23	2	2	2	2	2	2	2	2	2	2	2	2	2
+out_pit_5_20	2	2	2	2	2	2	2	2	2	2	2	2	2
+out_pit_5_21	2	1	2	2	2	2	2	1	2	2	2	2	2
+out_pit_5_22	2	1	2	2	2	2	2	1	2	2	2	2	2
+out_pit_5_23	2	1	2	2	2	2	2	1	2	2	2	2	2
+out_stairsdown_320_576	2	2	2	2	2	2	2	2	2	2	2	2	2
+out_stairsup_176_464	1	1	1	1	1	1	1	1	1	1	1	1	1
+out_teleporter_0_160	1	1	1	1	1	1	1	1	1	1	1	1	1
+out_teleporter_144_0	1	1	1	1	1	1	1	1	1	1	1	1	1
+out_teleporter_144_64	1	1	1	1	1	1	1	1	1	1	1	1	1
+out_teleporter_240_336	1	1	1	1	1	1	1	1	1	1	1	1	1
+out_teleporter_480_912	2	2	2	2	2	2	2	2	2	2	2	2	2
+out_teleporter_848_0	2	2	2	2	2	2	2	2	2	2	2	2	2
+out_teleporter_944_96	2	2	2	2	2	2	2	2	2	2	2	2	2

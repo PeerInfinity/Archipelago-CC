@@ -114,6 +114,16 @@ const REFUSAL_SOURCES = [
             + 'on both pages, and the ELEMENTS CENSUS counts them',
     },
     {
+        id: 'rope-gate',
+        title: 'The ROPE GATE — an armed arrow trap on a cut and the rope that silences it',
+        kind: 'constant',
+        constant: 'ROPE_GATE_REFUSALS',
+        names: M.ropeGate.ROPE_GATE_REFUSALS,
+        file: SOURCES.ropeGate,
+        channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
+            + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
         id: 'open-chamber',
         title: 'The OPEN CHAMBER element',
         kind: 'constant',

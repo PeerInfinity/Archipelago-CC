@@ -21,6 +21,16 @@
  *   machine, a turret, a boss), art on and off — every family the room holds reports sprites in the readout
  *   (`drawn.families`), and in the boxes L2 drew as rectangles at most `SAME_MAX` of the pixels are unchanged.
  *
+ *   ⛓ seedling-gen-ropegate: a generated ROPE GATE room (`?elements=ropegate`, post-sword) certifies, holds its trap
+ *   and rope, and draws the trap in sprites.
+ *
+ *   ⛓ gen-biomes-1: the generate arm's LOOK select — one generated room in every look, the canvas's floor and
+ *   wall pixels following each look's COLUMN (stills `look-<name>.png`) — and the four new item presets boot.
+ *
+ *   ⛓ gen-terrains: one generated room per walk-changing terrain (ice, stairs, ghost step, lava, igneous), art
+ *   on, the terrain's canvas pixels unlike the floor's (stills `terrain-<name>.png`), and the `#genTerrains`
+ *   select offering each biome's `TERRAIN_OFFERS`.
+ *
  * Prereqs: a dev server at the REPO ROOT. SKIPs (exit 0) without one, like its siblings.
  * Run: node scripts/procgen/check-seedling-lab-art.mjs [--host=http://localhost:8000] [--shots=<dir>]
  */
@@ -280,6 +290,237 @@ async function main() {
             check(same / Math.max(1, total) <= SAME_MAX,
                 `L${room.level} ${room.name}: ≤ ${SAME_MAX * 100}% of the ${boxes.length} object box(es)' pixels are the rectangles L2 drew there`,
                 `${((same / Math.max(1, total)) * 100).toFixed(1)}% identical; worst ${worst.slice(0, 3).map(([s, t]) => `${t} ${(s * 100).toFixed(0)}%`).join(', ')}`);
+        }
+    }
+
+    // ── ⛓ seedling-gen-ropegate: a generated ROPE GATE room, art on ──
+    //
+    // The generate arm with `?elements=ropegate` (post-sword): the room the lab generates holds the element's two
+    // parts — an armed `arrowtrap` and a `rope` with its node, one `tset` — it certifies, and the art draws the trap
+    // in sprites (the `trap` family). ⚠ The rope has NO skin in the art library yet, so it draws as the renderer's
+    // stand-in rect; the row records that rather than asserting a sprite nothing draws.
+    console.log('\n## ropegate — a generated rope gate room');
+    for (const mode of ['on', 'off']) {
+        const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+        const errors = [];
+        page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+        await page.goto(`${PAGE}?source=generate&seed=1&biome=post-sword&elements=ropegate${mode === 'off' ? '&art=off' : ''}`,
+            { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction((want) => {
+            const a = window.__labArt;
+            return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                && (want === 'off' ? a.drawn === null : a.drawn !== null);
+        }, mode, { timeout: 180000 }).catch(() => {});
+        await page.waitForTimeout(1200);
+        const { art, payload } = await page.evaluate(() => ({ art: window.__labArt ?? null,
+            payload: window.__watch?.payload ? { certified: window.__watch.payload.certified,
+                entities: window.__watch.payload.level.entities } : null }));
+        if (mode === 'on') {
+            const trap = (payload?.entities ?? []).filter((e) => e.type === 'arrowtrap');
+            const rope = (payload?.entities ?? []).filter((e) => e.type === 'rope');
+            check(payload?.certified === true && trap.length === 1 && rope.length === 1
+                && trap[0].attrs?.shoot === '1' && trap[0].attrs.tset === rope[0].attrs?.tset
+                && (rope[0].nodes ?? []).length === 1,
+                'ropegate: the generated room CERTIFIES and holds an armed trap and a rope of ONE group, the rope with its node',
+                JSON.stringify({ certified: payload?.certified, trap, rope }));
+            check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && (art.drawn.families?.trap ?? 0) > 0,
+                'ropegate: drawn in sprites, the arrow trap among them (`trap` family)', JSON.stringify(art?.drawn));
+        } else {
+            check(art?.drawn === null, 'ropegate ?art=off: the rectangles', JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+        }
+        if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-ropegate${mode === 'off' ? '-off' : ''}.png`) });
+        check(errors.length === 0, `ropegate (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+        await page.close();
+    }
+
+    // ── ⛓ seedling-gen-biomes-1 (C1 + C2): the generate arm's LOOK select and the four new item presets ──
+    //
+    // One generated room (seed 1, pre-sword), redrawn in every look with the art on. The record's own GROUND and
+    // WALL cells (`__editorGenerated.level`, the generator's record, which the look never touches) are averaged
+    // to one colour per class off the CANVAS, and compared with the `none` draw (Ground / Stone) and with each
+    // other: every look's floor must leave Ground; its walls must leave Stone exactly when its wall column is not
+    // Stone's; and two looks agree on a class exactly when they paint it with the same COLUMN. That last clause
+    // is the pixel proof the canvas is drawn from the look's columns: sharing a column ⇒ the same pixels, a
+    // different column ⇒ different ones, for every pair.
+    console.log('\n## gen-biomes-1 — the generate arm draws each LOOK, and offers the new presets');
+    {
+        const R = new URL('../../frontend/modules/seedlingDemo/', import.meta.url).href;
+        const { GEN_LOOKS, LAB_LOOK_NONE } = await import(`${R}procgenLook.js`);
+        const { TERRAIN } = await import(`${R}procgenLevel.js`);
+        /** Mean-colour distance (0–441) above which two class colours DIFFER, and below which they are the SAME. */
+        const DIFFER = 12;
+        const SAME = 4;
+        const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+        const errors = [];
+        page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+        await page.goto(`${PAGE}?source=generate&seed=1&biome=pre-sword`, { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction(() => window.__labArt?.status === 'ready' && window.__labArt.drawn !== null
+            && window.__editorGenerate?.status === 'ok', null, { timeout: 120000 }).catch(() => {});
+        const options = await page.$$eval('#genBiome option', (os) => os.map((o) => o.value));
+        check(['post-fire', 'post-spear', 'post-dark-suit', 'endgame'].every((b) => options.includes(b)),
+            'the generate arm\'s biome select lists the four new presets', options.join(', '));
+        const looks = await page.$$eval('#genLook option', (os) => os.map((o) => o.value));
+        check(Object.keys(GEN_LOOKS).every((l) => looks.includes(l)) && looks.includes(LAB_LOOK_NONE),
+            'the generate arm has a look select holding every look and `none`', looks.join(', '));
+        const record = await page.evaluate(() => window.__editorGenerated?.level ?? null);
+        const cells = { floor: [], wall: [] };
+        for (const [tx, ty, px] of record?.layers?.[0]?.tiles ?? []) {
+            if (px / 16 === TERRAIN.ground.column) cells.floor.push([tx, ty]);
+            if (px / 16 === TERRAIN.wall.column) cells.wall.push([tx, ty]);
+        }
+        /** The canvas's mean colour over each class's cells (each cell's middle half, away from autotile edges). */
+        const classColours = () => page.evaluate(({ cells, w }) => {
+            const c = document.getElementById('canvas');
+            const s = c.width / w;
+            const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+            const out = {};
+            for (const [cls, list] of Object.entries(cells)) {
+                const sum = [0, 0, 0];
+                let n = 0;
+                for (const [tx, ty] of list) {
+                    for (let y = Math.round((ty + 0.25) * s); y < Math.round((ty + 0.75) * s); y += 1) {
+                        for (let x = Math.round((tx + 0.25) * s); x < Math.round((tx + 0.75) * s); x += 1) {
+                            const i = (y * c.width + x) * 4;
+                            sum[0] += d[i]; sum[1] += d[i + 1]; sum[2] += d[i + 2]; n += 1;
+                        }
+                    }
+                }
+                out[cls] = sum.map((v) => v / Math.max(1, n));
+            }
+            return out;
+        }, { cells, w: record?.width ?? 1 });
+        const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+        const drawn = {};
+        for (const look of [LAB_LOOK_NONE, ...Object.keys(GEN_LOOKS)]) {
+            await page.selectOption('#genLook', look);
+            const want = look === LAB_LOOK_NONE ? null : look;
+            const ok = await page.waitForFunction((w) => window.__editorGenerate?.look === w
+                && window.__labArt?.drawn !== null, want, { timeout: 60000 }).then(() => true).catch(() => false);
+            await page.waitForTimeout(800);
+            drawn[look] = await classColours();
+            check(ok, `look ${look}: the arm redrew in it (\`__editorGenerate.look\` = ${JSON.stringify(want)}, art drawn)`);
+            if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `look-${look}.png`) });
+        }
+        check(cells.floor.length > 0 && cells.wall.length > 0, 'the room holds ground and wall cells to measure',
+            `${cells.floor.length} floor, ${cells.wall.length} wall`);
+        const columnOf = (look, cls) => (look === LAB_LOOK_NONE
+            ? (cls === 'floor' ? TERRAIN.ground.column : TERRAIN.wall.column) : GEN_LOOKS[look][cls]);
+        const names = Object.keys(drawn);
+        for (const cls of ['floor', 'wall']) {
+            const wrong = [];
+            for (let i = 0; i < names.length; i += 1) {
+                for (let j = i + 1; j < names.length; j += 1) {
+                    const sameColumn = columnOf(names[i], cls) === columnOf(names[j], cls);
+                    const d = dist(drawn[names[i]][cls], drawn[names[j]][cls]);
+                    if (sameColumn ? d > SAME : d < DIFFER) {
+                        wrong.push(`${names[i]}/${names[j]} ${sameColumn ? 'share' : 'differ in'} column, Δ ${d.toFixed(1)}`);
+                    }
+                }
+            }
+            check(wrong.length === 0, `the ${cls} pixels follow the look's ${cls} COLUMN across all ${names.length} draws `
+                + `(same column ⇒ Δ ≤ ${SAME}, different ⇒ Δ ≥ ${DIFFER})`, wrong.slice(0, 4).join('; '));
+        }
+        check(errors.length === 0, 'looks: no page errors', errors.slice(0, 2).join(' | '));
+        await page.close();
+
+        for (const biome of ['post-fire', 'post-spear', 'post-dark-suit', 'endgame']) {
+            const p = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errs = [];
+            p.on('pageerror', (e) => errs.push(`pageerror: ${e.message}`));
+            await p.goto(`${PAGE}?source=generate&seed=1&biome=${biome}`, { waitUntil: 'domcontentloaded' });
+            const g = await p.waitForFunction(() => (window.__editorGenerate?.status ? window.__editorGenerate : null),
+                null, { timeout: 120000 }).then((h) => h.jsonValue()).catch(() => null);
+            await p.waitForTimeout(800);
+            check(g?.status === 'ok' && g.biome === biome && g.look === biome && errs.length === 0,
+                `${biome}: the generate arm builds, solves and draws it in its own look`,
+                JSON.stringify(g && { status: g.status, biome: g.biome, look: g.look, step: g.step }) + errs.slice(0, 1).join(''));
+            if (SHOTS) await p.locator('#canvas').screenshot({ path: join(SHOTS, `preset-${biome}.png`) });
+            await p.close();
+        }
+    }
+
+    // ── ⛓ seedling-gen-terrains (C3): the walk-changing terrains, one generated room each, art on ──
+    //
+    // Each room is a seed whose six-obstacle ladder paints the terrain (measured with `generateStep` before this
+    // row was written). The terrain's cells (read off the generator's record) are averaged off the CANVAS and must
+    // differ from the floor's: the art draws the terrain's own column. The `#genTerrains` select offers exactly
+    // the biome's `TERRAIN_OFFERS` (none, each, all) and is disabled where a biome offers none.
+    console.log('\n## gen-terrains — the generate arm offers and draws each walk-changing terrain');
+    {
+        const R = new URL('../../frontend/modules/seedlingDemo/', import.meta.url).href;
+        const { TERRAIN } = await import(`${R}procgenLevel.js`);
+        const { TERRAIN_OFFERS } = await import(`${R}procgenPalette.js`);
+        const DIFFER = 12;
+        const ROOMS = [
+            { terrain: 'ice', biome: 'post-swim', terrains: 'ice', seed: 1 },
+            { terrain: 'stairs', biome: 'post-feather', terrains: 'stairs', seed: 1 },
+            { terrain: 'ghoststep', biome: 'post-feather', terrains: 'ghoststep', seed: 1 },
+            { terrain: 'lava', biome: 'post-dark-suit', terrains: '', seed: 2 },
+            { terrain: 'melt', biome: 'post-dark-suit', terrains: '', seed: 1 },
+        ];
+        let offersChecked = false;
+        for (const room of ROOMS) {
+            const p = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errs = [];
+            p.on('pageerror', (e) => errs.push(`pageerror: ${e.message}`));
+            await p.goto(`${PAGE}?source=generate&seed=${room.seed}&biome=${room.biome}&count=6&tries=8&k=3&run=1`
+                + `${room.terrains ? `&terrains=${room.terrains}` : ''}`, { waitUntil: 'domcontentloaded' });
+            const g = await p.waitForFunction(() => (window.__editorGenerate?.status === 'ok'
+                && window.__editorGenerate.step === 6 && window.__labArt?.drawn !== null ? window.__editorGenerate : null),
+            null, { timeout: 180000 }).then((h) => h.jsonValue()).catch(() => null);
+            await p.waitForTimeout(800);
+            check(g?.status === 'ok' && g.terrains === room.terrains && errs.length === 0,
+                `${room.terrain}: the ${room.biome} room${room.terrains ? ` with ?terrains=${room.terrains}` : ''} builds to step 6 and draws`,
+                JSON.stringify(g && { status: g.status, step: g.step, palette: g.palette, terrains: g.terrains }) + errs.slice(0, 1).join(''));
+            const record = await p.evaluate(() => window.__editorGenerated?.level ?? null);
+            const cells = { terrain: [], floor: [] };
+            for (const [tx, ty, px] of record?.layers?.[0]?.tiles ?? []) {
+                if (px / 16 === TERRAIN[room.terrain].column) cells.terrain.push([tx, ty]);
+                if (px / 16 === TERRAIN.ground.column) cells.floor.push([tx, ty]);
+            }
+            const colours = await p.evaluate(({ cells, w }) => {
+                const c = document.getElementById('canvas');
+                const s = c.width / w;
+                const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+                const out = {};
+                for (const [cls, list] of Object.entries(cells)) {
+                    const sum = [0, 0, 0];
+                    let n = 0;
+                    for (const [tx, ty] of list) {
+                        for (let y = Math.round((ty + 0.25) * s); y < Math.round((ty + 0.75) * s); y += 1) {
+                            for (let x = Math.round((tx + 0.25) * s); x < Math.round((tx + 0.75) * s); x += 1) {
+                                const i = (y * c.width + x) * 4;
+                                sum[0] += d[i]; sum[1] += d[i + 1]; sum[2] += d[i + 2]; n += 1;
+                            }
+                        }
+                    }
+                    out[cls] = sum.map((v) => v / Math.max(1, n));
+                }
+                return out;
+            }, { cells, w: record?.width ?? 1 });
+            const delta = Math.hypot(...colours.terrain.map((v, i) => v - colours.floor[i]));
+            check(cells.terrain.length > 0 && cells.floor.length > 0 && delta >= DIFFER,
+                `${room.terrain}: the record holds ${cells.terrain.length} ${room.terrain} cell(s) (column `
+                + `${TERRAIN[room.terrain].column}) and the canvas draws them unlike the floor (Δ ≥ ${DIFFER})`,
+                `Δ ${delta.toFixed(1)}`);
+            if (SHOTS) await p.locator('#canvas').screenshot({ path: join(SHOTS, `terrain-${room.terrain}.png`) });
+            if (!offersChecked) {
+                offersChecked = true;
+                const offers = {};
+                for (const biome of ['post-sword', 'post-swim', 'post-feather', 'post-dark-suit']) {
+                    await p.selectOption('#genBiome', biome);
+                    offers[biome] = await p.$eval('#genTerrains', (s) => ({ disabled: s.disabled,
+                        values: [...s.options].map((o) => o.value) }));
+                }
+                const want = (b) => {
+                    const o = TERRAIN_OFFERS[b] ?? [];
+                    return { disabled: o.length === 0, values: ['', ...o, ...(o.length > 1 ? [o.join(',')] : [])] };
+                };
+                check(Object.keys(offers).every((b) => JSON.stringify(offers[b]) === JSON.stringify(want(b))),
+                    'the #genTerrains select offers each biome\'s TERRAIN_OFFERS (none, each, all) and is disabled where there are none',
+                    JSON.stringify(offers));
+            }
+            await p.close();
         }
     }
 

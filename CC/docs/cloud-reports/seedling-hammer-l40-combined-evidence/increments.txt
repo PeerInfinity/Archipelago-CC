@@ -1,0 +1,23 @@
+== A0 vs A1: 9 mover(s); solved 41 -> 47
+  374/0 out_pit_5_21: B:refusal -> S955
+  374/1 out_pit_5_21: B:refusal -> S955
+  378/0 out_pit_5_22: B:refusal -> S938
+  378/1 out_pit_5_22: B:refusal -> S938
+  380/0 out_pit_5_23: B:refusal -> S909
+  380/1 out_pit_5_23: B:refusal -> S909
+  382/0 Level 040 - Chest: R:refusal -> B:refusal
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+== A1 vs A2: 0 mover(s); solved 47 -> 47
+== A2 vs A3: 4 mover(s); solved 47 -> 47
+  366/0 Level 040 - Totem Part 64,144: R:refusal -> B:refusal
+  366/1 Level 040 - Totem Part 64,144: R:refusal -> R:refusal
+  399/0 Level 040 - Chest: R:refusal -> B:refusal
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+== A3 vs A4: 2 mover(s); solved 47 -> 47
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+  861/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+== A4 vs A5: 3 mover(s); solved 47 -> 48
+  399/0 Level 040 - Chest: B:refusal -> S1914!
+  860/1 Level 040 - Boss Key 2: R:refusal -> R:refusal
+  861/1 Level 040 - Boss Key 2: R:refusal -> B:refusal

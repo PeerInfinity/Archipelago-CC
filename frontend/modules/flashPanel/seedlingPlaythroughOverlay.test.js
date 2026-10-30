@@ -351,6 +351,34 @@ describe('the LavaTrap lift', () => {
         expect(lavaTrapPulls({ width: 5, height: 5, entities: [{ type: 'darktrap', x: 0, y: 0 }] }))
             .toEqual([]);
     });
+
+    // ⛓ ONE step into two discs (session tile-primitives-sphere-order-10, ⚖ 2026-10-30 "First range entered"): the trap whose
+    // disc the walk from centre to centre enters FIRST takes the step; the other `yields` it. `probe-seedling-l78-pull-order.mjs`
+    // drove L78's on the game: reeled onto (9,6).
+    it('L78: (6,5) yields the step (8,4) → (8,5) to (9,6), whose disc the walk enters first (y 75.1 vs 79.9)', () => {
+        const pulls = lavaTrapPulls(level(78));
+        // and its mirror on the lava, (7,7) → (7,6), the other way round (a step only the Dark Suit walks)
+        expect(pulls.map((p) => [p.tile, p.yields])).toEqual([
+            [[9, 3], []], [[6, 5], [{ from: [8, 4], to: [8, 5] }]], [[9, 6], [{ from: [7, 7], to: [7, 6] }]],
+        ]);
+    });
+
+    it('no other level has a step into two discs from outside both (L77, L80, L108)', () => {
+        for (const id of [77, 80, 108]) expect(lavaTrapPulls(level(id)).flatMap((p) => p.yields), `L${id}`).toEqual([]);
+    });
+
+    it('the first disc ENTERED wins; a tie yields nothing (the engine refuses it)', () => {
+        const at = (x, y) => ({ type: 'lavatrap', x: x * 16, y: y * 16 });
+        // traps (1,3) and (3,3) mirror each other about the step (2,1) → (2,2): a tie
+        expect(lavaTrapPulls({ width: 5, height: 6, entities: [at(1, 3), at(3, 3)] }).flatMap((p) => p.yields)).toEqual([]);
+        // traps (0,2) and (3,3) both take (2,2) from (2,1), (0,2) the NEARER to (2,2)'s centre on the line's axis but 32 px off
+        // it: the walk down enters (3,3)'s disc at y 27.1 px and (0,2)'s at y 31.9, so (0,2) yields
+        const pulls = lavaTrapPulls({ width: 5, height: 6, entities: [at(0, 2), at(3, 3)] });
+        const ins = (p, c) => p.from.some((t) => t[0] === c[0] && t[1] === c[1]);
+        expect(pulls.map((p) => [ins(p, [2, 2]), ins(p, [2, 1])])).toEqual([[true, false], [true, false]]);
+        // (and the mirror step (1,4) → (1,3), which (3,3) yields)
+        expect(pulls.map((p) => p.yields)).toEqual([[{ from: [2, 1], to: [2, 2] }], [{ from: [1, 4], to: [1, 3] }]]);
+    });
 });
 
 describe('location guards — the gate that is not a door', () => {
