@@ -82,8 +82,9 @@ import {
 // builds `drawWorld`'s `view` out of this panel's own state.
 import { TILE_PX, drawWorld } from './mazeRoomRender.js';
 import {
-    SEEDLING_CELL_PX, bakeSeedlingLayer, createTinter, loadSeedlingArt, seedlingLayerKey, seedlingSkinFor, spritePainter,
+    SEEDLING_CELL_PX, bakeSeedlingLayer, loadSeedlingArt, seedlingLayerKey, seedlingSkinFor, spritePainter,
 } from './mazeSeedlingSkin.js';
+import { createTinter } from '../seedlingDemo/seedlingSkinRenderer.js';
 import { seedlingSprites } from './mazeSeedlingSprites.js';
 import { getLastRawJsonData } from '../stateManager/index.js';
 import {
