@@ -13,10 +13,14 @@ const { solveAnytime, ANYTIME_PASSES, replayTape } = await import(ROOT + '/front
 const SB = await import(ROOT + '/frontend/modules/seedlingDemo/solverBot.js');
 const { CONTACT_FIDELITY } = await import(ROOT + '/frontend/modules/seedlingDemo/contactFidelity.js');
 const PK = await import(ROOT + '/frontend/modules/seedlingDemo/pressKillCost.js');
+// SPIN: the press kills that completed (PRESS_KILL_DONE_TRACE) and the switch's counts, per request; absent on an old tree
+const PG = await import(ROOT + '/frontend/modules/seedlingDemo/pressKillGuards.js');
+let kills = [];
+if (PG.PRESS_KILL_DONE_TRACE) PG.PRESS_KILL_DONE_TRACE.sink = (k) => { kills.push({ bodies: k.bodies, from: k.from, t: k.t, landings: k.landings.map((l) => l.t) }); };
 const [shard, nshard] = (args.shard ?? '0/1').split('/').map(Number);
 const ids = args.ids ? new Set(args.ids.split(',')) : null;
 const md5 = (s) => createHash('md5').update(s).digest('hex').slice(0, 12);
-const arm = { cpair: SB.CHOOSER_PAIR?.enabled ? SB.CHOOSER_PAIR.size : 0, icest: !!SB.ICETURRET_STATIC_KILL?.enabled,
+const arm = { spin: !!PG.PRESS_ESCAPE_SHIELD_CLAIM?.enabled, cpair: SB.CHOOSER_PAIR?.enabled ? SB.CHOOSER_PAIR.size : 0, icest: !!SB.ICETURRET_STATIC_KILL?.enabled,
     opp: !!PK.OPPORTUNISTIC_STRIKE?.enabled, lwf: !!SB.LATCH_WEIGH_FIRST?.enabled,
     ofa: !!CONTACT_FIDELITY.orbitFreeAim, sbd: !!CONTACT_FIDELITY.strategyBoundDistinct };
 console.log('ARM', JSON.stringify(arm));
@@ -59,6 +63,8 @@ for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
         SB.resetIceTurretStaticKillCounts?.();
         SB.resetLatchWeighFirstCounts?.();
         SB.resetChooserPairCounts?.();
+        PG.resetPressEscapeShieldClaimCounts?.();
+        kills = [];
         const levelSource = levelSourceFromAtlas(source.records);
         const t0 = Date.now();
         let answer;
@@ -80,7 +86,9 @@ for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
             danger: msg ? (/passes through danger at \(([^)]*)\) — ([a-z]+:[A-Za-z0-9@,]+)/.exec(msg)?.slice(1).join(' ') ?? null) : null,
             icest: SB.ICETURRET_STATIC_KILL_COUNTS ? JSON.parse(JSON.stringify(SB.ICETURRET_STATIC_KILL_COUNTS)) : null,
             lwf: SB.LATCH_WEIGH_FIRST_COUNTS ? JSON.parse(JSON.stringify(SB.LATCH_WEIGH_FIRST_COUNTS.asked)) : null,
-            cpair: SB.CHOOSER_PAIR_COUNTS ? { admitted: SB.CHOOSER_PAIR_COUNTS.admitted } : null };
+            cpair: SB.CHOOSER_PAIR_COUNTS ? { admitted: SB.CHOOSER_PAIR_COUNTS.admitted } : null,
+            spin: PG.PRESS_ESCAPE_SHIELD_CLAIM ? { on: PG.PRESS_ESCAPE_SHIELD_CLAIM.enabled, ...PG.PRESS_ESCAPE_SHIELD_CLAIM_COUNTS } : null,
+            kills: kills.filter((k) => k.bodies.some((b) => b.startsWith('spinner@'))) };
         appendFileSync(args.out, JSON.stringify(out) + '\n');
         console.log(`${row.id}/${c.i} ${out.ok ? `SOLVED ${out.ticks} gm=${gm?.gm}` : `REFUSED ${out.kind}`} ${out.digest} ${ms}ms`);
     }
