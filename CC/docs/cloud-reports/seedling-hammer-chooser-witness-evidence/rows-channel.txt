@@ -1,0 +1,18 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m scripts/procgen/seedlingDivergenceSolverEnv.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 2885[2mms[22m[39m
+     [33m[2m✓[22m[39m an empty flag is byte-identical to no flag; set, the plan is stamped with the canonical spec [33m 2873[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingDivergenceWindow.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 2879[2mms[22m[39m
+     [33m[2m✓[22m[39m empty flags are byte-identical to no flag (no stamp); set, the plan is stamped [33m 2861[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverEnvChannel.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 2310[2mms[22m[39m
+     [33m[2m✓[22m[39m sets CHOOSER_PAIR (on, size 3) in the worker before solverBot loads; nothing else [33m 309[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing set = defaults: CHOOSER_PAIR off at size 2, no SEEDLING_* in the env [33m 390[2mms[22m[39m
+     [33m[2m✓[22m[39m the result records the switches set (and carries no stamp at the defaults) [33m 707[2mms[22m[39m
+     [33m[2m✓[22m[39m an unknown switch refuses BY NAME in the worker too: every solve, nothing installed [33m 747[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m30 passed[39m[22m[90m (30)[39m
+[2m   Start at [22m 16:19:11
+[2m   Duration [22m 8.69s[2m (transform 5.37s, setup 0ms, import 10.15s, tests 8.07s, environment 0ms)[22m
+

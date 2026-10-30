@@ -1,0 +1,9 @@
+⛔ THE BOX IS TAKEN — check-procgen-reference.mjs (browser) refuses rather than perturbing a live measurement.
+   holder   probe-seedling-divergence-sweep.mjs (browser)
+   pid      18267 on vm
+   since    2026-10-30T16:16:56.281Z (61s)
+   head     183c4d14254747e3f42b650d05f946efb28f0811
+   tree     /home/user/Archipelago-CC
+   ⛓ to QUEUE instead of refusing, re-run with `--wait-for-box=<seconds>`.
+   ⛓ if that pid is gone, the next taker reclaims the lock automatically — nothing has to be deleted by hand.
+exit 1

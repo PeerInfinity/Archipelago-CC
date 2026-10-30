@@ -1,0 +1,7 @@
+DIFFERS seedling-solver-surface: 215225 bytes committed vs 215225 derived — re-run with --write
+RED: 1 finding(s) — run --write, then classify
+exit 1
+base 9c0f9045: RED: 1 finding (DIFFERS, line-only); head after --write:
+same seedling-solver-surface: 215225 bytes
+GREEN: 363 rows match a fresh census
+exit 0
