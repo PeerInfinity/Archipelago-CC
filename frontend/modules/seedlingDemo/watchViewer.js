@@ -368,6 +368,8 @@ import {
     createLabArtPainter, labArt, labArtActive, labArtOps, mountLabArtToggle, publishLabArtDraw, rememberRoomRecord,
     roomRecordOf, setLabArtRedraw, placementBodies,
 } from './watchArt.js';
+// ⛓ seedling-gen-biomes-1 (C1): the generated room's LOOK, drawn by the generate arm (never written to its record).
+import { LAB_LOOK_CHOICES, LAB_LOOK_OWN, applyLook, labLookOf } from './procgenLook.js';
 /**
  * ⛓ THE ON-SCREEN CONTROLS (slice `seedling-lab-touch-controls`) — the flash panel's, imported AS IS: the d-pad and
  * buttons Seedling's `games/seedling.json` declares, shown by the same auto/on/off rule (`?touch=1`, a coarse pointer).
@@ -6115,6 +6117,24 @@ async function runGenerate(params, lifetime) {
     biomeSel.innerHTML = BIOME_NAMES
         .map((b) => `<option value="${b}">${b}</option>`).join('');
     biomeSel.value = biome;
+    /**
+     * ⛓ seedling-gen-biomes-1 (C1) — THE LOOK SELECT, built here beside the biome
+     * select rather than in watch.html. It defaults to the biome's OWN look; `none`
+     * is the generator's Ground / Stone. ⛔ It changes only what `show` DRAWS
+     * (`applyLook` over the displayed record): the state's record, the payload, the
+     * URL and the `?gen=` check are the generator's, whatever the select says.
+     */
+    const lookSel = document.createElement('select');
+    lookSel.id = 'genLook';
+    lookSel.title = 'The tileset the room is DRAWN in: the biome\'s own area, none (Ground / Stone), or any area';
+    lookSel.innerHTML = LAB_LOOK_CHOICES.map((l) => `<option value="${l}">${l === LAB_LOOK_OWN
+        ? '(biome\'s own)' : l}</option>`).join('');
+    lookSel.value = LAB_LOOK_OWN;
+    const lookLabel = document.createElement('label');
+    lookLabel.htmlFor = 'genLook';
+    lookLabel.textContent = 'look';
+    biomeSel.after(lookLabel, lookSel);
+    const shownLook = () => labLookOf(lookSel.value, state?.biome ?? biome);
 
     /**
      * ── ⛓⛓⛓ CONSTRUCTIVE-MODE SLICE 5 — THE SKELETON SELECTOR ──────────
@@ -7215,7 +7235,8 @@ async function runGenerate(params, lifetime) {
             return { solved, agreement, drew: false };
         }
 
-        const levelSource = levelSourceFromAtlas(atlasOf(state.record));
+        // ⛓ seedling-gen-biomes-1 (C1): the room is DRAWN in its look; `state.record` stays the generator's.
+        const levelSource = levelSourceFromAtlas(atlasOf(applyLook(state.record, shownLook())));
         /**
          * ⛓⛓ MOVED UP BY SLICE 11, and only past the refusal check above: the
          * STILL-FRAME path below asks `isHeldLevel(staging.boot.level)` for its
@@ -7312,6 +7333,8 @@ async function runGenerate(params, lifetime) {
             seed,
             biome,
             step,
+            /** ⛓ seedling-gen-biomes-1 (C1): the look the room is DRAWN in (null: Ground / Stone). */
+            look: shownLook(),
             /**
              * ⛓ SLICE 4 (constructive-mode arc): the IDENTITY LINE, the same
              * string the detail line prints. ⛔ Carried rather than rebuilt —
@@ -8378,6 +8401,10 @@ async function runGenerate(params, lifetime) {
         } else if (e.target.checked) selectedFacts.add(id);
         else selectedFacts.delete(id);
         await showPhase();
+    });
+    // ⛓ seedling-gen-biomes-1 (C1): a look change only REDRAWS (the record is not regenerated).
+    lifetime.on(lookSel, 'change', async () => {
+        if (phaseIndex === null && state) await show(`look: ${lookSel.value}`);
     });
     const setLayer = async (next) => {
         genLayer = next;

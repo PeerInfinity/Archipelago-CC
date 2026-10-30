@@ -259,7 +259,7 @@ describe('generateRegionCore — the room and its doors', () => {
     it('refusals are sentences: a duplicated exit, a bad knob, a room the generator refuses', () => {
         expect(() => build([{ exit_id: 'a' }, { exit_id: 'a' }])).toThrow(GEN_ROOM_REFUSALS.duplicateExit('gen_probe', 'a'));
         expect(() => build(EXITS, { params: { seedlingGen: { biome: 'lava' } } }))
-            .toThrow(/knob `biome` = "lava" is not usable — the biomes are \[pre-sword, post-sword, post-shield, post-swim, post-feather\]/);
+            .toThrow(/knob `biome` = "lava" is not usable — the biomes are \[pre-sword, post-sword, post-shield, post-swim, post-feather, post-fire, post-spear, post-dark-suit, endgame\]/);
         expect(() => build(EXITS, { params: { seedlingGen: { skeleton: 'nope' } } }))
             .toThrow(/knob `skeleton` = "nope" is not usable/);
         expect(() => build(EXITS, { size: { width: 2, height: 2 } }))
@@ -463,8 +463,9 @@ describe('the per-region generation knobs', () => {
         // ⛓ G4: `hostChildren` rides beside the room's knobs (it steers the tree, not the generator)
         expect(buildSeedlingGenRegionParams({ params: {} }))
             // ⛓ S1, D4: `require` is carried ONLY WHEN GIVEN, so the bare bag has none.
+            // ⛓ seedling-gen-biomes-1: and so is `look` (the panel has no look row; the room reads it from the API).
             .toEqual({ seedlingGen: { ...GEN_ROOM_DEFAULTS, saturationK: undefined, require: undefined,
-                hostChildren: true } });
+                look: undefined, hostChildren: true } });
         const p = buildSeedlingGenRegionParams({ params: { seedlingGenObstacleTarget: 2, seedlingGenFill: 'shell' } });
         expect(p.seedlingGen).toMatchObject({ obstacleTarget: 2, fill: 'shell', biome: 'pre-sword' });
     });
