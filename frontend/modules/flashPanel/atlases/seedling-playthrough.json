@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-203feafc",
+  "atlas_id": "seedling-1973beee",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "203feafc" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "1973beee" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -8193,31 +8193,36 @@
           "exit_id": "in_L111_128_48",
           "kind": "teleporter",
           "exit_tiles": [[2,13]],
-          "entrance_tile": [2,13]
+          "entrance_tile": [2,13],
+          "sub_region": "r2c2"
         },
         {
           "exit_id": "out_teleporter_32_224",
           "kind": "teleporter",
           "exit_tiles": [[2,14]],
-          "entrance_tile": [2,14]
+          "entrance_tile": [2,14],
+          "sub_region": "r2c2"
         },
         {
           "exit_id": "out_teleporter_112_0",
           "kind": "teleporter",
           "exit_tiles": [[7,0]],
-          "entrance_tile": [7,0]
+          "entrance_tile": [7,0],
+          "sub_region": "r0c7"
         },
         {
           "exit_id": "in_L113_64_144",
           "kind": "teleporter",
           "exit_tiles": [[7,1]],
-          "entrance_tile": [7,1]
+          "entrance_tile": [7,1],
+          "sub_region": "r0c7"
         },
         {
           "exit_id": "in_L113_80_144",
           "kind": "teleporter",
           "exit_tiles": [[7,1]],
-          "entrance_tile": [7,1]
+          "entrance_tile": [7,1],
+          "sub_region": "r0c7"
         }
       ],
       "locations": [
@@ -8231,10 +8236,29 @@
               { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
               { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
             ]
-          }
+          },
+          "sub_region": "r2c2"
         }
       ],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "analyzer" },
+      "subgraph": {
+        "sub_regions": ["r0c7","r2c2"],
+        "internal_exits": [
+          {
+            "from": "r0c7",
+            "to": "r2c2",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          }
+        ]
+      }
     },
     {
       "region_id": "level_113",

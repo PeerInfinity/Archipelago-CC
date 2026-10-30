@@ -140,7 +140,9 @@ describe('flash_seedling — the atlas install knob (S2 D1)', () => {
         //   pools, each holding doors (r0c7 the L54 door, r2c2 the L55 door, r5c10 the L51/L56 doors).
         // ⛓ tile-primitives-pixelmask-l86: 183 -> 184 — a building's footprint is its Pixelmask: L0's house door (r6c5,
         //   the L1 door) and L93's door into L98 (r5c7) are zones of their own, and L93's r10c7 loses its only doors to r5c7.
-        expect(entry.zoneCount).toBe(184);
+        // ⛓ rules-l112-owl-rocklock: 184 -> 185 — L112 splits at its rock (the Owl's kill): r0c7 (the L113 doors) and r2c2
+        //   (the L111 door) each hold doors.
+        expect(entry.zoneCount).toBe(185);
         entry.prepareSphereGrowth({ params: {} });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
     });

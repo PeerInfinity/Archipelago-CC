@@ -2553,12 +2553,22 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_113 -> level_112", player),
+        multiworld.get_entrance("level_112__r0c7 -> level_112__r2c2", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_112__r2c2 -> level_112__r0c7", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_113 -> level_112__r0c7", player),
         Has('L112 flag 1: rocklock@112,16 cleared', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_113 -> level_112 #2", player),
+        multiworld.get_entrance("level_113 -> level_112__r0c7 #2", player),
         Has('L112 flag 1: rocklock@112,16 cleared', 1)
     )
 
@@ -2959,6 +2969,11 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Level 112 - Owl", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_location("L112 flag 1: rocklock@112,16 cleared", player),
         HasAny('Progressive Sword', 'Ghost Spear')
     )
 

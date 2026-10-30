@@ -407,8 +407,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-collider-mismatch (650d4539… -> e1b1c33a): a pixel-mask wall seals its mask's opaque tiles, not its
         //   rect — L65's open-tree doorway is floor, one sub-region renamed (level_65__r4c13 -> r4c11). No exit or
         //   location moves (the overlay fixture rewrites byte-identical).
+        // ⛓ rules-l112-owl-rocklock (e1b1c33a… -> 141195a8): L112's rock costs the Owl's kill (`SCRIPT_GROUP_OPENERS`), so
+        //   L112 splits into r0c7 + r2c2 (sub_region on its exits and locations). No name, exit or location moves (the
+        //   overlay fixture rewrites byte-identical).
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('e1b1c33a2f90060a48af8bd3f8eb52fb');
+            .toBe('141195a8b18ffe5187bad889d84c39ea');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
