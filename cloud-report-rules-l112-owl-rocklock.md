@@ -102,7 +102,7 @@ The bounded vitest set:
 - every test file that names `seedling-playthrough.json`, `seedling_playthrough`, `seedling-subregion-partition`,
   `make-seedling-playthrough*`, `PLAYTHROUGH_ATLAS` or `seedlingPlaythroughOverlay`;
 - every test file that names `developer/procgen` or `maze.md` (the docs pins);
-- the remaining required files: `scripts/procgen/boxLock.test.js`, `scripts/test/noNewDocsReferences.test.js`,
+- the remaining required files: `scripts/procgen/boxLock.test.js`, the no-new-docs references test (`scripts/test/`),
   `scripts/procgen/checkProcgenHelp.test.js`, `scripts/procgen/procgenHelpBaseline.test.js`,
   `frontend/modules/flashPanel/atlasIndex.test.js` and the new `seedlingScriptOpeners.test.js`.
 
