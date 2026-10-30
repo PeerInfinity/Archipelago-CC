@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 21,
+            "count": 22,
             "id": "census"
         },
         {
@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 126,
-            "count": 174,
+            "browser": 127,
+            "count": 175,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 488,
-        "browser": 193,
+        "blockStyle": 490,
+        "browser": 194,
         "cited": 263,
-        "files": 505,
+        "files": 507,
         "lineStyle": 17,
-        "withDocblock": 505,
-        "withFlags": 421
+        "withDocblock": 507,
+        "withFlags": 423
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1602,6 +1602,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-stepoff — **EVERY LATCHED ARRIVAL, SOLVED FOR THE DOOR IT STANDS ON** (Seedling fidelity STEPOFF2, D4).",
             "path": "scripts/procgen/census-seedling-stepoff.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-weapon-reach.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "verbose"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "charge-crossings"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "no-directional-locks"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "quiet"
+                }
+            ],
+            "oneLiner": "⛓ RULES weapon-reach-census — ONCE THE GHOST SWORD IS HELD THE SPEAR CANNOT BE THRUST: WHICH \"SPEAR\" TARGET DOES THE SWING NOT REACH FROM WHERE THE THRUST DID?",
+            "path": "scripts/procgen/census-seedling-weapon-reach.mjs"
         },
         {
             "argvHelpers": [
@@ -18088,6 +18137,54 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-watch-page — does `watch.html` actually DRAW a tape, all the way through, without dying?",
             "path": "scripts/procgen/probe-seedling-watch-page.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-weapon-reach.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "The WEAPON REACH witnesses (slice rules-weapon-reach-census): a stance from which the Spear THRUST lights a pole and the Ghost Sword SWING may not (LOOSER: the rules charge the pole's door `Or(<event>, Ghost Spear)` there, and a Ghost Sword holder holds the Ghost Spear but can no longer thrust it), and the reverse (…",
+            "path": "scripts/procgen/probe-seedling-weapon-reach.mjs"
         },
         {
             "argvHelpers": [
