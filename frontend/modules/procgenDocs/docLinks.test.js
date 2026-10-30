@@ -292,20 +292,24 @@ describe('the corpus census — printed, then pinned', () => {
          *              (`doc` 280 → 282).
          *   366 → 367  shared level worlds (2026-10-21, tile-primitives Stage 2): maze.md's item-actions
          *              persistence bullet → its own § Shared level worlds (`same-doc` 22 → 23).
+         *   367 → 377  cloudberry substrate (2026-10-30, P2a): the new cloudberry.md → flash.md ×2,
+         *              paths-and-obstacles.md ×2, runner.md ×2, substrate-registry.md, and the README
+         *              index's row for it (`doc` 282 → 290); its § Setting up the game page and
+         *              § CLI tools pointers (`same-doc` 23 → 25).
          */
         expect(by).toEqual({
-            'same-doc': 23,
-            doc: 282,
+            'same-doc': 25,
+            doc: 290,
             external: 22,
             repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(367);
+        expect(CORPUS.length).toBe(377);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(282);
+        expect(docs).toHaveLength(290);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

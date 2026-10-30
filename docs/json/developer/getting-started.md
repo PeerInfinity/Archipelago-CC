@@ -358,6 +358,18 @@ Some Seedling tests and extractors under `scripts/procgen/` read the game's AS3 
 git submodule update --init vendor/seedling
 ```
 
+### 6. (Optional) Fetch the Cloudberry Kingdom Site
+
+The `cloudberry` substrate's panel iframes the Cloudberry Kingdom game page, which must come from the same origin as the frontend. On GitHub Pages that is the deployed site; locally, download it once into the gitignored `frontend/external/cloudberry/` (about 26 MB), and again after the Cloudberry site is redeployed:
+
+```bash
+# From the repository root.
+node scripts/setup/fetch-cloudberry-site.mjs           # the live site
+node scripts/setup/fetch-cloudberry-site.mjs --check   # is the copy there and current?
+```
+
+`--link <site dir>` uses a local Cloudberry build instead. See [Cloudberry Substrate](./procgen/cloudberry.md).
+
 ### Working in a git worktree
 
 Concurrent work runs in separate git worktrees. Create one with the script, not with a bare `git worktree add`:

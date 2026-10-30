@@ -54,7 +54,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 63,
-            "count": 103,
+            "count": 104,
             "id": "check"
         },
         {
@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 11,
+            "count": 12,
             "id": "make"
         },
         {
@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 5,
+            "count": 7,
             "id": "no prefix"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 496,
+        "blockStyle": 499,
         "browser": 199,
-        "cited": 264,
-        "files": 513,
-        "lineStyle": 17,
-        "withDocblock": 513,
-        "withFlags": 429
+        "cited": 267,
+        "files": 517,
+        "lineStyle": 18,
+        "withDocblock": 517,
+        "withFlags": 431
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -259,6 +259,32 @@ export const INSTRUMENTS = frz({
         "unresolvedByDesign": "/\\((?:never written|retired)\\)/ within 120 characters after a citation, on the same line — the citation is then of a PLAN or of a RETIRED instrument, and is dropped from both directions of the table"
     },
     "rows": [
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "no prefix",
+            "citedBy": [],
+            "docblockStyle": "line",
+            "documentedFlags": [],
+            "file": "archipelagoLogoArt.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "extract-seedling-masks.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "extract-seedling-masks.mjs",
+                    "name": "out"
+                },
+                {
+                    "from": "extract-seedling-masks.mjs",
+                    "name": "source"
+                }
+            ],
+            "oneLiner": "The Archipelago logo at 64×64 for the `archipelago` art pack (⚖ R17, the Cloudberry plan): Archipelago's application icon `data/icon.png` (512×512, MIT — this repository's root LICENSE) reduced by an 8×8 box filter, alpha-weighted so the transparent surround does not darken the edge.",
+            "path": "scripts/procgen/archipelagoLogoArt.mjs"
+        },
         {
             "argvHelpers": [
                 "SEEDS",
@@ -1872,6 +1898,51 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Phase-2 check: the headless CLIs build their sphere-growth config through the SAME substrate-hook assembly the panel uses (sphereConfigHooks), so the CLI's emitted regionParams / starting items / exclusive spheres match what the panel produces — no more inline arrow block + minimal {fallBehavior, physicsProfile} reg…",
             "path": "scripts/procgen/check-cli-sphere-config.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/cloudberry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-cloudberry-embed.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "keep"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "port"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shots"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "check-cloudberry-embed — **A CLOUDBERRY WORLD, FROM THE DEMO PACK THROUGH THE PYTHON ROUND TRIP INTO THE REAL FRONTEND, PLAYED** (cloudberry P2a gate).",
+            "path": "scripts/procgen/check-cloudberry-embed.mjs"
         },
         {
             "argvHelpers": [
@@ -5661,6 +5732,46 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/ci-vitest-summary.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "no prefix",
+            "citedBy": [
+                "docs/json/developer/procgen/cloudberry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "cloudberrySite.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "fetch-cloudberry-site.mjs",
+                    "name": "base"
+                },
+                {
+                    "from": "fetch-cloudberry-site.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "fetch-cloudberry-site.mjs",
+                    "name": "force"
+                },
+                {
+                    "from": "fetch-cloudberry-site.mjs",
+                    "name": "help"
+                },
+                {
+                    "from": "fetch-cloudberry-site.mjs",
+                    "name": "link"
+                },
+                {
+                    "from": "fetch-cloudberry-site.mjs",
+                    "name": "out"
+                }
+            ],
+            "oneLiner": "cloudberrySite — open the Cloudberry Kingdom game page headless, served from a local copy of the site (`scripts/setup/fetch-cloudberry-site.mjs`), for the instruments that need the game's own generator (the pack maker) without a dev server: Playwright answers every request to a private origin from the folder.",
+            "path": "scripts/procgen/cloudberrySite.mjs"
+        },
+        {
             "argvHelpers": [
                 "ONLY"
             ],
@@ -7048,6 +7159,51 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Generate the committed demo BOUNCE region-library pack + register it in the region-libraries index (region-library F6a).",
             "path": "scripts/procgen/make-demo-bounce-pack.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "make",
+            "citedBy": [
+                "docs/json/developer/procgen/cloudberry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "make-demo-cloudberry-pack.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "checks-per-piece"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "site"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Generate the committed demo CLOUDBERRY region-library pack + register it in the region-libraries index — the Cloudberry analogue of make-demo-runner-pack.mjs.",
+            "path": "scripts/procgen/make-demo-cloudberry-pack.mjs"
         },
         {
             "argvHelpers": [],

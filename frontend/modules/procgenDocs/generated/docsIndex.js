@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 28,
-        "headings": 1211,
+        "docs": 29,
+        "headings": 1221,
         "indexHeadings": 2,
-        "lines": 33619,
+        "lines": 33740,
         "pages": 4,
-        "words": 476920
+        "words": 478338
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -164,6 +164,21 @@ export const DOCS_INDEX = frz({
             ],
             "path": "docs/json/developer/procgen/runner.md",
             "words": 2874
+        },
+        {
+            "description": "Cloudberry (substrate id `cloudberry`, in `frontend/modules/cloudberryDemo/`) plays each region as a Cloudberry Kingdom level.",
+            "file": "cloudberry.md",
+            "h1": "Cloudberry Substrate",
+            "headings": 10,
+            "lines": 121,
+            "links": [
+                "flash.md",
+                "paths-and-obstacles.md",
+                "runner.md",
+                "substrate-registry.md"
+            ],
+            "path": "docs/json/developer/procgen/cloudberry.md",
+            "words": 1418
         },
         {
             "description": "Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward simulator that writes sphere logs, and per-substrate visualizers.",
