@@ -26537,3 +26537,36 @@ row equal ticks included. The sweep ×2 per arm and the probes standard are the 
 - An executor that walks inside itself is invisible to the frontier's re-entry guard: give the order its stance.
 
 ---
+
+### Seedling hammer-phase DASH — the L4 window margin and the stand-tail dash
+
+⚖ User, queued 2026-10-30 (one of four parallel hammer slices; planner `seedling-hammer-phase-planning-2`). Switch
+`solverBot.DASH_STAND_WHOLE`, **OFF** (`SEEDLING_DASH_STAND_WHOLE=1`, `withDashStandWhole`); the window
+(`SOLVER_UPGRADE_WINDOW_WORK`, 85) is unchanged. The report is `CC/docs/cloud-reports/seedling-hammer-dash-window.md`.
+
+- **The margin the brief named is the OFF arm's.** L4 (16,16) → its stairs: the whole-pass threshold is 84 (margin 1), but
+  the shipped arm (`DASH_ONLY_WINDOW` ON) counts only `sword-dash` asks, and there L4's threshold is 39 (margin 46).
+- **The edge on the shipped arm is elsewhere.** The 870 captured requests of sweep `38845773709`, re-solved at this head
+  (thresholds bisected on real `solveAnytime` calls): 529 upgrade; 7 sit at exactly 85 (leg 108, L12, 328 t at 85 and
+  343 t at 84; L104, L40 pit 4,22, L0, L87, L29, another L12), 10 within 9 units, 94 ship less than window 0. The ON
+  thresholds fall on 4k+1 (a candidate start previews four prefixes). The totals: 85 ships 80.3 % of window 0's tick
+  savings; 89, 81.6 % (+537 units on the 138 requests the window binds); 129, 89.3 % (+5,105); 353, all (+17,844).
+- **The window is not monotone in ticks.** On 31 requests a kept partial at some windows beats the unwindowed full plan
+  (the greedy scan accepts windows a later window would undo), so "the unwindowed plan" is not always the best a window
+  can ship. The thresholds above are measured against the unwindowed plan.
+- **Design.** Keep 85 (no value removes the edge: thresholds spread from 5 to 346) and pin the margin:
+  `hammerDashWindow.test.js` reds if L4's margin drops under 40 (ON) / 1 (OFF) or leg 108's under 0 (ON).
+- **The stand tail.** ON, `walkTo` asks `spinnerDashWhole(wps, except, stand)` for a corridor that ends standing; the
+  certificate is the dashed walk and its whole stand (every tick, or to the collect tail's ceremony), untruncated; less falls
+  back. Measured on 60 stand-tail corridors (survey 44, r9 9, the spinner-room requests 6, the L40 latch chain 1; 7 in a
+  spinner room): ON plans the same ticks on every one, and the survey is identical ON (237/237). Gain: 0 ticks today.
+- **Gate** `hammerDashWindow.test.js` (L4's thresholds per arm; the margin pins; L20's hold and collect tails OFF / ON;
+  L4's hold ON, same keys and units; leg 108 ON = OFF). Mutants (drop the stand from the certificate, shorten it by a tick,
+  the window 85 → 83): all red.
+
+**Trap candidates.**
+- A margin quoted without its arm: the same window counts different things under `DASH_ONLY_WINDOW` ON and OFF.
+- A "no stand tail" witness that has one: L4's stairs leg carries `holdWaitPriced`'s hold. Read the audit before naming a
+  control.
+
+---
