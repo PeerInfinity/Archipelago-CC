@@ -285,6 +285,8 @@ const PALETTE_NAME = arg('palette', 'pre-sword');
 /** ⛓ S1 — the biome names are `watchGenerate.GENERATE_BIOMES`'s, not a second list. */
 const SEEDLING_BIOMES = SUBSTRATE === 'seedling'
     ? (await M('seedlingDemo/watchGenerate.js')).GENERATE_BIOMES : {};
+/** ⛓ seedling-gen-terrains (C3) — `--terrains=ice` opts the biome's offered terrains in (absent = none). */
+const TERRAINS = SUBSTRATE === 'seedling' ? arg('terrains', '') : '';
 if (SUBSTRATE === 'seedling' && !SEEDLING_BIOMES[PALETTE_NAME]) {
     note(`sweep-yield-table: --palette=${PALETTE_NAME} is not a Seedling biome. They are `
         + `[${Object.keys(SEEDLING_BIOMES).join(', ')}]; \`pre-sword\` is the default.`);
@@ -386,7 +388,7 @@ if (CELL !== '') {
             interiorCells, seedlingSeam, seedlingSkeletonSpec,
         } = await M('seedlingDemo/procgenSeedling.js');
         const { terrainAt } = await M('seedlingDemo/procgenLevel.js');
-        palette = SEEDLING_BIOMES[PALETTE_NAME];
+        palette = (await M('seedlingDemo/watchGenerate.js')).paletteWithTerrains(PALETTE_NAME, TERRAINS);
         /**
          * ⛓⛓ ONE SEAM, TWO CALLERS (arc 3 slice 3). `seedlingSeam` is what
          * `generateSeedlingLevel` uses: it builds the model, runs the element's
@@ -882,6 +884,7 @@ const header = [
         + `--elements='${formatElementSpec(ELEMENTS_EFFECTIVE)}' `
         + `${REQUIRE ? `--require=${formatRequireList(REQUIRE)} ` : ''}`
         + `${SUBSTRATE === 'seedling' ? `--palette=${PALETTE_NAME} ` : ''}`
+        + `${TERRAINS ? `--terrains=${TERRAINS} ` : ''}`
         + `--seeds=${arg('seeds', '1-8')} --count=${BOUNDS.obstacleTarget} `
         + `--tries=${BOUNDS.triesPerStep} --k=${BOUNDS.saturationK} `
         + `--anchortries=${BOUNDS.anchorTriesPerCandidate} --cellbudget=${CELL_BUDGET_S}\``,
@@ -926,6 +929,8 @@ for (const c of cells) {
         // ⛓ arc 3 slice 2 — the biome travels to the worker, or every cell of a
         // `--palette=post-sword` run would silently be a pre-sword one.
         ...(SUBSTRATE === 'seedling' ? [`--palette=${PALETTE_NAME}`] : []),
+        // ⛓ seedling-gen-terrains (C3) — and the opted-in terrains, for the same reason.
+        ...(TERRAINS ? [`--terrains=${TERRAINS}`] : []),
         ...(REQUIRE ? [`--require=${formatRequireList(REQUIRE)}`] : []),
         `--cell=${c.kind}|${c.size.label}|${c.seed}`,
         `--count=${BOUNDS.obstacleTarget}`, `--tries=${BOUNDS.triesPerStep}`,
