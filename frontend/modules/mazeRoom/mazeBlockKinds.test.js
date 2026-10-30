@@ -325,6 +325,11 @@ describe('PULSERS: a held token pushes the pulsed blocks on its reach away; the 
             { x: 2, y: 2, token: 't', reach: [{ x: 3, y: 2 }] },
             { x: 3, y: 4, token: 't', reach: [{ x: 3, y: 3 }] },
         ], cross, 't')).toThrow(/pulses push \(3,1\) and \(3,3\) both onto \(3,2\)/);
+        // A pulser lit by a rope's cut (a carried event): its start would not be settled.
+        const roped = world(PULSE_GATE, { pulsers: false });
+        roped.obstacleLib = { ...roped.obstacleLib, rope: { clear_set: [], struck_by: ['sword'], activates: 'sw_1', at: '1,2' } };
+        expect(() => checkPulsers([{ x: 3, y: 3, token: 'sw_1', reach: [{ x: 3, y: 4 }] }], roped, 't'))
+            .toThrow(/lit by rope's cut — a CARRIED token/);
         // A reach cell pushed onto another reach cell: chained pulses are not modelled.
         expect(() => checkPulsers([
             { x: 3, y: 0, token: 't', reach: [{ x: 3, y: 1 }] },

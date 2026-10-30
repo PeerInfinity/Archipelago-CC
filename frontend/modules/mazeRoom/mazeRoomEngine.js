@@ -1209,8 +1209,9 @@ export function blockWithinReach(world, state, actionId) {
  * too (`createState`).
  * ⛔ Refused BY NAME: a pulser cell that is floor or off the grid, an empty token, an empty reach, a reach cell off the
  * grid, repeated or the pulser's own, a cell in two pulsers' reach (which pushes first is not settled), two reach cells
- * pushed onto one cell, and a reach cell pushed onto a reach cell (chained pulses are not modelled — the pulls'
- * precedent). Returns `[{x, y, token, reach: [posKey…]}]`; sets nothing else.
+ * pushed onto one cell, a reach cell pushed onto a reach cell (chained pulses are not modelled — the pulls'
+ * precedent), and a token a rope `activates` (a cut carried as an event lights it, and the searches set the carried
+ * inventory AFTER `createState` settles the start on held tokens). Returns `[{x, y, token, reach: [posKey…]}]`; sets nothing else.
  */
 export function checkPulsers(pulsers, world, who) {
     const bad = (why) => new Error(`${who}: "pulsers" ${why}`);
@@ -1223,6 +1224,8 @@ export function checkPulsers(pulsers, world, who) {
         if (!inGrid(p)) throw bad(`entry ${JSON.stringify(p)} is not a cell of the ${width}x${height} grid`);
         if (isFloor(world, p.x, p.y)) throw bad(`pulser at (${p.x},${p.y}) stands on floor — a pulser is a solid body`);
         if (typeof p.token !== 'string' || p.token === '') throw bad(`pulser at (${p.x},${p.y}) names no group token`);
+        const rope = Object.entries(world.obstacleLib ?? {}).find(([, e]) => e?.activates === p.token);
+        if (rope) throw bad(`pulser at (${p.x},${p.y}) is lit by ${rope[0]}'s cut — a CARRIED token, which a start is not settled on (not modelled)`);
         if (!Array.isArray(p.reach) || p.reach.length === 0) throw bad(`pulser at (${p.x},${p.y}) reaches no cell`);
         const reach = p.reach.map((c) => {
             if (!inGrid(c)) throw bad(`pulser at (${p.x},${p.y}) reaches ${JSON.stringify(c)}, not a cell of the grid`);
