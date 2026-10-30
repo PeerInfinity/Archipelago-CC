@@ -1,0 +1,79 @@
+#!/usr/bin/env node
+// DASH-WINDOW threshold runner (scratch). One captured request, one fresh process, against the tree at --lab.
+// It runs the anytime loop UNWINDOWED (only the budget bounds it, as passShouldStop does) with a counting shouldStop,
+// and reports per pass: units, sword-dash asks, ticks. From that:
+//   thrOff = dashless units + full units   (WINDOW WHOLE PASS: the smallest window that lets the full pass finish)
+//   thrOn  = the full pass's sword-dash asks (DASH-ONLY WINDOW: the smallest window that trips no dash ask)
+// Both only where the full pass's plan beats the dashless one (`betterAnswer`); else null (the window cannot move it).
+// Then, where a threshold exceeds --window, it also runs the REAL solveAnytime at --window under that arm.
+// node thr.mjs --lab=<tree> --requests=<jsonl> --one=<id>:<i> [--window=85]
+import { readFileSync } from 'node:fs';
+import { performance } from 'node:perf_hooks';
+const arg = (n, f) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3) ?? f;
+const LAB = arg('lab'); const FILE = arg('requests');
+const [id, i] = arg('one').split(':').map(Number);
+const WINDOW = Number(arg('window', '85'));
+const BISECT = process.argv.includes('--bisect');
+const NEAR = Number(arg('near', '0'));
+const { restoreRequest } = await import(`${LAB}/scripts/procgen/seedlingSolveRequestCodec.js`);
+const { levelSourceFromAtlas } = await import(`${LAB}/frontend/modules/seedlingDemo/atlasSource.js`);
+const js = await import(`${LAB}/frontend/modules/seedlingDemo/jsRuntimeSolver.js`);
+const dow = await import(`${LAB}/frontend/modules/seedlingDemo/dashOnlyWindowHook.js`);
+let line = null;
+for (const l of readFileSync(FILE, 'utf8').split('\n')) { if (l.startsWith(`{"id":${id},`)) { line = JSON.parse(l); break; } }
+const cap = line.requests.find((r) => r.i === i);
+const req = restoreRequest(cap.request);
+const STAMPS = ['dashShape', 'dashOnlyWindow', 'axeDodgeAskPerPreview', 'contactFidelity', 'killLockBodies'].filter((k) => k in req);
+const { passes = js.ANYTIME_PASSES, source, budgetWork, upgradeWindowWork: capturedWindow, ...tape } = req;
+const levelSource = levelSourceFromAtlas(source.records);
+const t0 = performance.now();
+let units = 0;
+let best = null;
+const rows = [];
+for (const p of passes) {
+    let u = 0; let dash = 0;
+    const shouldStop = (site) => { units += 1; u += 1; if (site === 'sword-dash') dash += 1; return units > budgetWork; };
+    const a = js.settleSolve(() => js.solveFromTape({ ...tape, clock: () => performance.now(), source, levelSource, dashMode: p.dashMode, adds: p.adds ?? null,
+        shouldStop, fineCheckpoints: js.FINE_CHECKPOINTS }));
+    const dl = js.deadlineOf(a);
+    rows.push({ pass: p.pass, ok: a.ok, ticks: a.ok ? a.plan.solution.length : null, units: u, dashAsks: dash, at: units,
+        ...(dl ? { deadline: dl.first ?? dl } : {}) });
+    const better = js.betterAnswer(best, a);
+    rows.at(-1).better = better;
+    if (better) best = a;
+    if (a.kind === 'divergence') break;
+}
+const [dl, full] = rows;
+const upgrade = Boolean(full && full.better && dl && dl.ok);
+const thrOff = upgrade ? full.at : null;
+const thrOn = upgrade ? full.dashAsks : null;
+const realAt = (arm, w) => {
+    const r = dow.withDashOnlyWindow(arm === 'on', () => js.solveAnytime({ ...tape, source, levelSource, budgetWork,
+        upgradeWindowWork: w }, { passes }));
+    return { ok: r.ok, ticks: r.ok ? r.plan.solution.length : null, pass: r.ok ? r.plan.pass : null,
+        passes: r.passes.map(({ ms, ...x }) => x) };
+};
+// The LOSS threshold per arm: the smallest window whose shipped plan has the unwindowed best's ticks (bisected on
+// [1, thr]; the shipped ticks never grow with the window: a larger window keeps every window a smaller one kept).
+const real = {};
+const loss = {};
+if (upgrade && BISECT) {
+    const target = best.plan.solution.length;
+    for (const [arm, thr] of [['off', thrOff], ['on', thrOn]]) {
+        const seen = {};
+        const at = (w) => (seen[w] ??= realAt(arm, w));
+        // A counted threshold ≤ WINDOW − NEAR bounds the loss threshold from above: margin ≥ NEAR, no solve asked.
+        if (NEAR > 0 && thr <= WINDOW - NEAR) { loss[arm] = { upper: thr, atWindow: target, atWindowPass: 'full', solves: 0 }; continue; }
+        let lo = 1; let hi = Math.max(1, thr);
+        if (at(hi).ticks !== target) { loss[arm] = { thr: null, why: `ships ${at(hi).ticks} at its own threshold ${hi}` }; continue; }
+        while (lo < hi) { const mid = (lo + hi) >> 1; if (at(mid).ticks === target) hi = mid; else lo = mid + 1; }
+        const w85 = at(WINDOW);
+        loss[arm] = { thr: lo, below: lo > 1 ? at(lo - 1).ticks : null, atWindow: w85.ticks, atWindowPass: w85.pass,
+            solves: Object.keys(seen).length };
+    }
+} else {
+    for (const [arm, thr] of [['off', thrOff], ['on', thrOn]]) if (thr !== null && thr > WINDOW) real[arm] = realAt(arm, WINDOW);
+}
+console.log(`RESULT ${JSON.stringify({ id, i, key: line.key, level: req.staging?.boot?.level ?? null, budgetWork, capturedWindow,
+    stamps: STAMPS, rows, upgrade, thrOff, thrOn, bestTicks: best?.ok ? best.plan.solution.length : null, real, loss,
+    ms: Math.round(performance.now() - t0), dashOnlyDefault: dow.DASH_ONLY_WINDOW.enabled })}`);

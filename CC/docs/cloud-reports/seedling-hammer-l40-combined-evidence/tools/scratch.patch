@@ -1,0 +1,22 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 68606c45..b4657ce2 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -2882,7 +2882,7 @@ function encounterExecutorFor(run, goal) {
+  * room needs (L8's two shoves and two holds), stated so a room that needs
+  * five reports the bound rather than spinning.
+  */
+-const MAX_STRATEGIES_PER_GOAL = 4;
++const MAX_STRATEGIES_PER_GOAL = Number(globalThis.process?.env?.L40C_SCRATCH_BOUND ?? 4); // L40C SCRATCH (remove)
+ /**
+  * ⛓ fidelity L40BK2B D2 (`CONTACT_FIDELITY.strategyBoundDistinct`, OFF) — with the bound counting DISTINCT
+  * applications, the backstop on applications in all (a repeat of the same one still spends a verb, and a goal that
+@@ -29155,7 +29155,7 @@ function solveSegmentUnder({
+                      * end is refused by name, so the switch never ships a hit (measured: the latch boot with CPAIR
+                      * size 3 — the walk arrived hitless at t916, a blast landed at t917 on `execCorpseWeigh`'s snap tick).
+                      */
+-                    if (hitsBeforeStance !== null && run.ledger('playerHits').length > hitsBeforeStance) {
++                    if (globalThis.process?.env?.L40C_SCRATCH_NOGUARD !== '1' && hitsBeforeStance !== null && run.ledger('playerHits').length > hitsBeforeStance) { // L40C SCRATCH (remove)
+                         const h = run.ledger('playerHits')[hitsBeforeStance];
+                         refuse(`${what} -> ${plan.strategy} (${plan.obstacle.id}): the reordered corpse weigh took a `
+                             + `hit at t${h.t} (${h.source}:${h.id}) on its way to ${plan.resolved.corpse.turret}'s kill `

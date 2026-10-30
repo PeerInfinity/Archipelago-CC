@@ -1,0 +1,53 @@
+id	end	seamTime	requests	key
+358	done	5140	1	level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0
+367	done	5197	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+368	done	5460	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912
+369	done	5531	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20
+370	done	6393	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20
+371	done	7311	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20
+372	done	8333	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+373	done	9431	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21
+374	failed	10275	2	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+375	failed	10373	2	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+376	failed	10470	2	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+377	done	10560	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22
+378	failed	11391	2	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+379	done	11473	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23
+380	failed	12286	2	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+384	done	12379	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+385	done	12465	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912
+386	done	12956	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+387	done	13375	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+388	done	13861	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+389	done	14509	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20
+390	done	15227	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+391	done	15715	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+392	done	16245	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+393	done	16848	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+394	done	17486	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+395	done	17831	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+396	done	18318	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+397	done	18758	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+404	done	19268	1	level_43__r13c7 <- in_L40_320_576 -> exit:out_stairsup_176_464
+361	done	19392	1	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+362	done	19547	1	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+364	done	19630	1	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+365	done	19716	1	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+401	done	19866	1	level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160
+402	done	19918	1	level_42 <- in_L40_848_0 -> exit:out_teleporter_240_336
+863	done	20122	2	level_43__r3c8 <- in_L40_320_576 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64
+359	done	5141	1	level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40
+381	done	5311	1	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+382	failed	5879	1	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+860	failed	5950	2	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+363	timeout	6083	1	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+383	failed	7393	1	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+403	done	7459	1	level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152
+862	done	8858	1	level_41__r7c15 <- in_L40_944_96 ~> level_41__r4c3 ~> level_41__r4c15 -> location:Level 041 - Totem Part 240,144
+405	done	11324	1	level_43__r13c7 <- in_L40_320_576 -> location:Level 043 - Wand
+876	done	11563	1	level_43__r8c7 <- in_L40_320_576 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste
+398	done	5154	1	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+399	failed	5341	1	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+861	failed	5425	2	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+366	failed	5574	2	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+400	failed	5669	1	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
