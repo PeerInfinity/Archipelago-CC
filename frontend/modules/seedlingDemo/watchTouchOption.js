@@ -6,7 +6,7 @@
  * Only the page (`watchViewer.js`) and its test import this.
  */
 
-import { TOUCH_SETTING_VALUES } from '../flashPanel/touchControls.js';
+import { TOUCH_SETTING_VALUES, touchControlsVisible } from '../flashPanel/touchControls.js';
 import { resolveTouchOverride } from '../shared/touchInput.js';
 
 /**
@@ -50,4 +50,13 @@ export function writeLabTouchSetting(storage, value) {
  */
 export function initialLabTouchSetting({ storage, search }) {
     return resolveTouchOverride(search) === null ? readLabTouchSetting(storage) : LAB_TOUCH_DEFAULT;
+}
+
+/**
+ * ⛓ LAB L3 — whether the option, as this page load starts it, SHOWS the controls: the panel's rule on
+ * `initialLabTouchSetting`. The JS frame's `#jsTouch` box starts here (a per-ship override that never writes the
+ * stored choice), so the lab keeps ONE on-screen-controls option.
+ */
+export function labTouchShownInitially({ storage, search, matchMediaFn }) {
+    return touchControlsVisible(initialLabTouchSetting({ storage, search }), { search, matchMediaFn });
 }
