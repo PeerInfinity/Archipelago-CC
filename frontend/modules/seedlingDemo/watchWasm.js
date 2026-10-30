@@ -210,6 +210,137 @@ export const WASM_STAGES = Object.freeze([
 ]);
 
 /**
+ * ── ⛓⛓⛓ LAB L3 — THE SECOND TRANSPORT: ▶ LOAD IN JS ─────────────────────
+ *
+ * The SAME ship, pointed at `jsRuntime.html` instead of a wasm build (⚖ user
+ * 2026-10-28: *"I also want the lab page to be able to run in JS mode"*, *"I
+ * want sound in 'Load in JS'"*). `shipToJs` and `shipToWasm` are one function
+ * (`shipToFrame`) with a transport name: the stage machine, its refusals, the
+ * fresh frame, the lifetime-guarded wait and the `levels` read-back are
+ * written ONCE, and the two transports part only after `levels`.
+ *
+ *   probe     `jsRuntime.html` is SERVED (HEAD) — else `js-page-missing`
+ *   runtime   `__runtimeReady` in the frame
+ *   start     the PERSON pressed the frame's ▶ Start (`?start=click`): the
+ *             bridge's callbacks appear only then, and that click is what
+ *             unlocks the page's sound. ⛔ The parent never presses it (the
+ *             wasm law, unchanged): a parent-side click carries no user
+ *             activation into the frame, so the AudioContext would stay shut.
+ *   levels    ONLY with a level set — the same `deliverChunks` + read-back
+ *   spot      the start spot and inventory through `__swfBridge.queueItems`,
+ *             the host's own channel (`games/seedling.json`'s teleport recipe
+ *             and item defs — the panel's AP warp and delivery items); passed
+ *             when `botStatus` reports the player there
+ *   play      LIVE: the keyboard (or the on-screen controls) drives the JS
+ *             game; `botStatus` is polled for the readout and never finishes
+ *
+ * ⛔ PHASE A ONLY (⚖ js-13, 2026-10-29). The JS bridge has no `botLoadTape` /
+ * `botStart` / `botDrain`, so there is NO tape replay and NO verdict here: a
+ * REPLAY's ▶ load in JS is live play from the tape's start spot, and the UI
+ * says so. Tape replay in the JS frame is a separate js-arc slice (Phase B).
+ */
+export const JS_STAGES = Object.freeze(['probe', 'runtime', 'start', 'levels', 'spot', 'play']);
+
+/** The JS runtime page, beside this one (`seedlingDemo/`). */
+export const JS_PAGE = 'jsRuntime.html';
+
+/**
+ * The URL a JS ship points the frame at: Seedling art (`?graphics=seedling`)
+ * and the page's own ▶ Start (`?start=click`, which is also the sound unlock).
+ * ⛓ `?jsCamera=<mode>` on the lab's URL passes through as the page's
+ * `?camera=` (the page validates it; absent = its default, `room`).
+ * @param {string} search a `location.search`
+ */
+export function jsPageFor(search) {
+    const camera = new URLSearchParams(search ?? '').get('jsCamera');
+    const q = new URLSearchParams({ graphics: 'seedling', start: 'click' });
+    if (camera && /^[a-z]+$/.test(camera)) q.set('camera', camera);
+    return `${JS_PAGE}?${q}`;
+}
+
+/**
+ * ⛓⛓ THE SPOT, AS THE HOST'S OWN QUEUE ITEMS — pure, so the shape is pinned in
+ * node. Everything is read off `games/seedling.json` (the panel's config): the
+ * class aliases (`classes.main.name` = `Main`), the boolean item flags, the
+ * `op: add` counter (`hitsMax`), the key setter (`hasKeySet`, `save_array:
+ * keys`), the two FILL setters (seal log, totem parts) and the teleport recipe
+ * (`preWrites`, then `new_instance Game [level, x, y]`). ⛔ No second spelling
+ * of any of them.
+ *
+ * ⛓ ORDER: inventory FIRST, the teleport LAST. A flag written while no run
+ * exists only sets the flag; the teleport's boot then stages it (one boot, no
+ * reboot in place). `mount()` clears the session's keys, so this runs AFTER
+ * the `levels` read-back, never before.
+ *
+ * ⚠ WHAT IS NOT CARRIED IS SAID, as a field (`dropped`): the tape's other
+ * seam fields, its persistence/grants/equips rows. The JS bridge takes the
+ * host's channel and nothing else; a silently partial start would read as the
+ * tape's own state.
+ *
+ * @param {object|null} tape  the shipped tape (its `boot`, `seam`, `save`)
+ * @param {object} config     `games/seedling.json`
+ * @returns {{items: object[], spot: {level,x,y}, dropped: string[]}}
+ */
+export function spotItemsOf(tape, config) {
+    const cls = (alias) => config?.classes?.[alias]?.name ?? alias;
+    const defs = config?.items ?? [];
+    const seam = tape?.seam ?? {};
+    const held = seam.items ?? {};
+    const save = tape?.save ?? {};
+    const items = [];
+    const used = new Set(['items']);
+    for (const def of defs) {
+        if (def.property && def.op === 'add' && def.property === 'hitsMax'
+            && Number.isInteger(seam.hits_max)) {
+            items.push({ class: cls(def.class), property: def.property, value: seam.hits_max });
+            used.add('hits_max');
+        } else if (def.property && !def.op && def.value === true && held[def.property] === true) {
+            items.push({ class: cls(def.class), property: def.property, value: true });
+        }
+    }
+    const method = (def, args) => ({
+        invocation: 'method_call', path: [{ class: cls(def.class) }], method: def.method, args,
+    });
+    for (const k of save.keys ?? []) {
+        const def = defs.find((d) => d.method && d.save_array === 'keys' && d.index === k);
+        if (def) items.push(method(def, [...def.args]));
+    }
+    for (const def of defs.filter((d) => d.fill)) {
+        const log = save[def.save_array] ?? [];
+        if (def.fill.rule === 'log') log.forEach((identity, slot) => items.push(method(def, [slot, identity])));
+        else log.forEach((index) => items.push(method(def, [index, def.fill.value])));
+    }
+    const boot = tape?.boot;
+    const spot = boot && Number.isFinite(boot.level) ? { level: boot.level, x: boot.x, y: boot.y }
+        : { level: -1, x: 0, y: 0 };
+    const tp = config?.teleport ?? {};
+    for (const w of tp.preWrites ?? []) items.push({ ...w, class: cls(w.class) });
+    items.push({ invocation: tp.invocation, className: tp.className, args: [spot.level, spot.x, spot.y] });
+    const dropped = [
+        ...Object.keys(seam).filter((k) => !used.has(k) && seam[k] !== null && seam[k] !== undefined),
+        ...['persistence', 'grants', 'equips', 'despawn'].filter((k) => (tape?.[k] ?? []).length > 0),
+        ...Object.entries(held).filter(([k, v]) => v === true
+            && !defs.some((d) => d.property === k && !d.op)).map(([k]) => `items.${k}`),
+    ];
+    return { items, spot, dropped };
+}
+
+/**
+ * Is the JS game at the spot? `botStatus` reports the PLAYER's position, and
+ * the `Game` constructor re-centres onto the tile, so the player stands at
+ * (x + 8, y + 8) — the boot panel's own note (`#bootX`). A `level < 0` spot is
+ * the set's start (or the vanilla spawn), whose coordinates the parent does
+ * not know: there, any booted level answers.
+ */
+export const SPOT_HALF_TILE = 8;
+export function atSpot(st, spot, startLevel = null) {
+    if (!st || !Number.isInteger(st.level) || st.level < 0) return false;
+    if (spot.level < 0) return startLevel === null || st.level === startLevel;
+    return st.level === spot.level && st.x === spot.x + SPOT_HALF_TILE
+        && st.y === spot.y + SPOT_HALF_TILE;
+}
+
+/**
  * ── ⛓⛓⛓ THE END-STATE TOLERANCE — **MEASURED AT ZERO**, WITH ITS COMMAND ──
  *
  * Five committed tapes replayed through the JS model (`tapeRunner.runTape`)
@@ -262,7 +393,9 @@ export const END_STATE_TOLERANCE = 0;
  * (trap 262's shape), and a reader who could not see the stage at all could not
  * tell a MANUAL ship from one whose verdict was never computed.
  */
-export function stagesOf({ levelSet = null, windows = 1 } = {}) {
+export function stagesOf({ levelSet = null, windows = 1, transport = 'wasm' } = {}) {
+    // ⛓ LAB L3: the JS transport's own list, filtered by the SAME data rule.
+    if (transport === 'js') return JS_STAGES.filter((s) => s !== 'levels' || Boolean(levelSet));
     /**
      * ⛔ ONE WINDOW IS THE OLD LIST, EXACTLY. Every browser row and every unit
      * row asserts on these names, and a ship of one tape must reach the same
@@ -1021,7 +1154,9 @@ export { levelSetDisagreement };
  * `flashPanel` → `seedlingDemo` is the one F6 priced at +1,267,998 B.
  * `wasmGamePage.js` imports nothing, so this costs the lab one file.
  */
-import { botOver, frameWindow, gameUp, runtimeUp } from '../flashPanel/wasmGamePage.js';
+import {
+    botOver, bridgeOf, frameWindow, gameUp, runtimeUp,
+} from '../flashPanel/wasmGamePage.js';
 
 /**
  * ⛓⛓ **THE `botLoadLevels`/`botLevelSet` PROTOCOL, IMPORTED** (maze-lab arms
@@ -1066,7 +1201,32 @@ import { deliverChunks } from '../flashPanel/seedlingLevelSetDelivery.js';
  * @returns {Promise<object>} the ship's final state — also what the readout was
  *   told, so a caller has it without scraping the DOM.
  */
-export async function shipToWasm(payload, host) {
+export function shipToWasm(payload, host) {
+    return shipToFrame(payload, host, 'wasm');
+}
+
+/**
+ * ⛓⛓⛓ LAB L3 — THE SAME SHIP, TO THE JS RUNTIME PAGE. `payload` is the one
+ * every arm already builds (`tape`, `levelSet`, `chunks`, `label`, `note`);
+ * `host` adds `gameConfig` (`games/seedling.json`, for the spot's items) and
+ * optionally `jsPage`. Resolves when the ship reaches `play` (or refuses); the
+ * `botStatus` poll goes on until the lifetime retires or the frame is shipped
+ * again.
+ */
+export function shipToJs(payload, host) {
+    return shipToFrame(payload, host, 'js');
+}
+
+/**
+ * ⛓ A ship's identity on its frame. A JS ship's `play` poll never finishes on
+ * its own, so a second press on the same frame must stop the first one's poll:
+ * the poll stops when this number moves. (A WeakMap, not a DOM attribute: the
+ * wasm path's frame is untouched.)
+ */
+const shipOfFrame = new WeakMap();
+
+async function shipToFrame(payload, host, transport) {
+    const js = transport === 'js';
     const {
         levelSet = null, chunks = null, tape, expect = null, expectWhy = null, label = '',
         note = null, modelStream = null, modelStreamWhy = null,
@@ -1101,10 +1261,13 @@ export async function shipToWasm(payload, host) {
         tape, expect, expectWhy, modelStream, modelStreamWhy, label,
     }];
     const { frame, lifetime, readout, tolerance = END_STATE_TOLERANCE } = host;
-    const wasmPage = host.wasmPage ?? wasmPageFor(globalThis.location?.search ?? '');
+    const wasmPage = js ? (host.jsPage ?? jsPageFor(globalThis.location?.search ?? ''))
+        : (host.wasmPage ?? wasmPageFor(globalThis.location?.search ?? ''));
+    const shipId = (shipOfFrame.get(frame) ?? 0) + 1;
+    shipOfFrame.set(frame, shipId);
     const state = {
         stage: null,
-        stages: stagesOf({ levelSet, windows: windows.length }),
+        stages: stagesOf({ levelSet, windows: windows.length, transport }),
         /** ⛓ One record per window: its stages, its own verdict, its boundary. */
         windows: [],
         /** ⛓ P4E: `{build, capable, why}` — does this build hold after the latch. */
@@ -1160,6 +1323,10 @@ export async function shipToWasm(payload, host) {
     // ⛓ P4E: `no-store` — the page is now CHOSEN (`wasmPageFor`), and the
     // one-busted-fetch rule (`watchLifetime.test.js`) names the literal only.
     const probe = await fetch(wasmPage, { method: 'HEAD', cache: 'no-store' }).catch(() => null);
+    if ((!probe || !probe.ok) && js) {
+        return refuse('probe', 'js-page-missing',
+            `${wasmPage} is missing (HTTP ${probe ? probe.status : 'unreachable'}).`);
+    }
     if (!probe || !probe.ok) {
         return refuse('probe', 'wasm-build-missing',
             `${wasmPage} is missing (HTTP ${probe ? probe.status : 'unreachable'}). `
@@ -1191,9 +1358,10 @@ export async function shipToWasm(payload, host) {
         ? await fetch(WASM_MANIFEST, { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null))
             .catch(() => null)
         : null;
-    state.hold = windows.length > 1 ? holdCapabilityOf(manifest, wasmPage)
+    // ⛓ LAB L3: a JS frame holds nothing for a successor — there is no tape.
+    state.hold = js ? null : (windows.length > 1 ? holdCapabilityOf(manifest, wasmPage)
         : { build: buildNameFromWasmPath(wasmPage), capable: false,
-            why: 'a single window has no successor to hold for' };
+            why: 'a single window has no successor to hold for' });
     await freshFrame(frame, lifetime, wasmPage);
     /**
      * ⛓⛓ THE TEARDOWN THE RELOAD USED TO DO. `about:blank` discards the
@@ -1244,7 +1412,7 @@ export async function shipToWasm(payload, host) {
      */
     const until = (what, pred, ms = 180000) => new Promise((resolve, reject) => {
         const t0 = Date.now();
-        const tick = lifetime.guard('wasm-until', () => {
+        const tick = lifetime.guard(`${transport}-until`, () => {
             let v = null;
             try { v = pred(); } catch { v = null; }
             if (v) return resolve(v);
@@ -1252,7 +1420,7 @@ export async function shipToWasm(payload, host) {
             return setTimeout(tick, 200);
         });
         lifetime.onRetire(() => reject(new Error(
-            `the wasm arm was retired while waiting for ${what}`)));
+            `the ${transport} arm was retired while waiting for ${what}`)));
         tick();
     });
 
@@ -1324,6 +1492,14 @@ export async function shipToWasm(payload, host) {
         }
         state.readback = out.readback;
         enter('levels', `${levelSet.rooms.length} room(s) mounted — ${levelSet.set_id}`);
+    }
+
+    // ⛓ LAB L3: the transports part here — the JS frame has no tape verbs.
+    if (js) {
+        return playInJs({
+            payload, host, state, enter, refuse, until, win, botJson,
+            alive: () => lifetime.alive() && shipOfFrame.get(frame) === shipId,
+        });
     }
 
     /**
@@ -1753,6 +1929,69 @@ export async function shipToWasm(payload, host) {
     state.stage = 'verdict';
     state.reached.push('verdict');
     readout.onVerdict(v, state);
+    return state;
+}
+
+/**
+ * ── ⛓⛓⛓ LAB L3 — `spot` AND `play`, THE JS TRANSPORT'S TAIL ──────────────
+ *
+ * Reached after the shared `levels` read-back. ⛔ It touches the frame only
+ * through `__swfBridge` (`queueItems`, and the callback table `botJson` reads)
+ * and the page's sound READOUT (`__seedlingJsSound.readout`) — never the
+ * runtime object behind them, and never the page's ▶ Start.
+ */
+async function playInJs({ payload, host, state, enter, refuse, until, win, botJson, alive }) {
+    const { levelSet = null, tape = null, windows = null } = payload;
+    // ── spot ─────────────────────────────────────────────────────────
+    if (!host.gameConfig) {
+        return refuse('spot', 'no-game-config',
+            'games/seedling.json was not handed over, so the spot\'s queue items cannot be spelled');
+    }
+    const first = tape ?? windows?.[0]?.tape ?? null;
+    const { items, spot, dropped } = spotItemsOf(first, host.gameConfig);
+    const bridge = bridgeOf(win());
+    if (!bridge || typeof bridge.queueItems !== 'function') {
+        return refuse('spot', 'no-queue-items', 'the frame\'s __swfBridge has no queueItems');
+    }
+    bridge.queueItems(items);
+    state.spot = { ...spot, items: items.length, dropped };
+    const startLevel = levelSet?.start?.level ?? null;
+    let arrived = null;
+    try {
+        arrived = await until('the player at the start spot', () => {
+            const st = botJson('botStatus');
+            return atSpot(st, spot, spot.level < 0 ? startLevel : null) ? st : null;
+        }, 20000);
+    } catch (e) {
+        const st = botJson('botStatus');
+        return refuse('spot', 'spot-never-reached', `${e.message}; botStatus level `
+            + `${st?.level ?? '?'} at (${st?.x ?? '?'}, ${st?.y ?? '?'})`
+            + `${st?.halted ? ` — HALTED: ${st.halted}` : ''}`);
+    }
+    state.status = arrived;
+    state.spot.arrived = { level: arrived.level, x: arrived.x, y: arrived.y };
+    enter('spot', spot.level < 0 ? `booted at the start — level ${arrived.level}`
+        : `level ${spot.level} at (${spot.x}, ${spot.y}) — ${items.length} queue item(s)`
+            + `${dropped.length ? `; not carried: ${dropped.join(', ')}` : ''}`);
+
+    // ── play ─────────────────────────────────────────────────────────
+    const sound = () => {
+        try { return win()?.__seedlingJsSound?.readout ?? null; } catch { return null; }
+    };
+    state.sound = sound();
+    enter('play', 'LIVE — the keyboard drives the JS game in the frame (click it first)');
+    const pollTick = host.lifetime.guard('js-poll', () => poll());
+    function poll() {
+        if (!alive()) return;
+        const now = botJson('botStatus');
+        if (now) {
+            state.status = now;
+            state.sound = sound();
+            host.readout.onTick(now, null, state);
+        }
+        setTimeout(pollTick, 250);
+    }
+    pollTick();
     return state;
 }
 
