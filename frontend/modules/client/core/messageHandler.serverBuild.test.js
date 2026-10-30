@@ -274,6 +274,27 @@ describe('MessageHandler: rules built from server data', () => {
     expect(handler._serverBuild?.game).toBe('Metamath');
   });
 
+  it('without a build, Connected and ReceivedItems are handled at once, as before', async () => {
+    // Usable rules (Metamath at this seed): the pre-existing Connected path.
+    stateManagerMock.staticData = { game_name: 'Metamath', seed_name: SEED, playerId: '1', world: { 1: { game: 'Metamath' } } };
+    handler.processMessage({ cmd: 'RoomInfo', games: ['Metamath'], seed_name: SEED });
+    handler.processMessage({ cmd: 'DataPackage', data: DATA_PACKAGE });
+    await flush();
+    handler.processMessage(connected());
+    handler.processMessage(RECEIVED_ITEMS);
+    await flush(10);
+
+    expect(handler._serverBuild).toBe(null);
+    expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(0);
+    expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'addItemToInventory', 'addItemToInventory']);
+    expect(sent('LocationScouts')).toHaveLength(1);
+    // LocationInfo is only recorded: no build, no second scout, no load
+    handler.processMessage(LOCATION_INFO);
+    await flush(10);
+    expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(0);
+    expect(handler.getScoutedLocations()).toHaveLength(placements.length);
+  });
+
   it('a disconnect abandons the build', async () => {
     handler.processMessage({ cmd: 'RoomInfo', games: ['Metamath'], seed_name: SEED });
     await flush();
