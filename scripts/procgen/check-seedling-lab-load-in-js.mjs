@@ -23,6 +23,11 @@
  *       observations (the ship's own count);
  *   R3. the per-tick verdict — JS FRAME vs JS MODEL — AGREES at every tick, and the painted verdict names the JS
  *       frame (never `wasm verdict`);
+ *   R4. LIVE INPUT MID-REPLAY does not reach the run: while the tape is ARMED (read before and after), a real key
+ *       press on the frame (an arrow, X and V) and a tap on the `#jsTouch` d-pad go in — and R3's verdict still
+ *       agrees per tick. (`#jsTouch` stays mounted on a replay ship: its taps are KeyboardEvents on the frame's
+ *       canvas, the same held set the keyboard fills, which a tape tick never steps — pinned in Node by
+ *       `jsRuntimeTape.test.js`'s live-keys row.)
  *   then 4 and 5 as before: after `finished` the frame goes on LIVE.
  *
  *   node scripts/procgen/check-seedling-lab-load-in-js.mjs [--host=http://localhost:8000] [--shots=<dir>]
@@ -122,6 +127,30 @@ async function main() {
                     `${c.name}: the frame is the JS runtime page with art and its own ▶ Start`, frame?.url());
                 // ⛔ THE ONE CLICK THE PAGE MAY NEVER MAKE — a real click, inside the frame.
                 await frame.click('#btn-start');
+                if (c.live) {
+                    // R4 — a key and a tap MID-REPLAY (the tape armed before the first and after the last).
+                    await page.waitForFunction(() => window.__editorJs?.reached?.includes('running')
+                        || window.__editorJs?.refusal, null, { timeout: 120000 });
+                    const armedAt = async () => frame.evaluate(() => JSON.parse(window.__swfBridge.game.botStatus()));
+                    const pre = await armedAt();
+                    for (const key of ['ArrowLeft', 'KeyX', 'KeyV']) await page.keyboard.down(key);
+                    const pad = await page.evaluate(() => {
+                        const r = document.getElementById('frame').nextElementSibling
+                            ?.querySelector('.flash-touch-left')?.firstElementChild?.getBoundingClientRect();
+                        return r ? { x: r.x, y: r.y, w: r.width, h: r.height } : null;
+                    });
+                    if (pad) {
+                        await page.mouse.move(pad.x + pad.w * 0.88, pad.y + pad.h / 2);
+                        await page.mouse.down();
+                    }
+                    await page.waitForTimeout(300);
+                    if (pad) await page.mouse.up();
+                    for (const key of ['ArrowLeft', 'KeyX', 'KeyV']) await page.keyboard.up(key);
+                    const post = await armedAt();
+                    check(pre.armed && post.armed && Boolean(pad) && post.tick > pre.tick,
+                        `${c.name}: a key (left, X, V) and a #jsTouch tap went in MID-REPLAY (the tape armed throughout)`,
+                        `armed ${pre.armed}→${post.armed} tick ${pre.tick}→${post.tick}/${pre.tick_count} pad=${Boolean(pad)}`);
+                }
                 const last = c.live ? 'verdict' : 'play';
                 await page.waitForFunction((stage) => window.__editorJs?.stage === stage
                     || window.__editorJs?.refusal, last, { timeout: 120000 });
@@ -143,7 +172,8 @@ async function main() {
                     const verdictText = await page.textContent('#wasmVerdict');
                     check(js.verdict?.perTick?.kind === 'agrees' && /^js frame verdict:/.test(verdictText)
                         && !/wasm verdict/.test(verdictText),
-                        `${c.name}: JS frame vs JS model AGREES at every tick, and the verdict names the JS frame`,
+                        `${c.name}: JS frame vs JS model AGREES at every tick (live input fed mid-replay), and the `
+                        + 'verdict names the JS frame',
                         `${js.verdict?.perTick?.text} | ${verdictText.split('\n')[0].slice(0, 120)}`);
                 }
                 if (c.set) {

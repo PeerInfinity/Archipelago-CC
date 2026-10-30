@@ -12,6 +12,10 @@
  *     (`diffObservationStreams` over `gameStreamFromDrain`), and its last frame is the model's end state.
  *  3. THE REFUSALS — the game's own strings where the game has one (`no tape loaded`, `already running`, the version
  *     gate), and named ones where only the JS frame refuses (`JS_TAPE_REFUSALS`). A relaxed tape plays as declared.
+ *  4. LIVE INPUT NEVER REACHES A REPLAY — a tape played while the page feeds live keys into EVERY tape tick (arrows,
+ *     X, C, and the V/I menu toggles) drains byte-identically to the same tape with no live keys, ends in the same
+ *     state digest and inventory, never opens the V menu and notes no `inventory` event. This is what L3's
+ *     `#jsTouch` strip leans on during a REPLAY: touch feeds the same held set `rt.tick` takes.
  *  ⛓ The whole committed roster (every `fixtures/tapes/*.json` that parses) is swept in `jsRuntimeTape.slow.test.js`.
  */
 import { describe, expect, it } from 'vitest';
@@ -21,6 +25,7 @@ import { fileURLToPath } from 'node:url';
 
 import { createJsRuntime, JS_TAPE_REFUSALS } from './jsRuntimeCore.js';
 import { WALK_STATES } from './jsRuntimeWalker.js';
+import { TOGGLE_KEYS } from './inventoryMenu.js';
 import { canonicalDigestText, digestOfText } from './levelRun.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { runTape } from './tapeRunner.js';
@@ -157,6 +162,60 @@ describe('⛓ PHASE B — a tape plays to `finished`, and its drain is the JS mo
             x: raw.boot.x, y: raw.boot.y, why: 'tape collide-up-rock (botStart)' });
         expect(rt.arrival).toEqual(raw.boot);
         expect(rt.tape).toMatchObject({ loaded: true, armed: true, finished: false, tick: 0 });
+    });
+});
+
+/**
+ * ⛓ LIVE KEYS DURING A TAPE — `slots-l24-fire-first` (L24, two items, `firstUse`: the V menu is OPENABLE on most of
+ * its ticks, so a toggle that leaked would open it). `live(t)` is the page's held set on tape tick t (`null` = none).
+ * Live keys are fed only while the tape is armed for the tick: the finishing frame is a LIVE frame (`Bot.as:3330-3333`,
+ * `tapeRecordThenAct` returns null), so both legs feed it nothing — and the last tape tick carries no toggle, since a
+ * V held into the finishing frame is released ON it, a live frame's edge rather than a tape tick's.
+ */
+const LIVE_PATTERN = [['right'], ['left', 'primary'], ['up', 'secondary'], ['inventory'], [], ['down', 'inventory2'],
+    ['right', 'primary', 'inventory'], []];
+const LIVE_REPLAY_TAPE = 'slots-l24-fire-first';
+
+function playTapeUnderLiveKeys(live) {
+    const rt = vanillaRuntime();
+    const raw = tapeOf(LIVE_REPLAY_TAPE);
+    expect(rt.game.botLoadTape(JSON.stringify(gameVisibleTape(parseTape(raw))))).toBe('ok');
+    expect(rt.game.botStart()).toBe('ok');
+    const events0 = rt.events.length;
+    let st = JSON.parse(rt.game.botStatus());
+    let menuEverOpen = false;
+    let openableTicks = 0;
+    for (let i = 0; i < 5000 && !st.finished; i += 1) {
+        const armedTick = st.armed && st.tick < st.tick_count;
+        let keys = armedTick && live ? live(st.tick) : [];
+        if (armedTick && st.tick === st.tick_count - 1) keys = keys.filter((k) => !TOGGLE_KEYS.includes(k));
+        rt.tick(new Set(keys));
+        menuEverOpen ||= rt.inventoryMenu.open;
+        if (rt.run.inventoryOpenable) openableTicks += 1;
+        st = JSON.parse(rt.game.botStatus());
+    }
+    return {
+        status: st, drain: rt.game.botDrain(), digest: canonicalDigestText(rt.run.stateDigest()),
+        slots: [...rt.run.inventorySlots], primary: rt.run.primary, menuEverOpen, openableTicks,
+        inventoryEvents: rt.events.slice(events0).filter((e) => e.type === 'inventory'),
+    };
+}
+
+describe('⛓ PHASE B — live input never reaches a replay (keyboard, and the `#jsTouch` strip that feeds the same set)', () => {
+    it(`${LIVE_REPLAY_TAPE}: arrows, X, C, V and I fed into every tape tick → the drain, end state and inventory are the quiet replay's`, () => {
+        const quiet = playTapeUnderLiveKeys(null);
+        const noisy = playTapeUnderLiveKeys((t) => LIVE_PATTERN[t % LIVE_PATTERN.length]);
+        expect(quiet.status).toMatchObject({ finished: true, error: '' });
+        // the menu COULD have opened: the pin is not vacuous
+        expect(quiet.slots.length).toBeGreaterThanOrEqual(2);
+        expect(noisy.openableTicks).toBeGreaterThan(100);
+        expect(noisy.status).toEqual(quiet.status);
+        expect(noisy.drain).toBe(quiet.drain);
+        expect(noisy.digest).toBe(quiet.digest);
+        expect(noisy.slots).toEqual(quiet.slots);
+        expect(noisy.primary).toBe(quiet.primary);
+        expect(noisy.menuEverOpen).toBe(false);
+        expect(noisy.inventoryEvents).toEqual([]);
     });
 });
 
