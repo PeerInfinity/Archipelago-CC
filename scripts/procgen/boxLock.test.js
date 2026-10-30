@@ -610,8 +610,10 @@ describe('who takes the box', () => {
             'probe-seedling-inventory-menu.mjs',
             // fidelity L12DOORS: the solver's L12 → L83 plans on the game (import door: `isEntryPoint` → main())
             'probe-seedling-l12doors.mjs',
+            // fidelity TURRETSNAP: which box of L40's live ice turret the game touches (import door: `isEntryPoint` → main())
+            'probe-seedling-turret-snap.mjs',
             // fidelity SECUSE: the X+C tick's game witness (import door: `isEntryPoint` → main())
-            'probe-seedling-secondary-use.mjs',.)
+            'probe-seedling-secondary-use.mjs',
             // seedling-lab-static-art: the lab page's art row (import door: `isEntryPoint` → main())
             'check-seedling-lab-art.mjs',
             // seedling-lab-load-in-js: the lab page's ▶ load in JS row (import door: `isEntryPoint` → main())
