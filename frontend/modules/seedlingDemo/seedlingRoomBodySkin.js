@@ -104,6 +104,25 @@ export const ROOM_BODY_COVERAGE = Object.freeze({
     remaining: Object.freeze(['the Turret "die" (damage not modelled)', 'BobBossNPC portrait', 'nightBmp copies (G5)', 'effects (G4)']),
 });
 
+/**
+ * The `roomOps` objects this skin draws instead of the rectangle stand-in (the shape of `HAZARD_OBJECT_TAGS`). The
+ * ice turret's object solid is its CORPSE wall (`levelWorld`'s `iceturret` row: `IceTurret.as:92-95` sets
+ * `type = "Solid"` only in the else-arm of `currentAnim != "dead"`), built at the ALIVE 32x32 body; the turret —
+ * alive, and dead as frame 6 with the 16x16 box (`IceTurret.as:42,135-147`) — is this skin's sprite, so the game
+ * shows no separate wall picture. Shared by the JS page and the lab (`watchArt.FAMILY_OBJECT_TAGS.roomBody`).
+ */
+export const ROOM_BODY_OBJECT_TAGS = Object.freeze(new Set(['iceturret']));
+
+/**
+ * `roomOps`' `drawnObjects` for this family: `ROOM_BODY_OBJECT_TAGS`, but only when the skin DREW something
+ * (`bodyOps` non-empty) — the lab's rule (`watchArt.labDrawnObjects`): with no ops the stand-in stays.
+ * `tags` is the test seam for the mutant.
+ */
+export function roomBodyDrawnObjects(bodyOps, tags = ROOM_BODY_OBJECT_TAGS) {
+    const drew = (bodyOps?.length ?? 0) > 0;
+    return (o) => drew && tags.has(o.tag);
+}
+
 /** `FP.angle_difference` — ONE wrap, not a modulo (`iceTurret.js` `angleDifference`, the same transcription). */
 function angleDifference(a0, a1) {
     let d = a0 - a1;
