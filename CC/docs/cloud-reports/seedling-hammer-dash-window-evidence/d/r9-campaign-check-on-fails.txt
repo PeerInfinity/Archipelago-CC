@@ -1,0 +1,8 @@
+PASS: ⛓ sum(segment ticks) === the COMMITTED tapes' own sum — 183 + 47 + 245 + 255 + 403 + 294 + 146 + 827 + 122 + 83 + 97 + 152 + 23 + 145 + 36 + 103 + 456 + 655 + 390 + 746 + 560 + 48 + 313 + 2364 + 26 + 89 + 379 + 336 + 210 + 839 = 10572; recorded 10572 against committed 10572
+PASS: ⛓ every RECORDED segment's solved length is its committed tape's own — 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,103,456,655,390,746,560,48,313,2364,26,89,379,336,210,839 against 183,47,245,255,403,294,146,827,122,83,97,152,23,145,36,103,456,655,390,746,560,48,313,2364,26,89,379,336,210,839
+FAIL: r9-solve-19 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-20 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-12 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-29 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-31 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
+FAIL: r9-solve-30 trace is byte-identical to what this solver derives — ⛔ DRIFT — the committed artifact is not what the solver produces today
