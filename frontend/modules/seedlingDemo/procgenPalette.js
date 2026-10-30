@@ -826,6 +826,13 @@ export const EXCLUDED_TEMPLATES = Object.freeze([
      * code wearing a legality rule's name. `lane: 'avoidable'` therefore also
      * leaves the CONCRETE-ROW vocabulary (see this file's header and
      * `procgenCore/templateContract`): the word is retired, not reserved.
+     *
+     * ⛓⛓ **RE-OPENED ALONG THIS ROW'S OWN `wouldNeed`** (seedling gen A1). ⚖ The
+     * user, 2026-10-28: *"Arrow traps would need to be combined with either a
+     * switch or a rope."* The trap and its disarmer built TOGETHER is now the
+     * `ropegate` ELEMENT (`procgenCore/elements/ropeGate.js`, the L16 pattern:
+     * an armed trap on a cut and the rope a sword cuts). ⛔ THIS TEMPLATE STAYS
+     * EXCLUDED: a lane dropped into a finished room is still what it was.
      */
     Object.freeze({
         name: 'arrow-lane',
@@ -861,7 +868,12 @@ export const EXCLUDED_TEMPLATES = Object.freeze([
             + 'the lane is a thing the level was built around rather than a hazard dropped '
             + 'into an existing room for the walk to route past. ⛔ Until then the honest '
             + 'answer is that the generator has no use for one: ⚖ design ruling 8 designs '
-            + 'for POST-SWORD by default, and a post-sword player walks through the volley.',
+            + 'for POST-SWORD by default, and a post-sword player walks through the volley. '
+            + '⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: "Arrow '
+            + 'traps would need to be combined with either a switch or a rope."): the '
+            + '`ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and '
+            + 'the rope that disarms it together, post-sword. This template row stays '
+            + 'excluded.',
     }),
     Object.freeze({
         name: 'button-lock-pair',
