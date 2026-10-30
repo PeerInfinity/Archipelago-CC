@@ -77,6 +77,14 @@ export const GEN_LOOKS = Object.freeze({
     'post-spear': look('D7', 18, 17),        // Igneous Stone / Dark Stone
     'post-dark-suit': look('D8', 39, 41),    // Odd Tile / Odd Tile (wall)
     endgame: look('End', 44, 43),            // Rock Wall (floor) / Rock Wall
+    // ⛓ seedling-gen-new-biomes (C4) — the new biomes' own looks: no original area, so each names
+    //   its theme. Their columns are all used by a look above (the lab-art row measures per column).
+    //   caldera's floor is plain grey rock so the melt crust (Igneous-to-Lava) and the lava read against it
+    //   (on D7's speckled Igneous Stone the crust is hard to see); frozen-forge's floor is blue tile so the
+    //   ice sheets read against it; flooded-ruins is D1's.
+    caldera: look('Caldera', 44, 17),        // Rock Wall (floor) / Dark Stone
+    'frozen-forge': look('Frozen forge', 20, 25), // Blue Tile / Ice Wall
+    'flooded-ruins': look('D1', 6, 3),       // Dungeon Tile / Stone (pre-sword's)
 });
 
 export const GEN_LOOK_NAMES = Object.freeze(Object.keys(GEN_LOOKS));

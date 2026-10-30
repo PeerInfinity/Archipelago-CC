@@ -62,7 +62,9 @@ export const GEN_ROOM_DEFAULTS = Object.freeze({
  * panel's select can offer them without importing the generator.
  */
 export const GEN_ROOM_BIOME_NAMES = Object.freeze(['pre-sword', 'post-sword', 'post-shield',
-    'post-swim', 'post-feather', 'post-fire', 'post-spear', 'post-dark-suit', 'endgame']);
+    'post-swim', 'post-feather', 'post-fire', 'post-spear', 'post-dark-suit', 'endgame',
+    // ⛓ seedling-gen-new-biomes (C4)
+    'caldera', 'frozen-forge', 'flooded-ruins']);
 
 /** The tile size every Seedling payload is written in (the game's 16 px grid). */
 export const GEN_ROOM_TILE_SIZE = 16;

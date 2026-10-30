@@ -31,6 +31,9 @@
  *   on, the terrain's canvas pixels unlike the floor's (stills `terrain-<name>.png`), and the `#genTerrains`
  *   select offering each biome's `TERRAIN_OFFERS`.
  *
+ *   ⛓ gen-new-biomes: one generated room per new biome (caldera, frozen-forge, flooded-ruins), art on, in its own
+ *   look, each of its terrains' canvas pixels unlike the looked floor's (stills `biome-<name>.png`).
+ *
  * Prereqs: a dev server at the REPO ROOT. SKIPs (exit 0) without one, like its siblings.
  * Run: node scripts/procgen/check-seedling-lab-art.mjs [--host=http://localhost:8000] [--shots=<dir>]
  */
@@ -520,6 +523,81 @@ async function main() {
                     'the #genTerrains select offers each biome\'s TERRAIN_OFFERS (none, each, all) and is disabled where there are none',
                     JSON.stringify(offers));
             }
+            await p.close();
+        }
+    }
+
+    // ── ⛓ seedling-gen-new-biomes (C4): the three new biomes, one generated room each, art on, own look ──
+    //
+    // Each room is seed 4, whose six-obstacle ladder paints the biome's own terrains (measured with `generateStep`
+    // before this row was written). The arm draws it in the biome's OWN look; each terrain's cells are averaged off
+    // the CANVAS and must differ from the LOOKED floor's (the look must not hide the terrain: a caldera crust on its
+    // dark floor, an ice sheet on the forge's blue tile).
+    console.log('\n## gen-new-biomes — the generate arm offers and draws caldera, frozen-forge and flooded-ruins');
+    {
+        const R = new URL('../../frontend/modules/seedlingDemo/', import.meta.url).href;
+        const { TERRAIN } = await import(`${R}procgenLevel.js`);
+        const DIFFER = 12;
+        const ROOMS = [
+            { biome: 'caldera', seed: 4, terrains: ['melt', 'lava'] },
+            { biome: 'frozen-forge', seed: 4, terrains: ['ice', 'lava'] },
+            { biome: 'flooded-ruins', seed: 4, terrains: ['water', 'pit'] },
+        ];
+        let listed = false;
+        for (const room of ROOMS) {
+            const p = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errs = [];
+            p.on('pageerror', (e) => errs.push(`pageerror: ${e.message}`));
+            await p.goto(`${PAGE}?source=generate&seed=${room.seed}&biome=${room.biome}&count=6&tries=8&k=3&run=1`,
+                { waitUntil: 'domcontentloaded' });
+            const g = await p.waitForFunction(() => (window.__editorGenerate?.status === 'ok'
+                && window.__editorGenerate.step === 6 && window.__labArt?.drawn !== null ? window.__editorGenerate : null),
+            null, { timeout: 180000 }).then((h) => h.jsonValue()).catch(() => null);
+            await p.waitForTimeout(800);
+            if (!listed) {
+                listed = true;
+                const options = await p.$$eval('#genBiome option', (os) => os.map((o) => o.value));
+                check(ROOMS.every((r) => options.includes(r.biome)),
+                    'the generate arm\'s biome select lists the three new biomes', options.join(', '));
+            }
+            check(g?.status === 'ok' && g.biome === room.biome && g.look === room.biome && errs.length === 0,
+                `${room.biome}: the room builds to step 6 and draws in its own look`,
+                JSON.stringify(g && { status: g.status, step: g.step, biome: g.biome, look: g.look }) + errs.slice(0, 1).join(''));
+            const record = await p.evaluate(() => window.__editorGenerated?.level ?? null);
+            const cells = { floor: [] };
+            for (const t of room.terrains) cells[t] = [];
+            for (const [tx, ty, px] of record?.layers?.[0]?.tiles ?? []) {
+                const col = px / 16;
+                if (col === TERRAIN.ground.column) cells.floor.push([tx, ty]);
+                for (const t of room.terrains) if (col === TERRAIN[t].column) cells[t].push([tx, ty]);
+            }
+            const colours = await p.evaluate(({ cells, w }) => {
+                const c = document.getElementById('canvas');
+                const s = c.width / w;
+                const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+                const out = {};
+                for (const [cls, list] of Object.entries(cells)) {
+                    const sum = [0, 0, 0];
+                    let n = 0;
+                    for (const [tx, ty] of list) {
+                        for (let y = Math.round((ty + 0.25) * s); y < Math.round((ty + 0.75) * s); y += 1) {
+                            for (let x = Math.round((tx + 0.25) * s); x < Math.round((tx + 0.75) * s); x += 1) {
+                                const i = (y * c.width + x) * 4;
+                                sum[0] += d[i]; sum[1] += d[i + 1]; sum[2] += d[i + 2]; n += 1;
+                            }
+                        }
+                    }
+                    out[cls] = sum.map((v) => v / Math.max(1, n));
+                }
+                return out;
+            }, { cells, w: record?.width ?? 1 });
+            for (const t of room.terrains) {
+                const delta = Math.hypot(...colours[t].map((v, i) => v - colours.floor[i]));
+                check(cells[t].length > 0 && cells.floor.length > 0 && delta >= DIFFER,
+                    `${room.biome}: the record holds ${cells[t].length} ${t} cell(s) and the canvas draws them unlike `
+                    + `the biome's looked floor (Δ ≥ ${DIFFER})`, `Δ ${delta.toFixed(1)}`);
+            }
+            if (SHOTS) await p.locator('#canvas').screenshot({ path: join(SHOTS, `biome-${room.biome}.png`) });
             await p.close();
         }
     }
