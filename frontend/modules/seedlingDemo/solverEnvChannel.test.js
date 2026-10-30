@@ -85,6 +85,12 @@ const readSwitches = (url) => inWorker(url, `
     })().catch((e) => post({ type: 'read', threw: e.message }));
 `).then((msgs) => msgs.find((m) => m.type === 'read'));
 
+/** `solverBot.js` alone, no entry, no shim, an empty env: the switch's shipped DEFAULT, whatever it is. */
+const readDefaults = () => inWorker('http://localhost/', `
+    import(${JSON.stringify(SOLVER_BOT)}).then((bot) => post({ type: 'read', chooserPair: { ...bot.CHOOSER_PAIR } }))
+        .catch((e) => post({ type: 'read', threw: e.message }));
+`).then((msgs) => msgs.find((m) => m.type === 'read').chooserPair);
+
 describe('solverEnvChannel — the one table', () => {
     it('the table is every SEEDLING_* name the solve worker\'s import closure reads (and only those), sorted', () => {
         const read = new Set();
@@ -162,10 +168,10 @@ describe('solverEnvChannel — the real worker', () => {
         expect(r.env).toEqual({ SEEDLING_CHOOSER_PAIR: '1', SEEDLING_CHOOSER_PAIR_SIZE: '3' });
     }, 60000);
 
-    it('nothing set = defaults: CHOOSER_PAIR off at size 2, no SEEDLING_* in the env', async () => {
+    it('nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env', async () => {
         const r = await readSwitches(solveWorkerUrl(SOLVE_WORKER_URL, '?rules=x'));
         expect(r.applied).toBe(null);
-        expect(r.chooserPair).toEqual({ enabled: false, near: 4, size: 2 });
+        expect(r.chooserPair).toEqual(await readDefaults());
         expect(r.env).toEqual({});
     }, 60000);
 
@@ -185,7 +191,7 @@ describe('solverEnvChannel — the real worker', () => {
         expect('solverEnv' in bad).toBe(false);
         const read = await readSwitches(solveWorkerUrl(SOLVE_WORKER_URL, pageSearch('SEEDLING_CHOOSER_PAIR=1;SEEDLING_NOPE=1')));
         expect(read.applied).toBe(null);
-        expect(read.chooserPair.enabled).toBe(false);
+        expect(read.chooserPair).toEqual(await readDefaults());
     }, 60000);
 });
 
