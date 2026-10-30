@@ -139,7 +139,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 132,
-            "count": 180,
+            "count": 181,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 495,
+        "blockStyle": 496,
         "browser": 199,
         "cited": 264,
-        "files": 512,
+        "files": 513,
         "lineStyle": 17,
-        "withDocblock": 512,
-        "withFlags": 428
+        "withDocblock": 513,
+        "withFlags": 429
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12780,6 +12780,109 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-fire-push — ⛓⛓⛓ seedling-fidelity-firepush: L40's BOSS KEY 2 BEHIND `pushableblockfire@576,576`, THE ROOM'S PULSER MOVING IT (`CONTACT_FIDELITY.fireBlockPulseShove`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-fire-push.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "ent",
+                "has",
+                "trap"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "crossing",
+                "goal",
+                "items",
+                "json",
+                "rooms",
+                "size"
+            ],
+            "file": "probe-seedling-gen-arrowtrap-rooms.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "ent"
+                    ],
+                    "name": "arrowtrap"
+                },
+                {
+                    "how": [
+                        "ent"
+                    ],
+                    "name": "button"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "crossing"
+                },
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "full"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "goal"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "items"
+                },
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "ent"
+                    ],
+                    "name": "pushableblock"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "rooms"
+                },
+                {
+                    "how": [
+                        "ent"
+                    ],
+                    "name": "rope"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "size"
+                },
+                {
+                    "how": [
+                        "ent"
+                    ],
+                    "name": "torchpickup"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-gen-arrowtrap-rooms — HAND-BUILT ARROW-TRAP ROOMS, SOLVED BY THE GENERATOR'S ORACLE.",
+            "path": "scripts/procgen/probe-seedling-gen-arrowtrap-rooms.mjs"
         },
         {
             "argvHelpers": [
