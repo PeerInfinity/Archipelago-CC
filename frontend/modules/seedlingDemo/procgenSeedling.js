@@ -2128,10 +2128,15 @@ export function seedlingModel({
             const realised = seedlingOnConnectorEntities({
                 placed: p,
                 tagFor: (...more) => placementTagId(withGoal, [...taken, ...more]),
+                groupIdFor: (at) => placementGroupId(at, d.height),
             });
+            /** ⛓ Seedling gen A1 — a `rope`'s `<node>` rides through (OEL pixels,
+             *  the atlas's own spelling); absent on every other entity. */
             elementEntities = Object.freeze(realised.entities.map((e) => Object.freeze({
                 type: e.type, ...oelAtTile(e.tx, e.ty),
                 ...(e.attrs ? { attrs: Object.freeze({ ...e.attrs }) } : {}),
+                ...(e.nodes ? { nodes: Object.freeze(e.nodes
+                    .map((n) => Object.freeze(oelAtTile(n.tx, n.ty)))) } : {}),
             })));
             /** ⛔ THE OWNED CELLS ARE THE DOOR, ITS CLEARER, THE WALL AND THE
              *  CARVE — not a rectangle. This element has none, and reserving one

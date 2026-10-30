@@ -46,6 +46,7 @@ import { KILL_GATE } from './elements/killGate.js';
 import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { ROAM } from './elements/roam.js';
+import { ROPE_GATE } from './elements/ropeGate.js';
 import {
     CORRIDOR_BODY, ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT,
     WATERFALL_GATE,
@@ -439,6 +440,34 @@ export const ELEMENT_TABLE = Object.freeze({
          * — which also keeps every `--require=hasSword` room where it was (the
          * `+` list it would have joined spends one pick over its members).
          */
+        meetsRequire: false,
+    }),
+    /**
+     * ⛓⛓⛓ **THE ROPE GATE — THE GENERATOR'S FIRST ARROW TRAP** (seedling gen
+     * content A1; ⚖ the user 2026-10-28/30: the trap built WITH its disarmer,
+     * the rope first, the switch later). An armed trap whose lane is a
+     * main-path cut, and a rope of its group on the start side; the solver's
+     * `pull` (built for L16) cuts it with the sword and the lane falls silent.
+     *
+     * ⛓ `needs: ['hasSword']` — the rope is cut by a sword swing, and pre-sword
+     * the lane is an armed wall the ladder cannot cross without tanking an
+     * arrow, which the oracle refuses (⚖ L16: no hit is ever the intended
+     * route). Measured: the sword differential grades it REQUIRED.
+     *
+     * Placed LAST so no head moves in `ELEMENT_NAMES`. It ships OPT-IN (⚖ Q5).
+     * ⛔ `meetsRequire: false` — not because it grades SHORTENS (it does not)
+     * but because joining `require:['hasSword']`'s `+` list moves every room a
+     * `--require=hasSword` run builds today (the list spends ONE pick over its
+     * members); that is a re-record, a decision of its own.
+     */
+    ropegate: Object.freeze({
+        element: ROPE_GATE,
+        why: 'The ROPE GATE (seedling gen A1, the L16 pattern): an armed `arrowtrap` at the head '
+            + 'of a lane that is a main-path cut, and a `rope` of the same group on the start '
+            + 'side. Certified by the solver\'s `pull` (a sword cut silences the lane) with the '
+            + 'lane-crossing arm OFF; a certificate that tanks an arrow is refused.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasSword']),
         meetsRequire: false,
     }),
 });
