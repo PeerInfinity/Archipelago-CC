@@ -27,7 +27,7 @@
 
 import {
     createState, getExitAt, getObstacle, mazeVisitedKey, hasItemActions, worldInputs, USE_PREFIX, TURN_PREFIX, INPUTS, turnInput,
-    actionItems, actionUsable, blockWithinReach, footprintCells, stanceStrikes,
+    actionItems, actionUsable, blockWithinReach, blockActionIds, footprintCells, stanceStrikes,
 } from '../mazeRoomEngine.js';
 import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
 import { isObstacleCleared } from '../../shared/procgen/library.js';
@@ -250,9 +250,9 @@ export function regionItems(world) {
         if (entry.activates && entry.opened_by) out.add(entry.opened_by);
         for (const ev of entry.events ?? []) out.add(ev.name);
     }
-    // ⛓ STRUCK BLOCKS: the items of the actions that move the world's blocks.
+    // ⛓ BLOCK KINDS: the items of the actions that move or wake the world's blocks.
     if (world.blocks?.size > 0) {
-        for (const actionId of world.blockStrike?.struckBy ?? []) {
+        for (const actionId of blockActionIds(world)) {
             for (const item of actionItems(world.actionLib?.[actionId])) if (!held.has(item)) out.add(item);
         }
     }
@@ -302,7 +302,7 @@ export function reachKey(state) {
 /**
  * Does a cell the use hits after a `TURN_<d>` hold an obstacle (what it could break)? — its footprint
  * (`footprintCells`: the faced cell unless the action carries one, ⛓ WEAPON FOOTPRINTS) — or, on a
- * STRUCK-BLOCK world, does a block stand in its strike cells (what it could move)?
+ * BLOCK-KIND world, does a block it moves or wakes stand in its footprint (`blockWithinReach`)?
  */
 function obstacleToward(world, state, macro) {
     const faced = { ...state, facing: macro[0].slice(TURN_PREFIX.length) };

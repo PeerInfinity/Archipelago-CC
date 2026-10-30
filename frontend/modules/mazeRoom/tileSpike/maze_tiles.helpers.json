@@ -267,6 +267,17 @@
           }
         },
         {
+          "type": "not",
+          "condition": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "player"
+          }
+        },
+        {
           "type": "or",
           "conditions": [
             {
@@ -303,6 +314,152 @@
           "right": {
             "type": "constant",
             "value": null
+          }
+        }
+      ]
+    }
+  },
+  "block_struck": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "block"
+        },
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "block_struck"
+        }
+      ]
+    }
+  },
+  "woken": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "block"
+        },
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "wakes"
+        }
+      ]
+    }
+  },
+  "pulse_armed": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "pulse"
+          },
+          "op": "is not",
+          "right": {
+            "type": "constant",
+            "value": null
+          }
+        },
+        {
+          "type": "item_check",
+          "item": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "pulse"
+          }
+        }
+      ]
+    }
+  },
+  "pulse_shoves": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "block"
+        },
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "pulsed"
+        },
+        {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "pulse"
+          },
+          "op": "is not",
+          "right": {
+            "type": "constant",
+            "value": null
+          }
+        },
+        {
+          "type": "item_check",
+          "item": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "pulse"
           }
         }
       ]

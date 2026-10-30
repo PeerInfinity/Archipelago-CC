@@ -90,6 +90,13 @@ export const PRIMITIVE_STRIKE = 'strike';
 /** The two ways a trap's group arms it (`trapLib.<id>.fires`). */
 export const TRAP_FIRES = Object.freeze(['unless_active', 'while_active']);
 
+/**
+ * ⛓ The ways a strike moves a block it hits (`action_lib.<id>.push`, session tile-mechanisms-m1): `'facing'` (the
+ * default) one cell the way the player faces — Seedling's spear (`Player.as:1121-1123`, the hit is relative); `'away'`
+ * one cell away from the player — Seedling's Fire (`PushableBlockFire.hit`, the `atan2` rule, see `awayDelta`).
+ */
+export const PUSH_MODES = Object.freeze(['facing', 'away']);
+
 /** `TURN_<dir>` for one of N/E/S/W. */
 export function turnInput(dir) { return `${TURN_PREFIX}${dir}`; }
 
@@ -380,8 +387,15 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     // written before this slice, and createWorld already seeded empty Maps, so
     // an old sidecar loads exactly as it did. Emitted by
     // serializeMazeEntities, which omits both when empty.
+    // ⛓ BLOCK KINDS (session tile-mechanisms-m1): on a `block_lib` world every block names its kind (the Map's value);
+    // elsewhere a block is `true`, walk-pushed. ⛔ The retired `block_strike` is refused by name (one spelling).
+    if (sidecar.block_strike !== undefined) {
+        throw new Error('deserializeMazeWorld: "block_strike" is retired — a struck block is a `block_lib` kind '
+            + '(`{spear: {walk: false, struck_by: [...]}}`) named by each block');
+    }
+    if (sidecar.block_lib !== undefined) world.blockLib = checkBlockLib(sidecar.block_lib, world.actionLib, 'deserializeMazeWorld');
     for (const b of sidecar.blocks ?? []) {
-        world.blocks.set(posKey(b.x, b.y), true);
+        world.blocks.set(posKey(b.x, b.y), checkBlockKind(world, b, 'deserializeMazeWorld'));
     }
     for (const b of sidecar.buttons ?? []) {
         world.buttons.set(posKey(b.x, b.y), b.id);
@@ -460,14 +474,12 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.block_sinks !== undefined) {
         world.blockSinks = checkBlockSinks(sidecar.block_sinks, width, height, 'deserializeMazeWorld');
     }
-    // ⛓ STRUCK BLOCKS: absent on every other sidecar, so `world.blockStrike` stays undefined and a block is walk-pushed.
-    if (sidecar.block_strike !== undefined) {
-        world.blockStrike = checkBlockStrike(sidecar.block_strike, world.actionLib, 'deserializeMazeWorld');
-    }
     // ⛓ STRUCK FROM A STANCE: an obstacle entry without `struck_from` is struck through its cells, as before.
     checkStruckFrom(obstacleLib, world.actionLib, width, height, 'deserializeMazeWorld');
     // ⛓ PULLS: absent on every other sidecar, so `world.pulls` stays undefined and a move is never pulled.
     if (sidecar.pulls !== undefined) world.pulls = checkPulls(sidecar.pulls, world, 'deserializeMazeWorld');
+    // ⛓ PULSERS: absent on every other sidecar, so `world.pulsers` stays undefined and no step pulses.
+    if (sidecar.pulsers !== undefined) world.pulsers = checkPulsers(sidecar.pulsers, world, 'deserializeMazeWorld');
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
     // immutable shape (tiles + cycleLength + length + shape); phase
@@ -525,9 +537,10 @@ export function getBlock(world, x, y) {
     return world.blocks?.get(posKey(x, y)) ?? false;
 }
 
-export function setBlock(world, x, y) {
+/** Place a block; `kind` names its `block_lib` kind on a block-kind world (see `checkBlockLib`), else it is `true`. */
+export function setBlock(world, x, y, kind = true) {
     if (!world.blocks) world.blocks = new Map();
-    world.blocks.set(posKey(x, y), true);
+    world.blocks.set(posKey(x, y), kind);
 }
 
 export function clearBlock(world, x, y) {
@@ -570,6 +583,9 @@ export function checkActionLib(lib, who) {
                 + `only '${PRIMITIVE_STRIKE}' is modelled`);
         }
         if (entry.footprint !== undefined) checkFootprint(entry.footprint, id, who);
+        if (entry.push !== undefined && !PUSH_MODES.includes(entry.push)) {
+            throw new Error(`${who}: action_lib.${id}.push is ${JSON.stringify(entry.push)}; one of ${PUSH_MODES.join(', ')}`);
+        }
     }
     return { ...lib };
 }
@@ -964,91 +980,309 @@ export function blocksAfterPush(world, blocks, from, to) {
 }
 
 /**
- * ⛓ STRUCK BLOCKS (session tile-primitives-sphere-order-2, ⚖ 2026-10-26 "Reach-2 strike-push"): `block_strike:
- * {struck_by: [actionId…], reach?}` — every block of this world is one the game moves only by a HIT: Seedling's
- * `PushableBlockSpear` (`Puzzlements/PushableBlockSpear.as`: `moveTypes = ["Spear"]`, type "Solid"). Walking into
- * one is refused: it is never walk-pushed. A `USE:<id>` of a listed action hits every block in its FOOTPRINT — the
- * spear's 32 px stab rect (`Player.as:954-993`: no reach gate, no line test, so over any cell between) — and moves
- * each ONE cell the way the player faces (`Player.as:1121-1123`: the hit is relative to the thrust), farthest first.
- * A block whose next cell is off the grid, a wall, a block, a shut obstacle (unless it sinks there) or an entry gate
- * stays put (`PushableBlockFire.update`: a collided move resets its target). Game-measured by the seedling-fidelity
- * spear legs (L63, L65, L67 — L67's five thrusts park the block on its button) and the spearrect witnesses.
- * ⛓ WEAPON FOOTPRINTS (session tile-primitives-weapon-footprints): the footprint is the action's own
- * (`action_lib.<id>.footprint`); `reach` — the cells straight ahead, the shape before footprints — is for a world
- * whose struck actions carry none. ⛔ Both, or neither, is refused by name: one shape per world.
- * The world's `action_lib` must hold every listed action. Returns `{struckBy}` or `{struckBy, reach}`.
+ * ⛓⛓ BLOCK KINDS (session tile-mechanisms-m1, ⚖ 2026-10-30 "Four primitives, 2 slices"). `block_lib: {<kind>: {walk,
+ * struck_by?, pulsed?, wake?}}` says how each KIND of block moves, and every block of the world names its kind
+ * (`blocks: [{x, y, kind}]`), so one level may hold Seedling's three movers side by side (L40: a PushableBlock, two
+ * PushableBlockFires and an IceTurret):
+ *   walk       true: walking into it pushes it one cell (`PushableBlock`); false: walking into it is refused
+ *   struck_by  the actions whose use moves it when a cell of the use's footprint (`footprintCells`) holds it, one cell
+ *              the way the action's `push` says (`PUSH_MODES`): the spear's `'facing'` (`PushableBlockSpear`, game-measured
+ *              by the seedling-fidelity spear legs, L63 L65 L67) or Fire's `'away'` (`PushableBlockFire.hit`, `awayDelta`)
+ *   pulsed     a live pulser whose reach holds it pushes it away (`checkPulsers`; `moveTypes = ["Fire","Pulse"]`)
+ *   wake       `{struck_by, becomes}`: a use of a listed action on it turns it into kind `becomes`, PER VISIT like its
+ *              position (Seedling's IceTurret: a weapon kills it into its corpse, `IceTurret.as:136-148`, which only Fire
+ *              and pulses move, `:172-200`; the turret has no tag, so the game re-arms it on every visit)
+ * Pushed blocks go farthest first, each applied before the next is asked; a block whose next cell is off the grid, a
+ * wall, a block, the player, a shut obstacle (unless it sinks there) or an entry gate stays put (`PushableBlockFire.update`:
+ * a collided move resets its target). It retired sphere-order-2's world-level `block_strike` (one kind for every block),
+ * which is kind `spear` here, and that slice's `reach` (the cells straight ahead, for an action without a footprint):
+ * every struck action now hits its own footprint, the faced cell when it names none.
+ * Without a `block_lib` every block is walk-pushed, as before. ⛔ Refused BY NAME: an unknown key, a kind both walked and
+ * struck (the game has none), an action the `action_lib` lacks, an action that both moves and wakes one kind, a
+ * `becomes` the lib does not hold (or the kind itself). Returns `{<kind>: {walk, struckBy, pulsed, wake}}`.
  */
-export function checkBlockStrike(spec, actionLib, who) {
-    const bad = (why) => new Error(`${who}: "block_strike" ${why}`);
-    if (!spec || typeof spec !== 'object' || Array.isArray(spec)) throw bad('must be an object {struck_by, reach?}');
-    const struckBy = spec.struck_by;
-    if (!Array.isArray(struckBy) || struckBy.length === 0 || struckBy.some((id) => typeof id !== 'string')) {
-        throw bad(`struck_by must be a non-empty list of action ids, got ${JSON.stringify(struckBy)}`);
+export function checkBlockLib(lib, actionLib, who) {
+    const bad = (why) => new Error(`${who}: "block_lib" ${why}`);
+    if (!lib || typeof lib !== 'object' || Array.isArray(lib) || Object.keys(lib).length === 0) {
+        throw bad(`must be a non-empty object of kinds, got ${JSON.stringify(lib)}`);
     }
-    const missing = struckBy.filter((id) => !actionLib?.[id]);
-    if (missing.length > 0) throw bad(`names ${missing.join(', ')}, which the action_lib does not hold`);
-    const withFootprint = struckBy.filter((id) => actionLib[id].footprint !== undefined);
-    if (withFootprint.length > 0) {
-        if (withFootprint.length !== struckBy.length || spec.reach !== undefined) {
-            throw bad(`mixes a reach (${JSON.stringify(spec.reach)}) with the footprint of ${withFootprint.join(', ')} — `
-                + 'a world whose struck actions carry a footprint takes no reach');
+    const actions = (ids, at) => {
+        if (!Array.isArray(ids) || ids.length === 0 || ids.some((id) => typeof id !== 'string')) {
+            throw bad(`${at} must be a non-empty list of action ids, got ${JSON.stringify(ids)}`);
         }
-        return { struckBy: [...struckBy] };
+        const missing = ids.filter((id) => !actionLib?.[id]);
+        if (missing.length > 0) throw bad(`${at} names ${missing.join(', ')}, which the action_lib does not hold`);
+        return [...ids];
+    };
+    const out = {};
+    for (const [kind, e] of Object.entries(lib)) {
+        if (!e || typeof e !== 'object' || Array.isArray(e)) throw bad(`.${kind} must be an object`);
+        const unknown = Object.keys(e).filter((k) => !BLOCK_KIND_KEYS.includes(k));
+        if (unknown.length > 0) throw bad(`.${kind} names ${unknown.join(', ')}; a kind holds only ${BLOCK_KIND_KEYS.join(', ')}`);
+        if (typeof e.walk !== 'boolean') throw bad(`.${kind}.walk must be true or false, got ${JSON.stringify(e.walk)}`);
+        if (e.pulsed !== undefined && typeof e.pulsed !== 'boolean') throw bad(`.${kind}.pulsed must be true or false`);
+        const struckBy = e.struck_by === undefined ? [] : actions(e.struck_by, `.${kind}.struck_by`);
+        if (e.walk && struckBy.length > 0) throw bad(`.${kind} is both walked and struck — the game has no such block`);
+        let wake = null;
+        if (e.wake !== undefined) {
+            if (!e.wake || typeof e.wake !== 'object' || Array.isArray(e.wake)) throw bad(`.${kind}.wake must be {struck_by, becomes}`);
+            const by = actions(e.wake.struck_by, `.${kind}.wake.struck_by`);
+            if (e.wake.becomes === kind || !Object.hasOwn(lib, e.wake.becomes)) {
+                throw bad(`.${kind}.wake.becomes names ${JSON.stringify(e.wake.becomes)}, not another kind of the block_lib`);
+            }
+            const both = by.filter((id) => struckBy.includes(id));
+            if (both.length > 0) throw bad(`.${kind}: ${both.join(', ')} both moves and wakes it — which comes first is not settled`);
+            wake = { struckBy: by, becomes: e.wake.becomes };
+        }
+        out[kind] = { walk: e.walk, struckBy, pulsed: e.pulsed === true, wake };
     }
-    if (!Number.isInteger(spec.reach) || spec.reach < 1) throw bad(`reach must be a positive integer, got ${JSON.stringify(spec.reach)}`);
-    return { struckBy: [...struckBy], reach: spec.reach };
+    return out;
+}
+
+/** The keys a `block_lib` kind may hold. */
+const BLOCK_KIND_KEYS = Object.freeze(['walk', 'struck_by', 'pulsed', 'wake']);
+
+/** A block's entry on a world without a `block_lib`: walk-pushed, nothing else. */
+const WALK_BLOCK = Object.freeze({ walk: true, struckBy: Object.freeze([]), pulsed: false, wake: null });
+
+/** A sidecar block row's kind, CHECKED against the world's `block_lib` (`true` without one). ⛔ A missing, unknown or stray kind is refused by name. */
+function checkBlockKind(world, b, who) {
+    if (!world.blockLib) {
+        if (b.kind !== undefined) throw new Error(`${who}: block at (${b.x},${b.y}) names kind ${JSON.stringify(b.kind)}, but the world has no block_lib`);
+        return true;
+    }
+    if (typeof b.kind !== 'string' || !world.blockLib[b.kind]) {
+        throw new Error(`${who}: block at (${b.x},${b.y}) names kind ${JSON.stringify(b.kind)}, which the block_lib does not hold`);
+    }
+    return b.kind;
+}
+
+/** The kind entry of the block at posKey `key` of `state` (see `checkBlockLib`) — `WALK_BLOCK` on a world without a `block_lib`, null for no such kind. */
+export function blockEntryAt(world, state, key) {
+    if (!world.blockLib) return WALK_BLOCK;
+    return world.blockLib[state.blockKinds?.[key]] ?? null;
+}
+
+/** The kind of the block at posKey `key` of `state`, or null (no `block_lib`, or no block there). */
+export function blockKindAt(world, state, key) {
+    return world.blockLib ? state.blockKinds?.[key] ?? null : null;
+}
+
+/** The action ids that move or wake any kind of the world's blocks (sorted; `[]` without a `block_lib`). */
+export function blockActionIds(world) {
+    const out = new Set();
+    for (const e of Object.values(world.blockLib ?? {})) for (const id of [...e.struckBy, ...(e.wake?.struckBy ?? [])]) out.add(id);
+    return [...out].sort();
 }
 
 /**
- * The cells a `USE:<actionId>` hits a struck block on, FARTHEST first along the facing (the order the pushes are
- * made in): the action's footprint, or — a `reach` world — the `reach` cells straight ahead. `[]` when the action
- * moves no block.
+ * Move the block at `from` to `to` in a FRESH state (it is mutated): `blocksAfterPush` (moved, or gone into a sink) and
+ * its kind with it. Every push — walk, strike, pulse; native and scripted — goes through here.
  */
-export function blockStrikeCells(world, state, actionId) {
-    const spec = world.blockStrike;
-    const d = DELTAS[state.facing];
-    if (!spec || !d || !spec.struckBy.includes(actionId)) return [];
-    const { x, y } = state.player_pos;
-    const cells = spec.reach !== undefined
-        ? Array.from({ length: spec.reach }, (_, i) => ({ x: x + d.dx * (i + 1), y: y + d.dy * (i + 1) }))
-        : footprintCells(world, state, actionId);
-    const along = (c) => (c.x - x) * d.dx + (c.y - y) * d.dy;
-    return cells.slice().sort((p, q) => along(q) - along(p) || p.y - q.y || p.x - q.x);
+export function moveBlockIn(world, state, from, to) {
+    state.blocks = blocksAfterPush(world, state.blocks, from, to);
+    if (state.blockKinds === undefined) return;
+    const kinds = { ...state.blockKinds };
+    const kind = kinds[from];
+    delete kinds[from];
+    if (state.blocks.includes(to)) kinds[to] = kind;
+    state.blockKinds = kinds;
 }
 
-/** May a block move onto (x, y) going `dir`, with `blocks` where they are now? (A walk-push's and a strike-push's test.) */
+const BOTH_RANGE = 0.1;
+
+/**
+ * The one-cell move a HIT from cell `from` gives the body on cell `at` — away from the hitter along the axis between
+ * them — or null when the game would move it on BOTH axes (a diagonal: the orthogonal maze has no such move, so it is
+ * NOT MOVED — the stricter side, named) or the two are one cell. The AS3 rule, on cell centres
+ * (`PushableBlockFire.hit`, `IceTurret.bump`): `a = atan2(p.y - b.y, p.x - b.x)`; x moves when `|sin a| - 0.1 < |cos a|`,
+ * y when `|sin a| > |cos a| - 0.1`.
+ */
+export function awayDelta(from, at) {
+    const vx = from.x - at.x;
+    const vy = from.y - at.y;
+    if (vx === 0 && vy === 0) return null;
+    const a = Math.atan2(vy, vx);
+    const s = Math.abs(Math.sin(a));
+    const c = Math.abs(Math.cos(a));
+    const moveX = s - BOTH_RANGE < c;
+    const moveY = s > c - BOTH_RANGE;
+    if (moveX && moveY) return null;
+    return moveX ? { dx: Math.cos(a) > 0 ? -1 : 1, dy: 0 } : { dx: 0, dy: Math.sin(a) > 0 ? -1 : 1 };
+}
+
+/** The input (N/E/S/W) of a one-cell delta. */
+function dirOfDelta(d) {
+    return Object.keys(DELTAS).find((k) => DELTAS[k].dx === d.dx && DELTAS[k].dy === d.dy);
+}
+
+/**
+ * The cells a `USE:<actionId>` hits a block on, FARTHEST first (the order the pushes are made in): the action's
+ * footprint, by distance along the facing (`'facing'`) or from the player (`'away'`). `[]` on a world without a
+ * `block_lib` or a state without a facing.
+ */
+export function blockStrikeCells(world, state, actionId) {
+    const d = DELTAS[state.facing];
+    const entry = world.actionLib?.[actionId];
+    if (!world.blockLib || !d || !entry) return [];
+    const { x, y } = state.player_pos;
+    const far = entry.push === 'away' ? (c) => (c.x - x) ** 2 + (c.y - y) ** 2 : (c) => (c.x - x) * d.dx + (c.y - y) * d.dy;
+    return footprintCells(world, state, actionId).sort((p, q) => far(q) - far(p) || p.y - q.y || p.x - q.x);
+}
+
+/** The one-cell move a `USE:<actionId>` gives a block it moves on `cell`: the facing, or `awayDelta` (null: not moved). */
+export function strikeDelta(world, state, actionId, cell) {
+    return world.actionLib?.[actionId]?.push === 'away' ? awayDelta(state.player_pos, cell) : DELTAS[state.facing] ?? null;
+}
+
+/** May a block move onto (x, y) going `dir`, with `blocks` where they are now? (A strike-push's and a pulse's test.) */
 function blockMayEnter(world, state, blocks, x, y, dir, inv, clearanceOpts) {
     if (x < 0 || y < 0 || x >= world.width || y >= world.height || !blockGround(world, x, y)) return false;
     if (blocks.includes(posKey(x, y))) return false;
+    if (state.player_pos.x === x && state.player_pos.y === y) return false;
     if (!sinksBlock(world, x, y) && shutObstacleAt(world, state, x, y, inv, clearanceOpts) !== null) return false;
     return !hasEntryGate(world, x, y, dir);
 }
 
 /**
- * The pushes a `USE:<actionId>` makes on a STRUCK-BLOCK world from `state` (see `checkBlockStrike`): `[{from, to}]`,
- * farthest block first, each applied before the next is asked; `[]` when the action moves no block. `inv` = the
- * effective inventory the use is asked with.
+ * The pushes a `USE:<actionId>` makes from `state` (see `checkBlockLib`): `[{from, to}]`, farthest block first, each
+ * applied before the next is asked; `[]` when the action moves no block. `inv` = the effective inventory the use is
+ * asked with.
  */
 export function strikePushes(world, state, actionId, inv, clearanceOpts) {
-    const d = DELTAS[state.facing];
     if (!state.blocks?.length) return [];
     let blocks = state.blocks;
     const out = [];
-    for (const { x, y } of blockStrikeCells(world, state, actionId)) {
-        const from = posKey(x, y);
-        if (!blocks.includes(from)) continue;
-        if (!blockMayEnter(world, state, blocks, x + d.dx, y + d.dy, state.facing, inv, clearanceOpts)) continue;
-        const to = posKey(x + d.dx, y + d.dy);
+    for (const cell of blockStrikeCells(world, state, actionId)) {
+        const from = posKey(cell.x, cell.y);
+        if (!blocks.includes(from) || !blockEntryAt(world, state, from)?.struckBy.includes(actionId)) continue;
+        const d = strikeDelta(world, state, actionId, cell);
+        if (d === null) continue;
+        if (!blockMayEnter(world, state, blocks, cell.x + d.dx, cell.y + d.dy, dirOfDelta(d), inv, clearanceOpts)) continue;
+        const to = posKey(cell.x + d.dx, cell.y + d.dy);
         out.push({ from, to });
         blocks = blocksAfterPush(world, blocks, from, to);
     }
     return out;
 }
 
-/** Might `USE:<actionId>` move a block from `state` — does one stand in its strike cells? (Position only.) */
+/** The blocks a `USE:<actionId>` WAKES from `state`: `[{at, becomes}]` (posKey, the kind it turns into), sorted. */
+export function strikeWakes(world, state, actionId) {
+    if (!world.blockLib || !state.blocks?.length) return [];
+    const out = [];
+    for (const { x, y } of footprintCells(world, state, actionId)) {
+        const at = posKey(x, y);
+        const wake = state.blocks.includes(at) ? blockEntryAt(world, state, at)?.wake : null;
+        if (wake?.struckBy.includes(actionId)) out.push({ at, becomes: wake.becomes });
+    }
+    return out.sort((a, b) => (a.at < b.at ? -1 : 1));
+}
+
+/** Might `USE:<actionId>` move or wake a block from `state` — does one it moves or wakes stand in its footprint? (Position only.) */
 export function blockWithinReach(world, state, actionId) {
-    if (!state.blocks?.length) return false;
-    return blockStrikeCells(world, state, actionId).some((c) => state.blocks.includes(posKey(c.x, c.y)));
+    if (!state.blocks?.length || !world.blockLib) return false;
+    return footprintCells(world, state, actionId).some((c) => {
+        const key = posKey(c.x, c.y);
+        if (!state.blocks.includes(key)) return false;
+        const e = blockEntryAt(world, state, key);
+        return !!e && (e.struckBy.includes(actionId) || !!e.wake?.struckBy.includes(actionId));
+    });
+}
+
+/**
+ * ⛓⛓ PULSERS (session tile-mechanisms-m1, ⚖ 2026-10-30 "Four primitives, 2 slices"). `pulsers: [{x, y, token,
+ * reach: [{x, y}]}]` — Seedling's Pulser (`Puzzlements/Pulser.as`): while its group is active (`token` in the
+ * effective inventory: a held button derives it, `:51-85`) it pulses, hitting everything within `radiusHit` 22 px
+ * (`:87-114`). A `pulsed` block on a `reach` cell is pushed one cell AWAY from the pulser (`awayDelta`: a diagonal one is
+ * not moved); the PLAYER is hit too and takes damage, so a live reach is an ARMED LANE (⚖ "an armed lane refuses
+ * outright", the arrow traps' rule): no step may END with the player on a reach cell of a live pulser.
+ * The pulse runs at the end of every step (wait, turn and use included — `settlePulses`), after the move, its pickup and
+ * its pull, and the world SETTLES: rounds of pulses until none moves a block (a block parked on a button by one round can
+ * light another pulser for the next). Each round's pushes are SIMULTANEOUS (each asked against the blocks before it, so
+ * the order of the pulsers does not matter). A block moves at most once per settle — no pushed block lands on a reach
+ * cell (refused below) — so it ends, and a WAIT after any step is a self-loop again (the searches never branch on one).
+ * Then the lane is asked of the settled stance. The pulser is a SOLID body (`type = "Solid"`): its cell must not be floor.
+ * `reach` is the producer's (its cells from the game's hit radius); the engine reads cells.
+ * ⛔ Refused BY NAME: a pulser cell that is floor or off the grid, an empty token, an empty reach, a reach cell off the
+ * grid, repeated or the pulser's own, a cell in two pulsers' reach (which pushes first is not settled), two reach cells
+ * pushed onto one cell, and a reach cell pushed onto a reach cell (chained pulses are not modelled — the pulls'
+ * precedent). Returns `[{x, y, token, reach: [posKey…]}]`; sets nothing else.
+ */
+export function checkPulsers(pulsers, world, who) {
+    const bad = (why) => new Error(`${who}: "pulsers" ${why}`);
+    if (!Array.isArray(pulsers)) throw bad('must be a list');
+    const { width, height } = world;
+    const inGrid = (c) => Number.isInteger(c?.x) && Number.isInteger(c?.y) && c.x >= 0 && c.y >= 0 && c.x < width && c.y < height;
+    const owner = new Map();
+    const targets = new Map();
+    const out = pulsers.map((p, i) => {
+        if (!inGrid(p)) throw bad(`entry ${JSON.stringify(p)} is not a cell of the ${width}x${height} grid`);
+        if (isFloor(world, p.x, p.y)) throw bad(`pulser at (${p.x},${p.y}) stands on floor — a pulser is a solid body`);
+        if (typeof p.token !== 'string' || p.token === '') throw bad(`pulser at (${p.x},${p.y}) names no group token`);
+        if (!Array.isArray(p.reach) || p.reach.length === 0) throw bad(`pulser at (${p.x},${p.y}) reaches no cell`);
+        const reach = p.reach.map((c) => {
+            if (!inGrid(c)) throw bad(`pulser at (${p.x},${p.y}) reaches ${JSON.stringify(c)}, not a cell of the grid`);
+            const key = posKey(c.x, c.y);
+            if (c.x === p.x && c.y === p.y) throw bad(`pulser at (${p.x},${p.y}) lists its own cell`);
+            if (owner.get(key) === i) throw bad(`pulser at (${p.x},${p.y}) lists (${c.x},${c.y}) twice`);
+            if (owner.has(key)) {
+                const o = pulsers[owner.get(key)];
+                throw bad(`(${c.x},${c.y}) is in the reach of the pulsers at (${o.x},${o.y}) and (${p.x},${p.y}) — which pushes first is not settled`);
+            }
+            owner.set(key, i);
+            const d = awayDelta(p, c);
+            if (d !== null) {
+                const to = posKey(c.x + d.dx, c.y + d.dy);
+                if (targets.has(to)) throw bad(`pulses push (${targets.get(to)}) and (${key}) both onto (${to})`);
+                targets.set(to, key);
+            }
+            return key;
+        });
+        return { x: p.x, y: p.y, token: p.token, reach };
+    });
+    for (const [to, from] of targets) {
+        if (owner.has(to)) throw bad(`a pulse pushes (${from}) onto (${to}), another reach cell — chained pulses are not modelled`);
+    }
+    return out;
+}
+
+/** The live pulser (`{x, y, token, reach}`) whose reach holds (x, y) for the effective inventory `inv`, or null. */
+export function pulsingAt(world, inv, x, y) {
+    if (!world.pulsers) return null;
+    const key = posKey(x, y);
+    return world.pulsers.find((p) => inv.has(p.token) && p.reach.includes(key)) ?? null;
+}
+
+/** The pushes the live pulsers make on `state` for `inv`: `[{from, to}]`, every one asked against the blocks before the pulse. */
+export function pulseShoves(world, state, inv, clearanceOpts) {
+    if (!world.pulsers || !state.blocks?.length) return [];
+    const out = [];
+    for (const p of world.pulsers) {
+        if (!inv.has(p.token)) continue;
+        for (const from of p.reach) {
+            if (!state.blocks.includes(from) || !blockEntryAt(world, state, from)?.pulsed) continue;
+            const c = unposKey(from);
+            const d = awayDelta(p, c);
+            if (d === null) continue;
+            if (!blockMayEnter(world, state, state.blocks, c.x + d.dx, c.y + d.dy, dirOfDelta(d), inv, clearanceOpts)) continue;
+            out.push({ from, to: posKey(c.x + d.dx, c.y + d.dy) });
+        }
+    }
+    return out;
+}
+
+/**
+ * The PULSE that ends every step on a pulser world: rounds of the live pulsers' pushes (`pulseShoves`) on `next` — a FRESH
+ * state, mutated — until one moves nothing, with `carried` the step's carried inventory after it; returns the live pulser
+ * the player then stands in reach of (the step is refused), or null. (It ends: see `checkPulsers`.)
+ */
+function settlePulses(world, next, carried, clearanceOpts) {
+    for (;;) {
+        const inv = effectiveInventory(world, carried, next.player_pos, next.blocks, next.broken);
+        const pushes = pulseShoves(world, next, inv, clearanceOpts);
+        if (pushes.length === 0) return pulsingAt(world, inv, next.player_pos.x, next.player_pos.y);
+        for (const p of pushes) moveBlockIn(world, next, p.from, p.to);
+    }
 }
 
 /** Does any entry gate stand on entering (x, y) moving `dir`? A pushed block never crosses one (it carries nothing). */
@@ -1109,9 +1343,17 @@ export function serializeMazeEntities(world) {
     const out = {};
     const rowMajor = (a, b) => (a.y - b.y) || (a.x - b.x);
     if (world.blocks?.size) {
-        out.blocks = [...world.blocks.keys()]
-            .map(unposKey)
+        out.blocks = [...world.blocks]
+            .map(([key, kind]) => (typeof kind === 'string' ? { ...unposKey(key), kind } : unposKey(key)))
             .sort(rowMajor);
+    }
+    if (world.blockLib) {
+        out.block_lib = Object.fromEntries(Object.entries(world.blockLib).map(([kind, e]) => [kind, {
+            walk: e.walk,
+            ...(e.struckBy.length > 0 ? { struck_by: [...e.struckBy] } : {}),
+            ...(e.pulsed ? { pulsed: true } : {}),
+            ...(e.wake ? { wake: { struck_by: [...e.wake.struckBy], becomes: e.wake.becomes } } : {}),
+        }]));
     }
     if (world.buttons?.size) {
         out.buttons = [...world.buttons.entries()]
@@ -1142,12 +1384,6 @@ export function serializeMazeEntities(world) {
     if (world.blockSinks?.size) {
         out.block_sinks = [...world.blockSinks].map(unposKey).sort(rowMajor);
     }
-    if (world.blockStrike) {
-        out.block_strike = {
-            struck_by: [...world.blockStrike.struckBy],
-            ...(world.blockStrike.reach !== undefined ? { reach: world.blockStrike.reach } : {}),
-        };
-    }
     if (world.pulls?.length) {
         out.pulls = world.pulls.map((p) => ({
             x: p.x, y: p.y, from: [...p.disc].filter((k) => k !== posKey(p.x, p.y)).map(unposKey).sort(rowMajor), gate: p.gate,
@@ -1156,6 +1392,9 @@ export function serializeMazeEntities(world) {
                     .sort((a, b) => rowMajor(a.to, b.to) || rowMajor(a.from, b.from)),
             } : {}),
         }));
+    }
+    if (world.pulsers?.length) {
+        out.pulsers = world.pulsers.map((p) => ({ x: p.x, y: p.y, token: p.token, reach: p.reach.map(unposKey) }));
     }
     return out;
 }
@@ -1262,6 +1501,8 @@ export function createState(world) {
     };
     if (world.blocks?.size) {
         state.blocks = [...world.blocks.keys()].sort();
+        // ⛓ BLOCK KINDS: where each kind stands, per visit (a wake changes one) — only on a `block_lib` world.
+        if (world.blockLib) state.blockKinds = Object.fromEntries(world.blocks);
     }
     // ⛓ ITEM ACTIONS — the same "absence is the switch" rule as `blocks`:
     // `facing` (one of N/E/S/W) and `broken` (a SORTED array of posKeys of the
@@ -1299,6 +1540,7 @@ function cloneState(state) {
         inventory: copyInventory(state.inventory),
     };
     if (state.blocks !== undefined) next.blocks = state.blocks.slice();
+    if (state.blockKinds !== undefined) next.blockKinds = { ...state.blockKinds };
     if (state.facing !== undefined) next.facing = state.facing;
     if (state.broken !== undefined) next.broken = state.broken.slice();
     return next;
@@ -1575,6 +1817,15 @@ export function standsInArmedLane(world, state, inventoryOverride) {
 // stays open for as long as the block sits there. This is why the gadget uses
 // a block, and it is a fact about the model rather than a defect in it.
 export function step(world, state, input, inventoryOverride, clearanceOpts) {
+    const next = stepCore(world, state, input, inventoryOverride, clearanceOpts);
+    if (next === null || !world.pulsers) return next;
+    // ⛓ PULSERS — the pulse ends every step (see `checkPulsers`); a player left in a live reach refuses it.
+    return settlePulses(world, next, inventoryOverride !== undefined ? inventoryOverride : next.inventory, clearanceOpts) === null
+        ? next : null;
+}
+
+/** `step` before the pulse that ends it (`settlePulses`): every input's own effect and guards. */
+function stepCore(world, state, input, inventoryOverride, clearanceOpts) {
     // A WAIT is a turn and nothing else: no arrival, so no pickup, no push,
     // no inventory change. Handled BEFORE the DELTAS lookup — WAIT has no
     // delta and would otherwise fall out as a refusal (slice S2a).
@@ -1605,11 +1856,14 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
             used.broken.push(...hits);
             used.broken.sort();
         }
-        // ⛓ STRUCK BLOCKS: the use moves every block it hits; a block moved off a button may arm the lane the player
-        // stands in (`step`'s last guard, on the stance after).
+        // ⛓ BLOCK KINDS: the use moves every block it hits that its kind lets it move, and wakes every one it wakes (a
+        // woken block is not moved by the same use: `checkBlockLib`); a block moved off a button may arm the lane the
+        // player stands in (`step`'s last guard, on the stance after).
         const pushes = strikePushes(world, state, actionId, inv, clearanceOpts);
+        const wakes = strikeWakes(world, state, actionId);
+        if (wakes.length > 0) used.blockKinds = { ...used.blockKinds, ...Object.fromEntries(wakes.map((w) => [w.at, w.becomes])) };
         if (pushes.length > 0) {
-            for (const p of pushes) used.blocks = blocksAfterPush(world, used.blocks, p.from, p.to);
+            for (const p of pushes) moveBlockIn(world, used, p.from, p.to);
             if (world.trapLanes && armedTrapAt(world, effectiveInventory(world, carried, used.player_pos, used.blocks, used.broken),
                 used.player_pos.x, used.player_pos.y) !== null) return null;
         }
@@ -1631,7 +1885,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     if (state.blocks !== undefined) {
         const targetKey = posKey(nx, ny);
         if (state.blocks.includes(targetKey)) {
-            if (world.blockStrike) return null; // ⛓ STRUCK BLOCKS: never walk-pushed
+            if (!blockEntryAt(world, state, targetKey)?.walk) return null; // ⛓ BLOCK KINDS: a struck kind is never walk-pushed
             const bx = nx + delta.dx;
             const by = ny + delta.dy;
             if (!blockGround(world, bx, by)) return null;
@@ -1650,7 +1904,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     next.player_pos.y = ny;
     next.turn += 1;
     if (next.facing !== undefined) next.facing = input;
-    if (pushedFrom !== null) next.blocks = blocksAfterPush(world, next.blocks, pushedFrom, pushedTo);
+    if (pushedFrom !== null) moveBlockIn(world, next, pushedFrom, pushedTo);
     // ⛓ ARROW TRAPS — LAST, on the stance AFTER the move (see `armedTrapAt`).
     if (world.trapLanes && armedTrapAt(world,
         effectiveInventory(world, carried, next.player_pos, next.blocks, next.broken), nx, ny) !== null) {
@@ -1761,6 +2015,18 @@ function shutBecause(world, obstacleId, inv) {
  * @returns {string|null} `null` iff `step` would return a state
  */
 export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts) {
+    const why = whyRefused(world, state, input, inventoryOverride, clearanceOpts);
+    if (why !== null || !world.pulsers) return why;
+    // ⛓ PULSERS — `step`'s last guard: the stance after the step's own pulse.
+    const next = stepCore(world, state, input, inventoryOverride, clearanceOpts);
+    if (next === null) return null;
+    const p = settlePulses(world, next, inventoryOverride !== undefined ? inventoryOverride : next.inventory, clearanceOpts);
+    return p === null ? null
+        : `pulse of the pulser at (${p.x},${p.y}) reaches (${next.player_pos.x},${next.player_pos.y}) — its group (${p.token}) is active`;
+}
+
+/** `whyBlocked` before the pulse: every guard of `stepCore`, in its order. */
+function whyRefused(world, state, input, inventoryOverride, clearanceOpts) {
     if (!world || !state) return 'no world or state loaded';
     // ⛓ S2a: a WAIT is always legal — the engine owns "a turn passes".
     if (input === INPUT_WAIT) return null;
@@ -1782,7 +2048,7 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
             const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
             if (!actionUsable(entry, inv)) return `use ${actionId} needs ${actionItems(entry).join(' + ')}`;
         }
-        if (world.blockStrike && world.trapLanes) {
+        if (world.blockLib && world.trapLanes) {
             const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
             const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
             let blocks = state.blocks;
@@ -1812,8 +2078,13 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
     if (entry === null) return `no entry into (${nx},${ny}) moving ${input}`;
     if (entry !== undefined) return `entry into (${nx},${ny}) moving ${input} is shut — ${shutBecause(world, entry, inv)}`;
     if (state.blocks !== undefined && state.blocks.includes(posKey(nx, ny))) {
-        if (world.blockStrike) {
-            return `block at (${nx},${ny}) is moved only by a strike (${world.blockStrike.struckBy.join(' or ')}, from up to ${world.blockStrike.reach} cell(s) away)`;
+        const kind = blockEntryAt(world, state, posKey(nx, ny));
+        if (!kind?.walk) {
+            const name = blockKindAt(world, state, posKey(nx, ny));
+            const how = kind?.struckBy.length ? `a strike moves it (${kind.struckBy.join(' or ')})`
+                : kind?.wake ? `nothing moves it until ${kind.wake.struckBy.join(' or ')} wakes it into ${kind.wake.becomes}`
+                    : kind?.pulsed ? 'only a pulse moves it' : 'nothing moves it';
+            return `block at (${nx},${ny}) (${name}) is not walk-pushed — ${how}`;
         }
         const bx = nx + delta.dx;
         const by = ny + delta.dy;
@@ -2000,7 +2271,9 @@ export function mazeVisitedKey(state) {
     const base = state.inventory.size === 0
         ? `${state.player_pos.x},${state.player_pos.y}|`
         : `${state.player_pos.x},${state.player_pos.y}|${inventoryKeyPart(state.inventory)}`;
-    const withBlocks = state.blocks === undefined ? base : `${base}|${state.blocks.join(';')}`;
+    const placed = state.blocks === undefined ? base : `${base}|${state.blocks.join(';')}`;
+    // ⛓ BLOCK KINDS append `|k<kind;…>` (in `blocks` order) ONLY on a `block_lib` world's state.
+    const withBlocks = state.blockKinds === undefined ? placed : `${placed}|k${state.blocks.map((k) => state.blockKinds[k]).join(';')}`;
     // ⛓ ITEM ACTIONS append `|f<dir>|<broken>` ONLY when the state has a facing,
     // so a key on any world without an `action_lib` is unchanged, byte for byte.
     return state.facing === undefined
@@ -2295,9 +2568,9 @@ function blockWorldAccessRules(world) {
             for (const item of actionItems(world.actionLib?.[actionId])) axis.add(item);
         }
     }
-    // ⛓ STRUCK BLOCKS: the items of the actions that move the world's blocks.
+    // ⛓ BLOCK KINDS: the items of the actions that move or wake the world's blocks.
     if (world.blocks?.size > 0) {
-        for (const actionId of world.blockStrike?.struckBy ?? []) {
+        for (const actionId of blockActionIds(world)) {
             for (const item of actionItems(world.actionLib?.[actionId])) axis.add(item);
         }
     }

@@ -10,7 +10,9 @@
 # entry (ENTRY GATES: the combos entering the cell needs MOVING this way; [] = no entry that way, None = no gate),
 # sink (BLOCK SINKS: a block pushed here sinks — water, lava, a pit — so it enters whatever the cell's clearance, and
 # PIT SINKS: even when the cell is not floor, a pit the player cannot walk),
-# pull (PULLS: the combos the trap whose disc this step enters from outside needs to reel the player in; None = no pull).
+# pull (PULLS: the combos the trap whose disc this step enters from outside needs to reel the player in; None = no pull),
+# kind / block_struck / wakes / pulsed (BLOCK KINDS, session tile-mechanisms-m1: the block's kind; the acting use moves it;
+# the acting use wakes it; a pulse moves it), pulse (PULSERS: the group token of the pulser whose reach holds the cell; None = none).
 
 
 def cleared(state, player, tile):
@@ -26,7 +28,23 @@ def player_may_enter(state, player, cell, tile):
 
 
 def block_may_enter(state, player, cell, tile):
-    return (tile.floor or tile.sink) and not tile.block and (tile.sink or cleared(state, player, tile)) and tile.entry is None
+    return (tile.floor or tile.sink) and not tile.block and not tile.player and (tile.sink or cleared(state, player, tile)) and tile.entry is None
+
+
+def block_struck(state, player, cell, tile):
+    return tile.block and tile.block_struck
+
+
+def woken(state, player, cell, tile):
+    return tile.block and tile.wakes
+
+
+def pulse_armed(state, player, cell, tile):
+    return tile.pulse is not None and state.has(tile.pulse, player)
+
+
+def pulse_shoves(state, player, cell, tile):
+    return tile.block and tile.pulsed and tile.pulse is not None and state.has(tile.pulse, player)
 
 
 def presses(state, player, cell, tile):

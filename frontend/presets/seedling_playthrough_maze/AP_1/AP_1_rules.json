@@ -52786,9 +52786,18 @@
           "blocks": [
             {
               "x": 7,
-              "y": 6
+              "y": 6,
+              "kind": "spear"
             }
           ],
+          "block_lib": {
+            "spear": {
+              "walk": false,
+              "struck_by": [
+                "spear"
+              ]
+            }
+          },
           "action_lib": {
             "spear": {
               "item": "Ghost Spear",
@@ -53425,11 +53434,6 @@
               "y": 19
             }
           ],
-          "block_strike": {
-            "struck_by": [
-              "spear"
-            ]
-          },
           "shared_world": {
             "key": "level_63",
             "regions": [
@@ -53841,9 +53845,18 @@
           "blocks": [
             {
               "x": 11,
-              "y": 8
+              "y": 8,
+              "kind": "spear"
             }
           ],
+          "block_lib": {
+            "spear": {
+              "walk": false,
+              "struck_by": [
+                "spear"
+              ]
+            }
+          },
           "action_lib": {
             "spear": {
               "item": "Ghost Spear",
@@ -54320,11 +54333,6 @@
               "y": 12
             }
           ],
-          "block_strike": {
-            "struck_by": [
-              "spear"
-            ]
-          },
           "shared_world": {
             "key": "level_65",
             "regions": [
@@ -54580,9 +54588,18 @@
           "blocks": [
             {
               "x": 9,
-              "y": 7
+              "y": 7,
+              "kind": "spear"
             }
           ],
+          "block_lib": {
+            "spear": {
+              "walk": false,
+              "struck_by": [
+                "spear"
+              ]
+            }
+          },
           "buttons": [
             {
               "x": 6,
@@ -54902,11 +54919,6 @@
               "y": 10
             }
           ],
-          "block_strike": {
-            "struck_by": [
-              "spear"
-            ]
-          },
           "shared_world": {
             "key": "level_67",
             "regions": [

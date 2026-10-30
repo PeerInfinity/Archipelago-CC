@@ -1125,9 +1125,14 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
     return out;
 }
 
-/** A world's `block_strike` from its blocks' one push `{by, reach}`: `reach` only when the row named one (no footprint). */
-function blockStrikeOf({ by, reach }) {
-    return { struck_by: by, ...(reach !== undefined ? { reach } : {}) };
+/**
+ * ⛓ BLOCK KINDS (session tile-mechanisms-m1): a block row's `block_lib` kind — `plain` (walk-pushed), or a struck block's
+ * kind named by the actions that move it (`spear`: Seedling's PushableBlockSpear) — and that kind's entry.
+ */
+function blockKindOf(row, actionFor) {
+    if (!row.strike) return { kind: 'plain', entry: { walk: true } };
+    const by = row.strike.map(actionFor);
+    return { kind: by.join('+'), entry: { walk: false, struck_by: by } };
 }
 
 /**
@@ -1139,7 +1144,7 @@ function blockStrikeOf({ by, reach }) {
  *   `{sub_regions, rows, origin:[x,y]}` (the atlas's persisted partition)
  * @param {Array<object>} entities `levelEntitiesFor`'s rows:
  *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item, footprint?} | {action, rule, footprint?}], reach?, label}`
- *   — a block with a `strike` is moved only by it, on its action's `footprint` or from up to `reach` cells (`block_strike`)
+ *   — a block with a `strike` is moved only by it, on its action's `footprint` (a `block_lib` kind named by its actions)
  * @returns {{ sidecars: object, notes: Array, analysis: null, sharedWorld: string }}
  */
 export function projectLevelWorld(region, grid, ctx, entities) {
@@ -1186,7 +1191,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
 
     // --- entity rows ---------------------------------------------------------
     const blocks = [];
-    let blockPush = null; // 'walk', or a struck block's JSON {by, reach} — one per world
+    const blockLib = {}; // ⛓ BLOCK KINDS: kind → entry, of the blocks laid
     const buttons = [];
     const buttonLib = {};
     const actionLib = {};
@@ -1256,15 +1261,18 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             const [x, y] = tiles[0];
             builder.floor(x, y);
             claimed.add(keyOf(x, y));
-            blocks.push({ x, y });
-            // ⛓ STRUCK BLOCKS (session tile-primitives-sphere-order-2, ⚖ "Reach-2 strike-push"): a block the game moves
-            // only by a hit (Seedling's PushableBlockSpear) names its strike; the world's `block_strike` says so for all.
-            const how = e.strike ? JSON.stringify({ by: e.strike.map(actionFor), reach: e.reach }) : 'walk';
-            if (blockPush !== null && blockPush !== how) {
-                throw new Error(`atlas region "${regionId}": ${e.label ?? 'a block'} is pushed ${how}, another block ${blockPush} `
-                    + '— one world moves all its blocks one way (a mixed world is not modelled)');
+            // ⛓ BLOCK KINDS (session tile-mechanisms-m1; struck blocks since tile-primitives-sphere-order-2, ⚖ "Reach-2
+            // strike-push"): a block the game moves only by a hit (Seedling's PushableBlockSpear) is a kind named by its
+            // strike, so one world may mix kinds. ⛔ The retired `reach` (cells straight ahead) is refused by name.
+            if (e.reach !== undefined) {
+                throw new Error(`atlas region "${regionId}": ${e.label ?? 'a block'} names a reach — retired; a strike hits its action's footprint`);
             }
-            blockPush = how;
+            const { kind, entry } = blockKindOf(e, actionFor);
+            if (blockLib[kind] !== undefined && JSON.stringify(blockLib[kind]) !== JSON.stringify(entry)) {
+                throw new Error(`atlas region "${regionId}": block kind "${kind}" is moved two ways (${JSON.stringify(blockLib[kind])}, ${JSON.stringify(entry)})`);
+            }
+            blockLib[kind] = entry;
+            blocks.push({ x, y, kind });
             continue;
         }
         if (e.kind === 'button') {
@@ -1751,6 +1759,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     // --- assemble: ONE payload, carried by the first sub-region --------------
     const carrier = bindings[0].apName;
     const sortRows = (a, b) => (a.y - b.y) || (a.x - b.x);
+    const struckKinds = Object.values(blockLib).some((e) => !e.walk);
     const payload = {
         width: grid.width,
         height: grid.height,
@@ -1766,14 +1775,14 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             return { x, y, id: entry.id, locationName: entry.locationName };
         }).sort(sortRows),
         obstacleLib: builder.obstacleLib,
-        ...(blocks.length > 0 ? { blocks: blocks.sort(sortRows) } : {}),
+        // A world of plain blocks alone carries no kinds (every block walk-pushed, the format before block kinds).
+        ...(blocks.length > 0 ? { blocks: blocks.map((b) => (struckKinds ? b : { x: b.x, y: b.y })).sort(sortRows) } : {}),
+        ...(struckKinds ? { block_lib: Object.fromEntries(Object.entries(blockLib).sort(([a], [b]) => (a < b ? -1 : 1))) } : {}),
         ...(buttons.length > 0 ? { buttons: buttons.sort(sortRows), buttonLib } : {}),
         ...(Object.keys(actionLib).length > 0 ? { action_lib: actionLib } : {}),
         ...(traps.length > 0 ? { traps: traps.sort(sortRows), trapLib } : {}),
         ...(entryGates.length > 0 ? { entry_gates: entryGates } : {}),
         ...(blockSinks.length > 0 ? { block_sinks: blockSinks } : {}),
-        ...(blockPush !== null && blockPush !== 'walk'
-            ? { block_strike: blockStrikeOf(JSON.parse(blockPush)) } : {}),
         ...(pulls.length > 0 ? { pulls: pullRows } : {}),
         shared_world: {
             key: regionId,

@@ -18,9 +18,16 @@
  *            `block_may_enter` condition lets it in through `tile.sink` whatever the cell's own clearance
  *   entry  — ENTRY GATES: entering a cell MOVING one way (a waterfall climbed north) needs its gate; read by
  *            the enter / push conditions through `tile.entry` (the gate's combos for THIS move's direction)
- *   strike-push — STRUCK BLOCKS (`block_strike`): a block is never walk-pushed; a use of a listed action moves
- *            every block within `reach` ahead one cell, farthest first (the push primitive's data, not a
- *            condition)                                  condition: tileLib.block.may_enter (asked of each next cell)
+ *   strike-push — BLOCK KINDS (`block_lib`, session tile-mechanisms-m1): a kind that is not `walk` is never
+ *            walk-pushed (data); a use moves each block of its footprint, farthest first, one cell the way the action's
+ *            `push` says (the native `strikeDelta`: geometry)   condition: tileLib.block.struck (is it moved by this use),
+ *            then tileLib.block.may_enter (asked of its next cell)
+ *   wake   — BLOCK KINDS: a use turns a block of its footprint into the kind its `wake` names (data)
+ *                                                       condition: tileLib.block.woken
+ *   pulse  — PULSERS: at the end of every step each block on a pulser's reach is pushed away from it (the native
+ *            `awayDelta`), simultaneously; then the player may not stand on a live reach
+ *                                                       conditions: tileLib.pulser.shoves (asked of each block on a
+ *            reach cell), tileLib.block.may_enter (of its next cell), tileLib.pulser.armed (of the player's cell)
  *
  * Helpers are called as `f(cell, tile)` with `state`/`player` ambient (⚖ Q4 v1): `state.has` reads
  * the EFFECTIVE inventory — carried plus held tokens — through the context's `hasItem`.
@@ -29,7 +36,8 @@
 import { evaluateRule } from '../../shared/ruleEngine/index.js';
 import {
     INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory, actionItems, actionUsable,
-    blocksAfterPush, sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch, pullCatching,
+    sinksBlock, footprintCells, blockStrikeCells, stanceStrikes, ropeLatch, pullCatching,
+    blockEntryAt, blockKindAt, moveBlockIn, strikeDelta, awayDelta,
 } from '../mazeRoomEngine.js';
 
 const DELTAS = { N: { dx: 0, dy: -1 }, S: { dx: 0, dy: 1 }, E: { dx: 1, dy: 0 }, W: { dx: -1, dy: 0 } };
@@ -37,11 +45,12 @@ const PLAYER = '1';
 
 export const MAZE_TILE_LIB = {
     cell: { primitive: 'enter', enter: 'player_may_enter' },
-    block: { primitive: 'push', may_enter: 'block_may_enter' },
+    block: { primitive: 'push', may_enter: 'block_may_enter', struck: 'block_struck', woken: 'woken' },
     button: { primitive: 'hold', pressed: 'presses' },
     trap: { primitive: 'lane', armed: 'lane_armed' },
     rope: { primitive: 'cut', cut: 'rope_cut' },
     pull: { primitive: 'pull', fires: 'pulled' },
+    pulser: { primitive: 'pulse', armed: 'pulse_armed', shoves: 'pulse_shoves' },
 };
 
 /**
@@ -71,8 +80,12 @@ function callHelper(context, name, cell, tile) {
  * The facts a v1 (cell-local) helper sees about one cell. `broken` is the state's per-visit list;
  * `actionId` is the use being asked about (`struck` = the obstacle lists it in `struck_by`).
  */
-function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = null, dir = null) {
+function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = null, dir = null, blockKinds = undefined) {
     const key = posKey(x, y);
+    // ⛓ BLOCK KINDS (session tile-mechanisms-m1): the block's kind here and what its kind entry says (data the conditions read).
+    const onBlock = blocks?.includes(key) ?? false;
+    const kindEntry = onBlock ? blockEntryAt(world, { blockKinds }, key) : null;
+    const pulser = world.pulsers?.find((p) => p.reach.includes(key)) ?? null;
     const obstacle = getObstacle(world, x, y) ?? null;
     const clearSet = obstacle === null ? null : clearSetOf(world, obstacle);
     const lanes = (world.trapLanes?.get(key) ?? []).map((i) => world.trapLib[world.traps[i].id]);
@@ -89,7 +102,14 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
     const catching = dir === null ? null : pullCatching(world, playerPos, { x, y });
     return {
         floor: isFloor(world, x, y),
-        block: blocks?.includes(key) ?? false,
+        block: onBlock,
+        kind: onBlock ? blockKindAt(world, { blockKinds }, key) : null,
+        // the acting use moves this block's kind / wakes it (BLOCK KINDS); a pulse moves it (`pulsed`)
+        block_struck: actionId !== null && (kindEntry?.struckBy.includes(actionId) ?? false),
+        wakes: actionId !== null && (kindEntry?.wake?.struckBy.includes(actionId) ?? false),
+        pulsed: kindEntry?.pulsed ?? false,
+        // PULSERS: the group token of the pulser whose reach holds this cell (null: none reaches it)
+        pulse: pulser?.token ?? null,
         player: playerPos.x === x && playerPos.y === y,
         button: world.buttons?.get(key) ?? null,
         obstacle,
@@ -201,7 +221,47 @@ export function scriptedStandsInArmedLane(world, state, helpers, tileLib = MAZE_
  * `{ next: null, refused: { primitive, cell, helper } }`. `latch: false` turns the item pickup
  * off: an AP-logic search holds a fixed inventory and a location tile grants nothing.
  */
-export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_LIB, { latch = true } = {}) {
+export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_LIB, opts = {}) {
+    const out = scriptedStepCore(world, state, input, helpers, tileLib, opts);
+    if (out.next === null || !world.pulsers) return out;
+    return scriptedPulse(world, out.next, helpers, tileLib);
+}
+
+/**
+ * ⛓ PULSERS — the pulse that ends every scripted step, on `next` (FRESH, mutated): rounds in which each block on a reach
+ * cell is asked of `shoves` and its next cell (the native `awayDelta` from its pulser) of `may_enter`, all against the
+ * blocks before the round, until a round moves nothing; then the player's cell, if a reach cell, of `armed`.
+ */
+function scriptedPulse(world, next, helpers, tileLib) {
+    const at = (x, y, dir = null) => tileAt(world, x, y, next.blocks, next.player_pos, next.broken, null, dir, next.blockKinds);
+    // Rounds until one moves nothing (the native `settlePulses`; `checkPulsers` makes it end).
+    for (let moves = null; moves === null || moves.length > 0;) {
+        const ctx = makeContext(helpers, scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken));
+        moves = [];
+        for (const key of next.blocks ?? []) {
+            const [x, y] = key.split(',').map(Number);
+            const here = at(x, y);
+            if (here.pulse === null || !callHelper(ctx, tileLib.pulser.shoves, { x, y }, here)) continue;
+            const d = awayDelta(world.pulsers.find((p) => p.reach.includes(key)), { x, y });
+            if (d === null) continue;
+            const dir = Object.keys(DELTAS).find((k) => DELTAS[k].dx === d.dx && DELTAS[k].dy === d.dy);
+            if (!callHelper(ctx, tileLib.block.may_enter, { x: x + d.dx, y: y + d.dy }, at(x + d.dx, y + d.dy, dir))) continue;
+            moves.push([key, posKey(x + d.dx, y + d.dy)]);
+        }
+        for (const [from, to] of moves) moveBlockIn(world, next, from, to);
+    }
+    const { x, y } = next.player_pos;
+    const stand = at(x, y);
+    if (stand.pulse !== null) {
+        const after = makeContext(helpers, scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken));
+        if (callHelper(after, tileLib.pulser.armed, { x, y }, stand)) {
+            return { next: null, refused: { primitive: 'pulse', cell: { x, y }, helper: tileLib.pulser.armed } };
+        }
+    }
+    return { next, refused: null };
+}
+
+function scriptedStepCore(world, state, input, helpers, tileLib, { latch = true } = {}) {
     if (input === INPUT_WAIT) {
         return { next: { ...cloneState(state), turn: state.turn + 1 }, refused: null };
     }
@@ -222,7 +282,6 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
         if (!actionUsable(entry, inv)) {
             return { next: null, refused: { primitive: 'strike', cell: null, helper: null, item: actionItems(entry).join(' + ') } };
         }
-        const d = DELTAS[state.facing];
         const next = cloneState(state);
         next.turn += 1;
         // ⚖ "use at air" is legal: the condition only decides whether each cell of the use's footprint BREAKS
@@ -249,18 +308,33 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
             struck.add(key);
         }
         next.broken.sort();
-        // ⛓ STRUCK BLOCKS (session tile-primitives-sphere-order-2): the native `strikePushes` over the native
-        // `blockStrikeCells` (farthest first), the next cell asked of the push condition; a block moved off a button
-        // may arm the lane the player stands in.
-        if (world.blockStrike?.struckBy.includes(actionId) && state.blocks?.length) {
+        // ⛓ BLOCK KINDS (session tile-mechanisms-m1; struck blocks since tile-primitives-sphere-order-2): the native
+        // `blockStrikeCells` (farthest first); each block there asked of the `struck` condition, its move the native
+        // `strikeDelta` (null: a diagonal, not moved), its next cell asked of the push condition; then each block of the
+        // footprint asked of the `woken` condition against the stance BEFORE the use. A block moved off a button may arm
+        // the lane the player stands in.
+        if (world.blockLib && state.blocks?.length) {
             const moved = next.blocks;
             for (const { x, y } of blockStrikeCells(world, state, actionId)) {
                 if (!next.blocks.includes(posKey(x, y))) continue;
-                const bx = x + d.dx;
-                const by = y + d.dy;
-                const beyond = tileAt(world, bx, by, next.blocks, state.player_pos, state.broken, null, state.facing);
+                const here = tileAt(world, x, y, next.blocks, state.player_pos, state.broken, actionId, null, next.blockKinds);
+                if (!callHelper(ctx, tileLib.block.struck, { x, y }, here)) continue;
+                const step = strikeDelta(world, state, actionId, { x, y });
+                if (step === null) continue;
+                const bx = x + step.dx;
+                const by = y + step.dy;
+                const dir = Object.keys(DELTAS).find((k) => DELTAS[k].dx === step.dx && DELTAS[k].dy === step.dy);
+                const beyond = tileAt(world, bx, by, next.blocks, state.player_pos, state.broken, null, dir, next.blockKinds);
                 if (!callHelper(ctx, tileLib.block.may_enter, { x: bx, y: by }, beyond)) continue;
-                next.blocks = blocksAfterPush(world, next.blocks, posKey(x, y), posKey(bx, by));
+                moveBlockIn(world, next, posKey(x, y), posKey(bx, by));
+            }
+            for (const { x, y } of footprintCells(world, state, actionId)) {
+                const key = posKey(x, y);
+                const here = tileAt(world, x, y, state.blocks, state.player_pos, state.broken, actionId, null, state.blockKinds);
+                if (!here.block || !callHelper(ctx, tileLib.block.woken, { x, y }, here)) continue;
+                // `becomes` is data: a kind that names no wake has nothing to become, whatever the condition says.
+                const becomes = blockEntryAt(world, state, key)?.wake?.becomes;
+                if (becomes !== undefined) next.blockKinds = { ...next.blockKinds, [key]: becomes };
             }
             if (next.blocks !== moved && world.trapLanes && scriptedStandsInArmedLane(world, next, helpers, tileLib)) {
                 return { next: null, refused: { primitive: 'lane', cell: { ...state.player_pos }, helper: tileLib.trap.armed } };
@@ -280,7 +354,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     }
     let pushedFrom = null;
     let pushedTo = null;
-    if (target.block && world.blockStrike) {
+    if (target.block && !blockEntryAt(world, state, posKey(nx, ny))?.walk) {
         return { next: null, refused: { primitive: 'push', cell: { x: nx, y: ny }, helper: null } };
     }
     if (target.block) {
@@ -298,7 +372,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     next.turn += 1;
     if (next.facing !== undefined) next.facing = input;
     // ⛓ BLOCK SINKS: the push primitive's effect — onto a sink cell the block is gone (the helper said it may enter).
-    if (pushedFrom !== null) next.blocks = blocksAfterPush(world, next.blocks, pushedFrom, pushedTo);
+    if (pushedFrom !== null) moveBlockIn(world, next, pushedFrom, pushedTo);
     if (world.trapLanes && scriptedStandsInArmedLane(world, next, helpers, tileLib)) {
         return { next: null, refused: { primitive: 'lane', cell: { x: nx, y: ny }, helper: tileLib.trap.armed } };
     }
@@ -326,6 +400,7 @@ function cloneState(state) {
         inventory: copyInventory(state.inventory),
     };
     if (state.blocks !== undefined) next.blocks = state.blocks.slice();
+    if (state.blockKinds !== undefined) next.blockKinds = { ...state.blockKinds };
     if (state.facing !== undefined) next.facing = state.facing;
     if (state.broken !== undefined) next.broken = state.broken.slice();
     return next;
