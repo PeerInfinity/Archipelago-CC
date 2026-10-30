@@ -29,87 +29,92 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const M = (p) => import(join(HERE, '..', '..', 'frontend/modules/seedlingDemo', p));
 
-const { bootAtTile, emptyLevel, oelAtTile, withEntities } = await M('procgenLevel.js');
-const { DEFAULT_BUDGET, bootStaging, collectGoal, solve } = await M('procgenOracle.js');
-const { withArrowLaneCrossing } = await M('arrowLaneCrossing.js');
-const { PRE_SWORD_ITEMS, POST_SWORD_ITEMS, POST_SHIELD_ITEMS } = await M('procgenPalette.js');
+/** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help`'s import door): the solves are all `main()`'s. */
+async function main() {
+    const { bootAtTile, emptyLevel, oelAtTile, withEntities } = await M('procgenLevel.js');
+    const { DEFAULT_BUDGET, bootStaging, collectGoal, solve } = await M('procgenOracle.js');
+    const { withArrowLaneCrossing } = await M('arrowLaneCrossing.js');
+    const { PRE_SWORD_ITEMS, POST_SWORD_ITEMS, POST_SHIELD_ITEMS } = await M('procgenPalette.js');
 
-const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
-    ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
-const has = (name) => process.argv.includes(`--${name}`);
+    const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
+        ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
+    const has = (name) => process.argv.includes(`--${name}`);
 
-const LEVEL = 900;
-const START = { tx: 1, ty: 1 };
-const LANE_TX = 4;
+    const LEVEL = 900;
+    const START = { tx: 1, ty: 1 };
+    const LANE_TX = 4;
 
-const ITEMS = { 'pre-sword': PRE_SWORD_ITEMS, 'post-sword': POST_SWORD_ITEMS, 'post-shield': POST_SHIELD_ITEMS };
+    const ITEMS = { 'pre-sword': PRE_SWORD_ITEMS, 'post-sword': POST_SWORD_ITEMS, 'post-shield': POST_SHIELD_ITEMS };
 
-const ent = (type, tx, ty, attrs) => ({ type, ...oelAtTile(tx, ty), ...(attrs ? { attrs } : {}) });
+    const ent = (type, tx, ty, attrs) => ({ type, ...oelAtTile(tx, ty), ...(attrs ? { attrs } : {}) });
 
-function room(name) {
-    const [sw, sh] = arg('size', '').split('x').map(Number);
-    const base = emptyLevel({ level: LEVEL, ...(sw && sh ? { width: sw, height: sh } : {}) });
-    const W = base.width;
-    const H = base.height;
-    const [gx, gy] = arg('goal', `${W - 2},${H - 2}`).split(',').map(Number);
-    const goal = { tx: gx, ty: gy };
-    const trap = (shoot) => ent('arrowtrap', LANE_TX, 1, { tset: '0', shoot: String(shoot) });
-    const entities = [ent('torchpickup', goal.tx, goal.ty, { tag: '0' })];
-    switch (name) {
-        case 'bare': entities.push(trap(1)); break;
-        case 'button': entities.push(trap(1), ent('button', 2, H - 3, { tset: '0' })); break;
-        case 'button-block':
-            entities.push(trap(1), ent('button', 1, H - 3, { tset: '0' }), ent('pushableblock', 2, H - 3));
-            break;
-        case 'rope':
-            // A rope is a SPAN, `x` to its one node's `x` (L16's runs (32,16)→(80,16)); this one spans two cells.
-            entities.push(trap(1), { ...ent('rope', 1, H - 3, { tset: '0', tag: '1' }),
-                nodes: [oelAtTile(2, H - 3)] });
-            break;
-        case 'weapon': entities.push(trap(0), ent('button', 2, H - 3, { tset: '0' })); break;
-        default: throw new Error(`unknown room ${name}`);
+    function room(name) {
+        const [sw, sh] = arg('size', '').split('x').map(Number);
+        const base = emptyLevel({ level: LEVEL, ...(sw && sh ? { width: sw, height: sh } : {}) });
+        const W = base.width;
+        const H = base.height;
+        const [gx, gy] = arg('goal', `${W - 2},${H - 2}`).split(',').map(Number);
+        const goal = { tx: gx, ty: gy };
+        const trap = (shoot) => ent('arrowtrap', LANE_TX, 1, { tset: '0', shoot: String(shoot) });
+        const entities = [ent('torchpickup', goal.tx, goal.ty, { tag: '0' })];
+        switch (name) {
+            case 'bare': entities.push(trap(1)); break;
+            case 'button': entities.push(trap(1), ent('button', 2, H - 3, { tset: '0' })); break;
+            case 'button-block':
+                entities.push(trap(1), ent('button', 1, H - 3, { tset: '0' }), ent('pushableblock', 2, H - 3));
+                break;
+            case 'rope':
+                // A rope is a SPAN, `x` to its one node's `x` (L16's runs (32,16)→(80,16)); this one spans two cells.
+                entities.push(trap(1), { ...ent('rope', 1, H - 3, { tset: '0', tag: '1' }),
+                    nodes: [oelAtTile(2, H - 3)] });
+                break;
+            case 'weapon': entities.push(trap(0), ent('button', 2, H - 3, { tset: '0' })); break;
+            default: throw new Error(`unknown room ${name}`);
+        }
+        return { record: withEntities(base, entities), goal, size: `${W}x${H}` };
     }
-    return { record: withEntities(base, entities), goal, size: `${W}x${H}` };
-}
 
-const rooms = arg('rooms', 'bare,button,button-block,rope,weapon').split(',');
-const itemSets = arg('items', 'pre-sword,post-sword,post-shield').split(',');
-const crossings = arg('crossing', 'off,on').split(',');
+    const rooms = arg('rooms', 'bare,button,button-block,rope,weapon').split(',');
+    const itemSets = arg('items', 'pre-sword,post-sword,post-shield').split(',');
+    const crossings = arg('crossing', 'off,on').split(',');
 
-const rows = [];
-for (const r of rooms) {
-    const { record, goal, size } = room(r);
-    for (const it of itemSets) {
-        for (const c of crossings) {
-            const staging = bootStaging({ boot: bootAtTile(record, START.tx, START.ty), items: ITEMS[it] });
-            const goals = [collectGoal(goal.tx * 16, goal.ty * 16)];
-            const t0 = Date.now();
-            let out;
-            try {
-                out = withArrowLaneCrossing(c === 'on', () => solve(record, staging, goals, DEFAULT_BUDGET,
-                    { name: `gen-arrow-${r}` }));
-            } catch (e) {
-                out = { verdict: 'THREW', reasonText: `${e?.name}: ${String(e?.message ?? e)}` };
-            }
-            const ms = Date.now() - t0;
-            const strategies = [...new Set((out.records ?? []).flatMap((rec) => [rec.strategy,
-                ...(rec.forcedHits ?? []).map((f) => `forced:${f.candidate}`)]).filter(Boolean))];
-            const row = { room: r, size, items: it, crossing: c, verdict: out.verdict, ms, ticks: out.ticks ?? null,
-                strategies, hits: out.records?.at(-1)?.damage?.hits ?? null,
-                why: out.verdict === 'SOLVED' ? '' : String(out.reasonText ?? '').split('\n')[0].slice(0, 300),
-                full: has('full') ? String(out.reasonText ?? '') : undefined };
-            rows.push(row);
-            if (!has('json')) {
-                process.stdout.write(`${r}\t${it}\tcrossing=${c}\t${row.verdict}\t${ms} ms\tticks=${row.ticks}`
-                    + `\t[${strategies.join(',')}]${row.why ? `\n    ${row.why}` : ''}\n`);
+    const rows = [];
+    for (const r of rooms) {
+        const { record, goal, size } = room(r);
+        for (const it of itemSets) {
+            for (const c of crossings) {
+                const staging = bootStaging({ boot: bootAtTile(record, START.tx, START.ty), items: ITEMS[it] });
+                const goals = [collectGoal(goal.tx * 16, goal.ty * 16)];
+                const t0 = Date.now();
+                let out;
+                try {
+                    out = withArrowLaneCrossing(c === 'on', () => solve(record, staging, goals, DEFAULT_BUDGET,
+                        { name: `gen-arrow-${r}` }));
+                } catch (e) {
+                    out = { verdict: 'THREW', reasonText: `${e?.name}: ${String(e?.message ?? e)}` };
+                }
+                const ms = Date.now() - t0;
+                const strategies = [...new Set((out.records ?? []).flatMap((rec) => [rec.strategy,
+                    ...(rec.forcedHits ?? []).map((f) => `forced:${f.candidate}`)]).filter(Boolean))];
+                const row = { room: r, size, items: it, crossing: c, verdict: out.verdict, ms, ticks: out.ticks ?? null,
+                    strategies, hits: out.records?.at(-1)?.damage?.hits ?? null,
+                    why: out.verdict === 'SOLVED' ? '' : String(out.reasonText ?? '').split('\n')[0].slice(0, 300),
+                    full: has('full') ? String(out.reasonText ?? '') : undefined };
+                rows.push(row);
+                if (!has('json')) {
+                    process.stdout.write(`${r}\t${it}\tcrossing=${c}\t${row.verdict}\t${ms} ms\tticks=${row.ticks}`
+                        + `\t[${strategies.join(',')}]${row.why ? `\n    ${row.why}` : ''}\n`);
+                }
             }
         }
     }
+    if (has('json')) process.stdout.write(`${JSON.stringify(rows, null, 2)}\n`);
 }
-if (has('json')) process.stdout.write(`${JSON.stringify(rows, null, 2)}\n`);
+
+if (isEntryPoint(import.meta.url)) await main();
