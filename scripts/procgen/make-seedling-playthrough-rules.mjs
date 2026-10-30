@@ -171,6 +171,9 @@ const analyzerOptions = {
 
 const CROSS_LEVEL_OPENERS = OV.buildCrossLevelOpeners(MAP);
 const GROUP_OPENERS = OV.buildGroupOpeners(MAP);
+// ⛓ RULES l112-owl-rocklock — the group openers that are scripts, not buttons (`OV.SCRIPT_GROUP_OPENERS`): a grouped
+// lock whose level holds no in-level opener is priced by one of these or throws.
+const SCRIPT_OPENERS = OV.buildScriptOpeners(MAP);
 /** ⛓ RULES kill-locks — every kill-lock room's census and ruling (`OV.killLockRoomRuling`). */
 const KILL_LOCKS = OV.buildKillLockRulings(MAP);
 // ⛓ RULES block-path — who can hold each re-closing lock's button (the room's pushables; ⚖ enemies don't
@@ -181,7 +184,7 @@ const BLOCK_HOLDERS = OV.buildBlockHolders(MAP);
 export const playthroughKillLocks = KILL_LOCKS;
 const entityOverride = (entity, base, level) => {
     return OV.overlayEntitySemantics(entity, base, {
-        level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
+        level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS, scriptOpeners: SCRIPT_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
     });
 };
 
@@ -1477,7 +1480,7 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
     const B = barrierAnalysis(doc);
     const { entityOf, killsOf } = B;
     const ruling = (t, crossLevelOpeners) => OV.overlayEntitySemantics(entityOf(t), SEM.entitySemantics(entityOf(t)), {
-        level: t.level, crossLevelOpeners, groupOpeners: GROUP_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
+        level: t.level, crossLevelOpeners, groupOpeners: GROUP_OPENERS, scriptOpeners: SCRIPT_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
     });
     return deriveButtonEvents(crossRoomButtonsOf(MAP), {
         existing,

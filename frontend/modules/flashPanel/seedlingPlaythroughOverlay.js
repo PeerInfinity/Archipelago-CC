@@ -303,6 +303,76 @@ export const GROUPED_LOCK_EXCEPTIONS = Object.freeze({
 });
 
 /**
+ * ⛓⛓ RULES l112-owl-rocklock — THE GROUP OPENERS THAT ARE NOT BUTTONS.
+ *
+ * The `tSet >= 0` arm calls a grouped lock free because "its group's
+ * Button/ButtonRoom is pressed by any body". That premise names an IN-LEVEL
+ * opener, and `buildGroupOpeners` is its census (a Button, a `room == -1`
+ * ButtonRoom, a rope). Where the level holds none, the lock's group is opened
+ * by a SCRIPT, or by nothing — and the premise is false.
+ *
+ * The scripts are read off the AS3: `Button.activateAll` has exactly two
+ * callers, `Puzzlements/Button.as:46` (the button itself) and
+ * `Enemies/FinalBoss.as:218`, so there is ONE row. A row names the class tag
+ * whose code opens the group, the group it publishes, the persistence tag it
+ * clears relative to its own (`tagOffset`), and the overlay row whose
+ * condition is that body's kill rule — the lock costs exactly what killing the
+ * body costs. `seedlingPlaythroughOverlay.test.js` re-reads the AS3 callers.
+ */
+export const SCRIPT_GROUP_OPENERS = Object.freeze({
+    finalboss: Object.freeze({
+        group: 0,
+        tagOffset: 1,
+        killRule: 'finalboss',
+        cite: 'Enemies/FinalBoss.as:212-224 (`endAnim` "dead": `Button.activateAll(null, 0, true)` '
+            + '+ `Game.setPersistence(tag+1, false)`) + Puzzlements/RockLock.as:31-37 (`check()` removes the rock '
+            + 'when its tag is cleared, whatever its tSet)',
+        why: 'a GROUPED lock whose level holds no Button/ButtonRoom/rope of its group: the Owl\'s DEATH opens '
+            + 'it (`activateAll` on group 0) and clears its tag (the Owl\'s tag + 1), so the rock is gone on '
+            + 'every later entry. It costs the Owl\'s own kill rule (the overlay\'s `finalboss` row).',
+    }),
+});
+
+/**
+ * `"<level>:<group>"` -> `{ opener, tag, row }` for every placed body whose
+ * class is a `SCRIPT_GROUP_OPENERS` row, `tag` being the persistence tag its
+ * script clears (its own + `tagOffset`).
+ */
+export function buildScriptOpeners(mapDoc) {
+    const out = new Map();
+    for (const level of mapDoc?.levels ?? []) {
+        for (const e of level.entities ?? []) {
+            const row = SCRIPT_GROUP_OPENERS[e.type];
+            if (!row) continue;
+            out.set(`${level.level}:${row.group}`, {
+                opener: `${e.type}@${e.x},${e.y}`, tag: Number(e.attrs?.tag) + row.tagOffset, row,
+            });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓ The census the premise check stands on: every GROUPED lock-family
+ * placement whose level holds no in-level opener of its group, and the
+ * script opener that resolves it (null where none does — `lockRuling` throws
+ * on that one by name).
+ */
+export function groupedLocksWithoutOpener(mapDoc) {
+    const groups = buildGroupOpeners(mapDoc);
+    const scripts = buildScriptOpeners(mapDoc);
+    const out = [];
+    for (const level of mapDoc?.levels ?? []) {
+        for (const e of level.entities ?? []) {
+            const t = Number(e.attrs?.tset);
+            if (!LOCK_FAMILY.has(e.type) || !(t >= 0) || groups.has(`${level.level}:${t}`)) continue;
+            out.push({ site: `${level.level}:${e.type}@${e.x},${e.y}`, script: scripts.get(`${level.level}:${t}`)?.opener ?? null });
+        }
+    }
+    return out;
+}
+
+/**
  * ⛓⛓⛓ RULES kill-locks — **WHAT A KILL-LOCK ROOM REALLY COSTS, read from the
  * game's own kill paths rather than assumed to be "a weapon".**
  *
@@ -584,6 +654,23 @@ function lockRuling(entity, ctx) {
         const site = `${ctx?.level}:${entity.type}@${entity.x},${entity.y}`;
         const ruled = GROUPED_LOCK_EXCEPTIONS[site];
         if (ruled) return GATED(ruled.condition, ruled.cite, ruled.why);
+        // ⛓ RULES l112-owl-rocklock — and the premise's OTHER half: the group
+        // has an in-level opener at all. Checkable only where the caller
+        // supplies the census (`buildGroupOpeners`); where the level holds
+        // none, a `SCRIPT_GROUP_OPENERS` body opens it, or nothing does.
+        if (ctx?.groupOpeners && !ctx.groupOpeners.has(`${ctx.level}:${tSet}`)) {
+            const script = ctx.scriptOpeners?.get(`${ctx.level}:${tSet}`);
+            const durable = script && entity.type === 'rocklock' && Number(tag) === script.tag;
+            if (!durable) {
+                throw new Error(`seedlingPlaythroughOverlay: grouped lock ${site} (tSet ${tSet}, tag ${tag}) has no `
+                    + 'in-level opener of its group'
+                    + (script ? ` and its script opener ${script.opener} clears tag ${script.tag}, not a durable opening of it`
+                        : ' and no SCRIPT_GROUP_OPENERS row') + ' — read the AS3 before ruling it');
+            }
+            const rule = PLAYTHROUGH_ENTITY_OVERLAY[script.row.killRule];
+            return GATED(rule.condition, `${script.row.cite} + the overlay's \`${script.row.killRule}\` row (${rule.cite})`,
+                `${script.row.why} Opened by ${script.opener}.`);
+        }
         // ⛓ RULES re-closing locks — see `buildGroupOpeners`. `directional`
         // with no condition: free to cross, but `buildSeedlingRegionGrid`
         // (under `directionalLocks`) walls every ENTRY from a side that cannot
