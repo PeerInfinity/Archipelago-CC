@@ -69,7 +69,7 @@ const LEVEL_WORLD_PROJECTION = '`projectLevelWorld` (`procgenPipeline/regionAtla
  * projection's `projectLevelWorld` emits `blocks`, `buttons`, `buttonLib`,
  * `action_lib`, `traps`, `trapLib` (arrow traps, session tile-primitives-arrow-rope), `entry_gates`
  * (session tile-primitives-water-exits), `block_sinks` (session tile-primitives-sphere-order-1), `block_strike`
- * (session tile-primitives-sphere-order-2) and
+ * (session tile-primitives-sphere-order-2), `pulls` (session tile-primitives-sphere-order-9) and
  * `shared_world` on the ONE payload a level world carries (every other sub-region of that level is a payload-less alias entry — see
  * `rules.schema.json` `presetSidecarEntry.shared_world`). Each is omitted on
  * every other payload, so the corpus they were measured on is unmoved.
@@ -229,6 +229,20 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
                 dir: Object.freeze({ type: 'string' }),
                 gate: Object.freeze({ type: ['string', 'null'] }),
             }, ['dir', 'gate']),
+        }),
+    }),
+    pulls: Object.freeze({
+        type: 'array', required: false,
+        description: 'Pulls (session tile-primitives-sphere-order-9) `{x, y, from: [{x, y}…], gate}`: a trap at (x, y) that '
+            + 'reels the player onto its own cell — a MOVE from outside its disc (`from` + its own cell) into it, holding the '
+            + 'clearance of `obstacleLib.<gate>`, ends on (x, y) (Seedling\'s LavaTrap: its tongue crosses lava or a pit, '
+            + 'survived with the Dark Suit; it re-arms only once the player has left its range). Read through `checkPulls`. '
+            + 'Written by `projectLevelWorld` from the rules producer\'s own discs (`lavaTrapPulls`); omitted when there are none.',
+        schema: Object.freeze({
+            items: atXY({
+                from: Object.freeze({ type: 'array', items: atXY() }),
+                gate: Object.freeze({ type: 'string' }),
+            }, ['from', 'gate']),
         }),
     }),
     block_sinks: Object.freeze({
