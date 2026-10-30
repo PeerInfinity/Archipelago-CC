@@ -132,6 +132,13 @@ async function main() {
                     await page.waitForFunction(() => window.__editorJs?.reached?.includes('running')
                         || window.__editorJs?.refusal, null, { timeout: 120000 });
                     const armedAt = async () => frame.evaluate(() => JSON.parse(window.__swfBridge.game.botStatus()));
+                    // `running` can be reached before the first tape tick (CI measured tick 0→0 over a fixed 300 ms):
+                    // wait for the tape to STEP, then hold the input until it has stepped again — by tick, not time.
+                    const tickPast = (n) => frame.waitForFunction((k) => {
+                        const st = JSON.parse(window.__swfBridge.game.botStatus());
+                        return st.tick > k || st.finished;
+                    }, n, { timeout: 60000 }).catch(() => null);
+                    await tickPast(0);
                     const pre = await armedAt();
                     for (const key of ['ArrowLeft', 'KeyX', 'KeyV']) await page.keyboard.down(key);
                     const pad = await page.evaluate(() => {
@@ -143,7 +150,7 @@ async function main() {
                         await page.mouse.move(pad.x + pad.w * 0.88, pad.y + pad.h / 2);
                         await page.mouse.down();
                     }
-                    await page.waitForTimeout(300);
+                    await tickPast(pre.tick + 4);
                     if (pad) await page.mouse.up();
                     for (const key of ['ArrowLeft', 'KeyX', 'KeyV']) await page.keyboard.up(key);
                     const post = await armedAt();
