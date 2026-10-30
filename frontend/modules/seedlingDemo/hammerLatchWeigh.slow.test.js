@@ -12,12 +12,15 @@
  * The rows where the reorder must not move anything (no turret, a turret out of range, no corpse route) are fast and
  * built in `hammerLatchWeigh.test.js`: on L40 every switch that removes the corpse route (`fireLiveTurretReach`,
  * `blockSweepBodies`, `corpseBumpWeigh`) refuses the whole chain at t0 on `button@816,400`, before the reorder is asked.
+ * ⛓ hammer-phase APPROACH: both rows are LWEIGH's own walk, so they run with `TURRET_APPROACH` pinned OFF (ON, the
+ * second solves — `hammerTurretApproach.slow.test.js` — and the first meets the arrival's bobsoldier on the staging walk).
  */
 import { describe, expect, it } from 'vitest';
 
 import { l40LatchBoot, l40LatchSolve } from './fidelityL40Latch.js';
 import {
     CHOOSER_PAIR, LATCH_WEIGH_FIRST_COUNTS, resetLatchWeighFirstCounts, withChooserPair, withLatchWeighFirst,
+    withTurretApproach,
 } from './solverBot.js';
 
 const TURRET = 'iceturret@472,400';
@@ -59,9 +62,9 @@ async function replayLatch(perTick, equips) {
 describe('hammer-phase LWEIGH on the latch chain (slow)', () => {
     it('OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271', async () => {
         const boot = await l40LatchBoot();
-        const off = await withLatchWeighFirst(false, () => l40LatchSolve(boot));
+        const off = await withTurretApproach(false, () => withLatchWeighFirst(false, () => l40LatchSolve(boot)));
         resetLatchWeighFirstCounts();
-        const on = await withLatchWeighFirst(true, () => l40LatchSolve(boot));
+        const on = await withTurretApproach(false, () => withLatchWeighFirst(true, () => l40LatchSolve(boot)));
         expect(off.refusal.message).toMatch(/-> shove stance \(pushableblockfire@576,576\) -> hold stance \(wandlock@448,432\): the combat ladder is EXHAUSTED/);
         expect(on.refusal.message).toMatch(/-> shove stance \(pushableblockfire@576,576\) -> weigh stance \(wandlock@448,432\): the combat ladder is EXHAUSTED/);
         for (const r of [off, on]) {
@@ -76,7 +79,7 @@ describe('hammer-phase LWEIGH on the latch chain (slow)', () => {
     it('ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name', async () => {
         const boot = await l40LatchBoot();
         const r = await withPairSize(3, () => withChooserPair(true, () => withLatchWeighFirst(true,
-            () => l40LatchSolve(boot))));
+            () => withTurretApproach(false, () => l40LatchSolve(boot)))));
         expect(r.out).toBeNull();
         expect(r.refusal.message).toMatch(/-> weigh \(wandlock@448,432\): the reordered corpse weigh took a hit at t917 \(blast:iceturret@472,400#[0-9.]+\) on its way to iceturret@472,400's kill stance \(488,445\)/);
         expect(r.refusal.obstacle).toEqual({ kind: 'danger', id: TURRET });

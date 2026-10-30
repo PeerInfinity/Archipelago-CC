@@ -1,0 +1,6237 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 838983[2mms[22m[39m
+     [33m[2m✓[22m[39m ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte [33m 567352[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit [33m 271627[2mms[22m[39m
+ [31m❯[39m frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js [2m([22m[2m2 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 552802[2mms[22m[39m
+[31m     [31m×[31m OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271[39m[33m 373483[2mms[22m[39m
+[31m     [31m×[31m ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name[39m[33m 179317[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Latch.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 386334[2mms[22m[39m
+     [33m[2m✓[22m[39m holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier [33m 106948[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON: the solve's refused prefix is the recorded tape [33m 279384[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 390413[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast [33m 171127[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run [33m 176392[2mms[22m[39m
+     [33m[2m✓[22m[39m ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached [33m 42890[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Bk2.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 315987[2mms[22m[39m
+     [33m[2m✓[22m[39m the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape [33m 315985[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js[2m > [22mhammer-phase LWEIGH on the latch chain (slow)[2m > [22mOFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271
+[31m[1mAssertionError[22m: expected 'solverBot(l40latch) collect (656,528)…' to match /-> shove stance \(pushableblockfire@5…/[39m
+
+[32m- Expected:[39m 
+/-> shove stance \(pushableblockfire@576,576\) -> weigh stance \(wandlock@448,432\): the combat ladder is EXHAUSTED/
+
+[31m+ Received:[39m 
+"solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh -> iceturret@472,400 approach staging (488,579): the combat ladder is EXHAUSTED. The corridor passes through danger at (888.0,808.7) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine(\"Player\", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — no walkable tile path in level 40 from tile (55,48) to (30,36). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by wat
+  time: the aim is 446 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [chaser:bobsoldier@880,832] and this room's live roster is [bob@320,112, bob@288,112, bob@288,80, bob@304,144, bob@272,112, bobsoldier@880,832, bob@736,752, bob@736,800, bob@192,480, bob@352,448, bob@352,416, bob@208,448, bob@224,496, puncher@128,624, puncher@816,128]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.
+  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static \"Enemy\" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)
+  narrow: the corridor walked with the pre-lapse strike admissions is dangerous too — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine(\"Player\", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) at (888.0,808.7)
+  detour: no corridor bent through at most 2 via cell(s) of the 173 the walk can plan to probes clean: 0 candidate corridor(s) previewed with the bodies stepped against each, 0 prefix(es) dangerous before their last via, 0 preview(s) of the 300 bound spent and 3479 leg(s) of the 500 planned, 173 candidate(s) left unasked.
+  forced-hit: no forced hit is proven from (888.0,776.0): the hitless input [· · ·] survives 3 tick(s) — no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))"
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js:[2m66:36[22m[39m
+    [90m 64| [39m        const on = await withLatchWeighFirst(true, () => l40LatchSolve…
+    [90m 65| [39m        expect(off.refusal.message).toMatch(/-> shove stance \(pushabl…
+    [90m 66| [39m        expect(on.refusal.message).toMatch(/-> shove stance \(pushable…
+    [90m   | [39m                                   [31m^[39m
+    [90m 67| [39m        [35mfor[39m ([35mconst[39m r [35mof[39m [off[33m,[39m on]) {
+    [90m 68| [39m            [34mexpect[39m(r[33m.[39mrefusal[33m.[39mperTick)[33m.[39m[34mtoHaveLength[39m([34m271[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js[2m > [22mhammer-phase LWEIGH on the latch chain (slow)[2m > [22mON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name
+[31m[1mAssertionError[22m: expected { …(10) } to be null[39m
+
+[32m- Expected:[39m 
+null
+
+[31m+ Received:[39m 
+{
+  "dangerQueries": [
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 0,
+      "sources": [],
+      "tick": 0,
+      "where": "gate",
+      "x": 888,
+      "y": 776,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 0,
+      "sources": [],
+      "tick": 0,
+      "where": "sense",
+      "x": 888,
+      "y": 776,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 0,
+      "sources": [],
+      "tick": 0,
+      "where": "gate",
+      "x": 888,
+      "y": 776,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 0,
+      "sources": [],
+      "tick": 0,
+      "where": "sense",
+      "x": 888,
+      "y": 776,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 0,
+      "sources": [],
+      "tick": 0,
+      "where": "gate",
+      "x": 888,
+      "y": 776,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 0,
+      "sources": [],
+      "tick": 0,
+      "where": "sense",
+      "x": 888,
+      "y": 776,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 0,
+      "sources": [],
+      "tick": 0,
+      "where": "sense",
+      "x": 888,
+      "y": 776,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 0,
+      "sources": [],
+      "tick": 0,
+      "where": "sense",
+      "x": 888,
+      "y": 776,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 184,
+      "sources": [],
+      "tick": 184,
+      "where": "sense",
+      "x": 871.2809792099287,
+      "y": 782.7577550668947,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 184,
+      "sources": [],
+      "tick": 184,
+      "where": "gate",
+      "x": 871.2809792099287,
+      "y": 782.7577550668947,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 184,
+      "sources": [],
+      "tick": 184,
+      "where": "sense",
+      "x": 871.2809792099287,
+      "y": 782.7577550668947,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 184,
+      "sources": [],
+      "tick": 184,
+      "where": "sense",
+      "x": 871.2809792099287,
+      "y": 782.7577550668947,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 184,
+      "sources": [],
+      "tick": 184,
+      "where": "sense",
+      "x": 871.2809792099287,
+      "y": 782.7577550668947,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 184,
+      "sources": [],
+      "tick": 184,
+      "where": "sense",
+      "x": 871.2809792099287,
+      "y": 782.7577550668947,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 184,
+      "sources": [],
+      "tick": 184,
+      "where": "gate",
+      "x": 871.2809792099287,
+      "y": 782.7577550668947,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 184,
+      "sources": [],
+      "tick": 184,
+      "where": "sense",
+      "x": 871.2809792099287,
+      "y": 782.7577550668947,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 484,
+      "sources": [],
+      "tick": 484,
+      "where": "gate",
+      "x": 744.1403997913817,
+      "y": 789.8579727249534,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 484,
+      "sources": [],
+      "tick": 484,
+      "where": "sense",
+      "x": 744.1403997913817,
+      "y": 789.8579727249534,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 977,
+      "sources": [],
+      "tick": 977,
+      "where": "gate",
+      "x": 466.6149746142217,
+      "y": 423.5538745154452,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 977,
+      "sources": [],
+      "tick": 977,
+      "where": "sense",
+      "x": 466.6149746142217,
+      "y": 423.5538745154452,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1117,
+      "sources": [],
+      "tick": 1117,
+      "where": "gate",
+      "x": 487.0482017884439,
+      "y": 440.72339144189544,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1117,
+      "sources": [],
+      "tick": 1117,
+      "where": "sense",
+      "x": 487.0482017884439,
+      "y": 440.72339144189544,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1253,
+      "sources": [],
+      "tick": 1253,
+      "where": "gate",
+      "x": 487.0482017884439,
+      "y": 424.4233914418955,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1253,
+      "sources": [],
+      "tick": 1253,
+      "where": "sense",
+      "x": 487.0482017884439,
+      "y": 424.4233914418955,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1253,
+      "sources": [],
+      "tick": 1253,
+      "where": "gate",
+      "x": 487.0482017884439,
+      "y": 424.4233914418955,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1253,
+      "sources": [],
+      "tick": 1253,
+      "where": "sense",
+      "x": 487.0482017884439,
+      "y": 424.4233914418955,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1327,
+      "sources": [],
+      "tick": 1327,
+      "where": "gate",
+      "x": 472.54554620426455,
+      "y": 487.9969228399134,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1327,
+      "sources": [],
+      "tick": 1327,
+      "where": "sense",
+      "x": 472.54554620426455,
+      "y": 487.9969228399134,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1382,
+      "sources": [],
+      "tick": 1382,
+      "where": "gate",
+      "x": 487.9455462042647,
+      "y": 487.9969228399134,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1382,
+      "sources": [],
+      "tick": 1382,
+      "where": "sense",
+      "x": 487.9455462042647,
+      "y": 487.9969228399134,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1432,
+      "sources": [],
+      "tick": 1432,
+      "where": "gate",
+      "x": 503.39554620426486,
+      "y": 487.9969228399134,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1432,
+      "sources": [],
+      "tick": 1432,
+      "where": "sense",
+      "x": 503.39554620426486,
+      "y": 487.9969228399134,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1486,
+      "sources": [],
+      "tick": 1486,
+      "where": "gate",
+      "x": 520.4455462042647,
+      "y": 487.9969228399134,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1486,
+      "sources": [],
+      "tick": 1486,
+      "where": "sense",
+      "x": 520.4455462042647,
+      "y": 487.9969228399134,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1572,
+      "sources": [],
+      "tick": 1572,
+      "where": "gate",
+      "x": 552.3455462042646,
+      "y": 503.0969228399134,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1572,
+      "sources": [],
+      "tick": 1572,
+      "where": "sense",
+      "x": 552.3455462042646,
+      "y": 503.0969228399134,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1623,
+      "sources": [],
+      "tick": 1623,
+      "where": "gate",
+      "x": 552.3455462042646,
+      "y": 488.79692283991324,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1623,
+      "sources": [],
+      "tick": 1623,
+      "where": "sense",
+      "x": 552.3455462042646,
+      "y": 488.79692283991324,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1679,
+      "sources": [],
+      "tick": 1679,
+      "where": "gate",
+      "x": 552.3455462042646,
+      "y": 472.09692283991296,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1679,
+      "sources": [],
+      "tick": 1679,
+      "where": "sense",
+      "x": 552.3455462042646,
+      "y": 472.09692283991296,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1729,
+      "sources": [],
+      "tick": 1729,
+      "where": "gate",
+      "x": 552.3455462042646,
+      "y": 456.6469228399128,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1729,
+      "sources": [],
+      "tick": 1729,
+      "where": "sense",
+      "x": 552.3455462042646,
+      "y": 456.6469228399128,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1783,
+      "sources": [],
+      "tick": 1783,
+      "where": "gate",
+      "x": 552.3455462042646,
+      "y": 439.59692283991257,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1783,
+      "sources": [],
+      "tick": 1783,
+      "where": "sense",
+      "x": 552.3455462042646,
+      "y": 439.59692283991257,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1838,
+      "sources": [],
+      "tick": 1838,
+      "where": "gate",
+      "x": 552.3455462042646,
+      "y": 424.1969228399124,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1838,
+      "sources": [],
+      "tick": 1838,
+      "where": "sense",
+      "x": 552.3455462042646,
+      "y": 424.1969228399124,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1933,
+      "sources": [],
+      "tick": 1933,
+      "where": "gate",
+      "x": 535.2955462042648,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1933,
+      "sources": [],
+      "tick": 1933,
+      "where": "sense",
+      "x": 535.2955462042648,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1989,
+      "sources": [],
+      "tick": 1989,
+      "where": "gate",
+      "x": 551.9955462042645,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 1989,
+      "sources": [],
+      "tick": 1989,
+      "where": "sense",
+      "x": 551.9955462042645,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2039,
+      "sources": [],
+      "tick": 2039,
+      "where": "gate",
+      "x": 567.4455462042642,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2039,
+      "sources": [],
+      "tick": 2039,
+      "where": "sense",
+      "x": 567.4455462042642,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2093,
+      "sources": [],
+      "tick": 2093,
+      "where": "gate",
+      "x": 584.495546204264,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2093,
+      "sources": [],
+      "tick": 2093,
+      "where": "sense",
+      "x": 584.495546204264,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2148,
+      "sources": [],
+      "tick": 2148,
+      "where": "gate",
+      "x": 599.895546204264,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2148,
+      "sources": [],
+      "tick": 2148,
+      "where": "sense",
+      "x": 599.895546204264,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2198,
+      "sources": [],
+      "tick": 2198,
+      "where": "gate",
+      "x": 615.3455462042637,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2198,
+      "sources": [],
+      "tick": 2198,
+      "where": "sense",
+      "x": 615.3455462042637,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2252,
+      "sources": [],
+      "tick": 2252,
+      "where": "gate",
+      "x": 632.3955462042634,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2252,
+      "sources": [],
+      "tick": 2252,
+      "where": "sense",
+      "x": 632.3955462042634,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2302,
+      "sources": [],
+      "tick": 2302,
+      "where": "gate",
+      "x": 647.8455462042631,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2302,
+      "sources": [],
+      "tick": 2302,
+      "where": "sense",
+      "x": 647.8455462042631,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2360,
+      "sources": [],
+      "tick": 2360,
+      "where": "gate",
+      "x": 663.6955462042628,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2360,
+      "sources": [],
+      "tick": 2360,
+      "where": "sense",
+      "x": 663.6955462042628,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2414,
+      "sources": [],
+      "tick": 2414,
+      "where": "gate",
+      "x": 680.7455462042625,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2414,
+      "sources": [],
+      "tick": 2414,
+      "where": "sense",
+      "x": 680.7455462042625,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2468,
+      "sources": [],
+      "tick": 2468,
+      "where": "gate",
+      "x": 696.8955462042624,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2468,
+      "sources": [],
+      "tick": 2468,
+      "where": "sense",
+      "x": 696.8955462042624,
+      "y": 392.04692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2587,
+      "sources": [],
+      "tick": 2587,
+      "where": "gate",
+      "x": 744.5955462042623,
+      "y": 392.29692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2587,
+      "sources": [],
+      "tick": 2587,
+      "where": "sense",
+      "x": 744.5955462042623,
+      "y": 392.29692283991216,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2645,
+      "sources": [],
+      "tick": 2645,
+      "where": "gate",
+      "x": 711.8684472608223,
+      "y": 375.97583375841396,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2645,
+      "sources": [],
+      "tick": 2645,
+      "where": "sense",
+      "x": 711.8684472608223,
+      "y": 375.97583375841396,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2695,
+      "sources": [],
+      "tick": 2695,
+      "where": "gate",
+      "x": 711.8684472608223,
+      "y": 391.4258337584141,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2695,
+      "sources": [],
+      "tick": 2695,
+      "where": "sense",
+      "x": 711.8684472608223,
+      "y": 391.4258337584141,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2749,
+      "sources": [],
+      "tick": 2749,
+      "where": "gate",
+      "x": 711.8684472608223,
+      "y": 408.47583375841435,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2749,
+      "sources": [],
+      "tick": 2749,
+      "where": "sense",
+      "x": 711.8684472608223,
+      "y": 408.47583375841435,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2804,
+      "sources": [],
+      "tick": 2804,
+      "where": "gate",
+      "x": 711.8684472608223,
+      "y": 423.8758337584145,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2804,
+      "sources": [],
+      "tick": 2804,
+      "where": "sense",
+      "x": 711.8684472608223,
+      "y": 423.8758337584145,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2854,
+      "sources": [],
+      "tick": 2854,
+      "where": "gate",
+      "x": 711.8684472608223,
+      "y": 439.32583375841466,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2854,
+      "sources": [],
+      "tick": 2854,
+      "where": "sense",
+      "x": 711.8684472608223,
+      "y": 439.32583375841466,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2944,
+      "sources": [],
+      "tick": 2944,
+      "where": "gate",
+      "x": 696.2184472608222,
+      "y": 472.12583375841507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2944,
+      "sources": [],
+      "tick": 2944,
+      "where": "sense",
+      "x": 696.2184472608222,
+      "y": 472.12583375841507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2994,
+      "sources": [],
+      "tick": 2994,
+      "where": "gate",
+      "x": 711.668447260822,
+      "y": 472.12583375841507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 2994,
+      "sources": [],
+      "tick": 2994,
+      "where": "sense",
+      "x": 711.668447260822,
+      "y": 472.12583375841507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3048,
+      "sources": [],
+      "tick": 3048,
+      "where": "gate",
+      "x": 728.7184472608217,
+      "y": 472.12583375841507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3048,
+      "sources": [],
+      "tick": 3048,
+      "where": "sense",
+      "x": 728.7184472608217,
+      "y": 472.12583375841507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3102,
+      "sources": [],
+      "tick": 3102,
+      "where": "gate",
+      "x": 744.8684472608215,
+      "y": 472.12583375841507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3102,
+      "sources": [],
+      "tick": 3102,
+      "where": "sense",
+      "x": 744.8684472608215,
+      "y": 472.12583375841507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3189,
+      "sources": [],
+      "tick": 3189,
+      "where": "gate",
+      "x": 776.5684472608216,
+      "y": 488.82583375841506,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3189,
+      "sources": [],
+      "tick": 3189,
+      "where": "sense",
+      "x": 776.5684472608216,
+      "y": 488.82583375841506,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3245,
+      "sources": [],
+      "tick": 3245,
+      "where": "gate",
+      "x": 776.5684472608216,
+      "y": 472.1258337584148,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3245,
+      "sources": [],
+      "tick": 3245,
+      "where": "sense",
+      "x": 776.5684472608216,
+      "y": 472.1258337584148,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3295,
+      "sources": [],
+      "tick": 3295,
+      "where": "gate",
+      "x": 776.5684472608216,
+      "y": 456.6758337584146,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3295,
+      "sources": [],
+      "tick": 3295,
+      "where": "sense",
+      "x": 776.5684472608216,
+      "y": 456.6758337584146,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3427,
+      "sources": [],
+      "tick": 3427,
+      "where": "gate",
+      "x": 776.5684472608216,
+      "y": 439.6258337584144,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3427,
+      "sources": [],
+      "tick": 3427,
+      "where": "sense",
+      "x": 776.5684472608216,
+      "y": 439.6258337584144,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3508,
+      "sources": [],
+      "tick": 3508,
+      "where": "gate",
+      "x": 823.6437859747368,
+      "y": 407.1821532061507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3508,
+      "sources": [],
+      "tick": 3508,
+      "where": "sense",
+      "x": 823.6437859747368,
+      "y": 407.1821532061507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3508,
+      "sources": [],
+      "tick": 3508,
+      "where": "gate",
+      "x": 823.6437859747368,
+      "y": 407.1821532061507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 3508,
+      "sources": [],
+      "tick": 3508,
+      "where": "sense",
+      "x": 823.6437859747368,
+      "y": 407.1821532061507,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 4082,
+      "sources": [],
+      "tick": 4082,
+      "where": "gate",
+      "x": 584.850816024509,
+      "y": 543.6643367284622,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 4082,
+      "sources": [],
+      "tick": 4082,
+      "where": "sense",
+      "x": 584.850816024509,
+      "y": 543.6643367284622,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 4134,
+      "sources": [],
+      "tick": 4134,
+      "where": "gate",
+      "x": 664.3291260997429,
+      "y": 520.8086067453941,
+    },
+    {
+      "danger": false,
+      "horizon": 0,
+      "level": 40,
+      "mode": "wait",
+      "runTick": 4142,
+      "sources": [],
+      "tick": 4142,
+      "where": "sense",
+      "x": 663.8278590262538,
+      "y": 529.8979120704959,
+    },
+  ],
+  "dashes": {
+    "count": 124,
+    "walks": [
+      {
+        "attempt": 2,
+        "planned": true,
+        "pressed": 14,
+        "saved": 197,
+        "tick": 484,
+        "ticks": 221,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh -> iceturret@472,400 approach staging (488,579)",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 6,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 4,
+        "tick": 977,
+        "ticks": 26,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh -> corpse bump 1 stance (488,440)",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 0,
+        "saved": 3,
+        "tick": 1117,
+        "ticks": 18,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh -> corpse bump 2 stance (488,424)",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 4,
+        "saved": 26,
+        "tick": 1253,
+        "ticks": 36,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh stance (wandlock@800,400)",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 2,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 2,
+        "tick": 1327,
+        "ticks": 17,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 2/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 14,
+        "tick": 1382,
+        "ticks": 12,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 3/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 5,
+        "tick": 1432,
+        "ticks": 16,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 4/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 2,
+        "saved": 18,
+        "tick": 1486,
+        "ticks": 48,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 5/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 2,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 4,
+        "tick": 1572,
+        "ticks": 13,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 6/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 8,
+        "tick": 1623,
+        "ticks": 18,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 7/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 14,
+        "tick": 1679,
+        "ticks": 12,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 8/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 5,
+        "tick": 1729,
+        "ticks": 16,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 9/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 2,
+        "tick": 1783,
+        "ticks": 17,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 10/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 3,
+        "saved": 12,
+        "tick": 1838,
+        "ticks": 57,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 11/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 3,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 3,
+        "tick": 1933,
+        "ticks": 18,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 12/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 14,
+        "tick": 1989,
+        "ticks": 12,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 13/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 5,
+        "tick": 2039,
+        "ticks": 16,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 14/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 2,
+        "tick": 2093,
+        "ticks": 17,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 15/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 14,
+        "tick": 2148,
+        "ticks": 12,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 16/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 5,
+        "tick": 2198,
+        "ticks": 16,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 17/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 9,
+        "tick": 2252,
+        "ticks": 12,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 18/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 6,
+        "tick": 2302,
+        "ticks": 20,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 19/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 6,
+        "tick": 2360,
+        "ticks": 16,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 20/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 3,
+        "tick": 2414,
+        "ticks": 16,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 21/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 6,
+        "saved": 20,
+        "tick": 2468,
+        "ticks": 81,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 22/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 4,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 3,
+        "saved": 20,
+        "tick": 2587,
+        "ticks": 20,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 23/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 14,
+        "tick": 2645,
+        "ticks": 12,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 24/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 5,
+        "tick": 2695,
+        "ticks": 16,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 25/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 2,
+        "tick": 2749,
+        "ticks": 17,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 26/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 14,
+        "tick": 2804,
+        "ticks": 12,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 27/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 3,
+        "saved": 12,
+        "tick": 2854,
+        "ticks": 52,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 28/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 3,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 9,
+        "tick": 2944,
+        "ticks": 12,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 29/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 6,
+        "tick": 2994,
+        "ticks": 16,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 30/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 3,
+        "tick": 3048,
+        "ticks": 16,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 31/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 2,
+        "saved": 10,
+        "tick": 3102,
+        "ticks": 49,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 32/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 2,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 8,
+        "tick": 3189,
+        "ticks": 18,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 33/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 14,
+        "tick": 3245,
+        "ticks": 12,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 34/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 1,
+        "saved": 5,
+        "tick": 3295,
+        "ticks": 16,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (park the block) (route step 35/35: fire) stance",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 1,
+      },
+      {
+        "attempt": 2,
+        "planned": true,
+        "pressed": 3,
+        "saved": 18,
+        "tick": 3427,
+        "ticks": 53,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576)",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 2,
+      },
+      {
+        "attempt": 0,
+        "planned": true,
+        "pressed": 50,
+        "saved": 408,
+        "tick": 3508,
+        "ticks": 473,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblock@576,560)",
+        "why": "certified whole (fidelity L40BK2)",
+        "windows": 23,
+      },
+      {
+        "attempt": 2,
+        "planned": true,
+        "pressed": 5,
+        "saved": 31,
+        "tick": 4082,
+        "ticks": 52,
+        "what": "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it)",
+        "why": null,
+        "windows": 2,
+      },
+    ],
+    "windows": 80,
+  },
+  "equips": [
+    {
+      "slot": 1,
+      "t": 1003,
+    },
+    {
+      "slot": 0,
+      "t": 1252,
+    },
+    {
+      "slot": 1,
+      "t": 1289,
+    },
+    {
+      "slot": 0,
+      "t": 1327,
+    },
+    {
+      "slot": 1,
+      "t": 1344,
+    },
+    {
+      "slot": 0,
+      "t": 1382,
+    },
+    {
+      "slot": 1,
+      "t": 1394,
+    },
+    {
+      "slot": 0,
+      "t": 1432,
+    },
+    {
+      "slot": 1,
+      "t": 1448,
+    },
+    {
+      "slot": 0,
+      "t": 1486,
+    },
+    {
+      "slot": 1,
+      "t": 1534,
+    },
+    {
+      "slot": 0,
+      "t": 1572,
+    },
+    {
+      "slot": 1,
+      "t": 1585,
+    },
+    {
+      "slot": 0,
+      "t": 1623,
+    },
+    {
+      "slot": 1,
+      "t": 1641,
+    },
+    {
+      "slot": 0,
+      "t": 1679,
+    },
+    {
+      "slot": 1,
+      "t": 1691,
+    },
+    {
+      "slot": 0,
+      "t": 1729,
+    },
+    {
+      "slot": 1,
+      "t": 1745,
+    },
+    {
+      "slot": 0,
+      "t": 1783,
+    },
+    {
+      "slot": 1,
+      "t": 1800,
+    },
+    {
+      "slot": 0,
+      "t": 1838,
+    },
+    {
+      "slot": 1,
+      "t": 1895,
+    },
+    {
+      "slot": 0,
+      "t": 1933,
+    },
+    {
+      "slot": 1,
+      "t": 1951,
+    },
+    {
+      "slot": 0,
+      "t": 1989,
+    },
+    {
+      "slot": 1,
+      "t": 2001,
+    },
+    {
+      "slot": 0,
+      "t": 2039,
+    },
+    {
+      "slot": 1,
+      "t": 2055,
+    },
+    {
+      "slot": 0,
+      "t": 2093,
+    },
+    {
+      "slot": 1,
+      "t": 2110,
+    },
+    {
+      "slot": 0,
+      "t": 2148,
+    },
+    {
+      "slot": 1,
+      "t": 2160,
+    },
+    {
+      "slot": 0,
+      "t": 2198,
+    },
+    {
+      "slot": 1,
+      "t": 2214,
+    },
+    {
+      "slot": 0,
+      "t": 2252,
+    },
+    {
+      "slot": 1,
+      "t": 2264,
+    },
+    {
+      "slot": 0,
+      "t": 2302,
+    },
+    {
+      "slot": 1,
+      "t": 2322,
+    },
+    {
+      "slot": 0,
+      "t": 2360,
+    },
+    {
+      "slot": 1,
+      "t": 2376,
+    },
+    {
+      "slot": 0,
+      "t": 2414,
+    },
+    {
+      "slot": 1,
+      "t": 2430,
+    },
+    {
+      "slot": 0,
+      "t": 2468,
+    },
+    {
+      "slot": 1,
+      "t": 2549,
+    },
+    {
+      "slot": 0,
+      "t": 2587,
+    },
+    {
+      "slot": 1,
+      "t": 2607,
+    },
+    {
+      "slot": 0,
+      "t": 2645,
+    },
+    {
+      "slot": 1,
+      "t": 2657,
+    },
+    {
+      "slot": 0,
+      "t": 2695,
+    },
+    {
+      "slot": 1,
+      "t": 2711,
+    },
+    {
+      "slot": 0,
+      "t": 2749,
+    },
+    {
+      "slot": 1,
+      "t": 2766,
+    },
+    {
+      "slot": 0,
+      "t": 2804,
+    },
+    {
+      "slot": 1,
+      "t": 2816,
+    },
+    {
+      "slot": 0,
+      "t": 2854,
+    },
+    {
+      "slot": 1,
+      "t": 2906,
+    },
+    {
+      "slot": 0,
+      "t": 2944,
+    },
+    {
+      "slot": 1,
+      "t": 2956,
+    },
+    {
+      "slot": 0,
+      "t": 2994,
+    },
+    {
+      "slot": 1,
+      "t": 3010,
+    },
+    {
+      "slot": 0,
+      "t": 3048,
+    },
+    {
+      "slot": 1,
+      "t": 3064,
+    },
+    {
+      "slot": 0,
+      "t": 3102,
+    },
+    {
+      "slot": 1,
+      "t": 3151,
+    },
+    {
+      "slot": 0,
+      "t": 3189,
+    },
+    {
+      "slot": 1,
+      "t": 3207,
+    },
+    {
+      "slot": 0,
+      "t": 3245,
+    },
+    {
+      "slot": 1,
+      "t": 3257,
+    },
+    {
+      "slot": 0,
+      "t": 3295,
+    },
+    {
+      "slot": 1,
+      "t": 3311,
+    },
+    {
+      "slot": 0,
+      "t": 3349,
+    },
+  ],
+  "grazes": [],
+  "perTick": [
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "primary",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "primary",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "primary",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "primary",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "primary",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "right",
+      "up",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "primary",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {},
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+    },
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+      "primary",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "left",
+    },
+    Set {},
+    Set {},
+    Set {
+      "right",
+    },
+    Set {},
+    Set {},
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {},
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "right",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "right",
+      "up",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "right",
+    },
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "right",
+      "down",
+      "primary",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "up",
+    },
+    Set {
+      "right",
+      "up",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {},
+    Set {},
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "left",
+      "down",
+      "primary",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+      "primary",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+      "primary",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+      "primary",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "left",
+      "down",
+    },
+    Set {
+      "right",
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+      "primary",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+      "primary",
+    },
+    Set {
+      "left",
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {},
+    Set {
+      "right",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "right",
+      "primary",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {},
+    Set {},
+    Set {
+      "left",
+    },
+    Set {
+      "left",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "right",
+      "primary",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "left",
+    },
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "right",
+      "primary",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {},
+    Set {},
+    Set {
+      "left",
+    },
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+      "primary",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+      "primary",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+      "primary",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {
+      "left",
+    },
+    Set {
+      "right",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "primary",
+    },
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {},
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+      "primary",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "up",
+    },
+    Set {
+      "down",
+    },
+    Set {
+      "up",
+    },
+    Set {},
+    Set {},
+    Set {
+      "down",
+    },
+    Set {
+      "down",
+    },
+    Set {},
+    Set {},
+    Set {
+      "up",
+    },
+    Set {},
+ ...
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js:[2m80:23[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m 19:24:36
+[2m   Duration [22m 2490.74s[2m (transform 2.71s, setup 0ms, import 5.24s, tests 2484.52s, environment 1ms)[22m
+

@@ -1,0 +1,22 @@
+M1-drop-timing: exit 1 (RED)
+    [31m❯[39m frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m2 skipped[39m[2m)[22m[33m 47710[2mms[22m[39m
+    [2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m2 skipped[39m[90m (3)[39m
+    [31m[1mAssertionError[22m: expected SolverRefusal: solverBot(l40latch) collec… { …(8) } to be null[39m
+M2-cycle-late: exit 1 (RED)
+    [31m❯[39m frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m2 skipped[39m[2m)[22m[33m 175102[2mms[22m[39m
+    [2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m2 skipped[39m[90m (3)[39m
+    [31m[1mAssertionError[22m: expected [ Set{ 'right', 'down' }, …(4187) ] to have a length of 4142 but got 4188[39m
+M3-recount: exit 1 (RED)
+    [31m❯[39m frontend/modules/seedlingDemo/hammerTurretApproach.test.js [2m([22m[2m5 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m4 skipped[39m[2m)[22m[32m 12[2mms[22m[39m
+    [2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m4 skipped[39m[90m (5)[39m
+    [31m[1mAssertionError[22m: expected true to be false // Object.is equality[39m
+M4-drop-snap: exit 1 (RED)
+    [31m❯[39m frontend/modules/seedlingDemo/hammerTurretApproach.test.js [2m([22m[2m5 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m4 skipped[39m[2m)[22m[32m 91[2mms[22m[39m
+    [2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m4 skipped[39m[90m (5)[39m
+    [31m[1mAssertionError[22m: expected { x: 488, y: 437 } to deeply equal { x: 488, y: 445 }[39m
+restored 2da5056b3fceabf8e87cc75058374051
+exit 0
