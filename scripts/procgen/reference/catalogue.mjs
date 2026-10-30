@@ -95,7 +95,8 @@ export function buildCatalogue() {
          * BY REFERENCE (`procgenPalette`); what differs is the boot, and so the
          * default element list.
          */
-        ...['post-shield', 'post-swim', 'post-feather'].map((id) => {
+        /** ⛓ seedling-gen-biomes-1 (C2) — and the four census boots after them (opt-in, not in the census). */
+        ...M.watchGenerate.BIOME_NAMES.slice(2).map((id) => {
             const palette = M.watchGenerate.GENERATE_BIOMES[id];
             return {
                 id,
