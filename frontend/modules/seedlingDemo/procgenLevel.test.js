@@ -171,9 +171,9 @@ describe('placement is pure — revert is keeping the old record', () => {
         ])).toThrow(/named twice/);
     });
 
-    it('refuses an unknown terrain BY NAME, listing the five (swim T2 added `waterfall`)', () => {
-        expect(() => withTerrain(room(), [{ tx: 3, ty: 3, terrain: 'lava' }]))
-            .toThrow(/"lava" is not one of the PoC's terrains \(ground, wall, water, pit, waterfall\)/);
+    it('refuses an unknown terrain BY NAME, listing them all (swim T2 added `waterfall`, C3 the walk terrains)', () => {
+        expect(() => withTerrain(room(), [{ tx: 3, ty: 3, terrain: 'magma' }]))
+            .toThrow(/"magma" is not one of the PoC's terrains \(ground, wall, water, pit, waterfall, ice, lava, melt, stairs, ghoststep\)/);
     });
 
     it('refuses an entity with no coordinates', () => {

@@ -140,6 +140,8 @@ const PARAM_NOTES = {
     anchortries: { field: { watch: 'bounds.anchorTriesPerCandidate', lab: 'bounds.anchorTriesPerCandidate' }, codec: 'intParam', terms: ['anchor', 'anchor-search'] },
     families: { field: { watch: 'roster', lab: 'roster' }, codec: 'a comma list, validated against the palette', terms: ['family', 'roster', 'restrict'] },
     templates: { field: { watch: 'roster', lab: 'roster' }, codec: 'a comma list, validated against the palette', terms: ['template', 'roster', 'restrict'] },
+    /** ⛓ seedling-gen-terrains (C3) — the walk terrains an old biome offers opt-in (`TERRAIN_OFFERS`). */
+    terrains: { field: { watch: 'terrains', lab: null }, codec: 'a comma list, validated against the biome\'s terrain offers', terms: ['biome', 'palette'] },
     skeleton: { field: { watch: 'skeleton', lab: 'skeleton' }, codec: 'parseSkeleton', terms: ['skeleton', 'skeleton-kind', 'the-carve'] },
     elements: {
         field: { watch: 'elements', lab: 'elements' },

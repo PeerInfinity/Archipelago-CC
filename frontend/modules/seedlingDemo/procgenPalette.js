@@ -798,6 +798,151 @@ export const PRE_SWORD_TEMPLATES = Object.freeze([
     }),
 ]);
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE WALK-CHANGING TERRAIN PATCHES (Seedling lab arc, `seedling-gen-terrains`, C3)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * One area template per walk-changing terrain the original game uses and the
+ * generator did not paint (the gen-content design's §3.2): ice (D5), cliff stairs
+ * and ghost step (the mountain, D6), lava and igneous-to-lava (D7). Each is the
+ * `water-pool` / `pit-patch` shape: a rectangle of one terrain on CHAMBER cells.
+ *
+ * ⛔ THEY ARE IN NO OLD BIOME'S ROSTER. The five old biomes share
+ * `POST_SWORD_TEMPLATES` (and pre-sword its own roster), and a roster member is
+ * part of every level's draw, so a sixth member would move every committed room.
+ * A biome OFFERS them (`TERRAIN_OFFERS`) and a caller opts in by name
+ * (`withTerrains`). The three D7-and-later presets take lava and igneous BY
+ * DEFAULT: they are opt-in biomes already.
+ *
+ * ⛓ Whether a patch may CUT the room is the floods' answer, not the template's
+ * (`procgenLevel.floodTerrainsFor`): ice, stairs and ghost step are walkable at
+ * every boot; lava and igneous only with the dark suit, so before it they are
+ * decoration that the seal pre-check never lets close a route.
+ */
+const terrainPatch = ({ name, family, terrain, w, h, pins = [], why }) => defineTemplate({
+    name,
+    family,
+    /** ⛓ Chamber cells, as `water-pool`: an area template on a 1-wide corridor is a sealer. */
+    site: 'chamber',
+    params: [
+        { key: 'w', domain: w.domain, default: w.default, why: w.why },
+        { key: 'h', domain: h.domain, default: h.default, why: h.why },
+    ],
+    why,
+    build: ({ w: ww, h: hh }) => {
+        const cells = rectCells(ww, hh);
+        return {
+            footprint: cells,
+            clearance: Object.freeze([]),
+            terrain: paint(cells, terrain),
+            entities: Object.freeze([]),
+            pins: Object.freeze([...pins]),
+        };
+    },
+});
+
+const SIZE_WHY = 'the `water-pool` domain: 3 stops short of half an 8-wide interior';
+
+export const TERRAIN_TEMPLATES = Object.freeze([
+    terrainPatch({
+        name: 'ice-sheet',
+        family: 'ice',
+        terrain: 'ice',
+        w: { domain: [2, 3], default: 3, why: `a sheet the walk slides across; ${SIZE_WHY}` },
+        h: { domain: [2, 3], default: 2, why: SIZE_WHY },
+        why: 'Ice cells (type 22): `slidingFriction` + `slidingSpeed`, so the walk keeps its '
+            + 'velocity. Walkable at every boot; the floods treat it as floor',
+    }),
+    terrainPatch({
+        name: 'stairs-patch',
+        family: 'stairs',
+        terrain: 'stairs',
+        w: { domain: [1, 2, 3], default: 2, why: SIZE_WHY },
+        h: { domain: [1, 2], default: 2, why: 'cliff stairs climb one way in the atlas, so the patch is thin' },
+        why: 'Cliff Stairs cells (type 10): walk speed 0.4. Walkable at every boot',
+    }),
+    terrainPatch({
+        name: 'ghoststep-patch',
+        family: 'ghoststep',
+        terrain: 'ghoststep',
+        w: { domain: [1, 2, 3], default: 2, why: SIZE_WHY },
+        h: { domain: [1, 2], default: 2, why: 'the stairs\' domain: D6 uses them as steps' },
+        why: 'Ghost Tile Step cells (type 30): walk speed 0.4. Walkable at every boot',
+    }),
+    terrainPatch({
+        name: 'lava-pool',
+        family: 'lava',
+        terrain: 'lava',
+        w: { domain: [1, 2, 3], default: 2, why: SIZE_WHY },
+        h: { domain: [1, 2, 3], default: 2, why: SIZE_WHY },
+        pins: ['sound'],
+        why: 'Lava cells (type 17): lethal without the dark suit. Pins `sound`: a lava tick runs '
+            + 'the swim term, and without the pin the dark-suit walk THREW `PhysicsV2Error` '
+            + '(design §3.2). Before the dark suit the floods block it, so it never cuts',
+    }),
+    terrainPatch({
+        name: 'melt-patch',
+        family: 'melt',
+        terrain: 'melt',
+        w: { domain: [1, 2, 3], default: 2, why: SIZE_WHY },
+        h: { domain: [1, 2], default: 1, why: 'a thin crust: it breaks once the walk comes near' },
+        pins: ['sound'],
+        why: 'Igneous-to-Lava cells (type 31): the cell breaks apart once the player has been '
+            + 'within half a diagonal for 8 frames and is lava ~5 animation steps later '
+            + '(`Tile.as` case 31). Pins `sound` (it becomes lava). Blocks the floods before '
+            + 'the dark suit, as lava does',
+    }),
+]);
+
+/** A terrain template by its TERRAIN name (`ice`, `lava`, …). */
+const TERRAIN_TEMPLATE_BY_TERRAIN = new Map(TERRAIN_TEMPLATES.map((t) => [t.family, t]));
+export const TERRAIN_TEMPLATE_NAMES = Object.freeze(TERRAIN_TEMPLATES.map((t) => t.family));
+
+/**
+ * ⛓ WHICH TERRAINS AN OLD BIOME OFFERS OPT-IN — the original game's area for
+ * that boot (design §3.3): ice in D5 (`post-swim`), cliff stairs and ghost step
+ * on the mountain and in D6 (`post-feather`). Lava and igneous are D7's: the
+ * D7-and-later presets hold them BY DEFAULT (`D7_TEMPLATES`), so they offer
+ * nothing more. A biome not listed offers none.
+ */
+export const TERRAIN_OFFERS = Object.freeze({
+    'post-swim': Object.freeze(['ice']),
+    'post-feather': Object.freeze(['stairs', 'ghoststep']),
+});
+
+/** Split a `terrains` knob (`'ice'`, `'stairs,ghoststep'`, a list) into sorted, deduped names. */
+export function parseTerrainList(spec) {
+    if (spec === undefined || spec === null) return [];
+    const raw = Array.isArray(spec) ? spec : String(spec).split(/[,+]/);
+    return [...new Set(raw.map((s) => String(s).trim()).filter(Boolean))].sort();
+}
+
+/**
+ * ⛓ THE OPT-IN: `palette` with the named terrains' templates APPENDED to its
+ * roster (after every existing member, so their order is unchanged), and the
+ * names in the palette's name (`post-swim+ice`). ⛔ A terrain the biome does not offer REFUSES BY
+ * NAME, as an unknown roster member does: a typo must not build a room under a
+ * roster nobody asked for. An empty list returns `palette` itself.
+ */
+export function withTerrains(palette, spec) {
+    const names = parseTerrainList(spec);
+    if (names.length === 0) return palette;
+    const offered = TERRAIN_OFFERS[palette?.name] ?? [];
+    for (const n of names) {
+        if (!offered.includes(n)) {
+            fail(`procgenPalette: biome "${palette?.name}" does not offer the terrain ${JSON.stringify(n)}`
+                + ` — it offers [${offered.join(', ')}]. The terrains are [${TERRAIN_TEMPLATE_NAMES.join(', ')}],`
+                + ' each in the biome whose original area uses it.');
+        }
+    }
+    const add = names.map((n) => TERRAIN_TEMPLATE_BY_TERRAIN.get(n));
+    return Object.freeze({
+        ...palette,
+        name: `${palette.name}+${names.join('+')}`,
+        templates: Object.freeze([...palette.templates, ...add]),
+    });
+}
+
 /**
  * ⛔⛔⛔ THE EXCLUSIONS, AND EVERY ONE CARRIES ITS OWN MEASUREMENT.
  *
@@ -1487,6 +1632,13 @@ export const POST_FIRE_PALETTE = Object.freeze({
     excluded: POST_SWORD_EXCLUDED_TEMPLATES,
 });
 
+/**
+ * ⛓ seedling-gen-terrains (C3) — D7 and later draw lava and igneous BY DEFAULT: the
+ * post-sword roster with the two patches appended (so its members keep their order).
+ */
+const D7_TEMPLATES = Object.freeze([...POST_SWORD_TEMPLATES,
+    ...TERRAIN_TEMPLATES.filter((t) => t.family === 'lava' || t.family === 'melt')]);
+
 /** D7's boot: + the wand (D4), the conch (D5), the feather (mountain) and the ghost spear (D6). */
 export const POST_SPEAR_ITEMS = Object.freeze({
     ...POST_FIRE_ITEMS, hasWand: true, canSwim: true, hasFeather: true, hasSpear: true,
@@ -1495,7 +1647,7 @@ export const POST_SPEAR_ITEMS = Object.freeze({
 export const POST_SPEAR_PALETTE = Object.freeze({
     name: 'post-spear',
     items: POST_SPEAR_ITEMS,
-    templates: POST_SWORD_TEMPLATES,
+    templates: D7_TEMPLATES,
     excluded: POST_SWORD_EXCLUDED_TEMPLATES,
 });
 
@@ -1505,7 +1657,7 @@ export const POST_DARK_SUIT_ITEMS = Object.freeze({ ...POST_SPEAR_ITEMS, hasDark
 export const POST_DARK_SUIT_PALETTE = Object.freeze({
     name: 'post-dark-suit',
     items: POST_DARK_SUIT_ITEMS,
-    templates: POST_SWORD_TEMPLATES,
+    templates: D7_TEMPLATES,
     excluded: POST_SWORD_EXCLUDED_TEMPLATES,
 });
 
@@ -1515,7 +1667,7 @@ export const ENDGAME_ITEMS = Object.freeze({ ...POST_DARK_SUIT_ITEMS, hasGhostSw
 export const ENDGAME_PALETTE = Object.freeze({
     name: 'endgame',
     items: ENDGAME_ITEMS,
-    templates: POST_SWORD_TEMPLATES,
+    templates: D7_TEMPLATES,
     excluded: POST_SWORD_EXCLUDED_TEMPLATES,
 });
 
@@ -1834,7 +1986,7 @@ export function assertPalette(palette = PRE_SWORD_PALETTE) {
             for (const w of t.terrain ?? []) {
                 if (!TERRAIN[w.terrain]) {
                     fail(`procgenPalette: ${where} writes terrain "${w.terrain}", which is `
-                        + `not one of the PoC's four (${Object.keys(TERRAIN).join(', ')}).`);
+                        + `not one of the generator's terrains (${Object.keys(TERRAIN).join(', ')}).`);
                 }
                 if (!seen.has(`${w.dx},${w.dy}`)) {
                     fail(`procgenPalette: ${where} writes (${w.dx},${w.dy}), which is not `
