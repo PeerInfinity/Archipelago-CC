@@ -71,11 +71,13 @@
 import { generateSeedlingLevel, placementTagId, seedlingOracle } from './procgenSeedling.js';
 import { VERDICT, collectGoal } from './procgenOracle.js';
 import {
-    POST_FEATHER_PALETTE, POST_SHIELD_PALETTE, POST_SWIM_PALETTE, PRE_SWORD_PALETTE, POST_SWORD_PALETTE,
+    ENDGAME_PALETTE, POST_DARK_SUIT_PALETTE, POST_FEATHER_PALETTE, POST_FIRE_PALETTE, POST_SHIELD_PALETTE,
+    POST_SPEAR_PALETTE, POST_SWIM_PALETTE, PRE_SWORD_PALETTE, POST_SWORD_PALETTE, parseTerrainList, withTerrains,
 } from './procgenPalette.js';
 import { pickDoorCells } from './levelSetExits.js';
 import { TILE_SIZE, buildLevelWorld, tagOf } from './levelWorld.js';
 import { ROOM_TILES_MAX, ROOM_TILES_MIN } from './procgenLevel.js';
+import { GEN_LOOK_NAMES, applyLook } from './procgenLook.js';
 import { coreLevelRecord } from './levelSetValidator.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
@@ -102,7 +104,10 @@ const cloneRule = (rule) => structuredClone(rule);
 /** The biomes a room can be built in — the palettes `watchGenerate.GENERATE_BIOMES` offers
  *  (S1 added `post-shield`, T4-swim `post-feather`; `GEN_ROOM_BIOME_NAMES` is the same list by name). */
 export const GEN_ROOM_BIOMES = Object.freeze({ 'pre-sword': PRE_SWORD_PALETTE, 'post-sword': POST_SWORD_PALETTE,
-    'post-shield': POST_SHIELD_PALETTE, 'post-swim': POST_SWIM_PALETTE, 'post-feather': POST_FEATHER_PALETTE });
+    'post-shield': POST_SHIELD_PALETTE, 'post-swim': POST_SWIM_PALETTE, 'post-feather': POST_FEATHER_PALETTE,
+    // ⛓ seedling-gen-biomes-1 (C2) — the census boots of D4, D7, D8 and the End.
+    'post-fire': POST_FIRE_PALETTE, 'post-spear': POST_SPEAR_PALETTE, 'post-dark-suit': POST_DARK_SUIT_PALETTE,
+    endgame: ENDGAME_PALETTE });
 if (Object.keys(GEN_ROOM_BIOMES).join() !== GEN_ROOM_BIOME_NAMES.join()) {
     throw new Error('seedlingGenRoom: GEN_ROOM_BIOMES and GEN_ROOM_BIOME_NAMES disagree — one list, two spellings');
 }
@@ -125,6 +130,11 @@ function knobsOf(params) {
         /** ⛓ S1, D4 — ONLY WHEN GIVEN: an absent (or empty) `require` adds no key,
          *  so `generation` — which spreads these knobs — is byte-identical. */
         ...(String(bag.require ?? '').trim() !== '' ? { require: String(bag.require).trim() } : {}),
+        /** ⛓ seedling-gen-biomes-1 (C1) — the look, ONLY WHEN GIVEN, as `require`. */
+        ...(String(bag.look ?? '').trim() !== '' ? { look: String(bag.look).trim() } : {}),
+        /** ⛓ seedling-gen-terrains (C3) — the opted-in terrains (`'ice'`, `'stairs,ghoststep'`), ONLY WHEN
+         *  GIVEN, as `require`: absent, `generation` is byte-identical. Normalized sorted, comma-joined. */
+        ...(parseTerrainList(bag.terrains).length > 0 ? { terrains: parseTerrainList(bag.terrains).join(',') } : {}),
     };
 }
 
@@ -134,10 +144,18 @@ function knobsOf(params) {
  * the generator as `undefined` — its own default, the CLI's.
  */
 function generatorInput(regionId, seed, size, knobs) {
-    const palette = GEN_ROOM_BIOMES[knobs.biome];
-    if (!palette) {
+    const biomePalette = GEN_ROOM_BIOMES[knobs.biome];
+    if (!biomePalette) {
         throw new Error(GEN_ROOM_REFUSALS.badKnob(regionId, 'biome', knobs.biome,
             `the biomes are [${Object.keys(GEN_ROOM_BIOMES).join(', ')}]`));
+    }
+    let palette = biomePalette;
+    try { palette = withTerrains(biomePalette, knobs.terrains); } catch (e) {
+        throw new Error(GEN_ROOM_REFUSALS.badKnob(regionId, 'terrains', knobs.terrains, e.message));
+    }
+    if (knobs.look !== undefined && !GEN_LOOK_NAMES.includes(knobs.look)) {
+        throw new Error(GEN_ROOM_REFUSALS.badKnob(regionId, 'look', knobs.look,
+            `the looks are [${GEN_LOOK_NAMES.join(', ')}]`));
     }
     for (const key of ['obstacleTarget', 'triesPerStep', 'saturationK']) {
         if (!Number.isInteger(knobs[key]) || knobs[key] < 0) {
@@ -983,7 +1001,9 @@ export function serializeGenRoom(world, extractedRules, _obstacleLib, _itemLib, 
         generated: true,
         seed: room.seed,
         size: { ...room.size },
-        record: structuredClone(room.record),
+        // ⛓ seedling-gen-biomes-1 (C1) — the look is painted HERE, on the finished room, and nowhere
+        //   earlier: every door, location and re-roll above read the generator's own terrain names.
+        record: structuredClone(applyLook(room.record, room.generation?.look)),
         start: { ...room.start },
         goal_cell: { ...room.goalCell },
         generation: { ...room.generation },

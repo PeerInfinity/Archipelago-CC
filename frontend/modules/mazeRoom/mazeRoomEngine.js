@@ -845,10 +845,14 @@ export function checkBlockSinks(sinks, width, height, who) {
  * is not pulled until it has left. Without the gate nothing happens — the rules producer's own bound (the disc is not
  * lethal there either), named. Discs may overlap (L108's ferry: released on one trap, the next step enters the next
  * trap's disc from outside it, so that trap fires). Refused by name: a disc cell that is an exit tile, a trap cell that
- * is not floor, ONE step that enters two discs from outside both (which trap wins is not settled), a trap whose cell
+ * is not floor, ONE step that enters two discs from outside both unless all but one trap YIELD it, a trap whose cell
  * lies in another's disc (the landing would fire the next tongue: chained pulls are not modelled), and a world with
  * arrow traps too.
- * Returns `[{x, y, gate, disc: Set<posKey>}]` (the disc INCLUDES the trap's cell).
+ * ⛓ `yields` (session tile-primitives-sphere-order-10, ⚖ 2026-10-30 "First range entered"): `[{from, to}]`, the steps
+ * into its disc this trap does NOT take because another trap's disc is entered first on the way (the producer measures
+ * that; L78's (6,5) yields (8,4) → (8,5) to (9,6), `probe-seedling-l78-pull-order.mjs`). Each is one move, `from`
+ * outside the disc and `to` inside it; a step every trap it enters yields is refused.
+ * Returns `[{x, y, gate, disc: Set<posKey>, yields: Set<"from>to">}]` (the disc INCLUDES the trap's cell).
  */
 export function checkPulls(pulls, world, who) {
     const bad = (why) => new Error(`${who}: "pulls" ${why}`);
@@ -871,7 +875,18 @@ export function checkPulls(pulls, world, who) {
             if (exitCells.has(key)) throw bad(`trap at (${p.x},${p.y}) grabs from the exit tile (${c.x},${c.y}) — which comes first is not settled`);
             disc.add(key);
         }
-        return { x: p.x, y: p.y, gate: p.gate, disc };
+        if (p.yields !== undefined && !Array.isArray(p.yields)) throw bad(`trap at (${p.x},${p.y}) "yields" must be a list`);
+        const yields = new Set();
+        for (const { from, to } of p.yields ?? []) {
+            if (!inGrid(from) || !inGrid(to)) throw bad(`trap at (${p.x},${p.y}) yields ${JSON.stringify({ from, to })}, not cells of the grid`);
+            if (!disc.has(posKey(to.x, to.y))) throw bad(`trap at (${p.x},${p.y}) yields a step into (${to.x},${to.y}), which is not in its disc`);
+            if (disc.has(posKey(from.x, from.y))) throw bad(`trap at (${p.x},${p.y}) yields a step from (${from.x},${from.y}), which is in its disc`);
+            if (Math.abs(from.x - to.x) + Math.abs(from.y - to.y) !== 1) {
+                throw bad(`trap at (${p.x},${p.y}) yields a step from (${from.x},${from.y}) into (${to.x},${to.y}), which is not one move`);
+            }
+            yields.add(stepKey(from, to));
+        }
+        return { x: p.x, y: p.y, gate: p.gate, disc, yields };
     });
     for (const a of out) {
         for (const b of out) {
@@ -884,11 +899,16 @@ export function checkPulls(pulls, world, who) {
         for (const b of out.slice(i + 1)) {
             for (const key of a.disc) {
                 if (!b.disc.has(key)) continue;
-                const { x, y } = unposKey(key);
-                const outside = Object.values(DELTAS).filter(({ dx, dy }) => isFloor(world, x - dx, y - dy))
-                    .map(({ dx, dy }) => posKey(x - dx, y - dy)).find((k) => !a.disc.has(k) && !b.disc.has(k));
-                if (outside !== undefined) {
-                    throw bad(`traps at (${a.x},${a.y}) and (${b.x},${b.y}) both grab a step from ${outside} into ${key} — which wins is not settled`);
+                const to = unposKey(key);
+                for (const { dx, dy } of Object.values(DELTAS)) {
+                    const from = { x: to.x - dx, y: to.y - dy };
+                    const k = posKey(from.x, from.y);
+                    if (!isFloor(world, from.x, from.y) || a.disc.has(k) || b.disc.has(k)) continue;
+                    const takers = pullsTaking(out, from, to);
+                    if (takers.length > 1) {
+                        throw bad(`traps at (${takers[0].x},${takers[0].y}) and (${takers[1].x},${takers[1].y}) both grab a step from ${k} into ${key} — which wins is not settled`);
+                    }
+                    if (takers.length === 0) throw bad(`the step from ${k} into ${key} is yielded by every trap it enters`);
                 }
             }
         }
@@ -902,9 +922,18 @@ export function checkPulls(pulls, world, who) {
  */
 export function pullCatching(world, from, to) {
     if (!world.pulls) return null;
+    return pullsTaking(world.pulls, from, to)[0] ?? null;
+}
+
+/** A step's key in a pull's `yields`. */
+const stepKey = (from, to) => `${posKey(from.x, from.y)}>${posKey(to.x, to.y)}`;
+
+/** The traps whose disc a move from `from` to `to` enters from outside it, less those that yield the step. */
+function pullsTaking(pulls, from, to) {
     const t = posKey(to.x, to.y);
     const f = posKey(from.x, from.y);
-    return world.pulls.find((p) => p.disc.has(t) && !p.disc.has(f)) ?? null;
+    const step = stepKey(from, to);
+    return pulls.filter((p) => p.disc.has(t) && !p.disc.has(f) && !p.yields?.has(step));
 }
 
 /**
@@ -1122,6 +1151,10 @@ export function serializeMazeEntities(world) {
     if (world.pulls?.length) {
         out.pulls = world.pulls.map((p) => ({
             x: p.x, y: p.y, from: [...p.disc].filter((k) => k !== posKey(p.x, p.y)).map(unposKey).sort(rowMajor), gate: p.gate,
+            ...(p.yields.size > 0 ? {
+                yields: [...p.yields].map((k) => k.split('>').map(unposKey)).map(([from, to]) => ({ from, to }))
+                    .sort((a, b) => rowMajor(a.to, b.to) || rowMajor(a.from, b.from)),
+            } : {}),
         }));
     }
     return out;

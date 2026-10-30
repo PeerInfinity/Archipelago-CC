@@ -146,10 +146,10 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
             for (const l of r.locations ?? []) ruleItems(l.access_rule, asked);
         }
         const REAL = [...asked].filter((i) => i !== ROPE);
-        // ⛓ tile-primitives-sphere-order-9 (sphere 8.5 joined): five regions no AP exit of the preset enters — L80's r16c1 is entered
-        // only from L79 (sphere 9.10, unlisted) and r12c3 / r8c4 only past it; L84's r0c0 and r3c0 have no AP entrance in the
-        // `seedling_playthrough` rules either (L85's landings there are arrival-only).
-        const UNENTERED = ['level_80__r12c3', 'level_80__r16c1', 'level_80__r8c4', 'level_84__r0c0', 'level_84__r3c0'];
+        // ⛓ tile-primitives-sphere-order-9 (sphere 8.5 joined): regions no AP exit of the preset enters — L84's r0c0 and r3c0 have no
+        // AP entrance in the `seedling_playthrough` rules either (L85's landings there are arrival-only). L80's r16c1 (and r12c3 / r8c4
+        // past it) were entered only from L79 until sphere 9.10 joined (session tile-primitives-sphere-order-10).
+        const UNENTERED = ['level_84__r0c0', 'level_84__r3c0'];
         expect(reachFromStart(REAL)).toEqual({ unreached: UNENTERED, unchecked: [] });
         // Ring 2 (session tile-primitives-grow-ring2) brings weapon gates of its own: L0's rocks (Sword | Spear) close
         // r11c19 and, past it, r1c6 (and their two rock events); L19's crossings into r1c5 / r5c5 are the Sword (and its
@@ -177,6 +177,8 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         // ⛓ rules-collider-mismatch: level_65__r4c13 -> r4c11 (the open tree's doorway [11,4] is floor; a pixel-mask wall seals its mask).
         // ⛓ tile-primitives-sphere-order-9 (sphere 8.5 joined): L69–L75 and L80's rooted half hang off L66 (in the set), so they join it with
         // their locations and L71's shield lock; L83, L84 r2c4, L85 and L71 r13c7 hang off L12 r42c28's events and stay out of it.
+        // ⛓ tile-primitives-sphere-order-10 (sphere 9.10 joined): L76–L79 hang off L71 r16c19 (in the set), so they join it with L79's
+        // Dark Suit, and so does the half of L80 entered from L79 (r16c1, and r12c3 / r8c4 past it), no longer unentered.
         const RING2_WEAPON_GATED = ['level_0__r1c6', 'level_0__r6c5', 'level_19__r1c5', 'level_19__r5c5'];
         const SPHERE01_WEAPON_GATED = ['level_1', 'level_67__r3c2', 'level_92__r3c12'];
         const SPHERE45_WEAPON_GATED = ['level_48__r11c9', 'level_48__r2c10', 'level_48__r4c3', 'level_48__r7c0', 'level_49'];
@@ -192,11 +194,13 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
             'level_65__r0c8', 'level_65__r4c11', 'level_66__r5c4', 'level_66__r9c8', 'level_68__r1c1', 'level_68__r3c1'];
         const SPHERE85_WEAPON_GATED = ['level_69', 'level_70', 'level_71__r0c6', 'level_71__r11c7', 'level_71__r14c12', 'level_71__r16c19',
             'level_72', 'level_73__r0c4', 'level_73__r3c7', 'level_74', 'level_75', 'level_80__r0c2', 'level_80__r6c4', 'level_80__r8c1'];
+        const SPHERE910_WEAPON_GATED = ['level_76', 'level_77', 'level_78__r0c16', 'level_78__r0c2', 'level_79__r0c4', 'level_79__r8c4',
+            'level_80__r12c3', 'level_80__r16c1', 'level_80__r8c4'];
         expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
             .toEqual({
                 unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED, ...SPHERE01_WEAPON_GATED, ...SPHERE45_WEAPON_GATED,
                     ...SPHERE53_WEAPON_GATED, ...SPHERE56_WEAPON_GATED, ...SPHERE8_WEAPON_GATED, ...SPHERE85_WEAPON_GATED,
-                    ...UNENTERED].sort(),
+                    ...SPHERE910_WEAPON_GATED, ...UNENTERED].sort(),
                 unchecked: ['L0 flag 1: breakablerock@288,176 cleared', 'L0 flag 4: breakablerock@80,112 cleared', ROPE,
                     'L24 flag 0: burnabletree@32,128 cleared', 'L28 flag 0: rope@160,64 cleared', 'L40 flag 8: bosslock@480,352 cleared',
                     'L48 flag 1: bosslock@48,144 cleared', 'L58 flag 1: yeti@56,56 cleared', 'L63 flag 6: lightpole@48,272 cleared',
@@ -207,7 +211,7 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
                     'Level 042 - Totem Part 184,152', 'Level 043 - Totem of Lacste', 'Level 043 - Wand',
                     'Level 048 - Chest', 'Level 049 - Conch', 'Level 055 - Boss Key 3', 'Level 057 - Tentacled Beast', 'Level 063 - Chest',
                     'Level 067 - Boss Key 4', 'Level 068 - Health', 'Level 069 - Lights', 'Level 071 - Chest', 'Level 074 - Darkshield',
-                    'Level 080 - Chest'],
+                    'Level 079 - Darksuit', 'Level 080 - Chest'],
             });
         expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'constant', value: true });
     });

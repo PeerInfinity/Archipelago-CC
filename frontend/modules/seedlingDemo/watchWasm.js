@@ -234,12 +234,22 @@ export const WASM_STAGES = Object.freeze([
  *   play      LIVE: the keyboard (or the on-screen controls) drives the JS
  *             game; `botStatus` is polled for the readout and never finishes
  *
- * ⛔ PHASE A ONLY (⚖ js-13, 2026-10-29). The JS bridge has no `botLoadTape` /
- * `botStart` / `botDrain`, so there is NO tape replay and NO verdict here: a
- * REPLAY's ▶ load in JS is live play from the tape's start spot, and the UI
- * says so. Tape replay in the JS frame is a separate js-arc slice (Phase B).
+ * ⛓⛓ PHASE B (js-arc slice `seedling-js-tape-bridge`) — A REPLAY SHIP NOW
+ * REPLAYS. The JS core has the Bot.as tape verbs (`jsRuntimeCore`'s
+ * `botLoadTape` / `botStart` / `botStatus.finished` / `botDrain`, same `'ok'`
+ * and refusal vocabulary), so a payload marked `replay: true` leaves the shared
+ * stages for the WASM TAIL, unchanged: `tape → running → finished → drain →
+ * verdict` (`JS_REPLAY_STAGES`), its per-tick verdict JS FRAME vs JS MODEL. The
+ * other arms (SOLVE, MANUAL, GENERATE, EDIT) still ship a SPOT for live play —
+ * `spot → play`, as Phase A. ⛔ One window only: the JS frame has no
+ * continuation (`botStart` always rebuilds), so a sequence refuses by name
+ * (`js-sequence-unsupported`) rather than be re-booted per window.
  */
 export const JS_STAGES = Object.freeze(['probe', 'runtime', 'start', 'levels', 'spot', 'play']);
+/** ⛓ PHASE B — a JS REPLAY ship's stages: the shared head, then the wasm tail. */
+export const JS_REPLAY_STAGES = Object.freeze([
+    'probe', 'runtime', 'start', 'levels', 'tape', 'running', 'finished', 'drain', 'verdict',
+]);
 
 /** The JS runtime page, beside this one (`seedlingDemo/`). */
 export const JS_PAGE = 'jsRuntime.html';
@@ -393,9 +403,11 @@ export const END_STATE_TOLERANCE = 0;
  * (trap 262's shape), and a reader who could not see the stage at all could not
  * tell a MANUAL ship from one whose verdict was never computed.
  */
-export function stagesOf({ levelSet = null, windows = 1, transport = 'wasm' } = {}) {
-    // ⛓ LAB L3: the JS transport's own list, filtered by the SAME data rule.
-    if (transport === 'js') return JS_STAGES.filter((s) => s !== 'levels' || Boolean(levelSet));
+export function stagesOf({ levelSet = null, windows = 1, transport = 'wasm', replay = false } = {}) {
+    // ⛓ LAB L3: the JS transport's own list, filtered by the SAME data rule (⛓ PHASE B: a replay's list).
+    if (transport === 'js') {
+        return (replay ? JS_REPLAY_STAGES : JS_STAGES).filter((s) => s !== 'levels' || Boolean(levelSet));
+    }
     /**
      * ⛔ ONE WINDOW IS THE OLD LIST, EXACTLY. Every browser row and every unit
      * row asserts on these names, and a ship of one tape must reach the same
@@ -1096,14 +1108,15 @@ const PER_TICK_ANSWERED = new Set(['agrees', 'diverges', 'inconsistent', 'refuse
  * it is why the `end state only` sentence is on screen for every ship, which
  * is what `check-seedling-wasm-ship.mjs` has always asserted.
  */
-export function verdictBlock(v, note = null) {
+export function verdictBlock(v, note = null, who = 'wasm') {
     const pt = v?.perTick ?? null;
     const lines = [];
+    // ⛓ PHASE B: `who` names the subject — `js frame` for a JS replay, which is NOT a statement about the real game.
     if (pt && PER_TICK_ANSWERED.has(pt.kind)) {
-        lines.push(`wasm verdict: ${pt.text}  —  ${PER_TICK_SCOPE}`);
+        lines.push(`${who} verdict: ${pt.text}  —  ${PER_TICK_SCOPE}`);
         lines.push(`end state: ${v.text}  —  ${VERDICT_SCOPE}`);
     } else {
-        lines.push(`${verdictLine(v)}  —  ${VERDICT_SCOPE}`);
+        lines.push(`${who === 'wasm' ? verdictLine(v) : `${who} verdict: ${v.text}`}  —  ${VERDICT_SCOPE}`);
         // ⛓ A REFUSAL'S per-tick line would repeat the headline word for word —
         // the end-state verdict already reads `not finished (<reason>)`.
         if (pt && pt.kind !== 'not-finished') lines.push(`per tick: ${pt.text}`);
@@ -1256,6 +1269,8 @@ async function shipToFrame(payload, host, transport) {
          * reason to stop checking it.
          */
         levelSource = null,
+        /** ⛓ PHASE B — a JS ship that REPLAYS its tape (the wasm tail) instead of shipping a spot for live play. */
+        replay = false,
     } = payload;
     const windows = windowsIn ?? [{
         tape, expect, expectWhy, modelStream, modelStreamWhy, label,
@@ -1267,7 +1282,7 @@ async function shipToFrame(payload, host, transport) {
     shipOfFrame.set(frame, shipId);
     const state = {
         stage: null,
-        stages: stagesOf({ levelSet, windows: windows.length, transport }),
+        stages: stagesOf({ levelSet, windows: windows.length, transport, replay: js && replay }),
         /** ⛓ One record per window: its stages, its own verdict, its boundary. */
         windows: [],
         /** ⛓ P4E: `{build, capable, why}` — does this build hold after the latch. */
@@ -1359,7 +1374,9 @@ async function shipToFrame(payload, host, transport) {
             .catch(() => null)
         : null;
     // ⛓ LAB L3: a JS frame holds nothing for a successor — there is no tape.
-    state.hold = js ? null : (windows.length > 1 ? holdCapabilityOf(manifest, wasmPage)
+    // ⛓ PHASE B: a JS REPLAY takes the wasm tail, which reads `state.hold` — a hold the JS runtime cannot make.
+    state.hold = js ? (replay ? { build: null, capable: false, why: 'the JS runtime declares no `hold`' } : null)
+        : (windows.length > 1 ? holdCapabilityOf(manifest, wasmPage)
         : { build: buildNameFromWasmPath(wasmPage), capable: false,
             why: 'a single window has no successor to hold for' });
     await freshFrame(frame, lifetime, wasmPage);
@@ -1494,8 +1511,13 @@ async function shipToFrame(payload, host, transport) {
         enter('levels', `${levelSet.rooms.length} room(s) mounted — ${levelSet.set_id}`);
     }
 
-    // ⛓ LAB L3: the transports part here — the JS frame has no tape verbs.
-    if (js) {
+    // ⛓ LAB L3: the transports part here — a JS ship that is not a replay plays live from its spot.
+    // ⛓ PHASE B: a JS REPLAY takes the wasm tail below, for ONE window (the JS frame has no continuation).
+    if (js && replay && windows.length > 1) {
+        return refuse('tape', 'js-sequence-unsupported', `${windows.length} windows — the JS frame's botStart `
+            + 'always rebuilds, so a continuation would be a re-boot reported as one');
+    }
+    if (js && !replay) {
         return playInJs({
             payload, host, state, enter, refuse, until, win, botJson,
             alive: () => lifetime.alive() && shipOfFrame.get(frame) === shipId,
@@ -1741,7 +1763,7 @@ async function shipToFrame(payload, host, transport) {
         // ── running ──────────────────────────────────────────────────
         const started = bot('botStart');
         if (started !== 'ok') return refuse(`running${at}`, `botStart: ${started}`, '');
-        enter(`running${at}`, `${wLabel} — running in the real game`);
+        enter(`running${at}`, `${wLabel} — running in the ${js ? 'JS game' : 'real game'}`);
 
         /**
          * ⚠ THE POLL IS THE SAME 250 ms POLL IT ALWAYS WAS, wrapped in a

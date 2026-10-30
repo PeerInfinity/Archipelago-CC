@@ -28,7 +28,7 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { createJsRuntime } from './jsRuntimeCore.js';
 import {
-    SCENERY, autotileMask, cameraView, cosmeticRand, formatOp, paintOps, poleFrame, roomOps, treeFrame,
+    SCENERY, autotileMask, cameraView, cosmeticRand, createTinter, formatOp, paintOps, poleFrame, roomOps, treeFrame,
 } from './seedlingSkinRenderer.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -201,6 +201,59 @@ describe('4. the painter, on a recording ctx', () => {
         const images = new Map(art.sheetsInUse().map(({ sheetRef }) => [sheetRef, { name: sheetRef }]));
         const counts = paintOps(recorder(), ops, images, view, canvas);
         expect(counts.sprites).toBeLessThan(ops.length / 2);
+    });
+});
+
+describe('4b. the tinter (`createTinter`, the page\'s and the maze\'s `tinted`), on a stub doc that records ops', () => {
+    // ⛓ seedling-js-render-fixes — lifted from `jsRuntimePage` (and the maze's copy); these are the ops both drew.
+    const stubDoc = () => {
+        const made = [];
+        return {
+            made,
+            createElement: (tag) => {
+                const calls = [];
+                const ctx = new Proxy({}, {
+                    get: (t, k) => (...a) => calls.push([k, ...a]),
+                    set: (t, k, v) => { calls.push([`=${String(k)}`, v]); return true; },
+                });
+                const c = { tag, width: 0, height: 0, calls, getContext: (kind) => (kind === '2d' ? ctx : null) };
+                made.push(c);
+                return c;
+            },
+        };
+    };
+    const img = { width: 32, height: 16 };
+    const opsOf = (fill, op) => [
+        ['drawImage', img, 0, 0],
+        ['=globalCompositeOperation', op], ['=fillStyle', fill], ['fillRect', 0, 0, 32, 16],
+        ['=globalCompositeOperation', 'destination-in'], ['drawImage', img, 0, 0],
+    ];
+
+    it('a colour MULTIPLIES (Image.as), then destination-in keeps the sheet\'s own alpha', () => {
+        const doc = stubDoc();
+        const c = createTinter(doc)(img, '#ff8040');
+        expect(doc.made).toEqual([c]);
+        expect([c.tag, c.width, c.height]).toEqual(['canvas', 32, 16]);
+        expect(c.calls).toEqual(opsOf('#ff8040', 'multiply'));
+    });
+
+    it('`=colour` is a SILHOUETTE (G9c): source-in with the colour after the `=`, then destination-in', () => {
+        const doc = stubDoc();
+        expect(createTinter(doc)(img, '=#ffffff').calls).toEqual(opsOf('#ffffff', 'source-in'));
+    });
+
+    it('one cached canvas per (img, tint); another tint, image or tinter is its own', () => {
+        const doc = stubDoc();
+        const tinted = createTinter(doc);
+        const a = tinted(img, '#ff0000');
+        expect(tinted(img, '#ff0000')).toBe(a);
+        const b = tinted(img, '=#ff0000');
+        const other = { width: 32, height: 16 };
+        const c = tinted(other, '#ff0000');
+        expect(new Set([a, b, c]).size).toBe(3);
+        expect(doc.made).toHaveLength(3);
+        expect(createTinter(doc)(img, '#ff0000')).not.toBe(a);
+        expect(doc.made).toHaveLength(4);
     });
 });
 

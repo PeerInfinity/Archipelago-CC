@@ -296,6 +296,20 @@ export const TERRAIN = Object.freeze({
      * `TILE_COLUMN_VARIANTS`' cosmetic pit/continuous/spray flags.
      */
     waterfall: Object.freeze({ name: 'waterfall', column: 32, type: 25 }),
+    /**
+     * ⛓ seedling-gen-terrains (C3) — the original game's WALK-CHANGING tiles, one
+     * column each (the gen-content design's §3.2, measured there in a 10x10 band):
+     * Ice 22 (sliding), Lava 17 (lethal without the dark suit), Igneous-to-Lava 31
+     * (turns to lava ~36 frames after the player comes near: `Tile.as` case 31),
+     * Cliff Stairs 10 and Ghost Tile Step 30 (speed 0.4). Only a terrain template
+     * paints them, and the five old biomes take those templates OPT-IN, so no
+     * committed room holds one.
+     */
+    ice: Object.freeze({ name: 'ice', column: 24, type: 22 }),
+    lava: Object.freeze({ name: 'lava', column: 19, type: 17 }),
+    melt: Object.freeze({ name: 'melt', column: 38, type: 31 }),
+    stairs: Object.freeze({ name: 'stairs', column: 12, type: 10 }),
+    ghoststep: Object.freeze({ name: 'ghoststep', column: 37, type: 30 }),
 });
 
 export const TERRAIN_NAMES = Object.freeze(Object.keys(TERRAIN));
@@ -586,6 +600,42 @@ export function recordHoldsWater(record) {
     const wet = new Set([TERRAIN.water.name, TERRAIN.waterfall.name]);
     return tilesLayer(record).tiles.some((t) => wet.has(columnTerrainName(
         Math.floor(t[2] / TILE_SIZE))));
+}
+
+/**
+ * ⛓ seedling-gen-terrains (C3) — **THE TERRAINS WHOSE TICK OWES THE `sound` PIN**:
+ * water and waterfall (above), and LAVA and IGNEOUS-TO-LAVA. `hazardFlagsFor` runs
+ * the swim term on a lava tick too, and an igneous cell becomes lava under the
+ * walk. Measured: a dark-suit walk across a lava band without the pin THREW
+ * `PhysicsV2Error`; with it, it SOLVED (the design's §3.2 probe).
+ */
+export const SOUND_PIN_TERRAINS = Object.freeze([
+    TERRAIN.water.name, TERRAIN.waterfall.name, TERRAIN.lava.name, TERRAIN.melt.name]);
+
+/** Does this record hold a cell whose tick owes the `sound` pin (`SOUND_PIN_TERRAINS`)? */
+export function recordOwesSoundPin(record) {
+    const owes = new Set(SOUND_PIN_TERRAINS);
+    return tilesLayer(record).tiles.some((t) => owes.has(columnTerrainName(
+        Math.floor(t[2] / TILE_SIZE))));
+}
+
+/**
+ * ⛓ seedling-gen-terrains (C3) — **WHICH TERRAINS THE GENERATOR'S FLOODS WALK**
+ * (the seal pre-check, the door law, the carve law), for a boot.
+ *
+ * `ground` and the three that only change HOW the walk moves (ice, stairs, ghost
+ * step) are walkable at every boot. Lava and igneous-to-lava are walkable only
+ * with the dark suit; without it they block, so a pre-dark-suit room never gets a
+ * lava cell that CUTS anything. Water and waterfall stay blocking at every boot,
+ * as they always were (the swim gates are elements, not floods).
+ *
+ * ⛔ The set is a function of the items alone, and on a record that holds none of
+ * the new terrains every boot's flood is the old `ground`-only flood.
+ */
+export function floodTerrainsFor(items) {
+    const names = [TERRAIN.ground.name, TERRAIN.ice.name, TERRAIN.stairs.name, TERRAIN.ghoststep.name];
+    if (items?.hasDarkSuit === true) names.push(TERRAIN.lava.name, TERRAIN.melt.name);
+    return Object.freeze(names);
 }
 
 /**

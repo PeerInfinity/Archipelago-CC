@@ -322,18 +322,23 @@ describe('catalogue names every template, element head and skeleton kind', () =>
      *  head's DEFAULT-IN column is read off `defaultElementsFor`, pinned BY NAME. */
     it('⛓ the DEFAULT-IN column: which biome defaults draw each head (the ⚖ Q13 fold)', () => {
         expect(CATALOGUE.biomes.map((b) => b.id))
-            .toEqual(['pre-sword', 'post-sword', 'post-shield', 'post-swim', 'post-feather', 'maze-v1']);
+            .toEqual(['pre-sword', 'post-sword', 'post-shield', 'post-swim', 'post-feather', 'post-fire',
+                'post-spear', 'post-dark-suit', 'endgame', 'maze-v1']);
         const defaultIn = (head) => CATALOGUE.elements.find((e) => e.head === head).defaultIn;
-        const ALL = ['pre-sword', 'post-sword', 'post-shield', 'post-swim', 'post-feather'];
+        // ⛓ seedling-gen-biomes-1 (C2): the four census boots hold the sword and the shield; post-spear on
+        //   the conch and the feather too (post-fire has neither — it is D4's boot).
+        const ALL = ['pre-sword', 'post-sword', 'post-shield', 'post-swim', 'post-feather', 'post-fire',
+            'post-spear', 'post-dark-suit', 'endgame'];
+        const SWIMMERS = ['post-swim', 'post-feather', 'post-spear', 'post-dark-suit', 'endgame'];
         const SWORD = ALL.slice(1);
         for (const head of ['guard', 'blockpocket', 'chamber']) expect(defaultIn(head), head).toEqual(ALL);
         for (const head of ['killgate', 'arena', 'rockgate', 'shortcut', 'roam', 'corridorbody']) {
             expect(defaultIn(head), head).toEqual(SWORD);
         }
-        expect(defaultIn('shieldgate')).toEqual(['post-shield', 'post-swim', 'post-feather']);
-        expect(defaultIn('watergate')).toEqual(['post-swim', 'post-feather']);
-        expect(defaultIn('watershortcut')).toEqual(['post-swim', 'post-feather']);
-        expect(defaultIn('waterfallgate')).toEqual(['post-feather']);
+        expect(defaultIn('shieldgate')).toEqual(ALL.slice(2));
+        expect(defaultIn('watergate')).toEqual(SWIMMERS);
+        expect(defaultIn('watershortcut')).toEqual(SWIMMERS);
+        expect(defaultIn('waterfallgate')).toEqual(SWIMMERS.slice(1));
     });
 
     it('⛔ KILL_LOCK_TEMPLATES is EMPTY, and the table SAYS SO rather than '

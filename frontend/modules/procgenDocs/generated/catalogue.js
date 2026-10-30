@@ -31,7 +31,7 @@ export const CATALOGUE = frz({
                     "hasRefusalText": true,
                     "measured": "⛓ IT WAS ALSO THE WHOLE COST STORY ON A CARVED ROOM, and that is why the ruling is recorded with a number rather than as a preference. The constructive-mode arc's yield table (§13.5) found every expensive solve in the sweep to be an `arrow-lane` REVERT — the worst single solve was **77.8 s** (`bushy` seed 5), against a per-cell mean under 1 s — and an arrow lane writes NO TERRAIN AT ALL, so the connectivity pre-check slice 6 shipped could not touch it and must not have. §14.13 re-measured it at every chamber count: **`arrow-lane` owned 21 of the 23 REVERTs** in the Seedling sweep and the one expensive cell at each. ⛔ The cost is the SOLVER walking its whole combat ladder against a live volley before refusing; nothing about it is a defect, which is exactly why no slice could fix it and the row had to be ruled on.",
                     "name": "arrow-lane",
-                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley."
+                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley. ⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: \"Arrow traps would need to be combined with either a switch or a rope.\"): the `ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and the rope that disarms it together, post-sword. This template row stays excluded."
                 },
                 {
                     "cause": "MECHANISM — a hold is not a latch",
@@ -466,7 +466,7 @@ export const CATALOGUE = frz({
                     "hasRefusalText": true,
                     "measured": "⛓ IT WAS ALSO THE WHOLE COST STORY ON A CARVED ROOM, and that is why the ruling is recorded with a number rather than as a preference. The constructive-mode arc's yield table (§13.5) found every expensive solve in the sweep to be an `arrow-lane` REVERT — the worst single solve was **77.8 s** (`bushy` seed 5), against a per-cell mean under 1 s — and an arrow lane writes NO TERRAIN AT ALL, so the connectivity pre-check slice 6 shipped could not touch it and must not have. §14.13 re-measured it at every chamber count: **`arrow-lane` owned 21 of the 23 REVERTs** in the Seedling sweep and the one expensive cell at each. ⛔ The cost is the SOLVER walking its whole combat ladder against a live volley before refusing; nothing about it is a defect, which is exactly why no slice could fix it and the row had to be ruled on.",
                     "name": "arrow-lane",
-                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley."
+                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley. ⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: \"Arrow traps would need to be combined with either a switch or a rope.\"): the `ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and the rope that disarms it together, post-sword. This template row stays excluded."
                 },
                 {
                     "cause": "MECHANISM — a hold is not a latch",
@@ -933,7 +933,7 @@ export const CATALOGUE = frz({
                     "hasRefusalText": true,
                     "measured": "⛓ IT WAS ALSO THE WHOLE COST STORY ON A CARVED ROOM, and that is why the ruling is recorded with a number rather than as a preference. The constructive-mode arc's yield table (§13.5) found every expensive solve in the sweep to be an `arrow-lane` REVERT — the worst single solve was **77.8 s** (`bushy` seed 5), against a per-cell mean under 1 s — and an arrow lane writes NO TERRAIN AT ALL, so the connectivity pre-check slice 6 shipped could not touch it and must not have. §14.13 re-measured it at every chamber count: **`arrow-lane` owned 21 of the 23 REVERTs** in the Seedling sweep and the one expensive cell at each. ⛔ The cost is the SOLVER walking its whole combat ladder against a live volley before refusing; nothing about it is a defect, which is exactly why no slice could fix it and the row had to be ruled on.",
                     "name": "arrow-lane",
-                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley."
+                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley. ⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: \"Arrow traps would need to be combined with either a switch or a rope.\"): the `ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and the rope that disarms it together, post-sword. This template row stays excluded."
                 },
                 {
                     "cause": "MECHANISM — a hold is not a latch",
@@ -1400,7 +1400,7 @@ export const CATALOGUE = frz({
                     "hasRefusalText": true,
                     "measured": "⛓ IT WAS ALSO THE WHOLE COST STORY ON A CARVED ROOM, and that is why the ruling is recorded with a number rather than as a preference. The constructive-mode arc's yield table (§13.5) found every expensive solve in the sweep to be an `arrow-lane` REVERT — the worst single solve was **77.8 s** (`bushy` seed 5), against a per-cell mean under 1 s — and an arrow lane writes NO TERRAIN AT ALL, so the connectivity pre-check slice 6 shipped could not touch it and must not have. §14.13 re-measured it at every chamber count: **`arrow-lane` owned 21 of the 23 REVERTs** in the Seedling sweep and the one expensive cell at each. ⛔ The cost is the SOLVER walking its whole combat ladder against a live volley before refusing; nothing about it is a defect, which is exactly why no slice could fix it and the row had to be ruled on.",
                     "name": "arrow-lane",
-                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley."
+                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley. ⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: \"Arrow traps would need to be combined with either a switch or a rope.\"): the `ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and the rope that disarms it together, post-sword. This template row stays excluded."
                 },
                 {
                     "cause": "MECHANISM — a hold is not a latch",
@@ -1868,7 +1868,7 @@ export const CATALOGUE = frz({
                     "hasRefusalText": true,
                     "measured": "⛓ IT WAS ALSO THE WHOLE COST STORY ON A CARVED ROOM, and that is why the ruling is recorded with a number rather than as a preference. The constructive-mode arc's yield table (§13.5) found every expensive solve in the sweep to be an `arrow-lane` REVERT — the worst single solve was **77.8 s** (`bushy` seed 5), against a per-cell mean under 1 s — and an arrow lane writes NO TERRAIN AT ALL, so the connectivity pre-check slice 6 shipped could not touch it and must not have. §14.13 re-measured it at every chamber count: **`arrow-lane` owned 21 of the 23 REVERTs** in the Seedling sweep and the one expensive cell at each. ⛔ The cost is the SOLVER walking its whole combat ladder against a live volley before refusing; nothing about it is a defect, which is exactly why no slice could fix it and the row had to be ruled on.",
                     "name": "arrow-lane",
-                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley."
+                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley. ⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: \"Arrow traps would need to be combined with either a switch or a rope.\"): the `ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and the rope that disarms it together, post-sword. This template row stays excluded."
                 },
                 {
                     "cause": "MECHANISM — a hold is not a latch",
@@ -2329,6 +2329,2065 @@ export const CATALOGUE = frz({
             ]
         },
         {
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate",
+            "excluded": [
+                {
+                    "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
+                    "family": "arrow-lane",
+                    "hasRefusalText": true,
+                    "measured": "⛓ IT WAS ALSO THE WHOLE COST STORY ON A CARVED ROOM, and that is why the ruling is recorded with a number rather than as a preference. The constructive-mode arc's yield table (§13.5) found every expensive solve in the sweep to be an `arrow-lane` REVERT — the worst single solve was **77.8 s** (`bushy` seed 5), against a per-cell mean under 1 s — and an arrow lane writes NO TERRAIN AT ALL, so the connectivity pre-check slice 6 shipped could not touch it and must not have. §14.13 re-measured it at every chamber count: **`arrow-lane` owned 21 of the 23 REVERTs** in the Seedling sweep and the one expensive cell at each. ⛔ The cost is the SOLVER walking its whole combat ladder against a live volley before refusing; nothing about it is a defect, which is exactly why no slice could fix it and the row had to be ruled on.",
+                    "name": "arrow-lane",
+                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley. ⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: \"Arrow traps would need to be combined with either a switch or a rope.\"): the `ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and the rope that disarms it together, post-sword. This template row stays excluded."
+                },
+                {
+                    "cause": "MECHANISM — a hold is not a latch",
+                    "family": "hold",
+                    "hasRefusalText": true,
+                    "measured": "PoC slice 3 RE-MEASURED this one on the corridor, and the verb is now SELECTED where slice 2 measured it never selected at all (trace row tick 0, `hold` against `lock@64,80`). It still does not open the way. A `Lock` is open only WHILE its group is published and `Button.update` republishes every tick from whoever stands on it, so the player who leaves the button to walk through has already shut the lock: the walk then spends its whole per-target budget grazing the lock it just opened.",
+                    "name": "button-lock-pair",
+                    "wouldNeed": "⛓ DISCHARGED BY PoC SLICE 3b, AND THE ROW STAYS ANYWAY. What this needed was the game's own answer — a SOLID on the button, because `Button.hitables` is `[\"Player\",\"Enemy\",\"Solid\"]` and `PushableBlock` is a `\"Solid\"` (L15's shape). Slice 3b built it: `weigh` (a `refineStrategy` arm selected when every presser in the group republishes) parks a block on the button with `runShove` and waits out the fade with `runDwell`, and the palette now carries `wall-gap-lock-weigh-h`/`-v`. ⛔ THIS ROW IS NOT THAT TEMPLATE — it is that template MINUS THE BLOCK, and it is still excluded for its original measured reason, which no longer has a workaround inside it: a button+lock pair with no pushable in the room has nothing to hold the group, and the walk still spends its whole per-target budget grazing the lock it just opened (RE-MEASURED at slice 3b with the `weigh` arm live: the verb is considered, refuses for want of a block by name, and the derivation falls back to exactly the `hold` measured above). ⚠ The shape that remains unbuilt is the CHAIN — a block that needs two leans to reach the button, which is L16's room (block at tile (16,5), button at (17,3), sharing neither coordinate). ⚖ Nobody has ruled on it."
+                },
+                {
+                    "cause": "MECHANISM — the hold outlives its own derived bound",
+                    "family": "kill",
+                    "hasRefusalText": true,
+                    "measured": "⛓ SLICE 3 MOVED THIS ONE TWICE OVER and slice 2's stated cause is now STALE. Slice 2 measured a `PendingDeclaration` only `twoPassSolve` discharges; on the fixed collect path the corridor case never reaches one (`pending` is null). The ladder selects `kill`, the CEILING arm resolves, the button arms the trap and the body DIES — and the hold then runs out the bound its own mechanism derived, waiting on the lock's 101-tick fade. ⚠ MEASURED IN A PROBE ROOM OF THIS SLICE'S OWN MAKING, not in a surveyed one: the number is a fact about that geometry, and it is NOT a claim that L5's shape cannot be templated.",
+                    "name": "arrow-ceiling-killlock",
+                    "wouldNeed": "a template whose geometry lets the fade finish inside the derived bound — which is a MEASUREMENT somebody must take against a surveyed room, not a number to raise. ⛓ THE PRESS ARM stays shut for its own reason: it needs a `KILL_ARM_POLICY.modelled` class (IceTurret, ShieldBoss, Spinner — none pre-sword) and a press needs the sword. ⛓ AND THE NAME CORRECTION STANDS: kickoff §3.3 calls this \"water+bob+kill-lock (bait-kill)\", but the killer at L5 is the ARROW CEILING (`ARROW_KILL_PLAN`'s six phases). A bob's water death IS modelled (`levelRun`'s `ENEMY_TERRAIN_DESTROYS`) and no solver plan baits a body into it; L6's drowning is DECLARED by that tape's own v10 despawn row."
+                },
+                {
+                    "cause": "SUPERSEDED (seedling substrate S1, 2026-09-26) — the room-aware `rockgate` ELEMENT; the old cause VERB-MISSING (\"no `break` executor exists\") went stale at R9 slice L15",
+                    "family": "break",
+                    "hasRefusalText": false,
+                    "measured": "W0 (hand-drawn 10x10, `torchpickup` goal, `DEFAULT_BUDGET`): a `breakablerock` on a 1-wide corridor SOLVES post-sword in 111 ticks (the open corridor: 81) and REFUSES pre-sword; on a loop's short arc it SOLVES 148 ticks with the sword and 244 without (the long way). W1: `--elements=rockgate` post-sword certifies with `break` on seeds 1-4 of the default room, and `--require=hasSword --elements=rockgate` grades STRONG on seeds 1-3.",
+                    "name": "breakable-rock",
+                    "wouldNeed": "nothing — the `rockgate` element (`procgenCore/elements/soloDoor.js`) is the rock's room-aware form; the pass-2 template stays out for the reason the door templates did (a relative footprint cannot grow its wall to the room)."
+                },
+                {
+                    "cause": "NO CERTIFYING ROOM",
+                    "family": "chaser",
+                    "hasRefusalText": false,
+                    "measured": "no surveyed room certifies crossing past a live bob that is never engaged (⚖ kickoff §1.6's accepted default)",
+                    "name": "free-roaming-bob",
+                    "wouldNeed": "a measured crossing; bobs stay out of v1 entirely now that the kill-lock template they were reserved for is excluded"
+                },
+                {
+                    "cause": "NEEDS-GAME-ORACLE",
+                    "family": "kill",
+                    "hasRefusalText": false,
+                    "measured": "§11.4 REFUSES to compute a static \"Enemy\" body's arrow death, so its clear is a tape-DECLARED v9 row and only the `--win` game channel can date it",
+                    "name": "sandtrap-room",
+                    "wouldNeed": "a recording channel — which ⚖ kickoff §3.3 rules out by contract: nothing whose clear only the game can date"
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the room-aware `blockpocket` ELEMENT does what this row could not: it carves the block's REST CELL",
+                    "family": "shove",
+                    "hasRefusalText": false,
+                    "measured": "⛓ ITS OWN CENSUS IS WHAT RETIRED IT. Slice 2 §9.2 counted 170 CUT anchors for a span-1 door on `winding` and the sweep could use NONE of them, because a span-1 block in a 1-wide corridor is shoved to the next bend and SEALS it (§9.11). This row therefore kept its `INTERIOR_SPAN` constant and NOTHING on any carved kind at any span: **0 KEPT on the eight carved kinds in every arm of S1's six-arm yield table (§11.9), 2 per arm on `empty`.** The element places on ALL TEN kinds — **62 of 120 (kind, seed) cells**, `empty` 8/12 and `winding` 7/12 — and certifies with `shove` on every placement, with the lifted claim TRUE (arc-3 §12).",
+                    "name": "wall-gap-block",
+                    "wouldNeed": "nothing this palette can give it. A pass-2 TEMPLATE writes a RELATIVE footprint at an anchor somebody else offers, so it cannot know where the corridor bends — and the rest cell is exactly that. The room-aware element walks the straight run and CARVES the bend (`procgenCore/elements/blockPocket.js`), which is design catalogue #2 and needs the `on-connector` phase to be possible at all. ⛓ Its wave-1 `ori`/`gap` domain sweep (every legal anchor of seeds 1..12, zero throws at all sixteen values) is preserved in the arc-3 kickoff §13.6."
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the `guard` ELEMENT brings its own lane and CARVES it; this row demanded one the room already had",
+                    "family": "weigh",
+                    "hasRefusalText": false,
+                    "measured": "⛓ ⚖ Q2 WAS ANSWERED BY MEASUREMENT AND THE ANSWER WAS ZERO. Its clearer is a SIX-CELL LANE at across `-1`, and no corridor has a straight run beside a bridge cell: **0 KEPT on the eight carved kinds in every arm of S1's six-arm table (§11.9), 1-2 per arm on `empty`.** Slice 2 §9.5b swept every span and it kept NOTHING at any of them. The reverse-pull element carries its own lane into the room and certifies: 16 of 18 placements at `len=2` and 16 of 16 at `len=3`, `heldAtDoor` TRUE on every one (§11.8).",
+                    "name": "wall-gap-lock-weigh",
+                    "wouldNeed": "a room that already has a six-cell straight lane beside a cut cell. That is what pass 1 does NOT build, and asking pass 2 to find one is asking a decorator to be a constructor. ⛓ The element is the same mechanism with the lane brought along (⚖ design ruling 2), and the yield table above is the before it should be read against."
+                },
+                {
+                    "cause": "⚖ NOT A PALETTE FAMILY (user, 2026-08-12) — a SOLVER CAPABILITY. The geometry below is CAPABILITY DOCUMENTATION, not a rejected candidate.",
+                    "family": "chest",
+                    "hasRefusalText": true,
+                    "measured": "⚖ THE RULING FIRST: what `solid:chest → chest` is for is that the solver KNOWS a chest in its way can be cleared by COLLECTING it; the generator was never meant to place chests as deliberate obstacles. So nothing here is an exclusion — it is the bound on the capability, measured while the question was still open, and worth keeping because a later slice that reached for a chest DOOR would otherwise measure it again.\n⛓ AND §2/§9.8's \"chest is proven\" DOES NOT TRANSFER — that was measured on L11's own one-tile shaft, and a measured CAPABILITY is as local as a measured limitation. `chestStanceBand` (`chest.js:167`) searches rows from `py + box.h - 16` DOWNWARD and skips every row whose player box overlaps the chest's own solid, so the stance that fires the open-trigger line is strictly BELOW the chest — the game's own trigger geometry, not a solver choice. The room's start is its fixed NW corner (`SEEDLING_DEFAULTS.start` = (1,1)), so every crossing a SINGLE template can make runs north→south or west→east ⇒ the opener's stance is on the side the player is trying to reach. Driven both ways: in a HORIZONTAL wall's gap the stance is beyond the wall, and in a VERTICAL wall's gap the cell below the chest is the wall itself. The verb IS selected in both — this is not slice 2's \"never reached\" — and it is applied to `MAX_STRATEGIES_PER_GOAL` without a corridor ever appearing.",
+                    "name": "chest-in-the-gap",
+                    "wouldNeed": "⛔ NOTHING — ⚖ the user ruled the family out of scope, so there is no work owed here. Recorded for completeness only: a chest DOOR would need a room whose route DOUBLES BACK so the crossing runs south→north, which needs TWO cooperating templates (one to force the player south, one to be the door) — the depth-1 boundary ⚖ §1.6 draws on purpose (*templates remove the need for cooperative multi-step placement*). ⚠ THE GOAL-SIDE SHAPE IS ITS OWN RESIDUE: a chest whose rect CONTAINS the pickup makes the solve RETURN UNCERTIFIED rather than refuse — `procgenOracle` catches it as *\"the solve returned but the goal list is not certified — no collect record for place:112,112. `solveSegment` is supposed to refuse rather than return short, so this is a seam defect, not a rejected candidate.\"* Recorded for a future engine slice; nothing in this arc touches it."
+                },
+                {
+                    "cause": "DIAGNOSED (Seedling fidelity STANCE) — the key line is on the lock's FAR side: `BossLock.update` opens only on a player box on the row UNDER the lock, and every crossing a single template makes runs north→south, so the lock is sealed from the side the player stands on (the chest's shape exactly)",
+                    "family": "keylock",
+                    "hasRefusalText": true,
+                    "measured": "⛓ SEEDLING FIDELITY STANCE — THE CAUSE IS NOW NAMED. `stanceHypothesis` listed the lock ITSELF, so the far-side stance read as reachable \"once the lock is discharged\", the walk to it named the lock again, and the frontier re-applied `keylock` until `MAX_STRATEGIES_PER_GOAL`. With the lock excluded from its own hypothesis the derivation refuses by name: *\"⛔ SEALED BEHIND ITSELF: the key line is the row y=97 under bosslock@64,80\"* — the SHUT state (the save holds its flag); a cleared flag builds no lock. The route survey had the same loop at L12, L30 and L48. What follows is the record as it stood before the diagnosis.\n⚠⚠ (BEFORE STANCE) THE DECIDING CAUSE IS NOT NAMED, AND THIS ROW SAYS SO — the \"applied 4 strategies and no corridor\" line below is the SYMPTOM; the diagnosis is OPEN. Nobody should read this exclusion as understood. What IS established: `resolveKeylockStrategy` gates on the RUN's own key set (`BossLock.update` reads `Player.hasKey(keyType)`, a save-file boolean and not one of the fourteen `botStatus.items` fields), and with no key the solve THROWS `SolverBotError` — *\"the key is a SUB-ORDER — a `collect-placement` goal the macro layer owes — and inventing a stance for an unkeyed lock would be a wait with no mechanism behind it.\"* BOTH cures were driven and BOTH fail identically: (a) the key GRANTED at boot (`staging.save.keys = [0]`, the channel `levelRun.js:3137` reads), and (b) the key as a FIRST `collect-placement` in an ordered queue — where the key IS collected (verbs `walk`, `collect`, `keylock`) and the door still never opens. ⇒ holding the key is NOT the missing piece, which is what makes the symptom worth recording separately from the guess.",
+                    "name": "key-keylock-pair",
+                    "wouldNeed": "⛓ (Seedling fidelity STANCE) A crossing that reaches the lock from its SOUTH side — the chest's doubled-back route, two cooperating templates — or a boot with its flag cleared. ⚠ (BEFORE STANCE:) FIRST a diagnosis — why the re-plan after a resolved `keylock` still prices the lock as a wall — because until that is named, any template built here would be built against a guess. ⚠ Note the SHARED SHAPE with `chest-in-the-gap`: both are verbs that RESOLVE, get applied to `MAX_STRATEGIES_PER_GOAL`, and never move the corridor, while `shove`, `weigh` and `hold` all do. Two families with one symptom is a hint about the LADDER rather than about either family, and it is the first thing to ask. ⛔ Since design (b) works as far as collecting the key, the goal-QUEUE widening (⚖ §1.4) buys nothing here and is NOT proposed."
+                },
+                {
+                    "cause": "INCOMPATIBLE WITH v1's ONLY GOAL",
+                    "family": "fight",
+                    "hasRefusalText": true,
+                    "measured": "⚖ RULED A BOUNDED PROBE (orchestrator, 2026-08-12) after the three named families all failed: `solid:shieldboss → fight` is a registered executor, `KILL_ARM_POLICY.ShieldBoss` is `modelled`, and ⚖ §0's \"before collecting the shield\" is the shieldboss's own room — so it was the last candidate for a post-sword-EXCLUSIVE clearer. NINE geometries (h walls at ty 3/4/5/6 with a 3-wide gap, v walls at tx 3/4/5 with a 3-tall gap, a 1-wide gap, and an open room): ZERO solved, FIVE threw. The `fight` verb resolves in all of them; two REFUSE on the same \"applied 4 strategies … no corridor\" line the chest and the keylock give, and one spends the per-target budget grazing the 48x48 body.",
+                    "name": "shieldboss-door",
+                    "wouldNeed": "⛔ NOTHING ABOUT THE FIGHT — the blocker is the GOAL. ⚖ §1.4 makes `collect-placement` v1's only goal kind and slice 1 §8.2 makes `torchpickup` the pickup, so EVERY generated level ends in a ceremony; a live ShieldBoss anywhere in the room refuses that ceremony by name. The cure the message itself offers — *\"collect after the removal\"* — is a template that guarantees the boss dies FIRST, which is an ORDER between a clearer and the goal that a depth-1 loop with one goal cannot express."
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the room-aware `killgate` ELEMENT GROWS its wall to the room instead of drawing a `span` from a two-value domain",
+                    "family": "kill",
+                    "hasRefusalText": false,
+                    "measured": "⛓ THE `span` PARAMETER WAS A PROXY FOR A MEASUREMENT THE ROOM CAN MAKE ITSELF. Slice 2 measured its domain as `{1, 8}` — two values for two rooms — and published the price: *\"half this family's `empty` draws are now NO_ANCHOR by construction\"* (§9.11). The element grows 0 cells on a corridor, 7 on the open 10x10 room and a chamber's walls in a chamber, draws NO parameter at all, and places on ALL TEN kinds — **61 of 120 (kind, seed) cells** against the template's 39 legal span-1 anchors on `winding` and 0 anywhere at span 8 except `empty` (§9.5).",
+                    "name": "wall-gap-spinner-killlock",
+                    "wouldNeed": "nothing. ⛔ AND THE ELEMENT DOES NOT DISCHARGE THE CLASS — it inherits it. What retires this row is that the `span` domain, the `SPINNER_OFFSET` constant and the `gap` clamp all become facts about the ROOM rather than draws, which is the whole point of the `on-connector` phase. ⛓ The two measurements that sized its constants — the `SPINNER_OFFSET` sweep and the `span` domain's per-value discharge table — are preserved in the arc-3 kickoff §13.6."
+                }
+            ],
+            "id": "post-fire",
+            "items": {
+                "hasFire": true,
+                "hasShield": true,
+                "hasSword": true,
+                "hasTorch": true
+            },
+            "page": "/frontend/modules/seedlingDemo/watch.html",
+            "skeletonKinds": [
+                {
+                    "backend": "empty",
+                    "codecDefaults": {},
+                    "description": "No walls — just entrance and exits. Showcases the topology layer.",
+                    "effectiveDefaults": {},
+                    "isDefault": true,
+                    "kind": "empty",
+                    "name": "Empty",
+                    "needs": null,
+                    "offered": true,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "random_walls",
+                    "codecDefaults": {},
+                    "description": "Uniform random wall proposals with a feasibility check. The original v1 generator.",
+                    "effectiveDefaults": {},
+                    "isDefault": false,
+                    "kind": "classic",
+                    "name": "Classic",
+                    "needs": "the maze simulator — it solves the room as it builds it, so it runs only in the maze substrate",
+                    "offered": false,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "corridor_only",
+                    "codecDefaults": {},
+                    "description": "Shortest path from entrance to each exit; everything else is wall.",
+                    "effectiveDefaults": {},
+                    "isDefault": false,
+                    "kind": "corridor",
+                    "name": "Corridor",
+                    "needs": "the maze simulator — it solves the room as it builds it, so it runs only in the maze substrate",
+                    "offered": false,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Recursive backtracker with newest-cell picker — long winding corridors with deep dead ends.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "branchy",
+                    "name": "Branchy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "prune": 0
+                    },
+                    "description": "Recursive backtracker with random picker — bushier, Prim's-like with shorter branches.",
+                    "effectiveDefaults": {
+                        "chambers": 1,
+                        "prune": 0
+                    },
+                    "isDefault": false,
+                    "kind": "bushy",
+                    "name": "Bushy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1
+                            ],
+                            "key": "prune",
+                            "why": "fill every dead end back in (1) or leave them (0). MEASURED to be a boolean: pruneDeadEnds runs to a fixed point, so thresholds 1..9999 are one room. 0 = today, and byte-inert."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "kruskals",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "prune": 0
+                    },
+                    "description": "Kruskal's spanning tree with 50% braid — perfect maze with some loops mixed in.",
+                    "effectiveDefaults": {
+                        "chambers": 1,
+                        "prune": 0
+                    },
+                    "isDefault": false,
+                    "kind": "loopy",
+                    "name": "Loopy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1
+                            ],
+                            "key": "prune",
+                            "why": "fill every dead end back in (1) or leave them (0). MEASURED to be a boolean: pruneDeadEnds runs to a fixed point, so thresholds 1..9999 are one room. 0 = today, and byte-inert."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "braid"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "kruskals",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Kruskal's spanning tree with full braid — every dead end removed, loops everywhere.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "open",
+                    "name": "Open",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "braid"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "recursive_division",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "minRoom": 3
+                    },
+                    "description": "Recursive division — partitions the region into chambers connected by single-tile gaps.",
+                    "effectiveDefaults": {
+                        "chambers": 0,
+                        "minRoom": 3
+                    },
+                    "isDefault": false,
+                    "kind": "rooms",
+                    "name": "Rooms",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 3,
+                            "domain": [
+                                2,
+                                3,
+                                4
+                            ],
+                            "key": "minRoom",
+                            "why": "the smallest chamber recursive_division will cut. Smaller = more, tighter rooms; larger = fewer, bigger ones. 3 is today's value."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Recursive backtracker with every dead end filled — one winding corridor from the entrance to the goal, and wall everywhere else. Cloudberry's pass 1.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "winding",
+                    "name": "Winding",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "pruneDeadEnds"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                }
+            ],
+            "substrate": "seedling",
+            "templates": [
+                {
+                    "family": "wall",
+                    "name": "wall-segment",
+                    "params": [
+                        {
+                            "default": "h",
+                            "domain": [
+                                "h",
+                                "v"
+                            ],
+                            "key": "ori",
+                            "why": "the two orientations were `wall-segment-h3` and `-v3`, one parameter hand-unrolled into two rows. Collapsing them is ⚖ ruling 3's wave-1 item and it is what stops the pair drifting apart"
+                        },
+                        {
+                            "default": 3,
+                            "domain": [
+                                2,
+                                3,
+                                4,
+                                5
+                            ],
+                            "key": "len",
+                            "why": "the frozen row was THREE and the number was never measured — three is the default because it is what shipped. The domain stops at 5 because 6 would be within two cells of spanning an 8-wide interior, and a near-spanning wall is a door with no clearer in it (the `wall-gap-block` family is where a door belongs)"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Stone cells in a line; `world.solids` gains them with tag `tile:Stone`. The two orientations are two values of one draw, so a room can be constrained on both axes from one template"
+                },
+                {
+                    "family": "water",
+                    "name": "water-pool",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the frozen row was 2x2 and its own docblock called the size a declared choice; the measurement was that the cells build as water. The domain stops at 3 because a 4-wide pool in an 8-wide interior is half the room"
+                        },
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "h",
+                            "why": "the same, on the other axis. ⛔ NOT collapsed into an `ori` — a pool is a RECTANGLE and w x h says more than a length and a flip does"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Water cells; `world.lethalTerrainTiles` gains them, and the block must pin `sound` for any wet tick (R5 §13) — at every size, which is why the pin is static and not a function of the parameters"
+                },
+                {
+                    "family": "pit",
+                    "name": "pit-patch",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the frozen row was 2x1 — \"the atlas's own pits (L4's two cells) are small\", a declared choice. The domain keeps that end and offers two more; 4 would be half the interior"
+                        },
+                        {
+                            "default": 1,
+                            "domain": [
+                                1,
+                                2
+                            ],
+                            "key": "h",
+                            "why": "the frozen row was ONE cell tall. A pit is a hole in the floor and the atlas's are thin, so the domain is deliberately shorter on this axis than the pool's — the asymmetry is the atlas's, not a typo"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Pit cells; `world.pitTiles` gains them and the corridor planner prices them as a fall"
+                }
+            ]
+        },
+        {
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate",
+            "excluded": [
+                {
+                    "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
+                    "family": "arrow-lane",
+                    "hasRefusalText": true,
+                    "measured": "⛓ IT WAS ALSO THE WHOLE COST STORY ON A CARVED ROOM, and that is why the ruling is recorded with a number rather than as a preference. The constructive-mode arc's yield table (§13.5) found every expensive solve in the sweep to be an `arrow-lane` REVERT — the worst single solve was **77.8 s** (`bushy` seed 5), against a per-cell mean under 1 s — and an arrow lane writes NO TERRAIN AT ALL, so the connectivity pre-check slice 6 shipped could not touch it and must not have. §14.13 re-measured it at every chamber count: **`arrow-lane` owned 21 of the 23 REVERTs** in the Seedling sweep and the one expensive cell at each. ⛔ The cost is the SOLVER walking its whole combat ladder against a live volley before refusing; nothing about it is a defect, which is exactly why no slice could fix it and the row had to be ruled on.",
+                    "name": "arrow-lane",
+                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley. ⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: \"Arrow traps would need to be combined with either a switch or a rope.\"): the `ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and the rope that disarms it together, post-sword. This template row stays excluded."
+                },
+                {
+                    "cause": "MECHANISM — a hold is not a latch",
+                    "family": "hold",
+                    "hasRefusalText": true,
+                    "measured": "PoC slice 3 RE-MEASURED this one on the corridor, and the verb is now SELECTED where slice 2 measured it never selected at all (trace row tick 0, `hold` against `lock@64,80`). It still does not open the way. A `Lock` is open only WHILE its group is published and `Button.update` republishes every tick from whoever stands on it, so the player who leaves the button to walk through has already shut the lock: the walk then spends its whole per-target budget grazing the lock it just opened.",
+                    "name": "button-lock-pair",
+                    "wouldNeed": "⛓ DISCHARGED BY PoC SLICE 3b, AND THE ROW STAYS ANYWAY. What this needed was the game's own answer — a SOLID on the button, because `Button.hitables` is `[\"Player\",\"Enemy\",\"Solid\"]` and `PushableBlock` is a `\"Solid\"` (L15's shape). Slice 3b built it: `weigh` (a `refineStrategy` arm selected when every presser in the group republishes) parks a block on the button with `runShove` and waits out the fade with `runDwell`, and the palette now carries `wall-gap-lock-weigh-h`/`-v`. ⛔ THIS ROW IS NOT THAT TEMPLATE — it is that template MINUS THE BLOCK, and it is still excluded for its original measured reason, which no longer has a workaround inside it: a button+lock pair with no pushable in the room has nothing to hold the group, and the walk still spends its whole per-target budget grazing the lock it just opened (RE-MEASURED at slice 3b with the `weigh` arm live: the verb is considered, refuses for want of a block by name, and the derivation falls back to exactly the `hold` measured above). ⚠ The shape that remains unbuilt is the CHAIN — a block that needs two leans to reach the button, which is L16's room (block at tile (16,5), button at (17,3), sharing neither coordinate). ⚖ Nobody has ruled on it."
+                },
+                {
+                    "cause": "MECHANISM — the hold outlives its own derived bound",
+                    "family": "kill",
+                    "hasRefusalText": true,
+                    "measured": "⛓ SLICE 3 MOVED THIS ONE TWICE OVER and slice 2's stated cause is now STALE. Slice 2 measured a `PendingDeclaration` only `twoPassSolve` discharges; on the fixed collect path the corridor case never reaches one (`pending` is null). The ladder selects `kill`, the CEILING arm resolves, the button arms the trap and the body DIES — and the hold then runs out the bound its own mechanism derived, waiting on the lock's 101-tick fade. ⚠ MEASURED IN A PROBE ROOM OF THIS SLICE'S OWN MAKING, not in a surveyed one: the number is a fact about that geometry, and it is NOT a claim that L5's shape cannot be templated.",
+                    "name": "arrow-ceiling-killlock",
+                    "wouldNeed": "a template whose geometry lets the fade finish inside the derived bound — which is a MEASUREMENT somebody must take against a surveyed room, not a number to raise. ⛓ THE PRESS ARM stays shut for its own reason: it needs a `KILL_ARM_POLICY.modelled` class (IceTurret, ShieldBoss, Spinner — none pre-sword) and a press needs the sword. ⛓ AND THE NAME CORRECTION STANDS: kickoff §3.3 calls this \"water+bob+kill-lock (bait-kill)\", but the killer at L5 is the ARROW CEILING (`ARROW_KILL_PLAN`'s six phases). A bob's water death IS modelled (`levelRun`'s `ENEMY_TERRAIN_DESTROYS`) and no solver plan baits a body into it; L6's drowning is DECLARED by that tape's own v10 despawn row."
+                },
+                {
+                    "cause": "SUPERSEDED (seedling substrate S1, 2026-09-26) — the room-aware `rockgate` ELEMENT; the old cause VERB-MISSING (\"no `break` executor exists\") went stale at R9 slice L15",
+                    "family": "break",
+                    "hasRefusalText": false,
+                    "measured": "W0 (hand-drawn 10x10, `torchpickup` goal, `DEFAULT_BUDGET`): a `breakablerock` on a 1-wide corridor SOLVES post-sword in 111 ticks (the open corridor: 81) and REFUSES pre-sword; on a loop's short arc it SOLVES 148 ticks with the sword and 244 without (the long way). W1: `--elements=rockgate` post-sword certifies with `break` on seeds 1-4 of the default room, and `--require=hasSword --elements=rockgate` grades STRONG on seeds 1-3.",
+                    "name": "breakable-rock",
+                    "wouldNeed": "nothing — the `rockgate` element (`procgenCore/elements/soloDoor.js`) is the rock's room-aware form; the pass-2 template stays out for the reason the door templates did (a relative footprint cannot grow its wall to the room)."
+                },
+                {
+                    "cause": "NO CERTIFYING ROOM",
+                    "family": "chaser",
+                    "hasRefusalText": false,
+                    "measured": "no surveyed room certifies crossing past a live bob that is never engaged (⚖ kickoff §1.6's accepted default)",
+                    "name": "free-roaming-bob",
+                    "wouldNeed": "a measured crossing; bobs stay out of v1 entirely now that the kill-lock template they were reserved for is excluded"
+                },
+                {
+                    "cause": "NEEDS-GAME-ORACLE",
+                    "family": "kill",
+                    "hasRefusalText": false,
+                    "measured": "§11.4 REFUSES to compute a static \"Enemy\" body's arrow death, so its clear is a tape-DECLARED v9 row and only the `--win` game channel can date it",
+                    "name": "sandtrap-room",
+                    "wouldNeed": "a recording channel — which ⚖ kickoff §3.3 rules out by contract: nothing whose clear only the game can date"
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the room-aware `blockpocket` ELEMENT does what this row could not: it carves the block's REST CELL",
+                    "family": "shove",
+                    "hasRefusalText": false,
+                    "measured": "⛓ ITS OWN CENSUS IS WHAT RETIRED IT. Slice 2 §9.2 counted 170 CUT anchors for a span-1 door on `winding` and the sweep could use NONE of them, because a span-1 block in a 1-wide corridor is shoved to the next bend and SEALS it (§9.11). This row therefore kept its `INTERIOR_SPAN` constant and NOTHING on any carved kind at any span: **0 KEPT on the eight carved kinds in every arm of S1's six-arm yield table (§11.9), 2 per arm on `empty`.** The element places on ALL TEN kinds — **62 of 120 (kind, seed) cells**, `empty` 8/12 and `winding` 7/12 — and certifies with `shove` on every placement, with the lifted claim TRUE (arc-3 §12).",
+                    "name": "wall-gap-block",
+                    "wouldNeed": "nothing this palette can give it. A pass-2 TEMPLATE writes a RELATIVE footprint at an anchor somebody else offers, so it cannot know where the corridor bends — and the rest cell is exactly that. The room-aware element walks the straight run and CARVES the bend (`procgenCore/elements/blockPocket.js`), which is design catalogue #2 and needs the `on-connector` phase to be possible at all. ⛓ Its wave-1 `ori`/`gap` domain sweep (every legal anchor of seeds 1..12, zero throws at all sixteen values) is preserved in the arc-3 kickoff §13.6."
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the `guard` ELEMENT brings its own lane and CARVES it; this row demanded one the room already had",
+                    "family": "weigh",
+                    "hasRefusalText": false,
+                    "measured": "⛓ ⚖ Q2 WAS ANSWERED BY MEASUREMENT AND THE ANSWER WAS ZERO. Its clearer is a SIX-CELL LANE at across `-1`, and no corridor has a straight run beside a bridge cell: **0 KEPT on the eight carved kinds in every arm of S1's six-arm table (§11.9), 1-2 per arm on `empty`.** Slice 2 §9.5b swept every span and it kept NOTHING at any of them. The reverse-pull element carries its own lane into the room and certifies: 16 of 18 placements at `len=2` and 16 of 16 at `len=3`, `heldAtDoor` TRUE on every one (§11.8).",
+                    "name": "wall-gap-lock-weigh",
+                    "wouldNeed": "a room that already has a six-cell straight lane beside a cut cell. That is what pass 1 does NOT build, and asking pass 2 to find one is asking a decorator to be a constructor. ⛓ The element is the same mechanism with the lane brought along (⚖ design ruling 2), and the yield table above is the before it should be read against."
+                },
+                {
+                    "cause": "⚖ NOT A PALETTE FAMILY (user, 2026-08-12) — a SOLVER CAPABILITY. The geometry below is CAPABILITY DOCUMENTATION, not a rejected candidate.",
+                    "family": "chest",
+                    "hasRefusalText": true,
+                    "measured": "⚖ THE RULING FIRST: what `solid:chest → chest` is for is that the solver KNOWS a chest in its way can be cleared by COLLECTING it; the generator was never meant to place chests as deliberate obstacles. So nothing here is an exclusion — it is the bound on the capability, measured while the question was still open, and worth keeping because a later slice that reached for a chest DOOR would otherwise measure it again.\n⛓ AND §2/§9.8's \"chest is proven\" DOES NOT TRANSFER — that was measured on L11's own one-tile shaft, and a measured CAPABILITY is as local as a measured limitation. `chestStanceBand` (`chest.js:167`) searches rows from `py + box.h - 16` DOWNWARD and skips every row whose player box overlaps the chest's own solid, so the stance that fires the open-trigger line is strictly BELOW the chest — the game's own trigger geometry, not a solver choice. The room's start is its fixed NW corner (`SEEDLING_DEFAULTS.start` = (1,1)), so every crossing a SINGLE template can make runs north→south or west→east ⇒ the opener's stance is on the side the player is trying to reach. Driven both ways: in a HORIZONTAL wall's gap the stance is beyond the wall, and in a VERTICAL wall's gap the cell below the chest is the wall itself. The verb IS selected in both — this is not slice 2's \"never reached\" — and it is applied to `MAX_STRATEGIES_PER_GOAL` without a corridor ever appearing.",
+                    "name": "chest-in-the-gap",
+                    "wouldNeed": "⛔ NOTHING — ⚖ the user ruled the family out of scope, so there is no work owed here. Recorded for completeness only: a chest DOOR would need a room whose route DOUBLES BACK so the crossing runs south→north, which needs TWO cooperating templates (one to force the player south, one to be the door) — the depth-1 boundary ⚖ §1.6 draws on purpose (*templates remove the need for cooperative multi-step placement*). ⚠ THE GOAL-SIDE SHAPE IS ITS OWN RESIDUE: a chest whose rect CONTAINS the pickup makes the solve RETURN UNCERTIFIED rather than refuse — `procgenOracle` catches it as *\"the solve returned but the goal list is not certified — no collect record for place:112,112. `solveSegment` is supposed to refuse rather than return short, so this is a seam defect, not a rejected candidate.\"* Recorded for a future engine slice; nothing in this arc touches it."
+                },
+                {
+                    "cause": "DIAGNOSED (Seedling fidelity STANCE) — the key line is on the lock's FAR side: `BossLock.update` opens only on a player box on the row UNDER the lock, and every crossing a single template makes runs north→south, so the lock is sealed from the side the player stands on (the chest's shape exactly)",
+                    "family": "keylock",
+                    "hasRefusalText": true,
+                    "measured": "⛓ SEEDLING FIDELITY STANCE — THE CAUSE IS NOW NAMED. `stanceHypothesis` listed the lock ITSELF, so the far-side stance read as reachable \"once the lock is discharged\", the walk to it named the lock again, and the frontier re-applied `keylock` until `MAX_STRATEGIES_PER_GOAL`. With the lock excluded from its own hypothesis the derivation refuses by name: *\"⛔ SEALED BEHIND ITSELF: the key line is the row y=97 under bosslock@64,80\"* — the SHUT state (the save holds its flag); a cleared flag builds no lock. The route survey had the same loop at L12, L30 and L48. What follows is the record as it stood before the diagnosis.\n⚠⚠ (BEFORE STANCE) THE DECIDING CAUSE IS NOT NAMED, AND THIS ROW SAYS SO — the \"applied 4 strategies and no corridor\" line below is the SYMPTOM; the diagnosis is OPEN. Nobody should read this exclusion as understood. What IS established: `resolveKeylockStrategy` gates on the RUN's own key set (`BossLock.update` reads `Player.hasKey(keyType)`, a save-file boolean and not one of the fourteen `botStatus.items` fields), and with no key the solve THROWS `SolverBotError` — *\"the key is a SUB-ORDER — a `collect-placement` goal the macro layer owes — and inventing a stance for an unkeyed lock would be a wait with no mechanism behind it.\"* BOTH cures were driven and BOTH fail identically: (a) the key GRANTED at boot (`staging.save.keys = [0]`, the channel `levelRun.js:3137` reads), and (b) the key as a FIRST `collect-placement` in an ordered queue — where the key IS collected (verbs `walk`, `collect`, `keylock`) and the door still never opens. ⇒ holding the key is NOT the missing piece, which is what makes the symptom worth recording separately from the guess.",
+                    "name": "key-keylock-pair",
+                    "wouldNeed": "⛓ (Seedling fidelity STANCE) A crossing that reaches the lock from its SOUTH side — the chest's doubled-back route, two cooperating templates — or a boot with its flag cleared. ⚠ (BEFORE STANCE:) FIRST a diagnosis — why the re-plan after a resolved `keylock` still prices the lock as a wall — because until that is named, any template built here would be built against a guess. ⚠ Note the SHARED SHAPE with `chest-in-the-gap`: both are verbs that RESOLVE, get applied to `MAX_STRATEGIES_PER_GOAL`, and never move the corridor, while `shove`, `weigh` and `hold` all do. Two families with one symptom is a hint about the LADDER rather than about either family, and it is the first thing to ask. ⛔ Since design (b) works as far as collecting the key, the goal-QUEUE widening (⚖ §1.4) buys nothing here and is NOT proposed."
+                },
+                {
+                    "cause": "INCOMPATIBLE WITH v1's ONLY GOAL",
+                    "family": "fight",
+                    "hasRefusalText": true,
+                    "measured": "⚖ RULED A BOUNDED PROBE (orchestrator, 2026-08-12) after the three named families all failed: `solid:shieldboss → fight` is a registered executor, `KILL_ARM_POLICY.ShieldBoss` is `modelled`, and ⚖ §0's \"before collecting the shield\" is the shieldboss's own room — so it was the last candidate for a post-sword-EXCLUSIVE clearer. NINE geometries (h walls at ty 3/4/5/6 with a 3-wide gap, v walls at tx 3/4/5 with a 3-tall gap, a 1-wide gap, and an open room): ZERO solved, FIVE threw. The `fight` verb resolves in all of them; two REFUSE on the same \"applied 4 strategies … no corridor\" line the chest and the keylock give, and one spends the per-target budget grazing the 48x48 body.",
+                    "name": "shieldboss-door",
+                    "wouldNeed": "⛔ NOTHING ABOUT THE FIGHT — the blocker is the GOAL. ⚖ §1.4 makes `collect-placement` v1's only goal kind and slice 1 §8.2 makes `torchpickup` the pickup, so EVERY generated level ends in a ceremony; a live ShieldBoss anywhere in the room refuses that ceremony by name. The cure the message itself offers — *\"collect after the removal\"* — is a template that guarantees the boss dies FIRST, which is an ORDER between a clearer and the goal that a depth-1 loop with one goal cannot express."
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the room-aware `killgate` ELEMENT GROWS its wall to the room instead of drawing a `span` from a two-value domain",
+                    "family": "kill",
+                    "hasRefusalText": false,
+                    "measured": "⛓ THE `span` PARAMETER WAS A PROXY FOR A MEASUREMENT THE ROOM CAN MAKE ITSELF. Slice 2 measured its domain as `{1, 8}` — two values for two rooms — and published the price: *\"half this family's `empty` draws are now NO_ANCHOR by construction\"* (§9.11). The element grows 0 cells on a corridor, 7 on the open 10x10 room and a chamber's walls in a chamber, draws NO parameter at all, and places on ALL TEN kinds — **61 of 120 (kind, seed) cells** against the template's 39 legal span-1 anchors on `winding` and 0 anywhere at span 8 except `empty` (§9.5).",
+                    "name": "wall-gap-spinner-killlock",
+                    "wouldNeed": "nothing. ⛔ AND THE ELEMENT DOES NOT DISCHARGE THE CLASS — it inherits it. What retires this row is that the `span` domain, the `SPINNER_OFFSET` constant and the `gap` clamp all become facts about the ROOM rather than draws, which is the whole point of the `on-connector` phase. ⛓ The two measurements that sized its constants — the `SPINNER_OFFSET` sweep and the `span` domain's per-value discharge table — are preserved in the arc-3 kickoff §13.6."
+                }
+            ],
+            "id": "post-spear",
+            "items": {
+                "canSwim": true,
+                "hasFeather": true,
+                "hasFire": true,
+                "hasShield": true,
+                "hasSpear": true,
+                "hasSword": true,
+                "hasTorch": true,
+                "hasWand": true
+            },
+            "page": "/frontend/modules/seedlingDemo/watch.html",
+            "skeletonKinds": [
+                {
+                    "backend": "empty",
+                    "codecDefaults": {},
+                    "description": "No walls — just entrance and exits. Showcases the topology layer.",
+                    "effectiveDefaults": {},
+                    "isDefault": true,
+                    "kind": "empty",
+                    "name": "Empty",
+                    "needs": null,
+                    "offered": true,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "random_walls",
+                    "codecDefaults": {},
+                    "description": "Uniform random wall proposals with a feasibility check. The original v1 generator.",
+                    "effectiveDefaults": {},
+                    "isDefault": false,
+                    "kind": "classic",
+                    "name": "Classic",
+                    "needs": "the maze simulator — it solves the room as it builds it, so it runs only in the maze substrate",
+                    "offered": false,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "corridor_only",
+                    "codecDefaults": {},
+                    "description": "Shortest path from entrance to each exit; everything else is wall.",
+                    "effectiveDefaults": {},
+                    "isDefault": false,
+                    "kind": "corridor",
+                    "name": "Corridor",
+                    "needs": "the maze simulator — it solves the room as it builds it, so it runs only in the maze substrate",
+                    "offered": false,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Recursive backtracker with newest-cell picker — long winding corridors with deep dead ends.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "branchy",
+                    "name": "Branchy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "prune": 0
+                    },
+                    "description": "Recursive backtracker with random picker — bushier, Prim's-like with shorter branches.",
+                    "effectiveDefaults": {
+                        "chambers": 1,
+                        "prune": 0
+                    },
+                    "isDefault": false,
+                    "kind": "bushy",
+                    "name": "Bushy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1
+                            ],
+                            "key": "prune",
+                            "why": "fill every dead end back in (1) or leave them (0). MEASURED to be a boolean: pruneDeadEnds runs to a fixed point, so thresholds 1..9999 are one room. 0 = today, and byte-inert."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "kruskals",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "prune": 0
+                    },
+                    "description": "Kruskal's spanning tree with 50% braid — perfect maze with some loops mixed in.",
+                    "effectiveDefaults": {
+                        "chambers": 1,
+                        "prune": 0
+                    },
+                    "isDefault": false,
+                    "kind": "loopy",
+                    "name": "Loopy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1
+                            ],
+                            "key": "prune",
+                            "why": "fill every dead end back in (1) or leave them (0). MEASURED to be a boolean: pruneDeadEnds runs to a fixed point, so thresholds 1..9999 are one room. 0 = today, and byte-inert."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "braid"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "kruskals",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Kruskal's spanning tree with full braid — every dead end removed, loops everywhere.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "open",
+                    "name": "Open",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "braid"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "recursive_division",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "minRoom": 3
+                    },
+                    "description": "Recursive division — partitions the region into chambers connected by single-tile gaps.",
+                    "effectiveDefaults": {
+                        "chambers": 0,
+                        "minRoom": 3
+                    },
+                    "isDefault": false,
+                    "kind": "rooms",
+                    "name": "Rooms",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 3,
+                            "domain": [
+                                2,
+                                3,
+                                4
+                            ],
+                            "key": "minRoom",
+                            "why": "the smallest chamber recursive_division will cut. Smaller = more, tighter rooms; larger = fewer, bigger ones. 3 is today's value."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Recursive backtracker with every dead end filled — one winding corridor from the entrance to the goal, and wall everywhere else. Cloudberry's pass 1.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "winding",
+                    "name": "Winding",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "pruneDeadEnds"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                }
+            ],
+            "substrate": "seedling",
+            "templates": [
+                {
+                    "family": "wall",
+                    "name": "wall-segment",
+                    "params": [
+                        {
+                            "default": "h",
+                            "domain": [
+                                "h",
+                                "v"
+                            ],
+                            "key": "ori",
+                            "why": "the two orientations were `wall-segment-h3` and `-v3`, one parameter hand-unrolled into two rows. Collapsing them is ⚖ ruling 3's wave-1 item and it is what stops the pair drifting apart"
+                        },
+                        {
+                            "default": 3,
+                            "domain": [
+                                2,
+                                3,
+                                4,
+                                5
+                            ],
+                            "key": "len",
+                            "why": "the frozen row was THREE and the number was never measured — three is the default because it is what shipped. The domain stops at 5 because 6 would be within two cells of spanning an 8-wide interior, and a near-spanning wall is a door with no clearer in it (the `wall-gap-block` family is where a door belongs)"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Stone cells in a line; `world.solids` gains them with tag `tile:Stone`. The two orientations are two values of one draw, so a room can be constrained on both axes from one template"
+                },
+                {
+                    "family": "water",
+                    "name": "water-pool",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the frozen row was 2x2 and its own docblock called the size a declared choice; the measurement was that the cells build as water. The domain stops at 3 because a 4-wide pool in an 8-wide interior is half the room"
+                        },
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "h",
+                            "why": "the same, on the other axis. ⛔ NOT collapsed into an `ori` — a pool is a RECTANGLE and w x h says more than a length and a flip does"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Water cells; `world.lethalTerrainTiles` gains them, and the block must pin `sound` for any wet tick (R5 §13) — at every size, which is why the pin is static and not a function of the parameters"
+                },
+                {
+                    "family": "pit",
+                    "name": "pit-patch",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the frozen row was 2x1 — \"the atlas's own pits (L4's two cells) are small\", a declared choice. The domain keeps that end and offers two more; 4 would be half the interior"
+                        },
+                        {
+                            "default": 1,
+                            "domain": [
+                                1,
+                                2
+                            ],
+                            "key": "h",
+                            "why": "the frozen row was ONE cell tall. A pit is a hole in the floor and the atlas's are thin, so the domain is deliberately shorter on this axis than the pool's — the asymmetry is the atlas's, not a typo"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Pit cells; `world.pitTiles` gains them and the corridor planner prices them as a fall"
+                },
+                {
+                    "family": "lava",
+                    "name": "lava-pool",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "h",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Lava cells (type 17): lethal without the dark suit. Pins `sound`: a lava tick runs the swim term, and without the pin the dark-suit walk THREW `PhysicsV2Error` (design §3.2). Before the dark suit the floods block it, so it never cuts"
+                },
+                {
+                    "family": "melt",
+                    "name": "melt-patch",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 1,
+                            "domain": [
+                                1,
+                                2
+                            ],
+                            "key": "h",
+                            "why": "a thin crust: it breaks once the walk comes near"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Igneous-to-Lava cells (type 31): the cell breaks apart once the player has been within half a diagonal for 8 frames and is lava ~5 animation steps later (`Tile.as` case 31). Pins `sound` (it becomes lava). Blocks the floods before the dark suit, as lava does"
+                }
+            ]
+        },
+        {
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate",
+            "excluded": [
+                {
+                    "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
+                    "family": "arrow-lane",
+                    "hasRefusalText": true,
+                    "measured": "⛓ IT WAS ALSO THE WHOLE COST STORY ON A CARVED ROOM, and that is why the ruling is recorded with a number rather than as a preference. The constructive-mode arc's yield table (§13.5) found every expensive solve in the sweep to be an `arrow-lane` REVERT — the worst single solve was **77.8 s** (`bushy` seed 5), against a per-cell mean under 1 s — and an arrow lane writes NO TERRAIN AT ALL, so the connectivity pre-check slice 6 shipped could not touch it and must not have. §14.13 re-measured it at every chamber count: **`arrow-lane` owned 21 of the 23 REVERTs** in the Seedling sweep and the one expensive cell at each. ⛔ The cost is the SOLVER walking its whole combat ladder against a live volley before refusing; nothing about it is a defect, which is exactly why no slice could fix it and the row had to be ruled on.",
+                    "name": "arrow-lane",
+                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley. ⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: \"Arrow traps would need to be combined with either a switch or a rope.\"): the `ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and the rope that disarms it together, post-sword. This template row stays excluded."
+                },
+                {
+                    "cause": "MECHANISM — a hold is not a latch",
+                    "family": "hold",
+                    "hasRefusalText": true,
+                    "measured": "PoC slice 3 RE-MEASURED this one on the corridor, and the verb is now SELECTED where slice 2 measured it never selected at all (trace row tick 0, `hold` against `lock@64,80`). It still does not open the way. A `Lock` is open only WHILE its group is published and `Button.update` republishes every tick from whoever stands on it, so the player who leaves the button to walk through has already shut the lock: the walk then spends its whole per-target budget grazing the lock it just opened.",
+                    "name": "button-lock-pair",
+                    "wouldNeed": "⛓ DISCHARGED BY PoC SLICE 3b, AND THE ROW STAYS ANYWAY. What this needed was the game's own answer — a SOLID on the button, because `Button.hitables` is `[\"Player\",\"Enemy\",\"Solid\"]` and `PushableBlock` is a `\"Solid\"` (L15's shape). Slice 3b built it: `weigh` (a `refineStrategy` arm selected when every presser in the group republishes) parks a block on the button with `runShove` and waits out the fade with `runDwell`, and the palette now carries `wall-gap-lock-weigh-h`/`-v`. ⛔ THIS ROW IS NOT THAT TEMPLATE — it is that template MINUS THE BLOCK, and it is still excluded for its original measured reason, which no longer has a workaround inside it: a button+lock pair with no pushable in the room has nothing to hold the group, and the walk still spends its whole per-target budget grazing the lock it just opened (RE-MEASURED at slice 3b with the `weigh` arm live: the verb is considered, refuses for want of a block by name, and the derivation falls back to exactly the `hold` measured above). ⚠ The shape that remains unbuilt is the CHAIN — a block that needs two leans to reach the button, which is L16's room (block at tile (16,5), button at (17,3), sharing neither coordinate). ⚖ Nobody has ruled on it."
+                },
+                {
+                    "cause": "MECHANISM — the hold outlives its own derived bound",
+                    "family": "kill",
+                    "hasRefusalText": true,
+                    "measured": "⛓ SLICE 3 MOVED THIS ONE TWICE OVER and slice 2's stated cause is now STALE. Slice 2 measured a `PendingDeclaration` only `twoPassSolve` discharges; on the fixed collect path the corridor case never reaches one (`pending` is null). The ladder selects `kill`, the CEILING arm resolves, the button arms the trap and the body DIES — and the hold then runs out the bound its own mechanism derived, waiting on the lock's 101-tick fade. ⚠ MEASURED IN A PROBE ROOM OF THIS SLICE'S OWN MAKING, not in a surveyed one: the number is a fact about that geometry, and it is NOT a claim that L5's shape cannot be templated.",
+                    "name": "arrow-ceiling-killlock",
+                    "wouldNeed": "a template whose geometry lets the fade finish inside the derived bound — which is a MEASUREMENT somebody must take against a surveyed room, not a number to raise. ⛓ THE PRESS ARM stays shut for its own reason: it needs a `KILL_ARM_POLICY.modelled` class (IceTurret, ShieldBoss, Spinner — none pre-sword) and a press needs the sword. ⛓ AND THE NAME CORRECTION STANDS: kickoff §3.3 calls this \"water+bob+kill-lock (bait-kill)\", but the killer at L5 is the ARROW CEILING (`ARROW_KILL_PLAN`'s six phases). A bob's water death IS modelled (`levelRun`'s `ENEMY_TERRAIN_DESTROYS`) and no solver plan baits a body into it; L6's drowning is DECLARED by that tape's own v10 despawn row."
+                },
+                {
+                    "cause": "SUPERSEDED (seedling substrate S1, 2026-09-26) — the room-aware `rockgate` ELEMENT; the old cause VERB-MISSING (\"no `break` executor exists\") went stale at R9 slice L15",
+                    "family": "break",
+                    "hasRefusalText": false,
+                    "measured": "W0 (hand-drawn 10x10, `torchpickup` goal, `DEFAULT_BUDGET`): a `breakablerock` on a 1-wide corridor SOLVES post-sword in 111 ticks (the open corridor: 81) and REFUSES pre-sword; on a loop's short arc it SOLVES 148 ticks with the sword and 244 without (the long way). W1: `--elements=rockgate` post-sword certifies with `break` on seeds 1-4 of the default room, and `--require=hasSword --elements=rockgate` grades STRONG on seeds 1-3.",
+                    "name": "breakable-rock",
+                    "wouldNeed": "nothing — the `rockgate` element (`procgenCore/elements/soloDoor.js`) is the rock's room-aware form; the pass-2 template stays out for the reason the door templates did (a relative footprint cannot grow its wall to the room)."
+                },
+                {
+                    "cause": "NO CERTIFYING ROOM",
+                    "family": "chaser",
+                    "hasRefusalText": false,
+                    "measured": "no surveyed room certifies crossing past a live bob that is never engaged (⚖ kickoff §1.6's accepted default)",
+                    "name": "free-roaming-bob",
+                    "wouldNeed": "a measured crossing; bobs stay out of v1 entirely now that the kill-lock template they were reserved for is excluded"
+                },
+                {
+                    "cause": "NEEDS-GAME-ORACLE",
+                    "family": "kill",
+                    "hasRefusalText": false,
+                    "measured": "§11.4 REFUSES to compute a static \"Enemy\" body's arrow death, so its clear is a tape-DECLARED v9 row and only the `--win` game channel can date it",
+                    "name": "sandtrap-room",
+                    "wouldNeed": "a recording channel — which ⚖ kickoff §3.3 rules out by contract: nothing whose clear only the game can date"
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the room-aware `blockpocket` ELEMENT does what this row could not: it carves the block's REST CELL",
+                    "family": "shove",
+                    "hasRefusalText": false,
+                    "measured": "⛓ ITS OWN CENSUS IS WHAT RETIRED IT. Slice 2 §9.2 counted 170 CUT anchors for a span-1 door on `winding` and the sweep could use NONE of them, because a span-1 block in a 1-wide corridor is shoved to the next bend and SEALS it (§9.11). This row therefore kept its `INTERIOR_SPAN` constant and NOTHING on any carved kind at any span: **0 KEPT on the eight carved kinds in every arm of S1's six-arm yield table (§11.9), 2 per arm on `empty`.** The element places on ALL TEN kinds — **62 of 120 (kind, seed) cells**, `empty` 8/12 and `winding` 7/12 — and certifies with `shove` on every placement, with the lifted claim TRUE (arc-3 §12).",
+                    "name": "wall-gap-block",
+                    "wouldNeed": "nothing this palette can give it. A pass-2 TEMPLATE writes a RELATIVE footprint at an anchor somebody else offers, so it cannot know where the corridor bends — and the rest cell is exactly that. The room-aware element walks the straight run and CARVES the bend (`procgenCore/elements/blockPocket.js`), which is design catalogue #2 and needs the `on-connector` phase to be possible at all. ⛓ Its wave-1 `ori`/`gap` domain sweep (every legal anchor of seeds 1..12, zero throws at all sixteen values) is preserved in the arc-3 kickoff §13.6."
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the `guard` ELEMENT brings its own lane and CARVES it; this row demanded one the room already had",
+                    "family": "weigh",
+                    "hasRefusalText": false,
+                    "measured": "⛓ ⚖ Q2 WAS ANSWERED BY MEASUREMENT AND THE ANSWER WAS ZERO. Its clearer is a SIX-CELL LANE at across `-1`, and no corridor has a straight run beside a bridge cell: **0 KEPT on the eight carved kinds in every arm of S1's six-arm table (§11.9), 1-2 per arm on `empty`.** Slice 2 §9.5b swept every span and it kept NOTHING at any of them. The reverse-pull element carries its own lane into the room and certifies: 16 of 18 placements at `len=2` and 16 of 16 at `len=3`, `heldAtDoor` TRUE on every one (§11.8).",
+                    "name": "wall-gap-lock-weigh",
+                    "wouldNeed": "a room that already has a six-cell straight lane beside a cut cell. That is what pass 1 does NOT build, and asking pass 2 to find one is asking a decorator to be a constructor. ⛓ The element is the same mechanism with the lane brought along (⚖ design ruling 2), and the yield table above is the before it should be read against."
+                },
+                {
+                    "cause": "⚖ NOT A PALETTE FAMILY (user, 2026-08-12) — a SOLVER CAPABILITY. The geometry below is CAPABILITY DOCUMENTATION, not a rejected candidate.",
+                    "family": "chest",
+                    "hasRefusalText": true,
+                    "measured": "⚖ THE RULING FIRST: what `solid:chest → chest` is for is that the solver KNOWS a chest in its way can be cleared by COLLECTING it; the generator was never meant to place chests as deliberate obstacles. So nothing here is an exclusion — it is the bound on the capability, measured while the question was still open, and worth keeping because a later slice that reached for a chest DOOR would otherwise measure it again.\n⛓ AND §2/§9.8's \"chest is proven\" DOES NOT TRANSFER — that was measured on L11's own one-tile shaft, and a measured CAPABILITY is as local as a measured limitation. `chestStanceBand` (`chest.js:167`) searches rows from `py + box.h - 16` DOWNWARD and skips every row whose player box overlaps the chest's own solid, so the stance that fires the open-trigger line is strictly BELOW the chest — the game's own trigger geometry, not a solver choice. The room's start is its fixed NW corner (`SEEDLING_DEFAULTS.start` = (1,1)), so every crossing a SINGLE template can make runs north→south or west→east ⇒ the opener's stance is on the side the player is trying to reach. Driven both ways: in a HORIZONTAL wall's gap the stance is beyond the wall, and in a VERTICAL wall's gap the cell below the chest is the wall itself. The verb IS selected in both — this is not slice 2's \"never reached\" — and it is applied to `MAX_STRATEGIES_PER_GOAL` without a corridor ever appearing.",
+                    "name": "chest-in-the-gap",
+                    "wouldNeed": "⛔ NOTHING — ⚖ the user ruled the family out of scope, so there is no work owed here. Recorded for completeness only: a chest DOOR would need a room whose route DOUBLES BACK so the crossing runs south→north, which needs TWO cooperating templates (one to force the player south, one to be the door) — the depth-1 boundary ⚖ §1.6 draws on purpose (*templates remove the need for cooperative multi-step placement*). ⚠ THE GOAL-SIDE SHAPE IS ITS OWN RESIDUE: a chest whose rect CONTAINS the pickup makes the solve RETURN UNCERTIFIED rather than refuse — `procgenOracle` catches it as *\"the solve returned but the goal list is not certified — no collect record for place:112,112. `solveSegment` is supposed to refuse rather than return short, so this is a seam defect, not a rejected candidate.\"* Recorded for a future engine slice; nothing in this arc touches it."
+                },
+                {
+                    "cause": "DIAGNOSED (Seedling fidelity STANCE) — the key line is on the lock's FAR side: `BossLock.update` opens only on a player box on the row UNDER the lock, and every crossing a single template makes runs north→south, so the lock is sealed from the side the player stands on (the chest's shape exactly)",
+                    "family": "keylock",
+                    "hasRefusalText": true,
+                    "measured": "⛓ SEEDLING FIDELITY STANCE — THE CAUSE IS NOW NAMED. `stanceHypothesis` listed the lock ITSELF, so the far-side stance read as reachable \"once the lock is discharged\", the walk to it named the lock again, and the frontier re-applied `keylock` until `MAX_STRATEGIES_PER_GOAL`. With the lock excluded from its own hypothesis the derivation refuses by name: *\"⛔ SEALED BEHIND ITSELF: the key line is the row y=97 under bosslock@64,80\"* — the SHUT state (the save holds its flag); a cleared flag builds no lock. The route survey had the same loop at L12, L30 and L48. What follows is the record as it stood before the diagnosis.\n⚠⚠ (BEFORE STANCE) THE DECIDING CAUSE IS NOT NAMED, AND THIS ROW SAYS SO — the \"applied 4 strategies and no corridor\" line below is the SYMPTOM; the diagnosis is OPEN. Nobody should read this exclusion as understood. What IS established: `resolveKeylockStrategy` gates on the RUN's own key set (`BossLock.update` reads `Player.hasKey(keyType)`, a save-file boolean and not one of the fourteen `botStatus.items` fields), and with no key the solve THROWS `SolverBotError` — *\"the key is a SUB-ORDER — a `collect-placement` goal the macro layer owes — and inventing a stance for an unkeyed lock would be a wait with no mechanism behind it.\"* BOTH cures were driven and BOTH fail identically: (a) the key GRANTED at boot (`staging.save.keys = [0]`, the channel `levelRun.js:3137` reads), and (b) the key as a FIRST `collect-placement` in an ordered queue — where the key IS collected (verbs `walk`, `collect`, `keylock`) and the door still never opens. ⇒ holding the key is NOT the missing piece, which is what makes the symptom worth recording separately from the guess.",
+                    "name": "key-keylock-pair",
+                    "wouldNeed": "⛓ (Seedling fidelity STANCE) A crossing that reaches the lock from its SOUTH side — the chest's doubled-back route, two cooperating templates — or a boot with its flag cleared. ⚠ (BEFORE STANCE:) FIRST a diagnosis — why the re-plan after a resolved `keylock` still prices the lock as a wall — because until that is named, any template built here would be built against a guess. ⚠ Note the SHARED SHAPE with `chest-in-the-gap`: both are verbs that RESOLVE, get applied to `MAX_STRATEGIES_PER_GOAL`, and never move the corridor, while `shove`, `weigh` and `hold` all do. Two families with one symptom is a hint about the LADDER rather than about either family, and it is the first thing to ask. ⛔ Since design (b) works as far as collecting the key, the goal-QUEUE widening (⚖ §1.4) buys nothing here and is NOT proposed."
+                },
+                {
+                    "cause": "INCOMPATIBLE WITH v1's ONLY GOAL",
+                    "family": "fight",
+                    "hasRefusalText": true,
+                    "measured": "⚖ RULED A BOUNDED PROBE (orchestrator, 2026-08-12) after the three named families all failed: `solid:shieldboss → fight` is a registered executor, `KILL_ARM_POLICY.ShieldBoss` is `modelled`, and ⚖ §0's \"before collecting the shield\" is the shieldboss's own room — so it was the last candidate for a post-sword-EXCLUSIVE clearer. NINE geometries (h walls at ty 3/4/5/6 with a 3-wide gap, v walls at tx 3/4/5 with a 3-tall gap, a 1-wide gap, and an open room): ZERO solved, FIVE threw. The `fight` verb resolves in all of them; two REFUSE on the same \"applied 4 strategies … no corridor\" line the chest and the keylock give, and one spends the per-target budget grazing the 48x48 body.",
+                    "name": "shieldboss-door",
+                    "wouldNeed": "⛔ NOTHING ABOUT THE FIGHT — the blocker is the GOAL. ⚖ §1.4 makes `collect-placement` v1's only goal kind and slice 1 §8.2 makes `torchpickup` the pickup, so EVERY generated level ends in a ceremony; a live ShieldBoss anywhere in the room refuses that ceremony by name. The cure the message itself offers — *\"collect after the removal\"* — is a template that guarantees the boss dies FIRST, which is an ORDER between a clearer and the goal that a depth-1 loop with one goal cannot express."
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the room-aware `killgate` ELEMENT GROWS its wall to the room instead of drawing a `span` from a two-value domain",
+                    "family": "kill",
+                    "hasRefusalText": false,
+                    "measured": "⛓ THE `span` PARAMETER WAS A PROXY FOR A MEASUREMENT THE ROOM CAN MAKE ITSELF. Slice 2 measured its domain as `{1, 8}` — two values for two rooms — and published the price: *\"half this family's `empty` draws are now NO_ANCHOR by construction\"* (§9.11). The element grows 0 cells on a corridor, 7 on the open 10x10 room and a chamber's walls in a chamber, draws NO parameter at all, and places on ALL TEN kinds — **61 of 120 (kind, seed) cells** against the template's 39 legal span-1 anchors on `winding` and 0 anywhere at span 8 except `empty` (§9.5).",
+                    "name": "wall-gap-spinner-killlock",
+                    "wouldNeed": "nothing. ⛔ AND THE ELEMENT DOES NOT DISCHARGE THE CLASS — it inherits it. What retires this row is that the `span` domain, the `SPINNER_OFFSET` constant and the `gap` clamp all become facts about the ROOM rather than draws, which is the whole point of the `on-connector` phase. ⛓ The two measurements that sized its constants — the `SPINNER_OFFSET` sweep and the `span` domain's per-value discharge table — are preserved in the arc-3 kickoff §13.6."
+                }
+            ],
+            "id": "post-dark-suit",
+            "items": {
+                "canSwim": true,
+                "hasDarkShield": true,
+                "hasDarkSuit": true,
+                "hasFeather": true,
+                "hasFire": true,
+                "hasShield": true,
+                "hasSpear": true,
+                "hasSword": true,
+                "hasTorch": true,
+                "hasWand": true
+            },
+            "page": "/frontend/modules/seedlingDemo/watch.html",
+            "skeletonKinds": [
+                {
+                    "backend": "empty",
+                    "codecDefaults": {},
+                    "description": "No walls — just entrance and exits. Showcases the topology layer.",
+                    "effectiveDefaults": {},
+                    "isDefault": true,
+                    "kind": "empty",
+                    "name": "Empty",
+                    "needs": null,
+                    "offered": true,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "random_walls",
+                    "codecDefaults": {},
+                    "description": "Uniform random wall proposals with a feasibility check. The original v1 generator.",
+                    "effectiveDefaults": {},
+                    "isDefault": false,
+                    "kind": "classic",
+                    "name": "Classic",
+                    "needs": "the maze simulator — it solves the room as it builds it, so it runs only in the maze substrate",
+                    "offered": false,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "corridor_only",
+                    "codecDefaults": {},
+                    "description": "Shortest path from entrance to each exit; everything else is wall.",
+                    "effectiveDefaults": {},
+                    "isDefault": false,
+                    "kind": "corridor",
+                    "name": "Corridor",
+                    "needs": "the maze simulator — it solves the room as it builds it, so it runs only in the maze substrate",
+                    "offered": false,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Recursive backtracker with newest-cell picker — long winding corridors with deep dead ends.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "branchy",
+                    "name": "Branchy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "prune": 0
+                    },
+                    "description": "Recursive backtracker with random picker — bushier, Prim's-like with shorter branches.",
+                    "effectiveDefaults": {
+                        "chambers": 1,
+                        "prune": 0
+                    },
+                    "isDefault": false,
+                    "kind": "bushy",
+                    "name": "Bushy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1
+                            ],
+                            "key": "prune",
+                            "why": "fill every dead end back in (1) or leave them (0). MEASURED to be a boolean: pruneDeadEnds runs to a fixed point, so thresholds 1..9999 are one room. 0 = today, and byte-inert."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "kruskals",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "prune": 0
+                    },
+                    "description": "Kruskal's spanning tree with 50% braid — perfect maze with some loops mixed in.",
+                    "effectiveDefaults": {
+                        "chambers": 1,
+                        "prune": 0
+                    },
+                    "isDefault": false,
+                    "kind": "loopy",
+                    "name": "Loopy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1
+                            ],
+                            "key": "prune",
+                            "why": "fill every dead end back in (1) or leave them (0). MEASURED to be a boolean: pruneDeadEnds runs to a fixed point, so thresholds 1..9999 are one room. 0 = today, and byte-inert."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "braid"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "kruskals",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Kruskal's spanning tree with full braid — every dead end removed, loops everywhere.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "open",
+                    "name": "Open",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "braid"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "recursive_division",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "minRoom": 3
+                    },
+                    "description": "Recursive division — partitions the region into chambers connected by single-tile gaps.",
+                    "effectiveDefaults": {
+                        "chambers": 0,
+                        "minRoom": 3
+                    },
+                    "isDefault": false,
+                    "kind": "rooms",
+                    "name": "Rooms",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 3,
+                            "domain": [
+                                2,
+                                3,
+                                4
+                            ],
+                            "key": "minRoom",
+                            "why": "the smallest chamber recursive_division will cut. Smaller = more, tighter rooms; larger = fewer, bigger ones. 3 is today's value."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Recursive backtracker with every dead end filled — one winding corridor from the entrance to the goal, and wall everywhere else. Cloudberry's pass 1.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "winding",
+                    "name": "Winding",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "pruneDeadEnds"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                }
+            ],
+            "substrate": "seedling",
+            "templates": [
+                {
+                    "family": "wall",
+                    "name": "wall-segment",
+                    "params": [
+                        {
+                            "default": "h",
+                            "domain": [
+                                "h",
+                                "v"
+                            ],
+                            "key": "ori",
+                            "why": "the two orientations were `wall-segment-h3` and `-v3`, one parameter hand-unrolled into two rows. Collapsing them is ⚖ ruling 3's wave-1 item and it is what stops the pair drifting apart"
+                        },
+                        {
+                            "default": 3,
+                            "domain": [
+                                2,
+                                3,
+                                4,
+                                5
+                            ],
+                            "key": "len",
+                            "why": "the frozen row was THREE and the number was never measured — three is the default because it is what shipped. The domain stops at 5 because 6 would be within two cells of spanning an 8-wide interior, and a near-spanning wall is a door with no clearer in it (the `wall-gap-block` family is where a door belongs)"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Stone cells in a line; `world.solids` gains them with tag `tile:Stone`. The two orientations are two values of one draw, so a room can be constrained on both axes from one template"
+                },
+                {
+                    "family": "water",
+                    "name": "water-pool",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the frozen row was 2x2 and its own docblock called the size a declared choice; the measurement was that the cells build as water. The domain stops at 3 because a 4-wide pool in an 8-wide interior is half the room"
+                        },
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "h",
+                            "why": "the same, on the other axis. ⛔ NOT collapsed into an `ori` — a pool is a RECTANGLE and w x h says more than a length and a flip does"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Water cells; `world.lethalTerrainTiles` gains them, and the block must pin `sound` for any wet tick (R5 §13) — at every size, which is why the pin is static and not a function of the parameters"
+                },
+                {
+                    "family": "pit",
+                    "name": "pit-patch",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the frozen row was 2x1 — \"the atlas's own pits (L4's two cells) are small\", a declared choice. The domain keeps that end and offers two more; 4 would be half the interior"
+                        },
+                        {
+                            "default": 1,
+                            "domain": [
+                                1,
+                                2
+                            ],
+                            "key": "h",
+                            "why": "the frozen row was ONE cell tall. A pit is a hole in the floor and the atlas's are thin, so the domain is deliberately shorter on this axis than the pool's — the asymmetry is the atlas's, not a typo"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Pit cells; `world.pitTiles` gains them and the corridor planner prices them as a fall"
+                },
+                {
+                    "family": "lava",
+                    "name": "lava-pool",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "h",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Lava cells (type 17): lethal without the dark suit. Pins `sound`: a lava tick runs the swim term, and without the pin the dark-suit walk THREW `PhysicsV2Error` (design §3.2). Before the dark suit the floods block it, so it never cuts"
+                },
+                {
+                    "family": "melt",
+                    "name": "melt-patch",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 1,
+                            "domain": [
+                                1,
+                                2
+                            ],
+                            "key": "h",
+                            "why": "a thin crust: it breaks once the walk comes near"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Igneous-to-Lava cells (type 31): the cell breaks apart once the player has been within half a diagonal for 8 frames and is lava ~5 animation steps later (`Tile.as` case 31). Pins `sound` (it becomes lava). Blocks the floods before the dark suit, as lava does"
+                }
+            ]
+        },
+        {
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate",
+            "excluded": [
+                {
+                    "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
+                    "family": "arrow-lane",
+                    "hasRefusalText": true,
+                    "measured": "⛓ IT WAS ALSO THE WHOLE COST STORY ON A CARVED ROOM, and that is why the ruling is recorded with a number rather than as a preference. The constructive-mode arc's yield table (§13.5) found every expensive solve in the sweep to be an `arrow-lane` REVERT — the worst single solve was **77.8 s** (`bushy` seed 5), against a per-cell mean under 1 s — and an arrow lane writes NO TERRAIN AT ALL, so the connectivity pre-check slice 6 shipped could not touch it and must not have. §14.13 re-measured it at every chamber count: **`arrow-lane` owned 21 of the 23 REVERTs** in the Seedling sweep and the one expensive cell at each. ⛔ The cost is the SOLVER walking its whole combat ladder against a live volley before refusing; nothing about it is a defect, which is exactly why no slice could fix it and the row had to be ruled on.",
+                    "name": "arrow-lane",
+                    "wouldNeed": "the pre-sword puzzle as an ELEMENT, when that puzzle is wanted — a constructor that builds the trap, the cover the player waits behind and the button that disarms it TOGETHER (`procgenCore/elements.js`'s contract), so the lane is a thing the level was built around rather than a hazard dropped into an existing room for the walk to route past. ⛔ Until then the honest answer is that the generator has no use for one: ⚖ design ruling 8 designs for POST-SWORD by default, and a post-sword player walks through the volley. ⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: \"Arrow traps would need to be combined with either a switch or a rope.\"): the `ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and the rope that disarms it together, post-sword. This template row stays excluded."
+                },
+                {
+                    "cause": "MECHANISM — a hold is not a latch",
+                    "family": "hold",
+                    "hasRefusalText": true,
+                    "measured": "PoC slice 3 RE-MEASURED this one on the corridor, and the verb is now SELECTED where slice 2 measured it never selected at all (trace row tick 0, `hold` against `lock@64,80`). It still does not open the way. A `Lock` is open only WHILE its group is published and `Button.update` republishes every tick from whoever stands on it, so the player who leaves the button to walk through has already shut the lock: the walk then spends its whole per-target budget grazing the lock it just opened.",
+                    "name": "button-lock-pair",
+                    "wouldNeed": "⛓ DISCHARGED BY PoC SLICE 3b, AND THE ROW STAYS ANYWAY. What this needed was the game's own answer — a SOLID on the button, because `Button.hitables` is `[\"Player\",\"Enemy\",\"Solid\"]` and `PushableBlock` is a `\"Solid\"` (L15's shape). Slice 3b built it: `weigh` (a `refineStrategy` arm selected when every presser in the group republishes) parks a block on the button with `runShove` and waits out the fade with `runDwell`, and the palette now carries `wall-gap-lock-weigh-h`/`-v`. ⛔ THIS ROW IS NOT THAT TEMPLATE — it is that template MINUS THE BLOCK, and it is still excluded for its original measured reason, which no longer has a workaround inside it: a button+lock pair with no pushable in the room has nothing to hold the group, and the walk still spends its whole per-target budget grazing the lock it just opened (RE-MEASURED at slice 3b with the `weigh` arm live: the verb is considered, refuses for want of a block by name, and the derivation falls back to exactly the `hold` measured above). ⚠ The shape that remains unbuilt is the CHAIN — a block that needs two leans to reach the button, which is L16's room (block at tile (16,5), button at (17,3), sharing neither coordinate). ⚖ Nobody has ruled on it."
+                },
+                {
+                    "cause": "MECHANISM — the hold outlives its own derived bound",
+                    "family": "kill",
+                    "hasRefusalText": true,
+                    "measured": "⛓ SLICE 3 MOVED THIS ONE TWICE OVER and slice 2's stated cause is now STALE. Slice 2 measured a `PendingDeclaration` only `twoPassSolve` discharges; on the fixed collect path the corridor case never reaches one (`pending` is null). The ladder selects `kill`, the CEILING arm resolves, the button arms the trap and the body DIES — and the hold then runs out the bound its own mechanism derived, waiting on the lock's 101-tick fade. ⚠ MEASURED IN A PROBE ROOM OF THIS SLICE'S OWN MAKING, not in a surveyed one: the number is a fact about that geometry, and it is NOT a claim that L5's shape cannot be templated.",
+                    "name": "arrow-ceiling-killlock",
+                    "wouldNeed": "a template whose geometry lets the fade finish inside the derived bound — which is a MEASUREMENT somebody must take against a surveyed room, not a number to raise. ⛓ THE PRESS ARM stays shut for its own reason: it needs a `KILL_ARM_POLICY.modelled` class (IceTurret, ShieldBoss, Spinner — none pre-sword) and a press needs the sword. ⛓ AND THE NAME CORRECTION STANDS: kickoff §3.3 calls this \"water+bob+kill-lock (bait-kill)\", but the killer at L5 is the ARROW CEILING (`ARROW_KILL_PLAN`'s six phases). A bob's water death IS modelled (`levelRun`'s `ENEMY_TERRAIN_DESTROYS`) and no solver plan baits a body into it; L6's drowning is DECLARED by that tape's own v10 despawn row."
+                },
+                {
+                    "cause": "SUPERSEDED (seedling substrate S1, 2026-09-26) — the room-aware `rockgate` ELEMENT; the old cause VERB-MISSING (\"no `break` executor exists\") went stale at R9 slice L15",
+                    "family": "break",
+                    "hasRefusalText": false,
+                    "measured": "W0 (hand-drawn 10x10, `torchpickup` goal, `DEFAULT_BUDGET`): a `breakablerock` on a 1-wide corridor SOLVES post-sword in 111 ticks (the open corridor: 81) and REFUSES pre-sword; on a loop's short arc it SOLVES 148 ticks with the sword and 244 without (the long way). W1: `--elements=rockgate` post-sword certifies with `break` on seeds 1-4 of the default room, and `--require=hasSword --elements=rockgate` grades STRONG on seeds 1-3.",
+                    "name": "breakable-rock",
+                    "wouldNeed": "nothing — the `rockgate` element (`procgenCore/elements/soloDoor.js`) is the rock's room-aware form; the pass-2 template stays out for the reason the door templates did (a relative footprint cannot grow its wall to the room)."
+                },
+                {
+                    "cause": "NO CERTIFYING ROOM",
+                    "family": "chaser",
+                    "hasRefusalText": false,
+                    "measured": "no surveyed room certifies crossing past a live bob that is never engaged (⚖ kickoff §1.6's accepted default)",
+                    "name": "free-roaming-bob",
+                    "wouldNeed": "a measured crossing; bobs stay out of v1 entirely now that the kill-lock template they were reserved for is excluded"
+                },
+                {
+                    "cause": "NEEDS-GAME-ORACLE",
+                    "family": "kill",
+                    "hasRefusalText": false,
+                    "measured": "§11.4 REFUSES to compute a static \"Enemy\" body's arrow death, so its clear is a tape-DECLARED v9 row and only the `--win` game channel can date it",
+                    "name": "sandtrap-room",
+                    "wouldNeed": "a recording channel — which ⚖ kickoff §3.3 rules out by contract: nothing whose clear only the game can date"
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the room-aware `blockpocket` ELEMENT does what this row could not: it carves the block's REST CELL",
+                    "family": "shove",
+                    "hasRefusalText": false,
+                    "measured": "⛓ ITS OWN CENSUS IS WHAT RETIRED IT. Slice 2 §9.2 counted 170 CUT anchors for a span-1 door on `winding` and the sweep could use NONE of them, because a span-1 block in a 1-wide corridor is shoved to the next bend and SEALS it (§9.11). This row therefore kept its `INTERIOR_SPAN` constant and NOTHING on any carved kind at any span: **0 KEPT on the eight carved kinds in every arm of S1's six-arm yield table (§11.9), 2 per arm on `empty`.** The element places on ALL TEN kinds — **62 of 120 (kind, seed) cells**, `empty` 8/12 and `winding` 7/12 — and certifies with `shove` on every placement, with the lifted claim TRUE (arc-3 §12).",
+                    "name": "wall-gap-block",
+                    "wouldNeed": "nothing this palette can give it. A pass-2 TEMPLATE writes a RELATIVE footprint at an anchor somebody else offers, so it cannot know where the corridor bends — and the rest cell is exactly that. The room-aware element walks the straight run and CARVES the bend (`procgenCore/elements/blockPocket.js`), which is design catalogue #2 and needs the `on-connector` phase to be possible at all. ⛓ Its wave-1 `ori`/`gap` domain sweep (every legal anchor of seeds 1..12, zero throws at all sixteen values) is preserved in the arc-3 kickoff §13.6."
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the `guard` ELEMENT brings its own lane and CARVES it; this row demanded one the room already had",
+                    "family": "weigh",
+                    "hasRefusalText": false,
+                    "measured": "⛓ ⚖ Q2 WAS ANSWERED BY MEASUREMENT AND THE ANSWER WAS ZERO. Its clearer is a SIX-CELL LANE at across `-1`, and no corridor has a straight run beside a bridge cell: **0 KEPT on the eight carved kinds in every arm of S1's six-arm table (§11.9), 1-2 per arm on `empty`.** Slice 2 §9.5b swept every span and it kept NOTHING at any of them. The reverse-pull element carries its own lane into the room and certifies: 16 of 18 placements at `len=2` and 16 of 16 at `len=3`, `heldAtDoor` TRUE on every one (§11.8).",
+                    "name": "wall-gap-lock-weigh",
+                    "wouldNeed": "a room that already has a six-cell straight lane beside a cut cell. That is what pass 1 does NOT build, and asking pass 2 to find one is asking a decorator to be a constructor. ⛓ The element is the same mechanism with the lane brought along (⚖ design ruling 2), and the yield table above is the before it should be read against."
+                },
+                {
+                    "cause": "⚖ NOT A PALETTE FAMILY (user, 2026-08-12) — a SOLVER CAPABILITY. The geometry below is CAPABILITY DOCUMENTATION, not a rejected candidate.",
+                    "family": "chest",
+                    "hasRefusalText": true,
+                    "measured": "⚖ THE RULING FIRST: what `solid:chest → chest` is for is that the solver KNOWS a chest in its way can be cleared by COLLECTING it; the generator was never meant to place chests as deliberate obstacles. So nothing here is an exclusion — it is the bound on the capability, measured while the question was still open, and worth keeping because a later slice that reached for a chest DOOR would otherwise measure it again.\n⛓ AND §2/§9.8's \"chest is proven\" DOES NOT TRANSFER — that was measured on L11's own one-tile shaft, and a measured CAPABILITY is as local as a measured limitation. `chestStanceBand` (`chest.js:167`) searches rows from `py + box.h - 16` DOWNWARD and skips every row whose player box overlaps the chest's own solid, so the stance that fires the open-trigger line is strictly BELOW the chest — the game's own trigger geometry, not a solver choice. The room's start is its fixed NW corner (`SEEDLING_DEFAULTS.start` = (1,1)), so every crossing a SINGLE template can make runs north→south or west→east ⇒ the opener's stance is on the side the player is trying to reach. Driven both ways: in a HORIZONTAL wall's gap the stance is beyond the wall, and in a VERTICAL wall's gap the cell below the chest is the wall itself. The verb IS selected in both — this is not slice 2's \"never reached\" — and it is applied to `MAX_STRATEGIES_PER_GOAL` without a corridor ever appearing.",
+                    "name": "chest-in-the-gap",
+                    "wouldNeed": "⛔ NOTHING — ⚖ the user ruled the family out of scope, so there is no work owed here. Recorded for completeness only: a chest DOOR would need a room whose route DOUBLES BACK so the crossing runs south→north, which needs TWO cooperating templates (one to force the player south, one to be the door) — the depth-1 boundary ⚖ §1.6 draws on purpose (*templates remove the need for cooperative multi-step placement*). ⚠ THE GOAL-SIDE SHAPE IS ITS OWN RESIDUE: a chest whose rect CONTAINS the pickup makes the solve RETURN UNCERTIFIED rather than refuse — `procgenOracle` catches it as *\"the solve returned but the goal list is not certified — no collect record for place:112,112. `solveSegment` is supposed to refuse rather than return short, so this is a seam defect, not a rejected candidate.\"* Recorded for a future engine slice; nothing in this arc touches it."
+                },
+                {
+                    "cause": "DIAGNOSED (Seedling fidelity STANCE) — the key line is on the lock's FAR side: `BossLock.update` opens only on a player box on the row UNDER the lock, and every crossing a single template makes runs north→south, so the lock is sealed from the side the player stands on (the chest's shape exactly)",
+                    "family": "keylock",
+                    "hasRefusalText": true,
+                    "measured": "⛓ SEEDLING FIDELITY STANCE — THE CAUSE IS NOW NAMED. `stanceHypothesis` listed the lock ITSELF, so the far-side stance read as reachable \"once the lock is discharged\", the walk to it named the lock again, and the frontier re-applied `keylock` until `MAX_STRATEGIES_PER_GOAL`. With the lock excluded from its own hypothesis the derivation refuses by name: *\"⛔ SEALED BEHIND ITSELF: the key line is the row y=97 under bosslock@64,80\"* — the SHUT state (the save holds its flag); a cleared flag builds no lock. The route survey had the same loop at L12, L30 and L48. What follows is the record as it stood before the diagnosis.\n⚠⚠ (BEFORE STANCE) THE DECIDING CAUSE IS NOT NAMED, AND THIS ROW SAYS SO — the \"applied 4 strategies and no corridor\" line below is the SYMPTOM; the diagnosis is OPEN. Nobody should read this exclusion as understood. What IS established: `resolveKeylockStrategy` gates on the RUN's own key set (`BossLock.update` reads `Player.hasKey(keyType)`, a save-file boolean and not one of the fourteen `botStatus.items` fields), and with no key the solve THROWS `SolverBotError` — *\"the key is a SUB-ORDER — a `collect-placement` goal the macro layer owes — and inventing a stance for an unkeyed lock would be a wait with no mechanism behind it.\"* BOTH cures were driven and BOTH fail identically: (a) the key GRANTED at boot (`staging.save.keys = [0]`, the channel `levelRun.js:3137` reads), and (b) the key as a FIRST `collect-placement` in an ordered queue — where the key IS collected (verbs `walk`, `collect`, `keylock`) and the door still never opens. ⇒ holding the key is NOT the missing piece, which is what makes the symptom worth recording separately from the guess.",
+                    "name": "key-keylock-pair",
+                    "wouldNeed": "⛓ (Seedling fidelity STANCE) A crossing that reaches the lock from its SOUTH side — the chest's doubled-back route, two cooperating templates — or a boot with its flag cleared. ⚠ (BEFORE STANCE:) FIRST a diagnosis — why the re-plan after a resolved `keylock` still prices the lock as a wall — because until that is named, any template built here would be built against a guess. ⚠ Note the SHARED SHAPE with `chest-in-the-gap`: both are verbs that RESOLVE, get applied to `MAX_STRATEGIES_PER_GOAL`, and never move the corridor, while `shove`, `weigh` and `hold` all do. Two families with one symptom is a hint about the LADDER rather than about either family, and it is the first thing to ask. ⛔ Since design (b) works as far as collecting the key, the goal-QUEUE widening (⚖ §1.4) buys nothing here and is NOT proposed."
+                },
+                {
+                    "cause": "INCOMPATIBLE WITH v1's ONLY GOAL",
+                    "family": "fight",
+                    "hasRefusalText": true,
+                    "measured": "⚖ RULED A BOUNDED PROBE (orchestrator, 2026-08-12) after the three named families all failed: `solid:shieldboss → fight` is a registered executor, `KILL_ARM_POLICY.ShieldBoss` is `modelled`, and ⚖ §0's \"before collecting the shield\" is the shieldboss's own room — so it was the last candidate for a post-sword-EXCLUSIVE clearer. NINE geometries (h walls at ty 3/4/5/6 with a 3-wide gap, v walls at tx 3/4/5 with a 3-tall gap, a 1-wide gap, and an open room): ZERO solved, FIVE threw. The `fight` verb resolves in all of them; two REFUSE on the same \"applied 4 strategies … no corridor\" line the chest and the keylock give, and one spends the per-target budget grazing the 48x48 body.",
+                    "name": "shieldboss-door",
+                    "wouldNeed": "⛔ NOTHING ABOUT THE FIGHT — the blocker is the GOAL. ⚖ §1.4 makes `collect-placement` v1's only goal kind and slice 1 §8.2 makes `torchpickup` the pickup, so EVERY generated level ends in a ceremony; a live ShieldBoss anywhere in the room refuses that ceremony by name. The cure the message itself offers — *\"collect after the removal\"* — is a template that guarantees the boss dies FIRST, which is an ORDER between a clearer and the goal that a depth-1 loop with one goal cannot express."
+                },
+                {
+                    "cause": "⚖ SUPERSEDED (user, 2026-08-16) — the room-aware `killgate` ELEMENT GROWS its wall to the room instead of drawing a `span` from a two-value domain",
+                    "family": "kill",
+                    "hasRefusalText": false,
+                    "measured": "⛓ THE `span` PARAMETER WAS A PROXY FOR A MEASUREMENT THE ROOM CAN MAKE ITSELF. Slice 2 measured its domain as `{1, 8}` — two values for two rooms — and published the price: *\"half this family's `empty` draws are now NO_ANCHOR by construction\"* (§9.11). The element grows 0 cells on a corridor, 7 on the open 10x10 room and a chamber's walls in a chamber, draws NO parameter at all, and places on ALL TEN kinds — **61 of 120 (kind, seed) cells** against the template's 39 legal span-1 anchors on `winding` and 0 anywhere at span 8 except `empty` (§9.5).",
+                    "name": "wall-gap-spinner-killlock",
+                    "wouldNeed": "nothing. ⛔ AND THE ELEMENT DOES NOT DISCHARGE THE CLASS — it inherits it. What retires this row is that the `span` domain, the `SPINNER_OFFSET` constant and the `gap` clamp all become facts about the ROOM rather than draws, which is the whole point of the `on-connector` phase. ⛓ The two measurements that sized its constants — the `SPINNER_OFFSET` sweep and the `span` domain's per-value discharge table — are preserved in the arc-3 kickoff §13.6."
+                }
+            ],
+            "id": "endgame",
+            "items": {
+                "canSwim": true,
+                "hasDarkShield": true,
+                "hasDarkSuit": true,
+                "hasFeather": true,
+                "hasFire": true,
+                "hasFireWand": true,
+                "hasGhostSword": true,
+                "hasShield": true,
+                "hasSpear": true,
+                "hasSword": true,
+                "hasTorch": true,
+                "hasWand": true
+            },
+            "page": "/frontend/modules/seedlingDemo/watch.html",
+            "skeletonKinds": [
+                {
+                    "backend": "empty",
+                    "codecDefaults": {},
+                    "description": "No walls — just entrance and exits. Showcases the topology layer.",
+                    "effectiveDefaults": {},
+                    "isDefault": true,
+                    "kind": "empty",
+                    "name": "Empty",
+                    "needs": null,
+                    "offered": true,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "random_walls",
+                    "codecDefaults": {},
+                    "description": "Uniform random wall proposals with a feasibility check. The original v1 generator.",
+                    "effectiveDefaults": {},
+                    "isDefault": false,
+                    "kind": "classic",
+                    "name": "Classic",
+                    "needs": "the maze simulator — it solves the room as it builds it, so it runs only in the maze substrate",
+                    "offered": false,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "corridor_only",
+                    "codecDefaults": {},
+                    "description": "Shortest path from entrance to each exit; everything else is wall.",
+                    "effectiveDefaults": {},
+                    "isDefault": false,
+                    "kind": "corridor",
+                    "name": "Corridor",
+                    "needs": "the maze simulator — it solves the room as it builds it, so it runs only in the maze substrate",
+                    "offered": false,
+                    "params": [],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Recursive backtracker with newest-cell picker — long winding corridors with deep dead ends.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "branchy",
+                    "name": "Branchy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "prune": 0
+                    },
+                    "description": "Recursive backtracker with random picker — bushier, Prim's-like with shorter branches.",
+                    "effectiveDefaults": {
+                        "chambers": 1,
+                        "prune": 0
+                    },
+                    "isDefault": false,
+                    "kind": "bushy",
+                    "name": "Bushy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1
+                            ],
+                            "key": "prune",
+                            "why": "fill every dead end back in (1) or leave them (0). MEASURED to be a boolean: pruneDeadEnds runs to a fixed point, so thresholds 1..9999 are one room. 0 = today, and byte-inert."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "kruskals",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "prune": 0
+                    },
+                    "description": "Kruskal's spanning tree with 50% braid — perfect maze with some loops mixed in.",
+                    "effectiveDefaults": {
+                        "chambers": 1,
+                        "prune": 0
+                    },
+                    "isDefault": false,
+                    "kind": "loopy",
+                    "name": "Loopy",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1
+                            ],
+                            "key": "prune",
+                            "why": "fill every dead end back in (1) or leave them (0). MEASURED to be a boolean: pruneDeadEnds runs to a fixed point, so thresholds 1..9999 are one room. 0 = today, and byte-inert."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "braid"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "kruskals",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Kruskal's spanning tree with full braid — every dead end removed, loops everywhere.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "open",
+                    "name": "Open",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "braid"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                },
+                {
+                    "backend": "recursive_division",
+                    "codecDefaults": {
+                        "chambers": 0,
+                        "minRoom": 3
+                    },
+                    "description": "Recursive division — partitions the region into chambers connected by single-tile gaps.",
+                    "effectiveDefaults": {
+                        "chambers": 0,
+                        "minRoom": 3
+                    },
+                    "isDefault": false,
+                    "kind": "rooms",
+                    "name": "Rooms",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 3,
+                            "domain": [
+                                2,
+                                3,
+                                4
+                            ],
+                            "key": "minRoom",
+                            "why": "the smallest chamber recursive_division will cut. Smaller = more, tighter rooms; larger = fewer, bigger ones. 3 is today's value."
+                        },
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [],
+                    "spelledExplicitlyInTheUrl": []
+                },
+                {
+                    "backend": "recursive_backtracker",
+                    "codecDefaults": {
+                        "chambers": 0
+                    },
+                    "description": "Recursive backtracker with every dead end filled — one winding corridor from the entrance to the goal, and wall everywhere else. Cloudberry's pass 1.",
+                    "effectiveDefaults": {
+                        "chambers": 1
+                    },
+                    "isDefault": false,
+                    "kind": "winding",
+                    "name": "Winding",
+                    "needs": null,
+                    "offered": true,
+                    "params": [
+                        {
+                            "default": 0,
+                            "domain": [
+                                0,
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "chambers",
+                            "why": "how many 3x3 open squares to stamp onto the finished carve. 0 = off, and off is BYTE-INERT — the post-processor is not appended at all, so no draw is spent. A carved room is corridor; an area template has nowhere to be until this runs."
+                        }
+                    ],
+                    "postProcessors": [
+                        "pruneDeadEnds"
+                    ],
+                    "spelledExplicitlyInTheUrl": [
+                        "chambers"
+                    ]
+                }
+            ],
+            "substrate": "seedling",
+            "templates": [
+                {
+                    "family": "wall",
+                    "name": "wall-segment",
+                    "params": [
+                        {
+                            "default": "h",
+                            "domain": [
+                                "h",
+                                "v"
+                            ],
+                            "key": "ori",
+                            "why": "the two orientations were `wall-segment-h3` and `-v3`, one parameter hand-unrolled into two rows. Collapsing them is ⚖ ruling 3's wave-1 item and it is what stops the pair drifting apart"
+                        },
+                        {
+                            "default": 3,
+                            "domain": [
+                                2,
+                                3,
+                                4,
+                                5
+                            ],
+                            "key": "len",
+                            "why": "the frozen row was THREE and the number was never measured — three is the default because it is what shipped. The domain stops at 5 because 6 would be within two cells of spanning an 8-wide interior, and a near-spanning wall is a door with no clearer in it (the `wall-gap-block` family is where a door belongs)"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Stone cells in a line; `world.solids` gains them with tag `tile:Stone`. The two orientations are two values of one draw, so a room can be constrained on both axes from one template"
+                },
+                {
+                    "family": "water",
+                    "name": "water-pool",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the frozen row was 2x2 and its own docblock called the size a declared choice; the measurement was that the cells build as water. The domain stops at 3 because a 4-wide pool in an 8-wide interior is half the room"
+                        },
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "h",
+                            "why": "the same, on the other axis. ⛔ NOT collapsed into an `ori` — a pool is a RECTANGLE and w x h says more than a length and a flip does"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Water cells; `world.lethalTerrainTiles` gains them, and the block must pin `sound` for any wet tick (R5 §13) — at every size, which is why the pin is static and not a function of the parameters"
+                },
+                {
+                    "family": "pit",
+                    "name": "pit-patch",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the frozen row was 2x1 — \"the atlas's own pits (L4's two cells) are small\", a declared choice. The domain keeps that end and offers two more; 4 would be half the interior"
+                        },
+                        {
+                            "default": 1,
+                            "domain": [
+                                1,
+                                2
+                            ],
+                            "key": "h",
+                            "why": "the frozen row was ONE cell tall. A pit is a hole in the floor and the atlas's are thin, so the domain is deliberately shorter on this axis than the pool's — the asymmetry is the atlas's, not a typo"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Pit cells; `world.pitTiles` gains them and the corridor planner prices them as a fall"
+                },
+                {
+                    "family": "lava",
+                    "name": "lava-pool",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "h",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Lava cells (type 17): lethal without the dark suit. Pins `sound`: a lava tick runs the swim term, and without the pin the dark-suit walk THREW `PhysicsV2Error` (design §3.2). Before the dark suit the floods block it, so it never cuts"
+                },
+                {
+                    "family": "melt",
+                    "name": "melt-patch",
+                    "params": [
+                        {
+                            "default": 2,
+                            "domain": [
+                                1,
+                                2,
+                                3
+                            ],
+                            "key": "w",
+                            "why": "the `water-pool` domain: 3 stops short of half an 8-wide interior"
+                        },
+                        {
+                            "default": 1,
+                            "domain": [
+                                1,
+                                2
+                            ],
+                            "key": "h",
+                            "why": "a thin crust: it breaks once the walk comes near"
+                        }
+                    ],
+                    "site": "chamber",
+                    "why": "Igneous-to-Lava cells (type 31): the cell breaks apart once the player has been within half a diagonal for 8 frames and is lava ~5 animation steps later (`Tile.as` case 31). Pins `sound` (it becomes lava). Blocks the floods before the dark suit, as lava does"
+                }
+            ]
+        },
+        {
             "defaultElements": "none",
             "excluded": [],
             "id": "maze-v1",
@@ -2680,7 +4739,8 @@ export const CATALOGUE = frz({
         "watershortcut",
         "waterfallgate",
         "roam",
-        "corridorbody"
+        "corridorbody",
+        "ropegate"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -2690,7 +4750,11 @@ export const CATALOGUE = frz({
                 "post-sword",
                 "post-shield",
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "guard",
             "module": "reverse-pull-block",
@@ -2736,7 +4800,11 @@ export const CATALOGUE = frz({
                 "post-sword",
                 "post-shield",
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "killgate",
             "module": "kill-gate",
@@ -2752,7 +4820,11 @@ export const CATALOGUE = frz({
                 "post-sword",
                 "post-shield",
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "blockpocket",
             "module": "block-pocket",
@@ -2766,7 +4838,11 @@ export const CATALOGUE = frz({
                 "post-sword",
                 "post-shield",
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "chamber",
             "module": "open-chamber",
@@ -2804,7 +4880,11 @@ export const CATALOGUE = frz({
                 "post-sword",
                 "post-shield",
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "arena",
             "module": "arena",
@@ -2853,7 +4933,11 @@ export const CATALOGUE = frz({
                 "post-sword",
                 "post-shield",
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "rockgate",
             "module": "rock-gate",
@@ -2868,7 +4952,11 @@ export const CATALOGUE = frz({
                 "post-sword",
                 "post-shield",
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "shortcut",
             "module": "rock-shortcut",
@@ -2882,7 +4970,11 @@ export const CATALOGUE = frz({
             "defaultIn": [
                 "post-shield",
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "shieldgate",
             "module": "shield-gate",
@@ -2895,7 +4987,10 @@ export const CATALOGUE = frz({
         {
             "defaultIn": [
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "watergate",
             "module": "water-gate",
@@ -2908,7 +5003,10 @@ export const CATALOGUE = frz({
         {
             "defaultIn": [
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "watershortcut",
             "module": "water-shortcut",
@@ -2920,7 +5018,10 @@ export const CATALOGUE = frz({
         },
         {
             "defaultIn": [
-                "post-feather"
+                "post-feather",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "waterfallgate",
             "module": "waterfall-gate",
@@ -2935,7 +5036,11 @@ export const CATALOGUE = frz({
                 "post-sword",
                 "post-shield",
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "roam",
             "module": "roam",
@@ -2982,7 +5087,11 @@ export const CATALOGUE = frz({
                 "post-sword",
                 "post-shield",
                 "post-swim",
-                "post-feather"
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame"
             ],
             "head": "corridorbody",
             "module": "corridor-body",
@@ -2991,6 +5100,16 @@ export const CATALOGUE = frz({
             ],
             "params": [],
             "why": "The CORRIDOR BODY (seedling swim U3): a lock-less `spinner` on a main-path cut, its wall grown to seal the room, so the walk must cross the body. Certified by the solver's lock-less kill (or a dodge) against the textless goal. Pre-sword the seam refuses it by name; the sword differential grades it SHORTENS where the billiard bounces clear of the cut, so it is not a head `require` can force."
+        },
+        {
+            "defaultIn": [],
+            "head": "ropegate",
+            "module": "rope-gate",
+            "needs": [
+                "hasSword"
+            ],
+            "params": [],
+            "why": "The ROPE GATE (seedling gen A1, the L16 pattern): an armed `arrowtrap` at the head of a lane that is a main-path cut, and a `rope` of the same group on the start side. Certified by the solver's `pull` (a sword cut silences the lane) with the lane-crossing arm OFF; a certificate that tanks an arrow is refused."
         }
     ],
     "itemsElementsNeed": [
