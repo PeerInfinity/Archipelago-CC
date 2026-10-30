@@ -614,6 +614,25 @@ export function continuationTape(tape) {
 }
 
 /**
+ * ⛓ WHAT `botLoadTape` RECEIVES FOR WINDOW `k` — `shipToFrame`'s window loop, stated once so a pin can hold it.
+ * Window 1 is `gameVisibleTape`; a continuation is `continuationTape`, and ⛓ seedling-js-replay-continuation: the JS
+ * frame takes that projection WITHOUT the tick-0 write (see the `JS_STAGES` docblock).
+ *
+ * ⛓ seedling-js-cloud-landings (lab review note 2): the JS arm keeps `continuationTape`'s `forwardRows`, and that is
+ * exact, not stale. `forwardRows` is read off `tape.persistence`'s TIMED rows only (`continuationTape`, before its
+ * `tick0` branch, returned unchanged on both its paths), so the tick-0 write cannot move it; and the tape the JS arm
+ * ships withholds the SAME rows (`gameVisibleTape` drops a timed row entirely, ⚖ ruling 23), so they ARE what was
+ * not handed over. Recomputing from `gameVisibleTape` would read `[]` — the rows are already gone. Pinned in
+ * `watchWasmJs.test.js`.
+ */
+export function windowProjection(wTape, k, js) {
+    const projected = k > 0 ? continuationTape(wTape) : { tape: gameVisibleTape(wTape),
+        tick0Applied: null, tick0Missing: false, forwardRows: [] };
+    if (js && k > 0) Object.assign(projected, { tape: gameVisibleTape(wTape), tick0Applied: null });
+    return projected;
+}
+
+/**
  * ⛓⛓⛓ THE WINDOW BOUNDARY, IN ONE PLACE — the streams concatenated the way the
  * HEADLINE ARITHMETIC does it.
  *
@@ -1746,10 +1765,7 @@ async function shipToFrame(payload, host, transport) {
          */
         rec.hold = state.hold.capable && k < windows.length - 1;
         const wTape = rec.hold ? holdingWindowTape(w.tape) : w.tape;
-        const projected = k > 0 ? continuationTape(wTape) : { tape: gameVisibleTape(wTape),
-            tick0Applied: null, tick0Missing: false, forwardRows: [] };
-        // ⛓ seedling-js-replay-continuation: the JS frame takes the projection WITHOUT the tick-0 write (see the docblock).
-        if (js && k > 0) Object.assign(projected, { tape: gameVisibleTape(wTape), tick0Applied: null });
+        const projected = windowProjection(wTape, k, js);
         rec.forwardRows = projected.forwardRows;
         /**
          * ⛓ `{seed, cosmetic, fp, time, declared, bootCost, obeysBootCost}`

@@ -2288,7 +2288,12 @@ async function runJsSequence(params, lifetime) {
     const walked = await walkSequence(params, lifetime, levelSource);
     if (!walked || walked.stopped || !walked.seq.admitted) return walked?.seq ?? null;
     // ⛓ seedling-js-replay-continuation: the admitted walk is what ▶ load in JS ships (`replayJsShipFor`).
-    if (lifetime.alive()) jsSequenceWalk = walked;
+    if (lifetime.alive()) {
+        jsSequenceWalk = walked;
+        // ⛓ seedling-js-cloud-landings (lab review note 1): the button armed DISABLED at mount; the walk arms it.
+        replayJsShip = replayJsSequenceShip();
+        setJsShippable(replayJsShip);
+    }
     return replayTape(walked.combinedParsed, walked.label, params, levelSource, null, null,
         { precollected: walked.combined, sequence: walked.seq });
 }
@@ -10558,7 +10563,15 @@ function replayJsShipFor(params) {
  * JS model.
  */
 let jsSequenceWalk = null;
+/**
+ * ⛓ seedling-js-cloud-landings (lab review note 1): NOT SHIPPABLE UNTIL THE WALK HAS ADMITTED THE QUEUE. Before
+ * `runJsSequence` sets `jsSequenceWalk` this answers a `{why}` with no `build`, so `setJsShippable` holds the button
+ * DISABLED with that reason (an early press used to reach `build` and refuse "has not admitted this queue (yet)");
+ * `runJsSequence` calls it again once the walk is in. The throw in `build` stays as the backstop.
+ */
+const JS_SEQUENCE_NOT_ADMITTED = 'the sequence walk has not admitted this queue yet — ▶ load in JS arms when it has';
 function replayJsSequenceShip() {
+    if (!jsSequenceWalk) return { why: JS_SEQUENCE_NOT_ADMITTED };
     return {
         what: '\u25b6 replay this sequence in the JS game',
         replay: true,

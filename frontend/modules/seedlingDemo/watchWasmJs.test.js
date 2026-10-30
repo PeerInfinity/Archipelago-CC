@@ -17,8 +17,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createLifetime } from '../procgenCore/pageLifetime.js';
 import { labTouchShownInitially, LAB_TOUCH_STORAGE_KEY } from './watchTouchOption.js';
 import {
-    JS_STAGES, WASM_STAGES, atSpot, jsPageFor, shipToJs, shipToWasm, spotItemsOf, stagesOf,
+    JS_STAGES, WASM_STAGES, atSpot, jsPageFor, shipToJs, shipToWasm, spotItemsOf, stagesOf, windowProjection,
 } from './watchWasm.js';
+import { gameVisibleTape } from './tapeFormat.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const CONFIG = JSON.parse(readFileSync(join(HERE, '../flashPanel/games/seedling.json'), 'utf8'));
@@ -450,5 +451,89 @@ describe('⛓ PHASE B — ▶ load in JS on a REPLAY replays the tape to a per-t
         expect(stagesOf({ transport: 'js' })).toEqual(['probe', 'runtime', 'start', 'spot', 'play']);
         expect(stagesOf({ transport: 'js', replay: true })).toEqual(['probe', 'runtime', 'start', 'tape', 'running',
             'finished', 'drain', 'verdict']);
+    });
+});
+
+/**
+ * ⛓ seedling-js-cloud-landings — the lab review's two notes on seedling-js-replay-continuation, each as a pin.
+ */
+describe('⛓ JS sequence replay — the lab review notes', () => {
+    const VIEWER = readFileSync(join(HERE, 'watchViewer.js'), 'utf8');
+    /** A top-level `function name(…) {…}` of the page, as text (it ends at the first column-0 `}`). */
+    const fnSrc = (src, name) => {
+        const i = src.indexOf(`function ${name}(`);
+        return src.slice(i, src.indexOf('\n}\n', i) + 2);
+    };
+    const notAdmittedLine = (src) => src.match(/^const JS_SEQUENCE_NOT_ADMITTED = .*;$/m)?.[0] ?? '';
+    /**
+     * The page's OWN `setJsShippable` and `replayJsSequenceShip`, run over a stub `#loadJs`: `arm()` is what
+     * `wireShipButton` does at mount, `admit(w)` what `runJsSequence` does once its walk is in.
+     */
+    const harness = (src) => {
+        const els = { loadJs: { disabled: false, title: '' }, loadJsNote: { textContent: '' } };
+        const make = new Function('$', 'modelStreamOf', `let jsShippable = null; let jsSequenceWalk = null;
+            ${notAdmittedLine(src)}
+            ${fnSrc(src, 'setJsShippable')}
+            ${fnSrc(src, 'replayJsSequenceShip')}
+            return { arm: () => setJsShippable(replayJsSequenceShip()),
+                admit: (w) => { jsSequenceWalk = w; setJsShippable(replayJsSequenceShip()); },
+                shippable: () => jsShippable };`);
+        return { els, ...make((id) => els[id], (c) => ({ ticks: c })) };
+    };
+    const walked = { perWindow: [{ expect: { level: 1 } }, { expect: { level: 2 } }], label: 'pair', names: ['a', 'b'],
+        combined: [] };
+
+    it('note 1: ▶ load in JS starts DISABLED, with the reason, until the walk admits the queue', async () => {
+        const h = harness(VIEWER);
+        h.arm();
+        expect(h.els.loadJs.disabled).toBe(true);
+        expect(h.els.loadJsNote.textContent).toMatch(/has not admitted this queue yet/);
+        // ⛔ the press path's guard: nothing shippable → `shipToJsNow` returns before any `build` (no throw to escape)
+        expect(h.shippable()).toBeNull();
+        expect(fnSrc(VIEWER, 'shipToJsNow')).toMatch(/^function shipToJsNow\([^)]*\) \{\n {4}if \(!jsShippable \|\|/);
+        h.admit(walked);
+        expect(h.els.loadJs.disabled).toBe(false);
+        expect(await h.shippable().build()).toMatchObject({ label: 'pair', replay: true, expect: { level: 2 } });
+        // …and `runJsSequence` is what admits it: the re-arm sits right after `jsSequenceWalk = walked`.
+        expect(fnSrc(VIEWER, 'runJsSequence')).toMatch(
+            /jsSequenceWalk = walked;[^]*?replayJsShip = replayJsSequenceShip\(\);\s*setJsShippable\(replayJsShip\);/);
+    });
+
+    it('⛔ note 1 mutant: the unguarded ship (the branch as reviewed) is enabled before the walk — the pin reds', () => {
+        const mutant = VIEWER.replace(/\n {4}if \(!jsSequenceWalk\) return \{ why: JS_SEQUENCE_NOT_ADMITTED \};/, '');
+        expect(mutant).not.toBe(VIEWER);
+        const h = harness(mutant);
+        h.arm();
+        expect(h.els.loadJs.disabled).toBe(false);
+        return expect(h.shippable().build()).rejects.toThrow(/has not admitted this queue/);
+    });
+
+    it('note 2: a JS continuation window keeps `continuationTape`\'s forwardRows — identical without the tick-0 write', () => {
+        const tape = {
+            tape_version: 11, name: 'w', boot: { level: 20, x: 192, y: 64 }, tick_count: 3, inputs: [], grants: [],
+            persistence: [{ level: 5, tag: 0 }, { level: 5, tag: 1, at: 427 }],
+            rng: { seed: 1823918582, split: false, cosmetic: 4, fp: 1752443622 },
+            seam: { time: 10213, day: 0, music: [1, 0] },
+            tick0: { rng: { seed: 1565614772, split: false, cosmetic: 9, fp: 1044262091 }, seam: { time: 10234 } },
+        };
+        const wasm = windowProjection(tape, 1, false);
+        const js = windowProjection(tape, 1, true);
+        expect(wasm.tick0Applied).not.toBeNull();
+        expect(wasm.tape.rng.seed).toBe(1565614772);
+        // the JS frame takes no tick-0 write…
+        expect(js.tick0Applied).toBeNull();
+        expect(js.tape).toEqual(gameVisibleTape(tape));
+        expect(js.tape.rng.seed).toBe(1823918582);
+        // …and the forward rows are the same with and without it — and ARE the rows its tape withholds
+        expect(js.forwardRows).toEqual(['5:1@427']);
+        expect(js.forwardRows).toEqual(wasm.forwardRows);
+        expect(windowProjection({ ...tape, tick0: undefined }, 1, true).forwardRows).toEqual(['5:1@427']);
+        expect(js.tape.persistence).toEqual([{ level: 5, tag: 0 }]);
+        // ⛔ recomputing from `gameVisibleTape` would report nothing: ruling 23 already dropped the timed row
+        expect(gameVisibleTape(tape).persistence.filter((c) => c.at !== undefined)).toEqual([]);
+        // window 1 projects the same for both transports
+        expect(windowProjection(tape, 0, true)).toEqual(windowProjection(tape, 0, false));
+        // and the ship's window loop is this function
+        expect(readFileSync(join(HERE, 'watchWasm.js'), 'utf8')).toMatch(/const projected = windowProjection\(wTape, k, js\);/);
     });
 });
