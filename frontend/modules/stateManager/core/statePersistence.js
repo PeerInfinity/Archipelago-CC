@@ -960,6 +960,9 @@ export function getStaticGameData(sm) {
     // "Multiworld"); the slot's game is `world[playerId].game` (rules F4).
     game_name: sm.rules?.game_name,
     game_directory: sm.rules?.game_directory,
+    // The seed the rules were exported from; null for a SEEDLESS document
+    // (no `seed_name`). The client compares it with RoomInfo.seed_name.
+    seed_name: sm.rules?.seed_name ?? null,
     // ⛓ rules F2: `flash_panel` is per player (`{"<p>": block}`); the panel
     // gets the LOADED slot's block, never another slot's.
     flash_panel: sm.rules?.flash_panel?.[sm.playerId],
