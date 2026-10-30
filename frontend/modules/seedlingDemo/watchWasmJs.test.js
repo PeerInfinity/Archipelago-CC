@@ -345,3 +345,81 @@ describe('⛓ #jsTouch follows the lab\'s on-screen-controls option', () => {
         expect(pinned(writes)).toBe(false);
     });
 });
+
+/**
+ * ⛓⛓ PHASE B — A JS REPLAY TAKES THE WASM TAIL, over a frame whose game is the REAL JS core (`createJsRuntime` on
+ * the vanilla map, ticked on a timer once the person presses Start). The model stream is `watchOverlays.collectRun`'s,
+ * the lab's own (`replayJsShipFor`), so the verdict read here is the one the lab paints: JS frame vs JS model.
+ */
+describe('⛓ PHASE B — ▶ load in JS on a REPLAY replays the tape to a per-tick verdict', () => {
+    const ROOT = join(HERE, '../../..');
+    const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+    const tapeOf = (n) => JSON.parse(readFileSync(join(HERE, `fixtures/tapes/${n}.json`), 'utf8'));
+
+    function realJsFrame(createJsRuntime) {
+        const frame = { style: {}, win: null, presses: 0, listeners: [], timers: [],
+            addEventListener(type, fn) { this.listeners.push({ type, fn }); }, removeEventListener() {},
+            get contentWindow() { return this.win; } };
+        let src = null;
+        Object.defineProperty(frame, 'src', {
+            get: () => src,
+            set(v) {
+                src = v;
+                for (const t of frame.timers.splice(0)) clearInterval(t);
+                if (v === 'about:blank') { frame.win = { blank: true }; return; }
+                const rt = createJsRuntime();
+                rt.game.configure(JSON.stringify({ classes: CONFIG.classes, state_properties: CONFIG.state_properties }));
+                const win = { __runtimeReady: true, __swfBridge: { game: {}, queueItems: (i) => rt.queueItems(i) } };
+                frame.press = () => {
+                    rt.setVanilla(MAP);
+                    Object.assign(win.__swfBridge.game, rt.game);
+                    frame.timers.push(setInterval(() => rt.tick(new Set()), 2));
+                };
+                frame.win = win;
+            },
+        });
+        return frame;
+    }
+
+    it('collide-up-rock: probe → runtime → start → tape → running → finished → drain → verdict, agreeing per tick', async () => {
+        serveAll();
+        const { createJsRuntime } = await import('./jsRuntimeCore.js');
+        const { collectRun, modelStreamOf } = await import('./watchOverlays.js');
+        const { levelSourceFromAtlas } = await import('./atlasSource.js');
+        const { JS_REPLAY_STAGES } = await import('./watchWasm.js');
+        const tape = tapeOf('collide-up-rock');
+        const collected = collectRun(tape, levelSourceFromAtlas(MAP));
+        expect(collected.error ?? null).toBeNull();
+        const frame = realJsFrame(createJsRuntime);
+        try {
+            const { state } = await shipAndPress(shipToJs, {
+                tape, label: 'collide-up-rock', replay: true, modelStream: modelStreamOf(collected),
+            }, frame);
+            expect(state.refusal).toBeNull();
+            expect(state.reached).toEqual(JS_REPLAY_STAGES.filter((s) => s !== 'levels'));
+            expect(state.drain).toEqual({ observations: tape.tick_count + 1, reportedTransitions: 0 });
+            expect(state.verdict.perTick).toMatchObject({ kind: 'agrees', agrees: true });
+        } finally {
+            for (const t of frame.timers.splice(0)) clearInterval(t);
+        }
+    }, 30000);
+
+    it('a JS replay of a SEQUENCE refuses by name (the JS frame has no continuation)', async () => {
+        serveAll();
+        const { createJsRuntime } = await import('./jsRuntimeCore.js');
+        const frame = realJsFrame(createJsRuntime);
+        const t = tapeOf('collide-up-rock');
+        try {
+            const { state } = await shipAndPress(shipToJs, { replay: true, windows: [{ tape: t }, { tape: t }] }, frame);
+            expect(state.refusal).toMatchObject({ stage: 'tape', reason: 'js-sequence-unsupported' });
+        } finally {
+            for (const t2 of frame.timers.splice(0)) clearInterval(t2);
+        }
+    }, 30000);
+
+    it('⛔ a live JS ship (no `replay`) is Phase A, unchanged: spot → play', () => {
+        expect(stagesOf({ transport: 'js' })).toEqual(['probe', 'runtime', 'start', 'spot', 'play']);
+        expect(stagesOf({ transport: 'js', replay: true })).toEqual(['probe', 'runtime', 'start', 'tape', 'running',
+            'finished', 'drain', 'verdict']);
+    });
+});

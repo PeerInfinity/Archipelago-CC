@@ -72,6 +72,13 @@
  *  · `botLoadLevels` answers `'pending'` per chunk and `'ok'` on the last;
  *    `botLevelSet` reads back `{active, table_levels, start_level}`
  *    (`levelSetDisagreement.READBACK_FIELDS`).
+ *  · ⛓ PHASE B — the TAPE verbs (`Bot.as` `botLoadTape` :912, `botStart` :1658,
+ *    `botStatus` :2027, `botDrain` :2870): a tape is parsed and staged, booted
+ *    through the same `boot()` with its declaration (`declared`), driven per
+ *    tick in place of the keyboard and the walker (`tapeRecordThenAct`, the
+ *    armed loop :3232-3335), and drained in `diffObservationStreams`'
+ *    vocabulary. ⛔ `tape.armed` is the one switch: unarmed, every tick is
+ *    the pre-Phase-B tick (`jsRuntimeTape.test.js`'s identity chain).
  *
  * ── ⚖ THE TWO APPROVED LIBERTIES (user, 2026-10-01) ───────────────────────
  *
@@ -134,7 +141,8 @@ import { buildLevelWorld, ENTITY_CLASSES, entityRect, STAIRS_TAGS, tagOf } from 
 import { chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
-import { BUILD_SPAWN, INVENTORY_ITEM_IDS, ITEM_PROPERTIES, SAVE_SLOTS } from './tapeFormat.js';
+import { BUILD_SPAWN, heldKeysAt, INVENTORY_ITEM_IDS, ITEM_PROPERTIES, parseTape, SAVE_SLOTS } from './tapeFormat.js';
+import { stagingFromTape } from './tapeRunner.js';
 import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
 import { createRuntimeSolver } from './jsRuntimeSolver.js';
 import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
@@ -198,6 +206,18 @@ export function isDeathRefusal(err) {
 /** The `Main.*` flag every item property names, with its empty value. */
 const ITEM_FLAGS = Object.freeze(Object.fromEntries(Object.values(ITEM_PROPERTIES)
     .map((spec) => [spec.property, spec.kind === 'add' ? spec.base : false])));
+
+/** ⛓ PHASE B — the `Main.*` item properties of an inventory, in `ITEM_FLAGS` order (`Bot.as:2690` `itemReadout`'s fourteen). */
+const pickItems = (inv) => Object.fromEntries(Object.keys(ITEM_FLAGS).map((k) => [k, k in inv ? inv[k] : ITEM_FLAGS[k]]));
+
+/**
+ * ⛓⛓ PHASE B — **THE TAPE VERBS' REFUSALS THE WASM GAME DOES NOT HAVE**, said by name. `hold` (v12, the P4E latch
+ * hold) is a wasm build capability the JS runtime does not declare; a halt is the JS model refusing mid-tape.
+ */
+export const JS_TAPE_REFUSALS = Object.freeze({
+    hold: 'error:hold is not modelled by the JS runtime (no `hold` capability)',
+    halted: (message) => `error:the JS model halted — ${message}`,
+});
 
 /** The class aliases `games/seedling.json` declares, by the AS3 name they resolve to. */
 const MAIN = 'Main';
@@ -383,6 +403,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     /** "level:tag" apitems collected (their slot is cleared). */
     const collected = new Set();
     let deferredReboot = false;
+    /**
+     * ⛓⛓ PHASE B — THE TAPE, as `Bot.as` holds it (`loaded`/`armed`/`finished`/`tick`/`tickCount`, the observation
+     * buffer and its base). ⛔ `armed` is the ONE switch the no-tape path reads: while it is false every tick is the
+     * walker's/keyboard's, byte for byte as before (the identity pin in `jsRuntimeTape.test.js`).
+     */
+    const tape = { loaded: null, staging: null, armed: false, finished: false, tick: 0, tickCount: 0, error: '',
+        obs: [], obsBase: 0 };
 
     let pendingExit = '';
     let pendingExitSeq = 0;
@@ -546,7 +573,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             secondary: Number.isInteger(run.secondary) ? run.secondary : 0, firstUse: run.firstUse === true };
     }
 
-    function boot({ level, x, y }, why, { playerDamage = null } = {}) {
+    function boot({ level, x, y }, why, { playerDamage = null, declared = null } = {}) {
         const src = roomSource();
         if (!src) throw new Error('jsRuntimeCore: no level set is mounted and no vanilla map is loaded — nothing to boot');
         if (!src.records.has(level)) {
@@ -559,7 +586,39 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         const slots = carriedSlots();
         // The constructor writes the statics before it builds anything (a room the model refuses included).
         lastCtor = { x, y };
-        const staging = bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS] });
+        // ⛓ PHASE B — a TAPE's boot (`botStart`) stages the tape's own declaration and nothing of the session's: the
+        // game's `botStart` resets the persistence table and the save arrays to a fresh start and applies only what the
+        // tape declares (`Bot.as:1708-1772`, ⚖ ruling 25). Absent (every other caller), the staging below is unchanged.
+        const staging = declared ? { ...declared } : bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS] });
+        if (!declared) stageSession(staging, slots, playerDamage);
+        bootItems = { ...flags };
+        try {
+            // ⛓ PHASE B — a tape's staging runs AS DECLARED (`declared`, no `solveStaging`: `runTape`'s own
+            // construction). ⚠ `scratchPersistence` stays ON for it too, and that is MEASURED: the frame is handed the
+            // GAME-VISIBLE projection (`gameVisibleTape` drops v9's kill-lock `at` rows — what the game does on its
+            // own), so, like the game, the frame must compute those clears itself. Off, 14 committed kill-lock tapes
+            // halted by name ("OPENS 1 kill lock … DECLARES no clear"); on, all 202 that load agree with `runTape`.
+            session = createManualSession({ levelSource: src.source, staging, name: 'js-runtime', scratchPersistence: true,
+                declared: Boolean(declared) });
+        } catch (err) {
+            // ⛓ J3 — a real level the model cannot BUILD (an entity it refuses
+            // by name) halts the page by name, the same as a refusal mid-play.
+            session = null;
+            halted = { tick: ticks, level, message: err.message };
+            note({ type: 'halt', level, message: `[js runtime] HALTED — the model refused to boot level ${level}: `
+                + `${err.message.split('\n')[0]}` });
+            return null;
+        }
+        // ⛓ PHASE B — what the tape's run was booted holding is the baseline a later fold measures GAINED against.
+        if (declared) bootItems = { ...flags, ...pickItems(session.run.inventory ?? {}) };
+        halted = null;
+        deferredReboot = false;
+        note({ type: 'boot', level, x, y, why, message: `[js runtime] boot level ${level} at (${x}, ${y}) — ${why}` });
+        return session;
+    }
+
+    /** The session's own state, staged into a non-tape boot (unchanged from before Phase B; hoisted only). */
+    function stageSession(staging, slots, playerDamage) {
         staging.persistence = [...carried.values()].map((c) => ({ ...c }));
         // ⛓ KEY DELIVERY — the session's keys and slot order survive every boot (teleport, Restart, item reboot).
         staging.save = { ...staging.save, keys: [...heldKeys].sort((a, b) => a - b) };
@@ -577,22 +636,6 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ STAGEDHITS CONSUMER — an in-place reboot keeps the game's `Player` (an item flag rebuilds no world), so
         // its damage is STAGED (`playerDamage.stagedPlayerDamage`); absent everywhere else (a new `Player`, 0 hits).
         if (playerDamage) staging.player_damage = playerDamage;
-        bootItems = { ...flags };
-        try {
-            session = createManualSession({ levelSource: src.source, staging, name: 'js-runtime', scratchPersistence: true });
-        } catch (err) {
-            // ⛓ J3 — a real level the model cannot BUILD (an entity it refuses
-            // by name) halts the page by name, the same as a refusal mid-play.
-            session = null;
-            halted = { tick: ticks, level, message: err.message };
-            note({ type: 'halt', level, message: `[js runtime] HALTED — the model refused to boot level ${level}: `
-                + `${err.message.split('\n')[0]}` });
-            return null;
-        }
-        halted = null;
-        deferredReboot = false;
-        note({ type: 'boot', level, x, y, why, message: `[js runtime] boot level ${level} at (${x}, ${y}) — ${why}` });
-        return session;
     }
 
     function teleport(args) {
@@ -754,11 +797,17 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     function tickOnce(rawHeld) {
         drainQueue();
         if (!session || halted) { flush(); return { stepped: false }; }
-        if (deferredReboot && !session.run.inCeremony && !encounterHoldsDelivery()) rebootInPlace(IN_PLACE_REBOOT_WHY);
+        // ⛓ PHASE B — an item delivery's in-place reboot WAITS while a tape is armed (it would replace the tape's run
+        // mid-stream; the game's flag write rebuilds nothing), and lands on the first tick after the tape finishes.
+        if (deferredReboot && !tape.armed && !session.run.inCeremony && !encounterHoldsDelivery()) rebootInPlace(IN_PLACE_REBOOT_WHY);
         const run = session.run;
-        // (`heldFor` is asked ONCE per tick — the walker's contract — and reused below.)
-        const walkHeld = walker.heldFor(run);
-        const manual = !walker.solverDriving && walkHeld === null;
+        // ⛓ PHASE B — the tape's keys for this tick, or null: no tape armed (every tick before Phase B), or the tape
+        // finished on THIS frame (the game's frame still updates — `Bot.as:3330-3333` returns to `super.update()`).
+        const tapeHeld = tape.armed ? tapeRecordThenAct(run) : null;
+        // (`heldFor` is asked ONCE per tick — the walker's contract — and reused below.) ⛔ Not asked on a tape tick:
+        // the tape drives in place of the walker and the keyboard, and the walker is never told a tape tick happened.
+        const walkHeld = tapeHeld ? null : walker.heldFor(run);
+        const manual = !tapeHeld && !walker.solverDriving && walkHeld === null;
         const released = releasedSince(rawHeld);
         if (invMenu.open) {
             if (manual) return menuHeldTick(run, released, rawHeld);
@@ -773,7 +822,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         const box0 = playerBoxAt(run.state.x, run.state.y);
         const n0 = run.transitions.length;
         const inCeremony0 = Boolean(run.inCeremony);
-        if (walker.solverHolding) {
+        if (!tapeHeld && walker.solverHolding) {
             // ⛓ S2 — a solve is in flight: the room is HELD (the run does not
             // step, so the plan is played from the state it was solved from);
             // the host's queue was drained above and the reports still flush.
@@ -781,13 +830,19 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             return { stepped: false, solving: true };
         }
         // ⛓ S1 — the solver's plan already presses every ceremony X; the page must not add one.
-        const { held: drive } = session.heldFor(walkHeld ?? held, { autoAdvanceText: !walker.solverDriving });
+        // ⛓ PHASE B — a tape tick steps EXACTLY the tape's keys (`runTape`'s `run.advance(heldKeysAt(t, tick))`): no
+        // ceremony auto-advance, which `runTape` does not add either.
+        const { held: drive } = tapeHeld ? { held: tapeHeld }
+            : session.heldFor(walkHeld ?? held, { autoAdvanceText: !walker.solverDriving });
         const deaths0 = run.playerDeaths.length;
         try {
             session.step(drive);
         } catch (err) {
             halted = { tick: ticks, message: err.message };
             note({ type: 'halt', message: `[js runtime] HALTED — the model refused: ${err.message.split('\n')[0]}` });
+            // ⛓ PHASE B — a halted tape FINISHES with the refusal as its error (a poll that waited on `finished` for
+            // ever would read as a slow tape); its drain holds what was recorded, and the verdict says the rest.
+            if (tapeHeld) Object.assign(tape, { armed: false, finished: true, error: JS_TAPE_REFUSALS.halted(err.message.split('\n')[0]) });
             flush();
             return { stepped: false, halted };
         }
@@ -802,7 +857,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             deaths.push({ t: ticks, level: level0, kind, respawn: d.respawn ? { ...d.respawn } : null });
             note({ type: 'death', kind, level: level0, message: `[js runtime] death (${kind}) in level ${level0} — `
                 + 'the model restarted the room the game\'s way' });
-            walker.observe({ death: kind });
+            if (!tapeHeld) walker.observe({ death: kind });
             flush();
             return { stepped: true, death: kind };
         }
@@ -832,9 +887,85 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ seedling-js-inventory-menu: the frame's tail, `inventory.update()` — after the step, as the game runs it.
         if (manual) menuLiveTail(run, released);
         reportClears(run);
-        walker.observe({ crossing });
+        if (!tapeHeld) walker.observe({ crossing });
         flush();
         return { stepped: true, crossing };
+    }
+
+    // ── ⛓⛓ PHASE B — the tape, `Bot.as`'s armed loop over the JS run ──────────────────────────────────────────────
+
+    /**
+     * One armed frame's bookkeeping, `Bot.as:3232-3335` — RECORD, then act: the observation is the state the
+     * previous tick left (observation t = the state after t completed ticks), then this tick's keys. On the tick that
+     * reaches `tick_count` the final observation is recorded and the tape disarms WITHOUT consuming a tick
+     * (`Bot.as:3291-3333`); null is returned and the frame goes on as an ordinary one. `heldKeysAt` is the span rule
+     * `runTape` reads, so a span `[from, to)` is held exactly where the model holds it.
+     * @returns {Set<string>|null}
+     */
+    function tapeRecordThenAct(run) {
+        tape.obs.push({ x: run.state.x, y: run.state.y, level: run.level });
+        if (tape.tick >= tape.tickCount) {
+            tape.armed = false;
+            tape.finished = true;
+            note({ type: 'tape', finished: true, message: `[js runtime] tape finished at tick ${tape.tick}` });
+            return null;
+        }
+        const held = heldKeysAt(tape.loaded, tape.tick);
+        tape.tick += 1;
+        // A tape tick with no key down is still a TAPE tick: the empty Set drives (truthy), the walker does not.
+        return held;
+    }
+
+    /**
+     * `botLoadTape` — `Bot.as:912-1636`. Parse, gate the version EXACTLY as the game gates it (`Bot.as:921-924`: 9, 10
+     * and 11 are model-only and refused — a caller hands the game-visible projection, `gameVisibleTape`), validate
+     * through the one parser (`parseTape`, whose own refusals stand in for `botLoadTape`'s field checks), refuse
+     * what the JS runtime cannot do (`JS_TAPE_REFUSALS.hold`), and STAGE the boot (`stagingFromTape`). Loading
+     * disarms and clears the buffer (`Bot.as:1610-1628`). `'ok'` or `'error:…'`, the game's vocabulary.
+     */
+    function botLoadTape(json) {
+        let raw;
+        try { raw = JSON.parse(json); } catch (err) { return `error:${err.message}`; }
+        const version = Math.trunc(Number(raw?.tape_version));
+        if (!(version >= 1) || (version > 8 && version !== 12)) {
+            return `error:tape_version must be 1, 2, 3, 4, 5, 6, 7, 8 or 12, got ${raw?.tape_version}`;
+        }
+        let parsed;
+        try { parsed = parseTape(raw); } catch (err) { return `error:${err.message}`; }
+        if (parsed.hold) return JS_TAPE_REFUSALS.hold;
+        Object.assign(tape, { loaded: parsed, staging: stagingFromTape(parsed), armed: false, finished: false,
+            tick: 0, tickCount: parsed.tick_count, error: '', obs: [], obsBase: 0 });
+        note({ type: 'tape', loaded: true, message: `[js runtime] tape loaded — ${parsed.name ?? 'unnamed'}, `
+            + `${parsed.tick_count} tick(s), boot L${parsed.boot.level} (${parsed.boot.x}, ${parsed.boot.y})` });
+        return 'ok';
+    }
+
+    /**
+     * `botStart` — `Bot.as:1658-1937`. ⛔ Through the SAME `boot()` every other boot takes, with the tape's staging
+     * DECLARED (fresh persistence and save arrays plus what the tape declares — `Bot.as:1708-1772`). ⚠ ALWAYS a
+     * rebuild: the game skips one when it already stands at the boot (`Bot.as:1843-1846`, the continuation path), and
+     * the JS frame has no continuation — the lab refuses a multi-window JS ship by name. Tick 0 is the next live frame
+     * (the page's own fade frames are dead frames it holds, as the game's `blackCover` frames are).
+     */
+    function botStart() {
+        if (!tape.loaded) return 'error:no tape loaded';
+        if (tape.armed) return 'error:already running';
+        const { boot: b } = tape.loaded;
+        if (invMenu.open) { invMenu.open = false; menuHeldFrames = 0; }
+        arrival = { level: b.level, x: b.x, y: b.y };
+        const booted = boot(arrival, `tape ${tape.loaded.name ?? 'unnamed'} (botStart)`, { declared: tape.staging });
+        if (!booted) return JS_TAPE_REFUSALS.halted(halted?.message?.split('\n')[0] ?? 'the boot was refused');
+        Object.assign(tape, { armed: true, finished: false, tick: 0, error: '', obs: [] });
+        flush();
+        return 'ok';
+    }
+
+    /** `botDrain` — `Bot.as:2870-2886`: the buffer since the last drain, `t` from its base; then cleared, base kept. */
+    function botDrain() {
+        const ticksOut = tape.obs.map((o, i) => ({ t: tape.obsBase + i, x: o.x, y: o.y, level: o.level }));
+        tape.obsBase += tape.obs.length;
+        tape.obs = [];
+        return JSON.stringify({ ticks: ticksOut, transitions: [] });
     }
 
     /**
@@ -1328,7 +1459,21 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             // ⛓ OBSTACLE EVENTS — the game's cleared persistence slots, as the wasm game's `botStatus` reports them
             // (`persistence_cleared`): what earlier runs carried + what this run cleared. The collector's load read.
             persistence_cleared: persistenceCleared(),
+            // ⛓ PHASE B — the tape's readout, `Bot.as:2029-2069`'s names: `finished` is what the lab's poll waits on,
+            // `tick`/`tick_count`/`buffered` the progress, `error` a halted tape's refusal, `items` `itemReadout`'s
+            // fourteen (the run's live inventory; the host's flags with no run).
+            loaded: tape.loaded !== null,
+            armed: tape.armed,
+            finished: tape.finished,
+            error: tape.error,
+            tick: tape.tick,
+            tick_count: tape.tickCount,
+            buffered: tape.obs.length,
+            items: session ? pickItems(session.run.inventory ?? {}) : { ...flags },
         }),
+        botLoadTape: (json) => botLoadTape(json),
+        botStart: () => botStart(),
+        botDrain: () => botDrain(),
         botMobiles: () => JSON.stringify({
             mobiles: session ? [{ cls: 'Player', x: session.run.state.x, y: session.run.state.y }] : [],
         }),
@@ -1381,6 +1526,11 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
                 textScale: [...invMenu.textScale], heldFrames: menuHeldFrames };
         },
         get ticks() { return ticks; },
+        /** ⛓ PHASE B — the tape's state, for the page and the rows (`armed` is the no-tape path's one switch). */
+        get tape() {
+            return { loaded: tape.loaded !== null, armed: tape.armed, finished: tape.finished, tick: tape.tick,
+                tickCount: tape.tickCount, buffered: tape.obs.length, error: tape.error };
+        },
         get configured() { return config !== null; },
         /** The current room's record and its uncollected apitems, for the painter. */
         view() {

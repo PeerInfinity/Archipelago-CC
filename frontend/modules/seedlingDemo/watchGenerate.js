@@ -92,7 +92,8 @@ import {
     writeRosterParam, writeRunFlag, writeSizeParams, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
-    POST_FEATHER_PALETTE, POST_SHIELD_PALETTE, POST_SWIM_PALETTE, POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
+    ENDGAME_PALETTE, POST_DARK_SUIT_PALETTE, POST_FEATHER_PALETTE, POST_FIRE_PALETTE, POST_SHIELD_PALETTE,
+    POST_SPEAR_PALETTE, POST_SWIM_PALETTE, POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
     instantiateKept, normalizeRoster, restrictPalette,
 } from './procgenPalette.js';
 import {
@@ -149,6 +150,11 @@ export const GENERATE_BIOMES = Object.freeze({
     'post-swim': POST_SWIM_PALETTE,
     /** ⛓ seedling swim T2 (D3) — the feather (and the conch) in the boot; opt-in. */
     'post-feather': POST_FEATHER_PALETTE,
+    /** ⛓ seedling-gen-biomes-1 (C2) — the census boots of D4, D7, D8 and the End; opt-in. */
+    'post-fire': POST_FIRE_PALETTE,
+    'post-spear': POST_SPEAR_PALETTE,
+    'post-dark-suit': POST_DARK_SUIT_PALETTE,
+    endgame: ENDGAME_PALETTE,
 });
 
 export const BIOME_NAMES = Object.freeze(Object.keys(GENERATE_BIOMES));

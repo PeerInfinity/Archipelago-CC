@@ -170,34 +170,6 @@ export function loadSeedlingArt({ win = globalThis, base = packsBaseUrl() } = {}
 }
 
 /**
- * ⛓ FlashPunk's `Image.color` MULTIPLIES the sprite (a fire / spear block's tint) — `jsRuntimePage`'s own
- * `tinted`, which is private to the page (⛔ importing the page would pull it all in): one cached copy per
- * (sheet, tint); `=colour` is a silhouette. `doc` makes the canvases.
- */
-export function createTinter(doc = globalThis.document) {
-    const cache = new WeakMap();
-    return (img, tint) => {
-        let byTint = cache.get(img);
-        if (!byTint) cache.set(img, byTint = new Map());
-        if (!byTint.has(tint)) {
-            const c = doc.createElement('canvas');
-            c.width = img.width;
-            c.height = img.height;
-            const t = c.getContext('2d');
-            t.drawImage(img, 0, 0);
-            const silhouette = tint.startsWith('=');
-            t.globalCompositeOperation = silhouette ? 'source-in' : 'multiply';
-            t.fillStyle = silhouette ? tint.slice(1) : tint;
-            t.fillRect(0, 0, c.width, c.height);
-            t.globalCompositeOperation = 'destination-in';
-            t.drawImage(img, 0, 0);
-            byTint.set(tint, c);
-        }
-        return byTint.get(tint);
-    };
-}
-
-/**
  * The live sprites' painter for a canvas of `mazeWorld` at `cellPx` per cell: `(ctx, ops) => counts`, the ops in
  * level pixels (16 per cell), scaled by `paintOps` from the canvas size.
  */

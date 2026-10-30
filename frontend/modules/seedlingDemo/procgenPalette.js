@@ -826,6 +826,13 @@ export const EXCLUDED_TEMPLATES = Object.freeze([
      * code wearing a legality rule's name. `lane: 'avoidable'` therefore also
      * leaves the CONCRETE-ROW vocabulary (see this file's header and
      * `procgenCore/templateContract`): the word is retired, not reserved.
+     *
+     * ⛓⛓ **RE-OPENED ALONG THIS ROW'S OWN `wouldNeed`** (seedling gen A1). ⚖ The
+     * user, 2026-10-28: *"Arrow traps would need to be combined with either a
+     * switch or a rope."* The trap and its disarmer built TOGETHER is now the
+     * `ropegate` ELEMENT (`procgenCore/elements/ropeGate.js`, the L16 pattern:
+     * an armed trap on a cut and the rope a sword cuts). ⛔ THIS TEMPLATE STAYS
+     * EXCLUDED: a lane dropped into a finished room is still what it was.
      */
     Object.freeze({
         name: 'arrow-lane',
@@ -861,7 +868,12 @@ export const EXCLUDED_TEMPLATES = Object.freeze([
             + 'the lane is a thing the level was built around rather than a hazard dropped '
             + 'into an existing room for the walk to route past. ⛔ Until then the honest '
             + 'answer is that the generator has no use for one: ⚖ design ruling 8 designs '
-            + 'for POST-SWORD by default, and a post-sword player walks through the volley.',
+            + 'for POST-SWORD by default, and a post-sword player walks through the volley. '
+            + '⛓ RE-OPENED AS AN ELEMENT (seedling gen A1; ⚖ the user, 2026-10-28: "Arrow '
+            + 'traps would need to be combined with either a switch or a rope."): the '
+            + '`ropegate` element (`procgenCore/elements/ropeGate.js`) builds the trap and '
+            + 'the rope that disarms it together, post-sword. This template row stays '
+            + 'excluded.',
     }),
     Object.freeze({
         name: 'button-lock-pair',
@@ -1444,6 +1456,65 @@ export const POST_FEATHER_ITEMS = Object.freeze({ ...POST_SWIM_ITEMS, hasFeather
 export const POST_FEATHER_PALETTE = Object.freeze({
     name: 'post-feather',
     items: POST_FEATHER_ITEMS,
+    templates: POST_SWORD_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+});
+
+/**
+ * ⛓⛓⛓ **THE FOUR LATER ITEM PRESETS** (Seedling lab arc, `seedling-gen-biomes-1`,
+ * C2): the boot the player ARRIVES with at D4, D7, D8 and the End, from the vanilla
+ * area census (the gen-content design's §3.1 "Player arrives with" column). Each
+ * holds every earlier item, the torch, fire and wand included.
+ *
+ * ⛔ THEY DO NOT EXTEND `POST_SWIM_ITEMS`. Post-swim's boot skips the torch, the
+ * fire and the wand, and it stays byte-identical here (its correction is a later
+ * change of its own). These four are built from the census instead.
+ *
+ * ⛔ THE ROSTER IS POST-SWORD'S, BY REFERENCE, as for every biome since post-shield:
+ * none of these items gates a pass-2 template. Their element defaults are the ones
+ * their items meet (`procgenSeedling.BIOME_DEFAULT_FOLD`); no element needs the
+ * torch, fire, wand, spear, dark suit or ghost sword yet.
+ *
+ * ⚠ DECLARED, NOT EARNED, and OPT-IN: not in `watchGenerate.DEFAULT_CENSUS_BIOMES`.
+ * `hasDarkSword` is in no preset: the census does not place it in any area's boot.
+ */
+export const POST_FIRE_ITEMS = Object.freeze({ hasSword: true, hasShield: true, hasTorch: true, hasFire: true });
+
+export const POST_FIRE_PALETTE = Object.freeze({
+    name: 'post-fire',
+    items: POST_FIRE_ITEMS,
+    templates: POST_SWORD_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+});
+
+/** D7's boot: + the wand (D4), the conch (D5), the feather (mountain) and the ghost spear (D6). */
+export const POST_SPEAR_ITEMS = Object.freeze({
+    ...POST_FIRE_ITEMS, hasWand: true, canSwim: true, hasFeather: true, hasSpear: true,
+});
+
+export const POST_SPEAR_PALETTE = Object.freeze({
+    name: 'post-spear',
+    items: POST_SPEAR_ITEMS,
+    templates: POST_SWORD_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+});
+
+/** D8's boot: + the dark suit and the dark shield (D7). */
+export const POST_DARK_SUIT_ITEMS = Object.freeze({ ...POST_SPEAR_ITEMS, hasDarkSuit: true, hasDarkShield: true });
+
+export const POST_DARK_SUIT_PALETTE = Object.freeze({
+    name: 'post-dark-suit',
+    items: POST_DARK_SUIT_ITEMS,
+    templates: POST_SWORD_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+});
+
+/** The End's boot: + the ghost sword and the fire wand (D8). */
+export const ENDGAME_ITEMS = Object.freeze({ ...POST_DARK_SUIT_ITEMS, hasGhostSword: true, hasFireWand: true });
+
+export const ENDGAME_PALETTE = Object.freeze({
+    name: 'endgame',
+    items: ENDGAME_ITEMS,
     templates: POST_SWORD_TEMPLATES,
     excluded: POST_SWORD_EXCLUDED_TEMPLATES,
 });
