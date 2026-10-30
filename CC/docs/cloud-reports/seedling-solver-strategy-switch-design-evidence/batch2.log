@@ -1,0 +1,40 @@
+### none :: 1,29,48,66,112,125,136,170,189 08:55:25
+rc=0
+== step 1 — L0 ... SOLVED 183 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 367 ms
+== step 29 — L20 ... SOLVED 560 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3230 ms
+== step 48 — L38 ... SOLVED 371 ticks, 6 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 1882 ms
+== step 66 — L39 ... SOLVED 3496 ticks, 26 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 23567 ms
+== step 112 — L57 ... SOLVED 1389 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4650 ms
+== step 125 — L62 ... SOLVED 266 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4579 ms
+== step 136 — L40 ... SOLVED 172 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5281 ms
+== step 170 — L69 ... SOLVED 440 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 32999 ms
+== step 189 — L82 ... SOLVED 1363 ticks, 2 decision(s), 0 re-plan(s), 2 hit(s), 1 pass(es) — 9755 ms
+### weigh :: 23 08:57:20
+rc=0
+== step 23 — L15 ... REFUSED — PROBE: 'weigh' disabled for this solve
+### wand :: 66,136 08:57:26
+rc=0
+== step 66 — L39 ... SOLVED 3496 ticks, 26 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 23260 ms
+== step 136 — L40 ... SOLVED 172 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5609 ms
+### touch :: 29 08:58:05
+rc=0
+== step 29 — L20 ... REFUSED — solverBot: no REACHABLE stance inside buttonroom@192,16 in level 20 — 1 cell(s) land the player box in the button and none of them plans a corridor from (118.68
+### break :: 1 08:58:11
+rc=0
+== step 1 — L0 ... SOLVED 183 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 329 ms
+### lights :: 170 08:58:16
+rc=0
+== step 170 — L69 ... REFUSED — level 69 has no teleporter at (72,72); it has . An exit names a trigger by its OEL coordinates — the driver does not search the teleporter graph.
+### tentaclebeast :: 112 08:58:21
+rc=0
+== step 112 — L57 ... REFUSED — solverBot(survey-step-112) clear-tag {57,0} tentaclebeast@80,48: solid:tentaclebeast selects 'tentaclebeast', which is NOT REGISTERED — no executor clears this 
+### lavaboss :: 189 08:58:25
+rc=0
+== step 189 — L82 ... REFUSED — solverBot(survey-step-189): no corridor for goal reach-exit toward (152,8) in level 82. Obstacle: solid:lavaboss (lavaboss@112,48). Strategy 'lavaboss' is SELEC
+### pole :: 125 08:58:31
+rc=0
+== step 125 — L62 ... SOLVED 266 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6279 ms
+### pulse :: 48 08:58:44
+rc=0
+== step 48 — L38 ... REFUSED — solverBot(survey-step-48) chest (144,112): the placement is INSIDE solid:cover (cover@144,112) — a pickup in a solid is an obstacle, not a stance problem. Strat
+DONE

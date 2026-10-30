@@ -1,0 +1,162 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 68606c45aa..4d4427612c 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -235,6 +235,22 @@ function switchGatedRow(table, key, get) {
+     Object.defineProperty(table, key, { get, enumerable: false });
+     return table;
+ }
++// ⛔ THROWAWAY MEASUREMENT PATCH (seedling-solver-strategy-switch-design) — never a candidate.
++const PROBE_DISABLED = new Set((globalThis.process?.env?.SEEDLING_PROBE_DISABLE ?? '').split(',').filter(Boolean));
++const DIS = (v) => PROBE_DISABLED.has(v);
++function probeMask(t) {
++    if (PROBE_DISABLED.size === 0) return t;
++    return new Proxy({}, {
++        get: (_, k) => (DIS(k) ? undefined : t[k]),
++        has: (_, k) => !DIS(k) && k in t,
++        ownKeys: () => Reflect.ownKeys(t).filter((k) => !DIS(k)),
++        getOwnPropertyDescriptor: (_, k) => {
++            if (DIS(k)) return undefined;
++            const d = Reflect.getOwnPropertyDescriptor(t, k);
++            return d && { ...d, configurable: true };
++        },
++    });
++}
+ // ⛓ seedling-fidelity-bosskills D2 — the King of Fire's policy (the run steps the fight, `lavaBoss.js`).
+ import { LAVA_BOSS_POLICY_VARIANTS, createLavaBossPolicy, lavaBossPolicyStep } from './lavaBossPolicy.js';
+ // ⛓ fidelity L67BK4 D2 — the Totem's policy (the run steps the fight, `bossTotem.js`).
+@@ -813,7 +829,7 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
+  * row that had to DERIVE its own parameters rather than bind a placement: a
+  * leg spec carried `{presser, ticks}` and a live policy has to work out both.
+  */
+-export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
++export const STRATEGY_EXECUTORS = probeMask(Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
+     collect: execCollect,
+     chest: execChest,
+     hold: execHold,
+@@ -923,7 +939,7 @@ export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(sw
+ // ⛓ fidelity L39SHAFT — `l39shaft` (switch-gated on `l39ShaftPress`): L39's licensed special case. See `execL39Shaft`.
+ 'l39shaft', () => (CONTACT_FIDELITY.l39ShaftPress ? execL39Shaft : undefined)),
+ // ⛓ fidelity LIGHTPOLE D2 — `pole` (switch-gated on `inRoomPoleThrust`): one Spear thrust at a pole. See `execPoleThrust`.
+-'pole', () => (CONTACT_FIDELITY.inRoomPoleThrust ? execPoleThrust : undefined)));
++'pole', () => (CONTACT_FIDELITY.inRoomPoleThrust ? execPoleThrust : undefined))));
+ 
+ /**
+  * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — **THE FRONTIER'S EXECUTOR LOOKUP**, and the
+@@ -937,6 +953,7 @@ export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(sw
+  * off it is the table, byte for byte; that is the flag's whole contract.
+  */
+ export function frontierExecutor(strategy) {
++    if (DIS(strategy)) return undefined;
+     const row = STRATEGY_EXECUTORS[strategy];
+     if (row) return row;
+     if (strategy === 'bait' && CRUSHER_BAIT.enabled) return execBait;
+@@ -954,6 +971,7 @@ export function frontierExecutor(strategy) {
+  * and this lookup answers the table byte for byte with the flag off.
+  */
+ function clearTagExecutor(strategy) {
++    if (DIS(strategy)) return undefined;
+     // ⛓ fidelity SEALDOOR D2 — `approach` (the FinalDoor's {113,0}) only while `sealDoorApproach` is on.
+     if (strategy === 'approach' && CONTACT_FIDELITY.sealDoorApproach) return execApproach;
+     return STRATEGY_EXECUTORS[strategy] ?? (strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined);
+@@ -26374,7 +26392,7 @@ function solveSegmentUnder({
+          * a spit climbs again; `DODGE_RUNG.maxPerSegment` bounds the stalls.
+          * ⛓ fidelity CORRIDOR D2: a wallflyer's or a drill's forecast contact asks it too (`corridorBodyOnly`).
+          */
+-        if ((spitOnly || corridorBodyOnly) && corridor) {
++        if ((spitOnly || corridorBodyOnly) && corridor && !DIS('dodge')) {
+             if (activeProgress !== null) progressRung('dodge');
+             let dodge = null;
+             let dodgeWhy = null;
+@@ -26435,7 +26453,7 @@ function solveSegmentUnder({
+          * priced on every tick of it). It drives the stall and hands back `{}`, and the walk re-plans with the
+          * whirlpools as they then stand. Bounded by the spit arm's `maxPerSegment`.
+          */
+-        if (whirlpoolOnly && corridor) {
++        if (whirlpoolOnly && corridor && !DIS('dodge')) {
+             if (activeProgress !== null) progressRung('dodge');
+             const named = new Set(hit.sources.map((s) => s.id));
+             const left = Math.max(0, ...(run.entities('tentacleBeastFight')?.whirlpools ?? [])
+@@ -26484,7 +26502,7 @@ function solveSegmentUnder({
+          * own predicate over the whole walk. Bounded, and a `shouldStop` site
+          * (`axe-dodge`).
+          */
+-        if (axeOnly && corridor) {
++        if (axeOnly && corridor && !DIS('dodge')) {
+             if (activeProgress !== null) progressRung('dodge');
+             let dodge = null;
+             let dodgeWhy = null;
+@@ -26945,7 +26963,7 @@ function solveSegmentUnder({
+          */
+         const phaseOnly = hit.sources.length > 0
+             && hit.sources.every((s) => s.kind === 'hazard' && s.phase);
+-        if (phaseOnly && corridor) {
++        if (phaseOnly && corridor && !DIS('dodge')) {
+             if (activeProgress !== null) progressRung('dodge');
+             let dodge = null;
+             let dodgeWhy = null;
+@@ -27248,7 +27266,7 @@ function solveSegmentUnder({
+                 if (next) silencer = deriveLaneSilencer(run, next, what, pullingRopes);
+             }
+         }
+-        if (silencer) {
++        if (silencer && !DIS('pull')) {
+             const ropeId = silencer.rope.ropeId;
+             let pull = null;
+             let pullWhy = null;
+@@ -27348,7 +27366,7 @@ function solveSegmentUnder({
+         if (activeProgress !== null) progressRung('time');
+         const timeline = `dangerMap over L${run.level} at model tick `
+             + `${run.ticksCompleted}`;
+-        const reachable = Math.hypot(aim.x - run.state.x, aim.y - run.state.y)
++        const reachable = !DIS('time') && Math.hypot(aim.x - run.state.x, aim.y - run.state.y)
+             <= TIME_RUNG.reach;
+         let timeWhy = null;
+         if (!reachable) {
+@@ -27473,7 +27491,9 @@ function solveSegmentUnder({
+         // is the body the single-return chooser used to hand them.
+         const body = removable[0] ?? null;
+         let baitWhy = null;
+-        if (body && body.stepped === false) {
++        if (DIS('bait')) {
++            baitWhy = 'PROBE: bait disabled for this solve';
++        } else if (body && body.stepped === false) {
+             baitWhy = `${body.id} is a STATIC census body (\`speed 0\`, and this room's `
+                 + 'chaser roster is refused) — it never writes `v`, so there is no straight '
+                 + 'line to bend and nothing to lure. That is a KILL question, and the kill '
+@@ -27550,7 +27570,7 @@ function solveSegmentUnder({
+         // ── rung 4: KILL — the room's own weapon, held until the count moves ─
+         if (activeProgress !== null) progressRung('kill');
+         let killWhy = null;
+-        const target = body ?? null;
++        const target = DIS('kill') ? null : (body ?? null);
+         if (target && target.iceTurret === true && ICETURRET_STATIC_KILL.enabled) {
+             /**
+              * ⛓⛓ HAMMER-PHASE ICEST (`ICETURRET_STATIC_KILL`, OFF) — a LIVE ice turret (the chooser's, a set's head,
+@@ -29127,7 +29147,7 @@ function solveSegmentUnder({
+                             stanceWalks.delete(walking);
+                         }
+                     }
+-                    const record = frontierExecutor(plan.strategy)(run, perTick, plan.resolved, {
++                    const record = (frontierExecutor(plan.strategy) ?? (() => { throw new SolverRefusal(`PROBE: '${plan.strategy}' disabled for this solve`); }))(run, perTick, plan.resolved, {
+                         maxTicksPerTarget,
+                         economies,
+                         dashMode,
+@@ -30176,7 +30196,7 @@ function solveSegmentUnder({
+                 rejected: [],
+                 keys: [],
+             });
+-            const record = STRATEGY_EXECUTORS[verb](run, perTick, { strategy: verb, obstacle: { kind: 'solid', tag: cls, id } },
++            const record = (STRATEGY_EXECUTORS[verb] ?? (() => { throw new SolverRefusal(`PROBE: '${verb}' disabled for this solve`); }))(run, perTick, { strategy: verb, obstacle: { kind: 'solid', tag: cls, id } },
+                 { walkTo, goal, what: `${whatCT} -> ${verb}`, refuse: (reason, why) => refuseCT(reason, why) });
+             const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
+             done('verb', { strategy: verb, waited, ...record });
+@@ -30766,7 +30786,7 @@ function solveSegmentUnder({
+                     contactsOverride: resolvedBlocker.exempt,
+                 });
+             }
+-            const rec = STRATEGY_EXECUTORS[strategy](run, perTick, resolvedBlocker, {
++            const rec = (STRATEGY_EXECUTORS[strategy] ?? (() => { throw new SolverRefusal(`PROBE: '${strategy}' disabled for this solve`); }))(run, perTick, resolvedBlocker, {
+                 maxTicksPerTarget, economies, dashMode, what: `${what} -> ${strategy}`,
+                 before: null, walkTo, goal, equip, rewind,
+                 // ⛓ fidelity BOSSFORK D1: the segment's fork, as the frontier arm and the clear-tag arm pass it.

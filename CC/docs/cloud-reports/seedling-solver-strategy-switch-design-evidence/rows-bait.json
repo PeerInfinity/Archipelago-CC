@@ -1,0 +1,10 @@
+[
+ {
+  "step": 6,
+  "level": 6,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 146,
+  "refusal": "solverBot(survey-step-6) reach-exit (224,32)->L7: the combat ladder is EXHAUSTED. The corridor passes through danger at (62.0,24.0) \u2014 enemy:sandtrap@64,16 (a static \"Enemy\" body at its placement (this room is stepped, so this class is unbridged and does not move), priced \"static\" by `contactPricing`) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 6 volume(s) forbidden \u2014 no walkable tile path in level 6 from tile (2,1) to (14,2). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, \n  time: the aim is 193 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: PROBE: bait disabled for this solve\n  kill: no presser in level 6 arms a trap whose lane covers bob@112,48 \u2014 the room has 0 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: this run holds no sword, so `set slashing`'s outer gate refuses every press \u2014 no stance could strike bob@112,48, and the stance scan was not run (SF3)\n  forced-hit: no forced hit is proven from (40.0,24.0): the hitless input [\u00b7 \u00b7 \u00b7] survives 3 tick(s) \u2014 no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))"
+ }
+]

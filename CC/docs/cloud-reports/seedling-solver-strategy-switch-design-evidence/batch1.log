@@ -1,0 +1,60 @@
+### none :: 3,4,5,6,8,23,24,27,28,37,45,50 08:51:56
+rc=0
+== step 3 — L3 ... SOLVED 245 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 396 ms
+== step 4 — L4 ... SOLVED 255 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 565 ms
+== step 5 — L5 ... SOLVED 403 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 1003 ms
+== step 6 — L6 ... SOLVED 294 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 485 ms
+== step 8 — L8 ... SOLVED 827 ticks, 7 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 807 ms
+== step 23 — L15 ... SOLVED 456 ticks, 7 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 993 ms
+== step 24 — L16 ... SOLVED 273 ticks, 2 decision(s), 0 re-plan(s), 1 hit(s), 1 pass(es) — 4782 ms
+== step 27 — L18 ... SOLVED 467 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 9343 ms
+== step 28 — L19 ... SOLVED 746 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1120 ms
+== step 37 — L29 ... SOLVED 257 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1227 ms
+== step 45 — L24 ... SOLVED 124 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 593 ms
+== step 50 — L44 ... SOLVED 212 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 632 ms
+### hold :: 4 08:52:52
+rc=0
+== step 4 — L4 ... REFUSED — solverBot(survey-step-4): no corridor for goal reach-exit toward (72,24) in level 4. Obstacle: proximity-hazard:button (button@16,64). Strategy 'hold' is SELECT
+### shove :: 4,8,23 08:52:56
+rc=0
+== step 4 — L4 ... REFUSED — solverBot(survey-step-4): no corridor for goal reach-exit toward (72,24) in level 4. Obstacle: solid:pushableblock (pushableblock@32,64). Strategy 'shove' is SE
+== step 8 — L8 ... REFUSED — solverBot(survey-step-8): no corridor for goal reach-exit toward (104,200) in level 8. Obstacle: solid:pushableblock (pushableblock@112,48). Strategy 'shove' is
+== step 23 — L15 ... REFUSED — solverBot(survey-step-23): no corridor for goal reach-exit toward (152,24) in level 15. Obstacle: solid:pushableblock (pushableblock@64,64). Strategy 'shove' is
+### weigh :: 23 08:53:06
+rc=0
+== step 23 — L15 ... REFUSED — frontierExecutor(...) is not a function
+### kill :: 5,8,27 08:53:11
+rc=0
+== step 5 — L5 ... REFUSED — solverBot(survey-step-5) reach-exit (48,112)->L6 -> hold stance (button@48,48): the combat ladder is EXHAUSTED. The corridor passes through danger at (56.1,56.4
+== step 8 — L8 ... REFUSED — solverBot(survey-step-8) reach-exit (96,192)->L9 -> shove stance (pushableblock@96,112): the combat ladder is EXHAUSTED. The corridor passes through danger at (
+== step 27 — L18 ... REFUSED — solverBot(survey-step-27): no corridor for goal reach-exit toward (184,120) in level 18. Obstacle: solid:lock (lock@144,112); also on the frontier: dungeonspire
+### bait :: 6 08:53:28
+rc=0
+== step 6 — L6 ... REFUSED — solverBot(survey-step-6) reach-exit (224,32)->L7: the combat ladder is EXHAUSTED. The corridor passes through danger at (62.0,24.0) — enemy:sandtrap@64,16 (a st
+### break :: 3 08:53:32
+rc=0
+== step 3 — L3 ... SOLVED 245 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 234 ms
+### rope :: 24 08:53:37
+rc=0
+== step 24 — L16 ... REFUSED — solverBot(survey-step-24) clear-tag {16,0} rope@32,16: solid:rope selects 'rope', which is NOT REGISTERED — no executor clears this flag yet (a later slice's ro
+### pull :: 24 08:53:41
+rc=0
+== step 24 — L16 ... SOLVED 273 ticks, 2 decision(s), 0 re-plan(s), 1 hit(s), 1 pass(es) — 3875 ms
+### fight :: 28 08:53:49
+rc=0
+== step 28 — L19 ... REFUSED — solverBot(survey-step-28) collect (96,64): the placement is INSIDE solid:shieldboss (shieldboss@80,32) — a pickup in a solid is an obstacle, not a stance proble
+### keylock :: 28 08:53:53
+rc=0
+== step 28 — L19 ... REFUSED — solverBot(survey-step-28): no corridor for goal reach-exit toward (24,104) in level 19. Obstacle: solid:sign (sign@64,128); also on the frontier: bosslock@48,32
+### dodge :: 37 08:53:58
+rc=0
+== step 37 — L29 ... SOLVED 257 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2652 ms
+### burn :: 45,50 08:54:05
+rc=0
+== step 45 — L24 ... REFUSED — solverBot(survey-step-45): no corridor for goal reach-exit toward (40,152) in level 24. Obstacle: solid:burnabletree (burnabletree@32,128); also on the frontier
+== step 50 — L44 ... REFUSED — solverBot(survey-step-50): no corridor for goal reach-exit toward (72,8) in level 44. Obstacle: solid:burnabletree (burnabletree@48,64); also on the frontier: r
+### time :: 6,27 08:54:12
+rc=0
+== step 6 — L6 ... SOLVED 294 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 402 ms
+== step 27 — L18 ... SOLVED 467 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 17623 ms
+DONE

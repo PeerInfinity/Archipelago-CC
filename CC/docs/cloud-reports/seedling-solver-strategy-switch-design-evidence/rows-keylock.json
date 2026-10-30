@@ -1,0 +1,10 @@
+[
+ {
+  "step": 28,
+  "level": 19,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 868,
+  "refusal": "solverBot(survey-step-28): no corridor for goal reach-exit toward (24,104) in level 19. Obstacle: solid:sign (sign@64,128); also on the frontier: bosslock@48,32. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 19 from tile (6,4) to (1,6). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game."
+ }
+]

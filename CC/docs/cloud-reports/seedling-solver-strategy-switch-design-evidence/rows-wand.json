@@ -1,0 +1,18 @@
+[
+ {
+  "step": 66,
+  "level": 39,
+  "verdict": "SOLVED",
+  "ticks": 3496,
+  "ms": 23260,
+  "refusal": null
+ },
+ {
+  "step": 136,
+  "level": 40,
+  "verdict": "SOLVED",
+  "ticks": 172,
+  "ms": 5609,
+  "refusal": null
+ }
+]

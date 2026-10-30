@@ -1,0 +1,10 @@
+[
+ {
+  "step": 112,
+  "level": 57,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 40,
+  "refusal": "solverBot(survey-step-112) clear-tag {57,0} tentaclebeast@80,48: solid:tentaclebeast selects 'tentaclebeast', which is NOT REGISTERED \u2014 no executor clears this flag yet (a later slice's row, computed rather than guessed)"
+ }
+]

@@ -1,0 +1,26 @@
+[
+ {
+  "step": 5,
+  "level": 5,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 3586,
+  "refusal": "solverBot(survey-step-5) reach-exit (48,112)->L6 -> hold stance (button@48,48): the combat ladder is EXHAUSTED. The corridor passes through danger at (56.1,56.4) \u2014 chaser:bob@16,64 (inside leash 80 (d=6.1), box grown 0.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: the danger-forbidden corridor STILL probes dangerous at (56.1,56.4) \u2014 chaser:bob@16,64 (inside leash 80 (d=6.1), box grown 0.5 px/tick x 0 + pad 0). \u26a0 The AVOID rung routes around RECTS and the probe asks the whole union, which includes the point tests a rect cannot carry (a disc hazard); that gap is why the ladder has a second rung.\n  time: the walk carries a HOLD's still wait as its tail (`holdStandWalk`), and the danger is in that wait: TIME certifies the mover TO the aim against the danger timeline, never the wait at it, so its answer would leave the tail hit where it was (L40LATCH).\n  bait: no bait stance for bob@48,80 survives the chaser forecast: 81 cell(s) in its leash (80), 10 crossing a kill region, 1 previewed and refused [(-8,40): the preview did not settle \u2014 the preview LATCHED DROWNING at (18.4,52.5) in level 5 \u2014 `checkDrowning`'s cumulative timer ran out on unprotected water or lava, and `drown()` runs to `die()`]\n  kill: the danger on this corridor is not a body this run can watch die \u2014 a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and \u26d4 a static \"Enemy\" body's own arrow death is REFUSED by name (\u00a711.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  detour: no corridor bent through at most 2 via cell(s) of the 17 the walk can plan to probes clean: 129 candidate corridor(s) previewed with the bodies stepped against each, 10 prefix(es) dangerous before their last via, 129 preview(s) of the 300 bound spent and 178 leg(s) of the 500 planned.\n  forced-hit: no forced hit is proven from (88.0,40.0): the hitless input [\u00b7 \u00b7 \u00b7] survives 3 tick(s) \u2014 no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))"
+ },
+ {
+  "step": 8,
+  "level": 8,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 425,
+  "refusal": "solverBot(survey-step-8) reach-exit (96,192)->L9 -> shove stance (pushableblock@96,112): the combat ladder is EXHAUSTED. The corridor passes through danger at (104.8,77.6) \u2014 enemy:sandtrap@96,80 (a static \"Enemy\" body at its PLACEMENT \u2014 this room's chaser roster is REFUSED, so the model has no live position for it, priced \"static\" by `contactPricing`) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 2 volume(s) forbidden \u2014 no walkable tile path in level 8 from tile (7,3) to (7,7). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a\n  time: the aim is 64 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: sandtrap@96,80 is a STATIC census body (`speed 0`, and this room's chaser roster is refused) \u2014 it never writes `v`, so there is no straight line to bend and nothing to lure. That is a KILL question, and the kill is the room's own ceiling.\n  kill: the danger on this corridor is not a body this run can watch die \u2014 a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and \u26d4 a static \"Enemy\" body's own arrow death is REFUSED by name (\u00a711.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  forced-hit: no forced hit is proven from (112.2,56.0): the hitless input [\u00b7 \u00b7 \u00b7] survives 3 tick(s) \u2014 no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))"
+ },
+ {
+  "step": 27,
+  "level": 18,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 72,
+  "refusal": "solverBot(survey-step-27): no corridor for goal reach-exit toward (184,120) in level 18. Obstacle: solid:lock (lock@144,112); also on the frontier: dungeonspire@80,64. Strategy 'kill' is SELECTED but not registered this slice. Planner said: no walkable tile path in level 18 from tile (1,2) to (11,7). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game."
+ }
+]

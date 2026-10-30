@@ -1,0 +1,10 @@
+[
+ {
+  "step": 4,
+  "level": 4,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 55,
+  "refusal": "solverBot(survey-step-4): no corridor for goal reach-exit toward (72,24) in level 4. Obstacle: proximity-hazard:button (button@16,64). Strategy 'hold' is SELECTED but not registered this slice. Planner said: no walkable tile path in level 4 from tile (1,1) to (4,1). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game."
+ }
+]

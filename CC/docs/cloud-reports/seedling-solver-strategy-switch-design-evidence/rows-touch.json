@@ -1,0 +1,10 @@
+[
+ {
+  "step": 29,
+  "level": 20,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 697,
+  "refusal": "solverBot: no REACHABLE stance inside buttonroom@192,16 in level 20 \u2014 1 cell(s) land the player box in the button and none of them plans a corridor from (118.68384576779738,51.34300521889724). A hold that cannot be stood on is not a strategy for this obstacle. \u26d4 AND NO PREREQUISITE EXISTS TO RAISE: level 20 holds no walk-family pushable and no hypothesised activator whose own verb moves one, so there is nothing an order could discharge to open this stance (arc 3 slice S1, gap 1 \u2014 the bound this sweep ran over is the room's own roster)."
+ }
+]

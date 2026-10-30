@@ -1,0 +1,170 @@
+[
+ {
+  "step": 1,
+  "level": 0,
+  "verdict": "SOLVED",
+  "ticks": 183,
+  "ms": 367,
+  "refusal": null
+ },
+ {
+  "step": 3,
+  "level": 3,
+  "verdict": "SOLVED",
+  "ticks": 245,
+  "ms": 396,
+  "refusal": null
+ },
+ {
+  "step": 4,
+  "level": 4,
+  "verdict": "SOLVED",
+  "ticks": 255,
+  "ms": 565,
+  "refusal": null
+ },
+ {
+  "step": 5,
+  "level": 5,
+  "verdict": "SOLVED",
+  "ticks": 403,
+  "ms": 1003,
+  "refusal": null
+ },
+ {
+  "step": 6,
+  "level": 6,
+  "verdict": "SOLVED",
+  "ticks": 294,
+  "ms": 485,
+  "refusal": null
+ },
+ {
+  "step": 8,
+  "level": 8,
+  "verdict": "SOLVED",
+  "ticks": 827,
+  "ms": 807,
+  "refusal": null
+ },
+ {
+  "step": 23,
+  "level": 15,
+  "verdict": "SOLVED",
+  "ticks": 456,
+  "ms": 993,
+  "refusal": null
+ },
+ {
+  "step": 24,
+  "level": 16,
+  "verdict": "SOLVED",
+  "ticks": 273,
+  "ms": 4782,
+  "refusal": null
+ },
+ {
+  "step": 27,
+  "level": 18,
+  "verdict": "SOLVED",
+  "ticks": 467,
+  "ms": 9343,
+  "refusal": null
+ },
+ {
+  "step": 28,
+  "level": 19,
+  "verdict": "SOLVED",
+  "ticks": 746,
+  "ms": 1120,
+  "refusal": null
+ },
+ {
+  "step": 29,
+  "level": 20,
+  "verdict": "SOLVED",
+  "ticks": 560,
+  "ms": 3230,
+  "refusal": null
+ },
+ {
+  "step": 37,
+  "level": 29,
+  "verdict": "SOLVED",
+  "ticks": 257,
+  "ms": 1227,
+  "refusal": null
+ },
+ {
+  "step": 45,
+  "level": 24,
+  "verdict": "SOLVED",
+  "ticks": 124,
+  "ms": 593,
+  "refusal": null
+ },
+ {
+  "step": 48,
+  "level": 38,
+  "verdict": "SOLVED",
+  "ticks": 371,
+  "ms": 1882,
+  "refusal": null
+ },
+ {
+  "step": 50,
+  "level": 44,
+  "verdict": "SOLVED",
+  "ticks": 212,
+  "ms": 632,
+  "refusal": null
+ },
+ {
+  "step": 66,
+  "level": 39,
+  "verdict": "SOLVED",
+  "ticks": 3496,
+  "ms": 23567,
+  "refusal": null
+ },
+ {
+  "step": 112,
+  "level": 57,
+  "verdict": "SOLVED",
+  "ticks": 1389,
+  "ms": 4650,
+  "refusal": null
+ },
+ {
+  "step": 125,
+  "level": 62,
+  "verdict": "SOLVED",
+  "ticks": 266,
+  "ms": 4579,
+  "refusal": null
+ },
+ {
+  "step": 136,
+  "level": 40,
+  "verdict": "SOLVED",
+  "ticks": 172,
+  "ms": 5281,
+  "refusal": null
+ },
+ {
+  "step": 170,
+  "level": 69,
+  "verdict": "SOLVED",
+  "ticks": 440,
+  "ms": 32999,
+  "refusal": null
+ },
+ {
+  "step": 189,
+  "level": 82,
+  "verdict": "SOLVED",
+  "ticks": 1363,
+  "ms": 9755,
+  "refusal": null
+ }
+]

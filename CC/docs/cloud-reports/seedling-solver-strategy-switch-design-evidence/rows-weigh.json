@@ -1,0 +1,10 @@
+[
+ {
+  "step": 23,
+  "level": 15,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 718,
+  "refusal": "PROBE: 'weigh' disabled for this solve"
+ }
+]

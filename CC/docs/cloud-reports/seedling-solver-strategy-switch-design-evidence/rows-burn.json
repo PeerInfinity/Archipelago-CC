@@ -1,0 +1,18 @@
+[
+ {
+  "step": 45,
+  "level": 24,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 57,
+  "refusal": "solverBot(survey-step-45): no corridor for goal reach-exit toward (40,152) in level 24. Obstacle: solid:burnabletree (burnabletree@32,128); also on the frontier: tree@64,128, tree@0,96, dungeonspire@80,112, tree@0,64, tree@0,32, dungeonspire@112,80, tree@128,64, tree@32,0, tree@128,32, tree@64,0, tree@96,0. Strategy 'burn' is SELECTED but not registered this slice. Planner said: A* goal tile (2,9) in level 24 \u2014 for (40,152) \u2014 is not walkable: solid burnabletree at (32,128). The planner works in whole tiles, so both ends of a route must be tiles the player box fits in at the centre of."
+ },
+ {
+  "step": 50,
+  "level": 44,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 55,
+  "refusal": "solverBot(survey-step-50): no corridor for goal reach-exit toward (72,8) in level 44. Obstacle: solid:burnabletree (burnabletree@48,64); also on the frontier: rock2@48,96, tree@128,80. Strategy 'burn' is SELECTED but not registered this slice. Planner said: no walkable tile path in level 44 from tile (8,8) to (4,0). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game."
+ }
+]

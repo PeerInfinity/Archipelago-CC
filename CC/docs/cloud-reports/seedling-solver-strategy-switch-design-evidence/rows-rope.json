@@ -1,0 +1,10 @@
+[
+ {
+  "step": 24,
+  "level": 16,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 25,
+  "refusal": "solverBot(survey-step-24) clear-tag {16,0} rope@32,16: solid:rope selects 'rope', which is NOT REGISTERED \u2014 no executor clears this flag yet (a later slice's row, computed rather than guessed)"
+ }
+]

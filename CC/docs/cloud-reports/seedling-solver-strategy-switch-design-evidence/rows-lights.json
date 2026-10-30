@@ -1,0 +1,10 @@
+[
+ {
+  "step": 170,
+  "level": 69,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 21,
+  "refusal": "level 69 has no teleporter at (72,72); it has . An exit names a trigger by its OEL coordinates \u2014 the driver does not search the teleporter graph."
+ }
+]

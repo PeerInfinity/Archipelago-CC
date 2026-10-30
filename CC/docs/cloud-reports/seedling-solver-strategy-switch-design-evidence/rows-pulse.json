@@ -1,0 +1,10 @@
+[
+ {
+  "step": 48,
+  "level": 38,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 31,
+  "refusal": "solverBot(survey-step-48) chest (144,112): the placement is INSIDE solid:cover (cover@144,112) \u2014 a pickup in a solid is an obstacle, not a stance problem. Strategy 'pulse' is SELECTED but not registered."
+ }
+]

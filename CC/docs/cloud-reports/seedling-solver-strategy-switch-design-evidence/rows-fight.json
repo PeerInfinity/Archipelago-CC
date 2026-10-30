@@ -1,0 +1,10 @@
+[
+ {
+  "step": 28,
+  "level": 19,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "ms": 24,
+  "refusal": "solverBot(survey-step-28) collect (96,64): the placement is INSIDE solid:shieldboss (shieldboss@80,32) \u2014 a pickup in a solid is an obstacle, not a stance problem. Strategy 'fight' is SELECTED but not registered."
+ }
+]
