@@ -139,7 +139,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 132,
-            "count": 181,
+            "count": 182,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 496,
+        "blockStyle": 497,
         "browser": 199,
         "cited": 264,
-        "files": 513,
+        "files": 514,
         "lineStyle": 17,
-        "withDocblock": 513,
-        "withFlags": 429
+        "withDocblock": 514,
+        "withFlags": 430
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12883,6 +12883,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-gen-arrowtrap-rooms — HAND-BUILT ARROW-TRAP ROOMS, SOLVED BY THE GENERATOR'S ORACLE.",
             "path": "scripts/procgen/probe-seedling-gen-arrowtrap-rooms.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "has"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "items",
+                "rooms"
+            ],
+            "file": "probe-seedling-gen-chest-rooms.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "items"
+                },
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "rooms"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-gen-chest-rooms — HAND-BUILT CHEST ROOMS, SOLVED BY THE GENERATOR'S ORACLE.",
+            "path": "scripts/procgen/probe-seedling-gen-chest-rooms.mjs"
         },
         {
             "argvHelpers": [

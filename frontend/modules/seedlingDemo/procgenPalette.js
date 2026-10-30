@@ -1119,6 +1119,14 @@ export const PRE_SWORD_PALETTE = Object.freeze({
  * for the same reason every other row is: the geometry it measures is what a
  * later slice would otherwise re-discover by building the thing.
  *
+ * ⛓⛓ **RE-OPENED AS AN ELEMENT, NOT AS THIS ROW** (seedling gen B2). ⚖ The
+ * user, 2026-10-30, *"I agree with your recommendations"* — approving the
+ * recommendation *chests as DOORS now, each door chest an AP location; loot
+ * and goal chests only after the oracle's "no collect record" fix*. The door is
+ * the `chestdoor` ELEMENT (`procgenCore/elements/chestDoor.js`), which owns
+ * the doubling-back this row's `wouldNeed` named. ⛔ `chest-in-the-gap` STAYS
+ * EXCLUDED: a chest dropped into a finished room's gap is still what it was.
+ *
  * ⚠ SAYING THAT OUT LOUD IS THE POINT. A biome that quietly shipped the same
  * six families under a new name would read as a palette that grew; naming the
  * gap makes "the post-sword palette has no post-sword-EXCLUSIVE clearer" a
@@ -1256,7 +1264,12 @@ export const POST_SWORD_EXCLUDED_TEMPLATES = Object.freeze([
             + 'returned but the goal list is not certified — no collect record for '
             + 'place:112,112. `solveSegment` is supposed to refuse rather than return '
             + 'short, so this is a seam defect, not a rejected candidate."* Recorded for '
-            + 'a future engine slice; nothing in this arc touches it.',
+            + 'a future engine slice; nothing in this arc touches it. '
+            + '⛓ RE-OPENED AS AN ELEMENT (seedling gen B2; ⚖ the user, 2026-10-30: "I agree '
+            + 'with your recommendations", approving chests as DOORS now and each door chest an '
+            + 'AP location): the `chestdoor` element (`procgenCore/elements/chestDoor.js`) '
+            + 'grows the wall, jogs it and carves the pocket so the crossing runs south→north. '
+            + 'This template row stays excluded.',
     }),
     /**
      * ⛓⛓⛓ `spinner-killlock` WAS HERE, AND IT IS NOW A TEMPLATE.

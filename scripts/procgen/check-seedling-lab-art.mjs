@@ -24,6 +24,9 @@
  *   ⛓ seedling-gen-ropegate: a generated ROPE GATE room (`?elements=ropegate`, post-sword) certifies, holds its trap
  *   and rope, and draws the trap in sprites.
  *
+ *   ⛓ seedling-gen-chestdoor: a generated CHEST DOOR room (`?elements=chestdoor`, pre-sword) certifies, holds one
+ *   tagged chest, and draws the chest in sprites (the `solids` family).
+ *
  *   ⛓ gen-biomes-1: the generate arm's LOOK select — one generated room in every look, the canvas's floor and
  *   wall pixels following each look's COLUMN (stills `look-<name>.png`) — and the four new item presets boot.
  *
@@ -326,6 +329,43 @@ async function main() {
         }
         if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-ropegate${mode === 'off' ? '-off' : ''}.png`) });
         check(errors.length === 0, `ropegate (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+        await page.close();
+    }
+
+    // ── ⛓ seedling-gen-chestdoor: a generated CHEST DOOR room, art on ──
+    //
+    // The generate arm with `?elements=chestdoor` (pre-sword: a chest takes no item): the room holds ONE `chest` with
+    // its own tag (its persistence and its AP check address), in the only gap of a wall, and it certifies (the stance
+    // below the chest is the unit rows' to pin, `procgenChestDoor.test.js`). The chest has a skin
+    // (`seedling:puzzlement/chest`, the `solids` family).
+    console.log('\n## chestdoor — a generated chest door room');
+    for (const mode of ['on', 'off']) {
+        const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+        const errors = [];
+        page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+        await page.goto(`${PAGE}?source=generate&seed=1&biome=pre-sword&elements=chestdoor${mode === 'off' ? '&art=off' : ''}`,
+            { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction((want) => {
+            const a = window.__labArt;
+            return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                && (want === 'off' ? a.drawn === null : a.drawn !== null);
+        }, mode, { timeout: 180000 }).catch(() => {});
+        await page.waitForTimeout(1200);
+        const { art, payload } = await page.evaluate(() => ({ art: window.__labArt ?? null,
+            payload: window.__watch?.payload ? { certified: window.__watch.payload.certified,
+                entities: window.__watch.payload.level.entities } : null }));
+        if (mode === 'on') {
+            const chest = (payload?.entities ?? []).filter((e) => e.type === 'chest');
+            check(payload?.certified === true && chest.length === 1 && Number(chest[0].attrs?.tag) >= 0,
+                'chestdoor: the generated room CERTIFIES and holds ONE tagged chest',
+                JSON.stringify({ certified: payload?.certified, chest }));
+            check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && (art.drawn.families?.solids ?? 0) > 0,
+                'chestdoor: drawn in sprites, the chest among them (`solids` family)', JSON.stringify(art?.drawn));
+        } else {
+            check(art?.drawn === null, 'chestdoor ?art=off: the rectangles', JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+        }
+        if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-chestdoor${mode === 'off' ? '-off' : ''}.png`) });
+        check(errors.length === 0, `chestdoor (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
         await page.close();
     }
 
