@@ -1,0 +1,11 @@
+registry:   9 entries (bounce, flash_seedling, flash_seedling_gen, jta, maze, noiz2sa, omsi, runner, text_adventure), 93 fields over 15 groups, 0 library/libraries NOT loadable headless, 0 FINDING(S)
+instruments: 510 files over 42 categories, 197 browser rows, 426 with flags, 263 cited by a doc, 0 FINDING(S)
+capabilities: 29 statements × 9 substrates, 39 fields read, 51 not yet read
+docsIndex:  28 documents (477,627 words) + 4 pages
+PASS: …and that link LOADS from this page's own host — http://127.0.0.1:38521/frontend/modules/procgenDocs/reference.html → 200
+
+ALL CHECKS PASSED
+OK: frontend/modules/quickLaunch/generated/docsIndex.js is current (191 docs, 9 sections, 12 categories).
+PASS: r9-solve-32's tick-0 clock is declared + bootCost — declared 16414 + 21 = 16435, measured 16435 (delta 21)
+
+ALL CHECKS PASSED

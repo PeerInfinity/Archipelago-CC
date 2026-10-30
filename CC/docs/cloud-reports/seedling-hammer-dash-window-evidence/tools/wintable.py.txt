@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+"""The window options on the ON arm: ticks and work over the 870 requests, from thr.jsonl + win.jsonl."""
+import json, sys
+thr, seen = {}, set()
+for l in open(sys.argv[1]):
+    r = json.loads(l)
+    if 'fail' in r or (r['id'], r['i']) in seen: continue
+    seen.add((r['id'], r['i'])); thr[(r['id'], r['i'])] = r
+win = {}
+for f in sys.argv[2:]:
+    for l in open(f):
+        r = json.loads(l); win[(r['id'], r['i'])] = r['out']
+WS = [85, 89, 97, 129, 193, 257, 353]
+# baseline per request: the requests whose dashless pass answered (as m1table's totals)
+base = [r for r in thr.values() if r['rows'][0]['ok'] and r['bestTicks'] is not None]
+dl = sum(r['rows'][0]['ticks'] for r in base); w0 = sum(r['bestTicks'] for r in base)
+print(f'{len(base)} requests; dashless {dl} t, window 0 {w0} t; {len(win)} requests re-solved per window (full pass counted > 85 ON asks, a plan in hand)')
+print('window | ticks | % of window 0 savings | requests short of window 0 | Δ work units vs 85 (the re-solved requests)')
+w85work = sum(win[k]['85']['work'] for k in win)
+for w in WS:
+    ticks, short = 0, 0
+    for r in base:
+        k = (r['id'], r['i'])
+        t = win[k][str(w)]['ticks'] if k in win else (r['loss']['on'].get('atWindow') if r['upgrade'] else r['bestTicks'])
+        if k in win and win[k][str(w)]['ticks'] is None: t = r['bestTicks']
+        if k not in win and r['upgrade'] and w != 85:
+            t = r['bestTicks']  # counted asks <= 85: never trips at any window >= 85
+        ticks += t; short += t > r['bestTicks']
+    work = sum(win[k][str(w)]['work'] for k in win)
+    print(f'{w:6d} | {ticks:6d} | {100*(dl-ticks)/(dl-w0):5.1f} % | {short:4d} | {work - w85work:+6d} ({work})')
+# legs at 85 and their lift at 89
+print('\nlegs whose ON threshold is exactly 85, at 85 / 89:')
+for k, r in thr.items():
+    if r['upgrade'] and r['loss']['on'].get('thr') == 85:
+        print(f"  {k[0]}:{k[1]} L{r['level']} best {r['bestTicks']}  85:{win.get(k, {}).get('85')}  89:{win.get(k, {}).get('89')}")

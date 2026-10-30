@@ -1,0 +1,4 @@
+#!/bin/bash
+# one job: <requests file> <id:i>
+out=$(node --max-old-space-size=3000 /tmp/claude-0/-home-user-Archipelago-CC/89a163f5-efff-5e0c-867d-c41e90ecb368/scratchpad/tools/thr.mjs --lab=/home/user/Archipelago-CC --requests=$1 --one=$2 --bisect --near=10 2>/tmp/claude-0/-home-user-Archipelago-CC/89a163f5-efff-5e0c-867d-c41e90ecb368/scratchpad/m1/err-${2/:/-}.txt | grep '^RESULT')
+[ -n "$out" ] && echo "${out#RESULT }" >> /tmp/claude-0/-home-user-Archipelago-CC/89a163f5-efff-5e0c-867d-c41e90ecb368/scratchpad/m1/thr.jsonl || echo "{\"fail\":\"$2\"}" >> /tmp/claude-0/-home-user-Archipelago-CC/89a163f5-efff-5e0c-867d-c41e90ecb368/scratchpad/m1/thr.jsonl

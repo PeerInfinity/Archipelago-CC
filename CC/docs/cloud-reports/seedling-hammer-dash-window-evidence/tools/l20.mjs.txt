@@ -1,0 +1,24 @@
+// L20 (survey step 29's room: r8-d2-20's boot, the Shield, then stairsup@16,48 → L13) under DASH_STAND_WHOLE OFF / ON.
+import { join } from 'node:path';
+const LAB = process.argv[2];
+const M = (p) => import(join(LAB, 'frontend/modules/seedlingDemo', p));
+const { loadTape } = await M('fixtures/index.js');
+const { createRunForStaging, solveStaging, stagingFromTape } = await M('tapeRunner.js');
+const { atlasLevelSource } = await M('levelSource.js');
+const { twoPassSolve } = await M('twoPassSolve.js');
+const sb = await M('solverBot.js');
+const levelSource = atlasLevelSource();
+const tape = loadTape('r8-d2-20');
+const goals = [{ kind: 'collect-placement', placement: { x: 112, y: 48 } }, { kind: 'reach-exit', exit: { x: 16, y: 48 } }];
+for (const on of [false, true]) {
+    const audit = [];
+    sb.DASH_STAND_WHOLE.audit = audit;
+    const t0 = Date.now();
+    const staging = solveStaging(stagingFromTape(tape));
+    const out = await sb.withDashStandWhole(on, () => twoPassSolve({ makeRun: (p) => createRunForStaging({ ...staging, persistence: p },
+        levelSource), goals, name: 'l20', boot: staging.boot, persistence: staging.persistence }));
+    sb.DASH_STAND_WHOLE.audit = null;
+    const keys = JSON.stringify(out.out.perTick.map((k) => [...k]));
+    console.log(on ? 'ON ' : 'OFF', out.out.perTick.length, keys.length, Date.now() - t0, 'ms');
+    for (const a of audit) console.log('   ', JSON.stringify(a));
+}
