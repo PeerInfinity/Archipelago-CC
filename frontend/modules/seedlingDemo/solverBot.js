@@ -11914,7 +11914,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
             ? [{ x: r.x - V, y: side.y }, { x: r.right + V, y: side.y }]
             : [{ x: side.x, y: r.y - V }, { x: side.x, y: r.bottom + V }];
         vias.sort((a, b) => Math.hypot(a.x - stage.x, a.y - stage.y) - Math.hypot(b.x - stage.x, b.y - stage.y));
-        for (const via of [null, ...vias.filter((v) => plannerObstacleAt(run.world, v.x, v.y, null, opts) === null)]) {
+        route: for (const via of [null, ...vias.filter((v) => plannerObstacleAt(run.world, v.x, v.y, null, opts) === null)]) {
             for (let w = 0; w <= TURRET_APPROACH_WAIT_MAX; w += 1) {
                 const what = `${side.key} ${via ? `via (${via.x},${via.y})` : 'corridor'}, wait ${w}`;
                 const count = (k, why = null) => {
@@ -11942,7 +11942,10 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                 };
                 const aim = via ?? { x: side.x, y: side.y };
                 const wps = planWaypointsOrNull(f.world, f.state, aim, null, solverPlanOpts(f, exempt));
-                if (wps === null) { count('no-plan', `no corridor to (${aim.x},${aim.y})`); continue; }
+                // ⛔ every try of a route starts from the same staging state, so a route with no corridor has none at
+                // any wait: the route is done (measured: without this, L40 legs 860/861 spent their `crusher-fork`
+                // deadline on 251 corridor-less tries behind the latched south door, and refused on the deadline)
+                if (wps === null) { count('no-plan', `no corridor to (${aim.x},${aim.y})`); continue route; }
                 // ⛓ the wait, at the route's first waypoint: inside the range it runs the turret's volley clock
                 let ok = true;
                 let rest = wps;
@@ -11954,7 +11957,20 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
                     if (rest === null) { count('no-plan', `no corridor on from the wait to (${aim.x},${aim.y})`); continue; }
                 }
                 ok = walkOn(via ? [...rest, { x: side.x, y: side.y }] : rest);
-                if (!ok) { count('approach-hit', hitWhy()); continue; }
+                if (!ok) {
+                    /**
+                     * ⛔ A WALK THAT MEETS THE TURRET'S BODY IS THE ROUTE'S GEOMETRY, NOT ITS TIMING: the live body does
+                     * not move (an `IceTurret` has no knockback, and its rest cycle is 0.5 px), so no wait clears it and
+                     * the route's remaining waits are not tried. Measured: the push side's corridor on the latch chain
+                     * dog-legs up x 472 into the snapped body's corner at every wait; pruned, the latch chain's approach
+                     * takes 376 forks where it took ~470, with the same keys.
+                     */
+                    const h = f.ledger('playerHits').at(-1);
+                    const body = h?.source === 'iceturret' && h?.id === id;
+                    count(body ? 'approach-body' : 'approach-hit', hitWhy());
+                    if (body) continue route;
+                    continue;
+                }
                 for (let i = 0; ok && !onSnap(f) && i < CORPSE_SNAP_WAIT; i += 1) ok = step(NONE_KEYS);
                 // ⛓ the kill derives its side off the LIVE box (its 0.5 px rest cycle): settle on that one
                 const live = corpseKillSide(f.entities('turrets').get(id).rect, side.dir);

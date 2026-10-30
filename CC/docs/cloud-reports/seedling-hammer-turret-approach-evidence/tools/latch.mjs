@@ -22,3 +22,4 @@ const rowsOf = (o) => o?.rows ?? o?.trace?.rows ?? [];
 for (const row of rowsOf(out ?? refusal)) if (row.strategy) console.log('STRATROWS', row.tick, row.strategy.verb, row.obstacle?.id);
 console.log('ICEST', JSON.stringify(SB.ICETURRET_STATIC_KILL_COUNTS ?? null));
 console.log('LWF', JSON.stringify(SB.LATCH_WEIGH_FIRST_COUNTS ?? null));
+console.log('TA', JSON.stringify(SB.TURRET_APPROACH_COUNTS ?? null));
