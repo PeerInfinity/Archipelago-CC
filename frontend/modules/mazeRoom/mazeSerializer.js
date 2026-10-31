@@ -68,8 +68,9 @@ const LEVEL_WORLD_PROJECTION = '`projectLevelWorld` (`procgenPipeline/regionAtla
  * ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2) — a third writer: the atlas
  * projection's `projectLevelWorld` emits `blocks`, `buttons`, `buttonLib`,
  * `action_lib`, `traps`, `trapLib` (arrow traps, session tile-primitives-arrow-rope), `entry_gates`
- * (session tile-primitives-water-exits), `block_sinks` (session tile-primitives-sphere-order-1), `block_strike`
- * (session tile-primitives-sphere-order-2), `pulls` (session tile-primitives-sphere-order-9) and
+ * (session tile-primitives-water-exits), `block_sinks` (session tile-primitives-sphere-order-1), `block_lib`
+ * (session tile-mechanisms-m1; it retired sphere-order-2's `block_strike`), `pulls` (session tile-primitives-sphere-order-9),
+ * `pulsers` (session tile-mechanisms-m1) and
  * `shared_world` on the ONE payload a level world carries (every other sub-region of that level is a payload-less alias entry — see
  * `rules.schema.json` `presetSidecarEntry.shared_world`). Each is omitted on
  * every other payload, so the corpus they were measured on is unmoved.
@@ -174,10 +175,11 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
     }),
     blocks: Object.freeze({
         type: 'array', required: false,
-        description: 'Pushable blocks\' INITIAL cells `{x, y}` (arc 2). Where they are now is the play '
-            + 'state\'s (`state.blocks`). Written by the shared-level-world projection '
+        description: 'Pushable blocks\' INITIAL cells `{x, y, kind?}` (arc 2). Where they are now is the play '
+            + 'state\'s (`state.blocks`). `kind` (session tile-mechanisms-m1) names the block\'s `block_lib` kind, on '
+            + 'every block of a world that has one and on none elsewhere. Written by the shared-level-world projection '
             + '(`projectLevelWorld`) and the lab level record (`serializeMazeEntities`); omitted when there are none.',
-        schema: Object.freeze({ items: atXY() }),
+        schema: Object.freeze({ items: atXY({ kind: Object.freeze({ type: 'string' }) }, []) }),
     }),
     buttons: Object.freeze({
         type: 'array', required: false,
@@ -253,19 +255,27 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
             + 'from the analysis grid in a world with a block; omitted when there are none.',
         schema: Object.freeze({ items: atXY({}, []) }),
     }),
-    block_strike: Object.freeze({
+    block_lib: Object.freeze({
         type: 'object', required: false,
-        description: 'Struck blocks (session tile-primitives-sphere-order-2) `{struck_by, reach?}`: every block of this world '
-            + 'is moved ONLY by a use of one of the `struck_by` actions, on a cell of the action\'s `footprint` (over any '
-            + 'cell between) — or, for actions without one, up to `reach` cells ahead of the facing — one cell the way the '
-            + 'player faces; walking into one is refused (Seedling\'s PushableBlockSpear: the spear\'s stab rect). Read '
-            + 'through `checkBlockStrike`. Written by `projectLevelWorld` for a level whose blocks are struck; omitted otherwise.',
+        description: 'Block kinds (session tile-mechanisms-m1; it retired the world-level `block_strike`) — kind → '
+            + '`{walk, struck_by?, pulsed?, wake?: {struck_by, becomes}}`: walked into and pushed (`walk`), moved one cell by '
+            + 'a use of a `struck_by` action on its footprint (the action\'s `push`: the facing, or away from the player), '
+            + 'pushed away by a live pulser (`pulsed`), or turned into kind `becomes` by a use of a `wake.struck_by` action, '
+            + 'per visit (Seedling\'s IceTurret → its corpse). Every block names its kind. Read through `checkBlockLib`. '
+            + 'Written by `projectLevelWorld` for a level with a struck block (kind `spear`: PushableBlockSpear); omitted otherwise.',
+    }),
+    pulsers: Object.freeze({
+        type: 'array', required: false,
+        description: 'Pulsers (session tile-mechanisms-m1) `{x, y, token, reach: [{x, y}…]}`: a solid body at (x, y) that, '
+            + 'while its group `token` is active, pushes every `pulsed` block on a `reach` cell one cell away from it at the end '
+            + 'of each step, and refuses any step that leaves the player on a reach cell (the pulse hits the player: an '
+            + 'armed lane). Seedling\'s Pulser (`Pulser.as`, `radiusHit` 22 px). Read through `checkPulsers`; omitted when '
+            + 'there are none.',
         schema: Object.freeze({
-            properties: Object.freeze({
-                struck_by: Object.freeze({ type: 'array', items: Object.freeze({ type: 'string' }) }),
-                reach: Object.freeze({ type: 'integer' }),
-            }),
-            required: Object.freeze(['struck_by']),
+            items: atXY({
+                token: Object.freeze({ type: 'string' }),
+                reach: Object.freeze({ type: 'array', items: atXY() }),
+            }, ['token', 'reach']),
         }),
     }),
     shared_world: Object.freeze({

@@ -102,6 +102,13 @@
  *                        the engine makes off-default carries the `dashShape` stamp, each plan the shape its worker READ
  *                        (`dashShapeRead`), every row and the plan `dashShape` (the canonical spec), and the merge refuses
  *                        a mixed merge by name.
+ *   --solver-env=<spec>  ⛓ CPWIT, MEASUREMENT ONLY: set the solver's OFF switches by their env names in the page's
+ *                        solve WORKER (`NAME=VALUE;…`, e.g. `SEEDLING_CHOOSER_PAIR=1;SEEDLING_CHOOSER_PAIR_SIZE=3`; the
+ *                        names are `solverEnvChannel.SOLVER_ENV_NAMES`, an unknown one fails before a browser starts).
+ *                        Rides the page URL as `?seedlingSolverEnv=` (never a setting, never persisted); read back as a
+ *                        `SOLVER_ENV:` line (a mismatch fails the boot); every plan the worker solved carries its
+ *                        `solverEnv` stamp (a leg whose plan does not is a probe-error by name); every row and the plan
+ *                        are stamped `solverEnv` (the canonical spec), and the merge refuses a mixed merge by name.
  *
  * ⛓ THE HANG BOUND (H1: sweep-4 shard 9, CI run 38110831520, sat ~5 h after its 18th page and named nothing). Every
  * harness step between legs — a page's teardown, the browser's close, the launch, the new page, a boot attempt and a
@@ -119,7 +126,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--upgrade-window-work=<units>] [--dash-only-window=on|off] [--dash-shape=<spec>] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--arrival-trace-ms=<ms>] [--memory-probe-ms=<ms> [--memory-out=<jsonl>]] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--upgrade-window-work=<units>] [--dash-only-window=on|off] [--dash-shape=<spec>] [--solver-env=<spec>] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--arrival-trace-ms=<ms>] [--memory-probe-ms=<ms> [--memory-out=<jsonl>]] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -129,6 +136,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { canonicalSolverEnv, SOLVER_ENV_PARAM } from '../../frontend/modules/seedlingDemo/solverEnvChannel.js';
 import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf, withSlotBlock } from './seedlingRoomPlay.js';
 import { legSelectors, pickLegs } from './seedling-divergence-legs.mjs';
 import { compactArrivalTrace, installArrivalTraceInPage, takeArrivalTraceInPage } from './seedlingArrivalTrace.js';
@@ -245,7 +253,7 @@ export function stampBudget(row, legBudgetMs) {
  * settings a sweep may move. Empty = absent (today's run: nothing is set, nothing is stamped). Unlike the leg budget
  * these reach the SOLVE: the panel setting is written before the boot, so the engine's every request carries it.
  */
-export const SOLVER_KNOB_KEYS = Object.freeze(['upgradeWindowWork', 'dashOnlyWindow', 'dashShape']);
+export const SOLVER_KNOB_KEYS = Object.freeze(['upgradeWindowWork', 'dashOnlyWindow', 'dashShape', 'solverEnv']);
 
 /** `--upgrade-window-work` → units (empty = null, the engine's own). Not a whole number ≥ 0 → throws by name. */
 export function parseUpgradeWindowWorkArg(spec) {
@@ -272,6 +280,14 @@ export async function parseDashShapeArg(spec) {
     if (!s) return null;
     const { parseDashShape, formatDashShape } = await import('../../frontend/modules/seedlingDemo/dashShapeHook.js');
     return formatDashShape(parseDashShape(s, '--dash-shape')) || null;
+}
+
+/**
+ * ⛓ CPWIT — `--solver-env` → the canonical spec (`solverEnvChannel.canonicalSolverEnv`: names sorted; empty = null, the
+ * switches' own defaults). An unknown name, a repeated one or a bare word throws by name.
+ */
+export function parseSolverEnvArg(spec) {
+    return canonicalSolverEnv(spec, '--solver-env');
 }
 
 /** A row (or the plan) stamped with the knobs that were set: the row itself when none was (byte-identical). */
@@ -416,7 +432,7 @@ async function main() {
         // ⛓ THE SOLVER KNOBS — on the plan too, so the merge holds every row to the plan's
         const knobs = { upgradeWindowWork: parseUpgradeWindowWorkArg(arg('upgrade-window-work', '')),
             dashOnlyWindow: parseDashOnlyWindowArg(arg('dash-only-window', '')),
-            dashShape: await parseDashShapeArg(arg('dash-shape', '')) };
+            dashShape: await parseDashShapeArg(arg('dash-shape', '')), solverEnv: parseSolverEnvArg(arg('solver-env', '')) };
         const staging = new Set(legs0.filter((l) => l.stagedEvents?.length).map((l) => l.id));
         const pagesOf = new Map();
         for (const x of shards) {
@@ -485,7 +501,7 @@ async function main() {
     // ⛓ THE SOLVER KNOBS — checked here so a bad value fails before a browser starts
     const KNOBS = { upgradeWindowWork: parseUpgradeWindowWorkArg(arg('upgrade-window-work', '')),
         dashOnlyWindow: parseDashOnlyWindowArg(arg('dash-only-window', '')),
-        dashShape: await parseDashShapeArg(arg('dash-shape', '')) };
+        dashShape: await parseDashShapeArg(arg('dash-shape', '')), solverEnv: parseSolverEnvArg(arg('solver-env', '')) };
     const { DASH_ONLY_WINDOW_SETTING_KEY } = await import('../../frontend/modules/flashPanel/seedlingDashOnlyWindowSettings.js');
     // ⛓ DASH-SHAPE STAMP — the spec's keys as the three panel settings (`on` / `off`; a key the spec omits stays untouched)
     const { DASH_SHAPE_SETTING_KEYS, dashShapeSpec } = await import('../../frontend/modules/flashPanel/seedlingDashShapeSettings.js');
@@ -622,7 +638,9 @@ async function main() {
         let bootErr = null;
         for (let attempt = 1; attempt <= 2 && !booted; attempt++) try { await step('boot', async () => {
             if (attempt > 1) await page.goto('about:blank');
-            await page.goto(`${HOST}/frontend/?rules=./presets/${GAME}/AP_1/AP_1_rules.json`, { waitUntil: 'domcontentloaded' });
+            // ⛓ CPWIT — the solver-env channel rides the page URL (absent = today's URL exactly)
+            const envQuery = KNOBS.solverEnv ? `&${SOLVER_ENV_PARAM}=${encodeURIComponent(KNOBS.solverEnv)}` : '';
+            await page.goto(`${HOST}/frontend/?rules=./presets/${GAME}/AP_1/AP_1_rules.json${envQuery}`, { waitUntil: 'domcontentloaded' });
             await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
             if (CONTACT) {
                 await page.evaluate(async (writes) => {
@@ -706,6 +724,15 @@ async function main() {
                 + `${KNOBS.dashShape ? ' (--dash-shape)' : ''}`);
             if ((KNOBS.dashShape ?? '') !== (shapeNow ?? '') || shapeNow === null) {
                 throw new Error(`--dash-shape asked ${KNOBS.dashShape ?? 'default'}; the panel holds ${shapeNow ?? 'nothing (unread)'}`);
+            }
+            // ⛓ CPWIT — the spec the page hands its solve worker (`solverEnvFromSearch` of its own URL), read back
+            const envNow = await page.evaluate(async () => {
+                const { solverEnvFromSearch } = await import('./modules/seedlingDemo/solverEnvChannel.js');
+                return solverEnvFromSearch(window.location.search);
+            });
+            console.log(`SOLVER_ENV: page ${pageNo}: ${envNow ?? 'default'}${KNOBS.solverEnv ? ' (--solver-env)' : ''}`);
+            if ((KNOBS.solverEnv ?? null) !== envNow) {
+                throw new Error(`--solver-env asked ${KNOBS.solverEnv ?? 'default'}; the page holds ${envNow ?? 'default'}`);
             }
             await page.evaluate(async () => {
                 const { createLab } = await import('/scripts/procgen/seedlingDivergenceLab.js');
@@ -863,6 +890,15 @@ async function main() {
                 const { requests, ...served } = r;
                 if (CAPTURE) appendFileSync(CAPTURE, `${JSON.stringify({ id: leg.id, key: leg.key ?? null, requests: requests ?? [] })}\n`);
                 Object.assign(row, served);
+                // ⛓ CPWIT — a plan the worker answered says which switches it solved under: one that says another, or a
+                // SOLVED plan with no stamp under `--solver-env`, is not this run's, so the leg is a probe-error BY NAME
+                // (a page-side settle — `cancelled`, a worker that failed — carries no stamp and is not asked)
+                const envOff = (row.plans ?? []).filter((x) => (typeof x.solverEnv === 'string' && x.solverEnv !== KNOBS.solverEnv)
+                    || (KNOBS.solverEnv && x.ok === true && x.solverEnv !== KNOBS.solverEnv));
+                if (envOff.length) {
+                    throw new Error(`--solver-env asked ${KNOBS.solverEnv ?? 'default'}; ${envOff.length} of ${row.plans.length} plan(s) `
+                        + `were solved under ${[...new Set(envOff.map((x) => x.solverEnv ?? 'default'))].join(', ')}`);
+                }
                 // eslint-disable-next-line no-await-in-loop
                 if (ARRIVAL_TRACE) row.arrivalTrace = compactArrivalTrace(await rp.gameFrame().evaluate(takeArrivalTraceInPage));
                 swaps += (r.history ?? []).length;

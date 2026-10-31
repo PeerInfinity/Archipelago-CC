@@ -128,7 +128,8 @@ describe('the sixth fact — `atlas`, decided by (iii)\'s own count', () => {
         // ⛓ rules-l55-waterfall: 257 -> 259 — all-water L52 is floored by its entry gate and splits into its three pools.
         // ⛓ tile-primitives-pixelmask-l86: 259 -> 261 — L0's house door (r6c5) and L93's door into L98 (r5c7) are their own
         //   sub-regions, a building's footprint being its Pixelmask.
-        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(261);
+        // ⛓ rules-l112-owl-rocklock: 261 -> 262 — L112 splits at its rock (r0c7 the L113 landing, r2c2 the arena).
+        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(262);
         expect(atlasRoomRegions(rulesOf('seedling'))).toHaveLength(0);
         expect(atlasRoomRegions(rulesOf('seedling_generated_room'))).toHaveLength(0);
     });

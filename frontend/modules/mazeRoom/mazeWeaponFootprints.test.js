@@ -6,7 +6,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import {
-    createState, step, whyBlocked, useInput, turnInput, strikeTargets, checkActionLib, checkBlockStrike,
+    createState, step, whyBlocked, useInput, turnInput, strikeTargets, checkActionLib, checkBlockLib,
     deserializeMazeWorld, serializeMazeEntities, blockWithinReach, strikePushes, effectiveInventory,
 } from './mazeRoomEngine.js';
 import { scriptedStep } from './tileSpike/tileStep.js';
@@ -133,7 +133,7 @@ describe('a use hits every struck obstacle in its footprint', () => {
 
 const SPEAR = 'Ghost Spear';
 const SPEAR_LIB = { spear: { item: SPEAR, primitive: 'strike', condition: 'strikes', key: 'x', footprint: SPEAR_FP } };
-const blockSidecar = (rows, blockStrike) => {
+const blockSidecar = (rows, blockLib) => {
     const cells = (ch) => rows.flatMap((r, y) => [...r].flatMap((c, x) => (c === ch ? [{ x, y }] : [])));
     return {
         width: rows[0].length,
@@ -144,24 +144,28 @@ const blockSidecar = (rows, blockStrike) => {
         obstacles: [],
         items: [],
         obstacleLib: {},
-        blocks: cells('B'),
+        blocks: cells('B').map((c) => ({ ...c, kind: 'spear' })),
         action_lib: SPEAR_LIB,
-        block_strike: blockStrike,
+        block_lib: blockLib,
     };
 };
 
-describe('struck blocks read the action\'s footprint (block_strike `reach` retired where a footprint stands)', () => {
+describe('struck blocks read the action\'s footprint (`reach` retired; ⛓ BLOCK KINDS, session tile-mechanisms-m1)', () => {
     const LINE = ['########', '#P#B...#', '#......#', '########'];
+    const SPEAR_KIND = { spear: { walk: false, struck_by: ['spear'] } };
 
-    it('block_strike names a footprint action and no reach; reach + footprint, or neither, is refused by name', () => {
-        expect(checkBlockStrike({ struck_by: ['spear'] }, SPEAR_LIB, 't')).toEqual({ struckBy: ['spear'] });
-        expect(() => checkBlockStrike({ struck_by: ['spear'], reach: 2 }, SPEAR_LIB, 't')).toThrow(/reach .* footprint/);
-        const bare = { spear: { ...SPEAR_LIB.spear, footprint: undefined } };
-        expect(() => checkBlockStrike({ struck_by: ['spear'] }, bare, 't')).toThrow(/reach must be a positive integer/);
+    it('a kind takes no reach (refused by name); without a footprint a use hits the faced cell', () => {
+        expect(checkBlockLib(SPEAR_KIND, SPEAR_LIB, 't')).toEqual({ spear: { walk: false, struckBy: ['spear'], pulsed: false, wake: null } });
+        expect(() => checkBlockLib({ spear: { ...SPEAR_KIND.spear, reach: 2 } }, SPEAR_LIB, 't')).toThrow(/names reach; a kind holds only/);
+        const bare = deserializeMazeWorld({ ...blockSidecar(LINE, SPEAR_KIND), action_lib: { spear: { ...SPEAR_LIB.spear, footprint: undefined } } });
+        const s = createState(bare);
+        s.inventory = new Set([SPEAR]);
+        s.facing = 'E';
+        expect(step(bare, s, useInput('spear')).blocks).toEqual(['3,1']);
     });
 
     it('a thrust over the wall moves the block 2 cells away, as reach 2 did; round-trips without reach', () => {
-        const w = deserializeMazeWorld(blockSidecar(LINE, { struck_by: ['spear'] }));
+        const w = deserializeMazeWorld(blockSidecar(LINE, SPEAR_KIND));
         const s = createState(w);
         s.inventory = new Set([SPEAR]);
         s.facing = 'E';
@@ -170,7 +174,7 @@ describe('struck blocks read the action\'s footprint (block_strike `reach` retir
         expect(strikePushes(w, s, 'spear', inv)).toEqual([{ from: '3,1', to: '4,1' }]);
         expect(step(w, s, useInput('spear')).blocks).toEqual(['4,1']);
         expect(scriptedStep(w, s, useInput('spear'), HELPERS).next.blocks).toEqual(['4,1']);
-        expect(serializeMazeEntities(w).block_strike).toEqual({ struck_by: ['spear'] });
+        expect(serializeMazeEntities(w).block_lib).toEqual(SPEAR_KIND);
         const turned = step(w, step(w, s, turnInput('S')), useInput('spear'));
         expect(turned.blocks).toEqual(['3,1']);
         expect(whyBlocked(w, s, 'E')).toBeTruthy();
