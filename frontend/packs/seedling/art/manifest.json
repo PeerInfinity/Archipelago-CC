@@ -663,6 +663,11 @@
       "w": 64,
       "h": 16
     },
+    "RopePulley": {
+      "file": "sheets/RopePulley.png",
+      "w": 64,
+      "h": 16
+    },
     "NPCs/IntroCharacter": {
       "file": "sheets/NPCs/IntroCharacter.png",
       "w": 24,
@@ -3496,6 +3501,17 @@
         8
       ],
       "as3": "Puzzlements/ButtonRoom.as:14-15 Spritemap(16, 16); :29 centerOO; :47-49,97 frame int(_active) + frameAdd (2 over a Wire)"
+    },
+    "seedling:puzzlement/rope": {
+      "sheet": "RopePulley",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/RopeStart.as:14-15 Spritemap(16, 16); :22-23 super(_x + 8, _y + 8), centerOO; :51-75 render: uncut = frame 1 per cell x..xend, frame 0 (pulley) at x, frame 2 (handle) at xend; cut = frame 0 at x, frame 3 at xend"
     },
     "seedling:npc/introchar": {
       "sheet": "NPCs/IntroCharacter",

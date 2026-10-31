@@ -137,6 +137,8 @@ export const ENEMY_ART = Object.freeze([
         as3: 'Puzzlements/Button.as:14-15 Spritemap(8, 8); :20 centerOO; :47 frame int(_active)' },
     { pack: 'seedling', key: 'seedling:puzzlement/buttonroom', file: 'ButtonRoom.png', fw: 16, fh: 16, origin: [8, 8],
         as3: 'Puzzlements/ButtonRoom.as:14-15 Spritemap(16, 16); :29 centerOO; :47-49,97 frame int(_active) + frameAdd (2 over a Wire)' },
+    { pack: 'seedling', key: 'seedling:puzzlement/rope', file: 'RopePulley.png', fw: 16, fh: 16, origin: [8, 8],
+        as3: 'Puzzlements/RopeStart.as:14-15 Spritemap(16, 16); :22-23 super(_x + 8, _y + 8), centerOO; :51-75 render: uncut = frame 1 per cell x..xend, frame 0 (pulley) at x, frame 2 (handle) at xend; cut = frame 0 at x, frame 3 at xend' },
     // ── G8: the placed NPCs' bodies and the talk prompt (`seedlingNpcSkin.js`). `centerOO` on the entity, so the
     //    origin is the frame centre, but for a class with its own offset. The Oracle's anims ride the skin
     //    (`NPC_ANIMS.oracle`: two are at frame rate 0, which the manifest refuses). ──
