@@ -3,13 +3,14 @@
  * `PushableBlockSpear` (`Puzzlements/PushableBlockSpear.as`: `moveTypes = ["Spear"]`, type "Solid") is never walked
  * into; a spear thrust — a 32 px stab rect with no reach gate and no line test (`Player.as:964-989`) — moves it one
  * cell the way the player faces (`Player.as:1121-1123`). L67's block stands between pits, so the game spears it from
- * two cells away across them (the seedling-fidelity spear legs). A world's `block_strike: {struck_by, reach}` says
- * every block of it moves that way.
+ * two cells away across them (the seedling-fidelity spear legs). ⛓ BLOCK KINDS (session tile-mechanisms-m1): the
+ * world-level `block_strike` retired into the `block_lib` kind `spear` (`{walk: false, struck_by: ['spear']}`), named
+ * by each block, and its `reach` (cells straight ahead) into the spear's own footprint — here a reach-r footprint.
  */
 import { describe, it, expect } from 'vitest';
 import {
     createState, step, whyBlocked, mazeVisitedKey, worldInputs, deserializeMazeWorld, serializeMazeEntities,
-    checkBlockStrike, strikePushes, effectiveInventory, getExitAt,
+    checkBlockLib, strikePushes, effectiveInventory, getExitAt,
 } from './mazeRoomEngine.js';
 import { scriptedStep } from './tileSpike/tileStep.js';
 import { deriveRequires } from './mazeQueueExecutor.js';
@@ -18,7 +19,12 @@ import HELPERS from './tileSpike/maze_tiles.helpers.json' with { type: 'json' };
 import { buildPlaythroughMaze } from '../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
 
 const SPEAR = 'Ghost Spear';
-const ACTIONS = { spear: { item: SPEAR, primitive: 'strike', condition: 'strikes', key: 'x' } };
+/** The cells `reach` ahead, per facing — the retired `block_strike.reach` as a footprint. */
+const reachFootprint = (reach) => Object.fromEntries(Object.entries({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] })
+    .map(([f, [dx, dy]]) => [f, Array.from({ length: reach }, (_, i) => [dx * (i + 1), dy * (i + 1)])]));
+const actions = (reach = 2) => ({ spear: { item: SPEAR, primitive: 'strike', condition: 'strikes', key: 'x', footprint: reachFootprint(reach) } });
+const ACTIONS = actions();
+const SPEAR_KIND = { spear: { walk: false, struck_by: ['spear'] } };
 
 /**
  *   #  wall   P entrance   X exit   B block   o button (holds sw_0)   D door (opens to sw_0)   w water that SINKS a block
@@ -44,11 +50,11 @@ function sidecar(rows, { reach = 2, strike = true } = {}) {
             door: { id: 'door', name: 'door', clear_set: [['sw_0']] },
             water: { id: 'water', name: 'water', clear_set: [['Progressive Swim']] },
         },
-        blocks: at('B'),
+        blocks: strike ? at('B').map((c) => ({ ...c, kind: 'spear' })) : at('B'),
         ...(at('o').length > 0 ? { buttons: at('o').map((c) => ({ ...c, id: 'button_0' })), buttonLib: { button_0: { kind: 'button', holds: 'sw_0' } } } : {}),
         ...(at('w').length > 0 ? { block_sinks: at('w') } : {}),
-        action_lib: ACTIONS,
-        ...(strike ? { block_strike: { struck_by: ['spear'], reach } } : {}),
+        action_lib: actions(reach),
+        ...(strike ? { block_lib: SPEAR_KIND } : {}),
     };
 }
 
@@ -69,17 +75,25 @@ const LINE = [
     '########',
 ];
 
-describe('block_strike — checked, round-tripped', () => {
-    it('refuses a missing action, an empty list and a bad reach, by name', () => {
-        expect(() => checkBlockStrike({ struck_by: ['sword'], reach: 2 }, ACTIONS, 't')).toThrow(/names sword, which the action_lib does not hold/);
-        expect(() => checkBlockStrike({ struck_by: [], reach: 2 }, ACTIONS, 't')).toThrow(/non-empty list/);
-        expect(() => checkBlockStrike({ struck_by: ['spear'], reach: 0 }, ACTIONS, 't')).toThrow(/positive integer/);
-        expect(() => checkBlockStrike([], ACTIONS, 't')).toThrow(/must be an object/);
+describe('the spear kind — checked, round-tripped', () => {
+    it('refuses a missing action and an empty list by name', () => {
+        expect(() => checkBlockLib({ spear: { walk: false, struck_by: ['sword'] } }, ACTIONS, 't')).toThrow(/names sword, which the action_lib does not hold/);
+        expect(() => checkBlockLib({ spear: { walk: false, struck_by: [] } }, ACTIONS, 't')).toThrow(/non-empty list/);
+        expect(() => checkBlockLib([], ACTIONS, 't')).toThrow(/must be a non-empty object/);
+    });
+
+    it('the retired block_strike is refused by name — one spelling', () => {
+        const sc = { ...sidecar(LINE, { strike: false }), block_strike: { struck_by: ['spear'] } };
+        expect(() => deserializeMazeWorld(sc)).toThrow(/"block_strike" is retired/);
     });
 
     it('serializes back as it was loaded; a world without it carries none', () => {
-        expect(serializeMazeEntities(world(LINE)).block_strike).toEqual({ struck_by: ['spear'], reach: 2 });
-        expect(serializeMazeEntities(world(LINE, { strike: false })).block_strike).toBeUndefined();
+        const out = serializeMazeEntities(world(LINE));
+        expect(out.block_lib).toEqual(SPEAR_KIND);
+        expect(out.blocks).toEqual([{ x: 3, y: 1, kind: 'spear' }]);
+        const plain = serializeMazeEntities(world(LINE, { strike: false }));
+        expect(plain.block_lib).toBeUndefined();
+        expect(plain.blocks).toEqual([{ x: 3, y: 1 }]);
     });
 });
 
@@ -89,8 +103,8 @@ describe('a struck block moves only by a thrust', () => {
         const s = holding(w, [SPEAR], { x: 3, y: 2 });
         expect(step(w, s, 'N')).toBeNull();
         expect(scriptedStep(w, s, 'N', HELPERS).refused.primitive).toBe('push');
-        expect(whyBlocked(w, s, 'N')).toMatch(/moved only by a strike \(spear, from up to 2 cell\(s\) away\)/);
-        // Control: the same corridor without block_strike walk-pushes its block.
+        expect(whyBlocked(w, s, 'N')).toMatch(/block at \(3,1\) \(spear\) is not walk-pushed — a strike moves it \(spear\)/);
+        // Control: the same corridor without the spear kind walk-pushes its block.
         const ROOM = ['######', '#PB..#', '######'];
         expect(step(world(ROOM, { strike: false }), holding(world(ROOM, { strike: false }), []), 'E').blocks).toEqual(['3,1']);
         expect(step(world(ROOM), holding(world(ROOM), [SPEAR]), 'E')).toBeNull();
@@ -161,13 +175,15 @@ describe('a struck block moves only by a thrust', () => {
 });
 
 describe('L67 — the spear block projects as a struck block', () => {
-    it('its world carries block_strike (spear, on its footprint: two cells ahead) and the block, not a Ghost Spear gate', () => {
+    it('its world carries the spear kind (on its footprint: two cells ahead) and the block, not a Ghost Spear gate', () => {
         const rules = JSON.parse(buildPlaythroughMaze({ levels: ['level_59', 'level_67'] }).text);
         const p = Object.values(rules.preset_sidecars['1']).find((s) => s.playable_payload?.atlas_region === 'level_67').playable_payload;
         // ⛓ WEAPON FOOTPRINTS (session tile-primitives-weapon-footprints): the reach is the spear's footprint now.
-        expect(p.block_strike).toEqual({ struck_by: ['spear'] });
+        // ⛓ BLOCK KINDS (session tile-mechanisms-m1): `block_strike` retired into the `spear` kind.
+        expect(p.block_strike).toBeUndefined();
+        expect(p.block_lib).toEqual(SPEAR_KIND);
         expect(p.action_lib.spear.footprint.E).toEqual([[1, 0], [2, 0]]);
-        expect(p.blocks).toEqual([{ x: 9, y: 7 }]);
+        expect(p.blocks).toEqual([{ x: 9, y: 7, kind: 'spear' }]);
         expect(p.action_lib.spear.item).toBe(SPEAR);
         expect(p.obstacles.find((o) => o.x === 9 && o.y === 7)).toBeUndefined();
     }, 120000); // the first compile in the file pays the producer's cold analysis pass
