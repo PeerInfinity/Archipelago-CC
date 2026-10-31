@@ -1751,6 +1751,16 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_CHEST_BODY_PLACEMENT_PROBE=0|1`.
      */
     chestBodyPlacementProbe: false,
+    /**
+     * fidelity REFUSALS D2 (wave 36) — A RUN STANDING IN A PIT FALLS OUT WITH NO INPUT (`solverBot` `execReachPit`).
+     *
+     * A fall can land the player inside a pit of the next level (L84 `fallhole1`: its 3x3 middle is one pit), and
+     * `Player.checkFallingInPit` drops it again with nothing pressed. The reach-pit walk planned an A* from that start
+     * tile and refused it as unwalkable (survey steps 174/202). ON: a run whose terrain probe overlaps a pit tile that
+     * falls to the goal's level is stepped idle until the edge, then coasts. OFF: byte-identical.
+     * `SEEDLING_IN_PIT_FALL_OUT=0|1`.
+     */
+    inPitFallOut: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2101,6 +2111,9 @@ if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '0') CONTACT_FIDE
 // ⛓ fidelity REFUSALS D1: `SEEDLING_CHEST_BODY_PLACEMENT_PROBE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_CHEST_BODY_PLACEMENT_PROBE === '1') CONTACT_FIDELITY.chestBodyPlacementProbe = true;
 if (globalThis.process?.env?.SEEDLING_CHEST_BODY_PLACEMENT_PROBE === '0') CONTACT_FIDELITY.chestBodyPlacementProbe = false;
+// ⛓ fidelity REFUSALS D2: `SEEDLING_IN_PIT_FALL_OUT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_IN_PIT_FALL_OUT === '1') CONTACT_FIDELITY.inPitFallOut = true;
+if (globalThis.process?.env?.SEEDLING_IN_PIT_FALL_OUT === '0') CONTACT_FIDELITY.inPitFallOut = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
