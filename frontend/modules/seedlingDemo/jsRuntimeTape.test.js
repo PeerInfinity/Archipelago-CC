@@ -12,6 +12,7 @@
  *     (`diffObservationStreams` over `gameStreamFromDrain`), and its last frame is the model's end state.
  *  3. THE REFUSALS — the game's own strings where the game has one (`no tape loaded`, `already running`, the version
  *     gate), and named ones where only the JS frame refuses (`JS_TAPE_REFUSALS`). A relaxed tape plays as declared.
+ *     ⛓ A `hold` tape is no longer refused: the core models P4E (sequences: `jsRuntimeContinuation.test.js`).
  *  4. LIVE INPUT NEVER REACHES A REPLAY — a tape played while the page feeds live keys into EVERY tape tick (arrows,
  *     X, C, and the V/I menu toggles) drains byte-identically to the same tape with no live keys, ends in the same
  *     state digest and inventory, never opens the V menu and notes no `inventory` event. This is what L3's
@@ -236,13 +237,16 @@ describe('⛓ PHASE B — the refusals, the game\'s strings where it has one', (
         expect(rt.game.botLoadTape('{')).toMatch(/^error:/);
     });
 
-    it('a `hold` tape is refused BY NAME (a wasm build capability the JS runtime does not declare)', () => {
+    it('a `hold` tape LOADS and plays (⛓ seedling-js-replay-continuation: the core models P4E), holding at its latch', () => {
         const rt = vanillaRuntime();
         // the lab's own spelling of a held window (`holdingWindowTape`), projected as it ships
         const held = gameVisibleTape(holdingWindowTape(parseTape(tapeOf('collide-up-rock'))));
         expect(held).toMatchObject({ tape_version: 12, hold: true });
-        expect(rt.game.botLoadTape(JSON.stringify(held))).toBe(JS_TAPE_REFUSALS.hold);
-        expect(JSON.parse(rt.game.botStatus())).toMatchObject({ loaded: false, armed: false, finished: false });
+        expect(JS_TAPE_REFUSALS).not.toHaveProperty('hold');
+        const { loaded, started, status, drained } = playTape(rt, held);
+        expect([loaded, started]).toEqual(['ok', 'ok']);
+        expect(status).toMatchObject({ finished: true, held: true, error: '' });
+        expect(drained.ticks).toHaveLength(held.tick_count + 1);
     });
 
     it('a RELAXED tape (friction-stop, noclip) plays AS DECLARED — the model\'s world, not solveStaging\'s', () => {
