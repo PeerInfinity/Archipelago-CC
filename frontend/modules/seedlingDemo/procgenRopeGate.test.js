@@ -58,10 +58,11 @@ const TRAP = { role: 'obstacle', x: 4, y: 1, id: ROPE_GATE_TRAP_ID };
 const ROPE = { role: 'obstacle', x: 2, y: 5, id: ROPE_GATE_ROPE_ID, node: { x: 2, y: 5 } };
 
 describe('⛓⛓⛓ the ROPE GATE\'s table row and binding rows (seedling gen A1)', () => {
-    it('the head is `ropegate`, LAST, sword-gated, opt-in and not a `require` head', () => {
+    it('the head is `ropegate`, last but chestdoor, sword-gated, opt-in and not a `require` head', () => {
         expect(ELEMENT_TABLE.ropegate.element).toBe(ROPE_GATE);
         expect(ELEMENT_TABLE.ropegate.needs).toEqual(['hasSword']);
-        expect(ELEMENT_NAMES.at(-1)).toBe('ropegate');
+        /** ⛓ seedling gen B2 appended `chestdoor` after it; nothing before it moved. */
+        expect(ELEMENT_NAMES.slice(-2)).toEqual(['ropegate', 'chestdoor']);
         /** ⛔ joining `require:['hasSword']`'s `+` list would move every such room */
         expect(headsNeeding('hasSword')).not.toContain('ropegate');
     });

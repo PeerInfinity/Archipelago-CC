@@ -114,6 +114,7 @@ import {
     WATER_GATE_DOOR_ID, WATER_SHORTCUT_DOOR_ID, WATERFALL_GATE_DOOR_ID,
 } from '../procgenCore/elements/soloDoor.js';
 import { ROPE_GATE_ROPE_ID, ROPE_GATE_TRAP_ID } from '../procgenCore/elements/ropeGate.js';
+import { CHEST_DOOR_CHEST_ID } from '../procgenCore/elements/chestDoor.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
 
@@ -981,7 +982,20 @@ export function compositeSeedlingOnConnector({
     const carved = placement.tiles
         .filter((t) => t.tile === TILE_FLOOR && skeletonWallAt(t.x, t.y))
         .map((t) => ({ x: t.x, y: t.y }));
-    const carveWhy = carveLaw({ carved, walkableAfter: at, walkableBefore: before });
+    /**
+     * ⛓ Seedling gen B2 — A DOOR THAT IS SOLID UNTIL OPENED, AS ITS OWN POCKET'S
+     * WALL. The chest door's pocket ends under the chest by construction (the
+     * stance is the cell BELOW it), so with the chest cell read as ground the
+     * pocket always has a second "mouth" — the door itself, which the door law
+     * below adjudicates on its own terms. An element that says
+     * `doorSolidForCarve` has its door cells read as wall by the carve law
+     * ONLY. ⛔ Opt-in per placement: every other element's carve is asked
+     * exactly as before, so no other room moves.
+     */
+    const carveDoor = placement.doorSolidForCarve
+        ? new Set(placement.doorCells.map((c) => `${c.x},${c.y}`)) : null;
+    const carveAt = carveDoor ? (x, y) => !carveDoor.has(`${x},${y}`) && at(x, y) : at;
+    const carveWhy = carveLaw({ carved, walkableAfter: carveAt, walkableBefore: before });
     if (carveWhy) {
         return { refused: { reason: 'the-elements-carve-is-not-legal', detail: carveWhy } };
     }
@@ -1263,6 +1277,23 @@ export function seedlingOnConnectorEntities({ placed, tagFor, groupIdFor = null 
             entities.push({ type: 'rope', tx: e.x, ty: e.y,
                 attrs: { tset: ropeGroup, tag: String(tag) },
                 nodes: [{ tx: e.node.x, ty: e.node.y }] });
+            continue;
+        }
+        /**
+         * ⛓⛓⛓ Seedling gen B2 — **THE CHEST DOOR'S ONE CHEST**:
+         *   `chestdoor_chest` -> `chest {tag: <own>}`, the vanilla spelling
+         *                        (every map-doc chest is `<chest tag x y/>`).
+         *                        ⛓ ONE tag from the 30, and it is LOAD-BEARING
+         *                        twice: `open()` writes it by `setPersistence`
+         *                        (an opened chest stays open on a revisit), and
+         *                        it is the CHECK ADDRESS — the game reports a
+         *                        chest as `pendingCheck "<seq>|<level>|<tag>|0"`,
+         *                        so `(level, tag)` is this chest's AP location.
+         */
+        if (e.id === CHEST_DOOR_CHEST_ID) {
+            const tag = tagFor();
+            tags.chest = tag;
+            entities.push({ type: 'chest', tx: e.x, ty: e.y, attrs: { tag: String(tag) } });
             continue;
         }
         fail(`procgenSeedlingElements: the on-connector element named the id `

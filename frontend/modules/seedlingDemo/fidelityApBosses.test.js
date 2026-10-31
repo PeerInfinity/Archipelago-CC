@@ -171,8 +171,9 @@ describe('the Bob Boss encounter ON (Q2: always fought; the reports, never the i
             expect(ev.find((r) => r.what === 'fire-removed').outOfBand).toBe(false);
             expect(out.records.find((r) => r.leg === 'drop')).toMatchObject({ report: true, killedAtEntry: false,
                 collected: true });
-            // {32,1} (the rock's arm) is a `bobBossEvents` row and not an `earnedClears` one — as OFF, unchanged.
-            expect(run.earnedClears.filter((c) => c.level === 32).map((c) => c.tag).sort()).toEqual([0, 3, 4]);
+            // {32,1} (the rock's arm) is banked as an `earnedClears` row too, as the game clears it (fidelity L32ROCK,
+            // `bobArenaRockClear`, ON since the W35 flip).
+            expect(run.earnedClears.filter((c) => c.level === 32).map((c) => c.tag).sort()).toEqual([0, 1, 3, 4]);
             expect(run.earnedClears.some((c) => c.level === 31)).toBe(false);
             expect(run.ledger('collected').find((r) => r.level === 32).item).toBe(null);
             expect(run.level).toBe(30);

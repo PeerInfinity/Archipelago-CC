@@ -1,0 +1,13 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+const M = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo/';
+const { parseTape } = await import(M + 'tapeFormat.js');
+const { solveStaging, stagingFromTape } = await import(M + 'tapeRunner.js');
+const { buildStagedTape } = await import(M + 'botDriverV1.js');
+const [view, ticksFile, name, out] = process.argv.slice(2);
+const parsed = parseTape(JSON.parse(readFileSync(view, 'utf8')));
+const staging = solveStaging(stagingFromTape({ ...parsed, inputs: [], tick_count: 0 }));
+staging.equips = [];
+const perTick = JSON.parse(readFileSync(ticksFile, 'utf8')).map((k) => new Set(k));
+const built = buildStagedTape({ staging, perTick, name });
+writeFileSync(out, `${JSON.stringify({ ...built, description: `L100 W0 probe tape ${name}` }, null, 4)}\n`);
+console.log('wrote', out, perTick.length);

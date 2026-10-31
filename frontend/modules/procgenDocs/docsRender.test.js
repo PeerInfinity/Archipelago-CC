@@ -284,7 +284,8 @@ describe('⛓ the links the render emits', () => {
         //   362 → 364: Noiz2sa measured final span — noiz2sa.md § Pricing → the cloud measurement report, twice.
         //   364 → 366: generic `flash` entry removed — architecture.md's substrate table → noiz2sa.md, flash.md.
         //   366 → 367: shared level worlds — maze.md's persistence bullet → its own § Shared level worlds.
-        expect(checked).toBe(367);
+        //   367 → 377: cloudberry substrate — the new cloudberry.md's eight sibling/README links and two same-doc ones.
+        expect(checked).toBe(377);
     });
 
     it('tags each link with the kind that produced it', () => {

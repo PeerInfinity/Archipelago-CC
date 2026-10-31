@@ -1,0 +1,4 @@
+SWITCH true COUNTS {"asked":37,"certified":17,"envelope":8,"exhausted":3,"noClaim":9}
+ANSWER REFUSED work 10241: solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> weigh stance (wandlock@448,432) -> weigh stance (wandlock@448,432): the re-planned corridor failed too — solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576
+KILLS 3 of spinner@816,848 1 [{"from":1513,"t":2830,"landings":[2626,2761,2817]}]
+REPLAY {"ticks":2830,"level":40,"goneAt":2830,"gone":true,"hits":[],"deaths":0,"landings":[2626,2761,2817]}

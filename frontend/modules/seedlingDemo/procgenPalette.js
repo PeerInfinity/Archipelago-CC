@@ -1264,6 +1264,14 @@ export const PRE_SWORD_PALETTE = Object.freeze({
  * for the same reason every other row is: the geometry it measures is what a
  * later slice would otherwise re-discover by building the thing.
  *
+ * ⛓⛓ **RE-OPENED AS AN ELEMENT, NOT AS THIS ROW** (seedling gen B2). ⚖ The
+ * user, 2026-10-30, *"I agree with your recommendations"* — approving the
+ * recommendation *chests as DOORS now, each door chest an AP location; loot
+ * and goal chests only after the oracle's "no collect record" fix*. The door is
+ * the `chestdoor` ELEMENT (`procgenCore/elements/chestDoor.js`), which owns
+ * the doubling-back this row's `wouldNeed` named. ⛔ `chest-in-the-gap` STAYS
+ * EXCLUDED: a chest dropped into a finished room's gap is still what it was.
+ *
  * ⚠ SAYING THAT OUT LOUD IS THE POINT. A biome that quietly shipped the same
  * six families under a new name would read as a palette that grew; naming the
  * gap makes "the post-sword palette has no post-sword-EXCLUSIVE clearer" a
@@ -1401,7 +1409,12 @@ export const POST_SWORD_EXCLUDED_TEMPLATES = Object.freeze([
             + 'returned but the goal list is not certified — no collect record for '
             + 'place:112,112. `solveSegment` is supposed to refuse rather than return '
             + 'short, so this is a seam defect, not a rejected candidate."* Recorded for '
-            + 'a future engine slice; nothing in this arc touches it.',
+            + 'a future engine slice; nothing in this arc touches it. '
+            + '⛓ RE-OPENED AS AN ELEMENT (seedling gen B2; ⚖ the user, 2026-10-30: "I agree '
+            + 'with your recommendations", approving chests as DOORS now and each door chest an '
+            + 'AP location): the `chestdoor` element (`procgenCore/elements/chestDoor.js`) '
+            + 'grows the wall, jogs it and carves the pocket so the crossing runs south→north. '
+            + 'This template row stays excluded.',
     }),
     /**
      * ⛓⛓⛓ `spinner-killlock` WAS HERE, AND IT IS NOW A TEMPLATE.
@@ -1668,6 +1681,67 @@ export const ENDGAME_PALETTE = Object.freeze({
     name: 'endgame',
     items: ENDGAME_ITEMS,
     templates: D7_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+});
+
+/**
+ * ⛓⛓⛓ **THE THREE NEW BIOMES** (Seedling lab arc, `seedling-gen-new-biomes`, C4;
+ * the gen-content design's §3.4). ⚖ The user (2026-10-28): *"I want the list of
+ * biomes to include all of the biomes from the original game, and also some new
+ * ones if possible"*; all three approved 2026-10-30. Areas the original game does
+ * not have, built from its terrains. Each reuses an existing boot, so the element
+ * defaults are that boot's (`procgenSeedling.BIOME_DEFAULT_FOLD` reads the items).
+ *
+ * ⚠ DECLARED, NOT EARNED, and OPT-IN: not in `watchGenerate.DEFAULT_CENSUS_BIOMES`.
+ */
+
+/**
+ * `caldera` — keep moving or the floor melts: post-sword's boot (NO dark suit) over
+ * D7's roster (lava pools and igneous crusts). ⛔ Its one difference from every
+ * other biome is the FLOOD: `floodWalks: ['melt']` lets an igneous crust CUT the
+ * room before the dark suit (`procgenLevel.floodTerrainsFor`), because the walk
+ * crosses it before it breaks (measured: the §3.2 band, SOLVED at post-sword).
+ * Lava pools still block the flood, so they never cut. The certificate may not
+ * LINGER: a solve that died in lava (a crust that broke under a waiting player) is
+ * REFUSED by the oracle (`procgenOracle.lavaDeathsOf`).
+ */
+export const CALDERA_PALETTE = Object.freeze({
+    name: 'caldera',
+    items: POST_SWORD_ITEMS,
+    templates: D7_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+    floodWalks: Object.freeze(['melt']),
+});
+
+/**
+ * `frozen-forge` — ice sheets beside lava pools: post-dark-suit's boot (the suit
+ * walks the lava), over post-sword's roster + `ice-sheet` + `lava-pool`. No melt:
+ * the forge is the ice and the lava. ⚠ The harder post-spear variant (no suit, so a
+ * slide into a pool is a death) is NOT built: it is another name, another certify
+ * and another sweep arm.
+ */
+const FROZEN_FORGE_TEMPLATES = Object.freeze([...POST_SWORD_TEMPLATES,
+    ...TERRAIN_TEMPLATES.filter((t) => t.family === 'ice' || t.family === 'lava')]);
+
+export const FROZEN_FORGE_PALETTE = Object.freeze({
+    name: 'frozen-forge',
+    items: POST_DARK_SUIT_ITEMS,
+    templates: FROZEN_FORGE_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+});
+
+/**
+ * `flooded-ruins` — D1's stone look with water, waterfalls and pits: post-feather's
+ * boot (so its element defaults include the water and waterfall gates) over
+ * post-sword's roster WITHOUT `wall-segment`: the ruins' obstacles are its pools
+ * and pits. Uses only what exists today; its look is D1's (`procgenLook`).
+ */
+const FLOODED_RUINS_TEMPLATES = Object.freeze(POST_SWORD_TEMPLATES.filter((t) => t.family !== 'wall'));
+
+export const FLOODED_RUINS_PALETTE = Object.freeze({
+    name: 'flooded-ruins',
+    items: POST_FEATHER_ITEMS,
+    templates: FLOODED_RUINS_TEMPLATES,
     excluded: POST_SWORD_EXCLUDED_TEMPLATES,
 });
 

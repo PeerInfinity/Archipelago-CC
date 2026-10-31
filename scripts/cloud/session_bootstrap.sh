@@ -16,7 +16,10 @@ set -u
 cd "$(git rev-parse --show-toplevel)" || exit 1
 CACHE="${ARCHCC_SETUP_DEST:-/root/CC}"
 FAIL=0
-SUBS="frontend/modules/shared"
+# bulletml-dodge is default: generate-procgen-reference reads the noiz2sa
+# substrate from it, and without it --check FAILs and --write silently drops
+# the noiz2sa registry entry.
+SUBS="frontend/modules/shared frontend/modules/bulletml-dodge"
 case "${1:-}" in
   "") ;;
   --seedling) SUBS="$SUBS frontend/modules/flashPanel/wasm vendor/seedling" ;;

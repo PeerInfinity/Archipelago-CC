@@ -1,0 +1,12 @@
+save()
+strokeStyle="#ffd75f"
+fillStyle="#ffd75f"
+lineWidth=2
+beginPath()
+arc(12,36,2.24,0,6.283185307179586)
+stroke()
+fillStyle="#c8a06a"
+strokeStyle="#2a1c0c"
+fillRect(17.2,33.2,5.6,5.6)
+strokeRect(17.2,33.2,5.6,5.6)
+restore()

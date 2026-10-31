@@ -26538,6 +26538,107 @@ row equal ticks included. The sweep ×2 per arm and the probes standard are the 
 
 ---
 
+
+### Seedling fidelity TURRETSNAP — a live ice turret priced where its contact is tested, not at its placement (`turretSnapPricing`, OFF)
+
+Planner `seedling-fidelity-planning-16`, wave 35. The report is `CC/docs/cloud-reports/seedling-fidelity-turretsnap.md`.
+
+**The gap (hammer ICEST's hand-over).** `dangerMap.staticEnemyDanger` and `dangerVolumes` priced a live IceTurret at its census
+box (the ctor point). `IceTurret.input()` snaps a stationary axis onto `floor(v/16)*16 + 8` in the same update and BEFORE
+`hitPlayer`, and an off-screen turret runs neither, so the ctor box is never a contact. L40's `iceturret@472,400` stands at
+(488,416) and cycles (487.5,424) / (488,423.5) from its first update; L98's already sits on a snap centre.
+
+**D1.** `iceTurret.iceTurretLiveContactCycle` derives the two-cycle from the ctor by `input()` itself; with the key ON
+`dangerMap.liveTurretContactRect` prices a live turret the run steps at the cycle's hull (both danger readers and the pole
+thrust's crowd test). The run's turret is not moved. Game witnesses (`fixtures/turretsnap-witness/`,
+`probe-seedling-turret-snap.mjs`): inside only the snapped body the game bills on t1; inside only the ctor box, never. OFF the map
+reads both backwards.
+
+**D2.** ICEST's generated corridor: the refusal point moves 8 px and ICEST's stance (88,18) turns calm on the map, but no verdict
+moves (the 16 px lattice centre is inside the snapped body too). The latch chain (OFF, CPAIR 3, CPAIR 3 + ICEST) is equal ON.
+
+**Movers.** Local survey full OFF = ON (203/37, 0 of 240 rows). Producers ON 97/0 red. The bounded set ON owes one re-pin
+(`contactFidelity.test.js`'s defaults table).
+
+**Trap candidates.**
+- An entity that snaps in its first update is never touched at its ctor box: price the box the contact TESTS, not the one the
+  body stands in before it has updated. "Do not snap early" is a rule for the run's state, not for a pricing.
+- A two-axis rest cycle: one axis on its snap centre each tick, the other half a pixel off; a static reader prices the hull.
+- `identity-block.sh` and the surveys die with the worker: a restart mid-block leaves a partial file that reads as complete
+  unless the row count is checked.
+
+
+### Seedling fidelity WATERFALL — the corridor planner prices the waterfall's push (`waterfallPushPricing`, OFF)
+
+Planner `seedling-fidelity-planning-16`, wave 35. The report is `CC/docs/cloud-reports/seedling-fidelity-waterfall.md`.
+
+**W0.** `Player.as:1557`: every motion on a waterfall but a Feather-held rise is pushed (`v.y += 0.8`). The planner refused
+only the featherless climb (`climbsArmedWaterfall`) and priced every other waterfall step as floor. Census: 201 armed waterfall
+tiles in 20 levels (L0, 46, 52, 54, 56, 57, 59, 60, 63, 65, 66, 87, 89, 91, 93, 94, 95, 98, 100, 115), most of them one to
+three rows deep. The carry, measured in the model on L100 from rest (Feather or not): held right, 4 px of waterfall → 11.4 px
+down, 8 px → 63.6 px, 16 px → 127.2 px; right+up with the Feather rises 4.4 / 8.2 / 16.4 px; without it 5.3 / 25.1 / 96.5 px
+down. A flat crossing of half a lattice cell leaves its row, at either lattice.
+
+**D1.** ON, a flat A* step INTO an unpinned waterfall node costs `1 + 2 × depth` (the fall and the climb back; a floor under
+it pins the player, cost 1); a flat EXIT costs the same unless its half-cell carry lands on walkable nodes on the far side.
+A price, not a refusal: `plansReach` stays exact, and the R4 lesson (refusing waterfall motion cut L0 from 53 nodes to 12)
+holds. The string-pull keeps no shortcut whose flat or down-diagonal leg crosses an armed waterfall over an open drop, and no
+waterfall point as a stop. L100's 8 px corridor: (76,44) → (108,28) → (116,36) → (124,140).
+
+**Witnesses.** p4g headless, `fixtures/waterfall-witness/`: the ON corridor with the jellyfish present (176 ticks, 19 over
+the waterfall, jellyfish@80,16's hit at t151), its exit leg from the pool down the sliver (117 ticks, 0 hits), and survey step
+89's ON plan (292 ticks, L87 at t291). The model equals the game at every tick, 0 px.
+
+**D2.** Step 219 (L100) stays REFUSED, with a new text: the break-stance walk is planned on the run's 16 px lattice, where
+the sliver has no node, so it is carried to the pool and stalls against `cliffside0@112,128` instead of meeting the jellyfish
+dwell. The 8 px corridor that exists is the walk's lattice choice (the L100 swing-stance code's), not the edge model's.
+
+**Movers.** Local full survey ON vs OFF: 203/37 on both arms; step 89 (L89) SOLVED 639 → 291 t (OFF kept a stop at
+(232,104) on the waterfall, stalled and re-planned), step 219's refusal text. Bounded set ON: the defaults pin only. Six
+`--check`s ON identical; producers ON 97 run, 0 red.
+
+**Trap candidates.**
+- A waypoint on a waterfall is a stop the walk can never make: `hasArrived` needs a stop and the push never lets one happen.
+  A planner that prices waterfall tiles as floor emits such stops, and the walk "stalls" there with nothing in the way.
+- A 16 px route to an 8 px target appends the target to the nearest 16 px node, and the last segment can cross a wall the
+  smoother's fallback never checked. A stance found on the 8 px lattice needs its walk planned on it.
+- Concurrent surveys share one views directory (`.cache/seedling-survey/through-end/views`): run a step alone to read its walk.
+
+
+### Seedling fidelity L32ROCK — the BobBoss arena rock's arm banks its {32,1} clear (`bobArenaRockClear`, OFF)
+
+Wave 35, planner `seedling-fidelity-planning-16`, base `9dadbdfc4b` (102 ON of 113). js `seedling-js-encounter-legs`
+measured (CI 40579343337) that on `apb-l32-fresh-no-fire` the game clears {32,1} at t9 and `liveClears` never reports
+it. The report is `CC/docs/cloud-reports/seedling-fidelity-l32rock.md` (evidence beside it).
+
+**W0 — the model steps the event; it does not record it.** {32,1} is `fallrocklarge@64,128` (`bossrock`, `thirdboss`).
+`FallRockLarge.fall()` (`:137-143`) runs `setPersistence(tag, false)` on the frame the rock arms: the nearest Player
+above `fallTo - 24` (y < 120 in L32), not `fallFromCeiling`, the tag still held (a cleared tag builds the rock fallen with
+`_active` set, so it never re-arms). That is every L32 build with {32,1} held, on the first frame the player rises past
+the line, whatever the boot. `levelRun.stepBobBossArenaNow` already stepped the arm (`bobBossEvents` `rock-armed`, the
+freeze, the 174 dead frames, the landing) and wrote `bobRocksFallen`, but banked nothing in a clear ledger. L82's arena
+rock (`stepLavaArenaRockNow`) did bank. So the fix belongs to `levelRun`; `liveClears` reads the ledgers correctly.
+
+**D1 — the switch.** ON, the arm banks the write as L82's does: `rockFlags` by `fallrocklarge` (so `earnedClears`) plus
+`pendingEarnedClears`, stamped `ticksCompleted + 1`. It is keyed on the arena rock row, not on level 32. No new run map
+(both ledgers are existing digest members). A re-entry then builds the rock fallen through the cleared tag
+(`arenaRockOf` → `fallenAtBuild`), the same arena `bobRocksFallen` already gave it. Game = model on p4g
+(`probe-seedling-encounter-ticks.mjs`, key ON): `apb-l32-fresh-no-fire` t9, `enc-l32-live-arrival` t2, `r5-bobboss-arm` t13, each with
+the prior sample one tick earlier. Roster: positions byte-equal ON vs OFF on all 293 tapes. ON adds {32,1} to exactly
+9 tapes' clears.
+
+**Movers.** Full survey ON vs OFF: 203/37 both, 0 rows differ (step 40 fights, then refuses at the burn as before).
+Local keyed sweep (L32 legs 324/330–334, inv/solver): the same ends ON and OFF. D3 reds ON: three pins of the old,
+unbanked set (`contactFidelity` defaults row, `fidelityApBosses.test.js:175`, JS's `jsRuntimeEncounterLegWalk.test.js:172`).
+
+**Trap candidates.**
+- A ledger row with a `flag` field (`bobBossEvents`' `rock-armed`) is not a clear: only the clear ledgers reach
+  `liveClears` / `earnedClears`. Check which ledger a write lands in, not whether some row names it.
+- Two instances of one AS3 class can be modelled by two code paths with different banking; when one is fixed, ask the
+  other (L82's rock banked, L32's did not).
+- A mutant made while a background gate battery reads the same tree can contaminate it. Run mutants between batteries,
+  and re-measure anything that overlapped.
+
 ### Seedling hammer-phase DASH — the L4 window margin and the stand-tail dash
 
 ⚖ User, queued 2026-10-30 (one of four parallel hammer slices; planner `seedling-hammer-phase-planning-2`). Switch
@@ -26573,6 +26674,92 @@ row equal ticks included. The sweep ×2 per arm and the probes standard are the 
 - A "no stand tail" witness that has one: L4's stairs leg carries `holdWaitPriced`'s hold. Read the audit before naming a
   control.
 - A radius that stops at the route misses the generated levels: the identity block's kind pairs were the only movers.
+### Seedling hammer-phase SPIN — the press kill of spinner@816,848
+
+⚖ User, 2026-10-30: queued as one of four hammer slices run in parallel (with APPROACH, CPWIT and DASH). L40C ranked
+this wall FIRST: the first wall on leg 860 (`level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29`, Boss Key 2), the
+only Boss Key 2 arrival leg that gets past `bobsoldier@880,832`. Switch `pressKillGuards.PRESS_ESCAPE_SHIELD_CLAIM`,
+**OFF** (`SEEDLING_PRESS_ESCAPE_SHIELD_CLAIM=1`, `withPressEscapeShieldClaim`). The report is
+`CC/docs/cloud-reports/seedling-hammer-spinner-press.md`.
+
+- **The wall is a phase.** Main's page captured leg 860 at seam 5102 (L40C: 5950), and there A5 at 10240 stops on the
+  combat ladder before any press kill. Re-stamped to 5950, the same request reproduces L40C's corner byte for byte:
+  `kill (spinner@816,848) by press`, every key set on the body or the 13 px line at (770.96,860.99), 19 t after the
+  landing at t2744. L40C's base code on main's capture gives main's answer: the seam moved it, not the code.
+- **The cause:** the press at t2743 was taken with NO escape claim. `pressEscape` asks
+  `levelRun.spinnerForecastWithPress`, which names `shieldBumpNow` as unmodelled whenever the shield is carried, so
+  after the shield hammer-phase A is inert and A3's fallback presses. Asked anyway, the escape kernel EXHAUSTS from that
+  landing (nothing survives 11 t). The refuge walk after it cannot be rescued: a space-time search from each refuge
+  tick t2749–t2752 exhausts too.
+- **Designs measured on 860** (5950, A5, 10240): certify the refuge walk (refuses earlier: "nowhere to be"); a certified
+  hold-out on the refuge walk (nothing to hold); shield-only certificates whose path keeps the shield off every body
+  (the wall stands); those certificates plus the exhausted negative claimed (**the kill completes**). Negatives alone
+  pass at 5950 but not at main's own 5102, where the certificates re-time `spinner@880,848`'s kill and the chooser
+  then hands ICEST: both halves ship.
+- **The change** (`pressEscapeOnce`; `pressKillGuards.SHIELD_ENVELOPE`, `shieldEnvelopeMeets`, `shieldOnlyUnmodelled`):
+  ON, with the shield bump the only unmodelled source, a certificate is adopted only where no state of its path puts
+  the shield's envelope (the union of `playerShieldRect`'s boxes) on a forecast body, rows `i − 1 … i + 1`; an
+  exhausted escape search is claimed; every other negative stays OFF's no-claim. OFF returns at the same line.
+  `PRESS_KILL_DONE_TRACE` (a sink, `null`) hands out a completed press kill's keys and equips.
+- **Effect ON:** 860 (5950, A5, 10240) kills `spinner@816,848` (t2626/2761/2817); the keys replayed on a fresh run with
+  their equips kill it with no hit and no death; the chain then meets the anytime deadline inside
+  `kill (iceturret@472,400)`. At main's seam 5102 (A5, 10240) it passes the spinner too (t2626/2759/2792). At the
+  shipped budget and without ICEST nothing passes: the walls come before the press kill. 861 never reaches the kill
+  (its movers are text). L40's 59 captured requests: defaults 2 movers (366/0 Totem 64,144 SOLVED 1757 → 1699 t, two
+  bomb hits → one; 382/0 Chest refusal text), A5 1 mover (382/0 Chest SOLVED 1468 → 1395 t, hitless). Route survey:
+  0 of 237 rows. r9 campaign `--check`: green.
+- **Gate** `hammerSpinnerPress.test.js` (11 rows: four stands beside the body on 860's staging, one per class of the
+  answer; the envelope; the no-shield and no-spinner identities; ships OFF) and `hammerSpinnerPress.slow.test.js` (OFF
+  the corner, ON the kill replayed). Mutants (the fix dropped, the envelope dropped, the rows mis-timed by one): all red.
+
+- A capture's verdict is a function of its seam: a wall measured at one page clock is a phase of the leg, not the leg.
+  Re-stamp the seam to reproduce, and measure at the capture's own seam before calling the fix done.
+- "No claim" is a choice with a cost: an executor that falls back to pressing whenever the forecast names an
+  unmodelled source has turned its certificate off for every room that source is in. Ask whether the source can fire
+  on the path before giving up the claim.
+### Seedling hammer-phase APPROACH — a hitless approach into an IceTurret's range
+
+⚖ User, queued 2026-10-30 (one of four hammer slices run in parallel; LWEIGH's hand-over, its report § 9, and L40C's, its
+§ 6 item 3). Switches `solverBot.TURRET_APPROACH` and `solverBot.FIFTH_ORDER`, both **OFF** (`SEEDLING_TURRET_APPROACH=1`
+/ `withTurretApproach`, `SEEDLING_FIFTH_ORDER=1` / `withFifthOrder`). The report is
+`CC/docs/cloud-reports/seedling-hammer-turret-approach.md`.
+
+- **The clock, measured** (the latch chain, CPAIR size 3 + `LATCH_WEIGH_FIRST`, `turretDamage` per tick): the stance walk
+  enters `iceturret@472,400`'s range at t822; volley 1 at t852; the walk's own swing lands on the turret at t879, so
+  `hitsTimer` holds `shootTimer` at 0; the player stops on the stance at t909; the i-frame runs out and the startshot
+  begins at t910; blast #2.2 lands at t917 on `execCorpseWeigh`'s snap tick. The arrival landed on the clock's zero.
+- **The design.** (a) a wait timed to the clock: a wait OUTSIDE the range moves nothing (`IceTurret.update`'s `else`
+  re-arms `shootTimer` every tick), so the wait must be spent inside it. (b) the approach tried on forks
+  (`killIceTurretOnWalk`'s shape). (c) another kill side. Measured: the push side's stance (488,445) has no hitless try (its
+  column is shut by `pushableblockfire@480,480`, so its corridor dog-legs into the snapped body's corner; its via routes
+  slide past the barrel under a volley). Chosen: all three together — on forks, every side of the snapped box, a wait at
+  the route's first waypoint. That waypoint (488,504) is in the range and COVERED by the fire block (a blast dies on a
+  `Solid`). Only waits 30 and 31 there bring the player to the west stance (467,424) between volleys. The side is free
+  because the corpse is where the turret died. A route with no corridor, or whose walk meets the body, is pruned after
+  its first try (without that, L40 legs 860/861 spent their `crusher-fork` deadline on corridor-less tries).
+- **The fifth order.** With LWEIGH's guard off (scratch), a bound of 5, "a fifth distinct order", and "do not re-count a
+  succeeded order" each solve the latch at 4138 (with the t917 hit). Every applied order has succeeded, so the last is no
+  bound at all; "distinct" is the narrowest, and it is the one shipped. With the approach ON the chain applies four orders
+  (the `hold(wandlock@480,560)` was the uncertified walk's), so the bound is not met there.
+- **The ctor box** (TURRETSNAP's hand-over): ON, `killForCorpse` and `killIceTurretInPlace` derive their stance off the
+  snapped box (`iceTurretKillBox`). The pocket boot at tick 0 (the turret not yet updated): off the run's rect the up
+  stance is (488,437), inside the live body (y 408..440); off the snap, (488,445). Once updated, the boxes agree.
+- **Effect ON.** Latch chain (CPAIR-3 + LWF + `TURRET_APPROACH`): **Boss Key 2 SOLVED 4142, hitless**, game-modelled on a
+  fresh run; + ICEST + OPP the same; + `orbitFreeAim` + `strategyBoundDistinct` SOLVED 4108, hitless (measurement only).
+  ICEST's pocket boot unchanged (4495). 60 captured L40 requests: no solve gained or lost in any arm; switches alone 0
+  movers; with CPAIR-3 + LWF 4 movers (860/0,1 and 861/0,1), refusal text only — the approach reaches its staging point
+  (488,579) and names that no corridor plans past the latched south door `wandlock@480,560` to any kill stance.
+- **Gate** `hammerTurretApproach.test.js` (ships OFF; the fifth-order rule on L40C's list; the ctor box; no turret in
+  range, and a turret in range with no corpse route, ON = OFF) and `hammerTurretApproach.slow.test.js` (the latch chain
+  OFF: the t917 refusal; ON: SOLVED 4142 and replayed; the pocket boot). Mutants (drop the timing; one cycle late, which
+  solves at 4188 — the clock is periodic, so the row catches it by the plan's length; re-count a succeeded order; drop the
+  snap): all red.
+
+**Trap candidates.**
+- A wait outside a turret's range is not a timing: the clock re-arms there. Spend the wait where the clock runs, and
+  under cover.
+- A search over waits per route repeats the route's geometry every time: prune a route when its failure is geometry (no
+  corridor, the body), or its tries spend the caller's deadline.
 
 ---
 ### Seedling hammer-phase CPWIT — a page channel for OFF switches; CHOOSER_PAIR size 3 witnessed

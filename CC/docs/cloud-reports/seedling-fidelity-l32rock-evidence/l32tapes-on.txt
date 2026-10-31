@@ -1,0 +1,293 @@
+{"name":"apb-l12-witch-reported","saw32":false,"earned":"","md5":"3ca4c19c","clears":"","rock":""}
+{"name":"apb-l12-witch-server-sword","saw32":false,"earned":"12:1@359","md5":"37b41900","clears":"12:1","rock":""}
+{"name":"apb-l12-witch-slot-held","saw32":false,"earned":"12:1@377","md5":"cbb37f54","clears":"12:1","rock":""}
+{"name":"apb-l32-both-reported","saw32":true,"earned":"","md5":"5ca968ae","clears":"","rock":"rock-snap@0 rock-fallen-at-build@0"}
+{"name":"apb-l32-fresh-fire-held","saw32":true,"earned":"32:1@9 32:0@884 32:3@778 32:4@839","md5":"f2728153","clears":"32:1 32:0 32:3 32:4","rock":"rock-armed@8 rock-landed@9"}
+{"name":"apb-l32-fresh-no-fire","saw32":true,"earned":"32:1@9 32:3@778 32:4@839","md5":"76dac97c","clears":"32:1 32:3 32:4","rock":"rock-armed@8 rock-landed@9"}
+{"name":"apb-l32-killed-drop-held","saw32":true,"earned":"32:4@66","md5":"00b1b3e7","clears":"32:4","rock":"rock-snap@0 rock-fallen-at-build@0"}
+{"name":"apb-l43-totem-no-parts","saw32":false,"earned":"","md5":"1ad44841","clears":"","rock":""}
+{"name":"axe-l48-reach-l49","saw32":false,"earned":"","md5":"97b78785","clears":"","rock":""}
+{"name":"axe-l61-reach-l62","saw32":false,"earned":"","md5":"0ee8f0ac","clears":"","rock":""}
+{"name":"axe-l61-reach-l63","saw32":false,"earned":"","md5":"88051699","clears":"","rock":""}
+{"name":"axe-l71-reach-l76","saw32":false,"earned":"71:2@318","md5":"29e14924","clears":"71:2","rock":""}
+{"name":"bobsoldier-corpse","saw32":false,"earned":"","md5":"3cd4c934","clears":"","rock":""}
+{"name":"bobsoldier-kill","saw32":false,"earned":"","md5":"b375b79c","clears":"","rock":""}
+{"name":"bobsoldier-sword","saw32":false,"earned":"","md5":"d239c086","clears":"","rock":""}
+{"name":"bobsoldier2-l30-dash-stance","saw32":false,"earned":"","md5":"93f0e53a","clears":"","rock":""}
+{"name":"bobsoldier2-l30-torch","saw32":true,"earned":"30:2@374 30:4@168","md5":"7151289b","clears":"30:2 30:4","rock":""}
+{"name":"burn-l24-reach-exit","saw32":false,"earned":"24:0@64","md5":"2edc42e9","clears":"24:0","rock":""}
+{"name":"burn-l44-reach-exit","saw32":false,"earned":"44:0@46","md5":"e05870f5","clears":"44:0","rock":""}
+{"name":"cancross-l16-sword-none","saw32":false,"earned":"","md5":"f034d58e","clears":"16:0","rock":""}
+{"name":"collide-up-rock","saw32":false,"earned":"","md5":"feb054d0","clears":"","rock":""}
+{"name":"cross-level-leg","saw32":false,"earned":"","md5":"d23edaa4","clears":"","rock":""}
+{"name":"crusher-l42-round-trip","saw32":false,"earned":"","md5":"1d26eaee","clears":"","rock":""}
+{"name":"dash-l16-sword-all","saw32":false,"earned":"16:4@70 16:3@73","md5":"f4d6613d","clears":"16:4 16:3 16:0","rock":""}
+{"name":"diagonal-run","saw32":false,"earned":"","md5":"d4c80237","clears":"","rock":""}
+{"name":"direction-flip","saw32":false,"earned":"","md5":"c4a03296","clears":"","rock":""}
+{"name":"enc-l12-witch","saw32":false,"earned":"12:1@377","md5":"cbb37f54","clears":"12:1","rock":""}
+{"name":"enc-l32-fallen-door","saw32":true,"earned":"32:3@777 32:4@838","md5":"0d8bcf9a","clears":"32:3 32:4","rock":"rock-snap@0 rock-fallen-at-build@0"}
+{"name":"enc-l32-live-arrival","saw32":true,"earned":"32:1@2 32:3@771 32:4@832","md5":"1a36479b","clears":"32:1 32:3 32:4","rock":"rock-armed@1 rock-landed@2"}
+{"name":"f1-l5-lock-removal","saw32":false,"earned":"","md5":"2065d0cc","clears":"5:0","rock":""}
+{"name":"f1-l5-open-lock-bait","saw32":false,"earned":"","md5":"d5d14446","clears":"","rock":""}
+{"name":"f1c-l18-lock-removal","saw32":false,"earned":"","md5":"8570cf70","clears":"18:0 17:29","rock":""}
+{"name":"f1c-l18-phase42","saw32":false,"earned":"","md5":"7da2bdf5","clears":"18:0 17:29","rock":""}
+{"name":"f4-l8-sandtraps","saw32":false,"earned":"","md5":"c6c1ac08","clears":"8:0 8:1","rock":""}
+{"name":"f6-l17-reentry","saw32":false,"earned":"","md5":"f04050e5","clears":"","rock":""}
+{"name":"f6-l2-reentry","saw32":false,"earned":"","md5":"b3103d01","clears":"","rock":""}
+{"name":"f6-l20-reentry","saw32":false,"earned":"","md5":"76171945","clears":"20:1","rock":""}
+{"name":"f7-l16-reentry","saw32":false,"earned":"","md5":"a37bf7ce","clears":"","rock":""}
+{"name":"f7-l16-walkin","saw32":false,"earned":"","md5":"b60d6e6b","clears":"","rock":""}
+{"name":"friction-stop","saw32":false,"earned":"","md5":"d7d33d93","clears":"","rock":""}
+{"name":"frontier3-l62-door-niche","saw32":false,"earned":"","md5":"ff901dfe","clears":"","rock":""}
+{"name":"frontier3-l87-pocket","saw32":false,"earned":"","md5":"4c73b536","clears":"","rock":""}
+{"name":"ghostmotion-l102-axis","saw32":false,"earned":"","md5":"cee3b839","clears":"","rock":""}
+{"name":"ghostmotion-l102-diag","saw32":false,"earned":"","md5":"2b994305","clears":"","rock":""}
+{"name":"ghostsword-l3-rock","saw32":false,"earned":"3:0@2","md5":"54938c71","clears":"3:0","rock":""}
+{"name":"ghostsword-l3-rockghost","saw32":false,"earned":"3:1@2","md5":"be4e1102","clears":"3:1","rock":""}
+{"name":"ghostsword-l30-bobsoldier","saw32":false,"earned":"","md5":"540ee5a9","clears":"","rock":""}
+{"name":"grant-sword-room","saw32":false,"earned":"","md5":"acbe8331","clears":"","rock":""}
+{"name":"hammer-a-l18-escape15","saw32":false,"earned":"","md5":"d8fbdcbb","clears":"18:0 17:29","rock":""}
+{"name":"hammer-a-l18-escape21","saw32":false,"earned":"","md5":"3e3715f8","clears":"18:0 17:29","rock":""}
+{"name":"hammer-b1-l18-approach40","saw32":false,"earned":"","md5":"600eaadf","clears":"18:0 17:29","rock":""}
+{"name":"hammer-b2-l18-fight40","saw32":false,"earned":"","md5":"aaf557c6","clears":"18:0 17:29","rock":""}
+{"name":"hammer-c2-l18-ghostspinner","saw32":false,"earned":"","md5":"5708f751","clears":"17:29","rock":""}
+{"name":"hazard-boot-pit","saw32":false,"earned":"","md5":"1c022f8a","clears":"","rock":""}
+{"name":"hazard-walk-water","saw32":false,"earned":"","md5":"a9c52777","clears":"","rock":""}
+{"name":"l100-sliver-rock","saw32":false,"earned":"100:0@78","md5":"7750f5d3","clears":"100:0","rock":""}
+{"name":"l12keyline-134-round","saw32":false,"earned":"12:2@347","md5":"e4329001","clears":"12:2","rock":""}
+{"name":"l14-swordless-detour","saw32":false,"earned":"","md5":"a69ecad5","clears":"","rock":""}
+{"name":"l30keylock-pit224-before","saw32":false,"earned":"30:0@212","md5":"1c43d90d","clears":"30:0","rock":""}
+{"name":"l30keylock-pit224","saw32":false,"earned":"30:0@304","md5":"c621be9b","clears":"30:0","rock":""}
+{"name":"l30keylock-pit240","saw32":false,"earned":"30:0@325","md5":"cacb497f","clears":"30:0","rock":""}
+{"name":"l40button-l41-part0","saw32":false,"earned":"40:7@1071 40:1@1274 40:22@1224 40:24@1224 40:23@1265","md5":"b3bca1bb","clears":"40:7 40:1 40:22 40:24 40:23 40:4 40:5 40:6 40:2 40:3","rock":""}
+{"name":"l40button-l42-part0","saw32":false,"earned":"40:7@996 40:1@1370 40:22@1324 40:24@1324 40:23@1360","md5":"889feff9","clears":"40:7 40:1 40:22 40:24 40:23 40:4 40:5 40:6 40:19 40:17 40:2 40:3","rock":""}
+{"name":"l71-button-lock","saw32":false,"earned":"","md5":"7dea1a08","clears":"","rock":""}
+{"name":"l71-hold-101-shut","saw32":false,"earned":"","md5":"a8d55341","clears":"71:3","rock":""}
+{"name":"l71-hold-102-open","saw32":false,"earned":"","md5":"ddd2be73","clears":"71:3","rock":""}
+{"name":"l71-lock-shut","saw32":false,"earned":"","md5":"e2d11c01","clears":"","rock":""}
+{"name":"l71-shieldlock-open","saw32":false,"earned":"71:2@119","md5":"d3b798f5","clears":"71:2","rock":""}
+{"name":"l71-shieldlock-shut","saw32":false,"earned":"","md5":"4e82f476","clears":"","rock":""}
+{"name":"ladder2-l104-beam","saw32":false,"earned":"","md5":"a621ef8c","clears":"","rock":""}
+{"name":"ladder2-l59-grenade","saw32":false,"earned":"","md5":"7e5b7960","clears":"","rock":""}
+{"name":"lightpole-l101-ghost","saw32":false,"earned":"101:0@306","md5":"3c48962c","clears":"101:0","rock":""}
+{"name":"lightpole-l101-spear","saw32":false,"earned":"101:0@279","md5":"cd82f959","clears":"101:0","rock":""}
+{"name":"pit-fall-83","saw32":false,"earned":"","md5":"3b8b07ba","clears":"","rock":""}
+{"name":"pit-fall-chain-85","saw32":false,"earned":"","md5":"44b32b30","clears":"","rock":""}
+{"name":"prox-l29-key-return","saw32":false,"earned":"","md5":"718497e3","clears":"","rock":""}
+{"name":"prox-l38-chest","saw32":false,"earned":"37:4@1 38:5@1 38:0@48 38:3@145","md5":"57e090a1","clears":"37:4 38:5 38:0 38:3 38:1","rock":""}
+{"name":"prox-l38-reach-l39","saw32":false,"earned":"37:4@1 38:5@1 38:0@48 38:3@146","md5":"3615e19e","clears":"37:4 38:5 38:0 38:3 38:1","rock":""}
+{"name":"prox-l40-turret-contact","saw32":false,"earned":"","md5":"f70fbfc1","clears":"","rock":""}
+{"name":"prox-l40-turret-volley","saw32":false,"earned":"","md5":"417c0ef6","clears":"","rock":""}
+{"name":"pushblock-l65-reach-l63","saw32":false,"earned":"","md5":"78a772c4","clears":"","rock":""}
+{"name":"pushblock-l65-reach-l68","saw32":false,"earned":"65:2@197","md5":"0cbac478","clears":"65:2","rock":""}
+{"name":"pushblock-l65-sword-press","saw32":false,"earned":"","md5":"4daad4ff","clears":"","rock":""}
+{"name":"r1-dark-shield-bobboss","saw32":true,"earned":"32:1@9","md5":"20f9fad6","clears":"32:1","rock":"rock-armed@8 rock-landed@9"}
+{"name":"r1-dark-shield-kill","saw32":false,"earned":"","md5":"57b907e3","clears":"","rock":""}
+{"name":"r1-dark-shield-spinner","saw32":false,"earned":"","md5":"c5723428","clears":"","rock":""}
+{"name":"r1-dark-suit-bob","saw32":false,"earned":"","md5":"e0df237b","clears":"","rock":""}
+{"name":"r1-dark-suit-kill","saw32":false,"earned":"","md5":"41db7fbb","clears":"","rock":""}
+{"name":"r1-dark-suit-spinner","saw32":false,"earned":"","md5":"5a3fdf45","clears":"","rock":""}
+{"name":"r2-terrain-killlock","saw32":false,"earned":"","md5":"f740b0fd","clears":"5:0","rock":""}
+{"name":"r2-two-teleporters","saw32":false,"earned":"","md5":"9c059114","clears":"","rock":""}
+{"name":"r2-walk-1-sword-shield","saw32":false,"earned":"","md5":"fd87d1f8","clears":"","rock":""}
+{"name":"r2-walk-2-feather","saw32":false,"earned":"","md5":"f8538c3f","clears":"","rock":""}
+{"name":"r2-walk-3-darksword-torch","saw32":false,"earned":"","md5":"c9c22585","clears":"","rock":""}
+{"name":"r2-walk-4-spear","saw32":false,"earned":"","md5":"ee73be47","clears":"","rock":""}
+{"name":"r2-walk-5-darkshield","saw32":false,"earned":"","md5":"9663231d","clears":"","rock":""}
+{"name":"r2-walk-6-darksuit","saw32":false,"earned":"","md5":"92ba5fa0","clears":"","rock":""}
+{"name":"r2-walk-full","saw32":false,"earned":"","md5":"8d41da4c","clears":"","rock":""}
+{"name":"r2-wallflyer-contact","saw32":false,"earned":"","md5":"048bdbe6","clears":"","rock":""}
+{"name":"r2-wallflyer-suit","saw32":false,"earned":"","md5":"048bdbe6","clears":"","rock":""}
+{"name":"r3-bobboss-death","saw32":true,"earned":"","md5":"5fec31da","clears":"","rock":"rock-armed@8 rock-landed@9 rock-fallen-at-build@148"}
+{"name":"r3-collect-darkshield","saw32":false,"earned":"74:0@46","md5":"f313ec8a","clears":"74:0","rock":""}
+{"name":"r3-collect-darksuit","saw32":false,"earned":"79:0@45","md5":"5873438c","clears":"79:0","rock":""}
+{"name":"r3-collect-feather","saw32":false,"earned":"89:0@46","md5":"a3f3b5bc","clears":"89:0","rock":""}
+{"name":"r3-collect-shield","saw32":false,"earned":"20:2@46","md5":"7c333ca1","clears":"20:2","rock":""}
+{"name":"r3-collect-spear","saw32":false,"earned":"64:1@48","md5":"283747b0","clears":"64:1","rock":""}
+{"name":"r3-collect-sword","saw32":false,"earned":"10:0@58","md5":"6d50b3d9","clears":"10:0","rock":""}
+{"name":"r3-collect-torch","saw32":false,"earned":"30:4@46","md5":"6d5be442","clears":"30:4","rock":""}
+{"name":"r3-drown","saw32":false,"earned":"","md5":"f207e0bb","clears":"","rock":""}
+{"name":"r3-lava","saw32":false,"earned":"","md5":"21dae4dc","clears":"","rock":""}
+{"name":"r3-pit-death","saw32":false,"earned":"","md5":"3e557571","clears":"","rock":""}
+{"name":"r3-walk-1-sword","saw32":false,"earned":"10:0@400","md5":"c1c5b56f","clears":"10:0","rock":""}
+{"name":"r3-walk-2-feather","saw32":false,"earned":"89:0@605","md5":"e9a87276","clears":"89:0","rock":""}
+{"name":"r3-walk-3-torch","saw32":false,"earned":"30:4@1530","md5":"f0ce2aea","clears":"30:4","rock":""}
+{"name":"r3-walk-4-spear","saw32":false,"earned":"64:1@2123","md5":"2890af47","clears":"64:1","rock":""}
+{"name":"r3-walk-5-darkshield","saw32":false,"earned":"74:0@1907","md5":"2d684d1a","clears":"74:0","rock":""}
+{"name":"r3-walk-6-darksuit","saw32":false,"earned":"71:2@424 79:0@1224","md5":"bd85e0a6","clears":"71:2 79:0","rock":""}
+{"name":"r3-walk-full","saw32":false,"earned":"71:2@10354 10:0@400 89:0@1246 30:4@3644 64:1@6184 74:0@9675 79:0@11154","md5":"4e32090e","clears":"71:2 10:0 89:0 30:4 64:1 74:0 79:0","rock":""}
+{"name":"r4-iceturret-bobs","saw32":false,"earned":"","md5":"81a51fe6","clears":"","rock":""}
+{"name":"r4-walk-1-sword","saw32":false,"earned":"10:0@400","md5":"c1c5b56f","clears":"10:0","rock":""}
+{"name":"r4-walk-2-feather","saw32":false,"earned":"89:0@605","md5":"e9a87276","clears":"89:0","rock":""}
+{"name":"r4-walk-3-torch","saw32":false,"earned":"30:4@1530","md5":"f0ce2aea","clears":"30:4","rock":""}
+{"name":"r4-walk-4-approach","saw32":false,"earned":"","md5":"28252662","clears":"","rock":""}
+{"name":"r4-walk-5-spear","saw32":false,"earned":"64:1@769","md5":"2450b7d8","clears":"64:1","rock":""}
+{"name":"r4-walk-6-health","saw32":false,"earned":"68:0@3012 65:2@2750 68:2@3049","md5":"ece0c59b","clears":"68:0 65:2 68:2","rock":""}
+{"name":"r4-walk-full","saw32":false,"earned":"68:0@9998 65:2@9736 10:0@400 89:0@1246 30:4@3644 64:1@6184 68:2@10035","md5":"594aba16","clears":"68:0 65:2 10:0 89:0 30:4 64:1 68:2","rock":""}
+{"name":"r5-bobboss-arm","saw32":true,"earned":"32:1@13","md5":"c8aef1d2","clears":"32:1","rock":"rock-armed@12 rock-landed@13"}
+{"name":"r5-bobboss-fire-control","saw32":true,"earned":"32:1@13","md5":"d2b0c1ac","clears":"32:1","rock":"rock-armed@12 rock-landed@13"}
+{"name":"r5-bobboss-fire","saw32":true,"earned":"32:1@13 32:3@1451 32:4@1951","md5":"3bb05952","clears":"32:1 32:3 32:4","rock":"rock-armed@12 rock-landed@13"}
+{"name":"r5-bosskey-leg","saw32":false,"earned":"31:0@611 30:2@1014","md5":"44b6e844","clears":"31:0 30:2","rock":""}
+{"name":"r5-bosskey-lock-shut","saw32":false,"earned":"","md5":"0e0c53ca","clears":"","rock":""}
+{"name":"r5-contact-control-off","saw32":false,"earned":"","md5":"50e56242","clears":"","rock":""}
+{"name":"r5-contact-control-on","saw32":false,"earned":"","md5":"b9905cea","clears":"","rock":""}
+{"name":"r5-d5-conch","saw32":false,"earned":"49:0@1645","md5":"1931c412","clears":"49:0","rock":""}
+{"name":"r5-feather","saw32":false,"earned":"91:29@814 89:0@1502","md5":"d0864acc","clears":"91:29 89:0","rock":""}
+{"name":"r5-karlore-fire","saw32":false,"earned":"","md5":"1e74826d","clears":"","rock":""}
+{"name":"r5-karlore-plug","saw32":false,"earned":"","md5":"54e28f3b","clears":"","rock":""}
+{"name":"r5-l37-burn-control","saw32":false,"earned":"","md5":"72cf0c4b","clears":"","rock":""}
+{"name":"r5-l37-burn","saw32":false,"earned":"37:1@64","md5":"13a3bd6c","clears":"37:1","rock":""}
+{"name":"r5-l38-fade-boot","saw32":false,"earned":"37:4@1 38:5@1","md5":"7251b3f8","clears":"37:4 38:5","rock":""}
+{"name":"r5-l38-fade-door","saw32":false,"earned":"","md5":"9068df4e","clears":"","rock":""}
+{"name":"r5-l40-join-control","saw32":false,"earned":"","md5":"bed743e0","clears":"40:13","rock":""}
+{"name":"r5-l40-join","saw32":false,"earned":"40:0@789","md5":"c22acc3d","clears":"40:0 40:13","rock":""}
+{"name":"r5-l40-part0-control","saw32":false,"earned":"40:7@10","md5":"9316754c","clears":"40:7 40:4 40:5 40:6","rock":""}
+{"name":"r5-l40-part0","saw32":false,"earned":"40:7@10 40:1@290 40:22@211 40:24@211 40:23@260","md5":"a7bba332","clears":"40:7 40:1 40:22 40:24 40:23 40:4 40:5 40:6 40:2 40:3","rock":""}
+{"name":"r5-l40-part1","saw32":false,"earned":"","md5":"10af4ec9","clears":"","rock":""}
+{"name":"r5-l40-part5-control","saw32":false,"earned":"40:12@742","md5":"5fef2293","clears":"40:12 40:11","rock":""}
+{"name":"r5-l40-part5","saw32":false,"earned":"40:12@742","md5":"8f6a7e25","clears":"40:12 40:11 40:9 40:10","rock":""}
+{"name":"r5-l41-part3-control","saw32":false,"earned":"","md5":"5e741afb","clears":"","rock":""}
+{"name":"r5-l41-part3","saw32":false,"earned":"","md5":"3c4ada13","clears":"41:0","rock":""}
+{"name":"r5-l42-part4-control","saw32":false,"earned":"","md5":"abc5adb5","clears":"","rock":""}
+{"name":"r5-l42-part4","saw32":false,"earned":"","md5":"6715a014","clears":"","rock":""}
+{"name":"r5-l43-wand-control","saw32":false,"earned":"","md5":"5157244f","clears":"","rock":""}
+{"name":"r5-l43-wand","saw32":false,"earned":"43:0@109","md5":"69ae8590","clears":"43:0 43:2 43:1 43:3","rock":""}
+{"name":"r5-l60-kill-control","saw32":false,"earned":"","md5":"180849ae","clears":"","rock":""}
+{"name":"r5-l60-kill","saw32":false,"earned":"","md5":"180849ae","clears":"","rock":""}
+{"name":"r5-press-delay-control","saw32":false,"earned":"","md5":"7fa648b9","clears":"","rock":""}
+{"name":"r5-press-delay","saw32":false,"earned":"","md5":"daf0c930","clears":"","rock":""}
+{"name":"r5-press-glide","saw32":false,"earned":"","md5":"516cd5d4","clears":"","rock":""}
+{"name":"r5-press-repeat","saw32":false,"earned":"","md5":"281064e8","clears":"","rock":""}
+{"name":"r5-shaft-control","saw32":false,"earned":"","md5":"02a8148f","clears":"39:9 39:10 39:4","rock":""}
+{"name":"r5-shaft","saw32":false,"earned":"","md5":"b57973b4","clears":"39:9 39:10 39:0 39:2 39:1","rock":""}
+{"name":"r5-swim-cross","saw32":false,"earned":"","md5":"5feba064","clears":"","rock":""}
+{"name":"r5-swim-drown","saw32":false,"earned":"","md5":"5feba064","clears":"","rock":""}
+{"name":"r5-swim-latch","saw32":false,"earned":"","md5":"82c20b4c","clears":"","rock":""}
+{"name":"r5-totem-entrance-control","saw32":false,"earned":"37:4@1 38:5@1 38:0@133 38:3@282","md5":"72bc95cd","clears":"37:4 38:5 38:0 38:3 38:1","rock":""}
+{"name":"r5-totem-entrance","saw32":false,"earned":"37:4@1 38:5@1 38:0@133 38:3@282 39:8@652 38:4@652","md5":"6dac0f93","clears":"37:4 38:5 38:0 38:3 39:8 38:4 38:1","rock":""}
+{"name":"r5-waterfall-climb","saw32":false,"earned":"","md5":"dfa7d0a6","clears":"","rock":""}
+{"name":"r5-waterfall-shut","saw32":false,"earned":"","md5":"f4eb52b1","clears":"","rock":""}
+{"name":"r6-contact-pair-control","saw32":false,"earned":"","md5":"1809944f","clears":"","rock":""}
+{"name":"r6-contact-pair-heart","saw32":false,"earned":"","md5":"75069b80","clears":"","rock":""}
+{"name":"r6-contact-pair-live","saw32":false,"earned":"","md5":"d86c88e0","clears":"","rock":""}
+{"name":"r6-contact-pair-standing","saw32":false,"earned":"","md5":"7fa11333","clears":"","rock":""}
+{"name":"r6-final-door-control","saw32":false,"earned":"","md5":"36a12965","clears":"","rock":""}
+{"name":"r6-final-door","saw32":false,"earned":"113:0@93","md5":"44c5b2ed","clears":"113:0","rock":""}
+{"name":"r6-owl-control","saw32":false,"earned":"","md5":"413a859b","clears":"","rock":""}
+{"name":"r6-owl-kill","saw32":false,"earned":"","md5":"183459c8","clears":"112:0 112:1","rock":""}
+{"name":"r6-seed-control","saw32":false,"earned":"","md5":"3f3b3ce3","clears":"","rock":""}
+{"name":"r6-seed-credits","saw32":false,"earned":"","md5":"304d803f","clears":"","rock":""}
+{"name":"r6-shield-control","saw32":false,"earned":"","md5":"c765db74","clears":"","rock":""}
+{"name":"r6-shield-kill","saw32":false,"earned":"19:0@409","md5":"01173b6d","clears":"19:0","rock":""}
+{"name":"r6-totem-control","saw32":false,"earned":"43:0@63","md5":"2385251f","clears":"43:0 43:2 43:1 43:3","rock":""}
+{"name":"r6-totem-kill","saw32":false,"earned":"43:5@660 43:0@63","md5":"d45d0c8a","clears":"43:5 43:0 43:2 43:1 43:3","rock":""}
+{"name":"r6-watcher-blood-control","saw32":false,"earned":"","md5":"02355dea","clears":"","rock":""}
+{"name":"r6-watcher-blood","saw32":false,"earned":"","md5":"6c9c6533","clears":"","rock":""}
+{"name":"r6-watcher-control","saw32":false,"earned":"","md5":"11b9e411","clears":"","rock":""}
+{"name":"r6-watcher-talk","saw32":false,"earned":"114:0@197","md5":"a10d128a","clears":"114:0","rock":""}
+{"name":"r7-act2-5","saw32":false,"earned":"","md5":"950b00f5","clears":"5:0","rock":""}
+{"name":"r7-act2-6","saw32":false,"earned":"","md5":"22b38be7","clears":"","rock":""}
+{"name":"r7-act2-full","saw32":false,"earned":"10:0@3412","md5":"672fa5cc","clears":"10:0 11:0 5:0 8:0 8:1","rock":""}
+{"name":"r7-ends-meet-1","saw32":false,"earned":"","md5":"baea7190","clears":"","rock":""}
+{"name":"r7-ends-meet-2","saw32":false,"earned":"","md5":"24bedbbb","clears":"","rock":""}
+{"name":"r7-ends-meet-full","saw32":false,"earned":"","md5":"04c13579","clears":"","rock":""}
+{"name":"r8-d2-19","saw32":false,"earned":"19:1@681 19:0@446","md5":"9d692e3c","clears":"19:1 19:0","rock":""}
+{"name":"r8-d2-20","saw32":false,"earned":"20:0@300 20:4@309 20:2@161","md5":"c00fb783","clears":"20:0 20:4 20:2 20:1","rock":""}
+{"name":"r8-d2","saw32":false,"earned":"20:0@1513 19:1@1148 20:4@1522 19:0@913 20:2@1374","md5":"77fcc94d","clears":"20:0 19:1 20:4 19:0 20:2 20:1 18:0 17:29","rock":""}
+{"name":"r8-hammer-arm","saw32":false,"earned":"","md5":"588fae58","clears":"","rock":""}
+{"name":"r8-hammer-control","saw32":false,"earned":"","md5":"49fb717b","clears":"","rock":""}
+{"name":"r8-l18-spinner-press","saw32":false,"earned":"","md5":"2acd144f","clears":"17:29","rock":""}
+{"name":"r8-l6-bob-contact","saw32":false,"earned":"","md5":"e8505f3c","clears":"","rock":""}
+{"name":"r8-solve-1","saw32":false,"earned":"","md5":"beced2fd","clears":"","rock":""}
+{"name":"r8-solve-10","saw32":false,"earned":"10:0@70","md5":"99d4e083","clears":"10:0","rock":""}
+{"name":"r8-solve-11","saw32":false,"earned":"","md5":"a52f2665","clears":"11:0","rock":""}
+{"name":"r8-solve-18","saw32":false,"earned":"","md5":"5d87573a","clears":"18:0 17:29","rock":""}
+{"name":"r8-solve-2","saw32":false,"earned":"","md5":"d27e552b","clears":"","rock":""}
+{"name":"r8-solve-20","saw32":false,"earned":"20:2@161","md5":"0102c81b","clears":"20:2","rock":""}
+{"name":"r8-solve-3","saw32":false,"earned":"","md5":"db7bdd13","clears":"","rock":""}
+{"name":"r8-solve-4","saw32":false,"earned":"","md5":"e1215292","clears":"","rock":""}
+{"name":"r8-solve-5","saw32":false,"earned":"","md5":"a28e7c5d","clears":"5:0","rock":""}
+{"name":"r8-solve-6","saw32":false,"earned":"","md5":"1312cd80","clears":"","rock":""}
+{"name":"r8-solve-7","saw32":false,"earned":"","md5":"c22ad181","clears":"","rock":""}
+{"name":"r8-solve-8","saw32":false,"earned":"","md5":"c6c1ac08","clears":"8:0 8:1","rock":""}
+{"name":"r8-solve-9","saw32":false,"earned":"","md5":"67457745","clears":"","rock":""}
+{"name":"r9-l0-sword-dash-rest","saw32":false,"earned":"","md5":"7de8239b","clears":"","rock":""}
+{"name":"r9-l0-sword-dash","saw32":false,"earned":"","md5":"4f13f57f","clears":"","rock":""}
+{"name":"r9-l6-bob-press","saw32":false,"earned":"","md5":"fcbff128","clears":"","rock":""}
+{"name":"r9-l6-harmless-control","saw32":false,"earned":"","md5":"d01cba64","clears":"","rock":""}
+{"name":"r9-l6-harmless-press","saw32":false,"earned":"","md5":"323bf0de","clears":"","rock":""}
+{"name":"r9-l6-sword-dash-hit","saw32":false,"earned":"","md5":"9f4d3470","clears":"","rock":""}
+{"name":"r9-solve-0-v3","saw32":false,"earned":"0:1@284 2:0@2","md5":"d5627d83","clears":"0:1 2:0","rock":""}
+{"name":"r9-solve-0","saw32":false,"earned":"","md5":"e7fcf0d3","clears":"","rock":""}
+{"name":"r9-solve-11","saw32":false,"earned":"","md5":"d18f0476","clears":"11:0","rock":""}
+{"name":"r9-solve-12","saw32":false,"earned":"12:10@816 12:5@1897","md5":"1e7bcd2c","clears":"12:10 12:5","rock":""}
+{"name":"r9-solve-13-v2","saw32":false,"earned":"","md5":"be310519","clears":"","rock":""}
+{"name":"r9-solve-13","saw32":false,"earned":"","md5":"fd23bf8b","clears":"","rock":""}
+{"name":"r9-solve-14","saw32":false,"earned":"","md5":"056814f6","clears":"","rock":""}
+{"name":"r9-solve-15","saw32":false,"earned":"15:2@73 15:3@237","md5":"75a7651d","clears":"15:2 15:3 15:0","rock":""}
+{"name":"r9-solve-16","saw32":false,"earned":"16:4@70 16:3@73 16:6@309","md5":"b44a4d33","clears":"16:4 16:3 16:6 16:0 16:7","rock":""}
+{"name":"r9-solve-18","saw32":false,"earned":"","md5":"d274617e","clears":"18:0 17:29","rock":""}
+{"name":"r9-solve-19","saw32":false,"earned":"19:1@681 19:0@446","md5":"9d692e3c","clears":"19:1 19:0","rock":""}
+{"name":"r9-solve-2","saw32":false,"earned":"","md5":"4129bcd3","clears":"","rock":""}
+{"name":"r9-solve-20","saw32":false,"earned":"20:0@300 20:4@309 20:2@161","md5":"c00fb783","clears":"20:0 20:4 20:2 20:1","rock":""}
+{"name":"r9-solve-21","saw32":false,"earned":"","md5":"4b32ebed","clears":"","rock":""}
+{"name":"r9-solve-22","saw32":false,"earned":"","md5":"bf3736e1","clears":"","rock":""}
+{"name":"r9-solve-29","saw32":false,"earned":"","md5":"ccb8e350","clears":"","rock":""}
+{"name":"r9-solve-3","saw32":false,"earned":"3:0@2","md5":"2ecd09e6","clears":"3:0","rock":""}
+{"name":"r9-solve-30","saw32":true,"earned":"30:2@189","md5":"0edc5c29","clears":"30:2","rock":""}
+{"name":"r9-solve-31","saw32":false,"earned":"31:0@263","md5":"9bd1a2bf","clears":"31:0","rock":""}
+{"name":"r9-solve-32","saw32":true,"earned":"32:1@9 32:3@778 32:4@839","md5":"70d9151b","clears":"32:1 32:3 32:4","rock":"rock-armed@8 rock-landed@9"}
+{"name":"return-l15-conch","saw32":false,"earned":"","md5":"df586c92","clears":"","rock":""}
+{"name":"return-l15-reentry-unclear","saw32":false,"earned":"","md5":"1e475351","clears":"","rock":""}
+{"name":"return-l15-reentry","saw32":false,"earned":"","md5":"1e475351","clears":"","rock":""}
+{"name":"return-l15-walkin","saw32":false,"earned":"","md5":"4441b275","clears":"","rock":""}
+{"name":"robust-l16-l18-sword-conch","saw32":false,"earned":"16:6@393","md5":"ab471f42","clears":"16:6 16:0 16:7","rock":""}
+{"name":"robust-l16-sword-idle1","saw32":false,"earned":"","md5":"84c32bad","clears":"16:0","rock":""}
+{"name":"rulesref-l66-door","saw32":false,"earned":"66:0@228","md5":"9b129d10","clears":"66:0","rock":""}
+{"name":"sealdoor-l113-clear","saw32":false,"earned":"113:0@146","md5":"19950ba9","clears":"113:0","rock":""}
+{"name":"sealdoor-l113-exit","saw32":false,"earned":"113:0@184","md5":"6a8e22cf","clears":"113:0","rock":""}
+{"name":"sealdoor-l113-noseal-control","saw32":false,"earned":"","md5":"19950ba9","clears":"","rock":""}
+{"name":"shuffle-stop","saw32":false,"earned":"","md5":"57328136","clears":"","rock":""}
+{"name":"slots-l24-burn-cut-110","saw32":false,"earned":"24:0@64","md5":"6e74d922","clears":"24:0","rock":""}
+{"name":"slots-l24-burn-cut-80","saw32":false,"earned":"24:0@64","md5":"f8691fbb","clears":"24:0","rock":""}
+{"name":"slots-l24-burn-fencepost","saw32":false,"earned":"24:0@64","md5":"ca5c94e2","clears":"24:0","rock":""}
+{"name":"slots-l24-burn-fire-first","saw32":false,"earned":"24:0@65","md5":"835b8f82","clears":"24:0","rock":""}
+{"name":"slots-l24-fire-first","saw32":false,"earned":"24:0@98","md5":"b5bb092c","clears":"24:0","rock":""}
+{"name":"stance-l46-chest","saw32":false,"earned":"","md5":"43ead044","clears":"46:0","rock":""}
+{"name":"stance-l48-chest","saw32":false,"earned":"","md5":"08ea9be1","clears":"48:0","rock":""}
+{"name":"stance-l48-keylock-north","saw32":false,"earned":"","md5":"6d26fbf4","clears":"","rock":""}
+{"name":"stance-l48-keylock-open","saw32":false,"earned":"","md5":"16249ca0","clears":"","rock":""}
+{"name":"stance-l48-keylock-south","saw32":false,"earned":"48:1@248","md5":"e940dac1","clears":"48:1","rock":""}
+{"name":"statue-press","saw32":false,"earned":"","md5":"28fde59c","clears":"","rock":""}
+{"name":"straight-run","saw32":false,"earned":"","md5":"2fffef3c","clears":"","rock":""}
+{"name":"swim-u5-bobboss-encounter","saw32":true,"earned":"32:1@9 32:3@778 32:4@839","md5":"bd5d3128","clears":"32:1 32:3 32:4","rock":"rock-armed@8 rock-landed@9"}
+{"name":"thread-the-gap","saw32":false,"earned":"","md5":"9f0ea97a","clears":"","rock":""}
+{"name":"transition-west-return","saw32":false,"earned":"","md5":"bddec00e","clears":"","rock":""}
+{"name":"u10-puncher-dwell-refused","saw32":false,"earned":"","md5":"3d555cd2","clears":"","rock":""}
+{"name":"u10-puncher-dwell","saw32":false,"earned":"","md5":"15725642","clears":"","rock":""}
+{"name":"u11-dark-shield-bob","saw32":false,"earned":"","md5":"f5accd24","clears":"","rock":""}
+{"name":"u11-dark-shield-puncher","saw32":false,"earned":"","md5":"222b81cc","clears":"","rock":""}
+{"name":"u11-facing-knockback","saw32":false,"earned":"","md5":"33ccbea5","clears":"","rock":""}
+{"name":"u11-facing-puncher","saw32":false,"earned":"","md5":"e9c7ed40","clears":"","rock":""}
+{"name":"u12-pull-carry","saw32":false,"earned":"","md5":"79a8f779","clears":"","rock":""}
+{"name":"u12-pull-cross","saw32":false,"earned":"","md5":"c01ab6b3","clears":"","rock":""}
+{"name":"u14-moonrock-beam","saw32":false,"earned":"2:0@2","md5":"4ff2c444","clears":"2:0","rock":""}
+{"name":"u14-moonrock-set","saw32":false,"earned":"2:0@0","md5":"af68ea67","clears":"2:0","rock":""}
+{"name":"u15-turret-shield","saw32":false,"earned":"","md5":"2ac0288b","clears":"","rock":""}
+{"name":"u15-turret-spit","saw32":false,"earned":"","md5":"5cbeb326","clears":"","rock":""}
+{"name":"u7-puncher-kill","saw32":false,"earned":"","md5":"562c421d","clears":"","rock":""}
+{"name":"u7-puncher-punch","saw32":false,"earned":"","md5":"7fbf6d9f","clears":"","rock":""}
+{"name":"u9-shield-bob-shove","saw32":false,"earned":"","md5":"fa3f5ffc","clears":"","rock":""}
+{"name":"u9-shield-bob-standing","saw32":false,"earned":"","md5":"003a273d","clears":"","rock":""}
+{"name":"u9-shield-puncher","saw32":false,"earned":"","md5":"174dc795","clears":"","rock":""}
+{"name":"wall-slide","saw32":false,"earned":"","md5":"05380de2","clears":"","rock":""}
+{"name":"wallflyer-kill-flight","saw32":false,"earned":"","md5":"b74a1608","clears":"","rock":""}
+{"name":"wallflyer-kill","saw32":false,"earned":"","md5":"5c023998","clears":"","rock":""}
+{"name":"wallflyer-shield-bump","saw32":false,"earned":"","md5":"a0263be1","clears":"","rock":""}
+{"name":"watcher-l114-silent","saw32":false,"earned":"","md5":"5b011a7a","clears":"","rock":""}
+{"name":"watcher-l114-talk","saw32":false,"earned":"114:0@355","md5":"9adace34","clears":"114:0","rock":""}
+{"name":"watcher-l37-reach-l38","saw32":false,"earned":"37:1@50","md5":"88863d5e","clears":"37:1","rock":""}
+{"name":"watcher-l37-reach-l44","saw32":false,"earned":"37:1@185","md5":"6f08bda8","clears":"37:1","rock":""}
+{"name":"watcher-l37-silent-lean","saw32":false,"earned":"","md5":"bdbb4320","clears":"","rock":""}
+{"name":"watchertalk-l114-clear-16","saw32":false,"earned":"114:0@379","md5":"615540a1","clears":"114:0","rock":""}
+{"name":"watchertalk-l114-clear-32","saw32":false,"earned":"114:0@379","md5":"6c0ddc33","clears":"114:0","rock":""}

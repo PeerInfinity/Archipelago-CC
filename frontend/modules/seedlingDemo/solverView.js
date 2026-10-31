@@ -45,8 +45,9 @@ export {
 } from './activators.js';
 // arrowTrap.js — dangerMap, solverBot · seedling 6
 export { ARROW, arrowLaneForPlacement, arrowLaneRect, arrowRect, arrowTrapFires, stepArrow } from './arrowTrap.js';
-// bobBossFight.js — solverBot · seedling 1 (hammer-phase B2: the fight forbids a shield bump)
-export { bobBossRockArms, shieldBumpTouches } from './bobBossFight.js';
+// bobBossFight.js — solverBot, pressKillGuards · seedling 2 (hammer-phase B2: the fight forbids a shield bump; SPIN: the
+// escape's shield envelope)
+export { bobBossRockArms, playerShieldRect, shieldBumpTouches } from './bobBossFight.js';
 // breakableRocks.js — botDriverV2, solverBot · seedling 3
 export { assertWaitCovers, rockBreaksUnder, WAIT_AFTER_PRESS_TICKS } from './breakableRocks.js';
 // bridges.js — botDriverV2 · seedling 1
@@ -137,6 +138,8 @@ export {
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (its switch, the cut and its instrument; ON by default since the user's flip).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
 } from './pressKillCost.js';
+// iceTurret.js — dangerMap · seedling 1 (fidelity TURRETSNAP: the boxes a live turret's contact is tested on)
+export { iceTurretLiveContactCycle } from './iceTurret.js';
 // igneousLava.js — dangerMap · seedling 3 (fidelity IGNEOUS: the type-31 tile's render clock)
 export { igneousInRange, igneousRendersToLava, stepIgneousRender } from './igneousLava.js';
 // iceTurret.js — botDriverV2 · seedling 2

@@ -1,0 +1,2 @@
+OK: frontend/modules/quickLaunch/generated/docsIndex.js is current (191 docs, 9 sections, 12 categories).
+rc=0

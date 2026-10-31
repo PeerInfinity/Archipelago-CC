@@ -150,5 +150,28 @@ class TestStartingStatementDeterminism(unittest.TestCase):
         self.assertNotEqual(self._starting(1), self._starting(2))
 
 
+class TestSlotData(unittest.TestCase):
+    """slot_data carries what the client needs to rebuild the rules.
+
+    The frontend builds a MetaMath rules.json from slot_data plus the server's
+    scouts when no preset matches the room. The entrance rules depend on
+    entrance_rule_mode, so slot_data must carry it. 2p2e4 without auto-download
+    falls back to the hardcoded proof, so this runs without set.mm.
+    """
+
+    def _slot_data(self, mode):
+        from test.general import setup_multiworld
+        from worlds.metamath import MetamathWorld
+
+        options = {"theorem": "2p2e4", "auto_download_database": False, "entrance_rule_mode": mode}
+        multiworld = setup_multiworld(MetamathWorld, ("generate_early",), 1, options)
+        return multiworld.worlds[1].fill_slot_data()
+
+    def test_entrance_rule_mode_in_slot_data(self):
+        for mode in range(4):
+            with self.subTest(mode=mode):
+                self.assertEqual(self._slot_data(mode)["entrance_rule_mode"], mode)
+
+
 if __name__ == "__main__":
     unittest.main()

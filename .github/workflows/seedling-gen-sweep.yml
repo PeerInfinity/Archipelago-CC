@@ -9,7 +9,8 @@ name: Seedling generator sweep (manual)
 #
 #   cell    one matrix job per (element arm, skeleton kind): the sweep itself, unchanged, `--kinds=<kind>`
 #           `--elements=<arm>`, every size and seed. Each job uploads its table and JSON.
-#   summary one table per arm: cells, placed, certified, certified with `pull` in the plan, REVERTs (pass-2
+#   summary one table per arm: cells, placed, certified, certified with `verb` in the plan (default `pull`, the rope
+#           gate's; `chest` for the chest door), REVERTs (pass-2
 #           candidates the oracle reverted), the worst single solve and the worst cell, and the harness aborts.
 #
 # ⚠ THE WALL-CLOCK COLUMNS ARE EVIDENCE ONLY (the sweep's own law): they decide nothing about a level, and a runner's
@@ -47,6 +48,10 @@ on:
         description: The harness's per-cell wall budget, seconds.
         type: number
         default: 600
+      verb:
+        description: The certification verb the summary counts (`pull` for ropegate, `chest` for chestdoor).
+        type: string
+        default: pull
   push:
     branches:
       - 'seedling-gen-sweep/**'
@@ -57,6 +62,7 @@ env:
   DEFAULT_SEEDS: 1-12
   DEFAULT_SIZES: 10x10,14x14
   DEFAULT_CELLBUDGET: '600'
+  DEFAULT_VERB: pull
 
 jobs:
   plan:
@@ -166,6 +172,8 @@ jobs:
           merge-multiple: true
 
       - name: One table per arm
+        env:
+          VERB: ${{ inputs.verb || env.DEFAULT_VERB }}
         run: |
           node -e '
             const fs = require("fs");
@@ -181,7 +189,8 @@ jobs:
               }
             }
             const lines = [`SEEDLING GENERATOR SWEEP @ ${process.env.GITHUB_SHA}`];
-            lines.push("| arm | kind x size | cells | aborted | placed | certified | certified with pull | REVERTs | worst solve ms | worst cell ms |");
+            const verb = process.env.VERB || "pull";
+            lines.push(`| arm | kind x size | cells | aborted | placed | certified | certified with ${verb} | REVERTs | worst solve ms | worst cell ms |`);
             lines.push("|---|---|---|---|---|---|---|---|---|---|");
             const sumRow = (arm, label, rs) => {
               const ok = rs.filter((r) => r.stop);
@@ -189,7 +198,7 @@ jobs:
                 .reduce((m, t) => m + (t.REVERTED ?? 0), 0), 0);
               const placed = rs.filter((r) => r.elements?.placed).length;
               const cert = rs.filter((r) => r.elements?.certified).length;
-              const pull = rs.filter((r) => r.elements?.certified && (r.elements.certVerbs ?? []).includes("pull")).length;
+              const pull = rs.filter((r) => r.elements?.certified && (r.elements.certVerbs ?? []).includes(verb)).length;
               const worst = Math.max(0, ...ok.map((r) => r.maxSolveMs ?? 0));
               const cell = Math.max(0, ...ok.map((r) => r.genMs ?? 0));
               lines.push(`| ${arm} | ${label} | ${rs.length} | ${rs.length - ok.length} | ${placed} | ${cert} | ${pull} | ${reverts} | ${worst} | ${cell} |`);

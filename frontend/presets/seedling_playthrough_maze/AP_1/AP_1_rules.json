@@ -3576,6 +3576,13 @@
                 "item_name": "Dark Suit"
               }
             }
+          },
+          {
+            "name": "level_37__r9c36 -> level_97",
+            "connected_region": "level_97",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -9627,6 +9634,13 @@
                 "item_name": "Dark Suit"
               }
             }
+          },
+          {
+            "name": "level_71__r14c12 -> level_82",
+            "connected_region": "level_82",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -10163,6 +10177,72 @@
         ],
         "locations": []
       },
+      "level_82": {
+        "name": "level_82",
+        "exits": [
+          {
+            "name": "level_82 -> level_96",
+            "connected_region": "level_96",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 082 - King of Fire",
+            "id": 30000039,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
       "level_83": {
         "name": "level_83",
         "exits": [
@@ -10305,7 +10385,7 @@
         "locations": [
           {
             "name": "Level 086 - Chest",
-            "id": 30000039,
+            "id": 30000040,
             "access_rule": {
               "rule": "True_"
             },
@@ -10836,7 +10916,7 @@
         "locations": [
           {
             "name": "Level 089 - Feather",
-            "id": 30000040,
+            "id": 30000041,
             "access_rule": {
               "rule": "True_"
             },
@@ -10938,7 +11018,7 @@
         "locations": [
           {
             "name": "Level 090 - Chest",
-            "id": 30000041,
+            "id": 30000042,
             "access_rule": {
               "rule": "True_"
             },
@@ -11171,6 +11251,13 @@
                 "item_name": "Progressive Swim"
               }
             }
+          },
+          {
+            "name": "level_93__r5c7 -> level_98",
+            "connected_region": "level_98",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -11321,6 +11408,589 @@
         ],
         "locations": []
       },
+      "level_96": {
+        "name": "level_96",
+        "exits": [
+          {
+            "name": "level_96 -> level_97",
+            "connected_region": "level_97",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_96 -> level_82",
+            "connected_region": "level_82",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_97": {
+        "name": "level_97",
+        "exits": [
+          {
+            "name": "level_97 -> level_37__r9c36",
+            "connected_region": "level_37__r9c36",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_97 -> level_96",
+            "connected_region": "level_96",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_98": {
+        "name": "level_98",
+        "exits": [
+          {
+            "name": "level_98 -> level_99__r2c7",
+            "connected_region": "level_99__r2c7",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_98 -> level_93__r5c7",
+            "connected_region": "level_93__r5c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 098 - Chest",
+            "id": 30000043,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "level_99__r2c4": {
+        "name": "level_99__r2c4",
+        "exits": [
+          {
+            "name": "level_99__r2c4 -> level_99__r2c7",
+            "connected_region": "level_99__r2c7",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_99__r2c4 -> level_100__r2c3",
+            "connected_region": "level_100__r2c3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_99__r2c7": {
+        "name": "level_99__r2c7",
+        "exits": [
+          {
+            "name": "level_99__r2c7 -> level_99__r2c4",
+            "connected_region": "level_99__r2c4",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_99__r2c7 -> level_98",
+            "connected_region": "level_98",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_100__r2c3": {
+        "name": "level_100__r2c3",
+        "exits": [
+          {
+            "name": "level_100__r2c3 -> level_100__r4c10",
+            "connected_region": "level_100__r4c10",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_100__r2c3 -> level_99__r2c4",
+            "connected_region": "level_99__r2c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_100__r4c10": {
+        "name": "level_100__r4c10",
+        "exits": [
+          {
+            "name": "level_100__r4c10 -> level_100__r2c3",
+            "connected_region": "level_100__r2c3",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_100__r4c10 -> level_101__r4c2",
+            "connected_region": "level_101__r4c2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_101__r0c6": {
+        "name": "level_101__r0c6",
+        "exits": [
+          {
+            "name": "level_101__r0c6 -> level_101__r4c2",
+            "connected_region": "level_101__r4c2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire Wand Fusion"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_101__r4c2": {
+        "name": "level_101__r4c2",
+        "exits": [
+          {
+            "name": "level_101__r4c2 -> level_101__r0c6",
+            "connected_region": "level_101__r0c6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire Wand Fusion"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_101__r4c2 -> level_101__r4c9",
+            "connected_region": "level_101__r4c9",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Sword Fusion"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_101__r4c2 -> level_102__r5c3",
+            "connected_region": "level_102__r5c3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "L101 flag 0: lightpole@144,64 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Ghost Spear"
+              }
+            },
+            "item": {
+              "name": "L101 flag 0: lightpole@144,64 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L101:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 101,
+              "tag": 0,
+              "class": "lightpole",
+              "x": 144,
+              "y": 64
+            },
+            "action": {
+              "verb": "lit by a Spear thrust",
+              "item": "hasSpear"
+            },
+            "side": "level_101__r4c2",
+            "across": []
+          }
+        ]
+      },
+      "level_101__r4c9": {
+        "name": "level_101__r4c9",
+        "exits": [
+          {
+            "name": "level_101__r4c9 -> level_101__r4c2",
+            "connected_region": "level_101__r4c2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Sword Fusion"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_101__r4c9 -> level_102__r5c9",
+            "connected_region": "level_102__r5c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L101 flag 0: lightpole@144,64 cleared"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_102__r5c3": {
+        "name": "level_102__r5c3",
+        "exits": [
+          {
+            "name": "level_102__r5c3 -> level_103",
+            "connected_region": "level_103",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_102__r5c3 -> level_101__r4c2",
+            "connected_region": "level_101__r4c2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_102__r5c9": {
+        "name": "level_102__r5c9",
+        "exits": [
+          {
+            "name": "level_102__r5c9 -> level_101__r4c9",
+            "connected_region": "level_101__r4c9",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L101 flag 0: lightpole@144,64 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_103": {
+        "name": "level_103",
+        "exits": [
+          {
+            "name": "level_103 -> level_104",
+            "connected_region": "level_104",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_103 -> level_102__r5c3",
+            "connected_region": "level_102__r5c3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_104": {
+        "name": "level_104",
+        "exits": [
+          {
+            "name": "level_104 -> level_105",
+            "connected_region": "level_105",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_104 -> level_103",
+            "connected_region": "level_103",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_105": {
+        "name": "level_105",
+        "exits": [
+          {
+            "name": "level_105 -> level_106",
+            "connected_region": "level_106",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_105 -> level_104",
+            "connected_region": "level_104",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_106": {
+        "name": "level_106",
+        "exits": [
+          {
+            "name": "level_106 -> level_101__r4c2",
+            "connected_region": "level_101__r4c2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_106 -> level_105",
+            "connected_region": "level_105",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 106 - Ghostsword",
+            "id": 30000044,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Ghost Sword Fusion",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
       "Menu": {
         "name": "Menu",
         "exits": [
@@ -11378,9 +12048,17 @@
         "type": null,
         "max_count": 1
       },
+      "Ghost Sword Fusion": {
+        "name": "Ghost Sword Fusion",
+        "id": 30000004,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Green Key": {
         "name": "Green Key",
-        "id": 30000004,
+        "id": 30000005,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11388,7 +12066,7 @@
       },
       "Health": {
         "name": "Health",
-        "id": 30000005,
+        "id": 30000006,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11396,7 +12074,7 @@
       },
       "Light": {
         "name": "Light",
-        "id": 30000006,
+        "id": 30000007,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11404,7 +12082,7 @@
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
-        "id": 30000007,
+        "id": 30000008,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11412,7 +12090,7 @@
       },
       "Progressive Swim": {
         "name": "Progressive Swim",
-        "id": 30000008,
+        "id": 30000009,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11420,7 +12098,7 @@
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
-        "id": 30000009,
+        "id": 30000010,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11428,7 +12106,7 @@
       },
       "Purple Key": {
         "name": "Purple Key",
-        "id": 30000010,
+        "id": 30000011,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11436,7 +12114,7 @@
       },
       "Red Key": {
         "name": "Red Key",
-        "id": 30000011,
+        "id": 30000012,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11444,15 +12122,15 @@
       },
       "Seal": {
         "name": "Seal",
-        "id": 30000012,
+        "id": 30000013,
         "groups": [],
         "classification": "progression",
         "type": null,
-        "max_count": 20
+        "max_count": 22
       },
       "Totem Shard": {
         "name": "Totem Shard",
-        "id": 30000013,
+        "id": 30000014,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11460,7 +12138,7 @@
       },
       "Wand": {
         "name": "Wand",
-        "id": 30000014,
+        "id": 30000015,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11468,7 +12146,7 @@
       },
       "Yellow Key": {
         "name": "Yellow Key",
-        "id": 30000015,
+        "id": 30000016,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -11727,6 +12405,17 @@
         "type": "Event",
         "max_count": 1
       },
+      "L101 flag 0: lightpole@144,64 cleared": {
+        "name": "L101 flag 0: lightpole@144,64 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L58 flag 1: yeti@56,56 cleared": {
         "name": "L58 flag 1: yeti@56,56 cleared",
         "id": null,
@@ -11768,7 +12457,7 @@
   "itempool_counts": {
     "1": {
       "Progressive Sword": 2,
-      "Seal": 20,
+      "Seal": 22,
       "Red Key": 1,
       "Progressive Shield": 2,
       "Green Key": 1,
@@ -11783,6 +12472,7 @@
       "Yellow Key": 1,
       "Health": 1,
       "Dark Suit": 1,
+      "Ghost Sword Fusion": 1,
       "L0 flag 1: breakablerock@288,176 cleared": 1,
       "L0 flag 4: breakablerock@80,112 cleared": 1,
       "L12 flag 7: magicallock@32,864 cleared": 1,
@@ -11806,6 +12496,7 @@
       "L63 flag 6: lightpole@48,272 cleared": 1,
       "L63 flag 7: lightpole@112,272 cleared": 1,
       "L65 flag 0: lightpole@128,168 cleared": 1,
+      "L101 flag 0: lightpole@144,64 cleared": 1,
       "L58 flag 1: yeti@56,56 cleared": 1,
       "L16 flag 0: rope@32,16 cleared": 1,
       "L28 flag 0: rope@160,64 cleared": 1
@@ -11840,7 +12531,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-f4b9738e",
+      "atlas_id": "seedling-33a2d750",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -21653,6 +22344,17 @@
             "y": 9
           },
           "exits": [
+            {
+              "exit_id": "level_37__r9c36 -> level_97",
+              "x": 36,
+              "y": 9,
+              "side": null,
+              "exitName": "level_37__r9c36 -> level_97",
+              "targetRegion": "level_97",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_576_144"
+            },
             {
               "exit_id": "level_37__r9c36 -> level_37__r5c33",
               "x": 36,
@@ -52603,6 +53305,7 @@
               "activates": "lit_48_272",
               "at": "2,17",
               "event": "L63 flag 6: lightpole@48,272 cleared",
+              "side": "level_63__r10c2",
               "color": "#d8c84a"
             },
             "pole_112_272": {
@@ -52645,6 +53348,7 @@
               "activates": "lit_112_272",
               "at": "8,17",
               "event": "L63 flag 7: lightpole@112,272 cleared",
+              "side": "level_63__r6c9",
               "color": "#d8c84a"
             },
             "atlas_gate_0": {
@@ -53696,6 +54400,7 @@
               "activates": "lit_128_168",
               "at": "9,9",
               "event": "L65 flag 0: lightpole@128,168 cleared",
+              "side": "level_65__r0c8",
               "color": "#d8c84a"
             },
             "atlas_gate_0": {
@@ -55476,7 +56181,7 @@
         "playable_payload": {
           "width": 20,
           "height": 20,
-          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,0,1,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1,0,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,1,1,1,0,1,0,0,0,1,1,0,1,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,1,0,1,1,0,1,1,1,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1,0,1,1,1,0,0,1,0,0,0,1,1,1,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,1,1,1,1,0,0,0,1,0,1,1,0,0,0],
+          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,0,1,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1,0,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,1,1,1,0,1,0,0,0,1,1,0,1,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,1,0,1,1,0,1,1,1,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0,0,1,1,1,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,1,1,1,1,0,0,0,1,0,1,1,0,0,0],
           "entrance": {
             "x": 6,
             "y": 0
@@ -55536,6 +56241,17 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_304_256"
+            },
+            {
+              "exit_id": "level_71__r14c12 -> level_82",
+              "x": 12,
+              "y": 13,
+              "side": null,
+              "exitName": "level_71__r14c12 -> level_82",
+              "targetRegion": "level_82",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_10_17"
             }
           ],
           "obstacles": [
@@ -56442,7 +57158,7 @@
               "..A......A....A.AA..",
               ".......B......AAAAA.",
               "...............AAAA.",
-              ".......CC........A..",
+              ".......CC...D....A..",
               ".......CC...DD..AA..",
               ".C.....CC.......AA..",
               ".CC...CC..A.....AA.E",
@@ -56465,7 +57181,7 @@
               },
               "level_71__r14c12": {
                 "x": 12,
-                "y": 14
+                "y": 13
               },
               "level_71__r16c19": {
                 "x": 19,
@@ -60488,6 +61204,1642 @@
         "substrate": "maze",
         "shared_world": "level_80"
       },
+      "level_82": {
+        "substrate": "maze",
+        "shared_world": "level_82",
+        "playable_payload": {
+          "width": 20,
+          "height": 24,
+          "tiles": [0,0,0,0,0,0,0,1,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,1,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          "entrance": {
+            "x": 10,
+            "y": 17
+          },
+          "exits": [
+            {
+              "exit_id": "level_82 -> level_96",
+              "x": 9,
+              "y": 0,
+              "side": null,
+              "exitName": "level_82 -> level_96",
+              "targetRegion": "level_96",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_144_0"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 0,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 0,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 13,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 3,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 9,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 7,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 11,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 14,
+              "id": "lock_1"
+            },
+            {
+              "x": 15,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 20,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 21,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 22,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 17,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 23,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 19,
+              "y": 23,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 7,
+              "y": 3,
+              "id": "Seal",
+              "locationName": "Level 082 - King of Fire"
+            }
+          ],
+          "obstacleLib": {
+            "lock_1": {
+              "id": "lock_1",
+              "name": "lock (group 1)",
+              "kind": "door",
+              "clear_set": [
+                [
+                  "sw_1"
+                ]
+              ],
+              "color": "#3a7"
+            },
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Dark Suit",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Dark Suit"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "(Dark Suit AND (Progressive Sword OR Ghost Spear))",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Dark Suit"
+                    }
+                  },
+                  {
+                    "rule": "Or",
+                    "children": [
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Progressive Sword"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Ghost Spear"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
+              "name": "(Progressive Sword OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "buttons": [
+            {
+              "x": 12,
+              "y": 15,
+              "id": "button_1"
+            }
+          ],
+          "buttonLib": {
+            "button_1": {
+              "kind": "button",
+              "holds": "sw_1"
+            }
+          },
+          "shared_world": {
+            "key": "level_82",
+            "regions": [
+              "level_82"
+            ],
+            "rows": [
+              "AAAAAAA..A...AAAAAAA",
+              "AAAA.....AA...AAAAAA",
+              "AAAA.....AA....AAAAA",
+              "AAAAA..A.AA......AAA",
+              "AAAA..AA.AA.AA....AA",
+              "AAA...AAAAAAAA....AA",
+              "AAA.....AAAA....AAAA",
+              "AAA....AAAAAA.....AA",
+              "AA....AAAAAAAAA...AA",
+              "AA..AAAAAAAAAAAA..AA",
+              "AA..AAAAAAAAAAAA..AA",
+              "AA...AAAAAAAAAA...AA",
+              "AAA...AAAAAAAA...AAA",
+              "AAAA....AAAAA...AAAA",
+              "AAAAAA..AA..A..AAAAA",
+              "AAAAAA..AA..A.AAAAAA",
+              "AAAAAAA.AAAAA.AAAAAA",
+              "AAAAAAA..AAA..AAAAAA",
+              "AAAAAAA..AAA.AAAAAAA",
+              "AAAAAAA......AAAAAAA",
+              "AAAAAAAA....AAAAAAAA",
+              "AAAAAAAAAAAAAAAAAAAA",
+              "AAAAAAAAAAAAAAAAAAAA",
+              "AAAAAAAAAAAAAAAAAAAA"
+            ],
+            "entrances": {
+              "level_82": {
+                "x": 10,
+                "y": 17
+              }
+            },
+            "links": {}
+          },
+          "atlas_region": "level_82",
+          "level": 82,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
       "level_83": {
         "substrate": "maze",
         "playable_payload": {
@@ -63401,6 +65753,17 @@
           },
           "exits": [
             {
+              "exit_id": "level_93__r5c7 -> level_98",
+              "x": 7,
+              "y": 5,
+              "side": null,
+              "exitName": "level_93__r5c7 -> level_98",
+              "targetRegion": "level_98",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_112_80"
+            },
+            {
               "exit_id": "level_93__r5c7 -> level_93__r10c7",
               "x": 7,
               "y": 6,
@@ -63862,6 +66225,1674 @@
           ],
           "atlas_region": "level_95",
           "level": 95,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_96": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 5,
+          "height": 5,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,0,1,1],
+          "entrance": {
+            "x": 2,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_96 -> level_97",
+              "x": 2,
+              "y": 2,
+              "side": null,
+              "exitName": "level_96 -> level_97",
+              "targetRegion": "level_97",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_32_32"
+            },
+            {
+              "exit_id": "level_96 -> level_82",
+              "x": 2,
+              "y": 4,
+              "side": null,
+              "exitName": "level_96 -> level_82",
+              "targetRegion": "level_82",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_32_64"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 2,
+              "y": 4,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Dark Suit AND (Progressive Sword OR Ghost Spear))",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Dark Suit"
+                    }
+                  },
+                  {
+                    "rule": "Or",
+                    "children": [
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Progressive Sword"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Ghost Spear"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_96",
+          "level": 96,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_97": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 5,
+          "height": 5,
+          "tiles": [1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1],
+          "entrance": {
+            "x": 1,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_97 -> level_37__r9c36",
+              "x": 2,
+              "y": 1,
+              "side": null,
+              "exitName": "level_97 -> level_37__r9c36",
+              "targetRegion": "level_37__r9c36",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_32_16"
+            },
+            {
+              "exit_id": "level_97 -> level_96",
+              "x": 2,
+              "y": 3,
+              "side": null,
+              "exitName": "level_97 -> level_96",
+              "targetRegion": "level_96",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_32_48"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_97",
+          "level": 97,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_98": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 15,
+          "height": 13,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,0,0,0,1,1,0,0,1,1,1,1,0,0,1,0,0,0,0,0,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 4,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_98 -> level_99__r2c7",
+              "x": 7,
+              "y": 7,
+              "side": null,
+              "exitName": "level_98 -> level_99__r2c7",
+              "targetRegion": "level_99__r2c7",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_112_112"
+            },
+            {
+              "exit_id": "level_98 -> level_93__r5c7",
+              "x": 7,
+              "y": 12,
+              "side": null,
+              "exitName": "level_98 -> level_93__r5c7",
+              "targetRegion": "level_93__r5c7",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_112_192"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 7,
+              "y": 7,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 10,
+              "y": 2,
+              "id": "Seal",
+              "locationName": "Level 098 - Chest"
+            }
+          ],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Shield x2 OR Ghost Spear OR Progressive Sword OR Wand)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield",
+                      "count": 2
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_98",
+          "level": 98,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_99__r2c4": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 15,
+          "height": 13,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 4,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_99__r2c4 -> level_100__r2c3",
+              "x": 3,
+              "y": 6,
+              "side": null,
+              "exitName": "level_99__r2c4 -> level_100__r2c3",
+              "targetRegion": "level_100__r2c3",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_48_96"
+            },
+            {
+              "exit_id": "level_99__r2c4 -> level_99__r2c7",
+              "x": 5,
+              "y": 6,
+              "side": null,
+              "exitName": "level_99__r2c4 -> level_99__r2c7",
+              "targetRegion": "level_99__r2c7",
+              "targetExitId": "level_99__r2c7 -> level_99__r2c4",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r2c7"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 5,
+              "y": 6,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Sword OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 4,
+              "y": 6,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 6,
+              "dir": "E",
+              "gate": null
+            }
+          ],
+          "atlas_region": "level_99",
+          "atlas_sub_region": "r2c4",
+          "level": 99,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_99__r2c7": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 15,
+          "height": 13,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,1,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 7,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_99__r2c7 -> level_98",
+              "x": 7,
+              "y": 7,
+              "side": null,
+              "exitName": "level_99__r2c7 -> level_98",
+              "targetRegion": "level_98",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_112_112"
+            },
+            {
+              "exit_id": "level_99__r2c7 -> level_99__r2c4",
+              "x": 5,
+              "y": 6,
+              "side": null,
+              "exitName": "level_99__r2c7 -> level_99__r2c4",
+              "targetRegion": "level_99__r2c4",
+              "targetExitId": "level_99__r2c4 -> level_99__r2c7",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r2c4"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 5,
+              "y": 6,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Sword OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 6,
+              "y": 5,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 5,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 6,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 6,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            }
+          ],
+          "atlas_region": "level_99",
+          "atlas_sub_region": "r2c7",
+          "level": 99,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_100__r2c3": {
+        "substrate": "maze",
+        "shared_world": "level_100",
+        "playable_payload": {
+          "width": 23,
+          "height": 13,
+          "tiles": [0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,1,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,1,0,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+          "entrance": {
+            "x": 2,
+            "y": 6
+          },
+          "exits": [
+            {
+              "exit_id": "level_100__r2c3 -> level_99__r2c4",
+              "x": 3,
+              "y": 6,
+              "side": null,
+              "exitName": "level_100__r2c3 -> level_99__r2c4",
+              "targetRegion": "level_99__r2c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_48_96"
+            },
+            {
+              "exit_id": "level_100__r4c10 -> level_101__r4c2",
+              "x": 18,
+              "y": 6,
+              "side": null,
+              "exitName": "level_100__r4c10 -> level_101__r4c2",
+              "targetRegion": "level_101__r4c2",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_288_96"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 5,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 9,
+              "id": "rock_sword_spear"
+            },
+            {
+              "x": 4,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 10,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
+              "kind": "rock",
+              "clear_set": [],
+              "struck_by": [
+                "sword",
+                "spear"
+              ],
+              "color": "#7a6a55"
+            },
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "Progressive Swim x2",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim",
+                  "count": 2
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "action_lib": {
+            "sword": {
+              "item": "Progressive Sword",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "z",
+              "footprint": {
+                "N": [
+                  [
+                    -1,
+                    -1
+                  ],
+                  [
+                    0,
+                    -1
+                  ],
+                  [
+                    1,
+                    -1
+                  ],
+                  [
+                    -1,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "E": [
+                  [
+                    0,
+                    -1
+                  ],
+                  [
+                    1,
+                    -1
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ],
+                "S": [
+                  [
+                    -1,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    -1,
+                    1
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ],
+                "W": [
+                  [
+                    -1,
+                    -1
+                  ],
+                  [
+                    0,
+                    -1
+                  ],
+                  [
+                    -1,
+                    0
+                  ],
+                  [
+                    -1,
+                    1
+                  ],
+                  [
+                    0,
+                    1
+                  ]
+                ]
+              }
+            },
+            "spear": {
+              "item": "Ghost Spear",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "x",
+              "footprint": {
+                "N": [
+                  [
+                    0,
+                    -2
+                  ],
+                  [
+                    0,
+                    -1
+                  ]
+                ],
+                "E": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "S": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    0,
+                    2
+                  ]
+                ],
+                "W": [
+                  [
+                    -2,
+                    0
+                  ],
+                  [
+                    -1,
+                    0
+                  ]
+                ]
+              }
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 5,
+              "y": 1,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 3,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 3,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 3,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 4,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 4,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 4,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 6,
+              "y": 4,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 4,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 4,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 5,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 5,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 5,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 5,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 6,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 6,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 6,
+              "y": 8,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 8,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 6,
+              "y": 9,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 9,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 3,
+              "y": 10,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 10,
+              "dir": "E",
+              "gate": null
+            }
+          ],
+          "shared_world": {
+            "key": "level_100",
+            "regions": [
+              "level_100__r2c3",
+              "level_100__r4c10"
+            ],
+            "rows": [
+              ".......................",
+              ".......................",
+              "...AA..A...............",
+              "...A...................",
+              "..AA......BB...........",
+              "..AA.....BBBB....BBB...",
+              "..AA.....BBBBBBBBBBB...",
+              "..A......BBBB....BBB...",
+              ".........BBB...........",
+              ".........BB............",
+              ".......................",
+              ".......................",
+              "......................."
+            ],
+            "entrances": {
+              "level_100__r2c3": {
+                "x": 2,
+                "y": 6
+              },
+              "level_100__r4c10": {
+                "x": 10,
+                "y": 4
+              }
+            },
+            "links": {
+              "level_100__r2c3>level_100__r4c10": "level_100__r2c3 -> level_100__r4c10",
+              "level_100__r4c10>level_100__r2c3": "level_100__r4c10 -> level_100__r2c3"
+            }
+          },
+          "atlas_region": "level_100",
+          "level": 100,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_100__r4c10": {
+        "substrate": "maze",
+        "shared_world": "level_100"
+      },
+      "level_101__r0c6": {
+        "substrate": "maze",
+        "shared_world": "level_101",
+        "playable_payload": {
+          "width": 23,
+          "height": 20,
+          "tiles": [0,0,1,1,1,1,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,0,0,1,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,0,0,0,1,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,1,1,0,1,1,0,0,0,1,0,0,1,1,1,0,0,1,1,1,1,1,0,1,1,1,0,1,1,0,0,0,1,0,0,1,0,0,0,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1,0,0,1,1,0,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          "entrance": {
+            "x": 6,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_101__r4c2 -> level_102__r5c3",
+              "x": 3,
+              "y": 6,
+              "side": null,
+              "exitName": "level_101__r4c2 -> level_102__r5c3",
+              "targetRegion": "level_102__r5c3",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_48_96"
+            },
+            {
+              "exit_id": "level_101__r4c9 -> level_102__r5c9",
+              "x": 9,
+              "y": 6,
+              "side": null,
+              "exitName": "level_101__r4c9 -> level_102__r5c9",
+              "targetRegion": "level_102__r5c9",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_144_96"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 6,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 5,
+              "id": "pole_144_64"
+            },
+            {
+              "x": 9,
+              "y": 6,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 14,
+              "y": 6,
+              "id": "rock_ghostsword"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "pole_144_64": {
+              "id": "pole_144_64",
+              "name": "lightpole@144,64",
+              "kind": "pole",
+              "clear_set": [
+                [
+                  "lit_144_64"
+                ]
+              ],
+              "struck_by": [
+                "spear",
+                "ghostsword"
+              ],
+              "struck_from": {
+                "spear": [
+                  "7,4,E",
+                  "9,4,E",
+                  "9,4,N",
+                  "9,4,W",
+                  "9,5,N"
+                ],
+                "ghostsword": [
+                  "9,4,E",
+                  "9,4,N",
+                  "9,4,W",
+                  "9,5,E",
+                  "9,5,N",
+                  "9,5,W"
+                ]
+              },
+              "activates": "lit_144_64",
+              "at": "10,5",
+              "event": "L101 flag 0: lightpole@144,64 cleared",
+              "side": "level_101__r4c2",
+              "color": "#d8c84a"
+            },
+            "rock_ghostsword": {
+              "id": "rock_ghostsword",
+              "name": "rock (ghostsword)",
+              "kind": "rock",
+              "clear_set": [],
+              "struck_by": [
+                "ghostsword"
+              ],
+              "color": "#7a6a55"
+            },
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Fire Wand Fusion AND Wand AND Fire)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Fire Wand Fusion"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Fire"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "L101 flag 0: lightpole@144,64 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L101 flag 0: lightpole@144,64 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "action_lib": {
+            "spear": {
+              "item": "Ghost Spear",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "z",
+              "footprint": {
+                "N": [
+                  [
+                    0,
+                    -2
+                  ],
+                  [
+                    0,
+                    -1
+                  ]
+                ],
+                "E": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    2,
+                    0
+                  ]
+                ],
+                "S": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    0,
+                    2
+                  ]
+                ],
+                "W": [
+                  [
+                    -2,
+                    0
+                  ],
+                  [
+                    -1,
+                    0
+                  ]
+                ]
+              }
+            },
+            "ghostsword": {
+              "rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Sword Fusion"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  }
+                ]
+              },
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "x",
+              "footprint": {
+                "N": [
+                  [
+                    -1,
+                    -1
+                  ],
+                  [
+                    0,
+                    -1
+                  ],
+                  [
+                    1,
+                    -1
+                  ],
+                  [
+                    -1,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "E": [
+                  [
+                    0,
+                    -1
+                  ],
+                  [
+                    1,
+                    -1
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ],
+                "S": [
+                  [
+                    -1,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    -1,
+                    1
+                  ],
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    1
+                  ]
+                ],
+                "W": [
+                  [
+                    -1,
+                    -1
+                  ],
+                  [
+                    0,
+                    -1
+                  ],
+                  [
+                    -1,
+                    0
+                  ],
+                  [
+                    -1,
+                    1
+                  ],
+                  [
+                    0,
+                    1
+                  ]
+                ]
+              }
+            }
+          },
+          "shared_world": {
+            "key": "level_101",
+            "regions": [
+              "level_101__r0c6",
+              "level_101__r4c2",
+              "level_101__r4c9"
+            ],
+            "rows": [
+              "......AA...............",
+              "......AA...............",
+              "......AA...............",
+              ".......................",
+              "..BBB.BB.C..C..........",
+              "..BBB.BB.CCCC..........",
+              "..BBB.BB.C.CCC.BBBB....",
+              "..BBB.BB...CC.....B....",
+              "..BBB.BB.CCCC.....B....",
+              "....B.BB..C.......B....",
+              "....B.BB..........B....",
+              "....B.BB..........B....",
+              "....B.B...........B....",
+              "....BBB...........B....",
+              "....BBB...........B....",
+              "....BBBBBBBBBBBBBBB....",
+              ".......................",
+              ".......................",
+              ".......................",
+              "......................."
+            ],
+            "entrances": {
+              "level_101__r0c6": {
+                "x": 6,
+                "y": 1
+              },
+              "level_101__r4c2": {
+                "x": 18,
+                "y": 15
+              },
+              "level_101__r4c9": {
+                "x": 9,
+                "y": 6
+              }
+            },
+            "links": {
+              "level_101__r0c6>level_101__r4c2": "level_101__r0c6 -> level_101__r4c2",
+              "level_101__r4c2>level_101__r0c6": "level_101__r4c2 -> level_101__r0c6",
+              "level_101__r4c2>level_101__r4c9": "level_101__r4c2 -> level_101__r4c9",
+              "level_101__r4c9>level_101__r4c2": "level_101__r4c9 -> level_101__r4c2"
+            }
+          },
+          "atlas_region": "level_101",
+          "level": 101,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_101__r4c2": {
+        "substrate": "maze",
+        "shared_world": "level_101"
+      },
+      "level_101__r4c9": {
+        "substrate": "maze",
+        "shared_world": "level_101"
+      },
+      "level_102__r5c3": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 15,
+          "height": 13,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 3,
+            "y": 5
+          },
+          "exits": [
+            {
+              "exit_id": "level_102__r5c3 -> level_103",
+              "x": 0,
+              "y": 6,
+              "side": null,
+              "exitName": "level_102__r5c3 -> level_103",
+              "targetRegion": "level_103",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_96"
+            },
+            {
+              "exit_id": "level_102__r5c3 -> level_101__r4c2",
+              "x": 4,
+              "y": 6,
+              "side": null,
+              "exitName": "level_102__r5c3 -> level_101__r4c2",
+              "targetRegion": "level_101__r4c2",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_64_96"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_102",
+          "atlas_sub_region": "r5c3",
+          "level": 102,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_102__r5c9": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 15,
+          "height": 13,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 9,
+            "y": 5
+          },
+          "exits": [
+            {
+              "exit_id": "level_102__r5c9 -> level_101__r4c9",
+              "x": 10,
+              "y": 6,
+              "side": null,
+              "exitName": "level_102__r5c9 -> level_101__r4c9",
+              "targetRegion": "level_101__r4c9",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_160_96"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 10,
+              "y": 6,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(L101 flag 0: lightpole@144,64 cleared OR Ghost Spear)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L101 flag 0: lightpole@144,64 cleared"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_102",
+          "atlas_sub_region": "r5c9",
+          "level": 102,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_103": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 20,
+          "height": 19,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 2,
+            "y": 3
+          },
+          "exits": [
+            {
+              "exit_id": "level_103 -> level_104",
+              "x": 0,
+              "y": 4,
+              "side": null,
+              "exitName": "level_103 -> level_104",
+              "targetRegion": "level_104",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_64"
+            },
+            {
+              "exit_id": "level_103 -> level_102__r5c3",
+              "x": 19,
+              "y": 9,
+              "side": null,
+              "exitName": "level_103 -> level_102__r5c3",
+              "targetRegion": "level_102__r5c3",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_304_144"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_103",
+          "level": 103,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_104": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 10,
+          "height": 10,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 0,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_104 -> level_105",
+              "x": 0,
+              "y": 1,
+              "side": null,
+              "exitName": "level_104 -> level_105",
+              "targetRegion": "level_105",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_16"
+            },
+            {
+              "exit_id": "level_104 -> level_103",
+              "x": 9,
+              "y": 8,
+              "side": null,
+              "exitName": "level_104 -> level_103",
+              "targetRegion": "level_103",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_144_128"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_104",
+          "level": 104,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_105": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 15,
+          "height": 10,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,0,0,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 2,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_105 -> level_106",
+              "x": 5,
+              "y": 9,
+              "side": null,
+              "exitName": "level_105 -> level_106",
+              "targetRegion": "level_106",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_80_144"
+            },
+            {
+              "exit_id": "level_105 -> level_104",
+              "x": 14,
+              "y": 4,
+              "side": null,
+              "exitName": "level_105 -> level_104",
+              "targetRegion": "level_104",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_224_64"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_105",
+          "level": 105,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_106": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 20,
+          "height": 10,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 16,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "level_106 -> level_101__r4c2",
+              "x": 4,
+              "y": 3,
+              "side": null,
+              "exitName": "level_106 -> level_101__r4c2",
+              "targetRegion": "level_101__r4c2",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_64_48"
+            },
+            {
+              "exit_id": "level_106 -> level_105",
+              "x": 16,
+              "y": 0,
+              "side": null,
+              "exitName": "level_106 -> level_105",
+              "targetRegion": "level_105",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_256_0"
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 4,
+              "y": 4,
+              "id": "Ghost Sword Fusion",
+              "locationName": "Level 106 - Ghostsword"
+            }
+          ],
+          "obstacleLib": {},
+          "atlas_region": "level_106",
+          "level": 106,
           "tile_size": 16,
           "origin": {
             "x": 0,
@@ -65586,10 +69617,22 @@
             }
           },
           "new_accessible_locations": [
+            "L101 flag 0: lightpole@144,64 cleared",
             "Level 063 - Chest",
-            "Level 080 - Chest"
+            "Level 080 - Chest",
+            "Level 082 - King of Fire",
+            "Level 098 - Chest",
+            "Level 106 - Ghostsword"
           ],
           "new_accessible_regions": [
+            "level_100__r2c3",
+            "level_100__r4c10",
+            "level_101__r4c2",
+            "level_102__r5c3",
+            "level_103",
+            "level_104",
+            "level_105",
+            "level_106",
             "level_37__r9c36",
             "level_63__r5c14",
             "level_63__r6c15",
@@ -65600,8 +69643,14 @@
             "level_80__r6c4",
             "level_80__r8c1",
             "level_80__r8c4",
+            "level_82",
             "level_93__r10c7",
-            "level_93__r5c7"
+            "level_93__r5c7",
+            "level_96",
+            "level_97",
+            "level_98",
+            "level_99__r2c4",
+            "level_99__r2c7"
           ],
           "sphere_locations": [
             "Level 079 - Darksuit"
@@ -65616,16 +69665,16 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "Seal": 1
+              "L101 flag 0: lightpole@144,64 cleared": 1
             },
             "resolved_items": {
-              "Seal": 1
+              "L101 flag 0: lightpole@144,64 cleared": 1
             }
           },
           "new_accessible_locations": [],
           "new_accessible_regions": [],
           "sphere_locations": [
-            "Level 063 - Chest"
+            "L101 flag 0: lightpole@144,64 cleared"
           ]
         }
       }
@@ -65646,7 +69695,94 @@
           "new_accessible_locations": [],
           "new_accessible_regions": [],
           "sphere_locations": [
+            "Level 063 - Chest"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
             "Level 080 - Chest"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 082 - King of Fire"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 098 - Chest"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Ghost Sword Fusion": 1
+            },
+            "resolved_items": {
+              "Ghost Sword Fusion": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [
+            "level_101__r4c9",
+            "level_102__r5c9"
+          ],
+          "sphere_locations": [
+            "Level 106 - Ghostsword"
           ]
         }
       }

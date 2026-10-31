@@ -210,7 +210,10 @@ describe('⛓ G0 — the `regionGeometry` slot', () => {
      * room: `exits_placed` carry no `tile_position`). Both sets are DERIVED —
      * the second by DRIVING every entry's own `generateRegionCore` once — never
      * typed; the law is not the field under test, so a mutant that drops or
-     * adds a declaration cannot filter itself out.
+     * adds a declaration cannot filter itself out. ⛓ Cloudberry P2a: a third
+     * population, the CONTENT library substrates — regions only from a library
+     * (`instantiateLibraryEntry`, no `generateRegionCore`), assembled by
+     * `assembleZoneRegion` on synthetic side exits (cloudberry has no zone table).
      */
     it('the entries that declare sides are exactly the zone games (`extractZoneRules`) and the '
         + 'procedural cores that place no exit on a tile; every other entry reads tiles', () => {
@@ -224,9 +227,12 @@ describe('⛓ G0 — the `regionGeometry` slot', () => {
             });
             return core.exits_placed.length === 2 && core.exits_placed.every((p) => !p.tile_position);
         }).map((e) => e.id);
+        const contentLibraries = ENTRIES.filter((e) => typeof e.instantiateLibraryEntry === 'function'
+            && typeof e.generateRegionCore !== 'function').map((e) => e.id);
         expect(zoneGames.length).toBeGreaterThan(0);
         expect(tileFreeCores.length).toBeGreaterThan(0);
-        expect(sides.sort()).toEqual([...zoneGames, ...tileFreeCores].sort());
+        expect(contentLibraries.filter((id) => !zoneGames.includes(id)).length).toBeGreaterThan(0);
+        expect(sides.sort()).toEqual([...new Set([...zoneGames, ...tileFreeCores, ...contentLibraries])].sort());
         expect(geometryOf(substrateRegistry.get('maze'))).toBe(REGION_GEOMETRY.TILES);
     });
 });
@@ -309,8 +315,12 @@ describe('⛓ M3 — the `exitSides` slot', () => {
             expect(geometryOf(entry), entry.id).toBe(REGION_GEOMETRY.SIDES);
             expect(exitSidesOf(entry).decl.keys.includes('params.sidePortals'), entry.id).toBe(declaresPortalMap(entry));
         }
-        // a declaration that keys nothing relabels nothing: its relabel is the identity, and a clone
-        for (const entry of withoutMap) {
+        // a declaration that keys nothing relabels nothing: its relabel is the identity, and a clone.
+        // ⛓ Cloudberry P2a: a map-less declaration MAY key something else (cloudberry keys its
+        // back-exit side and its authored portal locks), so the law is read off the keys.
+        const keyingNothing = withoutMap.filter((e) => exitSidesOf(e).decl.keys.length === 0);
+        expect(keyingNothing.length).toBeGreaterThan(0);
+        for (const entry of keyingNothing) {
             const { decl } = exitSidesOf(entry);
             expect(decl.keys, entry.id).toEqual([]);
             const payload = { exits: [{ exit_id: 'a', side: 'N' }], nested: { side: 'N' } };

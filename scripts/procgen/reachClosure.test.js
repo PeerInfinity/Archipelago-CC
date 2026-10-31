@@ -418,21 +418,42 @@ describe('R9 P3: the DATA reach — the population a code-import closure cannot 
      * both pinned: the tape INDEX's stem (`index`, a token half the tree
      * spells) and substring collisions between `r8-solve-1` and its
      * ten/eleven siblings. This row reds if either comes back.
+     *
+     * ⛓ seedling-js-cloud-landings (2026-10-30): THE CEILING IS RELATIVE NOW, not `< 60`. The hard-coded 60 was
+     * crossed by two LEGITIMATE consumers, not by either regression: `hammerDashWindow.test.js` (hammer DASH) took
+     * the reach to 59 and `jsRuntimeContinuation.test.js` (seedling-js-replay-continuation) to 60 — and the next
+     * consumer would have redded main the same way. So each regression is now measured against its OWN naive
+     * answer, computed here over the same candidates (`git ls-files *.test.js *.test.mjs`, read with
+     * `readFileSync` as `dataReach` reads them):
+     *   · `naive` — plain `includes` over the 22 stems AND `index`, the first draft's rule (166 then);
+     *   · `substring` — plain `includes` over the 22 stems alone (the index already excluded).
+     * Measured that day: precise = 60, naive = 434, substring = 70, over 1062 candidates (~1 s).
+     * ⛔ MUTANTS, both red at THIS bound: re-admitting the `index` stem in `dataReach` (→ 344, against a ceiling of
+     * 217; the `toHaveLength(22)` above reds first, at 23), and swapping its token match for `text.includes` (→ 70,
+     * which is not < 70).
      */
     it('⛔⛔ the thirteen series names do NOT drag in the whole tree (the 166 row)', () => {
-        const series = ['r8-d2', 'r8-d2-19', 'r8-d2-20', 'r8-solve-1', 'r8-solve-10',
+        const stems = ['r8-d2', 'r8-d2-19', 'r8-d2-20', 'r8-solve-1', 'r8-solve-10',
             'r8-solve-11', 'r8-solve-18', 'r8-solve-2', 'r8-solve-20', 'r8-solve-3',
             'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r8-solve-7', 'r8-solve-8',
             'r8-solve-9', 'r9-solve-0', 'r9-solve-11', 'r9-solve-13', 'r9-solve-14',
-            'r9-solve-2', 'r9-solve-3']
-            .map((n) => `frontend/modules/seedlingDemo/fixtures/tapes/${n}.json`);
+            'r9-solve-2', 'r9-solve-3'];
+        const series = stems.map((n) => `frontend/modules/seedlingDemo/fixtures/tapes/${n}.json`);
         const d = dataReach([...series,
             'frontend/modules/seedlingDemo/fixtures/tapes/index.json'], { repo: REPO });
         expect(d.labels).toHaveLength(22);          // the index is excluded, by name
         // non-vacuity in both directions: it finds real consumers…
         expect(d.tests.length).toBeGreaterThan(10);
-        // …and it does not find the whole tree. 166 was the naive answer.
-        expect(d.tests.length).toBeLessThan(60);
+        // …and it does not find the whole tree: each naive answer, over the same candidates.
+        const texts = execFileSync('git', ['ls-files', '--', '*.test.js', '*.test.mjs'],
+            { cwd: REPO, encoding: 'utf8' }).split('\n').filter(Boolean).map((f) => {
+            try { return readFileSync(join(REPO, f), 'utf8'); } catch { return ''; }
+        });
+        const naiveOver = (names) => texts.filter((t) => names.some((n) => t.includes(n))).length;
+        const naive = naiveOver([...stems, 'index']);
+        const substring = naiveOver(stems);
+        expect(d.tests.length).toBeLessThan(naive / 2);      // the index stem stays out
+        expect(d.tests.length).toBeLessThan(substring);      // the token match is strictly tighter
         // every one of them is a seedling-side or procgen-side test, not a stray
         for (const t of d.tests) {
             expect(t).toMatch(/^(?:frontend\/modules\/seedlingDemo|scripts\/procgen)\//);

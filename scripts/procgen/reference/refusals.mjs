@@ -124,6 +124,16 @@ const REFUSAL_SOURCES = [
             + 'on both pages, and the ELEMENTS CENSUS counts them',
     },
     {
+        id: 'chest-door',
+        title: 'The CHEST DOOR — a chest in the only gap of a wall, opened from the south',
+        kind: 'constant',
+        constant: 'CHEST_DOOR_REFUSALS',
+        names: M.chestDoor.CHEST_DOOR_REFUSALS,
+        file: SOURCES.chestDoor,
+        channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
+            + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
         id: 'open-chamber',
         title: 'The OPEN CHAMBER element',
         kind: 'constant',

@@ -1,0 +1,80 @@
+0 done None solver 183 None "level_0__r7c6 -> level_2" 0
+1 done None solver 47 None "level_2 -> level_3__r0c4" 2
+2 done None solver 245 None "level_3__r0c4 -> level_4" 3
+3 done None solver 255 None "level_4 -> level_5__r1c5" 4
+4 done None solver 403 None "level_5__r1c5 -> level_6" 5
+5 done None solver 294 None "level_6 -> level_7" 6
+6 done None solver 146 None "level_7 -> level_8" 7
+7 done None solver 827 None "level_8 -> level_9" 8
+8 done None solver 122 None "level_9 -> level_10" 9
+9 done None solver 35 None "Level 010 - Sword" 10
+10 done None solver 11 None "level_10 -> level_11" 10
+11 done None solver 12 None "Level 011 - Chest" 11
+12 done None solver 22 None "level_11 -> level_3__r8c6" 11
+13 done None solver 152 None "level_3__r0c4 -> level_2" 3
+14 done None solver 23 None "level_2 -> level_0__r7c6" 2
+15 done None solver 111 None "level_0__r7c6 -> level_86" 0
+16 done None solver 23 None "Level 086 - Chest" 86
+17 done None solver 16 None "level_86 -> level_0__r7c6" 86
+18 done None solver 199 None "level_0__r11c19 -> level_12__r0c19" 0
+19 done None solver 475 None "level_12__r0c19 -> level_36" 12
+20 done None solver 72 None "Level 036 - Chest" 36
+21 done None solver 77 None "level_36 -> level_12__r0c19" 36
+22 done None solver 371 None "level_12__r0c19 -> level_0__r11c19" 12
+23 done None solver 215 None "level_0__r7c6 -> level_13" 0
+24 done None solver 36 None "level_13 -> level_14" 13
+25 done None solver 116 None "level_14 -> level_15__r1c5" 14
+26 done None solver 456 None "level_15__r1c9 -> level_16__r1c1" 15
+27 done None solver 112 None "L16 flag 0: rope@32,16 cleared" 16
+28 done None solver 161 None "level_16__r1c9 -> level_17" 16
+29 done None solver 17 None "Level 017 - Chest" 17
+30 done None solver 46 None "level_17 -> level_16__r3c7" 17
+31 done None solver 544 None "level_16__r4c21 -> level_18__r1c1" 16
+32 done None solver 410 None "level_18__r7c10 -> level_19__r5c5" 18
+33 interrupted None solver 508 None "Level 019 - Boss Key 0" 19
+34 done None solver 92 None "Level 019 - Boss Key 0" 19
+35 done None solver 185 None "level_19__r1c1 -> level_20__r1c4" 19
+36 done None solver 99 None "Level 020 - Shield" 20
+37 done None solver 452 None "level_20__r3c1 -> level_13" 20
+38 done None solver 48 None "level_13 -> level_0__r7c6" 13
+39 done None solver 229 None "level_0__r11c19 -> level_12__r0c19" 0
+40 done None solver 2564 None "level_12__r0c37 -> level_21" 12
+41 done None solver 26 None "level_21 -> level_22" 21
+42 done None solver 113 None "level_22 -> level_25" 22
+43 done None solver 57 None "Level 025 - Chest" 25
+44 done None solver 51 None "level_25 -> level_22" 25
+45 done None solver 201 None "level_22 -> level_29__r2c2" 22
+46 done None solver 128 None "Level 029 - Boss Key 1" 29
+47 done None solver 67 None "level_29__r2c2 -> level_31__r5c24" 29
+48 done None solver 341 None "level_31__r24c10 -> level_30__r2c10" 31
+49 done None solver 160 None "Level 030 - Torchpickup" 30
+50 done None solver 213 None "level_30__r8c13 -> level_32" 30
+51 done None solver 818 None "Level 032 - Bob Boss" 32
+52 done None solver 196 None "level_32 -> level_30__r2c10" 32
+53 done None solver 313 None "level_30__r0c4 -> level_22" 30
+54 done None solver 219 None "level_22 -> level_21" 22
+55 done None solver 31 None "level_21 -> level_23" 21
+56 done None solver 11 None "level_23 -> level_24" 23
+57 done None solver 124 None "level_24 -> level_12__r40c4" 24
+58 done None solver 2635 None "Level 012 - Chest" 12
+59 done None solver 1444 None "level_12__r0c37 -> level_37__r12c6" 12
+60 done None solver 373 None "level_37__r0c18 -> level_38" 37
+61 done None solver 324 None "Level 038 - Chest" 38
+62 fallback None None None None "level_38 -> level_37__r0c18" 38
+63 done None solver 4 None "level_38 -> level_37__r0c18" 38
+64 done None solver 365 None "level_37__r12c6 -> level_44__r6c4" 37
+65 done None solver 212 None "level_44__r0c4 -> level_45__r0c7" 44
+66 done None solver 273 None "level_45__r0c7 -> level_46__r0c11" 45
+67 done None solver 222 None "level_46__r0c11 -> level_47__r2c9" 46
+68 done None solver 266 None "level_47__r2c9 -> level_48__r18c7" 47
+69 done None solver 430 None "level_48__r2c10 -> level_49" 48
+70 done None solver 70 None "Level 049 - Conch" 49
+71 done None solver 50 None "level_0__r7c6 -> level_13" 0
+72 done None solver 36 None "level_13 -> level_14" 13
+73 done None solver 117 None "level_14 -> level_15__r1c5" 14
+74 done None solver 185 None "Level 015 - Chest" 15
+75 done None solver 160 None "level_15__r1c5 -> level_14" 15
+76 done None solver 55 None "level_14 -> level_13" 14
+77 done None solver 48 None "level_13 -> level_0__r7c6" 13
+78 done None solver 228 None "level_0__r11c19 -> level_12__r0c19" 0
+79 done None solver 1790 None "level_12__r0c37 -> level_37__r12c6" 12

@@ -241,9 +241,19 @@ export const WASM_STAGES = Object.freeze([
  * stages for the WASM TAIL, unchanged: `tape → running → finished → drain →
  * verdict` (`JS_REPLAY_STAGES`), its per-tick verdict JS FRAME vs JS MODEL. The
  * other arms (SOLVE, MANUAL, GENERATE, EDIT) still ship a SPOT for live play —
- * `spot → play`, as Phase A. ⛔ One window only: the JS frame has no
- * continuation (`botStart` always rebuilds), so a sequence refuses by name
- * (`js-sequence-unsupported`) rather than be re-booted per window.
+ * `spot → play`, as Phase A.
+ *
+ * ⛓⛓ seedling-js-replay-continuation — AND A SEQUENCE CHAINS, through the SAME
+ * window loop. The JS core's `botStart` now continues where the game would not
+ * rebuild (`Bot.as:1843-1846`) and models P4E's `hold`, so a JS replay of N
+ * windows takes the wasm tail's stage list (`tape k/N … boundary k/N`) with a
+ * per-window verdict JS frame vs JS model. Where the JS transport parts from the
+ * wasm one, it parts BY NAME: the boundary's live world is the frame's
+ * `botJsLatch` (`director.jsLiveEnvelope` over the frame's own run — the game's
+ * `botSeam` envelope is an LFSR-and-seam latch the JS model does not keep), and
+ * a continuation window ships `gameVisibleTape`, NOT `continuationTape` (its
+ * tick-0 write is a game-side latch the JS model never applies — measured, see
+ * `jsRuntimeSequence.js`).
  */
 export const JS_STAGES = Object.freeze(['probe', 'runtime', 'start', 'levels', 'spot', 'play']);
 /** ⛓ PHASE B — a JS REPLAY ship's stages: the shared head, then the wasm tail. */
@@ -405,7 +415,8 @@ export const END_STATE_TOLERANCE = 0;
  */
 export function stagesOf({ levelSet = null, windows = 1, transport = 'wasm', replay = false } = {}) {
     // ⛓ LAB L3: the JS transport's own list, filtered by the SAME data rule (⛓ PHASE B: a replay's list).
-    if (transport === 'js') {
+    // ⛓ seedling-js-replay-continuation: a JS replay of N > 1 windows takes the sequence list below, unchanged.
+    if (transport === 'js' && !(replay && windows > 1)) {
         return (replay ? JS_REPLAY_STAGES : JS_STAGES).filter((s) => s !== 'levels' || Boolean(levelSet));
     }
     /**
@@ -600,6 +611,25 @@ export function continuationTape(tape) {
         tick0Missing: false,
         forwardRows,
     };
+}
+
+/**
+ * ⛓ WHAT `botLoadTape` RECEIVES FOR WINDOW `k` — `shipToFrame`'s window loop, stated once so a pin can hold it.
+ * Window 1 is `gameVisibleTape`; a continuation is `continuationTape`, and ⛓ seedling-js-replay-continuation: the JS
+ * frame takes that projection WITHOUT the tick-0 write (see the `JS_STAGES` docblock).
+ *
+ * ⛓ seedling-js-cloud-landings (lab review note 2): the JS arm keeps `continuationTape`'s `forwardRows`, and that is
+ * exact, not stale. `forwardRows` is read off `tape.persistence`'s TIMED rows only (`continuationTape`, before its
+ * `tick0` branch, returned unchanged on both its paths), so the tick-0 write cannot move it; and the tape the JS arm
+ * ships withholds the SAME rows (`gameVisibleTape` drops a timed row entirely, ⚖ ruling 23), so they ARE what was
+ * not handed over. Recomputing from `gameVisibleTape` would read `[]` — the rows are already gone. Pinned in
+ * `watchWasmJs.test.js`.
+ */
+export function windowProjection(wTape, k, js) {
+    const projected = k > 0 ? continuationTape(wTape) : { tape: gameVisibleTape(wTape),
+        tick0Applied: null, tick0Missing: false, forwardRows: [] };
+    if (js && k > 0) Object.assign(projected, { tape: gameVisibleTape(wTape), tick0Applied: null });
+    return projected;
 }
 
 /**
@@ -1375,7 +1405,10 @@ async function shipToFrame(payload, host, transport) {
         : null;
     // ⛓ LAB L3: a JS frame holds nothing for a successor — there is no tape.
     // ⛓ PHASE B: a JS REPLAY takes the wasm tail, which reads `state.hold` — a hold the JS runtime cannot make.
-    state.hold = js ? (replay ? { build: null, capable: false, why: 'the JS runtime declares no `hold`' } : null)
+    // ⛓ seedling-js-replay-continuation: …and a JS SEQUENCE holds — the core models P4E (`jsRuntimeCore` `holding`).
+    state.hold = js ? (replay ? (windows.length > 1
+        ? { build: null, capable: true, why: 'the JS core models `hold` (Bot.as P4E, :3326-3328)' }
+        : { build: null, capable: false, why: 'the JS runtime declares no `hold`' }) : null)
         : (windows.length > 1 ? holdCapabilityOf(manifest, wasmPage)
         : { build: buildNameFromWasmPath(wasmPage), capable: false,
             why: 'a single window has no successor to hold for' });
@@ -1512,11 +1545,7 @@ async function shipToFrame(payload, host, transport) {
     }
 
     // ⛓ LAB L3: the transports part here — a JS ship that is not a replay plays live from its spot.
-    // ⛓ PHASE B: a JS REPLAY takes the wasm tail below, for ONE window (the JS frame has no continuation).
-    if (js && replay && windows.length > 1) {
-        return refuse('tape', 'js-sequence-unsupported', `${windows.length} windows — the JS frame's botStart `
-            + 'always rebuilds, so a continuation would be a re-boot reported as one');
-    }
+    // ⛓ PHASE B: a JS REPLAY takes the wasm tail below (⛓ seedling-js-replay-continuation: every window of it).
     if (js && !replay) {
         return playInJs({
             payload, host, state, enter, refuse, until, win, botJson,
@@ -1603,14 +1632,16 @@ async function shipToFrame(payload, host, transport) {
 
             let blocks = null;
             let blocksWhy = null;
-            const env = botJson('botSeam');
+            const env = js ? null : botJson('botSeam');
             try {
-                blocks = segmentBootFromLatch(env);
+                if (!js) blocks = segmentBootFromLatch(env);
             } catch (e) {
                 blocksWhy = { all: 'the live world\'s latch could not be turned into tape '
                     + `blocks — ${e.message}` };
             }
-            const live = {
+            // ⛓ seedling-js-replay-continuation: the JS frame's own latch, already in the admission's vocabulary.
+            const jsLatch = js ? botJson('botJsLatch') : null;
+            const live = jsLatch ?? {
                 level: blocks ? blocks.boot.level : atRest?.level,
                 ctor: blocks ? { x: blocks.boot.x, y: blocks.boot.y } : null,
                 cleared: blocks ? blocks.persistence : (atRest?.persistence_cleared ?? null),
@@ -1734,8 +1765,7 @@ async function shipToFrame(payload, host, transport) {
          */
         rec.hold = state.hold.capable && k < windows.length - 1;
         const wTape = rec.hold ? holdingWindowTape(w.tape) : w.tape;
-        const projected = k > 0 ? continuationTape(wTape) : { tape: gameVisibleTape(wTape),
-            tick0Applied: null, tick0Missing: false, forwardRows: [] };
+        const projected = windowProjection(wTape, k, js);
         rec.forwardRows = projected.forwardRows;
         /**
          * ⛓ `{seed, cosmetic, fp, time, declared, bootCost, obeysBootCost}`

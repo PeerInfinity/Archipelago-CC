@@ -58,6 +58,16 @@
  *     bridge relays the eventBus event `substrate:hostRequest`
  *     {region, request} for the active region, and the substrate's own host
  *     module answers it (Noiz2sa: the player chose the exit to leave by).
+ *   - Checked locations (optional): a game with
+ *     __swfBridge.setCheckedLocations(flashNames) is handed the region's
+ *     checked objective ids (the host's checked snapshot, through
+ *     ap_locations) after configure and on every snapshot change, so it can
+ *     redraw a collected objective as checked (Cloudberry: the check coin's
+ *     outline). configure's `checkedLocations` seeds the same set at load.
+ *   - A late game side: a page that creates __swfBridge.configure only after
+ *     it has booted (Cloudberry's .NET runtime takes seconds) is waited for —
+ *     a loadRegion that arrives first is held and applied once configure
+ *     exists (polled; given up on loudly after LATE_GAME_SIDE_MS).
  *
  * The loadRegion event name is read from the iframe URL's
  * `loadRegionEvent` query param (set by the panel's iframeSrc), so
@@ -471,6 +481,54 @@ function _handlePlaybackControl(payload) {
 // Region loading
 // ────────────────────────────────────────────────────────────────
 
+// A loadRegion that arrived before the game created __swfBridge.configure
+// (see the header): held, and re-applied by a poll once configure exists.
+const LATE_GAME_SIDE_MS = 180000;
+const LATE_GAME_SIDE_POLL_MS = 200;
+let _pendingLoad = null;
+let _pendingLoadTimer = null;
+
+function _awaitGameSide(payload) {
+    _pendingLoad = payload;
+    if (_pendingLoadTimer) return;
+    const since = Date.now();
+    log('info', `__swfBridge.configure not there yet; holding region ${payload.region_id} until it is`);
+    _pendingLoadTimer = setInterval(() => {
+        if (!_pendingLoad) { clearInterval(_pendingLoadTimer); _pendingLoadTimer = null; return; }
+        if (typeof _bridge()?.configure === 'function') {
+            clearInterval(_pendingLoadTimer);
+            _pendingLoadTimer = null;
+            const held = _pendingLoad;
+            _pendingLoad = null;
+            _handleLoadRegion(held);
+        } else if (Date.now() - since > LATE_GAME_SIDE_MS) {
+            clearInterval(_pendingLoadTimer);
+            _pendingLoadTimer = null;
+            log('warn', '__swfBridge.configure never appeared; game not configured for region', _pendingLoad.region_id);
+            _pendingLoad = null;
+        }
+    }, LATE_GAME_SIDE_POLL_MS);
+}
+
+/** The active region's objective ids the host has checked (ap_locations inverted). */
+function _checkedFlashNames() {
+    const checked = _hostCheckedNames();
+    return Object.entries(_world?.ap_locations ?? {})
+        .filter(([, apName]) => checked.has(apName))
+        .map(([flashName]) => flashName);
+}
+
+/** Hand the game the checked objective ids (optional contract method). */
+function _pushCheckedLocations() {
+    const b = _bridge();
+    if (!b || typeof b.setCheckedLocations !== 'function') return;
+    try {
+        b.setCheckedLocations(_checkedFlashNames());
+    } catch (err) {
+        log('error', 'setCheckedLocations threw:', err);
+    }
+}
+
 function _handleLoadRegion(payload) {
     if (!payload || !payload.region_id) {
         log('warn', `${LOAD_REGION_EVENT} with no region_id`, payload);
@@ -501,9 +559,10 @@ function _handleLoadRegion(payload) {
 
     const b = _bridge();
     if (!b || typeof b.configure !== 'function') {
-        log('warn', '__swfBridge.configure missing; game not configured for region', regionId);
+        _awaitGameSide(payload);
         return;
     }
+    _pendingLoad = null;
     try {
         b.configure({
             gameId: world.gameId ?? null,
@@ -528,6 +587,7 @@ function _handleLoadRegion(payload) {
     // states for any rule-gated portals/pickups.
     _pollItemsIntoGame();
     _pushGateStates();
+    _pushCheckedLocations();
     // STARTING items are applied to the worker at world load — BEFORE this
     // iframe subscribed — so, unlike location-checked items, they fire no
     // stateManager:snapshotUpdated this bridge can hear, and the cached
@@ -585,6 +645,7 @@ async function main() {
             _locationReports.noteHostChecked(_hostCheckedNames());
             _pollItemsIntoGame();
             _pushGateStates();
+            _pushCheckedLocations();
         }
     });
 

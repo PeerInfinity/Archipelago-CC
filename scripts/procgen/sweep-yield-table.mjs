@@ -422,6 +422,8 @@ if (CELL !== '') {
             elements: (REQUIRE && ELEMENTS === undefined) ? undefined : ELEMENTS_EFFECTIVE,
             areas: AREAS,
             items: palette.items ?? null,
+            /** ⛓ seedling-gen-new-biomes (C4) — the biome's extra flood terrains (`caldera`'s melt). */
+            floodWalks: palette.floodWalks,
             require: REQUIRE ?? undefined,
             wrapOracle: wrap,
         });

@@ -1,0 +1,40 @@
+# box lock: TAKEN by probe-seedling-encounter-ticks.mjs (browser, pid 885) — head 9dadbdfc4, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+INFO: apb-l32-fresh-no-fire: 10437 page answers, 870 sampled tick(s) of 869; shifts that fit every player x/y: []
+t0   G p(80,128 v0,0) F0D0 - | M p(80,128 v0,0) F0D0 -
+t1   G p(80,127.2 v0,-0.8) F0D0 - | M p(80,127.2 v0,-0.8) F0D0 -
+t2   G p(80,125.85 v0,-1.35) F0D0 - | M p(80,125.85 v0,-1.35) F0D0 -
+t3   G p(80,124.75 v0,-1.1) F0D0 - | M p(80,124.75 v0,-1.1) F0D0 -
+t4   G p(80,123.9 v0,-0.85) F0D0 - | M p(80,123.9 v0,-0.85) F0D0 -
+t5   G p(80,122.5 v0,-1.4) F0D0 - | M p(80,122.5 v0,-1.4) F0D0 -
+t6   G p(80,121.35 v0,-1.15) F0D0 - | M p(80,121.35 v0,-1.15) F0D0 -
+t7   G p(80,120.45 v0,-0.9) F0D0 - | M p(80,120.45 v0,-0.9) F0D0 -
+t8   G p(80,119 v0,-1.45) F0D0 - | M p(80,119 v0,-1.45) F0D0 -
+t9 ⛔ G p(80,119 v0,-1.45) F0D0 - | M p(80,117.8 v0,-1.2) F0D0 - pend{"form":0}
+t10   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t11   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t12   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t13   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t14   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t15   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t16   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t17   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t18   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t19   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t20   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t21   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t22   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t23   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t24   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t25   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t26   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t27   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t28   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t29   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+t30   G p(80,116.85 v0,-0.95) F0D0 BobBoss(80,80 v0,0) BobBossNPC(80,80 v0,0) | M p(80,116.85 v0,-0.95) F0D0 f0(80,80 v0,0 h0/0)
+INFO: the drained stream: 870 obs, worst |Δ| 0, first off null
+INFO: first SAMPLED tick off the model (a sample may straddle a frozen frame): 9
+INFO: item flips (sampled ticks) — game {}, model {}
+INFO: clears (first tick) — {32:1} game t9 (prev sample t8) / model never; {32:3} game t778 (prev sample t777) / model t778; {32:4} game t839 (prev sample t839) / model t839
+INFO: at finished — game hasFire false hasDarkSword false; model hasFire false hasDarkSword false
+wrote /tmp/claude-0/-home-user-Archipelago-CC/2bb9f566-80fd-51a8-8010-6b7465fc542d/scratchpad/enc.json

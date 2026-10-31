@@ -47,6 +47,7 @@ import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { ROAM } from './elements/roam.js';
 import { ROPE_GATE } from './elements/ropeGate.js';
+import { CHEST_DOOR } from './elements/chestDoor.js';
 import {
     CORRIDOR_BODY, ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT,
     WATERFALL_GATE,
@@ -468,6 +469,33 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'lane-crossing arm OFF; a certificate that tanks an arrow is refused.',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasSword']),
+        meetsRequire: false,
+    }),
+    /**
+     * ⛓⛓⛓ **THE CHEST DOOR — A CHEST IN THE ONLY GAP OF A WALL** (seedling gen
+     * content B2; ⚖ the user 2026-10-30: chests as DOORS now, each door chest
+     * an AP location; loot and goal chests later). The chest is a main-path
+     * cut, opened from the cell BELOW it (the game's trigger line), with a
+     * carved pocket when the corridor meets the wall east–west.
+     *
+     * ⛓ `needs: []` — opening a chest takes no item (`Chest.update` fires on
+     * the player's box crossing its line). Measured both biomes: the design
+     * probe's `door-south` SOLVED pre-sword and post-sword, and the generated
+     * witness certifies `[chest, collect]` in both.
+     *
+     * Placed LAST so no head moves in `ELEMENT_NAMES`. It ships OPT-IN, as the
+     * rope gate does. ⛔ `meetsRequire: false`: it needs no item, so it can
+     * never be a `require` head's answer, and being in no `+` list moves no
+     * room a default or directive run builds today.
+     */
+    chestdoor: Object.freeze({
+        element: CHEST_DOOR,
+        why: 'The CHEST DOOR (seedling gen B2, the L38 pattern): a `chest` standing in a '
+            + 'main-path cut, opened from the cell directly below it. Certified only by a plan '
+            + 'that OPENS the chest (`[chest, …]`); a certificate that reaches the goal without '
+            + 'it is refused. Its seal piece is an AP location.',
+        extra: Object.freeze([]),
+        needs: Object.freeze([]),
         meetsRequire: false,
     }),
 });

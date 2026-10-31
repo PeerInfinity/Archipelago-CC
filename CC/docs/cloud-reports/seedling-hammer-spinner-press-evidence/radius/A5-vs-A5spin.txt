@@ -1,0 +1,62 @@
+358/0	SOLVED 5	SOLVED 5	0535c35ae8db	0535c35ae8db	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+359/0	SOLVED 75	SOLVED 75	991b7e2fcc6f	991b7e2fcc6f	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+361/0	SOLVED 70	SOLVED 70	13f0b0244a50	13f0b0244a50	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+362/0	SOLVED 5	SOLVED 5	0776f2b6baad	0776f2b6baad	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+363/0	SOLVED 1558	SOLVED 1558	14efd912c9f2	14efd912c9f2	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+364/0	SOLVED 5	SOLVED 5	0535c35ae8db	0535c35ae8db	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+365/0	SOLVED 70	SOLVED 70	4f15e87d2d99	4f15e87d2d99	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+366/0	REFUSED	REFUSED	6ae6e6ba295b	6ae6e6ba295b	same	{"on":true,"asked":48,"certified":18,"envelope":16,"exhausted":0,"noClaim":14}
+367/0	SOLVED 172	SOLVED 172	23bc1aba8850	23bc1aba8850	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+368/0	SOLVED 4	SOLVED 4	b973be6dc3cf	b973be6dc3cf	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+369/0	SOLVED 861	SOLVED 861	11dc8924a4a7	11dc8924a4a7	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+370/0	SOLVED 913	SOLVED 913	ef65c44f9910	ef65c44f9910	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+371/0	SOLVED 1025	SOLVED 1025	742b7cab7bf9	742b7cab7bf9	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+372/0	SOLVED 1088	SOLVED 1088	64d950626e1f	64d950626e1f	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+373/0	SOLVED 844	SOLVED 844	d776e0fe8a8c	d776e0fe8a8c	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+374/0	SOLVED 955	SOLVED 955	22c379a1ea87	22c379a1ea87	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+374/1	SOLVED 955	SOLVED 955	22c379a1ea87	22c379a1ea87	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+375/0	REFUSED	REFUSED	918e176c5ea1	918e176c5ea1	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+375/1	REFUSED	REFUSED	918e176c5ea1	918e176c5ea1	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+376/0	REFUSED	REFUSED	1bbc0e5044ed	1bbc0e5044ed	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+376/1	REFUSED	REFUSED	1bbc0e5044ed	1bbc0e5044ed	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+377/0	SOLVED 828	SOLVED 828	a222d1db1226	a222d1db1226	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+378/0	SOLVED 938	SOLVED 938	1fde79b855da	1fde79b855da	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+378/1	SOLVED 938	SOLVED 938	1fde79b855da	1fde79b855da	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+379/0	SOLVED 809	SOLVED 809	4c6ce52ad40f	4c6ce52ad40f	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+380/0	SOLVED 909	SOLVED 909	91767a3c5f35	91767a3c5f35	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+380/1	SOLVED 909	SOLVED 909	91767a3c5f35	91767a3c5f35	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+381/0	SOLVED 494	SOLVED 494	8bc59cfa3fb0	8bc59cfa3fb0	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+382/0	SOLVED 1468	SOLVED 1395	9afa5a4a38a9	5073e02845c2	MOVED	{"on":true,"asked":24,"certified":14,"envelope":4,"exhausted":0,"noClaim":6}
+   base: gm=true kills ["spinner@880,848","spinner@880,848"]
+   arm:  gm=true hits=[] kills ["spinner@880,848","spinner@880,848"]
+383/0	REFUSED	REFUSED	5ef26e7cad6c	5ef26e7cad6c	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+384/0	SOLVED 5	SOLVED 5	0535c35ae8db	0535c35ae8db	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+385/0	SOLVED 417	SOLVED 417	cfe39855ce60	cfe39855ce60	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+386/0	SOLVED 416	SOLVED 416	eeadb3e660b6	eeadb3e660b6	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+387/0	SOLVED 480	SOLVED 480	45bb551d24a8	45bb551d24a8	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+388/0	SOLVED 642	SOLVED 642	3cc78d324fe4	3cc78d324fe4	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+389/0	SOLVED 718	SOLVED 718	9e96d381be9f	9e96d381be9f	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+390/0	SOLVED 482	SOLVED 482	ba8335120b53	ba8335120b53	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+391/0	SOLVED 527	SOLVED 527	f8b1bc540538	f8b1bc540538	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+392/0	SOLVED 598	SOLVED 598	54c50e3386cd	54c50e3386cd	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+393/0	SOLVED 637	SOLVED 637	b7605a0c799d	b7605a0c799d	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+394/0	SOLVED 340	SOLVED 340	f700bb6b81c9	f700bb6b81c9	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+395/0	SOLVED 476	SOLVED 476	883724adf39e	883724adf39e	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+396/0	SOLVED 433	SOLVED 433	865c94fde976	865c94fde976	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+397/0	SOLVED 499	SOLVED 499	6b8de0e2e2b7	6b8de0e2e2b7	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+398/0	SOLVED 118	SOLVED 118	e24e6c9138e8	e24e6c9138e8	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+399/0	REFUSED	REFUSED	bb8c0aa9c749	bb8c0aa9c749	same	{"on":true,"asked":16,"certified":8,"envelope":6,"exhausted":0,"noClaim":2}
+400/0	REFUSED	REFUSED	9150f6612a5b	9150f6612a5b	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+401/0	SOLVED 5	SOLVED 5	ff449e3386a6	ff449e3386a6	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+402/0	SOLVED 4	SOLVED 4	b973be6dc3cf	b973be6dc3cf	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+404/0	SOLVED 4	SOLVED 4	b973be6dc3cf	b973be6dc3cf	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+405/0	SOLVED 96	SOLVED 96	2cd5b25e894e	2cd5b25e894e	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+860/0	REFUSED	REFUSED	27cd3718c4e8	27cd3718c4e8	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+860/1	REFUSED	REFUSED	7b47e03bd5b0	7b47e03bd5b0	same	{"on":true,"asked":12,"certified":8,"envelope":2,"exhausted":0,"noClaim":2}
+861/0	REFUSED	REFUSED	27cd3718c4e8	27cd3718c4e8	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+861/1	REFUSED	REFUSED	514f09479a99	514f09479a99	same	{"on":true,"asked":12,"certified":8,"envelope":2,"exhausted":0,"noClaim":2}
+862/0	SOLVED 2269	SOLVED 2269	1e412e021252	1e412e021252	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+863/0	SOLVED 1054	SOLVED 1054	5790b7de720f	5790b7de720f	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+863/1	SOLVED 389	SOLVED 389	0d85ae24063c	0d85ae24063c	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+876/0	SOLVED 808	SOLVED 808	604b8f866a82	604b8f866a82	same	{"on":true,"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+# 1 mover(s) of 59; base 47 SOLVED, arm 47 SOLVED

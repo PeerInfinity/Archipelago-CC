@@ -24,12 +24,18 @@
  *   ⛓ seedling-gen-ropegate: a generated ROPE GATE room (`?elements=ropegate`, post-sword) certifies, holds its trap
  *   and rope, and draws the trap in sprites.
  *
+ *   ⛓ seedling-gen-chestdoor: a generated CHEST DOOR room (`?elements=chestdoor`, pre-sword) certifies, holds one
+ *   tagged chest, and draws the chest in sprites (the `solids` family).
+ *
  *   ⛓ gen-biomes-1: the generate arm's LOOK select — one generated room in every look, the canvas's floor and
  *   wall pixels following each look's COLUMN (stills `look-<name>.png`) — and the four new item presets boot.
  *
  *   ⛓ gen-terrains: one generated room per walk-changing terrain (ice, stairs, ghost step, lava, igneous), art
  *   on, the terrain's canvas pixels unlike the floor's (stills `terrain-<name>.png`), and the `#genTerrains`
  *   select offering each biome's `TERRAIN_OFFERS`.
+ *
+ *   ⛓ gen-new-biomes: one generated room per new biome (caldera, frozen-forge, flooded-ruins), art on, in its own
+ *   look, each of its terrains' canvas pixels unlike the looked floor's (stills `biome-<name>.png`).
  *
  * Prereqs: a dev server at the REPO ROOT. SKIPs (exit 0) without one, like its siblings.
  * Run: node scripts/procgen/check-seedling-lab-art.mjs [--host=http://localhost:8000] [--shots=<dir>]
@@ -333,6 +339,43 @@ async function main() {
         await page.close();
     }
 
+    // ── ⛓ seedling-gen-chestdoor: a generated CHEST DOOR room, art on ──
+    //
+    // The generate arm with `?elements=chestdoor` (pre-sword: a chest takes no item): the room holds ONE `chest` with
+    // its own tag (its persistence and its AP check address), in the only gap of a wall, and it certifies (the stance
+    // below the chest is the unit rows' to pin, `procgenChestDoor.test.js`). The chest has a skin
+    // (`seedling:puzzlement/chest`, the `solids` family).
+    console.log('\n## chestdoor — a generated chest door room');
+    for (const mode of ['on', 'off']) {
+        const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+        const errors = [];
+        page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+        await page.goto(`${PAGE}?source=generate&seed=1&biome=pre-sword&elements=chestdoor${mode === 'off' ? '&art=off' : ''}`,
+            { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction((want) => {
+            const a = window.__labArt;
+            return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                && (want === 'off' ? a.drawn === null : a.drawn !== null);
+        }, mode, { timeout: 180000 }).catch(() => {});
+        await page.waitForTimeout(1200);
+        const { art, payload } = await page.evaluate(() => ({ art: window.__labArt ?? null,
+            payload: window.__watch?.payload ? { certified: window.__watch.payload.certified,
+                entities: window.__watch.payload.level.entities } : null }));
+        if (mode === 'on') {
+            const chest = (payload?.entities ?? []).filter((e) => e.type === 'chest');
+            check(payload?.certified === true && chest.length === 1 && Number(chest[0].attrs?.tag) >= 0,
+                'chestdoor: the generated room CERTIFIES and holds ONE tagged chest',
+                JSON.stringify({ certified: payload?.certified, chest }));
+            check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && (art.drawn.families?.solids ?? 0) > 0,
+                'chestdoor: drawn in sprites, the chest among them (`solids` family)', JSON.stringify(art?.drawn));
+        } else {
+            check(art?.drawn === null, 'chestdoor ?art=off: the rectangles', JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+        }
+        if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-chestdoor${mode === 'off' ? '-off' : ''}.png`) });
+        check(errors.length === 0, `chestdoor (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+        await page.close();
+    }
+
     // ── ⛓ seedling-gen-biomes-1 (C1 + C2): the generate arm's LOOK select and the four new item presets ──
     //
     // One generated room (seed 1, pre-sword), redrawn in every look with the art on. The record's own GROUND and
@@ -520,6 +563,81 @@ async function main() {
                     'the #genTerrains select offers each biome\'s TERRAIN_OFFERS (none, each, all) and is disabled where there are none',
                     JSON.stringify(offers));
             }
+            await p.close();
+        }
+    }
+
+    // ── ⛓ seedling-gen-new-biomes (C4): the three new biomes, one generated room each, art on, own look ──
+    //
+    // Each room is seed 4, whose six-obstacle ladder paints the biome's own terrains (measured with `generateStep`
+    // before this row was written). The arm draws it in the biome's OWN look; each terrain's cells are averaged off
+    // the CANVAS and must differ from the LOOKED floor's (the look must not hide the terrain: a caldera crust on its
+    // dark floor, an ice sheet on the forge's blue tile).
+    console.log('\n## gen-new-biomes — the generate arm offers and draws caldera, frozen-forge and flooded-ruins');
+    {
+        const R = new URL('../../frontend/modules/seedlingDemo/', import.meta.url).href;
+        const { TERRAIN } = await import(`${R}procgenLevel.js`);
+        const DIFFER = 12;
+        const ROOMS = [
+            { biome: 'caldera', seed: 4, terrains: ['melt', 'lava'] },
+            { biome: 'frozen-forge', seed: 4, terrains: ['ice', 'lava'] },
+            { biome: 'flooded-ruins', seed: 4, terrains: ['water', 'pit'] },
+        ];
+        let listed = false;
+        for (const room of ROOMS) {
+            const p = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errs = [];
+            p.on('pageerror', (e) => errs.push(`pageerror: ${e.message}`));
+            await p.goto(`${PAGE}?source=generate&seed=${room.seed}&biome=${room.biome}&count=6&tries=8&k=3&run=1`,
+                { waitUntil: 'domcontentloaded' });
+            const g = await p.waitForFunction(() => (window.__editorGenerate?.status === 'ok'
+                && window.__editorGenerate.step === 6 && window.__labArt?.drawn !== null ? window.__editorGenerate : null),
+            null, { timeout: 180000 }).then((h) => h.jsonValue()).catch(() => null);
+            await p.waitForTimeout(800);
+            if (!listed) {
+                listed = true;
+                const options = await p.$$eval('#genBiome option', (os) => os.map((o) => o.value));
+                check(ROOMS.every((r) => options.includes(r.biome)),
+                    'the generate arm\'s biome select lists the three new biomes', options.join(', '));
+            }
+            check(g?.status === 'ok' && g.biome === room.biome && g.look === room.biome && errs.length === 0,
+                `${room.biome}: the room builds to step 6 and draws in its own look`,
+                JSON.stringify(g && { status: g.status, step: g.step, biome: g.biome, look: g.look }) + errs.slice(0, 1).join(''));
+            const record = await p.evaluate(() => window.__editorGenerated?.level ?? null);
+            const cells = { floor: [] };
+            for (const t of room.terrains) cells[t] = [];
+            for (const [tx, ty, px] of record?.layers?.[0]?.tiles ?? []) {
+                const col = px / 16;
+                if (col === TERRAIN.ground.column) cells.floor.push([tx, ty]);
+                for (const t of room.terrains) if (col === TERRAIN[t].column) cells[t].push([tx, ty]);
+            }
+            const colours = await p.evaluate(({ cells, w }) => {
+                const c = document.getElementById('canvas');
+                const s = c.width / w;
+                const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+                const out = {};
+                for (const [cls, list] of Object.entries(cells)) {
+                    const sum = [0, 0, 0];
+                    let n = 0;
+                    for (const [tx, ty] of list) {
+                        for (let y = Math.round((ty + 0.25) * s); y < Math.round((ty + 0.75) * s); y += 1) {
+                            for (let x = Math.round((tx + 0.25) * s); x < Math.round((tx + 0.75) * s); x += 1) {
+                                const i = (y * c.width + x) * 4;
+                                sum[0] += d[i]; sum[1] += d[i + 1]; sum[2] += d[i + 2]; n += 1;
+                            }
+                        }
+                    }
+                    out[cls] = sum.map((v) => v / Math.max(1, n));
+                }
+                return out;
+            }, { cells, w: record?.width ?? 1 });
+            for (const t of room.terrains) {
+                const delta = Math.hypot(...colours[t].map((v, i) => v - colours.floor[i]));
+                check(cells[t].length > 0 && cells.floor.length > 0 && delta >= DIFFER,
+                    `${room.biome}: the record holds ${cells[t].length} ${t} cell(s) and the canvas draws them unlike `
+                    + `the biome's looked floor (Δ ≥ ${DIFFER})`, `Δ ${delta.toFixed(1)}`);
+            }
+            if (SHOTS) await p.locator('#canvas').screenshot({ path: join(SHOTS, `biome-${room.biome}.png`) });
             await p.close();
         }
     }

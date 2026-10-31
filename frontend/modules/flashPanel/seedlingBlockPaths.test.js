@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { blockCrossingCost, blockHolderSearch, blockHolderVerdict, selfHoldTiles } from './seedlingBlockPaths.js';
+import { blockCrossingCost, blockHolderSearch, blockHolderVerdict, blockPushSearch, selfHoldTiles } from './seedlingBlockPaths.js';
 import { anyOf, buildSeedlingRegionGrid, conditionKey, entitySemantics, flag } from './seedlingSemantics.js';
 import { ropeEventCondition } from './seedlingObstacleEvents.js';
 import {
@@ -374,5 +374,23 @@ describe('blockCrossingCost — the far side behind a pushed block', () => {
         const thrust = { N: [[0, -1], [0, -2]], E: [[1, 0], [2, 0]], S: [[0, 1], [0, 2]], W: [[-1, 0], [-2, 0]] };
         // Pushed W from [6,1] across the pit [5,1]; the player cannot follow it, so the far side stays out of reach.
         expect(cost(r, { stances: thrust, start: [6, 1], goal: WEST }).sets).toEqual([]);
+    });
+
+    // ⛓ RULES rules-block-stoppers — the one search, exported for the census: every cell the block stood on, and the
+    // fatal tiles it was pushed onto.
+    it('blockPushSearch with no goal: the cells the block stands on and the pit it is pushed into', () => {
+        const r = corridor();
+        const search = (stoppers) => blockPushSearch(r.grid, {
+            block: { tx: 4, ty: 1, condition: SPEAR }, stances: behind, stoppers, tileTypes: r.tileTypes, keyOf: conditionKey,
+            held: [conditionKey(SPEAR)],
+        }, r.at(5, 1), null);
+        const tiles = (set) => [...set].map((i) => [i % 7, Math.floor(i / 7)]).sort((a, b) => a[0] - b[0]);
+        const free = search([]);
+        expect(free.ok).toBe(false);
+        expect(tiles(free.cells)).toEqual([[2, 1], [3, 1], [4, 1]]);
+        expect(tiles(free.fatal)).toEqual([[1, 1]]);
+        const parked = search([{ tx: 2, ty: 1, keys: [], label: 'darktrap' }]);
+        expect(tiles(parked.cells)).toEqual([[3, 1], [4, 1]]);
+        expect(parked.fatal.size).toBe(0);
     });
 });

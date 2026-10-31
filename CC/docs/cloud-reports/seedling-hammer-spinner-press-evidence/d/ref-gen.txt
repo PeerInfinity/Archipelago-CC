@@ -1,0 +1,44 @@
+[centralRegistry] CentralRegistry initialized
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:247:25)
+    at new StateManagerProxy (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:115:10)
+    at file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async loadRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:99:17)
+    at async buildRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:214:36)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/generate-procgen-reference.mjs:104:18
+[discoveryState] [DiscoveryState] Constructed
+PASS: urlGrammar.js is what the code says
+PASS: catalogue.js is what the code says
+PASS: refusals.js is what the code says
+PASS: registry.js is what the code says
+PASS: instruments.js is what the code says
+FAIL: docsIndex.js DIFFERS from what the code says
+  line 28
+    on disk:         "lines": 33619,
+    the code:         "lines": 33621,
+  line 30
+    on disk:         "words": 476741
+    the code:         "words": 477034
+  line 337
+    on disk:             "lines": 773,
+    the code:             "lines": 775,
+  line 347
+    on disk:             "words": 41184
+    the code:             "words": 41477
+PASS: capabilities.js is what the code says
+PASS: docs/json/developer/procgen/substrate-registry.md § GENERATED:substrate-capability-matrix is what the code says
+PASS: docs/json/developer/procgen/architecture.md § GENERATED:procgen-instruments is what the code says
+FAIL: docs/json/developer/procgen/README.md § GENERATED:procgen-docs-index DIFFERS from what the code says
+  region line 1
+    on disk: **28 documents · 4 pages · 476,741 words.**
+    the code: **28 documents · 4 pages · 477,034 words.**
+  region line 27
+    on disk: | [The Seedling Real-Game Bot](./seedling-bot.md) | How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md). | 41184 |
+    the code: | [The Seedling Real-Game Bot](./seedling-bot.md) | How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md). | 41477 |
+PASS: docs/json/developer/procgen/seedling-bot-log.md § GENERATED:campaign-chain is what the code says
+PASS: docs/json/features/procgen-substrates.md § GENERATED:substrate-capability-chart is what the code says
+
+2 GENERATED MODULE(S)/REGION(S) DIFFER — run the generator with no --check
+rc=1

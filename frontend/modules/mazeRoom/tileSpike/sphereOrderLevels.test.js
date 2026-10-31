@@ -370,3 +370,32 @@ describe('L91 — the waterfall teleporter row, priced Swim×2 on both sides', (
         expect(fall).toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim', count: 2 } });
     }, 180_000);
 });
+
+/**
+ * ⛓ SPHERE 10.2 (session tile-primitives-sphere-order-11, ⚖ 2026-10-30 "All 12", "Producer's side, all poles"): L82 L96–L106.
+ *   - L101: the rules light its pole through a wall, a Spear thrust from (7,4) in r4c2 — a stance on neither side of its DarkTrap
+ *     (10,5) — and PLACE its event there (`playthroughInRoomPoleEvents`). The pole entry carried no side, so its event was owned
+ *     by the DarkTrap's cell (r4c9): r4c2's location went unpriced and r4c9 priced one AP does not have. Every in-room pole entry
+ *     now carries the producer's place as `side` (L63's and L65's name the region their cell already gave them).
+ */
+describe('L100–L102 — L101\'s pole event is priced where the rules place it', () => {
+    const LV = ['level_100', 'level_101', 'level_102'];
+    const F0 = 'L101 flag 0: lightpole@144,64 cleared';
+
+    it('L100–L102 certify clean; the event is r4c2\'s, a thrust from its stance (Ghost Spear)', () => {
+        const rules = compile(LV);
+        const e = rules.preset_sidecars['1'].level_101__r0c6.playable_payload.obstacleLib.pole_144_64; // the shared world's holder
+        expect(e).toMatchObject({ kind: 'pole', at: '10,5', event: F0, side: 'level_101__r4c2' });
+        const out = certify(LV);
+        expect(out.problems).toEqual([]);
+        expect(line(out, `level_101__r4c2@${F0}=`)).toBe(JSON.stringify([['Ghost Spear']]));
+        expect(out.lines.some((l) => l.startsWith(`level_101__r4c9@${F0}`))).toBe(false);
+    }, 180_000);
+
+    it('a mutant pole entry with no side is caught: the event goes back to the DarkTrap\'s sub-region', () => {
+        const rules = structuredClone(compile(LV));
+        for (const sc of Object.values(rules.preset_sidecars['1'])) delete sc.playable_payload?.obstacleLib?.pole_144_64?.side;
+        const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS, regions: ['level_101__r4c2', 'level_101__r4c9'] });
+        expect(out.problems).toContain(`level_101__r4c2: location ${F0} is not priced`);
+    }, 180_000);
+});

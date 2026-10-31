@@ -87,6 +87,9 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * whose `pulls` are the producer's own discs (⚖ "Forced pull, rules' disc"). Sphere 9.10 (session tile-primitives-sphere-order-10,
  * ⚖ 2026-10-30 "All 4"): L76–L79 — L79's Dark Suit prices L80's pulls in the preset; L77 is one level world with its one trap; L78's
  * one step into two discs goes to the trap whose disc the walk enters first (⚖ "First range entered": the producer's `yields`).
+ * Sphere 10.2 (session tile-primitives-sphere-order-11, ⚖ 2026-10-30 "All 12"): L82 L96–L106 — L101's pole is lit through a wall
+ * from r4c2, so its event is that sub-region's location: every in-room pole entry carries the producer's place (⚖ "Producer's side,
+ * all poles").
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
@@ -96,9 +99,10 @@ export const LEVELS = Object.freeze([
     'level_47', 'level_48', 'level_49', 'level_50', 'level_51', 'level_52', 'level_53', 'level_54', 'level_55', 'level_56', 'level_57', 'level_58',
     'level_59', 'level_60', 'level_61', 'level_62', 'level_63', 'level_64', 'level_65', 'level_66', 'level_67', 'level_68', 'level_69',
     'level_70', 'level_71', 'level_72', 'level_73', 'level_74', 'level_75', 'level_76', 'level_77', 'level_78', 'level_79', 'level_80',
-    'level_83', 'level_84', 'level_85', 'level_86',
+    'level_82', 'level_83', 'level_84', 'level_85', 'level_86',
     'level_87', 'level_88', 'level_89', 'level_90', 'level_91', 'level_92', 'level_93', 'level_94',
-    'level_95',
+    'level_95', 'level_96', 'level_97', 'level_98', 'level_99', 'level_100', 'level_101', 'level_102', 'level_103', 'level_104',
+    'level_105', 'level_106',
 ]);
 
 /**

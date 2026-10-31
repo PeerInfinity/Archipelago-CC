@@ -38,6 +38,7 @@ export const LIBRARY_V1_SUBSTRATES = Object.freeze({
     maze: 'procedural',
     bounce: 'content',
     runner: 'content',
+    cloudberry: 'content',
 });
 
 const VALID_SIDES = new Set(['N', 'E', 'S', 'W']);

@@ -3966,6 +3966,7 @@ export class MazeRoomUI {
             facing: this.state?.facing ?? null,
             armedTraps: this.state ? armedTraps(this.world, this.state, this.externalInventory ?? undefined) : null,
             seedlingSkin: null,
+            blocks: this.state?.blocks ?? null,
         };
         view.seedlingSkin = seedlingSkin ? this._withSeedlingSprites(seedlingSkin, view, canvas) : null;
         drawWorld(ctx, this.world, view);

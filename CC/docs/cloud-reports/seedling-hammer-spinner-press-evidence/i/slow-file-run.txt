@@ -1,0 +1,12 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js (2 tests) 709871ms
+     ✓ OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall)  310086ms
+     ✓ ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death  399775ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  17:19:54
+   Duration  714.99s (transform 3.60s, setup 0ms, import 4.86s, tests 709.87s, environment 0ms)
+

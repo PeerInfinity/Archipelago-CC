@@ -398,4 +398,7 @@ class MetamathWorld(World):
             "theorem": self.options.theorem.current_key,
             "randomize_items": self.options.randomize_items.value,
             "vanilla_placement": self.options.vanilla_placement.value,
+            # The client rebuilds the entrance rules from proof_structure, so it
+            # needs the rule mode too (see set_metamath_rules).
+            "entrance_rule_mode": self.options.entrance_rule_mode.value,
         }

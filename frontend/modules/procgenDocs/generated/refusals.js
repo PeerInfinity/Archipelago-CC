@@ -509,7 +509,8 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "block-pocket",
                 "solo-door",
-                "rope-gate"
+                "rope-gate",
+                "chest-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "KILL_GATE_REFUSALS",
@@ -528,7 +529,8 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "kill-gate",
                 "solo-door",
-                "rope-gate"
+                "rope-gate",
+                "chest-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BLOCK_POCKET_REFUSALS",
@@ -547,7 +549,8 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "kill-gate",
                 "block-pocket",
-                "rope-gate"
+                "rope-gate",
+                "chest-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "SOLO_DOOR_REFUSALS",
@@ -566,7 +569,8 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "kill-gate",
                 "block-pocket",
-                "solo-door"
+                "solo-door",
+                "chest-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "ROPE_GATE_REFUSALS",
@@ -580,6 +584,26 @@ export const REFUSALS = frz({
             "source": "rope-gate",
             "sourceTitle": "The ROPE GATE — an armed arrow trap on a cut and the rope that silences it",
             "where": "frontend/modules/procgenCore/elements/ropeGate.js — `ROPE_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket",
+                "solo-door",
+                "rope-gate"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "CHEST_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/chestDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "goal-too-close",
+            "named": true,
+            "scanFound": true,
+            "source": "chest-door",
+            "sourceTitle": "The CHEST DOOR — a chest in the only gap of a wall, opened from the south",
+            "where": "frontend/modules/procgenCore/elements/chestDoor.js — `CHEST_DOOR_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -704,6 +728,21 @@ export const REFUSALS = frz({
             "source": "maze-area-binding",
             "sourceTitle": "The MAZE area + element binding",
             "where": "procgenMaze.js (the whole module)"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "CHEST_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/chestDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "no cell of the …-cell main path can hold a CHEST DOOR: the deepest stage any cell reached was \"…\". ⛓ A chest opens from the one-pixel line BELOW it, so the cell under the chest must be on the start side (or a pocket of at most … carved cell(s) away from it), and the chest with its wall must be a cut.",
+            "name": "no-chest-cell",
+            "named": true,
+            "scanFound": true,
+            "source": "chest-door",
+            "sourceTitle": "The CHEST DOOR — a chest in the only gap of a wall, opened from the south",
+            "where": "frontend/modules/procgenCore/elements/chestDoor.js — `CHEST_DOOR_REFUSALS`"
         },
         {
             "alsoFiresIn": [
@@ -1031,6 +1070,21 @@ export const REFUSALS = frz({
             "source": "seedling-area-binding",
             "sourceTitle": "The SEEDLING area binding",
             "where": "procgenSeedling.js (the whole module)"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "CHEST_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/chestDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "no cell of the …-cell main path can hold a CHEST DOOR: the deepest stage any cell reached was \"…\". ⛓ A chest opens from the one-pixel line BELOW it, so the cell under the chest must be on the start side (or a pocket of at most … carved cell(s) away from it), and the chest with its wall must be a cut.",
+            "name": "no-stance-pocket",
+            "named": true,
+            "scanFound": true,
+            "source": "chest-door",
+            "sourceTitle": "The CHEST DOOR — a chest in the only gap of a wall, opened from the south",
+            "where": "frontend/modules/procgenCore/elements/chestDoor.js — `CHEST_DOOR_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -1438,6 +1492,21 @@ export const REFUSALS = frz({
             "source": "seedling-area-binding",
             "sourceTitle": "The SEEDLING area binding",
             "where": "procgenSeedling.js (the whole module)"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "CHEST_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/chestDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-chest-is-not-a-cut",
+            "named": true,
+            "scanFound": true,
+            "source": "chest-door",
+            "sourceTitle": "The CHEST DOOR — a chest in the only gap of a wall, opened from the south",
+            "where": "frontend/modules/procgenCore/elements/chestDoor.js — `CHEST_DOOR_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -2180,6 +2249,21 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "CHEST_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/chestDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-stance-is-beyond-the-chest",
+            "named": true,
+            "scanFound": true,
+            "source": "chest-door",
+            "sourceTitle": "The CHEST DOOR — a chest in the only gap of a wall, opened from the south",
+            "where": "frontend/modules/procgenCore/elements/chestDoor.js — `CHEST_DOOR_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
             "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `watch.html`",
             "constant": "SEEDLING_AREA_REFUSALS",
             "file": "frontend/modules/seedlingDemo/procgenSeedling.js",
@@ -2353,6 +2437,21 @@ export const REFUSALS = frz({
             "spansModules": false,
             "title": "The BLOCK POCKET element",
             "where": "frontend/modules/procgenCore/elements/blockPocket.js — `BLOCK_POCKET_REFUSALS`"
+        },
+        {
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "CHEST_DOOR_REFUSALS",
+            "declaredCount": 5,
+            "file": "frontend/modules/procgenCore/elements/chestDoor.js",
+            "id": "chest-door",
+            "kind": "constant",
+            "patterns": [
+                "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
+            ],
+            "scannedCount": 5,
+            "spansModules": false,
+            "title": "The CHEST DOOR — a chest in the only gap of a wall, opened from the south",
+            "where": "frontend/modules/procgenCore/elements/chestDoor.js — `CHEST_DOOR_REFUSALS`"
         },
         {
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",

@@ -13,8 +13,11 @@
  * the room through a computed specifier instead (see the library's header).
  */
 import * as seedlingGenRoom from '../seedlingDemo/seedlingGenRoom.js';
-import { installSeedlingGenRoom } from './flashSeedlingGenLibrary.js';
+import * as procgenLook from '../seedlingDemo/procgenLook.js';
+import { installSeedlingGenLooks, installSeedlingGenRoom } from './flashSeedlingGenLibrary.js';
 
 installSeedlingGenRoom(seedlingGenRoom);
+// the look row's names (seedling-js-panel-look) — `procgenLook.js` is in the room's closure already
+installSeedlingGenLooks(procgenLook);
 
 export { substrateRegistryEntry, FLASH_SEEDLING_GEN_SUBSTRATE_ID } from './flashSeedlingGenLibrary.js';

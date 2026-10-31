@@ -1,0 +1,10 @@
+SPINBPV t2749 horizon+71 refuge(744,840) H71
+SPINB t2749 corner+71 search exhausted: depth first (deepest 4) and then breadth first: no state reachable from index 0 survives to index 13 (the dedup on the coarse key may have dropped an alternative) exp 122
+SPINBPV t2750 horizon+70 refuge(744,856) H70
+SPINB t2750 corner+70 search exhausted: depth first (deepest 2) and then breadth first: no state reachable from index 0 survives to index 12 (the dedup on the coarse key may have dropped an alternative) exp 45
+SPINBPV t2751 horizon+69 refuge(744,856) H69
+SPINB t2751 corner+69 search exhausted: depth first (deepest 1) and then breadth first: no state reachable from index 0 survives to index 11 (the dedup on the coarse key may have dropped an alternative) exp 28
+SPINBPV t2752 horizon+68 refuge(744,856) H68
+SPINB t2752 corner+68 search exhausted: depth first (deepest 9) and then breadth first: no state reachable from index 0 survives to index 10 (the dedup on the coarse key may have dropped an alternative) exp 41
+SPINBPV t2753 horizon+67 refuge(744,856) H67
+SPINB t2753 corner+67 search ok 67 exp 2684

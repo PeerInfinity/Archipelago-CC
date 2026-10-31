@@ -30,6 +30,12 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
+            "fields": 24,
+            "id": "cloudberry",
+            "label": "Cloudberry Kingdom",
+            "registeredBy": "frontend/modules/cloudberryDemo/cloudberryLibrary.js"
+        },
+        {
             "fields": 33,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
@@ -276,6 +282,14 @@ export const REGISTRY = frz({
         },
         {
             "error": null,
+            "file": "frontend/modules/cloudberryDemo/cloudberryLibrary.js",
+            "loadable": true,
+            "registered": [
+                "cloudberry"
+            ]
+        },
+        {
+            "error": null,
             "file": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js",
             "loadable": true,
             "registered": [
@@ -327,6 +341,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling_gen",
                 "jta",
                 "maze",
@@ -338,6 +353,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -407,6 +429,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling_gen",
                 "jta",
                 "maze",
@@ -418,6 +441,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -491,6 +521,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -572,6 +609,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -635,6 +679,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "runner"
@@ -642,6 +687,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -715,6 +767,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -795,6 +854,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -871,6 +937,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -943,6 +1016,13 @@ export const REGISTRY = frz({
                     "present": true,
                     "short": "fn",
                     "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
@@ -1022,6 +1102,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -1095,6 +1182,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -1158,12 +1252,20 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "maze",
                 "runner"
             ],
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -1238,6 +1340,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -1322,6 +1431,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -1390,6 +1506,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -1493,6 +1616,13 @@ export const REGISTRY = frz({
                         "bouncePlatformRows",
                         "bounceSpringChance"
                     ]
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
                 },
                 {
                     "id": "flash_seedling",
@@ -1603,6 +1733,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -1666,6 +1803,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -1678,6 +1816,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -1760,6 +1905,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -1827,6 +1979,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -1909,6 +2068,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -1972,6 +2138,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -1983,6 +2150,16 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "{keys, relabel}",
+                    "type": "object",
+                    "value": [
+                        "keys",
+                        "relabel"
+                    ]
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "{keys, relabel}",
                     "type": "object",
@@ -2088,6 +2265,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -2166,6 +2350,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -2233,6 +2424,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -2313,6 +2511,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -2376,6 +2581,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "runner"
             ],
             "cells": [
@@ -2385,6 +2591,24 @@ export const REGISTRY = frz({
                     "short": "`null`",
                     "type": "null",
                     "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": true,
+                    "short": "10 items",
+                    "type": "array",
+                    "value": [
+                        "Moving Blocks",
+                        "Falling Blocks",
+                        "Bouncy Blocks",
+                        "Ghost Blocks",
+                        "Clouds",
+                        "Elevators",
+                        "Pendulums",
+                        "Conveyors",
+                        "Fly Blobs",
+                        "Jetpack"
+                    ]
                 },
                 {
                     "id": "flash_seedling",
@@ -2468,6 +2692,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -2545,6 +2776,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -2616,6 +2854,13 @@ export const REGISTRY = frz({
                     "present": true,
                     "short": "fn",
                     "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
@@ -2693,6 +2938,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -2756,6 +3008,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -2768,6 +3021,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -2847,6 +3107,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -2910,11 +3177,19 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "runner"
             ],
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -2984,6 +3259,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -3000,6 +3276,13 @@ export const REGISTRY = frz({
                     "short": "bounce",
                     "type": "string",
                     "value": "bounce"
+                },
+                {
+                    "id": "cloudberry",
+                    "present": true,
+                    "short": "cloudberry",
+                    "type": "string",
+                    "value": "cloudberry"
                 },
                 {
                     "id": "flash_seedling",
@@ -3065,6 +3348,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "jta",
                 "noiz2sa",
                 "omsi",
@@ -3078,6 +3362,13 @@ export const REGISTRY = frz({
                     "short": "bounceDemo",
                     "type": "string",
                     "value": "bounceDemo"
+                },
+                {
+                    "id": "cloudberry",
+                    "present": true,
+                    "short": "cloudberryDemo",
+                    "type": "string",
+                    "value": "cloudberryDemo"
                 },
                 {
                     "id": "flash_seedling",
@@ -3153,6 +3444,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -3216,12 +3514,20 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "maze",
                 "runner"
             ],
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -3291,12 +3597,20 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "maze",
                 "runner"
             ],
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -3366,6 +3680,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -3382,6 +3697,13 @@ export const REGISTRY = frz({
                     "short": "Bounce Demo",
                     "type": "string",
                     "value": "Bounce Demo"
+                },
+                {
+                    "id": "cloudberry",
+                    "present": true,
+                    "short": "Cloudberry Kingdom",
+                    "type": "string",
+                    "value": "Cloudberry Kingdom"
                 },
                 {
                     "id": "flash_seedling",
@@ -3458,6 +3780,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -3521,6 +3850,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling_gen",
                 "jta",
                 "noiz2sa",
@@ -3540,6 +3870,25 @@ export const REGISTRY = frz({
                         "Left arrow",
                         "Right arrow",
                         "Springs",
+                        "Victory"
+                    ]
+                },
+                {
+                    "id": "cloudberry",
+                    "present": true,
+                    "short": "11 keys",
+                    "type": "object",
+                    "value": [
+                        "Bouncy Blocks",
+                        "Clouds",
+                        "Conveyors",
+                        "Elevators",
+                        "Falling Blocks",
+                        "Fly Blobs",
+                        "Ghost Blocks",
+                        "Jetpack",
+                        "Moving Blocks",
+                        "Pendulums",
                         "Victory"
                     ]
                 },
@@ -3672,6 +4021,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -3688,6 +4038,13 @@ export const REGISTRY = frz({
                     "short": "bounce:loadRegion",
                     "type": "string",
                     "value": "bounce:loadRegion"
+                },
+                {
+                    "id": "cloudberry",
+                    "present": true,
+                    "short": "cloudberry:loadRegion",
+                    "type": "string",
+                    "value": "cloudberry:loadRegion"
                 },
                 {
                     "id": "flash_seedling",
@@ -3765,6 +4122,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -3836,6 +4200,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -3860,6 +4225,18 @@ export const REGISTRY = frz({
                         "queueActions",
                         "record",
                         "summaryRecording"
+                    ]
+                },
+                {
+                    "id": "cloudberry",
+                    "present": true,
+                    "short": "4 keys",
+                    "type": "object",
+                    "value": [
+                        "customQueues",
+                        "executeVia",
+                        "manual",
+                        "queueActions"
                     ]
                 },
                 {
@@ -4001,6 +4378,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -4064,6 +4448,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -4076,6 +4461,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "no",
+                    "type": "boolean",
+                    "value": false
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "no",
                     "type": "boolean",
@@ -4145,6 +4537,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -4156,6 +4549,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "solver",
+                    "type": "string",
+                    "value": "solver"
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "solver",
                     "type": "string",
@@ -4241,6 +4641,13 @@ export const REGISTRY = frz({
                     "value": true
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -4304,6 +4711,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -4316,6 +4724,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "yes",
                     "type": "boolean",
@@ -4391,6 +4806,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -4476,6 +4898,13 @@ export const REGISTRY = frz({
                     "value": true
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -4539,6 +4968,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -4551,6 +4981,16 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "regionMove, locationCheck",
+                    "type": "array",
+                    "value": [
+                        "regionMove",
+                        "locationCheck"
+                    ]
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "regionMove, locationCheck",
                     "type": "array",
@@ -4663,6 +5103,13 @@ export const REGISTRY = frz({
                     "value": true
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -4731,6 +5178,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -4812,6 +5266,13 @@ export const REGISTRY = frz({
                     "value": true
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -4885,6 +5346,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -4948,6 +5416,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -4964,6 +5433,13 @@ export const REGISTRY = frz({
                     "short": "bounceDemoPanel",
                     "type": "string",
                     "value": "bounceDemoPanel"
+                },
+                {
+                    "id": "cloudberry",
+                    "present": true,
+                    "short": "cloudberryDemoPanel",
+                    "type": "string",
+                    "value": "cloudberryDemoPanel"
                 },
                 {
                     "id": "flash_seedling",
@@ -5040,6 +5516,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -5109,6 +5592,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -5207,6 +5697,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -5276,6 +5773,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -5356,6 +5860,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "54 chars",
@@ -5430,6 +5941,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -5497,6 +6015,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -5578,6 +6103,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -5646,6 +6178,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -5725,6 +6264,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -5788,6 +6334,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -5799,6 +6346,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "sides",
+                    "type": "string",
+                    "value": "sides"
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "sides",
                     "type": "string",
@@ -5883,6 +6437,13 @@ export const REGISTRY = frz({
                         "open",
                         "save"
                     ]
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
                 },
                 {
                     "id": "flash_seedling",
@@ -5970,6 +6531,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -6037,6 +6605,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -6122,6 +6697,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -6190,6 +6772,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -6284,6 +6873,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "{arm, kind, page}",
@@ -6370,6 +6966,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -6433,6 +7036,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -6445,6 +7049,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -6521,6 +7132,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -6611,6 +7229,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -6685,6 +7310,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -6766,6 +7398,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -6829,6 +7468,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -6841,6 +7481,21 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "7 keys",
+                    "type": "object",
+                    "value": [
+                        "ap_locations",
+                        "exits",
+                        "flashCapabilities",
+                        "fogEnabled",
+                        "gameId",
+                        "gate_rules",
+                        "params"
+                    ]
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "7 keys",
                     "type": "object",
@@ -7024,6 +7679,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -7092,6 +7754,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -7173,6 +7842,13 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -7236,6 +7912,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
@@ -7254,6 +7931,16 @@ export const REGISTRY = frz({
                     "value": [
                         "arbitrary_ap_locations",
                         "bounce_abilities"
+                    ]
+                },
+                {
+                    "id": "cloudberry",
+                    "present": true,
+                    "short": "arbitrary_ap_locations, cloudberry_items",
+                    "type": "array",
+                    "value": [
+                        "arbitrary_ap_locations",
+                        "cloudberry_items"
                     ]
                 },
                 {
@@ -7363,6 +8050,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": false,
                     "short": "—",
@@ -7426,12 +8120,20 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "maze",
                 "runner"
             ],
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -7501,6 +8203,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "jta",
                 "noiz2sa",
                 "omsi",
@@ -7509,6 +8212,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": true,
+                    "short": "Victory",
+                    "type": "string",
+                    "value": "Victory"
+                },
+                {
+                    "id": "cloudberry",
                     "present": true,
                     "short": "Victory",
                     "type": "string",
@@ -7583,6 +8293,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -7667,6 +8384,13 @@ export const REGISTRY = frz({
                     "value": 5
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "4",
@@ -7741,6 +8465,13 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
                     "id": "flash_seedling",
                     "present": true,
                     "short": "fn",
@@ -7809,6 +8540,13 @@ export const REGISTRY = frz({
             "cells": [
                 {
                     "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
                     "present": false,
                     "short": "—",
                     "type": "absent",

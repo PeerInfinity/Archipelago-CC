@@ -179,6 +179,8 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
         // their locations and L71's shield lock; L83, L84 r2c4, L85 and L71 r13c7 hang off L12 r42c28's events and stay out of it.
         // ⛓ tile-primitives-sphere-order-10 (sphere 9.10 joined): L76–L79 hang off L71 r16c19 (in the set), so they join it with L79's
         // Dark Suit, and so does the half of L80 entered from L79 (r16c1, and r12c3 / r8c4 past it), no longer unentered.
+        // ⛓ tile-primitives-sphere-order-11 (sphere 10.2 joined): L82 hangs off L71 r14c12 and L98–L106 off L93 r5c7 (both in the set), so
+        // they join it with King of Fire, L98's Chest, L101's pole and L106's Ghost Sword; L96/L97 (from L37) stay out of it.
         const RING2_WEAPON_GATED = ['level_0__r1c6', 'level_0__r6c5', 'level_19__r1c5', 'level_19__r5c5'];
         const SPHERE01_WEAPON_GATED = ['level_1', 'level_67__r3c2', 'level_92__r3c12'];
         const SPHERE45_WEAPON_GATED = ['level_48__r11c9', 'level_48__r2c10', 'level_48__r4c3', 'level_48__r7c0', 'level_49'];
@@ -196,12 +198,16 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
             'level_72', 'level_73__r0c4', 'level_73__r3c7', 'level_74', 'level_75', 'level_80__r0c2', 'level_80__r6c4', 'level_80__r8c1'];
         const SPHERE910_WEAPON_GATED = ['level_76', 'level_77', 'level_78__r0c16', 'level_78__r0c2', 'level_79__r0c4', 'level_79__r8c4',
             'level_80__r12c3', 'level_80__r16c1', 'level_80__r8c4'];
+        const SPHERE102_WEAPON_GATED = ['level_100__r2c3', 'level_100__r4c10', 'level_101__r0c6', 'level_101__r4c2', 'level_101__r4c9',
+            'level_102__r5c3', 'level_102__r5c9', 'level_103', 'level_104', 'level_105', 'level_106', 'level_82', 'level_98', 'level_99__r2c4',
+            'level_99__r2c7'];
         expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
             .toEqual({
                 unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED, ...SPHERE01_WEAPON_GATED, ...SPHERE45_WEAPON_GATED,
                     ...SPHERE53_WEAPON_GATED, ...SPHERE56_WEAPON_GATED, ...SPHERE8_WEAPON_GATED, ...SPHERE85_WEAPON_GATED,
-                    ...SPHERE910_WEAPON_GATED, ...UNENTERED].sort(),
-                unchecked: ['L0 flag 1: breakablerock@288,176 cleared', 'L0 flag 4: breakablerock@80,112 cleared', ROPE,
+                    ...SPHERE910_WEAPON_GATED, ...SPHERE102_WEAPON_GATED, ...UNENTERED].sort(),
+                unchecked: ['L0 flag 1: breakablerock@288,176 cleared', 'L0 flag 4: breakablerock@80,112 cleared',
+                    'L101 flag 0: lightpole@144,64 cleared', ROPE,
                     'L24 flag 0: burnabletree@32,128 cleared', 'L28 flag 0: rope@160,64 cleared', 'L40 flag 8: bosslock@480,352 cleared',
                     'L48 flag 1: bosslock@48,144 cleared', 'L58 flag 1: yeti@56,56 cleared', 'L63 flag 6: lightpole@48,272 cleared',
                     'L63 flag 7: lightpole@112,272 cleared', 'L65 flag 0: lightpole@128,168 cleared', 'L68 flag 0: bosslock@16,32 cleared', 'L71 flag 2: shieldlock@288,256 cleared',
@@ -211,7 +217,8 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
                     'Level 042 - Totem Part 184,152', 'Level 043 - Totem of Lacste', 'Level 043 - Wand',
                     'Level 048 - Chest', 'Level 049 - Conch', 'Level 055 - Boss Key 3', 'Level 057 - Tentacled Beast', 'Level 063 - Chest',
                     'Level 067 - Boss Key 4', 'Level 068 - Health', 'Level 069 - Lights', 'Level 071 - Chest', 'Level 074 - Darkshield',
-                    'Level 079 - Darksuit', 'Level 080 - Chest'],
+                    'Level 079 - Darksuit', 'Level 080 - Chest', 'Level 082 - King of Fire',
+                    'Level 098 - Chest', 'Level 106 - Ghostsword'],
             });
         expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'constant', value: true });
     });

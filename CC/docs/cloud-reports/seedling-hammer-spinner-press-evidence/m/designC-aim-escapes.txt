@@ -1,0 +1,8 @@
+SPINAIM t539 ok=true claim=true bound=- why=
+SPINAIM t871 ok=true claim=true bound=- why=
+SPINAIM t904 ok=true claim=true bound=- why=
+SPINAIM t539 ok=true claim=true bound=- why=
+SPINAIM t871 ok=true claim=true bound=- why=
+SPINAIM t904 ok=true claim=true bound=- why=
+SPINAIM t2624 ok=true claim=true bound=- why=
+SPINAIM t2742 ok=false claim=false bound=- why=(SPIN C) shield bump unmodelled; depth first (deepest 10) and then breadth first: no state reachable from index 7 survives to index 11 (the dedup on the coarse key may have dropped an alternative)

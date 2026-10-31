@@ -358,3 +358,8 @@ frontend/exporter/
 
 # probe-seedling-whole-game-certify.mjs: the old arm's scratch certifier (a killed run can strand it)
 *.oldframing.tmp.js
+
+# ⛓ The Cloudberry Kingdom site, fetched (or linked) by scripts/setup/fetch-cloudberry-site.mjs so the
+# `cloudberry` substrate's panel iframes it from the frontend's own origin (⚖ R18). ⛔ The game's compiled
+# code and data are never committed to this repository.
+frontend/external/

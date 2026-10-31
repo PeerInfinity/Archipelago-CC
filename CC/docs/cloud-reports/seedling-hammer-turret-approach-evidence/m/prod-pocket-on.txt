@@ -1,0 +1,52 @@
+ms 34906
+SOLVED 4495
+REC {"goal":"collect-placement","strategy":"weigh","kind":"weigh","postCondition":"press","presser":{"x":480,"y":384},"corpse":{"turret":"iceturret@472,400","kill":{"phase":"turret-kill","target":"iceturret@472,400","circle":{"cw":true,"start":3},"presses":3,"killTick":56,"ticks":68,"corpseOnly":true,"delay":0,"side":"up","forks":1},"presses":[{"stance":{"x":488,"y":440},"to":{"tx":30,"ty":25},"pressTick":133,"rest":{"tx":30,"ty":25}},{"stance":{"x":488,"y":424},"to":{"tx":30,"ty":24},"pressTick":26
+REC {"goal":"collect-placement","strategy":"weigh","kind":"weigh","postCondition":"press","presser":{"x":768,"y":400},"shove":{"verb":"fire","target":"pushableblockfire@480,480","from":2449,"to":{"tx":48,"ty":25},"pressTick":2449,"weapon":"fire","restoredSlot":0,"ticks":1330,"steps":[{"verb":"fire","ticks":38,"from":421,"to":{"tx":31,"ty":30}},{"verb":"fire","ticks":38,"from":475,"to":{"tx":32,"ty":30}},{"verb":"fire","ticks":38,"from":530,"to":{"tx":33,"ty":30}},{"verb":"fire","ticks":38,"from":580
+REC {"goal":"collect-placement","strategy":"shove","verb":"shove","via":"pulse","target":"pushableblockfire@576,576","pulser":"pulser@592,576","to":{"tx":35,"ty":36},"dir":"W","hold":{"presser":{"tag":"button","x":816,"y":400,"t":4},"ticks":164,"heldFor":24,"stoppedOn":"pushableblockfire@576,576 is at rest on (35,36) — pulser@592,576's pulse pushed it W","at":{"x":824.5252382987803,"y":407.0139161399138},"opened":[],"armed":["pulser@592,576"],"traps":[],"volleys":[],"wrote":[]},"from":2626,"ticks":2
+REC {"goal":"collect-placement","strategy":"shove","kind":"shove","id":"pushableblock@576,560","dir":"N","key":"up","at":{"x":583.859758988787,"y":584.1321258203542},"from":{"tx":36,"ty":35},"to":{"tx":36,"ty":32},"destroys":false,"contactTick":6,"leanTicks":70,"startTick":4329,"ticks":102}
+REC {"goal":"collect-placement","strategy":"collect","pickup":{"tag":"bosskey","x":656,"y":528},"item":null,"level":40,"approach":10,"ceremony":0,"releases":0,"from":4485}
+STRATROWS 0 weigh wandlock@512,480
+STRATROWS 1 walk undefined
+STRATROWS 89 walk undefined
+STRATROWS 247 walk undefined
+STRATROWS 383 weigh wandlock@800,400
+STRATROWS 459 walk undefined
+STRATROWS 513 walk undefined
+STRATROWS 568 walk undefined
+STRATROWS 618 walk undefined
+STRATROWS 708 walk undefined
+STRATROWS 758 walk undefined
+STRATROWS 816 walk undefined
+STRATROWS 870 walk undefined
+STRATROWS 924 walk undefined
+STRATROWS 975 walk undefined
+STRATROWS 1065 walk undefined
+STRATROWS 1123 walk undefined
+STRATROWS 1177 walk undefined
+STRATROWS 1232 walk undefined
+STRATROWS 1282 walk undefined
+STRATROWS 1336 walk undefined
+STRATROWS 1391 walk undefined
+STRATROWS 1441 walk undefined
+STRATROWS 1495 walk undefined
+STRATROWS 1550 walk undefined
+STRATROWS 1600 walk undefined
+STRATROWS 1711 walk undefined
+STRATROWS 1772 walk undefined
+STRATROWS 1827 walk undefined
+STRATROWS 1877 walk undefined
+STRATROWS 1931 walk undefined
+STRATROWS 1981 walk undefined
+STRATROWS 2072 walk undefined
+STRATROWS 2123 walk undefined
+STRATROWS 2179 walk undefined
+STRATROWS 2237 walk undefined
+STRATROWS 2328 walk undefined
+STRATROWS 2378 walk undefined
+STRATROWS 2432 walk undefined
+STRATROWS 2565 walk undefined
+STRATROWS 2650 narrow bob@192,480
+STRATROWS 4431 walk undefined
+STRATROWS 4485 collect undefined
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[]}

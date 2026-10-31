@@ -54,6 +54,7 @@ import { SHORTCUT_REFUSALS } from './elements/shortcut.js';
 import { ROOM_DOOR_REFUSALS } from './elements/roomDoor.js';
 import { SOLO_DOOR_REFUSALS } from './elements/soloDoor.js';
 import { ROPE_GATE_REFUSALS } from './elements/ropeGate.js';
+import { CHEST_DOOR_REFUSALS } from './elements/chestDoor.js';
 import { SEEDLING_ELEMENT_REFUSALS } from '../seedlingDemo/procgenSeedlingElements.js';
 import { SEEDLING_AREA_REFUSALS } from '../seedlingDemo/procgenSeedling.js';
 import { MAZE_REFUSALS, MAZE_REQUIRE_REFUSALS } from '../mazeRoom/procgenMaze.js';
@@ -102,6 +103,7 @@ const SOURCES = {
     roomDoor: 'frontend/modules/procgenCore/elements/roomDoor.js',
     soloDoor: 'frontend/modules/procgenCore/elements/soloDoor.js',
     ropeGate: 'frontend/modules/procgenCore/elements/ropeGate.js',
+    chestDoor: 'frontend/modules/procgenCore/elements/chestDoor.js',
     seedlingElements: 'frontend/modules/seedlingDemo/procgenSeedlingElements.js',
     seedling: 'frontend/modules/seedlingDemo/procgenSeedling.js',
     maze: 'frontend/modules/mazeRoom/procgenMaze.js',
@@ -165,6 +167,12 @@ const KEYS = [
         constant: 'ROPE_GATE_REFUSALS',
         declared: ROPE_GATE_REFUSALS,
         text: () => read(SOURCES.ropeGate),
+    },
+    {
+        /** ⛓ seedling gen B2 — the CHEST DOOR: one builder, one file, one key. */
+        constant: 'CHEST_DOOR_REFUSALS',
+        declared: CHEST_DOOR_REFUSALS,
+        text: () => read(SOURCES.chestDoor),
     },
     {
         constant: 'SEEDLING_ELEMENT_REFUSALS',
