@@ -111,9 +111,11 @@ class DepGraphWorld(World):
             self.starting_node_set = {1}
             remaining = num_starting - 1
             if remaining > 0:
-                import random
                 candidates = list(range(2, self.num_nodes))  # exclude final node
-                random.shuffle(candidates)
+                # self.random (seeded per slot from the multiworld seed), never
+                # module-level random: other players' weighted yamls draw from
+                # module random while rolling, which changed these picks.
+                self.random.shuffle(candidates)
                 self.starting_node_set.update(candidates[:remaining])
 
         # Build canonical placements (exclude final node)
