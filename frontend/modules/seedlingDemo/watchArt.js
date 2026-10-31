@@ -50,6 +50,9 @@ import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
 import { MACHINE_OBJECT_TAGS, machineOps, machineSkinView, stepMachineSkin } from './seedlingMachineSkin.js';
 import { BOSS_OBJECT_TAGS, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
+// ⛓ LAB rope-bridge: the rope's picture is drawn here (no skin draws one); the ops in the renderer's own shape.
+import { rectOp, spriteOp } from './seedlingEnemySkin.js';
+import { objectSolidColour } from './rectPalette.js';
 
 /** The `packs.json` graphics stack (the JS page's `?graphics=seedling`, the maze's ruling 1). */
 export const LAB_ART_STACK = 'graphics.seedling';
@@ -255,6 +258,9 @@ export const FAMILY_OBJECT_TAGS = Object.freeze({
     // wall"), so with the room-body skin drawing the turret the stand-in goes — but only when that skin drew something
     // (no placement run: the stand-in stays). The JS page's rule too (`seedlingRoomBodySkin.roomBodyDrawnObjects`).
     roomBody: ROOM_BODY_OBJECT_TAGS,
+    // ⛓ LAB rope-bridge: lab-side, not a skin (`staticRopeOps`, `BRIDGE_TILE_KEY`)
+    rope: new Set(['rope']),
+    bridge: new Set(['tile:Bridge']),
 });
 export function labDrawnObjects(byFamily) {
     const sets = Object.entries(FAMILY_OBJECT_TAGS)
@@ -280,8 +286,58 @@ export function staticEntityOpsByFamily(world, art, { record = null, state = nul
             out[name] = null;
         }
     }
+    out.rope = staticRopeOps(world, art, { sample });
+    out.bridge = art.has(BRIDGE_TILE_KEY) ? [] : null;
     return out;
 }
+
+// ── LAB rope-bridge: the rope and the bridge, the last two stand-ins ─────
+
+/**
+ * ⛓ THE ROPE — `Puzzlements/RopeStart.as`, drawn lab-side because no skin draws one (the JS page paints its
+ * stand-in too). `RopeStart` sits at `(_x + 8, _y + 8)`, `centerOO`, and its `render()` (`:51-75`) is the whole
+ * picture: UNCUT, frame 1 at every cell from `x` to `xend` (the `<node>`), then the pulley (frame 0) at `x` and
+ * the handle (frame 2) at `xend`; CUT, the pulley at `x` and the dropped handle (frame 3) at `xend`. A cut rope
+ * keeps its one-cell solid at the pulley (`hit()` shrinks the hitbox, it never despawns). Layer
+ * `-(y - originY + height / 2)` of the uncut hitbox (`:26`, set once).
+ *
+ * CUT = the world was built with the rope already pulled (`bootPulled`, a cleared persistence tag), or the sample
+ * at the cursor says the run pulled it (`pulledRopes`, `watchOverlays.WORLD_STATE_FAMILIES`). Static: the frames
+ * are a function of that state only, never of the tick. `null` when the stack lacks the key (the stand-in stays).
+ */
+export const ROPE_KEY = 'seedling:puzzlement/rope';
+export const ROPE_FRAMES = Object.freeze({ pulley: 0, span: 1, handle: 2, handleCut: 3 });
+export function staticRopeOps(world, art, { sample = null } = {}) {
+    if (!art?.has(ROPE_KEY)) return null;
+    const s = sample && sample.level === world.level && sample.changeCounts ? sample : null;
+    const pulled = new Set((s?.changes ?? []).filter((c) => c.family === 'pulledRopes').map((c) => c.id));
+    const ops = [];
+    for (const rope of world.objectSolids ?? []) {
+        if (!rope.ropeId || !rope.span) continue;
+        const cut = !!rope.bootPulled || pulled.has(rope.ropeId);
+        const x = rope.x + 8;
+        const y = rope.y + 8;
+        const xend = rope.span.xend + 8;
+        const layer = -y;
+        const push = (frame, at) => {
+            const fallback = rectOp({ x: at - 8, y: rope.y, w: 16, h: 16, right: at + 8, bottom: rope.y + 16 },
+                objectSolidColour(rope), 0.85, layer);
+            ops.push(spriteOp(art, ROPE_KEY, frame, { x: at, y }, { layer, fallback }) ?? fallback);
+        };
+        if (!cut) for (let i = 0; i < xend - x; i += 16) push(ROPE_FRAMES.span, x + i);
+        push(ROPE_FRAMES.pulley, x);
+        push(cut ? ROPE_FRAMES.handleCut : ROPE_FRAMES.handle, xend);
+    }
+    return ops;
+}
+
+/**
+ * ⛓ THE BRIDGE — tile 29, which `roomOps`' tile pass already draws as `BRIDGE_TILE_KEY` (`closed`, read at
+ * `LAB_ART_TICK`). Its OBJECT solid (`tile:Bridge`, `bridgeId`) is a stand-in rect painted OVER that picture, so the
+ * lab claims it whenever the tile's key is in the stack (without it the tile is its colour and the stand-in stays).
+ * ⚠ LIMIT: the sample carries no `openBridges`, so a speared bridge is drawn CLOSED (the build look).
+ */
+export const BRIDGE_TILE_KEY = 'seedling:tile/bridge';
 
 /**
  * The bodies to draw when the sample has none for this room (the editor, a still, a scrub off the tape's
@@ -304,7 +360,7 @@ export function placementBodies(world) {
  * record) decides which teleporters are SHOWN, as on the JS page; without it every live teleporter is its
  * stand-in. A family whose skin refused keeps its objects' rectangle stand-ins.
  */
-export function labArtOps(world, art, { record = null, state = null, bodies = [], sample = null } = {}) {
+export function labArtOps(world, art, { record = null, state = null, bodies = [], sample = null, tick = LAB_ART_TICK } = {}) {
     const level = world.level;
     const playerSprites = state ? staticPlayerOps(state, art, { level }) : null;
     const byFamily = staticEntityOpsByFamily(world, art, { record, state, sample });
@@ -312,14 +368,18 @@ export function labArtOps(world, art, { record = null, state = null, bodies = []
         ...staticBodyOps(bodies, art, { level })];
     const ops = roomOps(world, art, {
         // `player`: the white box `roomOps` draws when there are no player sprites (a stack without the suit).
-        level, tick: LAB_ART_TICK, playerSprites, entitySprites, player: state ? playerBoxAt(state.x, state.y) : null,
+        // `tick`: ⛔ the TEST SEAM of the tile-clock mutant only (`watchArt.test.js`); every caller reads `LAB_ART_TICK`
+        level, tick, playerSprites, entitySprites, player: state ? playerBoxAt(state.x, state.y) : null,
         drawnPickups: art ? (p) => PICKUP_TAGS.has(p.tag) : null,
         drawnObjects: art ? labDrawnObjects(byFamily) : null,
         ...(art && record ? { drawnTeleporters: teleporterArtFilter(record), shownTeleporter: shownTeleporters(record) } : {}),
     });
     // ⛓ the readout's per-family SPRITE counts (null = that family's skin refused), carried on the list unenumerated
     Object.defineProperty(ops, 'families', { value: Object.fromEntries(Object.entries(byFamily)
-        .map(([name, o]) => [name, o === null ? null : o.filter((x) => x?.sheetRef).length])) });
+        .map(([name, o]) => [name, o === null ? null : name === 'bridge'
+            // the bridge's picture is its tile: count the bridge tiles the list draws as sprites
+            ? ops.filter((x) => x?.sheetRef && x.key === BRIDGE_TILE_KEY).length
+            : o.filter((x) => x?.sheetRef).length])) });
     return ops;
 }
 

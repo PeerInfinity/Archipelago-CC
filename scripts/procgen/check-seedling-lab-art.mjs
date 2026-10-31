@@ -37,6 +37,10 @@
  *   ⛓ gen-new-biomes: one generated room per new biome (caldera, frozen-forge, flooded-ruins), art on, in its own
  *   look, each of its terrains' canvas pixels unlike the looked floor's (stills `biome-<name>.png`).
  *
+ *   ⛓ seedling-lab-rope-bridge-art: every vanilla rope and bridge room (L16 L28 L39 / L61 L63 L66 L93), art on and
+ *   off — the `rope` / `bridge` readout reports sprites, and ≤ 10% of each rope / bridge box's pixels are the stand-in
+ *   rect (stills `lab-art-rope-L<n>.png`, `lab-art-bridge-L<n>.png`).
+ *
  * Prereqs: a dev server at the REPO ROOT. SKIPs (exit 0) without one, like its siblings.
  * Run: node scripts/procgen/check-seedling-lab-art.mjs [--host=http://localhost:8000] [--shots=<dir>]
  */
@@ -214,6 +218,23 @@ async function main() {
     // the world `buildLevelWorld` makes in node, the page's own builder) — and in each object's own box, the share
     // of canvas pixels that are IDENTICAL with the art on and off. With the art off that box is the stand-in fill;
     // with it on it is the sprite (and the tiles around it), so an identical pixel is a rectangle the art left.
+    /** The canvas pixels inside each box (room units → canvas px), as packed RGB per box. */
+    const boxPixels = (page, boxes, roomW) => page.evaluate(({ boxes, roomW }) => {
+        const c = document.getElementById('canvas');
+        const s = c.width / roomW;
+        const ctx = c.getContext('2d');
+        return boxes.map((b) => {
+            const x = Math.max(0, Math.round(b.x * s));
+            const y = Math.max(0, Math.round(b.y * s));
+            const w = Math.max(1, Math.min(c.width - x, Math.round(b.w * s)));
+            const h = Math.max(1, Math.min(c.height - y, Math.round(b.h * s)));
+            const d = ctx.getImageData(x, y, w, h).data;
+            const out = [];
+            for (let i = 0; i < d.length; i += 4) out.push((d[i] << 16) | (d[i + 1] << 8) | d[i + 2]);
+            return out;
+        });
+    }, { boxes, roomW });
+
     console.log('\n## L2b — blocks, hazards, NPCs, machines, static enemies, bosses');
     {
         const R = new URL('../../frontend/modules/seedlingDemo/', import.meta.url).href;
@@ -235,22 +256,6 @@ async function main() {
             { name: 'turret', level: 29, families: ['roomBody'], why: 'the turrets (static "Enemy" placements: never rectangles, drawn by nothing before)' },
             { name: 'boss', level: 19, families: ['boss'], why: 'the shield boss' },
         ]);
-        /** The canvas pixels inside each box (room units → canvas px), as packed RGB per box. */
-        const boxPixels = (page, boxes, roomW) => page.evaluate(({ boxes, roomW }) => {
-            const c = document.getElementById('canvas');
-            const s = c.width / roomW;
-            const ctx = c.getContext('2d');
-            return boxes.map((b) => {
-                const x = Math.max(0, Math.round(b.x * s));
-                const y = Math.max(0, Math.round(b.y * s));
-                const w = Math.max(1, Math.min(c.width - x, Math.round(b.w * s)));
-                const h = Math.max(1, Math.min(c.height - y, Math.round(b.h * s)));
-                const d = ctx.getImageData(x, y, w, h).data;
-                const out = [];
-                for (let i = 0; i < d.length; i += 4) out.push((d[i] << 16) | (d[i + 1] << 8) | d[i + 2]);
-                return out;
-            });
-        }, { boxes, roomW });
         for (const room of ROOMS) {
             const world = buildLevelWorld(source(room.level), { roles: ROLES });
             const boxes = [...world.objectSolids, ...world.pixelmasks].filter((o) => drawnTags.has(o.tag))
@@ -303,9 +308,12 @@ async function main() {
     //
     // The generate arm with `?elements=ropegate` (post-sword): the room the lab generates holds the element's two
     // parts — an armed `arrowtrap` and a `rope` with its node, one `tset` — it certifies, and the art draws the trap
-    // in sprites (the `trap` family). ⚠ The rope has NO skin in the art library yet, so it draws as the renderer's
-    // stand-in rect; the row records that rather than asserting a sprite nothing draws.
+    // in sprites (the `trap` family). ⛓ rope-bridge-art: and the ROPE in sprites (the lab-side `rope` family, from
+    // RopePulley.png), ≤ `ROPE_SAME_MAX` of its box's pixels left as the stand-in rect (art on vs off).
     console.log('\n## ropegate — a generated rope gate room');
+    const ROPE_SAME_MAX = 0.1;
+    const ropeBoxPx = {};
+    let ropeBox = null;
     for (const mode of ['on', 'off']) {
         const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
         const errors = [];
@@ -329,14 +337,42 @@ async function main() {
                 && (rope[0].nodes ?? []).length === 1,
                 'ropegate: the generated room CERTIFIES and holds an armed trap and a rope of ONE group, the rope with its node',
                 JSON.stringify({ certified: payload?.certified, trap, rope }));
-            check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && (art.drawn.families?.trap ?? 0) > 0,
-                'ropegate: drawn in sprites, the arrow trap among them (`trap` family)', JSON.stringify(art?.drawn));
+            check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && (art.drawn.families?.trap ?? 0) > 0
+                && (art.drawn.families?.rope ?? 0) > 0,
+                'ropegate: drawn in sprites, the arrow trap (`trap`) and the rope (`rope`) among them', JSON.stringify(art?.drawn));
+            const r = rope[0];
+            if (r) ropeBox = { x: r.x, y: r.y, w: (r.nodes?.at(-1)?.x ?? r.x) - r.x + 16, h: 16 };
         } else {
             check(art?.drawn === null, 'ropegate ?art=off: the rectangles', JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+        }
+        if (ropeBox) {
+            // ⚠ measured with EVERY OVERLAY OFF (`?layers=`, present and empty): the overlays draw over the art either
+            // way, and on a one-cell rope their outline alone is ~10% of the box (measured 10.2% with them on)
+            const bare = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            await bare.goto(`${PAGE}?source=generate&seed=1&biome=post-sword&elements=ropegate&layers=${mode === 'off' ? '&art=off' : ''}`,
+                { waitUntil: 'domcontentloaded' });
+            await bare.waitForFunction((want) => {
+                const a = window.__labArt;
+                return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                    && (want === 'off' ? a.drawn === null : a.drawn !== null);
+            }, mode, { timeout: 180000 }).catch(() => {});
+            await bare.waitForTimeout(1200);
+            // the record's `width` is in TILES (a generated room's 10 = 160 px)
+            const roomW = 16 * await bare.evaluate(() => (window.__watch?.payload?.level?.width ?? 0));
+            [ropeBoxPx[mode]] = await boxPixels(bare, [ropeBox], roomW);
+            await bare.close();
         }
         if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-ropegate${mode === 'off' ? '-off' : ''}.png`) });
         check(errors.length === 0, `ropegate (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
         await page.close();
+    }
+    {
+        const { on = [], off = [] } = ropeBoxPx;
+        let same = 0;
+        for (let j = 0; j < on.length; j += 1) if (on[j] === off[j]) same += 1;
+        check(on.length > 0 && on.length === off.length && same / on.length <= ROPE_SAME_MAX,
+            `ropegate: ≤ ${ROPE_SAME_MAX * 100}% of the rope box's pixels are the stand-in rect`,
+            `${((same / Math.max(1, on.length)) * 100).toFixed(1)}% identical of ${on.length} px; box ${JSON.stringify(ropeBox)}`);
     }
 
     // ── ⛓ seedling-gen-chestdoor: a generated CHEST DOOR room, art on ──
@@ -639,6 +675,62 @@ async function main() {
             }
             if (SHOTS) await p.locator('#canvas').screenshot({ path: join(SHOTS, `biome-${room.biome}.png`) });
             await p.close();
+        }
+    }
+
+    // ── ⛓ seedling-lab-rope-bridge-art: the last two stand-ins, the ROPE and the BRIDGE ──
+    //
+    // Every vanilla room that held one (measured over the 116: ropes L16 L28 L39, bridges L61 L63 L66 L93), in the
+    // editor arm, art on and off. The readout's `rope` / `bridge` family reports sprites (the rope's RopePulley.png
+    // cells; the bridge tiles under the claimed stand-ins), and in each rope / bridge object box at most
+    // `ROPE_BRIDGE_SAME_MAX` of the pixels are identical on and off (an identical pixel = the stand-in left there).
+    console.log('\n## rope-bridge — the ropes and the bridges');
+    {
+        const R = new URL('../../frontend/modules/seedlingDemo/', import.meta.url).href;
+        const { ROLES, buildLevelWorld } = await import(`${R}levelWorld.js`);
+        const { atlasLevelSource } = await import(`${R}levelSource.js`);
+        const source = atlasLevelSource();
+        const ROPE_BRIDGE_SAME_MAX = 0.1;
+        const ROOMS = Object.freeze([
+            ...[16, 28, 39].map((level) => ({ level, family: 'rope', key: 'ropeId' })),
+            ...[61, 63, 66, 93].map((level) => ({ level, family: 'bridge', key: 'bridgeId' })),
+        ]);
+        for (const room of ROOMS) {
+            const world = buildLevelWorld(source(room.level), { roles: ROLES });
+            const boxes = world.objectSolids.filter((o) => o[room.key]).map((o) => ({ x: o.rect.x, y: o.rect.y, w: o.rect.w, h: o.rect.h }));
+            const shots = {};
+            for (const mode of ['on', 'off']) {
+                const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+                const errors = [];
+                page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+                await page.goto(`${PAGE}?source=edit&level=${room.level}${mode === 'off' ? '&art=off' : ''}`, { waitUntil: 'domcontentloaded' });
+                await page.waitForFunction((want) => {
+                    const a = window.__labArt;
+                    return !!a && a.status === 'ready' && (want === 'off' ? a.drawn === null : a.drawn !== null);
+                }, mode, { timeout: 90000 }).catch(() => {});
+                await page.waitForTimeout(1200);
+                shots[mode] = { art: await page.evaluate(() => window.__labArt ?? null), px: await boxPixels(page, boxes, world.world.width) };
+                if (SHOTS) {
+                    await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-${room.family}-L${room.level}${mode === 'off' ? '-off' : ''}.png`) });
+                }
+                check(errors.length === 0, `L${room.level} ${room.family} (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+                await page.close();
+            }
+            const { art } = shots.on;
+            check(art?.active === true && art.drawn?.fallbacks === 0 && (art.drawn?.families?.[room.family] ?? 0) > 0,
+                `L${room.level}: the ${room.family} draws in sprites (readout \`${room.family}\` > 0), no missing-key fallback`,
+                JSON.stringify(art?.drawn?.families));
+            let same = 0;
+            let total = 0;
+            boxes.forEach((b, i) => {
+                const on = shots.on.px[i];
+                const off = shots.off.px[i];
+                for (let j = 0; j < on.length; j += 1) if (on[j] === off[j]) same += 1;
+                total += on.length;
+            });
+            check(boxes.length > 0 && same / Math.max(1, total) <= ROPE_BRIDGE_SAME_MAX,
+                `L${room.level}: ≤ ${ROPE_BRIDGE_SAME_MAX * 100}% of the ${boxes.length} ${room.family} box(es)' pixels are the stand-in rect`,
+                `${((same / Math.max(1, total)) * 100).toFixed(1)}% identical of ${total} px`);
         }
     }
 
