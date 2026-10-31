@@ -12,7 +12,7 @@
  * `scripts/procgen/probe-seedling-wasm-playback.mjs`.
  */
 
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -30,6 +30,7 @@ import { DASH_ONLY_WINDOW, applyDashOnlyWindow } from '../seedlingDemo/dashOnlyW
 import { DASH_SHAPE_DEFAULTS, applyDashShape, dashShapeRead } from '../seedlingDemo/dashShapeHook.js';
 import { LOAD_FADE_FRAMES } from '../seedlingDemo/gameClock.js';
 import { replayTape } from '../seedlingDemo/jsRuntimeSolver.js';
+import { resolveSeedlingGoal } from './seedlingPlaybackController.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -1414,6 +1415,45 @@ describe('§5.36 — a GENERATED room is a SOLVER room (the recorded p4e arrival
         expect([engine.generated, engine.producer, engine.status().producer]).toEqual([true, 'solver', 'solver']);
         expect(fetched).toBe(0);
         engine.dispose();
+    });
+});
+
+/**
+ * ⛓ seedling-js-playback-door-chest-goal — a generated DOOR CHEST (`<region> - Chest`, `report.chestDoors`) is a
+ * goal on the wasm engine too: `resolveSeedlingGoal`'s `{kind: 'location', tag, entityType: 'chest'}` maps to the
+ * solver's `collect-placement` at the chest (`arrivalSolverGoal`, unchanged) and its plan opens it (`chest`).
+ * ⚠ No committed preset holds a door chest yet, so the world is chestdoor-ap's (built headless here) and the arrival
+ * is SYNTHETIC: the recorded p4g arrival G_A0 moved to that set's start (ctor `start`, the game's centre = +8). The
+ * real wasm game playing it is the open gap (the slice's report).
+ */
+describe('⛓ DOOR CHESTS — the wasm engine solves and ships a door-chest goal (generated set, synthetic arrival)', () => {
+    let chestSet = null;
+    beforeAll(async () => {
+        const { REGISTRY_LIBRARIES } = await import('../../../scripts/procgen/reference/registry.mjs');
+        for (const rel of REGISTRY_LIBRARIES) await import(join(ROOT, rel)); // eslint-disable-line no-await-in-loop
+        const { buildRunFromState, runPresetHeadless } = await import('../procgenPipeline/presetRun.js');
+        const { SEEDLING_GENERATED_ROOM_STATE: S } = await import('../procgenPipeline/presetDefs.js');
+        const state = { ...S, params: { ...S.params, seedlingGenElements: 'chestdoor' } };
+        chestSet = assembleGeneratedSeedlingSet((await runPresetHeadless(buildRunFromState(structuredClone(state)))).rulesJson, { selfPlayer: 1 });
+    }, 120_000);
+
+    it('`region_0_0 - Chest`: forced re-arrival → the SOLVER\'s chest plan → shipped → done, the room HELD', () => {
+        const { goal } = resolveSeedlingGoal({ kind: 'location', name: 'region_0_0 - Chest' }, chestSet.report);
+        expect(goal).toMatchObject({ kind: 'location', level: 0, entityType: 'chest' });
+        const { start } = chestSet.set;
+        const arrival = { ...G_A0, state: { ...G_A0.state, playerPositionX: start.x, playerPositionY: start.y },
+            status: { ...G_A0.status, x: start.x + 8, y: start.y + 8 } };
+        const e = engineOver(arrival, { records: mountedRecordsOf(chestSet.set), generated: true });
+        expect(e.engine.walkTo(goal)).toEqual({ ok: true, action: 'force-re-arrival' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        const door = chestSet.report.chestDoors[0];
+        expect(e.service.seen[0].request).toMatchObject({ solverGoal: { kind: 'collect-placement',
+            placement: { x: door.cell.tx * 16, y: door.cell.ty * 16 } }, scratchPersistence: true });
+        expect(e.service.seen[0].result.plan.verbs).toContain('chest');
+        expect(e.dones).toHaveLength(1);
+        expect(e.dones[0]).toMatchObject({ producer: 'solver', divergence: null, heldEnd: true });
+        expect(e.engine.status().phase).toBe('held');
     });
 });
 

@@ -468,10 +468,11 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             if (goal.event) return goal.event.presser ?? goal.event.at;
             // ⛓ ENCOUNTER LEGS — the leg is the solver's `encounter`; the point is the location's atlas tile.
             if (goal.encounter) return goal.encounter.at ?? null;
-            // ⛔ A mounted set's locations are its apitems ONLY (validateGoal's rule).
+            // ⛔ A mounted set's locations are its apitems, and the entities a goal NAMES (validateGoal's rule).
             if (mounted) {
                 const a = (mounted.apItems.get(goal.level) ?? []).find((x) => x.tag === goal.tag);
-                return a ? { x: (a.rect.x + a.rect.right) / 2, y: (a.rect.y + a.rect.bottom) / 2 } : null;
+                if (a) return { x: (a.rect.x + a.rect.right) / 2, y: (a.rect.y + a.rect.bottom) / 2 };
+                if (!goal.entityType) return null;
             }
             return locationPointOf(locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null));
         },
@@ -1436,6 +1437,12 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         }
         if (goal.kind === 'location') {
             if ((mounted?.apItems.get(goal.level) ?? []).some((a) => a.tag === goal.tag)) return { ok: true };
+            // ⛓ DOOR CHESTS — a mounted set's location that NAMES its entity (a generated door chest: the chest's
+            // own clear is the check) is that entity, as in a real room. A goal naming none stays apitem-only.
+            if (mounted && goal.entityType) {
+                if (locationEntityOf(record, goal.tag, goal.entityType)) return { ok: true };
+                return { ok: false, reason: `level ${goal.level} has no ${goal.entityType} with tag ${goal.tag}` };
+            }
             // ⛓ J3 — a real room's location: the entity holding the tag.
             if (!mounted && locationEntityOf(record, goal.tag, goal.entityType ?? null)) return { ok: true };
             return { ok: false, reason: mounted ? `level ${goal.level} has no apitem with tag ${goal.tag}`
