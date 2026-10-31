@@ -191,7 +191,7 @@ describe('MessageHandler: rules built from server data', () => {
     await flush(10);
 
     const kinds = calls.map(([kind]) => kind);
-    expect(kinds).toEqual(['files:jsonLoaded', 'applyRuntimeStateData', 'addItemToInventory', 'addItemToInventory']);
+    expect(kinds).toEqual(['files:jsonLoaded', 'applyRuntimeStateData', 'applyRuntimeStateData']);
     const load = calls[0][1];
     expect(load.selectedPlayerId).toBe(1);
     expect(load.sourceName).toBe(`server:${SEED}:P1`);
@@ -206,7 +206,11 @@ describe('MessageHandler: rules built from server data', () => {
     const order = bus.published.map((p) => p.event);
     expect(order.indexOf('game:connected')).toBeGreaterThan(order.indexOf('files:jsonLoaded'));
     expect(order.lastIndexOf('game:locationsScouted')).toBeGreaterThan(order.indexOf('stateManager:rulesLoaded'));
-    expect(calls.slice(2).map(([, name]) => name)).toEqual(['Statement 1', 'Statement 3']);
+    // ⚖ The plain rule: Connected re-adds only the ID-less starting items from the built rules,
+    // and ReceivedItems index 0 REPLACES the inventory with the server's items.
+    expect(calls[1][1]).toMatchObject({ startingItemsFromServer: true });
+    expect(calls[2][1]).toMatchObject({ resetInventory: true, startingItemsFromServer: true, rederiveIdlessLocations: true });
+    expect(calls[2][1].receivedItemsForProcessing.map((d) => d.itemName)).toEqual(['Statement 1', 'Statement 3']);
     expect(consoleLines(bus).some((m) => /Built Metamath rules for 2p2e4 \(10 statements, entrance mode 3\)/.test(m))).toBe(true);
     expect(sent('LocationScouts')).toHaveLength(1);
   });
@@ -217,7 +221,7 @@ describe('MessageHandler: rules built from server data', () => {
     await flush(10);
 
     expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(0);
-    expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'addItemToInventory', 'addItemToInventory']);
+    expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'applyRuntimeStateData']);
     expect(consoleLines(bus).some((m) => /Could not build Metamath rules .*proof_structure.*Staying connected/.test(m))).toBe(true);
     expect(handler._serverBuild).toBe(null);
   });
@@ -286,13 +290,27 @@ describe('MessageHandler: rules built from server data', () => {
 
     expect(handler._serverBuild).toBe(null);
     expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(0);
-    expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'addItemToInventory', 'addItemToInventory']);
+    expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'applyRuntimeStateData']);
     expect(sent('LocationScouts')).toHaveLength(1);
     // LocationInfo is only recorded: no build, no second scout, no load
     handler.processMessage(LOCATION_INFO);
     await flush(10);
     expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(0);
     expect(handler.getScoutedLocations()).toHaveLength(placements.length);
+
+    // An incremental ReceivedItems (index > 0) still ADDS, in one worker batch, as before the plain rule.
+    calls.length = 0;
+    stateManagerMock.beginBatchUpdate.mockClear();
+    stateManagerMock.commitBatchUpdate.mockClear();
+    handler.processMessage({
+      cmd: 'ReceivedItems',
+      index: 2,
+      items: [{ item: metamathItems['Statement 4'], location: 2, player: 2, flags: 1 }],
+    });
+    await flush(10);
+    expect(calls).toEqual([['addItemToInventory', 'Statement 4']]);
+    expect(stateManagerMock.beginBatchUpdate).toHaveBeenCalledTimes(1);
+    expect(stateManagerMock.commitBatchUpdate).toHaveBeenCalledTimes(1);
   });
 
   it('a disconnect abandons the build', async () => {
