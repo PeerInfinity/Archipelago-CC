@@ -1741,6 +1741,19 @@ export const CONTACT_FIDELITY = {
      * `pendingEarnedClears`). OFF: byte-identical. `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`.
      */
     bobArenaRockClear: true,
+    /**
+     * fidelity L100LATTICE D1 (wave 36) — A WALK TO AN 8 px STANCE PLANS ON THE 8 px LATTICE (`solverBot.walkToUnder`).
+     *
+     * A stance whose existence was answered on `FINE_LATTICE` (`fineSwingStance`'s fresh cells, `fineWandStance`,
+     * `fineFrontierFlood`, the bridge / pole-thrust / light-pole stances the 16 px plan refused) was then WALKED on the
+     * run's 16 px lattice, whose plan reaches it only when no 16 px node is near: `nearestGoalNode` otherwise aims at a
+     * node up to two cells away and the string-pull's fallback keeps the target as a last segment nothing checks.
+     * Measured on survey step 219 (L100): the break stance (124,140) for `breakablerock@128,144` was walked as
+     * `… (104,136) (124,140)` through `cliffside0@112,128` and stalled 400 ticks. ON: the walk to such a stance asks
+     * the 8 px lattice first (the FRONTIER3 fine walk), and a throw there falls back to the 16 px plan as before.
+     * OFF: byte-identical. `SEEDLING_FINE_STANCE_WALK=0|1`.
+     */
+    fineStanceWalk: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2088,6 +2101,9 @@ if (globalThis.process?.env?.SEEDLING_WATERFALL_PUSH_PRICING === '0') CONTACT_FI
 // ⛓ fidelity L32ROCK D1: `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '1') CONTACT_FIDELITY.bobArenaRockClear = true;
 if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '0') CONTACT_FIDELITY.bobArenaRockClear = false;
+// ⛓ fidelity L100LATTICE D1: `SEEDLING_FINE_STANCE_WALK=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_STANCE_WALK === '1') CONTACT_FIDELITY.fineStanceWalk = true;
+if (globalThis.process?.env?.SEEDLING_FINE_STANCE_WALK === '0') CONTACT_FIDELITY.fineStanceWalk = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
