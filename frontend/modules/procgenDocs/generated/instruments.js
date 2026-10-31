@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 133,
-            "count": 183,
+            "browser": 134,
+            "count": 184,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 499,
-        "browser": 200,
-        "cited": 264,
-        "files": 516,
+        "blockStyle": 500,
+        "browser": 201,
+        "cited": 265,
+        "files": 517,
         "lineStyle": 17,
-        "withDocblock": 516,
-        "withFlags": 432
+        "withDocblock": 517,
+        "withFlags": 433
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -17629,6 +17629,53 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-turret-circle — ⛓⛓⛓ seedling-fidelity-turretcircle: L40'S ICE TURRET KILLED WITH THE PLAIN SWORD, HITLESS, BY CIRCLING IT (⚖ the user, 2026-10-24: \"keep moving while attacking\"), AND A BLAST STOPPED BY THE PLAYER'S SHIELD (`CONTACT_FIDELITY.iceBlastShield`), PLAYED ON THE GAME AND COMPARED WITH THE MO…",
             "path": "scripts/procgen/probe-seedling-turret-circle.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-turret-snap.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-turret-snap — ⛓⛓ seedling-fidelity-turretsnap D1: WHICH BOX OF L40'S LIVE ICE TURRET THE GAME TOUCHES.",
+            "path": "scripts/procgen/probe-seedling-turret-snap.mjs"
         },
         {
             "argvHelpers": [],

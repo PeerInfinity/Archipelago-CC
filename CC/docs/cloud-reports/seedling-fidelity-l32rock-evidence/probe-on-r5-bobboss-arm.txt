@@ -1,0 +1,6 @@
+INFO: r5-bobboss-arm: 8709 page answers, 901 sampled tick(s) of 900; shifts that fit every player x/y: []
+INFO: the drained stream: 901 obs, worst |Δ| 0, first off null
+INFO: first SAMPLED tick off the model (a sample may straddle a frozen frame): 13
+INFO: item flips (sampled ticks) — game {}, model {}
+INFO: clears (first tick) — {32:1} game t13 (prev sample t12) / model t13
+INFO: at finished — game hasFire false hasDarkSword false; model hasFire false hasDarkSword false

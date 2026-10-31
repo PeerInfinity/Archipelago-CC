@@ -1,0 +1,10 @@
+local full survey --through=end --route=full --timeout=1500 at ab2049cc (OFF = defaults; ON = SEEDLING_WATERFALL_PUSH_PRICING=1)
+OFF 240 {'SOLVED': 203, 'REFUSED': 37}
+ON  240 {'SOLVED': 203, 'REFUSED': 37}
+MOVER step 89 L89: SOLVED 639 replans 1 -> SOLVED 291 replans 0
+  OFF: None
+  ON : None
+MOVER step 219 L100: REFUSED None replans None -> REFUSED None replans None
+  OFF: solverBot(survey-step-219) reach-exit (288,96)->L101 -> break stance (breakablerock@128,144) -> kill (jellyfish@88,144) by press: the dwell was HIT at tick 193 (hits 0 -> 1, deaths 0 -> 0). The stance was derived to be outside every danger the map can name; the GAME says otherwise, which is the map being a heuristic and the run being the oracle.
+  ON : solverBot(survey-step-219) reach-exit (288,96)->L101 -> break stance (breakablerock@128,144): the re-planned corridor failed too — solverBot(survey-step-219) reach-exit (288,96)->L101 -> break stance (breakablerock@128,144) waypoint 1 (124,140): not reached within 400 ticks; stalled at (110.99137400956971,140.57747837901405) v=(0.45,0) in level 100, aiming at (124,140), after grazing 393 solid(s): cliffside0 at (112,128) on the X axis, at (110.99137400956971,140.89897693161498) in level 100, aiming at (124,140); cliffside0 at (112,128) on the X axis, at (110.99137400956971,141.12392498842078) in level 100, aiming at (124,140); cliffside0 at (112,128) on the X axis, at (110.99137400956971,140.6739249884208) in level 100, aiming at (124,140).
+every other row: verdict, ticks and refusal text equal
