@@ -152,7 +152,7 @@ No mover turns a solve into a refusal, adds a hit on the player, or adds a death
 | `check-seedling-wasm-ship` (headless page on :8000) | **ALL PASS** (416 PASS rows, the r9 campaign included; `wasm-ship.txt`) |
 | `solverEnvChannel.test.js` | green (in the bounded set and beside the new file: 15 / 15) |
 | docs | `seedling-bot.md` (the switch, OFF, what it does and what it measured); `seedling-bot-log.md` (`### Seedling hammer-phase AXIS — …`) |
-| JSUT | run **41230430090** at `902ef8c5`: suite **25,013 passed / 1 failed / 0 skipped**; **slow battery 351 / 351**; the one red was `seedlingConstantsCensus.test.js` (the constants CSV not re-written for the switch's counter zeros), fixed in `142d2d12` (`--write`; that file 24 / 24 locally). Run **41238248272** at `142d2d12` was still QUEUED (all four vitest jobs) more than 90 minutes after the push, when this report was committed; the report's own push starts the run that supersedes it. The planner should read that one with `node scripts/procgen/ci-summary.mjs <head sha> --wait` |
+| JSUT | run **41230430090** at `902ef8c5`: suite **25,013 passed / 1 failed / 0 skipped**; **slow battery 351 / 351**; the one red was `seedlingConstantsCensus.test.js` (the constants CSV not re-written for the switch's counter zeros), fixed in `142d2d12` (`--write`; that file 24 / 24 locally). Run **41238248272** at `142d2d12` was still QUEUED (all four vitest jobs) more than 90 minutes after the push, when this report was committed (no runner had picked up any of its jobs). It is the head's JSUT: the report-only commits after it do not trigger the workflow (its path filter). The planner should read it with `node scripts/procgen/ci-summary.mjs --run=41238248272 --wait` |
 
 ## 7. What the harvest A/B should expect
 
