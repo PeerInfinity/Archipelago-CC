@@ -26793,3 +26793,40 @@ only Boss Key 2 arrival leg that gets past `bobsoldier@880,832`. Switch `pressKi
   worktree with it applied: producer roster 97 run, 0 red; the bounded set 635/635. Re-recording instead
   (`variant-rerecord.patch`) lengthens both witness tapes past their game samples (2195 → 2317 t, 1629 → 1796 t) and
   reds 7 rows.
+
+---
+### Seedling hammer-phase GHOSTROPE — the PULL rung cuts a rope with the Ghost Sword
+
+⚖ User, queued 2026-10-31 (one of four hammer slices run in parallel). ⚖ The user (2026-10-30): *"ghost sword replaces
+the sword, so the solver shouldn't attempt to switch to regular sword when it has ghost sword."* Switch
+`ghostRopeCut.GHOST_ROPE_CUT`, **OFF** (`SEEDLING_GHOST_ROPE_CUT=1` / `withGhostRopeCut`). The report is
+`CC/docs/cloud-reports/seedling-hammer-ghost-rope.md`.
+
+- **The game.** `slash()` runs `if (hasSword)`; under `hasGhostSword` the rect is 24 x 48, the reach 24, the line waived,
+  and `genericHit` → `RopeStart.hit()` takes no `t`. Witnessed on p4g headless (`probe-seedling-ghost-rope.mjs`,
+  `fixtures/ghost-rope-witness/`, L16's `rope@32,16`): the ghost sword cuts from 15.1 and 23.1 px ({16,0} at t3 = the
+  model's pull t2 + 1), the plain sword does not from 23.1, nothing cuts from 27.1. Game = model at 0 px. The run already
+  modelled it (`GHOST_PRESS_ARMS.RopeStart`).
+- **The gap.** The PULL rung, its later-lane probe and the `rope` verb asked only a `sword` primary; `ropeCutWeapons`
+  skips the sword while `hasGhostSword` is up and had no ghost row. The lab's ENDGAME `ropegate` rooms (seeds 1-3, 10x10
+  `empty`) refused at the rung: *"the run's `primary` slot fires `ghostsword` and no slot holds a Sword, Fire or Spear"*.
+- **The fix (ON).** A `ghostsword` primary whose swing tests is the rung's and the verb's own swing, priced with the
+  ghost's press (`ROPE_SWING_PRESS.ghostsword`). Three things the ghost swing needs that the sword's did not, each
+  measured on a hand-built room with a `LightPole` beside the rope: the 48-wide rect reaches a pole the sword's does not
+  (a stance is kept off `GHOST_ROPE_STRAY_ARMS`: LightPole, bridge Tile, PushableBlockSpear); the press DASHES the player
+  ~5 px along the facing during its seven tests (the audit is swept by `DASH_DISPLACEMENT`, 9 px, + 4 px slack at
+  derivation); a stance on the diagonal flips `facingToward` under the aim tap (the facing is fixed at the first ask, and
+  the press waits for rest). A held ghost sword is the swordless cut's swing row (selected by `equip`).
+- **Effect ON.** The three ENDGAME rooms SOLVE (`pull` with the ghost sword, `collect`; 144 / 125 / 120 t), replayed in
+  the model with no hit. The solver's L16 `rope` plan (`ghostrope-l16-verb-plan`) plays on the game as planned. L16's
+  full crossing with the ghost pair now passes the lanes and stops at `lock@320,112` (the weigh, out of scope). Movers
+  elsewhere: none — producers 97/0 red ON and OFF, the identity block identical OFF and ON, and the route survey cannot
+  move (the ghost sword arrives at step 222; the last rope room is step 148).
+- **Gate** `hammerGhostRope.test.js` (13 rows). Mutants: the plain sword's row in the ghost's place (5 red), the ghost
+  priced with the sword's rect and reach (2 red), the arm dropped (5 red).
+
+**Trap candidates.**
+- A wider swing reaches more than its target: price the stance with the rect that swings, and over the whole swing (a
+  ghost press moves the player while it tests).
+- `facingToward` on the diagonal flips under a one-pixel aim tap; a press that re-derives its facing each tick can turn
+  onto something else.

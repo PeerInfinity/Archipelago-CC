@@ -236,7 +236,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 504,
         "browser": 204,
-        "cited": 268,
+        "cited": 269,
         "files": 522,
         "lineStyle": 18,
         "withDocblock": 522,
@@ -13155,7 +13155,10 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-ghost-rope.mjs",
