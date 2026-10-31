@@ -4233,6 +4233,8 @@ export function seedlingSeam({
      * not generate it.
      */
     dashMode,
+    /** ⛓ seedling-gen-new-biomes (C4) — the biome's extra flood terrains (`palette.floodWalks`; `caldera`'s melt). */
+    floodWalks = [],
 } = {}) {
     /**
      * ⛓⛓⛓ **THE DIRECTIVE IS RESOLVED FIRST, BECAUSE IT FORCES THE HEAD**
@@ -4260,7 +4262,7 @@ export function seedlingSeam({
     if (elements === undefined) elements = defaultElementsFor(items);
     /** ⛓ seedling-gen-terrains (C3) — the boot decides which terrains the floods walk (lava only with
      *  the dark suit). Every model this seam builds takes the same set. */
-    const floodTerrains = floodTerrainsFor(items);
+    const floodTerrains = floodTerrainsFor(items, floodWalks);
     let model = seedlingModel({ seed, floodTerrains, defaults, skeleton, elements, areas });
     let oracle = wrapOracle(seedlingOracle({ model, items, budget, dashMode }));
     /**
@@ -4840,7 +4842,7 @@ export function generateSeedlingLevel({
     const { model, oracle, certification, areaCertification, require: dir,
         ledger: seamLedger } = seedlingSeam({
         seed, items: palette.items ?? null, budget, defaults, skeleton, elements, areas,
-        require, dashMode,
+        require, dashMode, floodWalks: palette.floodWalks,
     });
     const out = generateLevel({ rng: rngFor(seed), model, oracle, palette, bounds });
     /**

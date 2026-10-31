@@ -100,7 +100,9 @@ describe('SWIM T1 D1 — hazardCells(record, items): one arm per item', () => {
     it('byte-inertia: no biome but post-swim, post-feather and the C2 presets past D5 grants canSwim or hasDarkSuit, so every other room reads the item-less set', () => {
         const granting = Object.entries(GEN_ROOM_BIOMES)
             .filter(([, p]) => p.items?.canSwim || p.items?.hasDarkSuit).map(([name]) => name);
-        expect(granting).toEqual(['post-swim', 'post-feather', 'post-spear', 'post-dark-suit', 'endgame']);
+        // ⛓ seedling-gen-new-biomes (C4) — frozen-forge (post-dark-suit's boot) and flooded-ruins (post-feather's).
+        expect(granting).toEqual(['post-swim', 'post-feather', 'post-spear', 'post-dark-suit', 'endgame',
+            'frozen-forge', 'flooded-ruins']);
         for (const [name, p] of Object.entries(GEN_ROOM_BIOMES)) {
             if (!granting.includes(name)) expect(hazardCells(record, p.items ?? null), name).toEqual(hazardCells(record));
         }

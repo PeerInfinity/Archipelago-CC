@@ -14,7 +14,8 @@
  *  - Click an item  → dispatch user:locationCheck via host.
  *  - Inventory      → mirror snapshot.inventory into engine sidebar.
  *  - Collected      → mark engine items collected from snapshot.checkedLocations.
- *  - Accessibility  → deferred (everything accessible by default).
+ *  - Accessibility  → each room's access rules against the snapshot;
+ *                     inaccessible until a snapshot arrives.
  *  - Discovery / fog → deferred.
  */
 
@@ -23,6 +24,7 @@ import { TextAdventureEngine } from '../textAdventureEngine/engine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { installPlaybackBridge } from './playbackBridge.js';
+import { roomAccessibility } from './roomAccessibility.js';
 import {
     customRegionEnterMessage,
     customLocationCheckMessage,
@@ -246,8 +248,12 @@ function applyInventoryFromSnapshot(engine, snapshot) {
 
 /**
  * Evaluate access rules for one room's exits and items, push results
- * to the engine. Defaults to accessible=true if a rule is null or
- * evaluation throws.
+ * to the engine. Before there is a snapshot (and static data) to
+ * evaluate against, every exit and item is pushed INACCESSIBLE — the
+ * engine's own `loadWorld` default is accessible, and the world is
+ * built from static data that can land before the snapshot does
+ * (`roomAccessibility.js` has the measurement). A rule that throws
+ * still defaults to accessible.
  *
  * Procgen note: obstacles are not evaluated here as a separate gate.
  * The procgen pipeline (shared/procgen/pathsAndObstaclesCompiler.js)
@@ -264,34 +270,18 @@ function evaluateAccessibilityForRoom(engine, client, world, roomId) {
     const room = world.rooms[roomId];
     const rules = world.accessRules?.[roomId];
     if (!room || !rules) return;
-    const snapshot = client.getStateSnapshot();
-    const staticData = client.getStaticData();
-    if (!snapshot || !staticData) return;
-
-    let ctx;
-    try {
-        ctx = createSnapshotInterface(snapshot, staticData, {});
-    } catch (err) {
-        log('warn', 'createSnapshotInterface failed:', err);
-        return;
-    }
-
-    function evalRule(rule) {
-        if (rule == null) return true;
-        try {
-            return !!evaluateRule(rule, ctx);
-        } catch (err) {
-            log('debug', 'rule eval threw, defaulting accessible:', err);
-            return true;
-        }
-    }
+    const acc = roomAccessibility(room, rules, client.getStateSnapshot(), client.getStaticData(), {
+        createContext: createSnapshotInterface,
+        evaluate: evaluateRule,
+        log,
+    });
 
     engine.batchUpdate(() => {
         for (const exit of room.exits) {
-            engine.setExitAccessible(roomId, exit.id, evalRule(rules.exits[exit.id]));
+            engine.setExitAccessible(roomId, exit.id, acc.exits[exit.id]);
         }
         for (const item of room.items) {
-            engine.setItemAccessible(roomId, item.id, evalRule(rules.items[item.id]));
+            engine.setItemAccessible(roomId, item.id, acc.items[item.id]);
         }
     });
 }
@@ -510,6 +500,10 @@ async function main() {
                     // enter message fires on the initial mount too,
                     // not just on subsequent gameState transitions.
                     applyRegionChange(currentRegion, 'rebuildWorld');
+                } else {
+                    // loadWorld showed the start room with the engine's
+                    // accessible-by-default slots; replace them now.
+                    evaluateAccessibilityForRoom(engine, client, w, w.startRoomId);
                 }
             });
             // Re-apply any initialState that arrived before the world
@@ -532,9 +526,7 @@ async function main() {
             applyInventoryFromSnapshot(engine, snapshot);
             applyCheckedLocationsFromSnapshot(engine, snapshot, world);
         });
-        if (lastSeenRegion) {
-            evaluateAccessibilityForRoom(engine, client, world, lastSeenRegion);
-        }
+        evaluateAccessibilityForRoom(engine, client, world, lastSeenRegion ?? world.startRoomId);
     }
 
     // AP → engine: subscribe to host events.
