@@ -30,6 +30,18 @@
  *       `jsRuntimeTape.test.js`'s live-keys row.)
  *   then 4 and 5 as before: after `finished` the frame goes on LIVE.
  *
+ * And SEQUENCE — ⛓ seedling-js-replay-continuation: `?tapes=toy-west-pair` (two windows), its admitted walk shipped to
+ * the JS frame through the SAME window loop the wasm transport uses, on ONE run:
+ *
+ *   S1. the stages are the SEQUENCE list (`tape k/2 … boundary 1/2 … verdict`), in order, and the note says it is a
+ *       sequence REPLAY against the JS model;
+ *   S2. window 1 HELD at its latch (`heldAtFinish`), the boundary admitted window 2 on the frame's own latch
+ *       (`botJsLatch`: window 2's boot is the live room's construction spot), and the frame CONTINUED the run there
+ *       (its `tape … continued` boot note, not a rebuild);
+ *   S3. every window's per-tick verdict and the whole sequence's AGREE (JS frame vs JS model), the frame finished
+ *       window 2 at its `tick_count`, and the drains held `61 + 48 + 1` observations;
+ *   then 4 and 5: after the last window the frame goes on LIVE.
+ *
  *   node scripts/procgen/check-seedling-lab-load-in-js.mjs [--host=http://localhost:8000] [--shots=<dir>]
  *
  * Exits 0 when every check passes (or SKIPs with no dev server), 1 otherwise. Takes the box lock (kind `browser`).
@@ -46,6 +58,10 @@ argvHelp(import.meta.url);
  *  read its own subject). ⛓ PHASE B: and a REPLAY's, `watchWasm.JS_REPLAY_STAGES` (no set, so no `levels`). */
 const JS_STAGES = ['probe', 'runtime', 'start', 'levels', 'spot', 'play'];
 const JS_REPLAY_STAGES = ['probe', 'runtime', 'start', 'tape', 'running', 'finished', 'drain', 'verdict'];
+/** ⛓ seedling-js-replay-continuation: a two-window SEQUENCE's, as `watchWasm.stagesOf({windows: 2})` spells it. */
+const JS_SEQUENCE_STAGES = ['probe', 'runtime', 'start', 'tape 1/2', 'running 1/2', 'finished 1/2', 'drain 1/2',
+    'boundary 1/2', 'tape 2/2', 'running 2/2', 'finished 2/2', 'drain 2/2', 'verdict'];
+const SEQUENCE = ['r7-ends-meet-1', 'r7-ends-meet-2'];
 const HALF_TILE = 8;
 
 async function main() {
@@ -96,6 +112,13 @@ async function main() {
             live: true,
             touch: true,
         },
+        {
+            name: 'sequence',
+            q: 'tapes=toy-west-pair',
+            ready: "window.__editorSequence?.admitted === true && !document.getElementById('loadJs').disabled",
+            set: false,
+            seq: true,
+        },
     ];
 
     const browser = await chromium.launch({ args: ['--autoplay-policy=user-gesture-required'] });
@@ -108,13 +131,17 @@ async function main() {
                 await page.goto(`${PAGE}?${c.q}`, { waitUntil: 'domcontentloaded' });
                 await page.waitForFunction(c.ready, null, { timeout: 240000 });
                 // What will be shipped: the arm's own builder (REPLAY has none — its spot is the tape file's boot).
-                const shipped = c.live
+                const shipped = c.seq ? null : c.live
                     ? { boot: (await (await fetch(`${HOST}/${TAPE}`)).json()).boot, set: null }
                     : await page.evaluate(async () => {
                         const p = await window.__editorShipProbe?.();
                         return p ? { boot: p.tape?.boot ?? null, set: p.levelSet?.set_id ?? null } : null;
                     });
                 const note = await page.textContent('#loadJsNote');
+                if (c.seq) {
+                    check(/REPLAY of the sequence/.test(note) && /JS model/.test(note),
+                        `${c.name}: the button's note says it is a SEQUENCE replay, judged against the JS model`, note);
+                }
                 if (c.live) {
                     check(/REPLAY of the tape/.test(note) && /JS model/.test(note),
                         `${c.name}: the button's note says it is a REPLAY, judged against the JS model`, note);
@@ -158,16 +185,41 @@ async function main() {
                         `${c.name}: a key (left, X, V) and a #jsTouch tap went in MID-REPLAY (the tape armed throughout)`,
                         `armed ${pre.armed}→${post.armed} tick ${pre.tick}→${post.tick}/${pre.tick_count} pad=${Boolean(pad)}`);
                 }
-                const last = c.live ? 'verdict' : 'play';
+                const last = c.live || c.seq ? 'verdict' : 'play';
                 await page.waitForFunction((stage) => window.__editorJs?.stage === stage
                     || window.__editorJs?.refusal, last, { timeout: 120000 });
                 const js = await page.evaluate(() => window.__editorJs);
                 check(js.stage === last && !js.refusal, `${c.name}: the ship reached ${last}`,
                     js.refusal ? JSON.stringify(js.refusal) : js.reached.join(' → '));
-                const want = c.live ? JS_REPLAY_STAGES : JS_STAGES.filter((s) => s !== 'levels' || c.set);
+                const want = c.seq ? JS_SEQUENCE_STAGES : c.live ? JS_REPLAY_STAGES
+                    : JS_STAGES.filter((s) => s !== 'levels' || c.set);
                 check(JSON.stringify(js.stages) === JSON.stringify(want)
                     && JSON.stringify(js.reached) === JSON.stringify(want),
-                    `${c.name}: the stages are the JS ${c.live ? 'REPLAY ' : ''}list, in order`, js.reached.join(' '));
+                    `${c.name}: the stages are the JS ${c.seq ? 'SEQUENCE ' : c.live ? 'REPLAY ' : ''}list, in order`,
+                    js.reached.join(' '));
+                if (c.seq) {
+                    const tapes = await Promise.all(SEQUENCE.map(async (n) => (await fetch(
+                        `${HOST}/frontend/modules/seedlingDemo/fixtures/tapes/${n}.json`)).json()));
+                    const w = js.windows ?? [];
+                    const boots = await frame.evaluate(() => window.__seedlingJsRuntime?.events
+                        ?.filter((e) => e.type === 'boot' || (e.type === 'tape' && e.continued))
+                        .map((e) => (e.continued ? 'continued' : e.why)) ?? null);
+                    check(w.length === 2 && w[0].heldAtFinish === true && w[1].admission !== null
+                        && w[1].live?.level === tapes[1].boot.level && w[1].live?.ctor?.x === tapes[1].boot.x
+                        && w[1].live?.ctor?.y === tapes[1].boot.y,
+                        `${c.name}: window 1 HELD at its latch, and window 2 was admitted on the frame's own latch`,
+                        `held=${w[0]?.heldAtFinish} live=${JSON.stringify(w[1]?.live && { level: w[1].live.level, ctor: w[1].live.ctor })}`);
+                    check(Array.isArray(boots) && boots.at(-1) === 'continued' && boots.filter((b) => b === 'continued').length === 1,
+                        `${c.name}: the frame CONTINUED the run at window 2 (no rebuild)`, JSON.stringify(boots));
+                    const fin = await frame.evaluate(() => JSON.parse(window.__swfBridge.game.botStatus()));
+                    const total = tapes[0].tick_count + tapes[1].tick_count + 1;
+                    check(w.every((x) => /agrees/.test(x.verdict?.perTick?.text ?? '') && x.verdict?.perTick?.agrees)
+                        && js.verdict?.perTick?.kind === 'agrees' && fin.finished === true
+                        && fin.tick === tapes[1].tick_count && js.drain?.observations === total,
+                        `${c.name}: every window and the whole sequence AGREE per tick (JS frame vs JS model)`,
+                        `${w.map((x) => x.verdict?.perTick?.text).join(' | ')} | whole: ${js.verdict?.perTick?.text} `
+                        + `| drained ${js.drain?.observations}/${total}`);
+                }
                 if (c.live) {
                     const tape = await (await fetch(`${HOST}/${TAPE}`)).json();
                     const fin = await frame.evaluate(() => JSON.parse(window.__swfBridge.game.botStatus()));
@@ -192,7 +244,7 @@ async function main() {
                 }
                 const st = await frame.evaluate(() => JSON.parse(window.__swfBridge.game.botStatus()));
                 const b = shipped?.boot;
-                if (!c.live) check(Boolean(b) && st.level === b.level && st.x === b.x + HALF_TILE && st.y === b.y + HALF_TILE,
+                if (!c.live && !c.seq) check(Boolean(b) && st.level === b.level && st.x === b.x + HALF_TILE && st.y === b.y + HALF_TILE,
                     `${c.name}: the player is at the spot`,
                     `boot L${b?.level} (${b?.x}, ${b?.y}); botStatus L${st.level} (${st.x}, ${st.y})`);
                 // The sound: the context RUNNING (the Start click unlocked it) and both libraries loaded.
