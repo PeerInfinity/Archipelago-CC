@@ -45,6 +45,7 @@ import {
     wireSphereWaves,
     placeSphereTreeItems,
     realiseSphereBatchGen,
+    yieldedWait,
     resolveSphereLibrarySources,
     resolveSphereAtlasSources,
     compactSphereTree,
@@ -439,7 +440,7 @@ async function stepRegions(env, { onProgress = null } = {}) {
     while (!r.done) {
         onProgress?.(r.value);
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        await yieldedWait(r.value);
         r = gen.next();
     }
 

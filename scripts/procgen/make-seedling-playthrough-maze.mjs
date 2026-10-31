@@ -25,7 +25,9 @@
  * the pair the partition generator re-runs) and reads the entity rows off the delivered rooms too. On the
  * raw transcription 45 of the 115 regions disagreed with their own atlas (overlay cells, pruned pockets).
  * The grid is the hand-ruled one (`playthroughHandRuledGridFor`, session tile-primitives-sphere-order-6): it moves only the
- * conditions of L40's Fire cells, never which cells are gated, so the partition still holds.
+ * conditions of L40's Fire cells, never which cells are gated, so the partition still holds. Since session tile-mechanisms-m2-w1
+ * it carries the ANNOTATED PUZZLE LOCKS too (`playthroughPuzzleLockGridFor`, below): `enter` gates on the cell of a lock a
+ * verdict names (L40's (32,30), inside one sub-region of the partition) and its interior piece cells' own conditions back.
  *
  * Deterministic, so `--check` is an exact byte gate.
  *
@@ -46,10 +48,12 @@ import { SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSe
 import { crossRoomButtonsOf, persistenceEffect, IN_ROOM_POLE_GATE_KIND } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
 import { PERSISTENCE_RESPONSE } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 import {
-    PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
+    PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
     setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
 } from './make-seedling-playthrough-rules.mjs';
 import { itemNamesInRule } from '../../frontend/modules/procgenCore/ruleItemNames.js';
+import * as OV from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
+import { PUSHABLE_KINDS } from '../../frontend/modules/flashPanel/seedlingBlockPaths.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
@@ -381,6 +385,147 @@ export function playthroughPermissiveLocations() {
     return [...permissiveBindings];
 }
 
+/**
+ * ⛓⛓ ANNOTATED PUZZLE LOCKS (session tile-mechanisms-m2-w1, ⚖ user 2026-10-31: "For the version of Seedling that runs in the
+ * maze substrate, instead of having code to turn the logic of the puzzle into Archipelago access rules, we could instead annotate
+ * the locks that the puzzles unlock, to say which direction they unlock from and which objects are required to complete the
+ * puzzle" — then "Fallback, build here", once W1 measured the simulated L40 chain far over the search's caps).
+ *
+ * The maze does not play the puzzle. The LOCK the puzzle opens carries it, as the region analyzer's own vocabulary for a lock
+ * that opens from one side: its cell's `enter[dir]` gates (`regionAtlasAnalyzer.js` grid contract), which the projection
+ * already lays as entry gates (`levelWorldEntryGates`) and both step arms already read (`tile.entry`). So there is no engine
+ * code and no new tile helper. Every piece of an annotation is read, never listed:
+ *   - WHICH lock, and what completing its puzzle requires: the rules producer's own puzzle verdicts — an overlay row that names
+ *     its `door` (`<class>@<px>,<py>`), its `tile` and its `condition` (today one: `L40_EAST_RULE`, the corpse + fire-block chain
+ *     that holds `wandlock@512,480` open, priced Fire AND a weapon);
+ *   - WHICH DIRECTION it unlocks from: the side of the closed lock whose terrain reaches a HOLDER of its group
+ *     (`buildGroupOpeners`) — for L40's door, the west, where the t2 button is;
+ *   - the far side: a re-closing lock held open from its opener side is open both ways for the rest of that visit, so the far
+ *     side's entry costs the same. That is exact only while no ARRIVAL stands on the far side (an arrival there meets the lock
+ *     shut), so a far-side arrival — any exit's landing tile in the closed lock's far terrain — is REFUSED by name; so is a group
+ *     that latches (a ButtonRoom / rope: open for good, an event — the OWED in-level latch), a door whose verdict names no
+ *     entity, and a lock no holder reaches.
+ * The puzzle's own PIECES are not gates any more: in a level with an annotated lock, the hand ruling's condition on a pushable
+ * block's start cell that prices no crossing (every owned neighbour is ONE sub-region of the persisted partition — L40's
+ * (30,30), inside r23c29) reverts to the analyzer's own (Fire: pushing the block aside). A piece cell that IS a crossing keeps
+ * the ruling — it is the lock its puzzle opens (L40's (36,36), which the pulser shoves; the rules price r23c29 ↔ r32c36/r36c35
+ * there). Cells that are no block's (L40's burnable-tree pocket) are untouched.
+ */
+const ENTER_STEPS = Object.freeze({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] });
+
+/** The rules producer's puzzle verdicts that name the lock their puzzle opens: every overlay row `{level, door, tile, condition}`. */
+export function puzzleLockVerdicts(overlay = OV) {
+    return Object.values(overlay).filter((v) => v && typeof v === 'object' && !Array.isArray(v)
+        && typeof v.door === 'string' && Array.isArray(v.tile) && Number.isInteger(v.level) && v.condition);
+}
+
+/**
+ * The annotated locks of one map level: `[{door, x, y, opensFrom: [side…], requires, group}]` (map tiles; `opensFrom` = the
+ * SIDES (N/E/S/W of the lock) it unlocks from: those whose terrain reaches a holder of its group). Pure over its inputs; refuses by name (see above).
+ */
+export function puzzleLocksFor(level, grid, { arrivals = [], groups = OV.buildGroupOpeners(PLAYTHROUGH_MAP), verdicts = puzzleLockVerdicts() } = {}) {
+    const { x: ox, y: oy } = grid.origin ?? { x: 0, y: 0 };
+    const cellAt = (x, y) => {
+        const lx = x - ox;
+        const ly = y - oy;
+        return lx < 0 || ly < 0 || lx >= grid.width || ly >= grid.height ? null : grid.cells[ly * grid.width + lx];
+    };
+    const open = (x, y) => { const c = cellAt(x, y); return c !== null && c.kind !== 'wall'; };
+    // The terrain on one side of the CLOSED lock: every non-wall cell reachable without crossing it (geometry only — wider than
+    // any item's reach, so a far-side arrival is never missed).
+    const side = (sx, sy, door) => {
+        const seen = new Set([`${sx},${sy}`]);
+        const queue = [[sx, sy]];
+        for (let head = 0; head < queue.length; head++) {
+            const [x, y] = queue[head];
+            for (const [dx, dy] of Object.values(ENTER_STEPS)) {
+                const key = `${x + dx},${y + dy}`;
+                if (key === door || seen.has(key) || !open(x + dx, y + dy)) continue;
+                seen.add(key);
+                queue.push([x + dx, y + dy]);
+            }
+        }
+        return seen;
+    };
+    const out = [];
+    for (const v of verdicts.filter((r) => r.level === level.level)) {
+        const who = `puzzle lock ${v.door} (L${v.level})`;
+        const [cls, at] = v.door.split('@');
+        const [px, py] = (at ?? '').split(',').map(Number);
+        const e = (level.entities ?? []).find((n) => n.type === cls && n.x === px && n.y === py);
+        if (!e) throw new Error(`${who}: the verdict names no entity of L${v.level}`);
+        const [x, y] = [Math.floor(px / SEEDLING_TILE_SIZE), Math.floor(py / SEEDLING_TILE_SIZE)];
+        if (x !== v.tile[0] || y !== v.tile[1]) throw new Error(`${who}: its entity stands on (${x},${y}), the verdict says (${v.tile})`);
+        const group = Number(e.attrs?.tset);
+        const opener = groups.get(`${v.level}:${group}`);
+        if (!opener) throw new Error(`${who}: its group t${group} has no opener in L${v.level}`);
+        if (opener.latching) throw new Error(`${who}: its group t${group} LATCHES — an in-level latch is not built (owed)`);
+        const holders = new Set(opener.holders.map(([hx, hy]) => `${hx},${hy}`));
+        const door = `${x},${y}`;
+        const opensFrom = [];
+        const far = [];
+        for (const [at, [dx, dy]] of Object.entries(ENTER_STEPS)) {
+            const [fx, fy] = [x + dx, y + dy];   // the neighbour on side `at`; a move from it INTO the lock goes the other way
+            if (!open(fx, fy)) continue;
+            const terrain = side(fx, fy, door);
+            if ([...holders].some((h) => terrain.has(h))) opensFrom.push(at);
+            else far.push({ at, terrain });
+        }
+        if (opensFrom.length === 0) throw new Error(`${who}: no side of it reaches a holder of t${group} (${[...holders].join(' ')})`);
+        for (const f of far) {
+            const landing = arrivals.find(([ax, ay]) => f.terrain.has(`${ax},${ay}`));
+            if (landing) {
+                throw new Error(`${who}: an arrival (${landing}) stands on its ${f.at} side, where the lock is shut — `
+                    + 'per-visit opening is not built');
+            }
+        }
+        out.push({ door: v.door, x, y, opensFrom, requires: v.condition, group });
+    }
+    return out;
+}
+
+/**
+ * The grid the maze world plays for `level`: the hand-ruled grid (`playthroughHandRuledGridFor`), plus its annotated puzzle
+ * locks (`puzzleLocksFor`) as `enter` gates, with the puzzle's interior piece cells reverted to the analyzer's own conditions.
+ * `atlas` + `partition`: the arrivals (every exit's landing tile) and the sub-region rows the interior test reads.
+ */
+export function playthroughPuzzleLockGridFor(level, { atlas, partition }) {
+    const grid = playthroughHandRuledGridFor(level);
+    const region = atlas.regions.find((r) => r.map_ref === level.level);
+    const arrivals = (region?.exits ?? []).map((e) => e.entrance_tile).filter(Boolean);
+    const locks = puzzleLocksFor(level, grid, { arrivals });
+    if (locks.length === 0) return grid;
+    const { x: ox, y: oy } = grid.origin ?? { x: 0, y: 0 };
+    const index = (x, y) => (y - oy) * grid.width + (x - ox);
+    const cells = grid.cells.slice();
+    for (const lock of locks) {
+        const c = cells[index(lock.x, lock.y)];
+        if (c.kind !== 'directional' && c.kind !== 'open') {
+            throw new Error(`puzzle lock ${lock.door}: its cell is "${c.kind}", not a door the analyzer leaves open`);
+        }
+        const enter = { ...(c.enter ?? {}) };
+        for (const dir of Object.keys(ENTER_STEPS)) if (enter[dir] !== null) enter[dir] = [lock.requires];
+        cells[index(lock.x, lock.y)] = { ...c, kind: 'directional', enter, puzzle_lock: { door: lock.door, opens_from: lock.opensFrom } };
+    }
+    // The pieces: a pushable block's start cell the hand ruling re-priced, owned on every side by one sub-region, reverts.
+    const base = playthroughGridFor(level);
+    const part = partition?.regions?.[region?.region_id];
+    const [px, py] = part?.origin ?? [0, 0];
+    const ownerAt = (x, y) => {
+        const ch = part?.rows?.[y - py]?.[x - px];
+        return ch && ch !== '.' ? ch : null;
+    };
+    for (const e of level.entities ?? []) {
+        if (!PUSHABLE_KINDS[e.type]) continue;
+        const [x, y] = [Math.floor(e.x / SEEDLING_TILE_SIZE), Math.floor(e.y / SEEDLING_TILE_SIZE)];
+        const i = index(x, y);
+        if (JSON.stringify(cells[i].conditions) === JSON.stringify(base.cells[i].conditions)) continue;
+        const owners = new Set(Object.values(ENTER_STEPS).map(([dx, dy]) => ownerAt(x + dx, y + dy)).filter(Boolean));
+        if (owners.size === 1) cells[i] = base.cells[i];
+    }
+    return { ...grid, cells };
+}
+
 /** Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`. */
 export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
@@ -399,7 +544,7 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
         gameConfig,
         levelWorlds: { partition },
         analysis: {
-            gridForLevel: (level) => playthroughHandRuledGridFor(level),
+            gridForLevel: (level) => playthroughPuzzleLockGridFor(level, { atlas, partition }),
             conditionKey: playthroughAnalyzerOptions.conditionKey,
             resolveCondition: playthroughAnalyzerOptions.resolveCondition,
         },

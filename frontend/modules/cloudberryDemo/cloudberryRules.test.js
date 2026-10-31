@@ -155,7 +155,11 @@ describe('pageParamsForWorld', () => {
             ['odd', { exit_id: 'odd', side: null, exitName: 'odd' }],
         ]);
         const params = pageParamsForWorld({ params: { payload: CLOUDBERRY_PAYLOAD_VERSION, backExitSide: 'W' }, exits });
-        expect(params.exits).toEqual([{ side: 'east', exitName: 'exit_E', label: 'to region_1_0' }, { side: 'west', exitName: 'exit_W' }]);
+        // exitId / targetRegion: what the bridge's configure.arrivedFrom is matched against (the start door's side arrived by).
+        expect(params.exits).toEqual([
+            { side: 'east', exitName: 'exit_E', exitId: 'exit_E', targetRegion: 'region_1_0', label: 'to region_1_0' },
+            { side: 'west', exitName: 'exit_W', exitId: 'exit_W' },
+        ]);
         expect(params.sidePortals).toEqual({ N: 'north', E: 'east', S: 'south', W: 'west' });
         expect(params.entrySide).toBe('west');
         expect(pageParamsForWorld({ params: {}, exits: [] }).entrySide).toBeNull();
