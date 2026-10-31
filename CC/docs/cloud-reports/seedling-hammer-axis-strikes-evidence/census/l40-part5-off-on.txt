@@ -1,0 +1,4 @@
+{"on":false,"ticks":679,"plan":"83ea3652d4cd25e74e28661a795660db","counts":{"policies":0,"asked":0,"withheld":0,"noAxis":0,"aimed":0,"pressed":0}}
+{"driveTicks":615,"axisTicks":0,"armed":0,"inReach":0,"rows":[]}
+{"on":true,"ticks":679,"plan":"83ea3652d4cd25e74e28661a795660db","counts":{"policies":1,"asked":525,"withheld":4029,"noAxis":0,"aimed":1,"pressed":1}}
+{"driveTicks":615,"axisTicks":0,"armed":0,"inReach":0,"rows":[]}
