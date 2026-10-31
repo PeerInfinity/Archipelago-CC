@@ -96,8 +96,8 @@ describe('hammer-phase SOUTHDOOR on the latch boot (slow)', () => {
         expect(hold.presser).toEqual({ tag: 'buttonroom', x: 880, y: 768, t: 3 });
         expect(hold.opened).toEqual([DOOR]);
         // the approach: one, after the door, from the doorway
-        expect(TURRET_APPROACH_COUNTS.approaches).toHaveLength(1);
-        expect(TURRET_APPROACH_COUNTS.approaches[0]).toMatchObject({ turret: TURRET, t: 1632, side: 'right' });
+        expect(TURRET_APPROACH_COUNTS.approaches).toEqual([expect.objectContaining({ turret: TURRET, t: 1632,
+            side: 'right' })]);
         // ⚖ 30(c): the plan's keys on a FRESH run of the model
         const seen = await replay(boot, r.out.perTick.map((k) => [...k]), r.out.equips);
         expect(seen.hits).toEqual([]);
