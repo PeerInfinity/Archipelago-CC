@@ -139,23 +139,38 @@ describe('FORCEDHITXC D1 — the proof carries an open hitless prefix on to a cr
         expect(p).not.toHaveProperty('crossing');
     });
     it('ON: a horizon short of the door is not a crossing — the proof stays open on its own verdict', () => {
-        const before = FORCED_HITS.continuationTicks;
+        const ticks = FORCED_HITS.continuationTicks;
+        const forks = FORCED_HITS.continuationForks;
         FORCED_HITS.continuationTicks = 3;
         try {
-            // at the shipped budget, the 668 forks left run out inside the 6,480 (prefix, hold) pairs
+            // the shipped cap: 36 forks (one alphabet's width) of the 6,480 (prefix, hold) pairs, not the 668 left
             const p = prove({ secondaryUse: true, forcedHitWitnessFirst: false });
             expect(p).not.toHaveProperty('crossing');
             expect(p.why).toMatch(/180 prefix\(es\) of 2 tick\(s\) are still hitless/);
-            expect(p.continuation).toMatchObject({ nodes: 668 });
-            expect(p.continuation.why).toMatch(/ran out of budget after 668 fork/);
+            expect(p).toMatchObject({ nodes: 1332 + 36, continuation: { nodes: 36 } });
+            expect(p.continuation.why).toMatch(/ran out of budget after 36 fork/);
             // with room for every pair (the tree stopped at depth 2, its bound), none leaves the room inside 3 ticks
+            FORCED_HITS.continuationForks = 6480;
             const q = prove({ secondaryUse: true, forcedHitWitnessFirst: false }, { depthMax: 2, nodeBudget: 1332 + 6480 });
             expect(q).not.toHaveProperty('crossing');
             expect(q.continuation).toMatchObject({ nodes: 6480 });
             expect(q.continuation.why).toMatch(/no hitless continuation .* within 3 tick/);
         } finally {
-            FORCED_HITS.continuationTicks = before;
+            FORCED_HITS.continuationTicks = ticks;
+            FORCED_HITS.continuationForks = forks;
         }
+    });
+    it('ON: a quiet room (hitless, never left) costs at most the cap — one alphabet\'s width — after the witness', () => {
+        let forks = 0;
+        const quiet = () => {
+            forks += 1;
+            return { ledger: () => [], advance: () => ({ transition: null }) };
+        };
+        const p = withContactFidelity({ secondaryUse: true, forcedHitWitnessFirst: true },
+            () => proveForcedHit(quiet, { replayTicks: 134 }));
+        expect(p).toMatchObject({ proven: false, witness: true, nodes: 1 + 36, continuation: { nodes: 36 } });
+        expect(p).not.toHaveProperty('crossing');
+        expect(forks).toBe(37);
     });
 });
 

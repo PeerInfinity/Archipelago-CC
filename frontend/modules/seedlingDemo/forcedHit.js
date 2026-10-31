@@ -65,6 +65,12 @@ export const FORCED_HITS = {
      * the open prefix's own ticks included, before it is given up as "did not leave the room" (`continueHitless`)
      */
     continuationTicks: 30,
+    /**
+     * ⛓ FORCEDHITXC D1: the most forks the continuation may spend, under what the proof's budgets left — one
+     * alphabet's width (36), so a room that is hitless but never left (the witness's quiet room, L67 leg 908's) costs
+     * at most what one more depth-1 level would, never the proof's whole leftover budget (668 forks measured)
+     */
+    continuationForks: 36,
 };
 
 /**
@@ -190,12 +196,13 @@ function hitlessWitness(fork, { depthMax, alphabet }) {
  * crossing (`crossing: {keys, transition, ticks, label}`): no hit is forced, and the rung may walk it. Nothing is
  * special-cased: the X+C tick is one alphabet member like the rest, the hold is the witness's own shape (one held
  * set, carried), and the tie order is the alphabet's, unchanged (so a prefix ending on `·` is first continued by
- * standing — on leg 622 that already crosses at t4, carried by the slash-dash's velocity). It spends what the
- * proof left of the node and advance budgets (each fork charged its replay and its ticks); a budget that runs out
- * leaves the proof open as before, now saying so. Returns `{nodes, advances, crossing | null, tried, why}`.
+ * standing — on leg 622 that already crosses at t4, carried by the slash-dash's velocity). It spends at most
+ * `continuationForks` (36) of what the proof left of the node and advance budgets (each fork charged its replay and its
+ * ticks); a budget that runs out leaves the proof open as before, now saying so. Returns `{nodes, advances, crossing | null, tried, why}`.
  */
-function continueHitless(fork, prefixes, { alphabet, nodesLeft, advancesLeft, replayTicks,
-    horizon = FORCED_HITS.continuationTicks }) {
+function continueHitless(fork, prefixes, { alphabet, nodesLeft: budgetLeft, advancesLeft, replayTicks,
+    horizon = FORCED_HITS.continuationTicks, forks = FORCED_HITS.continuationForks }) {
+    const nodesLeft = Math.min(budgetLeft, forks);
     let nodes = 0;
     let advances = 0;
     for (const p of prefixes) {
