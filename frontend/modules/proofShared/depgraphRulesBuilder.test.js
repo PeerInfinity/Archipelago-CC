@@ -12,7 +12,9 @@
  * starting nodes, and their slot_data predates sending the mode and the graph
  * key, so they also exercise the fallback), plus committed fixtures for the
  * option values the presets don't cover: modes 0, 2 and 3, starting nodes
- * (randomized and in order), and player 1 of a DepGraph + APQuest room.
+ * (randomized and in order), player 1 of a DepGraph + APQuest room, and the
+ * real-server check's seed (strict, 53 random starting nodes, ten of them
+ * leaves, whose empty regions the exporter marks dynamically_added).
  * depgraph_worldgen/ is excluded: it is a different game ("DepGraph WorldGen").
  *
  * Fields the server cannot know are excluded (see IGNORED below).
@@ -146,6 +148,15 @@ describe('buildDepgraphRules equivalence with the exporter', () => {
     // [1, 2, 3] from randomize_starting_nodes false; anything else from true.
     expect(starts.some((list) => list.join() === [...list].sort((x, y) => x - y).join())).toBe(true);
     expect(starts.some((list) => list.join() !== [...list].sort((x, y) => x - y).join())).toBe(true);
+  });
+
+  it('has a case with a starting node nothing depends on (an empty, dynamically_added region)', () => {
+    const marked = CASES.some(({ path }) => {
+      const rules = JSON.parse(readFileSync(path, 'utf8'));
+      const p = rules.playerId ?? Object.keys(rules.world)[0];
+      return Object.values(rules.regions[p]).some((region) => region.dynamically_added);
+    });
+    expect(marked).toBe(true);
   });
 
   for (const { name, path } of CASES) {

@@ -196,6 +196,9 @@ export function buildProofGraphRules(spec, slotData, scoutedLocations, playerCon
         makeExit(`From ${entranceLabel(i)} to ${entranceLabel(d)}`, locationName(d), entranceRule(i, d))
       );
     }
+    // The exporter marks a region with no locations and no exits (a starting
+    // node nothing depends on) as dynamically_added.
+    if (region.locations.length === 0 && region.exits.length === 0) region.dynamically_added = true;
     regions[region.name] = region;
   }
   if (missingScouts.length > 0) {
