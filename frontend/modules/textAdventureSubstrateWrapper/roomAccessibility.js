@@ -21,7 +21,11 @@
  * `error` once per call, naming the room, the exit or location and the
  * message. One call is one evaluation pass (a snapshot or a region change),
  * not a frame, so the console line does not repeat on every render. The bridge
- * marks the link from `ruleErrors` (`ruleErrorMarker.js`). That is a different
+ * marks the link from `ruleErrors` (`ruleErrorMarker.js`). The engine catches
+ * a throwing node in EITHER rule format and answers undefined (⚖ 2026-10-31),
+ * so the throw is heard through the `onRuleError` context hook, not as an
+ * exception: ANY rule with a caught error — AST or Rule Builder, top-level or
+ * nested in a helper or sub-context — is passable and marked. That is a different
  * question from "no state yet", which stays shut (`known: false`) and carries
  * no rule errors: nothing was evaluated.
  *
@@ -42,9 +46,17 @@ export function roomAccessibility(room, rules, snapshot, staticData, { createCon
     });
     if (!snapshot || !staticData) return { known: false, ...all(false) };
 
+    // The engine CATCHES a throwing rule node (either format) and answers
+    // undefined, which would read as shut; it reports each caught error through
+    // the context's `onRuleError` hook. The hook rides in as a context variable
+    // so it reaches nested evaluations (helper bodies, location/entrance
+    // sub-contexts, bound comprehension contexts). `caught` collects the errors
+    // of the rule being evaluated right now.
+    let caught = null;
+    const onRuleError = ({ error }) => { if (caught) caught.push(error); };
     let ctx;
     try {
-        ctx = createContext(snapshot, staticData, {});
+        ctx = createContext(snapshot, staticData, { onRuleError });
     } catch (err) {
         log('warn', 'createSnapshotInterface failed:', err);
         return { known: false, ...all(false) };
@@ -53,15 +65,22 @@ export function roomAccessibility(room, rules, snapshot, staticData, { createCon
     const ruleErrors = { exits: {}, items: {} };
     const evalRule = (kind, id, rule) => {
         if (rule == null) return true;
+        caught = [];
+        let value;
         try {
-            return !!evaluate(rule, ctx);
+            value = !!evaluate(rule, ctx);
         } catch (err) {
-            const message = String(err?.message ?? err);
-            ruleErrors[kind][id] = message;
-            log('error', `access rule threw in room "${room.id}", ${kind === 'exits' ? 'exit' : 'location'} "${id}"`
-                + ` — left passable: ${message}`, rule);
-            return true;
+            // An evaluator without catch-and-report still escapes: same policy.
+            caught.push(err);
         }
+        const errors = caught;
+        caught = null;
+        if (errors.length === 0) return value;
+        const message = String(errors[0]?.message ?? errors[0]);
+        ruleErrors[kind][id] = message;
+        log('error', `access rule threw in room "${room.id}", ${kind === 'exits' ? 'exit' : 'location'} "${id}"`
+            + ` — left passable: ${message}`, rule);
+        return true;
     };
     return {
         known: true,
