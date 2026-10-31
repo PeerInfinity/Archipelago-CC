@@ -403,6 +403,42 @@ export function arrowHitsOf(run) {
         .map((h) => Object.freeze({ t: h.t ?? null, id: h.id ?? null }));
 }
 
+/**
+ * ⛓ seedling-gen-new-biomes (C4) — the LAVA DEATHS a finished run took: its own
+ * `playerDeaths` rows whose source is lava (`playerPhysicsV2`'s `die()` after the
+ * lava drown). Before the dark suit a lava tick latches the drown and the player
+ * cannot leave it, so this is also every pre-suit lava entry that ran to its end.
+ * `[]` for a run with none, or a run object without the field.
+ */
+export function lavaDeathsOf(run) {
+    return (run?.playerDeaths ?? []).filter((d) => d?.source === 'lava')
+        .map((d) => Object.freeze({ t: d.t ?? null, id: d.id ?? null }));
+}
+
+/**
+ * ⛓⛓ **NO CERTIFICATE DIES IN LAVA** (seedling-gen-new-biomes, C4: `caldera`) —
+ * the refusal fields for a run that took a lava death, or null. An igneous crust
+ * (`melt`) breaks 36 in-range renders after the player first comes near it
+ * (`igneousLava.js`), so a route that WAITS on one dies there; the run respawns and
+ * may still reach its goals, which would certify a route that lingered. The
+ * generator's rooms are certified by a route that never dies, so it is refused.
+ *
+ * ⛔ It reads the RUN's own `playerDeaths` rows, never refusal prose. A room with
+ * no lava and no melt cannot produce one, and a dark-suit run never drowns in lava.
+ */
+export function lavaDeathRefusal(run) {
+    const deaths = lavaDeathsOf(run);
+    if (deaths.length === 0) return null;
+    return {
+        reasonText: `procgenOracle: the solve reached its goals after ${deaths.length} LAVA death(s) `
+            + `[${deaths.map((d) => `t${d.t} ${d.id}`).join(', ')}]. A generated level is certified by a `
+            + 'route that never dies; a death in lava is a route that lingered on a melting crust '
+            + '(or walked into lava without the dark suit), so this certificate is refused.',
+        classifiedBy: 'the certificate dies in LAVA — refused by the oracle\'s no-linger rule, not by the solver',
+        obstacle: Object.freeze({ kind: 'lava-death', deaths: deaths.length, id: deaths[0].id }),
+    };
+}
+
 /** Does a refusal message name the tick budget this call passed in? */
 const namesTickBudget = (message, maxTicksPerTarget) => new RegExp(
     `\\b${maxTicksPerTarget} ticks?\\b`).test(message ?? '');
@@ -753,6 +789,22 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
             refusalGoal: null,
             obstacle: Object.freeze({ kind: 'arrow-hit', hits: arrowHits.length,
                 id: arrowHits[0].id }),
+            considered: [],
+            pending: null,
+            rows: [],
+            ticksSpent: result.out.perTick.length,
+        };
+    }
+    /** ⛓ seedling-gen-new-biomes (C4) — the no-linger rule (`lavaDeathRefusal`). */
+    const lavaDeath = lavaDeathRefusal(result.run);
+    if (lavaDeath) {
+        return {
+            ...base,
+            verdict: VERDICT.REFUSED,
+            ms,
+            ...lavaDeath,
+            errorName: null,
+            refusalGoal: null,
             considered: [],
             pending: null,
             rows: [],

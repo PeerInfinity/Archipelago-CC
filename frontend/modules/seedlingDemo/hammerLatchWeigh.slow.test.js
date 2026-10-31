@@ -17,6 +17,7 @@
  */
 import { describe, expect, it } from 'vitest';
 
+import { CONTACT_FIDELITY_KEYS, withContactFidelity } from './contactFidelity.js';
 import { l40LatchBoot, l40LatchSolve } from './fidelityL40Latch.js';
 import {
     CHOOSER_PAIR, LATCH_WEIGH_FIRST_COUNTS, resetLatchWeighFirstCounts, withChooserPair, withLatchWeighFirst,
@@ -24,6 +25,13 @@ import {
 } from './solverBot.js';
 
 const TURRET = 'iceturret@472,400';
+
+/**
+ * ⛓ The CPAIR-3 row measures the uncertified stance walk into the t917 blast. Under fidelity's `turretSnapPricing`
+ * that walk refuses earlier, on the snapped hull's danger at (472.0,441.8): a more faithful refusal. The row is LWEIGH's
+ * own control, so it runs with the key OFF wherever it exists (planner-signed for fidelity's W35).
+ */
+const SNAP_OFF = CONTACT_FIDELITY_KEYS.includes('turretSnapPricing') ? { turretSnapPricing: false } : {};
 
 /** Run `fn` with `CHOOSER_PAIR`'s largest set at `size` (CPAIR's measurement arm), restoring it. */
 async function withPairSize(size, fn) {
@@ -78,8 +86,8 @@ describe('hammer-phase LWEIGH on the latch chain (slow)', () => {
 
     it('ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name', async () => {
         const boot = await l40LatchBoot();
-        const r = await withPairSize(3, () => withChooserPair(true, () => withLatchWeighFirst(true,
-            () => withTurretApproach(false, () => l40LatchSolve(boot)))));
+        const r = await withContactFidelity(SNAP_OFF, () => withPairSize(3, () => withChooserPair(true,
+            () => withLatchWeighFirst(true, () => withTurretApproach(false, () => l40LatchSolve(boot))))));
         expect(r.out).toBeNull();
         expect(r.refusal.message).toMatch(/-> weigh \(wandlock@448,432\): the reordered corpse weigh took a hit at t917 \(blast:iceturret@472,400#[0-9.]+\) on its way to iceturret@472,400's kill stance \(488,445\)/);
         expect(r.refusal.obstacle).toEqual({ kind: 'danger', id: TURRET });

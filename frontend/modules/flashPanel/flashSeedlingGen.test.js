@@ -22,6 +22,7 @@ import { createRng } from '../shared/rng.js';
 import {
     FLASH_SEEDLING_GEN_SUBSTRATE_ID, substrateRegistryEntry as ENTRY, FLASH_SEEDLING_GEN_NOT_INSTALLED,
     SEEDLING_GEN_ROOM_EXPORTS, SEEDLING_GEN_ROOM_MODULE_PATH, installSeedlingGenRoom,
+    SEEDLING_GEN_LOOK_MODULE_PATH,
     buildSeedlingGenRegionParams, seedlingGenProcgenParamsFromPayload, DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS,
 } from './flashSeedlingGenLibrary.js';
 import * as GEN_LIBRARY from './flashSeedlingGenLibrary.js';
@@ -31,6 +32,8 @@ import {
     substrateRegistryEntry as FLASH_SEEDLING_ENTRY, FLASH_SEEDLING_LOAD_REGION_EVENT, seedlingFlashPanelBlock,
 } from './flashSeedlingLibrary.js';
 import * as ROOM from '../seedlingDemo/seedlingGenRoom.js';
+import * as LOOK from '../seedlingDemo/procgenLook.js';
+import { GEN_LOOK_NAMES } from '../seedlingDemo/procgenLook.js';
 import {
     GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId, deserializeGenRoom, genRoomRefusal,
 } from '../seedlingDemo/seedlingGenRoom.js';
@@ -128,7 +131,9 @@ describe('the entry — registered, light, and in the family', () => {
         const closure = walk(fileURLToPath(new URL('./index.js', import.meta.url)));
         expect(closure.some((f) => f.endsWith('/flashSeedlingGenLibrary.js'))).toBe(true);
         expect(closure.some((f) => f.endsWith('/seedlingGenRoomPayload.js'))).toBe(true);
-        for (const heavy of ['/procgenSeedling.js', '/seedlingGenRoom.js', '/levelSetExits.js', '/flashSeedlingGenBuild.js']) {
+        // ⛓ seedling-js-panel-look: `procgenLook.js` too — the Look row's names are INSTALLED, not imported
+        for (const heavy of ['/procgenSeedling.js', '/seedlingGenRoom.js', '/levelSetExits.js', '/flashSeedlingGenBuild.js',
+            '/procgenLook.js']) {
             expect(closure.filter((f) => f.endsWith(heavy)), heavy).toEqual([]);
         }
         // …and the room module the live app installs is the one the seam names
@@ -183,10 +188,13 @@ describe('the install seam', () => {
         const seen = [];
         expect(await index.loadSeedlingGenerator({
             baseURI: 'http://localhost:8300/frontend/index.html',
-            importer: async (url) => { seen.push(url); return ROOM; },
+            importer: async (url) => { seen.push(url); return url.endsWith('/procgenLook.js') ? LOOK : ROOM; },
         })).toBe(true);
-        expect(seen).toEqual([`http://localhost:8300/frontend/${SEEDLING_GEN_ROOM_MODULE_PATH}`]);
+        // ⛓ seedling-js-panel-look: then the look names, from the same computed base
+        expect(seen).toEqual([`http://localhost:8300/frontend/${SEEDLING_GEN_ROOM_MODULE_PATH}`,
+            `http://localhost:8300/frontend/${SEEDLING_GEN_LOOK_MODULE_PATH}`]);
         expect(lib.seedlingGenRoomInstalled()).toBe(true);
+        expect(lib.seedlingGenLookNames()).toEqual(GEN_LOOK_NAMES);
         // once installed, no second load
         expect(await index.loadSeedlingGenerator({ baseURI: 'http://x/', importer: () => { throw new Error('no'); } })).toBe(true);
         errors.mockRestore();
@@ -259,7 +267,7 @@ describe('generateRegionCore — the room and its doors', () => {
     it('refusals are sentences: a duplicated exit, a bad knob, a room the generator refuses', () => {
         expect(() => build([{ exit_id: 'a' }, { exit_id: 'a' }])).toThrow(GEN_ROOM_REFUSALS.duplicateExit('gen_probe', 'a'));
         expect(() => build(EXITS, { params: { seedlingGen: { biome: 'lava' } } }))
-            .toThrow(/knob `biome` = "lava" is not usable — the biomes are \[pre-sword, post-sword, post-shield, post-swim, post-feather, post-fire, post-spear, post-dark-suit, endgame\]/);
+            .toThrow(/knob `biome` = "lava" is not usable — the biomes are \[pre-sword, post-sword, post-shield, post-swim, post-feather, post-fire, post-spear, post-dark-suit, endgame, caldera, frozen-forge, flooded-ruins\]/);
         expect(() => build(EXITS, { params: { seedlingGen: { skeleton: 'nope' } } }))
             .toThrow(/knob `skeleton` = "nope" is not usable/);
         expect(() => build(EXITS, { size: { width: 2, height: 2 } }))
@@ -463,7 +471,8 @@ describe('the per-region generation knobs', () => {
         // ⛓ G4: `hostChildren` rides beside the room's knobs (it steers the tree, not the generator)
         expect(buildSeedlingGenRegionParams({ params: {} }))
             // ⛓ S1, D4: `require` is carried ONLY WHEN GIVEN, so the bare bag has none.
-            // ⛓ seedling-gen-biomes-1: and so is `look` (the panel has no look row; the room reads it from the API).
+            // ⛓ seedling-gen-biomes-1: and so is `look` — the panel's Look row (seedling-js-panel-look)
+            //   writes `''` for "(none)", so a region without a look builds none: old regions are byte-identical.
             .toEqual({ seedlingGen: { ...GEN_ROOM_DEFAULTS, saturationK: undefined, require: undefined,
                 look: undefined, hostChildren: true } });
         const p = buildSeedlingGenRegionParams({ params: { seedlingGenObstacleTarget: 2, seedlingGenFill: 'shell' } });

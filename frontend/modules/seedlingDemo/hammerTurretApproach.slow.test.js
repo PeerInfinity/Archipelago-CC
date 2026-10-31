@@ -12,6 +12,7 @@
  */
 import { describe, expect, it } from 'vitest';
 
+import { CONTACT_FIDELITY_KEYS, withContactFidelity } from './contactFidelity.js';
 import { l40LatchBoot, l40LatchSolve } from './fidelityL40Latch.js';
 import {
     CHOOSER_PAIR, TURRET_APPROACH_COUNTS, resetTurretApproachCounts, withChooserPair, withLatchWeighFirst,
@@ -19,6 +20,13 @@ import {
 } from './solverBot.js';
 
 const TURRET = 'iceturret@472,400';
+
+/**
+ * ⛓ The OFF control measures LWEIGH's uncertified stance walk into the t917 blast. Under fidelity's
+ * `turretSnapPricing` that walk refuses earlier, on the snapped hull's danger, so the control runs with the key OFF
+ * wherever it exists (the approach's ON row is measured to solve both ways).
+ */
+const SNAP_OFF = CONTACT_FIDELITY_KEYS.includes('turretSnapPricing') ? { turretSnapPricing: false } : {};
 
 /** Run `fn` with `CHOOSER_PAIR`'s largest set at `size` (CPAIR's measurement arm), restoring it. */
 async function withPairSize(size, fn) {
@@ -64,7 +72,7 @@ async function replayLatch(perTick, equips) {
 
 describe('hammer-phase APPROACH on the latch chain (slow)', () => {
     it('OFF: the stance walk into the range is not certified — LWEIGH\'s refusal on the t917 blast', async () => {
-        const r = await latchChain(false);
+        const r = await withContactFidelity(SNAP_OFF, () => latchChain(false));
         expect(r.out).toBeNull();
         expect(r.refusal.message).toMatch(/-> weigh \(wandlock@448,432\): the reordered corpse weigh took a hit at t917 \(blast:iceturret@472,400#[0-9.]+\) on its way to iceturret@472,400's kill stance \(488,445\)/);
         expect(r.refusal.perTick).toHaveLength(1245);

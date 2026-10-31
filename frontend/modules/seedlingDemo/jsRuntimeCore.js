@@ -148,6 +148,7 @@ import { createRuntimeSolver } from './jsRuntimeSolver.js';
 import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
 import { encounterReportServed, locationGoalServed } from './wasmPlayback.js';
 import { R7_GOAL_LEDGER } from './r7Acceptance.js';
+import { jsLiveEnvelope } from './director.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
 import { ENCOUNTER_EXECUTORS } from './solverBot.js';
 
@@ -211,12 +212,13 @@ const ITEM_FLAGS = Object.freeze(Object.fromEntries(Object.values(ITEM_PROPERTIE
 const pickItems = (inv) => Object.fromEntries(Object.keys(ITEM_FLAGS).map((k) => [k, k in inv ? inv[k] : ITEM_FLAGS[k]]));
 
 /**
- * ⛓⛓ PHASE B — **THE TAPE VERBS' REFUSALS THE WASM GAME DOES NOT HAVE**, said by name. `hold` (v12, the P4E latch
- * hold) is a wasm build capability the JS runtime does not declare; a halt is the JS model refusing mid-tape.
+ * ⛓⛓ PHASE B — **THE TAPE VERBS' REFUSALS THE WASM GAME DOES NOT HAVE**, said by name: a halt is the JS model
+ * refusing mid-tape (or refusing to boot), and a continuation window's `equips` the resumed run cannot take.
+ * ⛓ seedling-js-replay-continuation retired `hold`'s refusal: the core now models the P4E latch hold (`Bot.as:283-298`).
  */
 export const JS_TAPE_REFUSALS = Object.freeze({
-    hold: 'error:hold is not modelled by the JS runtime (no `hold` capability)',
     halted: (message) => `error:the JS model halted — ${message}`,
+    equips: (message) => `error:the continuation's equips do not fit the live run — ${message}`,
 });
 
 /** The class aliases `games/seedling.json` declares, by the AS3 name they resolve to. */
@@ -409,7 +411,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
      * walker's/keyboard's, byte for byte as before (the identity pin in `jsRuntimeTape.test.js`).
      */
     const tape = { loaded: null, staging: null, armed: false, finished: false, tick: 0, tickCount: 0, error: '',
-        obs: [], obsBase: 0 };
+        obs: [], obsBase: 0,
+        // ⛓ seedling-js-replay-continuation — `Bot.as`'s P4E pair (`:283-298`): `holdDeclared` is the LOADED tape's
+        // `hold`, `holding` the room held at its latch (no step) until the next `botStart`/`botLoadLevels`.
+        holdDeclared: false, holding: false,
+        // ⛓ the CHAIN's boot block — what the window that last REBUILT declared (`persistence`, `pins`): the boot
+        // fold of `director.jsLiveEnvelope`, which a continuation's latch (`botJsLatch`) reads as the walk does.
+        chainBoot: null };
 
     let pendingExit = '';
     let pendingExitSeq = 0;
@@ -591,6 +599,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // tape declares (`Bot.as:1708-1772`, ⚖ ruling 25). Absent (every other caller), the staging below is unchanged.
         const staging = declared ? { ...declared } : bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS] });
         if (!declared) stageSession(staging, slots, playerDamage);
+        // ⛓ seedling-js-replay-continuation — a NON-tape boot (the first frame, a teleport, an in-place reboot) ends
+        // the tape chain: the next `botStart` rebuilds (see `botStart`'s bounded liberty).
+        if (!declared) tape.chainBoot = null;
         bootItems = { ...flags };
         try {
             // ⛓ PHASE B — a tape's staging runs AS DECLARED (`declared`, no `solveStaging`: `runTape`'s own
@@ -797,6 +808,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     function tickOnce(rawHeld) {
         drainQueue();
         if (!session || halted) { flush(); return { stepped: false }; }
+        // ⛓ seedling-js-replay-continuation — a HELD room steps nothing (`Main.as:80-89`: `Bot.holding` skips
+        // `super.update()`), and the host's queue was drained above, as the game's `drainItems` runs on such a frame.
+        if (tape.holding) { flush(); return { stepped: false, held: true }; }
         // ⛓ PHASE B — an item delivery's in-place reboot WAITS while a tape is armed (it would replace the tape's run
         // mid-stream; the game's flag write rebuilds nothing), and lands on the first tick after the tape finishes.
         if (deferredReboot && !tape.armed && !session.run.inCeremony && !encounterHoldsDelivery()) rebootInPlace(IN_PLACE_REBOOT_WHY);
@@ -804,6 +818,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ PHASE B — the tape's keys for this tick, or null: no tape armed (every tick before Phase B), or the tape
         // finished on THIS frame (the game's frame still updates — `Bot.as:3330-3333` returns to `super.update()`).
         const tapeHeld = tape.armed ? tapeRecordThenAct(run) : null;
+        // ⛓ seedling-js-replay-continuation — the latch held the room on its finishing frame (`Bot.as:3326-3328`, set
+        // BEFORE that frame's `super.update()`): this frame does not step either.
+        if (tape.holding) { flush(); return { stepped: false, held: true }; }
         // (`heldFor` is asked ONCE per tick — the walker's contract — and reused below.) ⛔ Not asked on a tape tick:
         // the tape drives in place of the walker and the keyboard, and the walker is never told a tape tick happened.
         const walkHeld = tapeHeld ? null : walker.heldFor(run);
@@ -905,6 +922,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     function tapeRecordThenAct(run) {
         tape.obs.push({ x: run.state.x, y: run.state.y, level: run.level });
         if (tape.tick >= tape.tickCount) {
+            // ⛓ P4E — hold the room AT the latch iff the tape declared it (`Bot.as:3326-3328`).
+            if (tape.holdDeclared) tape.holding = true;
             tape.armed = false;
             tape.finished = true;
             note({ type: 'tape', finished: true, message: `[js runtime] tape finished at tick ${tape.tick}` });
@@ -920,8 +939,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
      * `botLoadTape` — `Bot.as:912-1636`. Parse, gate the version EXACTLY as the game gates it (`Bot.as:921-924`: 9, 10
      * and 11 are model-only and refused — a caller hands the game-visible projection, `gameVisibleTape`), validate
      * through the one parser (`parseTape`, whose own refusals stand in for `botLoadTape`'s field checks), refuse
-     * what the JS runtime cannot do (`JS_TAPE_REFUSALS.hold`), and STAGE the boot (`stagingFromTape`). Loading
-     * disarms and clears the buffer (`Bot.as:1610-1628`). `'ok'` or `'error:…'`, the game's vocabulary.
+     * and STAGE the boot (`stagingFromTape`). Loading disarms and clears the buffer and its base (`Bot.as:1610-1628`,
+     * `clearObservations()`), and records the tape's `hold` (`:1607` `holdDeclared = newHold`) — ⛔ WITHOUT releasing a
+     * held room: the director loads the next window while the room is held (`:288-292`). `'ok'` or `'error:…'`.
      */
     function botLoadTape(json) {
         let raw;
@@ -932,32 +952,86 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         }
         let parsed;
         try { parsed = parseTape(raw); } catch (err) { return `error:${err.message}`; }
-        if (parsed.hold) return JS_TAPE_REFUSALS.hold;
         Object.assign(tape, { loaded: parsed, staging: stagingFromTape(parsed), armed: false, finished: false,
-            tick: 0, tickCount: parsed.tick_count, error: '', obs: [], obsBase: 0 });
+            tick: 0, tickCount: parsed.tick_count, error: '', obs: [], obsBase: 0, holdDeclared: parsed.hold === true });
         note({ type: 'tape', loaded: true, message: `[js runtime] tape loaded — ${parsed.name ?? 'unnamed'}, `
             + `${parsed.tick_count} tick(s), boot L${parsed.boot.level} (${parsed.boot.x}, ${parsed.boot.y})` });
         return 'ok';
     }
 
     /**
-     * `botStart` — `Bot.as:1658-1937`. ⛔ Through the SAME `boot()` every other boot takes, with the tape's staging
-     * DECLARED (fresh persistence and save arrays plus what the tape declares — `Bot.as:1708-1772`). ⚠ ALWAYS a
-     * rebuild: the game skips one when it already stands at the boot (`Bot.as:1843-1846`, the continuation path), and
-     * the JS frame has no continuation — the lab refuses a multi-window JS ship by name. Tick 0 is the next live frame
-     * (the page's own fade frames are dead frames it holds, as the game's `blackCover` frames are).
+     * `botStart` — `Bot.as:1658-1937`. The game's REBUILD RULE, read off the fork and modelled line for line:
+     *
+     *     if (bootLevel != Main.level || !atBootPosition())      // Bot.as:1843-1846
+     *         booting = new Game(bootLevel, bootX, bootY);
+     *     atBootPosition: Main.playerPositionX == bootX && …Y     // Bot.as:1950-1953
+     *
+     * `Main.playerPositionX/Y` is the room's CONSTRUCTION spot (`Game.playerPosition`'s setter, `Game.as:555-560`, the
+     * ctor/arrival — never the live position): this core's `run.worldCtor`, the same value its own
+     * `Main.playerPositionX` read answers. No run (`Main.level` −1) is a rebuild too.
+     *
+     * ⚖ ONE BOUNDED LIBERTY, NAMED: the continue arm is taken only over a TAPE's run (`tape.chainBoot`, set by a
+     * tape's rebuild and cleared by every other boot). A tape whose boot is the room a NON-tape boot built — the
+     * game's own first frame (`Main.as:51` `new Game(0, 80, 128)`, which `setVanilla` boots), a host teleport, an
+     * item reboot — still REBUILDS here, where the game would not. That keeps every FIRST window exactly Phase B's
+     * fresh boot of its own declaration (the single-window identity: the slow tier's 293/293, the lab's window 1,
+     * `watchWasm`'s "WINDOW 1 IS UNTOUCHED"); the continuation is a property of a SEQUENCE, never of a first window.
+     *
+     *  · REBUILD — through the SAME `boot()` every other boot takes, with the tape's staging DECLARED (fresh
+     *    persistence and save arrays plus what the tape declares — `:1708-1772`, ⚖ ruling 25). Unchanged from Phase B.
+     *  · ⛓ CONTINUE (seedling-js-replay-continuation) — `booting == null`: the tape arms over the LIVE run, at once
+     *    (`:1915` `armed = (booting == null)`). The `:1708-1772` writes still run in the game, but onto tables
+     *    the admission has already held EQUAL to the live world's (`director.continuationAdmission`; a declaration
+     *    that differs is a ledger rebuild it refuses by name), and no built object re-reads them — so the run is NOT
+     *    re-staged: applying the staging IS a rebuild (`tapeRunner.createTapeStepper`'s resume face). What the resume
+     *    face does adopt, this does too: the window's clock when the run's is unknown (`adoptWindowClock`,
+     *    `tapeRunner.js:553-555`), and the window's `equips` REBASED onto the run's tick count (the page walk's
+     *    `run.addEquips`, `watchViewer.walkSequence`; the game applies them per window tick, `Bot.as:3246`).
+     *    A v9 forward clear never arrives (`gameVisibleTape` drops it): the run's scratch layer earns it, as on a
+     *    rebuild. ⚠ A HALTED run cannot continue (the model refused it) and is rebuilt — said in the boot note.
+     *
+     * Either way `holding` is released (`:1663`) and the buffer AND its base are cleared (`:1936`
+     * `clearObservations()`); tick 0 is the next frame.
      */
     function botStart() {
         if (!tape.loaded) return 'error:no tape loaded';
         if (tape.armed) return 'error:already running';
+        tape.holding = false;
         const { boot: b } = tape.loaded;
         if (invMenu.open) { invMenu.open = false; menuHeldFrames = 0; }
-        arrival = { level: b.level, x: b.x, y: b.y };
-        const booted = boot(arrival, `tape ${tape.loaded.name ?? 'unnamed'} (botStart)`, { declared: tape.staging });
-        if (!booted) return JS_TAPE_REFUSALS.halted(halted?.message?.split('\n')[0] ?? 'the boot was refused');
-        Object.assign(tape, { armed: true, finished: false, tick: 0, error: '', obs: [] });
+        const live = session && !halted ? session.run : null;
+        const continues = live !== null && tape.chainBoot !== null
+            && live.level === b.level && live.worldCtor.x === b.x && live.worldCtor.y === b.y;
+        if (continues) {
+            live.adoptWindowClock?.(tape.loaded);
+            const equips = (tape.loaded.equips ?? []).map((e) => ({ t: e.t + live.ticksCompleted, slot: e.slot }));
+            if (equips.length > 0) {
+                try { live.addEquips(equips); } catch (err) { return JS_TAPE_REFUSALS.equips(err.message.split('\n')[0]); }
+            }
+            note({ type: 'tape', continued: true, level: b.level, x: b.x, y: b.y,
+                message: `[js runtime] tape ${tape.loaded.name ?? 'unnamed'} (botStart) CONTINUES level ${b.level} at `
+                    + `(${b.x}, ${b.y}) — the game would not rebuild (Bot.as:1843-1846)` });
+        } else {
+            arrival = { level: b.level, x: b.x, y: b.y };
+            const booted = boot(arrival, `tape ${tape.loaded.name ?? 'unnamed'} (botStart)`
+                + `${session && halted ? ' — the halted run cannot continue' : ''}`, { declared: tape.staging });
+            if (!booted) return JS_TAPE_REFUSALS.halted(halted?.message?.split('\n')[0] ?? 'the boot was refused');
+            tape.chainBoot = { persistence: tape.loaded.persistence ?? [], pins: tape.loaded.pins ?? [] };
+        }
+        Object.assign(tape, { armed: true, finished: false, tick: 0, error: '', obs: [], obsBase: 0 });
         flush();
         return 'ok';
+    }
+
+    /**
+     * ⛓ seedling-js-replay-continuation — **`botJsLatch`, a JS-only verb** (the game has none; its latch is
+     * `botSeam()`, an LFSR-and-seam envelope this model does not keep). The live world in `continuationAdmission`'s
+     * vocabulary, read off THIS frame's run by the one function the page walk reads its own run with
+     * (`director.jsLiveEnvelope`), over the boot block of the window that last rebuilt. `null` with no run.
+     */
+    function botJsLatch() {
+        if (!session) return 'null';
+        return JSON.stringify(jsLiveEnvelope(session.run, tape.chainBoot?.persistence ?? [], tape.chainBoot?.pins ?? []));
     }
 
     /** `botDrain` — `Bot.as:2870-2886`: the buffer since the last drain, `t` from its base; then cleared, base kept. */
@@ -1209,6 +1283,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     }
 
     function botLoadLevels(json) {
+        // ⛓ P4E — a level delivery releases a held room (`Bot.as:3563`).
+        tape.holding = false;
         let chunk;
         try { chunk = typeof json === 'string' ? JSON.parse(json) : json; } catch (e) {
             staged = null;
@@ -1469,11 +1545,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             tick: tape.tick,
             tick_count: tape.tickCount,
             buffered: tape.obs.length,
+            // ⛓ P4E — `Bot.as:2048` `held: holding`.
+            held: tape.holding,
             items: session ? pickItems(session.run.inventory ?? {}) : { ...flags },
         }),
         botLoadTape: (json) => botLoadTape(json),
         botStart: () => botStart(),
         botDrain: () => botDrain(),
+        botJsLatch: () => botJsLatch(),
         botMobiles: () => JSON.stringify({
             mobiles: session ? [{ cls: 'Player', x: session.run.state.x, y: session.run.state.y }] : [],
         }),
@@ -1529,7 +1608,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         /** ⛓ PHASE B — the tape's state, for the page and the rows (`armed` is the no-tape path's one switch). */
         get tape() {
             return { loaded: tape.loaded !== null, armed: tape.armed, finished: tape.finished, tick: tape.tick,
-                tickCount: tape.tickCount, buffered: tape.obs.length, error: tape.error };
+                tickCount: tape.tickCount, buffered: tape.obs.length, error: tape.error, holding: tape.holding };
         },
         get configured() { return config !== null; },
         /** The current room's record and its uncollected apitems, for the painter. */

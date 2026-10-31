@@ -851,9 +851,9 @@
         "dangerMap.js": 3,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 123
+        "solverBot.js": 124
       },
-      "sites": 186,
+      "sites": 187,
       "seen": "both",
       "via": [
         "direct",
@@ -903,7 +903,8 @@
           "solverBot.js": 1
         },
         "equipsFired": {
-          "botDriverV2.js": 4
+          "botDriverV2.js": 4,
+          "solverBot.js": 1
         },
         "grantsFired": {
           "botDriverV2.js": 1
@@ -3444,6 +3445,24 @@
       ],
       "dynamic": null,
       "why": "`FallRockLarge.update`'s arm test (`p.y < fallTo - sprRock.height / 2 - 8`, y only); the L32 arena prefix (`solverBot.arenaPrefixFor`) asks whether a walk to a pit crosses the arm line, so the fight comes first."
+    },
+    {
+      "surface": "import",
+      "name": "playerShieldRect",
+      "module": "frontend/modules/seedlingDemo/bobBossFight.js",
+      "line": 351,
+      "class": "seedling",
+      "form": "geometry-query",
+      "files": {
+        "pressKillGuards.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "`Player.shieldObj`'s hitbox per facing, moving or standing, slashing or not; hammer-phase SPIN derives the shield's ENVELOPE from it (the union of its boxes, `pressKillGuards.SHIELD_ENVELOPE`), so `PRESS_ESCAPE_SHIELD_CLAIM` adopts an escape certificate only where the bump cannot touch a body."
     },
     {
       "surface": "import",

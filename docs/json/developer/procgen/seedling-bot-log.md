@@ -26538,6 +26538,84 @@ row equal ticks included. The sweep ×2 per arm and the probes standard are the 
 
 ---
 
+### Seedling hammer-phase DASH — the L4 window margin and the stand-tail dash
+
+⚖ User, queued 2026-10-30 (one of four parallel hammer slices; planner `seedling-hammer-phase-planning-2`). Switch
+`solverBot.DASH_STAND_WHOLE`, **OFF** (`SEEDLING_DASH_STAND_WHOLE=1`, `withDashStandWhole`); the window
+(`SOLVER_UPGRADE_WINDOW_WORK`, 85) is unchanged. The report is `CC/docs/cloud-reports/seedling-hammer-dash-window.md`.
+
+- **The margin the brief named is the OFF arm's.** L4 (16,16) → its stairs: the whole-pass threshold is 84 (margin 1), but
+  the shipped arm (`DASH_ONLY_WINDOW` ON) counts only `sword-dash` asks, and there L4's threshold is 39 (margin 46).
+- **The edge on the shipped arm is elsewhere.** The 870 captured requests of sweep `38845773709`, re-solved at this head
+  (thresholds bisected on real `solveAnytime` calls): 529 upgrade; 7 sit at exactly 85 (leg 108, L12, 328 t at 85 and
+  343 t at 84; L104, L40 pit 4,22, L0, L87, L29, another L12), 10 within 9 units, 94 ship less than window 0. The ON
+  thresholds fall on 4k+1 (a candidate start previews four prefixes). The totals: 85 ships 80.3 % of window 0's tick
+  savings; 89, 81.6 % (+537 units on the 138 requests the window binds); 129, 89.3 % (+5,105); 353, all (+17,844).
+- **The window is not monotone in ticks.** On 31 requests a kept partial at some windows beats the unwindowed full plan
+  (the greedy scan accepts windows a later window would undo), so "the unwindowed plan" is not always the best a window
+  can ship. The thresholds above are measured against the unwindowed plan.
+- **Design.** Keep 85 (no value removes the edge: thresholds spread from 5 to 346) and pin the margin:
+  `hammerDashWindow.test.js` reds if L4's margin drops under 40 (ON) / 1 (OFF) or leg 108's under 0 (ON).
+- **The stand tail.** ON, `walkTo` asks `spinnerDashWhole(wps, except, stand)` for a corridor that ends standing; the
+  certificate is the dashed walk and its whole stand (every tick, or to the collect tail's ceremony), untruncated; less falls
+  back. Measured on 60 stand-tail corridors on the route (survey 44, r9 9, the spinner-room requests 6, the L40 latch
+  chain 1; 7 in a spinner room): ON plans the same ticks on every one, and the survey is identical ON (237/237). The
+  generated levels do move (`carved pairs c4`): a collect approach beside one spinner, bushy post-feather s9 96 → 80 t,
+  loopy post-shield s2 88 → 86 t, winding post-feather s9 199 → 204 t (the blind chain is taken whenever it certifies,
+  never compared: ON is not monotone). Nine trace sidecars re-word (`why` only; tapes byte-identical); the L40 kill-rung
+  progress rows count one more preview.
+- **Gate** `hammerDashWindow.test.js` (L4's thresholds per arm; the margin pins; L20's hold and collect tails OFF / ON;
+  L4's hold ON, same keys and units; the two generated movers, bushy s9 and winding s9; leg 108 ON = OFF). Mutants (drop the stand from the certificate, shorten it by a tick,
+  the window 85 → 83): all red.
+
+**Trap candidates.**
+- A margin quoted without its arm: the same window counts different things under `DASH_ONLY_WINDOW` ON and OFF.
+- A "no stand tail" witness that has one: L4's stairs leg carries `holdWaitPriced`'s hold. Read the audit before naming a
+  control.
+- A radius that stops at the route misses the generated levels: the identity block's kind pairs were the only movers.
+### Seedling hammer-phase SPIN — the press kill of spinner@816,848
+
+⚖ User, 2026-10-30: queued as one of four hammer slices run in parallel (with APPROACH, CPWIT and DASH). L40C ranked
+this wall FIRST: the first wall on leg 860 (`level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29`, Boss Key 2), the
+only Boss Key 2 arrival leg that gets past `bobsoldier@880,832`. Switch `pressKillGuards.PRESS_ESCAPE_SHIELD_CLAIM`,
+**OFF** (`SEEDLING_PRESS_ESCAPE_SHIELD_CLAIM=1`, `withPressEscapeShieldClaim`). The report is
+`CC/docs/cloud-reports/seedling-hammer-spinner-press.md`.
+
+- **The wall is a phase.** Main's page captured leg 860 at seam 5102 (L40C: 5950), and there A5 at 10240 stops on the
+  combat ladder before any press kill. Re-stamped to 5950, the same request reproduces L40C's corner byte for byte:
+  `kill (spinner@816,848) by press`, every key set on the body or the 13 px line at (770.96,860.99), 19 t after the
+  landing at t2744. L40C's base code on main's capture gives main's answer: the seam moved it, not the code.
+- **The cause:** the press at t2743 was taken with NO escape claim. `pressEscape` asks
+  `levelRun.spinnerForecastWithPress`, which names `shieldBumpNow` as unmodelled whenever the shield is carried, so
+  after the shield hammer-phase A is inert and A3's fallback presses. Asked anyway, the escape kernel EXHAUSTS from that
+  landing (nothing survives 11 t). The refuge walk after it cannot be rescued: a space-time search from each refuge
+  tick t2749–t2752 exhausts too.
+- **Designs measured on 860** (5950, A5, 10240): certify the refuge walk (refuses earlier: "nowhere to be"); a certified
+  hold-out on the refuge walk (nothing to hold); shield-only certificates whose path keeps the shield off every body
+  (the wall stands); those certificates plus the exhausted negative claimed (**the kill completes**). Negatives alone
+  pass at 5950 but not at main's own 5102, where the certificates re-time `spinner@880,848`'s kill and the chooser
+  then hands ICEST: both halves ship.
+- **The change** (`pressEscapeOnce`; `pressKillGuards.SHIELD_ENVELOPE`, `shieldEnvelopeMeets`, `shieldOnlyUnmodelled`):
+  ON, with the shield bump the only unmodelled source, a certificate is adopted only where no state of its path puts
+  the shield's envelope (the union of `playerShieldRect`'s boxes) on a forecast body, rows `i − 1 … i + 1`; an
+  exhausted escape search is claimed; every other negative stays OFF's no-claim. OFF returns at the same line.
+  `PRESS_KILL_DONE_TRACE` (a sink, `null`) hands out a completed press kill's keys and equips.
+- **Effect ON:** 860 (5950, A5, 10240) kills `spinner@816,848` (t2626/2761/2817); the keys replayed on a fresh run with
+  their equips kill it with no hit and no death; the chain then meets the anytime deadline inside
+  `kill (iceturret@472,400)`. At main's seam 5102 (A5, 10240) it passes the spinner too (t2626/2759/2792). At the
+  shipped budget and without ICEST nothing passes: the walls come before the press kill. 861 never reaches the kill
+  (its movers are text). L40's 59 captured requests: defaults 2 movers (366/0 Totem 64,144 SOLVED 1757 → 1699 t, two
+  bomb hits → one; 382/0 Chest refusal text), A5 1 mover (382/0 Chest SOLVED 1468 → 1395 t, hitless). Route survey:
+  0 of 237 rows. r9 campaign `--check`: green.
+- **Gate** `hammerSpinnerPress.test.js` (11 rows: four stands beside the body on 860's staging, one per class of the
+  answer; the envelope; the no-shield and no-spinner identities; ships OFF) and `hammerSpinnerPress.slow.test.js` (OFF
+  the corner, ON the kill replayed). Mutants (the fix dropped, the envelope dropped, the rows mis-timed by one): all red.
+
+- A capture's verdict is a function of its seam: a wall measured at one page clock is a phase of the leg, not the leg.
+  Re-stamp the seam to reproduce, and measure at the capture's own seam before calling the fix done.
+- "No claim" is a choice with a cost: an executor that falls back to pressing whenever the forecast names an
+  unmodelled source has turned its certificate off for every room that source is in. Ask whether the source can fire
+  on the path before giving up the claim.
 ### Seedling hammer-phase APPROACH — a hitless approach into an IceTurret's range
 
 ⚖ User, queued 2026-10-30 (one of four hammer slices run in parallel; LWEIGH's hand-over, its report § 9, and L40C's, its

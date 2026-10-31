@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+// One captured request at several windows on one arm: shipped ticks and the attempt's work units per window.
+// node win.mjs --lab=<tree> --requests=<jsonl> --one=<id>:<i> --arm=on|off --windows=85,95,128
+import { readFileSync } from 'node:fs';
+const arg = (n, f) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3) ?? f;
+const LAB = arg('lab'); const FILE = arg('requests');
+const [id, i] = arg('one').split(':').map(Number);
+const ARM = arg('arm', 'on');
+const WINDOWS = arg('windows').split(',').map(Number);
+const { restoreRequest } = await import(`${LAB}/scripts/procgen/seedlingSolveRequestCodec.js`);
+const { levelSourceFromAtlas } = await import(`${LAB}/frontend/modules/seedlingDemo/atlasSource.js`);
+const js = await import(`${LAB}/frontend/modules/seedlingDemo/jsRuntimeSolver.js`);
+const dow = await import(`${LAB}/frontend/modules/seedlingDemo/dashOnlyWindowHook.js`);
+let line = null;
+for (const l of readFileSync(FILE, 'utf8').split('\n')) { if (l.startsWith(`{"id":${id},`)) { line = JSON.parse(l); break; } }
+const { passes = js.ANYTIME_PASSES, source, upgradeWindowWork: _w, ...tape } = restoreRequest(line.requests.find((r) => r.i === i).request);
+const levelSource = levelSourceFromAtlas(source.records);
+const out = {};
+for (const w of WINDOWS) {
+    const a = dow.withDashOnlyWindow(ARM === 'on', () => js.solveAnytime({ ...tape, source, levelSource, upgradeWindowWork: w }, { passes }));
+    out[w] = { ticks: a.ok ? a.plan.solution.length : null, work: a.work ?? null };
+}
+console.log(`RESULT ${JSON.stringify({ id, i, arm: ARM, out })}`);

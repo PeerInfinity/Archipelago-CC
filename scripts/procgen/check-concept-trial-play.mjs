@@ -11,6 +11,10 @@
  * rooms, the gates, the items, the prose, the colours, the victory — is read
  * off that preset, never typed here.
  *
+ *   Phase A0 — THE LATE SNAPSHOT: a second page whose text-adventure iframe holds
+ *     every snapshot-bearing message back; the world is built from static data
+ *     alone, and the guarded exit (and the location) must render INACCESSIBLE —
+ *     unknown is shut, not the engine's accessible default.
  *   Phase A — boot: the player starts in the text-adventure START, the wrapper
  *     renders its guarded exit INACCESSIBLE.
  *   Phase T — THE GUARDIAN BARS THE WAY: a real click on the guarded exit; the
@@ -242,6 +246,81 @@ async function main() {
             `entrance ${JSON.stringify(MAZE?.entrance)}, swim ${SWIM_AT?.x},${SWIM_AT?.y}, gate ${GATE_AT?.x},${GATE_AT?.y}`);
         check(`the completion condition names ${VICTORY}, in the maze ${VICTORY_MAZE}`,
             COMPLETION?.type === 'item_check' && !!VICTORY_AT, JSON.stringify(COMPLETION));
+
+        // ── Phase A0 — the snapshot arrives LATE ────────────────────────────
+        // The static data answers the iframe in one round trip, the snapshot in a
+        // `pingWorker` round trip, so the wrapper can build its world before the
+        // snapshot lands. Phase A's boot read then sees whichever came first — a
+        // ~10–50 ms window measured in the cloud's Chromium (5 of ~145 CI runs
+        // read it as `tae-link-accessible`). Here the ordering is FORCED: a page
+        // whose iframe holds every snapshot-bearing message for HOLD_MS, so the
+        // exit is rendered with no snapshot, every time; it must render shut.
+        const HOLD_MS = 1500;
+        const late = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+        late.on('pageerror', (err) => pageErrors.push(`[late-snapshot page] ${err.message}`));
+        /** Runs as the iframe document's FIRST script (spliced into its HTML below). */
+        const holdSnapshots = (holdMs) => {
+            window.__snapshotHoldInstalled = true;
+            const held = [];
+            let timer = null;
+            const carriesSnapshot = (d) => d?.type === 'STATE_SNAPSHOT' || (d?.type === 'EVENT_BUS_MESSAGE'
+                && /^stateManager:(snapshotUpdated|rulesLoaded)$/.test(d?.data?.eventName ?? ''));
+            // Registered before the page's own scripts, so it runs before the
+            // adapter client's listener; after the hold, messages pass through.
+            window.addEventListener('message', (e) => {
+                if (window.__snapshotsReleased || e.__released || !carriesSnapshot(e.data)) return;
+                e.stopImmediatePropagation();
+                held.push(e);
+                window.__snapshotsHeld = (window.__snapshotsHeld ?? 0) + 1;
+                timer ??= setTimeout(() => {
+                    window.__snapshotsReleased = true;
+                    for (const h of held.splice(0)) {
+                        const again = new MessageEvent('message', { data: h.data, origin: h.origin, source: h.source });
+                        again.__released = true;
+                        window.dispatchEvent(again);
+                    }
+                }, holdMs);
+            }, true);
+        };
+        // ⛔ NOT `addInitScript`: measured under load, it did not reach this
+        // iframe's document on 8 of 10 consecutive runs (`held: 0`, the snapshot
+        // evaluated), so the pin read a page whose ordering it had not forced.
+        // Splicing the hold into the served HTML makes it part of the document.
+        await late.route('**/textAdventureSubstrateWrapper/index-iframe.html*', async (route) => {
+            const res = await route.fetch();
+            const body = (await res.text()).replace('<head>',
+                `<head><script>(${holdSnapshots.toString()})(${HOLD_MS});</script>`);
+            await route.fulfill({ response: res, body });
+        });
+        await late.goto(URL, { waitUntil: 'domcontentloaded' });
+        const lateRead = () => late.evaluate(({ exit, loc }) => {
+            const w = document.querySelector('iframe.tasw-iframe')?.contentWindow;
+            const d = w?.document;
+            return {
+                exit: d?.querySelector(`[data-exit-id="${exit}"]`)?.className ?? null,
+                loc: d?.querySelector(`[data-item-id="${loc}"]`)?.className ?? null,
+                installed: !!w?.__snapshotHoldInstalled,
+                released: !!w?.__snapshotsReleased,
+                held: w?.__snapshotsHeld ?? 0,
+            };
+        }, { exit: GUARDED, loc: SWORD_LOC.name });
+        const early = await waitFor(`the late-snapshot page renders ${GUARDED} before its snapshot`, async () => {
+            const v = await lateRead();
+            return (v.exit && v.installed) || v.released ? v : null;
+        }, 20000);
+        check(`Phase A0: with the snapshot held back, ${START}'s ${GUARDED} is rendered BEFORE any snapshot reaches the wrapper`,
+            !!early.exit && early.installed && early.released === false, JSON.stringify(early));
+        check(`Phase A0: …and renders tae-link-inaccessible (unknown is shut — not the engine's accessible default), its location too`,
+            !!early.exit?.includes('tae-link-inaccessible') && !!early.loc?.includes('tae-link-inaccessible'), JSON.stringify(early));
+        const settled = await waitFor('the held snapshot is released and evaluated', async () => {
+            const v = await lateRead();
+            return v.released ? v : null;
+        }, 10000);
+        await late.waitForTimeout(300);
+        const lateAfter = await lateRead();
+        check(`Phase A0: once the held snapshot lands (no ${SWORD}), ${GUARDED} stays tae-link-inaccessible`,
+            !!settled && !!lateAfter.exit?.includes('tae-link-inaccessible'), JSON.stringify(lateAfter));
+        await late.close();
 
         // ── Phase A — boot, in the text adventure ───────────────────────────
         await page.goto(URL, { waitUntil: 'domcontentloaded' });

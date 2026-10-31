@@ -1,0 +1,9 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityL40Bk2.test.js > L40BK2 D1 — a weigh's holder derived under the rest of the stance hypothesis > ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)
+ FAIL  frontend/modules/seedlingDemo/fidelityL40Res.test.js > L40RES D2 — a stance walk that re-enters its own order walks on along its frontier > ON: the re-entry passes to the chest (the south door's chain); the end is the chest walk's press kill
+ FAIL  frontend/modules/seedlingDemo/hammerChooserPair.test.js > hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHOOSER_PAIR`) > 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the pair bob@736,752 + bobsoldier@880,832 admits, the chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill
+ FAIL  frontend/modules/seedlingDemo/hammerPressKillChasers.test.js > hammer-phase PKC — the press kill prices the chasers beside its walks > step 67: OFF the kill walks into bob@736,752 and dies; ON it takes no hit, and the keys are OFF's until the step that met the bob
+ FAIL  frontend/modules/seedlingDemo/hammerPressKillGuards.test.js > hammer-phase LB — the press kill guards > HO2 OFF: the press kill carries on past the death at t788
+ FAIL  frontend/modules/seedlingDemo/hammerPressKillGuards.test.js > hammer-phase LB — the press kill guards > HO2 ON: the press kill is refused by name on the tick of the first death
+ Test Files  5 failed | 3 passed (8)
+      Tests  6 failed | 63 passed (69)
