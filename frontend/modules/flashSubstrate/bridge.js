@@ -572,6 +572,10 @@ function _handleLoadRegion(payload) {
             flashCapabilities: _capabilities(),
             regionId,
             checkedLocations: checkedFlashNames,
+            // How the player arrived (procgenPlayer's {exit_id, source_region}), or
+            // null: a game with a way back of its own offers that side (cloudberry's
+            // start door). Games that do not read it ignore it.
+            arrivedFrom: payload.arrivedFrom ?? null,
         });
     } catch (err) {
         log('error', 'configure threw:', err);

@@ -296,6 +296,17 @@
     "template_file": "Civilization VI.yaml",
     "world_directory": "civ_6"
   },
+  "Cloudberry Sphere WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Cloudberry Sphere WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Cloudberry Sphere WorldGen.yaml",
+    "world_directory": "cloudberry_sphere_worldgen"
+  },
   "Coding Adventure": {
     "exporter_path": null,
     "exporter_size": 0,
