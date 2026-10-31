@@ -1,0 +1,18 @@
+drawImage(seedling/Pulser, 0, 0, 592, 576)
+drawImage(seedling/WandLock, 0, 0, 176, 80)
+drawImage(seedling/WandLock, 0, 0, 208, 128)
+drawImage(seedling/WandLock, 0, 0, 208, 144)
+drawImage(seedling/WandLock, 0, 0, 208, 160)
+drawImage(seedling/WandLock, 0, 0, 176, 208)
+drawImage(seedling/Button, 0, 0, 484, 388)
+drawImage(seedling/WandLock, 0, 0, 800, 400)
+drawImage(seedling/Button, 0, 0, 820, 404)
+drawImage(seedling/Button, 0, 0, 772, 404)
+drawImage(seedling/IceTurret, 0, 0, 460, 392)
+drawImage(seedling/WandLock, 0, 0, 448, 432)
+drawImage(seedling/WandLock, 0, 0, 512, 480)
+drawImage(seedling/PushableBlockFire, 0, 0, 480, 480) tint=#ff0000
+drawImage(seedling/WandLock, 0, 0, 480, 560)
+drawImage(seedling/PushableBlock, 0, 0, 576, 560)
+drawImage(seedling/PushableBlockFire, 0, 0, 576, 576) tint=#ff0000
+player drawImage(seedling/ShrumBlue, 0, 0, 16, 16)
