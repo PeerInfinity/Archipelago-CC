@@ -28676,7 +28676,9 @@ function solveSegmentUnder({
         } else if (FORCED_HITS.enabled && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
             if (activeProgress !== null) progressRung('forced-hit');
             const lastRefused = { rung: lastOption, why: lastWhy };
-            const proof = proveForcedHit(fork, { replayTicks: perTick.length, ...(crossTo ? { crossTo } : {}) });
+            // ⛓ FORCEDHITXC D3: the hitless continuation only for a walk with an exit to cross (`crossTo`)
+            const proof = proveForcedHit(fork, { replayTicks: perTick.length,
+                ...(crossTo ? { crossTo } : { continuation: false }) });
             const proofRow = { proven: proof.proven, depth: proof.depth, nodes: proof.nodes,
                 leaves: proof.leaves, alphabet: proof.alphabet ?? null, minHits: proof.minHits ?? null };
             let forcedWhy = null;

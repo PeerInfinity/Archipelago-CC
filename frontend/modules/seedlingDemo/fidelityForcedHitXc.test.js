@@ -219,6 +219,17 @@ describe('FORCEDHITXC D3 — a crossing is the walk\'s only by the walk\'s OWN e
         expect(crossingMatches(t({ before: undefined }), { level: 74, arrival: { x: 296, y: 136 } })).toBe(false);
         expect(crossingMatches(t(), null)).toBe(false);
     });
+    it('`continuation: false` (the rung\'s for a walk with no exit, e.g. a `collect`) asks none of it: the open verdict, '
+        + 'byte for byte the OFF one', () => {
+        const on = withContactFidelity({ secondaryUse: true, forcedHitWitnessFirst: true },
+            () => proveForcedHit(fork622, { continuation: false }));
+        const off = withContactFidelity({ secondaryUse: false, forcedHitWitnessFirst: true },
+            () => proveForcedHit(fork622, { depthMax: 1 }));
+        expect(on).not.toHaveProperty('continuation');
+        expect(on).not.toHaveProperty('crossing');
+        expect(on).toMatchObject({ proven: false, nodes: 1341, open: 180, hitless: 'up+primary+secondary ·' });
+        expect(off).not.toHaveProperty('continuation');
+    });
     it('leg 622\'s continuation, asked with the leg\'s exit, still crosses — it IS that exit', () => {
         const p = withContactFidelity({ secondaryUse: true, forcedHitWitnessFirst: false },
             () => proveForcedHit(fork622, { crossTo: { level: 74, arrival: { x: 296, y: 136 } } }));

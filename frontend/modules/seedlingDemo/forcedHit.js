@@ -285,14 +285,17 @@ export function crossingMatches(crossing, crossTo) {
  * and a continuation that leaves the room hitless is carried as `crossing` too (its `why` the continuation's, the
  * open verdict's kept as `openWhy`). OFF: neither, byte-identical. ⛓ D3: with `crossTo` (the walk's exit, the rung's), only
  * a crossing that leaves by THAT exit (`crossingMatches`) is carried; the continuation searches on past another exit.
+ * `continuation: false` (the rung's, for a walk with no exit to cross: a crossing could never be walked there) asks
+ * none of it — measured: the acceptance batch's post-shield seed 2 `collect` refusal spent 36 forks for nothing.
  */
 export function proveForcedHit(fork, { depthMax = FORCED_HITS.depthMax, nodeBudget = FORCED_HITS.nodeBudget,
-    alphabet = FORCED_HIT_ALPHABET, replayTicks = 0, advanceBudget = FORCED_HITS.advanceBudget, crossTo = null } = {}) {
+    alphabet = FORCED_HIT_ALPHABET, replayTicks = 0, advanceBudget = FORCED_HITS.advanceBudget, crossTo = null,
+    continuation = true } = {}) {
     let frontier = [[]];
     let nodes = 0;
     let advances = 0;
     const leaves = [];
-    const continuing = CONTACT_FIDELITY.secondaryUse === true;
+    const continuing = CONTACT_FIDELITY.secondaryUse === true && continuation !== false;
     /** ⛓ D3: a crossing found by the tree or the witness is carried only when it is the walk's exit (or none is named) */
     const ours = (c) => crossTo === null || crossingMatches(c, crossTo);
     /** ⛓ FORCEDHITXC D1: an open verdict carried on (ON only; OFF returns `v` as it stands). */
