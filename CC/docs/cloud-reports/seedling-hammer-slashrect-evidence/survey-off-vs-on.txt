@@ -1,0 +1,5 @@
+rows 237 237
+keys ['agreesWithKnown', 'boot', 'clock', 'declarations', 'family', 'goals', 'knownAnswer', 'knownTicks', 'level', 'ms', 'passes', 'refusal', 'replans', 'replay', 'step', 'ticks', 'traceRows', 'verdict', 'views', 'visit', 'withCommittedDeclarations']
+movers (all fields but timing): 0
+OFF Counter({'SOLVED': 201, 'REFUSED': 36})
+ON Counter({'SOLVED': 201, 'REFUSED': 36})

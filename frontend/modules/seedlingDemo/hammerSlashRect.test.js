@@ -23,6 +23,7 @@ import { PressError, slashRect } from './presses.js';
 import { CombatVerbError } from './combatVerbs.js';
 import { SolverRefusal } from './solverBot.js';
 import { createPlayerDamage, playerHit, stepPlayerDamage } from './playerDamage.js';
+import { progressKind } from './solveProgress.js';
 import {
     PRESS_NO_FACING, PRESS_NO_FACING_BOUND, PRESS_NO_FACING_COUNTS, PRESS_NO_FACING_DEFAULT, isFacing,
     refuseNoFacing, resetPressNoFacingCounts, withPressNoFacing,
@@ -78,7 +79,10 @@ describe('hammer-phase SLASHRECT — `refuseNoFacing`', () => {
             expect(e.message.startsWith(`${PRESS_NO_FACING_BOUND}: the press at t101 (escape) starts with facing -1`))
                 .toBe(true);
             expect(e.message).toContain(cause.message);
+            // the solve-progress ledger reads it as a press the model has no arm for
+            expect(progressKind(e)).toBe('unmodelled');
         }
+        expect(progressKind({ ok: false, claim: true, bound: 'no-facing', why: 'x' })).toBe('unmodelled');
     });
 });
 
