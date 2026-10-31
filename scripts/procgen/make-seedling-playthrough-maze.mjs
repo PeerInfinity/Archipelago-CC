@@ -89,7 +89,10 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * one step into two discs goes to the trap whose disc the walk enters first (⚖ "First range entered": the producer's `yields`).
  * Sphere 10.2 (session tile-primitives-sphere-order-11, ⚖ 2026-10-30 "All 12"): L82 L96–L106 — L101's pole is lit through a wall
  * from r4c2, so its event is that sub-region's location: every in-room pole entry carries the producer's place (⚖ "Producer's side,
- * all poles").
+ * all poles"). Sphere 11.6 (session tile-primitives-sphere-order-12, ⚖ 2026-10-31 "All 7"): L107–L109 L111–L114, which needed no new
+ * feature. L107 plays as the rules have it (⚖ "As the rules have it"): its fire block and pulser sit in walled cells behind an
+ * in-level latching ButtonRoom whose shove only tames the Crusher, a hazard neither model carries. L3 → L111 needs Swim in the maze
+ * (the approach is water; probe-confirmed), which the rules do not charge: a named open row, the rules unchanged for now.
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
@@ -102,7 +105,7 @@ export const LEVELS = Object.freeze([
     'level_82', 'level_83', 'level_84', 'level_85', 'level_86',
     'level_87', 'level_88', 'level_89', 'level_90', 'level_91', 'level_92', 'level_93', 'level_94',
     'level_95', 'level_96', 'level_97', 'level_98', 'level_99', 'level_100', 'level_101', 'level_102', 'level_103', 'level_104',
-    'level_105', 'level_106',
+    'level_105', 'level_106', 'level_107', 'level_108', 'level_109', 'level_111', 'level_112', 'level_113', 'level_114',
 ]);
 
 /**
