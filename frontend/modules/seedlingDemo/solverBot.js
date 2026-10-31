@@ -217,7 +217,7 @@ import { PRESS_KILL_GUARD_COUNTS, PRESS_KILL_REBOOT_GUARD, PRESS_KILL_SHAKE_GUAR
 import { PRESS_ESCAPE_SHIELD_CLAIM, PRESS_ESCAPE_SHIELD_CLAIM_COUNTS, PRESS_KILL_DONE_TRACE, shieldEnvelopeMeets,
     shieldOnlyUnmodelled } from './pressKillGuards.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
-import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
+import { FORCED_HITS, FORCED_HIT_TRACE, crossingMatches, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
 // ⛓ seedling-fidelity-axeforcedu D2 — a spinning axe's forced U, crossed and billed (`AXE_PRICED_CROSSING`, OFF).
 import { AXE_PRICED_CROSSING, AXE_PRICED_TRACE, admitAxeCrossing } from './axePricedCrossing.js';
 // ⛓ seedling-fidelity-arrowlane D2 — the armed-lane crossing arm (`ARROW_LANE_CROSSING`, OFF).
@@ -28676,7 +28676,7 @@ function solveSegmentUnder({
         } else if (FORCED_HITS.enabled && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
             if (activeProgress !== null) progressRung('forced-hit');
             const lastRefused = { rung: lastOption, why: lastWhy };
-            const proof = proveForcedHit(fork, { replayTicks: perTick.length });
+            const proof = proveForcedHit(fork, { replayTicks: perTick.length, ...(crossTo ? { crossTo } : {}) });
             const proofRow = { proven: proof.proven, depth: proof.depth, nodes: proof.nodes,
                 leaves: proof.leaves, alphabet: proof.alphabet ?? null, minHits: proof.minHits ?? null };
             let forcedWhy = null;
@@ -28684,12 +28684,12 @@ function solveSegmentUnder({
             /**
              * ⛓ FORCEDHITXC D1 (`secondaryUse` ON only; OFF `proof.crossing` is never set): the proof found a HITLESS
              * input that leaves the room (its tree, its witness, or the hitless continuation of an open prefix). When
-             * it leaves for THIS walk's crossing (`crossTo`), it is the walk: replayed on the live run, which must cross
+             * it leaves by THIS walk's exit (`crossTo`, `crossingMatches`), it is the walk: replayed on the live run, which must cross
              * on its last key with no hit, as the fork did. A row `forced-hit` with `billed: []` and the proof's
              * `proven: false` — the rung's verdict that nothing is forced, walked.
              */
-            const xc = (!proof.proven && proof.crossing && crossTo
-                && proof.crossing.transition.to_level === crossTo.level) ? proof.crossing : null;
+            // ⛓ FORCEDHITXC D3: by the walk's OWN exit (`crossingMatches`, the drive's crossTo test), not its level alone
+            const xc = (!proof.proven && proof.crossing && crossingMatches(proof.crossing, crossTo)) ? proof.crossing : null;
             if (xc) {
                 rowFor('forced-hit', lastRefused, { proof: proofRow, candidate: 'hitless-continuation', billed: [],
                     ticks: xc.ticks });

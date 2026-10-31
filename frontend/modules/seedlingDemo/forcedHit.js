@@ -35,6 +35,8 @@
  */
 import { BotDriverV2Error, drive } from './botDriverV2.js';
 import { CONTACT_FIDELITY } from './solverView.js';
+import { rectsOverlap } from './levelWorld.js';
+import { terrainProbeRect } from './playerPhysicsV2.js';
 
 /**
  * The switch and its bounds. `enabled` reads `CONTACT_FIDELITY.forcedHits`, so the page, its solve worker and the
@@ -152,9 +154,11 @@ function hitlessWitness(fork, { depthMax, alphabet }) {
         const keys = [];
         let crossed = null;
         let refused = false;
+        let before = null;
         for (let i = 0; i < depthMax; i += 1) {
             keys.push(a);
             let o;
+            before = { x: f.state?.x, y: f.state?.y };
             try {
                 o = f.advance(new Set(a));
             } catch {
@@ -166,7 +170,8 @@ function hitlessWitness(fork, { depthMax, alphabet }) {
         }
         if (refused || hitsOf(f) > h0 || deathsOf(f) > d0) continue;
         if (crossed) {
-            return { nodes, keys, crossing: { keys, transition: crossed, ticks: keys.length, label: label(keys) },
+            return { nodes, keys, crossing: { keys, ticks: keys.length, label: label(keys),
+                transition: { ...crossed, before, landing: { x: f.state?.x, y: f.state?.y } } },
                 verdict: { proven: false, depth: keys.length, leaves: 0, witness: true, hitless: label(keys),
                 why: `the hitless input [${label(keys)}] leaves level ${crossed.from_level} for ${crossed.to_level} — `
                     + 'no hit is forced (the witness, before the tree)' } };
@@ -200,17 +205,19 @@ function hitlessWitness(fork, { depthMax, alphabet }) {
  * `continuationForks` (36) of what the proof left of the node and advance budgets (each fork charged its replay and its
  * ticks); a budget that runs out leaves the proof open as before, now saying so. Returns `{nodes, advances, crossing | null, tried, why}`.
  */
-function continueHitless(fork, prefixes, { alphabet, nodesLeft: budgetLeft, advancesLeft, replayTicks,
+function continueHitless(fork, prefixes, { alphabet, nodesLeft: budgetLeft, advancesLeft, replayTicks, crossTo = null,
     horizon = FORCED_HITS.continuationTicks, forks = FORCED_HITS.continuationForks }) {
     const nodesLeft = Math.min(budgetLeft, forks);
     let nodes = 0;
     let advances = 0;
+    let otherExits = 0;
     for (const p of prefixes) {
         if (p.length >= horizon) continue;
         for (const a of alphabet) {
             if (nodes + 1 > nodesLeft || advances + replayTicks + horizon > advancesLeft) {
                 return { nodes, advances, crossing: null,
-                    why: `the hitless continuation ran out of budget after ${nodes} fork(s)` };
+                    why: `the hitless continuation ran out of budget after ${nodes} fork(s)`
+                        + `${otherExits ? ` (${otherExits} left by another exit)` : ''}` };
             }
             const f = fork();
             if (f === null) {
@@ -226,15 +233,23 @@ function continueHitless(fork, prefixes, { alphabet, nodesLeft: budgetLeft, adva
                 for (let i = 0; i < horizon; i += 1) {
                     const k = i < p.length ? p[i] : a;
                     keys.push(k);
+                    const before = { x: f.state.x, y: f.state.y };
                     const o = f.advance(new Set(k));
                     if (hitsOf(f) > h0 || deathsOf(f) > d0) { clean = false; break; }
-                    if (o.transition) { crossed = o.transition; break; }
+                    if (o.transition) {
+                        // the pre-move point and the landing: which EXIT this was (`crossingMatches`)
+                        crossed = { ...o.transition, before, landing: { x: f.state.x, y: f.state.y } };
+                        break;
+                    }
                 }
             } catch {
                 clean = false;
             }
             advances += replayTicks + keys.length;
-            if (clean && crossed) {
+            if (clean && crossed && crossTo && !crossingMatches({ transition: crossed }, crossTo)) {
+                // ⛓ D3: a hitless exit, but not the walk's (`crossingMatches`) — not this walk's crossing; search on
+                otherExits += 1;
+            } else if (clean && crossed) {
                 return { nodes, advances, crossing: { keys, transition: crossed, ticks: keys.length, label: label(keys) },
                     why: `the hitless prefix [${label(p)}] carried on by holding [${label([a])}] leaves level `
                         + `${crossed.from_level} for ${crossed.to_level} at tick ${keys.length} — no hit is forced `
@@ -243,7 +258,23 @@ function continueHitless(fork, prefixes, { alphabet, nodesLeft: budgetLeft, adva
         }
     }
     return { nodes, advances, crossing: null,
-        why: `no hitless continuation of the open prefix(es) leaves the room within ${horizon} tick(s) (${nodes} fork(s))` };
+        why: `no hitless continuation of the open prefix(es) leaves the room${crossTo ? ' by the walk\'s exit' : ''} `
+            + `within ${horizon} tick(s) (${nodes} fork(s)${otherExits ? `, ${otherExits} by another exit` : ''})` };
+}
+
+/**
+ * ⛓ FORCEDHITXC D3 — does a proof `crossing` leave by the walk's OWN exit? The drive's crossing test
+ * (`botDriverV2.drive`'s `crossTo` arm), applied to the continuation's recorded transition: the destination level, and
+ * then the pit tile under the pre-move terrain probe (`crossTo.pit`, every pit of a level falls to the same level) or
+ * the exit's arrival point exactly (`crossTo.arrival`). A level alone is not enough: measured on L40 leg 403
+ * (`… <- in_L43_176_464 -> exit:out_pit_13_20`), the continuation held `up` from the arrival and left by the DOOR the
+ * player came in through — level 43 as well, the wrong exit. A crossing without its recorded points never matches.
+ */
+export function crossingMatches(crossing, crossTo) {
+    const t = crossing?.transition;
+    if (!t || !crossTo || t.to_level !== crossTo.level || !t.before || !t.landing) return false;
+    if (crossTo.pit) return rectsOverlap(terrainProbeRect(t.before.x, t.before.y), crossTo.pit.rect);
+    return !!crossTo.arrival && t.landing.x === crossTo.arrival.x && t.landing.y === crossTo.arrival.y;
 }
 
 /**
@@ -254,19 +285,22 @@ function continueHitless(fork, prefixes, { alphabet, nodesLeft: budgetLeft, adva
  * ⛓ FORCEDHITXC D1 (`secondaryUse` ON only): a `proven: false` verdict whose hitless input already LEFT the room
  * carries it as `crossing`; one left open on hitless prefixes asks `continueHitless` with what the budgets have left,
  * and a continuation that leaves the room hitless is carried as `crossing` too (its `why` the continuation's, the
- * open verdict's kept as `openWhy`). OFF: neither, byte-identical.
+ * open verdict's kept as `openWhy`). OFF: neither, byte-identical. ⛓ D3: with `crossTo` (the walk's exit, the rung's), only
+ * a crossing that leaves by THAT exit (`crossingMatches`) is carried; the continuation searches on past another exit.
  */
 export function proveForcedHit(fork, { depthMax = FORCED_HITS.depthMax, nodeBudget = FORCED_HITS.nodeBudget,
-    alphabet = FORCED_HIT_ALPHABET, replayTicks = 0, advanceBudget = FORCED_HITS.advanceBudget } = {}) {
+    alphabet = FORCED_HIT_ALPHABET, replayTicks = 0, advanceBudget = FORCED_HITS.advanceBudget, crossTo = null } = {}) {
     let frontier = [[]];
     let nodes = 0;
     let advances = 0;
     const leaves = [];
     const continuing = CONTACT_FIDELITY.secondaryUse === true;
+    /** ⛓ D3: a crossing found by the tree or the witness is carried only when it is the walk's exit (or none is named) */
+    const ours = (c) => crossTo === null || crossingMatches(c, crossTo);
     /** ⛓ FORCEDHITXC D1: an open verdict carried on (ON only; OFF returns `v` as it stands). */
     const carryOn = (v, prefixes) => {
         if (!continuing) return v;
-        const c = continueHitless(fork, prefixes, { alphabet, replayTicks,
+        const c = continueHitless(fork, prefixes, { alphabet, replayTicks, crossTo,
             nodesLeft: nodeBudget - v.nodes, advancesLeft: advanceBudget - (v.advances ?? advances) });
         const out = { ...v, nodes: v.nodes + c.nodes, advances: (v.advances ?? advances) + c.advances,
             continuation: { nodes: c.nodes, why: c.why } };
@@ -280,7 +314,7 @@ export function proveForcedHit(fork, { depthMax = FORCED_HITS.depthMax, nodeBudg
         if (w.verdict) {
             const v = { ...w.verdict, nodes, advances };
             if (!continuing || !w.keys) return v;
-            if (w.crossing) return { ...v, crossing: w.crossing };
+            if (w.crossing) return ours(w.crossing) ? { ...v, crossing: w.crossing } : v;
             return carryOn(v, [w.keys]);
         }
     }
@@ -318,8 +352,10 @@ export function proveForcedHit(fork, { depthMax = FORCED_HITS.depthMax, nodeBudg
                 const keys = [...p, a];
                 let firstHit = null;
                 let crossed = null;
+                let before = null;
                 for (let i = 0; i < keys.length; i += 1) {
                     let o;
+                    before = { x: f.state?.x, y: f.state?.y };
                     try {
                         o = f.advance(new Set(keys[i]));
                     } catch (e) {
@@ -346,8 +382,9 @@ export function proveForcedHit(fork, { depthMax = FORCED_HITS.depthMax, nodeBudg
                         why: `the hitless input [${label(keys)}] leaves level ${crossed.from_level} for `
                             + `${crossed.to_level} — no hit is forced`, hitless: label(keys) };
                     // ⛓ FORCEDHITXC D1 (ON only): the tree's own hitless crossing is carried, for the rung to walk
-                    return continuing ? { ...v, advances,
-                        crossing: { keys, transition: crossed, ticks: keys.length, label: label(keys) } } : v;
+                    const c = { keys, ticks: keys.length, label: label(keys),
+                        transition: { ...crossed, before, landing: { x: f.state?.x, y: f.state?.y } } };
+                    return continuing && ours(c) ? { ...v, advances, crossing: c } : v;
                 } else next.push(keys);
             }
         }

@@ -24,7 +24,11 @@ import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
-import { FORCED_HITS, FORCED_HIT_TRACE, proveForcedHit, withForcedHits } from './forcedHit.js';
+import { FORCED_HITS, FORCED_HIT_TRACE, crossingMatches, proveForcedHit, withForcedHits } from './forcedHit.js';
+import { gunzipSync } from 'node:zlib';
+import { ANYTIME_PASSES as PASSES, solveAnytime } from './jsRuntimeSolver.js';
+import { LAPSE_NARROW_RETRY } from './solverBot.js';
+import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { arrivalSolverGoal, arrivalSolveRequest } from './wasmArrival.js';
 import { createInPlaceProduceService } from './wasmWalkTape.js';
@@ -202,4 +206,55 @@ describe('FORCEDHITXC D2 — leg 622 solves by the game\'s hitless X+C (ON); OFF
             expect(rows.every((r) => r.outcome === 'hitless')).toBe(true);
         }
     });
+});
+
+describe('FORCEDHITXC D3 — a crossing is the walk\'s only by the walk\'s OWN exit (`crossingMatches`)', () => {
+    const t = (over) => ({ transition: { to_level: 74, before: { x: 72, y: 16.35 }, landing: { x: 296, y: 136 }, ...over } });
+    it('the drive\'s test: the level AND the arrival point exactly; a pit by the pre-move probe; no points, no match', () => {
+        expect(crossingMatches(t(), { level: 74, arrival: { x: 296, y: 136 } })).toBe(true);
+        expect(crossingMatches(t(), { level: 74, arrival: { x: 288, y: 144 } })).toBe(false);
+        expect(crossingMatches(t(), { level: 73, arrival: { x: 296, y: 136 } })).toBe(false);
+        expect(crossingMatches(t(), { level: 74, pit: { rect: { x: 64, y: 8, right: 80, bottom: 24 } } })).toBe(true);
+        expect(crossingMatches(t(), { level: 74, pit: { rect: { x: 200, y: 200, right: 216, bottom: 216 } } })).toBe(false);
+        expect(crossingMatches(t({ before: undefined }), { level: 74, arrival: { x: 296, y: 136 } })).toBe(false);
+        expect(crossingMatches(t(), null)).toBe(false);
+    });
+    it('leg 622\'s continuation, asked with the leg\'s exit, still crosses — it IS that exit', () => {
+        const p = withContactFidelity({ secondaryUse: true, forcedHitWitnessFirst: false },
+            () => proveForcedHit(fork622, { crossTo: { level: 74, arrival: { x: 296, y: 136 } } }));
+        expect(p.crossing).toMatchObject({ ticks: 4 });
+        const q = withContactFidelity({ secondaryUse: true, forcedHitWitnessFirst: false },
+            () => proveForcedHit(fork622, { crossTo: { level: 74, arrival: { x: 0, y: 0 } } }));
+        expect(q).not.toHaveProperty('crossing');
+        expect(q.continuation.why).toMatch(/ran out of budget after 36 fork\(s\) \(\d+ left by another exit\)/);
+    });
+    it('L40 leg 403 (`… <- in_L43_176_464 -> exit:out_pit_13_20`, LAPSECOST\'s request at budget 160): ON refuses as OFF '
+        + 'does — the continuation\'s hitless `up` leaves by the ARRIVAL door (L43 too), not the pit', () => {
+        const line = JSON.parse(gunzipSync(readFileSync(join(HERE, '..', '..', '..', 'CC', 'docs', 'cloud-reports',
+            'seedling-fidelity-lapsecost-evidence', 'd1', 'leg-403-requests.jsonl.gz'))).toString('utf8').split('\n')[0]);
+        const req = restoreRequest(line.requests[0].request);
+        const { passes = PASSES, source, ...tape } = req;
+        const solve = (su) => {
+            const rows = [];
+            FORCED_HIT_TRACE.sink = (r) => rows.push(r);
+            LAPSE_NARROW_RETRY.enabled = false;
+            try {
+                const res = withContactFidelity({ strikeIframeLapse: true, secondaryUse: su }, () => solveAnytime(
+                    { ...tape, budgetWork: 160, source, levelSource: levelSourceFromAtlas(source.records) }, { passes }));
+                return { res, rows };
+            } finally {
+                LAPSE_NARROW_RETRY.enabled = true;
+                FORCED_HIT_TRACE.sink = null;
+            }
+        };
+        const off = solve(false);
+        const on = solve(true);
+        for (const { res } of [off, on]) {
+            expect(res.ok).toBe(false);
+            expect(res.passes[0]).toMatchObject({ pass: 'dashless', ok: false, deadline: 'detour', limit: 'budget' });
+        }
+        expect(on.res.message).toBe(off.res.message);
+        expect(off.rows.map((r) => [r.outcome, r.proof.nodes])).toEqual([['not-proven', 1]]);
+        expect(on.rows.map((r) => [r.outcome, r.proof.nodes])).toEqual([['not-proven', 37]]);
+    }, 60000);
 });

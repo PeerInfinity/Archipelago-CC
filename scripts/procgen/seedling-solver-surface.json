@@ -5369,10 +5369,11 @@
         "arrowLaneCrossing.js": 1,
         "botDriverV2.js": 12,
         "dangerMap.js": 24,
+        "forcedHit.js": 1,
         "solverBot.js": 14,
         "strikePolicy.js": 2
       },
-      "sites": 54,
+      "sites": 55,
       "seen": "static",
       "via": [
         "import"
@@ -6031,9 +6032,10 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 2,
+        "forcedHit.js": 1,
         "solverBot.js": 1
       },
-      "sites": 6,
+      "sites": 7,
       "seen": "static",
       "via": [
         "import"
