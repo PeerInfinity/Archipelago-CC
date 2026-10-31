@@ -6126,9 +6126,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 12
+        "solverBot.js": 13
       },
-      "sites": 12,
+      "sites": 13,
       "seen": "static",
       "via": [
         "import"
@@ -6180,9 +6180,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 13
+        "solverBot.js": 14
       },
-      "sites": 13,
+      "sites": 14,
       "seen": "static",
       "via": [
         "import"
@@ -6235,9 +6235,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 15
+        "solverBot.js": 16
       },
-      "sites": 15,
+      "sites": 16,
       "seen": "static",
       "via": [
         "import"
@@ -6461,15 +6461,51 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 12
+        "solverBot.js": 13
       },
-      "sites": 12,
+      "sites": 13,
       "seen": "static",
       "via": [
         "import"
       ],
       "dynamic": null,
       "why": "Facing direction UP = 1 as Player.direction numbers it."
+    },
+    {
+      "surface": "import",
+      "name": "AXIS_STRIKE",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 513,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 2
+      },
+      "sites": 2,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The switch (hammer-phase AXIS; OFF, SEEDLING_AXIS_STRIKE=1 opts in) under which walkToUnder's axis-aligned walks, strike-free OFF, are handed the one strike policy (strikePolicyFor's axisAlong row, axisStrikeFor) at the drive and every preview that certifies them, offered on each aim tick only the bodies whose facing lies on the walk's axis; OFF nothing is built."
+    },
+    {
+      "surface": "import",
+      "name": "AXIS_STRIKE_COUNTS",
+      "module": "frontend/modules/seedlingDemo/pressKillCost.js",
+      "line": 539,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 6
+      },
+      "sites": 6,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The AXIS switch's instrument (policies built, aim ticks asked, bodies withheld off-axis, ticks with no single axis, aims and presses taken); written only ON, read by nothing that decides."
     },
     {
       "surface": "import",
@@ -6673,7 +6709,7 @@
       "surface": "import",
       "name": "REFUGE_ETA_CUT",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 521,
+      "line": 579,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -6691,7 +6727,7 @@
       "surface": "import",
       "name": "REFUGE_ETA_CUT_COUNTS",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 556,
+      "line": 614,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -6709,7 +6745,7 @@
       "surface": "import",
       "name": "refugeEtaCut",
       "module": "frontend/modules/seedlingDemo/pressKillCost.js",
-      "line": 547,
+      "line": 605,
       "class": "seedling",
       "form": "function",
       "files": {

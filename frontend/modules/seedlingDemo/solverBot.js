@@ -136,6 +136,8 @@ import {
     PRESS_KILL_CHASERS, PRESS_KILL_CHASERS_COUNTS,
     // ⛓⛓⛓ hammer-phase OPP: opportunistic strikes in the press kill (behind `OPPORTUNISTIC_STRIKE`, OFF).
     OPPORTUNISTIC_STRIKE, OPPORTUNISTIC_STRIKE_COUNTS, OPPORTUNISTIC_STRIKE_TRACE,
+    // ⛓⛓⛓ hammer-phase AXIS: strikes on axis-aligned walks, aimed along the walk's axis (behind `AXIS_STRIKE`, OFF).
+    AXIS_STRIKE, AXIS_STRIKE_COUNTS,
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, ON by default since the user's flip; a behaviour switch, see its file).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
@@ -6385,7 +6387,9 @@ export const ECONOMIES_ROSTER_WIDE = false;
 export function strikePolicyFor(run, { dashPlan = null,
     dashMode = DEFAULT_DASH_MODE,
     // ⛓ LAPSECOST D1 — the walk's i-frame-lapse permission (`createStrikePolicy`); `true`: the switch decides.
-    iframeLapse = true } = {}) {
+    iframeLapse = true,
+    // ⛓ hammer-phase AXIS — an axis-aligned walk's row (`axisStrikeFor`, `AXIS_STRIKE` ON only): see `axisAlongStrike`.
+    axisAlong = false } = {}) {
     assertDashMode(dashMode, 'strikePolicyFor');
     const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
     if (!hasSword) return null;
@@ -6399,7 +6403,7 @@ export function strikePolicyFor(run, { dashPlan = null,
      * preview would carry it and the drive would not).
      */
     if (!dashPlan && (run.entities('strikeBodies') ?? []).length === 0) return null;
-    return createStrikePolicy({
+    const policy = createStrikePolicy({
         facingToward, facingKeys: FACING_KEYS, hasSword, dashPlan,
         /**
          * ⛓ R9 SLICE 12i — the boolean the policy enforces is now a QUESTION
@@ -6425,6 +6429,68 @@ export function strikePolicyFor(run, { dashPlan = null,
         vetoBody: dropKillVetoFor(run),
         ...(iframeLapse === false ? { iframeLapse: false } : {}),
     });
+    if (!axisAlong) return policy;
+    if (dashPlan) fail('strikePolicyFor: an axis-along policy carries no dash plan (an axis-aligned walk is undashed)');
+    AXIS_STRIKE_COUNTS.policies += 1;
+    return axisAlongStrike(policy);
+}
+
+/** ⛓ hammer-phase AXIS — the axis of each `Player.direction` (`FACING_KEYS`' numbering). */
+const AXIS_OF_FACING = Object.freeze({ [RIGHT]: 'x', [LEFT]: 'x', [UP]: 'y', [DOWN]: 'y' });
+
+/**
+ * ⛓⛓ hammer-phase AXIS — THE AXIS AN AXIS-ALIGNED WALK IS ON THIS TICK: `'x'` / `'y'`, or `null` when it has none.
+ * The velocity's axis when exactly one component moves (`holdOneAxis` keeps it so); at rest, the axis of the walk's own
+ * held direction keys when they name one. A diagonal velocity, or a held set at rest with both axes or none (a stance's
+ * stand, a corner `holdOneAxis` settles by the target) has no single axis, so nothing may be aimed.
+ */
+export function walkAxisOf(state, walkHeld) {
+    const vx = state.vx ?? 0;
+    const vy = state.vy ?? 0;
+    if (vx !== 0 || vy !== 0) return vx !== 0 && vy !== 0 ? null : (vx !== 0 ? 'x' : 'y');
+    const hx = walkHeld.has('left') || walkHeld.has('right');
+    const hy = walkHeld.has('up') || walkHeld.has('down');
+    return hx === hy ? null : (hx ? 'x' : 'y');
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase AXIS (`AXIS_STRIKE`, OFF) — **THE ONE POLICY, AIMED ONLY ALONG THE WALK'S OWN AXIS.** On an aim
+ * tick (no press owed) the policy is offered only the bodies whose facing (`facingToward`, the key the aim would hold)
+ * lies on `walkAxisOf`'s axis, so the aim key is the walk's own axis, forward or back; the press holds `primary` alone
+ * (friction on a one-axis velocity is exact, `holdOneAxis`' docblock). The other coordinate does not move on either
+ * tick, which is what the skirted lane needs (Swim U2, fidelity PROXIMITY). The press half is asked with EVERY body,
+ * so its Bulb veto and the swing see the whole rect, as the game does. Every other getter is the wrapped policy's.
+ */
+export function axisAlongStrike(policy) {
+    const decide = (state, bodies, tick, walkHeld, opts) => {
+        if (policy.aimed !== null) {
+            const out = policy.decide(state, bodies, tick, walkHeld, opts);
+            if (out.decision === STRIKE_PRESS) AXIS_STRIKE_COUNTS.pressed += 1;
+            return out;
+        }
+        const axis = walkAxisOf(state, walkHeld);
+        let along = [];
+        if (axis === null) {
+            if (bodies.length > 0) AXIS_STRIKE_COUNTS.noAxis += 1;
+        } else {
+            along = bodies.filter((b) => AXIS_OF_FACING[facingToward(state, b.rect)] === axis);
+            AXIS_STRIKE_COUNTS.withheld += bodies.length - along.length;
+        }
+        if (bodies.length > 0) AXIS_STRIKE_COUNTS.asked += 1;
+        const out = policy.decide(state, along, tick, walkHeld, opts);
+        if (out.decision === STRIKE_AIM) AXIS_STRIKE_COUNTS.aimed += 1;
+        return out;
+    };
+    return new Proxy(policy, { get: (target, key) => (key === 'decide' ? decide : Reflect.get(target, key)) });
+}
+
+/**
+ * ⛓ hammer-phase AXIS — an axis-aligned walk's strike: `null` OFF (the walk's strike-free policy, byte-identical), and
+ * ON the axis-along row of `strikePolicyFor`. Asked at every site an axis-aligned walk was handed `strike: null`, the
+ * drive and every preview that certifies it alike (⚖ 30(c)).
+ */
+export function axisStrikeFor(run, dashMode = DEFAULT_DASH_MODE) {
+    return AXIS_STRIKE.enabled ? strikePolicyFor(run, { dashMode, axisAlong: true }) : null;
 }
 
 /**
@@ -26243,7 +26309,7 @@ function solveSegmentUnder({
          */
         const tail = standTailOpts(stand);
         const walk = previewWalk(run, wps, tolerance, axisAligned
-            ? { strike: null, axisAligned, ...tail }
+            ? { strike: axisStrikeFor(run, dashMode), axisAligned, ...tail }
             : { strike: strikePolicyFor(run, { dashMode, iframeLapse }), ...tail });
         const hit = probeSamples(walk.samples, except, { walkCheck });
         if (hit) {
@@ -26788,7 +26854,7 @@ function solveSegmentUnder({
                 search: for (let at = lastAt; at >= firstAt; at -= DODGE_RUNG.step) {
                     for (let ticks = 1; ticks <= DODGE_RUNG.maxTicks; ticks += 1) {
                         const walk = previewWalkOrDeath(run, corridor, tolerance, axisAligned
-                            ? { strike: null, axisAligned, stall: { at, ticks }, ...stopEarly }
+                            ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall: { at, ticks }, ...stopEarly }
                             : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks }, ...stopEarly });
                         if (walk.truncated && walk.truncated.kind !== 'crossed') continue;
                         if (walk.samples.length < at + ticks) continue;
@@ -26841,7 +26907,7 @@ function solveSegmentUnder({
                 whirlWhy = `the named whirlpool(s) [${[...named].join(', ')}] are not in this room's fight any more`;
             } else {
                 walk = previewWalkOrDeath(run, corridor, tolerance, axisAligned
-                    ? { strike: null, axisAligned, stall: { at: 0, ticks: left } }
+                    ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall: { at: 0, ticks: left } }
                     : { strike: strikePolicyFor(run, { dashMode }), stall: { at: 0, ticks: left } });
                 const bad = walk.truncated && walk.truncated.kind !== 'crossed' ? `the preview truncates (${walk.truncated.kind})`
                     : walk.samples.length < left ? 'the preview ends inside the stall'
@@ -26895,7 +26961,7 @@ function solveSegmentUnder({
                 const hitAt = Math.max(0, h.tick - run.ticksCompleted - 1);
                 const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
                 const optsFor = (stall) => (axisAligned
-                    ? { strike: null, axisAligned, stall, stopWhen: dangerous }
+                    ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall, stopWhen: dangerous }
                     : { strike: strikePolicyFor(run, { dashMode }), stall, stopWhen: dangerous });
                 const base = previewWalkOrDeath(run, wps, tolerance, optsFor(null));
                 // ⛓ PDS: a base walk that DIED has no doorstep, so no stall of it is a candidate
@@ -26954,7 +27020,7 @@ function solveSegmentUnder({
                                 if (AXE_DODGE_ASK_PER_PREVIEW.enabled && askAxe()) return null;
                                 previews += 1;
                                 const full = previewWalkOrDeath(run, wps, tolerance, axisAligned
-                                    ? { strike: null, axisAligned, stall: { at, ticks: rest } }
+                                    ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall: { at, ticks: rest } }
                                     : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks: rest } });
                                 const sm = full.samples;
                                 const still = sm.length > at + rest && sm[at + rest - 1].x === sm[at + rest - 2]?.x
@@ -27023,7 +27089,7 @@ function solveSegmentUnder({
             let timingBaseWalk = null;
             /** The corridor walked as it stands, undashed and unstalled (one preview, kept). */
             const timingBase = () => (timingBaseWalk ??= previewWalkOrDeath(run, corridor, tolerance, axisAligned
-                ? { strike: null, axisAligned } : { strike: strikePolicyFor(run, { dashMode }) }));
+                ? { strike: axisStrikeFor(run, dashMode), axisAligned } : { strike: strikePolicyFor(run, { dashMode }) }));
             /**
              * ⛓ AXETIMING — **WHEN THE STALLS CANNOT HELP, THE RUNG IS ASKED FIRST.** The walk's angle round each
              * hit axe's hub, relative to the blade's, over the samples whose box centre is inside the blade's length
@@ -27225,7 +27291,7 @@ function solveSegmentUnder({
                         certify: (wps) => {
                             const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
                             const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
-                                ? { strike: null, axisAligned, stopWhen: dangerous }
+                                ? { strike: axisStrikeFor(run, dashMode), axisAligned, stopWhen: dangerous }
                                 : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
                             const h = probeSamples(walk.samples, dangerExcept);
                             const out = { hit: h, hitWp: h ? walk.samples.at(-1).wp : null,
@@ -27357,7 +27423,7 @@ function solveSegmentUnder({
                 const hitAt = Math.max(0, h.tick - run.ticksCompleted - 1);
                 const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
                 const optsFor = (stall) => (axisAligned
-                    ? { strike: null, axisAligned, stall, stopWhen: dangerous }
+                    ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall, stopWhen: dangerous }
                     : { strike: strikePolicyFor(run, { dashMode }), stall, stopWhen: dangerous });
                 const base = previewWalkOrDeath(run, wps, tolerance, optsFor(null));
                 // ⛓ PDS: a base walk that DIED has no doorstep, so no stall of it is a candidate
@@ -27427,7 +27493,7 @@ function solveSegmentUnder({
                             if (ticks === rest && clock.v !== null) {
                                 previews += 1;
                                 const full = previewWalkOrDeath(run, wps, tolerance, axisAligned
-                                    ? { strike: null, axisAligned, stall: { at, ticks: rest } }
+                                    ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall: { at, ticks: rest } }
                                     : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks: rest } });
                                 const sm = full.samples;
                                 const still = sm.length > at + rest && sm[at + rest - 1].x === sm[at + rest - 2]?.x
@@ -27523,7 +27589,7 @@ function solveSegmentUnder({
                         certify: (wps) => {
                             const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
                             const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
-                                ? { strike: null, axisAligned, stopWhen: dangerous }
+                                ? { strike: axisStrikeFor(run, dashMode), axisAligned, stopWhen: dangerous }
                                 : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
                             const h = probeSamples(walk.samples, dangerExcept);
                             const out = { hit: h, hitWp: h ? walk.samples.at(-1).wp : null,
@@ -28634,7 +28700,7 @@ function solveSegmentUnder({
                     const end = wps[wps.length - 1];
                     const tail = stand && end && end.x === aim.x && end.y === aim.y ? standTailOpts(stand) : {};
                     const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
-                        ? { strike: null, axisAligned, stopWhen: dangerous, ...tail }
+                        ? { strike: axisStrikeFor(run, dashMode), axisAligned, stopWhen: dangerous, ...tail }
                         : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous, ...tail });
                     const hit = probeSamples(walk.samples, dangerExcept);
                     return { hit, hitWp: hit ? walk.samples.at(-1).wp : null,
@@ -28689,7 +28755,8 @@ function solveSegmentUnder({
                 const hitsMax = run.progress('inventory')?.hitsMax ?? 3;
                 const plan = planForcedCrossing(fork, proof, corridor, {
                     crossTo, tolerance, maxTicks: maxTicksPerTarget, contacts, axisAligned,
-                    strikeFor: axisAligned ? null : (f) => strikePolicyFor(f, { dashMode }),
+                    strikeFor: axisAligned ? (AXIS_STRIKE.enabled ? (f) => axisStrikeFor(f, dashMode) : null)
+                        : (f) => strikePolicyFor(f, { dashMode }),
                     hitsMax, hitsNow: worldHitsOf(run).hits, budgetLeft: FORCED_HITS.maxPerSegment - spent,
                 });
                 if (!plan.best) {
@@ -28791,7 +28858,7 @@ function solveSegmentUnder({
             }
             let door = 0;
             let span = 1;
-            const strikeFor = (r, fam, s) => (axisAligned ? null : strikePolicyFor(r, fam.offset === null ? { dashMode }
+            const strikeFor = (r, fam, s) => (axisAligned ? axisStrikeFor(r, dashMode) : strikePolicyFor(r, fam.offset === null ? { dashMode }
                 : { dashMode, dashPlan: (() => {
                     const ticks = new Set();
                     const resume = t0 + door + s;
@@ -29137,7 +29204,7 @@ function solveSegmentUnder({
         const keys = [];
         let transition = null;
         try {
-            const strike = axisAligned ? null
+            const strike = axisAligned ? axisStrikeFor(f, dashMode)
                 : strikePolicyFor(f, { dashPlan: null, dashMode, ...(narrow ? { iframeLapse: false } : {}) });
             for (let wi = 0; wi < wps.length; wi += 1) {
                 const last = wi === wps.length - 1;
@@ -29194,6 +29261,8 @@ function solveSegmentUnder({
          * and no opportunistic strike, whose presses and aim keys would add
          * the second axis back. Asked only by a resolution that says
          * `approach: 'axis-aligned'` — `skirt`'s, whose lane admits one x.
+         * ⛓ hammer-phase AXIS (`AXIS_STRIKE`, OFF): ON, the walk strikes, aimed only along its own axis
+         * (`axisAlongStrike`), so no aim key adds the second axis back.
          */
         axisAligned: axisAlignedAsked = false,
         /**
@@ -29796,7 +29865,8 @@ function solveSegmentUnder({
              * this existed.
              */
             const strike = axisAligned
-                ? null
+                // ⛓ hammer-phase AXIS: OFF `null` (strike-free on purpose); ON the axis-along row, as every preview above.
+                ? axisStrikeFor(run, dashMode)
                 : strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode,
                     ...(narrow ? { iframeLapse: false } : {}) });
             // ⛓ D3: the walk's dash record — see `dashWalks`. `pressed` is filled
