@@ -21339,6 +21339,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "DISABLE",
                 "argOf"
             ],
             "browser": false,
@@ -21350,6 +21351,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "derive-only",
+                "disable",
                 "only",
                 "out",
                 "route",
@@ -21369,6 +21371,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "derive-only"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "disable"
                 },
                 {
                     "how": [

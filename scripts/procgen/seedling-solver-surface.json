@@ -23,6 +23,7 @@
     "solveProgress.js",
     "solverBot.js",
     "spaceTimeReach.js",
+    "strategySwitch.js",
     "strikePolicy.js",
     "tentacleBeastPolicy.js"
   ],
@@ -553,9 +554,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 217
+        "solverBot.js": 218
       },
-      "sites": 358,
+      "sites": 359,
       "seen": "both",
       "via": [
         "direct",
@@ -631,7 +632,7 @@
         },
         "darkTraps": {
           "dangerMap.js": 1,
-          "solverBot.js": 4
+          "solverBot.js": 5
         },
         "drillBodies": {
           "dangerMap.js": 1,

@@ -94,6 +94,7 @@
  *   node scripts/procgen/survey-seedling-route.mjs --through=2.2 --out=<file.json> --only=21,22,…
  *   node scripts/procgen/survey-seedling-route.mjs --through=end --out=<file.json>
  *   node scripts/procgen/survey-seedling-route.mjs --through=3.1 --route=route-only --out=<file.json>
+ *   SEEDLING_STRATEGY_SWITCH=1 node scripts/procgen/survey-seedling-route.mjs --through=end --only=4 --disable=shove
  *
  * ── `--through=2.2` AND `--out=` (SEEDLING SWIM S2, D5) ────────────────
  *
@@ -195,6 +196,22 @@ const argOf = (k, dflt) => {
 };
 const STEP = argOf('step', null);
 const ONLY = argOf('only', null);
+/**
+ * ⛓ STRATEGY SWITCH r1 — `--disable=<name>[,<name>…]`: every step solved with those strategies switched off
+ * (`twoPassSolve`'s `disable`, which needs `SEEDLING_STRATEGY_SWITCH=1`; with the flag OFF every step REFUSES by name).
+ * Forwarded to each step's child, and the row records `disable` and the gate's `disabled` count. ⛔ ABSENT = today's
+ * survey, byte for byte: nothing is forwarded and no row gains a field.
+ */
+const DISABLE = (() => {
+    const v = argOf('disable', null);
+    if (v === null) return undefined;
+    const list = v.split(',').map((x) => x.trim()).filter(Boolean);
+    if (list.length === 0) {
+        console.error('ERROR: --disable= names no strategy — omit it to solve with every strategy on');
+        process.exit(2);
+    }
+    return list;
+})();
 /** ⛔ An ABSENT `--only` is every step; a PRESENT-but-empty one is a caller's lost list, never "everything". */
 if (ONLY !== null && !ONLY.split(',').some((s) => s.trim())) {
     console.error('ERROR: --only= names no step — omit --only to survey every step; an empty list is refused, never read as all');
@@ -1536,6 +1553,7 @@ async function solveOneStep(step) {
     let solved = null;
     let refusal = null;
     let verdict = 'SOLVED';
+    let disabledRow = null;
     try {
         solved = await twoPassSolve({
             makeRun,
@@ -1545,9 +1563,11 @@ async function solveOneStep(step) {
             dashMode: DASH_MODE,
             persistence: staging.persistence,
             log: () => {},
+            ...(DISABLE ? { disable: DISABLE } : {}),
         });
     } catch (e) {
         refusal = e.message;
+        if (DISABLE) disabledRow = e.disabled ?? null;
         verdict = /needs a GAME-sourced tick/i.test(e.message) ? 'NEEDS-GAME-ORACLE' : 'REFUSED';
     }
     const ms = Date.now() - t0;
@@ -1637,6 +1657,7 @@ async function solveOneStep(step) {
         clock,
         verdict,
         refusal,
+        ...(DISABLE ? { disable: DISABLE, disabled: solved ? solved.out.disabled ?? null : disabledRow } : {}),
         ticks: solved ? solved.out.perTick.length : null,
         traceRows: solved ? solved.out.trace.rows.length : null,
         replans: solved ? solved.out.replans : null,
@@ -2007,7 +2028,8 @@ for (const step of [...route.steps, ...addendum]) {
     // eslint-disable-next-line no-await-in-loop
     const res = await new Promise((resolve) => {
         execFile(process.execPath, [fileURLToPath(import.meta.url), `--step=${step.step}`,
-            ...(THROUGH ? [`--through=${THROUGH}`, `--route=${ROUTE_MODE}`] : [])], {
+            ...(THROUGH ? [`--through=${THROUGH}`, `--route=${ROUTE_MODE}`] : []),
+            ...(DISABLE ? [`--disable=${DISABLE.join(',')}`] : [])], {
             cwd: REPO, timeout: TIMEOUT_S * 1000, maxBuffer: 64 * 1024 * 1024, killSignal: 'SIGKILL',
         }, (err, stdout, stderr) => {
             const marked = String(stdout).split('\n').find((l) => l.startsWith('##SURVEY##'));
