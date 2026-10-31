@@ -55,8 +55,9 @@ describe('⛓⛓⛓ the CORRIDOR BODY element and its table row (swim U3, D3)', 
         expect(CORRIDOR_BODY_REFUSALS).toEqual(ROCK_GATE_REFUSALS);
         expect(ELEMENT_TABLE.corridorbody.element).toBe(CORRIDOR_BODY);
         expect(ELEMENT_TABLE.corridorbody.needs).toEqual(['hasSword']);
-        /** ⛓ seedling gen A1 appended `ropegate` after it; no head before it moved. */
-        expect(ELEMENT_NAMES.slice(-2)).toEqual(['corridorbody', 'ropegate']);
+        /** ⛓ seedling gen A1 appended `ropegate` after it, and B2 `chestdoor`; no
+         *  head before them moved. */
+        expect(ELEMENT_NAMES.slice(-3)).toEqual(['corridorbody', 'ropegate', 'chestdoor']);
     });
 
     it('⛔ is NOT a head `require` can force — measured SHORTENS — so `--require=hasSword` is unmoved', () => {
