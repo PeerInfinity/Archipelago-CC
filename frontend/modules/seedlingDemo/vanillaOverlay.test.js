@@ -69,7 +69,7 @@ const AMBIGUOUS = (() => {
 
 describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
     it(`expresses every one of the atlas's ${ATLAS_LOCATIONS.length} locations and `
-        + `${ATLAS_RULES.length - 6} of its ${ATLAS_RULES.length} authored rules, refusing none`, () => {
+        + `${ATLAS_RULES.length - 13} of its ${ATLAS_RULES.length} authored rules, refusing none`, () => {
         const atlasLocations = ATLAS_LOCATIONS;
         const atlasRules = ATLAS_RULES;
 
@@ -90,16 +90,25 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
         //   Pixelmask leaves the door tile clear), so the rock is the analyzer's crossing into it and the door is True_.
         //   ⛓ RULES waterfall-door: 6 -> 7 — L89's door to L91 is charged the Feather (every way onto it climbs the
         //   fall), and L89 is a split level (r1c10).
+        //   ⛓ rules-certifier-tail: 7 -> 13 — a door is charged what EVERY way onto its tile pays (the Swim of the water it
+        //   stands in or before), and six of the thirteen so charged sit in split levels (L0, L51 x2, L54 x2, L89's door
+        //   to L90); L3's door to L111 was already here. L49, L55, L56 and L91 are one region each and lift.
         expect(LIFT.expressed.filter((o) => o.op === 'set-access-rule'))
-            .toHaveLength(atlasRules.length - 7);
+            .toHaveLength(atlasRules.length - 13);
         expect(LIFT.cannotRules).toEqual([
+            { region: 'level_0', exit_id: 'out_teleporter_240_0', sub_region: 'r2c13' },
             { region: 'level_3', exit_id: 'out_teleporter_0_64', sub_region: 'r0c4' },
             { region: 'level_12', exit_id: 'out_teleporter_32_848', sub_region: 'r42c28' },
             { region: 'level_30', exit_id: 'out_pit_3_34', sub_region: 'r2c10' },
+            { region: 'level_51', exit_id: 'out_teleporter_144_0', sub_region: 'r3c10' },
+            { region: 'level_51', exit_id: 'out_teleporter_256_256', sub_region: 'r14c6' },
+            { region: 'level_54', exit_id: 'out_teleporter_128_464', sub_region: 'r27c8' },
+            { region: 'level_54', exit_id: 'out_teleporter_144_0', sub_region: 'r1c8' },
             { region: 'level_58', exit_id: 'out_teleporter_48_112', sub_region: 'r4c1' },
             { region: 'level_58', exit_id: 'out_teleporter_64_112', sub_region: 'r6c5' },
             // ⛓ RULES l66-door: the only door into Dungeon 6, under bosslock@72,64 {keyType 4}
             { region: 'level_66', exit_id: 'out_teleporter_72_64', sub_region: 'r5c4' },
+            { region: 'level_89', exit_id: 'out_teleporter_160_304', sub_region: 'r11c12' },
             // ⛓ RULES waterfall-door: the teleporter atop L89's fall, reached only by climbing it
             { region: 'level_89', exit_id: 'out_teleporter_208_0', sub_region: 'r1c10' },
         ]);
@@ -299,9 +308,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   and the L69 arena's two door rules (L70's pit in, the Lights' exit out) lift.
         // ⛓ rules-location-crossing: 15,730 -> 15,835 B — L19's Boss Key 0 (inside the ShieldBoss body) lifts its
         //   Sword rule beside the Shieldspire's.
-        expect(Buffer.byteLength(committed, 'utf8')).toBe(15835);
+        // ⛓ rules-certifier-tail: 15,835 -> 16,334 B — the four expressible doors charged their Swim (L49, L55, L56, L91).
+        expect(Buffer.byteLength(committed, 'utf8')).toBe(16334);
         // ⛓ rules-r4b-followup: the bytes hold (out_pit_3_7 -> out_pit_3_8, the same length); the id moves.
-        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-f9c6d0ec');
+        // ⛓ rules-certifier-tail: f9c6d0ec -> 2ef0551f (the four Swim rules above).
+        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-2ef0551f');
         // ⛔ AND THE SUFFIXES ARE GONE — the artifact, not the producer.
         expect(committed).not.toMatch(/Chest \(L\d/);
     });
@@ -312,7 +323,7 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         expect(Object.values(committed.rooms)
             .reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(48);
         expect(Object.values(committed.rooms)
-            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(25); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors; kill-locks: +1 (L98's stairs); game-truth-gaps: +2 L57 arena doors; R4b: +2 L69 arena doors, +7 boss kills; location-crossing: +1 (L19 Boss Key 0)
+            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(29); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors; kill-locks: +1 (L98's stairs); game-truth-gaps: +2 L57 arena doors; R4b: +2 L69 arena doors, +7 boss kills; location-crossing: +1 (L19 Boss Key 0); certifier-tail: +4 (the Swim of L49's, L55's, L56's and L91's doors)
         // ⛔ EVERY authored name is unique WITHIN ITS ROOM — `mark-location`'s
         //    own law since E6a, asserted on the artifact rather than only on the
         //    fold. ⛓ Across rooms it is NOT unique any more, and the row below
@@ -410,8 +421,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-l112-owl-rocklock (e1b1c33a… -> 141195a8): L112's rock costs the Owl's kill (`SCRIPT_GROUP_OPENERS`), so
         //   L112 splits into r0c7 + r2c2 (sub_region on its exits and locations). No name, exit or location moves (the
         //   overlay fixture rewrites byte-identical).
+        // ⛓ rules-certifier-tail (141195a8… -> e60bcdb6): thirteen doors are charged what every way onto their tile pays
+        //   (L3's door to L111 the Swim of the water before it; twelve more the Swim they already paid through their
+        //   landing gate or their sub-region's entry). No name, exit or location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('141195a8b18ffe5187bad889d84c39ea');
+            .toBe('e60bcdb6e2d0f328a086e07974f3520c');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
@@ -458,13 +472,14 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
     // ⛓ R4b: 322 -> 320 — the L69 arena's two doors (L70's pit in, the Lights' exit out); the locations 38 -> 38:
     //   seven more (the bosses), each guarded by its kill, so none of them is free.
     // ⛓ rules-location-crossing: the locations 38 -> 37 — L19's Boss Key 0 lifts its Sword rule.
-    it('moves 334 free exits + 0 locations to 320 + 37, and the export stays ALLOWED', () => {
+    // ⛓ rules-certifier-tail: 320 -> 316 — L49's, L55's, L56's and L91's doors lift their Swim.
+    it('moves 334 free exits + 0 locations to 316 + 37, and the export stays ALLOWED', () => {
         const before = freeEdgesOf(reportWith(emptyOverlay()).rules);
         const after = freeEdgesOf(reportWith(LIFT.overlay).rules);
 
         expect(before.filter((e) => e.kind === 'exit')).toHaveLength(334);
         expect(before.filter((e) => e.kind === 'location')).toHaveLength(0);
-        expect(after.filter((e) => e.kind === 'exit')).toHaveLength(320);
+        expect(after.filter((e) => e.kind === 'exit')).toHaveLength(316);
         expect(after.filter((e) => e.kind === 'location')).toHaveLength(37);
 
         /**
@@ -480,10 +495,11 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
          */
         const gone = before.filter((e) => e.kind === 'exit')
             .filter((e) => !after.some((a) => a.region === e.region && a.name === e.name));
-        expect(gone).toHaveLength(14); // ⛓ RULES kill-locks: + L98's stairs under its kill-lock; game-truth-gaps: + L56's pit, the mouth; R4b: + L70's pit, the Lights' exit
+        expect(gone).toHaveLength(18); // ⛓ RULES kill-locks: + L98's stairs under its kill-lock; game-truth-gaps: + L56's pit, the mouth; R4b: + L70's pit, the Lights' exit; certifier-tail: + the Swim of L49's, L55's, L56's and L91's doors
         expect(gone.map((e) => e.name).sort()).toEqual([
             'level_113 -> level_115', 'level_113 -> level_115 #2', 'level_24 -> level_12', 'level_24 -> level_12 #2',
             'level_32 -> level_30 #2', 'level_32 -> level_30 #3', 'level_34 -> level_12 #2',
+            'level_49 -> level_50', 'level_55 -> level_52', 'level_56 -> level_52', 'level_91 -> level_89',
             'level_56 -> level_57', 'level_57 -> level_58', 'level_69 -> level_36', 'level_70 -> level_69',
             'level_82 -> level_96', 'level_96 -> level_82', 'level_98 -> level_99',
         ].sort());
@@ -494,7 +510,8 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
             .toEqual(['level_113 out_teleporter_112_0', 'level_113 out_teleporter_128_0',
                 'level_24 out_teleporter_32_144', 'level_24 out_teleporter_48_144',
                 'level_32 out_pit_14_5', 'level_32 out_pit_15_5', 'level_34 out_teleporter_128_0',
-                'level_56 out_pit_6_10', 'level_57 out_tentaclebeast_80_48',
+                'level_49 out_teleporter_32_128', 'level_55 out_teleporter_80_48', 'level_56 out_teleporter_0_112',
+                'level_91 out_teleporter_16_144', 'level_56 out_pit_6_10', 'level_57 out_tentaclebeast_80_48',
                 'level_69 out_lightbosscontroller_72_72', 'level_70 out_pit_3_8',
                 'level_82 out_teleporter_144_0', 'level_96 out_teleporter_32_64', 'level_98 out_stairsup_112_112'].sort());
         // …and the eleven locations that are NOT free are the eleven the

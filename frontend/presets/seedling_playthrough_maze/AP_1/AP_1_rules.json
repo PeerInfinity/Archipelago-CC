@@ -6801,7 +6801,10 @@
             "name": "level_54__r1c8 -> level_53__r14c9",
             "connected_region": "level_53__r14c9",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
             }
           }
         ],
@@ -11038,7 +11041,10 @@
             "name": "level_91 -> level_89__r1c10",
             "connected_region": "level_89__r1c10",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
             }
           },
           {
@@ -12531,7 +12537,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-33a2d750",
+      "atlas_id": "seedling-a989c447",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -64851,6 +64857,11 @@
             {
               "x": 1,
               "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 9,
               "id": "atlas_gate_0"
             }
           ],

@@ -36,9 +36,10 @@ const withLocationRule = (rules, region, name, rule) => {
 describe('landing gates in the maze preset (L49 + L50)', () => {
     const RULES = JSON.parse(buildPlaythroughMaze({ levels: LEVELS }).text);
 
+    // ⛓ rules-certifier-tail: L49's door now carries the Swim in the ATLAS (every way onto it is water), so its landing
+    // gate is not written twice; the AP rule below is the same Swim.
     it('landingGatesFor keeps exactly the gates whose crossing is wired inside the levels', () => {
         expect(landingGatesFor(ATLAS, LEVELS)).toEqual([
-            { region_id: 'level_49', exit_id: 'out_teleporter_32_128', rule: SWIM },
             { region_id: 'level_50', exit_id: 'out_teleporter_32_0', rule: SWIM },
         ]);
     });

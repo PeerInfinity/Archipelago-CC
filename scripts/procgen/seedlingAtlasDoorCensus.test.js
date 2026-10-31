@@ -96,7 +96,10 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ rules-l112-owl-rocklock — restamped (203feafc -> 1973beee): L112's rock is priced at the Owl's kill rule
         //   (`SCRIPT_GROUP_OPENERS`), so L112 splits at it into r0c7 (the L113 landing) and r2c2 (the arena): 53 -> 54 with
         //   a subgraph, 199 -> 201 sub-regions, 297 -> 298 internal exits (r0c7 <-> r2c2, Or(Sword, Ghost Spear)). No swim row moves.
-        expect(c.atlasId).toBe('seedling-1973beee');
+        // ⛓ rules-certifier-tail — restamped (1973beee -> 9a9b0ddd): thirteen doors are charged what every way onto their
+        //   tile pays (L3's door to L111 the Swim of the water before it), boundary exit rules only; no door, sub-region or
+        //   internal-exit count moves.
+        expect(c.atlasId).toBe('seedling-9a9b0ddd');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
