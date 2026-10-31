@@ -60,6 +60,11 @@ export const FORCED_HITS = {
     margin: 1,
     /** how many proof leaves (fewest hits first) are tried as a crossing's prefix */
     prefixCandidates: 12,
+    /**
+     * ⛓ FORCEDHITXC D1 (`CONTACT_FIDELITY.secondaryUse` ON only): the most ticks a HITLESS CONTINUATION may run,
+     * the open prefix's own ticks included, before it is given up as "did not leave the room" (`continueHitless`)
+     */
+    continuationTicks: 30,
 };
 
 /**
@@ -155,11 +160,12 @@ function hitlessWitness(fork, { depthMax, alphabet }) {
         }
         if (refused || hitsOf(f) > h0 || deathsOf(f) > d0) continue;
         if (crossed) {
-            return { nodes, verdict: { proven: false, depth: keys.length, leaves: 0, witness: true, hitless: label(keys),
+            return { nodes, keys, crossing: { keys, transition: crossed, ticks: keys.length, label: label(keys) },
+                verdict: { proven: false, depth: keys.length, leaves: 0, witness: true, hitless: label(keys),
                 why: `the hitless input [${label(keys)}] leaves level ${crossed.from_level} for ${crossed.to_level} — `
                     + 'no hit is forced (the witness, before the tree)' } };
         }
-        return { nodes, verdict: { proven: false, depth: depthMax, leaves: 0, witness: true, hitless: label(keys),
+        return { nodes, keys, verdict: { proven: false, depth: depthMax, leaves: 0, witness: true, hitless: label(keys),
             why: `the hitless input [${label(keys)}] survives ${depthMax} tick(s) — no hit is forced inside the bound `
                 + `(the witness, ${nodes} fork(s), before the tree)` } };
     }
@@ -167,9 +173,81 @@ function hitlessWitness(fork, { depthMax, alphabet }) {
 }
 
 /**
+ * ⛓ FORCEDHITXC D1 — THE HITLESS CONTINUATION, asked only while `CONTACT_FIDELITY.secondaryUse` is ON (OFF: never
+ * called, so every OFF verdict, node count and `why` is byte-identical).
+ *
+ * The proof ends `proven: false` on a HITLESS prefix that has not left the room yet — the witness's held set that
+ * survived `depthMax`, or the tree's open frontier when the next depth is over the budget (or past `depthMax`). That
+ * prefix only keeps the proof open; it is not yet a crossing. Measured (L73 leg 612/622, `lavarunner@72,24`
+ * diagonally adjacent, `secondaryUse` ON): five one-tick X+C sets are hitless at depth 2 (180 open prefixes), depth 3
+ * needs 6,480 forks against the 659 the budget has left, and the game's own crossing is at t4 (depth 4, past
+ * `depthMax` 3) — so the rung refused EXHAUSTED on a room the game leaves hitless (`secuse-l73-622-xc`).
+ *
+ * The continuation asks the model what each open prefix does when it is carried on: for each open prefix (in the
+ * tree's own order) and each member of the SAME alphabet (in its own order), one fork plays the prefix and then
+ * HOLDS that member until the room is left, a hit or a death is billed, the model refuses a tick, or the sequence
+ * reaches `continuationTicks`. The first sequence that leaves the room with no hit and no death is the tree's
+ * crossing (`crossing: {keys, transition, ticks, label}`): no hit is forced, and the rung may walk it. Nothing is
+ * special-cased: the X+C tick is one alphabet member like the rest, the hold is the witness's own shape (one held
+ * set, carried), and the tie order is the alphabet's, unchanged (so a prefix ending on `·` is first continued by
+ * standing — on leg 622 that already crosses at t4, carried by the slash-dash's velocity). It spends what the
+ * proof left of the node and advance budgets (each fork charged its replay and its ticks); a budget that runs out
+ * leaves the proof open as before, now saying so. Returns `{nodes, advances, crossing | null, tried, why}`.
+ */
+function continueHitless(fork, prefixes, { alphabet, nodesLeft, advancesLeft, replayTicks,
+    horizon = FORCED_HITS.continuationTicks }) {
+    let nodes = 0;
+    let advances = 0;
+    for (const p of prefixes) {
+        if (p.length >= horizon) continue;
+        for (const a of alphabet) {
+            if (nodes + 1 > nodesLeft || advances + replayTicks + horizon > advancesLeft) {
+                return { nodes, advances, crossing: null,
+                    why: `the hitless continuation ran out of budget after ${nodes} fork(s)` };
+            }
+            const f = fork();
+            if (f === null) {
+                return { nodes, advances, crossing: null, why: 'the caller\'s deadline tripped inside the continuation' };
+            }
+            nodes += 1;
+            const h0 = hitsOf(f);
+            const d0 = deathsOf(f);
+            const keys = [];
+            let crossed = null;
+            let clean = true;
+            try {
+                for (let i = 0; i < horizon; i += 1) {
+                    const k = i < p.length ? p[i] : a;
+                    keys.push(k);
+                    const o = f.advance(new Set(k));
+                    if (hitsOf(f) > h0 || deathsOf(f) > d0) { clean = false; break; }
+                    if (o.transition) { crossed = o.transition; break; }
+                }
+            } catch {
+                clean = false;
+            }
+            advances += replayTicks + keys.length;
+            if (clean && crossed) {
+                return { nodes, advances, crossing: { keys, transition: crossed, ticks: keys.length, label: label(keys) },
+                    why: `the hitless prefix [${label(p)}] carried on by holding [${label([a])}] leaves level `
+                        + `${crossed.from_level} for ${crossed.to_level} at tick ${keys.length} — no hit is forced `
+                        + `(the hitless continuation, ${nodes} fork(s))` };
+            }
+        }
+    }
+    return { nodes, advances, crossing: null,
+        why: `no hitless continuation of the open prefix(es) leaves the room within ${horizon} tick(s) (${nodes} fork(s))` };
+}
+
+/**
  * THE PROOF. `fork()` returns a fresh run standing exactly where the live run stands (or `null` when the caller's
  * deadline tripped). Returns `{proven: true, depth, nodes, leaves, minHits, best}` — `best` the leaves billing
  * `minHits` with no death, fewest-ticks first — or `{proven: false, why, nodes, …}`.
+ *
+ * ⛓ FORCEDHITXC D1 (`secondaryUse` ON only): a `proven: false` verdict whose hitless input already LEFT the room
+ * carries it as `crossing`; one left open on hitless prefixes asks `continueHitless` with what the budgets have left,
+ * and a continuation that leaves the room hitless is carried as `crossing` too (its `why` the continuation's, the
+ * open verdict's kept as `openWhy`). OFF: neither, byte-identical.
  */
 export function proveForcedHit(fork, { depthMax = FORCED_HITS.depthMax, nodeBudget = FORCED_HITS.nodeBudget,
     alphabet = FORCED_HIT_ALPHABET, replayTicks = 0, advanceBudget = FORCED_HITS.advanceBudget } = {}) {
@@ -177,30 +255,47 @@ export function proveForcedHit(fork, { depthMax = FORCED_HITS.depthMax, nodeBudg
     let nodes = 0;
     let advances = 0;
     const leaves = [];
+    const continuing = CONTACT_FIDELITY.secondaryUse === true;
+    /** ⛓ FORCEDHITXC D1: an open verdict carried on (ON only; OFF returns `v` as it stands). */
+    const carryOn = (v, prefixes) => {
+        if (!continuing) return v;
+        const c = continueHitless(fork, prefixes, { alphabet, replayTicks,
+            nodesLeft: nodeBudget - v.nodes, advancesLeft: advanceBudget - (v.advances ?? advances) });
+        const out = { ...v, nodes: v.nodes + c.nodes, advances: (v.advances ?? advances) + c.advances,
+            continuation: { nodes: c.nodes, why: c.why } };
+        return c.crossing ? { ...out, crossing: c.crossing, hitless: c.crossing.label, openWhy: v.why, why: c.why } : out;
+    };
     // ⛓ SEARCHGAPS D-B — the hitless WITNESS first (`forcedHitWitnessFirst`; OFF: not asked, byte-identical).
     if (CONTACT_FIDELITY.forcedHitWitnessFirst) {
         const w = hitlessWitness(fork, { depthMax, alphabet });
         nodes += w.nodes;
         advances += w.nodes * (replayTicks + depthMax);
-        if (w.verdict) return { ...w.verdict, nodes, advances };
+        if (w.verdict) {
+            const v = { ...w.verdict, nodes, advances };
+            if (!continuing || !w.keys) return v;
+            if (w.crossing) return { ...v, crossing: w.crossing };
+            return carryOn(v, [w.keys]);
+        }
     }
     for (let depth = 1; depth <= depthMax; depth += 1) {
         const next = [];
         // the whole depth or nothing: a depth the budget cannot finish is refused before a node of it is spent
         const cost = frontier.length * alphabet.length;
         if (advances + cost * (replayTicks + depth) > advanceBudget) {
-            return { proven: false, nodes, depth, leaves: leaves.length, open: frontier.length,
+            const v = { proven: false, nodes, depth, leaves: leaves.length, open: frontier.length,
                 hitless: depth > 1 ? label(frontier[0]) : null,
                 why: `depth ${depth} needs ${cost} fork(s), each replaying the segment's ${replayTicks} tick(s): `
                     + `${cost * (replayTicks + depth)} run ticks, over the advance budget's ${advanceBudget - advances} `
                     + '— a search that gave up is not a proof' };
+            return depth > 1 ? carryOn(v, frontier) : v;
         }
         if (nodes + cost > nodeBudget) {
-            return { proven: false, nodes, depth, leaves: leaves.length, open: frontier.length,
+            const v = { proven: false, nodes, depth, leaves: leaves.length, open: frontier.length,
                 hitless: label(frontier[0]),
                 why: `${frontier.length} prefix(es) of ${depth - 1} tick(s) are still hitless (first `
                     + `[${label(frontier[0])}]), and depth ${depth} needs ${frontier.length * alphabet.length} more `
                     + `fork step(s) than the budget's ${nodeBudget - nodes} — a search that gave up is not a proof` };
+            return depth > 1 ? carryOn(v, frontier) : v;
         }
         for (const p of frontier) {
             for (const a of alphabet) {
@@ -240,9 +335,12 @@ export function proveForcedHit(fork, { depthMax = FORCED_HITS.depthMax, nodeBudg
                     leaves.push({ keys, hits, died, firstHit, crossed: crossed ? crossed.to_level : null });
                 } else if (crossed) {
                     // a hitless input that leaves the room: it is a crossing, so nothing is forced
-                    return { proven: false, nodes, depth, leaves: leaves.length,
+                    const v = { proven: false, nodes, depth, leaves: leaves.length,
                         why: `the hitless input [${label(keys)}] leaves level ${crossed.from_level} for `
                             + `${crossed.to_level} — no hit is forced`, hitless: label(keys) };
+                    // ⛓ FORCEDHITXC D1 (ON only): the tree's own hitless crossing is carried, for the rung to walk
+                    return continuing ? { ...v, advances,
+                        crossing: { keys, transition: crossed, ticks: keys.length, label: label(keys) } } : v;
                 } else next.push(keys);
             }
         }
@@ -256,10 +354,10 @@ export function proveForcedHit(fork, { depthMax = FORCED_HITS.depthMax, nodeBudg
         }
         frontier = next;
     }
-    return { proven: false, nodes, depth: depthMax, leaves: leaves.length, open: frontier.length,
+    return carryOn({ proven: false, nodes, depth: depthMax, leaves: leaves.length, open: frontier.length,
         hitless: label(frontier[0]),
         why: `${frontier.length} prefix(es) of ${depthMax} tick(s) are still hitless (first [${label(frontier[0])}]) `
-            + '— no hit is proven forced inside the bound' };
+            + '— no hit is proven forced inside the bound' }, frontier);
 }
 
 /**

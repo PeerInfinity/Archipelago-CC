@@ -28681,6 +28681,37 @@ function solveSegmentUnder({
                 leaves: proof.leaves, alphabet: proof.alphabet ?? null, minHits: proof.minHits ?? null };
             let forcedWhy = null;
             const at = { level: run.level, x: run.state.x, y: run.state.y, tick: perTick.length };
+            /**
+             * ⛓ FORCEDHITXC D1 (`secondaryUse` ON only; OFF `proof.crossing` is never set): the proof found a HITLESS
+             * input that leaves the room (its tree, its witness, or the hitless continuation of an open prefix). When
+             * it leaves for THIS walk's crossing (`crossTo`), it is the walk: replayed on the live run, which must cross
+             * on its last key with no hit, as the fork did. A row `forced-hit` with `billed: []` and the proof's
+             * `proven: false` — the rung's verdict that nothing is forced, walked.
+             */
+            const xc = (!proof.proven && proof.crossing && crossTo
+                && proof.crossing.transition.to_level === crossTo.level) ? proof.crossing : null;
+            if (xc) {
+                rowFor('forced-hit', lastRefused, { proof: proofRow, candidate: 'hitless-continuation', billed: [],
+                    ticks: xc.ticks });
+                const hitsBefore = run.ledger('playerHits').length;
+                const from = perTick.length;
+                let transition = null;
+                for (let i = 0; i < xc.keys.length; i += 1) {
+                    const held = new Set(xc.keys[i]);
+                    perTick.push(held);
+                    const o = run.advance(held);
+                    if (o.transition) { transition = o.transition; break; }
+                }
+                if (transition === null || perTick.length - from !== xc.keys.length
+                    || run.ledger('playerHits').length !== hitsBefore) {
+                    fail(`${what} -> forced-hit: the hitless crossing [${xc.label}] did not replay as the fork played it `
+                        + '(crossing on its last key, no hit) — the fork is not this run.');
+                }
+                FORCED_HIT_TRACE.sink?.({ what, at, proof: proofRow, outcome: 'hitless', candidate: 'hitless-continuation',
+                    billed: [], ticks: xc.ticks, keys: xc.keys.map((k) => [...k].sort()), why: proof.why,
+                    damage: worldHitsOf(run) });
+                return { forced: { transition }, escalations };
+            }
             if (!proof.proven) {
                 forcedWhy = `no forced hit is proven from (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)}): `
                     + `${proof.why} (${proof.nodes} fork step(s))`;
