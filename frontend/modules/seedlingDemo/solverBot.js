@@ -84,7 +84,8 @@ import {
 } from './crusherBait.js';
 // ⛓ SEEDLING STRATEGY SWITCH r1 — the per-solve OFF switch's scope (`disable:`), flag OFF (`strategySwitch.js`).
 import {
-    ACTIVE_DISABLE, STRATEGY_DISABLED, STRATEGY_DISABLED_SCOPE_CHANGED, STRATEGY_SWITCH, STRATEGY_SWITCH_OFF,
+    ACTIVE_DISABLE, STRATEGY_DISABLED, STRATEGY_DISABLED_SCOPE_CHANGED, STRATEGY_DISABLE_UNKNOWN, STRATEGY_SWITCH,
+    STRATEGY_SWITCH_OFF,
     disabledClause, disabledReport, liveDisableKey, parseDisable, rungOff, verbDisabled, verbOff, withDisabledScope,
 } from './strategySwitch.js';
 import {
@@ -1006,6 +1007,16 @@ function requireVerb(verb, site, id = null) {
 
 /** A ladder rung's entry: is it switched off? (Asked last in the rung's own entry condition, so a hit is an entry.) */
 const rungGate = (rung, site = rung) => ACTIVE_DISABLE !== null && rungOff(rung, site);
+
+/**
+ * Would some arm of the KILL rung run? A `target`, or a live darktrap ON the corridor (the light arm's own filter).
+ * ⛔ Not the roster's truthiness: `darkTraps` is `[]` (truthy) in a room with none while `darkTrapLight` is on, and a
+ * gate asked there would count a hit for a rung that does nothing (p17 review A).
+ */
+export function killRungArmRuns(run, target, hit) {
+    return target !== null || (run.entities('darkTraps') ?? []).some((b) => !b.startDying && !b.removed
+        && hit.sources.some((sx) => sx.kind === 'enemy' && sx.id === b.id));
+}
 
 /** The `why` a switched-off rung's row carries. */
 const disabledRungWhy = (rung) => `the ${rung.toUpperCase()} rung is switched off for this solve (\`disable\`)`;
@@ -5282,8 +5293,14 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
          * still says which blocks were considered and why none of them
          * served. [[feedback_conservative_ingredient_hides_bound_defects]]
          */
-        // ⛓ strategy switch r1 — `hold` off: the weigh does not fall back to a hold (either fallback below)
-        if (ACTIVE_DISABLE !== null && verbOff('hold', 'weigh:hold-fallback', obstacle.id)) return null;
+        // ⛓ strategy switch r1 — `hold` off: the weigh does not fall back to a hold (either fallback below). The hit is
+        // counted only where the fallback would have resolved a hold (p17 review C); otherwise it is today's `null`.
+        if (verbDisabled('hold')) {
+            if (resolveHoldStrategy(run, obstacle, contacts, blocked, derived.rejected) !== null) {
+                verbOff('hold', 'weigh:hold-fallback', obstacle.id);
+            }
+            return null;
+        }
         // ⛓ hammer-phase LWEIGH (`LATCH_WEIGH_FIRST`, OFF): a hold stance inside a live turret's range asks the corpse
         // weigh again under the stance hypothesis the hold was derived under (`latchWeighFirst`).
         if (LATCH_WEIGH_FIRST.enabled) {
@@ -11965,6 +11982,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     const id = c.turret;
     const t = run.entities('turrets')?.get?.(id) ?? null;
     if (!t || t.dead) return null;
+    requireVerb('kill', 'weigh:approachKillForCorpse', id); // ⛓ strategy switch r1: a nested kill, before any fork
     const refuse = (msg) => {
         throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'danger', id },
             perTick: [...perTick] });
@@ -25095,8 +25113,15 @@ export function solveSegment(o) {
  */
 export function withStrategyDisable(disable, fn) {
     if (disable === undefined || (Array.isArray(disable) && disable.length === 0)) return fn();
+    // ⛓ js-14 r1 condition 1 — a non-array is refused by name at either flag state (never spread, never ignored)
+    if (!Array.isArray(disable)) {
+        const e = new SolverRefusal(`solveSegment: \`disable\` must be an array of strategy names, got `
+            + `${disable === null ? 'null' : typeof disable} ${JSON.stringify(disable)}.`);
+        e.code = STRATEGY_DISABLE_UNKNOWN;
+        throw e;
+    }
     if (!STRATEGY_SWITCH.enabled) {
-        const asked = Array.isArray(disable) ? [...disable] : disable;
+        const asked = [...disable];
         const e = new SolverRefusal(`solveSegment: \`disable: ${JSON.stringify(asked)}\` was asked with the strategy `
             + 'switch OFF (`STRATEGY_SWITCH`; `SEEDLING_STRATEGY_SWITCH=1` turns it on). Refused by name: a disable '
             + 'request the solver silently ignored would grade every room INERT.');
@@ -27926,13 +27951,13 @@ function solveSegmentUnder({
             timeWhy = 'the walk carries a HOLD\'s still wait as its tail (`holdStandWalk`), and the danger is in that '
                 + 'wait: TIME certifies the mover TO the aim against the danger timeline, never the wait at it, so its '
                 + 'answer would leave the tail hit where it was (L40LATCH).';
-        } else if (rungGate('time')) {
-            timeWhy = disabledRungWhy('time'); // ⛓ strategy switch r1: the rung's row says why, the ladder falls through
         } else if (fineDeadlineReached('time')) {
             // ⛓ FIDELITY CHECKPOINTS — the `time` site, latched: the search is
             // not run and the ladder falls through to the next rung.
             timeWhy = 'deadline — the caller\'s anytime deadline (`shouldStop`) was reached '
                 + 'before the TIME rung\'s search, so it was not run.';
+        } else if (rungGate('time')) {
+            timeWhy = disabledRungWhy('time'); // ⛓ strategy switch r1: the rung's row says why, the ladder falls through
         } else {
             const dash = planDash({
                 start: {
@@ -28106,8 +28131,9 @@ function solveSegmentUnder({
         let killWhy = null;
         const target = body ?? null;
         // ⛓ strategy switch r1 — the KILL rung off gates every arm below (ice turret, static sword, press, chaser,
-        // orbit, light): it is asked only where some arm would run (a target, or a darktrap roster for the light arm).
-        if ((target || run.entities('darkTraps')) && rungGate('kill')) {
+        // orbit, light): it is asked only where some arm would run — a target, or a live darktrap ON the corridor (the
+        // light arm's own filter below); a room with no trap and no target counts nothing (p17 review A).
+        if (killRungArmRuns(run, target, hit) && rungGate('kill')) {
             killWhy = disabledRungWhy('kill');
         } else if (target && target.iceTurret === true && ICETURRET_STATIC_KILL.enabled) {
             /**

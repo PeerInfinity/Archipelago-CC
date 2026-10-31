@@ -31,7 +31,7 @@ import * as strategySwitch from './strategySwitch.js';
 import { withContactFidelity } from './contactFidelity.js';
 import {
     DISABLE_RUNGS, ESCALATION_LADDER, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, SolverRefusal, frontierExecutor,
-    settleUnderDisable, solveSegment, strategyDisableVocabulary, withStrategyDisable,
+    killRungArmRuns, settleUnderDisable, solveSegment, strategyDisableVocabulary, withStrategyDisable,
 } from './solverBot.js';
 
 const SRC = readFileSync(new URL('./solverBot.js', import.meta.url), 'utf8');
@@ -67,6 +67,19 @@ describe('strategy switch — the flag', () => {
             });
         }
         expect(settleUnderDisable(undefined, () => out)).toBe(out);
+    });
+
+    it('a non-array `disable` refuses BY NAME at either flag state (js-14 r1 condition 1), in the settle too', () => {
+        for (const flag of [false, true]) {
+            withStrategySwitch(flag, () => {
+                for (const bad of ['shove', null, { shove: true }, 3]) {
+                    expect(() => withStrategyDisable(bad, () => 1)).toThrow(expect.objectContaining({
+                        code: STRATEGY_DISABLE_UNKNOWN, name: 'SolverRefusal' }));
+                    expect(settleUnderDisable(bad, () => ({ ok: true }))).toMatchObject({ ok: false, kind: 'refusal',
+                        message: expect.stringMatching(/must be an array/) });
+                }
+            });
+        }
     });
 
     it('the worker\'s settle: flag OFF is a refusal ANSWER (never a throw), carrying `disabled`', () => {
@@ -208,6 +221,17 @@ describe('strategy switch — the gates', () => {
         expect(err.message).toMatch(new RegExp(`\\[${offRow}\\] has NO executor in this process`));
     });
 
+    it('the KILL rung counts only where an arm would run (p17 review A): no target and an EMPTY darktrap roster is 0', () => {
+        const hit = { sources: [{ kind: 'enemy', id: 'darktrap@1,1' }] };
+        const runWith = (traps) => ({ entities: (k) => (k === 'darkTraps' ? traps : null) });
+        expect(killRungArmRuns(runWith([]), null, hit)).toBe(false); // ⛔ `[]` is truthy: the mutant counted here
+        expect(killRungArmRuns(runWith(null), null, hit)).toBe(false);
+        expect(killRungArmRuns(runWith([{ id: 'darktrap@9,9' }]), null, hit)).toBe(false); // off the corridor
+        expect(killRungArmRuns(runWith([{ id: 'darktrap@1,1', startDying: true }]), null, hit)).toBe(false);
+        expect(killRungArmRuns(runWith([{ id: 'darktrap@1,1' }]), null, hit)).toBe(true);
+        expect(killRungArmRuns(runWith([]), { id: 'bob@1,1' }, hit)).toBe(true);
+    });
+
     it('every ladder rung is gated exactly where it is counted: rungGate(x) sites = progressRung(x) sites (but AVOID)', () => {
         const count = (re) => {
             const m = {};
@@ -237,10 +261,14 @@ describe('strategy switch — the gates', () => {
     it('the nested sites hammer-2 named are gated (kill: corpse-weigh kill; hold: the ladder\'s hold arm, the weigh fallback)', () => {
         expect(SRC).toMatch(/requireVerb\('kill', 'weigh:killForCorpse', c\.turret\);[^\n]*\n\s*const kill = turret\(\)\?\.dead \? null : killForCorpse\(/);
         expect(SRC).toMatch(/requireVerb\('hold', 'kill:ceiling-hold', target\.id\);[^\n]*\n\s*rowFor\('kill', refused, \{ presser/);
-        expect(SRC).toMatch(/verbOff\('hold', 'weigh:hold-fallback', obstacle\.id\)\) return null;[\s\S]{0,400}if \(LATCH_WEIGH_FIRST\.enabled\)/);
+        expect(SRC).toMatch(/if \(verbDisabled\('hold'\)\) \{\n\s*if \(resolveHoldStrategy\([^\n]*\) !== null\) \{\n\s*verbOff\('hold', 'weigh:hold-fallback', obstacle\.id\);\n\s*\}\n\s*return null;\n\s*\}[\s\S]{0,400}if \(LATCH_WEIGH_FIRST\.enabled\)/);
+        // ⛓ hammer-2 review: APPROACH's in-place kill inside the weigh, gated at its head (before any fork)
+        expect(SRC).toMatch(/if \(!t \|\| t\.dead\) return null;\n\s*requireVerb\('kill', 'weigh:approachKillForCorpse', id\);/);
         expect(SRC).toMatch(/verbOff\('break', 'step-off', rock\.rockId\)/);
         // the KILL rung's gate heads its arm chain: ICEST, static sword, press (+ OPP strike), chaser, orbit, light
-        expect(SRC).toMatch(/if \(\(target \|\| run\.entities\('darkTraps'\)\) && rungGate\('kill'\)\) \{\n\s*killWhy = disabledRungWhy\('kill'\);\n\s*\} else if \(target && target\.iceTurret === true/);
+        expect(SRC).toMatch(/if \(killRungArmRuns\(run, target, hit\) && rungGate\('kill'\)\) \{\n\s*killWhy = disabledRungWhy\('kill'\);\n\s*\} else if \(target && target\.iceTurret === true/);
+        // the TIME gate sits after the deadline's own "not run" arm (p17 review B)
+        expect(SRC).toMatch(/\} else if \(fineDeadlineReached\('time'\)\) \{[\s\S]{0,400}\} else if \(rungGate\('time'\)\) \{/);
     });
 });
 
@@ -275,8 +303,9 @@ describe('strategy switch — the worker CARRIES, never originates (js-14 ruling
         expect(worker.split('\n').filter((l) => /\bdisable\b/.test(l) && !/^\s*\/\//.test(l)).map((l) => l.trim())).toEqual([
             'const { disable } = request;',
             'const carry = (fn) => settleUnderDisable(disable, fn);',
-            'const env = (a) => stampSolverEnv(disable === undefined || !a ? a : { ...a, disable: [...disable] }, SOLVER_ENV_APPLIED);',
-            'const { passes = ANYTIME_PASSES, disable: carried, ...tape } = request;',
+            'const stamped = Array.isArray(disable) && disable.length > 0;',
+            'const env = (a) => stampSolverEnv(!stamped || !a ? a : { ...a, disable: [...disable] }, SOLVER_ENV_APPLIED);',
+            'const { passes = ANYTIME_PASSES, disable: _disable, ...tape } = request;',
         ]);
         for (const f of ['procgenOracle.js', 'watchSolve.js']) {
             expect(readFileSync(new URL(f, dir), 'utf8')).toMatch(/\.\.\.\(disable === undefined \? \{\} : \{ disable \}\)/);
@@ -285,9 +314,13 @@ describe('strategy switch — the worker CARRIES, never originates (js-14 ruling
 
     it('(a) absent: the worker\'s answer gains no field; present: it names the list, even on a refusal', async () => {
         const without = await ask({ source: { id: 7 } });
+        const empty = await ask({ source: { id: 7 }, disable: [] });
         const withIt = await ask({ source: { id: 7 }, disable: ['shove'] });
+        const str = await ask({ source: { id: 7 }, disable: 'shove' });
         expect(Object.keys(without).sort()).toEqual(['id', 'kind', 'message', 'ok', 'type']);
         expect(without).not.toHaveProperty('disable');
+        expect(empty).toEqual(without); // ⛓ js-14 r1 condition 2: `[]` is absent
         expect(withIt).toEqual({ ...without, disable: ['shove'] });
+        expect(str).toEqual(without); // ⛓ condition 1: a string is never spread into characters
     });
 });

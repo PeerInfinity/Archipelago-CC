@@ -10,7 +10,9 @@
  *   | 5    | L5   | kill     | REFUSED at the gate (hits > 0) — verb and rung                   |
  *   | 6    | L6   | time     | SOLVED at the control's ticks — INERT, the BUDGET control        |
  *
- * And the flag OFF: the same `--disable` REFUSES by name (`STRATEGY_SWITCH_OFF`, 0 hits) — "rule not established",
+ * hammer-2's rows: L8 with `hold` off SOLVES at the control's ticks with `hold` hits > 0 (a FALLBACK, and the bound
+ * pin: L8 is the room the bound's docblock names); L38's pulse solves with `hold` off (0 hold hits) and refuses with
+ * `pulse` off. And the flag OFF: the same `--disable` REFUSES by name (`STRATEGY_SWITCH_OFF`, 0 hits) — "rule not established",
  * never STRONG. ⛓ hammer-2 condition 2: a disabled verb is never APPLIED, so it never counts toward
  * `MAX_STRATEGIES_PER_GOAL` — L4's refusal is the selection's ("SELECTED but not registered"), not the bound's.
  */
@@ -73,6 +75,28 @@ describe('strategy switch — the bounded needs-it table (L4 shove, L24 burn, L5
         expect(time[6].verdict).toBe('SOLVED');
         expect(time[6].ticks).toBe(control[6].ticks);
         expect(time[6].disabled).toEqual({ asked: ['time'], hits: {}, first: null, absent: [] });
+    }, 900000);
+
+    it('hammer-2\'s rows: the FALLBACK (L8 hold off SOLVES via the other strategies, hits > 0) is also the BOUND pin; a pulse is not a hold', async () => {
+        const [control, hold8, hold48, pulse48] = await Promise.all([
+            survey('control-8-48', '8,48', null),
+            survey('hold8', '8', 'hold'),
+            survey('hold48', '48', 'hold'),
+            survey('pulse48', '48', 'pulse'),
+        ]);
+        // ⛓ condition 2 + ASK 1/2: L8 is the room `MAX_STRATEGIES_PER_GOAL`'s docblock names (two shoves and two holds,
+        // the bound exactly). With `hold` off its lookups answer "off" (hits > 0) and the room still solves, at the
+        // control's ticks: a disabled lookup was never APPLIED, so it never spent the bound.
+        expect(hold8[8].verdict).toBe('SOLVED');
+        expect(hold8[8].disabled.hits.hold).toBeGreaterThan(0);
+        expect(hold8[8].ticks).toBe(control[8].ticks);
+        // ⚖ hammer-2's ruling: a pulse's press is not the hold verb — hold off leaves L38's pulse solving (0 hold hits);
+        // pulse off stops it, at the gate
+        expect(hold48[48].verdict).toBe('SOLVED');
+        expect(hold48[48].ticks).toBe(control[48].ticks);
+        expect(hold48[48].disabled.hits.hold ?? 0).toBe(0);
+        expect(pulse48[48].verdict).toBe('REFUSED');
+        expect(pulse48[48].disabled.hits.pulse).toBeGreaterThan(0);
     }, 900000);
 
     it('the flag OFF refuses the same request by name, with 0 hits ("rule not established", never STRONG)', async () => {

@@ -62,6 +62,13 @@ export function withStrategySwitch(enabled, fn) {
     }
 }
 
+/**
+ * ⚖ WHAT "NEEDS A STRATEGY" MEANS (hammer-2's ruling on r1): the VERB, as the solver selects and applies it. A verb's
+ * own internal mechanics are not the verb: `pulse` and the fire-pulse `shove` press a button through `execHold`'s
+ * runner, and that press does not count as `hold` — `disable: ['hold']` leaves them running (0 `hold` hits),
+ * `disable: ['pulse']` stops a pulse.
+ */
+
 /** The refusal codes (`SolverRefusal.code`). */
 export const STRATEGY_DISABLED = 'STRATEGY_DISABLED';
 export const STRATEGY_SWITCH_OFF = 'STRATEGY_SWITCH_OFF';
