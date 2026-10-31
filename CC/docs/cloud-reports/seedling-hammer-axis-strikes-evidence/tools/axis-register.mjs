@@ -23,6 +23,7 @@ globalThis.__axisDrive = (run, target, strike, axisAligned, held) => {
     S.driveTicks += 1;
     if (!axisAligned) return;
     S.axisTicks += 1;
+    S.lastAxisRun = run;
     if (strike) S.axisArmed += 1;
     const inv = run.progress('inventory');
     if (!(inv?.hasSword || inv?.hasGhostSword)) return;
@@ -46,6 +47,9 @@ if (process.env.AXIS_OUT) {
     const { appendFileSync } = await import('node:fs');
     process.on('exit', () => {
         appendFileSync(process.env.AXIS_OUT, JSON.stringify({ tag: process.env.AXIS_TAG ?? null,
-            driveTicks: S.driveTicks, axisTicks: S.axisTicks, axisArmed: S.axisArmed, rows: S.rows }) + '\n');
+            driveTicks: S.driveTicks, axisTicks: S.axisTicks, axisArmed: S.axisArmed, rows: S.rows,
+            lastAxisRun: S.lastAxisRun ? { level: S.lastAxisRun.level, t: S.lastAxisRun.ticksCompleted,
+                pressHits: (S.lastAxisRun.chaserPressHits ?? []).filter((h) => h.landed).map((h) => [h.t, h.id, h.hits, h.killed]),
+                playerHits: (S.lastAxisRun.playerHits ?? []).map((h) => [h.t, h.source, h.id]) } : null }) + '\n');
     });
 }

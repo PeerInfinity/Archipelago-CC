@@ -1,0 +1,10 @@
+false right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right right
+ firstOffGrid 19 [ 108.40158204016554, 56, -1.6484179598344448, 0 ]
+ grid false y [ 56 ] vy [ 0 ]
+ press [] hits [20] undefined
+ preview right right right right right right right right right right right right right right right right right right right
+true right right right right right right right right right right right primary right right right right right right right right right right right right right right right right right right right right right right right right right left primary right right
+ firstOffGrid -1 undefined
+ grid true y [ 56 ] vy [ 0 ]
+ press [[12,"bob@112,48",1]] hits [] [ '10:aim:0', '11:press:', '37:aim:2', '38:press:' ]
+ preview right right right right right right right right right right right primary right right right right right right right
