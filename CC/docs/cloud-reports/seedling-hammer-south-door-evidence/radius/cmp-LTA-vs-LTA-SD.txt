@@ -1,0 +1,17 @@
+# base 47/59 solved (47 hitless+modelled), arm 47/59 solved (47 hitless+modelled), 4 mover(s)
+## 856/0 level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+   base: refusal : no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+   arm:  refusal s corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+   doors: [{"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 283}]
+## 856/1 level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+   base: refusal : no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+   arm:  refusal  by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; bosslock@480,352 (no presser publishes its tSet group at all, so nothing in this room can open it); pushableblock@576,560 (no shove of it plans the corridor).
+   doors: [{"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 283}, {"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 283}]
+## 857/0 level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+   base: refusal : no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+   arm:  refusal s corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+   doors: [{"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 311}]
+## 857/1 level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+   base: refusal : no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+   arm:  refusal  by leaving. ⚖ Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; bosslock@480,352 (no presser publishes its tSet group at all, so nothing in this room can open it); pushableblock@576,560 (no shove of it plans the corridor).
+   doors: [{"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 311}, {"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 145}]

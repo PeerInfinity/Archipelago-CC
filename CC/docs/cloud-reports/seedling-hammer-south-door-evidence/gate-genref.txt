@@ -28,4 +28,4 @@ refusals:   144 rows over 16 sources (142 from a constant, 2 literal-scanned; 0 
 registry:   10 entries (bounce, cloudberry, flash_seedling, flash_seedling_gen, jta, maze, noiz2sa, omsi, runner, text_adventure), 93 fields over 15 groups, 0 library/libraries NOT loadable headless, 0 FINDING(S)
 instruments: 521 files over 42 categories, 203 browser rows, 435 with flags, 268 cited by a doc, 0 FINDING(S)
 capabilities: 29 statements × 10 substrates, 39 fields read, 51 not yet read
-docsIndex:  29 documents (485,314 words) + 4 pages
+docsIndex:  29 documents (485,639 words) + 4 pages

@@ -26793,3 +26793,26 @@ only Boss Key 2 arrival leg that gets past `bobsoldier@880,832`. Switch `pressKi
   worktree with it applied: producer roster 97 run, 0 red; the bounded set 635/635. Re-recording instead
   (`variant-rerecord.patch`) lengthens both witness tapes past their game samples (2195 → 2317 t, 1629 → 1796 t) and
   reds 7 rows.
+
+### Seedling hammer-phase SOUTHDOOR — the approach's latched south door
+
+⚖ User, queued 2026-10-31 (one of four parallel hammer slices; APPROACH's hand-over, its report § 9). Switch
+`solverBot.APPROACH_DOOR`, **OFF** (`SEEDLING_APPROACH_DOOR=1` / `withApproachDoor`; asked only inside `TURRET_APPROACH`'s
+approach). The report is `CC/docs/cloud-reports/seedling-hammer-south-door.md`.
+
+- **The wall, re-measured.** From the Boss Key 2 arrival legs (856/857 on this main; L40C's 860/861), CPAIR size 3 +
+  `LATCH_WEIGH_FIRST` + `TURRET_APPROACH`: the approach stages at (488,579), south of the latched `wandlock@480,560`, and
+  its 12 forks are all `no-plan` — `planWaypoints` has no ladder. Captured budget and 10240 alike.
+- **The design.** The door's order before the forks, staged in its discharge: when no side of the turret's box plans
+  from the staging point, `approachDoorFor` asks the stance hypothesis which door a side's route crosses (no tick spent),
+  and `approachDoorFirst` walks the live run to that door's cell with the loop's own `walkTo`; the ladder raises the
+  door's order (the latch's `hold` at `buttonroom@880,768`) and the walk ends in the open doorway (outside the range).
+  Giving each fork the ladder was not built: a fork has no `walkTo`, and the order is the same on every try.
+- **Measured.** The latch fixture re-booted south of the door (the pocket open, the latch not held): OFF the arrivals'
+  refusal; ON the hold is applied (the ladder kills `bob@736,752`, `spinner@816,848` and `bobsoldier@880,832` on its
+  way), the approach kills the turret hitless from the doorway, and the chain meets the 4-order bound; with
+  `FIFTH_ORDER` **SOLVED 4810, hitless on a fresh run**. From the arrival legs themselves the door's hold refuses:
+  `burnabletree@872,784` shuts the pocket, and the hold's prerequisites offer no burn (the next wall, named, not fixed).
+  SPIN's switch changes nothing there; 10240 only moves `/0` off the anytime deadline.
+- **Radius.** ON alone: 0 of 59 L40 requests move, producers 0 red. Behind L+TA: the 4 BK2 requests change refusal text,
+  nothing else. Latch staging 4142 and ICEST's pocket 4495 unchanged; identity block unchanged.
