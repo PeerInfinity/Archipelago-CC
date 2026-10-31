@@ -315,4 +315,8 @@ class DepGraphWorld(World):
             "title": self.graph_structure.title,
             "randomize_items": self.options.randomize_items.value,
             "vanilla_placement": self.options.vanilla_placement.value,
+            # The client rebuilds the rules from graph_structure, so it needs
+            # the rule mode (see set_depgraph_rules) and the graph's option key.
+            "entrance_rule_mode": self.options.entrance_rule_mode.value,
+            "graph_file": self.options.graph_file.current_key,
         }
