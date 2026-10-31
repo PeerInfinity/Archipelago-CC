@@ -65,7 +65,7 @@
  * ⛓ rules F3 — THE LINE SPLICE. A document whose integer-like object keys
  * (`"19"`, `"21"`, …) sit out of numeric order cannot pass step 1 — `JSON.parse`
  * re-orders such keys, so no JS writer reproduces them (the metamath family,
- * `alttp_vanilla`, `apcalc_worldgen`: the Python exporter's
+ * `alttp_vanilla`: the Python exporter's
  * `json.dumps(indent=2)`). When every key to move is a rules-F3 SCALAR on its
  * own top-level line (`  "is_vanilla": true,`), that one line is replaced by
  * the two-space-indent slot map the exporter writes (`  "is_vanilla": {` /
