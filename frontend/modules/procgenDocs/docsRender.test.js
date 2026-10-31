@@ -285,7 +285,8 @@ describe('⛓ the links the render emits', () => {
         //   364 → 366: generic `flash` entry removed — architecture.md's substrate table → noiz2sa.md, flash.md.
         //   366 → 367: shared level worlds — maze.md's persistence bullet → its own § Shared level worlds.
         //   367 → 377: cloudberry substrate — the new cloudberry.md's eight sibling/README links and two same-doc ones.
-        expect(checked).toBe(377);
+        //   377 → 381: cloudberry P2b — two links into cloudberry.md § Build-time generation, two same-doc ones.
+        expect(checked).toBe(381);
     });
 
     it('tags each link with the kind that produced it', () => {

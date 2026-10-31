@@ -34,6 +34,8 @@ import {
     CLOUDBERRY_PLAYBACK_CONTROL_EVENT,
     CLOUDBERRY_IFRAME_ID,
 } from './cloudberryLibrary.js';
+import { installCloudberryGenerator, localStorageCloudberryStore } from './cloudberryGeneration.js';
+import { createFrameGenerator } from './cloudberryGenFrame.js';
 
 const SITE_SETTING_KEY = 'moduleSettings.cloudberryDemo.siteUrl';
 /** The same-origin local copy (relative to the frontend page). */
@@ -167,6 +169,19 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     }, 'cloudberryDemo');
 
     setPlaybackProxy(new PlaybackProxy({ eventBus, controlEvent: CLOUDBERRY_PLAYBACK_CONTROL_EVENT }));
+
+    // Build-time generation (P2b): the pipeline's Cloudberry levels come from a hidden
+    // game page on the same site the panel plays, created on the first generation.
+    let store = null;
+    try { store = localStorageCloudberryStore(globalThis.localStorage); } catch { store = null; }
+    installCloudberryGenerator(createFrameGenerator({
+        siteUrl: async () => {
+            if (!_settingUrl) await localSitePresent();
+            return cloudberrySiteUrl();
+        },
+        packsUrl: abs('./packs/'),
+        log: (m) => console.log(`[cloudberryDemo] ${m}`),
+    }), { store });
 
     eventBus.subscribe(CLOUDBERRY_LOAD_REGION_EVENT, () => {
         activate();
