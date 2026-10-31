@@ -23,6 +23,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
+import { gunzipSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 
 import { buildDepgraphRules, entranceRuleModeOf } from './depgraphRulesBuilder.js';
@@ -48,12 +49,16 @@ function presetCases() {
 
 function fixtureCases() {
   return readdirSync(FIXTURES)
-    .filter((f) => f.endsWith('.json'))
+    .filter((f) => f.endsWith('.json') || f.endsWith('.json.gz'))
     .sort()
     .map((f) => ({ name: `fixture ${f}`, path: join(FIXTURES, f) }));
 }
 
 const CASES = [...presetCases(), ...fixtureCases()];
+
+// The large fixture is committed gzipped.
+const readRules = (path) =>
+  JSON.parse(path.endsWith('.gz') ? gunzipSync(readFileSync(path)).toString('utf8') : readFileSync(path, 'utf8'));
 
 /** What the server would hand the client for this rules.json's player. */
 function serverDataFor(rules) {
@@ -130,7 +135,7 @@ describe('buildDepgraphRules equivalence with the exporter', () => {
   it('has cases for every entrance rule mode', () => {
     const modes = new Set(
       CASES.map(({ path }) => {
-        const rules = JSON.parse(readFileSync(path, 'utf8'));
+        const rules = readRules(path);
         const p = rules.playerId ?? Object.keys(rules.world)[0];
         return rules.world[p].options.entrance_rule_mode;
       })
@@ -141,7 +146,7 @@ describe('buildDepgraphRules equivalence with the exporter', () => {
 
   it('has cases with starting nodes, in order and randomized', () => {
     const starts = CASES.map(({ path }) => {
-      const rules = JSON.parse(readFileSync(path, 'utf8'));
+      const rules = readRules(path);
       const p = rules.playerId ?? Object.keys(rules.world)[0];
       return rules.world[p].slot_data.starting_nodes;
     }).filter((list) => list.length > 1);
@@ -152,7 +157,7 @@ describe('buildDepgraphRules equivalence with the exporter', () => {
 
   it('has a case with a starting node nothing depends on (an empty, dynamically_added region)', () => {
     const marked = CASES.some(({ path }) => {
-      const rules = JSON.parse(readFileSync(path, 'utf8'));
+      const rules = readRules(path);
       const p = rules.playerId ?? Object.keys(rules.world)[0];
       return Object.values(rules.regions[p]).some((region) => region.dynamically_added);
     });
@@ -161,7 +166,7 @@ describe('buildDepgraphRules equivalence with the exporter', () => {
 
   for (const { name, path } of CASES) {
     it(name, () => {
-      const expected = JSON.parse(readFileSync(path, 'utf8'));
+      const expected = readRules(path);
       const { p, slotData, scouts, context } = serverDataFor(expected);
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
       let built;
@@ -197,7 +202,7 @@ describe('buildDepgraphRules equivalence with the exporter', () => {
 describe('depgraphWorldInfo.json', () => {
   it('matches the apworld metadata in every committed DepGraph preset', () => {
     for (const { name, path } of presetCases()) {
-      const rules = JSON.parse(readFileSync(path, 'utf8'));
+      const rules = readRules(path);
       const world = rules.world['1'];
       const context = `${name} (refresh depgraphWorldInfo.json from a regenerated preset)`;
       expect(world.option_definitions, context).toEqual(WORLD_INFO.option_definitions);
