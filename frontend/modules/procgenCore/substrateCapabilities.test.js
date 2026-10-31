@@ -221,6 +221,7 @@ describe('P4 / P5 — the split DERIVED from the items\' own feature tags (S3, �
         maze: ['colored_doors_and_keys'],
         bounce: ['bounce_abilities'],
         runner: ['runner_abilities'],
+        cloudberry: ['cloudberry_items'],
         // ⛓ Re-pinned by name at the swim T1 merge (2026-09-29): the generated
         // Seedling entry declares its gate items (`itemLabels.SEEDLING_LIBRARY_ITEMS`,
         // tagged `seedling_items`) so `seedling_generated_swim` may name
@@ -400,9 +401,9 @@ describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ p
                 expect(e.zoneCount, e.id).toBeUndefined();
             }
         }
-        // ⛓ No real entry is ✗ since the generic `flash` entry went (2026-10-18), so the
-        //   ✗ arm is held on the flash factory's bare shape, which declares no zoneCount.
-        expect([...kinds].sort()).toEqual([CELL_KINDS.NA, CELL_KINDS.YES].sort());
+        // ⛓ The ✗ arm is held by `cloudberry` (P2a: levels only from a region-library
+        //   pack, no zone table) and on the flash factory's bare shape, which declares no zoneCount.
+        expect([...kinds].sort()).toEqual([CELL_KINDS.NA, CELL_KINDS.NO, CELL_KINDS.YES].sort());
         const bare = createFlashSubstrateEntry({ id: 'flash_factory_probe' });
         expect(bare.zoneCount).toBeUndefined();
         expect(CAPABILITY_STATEMENTS.find((s) => s.id === 'G2').answer(bare).kind).toBe(CELL_KINDS.NO);

@@ -67,7 +67,7 @@ const STAMPED = FAMILIES.flatMap((family) => readdirSync(family.dir)
     }));
 
 describe('⛓ contentIdentity — every COMMITTED stamped document recomputes', () => {
-    it('the derived roster is the ten stamped documents, and says which they are', () => {
+    it('the derived roster is the eleven stamped documents, and says which they are', () => {
         // ⚠ The count is asserted so that a document DISAPPEARING is as loud as
         // one arriving; the names are the readable half.
         expect(STAMPED.map((s) => `${s.family.idKey}:${s.file}`)).toEqual([
@@ -75,6 +75,7 @@ describe('⛓ contentIdentity — every COMMITTED stamped document recomputes', 
             'atlas_id:seedling-playthrough.json',
             'atlas_id:seedling.json',
             'library_id:demo-bounce-pack.json',
+            'library_id:demo-cloudberry-pack.json',
             'library_id:demo-maze-pack.json',
             'library_id:demo-runner-pack.json',
             'pool_id:seedling-atlas-pool.json',
