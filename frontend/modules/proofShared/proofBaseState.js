@@ -24,6 +24,10 @@
  *   @property {string}   displayName  - Human-readable display name
  */
 
+// The EntranceRuleMode default of both worlds that send a proof/graph
+// structure (worlds/metamath/Options.py, worlds/depgraph/Options.py).
+const DEFAULT_ENTRANCE_RULE_MODE = 1;
+
 export class ProofBaseState {
   constructor() {
     /** @type {Map<number, ProofStep>} All proof steps keyed by index */
@@ -51,11 +55,11 @@ export class ProofBaseState {
     this.structureType = null;
 
     /**
-     * Entrance rule mode (2-bit field from world options).
+     * Entrance rule mode (2-bit field from slot_data or the world options).
      * 0 = strict, 1 = relaxed_items, 2 = relaxed_events, 3 = fully_relaxed.
      * @type {number}
      */
-    this.entranceRuleMode = 0;
+    this.entranceRuleMode = DEFAULT_ENTRANCE_RULE_MODE;
   }
 
   // ─── Proof Structure Parsing ──────────────────────────────
@@ -68,7 +72,7 @@ export class ProofBaseState {
    *
    * @param {Object} slotData - The slot_data object from rules.json
    * @param {Object} [nameSubstitutions] - The name_substitutions object from rules.json
-   * @param {Object} [options] - World options (contains entrance_rule_mode)
+   * @param {Object} [options] - World options (contains entrance_rule_mode; slot_data's wins)
    * @returns {boolean} Whether parsing succeeded
    * @protected
    */
@@ -77,7 +81,10 @@ export class ProofBaseState {
     this.receivedItems.clear();
     this.checkedLocations.clear();
     this.nameSubstitutions.clear();
-    this.entranceRuleMode = options?.entrance_rule_mode ?? 0;
+    // slot_data carries the mode on servers that send it; a rules.json built
+    // from server data has no exporter options of its own to fall back on.
+    this.entranceRuleMode =
+      slotData?.entrance_rule_mode ?? options?.entrance_rule_mode ?? DEFAULT_ENTRANCE_RULE_MODE;
 
     // Accept either proof_structure (MetaMath) or graph_structure (DepGraph)
     const structure = slotData?.proof_structure || slotData?.graph_structure;
