@@ -26793,3 +26793,44 @@ only Boss Key 2 arrival leg that gets past `bobsoldier@880,832`. Switch `pressKi
   worktree with it applied: producer roster 97 run, 0 red; the bounded set 635/635. Re-recording instead
   (`variant-rerecord.patch`) lengthens both witness tapes past their game samples (2195 → 2317 t, 1629 → 1796 t) and
   reds 7 rows.
+
+
+
+### Seedling fidelity FORCEDHITXC — with `secondaryUse` ON, the forced-hit rung crosses by the game's hitless X+C (L73 leg 612)
+
+Planner `seedling-fidelity-planning-17`, wave 36. The report is `CC/docs/cloud-reports/seedling-fidelity-forcedhitxc.md`.
+
+**W0.** At main `b646d32d95`, leg 612 (`level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0`, 622 at C4's base):
+OFF solves by the 4-tick `forced-hit` plan (up, up, down+right, down+right; `lavarunner@72,24` at t2). ON, five one-tick
+X+C sets (`up`, `left`, `up+left`, `up+right`, `down+left`, each `+primary+secondary`) are hitless at depth 2, so 180
+prefixes stay open; depth 3 needs 6,480 forks against the 659 the budget has left, and the game's crossing is at t4 (past
+`depthMax` 3). The rung discarded a hitless prefix that had not left the room yet, by budget. Carried on, the first open
+prefix `[up+primary+secondary ·]` held on `·` (and on every hold of 24 of the 36) crosses at t4. The model's ON
+trajectory is the wasm XC fixture's at every sample, 0 px.
+
+**D1.** `forcedHit.continueHitless` (ON only): each open hitless prefix (the tree's frontier, or the witness's held set) is
+carried on by holding each alphabet member in order, until the room is left, a hit, a death, a refused tick, or
+`continuationTicks` 30, within `continuationForks` 36 of what the proof's budgets left. The first hitless crossing is the
+proof's `crossing`; the rung walks it (`forced-hit`, `candidate: 'hitless-continuation'`, `billed: []`). Leg 612 ON: SOLVED
+`[up+primary+secondary, ·, ·, ·]`, one extra fork. Game witness `secuse-l73-622-xc-stand` (p4g, ×2): that plan reaches L74
+at t4 with 0 hits.
+
+**D2.** The 11 leg-622 rows in `fidelityForcedHit`, `fidelityStagedHits`, `fidelityUnbilledGate` pin the OFF arm
+explicitly; ON siblings read the hitless crossing. Green under `SEEDLING_SECONDARY_USE=0` and `=1`.
+
+**D3, three fixes the flip battery found.** (1) The continuation spent the proof's whole leftover budget in a room that is
+never left: capped at 36 forks. (2) On L40 leg 403 it left by the ARRIVAL door, which also leads to L43, and the rung
+walked it: `crossingMatches` is now the drive's own `crossTo` test (the level, then the pit under the pre-move probe or the
+arrival point exactly), and the continuation searches on past another exit. (3) A walk with no `crossTo` (a `collect`)
+asks no continuation (`continuation: false`); the acceptance batch's post-shield seed 2 had moved its digest.
+
+**Battery ON (head `46ace862`).** Bounded 92 files: 4 reds, all the env stamping the live switch object off-default (the
+defaults table, `dashShape`/`dashOnlyWindow`'s "no field at the default"); a flip owes `contactFidelity.test.js`'s table.
+Identity block and the six `--check`s equal the base on every row. Producers 97 run, 0 red. Local full survey ON vs OFF:
+201/36 both; steps 118, 177, 219 change only the fork count in their refusal text (1 → 37).
+
+**Trap candidates.**
+- A hitless crossing's LEVEL is not its exit: the door you came in through leads back to the level you came from, which is
+  often the goal's level too. Match a crossing by the drive's `crossTo` test, never by `to_level` alone.
+- A search that "continues" an open frontier must be capped by its own width, not by the leftover of the search before
+  it: in a quiet room the leftover is the whole budget, which is what the witness-first rung exists to save.

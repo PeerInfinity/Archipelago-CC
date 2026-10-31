@@ -23,6 +23,8 @@ describe('fidelity SEARCHGAPS D-B — the switch', () => {
 });
 
 describe('fidelity SEARCHGAPS D-B — the forced-hit proof\'s hitless witness', () => {
+    // ⛓ FORCEDHITXC D2: these rows count the proof's own forks, so the hitless continuation (`secondaryUse` ON only)
+    // is held OFF; its cap in a quiet room (+36 forks) is pinned in `fidelityForcedHitXc.test.js`.
     /** A run stand-in: `advance` bills a hit when `hitAt(keys, tick)` says so. */
     const fakeFork = (hitAt) => {
         let forks = 0;
@@ -39,14 +41,14 @@ describe('fidelity SEARCHGAPS D-B — the forced-hit proof\'s hitless witness', 
     };
     it('OFF: a room that never hits costs the whole depth-2 tree, then gives up at depth 3', () => {
         const f = fakeFork(() => false);
-        const p = withContactFidelity({ forcedHitWitnessFirst: false }, () => proveForcedHit(f.fork, { replayTicks: 134 }));
+        const p = withContactFidelity({ forcedHitWitnessFirst: false, secondaryUse: false }, () => proveForcedHit(f.fork, { replayTicks: 134 }));
         expect(p.proven).toBe(false);
         expect(f.forks()).toBe(36 + 36 * 36);
         expect(p.why).toMatch(/depth 3 needs 46656 fork/);
     });
     it('ON: the same room is decided by ONE fork — the hitless witness', () => {
         const f = fakeFork(() => false);
-        const p = withContactFidelity({ forcedHitWitnessFirst: true }, () => proveForcedHit(f.fork, { replayTicks: 134 }));
+        const p = withContactFidelity({ forcedHitWitnessFirst: true, secondaryUse: false }, () => proveForcedHit(f.fork, { replayTicks: 134 }));
         expect(p.proven).toBe(false);
         expect(p.witness).toBe(true);
         expect(f.forks()).toBe(1);
@@ -61,7 +63,7 @@ describe('fidelity SEARCHGAPS D-B — the forced-hit proof\'s hitless witness', 
     });
     it('ON: a witness that is hit is no verdict — a room hit only standing still is still searched', () => {
         const f = fakeFork((held) => held.length === 0);
-        const on = withContactFidelity({ forcedHitWitnessFirst: true }, () => proveForcedHit(f.fork));
+        const on = withContactFidelity({ forcedHitWitnessFirst: true, secondaryUse: false }, () => proveForcedHit(f.fork));
         expect(on.proven).toBe(false);
         expect(on.hitless).toBe('up up up');
         expect(f.forks()).toBe(2);

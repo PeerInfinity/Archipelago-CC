@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, createTapeStepper, stagingFromTape } from './tapeRunner.js';
-import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS } from './contactFidelity.js';
+import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { FORCED_HITS, FORCED_HIT_ALPHABET, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit,
     withForcedHits, worldHitsOf } from './forcedHit.js';
 import { KNOWN_STRATEGY_VERBS } from './decisionTrace.js';
@@ -82,9 +82,15 @@ describe('FORCEDHIT D1 — the PROOF is a measured fact on the run, never a sear
     // ⛓ SEARCHGAPS' flip (⚖ user "Harvest + flip both ON", 2026-10-23): `forcedHitWitnessFirst` ON adds the nine witness forks
     // to a proof's `nodes` (1,332 → 1,341) and ends a depth-1 row on the witness's verdict; these rows pin the full-tree
     // proof's own accounting, so they run with it OFF (`fidelityForcedHitWitness.test.js` pins the ON arm).
+    // ⛓ FORCEDHITXC D2: these rows pin the proof in the model where C is nothing (`secondaryUse` OFF, the shipped
+    // default); ON, the game's hitless X+C opens it and the hitless continuation crosses (`fidelityForcedHitXc.test.js`).
     let witnessFirst;
-    beforeEach(() => { witnessFirst = CONTACT_FIDELITY.forcedHitWitnessFirst; CONTACT_FIDELITY.forcedHitWitnessFirst = false; });
-    afterEach(() => { CONTACT_FIDELITY.forcedHitWitnessFirst = witnessFirst; });
+    let secondaryUse;
+    beforeEach(() => {
+        witnessFirst = CONTACT_FIDELITY.forcedHitWitnessFirst; CONTACT_FIDELITY.forcedHitWitnessFirst = false;
+        secondaryUse = CONTACT_FIDELITY.secondaryUse; CONTACT_FIDELITY.secondaryUse = false;
+    });
+    afterEach(() => { CONTACT_FIDELITY.forcedHitWitnessFirst = witnessFirst; CONTACT_FIDELITY.secondaryUse = secondaryUse; });
     it('leg 622: every input over 36 held sets is hit by t2 — proven at depth 2 (36 + 36² fork steps), least 1 hit', () => {
         const p = proveForcedHit(fork622);
         expect(p).toMatchObject({ proven: true, depth: 2, nodes: 1332, leaves: 1296, deadly: 0, minHits: 1,
@@ -145,7 +151,8 @@ describe('FORCEDHIT D2 — the state a hit leaves is read off the run (`worldHit
 });
 
 describe('FORCEDHIT D2 — the crossing: least damage, under the budget, never a death', () => {
-    const proof = proveForcedHit(fork622);
+    // ⛓ FORCEDHITXC D2: the OFF proof (C is nothing); ON it is not proven (`fidelityForcedHitXc.test.js`)
+    const proof = withContactFidelity({ secondaryUse: false }, () => proveForcedHit(fork622));
     const wps = [{ x: 72, y: 8 }];
     const crossTo = { level: 74 };
     const opts = { crossTo, tolerance: 0, maxTicks: 400, contacts: new Set(), hitsMax: 3, hitsNow: 0, budgetLeft: 2 };
@@ -164,9 +171,15 @@ describe('FORCEDHIT D2 — leg 622 (L73 → L74): OFF refuses EXHAUSTED; ON bill
     // ⛓ SEARCHGAPS' flip (⚖ user "Harvest + flip both ON", 2026-10-23): `forcedHitWitnessFirst` ON adds the nine witness forks
     // to a proof's `nodes` (1,332 → 1,341) and ends a depth-1 row on the witness's verdict; these rows pin the full-tree
     // proof's own accounting, so they run with it OFF (`fidelityForcedHitWitness.test.js` pins the ON arm).
+    // ⛓ FORCEDHITXC D2: `secondaryUse` OFF here too; ON, leg 622 solves by the game's hitless X+C
+    // (`fidelityForcedHitXc.test.js`, witness `secuse-l73-622-xc-stand`).
     let witnessFirst;
-    beforeEach(() => { witnessFirst = CONTACT_FIDELITY.forcedHitWitnessFirst; CONTACT_FIDELITY.forcedHitWitnessFirst = false; });
-    afterEach(() => { CONTACT_FIDELITY.forcedHitWitnessFirst = witnessFirst; });
+    let secondaryUse;
+    beforeEach(() => {
+        witnessFirst = CONTACT_FIDELITY.forcedHitWitnessFirst; CONTACT_FIDELITY.forcedHitWitnessFirst = false;
+        secondaryUse = CONTACT_FIDELITY.secondaryUse; CONTACT_FIDELITY.secondaryUse = false;
+    });
+    afterEach(() => { CONTACT_FIDELITY.forcedHitWitnessFirst = witnessFirst; CONTACT_FIDELITY.secondaryUse = secondaryUse; });
     it('OFF: the refusal is the BEFORE one (the ladder EXHAUSTED on lavarunner@72,24), and the rung is absent', () => {
         const { res, rows } = withForcedHits(false, () => solve622());
         expect(res.ok).toBe(false);
