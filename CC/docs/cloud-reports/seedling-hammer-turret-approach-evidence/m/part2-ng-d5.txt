@@ -1,0 +1,60 @@
+ms 226528
+SOLVED 4138
+REC {"goal":"collect-placement","strategy":"kill","arm":"orbit","target":"bobsoldier@880,832","kind":"orbit","from":0,"ticks":184,"candidate":"r 22 ccw far 90°","forks":2}
+REC {"goal":"collect-placement","strategy":"kill","arm":"press","target":"spinner@816,848","ledger":"spinnerWrites","verb":"kill","from":184,"ticks":67,"landings":[{"t":205,"id":"spinner@816,848","hits":2},{"t":238,"id":"spinner@816,848","hits":3}],"cycles":[{"body":"spinner@816,848","cell":{"x":872,"y":776},"pressAt":203,"eta":15,"considered":41,"rejected":[]},{"body":"spinner@816,848","cell":{"x":872,"y":776},"pressAt":209,"eta":3,"considered":41,"rejected":[]},{"body":"spinner@816,848","cell":{"x
+REC {"goal":"collect-placement","strategy":"hold","presser":{"tag":"buttonroom","x":880,"y":768,"t":3},"ticks":131,"heldFor":1,"stoppedOn":"every shut responder in group t=3 [wandlock@480,560] is open — and the group is LATCHED by `localPublish`, so the fade completes whoever is standing where","at":{"x":887.4713811067359,"y":775.607200077244},"opened":["wandlock@480,560"],"armed":[],"traps":[],"volleys":[],"wrote":[]}
+REC {"goal":"collect-placement","strategy":"kill","arm":"chaser","target":"bob@736,800","stance":{"x":744,"y":824},"clears":["bob@736,800"],"kind":"dwell","at":{"x":744.2713811067359,"y":824.5572000772438},"ticks":70,"bound":112,"why":"bob@736,800 is a `modelled` press target (KILL_ARM_POLICY.Bob) 142.3 px from the walk; the stance (744,824) puts it 16.0 px away, inside its 80 px leash, so it CHASES. The forecast walks there in 236 tick(s) and stands: bob@736,800 dies at tick 318, and NO body reache
+REC {"goal":"collect-placement","strategy":"weigh","kind":"weigh","postCondition":"press","presser":{"x":480,"y":384},"corpse":{"turret":"iceturret@472,400","kill":{"phase":"turret-kill","target":"iceturret@472,400","circle":{"cw":true,"start":3},"presses":2,"killTick":49,"ticks":61,"corpseOnly":true,"delay":0,"side":"up","forks":1},"presses":[{"stance":{"x":488,"y":440},"to":{"tx":30,"ty":25},"pressTick":993,"rest":{"tx":30,"ty":25}},{"stance":{"x":488,"y":424},"to":{"tx":30,"ty":24},"pressTick":11
+REC {"goal":"collect-placement","strategy":"weigh","kind":"weigh","postCondition":"press","presser":{"x":768,"y":400},"shove":{"verb":"fire","target":"pushableblockfire@480,480","from":3300,"to":{"tx":48,"ty":25},"pressTick":3300,"weapon":"fire","restoredSlot":0,"ticks":1330,"steps":[{"verb":"fire","ticks":38,"from":1281,"to":{"tx":31,"ty":30}},{"verb":"fire","ticks":38,"from":1337,"to":{"tx":32,"ty":30}},{"verb":"fire","ticks":38,"from":1391,"to":{"tx":33,"ty":30}},{"verb":"fire","ticks":38,"from":
+REC {"goal":"collect-placement","strategy":"shove","verb":"shove","via":"pulse","target":"pushableblockfire@576,576","pulser":"pulser@592,576","to":{"tx":35,"ty":36},"dir":"W","hold":{"presser":{"tag":"button","x":816,"y":400,"t":4},"ticks":164,"heldFor":24,"stoppedOn":"pushableblockfire@576,576 is at rest on (35,36) — pulser@592,576's pulse pushed it W","at":{"x":824.1065930979825,"y":408.8672560795396},"opened":[],"armed":["pulser@592,576"],"traps":[],"volleys":[],"wrote":[]},"from":3478,"ticks":2
+REC {"goal":"collect-placement","strategy":"shove","kind":"shove","id":"pushableblock@576,560","dir":"N","key":"up","at":{"x":584.9579501353176,"y":583.3567665221196},"from":{"tx":36,"ty":35},"to":{"tx":36,"ty":32},"destroys":false,"contactTick":6,"leanTicks":70,"startTick":3977,"ticks":102}
+REC {"goal":"collect-placement","strategy":"collect","pickup":{"tag":"bosskey","x":656,"y":528},"item":null,"level":40,"approach":9,"ceremony":0,"releases":0,"from":4129}
+STRATROWS 0 bait bobsoldier@880,832
+STRATROWS 184 kill spinner@816,848
+STRATROWS 251 walk undefined
+STRATROWS 271 kill bob@736,800
+STRATROWS 577 walk undefined
+STRATROWS 978 walk undefined
+STRATROWS 1107 walk undefined
+STRATROWS 1245 weigh wandlock@800,400
+STRATROWS 1319 walk undefined
+STRATROWS 1375 walk undefined
+STRATROWS 1429 walk undefined
+STRATROWS 1480 walk undefined
+STRATROWS 1570 walk undefined
+STRATROWS 1624 walk undefined
+STRATROWS 1679 walk undefined
+STRATROWS 1729 walk undefined
+STRATROWS 1783 walk undefined
+STRATROWS 1838 walk undefined
+STRATROWS 1929 walk undefined
+STRATROWS 1979 walk undefined
+STRATROWS 2033 walk undefined
+STRATROWS 2088 walk undefined
+STRATROWS 2138 walk undefined
+STRATROWS 2192 walk undefined
+STRATROWS 2247 walk undefined
+STRATROWS 2297 walk undefined
+STRATROWS 2351 walk undefined
+STRATROWS 2406 walk undefined
+STRATROWS 2456 walk undefined
+STRATROWS 2574 walk undefined
+STRATROWS 2637 walk undefined
+STRATROWS 2691 walk undefined
+STRATROWS 2746 walk undefined
+STRATROWS 2796 walk undefined
+STRATROWS 2850 walk undefined
+STRATROWS 2936 walk undefined
+STRATROWS 2987 walk undefined
+STRATROWS 3043 walk undefined
+STRATROWS 3093 walk undefined
+STRATROWS 3184 walk undefined
+STRATROWS 3234 walk undefined
+STRATROWS 3288 walk undefined
+STRATROWS 3416 walk undefined
+STRATROWS 3502 shove pushableblock@576,560
+STRATROWS 4079 walk undefined
+STRATROWS 4129 collect undefined
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]},{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}
+rc 0

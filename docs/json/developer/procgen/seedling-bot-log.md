@@ -26717,5 +26717,48 @@ only Boss Key 2 arrival leg that gets past `bobsoldier@880,832`. Switch `pressKi
 - "No claim" is a choice with a cost: an executor that falls back to pressing whenever the forecast names an
   unmodelled source has turned its certificate off for every room that source is in. Ask whether the source can fire
   on the path before giving up the claim.
+### Seedling hammer-phase APPROACH — a hitless approach into an IceTurret's range
+
+⚖ User, queued 2026-10-30 (one of four hammer slices run in parallel; LWEIGH's hand-over, its report § 9, and L40C's, its
+§ 6 item 3). Switches `solverBot.TURRET_APPROACH` and `solverBot.FIFTH_ORDER`, both **OFF** (`SEEDLING_TURRET_APPROACH=1`
+/ `withTurretApproach`, `SEEDLING_FIFTH_ORDER=1` / `withFifthOrder`). The report is
+`CC/docs/cloud-reports/seedling-hammer-turret-approach.md`.
+
+- **The clock, measured** (the latch chain, CPAIR size 3 + `LATCH_WEIGH_FIRST`, `turretDamage` per tick): the stance walk
+  enters `iceturret@472,400`'s range at t822; volley 1 at t852; the walk's own swing lands on the turret at t879, so
+  `hitsTimer` holds `shootTimer` at 0; the player stops on the stance at t909; the i-frame runs out and the startshot
+  begins at t910; blast #2.2 lands at t917 on `execCorpseWeigh`'s snap tick. The arrival landed on the clock's zero.
+- **The design.** (a) a wait timed to the clock: a wait OUTSIDE the range moves nothing (`IceTurret.update`'s `else`
+  re-arms `shootTimer` every tick), so the wait must be spent inside it. (b) the approach tried on forks
+  (`killIceTurretOnWalk`'s shape). (c) another kill side. Measured: the push side's stance (488,445) has no hitless try (its
+  column is shut by `pushableblockfire@480,480`, so its corridor dog-legs into the snapped body's corner; its via routes
+  slide past the barrel under a volley). Chosen: all three together — on forks, every side of the snapped box, a wait at
+  the route's first waypoint. That waypoint (488,504) is in the range and COVERED by the fire block (a blast dies on a
+  `Solid`). Only waits 30 and 31 there bring the player to the west stance (467,424) between volleys. The side is free
+  because the corpse is where the turret died. A route with no corridor, or whose walk meets the body, is pruned after
+  its first try (without that, L40 legs 860/861 spent their `crusher-fork` deadline on corridor-less tries).
+- **The fifth order.** With LWEIGH's guard off (scratch), a bound of 5, "a fifth distinct order", and "do not re-count a
+  succeeded order" each solve the latch at 4138 (with the t917 hit). Every applied order has succeeded, so the last is no
+  bound at all; "distinct" is the narrowest, and it is the one shipped. With the approach ON the chain applies four orders
+  (the `hold(wandlock@480,560)` was the uncertified walk's), so the bound is not met there.
+- **The ctor box** (TURRETSNAP's hand-over): ON, `killForCorpse` and `killIceTurretInPlace` derive their stance off the
+  snapped box (`iceTurretKillBox`). The pocket boot at tick 0 (the turret not yet updated): off the run's rect the up
+  stance is (488,437), inside the live body (y 408..440); off the snap, (488,445). Once updated, the boxes agree.
+- **Effect ON.** Latch chain (CPAIR-3 + LWF + `TURRET_APPROACH`): **Boss Key 2 SOLVED 4142, hitless**, game-modelled on a
+  fresh run; + ICEST + OPP the same; + `orbitFreeAim` + `strategyBoundDistinct` SOLVED 4108, hitless (measurement only).
+  ICEST's pocket boot unchanged (4495). 60 captured L40 requests: no solve gained or lost in any arm; switches alone 0
+  movers; with CPAIR-3 + LWF 4 movers (860/0,1 and 861/0,1), refusal text only — the approach reaches its staging point
+  (488,579) and names that no corridor plans past the latched south door `wandlock@480,560` to any kill stance.
+- **Gate** `hammerTurretApproach.test.js` (ships OFF; the fifth-order rule on L40C's list; the ctor box; no turret in
+  range, and a turret in range with no corpse route, ON = OFF) and `hammerTurretApproach.slow.test.js` (the latch chain
+  OFF: the t917 refusal; ON: SOLVED 4142 and replayed; the pocket boot). Mutants (drop the timing; one cycle late, which
+  solves at 4188 — the clock is periodic, so the row catches it by the plan's length; re-count a succeeded order; drop the
+  snap): all red.
+
+**Trap candidates.**
+- A wait outside a turret's range is not a timing: the clock re-arms there. Spend the wait where the clock runs, and
+  under cover.
+- A search over waits per route repeats the route's geometry every time: prune a route when its failure is geometry (no
+  corridor, the body), or its tries spend the caller's deadline.
 
 ---

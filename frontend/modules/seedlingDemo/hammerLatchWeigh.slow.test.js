@@ -12,16 +12,26 @@
  * The rows where the reorder must not move anything (no turret, a turret out of range, no corpse route) are fast and
  * built in `hammerLatchWeigh.test.js`: on L40 every switch that removes the corpse route (`fireLiveTurretReach`,
  * `blockSweepBodies`, `corpseBumpWeigh`) refuses the whole chain at t0 on `button@816,400`, before the reorder is asked.
+ * ⛓ hammer-phase APPROACH: both rows are LWEIGH's own walk, so they run with `TURRET_APPROACH` pinned OFF (ON, the
+ * second solves — `hammerTurretApproach.slow.test.js` — and the first meets the arrival's bobsoldier on the staging walk).
  */
 import { describe, expect, it } from 'vitest';
-import { withContactFidelity } from './contactFidelity.js';
 
+import { CONTACT_FIDELITY_KEYS, withContactFidelity } from './contactFidelity.js';
 import { l40LatchBoot, l40LatchSolve } from './fidelityL40Latch.js';
 import {
     CHOOSER_PAIR, LATCH_WEIGH_FIRST_COUNTS, resetLatchWeighFirstCounts, withChooserPair, withLatchWeighFirst,
+    withTurretApproach,
 } from './solverBot.js';
 
 const TURRET = 'iceturret@472,400';
+
+/**
+ * ⛓ The CPAIR-3 row measures the uncertified stance walk into the t917 blast. Under fidelity's `turretSnapPricing`
+ * that walk refuses earlier, on the snapped hull's danger at (472.0,441.8): a more faithful refusal. The row is LWEIGH's
+ * own control, so it runs with the key OFF wherever it exists (planner-signed for fidelity's W35).
+ */
+const SNAP_OFF = CONTACT_FIDELITY_KEYS.includes('turretSnapPricing') ? { turretSnapPricing: false } : {};
 
 /** Run `fn` with `CHOOSER_PAIR`'s largest set at `size` (CPAIR's measurement arm), restoring it. */
 async function withPairSize(size, fn) {
@@ -60,9 +70,9 @@ async function replayLatch(perTick, equips) {
 describe('hammer-phase LWEIGH on the latch chain (slow)', () => {
     it('OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271', async () => {
         const boot = await l40LatchBoot();
-        const off = await withLatchWeighFirst(false, () => l40LatchSolve(boot));
+        const off = await withTurretApproach(false, () => withLatchWeighFirst(false, () => l40LatchSolve(boot)));
         resetLatchWeighFirstCounts();
-        const on = await withLatchWeighFirst(true, () => l40LatchSolve(boot));
+        const on = await withTurretApproach(false, () => withLatchWeighFirst(true, () => l40LatchSolve(boot)));
         expect(off.refusal.message).toMatch(/-> shove stance \(pushableblockfire@576,576\) -> hold stance \(wandlock@448,432\): the combat ladder is EXHAUSTED/);
         expect(on.refusal.message).toMatch(/-> shove stance \(pushableblockfire@576,576\) -> weigh stance \(wandlock@448,432\): the combat ladder is EXHAUSTED/);
         for (const r of [off, on]) {
@@ -75,27 +85,22 @@ describe('hammer-phase LWEIGH on the latch chain (slow)', () => {
     }, 900000);
 
     it('ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name', async () => {
-        // ⛓ hammer-2 signed (2026-10-30, W35): LWEIGH's row measures the uncertified stance walk into the t917 blast. Under
-        // fidelity TURRETSNAP (`turretSnapPricing`, ON since W35) that walk refuses earlier, on the snapped hull's danger at
-        // (472.0,441.8) — the more faithful refusal — so this row is LWEIGH's own control with the switch OFF.
-        await withContactFidelity({ turretSnapPricing: false }, async () => {
-            const boot = await l40LatchBoot();
-            const r = await withPairSize(3, () => withChooserPair(true, () => withLatchWeighFirst(true,
-                () => l40LatchSolve(boot))));
-            expect(r.out).toBeNull();
-            expect(r.refusal.message).toMatch(/-> weigh \(wandlock@448,432\): the reordered corpse weigh took a hit at t917 \(blast:iceturret@472,400#[0-9.]+\) on its way to iceturret@472,400's kill stance \(488,445\)/);
-            expect(r.refusal.obstacle).toEqual({ kind: 'danger', id: TURRET });
-            // the steps are the model's: the refused prefix on a fresh run
-            const { rows, hits } = await replayLatch(r.refusal.perTick.map((k) => [...k]), r.refusal.equips);
-            expect(hits).toEqual([{ t: 917, source: 'blast', id: expect.stringMatching(/^iceturret@472,400#/) }]);
-            const death = rows.find((g) => g.dead);
-            expect(death.tile).toEqual({ tx: 30, ty: 26 });
-            expect(death.t).toBeGreaterThan(917);
-            const tiles = [...new Set(rows.filter((g) => g.dead).map((g) => `${g.tile.tx},${g.tile.ty}`))];
-            expect(tiles).toEqual(['30,26', '30,25', '30,24']);
-            const opened = rows.find((g) => g.open);
-            expect(opened.tile).toEqual({ tx: 30, ty: 24 });
-            expect(rows.at(-1)).toMatchObject({ dead: true, removed: false, tile: { tx: 30, ty: 24 }, open: true });
-        });
+        const boot = await l40LatchBoot();
+        const r = await withContactFidelity(SNAP_OFF, () => withPairSize(3, () => withChooserPair(true,
+            () => withLatchWeighFirst(true, () => withTurretApproach(false, () => l40LatchSolve(boot))))));
+        expect(r.out).toBeNull();
+        expect(r.refusal.message).toMatch(/-> weigh \(wandlock@448,432\): the reordered corpse weigh took a hit at t917 \(blast:iceturret@472,400#[0-9.]+\) on its way to iceturret@472,400's kill stance \(488,445\)/);
+        expect(r.refusal.obstacle).toEqual({ kind: 'danger', id: TURRET });
+        // the steps are the model's: the refused prefix on a fresh run
+        const { rows, hits } = await replayLatch(r.refusal.perTick.map((k) => [...k]), r.refusal.equips);
+        expect(hits).toEqual([{ t: 917, source: 'blast', id: expect.stringMatching(/^iceturret@472,400#/) }]);
+        const death = rows.find((g) => g.dead);
+        expect(death.tile).toEqual({ tx: 30, ty: 26 });
+        expect(death.t).toBeGreaterThan(917);
+        const tiles = [...new Set(rows.filter((g) => g.dead).map((g) => `${g.tile.tx},${g.tile.ty}`))];
+        expect(tiles).toEqual(['30,26', '30,25', '30,24']);
+        const opened = rows.find((g) => g.open);
+        expect(opened.tile).toEqual({ tx: 30, ty: 24 });
+        expect(rows.at(-1)).toMatchObject({ dead: true, removed: false, tile: { tx: 30, ty: 24 }, open: true });
     }, 900000);
 });

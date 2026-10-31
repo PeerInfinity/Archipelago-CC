@@ -1,0 +1,26 @@
+ms 152383
+REFUSED solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (wandlock@448,432): the reordered corpse weigh took a hit at t917 (blast:iceturret@472,400#2.2) on its way to iceturret@472,400's kill stance (488,445) — the approach into the turret's range is not certified (⛓ LWEIGH: a volley-aware approach is the unbuilt arm)
+obstacle {"kind":"danger","id":"iceturret@472,400"} perTick 1245
+STRATROWS 0 shove pushableblockfire@576,576
+STRATROWS 0 weigh wandlock@448,432
+STRATROWS 0 hold wandlock@480,560
+STRATROWS 0 walk bobsoldier@880,832
+STRATROWS 0 time bobsoldier@880,832
+STRATROWS 0 bait bobsoldier@880,832
+STRATROWS 184 kill bobsoldier@880,832
+STRATROWS 184 walk spinner@816,848
+STRATROWS 184 time spinner@816,848
+STRATROWS 184 bait spinner@816,848
+STRATROWS 184 kill spinner@816,848
+STRATROWS 251 walk undefined
+STRATROWS 271 walk bob@736,800
+STRATROWS 271 time bob@736,800
+STRATROWS 271 bait bob@736,800
+STRATROWS 271 kill bob@736,800
+STRATROWS 271 walk undefined
+STRATROWS 577 walk undefined
+STRATROWS 978 walk undefined
+STRATROWS 1107 walk undefined
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]},{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}
+TA {"approaches":[]}

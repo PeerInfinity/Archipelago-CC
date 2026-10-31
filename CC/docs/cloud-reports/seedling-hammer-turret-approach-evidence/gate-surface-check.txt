@@ -1,0 +1,2 @@
+same seedling-solver-surface: 215226 bytes
+GREEN: 363 rows match a fresh census

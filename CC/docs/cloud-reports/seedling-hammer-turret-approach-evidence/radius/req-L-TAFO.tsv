@@ -1,0 +1,61 @@
+id	i	ok	ticks	work	digest	gm	hits	approaches	refusal_tail
+358	0	True	5	9	0535c35ae8db	True	[]	[]	
+359	0	True	75	88	991b7e2fcc6f	True	[]	[]	
+361	0	True	70	35	13f0b0244a50	True	[]	[]	
+362	0	True	5	9	0776f2b6baad	True	[]	[]	
+363	0	True	1558	596	14efd912c9f2	True	[]	[]	
+364	0	True	5	9	0535c35ae8db	True	[]	[]	
+365	0	True	70	35	4f15e87d2d99	True	[]	[]	
+366	0	True	1736	357	871e640455a7	True	[]	[]	
+367	0	True	172	85	23bc1aba8850	True	[]	[]	
+368	0	True	4	9	b973be6dc3cf	True	[]	[]	
+369	0	True	861	105	11dc8924a4a7	True	[]	[]	
+370	0	True	913	157	ef65c44f9910	True	[]	[]	
+371	0	True	1025	175	742b7cab7bf9	True	[]	[]	
+372	0	True	1088	181	64d950626e1f	True	[]	[]	
+373	0	True	844	103	d776e0fe8a8c	True	[]	[]	
+374	0	True	955	425	22c379a1ea87	True	[]	[]	
+374	1	True	955	425	22c379a1ea87	True	[]	[]	
+375	0	False	None	642	918e176c5ea1	None	null	[]	ot(wasm-exit-40) reach-pit (23,28)->L43's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+375	1	False	None	2562	918e176c5ea1	None	null	[]	ot(wasm-exit-40) reach-pit (23,28)->L43's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+376	0	False	None	642	1bbc0e5044ed	None	null	[]	ot(wasm-exit-40) reach-pit (24,28)->L43's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+376	1	False	None	2562	1bbc0e5044ed	None	null	[]	ot(wasm-exit-40) reach-pit (24,28)->L43's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+377	0	True	828	101	a222d1db1226	True	[]	[]	
+378	0	True	938	420	1fde79b855da	True	[]	[]	
+378	1	True	938	420	1fde79b855da	True	[]	[]	
+379	0	True	809	99	4c6ce52ad40f	True	[]	[]	
+380	0	True	909	388	91767a3c5f35	True	[]	[]	
+380	1	True	909	388	91767a3c5f35	True	[]	[]	
+381	0	True	494	65	8bc59cfa3fb0	True	[]	[]	
+382	0	False	None	643	f8918df357a1	None	null	[]	m-location-40) apitem (880,816) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+383	0	False	None	20	5ef26e7cad6c	None	null	[]	solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (488,904): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put the player box on the line when walked into the lock, none with a corridor from (488,904).
+384	0	True	5	9	0535c35ae8db	True	[]	[]	
+385	0	True	417	142	cfe39855ce60	True	[]	[]	
+386	0	True	416	153	eeadb3e660b6	True	[]	[]	
+387	0	True	480	188	45bb551d24a8	True	[]	[]	
+388	0	True	642	208	3cc78d324fe4	True	[]	[]	
+389	0	True	718	216	9e96d381be9f	True	[]	[]	
+390	0	True	482	153	ba8335120b53	True	[]	[]	
+391	0	True	527	191	f8b1bc540538	True	[]	[]	
+392	0	True	598	206	54c50e3386cd	True	[]	[]	
+393	0	True	637	211	b7605a0c799d	True	[]	[]	
+394	0	True	340	147	f700bb6b81c9	True	[]	[]	
+395	0	True	476	186	883724adf39e	True	[]	[]	
+396	0	True	433	148	865c94fde976	True	[]	[]	
+397	0	True	499	184	6b8de0e2e2b7	True	[]	[]	
+398	0	True	118	73	e24e6c9138e8	True	[]	[]	
+399	0	False	None	78	6ec00f2d8e53	None	null	[]	inner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound).
+400	0	False	None	20	9150f6612a5b	None	null	[]	solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (328,600): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put the player box on the line when walked into the lock, none with a corridor from (328,600).
+401	0	True	5	9	ff449e3386a6	True	[]	[]	
+402	0	True	4	9	b973be6dc3cf	True	[]	[]	
+403	0	True	1331	433	32a3b0c8aab8	True	[]	[]	
+404	0	True	4	9	b973be6dc3cf	True	[]	[]	
+405	0	True	96	48	2cd5b25e894e	True	[]	[]	
+860	0	False	None	642	2c2ee1c516ea	None	null	[{"turret": "iceturret@472,400", "t": 283, "side": null, "forks": 12, "tally": {"no-plan": 12}}]	nce (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+860	1	False	None	1951	2c2ee1c516ea	None	null	[{"turret": "iceturret@472,400", "t": 283, "side": null, "forks": 12, "tally": {"no-plan": 12}}, {"turret": "iceturret@472,400", "t": 283, "side": null, "forks": 12, "tally": {"no-plan": 12}}]	nce (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+861	0	False	None	642	2c2ee1c516ea	None	null	[{"turret": "iceturret@472,400", "t": 311, "side": null, "forks": 12, "tally": {"no-plan": 12}}]	nce (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+861	1	False	None	830	2c2ee1c516ea	None	null	[{"turret": "iceturret@472,400", "t": 311, "side": null, "forks": 12, "tally": {"no-plan": 12}}, {"turret": "iceturret@472,400", "t": 145, "side": null, "forks": 12, "tally": {"no-plan": 12}}]	nce (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+862	0	True	2269	532	1e412e021252	True	[]	[]	
+863	0	True	1054	199	5790b7de720f	True	[]	[]	
+863	1	True	389	66	0d85ae24063c	True	[]	[]	
+876	0	True	808	131	604b8f866a82	True	[]	[]	
