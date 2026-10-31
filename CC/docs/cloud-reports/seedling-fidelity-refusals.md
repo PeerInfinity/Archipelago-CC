@@ -159,6 +159,8 @@ endpoint must not seal the door). That is a BOSSKILLS-sized slice (cf. `lavaBoss
 | identity block / six `--check`s at defaults | all six exit 0, md5s equal the base (see *Identity*) |
 | L4 dash margin (84 vs 85) | `jsRuntimeSolverShouldStop` green ON (neither key touches L4's dashless path) |
 
+**Branch CI:** `JavaScript Unit Tests` run `41221158970` at the code head `3f368cf4` was **CANCELLED** (my later docs-only pushes; they do not trigger the path filter, so no run exists at the report head). A rerun from this session is refused (403). ⇒ **the planner reruns it**; no CI suite number is claimed here.
+
 Not run (named for the planner): `ci-producer-checks.mjs --jobs=3` with the keys ON, and the full survey and sweep on CI.
 
 ## Dispatches for the planner
