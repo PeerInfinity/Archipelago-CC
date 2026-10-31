@@ -29213,21 +29213,30 @@ function solveSegmentUnder({
      * throw there (the arm answered under a hypothesis the world has not discharged yet) returns null and the 16 px
      * plan runs as before. Skipped for an axis-aligned walk (its corners are the skirt's), a run already on the fine
      * pitch, and `fineLattice: false`. A row in `fineLatticeWalks` names each fine-first walk.
+     *
+     * ⚠ AN AIM OFF THE 8 px NODE GRID IS WALKED AXIS-ALIGNED (`manhattan`, `holdOneAxis`), STANCE_REENTRY's shape and
+     * for its measured reason (L48: a diagonal bang-bang approach to a half-tile point cycles at ±1.5 px for the whole
+     * budget). It is also what bounds the cost: an axis-aligned walk asks no sword dash, and MEASURED on route steps
+     * 172/200 (L12, the wand stance (40,888), x 40 on no 8 px node) a free fine corridor's whole-chain dash certificate
+     * (`spinnerDashWhole`) took ~60 s / ~105 s of the solve against ~2 s. Returns `{wps, axis}` or null.
      */
     const fineStanceWalkPlan = (aim, contacts, allowTeleporter, axisAligned, goalPlanExtra, what) => {
         if (!CONTACT_FIDELITY.fineStanceWalk || !FINE_STANCES.has(aim) || !fineLattice || axisAligned
             || (solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) <= FINE_LATTICE) return null;
+        const n = nodeAt(aim.x, aim.y, FINE_LATTICE);
+        const centre = nodeCentre(n.tx, n.ty, FINE_LATTICE);
+        const axis = centre.x !== aim.x || centre.y !== aim.y;
         let wps;
         try {
             wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
-                solverPlanOpts(run, contacts, { ...goalPlanExtra, lattice: FINE_LATTICE }));
+                solverPlanOpts(run, contacts, { ...goalPlanExtra, lattice: FINE_LATTICE, ...(axis ? { manhattan: true } : {}) }));
         } catch (e) {
             if (!(e instanceof BotDriverV2Error)) throw e;
             return null;
         }
-        fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
-            waypoints: wps.length, refused: 'FINE_STANCE (the stance an 8 px arm answered)' });
-        return wps;
+        fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y }, waypoints: wps.length,
+            refused: `FINE_STANCE (the stance an 8 px arm answered${axis ? '; off the 8 px grid, axis-aligned' : ''})` });
+        return { wps, axis };
     };
     const walkToUnder = (goal, aim, {
         allowTeleporter = null, crossTo = null, what, contactsOverride = null,
@@ -29301,10 +29310,11 @@ function solveSegmentUnder({
             refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true, timedAxe: true });
             // ⛓ L100LATTICE D1 (`fineStanceWalk`, OFF: null) — an aim an 8 px arm answered is planned on that lattice.
             const fineFirst = fineStanceWalkPlan(aim, contacts, allowTeleporter, axisAligned, goalPlanExtra, what);
+            if (fineFirst?.axis) axisAligned = true;
             let wps;
             let fine = fineFirst !== null;
             try {
-                wps = fineFirst ?? planWaypoints(run.world, run.state, aim, allowTeleporter,
+                wps = fineFirst?.wps ?? planWaypoints(run.world, run.state, aim, allowTeleporter,
                     axisAligned
                         ? { ...solverPlanOpts(run, contacts, goalPlanExtra), manhattan: true }
                         : solverPlanOpts(run, contacts, goalPlanExtra));

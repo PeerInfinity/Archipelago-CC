@@ -31,7 +31,7 @@ const SRC = atlasLevelSource();
 const W = JSON.parse(readFileSync(join(HERE, 'fixtures', 'l100lattice-witness', 'step216-on.json'), 'utf8'));
 const L89 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'waterfall-witness', 'l89-step89-on.json'), 'utf8'));
 const W168 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'l100lattice-witness', 'step168-on.json'), 'utf8'));
-const W172 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'l100lattice-witness', 'step172-on.json'), 'utf8'));
+const bootOf = (step) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'l100lattice-witness', `step${step}-boot.json`), 'utf8'));
 
 const runOf = (tape) => createRunForStaging(solveStaging(stagingFromTape(parseTape({ ...tape, inputs: [], tick_count: 0 }))), SRC);
 const tapeKeys = (tape) => {
@@ -84,7 +84,7 @@ describe('L100 — the walk to an 8 px swing stance plans on the 8 px lattice (f
         expect(run.playerHits.map((h) => [h.t, h.id])).toEqual([[125, 'jellyfish@80,112']]);
     }, 120_000);
 
-    it.each([['step 216 (L100)', W, 700], ['step 168 (L66, a mover)', W168, 230], ['step 172 (L12, a mover)', W172, 1000]])(
+    it.each([['step 216 (L100)', W, 700], ['step 168 (L66, a mover)', W168, 230]])(
         'ON: the model replaying %s\'s witness tape equals the game at every sampled tick (0 px), hits and level too',
         (_name, w, min) => {
             const run = runOf(w.tape);
@@ -120,5 +120,20 @@ describe('L100 — the walk to an 8 px swing stance plans on the 8 px lattice (f
             dashMode: DEFAULT_DASH_MODE }));
         expect(keysOf(r.perTick)).toEqual(tapeKeys(L89.tape));
         expect(r.fineLatticeWalks ?? []).toEqual([]);
+    }, 120_000);
+
+    it.each([[172], [200]])('ON: step %i (L12, the wand stance (40,888), off the 8 px grid) walks axis-aligned — the OFF keys', (step) => {
+        const boot = bootOf(step);
+        const solve = (on) => withContactFidelity({ fineStanceWalk: on }, () => solveSegment({
+            run: runOf({ ...boot, equips: [] }), goals: [{ kind: 'reach-exit', exit: { x: 32, y: 848 } }], name: 'l12',
+            boot: boot.boot, dashMode: DEFAULT_DASH_MODE }));
+        const off = solve(false);
+        const on = solve(true);
+        // OFF reached it by STANCE_REENTRY's axis-aligned fine walk; ON asks the same shape first, and asks no dash
+        // (a free fine corridor's whole-chain dash certificate cost ~60 s / ~105 s here, measured)
+        expect(off.fineLatticeWalks.map((w) => w.refused)).toEqual(['STANCE_REENTRY wand(magicallock@32,864)#0']);
+        expect(on.fineLatticeWalks.map((w) => w.refused))
+            .toEqual(['FINE_STANCE (the stance an 8 px arm answered; off the 8 px grid, axis-aligned)']);
+        expect(keysOf(on.perTick)).toEqual(keysOf(off.perTick));
     }, 120_000);
 });
