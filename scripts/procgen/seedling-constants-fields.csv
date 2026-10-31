@@ -1734,6 +1734,25 @@ frontend/modules/seedlingDemo/iceTurret.js|(module)|h379c4c3e|1|0,rule,magnitude
 frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|he88721a0|0|0,rule,bound,Enemies/Enemy.as:hitPlayer,hitsTimer <= 0 gate on the live body's contact (Enemy.hitPlayer)
 frontend/modules/seedlingDemo/levelRun.js|terrainAt|hb402bd13|0|0,rule,sentinel,,tile type default when no walkable tile
 frontend/modules/seedlingDemo/iceTurret.js|(module)|h4f0b044e|3|0,rule,magnitude,Enemies/Enemy.as:hitPlayer,ICE_TURRET_CONTACT: the live body's contact force (p.hit(this; 3; ...))
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|ha14438b8|0|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|ha14438b8|0|1,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h60d0f44f|0|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h4c3ed7c0|3|0,rule,count,,the cycle check's three input() ticks: the third must equal the first
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h4c3ed7c0|1|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h9558086d|2|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h9558086d|0|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h9558086d|2|1,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h9558086d|0|1,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h2797839f|0|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h2797839f|1|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h7f80fa16|0|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h7f80fa16|1|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h740156d1|0|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h740156d1|1|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h976418ff|0|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h976418ff|1|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h6f08bd57|0|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretLiveContactCycle|h6f08bd57|1|0,structural,,,
 frontend/modules/seedlingDemo/placedGrenade.js|*|*,structural,,,default: initial state / update counters / loop bounds (LADDER2 placed grenade)
 frontend/modules/seedlingDemo/placedGrenade.js|(module)|h79f1aaf5|32|0,rule,magnitude,Enemies/Grenade.as:fallTriggerDistance,fallTriggerDistance: the player's entity point within 32 px of (x; endY) arms it
 frontend/modules/seedlingDemo/placedGrenade.js|(module)|h097576a2|0.1|0,physics,magnitude,Enemies/Grenade.as:g,g: the fall's v.y += 0.1 per update

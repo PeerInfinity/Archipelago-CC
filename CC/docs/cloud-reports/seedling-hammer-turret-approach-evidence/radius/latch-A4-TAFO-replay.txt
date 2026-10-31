@@ -1,0 +1,9 @@
+t0 L40 (888.0,776.0) turret live tile(30,26) open[] hits 0
+t101 L40 (908.2,812.9) turret live tile(30,26) open[wandlock@480,560] hits 0
+t965 L40 (466.6,423.6) turret DEAD tile(30,26) open[wandlock@480,560] hits 0
+t1025 L40 (487.0,440.7) turret DEAD tile(30,25) open[wandlock@480,560] hits 0
+t1159 L40 (487.0,424.4) turret DEAD tile(30,24) open[wandlock@480,560] hits 0
+t1253 L40 (487.0,424.4) turret DEAD tile(30,24) open[wandlock@448,432,wandlock@480,560,wandlock@512,480] hits 0
+t3427 L40 (776.6,439.6) turret DEAD tile(30,24) open[wandlock@448,432,wandlock@480,560,wandlock@512,480,wandlock@800,400] hits 0
+END t ? pos 663.8 529.9 deaths 0 collected [{"t":4142,"tag":2}]
+HITS []

@@ -168,8 +168,9 @@ describe('⛓ ENCOUNTER LEGS — the walks', () => {
         expect(s.lastSolve.goal).toEqual({ kind: 'encounter', at: BOB.encounter.at, drop: { item: 'Fire' }, then: null });
         expect(`${s.solves}/${s.declines}/${s.refutations}`).toBe('1/0/0');
         expect(rt.run.level).toBe(32);
-        // The host hears both reports as the check binding reads them: one clear each.
-        expect(checksOf(rt).filter((k) => k.startsWith('32:'))).toEqual(['32:3', '32:4']);
+        // The host hears both reports as the check binding reads them: one clear each, after the arena rock's {32,1}
+        // (fidelity L32ROCK, `bobArenaRockClear`, ON since the W35 flip: the game clears it on the arm frame too).
+        expect(checksOf(rt).filter((k) => k.startsWith('32:'))).toEqual(['32:1', '32:3', '32:4']);
         expect(rt.playback.describe()).toBe('bot: done → Level 032 - Bob Boss in level 32');
     }, 240_000);
 

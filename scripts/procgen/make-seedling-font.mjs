@@ -245,6 +245,15 @@ function zlibStored(raw) {
 /** The sheet's PNG bytes (8-bit RGBA, filter 0 on every row). */
 export function fontSheetBytes() {
     const { w, h, px } = fontPixels();
+    return rgbaPngBytes(w, h, px);
+}
+
+/**
+ * Any 8-bit RGBA image as PNG bytes — filter 0 on every row, STORED deflate blocks, so
+ * the bytes depend on the pixels alone (no zlib version). `px` is a Uint8Array/Buffer
+ * of w·h·4. (Also `archipelagoLogoArt.mjs`'s 64×64 logo.)
+ */
+export function rgbaPngBytes(w, h, px) {
     const raw = Buffer.alloc(h * (w * 4 + 1));
     for (let y = 0; y < h; y += 1) Buffer.from(px.buffer, y * w * 4, w * 4).copy(raw, y * (w * 4 + 1) + 1);
     const ihdr = Buffer.alloc(13);

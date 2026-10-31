@@ -1,0 +1,17 @@
+# base 47/60 solved (47 hitless+modelled), arm 47/60 solved (47 hitless+modelled), 4 mover(s)
+## 860/0 level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+   base: refusal s corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+   arm:  refusal : no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+   approaches: [{"turret": "iceturret@472,400", "t": 283, "side": null, "forks": 12, "tally": {"no-plan": 12}}]
+## 860/1 level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+   base: refusal (55,51) lies inside the live body bobsoldier@880,832's volume (a stepped bobsoldier at its LIVE position), so the danger map forbids the goal itself — every DETOUR candidate and every forced crossing ends on that tile, and neither rung is asked while it stands
+   arm:  refusal : no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+   approaches: [{"turret": "iceturret@472,400", "t": 283, "side": null, "forks": 12, "tally": {"no-plan": 12}}, {"turret": "iceturret@472,400", "t": 283, "side": null, "forks": 12, "tally": {"no-plan": 12}}]
+## 861/0 level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+   base: refusal s corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.
+   arm:  refusal : no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+   approaches: [{"turret": "iceturret@472,400", "t": 311, "side": null, "forks": 12, "tally": {"no-plan": 12}}]
+## 861/1 level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+   base: refusal 4) -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (746.17,788.83) in level 40. There is no step out.
+   arm:  refusal : no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+   approaches: [{"turret": "iceturret@472,400", "t": 311, "side": null, "forks": 12, "tally": {"no-plan": 12}}, {"turret": "iceturret@472,400", "t": 145, "side": null, "forks": 12, "tally": {"no-plan": 12}}]

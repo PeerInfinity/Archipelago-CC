@@ -16564,6 +16564,16 @@ export function createLevelRun({
             // `fall()` writes `setPersistence(tag, false)` on the arm frame.
             bobLedger({ what: 'rock-armed', y: state.y,
                 flag: { level, tag: a.persistTag, value: false } });
+            if (CONTACT_FIDELITY.bobArenaRockClear === true && a.persistTag >= 0) {
+                // ⛓ fidelity L32ROCK D1: …and the run BANKS that write, as L82's arena rock's arm does
+                // (`stepLavaArenaRockNow`): `rockFlags` (`earnedClears`, by `fallrocklarge`) + `pendingEarnedClears`.
+                // `FallRockLarge.as:137-143` @ccdf189776, on the arm frame (tick `ticksCompleted + 1`). OFF: unbanked.
+                const flag = outOfBandFlagFor(level, a.persistTag);
+                rockFlags.set(ledgerKey(flag), { ...flag, id: a.rockId, level, by: 'fallrocklarge',
+                    t: ticksCompleted + 1 });
+                if (!pendingEarnedClears.has(flag.level)) pendingEarnedClears.set(flag.level, new Set());
+                pendingEarnedClears.get(flag.level).add(flag.tag);
+            }
             return {
                 frozen: true,
                 why: 'the BobBoss rock\'s arm frame',

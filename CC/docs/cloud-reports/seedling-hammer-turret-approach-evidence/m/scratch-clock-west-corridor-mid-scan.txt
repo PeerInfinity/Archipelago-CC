@@ -1,0 +1,101 @@
+CLOCK right direct mid 1 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 1 approach-hit t856 blast:iceturret@472,400#3.1 at (466.0,431.6)
+CLOCK right direct mid 2 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 2 approach-hit t856 blast:iceturret@472,400#3.1 at (466.0,432.5)
+CLOCK right direct mid 3 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 3 kill-hit  (fork, approach right direct mid 3): the player was HIT while killing iceturret@472,400 at run tick 910 (source blast iceturret@472,400#4.0) from the right side at (467.2,423.6)
+CLOCK right direct mid 4 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 4 approach-hit t818 blast:iceturret@472,400#2.1 at (466.0,481.7)
+CLOCK right direct mid 5 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 5 approach-hit t818 blast:iceturret@472,400#2.1 at (466.0,482.4)
+CLOCK right direct mid 6 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 6 approach-hit t819 blast:iceturret@472,400#2.1 at (466.0,482.4)
+CLOCK right direct mid 7 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 7 approach-hit t819 blast:iceturret@472,400#2.1 at (466.0,483.4)
+CLOCK right direct mid 8 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 8 approach-hit t819 blast:iceturret@472,400#2.1 at (466.0,485.4)
+CLOCK right direct mid 9 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 9 approach-hit t819 blast:iceturret@472,400#2.1 at (466.0,486.1)
+CLOCK right direct mid 10 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 10 approach-hit t819 blast:iceturret@472,400#2.1 at (466.0,487.0)
+CLOCK right direct mid 11 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 11 approach-hit t819 blast:iceturret@472,400#2.1 at (466.0,489.0)
+CLOCK right direct mid 12 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 12 approach-hit t820 blast:iceturret@472,400#2.1 at (466.0,489.0)
+CLOCK right direct mid 13 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 13 approach-hit t820 blast:iceturret@472,400#2.1 at (466.0,489.6)
+CLOCK right direct mid 14 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 14 approach-hit t820 blast:iceturret@472,400#2.1 at (466.0,490.5)
+CLOCK right direct mid 15 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 15 approach-hit t820 blast:iceturret@472,400#2.1 at (466.0,491.6)
+CLOCK right direct mid 16 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 16 approach-hit t820 blast:iceturret@472,400#2.1 at (466.0,493.7)
+CLOCK right direct mid 17 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 17 approach-hit t820 blast:iceturret@472,400#2.1 at (466.5,494.5)
+CLOCK right direct mid 18 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 18 approach-hit t820 blast:iceturret@472,400#2.1 at (466.5,495.5)
+CLOCK right direct mid 19 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 19 approach-hit t821 blast:iceturret@472,400#2.1 at (466.5,495.5)
+CLOCK right direct mid 20 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 20 approach-hit t821 blast:iceturret@472,400#2.1 at (468.1,497.5)
+CLOCK right direct mid 21 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 21 kill-hit  (fork, approach right direct mid 21): the player was HIT while killing iceturret@472,400 at run tick 928 (source blast iceturret@472,400#4.0) from the right side at (467.2,423.6)
+CLOCK right direct mid 22 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 22 approach-hit t821 blast:iceturret@472,400#2.1 at (469.2,498.9)
+CLOCK right direct mid 23 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 23 kill-hit  (fork, approach right direct mid 23): the player was HIT while killing iceturret@472,400 at run tick 930 (source blast iceturret@472,400#4.0) from the right side at (467.2,423.6)
+CLOCK right direct mid 24 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 24 approach-hit t821 blast:iceturret@472,400#2.1 at (470.8,502.0)
+CLOCK right direct mid 25 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 25 approach-hit t821 blast:iceturret@472,400#2.1 at (472.2,503.4)
+CLOCK right direct mid 26 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 26 approach-hit t821 blast:iceturret@472,400#2.1 at (472.2,503.4)
+CLOCK right direct mid 27 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 27 approach-hit t821 blast:iceturret@472,400#2.1 at (472.2,503.4)
+CLOCK right direct mid 28 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 28 kill-hit  (fork, approach right direct mid 28): the player was HIT while killing iceturret@472,400 at run tick 901 (source blast iceturret@472,400#4.0) from the right side at (467.7,423.6)
+CLOCK right direct mid 29 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 29 kill-hit  (fork, approach right direct mid 29): the player was HIT while killing iceturret@472,400 at run tick 901 (source blast iceturret@472,400#4.0) from the right side at (467.7,423.6)
+CLOCK right direct mid 30 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 30 OK keys 272
+CLOCK right direct mid 31 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 31 OK keys 274
+CLOCK right direct mid 32 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 32 approach-hit t821 blast:iceturret@472,400#2.1 at (470.8,503.4)
+CLOCK right direct mid 33 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 33 approach-hit t821 blast:iceturret@472,400#2.1 at (472.9,503.4)
+CLOCK right direct mid 34 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 34 approach-hit t821 blast:iceturret@472,400#2.1 at (474.4,503.4)
+CLOCK right direct mid 35 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 35 approach-hit t821 blast:iceturret@472,400#2.1 at (473.8,503.4)
+CLOCK right direct mid 36 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 36 approach-hit t821 blast:iceturret@472,400#2.1 at (475.9,503.4)
+CLOCK right direct mid 37 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 37 approach-hit t821 blast:iceturret@472,400#2.1 at (476.6,503.4)
+CLOCK right direct mid 38 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 38 approach-hit t821 blast:iceturret@472,400#2.1 at (477.5,503.4)
+CLOCK right direct mid 39 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 39 approach-hit t901 blast:iceturret@472,400#4.1 at (466.0,424.5)
+CLOCK right direct mid 40 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 40 approach-hit t901 blast:iceturret@472,400#4.1 at (466.0,426.0)
+CLOCK right direct mid 41 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 41 approach-hit t901 blast:iceturret@472,400#4.1 at (466.0,425.4)
+CLOCK right direct mid 42 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 42 approach-hit t901 blast:iceturret@472,400#4.1 at (466.0,427.4)
+CLOCK right direct mid 43 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 43 approach-hit t901 blast:iceturret@472,400#4.1 at (466.0,428.1)
+CLOCK right direct mid 44 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 44 approach-hit t901 blast:iceturret@472,400#4.1 at (466.0,429.0)
+CLOCK right direct mid 45 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 45 approach-hit t901 blast:iceturret@472,400#4.1 at (466.0,431.0)
+CLOCK right direct mid 46 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 46 approach-hit t901 blast:iceturret@472,400#4.1 at (466.0,431.6)
+CLOCK right direct mid 47 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 47 kill-hit  (fork, approach right direct mid 47): the player was HIT while killing iceturret@472,400 at run tick 954 (source blast iceturret@472,400#5.0) from the right side at (467.2,423.6)
+CLOCK right direct mid 48 t774 (487.7,503.4) finishshot st25 hT0 blasts1
+TRY right direct mid 48 kill-hit  (fork, approach right direct mid 48): the player was HIT while killing iceturret@472,400 at run tick 954 (source blast iceturret@472,400#5.0) from the right side at (467.2,423.6)
+ms 55180
+REFUSED solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488,579) is hitless (48 fork(s); {"approach-hit":39,"kill-hit":7,"OK":2}) — right direct mid 1: t856 blast:iceturret@472,400#3.1 at (466.0,431.6) | right direct mid 2: t856 blast:iceturret@472,400#3.1 at (466.0,432.5) | right direct mid 3:  (fork, approach right direct mid 3): the player was HIT while killing iceturret@472,400 at run tick 910 (source blast iceturret@472,400#4.0) from the right side at (467.2,423.6) | right direct mid 4: t818 blast:iceturret@472,400#2.1 at (466.0,481.7)
+obstacle {"kind":"danger","id":"iceturret@472,400"} perTick 705
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}

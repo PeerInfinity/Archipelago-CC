@@ -1,0 +1,24 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 396520[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast [33m 168539[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run [33m 181385[2mms[22m[39m
+     [33m[2m✓[22m[39m ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached [33m 46593[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 784041[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271 [33m 601564[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name [33m 182474[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 824959[2mms[22m[39m
+     [33m[2m✓[22m[39m ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte [33m 552386[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit [33m 272570[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Latch.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 404444[2mms[22m[39m
+     [33m[2m✓[22m[39m holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier [33m 109465[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON: the solve's refused prefix is the recorded tape [33m 294976[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Bk2.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 293083[2mms[22m[39m
+     [33m[2m✓[22m[39m the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape [33m 293080[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m 18:39:26
+[2m   Duration [22m 2709.48s[2m (transform 2.92s, setup 0ms, import 5.52s, tests 2703.05s, environment 1ms)[22m
+

@@ -1,0 +1,21 @@
+18:17:24 producer OFF
+18:22:46 rc 0
+18:22:46 producer ON
+18:27:39 rc 0
+18:27:39 bounded ON
+18:39:19 rc 0
+18:39:19 bounded OFF-after
+18:39:25 rc 0
+18:39:25 slow OFF
+19:24:35 rc 0
+19:24:35 slow ON
+20:06:07 rc 1
+20:06:07 identity after
+20:22:17 rc 0
+20:22:17 wasm ship
+20:39:57 rc 0
+20:39:57 survey OFF
+20:53:45 rc 0
+20:53:45 survey ON
+21:07:50 rc 0
+21:07:50 done
