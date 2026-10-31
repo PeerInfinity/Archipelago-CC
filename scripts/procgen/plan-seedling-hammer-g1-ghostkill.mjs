@@ -69,15 +69,16 @@ export async function ghostKillStaging() {
  * stays byte-identical. ⛔ Re-recording it ON would rewrite a game-witnessed tape from the model alone.
  */
 export async function ghostKillSolve(staging, enabled) {
-    const { solveSegment, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
+    const { solveSegment, withChooserPair, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { withGhostKillRung } = await import(join(MODULE, 'ghostSpinnerPress.js'));
     const { withPressKillRebootGuard, withPressKillShakeGuard } = await import(join(MODULE, 'pressKillGuards.js'));
     const run = createRunForStaging(staging, atlasLevelSource());
     // ⛓ hammer-phase OPP: the witness is the kill across the bob's death, so `OPPORTUNISTIC_STRIKE` is pinned OFF too (it ships OFF)
+    // ⛓ CPWIT flip: and `CHOOSER_PAIR` (ON since its flip): the witness is this switch's kill, not the chooser's later refusal
     const { withOpportunisticStrike, withPressKillChasers } = await import(join(MODULE, 'pressKillCost.js'));
-    const guardsOff = (fn) => withOpportunisticStrike(false, () => withPressKillChasers(false, () => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, fn))));
+    const guardsOff = (fn) => withOpportunisticStrike(false, () => withPressKillChasers(false, () => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, () => withChooserPair(false, fn)))));
     return withStrikeEtaFloor(false, () => guardsOff(() => withGhostKillRung(enabled, () => {
         try {
             const out = solveSegment({ run, goals: [JSON.parse(JSON.stringify(GOAL))], name: NAME, boot: staging.boot,

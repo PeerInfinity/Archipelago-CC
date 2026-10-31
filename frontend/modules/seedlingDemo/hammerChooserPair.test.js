@@ -77,10 +77,10 @@ function withPairSize(size, fn) {
 const SILENT = 'NO LIVE BODY\'s removal admits a corridor';
 
 describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHOOSER_PAIR`)', () => {
-    it('ships OFF (`SEEDLING_CHOOSER_PAIR=1` turns it on in node), asking pairs only', () => {
-        expect(CHOOSER_PAIR_DEFAULT).toBe(false);
-        expect(CHOOSER_PAIR.enabled).toBe(ENV.SEEDLING_CHOOSER_PAIR === '1');
-        expect(CHOOSER_PAIR.size).toBe(ENV.SEEDLING_CHOOSER_PAIR_SIZE === '3' ? 3 : 2);
+    it('ships ON at size 3 (⚖ the flip, after CPWIT\'s game witness; `SEEDLING_CHOOSER_PAIR=0` opts out, `…_SIZE=2` asks pairs only)', () => {
+        expect(CHOOSER_PAIR_DEFAULT).toBe(true);
+        expect(CHOOSER_PAIR.enabled).toBe(ENV.SEEDLING_CHOOSER_PAIR !== '0');
+        expect(CHOOSER_PAIR.size).toBe(ENV.SEEDLING_CHOOSER_PAIR_SIZE === '2' ? 2 : 3);
     });
 
     it('853 at 5196: OFF the burn stance\'s walk refuses on bob@736,752 with the chooser silent; ON the pair '
@@ -100,10 +100,11 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
         expect(on.message).toContain('-> kill (spinner@816,848) by press: the player died at t1046 (chaser bob@736,800)');
     }, 240_000);
 
-    it('853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and ON = OFF',
+    it('853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF',
         () => {
             const off = solveLeg(LEG853, 5172, false);
-            const on = solveLeg(LEG853, 5172, true);
+            // ⛓ CPWIT flip: the PAIR arm's question (size 2); the shipped triple arm admits here
+            const on = withPairSize(2, () => solveLeg(LEG853, 5172, true));
             expect(on.counts.asked).toBeGreaterThan(0);
             expect(on.counts.admitted).toBe(0);
             expect([on.ok, on.work, on.message]).toEqual([off.ok, off.work, off.message]);
@@ -123,7 +124,7 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
         const off = solveLeg(LEG367, null, false, Infinity);
         expect(off.ok).toBe(false);
         expect(off.message).toContain('the caller\'s anytime deadline');
-        const pairOnly = solveLeg(LEG367, null, true, 1);
+        const pairOnly = withPairSize(2, () => solveLeg(LEG367, null, true, 1));
         expect(pairOnly.counts.asked).toBeGreaterThan(0);
         expect(pairOnly.counts.admitted).toBe(0);
         withPairSize(3, () => {
