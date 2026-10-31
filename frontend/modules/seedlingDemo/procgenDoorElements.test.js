@@ -45,11 +45,12 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
          *  ⛓ Concept library F1 added `roam` (the roaming enemy), LAST, so no
          *  existing head moved. ⛓ Swim U3 added `corridorbody` (a lock-less body on a
          *  main-path cut), LAST for the same reason. ⛓ Seedling gen A1 added
-         *  `ropegate` (an armed arrow trap and its rope), LAST, OPT-IN. */
+         *  `ropegate` (an armed arrow trap and its rope), LAST, OPT-IN. ⛓ Seedling
+         *  gen B2 added `chestdoor` (a chest in a wall's only gap), LAST, OPT-IN. */
         expect(ELEMENT_NAMES).toEqual([
             'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena', 'rockgate',
             'shortcut', 'shieldgate', 'watergate', 'watershortcut', 'waterfallgate', 'roam',
-            'corridorbody', 'ropegate',
+            'corridorbody', 'ropegate', 'chestdoor',
         ]);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });
@@ -124,10 +125,11 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
         expect(added(POST_SHIELD_ITEMS, POST_SWIM_ITEMS)).toEqual(['watergate', 'watershortcut']);
         expect(added(POST_SWIM_ITEMS, POST_FEATHER_ITEMS)).toEqual(['waterfallgate']);
         /** ⛓ by post-feather every head in the table is drawn by default — but
-         *  `ropegate`, which ships OPT-IN (⚖ Q5: a new head joins a default only
-         *  by a re-record of its own). */
+         *  `ropegate` and `chestdoor`, which ship OPT-IN (⚖ Q5: a new head joins a
+         *  default only by a re-record of its own). */
         expect([...names(POST_FEATHER_ITEMS)].sort())
-            .toEqual(Object.keys(ELEMENT_TABLE).filter((n) => n !== 'ropegate').sort());
+            .toEqual(Object.keys(ELEMENT_TABLE)
+                .filter((n) => n !== 'ropegate' && n !== 'chestdoor').sort());
         /**
          * ⛔ THE TWO-STREAMS HALF, READ OFF THE NORMALIZED SPEC — and since
          * SEEDLING BOT R9 slice 1 (D1) the guard's `len` is the THIRD kind:
