@@ -262,6 +262,42 @@ export const SEEDLING_GEN_HOST_CHILDREN_KEY = 'seedlingGenHostChildren';
 
 /** ⛓ S1, D4 — the bag key of the room's `require` directive (`--require=`'s grammar). */
 export const SEEDLING_GEN_REQUIRE_KEY = 'seedlingGenRequire';
+
+/**
+ * ⛓ seedling-js-panel-look — the bag key of the room's LOOK (`procgenLook.GEN_LOOKS`,
+ * seedling-gen-biomes-1 C1). Like `require` it is NOT in `KNOB_OF` or the defaults:
+ * absent (or `''`, the row's "(none)") builds no `look`, so every old region is
+ * byte-identical.
+ */
+export const SEEDLING_GEN_LOOK_KEY = 'seedlingGenLook';
+/** The look row's absent choice: value `''`, shown as this. */
+export const SEEDLING_GEN_LOOK_NONE_LABEL = '(none)';
+
+/** Where the live app loads the look names from (relative to the document) — a computed specifier. */
+export const SEEDLING_GEN_LOOK_MODULE_PATH = 'modules/seedlingDemo/procgenLook.js';
+
+/**
+ * ⛓ THE LOOK NAMES, INSTALLED — read off `procgenLook.GEN_LOOK_NAMES`, never a
+ * second list. ⛔ Not imported: `procgenLook.js` reaches `levelWorld.js`, and a
+ * static path to it adds ~21 files / ~1.09 MB to `flashPanel/index.js`'s closure
+ * (measured, seedling-js-panel-look). The two install doors are the room's
+ * (`flashSeedlingGenBuild.js` headless; `loadSeedlingGenerator` in the live app,
+ * where the room module already holds it, so the load is a cache hit). Until
+ * then the row offers "(none)" and the region's own look, so a round trip keeps it.
+ */
+let installedLookNames = null;
+export function installSeedlingGenLooks(lookModule) {
+    const names = lookModule?.GEN_LOOK_NAMES;
+    if (!Array.isArray(names) || names.some((n) => typeof n !== 'string' || n === '')) {
+        throw new Error(`${FLASH_SEEDLING_GEN_SUBSTRATE_ID}: the module handed to installSeedlingGenLooks is `
+            + `not the look module — it lacks \`GEN_LOOK_NAMES\` (install \`${SEEDLING_GEN_LOOK_MODULE_PATH}\`).`);
+    }
+    installedLookNames = Object.freeze([...names]);
+    return installedLookNames;
+}
+
+/** The installed look names, or null before either door ran. */
+export const seedlingGenLookNames = () => installedLookNames;
 export const hostsChildren = (regionParams) => regionParams?.seedlingGen?.hostChildren !== false;
 
 /**
@@ -282,6 +318,10 @@ export function buildSeedlingGenRegionParams({ params = {} } = {}) {
     if (String(params[SEEDLING_GEN_REQUIRE_KEY] ?? '').trim() !== '') {
         seedlingGen.require = String(params[SEEDLING_GEN_REQUIRE_KEY]).trim();
     }
+    /** ⛓ seedling-js-panel-look — the look, ONLY WHEN GIVEN, as `require`. */
+    if (String(params[SEEDLING_GEN_LOOK_KEY] ?? '').trim() !== '') {
+        seedlingGen.look = String(params[SEEDLING_GEN_LOOK_KEY]).trim();
+    }
     return { seedlingGen };
 }
 
@@ -292,6 +332,7 @@ export function seedlingGenProcgenParamsFromPayload(payload) {
     const out = {};
     for (const [bagKey, knob] of Object.entries(KNOB_OF)) if (knob in g) out[bagKey] = g[knob];
     if ('require' in g) out[SEEDLING_GEN_REQUIRE_KEY] = g.require;
+    if ('look' in g) out[SEEDLING_GEN_LOOK_KEY] = g.look;
     return out;
 }
 
@@ -315,6 +356,32 @@ function textRow(params, key, label, title, onChange) {
     input.placeholder = 'the generator\'s default';
     input.addEventListener('change', () => { params[key] = input.value.trim(); onChange(); });
     return fieldRow(label, title, input);
+}
+
+/**
+ * The look row's choices `[value, label]`: "(none)" (`''`), then the installed
+ * looks, then the bag's own look if the list lacks it (not installed yet, or a
+ * name the room will refuse by name at build) — so the select never drops it.
+ */
+export function seedlingGenLookOptions(current = '') {
+    const names = installedLookNames ?? [];
+    const own = String(current ?? '').trim();
+    return [['', SEEDLING_GEN_LOOK_NONE_LABEL], ...names.map((n) => [n, n]),
+        ...(own !== '' && !names.includes(own) ? [[own, own]] : [])];
+}
+
+function lookRow(params, onChange) {
+    const select = document.createElement('select');
+    for (const [value, label] of seedlingGenLookOptions(params[SEEDLING_GEN_LOOK_KEY])) {
+        const o = document.createElement('option');
+        o.value = value;
+        o.textContent = label;
+        select.appendChild(o);
+    }
+    select.value = String(params[SEEDLING_GEN_LOOK_KEY] ?? '').trim();
+    select.addEventListener('change', () => { params[SEEDLING_GEN_LOOK_KEY] = select.value; onChange(); });
+    return fieldRow('Look', 'The tileset the finished room\'s floor and walls are painted in (cosmetic); '
+        + '(none) = today\'s Ground / Stone', select);
 }
 
 /** The per-substrate controls (drawn by the shared per-region form). Call-time DOM only. */
@@ -341,6 +408,7 @@ export function renderSeedlingGenProcgenParams({ params, onChange = () => {} } =
         + 'REQUIRED; empty = no directive', onChange));
     wrap.appendChild(selectRow(params, 'seedlingGenFill', 'Fill',
         'dense keeps every wall; shell strips walls no floor touches', ['dense', 'shell'], onChange));
+    wrap.appendChild(lookRow(params, onChange));
     return wrap;
 }
 

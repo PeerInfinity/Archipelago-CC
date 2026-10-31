@@ -191,7 +191,7 @@ describe('MessageHandler: rules built from server data', () => {
     await flush(10);
 
     const kinds = calls.map(([kind]) => kind);
-    expect(kinds).toEqual(['files:jsonLoaded', 'applyRuntimeStateData', 'addItemToInventory', 'addItemToInventory']);
+    expect(kinds).toEqual(['files:jsonLoaded', 'applyRuntimeStateData', 'applyRuntimeStateData']);
     const load = calls[0][1];
     expect(load.selectedPlayerId).toBe(1);
     expect(load.sourceName).toBe(`server:${SEED}:P1`);
@@ -206,7 +206,11 @@ describe('MessageHandler: rules built from server data', () => {
     const order = bus.published.map((p) => p.event);
     expect(order.indexOf('game:connected')).toBeGreaterThan(order.indexOf('files:jsonLoaded'));
     expect(order.lastIndexOf('game:locationsScouted')).toBeGreaterThan(order.indexOf('stateManager:rulesLoaded'));
-    expect(calls.slice(2).map(([, name]) => name)).toEqual(['Statement 1', 'Statement 3']);
+    // ⚖ The plain rule: Connected re-adds only the ID-less starting items from the built rules,
+    // and ReceivedItems index 0 REPLACES the inventory with the server's items.
+    expect(calls[1][1]).toMatchObject({ startingItemsFromServer: true });
+    expect(calls[2][1]).toMatchObject({ resetInventory: true, startingItemsFromServer: true, rederiveIdlessLocations: true });
+    expect(calls[2][1].receivedItemsForProcessing.map((d) => d.itemName)).toEqual(['Statement 1', 'Statement 3']);
     expect(consoleLines(bus).some((m) => /Built Metamath rules for 2p2e4 \(10 statements, entrance mode 3\)/.test(m))).toBe(true);
     expect(sent('LocationScouts')).toHaveLength(1);
   });
@@ -217,7 +221,7 @@ describe('MessageHandler: rules built from server data', () => {
     await flush(10);
 
     expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(0);
-    expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'addItemToInventory', 'addItemToInventory']);
+    expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'applyRuntimeStateData']);
     expect(consoleLines(bus).some((m) => /Could not build Metamath rules .*proof_structure.*Staying connected/.test(m))).toBe(true);
     expect(handler._serverBuild).toBe(null);
   });
@@ -286,13 +290,27 @@ describe('MessageHandler: rules built from server data', () => {
 
     expect(handler._serverBuild).toBe(null);
     expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(0);
-    expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'addItemToInventory', 'addItemToInventory']);
+    expect(calls.map(([kind]) => kind)).toEqual(['applyRuntimeStateData', 'applyRuntimeStateData']);
     expect(sent('LocationScouts')).toHaveLength(1);
     // LocationInfo is only recorded: no build, no second scout, no load
     handler.processMessage(LOCATION_INFO);
     await flush(10);
     expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(0);
     expect(handler.getScoutedLocations()).toHaveLength(placements.length);
+
+    // An incremental ReceivedItems (index > 0) still ADDS, in one worker batch, as before the plain rule.
+    calls.length = 0;
+    stateManagerMock.beginBatchUpdate.mockClear();
+    stateManagerMock.commitBatchUpdate.mockClear();
+    handler.processMessage({
+      cmd: 'ReceivedItems',
+      index: 2,
+      items: [{ item: metamathItems['Statement 4'], location: 2, player: 2, flags: 1 }],
+    });
+    await flush(10);
+    expect(calls).toEqual([['addItemToInventory', 'Statement 4']]);
+    expect(stateManagerMock.beginBatchUpdate).toHaveBeenCalledTimes(1);
+    expect(stateManagerMock.commitBatchUpdate).toHaveBeenCalledTimes(1);
   });
 
   it('a disconnect abandons the build', async () => {
@@ -301,5 +319,106 @@ describe('MessageHandler: rules built from server data', () => {
     handler.processMessage(connected());
     bus.publish('connection:close');
     expect(handler._serverBuild).toBe(null);
+  });
+});
+
+describe('MessageHandler: DepGraph rules built from server data', () => {
+  // Player 1 (DG, DepGraph tech_tree, entrance mode 3, starting nodes 1 5 8) of a DepGraph + APQuest room.
+  const DG = JSON.parse(
+    readFileSync(
+      join(HERE, '..', '..', 'proofShared', 'fixtures', 'depgraphRulesBuilder', 'mode3_with_apquest_P1.json'),
+      'utf8'
+    )
+  );
+  const dgPlacements = Object.values(DG.regions['1'])
+    .flatMap((region) => region.locations)
+    .filter((location) => location.id !== null);
+  const dgItems = Object.fromEntries(
+    Object.values(DG.items['1'])
+      .filter((item) => /^Node \d+$/.test(item.name))
+      .map((item) => [item.name, item.id])
+  );
+  const questItems = { Key: 1, 'Health Upgrade': 5 };
+
+  let handler;
+  let bus;
+
+  beforeEach(() => {
+    connectionMock.send.mockClear();
+    calls.length = 0;
+    stateManagerMock.staticData = { game_name: 'Adventure', playerId: '1', world: { 1: { game: 'Adventure' } } };
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 404 })));
+    for (const method of ['warn', 'error', 'log', 'debug']) vi.spyOn(console, method).mockImplementation(() => {});
+    handler = new MessageHandler();
+    bus = makeBus();
+    handler.setEventBus(bus);
+    handler._requestDataPackage = vi.fn();
+    handler.clientSlotName = 'DG';
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('a picked DepGraph in a multi-game room builds and loads the exporter-equivalent rules once', async () => {
+    handler.chosenGame = 'DepGraph';
+    handler.processMessage({
+      cmd: 'RoomInfo',
+      games: ['Archipelago', 'APQuest', 'DepGraph'],
+      seed_name: DG.seed_name,
+      version: { major: 0, minor: 6, build: 8 },
+    });
+    handler.processMessage({
+      cmd: 'DataPackage',
+      data: {
+        games: {
+          DepGraph: {
+            item_name_to_id: dgItems,
+            location_name_to_id: Object.fromEntries(dgPlacements.map((l) => [l.name, l.id])),
+          },
+          APQuest: { item_name_to_id: questItems, location_name_to_id: {} },
+        },
+      },
+    });
+    await flush();
+    handler.processMessage({
+      cmd: 'Connected',
+      slot: 1,
+      team: 0,
+      players: [
+        { team: 0, slot: 1, alias: 'DG', name: 'DG' },
+        { team: 0, slot: 2, alias: 'Quester', name: 'Quester' },
+      ],
+      missing_locations: dgPlacements.map((l) => l.id),
+      checked_locations: [],
+      slot_data: DG.world['1'].slot_data,
+      slot_info: {
+        1: { name: 'DG', game: 'DepGraph', type: 1, group_members: [] },
+        2: { name: 'Quester', game: 'APQuest', type: 1, group_members: [] },
+      },
+    });
+    await flush();
+    expect(sent('Connect')[0]).toMatchObject({ game: 'DepGraph', name: 'DG' });
+    expect(calls).toEqual([]);
+
+    handler.processMessage({
+      cmd: 'LocationInfo',
+      locations: dgPlacements.map((l) => ({
+        item: l.item.player === 1 ? dgItems[l.item.name] : questItems[l.item.name],
+        location: l.id,
+        player: l.item.player,
+        flags: { progression: 1, useful: 2, trap: 4 }[DG.items['1'][l.item.name].classification] ?? 0,
+      })),
+    });
+    await flush(10);
+
+    expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(1);
+    const load = calls.find(([kind]) => kind === 'files:jsonLoaded')[1];
+    expect(load.jsonData.game_name).toBe('DepGraph');
+    expect(load.jsonData.regions).toEqual(DG.regions);
+    expect(load.jsonData.items).toEqual(DG.items);
+    expect(load.jsonData.starting_items).toEqual(DG.starting_items);
+    expect(consoleLines(bus).some((m) => /Built DepGraph rules for tech_tree \(\d+ nodes, entrance mode 3\)/.test(m))).toBe(true);
   });
 });

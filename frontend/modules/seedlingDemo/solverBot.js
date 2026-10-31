@@ -213,6 +213,9 @@ import { activeProgress, progressAsked, progressCaches, progressEnter, progressF
 // ⛓ hammer-phase LB (HX) — the press kill's shake-band and reboot guards (`PRESS_KILL_SHAKE_GUARD`, `PRESS_KILL_REBOOT_GUARD`, ON since GF).
 import { PRESS_KILL_GUARD_COUNTS, PRESS_KILL_REBOOT_GUARD, PRESS_KILL_SHAKE_GUARD, isShakeBandThrow }
     from './pressKillGuards.js';
+// ⛓ hammer-phase SPIN — the escape's claim through a carried shield (`PRESS_ESCAPE_SHIELD_CLAIM`, OFF) and the kill's done sink.
+import { PRESS_ESCAPE_SHIELD_CLAIM, PRESS_ESCAPE_SHIELD_CLAIM_COUNTS, PRESS_KILL_DONE_TRACE, shieldEnvelopeMeets,
+    shieldOnlyUnmodelled } from './pressKillGuards.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
 import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
 // ⛓ seedling-fidelity-axeforcedu D2 — a spinning axe's forced U, crossed and billed (`AXE_PRICED_CROSSING`, OFF).
@@ -14944,25 +14947,43 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     }
     const direction = st.direction;
     const probe = run.spinnerForecastWithPress(0, { pressAt, direction, id, positions: [] });
-    if (probe.unmodelled.length > 0) {
+    /**
+     * ⛓ hammer-phase SPIN (`PRESS_ESCAPE_SHIELD_CLAIM`, OFF ⇒ `false` and the no-claim below is OFF's) — the shield
+     * bump as the ONLY unmodelled source: the escape is asked of the bump-blind forecast, a certificate is adopted only
+     * where the shield's envelope meets no body on its path, and of the negatives only an exhausted search is claimed
+     * (`shieldNoClaim` keeps every other one OFF's no-claim). The docblock is the switch's (`pressKillGuards.js`).
+     */
+    const shieldClaim = PRESS_ESCAPE_SHIELD_CLAIM.enabled && shieldOnlyUnmodelled(probe.unmodelled);
+    if (probe.unmodelled.length > 0 && !shieldClaim) {
         return { ok: false, claim: false, why: `the forecast names ${probe.unmodelled.join(', ')} as unmodelled` };
     }
+    if (shieldClaim) PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.asked += 1;
+    const unmodelledWhy = `the forecast names ${probe.unmodelled.join(', ')} as unmodelled`;
+    const shieldNoClaim = (r) => {
+        if (!shieldClaim || r.ok) return r;
+        PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.noClaim += 1;
+        return { ok: false, claim: false, why: `${unmodelledWhy} (PRESS_ESCAPE_SHIELD_CLAIM: ${r.why})` };
+    };
     st = stepOrNull({ ...st }, PRESS, { dashImpulse: probe.impulse });
-    if (!st) return died(pressAt + 1);
+    if (!st) return shieldNoClaim(died(pressAt + 1));
     states.set(pressAt + 1, st);
     // ⛓ hammer-phase C2: the press's own train (`strikePressOf`: seven tests for a ghost swing)
     const trainEnd = pressAt + strikePressOf(run).hitTicks;
     for (let t = pressAt + 1; t < trainEnd + 1; t += 1) {
         st = stepOrNull({ ...st }, NO_KEYS);
-        if (!st) return died(t + 1);
+        if (!st) return shieldNoClaim(died(t + 1));
         states.set(t + 1, st);
     }
     const { horizon, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
     const rowsFor = (land) => land + horizon + 2 - n;
     const first = run.spinnerForecastWithPress(rowsFor(trainEnd), { pressAt, direction, id,
         positions: (t) => states.get(t) ?? null });
-    if (first.lineBlocked) return { ok: false, claim: true, bound: 'line', why: 'the press\'s line of sight is blocked' };
-    if (!first.landing) return { ok: false, claim: true, bound: 'no-landing', why: `the press does not land: ${first.why}` };
+    if (first.lineBlocked) {
+        return shieldNoClaim({ ok: false, claim: true, bound: 'line', why: 'the press\'s line of sight is blocked' });
+    }
+    if (!first.landing) {
+        return shieldNoClaim({ ok: false, claim: true, bound: 'no-landing', why: `the press does not land: ${first.why}` });
+    }
     const L = first.landing.t;
     /**
      * ⛓ HAMMER-PHASE A2 — **AN ESCAPE NEVER WALKS ONTO LETHAL FLOOR.** The prune was the hammer predicate alone, so
@@ -14983,8 +15004,8 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     };
     for (let t = at + 1; t <= L; t += 1) {
         if (!safe(states.get(t), t - n)) {
-            return { ok: false, claim: true, bound: 'approach', why: `the approach or the train meets a body or the `
-                + `line at t${t}, before the press lands` };
+            return shieldNoClaim({ ok: false, claim: true, bound: 'approach', why: `the approach or the train meets a `
+                + `body or the line at t${t}, before the press lands` });
         }
     }
     const search = (start, startIndex, rows, phase) => traced(phase, spaceTimeReach({
@@ -15001,7 +15022,9 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         if (r.ok) return null;
         // ⚠ a search cut by its BUDGET proves nothing either way: only an EXHAUSTED one refuses the press
         if (r.bound === 'deadline' || r.bound === 'expansions') return { ok: false, claim: false, why: r.why };
-        return { ok: false, claim: true, bound: r.bound, why: `no ESCAPE from the landing at t${L} (${pre}): ${r.why}` };
+        const claimed = { ok: false, claim: true, bound: r.bound, why: `no ESCAPE from the landing at t${L} (${pre}): ${r.why}` };
+        if (shieldClaim && r.bound === 'exhausted') PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.exhausted += 1;
+        return shieldClaim && r.bound !== 'exhausted' ? shieldNoClaim(claimed) : claimed;
     };
     // ⛓ First: free from the landing. Then re-aim the remaining tests from the certificate's own points.
     let found = search(states.get(L), L - n, first.rows, 'free');
@@ -15016,8 +15039,8 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         // ⛓ The fallback: the whole train stood, the search from its last test.
         for (let t = L + 1; t <= trainEnd + 1; t += 1) {
             if (!safe(states.get(t), t - n)) {
-                return { ok: false, claim: true, bound: 'train', why: `the escape moves the train's later tests, and `
-                    + `the train stood meets a body or the line at t${t}` };
+                return shieldNoClaim({ ok: false, claim: true, bound: 'train', why: `the escape moves the train's later `
+                    + `tests, and the train stood meets a body or the line at t${t}` });
             }
         }
         pre = Array.from({ length: trainEnd + 1 - L }, () => NO_KEYS);
@@ -15025,10 +15048,23 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         const bad2 = verdict(found, trainEnd + 1, 'the train stood');
         if (bad2) return bad2;
     }
+    const certified = [...pre.map((_, k) => states.get(L + k)), ...found.states];
+    if (shieldClaim) {
+        const path = [];
+        for (let t = at; t <= L; t += 1) path.push([t - n, states.get(t)]);
+        certified.forEach((q, k) => { if (k > 0) path.push([L - n + k, q]); });
+        const met = shieldEnvelopeMeets(path, first.rows);
+        if (met !== null) {
+            PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.envelope += 1;
+            return { ok: false, claim: false, why: `${unmodelledWhy} (PRESS_ESCAPE_SHIELD_CLAIM: the certificate's `
+                + `path puts the shield's envelope on a body at t${n + met})` };
+        }
+        PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.certified += 1;
+    }
     return {
         ok: true, claim: true, pressAt, landing: L, outcome: first.outcome, impulse: first.impulse,
         keys: [...pre, ...found.keys], expansions: found.expansions,
-        states: [...pre.map((_, k) => states.get(L + k)), ...found.states],
+        states: certified,
     };
 }
 
@@ -18622,6 +18658,9 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
      * on while it runs. ⚠ The wait happens at the LOITER cell: a fade is a
      * WAIT, and trap 154's question is asked of it exactly as of a dwell.
      */
+    // ⛓ hammer-phase SPIN — every counted body is gone: the kill's keys, for a witness (inert while the sink is `null`)
+    PRESS_KILL_DONE_TRACE.sink?.({ bodies: resolved.plans.map((p) => p.id), from, t: perTick.length,
+        landings: landings.map((l) => ({ ...l })), perTick: perTick.slice(), equips: run.ledger('equipsFired') ?? [] });
     const fade = resolved.lock
         ? opensOnTick(RESPONDERS[resolved.lock.tag]?.fade ?? RESPONDERS.lock.fade)
         : 0;

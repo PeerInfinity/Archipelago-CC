@@ -47,6 +47,8 @@
  *     ├─> receivedItemsForProcessing (array)
  *     ├─> inventory (object) - JSON export format
  *     ├─> checkedLocations (array) - JSON export format
+ *     ├─> startingItemsFromServer (bool) - re-add only ID-less starting items on a reset
+ *     ├─> rederiveIdlessLocations (bool) - a reset that keeps checkedLocations re-derives events
  *
  *   Processing:
  *     ├─> Reset or preserve inventory based on resetInventory flag
@@ -73,6 +75,7 @@
 import { initializeGameLogic, getGameLogic } from '../../shared/gameLogic/gameLogicRegistry.js';
 import { DEFAULT_PLAYER_ID } from '../../shared/playerIdUtils.js';
 import { buildSubstitutionMaps, getDisplayName } from '../../shared/nameSubstitutions.js';
+import { autoCollectsEvent } from './eventKinds.js';
 
 // Module-level helper for logging
 /**
@@ -1070,8 +1073,16 @@ export function applyRuntimeState(sm, payload) {
     // No need to assign them to inventory object
 
     // Re-add starting items (precollected items like keycards in SMZ3 when Keysanity is off)
-    // These should always be present after a reset, just like at initial load
-    const startingItems = sm.rules?.starting_items?.[sm.playerId] || [];
+    // These should always be present after a reset, just like at initial load.
+    // ⚖ The plain rule (server-data arc, 2026-10-30): when the inventory comes from a server,
+    // an ID-bearing starting item arrives in ReceivedItems (location -2), so only the ID-less
+    // ones (events, which the server never sends) come from the LOADED rules' starting_items
+    // (a preset, a procgen rules.json, or rules built from server data). Offline callers
+    // don't pass the flag and keep every starting item.
+    let startingItems = sm.rules?.starting_items?.[sm.playerId] || [];
+    if (payload.startingItemsFromServer) {
+      startingItems = startingItems.filter((itemName) => sm.itemData?.[itemName]?.id == null);
+    }
     if (startingItems.length > 0) {
       sm._logDebug(
         `[StateManager applyRuntimeState] Re-adding ${startingItems.length} starting items for player ${sm.playerId}`
@@ -1091,6 +1102,25 @@ export function applyRuntimeState(sm, payload) {
     sm._logDebug(
       '[StateManager applyRuntimeState] Preserving existing inventory (incremental update).'
     );
+  }
+
+  // 2b. A full reset that keeps checkedLocations (ReceivedItems index 0, /sync) has just dropped
+  // every item an ID-less location gave. Un-check the ones the reachability pass collects, so it
+  // collects them again; re-add the ones it never collects (a `game_state` event: the game set it).
+  if (isFullReset && payload.rederiveIdlessLocations && sm.checkedLocations) {
+    for (const locMap of [sm.eventLocations, sm.localItemLocations]) {
+      for (const loc of locMap?.values() || []) {
+        if (!sm.checkedLocations.has(loc.name)) continue;
+        if (locMap === sm.localItemLocations || autoCollectsEvent(loc)) {
+          sm.checkedLocations.delete(loc.name);
+        } else if (loc.item?.name) {
+          sm._addItemToInventory(loc.item.name, 1);
+          if (sm.gameStateModule && typeof sm.logicModule?.processEventItem === 'function') {
+            sm.gameStateModule = sm.logicModule.processEventItem(sm.gameStateModule, loc.item.name) || sm.gameStateModule;
+          }
+        }
+      }
+    }
   }
 
   // 3. Clear pathfinding cache and related structures

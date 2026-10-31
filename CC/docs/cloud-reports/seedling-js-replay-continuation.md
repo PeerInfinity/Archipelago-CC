@@ -165,3 +165,34 @@ Nothing.
 - **The bounded liberty above.** A tape at the game's first frame, or at a host-teleported room, rebuilds in JS but not in the game. If a caller ever needs the game's exact behaviour there, it needs a ruling. Today only the sequence tail continues, and its first window is meant to be fresh.
 - **A continuation window's `grants`/`despawn` are not applied**, exactly as in the model walk (the resume face applies only the clock, plus the walk's forward clears and equips). The game's `applyGrantsFor` does run per window. No committed chain trips this (30/30 agree), but it is a model-side gap rather than a frame one.
 - **`continuationFindings` on a JS window reads no `dead_frames`**: the JS `botStatus` has none. It reports that by name (informational), not as a refusal.
+
+## Landing
+
+Landed by the local slice `seedling-js-cloud-landings` (gate: `seedling-js-planning-13`, then `seedling-js-planning-14`),
+on 2026-10-31 UTC, as a plain fast-forward of `main` to **`3527b46f74`** (from `63101b5dee`).
+
+- **History on `js-land/seedling-js-replay-continuation`:** the cloud tip `66479fd841` (based on `bf28908179`), then
+  five clean merges of `origin/main`: `a7d40b84cb`, `2ce525e323` (gen-terrains; `watchViewer.js` auto-merged GENERATE
+  vs the REPLAY ship), `0ebdd65b7f` (DASH + block-stoppers), `9d790feb67` and `63101b5dee`. None needed hand
+  resolution. The generated reference was `--check` ALL MATCH after each, and the gitlink count stayed 0.
+- **The lab review's two notes** (`seedling-lab-planning-1`'s PASS), both fixed in `895a5dc37b`:
+  1. In REPLAY with `?tapes=`, ▶ load in JS now starts DISABLED with its reason (`JS_SEQUENCE_NOT_ADMITTED`) until
+     `runJsSequence` sets `jsSequenceWalk`, and re-arms right after it. Pinned in `watchWasmJs.test.js`: the pin runs
+     the page's own `setJsShippable`/`replayJsSequenceShip` over a stub button, plus the unguarded mutant (enabled,
+     and `build` rejects).
+  2. The JS window k>0 keeping `continuationTape`'s `forwardRows` is exact. They are read off the timed persistence
+     rows before the `tick0` branch, and the shipped `gameVisibleTape` withholds the same rows (⚖ ruling 23).
+     Recomputing them from `gameVisibleTape` would read `[]`. The projection is now `watchWasm.windowProjection`,
+     and its equality with and without the tick-0 write is pinned.
+- **`reachClosure.test.js` "the 166 row"** (`5240d4c9f6`, ruled by `seedling-js-planning-14`): the hard-coded
+  `< 60` was crossed by two legitimate consumers, `hammerDashWindow.test.js` (DASH, at 59) and
+  `jsRuntimeContinuation.test.js` (this branch, at 60). The bound is now relative: `precise < naive/2` and
+  `precise < substring`. That day's values were 60, 434 and 70. Both mutants red.
+- **Gates at `3527b46f74`:**
+  - JSUT 41156898785 ✅ (13 jobs) and unittests 41156898758 ✅.
+  - Carried from `92c2755a08`: TT 41126021406 ✅ (8 jobs) and `seedling-probe.yml` standard 41126025348 ✅ (11 probes).
+  - The lab-shard lines: `seedling-lab-load-in-js | 41/0` (with the SEQUENCE case), `seedling-lab-art | 105/0`,
+    `seedling-editor-manual | 63/0`, `seedling-editor-switch | 62/0` and `seedling-wasm-ship | 415/0`.
+- **Residue (logged by the gate):** the JS k>0 path still inherits `continuationTape`'s `tick0Missing` refusal
+  (`watchWasm.js`, the tier-2 backstop in `shipToFrame`'s window loop), although the JS frame never applies `tick0`.
+  That is a conservative over-refusal, safe, and deliberately left as is.
