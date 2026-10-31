@@ -2,6 +2,7 @@
 // One line per (biome, seed): the stop, or the ABORT and the engine's sentence. `caldera-cf` is the lab's
 // counterfactual (caldera's items + terrain WITHOUT `floodWalks`).
 //   node census-direction-throws.mjs <biome> <seedFrom-seedTo> [skeleton=empty] [obstacles=8]
+import { createHash } from 'node:crypto';
 import { CALDERA_PALETTE } from '../../../../frontend/modules/seedlingDemo/procgenPalette.js';
 import { generateSeedlingLevel, seedlingSkeletonSpec } from '../../../../frontend/modules/seedlingDemo/procgenSeedling.js';
 import { paletteWithTerrains } from '../../../../frontend/modules/seedlingDemo/watchGenerate.js';
@@ -15,7 +16,9 @@ for (let seed = a; seed <= (b ?? a); seed++) {
     try {
         const out = generateSeedlingLevel({ seed, palette,
             bounds: { obstacleTarget: Number(obst), triesPerStep: 4, saturationK: 4 }, skeleton: seedlingSkeletonSpec(skel) });
-        row = { biome, skel, seed, stop: out.summary.stop };
+        const sha = (o) => createHash('sha256').update(JSON.stringify(o)).digest('hex').slice(0, 16);
+        row = { biome, skel, seed, stop: out.summary.stop, record: sha(out.record),
+            trace: sha(out.trace.map((r) => [r.instance, r.at, r.outcome, r.verdict, r.reasonText ?? null])) };
     } catch (e) {
         const inner = e.cause ?? e;
         row = { biome, skel, seed, ABORT: inner.name, msg: String(inner.message).split('\n')[0].slice(0, 200),
