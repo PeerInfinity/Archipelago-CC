@@ -14,6 +14,7 @@ import {
   DEPGRAPH_GAME,
   summarizeDepgraphRules,
 } from '../../proofShared/depgraphRulesBuilder.js';
+import { APCALC_GAME, buildApcalcRules, summarizeApcalcRules } from '../../apcalc/apcalcRulesBuilder.js';
 
 export { versionString } from '../../proofShared/proofGraphRulesBuilder.js';
 
@@ -22,6 +23,7 @@ export { versionString } from '../../proofShared/proofGraphRulesBuilder.js';
 const BUILDERS = {
   [METAMATH_GAME]: { build: buildMetamathRules, summarize: summarizeMetamathRules },
   [DEPGRAPH_GAME]: { build: buildDepgraphRules, summarize: summarizeDepgraphRules },
+  [APCALC_GAME]: { build: buildApcalcRules, summarize: summarizeApcalcRules },
 };
 
 /** @returns {boolean} Whether `game`'s rules can be built from server data. */
