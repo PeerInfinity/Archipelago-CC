@@ -104,7 +104,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_WEIGH_HYPOTHESIS_CHAIN || !!process.env.SEEDLING_DASH_SPINNER_FORECAST
         || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT
         || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO
-        || !!process.env.SEEDLING_BAIT_PARKED_TAIL)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_BAIT_PARKED_TAIL
+        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
