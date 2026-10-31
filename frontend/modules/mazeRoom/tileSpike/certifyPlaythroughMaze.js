@@ -250,6 +250,9 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
                 continue;
             }
             if (!l.event || bound.has(l.name) || !l.obstacle) continue;
+            // ⛓ A TALK is produced as a location on its NPC's talk circle (session tile-primitives-sphere-order-8): an item
+            // cell like a press's. Calling it unproducible misnamed L113's finaldoor row (slice rules-certifier-tail).
+            if (l.action?.verb === 'talk' && pressed.has(l.name)) continue;
             const why = l.action?.presser ? `a press in L${l.action.presser.level}, another level`
                 : l.action?.verb === 'talk' ? 'a talk' : `its ${l.obstacle.class} is not in the maze world`;
             unproducible.set(l.item?.name ?? l.name, why);
