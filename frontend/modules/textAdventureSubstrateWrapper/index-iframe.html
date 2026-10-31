@@ -20,6 +20,13 @@
         #status.connected { color: #88cc88; background: #1a2d1a; }
         #status.error { color: #cc8888; background: #2d1a1a; }
         #app { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+        /* An exit/location whose access rule threw: still passable (keeps its
+           own colour and stays clickable), marked by a wavy amber underline;
+           the title tooltip names the error. */
+        .tae-link.tae-link-rule-error {
+            text-decoration: underline wavy #d4a017;
+            text-underline-offset: 3px;
+        }
     </style>
 </head>
 <body>

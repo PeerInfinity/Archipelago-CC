@@ -114,6 +114,8 @@ Two measurements shaped the world:
 
 - **Unknown accessibility is shut.** The wrapper builds its world from static data, which can reach the iframe before the state snapshot does (the snapshot is a `pingWorker` round trip). The engine seeds every exit as accessible, and the bridge used to skip the evaluation until the snapshot came. So for 10–50 ms the guarded exit painted open, and could be clicked, with no sword held. That was the gate's Phase A flake: 5 of ~145 CI runs. `roomAccessibility.js` now reports every exit and location inaccessible until there is a snapshot to evaluate against. The gate's Phase A0 forces that ordering by holding the iframe's snapshot back.
 
+- **A rule that throws is passable, and marked.** That is a different question from unknown state. When the evaluator throws on an exit's or location's rule, `roomAccessibility.js` still reports it accessible, so the player is never softlocked. The message goes into the result's `ruleErrors` and is logged with `console.error` once per evaluation pass, naming the room, the exit or location, and the message. The bridge's `ruleErrorMarker.js` re-applies the class `tae-link-rule-error` after every engine render: a wavy amber underline, with a `title` tooltip naming the error. The link keeps its `tae-link-accessible` colour.
+
 `check-concept-trial-play.mjs` plays the world from a fresh page load: the guardian's prose, the sword, the maze's gate read closed by the renderer's clearance and by `whyBlocked`, the swim, the gate read cleared, victory, and world completion. The in-app row `concept-trial-plays` asserts the maze world's gate definition and colours, and the guardian's two messages.
 
 ## What the chart reads
