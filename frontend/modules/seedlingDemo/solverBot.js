@@ -2355,7 +2355,8 @@ function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
             missed += 1;
             continue;
         }
-        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis)
+        const coarse = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        const reached = coarse
             ?? (CONTACT_FIDELITY.fineWandStance ? fineWandStanceReaches(run, c, contacts) : null);
         if (!reached) { unreached += 1; continue; }
         const here = run.state.x === c.x && run.state.y === c.y;
@@ -2365,7 +2366,8 @@ function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
             lock: lock.id,
             tag: lock.tag,
             lockType: lock.lockType,
-            stance: here ? null : { x: c.x, y: c.y },
+            // ⛓ L100LATTICE D1: a stance only the 8 px ask reached is walked on that lattice (`fineStance`).
+            stance: here ? null : (coarse ? { x: c.x, y: c.y } : fineStance(c)),
             at: { ...leaned },
             lean: c.key,
             direction: WAND_LEAN_DIRECTION[c.key],
@@ -5989,6 +5991,22 @@ export const FINE_LATTICE = TILE_SIZE / 2;
  * `economies` is; this constant is the roster-wide default.
  */
 export const FINE_LATTICE_ROSTER_WIDE = true;
+
+/**
+ * ⛓⛓ fidelity L100LATTICE D1 (`CONTACT_FIDELITY.fineStanceWalk`, OFF) — **THE STANCES AN 8 px ARM ANSWERED.** A stance
+ * whose existence the 8 px lattice decided (the 16 px ask refused it, or no 16 px cell names it) is a stance the 16 px
+ * WALK may not reach: `nearestGoalNode` aims at a 16 px node up to two cells away and the string-pull's fallback keeps
+ * the target as a last segment whose clearance nothing checks. Measured, survey step 219 (L100): `fineSwingStance`'s
+ * (124,140) walked as `… (104,136) (124,140)` through `cliffside0@112,128`, a 400-tick stall. So such a stance is
+ * MARKED here (an identity set: nothing is added to the object, so no record or trace that carries it changes) and
+ * `walkToUnder` plans the walk to a marked aim on `FINE_LATTICE` first. OFF: the same `{x, y}`, unmarked.
+ */
+const FINE_STANCES = new WeakSet();
+function fineStance(c) {
+    const stance = { x: c.x, y: c.y };
+    if (CONTACT_FIDELITY.fineStanceWalk) FINE_STANCES.add(stance);
+    return stance;
+}
 
 /**
  * The point a reach-exit walks at: the trigger's centre, or — when the player
@@ -11174,12 +11192,14 @@ function resolveBridgeStrategy(run, obstacle, contacts) {
                 continue;
             }
             const here = run.state.x === c.x && run.state.y === c.y;
+            let viaFine = false; // ⛓ L100LATTICE D1: the 8 px ask answered (`fineStance`)
             if (!here) {
                 let ok = false;
                 for (const lattice of [DEFAULT_LATTICE, FINE_LATTICE]) {
                     try {
                         planWaypoints(run.world, run.state, c, null, solverPlanOpts(run, contacts, { lattice }));
                         ok = true;
+                        viaFine = lattice === FINE_LATTICE;
                         break;
                     } catch (e) {
                         if (!(e instanceof BotDriverV2Error)) throw e;
@@ -11187,7 +11207,8 @@ function resolveBridgeStrategy(run, obstacle, contacts) {
                 }
                 if (!ok) { tried.push(`no corridor reaches ${at}`); continue; }
             }
-            found.push({ stance: { x: c.x, y: c.y }, dir, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+            found.push({ stance: viaFine ? fineStance(c) : { x: c.x, y: c.y }, dir,
+                d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
         }
     }
     if (found.length === 0) {
@@ -11354,10 +11375,12 @@ function resolvePoleThrustStrategy(run, obstacle, contacts) {
         if (traps.some((b) => rectsOverlapLocal(playerBoxAt(c.x, c.y), b.rect))) { unsafe += 1; continue; }
         const here = Math.abs(run.state.x - c.x) < 0.5 && Math.abs(run.state.y - c.y) < 0.5;
         let ok = here;
+        let viaFine = false; // ⛓ L100LATTICE D1: the 8 px ask answered (`fineStance`)
         for (const lattice of here ? [] : [DEFAULT_LATTICE, FINE_LATTICE]) {
             try {
                 planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null, solverPlanOpts(run, contacts, { lattice }));
                 ok = true;
+                viaFine = lattice === FINE_LATTICE;
                 break;
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
@@ -11373,7 +11396,7 @@ function resolvePoleThrustStrategy(run, obstacle, contacts) {
             slot: arm.slot,
             reach: arm.reach,
             dir: c.dir,
-            stance: { x: c.x, y: c.y },
+            stance: viaFine ? fineStance(c) : { x: c.x, y: c.y },
             core,
             rejected: [{
                 option: ghost ? 'a plain sword swing / a second swing' : 'a sword slash / a second thrust',
@@ -20062,7 +20085,7 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
             try {
                 planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
                     solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
-                return { stance: { x: c.x, y: c.y }, discharged: [] };
+                return { stance: fineStance(c), discharged: [] }; // ⛓ L100LATTICE D1
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
             }
@@ -21032,12 +21055,12 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
         if (STANCE_ROCKS.enabled) {
             for (const c of fresh) {
                 const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, () => [], FINE_LATTICE);
-                if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+                if (reached) return { stance: fineStance(c), discharged: reached.discharged }; // ⛓ L100LATTICE D1
             }
         }
         for (const c of fresh) {
             const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis, FINE_LATTICE);
-            if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+            if (reached) return { stance: fineStance(c), discharged: reached.discharged }; // ⛓ L100LATTICE D1
         }
     }
     throw new SolverRefusal(refusal({ candidates, outOfReach, noRect, unsafe }),
@@ -24601,14 +24624,14 @@ function deriveLightPole(run, body, contacts, blocked = []) {
                 try {
                     planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
                         solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
-                    reached = { discharged: [] };
+                    reached = { discharged: [], fine: true }; // ⛓ L100LATTICE D1: `fine` read below only
                 } catch (e) {
                     if (!(e instanceof BotDriverV2Error)) throw e;
                 }
             }
             if (!reached) { unreached += 1; continue; }
             return {
-                pole, stance: { x: c.x, y: c.y }, dir: c.dir, discharged: reached.discharged,
+                pole, stance: reached.fine ? fineStance(c) : { x: c.x, y: c.y }, dir: c.dir, discharged: reached.discharged,
                 why: `${pole.id}'s light comes within ${pole.min.toFixed(1)}–${pole.max.toFixed(1)} px of ${body.id}; a Spear `
                     + `thrust facing ${FACING_KEYS[c.dir]} from (${c.x},${c.y}) lights it`,
             };
@@ -29184,6 +29207,28 @@ function solveSegmentUnder({
             lanes: cert.laneWalk.lanes, outcome: cert.billed.length > 0 ? 'billed' : 'clean', billed: cert.billed,
             ticks: cert.ticks, transition: transition ? transition.to_level : null });
     };
+    /**
+     * ⛓⛓ fidelity L100LATTICE D1 (`CONTACT_FIDELITY.fineStanceWalk`, OFF → null) — THE WALK TO A STANCE AN 8 px ARM
+     * ANSWERED (`FINE_STANCES`) IS PLANNED ON `FINE_LATTICE` FIRST, with the attempt's own contacts and goal extras. A
+     * throw there (the arm answered under a hypothesis the world has not discharged yet) returns null and the 16 px
+     * plan runs as before. Skipped for an axis-aligned walk (its corners are the skirt's), a run already on the fine
+     * pitch, and `fineLattice: false`. A row in `fineLatticeWalks` names each fine-first walk.
+     */
+    const fineStanceWalkPlan = (aim, contacts, allowTeleporter, axisAligned, goalPlanExtra, what) => {
+        if (!CONTACT_FIDELITY.fineStanceWalk || !FINE_STANCES.has(aim) || !fineLattice || axisAligned
+            || (solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) <= FINE_LATTICE) return null;
+        let wps;
+        try {
+            wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
+                solverPlanOpts(run, contacts, { ...goalPlanExtra, lattice: FINE_LATTICE }));
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+            return null;
+        }
+        fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
+            waypoints: wps.length, refused: 'FINE_STANCE (the stance an 8 px arm answered)' });
+        return wps;
+    };
     const walkToUnder = (goal, aim, {
         allowTeleporter = null, crossTo = null, what, contactsOverride = null,
         dangerExcept = null,
@@ -29254,10 +29299,12 @@ function solveSegmentUnder({
             // ⛓ BOBSOLDIER2 D2b: a WALK's gate — the transit probe follows it (`SWORD_GATE_TIMED`).
             // ⛓ AXETIMING D2b: and a spinning axe's blade at the walk's first sample (`axeGateTransit`).
             refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true, timedAxe: true });
+            // ⛓ L100LATTICE D1 (`fineStanceWalk`, OFF: null) — an aim an 8 px arm answered is planned on that lattice.
+            const fineFirst = fineStanceWalkPlan(aim, contacts, allowTeleporter, axisAligned, goalPlanExtra, what);
             let wps;
-            let fine = false;
+            let fine = fineFirst !== null;
             try {
-                wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
+                wps = fineFirst ?? planWaypoints(run.world, run.state, aim, allowTeleporter,
                     axisAligned
                         ? { ...solverPlanOpts(run, contacts, goalPlanExtra), manhattan: true }
                         : solverPlanOpts(run, contacts, goalPlanExtra));
