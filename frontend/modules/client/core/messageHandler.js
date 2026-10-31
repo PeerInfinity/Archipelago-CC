@@ -12,7 +12,12 @@ import {
   initializeMappingsFromDataPackage,
 } from '../utils/idMapping.js';
 import { findPresetsForRoom } from '../../../utils/presetResolver.js';
-import { buildRulesFromServerData, hasServerDataBuilder, versionString } from './serverDataRules.js';
+import {
+  buildRulesFromServerData,
+  describeServerDataRules,
+  hasServerDataBuilder,
+  versionString,
+} from './serverDataRules.js';
 import {
   generateInaccessibleLocationSphereLog,
   generateRegressionTestSphereLog,
@@ -720,13 +725,8 @@ export class MessageHandler {
         const loaded = await this._loadRulesDocument(rules, data.slot, sourceName, { playerName });
         if (this._serverBuild !== build) return; // a reconnect superseded this build
         if (!loaded) throw new Error(`the rules did not load within ${PRESET_LOAD_TIMEOUT_MS / 1000} s`);
-        const theorem = data.slot_data?.theorem;
-        const statements = Object.keys(data.slot_data?.proof_structure || {}).length;
-        this._printToConsole(
-          `Built ${build.game} rules${theorem ? ` for ${theorem}` : ''} (${statements} statements, entrance mode ` +
-            `${rules.world[String(data.slot)].options.entrance_rule_mode}) and loaded them.`,
-          'success'
-        );
+        const summary = describeServerDataRules(build.game, data.slot_data, rules);
+        this._printToConsole(`Built ${build.game} rules${summary ? ` ${summary}` : ''} and loaded them.`, 'success');
       } catch (e) {
         error = e;
       }
