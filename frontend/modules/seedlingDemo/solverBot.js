@@ -5779,9 +5779,18 @@ function deriveWeighSource(run, onto, contacts, blocked = [], { liveBag = null }
  */
 function placementBlocker(run, resolved, contacts) {
     const t = resolved.target;
+    /**
+     * ⛓ fidelity REFUSALS D1 (`CONTACT_FIDELITY.chestBodyPlacementProbe`) — a `world.chests` row carries no `rect`, so
+     * the probe stood on its OEL cell CORNER (x, y). The game's chest is `super(_x + Tile.w/2, _y + Tile.h/2)` with
+     * `setHitbox(16, 16, 8, 8)` (`Chest.as:27,30`): its body is the cell (x..x+16, y..y+16), centred at (x+8, y+8).
+     * L25's `chest@96,96` only TOUCHES `rock2@80,96` (x 80..96) at x = 96, but the player box at the corner reached over
+     * it. ON: a chest is probed at its body's centre. OFF: byte-identical.
+     */
     const centre = t.rect
         ? { x: (t.rect.x + t.rect.right) / 2, y: (t.rect.y + t.rect.bottom) / 2 }
-        : { x: t.x, y: t.y };
+        : (CONTACT_FIDELITY.chestBodyPlacementProbe && resolved.strategy === 'chest'
+            ? { x: t.x + TILE_SIZE / 2, y: t.y + TILE_SIZE / 2 }
+            : { x: t.x, y: t.y });
     const hit = plannerObstacleAt(run.world, centre.x, centre.y, null,
         solverPlanOpts(run, contacts, {
             avoidVolumes: false, nodeMargin: 0, triggerMargin: 0,
