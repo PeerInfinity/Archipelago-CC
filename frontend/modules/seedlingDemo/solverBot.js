@@ -30848,7 +30848,13 @@ function solveSegmentUnder({
              * `maxTicksPerTarget`), then coasts as the walk's arm does. OFF: byte-identical.
              */
             const standingPit = CONTACT_FIDELITY.inPitFallOut
-                ? (run.world.pitTiles ?? []).find((p) => rectsOverlap(terrainProbeRect(run.state.x, run.state.y), p.rect))
+                // ⚠ The START TILE, the planner's own refusal condition (`planTilePath`: the 16 px cell of the
+                // position) — not a probe overlap: a live start beside a pit's edge (jsRuntimeVerbs S4, L48) walks.
+                ? (run.world.pitTiles ?? []).find((p) => p.tx === Math.floor(run.state.x / TILE_SIZE)
+                    && p.ty === Math.floor(run.state.y / TILE_SIZE)
+                    // the goal's own pit is the walk's (its `allowPit` exempts it; wasmArrivalComposite W4's L84 row)
+                    && !(p.tx === tx && p.ty === ty)
+                    && rectsOverlap(terrainProbeRect(run.state.x, run.state.y), p.rect))
                 : null;
             if (standingPit) {
                 let fellTo = null;
