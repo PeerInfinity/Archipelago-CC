@@ -34,9 +34,7 @@
  * a solved walk with 0 hits — and a `forcedHits` row on the segment's result.
  */
 import { BotDriverV2Error, drive } from './botDriverV2.js';
-import { CONTACT_FIDELITY } from './solverView.js';
-import { rectsOverlap } from './levelWorld.js';
-import { terrainProbeRect } from './playerPhysicsV2.js';
+import { CONTACT_FIDELITY, rectsOverlap, terrainProbeRect } from './solverView.js';
 
 /**
  * The switch and its bounds. `enabled` reads `CONTACT_FIDELITY.forcedHits`, so the page, its solve worker and the
