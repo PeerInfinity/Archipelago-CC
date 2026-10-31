@@ -11639,9 +11639,40 @@ function execCorpseWeigh(run, perTick, resolved, ctx, armed) {
         throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'solid', id: c.turret },
             perTick: [...perTick] });
     };
+    // at rest: the corpse's two-cycle moves it 0.5 px a tick for ever and a glide moves 0.5 px a tick too, so
+    // "at rest" is the position two and four ticks ago, exactly (the cycle's period), and not before
+    // `CORPSE_GLIDE_MIN` ticks (a glide can pause on the cycle: measured, L40 at y 408 mid-way to (30,24))
+    const waitRest = (after) => {
+        const seen = [{ ...turret() }];
+        for (let w = 0; ; w += 1) {
+            if (w > CORPSE_GLIDE_MAX) refuseHere(`${c.turret}'s corpse never came to rest after ${after}`);
+            perTick.push(NONE);
+            if (run.advance(NONE).transition) refuseHere('the run crossed a door while the corpse glided');
+            const now = turret();
+            if (now.removed) refuseHere(`${c.turret}'s corpse was destroyed gliding after ${after}`);
+            seen.push({ ...now });
+            const b2 = seen.at(-3);
+            const b4 = seen.at(-5);
+            if (w >= CORPSE_GLIDE_MIN && b2 && b4 && b2.x === now.x && b2.y === now.y && b4.x === now.x
+                && b4.y === now.y) break;
+        }
+    };
+    /**
+     * ⛓ fidelity CORPSEBUMP2 D1 (`CONTACT_FIDELITY.corpseBumpRestRead`, OFF): the corpse the press is aimed at is the
+     * one AT the stance, so after each stance walk it is re-read. A walk driven with Fire selected can press X (the
+     * strike/dash policy gates on the inventory's sword, not the selected slot), and that press is a bump. A walk
+     * press younger than its bump window is stood out; a corpse then gliding or off the rest cycle it was read on is
+     * counted (at most `k` such walks), waited to rest by the press's own rule, and the loop re-reads the tile — so a
+     * bump the walk already made is not made again, and an unmoved corpse costs no tick. Measured on L40's latch chain
+     * (CPAIR-3 + `LATCH_WEIGH_FIRST` + `orbitFreeAim`, `turretSnapPricing` OFF; the game agrees at 0 px).
+     */
+    const restRead = CONTACT_FIDELITY.corpseBumpRestRead;
+    const walkBumps = [];
     for (let i = 0; along(tileOf(turret())) < c.k; i += 1) {
         if (i >= c.k) refuseHere(`${c.k} press(es) and ${c.turret}'s corpse is at ${JSON.stringify(tileOf(turret()))}`);
         const at = tileOf(turret());
+        const atBody = restRead ? { ...turret() } : null;
+        const walkFrom = perTick.length;
         const stance = { x: (at.tx - c.dir.dx) * TILE_SIZE + 8, y: (at.ty - c.dir.dy) * TILE_SIZE + 8 };
         const to = { tx: at.tx + c.dir.dx, ty: at.ty + c.dir.dy };
         if (!hasArrived(run.state, stance, DEFAULT_TOLERANCE)) {
@@ -11653,29 +11684,44 @@ function execCorpseWeigh(run, perTick, resolved, ctx, armed) {
             perTick.push(NONE);
             if (run.advance(NONE).transition) refuseHere('the run crossed a door while settling at a corpse bump stance');
         }
+        if (restRead) {
+            // a walk press's bumps land `FIRE_WINDOW.lastHitTick` ticks after it: one that recent is stood out first
+            const lastPress = run.progress('primaryWeapon') === 'fire'
+                ? perTick.findLastIndex((k, j) => j >= walkFrom && k.has('primary')) : -1;
+            for (let w = 0; lastPress >= 0 && perTick.length - lastPress <= FIRE_WINDOW.lastHitTick + 1; w += 1) {
+                perTick.push(NONE);
+                if (run.advance(NONE).transition) refuseHere('the run crossed a door after the walk\'s Fire press');
+            }
+            // moved: gliding (not where it was two ticks ago), or off the rest cycle it was read on
+            const now = turret();
+            const moved = !run.entities('turretsSettled')
+                || Math.abs(now.x - atBody.x) > 0.5 || Math.abs(now.y - atBody.y) > 0.5;
+            if (moved) {
+                if (walkBumps.length >= c.k) {
+                    refuseHere(`the walks to ${c.turret}'s bump stances pressed Fire ${walkBumps.length + 1} times`);
+                }
+                waitRest(`the walk to bump ${i + 1}'s stance`);
+                walkBumps.push({ before: i + 1, from: at, pressTick: lastPress >= 0 ? lastPress : null,
+                    rest: tileOf(turret()) });
+                i -= 1;
+                continue;
+            }
+        }
         if (run.progress('primaryWeapon') !== 'fire') {
             const slot = run.progress('inventorySlots').indexOf(INVENTORY_ITEM_IDS.fire);
             if (slot < 0) refuseHere('the inventory has no Fire slot');
             ctx.equip(slot);
         }
-        const rec = runFire(run, perTick, { bumps: [{ id: c.turret, to }] },
-            `${ctx.what} (corpse bump ${i + 1}, ${c.turret})`);
-        // at rest: the corpse's two-cycle moves it 0.5 px a tick for ever and a glide moves 0.5 px a tick too, so
-        // "at rest" is the position two and four ticks ago, exactly (the cycle's period), and not before
-        // `CORPSE_GLIDE_MIN` ticks (a glide can pause on the cycle: measured, L40 at y 408 mid-way to (30,24))
-        const seen = [{ ...turret() }];
-        for (let w = 0; ; w += 1) {
-            if (w > CORPSE_GLIDE_MAX) refuseHere(`${c.turret}'s corpse never came to rest after bump ${i + 1}`);
-            perTick.push(NONE);
-            if (run.advance(NONE).transition) refuseHere('the run crossed a door while the corpse glided');
-            const now = turret();
-            if (now.removed) refuseHere(`${c.turret}'s corpse was destroyed gliding after bump ${i + 1}`);
-            seen.push({ ...now });
-            const b2 = seen.at(-3);
-            const b4 = seen.at(-5);
-            if (w >= CORPSE_GLIDE_MIN && b2 && b4 && b2.x === now.x && b2.y === now.y && b4.x === now.x
-                && b4.y === now.y) break;
+        let rec;
+        try {
+            rec = runFire(run, perTick, { bumps: [{ id: c.turret, to }] },
+                `${ctx.what} (corpse bump ${i + 1}, ${c.turret})`);
+        } catch (e) {
+            // ⛓ CORPSEBUMP2 D1: the press's own refusal carries the run's ticks (an OPTIONAL field on the error)
+            if (restRead && e instanceof BotDriverV2Error && e.perTick === undefined) e.perTick = [...perTick];
+            throw e;
         }
+        waitRest(`bump ${i + 1}`);
         presses.push({ stance, to, pressTick: rec?.pressTick ?? null, rest: tileOf(turret()) });
     }
     if (along(tileOf(turret())) !== c.k) refuseHere(`${c.turret}'s corpse rests past the presser at `
@@ -11701,7 +11747,8 @@ function execCorpseWeigh(run, perTick, resolved, ctx, armed) {
         kind: 'weigh',
         postCondition: 'press',
         presser: { ...resolved.target },
-        corpse: { turret: c.turret, kill, presses, restoredSlot: prior, shakeWait },
+        corpse: { turret: c.turret, kill, presses, restoredSlot: prior, shakeWait,
+            ...(walkBumps.length ? { walkBumps } : {}) },
         dwell,
         ticks: perTick.length - from,
     };

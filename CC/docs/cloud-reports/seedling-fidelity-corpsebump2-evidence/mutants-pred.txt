@@ -1,0 +1,6 @@
+PREDICTIONS (written before any mutant ran)
+M1 drop the re-read: fast green; slow ON-chain row RED (BotDriverV2Error "ALREADY on (30,24)" instead of the strategy bound)
+M2 any walk press counts as a move: fast green; slow "unmoved" row RED (ON adds ~72 ticks: 4142 -> ~4216); ON-chain row green
+M3 no stand-out of a young walk press: SURVIVOR (the measured walk press is 26 ticks before the stance; no committed row has a press inside the bump window)
+M4 no perTick on runFire's refusal: SURVIVOR (no ON row reaches a runFire refusal; the OFF row asserts perTick undefined)
+M5 refuse the first walk bump: fast green; slow ON-chain row RED (refused by name at the walk bump)

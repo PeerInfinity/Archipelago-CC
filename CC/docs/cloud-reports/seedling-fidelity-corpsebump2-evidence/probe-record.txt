@@ -1,0 +1,12 @@
+# box lock: TAKEN by probe-seedling-l40latch.mjs (browser, pid 3793) — head b646d32d9, 4 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+      corpsebump2-walk-press: 1400 t; switches {"turretSnapPricing":false,"orbitFreeAim":true,"strategyBoundDistinct":true,"corpseBumpRestRead":true}
+PASS: corpsebump2-walk-press: the model (switches ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: corpsebump2-walk-press: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 1400 sampled tick(s)
+PASS: corpsebump2-walk-press: the game's player hit count equals the model's on every sampled tick (model hits none)
+      corpsebump2-walk-press: OFF the model parts from the game on 0 tick(s)
+PASS: corpsebump2-walk-press: the game never hits the player — max hits 0
+PASS: corpsebump2-walk-press: the game's corpse rests on (30,26), then (30,25), then (30,24) = button@480,384, and stays there — 30,26 → 30,25 → 30,24
+recorded frontend/modules/seedlingDemo/fixtures/l40latch-witness/corpsebump2-walk-press.json — 1400 tick(s)
+
+ALL CHECKS PASSED
