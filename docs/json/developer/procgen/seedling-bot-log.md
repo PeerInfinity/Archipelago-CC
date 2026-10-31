@@ -26538,6 +26538,107 @@ row equal ticks included. The sweep ×2 per arm and the probes standard are the 
 
 ---
 
+
+### Seedling fidelity TURRETSNAP — a live ice turret priced where its contact is tested, not at its placement (`turretSnapPricing`, OFF)
+
+Planner `seedling-fidelity-planning-16`, wave 35. The report is `CC/docs/cloud-reports/seedling-fidelity-turretsnap.md`.
+
+**The gap (hammer ICEST's hand-over).** `dangerMap.staticEnemyDanger` and `dangerVolumes` priced a live IceTurret at its census
+box (the ctor point). `IceTurret.input()` snaps a stationary axis onto `floor(v/16)*16 + 8` in the same update and BEFORE
+`hitPlayer`, and an off-screen turret runs neither, so the ctor box is never a contact. L40's `iceturret@472,400` stands at
+(488,416) and cycles (487.5,424) / (488,423.5) from its first update; L98's already sits on a snap centre.
+
+**D1.** `iceTurret.iceTurretLiveContactCycle` derives the two-cycle from the ctor by `input()` itself; with the key ON
+`dangerMap.liveTurretContactRect` prices a live turret the run steps at the cycle's hull (both danger readers and the pole
+thrust's crowd test). The run's turret is not moved. Game witnesses (`fixtures/turretsnap-witness/`,
+`probe-seedling-turret-snap.mjs`): inside only the snapped body the game bills on t1; inside only the ctor box, never. OFF the map
+reads both backwards.
+
+**D2.** ICEST's generated corridor: the refusal point moves 8 px and ICEST's stance (88,18) turns calm on the map, but no verdict
+moves (the 16 px lattice centre is inside the snapped body too). The latch chain (OFF, CPAIR 3, CPAIR 3 + ICEST) is equal ON.
+
+**Movers.** Local survey full OFF = ON (203/37, 0 of 240 rows). Producers ON 97/0 red. The bounded set ON owes one re-pin
+(`contactFidelity.test.js`'s defaults table).
+
+**Trap candidates.**
+- An entity that snaps in its first update is never touched at its ctor box: price the box the contact TESTS, not the one the
+  body stands in before it has updated. "Do not snap early" is a rule for the run's state, not for a pricing.
+- A two-axis rest cycle: one axis on its snap centre each tick, the other half a pixel off; a static reader prices the hull.
+- `identity-block.sh` and the surveys die with the worker: a restart mid-block leaves a partial file that reads as complete
+  unless the row count is checked.
+
+
+### Seedling fidelity WATERFALL — the corridor planner prices the waterfall's push (`waterfallPushPricing`, OFF)
+
+Planner `seedling-fidelity-planning-16`, wave 35. The report is `CC/docs/cloud-reports/seedling-fidelity-waterfall.md`.
+
+**W0.** `Player.as:1557`: every motion on a waterfall but a Feather-held rise is pushed (`v.y += 0.8`). The planner refused
+only the featherless climb (`climbsArmedWaterfall`) and priced every other waterfall step as floor. Census: 201 armed waterfall
+tiles in 20 levels (L0, 46, 52, 54, 56, 57, 59, 60, 63, 65, 66, 87, 89, 91, 93, 94, 95, 98, 100, 115), most of them one to
+three rows deep. The carry, measured in the model on L100 from rest (Feather or not): held right, 4 px of waterfall → 11.4 px
+down, 8 px → 63.6 px, 16 px → 127.2 px; right+up with the Feather rises 4.4 / 8.2 / 16.4 px; without it 5.3 / 25.1 / 96.5 px
+down. A flat crossing of half a lattice cell leaves its row, at either lattice.
+
+**D1.** ON, a flat A* step INTO an unpinned waterfall node costs `1 + 2 × depth` (the fall and the climb back; a floor under
+it pins the player, cost 1); a flat EXIT costs the same unless its half-cell carry lands on walkable nodes on the far side.
+A price, not a refusal: `plansReach` stays exact, and the R4 lesson (refusing waterfall motion cut L0 from 53 nodes to 12)
+holds. The string-pull keeps no shortcut whose flat or down-diagonal leg crosses an armed waterfall over an open drop, and no
+waterfall point as a stop. L100's 8 px corridor: (76,44) → (108,28) → (116,36) → (124,140).
+
+**Witnesses.** p4g headless, `fixtures/waterfall-witness/`: the ON corridor with the jellyfish present (176 ticks, 19 over
+the waterfall, jellyfish@80,16's hit at t151), its exit leg from the pool down the sliver (117 ticks, 0 hits), and survey step
+89's ON plan (292 ticks, L87 at t291). The model equals the game at every tick, 0 px.
+
+**D2.** Step 219 (L100) stays REFUSED, with a new text: the break-stance walk is planned on the run's 16 px lattice, where
+the sliver has no node, so it is carried to the pool and stalls against `cliffside0@112,128` instead of meeting the jellyfish
+dwell. The 8 px corridor that exists is the walk's lattice choice (the L100 swing-stance code's), not the edge model's.
+
+**Movers.** Local full survey ON vs OFF: 203/37 on both arms; step 89 (L89) SOLVED 639 → 291 t (OFF kept a stop at
+(232,104) on the waterfall, stalled and re-planned), step 219's refusal text. Bounded set ON: the defaults pin only. Six
+`--check`s ON identical; producers ON 97 run, 0 red.
+
+**Trap candidates.**
+- A waypoint on a waterfall is a stop the walk can never make: `hasArrived` needs a stop and the push never lets one happen.
+  A planner that prices waterfall tiles as floor emits such stops, and the walk "stalls" there with nothing in the way.
+- A 16 px route to an 8 px target appends the target to the nearest 16 px node, and the last segment can cross a wall the
+  smoother's fallback never checked. A stance found on the 8 px lattice needs its walk planned on it.
+- Concurrent surveys share one views directory (`.cache/seedling-survey/through-end/views`): run a step alone to read its walk.
+
+
+### Seedling fidelity L32ROCK — the BobBoss arena rock's arm banks its {32,1} clear (`bobArenaRockClear`, OFF)
+
+Wave 35, planner `seedling-fidelity-planning-16`, base `9dadbdfc4b` (102 ON of 113). js `seedling-js-encounter-legs`
+measured (CI 40579343337) that on `apb-l32-fresh-no-fire` the game clears {32,1} at t9 and `liveClears` never reports
+it. The report is `CC/docs/cloud-reports/seedling-fidelity-l32rock.md` (evidence beside it).
+
+**W0 — the model steps the event; it does not record it.** {32,1} is `fallrocklarge@64,128` (`bossrock`, `thirdboss`).
+`FallRockLarge.fall()` (`:137-143`) runs `setPersistence(tag, false)` on the frame the rock arms: the nearest Player
+above `fallTo - 24` (y < 120 in L32), not `fallFromCeiling`, the tag still held (a cleared tag builds the rock fallen with
+`_active` set, so it never re-arms). That is every L32 build with {32,1} held, on the first frame the player rises past
+the line, whatever the boot. `levelRun.stepBobBossArenaNow` already stepped the arm (`bobBossEvents` `rock-armed`, the
+freeze, the 174 dead frames, the landing) and wrote `bobRocksFallen`, but banked nothing in a clear ledger. L82's arena
+rock (`stepLavaArenaRockNow`) did bank. So the fix belongs to `levelRun`; `liveClears` reads the ledgers correctly.
+
+**D1 — the switch.** ON, the arm banks the write as L82's does: `rockFlags` by `fallrocklarge` (so `earnedClears`) plus
+`pendingEarnedClears`, stamped `ticksCompleted + 1`. It is keyed on the arena rock row, not on level 32. No new run map
+(both ledgers are existing digest members). A re-entry then builds the rock fallen through the cleared tag
+(`arenaRockOf` → `fallenAtBuild`), the same arena `bobRocksFallen` already gave it. Game = model on p4g
+(`probe-seedling-encounter-ticks.mjs`, key ON): `apb-l32-fresh-no-fire` t9, `enc-l32-live-arrival` t2, `r5-bobboss-arm` t13, each with
+the prior sample one tick earlier. Roster: positions byte-equal ON vs OFF on all 293 tapes. ON adds {32,1} to exactly
+9 tapes' clears.
+
+**Movers.** Full survey ON vs OFF: 203/37 both, 0 rows differ (step 40 fights, then refuses at the burn as before).
+Local keyed sweep (L32 legs 324/330–334, inv/solver): the same ends ON and OFF. D3 reds ON: three pins of the old,
+unbanked set (`contactFidelity` defaults row, `fidelityApBosses.test.js:175`, JS's `jsRuntimeEncounterLegWalk.test.js:172`).
+
+**Trap candidates.**
+- A ledger row with a `flag` field (`bobBossEvents`' `rock-armed`) is not a clear: only the clear ledgers reach
+  `liveClears` / `earnedClears`. Check which ledger a write lands in, not whether some row names it.
+- Two instances of one AS3 class can be modelled by two code paths with different banking; when one is fixed, ask the
+  other (L82's rock banked, L32's did not).
+- A mutant made while a background gate battery reads the same tree can contaminate it. Run mutants between batteries,
+  and re-measure anything that overlapped.
+
 ### Seedling hammer-phase DASH — the L4 window margin and the stand-tail dash
 
 ⚖ User, queued 2026-10-30 (one of four parallel hammer slices; planner `seedling-hammer-phase-planning-2`). Switch

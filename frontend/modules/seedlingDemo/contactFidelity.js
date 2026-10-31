@@ -1706,6 +1706,41 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_FINE_WAND_STANCE=0|1`.
      */
     fineWandStance: true,
+    /**
+     * fidelity TURRETSNAP D1 (wave 35) — A LIVE ICE TURRET PRICED WHERE ITS CONTACT IS TESTED (`dangerMap`).
+     *
+     * `staticEnemyDanger` and `dangerVolumes` priced a live `IceTurret` at its census box (`contactRect`, the ctor
+     * point). The game never tests that box: `input()` snaps a stationary axis 8 px onto `floor(v/16)*16 + 8` in the
+     * same update, BEFORE `hitPlayer`, and off screen the update (contact included) does not run at all. L40's
+     * `iceturret@472,400` stands at y 416 and is touched at 424 / 423.5 (hammer ICEST measured both halves of the
+     * error: a stance inside the snapped body, and a stance walk refused by the unsnapped one). ON: a live turret the
+     * run steps is priced at the hull of its rest two-cycle (`iceTurret.iceTurretLiveContactCycle`), and its run
+     * position is unchanged. The pole thrust's crowd test (`solverBot.resolvePoleThrustStrategy`, `deriveLightPole`)
+     * reads the same box. OFF: byte-identical. `SEEDLING_TURRET_SNAP_PRICING=0|1`.
+     */
+    turretSnapPricing: true,
+    /**
+     * fidelity WATERFALL D1 (wave 35) — THE CORRIDOR PLANNER PRICES THE WATERFALL'S PUSH (`botDriverV2.planTilePath`'s
+     * step cost, `waterfallCarriesLeg` in its string-pull).
+     *
+     * `Player.as:1557`: `if (onWaterfall && (!hasFeather || v.y >= 0)) v.y += 0.8`. Only a RISING player holding the
+     * Feather is not pushed. Measured in the model (L100, held right from rest): 4 px of waterfall carries the player
+     * 11.4 px down, 8 px carries it 63.6 px. ON: a FLAT A* step on an armed waterfall over an open drop costs the carry
+     * (`1 + 2 × WATERFALL_CARRY_DEPTH`), and the string-pull keeps no shortcut whose flat or down-diagonal leg crosses
+     * one. A rising step stays free with the Feather. OFF: byte-identical. ⚠ FIXED PER PROCESS: hammer XC's cross-pass
+     * escape cache keys on the digest, not on this flag — never flip it mid-solve. `SEEDLING_WATERFALL_PUSH_PRICING=0|1`.
+     */
+    waterfallPushPricing: true,
+    /**
+     * fidelity L32ROCK D1 (wave 35) — THE BOBBOSS ARENA ROCK'S ARM IS A CLEAR (`levelRun.stepBobBossArenaNow`).
+     *
+     * `FallRockLarge.fall()` (`FallRockLarge.as:137-143`) writes `setPersistence(tag, false)` on the frame the rock
+     * arms (the player above `fallTo - 24`, not falling from the ceiling). The model stepped the arm (`bobBossEvents`'
+     * `rock-armed`) but banked no clear, so `liveClears` never reported L32's {32,1}, which the game clears at t9 of
+     * `apb-l32-fresh-no-fire`. ON: the arm banks the write as L82's arena rock does (`rockFlags` by `fallrocklarge` +
+     * `pendingEarnedClears`). OFF: byte-identical. `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`.
+     */
+    bobArenaRockClear: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2039,11 +2074,20 @@ if (globalThis.process?.env?.SEEDLING_FINE_FRONTIER_HIDDEN_DOOR === '0') CONTACT
 // ⛓ fidelity L12DOORS D3: `SEEDLING_FINE_WAND_STANCE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FINE_WAND_STANCE === '1') CONTACT_FIDELITY.fineWandStance = true;
 if (globalThis.process?.env?.SEEDLING_FINE_WAND_STANCE === '0') CONTACT_FIDELITY.fineWandStance = false;
+// ⛓ fidelity TURRETSNAP D1: `SEEDLING_TURRET_SNAP_PRICING=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_TURRET_SNAP_PRICING === '1') CONTACT_FIDELITY.turretSnapPricing = true;
+if (globalThis.process?.env?.SEEDLING_TURRET_SNAP_PRICING === '0') CONTACT_FIDELITY.turretSnapPricing = false;
 // ⛓ fidelity DETERM (c): `SEEDLING_COVER_HELD_FADE=0|1` and `SEEDLING_LOCK_RECLOSE_LAG=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '1') CONTACT_FIDELITY.coverHeldFade = true;
 if (globalThis.process?.env?.SEEDLING_COVER_HELD_FADE === '0') CONTACT_FIDELITY.coverHeldFade = false;
 if (globalThis.process?.env?.SEEDLING_LOCK_RECLOSE_LAG === '1') CONTACT_FIDELITY.lockRecloseLag = true;
 if (globalThis.process?.env?.SEEDLING_LOCK_RECLOSE_LAG === '0') CONTACT_FIDELITY.lockRecloseLag = false;
+// ⛓ fidelity WATERFALL D1: `SEEDLING_WATERFALL_PUSH_PRICING=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WATERFALL_PUSH_PRICING === '1') CONTACT_FIDELITY.waterfallPushPricing = true;
+if (globalThis.process?.env?.SEEDLING_WATERFALL_PUSH_PRICING === '0') CONTACT_FIDELITY.waterfallPushPricing = false;
+// ⛓ fidelity L32ROCK D1: `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '1') CONTACT_FIDELITY.bobArenaRockClear = true;
+if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '0') CONTACT_FIDELITY.bobArenaRockClear = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

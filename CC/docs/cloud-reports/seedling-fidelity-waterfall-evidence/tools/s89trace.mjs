@@ -1,0 +1,12 @@
+import { readFileSync } from 'node:fs';
+const M = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo/';
+const { atlasLevelSource } = await import(M + 'levelSource.js');
+const { parseTape } = await import(M + 'tapeFormat.js');
+const { createRunForStaging, solveStaging, stagingFromTape } = await import(M + 'tapeRunner.js');
+const { solveSegment } = await import(M + 'solverBot.js');
+const { DEFAULT_DASH_MODE } = await import('/home/user/Archipelago-CC/scripts/procgen/dashMode.js');
+const staging = solveStaging(stagingFromTape(parseTape(JSON.parse(readFileSync('step-89-boot.json', 'utf8')))));
+const run = createRunForStaging(staging, atlasLevelSource());
+const r = solveSegment({ run, goals: [{ kind: 'reach-exit', exit: { x: 288, y: 240 } }], name: 's89', boot: staging.boot, dashMode: DEFAULT_DASH_MODE });
+console.log('ticks', r.perTick.length);
+for (const row of r.trace?.rows ?? r.rows ?? []) console.log(row.tick, JSON.stringify(row.strategy ?? {}).slice(0, 120), JSON.stringify(row.path ?? []).slice(0, 300), JSON.stringify(row.rejected ?? []).slice(0, 400));

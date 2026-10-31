@@ -84,7 +84,12 @@ export function noTapeChain(create, { between = () => {} } = {}) {
  * ⛔ MEASURED ON THE PRE-PHASE-B CORE (`9c0f9045`), never derived from the code under test: the chain the no-tape
  * scenario above hashes to, and its row count. A Phase B edit that moved one field of one tick reds this row.
  */
-const NO_TAPE_CHAIN = Object.freeze({ chain: '0d022900a706b10a780bf029f08a', rows: 224, walk: WALK_STATES.DONE });
+// ⛓ Re-measured at the fidelity W35 flip (2026-10-30, js-13 signed): 0d022900a706b10a780bf029f08a → 1f44092f380a801342ab2c06ee51.
+// Method: `noTapeChain` over `createJsRuntime` from `git show 9c0f904549:…/jsRuntimeCore.js` (the pre-Phase-B core, copied
+// beside this file) with W35's contactFidelity.js and its flags exactly as they ship (116 keys, 105 ON). Cause: the
+// `globals` part of `run.stateDigest()` hashes the whole CONTACT_FIDELITY object, so ANY new key moves this chain, even OFF
+// — measured: red with the three W35 keys false, green only with contactFidelity.js itself reverted.
+const NO_TAPE_CHAIN = Object.freeze({ chain: '1f44092f380a801342ab2c06ee51', rows: 224, walk: WALK_STATES.DONE });
 
 /** A runtime on the vanilla map, configured, with the game's own first frame booted. */
 function vanillaRuntime() {
