@@ -138,6 +138,8 @@ export function restrictPalette(palette, roster) {
         items: palette.items,
         templates: Object.freeze(templates),
         excluded: palette.excluded,
+        // ⛓ seedling-gen-new-biomes (C4) — a biome's extra flood terrains ride a restriction (`caldera`'s melt).
+        ...(palette.floodWalks ? { floodWalks: palette.floodWalks } : {}),
         roster: r,
     });
 }

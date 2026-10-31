@@ -21,10 +21,13 @@ Two versioned scripts do all of the steps below:
   the cache was built (requirements, lockfile, the submodule pin). It also writes
   `Players/Templates` and `host.yaml` and prints `READY` or what is missing. It
   falls back to installing from scratch when no setup script ran.
+  By default it checks out `frontend/modules/shared` and `frontend/modules/bulletml-dodge`
+  (the noiz2sa substrate: without it `generate-procgen-reference.mjs --check` FAILs four
+  regions and `--write` silently drops the noiz2sa registry entry).
   Pass `--seedling` to also check out the Seedling wasm builds
   (`frontend/modules/flashPanel/wasm`) and AS3 source (`vendor/seedling`), plus the
   Python Playwright the headless Seedling drivers use. Pass `--all` for every submodule.
-  The environment script mirrors all seven submodule repos, so any of them checks out
+  The environment script mirrors every submodule repo `.gitmodules` names, so any of them checks out
   offline. A Seedling tape replay then needs only a dev server on its own port and
   `SEEDLING_PORT=<port> node scripts/procgen/check-seedling-bot-differential.mjs --tier=fast`.
   It needs no build step. A change to `Bot.as` needs a wasm REBUILD, which can't be

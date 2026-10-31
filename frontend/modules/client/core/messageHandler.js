@@ -12,7 +12,12 @@ import {
   initializeMappingsFromDataPackage,
 } from '../utils/idMapping.js';
 import { findPresetsForRoom } from '../../../utils/presetResolver.js';
-import { buildRulesFromServerData, hasServerDataBuilder, versionString } from './serverDataRules.js';
+import {
+  buildRulesFromServerData,
+  describeServerDataRules,
+  hasServerDataBuilder,
+  versionString,
+} from './serverDataRules.js';
 import {
   generateInaccessibleLocationSphereLog,
   generateRegressionTestSphereLog,
@@ -660,6 +665,8 @@ export class MessageHandler {
     stateManager.applyRuntimeStateData({
       serverCheckedLocationNames: serverCheckedLocationNames,
       serverUncheckedLocationNames: serverUncheckedLocationNames,
+      // ID-bearing starting items arrive in ReceivedItems (location -2).
+      startingItemsFromServer: true,
     });
 
     if (scout) {
@@ -720,13 +727,8 @@ export class MessageHandler {
         const loaded = await this._loadRulesDocument(rules, data.slot, sourceName, { playerName });
         if (this._serverBuild !== build) return; // a reconnect superseded this build
         if (!loaded) throw new Error(`the rules did not load within ${PRESET_LOAD_TIMEOUT_MS / 1000} s`);
-        const theorem = data.slot_data?.theorem;
-        const statements = Object.keys(data.slot_data?.proof_structure || {}).length;
-        this._printToConsole(
-          `Built ${build.game} rules${theorem ? ` for ${theorem}` : ''} (${statements} statements, entrance mode ` +
-            `${rules.world[String(data.slot)].options.entrance_rule_mode}) and loaded them.`,
-          'success'
-        );
+        const summary = describeServerDataRules(build.game, data.slot_data, rules);
+        this._printToConsole(`Built ${build.game} rules${summary ? ` ${summary}` : ''} and loaded them.`, 'success');
       } catch (e) {
         error = e;
       }
@@ -871,9 +873,6 @@ export class MessageHandler {
     const processedItemDetails = []; // Array to hold { itemName, locationNameToMark }
 
     try {
-      // NOTE: Batch update calls are now around the collection and single applyRuntimeStateData call
-      await stateManager.beginBatchUpdate(true); // deferRegionComputation = true
-
       // Process each item from the server to collect details
       for (const item of data.items) {
         let itemName = 'unknown'; // Default for logging in case of issues
@@ -916,17 +915,25 @@ export class MessageHandler {
         }
       }
 
-      // ReceivedItems is the authoritative message for item additions
-      if (processedItemDetails.length > 0) {
-        if (data.index === 0) {
-          this._logDebug(
-            `[MessageHandler _handleReceivedItems] Full inventory sync (index=0): Adding ${processedItemDetails.length} items directly to inventory.`
-          );
-        } else {
-          this._logDebug(
-            `[MessageHandler _handleReceivedItems] Incremental items (index=${data.index}): Adding ${processedItemDetails.length} items to inventory.`
-          );
-        }
+      // ReceivedItems is the authoritative message for item additions.
+      // index 0 is a resync from the start (Connect, /sync): it REPLACES the
+      // inventory. The reset keeps the checked locations, re-adds the ID-less
+      // starting items from the loaded rules and re-derives the events.
+      if (data.index === 0) {
+        this._logDebug(
+          `[MessageHandler _handleReceivedItems] Full inventory sync (index=0): replacing the inventory with ${processedItemDetails.length} items.`
+        );
+        stateManager.applyRuntimeStateData({
+          resetInventory: true,
+          startingItemsFromServer: true,
+          rederiveIdlessLocations: true,
+          receivedItemsForProcessing: processedItemDetails,
+        });
+      } else if (processedItemDetails.length > 0) {
+        this._logDebug(
+          `[MessageHandler _handleReceivedItems] Incremental items (index=${data.index}): Adding ${processedItemDetails.length} items to inventory.`
+        );
+        await stateManager.beginBatchUpdate(true); // deferRegionComputation = true
 
         // Add all items to inventory
         for (const itemDetail of processedItemDetails) {
@@ -937,10 +944,9 @@ export class MessageHandler {
             );
           }
         }
+        // Commit updates (this will trigger computations and snapshot in StateManager if changes occurred)
+        await stateManager.commitBatchUpdate();
       }
-
-      // Commit updates (this will trigger computations and snapshot in StateManager if changes occurred)
-      await stateManager.commitBatchUpdate();
     } catch (batchError) {
       // Catch errors related to beginBatchUpdate, commitBatchUpdate, or the applyRuntimeStateData call itself
       log('error',
@@ -1422,16 +1428,8 @@ Location was force-checked to maintain server sync.`;
       return false;
     }
 
-    // Get stateManager
-    const stateManager = await this._getStateManager();
-
-    // Reset inventory state in stateManager
-    if (stateManager) {
-      // Reset inventory state if available
-      stateManager.clearInventory?.();
-      stateManager.invalidateCache?.();
-      stateManager.notifyUI?.('inventoryUpdated');
-    }
+    // The server answers with ReceivedItems index 0, which replaces the
+    // inventory (_handleReceivedItems); nothing is cleared here.
 
     // Clear inventory UI before sync
     this.eventBus?.publish('inventory:clear', {});

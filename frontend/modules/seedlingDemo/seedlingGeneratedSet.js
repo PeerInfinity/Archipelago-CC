@@ -25,6 +25,11 @@
  *   apitems   one per location, on its `cell`, `{tag, look: AP_LOOK}`; an entity
  *             already ON that cell (the goal pickup under location 0, ⚖ Q6) is
  *             REPLACED; a location with no joined item still gets one (AP fills it)
+ *             · ⛔ EXCEPT a DOOR CHEST (`kind: 'chest-door'`, seedling-gen-chestdoor-ap):
+ *               the chest IS the door (an `apitem` is not solid, so the wall's only
+ *               gap would open), so it is never replaced. Its check is the chest's
+ *               own clear at its fixed tag, the R4b report-row path: a table row
+ *               with `tagSource: 'fixed'` and `rewrite: false`, no room byte moved
  *   parking   level N (appended): a walled 3×3 with one floor cell, no exits;
  *             the game sits there while the host plays another substrate
  *   start     level 0 on its first door's approach cell (the Menu hop's own
@@ -91,6 +96,9 @@ export const GENERATED_SET_REFUSALS = Object.freeze({
     oneWay: (region, exitName, target) => `generated Seedling set: region '${region}' exit '${exitName}' `
         + `leads to generated room '${target}', which has no door back to '${region}' — the arrival cell `
         + 'is the paired door\'s approach, and there is no paired door',
+    chestDoorMissing: (region, name, cell, tag) => `generated Seedling set: region '${region}' location `
+        + `'${name}' is a door chest at (${cell.tx},${cell.ty}) tag ${tag}, and the room holds no chest with that tag `
+        + 'there — the check is the chest\'s own clear, so without the chest it could never fire',
     invalid: (errors) => `generated Seedling set: the assembled set does not validate — ${errors.join('; ')}`,
 });
 
@@ -110,15 +118,28 @@ export function parkingRoomRecord() {
 
 const cellPx = (cell) => ({ x: cell.tx * GEN_ROOM_TILE_SIZE, y: cell.ty * GEN_ROOM_TILE_SIZE });
 
+/** ⛓ seedling-gen-chestdoor-ap — `seedlingGenRoom.CHEST_DOOR_KIND` (this module imports no generator). */
+export const CHEST_DOOR_KIND = 'chest-door';
+
 /**
  * One room's `apitem`s, on the record: REPLACING an entity on the location's
- * cell, appended otherwise. Returns `{record, placed}`.
+ * cell, appended otherwise. ⛔ A door chest's location is NEVER replaced: it
+ * goes to `chests` with `rewrite: false` (its check is the chest's own clear
+ * at its tag) and the record is untouched. Returns `{record, placed, chests}`.
  */
-function placeApItems(record, locations) {
+export function placeApItems(record, locations, region = '?') {
     const entities = [...(record.entities ?? [])];
     const placed = [];
+    const chests = [];
     for (const loc of locations) {
         const { x, y } = cellPx(loc.cell);
+        if (loc.kind === CHEST_DOOR_KIND) {
+            const chest = entities.find((e) => e.type === 'chest' && e.x === x && e.y === y
+                && Number.parseInt(e.attrs?.tag, 10) === loc.tag);
+            if (!chest) refuse(GENERATED_SET_REFUSALS.chestDoorMissing(region, loc.name, loc.cell, loc.tag));
+            chests.push({ location: loc.name, cell: loc.cell, tag: loc.tag, rewrite: false });
+            continue;
+        }
         const item = { type: AP_ITEM_TYPE, x, y, attrs: { tag: String(loc.tag), look: AP_LOOK } };
         const at = entities.findIndex((e) => e.x === x && e.y === y);
         placed.push({ location: loc.name, cell: loc.cell, tag: loc.tag,
@@ -126,7 +147,7 @@ function placeApItems(record, locations) {
         if (at < 0) entities.push(item);
         else entities[at] = item;
     }
-    return { record: { ...record, entities }, placed };
+    return { record: { ...record, entities }, placed, chests };
 }
 
 /**
@@ -158,6 +179,7 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
 
     const doors = [];
     const apitems = [];
+    const chestDoors = [];
     const entries = census.rooms.map((region, level) => {
         const p = payloads[level];
         const roomDoors = p.exits.map((e) => {
@@ -179,8 +201,9 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
                 targetRegion: e.targetRegion, to, arrival, parked: to === parkingLevel });
             return { cell, to, arrival, sign: 0 };
         });
-        const { record: withItems, placed } = placeApItems(p.record, p.locations);
+        const { record: withItems, placed, chests } = placeApItems(p.record, p.locations, region);
         for (const a of placed) apitems.push({ room: level, region, ...a });
+        for (const c of chests) chestDoors.push({ room: level, region, ...c });
         return { record: emitDoorEntities(withItems, roomDoors), name: region };
     });
     entries.push({ record: parkingRoomRecord(), name: PARKING_ROOM_NAME });
@@ -202,7 +225,7 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
 
     const table = new Map();
     const unjoined = [];
-    for (const a of apitems) {
+    for (const a of [...apitems, ...chestDoors]) {
         const joined = locationItemOf(a.location);
         if (!joined) unjoined.push(a.location);
         table.set(placementKey(a.room, a.tag), {
@@ -213,6 +236,8 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
             item: joined?.name ?? null,
             player: joined?.player ?? null,
             look: AP_LOOK,
+            // ⛓ seedling-gen-chestdoor-ap — a door chest: the R4b report row (fixed address, no apitem).
+            ...(a.rewrite === false ? { tagSource: 'fixed', rewrite: false } : {}),
         });
     }
 
@@ -226,6 +251,8 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
             parkingLevel,
             doors,
             apitems,
+            // ⛓ seedling-gen-chestdoor-ap — the door chests' report rows; the key is ABSENT without one.
+            ...(chestDoors.length > 0 ? { chestDoors } : {}),
             unjoined,
             unsigned: doors.length,
             warnings: validation.warnings,

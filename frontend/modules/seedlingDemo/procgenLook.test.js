@@ -22,6 +22,8 @@ import { BIOME_NAMES, DEFAULT_CENSUS_BIOMES } from './watchGenerate.js';
 
 const OLD = ['pre-sword', 'post-sword', 'post-shield', 'post-swim', 'post-feather'];
 const NEW = ['post-fire', 'post-spear', 'post-dark-suit', 'endgame'];
+/** ⛓ seedling-gen-new-biomes (C4) — the three new biomes, after the presets (`procgenNewBiomes.test.js`). */
+const C4 = ['caldera', 'frozen-forge', 'flooded-ruins'];
 const sha = (o) => createHash('sha256').update(JSON.stringify(o)).digest('hex').slice(0, 16);
 const rngDrawing = (seed) => ({ next: () => (seed + 0.5) / 0x7fffffff });
 const roomOf = (seedlingGen, seed = 1) => generateGenRoom({
@@ -138,7 +140,7 @@ describe('C2 — the four later item presets', () => {
     });
 
     it('the names: one list, two spellings, and the lab\'s; the old five first and unmoved; opt-in to censuses', () => {
-        expect(GEN_ROOM_BIOME_NAMES).toEqual([...OLD, ...NEW]);
+        expect(GEN_ROOM_BIOME_NAMES).toEqual([...OLD, ...NEW, ...C4]);
         expect(Object.keys(GEN_ROOM_BIOMES)).toEqual(GEN_ROOM_BIOME_NAMES);
         expect(BIOME_NAMES).toEqual(GEN_ROOM_BIOME_NAMES);
         for (const name of GEN_ROOM_BIOME_NAMES) expect(GEN_ROOM_BIOMES[name].name).toBe(name);
