@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-1973beee",
+  "atlas_id": "seedling-07d995bd",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "1973beee" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "07d995bd" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -966,7 +966,7 @@
           {
             "from": "r0c19",
             "to": "r43c21",
-            "bidirectional": true,
+            "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Shield" } }
           },
@@ -1003,6 +1003,19 @@
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Green Key" } }
+          },
+          {
+            "from": "r43c21",
+            "to": "r0c19",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Shield" } },
+                { "rule": "CanReachRegion", "args": { "region_name": "level_12__r0c19" } }
+              ]
+            }
           }
         ]
       }
@@ -1651,7 +1664,20 @@
           {
             "from": "r1c12",
             "to": "r1c4",
-            "bidirectional": true,
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Shield" } },
+                { "rule": "CanReachRegion", "args": { "region_name": "level_20__r1c4" } }
+              ]
+            }
+          },
+          {
+            "from": "r1c4",
+            "to": "r1c12",
+            "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Shield" } }
           },
@@ -5955,7 +5981,7 @@
           {
             "from": "r0c6",
             "to": "r16c19",
-            "bidirectional": true,
+            "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Shield", "count": 2 } }
           },
@@ -5970,6 +5996,19 @@
               "children": [
                 { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
                 { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r16c19",
+            "to": "r0c6",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Shield", "count": 2 } },
+                { "rule": "CanReachRegion", "args": { "region_name": "level_71__r0c6" } }
               ]
             }
           }
