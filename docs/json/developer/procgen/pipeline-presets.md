@@ -38,6 +38,7 @@ Each preset's full description, with where to look in the panel, is its `descrip
 | `seedling-generated-leaf-demo` | maze + flash_seedling_gen | A generated Seedling room as a leaf, holding the victory item on its goal cell. |
 | `seedling-generated-host-demo` | maze + flash_seedling_gen | A generated Seedling room as the start, hosting a maze child behind a gate the host enforces. |
 | `seedling-generated-swim-demo` | maze + flash_seedling_gen | A generated `post-swim` Seedling room behind a maze exit gated on `Progressive Swim`; its `watergate` stands between the arrival and the victory on its goal cell. |
+| `seedling-generated-chestdoor-demo` | maze + flash_seedling_gen | The generated maze spiral with the `chestdoor` element: each generated room's chest is the only gap in a grown wall and an AP location of its own (`<room> - Chest`, a filler item). |
 | `seedling-atlas-host-demo` | maze + flash_seedling | A real Seedling room hosting gated children, with rules read from the logic's static data. |
 | `seedling-atlas-location-demo` | maze + flash_seedling | A real Seedling room's own chest collected as an Archipelago check. |
 

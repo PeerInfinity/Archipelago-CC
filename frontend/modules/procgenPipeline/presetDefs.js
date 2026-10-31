@@ -165,6 +165,20 @@ export const SEEDLING_GENERATED_ROOM_STATE = Object.freeze({
 });
 
 /**
+ * ⛓⛓ SEEDLING GEN CHESTDOOR — **THE GENERATED SPIRAL WITH DOOR CHESTS, SPELLED
+ * ONCE.** `SEEDLING_GENERATED_ROOM_STATE` with `seedlingGenElements: 'chestdoor'`:
+ * at seed 1 BOTH generated rooms place a chest door (a chest that is the only gap
+ * in a wall), and each chest is an AP location (`<room> - Chest`, its own fixed
+ * tag) carrying a `Region Library Filler` — 3 locations, 3 items. Its readers: the
+ * committed preset `seedling_generated_chestdoor`, where the REAL wasm game opens
+ * `region_0_0 - Chest` (in-app row `seedling-wasm-generated-chestdoor-chest`).
+ */
+export const SEEDLING_GENERATED_CHESTDOOR_STATE = Object.freeze({
+    ...SEEDLING_GENERATED_ROOM_STATE,
+    params: Object.freeze({ ...SEEDLING_GENERATED_ROOM_STATE.params, seedlingGenElements: 'chestdoor' }),
+});
+
+/**
  * ⛓ SEEDLING GENERATED LEVELS G1 — **A GENERATED ROOM AS A 1-ITEM SPHERE LEAF,
  * SPELLED ONCE.** Seed 1, 3 spheres, NO filler and at most one item per region,
  * starting in a maze: the tree realises three regions and the generated room is
@@ -911,6 +925,17 @@ export const SHIPPED_PRESETS = Object.freeze([
             + 'room. The same world is committed as the seedling_generated_room preset, which plays '
             + 'in the Seedling wasm.',
         state: SEEDLING_GENERATED_ROOM_STATE,
+    },
+    {
+        id: 'shipped:seedling-generated-chestdoor-demo',
+        label: 'Generated Seedling rooms with door chests',
+        group: PRESET_GROUPS.shuffledSpiral,
+        description: 'The generated maze spiral with the chestdoor element: each generated room grows a '
+            + 'wall across its corridor whose only gap is a CHEST, opened from below, and each chest is an '
+            + 'AP location (<room> - Chest) holding a filler item. Look at the flash_seedling_gen sidecars '
+            + '(each room\'s summary.chestDoors and its chest-door location row). The same world is '
+            + 'committed as the seedling_generated_chestdoor preset, which plays in the Seedling wasm.',
+        state: SEEDLING_GENERATED_CHESTDOOR_STATE,
     },
     {
         id: 'shipped:grid-growth-demo',

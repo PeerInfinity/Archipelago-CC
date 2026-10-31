@@ -633,6 +633,18 @@
             "_comment": "Re-enabled (2026-10-12) with the seedling-js-tutorial-walk-regression fix: its 2/14 CI flake (tick-1 exact-repeat divergence on region_0_0__key_blue_pickup, expected y 40.8, game y 40) was the wind cutscene leaking past the skip under the explicit start's record; the cold start now waits a showing scene out (seedlingWasmPlayback adoptLive) instead of re-arriving into it. The JS row's generated-room walk on the WASM runtime (WebGPU — the batch launches Chromium with it): the WG engine stages the mounted set, the solver produces the tapes; the game's Game.time drains the start room."
         },
         {
+            "id": "seedling-js-runtime-generated-chestdoor-chest",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "seedling-gen-chestdoor-preset (JS twin). runtime = js on the committed seedling_generated_chestdoor preset: the Playback Bot's walkToLocation('region_0_0 - Chest') — a DOOR CHEST, an AP location that stays a chest with its fixed tag — resolves off report.chestDoors, the page walks to the stance below and opens it, and the row ends on that location's locationCheck (it alone), the game's own pendingCheck of {level 0, tag 1}. seedling-js batch."
+        },
+        {
+            "id": "seedling-wasm-runtime-generated-chestdoor-chest",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "seedling-gen-chestdoor-preset. The REAL wasm game (WebGPU, the seedling-wasm batch's launch) on the committed seedling_generated_chestdoor preset: the Playback Bot walks to the door chest region_0_0 - Chest (the WG engine stages the mounted set, the solver's tape opens the chest from below) and the row ends on its locationCheck — that location alone, the game's own pendingCheck of {level 0, tag 1}, no error status. Room 1's chest (two goals, Q5) is not walked."
+        },
+        {
             "id": "seedling-js-runtime-loop-play-clock-drains-mana",
             "enabled": true,
             "category": "Seedling JS runtime",

@@ -757,7 +757,7 @@ It has no refusal phase, and that is measured, not skipped. Every maze path from
 
 ## Committed worlds and gates
 
-Each world is written by `scripts/procgen/make-seedling-spiral-room-preset.mjs --state=<name>` from a state in `procgenPipeline/presetDefs.js`, and opened as `frontend/?game=<preset>&seed=1`. The box gates in `scripts/procgen/` play them in the real game and skip when the wasm artifact is absent; they share their helpers (including the hazard-aware walker `roomPath`) in `scripts/procgen/seedlingRoomPlay.js`.
+Each world is written by `scripts/procgen/make-seedling-spiral-room-preset.mjs --state=<name>` from a state in `procgenPipeline/presetDefs.js`, and opened as `frontend/?game=<preset>&seed=1`. The box gates in `scripts/procgen/` (and, for the chest-door world, an in-app row) play them in the real game and skip when the wasm artifact is absent; they share their helpers (including the hazard-aware walker `roomPath`) in `scripts/procgen/seedlingRoomPlay.js`.
 
 | Preset (`--state`) | State | What it shows | Box gate |
 |---|---|---|---|
@@ -769,8 +769,9 @@ Each world is written by `scripts/procgen/make-seedling-spiral-room-preset.mjs -
 | `seedling_generated_leaf` (`generated-leaf`) | `SEEDLING_GENERATED_LEAF_STATE` | A generated sphere leaf holding `victory`. | `check-seedling-generated-leaf-play.mjs` |
 | `seedling_generated_host` (`generated-host`) | `SEEDLING_GENERATED_HOST_STATE` | A generated start room hosting a gated door. | `check-seedling-generated-host-play.mjs` |
 | `seedling_generated_swim` (`generated-swim`) | `SEEDLING_GENERATED_SWIM_STATE` | A generated `post-swim` room behind a maze gate on `Progressive Swim`; its watergate swum to `victory`. | `check-seedling-generated-swim-play.mjs` |
+| `seedling_generated_chestdoor` (`generated-chestdoor`) | `SEEDLING_GENERATED_CHESTDOOR_STATE` | `generated` with the `chestdoor` element: each room's chest, the only gap in a wall, is an AP location (`<room> - Chest`). | in-app `seedling-wasm-runtime-generated-chestdoor-chest` (the Playback Bot opens `region_0_0 - Chest`; JS twin `seedling-js-runtime-generated-chestdoor-chest`) |
 
-The compiled starter atlas (`seedling_atlas`) is played by `check-seedling-atlas-play.mjs`. Several states also ship as pipeline-panel presets (`shipped:seedling-generated-room-demo`, `shipped:seedling-generated-leaf-demo`, `shipped:seedling-generated-host-demo`, `shipped:seedling-generated-swim-demo`, `shipped:seedling-atlas-host-demo`); see [Pipeline Presets](./pipeline-presets.md).
+The compiled starter atlas (`seedling_atlas`) is played by `check-seedling-atlas-play.mjs`. Several states also ship as pipeline-panel presets (`shipped:seedling-generated-room-demo`, `shipped:seedling-generated-leaf-demo`, `shipped:seedling-generated-host-demo`, `shipped:seedling-generated-swim-demo`, `shipped:seedling-generated-chestdoor-demo`, `shipped:seedling-atlas-host-demo`); see [Pipeline Presets](./pipeline-presets.md).
 
 Headless rows sit beside the code, e.g. `flashPanel/seedling*World.test.js`, `seedlingDoorGate.test.js` and `seedlingDemo/seedlingGenRoom*.test.js`.
 
