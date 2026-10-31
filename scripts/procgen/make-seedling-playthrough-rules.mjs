@@ -1598,12 +1598,81 @@ export function playthroughInRoomPoleEvents(doc, { existing = [] } = {}) {
  * walk-in block (no item) claims no crossing and is not read, and a room with no stopper is left to the claim (named).
  * Refused by name: a row between the two sides whose rule is not the push item's (another crossing joins them too),
  * a stopper whose body is not one tile, and a direction no stopper set opens (the model and the analyzer disagree).
+ * ⛓ RULES rules-block-stoppers: the cases are `playthroughBlockCrossingCases` and the stoppers `playthroughBlockStoppers`,
+ * shared with `census-seedling-block-stoppers.mjs`, which measures the bodies left out (killable or mobile): none moves a
+ * price here (L65's one mobile Bob is game-witnessed, `probe-seedling-l65-bob-block.mjs`).
  */
 export function playthroughBlockCrossings(doc, { events = [] } = {}) {
     const minted = new Set(events.map((e) => e.name));
     const internalExitGates = [];
     const notes = [];
-    const key = ([x, y]) => `${x},${y}`;
+    for (const room of playthroughBlockCrossingCases(doc)) {
+        const { level, grid, tileTypes, pushables } = room;
+        const stoppers = playthroughBlockStoppers(level, minted);
+        // No stopper in the room: the transcription's claim is all a push could cost here (this derivation adds nothing).
+        if (stoppers.length === 0) { notes.push(`L${level.level}: ${pushables.length} struck block(s), no stopper`); continue; }
+        for (const c of room.cases) {
+            if (c.note) { notes.push(c.note); continue; }
+            const { label, from, to, row, pushRule } = c;
+            if (!row) { notes.push(`${label}: no internal exit ${from} -> ${to}`); continue; }
+            if (JSON.stringify(row.access_rule) !== JSON.stringify(pushRule)) {
+                throw new Error(`block crossings: ${label}'s crossing ${room.regionId} ${from} -> ${to} is priced `
+                    + `${JSON.stringify(row.access_rule)}, not its push item's ${JSON.stringify(pushRule)} — another crossing joins the sides`);
+            }
+            const cost = blockCrossingCost(grid, {
+                block: c.block, stances: c.stances, stoppers, tileTypes, keyOf: SEM.conditionKey, held: c.held,
+            }, c.start, c.goal);
+            if (cost.refused) throw new Error(`block crossings: ${label} ${from} -> ${to}: ${cost.refused}`);
+            if (cost.sets.length === 0) {
+                throw new Error(`block crossings: ${label} ${from} -> ${to}: no stopper set opens the crossing the analyzer `
+                    + `prices ${JSON.stringify(pushRule)} — the push model and the analyzer disagree`);
+            }
+            if (cost.sets.some((set) => set.length === 0)) { notes.push(`${label}: ${from} -> ${to} free beyond the push item`); continue; }
+            const ways = cost.sets.map((set) => simplifyRule(set.length === 1 ? { rule: 'Has', args: { item_name: set[0] } }
+                : { rule: 'And', children: set.map((n) => ({ rule: 'Has', args: { item_name: n } })) }));
+            const rule = ways.length === 1 ? ways[0] : { rule: 'Or', children: ways };
+            const named = new Set(cost.sets.flat());
+            const why = `${label}: pushed from ${from} it stops at ${stoppers.filter((st) => st.keys.some((k) => named.has(k))).map((st) => st.label).join(', ')} unless `
+                + `${cost.sets.map((set) => set.join(' + ')).join(' OR ')}`;
+            internalExitGates.push({ region_id: room.regionId, from, to, rule, why });
+            notes.push(why);
+        }
+    }
+    return { internalExitGates, notes };
+}
+
+/**
+ * ⛓ RULES rules-block-stoppers — the STOPPERS `playthroughBlockCrossings` hands the push search: static, unkillable
+ * bodies (the model's combat rows: `aggro.kind` static, `speed` 0, `kill` null — a DarkTrap), each removed by the
+ * events (of `minted`) of the poles whose light kills it (`poleKillsOf`). A body that is not one tile is refused by name.
+ */
+export function playthroughBlockStoppers(level, minted = new Set()) {
+    const poles = (level.entities ?? []).filter((e) => e.type === 'lightpole');
+    const kills = poles.map((p) => ({ pole: p, bodies: poleKillsOf(level, p, { buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH }) ?? [] }));
+    return combatCensusOf(level).enemies.filter((e) => e.row?.aggro?.kind === 'static' && e.row?.speed === 0 && e.row?.kill === null)
+        .map((e) => {
+            const r = contactRect(e);
+            const [tx, ty] = [r.x / TILE, r.y / TILE];
+            if (!Number.isInteger(tx) || !Number.isInteger(ty) || r.w !== TILE || r.h !== TILE) {
+                throw new Error(`block crossings: L${level.level} ${e.tag}@${e.x},${e.y}'s body ${JSON.stringify(r)} is not one tile`);
+            }
+            const keys = kills.filter((k) => k.bodies.some((b) => b.id === `${e.tag}@${e.x},${e.y}`))
+                .map((k) => obstacleEventName({ level: level.level, tag: Number(k.pole.attrs?.tag), cls: k.pole.type, x: k.pole.x, y: k.pole.y }))
+                .filter((n) => minted.has(n));
+            return { tx, ty, keys, label: `${e.tag}@${e.x},${e.y}` };
+        });
+}
+
+/**
+ * ⛓ RULES rules-block-stoppers — **THE CROSSINGS A STRUCK BLOCK'S PUSH PATHS PRICE**, set up once for the producer
+ * (`playthroughBlockCrossings`) and the census (`census-seedling-block-stoppers.mjs`) alike: per level with a struck
+ * block (fire/spear) and sub-regions, its grid, tile types and, per pushable whose start cell borders two sub-regions,
+ * per ordered pair of those sides, the case (a block with fewer than two sides is a `{note}` case, in order) — the near side's start cell, the far side's cells (`goal`), the atlas row
+ * between them (`row`, null when none) and its push item's rule, the push stances (`deriveWeaponFootprint`) and the
+ * held key. Nothing is refused here; the producer refuses what it prices.
+ */
+export function playthroughBlockCrossingCases(doc) {
+    const rooms = [];
     for (const level of MAP.levels) {
         const pushables = (level.entities ?? []).filter((e) => PUSHABLE_KINDS[e.type]?.push);
         if (pushables.length === 0) continue;
@@ -1623,30 +1692,13 @@ export function playthroughBlockCrossings(doc, { events = [] } = {}) {
                 if (t !== null) tileTypes.set(placement[1] * grid.width + placement[0], t);
             }
         }
-        // The stoppers: static, unkillable bodies, each removed by the events of the poles whose light kills it.
-        const poles = (level.entities ?? []).filter((e) => e.type === 'lightpole');
-        const kills = poles.map((p) => ({ pole: p, bodies: poleKillsOf(level, p, { buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH }) ?? [] }));
-        const stoppers = combatCensusOf(level).enemies.filter((e) => e.row?.aggro?.kind === 'static' && e.row?.speed === 0 && e.row?.kill === null)
-            .map((e) => {
-                const r = contactRect(e);
-                const [tx, ty] = [r.x / TILE, r.y / TILE];
-                if (!Number.isInteger(tx) || !Number.isInteger(ty) || r.w !== TILE || r.h !== TILE) {
-                    throw new Error(`block crossings: L${level.level} ${e.tag}@${e.x},${e.y}'s body ${JSON.stringify(r)} is not one tile`);
-                }
-                const keys = kills.filter((k) => k.bodies.some((b) => b.id === `${e.tag}@${e.x},${e.y}`))
-                    .map((k) => obstacleEventName({ level: level.level, tag: Number(k.pole.attrs?.tag), cls: k.pole.type, x: k.pole.x, y: k.pole.y }))
-                    .filter((n) => minted.has(n));
-                return { tx, ty, keys, label: `${e.tag}@${e.x},${e.y}` };
-            });
-        // No stopper in the room: the transcription's claim is all a push could cost here (this derivation adds nothing).
-        if (stoppers.length === 0) { notes.push(`L${level.level}: ${pushables.length} struck block(s), no stopper`); continue; }
+        const cases = [];
         for (const b of pushables) {
             const [bx, by] = [Math.floor(b.x / TILE), Math.floor(b.y / TILE)];
-            const at = by * grid.width + bx;
             const label = `L${level.level} ${b.type}@${b.x},${b.y}`;
             const pushFlag = PUSHABLE_KINDS[b.type].push;
             const pushRule = analyzerOptions.resolveCondition(SEM.flag(pushFlag));
-            const fp = deriveWeaponFootprint(pushFlag.replace(/^has/, '').toLowerCase(), 'block');
+            const stances = deriveWeaponFootprint(pushFlag.replace(/^has/, '').toLowerCase(), 'block');
             const sides = new Map();
             for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
                 const [nx, ny] = [bx + dx, by + dy];
@@ -1654,41 +1706,23 @@ export function playthroughBlockCrossings(doc, { events = [] } = {}) {
                 const sub = subOf(ny * grid.width + nx);
                 if (sub && !sides.has(sub)) sides.set(sub, ny * grid.width + nx);
             }
-            if (sides.size < 2) { notes.push(`${label}: its cell borders ${sides.size} sub-region(s) — no crossing`); continue; }
+            if (sides.size < 2) { cases.push({ note: `${label}: its cell borders ${sides.size} sub-region(s) — no crossing` }); continue; }
             for (const [from, start] of sides) {
                 for (const to of sides.keys()) {
                     if (to === from) continue;
-                    const row = region.subgraph.internal_exits.find((r) => (r.from === from && r.to === to) || (r.bidirectional && r.from === to && r.to === from));
-                    if (!row) { notes.push(`${label}: no internal exit ${from} -> ${to}`); continue; }
-                    if (JSON.stringify(row.access_rule) !== JSON.stringify(pushRule)) {
-                        throw new Error(`block crossings: ${label}'s crossing ${regionId} ${from} -> ${to} is priced `
-                            + `${JSON.stringify(row.access_rule)}, not its push item's ${JSON.stringify(pushRule)} — another crossing joins the sides`);
-                    }
+                    const row = region.subgraph.internal_exits.find((r) => (r.from === from && r.to === to) || (r.bidirectional && r.from === to && r.to === from)) ?? null;
                     const goal = new Set();
                     for (let i = 0; i < indexOf.length; i += 1) if (subOf(i) === to) goal.add(i);
-                    const cost = blockCrossingCost(grid, {
-                        block: { tx: bx, ty: by, condition: SEM.flag(pushFlag) }, stances: fp, stoppers, tileTypes,
-                        keyOf: SEM.conditionKey, held: [SEM.conditionKey(SEM.flag(pushFlag))],
-                    }, start, goal);
-                    if (cost.refused) throw new Error(`block crossings: ${label} ${from} -> ${to}: ${cost.refused}`);
-                    if (cost.sets.length === 0) {
-                        throw new Error(`block crossings: ${label} ${from} -> ${to}: no stopper set opens the crossing the analyzer `
-                            + `prices ${JSON.stringify(pushRule)} — the push model and the analyzer disagree`);
-                    }
-                    if (cost.sets.some((set) => set.length === 0)) { notes.push(`${label}: ${from} -> ${to} free beyond the push item`); continue; }
-                    const ways = cost.sets.map((set) => simplifyRule(set.length === 1 ? { rule: 'Has', args: { item_name: set[0] } }
-                        : { rule: 'And', children: set.map((n) => ({ rule: 'Has', args: { item_name: n } })) }));
-                    const rule = ways.length === 1 ? ways[0] : { rule: 'Or', children: ways };
-                    const named = new Set(cost.sets.flat());
-                    const why = `${label}: pushed from ${from} it stops at ${stoppers.filter((st) => st.keys.some((k) => named.has(k))).map((st) => st.label).join(', ')} unless `
-                        + `${cost.sets.map((set) => set.join(' + ')).join(' OR ')}`;
-                    internalExitGates.push({ region_id: regionId, from, to, rule, why });
-                    notes.push(why);
+                    cases.push({
+                        entity: b, label, pushFlag, pushRule, stances, from, to, start, goal, row,
+                        block: { tx: bx, ty: by, condition: SEM.flag(pushFlag) }, held: [SEM.conditionKey(SEM.flag(pushFlag))],
+                    });
                 }
             }
         }
+        rooms.push({ level, regionId, region, grid, tileTypes, pushables, cases });
     }
-    return { internalExitGates, notes };
+    return rooms;
 }
 
 /**
