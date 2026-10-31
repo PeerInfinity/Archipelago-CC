@@ -1,0 +1,27 @@
+OFF control, primary tree at 0dd87eb8 (default), :9765:
+PASS: B: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`) — {"assumeBidirectional":false,"source":"explicit"}
+PASS: B: the bot is mounted in level_0__r7c6, its first goal in level 10 — {"ok":true,"region":"level_0__r7c6","head":{"location":"Level 010 - Sword","region":"level_10"},"route":{"steps":["level_0__r7c6","level_2","level_3__r0c4","level_4","level_5__r1c5","level_6","level_7","level_8","level_9","
+PASS: B: the Sword's route is 9 hops, opening with r7c6's OWN stairs (`level_0__r7c6 -> level_2`), never through r1c6 — {"steps":["level_0__r7c6","level_2","level_3__r0c4","level_4","level_5__r1c5","level_6","level_7","level_8","level_9","level_10"],"nextExit":"level_0__r7c6 -> level_2","length":9
+PASS: B: the first move is the stairs walked straight from level_0__r7c6 (`level_0__r7c6 -> level_2`, not logical) — ["level_0__r7c6 -> level_2","level_2 -> level_3__r0c4","level_3__r0c4 -> level_4","level_4 -> level_5__r1c5","level_5__r1c5 -> level_6","level_6 -> level_7"]
+PASS: B: nothing is credited at r1c6 (the sealed link is gone from the rules) — []
+PASS: B: the bot CHECKED the Sword ("Level 010 - Sword") — or, on a base without F4, ends on L8's named sandtrap decline — {"swordAt":99,"checks":["Level 010 - Sword","Level 011 - Chest","Level 086 - Chest","Level 036 - Chest","Level 017 - Chest","Level 019 - Shieldspire","Level 019 - Boss Key 0
+PASS: B: every location checked once — ["Level 010 - Sword","Level 011 - Chest","Level 086 - Chest","Level 036 - Chest","Level 017 - Chest","Level 019 - Shieldspire","Level 019 - Boss Key 0","Level 020 - Shield","Level 025 - Chest","Level 029 - Boss Key 1","Level 030 - Torchpickup","Level 032 - Ti
+PASS: B: every solver leg is named by the PASS that made its plan (dashless / full) — [[0,"dashless"],[2,"dashless"],[3,"dashless"],[4,"dashless"],[5,"dashless"],[6,"dashless"],[7,"dashless"],[8,"dashless"],[9,"dashless"],[10,"dashless"],[10,"full"],[11,"full"],[11,"full"],[3,"full"],[2,"full"],[0
+PASS: B: 0 divergences (every played plan, dashless or full, stayed on plan) but the KNOWN ones, named above — {"divergences":0,"known":0,"unknown":[]}
+PASS: B: the engine solves under the work budget (640 units, the default) — {"budgetWork":640,"defaults":{"budgetWork":640,"upgradeWindowWork":85}}
+PASS: B: the engine solves under the upgrade window (85 units, the default) — {"upgradeWindowWork":85,"defaults":{"budgetWork":640,"upgradeWindowWork":85}}
+PASS: B: every adoption is put on the LIVE clock (no refusal), and the adopted plan ships at the held arrivals' gap — {"adoptClock":[{"level":0,"begin":4805,"model":4827,"live":4855,"shift":28,"refusal":null}],"firstGap":21,"modal":21}
+PASS: B: every Restart that met a playing leg waited for its end (none cut) — [{"from":"level_49","ended":true,"timedOut":false,"waitedMs":1613.2999999998137}]
+FAIL: B: every Restart's start-hop arrival is HELD (0 `no-held-arrival` fallbacks; ≥ 1 expected arrival, each ends `held`) — {"forcedBy":{"continuation-declined":1,"cold-start":1},"expectedArrivals":0,"expect":0,"held":0,"rows":[]}
+PASS: B: every location leg that ends in another level is HELD at its landing, and its own check settles — {"cross":[],"forcedBy":{"continuation-declined":1,"cold-start":1},"selfChecks":[]}
+PASS: B: 0 backstops (the wall clock never ended a solve) — {"backstops":0,"backstopMs":300000}
+PASS: B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall — Sphere 6.4 → routing via "level_12__r0c37 -> level_37__r12c6" → level_39__r0c9 (18/48)
+PASS: B: no walk ends on a BREAK step whose event the game already collected (the bot re-plans after the break) — {"eventId":null}
+PASS: R: the warm-up leg walked START -> level_2 and the wasm engine exists (then the bot stopped) — {"warmed":{"status":"Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)","region":"level_2","restartDeferrals":[]},"from":"level_2"}
+PASS: R: the player is in the pocket level_17 (the binding and gameState agree) — {"region":"level_17","physicalSub":"level_17","subRegions":true,"logicalMoves":0,"stats":{"loads":3,"teleports":3,"regionMoves":1,"warnings":0,"parks":0,"resumes":0,"setDeliveries":0,"locationChecks":0,"itemsFound":0
+PASS: R: the bot is mounted in level_17 and its route out BEGINS with RESTART (no walk out of the pocket) — {"ok":true,"region":"level_0__r7c6","head":{"location":"Level 010 - Sword","region":"level_10"},"route":null,"plan":{"goal":"level_10","kind":"restart","why":null,"firstSteps":[{"region":"le
+PASS: R: the bot TOOK the Restart out of level_17 (the glue's Restart was taken and the start hop pushed) — {"lastRestart":{"taken":true,"why":null,"start":"level_0__r7c6","substrate":"flash_seedling","stoppedWalks":0,"watching":0,"pushed":true,"at":1793298098175},"restarts":1,"restartPushes":[{"a
+PASS: R: the bot walks on from the start after the Restart (a region past the start, no error) — {"status":"Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)","region":"level_2","restartDeferrals":[],"restart":{"taken":true,"why":null,"start":"level_0__r7c6","substrate":"
+FAIL: R: every Restart's start-hop arrival is HELD (0 `no-held-arrival` fallbacks; ≥ 1 expected arrival, each ends `held`) — {"forcedBy":{},"expectedArrivals":0,"expect":0,"held":0,"rows":[]}
+PASS: R: 0 divergences (the leg solved from the held start hop stayed on plan) — {"divergences":0}
+2 CHECK(S) FAILED

@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 28,
-        "headings": 1213,
+        "docs": 29,
+        "headings": 1227,
         "indexHeadings": 2,
-        "lines": 33707,
+        "lines": 33982,
         "pages": 4,
-        "words": 479639
+        "words": 484195
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -166,6 +166,21 @@ export const DOCS_INDEX = frz({
             "words": 2874
         },
         {
+            "description": "Cloudberry (substrate id `cloudberry`, in `frontend/modules/cloudberryDemo/`) plays each region as a Cloudberry Kingdom level.",
+            "file": "cloudberry.md",
+            "h1": "Cloudberry Substrate",
+            "headings": 10,
+            "lines": 121,
+            "links": [
+                "flash.md",
+                "paths-and-obstacles.md",
+                "runner.md",
+                "substrate-registry.md"
+            ],
+            "path": "docs/json/developer/procgen/cloudberry.md",
+            "words": 1453
+        },
+        {
             "description": "Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward simulator that writes sphere logs, and per-substrate visualizers.",
             "file": "playback-and-debugging.md",
             "h1": "Playback and Debugging Tools",
@@ -272,7 +287,7 @@ export const DOCS_INDEX = frz({
             "file": "concepts.md",
             "h1": "Concepts",
             "headings": 18,
-            "lines": 189,
+            "lines": 191,
             "links": [
                 "gotchas.md",
                 "paths-and-obstacles.md",
@@ -281,7 +296,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/concepts.md",
-            "words": 3029
+            "words": 3121
         },
         {
             "description": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.",
@@ -334,7 +349,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 37,
-            "lines": 777,
+            "lines": 785,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -344,7 +359,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 42028
+            "words": 43059
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -372,8 +387,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 722,
-            "lines": 26577,
+            "headings": 726,
+            "lines": 26721,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -381,7 +396,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 292613
+            "words": 294593
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",

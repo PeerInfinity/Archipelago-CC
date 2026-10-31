@@ -86,6 +86,8 @@ import {
     WHIRLPOOL, whirlpoolRect,
     // ⛓ fidelity FIREPUSH: a quiet pulser's ring is not priced (`pulserQuiet`).
     playerBoxAt, pulserCycle,
+    // ⛓ fidelity TURRETSNAP D1: the boxes a live ice turret's contact is tested on.
+    iceTurretLiveContactCycle,
 } from './solverView.js';
 import {
     hazardVolume, volumeHitsBox, axeHitsPlayer, SPINNING_AXE,
@@ -1400,6 +1402,48 @@ function darkTrapsHarmless(run) {
     return out;
 }
 
+/**
+ * ⛓⛓ fidelity TURRETSNAP D1 (`CONTACT_FIDELITY.turretSnapPricing`, OFF) — A LIVE ICE TURRET'S BOX IS NOT ITS PLACEMENT.
+ *
+ * `contactRect` is the census box at the ctor point. The game tests a live `IceTurret`'s contact only after `input()`
+ * has snapped it (`iceTurret.iceTurretLiveContactCycle`: the snap precedes `hitPlayer` in the same update, and an
+ * off-screen turret runs neither), so the box a contact can meet is the hull of its rest two-cycle, wherever the run's
+ * turret stands now (a turret the run has not brought on screen yet still reads its ctor point, and that is correct:
+ * this prices the box the player can be touched by, not where the body is drawn this tick). A run position outside
+ * the cycle (a solid the half-pixel move met) is added to the hull rather than trusted away.
+ *
+ * `null` (the caller keeps `contactRect`): the key OFF, not an ice turret, or a turret the run does not step (no row
+ * — the model has no live body, so the placement is the honest reading) or that is dead or removed (the corpse arm,
+ * `darkTrapsHarmless`, owns that).
+ *
+ * @returns {?{rect: object, why: string}}
+ */
+export function liveTurretContactRect(run, inst) {
+    if (!CONTACT_FIDELITY.turretSnapPricing || inst?.as3 !== 'IceTurret') return null;
+    const id = `${inst.tag}@${inst.x},${inst.y}`;
+    const t = run.entities('turrets')?.get?.(id) ?? null;
+    if (!t || t.dead || t.removed) return null;
+    const cyc = iceTurretLiveContactCycle(inst.cx, inst.cy);
+    const inCycle = cyc.points.some((p) => p.x === t.x && p.y === t.y);
+    const atCtor = t.x === inst.cx && t.y === inst.cy;
+    let r = cyc.hull;
+    if (!inCycle && !atCtor) {
+        const x = Math.min(r.x, t.rect.x);
+        const y = Math.min(r.y, t.rect.y);
+        const right = Math.max(r.right, t.rect.right);
+        const bottom = Math.max(r.bottom, t.rect.bottom);
+        r = { x, y, w: right - x, h: bottom - y, right, bottom };
+    }
+    return {
+        rect: r,
+        why: `a live ice turret, priced at the hull of its rest two-cycle `
+            + `(${cyc.points.map((p) => `${p.x},${p.y}`).join(' / ')}) — \`input()\` snaps it before \`hitPlayer\` `
+            + `in the same update, so its ctor box (${inst.cx},${inst.cy}) is never a contact `
+            + `(the run's turret ${atCtor ? 'has not been on screen yet' : (inCycle ? 'is in the cycle'
+                : `stands at (${t.x},${t.y}), outside the cycle, and is added`)}; \`turretSnapPricing\`)`,
+    };
+}
+
 export function staticEnemyDanger(run, box) {
     const out = [];
     const world = run.worldFor(run.level);
@@ -1434,13 +1478,14 @@ export function staticEnemyDanger(run, box) {
         if (pricing.pricedBy === 'stepPlacedGrenadesNow') continue;
         const liveDrill = liveDrills?.get(`${inst.tag}@${inst.x},${inst.y}`) ?? null;
         if (liveDrill?.removed) continue;
-        const r = liveDrill ? liveDrill.rect : contactRect(inst);
+        const liveTurret = liveTurretContactRect(run, inst);
+        const r = liveDrill ? liveDrill.rect : (liveTurret ? liveTurret.rect : contactRect(inst));
         if (!r) continue;
         if (rectsOverlap(box, r)) {
             out.push({
                 kind: 'enemy',
                 id: `${inst.tag}@${inst.x},${inst.y}`,
-                why: liveDrill ? `a stepped drill, priced as a static box where it stands now (${liveDrill.x},${liveDrill.y}) `
+                why: liveTurret ? liveTurret.why : liveDrill ? `a stepped drill, priced as a static box where it stands now (${liveDrill.x},${liveDrill.y}) `
                     + '(`drillMixedRooms`: it hops only when the player is in its run range with a clear line)'
                     : `a static "Enemy" body at its ${stepped ? 'placement (this room is '
                     + 'stepped, so this class is unbridged and does not move)'
@@ -1762,11 +1807,13 @@ export function dangerVolumes(run, horizon = 0) {
         if (contactPricing(inst.tag).kind === 'boss') continue;
         // ⛓ LADDER2: no contact rect for a placed grenade (`grenadeDanger`).
         if (contactPricing(inst.tag).pricedBy === 'stepPlacedGrenadesNow') continue;
-        const r = contactRect(inst);
+        // ⛓ fidelity TURRETSNAP D1: a live ice turret at the box its contact is tested on (OFF: `null`).
+        const liveTurret = liveTurretContactRect(run, inst);
+        const r = liveTurret ? liveTurret.rect : contactRect(inst);
         if (!r) continue;
         out.push({
             level, kind: 'danger', id: `${inst.tag}@${inst.x},${inst.y}`, rect: r,
-            why: 'a static "Enemy" body',
+            why: liveTurret ? liveTurret.why : 'a static "Enemy" body',
         });
     }
     for (const [id, c] of (run.entities('crushers') ?? [])) {

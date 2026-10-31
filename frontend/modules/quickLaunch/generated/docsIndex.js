@@ -372,6 +372,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Bounce (substrate id bounce, in frontend/modules/bounceDemo/) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its…"
     },
     {
+        "path": "docs/json/developer/procgen/cloudberry.md",
+        "title": "Cloudberry Substrate",
+        "section": "developer/procgen",
+        "summary": "Cloudberry (substrate id cloudberry, in frontend/modules/cloudberryDemo/) plays each region as a Cloudberry Kingdom level. The game, its level generator and its embedded page live in the Cloudberry…"
+    },
+    {
         "path": "docs/json/developer/procgen/concepts.md",
         "title": "Concepts",
         "section": "developer/procgen",
@@ -1604,6 +1610,7 @@ export const HELP_SECTIONS = Object.freeze([
         "docs": [
             "docs/json/developer/procgen/architecture.md",
             "docs/json/developer/procgen/bounce.md",
+            "docs/json/developer/procgen/cloudberry.md",
             "docs/json/developer/procgen/concepts.md",
             "docs/json/developer/procgen/demos.md",
             "docs/json/developer/procgen/editing-core.md",

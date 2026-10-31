@@ -355,7 +355,13 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L12DOORS D2 (wave 34): a hidden door nearer the aim asks the 8 px frontier — ON since the W34 flip.
             fineFrontierHiddenDoor: true,
             // ⛓ fidelity L12DOORS D3 (wave 34): a wand stance the 8 px lattice reaches — ON since the W34 flip.
-            fineWandStance: true });
+            fineWandStance: true,
+            // ⛓ fidelity TURRETSNAP D1 (wave 35): a live ice turret priced at its snapped two-cycle — ON since the W35 flip.
+            turretSnapPricing: true,
+            // ⛓ fidelity WATERFALL D1 (wave 35): the corridor planner prices the waterfall's push — ON since the W35 flip.
+            waterfallPushPricing: true,
+            // ⛓ fidelity L32ROCK D1 (wave 35): the BobBoss arena rock's arm banks its {32,1} clear — ON since the W35 flip.
+            bobArenaRockClear: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

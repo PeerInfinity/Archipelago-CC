@@ -12,6 +12,12 @@
       "file": "sheets/ArchipelagoLogo.png",
       "w": 16,
       "h": 16
+    },
+    "ArchipelagoLogo64": {
+      "file": "sheets/ArchipelagoLogo64.png",
+      "w": 64,
+      "h": 64,
+      "authored": "scripts/procgen/archipelagoLogoArt.mjs — data/icon.png (512x512, MIT) by an 8x8 box filter"
     }
   },
   "sprites": {
@@ -25,6 +31,17 @@
         8
       ],
       "as3": "Pickups/APItem.as:74 imgAP; APItem(x+8, y+8) with a centred Image"
+    },
+    "archipelago:pickup/item-64": {
+      "sheet": "ArchipelagoLogo64",
+      "fw": 64,
+      "fh": 64,
+      "frames": 1,
+      "origin": [
+        32,
+        32
+      ],
+      "as3": "not drawn by Seedling (it draws archipelago:pickup/item); the Cloudberry page's check coins (check-look.js)"
     }
   }
 }

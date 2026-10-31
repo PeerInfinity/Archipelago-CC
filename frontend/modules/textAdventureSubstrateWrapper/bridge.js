@@ -15,7 +15,8 @@
  *  - Inventory      → mirror snapshot.inventory into engine sidebar.
  *  - Collected      → mark engine items collected from snapshot.checkedLocations.
  *  - Accessibility  → each room's access rules against the snapshot;
- *                     inaccessible until a snapshot arrives.
+ *                     inaccessible until a snapshot arrives. A rule that
+ *                     throws stays passable but is marked (`ruleErrorMarker.js`).
  *  - Discovery / fog → deferred.
  */
 
@@ -25,6 +26,7 @@ import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { installPlaybackBridge } from './playbackBridge.js';
 import { roomAccessibility } from './roomAccessibility.js';
+import { markRuleErrors } from './ruleErrorMarker.js';
 import {
     customRegionEnterMessage,
     customLocationCheckMessage,
@@ -253,7 +255,9 @@ function applyInventoryFromSnapshot(engine, snapshot) {
  * engine's own `loadWorld` default is accessible, and the world is
  * built from static data that can land before the snapshot does
  * (`roomAccessibility.js` has the measurement). A rule that throws
- * still defaults to accessible.
+ * still defaults to accessible, and is logged (once per pass) and marked
+ * on its link: its message is kept in `ruleErrorsByRoom` for the marker,
+ * which re-applies after every engine render.
  *
  * Procgen note: obstacles are not evaluated here as a separate gate.
  * The procgen pipeline (shared/procgen/pathsAndObstaclesCompiler.js)
@@ -265,6 +269,9 @@ function applyInventoryFromSnapshot(engine, snapshot) {
  * raw sidecar data; the wrapper consumes staticData and gets the
  * compiled equivalent.
  */
+/** roomId → the latest pass's `ruleErrors`, read by `markRuleErrors` after each render. */
+const ruleErrorsByRoom = new Map();
+
 function evaluateAccessibilityForRoom(engine, client, world, roomId) {
     if (!world || !roomId) return;
     const room = world.rooms[roomId];
@@ -284,6 +291,8 @@ function evaluateAccessibilityForRoom(engine, client, world, roomId) {
             engine.setItemAccessible(roomId, item.id, acc.items[item.id]);
         }
     });
+    ruleErrorsByRoom.set(roomId, acc.ruleErrors);
+    markRuleErrors(appEl, ruleErrorsByRoom);
 }
 
 function applyCheckedLocationsFromSnapshot(engine, snapshot, world) {
@@ -319,6 +328,12 @@ async function main() {
     log('info', 'Connected to host');
 
     const engine = new TextAdventureEngine(appEl, { managed: true });
+    // The engine re-renders the room as innerHTML on every state change, which
+    // drops the rule-error marker; re-apply it after each render. The callback
+    // runs at the microtask checkpoint, before paint, and only changes
+    // attributes, so it does not observe itself.
+    new MutationObserver(() => markRuleErrors(appEl, ruleErrorsByRoom))
+        .observe(appEl, { childList: true, subtree: true });
 
     // Engine → AP: translate command events into dispatcher publishes.
     // Payload shapes match what gameState/locations expect (see

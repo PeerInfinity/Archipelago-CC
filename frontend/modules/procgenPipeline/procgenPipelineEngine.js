@@ -5527,6 +5527,24 @@ function buildSphereLibraryRegion(sourceId, entry, {
         if (r) exitRules[entranceSide] = r;
     }
     if (Object.keys(exitRules).length) zoneRules.exitRules = exitRules;
+    // A hook that returns its own exit PATHS (a requirement the level really has —
+    // cloudberry's end door) keeps them: assembleZoneRegion prefers paths over
+    // exitRules, so the overlay gate is ANDed onto every path as a logic_gate
+    // obstacle instead of being dropped. Bounce and runner return no exitPaths
+    // here, so their regions are unchanged.
+    for (const [side, rule] of Object.entries(exitRules)) {
+        const paths = zoneRules.exitPaths?.[side];
+        if (!paths) continue;
+        const gateId = `sphere_gate_${region_id}_${side}`;
+        zoneRules.obstacleDefs = {
+            ...(zoneRules.obstacleDefs ?? {}),
+            [gateId]: { id: gateId, name: `Sphere gate (${side})`, clear_set_type: 'rule', clear_rule: rule },
+        };
+        zoneRules.exitPaths = {
+            ...zoneRules.exitPaths,
+            [side]: paths.map((p) => ({ ...p, obstacles: [...(p.obstacles ?? []), gateId] })),
+        };
+    }
 
     const region = assembleZoneRegion({
         substrate: entry.substrate,

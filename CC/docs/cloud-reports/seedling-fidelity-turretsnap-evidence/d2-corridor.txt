@@ -1,0 +1,26 @@
+rows 1 key OFF icest OFF: REFUSED ticks - handed [] kills []
+   solverBot(d2) collect (128,128) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (62.4,24.0) — enemy:iceturret@64,16 (a static "Enemy" body at its placement (this room is stepped, so this class is unbridged and does not move), priced "stepped" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused: |   avoid: no admissible corridor with the danger map's 1 vo
+rows 1 key OFF icest ON : SOLVED ticks 263 handed [{"id":"iceturret@64,16","t":0,"via":"chooser"}] kills [{"id":"iceturret@64,16","t":0,"dead":true,"ticks":140}] stance {"x":88,"y":18} side down
+rows 1 key ON  icest OFF: REFUSED ticks - handed [] kills []
+   solverBot(d2) collect (128,128) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (70.6,24.0) — enemy:iceturret@64,16 (a live ice turret, priced at the hull of its rest two-cycle (88,40 / 87.5,39.5) — `input()` snaps it before `hitPlayer` in the same update, so its ctor box (80,32) is never a contact (the run's turret has not been on screen yet; `turretSnapPricing`)) — 
+rows 1 key ON  icest ON : SOLVED ticks 263 handed [{"id":"iceturret@64,16","t":0,"via":"chooser"}] kills [{"id":"iceturret@64,16","t":0,"dead":true,"ticks":140}] stance {"x":88,"y":18} side down
+rows 2 key OFF icest OFF: REFUSED ticks - handed [] kills []
+   solverBot(d2) collect (128,128) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (62.6,40.0) — enemy:iceturret@64,16 (a static "Enemy" body at its placement (this room is stepped, so this class is unbridged and does not move), priced "stepped" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused: |   avoid: no admissible corridor with the danger map's 1 vo
+rows 2 key OFF icest ON : REFUSED ticks - handed [{"id":"iceturret@64,16","t":0,"via":"chooser"}] kills [{"id":"iceturret@64,16","t":0,"dead":false,"ticks":0,"why":"no side of iceturret@64,16 gives a hitless kill — right: no try is hitless (490 fork(s); {\"standing:hit:blast\":48,\"circle:other\":392,\"standing:frozen-press\":2,\"approach-hit:blast\":48}) — delay 0:  (fork, standing, delay 0): the player was H"}]
+   solverBot(d2) collect (128,128) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (62.6,40.0) — enemy:iceturret@64,16 (a static "Enemy" body at its placement (this room is stepped, so this class is unbridged and does not move), priced "stepped" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused: |   avoid: no admissible corridor with the danger map's 1 vo
+rows 2 key ON  icest OFF: REFUSED ticks - handed [] kills []
+   solverBot(d2) collect (128,128) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (69.9,39.8) — enemy:iceturret@64,16 (a live ice turret, priced at the hull of its rest two-cycle (88,40 / 87.5,39.5) — `input()` snaps it before `hitPlayer` in the same update, so its ctor box (80,32) is never a contact (the run's turret has not been on screen yet; `turretSnapPricing`)) — 
+rows 2 key ON  icest ON : REFUSED ticks - handed [{"id":"iceturret@64,16","t":0,"via":"chooser"}] kills [{"id":"iceturret@64,16","t":0,"dead":false,"ticks":0,"why":"no side of iceturret@64,16 gives a hitless kill — right: no try is hitless (490 fork(s); {\"standing:hit:blast\":48,\"circle:other\":392,\"standing:frozen-press\":2,\"approach-hit:blast\":48}) — delay 0:  (fork, standing, delay 0): the player was H"}]
+   solverBot(d2) collect (128,128) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (69.9,39.8) — enemy:iceturret@64,16 (a live ice turret, priced at the hull of its rest two-cycle (88,40 / 87.5,39.5) — `input()` snaps it before `hitPlayer` in the same update, so its ctor box (80,32) is never a contact (the run's turret has not been on screen yet; `turretSnapPricing`)) — 
+key OFF dangerAt (88,18) box {"x":86,"y":16,"right":90,"bottom":21}: iceturret@64,16
+key OFF dangerAt (88,20) box {"x":86,"y":18,"right":90,"bottom":23}: iceturret@64,16
+key OFF dangerAt (88,21) box {"x":86,"y":19,"right":90,"bottom":24}: iceturret@64,16
+key OFF dangerAt (88,24) box {"x":86,"y":22,"right":90,"bottom":27}: iceturret@64,16
+key OFF dangerAt (56,24) box {"x":54,"y":22,"right":58,"bottom":27}: calm
+key OFF dangerAt (120,24) box {"x":118,"y":22,"right":122,"bottom":27}: calm
+key ON  dangerAt (88,18) box {"x":86,"y":16,"right":90,"bottom":21}: calm
+key ON  dangerAt (88,20) box {"x":86,"y":18,"right":90,"bottom":23}: calm
+key ON  dangerAt (88,21) box {"x":86,"y":19,"right":90,"bottom":24}: iceturret@64,16
+key ON  dangerAt (88,24) box {"x":86,"y":22,"right":90,"bottom":27}: iceturret@64,16
+key ON  dangerAt (56,24) box {"x":54,"y":22,"right":58,"bottom":27}: calm
+key ON  dangerAt (120,24) box {"x":118,"y":22,"right":122,"bottom":27}: calm

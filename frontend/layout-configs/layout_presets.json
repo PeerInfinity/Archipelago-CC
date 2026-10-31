@@ -290,6 +290,11 @@
             },
             {
               "type": "component",
+              "componentType": "cloudberryDemoPanel",
+              "title": "Cloudberry Kingdom"
+            },
+            {
+              "type": "component",
               "componentType": "noiz2saSubstratePanel",
               "title": "Noiz2sa"
             },

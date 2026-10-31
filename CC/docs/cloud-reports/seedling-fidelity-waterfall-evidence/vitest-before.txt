@@ -1,0 +1,5 @@
+ FAIL  frontend/modules/mazeRoom/mazeRoomUI.test.js [ frontend/modules/mazeRoom/mazeRoomUI.test.js ]
+Error: registerBackend: duplicate id 'empty'
+     33|         throw new Error(`registerBackend: duplicate id '${backend.id}'…
+ Test Files  1 failed | 99 passed (100)
+      Tests  2515 passed (2515)

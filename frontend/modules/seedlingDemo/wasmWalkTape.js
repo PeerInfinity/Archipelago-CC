@@ -63,7 +63,7 @@
 
 import { createManualSession } from './watchManual.js';
 import { createRuntimeWalker, WALK_GIVE_UP_TICKS, WALK_STATES } from './jsRuntimeWalker.js';
-import { apItemsOf, recordOfRoom } from './jsRuntimeCore.js';
+import { apItemsOf, liveClears, locationEntityOf, locationPointOf, recordOfRoom } from './jsRuntimeCore.js';
 import { assembleLevelSetChunks, planLevelSetChunks } from './levelSetValidator.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { createInPlaceSolveService, settleSolve } from './jsRuntimeSolver.js';
@@ -89,7 +89,7 @@ const rowOf = (run) => ({ level: run.level, x: run.state.x, y: run.state.y, deat
  * @param {object} o.staging      the arrival's staging (a fresh boot — no prefix)
  * @param {object} o.levelSource  the MOUNTED set's level source (`levelSourceFromAtlas(records)`)
  * @param {Map} o.records         level → record (the mounted set's, `recordOfRoom`)
- * @param {object} o.goal         `{kind:'location', level, tag}` | `{kind:'exit', level, tile|tiles}`
+ * @param {object} o.goal         `{kind:'location', level, tag, entityType?}` | `{kind:'exit', level, tile|tiles}`
  *                                (`resolveSeedlingGoal`'s shape)
  * @param {boolean} [o.scratchPersistence]  the page's mode (S3: every room)
  * @param {number} [o.maxTicks]
@@ -109,8 +109,15 @@ export function walkTapeFromStaging({ staging, levelSource, records, goal, scrat
             + 'the bot plans ONE goal in ONE room (⚖ Q5)');
     }
     const apItems = new Map([...(records ?? new Map())].map(([level, rec]) => [level, apItemsOf(rec)]));
-    if (goal.kind === 'location' && !(apItems.get(goal.level) ?? []).some((a) => a.tag === goal.tag)) {
-        throw new WalkTapeRefusal(`level ${goal.level} of the mounted set has no apitem with tag ${goal.tag}`);
+    const isApItem = goal.kind === 'location' && (apItems.get(goal.level) ?? []).some((a) => a.tag === goal.tag);
+    // ⛓ DOOR CHESTS — a location that NAMES its entity (a generated door chest, `resolveSeedlingGoal`) is walked to
+    // that entity's own stance, and ends on the run clearing its slot (the chest's clear IS the check).
+    const entity = goal.kind === 'location' && !isApItem && goal.entityType
+        ? locationEntityOf(records?.get(goal.level), goal.tag, goal.entityType) : null;
+    if (goal.kind === 'location' && !isApItem && !entity) {
+        throw new WalkTapeRefusal(goal.entityType
+            ? `level ${goal.level} of the mounted set has no ${goal.entityType} with tag ${goal.tag}`
+            : `level ${goal.level} of the mounted set has no apitem with tag ${goal.tag}`);
     }
     // ⛔ An apitem's clear is NOT the model's to boot with: the `apitem` class has no
     // PERSISTENCE_RESPONSE (it is in no role list — the page owns its report), so a run
@@ -133,6 +140,7 @@ export function walkTapeFromStaging({ staging, levelSource, records, goal, scrat
     let failure = null;
     const walker = createRuntimeWalker({
         apItemOf: (level, tag) => (apItems.get(level) ?? []).find((a) => a.tag === tag) ?? null,
+        ...(entity ? { locationPointOf: () => locationPointOf(entity) } : {}),
         isCollected: (level, tag) => collected.has(`${level}:${tag}`),
         onEvent: (e) => { if (e.state === WALK_STATES.FAILED) failure = e.message ?? 'the walk failed'; },
     });
@@ -177,9 +185,12 @@ export function walkTapeFromStaging({ staging, levelSource, records, goal, scrat
                 break;
             }
         }
+        if (entity && run.level === goal.level && liveClears(run).some((c) => c.level === goal.level && c.tag === goal.tag)) {
+            collected.add(`${goal.level}:${goal.tag}`);
+        }
         const death = run.playerDeaths.length > deaths0 ? run.playerDeaths.at(-1).source ?? 'death' : null;
         walker.observe({ crossing, death });
-        if (goal.kind === 'location' && collected.has(`${goal.level}:${goal.tag}`)) end = 'collected';
+        if (goal.kind === 'location' && collected.has(`${goal.level}:${goal.tag}`)) end = entity ? 'opened' : 'collected';
         else if (walker.state === WALK_STATES.DONE) end = 'crossed';
         else if (crossing) {
             throw new WalkTapeRefusal(`the walk left level ${goal.level} for ${crossing.to} at tick ${i} without `
