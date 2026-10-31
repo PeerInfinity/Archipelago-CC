@@ -15,6 +15,11 @@
  *   - the module setting `siteUrl` overrides both.
  * The page gets `?embed=1` (the game side of `__swfBridge`), the bridge's event
  * names, and `packs=` this frontend's own art library (the check-coin logo).
+ *
+ * ⛔ Nothing is fetched before the first Cloudberry region: until then the panel shows
+ * `waiting.html` (the game is ~26 MB, and most worlds have no Cloudberry region). The
+ * first `cloudberry:loadRegion` probes for the local copy and swaps the iframe to the
+ * game page; procgenPlayer re-publishes the active region when its bridge says appReady.
  */
 
 import { createSubstrateIframePanelClass } from '../flashSubstrate/flashSubstratePanel.js';
@@ -42,18 +47,21 @@ const baseHref = () => (typeof document !== 'undefined' ? document.baseURI : 'ht
 const abs = (rel) => new URL(rel, baseHref()).href;
 
 let _settingUrl = '';
-// Before the probe answers: a localhost page guesses its local copy, any other host Pages.
-let _probedSite = (typeof location !== 'undefined' && /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname))
-    ? LOCAL_SITE : PAGES_SITE;
+let _probedSite = null;     // set by the probe, on the first Cloudberry region
+let _active = false;        // a Cloudberry region has been entered
 let _eventBus = null;
 
 /** The site the panel iframes now (an absolute URL ending in '/'). */
 export function cloudberrySiteUrl() {
-    const raw = _settingUrl || _probedSite;
+    const raw = _settingUrl || _probedSite || PAGES_SITE;
     return abs(raw.endsWith('/') ? raw : `${raw}/`);
 }
 
 function iframeSrc() {
+    if (!_active || (!_settingUrl && !_probedSite)) {
+        const w = new URLSearchParams({ iframeId: CLOUDBERRY_IFRAME_ID, loadRegionEvent: CLOUDBERRY_LOAD_REGION_EVENT });
+        return `./modules/cloudberryDemo/waiting.html?${w}`;
+    }
     const q = new URLSearchParams({
         embed: '1',
         iframeId: CLOUDBERRY_IFRAME_ID,
@@ -68,23 +76,29 @@ function siteChanged() {
     _eventBus?.publish?.(SITE_CHANGED_EVENT, { site: cloudberrySiteUrl() }, 'cloudberryDemo');
 }
 
-// Is the local copy there? Asked once, at import, so it normally answers before the panel mounts.
-const _probe = (typeof fetch === 'function' && typeof document !== 'undefined')
-    ? fetch(abs(`${LOCAL_SITE}build-info.json`), { cache: 'no-store' })
-        .then((res) => res.ok, () => false)
-        .then((present) => {
-            const next = present ? LOCAL_SITE : PAGES_SITE;
-            if (next !== _probedSite) { _probedSite = next; siteChanged(); }
-            return present;
-        })
-    : Promise.resolve(false);
-export const localSitePresent = () => _probe;
+// Is the local copy there? Asked once, on the first Cloudberry region.
+let _probe = null;
+export function localSitePresent() {
+    _probe ??= (typeof fetch === 'function'
+        ? fetch(abs(`${LOCAL_SITE}build-info.json`), { cache: 'no-store' }).then((res) => res.ok, () => false)
+        : Promise.resolve(false))
+        .then((present) => { _probedSite = present ? LOCAL_SITE : PAGES_SITE; return present; });
+    return _probe;
+}
+
+/** The first Cloudberry region: find the site, then swap the waiting page for the game. */
+function activate() {
+    if (_active) return;
+    _active = true;
+    if (_settingUrl) siteChanged();
+    else localSitePresent().then(() => siteChanged());
+}
 
 export const CloudberryDemoPanel = createSubstrateIframePanelClass({
     componentType: CLOUDBERRY_PANEL_COMPONENT_TYPE,
     title: 'Cloudberry Kingdom',
     iframeSrc,
-    // Absolute: the page lives outside this frontend's tree (its own site folder).
+    // Absolute: the game page lives outside this frontend's tree (its own site folder).
     bridgeSrc: abs('./modules/flashSubstrate/bridge.js'),
     moduleName: 'cloudberryDemo',
     reloadEvent: SITE_CHANGED_EVENT,
@@ -155,6 +169,7 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     setPlaybackProxy(new PlaybackProxy({ eventBus, controlEvent: CLOUDBERRY_PLAYBACK_CONTROL_EVENT }));
 
     eventBus.subscribe(CLOUDBERRY_LOAD_REGION_EVENT, () => {
+        activate();
         const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
         if (isFocusLocked?.()) return;
         eventBus.publish('ui:activatePanel', { panelId: CLOUDBERRY_PANEL_COMPONENT_TYPE });

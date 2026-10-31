@@ -31,7 +31,7 @@ The flash bridge is injected into the game's iframe by the host panel, so the pa
 
   The script finds the file list from what the build publishes about itself (`index.html` and the scripts it references, `content-manifest.json`, `_framework/blazor.boot.json`) and records the build id it fetched in `.cloudberry-site.json`.
 
-The panel uses the local copy when its `build-info.json` answers, and `/cloudberry-kingdom-wasm/` otherwise. The module setting **Cloudberry site URL** (`moduleSettings.cloudberryDemo.siteUrl`) overrides both.
+Nothing is fetched until the first Cloudberry region is entered: until then the panel shows a small waiting page (`waiting.html`), because the game is about 26 MB and most worlds have no Cloudberry region. Then the panel uses the local copy when its `build-info.json` answers, and `/cloudberry-kingdom-wasm/` otherwise. The module setting **Cloudberry site URL** (`moduleSettings.cloudberryDemo.siteUrl`) overrides both.
 
 The iframe URL is the page with `?embed=1` (the page's embedded mode, which implements the game side of `__swfBridge`), the bridge's `loadRegionEvent` and `playbackControlEvent`, and `packs=` pointing at this frontend's own `packs/` folder. The page draws check coins with the Archipelago logo from that art library, falling back to a purple coin when it cannot read it.
 
