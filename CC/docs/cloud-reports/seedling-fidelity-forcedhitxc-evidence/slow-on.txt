@@ -1,0 +1,4 @@
+ ✓ frontend/modules/seedlingDemo/fidelityL32ArenaPrefix.slow.test.js (5 tests) 43945ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Bk2.slow.test.js (1 test) 396209ms
+ Test Files  2 passed (2)
+      Tests  6 passed (6)
