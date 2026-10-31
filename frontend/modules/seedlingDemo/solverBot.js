@@ -11927,6 +11927,17 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
             contactsOverride: new Set(resolved.exempt ?? []) });
     }
     if (run.ledger('playerHits').length !== hitsBefore) refuse(`the player was HIT on the staging walk to ${id}`);
+    // ⛓ hammer-phase SOUTHDOOR (`APPROACH_DOOR`, OFF): a hypothesis door between the staging point and every side is
+    // discharged on the live run first, and the approach stages in its cell
+    if (APPROACH_DOOR.enabled) {
+        const door = approachDoorFirst(run, sides, exempt, resolved, ctx, id);
+        if (door !== null) {
+            if (run.ledger('playerHits').length !== hitsBefore) {
+                refuse(`the player was HIT discharging ${door.door} before the approach to ${id}`);
+            }
+            stage = { x: run.state.x, y: run.state.y };
+        }
+    }
     if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
     // 2. the tries, each on a fork
     const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
@@ -12048,6 +12059,72 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     TURRET_APPROACH_COUNTS.approaches.push({ turret: id, t: run.ticksCompleted, side: null, forks, tally });
     return refuse(`no approach to ${id} from the staging point (${stage.x},${stage.y}) is hitless — ${forks} fork(s), `
         + `${JSON.stringify(tally)}: ${whys.join(' | ')}`);
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SOUTHDOOR (`APPROACH_DOOR`, OFF) — THE APPROACH'S DOOR, DISCHARGED BEFORE ITS FORKS.
+ *
+ * The approach's fork routes plan with `planWaypoints` against the world as it is: no ladder, so a door between the
+ * staging point and the turret is a wall to every try (APPROACH, measured on L40 legs 860/861: the staging walk reached
+ * (488,579) hitless, south of the latched `wandlock@480,560` {t 3}, and all 12 forks were `no-plan`). The order that
+ * opens it — the latch's `hold` at `buttonroom@880,768` — was raised by the uncertified stance walk's own ladder before
+ * the approach replaced it.
+ *
+ * ON, and only when NO side plans from where the player stands: the stance hypothesis is asked (`stanceHypothesis`,
+ * with the order's exemptions); a side that plans under its discharged doors (`bagWithDischarged`) names the first
+ * hypothesis door its route crosses (the player's box sampled along the waypoints). The live run walks to that door's
+ * cell with the loop's own `walkTo` — its ladder raises the door's order and the walk ends in the open doorway — and
+ * returns the record. No side planning under the hypothesis either, or no door on the route, returns null: the
+ * approach is APPROACH's, and its own named refusal stands. The door's order is the ladder's, not chosen here.
+ *
+ * `approachDoorFor` is the question alone (no tick spent): null where a side plans from where the player stands (the
+ * near side: nothing is asked), else `{door, side, cell}` or `{door: null, why}`. `sides` are `{key, x, y}` stances.
+ */
+export function approachDoorFor(run, sides, exempt, contacts = NO_CONTACTS) {
+    const opts = solverPlanOpts(run, exempt);
+    if (sides.some((s) => planWaypointsOrNull(run.world, run.state, s, null, opts) !== null)) return null;
+    const hypothesis = stanceHypothesis(run, [], contacts);
+    const doors = new Set(hypothesis.filter((h) => h.kind === 'activator').map((h) => h.id));
+    if (doors.size === 0) return { door: null, why: 'no-hypothesis-door' };
+    const hopts = solverPlanOpts(run, exempt, { liveBag: bagWithDischarged(run, run.liveGeometryOpts(), hypothesis) });
+    const rows = (run.world.activators ?? []).filter((a) => doors.has(a.id) && a.rect);
+    for (const s of sides) {
+        const wps = planWaypointsOrNull(run.world, run.state, s, null, hopts);
+        if (wps === null) continue;
+        let from = { x: run.state.x, y: run.state.y };
+        for (const w of wps) {
+            const n = Math.max(1, Math.ceil(Math.hypot(w.x - from.x, w.y - from.y) / 2));
+            for (let i = 1; i <= n; i += 1) {
+                const box = playerBoxAt(from.x + ((w.x - from.x) * i) / n, from.y + ((w.y - from.y) * i) / n);
+                const a = rows.find((r) => rectsOverlapLocal(box, r.rect));
+                if (a) {
+                    return { door: a.id, side: s.key,
+                        cell: { x: (a.rect.x + a.rect.right) / 2, y: (a.rect.y + a.rect.bottom) / 2 } };
+                }
+            }
+            from = w;
+        }
+    }
+    return { door: null, why: 'no-door-on-a-hypothesis-route' };
+}
+
+/**
+ * The live half of SOUTHDOOR: `approachDoorFor`'s door, discharged by the loop's own `walkTo` to its cell (the ladder
+ * raises the door's order). Every ask is noted on `APPROACH_DOOR_COUNTS` (a door's row before its walk, so a door whose
+ * own order refuses is still on the instrument). Returns the door's row, or null (nothing to discharge).
+ */
+function approachDoorFirst(run, sides, exempt, resolved, ctx, id) {
+    const found = approachDoorFor(run, sides, exempt, new Set(resolved.exempt ?? []));
+    if (found === null) return null;
+    const row = Object.assign(found, { turret: id, t: run.ticksCompleted });
+    APPROACH_DOOR_COUNTS.doors.push(row);
+    if (row.door === null) return null;
+    const t0 = run.ticksCompleted;
+    ctx.walkTo(ctx.goal, row.cell, { what: `${ctx.what} -> ${id} approach door ${row.door} (${row.cell.x},${row.cell.y})`,
+        contactsOverride: new Set(resolved.exempt ?? []) });
+    row.ticks = run.ticksCompleted - t0;
+    row.open = run.entities('openActivators').has(row.door);
+    return row;
 }
 
 /** ICEST: the arm's staging point stands this far past the turret's attack range, px (outside it no volley starts). */
@@ -15924,6 +16001,36 @@ export const TURRET_APPROACH_COUNTS = { approaches: [] };
 /** Zero `TURRET_APPROACH_COUNTS`. */
 export function resetTurretApproachCounts() {
     TURRET_APPROACH_COUNTS.approaches = [];
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SOUTHDOOR — THE APPROACH'S DOOR FIRST (⚖ the user queued the slice on 2026-10-31, one of four
+ * hammer slices run in parallel; APPROACH's hand-over, its report § 9: *"from 860/861 the approach's staging point
+ * (488,579) is south of the latched `wandlock@480,560`, and the fork routes (`planWaypoints`) have no ladder to discharge
+ * it. The door's hold must come first, or the approach must stage inside the door's discharge"*).
+ *
+ * `APPROACH_DOOR` (OFF; asked only under `TURRET_APPROACH`): when no side of the turret's snapped box plans from the
+ * approach's staging point in the world as it is, but one plans under the stance hypothesis (`stanceHypothesis`, its
+ * discharged doors open), the hypothesis door the route crosses first is discharged on the LIVE run before any fork:
+ * the loop's own `walkTo` (its ladder raises the door's order — the latch's `hold` — exactly as the uncertified stance
+ * walk's did) to the door's cell, and the approach stages there (`approachDoorFirst`). Where a side plans from the
+ * staging point (the near side, the latch staging), nothing is asked and the approach is APPROACH's, byte for byte.
+ * `SEEDLING_APPROACH_DOOR=1` / `withApproachDoor(enabled, fn)`. OFF, nothing is read.
+ */
+export const APPROACH_DOOR = { enabled: globalThis.process?.env?.SEEDLING_APPROACH_DOOR === '1' };
+export const APPROACH_DOOR_DEFAULT = false;
+
+/** Run `fn` with `APPROACH_DOOR` set to `enabled`, restoring the previous value. */
+export function withApproachDoor(enabled, fn) {
+    return withSwitch(APPROACH_DOOR, enabled, fn);
+}
+
+/** The switch's instrument, written only ON, read by nothing that decides: `doors`, each discharge asked. */
+export const APPROACH_DOOR_COUNTS = { doors: [] };
+
+/** Zero `APPROACH_DOOR_COUNTS`. */
+export function resetApproachDoorCounts() {
+    APPROACH_DOOR_COUNTS.doors = [];
 }
 
 /**

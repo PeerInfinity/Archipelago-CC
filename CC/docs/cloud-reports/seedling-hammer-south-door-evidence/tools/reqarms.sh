@@ -1,4 +1,5 @@
 #!/bin/bash
+# (SOUTHDOOR: armenv.sh is this slice's; arms.mjs carries APPROACH_DOOR's instrument)
 # scratch (APPROACH, from L40C's reqall.sh): every captured request under each arm, N shards at once, against ROOT's
 # solver. Usage: ROOT=<tree> reqarms.sh <capture.jsonl> <outdir> <N> <arm>...
 T="$(cd "$(dirname "$0")" && pwd)"; CAP=$1; O=$2; N=$3; shift 3; mkdir -p "$O"
