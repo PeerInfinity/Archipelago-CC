@@ -1,0 +1,13 @@
+PRESSES [1337]
+BUMPS (run) [{"t":1333,"id":"spinner@192,160","shoved":true},{"t":1334,"id":"spinner@192,160","shoved":true}]
+FORECAST bumps ON [1332,1333] unmodelled OFF/ON 1 0 cursor 1 0
+{"T":1331,"run":[198.454,133.837],"game":null,"runGame":null,"OFFpress":0,"OFFcursor":0,"ONpress":0,"ONcursor":0}
+{"T":1332,"run":[197.857,133.035],"game":null,"runGame":null,"OFFpress":0,"OFFcursor":0,"ONpress":0,"ONcursor":0}
+{"T":1333,"run":[194.284,132.035],"game":null,"runGame":null,"OFFpress":2.9747,"OFFcursor":2.9747,"ONpress":0,"ONcursor":0}
+{"T":1334,"run":[187.043,133.384],"game":null,"runGame":null,"OFFpress":9.6182,"OFFcursor":9.6182,"ONpress":0,"ONcursor":0}
+{"T":1335,"run":[180.048,134.687],"game":null,"runGame":null,"OFFpress":16.016,"OFFcursor":16.016,"ONpress":0,"ONcursor":0}
+{"T":1336,"run":[173.299,135.944],"game":null,"runGame":null,"OFFpress":22.168,"OFFcursor":22.168,"ONpress":0,"ONcursor":0}
+{"T":1337,"run":[166.795,137.156],"game":null,"runGame":null,"OFFpress":28.0742,"OFFcursor":28.0742,"ONpress":0,"ONcursor":0}
+{"T":1338,"run":[164.795,138.321],"game":null,"runGame":null,"OFFpress":29.4767,"OFFcursor":29.4767,"ONpress":0,"ONcursor":0}
+{"T":1339,"run":[170.807,139.441],"game":null,"runGame":null,"OFFpress":22.867,"OFFcursor":23.4645,"ONpress":0,"ONcursor":0}
+WORST {"runGame":0,"OFFpress":29.4767,"ONpress":0,"OFFcursor":29.4767,"ONcursor":0} game samples skipped
