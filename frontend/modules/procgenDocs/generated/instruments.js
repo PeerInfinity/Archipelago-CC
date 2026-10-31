@@ -12417,6 +12417,7 @@ export const INSTRUMENTS = frz({
                 "producer",
                 "shard",
                 "shard-plan",
+                "solver-env",
                 "stage-flags",
                 "upgrade-window-work",
                 "wait-for-box"
@@ -12566,6 +12567,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "shard-plan"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "solver-env"
                 },
                 {
                     "how": [

@@ -291,6 +291,8 @@ export async function createLab() {
             ...(typeof s.res?.dashOnlyWindow === 'boolean' ? { dashOnlyWindow: s.res.dashOnlyWindow } : {}),
             // ⛓ DASH-SHAPE STAMP — the dash shape the WORKER's switches read (all three keys), when it was stamped
             ...(s.res?.dashShape ? { dashShapeRead: plain(s.res.dashShape) } : {}),
+            // ⛓ CPWIT — the solver-env spec the WORKER installed (`solverEnvChannel.js`), when the page set one (its stamp)
+            ...(typeof s.res?.solverEnv === 'string' ? { solverEnv: s.res.solverEnv } : {}),
             // ⛓ FORCED-HIT CONSUMER — the crossings the plan BILLED and the damage it ends on (absent = none billed):
             // a forced-hit leg's `roomHits.max` is measured against them
             ...(s.res?.plan?.forcedHits ? { forcedHits: plain(s.res.plan.forcedHits), damage: plain(s.res.plan.damage) } : {}),
