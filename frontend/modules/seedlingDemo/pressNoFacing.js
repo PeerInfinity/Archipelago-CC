@@ -35,8 +35,7 @@
  * `?seedlingSolverEnv=`); `withPressNoFacing(true, fn)` for a test or a witness.
  */
 
-import { CombatVerbError } from './combatVerbs.js';
-import { PressError } from './presses.js';
+import { CombatVerbError, PressError } from './solverView.js';
 
 export const PRESS_NO_FACING = { enabled: globalThis.process?.env?.SEEDLING_PRESS_NO_FACING === '1' };
 export const PRESS_NO_FACING_DEFAULT = false;

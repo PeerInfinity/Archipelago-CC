@@ -90,6 +90,8 @@ export {
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD, SLASH_ANIM_TICKS, SLASH_DASH_FORCE,
     SLASH_SCALE_NORMAL, slashPressForecast, slashScaleFor, slashSet, slashTimerTick,
 } from './combatVerbs.js';
+// ⛓ hammer-phase SLASHRECT: the ghost sword's rect throw, recognised by `pressNoFacing.refuseNoFacing`.
+export { CombatVerbError } from './combatVerbs.js';
 // crusher.js — botDriverV2, crusherBait · seedling 5
 export { collideLineSolid, CRUSHER, crusherRect, DIRECTIONS, scanCrusher } from './crusher.js';
 // endingChain.js — strikePolicy · seedling 1
@@ -197,6 +199,8 @@ export { pressRectTouches, spearHitRect } from './presses.js';
 export { auditPress, PRESS_ARM_POLICY } from './presses.js';
 // ⛓ fidelity FIREMOVE: the fire route's flame audit (what else a Fire press reaches, by its arm's policy).
 export { FIRE_ARM_POLICY } from './presses.js';
+// ⛓ hammer-phase SLASHRECT: the sword/spear rect throw, recognised by `pressNoFacing.refuseNoFacing`.
+export { PressError } from './presses.js';
 // pull.js — solverBot · seedling 2
 export { pullModelled, pullsDrainingInto } from './pull.js';
 // pulser.js — solverBot · seedling 3
