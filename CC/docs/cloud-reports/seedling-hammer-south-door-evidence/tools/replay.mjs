@@ -1,3 +1,4 @@
+// scratch (SOUTHDOOR): unchanged from APPROACH; AT=x,y is the boot header (state - 8)
 // scratch (APPROACH, from L40C, from LWEIGH tools/replay.mjs): replay saved latch keys on a fresh run of the latch boot; print the turret/doors/hits story.
 const ROOT = process.env.ROOT ?? '/home/user/Archipelago-CC';
 const M = ROOT + '/frontend/modules/seedlingDemo/';

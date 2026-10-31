@@ -17,7 +17,7 @@ console.log('open', [...run.entities('openActivators')].join(' '), 'latched', [.
 const near = (e) => e.x >= 760 && e.x <= 960 && e.y >= 700 && e.y <= 900;
 console.log('openChests', [...run.entities('openChests')].join(' '), 'burned', [...run.entities('burnedTrees')].join(' '));
 const opts = SB.solverPlanOpts(run, new Set());
-for (const aim of [{ x: 888, y: 776 }, { x: 888, y: 800 }, { x: 888, y: 860 }, { x: 488, y: 579 }, { x: 888, y: 840 }, { x: 872, y: 800 }]) {
+for (const aim of [{ x: 888, y: 776 }, { x: 888, y: 800 }, { x: 888, y: 860 }, { x: 488, y: 579 }, { x: 888, y: 840 }, { x: 872, y: 800 }, { x: 888, y: 824 }, { x: 904, y: 800 }, { x: 904, y: 776 }]) {
   let w = null; try { w = planWaypoints(run.world, run.state, aim, null, opts); } catch (e) { w = 'THREW ' + e.message.slice(0, 120); }
   console.log('plan to', JSON.stringify(aim), Array.isArray(w) ? `${w.length} wps` : w);
 }

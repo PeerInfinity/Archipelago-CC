@@ -1,0 +1,13 @@
+== bk2-cap-L-TA.jsonl
+  856/0 REFUSED refusal work=642 25736ms 2c2ee1c516ea
+    head: solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+    ta: [{"turret": "iceturret@472,400", "t": 283, "side": null, "forks": 12, "tally": {"no-plan": 12}}]
+  856/1 REFUSED refusal work=1951 53062ms 2c2ee1c516ea
+    head: solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+    ta: [{"turret": "iceturret@472,400", "t": 283, "side": null, "forks": 12, "tally": {"no-plan": 12}}, {"turret": "iceturret@472,400", "t": 283, "side": null, "forks": 12, "tally": {"no-plan": 12}}]
+  857/0 REFUSED refusal work=642 28655ms 2c2ee1c516ea
+    head: solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+    ta: [{"turret": "iceturret@472,400", "t": 311, "side": null, "forks": 12, "tally": {"no-plan": 12}}]
+  857/1 REFUSED refusal work=830 32866ms 2c2ee1c516ea
+    head: solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+    ta: [{"turret": "iceturret@472,400", "t": 311, "side": null, "forks": 12, "tally": {"no-plan": 12}}, {"turret": "iceturret@472,400", "t": 145, "side": null, "forks": 12, "tally": {"no-plan": 12}}]
