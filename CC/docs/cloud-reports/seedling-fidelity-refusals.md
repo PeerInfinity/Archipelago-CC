@@ -4,7 +4,7 @@ Session `seedling-fidelity-refusals`, planner `seedling-fidelity-planning-17`.
 
 - **Start SHA:** `b646d32d95b4ebd636a70f05886957deffbf724a` (main; 105 ON of 116).
 - **Harness branch:** `claude/seedling-fidelity-refusals-w0r4m3`.
-- **Head:** the commit that carries this report. Code commits: `95c5763a` (D1), `6d428ffd` (D2), `3f368cf4` (D2b, D2's narrowing).
+- **Head:** the commit that carries this report (identity-block file md5 `2d3ccf1c`, run at `3f368cf4`). Code commits: `95c5763a` (D1), `6d428ffd` (D2), `3f368cf4` (D2b, D2's narrowing).
 - **New keys** (appended at the END of the defaults, both **OFF**, byte-identical): `chestBodyPlacementProbe`, `inPitFallOut` → **105 ON of 118**.
 - `solverEnvChannel.js` does not exist at this base, so the two new env reads (`SEEDLING_CHEST_BODY_PLACEMENT_PROBE`, `SEEDLING_IN_PIT_FALL_OUT`) need no `SOLVER_ENV_NAMES` line yet. When CPWIT lands, they need one.
 
@@ -156,7 +156,7 @@ endpoint must not seal the door). That is a BOSSKILLS-sized slice (cf. `lavaBoss
 | bounded vitest BEFORE (defaults), 24 files | **533 / 533 passed** |
 | bounded vitest ON (`SEEDLING_CHEST_BODY_PLACEMENT_PROBE=1 SEEDLING_IN_PIT_FALL_OUT=1`), 28 files: contactFidelity, r8Acceptance, levelRunStateDigest, solveProgress, solverReachPit, fidelityL1516, fidelityDescent, fidelityEncounters, fidelityApBosses, solverEncounter, solverDeadline, fidelityCorpseBump, fidelityRopeStance, fidelityTurretCircle, fidelityChestSeal, chest, campaignChain, jsRuntimeVerbs, jsRuntimeLongPlanWalk, jsRuntimeVanillaDelivery, wasmArrivalComposite, decisionTrace, entityBlocks, seedlingCanCross, fidelityArrival, r5Shaft, watchOverlays, jsRuntimeSolverShouldStop (every `grep -a` hit for `placementBlocker`/`execReachPit`/`reach-pit`/the keys, plus the core rows) | **760 / 761**. The one red is `contactFidelity.test.js` *"the shipped defaults"* (the defaults pin: re-pin `true` at a flip) |
 | `jsRuntimeTape.test.js` at DEFAULTS | **2 red**: PHASE B `NO_TAPE_CHAIN` (×2). This is the brief's predicted move from any new key (it hashes `globals`). **For js's train 3; not re-pinned.** |
-| identity block / six `--check`s at defaults | see *Identity* below |
+| identity block / six `--check`s at defaults | all six exit 0, md5s equal the base (see *Identity*) |
 | L4 dash margin (84 vs 85) | `jsRuntimeSolverShouldStop` green ON (neither key touches L4's dashless path) |
 
 Not run (named for the planner): `ci-producer-checks.mjs --jobs=3` with the keys ON, and the full survey and sweep on CI.
