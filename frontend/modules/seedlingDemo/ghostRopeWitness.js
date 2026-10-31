@@ -52,6 +52,43 @@ export const GHOST_ROPE_WITNESSES = Object.freeze([
 export const GHOST_ROPE_TARGET = Object.freeze({ id: 'rope@32,16', level: 16, tag: 0, pressTick: 1, testTick: 2,
     rect: Object.freeze({ x: 32, y: 16, w: 64, h: 16, right: 96, bottom: 32 }) });
 
+/**
+ * ⛓ The SOLVER's own plan, switch ON (`GHOST_ROPE_CUT`): L16's `clear-tag {16,0}` from the boot (72,40) with the
+ * endgame pair — the `rope` verb's ghost swing (`arm: 'verb'`, `weapon: 'ghostsword'`), the walk it certifies played on
+ * the game (⚖ 30(c)).
+ */
+export const GHOST_ROPE_PLAN_WITNESSES = Object.freeze([
+    Object.freeze({ name: 'ghostrope-l16-verb-plan', boot: { level: 16, x: 72, y: 40 }, items: GHOST, cut: true,
+        goals: Object.freeze([{ kind: 'clear-tag', tag: { level: 16, tag: 0 }, at: { x: 32, y: 16 },
+            obstacle: 'rope@32,16' }]) }),
+]);
+
+/** The solver's plan for a plan witness (the switch ON) and its tape, an idle tail after the plan. */
+export async function ghostRopePlanTape(w) {
+    const { ropeStaging } = await import('./fidelityRope.js');
+    const { buildStagedTape } = await import('./botDriverV1.js');
+    const { atlasLevelSource } = await import('./levelSource.js');
+    const { twoPassSolve } = await import('./twoPassSolve.js');
+    const { createRunForStaging } = await import('./tapeRunner.js');
+    const { withGhostRopeCut } = await import('./ghostRopeCut.js');
+    const staging = await ropeStaging({ boot: w.boot, items: [...w.items] });
+    const levelSource = atlasLevelSource();
+    const solved = await withGhostRopeCut(true, () => twoPassSolve({
+        makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource),
+        goals: w.goals.map((g) => ({ ...g })), name: w.name, boot: staging.boot, dashMode: 'all',
+        persistence: staging.persistence, log: () => {},
+    }));
+    const tape = buildStagedTape({
+        staging: { ...staging, persistence: solved.persistence,
+            equips: [...(staging.equips ?? []), ...(solved.out.equips ?? [])] },
+        perTick: [...solved.out.perTick, ...Array.from({ length: GHOST_ROPE_IDLE }, () => new Set())],
+        name: w.name,
+    });
+    return { staging, solved, tape: { ...tape, description: 'seedling-hammer-ghost-rope: the solver\'s `rope` plan '
+        + `(GHOST_ROPE_CUT ON) for ${GHOST_ROPE_TARGET.id} from (${w.boot.x},${w.boot.y}) with the ghost sword `
+        + '(probe-seedling-ghost-rope.mjs)' } };
+}
+
 /** One witness's tape: a face tap up, one `primary` press, `GHOST_ROPE_IDLE` idle ticks. */
 export async function ghostRopeTape(w) {
     const { ropeStaging } = await import('./fidelityRope.js');

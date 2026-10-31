@@ -3,7 +3,8 @@
  * probe-seedling-ghost-rope — seedling-hammer-ghost-rope (GHOSTROPE): DOES THE GHOST SWORD CUT A ROPE ON THE GAME?
  *
  * Plays `ghostRopeWitness.GHOST_ROPE_WITNESSES` (L16's `rope@32,16`, one press from three distances, the ghost sword
- * and a plain-sword control) on a FRESH p4g page each (headless, the logic-only channel), and asks: is the rope's tag
+ * and a plain-sword control) and `GHOST_ROPE_PLAN_WITNESSES` (the solver's own `rope` plan with the switch ON) on a
+ * FRESH p4g page each (headless, the logic-only channel), and asks: is the rope's tag
  * {16,0} written (the cut), at which tick, and does the game's walk agree with the model's at 0 px on every tick?
  * See `ghostRopeWitness.js` for the AS3 lines and the four witnesses.
  *
@@ -22,8 +23,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { sampleOf } from './probe-seedling-rope-verb.mjs';
-import { GHOST_ROPE_TARGET, GHOST_ROPE_WITNESSES, GHOST_ROPE_WITNESS_DIR, ghostRopeModel, ghostRopeTape }
-    from '../../frontend/modules/seedlingDemo/ghostRopeWitness.js';
+import {
+    GHOST_ROPE_PLAN_WITNESSES, GHOST_ROPE_TARGET, GHOST_ROPE_WITNESSES, GHOST_ROPE_WITNESS_DIR, ghostRopeModel,
+    ghostRopePlanTape, ghostRopeTape,
+} from '../../frontend/modules/seedlingDemo/ghostRopeWitness.js';
 import { compareWitness } from '../../frontend/modules/seedlingDemo/fidelityRope.js';
 
 argvHelp(import.meta.url);
@@ -68,9 +71,14 @@ async function main() {
         if (!ok) failures += 1;
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     };
-    for (const w of GHOST_ROPE_WITNESSES) {
+    for (const w of [...GHOST_ROPE_WITNESSES, ...GHOST_ROPE_PLAN_WITNESSES]) {
         if (only && !only.includes(w.name)) continue;
-        const { tape } = await ghostRopeTape(w);
+        const { tape, solved } = w.goals ? await ghostRopePlanTape(w) : await ghostRopeTape(w);
+        if (solved) {
+            const cut = solved.out.records.find((r) => r.goal === 'clear-tag');
+            check(`${w.name}: the solver's plan (GHOST_ROPE_CUT ON) cuts with the ghost sword by the \`rope\` verb`,
+                cut?.arm === 'verb' && cut?.weapon === 'ghostsword', `${solved.out.perTick.length} t, ${JSON.stringify(cut)}`);
+        }
         const model = await ghostRopeModel(tape);
         const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
         let played;
