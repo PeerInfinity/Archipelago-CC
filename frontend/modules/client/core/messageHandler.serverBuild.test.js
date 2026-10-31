@@ -297,6 +297,20 @@ describe('MessageHandler: rules built from server data', () => {
     await flush(10);
     expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(0);
     expect(handler.getScoutedLocations()).toHaveLength(placements.length);
+
+    // An incremental ReceivedItems (index > 0) still ADDS, in one worker batch, as before the plain rule.
+    calls.length = 0;
+    stateManagerMock.beginBatchUpdate.mockClear();
+    stateManagerMock.commitBatchUpdate.mockClear();
+    handler.processMessage({
+      cmd: 'ReceivedItems',
+      index: 2,
+      items: [{ item: metamathItems['Statement 4'], location: 2, player: 2, flags: 1 }],
+    });
+    await flush(10);
+    expect(calls).toEqual([['addItemToInventory', 'Statement 4']]);
+    expect(stateManagerMock.beginBatchUpdate).toHaveBeenCalledTimes(1);
+    expect(stateManagerMock.commitBatchUpdate).toHaveBeenCalledTimes(1);
   });
 
   it('a disconnect abandons the build', async () => {
