@@ -26762,3 +26762,39 @@ only Boss Key 2 arrival leg that gets past `bobsoldier@880,832`. Switch `pressKi
   corridor, the body), or its tries spend the caller's deadline.
 
 ---
+
+### Seedling fidelity CORPSEBUMP2 — a bumped corpse is read where it is pressed (`corpseBumpRestRead`, OFF)
+
+Wave 36, planner `seedling-fidelity-planning-17`; LWEIGH's § 9 hand-over. Key `CONTACT_FIDELITY.corpseBumpRestRead`,
+**OFF** (`SEEDLING_CORPSE_BUMP_REST_READ=0|1`). The report is `CC/docs/cloud-reports/seedling-fidelity-corpsebump2.md`.
+
+- **W0: the two reads are one rule.** `execCorpseWeigh`'s rest read and `runFire`'s positive control both take the
+  corpse's ENTITY tile, `floor(x/16)`. The corpse MOVED between them. On the latch chain (CPAIR-3 + `LATCH_WEIGH_FIRST` +
+  `orbitFreeAim` + `strategyBoundDistinct`; at this base it also needs `turretSnapPricing` OFF, which W35 added after
+  LWEIGH measured), bump 1 rests the corpse on (30,25) at y 408 (a true rest: the two-cycle 408 ↔ 407.5). The walk to
+  bump 2's stance is driven with Fire still selected; the walk's strike/dash policy (`strikePolicyFor` gates on the
+  inventory's sword, not the selected slot) presses `up+primary` on the walk's first tick (stack: `botDriverV2.drive`
+  from `walkToUnder`). That is a Fire press: the corpse glides on to (30,24) during the walk, and `runFire` refuses
+  *"ALREADY on (30,24)"*. The refusal has no `perTick` because `runFire` throws a `BotDriverV2Error`, which carries none.
+- **The game agrees** (p4g, headless, 0 px, 1400 ticks, hitless): `corpsebump2-walk-press`, the solver's own ticks with the
+  key ON, recorded by `probe-seedling-l40latch.mjs` (`fixtures/l40latch-witness/`). The corpse rests (30,26) → (30,25) →
+  (30,24) = `button@480,384`, and `wandlock@448,432` opens in the model at t1301.
+- **D1** (`execCorpseWeigh` only): the rest wait is factored (`waitRest`, the same rule and messages). ON, after each
+  stance walk a walk press younger than its bump window is stood out, and a corpse gliding (`turretsSettled`) or off the
+  rest cycle it was read on is waited to rest and re-read (at most `k` such walks): the bump the walk made is not made
+  again. An unmoved corpse costs no tick: the first cut (any walk Fire press ⇒ wait) cost hammer-2's solved arms 72–74
+  ticks. A `runFire` refusal carries `perTick` (an optional field on the error). The record gains `corpse.walkBumps`.
+- **Effect ON.** The hand-over arm: OFF refuses at bump 2 (BotDriverV2Error, no perTick); ON the lock opens and the chain
+  stops on the 4-strategy bound at `pushableblock@576,560` (t3564, hitless) — LWEIGH's item 3. hammer-2's table: every other
+  arm ON = OFF, the solved ones key for key (L+CP3+TA 4142, + `orbitFreeAim` 4108, both hitless). L40 survey steps
+  67/95/97/136/149: ON = OFF.
+- **Gate** `fidelityCorpseBump2.test.js` (ships OFF; the witness: checks, 0 px ON and OFF, the two Fire presses and the
+  lock) and `fidelityCorpseBump2.slow.test.js` (OFF's refusal; ON's chain and the fixture's tape; ON = OFF on the solved
+  L+CP3+TA arm).
+
+**Trap candidates.**
+- Two reads that disagree may both be right: look for what acts BETWEEN them before unifying them.
+- A walk driven with a non-blade item selected still presses X when a sword is in the inventory; an executor that holds
+  Fire across a walk owns what that press does.
+
+---
