@@ -155,6 +155,34 @@ Builder frame catches it and answers `undefined`.
 ⚠ Only `roomAccessibility` installs the hook. Every other changed row now hears the failure only through the engine's
 `error` log line.
 
+**js-14's two follow-up questions, measured.** Two throwaway node scans loaded every committed preset (224
+`*_rules.json`, every player) into the real `StateManager` with the new core. Each was evaluated with an empty inventory
+and again with the full item pool. A copy of concept_trial with the `List` rule on its guarded exit served as a positive
+control, and both scans detected it.
+
+1. **The spoiler comparison's silent pass is LATENT, not current.**
+   - Mechanism: `comparisonEngine.js:182` builds the state's set of accessible locations, per sphere, from parent
+     reachable AND `evaluateRule(...) === true`, and diffs it against the sphere log's accessible set. An erroring rule
+     now yields `undefined`, so the location is left out of the state set.
+   - That matches the log at every sphere where the log does not list the location yet. It is caught
+     (`missingFromState`) at the first sphere that lists it. So a false pass needs a location the log never lists as
+     accessible, or `allow_regressive_accessibility_mismatches`. Before, the throw failed the sphere.
+   - Today: **0 of 224 presets have any caught rule error**, and none fails to load. The scan did not walk the
+     intermediate sphere inventories, only empty and full.
+2. **The regionBlockBuilder double class is reachable from committed presets TODAY, without any throw.**
+   - `isTraversable` (:553, :736) and `locAccessible` (:994) become `undefined` whenever a rule in a reachable region
+     is *undetermined*, and `toggle('accessible', undefined)` then acts as a plain toggle.
+   - Scan, evaluating through `createSnapshotInterface` (the UI's path): **18 of 224 presets** have exit or location
+     rules in reachable regions that evaluate to `undefined`, with **0 throws**. The largest:
+     - `zillion` 147 (empty and full inventory);
+     - `smz3` 25 (both);
+     - `alttp_worldgen` / `alttp_vanilla_worldgen` 25 at full inventory (`Desert Palace - Boss`…);
+     - the alttp multiworlds 5 each;
+     - `procgen_topdown` AP_7/AP_8 5 each.
+   - So it predates this slice. A throwing rule is just one more way in.
+   - The scan approximates the panel's interface: it uses a location context for location rules. The panel's own
+     count could differ.
+
 Two follow-ups for js-14, both outside this slice:
 
 - `regionBlockBuilder`'s double class.
@@ -208,7 +236,9 @@ is untouched. The route was hit 3 times (main thread and worker).
 - **Reading:** the A0 failure is load-bound and hits the base equally. It is not this change. That also follows from
   the code: A0 holds the snapshot back, so `roomAccessibility` returns `known: false` before `createContext`, and none
   of the changed code runs. The quiet-box runs, 4/4 (loop 1, runs 1 and 8–10), all passed.
-- **Total: 12 of 20 runs passed**, and A0 is the only failing check. A rate on a quiet box is still owed if js-14
+- **Total: 12 of 20 runs passed**, and A0 is the only failing check.
+- The exact failing text is the same in both arms: `FAIL: fatal: timeout waiting for: the late-snapshot page renders
+  exit before its snapshot`. Arm A had 6 failures, arm B had 7. **So A0 is load-flaky on base main too.** A rate on a quiet box is still owed if js-14
   wants one; I could not get a quiet box this session.
 
 ## WORKER ERROR INVESTIGATION (no code; a worker fix is a separate slice and needs the user's word)
@@ -377,17 +407,36 @@ At outer `c0ef47853e` (branch `rule-engine-catch-and-report`):
   - `gh run rerun --failed` → the regression job passed.
   - A local `npm test -- --mode=test-regression --bundled` at this tip: **59/59**.
   - So it reads as a flake: 1 red out of 2 CI attempts plus 1 local run. The colorblind rows read the Regions panel's
-    symbols, not rule results. I did not chase it further. js-14 may want its rate from `test-substrates-repeat`. TT runs `--mode=test-regression` (unbundled and
-  bundled) and the substrate batches, so the spoiler regression mode is covered.
+    symbols, not rule results. I did not chase it further. js-14 may want its rate from `test-substrates-repeat`.
+  - Job ids: attempt 1, red: `124576571009`. Attempt 2, green: `124579951685`.
+- TT runs `--mode=test-regression` (unbundled and bundled) and the substrate batches, so the spoiler regression mode is
+  covered.
+
+**At the merged tip `f7a0fca7f2`.** Main moved to `b646d32d95` (tile-mechanisms-m1) during the slice, so I merged it
+in. The only conflicts were the two generated procgen files: I took main's versions and regenerated them.
+`procgenDocs` was 494/494 after that; the pins plus `mazeRoom/tileSpike` were 242/242.
+
+- **Fresh TT** `41218859854`: **success**, first attempt.
+- unittests `41218860955`: success.
+- JSUT `41218860997`: **success**. After that, shared `main` was fast-forwarded `daee222 → 733945b`, and `merge-base --is-ancestor 733945b origin/main` gave rc=0.
+
+The outer diff against `origin/main` is 7 files. `frontend/modules/shared` (`daee222 → 733945b`) is the only 160000
+row.
+
+**State manager vs wrapper on a throwing exit.** They DISAGREE: the tracker/worker reports `region_2_3` unreachable (the
+exit is false), while the text adventure shows the link passable and marked, and a click moves the player through. This
+is the user's chosen design. The wrapper policy is the 10-30 ruling, and the worker was left as-is by the 10-31
+ruling.
 
 ## STOPPED / for js-14
 
 - Nothing STOPPED.
 - **Landing.** Shared follows a linear direct-to-main pattern (`git log origin/HEAD`: one commit after another on
   `main`). The plan, on js-14's GO:
-  1. fast-forward shared `main` to `733945b` (currently `daee222`, its parent);
-  2. measure `merge-base --is-ancestor 733945b origin/main`;
-  3. fast-forward the outer main.
+  1. DONE: shared `main` fast-forwarded `daee222 → 733945b` after JSUT `41218860997` went green.
+  2. DONE: `merge-base --is-ancestor 733945b origin/main` gave rc=0.
+  3. DONE: the outer tip `f7a0fca7f2` rode TRAIN 4, which landed as main `c14dc07626`. This report update is a
+     docs-only commit on top of it.
   The gitlink is the only 160000 row in the outer diff.
 - Follow-ups noted above:
   - `regionBlockBuilder`'s `toggle(…, undefined)` double class;
