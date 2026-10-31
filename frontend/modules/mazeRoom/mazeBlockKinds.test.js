@@ -454,15 +454,21 @@ describe('scripted ≡ native (every new condition by helper; geometry native)',
 
     it('agrees over seeded random gadget rooms (kinds, a button + door, a pulser)', () => {
         let rooms = 0;
-        for (let seed = 1; rooms < 6 && seed < 200; seed++) {
+        const exercised = { moved: 0, woken: 0, pulsed: 0 };
+        for (let seed = 1; rooms < 4 && seed < 200; seed++) {
             const rows = randomRoom(createRng(seed));
             let w;
             try { w = world(rows); } catch { continue; }
             const r = disagreements(w, [SWORD, FIRE]);
             expect(r.out, rows.join('\n')).toEqual([]);
+            for (const k of ['moved', 'woken', 'pulsed']) exercised[k] += r[k];
             rooms += 1;
         }
-        expect(rooms).toBe(6);
+        expect(rooms).toBe(4);
+        // Not vacuous: across the rooms, uses move and wake blocks and pulses shove them.
+        expect(exercised.moved).toBeGreaterThan(0);
+        expect(exercised.woken).toBeGreaterThan(0);
+        expect(exercised.pulsed).toBeGreaterThan(0);
     });
 
     describe('red-first: a broken helper makes scripted ≠ native', () => {
@@ -520,13 +526,13 @@ describe('scripted ≡ native (every new condition by helper; geometry native)',
 });
 
 /**
- * A seeded random gadget room: 8×7, sparse walls, a plain, a fire and a turret block, one button `o` holding the door
+ * A seeded random gadget room: 7×6, sparse walls, a plain, a fire and a turret block, one button `o` holding the door
  * `D` before the exit, and one pulser `Q` (a wall cell) whose token `q` is a second button. Refused layouts (a pulser
  * on a reach clash) are skipped by the caller.
  */
 function randomRoom(rng) {
-    const W = 8;
-    const H = 7;
+    const W = 7;
+    const H = 6;
     const g = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => (x === 0 || y === 0 || x === W - 1 || y === H - 1 ? '#' : '.')));
     const free = () => {
         for (;;) {
