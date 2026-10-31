@@ -1,0 +1,11 @@
+OFF
+1 REFUSED undefined  arrowtrap@48,16 101ms solverBot(procgen-l900) collect (96,112) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (48.5,48.5) — arrowLane:arrowtrap@48,16 (an ARMED trap's lane — a STATE question, and still danger at every horizon: the volley that has not fired yet is the one a walk needs warning about) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 1 volume(s) forbidden — no walkable tile path in level 900 from tile (1,1) to (6,6). The two are in different connected components of the tiles the player box fits in — which at the v2 rung i
+2 REFUSED undefined  arrowtrap@64,16 23ms solverBot(procgen-l900) collect (96,80) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (64.0,64.0) — arrowLane:arrowtrap@64,16 (an ARMED trap's lane — a STATE question, and still danger at every horizon: the volley that has not fired yet is the one a walk needs warning about) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 1 volume(s) forbidden — no walkable tile path in level 900 from tile (1,1) to (6,4). The two are in different connected components of the tiles the player box fits in — which at the v2 rung in
+3 REFUSED undefined  arrowtrap@64,16 19ms solverBot(procgen-l900) collect (96,64) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (64.0,56.4) — arrowLane:arrowtrap@64,16 (an ARMED trap's lane — a STATE question, and still danger at every horizon: the volley that has not fired yet is the one a walk needs warning about) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 1 volume(s) forbidden — no walkable tile path in level 900 from tile (1,1) to (6,3). The two are in different connected components of the tiles the player box fits in — which at the v2 rung in
+ON
+1 SOLVED 144 pull:ghostsword@24,88 collect  311ms 
+2 SOLVED 125 pull:ghostsword@40,72 collect  213ms 
+3 SOLVED 120 pull:ghostsword@24,56 collect  99ms 
