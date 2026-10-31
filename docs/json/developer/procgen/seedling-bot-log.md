@@ -26813,4 +26813,7 @@ only Boss Key 2 arrival leg that gets past `bobsoldier@880,832`. Switch `pressKi
   negative before forecasting, the aim is not admitted, the live press tick re-aims, the fight macro is not offered;
   seed 7's request then meets the kill's own refusal ("There is no step out"); the level is the same either way.
 - **Measured.** Identity block BEFORE = AFTER on every row (r9 campaign `be9c19c8`); census of 548 generated levels at
-  base: the family's only throw is caldera-cf seed 7. Gate `hammerSlashRect.test.js` (8 rows; 5 mutants each red).
+  base: the family's only throw is caldera-cf seed 7. Switch ON: producers 97 run / 0 red, route survey 0 movers
+  (201/237 both ways), hammer `.slow` files 11/11, a base/OFF/ON digest census of 54 levels moves only caldera-cf 7
+  (ABORT → generated). `solveProgress.BOUND_KINDS` classes both new bounds `unmodelled`. Gate
+  `hammerSlashRect.test.js` (8 rows; 5 mutants each red).
