@@ -107,7 +107,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_63__r6c9 → level_63__r6c15 | no AP crossing into level_63__r6c9 from outside its world admits this arrival',
             'level_82 @ Level 082 - King of Fire | Dark Suit',
             'level_89__r9c6 @ Level 089 - Feather (from level_89__r11c12) | the rules producer leaves level_89/Level 089 - Feather uncharged (permissiveBindings)',
-            'level_91 → level_89__r1c10 (landing 15,4) | Progressive Swim',
+            // ⛓ rules-certifier-tail: `level_91 → level_89__r1c10 (landing 15,4) | Progressive Swim` is gone — L91's door now
+            // charges the Swim every way onto it pays (`chargeNecessaryApproaches`), so the row AGREES instead of being excused.
         ]);
         // ⛓ THE SKIP CENSUS (session tile-primitives-lightpoles, designer review): every row whose LANDING arrival has points no AP
         // crossing landing there admits — counted and named, so a new skip is a diff here, never silence. L62/L63/L64 are the pole
@@ -169,6 +170,9 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_52__r5c10 → level_52__r2c2 (landing 1,7) | 1/3',
             'level_52__r5c10 → level_51__r14c6 (landing 1,7) | 1/3',
             'level_52__r5c10 → level_56 (landing 1,7) | 1/3',
+            // ⛓ rules-certifier-tail: L54's door to L53 now charges the Swim every way onto it pays, so its landing (9,14)
+            // admits only holding it.
+            'level_53__r14c9 → level_54__r1c8 (landing 9,14) | 24/48',
             'level_54__r1c8 → level_53__r14c9 (landing 9,1) | 1/3',
             'level_54__r27c8 → level_52__r0c7 (landing 8,28) | 1/3',
             'level_55 @ Level 055 - Boss Key 3 (landing 4,3) | 1/2',
@@ -208,6 +212,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_82 → level_96 (landing 9,1) | 5/8',
             'level_83 → level_12__r42c28 (landing 2,3) | 20/64',
             'level_83 → level_84__r2c4 (landing 2,3) | 20/64',
+            // ⛓ rules-certifier-tail: L91's door down the fall now charges the Swim, so its landing (13,1) admits only holding it.
+            'level_89__r1c10 → level_91 (landing 13,1) | 1/3',
             'level_89__r11c12 → level_0__r2c13 (landing 10,18) | 1/3',
             'level_89__r11c12 → level_87__r1c3 (landing 10,18) | 1/3',
             'level_91 → level_89__r1c10 (landing 1,8) | 2/3',
