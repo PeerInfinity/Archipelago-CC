@@ -1,0 +1,8 @@
+SPINAIM t539 ok=false claim=false bound=- why=the forecast names shield bump (`shieldBumpNow`) as unmodelled
+SPINAIM t871 ok=false claim=false bound=- why=the forecast names shield bump (`shieldBumpNow`) as unmodelled
+SPINAIM t904 ok=false claim=false bound=- why=the forecast names shield bump (`shieldBumpNow`) as unmodelled
+SPINAIM t539 ok=false claim=false bound=- why=the forecast names shield bump (`shieldBumpNow`) as unmodelled
+SPINAIM t871 ok=false claim=false bound=- why=the forecast names shield bump (`shieldBumpNow`) as unmodelled
+SPINAIM t904 ok=false claim=false bound=- why=the forecast names shield bump (`shieldBumpNow`) as unmodelled
+SPINAIM t2624 ok=false claim=false bound=- why=the forecast names shield bump (`shieldBumpNow`) as unmodelled
+SPINAIM t2742 ok=false claim=false bound=- why=the forecast names shield bump (`shieldBumpNow`) as unmodelled

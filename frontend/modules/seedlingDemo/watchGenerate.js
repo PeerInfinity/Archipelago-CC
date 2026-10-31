@@ -92,7 +92,8 @@ import {
     writeRosterParam, writeRunFlag, writeSizeParams, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
-    ENDGAME_PALETTE, POST_DARK_SUIT_PALETTE, POST_FEATHER_PALETTE, POST_FIRE_PALETTE, POST_SHIELD_PALETTE,
+    CALDERA_PALETTE, ENDGAME_PALETTE, FLOODED_RUINS_PALETTE, FROZEN_FORGE_PALETTE,
+    POST_DARK_SUIT_PALETTE, POST_FEATHER_PALETTE, POST_FIRE_PALETTE, POST_SHIELD_PALETTE,
     POST_SPEAR_PALETTE, POST_SWIM_PALETTE, POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
     instantiateKept, normalizeRoster, parseTerrainList, restrictPalette, withTerrains,
 } from './procgenPalette.js';
@@ -155,6 +156,10 @@ export const GENERATE_BIOMES = Object.freeze({
     'post-spear': POST_SPEAR_PALETTE,
     'post-dark-suit': POST_DARK_SUIT_PALETTE,
     endgame: ENDGAME_PALETTE,
+    /** ⛓ seedling-gen-new-biomes (C4) — the three new biomes (design §3.4); opt-in. */
+    caldera: CALDERA_PALETTE,
+    'frozen-forge': FROZEN_FORGE_PALETTE,
+    'flooded-ruins': FLOODED_RUINS_PALETTE,
 });
 
 export const BIOME_NAMES = Object.freeze(Object.keys(GENERATE_BIOMES));
@@ -893,7 +898,7 @@ export function generateStep({
          */
         const seam = seedlingSeam({
             seed, items: palette.items ?? null, budget: b, skeleton: skelEffective,
-            elements, areas, require, defaults, dashMode,
+            elements, areas, require, defaults, dashMode, floodWalks: palette.floodWalks,
         });
         const { model } = seam;
         return Object.freeze({

@@ -631,10 +631,20 @@ export function recordOwesSoundPin(record) {
  *
  * ⛔ The set is a function of the items alone, and on a record that holds none of
  * the new terrains every boot's flood is the old `ground`-only flood.
+ *
+ * ⛓ seedling-gen-new-biomes (C4) — `walks`: terrains a BIOME declares walkable on
+ * top of its boot's (`palette.floodWalks`). Only `caldera` names one today (`melt`:
+ * the igneous crust is crossed before the dark suit, as long as the walk does not
+ * linger, which the oracle's no-lava-death rule holds). Absent or empty, the set is
+ * the items' own, so every other biome's flood is unchanged.
  */
-export function floodTerrainsFor(items) {
+export function floodTerrainsFor(items, walks = []) {
     const names = [TERRAIN.ground.name, TERRAIN.ice.name, TERRAIN.stairs.name, TERRAIN.ghoststep.name];
     if (items?.hasDarkSuit === true) names.push(TERRAIN.lava.name, TERRAIN.melt.name);
+    for (const w of walks ?? []) {
+        if (!TERRAIN[w]) fail(`procgenLevel: floodTerrainsFor: "${w}" is not a TERRAIN name.`);
+        if (!names.includes(w)) names.push(w);
+    }
     return Object.freeze(names);
 }
 

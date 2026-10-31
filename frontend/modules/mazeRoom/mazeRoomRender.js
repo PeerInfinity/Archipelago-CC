@@ -75,6 +75,11 @@
  *                                  ops)` draws `ops` over the layer, the marker of every cell in
  *                                  `cells` is not drawn (the art owns it, shown or cleared), and
  *                                  `player` replaces the player's disc and facing tick.
+ *   blocks                string[]|null  BLOCKS (maze-seedling-art-3): `state.blocks` — the posKeys
+ *                                  the pushable blocks stand on NOW; null = the world's own
+ *                                  layout (`world.blocks`, the pre-play view — the element
+ *                                  overlay's spelling). A button reads DOWN under the player
+ *                                  or a block (the engine's `heldTokens`).
  *
  * ── ⛓ THE GATE IS AN ORDERED DRAW-OP LOG, AND WHY THAT IS THE PIXELS ──
  *
@@ -138,6 +143,16 @@ export const COLORS = {
     laneArmed: '#d04040',
     laneSilent: '#808080',
     trap: '#e0c040',
+    // BLOCKS AND BUTTONS (maze-seedling-art-3): the element overlay's own look (`ELEMENT_COLORS`), so the lab's
+    // gadget drawn over a maze block is the same square, not a second picture.
+    block: '#c8a06a',
+    blockEdge: '#2a1c0c',
+    button: '#ffd75f',
+    // PULLS (maze-seedling-art-3): the disc while the pull would fire (its gate held), grey while it would not.
+    pullLive: '#d0602a',
+    pullInert: '#808080',
+    pullTrap: '#a8401a',
+    pullMouth: '#000000',
 };
 
 /**
@@ -163,7 +178,7 @@ export function consumableTileColor(substrateId) {
 export const VIEW_FIELDS = Object.freeze([
     'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations', 'ruleEvaluator',
     'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible', 'isLocationVisible',
-    'isConsumableCollected', 'broken', 'facing', 'armedTraps', 'seedlingSkin',
+    'isConsumableCollected', 'broken', 'facing', 'armedTraps', 'seedlingSkin', 'blocks',
 ]);
 
 /**
@@ -249,6 +264,10 @@ export function assertView(view) {
         fail('mazeRoomRender: view.seedlingSkin.sprites must be null or {ops: [], cells: Set, player: []|null, '
             + 'paint: (ctx, ops) => void}.');
     }
+    if (view.blocks !== null && !Array.isArray(view.blocks)) {
+        fail('mazeRoomRender: view.blocks must be null or an array of "x,y" position keys (`state.blocks`), got '
+            + `${JSON.stringify(view.blocks)}.`);
+    }
     for (const key of ['isTileVisible', 'isExitVisible', 'isLocationVisible']) {
         if (typeof view[key] !== 'function') {
             fail(`mazeRoomRender: view.${key} must be a function, got `
@@ -268,7 +287,7 @@ export function assertView(view) {
  */
 export function plainView({
     tilePx = TILE_PX, playerPos = null, inventory = null, ruleEvaluator = null,
-    broken = null, facing = null, armedTraps = null, seedlingSkin = null,
+    broken = null, facing = null, armedTraps = null, seedlingSkin = null, blocks = null,
 } = {}) {
     return {
         tilePx,
@@ -287,7 +306,79 @@ export function plainView({
         facing,
         armedTraps,
         seedlingSkin,
+        blocks,
     };
+}
+
+/**
+ * ⛓ THE MAZE'S LIVE THINGS (slice maze-seedling-art-3): pulls, buttons and pushable blocks — none of which the panel
+ * drew before (S2's review: the plain view showed no block and no button at all). Drawn by `drawWorld` after the
+ * arrow traps and under the fog; exported so its log can be pinned alone (`mazeLiveMarkers.test.js`).
+ *   · a PULL (sphere-order-9's LavaTrap): every disc cell but the trap's tinted — `pullLive` while its gate is
+ *     cleared for `view.inventory` (a step in would reel the player), `pullInert` while it is not — and the trap's
+ *     cell a disc with a mouth;
+ *   · a BUTTON: a ring, filled while DOWN (the player or a block on it);
+ *   · a BLOCK: a square at `view.blocks` (null = `world.blocks`, the world's own layout).
+ * `spriteCells` (S2's `sprites.cells`, or null): a cell the art owns draws no marker. The art draws the LIVE blocks
+ * whenever it owns every block of the world, so their markers then go whole; the disc tint stays (like a lane's).
+ * A world with none of the three draws nothing, so every other draw log is unchanged.
+ */
+export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
+    const px = view.tilePx;
+    const owned = (x, y) => spriteCells?.has(`${x},${y}`) ?? false;
+    if (Array.isArray(w.pulls) && w.pulls.length > 0) {
+        const lib = w.obstacleLib ?? DEFAULT_OBSTACLES;
+        const clearOpts = view.ruleEvaluator ? { evaluateRule: view.ruleEvaluator } : undefined;
+        const inv = view.inventory ?? new Set();
+        ctx.save();
+        for (const p of w.pulls) {
+            const trap = `${p.x},${p.y}`;
+            ctx.globalAlpha = 0.25;
+            ctx.fillStyle = isObstacleCleared(p.gate, inv, lib, clearOpts) ? COLORS.pullLive : COLORS.pullInert;
+            for (const key of p.disc) {
+                if (key === trap) continue;
+                const [dx, dy] = key.split(',').map(Number);
+                ctx.fillRect(dx * px, dy * px, px, px);
+            }
+            ctx.globalAlpha = 1;
+            if (owned(p.x, p.y)) continue;
+            ctx.fillStyle = COLORS.pullTrap;
+            ctx.beginPath();
+            ctx.arc(p.x * px + px / 2, p.y * px + px / 2, px * 0.32, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = COLORS.pullMouth;
+            ctx.fillRect(p.x * px + px * 0.3, p.y * px + px * 0.45, px * 0.4, px * 0.1);
+        }
+        ctx.restore();
+    }
+    const placed = w.blocks ? [...w.blocks.keys()] : [];
+    const live = view.blocks ?? placed;
+    if (!w.buttons?.size && live.length === 0) return;
+    const onCell = new Set(live);
+    if (view.playerPos) onCell.add(`${view.playerPos.x},${view.playerPos.y}`);
+    ctx.save();
+    ctx.strokeStyle = COLORS.button;
+    ctx.fillStyle = COLORS.button;
+    ctx.lineWidth = 2;
+    for (const key of w.buttons?.keys() ?? []) {
+        const [x, y] = key.split(',').map(Number);
+        if (owned(x, y)) continue;
+        ctx.beginPath();
+        ctx.arc(x * px + px / 2, y * px + px / 2, px * 0.28, 0, Math.PI * 2);
+        if (onCell.has(key)) ctx.fill();
+        ctx.stroke();
+    }
+    const artBlocks = placed.length > 0 && placed.every((key) => spriteCells?.has(key));
+    if (!artBlocks && live.length > 0) {
+        ctx.fillStyle = COLORS.block;
+        ctx.strokeStyle = COLORS.blockEdge;
+        for (const key of live) {
+            const [x, y] = key.split(',').map(Number);
+            ctx.fillRect(x * px + px * 0.15, y * px + px * 0.15, px * 0.7, px * 0.7);
+            ctx.strokeRect(x * px + px * 0.15, y * px + px * 0.15, px * 0.7, px * 0.7);
+        }
+    }
+    ctx.restore();
 }
 
 /**
@@ -590,6 +681,8 @@ export function drawWorld(ctx, world, view) {
             ctx.fillRect(trap.x * px + 2, trap.y * px, px - 4, Math.max(2, Math.floor(px / 5)));
         });
     }
+
+    drawLiveMarkers(ctx, w, view, spriteCells);
 
     // The fog and the player are drawn opaque over the art.
     if (skin) ctx.globalAlpha = 1;

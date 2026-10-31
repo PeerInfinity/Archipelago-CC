@@ -15,7 +15,10 @@
  *   · a RULE gate: the entities its id NAMES (`<tag>@x,y`, the flag events it carries — a cell may stack two, L12's
  *     magical lock under a boss lock) else one gate-body entity on the cell, else none: a TERRAIN gate (water,
  *     snow, a boss, an item cell — the condition cells, shown by the terrain itself);
- *   · an item: the chest or pickup on its cell, or none (a boss's or an NPC's location: drawn on the cell).
+ *   · an item: the chest or pickup on its cell, or none (a boss's or an NPC's location: drawn on the cell);
+ *   · a PULL (maze-seedling-art-3; sphere-order-9's `world.pulls`): exactly one LavaTrap on its trap cell — and, when
+ *     its gate's `name` names a lava trap (`lavatrap@x,y`), that one. Its gate is in `obstacleLib` but on no cell, so
+ *     before S3 the census never saw a pull at all (accepted by silence, drawn by nothing).
  *
  * ── WHAT IS DRAWN, from each skin's own art table (⛔ no run, no levelRun view: the maze has neither) ──
  * Frame 0 of each class (open question A: the maze has no game tick); a body is hidden once the maze clears it
@@ -50,6 +53,8 @@ export const BODY_CLASSES = Object.freeze({
     block: Object.freeze(['PushableBlock', 'PushableBlockFire', 'PushableBlockSpear']),
     button: Object.freeze(['Button', 'ButtonRoom']),
     trap: Object.freeze(['ArrowTrap']),
+    // maze-seedling-art-3: a PULL's trap cell (sphere-order-9, `world.pulls`) — the lava trap whose tongue it models
+    pull: Object.freeze(['LavaTrap']),
 });
 /** The `.oel` tags that hold an item (`ITEM_FOR_TAG`'s, the boss keys). */
 const ITEM_TAGS = new Set([...Object.keys(ITEM_FOR_TAG), 'bosskey']);
@@ -81,7 +86,7 @@ const namedIds = (id) => [...String(id).matchAll(/([a-z][a-z0-9]*)@(-?\d+),(-?\d
 /**
  * ⚖ RULING 5 — THE CENSUS of one maze world against its level record: `{ rows, refusals }`.
  * `rows`: one per drawn ENTITY `{ what, id, tag, cls, e, cells, obstacles }` (`what` ∈ obstacle | block | button |
- * trap | item; `cells` the maze cells it answers for; `obstacles` the `[cell, obstacleId]` pairs that clear it).
+ * trap | pull | item; `cells` the maze cells it answers for; `obstacles` the `[cell, obstacleId]` pairs that clear it).
  * `terrain`: the gate cells no body stands on. `refusals`: one sentence per maze object that matched no entity or
  * more than one — the census test's whole subject.
  */
@@ -145,6 +150,17 @@ export function seedlingCensus(mazeWorld, record) {
             // `ButtonRoom.as:44-48`: `frameAdd` 2 when a Wire lies under it
             if (r.cls === 'ButtonRoom') row.wire = here(cell).some((w) => w.e.type === 'wire');
         }
+    }
+    for (const p of mazeWorld.pulls ?? []) {
+        const cell = posKey(p.x, p.y);
+        const r = exactlyOne(`pull ${p.gate}`, cell, BODY_CLASSES.pull);
+        if (!r) continue;
+        const named = namedIds(lib[p.gate]?.name ?? '').filter((id) => BODY_CLASSES.pull.includes(entitySemantics(byId.get(id))?.class));
+        if (named.length && !named.includes(r.id)) {
+            refusals.push(`L${record.level} pull ${p.gate} at ${cell}: names ${named.join(', ')}, not the lava trap on the cell (${r.id})`);
+            continue;
+        }
+        claim('pull', r, cell);
     }
     for (const cell of mazeWorld.items?.keys() ?? []) {
         const found = here(cell).filter((r) => ITEM_TAGS.has(r.e.type) && cellOfEntity(r.e) === cell);
@@ -210,6 +226,9 @@ function entityOp(art, row, x, y, { down = false, wire = false } = {}) {
         return sprite(SOLIDS.buttonRoom, (down ? 1 : 0) + (wire ? 2 : 0), centre, 100, cellBox(x + 4, y + 5, 8, 6));
     case 'ArrowTrap':
         return sprite(TRAPS.arrowTrap, 0, { x: x + 8, y: y + 2.5 }, -y, cellBox(x, y, 16, 5));
+    case 'LavaTrap':
+        // `LavaTrap.as:30` centres it on its tile; the trap skin's box and layer (`trapOps`), frame 0 (`play("")`)
+        return sprite(TRAPS.lavaTrap, 0, centre, -(y + 8 - 5 + (10 * 4) / 5), cellBox(x + 3, y + 3, 10, 10));
     case 'DarkTrap':
         return sprite(TRAPS.darkTrap, 0, centre, -(y + 8 - 8 + (16 * 4) / 5), cellBox(x + 1, y + 1, 14, 14));
     default:
@@ -258,7 +277,7 @@ export function seedlingSprites(census, art, { mazeWorld, view, blocks = null, i
             if (!op) continue;
             cells.add(cell);
             ops.push(op);
-        } else if (row.what === 'trap') {
+        } else if (row.what === 'trap' || row.what === 'pull') {
             const op = entityOp(art, row, Number(e.x), Number(e.y));
             if (!op) continue;
             cells.add(row.cells[0]);
