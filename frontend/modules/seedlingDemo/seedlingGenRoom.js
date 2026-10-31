@@ -16,7 +16,7 @@
  *     exits: Map<exit_id, {exit_id, door_id, side, exitName, targetRegion,
  *                          isBackExit, isTeleporter, kind: 'teleporter',
  *                          exit_tiles, entrance_tile, entrance_spawn}>,
- *     locations: [{id, item?, cell, tag, name?, access_rule?}],
+ *     locations: [{id, item?, cell, tag, name?, access_rule?, kind?}],   (kind: a door chest's, LAST)
  *     summary,
  *   }
  *
@@ -68,7 +68,7 @@
  * Headless-safe: no `node:` imports and no DOM.
  */
 
-import { generateSeedlingLevel, placementTagId, seedlingOracle } from './procgenSeedling.js';
+import { chestDoorLocationName, generateSeedlingLevel, placementTagId, seedlingOracle } from './procgenSeedling.js';
 import { VERDICT, collectGoal } from './procgenOracle.js';
 import {
     CALDERA_PALETTE, ENDGAME_PALETTE, FLOODED_RUINS_PALETTE, FROZEN_FORGE_PALETTE,
@@ -116,6 +116,45 @@ if (Object.keys(GEN_ROOM_BIOMES).join() !== GEN_ROOM_BIOME_NAMES.join()) {
 }
 
 const cellKey = (c) => `${c.tx},${c.ty}`;
+
+/**
+ * ⛓⛓ seedling-gen-chestdoor-ap — **EACH DOOR CHEST IS AN AP LOCATION** (⚖ the user, 2026-10-30: chests as
+ * DOORS, and each door chest IS an Archipelago location — it always drops a seal piece). The draw's
+ * `summary.chestDoors` (`procgenSeedling.chestDoorLocationsOf`, ABSENT on a room without one) becomes one
+ * location row per chest, added AFTER the draw: the chest's own cell and its FIXED tag (the binding allocated
+ * it, and it is the game's check address — opening the chest clears it). Nothing re-rolls for a chest door:
+ * the element is opt-in and may not place, and a room without one has no row.
+ *
+ *   · `kind: 'chest-door'` marks the row everywhere it travels (the world, the payload, the set's table), so
+ *     the placers never SEAT it (its cell and tag are the chest's), location 0 stays the GOAL, and the set
+ *     assembler never replaces the chest with an `apitem` (`seedlingGeneratedSet.placeApItems`).
+ *   · its `item` is the engine's slot filler (`procgenPipelineEngine.LIBRARY_SLOT_FILLER_ITEM`, the same
+ *     string; this module imports no engine), so the compiled pool gains ONE item per door chest and items
+ *     == locations (`compileLocation` pools a location's item).
+ *   · the name is `chestDoorLocationName(<region>)`, vanilla's `Level NNN - Chest` shape; a second chest in
+ *     one room (no element places one today) would be `… - Chest 2`.
+ */
+export const CHEST_DOOR_KIND = 'chest-door';
+export const CHEST_DOOR_ITEM = 'Region Library Filler';
+const isChestDoor = (l) => l?.kind === CHEST_DOOR_KIND;
+/** The locations a placer seats (every row but a door chest's). */
+const seatedOf = (world) => world.locations.filter((l) => !isChestDoor(l));
+
+/** One location row per door chest of the draw's `summary` — `[]` without one. */
+export function chestDoorRows(regionId, summary) {
+    return (summary?.chestDoors ?? []).map((c, k) => ({
+        id: k === 0 ? 'chest_door' : `chest_door_${k + 1}`,
+        name: k === 0 ? chestDoorLocationName(regionId) : `${chestDoorLocationName(regionId)} ${k + 1}`,
+        kind: CHEST_DOOR_KIND,
+        item: CHEST_DOOR_ITEM,
+        cell: { tx: c.cell.tx, ty: c.cell.ty },
+        tag: c.tag,
+    }));
+}
+
+/** The world's `summary` from a draw's: `stop`, `keptCount`, and `chestDoors` ONLY when the draw placed one. */
+const summaryOf = (out) => ({ stop: out.summary.stop ?? null, keptCount: out.summary.keptCount ?? null,
+    ...(out.summary.chestDoors ? { chestDoors: out.summary.chestDoors } : {}) });
 const around = (c) => [[0, -1], [-1, 0], [1, 0], [0, 1]].map(([dx, dy]) => ({ tx: c.tx + dx, ty: c.ty + dy }));
 
 /** Read one knob of the bag, falling back to the default; strings are trimmed. */
@@ -230,7 +269,9 @@ export function certifyGenRoom(payload, regionId = '?') {
     //   location, each given a pickup of its own.
     const goal = payload.goal_cell;
     const targets = [{ name: 'the goal', cell: goal, own: true },
-        ...payload.locations.filter((l) => cellKey(l.cell) !== cellKey(goal))
+        // ⛓ seedling-gen-chestdoor-ap — a door chest is no pickup cell: the generator's own seam
+        //   (`chestDoorBypassRefusal`) is what certifies it; a pickup there would replace the door.
+        ...payload.locations.filter((l) => cellKey(l.cell) !== cellKey(goal) && !isChestDoor(l))
             .map((l) => ({ name: l.name, cell: l.cell, own: false }))];
     for (const t of targets) {
         const x = t.cell.tx * TILE_SIZE;
@@ -617,8 +658,9 @@ export function generateGenRoom(input = {}) {
             //   seat, an engine-added door) continues THIS room's sequence. Never serialized.
             drawnSeed: drawn,
             exits: roomExits,
-            locations: [],
-            summary: { stop: out.summary.stop ?? null, keptCount: out.summary.keptCount ?? null },
+            // ⛓ seedling-gen-chestdoor-ap — the door chests' rows, AFTER the draw (`[]` without one).
+            locations: chestDoorRows(regionId, out.summary),
+            summary: summaryOf(out),
         },
         exits_placed: [...roomExits.values()].map(({ exit_id: exitId, side }) => ({ exit_id: exitId, side })),
     };
@@ -669,7 +711,8 @@ function freeTags(world) {
  * the rows need is re-rolled exactly like one without the floor for them.
  */
 function seatsFor(world, rows) {
-    const free = world.locations.length === 0 ? [world.goalCell] : [];
+    // ⛓ location 0 is the GOAL — a door chest's row (seated by the draw itself) does not count.
+    const free = seatedOf(world).length === 0 ? [world.goalCell] : [];
     free.push(...locationCells(world));
     const tags = freeTags(world);
     if (rows.length > tags) return { short: true, free, tags };
@@ -707,6 +750,11 @@ const rowOf = ({ cell: _cell, tag: _tag, ...row }) => row;
  */
 export function rerollGenRoom(world, entries, rows, cause) {
     const knobs = knobsOf({ seedlingGen: world.generation });
+    // ⛓ seedling-gen-chestdoor-ap — the door chests the room already declared: a re-roll must keep as many
+    //   (their location ids are the AP logic's, which a re-roll never moves). Their rows are re-derived from
+    //   the new draw, never seated.
+    const chests = world.locations.filter(isChestDoor).length;
+    rows = rows.filter((r) => !isChestDoor(r));
     const origin = originOf(world);
     const last = lastAttempt(origin);
     let err = null;
@@ -718,6 +766,11 @@ export function rerollGenRoom(world, entries, rows, cause) {
         }
         const draw = drawRoom(world.region_id, world.drawnSeed, k, at, knobs, entries.length);
         if (draw.err) { err = draw.err; continue; }
+        if ((draw.out.summary.chestDoors?.length ?? 0) !== chests) {
+            err = new Error(`levelSetExits: room '${world.region_id}' seed ${draw.seed} holds `
+                + `${draw.out.summary.chestDoors?.length ?? 0} door chest(s), and the room declared ${chests}`);
+            continue;
+        }
         const bound = entries.map(([key, e], i) => [key, { ...e, ...doorFields(draw.doors[i]) }]);
         const size = { width: draw.record.width, height: draw.record.height };
         const room = {
@@ -729,8 +782,8 @@ export function rerollGenRoom(world, entries, rows, cause) {
             goalCell: draw.goalCell,
             generation: generationAfter(knobs, k, cause, origin, size),
             exits: new Map(bound),
-            locations: [],
-            summary: { stop: draw.out.summary.stop ?? null, keptCount: draw.out.summary.keptCount ?? null },
+            locations: chestDoorRows(world.region_id, draw.out.summary),
+            summary: summaryOf(draw.out),
         };
         const seats = seatsFor(room, rows);
         if (seats.short) { err = new Error(locationsRefusal(room, rows, seats)); continue; }
@@ -759,7 +812,7 @@ function addLocations(world, rows) {
     const seats = seatsFor(world, rows);
     if (!seats.short) { seatRows(world, rows, seats.free); return; }
     if (!Number.isInteger(world.drawnSeed)) throw new Error(locationsRefusal(world, rows, seats));
-    const all = [...world.locations.map(rowOf), ...rows];
+    const all = [...seatedOf(world).map(rowOf), ...rows];
     const { room, bound, err, grown } = rerollGenRoom(world, [...world.exits.entries()], all,
         GEN_ROOM_REROLL_CAUSES.locations);
     if (err) throw new Error(locationsRefusal(world, rows, seats, grown));
@@ -772,15 +825,20 @@ function addLocations(world, rows) {
     world.locations = room.locations;
 }
 
-/** Seat `rows` on `free` (in order), each with a fresh tag. */
+/**
+ * Seat `rows` on `free` (in order), each with a fresh tag. ⛓ seedling-gen-chestdoor-ap: the door chests'
+ * rows stay LAST, so location 0 is still the goal's and the seated rows keep their order.
+ */
 function seatRows(world, rows, free) {
     const bare = recordWithoutGoal(world);
     const reserved = world.locations.map((l) => l.tag);
+    const seated = seatedOf(world);
     rows.forEach((row, k) => {
         const tag = placementTagId(bare, reserved);
         reserved.push(tag);
-        world.locations.push({ ...row, cell: { ...free[k] }, tag });
+        seated.push({ ...row, cell: { ...free[k] }, tag });
     });
+    world.locations = [...seated, ...world.locations.filter(isChestDoor)];
 }
 
 /**
@@ -892,7 +950,8 @@ function bindAllDoors(world, entries) {
     const keepReachable = {
         walls,
         approachWalls: new Set([...lethal, ...doorWalls]),
-        cells: [world.goalCell, ...world.locations.map((l) => l.cell),
+        // ⛓ a door chest's cell is SOLID (the chest): it is never a cell to keep reachable.
+        cells: [world.goalCell, ...seatedOf(world).map((l) => l.cell),
             ...bound.map(([, e]) => ({ tx: e.entrance_spawn.x / TILE_SIZE, ty: e.entrance_spawn.y / TILE_SIZE }))],
     };
     const pick = (ex) => pickDoorCells(world.record, world.start, unbound.length, {
@@ -939,7 +998,7 @@ function bindOrReroll(world, entries) {
         throw new Error(GEN_ROOM_REFUSALS.tooManyDoors(world.region_id ?? '?', world.seed, world.size,
             entries.length, first.err.message));
     }
-    const rows = world.locations.map(rowOf);
+    const rows = seatedOf(world).map(rowOf);
     const bare = entries.map(([key, e]) => [key, Object.fromEntries(Object.entries(e)
         .filter(([field]) => !DOOR_FIELDS.includes(field)))]);
     const again = rerollGenRoom(world, bare, rows, GEN_ROOM_REROLL_CAUSES.engineDoors);
@@ -993,6 +1052,8 @@ export function serializeGenRoom(world, extractedRules, _obstacleLib, _itemLib, 
         return {
             name,
             ...(l.item != null ? { item: l.item } : {}),
+            // ⛓ seedling-gen-chestdoor-ap — ONLY on a door chest's row, so no other payload moves.
+            ...(isChestDoor(l) ? { kind: CHEST_DOOR_KIND } : {}),
             cell: { ...l.cell },
             tag: l.tag,
             ...(l.access_rule && !isTrueRule(l.access_rule) ? { access_rule: cloneRule(l.access_rule) } : {}),
