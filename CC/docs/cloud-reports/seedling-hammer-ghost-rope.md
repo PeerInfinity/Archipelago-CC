@@ -167,7 +167,7 @@ toggles no pole. The mutant stands at (24,184).
 
 ### 6a. JSUT
 
-JSUT for `dde73866` was still running when this report was committed; the planner reads it with `node scripts/procgen/ci-summary.mjs dde73866522d4aa922506c9cb7c96fbde7073f85`. The local slow battery (11 files, 106 tests) is green. If CI answers before the session ends, a follow-up commit records it here.
+JSUT for `dde73866` is run **41235090201**; its four Vitest jobs (shards 1–3 and slow) were still QUEUED after 40 min of waiting (CI runners busy), so there is no CI number yet; the planner reads it with `node scripts/procgen/ci-summary.mjs dde73866522d4aa922506c9cb7c96fbde7073f85`. The local slow battery (11 files, 106 tests) is green. If CI answers before the session ends, a follow-up commit records it here.
 
 ## 7. What the harvest A/B should expect
 
