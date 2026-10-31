@@ -1,0 +1,87 @@
+97	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_80
+98	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_352
+99	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_368
+100	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_112_96
+101	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_168_368
+102	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_304_0
+103	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352
+104	level_12__r0c19 <- in_L0_304_176 -> location:Level 012 - Witch
+105	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared
+106	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared
+107	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_80
+108	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352
+109	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368
+110	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96
+111	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_168_368
+112	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_304_0
+113	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_432_352
+114	level_12__r0c19 <- in_L33_32_64 -> location:Level 012 - Witch
+115	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+116	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+117	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_80
+118	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352
+119	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368
+120	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_112_96
+121	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_168_368
+122	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_304_0
+123	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_432_352
+124	level_12__r0c19 <- in_L35_32_64 -> location:Level 012 - Witch
+125	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+126	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+127	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_80
+128	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_352
+129	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_368
+130	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_112_96
+131	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_168_368
+132	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0
+133	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_432_352
+134	level_12__r0c19 <- in_L36_32_128 -> location:Level 012 - Witch
+135	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared
+136	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared
+137	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_80
+138	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_352
+139	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_368
+140	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_112_96
+141	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_168_368
+142	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_304_0
+143	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_352
+144	level_12__r0c19 <- in_L88_96_304 -> location:Level 012 - Witch
+145	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared
+146	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared
+147	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_80
+148	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_352
+149	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_368
+150	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_112_96
+151	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_168_368
+152	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_304_0
+153	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_432_352
+154	level_12__r0c19 <- in_L95_624_64 -> location:Level 012 - Witch
+155	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared
+156	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared
+157	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_80
+158	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_352
+159	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_368
+160	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_112_96
+161	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_168_368
+162	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_0
+163	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_432_352
+164	level_12__r0c19 <- in_L95_624_80 -> location:Level 012 - Witch
+165	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared
+166	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared
+167	level_12__r0c37 <- in_L34_128_0 -> exit:out_teleporter_592_0
+168	level_12__r0c37 <- in_L34_128_0 -> exit:out_pit_5_5
+169	level_12__r0c37 <- in_L37_32_304 -> exit:out_teleporter_592_0
+170	level_12__r0c37 <- in_L37_32_304 -> exit:out_pit_5_5
+171	level_12__r13c6 <- in_L5_16_16 -> exit:out_stairsdown_96_240
+172	level_12__r13c6 <- in_L5_16_16 -> location:L12 flag 11: bosslock@112,192 cleared
+173	level_12__r40c4 <- in_L24_32_144 -> exit:out_teleporter_40_688
+174	level_12__r40c4 <- in_L24_32_144 -> location:L12 flag 3: bosslock@80,656 cleared
+175	level_12__r42c28 <- in_L83_32_64 -> exit:out_teleporter_32_848
+176	level_12__r42c28 <- in_L83_32_64 -> location:Level 012 - Chest
+177	level_12__r42c28 <- in_L83_32_64 -> location:L12 flag 7: magicallock@32,864 cleared
+178	level_12__r42c28 <- in_L83_32_64 -> location:L12 flag 12: bosslock@32,864 cleared
+179	level_12__r43c21 <- in_L34_32_144 -> exit:out_teleporter_336_688
+578	level_66__r5c4 <- in_L70_32_64 -> exit:out_teleporter_72_64
+579	level_66__r9c8 <- in_L65_0_128 -> exit:out_teleporter_144_144
+745	level_100__r2c3 <- in_L99_48_96 -> exit:out_stairsdown_48_96
+914	level_100__r4c10 <- in_L99_48_96 ~> level_100__r2c3 -> exit:out_teleporter_288_96
