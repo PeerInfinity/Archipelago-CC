@@ -219,9 +219,11 @@ describe('the committed playthrough\'s leg list', () => {
         //   legs from those landings).
         // ⛓ RULES l63-pole-crossings: 50 -> 45 — L63's two L65 landings open on Or(the pole's event, hasGhostSword) now (the
         //   swing lights the pole from the landing), so their legs are no longer gated on the event alone.
-        expect(gated.length).toBe(45);
+        // ⛓ rules-l112-owl-rocklock: 45 -> 42 — L112 splits at its rock, so the L113 arrival lands in r0c7 and its legs to
+        //   the L111 door, the Owl and the rock's own flag are crossings of the rock now, not legs (2 staged, 1 skipped).
+        expect(gated.length).toBe(42);
         expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
-        expect(gated.filter((l) => l.stagedEvents).length).toBe(37); // l63-pole-crossings: 40 -> 37 (+ 2 skips gone)
+        expect(gated.filter((l) => l.stagedEvents).length).toBe(35); // l63-pole-crossings: 40 -> 37 (+ 2 skips gone); l112-owl-rocklock: 37 -> 35
         expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
         const plain = legs.filter((l) => !l.arrive.events && !l.goalEvents);
         expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
@@ -247,20 +249,23 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ rules-start-in-front: the SAME legs by key, every id from 37 on shifted by +7 — the start arrival is the game's
         //   boot position (80, 128) (`seedlingStartSpawn`), no longer merged into in_L94_304_160's (16, 128) landing, so
         //   level_0__r7c6 gains its seven `<- start` legs (37-43, no goal events).
+        // ⛓ rules-l112-owl-rocklock: the SAME legs by key, every id from 792 on shifted by -4 — L112 splits at its rock
+        //   (r0c7 the L113 landing, r2c2 the arena), so the L113 arrival's three legs into the arena and the L111 arrival's
+        //   one leg to the L113 door go (each a crossing of the rock now).
         expect(by).toEqual({
             'flag:L0:4': [45], 'flag:L0:1': [97, 107, 117, 127, 137, 147, 157], 'flag:L24:0': [173],
             'flag:L16:0': [199, 201, 203, 205, 207, 209, 211, 213], 'flag:L39:8': [350],
             'flag:L62:0': [518, 523, 528, 533, 538, 569], 'flag:L63:1': [520, 525, 530, 535, 540, 544, 549, 554, 559],
             'flag:L63:6': [572, 574], 'flag:L63:7': [575],
             'flag:L71:2': [624, 626], 'flag:L12:7+flag:L12:12': [644], 'flag:L101:0': [750],
-            'flag:L112:1': [798, 799, 805, 806, 812, 813, 819, 820, 826, 827],
-            'flag:L114:0': [800, 801, 802, 807, 808, 809, 814, 815, 816, 821, 822, 828, 829],
-            'flag:L113:0': [837, 838, 839, 840],
+            'flag:L112:1': [794, 795, 801, 802, 808, 809, 815, 816, 822, 823],
+            'flag:L114:0': [796, 797, 798, 803, 804, 805, 810, 811, 812, 817, 818, 824, 825],
+            'flag:L113:0': [833, 834, 835, 836],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[801].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[797].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
         expect(legs[518].sphere.inventory).not.toContain('Ghost Spear');
         expect(legs[520].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
