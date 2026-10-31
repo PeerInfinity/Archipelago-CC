@@ -42,7 +42,7 @@ run-name: >-
   legs=${{ inputs.page_legs }} stage=${{ inputs.stage_events }} capture=${{ inputs.capture_requests }}
   ids=${{ inputs.ids }} keys=${{ inputs.keys }} flags=${{ inputs.stage_flags }}
   contact=${{ inputs.contact_fidelity }} axe=${{ inputs.axe_dodge }} window=${{ inputs.upgrade_window_work }}
-  dashonly=${{ inputs.dash_only_window }} dash=${{ inputs.dash_shape }} budget=${{ inputs.leg_budget_ms }}
+  dashonly=${{ inputs.dash_only_window }} dash=${{ inputs.dash_shape }} env=${{ inputs.solver_env }} budget=${{ inputs.leg_budget_ms }}
   census=${{ inputs.seam_census }} mem=${{ inputs.memory_probe_ms }} trace=${{ inputs.arrival_trace_ms }} fault=${{ inputs.test_fault }}
 on:
   workflow_dispatch:
@@ -131,6 +131,15 @@ on:
           through the flashPanel settings seedlingDash{LegPrecheck,NoSwingPrefix,KeepPartial}, read back as a DASH_SHAPE
           line, stamped dashShape on each request the engine makes off-default (capture_requests reads it back), on
           every row and on the plan; the merge refuses a mixed merge by name.
+        type: string
+        default: ''
+      solver_env:
+        description: >-
+          MEASUREMENT ONLY, empty for every real sweep. The solver's OFF switches by their env names, set in the page's
+          solve worker for this run: 'NAME=VALUE;…' (e.g. SEEDLING_CHOOSER_PAIR=1;SEEDLING_CHOOSER_PAIR_SIZE=3; the
+          names are solverEnvChannel.SOLVER_ENV_NAMES, an unknown one fails the plan by name). Rides the page URL as
+          ?seedlingSolverEnv= (never a setting), read back as a SOLVER_ENV line, stamped solverEnv on each plan the
+          worker solved, on every row and on the plan; the merge refuses a mixed merge by name.
         type: string
         default: ''
       leg_budget_ms:
@@ -223,6 +232,7 @@ jobs:
           UPGRADE_WINDOW: ${{ inputs.upgrade_window_work }}
           DASH_ONLY: ${{ inputs.dash_only_window }}
           DASH_SHAPE: ${{ inputs.dash_shape }}
+          SOLVER_ENV: ${{ inputs.solver_env }}
           CENSUS: ${{ inputs.seam_census }}
           CAPTURE: ${{ inputs.capture_requests && 'on' || '' }}
         run: |
@@ -239,10 +249,10 @@ jobs:
           fi
           node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} \
             ${UPGRADE_WINDOW:+--upgrade-window-work="$UPGRADE_WINDOW"} ${DASH_ONLY:+--dash-only-window="$DASH_ONLY"} \
-            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} | tee -a plan.txt
+            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} ${SOLVER_ENV:+--solver-env="$SOLVER_ENV"} | tee -a plan.txt
           node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --stage-flags="$STAGE_FLAGS" ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} \
             ${UPGRADE_WINDOW:+--upgrade-window-work="$UPGRADE_WINDOW"} ${DASH_ONLY:+--dash-only-window="$DASH_ONLY"} \
-            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} --json > plan.json
+            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} ${SOLVER_ENV:+--solver-env="$SOLVER_ENV"} --json > plan.json
           # ⛓ the partition travels with the leg list: the merge compares each shard's ids against its rows
           cp plan.json test-results/divergence-sweep/plan.json
           echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
@@ -333,6 +343,7 @@ jobs:
           UPGRADE_WINDOW: ${{ inputs.upgrade_window_work }}
           DASH_ONLY: ${{ inputs.dash_only_window }}
           DASH_SHAPE: ${{ inputs.dash_shape }}
+          SOLVER_ENV: ${{ inputs.solver_env }}
           LEG_BUDGET: ${{ inputs.leg_budget_ms }}
           CAPTURE: ${{ inputs.capture_requests && 'on' || '' }}
           MEM: ${{ inputs.memory_probe_ms }}
@@ -363,7 +374,7 @@ jobs:
             --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE ${CONTACT:+--contact-fidelity="$CONTACT"} \
             --stage-flags="$STAGE_FLAGS" ${AXE_DODGE:+--axe-dodge="$AXE_DODGE"} ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} \
             ${UPGRADE_WINDOW:+--upgrade-window-work="$UPGRADE_WINDOW"} ${DASH_ONLY:+--dash-only-window="$DASH_ONLY"} \
-            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} ${CAPTURE:+--capture-requests=$D/requests-$I.jsonl} ${MEM:+--memory-probe-ms="$MEM" --memory-out=$D/memory-$I.jsonl} \
+            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} ${SOLVER_ENV:+--solver-env="$SOLVER_ENV"} ${CAPTURE:+--capture-requests=$D/requests-$I.jsonl} ${MEM:+--memory-probe-ms="$MEM" --memory-out=$D/memory-$I.jsonl} \
             ${ARRIVAL_TRACE:+--arrival-trace-ms="$ARRIVAL_TRACE"} 2>&1 | tee "$L"
           RC=$?
           set -e

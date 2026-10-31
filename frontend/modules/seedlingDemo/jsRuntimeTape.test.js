@@ -3,7 +3,8 @@
  * `finished`·`tick`·`items` / `botDrain`), and the pin that the no-tape path did not move.
  *
  *  1. THE NO-TAPE IDENTITY PIN — a page with no tape loaded ticks BYTE-IDENTICALLY to the core before Phase B: the
- *     run's state digest (`run.stateDigest()`), the pre-Phase-B `botStatus` fields, the walker's state and the host's
+ *     run's state (`run.stateDigest({parts: true})`'s run parts, `globals` excluded: `NO_TAPE_RUN_PARTS`), the
+ *     pre-Phase-B `botStatus` fields, the walker's state and the host's
  *     reports, chained over a keyboard leg and a walker leg, hash to the value measured on the pre-Phase-B core
  *     (`NO_TAPE_CHAIN`, recorded at `9c0f9045`). And a tape LOADED but never started leaves the chain unchanged too
  *     (the leak a mutant of `tickOnce` reds — see the report, `CC/docs/cloud-reports/seedling-js-tape-bridge.md`).
@@ -27,6 +28,7 @@ import { fileURLToPath } from 'node:url';
 import { createJsRuntime, JS_TAPE_REFUSALS } from './jsRuntimeCore.js';
 import { WALK_STATES } from './jsRuntimeWalker.js';
 import { TOGGLE_KEYS } from './inventoryMenu.js';
+import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 import { canonicalDigestText, digestOfText } from './levelRun.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { runTape } from './tapeRunner.js';
@@ -46,16 +48,35 @@ const tapeOf = (name) => readJson(`${TAPES}${name}.json`);
 export const PRE_PHASE_B_STATUS = Object.freeze(['runtime', 'level', 'time', 'ticks', 'game_time', 'x', 'y', 'deaths',
     'hits', 'hits_timer', 'halted', 'persistence_cleared']);
 
+/**
+ * ⛓ THE RUN-STATE PARTS the chain hashes — `stateDigestParts`' seven minus `globals`. `globals` hashes the module
+ * switches (the whole CONTACT_FIDELITY table among them), not the run, so with it in the chain ANY new fidelity key
+ * moved this pin even shipped OFF (W35's re-pin, 0d022900… → 1f44092f…). This pin is for run-state drift from the
+ * tape bridge, so it reads the run's own six, in this fixed order. The full digest (`levelRun.js` unchanged) stays
+ * what the hammer and fidelity arcs key on.
+ */
+export const NO_TAPE_RUN_PARTS = Object.freeze(['staging', 'place', 'clock', 'player', 'persist', 'visit']);
+
+/** One tick's run state: the named parts of `run.stateDigest({parts: true})`, as `name=hash` in the given order. */
+function runStateOf(run, names) {
+    const { parts } = run.stateDigest({ parts: true });
+    return names.map((k) => {
+        if (!Object.hasOwn(parts, k)) throw new Error(`noTapeChain: run.stateDigest has no part "${k}"`);
+        return `${k}=${parts[k]}`;
+    }).join(';');
+}
+
 /** The level-0 stairs down to L2 (`owls_nest_stairs`, (256, 272)) — a walker goal the vanilla map boots next to. */
 const STAIRS_GOAL = { kind: 'exit', level: 0, tiles: [[16, 17]] };
 
 /**
  * ⛓ THE NO-TAPE SCENARIO, parameterised by the module so the chain can be measured on the pre-Phase-B core too
  * (a copy of `git show 9c0f9045:…/jsRuntimeCore.js` beside this one). `between(rt)` runs once before the ticks — the
- * tape-loaded leg loads a tape there and never starts it.
+ * tape-loaded leg loads a tape there and never starts it. `parts` names the `run.stateDigest({parts: true}).parts`
+ * hashed per tick, in order (default `NO_TAPE_RUN_PARTS`; the sensitivity rows pass others).
  * @returns {{chain: string, rows: number, walk: string}}
  */
-export function noTapeChain(create, { between = () => {} } = {}) {
+export function noTapeChain(create, { between = () => {}, parts = NO_TAPE_RUN_PARTS } = {}) {
     const reports = [];
     const rt = create({ onStateChanged: (p, v) => reports.push([p, v]) });
     rt.game.configure(BRIDGE_CONFIG);
@@ -65,7 +86,7 @@ export function noTapeChain(create, { between = () => {} } = {}) {
     const row = (out) => {
         const st = JSON.parse(rt.game.botStatus());
         rows.push(canonicalDigestText({
-            out, run: rt.run ? rt.run.stateDigest() : null,
+            out, run: rt.run ? runStateOf(rt.run, parts) : null,
             status: Object.fromEntries(PRE_PHASE_B_STATUS.map((k) => [k, st[k]])),
             walk: rt.playback.state, reports: reports.splice(0),
         }));
@@ -89,7 +110,31 @@ export function noTapeChain(create, { between = () => {} } = {}) {
 // beside this file) with W35's contactFidelity.js and its flags exactly as they ship (116 keys, 105 ON). Cause: the
 // `globals` part of `run.stateDigest()` hashes the whole CONTACT_FIDELITY object, so ANY new key moves this chain, even OFF
 // — measured: red with the three W35 keys false, green only with contactFidelity.js itself reverted.
-const NO_TAPE_CHAIN = Object.freeze({ chain: '1f44092f380a801342ab2c06ee51', rows: 224, walk: WALK_STATES.DONE });
+// ⛓ Re-measured at seedling-js-no-tape-chain-run-state (2026-10-31, base 16d1b67084): 1f44092f380a801342ab2c06ee51 →
+// 0852da9e5639860e8b2d4ccbeda5. Cause: the chain now hashes `NO_TAPE_RUN_PARTS` (the run state, `globals` excluded)
+// instead of the full `run.stateDigest()`. Method: the same — `noTapeChain` over `createJsRuntime` from `git show
+// 9c0f904549:…/jsRuntimeCore.js` copied beside this file, on today's tree and flags (116 keys, 105 ON); today's core
+// gives the same value. The old chain (globals in) re-measured 1f44092f… on both cores before the edit.
+const NO_TAPE_CHAIN = Object.freeze({ chain: '0852da9e5639860e8b2d4ccbeda5', rows: 224, walk: WALK_STATES.DONE });
+
+/** A fidelity key no code reads — the table grows a key and nothing else moves. Added and removed around `fn`. */
+function withDummyFidelityKey(fn) {
+    const key = 'noTapeChainDummyKey';
+    expect(Object.hasOwn(CONTACT_FIDELITY, key)).toBe(false);
+    CONTACT_FIDELITY[key] = true;
+    try {
+        return fn();
+    } finally {
+        delete CONTACT_FIDELITY[key];
+    }
+}
+
+/**
+ * An OFF key flipped ON that is a NO-OP on this scenario: `strategyBoundDistinct` is a solver strategy-bound switch,
+ * and the no-tape scenario (a keyboard leg and a walk to the L0 stairs) meets no encounter the solver prices. Measured
+ * at 16d1b67084: every one of the eleven OFF keys flipped alone leaves this chain at `NO_TAPE_CHAIN` (see the report).
+ */
+const NO_OP_OFF_KEY = 'strategyBoundDistinct';
 
 /** A runtime on the vanilla map, configured, with the game's own first frame booted. */
 function vanillaRuntime() {
@@ -121,6 +166,30 @@ describe('⛓ PHASE B — the no-tape path is byte-identical', () => {
             between: (rt) => expect(rt.game.botLoadTape(JSON.stringify(tapeOf('collide-up-rock')))).toBe('ok'),
         });
         expect(loadedOnly).toEqual(NO_TAPE_CHAIN);
+    });
+});
+
+describe('⛓ the no-tape chain hashes RUN STATE, not the fidelity flag table', () => {
+    it('a fidelity table that grows a key no code reads leaves the chain where it was', () => {
+        expect(withDummyFidelityKey(() => noTapeChain(createJsRuntime))).toEqual(NO_TAPE_CHAIN);
+    });
+
+    it(`an OFF key flipped ON that alters nothing here (${NO_OP_OFF_KEY}) leaves the chain where it was`, () => {
+        expect(CONTACT_FIDELITY[NO_OP_OFF_KEY]).toBe(false);
+        expect(withContactFidelity({ [NO_OP_OFF_KEY]: true }, () => noTapeChain(createJsRuntime))).toEqual(NO_TAPE_CHAIN);
+    });
+
+    it('the discriminator: with `globals` hashed back in, that same dummy key DOES move the chain', () => {
+        const withGlobals = [...NO_TAPE_RUN_PARTS, 'globals'];
+        const plain = noTapeChain(createJsRuntime, { parts: withGlobals }).chain;
+        expect(withDummyFidelityKey(() => noTapeChain(createJsRuntime, { parts: withGlobals }).chain)).not.toBe(plain);
+    });
+
+    it('still sensitive to run state: dropping `player` or `visit` from the hashed parts moves the chain', () => {
+        for (const drop of ['player', 'visit']) {
+            const parts = NO_TAPE_RUN_PARTS.filter((p) => p !== drop);
+            expect(noTapeChain(createJsRuntime, { parts }).chain, drop).not.toBe(NO_TAPE_CHAIN.chain);
+        }
     });
 });
 
