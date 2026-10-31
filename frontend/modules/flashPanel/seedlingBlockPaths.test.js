@@ -87,6 +87,18 @@ describe('the block search on hand-built rooms', () => {
             .entries(r.at(3, 2)).sets).toEqual([]);
     });
 
+    // ⛓ RULES rules-l16-holder-enemies — the census's `stoppers` (the rules hand in none): a body parked on the
+    // block's only path costs one of its kill verbs, and a room priced without it is unchanged.
+    it('a STOPPER on the only path costs one of its keys; with none the price is the free control\'s', () => {
+        const r = roomWith('.');
+        const stoppers = [{ tx: 3, ty: 2, keys: [flag('hasSword'), flag('hasSpear')], label: 'bob' }];
+        const search = (extra) => blockHolderSearch(r.grid, {
+            blocks: [BLOCK], holders: [BUTTON], lockCells: new Set([r.lock]), tileTypes: r.tileTypes, keyOf: conditionKey, ...extra,
+        }).entries(r.at(1, 2)).sets;
+        expect(search({ stoppers })).toEqual([['flag:hasSpear'], ['flag:hasSword']]);
+        expect(search({ stoppers: [] })).toEqual([[]]);
+    });
+
     it('a FIRE block costs Fire on top of its path', () => {
         const r = roomWith('R');
         expect(searchIn(r, { blocks: [{ ...BLOCK, kind: 'pushableblockfire' }], holders: [BUTTON] }).entries(r.at(1, 2)).sets)
