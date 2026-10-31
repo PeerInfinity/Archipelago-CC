@@ -188,7 +188,13 @@ refusal text are equal.
    - Note the sweep's `leg_budget_ms`: leg 914 ON solves in ~3.5–5.5 s locally.
 3. **Probes standard**: `seedling-probe.yml -f battery=standard` on the scratch flip commit, and at the head as the control.
 
-**Probes standard, key ON (local):** PROBES_PLACEHOLDER
+**Probes standard, key ON (local, `wt-flip` on :9767, `--host=http://localhost:9767`; `evidence/probes-on.txt`): 11 / 11
+ALL CHECKS PASSED.** logical-links B,R 26 PASS, vanilla-map 23, arrival-composites 95, midroom-replan D 10, restart-route
+W,J 18, restart-warp W,J 28, adopt 51, obstacle-events W,J 22, generated-playback 35, loop-restart 30, seal-delivery 52
+(+1 SKIP by design). ⚠ The brief grades logical-links B,R as KNOWN RED on main (*"every Restart's start-hop arrival is
+HELD"*, 2 FAIL). That red did not reproduce on this run. I did not run an OFF control of it, so this is one sample, not a
+fix: the planner's CI control decides. (A first pass hit :8000 because the probes read `--host=`, not `SEEDLING_PORT`; it
+is discarded.)
 
 ## The JS arc
 
@@ -241,7 +247,15 @@ refusal text are equal.
 
 ## CI (push, `JavaScript Unit Tests`)
 
-CI_PLACEHOLDER
+Run **41224360534** at `bdc5419a` (the last head that touches code, tests or `frontend/`; later commits touch only
+`CC/docs/`, which the path filter skips):
+- vitest unfiltered: **24,989 passed / 2 failed**.
+- slow battery: **351 / 351**.
+- The 2 failures are exactly jsRuntimeTape's `NO_TAPE_CHAIN` rows (*"the no-tape chain … is the one measured on the
+  pre-Phase-B core"*, *"a tape LOADED but never started …"*). The brief predicts that move for any new key; it is js's to
+  re-pin with train 3, and I did not re-pin it.
+
+Earlier pushes' runs were cancelled by newer pushes.
 
 ## Byte-inertia
 
