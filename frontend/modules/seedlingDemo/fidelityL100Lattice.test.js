@@ -30,6 +30,8 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = atlasLevelSource();
 const W = JSON.parse(readFileSync(join(HERE, 'fixtures', 'l100lattice-witness', 'step216-on.json'), 'utf8'));
 const L89 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'waterfall-witness', 'l89-step89-on.json'), 'utf8'));
+const W168 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'l100lattice-witness', 'step168-on.json'), 'utf8'));
+const W172 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'l100lattice-witness', 'step172-on.json'), 'utf8'));
 
 const runOf = (tape) => createRunForStaging(solveStaging(stagingFromTape(parseTape({ ...tape, inputs: [], tick_count: 0 }))), SRC);
 const tapeKeys = (tape) => {
@@ -82,20 +84,35 @@ describe('L100 — the walk to an 8 px swing stance plans on the 8 px lattice (f
         expect(run.playerHits.map((h) => [h.t, h.id])).toEqual([[125, 'jellyfish@80,112']]);
     }, 120_000);
 
-    it('ON: the model replaying the witness tape equals the game at every sampled tick (0 px), hit and level too', () => {
-        const run = runOf(W.tape);
-        const model = [[run.state.x, run.state.y]];
-        for (const k of tapeKeys(W.tape)) {
-            run.advance(new Set(k ? k.split('+') : []));
-            model.push([run.state.x, run.state.y]);
-        }
-        let worst = 0;
-        for (const [t, x, y] of W.game) worst = Math.max(worst, Math.abs(model[t][0] - x), Math.abs(model[t][1] - y));
-        expect(W.game.length).toBeGreaterThan(700);
-        expect(worst).toBe(0);
-        expect(run.playerHits.map((h) => [h.t, h.hits])).toEqual(W.gameHits);
-        expect([run.ticksCompleted, run.level]).toEqual([W.gameEnd.tick, W.gameEnd.level]);
-    }, 60_000);
+    it.each([['step 216 (L100)', W, 700], ['step 168 (L66, a mover)', W168, 230], ['step 172 (L12, a mover)', W172, 1000]])(
+        'ON: the model replaying %s\'s witness tape equals the game at every sampled tick (0 px), hits and level too',
+        (_name, w, min) => {
+            const run = runOf(w.tape);
+            const model = [[run.state.x, run.state.y]];
+            for (const k of tapeKeys(w.tape)) {
+                run.advance(new Set(k ? k.split('+') : []));
+                model.push([run.state.x, run.state.y]);
+            }
+            let worst = 0;
+            for (const [t, x, y] of w.game) worst = Math.max(worst, Math.abs(model[t][0] - x), Math.abs(model[t][1] - y));
+            expect(w.game.length).toBeGreaterThan(min);
+            expect(worst).toBe(0);
+            expect(run.playerHits.map((h) => [h.t, h.hits])).toEqual(w.gameHits);
+            expect([run.ticksCompleted, run.level]).toEqual([w.gameEnd.tick, w.gameEnd.level]);
+        }, 60_000);
+
+    it('ON: step 168 (L66 → L70) — the keylock stance fineFrontierFlood found is walked on 8 px; the plan IS the witness', () => {
+        const solve = (on) => withContactFidelity({ fineStanceWalk: on }, () => solveSegment({ run: runOf(W168.tape),
+            goals: [{ kind: 'reach-exit', exit: { x: 72, y: 64 } }], name: 'l66', boot: W168.tape.boot,
+            dashMode: DEFAULT_DASH_MODE }));
+        const off = solve(false);
+        expect(off.perTick).toHaveLength(230);
+        expect(off.fineLatticeWalks).toBeUndefined();
+        const on = solve(true);
+        expect(keysOf(on.perTick)).toEqual(tapeKeys(W168.tape));
+        expect(on.fineLatticeWalks.map((w) => [w.tick, w.aim.x, w.aim.y, w.refused.slice(0, 11)]))
+            .toEqual([[64, 76, 84, 'FINE_STANCE'], [160, 76, 84, 'FINE_STANCE']]);
+    }, 120_000);
 
     it('ON: a walk the 16 px lattice answers is untouched — the L89 control (W35 step 89) solves to the same keys', () => {
         const r = withContactFidelity({ fineStanceWalk: true }, () => solveSegment({ run: runOf(L89.tape),
