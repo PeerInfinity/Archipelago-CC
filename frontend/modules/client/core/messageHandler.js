@@ -12,6 +12,7 @@ import {
   initializeMappingsFromDataPackage,
 } from '../utils/idMapping.js';
 import { findPresetsForRoom } from '../../../utils/presetResolver.js';
+import { buildRulesFromServerData, hasServerDataBuilder, versionString } from './serverDataRules.js';
 import {
   generateInaccessibleLocationSphereLog,
   generateRegressionTestSphereLog,
@@ -26,6 +27,11 @@ const MODULE_NAME = 'client';
 
 // How long the connect flow waits for an auto-loaded preset's rules to load.
 const PRESET_LOAD_TIMEOUT_MS = 60_000;
+// How long a build from server data waits for the scouts' LocationInfo.
+const SCOUT_TIMEOUT_MS = 30_000;
+// Packets that change runtime state. While rules are being built from server
+// data they are held, then applied against the built rules.
+const HELD_DURING_BUILD = new Set(['ReceivedItems', 'RoomUpdate']);
 
 /** RoomInfo's games without the 'Archipelago' meta-game. */
 export function roomGamesOf(roomInfo) {
@@ -66,6 +72,11 @@ export class MessageHandler {
     // What the server says is in each of our locations, from LocationScouts:
     // server location ID -> scouted entry (see _handleLocationInfo)
     this.scoutedLocations = new Map();
+    // The last DataPackage's data (all games), for building rules from it.
+    this.dataPackage = null;
+    // A build of rules from server data in progress (see _beginServerBuild):
+    // { game, connected, held, timer }. Null when none.
+    this._serverBuild = null;
 
     // Use the imported stateManagerProxySingleton directly
     this.stateManager = stateManagerProxySingleton;
@@ -119,6 +130,7 @@ export class MessageHandler {
       this.clientSlot = null;
       this.clientTeam = null;
       this._resetScouts();
+      this._cancelServerBuild();
     });
     this.eventBus.subscribe('connection:close', () => {
       // The session is over: stop reporting a slot, or isHandshakeComplete()
@@ -127,6 +139,7 @@ export class MessageHandler {
       this.clientTeam = null;
       this.players = [];
       this._resetScouts();
+      this._cancelServerBuild();
     });
     this.eventBus.subscribe('connection:message', (commands) => {
       commands.forEach((command) => this.processMessage(command));
@@ -134,13 +147,21 @@ export class MessageHandler {
   }
 
   processMessage(command) {
+    const build = this._serverBuild;
+    if (build?.connected && HELD_DURING_BUILD.has(command.cmd)) {
+      build.held.push(command);
+      return;
+    }
     switch (command.cmd) {
       case 'RoomInfo':
         this._handleRoomInfo(command);
         break;
 
       case 'Connected':
-        this._handleConnected(command);
+        // Decided synchronously: the ReceivedItems in the same batch must
+        // already see the build as started.
+        if (build && !build.connected) this._beginServerBuild(command);
+        else this._handleConnected(command);
         break;
 
       case 'ConnectionRefused':
@@ -270,6 +291,7 @@ export class MessageHandler {
     }
 
     this.roomInfo = data;
+    this._cancelServerBuild();
     const roomInfoSeq = ++this._roomInfoSeq;
     const roomGames = roomGamesOf(data);
     if (roomGames.length > 0) {
@@ -281,6 +303,20 @@ export class MessageHandler {
     // always boots with SOME preset loaded, so "no rules" alone never
     // happens); those are treated as no usable rules.
     const loadedGame = this.getClientGameName();
+    // Rules this client can build from server data are rebuilt for a room of
+    // another seed (unless a preset matches it), not used as they are.
+    const loadedSeed = stateManagerProxySingleton?.getStaticData?.()?.seed_name;
+    if (
+      hasServerDataBuilder(loadedGame) &&
+      (roomGames.length === 0 || roomGames.includes(loadedGame)) &&
+      loadedSeed && data.seed_name && String(loadedSeed) !== String(data.seed_name)
+    ) {
+      this._printToConsole(
+        `The loaded ${loadedGame} rules are for seed ${loadedSeed}; this room is seed ${data.seed_name}.`,
+        'info'
+      );
+      return this._connectWithoutRules(data, roomGames, roomInfoSeq, loadedGame);
+    }
     if (loadedGame && (roomGames.length === 0 || roomGames.includes(loadedGame))) {
       log('info', `[MessageHandler] Using game name from stateManager: ${loadedGame}`);
       this._warnOnSeedMismatch(data.seed_name);
@@ -299,9 +335,11 @@ export class MessageHandler {
   /**
    * Connect when the loaded rules don't fit the room: load the preset made
    * from this room's own seed if there is exactly one, otherwise use the game
-   * the player picked (or the room's only game), otherwise ask for one.
+   * the player picked (or the room's only game, or `fallbackGame`), otherwise
+   * ask for one. A game whose rules can be built from server data is built
+   * after login (see _beginServerBuild).
    */
-  async _connectWithoutRules(roomInfo, roomGames, roomInfoSeq) {
+  async _connectWithoutRules(roomInfo, roomGames, roomInfoSeq, fallbackGame = null) {
     const isStale = () => roomInfoSeq !== this._roomInfoSeq;
     const chosen = this.chosenGame || null;
 
@@ -326,7 +364,16 @@ export class MessageHandler {
       this._printToConsole(`Could not load ${preset.path}; choose the game instead.`, 'warning');
     }
 
-    const game = chosen || (roomGames.length === 1 ? roomGames[0] : null);
+    const game = chosen || (roomGames.length === 1 ? roomGames[0] : null) || fallbackGame;
+    if (game && hasServerDataBuilder(game)) {
+      this._serverBuild = { game, connected: null, held: [], timer: null };
+      this._printToConsole(
+        `No preset matches this room; building ${game} rules from the server's data after login…`,
+        'info'
+      );
+      this._sendConnect(game);
+      return;
+    }
     if (game) {
       log('info', `[MessageHandler] No usable rules; connecting as ${game}.`);
       this._sendConnect(game);
@@ -436,7 +483,17 @@ export class MessageHandler {
       log('warn', `[MessageHandler] Could not fetch ${preset.path}: ${e.message}`);
       return false;
     }
-    if (!this.eventBus) return false;
+    return this._loadRulesDocument(jsonData, preset.playerId, preset.path);
+  }
+
+  /**
+   * Loads a rules document for one player via files:jsonLoaded and resolves
+   * once the state manager confirms it (stateManager:rulesLoaded from that
+   * source), or false after PRESET_LOAD_TIMEOUT_MS.
+   */
+  _loadRulesDocument(jsonData, playerId, sourceName, playerInfo = undefined) {
+    if (!this.eventBus) return Promise.resolve(false);
+    const preset = { playerId, path: sourceName };
     return new Promise((resolve) => {
       let unsubscribe = null;
       const timer = setTimeout(() => {
@@ -453,6 +510,7 @@ export class MessageHandler {
         jsonData,
         selectedPlayerId: preset.playerId,
         sourceName: preset.path,
+        ...(playerInfo ? { playerInfo } : {}),
       });
     });
   }
@@ -483,7 +541,14 @@ export class MessageHandler {
     connection.send([connectionData]);
   }
 
-  async _handleConnected(data) {
+  /**
+   * @param {Object} data - The Connected packet
+   * @param {Object} [options]
+   * @param {boolean} [options.scout=true] - Scout every location afterwards.
+   *   False after a build from server data, which already has the scouts;
+   *   they are re-announced instead, for the panels of the new rules.
+   */
+  async _handleConnected(data, { scout = true } = {}) {
     log('info', '[MessageHandler] _handleConnected called with data:', data);
 
     // Re-arm goal reporting for this connection. If the proof/game is already
@@ -597,7 +662,112 @@ export class MessageHandler {
       serverUncheckedLocationNames: serverUncheckedLocationNames,
     });
 
+    if (scout) {
+      this._scoutAllLocations();
+    } else if (this.scoutedLocations.size > 0) {
+      this.eventBus?.publish('game:locationsScouted', { locations: this.getScoutedLocations() });
+    }
+  }
+
+  /**
+   * Logged in to a slot whose rules are built from server data. The Connected
+   * packet and the runtime-state packets after it are held; the slot's
+   * locations are scouted, and the LocationInfo answer completes the build
+   * (_completeServerBuild): one loadRules, then the held packets.
+   */
+  _beginServerBuild(data) {
+    const build = this._serverBuild;
+    build.connected = data;
+    this.clientSlot = data.slot;
+    this.clientTeam = data.team;
+    this.players = data.players || [];
+    this.slotInfo = data.slot_info || {};
+    this.missingLocationIds = data.missing_locations || [];
+    this.checkedLocationIds = data.checked_locations || [];
+    this._printToConsole(`Logged in; building ${build.game} rules from the server's data…`, 'info');
+    if (this.missingLocationIds.length + this.checkedLocationIds.length === 0) {
+      // Nothing to scout: no LocationInfo will come.
+      this.scoutedLocations = new Map();
+      this._completeServerBuild();
+      return;
+    }
     this._scoutAllLocations();
+    build.timer = setTimeout(() => {
+      if (this._serverBuild !== build) return;
+      this._completeServerBuild(new Error(`no LocationInfo within ${SCOUT_TIMEOUT_MS / 1000} s`));
+    }, SCOUT_TIMEOUT_MS);
+  }
+
+  /**
+   * Build the rules from slot_data + scouts, load them once, then apply the
+   * held Connected and runtime-state packets against them. On failure the
+   * client stays connected: the error is printed and the held packets are
+   * applied against whatever rules are loaded.
+   */
+  async _completeServerBuild(failure = null) {
+    const build = this._serverBuild;
+    if (!build?.connected || build.completing) return;
+    build.completing = true;
+    clearTimeout(build.timer);
+    build.timer = null;
+    const data = build.connected;
+    let error = failure;
+    if (!error) {
+      try {
+        const rules = this._buildRulesForSlot(build.game, data);
+        const playerName = this.slotInfo?.[String(data.slot)]?.name ?? this.clientSlotName;
+        const sourceName = `server:${this.roomInfo?.seed_name ?? 'seedless'}:P${data.slot}`;
+        const loaded = await this._loadRulesDocument(rules, data.slot, sourceName, { playerName });
+        if (this._serverBuild !== build) return; // a reconnect superseded this build
+        if (!loaded) throw new Error(`the rules did not load within ${PRESET_LOAD_TIMEOUT_MS / 1000} s`);
+        const theorem = data.slot_data?.theorem;
+        const statements = Object.keys(data.slot_data?.proof_structure || {}).length;
+        this._printToConsole(
+          `Built ${build.game} rules${theorem ? ` for ${theorem}` : ''} (${statements} statements, entrance mode ` +
+            `${rules.world[String(data.slot)].options.entrance_rule_mode}) and loaded them.`,
+          'success'
+        );
+      } catch (e) {
+        error = e;
+      }
+    }
+    if (this._serverBuild !== build) return;
+    if (error) {
+      log('error', `[MessageHandler] Building ${build.game} rules from server data failed:`, error);
+      this._printToConsole(
+        `Could not build ${build.game} rules from the server's data (${error.message}). ` +
+          'Staying connected with the rules already loaded.',
+        'error'
+      );
+    }
+    this._serverBuild = null;
+    if (this.dataPackage) initializeMappingsFromDataPackage(this.dataPackage, build.game);
+    await this._handleConnected(data, { scout: false });
+    for (const command of build.held) this.processMessage(command);
+  }
+
+  /** The rules.json for our slot, from its slot_data, the scouts and the DataPackage. */
+  _buildRulesForSlot(game, connected) {
+    const tables = this.dataPackage?.games?.[game];
+    if (!tables) throw new Error(`the server's DataPackage has no ${game}`);
+    const names = {};
+    for (const [slot, info] of Object.entries(connected.slot_info || {})) {
+      if (info?.name) names[slot] = info.name;
+    }
+    return buildRulesFromServerData(game, connected.slot_data, this.getScoutedLocations(), {
+      slot: connected.slot,
+      names,
+      seedName: this.roomInfo?.seed_name ?? null,
+      itemNameToId: tables.item_name_to_id || {},
+      locationNameToId: tables.location_name_to_id || {},
+      archipelagoVersion: versionString(this.roomInfo?.version),
+    });
+  }
+
+  _cancelServerBuild() {
+    if (!this._serverBuild) return;
+    clearTimeout(this._serverBuild.timer);
+    this._serverBuild = null;
   }
 
   _resetScouts() {
@@ -654,6 +824,7 @@ export class MessageHandler {
     }
     log('info', `[MessageHandler] Scouted ${scouted.length} locations`);
     this.eventBus?.publish('game:locationsScouted', { locations: scouted });
+    if (this._serverBuild?.connected) this._completeServerBuild();
   }
 
   /** Every scouted entry received on this connection (empty before LocationInfo arrives). */
@@ -895,6 +1066,7 @@ export class MessageHandler {
 
   _handleDataPackage(data) {
     log('info', 'Received data package from server');
+    this.dataPackage = data.data;
 
     // Initialize in-memory mappings, passing the client's game name to avoid
     // ID collisions in multiworld. The cache is not persisted — it is rebuilt
