@@ -26793,3 +26793,15 @@ only Boss Key 2 arrival leg that gets past `bobsoldier@880,832`. Switch `pressKi
   worktree with it applied: producer roster 97 run, 0 red; the bounded set 635/635. Re-recording instead
   (`variant-rerecord.patch`) lengthens both witness tapes past their game samples (2195 → 2317 t, 1629 → 1796 t) and
   reds 7 rows.
+
+
+### Seedling fidelity REFUSALS — the unowned survey refusals (`chestBodyPlacementProbe`, `inPitFallOut`, both OFF)
+
+Wave 36, base `b646d32d95`. Report: `CC/docs/cloud-reports/seedling-fidelity-refusals.md`.
+- **D1 `chestBodyPlacementProbe`:** `world.chests` rows have no rect, so `placementBlocker` probed the OEL corner. The chest body is
+  the cell itself (`Chest.as:27,30`). L25's chest only touches rock2. ON, step 35's refusal turns truthful: the chest opens only
+  from (6,7), a pocket entered from L28 ⇒ a **rules** row (handed over).
+- **D2 `inPitFallOut`:** a run whose start cell is a non-goal pit falls out idle (`checkFallingInPit`); L84 steps 174/202
+  REFUSED → SOLVED 100 t. The only survey movers.
+- **STOP:** the lavatrap (L77/L78/L108; `levelRun` does not step `LavaTrap` at all: tongue, ferry and wand kill are owed) and
+  the Owl verb (L112; the fight is modelled, no executor).
