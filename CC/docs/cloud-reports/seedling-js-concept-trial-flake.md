@@ -201,3 +201,21 @@ Bounded checks run on this branch:
     the clean run.
   - A `git stash` round trip (to compare the reference check) briefly reverted the tree during the discarded loop.
     It did not overlap the clean one.
+
+## Landing
+
+Landed by the local slice `seedling-js-cloud-landings` (gate: `seedling-js-planning-13`, then `seedling-js-planning-14`)
+on 2026-10-31 UTC. It was the FIRST member of the COMBINED TRAIN `js-land/train-2026-10-31a`, which fast-forwarded `main`
+from `39b4f05179` to **`f886ddcadf`** (⚖ user ruling: a combined landing).
+
+- **History on `js-land/concept-trial-flake`:** the cloud tip `deb78ec063` (based on `a7d40b84cb`), then merges of
+  `origin/main`: `2ce525e323`, `0ebdd65b7f`, `9d790feb67`, `63101b5dee` and `3527b46f74`. The member SHA was
+  **`b445475726`**, which also carried the replay-continuation report's Landing section. The only conflicts, on the
+  `0ebdd65b7f` merge and on the train merge (`703c24d383`), were the GENERATED word counts in
+  `docs/json/developer/procgen/README.md` and `procgenDocs/generated/docsIndex.js`. Each was resolved by regenerating
+  (`generate-procgen-reference.mjs --write`, then `--check` ALL MATCH), never by hand. The gitlink count was 0.
+- **Gates at the member's own tip `b445475726`:** JSUT 41160416608 ✅ (attempt 1) and unittests 41160416697 ✅. The TT
+  41132647864 ✅ was carried from `918a4b02fc`.
+- **Gates at the train `f886ddcadf`:** JSUT 41166403787 ✅, unittests 41166403824 ✅, a fresh TT 41166403518 ✅ and the
+  probe 41166405742 ✅. The line is **`gate: concept-trial-play | 28/0 | ALL CHECKS PASSED`**, up from 25 before this
+  branch: A0's three checks, passing first time with no rerun, at every gated SHA of this branch.

@@ -75,3 +75,22 @@ Commits: `8cb073f2` (bootstrap), `930ea7c9` (panel look row), then this report.
 - Nothing stopped.
 - Not done: a browser check of the live row in the running app (no TT here; the coordinator dispatches it).
   The live loader path is covered headless by the loader row, using a stub importer.
+
+## Landing
+
+Landed by the local slice `seedling-js-cloud-landings` (gate: `seedling-js-planning-13`, then `seedling-js-planning-14`)
+on 2026-10-31 UTC. It was a member of the COMBINED TRAIN `js-land/train-2026-10-31a`, which fast-forwarded `main` from
+`39b4f05179` to **`f886ddcadf`** (⚖ user ruling: a combined landing).
+
+- **History on `js-land/seedling-js-panel-look`:** the cloud tip `875c08337b` (based on `bf28908179`), then clean merges
+  of `origin/main`: `a7d40b84cb`, `2ce525e323`, `0ebdd65b7f`, `9d790feb67`, `63101b5dee` and `3527b46f74`. The member
+  SHA was **`47d0ec8bae`**, merged into the train cleanly (`4e2d9ae262`). No hand resolution was needed, no feature
+  code changed in landing, and the gitlink count was 0.
+- **Gates at the member's own tip `47d0ec8bae`:** JSUT 41160491600 ✅ and unittests 41160491595 ✅. The TT 41126156953 ✅
+  was carried from `b6518ed124`.
+- **Gates at the train `f886ddcadf`:** JSUT 41166403787 ✅ (13 jobs, attempt 1), unittests 41166403824 ✅, a fresh TT
+  41166403518 ✅ (8 jobs) and `seedling-probe.yml` standard 41166405742 ✅. The lab-shard lines were
+  `seedling-lab-load-in-js | 41/0`, `seedling-lab-art | 118/0`, `seedling-editor-manual | 63/0`,
+  `seedling-editor-switch | 62/0` and `seedling-wasm-ship | 415/0`.
+- One JSUT at `708f59ffba` went red on the known concept-trial Phase A flake (`concept-trial-play | 24/1`) before that
+  fix landed. The failed job was rerun once, then superseded by the next main merge.
