@@ -168,7 +168,7 @@ A source that feeds a *document* into the pipeline (jta's dataset) declares `emi
 |-------|------|---------|
 | `generationCost` | `'light'` \| `'heavy'` (optional) | `'heavy'` means seconds per region, so the CI row `procgenPipeline/presetDefs.generate.slow.test.js` skips presets that use the substrate and requires the skipped set to equal `PRESETS_SKIPPED_AS_HEAVY`. Default `'light'`. Read by `procgenPipeline/presetRun.js` (`substrateGenerationCost`, `heavySubstrateIds`). |
 
-`runner` declares `'heavy'`. `flash_seedling_gen` declares `'light'` explicitly, with its measurements beside it: a room is one generator draw plus re-rolls, 0.1–1.5 s at 10×10, and its committed presets build in 0.3–0.7 s.
+`runner` and `cloudberry` declare `'heavy'` (cloudberry: a game page boots, then a generator search per level). `flash_seedling_gen` declares `'light'` explicitly, with its measurements beside it: a room is one generator draw plus re-rolls, 0.1–1.5 s at 10×10, and its committed presets build in 0.3–0.7 s.
 
 ### Build-time — location capacity
 
@@ -206,7 +206,7 @@ A **region library** stores a generated region as an entry and re-instantiates i
 
 Optional hooks the sphere-growth driver and the Procgen Pipeline panel read, so the engine never names a substrate. Semantics are documented at the consumers, `procgenPipelineEngine.js` and `sphereConfigHooks.js`.
 
-- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal})`: `ordinal` is which of the substrate's zones the region is (sphere growth's `sphereZoneOrdinal`, top-down's running count, the APWorld editor's own or first free zone), read by a source whose regions are content (jta's zones, noiz2sa's spans). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
+- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal, entrance})`. `ordinal` is which of the substrate's zones the region is: sphere growth's `sphereZoneOrdinal`, top-down's running count, or the APWorld editor's own or first free zone. A source whose regions are content reads it (jta's zones, noiz2sa's spans). `entrance` is `{side, requirement, counts}` for the region's way back and entry gate, or `null`; cloudberry reads it because its way back is a door of its own. A `…Gen` generator may yield an event carrying `await` (a promise). The asynchronous drivers wait on it before resuming (`yieldedWait`), and a synchronous drain does not. This is how cloudberry waits for its game page's generator ([Cloudberry](./cloudberry.md#build-time-generation-sphere-growth)). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
 - **Gate vetoes and hints:** `canHostExitGates`, `canHostExitGatesBraid`, `exitGateVeto`, `backPortalGated`, `hostsSurplusExitsNatively`, `gateHostingHint`.
 - **Region contract:** `buildRegionContract`, used by the panel's Edit flow.
 - **Panel parameters:** `defaultProcgenParams`, `prepareSphereGrowth`, `buildRegionParams`, `renderProcgenParams`; for a selected region library, `buildLibraryRegionParams` and `renderLibraryProcgenParams`. `procgenParamsFromPayload(payload)` recovers the params an existing payload records.
