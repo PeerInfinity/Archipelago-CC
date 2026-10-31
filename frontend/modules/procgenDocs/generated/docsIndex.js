@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 29,
         "headings": 1228,
         "indexHeadings": 2,
-        "lines": 34015,
+        "lines": 34017,
         "pages": 4,
-        "words": 485021
+        "words": 485314
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -349,7 +349,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 37,
-            "lines": 785,
+            "lines": 787,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -359,7 +359,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 43101
+            "words": 43394
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
