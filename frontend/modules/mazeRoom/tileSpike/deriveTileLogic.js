@@ -127,9 +127,11 @@ export function* allPoints(axis) {
 }
 
 /**
- * The rope obstacles that are AP events: `[{key, x, y, event}]` (their `event` named, the cut latches it) —
+ * The rope obstacles that are AP events: `[{key, x, y, event, side?}]` (their `event` named, the cut latches it) —
  * ONE per rope obstacle id, keyed at its canonical cell (`at`, where a strike on any run cell is recorded;
  * rules-l39, ⚖ "(a) One obstacle"), else at its own cell.
+ * `side`: the AP region whose location the event is, when the entry names one (an in-room pole, placed by the producer,
+ * session tile-primitives-sphere-order-11); else the region owning its cell.
  */
 export function ropeEvents(world) {
     const out = [];
@@ -140,7 +142,7 @@ export function ropeEvents(world) {
         seen.add(id);
         const key = entry.at ?? cell;
         const [x, y] = key.split(',').map(Number);
-        out.push({ key, x, y, event: entry.event });
+        out.push({ key, x, y, event: entry.event, ...(entry.side ? { side: entry.side } : {}) });
     }
     return out;
 }

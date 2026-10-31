@@ -1331,6 +1331,9 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             // `opened_by` — the press is a location in another level). The bodies' cells are NOT claimed: the terrain pass
             // lays them as the grid has them, and the obstacle is set on every one it floored (below).
             // ⛓ RULES l63-pole-crossings: a strike per ARM (the Spear thrust, the Ghost Sword swing), each from its stances.
+            // ⛓ An in-room pole's event is a location of the sub-region the PRODUCER places it in (`side`, session
+            // tile-primitives-sphere-order-11, ⚖ 2026-10-30 "Producer's side, all poles"): L101's is lit through a wall from r4c2,
+            // not from beside its DarkTrap (r4c9), so the trap's cell cannot say whose it is.
             const strikes = e.strike ?? [];
             if (strikes.length === 0 || strikes.some((st) => !Array.isArray(st.stances))) {
                 throw new Error(`atlas region "${regionId}": ${e.label} must name its strikes, each with its stances`);
@@ -1354,7 +1357,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
                 struck_from: struckFrom,
                 activates: `lit_${key}`,
                 at: keyOf(...tiles[0]),
-                ...(ev?.mode === 'pole' ? { event: ev.name } : ev?.mode === 'lit' ? { opened_by: ev.name } : {}),
+                ...(ev?.mode === 'pole' ? { event: ev.name, ...(ev.side ? { side: ev.side } : {}) } : ev?.mode === 'lit' ? { opened_by: ev.name } : {}),
                 color: '#d8c84a',
             };
             poleCells.push({ id, tiles, label: e.label });
