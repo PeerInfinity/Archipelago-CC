@@ -3903,9 +3903,78 @@ export function seedlingOracle({ model, items = null, budget = DEFAULT_BUDGET,
         solve(record, { templates = [] } = {}) {
             const pins = this.pinsFor(templates, record);
             const staging = bootStaging({ boot, items, pins });
-            return solve(record, staging, model.goals, b,
+            const out = solve(record, staging, model.goals, b,
                 { name: `procgen-l${record.level}`, dashMode });
+            return chestDoorBypassRefusal(model, out) ?? out;
         },
+    };
+}
+
+/** The chest a chest-door element placed, as the solver's id (`chest@x,y`, OEL px). */
+function chestDoorIdOf(model) {
+    const p = model.elements?.ran ? model.elements.placed[0] : null;
+    if (p?.family !== 'chestdoor') return null;
+    const { x, y } = oelAtTile(p.doorCell.x, p.doorCell.y);
+    return `chest@${x},${y}`;
+}
+
+/**
+ * ⛓⛓ **A DOOR CHEST IS AN AP LOCATION, AND THIS IS ITS NAME** (seedling gen
+ * B2; ⚖ the user 2026-10-30: each door chest IS an Archipelago location — it
+ * always drops a seal piece). Vanilla names its 16 chests `Level NNN - Chest`
+ * (one chest per level), and a level holds at most one chest door (one
+ * element per level), so the same shape is stable here: `<room> - Chest`,
+ * where the ROOM's name is the caller's (`Level NNN` for a numbered level, a
+ * region's name in a pipeline world). ⛔ The generator does not know the
+ * room's name — it knows the chest's cell and tag, which are its CHECK
+ * ADDRESS: the game reports an opened chest as `pendingCheck
+ * "<seq>|<level>|<tag>|0"`.
+ */
+export const CHEST_DOOR_LOCATION_SUFFIX = 'Chest';
+export const chestDoorLocationName = (roomName) => `${roomName} - ${CHEST_DOOR_LOCATION_SUFFIX}`;
+
+/**
+ * The door chests of a FINISHED level, as location rows `{cell, tag, kind}` —
+ * the chest the element placed, read off the final record (its tag is the one
+ * the binding allocated). `[]` for a level without one.
+ */
+export function chestDoorLocationsOf(model, record) {
+    const id = chestDoorIdOf(model);
+    if (id === null) return [];
+    const chest = (record.entities ?? []).find((e) => e.type === 'chest' && `chest@${e.x},${e.y}` === id);
+    if (!chest) return [];
+    const { doorCell } = model.elements.placed[0];
+    return [Object.freeze({ kind: 'chest-door', cell: Object.freeze({ tx: doorCell.x, ty: doorCell.y }),
+        tag: Number.parseInt(chest.attrs.tag, 10) })];
+}
+
+/**
+ * ⛓⛓⛓ **A CHEST DOOR IS CERTIFIED ONLY BY A PLAN THAT OPENS IT** (seedling
+ * gen B2). The element's geometry makes the chest a CUT of the skeleton; this
+ * is the same claim asked of EVERY solve of the room — the certification and
+ * every pass-2 keep — so a template that opened a second gap round the chest
+ * (and a walk that took it) is REFUSED rather than kept. ⛔ It reads the
+ * plan's own `chest` record by the chest's id, never the prose; a room without
+ * a chest door returns `null` on its first line, so no other room's verdict
+ * can move.
+ */
+export function chestDoorBypassRefusal(model, out) {
+    if (out?.verdict !== VERDICT.SOLVED) return null;
+    const id = chestDoorIdOf(model);
+    if (id === null) return null;
+    if ((out.records ?? []).some((r) => r.strategy === 'chest' && r.chest?.id === id)) return null;
+    return {
+        ...out,
+        verdict: VERDICT.REFUSED,
+        reasonText: `procgenSeedling: the solve reached its goals WITHOUT opening the chest door `
+            + `${id} — its plan is [${(out.records ?? []).map((r) => r.strategy).join(', ')}]. The `
+            + 'chest is the room\'s only way to the far side, so a route round it is a second gap '
+            + 'and this certificate is refused.',
+        errorName: null,
+        classifiedBy: 'the plan never opens the chest door — refused by the chest door\'s '
+            + 'certification rule, not by the solver',
+        refusalGoal: null,
+        obstacle: Object.freeze({ kind: 'chest-door-bypassed', id }),
     };
 }
 
@@ -3952,6 +4021,7 @@ function certificationGap(cert) {
     if (kind === 'pickup') return 'the-goal-approach-is-blocked';
     if (kind === 'proximity-hazard') return 'no-reachable-stance-and-no-prerequisite';
     if (kind === 'solid') return 'a-frontier-obstacle-with-no-usable-order';
+    if (kind === 'chest-door-bypassed') return 'the-chest-door-is-bypassed';
     return 'the-certification-solve-refused';
 }
 
@@ -4788,6 +4858,8 @@ export function generateSeedlingLevel({
     /** ⛓ F1 (D5) — `null` (and so absent from the summary) unless the level
      *  holds a roaming body. */
     const ablation = bodyAblation({ model, out, palette, budget, dashMode });
+    const finalRecord = shellLevel(out.record, model, fill);
+    const chestDoors = chestDoorLocationsOf(model, finalRecord);
     return {
         ...out,
         /**
@@ -4796,7 +4868,7 @@ export function generateSeedlingLevel({
          * OBJECT `generateLevel` returned, by identity, which is what makes the
          * knob byte-inert when nobody asks for it.
          */
-        record: shellLevel(out.record, model, fill),
+        record: finalRecord,
         model,
         certification,
         areaCertification,
@@ -4844,6 +4916,12 @@ export function generateSeedlingLevel({
              * no roaming body, which keeps every committed payload unmoved.
              */
             ...(ablation ? { bodyAblation: ablation } : {}),
+            /**
+             * ⛓⛓ Seedling gen B2 — **THE DOOR CHEST'S AP LOCATION** (cell and
+             * tag; `chestDoorLocationName` names it). ⛔ OMITTED ENTIRELY on a
+             * level without one, which keeps every committed payload unmoved.
+             */
+            ...(chestDoors.length > 0 ? { chestDoors: Object.freeze(chestDoors) } : {}),
             goalCell: model.goalCell,
             goalOel: model.goalOel,
             goalClass: model.goalClass ?? model.defaults.goalClass,
