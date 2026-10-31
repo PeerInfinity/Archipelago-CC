@@ -363,7 +363,7 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `generationCost` | — | — | — | light | — | — | — | — | heavy | — |
+| `generationCost` | — | heavy | — | light | — | — | — | — | heavy | — |
 
 **Build-time — location capacity**
 
@@ -389,23 +389,23 @@ Groups are this document's own § headings, matched to a field by the section th
 | `backPortalGated` | fn | fn | fn | fn | — | — | — | — | fn | — |
 | `buildLibraryRegionParams` | — | — | — | — | — | fn | — | — | — | — |
 | `buildRegionContract` | fn | — | — | — | — | — | — | — | fn | — |
-| `buildRegionParams` | fn | — | fn | fn | — | — | — | — | fn | — |
-| `buildZoneSpecs` | fn | — | fn | — | — | — | — | — | fn | — |
-| `canHostExitGates` | fn | — | fn | fn | — | — | — | — | fn | — |
+| `buildRegionParams` | fn | fn | fn | fn | — | — | — | — | fn | — |
+| `buildZoneSpecs` | fn | fn | fn | — | — | — | — | — | fn | — |
+| `canHostExitGates` | fn | fn | fn | fn | — | — | — | — | fn | — |
 | `canHostExitGatesBraid` | fn | — | — | — | — | — | — | — | — | — |
-| `defaultProcgenParams` | 10 keys | — | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | 8 keys | — |
+| `defaultProcgenParams` | 10 keys | 11 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | 8 keys | — |
 | `driftItems` | Left arrow, Right arrow | — | — | — | — | — | — | — | — | — |
-| `exitGateVeto` | fn | — | fn | fn | — | — | — | — | fn | — |
-| `gateHostingHint` | fn | — | — | — | — | — | — | — | fn | — |
+| `exitGateVeto` | fn | fn | fn | fn | — | — | — | — | fn | — |
+| `gateHostingHint` | fn | fn | — | — | — | — | — | — | fn | — |
 | `gateableItems` | `null` | 10 items | — | — | — | — | — | — | 5 items | — |
-| `generateZoneForSpecs` | fn | — | fn | — | fn | — | fn | — | fn | — |
-| `generateZoneForSpecsGen` | fn | — | — | — | — | — | — | — | fn | — |
+| `generateZoneForSpecs` | fn | fn | fn | — | fn | — | fn | — | fn | — |
+| `generateZoneForSpecsGen` | fn | fn | — | — | — | — | — | — | fn | — |
 | `hostsSurplusExitsNatively` | fn | fn | — | — | — | — | — | — | fn | — |
 | `libraryItems` | 7 keys | 11 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | 6 keys | — |
 | `prepareSphereGrowth` | fn | — | fn | — | — | — | — | — | — | — |
-| `procgenParamsFromPayload` | fn | — | — | fn | — | — | — | — | fn | — |
+| `procgenParamsFromPayload` | fn | fn | — | fn | — | — | — | — | fn | — |
 | `renderLibraryProcgenParams` | — | — | — | — | — | fn | — | — | — | — |
-| `renderProcgenParams` | fn | — | fn | fn | fn | fn | fn | — | fn | — |
+| `renderProcgenParams` | fn | fn | fn | fn | fn | fn | fn | — | fn | — |
 | `startingInventory` | {needs} | — | — | — | — | — | — | — | — | — |
 
 **Which library registered which entry** — entries self-register on library import, and this is the order the generator imports them in.
