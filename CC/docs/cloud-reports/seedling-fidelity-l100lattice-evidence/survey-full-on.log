@@ -578,367 +578,367 @@ wrote /home/user/wt-on/.cache/seedling-survey/through-end/route.json
 
 ## THE ADDENDUM — 0 step(s) of the alternative leg 2 that the chosen route never walks
 
-== step 1 — L0 ... SOLVED 183 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 144 ms
+== step 1 — L0 ... SOLVED 183 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 128 ms
 
 == step 2 — L2 ... SOLVED 47 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 51 ms
 
-== step 3 — L3 ... SOLVED 245 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 131 ms
+== step 3 — L3 ... SOLVED 245 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 138 ms
 
-== step 4 — L4 ... SOLVED 255 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 159 ms
+== step 4 — L4 ... SOLVED 255 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 255 ms
 
-== step 5 — L5 ... SOLVED 403 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 386 ms
+== step 5 — L5 ... SOLVED 403 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 362 ms
 
-== step 6 — L6 ... SOLVED 294 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 235 ms
+== step 6 — L6 ... SOLVED 294 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 228 ms
 
-== step 7 — L7 ... SOLVED 146 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 60 ms
+== step 7 — L7 ... SOLVED 146 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 72 ms
 
-== step 8 — L8 ... SOLVED 827 ticks, 7 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 341 ms
+== step 8 — L8 ... SOLVED 827 ticks, 7 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 571 ms
 
-== step 9 — L9 ... SOLVED 122 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 76 ms
+== step 9 — L9 ... SOLVED 122 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 60 ms
 
-== step 10 — L10 ... SOLVED 83 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 91 ms
+== step 10 — L10 ... SOLVED 83 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 80 ms
 
-== step 11 — L11 ... SOLVED 97 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 119 ms
+== step 11 — L11 ... SOLVED 97 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 170 ms
 
-== step 12 — L3 ... SOLVED 152 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 248 ms
+== step 12 — L3 ... SOLVED 152 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 503 ms
 
-== step 13 — L2 ... SOLVED 23 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 89 ms
+== step 13 — L2 ... SOLVED 23 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 106 ms
 
-== step 14 — L0 ... SOLVED 111 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 403 ms
+== step 14 — L0 ... SOLVED 111 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 609 ms
 
-== step 15 — L86 ... SOLVED 101 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 91 ms
+== step 15 — L86 ... SOLVED 101 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 127 ms
 
-== step 16 — L0 ... SOLVED 186 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 442 ms
+== step 16 — L0 ... SOLVED 186 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1396 ms
 
-== step 17 — L12 ... SOLVED 328 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1948 ms
+== step 17 — L12 ... SOLVED 328 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2872 ms
 
 == step 18 — L36 ... REFUSED — solverBot(survey-step-18) chest (64,48) stance: the re-planned corridor failed too — solverBot(survey-step-18) chest (64,48) stance waypoint 1 (72,66): the rout
 
-== step 19 — L12 ... SOLVED 311 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1165 ms
+== step 19 — L12 ... SOLVED 311 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1791 ms
 
-== step 20 — L0 ... SOLVED 198 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 575 ms
+== step 20 — L0 ... SOLVED 198 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 819 ms
 
-== step 21 — L13 ... SOLVED 36 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 106 ms
+== step 21 — L13 ... SOLVED 36 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 154 ms
 
-== step 22 — L14 ... SOLVED 103 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1476 ms
+== step 22 — L14 ... SOLVED 103 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1740 ms
 
-== step 23 — L15 ... SOLVED 456 ticks, 7 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 463 ms
+== step 23 — L15 ... SOLVED 456 ticks, 7 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 649 ms
 
-== step 24 — L16 ... SOLVED 273 ticks, 2 decision(s), 0 re-plan(s), 1 hit(s), 1 pass(es) — 2470 ms
+== step 24 — L16 ... SOLVED 273 ticks, 2 decision(s), 0 re-plan(s), 1 hit(s), 1 pass(es) — 3742 ms
 
-== step 25 — L17 ... SOLVED 131 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 317 ms
+== step 25 — L17 ... SOLVED 131 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 619 ms
 
-== step 26 — L16 ... SOLVED 516 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2167 ms
+== step 26 — L16 ... SOLVED 516 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3327 ms
 
-== step 27 — L18 ... SOLVED 467 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 4648 ms
+== step 27 — L18 ... SOLVED 467 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 6289 ms
 
-== step 28 — L19 ... SOLVED 746 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 451 ms
+== step 28 — L19 ... SOLVED 746 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 879 ms
 
-== step 29 — L20 ... SOLVED 560 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 538 ms
+== step 29 — L20 ... SOLVED 560 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1126 ms
 
-== step 30 — L13 ... SOLVED 48 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 154 ms
+== step 30 — L13 ... SOLVED 48 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 221 ms
 
-== step 31 — L0 ... SOLVED 201 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 894 ms
+== step 31 — L0 ... SOLVED 201 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1124 ms
 
-== step 32 — L12 ... SOLVED 2364 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 40997 ms
+== step 32 — L12 ... SOLVED 2364 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 40505 ms
 
-== step 33 — L21 ... SOLVED 26 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 74 ms
+== step 33 — L21 ... SOLVED 26 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 88 ms
 
-== step 34 — L22 ... SOLVED 113 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 579 ms
+== step 34 — L22 ... SOLVED 113 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 757 ms
 
 == step 35 — L25 ... REFUSED — solverBot(survey-step-35) chest (96,96): the placement is INSIDE solid:rock2 (rock2@80,96) — a pickup in a solid is an obstacle, not a stance problem. No strate
 
-== step 36 — L22 ... SOLVED 201 ticks, 1 decision(s), 0 re-plan(s), 1 hit(s), 1 pass(es) — 593 ms
+== step 36 — L22 ... SOLVED 201 ticks, 1 decision(s), 0 re-plan(s), 1 hit(s), 1 pass(es) — 1224 ms
 
-== step 37 — L29 ... SOLVED 257 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 540 ms
+== step 37 — L29 ... SOLVED 257 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1011 ms
 
-== step 38 — L31 ... SOLVED 336 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 522 ms
+== step 38 — L31 ... SOLVED 336 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 830 ms
 
-== step 39 — L30 ... SOLVED 395 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1265 ms
+== step 39 — L30 ... SOLVED 395 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2792 ms
 
 == step 40 — L32 ... REFUSED — solverBot(survey-step-40) encounter (80,128)->Seal: the arena's exit (burnabletree@64,0) burns only with Fire, and under `apReportBosses` the Fire pickup grants
 
-== step 41 — L30 ... SOLVED 320 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 707 ms
+== step 41 — L30 ... SOLVED 320 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1195 ms
 
-== step 42 — L22 ... SOLVED 406 ticks, 1 decision(s), 0 re-plan(s), 6 hit(s), 1 pass(es) — 555 ms
+== step 42 — L22 ... SOLVED 406 ticks, 1 decision(s), 0 re-plan(s), 6 hit(s), 1 pass(es) — 926 ms
 
-== step 43 — L21 ... SOLVED 31 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 84 ms
+== step 43 — L21 ... SOLVED 31 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 106 ms
 
-== step 44 — L23 ... SOLVED 11 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 67 ms
+== step 44 — L23 ... SOLVED 11 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 56 ms
 
-== step 45 — L24 ... SOLVED 124 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 216 ms
+== step 45 — L24 ... SOLVED 124 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 202 ms
 
 == step 46 — L12 ... REFUSED — solverBot(survey-step-46) chest (320,816) stance: the re-planned corridor failed too — solverBot(survey-step-46) chest (320,816) stance waypoint 13 (328,834): t
 
-== step 47 — L37 ... SOLVED 316 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 980 ms
+== step 47 — L37 ... SOLVED 316 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 976 ms
 
-== step 48 — L38 ... SOLVED 371 ticks, 6 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 746 ms
+== step 48 — L38 ... SOLVED 371 ticks, 6 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 1138 ms
 
-== step 49 — L37 ... SOLVED 332 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 677 ms
+== step 49 — L37 ... SOLVED 332 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1137 ms
 
-== step 50 — L44 ... SOLVED 212 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 341 ms
+== step 50 — L44 ... SOLVED 212 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 530 ms
 
-== step 51 — L45 ... SOLVED 239 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2025 ms
+== step 51 — L45 ... SOLVED 239 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2557 ms
 
-== step 52 — L46 ... SOLVED 208 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 845 ms
+== step 52 — L46 ... SOLVED 208 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1118 ms
 
-== step 53 — L47 ... SOLVED 204 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 552 ms
+== step 53 — L47 ... SOLVED 204 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 751 ms
 
-== step 54 — L48 ... SOLVED 330 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3245 ms
+== step 54 — L48 ... SOLVED 330 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3901 ms
 
 == step 55 — L49 ... REFUSED — solverBot(survey-step-55) collect (32,80) stance: the re-planned corridor failed too — solverBot(survey-step-55) collect (32,80) stance waypoint 0 (40,72): not 
 
-== step 56 — L0 ... SOLVED 74 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 257 ms
+== step 56 — L0 ... SOLVED 74 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 380 ms
 
-== step 57 — L13 ... SOLVED 36 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 107 ms
+== step 57 — L13 ... SOLVED 36 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 213 ms
 
-== step 58 — L14 ... SOLVED 117 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 571 ms
+== step 58 — L14 ... SOLVED 117 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 948 ms
 
-== step 59 — L15 ... SOLVED 326 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 987 ms
+== step 59 — L15 ... SOLVED 326 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 1393 ms
 
-== step 60 — L14 ... SOLVED 55 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 284 ms
+== step 60 — L14 ... SOLVED 55 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 429 ms
 
-== step 61 — L13 ... SOLVED 48 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 181 ms
+== step 61 — L13 ... SOLVED 48 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 290 ms
 
-== step 62 — L0 ... SOLVED 169 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 631 ms
+== step 62 — L0 ... SOLVED 169 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 798 ms
 
-== step 63 — L12 ... SOLVED 953 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2389 ms
+== step 63 — L12 ... SOLVED 953 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3486 ms
 
-== step 64 — L37 ... SOLVED 314 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3216 ms
+== step 64 — L37 ... SOLVED 314 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4907 ms
 
-== step 65 — L38 ... SOLVED 480 ticks, 6 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 649 ms
+== step 65 — L38 ... SOLVED 480 ticks, 6 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 1399 ms
 
-== step 66 — L39 ... SOLVED 3496 ticks, 26 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6836 ms
+== step 66 — L39 ... SOLVED 3496 ticks, 26 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 9370 ms
 
 == step 67 — L40 ... REFUSED — solverBot(survey-step-67) collect (656,528) stance (ladder-routed: no corridor from (488,904) to a stance that can collect bosskey@656,528 — 16 walkable candida
 
-== step 68 — L0 ... SOLVED 204 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1371 ms
+== step 68 — L0 ... SOLVED 204 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1268 ms
 
-== step 69 — L12 ... SOLVED 953 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3614 ms
+== step 69 — L12 ... SOLVED 953 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3288 ms
 
-== step 70 — L37 ... SOLVED 36 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 110 ms
+== step 70 — L37 ... SOLVED 36 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 294 ms
 
-== step 71 — L44 ... SOLVED 120 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 804 ms
+== step 71 — L44 ... SOLVED 120 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 922 ms
 
-== step 72 — L45 ... SOLVED 358 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5135 ms
+== step 72 — L45 ... SOLVED 358 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6087 ms
 
-== step 73 — L46 ... SOLVED 1352 ticks, 5 decision(s), 2 re-plan(s), 0 hit(s), 1 pass(es) — 956 ms
+== step 73 — L46 ... SOLVED 1352 ticks, 5 decision(s), 2 re-plan(s), 0 hit(s), 1 pass(es) — 1023 ms
 
-== step 74 — L47 ... SOLVED 300 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3965 ms
+== step 74 — L47 ... SOLVED 300 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3310 ms
 
-== step 75 — L48 ... SOLVED 681 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 1615 ms
+== step 75 — L48 ... SOLVED 681 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 1770 ms
 
 == step 76 — L49 ... REFUSED — solverBot(survey-step-76): no corridor for goal reach-exit toward (40,136) in level 49. Obstacle: pickup:conch (conch@32,80). Strategy 'collect' failed to apply
 
-== step 77 — L50 ... SOLVED 608 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 9392 ms
+== step 77 — L50 ... SOLVED 608 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 10637 ms
 
-== step 78 — L51 ... SOLVED 101 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 958 ms
+== step 78 — L51 ... SOLVED 101 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 821 ms
 
 == step 79 — L53 ... REFUSED — solverBot(survey-step-79) reach-exit (144,240)->L54 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 166-t
 
-== step 80 — L54 ... SOLVED 579 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 34151 ms
+== step 80 — L54 ... SOLVED 579 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 35171 ms
 
-== step 81 — L52 ... SOLVED 208 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3297 ms
+== step 81 — L52 ... SOLVED 208 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2890 ms
 
-== step 82 — L55 ... SOLVED 46 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 309 ms
+== step 82 — L55 ... SOLVED 46 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 340 ms
 
-== step 83 — L0 ... SOLVED 204 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1371 ms
+== step 83 — L0 ... SOLVED 204 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1277 ms
 
-== step 84 — L12 ... SOLVED 232 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1347 ms
+== step 84 — L12 ... SOLVED 232 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1395 ms
 
-== step 85 — L88 ... SOLVED 476 ticks, 1 decision(s), 0 re-plan(s), 2 hit(s), 1 pass(es) — 1017 ms
+== step 85 — L88 ... SOLVED 476 ticks, 1 decision(s), 0 re-plan(s), 2 hit(s), 1 pass(es) — 1035 ms
 
-== step 86 — L87 ... SOLVED 205 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1527 ms
+== step 86 — L87 ... SOLVED 205 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1163 ms
 
 == step 87 — L89 ... REFUSED — solverBot(survey-step-87): no corridor for goal collect-placement toward (168,88) in level 89. Obstacle: pickup:feather (feather@160,96); also on the frontier: 
 
-== step 88 — L90 ... SOLVED 137 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 240 ms
+== step 88 — L90 ... SOLVED 137 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 288 ms
 
-== step 89 — L89 ... SOLVED 291 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3220 ms
+== step 89 — L89 ... SOLVED 291 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1894 ms
 
-== step 90 — L87 ... SOLVED 250 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1325 ms
+== step 90 — L87 ... SOLVED 250 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1306 ms
 
-== step 91 — L44 ... SOLVED 149 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1463 ms
+== step 91 — L44 ... SOLVED 149 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1408 ms
 
-== step 92 — L37 ... SOLVED 522 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 8401 ms
+== step 92 — L37 ... SOLVED 522 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 25594 ms
 
-== step 93 — L38 ... SOLVED 359 ticks, 5 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 991 ms
+== step 93 — L38 ... SOLVED 359 ticks, 5 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 987 ms
 
-== step 94 — L39 ... SOLVED 3376 ticks, 24 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 8646 ms
+== step 94 — L39 ... SOLVED 3376 ticks, 24 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 8530 ms
 
 == step 95 — L40 ... REFUSED — solverBot(survey-step-95) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 — 22 walkable candida
 
-== step 96 — L41 ... SOLVED 2110 ticks, 12 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5880 ms
+== step 96 — L41 ... SOLVED 2110 ticks, 12 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5216 ms
 
-== step 97 — L40 ... SOLVED 70 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1237 ms
+== step 97 — L40 ... SOLVED 70 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1208 ms
 
-== step 98 — L42 ... SOLVED 1285 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4231 ms
+== step 98 — L42 ... SOLVED 1285 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4244 ms
 
-== step 99 — L0 ... SOLVED 392 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 10991 ms
+== step 99 — L0 ... SOLVED 392 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4539 ms
 
-== step 100 — L89 ... SOLVED 135 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 694 ms
+== step 100 — L89 ... SOLVED 135 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 859 ms
 
-== step 101 — L87 ... SOLVED 250 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 965 ms
+== step 101 — L87 ... SOLVED 250 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 986 ms
 
 == step 102 — L44 ... SOLVED 71 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 184 ms
 
-== step 103 — L45 ... SOLVED 358 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5946 ms
+== step 103 — L45 ... SOLVED 358 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5425 ms
 
-== step 104 — L46 ... SOLVED 347 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5598 ms
+== step 104 — L46 ... SOLVED 347 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6506 ms
 
-== step 105 — L47 ... SOLVED 300 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6566 ms
+== step 105 — L47 ... SOLVED 300 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6456 ms
 
-== step 106 — L48 ... SOLVED 295 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1065 ms
+== step 106 — L48 ... SOLVED 295 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1407 ms
 
 == step 107 — L49 ... REFUSED — solverBot(survey-step-107): no corridor for goal reach-exit toward (40,136) in level 49. Obstacle: pickup:conch (conch@32,80). Strategy 'collect' failed to appl
 
-== step 108 — L50 ... SOLVED 608 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 10827 ms
+== step 108 — L50 ... SOLVED 608 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 9752 ms
 
-== step 109 — L51 ... SOLVED 378 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6188 ms
+== step 109 — L51 ... SOLVED 378 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6512 ms
 
-== step 110 — L52 ... SOLVED 381 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4096 ms
+== step 110 — L52 ... SOLVED 381 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4111 ms
 
-== step 111 — L56 ... SOLVED 262 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 843 ms
+== step 111 — L56 ... SOLVED 262 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 685 ms
 
-== step 112 — L57 ... SOLVED 1389 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2230 ms
+== step 112 — L57 ... SOLVED 1389 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2668 ms
 
 == step 113 — L58 ... REFUSED — solverBot(survey-step-113) reach-exit (80,16)->L46: the re-planned corridor failed too — solverBot(survey-step-113) reach-exit (80,16)->L46 waypoint 1 (72,56): 
 
-== step 114 — L46 ... SOLVED 342 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6347 ms
+== step 114 — L46 ... SOLVED 342 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6697 ms
 
-== step 115 — L45 ... SOLVED 360 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6066 ms
+== step 115 — L45 ... SOLVED 360 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5757 ms
 
-== step 116 — L44 ... SOLVED 92 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 292 ms
+== step 116 — L44 ... SOLVED 92 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 274 ms
 
-== step 117 — L87 ... SOLVED 148 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 887 ms
+== step 117 — L87 ... SOLVED 148 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 562 ms
 
 == step 118 — L88 ... REFUSED — solverBot(survey-step-118) reach-exit (96,304)->L12: the combat ladder is EXHAUSTED. The corridor passes through danger at (136.9,144.4) — enemy:drill@128,160 (
 
-== step 119 — L12 ... SOLVED 208 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1451 ms
+== step 119 — L12 ... SOLVED 208 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1624 ms
 
-== step 120 — L95 ... SOLVED 490 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 597 ms
+== step 120 — L95 ... SOLVED 490 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 619 ms
 
-== step 121 — L59 ... SOLVED 150 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 746 ms
+== step 121 — L59 ... SOLVED 150 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 698 ms
 
-== step 122 — L60 ... SOLVED 530 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 3506 ms
+== step 122 — L60 ... SOLVED 530 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 4529 ms
 
-== step 123 — L61 ... SOLVED 296 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2825 ms
+== step 123 — L61 ... SOLVED 296 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3794 ms
 
-== step 124 — L63 ... SOLVED 86 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 460 ms
+== step 124 — L63 ... SOLVED 86 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 487 ms
 
-== step 125 — L62 ... SOLVED 266 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2306 ms
+== step 125 — L62 ... SOLVED 266 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2249 ms
 
 == step 126 — L64 ... REFUSED — levelRun: a sword press at tick 43 would fire its rect on a FROZEN tick (a pickup ceremony), and `genericHit` returns immediately under `Game.freezeObjects` — s
 
-== step 127 — L62 ... SOLVED 263 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1728 ms
+== step 127 — L62 ... SOLVED 263 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1850 ms
 
-== step 128 — L61 ... SOLVED 303 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 587 ms
+== step 128 — L61 ... SOLVED 303 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 503 ms
 
 == step 129 — L60 ... REFUSED — solverBot(survey-step-129) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 179-t
 
-== step 130 — L59 ... SOLVED 150 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 810 ms
+== step 130 — L59 ... SOLVED 150 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 674 ms
 
-== step 131 — L95 ... SOLVED 511 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 370 ms
+== step 131 — L95 ... SOLVED 511 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 272 ms
 
-== step 132 — L12 ... SOLVED 957 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4266 ms
+== step 132 — L12 ... SOLVED 957 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4361 ms
 
-== step 133 — L37 ... SOLVED 314 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4193 ms
+== step 133 — L37 ... SOLVED 314 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5255 ms
 
-== step 134 — L38 ... SOLVED 359 ticks, 5 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 982 ms
+== step 134 — L38 ... SOLVED 359 ticks, 5 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 807 ms
 
-== step 135 — L39 ... SOLVED 3376 ticks, 24 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 8859 ms
+== step 135 — L39 ... SOLVED 3376 ticks, 24 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 8545 ms
 
-== step 136 — L40 ... SOLVED 172 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2135 ms
+== step 136 — L40 ... SOLVED 172 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2637 ms
 
 == step 137 — L43 ... REFUSED — solverBot(survey-step-137) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112): the re-planned corridor failed too — solverBot(survey-step-137) reach-
 
-== step 138 — L37 ... SOLVED 234 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1204 ms
+== step 138 — L37 ... SOLVED 234 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1410 ms
 
-== step 139 — L12 ... SOLVED 1269 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2973 ms
+== step 139 — L12 ... SOLVED 1269 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3119 ms
 
-== step 140 — L95 ... SOLVED 490 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 595 ms
+== step 140 — L95 ... SOLVED 490 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 482 ms
 
-== step 141 — L59 ... SOLVED 143 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 517 ms
+== step 141 — L59 ... SOLVED 143 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 629 ms
 
-== step 142 — L67 ... SOLVED 957 ticks, 8 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2258 ms
+== step 142 — L67 ... SOLVED 957 ticks, 8 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2361 ms
 
-== step 143 — L59 ... SOLVED 131 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 430 ms
+== step 143 — L59 ... SOLVED 131 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 559 ms
 
-== step 144 — L95 ... SOLVED 511 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 262 ms
+== step 144 — L95 ... SOLVED 511 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 312 ms
 
-== step 145 — L12 ... SOLVED 1366 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5963 ms
+== step 145 — L12 ... SOLVED 1366 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6907 ms
 
-== step 146 — L37 ... SOLVED 314 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1761 ms
+== step 146 — L37 ... SOLVED 314 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4524 ms
 
-== step 147 — L38 ... SOLVED 359 ticks, 5 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 754 ms
+== step 147 — L38 ... SOLVED 359 ticks, 5 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 1031 ms
 
-== step 148 — L39 ... SOLVED 3253 ticks, 24 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 7837 ms
+== step 148 — L39 ... SOLVED 3253 ticks, 24 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 8866 ms
 
-== step 149 — L40 ... SOLVED 172 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2252 ms
+== step 149 — L40 ... SOLVED 172 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2871 ms
 
 == step 150 — L43 ... REFUSED — solverBot(survey-step-150) clear-tag {43,5} bosstotem@152,168: 'totem' cannot act on bosstotem@152,168 with this run's bag — bosstotem@152,168 sleeps while wand
 
-== step 151 — L37 ... SOLVED 234 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1273 ms
+== step 151 — L37 ... SOLVED 234 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1321 ms
 
-== step 152 — L12 ... SOLVED 1269 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2776 ms
+== step 152 — L12 ... SOLVED 1269 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3472 ms
 
-== step 153 — L95 ... SOLVED 490 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 479 ms
+== step 153 — L95 ... SOLVED 490 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 607 ms
 
-== step 154 — L59 ... SOLVED 150 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 613 ms
+== step 154 — L59 ... SOLVED 150 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 657 ms
 
-== step 155 — L60 ... SOLVED 497 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 3741 ms
+== step 155 — L60 ... SOLVED 497 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 4148 ms
 
-== step 156 — L61 ... SOLVED 296 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2544 ms
+== step 156 — L61 ... SOLVED 296 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3263 ms
 
-== step 157 — L63 ... SOLVED 497 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2946 ms
+== step 157 — L63 ... SOLVED 497 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3883 ms
 
-== step 158 — L65 ... SOLVED 546 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1417 ms
+== step 158 — L65 ... SOLVED 546 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1793 ms
 
 == step 159 — L68 ... REFUSED — solverBot(survey-step-159): no corridor for goal collect-placement toward (8,8) in level 68. Obstacle: pickup:health (health@16,16). Strategy 'collect' failed t
 
-== step 160 — L0 ... SOLVED 204 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1142 ms
+== step 160 — L0 ... SOLVED 204 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1481 ms
 
-== step 161 — L12 ... SOLVED 274 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1702 ms
+== step 161 — L12 ... SOLVED 274 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1764 ms
 
-== step 162 — L95 ... SOLVED 490 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 666 ms
+== step 162 — L95 ... SOLVED 490 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 587 ms
 
-== step 163 — L59 ... SOLVED 150 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 670 ms
+== step 163 — L59 ... SOLVED 150 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 636 ms
 
-== step 164 — L60 ... SOLVED 497 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 3560 ms
+== step 164 — L60 ... SOLVED 497 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 3689 ms
 
 == step 165 — L61 ... REFUSED — solverBot: bridge bridge@11,13 in level 61 — no floor cell one or two tiles behind it puts the spear's 32x5 rect on it and is reachable: (168,216) facing E's re
 
-== step 166 — L63 ... SOLVED 89 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 502 ms
+== step 166 — L63 ... SOLVED 89 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 694 ms
 
-== step 167 — L65 ... SOLVED 63 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 256 ms
+== step 167 — L65 ... SOLVED 63 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 381 ms
 
-== step 168 — L66 ... SOLVED 241 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 619 ms
+== step 168 — L66 ... SOLVED 241 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 714 ms
 
-== step 169 — L70 ... SOLVED 105 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 62 ms
+== step 169 — L70 ... SOLVED 105 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 60 ms
 
-== step 170 — L69 ... SOLVED 440 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 14445 ms
+== step 170 — L69 ... SOLVED 440 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 15207 ms
 
-== step 171 — L36 ... SOLVED 50 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 128 ms
+== step 171 — L36 ... SOLVED 50 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 158 ms
 
-== step 172 — L12 ... SOLVED 1066 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 60293 ms
+== step 172 — L12 ... SOLVED 1301 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2080 ms
 
-== step 173 — L83 ... SOLVED 85 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 142 ms
+== step 173 — L83 ... SOLVED 85 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 159 ms
 
 == step 174 — L84 ... REFUSED — solverBot(survey-step-174): no corridor for goal reach-pit toward (56,24) in level 84. Obstacle: no-corridor. No strategy row exists for this obstacle. Planner 
 
-== step 175 — L85 ... SOLVED 18 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 63 ms
+== step 175 — L85 ... SOLVED 18 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 72 ms
 
 == step 176 — L71 ... REFUSED — solverBot(survey-step-176) reach-exit (96,0)->L75 -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 1
 
 == step 177 — L75 ... REFUSED — solverBot(survey-step-177) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (104.3,160.6) — hazard:spinningaxe@80,1
 
-== step 178 — L74 ... SOLVED 321 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 954 ms
+== step 178 — L74 ... SOLVED 321 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1003 ms
 
 == step 179 — L75 ... REFUSED — solverBot(survey-step-179) reach-exit (64,224)->L71: the danger map forbids (78.24124278936391,35.24504871165134) — hazard:lavachain@96,32 (avoid (phase-band) —
 
-== step 180 — L71 ... SOLVED 327 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1545 ms
+== step 180 — L71 ... SOLVED 327 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2281 ms
 
-== step 181 — L76 ... SOLVED 496 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 5011 ms
+== step 181 — L76 ... SOLVED 496 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 6347 ms
 
 == step 182 — L77 ... REFUSED — solverBot(survey-step-182): no corridor for goal reach-exit toward (104,312) in level 77. Obstacle: proximity-hazard:lavatrap (lavatrap@96,192). No strategy row
 
@@ -946,113 +946,113 @@ wrote /home/user/wt-on/.cache/seedling-survey/through-end/route.json
 
 == step 184 — L79 ... REFUSED — solverBot(survey-step-184) collect (40,152) stance: the re-planned corridor failed too — solverBot(survey-step-184) collect (40,152) stance waypoint 0 (40,152):
 
-== step 185 — L78 ... SOLVED 392 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 13356 ms
+== step 185 — L78 ... SOLVED 392 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 16425 ms
 
-== step 186 — L77 ... SOLVED 475 ticks, 1 decision(s), 0 re-plan(s), 1 hit(s), 1 pass(es) — 12109 ms
+== step 186 — L77 ... SOLVED 475 ticks, 1 decision(s), 0 re-plan(s), 1 hit(s), 1 pass(es) — 15904 ms
 
-== step 187 — L76 ... SOLVED 434 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 277 ms
+== step 187 — L76 ... SOLVED 434 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 397 ms
 
-== step 188 — L71 ... SOLVED 193 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1203 ms
+== step 188 — L71 ... SOLVED 193 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1220 ms
 
-== step 189 — L82 ... SOLVED 1363 ticks, 2 decision(s), 0 re-plan(s), 2 hit(s), 1 pass(es) — 2436 ms
+== step 189 — L82 ... SOLVED 1363 ticks, 2 decision(s), 0 re-plan(s), 2 hit(s), 1 pass(es) — 2517 ms
 
-== step 190 — L96 ... SOLVED 5 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 66 ms
+== step 190 — L96 ... SOLVED 5 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 49 ms
 
-== step 191 — L97 ... SOLVED 5 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 48 ms
+== step 191 — L97 ... SOLVED 5 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 58 ms
 
-== step 192 — L37 ... SOLVED 780 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 17110 ms
+== step 192 — L37 ... SOLVED 780 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 16151 ms
 
-== step 193 — L12 ... SOLVED 1269 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3905 ms
+== step 193 — L12 ... SOLVED 1269 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3333 ms
 
-== step 194 — L95 ... SOLVED 490 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 802 ms
+== step 194 — L95 ... SOLVED 490 ticks, 2 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es) — 549 ms
 
-== step 195 — L59 ... SOLVED 150 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 990 ms
+== step 195 — L59 ... SOLVED 150 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 679 ms
 
-== step 196 — L60 ... SOLVED 497 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 6573 ms
+== step 196 — L60 ... SOLVED 497 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 4367 ms
 
-== step 197 — L61 ... SOLVED 296 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4760 ms
+== step 197 — L61 ... SOLVED 296 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3327 ms
 
-== step 198 — L63 ... SOLVED 0 ticks, 0 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 10 ms
+== step 198 — L63 ... SOLVED 0 ticks, 0 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 9 ms
 
-== step 199 — L0 ... SOLVED 204 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1556 ms
+== step 199 — L0 ... SOLVED 204 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1441 ms
 
-== step 200 — L12 ... SOLVED 1416 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 128079 ms
+== step 200 — L12 ... SOLVED 1825 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2248 ms
 
-== step 201 — L83 ... SOLVED 85 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 284 ms
+== step 201 — L83 ... SOLVED 85 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 180 ms
 
 == step 202 — L84 ... REFUSED — solverBot(survey-step-202): no corridor for goal reach-pit toward (56,24) in level 84. Obstacle: no-corridor. No strategy row exists for this obstacle. Planner 
 
-== step 203 — L85 ... SOLVED 18 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 76 ms
+== step 203 — L85 ... SOLVED 18 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 123 ms
 
 == step 204 — L71 ... REFUSED — solverBot(survey-step-204) reach-exit (224,304)->L80 -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whol
 
-== step 205 — L80 ... SOLVED 5 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 64 ms
+== step 205 — L80 ... SOLVED 5 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 113 ms
 
-== step 206 — L71 ... SOLVED 171 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1188 ms
+== step 206 — L71 ... SOLVED 171 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1450 ms
 
-== step 207 — L82 ... SOLVED 1363 ticks, 2 decision(s), 0 re-plan(s), 2 hit(s), 1 pass(es) — 2712 ms
+== step 207 — L82 ... SOLVED 1363 ticks, 2 decision(s), 0 re-plan(s), 2 hit(s), 1 pass(es) — 2339 ms
 
 == step 208 — L96 ... SOLVED 5 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 50 ms
 
-== step 209 — L97 ... SOLVED 5 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 56 ms
+== step 209 — L97 ... SOLVED 5 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 52 ms
 
-== step 210 — L37 ... SOLVED 767 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 17650 ms
+== step 210 — L37 ... SOLVED 767 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 18043 ms
 
-== step 211 — L44 ... SOLVED 86 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 447 ms
+== step 211 — L44 ... SOLVED 86 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 252 ms
 
-== step 212 — L87 ... SOLVED 223 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1296 ms
+== step 212 — L87 ... SOLVED 223 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 985 ms
 
-== step 213 — L93 ... SOLVED 362 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2834 ms
+== step 213 — L93 ... SOLVED 362 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2429 ms
 
-== step 214 — L98 ... SOLVED 724 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 5850 ms
+== step 214 — L98 ... SOLVED 724 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 3 pass(es) — 4057 ms
 
 == step 215 — L99 ... REFUSED — solverBot(survey-step-215) reach-exit (48,96)->L100 -> kill: the count is still waiting on [lavarunner@192,64, lavarunner@160,32, lavarunner@176,64] and no stan
 
-== step 216 — L100 ... SOLVED 731 ticks, 3 decision(s), 1 re-plan(s), 1 hit(s), 1 pass(es) — 4425 ms
+== step 216 — L100 ... SOLVED 731 ticks, 3 decision(s), 1 re-plan(s), 1 hit(s), 1 pass(es) — 4554 ms
 
-== step 217 — L101 ... SOLVED 287 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4860 ms
+== step 217 — L101 ... SOLVED 287 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 4424 ms
 
-== step 218 — L102 ... SOLVED 16 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 64 ms
+== step 218 — L102 ... SOLVED 16 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 68 ms
 
 == step 219 — L103 ... REFUSED — solverBot(survey-step-219) reach-exit (0,64)->L104: the combat ladder is EXHAUSTED. The corridor passes through danger at (103.0,247.5) — hazard:beamtower@208,2
 
-== step 220 — L104 ... SOLVED 261 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 996 ms
+== step 220 — L104 ... SOLVED 261 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 792 ms
 
-== step 221 — L105 ... SOLVED 416 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 798 ms
+== step 221 — L105 ... SOLVED 416 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 705 ms
 
-== step 222 — L106 ... SOLVED 185 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 314 ms
+== step 222 — L106 ... SOLVED 185 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 265 ms
 
 == step 223 — L101 ... REFUSED — solverBot(survey-step-223) reach-exit (144,96)->L102 -> wand: magicallockfire@112,48 cannot be opened by this run — magicallockfire@112,48 is a FIRE MagicalLock
 
-== step 224 — L102 ... SOLVED 20 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 70 ms
+== step 224 — L102 ... SOLVED 20 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 61 ms
 
 == step 225 — L107 ... REFUSED — solverBot(survey-step-225) reach-exit (304,176)->L108 -> hold stance (buttonroom@288,176): the combat ladder is EXHAUSTED. The corridor passes through danger at
 
 == step 226 — L108 ... REFUSED — solverBot(survey-step-226): no corridor for goal reach-exit toward (232,232) in level 108. Obstacle: proximity-hazard:lavatrap (lavatrap@128,80). No strategy ro
 
-== step 227 — L109 ... SOLVED 158 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 548 ms
+== step 227 — L109 ... SOLVED 158 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 354 ms
 
 == step 228 — L101 ... REFUSED — solverBot(survey-step-228) reach-exit (104,24)->L110 -> wand: magicallockfire@96,48 cannot be opened by this run — magicallockfire@96,48 needs the FIRE WAND's s
 
-== step 229 — L110 ... SOLVED 173 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 505 ms
+== step 229 — L110 ... SOLVED 173 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 229 ms
 
-== step 230 — L2 ... SOLVED 26 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 161 ms
+== step 230 — L2 ... SOLVED 26 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 88 ms
 
-== step 231 — L3 ... SOLVED 82 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 304 ms
+== step 231 — L3 ... SOLVED 82 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 160 ms
 
-== step 232 — L111 ... SOLVED 112 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 548 ms
+== step 232 — L111 ... SOLVED 112 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 300 ms
 
 == step 233 — L112 ... REFUSED — solverBot(survey-step-233): no corridor for goal reach-exit toward (120,8) in level 112. Obstacle: solid:rocklock (rocklock@112,16); also on the frontier: plant
 
-== step 234 — L113 ... SOLVED 87 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 357 ms
+== step 234 — L113 ... SOLVED 87 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 182 ms
 
-== step 235 — L114 ... SOLVED 406 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 140 ms
+== step 235 — L114 ... SOLVED 406 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 109 ms
 
-== step 236 — L113 ... SOLVED 166 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 495 ms
+== step 236 — L113 ... SOLVED 166 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 179 ms
 
-== step 237 — L115 ... SOLVED 173 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1532 ms
+== step 237 — L115 ... SOLVED 173 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 612 ms
 
-wrote /tmp/claude-0/runs/survey-on.json
+wrote /tmp/claude-0/runs/survey-on2.json
 
 ## HEADLINE: 202/237 route steps SOLVE today
   step 18 L36: REFUSED — unclassified — see the refusal text
