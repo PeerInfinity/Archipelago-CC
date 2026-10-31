@@ -5295,8 +5295,10 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
          */
         // ⛓ strategy switch r1 — `hold` off: the weigh does not fall back to a hold (either fallback below). The hit is
         // counted only where the fallback would have resolved a hold (p17 review C); otherwise it is today's `null`.
+        // The probe is handed a THROWAWAY rejection list, so it has no side effect: no hold rejection reaches
+        // `derived.rejected` or the refusal text (hammer-2's review).
         if (verbDisabled('hold')) {
-            if (resolveHoldStrategy(run, obstacle, contacts, blocked, derived.rejected) !== null) {
+            if (resolveHoldStrategy(run, obstacle, contacts, blocked, []) !== null) {
                 verbOff('hold', 'weigh:hold-fallback', obstacle.id);
             }
             return null;

@@ -261,7 +261,7 @@ describe('strategy switch — the gates', () => {
     it('the nested sites hammer-2 named are gated (kill: corpse-weigh kill; hold: the ladder\'s hold arm, the weigh fallback)', () => {
         expect(SRC).toMatch(/requireVerb\('kill', 'weigh:killForCorpse', c\.turret\);[^\n]*\n\s*const kill = turret\(\)\?\.dead \? null : killForCorpse\(/);
         expect(SRC).toMatch(/requireVerb\('hold', 'kill:ceiling-hold', target\.id\);[^\n]*\n\s*rowFor\('kill', refused, \{ presser/);
-        expect(SRC).toMatch(/if \(verbDisabled\('hold'\)\) \{\n\s*if \(resolveHoldStrategy\([^\n]*\) !== null\) \{\n\s*verbOff\('hold', 'weigh:hold-fallback', obstacle\.id\);\n\s*\}\n\s*return null;\n\s*\}[\s\S]{0,400}if \(LATCH_WEIGH_FIRST\.enabled\)/);
+        expect(SRC).toMatch(/if \(verbDisabled\('hold'\)\) \{\n\s*if \(resolveHoldStrategy\(run, obstacle, contacts, blocked, \[\]\) !== null\) \{\n\s*verbOff\('hold', 'weigh:hold-fallback', obstacle\.id\);\n\s*\}\n\s*return null;\n\s*\}[\s\S]{0,400}if \(LATCH_WEIGH_FIRST\.enabled\)/);
         // ⛓ hammer-2 review: APPROACH's in-place kill inside the weigh, gated at its head (before any fork)
         expect(SRC).toMatch(/if \(!t \|\| t\.dead\) return null;\n\s*requireVerb\('kill', 'weigh:approachKillForCorpse', id\);/);
         expect(SRC).toMatch(/verbOff\('break', 'step-off', rock\.rockId\)/);

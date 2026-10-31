@@ -105,7 +105,7 @@ self.onmessage = (event) => {
     const env = (a) => stampSolverEnv(!stamped || !a ? a : { ...a, disable: [...disable] }, SOLVER_ENV_APPLIED);
     let answer;
     if (SOLVER_ENV_ERROR) answer = { ok: false, kind: 'refusal', message: `the solver worker refused its switches — ${SOLVER_ENV_ERROR}` };
-    else if (!held) answer ={ ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };
+    else if (!held) answer = { ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };
     else if (produce) answer = carry(() => settleSolve(produce));
     else {
         // ⛓ ANYTIME — the solver's passes in order (`ANYTIME_PASSES`, or the request's own — a held retry
