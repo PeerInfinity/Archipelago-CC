@@ -71,7 +71,8 @@
 import { generateSeedlingLevel, placementTagId, seedlingOracle } from './procgenSeedling.js';
 import { VERDICT, collectGoal } from './procgenOracle.js';
 import {
-    ENDGAME_PALETTE, POST_DARK_SUIT_PALETTE, POST_FEATHER_PALETTE, POST_FIRE_PALETTE, POST_SHIELD_PALETTE,
+    CALDERA_PALETTE, ENDGAME_PALETTE, FLOODED_RUINS_PALETTE, FROZEN_FORGE_PALETTE,
+    POST_DARK_SUIT_PALETTE, POST_FEATHER_PALETTE, POST_FIRE_PALETTE, POST_SHIELD_PALETTE,
     POST_SPEAR_PALETTE, POST_SWIM_PALETTE, PRE_SWORD_PALETTE, POST_SWORD_PALETTE, parseTerrainList, withTerrains,
 } from './procgenPalette.js';
 import { pickDoorCells } from './levelSetExits.js';
@@ -107,7 +108,9 @@ export const GEN_ROOM_BIOMES = Object.freeze({ 'pre-sword': PRE_SWORD_PALETTE, '
     'post-shield': POST_SHIELD_PALETTE, 'post-swim': POST_SWIM_PALETTE, 'post-feather': POST_FEATHER_PALETTE,
     // ⛓ seedling-gen-biomes-1 (C2) — the census boots of D4, D7, D8 and the End.
     'post-fire': POST_FIRE_PALETTE, 'post-spear': POST_SPEAR_PALETTE, 'post-dark-suit': POST_DARK_SUIT_PALETTE,
-    endgame: ENDGAME_PALETTE });
+    endgame: ENDGAME_PALETTE,
+    // ⛓ seedling-gen-new-biomes (C4) — the three new biomes (design §3.4).
+    caldera: CALDERA_PALETTE, 'frozen-forge': FROZEN_FORGE_PALETTE, 'flooded-ruins': FLOODED_RUINS_PALETTE });
 if (Object.keys(GEN_ROOM_BIOMES).join() !== GEN_ROOM_BIOME_NAMES.join()) {
     throw new Error('seedlingGenRoom: GEN_ROOM_BIOMES and GEN_ROOM_BIOME_NAMES disagree — one list, two spellings');
 }
