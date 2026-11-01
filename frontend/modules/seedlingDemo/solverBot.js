@@ -82,6 +82,12 @@ import {
     BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherShieldOf, crusherSightDanger,
     parkedTailProbe, searchBaitOrdering, trimParkedTail,
 } from './crusherBait.js';
+// ⛓ SEEDLING STRATEGY SWITCH r1 — the per-solve OFF switch's scope (`disable:`), flag OFF (`strategySwitch.js`).
+import {
+    ACTIVE_DISABLE, STRATEGY_DISABLED, STRATEGY_DISABLED_SCOPE_CHANGED, STRATEGY_DISABLE_UNKNOWN, STRATEGY_SWITCH,
+    STRATEGY_SWITCH_OFF,
+    disabledClause, disabledReport, liveDisableKey, parseDisable, rungOff, verbDisabled, verbOff, withDisabledScope,
+} from './strategySwitch.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
     fallRocksArmedBy, groupResponders,
@@ -942,6 +948,11 @@ export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(sw
  * off it is the table, byte for byte; that is the flag's whole contract.
  */
 export function frontierExecutor(strategy) {
+    return gateVerb(frontierExecutorRow(strategy), strategy, 'frontierExecutor');
+}
+
+/** `frontierExecutor`'s answer before the strategy switch's gate (also the switch's "is there one?" ask). */
+function frontierExecutorRow(strategy) {
     const row = STRATEGY_EXECUTORS[strategy];
     if (row) return row;
     if (strategy === 'bait' && CRUSHER_BAIT.enabled) return execBait;
@@ -960,8 +971,80 @@ export function frontierExecutor(strategy) {
  */
 function clearTagExecutor(strategy) {
     // ⛓ fidelity SEALDOOR D2 — `approach` (the FinalDoor's {113,0}) only while `sealDoorApproach` is on.
-    if (strategy === 'approach' && CONTACT_FIDELITY.sealDoorApproach) return execApproach;
-    return STRATEGY_EXECUTORS[strategy] ?? (strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined);
+    if (strategy === 'approach' && CONTACT_FIDELITY.sealDoorApproach) return gateVerb(execApproach, strategy, 'clearTagExecutor');
+    return gateVerb(STRATEGY_EXECUTORS[strategy] ?? (strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined),
+        strategy, 'clearTagExecutor');
+}
+
+/**
+ * ⛓⛓ SEEDLING STRATEGY SWITCH r1 — **THE GATES.** Every one is `ACTIVE_DISABLE !== null && …`, so with no `disable:`
+ * installed (every default solve) each answers what it was handed and counts nothing.
+ *
+ * `gateVerb(row, verb, site)` — a LOOKUP's answer, `undefined` for a disabled verb, so "selected but unavailable" is
+ * the existing code path. The hit is counted only when the lookup found an executor (fidelity condition 1).
+ */
+function gateVerb(row, verb, site) {
+    return row !== undefined && ACTIVE_DISABLE !== null && verbOff(verb, site) ? undefined : row;
+}
+
+/** A direct `STRATEGY_EXECUTORS[verb]` read used as an availability test, through the gate. */
+const executorFor = (verb, site) => gateVerb(STRATEGY_EXECUTORS[verb], verb, site);
+
+/**
+ * An UNCONDITIONAL call of a looked-up executor: a disabled verb's `undefined` refuses BY NAME
+ * (`STRATEGY_DISABLED`) instead of dying as `TypeError: … is not a function` (measured on the design probe: `weigh`
+ * off on L15). Anything else is handed back as it was.
+ */
+function callableExecutor(fn, verb, site) {
+    if (typeof fn === 'function' || !verbDisabled(verb)) return fn;
+    throw strategyDisabledRefusal(verb, site);
+}
+
+/** A verb's executor called BY NAME inside another (a composition / nested arm): refuses by name when it is off. */
+function requireVerb(verb, site, id = null) {
+    if (ACTIVE_DISABLE !== null && verbOff(verb, site, id)) throw strategyDisabledRefusal(verb, site, id);
+}
+
+/** A ladder rung's entry: is it switched off? (Asked last in the rung's own entry condition, so a hit is an entry.) */
+const rungGate = (rung, site = rung) => ACTIVE_DISABLE !== null && rungOff(rung, site);
+
+/**
+ * Would some arm of the KILL rung run? A `target`, or a live darktrap ON the corridor (the light arm's own filter).
+ * ⛔ Not the roster's truthiness: `darkTraps` is `[]` (truthy) in a room with none while `darkTrapLight` is on, and a
+ * gate asked there would count a hit for a rung that does nothing (p17 review A).
+ */
+export function killRungArmRuns(run, target, hit) {
+    return target !== null || (run.entities('darkTraps') ?? []).some((b) => !b.startDying && !b.removed
+        && hit.sources.some((sx) => sx.kind === 'enemy' && sx.id === b.id));
+}
+
+/** The `why` a switched-off rung's row carries. */
+const disabledRungWhy = (rung) => `the ${rung.toUpperCase()} rung is switched off for this solve (\`disable\`)`;
+
+function strategyDisabledRefusal(verb, site, id = null) {
+    const e = new SolverRefusal(`solverBot: strategy '${verb}' is DISABLED for this solve (\`disable\`) and \`${site}\``
+        + `${id ? ` (${id})` : ''} would have applied it.`, { obstacle: id ? { kind: 'strategy', id } : null });
+    e.code = STRATEGY_DISABLED;
+    return e;
+}
+
+/** The rungs a `disable` list can name (`rung:<name>`): every `progressRung` entry but AVOID, the base walk. */
+export const DISABLE_RUNGS = Object.freeze(['dodge', 'pull', 'time', 'bait', 'kill', 'narrow', 'detour', 'forced-hit',
+    'arrow-lane']);
+
+/** The verbs `frontierExecutor` registers beside the table's rows (each behind its own switch). */
+const FRONTIER_EXTRA_VERBS = Object.freeze(['bait', 'approach', 'bridge', 'wand']);
+
+/**
+ * The `disable` vocabulary: the executor table's OWN keys (enumerable and switch-gated) plus the frontier extras,
+ * and `DISABLE_RUNGS`. `available(verb)`: does this process have an executor for it right now.
+ */
+export function strategyDisableVocabulary() {
+    return {
+        verbs: new Set([...Reflect.ownKeys(STRATEGY_EXECUTORS), ...FRONTIER_EXTRA_VERBS]),
+        rungs: new Set(DISABLE_RUNGS),
+        available: (verb) => frontierExecutorRow(verb) !== undefined,
+    };
 }
 
 /**
@@ -5210,6 +5293,16 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
          * still says which blocks were considered and why none of them
          * served. [[feedback_conservative_ingredient_hides_bound_defects]]
          */
+        // ⛓ strategy switch r1 — `hold` off: the weigh does not fall back to a hold (either fallback below). The hit is
+        // counted only where the fallback would have resolved a hold (p17 review C); otherwise it is today's `null`.
+        // The probe is handed a THROWAWAY rejection list, so it has no side effect: no hold rejection reaches
+        // `derived.rejected` or the refusal text (hammer-2's review).
+        if (verbDisabled('hold')) {
+            if (resolveHoldStrategy(run, obstacle, contacts, blocked, []) !== null) {
+                verbOff('hold', 'weigh:hold-fallback', obstacle.id);
+            }
+            return null;
+        }
         // ⛓ hammer-phase LWEIGH (`LATCH_WEIGH_FIRST`, OFF): a hold stance inside a live turret's range asks the corpse
         // weigh again under the stance hypothesis the hold was derived under (`latchWeighFirst`).
         if (LATCH_WEIGH_FIRST.enabled) {
@@ -10271,7 +10364,7 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
         if (wall.has(a.id) || run.entities('openActivators').has(a.id)) continue;
         const strategy = refineStrategy(run,
             OBSTACLE_STRATEGIES[`solid:${a.tag}`] ?? null, { id: a.id, tag: a.tag });
-        if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
+        if (!strategy || !executorFor(strategy, 'stanceHypothesis')) continue;
         /**
          * ⛓⛓⛓ **GUARD (iii) — NO OPTIMISM WITHOUT A DISCHARGE THAT OUTLIVES THE
          * WALKER.** PROCGEN ELEMENTS arc 3, slice S1, gap 2.
@@ -10352,7 +10445,7 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
     for (const b of (run.world.shieldBosses ?? [])) {
         if (wall.has(b.id)) continue;
         const strategy = OBSTACLE_STRATEGIES['solid:shieldboss'];
-        if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
+        if (!strategy || !executorFor(strategy, 'stanceHypothesis')) continue;
         out.push({ id: b.id, kind: 'shieldBoss', strategy });
     }
     if (STANCE_ROCKS.enabled) out.push(...rockHypothesis(run, wall));
@@ -10461,7 +10554,7 @@ function rockHypothesis(run, wall) {
     for (const s of (run.world.solids ?? [])) {
         if (!s.rockId || wall.has(s.rockId) || broken.has(s.rockId)) continue;
         const strategy = OBSTACLE_STRATEGIES[`solid:${s.tag}`] ?? null;
-        if (strategy !== 'break' || !STRATEGY_EXECUTORS[strategy]) continue;
+        if (strategy !== 'break' || !executorFor(strategy, 'rockHypothesis')) continue;
         if (!rockBreaksUnder(s.rockType, inventory)) continue;
         out.push({ id: s.rockId, kind: 'rock', tag: s.tag, strategy });
     }
@@ -11623,6 +11716,7 @@ function execCorpseWeigh(run, perTick, resolved, ctx, armed) {
         }
     }
     const prior = run.progress('primary');
+    if (!turret()?.dead) requireVerb('kill', 'weigh:killForCorpse', c.turret); // ⛓ strategy switch r1: a nested kill
     const kill = turret()?.dead ? null : killForCorpse(run, perTick, c, exempt, ctx);
     const NONE = new Set();
     const presses = [];
@@ -11890,6 +11984,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     const id = c.turret;
     const t = run.entities('turrets')?.get?.(id) ?? null;
     if (!t || t.dead) return null;
+    requireVerb('kill', 'weigh:approachKillForCorpse', id); // ⛓ strategy switch r1: a nested kill, before any fork
     const refuse = (msg) => {
         throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'danger', id },
             perTick: [...perTick] });
@@ -14909,11 +15004,17 @@ let escapeScopes = 0;
  * them, through its `Object.create(run)` view (`solveSegmentUnder`'s `viewOf`); a Proxy over a run is not reached,
  * and is not served.
  */
-export function escapeCrossPassScope() {
+export function escapeCrossPassScope({ disabled = liveDisableKey() } = {}) {
     const runs = new WeakMap();
     let adopted = 0;
     return {
         id: (escapeScopes += 1),
+        /**
+         * ⛓ STRATEGY SWITCH r1 (hammer-2's option (a)) — the `disable` set this scope's entries are answers UNDER
+         * (`null`: none), captured once at creation (`twoPassSolve` passes its own list's key). A read or write
+         * under a different live set refuses `STRATEGY_DISABLED_SCOPE_CHANGED` (`pressEscapeScoped`).
+         */
+        disabled,
         entries: new Map(),
         nodes: 0,
         counts: { lookups: 0, hits: 0, crossPassHits: 0, stored: 0 },
@@ -15107,11 +15208,24 @@ function escapeEntryDiffers(entry, got) {
     return null;
 }
 
+/**
+ * ⛓ STRATEGY SWITCH r1 — an escape answer cached under one `disable` set is not an answer under another (a disabled
+ * verb changes what the search may do), so the cache refuses rather than mixing them.
+ */
+function escapeScopeChangedRefusal(scope, live) {
+    const e = new SolverRefusal(`solverBot: the cross-pass escape cache (scope ${scope.id}) holds answers made under `
+        + `\`disable: [${scope.disabled ?? ''}]\` and was asked under \`disable: [${live ?? ''}]\`. The disable scope `
+        + 'must be installed OUTSIDE the cache\'s scope (`twoPassSolve` takes `disable` and captures it at entry).');
+    e.code = STRATEGY_DISABLED_SCOPE_CHANGED;
+    return e;
+}
+
 /** `pressEscapeOnce` through the scope in hand, when there is one and it adopted `run`. */
 function pressEscapeScoped(run, opts, trace) {
     const scope = activeEscapeScope;
     const inner = scope === null ? null : scope.innerOf(run);
     if (inner === null) return pressEscapeOnce(run, opts, trace, null);
+    if (scope.disabled !== liveDisableKey()) throw escapeScopeChangedRefusal(scope, liveDisableKey());
     const C = ESCAPE_CROSS_PASS_CACHE_COUNTS;
     const sink = ESCAPE_CROSS_PASS_CACHE_TRACE.sink;
     const note = (outcome) => {
@@ -24976,11 +25090,81 @@ const deadlineClause = (d) => ` ⏱ DEADLINE: the caller's \`shouldStop\` trippe
  *   `deadline` is present only when the hook tripped.
  */
 export function solveSegment(o) {
+    // ⛓ SEEDLING STRATEGY SWITCH r1 — `disable` (absent: nothing installed, today's solve exactly)
+    if (o?.disable !== undefined) {
+        const { disable, ...rest } = o;
+        return withStrategyDisable(disable, () => solveSegment(rest));
+    }
     const onProgress = o?.onProgress ?? null;
     if (onProgress !== null) return withSolveProgress(onProgress, () => solveSegment({ ...o, onProgress: null }));
     // ⛓ hammer-phase D1 — under an installed hook the segment is a progress segment (its tree, tiles and budget)
     if (activeProgress !== null) return progressSegment(o?.name, o?.run, () => solveSegmentDeadlined(o));
     return solveSegmentDeadlined(o);
+}
+
+/**
+ * ⛓⛓ SEEDLING STRATEGY SWITCH r1 — **THE `disable:` INSTALL**, `solveSegment`'s own and exported for a caller that
+ * owns a synchronous solve one layer out (the CPWIT solve worker carries a request's `disable` around its solve).
+ *
+ *   absent / `[]`  → `fn()`, nothing installed and nothing stamped (byte-identical);
+ *   flag OFF       → refused BY NAME (`STRATEGY_SWITCH_OFF`), never ignored — an ignored switch grades every room INERT;
+ *   otherwise      → the list is parsed (an unknown name refuses, `STRATEGY_DISABLE_UNKNOWN`), installed for `fn`'s
+ *                    dynamic extent (SYNC: `withDisabledScope` refuses a thenable), and the outcome stamped: an object
+ *                    result gains `disabled` ({asked, hits, first, absent}; its non-enumerable `liveRun` carried, as
+ *                    `withSolveDeadline` does), a `SolverRefusal` gains `e.disabled` and the `⊘ DISABLED` clause.
+ */
+export function withStrategyDisable(disable, fn) {
+    if (disable === undefined || (Array.isArray(disable) && disable.length === 0)) return fn();
+    // ⛓ js-14 r1 condition 1 — a non-array is refused by name at either flag state (never spread, never ignored)
+    if (!Array.isArray(disable)) {
+        const e = new SolverRefusal(`solveSegment: \`disable\` must be an array of strategy names, got `
+            + `${disable === null ? 'null' : typeof disable} ${JSON.stringify(disable)}.`);
+        e.code = STRATEGY_DISABLE_UNKNOWN;
+        throw e;
+    }
+    if (!STRATEGY_SWITCH.enabled) {
+        const asked = [...disable];
+        const e = new SolverRefusal(`solveSegment: \`disable: ${JSON.stringify(asked)}\` was asked with the strategy `
+            + 'switch OFF (`STRATEGY_SWITCH`; `SEEDLING_STRATEGY_SWITCH=1` turns it on). Refused by name: a disable '
+            + 'request the solver silently ignored would grade every room INERT.');
+        e.code = STRATEGY_SWITCH_OFF;
+        e.disabled = Object.freeze({ asked, hits: {}, first: null, absent: [], switch: 'off' });
+        throw e;
+    }
+    const scope = parseDisable(disable, strategyDisableVocabulary(), (code, message) => {
+        const e = new SolverRefusal(message);
+        e.code = code;
+        throw e;
+    });
+    try {
+        const out = withDisabledScope(scope, fn);
+        if (out === null || typeof out !== 'object') return out;
+        const stamped = { ...out, disabled: disabledReport(scope) };
+        if (out.liveRun !== undefined) Object.defineProperty(stamped, 'liveRun', { value: out.liveRun });
+        return stamped;
+    } catch (e) {
+        if (e instanceof SolverRefusal && e.disabled === undefined) {
+            e.message += disabledClause(scope);
+            e.disabled = disabledReport(scope);
+        }
+        throw e;
+    }
+}
+
+/**
+ * ⛓ STRATEGY SWITCH r1 — `withStrategyDisable` for a caller that SETTLES answers (the CPWIT solve worker, which CARRIES
+ * a request's `disable` and never originates one): `fn`'s answer under the scope (an object answer gains `disabled`),
+ * or the install's own refusal (flag OFF, an unknown name) as a refusal answer carrying `disabled` — never a throw.
+ * `undefined` = `fn()` exactly.
+ */
+export function settleUnderDisable(disable, fn) {
+    if (disable === undefined) return fn();
+    try {
+        return withStrategyDisable(disable, fn);
+    } catch (e) {
+        if (!(e instanceof SolverRefusal)) throw e;
+        return { ok: false, kind: 'refusal', message: String(e.message), ...(e.disabled ? { disabled: e.disabled } : {}) };
+    }
 }
 
 /** `solveSegment` after the progress install: the deadline install, then the loop. */
@@ -26767,7 +26951,7 @@ function solveSegmentUnder({
          * a spit climbs again; `DODGE_RUNG.maxPerSegment` bounds the stalls.
          * ⛓ fidelity CORRIDOR D2: a wallflyer's or a drill's forecast contact asks it too (`corridorBodyOnly`).
          */
-        if ((spitOnly || corridorBodyOnly) && corridor) {
+        if ((spitOnly || corridorBodyOnly) && corridor && !rungGate('dodge', 'dodge:spit')) {
             if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
@@ -26828,7 +27012,7 @@ function solveSegmentUnder({
          * priced on every tick of it). It drives the stall and hands back `{}`, and the walk re-plans with the
          * whirlpools as they then stand. Bounded by the spit arm's `maxPerSegment`.
          */
-        if (whirlpoolOnly && corridor) {
+        if (whirlpoolOnly && corridor && !rungGate('dodge', 'dodge:whirlpool')) {
             if (activeProgress !== null) progressRung('dodge');
             const named = new Set(hit.sources.map((s) => s.id));
             const left = Math.max(0, ...(run.entities('tentacleBeastFight')?.whirlpools ?? [])
@@ -26877,7 +27061,7 @@ function solveSegmentUnder({
          * own predicate over the whole walk. Bounded, and a `shouldStop` site
          * (`axe-dodge`).
          */
-        if (axeOnly && corridor) {
+        if (axeOnly && corridor && !rungGate('dodge', 'dodge:axe')) {
             if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
@@ -27338,7 +27522,7 @@ function solveSegmentUnder({
          */
         const phaseOnly = hit.sources.length > 0
             && hit.sources.every((s) => s.kind === 'hazard' && s.phase);
-        if (phaseOnly && corridor) {
+        if (phaseOnly && corridor && !rungGate('dodge', 'dodge:phase')) {
             if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
@@ -27641,7 +27825,7 @@ function solveSegmentUnder({
                 if (next) silencer = deriveLaneSilencer(run, next, what, pullingRopes);
             }
         }
-        if (silencer) {
+        if (silencer && !rungGate('pull')) {
             const ropeId = silencer.rope.ropeId;
             let pull = null;
             let pullWhy = null;
@@ -27774,6 +27958,8 @@ function solveSegmentUnder({
             // not run and the ladder falls through to the next rung.
             timeWhy = 'deadline — the caller\'s anytime deadline (`shouldStop`) was reached '
                 + 'before the TIME rung\'s search, so it was not run.';
+        } else if (rungGate('time')) {
+            timeWhy = disabledRungWhy('time'); // ⛓ strategy switch r1: the rung's row says why, the ladder falls through
         } else {
             const dash = planDash({
                 start: {
@@ -27888,6 +28074,8 @@ function solveSegmentUnder({
             baitWhy = `${body.id} is a Spinner: a billiard whose \`v\` reflects off walls and `
                 + 'never turns toward the player, so there is no line to bend. That is a KILL '
                 + 'question, and the kill is the player\'s own press.';
+        } else if (rungGate('bait')) {
+            baitWhy = disabledRungWhy('bait'); // ⛓ strategy switch r1
         } else {
             const derived = deriveBaitStance(run, body, contacts, { allowTeleporter, tolerance, dashMode });
             /**
@@ -27944,7 +28132,12 @@ function solveSegmentUnder({
         if (activeProgress !== null) progressRung('kill');
         let killWhy = null;
         const target = body ?? null;
-        if (target && target.iceTurret === true && ICETURRET_STATIC_KILL.enabled) {
+        // ⛓ strategy switch r1 — the KILL rung off gates every arm below (ice turret, static sword, press, chaser,
+        // orbit, light): it is asked only where some arm would run — a target, or a live darktrap ON the corridor (the
+        // light arm's own filter below); a room with no trap and no target counts nothing (p17 review A).
+        if (killRungArmRuns(run, target, hit) && rungGate('kill')) {
+            killWhy = disabledRungWhy('kill');
+        } else if (target && target.iceTurret === true && ICETURRET_STATIC_KILL.enabled) {
             /**
              * ⛓⛓ HAMMER-PHASE ICEST (`ICETURRET_STATIC_KILL`, OFF) — a LIVE ice turret (the chooser's, a set's head,
              * or the hit's): killed where it stands (`killIceTurretOnWalk`), the death the model's, and the ladder
@@ -28293,6 +28486,7 @@ function solveSegmentUnder({
         } else {
             const kill = deriveKillByCeiling(run, target, contacts);
             if (kill.presser) {
+                requireVerb('hold', 'kill:ceiling-hold', target.id); // ⛓ strategy switch r1: the ladder's hold arm
                 rowFor('kill', refused, { presser: kill.presser.tag, target: target.id });
                 /**
                  * ⛓⛓⛓ SEEDLING FIDELITY F1 D2 — §11.7's law, the FOURTH place it
@@ -28587,7 +28781,7 @@ function solveSegmentUnder({
         // escalates from (measured under the flip: fidelity L14's swordless arrival).
         if (Array.isArray(corridor) && corridor.length > 0 && !axisAligned
             && CONTACT_FIDELITY.strikeIframeLapse && LAPSE_NARROW_RETRY.enabled
-            && strikePolicyFor(run, { dashMode }) !== null) {
+            && strikePolicyFor(run, { dashMode }) !== null && !rungGate('narrow')) {
             if (activeProgress !== null) progressRung('narrow');
             const killRefused = { rung: 'kill', why: killWhy };
             const again = probeCorridor(corridor, dangerExcept, { axisAligned, walkCheck: true,
@@ -28620,7 +28814,7 @@ function solveSegmentUnder({
             rowFor('detour', { rung: lastOption, why: lastWhy }, { coveredGoal: coveredGoal.id, previews: 0, planned: 0 });
             lastWhy = coveredGoal.why;
             lastOption = 'detour';
-        } else if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
+        } else if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser') && !rungGate('detour')) {
             if (activeProgress !== null) progressRung('detour');
             const detour = deriveChaserDetour(run, {
                 aim, allowTeleporter,
@@ -28673,7 +28867,8 @@ function solveSegmentUnder({
             // ⛓ L40GUARD D3: a forced crossing ends on the covered tile too — refused by name, no proof asked.
             rowFor('forced-hit', { rung: lastOption, why: lastWhy }, { coveredGoal: coveredGoal.id });
             lastOption = 'forced-hit';
-        } else if (FORCED_HITS.enabled && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
+        } else if (FORCED_HITS.enabled && fork !== null && Array.isArray(corridor) && corridor.length > 0
+            && !rungGate('forced-hit')) {
             if (activeProgress !== null) progressRung('forced-hit');
             const lastRefused = { rung: lastOption, why: lastWhy };
             const proof = proveForcedHit(fork, { replayTicks: perTick.length });
@@ -28755,7 +28950,8 @@ function solveSegmentUnder({
          *   3. THE BILL: the fewest-billed member replayed on the live run, whose rows must be the fork's; a
          *      `forced-hit` row with `proof: {kind: 'axe-phase'}`, and `forcedHits` carries it.
          */
-        if (AXE_PRICED_CROSSING.enabled && axeOnly && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
+        if (AXE_PRICED_CROSSING.enabled && axeOnly && fork !== null && Array.isArray(corridor) && corridor.length > 0
+            && !rungGate('forced-hit', 'forced-hit:axe-priced')) {
             if (activeProgress !== null) progressRung('forced-hit');
             const pricedRefused = { rung: lastOption, why: lastWhy };
             const at = { level: run.level, x: run.state.x, y: run.state.y, tick: perTick.length };
@@ -29011,7 +29207,7 @@ function solveSegmentUnder({
         if (ARROW_LANE_CROSSING.enabled && !(dangerExcept instanceof LaneCrossingExcept)) {
             const lane = laneCrossingFor(run, aim, { boxAt: playerBoxAt,
                 separates: (vols) => laneSeparates(aim, allowTeleporter, contacts, goalPlanExtra, vols) });
-            if (lane) {
+            if (lane && !rungGate('arrow-lane')) {
                 if (activeProgress !== null) progressRung('arrow-lane');
                 const laneRefused = { rung: lastOption, why: lastWhy };
                 const ex = laneCrossingExcept(dangerExcept, lane.ids);
@@ -29525,7 +29721,8 @@ function solveSegmentUnder({
                             stanceWalks.delete(walking);
                         }
                     }
-                    const record = frontierExecutor(plan.strategy)(run, perTick, plan.resolved, {
+                    const record = callableExecutor(frontierExecutor(plan.strategy), plan.strategy,
+                        'frontier-apply')(run, perTick, plan.resolved, {
                         maxTicksPerTarget,
                         economies,
                         dashMode,
@@ -30031,6 +30228,12 @@ function solveSegmentUnder({
                         + 'other cell to swing from' });
                     continue;
                 }
+                // ⛓ strategy switch r1 — the step-off's own `break` (a composition), off: a rejection like the one above
+                if (ACTIVE_DISABLE !== null && verbOff('break', 'step-off', rock.rockId)) {
+                    rejected.push({ option: `break ${rock.rockId}`, why: 'the `break` strategy is switched off for '
+                        + 'this solve (`disable`)' });
+                    continue;
+                }
                 seeRow({
                     tick: perTick.length,
                     saw: saw(),
@@ -30515,7 +30718,8 @@ function solveSegmentUnder({
                 contactsOverride: resolved.exempt,
                 axisAligned: resolved.approach === 'axis-aligned',
             });
-            const record = written() ? { pressedOnTheWay: true } : clearTagExecutor(verb)(run, perTick, resolved, {
+            const record = written() ? { pressedOnTheWay: true } : callableExecutor(clearTagExecutor(verb), verb,
+                'cross-room-press')(run, perTick, resolved, {
                 maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb} ${pid}`,
                 before, walkTo, goal, equip, rewind,
             });
@@ -30582,7 +30786,8 @@ function solveSegmentUnder({
                 rejected: [],
                 keys: [],
             });
-            const record = STRATEGY_EXECUTORS[verb](run, perTick, { strategy: verb, obstacle: { kind: 'solid', tag: cls, id } },
+            const record = callableExecutor(executorFor(verb, 'cross-room-solid'), verb, 'cross-room-solid')(run, perTick,
+                { strategy: verb, obstacle: { kind: 'solid', tag: cls, id } },
                 { walkTo, goal, what: `${whatCT} -> ${verb}`, refuse: (reason, why) => refuseCT(reason, why) });
             const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
             done('verb', { strategy: verb, waited, ...record });
@@ -30750,7 +30955,7 @@ function solveSegmentUnder({
                 ...(drillKills ? { drillKills } : {}), ...(drillPass ? { drillPass } : {}) });
             return;
         }
-        const record = clearTagExecutor(verb)(run, perTick, verbResolved, {
+        const record = callableExecutor(clearTagExecutor(verb), verb, 'clear-tag')(run, perTick, verbResolved, {
             maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
             before, walkTo, goal, equip, rewind,
             // ⛓ fidelity BOSSFORK D1: the segment's own fork (`forkRun`, above; null without one), as the frontier arm
@@ -31144,7 +31349,7 @@ function solveSegmentUnder({
                 : refineStrategy(run,
                     OBSTACLE_STRATEGIES[key] ?? OBSTACLE_STRATEGIES[blocker.kind] ?? null,
                     blocker);
-            const resolvedBlocker = strategy && STRATEGY_EXECUTORS[strategy]
+            const resolvedBlocker = strategy && executorFor(strategy, 'placement-blocker')
                 ? resolveObstacleStrategy(run, strategy, blocker, contacts,
                     { x: goal.placement.x, y: goal.placement.y }, null, [...refusedOrders])
                 : null;
@@ -31216,7 +31421,7 @@ function solveSegmentUnder({
         refuseDanger(run.state.x, run.state.y, goal, what, null,
             CONTACT_FIDELITY.strikeIframeLapse && resolved.strategy === 'collect' ? { timedSword: true } : {});
         const verbTick = perTick.length;
-        const exec = STRATEGY_EXECUTORS[resolved.strategy];
+        const exec = executorFor(resolved.strategy, 'goal-verb');
         if (!exec) {
             refuse(`${what}: strategy '${resolved.strategy}' is selected and NOT `
                 + 'registered this slice.', {

@@ -99,7 +99,7 @@ import { makeLedger, paintable, phaseRow } from './procgenLedger.js';
 import {
     DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, drawElementHead, formatElementSpec,
     formatParamValue, isElementList, isParamSubset, namedParams, normalizeElementSpec,
-    paramSubset, resolveElementSpec, resolveRequireDirective,
+    paramSubset, resolveElementSpec, resolveRequireDirective, strategyOfRequire,
 } from '../procgenCore/elementSpec.js';
 /**
  * ⛓ THE REQUIREMENTS DIFFERENTIAL — arc 3, slice 4d. ⛔ ONE implementation,
@@ -4677,7 +4677,12 @@ export function requireVerdict({ dir, model, certification, out, palette, seed, 
         summary: out.summary,
         seed,
         biome: palette.name,
-    }, { verdict: VERDICT.SOLVED, ticks: out.summary.finalTicks }, { budget });
+    }, { verdict: VERDICT.SOLVED, ticks: out.summary.finalTicks }, {
+        budget,
+        // ⛓ STRATEGY SWITCH r1 (D2) — a `strategy:<verb>` entry is graded by the strategy arm (absent: none asked)
+        ...(dir.asked.some((a) => strategyOfRequire(a) !== null)
+            ? { strategies: dir.asked.map(strategyOfRequire).filter((v) => v !== null) } : {}),
+    });
     const rows = dir.asked.map((flag) => report.rows.find((r) => r.flag === flag) ?? null);
     const graded = rows.map((r) => (r ? gradeOf(r) : 'NOT-MEASURED'));
     const met = graded.every((g) => REQUIRING_GRADES.includes(g));

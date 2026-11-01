@@ -14,6 +14,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gunzipSync } from 'node:zlib';
 
 const connectionMock = vi.hoisted(() => ({
   isConnected: vi.fn(() => true),
@@ -420,5 +421,110 @@ describe('MessageHandler: DepGraph rules built from server data', () => {
     expect(load.jsonData.items).toEqual(DG.items);
     expect(load.jsonData.starting_items).toEqual(DG.starting_items);
     expect(consoleLines(bus).some((m) => /Built DepGraph rules for tech_tree \(\d+ nodes, entrance mode 3\)/.test(m))).toBe(true);
+  });
+});
+
+describe('MessageHandler: APCalc rules built from server data', () => {
+  // Player 1 (Calc, APCalc 8 spheres) of an APCalc + APQuest room.
+  const AC = JSON.parse(
+    gunzipSync(
+      readFileSync(join(HERE, '..', '..', 'apcalc', 'fixtures', 'apcalcRulesBuilder', 'with_apquest_P1.json.gz'))
+    ).toString('utf8')
+  );
+  const acPlacements = Object.values(AC.regions['1'])
+    .flatMap((region) => region.locations)
+    .filter((location) => location.id !== null);
+  const acItems = Object.fromEntries(
+    Object.values(AC.items['1'])
+      .filter((item) => item.groups.includes('Everything'))
+      .map((item) => [item.name, item.id])
+  );
+  const questItems = Object.fromEntries(
+    Object.values(AC.items['1'])
+      .filter((item) => item.id !== null && !item.groups.includes('Everything'))
+      .map((item) => [item.name, item.id])
+  );
+
+  let handler;
+  let bus;
+
+  beforeEach(() => {
+    connectionMock.send.mockClear();
+    calls.length = 0;
+    stateManagerMock.staticData = { game_name: 'Adventure', playerId: '1', world: { 1: { game: 'Adventure' } } };
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 404 })));
+    for (const method of ['warn', 'error', 'log', 'debug']) vi.spyOn(console, method).mockImplementation(() => {});
+    handler = new MessageHandler();
+    bus = makeBus();
+    handler.setEventBus(bus);
+    handler._requestDataPackage = vi.fn();
+    handler.clientSlotName = 'Calc';
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('a picked APCalc in a multi-game room builds and loads the exporter-equivalent rules once', async () => {
+    handler.chosenGame = 'APCalc';
+    handler.processMessage({
+      cmd: 'RoomInfo',
+      games: ['Archipelago', 'APCalc', 'APQuest'],
+      seed_name: AC.seed_name,
+      version: { major: 0, minor: 6, build: 8 },
+    });
+    handler.processMessage({
+      cmd: 'DataPackage',
+      data: {
+        games: {
+          APCalc: {
+            item_name_to_id: acItems,
+            location_name_to_id: Object.fromEntries(acPlacements.map((l) => [l.name, l.id])),
+          },
+          APQuest: { item_name_to_id: questItems, location_name_to_id: {} },
+        },
+      },
+    });
+    await flush();
+    handler.processMessage({
+      cmd: 'Connected',
+      slot: 1,
+      team: 0,
+      players: [
+        { team: 0, slot: 1, alias: 'Calc', name: 'Calc' },
+        { team: 0, slot: 2, alias: 'Quester', name: 'Quester' },
+      ],
+      missing_locations: acPlacements.map((l) => l.id),
+      checked_locations: [],
+      slot_data: AC.world['1'].slot_data,
+      slot_info: {
+        1: { name: 'Calc', game: 'APCalc', type: 1, group_members: [] },
+        2: { name: 'Quester', game: 'APQuest', type: 1, group_members: [] },
+      },
+    });
+    await flush();
+    expect(sent('Connect')[0]).toMatchObject({ game: 'APCalc', name: 'Calc' });
+    expect(calls).toEqual([]);
+
+    handler.processMessage({
+      cmd: 'LocationInfo',
+      locations: acPlacements.map((l) => ({
+        item: l.item.player === 1 ? acItems[l.item.name] : questItems[l.item.name],
+        location: l.id,
+        player: l.item.player,
+        flags: { progression: 1, useful: 2, trap: 4 }[AC.items['1'][l.item.name].classification] ?? 0,
+      })),
+    });
+    await flush(10);
+
+    expect(bus.published.filter((p) => p.event === 'files:jsonLoaded')).toHaveLength(1);
+    const load = calls.find(([kind]) => kind === 'files:jsonLoaded')[1];
+    expect(load.jsonData.game_name).toBe('APCalc');
+    expect(load.jsonData.regions).toEqual(AC.regions);
+    expect(load.jsonData.items).toEqual(AC.items);
+    expect(load.jsonData.starting_items).toEqual(AC.starting_items);
+    const nodes = Object.keys(AC.world['1'].slot_data.nodes).length;
+    expect(consoleLines(bus).some((m) => m.includes(`Built APCalc rules (${nodes} nodes, 8 spheres) and loaded them.`))).toBe(true);
   });
 });

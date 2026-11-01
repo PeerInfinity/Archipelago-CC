@@ -162,6 +162,8 @@ export const ELEMENT_TABLE = Object.freeze({
          * measured that would be measuring the boot rather than the gate.
          */
         needs: Object.freeze(['hasSword']),
+        // ⛓ strategy switch r1 (D2) — the solver strategy this gate's clearer applies: `require:['strategy:kill']`.
+        needsStrategy: Object.freeze(['kill']),
     }),
     blockpocket: Object.freeze({
         element: BLOCK_POCKET,
@@ -170,6 +172,8 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'the shove that clears the corridor has somewhere to put the block. Certified '
             + 'by the existing `shove`.',
         extra: Object.freeze([]),
+        // ⛓ strategy switch r1 (D2) — the solver strategy this gate's clearer applies: `require:['strategy:shove']`.
+        needsStrategy: Object.freeze(['shove']),
     }),
     /**
      * ⛓⛓⛓ **THE ELEMENT THAT IS SPACE** (PROCGEN ELEMENTS arc 5, slice 3;
@@ -234,6 +238,8 @@ export const ELEMENT_TABLE = Object.freeze({
             + '1-wide corridor.',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasSword']),
+        // ⛓ strategy switch r1 (D2) — the solver strategy this gate's clearer applies: `require:['strategy:kill']`.
+        needsStrategy: Object.freeze(['kill']),
     }),
     /**
      * ⛓⛓⛓ **THE ROCK GATE** (seedling substrate, slice S1; plan §2.1 G-a). A
@@ -257,6 +263,8 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'Certified by the existing `break` (R9 L15). No body, so no pocket and no A10.',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasSword']),
+        // ⛓ strategy switch r1 (D2) — the solver strategy this gate's clearer applies: `require:['strategy:break']`.
+        needsStrategy: Object.freeze(['break']),
     }),
     /**
      * ⛓⛓⛓ **THE SHORTCUT, REGISTERED AT LAST — AS A ROCK** (seedling substrate
@@ -311,6 +319,8 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'its west face holding the shield. Certified by the existing `touch`.',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasShield']),
+        // ⛓ strategy switch r1 (D2) — the solver strategy this gate's clearer applies: `require:['strategy:touch']`.
+        needsStrategy: Object.freeze(['touch']),
     }),
     /**
      * ⛓⛓⛓ **THE WATER GATE — THE THIRD PHYSICAL GATE** (seedling swim S1, D3).
@@ -1037,6 +1047,21 @@ export const ITEMS_ELEMENTS_NEED = Object.freeze([...new Set(
     Object.values(ELEMENT_TABLE).flatMap((e) => e.needs ?? []))].sort());
 
 /**
+ * ⛓⛓ STRATEGY SWITCH r1 (D2) — **A `require` ENTRY MAY NAME A SOLVER STRATEGY**: `strategy:<verb>` (e.g.
+ * `?require=strategy:shove`, `--require=hasSword,strategy:kill`). The head is derived the same way, from the rows'
+ * `needsStrategy` (the strategy the element's clearer applies), and the run's differential grades it with the solver's
+ * per-solve `disable:` switch (`procgenRequirements`'s strategy arm). A strategy no element declares — a budget rung
+ * (`strategy:time`) or a verb with no gadget — refuses `no-element-needs-this-item`, by name.
+ */
+export const STRATEGY_REQUIRE_PREFIX = 'strategy:';
+/** The verb a `strategy:<verb>` require entry names, or `null` for an item entry. */
+export const strategyOfRequire = (entry) => (typeof entry === 'string' && entry.startsWith(STRATEGY_REQUIRE_PREFIX)
+    ? entry.slice(STRATEGY_REQUIRE_PREFIX.length) : null);
+/** The strategies the catalogue knows how to require — the union of every head's `needsStrategy`, read from the table. */
+export const STRATEGIES_ELEMENTS_NEED = Object.freeze([...new Set(
+    Object.values(ELEMENT_TABLE).flatMap((e) => e.needsStrategy ?? []))].sort());
+
+/**
  * The heads whose `needs` include this item, in the TABLE's own order.
  *
  * ⛓ S1 — **A SHORTCUT-LAW ELEMENT IS NEVER A HEAD THAT CAN MEET A DIRECTIVE.**
@@ -1056,8 +1081,9 @@ export const ITEMS_ELEMENTS_NEED = Object.freeze([...new Set(
  * `cut`, and `roam` declares no `needs`, so it could not be a head either way.
  */
 export function headsNeeding(item, table = ELEMENT_TABLE) {
+    const verb = strategyOfRequire(item);
     return Object.freeze(Object.keys(table)
-        .filter((n) => (table[n].needs ?? []).includes(item)
+        .filter((n) => (verb === null ? (table[n].needs ?? []) : (table[n].needsStrategy ?? [])).includes(verb ?? item)
             && (table[n].element?.law ?? LAW_CUT) === LAW_CUT
             // ⛓ U3 D3 — a cut head whose differential is MEASURED to grade
             // SHORTENS declares it (`corridorbody`); see its table row.
@@ -1077,7 +1103,8 @@ export function parseItemRequireList(value) {
     return parseRequireList(value, {
         what: 'item flag',
         member: null,
-        vocabulary: () => `The items some element NEEDS are [${ITEMS_ELEMENTS_NEED.join(', ')}].`,
+        vocabulary: () => `The items some element NEEDS are [${ITEMS_ELEMENTS_NEED.join(', ')}]; the strategies, `
+            + `as \`${STRATEGY_REQUIRE_PREFIX}<verb>\`, are [${STRATEGIES_ELEMENTS_NEED.join(', ')}].`,
     });
 }
 
@@ -1108,6 +1135,15 @@ export const REQUIRE_DIRECTIVE_REFUSALS = Object.freeze([
     'the-directive-and-the-spec-disagree',
 ]);
 
+/** ⛓ STRATEGY SWITCH r1 (D2) — `no-element-needs-this-item`'s sentence for a `strategy:<verb>` entry. */
+function strategyNeededByNoElement(item, table) {
+    return `nothing in the element catalogue declares \`needsStrategy\` on ${JSON.stringify(strategyOfRequire(item))}. `
+        + `The strategies some element needs are [${[...new Set(Object.values(table)
+            .flatMap((e) => e.needsStrategy ?? []))].sort().join(', ') || '(none)'}]. ⛔ A budget rung (\`time\`, \`dodge\`, `
+        + '`pull`) is never a requirement — with it switched off the measured rooms still solve — and a verb with no '
+        + 'gadget names no room this generator can build.';
+}
+
 export function resolveRequireDirective({ require, elements, items, table = ELEMENT_TABLE } = {}) {
     const asked = Object.freeze([...(require ?? [])]);
     const out = (refused, spec = elements, heads = []) => Object.freeze({
@@ -1117,6 +1153,10 @@ export function resolveRequireDirective({ require, elements, items, table = ELEM
 
     for (const item of asked) {
         if (headsNeeding(item, table).length === 0) {
+            // ⛓ strategy switch r1 (D2): a `strategy:<verb>` entry's sentence names the strategies
+            if (strategyOfRequire(item) !== null) {
+                return out(Object.freeze({ reason: 'no-element-needs-this-item', detail: strategyNeededByNoElement(item, table) }));
+            }
             return out(Object.freeze({
                 reason: 'no-element-needs-this-item',
                 detail: `nothing in the element catalogue declares \`needs\` on `
@@ -1134,7 +1174,7 @@ export function resolveRequireDirective({ require, elements, items, table = ELEM
      * `pushableblock` in the room and the solver's own bound is one free
      * block), so two required items must be carried by ONE head.
      */
-    const heads = Object.keys(table)
+    let heads = Object.keys(table)
         .filter((n) => asked.every((item) => headsNeeding(item, table).includes(n)));
     if (heads.length === 0) {
         return out(Object.freeze({
@@ -1147,6 +1187,7 @@ export function resolveRequireDirective({ require, elements, items, table = ELEM
         }));
     }
     for (const item of asked) {
+        if (strategyOfRequire(item) !== null) continue; // ⛓ strategy switch r1: a strategy is no boot flag
         if (items?.[item] !== true) {
             return out(Object.freeze({
                 reason: 'the-biome-lacks-the-item',
@@ -1158,6 +1199,23 @@ export function resolveRequireDirective({ require, elements, items, table = ELEM
                     + 'directive says so BEFORE a room is built rather than after.',
             }, ), elements, heads);
         }
+    }
+    /**
+     * ⛓ STRATEGY SWITCH r1 (D2) — a strategy entry is met by a head the biome can HOST: one whose own item gate
+     * (`needs`) the boot grants (the seam's gate asked earlier, as for an item). Asked only when a strategy is.
+     */
+    if (asked.some((item) => strategyOfRequire(item) !== null)) {
+        const hostable = heads.filter((n) => (table[n].needs ?? []).every((i) => items?.[i] === true));
+        if (hostable.length === 0) {
+            return out(Object.freeze({
+                reason: 'the-biome-lacks-the-item',
+                detail: `[${heads.join(', ')}] can carry [${asked.join(', ')}], and each needs an item the run's boot `
+                    + `does not grant (items: ${JSON.stringify(items ?? null)}; needs: `
+                    + `${heads.map((n) => `${n} [${(table[n].needs ?? []).join(', ')}]`).join(', ')}). ⛔ The seam's own `
+                    + 'item gate, asked before a room is built.',
+            }), elements, heads);
+        }
+        heads = hostable;
     }
     /**
      * ⛓⛓ **NOBODY SAID ⇒ THE DIRECTIVE SAYS.** An omitted `elements` reaches
