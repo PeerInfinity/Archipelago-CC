@@ -44,6 +44,10 @@
     {
       "name": "Celeste (Open World).yaml",
       "reason": "Preset too slow to load in the frontend (~1.0 MB _rules.json)."
+    },
+    {
+      "name": "Zillion.yaml",
+      "reason": "Logic runs in the external zilliandomizer tool, which this system cannot evaluate (147 undetermined rows in the Regions panel; already on main_test_exclude_list). Preset removed (user ruling 2026-11-01)."
     }
   ],
   "ut_fuzz_exclude_list_comment": "Excluded from UT fuzz tests (bundled worlds) -- typically hangs or timeouts.",
