@@ -31,9 +31,10 @@ async function withPairSize(size, fn) {
 describe('hammer-phase ICEST on the latch chain (slow)', () => {
     it('ON alone: the walk back refuses at t271 on bob@736,800, OFF\'s refusal byte for byte', async () => {
         const boot = await l40LatchBoot();
-        const off = await withIceTurretStaticKill(false, () => l40LatchSolve(boot));
+        // ⛓ CPAIR flip: `CHOOSER_PAIR` pinned OFF (ON at size 3 since its flip); this row is the pre-pair walk back
+        const off = await withChooserPair(false, () => withIceTurretStaticKill(false, () => l40LatchSolve(boot)));
         resetIceTurretStaticKillCounts();
-        const on = await withIceTurretStaticKill(true, () => l40LatchSolve(boot));
+        const on = await withChooserPair(false, () => withIceTurretStaticKill(true, () => l40LatchSolve(boot)));
         expect(off.refusal.perTick).toHaveLength(271);
         expect(on.refusal.message).toBe(off.refusal.message);
         expect(on.refusal.perTick.map((k) => [...k])).toEqual(off.refusal.perTick.map((k) => [...k]));
