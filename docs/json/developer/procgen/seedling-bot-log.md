@@ -26857,3 +26857,26 @@ the sword, so the solver shouldn't attempt to switch to regular sword when it ha
   0.05 grid on every tick; the preview spends the same keys). Mutants: an off-axis offer, an at-rest offer of every body
   and a dropped arm each red a row; a perpendicular key added to the press survives (`holdOneAxis` drops it while the
   player moves).
+### Seedling hammer-phase SLASHRECT — a press with no facing refuses by name; `PRESS_NO_FACING` (OFF) does not plan it
+
+⚖ User, queued 2026-10-31 (one of four parallel hammer slices). The report is
+`CC/docs/cloud-reports/seedling-hammer-slashrect.md`.
+
+- **The abort.** The lab's caldera counterfactual (caldera's items and terrain WITHOUT its melt `floodWalks`, `empty`,
+  8 obstacles) aborted seed 7 on `PressError: slashRect: direction -1 is not 0..3` (step 5 try 4, `melt-patch(w=1,h=2)`
+  at (2,4)). It reproduces at base `8440451386`; the request is 6 KB (`fixtures/hammer-slashrect/seed7-request.json`).
+- **Why -1.** It is the GAME's facing: `Player.update` runs `slash()`, `super.update()`, `sprites()`, `hitUpdate()`;
+  on the tick the i-frames run out `hitUpdate` writes `direction = directionFace` (`Player.as:1424`), which is -1 when
+  no knockback parked one (lava's `hit(null, …)`). The press kill aimed `left` at t100 (the recovery tick) and its
+  escape forecast (`pressEscapeOnce`) asked the press at t101 with the previewed facing -1. The game would latch
+  `slashDirection = -1` and swing `getSlashRect`'s all-zero default rect: a whiff no model has.
+- **The fix** (`pressNoFacing.js`). Always: that rect throw, and only that throw (a `PressError` / `CombatVerbError`
+  at a non-facing), becomes `SolverRefusal` bound `PRESS_NO_FACING` (`pressEscapeOnce`, `deriveFight`'s press macro);
+  seed 7 then REFUSES the candidate and generates. `PRESS_NO_FACING` (OFF): the escape returns a claimed `no-facing`
+  negative before forecasting, the aim is not admitted, the live press tick re-aims, the fight macro is not offered;
+  seed 7's request then meets the kill's own refusal ("There is no step out"); the level is the same either way.
+- **Measured.** Identity block BEFORE = AFTER on every row (r9 campaign `be9c19c8`); census of 548 generated levels at
+  base: the family's only throw is caldera-cf seed 7. Switch ON: producers 97 run / 0 red, route survey 0 movers
+  (201/237 both ways), hammer `.slow` files 11/11, a base/OFF/ON digest census of 54 levels moves only caldera-cf 7
+  (ABORT → generated). `solveProgress.BOUND_KINDS` classes both new bounds `unmodelled`. Gate
+  `hammerSlashRect.test.js` (8 rows; 5 mutants each red).

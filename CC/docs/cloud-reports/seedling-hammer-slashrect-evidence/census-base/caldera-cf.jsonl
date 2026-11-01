@@ -1,0 +1,12 @@
+{"biome":"caldera-cf","skel":"empty","seed":1,"stop":"TARGET_REACHED","ms":1398}
+{"biome":"caldera-cf","skel":"empty","seed":2,"stop":"TARGET_REACHED","ms":659}
+{"biome":"caldera-cf","skel":"empty","seed":3,"stop":"TARGET_REACHED","ms":464}
+{"biome":"caldera-cf","skel":"empty","seed":4,"stop":"TARGET_REACHED","ms":105}
+{"biome":"caldera-cf","skel":"empty","seed":5,"stop":"TARGET_REACHED","ms":878}
+{"biome":"caldera-cf","skel":"empty","seed":6,"stop":"TARGET_REACHED","ms":292}
+{"biome":"caldera-cf","skel":"empty","seed":7,"ABORT":"PressError","msg":"slashRect: direction -1 is not 0..3","directionFamily":true,"ms":41133}
+{"biome":"caldera-cf","skel":"empty","seed":8,"stop":"TARGET_REACHED","ms":4669}
+{"biome":"caldera-cf","skel":"empty","seed":9,"stop":"TARGET_REACHED","ms":229}
+{"biome":"caldera-cf","skel":"empty","seed":10,"stop":"TARGET_REACHED","ms":498}
+{"biome":"caldera-cf","skel":"empty","seed":11,"stop":"TARGET_REACHED","ms":86}
+{"biome":"caldera-cf","skel":"empty","seed":12,"stop":"TARGET_REACHED","ms":310}

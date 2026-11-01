@@ -226,6 +226,8 @@ import { PRESS_KILL_GUARD_COUNTS, PRESS_KILL_REBOOT_GUARD, PRESS_KILL_SHAKE_GUAR
 // ⛓ hammer-phase SPIN — the escape's claim through a carried shield (`PRESS_ESCAPE_SHIELD_CLAIM`, OFF) and the kill's done sink.
 import { PRESS_ESCAPE_SHIELD_CLAIM, PRESS_ESCAPE_SHIELD_CLAIM_COUNTS, PRESS_KILL_DONE_TRACE, shieldEnvelopeMeets,
     shieldOnlyUnmodelled } from './pressKillGuards.js';
+// ⛓ hammer-phase SLASHRECT: a press on a tick that starts with no facing (`direction -1`, `Player.as:1424`)
+import { PRESS_NO_FACING, PRESS_NO_FACING_COUNTS, isFacing, noFacingWhy, refuseNoFacing } from './pressNoFacing.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
 import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
 // ⛓ seedling-fidelity-axeforcedu D2 — a spinning axe's forced U, crossed and billed (`AXE_PRICED_CROSSING`, OFF).
@@ -15377,7 +15379,20 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         states.set(t + 1, st);
     }
     const direction = st.direction;
-    const probe = run.spinnerForecastWithPress(0, { pressAt, direction, id, positions: [] });
+    /**
+     * ⛓ hammer-phase SLASHRECT — THE PRESS TICK MAY START WITH NO FACING: on the tick the i-frames run out `hitUpdate`
+     * writes `direction = directionFace` (-1 when no knockback parked one) AFTER `sprites()`, so the aim cannot set it
+     * and the press swings `getSlashRect`'s all-zero default rect (`pressNoFacing.js`). Always: a forecast that throws
+     * on it refuses the solve by name (`PRESS_NO_FACING`). Under `PRESS_NO_FACING` (OFF): a claimed negative, before
+     * any forecast, so the aim waits a tick.
+     */
+    if (PRESS_NO_FACING.enabled && !isFacing(direction)) {
+        PRESS_NO_FACING_COUNTS.escapeDeclined += 1;
+        return { ok: false, claim: true, bound: 'no-facing', why: noFacingWhy({ direction, pressAt, caller: 'escape' }) };
+    }
+    const forecastPress = (rows, o) => refuseNoFacing(SolverRefusal, { direction, pressAt, caller: 'escape', id },
+        () => run.spinnerForecastWithPress(rows, o));
+    const probe = forecastPress(0, { pressAt, direction, id, positions: [] });
     /**
      * ⛓ hammer-phase SPIN (`PRESS_ESCAPE_SHIELD_CLAIM`, OFF ⇒ `false` and the no-claim below is OFF's) — the shield
      * bump as the ONLY unmodelled source: the escape is asked of the bump-blind forecast, a certificate is adopted only
@@ -15407,7 +15422,7 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     }
     const { horizon, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
     const rowsFor = (land) => land + horizon + 2 - n;
-    const first = run.spinnerForecastWithPress(rowsFor(trainEnd), { pressAt, direction, id,
+    const first = forecastPress(rowsFor(trainEnd), { pressAt, direction, id,
         positions: (t) => states.get(t) ?? null });
     if (first.lineBlocked) {
         return shieldNoClaim({ ok: false, claim: true, bound: 'line', why: 'the press\'s line of sight is blocked' });
@@ -15462,7 +15477,7 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     const bad = verdict(found, L, 'free from the landing');
     if (bad) return bad;
     const at2 = (t) => (t <= L ? states.get(t) : found.states[t - L]);
-    const again = run.spinnerForecastWithPress(rowsFor(trainEnd), { pressAt, direction, id, positions: at2 });
+    const again = forecastPress(rowsFor(trainEnd), { pressAt, direction, id, positions: at2 });
     const sameTests = JSON.stringify(again.tests.map((x) => [x.t, x.id, x.landed]))
         === JSON.stringify(first.tests.map((x) => [x.t, x.id, x.landed]));
     let pre = [];
@@ -16482,8 +16497,16 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         const { q, i, cur } = node;
         const q1 = step({ ...q }, aim);
         if (q1 === null) return null;
+        // ⛓ hammer-phase SLASHRECT (`PRESS_NO_FACING`, OFF ⇒ never here): no press macro from an aim tick that ends
+        // facing -1 (`Player.as:1424`); the press would swing `getSlashRect`'s all-zero default rect
+        if (PRESS_NO_FACING.enabled && !isFacing(q1.direction)) {
+            PRESS_NO_FACING_COUNTS.fightDeclined += 1;
+            return null;
+        }
         const C = cur.fork(i);
-        const press = C.advance(q1, { direction: q1.direction });
+        // ⛓ SLASHRECT: always — a forecast test that throws on a no-facing press refuses the solve by name
+        const noFacing = { direction: q1.direction, pressAt: n + i + 1, caller: 'fight' };
+        const press = refuseNoFacing(SolverRefusal, noFacing, () => C.advance(q1, { direction: q1.direction }));
         if (!press.opens || !safe(C, q1, i + 1)) return null;
         const q2 = step({ ...q1 }, PRESS, { dashImpulse: press.outcome === 'dash' ? press.impulse : null });
         const keys = [aim, PRESS];
@@ -16492,7 +16515,7 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         let j = i + 2;
         for (;;) {
             if (st === null) return null;
-            C.advance(st);
+            refuseNoFacing(SolverRefusal, noFacing, () => C.advance(st));
             if (C.lineBlocked !== null || !safe(C, st, j)) return null;
             if (C.quiet()) break;
             st = step({ ...st }, NO_KEYS);
@@ -18849,6 +18872,12 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 const aimKeys = new Set([FACING_KEYS[facingToward(run.state, body.rect)]]);
                 aimEscape = pressEscape(run, { state: run.state, at: run.ticksCompleted, keys: [aimKeys],
                     pressAt: run.ticksCompleted + 1, id: plan.id, caller: 'aim' });
+                // ⛓ hammer-phase SLASHRECT (`PRESS_NO_FACING`, OFF ⇒ never this bound): a press with no facing is a
+                // whiff no model prices, so no fallback admits it; the aim waits a tick
+                if (aimEscape.bound === 'no-facing') {
+                    PRESS_NO_FACING_COUNTS.aimDeclined += 1;
+                    return false;
+                }
                 if (aimEscape.ok || !aimEscape.claim) return true;
                 if (!HAMMER_ESCAPE_FALLBACK.enabled) return false;
                 const lapsed = !strike || run.ticksCompleted > strike.pressAt;
@@ -18865,6 +18894,15 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 refuge = null;
                 escape = null;
                 phaseStall = null;
+            } else if (aimed && PRESS_NO_FACING.enabled && !isFacing(run.state.direction)) {
+                /**
+                 * ⛓ hammer-phase SLASHRECT (`PRESS_NO_FACING`, OFF ⇒ never here): the aimed press tick STARTS with no
+                 * facing (the i-frames ran out on the aim tick: `Player.as:1424`), so pressing would latch
+                 * `slashDirection = -1` — a whiff the run refuses to model. Aim again instead; the next tick takes its
+                 * facing from `v` (`sprites()`, `directionFace` is -1 by then).
+                 */
+                PRESS_NO_FACING_COUNTS.pressDeferred += 1;
+                held = new Set([FACING_KEYS[facingToward(run.state, body.rect)]]);
             } else if (aimed) {
                 held = PRESS;
                 lastPressAt = run.ticksCompleted;
