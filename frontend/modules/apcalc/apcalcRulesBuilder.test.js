@@ -19,8 +19,12 @@
  * The committed presets predate slot_data's per-edge path_costs and sphere and
  * its generation options. For them the test supplies what the current apworld
  * sends, from the file's own world.generated_edges and world.options; the
- * fixtures carry the real fields. apcalc_worldgen/ is excluded: it is a
- * different game ("APCalc WorldGen").
+ * fixtures carry the real fields.
+ *
+ * The builder is registered for game "APCalc" (worlds/apcalc) only. A puzzle
+ * built in the APCalc Generator panel is game "APCalc Puzzle <seed>-<hash>"
+ * (puzzleIdentity) and must never reach it: its rules come from its own
+ * rules.json, not from slot_data.
  */
 
 import { describe, it, expect, vi } from 'vitest';
@@ -32,6 +36,8 @@ import { fileURLToPath } from 'node:url';
 import { buildApcalcRules, pathCostsRule, summarizeApcalcRules } from './apcalcRulesBuilder.js';
 import WORLD_INFO from './apcalcWorldInfo.json' with { type: 'json' };
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
+import { hasServerDataBuilder } from '../client/core/serverDataRules.js';
+import { puzzleIdentity, PUZZLE_PARAM_KEYS } from '../apcalcGenerator/apcalcGeneratorEngine.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..', '..');
@@ -291,5 +297,24 @@ describe('summarizeApcalcRules', () => {
     expect(summarizeApcalcRules({ nodes: { 'Region 1': {}, 'Region 2': {} }, num_spheres: 8 })).toBe(
       '(2 nodes, 8 spheres)'
     );
+  });
+});
+
+describe('which rooms the builder serves', () => {
+  it('is registered for worlds/apcalc ("APCalc")', () => {
+    expect(hasServerDataBuilder('APCalc')).toBe(true);
+  });
+
+  it('never serves a browser-built puzzle ("APCalc Puzzle <seed>-<hash>")', () => {
+    const params = Object.fromEntries(PUZZLE_PARAM_KEYS.map((k, i) => [k, i + 2]));
+    for (const seed of [1, 7, 42, 'abc']) {
+      const { gameName } = puzzleIdentity({ seed, ...params });
+      expect(gameName.startsWith('APCalc Puzzle ')).toBe(true);
+      expect(hasServerDataBuilder(gameName)).toBe(false);
+    }
+    // Nor the retired worldgen copy, nor near-misses of the name.
+    for (const game of ['APCalc WorldGen', 'apcalc', 'APCalc ', 'APCalc Puzzle']) {
+      expect(hasServerDataBuilder(game)).toBe(false);
+    }
   });
 });
