@@ -111,11 +111,10 @@ WIP_WORLDS: frozenset[str] = frozenset({
 # Known-flaky, deliberately parked (see module docstring) — not WIP, not
 # expected to stabilize.
 KNOWN_FLAKY_WORLDS: frozenset[str] = frozenset({
-    # APCalc prototype ("APCalc" / "APCalc WorldGen") — seed-dependent
-    # "Failed to generate chain for sphere N" in generate_early; the user
-    # chose not to develop it further (2026-07-17).
-    "apcalc",
-    "apcalc_worldgen",
+    # APCalc ("apcalc") was here (2026-07-17): seed-dependent "Failed to
+    # generate chain for sphere N" in generate_early. Removed 2026-10-31
+    # (sdc-apcalc-rename) after a 500-seed + 300-config sweep found no
+    # recurrence; apcalc_worldgen was deleted (user ruling 2026-10-31).
 })
 
 # Everything dropped from AutoWorldRegister for the pytest session:
