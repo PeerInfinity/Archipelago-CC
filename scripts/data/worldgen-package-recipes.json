@@ -17,11 +17,6 @@
       "game_name": "A Link to the Past WorldGen",
       "canonical_seed": 1
     },
-    "apcalc_worldgen": {
-      "source": "frontend/presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-      "game_name": "APCalc WorldGen",
-      "canonical_seed": 1
-    },
     "bakingadventure_vanilla_worldgen": {
       "source": "frontend/presets/bakingadventure_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json",
       "game_name": "Baking Adventure Vanilla WorldGen",
