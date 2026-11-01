@@ -26830,3 +26830,30 @@ the sword, so the solver shouldn't attempt to switch to regular sword when it ha
   ghost press moves the player while it tests).
 - `facingToward` on the diagonal flips under a one-pixel aim tap; a press that re-derives its facing each tick can turn
   onto something else.
+### Seedling hammer-phase AXIS — strikes on axis-aligned walks, aimed along the walk's axis
+
+⚖ User, queued 2026-10-31 (one of four parallel hammer slices; OPP's hand-over). The report is
+`CC/docs/cloud-reports/seedling-hammer-axis-strikes.md`. **A new switch, OFF; nothing flips.**
+
+- **The switch.** `pressKillCost.AXIS_STRIKE` (`SEEDLING_AXIS_STRIKE=1`, `withAxisStrike`, the page channel's
+  `SOLVER_ENV_NAMES`), beside `OPPORTUNISTIC_STRIKE`. ON, every site that handed `walkToUnder`'s axis-aligned walk
+  `strike: null` (the drive and each preview that certifies it) is handed `solverBot.axisStrikeFor`:
+  `strikePolicyFor(run, {axisAlong: true})`, the one policy wrapped by `axisAlongStrike`, which offers an aim tick only
+  the bodies whose facing lies on the walk's axis (`walkAxisOf`). The aim key is then the walk's own axis and the press
+  holds `primary` alone, so the other coordinate never moves. OFF nothing new is built.
+- **The census at `84404513`** (a load hook on `driveStepHeld`, every driven axis-aligned tick with a body in sword
+  reach): the 60 captured L40 requests (the 52 keys) drive 50,052 ticks and none is axis-aligned, and with
+  `CHOOSER_PAIR` at size 3, 47,668 and none. OPP's 262 missed ticks are gone at this head. The r9 campaign has 27
+  axis-aligned ticks, none with a body in reach. The route survey has 4,165; only L53 (step 79, RULESREF's puncher exit)
+  has a body in reach, `puncher@136,96`, on 40 ticks: 18 with the puncher off the axis, 22 along it.
+- **The design check.** (1) An aim along the walk's axis: built. (2) Pausing the walk to aim across the lane: from rest
+  the aim key moves the player 1.70 px off the lane, and no one-key return lands back on it; not built. (3) Leave it:
+  not needed, since (1) keeps the lane exact on every measured tick.
+- **ON.** L40: no axis-aligned tick, so nothing to strike. The survey: 201/237 SOLVED both ways, one mover, step 79,
+  whose axis walk presses along x at t134 and lands the puncher's second hit at t135; the step refuses at the same press
+  kill of the puncher (166 → 167 t in the text). The r9 campaign `--check`: green ON.
+- **Gate** `hammerAxisStrikes.test.js` (L6's `bob@112,48` on the y = 56 lane: OFF walks into it at t20; ON aims `right`
+  at t10, presses at t11, the hit lands at t12, a second strike aims `left` back along the axis; y = 56 and x on the
+  0.05 grid on every tick; the preview spends the same keys). Mutants: an off-axis offer, an at-rest offer of every body
+  and a dropped arm each red a row; a perpendicular key added to the press survives (`holdOneAxis` drops it while the
+  player moves).

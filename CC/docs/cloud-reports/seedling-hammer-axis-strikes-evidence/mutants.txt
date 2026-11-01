@@ -1,0 +1,14 @@
+M1 aim off-axis (the offer keeps the bodies whose facing is OFF the axis)
+  -> RED | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+     red row: a body reachable only OFF the walk's axis is not aimed at (the plain policy would aim across the lane)
+     red row: the census tick: OFF walks the lane into the bob, ON strikes it ALONG the axis with the lane exact
+M2 the lane drifts (at rest the axis is not asked: every body offered, an aim across the lane from rest)
+  -> RED | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+     red row: a body reachable only OFF the walk's axis is not aimed at (the plain policy would aim across the lane)
+M2b the press adds a perpendicular key (`down`) — expected to be absorbed by holdOneAxis while moving
+  -> GREEN (survives) |       Tests  4 passed (4)
+M3 drop the arm (axisStrikeFor always null)
+  -> RED | ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+     red row: ships OFF (`SEEDLING_AXIS_STRIKE=1` turns it on in node; the page channel knows the name)
+     red row: the census tick: OFF walks the lane into the bob, ON strikes it ALONG the axis with the lane exact
+restored: True

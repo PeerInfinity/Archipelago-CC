@@ -1,0 +1,2 @@
+# off-all.jsonl vs on.jsonl: 60 requests, 60 identical (verdict, ticks, plan sha, work, message), movers 0
+# off-cp3.jsonl vs on-cp3.jsonl: 60 requests, 60 identical (verdict, ticks, plan sha, work, message), movers 0

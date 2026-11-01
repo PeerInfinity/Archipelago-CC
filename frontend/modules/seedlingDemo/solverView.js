@@ -137,6 +137,8 @@ export {
     PRESS_KILL_CHASERS, PRESS_KILL_CHASERS_COUNTS,
     // ⛓⛓⛓ hammer-phase OPP: opportunistic strikes in the press kill (its switch and instrument, OFF).
     OPPORTUNISTIC_STRIKE, OPPORTUNISTIC_STRIKE_COUNTS, OPPORTUNISTIC_STRIKE_TRACE,
+    // ⛓⛓⛓ hammer-phase AXIS: strikes on axis-aligned walks, aimed along the walk's axis (its switch and instrument, OFF).
+    AXIS_STRIKE, AXIS_STRIKE_COUNTS,
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (its switch, the cut and its instrument; ON by default since the user's flip).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
 } from './pressKillCost.js';

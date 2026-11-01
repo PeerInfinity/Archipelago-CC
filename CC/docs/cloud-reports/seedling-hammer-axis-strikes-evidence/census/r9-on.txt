@@ -1,0 +1,1 @@
+# processes 1 | driven ticks 5977 | axis-aligned ticks 27 | axis ticks armed 0 | axis ticks with a body in reach 0 | of those, reachable ALONG the axis 0
