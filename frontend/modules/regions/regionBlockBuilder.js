@@ -20,6 +20,20 @@ function log(level, message, ...data) {
 }
 
 /**
+ * A rule is MET only when it evaluates to exactly `true`. An undetermined rule
+ * evaluates to `undefined`; it shows as "not met" here, the way the Locations
+ * panel (`=== true`) and the spoiler comparison treat it. Every accessibility
+ * flag this builder hands to `classList.toggle(name, force)` must be a real
+ * boolean: `toggle(name, undefined)` is a PLAIN toggle per the DOM spec, which
+ * is how undetermined rows used to get both 'accessible' and 'inaccessible'.
+ * @param {*} result - what evaluateRule returned
+ * @returns {boolean}
+ */
+export function ruleMet(result) {
+  return result === true;
+}
+
+/**
  * RegionBlockBuilder class handles the creation of region block DOM elements
  */
 export class RegionBlockBuilder {
@@ -530,10 +544,10 @@ export class RegionBlockBuilder {
         let entranceAccessible = true;
         if (entrance.accessRule) {
           try {
-            entranceAccessible = evaluateRule(
+            entranceAccessible = ruleMet(evaluateRule(
               entrance.accessRule,
               snapshotInterface
-            );
+            ));
           } catch (e) {
             log(
               'error',
@@ -556,10 +570,10 @@ export class RegionBlockBuilder {
         let returnExitAccessible = true;
         if (entrance.isBidirectional && entrance.returnExit?.access_rule) {
           try {
-            returnExitAccessible = evaluateRule(
+            returnExitAccessible = ruleMet(evaluateRule(
               entrance.returnExit.access_rule,
               snapshotInterface
-            );
+            ));
           } catch (e) {
             log(
               'error',
@@ -714,10 +728,10 @@ export class RegionBlockBuilder {
         let exitAccessible = true;
         if (exitDef.access_rule) {
           try {
-            exitAccessible = evaluateRule(
+            exitAccessible = ruleMet(evaluateRule(
               exitDef.access_rule,
               snapshotInterface
-            );
+            ));
           } catch (e) {
             log(
               'error',
@@ -978,10 +992,10 @@ export class RegionBlockBuilder {
         let locAccessible = true;
         if (locationDef.access_rule) {
           try {
-            locAccessible = evaluateRule(
+            locAccessible = ruleMet(evaluateRule(
               locationDef.access_rule,
               snapshotInterface
-            );
+            ));
           } catch (e) {
             log(
               'error',
