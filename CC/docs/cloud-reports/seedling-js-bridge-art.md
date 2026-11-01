@@ -4,7 +4,7 @@
   (`CC/docs/cloud-reports/seedling-js-rope-art.md`; `jsRuntimePage.js` claims `ROPE_OBJECT_TAGS` in `drawnObjects`).
 - **Branch:** `claude/seedling-js-bridge-art-xfy37l`. The harness pinned this branch; there is no `seedling-js-bridge-art`
   push. I did not push main.
-- **Code commit:** `65f35e55`. This report is the last commit.
+- **Code commit:** `65f35e55`. This report is the last commit: it was first committed with the batch and lab results pending, then updated in a follow-up commit (no history rewrite).
 - ⚖ The decision: Robert, 2026-11-01 (Decision 3, "Launch follow-up (Recommended)").
 
 ## The gap (re-verified)
@@ -129,7 +129,7 @@ I applied every mutant below, ran it, and restored it. Each one went red. A coun
   are the same objects.
 - `watchArt.test.js` (the lab goldens), `watchBridge.test.js` and `seedlingSkinRenderer.test.js` (its goldens and the
   stale-layer pin) pass **unchanged**. No golden was re-recorded.
-- **Lab shard:** see "What I ran" below.
+- **Lab shard:** green, 148 PASS lines and ALL CHECKS PASSED (details in "What I ran" below).
 
 ## What I ran
 
@@ -141,8 +141,8 @@ I applied every mutant below, ran it, and restored it. Each one went red. A coun
 - `node scripts/procgen/generate-procgen-reference.mjs --check` → **ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS
   MATCH THE CODE**. Nothing it cites needed a regen.
 - In-app: the new row alone → PASSED. Its mutant → FAILED (above).
-- **`seedling-js` batch** (whole): PENDING — still running when this was first committed; the result follows in the next commit of this report.
-- **Lab shard** (`check-seedling-lab-art.mjs`): PENDING — run after the batch (one browser at a time); the result follows.
+- **`seedling-js` batch** (whole, local box): `npm test -- --mode=test-substrates --batch=seedling-js` → **45 run, 45 passed, 0 failed** (6.5 min), including `seedling-js-runtime-graphics-rope` PASSED 1.9 s and the new `seedling-js-runtime-graphics-bridge` PASSED 1.1 s. `check-batch-headroom.js` → HEADROOM OK, 378.2 s of 600 s (63 %).
+- **Lab shard:** `node scripts/procgen/check-seedling-lab-art.mjs --host=http://localhost:8000` → **ALL CHECKS PASSED** (148 PASS lines). This includes its bridge rooms, e.g. `L93: ≤ 10% of the 1 bridge box(es)' pixels are the stand-in rect — 0.0% identical`. The lab still draws every bridge `closed` (it passes no `bridgeLook`).
 
 ## Stopped / not done
 
