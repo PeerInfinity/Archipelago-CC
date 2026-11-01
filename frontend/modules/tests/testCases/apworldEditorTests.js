@@ -5793,13 +5793,16 @@ const PROGRESSION_PRESET_PATH =
 const ADDITIVE_PRESET_PATH =
     './presets/messenger/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 /**
- * ⛓⛓ smz3 — the corpus's stale-member document, as committed: 12 of its
- * members name resolved forms slot 1's `items` does not hold, and 13 carry
- * `provides`. Nothing is hand-edited into it; this state is what the exporter
- * wrote.
+ * ⛓⛓ procgen_topdown AP_7 — the corpus's stale-member document, as committed:
+ * 10 of its members (over five progressive entries, every one in a card with
+ * another member) name resolved forms slot 1's `items` does not hold
+ * (`Progressive Sword` → `Fighter Sword`…). Nothing is hand-edited into it;
+ * this state is what the pipeline wrote. It replaced smz3 when the smz3 preset
+ * was removed (user ruling 2026-11-01: an unsupported game) — the same shape,
+ * so the same editor path.
  */
 const STALE_PROGRESSION_PRESET_PATH =
-    './presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+    './presets/procgen_topdown/AP_7/AP_7_rules.json';
 /**
  * ⛓⛓ The four-player multiworld export whose slot 2 is the ALTTP world: slots
  * 1, 3 and 4 carry NO mappings and slot 2 carries five. That 0-vs-5 is the
@@ -6081,7 +6084,7 @@ export async function apworldAddingAProgressionMappingOnAnEmptySlot(testControll
  * ⛓⛓⛓ **A MEMBER NAMING AN ITEM THE SLOT DOES NOT HOLD IS SHOWN, MARKED AND
  * REMOVABLE — AND THE OP IS THE GUARD** (I2, task 4 (d); mutant (A)'s row).
  *
- * ⛓ smz3 is in this state AS COMMITTED — nothing is hand-edited in — because
+ * ⛓ procgen_topdown AP_7 is in this state AS COMMITTED — nothing is hand-edited in — because
  * `genericLogic.has` resolves a name THROUGH a mapping, so a level's name need
  * not be an item anyone receives.
  *
@@ -6297,7 +6300,7 @@ registerTest({
 registerTest({
     id: 'apworld-a-stale-progression-member-is-shown-and-removable',
     name: 'APWorld hub: a progression member the slot no longer holds is shown, marked and removable',
-    description: 'smz3 is in this state AS COMMITTED — 12 of its members name resolved forms '
+    description: 'procgen_topdown AP_7 is in this state AS COMMITTED — 10 of its members name resolved forms '
                + 'slot 1\'s items do not hold, because `genericLogic.has` resolves a name THROUGH '
                + 'the mapping. Asserts every one is drawn and marked against an expectation '
                + 'DERIVED from the document, that removing one is one op and drops the section\'s '

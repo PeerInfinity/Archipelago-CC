@@ -1002,7 +1002,7 @@
             "id": "apworld-a-stale-progression-member-is-shown-and-removable",
             "enabled": true,
             "category": "apworldEditor",
-            "_comment": "APWorld coverage I2. smz3 is in this state as committed: 12 members name resolved forms slot 1's items do not hold, because genericLogic.has resolves a name through the mapping. The refusal is asked of the OP, not of the picker (trap 1305) \u2014 no gesture on this section can produce an unknown name. Mutant: dropping the op's item refusal reds this row."
+            "_comment": "APWorld coverage I2. procgen_topdown AP_7 is in this state as committed (it replaced smz3, whose preset was removed 2026-11-01): 10 members name resolved forms slot 1's items do not hold, because genericLogic.has resolves a name through the mapping. The refusal is asked of the OP, not of the picker (trap 1305) \u2014 no gesture on this section can produce an unknown name. Mutant: dropping the op's item refusal reds this row."
         },
         {
             "id": "apworld-progression-follows-the-selected-slot",
