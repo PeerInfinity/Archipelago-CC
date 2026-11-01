@@ -34,7 +34,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { buildRunFromState, runPresetHeadless } from '../procgenPipeline/presetRun.js';
 import { LIBRARY_SLOT_FILLER_ITEM } from '../procgenPipeline/procgenPipelineEngine.js';
-import { SEEDLING_GENERATED_ROOM_STATE } from '../procgenPipeline/presetDefs.js';
+import { SEEDLING_GENERATED_CHESTDOOR_STATE, SEEDLING_GENERATED_ROOM_STATE } from '../procgenPipeline/presetDefs.js';
 import {
     CHEST_DOOR_ITEM, CHEST_DOOR_KIND, chestDoorRows, extractGenRules, generateGenRoom, placeGenItems,
     rerollGenRoom, serializeGenRoom,
@@ -214,6 +214,22 @@ describe('⚖ js-13 (2) — a world WITHOUT a door chest is BYTE-IDENTICAL', () 
     });
     // ⛓ The POOL's identity is the pipeline's: each committed preset is rebuilt and compared whole by its own row
     //   ("the committed … preset IS this world": seedlingGeneratedWorld / …HostWorld / …SwimWorld tests).
+});
+
+describe('⛓ chestdoor preset — the COMMITTED seedling_generated_chestdoor preset IS this file\'s chest world', () => {
+    const COMMITTED = 'frontend/presets/seedling_generated_chestdoor/AP_1/AP_1_rules.json';
+    it('presetDefs spells this file\'s state, and the committed bytes are its fresh build', () => {
+        expect(SEEDLING_GENERATED_CHESTDOOR_STATE).toEqual(CHEST_STATE);
+        expect(readFileSync(join(ROOT, COMMITTED), 'utf8')).toBe(JSON.stringify(chestWorld, null, 2));
+    });
+    it('its assembly → the set, table and report pinned (a NEW row; the four rows above are unchanged)', () => {
+        const a = assembleGeneratedSeedlingSet(readJson(COMMITTED), { selfPlayer: 1 });
+        const digest = createHash('sha256')
+            .update(JSON.stringify({ set: a.set, table: [...a.table.entries()], report: a.report })).digest('hex').slice(0, 16);
+        expect(digest).toBe('268593bf139e4854');  // measured at the slice's base b646d32d95
+        expect(a.report.chestDoors.map((c) => [c.location, c.room, c.tag])).toEqual([
+            ['region_0_0 - Chest', 0, 1], ['region_0_1 - Chest', 1, 1]]);
+    });
 });
 
 describe('⚖ js-13 (1) — END TO END on the JS runtime: open the door chest → the check fires → the location is reported', () => {
