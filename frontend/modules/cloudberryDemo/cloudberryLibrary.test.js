@@ -94,7 +94,9 @@ describe('instantiate for specs (sphere)', () => {
         const none = instantiateCloudberryLibraryEntryForSpecs(byId('cb_moving'), {
             exitSides: [], locationSpecs: [{ item: 'X' }], fillerItem: 'F', entryGate: [],
         });
-        expect(none.locations.map((l) => l.item)).toEqual(['X', 'F']);
+        // The coin behind Moving Blocks is no location in this slot (an ordinary coin): only one check.
+        expect(none.locations.map((l) => l.item)).toEqual(['X']);
+        expect(Object.keys(none.payload.params.checks)).toEqual(['coin38']);
         const held = instantiateCloudberryLibraryEntryForSpecs(byId('cb_moving'), {
             exitSides: [], locationSpecs: [{ item: 'X' }, { item: 'Y' }], fillerItem: 'F', entryGate: ['Moving Blocks'],
         });

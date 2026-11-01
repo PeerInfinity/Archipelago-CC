@@ -65,6 +65,10 @@ describe('a sphere world built from the demo Cloudberry pack', () => {
             const regs = r.rulesJson.regions['1'];
             const { inv, reach } = sweep(r.rulesJson);
             expect(reach.size).toBe(Object.keys(regs).length);
+            // Every location is reachable (AP's full-accessibility fill needs it).
+            const all = Object.values(regs).flatMap((g) => g.locations ?? []);
+            const got = all.filter((l) => ev(l.access_rule, inv));
+            expect(got.length).toBe(all.length);
             expect(inv.Victory).toBe(1);
             const subs = Object.values(r.rulesJson.preset_sidecars['1']).map((v) => v.substrate);
             expect(subs).toEqual(['cloudberry', 'cloudberry', 'cloudberry']);

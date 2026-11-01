@@ -300,7 +300,8 @@ export function cloudberryLibraryEntryRefusal(entry, ctx = {}) {
 
 /**
  * Sphere content-source hook (requirement-aware): the node's items onto the check
- * slots the entry gate makes REACHABLE, in piece order (engine filler on the rest),
+ * slots the entry gate makes REACHABLE, in piece order (engine filler on the other
+ * reachable ones; an unreachable coin is no location, an ordinary coin),
  * and the end door's REAL requirement as the forward exits' paths — the engine ANDs
  * its own gate onto them (buildSphereLibraryRegion), so the level's S_last is never
  * dropped for the overlay. The ENTRANCE side (`ctx.entranceSide`) is the start door's
@@ -315,9 +316,16 @@ export function instantiateCloudberryLibraryEntryForSpecs(entry, ctx = {}) {
     const reachable = reachableSlots(entry, ctx.entryGate);
     const refusal = cloudberryLibraryEntryRefusal(entry, { ...ctx, exitPlans: [] });
     if (refusal) throw new Error(refusal);
+    // In a sphere slot a coin the entry gate does not reach is NOT a location: it stays an
+    // ordinary coin. As a filler location it would need items the world may never have,
+    // and AP's fill refuses the world (measured: "Could not access required locations …
+    // region_4_2__coin66, region_4_2__coin84", the Falling Blocks / Clouds coins of
+    // cb_falling_cloud in a Moving + Bouncy world). Outside sphere growth every slot stays.
+    const used = Array.isArray(ctx.entryGate) ? reachable : slots;
+    const usedEntry = used === slots ? entry : { ...entry, payload: { ...entry.payload, checks: slots.filter((c) => used.includes(c)) } };
     const itemOf = new Map(reachable.slice(0, locationSpecs.length).map((c, k) => [c.name, locationSpecs[k].item]));
-    const slotItems = slots.map((c) => (itemOf.has(c.name) ? itemOf.get(c.name) : (ctx.fillerItem ?? null)));
-    const { locations, exitPaths, obstacleDefs, payload } = zoneRulesFor(entry, region_id, exitSides, slotItems);
+    const slotItems = usedEntry.payload.checks.map((c) => (itemOf.has(c.name) ? itemOf.get(c.name) : (ctx.fillerItem ?? null)));
+    const { locations, exitPaths, obstacleDefs, payload } = zoneRulesFor(usedEntry, region_id, exitSides, slotItems);
     if (ctx.entranceSide && exitPaths[ctx.entranceSide]) exitPaths[ctx.entranceSide] = [{ obstacles: [] }];
     return { locations, exitPaths, obstacleDefs, payload };
 }
