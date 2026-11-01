@@ -10,7 +10,7 @@
  * (`configure`, to prove a payload plays).
  */
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { extname, join, resolve, sep } from 'node:path';
 
 import { DEFAULT_OUT, readRecord } from '../setup/fetch-cloudberry-site.mjs';
@@ -98,4 +98,60 @@ export async function configurePayload(page, params, { regionId = 'probe' } = {}
         const app = w.__cloudberryEmbed.app;
         return { refusal: app.refusal ?? null, playResult: app.playResult ?? null };
     }, { params, regionId });
+}
+
+/**
+ * The pipeline's Cloudberry generator, headless (`cloudberryGeneration.js`'s generator
+ * shape): `{ build, generate(args) → { text, docSha256 } }` over an open page.
+ */
+export function cloudberryPageGenerator({ page, build }) {
+    return {
+        build: build ?? '',
+        async generate(args) {
+            const { text, docSha256 } = await generateDocument(page, args);
+            return { text, docSha256 };
+        },
+    };
+}
+
+/** The gitignored folder the headless level cache lives in (`frontend/external/` is ignored). */
+export const DEFAULT_LEVEL_CACHE_DIR = resolve(DEFAULT_OUT, '..', 'cloudberry-level-cache');
+
+/**
+ * A file-backed store for `installCloudberryGenerator(…, { store })`: one JSON file per
+ * key (sha256 of the key), under `dir/<build>/`, so a site redeploy starts afresh.
+ */
+export function fileCloudberryStore(dir = DEFAULT_LEVEL_CACHE_DIR, build = '') {
+    const root = join(resolve(dir), build || 'unknown-build');
+    const fileOf = (key) => join(root, `${createHash('sha256').update(key).digest('hex')}.json`);
+    return {
+        root,
+        get(key) {
+            const f = fileOf(key);
+            if (!existsSync(f)) return null;
+            const rec = JSON.parse(readFileSync(f, 'utf8'));
+            return rec.key === key ? rec.value : null;
+        },
+        set(key, value) {
+            mkdirSync(root, { recursive: true });
+            writeFileSync(fileOf(key), `${JSON.stringify({ key, value })}\n`);
+        },
+    };
+}
+
+/**
+ * Open the page in `browser` and install it as the pipeline's Cloudberry generator.
+ * `cache: false` keeps no file store (a measurement that must regenerate).
+ * @returns {{ page, build, close }}
+ */
+export async function installHeadlessCloudberryGenerator(browser, { dir = DEFAULT_OUT, cache = true, cacheDir, log } = {}) {
+    const { installCloudberryGenerator } = await import('../../frontend/modules/cloudberryDemo/cloudberryGeneration.js');
+    const opened = await openCloudberryPage(browser, { dir, log });
+    installCloudberryGenerator(cloudberryPageGenerator(opened), {
+        store: cache ? fileCloudberryStore(cacheDir, opened.build ?? '') : null,
+    });
+    return {
+        ...opened,
+        close: async () => { installCloudberryGenerator(null, { store: null }); await opened.close(); },
+    };
 }

@@ -31,6 +31,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     layoutTopDown,
     realiseTopDownGen,
+    yieldedWait,
     finalizeTopDown,
     buildRulesJson,
     discoveryModeConfig,
@@ -90,7 +91,7 @@ async function stepRealise(env, { onProgress = null } = {}) {
     while (!r.done) {
         onProgress?.(r.value);
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        await yieldedWait(r.value);
         r = gen.next();
     }
     env.realise = { grid: env.layout.grid };

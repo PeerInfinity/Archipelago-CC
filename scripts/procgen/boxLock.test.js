@@ -626,7 +626,9 @@ describe('who takes the box', () => {
             'probe-seedling-js-vs-wasm-tape.mjs',
             // cloudberry P2a: the embed gate and the pack maker (import door: `isEntryPoint` → main())
             'check-cloudberry-embed.mjs',
-            'make-demo-cloudberry-pack.mjs'];
+            'make-demo-cloudberry-pack.mjs',
+            // cloudberry P2b: the sphere gate (generation + Generate.py + play), same door
+            'check-cloudberry-sphere.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

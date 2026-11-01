@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 29,
-        "headings": 1228,
+        "headings": 1233,
         "indexHeadings": 2,
-        "lines": 34016,
+        "lines": 34095,
         "pages": 4,
-        "words": 485229
+        "words": 486981
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -62,6 +62,7 @@ export const DOCS_INDEX = frz({
             "lines": 274,
             "links": [
                 "architecture.md",
+                "cloudberry.md",
                 "concepts.md",
                 "flash.md",
                 "gotchas.md",
@@ -70,7 +71,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 5593
+            "words": 5673
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -169,8 +170,8 @@ export const DOCS_INDEX = frz({
             "description": "Cloudberry (substrate id `cloudberry`, in `frontend/modules/cloudberryDemo/`) plays each region as a Cloudberry Kingdom level.",
             "file": "cloudberry.md",
             "h1": "Cloudberry Substrate",
-            "headings": 10,
-            "lines": 121,
+            "headings": 15,
+            "lines": 199,
             "links": [
                 "flash.md",
                 "paths-and-obstacles.md",
@@ -178,7 +179,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/cloudberry.md",
-            "words": 1453
+            "words": 2912
         },
         {
             "description": "Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward simulator that writes sphere logs, and per-substrate visualizers.",
@@ -233,7 +234,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 16007
+            "words": 16168
         },
         {
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
@@ -260,12 +261,13 @@ export const DOCS_INDEX = frz({
             "links": [
                 "architecture.md",
                 "bounce.md",
+                "cloudberry.md",
                 "flash.md",
                 "stepped-pipeline.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/sphere-growth.md",
-            "words": 1978
+            "words": 2002
         },
         {
             "description": "Paths-and-obstacles is the intermediate representation procgen uses for access rules. Substrates reason spatially — \"to reach this goal you cross these obstacles\" — while Archipelago reasons in Boolean item logic. This representation is the bridge: rules are *authored* as paths of obstacles during generation, verified against the geometry, and *compiled* to Rule Builder JSON only at the end.",
@@ -319,13 +321,13 @@ export const DOCS_INDEX = frz({
             "file": "pipeline-presets.md",
             "h1": "Pipeline Presets",
             "headings": 12,
-            "lines": 124,
+            "lines": 125,
             "links": [
                 "concepts.md",
                 "flash.md"
             ],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 1986
+            "words": 2014
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",

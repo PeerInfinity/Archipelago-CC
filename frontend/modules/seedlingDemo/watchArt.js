@@ -44,15 +44,13 @@ import { createRunForStaging, solveStaging } from './tapeRunner.js';
 import { ROOM_BODY_OBJECT_TAGS, roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
 import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from './seedlingHazardSkin.js';
 import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from './seedlingPuzzleSkin.js';
-import { SOLIDS_OBJECT_TAGS, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
+import { ROPE_FRAMES, ROPE_KEY, SOLIDS_OBJECT_TAGS, ropeOps, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
 import { NPC_TAGS, npcOps, npcSkinView, stepNpcSkin } from './seedlingNpcSkin.js';
 import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
 import { MACHINE_OBJECT_TAGS, machineOps, machineSkinView, stepMachineSkin } from './seedlingMachineSkin.js';
 import { BOSS_OBJECT_TAGS, bossOps, bossSkinView, stepBossSkin } from './seedlingBossSkin.js';
 // ⛓ LAB rope-bridge: the rope's picture is drawn here (no skin draws one); the ops in the renderer's own shape.
-import { rectOp, spriteOp } from './seedlingEnemySkin.js';
-import { objectSolidColour } from './rectPalette.js';
 
 /** The `packs.json` graphics stack (the JS page's `?graphics=seedling`, the maze's ruling 1). */
 export const LAB_ART_STACK = 'graphics.seedling';
@@ -294,8 +292,8 @@ export function staticEntityOpsByFamily(world, art, { record = null, state = nul
 // ── LAB rope-bridge: the rope and the bridge, the last two stand-ins ─────
 
 /**
- * ⛓ THE ROPE — `Puzzlements/RopeStart.as`, drawn lab-side because no skin draws one (the JS page paints its
- * stand-in too). `RopeStart` sits at `(_x + 8, _y + 8)`, `centerOO`, and its `render()` (`:51-75`) is the whole
+ * ⛓ THE ROPE — `Puzzlements/RopeStart.as`, drawn lab-side from the solids skin's one rule (`ropeOps`, which the JS
+ * page draws through `ropeSkinView` too; the lab's static run decides `cut` from its sample). `RopeStart` sits at `(_x + 8, _y + 8)`, `centerOO`, and its `render()` (`:51-75`) is the whole
  * picture: UNCUT, frame 1 at every cell from `x` to `xend` (the `<node>`), then the pulley (frame 0) at `x` and
  * the handle (frame 2) at `xend`; CUT, the pulley at `x` and the dropped handle (frame 3) at `xend`. A cut rope
  * keeps its one-cell solid at the pulley (`hit()` shrinks the hitbox, it never despawns). Layer
@@ -305,30 +303,13 @@ export function staticEntityOpsByFamily(world, art, { record = null, state = nul
  * at the cursor says the run pulled it (`pulledRopes`, `watchOverlays.WORLD_STATE_FAMILIES`). Static: the frames
  * are a function of that state only, never of the tick. `null` when the stack lacks the key (the stand-in stays).
  */
-export const ROPE_KEY = 'seedling:puzzlement/rope';
-export const ROPE_FRAMES = Object.freeze({ pulley: 0, span: 1, handle: 2, handleCut: 3 });
+// ⛓ the frames and cells are `seedlingSolidsSkin.ropeOps` — ONE spelling of `render()`, the JS page's too; the lab
+// decides only `cut`, from its sample
+export { ROPE_KEY, ROPE_FRAMES };
 export function staticRopeOps(world, art, { sample = null } = {}) {
-    if (!art?.has(ROPE_KEY)) return null;
     const s = sample && sample.level === world.level && sample.changeCounts ? sample : null;
     const pulled = new Set((s?.changes ?? []).filter((c) => c.family === 'pulledRopes').map((c) => c.id));
-    const ops = [];
-    for (const rope of world.objectSolids ?? []) {
-        if (!rope.ropeId || !rope.span) continue;
-        const cut = !!rope.bootPulled || pulled.has(rope.ropeId);
-        const x = rope.x + 8;
-        const y = rope.y + 8;
-        const xend = rope.span.xend + 8;
-        const layer = -y;
-        const push = (frame, at) => {
-            const fallback = rectOp({ x: at - 8, y: rope.y, w: 16, h: 16, right: at + 8, bottom: rope.y + 16 },
-                objectSolidColour(rope), 0.85, layer);
-            ops.push(spriteOp(art, ROPE_KEY, frame, { x: at, y }, { layer, fallback }) ?? fallback);
-        };
-        if (!cut) for (let i = 0; i < xend - x; i += 16) push(ROPE_FRAMES.span, x + i);
-        push(ROPE_FRAMES.pulley, x);
-        push(cut ? ROPE_FRAMES.handleCut : ROPE_FRAMES.handle, xend);
-    }
-    return ops;
+    return ropeOps(world.objectSolids, art, (rope) => !!rope.bootPulled || pulled.has(rope.ropeId));
 }
 
 /**

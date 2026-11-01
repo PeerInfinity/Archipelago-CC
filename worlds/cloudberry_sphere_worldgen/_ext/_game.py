@@ -2,4 +2,4 @@
 
 The game name the vendored _ext rule classes register under.
 """
-GAME_NAME = "APCalc WorldGen"
+GAME_NAME = "Cloudberry Sphere WorldGen"
