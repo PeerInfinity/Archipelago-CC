@@ -269,6 +269,7 @@ function bindWorldEvents(builder, events, local, inGrid) {
             byCell.get(key).push(ev);
         }
     }
+    unifyEntityGates(builder, byCell);
     // The cells of one event that share an obstacle are one cut state (a multi-cell rock), as a rope's run. An event's
     // tiles are ONE entity's (`ctx.eventsFor`), so one cut state never joins two separate game objects.
     const firstCell = new Map();
@@ -294,6 +295,48 @@ function bindWorldEvents(builder, events, local, inGrid) {
             builder.obstacleLib[id] = entry;
         }
         builder.obstacles.set(key, id);
+    }
+}
+
+/**
+ * ⛓ ONE ENTITY, ONE GATE (session tile-primitives-sphere-order-13, ⚖ user 2026-11-01 "Switch to (B) unified gate"). An event's
+ * tiles are ONE game entity's body (`ctx.eventsFor`), and the game removes that body whole: L113's FinalDoor is a 2×2 entity, solid
+ * until `hasAllSealParts() && talkedToWatcher` (`FinalDoor.as`). The transcription can gate its cells unequally — the door row on
+ * the Watcher's talk, the lower row on the Seals alone — so the event was priced from beside its weakest cell and that cell was
+ * passable early. So the rule-typed cells of one entity (cells joined by sharing an event, transitively) all take the And of their
+ * distinct gates, before the event is bound. A struck body (a rock: `clear_set`) is one cut state already and is left alone, as is
+ * an entity any of whose cells is not rule-typed. Mutates `builder.obstacles`/`obstacleLib`; a body whose cells agree is unchanged.
+ */
+function unifyEntityGates(builder, byCell) {
+    const parent = new Map([...byCell.keys()].map((k) => [k, k]));
+    const find = (k) => (parent.get(k) === k ? k : find(parent.get(k)));
+    const firstOf = new Map();
+    for (const [key, evs] of byCell) {
+        for (const ev of evs) {
+            if (!firstOf.has(ev.name)) firstOf.set(ev.name, key);
+            else parent.set(find(key), find(firstOf.get(ev.name)));
+        }
+    }
+    const bodies = new Map();
+    for (const key of byCell.keys()) {
+        const root = find(key);
+        if (!bodies.has(root)) bodies.set(root, []);
+        bodies.get(root).push(key);
+    }
+    for (const keys of bodies.values()) {
+        if (keys.length < 2) continue;
+        const bases = keys.map((k) => builder.obstacleLib[builder.obstacles.get(k)]);
+        if (bases.some((b) => b.struck_by || b.clear_set_type !== 'rule' || !b.clear_rule)) continue;
+        const distinct = [...new Map(bases.map((b) => [b.id, b])).values()];
+        if (new Set(distinct.map((b) => JSON.stringify(b.clear_rule))).size < 2) continue;
+        const id = distinct.map((b) => b.id).join('&');
+        builder.obstacleLib[id] ??= {
+            ...distinct[0],
+            id,
+            name: distinct.map((b) => b.name).join(' & '),
+            clear_rule: simplifyRule({ rule: 'And', children: distinct.map((b) => b.clear_rule) }),
+        };
+        for (const k of keys) builder.obstacles.set(k, id);
     }
 }
 

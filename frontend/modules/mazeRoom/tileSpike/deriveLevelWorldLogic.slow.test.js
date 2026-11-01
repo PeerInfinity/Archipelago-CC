@@ -136,6 +136,10 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // (11,6), wired now (1); L112's landing from L113 (7,1) (2) and its rock-lock event at its L111 landing (2,13) [own event] (1); L3 r0c4
         // priced from L111's return landing (1,4) (3); and L113's finaldoor at its L114 landing (1,1) [own event] (1), which the whole game
         // prices over twice the points (L115's Swim exit adds an axis item).
+        // Spheres 12.2 + 12.3 (session tile-primitives-sphere-order-13) take 1 and add 13, all in the whole game's census: L115 lands in
+        // L113 on the FinalDoor's lower row (7,1)/(8,1), whose crossing from L115 already holds the event (10: the event, its own-event row,
+        // and L113's three ways out, per landing), L113's own (1,1) row now over L115's Swim axis (7/96 → 14/192), and L115 r9c4's
+        // landings from L113 (4,8)/(5,8) (2). L110 adds none.
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
@@ -236,7 +240,19 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_112__r0c7 → level_112__r2c2 (landing 7,1) | 4/8',
             'level_112__r0c7 → level_113 (landing 7,1) | 4/8',
             'level_112__r2c2 @ L112 flag 1: rocklock@112,16 cleared (landing 2,13) | 3/8 [own event]',
-            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 1,1) | 7/96 [own event]',
+            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 1,1) | 14/192 [own event]',
+            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 7,1) | 84/192',
+            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 7,1) | 14/192 [own event]',
+            'level_113 → level_114 (landing 7,1) | 84/192',
+            'level_113 → level_112__r0c7 (landing 7,1) | 84/192',
+            'level_113 → level_115__r9c4 (landing 7,1) | 84/192',
+            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 8,1) | 84/192',
+            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 8,1) | 14/192 [own event]',
+            'level_113 → level_114 (landing 8,1) | 84/192',
+            'level_113 → level_112__r0c7 (landing 8,1) | 84/192',
+            'level_113 → level_115__r9c4 (landing 8,1) | 84/192',
+            'level_115__r9c4 → level_113 (landing 4,8) | 17/36',
+            'level_115__r9c4 → level_113 (landing 5,8) | 17/36',
         ]);
         sampleLines = certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE }).lines;
         // ⛓ Sphere 2.2 (session tile-primitives-sphere-order-3): L28's rope drops its fallrock on the grass lock's button. The maze

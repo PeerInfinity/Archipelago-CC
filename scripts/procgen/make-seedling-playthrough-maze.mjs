@@ -97,6 +97,9 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * feature. L107 plays as the rules have it (⚖ "As the rules have it"): its fire block and pulser sit in walled cells behind an
  * in-level latching ButtonRoom whose shove only tames the Crusher, a hazard neither model carries. L3 → L111 needs Swim in the maze
  * (the approach is water; probe-confirmed), which the rules do not charge: a named open row, the rules unchanged for now.
+ * Spheres 12.2 + 12.3 (session tile-primitives-sphere-order-13, ⚖ 2026-11-01 "L115 + L110"): L115 and L110 — the last levels the
+ * sphere log reaches (L81 is not in the atlas). L115 brings L113's FinalDoor lower row into L113's world, whose transcription gated it on
+ * the Seals alone; one entity's body cells now share one gate (`unifyEntityGates` in the projection, ⚖ "Switch to (B) unified gate").
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
@@ -109,7 +112,8 @@ export const LEVELS = Object.freeze([
     'level_82', 'level_83', 'level_84', 'level_85', 'level_86',
     'level_87', 'level_88', 'level_89', 'level_90', 'level_91', 'level_92', 'level_93', 'level_94',
     'level_95', 'level_96', 'level_97', 'level_98', 'level_99', 'level_100', 'level_101', 'level_102', 'level_103', 'level_104',
-    'level_105', 'level_106', 'level_107', 'level_108', 'level_109', 'level_111', 'level_112', 'level_113', 'level_114',
+    'level_105', 'level_106', 'level_107', 'level_108', 'level_109', 'level_110', 'level_111', 'level_112', 'level_113', 'level_114',
+    'level_115',
 ]);
 
 /**
