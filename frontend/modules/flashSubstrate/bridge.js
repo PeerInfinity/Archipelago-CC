@@ -484,6 +484,19 @@ function _handlePlaybackControl(payload) {
 // A loadRegion that arrived before the game created __swfBridge.configure
 // (see the header): held, and re-applied by a poll once configure exists.
 const LATE_GAME_SIDE_MS = 180000;
+
+// A configure is SEEDED with the host's checked locations from this iframe's cached
+// snapshot. Right after a rules (re)load that cache can still be the PREVIOUS world's
+// (procgenPlayer publishes loadRegion before the new world's snapshot reaches the
+// iframe), so a location the new world has not checked would be handed to the game as
+// collected, and its report dropped by the ledger — measured on cloudberry (P3a: the
+// page then never re-reports the coin). The snapshots that arrive within this window
+// after a configure (the fresh one it requests included) are compared with the seed;
+// a seeded name the host does not have → configure again from the fresh snapshot.
+// A window, not "the next snapshot": a snapshot already in flight may land first.
+const SEED_VERIFY_MS = 5000;
+let _seeded = null;          // { payload, names: Set<AP name>, at } — the last configure's seed
+
 const LATE_GAME_SIDE_POLL_MS = 200;
 let _pendingLoad = null;
 let _pendingLoadTimer = null;
@@ -529,6 +542,20 @@ function _pushCheckedLocations() {
     }
 }
 
+/** Was the last configure seeded with checks the host does not have (a stale snapshot)? Then configure again. */
+function _reseedIfStale() {
+    const seed = _seeded;
+    if (!seed || seed.names.size === 0 || Date.now() - seed.at > SEED_VERIFY_MS) return false;
+    const host = _hostCheckedNames();
+    const stale = [...seed.names].filter((n) => !host.has(n));
+    if (stale.length === 0) return false;
+    _seeded = null;
+    log('info', `region ${_currentRegionId}: configured with checks the host does not have `
+        + `(${stale.join(', ')}; a snapshot from the previous world) — configuring again`);
+    _handleLoadRegion(seed.payload);
+    return true;
+}
+
 function _handleLoadRegion(payload) {
     if (!payload || !payload.region_id) {
         log('warn', `${LOAD_REGION_EVENT} with no region_id`, payload);
@@ -556,6 +583,7 @@ function _handleLoadRegion(payload) {
         }
     }
     _locationReports.reset(acceptedNames);
+    _seeded = { payload, names: new Set(acceptedNames), at: Date.now() };
 
     const b = _bridge();
     if (!b || typeof b.configure !== 'function') {
@@ -645,6 +673,7 @@ async function main() {
     // authored gate rules (a new key may open a locked portal/pickup).
     _client.subscribeEventBus('stateManager:snapshotUpdated', () => {
         if (_isActive) {
+            if (_reseedIfStale()) return;
             // An in-flight check the host now has is accepted (never resent).
             _locationReports.noteHostChecked(_hostCheckedNames());
             _pollItemsIntoGame();
