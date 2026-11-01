@@ -1,0 +1,13 @@
+== bk2-cap-L-TA+SD.jsonl
+  856/0 REFUSED refusal work=642 33566ms 27cd3718c4e8
+    head: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the ro
+    door: [{"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 283}]
+  856/1 REFUSED refusal work=2557 91026ms 2da39ddbe0ab
+    head: solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40 — 1 cell(s) land the player box in the button and none of them plans a corridor from (488,578.0000000000008). A hold that cannot be stood on is not a strategy for this obstacle. ⛔ AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@448,432 — its group t=2 publishes only while a Solid sits on button@480,384, and NO block in this roo
+    door: [{"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 283}, {"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 283}]
+  857/0 REFUSED refusal work=642 25027ms 27cd3718c4e8
+    head: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the ro
+    door: [{"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 311}]
+  857/1 REFUSED refusal work=1472 67476ms 2d2e1763f05e
+    head: solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40 — 1 cell(s) land the player box in the button and none of them plans a corridor from (487.69999999999936,578.0499999999994). A hold that cannot be stood on is not a strategy for this obstacle. ⛔ AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@448,432 — its group t=2 publishes only while a Solid sits on button@480,384, and NO bl
+    door: [{"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 311}, {"door": "wandlock@480,560", "side": "up", "cell": {"x": 488, "y": 568}, "turret": "iceturret@472,400", "t": 145}]
