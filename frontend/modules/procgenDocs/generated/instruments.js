@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 134,
-            "count": 184,
+            "browser": 135,
+            "count": 185,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 504,
-        "browser": 204,
-        "cited": 269,
-        "files": 522,
+        "blockStyle": 505,
+        "browser": 205,
+        "cited": 270,
+        "files": 523,
         "lineStyle": 18,
-        "withDocblock": 522,
-        "withFlags": 436
+        "withDocblock": 523,
+        "withFlags": 437
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13212,6 +13212,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-gen-chest-rooms — HAND-BUILT CHEST ROOMS, SOLVED BY THE GENERATOR'S ORACLE.",
             "path": "scripts/procgen/probe-seedling-gen-chest-rooms.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-ghost-rope.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-ghost-rope — seedling-hammer-ghost-rope (GHOSTROPE): DOES THE GHOST SWORD CUT A ROPE ON THE GAME?",
+            "path": "scripts/procgen/probe-seedling-ghost-rope.mjs"
         },
         {
             "argvHelpers": [

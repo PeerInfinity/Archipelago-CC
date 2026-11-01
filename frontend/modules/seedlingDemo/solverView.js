@@ -113,6 +113,8 @@ export {
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
     // ⛓ fidelity LIGHTPOLE D2: the ghost swing's rect and reach, for the pole verb's ghost arm.
     GHOST_SWORD_REACH, ghostSlashRect,
+    // ⛓⛓⛓ hammer-phase GHOSTROPE: the ghost swing's tests and its per-class arms, for `ghostRopeCut`'s rope swing.
+    GHOST_PRESS_ARMS, GHOST_SLASH_ANIM_TICKS,
 } from './ghostSword.js';
 // ghostSpinnerPress.js — solverBot · seedling 3
 // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (its switch, the sword's row, the chooser).

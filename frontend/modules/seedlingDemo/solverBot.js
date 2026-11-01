@@ -74,6 +74,8 @@ import {
     runSpear, livePerVisitOpts,
 } from './botDriverV2.js';
 import { resolvePresser } from './botDriverV2.js';
+// ⛓⛓⛓ hammer-phase GHOSTROPE: the PULL rung's and the `rope` verb's ghost swing (behind `GHOST_ROPE_CUT`, OFF).
+import { GHOST_ROPE_STRAY_ARMS, ropeSwingFor } from './ghostRopeCut.js';
 // ⛓ SEEDLING FIDELITY CRUSHER — the `bait` verb (behind `CRUSHER_BAIT`).
 import { runBait } from './botDriverV2.js';
 // ⛓ seedling-fidelity-movingwait — the paced wait's driver (behind `MOVING_WAIT`).
@@ -20969,8 +20971,12 @@ function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
  * `deriveKeylockStance` walk.
  */
 /** Is a swing from `at` on the rock? — `execBreak`'s own in-reach test. */
-const swingReaches = (at, rock) => distanceRectPoint(at.x, at.y, rock.rect) <= SLASH_REACH
-    && rectsOverlapLocal(slashRectToward(at, rock.rect), rock.rect);
+const swingReaches = (at, rock, press = null) => (press === null
+    ? distanceRectPoint(at.x, at.y, rock.rect) <= SLASH_REACH
+        && rectsOverlapLocal(slashRectToward(at, rock.rect), rock.rect)
+    // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): a swing priced with its OWN press (`ROPE_SWING_PRESS`).
+    : distanceRectPoint(at.x, at.y, rock.rect) <= press.reach
+        && rectsOverlapLocal(press.rectAt(at.x, at.y, facingToward(at, rock.rect)), rock.rect));
 
 /**
  * The candidate cells for a swing at `rock`, in `deriveBreakStance`'s own
@@ -20979,7 +20985,7 @@ const swingReaches = (at, rock) => distanceRectPoint(at.x, at.y, rock.rect) <= S
  * have derived on arrival. `opts` decides which world the candidate is
  * tested in (the live bag, or a route state's).
  */
-function breakStanceCandidates(run, rock, opts, pitch = DEFAULT_LATTICE) {
+function breakStanceCandidates(run, rock, opts, pitch = DEFAULT_LATTICE, press = null) {
     // ⛓ fidelity L100: the same pixel window at any pitch (±2 cells at 16 px, ±4 at 8 px).
     const span = Math.round((2 * DEFAULT_LATTICE) / pitch);
     const cell = nodeAt((rock.rect.x + rock.rect.right) / 2,
@@ -21003,8 +21009,9 @@ function breakStanceCandidates(run, rock, opts, pitch = DEFAULT_LATTICE) {
             const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
             if (c.x < 0 || c.y < 0 || c.x > levelW || c.y > levelH) { offLevel += 1; continue; }
             if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
-            if (distanceRectPoint(c.x, c.y, rock.rect) > SLASH_REACH) { outOfReach += 1; continue; }
-            if (!rectsOverlapLocal(slashRectToward(c, rock.rect), rock.rect)) {
+            if (distanceRectPoint(c.x, c.y, rock.rect) > (press?.reach ?? SLASH_REACH)) { outOfReach += 1; continue; }
+            if (!rectsOverlapLocal(press === null ? slashRectToward(c, rock.rect)
+                : press.rectAt(c.x, c.y, facingToward(c, rock.rect)), rock.rect)) {
                 noRect += 1;
                 continue;
             }
@@ -21058,7 +21065,12 @@ function breakStanceUnder(run, rock, contacts, from, bag,
  * stands in no danger volume — a rope hangs in rooms with a sandtrap beside
  * it; `break` passes none, so its stances cannot move).
  */
-function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null) {
+/**
+ * ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): `press` (null = the sword's, every caller OFF) prices the swing with
+ * its own reach and rect (`ROPE_SWING_PRESS`), and its `stray(cell, rect)` refuses a cell — the live one included —
+ * whose swing would reach a responder the cut must not touch.
+ */
+function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null, press = null) {
     /**
      * ⛓⛓⛓ **THE CHEAPEST STANCE IS THE ONE THE WALK IS ALREADY STANDING IN,
      * AND ROUTE STEP 12 IS WHY IT IS ASKED FIRST.**
@@ -21083,11 +21095,15 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
      * the one case where it is safe is the case where the run is demonstrably
      * already in it and has not transitioned.
      */
-    if (swingReaches(run.state, target)) {
+    if (swingReaches(run.state, target, press) && !(press?.stray?.(run.state, target.rect))) {
         return { stance: null, discharged: [] };
     }
     const { candidates, outOfReach, noRect } = breakStanceCandidates(run, target,
-        solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }));
+        solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }), DEFAULT_LATTICE, press);
+    if (press?.stray) {
+        const base = admit;
+        admit = (c) => (base === null || base(c)) && !press.stray(c, target.rect);
+    }
     // ⛓ L40BUTTON: a rock is never in its OWN swing stance's hypothesis — "reachable once this rock is broken" is
     // a stance on the rock's far side (measured: (168,136) for `breakablerock@176,128`, STANCE_REENTRY at t1188).
     // Only `rockHypothesis` entries are filtered, so with `STANCE_ROCKS` OFF the set is the one it always was.
@@ -21136,7 +21152,7 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
      */
     if (CONTACT_FIDELITY.fineSwingStance) {
         const fine = breakStanceCandidates(run, target,
-            solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }), FINE_LATTICE);
+            solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }), FINE_LATTICE, press);
         const named = new Set(candidates.map((c) => `${c.x},${c.y}`));
         const fresh = fine.candidates.filter((c) => {
             const n = nodeAt(c.x, c.y, DEFAULT_LATTICE);
@@ -21379,6 +21395,8 @@ function execPull(run, perTick, resolved, ctx) {
     const PRESS = new Set(['primary']);
     const from = perTick.length;
     const latched = () => (run.entities('latchedGroups') ?? NO_KEYS).has(resolved.group);
+    // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): a ghost swing's order names it (`swing`); OFF none does.
+    const press = resolved.swing === undefined ? null : ghostRopeSwing(run, resolved.swing);
     /**
      * ⛓ THE APPROACH MAY HAVE PULLED IT ALREADY. The walk to the stance carries
      * the strike policy and the dash windows, and a swing up the handle's column
@@ -21392,31 +21410,59 @@ function execPull(run, perTick, resolved, ctx) {
         return { verb: 'pull', target: resolved.rope, group: resolved.group, from,
             ticks: 0, pressedAt: null, stance: resolved.stance, silenced: resolved.traps,
             pulledBy: `the approach — ${resolved.rope} was pulled at tick `
-                + `${pull ? pull.t : '?'} by a swing of the walk to the stance` };
+                + `${pull ? pull.t : '?'} by a swing of the walk to the stance`,
+            ...(press === null ? {} : { weapon: press.weapon }) };
     }
-    const bound = 2 * (2 + SLASH_HIT_TICKS);
+    /**
+     * ⛓ GHOSTROPE: a ghost press is made AT REST. Its seven tests follow the player, and a press taken mid-drift (the
+     * walk's arrival, the aim tap) slides the 24 x 48 rect on past the stance — measured on the LightPole room: the press
+     * at (20,173) drifted to y 179 by the seventh test and toggled `lightpole@32,208`. So the walk settles first (no
+     * keys until the box stops, as `execRopeCut` does for a spear or fire press), and the reach and `stray` are asked
+     * where it actually stands.
+     */
+    const bound = press === null ? 2 * (2 + SLASH_HIT_TICKS) : 2 * (2 + press.hitTicks + BURN_SETTLE_MAX);
+    let settles = 0;
+    // ⛓ GHOSTROPE: the facing is fixed at the first ask. A stance on the diagonal from the rope's centre flips
+    // `facingToward` under the aim tap (measured: (60,172) LEFT → (59.2,172) DOWN, onto `lightpole@32,208`).
+    let ghostWant = null;
     let pressedAt = null;
     let aimed = false;
     for (let spent = 0; spent <= bound; spent += 1) {
         if (pressedAt !== null && latched()) {
             return { verb: 'pull', target: resolved.rope, group: resolved.group, from,
                 ticks: perTick.length - from, pressedAt, stance: resolved.stance,
-                silenced: resolved.traps };
+                silenced: resolved.traps, ...(press === null ? {} : { weapon: press.weapon }) };
         }
         let held = NO_KEYS;
-        if (pressedAt === null) {
-            const want = facingToward(run.state, resolved.target);
-            const inReach = distanceRectPoint(run.state.x, run.state.y, resolved.target)
-                <= SLASH_REACH
-                && rectsOverlapLocal(slashRect(run.state.x, run.state.y, want),
-                    resolved.target);
+        if (pressedAt === null && press !== null && (run.state.vx !== 0 || run.state.vy !== 0)) {
+            settles += 1;
+            if (settles > BURN_SETTLE_MAX) {
+                refuse(`${ctx.what}: the ${press.weapon} swing at ${resolved.rope} waits for the walk to come to rest, `
+                    + `and it did not in ${BURN_SETTLE_MAX} ticks.`);
+            }
+        } else if (pressedAt === null) {
+            const want = press === null ? facingToward(run.state, resolved.target)
+                : (ghostWant ??= facingToward(run.state, resolved.target));
+            const inReach = press === null
+                ? distanceRectPoint(run.state.x, run.state.y, resolved.target)
+                    <= SLASH_REACH
+                    && rectsOverlapLocal(slashRect(run.state.x, run.state.y, want),
+                        resolved.target)
+                : distanceRectPoint(run.state.x, run.state.y, resolved.target) <= press.reach
+                    && rectsOverlapLocal(press.rectAt(run.state.x, run.state.y, want), resolved.target);
             if (!inReach) {
                 refuse(`${ctx.what}: the walk arrived at (${run.state.x},${run.state.y}) and `
                     + `${resolved.rope} is not in reach of a swing from there `
-                    + `(SLASH_REACH ${SLASH_REACH} px). The stance this verb derived was `
+                    + `(${press === null ? `SLASH_REACH ${SLASH_REACH}` : `the ${press.weapon}'s reach ${press.reach}`} px). The stance this verb derived was `
                     + `${resolved.stance
                         ? `(${resolved.stance.x},${resolved.stance.y})`
                         : 'THE LIVE POSITION'} — a walk that ends somewhere else is a `
+                    + 'corridor finding, not a rope one.');
+            }
+            if (press?.stray?.(run.state, resolved.target, 0, want)) {
+                refuse(`${ctx.what}: a ${press.weapon} swing at ${resolved.rope} from (${run.state.x},${run.state.y}) `
+                    + `would also reach ${press.stray(run.state, resolved.target, 0, want).join(', ')} — a "Spear" arm the cut `
+                    + 'must not touch (`GHOST_ROPE_STRAY_ARMS`). A walk that ends somewhere else than the stance is a '
                     + 'corridor finding, not a rope one.');
             }
             if (aimed || run.direction === want) {
@@ -21451,6 +21497,62 @@ const pullStanceAdmit = (run) => (c) => !dangerVolumes(run, 0).some((v) => rects
     playerBoxAt(c.x, c.y), v.rect));
 
 /**
+ * ⛓⛓⛓ hammer-phase GHOSTROPE (behind `ghostRopeCut.GHOST_ROPE_CUT`, OFF) — **THE GHOST SWORD CUTS THE ROPE ITSELF.**
+ * ⚖ The user (2026-10-30): *"ghost sword replaces the sword, so the solver shouldn't attempt to switch to regular sword
+ * when it has ghost sword."* The game cuts a `RopeStart` with a ghost swing (`slash()` under `hasSword`, the 24 x 48
+ * rect, reach 24, the line waived, `RopeStart.hit()` takes no `t`; witnessed: `ghostRopeWitness.js`), and the run
+ * models it (`GHOST_PRESS_ARMS.RopeStart`). So the PULL rung and the `rope` verb ask THIS swing — never the sword.
+ *
+ * The swing a ghost cut is priced with, or null (OFF; a `weapon` that is not `ghostsword`; a ghost swing that would
+ * not test — `GHOSTSWORD_PRESS` off, or `ghostSwingRefusal`'s ghost-without-sword). `ROPE_SWING_PRESS.ghostsword`'s
+ * reach and rect, plus `stray(at, rect)`: the "Spear" responders (`GHOST_ROPE_STRAY_ARMS`: a `LightPole` toggles, a
+ * bridge `Tile` / `PushableBlockSpear` is an arm the run refuses for a ghost swing) the swing toward `rect` would reach
+ * from `at` — null when none — so a stance whose swing would touch one is not offered.
+ */
+/**
+ * The derivation's margin on `stray` (px, every side and the reach): a stance is judged where the walk is ASKED to
+ * stop, and the press is made where it comes to rest after the arrival, the aim tap and the settle — measured on the
+ * LightPole room, ~2 px off. The press itself re-asks `stray` at its rest point with no margin (`execPull`).
+ */
+const GHOST_ROPE_STANCE_SLACK = 4;
+
+function ghostRopeSwing(run, weapon = run.progress('primaryWeapon')) {
+    const swing = weapon === 'ghostsword' ? ropeSwingFor(weapon, run.progress('inventory')) : null;
+    if (swing === null) return null;
+    return {
+        ...swing,
+        stray: (at, rect, slack = GHOST_ROPE_STANCE_SLACK, dir = facingToward(at, rect)) => {
+            const swept = sweptAlong(swing.rectAt(at.x, at.y, dir), dir, DASH_DISPLACEMENT.total);
+            const grown = { x: swept.x - slack, y: swept.y - slack, w: swept.w + 2 * slack, h: swept.h + 2 * slack,
+                right: swept.right + slack, bottom: swept.bottom + slack };
+            const audit = auditPress(run.world, grown, { weapon: 'spear' });
+            const hits = audit.live.filter((r) => GHOST_ROPE_STRAY_ARMS.includes(r.as3)
+                && (!r.rect || distanceRectPoint(at.x, at.y, r.rect) <= swing.reach + DASH_DISPLACEMENT.total + slack));
+            return hits.length === 0 ? null : hits.map((r) => `${r.tag}@${r.x},${r.y}`);
+        },
+    };
+}
+
+/**
+ * `rect` extended `d` px along facing `dir`. ⛓ GHOSTROPE: a ghost press DASHES the player along its facing while its
+ * seven tests run (the game's knockback, `DASH_DISPLACEMENT`: 9 px over 8 ticks; measured on the LightPole room, 5.4 px
+ * between the first test and the seventh), so the stray audit covers the rect over the whole travel — conservative: it
+ * can only refuse a stance.
+ */
+function sweptAlong(rect, dir, d) {
+    const r = { ...rect };
+    if (dir === RIGHT) r.w += d;
+    else if (dir === LEFT) { r.x -= d; r.w += d; }
+    else if (dir === DOWN) r.h += d;
+    else { r.y -= d; r.h += d; }
+    return { ...r, right: r.x + r.w, bottom: r.y + r.h };
+}
+
+/** The reach a swing refusal names: the sword's spelling OFF (byte-identical), the ghost's own ON. */
+const swingReachText = (press) => (press === null ? `SLASH_REACH (${SLASH_REACH} px)`
+    : `the ${press.weapon}'s reach (${press.reach} px)`);
+
+/**
  * ⛓⛓⛓ fidelity ROPESTANCE (wave 23, behind `CONTACT_FIDELITY.ropeCutAnyWeapon`) — **THE ROPE IS CUT BY THE WEAPON THE
  * RUN HOLDS.** `RopeStart` is in the player's `hitables` (`Player.as:99`) and `genericHit` calls `hit()` with no `t`
  * (`:1095-1097`), so all three weapons cut it, each through its own filter:
@@ -21483,7 +21585,14 @@ function ropeCutWeapons(run) {
     const inv = run.progress('inventory') ?? {};
     for (const weapon of ROPE_CUT_WEAPONS) {
         if (weapon === primary) continue;
-        if (weapon === 'sword' && inv.hasGhostSword) continue;
+        if (weapon === 'sword' && inv.hasGhostSword) {
+            // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): the sword's row is the GHOST sword's slot — the item that
+            // replaced it (⚖ user, 2026-10-30) — never the plain sword's. OFF it is skipped, as it always was.
+            const ghostSlot = ropeSwingFor('ghostsword', inv) === null || primary === 'ghostsword' ? -1
+                : slots.indexOf(INVENTORY_ITEM_IDS.ghostsword);
+            if (ghostSlot >= 0) out.push({ weapon: 'ghostsword', slot: ghostSlot });
+            continue;
+        }
         const slot = slots.indexOf(INVENTORY_ITEM_IDS[weapon]);
         if (slot >= 0) out.push({ weapon, slot });
     }
@@ -21780,19 +21889,21 @@ function resolveRopeCut(run, rope, contacts, blocked = []) {
     const tried = [];
     for (const w of weapons) {
         try {
-            if (w.weapon === 'sword') {
+            if (w.weapon === 'sword' || w.weapon === 'ghostsword') {
                 if (!(rope.ropeT >= 0)) {
-                    tried.push({ option: `cut ${rope.ropeId} with the sword`, why: `it publishes no group (t=`
+                    tried.push({ option: `cut ${rope.ropeId} with the ${w.weapon}`, why: `it publishes no group (t=`
                         + `${rope.ropeT ?? -1}), and \`execPull\`'s post-condition is that group's latch` });
                     continue;
                 }
+                // ⛓ hammer-phase GHOSTROPE: a ghost slot's swing is priced with the ghost's press (only ON is it listed).
+                const press = w.weapon === 'ghostsword' ? ghostRopeSwing(run, 'ghostsword') : null;
                 const { stance, discharged } = deriveSwingStance(run, { rect: rope.rect, id: rope.ropeId }, contacts,
                     blocked, ({ candidates, outOfReach, noRect, unsafe }) => `solverBot: no REACHABLE stance for a swing `
                         + `at ${rope.ropeId} in level ${run.level} — ${candidates.length} cell(s) put the slash rect on `
                         + `the rope, ${unsafe} of them inside a danger volume, and none of the rest plans a corridor; `
-                        + `${outOfReach} more were beyond SLASH_REACH (${SLASH_REACH} px) and ${noRect} were in reach `
-                        + 'with the rect pointing elsewhere.', pullStanceAdmit(run));
-                return { weapon: 'sword', slot: w.slot, stance, discharged, tried };
+                        + `${outOfReach} more were beyond ${swingReachText(press)} and ${noRect} were in reach `
+                        + 'with the rect pointing elsewhere.', pullStanceAdmit(run), press);
+                return { weapon: w.weapon, slot: w.slot, stance, discharged, tried };
             }
             const s = w.weapon === 'fire' ? ropeFireStance(run, rope, contacts, blocked)
                 : ropeSpearStance(run, rope, contacts, blocked);
@@ -21811,6 +21922,9 @@ function resolveRopeCut(run, rope, contacts, blocked = []) {
  * `resolveRopeCut`'s answer as a `rope` work order: the sword path's fields plus the weapon's own. A spear or fire order
  * carries `stance: null` and its ranked `approach`, which the EXECUTOR walks (a caller walks only a `stance`).
  */
+/** The cuts that are a SWING (`execPull`'s): the sword, and ⛓ GHOSTROPE's ghost sword (listed only ON). */
+const ROPE_SWING_WEAPONS = new Set(['sword', 'ghostsword']);
+
 function ropeCutOrder(run, rope, cut) {
     const group = rope.ropeT >= 0 ? rope.ropeT : null;
     return {
@@ -21821,8 +21935,8 @@ function ropeCutOrder(run, rope, cut) {
         target: rope.rect,
         weapon: cut.weapon,
         slot: cut.slot,
-        stance: cut.weapon === 'sword' ? cut.stance : null,
-        ...(cut.weapon === 'sword' ? {} : { approach: cut.approach }),
+        stance: ROPE_SWING_WEAPONS.has(cut.weapon) ? cut.stance : null,
+        ...(ROPE_SWING_WEAPONS.has(cut.weapon) ? {} : { approach: cut.approach }),
         ...(cut.weapon === 'spear' && cut.approach.length === 0 ? { dir: cut.dir, facing: cut.facing } : {}),
         discharged: cut.discharged,
         rejected: [...cut.tried, ...hypothesisRejection(cut.discharged)],
@@ -21913,10 +22027,11 @@ function execRopeCutOnce(run, perTick, resolved, ctx) {
         if (resolved.slot !== null && run.progress('primary') !== resolved.slot) ctx.equip(resolved.slot);
     };
     const restore = () => { if (run.progress('primary') !== prior) ctx.equip(prior); };
-    if (resolved.weapon === 'sword') {
+    if (ROPE_SWING_WEAPONS.has(resolved.weapon)) {
         select();
         const rec = execPull(run, perTick, { rope: resolved.rope, group: resolved.group, traps: resolved.traps,
-            target: resolved.target, stance }, { what: ctx.what });
+            target: resolved.target, stance, ...(resolved.weapon === 'ghostsword' ? { swing: 'ghostsword' } : {}) },
+        { what: ctx.what });
         restore();
         return { ...rec, ...base, stance, restoredSlot: prior };
     }
@@ -22002,7 +22117,9 @@ function resolveRopeStrategy(run, obstacle, contacts, blocked = []) {
             + 'verb removes');
     }
     const weapon = run.progress('primaryWeapon');
-    if (weapon !== 'sword') {
+    // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): a ghost primary swings at the rope itself (`ghostRopeSwing`).
+    const ghostSwing = ghostRopeSwing(run, weapon);
+    if (weapon !== 'sword' && ghostSwing === null) {
         if (!CONTACT_FIDELITY.ropeCutAnyWeapon) {
             return cannot(`the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``} — `
                 + 'the cut this verb drives is the PULL rung\'s SWORD swing (`execPull`). The game also cuts with the '
@@ -22029,9 +22146,9 @@ function resolveRopeStrategy(run, obstacle, contacts, blocked = []) {
         ({ candidates, outOfReach, noRect, unsafe }) => `solverBot: no REACHABLE stance for a swing at `
             + `${rope.ropeId} in level ${run.level} — ${candidates.length} cell(s) put the slash rect on the rope, `
             + `${unsafe} of them inside a danger volume, and none of the rest plans a corridor from `
-            + `(${run.state.x},${run.state.y}); ${outOfReach} more were beyond SLASH_REACH (${SLASH_REACH} px) and `
+            + `(${run.state.x},${run.state.y}); ${outOfReach} more were beyond ${swingReachText(ghostSwing)} and `
             + `${noRect} were in reach with the rect pointing elsewhere.`,
-        pullStanceAdmit(run));
+        pullStanceAdmit(run), ghostSwing);
     const group = pub.group;
     return {
         strategy: 'rope',
@@ -22042,6 +22159,8 @@ function resolveRopeStrategy(run, obstacle, contacts, blocked = []) {
         stance,
         discharged,
         rejected: hypothesisRejection(discharged),
+        // ⛓ hammer-phase GHOSTROPE: the order names the ghost swing `execPull` prices (only ON is it set).
+        ...(ghostSwing === null ? {} : { swing: ghostSwing.weapon }),
     };
 }
 
@@ -22820,6 +22939,7 @@ function execRope(run, perTick, resolved, ctx) {
     const record = resolved.weapon !== undefined ? execRopeCut(run, perTick, resolved, ctx) : execPull(run, perTick, {
         rope: resolved.rope, group: resolved.group, traps: resolved.traps,
         target: resolved.target, stance: resolved.stance,
+        ...(resolved.swing === undefined ? {} : { swing: resolved.swing }),
     }, { what: ctx.what });
     const pulled = (run.ledger('ropePulls') ?? []).find((p) => p.id === resolved.rope) ?? null;
     if (!pulled) {
@@ -27815,7 +27935,9 @@ function solveSegmentUnder({
          * silencer at all (`roomHasLaneSilencer`: L16 alone in the atlas).
          */
         // ⛓ fidelity ROPESTANCE (`ropeCutAnyWeapon`, OFF): or with any weapon that cuts a rope (`ropeCutWeapons`).
+        // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): or with the ghost sword the primary swings (`ghostRopeSwing`).
         if (!silencer && corridor && (run.progress('primaryWeapon') === 'sword'
+            || ghostRopeSwing(run) !== null
             || (CONTACT_FIDELITY.ropeCutAnyWeapon && ropeCutWeapons(run).length > 0))
             && roomHasLaneSilencer(run)) {
             const passed = new Set(dangerExcept ?? []);
@@ -27832,7 +27954,9 @@ function solveSegmentUnder({
             // ⛓ fidelity ROPESTANCE: a swordless cut's order (`resolveRopeCut`), switch ON only.
             let cut = null;
             const weapon = run.progress('primaryWeapon');
-            if (weapon !== 'sword' && CONTACT_FIDELITY.ropeCutAnyWeapon) {
+            // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): a ghost primary is the rung's own swing, priced as one.
+            const ghostSwing = ghostRopeSwing(run, weapon);
+            if (weapon !== 'sword' && ghostSwing === null && CONTACT_FIDELITY.ropeCutAnyWeapon) {
                 try {
                     const answer = resolveRopeCut(run, silencer.rope, contacts, []);
                     if (answer === null) {
@@ -27848,7 +27972,7 @@ function solveSegmentUnder({
                     pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
                         + `t=${silencer.group}), but ${e.message}`;
                 }
-            } else if (weapon !== 'sword') {
+            } else if (weapon !== 'sword' && ghostSwing === null) {
                 // ⛔ `break`'s own gate: the pull this rung derives is a SWORD swing.
                 pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
                     + `t=${silencer.group}), but the run's \`primary\` slot `
@@ -27864,11 +27988,11 @@ function solveSegmentUnder({
                             + `${candidates.length} cell(s) put the slash rect on the rope, `
                             + `${unsafe} of them inside a danger volume, and none of the rest plans `
                             + `a corridor from (${run.state.x},${run.state.y}); ${outOfReach} more `
-                            + `were beyond SLASH_REACH (${SLASH_REACH} px) and ${noRect} were in `
+                            + `were beyond ${swingReachText(ghostSwing)} and ${noRect} were in `
                             + 'reach with the rect pointing elsewhere.',
                         // ⛔ THE STANCE IS STOOD IN FOR A SWING, so it must be out of every
                         // static danger volume — the same map AVOID forbids.
-                        pullStanceAdmit(run));
+                        pullStanceAdmit(run), ghostSwing);
                 } catch (e) {
                     if (!(e instanceof SolverRefusal)) throw e;
                     pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
@@ -27901,7 +28025,7 @@ function solveSegmentUnder({
             }
             if (pull) {
                 rowFor('pull', refused, { target: ropeId, group: silencer.group,
-                    stance: pull.stance });
+                    stance: pull.stance, ...(ghostSwing === null ? {} : { weapon: ghostSwing.weapon }) });
                 if (pull.stance) {
                     pullingRopes.add(ropeId);
                     try {
@@ -27913,6 +28037,7 @@ function solveSegmentUnder({
                 const record = execPull(run, perTick, {
                     rope: ropeId, group: silencer.group, traps: silencer.traps,
                     target: silencer.rope.rect, stance: pull.stance,
+                    ...(ghostSwing === null ? {} : { swing: ghostSwing.weapon }),
                 }, { what: `${what} -> pull (${ropeId})` });
                 records.push({ goal: goal.kind, strategy: 'pull', ...record });
                 return { escalations };
