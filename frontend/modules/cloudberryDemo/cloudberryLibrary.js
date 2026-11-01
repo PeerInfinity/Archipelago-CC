@@ -38,7 +38,8 @@ import {
 } from './cloudberryGeneration.js';
 import {
     CLOUDBERRY_GAME_ID, CLOUDBERRY_PAYLOAD_VERSION, CLOUDBERRY_LIBRARY_ITEMS, CLOUDBERRY_ITEM_NAMES,
-    CLOUDBERRY_VICTORY_ITEM, PAGE_SIDE, buildCloudberryPayload, emitCloudberryRules, pageParamsForWorld,
+    CLOUDBERRY_ITEMS_BY_AP_NAME, CLOUDBERRY_VICTORY_ITEM, PAGE_SIDE, buildCloudberryPayload, emitCloudberryRules,
+    exitItems, pageParamsForWorld, requiredItems,
 } from './cloudberryRules.js';
 
 export const CLOUDBERRY_SUBSTRATE_ID = 'cloudberry';
@@ -237,11 +238,73 @@ export function instantiateCloudberryLibraryEntry(entry, ctx = {}) {
     return region;
 }
 
+/** The game items a set of AP item names (a sphere gate) holds; other names hold none. */
+function heldGameItems(gate = []) {
+    return new Set((gate ?? []).map((name) => CLOUDBERRY_ITEMS_BY_AP_NAME[name]).filter(Boolean));
+}
+
+/**
+ * The entry's check slots a player ENTERING with `entryGate` can reach: a slot in
+ * piece k needs S_k (+ Jetpack on a Jetpack-hero level). Piece order. With NO entry
+ * gate (`undefined`: a caller that is not sphere growth, e.g. the APWorld editor,
+ * where every coin keeps its own emitted rule) every slot counts.
+ */
+function reachableSlots(entry, entryGate) {
+    const checks = [...(entry.payload?.checks ?? [])].sort((a, b) => a.piece - b.piece);
+    if (!Array.isArray(entryGate)) return checks;
+    const held = heldGameItems(entryGate);
+    const facts = entry.payload?.facts;
+    return checks.filter((c) => requiredItems(facts, c.piece).every((it) => held.has(it)));
+}
+
+/**
+ * Sphere content-source REFUSAL (P3a; the registry's `libraryEntryRefusal`, which the
+ * engine's sphere fit and the APWorld editor's picker consult): why this entry is not
+ * SOUND in this slot, or null. A sphere node's locations are free once inside
+ * (requirement []), and a forward exit needs only its gate — but a library level is real
+ * geometry: a coin in piece k needs S_k, and the end door needs S_last. So it refuses
+ * when (1) fewer of its check slots are reachable with `ctx.entryGate` than the node has
+ * locations, or (2) a forward exit's gate (`ctx.exitPlans[].gate`), with the entry gate,
+ * misses an item of S_last. Both rules are SPHERE rules: they apply when the caller
+ * passes `ctx.entryGate` (the engine's sphere source does; the APWorld editor does not,
+ * and there every coin keeps its own emitted rule, so any slot is sound). Without this the sphere source picked by sides and slot count
+ * alone, and the demo pack's sphere worlds were unwinnable (measured: the oracle "sphere
+ * count mismatch: computed 1, planned 3", Victory never placed).
+ */
+export function cloudberryLibraryEntryRefusal(entry, ctx = {}) {
+    const facts = entry?.payload?.facts;
+    const id = entry?.entry_id;
+    if (!facts?.pieceItems?.length) return `cloudberry: entry '${id}' has no document facts`;
+    const sphere = Array.isArray(ctx.entryGate);
+    const entryGate = ctx.entryGate ?? [];
+    const wanted = (ctx.locationSpecs ?? []).length;
+    const reachable = reachableSlots(entry, ctx.entryGate).length;
+    if (reachable < wanted) {
+        return `instantiateLibraryEntryForSpecs(cloudberry): entry '${id}' has ${reachable} check slot(s)`
+            + `${sphere ? ` reachable with [${entryGate.join(', ')}] (of ${(entry.payload.checks ?? []).length})` : ''} `
+            + `but the node needs ${wanted}`;
+    }
+    if (!sphere) return null;
+    const last = exitItems(facts);
+    for (const e of ctx.exitPlans ?? []) {
+        const held = new Set([...heldGameItems(entryGate), ...heldGameItems(e.gate)]);
+        const missing = last.filter((it) => !held.has(it));
+        if (missing.length) {
+            return `cloudberry: entry '${id}''s end door needs [${missing.map((m) => CLOUDBERRY_ITEM_NAMES[m] ?? m).join(', ')}], `
+                + `which the ${e.side ?? '?'} exit's gate [${(e.gate ?? []).join(', ')}] and the entry gate `
+                + `[${entryGate.join(', ')}] do not hold`;
+        }
+    }
+    return null;
+}
+
 /**
  * Sphere content-source hook (requirement-aware): the node's items onto the check
- * slots in order (engine filler on the surplus), and the end door's REAL requirement
- * as exit paths — the engine ANDs its own gate onto them (buildSphereLibraryRegion),
- * so the level's S_last is never dropped for the overlay. Draws no rng.
+ * slots the entry gate makes REACHABLE, in piece order (engine filler on the rest),
+ * and the end door's REAL requirement as the forward exits' paths — the engine ANDs
+ * its own gate onto them (buildSphereLibraryRegion), so the level's S_last is never
+ * dropped for the overlay. The ENTRANCE side (`ctx.entranceSide`) is the start door's
+ * way back: one free path (`backPortalGated` is false). Draws no rng.
  */
 export function instantiateCloudberryLibraryEntryForSpecs(entry, ctx = {}) {
     const region_id = ctx.region_id ?? entry.entry_id;
@@ -249,12 +312,13 @@ export function instantiateCloudberryLibraryEntryForSpecs(entry, ctx = {}) {
     const locationSpecs = ctx.locationSpecs ?? [];
     requireSides(entry, exitSides, 'instantiateLibraryEntryForSpecs');
     const slots = entry.payload?.checks ?? [];
-    if (locationSpecs.length > slots.length) {
-        throw new Error(`instantiateLibraryEntryForSpecs(cloudberry): entry '${entry.entry_id}' has `
-            + `${slots.length} check slot(s) but the node needs ${locationSpecs.length}`);
-    }
-    const slotItems = slots.map((_, k) => (k < locationSpecs.length ? locationSpecs[k].item : (ctx.fillerItem ?? null)));
+    const reachable = reachableSlots(entry, ctx.entryGate);
+    const refusal = cloudberryLibraryEntryRefusal(entry, { ...ctx, exitPlans: [] });
+    if (refusal) throw new Error(refusal);
+    const itemOf = new Map(reachable.slice(0, locationSpecs.length).map((c, k) => [c.name, locationSpecs[k].item]));
+    const slotItems = slots.map((c) => (itemOf.has(c.name) ? itemOf.get(c.name) : (ctx.fillerItem ?? null)));
     const { locations, exitPaths, obstacleDefs, payload } = zoneRulesFor(entry, region_id, exitSides, slotItems);
+    if (ctx.entranceSide && exitPaths[ctx.entranceSide]) exitPaths[ctx.entranceSide] = [{ obstacles: [] }];
     return { locations, exitPaths, obstacleDefs, payload };
 }
 
@@ -371,6 +435,8 @@ export function createCloudberrySubstrateEntry({ id = CLOUDBERRY_SUBSTRATE_ID, l
         captureLibraryEntry: captureCloudberryLibraryEntry,
         instantiateLibraryEntry: instantiateCloudberryLibraryEntry,
         instantiateLibraryEntryForSpecs: instantiateCloudberryLibraryEntryForSpecs,
+        // Sphere slots: an entry is refused where its real geometry is not sound (P3a).
+        libraryEntryRefusal: cloudberryLibraryEntryRefusal,
         validateLibraryEntry: validateCloudberryLibraryEntry,
 
         libraryItems: CLOUDBERRY_LIBRARY_ITEMS,

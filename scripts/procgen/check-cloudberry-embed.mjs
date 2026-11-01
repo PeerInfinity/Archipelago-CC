@@ -20,6 +20,12 @@
  *   5. the END DOOR's exit menu: the player stands at the door, Up opens the menu, → chooses
  *      east → `sendExit` → `user:regionMove` → the next region loads in the panel.
  *
+ *   6. (P3a) A SPHERE world from the same pack (sphere growth, the pack the only content source,
+ *      Moving Blocks + Bouncy Blocks + Victory over 3 spheres, seed 1): the oracle holds, every
+ *      region is reachable and Victory placed (the pack's levels fit only where their geometry is
+ *      sound: `libraryEntryFitsSpecs`) → world_generator + Generate.py → the frontend, where the
+ *      PLAYBACK BOT plays it from the sphere log to Victory (`--no-sphere` skips it).
+ *
  * The bot is the page's own (the computer's recording, P1a); it is driven through the
  * substrate's host-side PlaybackProxy (the surface loops and the Playback Bot use), except in 5,
  * where the page's own `botWalkTo` parks the player at the door by a side the region has no
@@ -29,7 +35,7 @@
  * dev server serving this tree. Runs in a throwaway world/preset and cleans up (restores
  * preset_files.json). Screenshots: `--shots <dir>`.
  *
- *   node scripts/procgen/check-cloudberry-embed.mjs [--port <n>] [--shots <dir>] [--keep] [--bundled]
+ *   node scripts/procgen/check-cloudberry-embed.mjs [--port <n>] [--shots <dir>] [--keep] [--bundled] [--no-sphere]
  *
  * @ci-box V3b adopted this script's NAME, not its RUN: it shells out to this tree's Python venv and `Generate.py`, and needs the fetched Cloudberry site and a dev server.
  * @tree-writes frontend/presets/preset_files.json: `Generate.py` registers this gate's export there, and the gate restores the file's bytes in its `finally` — which a SIGKILL skips.
@@ -69,6 +75,7 @@ async function main() {
     // runs there (the module is in the bundle and the region configures through the bridge): the play steps'
     // helpers import frontend modules into the page, which under the bundle are SECOND copies, not the app's.
     const BUNDLED = argv.includes('--bundled');
+    const SPHERE = !argv.includes('--no-sphere') && !BUNDLED;
 
     const here = path.dirname(fileURLToPath(import.meta.url));
     const repoRoot = path.resolve(here, '../..');
@@ -83,6 +90,12 @@ async function main() {
     const SEED = 1;
     const tmpRules = path.join(repoRoot, 'scripts/procgen/.cloudberry-spiral-rules.json');
     const tmpTemplates = path.join(repoRoot, 'scripts/procgen/.cloudberry-spiral-templates');
+    const SPH = {
+        game: 'Cloudberry Library Sphere', name: 'cloudberry_library_sphere_worldgen',
+        world: path.join(repoRoot, 'worlds/cloudberry_library_sphere_worldgen'),
+        preset: path.join(repoRoot, 'frontend/presets/cloudberry_library_sphere_worldgen'),
+        rules: path.join(repoRoot, 'scripts/procgen/.cloudberry-library-sphere-rules.json'),
+    };
 
     let failures = 0;
     failOnCrash(() => failures);
@@ -103,12 +116,93 @@ async function main() {
     function cleanup() {
         fs.rmSync(tmpTemplates, { recursive: true, force: true });
         fs.rmSync(tmpRules, { force: true });
+        fs.rmSync(SPH.rules, { force: true });
         if (presetFilesBefore !== null) fs.writeFileSync(PRESET_FILES_JSON, presetFilesBefore);
-        if (KEEP) { console.log(`[kept] ${WORLD_DIR}\n[kept] ${PRESET_DIR}`); return; }
-        for (const p of [WORLD_DIR, PRESET_DIR]) fs.rmSync(p, { recursive: true, force: true });
+        if (KEEP) { console.log(`[kept] ${WORLD_DIR}\n[kept] ${PRESET_DIR}\n[kept] ${SPH.world}\n[kept] ${SPH.preset}`); return; }
+        for (const p of [WORLD_DIR, PRESET_DIR, SPH.world, SPH.preset]) fs.rmSync(p, { recursive: true, force: true });
         if (fs.existsSync(OUTPUT_DIR)) {
             for (const f of fs.readdirSync(OUTPUT_DIR)) if (/^AP_\d+\.zip$/.test(f)) fs.rmSync(path.join(OUTPUT_DIR, f), { force: true });
         }
+    }
+
+    /** 6. A sphere world from the pack, played by the Playback Bot to Victory (P3a). */
+    async function sphereFromLibrary({ ok, run, py, imp, lib, browser, base, shot }) {
+        const { buildRunFromState, runPresetHeadless } = await imp('frontend/modules/procgenPipeline/presetRun.js');
+        const state = {
+            mode: 'sphereGrowth',
+            params: { seed: SEED, regionWidth: 8, regionHeight: 6, maxItemsPerRegion: 2, sphereCount: 3, fillerCount: 0, revisitPercent: 0 },
+            scenario: { items: { 'Moving Blocks': 1, 'Bouncy Blocks': 1, Victory: 1 }, obstacles: {} },
+            substrateQuotas: {}, substrateMix: {}, substrateMode: 'quotas',
+        };
+        const r = await runPresetHeadless(buildRunFromState(state, { resolvedLibraries: [{ library: lib, count: 7 }] }));
+        const regions = r.rulesJson.regions['1'];
+        const sidecars = r.rulesJson.preset_sidecars?.['1'] ?? {};
+        ok(Array.isArray(r.oracleErrors) && r.oracleErrors.length === 0, `6. sphere from the library: the oracle holds (${JSON.stringify(r.oracleErrors)})`);
+        const entries = Object.values(sidecars).map((v) => lib.entries.find((e) => e.payload.docSha256 === v.playable_payload?.params?.docSha256)?.entry_id);
+        ok(entries.length === 3 && entries.every(Boolean), `6. three regions, each a pack level (${entries.join(', ')})`);
+        const locs = Object.values(regions).flatMap((g) => g.locations ?? []);
+        ok(locs.some((l) => (l.item?.name ?? l.item) === 'Victory'), '6. Victory placed');
+        fs.writeFileSync(SPH.rules, JSON.stringify(r.rulesJson, null, 2));
+        fs.rmSync(SPH.preset, { recursive: true, force: true });
+        run(py, ['-m', 'world_generator', SPH.rules, '-o', SPH.world, '--game-name', SPH.game, '--force', '--canonical-seed', '1']);
+        run(py, ['-c', `from Options import generate_yaml_templates; generate_yaml_templates(${JSON.stringify(tmpTemplates)})`]);
+        run(py, ['Generate.py', '--weights_file_path', path.join(tmpTemplates, `${SPH.game}.yaml`), '--multi', '1', '--seed', String(SEED)]);
+        const ap = fs.readdirSync(SPH.preset).find((n) => n.startsWith('AP_'));
+        ok(!!ap, `6. Generate.py: an export (${ap})`);
+        const sphereLog = fs.readFileSync(path.join(SPH.preset, ap, `${ap}_sphere_log.jsonl`), 'utf8');
+        const exported = fs.readFileSync(path.join(SPH.preset, ap, `${ap}_rules.json`), 'utf8');
+        ok(/"Victory"/.test(exported), '6. Generate.py: Victory placed (a winnable seed)');
+
+        const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
+        const plogs = [];
+        page.on('pageerror', (e) => plogs.push(`[pageerror] ${e.message}`));
+        await page.goto(`${base}?rules=${encodeURIComponent(`./presets/${SPH.name}/${ap}/${ap}_rules.json`)}`);
+        const frame = () => page.frames().find((f) => f.url().includes('/external/cloudberry/index.html') && f.url().includes('loadRegionEvent'));
+        const appNow = () => frame()?.evaluate(() => {
+            const a = window.__cloudberryEmbed?.app;
+            return a ? { region: a.config?.regionId ?? null, ok: !!a.playResult?.ok, refusal: a.refusal ?? null,
+                exits: (a.events ?? []).filter((e) => e.kind === 'sendExit') } : null;
+        });
+        const until = async (desc, fn, ms) => {
+            const t0 = Date.now();
+            for (;;) {
+                let v = null;
+                try { v = await fn(); } catch { /* reloading */ }
+                if (v) return v;
+                if (Date.now() - t0 > ms) throw new Error(`6. timeout waiting for: ${desc}`);
+                await page.waitForTimeout(500);
+            }
+        };
+        const start = regions.Menu.exits[0].connected_region;
+        const a0 = await until(`${start} configured`, async () => { const a = await appNow(); return a?.region === start && (a.ok || a.refusal) ? a : null; }, 180000);
+        ok(!a0.refusal, `6. the start level ${start} configures (${a0.refusal ?? 'hash ok'})`);
+        await page.evaluate(async () => {
+            const { default: eventBus } = await import('./app/core/eventBus.js');
+            eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' }, 'tests');
+        });
+        const status = () => page.evaluate(() => document.querySelector('.playback-bot .playback-bot-status')?.textContent ?? '');
+        await until('the Playback Bot has the sphere log', async () => ((await status()).startsWith('Sphere log loaded') ? true : null), 30000);
+        const t0 = Date.now();
+        await page.locator('.playback-bot .playback-control-bar-button-play').click();
+        const done = await until('the Playback Bot finishes', async () => {
+            const st = await status();
+            if (st.startsWith('error')) return st;
+            return st.startsWith('finished') ? st : null;
+        }, 600000);
+        const inv = await page.evaluate(async () => {
+            const { default: proxy } = await import('./modules/stateManager/stateManagerProxySingleton.js');
+            await proxy.pingWorker('sync');
+            return proxy.uiCache?.inventory ?? {};
+        });
+        ok(done.startsWith('finished') && Number(inv.Victory) > 0,
+            `6. the Playback Bot played the library sphere world to Victory in ${Math.round((Date.now() - t0) / 1000)} s (${done})`);
+        const a1 = await appNow();
+        console.log(`  (the page's exits on the last level: ${JSON.stringify(a1?.exits ?? [])})`);
+        if (shot) await shot(page, '7-library-sphere-victory');
+        const errs = plogs.filter((l) => !l.includes('unwind'));
+        ok(errs.length === 0, `6. no page errors (${errs.slice(0, 3).join(' | ')})`);
+        ok(sphereLog.length > 0, '6. a sphere log was written');
+        await page.close();
     }
 
     let browser = null;
@@ -331,6 +425,9 @@ async function main() {
 
         const errors = logs.filter((l) => l.startsWith('[pageerror]') && !l.includes('unwind'));
         ok(errors.length === 0, `no page errors (${errors.slice(0, 3).join(' | ')})`);
+        await page.close();
+
+        if (SPHERE) await sphereFromLibrary({ ok, run, py, imp, lib, browser, base, shot: SHOTS ? (p, n) => p.locator('iframe[src*="/external/cloudberry/index.html"][src*="loadRegionEvent"]').screenshot({ path: path.join(SHOTS, `${n}.png`) }) : null });
     } catch (err) {
         if (!err?.bundledStop) ok(false, `crashed: ${err.stack ?? err}`);
     } finally {

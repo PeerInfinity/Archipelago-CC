@@ -5443,15 +5443,30 @@ function buildSphereLibrarySource(sourceId, doc) {
             // Fit (v1, bounce): enough re-keyable portals for every needed side
             // AND enough location slots for the node's items. (No ⊆-by-side match
             // — bounce relabels; count is the constraint.)
-            const fitting = entries.filter((e) =>
-                (e.exit_sides?.length ?? 0) >= neededSides.length
-                && (e.location_slots ?? 0) >= nLocs);
+            // The entry's own substrate may REFUSE the slot (`libraryEntryRefusal`, the
+            // precheck the APWorld editor's picker asks): its hook would throw, or (cloudberry,
+            // P3a) its level's real geometry — coins and end door needing the level's own
+            // items — is not sound behind these gates. Refused entries are not picked;
+            // a substrate that declares none is asked nothing.
+            const refusals = [];
+            const fitting = entries.filter((e) => {
+                if ((e.exit_sides?.length ?? 0) < neededSides.length || (e.location_slots ?? 0) < nLocs) return false;
+                const refuse = substrateRegistry.get(e.substrate)?.libraryEntryRefusal;
+                const why = typeof refuse === 'function' ? refuse(e, {
+                    region_id, regionSize, exitSides: neededSides,
+                    locationSpecs: locations.map((l) => ({ item: l.item })), regionParams,
+                    entranceSide: entranceSide ?? null, entryGate, exitPlans,
+                }) : null;
+                if (why) refusals.push(why);
+                return !why;
+            });
             if (fitting.length === 0) {
                 throw new Error(
                     `${sourceId}: no entry fits sphere slot (needs ${neededSides.length} `
                     + `side(s) [${neededSides.join(',')}] + ${nLocs} location(s)) for region `
                     + `'${region_id}' (library '${doc.name ?? doc.library_id}', `
-                    + `${entries.length} entries)`);
+                    + `${entries.length} entries${refusals.length ? `; ${refusals.length} refused by their `
+                        + `substrate, e.g. ${refusals[0]}` : ''})`);
             }
             // Least-used-then-declaration-order — rng-free.
             let pick = fitting[0];
@@ -5528,6 +5543,10 @@ function buildSphereLibraryRegion(sourceId, entry, {
         locationSpecs: locations.map((l) => ({ item: l.item })),
         fillerItem: LIBRARY_SLOT_FILLER_ITEM,
         regionParams,
+        // What a requirement-aware hook needs to place items soundly (cloudberry):
+        // the side it is entered by and what every player entering holds.
+        entranceSide: entranceSide ?? null,
+        entryGate,
     });
 
     // Gate OVERLAY: each child exit carries its gate rule; the entrance side
