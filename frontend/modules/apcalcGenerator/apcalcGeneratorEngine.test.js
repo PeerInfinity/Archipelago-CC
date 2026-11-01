@@ -11,7 +11,7 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { generate, exportRulesJson } from './apcalcGeneratorEngine.js';
+import { generate, exportRulesJson, puzzleIdentity, PUZZLE_PARAM_KEYS } from './apcalcGeneratorEngine.js';
 
 const CONFIGS = [
     { seed: 1, numSpheres: 3, opsPerSphere: 2, numsPerSphere: 2, trashPerSphere: 1, maxBranches: 2, reuseAttempts: 0 },
@@ -54,4 +54,42 @@ describe('exportRulesJson itempool_counts', () => {
             }
         });
     }
+});
+
+// A browser-built puzzle must not claim worlds/apcalc's "APCalc", and two
+// different puzzles must not claim one name (AP keys worlds by game name and
+// apworlds by directory).
+describe('puzzleIdentity', () => {
+    const base = CONFIGS[1];
+
+    it('names the game "APCalc Puzzle <seed>-<hash>" throughout the rules.json', async () => {
+        const rules = exportRulesJson(await generate(base, () => {}));
+        const id = puzzleIdentity(base);
+        expect(id.gameName).toMatch(/^APCalc Puzzle 42-[0-9a-f]{6}$/);
+        expect(id.gameDirectory).toBe(`apcalc_puzzle_42_${id.hash}`);
+        expect(id.worldClassName).toBe(`APCalcPuzzle42${id.hash}World`);
+        expect(rules.game_name).toBe(id.gameName);
+        expect(rules.game_directory).toBe(id.gameDirectory);
+        expect(rules.world['1'].game).toBe(id.gameName);
+        expect(rules.world['1'].world_class_name).toBe(id.worldClassName);
+        expect(rules.world['1'].world_directory).toBe(id.gameDirectory);
+        expect(rules.game_name).not.toBe('APCalc');
+    });
+
+    it('is a pure function of seed + params (the hash is always present)', () => {
+        expect(puzzleIdentity({ ...base })).toEqual(puzzleIdentity(base));
+        // key order and unrelated fields do not matter
+        expect(puzzleIdentity({ extra: 1, ...base }).gameName).toBe(puzzleIdentity(base).gameName);
+        // a missing reuseAttempts reads as 0 (auto), as generate() does
+        const { reuseAttempts, ...noReuse } = base;
+        expect(puzzleIdentity(noReuse).gameName).toBe(puzzleIdentity(base).gameName);
+    });
+
+    it('differs when the seed or any one param differs', () => {
+        const names = new Set([puzzleIdentity(base).gameName, puzzleIdentity({ ...base, seed: 43 }).gameName]);
+        for (const k of PUZZLE_PARAM_KEYS) names.add(puzzleIdentity({ ...base, [k]: (base[k] || 0) + 1 }).gameName);
+        expect(names.size).toBe(2 + PUZZLE_PARAM_KEYS.length);
+        const dirs = new Set([...names].map(n => n.toLowerCase()));
+        expect(dirs.size).toBe(names.size);
+    });
 });
