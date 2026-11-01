@@ -875,8 +875,54 @@ function pathCostsToRule(pathCosts) {
     return makeOrRule(unique.map(pc => pathCostToRule(pc)));
 }
 
+/**
+ * The generation params that shape a puzzle besides its seed, in a fixed
+ * order. The hash in a puzzle's name is taken over these.
+ */
+export const PUZZLE_PARAM_KEYS = Object.freeze([
+    'numSpheres', 'opsPerSphere', 'numsPerSphere', 'trashPerSphere', 'maxBranches', 'reuseAttempts',
+]);
+
+/** FNV-1a, 32-bit, over a string's UTF-16 code units; 8 lowercase hex digits. */
+function fnv1aHex(text) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < text.length; i++) {
+        h ^= text.charCodeAt(i);
+        h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h.toString(16).padStart(8, '0');
+}
+
+/**
+ * The AP identity of a browser-built puzzle: game "APCalc Puzzle <seed>-<hash>",
+ * directory `apcalc_puzzle_<seed>_<hash>`, class `APCalcPuzzle<seed><hash>World`.
+ *
+ * It must differ from `worlds/apcalc` ("APCalc"): AP keys a world by game name and
+ * an apworld by directory, so a puzzle named "APCalc" shadows the real world, and
+ * two puzzles shadow each other. The seed alone does not name a puzzle (the same
+ * seed with other params is another map), so the name carries a short hash of the
+ * params. The hash is ALWAYS present, never only when the params differ from the
+ * defaults: the name is then a function of the puzzle alone, and does not change
+ * meaning when the panel's defaults change (`DEFAULT_PARAMS` in the UI and the
+ * Python world's option defaults already differ).
+ * @param {object} config generation config (`seed` plus PUZZLE_PARAM_KEYS)
+ */
+export function puzzleIdentity(config) {
+    const params = PUZZLE_PARAM_KEYS.map(k => `${k}=${Number(config[k]) || 0}`).join(';');
+    const hash = fnv1aHex(params).slice(0, 6);
+    const seed = String(config.seed);
+    const seedId = seed.replace(/[^0-9a-zA-Z]/g, '_');
+    return {
+        gameName: `APCalc Puzzle ${seed}-${hash}`,
+        gameDirectory: `apcalc_puzzle_${seedId}_${hash}`,
+        worldClassName: `APCalcPuzzle${seedId.replace(/_/g, '')}${hash}World`,
+        hash,
+    };
+}
+
 export function exportRulesJson(gameData) {
     const { nodes, edges, startingButtons, config } = gameData;
+    const identity = puzzleIdentity(config);
 
     const allButtonLabels = new Set();
     let trashCount = 0;
@@ -1030,8 +1076,8 @@ export function exportRulesJson(gameData) {
 
     return {
         schema_version: 3,
-        game_name: 'APCalc',
-        game_directory: 'apcalc',
+        game_name: identity.gameName,
+        game_directory: identity.gameDirectory,
         archipelago_version: '0.6.7',
         generation_seed: config.seed,
         seed_name: String(config.seed),
@@ -1046,8 +1092,8 @@ export function exportRulesJson(gameData) {
         starting_items: { '1': startingItemsList },
         world: {
             '1': {
-                game: 'APCalc',
-                world_class_name: 'APCalcWorld',
+                game: identity.gameName,
+                world_class_name: identity.worldClassName,
                 options: {}, option_definitions: {},
                 world_description: 'APCalc is a calculator-themed puzzle game. '
                     + 'Collect number and operation buttons, then budget your presses '
@@ -1071,7 +1117,7 @@ export function exportRulesJson(gameData) {
                         authors: ['PeerInfinity'],
                     }],
                 },
-                world_directory: 'apcalc',
+                world_directory: identity.gameDirectory,
             },
         },
         exporter: {},

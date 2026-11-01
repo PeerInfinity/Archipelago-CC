@@ -17,11 +17,6 @@
       "game_name": "A Link to the Past WorldGen",
       "canonical_seed": 1
     },
-    "apcalc_worldgen": {
-      "source": "frontend/presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-      "game_name": "APCalc WorldGen",
-      "canonical_seed": 1
-    },
     "bakingadventure_vanilla_worldgen": {
       "source": "frontend/presets/bakingadventure_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json",
       "game_name": "Baking Adventure Vanilla WorldGen",
@@ -61,6 +56,11 @@
       "source": "frontend/presets/procgen_maze/AP_1/AP_1_rules.json",
       "game_name": "Procgen Maze WorldGen",
       "canonical_seed": null
+    },
+    "cloudberry_sphere_worldgen": {
+      "source": "frontend/presets/cloudberry_sphere_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Cloudberry Sphere WorldGen",
+      "canonical_seed": 1
     },
     "runner_sphere_worldgen": {
       "source": "frontend/presets/runner_sphere_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",

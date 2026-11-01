@@ -24,7 +24,7 @@ PACKAGES = recipe_lib.committed_packages(str(REPO))
 
 def test_every_generator_package_has_a_recipe_and_every_recipe_a_package():
     assert sorted(PACKAGES) == sorted(RECIPES)
-    assert len(PACKAGES) >= 16
+    assert len(PACKAGES) >= 15  # 16 until apcalc_worldgen was deleted (user ruling 2026-10-31)
 
 
 @pytest.mark.parametrize('package', sorted(RECIPES))

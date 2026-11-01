@@ -179,7 +179,22 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "generate",
+                    "statement": "The pipeline can build regions of it",
+                    "text": "picked from its own levels to fit the plan"
+                },
+                {
+                    "group": "generate",
                     "statement": "Its rooms can be captured into a library and reused",
+                    "text": null
+                },
+                {
+                    "group": "generate",
+                    "statement": "Exits can be locked behind items",
+                    "text": null
+                },
+                {
+                    "group": "generate",
+                    "statement": "It has its own settings in the generation form",
                     "text": null
                 },
                 {
@@ -3705,8 +3720,8 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "kind": "no",
-                    "text": "only as content from its own game",
+                    "kind": "yes",
+                    "text": "picked from its own levels to fit the plan",
                     "why": [
                         {
                             "field": "generateRegionCore",
@@ -3714,11 +3729,11 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "generateZoneForSpecs",
-                            "value": "—"
+                            "value": "fn"
                         },
                         {
                             "field": "generateZoneForSpecsGen",
-                            "value": "—"
+                            "value": "fn"
                         }
                     ]
                 },
@@ -4101,12 +4116,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "kind": "na",
-                    "text": null,
+                    "kind": "no",
+                    "text": "its generation cost is declared `heavy`",
                     "why": [
                         {
                             "field": "generationCost",
-                            "value": "—"
+                            "value": "heavy"
                         }
                     ]
                 },
@@ -4386,12 +4401,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "canHostExitGates",
-                            "value": "—"
+                            "value": "fn"
                         },
                         {
                             "field": "supportedFeatures",
@@ -4543,12 +4558,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "renderProcgenParams",
-                            "value": "—"
+                            "value": "fn"
                         }
                     ]
                 },
