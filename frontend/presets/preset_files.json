@@ -5982,60 +5982,6 @@
       }
     }
   },
-  "apcalc_worldgen": {
-    "name": "APCalc WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "APCalc WorldGen",
-            "is_canonical": true
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 1,
-        "seeds_failed": 0,
-        "total_seeds": 1,
-        "first_failure_seed": null,
-        "seed_range": "1"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 161,
-        "total_locations": 161
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 1,
-        "first_failure_player": null
-      }
-    }
-  },
   "bakingadventure_vanilla_worldgen": {
     "name": "Baking Adventure Vanilla WorldGen",
     "folders": {
@@ -7318,6 +7264,29 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
         ]
+      }
+    }
+  },
+  "cloudberry_sphere_worldgen": {
+    "name": "Cloudberry Sphere WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Cloudberry Sphere WorldGen",
+            "is_canonical": true
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "has_procgen_data": true
       }
     }
   }

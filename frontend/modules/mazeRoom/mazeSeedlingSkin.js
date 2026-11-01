@@ -77,7 +77,8 @@ export function mazeModelledCells(mazeWorld) {
     for (const m of [mazeWorld.obstacles, mazeWorld.blocks, mazeWorld.buttons, mazeWorld.items]) {
         for (const key of m?.keys?.() ?? []) cells.add(key);
     }
-    for (const t of [...(mazeWorld.traps ?? []), ...(mazeWorld.pulls ?? [])]) cells.add(posKey(t.x, t.y));
+    // ⛓ maze-seedling-art-4: + a PULSER's wall cell (m1's `world.pulsers`) — its body is the census's sprite
+    for (const t of [...(mazeWorld.traps ?? []), ...(mazeWorld.pulls ?? []), ...(mazeWorld.pulsers ?? [])]) cells.add(posKey(t.x, t.y));
     return cells;
 }
 

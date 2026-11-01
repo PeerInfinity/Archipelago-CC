@@ -17,7 +17,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -31,6 +31,8 @@ import {
     REGENERATE_SIDES_REASSIGNED, REGENERATE_STRANDED, applyRulesDocOp,
 } from './rulesDocOps.js';
 import { ruleWithOwned } from '../procgenCore/ruleWithOwned.js';
+import { installCloudberryGenerator } from '../cloudberryDemo/cloudberryGeneration.js';
+import { cloudberryTestGenerator } from '../cloudberryDemo/cloudberryTestGenerator.js';
 import { sidecarIssues } from './sidecarIssues.js';
 import { slotLayout } from './regionLayout.js';
 import {
@@ -287,7 +289,10 @@ describe('one exit per side for a KEYED target (found by the R0 corpus control)'
     const keyed = () => substrateRegistry.getAll().filter((e) => regionRealiserKind(e) && oneExitPerSide(e));
     const sharing = () => substrateRegistry.getAll().filter((e) => regionRealiserKind(e) && !oneExitPerSide(e));
 
-    it('⛓⛓ two exits on one side: the ADJACENT link keeps it, the other is reassigned, and the op builds', () => {
+    beforeAll(() => installCloudberryGenerator(cloudberryTestGenerator(), { store: null }));
+    afterAll(() => installCloudberryGenerator(null, { store: null }));
+
+    it('⛓⛓ two exits on one side: the ADJACENT link keeps it, the other is reassigned, and the op builds', async () => {
         const doc = read(SPLIT_PATH);
         const p = '1';
         const { grid, cells } = slotLayout(doc, p);
@@ -311,7 +316,14 @@ describe('one exit per side for a KEYED target (found by the R0 corpus control)'
                         `${e.id}: ${x.exit_id} kept ${x.side} but is not the adjacent link`).toBe(true);
                 }
             }
-            const res = applyRulesDocOp(doc, regenOp(p, region, e.id));
+            let res = applyRulesDocOp(doc, regenOp(p, region, e.id));
+            if (!res.ok && /cannot wait — ask again once it is done/.test(res.error)) {
+                // A realiser whose generator runs outside JS (cloudberry's game page; here a stand-in)
+                // refuses the synchronous press while it generates, and the next press builds.
+                // eslint-disable-next-line no-await-in-loop
+                await new Promise((r) => { setTimeout(r, 0); });
+                res = applyRulesDocOp(doc, regenOp(p, region, e.id));
+            }
             expect(res.ok, `${e.id}: ${res.error}`).toBe(true);
             expect(res.description).toContain(`${REGENERATE_SIDES_REASSIGNED} ${spec.sidesReassigned.join(', ')}`);
         }

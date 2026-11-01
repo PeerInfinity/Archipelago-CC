@@ -36,13 +36,16 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { mirrorTileAcrossSide } from '../shared/procgen/spatialPrimitives.js';
 import {
     DEFAULT_REGION_SIZE, Grid, REGION_GEOMETRY, SIDES, arrangeShuffledSpiral,
-    assembleZoneRegion, buildRulesJson, generateRegion, geometryOf, getRegionEntrance,
+    assembleZoneRegion, buildRulesJson, generateRegion, generateRegionGen, geometryOf, getRegionEntrance,
+    yieldedWait,
     getRegionExits, growSpheres, moveSphereExitSide, reconcileBidirectionalExits,
     topDownFromRulesJson,
 } from './procgenPipelineEngine.js';
 import { resolveExitTilePositions } from '../procgenCore/compositeMapRenderer.js';
 import { planSpheres } from './spherePlanner.js';
 import { GATEABLE_ITEMS } from '../bounceDemo/bounceDemoLibrary.js';
+import { installCloudberryGenerator } from '../cloudberryDemo/cloudberryGeneration.js';
+import { cloudberryTestGenerator } from '../cloudberryDemo/cloudberryTestGenerator.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 for (const rel of REGISTRY_LIBRARIES) {
@@ -313,18 +316,30 @@ describe('⛓⛓ the mirror fallback: a neighbour of a sides-only region mirrors
         expect(SIDES_ONLY.some((e) => !REALISABLE(e))).toBe(true);
     });
 
+    // Drained the way the pipeline's ASYNCHRONOUS drivers drain it (awaiting what a
+    // substrate yields to wait on — cloudberry's level generation, here a stand-in
+    // generator), so a substrate whose generator lives outside JS is realised too.
     it.each(SIDES_ONLY.map((e) => [e.id, REALISABLE(e)]))('%s (realisable: %s): the sphere / '
         + 'top-down realiser either realises it with NO tile field and NO entrance, or refuses it '
-        + 'by name', (id, realisable) => {
-        const realise = () => generateRegion({
+        + 'by name', async (id, realisable) => {
+        const spec = {
             substrate: id, region_id: 'r', size: DEFAULT_REGION_SIZE, rng: { next: () => 0 },
             exits: [{ side: 'E' }], locations: [],
-        });
+        };
         if (!realisable) {
-            expect(realise).toThrow(/neither generateRegionCore nor generateZoneForSpecs/);
+            expect(() => generateRegion(spec)).toThrow(/neither generateRegionCore nor generateZoneForSpecs/);
             return;
         }
-        const r = realise();
+        installCloudberryGenerator(cloudberryTestGenerator(), { store: null });
+        const gen = generateRegionGen(spec);
+        let step = gen.next();
+        while (!step.done) {
+            // eslint-disable-next-line no-await-in-loop
+            await yieldedWait(step.value);
+            step = gen.next();
+        }
+        installCloudberryGenerator(null, { store: null });
+        const r = step.value;
         const exits = getRegionExits(r);
         const list = exits instanceof Map ? [...exits.values()] : exits;
         expect(list.map((e) => e.side)).toEqual(['E']);

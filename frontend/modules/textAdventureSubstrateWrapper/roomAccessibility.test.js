@@ -10,7 +10,7 @@
  * solo boots; 5 of ~145 CI runs failed Phase A on it). These rows force that
  * ordering — static data first, snapshot later — instead of waiting for it.
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 import { roomAccessibility } from './roomAccessibility.js';
 
@@ -109,5 +109,68 @@ describe('roomAccessibility — a rule that throws: passable, and visible', () =
         // A second pass (the next snapshot) logs again — once.
         roomAccessibility(ROOM, RULES, { inventory: {} }, STATIC, d);
         expect(calls.filter(([level]) => level === 'error')).toHaveLength(2);
+    });
+});
+
+/**
+ * ⛓ CATCH + REPORT (⚖ user, 2026-10-31). The engine now catches a throwing
+ * node in BOTH formats and answers undefined (which would read shut); it
+ * reports through the context's `onRuleError` hook, which roomAccessibility
+ * passes as a context variable. So ANY throwing rule — AST or Rule Builder,
+ * top-level or nested — stays passable and marked. Driven through the REAL
+ * engine and snapshot interface.
+ */
+describe('roomAccessibility with the real engine — any throwing rule is passable and marked', async () => {
+    const { evaluateRule } = await import('../shared/ruleEngine.js');
+    const { createSnapshotInterface } = await import('../shared/snapshotInterface.js');
+    const RB_THROW = { rule: 'List', args: { value: 5 } };
+    const AST_THROW = { type: 'item_check', item: { type: 'constant', value: 'Lamp' } };
+    const regions = new Map([['Start', { exits: [{ name: 'Gate', access_rule: RB_THROW }] }]]);
+    const locations = new Map([['Chest', { name: 'Chest', parent_region_name: 'Start', access_rule: RB_THROW }]]);
+    const STATIC_REAL = { game_name: 'Test Game', regions, locations, helpers: { 1: { broken: { body: RB_THROW } } } };
+    /** The real interface, except that hasItem throws for 'Lamp' (the AST item_check calls it). */
+    const real = {
+        createContext: (snapshot, staticData, vars) => {
+            const ctx = createSnapshotInterface(snapshot, staticData, vars);
+            const hasItem = ctx.hasItem;
+            return { ...ctx, hasItem: (name) => { if (name === 'Lamp') throw new Error('hasItem exploded'); return hasItem(name); } };
+        },
+        evaluate: evaluateRule,
+    };
+    const SNAP = { inventory: {}, player: { id: 1 }, regionReachability: { Start: 'reachable' } };
+    const quiet = () => { const s = vi.spyOn(console, 'error').mockImplementation(() => {}); return s; };
+
+    for (const [name, rule, message] of [
+        ['an AST throw', AST_THROW, 'hasItem exploded'],
+        ['a Rule Builder throw', RB_THROW, 'listValue.map is not a function'],
+        ['a nested throw (an entrance\'s access_rule)', { rule: 'EntranceAccessRule', args: { entrance_name: 'Gate' } },
+            'listValue.map is not a function'],
+        ['a nested throw (a helper body, evaluated on the interface itself)', { type: 'helper', name: 'broken', args: [] },
+            'listValue.map is not a function'],
+        ['a nested throw (a location sub-context)', { rule: 'CanReachLocation', args: { location_name: 'Chest' } },
+            'listValue.map is not a function'],
+    ]) {
+        it(`${name}: passable, and ruleErrors carries the message`, () => {
+            const spy = quiet();
+            const r = roomAccessibility(ROOM, { exits: { exit: rule, back: null }, items: {} }, SNAP, STATIC_REAL, real);
+            spy.mockRestore();
+            expect(r.exits.exit).toBe(true);
+            expect(r.ruleErrors).toEqual({ exits: { exit: message }, items: {} });
+        });
+    }
+
+    it('a rule that is merely false: shut, unmarked', () => {
+        const r = roomAccessibility(ROOM, { exits: { exit: has('Sword'), back: null }, items: {} }, SNAP, STATIC_REAL, real);
+        expect(r.exits.exit).toBe(false);
+        expect(r.ruleErrors).toEqual({ exits: {}, items: {} });
+    });
+
+    it('logs the pass line at error once per throwing link', () => {
+        const spy = quiet();
+        const calls = [];
+        roomAccessibility(ROOM, { exits: { exit: RB_THROW, back: null }, items: {} }, SNAP, STATIC_REAL,
+            { ...real, log: (level, ...a) => calls.push([level, ...a]) });
+        spy.mockRestore();
+        expect(calls.filter(([l]) => l === 'error')).toHaveLength(1);
     });
 });

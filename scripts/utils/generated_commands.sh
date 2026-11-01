@@ -498,7 +498,6 @@ python Generate.py --weights_file_path Templates/shapez.yaml --multi 1 --seed 1
 
 python -m world_generator frontend/presets/alttp_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json -o worlds/alttp_vanilla_worldgen --game-name "A Link to the Past Vanilla WorldGen" --force --canonical-seed 1
 python scripts/test/test-world-generator.py --include-list "A Link to the Past.yaml" --phase generate-test-worlds --seed 1 --canonical-seed 1
-python scripts/test/test-world-generator.py --include-list APCalc.yaml --phase generate-test-worlds --seed 1 --canonical-seed 1
 python -m world_generator frontend/presets/bakingadventure_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json -o worlds/bakingadventure_vanilla_worldgen --game-name "Baking Adventure Vanilla WorldGen" --force --canonical-seed 1
 python scripts/test/test-world-generator.py --include-list "Baking Adventure.yaml" --phase generate-test-worlds --seed 1 --canonical-seed 1
 python -m world_generator frontend/presets/codingadventure_vanilla/AP_14089154938208861744/AP_14089154938208861744_rules.json -o worlds/codingadventure_vanilla_worldgen --game-name "Coding Adventure Vanilla WorldGen" --force --canonical-seed 1
@@ -516,7 +515,6 @@ python -c "from Options import generate_yaml_templates; generate_yaml_templates(
 
 python Generate.py --weights_file_path "Templates/A Link to the Past Vanilla WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/A Link to the Past WorldGen.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/APCalc WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Baking Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Baking Adventure WorldGen.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Coding Adventure Vanilla WorldGen.yaml" --multi 1 --seed 1

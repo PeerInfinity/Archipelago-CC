@@ -1448,6 +1448,19 @@ export function growMaze(config) {
 }
 
 /**
+ * What an ASYNCHRONOUS driver waits for between two progress events: the event's
+ * own `await` (a promise a substrate yields while work it cannot do synchronously
+ * runs — cloudberry's level generation in the game page), else one macrotask so the
+ * UI can repaint. A synchronous drain ignores `await` and resumes at once; the
+ * substrate then finds its work not done and refuses by name.
+ */
+export function yieldedWait(event) {
+    const pending = event?.await;
+    if (pending && typeof pending.then === 'function') return pending;
+    return new Promise((resolve) => { setTimeout(resolve, 0); });
+}
+
+/**
  * Grid-growth, asynchronous: forwards each progress event to `onProgress` and
  * yields to the event loop between events so the panel's Generate progress
  * indicator can repaint. Identical output to growMaze.
@@ -1458,7 +1471,7 @@ export async function growMazeAsync(config, onProgress = null) {
     while (!r.done) {
         onProgress?.(r.value);
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        await yieldedWait(r.value);
         r = gen.next();
     }
     return r.value;
@@ -3546,8 +3559,13 @@ function* generateRegionZoneGen(spec) {
         : baseZoneSpecs;
     // `ordinal`: which of the substrate's zones this region is (sphere growth's
     // `sphereZoneOrdinal`; 0 for a caller that names none) — read by a zone
-    // source whose regions are content (jta, noiz2sa).
-    const zoneCtx = { ordinal: spec.zoneOrdinal ?? 0 };
+    // source whose regions are content (jta, noiz2sa). `entrance`: the way back
+    // and the region's entry gate (the requirement every player inside holds) —
+    // read by cloudberry, whose way back is a door of its own.
+    const zoneCtx = {
+        ordinal: spec.zoneOrdinal ?? 0,
+        entrance: ent?.side ? { side: ent.side, ...requirementOf(ent) } : null,
+    };
     const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
         ? yield* adapter.generateZoneForSpecsGen(zoneSpecs, zoneCtx)
         : adapter.generateZoneForSpecs(zoneSpecs, zoneCtx);
@@ -7018,7 +7036,7 @@ export async function growSpheresBatchedAsync(config, onProgress = null) {
     while (!r.done) {
         onProgress?.(r.value);
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        await yieldedWait(r.value);
         r = gen.next();
     }
     return r.value;
@@ -7047,7 +7065,7 @@ export async function growSpheresAsync(config, onProgress = null) {
     let r = gen.next();
     while (!r.done) {
         onProgress?.(r.value);
-        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        await yieldedWait(r.value);
         r = gen.next();
     }
     return r.value;

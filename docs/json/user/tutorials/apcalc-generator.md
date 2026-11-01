@@ -13,7 +13,7 @@ The **APCalc Generator** builds APCalc maps in the browser: how many spheres, ho
 
 ## Package it as a .apworld
 
-1. Press **⭳ .apworld**: the generator runs Archipelago's world generator in your browser on this map and saves it as a game for `custom_worlds/` — as the APWorld Editor does for procgen worlds. The first build loads Python (~10 MB); the log ends with *.apworld: downloaded apcalc.apworld*.
+1. Press **⭳ .apworld**: the generator runs Archipelago's world generator in your browser on this map and saves it as a game for `custom_worlds/` — as the APWorld Editor does for procgen worlds. The first build loads Python (~10 MB); the log ends with *.apworld: downloaded apcalc_puzzle_7_….apworld*. The game is named *APCalc Puzzle 7-xxxxxx*: the seed plus a six-digit hash of the other fields, so it never clashes with the built-in APCalc world or with another generated puzzle.
 
 ## Tidy up
 

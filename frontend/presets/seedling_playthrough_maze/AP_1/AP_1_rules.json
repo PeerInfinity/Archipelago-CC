@@ -29118,7 +29118,7 @@
             {
               "x": 36,
               "y": 36,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
             },
             {
               "x": 44,
@@ -30778,7 +30778,7 @@
             {
               "x": 55,
               "y": 49,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
             },
             {
               "x": 58,
@@ -30878,7 +30878,7 @@
             {
               "x": 55,
               "y": 50,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
             },
             {
               "x": 58,
@@ -31586,6 +31586,21 @@
             },
             "atlas_gate_2": {
               "id": "atlas_gate_2",
+              "name": "Fire",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Fire"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_3": {
+              "id": "atlas_gate_3",
               "name": "(Fire AND (Progressive Sword OR Ghost Spear))",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -31643,8 +31658,8 @@
                 }
               ]
             },
-            "atlas_gate_3": {
-              "id": "atlas_gate_3",
+            "atlas_gate_4": {
+              "id": "atlas_gate_4",
               "name": "L40 flag 8: bosslock@480,352 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -31847,6 +31862,18 @@
               "x": 30,
               "y": 22,
               "dir": "S",
+              "gate": "atlas_gate_4"
+            },
+            {
+              "x": 32,
+              "y": 30,
+              "dir": "E",
+              "gate": "atlas_gate_3"
+            },
+            {
+              "x": 32,
+              "y": 30,
+              "dir": "W",
               "gate": "atlas_gate_3"
             }
           ],

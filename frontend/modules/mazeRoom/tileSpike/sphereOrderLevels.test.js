@@ -230,7 +230,9 @@ describe('L39 — the press opens its target; the pocket\'s doors cost it', () =
     }, 180_000);
 });
 
-describe('L40 — the corpse\'s kill rides on the Fire cells, from the rules\' own ruling', () => {
+// ⛓ Since session tile-mechanisms-m2-w1 (⚖ "Fallback, build here") the ruling rides on the LOCK its puzzle opens — the door (32,30),
+// as `enter` gates both ways (`puzzleLocks.test.js`) — and on the piece cells that are crossings; the interior piece (30,30) is Fire alone.
+describe('L40 — the corpse\'s kill rides on its annotated lock and the crossing cells, from the rules\' own ruling', () => {
     const LV = ['level_38', 'level_39', 'level_40'];
     const AND = { rule: 'And', children: [{ rule: 'Has', args: { item_name: 'Fire' } }, { rule: 'Or', children: [
         { rule: 'Has', args: { item_name: 'Progressive Sword' } }, { rule: 'Has', args: { item_name: 'Ghost Spear' } }] }] };
@@ -238,10 +240,12 @@ describe('L40 — the corpse\'s kill rides on the Fire cells, from the rules\' o
     const fireCells = (p, rule) => p.obstacles.filter((o) => JSON.stringify(p.obstacleLib[o.id].clear_rule) === JSON.stringify(rule))
         .map((o) => `${o.x},${o.y}`).sort();
 
-    it('every L40 cell the grid gates on Fire alone takes Fire AND a weapon; L38–L40 certify clean', () => {
+    it('the door (32,30) and every L40 crossing cell gated on Fire take Fire AND a weapon, the interior piece Fire alone; L38–L40 certify clean', () => {
         const p = l40(compile(LV));
-        expect(fireCells(p, { rule: 'Has', args: { item_name: 'Fire' } })).toEqual([]);
-        expect(fireCells(p, AND)).toEqual(['30,30', '36,36', '55,49', '55,50']);
+        expect(fireCells(p, { rule: 'Has', args: { item_name: 'Fire' } })).toEqual(['30,30']);
+        expect(fireCells(p, AND)).toEqual(['36,36', '55,49', '55,50']);
+        expect(p.entry_gates.filter((g) => g.gate && JSON.stringify(p.obstacleLib[g.gate].clear_rule) === JSON.stringify(AND))
+            .map((g) => `${g.x},${g.y},${g.dir}`).sort()).toEqual(['32,30,E', '32,30,W']);
         const out = certify(LV);
         expect(out.problems).toEqual([]);
         expect(out.accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
