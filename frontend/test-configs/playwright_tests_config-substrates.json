@@ -2045,6 +2045,12 @@
             "_comment": "slice seedling-js-rope-art. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 16: the rope drawn from seedling:puzzlement/rope as RopeStart.render does uncut (span frame 1 x3, pulley 0, handle 2); every sheet decodes, zero console errors. The cut look is pinned in node (seedlingSolidsRope.test.js). No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-bridge",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "slice seedling-js-bridge-art. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 66 (rulesref-l66-door's boot): the bridge (7,9) drawn from seedling:tile/bridge in its closed anim, the tile:Bridge object's stand-in rect claimed (0 left); every sheet decodes, zero console errors. The opening/open looks are pinned in node (seedlingBridgeArt.test.js). No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-graphics-npcs",
             "enabled": true,
             "category": "Seedling JS runtime",

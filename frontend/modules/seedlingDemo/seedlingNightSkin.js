@@ -354,7 +354,7 @@ export const TILE_NIGHT = Object.freeze({
     'seedling:tile/iceWall': (time, ctx) => (ctx.snowing ? null : sinPulse(time, 60, 5, 60) * 0.3 + 0.1), // `:262-272`
     'seedling:tile/iceWallGlowing': (time, ctx) => (ctx.snowing ? null : sinPulse(time, 60, 5, 60) * 0.3 + 0.1), // `:277-287`
     'seedling:tile/ghostTile': (time) => sinPulse(time, 100, 3, 99) * 0.05, // `:331-339`
-    'seedling:tile/bridge': (time) => sinPulse(time, 100, 3, 99) * 0.1, // `:364-375` (G1 never draws the opening)
+    'seedling:tile/bridge': (time) => sinPulse(time, 100, 3, 99) * 0.1, // `:364-375` (the opening's alpha-1 copy: `op.bridgeOpening`)
     'seedling:tile/ghostTileStep': (time) => sinPulse(time, 100, 3, 99) * 0.05, // `:380-386`
     'seedling:tile/igneousToLava': () => 0.25, // `:428-433`
     'seedling:tile/fuchsiaTile': (time, ctx, r0) => sinPulse(time, 100, 4, 100, r0 * 2 * Math.PI) * 0.75 + 0.25, // `:445-451`
@@ -488,6 +488,13 @@ export function nightOps(view, art, { skin = null, ops = [], hazard = null, whit
             // ⛓ G6 — the effects switch OFF (`lavaGlow: false`): no lava copy and no `solidBmp` edges
             if (!lavaGlow && op.key === LAVA_TILE) continue;
             const cell = op.fallback?.rect ?? { x: op.dx, y: op.dy };
+            // ⛓ seedling-js-bridge-art — an OPENING bridge (`Tile.as:370-373`): its copy is at alpha 1, and NORMAL
+            // (`:364` reset the blend before this draw), so the main op's INVERT silhouette does not ride along
+            if (op.bridgeOpening) {
+                const { blend: _b, tint: _t, bridgeOpening: _o, ...plain } = op;
+                night.push(withAlpha(plain, 1));
+                continue;
+            }
             const k = tileRule(time, ctx, cosmeticRand(level, Math.round(cell.x / TILE), Math.round(cell.y / TILE), 0));
             if (k !== null && k > 0) night.push(withAlpha(op, k));
             if (op.key === LAVA_TILE) solid.push(...R.lavaEdges(edgeFrameOf(op, cell, art, level, skin), cell, time));
