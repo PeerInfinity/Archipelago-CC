@@ -73,6 +73,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('procgen:activeSubstrateChanged'); // flashSubstrate tests
   registrationApi.registerEventBusPublisher('flash:loadRegion'); // flashSubstrate tests
   registrationApi.registerEventBusPublisher('runner:loadRegion'); // runnerDemo tests
+  registrationApi.registerEventBusPublisher('cloudberry:loadRegion'); // cloudberry substrate tests
   registrationApi.registerEventBusPublisher('tests:allTestsChanged');
   
   // Progress bar test events
