@@ -7,7 +7,8 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-import { blockStopperCensus, censusCounts } from './census-seedling-block-stoppers.mjs';
+import { blockStopperCensus, censusCounts, priceDnf } from './census-seedling-block-stoppers.mjs';
+import { holderTapes, expectHolder, BLOCK_PATH, BUTTON, BOOT } from './probe-seedling-l16-holder-bobs.mjs';
 import { bobBlockTapes, expectBobBlock, CRITICAL, LEVEL, EAST } from './probe-seedling-l65-bob-block.mjs';
 
 let census;
@@ -16,13 +17,14 @@ beforeAll(() => {
 }, 300_000);
 
 describe('the bodies on the pushed blocks\' cells', () => {
-    it('the counts: 19 blocks, 131 (use x body) rows that meet — 119 can\'t gate, 11 in holder rooms, 1 mobile, 0 kill-gates', () => {
+    it('the counts: 19 blocks, 131 (use x body) rows that meet — 119 can\'t gate, 11 in holder rooms (all ok), 1 mobile, 0 kill-gates', () => {
         expect(censusCounts(census)).toEqual({
             blocks: 19,
             uses: { none: 7, holder: 8, 'crossing+holder': 1, crossing: 3 },
             rows: 131,
             verdicts: { "CAN'T-GATE": 119, HOLDER: 11, MOBILE: 1 },
             movement: { chase: 91, static: 10, 'wall-hug-launch': 6, none: 24 },
+            holder: { 'ok (parked same)': 5, 'ok (parked tighter, never settles)': 6 },
         });
     });
 
@@ -39,6 +41,57 @@ describe('the bodies on the pushed blocks\' cells', () => {
     it('the HOLDER rows (the holder search models no Enemy) stand in two rooms: L16\'s Bobs, L39\'s Spinners', () => {
         const holder = census.rows.filter((r) => r.verdict === 'HOLDER');
         expect([...new Set(holder.map((r) => `L${r.level} ${r.cls}`))].sort()).toEqual(['L16 Bob', 'L39 Spinner']);
+    });
+
+    // ⛓ RULES rules-l16-holder-enemies — each HOLDER row priced with its body parked for good on every cell it meets.
+    it('L16: each Bob parked for good moves NO entry — lock@320,112 from (19,7) already costs a Bob kill verb', () => {
+        const l16 = census.rows.filter((r) => r.verdict === 'HOLDER' && r.level === 16);
+        expect(l16.map((r) => r.body).sort()).toEqual(['bob@160,112', 'bob@176,16', 'bob@192,80', 'bob@208,32', 'bob@224,96']);
+        for (const r of l16) {
+            expect({ parked: r.parked, settles: r.settles, holderVerdict: r.holderVerdict, respawns: r.respawns, killFlags: r.killFlags })
+                .toEqual({ parked: 'same', settles: true, holderVerdict: 'ok', respawns: true, killFlags: ['hasSword', 'hasSpear'] });
+            expect(r.prices['lock@320,112 from 19,7']).toEqual(['flag:hasSpear', 'flag:hasSword']);
+        }
+    });
+
+    it('L39: a Spinner parked for good would add a kill verb to Fire — but it never settles, so the rows are ok', () => {
+        const l39 = census.rows.filter((r) => r.verdict === 'HOLDER' && r.level === 39);
+        expect(l39).toHaveLength(6);
+        for (const r of l39) {
+            expect({ parked: r.parked, settles: r.settles, holderVerdict: r.holderVerdict }).toEqual({ parked: 'tighter', settles: false, holderVerdict: 'ok' });
+            expect(r.moved.map((m) => [m.entry, m.price, m.parked])).toEqual([
+                ['wandlock@144,64 from 9,5', ['flag:hasFire'], ['flag:hasFire & flag:hasSpear', 'flag:hasFire & flag:hasSword']],
+                ['wandlock@48,160 from 3,9', ['flag:hasFire'], ['flag:hasFire & flag:hasSpear', 'flag:hasFire & flag:hasSword']],
+            ]);
+        }
+    });
+
+    it('priceDnf reads a price as logic: any() expanded, a superset conjunction dropped', () => {
+        const byKey = new Map([['any(flag:hasSpear|flag:hasSword)', { any: [{ flag: 'hasSword' }, { flag: 'hasSpear' }] }], ['flag:hasSword', { flag: 'hasSword' }], ['flag:hasSpear', { flag: 'hasSpear' }]]);
+        expect(priceDnf([['any(flag:hasSpear|flag:hasSword)', 'flag:hasSpear'], ['any(flag:hasSpear|flag:hasSword)', 'flag:hasSword']], byKey))
+            .toEqual(priceDnf([['any(flag:hasSpear|flag:hasSword)']], byKey));
+        expect(priceDnf([[]], byKey)).toEqual(['']);
+        expect(priceDnf([], byKey)).toEqual([]);
+    });
+});
+
+describe('the L16 holder probe\'s tapes and expectations', () => {
+    it('six tapes, all booting on [10,2] with the Sword', () => {
+        const tapes = holderTapes();
+        expect(Object.keys(tapes)).toEqual(['alive', 'alive-south', 'kill-first', 'lure', 'parked', 'pinned']);
+        expect([BOOT.x / 16, BOOT.y / 16]).toEqual([10, 2]);
+        for (const t of Object.values(tapes)) expect(t.grants).toEqual([{ level: 16, items: ['sword'] }]);
+    });
+
+    it('the expectations: the block on the button and the lock passed every way; a Sword kill only on kill-first', () => {
+        const held = { blockFinal: BUTTON, blockOnButtonAt: 594, passedLock: true, blockTiles: [...BLOCK_PATH] };
+        expect(expectHolder('pinned', { ...held, swordKill: false, eastBobsAtButton: 2 })).toBe(true);
+        expect(expectHolder('pinned', { ...held, swordKill: false, eastBobsAtButton: 0 })).toBe(false);
+        expect(expectHolder('pinned', { ...held, blockFinal: '17,5', swordKill: false, eastBobsAtButton: 2 })).toBe(false);
+        expect(expectHolder('alive', { ...held, swordKill: false, eastBobsAtButton: 1 })).toBe(true);
+        expect(expectHolder('alive', { ...held, swordKill: true, eastBobsAtButton: 1 })).toBe(false);
+        expect(expectHolder('kill-first', { ...held, swordKill: true, eastBobsAtButton: 0 })).toBe(true);
+        expect(expectHolder('kill-first', { ...held, swordKill: false, eastBobsAtButton: 0 })).toBe(false);
     });
 });
 

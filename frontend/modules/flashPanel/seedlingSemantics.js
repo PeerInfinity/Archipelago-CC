@@ -354,8 +354,18 @@ const TRANSCRIBED_ENTITY_SEMANTICS = Object.freeze({
     // ShieldLock (Puzzlements/ShieldLock.as:33). shieldType 0 wants the plain
     // Shield, 1 the Dark Shield. Note the Ogmo tags are the other way round from
     // the class default: `shieldlock` is type 1 (Game.as:2145).
-    shieldlocknorm: G(flag('hasShield'), { class: 'ShieldLock', variant: { shieldType: 0 } }),
-    shieldlock: G(flag('hasDarkShield'), { class: 'ShieldLock', variant: { shieldType: 1 } }),
+    // ⛓ RULES sided-openers — ONE-SIDED AND LATCHING, like the BossLock below:
+    // - `probe: 'W'`: `update()` asks `collide("Player", x - 1, y)` (ShieldLock.as:32),
+    //   the lock's box moved one pixel WEST, so only a player touching its WEST face
+    //   opens it (the rows `seedlingBossLockCensus.LOCK_PROBE_SIDES` already read);
+    // - `persistAttr: 'tag'`: the constructor hands `Lock` `tSet = -2` (ShieldLock.as:26),
+    //   `activate` never resets (`Activators.as` holds `_active`), `Lock.turnOff()` writes
+    //   `setPersistence(tag, false)` (Lock.as:96) and `Lock.check()` removes it on every
+    //   later entry when `tag >= 0 && tSet < 0` (Lock.as:42).
+    // Before this slice the two rows were two-way `gated`: a far side the game cannot
+    // open it from crossed it on the Shield alone.
+    shieldlocknorm: G(flag('hasShield'), { class: 'ShieldLock', variant: { shieldType: 0 }, probe: 'W', persistAttr: 'tag' }),
+    shieldlock: G(flag('hasDarkShield'), { class: 'ShieldLock', variant: { shieldType: 1 }, probe: 'W', persistAttr: 'tag' }),
 
     // BossLock (Puzzlements/BossLock.as:17,34,63): `normType = "Solid"` until
     // `Player.hasKey(keyType)`. The key index is a per-placement attribute
@@ -599,20 +609,22 @@ export function entitySemantics(entity) {
     if (tag === undefined || isLevelPropertyTag(tag)) return null;
     const base = ENTITY_SEMANTICS[tag];
     if (!base) return null;
+    // ⛓ RULES sided-openers — `persists` is read for EVERY row that names a `persistAttr` (the ShieldLock's
+    // condition is a class constant, not a per-placement attribute; it used to be read only beside one).
+    const withPersists = (row) => {
+        if (!base.persistAttr) return row;
+        const t = Number(entity.attrs?.[base.persistAttr]);
+        return { ...row, persists: Number.isInteger(t) && t >= 0 };
+    };
     if (base.conditionFromAttr) {
         const raw = entity.attrs?.[base.conditionFromAttr];
         const index = Number(raw);
         if (!Number.isInteger(index)) {
             return { ...base, kind: 'manual', reason: `${base.class}: ${base.conditionFromAttr}="${raw}" is not an integer key index` };
         }
-        const resolved = { ...base, condition: key(index) };
-        if (base.persistAttr) {
-            const tag = Number(entity.attrs?.[base.persistAttr]);
-            resolved.persists = Number.isInteger(tag) && tag >= 0;
-        }
-        return resolved;
+        return withPersists({ ...base, condition: key(index) });
     }
-    return base;
+    return withPersists(base);
 }
 
 /**

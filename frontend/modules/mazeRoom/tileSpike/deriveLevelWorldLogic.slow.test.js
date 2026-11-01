@@ -136,6 +136,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // (11,6), wired now (1); L112's landing from L113 (7,1) (2) and its rock-lock event at its L111 landing (2,13) [own event] (1); L3 r0c4
         // priced from L111's return landing (1,4) (3); and L113's finaldoor at its L114 landing (1,1) [own event] (1), which the whole game
         // prices over twice the points (L115's Swim exit adds an axis item).
+        // ⛓ rules-sided-openers adds 2 [own event] rows: the two latching ShieldLocks' events (L12 flag 10, L20 flag 0), and
+        // L12 r0c19's subset universe doubles with its new event item (2048 → 4096; the two bosslock rows 144 → 216).
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
@@ -144,8 +146,9 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_3__r0c4 → level_2 (landing 1,4) | 8/16',
             'level_3__r0c4 → level_4 (landing 1,4) | 8/16',
             'level_5__r1c1 → level_12__r13c6 (landing 1,2) | 1/2',
-            'level_12__r0c19 @ L12 flag 4: bosslock@416,240 cleared (landing 1,22) | 144/2048 [own event]',
-            'level_12__r0c19 @ L12 flag 5: bosslock@432,240 cleared (landing 1,22) | 144/2048 [own event]',
+            'level_12__r0c19 @ L12 flag 4: bosslock@416,240 cleared (landing 1,22) | 216/4096 [own event]',
+            'level_12__r0c19 @ L12 flag 5: bosslock@432,240 cleared (landing 1,22) | 216/4096 [own event]',
+            'level_12__r0c19 @ L12 flag 10: shieldlocknorm@288,704 cleared (landing 1,22) | 180/4096 [own event]',
             'level_12__r13c6 @ L12 flag 11: bosslock@112,192 cleared (landing 6,14) | 2/8 [own event]',
             'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 3/16',
             'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 2/16 [own event]',
@@ -160,6 +163,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_12__r42c28 → level_12__r0c37 (landing 2,54) | 64/128',
             'level_12__r42c28 → level_83 (landing 2,54) | 64/128',
             'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
+            'level_20__r1c4 @ L20 flag 0: shieldlocknorm@176,16 cleared (landing 12,4) | 1/4 [own event]',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 2/4',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 1/4 [own event]',
             'level_24 → level_12__r40c4 (landing 3,8) | 2/4',

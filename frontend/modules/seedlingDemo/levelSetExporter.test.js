@@ -916,7 +916,8 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         // ⛓ tile-primitives-pixelmask-l86: 294 -> 297, a building's footprint is its Pixelmask: L0's house-door pocket (r6c5,
         //   one two-way row) and L93's door up the waterfall (r5c7: r10c7 -> r5c7 Swim x2, r5c7 -> r10c7 Swim).
         // ⛓ rules-l112-owl-rocklock: 297 -> 298, L112's rock (one two-way row, the Owl's kill rule).
-        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(298);
+        // ⛓ rules-sided-openers: 298 -> 301, the three ShieldLocks' two-way rows split one-way + a return each.
+        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(301);
         expect(fromXml.atlas.regions.filter((r) => r.subgraph)).toHaveLength(0);
         const exitKeys = new Set(committed.regions.flatMap((r) => (r.exits ?? [])
             .flatMap((e) => Object.keys(e))));
@@ -926,7 +927,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-1973beee');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) + r4b pit centre + block-path (L15/L16/L41 lock entries) + rope-events (L16 lanes, L28 lock, Fire cuts) + rules-l39 (rope runs, static pulsers, L39 lock run) restamps + location-crossing (L19 Boss Key 0 charged the Sword; L113 rules_source) + l55-waterfall (L52 floored by its entry gate: three pools) + l66-door (L66's D6 door charged the off-grid Yellow-Key lock) + pixelmask-l86 (building footprints from the Pixelmask) + waterfall-door (L89's door to L91 charged the Feather) + collider-mismatch (a pixel-mask wall seals its mask, not its rect) + l112-owl-rocklock (L112's rock costs the Owl's kill: L112 splits)
+        expect(committed.atlas_id).toBe('seedling-07d995bd');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) + r4b pit centre + block-path (L15/L16/L41 lock entries) + rope-events (L16 lanes, L28 lock, Fire cuts) + rules-l39 (rope runs, static pulsers, L39 lock run) restamps + location-crossing (L19 Boss Key 0 charged the Sword; L113 rules_source) + l55-waterfall (L52 floored by its entry gate: three pools) + l66-door (L66's D6 door charged the off-grid Yellow-Key lock) + pixelmask-l86 (building footprints from the Pixelmask) + waterfall-door (L89's door to L91 charged the Feather) + collider-mismatch (a pixel-mask wall seals its mask, not its rect) + l112-owl-rocklock (L112's rock costs the Owl's kill: L112 splits) + sided-openers (the ShieldLocks one-sided from the west, latching)
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 

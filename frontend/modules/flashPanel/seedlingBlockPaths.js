@@ -120,12 +120,17 @@ const BLOCKING = new Set(['wall', 'sink', 'manual']);
  * @param {Map<number,number>} opts.tileTypes cell index -> tile type
  * @param {(c:object)=>string} opts.keyOf
  * @param {object} [opts.flagCondition] `name -> condition` for a block kind's push flag
+ * @param {Array<{tx:number,ty:number,keys:object[],label:string}>} [opts.stoppers] bodies a block stops at
+ *   (`PushableBlock.as:28`, `solids.push("Enemy", "Player")`), as `blockCrossingCost` takes them: a cell no block
+ *   enters unless one of the body's `keys` (CONDITIONS here: the verbs that remove it) is held. The rules hand in
+ *   none (⛓ RULES rules-l16-holder-enemies: `census-seedling-block-stoppers.mjs` parks every met body on every met
+ *   cell with this and finds no holder price that moves); the census is the caller.
  * @returns {{ universe: string[], byKey: Map<string,object>, refused: string|null,
  *   entries: (startIndex:number) => string[][] }}
  */
 export function blockHolderSearch(grid, {
     blocks, holders, lockCells, closedCells = lockCells, tileTypes, keyOf, flagCondition = (f) => ({ flag: f }),
-    fallers = [],
+    fallers = [], stoppers = [],
 }) {
     const { width, height, cells } = grid;
     const inside = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
@@ -158,6 +163,14 @@ export function blockHolderSearch(grid, {
         }
     }
     for (const b of blocks) { const k = pushKey(b); if (k) universe.add(k); }
+    const stopperKeys = new Map();
+    for (const st of stoppers) {
+        if (!inside(st.tx, st.ty)) continue;
+        const ks = [...new Set(keysOf(st.keys))];
+        for (const k of ks) universe.add(k);
+        const i = st.ty * width + st.tx;
+        stopperKeys.set(i, [...(stopperKeys.get(i) ?? []), ks]);
+    }
     const fallerKeys = fallers.map((f) => f.triggers.map((t) => [...new Set(keysOf(t.condition ? [t.condition] : []))]));
     for (const ks of fallerKeys) for (const k of ks.flat()) universe.add(k);
     const holderSet = new Set(holders.filter(([x, y]) => inside(x, y)).map(([x, y]) => y * width + x));
@@ -182,6 +195,7 @@ export function blockHolderSearch(grid, {
             const c = cells[i];
             if (!standable(i)) return false;
             if (BLOCK_FATAL_TILES.includes(tileTypes.get(i))) return false;
+            if ((stopperKeys.get(i) ?? []).some((ks) => !ks.some((k) => held.has(k)))) return false;
             const gated = ['faces', 'dirs', 'enter'].some((k) => Object.keys(c[k] ?? {}).length > 0);
             return !gated;
         };
