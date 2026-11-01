@@ -303,25 +303,20 @@ function bindWorldEvents(builder, events, local, inGrid) {
  * tiles are ONE game entity's body (`ctx.eventsFor`), and the game removes that body whole: L113's FinalDoor is a 2×2 entity, solid
  * until `hasAllSealParts() && talkedToWatcher` (`FinalDoor.as`). The transcription can gate its cells unequally — the door row on
  * the Watcher's talk, the lower row on the Seals alone — so the event was priced from beside its weakest cell and that cell was
- * passable early. So the rule-typed cells of one entity (cells joined by sharing an event, transitively) all take the And of their
- * distinct gates, before the event is bound. A struck body (a rock: `clear_set`) is one cut state already and is left alone, as is
+ * passable early. So the rule-typed cells of one entity (one event's cells; a stacked cell with two events joins no body) all take
+ * the And of their distinct gates, before the event is bound. A struck body (a rock: `clear_set`) is one cut state already and is left alone, as is
  * an entity any of whose cells is not rule-typed. Mutates `builder.obstacles`/`obstacleLib`; a body whose cells agree is unchanged.
  */
-function unifyEntityGates(builder, byCell) {
-    const parent = new Map([...byCell.keys()].map((k) => [k, k]));
-    const find = (k) => (parent.get(k) === k ? k : find(parent.get(k)));
-    const firstOf = new Map();
-    for (const [key, evs] of byCell) {
-        for (const ev of evs) {
-            if (!firstOf.has(ev.name)) firstOf.set(ev.name, key);
-            else parent.set(find(key), find(firstOf.get(ev.name)));
-        }
-    }
+export function unifyEntityGates(builder, byCell) {
+    // A body is ONE event's cells (`ctx.eventsFor`: one entity's tiles). A cell carrying two events is two STACKED entities (L12's
+    // magical lock on its boss lock, each opened by its own rule), so it joins no body: welding there would And both entities'
+    // gates onto every cell of each (designer review, session tile-primitives-sphere-order-13).
     const bodies = new Map();
-    for (const key of byCell.keys()) {
-        const root = find(key);
-        if (!bodies.has(root)) bodies.set(root, []);
-        bodies.get(root).push(key);
+    for (const [key, evs] of byCell) {
+        if (evs.length !== 1) continue;
+        const name = evs[0].name;
+        if (!bodies.has(name)) bodies.set(name, []);
+        bodies.get(name).push(key);
     }
     for (const keys of bodies.values()) {
         if (keys.length < 2) continue;
