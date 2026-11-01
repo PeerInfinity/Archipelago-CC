@@ -64,6 +64,7 @@ The substrate uses two optional bridge methods from [Flash](./flash.md)'s bridge
 
 - `setCheckedLocations(names)` is called on every snapshot change, so a collected check coin is redrawn as an outline.
 - A `loadRegion` that arrives before the page has created `configure` (the .NET runtime takes seconds to boot) is held until it exists.
+- `configure`'s `checkedLocations` comes from the iframe's cached snapshot. Right after a world is loaded that cache can still hold the previous world's checks, so a coin of the new world would be handed to the page as collected, and the page would never report it. When a snapshot that arrives within a few seconds of a configure lacks a check the configure was given, the bridge configures the region again (`SEED_VERIFY_MS`; it logs `configured with checks the host does not have`).
 
 ## Items
 
@@ -83,6 +84,18 @@ The substrate uses two optional bridge methods from [Flash](./flash.md)'s bridge
 The nine platform items are platform types. The same level is generated whether or not an item is held; without it, that type's platforms are drawn dashed and cannot be landed on. `Jetpack` is a movement ability: a level generated with the Jetpack hero needs it.
 
 `Victory` is the substrate's victory item.
+
+## The bot
+
+The bot is the page's own: the computer's recording of the level, replayed. The host drives it through the substrate's playback proxy (the surface the Playback Bot and loop mode use), which the bridge turns into `botWalkTo` calls on the page:
+
+- **A location** (`{kind: 'pickup', id: <check>}`): the player respawns at the start of the coin's piece and plays that piece's recording to the coin. Without the piece's items it falls through the dashed platforms (`died`), or the recording runs out short of the coin (`timeout`).
+- **An exit** (`{kind: 'portal', id: <side>}`): the player walks to the door and leaves by that side, without the menu.
+  - A side the **start door** offers (`startDoorSides`: the way back, and the side the player arrived by) is left by the start door. The player respawns at the level's start, where the start door is, so it needs no item.
+  - Every other side is left by the end door. The player respawns at the start of the last piece and plays its recording to the door, so it needs the last piece's items.
+  - `options.door` (`'start'` or `'end'`) forces one door.
+
+The start door's walk is a Cloudberry page feature: the page says it has it with `__cloudberryEmbed.features.botStartDoor`. A page without it leaves every side by the end door.
 
 ## Rules
 
@@ -169,11 +182,41 @@ Cloudberry regions can also come from region-library packs: the substrate declar
 A pack entry's `payload` holds the original arguments, the resolved request, the document hash, the facts (`pieceItems`, `jetpack`) and the check coins (`checks`: name, coin id, piece). Its `carried_rules` are the rules those facts emit; `validateLibraryEntry` re-emits them and refuses any drift.
 
 - **Spiral** (`instantiateLibraryEntry`): the entry on the slot's sides (any subset of its four, since every exit leaves by the end door), keeping its captured slot items.
-- **Sphere growth** (`instantiateLibraryEntryForSpecs`): the node's items on the check slots in order, with the engine's filler on the rest. The hook returns the end door's real requirement as exit paths, and the engine ANDs its own gate onto each of them as a `logic_gate` obstacle (`buildSphereLibraryRegion`), so neither requirement is lost. A sphere world built from the library has not been played; generated regions (above) are the sphere path that has been.
+- **Sphere growth** (`instantiateLibraryEntryForSpecs`): a library level is real geometry, so a pack entry is used only where it is sound. Its `libraryEntryRefusal`, which the engine's sphere source consults before it picks an entry, refuses a slot in two cases:
+  - Fewer of the entry's check coins are reachable with the slot's entry gate than the node has locations. A coin in piece k needs S_k.
+  - A forward exit's gate, together with the entry gate, does not hold S_last.
+
+  The node's items go on the reachable coins, in piece order, with the engine's filler on the rest. The hook returns the end door's real requirement as the forward exits' paths, and the engine ANDs its own gate onto each of them as a `logic_gate` obstacle (`buildSphereLibraryRegion`), so neither requirement is lost. The entrance side is the start door's way back and is free.
+
+  A world whose only content source is a library takes its goal from the library's substrate: Cloudberry declares `Victory`. `check-cloudberry-embed.mjs` plays a sphere world built from the demo pack to Victory with the Playback Bot.
 
 The demo pack has seven levels: nested pieces over every platform item, two Jetpack levels, one check coin per piece, all four exit sides. One captured slot holds `Victory`, so a world made from the pack alone has a goal.
 
 The entry declares `regionGeometry: SIDES` and its own `exitSides` declaration, which keys the stored payload's `params.backExitSide` and `gate_rules.portals`.
+
+## Testing
+
+**In-app rows** (`frontend/modules/tests/testCases/cloudberrySubstrateTests.js`, category `cloudberrySubstrate`) run in the real frontend against the same-origin site copy:
+
+| Row | What it proves |
+|---|---|
+| `cloudberry-preset-start-region-configures` | The committed preset's start region configures: the document hash matches, nothing is held, and check coins draw the logo from this frontend's art library. |
+| `cloudberry-demo-pack-region-coin-and-unheld-item` | A demo-pack level boots. The bot dies short of a coin behind an unheld item. A check coin checks its AP location and is drawn as checked. Receiving the item makes its platforms landable. |
+| `cloudberry-bot-end-door-region-move` | Without the item the bot never reaches the end door. With it, the end door sends the exit and the next region loads (`user:regionMove`). |
+| `cloudberry-end-door-menu-by-key` | Up at the end door opens the exit menu and pauses the game; ↓ chooses south. |
+| `cloudberry-start-door-way-back` | Up at the start door offers the way back. On a page with the bot's start door, the bot leaves by it without the end door's item. On an older page that leg is logged as not run. |
+| `cloudberry-shipped-preset-generates` | `shipped:cloudberry-sphere-demo` generates in the browser (the hidden game page) and equals the committed world. |
+
+With no site copy every row **refuses by name**: it fails, naming `scripts/setup/fetch-cloudberry-site.mjs`. The rows and the tutorial walk `tutorial-walk-procgen-cloudberry` (the Procgen tutorial *a Cloudberry Kingdom world*) form the manual batch `cloudberry`:
+
+```bash
+node scripts/setup/fetch-cloudberry-site.mjs
+npm test -- --mode=test-substrates --batch=cloudberry
+```
+
+On CI the batch runs in `cloudberry-e2e.yml`, after its site fetch.
+
+**Gates** (box, below): `check-cloudberry-embed.mjs` and `check-cloudberry-sphere.mjs`. **The touch probe** `scripts/procgen/probe-cloudberry-touch-up.mjs` taps the on-screen ↑ at the doors with real pointer input and counts the taps that open no menu.
 
 ## CLI tools
 
@@ -182,11 +225,12 @@ The entry declares `regionGeometry: SIDES` and its own `exitSides` declaration, 
 | `scripts/setup/fetch-cloudberry-site.mjs` | The same-origin copy of the game page (see [Setting up the game page](#setting-up-the-game-page)). |
 | `scripts/procgen/make-demo-cloudberry-pack.mjs` | Generates the demo pack through the game's own generator (headless, from the local copy). Each payload is configured in the page once, and a refusal fails the run; a region whose reroll search is exhausted is named. `--check` compares a fresh generation with the committed pack byte for byte. |
 | `scripts/procgen/check-cloudberry-sphere.mjs` | The generation gate. The demo state is generated headless by the game's generator, twice, and the two `rules.json` are byte-compared. A re-run is checked to come from the cache. A mixed maze and Cloudberry world is generated and made a winnable seed. The demo then goes through `world_generator` and `Generate.py` and is played in the frontend: each level's check coin by the bot, out by the end door, the start door's way back by the side the player came in, and Victory. `--write` writes the committed `cloudberry_sphere_worldgen`; `--check` compares a fresh generation with it; `--no-play` stops after `Generate.py`. Needs a dev server (`--port`) and takes the box lock. |
-| `scripts/procgen/check-cloudberry-embed.mjs` | A spiral world from the demo pack, through `world_generator` (`--canonical-seed 1`) and `Generate.py`, played in the real frontend. The start region configures. The bot dies short of a coin behind an unheld item. The bot collects the free coin, which is checked in the tracker, drawn as an outline, and gives the item. The bot then reaches the gated coin. Up at the end door opens the exit menu, and choosing a side moves to the next region. Needs a dev server (`--port`) and takes the box lock. |
+| `scripts/procgen/check-cloudberry-embed.mjs` | A spiral world from the demo pack, through `world_generator` (`--canonical-seed 1`) and `Generate.py`, played in the real frontend. The start region configures. The bot dies short of a coin behind an unheld item. The bot collects the free coin, which is checked in the tracker, drawn as an outline, and gives the item. The bot then reaches the gated coin. Up at the end door opens the exit menu, and choosing a side moves to the next region. Then a sphere world from the same pack (oracle clean, Victory placed) goes through `Generate.py` and the Playback Bot plays it to Victory (`--no-sphere` skips it). Needs a dev server (`--port`) and takes the box lock. |
+| `scripts/procgen/probe-cloudberry-touch-up.mjs` | The on-screen ↑ tapped at a door again and again, with real pointer input: the first tap after the controls are switched on, the end door with the menu just closed, the start door after a reset, and after a region swap. Prints the misses per variant, with the doors' state at each. Needs a dev server (`--port`) and takes the box lock. |
 
 ## Not yet
 
-- Bot polish, loop mode and in-app test rows: P3.
+- Loop mode: P3b.
 - Exits inside a level, so that forward exits with different requirements can share a level.
 - Spiral worlds take Cloudberry regions from a library only: there is no zone table.
 

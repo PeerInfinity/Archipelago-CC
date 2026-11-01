@@ -196,7 +196,7 @@ A **region library** stores a generated region as an entry and re-instantiates i
 | `captureLibraryEntry(region, meta)` | Turn a region into an entry. The maze stores geometry only (`carried_rules: null`); bounce and runner store their rules verbatim. |
 | `instantiateLibraryEntry(entry, ctx)` | Rebuild a region from an entry for a slot, drawing no rng. |
 | `instantiateLibraryEntryForSpecs(entry, ctx)` | Requirement-aware variant, used by sphere placement (`buildSphereLibraryRegion`) and the APWorld editor's *Library entry* source (`apworldEditor/regionRegenerate.js`): relabels openings onto the slot's sides and reassigns items. |
-| `libraryEntryRefusal(entry, ctx)` | Why `instantiateLibraryEntryForSpecs` would refuse this entry for `ctx`, or `null`; the editor's picker disables such entries. |
+| `libraryEntryRefusal(entry, ctx)` | Why `instantiateLibraryEntryForSpecs` would refuse this entry for `ctx`, or `null`. The editor's picker disables such entries, and the engine's sphere library source does not pick them; there `ctx` also carries `entranceSide`, `entryGate` and `exitPlans`. Cloudberry uses it to refuse slots where its level's geometry is not sound. |
 | `validateLibraryEntry(entry)` | Refuse an entry this substrate cannot instantiate. |
 | `instantiateAtlasEntryForSpecs(entry, ctx)` | Instantiate a region-atlas entry (a piece of a real map): rules come with the entry, surplus exits are pruned, locations keep their names. |
 
@@ -379,7 +379,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `instantiateAtlasEntryForSpecs` | — | — | — | — | — | fn | — | — | — | — |
 | `instantiateLibraryEntry` | fn | fn | — | — | — | fn | — | — | fn | — |
 | `instantiateLibraryEntryForSpecs` | fn | fn | — | — | — | fn | — | — | fn | — |
-| `libraryEntryRefusal` | fn | — | — | — | — | fn | — | — | — | — |
+| `libraryEntryRefusal` | fn | fn | — | — | — | fn | — | — | — | — |
 | `validateLibraryEntry` | fn | fn | — | — | — | fn | — | — | fn | — |
 
 **Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)**

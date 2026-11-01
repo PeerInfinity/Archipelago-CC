@@ -628,7 +628,9 @@ describe('who takes the box', () => {
             'check-cloudberry-embed.mjs',
             'make-demo-cloudberry-pack.mjs',
             // cloudberry P2b: the sphere gate (generation + Generate.py + play), same door
-            'check-cloudberry-sphere.mjs'];
+            'check-cloudberry-sphere.mjs',
+            // cloudberry P3a: the touch-↑ probe (real pointer taps at the doors), same door
+            'probe-cloudberry-touch-up.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

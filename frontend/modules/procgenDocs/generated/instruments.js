@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 134,
-            "count": 184,
+            "browser": 135,
+            "count": 185,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 504,
-        "browser": 204,
-        "cited": 269,
-        "files": 522,
+        "blockStyle": 505,
+        "browser": 205,
+        "cited": 270,
+        "files": 523,
         "lineStyle": 18,
-        "withDocblock": 522,
-        "withFlags": 436
+        "withDocblock": 523,
+        "withFlags": 437
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1970,6 +1970,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "keep"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-sphere"
                 },
                 {
                     "how": [
@@ -11074,6 +11080,63 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-watchertalk-witness — ⛓⛓⛓ fidelity WATCHERTALK D3: THE WATCHER'S EVENT `{114,0}`, EARNED BY THE SOLVER'S CLEAR-TAG FROM THE DIVERGENCE SWEEP'S TWO L114 ARRIVALS (`CONTACT_FIDELITY.watcherTalkVerb` ON).",
             "path": "scripts/procgen/plan-seedling-watchertalk-witness.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/cloudberry.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-cloudberry-touch-up.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "hold"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "port"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "rounds"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "wait"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-cloudberry-touch-up — **THE ON-SCREEN ↑ AT A CLOUDBERRY DOOR, TAPPED MANY TIMES, MISSES COUNTED** (cloudberry P3a; P1b's one unexplained live miss: a touch ↑ at the end door that did not open the exit menu).",
+            "path": "scripts/procgen/probe-cloudberry-touch-up.mjs"
         },
         {
             "argvHelpers": [

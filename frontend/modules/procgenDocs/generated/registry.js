@@ -30,7 +30,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 35,
+            "fields": 36,
             "id": "cloudberry",
             "label": "Cloudberry Kingdom",
             "registeredBy": "frontend/modules/cloudberryDemo/cloudberryLibrary.js"
@@ -3790,6 +3790,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "maze"
             ],
             "cells": [
@@ -3802,9 +3803,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
