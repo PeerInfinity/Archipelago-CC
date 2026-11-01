@@ -155,6 +155,7 @@ function register(registrationApi) {
   registrationApi.registerEventBusPublisher('stateManager:workerQueueStatus'); // Updates on the worker's internal queue status
   registrationApi.registerEventBusPublisher('stateManager:workerError'); // Non-critical errors reported by the worker during processing
   registrationApi.registerEventBusPublisher('stateManager:error'); // Critical errors (e.g., worker init failure, communication failure)
+  registrationApi.registerEventBusPublisher('stateManager:loadFailed'); // A loadRules the worker could not complete: {game, player, phase, where, message} (rulesLoadFailed)
   registrationApi.registerEventBusPublisher('stateManager:loadingRules'); // Status updates during rule loading
   registrationApi.registerEventBusPublisher('stateManager:pongReceived'); // Response to ping requests
   registrationApi.registerEventBusPublisher('stateManager:inventoryChanged'); // Inventory changes
