@@ -1,0 +1,168 @@
+diff --git a/frontend/modules/seedlingDemo/hammerChooserPair.test.js b/frontend/modules/seedlingDemo/hammerChooserPair.test.js
+index 391eaa69..cfff930d 100644
+--- a/frontend/modules/seedlingDemo/hammerChooserPair.test.js
++++ b/frontend/modules/seedlingDemo/hammerChooserPair.test.js
+@@ -77,10 +77,10 @@ function withPairSize(size, fn) {
+ const SILENT = 'NO LIVE BODY\'s removal admits a corridor';
+ 
+ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHOOSER_PAIR`)', () => {
+-    it('ships OFF (`SEEDLING_CHOOSER_PAIR=1` turns it on in node), asking pairs only', () => {
+-        expect(CHOOSER_PAIR_DEFAULT).toBe(false);
+-        expect(CHOOSER_PAIR.enabled).toBe(ENV.SEEDLING_CHOOSER_PAIR === '1');
+-        expect(CHOOSER_PAIR.size).toBe(ENV.SEEDLING_CHOOSER_PAIR_SIZE === '3' ? 3 : 2);
++    it('ships ON at size 3 (⚖ the flip, after CPWIT\'s game witness; `SEEDLING_CHOOSER_PAIR=0` opts out, `…_SIZE=2` asks pairs only)', () => {
++        expect(CHOOSER_PAIR_DEFAULT).toBe(true);
++        expect(CHOOSER_PAIR.enabled).toBe(ENV.SEEDLING_CHOOSER_PAIR !== '0');
++        expect(CHOOSER_PAIR.size).toBe(ENV.SEEDLING_CHOOSER_PAIR_SIZE === '2' ? 2 : 3);
+     });
+ 
+     it('853 at 5196: OFF the burn stance\'s walk refuses on bob@736,752 with the chooser silent; ON the pair '
+@@ -100,10 +100,11 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
+         expect(on.message).toContain('-> kill (spinner@816,848) by press: the player died at t1046 (chaser bob@736,800)');
+     }, 240_000);
+ 
+-    it('853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and ON = OFF',
++    it('853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF',
+         () => {
+             const off = solveLeg(LEG853, 5172, false);
+-            const on = solveLeg(LEG853, 5172, true);
++            // ⛓ CPWIT flip: the PAIR arm's question (size 2); the shipped triple arm admits here
++            const on = withPairSize(2, () => solveLeg(LEG853, 5172, true));
+             expect(on.counts.asked).toBeGreaterThan(0);
+             expect(on.counts.admitted).toBe(0);
+             expect([on.ok, on.work, on.message]).toEqual([off.ok, off.work, off.message]);
+@@ -123,7 +124,7 @@ describe('hammer-phase CPAIR — the removal chooser answers a chaser pair (`CHO
+         const off = solveLeg(LEG367, null, false, Infinity);
+         expect(off.ok).toBe(false);
+         expect(off.message).toContain('the caller\'s anytime deadline');
+-        const pairOnly = solveLeg(LEG367, null, true, 1);
++        const pairOnly = withPairSize(2, () => solveLeg(LEG367, null, true, 1));
+         expect(pairOnly.counts.asked).toBeGreaterThan(0);
+         expect(pairOnly.counts.admitted).toBe(0);
+         withPairSize(3, () => {
+diff --git a/frontend/modules/seedlingDemo/hammerGhostKillRung.test.js b/frontend/modules/seedlingDemo/hammerGhostKillRung.test.js
+index a585414b..7051f7e6 100644
+--- a/frontend/modules/seedlingDemo/hammerGhostKillRung.test.js
++++ b/frontend/modules/seedlingDemo/hammerGhostKillRung.test.js
+@@ -21,7 +21,7 @@ import { withPressKillRebootGuard, withPressKillShakeGuard } from './pressKillGu
+ // ⛓ hammer-phase PKC / OPP: the witness is the kill across the bob's death, so `PRESS_KILL_CHASERS` and
+ // `OPPORTUNISTIC_STRIKE` are pinned OFF (both ship OFF)
+ import { withOpportunisticStrike, withPressKillChasers } from './pressKillCost.js';
+-import { solveSegment, withStrikeEtaFloor } from './solverBot.js';
++import { solveSegment, withChooserPair, withStrikeEtaFloor } from './solverBot.js';
+ import { SPINNER } from './spinner.js';
+ import { parseTape } from './tapeFormat.js';
+ import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
+@@ -100,7 +100,12 @@ function stagingA() {
+  * (2026-10-23) flipped the floor ON. ON, this staging's kill moves (t2114 → t1616, the death t1216 → t778); the floor's
+  * own gate, `hammerStrikeEtaFloor.test.js`, pins that answer against its own witness (`hammer-sf-l40-strikefloor`).
+  */
++/** ⛓ CPWIT flip: `CHOOSER_PAIR` pinned OFF (ON since its flip), as the other switches below are. */
+ function solveA(enabled, guards = false) {
++    return withChooserPair(false, () => solveAUnpinned(enabled, guards));
++}
++
++function solveAUnpinned(enabled, guards) {
+     const staging = stagingA();
+     const run = createRunForStaging(staging, atlasLevelSource());
+     return withOpportunisticStrike(false, () => withPressKillChasers(false, () => withStrikeEtaFloor(false, () => withPressKillShakeGuard(guards, () => withPressKillRebootGuard(guards, () => withGhostKillRung(enabled, () => {
+diff --git a/frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js b/frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js
+index 9fed0209..38848453 100644
+--- a/frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js
++++ b/frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js
+@@ -23,7 +23,7 @@ import { describe, expect, it } from 'vitest';
+ 
+ import {
+     STRIKE_ETA_FLOOR, STRIKE_ETA_FLOOR_DEFAULT, STRIKE_PREVIEW_CAP, deriveStrike, solveSegment, strikeEtaFloorOf,
+-    withStrikeEtaFloor,
++    withChooserPair, withStrikeEtaFloor,
+ } from './solverBot.js';
+ import { SPINNER } from './spinner.js';
+ import { PROFILE } from './seedlingProfile.js';
+@@ -284,7 +284,9 @@ describe(`${WNAME} — the strike the admissible floor lets the scan see, on the
+      * guard refuses the kill at that death, so the row that reproduces the witness pins the guards OFF, and a sibling
+      * row pins the ON answer (the witness's own first 778 ticks, then the guard's refusal).
+      */
+-    const solveOn = (guards) => {
++    // ⛓ CPWIT flip: `CHOOSER_PAIR` pinned OFF (ON since its flip), as the other switches below are
++    const solveOn = (guards) => withChooserPair(false, () => solveOnUnpinned(guards));
++    const solveOnUnpinned = (guards) => {
+         const staging = solveStaging(stagingFromTape(parseTape(readFileSync(join(HERE, 'fixtures',
+             'hammer-p1-l40-south-boot.json'), 'utf8'))));
+         staging.seam = { ...staging.seam, items: { ...staging.seam.items, hasSword: true, hasGhostSword: true } };
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 68606c45..5765d680 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -15459,18 +15459,19 @@ export function withChooserHitSources(enabled, fn, mode = null) {
+  * the next blocker: the bobsoldier, or the press kill's chaser death that OPP removes. `size: 3` (env
+  * `SEEDLING_CHOOSER_PAIR_SIZE=3`) is the measurement arm that asks triples too.
+  *
+- * OFF by default. `SEEDLING_CHOOSER_PAIR=1` turns it on in a node process (the page's worker has no `process`, so it is
+- * OFF there), and `withChooserPair(enabled, fn)` is for a test or a witness. OFF, no pair is asked and every walk and
+- * trace is byte-identical. ON where the chooser or C1 already admits a body, no pair is asked either.
++ * ON by default at `size: 3` (⚖ the user's flip, after CPWIT's game witness: the L43 pits `out_pit_5_21/22/23` ← L39
++ * played hitless to the exit in the game). `SEEDLING_CHOOSER_PAIR=0` or `withChooserPair(false, fn)` opts out (OFF,
++ * no pair is asked and every walk and trace is the BEFORE model); `SEEDLING_CHOOSER_PAIR_SIZE=2` asks pairs only. ON
++ * where the chooser or C1 already admits a body, no pair is asked either.
+  */
+ export const CHOOSER_PAIR = {
+-    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR === '1',
++    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR !== '0',
+     /** How many live chasers nearest the hit point are partnered with each of the hit's own chasers. */
+     near: 4,
+-    /** The largest set asked: 2 (a pair). `SEEDLING_CHOOSER_PAIR_SIZE=3` is the measurement arm (a triple too). */
+-    size: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR_SIZE === '3' ? 3 : 2,
++    /** The largest set asked: 3 (a triple too). `SEEDLING_CHOOSER_PAIR_SIZE=2` asks pairs only (CPAIR's shipped arm). */
++    size: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR_SIZE === '2' ? 2 : 3,
+ };
+-export const CHOOSER_PAIR_DEFAULT = false;
++export const CHOOSER_PAIR_DEFAULT = true;
+ 
+ /** Run `fn` with `CHOOSER_PAIR` set to `enabled`, restoring the previous value (`withChooserHitSources`'s shape). */
+ export function withChooserPair(enabled, fn) {
+diff --git a/scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs b/scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs
+index 2866cdd0..0285599a 100644
+--- a/scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs
++++ b/scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs
+@@ -69,15 +69,16 @@ export async function ghostKillStaging() {
+  * stays byte-identical. ⛔ Re-recording it ON would rewrite a game-witnessed tape from the model alone.
+  */
+ export async function ghostKillSolve(staging, enabled) {
+-    const { solveSegment, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
++    const { solveSegment, withChooserPair, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
+     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
+     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+     const { withGhostKillRung } = await import(join(MODULE, 'ghostSpinnerPress.js'));
+     const { withPressKillRebootGuard, withPressKillShakeGuard } = await import(join(MODULE, 'pressKillGuards.js'));
+     const run = createRunForStaging(staging, atlasLevelSource());
+     // ⛓ hammer-phase OPP: the witness is the kill across the bob's death, so `OPPORTUNISTIC_STRIKE` is pinned OFF too (it ships OFF)
++    // ⛓ CPWIT flip: and `CHOOSER_PAIR` (ON since its flip): the witness is this switch's kill, not the chooser's later refusal
+     const { withOpportunisticStrike, withPressKillChasers } = await import(join(MODULE, 'pressKillCost.js'));
+-    const guardsOff = (fn) => withOpportunisticStrike(false, () => withPressKillChasers(false, () => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, fn))));
++    const guardsOff = (fn) => withOpportunisticStrike(false, () => withPressKillChasers(false, () => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, () => withChooserPair(false, fn)))));
+     return withStrikeEtaFloor(false, () => guardsOff(() => withGhostKillRung(enabled, () => {
+         try {
+             const out = solveSegment({ run, goals: [JSON.parse(JSON.stringify(GOAL))], name: NAME, boot: staging.boot,
+diff --git a/scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs b/scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs
+index b70dce33..49e9ffd6 100644
+--- a/scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs
++++ b/scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs
+@@ -68,14 +68,15 @@ export async function strikeFloorStaging() {
+ 
+ /** One `solveSegment` from the staging; a refusal returns its executed prefix (`e.perTick`) and its message. */
+ export async function strikeFloorSolve(staging, enabled) {
+-    const { solveSegment, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
++    const { solveSegment, withChooserPair, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
+     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
+     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+     const { withPressKillRebootGuard, withPressKillShakeGuard } = await import(join(MODULE, 'pressKillGuards.js'));
+     const run = createRunForStaging(staging, atlasLevelSource());
+     // ⛓ hammer-phase OPP: the witness is the kill across the bob's death, so `OPPORTUNISTIC_STRIKE` is pinned OFF too (it ships OFF)
++    // ⛓ CPWIT flip: and `CHOOSER_PAIR` (ON since its flip): the witness is this switch's kill, not the chooser's later refusal
+     const { withOpportunisticStrike, withPressKillChasers } = await import(join(MODULE, 'pressKillCost.js'));
+-    const guardsOff = (fn) => withOpportunisticStrike(false, () => withPressKillChasers(false, () => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, fn))));
++    const guardsOff = (fn) => withOpportunisticStrike(false, () => withPressKillChasers(false, () => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, () => withChooserPair(false, fn)))));
+     return guardsOff(() => withStrikeEtaFloor(enabled, () => {
+         try {
+             const out = solveSegment({ run, goals: [JSON.parse(JSON.stringify(GOAL))], name: NAME, boot: staging.boot,

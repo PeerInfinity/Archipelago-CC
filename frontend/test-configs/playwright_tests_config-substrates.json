@@ -2051,6 +2051,12 @@
             "_comment": "GRAPHICS G8. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 38: the chest, both covers and all five buttons drawn from the seedling pack; the ButtonRoom the player arrives on drawn PRESSED (levelRun.activatorsNow reaching the page), the wired ButtonRoom on its wired frames; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-rope",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "slice seedling-js-rope-art. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 16: the rope drawn from seedling:puzzlement/rope as RopeStart.render does uncut (span frame 1 x3, pulley 0, handle 2); every sheet decodes, zero console errors. The cut look is pinned in node (seedlingSolidsRope.test.js). No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-graphics-npcs",
             "enabled": true,
             "category": "Seedling JS runtime",

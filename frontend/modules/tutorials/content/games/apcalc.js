@@ -128,7 +128,7 @@ export const APCALC_GENERATOR = Object.freeze({
                 {
                     step: {
                         id: 'apworld',
-                        text: 'Press **⭳ .apworld**: the generator runs Archipelago\'s world generator in your browser on this map and saves it as a game for `custom_worlds/` — as the APWorld Editor does for procgen worlds. The first build loads Python (~10 MB); the log ends with *.apworld: downloaded apcalc.apworld*.',
+                        text: 'Press **⭳ .apworld**: the generator runs Archipelago\'s world generator in your browser on this map and saves it as a game for `custom_worlds/` — as the APWorld Editor does for procgen worlds. The first build loads Python (~10 MB); the log ends with *.apworld: downloaded apcalc_puzzle_7_….apworld*. The game is named *APCalc Puzzle 7-xxxxxx*: the seed plus a six-digit hash of the other fields, so it never clashes with the built-in APCalc world or with another generated puzzle.',
                         actions: [{ click: { ...GEN, selector: 'button.apcalc-gen-apworld' } }],
                         done: (ctx) => /\.apworld: downloaded \S+\.apworld/.test(ctx.text({ ...GEN, selector: '.apcalc-gen-log' })),
                         failed: (ctx) => ctx.text({ ...GEN, selector: '.apcalc-gen-log' }).match(/\.apworld: build failed: .*/)?.[0] ?? null,

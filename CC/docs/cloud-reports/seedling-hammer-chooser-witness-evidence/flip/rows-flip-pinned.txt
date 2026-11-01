@@ -1,0 +1,27 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/wt-cpwit-flip[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m17 tests[22m[2m)[22m[33m 132947[2mms[22m[39m
+     [33m[2m✓[22m[39m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick [33m 2859[2mms[22m[39m
+     [33m[2m✓[22m[39m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA) [33m 3699[2mms[22m[39m
+     [33m[2m✓[22m[39m K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike [33m 4162[2mms[22m[39m
+     [33m[2m✓[22m[39m the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen [33m 5710[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts [33m 1264[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death) [33m 64158[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t778), and the executed prefix is the witness's first 778 ticks [33m 51075[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerChooserPair.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 443858[2mms[22m[39m
+     [33m[2m✓[22m[39m 853 at 5196: OFF the burn stance's walk refuses on bob@736,752 with the chooser silent; ON the pair bob@736,752 + bobsoldier@880,832 admits, the chaser arm kills the bob in the model, and the chain moves on to the spinner@816,848 press kill [33m 163303[2mms[22m[39m
+     [33m[2m✓[22m[39m 853 at 5172: every empty climb needs a TRIPLE (the bobsoldier and both bobs) — no pair admits, and the pair arm = OFF [33m 146809[2mms[22m[39m
+     [33m[2m✓[22m[39m 356 (its every climb answered by a single removal): the pair is never asked, and ON = OFF [33m 73541[2mms[22m[39m
+     [33m[2m✓[22m[39m the measurement arm that asks triples too: 367 OFF refuses at its deadline; with triples the set bob@192,480 + bob@224,496 + puncher@128,624 admits, the arm kills bob@192,480 in the model, and the walk reaches the L43 pit [33m 56662[2mms[22m[39m
+     [33m[2m✓[22m[39m the L16 guard: with the switch ON the solver re-derives r9-solve-16 (C1's regression stays closed) [33m 3537[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostKillRung.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 467314[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE) [33m 1547[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death; the strike floor OFF) [33m 322885[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t1216), and the executed prefix is the witness's first 1216 ticks (the strike floor OFF) [33m 142861[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m30 passed[39m[22m[90m (30)[39m
+[2m   Start at [22m 19:54:32
+[2m   Duration [22m 474.86s[2m (transform 6.84s, setup 0ms, import 18.14s, tests 1044.12s, environment 1ms)[22m
+

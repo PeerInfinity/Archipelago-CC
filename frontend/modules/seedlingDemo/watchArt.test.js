@@ -21,7 +21,7 @@ import { loadPackStack } from '../contentPacks/contentPacks.js';
 import { createArtLibrary } from '../artLibrary/artLibrary.js';
 import { ROLES, buildLevelWorld } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
-import { formatOp, PORTAL_KEY } from './seedlingSkinRenderer.js';
+import { formatOp, PORTAL_KEY, TILE_LAYER } from './seedlingSkinRenderer.js';
 import { playerOps, stepPlayerSkin, SUIT_KEYS } from './seedlingPlayerSkin.js';
 import { ENEMY_COLOUR, enemyOps, stepEnemySkin } from './seedlingEnemySkin.js';
 import { generateSeedlingLevel } from './procgenSeedling.js';
@@ -32,6 +32,7 @@ import {
     LAB_ART_TICK, _labArtRedrawForTests, _resetLabArtForTests, artParamOn, createLabArtPainter, labArt, labArtActive, labArtOps,
     labStillKey, rememberRoomRecord, roomRecordOf, setLabArtRedraw, staticBodyOps, staticPlayerOps,
     staticPlayerView, labDrawnObjects, placementBodies, placementRunOf, staticEntityOpsByFamily,
+    BRIDGE_TILE_KEY, ROPE_FRAMES, ROPE_KEY, staticRopeOps,
 } from './watchArt.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -294,7 +295,8 @@ describe('5. L2b — the room\'s other objects, static', () => {
         L19: { level: 19, families: ['boss'] },                               // the shield boss
     });
     const GOLDEN = Object.freeze({
-        L16: { ops: 253, sprites: 252, digest: 'f83191db9364eaa1' },
+        // ⛓ rope-bridge re-recorded (253/252/f83191db9364eaa1 → this): L16's rope is a sprite now, its stand-in gone
+        L16: { ops: 257, sprites: 257, digest: 'a8c89311a5fbed9c' },
         L107: { ops: 219, sprites: 209, digest: '1717df1a32f39cec' },
         L34: { ops: 102, sprites: 102, digest: '8d786297011148f8' },
         L29: { ops: 286, sprites: 286, digest: '2646371c41d100f7' },
@@ -438,5 +440,140 @@ describe('5. L2b — the room\'s other objects, static', () => {
                 expect(rects(missing) - rects(withArt)).toBe(drawn);
             });
         }
+    });
+});
+
+/**
+ * ⛓ LAB rope-bridge (seedling-lab-rope-bridge-art): the last two stand-ins. The ROPE is drawn lab-side from
+ * `RopeStart.render` (`seedling:puzzlement/rope`, RopePulley.png); the BRIDGE is tile 29's own picture, whose object
+ * stand-in the lab stops painting over it. Measured over the 116 vanilla rooms: the stand-ins were rope ×3 (L16, L28,
+ * L39) and bridge ×5 (L61 ×2, L63, L66, L93); after this, none.
+ */
+describe('6. rope and bridge — the last stand-ins', () => {
+    const SOURCE = atlasLevelSource();
+    const STAGING = Object.freeze({ boot: { level: 0, x: 0, y: 0 }, noclip: false, noHazards: [], noDamage: false,
+        grants: [], persistence: [], equips: [] });
+    const labWorld = (rec, levelSource = SOURCE) => rememberRoomRecord(buildLevelWorld(rec, { roles: ROLES }), rec,
+        { levelSource, staging: { ...STAGING, boot: { ...STAGING.boot, level: rec.level } } });
+    const without = (key) => ({ ...art, has: (q) => q !== key && art.has(q) });
+    const ROPE_ROOMS = [16, 28, 39];
+    const BRIDGE_ROOMS = [61, 63, 66, 93];
+    const GOLDEN = Object.freeze({
+        L16: { ops: 256, sprites: 256, digest: '816dd602c047f386' },
+        L61: { ops: 232, sprites: 232, digest: 'c9e0db6d04d7bf20' },
+        ropegate: { ops: 104, sprites: 104, digest: 'd0b0d4bec5da1b12' },
+    });
+    const check = (name, ops) => {
+        const got = { ops: ops.length, sprites: ops.filter((o) => o.sheetRef).length, digest: digest(ops) };
+        if (process.env.PRINT_WATCH_ART_DIGESTS) console.log(name, JSON.stringify(got));
+        expect(got).toEqual(GOLDEN[name]);
+    };
+    /** The stand-in rects left over a rope or bridge object. */
+    const standInsOf = (world, ops) => {
+        const objs = world.objectSolids.filter((s) => s.ropeId || s.bridgeId);
+        // (the object's stand-in, not tile 29's own colour rect under it, which sits at `TILE_LAYER`)
+        return ops.filter((o) => !o.sheetRef && o.rect && o.layer !== TILE_LAYER && objs.some((s) => s.rect.x === o.rect.x && s.rect.y === o.rect.y
+            && s.rect.w === o.rect.w));
+    };
+    const opsOf = (level, opts = {}, a = art) => {
+        const rec = recordOf(level);
+        const world = labWorld(rec);
+        return { world, ops: labArtOps(world, a, { record: rec, bodies: placementBodies(world), ...opts }) };
+    };
+    let ropegate;
+    beforeAll(() => {
+        // the Ropegate as-built's room: `?source=generate&seed=1&biome=post-sword&elements=ropegate`, empty 10×10
+        ropegate = generateSeedlingLevel({
+            seed: 1, palette: POST_SWORD_PALETTE, defaults: { width: 10, height: 10 },
+            skeleton: parseSkeleton('empty', { substrate: 'seedling' }), elements: parseElementSpec('ropegate'),
+        }).record;
+    }, 60000);
+
+    it('L16 (rope): golden; the rope is span ×3 + pulley + handle, in RopeStart.render\'s cells; no stand-in left', () => {
+        const { world, ops } = opsOf(16);
+        const rope = ops.filter((o) => o.key === ROPE_KEY);
+        expect(rope.map((o) => `${o.frame}@${o.dx},${o.dy}`)).toEqual(['1@32,16', '1@48,16', '1@64,16', '0@32,16', '2@80,16']);
+        expect(ops.families.rope).toBe(5);
+        expect(standInsOf(world, ops)).toEqual([]);
+        check('L16', ops);
+    });
+
+    it('L61 (bridge ×2): golden; the bridges are their tile sprites, the object stand-ins gone', () => {
+        const { world, ops } = opsOf(61);
+        const bridges = world.objectSolids.filter((s) => s.bridgeId);
+        expect(bridges).toHaveLength(2);
+        for (const b of bridges) {
+            expect(ops.some((o) => o.key === BRIDGE_TILE_KEY && o.sheetRef && o.dx === b.rect.x && o.dy === b.rect.y), b.bridgeId).toBe(true);
+        }
+        expect(ops.families.bridge).toBe(2);
+        expect(standInsOf(world, ops)).toEqual([]);
+        check('L61', ops);
+    });
+
+    it('every rope and bridge room: no stand-in left', () => {
+        for (const level of [...ROPE_ROOMS, ...BRIDGE_ROOMS]) {
+            const { world, ops } = opsOf(level);
+            expect(standInsOf(world, ops), `L${level}`).toEqual([]);
+        }
+    });
+
+    it('a generated ropegate room (seed 1, post-sword, 10×10): golden; the rope is drawn', () => {
+        const world = labWorld(ropegate, (n) => (n === ropegate.level ? ropegate : null));
+        const ops = labArtOps(world, art, { record: ropegate });
+        const rope = world.objectSolids.find((s) => s.ropeId);
+        expect(rope, 'the room holds its rope').toBeTruthy();
+        expect(ops.filter((o) => o.key === ROPE_KEY).map((o) => o.frame).sort()).toEqual(
+            [...Array((rope.span.xend - rope.x) / 16).fill(1), 0, 2].sort());
+        expect(standInsOf(world, ops)).toEqual([]);
+        check('ropegate', ops);
+    });
+
+    describe('state: a CUT rope is the pulley and the dropped handle (one cell stays solid; nothing despawns)', () => {
+        const pulledSample = (level, id) => ({ level, changes: [{ id, family: 'pulledRopes', effect: 'swapped' }],
+            changeCounts: { placed: 1, byFamily: {}, changed: 1, blind: 0, families: 8 } });
+        const frames = (ops) => ops.filter((o) => o.key === ROPE_KEY).map((o) => `${o.frame}@${o.dx}`);
+        it('the sample says PULLED → frame 0 at x, frame 3 at xend, no span', () => {
+            const { ops } = opsOf(16, { sample: pulledSample(16, 'rope@32,16') });
+            expect(frames(ops)).toEqual([`${ROPE_FRAMES.pulley}@32`, `${ROPE_FRAMES.handleCut}@80`]);
+        });
+        it('a world built with the rope already pulled (`bootPulled`) → cut', () => {
+            const world = buildLevelWorld(recordOf(16), { roles: ROLES });
+            const ropes = world.objectSolids.map((s) => (s.ropeId ? { ...s, bootPulled: true } : s));
+            expect(frames(staticRopeOps({ ...world, objectSolids: ropes }, art))).toEqual(['0@32', '3@80']);
+        });
+        it('another room\'s sample, or one with no world census, leaves the uncut look', () => {
+            const built = frames(opsOf(16).ops);
+            expect(frames(opsOf(16, { sample: { ...pulledSample(16, 'rope@32,16'), level: 15 } }).ops)).toEqual(built);
+            expect(frames(opsOf(16, { sample: { ...pulledSample(16, 'rope@32,16'), changeCounts: null } }).ops)).toEqual(built);
+            expect(built).toHaveLength(5);
+        });
+    });
+
+    describe('STATIC over the rope and the bridge — a scrub draws one frame set; the tile-clock MUTANT does not', () => {
+        const TICKS = [0, 1, 7, 30, 59, 60, 61, 119, 240, 37, 3];
+        const scrub = (tickOf) => [...ROPE_ROOMS, ...BRIDGE_ROOMS].map((level) => TICKS.map((t) => opsOf(level, tickOf(t)).ops
+            .filter((o) => o.key === ROPE_KEY || o.key === BRIDGE_TILE_KEY)// a tile op names its frame by its source cell only
+            .map((o) => `${o.key}#${o.frame ?? ''}@${o.sx}`).join(',')));
+        it('the real list: ONE frame set per room across the whole scrub', () => {
+            for (const frames of scrub(() => ({}))) expect(new Set(frames).size).toBe(1);
+        });
+        it('⛔ the MUTANT reading the bridge at the scrub tick (the `closed` anim) gives more than one', () => {
+            expect(scrub((t) => ({ tick: t })).some((frames) => new Set(frames).size > 1)).toBe(true);
+        });
+    });
+
+    describe('fallback: the sheet missing keeps the stand-in', () => {
+        it(`${ROPE_KEY} withheld: no rope sprite, the rope's stand-in rect is back, the family is null`, () => {
+            const { world, ops } = opsOf(16, {}, without(ROPE_KEY));
+            expect(ops.filter((o) => o.key === ROPE_KEY)).toHaveLength(0);
+            expect(standInsOf(world, ops)).toHaveLength(1);
+            expect(ops.families.rope).toBe(null);
+        });
+        it(`${BRIDGE_TILE_KEY} withheld: the tile is its colour and each bridge keeps its stand-in`, () => {
+            const { world, ops } = opsOf(61, {}, without(BRIDGE_TILE_KEY));
+            expect(ops.filter((o) => o.key === BRIDGE_TILE_KEY)).toHaveLength(0);
+            expect(standInsOf(world, ops)).toHaveLength(2);
+            expect(ops.families.bridge).toBe(null);
+        });
     });
 });

@@ -40,6 +40,12 @@
  *                  solve runs (only at the solver's own sites, so often fewer),
  *                  and the final one just before `result` (only when asked).
  *
+ * ⛓ CPWIT — THE SOLVER-ENV CHANNEL (measurement only): a worker built at a URL carrying `?seedlingSolverEnv=`
+ * (`solverEnvChannel.solveWorkerUrl`, from the PAGE's own param) installs those `SEEDLING_*` names as `process.env`
+ * before any solver module loads (`solverEnvShim.js`, the first import), and stamps every `pass` answer, `best` and
+ * `result` (and the plan) `solverEnv`: the canonical spec. A spec it refused answers every solve with a refusal
+ * naming it. No param = no shim, no stamp: today's worker.
+ *
  * ⛔ NO BUNDLE ENTRY. The JS runtime page (`jsRuntime.html`) is an unbundled
  * module page in BOTH flavours — the bundled build bundles the host
  * (`init-bundled.js`), and the deployed site serves `frontend/` whole — so
@@ -49,6 +55,10 @@
  * `worker_threads` with a `self` shim (`jsRuntimeSolveService.test.js`).
  */
 
+// ⛓ CPWIT — FIRST, before any solver module is evaluated: the page's `?seedlingSolverEnv=` off this worker's URL,
+// installed as `process.env` (`solverEnvShim.js`; measurement only, absent = nothing installed).
+import { SOLVER_ENV_APPLIED, SOLVER_ENV_ERROR } from './solverEnvShim.js';
+import { stampSolverEnv } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { ANYTIME_PASSES, settleSolve, solveAnytime, upgradeWindowWork } from './jsRuntimeSolver.js';
 import { walkTapeFromStaging, WALK_TAPE_PRODUCER } from './wasmWalkTape.js';
@@ -83,8 +93,12 @@ self.onmessage = (event) => {
             () => withKillLockBodies(normalizeKillLockBodies(request.killLockBodies ?? {}),
                 () => walkTapeFromStaging({ ...request, levelSource: held.levelSource, records: held.records, clock }))))
         : null;
+    // ⛓ CPWIT — every answer (each pass's, its best, the result) and its plan carry the switches this worker installed
+    // (`solverEnv`, the canonical spec; absent at the defaults); a spec the shim refused refuses every solve BY NAME.
+    const env = (a) => stampSolverEnv(a, SOLVER_ENV_APPLIED);
     let answer;
-    if (!held) answer = { ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };
+    if (SOLVER_ENV_ERROR) answer = { ok: false, kind: 'refusal', message: `the solver worker refused its switches — ${SOLVER_ENV_ERROR}` };
+    else if (!held) answer ={ ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };
     else if (produce) answer = settleSolve(produce);
     else {
         // ⛓ ANYTIME — the solver's passes in order (`ANYTIME_PASSES`, or the request's own — a held retry
@@ -106,11 +120,11 @@ self.onmessage = (event) => {
             passes, clock,
             onPass: (one, best, index) => {
                 tap?.onPass(one, best);
-                self.postMessage({ type: 'pass', id, index, pass: one.pass, answer: one, best });
+                self.postMessage({ type: 'pass', id, index, pass: one.pass, answer: env(one), best: env(best) });
             },
         });
         answer = tap ? withSolveProgress((site, peek) => tap.hook(site, peek), solve) : solve();
         tap?.finish();
     }
-    self.postMessage({ type: 'result', id, ...answer });
+    self.postMessage({ type: 'result', id, ...env(answer) });
 };

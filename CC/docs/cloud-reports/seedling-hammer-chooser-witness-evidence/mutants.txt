@@ -1,0 +1,5 @@
+CPWIT mutation runs (each applied by hand, the rows run, then reverted with the saved copy):
+
+m1  solverEnvShim.js imported AFTER the solver modules in jsRuntimeSolveWorker.js
+    -> RED: solverEnvChannel.test.js 'sets CHOOSER_PAIR (on, size 3) in the worker before solverBot loads; nothing else'
+       (10 passed / 1 failed); reverted -> 11/11.

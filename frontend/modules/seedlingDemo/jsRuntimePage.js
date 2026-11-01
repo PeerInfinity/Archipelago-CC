@@ -169,6 +169,7 @@
 
 import { createJsRuntime, IN_PLACE_REBOOT_WHY } from './jsRuntimeCore.js';
 import { createWorkerSolveService } from './jsRuntimeSolveService.js';
+import { solveWorkerUrl } from './solverEnvChannel.js';
 import { applyKillLockBodies, parseKillLockBodies } from './killLockBodies.js';
 import { applyContactFidelity, parseContactFidelity } from './contactFidelity.js';
 import { applyAxeDodgeAsk, parseAxeDodgeAsk } from './axeDodgeAskHook.js';
@@ -191,7 +192,7 @@ import {
     adoptRunEffectSkin, carryThroughReboot, effectOps, effectSkinView, fadeSlot, jiggleCam, screenOps, stepEffectSkin,
 } from './seedlingEffectSkin.js';
 import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from './seedlingPuzzleSkin.js';
-import { SOLIDS_OBJECT_TAGS, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
+import { ROPE_OBJECT_TAGS, SOLIDS_OBJECT_TAGS, ropeOps, ropeSkinView, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
 import { NPC_TAGS, npcOps, npcSkinView, stepNpcSkin } from './seedlingNpcSkin.js';
 import { rockHoldSlot, stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
@@ -261,7 +262,9 @@ export function mountJsRuntimePage(win = window) {
     let solveService = null;
     if (typeof win.Worker === 'function') {
         solveService = createWorkerSolveService({
-            createWorker: () => new win.Worker(new URL('./jsRuntimeSolveWorker.js', import.meta.url), { type: 'module', name: 'seedling-js-solver' }),
+            // ⛓ CPWIT — `?seedlingSolverEnv=` on THIS page reaches the worker's URL (`solverEnvChannel.js`); absent = today's
+            createWorker: () => new win.Worker(solveWorkerUrl(new URL('./jsRuntimeSolveWorker.js', import.meta.url), win.location?.search),
+                { type: 'module', name: 'seedling-js-solver' }),
             clock: () => win.performance.now(),
         });
     } else {
@@ -711,10 +714,13 @@ export function mountJsRuntimePage(win = window) {
                     pack: o.key ? art.packOf(o.key) : null })) }
             : null;
         const sv = art ? solidsView() : null;
-        const solidSprites = sv ? solidsOps(sv, art, { skin: graphics.solidsSkin }) : [];
+        // ⛓ the rope (`RopeStart.render`): static per `cut`, so no reducer; `null` (the key withheld) keeps its stand-in
+        const ropeView = art ? ropeSkinView(runtime.run) : null;
+        const ropeSprites = ropeView ? ropeOps(ropeView.ropes, art, ropeView.cut) : null;
+        const solidSprites = sv ? [...solidsOps(sv, art, { skin: graphics.solidsSkin }), ...(ropeSprites ?? [])] : [];
         graphics.solids = sv
             ? { chests: sv.chests.length, rocks: sv.rocks.length, trees: sv.trees.length, magicalLocks: sv.magicalLocks.length,
-                responders: sv.responders.length, rockLocks: sv.rockLocks.length, buttons: sv.buttons.length,
+                responders: sv.responders.length, rockLocks: sv.rockLocks.length, buttons: sv.buttons.length, ropes: ropeView?.ropes.length ?? 0,
                 ops: solidSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, alpha: o.alpha ?? 1, pack: o.key ? art.packOf(o.key) : null })) }
             : null;
         const nv = art ? npcSkinView(runtime.run) : null;
@@ -785,7 +791,7 @@ export function mountJsRuntimePage(win = window) {
         const roomBodyDrawn = roomBodyDrawnObjects(bodySprites);
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
-            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || NPC_TAGS.has(o.tag)
+            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || (ropeSprites !== null && ROPE_OBJECT_TAGS.has(o.tag)) || NPC_TAGS.has(o.tag)
                 || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag) || roomBodyDrawn(o),
                 // ⚖ only the game's SHOWN portals are drawn, as the spinning Portal.png; the invisible teleporters draw nothing
                 drawnTeleporters: teleporterArtFilter(roomRecord), shownTeleporter: shownTeleporters(roomRecord), visitTick: portalVisitTick(runtime.run),
