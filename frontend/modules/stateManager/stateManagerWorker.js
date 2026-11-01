@@ -224,6 +224,8 @@ import { WorkerSpoilerTest } from './core/workerSpoilerTest.js';
 
 import { slotGameName } from './core/statePersistence.js';
 
+import { loadRulesOrReport } from './core/rulesLoadFailure.js';
+
 // Initialize worker logger with basic settings
 initializeWorkerLogger({
   defaultLevel: 'WARN',
@@ -559,11 +561,17 @@ async function handleMessage(message) {
         const rulesData = message.payload.rulesData;
         const playerId = String(message.payload.playerInfo.playerId);
 
-        await stateManagerInstance.loadFromJSON(rulesData, playerId);
-        const initialSnapshot = stateManagerInstance.getSnapshot();
-
-        // Use the getStaticGameData method to get all static data including game_name and game_directory
-        const workerStaticGameData = stateManagerInstance.getStaticGameData();
+        // loadFromJSON, then getSnapshot and getStaticGameData (the latter gets all static data
+        // including game_name and game_directory). A throw in any of them posts rulesLoadFailed
+        // (game, player, phase, message), so the proxy settles the load instead of waiting
+        // forever, then rethrows into the catch below, which still posts workerError.
+        const { initialSnapshot, workerStaticGameData } = await loadRulesOrReport(
+          stateManagerInstance,
+          rulesData,
+          playerId,
+          message.payload.loadSeq,
+          (failure) => self.postMessage(failure)
+        );
 
         log(
           'info',

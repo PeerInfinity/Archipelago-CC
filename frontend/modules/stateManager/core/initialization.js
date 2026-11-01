@@ -40,6 +40,14 @@ import { PlayerIdUtils } from '../../shared/playerIdUtils.js';
 export function loadFromJSON(stateManager, jsonData, selectedPlayerId) {
   const sm = stateManager; // Shorthand
 
+  // Where the load is, for the worker's rulesLoadFailed report (core/rulesLoadFailure.js).
+  // A plain field on the instance, never copied into a snapshot or static data, and cleared
+  // to null when the load completes, so a good load leaves nothing behind.
+  // `where` is the region being indexed (loadLocations / loadExits only); the BFS sets nothing.
+  const progress = { phase: 'start', where: null };
+  sm._rulesLoadProgress = progress;
+  const enter = (phase) => { progress.phase = phase; progress.where = null; };
+
   sm.invalidateCache();
   sm.clearCheckedLocations({ sendUpdate: false });
 
@@ -61,6 +69,7 @@ export function loadFromJSON(stateManager, jsonData, selectedPlayerId) {
   sm.originalExitOrder = [];
 
   // Validate input
+  enter('validateJSONData');
   validateJSONData(jsonData, selectedPlayerId);
 
   // Set player ID (normalized to string)
@@ -74,12 +83,15 @@ export function loadFromJSON(stateManager, jsonData, selectedPlayerId) {
   );
 
   // Load player-specific data
-  loadPlayerData(sm, jsonData, selectedPlayerId);
+  enter('loadPlayerData');
+  loadPlayerData(sm, jsonData, selectedPlayerId, progress);
 
   // Select and initialize game logic module
+  enter('initializeGameLogic');
   initializeGameLogic(sm, jsonData, selectedPlayerId);
 
   // Create inventory instance
+  enter('inventory');
   sm.inventory = createInventoryInstance(sm, sm.settings.game);
 
   // Load game-specific data from game_info (e.g., total_progression_items for Stardew Valley)
@@ -90,20 +102,25 @@ export function loadFromJSON(stateManager, jsonData, selectedPlayerId) {
   }
 
   // Load shops if applicable
+  enter('loadShops');
   loadShops(sm, jsonData, selectedPlayerId);
 
   // Process starting items
+  enter('processStartingItems');
   processStartingItems(sm, jsonData, selectedPlayerId);
 
   // Initialize game-specific virtual items AFTER starting items are processed
   // (e.g., Stardew Valley progression tracking needs to count starting advancement items)
+  enter('initializeVirtualItems');
   if (sm.logicModule && typeof sm.logicModule.initializeVirtualItems === 'function') {
     sm.logicModule.initializeVirtualItems(sm);
     sm._logDebug('[Initialization] Initialized game-specific virtual items');
   }
 
   // Compute initial reachability
+  enter('buildIndirectConnections');
   sm.buildIndirectConnections();
+  enter('computeReachableRegions');
   sm.computeReachableRegions();
 
   // Reset game-specific events
@@ -115,6 +132,7 @@ export function loadFromJSON(stateManager, jsonData, selectedPlayerId) {
   // Ensure settings exist
   sm.settings = sm.settings || {};
 
+  sm._rulesLoadProgress = null;
   sm._logDebug('[Initialization] loadFromJSON completed.');
 }
 
@@ -213,7 +231,7 @@ export function refuseRetiredTopLevelKeys(jsonData) {
  * @param {Object} jsonData - The JSON data
  * @param {string} selectedPlayerId - The player ID
  */
-function loadPlayerData(sm, jsonData, selectedPlayerId) {
+function loadPlayerData(sm, jsonData, selectedPlayerId, progress = null) {
   // Load items and build name->ID map
   sm.itemData = jsonData.items?.[selectedPlayerId] || {};
   sm.itemNameToId = {};
@@ -284,10 +302,10 @@ function loadPlayerData(sm, jsonData, selectedPlayerId) {
   sm._logDebug('[Initialization] Initialized prog_items structure');
 
   // Load locations
-  loadLocations(sm, selectedPlayerId);
+  loadLocations(sm, selectedPlayerId, progress);
 
   // Load exits
-  loadExits(sm, selectedPlayerId);
+  loadExits(sm, selectedPlayerId, progress);
 }
 
 /**
@@ -326,7 +344,8 @@ function loadGroupData(sm, jsonData, selectedPlayerId) {
  * @param {Object} sm - StateManager instance
  * @param {string} selectedPlayerId - The player ID
  */
-function loadLocations(sm, selectedPlayerId) {
+function loadLocations(sm, selectedPlayerId, progress = null) {
+  if (progress) progress.phase = 'loadPlayerData/loadLocations';
   sm.locations.clear(); // Clear the Map initialized in constructor
   sm.locationNameToId = {};
   sm.eventLocations.clear();
@@ -335,6 +354,7 @@ function loadLocations(sm, selectedPlayerId) {
   for (const regionName of sm.originalRegionOrder) {
     const region = sm.regions.get(regionName); // Use Map.get() instead of bracket notation
     if (!region) continue;
+    if (progress) progress.where = regionName;
 
     if (region.locations && Array.isArray(region.locations)) {
       region.locations.forEach((locationDataItem) => {
@@ -395,13 +415,15 @@ function loadLocations(sm, selectedPlayerId) {
  * @param {Object} sm - StateManager instance
  * @param {string} selectedPlayerId - The player ID
  */
-function loadExits(sm, selectedPlayerId) {
+function loadExits(sm, selectedPlayerId, progress = null) {
+  if (progress) progress.phase = 'loadPlayerData/loadExits';
   sm.exits = [];
   sm._logDebug('[Initialization] Populating exits...');
 
   for (const regionName of sm.originalRegionOrder) {
     const regionObject = sm.regions.get(regionName); // Use Map.get() instead of bracket notation
     if (!regionObject) continue;
+    if (progress) progress.where = regionName;
 
     if (regionObject.exits && Array.isArray(regionObject.exits)) {
       regionObject.exits.forEach((originalExitObject) => {
