@@ -89,6 +89,7 @@
 import { IframeClient } from '../iframe-base/iframeClient.js';
 import { evaluateRuleAgainstInventory } from '../shared/procgen/library.js';
 import { createLocationReportLedger } from './locationReportLedger.js';
+import { createCheckedSeedVerifier } from './checkedSeedVerifier.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -486,16 +487,10 @@ function _handlePlaybackControl(payload) {
 const LATE_GAME_SIDE_MS = 180000;
 
 // A configure is SEEDED with the host's checked locations from this iframe's cached
-// snapshot. Right after a rules (re)load that cache can still be the PREVIOUS world's
-// (procgenPlayer publishes loadRegion before the new world's snapshot reaches the
-// iframe), so a location the new world has not checked would be handed to the game as
-// collected, and its report dropped by the ledger — measured on cloudberry (P3a: the
-// page then never re-reports the coin). The snapshots that arrive within this window
-// after a configure (the fresh one it requests included) are compared with the seed;
-// a seeded name the host does not have → configure again from the fresh snapshot.
-// A window, not "the next snapshot": a snapshot already in flight may land first.
-const SEED_VERIFY_MS = 5000;
-let _seeded = null;          // { payload, names: Set<AP name>, at } — the last configure's seed
+// snapshot, which after a rules (re)load can still be the PREVIOUS world's; the first
+// snapshot heard after the configure decides whether to configure again (once). The
+// rule and why it needs no clock: checkedSeedVerifier.js.
+const _seedVerifier = createCheckedSeedVerifier();
 
 const LATE_GAME_SIDE_POLL_MS = 200;
 let _pendingLoad = null;
@@ -542,21 +537,17 @@ function _pushCheckedLocations() {
     }
 }
 
-/** Was the last configure seeded with checks the host does not have (a stale snapshot)? Then configure again. */
+/** The first snapshot after a configure: was it seeded with checks the host does not have? Then configure again, once. */
 function _reseedIfStale() {
-    const seed = _seeded;
-    if (!seed || seed.names.size === 0 || Date.now() - seed.at > SEED_VERIFY_MS) return false;
-    const host = _hostCheckedNames();
-    const stale = [...seed.names].filter((n) => !host.has(n));
-    if (stale.length === 0) return false;
-    _seeded = null;
+    const verdict = _seedVerifier.snapshot(_hostCheckedNames());
+    if (!verdict) return false;
     log('info', `region ${_currentRegionId}: configured with checks the host does not have `
-        + `(${stale.join(', ')}; a snapshot from the previous world) — configuring again`);
-    _handleLoadRegion(seed.payload);
+        + `(${verdict.stale.join(', ')}; a snapshot from the previous world) — configuring again`);
+    _handleLoadRegion(verdict.payload, { reconfigure: true });
     return true;
 }
 
-function _handleLoadRegion(payload) {
+function _handleLoadRegion(payload, { reconfigure = false } = {}) {
     if (!payload || !payload.region_id) {
         log('warn', `${LOAD_REGION_EVENT} with no region_id`, payload);
         return;
@@ -583,7 +574,7 @@ function _handleLoadRegion(payload) {
         }
     }
     _locationReports.reset(acceptedNames);
-    _seeded = { payload, names: new Set(acceptedNames), at: Date.now() };
+    _seedVerifier.configured(payload, acceptedNames, { reconfigure });
 
     const b = _bridge();
     if (!b || typeof b.configure !== 'function') {
@@ -660,7 +651,7 @@ async function main() {
     _w.__swfBridge.requestHost = _onRequestHost;
 
     // Step 3: subscribe to host events.
-    _client.subscribeEventBus(LOAD_REGION_EVENT, _handleLoadRegion);
+    _client.subscribeEventBus(LOAD_REGION_EVENT, (payload) => _handleLoadRegion(payload));
 
     // Playback-bot control channel (only when the embedding panel
     // declared one via the iframe URL — see header).
@@ -699,7 +690,10 @@ async function main() {
     });
 
     // Re-request static data whenever rules (re)load (mirrors JtA).
+    // rulesLoaded carries the new world's snapshot (the client caches it): it can be the
+    // first snapshot after a configure that loadRegion's subscriber order put ahead of it.
     _client.subscribeEventBus('stateManager:rulesLoaded', () => {
+        if (_isActive) _reseedIfStale();
         _client?.requestStaticData?.();
     });
 
