@@ -1,6 +1,7 @@
 /**
  * seedlingDemo/strategySwitch — ⛓⛓ SEEDLING STRATEGY SWITCH r1: **A PER-SOLVE OFF SWITCH FOR THE SOLVER'S
- * STRATEGIES**, behind a flag that is OFF.
+ * STRATEGIES**, behind a flag that is ON by default (⚖ the user, 2026-11-01: "Turn it on"; `SEEDLING_STRATEGY_SWITCH=0`
+ * turns it off).
  *
  * The user's question (2026-10-28, item 6): can the generator work as the INVERSE of the solver — add content that
  * makes a room REQUIRE each strategy the solver knows? The with/without differential answers it once the solver can
@@ -9,9 +10,9 @@
  *
  *   `solveSegment({ …, disable: ['burn', 'rung:time'] })`  → one solve, with `burn` and the TIME rung switched off.
  *
- * ⛔ THE FLAG (`STRATEGY_SWITCH`, `SEEDLING_STRATEGY_SWITCH=1`) IS OFF, AND OFF REFUSES. A non-empty `disable` with
- * the flag off is a `SolverRefusal` (`STRATEGY_SWITCH_OFF`), never a silently ignored option: an ignored switch would
- * grade every room INERT. Absent or `[]` is a no-op at either flag state — nothing is installed, nothing is stamped,
+ * ⛔ THE FLAG (`STRATEGY_SWITCH`) IS ON BY DEFAULT, AND OFF (`SEEDLING_STRATEGY_SWITCH=0`) REFUSES. A non-empty
+ * `disable` with the flag off is a `SolverRefusal` (`STRATEGY_SWITCH_OFF`), never a silently ignored option: an
+ * ignored switch would grade every room INERT. Absent or `[]` is a no-op at either flag state — nothing is installed, nothing is stamped,
  * and the solve is today's, byte for byte.
  *
  * ⛔ THE SCOPE IS SYNCHRONOUS. `ACTIVE_DISABLE` is a module slot set for one solve's dynamic extent and restored in
@@ -42,9 +43,10 @@
 /**
  * ⚖ THE FLAG — `crusherBait.CRUSHER_BAIT`'s shape. A mutable record so a test or a measurement flips it in-process
  * (`withStrategySwitch`); the env var is the CLI/survey/worker switch (the page reaches it through CPWIT's
- * `?seedlingSolverEnv=SEEDLING_STRATEGY_SWITCH=1`). OFF: a `disable` request refuses by name. ⚖ A flip is the user's.
+ * `?seedlingSolverEnv=SEEDLING_STRATEGY_SWITCH=0`). ON by default since the flip (⚖ the user, 2026-11-01; r1 measured
+ * ON with no `disable` byte-identical to OFF); `=0` turns it OFF, and OFF refuses a `disable` request by name.
  */
-export const STRATEGY_SWITCH = { enabled: globalThis.process?.env?.SEEDLING_STRATEGY_SWITCH === '1' };
+export const STRATEGY_SWITCH = { enabled: globalThis.process?.env?.SEEDLING_STRATEGY_SWITCH !== '0' };
 
 export function withStrategySwitch(enabled, fn) {
     const prior = STRATEGY_SWITCH.enabled;

@@ -1,9 +1,10 @@
 /**
  * SEEDLING STRATEGY SWITCH r1 — the per-solve `disable:` switch (`strategySwitch.js` + its gates in `solverBot.js`),
- * flag `STRATEGY_SWITCH` OFF.
+ * flag `STRATEGY_SWITCH` ON by default since the flip (⚖ the user, 2026-11-01).
  *
  * The rows:
- *   - THE FLAG: off by default; off + a non-empty `disable` REFUSES by name (`STRATEGY_SWITCH_OFF`), never ignores;
+ *   - THE FLAG: ON by default, `SEEDLING_STRATEGY_SWITCH=0` turns it off (each env state pinned on a fresh import);
+ *     off + a non-empty `disable` REFUSES by name (`STRATEGY_SWITCH_OFF`), never ignores;
  *     absent / `[]` is `fn()` exactly (the same object back, nothing stamped);
  *   - THE PARSE: an unknown name, `avoid` and `dash` refuse by name; `verb:` / `rung:` qualify; a bare rung-and-verb
  *     word is both; the key is canonical;
@@ -21,7 +22,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { Worker as NodeWorker } from 'node:worker_threads';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
     ACTIVE_DISABLE, STRATEGY_DISABLE_UNKNOWN, STRATEGY_SWITCH, STRATEGY_SWITCH_OFF, disableKeyOf, parseDisable,
@@ -40,13 +41,31 @@ const refuseWith = (code, message) => { const e = new Error(message); e.code = c
 const ALL_VERBS = () => [...strategyDisableVocabulary().verbs];
 
 describe('strategy switch — the flag', () => {
-    it('ships OFF (no env in this process), and OFF refuses a non-empty `disable` by name', () => {
+    // ⚖ the flip (user, 2026-11-01: "Turn it on") — the env is read when the module loads, so each state is pinned on
+    // a FRESH import with the env set explicitly (`0` → OFF; unset or `1` → ON), `CRUSHER_BAIT`'s `!== '0'` shape.
+    it.each([[undefined, true], ['1', true], ['0', false]])('SEEDLING_STRATEGY_SWITCH=%s → enabled %s on a fresh import',
+        async (value, enabled) => {
+            const prior = process.env.SEEDLING_STRATEGY_SWITCH;
+            try {
+                if (value === undefined) delete process.env.SEEDLING_STRATEGY_SWITCH;
+                else process.env.SEEDLING_STRATEGY_SWITCH = value;
+                vi.resetModules();
+                const fresh = await import('./strategySwitch.js');
+                expect(fresh.STRATEGY_SWITCH.enabled).toBe(enabled);
+            } finally {
+                if (prior === undefined) delete process.env.SEEDLING_STRATEGY_SWITCH;
+                else process.env.SEEDLING_STRATEGY_SWITCH = prior;
+                vi.resetModules();
+            }
+        });
+
+    it('ships ON (no env in this process); OFF (the `0` state) refuses a non-empty `disable` by name', () => {
         expect(globalThis.process?.env?.SEEDLING_STRATEGY_SWITCH).toBeUndefined();
-        expect(STRATEGY_SWITCH.enabled).toBe(false);
+        expect(STRATEGY_SWITCH.enabled).toBe(true);
         let ran = false;
         let err = null;
         try {
-            withStrategyDisable(['burn'], () => { ran = true; });
+            withStrategySwitch(false, () => withStrategyDisable(['burn'], () => { ran = true; }));
         } catch (e) { err = e; }
         expect(ran).toBe(false);
         expect(err).toBeInstanceOf(SolverRefusal);
@@ -83,7 +102,7 @@ describe('strategy switch — the flag', () => {
     });
 
     it('the worker\'s settle: flag OFF is a refusal ANSWER (never a throw), carrying `disabled`', () => {
-        const a = settleUnderDisable(['shove'], () => ({ ok: true }));
+        const a = withStrategySwitch(false, () => settleUnderDisable(['shove'], () => ({ ok: true })));
         expect(a).toMatchObject({ ok: false, kind: 'refusal', disabled: { asked: ['shove'], switch: 'off' } });
         const b = withStrategySwitch(true, () => settleUnderDisable(['shove'], () => ({ ok: true, plan: {} })));
         expect(b).toEqual({ ok: true, plan: {}, disabled: { asked: ['shove'], hits: {}, first: null, absent: [] } });
