@@ -245,14 +245,16 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
 
 /**
  * ⛓ LATCHING BUTTONS — the LATCH primitive's effect on `next` (FRESH, mutated): each latching button (data) whose
- * `pressed` condition holds on this stance joins `next.latched` (sorted, once) — the native `noteLatches`.
+ * `pressed` condition holds on this stance joins `next.latched` (sorted, once) — the native `noteLatches`, which skips
+ * one whose event is carried (data: it is down already, and the record would only split the state).
  */
 function scriptedLatch(world, next, helpers, tileLib) {
     if (next.latched === undefined) return;
     const ctx = makeContext(helpers, next.inventory);
     let added = false;
     for (const [key, buttonId] of world.buttons ?? []) {
-        if (!world.buttonLib?.[buttonId]?.latch || next.latched.includes(key)) continue;
+        const latch = world.buttonLib?.[buttonId]?.latch;
+        if (!latch || next.latched.includes(key) || (latch.event && next.inventory.has(latch.event))) continue;
         const [x, y] = key.split(',').map(Number);
         if (!callHelper(ctx, tileLib.button.pressed, { x, y }, tileAt(world, x, y, next.blocks, next.player_pos))) continue;
         next.latched.push(key);

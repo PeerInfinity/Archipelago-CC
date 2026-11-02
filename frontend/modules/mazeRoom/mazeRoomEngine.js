@@ -1290,7 +1290,7 @@ function settlePulses(world, next, carried, clearanceOpts) {
         const inv = effectiveInventory(world, carried, next.player_pos, next.blocks, next.broken, next.latched);
         const pushes = pulseShoves(world, next, inv, clearanceOpts);
         if (pushes.length === 0) return pulsingAt(world, inv, next.player_pos.x, next.player_pos.y);
-        noteLatches(world, next);
+        noteLatches(world, next, carried);
         for (const p of pushes) moveBlockIn(world, next, p.from, p.to);
     }
 }
@@ -1762,13 +1762,16 @@ export function hasLatches(world) {
  * The LATCH primitive's effect, on a FRESH state (mutated): every latching button pressed NOW — the player or a block
  * on its cell (`heldTokens`' own rule) — joins `state.latched` (sorted, once). Run where a stance is final: the end of
  * every step, each pulse round (a block shoved on and off within one settle still pressed it), and the start.
+ * ⛓ A latch whose event `carried` holds is NOT recorded: it is down already (`latchTokens`), and a carried item is never
+ * dropped within a visit, so the record would only split each state in two (measured, session tile-mechanisms-m4-latch:
+ * L40's three latches laid, full inventory, 138,112 states = the base 17,312 × 8 with it; the base's without).
  */
-function noteLatches(world, state) {
+function noteLatches(world, state, carried = state.inventory) {
     if (state.latched === undefined) return;
     const here = posKey(state.player_pos.x, state.player_pos.y);
     let added = false;
-    for (const { key } of latchCells(world)) {
-        if (state.latched.includes(key)) continue;
+    for (const { key, entry } of latchCells(world)) {
+        if (state.latched.includes(key) || (entry.latch.event && carried.has(entry.latch.event))) continue;
         if (key !== here && !state.blocks?.includes(key)) continue;
         state.latched.push(key);
         added = true;
@@ -1952,7 +1955,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
         return null;
     }
     // ⛓ LATCHING BUTTONS — on the final stance: what is pressed now stays down for the visit.
-    noteLatches(world, next);
+    noteLatches(world, next, inventoryOverride !== undefined ? inventoryOverride : next.inventory);
     return next;
 }
 

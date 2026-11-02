@@ -193,6 +193,14 @@ describe('latching buttons — the engine (native step)', () => {
         expect(reachesGoal(on)).toBe(true);
     });
 
+    it('a latch whose event is carried is never recorded (it is down already; the record would only split states)', () => {
+        const w = world(SHOVE);
+        const carried = reachable(w, [EV]);
+        expect(carried.every((s) => s.latched.length === 0)).toBe(true);
+        expect(reachable(w, []).some((s) => s.latched.length > 0)).toBe(true);
+        expect(carried.some((s) => `${s.player_pos.x},${s.player_pos.y}` === goalOf(w))).toBe(true);
+    });
+
     it('`state.latched` and the visited key\'s `|l` segment exist only on a world that places a latch', () => {
         const plain = world(SHOVE, { latch: null });
         expect(createState(plain).latched).toBeUndefined();
