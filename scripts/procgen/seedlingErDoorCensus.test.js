@@ -119,7 +119,7 @@ describe('census-seedling-er-doorways — the committed playthrough atlas', () =
     });
 
     it('(B) 63 of 320 cross-level AP exits are gated; 5 sit on a stairs doorway, each conjunct owned by rule', () => {
-        expect(c.gates).toMatchObject({ crossLevel: 320, gated: 63, gatedLandingEvent: 15, gatedLandingTerrain: 25 });
+        expect(c.gates).toMatchObject({ crossLevel: 320, gated: 63, gatedLandingEvent: 17, gatedLandingTerrain: 25 });
         expect(c.gates.apExitsWithNoConnection).toEqual([]);
         expect(c.gates.stairsRows.map((r) => `${r.apExit} ${r.owners.map((o) => o.owner).join('+')}`)).toEqual([
             'level_101__r4c9 -> level_102__r5c9 DEPARTURE',

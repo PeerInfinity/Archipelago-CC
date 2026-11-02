@@ -56,6 +56,16 @@ export async function loadCensusInputs({ producer = true } = {}) {
     const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
     const { TRIGGER_FOR_NAMED_ROOM } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
     const { apRegionName } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
+    const { obstacleEventName } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
+    // The inverse of `obstacleEventName`, built FROM it (sentinels in, a pattern out), so the format is not respelled.
+    const SENT = { level: '\u0001', tag: '\u0002', cls: '\u0003', x: '\u0004', y: '\u0005' };
+    const eventRe = new RegExp(`^${obstacleEventName(SENT).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        .replace(SENT.level, '(\\d+)').replace(SENT.tag, '-?\\d+').replace(SENT.cls, '[a-z0-9_]+')
+        .replace(SENT.x, '-?\\d+').replace(SENT.y, '-?\\d+')}$`, 'i');
+    const flagLevelOf = (name) => {
+        const m = eventRe.exec(name);
+        return m ? Number(m[1]) : null;
+    };
     const triggerKeys = Object.fromEntries(Object.entries(TRIGGER_FOR_NAMED_ROOM).map(([key, t]) => [t, key]));
 
     const PRODUCER = 'scripts/procgen/make-seedling-playthrough-rules.mjs';
@@ -65,7 +75,7 @@ export async function loadCensusInputs({ producer = true } = {}) {
     for (const m of producerSource.matchAll(/await import\('(\.\/[^']+)'\)/g)) moduleSources[m[1]] = readFileSync(join(HERE, m[1]), 'utf8');
 
     const inputs = {
-        atlas, rules, mapDoc, returnTable: returnSpawnTable(mapDoc), returnKey, triggerKeys, apRegionName,
+        atlas, rules, mapDoc, returnTable: returnSpawnTable(mapDoc), returnKey, triggerKeys, apRegionName, flagLevelOf,
         producerSource, moduleSources,
     };
     if (!producer) return inputs;

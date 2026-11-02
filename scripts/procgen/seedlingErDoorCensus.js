@@ -263,9 +263,13 @@ const implied = (own, want) => !!own && (same(own, want) || conjuncts(own).some(
  * (B) — every gated AP exit carrying a STAIRS connection, its conjuncts classified by owner.
  *
  * OWNER RULES (per conjunct of the AP exit's rule):
- *   LANDING    it names an EVENT item (an AP_1 location with a null id holding it) whose event location lies
- *              in the LANDING level — a gate of the room the player lands in (a rope cut, a button barrier,
- *              an obstacle the landing sits in): under a shuffle it follows the LANDING (the target exit).
+ *   LANDING    it names an EVENT item (an AP_1 location with a null id holding it) OWNED by the LANDING
+ *              level — a gate of the room the player lands in (a rope cut, a button barrier, an obstacle the
+ *              landing sits in): under a shuffle it follows the LANDING (the target exit). An event's OWNER is
+ *              the level of the persistence flag it clears when its name is an obstacle event's
+ *              (`flagLevelOf`, the inverse of `seedlingObstacleEvents.obstacleEventName`), else the level its
+ *              event location lies in. (A cross-room button's event location is the PRESSER's room, but the
+ *              barrier it clears — the thing that cuts the landing — is in the flag's room.)
  *   DEPARTURE  it is the departure atlas exit's own `access_rule` (or a conjunct of it: the analyzer's
  *              in-room cost of reaching the door), or it names an event of the DEPARTURE level: it stays on
  *              the doorway under a shuffle.
@@ -273,13 +277,13 @@ const implied = (own, want) => !!own && (same(own, want) || conjuncts(own).some(
  *              landing (`lethalGated` holds "<region>/<exit>"): the landing's terrain, follows the landing.
  *   UNATTRIBUTED anything else, named.
  */
-export function stairsGates({ doorways, atlas, rules, lethalGated = new Set(), apRegionName }) {
+export function stairsGates({ doorways, atlas, rules, lethalGated = new Set(), apRegionName, flagLevelOf = () => null }) {
     const regions = rules.regions?.['1'] ?? rules.regions;
     const eventLevel = new Map();
     for (const [name, r] of Object.entries(regions)) {
         for (const loc of r.locations ?? []) {
             if (loc.id === null || loc.id === undefined) {
-                if (loc.item?.name) eventLevel.set(loc.item.name, levelOfApRegion(name));
+                if (loc.item?.name) eventLevel.set(loc.item.name, flagLevelOf(loc.item.name) ?? levelOfApRegion(name));
             }
         }
     }
@@ -468,7 +472,7 @@ export function censusErDoorways(i) {
     const scan = i.producerSource ? scanLinkReaders(i.producerSource, i.moduleSources ?? {}) : null;
     const exposure = scan ? readerStairsExposure(scan, i.readerDomains ?? {}, stairsDoors) : null;
     // (B)
-    const gates = i.rules ? stairsGates({ doorways, atlas: i.atlas, rules: i.rules, lethalGated: i.lethalGated, apRegionName: i.apRegionName }) : null;
+    const gates = i.rules ? stairsGates({ doorways, atlas: i.atlas, rules: i.rules, lethalGated: i.lethalGated, apRegionName: i.apRegionName, flagLevelOf: i.flagLevelOf }) : null;
     // (C) a stairs doorway a pit chain fires through
     const chains = (i.pitChains ?? []).map((c) => {
         const m = /^(\w+)@(-?\d+),(-?\d+)$/.exec(c.via);
