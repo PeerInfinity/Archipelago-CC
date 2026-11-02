@@ -20,6 +20,7 @@
     "lavaBossPolicy.js",
     "lightsVerb.js",
     "mover.js",
+    "pressEscapeExact.js",
     "pressKillGuards.js",
     "pressNoFacing.js",
     "solveProgress.js",
@@ -3475,9 +3476,10 @@
       "class": "seedling",
       "form": "geometry-query",
       "files": {
+        "pressEscapeExact.js": 2,
         "solverBot.js": 3
       },
-      "sites": 3,
+      "sites": 5,
       "seen": "static",
       "via": [
         "import"
@@ -4386,10 +4388,11 @@
         "dangerMap.js": 7,
         "forcedHit.js": 5,
         "lightsVerb.js": 3,
+        "pressEscapeExact.js": 2,
         "solverBot.js": 139,
         "strikePolicy.js": 2
       },
-      "sites": 174,
+      "sites": 176,
       "seen": "static",
       "via": [
         "import"
@@ -5280,9 +5283,9 @@
       "class": "seedling",
       "form": "function",
       "files": {
-        "solverBot.js": 8
+        "solverBot.js": 9
       },
-      "sites": 8,
+      "sites": 9,
       "seen": "static",
       "via": [
         "import"

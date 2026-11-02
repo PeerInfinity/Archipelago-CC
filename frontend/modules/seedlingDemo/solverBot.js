@@ -228,6 +228,9 @@ import { PRESS_ESCAPE_SHIELD_CLAIM, PRESS_ESCAPE_SHIELD_CLAIM_COUNTS, PRESS_KILL
     shieldOnlyUnmodelled } from './pressKillGuards.js';
 // ⛓ hammer-phase SLASHRECT: a press on a tick that starts with no facing (`direction -1`, `Player.as:1424`)
 import { PRESS_NO_FACING, PRESS_NO_FACING_COUNTS, isFacing, noFacingWhy, refuseNoFacing } from './pressNoFacing.js';
+// ⛓ hammer-phase ESCAPE-EXACT — the press escape search, exact under a carried shield (`PRESS_ESCAPE_EXACT`, OFF).
+import { PRESS_ESCAPE_EXACT, PRESS_ESCAPE_EXACT_COUNTS, bumpCoveredThrough, shieldBumpFiresAt,
+    shieldBumpForecastStepped } from './pressEscapeExact.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
 import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
 // ⛓ seedling-fidelity-axeforcedu D2 — a spinning axe's forced U, crossed and billed (`AXE_PRICED_CROSSING`, OFF).
@@ -15248,7 +15251,9 @@ function escapeKeyOf(run, { state, at, keys = [], pressAt, id, deadline = true }
     const p = activeProgress;
     const { horizon, follow, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
     const globals = [horizon, follow, cell, maxExpansions, GHOST_SPINNER_PRESS.enabled, PRESS_KILL_COST.enabled,
-        d === null ? 'none' : `live:${d.fine === true}`, p === null ? 'none' : (p.seg === null ? 'outside' : 'segment')];
+        d === null ? 'none' : `live:${d.fine === true}`, p === null ? 'none' : (p.seg === null ? 'outside' : 'segment'),
+        // ⛓ ESCAPE-EXACT: its answers differ, so it is keyed — and only when ON, so OFF's key text is OFF's
+        ...(PRESS_ESCAPE_EXACT.enabled ? [`exact:${canonicalDigestText(PRESS_ESCAPE_EXACT.parts)}`] : [])];
     return { digest, key: `${digest}|${canonicalDigestText(globals)}|${
         canonicalDigestText({ state, at, keys, pressAt, id, deadline })}` };
 }
@@ -15476,8 +15481,17 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
      * where the shield's envelope meets no body on its path, and of the negatives only an exhausted search is claimed
      * (`shieldNoClaim` keeps every other one OFF's no-claim). The docblock is the switch's (`pressKillGuards.js`).
      */
-    const shieldClaim = PRESS_ESCAPE_SHIELD_CLAIM.enabled && shieldOnlyUnmodelled(probe.unmodelled);
-    if (probe.unmodelled.length > 0 && !shieldClaim) {
+    /**
+     * ⛓ hammer-phase ESCAPE-EXACT (`PRESS_ESCAPE_EXACT`, OFF ⇒ `exact` false and every line below is OFF's) — part (i):
+     * the shield bump as the only unmodelled source, with a forecast that steps it, is read off `first`'s own
+     * coverage, not off this probe; SPIN is then not consulted. The docblock is the switch's (`pressEscapeExact.js`).
+     */
+    const XP = PRESS_ESCAPE_EXACT.enabled ? PRESS_ESCAPE_EXACT.parts : null;
+    const exact = XP !== null && XP.probe && shieldOnlyUnmodelled(probe.unmodelled) && shieldBumpForecastStepped();
+    const XC = PRESS_ESCAPE_EXACT_COUNTS;
+    if (exact) XC.asked += 1;
+    const shieldClaim = !exact && PRESS_ESCAPE_SHIELD_CLAIM.enabled && shieldOnlyUnmodelled(probe.unmodelled);
+    if (probe.unmodelled.length > 0 && !shieldClaim && !exact) {
         return { ok: false, claim: false, why: `the forecast names ${probe.unmodelled.join(', ')} as unmodelled` };
     }
     if (shieldClaim) PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.asked += 1;
@@ -15499,8 +15513,18 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     }
     const { horizon, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
     const rowsFor = (land) => land + horizon + 2 - n;
+    // ⛓ ESCAPE-EXACT (i): told every previewed state (the approach and the stood train), the forecast steps the bump
+    const told = (last) => (t) => (t <= last ? states.get(t) ?? null : null);
     const first = forecastPress(rowsFor(trainEnd), { pressAt, direction, id,
-        positions: (t) => states.get(t) ?? null });
+        positions: (t) => states.get(t) ?? null, ...(exact ? { players: told(trainEnd + 1) } : {}) });
+    if (exact && (first.unmodelled.some((u) => !shieldOnlyUnmodelled([u]))
+        || !bumpCoveredThrough(first, n, trainEnd + 1 - n))) {
+        XC.uncovered += 1;
+        XC.noClaim += 1;
+        return { ok: false, claim: false, why: `the forecast names ${probe.unmodelled.join(', ')} as unmodelled `
+            + `(PRESS_ESCAPE_EXACT: the bump was not stepped on every row from t${n} to t${trainEnd + 1}: `
+            + `${first.shieldBump ? `uncovered from t${first.shieldBump.uncoveredFrom}` : 'no coverage report'})` };
+    }
     if (first.lineBlocked) {
         return shieldNoClaim({ ok: false, claim: true, bound: 'line', why: 'the press\'s line of sight is blocked' });
     }
@@ -15516,8 +15540,20 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
      * latched at the start is the run's), or a fall whose tile `fallDestination` refuses (a lethal pit).
      */
     const lethalFloor = lethalFloorFrom(run, state);
-    const safeIn = (rows) => (q, i) => q !== null && !lethalFloor(q)
-        && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i);
+    /**
+     * ⛓ ESCAPE-EXACT (ii): past `exactFrom` (the last row the forecast stepped with a told state) a state a bump would
+     * fire on is pruned; `cut` counts the states the prune ALONE refused (the search's negative is then no claim).
+     */
+    const prune = exact && XP.prune;
+    let cut = 0;
+    const safeIn = (rows, bodies = null, exactFrom = Infinity) => (q, i) => {
+        if (!(q !== null && !lethalFloor(q) && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i))) return false;
+        if (prune && i > exactFrom && shieldBumpFiresAt(q, rows, bodies, i)) {
+            cut += 1;
+            return false;
+        }
+        return true;
+    };
     const safe = safeIn(first.rows);
     // ⛓ hammer-phase XC: `tap` (the cache's recorder or its silent re-derivation) sees each search; `null` is today's
     const traced = (phase, r) => {
@@ -15525,14 +15561,30 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         if (tap === null || !tap.silent) escapeSearchEmit(trace, phase, r);
         return r;
     };
-    for (let t = at + 1; t <= L; t += 1) {
+    // ⛓ ESCAPE-EXACT (iii): the aim tick's own row is asked too (a body that steps onto the player during it)
+    const contactFrom = XP !== null && XP.contact ? at : at + 1;
+    for (let t = contactFrom; t <= L; t += 1) {
         if (!safe(states.get(t), t - n)) {
+            if (t === at) XC.contact += 1;
+            if (exact) XC.claimedNegative += 1;
             return shieldNoClaim({ ok: false, claim: true, bound: 'approach', why: `the approach or the train meets a `
                 + `body or the line at t${t}, before the press lands` });
         }
     }
-    const search = (start, startIndex, rows, phase) => traced(phase, spaceTimeReach({
-        start, startIndex, step: (q, k) => stepOrNull(q, k), safe: safeIn(rows), horizon: L + horizon - n - startIndex,
+    /**
+     * ⛓ ESCAPE-EXACT (ii): the free search's rows. `first` was told the STOOD train through `trainEnd + 1`; a bump it
+     * stepped after the landing moved a body on a path the free search does not take, so those rows are re-forecast
+     * told the path only through the landing (the prune covers the rest).
+     */
+    let free = first;
+    if (exact && first.shieldBump.bumps.some((b) => b.shoved && b.t > L)) {
+        XC.rowsReforecast += 1;
+        free = forecastPress(rowsFor(trainEnd), { pressAt, direction, id, positions: (t) => states.get(t) ?? null,
+            players: told(L) });
+    }
+    const search = (start, startIndex, rows, phase, bodies = null, exactFrom = Infinity) => traced(phase, spaceTimeReach({
+        start, startIndex, step: (q, k) => stepOrNull(q, k), safe: safeIn(rows, bodies, exactFrom),
+        horizon: L + horizon - n - startIndex,
         keySets: HOLD_FIRST_KEY_SETS, keyOf: coarseKey(cell), maxExpansions,
         // ⛓ of two states with one coarse key, keep the one farther from every hammer's disc (the refuge's
         // preference, `discClearanceAt` — a robustness score, never the safety test)
@@ -15546,19 +15598,35 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         // ⚠ a search cut by its BUDGET proves nothing either way: only an EXHAUSTED one refuses the press
         if (r.bound === 'deadline' || r.bound === 'expansions') return { ok: false, claim: false, why: r.why };
         const claimed = { ok: false, claim: true, bound: r.bound, why: `no ESCAPE from the landing at t${L} (${pre}): ${r.why}` };
+        if (exact) {
+            // ⛓ ESCAPE-EXACT (ii): a negative the bump prune shaped is no claim; one it did not shape is exact
+            if (cut > 0) {
+                XC.exhaustedCut += 1;
+                XC.noClaim += 1;
+                return { ok: false, claim: false, why: `${unmodelledWhy} (PRESS_ESCAPE_EXACT: ${claimed.why}; the search `
+                    + `pruned ${cut} state(s) a shield bump would have moved a body on)` };
+            }
+            if (r.bound === 'exhausted') XC.exhausted += 1;
+            XC.claimedNegative += 1;
+            return claimed;
+        }
         if (shieldClaim && r.bound === 'exhausted') PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.exhausted += 1;
         return shieldClaim && r.bound !== 'exhausted' ? shieldNoClaim(claimed) : claimed;
     };
     // ⛓ First: free from the landing. Then re-aim the remaining tests from the certificate's own points.
-    let found = search(states.get(L), L - n, first.rows, 'free');
+    let found = search(states.get(L), L - n, free.rows, 'free', free.bodies, L - n);
+    if (exact) XC.cuts += cut;
     const bad = verdict(found, L, 'free from the landing');
     if (bad) return bad;
     const at2 = (t) => (t <= L ? states.get(t) : found.states[t - L]);
-    const again = forecastPress(rowsFor(trainEnd), { pressAt, direction, id, positions: at2 });
+    const again = forecastPress(rowsFor(trainEnd), { pressAt, direction, id, positions: at2,
+        ...(exact ? { players: told(L) } : {}) });
     const sameTests = JSON.stringify(again.tests.map((x) => [x.t, x.id, x.landed]))
         === JSON.stringify(first.tests.map((x) => [x.t, x.id, x.landed]));
     let pre = [];
-    if (!sameTests || !found.states.every((q, k) => safe(q, L - n + k) && safeIn(again.rows)(q, L - n + k))) {
+    const safeFree = exact ? safeIn(free.rows, free.bodies, L - n) : safe;
+    const safeAgain = exact ? safeIn(again.rows, again.bodies, L - n) : safeIn(again.rows);
+    if (!sameTests || !found.states.every((q, k) => safeFree(q, L - n + k) && safeAgain(q, L - n + k))) {
         // ⛓ The fallback: the whole train stood, the search from its last test.
         for (let t = L + 1; t <= trainEnd + 1; t += 1) {
             if (!safe(states.get(t), t - n)) {
@@ -15567,7 +15635,9 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
             }
         }
         pre = Array.from({ length: trainEnd + 1 - L }, () => NO_KEYS);
-        found = search(states.get(trainEnd + 1), trainEnd + 1 - n, first.rows, 'stood');
+        cut = 0;
+        found = search(states.get(trainEnd + 1), trainEnd + 1 - n, first.rows, 'stood', first.bodies, trainEnd + 1 - n);
+        if (exact) XC.cuts += cut;
         const bad2 = verdict(found, trainEnd + 1, 'the train stood');
         if (bad2) return bad2;
     }
@@ -15584,6 +15654,7 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         }
         PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.certified += 1;
     }
+    if (exact) XC.certified += 1;
     return {
         ok: true, claim: true, pressAt, landing: L, outcome: first.outcome, impulse: first.impulse,
         keys: [...pre, ...found.keys], expansions: found.expansions,
