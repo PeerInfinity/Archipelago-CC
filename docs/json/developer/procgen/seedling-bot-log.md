@@ -27045,3 +27045,27 @@ The key is read through `Object.hasOwn`, so main without the key is OFF's under 
   only mover (731 t / 1 hit → 327 t / 0). The bounded set (34 files) is green both ways.
 - **The L12 cost** (hand-over (b)) is the press-blind `planSwordDash` scan, not the certificate: 43.5 of 44.7 s (step
   172) and 87.2 of 88.8 s (step 200) under L100LATTICE's mutant M4. Handed on as a dash-search question.
+
+### Seedling hammer-phase AXISON — what AXIS_STRIKE ON still breaks: none of it is the axis strike
+
+⚖ User, queued 2026-11-02 (one of three parallel hammer slices: CLEARTAG-STAND, AXISON, BK2COMBAT). Switch
+`pressKillCost.AXIS_STRIKE`, still **OFF**; no code change. The report is `CC/docs/cloud-reports/seedling-hammer-axison.md`.
+
+- **The movers, reproduced.** CI sweep 41477361069 vs 41477345657 named L95 → L12 flag 4 pass → refused, flag 5 pass →
+  budget, and L105 0 → 2 hits as regressions. Two page runs per arm on the 14 mover legs (main `31ce3077`) reproduce the
+  L12 and L30 ones in kind both times; L105 takes no hit on either ON run, and L72's "gain" refuses ON both times.
+- **The split.** A scratch load hook runs ON with either half withheld. On all 10 captured requests the axis strikes alone
+  (the clear-tag stand withheld) answer OFF's plan byte for byte, and the clear-tag stand alone (`axisClearTagStand`,
+  AXIS-L12HITS) answers ON's. Every L12 / L30 regression AND gain is the stand's, so it is CLEARTAG-STAND's: on L95 flag 4
+  the priced hold meets `puncher@416,256`'s punch and every kill stance's WAIT is punched (t603–607). On these legs OFF
+  itself passes with 2 hits in the hold.
+- **L105 is a seam flake.** The page's OFF and ON requests differ only in the arrival seam (6187 / 6202). Over seams
+  6167–6227 OFF and ON answer identically (61 / 61) and build no axis policy. From seam 6224 both take `flyer@192,16`'s two
+  drops.
+- **Radius of the strikes at this head.** Route survey OFF vs ON: 201 / 36 both ways, 1 mover (step 79, refusal text 166 →
+  167 t, as AXIS measured). r9 `--check` ON green.
+- **Row.** `hammerAxisStrikes.test.js` row 7 pins the attribution on two cut page requests
+  (`fixtures/hammer-axison/`). On L95 flag 4, with the stand withheld (`KEYLOCK_WAIT_PRICED` off), the strikes build no
+  policy and answer OFF's 632 t plan. On L105 at seam 6224, ON = OFF, with the drops at t283 and t303.
+- **Flip-readiness.** The axis strikes are regression-free on every measured mover. The switch is not, because it also
+  carries the clear-tag stand. That half waits on CLEARTAG-STAND.
