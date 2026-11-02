@@ -25126,8 +25126,8 @@ export function withStrategyDisable(disable, fn) {
     if (!STRATEGY_SWITCH.enabled) {
         const asked = [...disable];
         const e = new SolverRefusal(`solveSegment: \`disable: ${JSON.stringify(asked)}\` was asked with the strategy `
-            + 'switch OFF (`STRATEGY_SWITCH`; `SEEDLING_STRATEGY_SWITCH=1` turns it on). Refused by name: a disable '
-            + 'request the solver silently ignored would grade every room INERT.');
+            + 'switch OFF (`STRATEGY_SWITCH`, ON by default; `SEEDLING_STRATEGY_SWITCH=0` turns it off). Refused by name: '
+            + 'a disable request the solver silently ignored would grade every room INERT.');
         e.code = STRATEGY_SWITCH_OFF;
         e.disabled = Object.freeze({ asked, hits: {}, first: null, absent: [], switch: 'off' });
         throw e;
