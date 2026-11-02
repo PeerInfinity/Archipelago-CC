@@ -252,23 +252,26 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ rules-l112-owl-rocklock: the SAME legs by key, every id from 792 on shifted by -4 — L112 splits at its rock
         //   (r0c7 the L113 landing, r2c2 the arena), so the L113 arrival's three legs into the arena and the L111 arrival's
         //   one leg to the L113 door go (each a crossing of the rock now).
+        // ⛓ rules-sided-openers: the SAME legs by key, every id from 107 on shifted — the two new ShieldLock events are
+        //   locations, so L12 r0c19's seven arrivals each gain a leg to `L12 flag 10` (+1 at 107, 118, 129, 140, 151, 162,
+        //   173) and L20 r1c4's L19 arrival one to `L20 flag 0` (+1 at 229): +7 from 107…, +8 from 229 on.
         expect(by).toEqual({
-            'flag:L0:4': [45], 'flag:L0:1': [97, 107, 117, 127, 137, 147, 157], 'flag:L24:0': [173],
-            'flag:L16:0': [199, 201, 203, 205, 207, 209, 211, 213], 'flag:L39:8': [350],
-            'flag:L62:0': [518, 523, 528, 533, 538, 569], 'flag:L63:1': [520, 525, 530, 535, 540, 544, 549, 554, 559],
-            'flag:L63:6': [572, 574], 'flag:L63:7': [575],
-            'flag:L71:2': [624, 626], 'flag:L12:7+flag:L12:12': [644], 'flag:L101:0': [750],
-            'flag:L112:1': [794, 795, 801, 802, 808, 809, 815, 816, 822, 823],
-            'flag:L114:0': [796, 797, 798, 803, 804, 805, 810, 811, 812, 817, 818, 824, 825],
-            'flag:L113:0': [833, 834, 835, 836],
+            'flag:L0:4': [45], 'flag:L0:1': [97, 108, 119, 130, 141, 152, 163], 'flag:L24:0': [180],
+            'flag:L16:0': [206, 208, 210, 212, 214, 216, 218, 220], 'flag:L39:8': [358],
+            'flag:L62:0': [526, 531, 536, 541, 546, 577], 'flag:L63:1': [528, 533, 538, 543, 548, 552, 557, 562, 567],
+            'flag:L63:6': [580, 582], 'flag:L63:7': [583],
+            'flag:L71:2': [632, 634], 'flag:L12:7+flag:L12:12': [652], 'flag:L101:0': [758],
+            'flag:L112:1': [802, 803, 809, 810, 816, 817, 823, 824, 830, 831],
+            'flag:L114:0': [804, 805, 806, 811, 812, 813, 818, 819, 820, 825, 826, 832, 833],
+            'flag:L113:0': [841, 842, 843, 844],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[797].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[805].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
-        expect(legs[518].sphere.inventory).not.toContain('Ghost Spear');
-        expect(legs[520].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
+        expect(legs[526].sphere.inventory).not.toContain('Ghost Spear');
+        expect(legs[528].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
         // a goal that needs no event keeps no goalEvents key at all (its row is byte-identical)
         expect(legs.filter((l) => !l.goalEvents).every((l) => !('goalEvents' in l))).toBe(true);
     });

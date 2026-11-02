@@ -39,6 +39,25 @@
  *               key is one of its kill verbs, `KILL_FLAGS`) — a probe's question: does it ever stand there?
  *   HOLDER      a decided `holder` room's body on the block's cells (the holder search models no Enemy at all).
  *
+ * ⛓ RULES rules-l16-holder-enemies — EACH HOLDER ROW IS PRICED, not just named. The room's re-closing locks (their
+ * `opensFrom`/`heldBy`, off the grid builder's own entity ruling: `playthroughEntitySemantics`) are searched by the
+ * rules' own `blockHolderSearch` from every neighbour of every lock cell, twice: as the rules run it, and with the
+ * body PARKED FOR GOOD on every cell it meets (`stoppers`, keyed by its kill verbs `KILL_FLAGS`; a kill lasts the
+ * visit whether or not it respawns, and every visit pays it again: the bound is the same either way). The two prices
+ * are compared as LOGIC (`priceDnf`: `any` expanded, supersets dropped), so `any(Sword|Spear) AND Sword` reads as
+ * Sword. Per row:
+ *   parked      'same'    — parked for good, it moves no entry's price: the price already holds its kill verb, or
+ *                           the block never needs its cells;
+ *               'tighter' — some entry's price grows (the entries it moves are in `moved`);
+ *   settles     false for a body that never comes to rest — no chase (`aggro.kind` 'none') and moving (`speed` > 0):
+ *               a Spinner, whose `friction()` keeps |v| >= `moveSpeed` and whose `moveX/moveY` reflect off what it
+ *               hits (`Spinner.as:23,124-171`), so a fire block it is in the way of is pushed again a moment later
+ *               (`PushableBlockFire.hit` refuses only while the block moves, `:78`);
+ *   holderVerdict  'ok' when `parked` is 'same' or the body never settles; 'TIGHTER' otherwise (the search should
+ *               take it as a stopper — none at this base).
+ * The harness prices each lock on its own (a lock RUN's outer cell, `seedlingSemantics` rules-l39, is not re-derived):
+ * it is a RELATIVE measure, the same search with and without the body.
+ *
  * Run:
  *   node scripts/procgen/census-seedling-block-stoppers.mjs           # the table
  *   node scripts/procgen/census-seedling-block-stoppers.mjs --json    # every row, as JSON
@@ -47,16 +66,16 @@ import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 import {
     buildPlaythroughAtlas, setPlaythroughLandingAtlas, playthroughEventLayer, playthroughBlockCrossingCases,
-    playthroughBlockStoppers, playthroughGridFor, PLAYTHROUGH_MAP,
+    playthroughBlockStoppers, playthroughGridFor, playthroughEntitySemantics, PLAYTHROUGH_MAP,
 } from './make-seedling-playthrough-rules.mjs';
 import { combatCensusOf } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 import { contactRect } from '../../frontend/modules/seedlingDemo/combat.js';
 import {
-    PUSHABLE_KINDS, blockPushSearch, blockCrossingCost, blockHolderVerdict,
+    PUSHABLE_KINDS, blockPushSearch, blockCrossingCost, blockHolderVerdict, blockHolderSearch,
 } from '../../frontend/modules/flashPanel/seedlingBlockPaths.js';
 import { buildBlockHolders } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
 import { deriveWeaponFootprint } from '../../frontend/modules/flashPanel/seedlingWeaponFootprints.js';
-import { conditionKey, tileTypeForPlacement, SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
+import { conditionKey, entityClaims, tileTypeForPlacement, SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
 
 argvHelp(import.meta.url);
 
@@ -133,6 +152,69 @@ const respawns = (e) => !(e.row?.sideWrite === 'own tag' && Number(e.attrs?.tag 
 const removal = (e) => (e.row?.kill ? `${e.row.kill.hits} hit(s)` : (e.row?.aggro?.kind === 'armed-by-proximity' ? 'self (armed by proximity)' : 'none by a hit'));
 
 /**
+ * A price (`entries(..).sets`: an OR of ANDs of condition keys) as a minimal DNF over ATOMS: an `any` condition is
+ * expanded into its alternatives, an `all` into their product, and a conjunction that is a superset of another is
+ * dropped. Two prices that read the same logically print the same.
+ */
+export function priceDnf(sets, byKey) {
+    const alts = (c) => {
+        if (c?.any) return c.any.flatMap(alts);
+        if (c?.all) return c.all.reduce((acc, m) => acc.flatMap((a) => alts(m).map((b) => [...a, ...b])), [[]]);
+        return [[conditionKey(c)]];
+    };
+    let out = [];
+    for (const set of sets) {
+        let conj = [[]];
+        for (const k of set) {
+            const c = byKey.get(k);
+            const a = c ? alts(c) : [[k]];
+            conj = conj.flatMap((x) => a.map((y) => [...x, ...y]));
+        }
+        out.push(...conj.map((x) => [...new Set(x)].sort()));
+    }
+    const sub = (a, b) => a.every((k) => b.includes(k));
+    const uniq = [...new Map(out.map((x) => [x.join(' & '), x])).values()];
+    return uniq.filter((x) => !uniq.some((y) => y !== x && sub(y, x))).map((x) => x.join(' & ')).sort();
+}
+
+/**
+ * The room's re-closing locks, as the grid builder reads them (`buildSeedlingRegionGrid`'s `reclosing`), searched by
+ * `blockHolderSearch` from every neighbour of every lock cell. `stoppers` in the search's shape. Returns
+ * `{ '<lock> from x,y': dnf }`.
+ */
+export function holderPrices(level, grid, tileTypes, stoppers = []) {
+    const { width, height } = grid;
+    const rec = [];
+    for (const e of level.entities ?? []) {
+        const sem = playthroughEntitySemantics(e, level);
+        if (sem?.opensFrom && sem.heldBy) rec.push({ e, tiles: entityClaims(e, sem, { pixelMaskFootprints: true }).map((c) => c.tile), opensFrom: sem.opensFrom, heldBy: sem.heldBy });
+    }
+    const closedCells = new Set(rec.flatMap((r) => r.tiles.map(([x, y]) => y * width + x)));
+    const out = {};
+    for (const r of rec) {
+        const lockCells = new Set(r.tiles.map(([x, y]) => y * width + x));
+        const search = blockHolderSearch(grid, {
+            blocks: r.heldBy.blocks, fallers: r.heldBy.fallers ?? [], holders: r.opensFrom, lockCells, closedCells, tileTypes, keyOf: conditionKey, stoppers,
+        });
+        for (const li of lockCells) {
+            const [x, y] = xy(li, width);
+            for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+                const [nx, ny] = [x + dx, y + dy];
+                if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+                const n = ny * width + nx;
+                if (lockCells.has(n) || BLOCKING.has(grid.cells[n].kind)) continue;
+                const { sets, refused } = search.entries(n);
+                out[`${r.e.type}@${r.e.x},${r.e.y} from ${nx},${ny}`] = refused ? `refused: ${refused}` : priceDnf(sets, search.byKey);
+            }
+        }
+    }
+    return out;
+}
+
+/** Whether a body comes to rest: no chase and moving is a wall-bouncer (`Spinner.as:124-171`), which never does. */
+export const settles = (e) => !(e.row?.aggro?.kind === 'none' && e.row?.speed > 0);
+
+/**
  * The census. Returns `{ rows, blocks }`: `blocks` one per pushable (its use, the bodies in its room, how many meet
  * its cells); `rows` one per (case, body) whose cells meet, with the classification.
  */
@@ -157,6 +239,7 @@ export function blockStopperCensus({ doc = null } = {}) {
             .map((e) => ({ e, tiles: bodyTiles(e, width), range: bodyRange(e, grid, tileTypes) }));
         const stoppers = playthroughBlockStoppers(level, minted);
         const heldBy = holders.get(level.level);
+        let basePrices = null;
         for (const b of pushables) {
             const [bx, by] = [Math.floor(b.x / T), Math.floor(b.y / T)];
             const blabel = `L${level.level} ${b.type}@${b.x},${b.y}`;
@@ -208,6 +291,18 @@ export function blockStopperCensus({ doc = null } = {}) {
                             });
                             if (v.decided) { verdict = 'HOLDER'; why = 'a decided holder room: `blockHolderSearch` models no Enemy'; } else why = `holder room undecided (${v.why}): no block path is priced`;
                         }
+                        if (verdict === 'HOLDER') {
+                            basePrices ??= holderPrices(level, grid, tileTypes);
+                            const parkedPrices = holderPrices(level, grid, tileTypes,
+                                on.map((i) => ({ tx: xy(i, width)[0], ty: xy(i, width)[1], keys: killFlagsOf(e).map((f) => ({ flag: f })), label: row.body })));
+                            const moved = Object.keys(basePrices).filter((k) => JSON.stringify(basePrices[k]) !== JSON.stringify(parkedPrices[k]))
+                                .map((k) => ({ entry: k, price: basePrices[k], parked: parkedPrices[k] }));
+                            const parked = moved.length ? 'tighter' : 'same';
+                            const still = settles(e);
+                            rows.push({ ...row, verdict, why, prices: basePrices, parked, moved, settles: still,
+                                holderVerdict: parked === 'same' || !still ? 'ok' : 'TIGHTER' });
+                            continue;
+                        }
                         rows.push({ ...row, verdict, why });
                         continue;
                     }
@@ -244,6 +339,7 @@ export function censusCounts({ rows, blocks }) {
         rows: rows.length,
         verdicts: by(rows, (r) => r.verdict),
         movement: by(rows, (r) => r.movement),
+        holder: by(rows.filter((r) => r.holderVerdict), (r) => `${r.holderVerdict} (parked ${r.parked}${r.settles ? '' : ', never settles'})`),
     };
 }
 
@@ -258,7 +354,9 @@ if (isEntryPoint(import.meta.url)) {
         for (const r of census.rows) {
             console.log(`  ${r.verdict.padEnd(10)} ${r.block}${r.crossing ? ` ${r.crossing}` : ''}  ${r.body} (${r.cls}, ${r.movement}, kill ${r.kill}, `
                 + `${r.respawns ? 'respawns' : 'kill sticks'}${r.killHeld ? ', the crossing holds its kill' : ''}) spawn ${r.spawn.map((t) => t.join(',')).join(' ')}; meets ${r.on.length} cell(s)`
-                + `${r.critical?.length ? `, critical ${r.critical.map((t) => t.join(',')).join(' ')}` : ''} — ${r.why}`);
+                + `${r.critical?.length ? `, critical ${r.critical.map((t) => t.join(',')).join(' ')}` : ''} — ${r.why}`
+                + `${r.holderVerdict ? ` · parked for good: ${r.parked}${r.moved.length ? ` (${r.moved.map((m) => `${m.entry}: ${m.price.join(' | ') || 'none'} -> ${m.parked.join(' | ') || 'none'}`).join('; ')})` : ''}`
+                    + `${r.settles ? '' : ', never settles'} => ${r.holderVerdict}` : ''}`);
         }
         console.log(`COUNTS ${JSON.stringify(censusCounts(census))}`);
     }

@@ -98,6 +98,51 @@
             "category": "runnerDemo"
         },
         {
+            "id": "cloudberry-preset-start-region-configures",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-demo-pack-region-coin-and-unheld-item",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-bot-end-door-region-move",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-end-door-menu-by-key",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-start-door-way-back",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-shipped-preset-generates",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-loop-record-then-instant-playback",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-loop-bot-blocks-reset-victory",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-mixed-loop-bot-victory",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "runner-preset-sidecar-configured",
             "enabled": true,
             "category": "runnerDemo"
@@ -633,6 +678,18 @@
             "_comment": "Re-enabled (2026-10-12) with the seedling-js-tutorial-walk-regression fix: its 2/14 CI flake (tick-1 exact-repeat divergence on region_0_0__key_blue_pickup, expected y 40.8, game y 40) was the wind cutscene leaking past the skip under the explicit start's record; the cold start now waits a showing scene out (seedlingWasmPlayback adoptLive) instead of re-arriving into it. The JS row's generated-room walk on the WASM runtime (WebGPU — the batch launches Chromium with it): the WG engine stages the mounted set, the solver produces the tapes; the game's Game.time drains the start room."
         },
         {
+            "id": "seedling-js-runtime-generated-chestdoor-chest",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "seedling-gen-chestdoor-preset (JS twin). runtime = js on the committed seedling_generated_chestdoor preset: the Playback Bot's walkToLocation('region_0_0 - Chest') — a DOOR CHEST, an AP location that stays a chest with its fixed tag — resolves off report.chestDoors, the page walks to the stance below and opens it, and the row ends on that location's locationCheck (it alone), the game's own pendingCheck of {level 0, tag 1}. seedling-js batch."
+        },
+        {
+            "id": "seedling-wasm-runtime-generated-chestdoor-chest",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "seedling-gen-chestdoor-preset. The REAL wasm game (WebGPU, the seedling-wasm batch's launch) on the committed seedling_generated_chestdoor preset: the Playback Bot walks to the door chest region_0_0 - Chest (the WG engine stages the mounted set, the solver's tape opens the chest from below) and the row ends on its locationCheck — that location alone, the game's own pendingCheck of {level 0, tag 1}, no error status. Room 1's chest (two goals, Q5) is not walked."
+        },
+        {
             "id": "seedling-js-runtime-loop-play-clock-drains-mana",
             "enabled": true,
             "category": "Seedling JS runtime",
@@ -1002,7 +1059,7 @@
             "id": "apworld-a-stale-progression-member-is-shown-and-removable",
             "enabled": true,
             "category": "apworldEditor",
-            "_comment": "APWorld coverage I2. smz3 is in this state as committed: 12 members name resolved forms slot 1's items do not hold, because genericLogic.has resolves a name through the mapping. The refusal is asked of the OP, not of the picker (trap 1305) \u2014 no gesture on this section can produce an unknown name. Mutant: dropping the op's item refusal reds this row."
+            "_comment": "APWorld coverage I2. procgen_topdown AP_7 is in this state as committed (it replaced smz3, whose preset was removed 2026-11-01): 10 members name resolved forms slot 1's items do not hold, because genericLogic.has resolves a name through the mapping. The refusal is asked of the OP, not of the picker (trap 1305) \u2014 no gesture on this section can produce an unknown name. Mutant: dropping the op's item refusal reds this row."
         },
         {
             "id": "apworld-progression-follows-the-selected-slot",
@@ -1900,6 +1957,18 @@
             "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft procgen-runner-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen."
         },
         {
+            "id": "tutorial-walk-procgen-cloudberry",
+            "enabled": true,
+            "category": "Tutorial walks: cloudberry",
+            "_comment": "Cloudberry P3a (2026-11-01): the walk row of procgen-cloudberry (the committed Cloudberry Sphere WorldGen preset played to the end by the Playback Bot). Manual batch cloudberry, run by cloudberry-e2e.yml after its site fetch."
+        },
+        {
+            "id": "tutorial-walk-procgen-loop-mode-cloudberry",
+            "enabled": true,
+            "category": "Tutorial walks: cloudberry",
+            "_comment": "Cloudberry P4a (2026-11-02): the walk row of procgen-loop-mode-cloudberry (the shipped Cloudberry demo generated in the panel with loop mode on, played to the end by the Playback Bot). Manual batch cloudberry, not tutorials-procgen-loops: only the cloudberry batch's job fetches the Cloudberry site."
+        },
+        {
             "id": "tutorial-walk-seedling-recompile",
             "enabled": true,
             "category": "Tutorial walks: seedling",
@@ -2037,6 +2106,12 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "GRAPHICS G8. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 38: the chest, both covers and all five buttons drawn from the seedling pack; the ButtonRoom the player arrives on drawn PRESSED (levelRun.activatorsNow reaching the page), the wired ButtonRoom on its wired frames; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-rope",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "slice seedling-js-rope-art. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 16: the rope drawn from seedling:puzzlement/rope as RopeStart.render does uncut (span frame 1 x3, pulley 0, handle 2); every sheet decodes, zero console errors. The cut look is pinned in node (seedlingSolidsRope.test.js). No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
             "id": "seedling-js-runtime-graphics-npcs",

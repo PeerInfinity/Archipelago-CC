@@ -53,11 +53,12 @@ const gen = (palette, { seed = 1, kind = 'empty', size = 10 } = {}) => generateS
 const CHEST = { role: 'obstacle', x: 3, y: 7, id: CHEST_DOOR_CHEST_ID };
 
 describe('⛓⛓⛓ the CHEST DOOR\'s table row and binding row (seedling gen B2)', () => {
-    it('the head is `chestdoor`, LAST, needs no item, opt-in and not a `require` head', () => {
+    it('the head is `chestdoor`, before the strategy gadgets, needs no item, opt-in and not a `require` head', () => {
         expect(ELEMENT_TABLE.chestdoor.element).toBe(CHEST_DOOR);
         expect(ELEMENT_TABLE.chestdoor.needs).toEqual([]);
         expect(ELEMENT_TABLE.chestdoor.meetsRequire).toBe(false);
-        expect(ELEMENT_NAMES.at(-1)).toBe('chestdoor');
+        /** ⛓ strategy switch r2 appended `burngate` after it, and r3 `holdgate`/`weighgate`; nothing before it moved. */
+        expect(ELEMENT_NAMES.slice(-4)).toEqual(['chestdoor', 'burngate', 'holdgate', 'weighgate']);
         for (const flag of ['hasSword', 'hasShield', 'hasSwim', 'hasFeather']) {
             expect(headsNeeding(flag)).not.toContain('chestdoor');
         }

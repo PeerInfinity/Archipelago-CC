@@ -1,0 +1,5 @@
+# main + this slice, SEEDLING_DASH_CERT_SIGHT=1, survey with NODE_OPTIONS=--import tools/audit-preload.mjs (one sink per solve process)
+processes 238 certificate asks 411 swings refused on the line 1831 whole-chain previews 330
+processes with a refused swing: [{'asks': 1, 'refused': 1}, {'asks': 5, 'refused': 9}, {'asks': 5, 'refused': 4}, {'asks': 1, 'refused': 1817}]
+whole previews by (certified, arrived, danger kinds): {'(True, True, ())': 330}
+movers 0

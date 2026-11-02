@@ -1,0 +1,7 @@
+frontend/modules/seedlingDemo/hammerDashShape.slow.test.js
+frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js
+frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js
+frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js
+frontend/modules/seedlingDemo/hammerSouthDoor.slow.test.js
+frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js
+frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js

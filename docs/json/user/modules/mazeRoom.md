@@ -33,6 +33,11 @@ Click into the panel so it has the keyboard, then:
 | Coloured circle | An item. A red border means its location is behind something you do not have yet. |
 | Coloured block / dashed outline | A door, shut / open. |
 | Diamond | A mana pickup (Loop mode). |
+| Tan square | A block you push by walking into it. |
+| Red square | A block you move by striking it (Fire pushes it away from you; the spear pushes it the way you face). |
+| Pale blue disc | An ice turret. Strike it with a weapon and it becomes a block that Fire moves (a red square). |
+| Yellow ring | A button: filled while you or a block stand on it. |
+| Yellow disc with a red / grey tint round it | A pulser and its reach. Red while its button is held: it pushes blocks out of the tinted cells, and you cannot step into them. Grey while it is quiet. |
 | Black | Fog: tiles you have not seen yet (with **Fog of war** on). |
 
 In a Seedling world, the room is drawn in the original Seedling graphics, with the marks above on top. See **Seedling art** below.
@@ -59,7 +64,7 @@ Every move you make is an entry here: ↑ ↓ → ← for moves, ◌ for waits, 
 
 - **Fog of war** hides what you have not seen yet. You see your own tile and its four neighbours.
 - **Explore** walks to the nearest tile you have not seen, again and again, until the room is uncovered. (With fog off, there is nothing to uncover.)
-- **Seedling art** (shown only in a Seedling world, such as the Seedling playthrough maze presets): draws the room in the original Seedling graphics, from the same art library the Seedling JS runtime uses. The maze is then drawn at 32 pixels a tile, and the marks above sit on top of the picture, slightly see-through. It is on by default. Untick it for the plain grid. The picture has no animation. The things the maze tracks are drawn as their own sprites, as they stand right now: you, facing the way you last moved or turned; rocks, locks, burnable trees and dark traps until you clear them; pushed blocks where you pushed them; buttons pressed while you or a block stand on them; arrow traps; and each item as its own Seedling picture (the Archipelago logo for an item with no Seedling picture), gone once you take it. Anything with no picture in the art library, such as a rope, keeps its mark. A wall you add or remove in **Edit mode** is drawn as a plain wall or floor tile. Hover the checkbox for the art's credit.
+- **Seedling art** (shown only in a Seedling world, such as the Seedling playthrough maze presets): draws the room in the original Seedling graphics, from the same art library the Seedling JS runtime uses. The maze is then drawn at 32 pixels a tile, and the marks above sit on top of the picture, slightly see-through. It is on by default. Untick it for the plain grid. The picture has no animation. The things the maze tracks are drawn as their own sprites, as they stand right now: you, facing the way you last moved or turned; rocks, locks, burnable trees and dark traps until you clear them; pushed blocks where you pushed them, each kind as its own sprite (an ice turret you strike turns into its broken shell); pulsers; buttons pressed while you or a block stand on them; arrow traps; and each item as its own Seedling picture (the Archipelago logo for an item with no Seedling picture), gone once you take it. Anything with no picture in the art library, such as a rope, keeps its mark. A wall you add or remove in **Edit mode** is drawn as a plain wall or floor tile. Hover the checkbox for the art's credit.
 - **Edit mode** lets you paint the room: choose a tile in the palette — floor, wall, entrance, item, obstacle, block, button, flag — and click the map. Its **Verifier** checks that every exit and location can still be reached.
 
 The **Paths & obstacles** and **Compiled rules** boxes at the bottom show the room's rules as data, for the curious.

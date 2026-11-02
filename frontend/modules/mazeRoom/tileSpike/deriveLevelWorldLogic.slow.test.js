@@ -44,7 +44,8 @@
  * → r2c11, by the press, priced from the pocket the L38 teleporter lands in), and one on the rules
  * producer's own permissive bound (L89's Feather, entered only from above; `permissive`, read from the producer), and (session
  * tile-primitives-sphere-order-8, ⚖ "Excuse on mismatch") L63 r6c9's rows at points no crossing into it from outside admits — its
- * entrance is the L65 pocket landing. One row stays OPEN by name (`OPEN_L63`, ⚖ "Land, name it; route to rules").
+ * entrance is the L65 pocket landing. One row stays OPEN by name (`OPEN_L63`, ⚖ "Land, name it; route to rules"),
+ * and since sphere 11.6 a second (`OPEN_L3_L111`: the maze is game-right, the rules looser).
  * Sphere 0.1 (2026-10-26, measured): native every region + the native sample 59 s, the scripted sample 256 s.
  */
 import { describe, it, expect } from 'vitest';
@@ -72,6 +73,14 @@ const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8'
  * east-no-f1 tape halts the block on [5,6]). AP's crossing into r0c1 proper still costs f1.
  */
 const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false';
+/**
+ * The second OPEN row (⚖ user 2026-10-31, session tile-primitives-sphere-order-12: "Going from L3 to L111 requires swim, and the rules
+ * should model that", with the rules left unchanged until the maze arc is done): the teleporter cell (0,4) is reached only through the water
+ * at (1,4), so the world needs Progressive Swim (a game probe drowned dry 0/3 and arrived wet 3/3). The rules charge only the ghost rock.
+ * It stays a PROBLEM, not accepted: the rules producer lists `level_3/out_teleporter_0_64` in its `permissiveBindings`, which is the
+ * list of hand exceptions the user means to revert once the maze's rules replace the hand ones. This row is one of those revert candidates.
+ */
+const OPEN_L3_L111 = 'level_3__r0c4 → level_111 holding [Ghost Spear,Ghost Sword Fusion,Progressive Sword]: derived false, atlas true';
 const PERMISSIVE = playthroughPermissiveLocations();
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -87,7 +96,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     let sampleLines;
     it('native engine, every region', () => {
         const { problems, lines, accepted, skipped } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
-        expect(problems).toEqual([OPEN_L63]);
+        expect(problems).toEqual([OPEN_L3_L111, OPEN_L63]);
         expect(lines.length).toBeGreaterThan(0);
         expect(accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
             'level_0__r2c13 → level_0__r1c6 | Progressive Swim',
@@ -124,13 +133,27 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // crossing costs L71's shield lock (flag 2) — admitted only holding it, as its other landing (14,18).
         // Sphere 10.2 (session tile-primitives-sphere-order-11) adds 6, all already in the whole game's census: L82's landing from L71
         // (9,1) (2); L93 r5c7's from L98 (7,6), wired now, so r5c7 is priced from its landings (2); L101 r4c9 ↔ L102 r5c9 (2).
+        // Sphere 11.6 (session tile-primitives-sphere-order-12) adds 8, all but one already in the whole game's census: L102 r5c9 → L107
+        // (11,6), wired now (1); L112's landing from L113 (7,1) (2) and its rock-lock event at its L111 landing (2,13) [own event] (1); L3 r0c4
+        // priced from L111's return landing (1,4) (3); and L113's finaldoor at its L114 landing (1,1) [own event] (1), which the whole game
+        // prices over twice the points (L115's Swim exit adds an axis item).
+        // Spheres 12.2 + 12.3 (session tile-primitives-sphere-order-13) take 1 and add 13, all in the whole game's census: L115 lands in
+        // L113 on the FinalDoor's lower row (7,1)/(8,1), whose crossing from L115 already holds the event (10: the event, its own-event row,
+        // and L113's three ways out, per landing), L113's own (1,1) row now over L115's Swim axis (7/96 → 14/192), and L115 r9c4's
+        // landings from L113 (4,8)/(5,8) (2). L110 adds none.
+        // ⛓ rules-sided-openers adds 2 [own event] rows: the two latching ShieldLocks' events (L12 flag 10, L20 flag 0), and
+        // L12 r0c19's subset universe doubles with its new event item (2048 → 4096; the two bosslock rows 144 → 216).
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
             'level_0__r11c19 → level_12__r0c19 (landing 18,11) | 21/48',
+            'level_3__r0c4 → level_111 (landing 1,4) | 8/16',
+            'level_3__r0c4 → level_2 (landing 1,4) | 8/16',
+            'level_3__r0c4 → level_4 (landing 1,4) | 8/16',
             'level_5__r1c1 → level_12__r13c6 (landing 1,2) | 1/2',
-            'level_12__r0c19 @ L12 flag 4: bosslock@416,240 cleared (landing 1,22) | 144/2048 [own event]',
-            'level_12__r0c19 @ L12 flag 5: bosslock@432,240 cleared (landing 1,22) | 144/2048 [own event]',
+            'level_12__r0c19 @ L12 flag 4: bosslock@416,240 cleared (landing 1,22) | 216/4096 [own event]',
+            'level_12__r0c19 @ L12 flag 5: bosslock@432,240 cleared (landing 1,22) | 216/4096 [own event]',
+            'level_12__r0c19 @ L12 flag 10: shieldlocknorm@288,704 cleared (landing 1,22) | 180/4096 [own event]',
             'level_12__r13c6 @ L12 flag 11: bosslock@112,192 cleared (landing 6,14) | 2/8 [own event]',
             'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 3/16',
             'level_12__r40c4 @ L12 flag 3: bosslock@80,656 cleared (landing 2,44) | 2/16 [own event]',
@@ -145,6 +168,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_12__r42c28 → level_12__r0c37 (landing 2,54) | 64/128',
             'level_12__r42c28 → level_83 (landing 2,54) | 64/128',
             'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
+            'level_20__r1c4 @ L20 flag 0: shieldlocknorm@176,16 cleared (landing 12,4) | 1/4 [own event]',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 2/4',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 1/4 [own event]',
             'level_24 → level_12__r40c4 (landing 3,8) | 2/4',
@@ -222,6 +246,23 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_93__r5c7 → level_98 (landing 7,6) | 1/2',
             'level_101__r4c9 → level_102__r5c9 (landing 9,5) | 32/128',
             'level_102__r5c9 → level_101__r4c9 (landing 11,6) | 2/4',
+            'level_102__r5c9 → level_107 (landing 11,6) | 2/4',
+            'level_112__r0c7 → level_112__r2c2 (landing 7,1) | 4/8',
+            'level_112__r0c7 → level_113 (landing 7,1) | 4/8',
+            'level_112__r2c2 @ L112 flag 1: rocklock@112,16 cleared (landing 2,13) | 3/8 [own event]',
+            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 1,1) | 14/192 [own event]',
+            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 7,1) | 84/192',
+            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 7,1) | 14/192 [own event]',
+            'level_113 → level_114 (landing 7,1) | 84/192',
+            'level_113 → level_112__r0c7 (landing 7,1) | 84/192',
+            'level_113 → level_115__r9c4 (landing 7,1) | 84/192',
+            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 8,1) | 84/192',
+            'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 8,1) | 14/192 [own event]',
+            'level_113 → level_114 (landing 8,1) | 84/192',
+            'level_113 → level_112__r0c7 (landing 8,1) | 84/192',
+            'level_113 → level_115__r9c4 (landing 8,1) | 84/192',
+            'level_115__r9c4 → level_113 (landing 4,8) | 17/36',
+            'level_115__r9c4 → level_113 (landing 5,8) | 17/36',
         ]);
         sampleLines = certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE }).lines;
         // ⛓ Sphere 2.2 (session tile-primitives-sphere-order-3): L28's rope drops its fallrock on the grass lock's button. The maze
@@ -234,7 +275,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     it('scripted tile definition on the sample — and it agrees with the native one', () => {
         for (const r of SAMPLE) expect(Object.keys(RULES.preset_sidecars['1'])).toContain(r);
         const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: false, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE });
-        expect(problems).toEqual([OPEN_L63]);
+        expect(problems).toEqual([OPEN_L3_L111, OPEN_L63]);
         expect(lines).toEqual(sampleLines);
         // ⛓ RULES l63-pole-crossings: the poles' Ghost Sword arm grows L63's subset universe 4x; measured scripted on its two
         // sample regions, main's preset 18.6 + 17.8 s → 61.7 + 58.8 s (+84 s over the ~450 s pass), so 600 s left too thin a margin.

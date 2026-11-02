@@ -187,6 +187,8 @@ const entityOverride = (entity, base, level) => {
         level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS, scriptOpeners: SCRIPT_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
     });
 };
+/** The overlay's entity ruling as the grid builder applies it (a census reads a lock's `opensFrom`/`heldBy` off it). */
+export const playthroughEntitySemantics = (entity, level) => entityOverride(entity, SEM.entitySemantics(entity), level);
 
 // ⛔⛔⛔ THE MASK EXPANSION WAS OFF BY DEFAULT, AND THAT WAS A MEASUREMENT (kept as history; the expansion is RETIRED).
 //

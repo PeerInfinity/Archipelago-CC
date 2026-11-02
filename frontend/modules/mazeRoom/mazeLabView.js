@@ -789,6 +789,7 @@ export function main() {
             broken: shownFrame()?.broken ?? null,
             facing: shownFrame()?.facing ?? null,
             blocks: overlayBlocks(),
+            latched: shownFrame()?.latched ?? null,
         }));
         /**
          * ⛔⛔ EDITOR v3 E2c — **THE THREE SIBLING OVERLAYS ARE THE LAB LEVEL'S,

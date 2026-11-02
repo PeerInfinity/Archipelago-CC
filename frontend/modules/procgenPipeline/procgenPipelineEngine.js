@@ -1448,6 +1448,19 @@ export function growMaze(config) {
 }
 
 /**
+ * What an ASYNCHRONOUS driver waits for between two progress events: the event's
+ * own `await` (a promise a substrate yields while work it cannot do synchronously
+ * runs — cloudberry's level generation in the game page), else one macrotask so the
+ * UI can repaint. A synchronous drain ignores `await` and resumes at once; the
+ * substrate then finds its work not done and refuses by name.
+ */
+export function yieldedWait(event) {
+    const pending = event?.await;
+    if (pending && typeof pending.then === 'function') return pending;
+    return new Promise((resolve) => { setTimeout(resolve, 0); });
+}
+
+/**
  * Grid-growth, asynchronous: forwards each progress event to `onProgress` and
  * yields to the event loop between events so the panel's Generate progress
  * indicator can repaint. Identical output to growMaze.
@@ -1458,7 +1471,7 @@ export async function growMazeAsync(config, onProgress = null) {
     while (!r.done) {
         onProgress?.(r.value);
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        await yieldedWait(r.value);
         r = gen.next();
     }
     return r.value;
@@ -3546,8 +3559,13 @@ function* generateRegionZoneGen(spec) {
         : baseZoneSpecs;
     // `ordinal`: which of the substrate's zones this region is (sphere growth's
     // `sphereZoneOrdinal`; 0 for a caller that names none) — read by a zone
-    // source whose regions are content (jta, noiz2sa).
-    const zoneCtx = { ordinal: spec.zoneOrdinal ?? 0 };
+    // source whose regions are content (jta, noiz2sa). `entrance`: the way back
+    // and the region's entry gate (the requirement every player inside holds) —
+    // read by cloudberry, whose way back is a door of its own.
+    const zoneCtx = {
+        ordinal: spec.zoneOrdinal ?? 0,
+        entrance: ent?.side ? { side: ent.side, ...requirementOf(ent) } : null,
+    };
     const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
         ? yield* adapter.generateZoneForSpecsGen(zoneSpecs, zoneCtx)
         : adapter.generateZoneForSpecs(zoneSpecs, zoneCtx);
@@ -5425,15 +5443,30 @@ function buildSphereLibrarySource(sourceId, doc) {
             // Fit (v1, bounce): enough re-keyable portals for every needed side
             // AND enough location slots for the node's items. (No ⊆-by-side match
             // — bounce relabels; count is the constraint.)
-            const fitting = entries.filter((e) =>
-                (e.exit_sides?.length ?? 0) >= neededSides.length
-                && (e.location_slots ?? 0) >= nLocs);
+            // The entry's own substrate may REFUSE the slot (`libraryEntryRefusal`, the
+            // precheck the APWorld editor's picker asks): its hook would throw, or (cloudberry,
+            // P3a) its level's real geometry — coins and end door needing the level's own
+            // items — is not sound behind these gates. Refused entries are not picked;
+            // a substrate that declares none is asked nothing.
+            const refusals = [];
+            const fitting = entries.filter((e) => {
+                if ((e.exit_sides?.length ?? 0) < neededSides.length || (e.location_slots ?? 0) < nLocs) return false;
+                const refuse = substrateRegistry.get(e.substrate)?.libraryEntryRefusal;
+                const why = typeof refuse === 'function' ? refuse(e, {
+                    region_id, regionSize, exitSides: neededSides,
+                    locationSpecs: locations.map((l) => ({ item: l.item })), regionParams,
+                    entranceSide: entranceSide ?? null, entryGate, exitPlans,
+                }) : null;
+                if (why) refusals.push(why);
+                return !why;
+            });
             if (fitting.length === 0) {
                 throw new Error(
                     `${sourceId}: no entry fits sphere slot (needs ${neededSides.length} `
                     + `side(s) [${neededSides.join(',')}] + ${nLocs} location(s)) for region `
                     + `'${region_id}' (library '${doc.name ?? doc.library_id}', `
-                    + `${entries.length} entries)`);
+                    + `${entries.length} entries${refusals.length ? `; ${refusals.length} refused by their `
+                        + `substrate, e.g. ${refusals[0]}` : ''})`);
             }
             // Least-used-then-declaration-order — rng-free.
             let pick = fitting[0];
@@ -5510,6 +5543,10 @@ function buildSphereLibraryRegion(sourceId, entry, {
         locationSpecs: locations.map((l) => ({ item: l.item })),
         fillerItem: LIBRARY_SLOT_FILLER_ITEM,
         regionParams,
+        // What a requirement-aware hook needs to place items soundly (cloudberry):
+        // the side it is entered by and what every player entering holds.
+        entranceSide: entranceSide ?? null,
+        entryGate,
     });
 
     // Gate OVERLAY: each child exit carries its gate rule; the entrance side
@@ -7018,7 +7055,7 @@ export async function growSpheresBatchedAsync(config, onProgress = null) {
     while (!r.done) {
         onProgress?.(r.value);
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        await yieldedWait(r.value);
         r = gen.next();
     }
     return r.value;
@@ -7047,7 +7084,7 @@ export async function growSpheresAsync(config, onProgress = null) {
     let r = gen.next();
     while (!r.done) {
         onProgress?.(r.value);
-        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        await yieldedWait(r.value);
         r = gen.next();
     }
     return r.value;

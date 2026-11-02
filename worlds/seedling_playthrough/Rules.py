@@ -109,7 +109,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_3__r0c4 -> level_111", player),
-        And(HasAll('Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'), Has('Progressive Swim'))
+        HasAll('Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -204,7 +204,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_12__r43c21 -> level_12__r0c19", player),
-        Has('Progressive Shield', 1)
+        HasAll('Progressive Shield', 'L12 flag 10: shieldlocknorm@288,704 cleared')
     )
 
     world.set_rule(
@@ -369,7 +369,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_20__r1c12 -> level_20__r1c4", player),
-        Has('Progressive Shield', 1)
+        HasAll('Progressive Shield', 'L20 flag 0: shieldlocknorm@176,16 cleared')
     )
 
     world.set_rule(
@@ -1403,11 +1403,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_54__r1c8 -> level_53__r14c9", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("level_54__r8c11 -> level_54__r10c5", player),
         Has('Progressive Swim', 1)
     )
@@ -2084,7 +2079,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_71__r16c19 -> level_71__r0c6", player),
-        Has('Progressive Shield', 2)
+        And(Has('Progressive Shield', 2), Has('L71 flag 2: shieldlock@288,256 cleared'))
     )
 
     world.set_rule(
@@ -2399,11 +2394,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_89__r11c12 -> level_0__r2c13", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_91 -> level_89__r1c10", player),
         Has('Progressive Swim', 1)
     )
 
@@ -2838,6 +2828,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("L12 flag 10: shieldlocknorm@288,704 cleared", player),
+        Has('Progressive Shield', 1)
+    )
+
+    world.set_rule(
         multiworld.get_location("L12 flag 11: bosslock@112,192 cleared", player),
         Has('Yellow Key', 1)
     )
@@ -2875,6 +2870,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Level 019 - Boss Key 0", player),
         Has('Progressive Sword', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("L20 flag 0: shieldlocknorm@176,16 cleared", player),
+        Has('Progressive Shield', 1)
     )
 
     world.set_rule(

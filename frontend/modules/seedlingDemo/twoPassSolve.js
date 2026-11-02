@@ -66,6 +66,8 @@ import {
     withHammerFight,
 } from './solverBot.js';
 import { assertTwoPassPrefixAgrees } from './r8Acceptance.js';
+// ⛓ STRATEGY SWITCH r1 — the escape-cache scope's key for a `disable` list captured at entry.
+import { disableKeyOf } from './strategySwitch.js';
 
 export class TwoPassError extends Error {
     constructor(message) { super(message); this.name = 'TwoPassError'; }
@@ -141,6 +143,14 @@ export async function twoPassSolve({
      * byte-inert for every producer that does not pass one.
      */
     dashMode,
+    /**
+     * ⛓ STRATEGY SWITCH r1 — FORWARDED to every pass's `solveSegment`, never defaulted (absent: no key, no install).
+     * ⛔ CAPTURED AT ENTRY (hammer-2's option (a)): the passes all solve under this one list and the cross-pass escape
+     * cache is created under its key, so the disable scope is OUTSIDE the cache's; a pass under any other set refuses
+     * `STRATEGY_DISABLED_SCOPE_CHANGED`. The scope itself is synchronous, so it is installed per pass, never across
+     * the `gameTick` await.
+     */
+    disable,
 }) {
     if (typeof makeRun !== 'function') {
         fail('twoPassSolve needs `makeRun(persistence)` — a FRESH run per pass. Re-using '
@@ -166,7 +176,9 @@ export async function twoPassSolve({
      * interleaved by their awaits never share one), and serving only the runs this call's `makeRun` built. OFF:
      * `null`, and `runFor` is `makeRun`.
      */
-    const escapeScope = ESCAPE_CROSS_PASS_CACHE.enabled ? escapeCrossPassScope() : null;
+    const passDisable = disable === undefined ? undefined : Object.freeze([...disable]);
+    const escapeScope = ESCAPE_CROSS_PASS_CACHE.enabled
+        ? escapeCrossPassScope(passDisable === undefined ? undefined : { disabled: disableKeyOf(passDisable) }) : null;
     const runFor = (rows) => (escapeScope === null ? makeRun(rows) : escapeScope.adopt(makeRun(rows)));
     /** Which (level, tag) has already been measured — the convergence guard. */
     const raisedTwice = new Map();
@@ -189,7 +201,8 @@ export async function twoPassSolve({
         // before committing it, and (HAMMER-PHASE B3) the fight fallback rewind the
         // pass to a press kill's first tick (`solveSegment`'s docblock).
         const solvePass = () => withEscapeCrossPassScope(escapeScope, () => solveSegment({ run: runFor(passRows),
-            goals, name, boot, dashMode, forkRun: () => runFor(passRows) }));
+            goals, name, boot, dashMode, forkRun: () => runFor(passRows),
+            ...(passDisable === undefined ? {} : { disable: passDisable }) }));
         try {
             try {
                 out = solvePass();

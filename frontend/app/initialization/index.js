@@ -58,6 +58,7 @@ import {
 
 // Import utilities
 import { incrementFileCounter, hideLoadingScreen } from './fileLoadingUI.js';
+import { installRulesLoadFailedNotice } from './rulesLoadFailedNotice.js';
 import { isValidLayoutObject } from '../layout/layoutLoader.js';
 import { filterLayoutContent } from '../layout/layoutFilter.js';
 import { getDefaultLayoutConfig } from '../layout/layoutLoader.js';
@@ -695,6 +696,9 @@ export async function initializeApplication(dependencies) {
       }, 'core');
     }
   }
+
+  // A rules load the worker could not complete: a visible named error (game, player, phase).
+  installRulesLoadFailedNotice(eventBus);
 
   // Subscribe to files:jsonLoaded event
   eventBus.subscribe('files:jsonLoaded', async (eventData) => {

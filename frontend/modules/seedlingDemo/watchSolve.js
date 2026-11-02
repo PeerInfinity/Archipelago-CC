@@ -515,6 +515,8 @@ export function solveForPage({
      * addition byte-inert for the page, the battery and the acceptance row.
      */
     dashMode,
+    /** ⛓ STRATEGY SWITCH r1 — `disable:` forwarded to `solveSegment` only when given (absent: today's call). */
+    disable,
 }) {
     const honest = solveStaging(staging);
     const t0 = now();
@@ -522,7 +524,8 @@ export function solveForPage({
     // ⛓⛓ CRUSHER — `forkRun`: a fresh run built exactly as `run` was (`bait` tries a choreography there first).
     // A solve the fight fallback rewound ends on a fresh run (`out.liveRun`).
     const out = solveSegment({ run: built, goals, name, boot: honest.boot, maxTicksPerTarget,
-        dashMode, forkRun: () => createRunForStaging(honest, levelSource, { scratchPersistence }) });
+        dashMode, forkRun: () => createRunForStaging(honest, levelSource, { scratchPersistence }),
+        ...(disable === undefined ? {} : { disable }) });
     const run = out.liveRun ?? built;
     const ms = now() - t0;
     const despawns = checkSolveDespawns(staging, run);

@@ -260,10 +260,9 @@ export function activeSubstrateDict({ mode, substrateMode, substrateQuotas, subs
  * The shared item library plus any `libraryItems` declared by the selected
  * substrates (registry-declared so the shared library needn't carry them).
  */
-export function mergedItemLib(state) {
+export function mergedItemLib(state, { librarySubstrateIds = [] } = {}) {
     const merged = { ...DEFAULT_ITEMS };
-    for (const [id, count] of Object.entries(activeSubstrateDict(state))) {
-        if (!(Number(count) > 0)) continue;
+    for (const id of selectedItemSubstrates(state, librarySubstrateIds)) {
         const extra = substrateRegistry.get(id)?.libraryItems;
         if (extra) Object.assign(merged, extra);
     }
@@ -289,17 +288,29 @@ export function mergedItemLib(state) {
  * the scenario pool). Null when neither contributes — buildRulesJson then keeps
  * the scaffold's constant-true default.
  */
-export function resolveVictoryItemId(state) {
-    const lib = mergedItemLib(state);
+export function resolveVictoryItemId(state, { librarySubstrateIds = [] } = {}) {
+    const lib = mergedItemLib(state, { librarySubstrateIds });
     const fromScenario = Object.entries(state.scenario.items)
         .find(([id, count]) => count > 0 && lib[id]?.is_victory)?.[0];
     if (fromScenario) return fromScenario;
-    for (const [id, count] of Object.entries(activeSubstrateDict(state))) {
-        if (!(Number(count) > 0)) continue;
+    for (const id of selectedItemSubstrates(state, librarySubstrateIds)) {
         const victoryItem = substrateRegistry.get(id)?.victoryItem;
         if (victoryItem) return victoryItem;
     }
     return null;
+}
+
+/**
+ * The substrates whose `libraryItems` / `victoryItem` a world takes: the in-quota ones,
+ * then (cloudberry P3a) the substrates the selected SPHERE libraries' entries realise
+ * (`sphereLibrarySubstrateIds`) — a library-only sphere world names no substrate in its
+ * quotas, so before this it had no goal and its scenario's Victory was no item at all
+ * (measured on the demo Cloudberry pack: Victory never placed). Empty list = as before.
+ */
+function selectedItemSubstrates(state, librarySubstrateIds = []) {
+    const ids = Object.entries(activeSubstrateDict(state)).filter(([, n]) => Number(n) > 0).map(([id]) => id);
+    for (const id of librarySubstrateIds) if (!ids.includes(id)) ids.push(id);
+    return ids;
 }
 
 /**
@@ -309,8 +320,8 @@ export function resolveVictoryItemId(state) {
  * a `victoryItem` gives the world one too. Null: no goal. Grid growth keeps
  * `resolveVictoryItemId`'s own item.
  */
-export function resolveGoalItem(state) {
-    return resolveVictoryItemId(state) ? GOAL_ITEM : null;
+export function resolveGoalItem(state, opts = {}) {
+    return resolveVictoryItemId(state, opts) ? GOAL_ITEM : null;
 }
 
 /**
@@ -380,8 +391,9 @@ export function buildSphereConfig(state, resolvedLibraries = []) {
     }
     // One goal item: the scenario's victory becomes `Victory`, and a goal only a
     // substrate declares joins the pool, so the plan pins it to the final sphere.
-    const goal = resolveGoalItem(state);
-    const lib = mergedItemLib(state);
+    const libOpts = { librarySubstrateIds: sphereLibrarySubstrateIds(resolvedLibraries) };
+    const goal = resolveGoalItem(state, libOpts);
+    const lib = mergedItemLib(state, libOpts);
     return {
         seed,
         regionWidth, regionHeight,

@@ -14,7 +14,7 @@
  */
 
 import {
-    regionItems, reachUnder, regionTargets, cutEvents, NOTHING_REACHED, reachedTarget, planToTarget, targetCell, reachKey, reachInputs,
+    regionItems, reachUnder, regionTargets, cutEvents, noteCuts, NOTHING_REACHED, reachedTarget, planToTarget, targetCell, reachKey, reachInputs,
     regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint, endsWalk,
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
@@ -43,6 +43,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
     }));
     const seen = new Map([[reachKey(start), null]]);
     const cells = new Map([[`${start.player_pos.x},${start.player_pos.y}`, reachKey(start)]]);
+    noteCuts(w, ropes, cuts, start, reachKey(start)); // a latch the arrival stands on is pressed from the start
     const queue = [start];
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
@@ -67,7 +68,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
             queue.push(endsWalk(w, s, next));
             const cell = `${next.player_pos.x},${next.player_pos.y}`;
             if (!cells.has(cell)) cells.set(cell, k);
-            for (const r of ropes) if (!cuts.has(r.key) && next.broken?.includes(r.key)) cuts.set(r.key, k);
+            noteCuts(w, ropes, cuts, next, k);
         }
         if (seen.size > cap) throw new Error(`level-world logic: native search over ${formatPoint(inventory)} exceeded ${cap} states`);
     }

@@ -172,6 +172,8 @@ import './modules/tests/testCases/discoveryModeTests.js';
 import './modules/tests/testCases/textAdventureWrapperTests.js';
 import './modules/tests/testCases/flashSubstrateTests.js';
 import './modules/tests/testCases/runnerDemoTests.js';
+import './modules/tests/testCases/cloudberrySubstrateTests.js';
+import './modules/tests/testCases/cloudberryLoopModeTests.js';
 import './modules/tests/testCases/runnerBlockModeTests.js';
 import './modules/tests/testCases/noiz2saSubstrateTests.js';
 import './modules/tests/testCases/jtaSubstrateWrapperTests.js';

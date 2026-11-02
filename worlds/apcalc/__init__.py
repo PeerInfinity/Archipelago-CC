@@ -308,7 +308,8 @@ class APCalcWorld(RuleWorldMixin, World):
         return APCalcItem(name, ItemClassification.progression, None, self.player)
 
     def fill_slot_data(self) -> Dict[str, Any]:
-        """Data sent to the client for gameplay."""
+        """Data sent to the client for gameplay, and for the client to rebuild
+        the rules.json from (frontend/modules/apcalc/apcalcRulesBuilder.js)."""
         # Build nodes dict keyed by generic region name
         nodes = {}
         for node in self.generated_nodes:
@@ -337,6 +338,12 @@ class APCalcWorld(RuleWorldMixin, World):
                 "operation": edge.operation,
                 "operand": edge.operand,
                 "operand_digits": edge.operand_digits,
+                "sphere": edge.sphere,
+                # Each cost is a FULL path from Start: the generator adds the
+                # edge's buttons to ONE of the source node's paths, picked by
+                # its RNG, so the client cannot derive it from the operand.
+                # set_rules builds the entrance rules from these.
+                "path_costs": [dict(pc) for pc in edge.path_costs],
             })
 
         return {
@@ -345,6 +352,11 @@ class APCalcWorld(RuleWorldMixin, World):
             "starting_buttons": self.starting_buttons,
             "operations": ["+", "-", "*", "/"],
             "num_spheres": self.options.num_spheres.value,
+            "ops_per_sphere": self.options.ops_per_sphere.value,
+            "nums_per_sphere": self.options.nums_per_sphere.value,
+            "trash_per_sphere": self.options.trash_per_sphere.value,
+            "max_branches": self.options.max_branches.value,
+            "randomize_items": bool(self.options.randomize_items.value),
             "goal": "all_locations",
         }
 

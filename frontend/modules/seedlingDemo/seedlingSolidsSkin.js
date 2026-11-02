@@ -116,7 +116,7 @@ const CHEST_FADE = CHEST_OPEN_TIMER / 3;
 /** WHAT G8 DRAWS, by AS3 class. */
 export const SOLIDS_COVERAGE = Object.freeze({
     drawn: Object.freeze(['Chest', 'BreakableRock', 'BurnableTree', 'MagicalLock', 'Lock', 'WandLock', 'GrassLock', 'ShieldLock',
-        'Cover', 'BossLock', 'RockLock', 'Button', 'ButtonRoom']),
+        'Cover', 'BossLock', 'RockLock', 'Button', 'ButtonRoom', 'RopeStart']),
 });
 /** Still drawn in their DEFAULT state (G9c drew the responders' fades). */
 export const SOLIDS_PENDING = Object.freeze({
@@ -477,4 +477,68 @@ export function solidsOps(view, art, { skin } = {}) {
         }
     }
     return ops.filter(Boolean);
+}
+
+// ── the rope (`Puzzlements/RopeStart.as`) ───────────────────────────────
+
+/**
+ * ⛓ THE ROPE — ONE spelling of `RopeStart.render()` (`:51-76`), drawn by the JS page (`ropeSkinView` + `ropeOps`,
+ * beside `solidsOps`) and by the lab (`watchArt.staticRopeOps`, which only decides `cut` from its sample).
+ *
+ *   · `:14-15` `Spritemap(imgRope, 16, 16)` over RopePulley.png (`seedling:puzzlement/rope`, 4 frames);
+ *   · `:22-24` `super(_x + Tile.w/2, _y + Tile.h/2, …)`, `centerOO()`, `xend = _xend + Tile.w/2` (`_xend` = the
+ *     `<node>`'s x, `levelWorld`'s `span.xend`);
+ *   · `:27` `layer = -(y - originY + height/2)` with the uncut hitbox (`:26`, origin 8, height 16) = `-y`, set once;
+ *   · `:53-66` UNCUT (`!activate`): frame 1 at `x + i` for `i = 0; i < xend - x; i += 16`, then the pulley (frame 0)
+ *     at `x` and the handle (frame 2) at `xend`;
+ *   · `:68-75` CUT: the pulley (frame 0) at `x`, the dropped handle (frame 3) at `xend`.
+ *
+ * Static: the frames are a function of `cut` only, never of the tick. A cut rope is not removed (`hit()` shrinks
+ * the hitbox, `:44`), so it is drawn while its solid exists. `null` when the stack lacks the key: the caller then
+ * keeps the rope's build-time stand-in rect (`roomOps`' object solid), as a family whose skin refused does.
+ */
+export const ROPE_KEY = 'seedling:puzzlement/rope';
+export const ROPE_FRAMES = Object.freeze({ pulley: 0, span: 1, handle: 2, handleCut: 3 });
+/** The `.oel` tag whose object-solid stand-in the rope's picture replaces (only while `ropeOps` draws). */
+export const ROPE_OBJECT_TAGS = Object.freeze(new Set(['rope']));
+
+/** `render()`'s cells for one rope: `[{frame, x}]` in draw order, `x` the frame's centre (`centerOO`). */
+export function ropeCells({ x, xend, cut }) {
+    const cells = [];
+    if (!cut) for (let i = 0; i < xend - x; i += 16) cells.push({ frame: ROPE_FRAMES.span, x: x + i });
+    cells.push({ frame: ROPE_FRAMES.pulley, x });
+    cells.push({ frame: cut ? ROPE_FRAMES.handleCut : ROPE_FRAMES.handle, x: xend });
+    return cells;
+}
+
+/**
+ * The ops for `solids` (the world's rope object solids: `ropeId`, `span`), `cut(solid)` the class's `activate`.
+ * Each op carries its cell's rect as its fallback.
+ */
+export function ropeOps(solids, art, cut = (s) => !!s.bootPulled) {
+    if (!art?.has(ROPE_KEY)) return null;
+    const ops = [];
+    for (const rope of solids ?? []) {
+        if (!rope.ropeId || !rope.span) continue;
+        const y = rope.y + 8;
+        const layer = -y;
+        for (const c of ropeCells({ x: rope.x + 8, xend: rope.span.xend + 8, cut: cut(rope) })) {
+            const fallback = rectOp({ x: c.x - 8, y: rope.y, w: 16, h: 16, right: c.x + 8, bottom: rope.y + 16 },
+                objectSolidColour(rope), 0.85, layer);
+            ops.push(spriteOp(art, ROPE_KEY, c.frame, { x: c.x, y }, { layer, fallback }) ?? fallback);
+        }
+    }
+    return ops;
+}
+
+/**
+ * THE JS PAGE'S ADAPTER for the rope: the current room's rope solids and which are CUT — the build's re-pull
+ * (`bootPulled`, `RopeStart.check()` `:31-38`) or the run's `pulledRopes` (this visit's `hit()`s, `levelRun`). It
+ * copies; it writes nothing. `null` when there is no run.
+ */
+export function ropeSkinView(run) {
+    if (!run?.state) return null;
+    const pulled = asSet(read(run, 'pulledRopes', null));
+    const ropes = (run.world?.objectSolids ?? []).filter((o) => o.ropeId && o.span);
+    return { level: run.level, ropes, cut: (s) => !!s.bootPulled || pulled.has(s.ropeId) };
 }

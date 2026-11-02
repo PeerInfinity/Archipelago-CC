@@ -1,0 +1,9 @@
+ ✓ frontend/modules/seedlingDemo/hammerSouthDoor.slow.test.js (4 tests) 564726ms
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js (2 tests) 975204ms
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js (3 tests) 474827ms
+ ✓ frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js (2 tests) 690125ms
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js (2 tests) 1086251ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 74888ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 66590ms
+ Test Files  4 passed (4)
+      Tests  6 passed (6)

@@ -64,6 +64,7 @@
 
 import { REQUIRING_GRADES, gradeDifferential } from '../procgenCore/differentialGrade.js';
 import { DEFAULT_BUDGET, bootStaging, solve } from './procgenOracle.js';
+import { contactFidelityStamp } from './contactFidelity.js';
 
 /** ⛓ RE-EXPORTED, not re-declared — arc 5 slice 5 moved the list into
  *  `procgenCore/differentialGrade` so the maze reads the same one. Every
@@ -111,7 +112,13 @@ export function requirementsFor(state, withOut, { budget = DEFAULT_BUDGET,
     // ⛓ R9 slice 12i: the with/without differential must run BOTH arms under
     // the same build — a `without` solved at the roster's default against a
     // `with` solved at another mode would be a differential of two things.
-    dashMode } = {}) {
+    dashMode,
+    /**
+     * ⛓ STRATEGY SWITCH r1 (D2) — THE STRATEGY ARM: verbs to grade, each one extra solve of the SAME level at the SAME
+     * boot and budget with that strategy switched off (`solve(…, {disable: [verb]})`). Absent / `[]`: no row, and the
+     * returned object is today's byte for byte (the acceptance batch's md5 `ab540ac4…` passes none).
+     */
+    strategies = [] } = {}) {
     const items = state.palette.items ?? {};
     const candidates = Object.keys(items).filter((k) => items[k] === true);
     const boot = state.model.boot();
@@ -207,8 +214,10 @@ export function requirementsFor(state, withOut, { budget = DEFAULT_BUDGET,
                 : null,
         });
     }
+    for (const verb of strategies) rows.push(strategyRow(state, withOut, verb, { budget, dashMode, boot, items, pins }));
     return {
         candidates,
+        ...(strategies.length > 0 ? { strategies: [...strategies] } : {}),
         rows,
         /** ⛓ An empty layer owes a `why`, and this is it. */
         why: candidates.length === 0
@@ -220,6 +229,61 @@ export function requirementsFor(state, withOut, { budget = DEFAULT_BUDGET,
         verdict: rows.some((r) => r.verdict === 'REQUIRED')
             ? rows.filter((r) => r.verdict === 'REQUIRED').map((r) => `requires ${r.item}`).join('; ')
             : 'none established',
+    };
+}
+
+/**
+ * ⛓⛓ STRATEGY SWITCH r1 (D2) — **ONE STRATEGY'S ROW.** The item arm with a different without-arm: the boot is
+ * UNCHANGED and the solver runs with `disable: [verb]`. ⛔ ONE NEW RULE: the gate's hit count gates REQUIRED on a
+ * refusal. Refusal TEXT does not say why a room refused (the design measured rooms refusing with sentences about
+ * something else), so:
+ *   REFUSED, `hits > 0`   → REQUIRED · STRONG (refused AT the disabled gate)
+ *   REFUSED, `hits === 0` → "rule not established": the strategy was never consulted — the flag OFF
+ *                           (`STRATEGY_SWITCH_OFF`) lands here too, never STRONG
+ *   BUDGET_EXHAUSTED      → REQUIRED · BOUND-DEPENDENT;  THREW → REQUIRED · WEAK
+ *   SOLVED                → INERT / SHORTENS / NOT-ESTABLISHED by `gradeOf`, as for an item
+ * The row carries `disabled` (the gate's `{asked, hits, first, absent}`) and, beside it, the `CONTACT_FIDELITY`
+ * stamp the arm ran under (`null` at the defaults; fidelity p17's condition 3).
+ */
+function strategyRow(state, withOut, verb, { budget, dashMode, boot, items, pins }) {
+    const flag = `strategy:${verb}`;
+    const without = attempt(() => solve(state.record, bootStaging({ boot, items, pins }), state.model.goals, budget,
+        { name: `req-s${state.seed}-no-strategy-${verb}`, dashMode, disable: [verb] }));
+    const v = without.ok ? without.value : null;
+    const disabled = v?.disabled ?? null;
+    const hits = Object.values(disabled?.hits ?? {}).reduce((a, b) => a + b, 0);
+    const withoutVerdict = without.ok ? v.verdict : `THREW:${without.error.name}`;
+    const withoutSolved = without.ok && v.verdict === 'SOLVED' && v.certification?.certified === true;
+    const neverConsulted = without.ok && v.verdict === 'REFUSED' && hits === 0;
+    const required = withOut.verdict === 'SOLVED' && !withoutSolved && !neverConsulted;
+    const evidence = !required ? 'n/a'
+        : (without.ok
+            ? (v.verdict === 'REFUSED' ? 'STRONG (solver refusal at the disabled gate)'
+                : 'BOUND-DEPENDENT (the budget is what ended it)')
+            : 'WEAK (an ENGINE throw, not a claim about the level)');
+    return {
+        flag,
+        strategy: verb,
+        item: `the ${verb} strategy`,
+        withVerdict: withOut.verdict,
+        withTicks: withOut.ticks,
+        withoutVerdict,
+        withoutTicks: without.ok ? (v.ticks ?? null) : null,
+        withoutReason: without.ok ? (v.reasonText ?? null) : without.error.message,
+        verdict: required ? 'REQUIRED' : 'rule not established',
+        evidence,
+        ...(neverConsulted ? { why: 'the disabled strategy was never consulted (the gate answered "off" 0 times)' } : {}),
+        inert: !required && without.ok && v.ticks === withOut.ticks,
+        disabled,
+        contactFidelity: contactFidelityStamp(),
+        label: required
+            ? `SOLVER-RELATIVE, BOUNDED: this solver, at maxTicksPerTarget=${budget.maxTicksPerTarget}, solves this `
+                + `level WITH the ${verb} strategy and does not solve it WITHOUT (\`disable: [${verb}]\`, the gate `
+                + `answered "off" ${hits}×). It is NOT a proof that no other route exists.`
+            : `SOLVER-RELATIVE, BOUNDED: ${neverConsulted ? `the without-arm refused and the ${verb} gate was never `
+                + 'consulted, so the refusal is not attributed to it' : `the level solved without the ${verb} strategy `
+                + 'at this budget'}; no rule is established.`,
+        howToReadTheText: null,
     };
 }
 

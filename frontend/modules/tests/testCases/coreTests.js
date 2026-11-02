@@ -470,6 +470,98 @@ export async function rulesReloadTest(testController) {
   }
 }
 
+/**
+ * test_core_rules_load_failed_named — a rules file the worker cannot load shows a
+ * NAMED error and the page does not hang (rule-engine-worker-load-failure, option A).
+ *
+ * ⛓ Before: a structural data error (C5: `region.exits = 5`) threw inside the
+ * worker's loadFromJSON; only `workerError` was posted, nothing settled
+ * initialLoadPromise, ensureReady() waited out its timeout and the page showed
+ * nothing but two console lines.
+ *
+ * Drives the page's own load path (loadRules + rawJsonDataLoaded, as
+ * loadRulesFromFile does) with the committed concept_trial AP_1 rules, mutated in
+ * memory, then restores ALTTP so the next row starts where the roster expects.
+ */
+export async function rulesLoadFailedNamedTest(testController) {
+  const RULES = './presets/concept_trial/AP_1/AP_1_rules.json';
+  const SOURCE = 'concept_trial AP_1 (C5: region_2_2.exits = 5)';
+  const uncaught = [];
+  const onError = (e) => uncaught.push(`error: ${e.message || e.error || e}`);
+  const onRejection = (e) => uncaught.push(`unhandledrejection: ${e.reason?.message || e.reason}`);
+  window.addEventListener('error', onError);
+  window.addEventListener('unhandledrejection', onRejection);
+  let ok = true;
+  const check = (description, condition) => {
+    testController.reportCondition(description, !!condition);
+    ok = ok && !!condition;
+  };
+  const handlerErrorsBefore = testController.eventBus?.handlerErrorCount ?? 0;
+  try {
+    const sm = testController.stateManager;
+    await sm.ensureReady(5000);
+    const response = await fetch(RULES);
+    const rules = await response.json();
+    rules.regions['1'].region_2_2.exits = 5;
+    const playerInfo = { playerId: '1', playerName: 'TestPlayer1' };
+
+    const failedPromise = testController.waitForEvent('stateManager:loadFailed', 8000);
+    await sm.loadRules(rules, playerInfo, SOURCE);
+    testController.eventBus?.publishAs?.('stateManager:rawJsonDataLoaded', {
+      source: SOURCE, rawJsonData: rules, selectedPlayerInfo: playerInfo,
+    }, 'stateManager');
+    const failure = await failedPromise;
+    check(
+      `stateManager:loadFailed names game/player/phase (${failure?.game} / ${failure?.player} / ${failure?.phase}: ${failure?.message})`,
+      !!failure && failure.game === 'Procgen Maze' && failure.player === '1'
+        && failure.phase === 'processStartingItems' && /not iterable/.test(failure.message || '')
+    );
+
+    const banner = await testController.pollForValue(
+      () => document.getElementById('rules-load-failed-banner'),
+      'rules-load-failed banner shown', 5000, 50
+    );
+    const text = banner?.textContent || '';
+    check(
+      'the banner names the game, the player, the phase and the message',
+      text.includes('Game: Procgen Maze') && text.includes('Player: 1')
+        && text.includes('Phase: processStartingItems') && text.includes('not iterable')
+    );
+
+    const t0 = performance.now();
+    const ready = await sm.ensureReady(10000);
+    const waited = Math.round(performance.now() - t0);
+    check(
+      `ensureReady() settles false at once, not after its timeout (${waited} ms)`,
+      ready === false && waited < 2000
+    );
+
+    // A quiet window for anything the failure sets off after the banner.
+    await new Promise((r) => setTimeout(r, 750));
+    const handlerErrors = (testController.eventBus?.handlerErrorCount ?? 0) - handlerErrorsBefore;
+    check(
+      `no secondary uncaught error or bus handler error after the banner (${uncaught.length} uncaught, ${handlerErrors} handler)${uncaught.length ? `: ${uncaught.join(' | ')}` : ''}`,
+      uncaught.length === 0 && handlerErrors === 0
+    );
+
+    // Fail, then a good load: the page boots again and the banner goes.
+    await testController.loadALTTPRules();
+    const readyAgain = await sm.ensureReady(10000);
+    check('a later good load boots (ensureReady true)', readyAgain === true);
+    check(
+      'the good load removes the banner',
+      !document.getElementById('rules-load-failed-banner')
+    );
+    await testController.completeTest(ok);
+  } catch (error) {
+    testController.reportCondition(`Test errored: ${error.message}`, false);
+    await testController.completeTest(false);
+  } finally {
+    window.removeEventListener('error', onError);
+    window.removeEventListener('unhandledrejection', onRejection);
+  }
+}
+
 // Self-register tests
 
 registerTest({
@@ -502,4 +594,13 @@ registerTest({
   category: 'Core',
   //enabled: true,
   //order: 2,
+});
+
+registerTest({
+  id: 'test_core_rules_load_failed_named',
+  name: 'Rules Load Failure Is Named',
+  description:
+    'A rules file the worker cannot load (C5: region.exits = 5) shows a named error (game, player, phase, message), ensureReady settles at once, and a later good load boots.',
+  testFunction: rulesLoadFailedNamedTest,
+  category: 'Core',
 });

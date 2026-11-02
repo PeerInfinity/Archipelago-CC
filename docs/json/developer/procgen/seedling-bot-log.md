@@ -26793,3 +26793,255 @@ only Boss Key 2 arrival leg that gets past `bobsoldier@880,832`. Switch `pressKi
   worktree with it applied: producer roster 97 run, 0 red; the bounded set 635/635. Re-recording instead
   (`variant-rerecord.patch`) lengthens both witness tapes past their game samples (2195 → 2317 t, 1629 → 1796 t) and
   reds 7 rows.
+
+---
+### Seedling hammer-phase GHOSTROPE — the PULL rung cuts a rope with the Ghost Sword
+
+⚖ User, queued 2026-10-31 (one of four hammer slices run in parallel). ⚖ The user (2026-10-30): *"ghost sword replaces
+the sword, so the solver shouldn't attempt to switch to regular sword when it has ghost sword."* Switch
+`ghostRopeCut.GHOST_ROPE_CUT`, **OFF** (`SEEDLING_GHOST_ROPE_CUT=1` / `withGhostRopeCut`). The report is
+`CC/docs/cloud-reports/seedling-hammer-ghost-rope.md`.
+
+- **The game.** `slash()` runs `if (hasSword)`; under `hasGhostSword` the rect is 24 x 48, the reach 24, the line waived,
+  and `genericHit` → `RopeStart.hit()` takes no `t`. Witnessed on p4g headless (`probe-seedling-ghost-rope.mjs`,
+  `fixtures/ghost-rope-witness/`, L16's `rope@32,16`): the ghost sword cuts from 15.1 and 23.1 px ({16,0} at t3 = the
+  model's pull t2 + 1), the plain sword does not from 23.1, nothing cuts from 27.1. Game = model at 0 px. The run already
+  modelled it (`GHOST_PRESS_ARMS.RopeStart`).
+- **The gap.** The PULL rung, its later-lane probe and the `rope` verb asked only a `sword` primary; `ropeCutWeapons`
+  skips the sword while `hasGhostSword` is up and had no ghost row. The lab's ENDGAME `ropegate` rooms (seeds 1-3, 10x10
+  `empty`) refused at the rung: *"the run's `primary` slot fires `ghostsword` and no slot holds a Sword, Fire or Spear"*.
+- **The fix (ON).** A `ghostsword` primary whose swing tests is the rung's and the verb's own swing, priced with the
+  ghost's press (`ROPE_SWING_PRESS.ghostsword`). Three things the ghost swing needs that the sword's did not, each
+  measured on a hand-built room with a `LightPole` beside the rope: the 48-wide rect reaches a pole the sword's does not
+  (a stance is kept off `GHOST_ROPE_STRAY_ARMS`: LightPole, bridge Tile, PushableBlockSpear); the press DASHES the player
+  ~5 px along the facing during its seven tests (the audit is swept by `DASH_DISPLACEMENT`, 9 px, + 4 px slack at
+  derivation); a stance on the diagonal flips `facingToward` under the aim tap (the facing is fixed at the first ask, and
+  the press waits for rest). A held ghost sword is the swordless cut's swing row (selected by `equip`).
+- **Effect ON.** The three ENDGAME rooms SOLVE (`pull` with the ghost sword, `collect`; 144 / 125 / 120 t), replayed in
+  the model with no hit. The solver's L16 `rope` plan (`ghostrope-l16-verb-plan`) plays on the game as planned. L16's
+  full crossing with the ghost pair now passes the lanes and stops at `lock@320,112` (the weigh, out of scope). Movers
+  elsewhere: none — producers 97/0 red ON and OFF, the identity block identical OFF and ON, and the route survey cannot
+  move (the ghost sword arrives at step 222; the last rope room is step 148).
+- **Gate** `hammerGhostRope.test.js` (13 rows). Mutants: the plain sword's row in the ghost's place (5 red), the ghost
+  priced with the sword's rect and reach (2 red), the arm dropped (5 red).
+
+**Trap candidates.**
+- A wider swing reaches more than its target: price the stance with the rect that swings, and over the whole swing (a
+  ghost press moves the player while it tests).
+- `facingToward` on the diagonal flips under a one-pixel aim tap; a press that re-derives its facing each tick can turn
+  onto something else.
+### Seedling hammer-phase AXIS — strikes on axis-aligned walks, aimed along the walk's axis
+
+⚖ User, queued 2026-10-31 (one of four parallel hammer slices; OPP's hand-over). The report is
+`CC/docs/cloud-reports/seedling-hammer-axis-strikes.md`. **A new switch, OFF; nothing flips.**
+
+- **The switch.** `pressKillCost.AXIS_STRIKE` (`SEEDLING_AXIS_STRIKE=1`, `withAxisStrike`, the page channel's
+  `SOLVER_ENV_NAMES`), beside `OPPORTUNISTIC_STRIKE`. ON, every site that handed `walkToUnder`'s axis-aligned walk
+  `strike: null` (the drive and each preview that certifies it) is handed `solverBot.axisStrikeFor`:
+  `strikePolicyFor(run, {axisAlong: true})`, the one policy wrapped by `axisAlongStrike`, which offers an aim tick only
+  the bodies whose facing lies on the walk's axis (`walkAxisOf`). The aim key is then the walk's own axis and the press
+  holds `primary` alone, so the other coordinate never moves. OFF nothing new is built.
+- **The census at `84404513`** (a load hook on `driveStepHeld`, every driven axis-aligned tick with a body in sword
+  reach): the 60 captured L40 requests (the 52 keys) drive 50,052 ticks and none is axis-aligned, and with
+  `CHOOSER_PAIR` at size 3, 47,668 and none. OPP's 262 missed ticks are gone at this head. The r9 campaign has 27
+  axis-aligned ticks, none with a body in reach. The route survey has 4,165; only L53 (step 79, RULESREF's puncher exit)
+  has a body in reach, `puncher@136,96`, on 40 ticks: 18 with the puncher off the axis, 22 along it.
+- **The design check.** (1) An aim along the walk's axis: built. (2) Pausing the walk to aim across the lane: from rest
+  the aim key moves the player 1.70 px off the lane, and no one-key return lands back on it; not built. (3) Leave it:
+  not needed, since (1) keeps the lane exact on every measured tick.
+- **ON.** L40: no axis-aligned tick, so nothing to strike. The survey: 201/237 SOLVED both ways, one mover, step 79,
+  whose axis walk presses along x at t134 and lands the puncher's second hit at t135; the step refuses at the same press
+  kill of the puncher (166 → 167 t in the text). The r9 campaign `--check`: green ON.
+- **Gate** `hammerAxisStrikes.test.js` (L6's `bob@112,48` on the y = 56 lane: OFF walks into it at t20; ON aims `right`
+  at t10, presses at t11, the hit lands at t12, a second strike aims `left` back along the axis; y = 56 and x on the
+  0.05 grid on every tick; the preview spends the same keys). Mutants: an off-axis offer, an at-rest offer of every body
+  and a dropped arm each red a row; a perpendicular key added to the press survives (`holdOneAxis` drops it while the
+  player moves).
+### Seedling hammer-phase SLASHRECT — a press with no facing refuses by name; `PRESS_NO_FACING` (OFF) does not plan it
+
+⚖ User, queued 2026-10-31 (one of four parallel hammer slices). The report is
+`CC/docs/cloud-reports/seedling-hammer-slashrect.md`.
+
+- **The abort.** The lab's caldera counterfactual (caldera's items and terrain WITHOUT its melt `floodWalks`, `empty`,
+  8 obstacles) aborted seed 7 on `PressError: slashRect: direction -1 is not 0..3` (step 5 try 4, `melt-patch(w=1,h=2)`
+  at (2,4)). It reproduces at base `8440451386`; the request is 6 KB (`fixtures/hammer-slashrect/seed7-request.json`).
+- **Why -1.** It is the GAME's facing: `Player.update` runs `slash()`, `super.update()`, `sprites()`, `hitUpdate()`;
+  on the tick the i-frames run out `hitUpdate` writes `direction = directionFace` (`Player.as:1424`), which is -1 when
+  no knockback parked one (lava's `hit(null, …)`). The press kill aimed `left` at t100 (the recovery tick) and its
+  escape forecast (`pressEscapeOnce`) asked the press at t101 with the previewed facing -1. The game would latch
+  `slashDirection = -1` and swing `getSlashRect`'s all-zero default rect: a whiff no model has.
+- **The fix** (`pressNoFacing.js`). Always: that rect throw, and only that throw (a `PressError` / `CombatVerbError`
+  at a non-facing), becomes `SolverRefusal` bound `PRESS_NO_FACING` (`pressEscapeOnce`, `deriveFight`'s press macro);
+  seed 7 then REFUSES the candidate and generates. `PRESS_NO_FACING` (OFF): the escape returns a claimed `no-facing`
+  negative before forecasting, the aim is not admitted, the live press tick re-aims, the fight macro is not offered;
+  seed 7's request then meets the kill's own refusal ("There is no step out"); the level is the same either way.
+- **Measured.** Identity block BEFORE = AFTER on every row (r9 campaign `be9c19c8`); census of 548 generated levels at
+  base: the family's only throw is caldera-cf seed 7. Switch ON: producers 97 run / 0 red, route survey 0 movers
+  (201/237 both ways), hammer `.slow` files 11/11, a base/OFF/ON digest census of 54 levels moves only caldera-cf 7
+  (ABORT → generated). `solveProgress.BOUND_KINDS` classes both new bounds `unmodelled`. Gate
+  `hammerSlashRect.test.js` (8 rows; 5 mutants each red).
+### Seedling hammer-phase SOUTHDOOR — the approach's latched south door
+
+⚖ User, queued 2026-10-31 (one of four parallel hammer slices; APPROACH's hand-over, its report § 9). Switch
+`solverBot.APPROACH_DOOR`, **OFF** (`SEEDLING_APPROACH_DOOR=1` / `withApproachDoor`; asked only inside `TURRET_APPROACH`'s
+approach). The report is `CC/docs/cloud-reports/seedling-hammer-south-door.md`.
+
+- **The wall, re-measured.** From the Boss Key 2 arrival legs (856/857 on this main; L40C's 860/861), CPAIR size 3 +
+  `LATCH_WEIGH_FIRST` + `TURRET_APPROACH`: the approach stages at (488,579), south of the latched `wandlock@480,560`, and
+  its 12 forks are all `no-plan` — `planWaypoints` has no ladder. Captured budget and 10240 alike.
+- **The design.** The door's order before the forks, staged in its discharge: when no side of the turret's box plans
+  from the staging point, `approachDoorFor` asks the stance hypothesis which door a side's route crosses (no tick spent),
+  and `approachDoorFirst` walks the live run to that door's cell with the loop's own `walkTo`; the ladder raises the
+  door's order (the latch's `hold` at `buttonroom@880,768`) and the walk ends in the open doorway (outside the range).
+  Giving each fork the ladder was not built: a fork has no `walkTo`, and the order is the same on every try.
+- **Measured.** The latch fixture re-booted south of the door (the pocket open, the latch not held): OFF the arrivals'
+  refusal; ON the hold is applied (the ladder kills `bob@736,752`, `spinner@816,848` and `bobsoldier@880,832` on its
+  way), the approach kills the turret hitless from the doorway, and the chain meets the 4-order bound; with
+  `FIFTH_ORDER` **SOLVED 4810, hitless on a fresh run**. From the arrival legs themselves the door's hold refuses:
+  `burnabletree@872,784` shuts the pocket, and the hold's prerequisites offer no burn (the next wall, named, not fixed).
+  SPIN's switch changes nothing there; 10240 only moves `/0` off the anytime deadline.
+- **Radius.** ON alone: 0 of 59 L40 requests move, producers 0 red. Behind L+TA: the 4 BK2 requests change refusal text,
+  nothing else. Latch staging 4142 and ICEST's pocket 4495 unchanged; identity block unchanged.
+### Seedling hammer-phase CPAIR FLIP — `CHOOSER_PAIR` ON at size 3
+
+⚖ The user approved the flip on 2026-10-31, after CPWIT's game witness. `CHOOSER_PAIR` now defaults ON with `size` 3
+(`SEEDLING_CHOOSER_PAIR=0` opts out; `SEEDLING_CHOOSER_PAIR_SIZE=2` asks pairs only). The change is CPWIT's prepared
+packet (`seedling-hammer-chooser-witness-evidence/flip/cpair3-flip.patch`), applied unchanged on main `8440451386`:
+`solverBot.js`'s defaults, and the two hammer witnesses (`hammer-g1-ghostkill`, `hammer-sf-strikefloor`) plus their four
+rows pin the switch OFF (or ask at size 2) beside the switches they already pin, so no tape is re-recorded. Evidence: the
+three L43 pits (`out_pit_5_21/22/23` from L39) play hitless to the exit in the game; on the 52 L40 keys they are the only
+verdict movers; the route survey, r9 campaign, latch chain and pocket boot are unchanged (L40C A1).
+### Seedling hammer-phase AXIS-L12HITS — the clear-tag keylock hold priced under `AXIS_STRIKE`
+
+⚖ User, queued 2026-11-02 (one of five parallel hammer slices), from the divergence sweep: with `AXIS_STRIKE` ON the
+8 L12 legs to `bosslock@416,240` / `@432,240` passed with 2 hits each (CI 41245586575 vs 41245582842; all four new
+switches, 41370177273 vs 41370172948). The report is `CC/docs/cloud-reports/seedling-hammer-axis-l12hits.md`. **No new
+switch; still OFF; OFF byte-identical.**
+
+- **What hits.** `puncher@416,256`'s punches, 29–40 ticks AFTER the stance walk ends, inside the keylock's 110-tick
+  hold; billed by the model at the game's own ticks (the sweep's `exact` rows, e.g. leg 105 t782/t822). No hit lands on
+  an aim or press tick. OFF the strike-free walk to the stance (424,264) is punched in transit, so the ladder's kill rung
+  clears the puncher first. ON, RULESREF's `punchGateTimed` asks the aligned corridor, now armed with the axis strikes;
+  they land 1–2 hits and keep the transit clean, so it is adopted with the puncher alive beside the stance.
+- **Why the certifier did not price it.** The clear-tag arm's stance walk (`execClearTag`, `walkTo(goal,
+  resolved.stance, …)`) never carried the keylock's hold as its tail; only the frontier arm does (`keylockStandWalk`,
+  L30KEYLOCK). The probe ran with `stand: null`.
+- **The fix.** `solverBot.axisClearTagStand(run, verb, resolved)`: ON, a keylock's stance walk on the clear-tag arm gets
+  `keylockStandWalk`'s tail; `{}` OFF, for any other verb, or with `KEYLOCK_WAIT_PRICED` off. ON its probe meets the punch
+  and the kill runs first: the 8 legs answer OFF's plan byte for byte, 0 hits (node replays; page sweep at the head 8/8,
+  roomHits 0).
+- **Designs weighed.** (1) offer only bodies the press kills: OFF's answer on the 8 legs, but loses AXIS's L6 lane kill
+  and survey step 79's strike. (3) withhold near a puncher in contact range: OFF's answer on the 8 legs, loses step 79's
+  strike, and plans around the game rather than modelling it. (2)-as-built: the strike's own ticks were already priced;
+  the unpriced ticks were the hold's.
+- **ON radius** (base ON vs fix ON): the 8 L12 legs (2 hits → 0, all to OFF's plan); L40's 58 captured requests (52
+  keys) 58/58 identical; the route survey 0 movers of 237; r9 campaign `--check` green; producers 97/0 red; identity
+  block ON = OFF.
+- **Gate** `hammerAxisStrikes.test.js` (+2 rows; fixture `fixtures/hammer-axis-l12/leg149-l12-request.json.gz`, cut to
+  L12, byte-identical to the uncut capture): ON = OFF with 0 hits, and the regression at t375/t415 with the tail
+  withheld. Mutants (remove the fix, drop the call, OFF too, every verb) each red a row.
+### Seedling hammer-phase POCKET-BURN — a burn opens BK2's latch pocket
+
+⚖ User, queued 2026-11-02 (one of five parallel hammer slices; SOUTHDOOR's hand-over, its report § 9). Switch
+`solverBot.STANCE_BURN`, **OFF** (`SEEDLING_STANCE_BURN=1` / `withStanceBurn`). The report is
+`CC/docs/cloud-reports/seedling-hammer-pocket-burn.md`.
+
+- **The wall, re-measured.** The Boss Key 2 arrival legs are 864/865 on this main. Under LWF + TA + APPROACH_DOOR +
+  FIFTH_ORDER (CPAIR-3 the default) `/1` refuses on `hold(wandlock@480,560)`'s stance `buttonroom@880,768` with
+  SOUTHDOOR's digests; the prerequisite list names three guard-(iii) wandlocks, `bosslock@480,352` and
+  `pushableblock@576,560` — no burn, though the run holds Fire. At the defaults the frontier already raises the burn
+  (through `wandlock@448,432`'s hypothesis) and dies on `bobsoldier@880,832`.
+- **The design.** `stancePrerequisite` (the one derivation `resolveHoldStrategy` asks with prerequisites) gains arm (c)
+  after the mechanism and geometry arms: a standing tree whose burn (`burnedTrees` in the bag) plans a corridor to a
+  candidate is the prerequisite, `via: 'burn'`; `prerequisiteOrder` resolves it with the frontier's own `burn`. Offered
+  only with Fire held (no Fire Wand) and `burn` through the strategy switch's gate. Putting trees in the stance
+  HYPOTHESIS instead (design 1) passed the hold inside the door's nested walk and then hit the strategy bound on a
+  repeat of `wandlock@448,432`; it was not built.
+- **Measured.** ON, both arrivals and the pocket-shut south re-boot raise the burn; the refusal moves past the pocket to
+  the burn walk's combat (`bobsoldier@880,832`; on 864 a death to `bob@736,752` inside the spinner press kill) — the
+  defaults' own wall there. ⚠ Not a solve: from a shut pocket the chain is SIX distinct orders (the burn + SOUTHDOOR's
+  five), `FIFTH_ORDER` admits five. The pocket-open re-boot stays SOLVED 4810 hitless.
+- **Radius.** ON alone: 0 of 58 L40 requests move; behind LWF+TA+SD+FO 2 move (864/1, 865/1), refusal text only.
+
+### Seedling hammer-phase ESCAPE-EXACT — `PRESS_ESCAPE_EXACT` (OFF): the press escape exact under a carried shield
+
+⚖ The user queued the slice on 2026-11-02 (one of five parallel hammer slices); report
+`CC/docs/cloud-reports/seedling-hammer-escape-exact.md`. Fidelity's SHIELDBUMP (`forecastShieldBump`, OFF, on fidelity's
+branch) made the press forecast step the plain shield bump on rows it is TOLD the player's state, and handed the escape
+three parts. They are built behind one switch, in `pressEscapeExact.js`:
+- **(i)** under a shield, with the key present and ON, `first` is told the previewed approach and train, and its own
+  coverage report must reach the last of them. The zero-row probe no longer decides.
+- **(ii)** past those rows the search prunes every state a bump would fire on. A certificate is then exact, and a
+  negative the prune shaped is no claim.
+- **(iii)** the approach check asks the aim tick's own row. A body stepping onto the player during the aim tick was
+  never asked.
+
+The key is read through `Object.hasOwn`, so main without the key is OFF's under a shield.
+- **Measured** (key ON in a scratch merge): SPIN's four stands. ON certifies two, each driven hitless, and claims the
+  other two at t0, where the run is in fact hit (SPIN claimed one of them "exhausted"). A 1,140-case room scan: 132
+  certificates (SPIN 85), and the one driven hit is a bobsoldier the spinner escape never models. c3 / c6 / c4 move; c3's
+  9 movers are all shield-carrying rows, ticks only. Four L39 survey steps solve shorter, hitless.
+- ⚠ **Leg 860 is not hitless ON.** At t541 the exact escape claims `no-landing` for `deriveStrike`'s candidates, the
+  claim it makes with no shield (no bump on those paths). The walk then refuses at t2119, `FROZEN_TICK_PRESS`. SPIN passes
+  860 only because it leaves every non-exhausted negative as no claim. So SPIN cannot be retired until presses are
+  scheduled around a freeze.
+- Gates `hammerEscapeExact.test.js` (12 rows; 4 skip by name without the key) and `.slow` (860, key-only). Mutants:
+  probe restored, path not told, contact dropped, prune dropped; each red.
+- **Trap candidates:** (1) a forecast "modelled" flag over rows nobody told is never true for a search, so read the
+  coverage of the told rows; (2) a looser no-claim upstream can hide a downstream defect (SPIN's blanket no-claim on 860);
+  (3) `CONTACT_FIDELITY_KEYS` is not on the solver's door (`solverView.js`).
+
+### Seedling hammer-phase STRIKE-SLOT — the strike policy reads the selected slot
+
+⚖ User, queued 2026-11-02 (one of five parallel hammer slices; fidelity CORPSEBUMP2's hand-over). The report is
+`CC/docs/cloud-reports/seedling-hammer-strike-slot.md`. **A new switch, OFF; nothing flips.**
+
+- **The switch.** `strikeSlot.STRIKE_SLOT` (`SEEDLING_STRIKE_SLOT=1`, `withStrikeSlot`, the page channel's
+  `SOLVER_ENV_NAMES`; a family file beside `strikePolicy.js`). OFF, `strikePolicyFor` gates on the INVENTORY's blade and
+  nothing new is read. ON, it gates on what the press does: `primaryWeapon` must be a blade (`pressIsBlade`: `ghostsword`,
+  or `sword` only while the Ghost Sword is not held). A non-blade selection gets no policy, a built policy re-reads the
+  slot on each `decide` (`slotIsBlade`) and stands down, and `planSwordDash` refuses by name.
+- **The census at `6d9f991739`** (a load hook wrapping every `strikePolicyFor` policy's `decide`): r9 campaign 26,582
+  presses and the route survey 446,481 (237 steps), all blades. L40's latch chain (`latch-boot`): one driven non-blade
+  press per arm (LWEIGH's and hammer-2's TA), a `planSwordDash` scheduled press on `execCorpseWeigh`'s walk to corpse
+  bump 2's stance with Fire selected: a Fire press whose 5th dispatch reaches the corpse. The 58 captured L40 requests
+  (the 52 keys, CPAIR size 3 default): 10 driven non-blade presses, all on leg 867 (L43, the Wand selected by the
+  arrival), each a scheduled "dash" that fires a WandShot, all in the dashed pass the anytime solver does not choose.
+- **The design check.** (1) No policy for a non-blade slot: built. (2) Pricing the item's own press: not built (no
+  measured press was wanted for its item's effect; a Fire or Wand press buys no displacement). (3) Re-selecting the
+  blade before the walk: an equip costs no tick, and a scratch hook in `execCorpseWeigh` saves 12 t on the TA arm
+  (4142 → 4130) and 25 t on LWEIGH's (3586 → 3561), hitless; not built here (an executor change in fidelity's corpse
+  weigh, or a drive/preview equip channel in `botDriverV2`, out of bounds): handed over.
+- **ON.** LWEIGH's arm no longer refuses *"ALREADY on (30,24)"*: it runs on hitless to the strategy bound at
+  `pushableblock@576,560` (3586 t). The TA arm loses only the walk's Fire press (t1117), 4142 t both ways. L40: 55/58
+  identical; 867:0, 867:1 and 880:0 move in work only (199 → 168, 66 → 52, 131 → 130), same plan. Survey and r9: no
+  mover. The producer roster: one committed tape moves, `apb-l32-fresh-fire-held` (`plan-seedling-encounters`, L32 with
+  the Fire held): its walks' three scheduled Fire presses (t840, t854, t934) are gone, 1056 t, the same burn (t880), level
+  30, hitless; a flip re-records it.
+- **Gate** `hammerStrikeSlot.test.js` (L6's `bob@112,48` with Fire selected: OFF the policy aims and presses at t11, 23,
+  35, 47, 59, each a Fire press whose five dispatches miss the bob; ON no policy, no `primary`, the same two contacts; a
+  built policy stands down when Fire is equipped; `planSwordDash` refuses by name; a blade walk is OFF's key for key; the
+  Ghost Sword selects `ghostsword` and a `sword` reading under it is refused). Mutants: the inventory gate, `sword`
+  accepted under the Ghost Sword, no per-tick re-read and an unguarded `planSwordDash` each red a row.
+
+### Seedling hammer-phase DASHCERT — the whole-dash certificate sees the swing's line of sight
+
+⚖ User, queued 2026-11-02 (one of five parallel hammer slices; fidelity L100LATTICE's hand-over to hammer). Switch
+`solverBot.DASH_CERT_SIGHT`, **OFF** (`SEEDLING_DASH_CERT_SIGHT=1` / `withDashCertSight`; asked only inside
+`spinnerDashWhole`). The report is `CC/docs/cloud-reports/seedling-hammer-dashcert.md`.
+
+- **The gap, measured** (fidelity's `fineStanceWalk` scratch-merged, survey step 216, L100 → L101). The certificate's
+  preview and the drive press the same keys until t81; at t81 the preview presses its scheduled dash and the drive yields
+  it (`certifyDash`: `jellyfish@80,16`'s i-frame expires mid-dash). The cause is 33 ticks earlier: the t48 press reaches
+  that jellyfish on t49 and t50 through `tile:Cliff`, which the run refuses on `slash()`'s line of sight (MASKS D2's
+  `pixelMaskSightLines`) and lands at t51; the preview's chaser arm asks no line and lands it at t50. The drive is then hit
+  by `jellyfish@80,112` at t125, in a room the preview never saw.
+- **The design.** The certificate's previews ask the run's own line (`run.collideLineSolid`, masks included, a Flyer
+  waived) before a swing lands. Billing chaser contact in the certificate was already there (`probeSamples`), and it bills
+  nothing because the preview's room has no contact. Refusing the whole chain when a preview swing is line-blocked does not
+  fix it: the window-by-window fallback is just as blind and plans the same hit (731 t, UNBILLED).
+- **Measured.** Step 216 ON: 327 t, hitless, L101, game-witnessed (p4g, 0 px over 327 ticks, Jellyfish worst |Δ| 0).
+  The route survey at the defaults is identical ON (237 rows, 201 solved); with `fineStanceWalk` ON, step 216 is the
+  only mover (731 t / 1 hit → 327 t / 0). The bounded set (34 files) is green both ways.
+- **The L12 cost** (hand-over (b)) is the press-blind `planSwordDash` scan, not the certificate: 43.5 of 44.7 s (step
+  172) and 87.2 of 88.8 s (step 200) under L100LATTICE's mutant M4. Handed on as a dash-search question.

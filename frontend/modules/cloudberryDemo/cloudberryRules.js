@@ -270,7 +270,8 @@ export function buildCloudberryPayload(region_id, { generate, docSha256, checks,
  *                        resolves the page's sendExit(exitName, side) by exitName; the
  *                        menu shows the label: the exit's own, else "to <target region>")
  *   params.sidePortals ← {grid side: page side} (the bridge's walkTo: portal id = side)
- *   params.entrySide   ← params.backExitSide as a page side (the start door's way back), else null
+ *   params.entrySide   ← params.backExitSide as a page side (the start door's way back), else null;
+ *                        the bridge's configure.arrivedFrom (an exitId) adds the side arrived by at run time
  */
 export function pageParamsForWorld(world) {
     const params = { ...(world.params ?? {}) };
@@ -279,7 +280,15 @@ export function pageParamsForWorld(world) {
     params.exits = exits.filter((e) => PAGE_SIDE[e?.side]).map((e) => {
         const label = typeof e.label === 'string' ? e.label
             : (typeof e.targetRegion === 'string' && e.targetRegion ? `to ${e.targetRegion}` : null);
-        return { side: PAGE_SIDE[e.side], exitName: e.exitName ?? e.exit_id, ...(label ? { label } : {}) };
+        return {
+            side: PAGE_SIDE[e.side],
+            exitName: e.exitName ?? e.exit_id,
+            // What the bridge's configure.arrivedFrom ({exit_id, source_region}) is
+            // matched against: the page's start door offers the side arrived by.
+            ...(typeof e.exit_id === 'string' ? { exitId: e.exit_id } : {}),
+            ...(typeof e.targetRegion === 'string' && e.targetRegion ? { targetRegion: e.targetRegion } : {}),
+            ...(label ? { label } : {}),
+        };
     });
     params.sidePortals = { ...PAGE_SIDE };
     params.entrySide = PAGE_SIDE[params.backExitSide] ?? null;

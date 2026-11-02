@@ -168,7 +168,7 @@ A source that feeds a *document* into the pipeline (jta's dataset) declares `emi
 |-------|------|---------|
 | `generationCost` | `'light'` \| `'heavy'` (optional) | `'heavy'` means seconds per region, so the CI row `procgenPipeline/presetDefs.generate.slow.test.js` skips presets that use the substrate and requires the skipped set to equal `PRESETS_SKIPPED_AS_HEAVY`. Default `'light'`. Read by `procgenPipeline/presetRun.js` (`substrateGenerationCost`, `heavySubstrateIds`). |
 
-`runner` declares `'heavy'`. `flash_seedling_gen` declares `'light'` explicitly, with its measurements beside it: a room is one generator draw plus re-rolls, 0.1–1.5 s at 10×10, and its committed presets build in 0.3–0.7 s.
+`runner` and `cloudberry` declare `'heavy'` (cloudberry: a game page boots, then a generator search per level). `flash_seedling_gen` declares `'light'` explicitly, with its measurements beside it: a room is one generator draw plus re-rolls, 0.1–1.5 s at 10×10, and its committed presets build in 0.3–0.7 s.
 
 ### Build-time — location capacity
 
@@ -196,7 +196,7 @@ A **region library** stores a generated region as an entry and re-instantiates i
 | `captureLibraryEntry(region, meta)` | Turn a region into an entry. The maze stores geometry only (`carried_rules: null`); bounce and runner store their rules verbatim. |
 | `instantiateLibraryEntry(entry, ctx)` | Rebuild a region from an entry for a slot, drawing no rng. |
 | `instantiateLibraryEntryForSpecs(entry, ctx)` | Requirement-aware variant, used by sphere placement (`buildSphereLibraryRegion`) and the APWorld editor's *Library entry* source (`apworldEditor/regionRegenerate.js`): relabels openings onto the slot's sides and reassigns items. |
-| `libraryEntryRefusal(entry, ctx)` | Why `instantiateLibraryEntryForSpecs` would refuse this entry for `ctx`, or `null`; the editor's picker disables such entries. |
+| `libraryEntryRefusal(entry, ctx)` | Why `instantiateLibraryEntryForSpecs` would refuse this entry for `ctx`, or `null`. The editor's picker disables such entries, and the engine's sphere library source does not pick them; there `ctx` also carries `entranceSide`, `entryGate` and `exitPlans`. Cloudberry uses it to refuse slots where its level's geometry is not sound. |
 | `validateLibraryEntry(entry)` | Refuse an entry this substrate cannot instantiate. |
 | `instantiateAtlasEntryForSpecs(entry, ctx)` | Instantiate a region-atlas entry (a piece of a real map): rules come with the entry, surplus exits are pruned, locations keep their names. |
 
@@ -206,7 +206,7 @@ A **region library** stores a generated region as an entry and re-instantiates i
 
 Optional hooks the sphere-growth driver and the Procgen Pipeline panel read, so the engine never names a substrate. Semantics are documented at the consumers, `procgenPipelineEngine.js` and `sphereConfigHooks.js`.
 
-- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal})`: `ordinal` is which of the substrate's zones the region is (sphere growth's `sphereZoneOrdinal`, top-down's running count, the APWorld editor's own or first free zone), read by a source whose regions are content (jta's zones, noiz2sa's spans). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
+- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal, entrance})`. `ordinal` is which of the substrate's zones the region is: sphere growth's `sphereZoneOrdinal`, top-down's running count, or the APWorld editor's own or first free zone. A source whose regions are content reads it (jta's zones, noiz2sa's spans). `entrance` is `{side, requirement, counts}` for the region's way back and entry gate, or `null`; cloudberry reads it because its way back is a door of its own. A `…Gen` generator may yield an event carrying `await` (a promise). The asynchronous drivers wait on it before resuming (`yieldedWait`), and a synchronous drain does not. This is how cloudberry waits for its game page's generator ([Cloudberry](./cloudberry.md#build-time-generation-sphere-growth)). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
 - **Gate vetoes and hints:** `canHostExitGates`, `canHostExitGatesBraid`, `exitGateVeto`, `backPortalGated`, `hostsSurplusExitsNatively`, `gateHostingHint`.
 - **Region contract:** `buildRegionContract`, used by the panel's Edit flow.
 - **Panel parameters:** `defaultProcgenParams`, `prepareSphereGrowth`, `buildRegionParams`, `renderProcgenParams`; for a selected region library, `buildLibraryRegionParams` and `renderLibraryProcgenParams`. `procgenParamsFromPayload(payload)` recovers the params an existing payload records.
@@ -286,18 +286,18 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `loopSupport` | 8 keys | 4 keys | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys | 8 keys |
+| `loopSupport` | 8 keys | 9 keys | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys | 8 keys |
 | `loopSupport.botActsAtOnce` | — | — | — | — | — | — | — | — | — | yes |
 | `loopSupport.customQueues` | no | no | no | no | no | yes | no | no | no | no |
 | `loopSupport.executeVia` | solver | solver | solver | solver | solver | — | solver | solver | solver | solver |
-| `loopSupport.instant` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
+| `loopSupport.instant` | yes | yes | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.manual` | yes | yes | yes | yes | yes | yes | yes | yes | yes | yes |
-| `loopSupport.playClock` | — | — | yes | yes | — | — | yes | — | — | — |
-| `loopSupport.playback` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
+| `loopSupport.playClock` | — | yes | yes | yes | — | — | yes | — | — | — |
+| `loopSupport.playback` | yes | yes | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.queueActions` | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove | regionMove, locationCheck | regionMove, locationCheck, explore |
-| `loopSupport.record` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
+| `loopSupport.record` | yes | yes | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.requiresLoopMode` | — | — | — | — | yes | — | — | yes | — | — |
-| `loopSupport.summaryRecording` | yes | — | — | — | — | — | yes | — | yes | — |
+| `loopSupport.summaryRecording` | yes | yes | — | — | — | — | yes | — | yes | — |
 | `priceRegions` | — | — | — | — | — | — | fn | — | — | — |
 | `takeLastRecording` | — | — | — | — | fn | fn | — | fn | — | — |
 
@@ -363,7 +363,7 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `generationCost` | — | — | — | light | — | — | — | — | heavy | — |
+| `generationCost` | — | heavy | — | light | — | — | — | — | heavy | — |
 
 **Build-time — location capacity**
 
@@ -379,7 +379,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `instantiateAtlasEntryForSpecs` | — | — | — | — | — | fn | — | — | — | — |
 | `instantiateLibraryEntry` | fn | fn | — | — | — | fn | — | — | fn | — |
 | `instantiateLibraryEntryForSpecs` | fn | fn | — | — | — | fn | — | — | fn | — |
-| `libraryEntryRefusal` | fn | — | — | — | — | fn | — | — | — | — |
+| `libraryEntryRefusal` | fn | fn | — | — | — | fn | — | — | — | — |
 | `validateLibraryEntry` | fn | fn | — | — | — | fn | — | — | fn | — |
 
 **Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)**
@@ -389,23 +389,23 @@ Groups are this document's own § headings, matched to a field by the section th
 | `backPortalGated` | fn | fn | fn | fn | — | — | — | — | fn | — |
 | `buildLibraryRegionParams` | — | — | — | — | — | fn | — | — | — | — |
 | `buildRegionContract` | fn | — | — | — | — | — | — | — | fn | — |
-| `buildRegionParams` | fn | — | fn | fn | — | — | — | — | fn | — |
-| `buildZoneSpecs` | fn | — | fn | — | — | — | — | — | fn | — |
-| `canHostExitGates` | fn | — | fn | fn | — | — | — | — | fn | — |
+| `buildRegionParams` | fn | fn | fn | fn | — | — | — | — | fn | — |
+| `buildZoneSpecs` | fn | fn | fn | — | — | — | — | — | fn | — |
+| `canHostExitGates` | fn | fn | fn | fn | — | — | — | — | fn | — |
 | `canHostExitGatesBraid` | fn | — | — | — | — | — | — | — | — | — |
-| `defaultProcgenParams` | 10 keys | — | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | 8 keys | — |
+| `defaultProcgenParams` | 10 keys | 11 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | 8 keys | — |
 | `driftItems` | Left arrow, Right arrow | — | — | — | — | — | — | — | — | — |
-| `exitGateVeto` | fn | — | fn | fn | — | — | — | — | fn | — |
-| `gateHostingHint` | fn | — | — | — | — | — | — | — | fn | — |
+| `exitGateVeto` | fn | fn | fn | fn | — | — | — | — | fn | — |
+| `gateHostingHint` | fn | fn | — | — | — | — | — | — | fn | — |
 | `gateableItems` | `null` | 10 items | — | — | — | — | — | — | 5 items | — |
-| `generateZoneForSpecs` | fn | — | fn | — | fn | — | fn | — | fn | — |
-| `generateZoneForSpecsGen` | fn | — | — | — | — | — | — | — | fn | — |
+| `generateZoneForSpecs` | fn | fn | fn | — | fn | — | fn | — | fn | — |
+| `generateZoneForSpecsGen` | fn | fn | — | — | — | — | — | — | fn | — |
 | `hostsSurplusExitsNatively` | fn | fn | — | — | — | — | — | — | fn | — |
 | `libraryItems` | 7 keys | 11 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | 6 keys | — |
 | `prepareSphereGrowth` | fn | — | fn | — | — | — | — | — | — | — |
-| `procgenParamsFromPayload` | fn | — | — | fn | — | — | — | — | fn | — |
+| `procgenParamsFromPayload` | fn | fn | — | fn | — | — | — | — | fn | — |
 | `renderLibraryProcgenParams` | — | — | — | — | — | fn | — | — | — | — |
-| `renderProcgenParams` | fn | — | fn | fn | fn | fn | fn | — | fn | — |
+| `renderProcgenParams` | fn | fn | fn | fn | fn | fn | fn | — | fn | — |
 | `startingInventory` | {needs} | — | — | — | — | — | — | — | — | — |
 
 **Which library registered which entry** — entries self-register on library import, and this is the order the generator imports them in.

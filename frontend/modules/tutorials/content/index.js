@@ -11,6 +11,7 @@ import { LOOPS_ADVENTURE } from './loops/adventureLoopMode.js';
 import { OTHER_EMBEDDING } from './other/embedding.js';
 import { OTHER_VIBE_CODING } from './other/vibeCoding.js';
 import { PROCGEN_RUNNER_DEMO } from './procgen/runnerDemo.js';
+import { PROCGEN_CLOUDBERRY, PROCGEN_LOOP_MODE_CLOUDBERRY } from './procgen/cloudberry.js';
 import { SEEDLING_BOT, SEEDLING_MULTIWORLD, SEEDLING_RECOMPILE, SEEDLING_WHOLE_GAME } from './seedling/seedling.js';
 import {
     DEV_EVENTS, DEV_LOOPS_COST_DEBUGGER, DEV_REGION_MARKING_TOOL, DEV_SPOILER_TEST, DEV_TESTS,
@@ -54,6 +55,8 @@ export const TUTORIALS = Object.freeze([
     entry('procgen/loopModeJta.js', PROCGEN_LOOP_MODE_JTA),
     entry('procgen/loopModeEverything.js', PROCGEN_LOOP_MODE_EVERYTHING),
     entry('procgen/runnerDemo.js', PROCGEN_RUNNER_DEMO),
+    entry('procgen/cloudberry.js', PROCGEN_CLOUDBERRY),
+    entry('procgen/cloudberry.js', PROCGEN_LOOP_MODE_CLOUDBERRY),
     entry('seedling/seedling.js', SEEDLING_RECOMPILE),
     entry('seedling/seedling.js', SEEDLING_BOT),
     entry('seedling/seedling.js', SEEDLING_MULTIWORLD),

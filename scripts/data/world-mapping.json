@@ -65,17 +65,6 @@
     "template_file": "APCalc.yaml",
     "world_directory": "apcalc"
   },
-  "APCalc WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "APCalc WorldGen",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "APCalc WorldGen.yaml",
-    "world_directory": "apcalc_worldgen"
-  },
   "APQuest": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -296,6 +285,28 @@
     "template_file": "Civilization VI.yaml",
     "world_directory": "civ_6"
   },
+  "Cloudberry Maze Mix WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Cloudberry Maze Mix WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Cloudberry Maze Mix WorldGen.yaml",
+    "world_directory": "cloudberry_maze_mix_worldgen"
+  },
+  "Cloudberry Sphere WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Cloudberry Sphere WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Cloudberry Sphere WorldGen.yaml",
+    "world_directory": "cloudberry_sphere_worldgen"
+  },
   "Coding Adventure": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -462,12 +473,12 @@
     "world_directory": "heretic"
   },
   "Hero Core": {
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/herocore.py",
+    "exporter_size": 4284,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Hero Core",
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "template_file": "Hero Core.yaml",
     "world_directory": "herocore"
@@ -551,7 +562,7 @@
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/official/kh2.py",
-    "exporter_size": 20875,
+    "exporter_size": 20862,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Kingdom Hearts 2",
@@ -562,7 +573,7 @@
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/official/kdl3.py",
-    "exporter_size": 10313,
+    "exporter_size": 10312,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Kirby's Dream Land 3",
@@ -891,12 +902,12 @@
     "world_directory": "soe"
   },
   "Seedling": {
-    "exporter_path": null,
-    "exporter_size": 0,
+    "exporter_path": "exporter/games/unofficial/seedling.py",
+    "exporter_size": 1751,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Seedling",
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "template_file": "Seedling.yaml",
     "world_directory": "seedling"
@@ -1068,7 +1079,7 @@
   },
   "Terraria": {
     "exporter_path": "exporter/games/official/terraria.py",
-    "exporter_size": 17270,
+    "exporter_size": 17280,
     "game_logic_path": null,
     "game_logic_size": 0,
     "game_name": "Terraria",

@@ -1,0 +1,2 @@
+# processes 81 | driven ticks 50052 | axis-aligned ticks 0 | axis ticks armed 0 | axis ticks with a body in reach 0 | of those, reachable ALONG the axis 0
+# requests 60: {'SOLVE': 41, 'deadline': 12, 'refusal': 7}

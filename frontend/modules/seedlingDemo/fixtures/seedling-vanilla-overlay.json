@@ -276,10 +276,7 @@
           "name": "Conch",
           "vanilla_item": "Progressive Swim"
         }
-      ],
-      "rules": {
-        "exit:out_teleporter_32_128": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-      }
+      ]
     },
     "55": {
       "locations": [
@@ -288,14 +285,10 @@
           "name": "Boss Key 3",
           "vanilla_item": "Blue Key"
         }
-      ],
-      "rules": {
-        "exit:out_teleporter_80_48": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-      }
+      ]
     },
     "56": {
       "rules": {
-        "exit:out_teleporter_0_112": { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
         "exit:out_pit_6_10": {
           "rule": "And",
           "children": [
@@ -500,11 +493,6 @@
         { "entity": { "type": "chest", "x": 48, "y": 32 }, "name": "Chest", "vanilla_item": "Seal" }
       ]
     },
-    "91": {
-      "rules": {
-        "exit:out_teleporter_16_144": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
-      }
-    },
     "96": {
       "rules": {
         "exit:out_teleporter_32_64": {
@@ -594,6 +582,6 @@
       ]
     }
   },
-  "provenance": { "content_hash": "2ef0551f" },
-  "overlay_id": "seedling-vanilla-overlay-2ef0551f"
+  "provenance": { "content_hash": "f9c6d0ec" },
+  "overlay_id": "seedling-vanilla-overlay-f9c6d0ec"
 }

@@ -1,0 +1,5 @@
+L40 captured requests (CPAIR size 3 default): 58 OFF vs ON identical in verdict, ticks, plan sha, work, message: 55
+OFF solved 44 ON solved 44
+MOVER ((867, 0), (True, 1054, '822a1ca5659f', 199), (True, 1054, '822a1ca5659f', 168), '', '')
+MOVER ((867, 1), (True, 389, '20f435ae4f1f', 66), (True, 389, '20f435ae4f1f', 52), '', '')
+MOVER ((880, 0), (True, 808, '283b84f70c1b', 131), (True, 808, '283b84f70c1b', 130), '', '')

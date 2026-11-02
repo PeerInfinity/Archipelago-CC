@@ -18,12 +18,18 @@
  *   · an item: the chest or pickup on its cell, or none (a boss's or an NPC's location: drawn on the cell);
  *   · a PULL (maze-seedling-art-3; sphere-order-9's `world.pulls`): exactly one LavaTrap on its trap cell — and, when
  *     its gate's `name` names a lava trap (`lavatrap@x,y`), that one. Its gate is in `obstacleLib` but on no cell, so
- *     before S3 the census never saw a pull at all (accepted by silence, drawn by nothing).
+ *     before S3 the census never saw a pull at all (accepted by silence, drawn by nothing);
+ *   · a PULSER (maze-seedling-art-4; tile-mechanisms-m1's `world.pulsers`): exactly one Pulser on its (wall) cell;
+ *   · BLOCK KINDS (maze-seedling-art-4; m1's `block_lib`): every kind a block of the world starts as is ONE class
+ *     (PushableBlock / PushableBlockFire / PushableBlockSpear / IceTurret — the census reads the kind off the block,
+ *     `world.blocks`' value, so one world may mix classes); a kind only a WAKE reaches (`wake.becomes`, the IceTurret's
+ *     corpse) is drawn by its source's class in that class's woken look, and refused by name when the class has none.
  *
  * ── WHAT IS DRAWN, from each skin's own art table (⛔ no run, no levelRun view: the maze has neither) ──
  * Frame 0 of each class (open question A: the maze has no game tick); a body is hidden once the maze clears it
  * (`state.broken`, or its obstacle cleared for the EFFECTIVE inventory — held buttons and cut ropes included,
- * `effectiveInventory`), a block at its live cell, a button down (frame 1) under the player or a block, an item as
+ * `effectiveInventory`), a block at its live cell, a button down (frame 1) under the player or a block (or a latch that
+ * stays down, `view.latched` / its event carried: session tile-mechanisms-m4-latch), an item as
  * its LOOK (`apItemOps`; the Archipelago logo for an item no Seedling table names), the player as the stand frame
  * of its facing. A row whose art the stack lacks keeps the maze's marker (a rope: there is no rope sheet).
  *
@@ -37,8 +43,10 @@ import { KEYS as SOLIDS, RESPONDER_ART } from '../seedlingDemo/seedlingSolidsSki
 import { BLOCKS } from '../seedlingDemo/seedlingPuzzleSkin.js';
 import { KEYS as TRAPS } from '../seedlingDemo/seedlingTrapSkin.js';
 import { SUIT_KEYS } from '../seedlingDemo/seedlingPlayerSkin.js';
+import { KEYS as ROOM_BODIES } from '../seedlingDemo/seedlingRoomBodySkin.js';
+import { KEYS as MACHINES } from '../seedlingDemo/seedlingMachineSkin.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
-import { effectiveInventory, posKey } from './mazeRoomEngine.js';
+import { effectiveInventory, latchesDown, posKey } from './mazeRoomEngine.js';
 
 /** The AS3 classes a maze object of each kind is drawn by (`seedlingSemantics`' `class`). */
 const LOCKS = ['Lock', 'WandLock', 'GrassLock', 'ShieldLock'];
@@ -50,12 +58,17 @@ export const BODY_CLASSES = Object.freeze({
     // a rule gate's body: what stands ON the cell and goes when the gate clears
     gate: Object.freeze(['BreakableRock', ...LOCKS, 'BossLock', 'MagicalLock', 'RockLock', 'BurnableTree',
         'PushableBlockFire', 'PushableBlockSpear']),
-    block: Object.freeze(['PushableBlock', 'PushableBlockFire', 'PushableBlockSpear']),
+    // maze-seedling-art-4: + IceTurret, m1's `turret` kind (a block that a weapon wakes into its corpse)
+    block: Object.freeze(['PushableBlock', 'PushableBlockFire', 'PushableBlockSpear', 'IceTurret']),
     button: Object.freeze(['Button', 'ButtonRoom']),
     trap: Object.freeze(['ArrowTrap']),
     // maze-seedling-art-3: a PULL's trap cell (sphere-order-9, `world.pulls`) — the lava trap whose tongue it models
     pull: Object.freeze(['LavaTrap']),
+    // maze-seedling-art-4: a PULSER's body (m1's `world.pulsers`), a Solid on a wall cell (`Pulser.as:48`)
+    pulser: Object.freeze(['Pulser']),
 });
+/** The classes with a WOKEN look (`wake.becomes`): the IceTurret's corpse, `IceTurret.as:42` "dead" = frame 6. */
+export const WOKEN_LOOK = Object.freeze(new Set(['IceTurret']));
 /** The `.oel` tags that hold an item (`ITEM_FOR_TAG`'s, the boss keys). */
 const ITEM_TAGS = new Set([...Object.keys(ITEM_FOR_TAG), 'bosskey']);
 
@@ -86,7 +99,9 @@ const namedIds = (id) => [...String(id).matchAll(/([a-z][a-z0-9]*)@(-?\d+),(-?\d
 /**
  * ⚖ RULING 5 — THE CENSUS of one maze world against its level record: `{ rows, refusals }`.
  * `rows`: one per drawn ENTITY `{ what, id, tag, cls, e, cells, obstacles }` (`what` ∈ obstacle | block | button |
- * trap | pull | item; `cells` the maze cells it answers for; `obstacles` the `[cell, obstacleId]` pairs that clear it).
+ * trap | pull | pulser | item; `cells` the maze cells it answers for; `obstacles` the `[cell, obstacleId]` pairs that
+ * clear it). `kinds`: on a `block_lib` world, kind → `{ row, woken }` — the class each block kind is drawn by
+ * (null elsewhere).
  * `terrain`: the gate cells no body stands on. `refusals`: one sentence per maze object that matched no entity or
  * more than one — the census test's whole subject.
  */
@@ -141,14 +156,62 @@ export function seedlingCensus(mazeWorld, record) {
         const r = exactlyOne(`${entry.kind} ${obstacleId}`, cell, classes);
         if (r) claim('obstacle', r, cell, obstacleId);
     }
+    const blockLib = mazeWorld.blockLib ?? null;
+    const kindRows = new Map();
     for (const [what, cells] of [['block', mazeWorld.blocks?.keys()], ['button', mazeWorld.buttons?.keys()],
-        ['trap', (mazeWorld.traps ?? []).map((t) => posKey(t.x, t.y))]]) {
+        ['trap', (mazeWorld.traps ?? []).map((t) => posKey(t.x, t.y))],
+        ['pulser', (mazeWorld.pulsers ?? []).map((p) => posKey(p.x, p.y))]]) {
         for (const cell of cells ?? []) {
             const r = exactlyOne(what, cell, BODY_CLASSES[what]);
             if (!r) continue;
             const row = claim(what, r, cell);
             // `ButtonRoom.as:44-48`: `frameAdd` 2 when a Wire lies under it
             if (r.cls === 'ButtonRoom') row.wire = here(cell).some((w) => w.e.type === 'wire');
+            // ⛓ LATCHING BUTTONS (session tile-mechanisms-m4-latch): only a ButtonRoom latches in the game (`Button.as` holds),
+            // and a room −1 ButtonRoom always does (`ButtonRoom.as` `activate` "Can't be reset") — either mismatch would
+            // draw the wrong look (a latched one popping up, or a per-visit one staying down), so it is refused by name.
+            if (what === 'button') {
+                const latches = !!mazeWorld.buttonLib?.[mazeWorld.buttons.get(cell)]?.latch;
+                if (latches && r.cls !== 'ButtonRoom') {
+                    refusals.push(`L${record.level} button at ${cell}: it latches, but ${r.id} is a ${r.cls}, which holds per visit`);
+                } else if (!latches && r.cls === 'ButtonRoom' && String(r.e.attrs?.room) === '-1') {
+                    refusals.push(`L${record.level} button at ${cell}: ${r.id} is a room −1 ButtonRoom, which latches, laid as a per-visit hold`);
+                }
+            }
+            if (what === 'block' && blockLib) {
+                const kind = mazeWorld.blocks.get(cell);
+                if (!kindRows.has(kind)) kindRows.set(kind, new Map());
+                kindRows.get(kind).set(row.tag, row);
+            }
+        }
+    }
+    // ⛓ BLOCK KINDS (maze-seedling-art-4): a kind is drawn by ONE class; a kind only a wake reaches, by its source's.
+    let kinds = null;
+    if (blockLib) {
+        kinds = new Map();
+        for (const [kind, byTag] of kindRows) {
+            if (byTag.size > 1) {
+                refusals.push(`L${record.level}: block kind "${kind}" stands on ${byTag.size} classes `
+                    + `(${[...byTag.keys()].join(', ')}) — which sprite a moved one is would be a guess`);
+                continue;
+            }
+            kinds.set(kind, { row: [...byTag.values()][0], woken: false });
+        }
+        for (const [kind, entry] of Object.entries(blockLib)) {
+            const becomes = entry.wake?.becomes;
+            if (becomes === undefined || kindRows.has(becomes) || !kinds.has(kind)) continue;
+            const source = kinds.get(kind);
+            if (!WOKEN_LOOK.has(source.row.cls)) {
+                refusals.push(`L${record.level}: block kind "${becomes}" (woken from "${kind}", ${source.row.cls}) — `
+                    + `${source.row.cls} has no woken look in the art`);
+                continue;
+            }
+            if (kinds.has(becomes)) {
+                refusals.push(`L${record.level}: block kind "${becomes}" is woken from two kinds — which class it is would be a guess`);
+                kinds.delete(becomes);
+                continue;
+            }
+            kinds.set(becomes, { row: source.row, woken: true });
         }
     }
     for (const p of mazeWorld.pulls ?? []) {
@@ -171,11 +234,12 @@ export function seedlingCensus(mazeWorld, record) {
         if (found.length === 1) claim('item', found[0], cell);
     }
     const tags = new Set([...rows.values()].filter((r) => r.what === 'block').map((r) => r.tag));
-    if (tags.size > 1) {
+    // without a `block_lib` the live blocks carry no kind; with one, `kinds` is their identity (above)
+    if (!blockLib && tags.size > 1) {
         refusals.push(`L${record.level}: blocks of ${tags.size} classes (${[...tags].join(', ')}) — the maze's live blocks `
             + 'carry no identity, so which sprite is which would be a guess');
     }
-    return { rows: [...rows.values()], terrain, refusals };
+    return { rows: [...rows.values()], terrain, refusals, kinds };
 }
 
 /** The entity ids the census draws — what the baked room must NOT also paint (`staticOps`' `drawnObjects`). */
@@ -190,12 +254,14 @@ export function itemLook(itemId, destTag = null) {
 }
 
 const cellBox = (x, y, w = 16, h = 16) => ({ x, y, w, h, right: x + w, bottom: y + h });
+/** The ice turret's sheet, its "dead" frame (`IceTurret.as:42`) and the corpse's settled `rot` (see `entityOp`). */
+const TURRET = Object.freeze({ key: ROOM_BODIES.iceTurret, deadFrame: 6, deadRot: 90 });
 const FALLBACK = '#c0c0c0';
 /** The player's stand frame per maze facing (`seedlingPlayerSkin`: side frames mirrored for the left). */
 const FACING_ANIM = Object.freeze({ N: ['up-stand', false], S: ['down-stand', false], E: ['side-stand', false], W: ['side-stand', true] });
 
 /** One entity's sprite at pixel top-left (x, y) — the key, frame and layer its own skin uses. */
-function entityOp(art, row, x, y, { down = false, wire = false } = {}) {
+function entityOp(art, row, x, y, { down = false, wire = false, woken = false } = {}) {
     const centre = { x: x + 8, y: y + 8 };
     const sprite = (key, frame, at, layer, box, extra = {}) => (art.has(key)
         ? spriteOp(art, key, frame, at, { ...extra, layer, fallback: rectOp(box, FALLBACK, 0.85, layer) }) : null);
@@ -219,6 +285,16 @@ function entityOp(art, row, x, y, { down = false, wire = false } = {}) {
         const spec = BLOCKS[tag];
         return spec ? sprite(spec.key, 0, { x, y }, -(y + 16), cellBox(x, y), spec.tint ? { tint: spec.tint } : {}) : null;
     }
+    case 'IceTurret':
+        // `IceTurret.as:96` `layer = -(y - originY + height)`: alive 32x32 at frame 0, angle 0 (`iceTurret.js`'s start);
+        // WOKEN = the corpse, "dead" frame 6 with the 16x16 box (`:42,135-147`), at the angle its dead arm of `input()`
+        // settles to (`angle -= angle_difference(atan2(1,0), -angle)/10` → -90°, drawn `rot: -angle` as the room-body skin)
+        return woken
+            ? sprite(TURRET.key, TURRET.deadFrame, centre, -(y + 16), cellBox(x, y), { rot: TURRET.deadRot })
+            : sprite(TURRET.key, 0, centre, -(y + 24), cellBox(x - 8, y - 8, 32, 32));
+    case 'Pulser':
+        // `Pulser.as:42-45` centred on its tile; `seedlingMachineSkin`'s layer 0; frame 0 ("" — the maze has no tick)
+        return sprite(MACHINES.pulser, 0, centre, 0, cellBox(x, y));
     case 'Button':
         return sprite(SOLIDS.button, down ? 1 : 0, centre, -(y + 8), cellBox(x + 4, y + 5, 8, 6));
     case 'ButtonRoom':
@@ -245,10 +321,12 @@ const layerSorted = (ops) => ops.map((op, i) => [op, i]).sort((a, b) => (b[0].la
  * cleared alike: the art owns the cell), `player` the player's op(s) or null.
  *
  * `view` is the very `drawWorld` view the panel builds (inventory, ruleEvaluator, broken, facing, playerPos,
- * isPlayback, checkedLocations, isLocationVisible); `blocks` is `state.blocks`; `isEvent(itemName)` is true for an
- * event item (it has no look: its marker stays).
+ * isPlayback, checkedLocations, isLocationVisible); `blocks` is `state.blocks`; `blockKinds` is `state.blockKinds`
+ * (maze-seedling-art-4: on a `block_lib` world each live block is drawn by its KIND's class — a woken one in the
+ * woken look; null = the kinds the world lays); `isEvent(itemName)` is true for an event item (it has no look: its
+ * marker stays).
  */
-export function seedlingSprites(census, art, { mazeWorld, view, blocks = null, isEvent = () => false }) {
+export function seedlingSprites(census, art, { mazeWorld, view, blocks = null, blockKinds = null, isEvent = () => false }) {
     const ops = [];
     const cells = new Set();
     if (!art) return { ops, cells, player: null };
@@ -256,11 +334,12 @@ export function seedlingSprites(census, art, { mazeWorld, view, blocks = null, i
     const broken = new Set(view.broken ?? []);
     const playerPos = view.playerPos ?? null;
     const inv = playerPos
-        ? effectiveInventory(mazeWorld, view.inventory ?? new Set(), playerPos, blocks ?? undefined, view.broken ?? undefined)
+        ? effectiveInventory(mazeWorld, view.inventory ?? new Set(), playerPos, blocks ?? undefined, view.broken ?? undefined, view.latched ?? undefined)
         : (view.inventory ?? new Set());
     const clearOpts = view.ruleEvaluator ? { evaluateRule: view.ruleEvaluator } : undefined;
     const cleared = ([cell, id]) => broken.has(cell) || isObstacleCleared(id, inv, lib, clearOpts);
     const liveBlocks = new Set(blocks ?? []);
+    const latched = latchesDown(mazeWorld, view.inventory, view.latched);
     const playerKey = playerPos ? posKey(playerPos.x, playerPos.y) : null;
 
     for (const row of census.rows) {
@@ -272,12 +351,13 @@ export function seedlingSprites(census, art, { mazeWorld, view, blocks = null, i
             if (!row.obstacles.every(cleared)) ops.push(probe);
         } else if (row.what === 'button') {
             const cell = row.cells[0];
-            const down = cell === playerKey || liveBlocks.has(cell);
+            // ⛓ LATCHING BUTTONS (session tile-mechanisms-m4-latch): a latch stays down (`ButtonRoom.as` "Can't be reset").
+            const down = cell === playerKey || liveBlocks.has(cell) || latched.has(cell);
             const op = entityOp(art, row, Number(e.x), Number(e.y), { down, wire: !!row.wire });
             if (!op) continue;
             cells.add(cell);
             ops.push(op);
-        } else if (row.what === 'trap' || row.what === 'pull') {
+        } else if (row.what === 'trap' || row.what === 'pull' || row.what === 'pulser') {
             const op = entityOp(art, row, Number(e.x), Number(e.y));
             if (!op) continue;
             cells.add(row.cells[0]);
@@ -285,12 +365,18 @@ export function seedlingSprites(census, art, { mazeWorld, view, blocks = null, i
         }
     }
 
-    // pushed blocks: at their LIVE cells, in the class the census found
+    // pushed blocks: at their LIVE cells, in the class the census found — by KIND on a `block_lib` world
     const blockRow = census.rows.find((r) => r.what === 'block');
     if (blockRow) {
         for (const key of liveBlocks) {
             const [x, y] = key.split(',').map(Number);
-            const op = entityOp(art, blockRow, x * 16, y * 16);
+            let op;
+            if (census.kinds) {
+                const look = census.kinds.get(blockKinds?.[key] ?? mazeWorld.blocks.get(key));
+                op = look ? entityOp(art, look.row, x * 16, y * 16, { woken: look.woken }) : null;
+            } else {
+                op = entityOp(art, blockRow, x * 16, y * 16);
+            }
             if (op) ops.push(op);
         }
         for (const r of census.rows) if (r.what === 'block') for (const c of r.cells) cells.add(c);

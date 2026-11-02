@@ -67,6 +67,7 @@ import { normalizeContactFidelity, withContactFidelity } from './contactFidelity
 import { withAxeDodgeAsk } from './axeDodgeAskHook.js';
 import { withSolveProgress } from './solveProgress.js';
 import { createProgressTap, progressIntervalMs, requestIdentity, SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
+import { settleUnderDisable } from './solverBot.js';
 
 /** source id -> `{levelSource, records}`: the room records this worker has been sent. */
 const sources = new Map();
@@ -95,16 +96,24 @@ self.onmessage = (event) => {
         : null;
     // ⛓ CPWIT — every answer (each pass's, its best, the result) and its plan carry the switches this worker installed
     // (`solverEnv`, the canonical spec; absent at the defaults); a spec the shim refused refuses every solve BY NAME.
-    const env = (a) => stampSolverEnv(a, SOLVER_ENV_APPLIED);
+    // ⛓ STRATEGY SWITCH r1 — a request's `disable` is CARRIED around the solve (no jsRuntime* path originates one;
+    // absent or `[]`: nothing changes, nothing is stamped; a non-array refuses by name in `settleUnderDisable`); every
+    // answer names a non-empty list beside `solverEnv`.
+    const { disable } = request;
+    const carry = (fn) => settleUnderDisable(disable, fn);
+    const stamped = Array.isArray(disable) && disable.length > 0;
+    const env = (a) => stampSolverEnv(!stamped || !a ? a : { ...a, disable: [...disable] }, SOLVER_ENV_APPLIED);
     let answer;
     if (SOLVER_ENV_ERROR) answer = { ok: false, kind: 'refusal', message: `the solver worker refused its switches — ${SOLVER_ENV_ERROR}` };
-    else if (!held) answer ={ ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };
-    else if (produce) answer = settleSolve(produce);
+    else if (!held) answer = { ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };
+    else if (produce) answer = carry(() => settleSolve(produce));
     else {
         // ⛓ ANYTIME — the solver's passes in order (`ANYTIME_PASSES`, or the request's own — a held retry
         // sends the passes not yet answered); each lands as a `pass` message, so the page holds the best
         // so far as its PROVISIONAL plan when a later pass is terminated at the budget.
-        const { passes = ANYTIME_PASSES, ...tape } = request;
+        // (`disable` is carried above, never handed to the solve's tape)
+        // eslint-disable-next-line no-unused-vars
+        const { passes = ANYTIME_PASSES, disable: _disable, ...tape } = request;
         // ⛓ SOLVE PROGRESS — ⛔ the hook is installed ONLY when the page asked (`progress` on the envelope); the
         // tap's clock decides only when to post, and nothing it computes reaches the solve. Its interval rides the
         // envelope too (`progressIntervalMs`), so a rate change never touches the request.
@@ -123,7 +132,7 @@ self.onmessage = (event) => {
                 self.postMessage({ type: 'pass', id, index, pass: one.pass, answer: env(one), best: env(best) });
             },
         });
-        answer = tap ? withSolveProgress((site, peek) => tap.hook(site, peek), solve) : solve();
+        answer = carry(() => (tap ? withSolveProgress((site, peek) => tap.hook(site, peek), solve) : solve()));
         tap?.finish();
     }
     self.postMessage({ type: 'result', id, ...env(answer) });

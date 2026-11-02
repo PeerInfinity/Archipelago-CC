@@ -80,7 +80,7 @@ import {
 // size and the palette left this file so `mazeRoom/lab.html` can draw the
 // same worlds with the same pixels. `_drawWorld` is now an adapter that
 // builds `drawWorld`'s `view` out of this panel's own state.
-import { TILE_PX, drawWorld } from './mazeRoomRender.js';
+import { TILE_PX, drawWorld, livePulsers } from './mazeRoomRender.js';
 import {
     SEEDLING_CELL_PX, bakeSeedlingLayer, loadSeedlingArt, seedlingLayerKey, seedlingSkinFor, spritePainter,
 } from './mazeSeedlingSkin.js';
@@ -2520,6 +2520,8 @@ export class MazeRoomUI {
                 // the broken set without moving — same one-fact-per-tick copy.
                 ...(vState.facing !== undefined ? { facing: vState.facing } : {}),
                 ...(Array.isArray(vState.broken) ? { broken: vState.broken.slice() } : {}),
+                // ⛓ LATCHING BUTTONS: the visit's latched presses, the same copy (session tile-mechanisms-m4-latch).
+                ...(Array.isArray(vState.latched) ? { latched: vState.latched.slice() } : {}),
             });
         }
         // Tick detection: the visualizer's turn counter strictly
@@ -3967,6 +3969,9 @@ export class MazeRoomUI {
             armedTraps: this.state ? armedTraps(this.world, this.state, this.externalInventory ?? undefined) : null,
             seedlingSkin: null,
             blocks: this.state?.blocks ?? null,
+            blockKinds: this.state?.blockKinds ?? null,
+            livePulsers: this.state ? livePulsers(this.world, this.state, this.externalInventory ?? undefined) : null,
+            latched: this.state?.latched ?? null,
         };
         view.seedlingSkin = seedlingSkin ? this._withSeedlingSprites(seedlingSkin, view, canvas) : null;
         drawWorld(ctx, this.world, view);
@@ -3989,6 +3994,7 @@ export class MazeRoomUI {
             mazeWorld: this.world,
             view,
             blocks: this.state?.blocks ?? null,
+            blockKinds: this.state?.blockKinds ?? null,
             isEvent: (name) => items?.[name]?.event === true,
         });
         this._seedlingTinter ??= createTinter(document);

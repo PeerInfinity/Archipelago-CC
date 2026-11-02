@@ -95,7 +95,7 @@ export const SKIN_CENSUS = Object.freeze([
     ['control', 'Point', 'none', 'a setting or effect, not a body'],
     ['blur', '-', 'none', 'a setting or effect, not a body'],
     ['snow', '-', 'none', 'a setting or effect, not a body'],
-    ['rope', '-', 'none', 'a setting or effect, not a body'],
+    ['rope', 'RopeStart', 'drawn', 'RopePulley.png per RopeStart.render (seedlingSolidsSkin.ropeOps): span cells, pulley, handle; cut: pulley + dropped handle'],
     ['blur2', '-', 'none', 'a setting or effect, not a body'],
     ['dungeonspire', 'DungeonSpire', 'drawn'],
     ['tree', 'Tree', 'drawn'],

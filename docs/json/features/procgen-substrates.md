@@ -29,11 +29,11 @@ The columns here are in id order. In the app, every list of substrates — the p
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | L1 | You can play it in loop mode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | L2 | What you can queue for it | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks, exploring | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks | ✓ moves between regions, location checks, exploring |
-| L3 | You can record a visit and replay it | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| L4 | How a replay works | ✓ applies the result instantly | n/a | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves | ✓ applies the result instantly | ✓ replays your exact moves | ✓ applies the result instantly | ✓ re-runs the queued actions |
-| L5 | Instant fast-forward | ✓ always — a replay is already instant | ✗ | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle |
+| L3 | You can record a visit and replay it | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| L4 | How a replay works | ✓ applies the result instantly | ✓ applies the result instantly | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves | ✓ applies the result instantly | ✓ replays your exact moves | ✓ applies the result instantly | ✓ re-runs the queued actions |
+| L5 | Instant fast-forward | ✓ always — a replay is already instant | ✓ always — a replay is already instant | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle |
 | L6 | A Bot block can play it for you | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the substrate walks it itself | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it |
-| L7 | The Bot honours Instant | n/a | ✗ | ✗ | ✗ | ✓ | ✗ | n/a | ✓ | n/a | n/a |
+| L7 | The Bot honours Instant | n/a | n/a | ✗ | ✗ | ✓ | ✗ | n/a | ✓ | n/a | n/a |
 | L8 | You can play it outside loop mode | ✓ | ✓ | ✓ | ✓ | ✗ (note 1) | ✓ | ✓ | ✗ (note 2) | ✓ | ✓ |
 | L9 | It shares the loop-mode mana pool | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✓ |
 | L10 | It shares consumable items with other substrates | ✗ | ✗ | ✗ | ✗ | ✓ its list comes from the running game — see the Substrate Registry panel | ✗ | ✗ | ✓ 18 item types: gold, reputation, herbs, … | ✗ | ✗ |
@@ -46,12 +46,12 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 | | What you can do | Bounce Demo | Cloudberry Kingdom | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Runner Demo | Text Adventure |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| G1 | The pipeline can build regions of it | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order |
+| G1 | The pipeline can build regions of it | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ grown to order |
 | G2 | How many ready-made rooms / levels it brings | ✓ 5 | ✗ | ✓ 4 Atlas rooms | n/a | ✓ 30 | n/a | ✓ 3 Noiz2sa segments | ✓ 1 | ✓ 6 | n/a |
-| G3 | Generates quickly | ✓ | n/a | ✓ | ✓ | ✓ | ✓ | ✓ | n/a | ✗ its generation cost is declared `heavy` | ✓ |
+| G3 | Generates quickly | ✓ | ✗ its generation cost is declared `heavy` | ✓ | ✓ | ✓ | ✓ | ✓ | n/a | ✗ its generation cost is declared `heavy` | ✓ |
 | G4 | Its rooms can be captured into a library and reused | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ | ✗ |
-| G5 | Exits can be locked behind items | ✓ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ | ✓ |
-| G6 | It has its own settings in the generation form | ✓ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ |
+| G5 | Exits can be locked behind items | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ | ✓ | ✓ |
+| G6 | It has its own settings in the generation form | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ |
 | G7 | A world of it can start with an empty inventory | ✗ (note 1) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | G8 | Any number of locations fits in one room | n/a | n/a | n/a | ✗ (note 2) | n/a | ✗ (note 3) | n/a | n/a | n/a | ✓ |
 
@@ -140,9 +140,15 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks
+- *Loop mode* — You can record a visit and replay it
+- *Loop mode* — How a replay works: applies the result instantly
+- *Loop mode* — Instant fast-forward: always — a replay is already instant
 - *Loop mode* — A Bot block can play it for you: the game's own automation walks it
 - *Loop mode* — You can play it outside loop mode
+- *Generate* — The pipeline can build regions of it: picked from its own levels to fit the plan
 - *Generate* — Its rooms can be captured into a library and reused
+- *Generate* — Exits can be locked behind items
+- *Generate* — It has its own settings in the generation form
 - *Generate* — A world of it can start with an empty inventory
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): one exit per side
 - *Edit* — The editor's validity report checks its location and exit names

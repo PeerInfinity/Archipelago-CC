@@ -177,7 +177,10 @@ export const REFUSAL_KINDS = Object.freeze(['deadline', 'pending', 'danger', 'bo
 export const BOUND_KINDS = Object.freeze({ deadline: 'deadline', expansions: 'bound', horizon: 'bound',
     exhausted: 'exhausted', start: 'danger', window: 'danger', death: 'danger', approach: 'danger', train: 'danger',
     body: 'does-not-apply', dying: 'does-not-apply', line: 'does-not-apply', 'no-landing': 'does-not-apply',
-    unmodelled: 'unmodelled' });
+    unmodelled: 'unmodelled',
+    // ⛓ hammer-phase SLASHRECT: a press on a tick that starts with no facing swings `getSlashRect`'s all-zero default
+    // arm, which no model has (`pressNoFacing.js`): the switch's claimed negative and the always-on refusal
+    'no-facing': 'unmodelled', PRESS_NO_FACING: 'unmodelled' });
 
 /**
  * A `clear-tag` refusal's `obstacle.reason` (`solverBot`'s `refuseCT`) → its kind: the reason is the solver's own

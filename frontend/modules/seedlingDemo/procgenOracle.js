@@ -620,6 +620,13 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
      * every procgen certification that SOLVES").
      */
     dashMode,
+    /**
+     * ⛓ STRATEGY SWITCH r1 — the per-solve `disable:` list, FORWARDED to `solveForPage` → `solveSegment` (absent:
+     * nothing forwarded, the solve and its result are today's byte for byte). A non-empty list stamps the result
+     * `disable` (the list asked) and `disabled` (the solve's `{asked, hits, first, absent}`, or the refusal's), even
+     * when the solve refuses — with the flag OFF the refusal is `STRATEGY_SWITCH_OFF`, with `hits` empty.
+     */
+    disable,
 } = {}) {
     const b = assertBudget(budget);
     if (!Array.isArray(goals) || goals.length === 0) {
@@ -632,6 +639,7 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
         name,
         goals: goals.map((g) => ({ ...g })),
         budget: b,
+        ...(Array.isArray(disable) && disable.length > 0 ? { disable: [...disable] } : {}),
     };
     const t0 = now();
     let result = null;
@@ -645,6 +653,7 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
             // in 134 ticks before the pass-through existed).
             maxTicksPerTarget: b.maxTicksPerTarget,
             dashMode,
+            ...(disable === undefined ? {} : { disable }),
             // ⛓⛓ Slice 4b: THIS is the one caller that turns the scratch
             // persistence layer on. See the docblock above `DEFAULT_BUDGET`'s
             // neighbour below and `levelRun`'s own.
@@ -677,6 +686,8 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
         }
     }
     const ms = now() - t0;
+    // ⛓ STRATEGY SWITCH r1 — the gate's own count beside the list (the refusal's, or the solved segment's)
+    if (base.disable) base.disabled = (thrown ? thrown.disabled : result?.out?.disabled) ?? null;
 
     if (thrown) {
         /**

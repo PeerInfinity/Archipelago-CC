@@ -118,6 +118,17 @@ export const TEST_BATCHES = Object.freeze({
         manual: true,
         categories: Object.freeze(['runnerDemo', 'Runner block modes']),
     }),
+    cloudberry: Object.freeze({
+        description:
+            'The Cloudberry substrate rows and its tutorial walk. They play the '
+            + 'same-origin copy of the Cloudberry site (frontend/external/cloudberry/, '
+            + 'fetched by scripts/setup/fetch-cloudberry-site.mjs), which no on-push '
+            + 'job has, so every row would refuse there: manual, and run by '
+            + 'cloudberry-e2e.yml right after its site fetch (on push to the '
+            + 'Cloudberry paths) and by test-substrates-manual.yml.',
+        manual: true,
+        categories: Object.freeze(['cloudberrySubstrate', 'Tutorial walks: cloudberry']),
+    }),
     tutorials: Object.freeze({
         description:
             'The Tutorial panel rows and one walk row per tutorial (each tutorial '

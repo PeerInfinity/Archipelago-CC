@@ -1,0 +1,99 @@
+{
+  "_comment": "APCalc apworld metadata the server never sends; apcalcRulesBuilder.test.js holds it equal to every committed APCalc preset.",
+  "game_directory": "apcalc",
+  "world_class_name": "APCalcWorld",
+  "world_directory": "apcalc",
+  "world_description": "APCalc is a calculator-themed puzzle game. Collect number and operation\nbuttons, then budget your presses to navigate a graph of target numbers.\nEvery seed generates a different puzzle.",
+  "web": {
+    "theme": "grass",
+    "tutorials": [
+      {
+        "name": "APCalc Setup Guide",
+        "description": "A guide to setting up APCalc for MultiWorld.",
+        "language": "English",
+        "file_name": "setup_en.md",
+        "link": "setup/en",
+        "authors": [
+          "PeerInfinity"
+        ]
+      }
+    ]
+  },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "max_branches": {
+      "type": "range",
+      "range_start": 2,
+      "range_end": 10,
+      "default": 5,
+      "display_name": "Max Branches"
+    },
+    "num_spheres": {
+      "type": "range",
+      "range_start": 3,
+      "range_end": 15,
+      "default": 8,
+      "display_name": "Number of Spheres"
+    },
+    "nums_per_sphere": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 5,
+      "default": 2,
+      "display_name": "Digits Per Sphere"
+    },
+    "ops_per_sphere": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 3,
+      "default": 1,
+      "display_name": "Operations Per Sphere"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "randomize_items": {
+      "type": "toggle",
+      "default": true,
+      "display_name": "Randomize Items"
+    },
+    "trash_per_sphere": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 5,
+      "default": 1,
+      "display_name": "Junk Per Sphere"
+    }
+  },
+  "default_options": {
+    "accessibility": 0,
+    "exclude_locations": [],
+    "item_links": [],
+    "local_items": [],
+    "max_branches": 5,
+    "non_local_items": [],
+    "num_spheres": 8,
+    "nums_per_sphere": 2,
+    "ops_per_sphere": 1,
+    "plando_items": [],
+    "priority_locations": [],
+    "progression_balancing": 50,
+    "randomize_items": true,
+    "start_hints": [],
+    "start_inventory": {},
+    "start_location_hints": [],
+    "trash_per_sphere": 1
+  }
+}

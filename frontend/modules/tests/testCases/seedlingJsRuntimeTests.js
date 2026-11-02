@@ -2659,15 +2659,15 @@ const GEN_APITEM = 'region_0_0__key_blue_pickup';
 const GEN_EXIT = 'exit_0';
 
 /**
- * Load seedling_generated_room on `runtime` by the production path and wait for the generated arm's AP load, the
+ * Load seedling_generated_room (or `presetPath`, a world with the same start room) on `runtime` by the production path and wait for the generated arm's AP load, the
  * game running and gameState in its start room. Returns `{panel, win, rt?}` (rt = the JS page's core), or null.
  */
-async function generatedPresetOn(tc, runtime) {
+async function generatedPresetOn(tc, runtime, { presetPath = PRESET_PATH } = {}) {
     const staleAdapter = getActivePanelInstance()?.adapter ?? null;
     await settingsManager.updateSetting(RUNTIME_KEY, runtime, { persist: false });
-    const rulesJson = await (await fetch(PRESET_PATH)).json();
+    const rulesJson = await (await fetch(presetPath)).json();
     const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
-    tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: PRESET_PATH });
+    tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: presetPath });
     await loaded;
     await tc.stateManager.pingWorker('after-rules-load', 5000);
     tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
@@ -2758,6 +2758,89 @@ for (const [id, name, fn] of [
     registerTest({
         id, name, description: LOOP_GEN_DESCRIPTION(id.startsWith('seedling-js') ? 'js' : 'wasm'),
         testFunction: restoresSavedQueues(fn),
+        category: seedlingRuntimeCategory(id),
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+// ── ⛓ SEEDLING GEN CHESTDOOR PRESET: the Playback Bot opens a DOOR CHEST in the committed preset ───────────────
+//
+// `seedling_generated_chestdoor` is seedling_generated_room's world with the `chestdoor` element: each generated
+// room's chest is the only gap in a wall and an AP location of its own (`<room> - Chest`, the chest's FIXED tag,
+// never replaced by an apitem). The Playback Bot is asked for ONE location, the start room's chest; the controller
+// resolves it off the assembly report's `chestDoors`, the runtime walks to the chest's stance below it and opens it,
+// the game reports the clear (`pendingCheck "<seq>|0|<tag>|…"`) and the panel's binding makes it the state
+// manager's `locationCheck`. The row ENDS on that check. Room 1's chest is two goals from the start (the door, then
+// the chest; ⚖ Q5 one goal per room) and is not walked.
+
+const CHESTDOOR_PATH = './presets/seedling_generated_chestdoor/AP_1/AP_1_rules.json';
+const CHESTDOOR_TARGET = `${GEN_START} - Chest`;
+const CHESTDOOR_LOCATIONS = Object.freeze([GEN_APITEM, CHESTDOOR_TARGET, `${GEN_NEXT} - Chest`]);
+
+const chestDoorWalk = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
+    // The bot panel is mounted BEFORE the rules load (procgenPlayer's synthetic start regionMove is how it learns
+    // where it is), and reset: no earlier row's queue or manual target survives into this one.
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+    const bot = (await tc.pollForValue(() => getBotPanel(), 'playback bot panel instance', 5000, 100))?.getBot?.() ?? null;
+    tc.reportCondition(`[${runtime}] the playback bot is mounted`, !!bot);
+    if (!bot) return;
+    bot.reset?.();
+    const up = await generatedPresetOn(tc, runtime, { presetPath: CHESTDOOR_PATH });
+    if (!up) return;
+    const { report } = up.panel.seedlingPlaybackSurface();
+    const door = (report.chestDoors ?? []).find((c) => c.location === CHESTDOOR_TARGET) ?? null;
+    tc.assertEqual(`[${runtime}] the assembly report lists both door chests, each its room's chest`,
+        JSON.stringify([CHESTDOOR_TARGET, `${GEN_NEXT} - Chest`]), JSON.stringify((report.chestDoors ?? []).map((c) => c.location)));
+    tc.reportCondition(`[${runtime}] ${CHESTDOOR_TARGET} is a door chest in level 0 (not an apitem)`,
+        door?.room === 0 && !report.apitems.some((a) => a.location === CHESTDOOR_TARGET));
+    if (!door) return;
+    await tc.stateManager.pingWorker('before-walk', 5000);
+    // ⛔ The row's own initial state: the fresh load checked NONE of this world's locations.
+    const before = snapshotFacts(tc).checked;
+    tc.assertEqual(`[${runtime}] no location of the chest-door world is checked before the walk`, '[]',
+        JSON.stringify(CHESTDOOR_LOCATIONS.filter((l) => before.has(l))));
+    const checksBefore = reportedChecks(up.win).length;
+
+    bot.walkToLocation(CHESTDOOR_TARGET);
+    const checked = await tc.pollForCondition(() => snapshotFacts(tc).checked.has(CHESTDOOR_TARGET)
+        || errorStatuses(bot).length > 0,
+    `[${runtime}] the Playback Bot opened ${CHESTDOOR_TARGET} and its locationCheck reached the state manager`, 120000, 250);
+    const controller = substrateRegistry.get('flash_seedling_gen')?.getPlaybackController?.() ?? null;
+    tc.log(`[${runtime}] bot status "${bot.getStatus?.()}"; controller ${JSON.stringify({ status: controller?.status?.() ?? null,
+        lastRefusal: controller?.lastRefusal ?? null, lastGoal: controller?.lastGoal ?? null })}`);
+    tc.assertEqual(`[${runtime}] the bot's walk named no error`, '[]', JSON.stringify(errorStatuses(bot)));
+    tc.assertEqual(`[${runtime}] the controller took the door chest as its goal (level, FIXED tag, a chest)`,
+        JSON.stringify({ kind: 'location', level: door.room, tag: door.tag, entityType: 'chest', name: CHESTDOOR_TARGET }),
+        JSON.stringify(controller?.lastGoal ?? null));
+    await tc.stateManager.pingWorker('after-walk', 5000);
+    const after = snapshotFacts(tc).checked;
+    tc.assertEqual(`[${runtime}] ${CHESTDOOR_TARGET}'s locationCheck reached the state manager — and it ALONE`,
+        JSON.stringify([CHESTDOOR_TARGET]), JSON.stringify(CHESTDOOR_LOCATIONS.filter((l) => after.has(l))));
+    tc.reportCondition(`[${runtime}] the walk ended on the check`, !!checked && after.has(CHESTDOOR_TARGET));
+    tc.assertEqual(`[${runtime}] the GAME reported the chest's own clear (level ${door.room}, tag ${door.tag})`,
+        JSON.stringify([{ level: door.room, tag: door.tag }]),
+        JSON.stringify(reportedChecks(up.win).slice(checksBefore).map(({ level, tag }) => ({ level, tag }))));
+    tc.assertEqual(`[${runtime}] gameState is still in ${GEN_START} (the walk opened the chest, it took no door)`,
+        GEN_START, readCurrentRegion());
+    assertNoDeathNoHalt(tc, runtime, up.rt);
+});
+
+export const seedlingJsRuntimeGeneratedChestdoorChest = chestDoorWalk('js');
+export const seedlingWasmRuntimeGeneratedChestdoorChest = chestDoorWalk('wasm');
+
+for (const [id, runtime, fn] of [
+    ['seedling-js-runtime-generated-chestdoor-chest', 'js', seedlingJsRuntimeGeneratedChestdoorChest],
+    ['seedling-wasm-runtime-generated-chestdoor-chest', 'wasm', seedlingWasmRuntimeGeneratedChestdoorChest],
+]) {
+    registerTest({
+        id,
+        name: `Seedling (${runtime} runtime): the Playback Bot opens the door chest region_0_0 - Chest in seedling_generated_chestdoor`,
+        description: `With flashPanel.runtime = ${runtime} on the committed seedling_generated_chestdoor preset, the `
+            + 'Playback Bot is asked for the start room\'s DOOR CHEST (an AP location that stays a chest, its tag fixed): '
+            + 'the generated rooms\' controller resolves it off the report\'s chestDoors, the game walks to the stance '
+            + 'below it and opens it, and the row ends on its locationCheck in the state manager — that one location '
+            + 'alone, the game\'s own clear of the chest\'s {level, tag}, no error status.',
+        testFunction: fn,
         category: seedlingRuntimeCategory(id),
         enabled: false, // off by default — runs only in the test-substrates mode
     });
@@ -3469,6 +3552,65 @@ registerTest({
         + 'wired frames, every sheet decodes, and no console error. Touches no panel, preset or AP state; the iframe is '
         + 'removed however it ends.',
     testFunction: seedlingJsRuntimeGraphicsSolids,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ THE ROPE (slice `seedling-js-rope-art`) — `RopeStart.render()` (`Puzzlements/RopeStart.as:51-76`) on the real page:
+ * `jsRuntime.html?graphics=seedling` standalone in the row's own iframe, driven through its own `__swfBridge` to
+ * `Game(16, 112, 48)` (L16's rope `rope@32,16`, node x 80, uncut). The page draws it from `seedling:puzzlement/rope`
+ * as the span (frame 1) at 32/48/64, the pulley (frame 0) and the handle (frame 2) — five ops, no stand-in. The cut
+ * look ([0, 3]) is pinned on real tapes in node (`seedlingSolidsRope.test.js`). Touches no panel, preset or AP state.
+ */
+export async function seedlingJsRuntimeGraphicsRope(tc) {
+    const frame = document.createElement('iframe');
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    const errors = [];
+    try {
+        frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+        }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+        tc.reportCondition('the standalone page is up with its pack', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [16, 112, 48] }]);
+        const g = win.__seedlingJsGraphics;
+        const rt = win.__seedlingJsRuntime;
+        const ROPE = 'seedling:puzzlement/rope';
+        const drawn = await tc.pollForValue(() => (rt.run?.level === 16 && g.effects?.owed === 0 && g.solids?.ropes === 1
+            && g.solids.ops.some((o) => o.key === ROPE) ? g.solids : null),
+        'level 16 is up, its arrival fade is over and its rope is drawn', 15000, 100);
+        const rope = (drawn?.ops ?? []).filter((o) => o.key === ROPE);
+        tc.log(`rope ops: ${JSON.stringify(rope)}`);
+        tc.assertEqual('RopeStart.render, uncut: span ×3 (frame 1), pulley (0), handle (2)', '1,1,1,0,2', rope.map((o) => o.frame).join(','));
+        tc.assertEqual('every rope op from the seedling pack', 'seedling', [...new Set(rope.map((o) => o.pack))].join(','));
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 16 and did not halt', '16/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-rope',
+    name: 'Seedling JS runtime: the rope drawn from RopePulley.png (RopeStart.render)',
+    description: 'Mounts jsRuntime.html?graphics=seedling standalone in its own iframe, drives it to level 16 through its own '
+        + '__swfBridge, and asserts the rope is drawn from the seedling pack as RopeStart.render does uncut (span frame 1 ×3, '
+        + 'pulley 0, handle 2), every sheet decodes, and no console error. Touches no panel, preset or AP state; the iframe '
+        + 'is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsRope,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

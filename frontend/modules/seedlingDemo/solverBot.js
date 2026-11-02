@@ -74,6 +74,8 @@ import {
     runSpear, livePerVisitOpts,
 } from './botDriverV2.js';
 import { resolvePresser } from './botDriverV2.js';
+// ⛓⛓⛓ hammer-phase GHOSTROPE: the PULL rung's and the `rope` verb's ghost swing (behind `GHOST_ROPE_CUT`, OFF).
+import { GHOST_ROPE_STRAY_ARMS, ropeSwingFor } from './ghostRopeCut.js';
 // ⛓ SEEDLING FIDELITY CRUSHER — the `bait` verb (behind `CRUSHER_BAIT`).
 import { runBait } from './botDriverV2.js';
 // ⛓ seedling-fidelity-movingwait — the paced wait's driver (behind `MOVING_WAIT`).
@@ -82,6 +84,12 @@ import {
     BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherShieldOf, crusherSightDanger,
     parkedTailProbe, searchBaitOrdering, trimParkedTail,
 } from './crusherBait.js';
+// ⛓ SEEDLING STRATEGY SWITCH r1 — the per-solve OFF switch's scope (`disable:`), flag OFF (`strategySwitch.js`).
+import {
+    ACTIVE_DISABLE, STRATEGY_DISABLED, STRATEGY_DISABLED_SCOPE_CHANGED, STRATEGY_DISABLE_UNKNOWN, STRATEGY_SWITCH,
+    STRATEGY_SWITCH_OFF,
+    disabledClause, disabledReport, liveDisableKey, parseDisable, rungOff, verbDisabled, verbOff, withDisabledScope,
+} from './strategySwitch.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
     fallRocksArmedBy, groupResponders,
@@ -136,6 +144,8 @@ import {
     PRESS_KILL_CHASERS, PRESS_KILL_CHASERS_COUNTS,
     // ⛓⛓⛓ hammer-phase OPP: opportunistic strikes in the press kill (behind `OPPORTUNISTIC_STRIKE`, OFF).
     OPPORTUNISTIC_STRIKE, OPPORTUNISTIC_STRIKE_COUNTS, OPPORTUNISTIC_STRIKE_TRACE,
+    // ⛓⛓⛓ hammer-phase AXIS: strikes on axis-aligned walks, aimed along the walk's axis (behind `AXIS_STRIKE`, OFF).
+    AXIS_STRIKE, AXIS_STRIKE_COUNTS,
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, ON by default since the user's flip; a behaviour switch, see its file).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
@@ -187,6 +197,8 @@ import {
     // ⛓ hammer-phase ICEST: the turret's attack range bounds the arm's staging point (`killIceTurretOnWalk`).
     ICE_TURRET,
 } from './solverView.js';
+// ⛓ hammer-phase STRIKE-SLOT: the policy's selected-slot gate (a family file, OFF).
+import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
@@ -216,6 +228,11 @@ import { PRESS_KILL_GUARD_COUNTS, PRESS_KILL_REBOOT_GUARD, PRESS_KILL_SHAKE_GUAR
 // ⛓ hammer-phase SPIN — the escape's claim through a carried shield (`PRESS_ESCAPE_SHIELD_CLAIM`, OFF) and the kill's done sink.
 import { PRESS_ESCAPE_SHIELD_CLAIM, PRESS_ESCAPE_SHIELD_CLAIM_COUNTS, PRESS_KILL_DONE_TRACE, shieldEnvelopeMeets,
     shieldOnlyUnmodelled } from './pressKillGuards.js';
+// ⛓ hammer-phase SLASHRECT: a press on a tick that starts with no facing (`direction -1`, `Player.as:1424`)
+import { PRESS_NO_FACING, PRESS_NO_FACING_COUNTS, isFacing, noFacingWhy, refuseNoFacing } from './pressNoFacing.js';
+// ⛓ hammer-phase ESCAPE-EXACT — the press escape search, exact under a carried shield (`PRESS_ESCAPE_EXACT`, OFF).
+import { PRESS_ESCAPE_EXACT, PRESS_ESCAPE_EXACT_COUNTS, bumpCoveredThrough, shieldBumpFiresAt,
+    shieldBumpForecastStepped } from './pressEscapeExact.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
 import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
 // ⛓ seedling-fidelity-axeforcedu D2 — a spinning axe's forced U, crossed and billed (`AXE_PRICED_CROSSING`, OFF).
@@ -942,6 +959,11 @@ export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(sw
  * off it is the table, byte for byte; that is the flag's whole contract.
  */
 export function frontierExecutor(strategy) {
+    return gateVerb(frontierExecutorRow(strategy), strategy, 'frontierExecutor');
+}
+
+/** `frontierExecutor`'s answer before the strategy switch's gate (also the switch's "is there one?" ask). */
+function frontierExecutorRow(strategy) {
     const row = STRATEGY_EXECUTORS[strategy];
     if (row) return row;
     if (strategy === 'bait' && CRUSHER_BAIT.enabled) return execBait;
@@ -960,8 +982,80 @@ export function frontierExecutor(strategy) {
  */
 function clearTagExecutor(strategy) {
     // ⛓ fidelity SEALDOOR D2 — `approach` (the FinalDoor's {113,0}) only while `sealDoorApproach` is on.
-    if (strategy === 'approach' && CONTACT_FIDELITY.sealDoorApproach) return execApproach;
-    return STRATEGY_EXECUTORS[strategy] ?? (strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined);
+    if (strategy === 'approach' && CONTACT_FIDELITY.sealDoorApproach) return gateVerb(execApproach, strategy, 'clearTagExecutor');
+    return gateVerb(STRATEGY_EXECUTORS[strategy] ?? (strategy === 'wand' && WAND_VERB.enabled ? execWand : undefined),
+        strategy, 'clearTagExecutor');
+}
+
+/**
+ * ⛓⛓ SEEDLING STRATEGY SWITCH r1 — **THE GATES.** Every one is `ACTIVE_DISABLE !== null && …`, so with no `disable:`
+ * installed (every default solve) each answers what it was handed and counts nothing.
+ *
+ * `gateVerb(row, verb, site)` — a LOOKUP's answer, `undefined` for a disabled verb, so "selected but unavailable" is
+ * the existing code path. The hit is counted only when the lookup found an executor (fidelity condition 1).
+ */
+function gateVerb(row, verb, site) {
+    return row !== undefined && ACTIVE_DISABLE !== null && verbOff(verb, site) ? undefined : row;
+}
+
+/** A direct `STRATEGY_EXECUTORS[verb]` read used as an availability test, through the gate. */
+const executorFor = (verb, site) => gateVerb(STRATEGY_EXECUTORS[verb], verb, site);
+
+/**
+ * An UNCONDITIONAL call of a looked-up executor: a disabled verb's `undefined` refuses BY NAME
+ * (`STRATEGY_DISABLED`) instead of dying as `TypeError: … is not a function` (measured on the design probe: `weigh`
+ * off on L15). Anything else is handed back as it was.
+ */
+function callableExecutor(fn, verb, site) {
+    if (typeof fn === 'function' || !verbDisabled(verb)) return fn;
+    throw strategyDisabledRefusal(verb, site);
+}
+
+/** A verb's executor called BY NAME inside another (a composition / nested arm): refuses by name when it is off. */
+function requireVerb(verb, site, id = null) {
+    if (ACTIVE_DISABLE !== null && verbOff(verb, site, id)) throw strategyDisabledRefusal(verb, site, id);
+}
+
+/** A ladder rung's entry: is it switched off? (Asked last in the rung's own entry condition, so a hit is an entry.) */
+const rungGate = (rung, site = rung) => ACTIVE_DISABLE !== null && rungOff(rung, site);
+
+/**
+ * Would some arm of the KILL rung run? A `target`, or a live darktrap ON the corridor (the light arm's own filter).
+ * ⛔ Not the roster's truthiness: `darkTraps` is `[]` (truthy) in a room with none while `darkTrapLight` is on, and a
+ * gate asked there would count a hit for a rung that does nothing (p17 review A).
+ */
+export function killRungArmRuns(run, target, hit) {
+    return target !== null || (run.entities('darkTraps') ?? []).some((b) => !b.startDying && !b.removed
+        && hit.sources.some((sx) => sx.kind === 'enemy' && sx.id === b.id));
+}
+
+/** The `why` a switched-off rung's row carries. */
+const disabledRungWhy = (rung) => `the ${rung.toUpperCase()} rung is switched off for this solve (\`disable\`)`;
+
+function strategyDisabledRefusal(verb, site, id = null) {
+    const e = new SolverRefusal(`solverBot: strategy '${verb}' is DISABLED for this solve (\`disable\`) and \`${site}\``
+        + `${id ? ` (${id})` : ''} would have applied it.`, { obstacle: id ? { kind: 'strategy', id } : null });
+    e.code = STRATEGY_DISABLED;
+    return e;
+}
+
+/** The rungs a `disable` list can name (`rung:<name>`): every `progressRung` entry but AVOID, the base walk. */
+export const DISABLE_RUNGS = Object.freeze(['dodge', 'pull', 'time', 'bait', 'kill', 'narrow', 'detour', 'forced-hit',
+    'arrow-lane']);
+
+/** The verbs `frontierExecutor` registers beside the table's rows (each behind its own switch). */
+const FRONTIER_EXTRA_VERBS = Object.freeze(['bait', 'approach', 'bridge', 'wand']);
+
+/**
+ * The `disable` vocabulary: the executor table's OWN keys (enumerable and switch-gated) plus the frontier extras,
+ * and `DISABLE_RUNGS`. `available(verb)`: does this process have an executor for it right now.
+ */
+export function strategyDisableVocabulary() {
+    return {
+        verbs: new Set([...Reflect.ownKeys(STRATEGY_EXECUTORS), ...FRONTIER_EXTRA_VERBS]),
+        rungs: new Set(DISABLE_RUNGS),
+        available: (verb) => frontierExecutorRow(verb) !== undefined,
+    };
 }
 
 /**
@@ -5210,6 +5304,16 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
          * still says which blocks were considered and why none of them
          * served. [[feedback_conservative_ingredient_hides_bound_defects]]
          */
+        // ⛓ strategy switch r1 — `hold` off: the weigh does not fall back to a hold (either fallback below). The hit is
+        // counted only where the fallback would have resolved a hold (p17 review C); otherwise it is today's `null`.
+        // The probe is handed a THROWAWAY rejection list, so it has no side effect: no hold rejection reaches
+        // `derived.rejected` or the refusal text (hammer-2's review).
+        if (verbDisabled('hold')) {
+            if (resolveHoldStrategy(run, obstacle, contacts, blocked, []) !== null) {
+                verbOff('hold', 'weigh:hold-fallback', obstacle.id);
+            }
+            return null;
+        }
         // ⛓ hammer-phase LWEIGH (`LATCH_WEIGH_FIRST`, OFF): a hold stance inside a live turret's range asks the corpse
         // weigh again under the stance hypothesis the hold was derived under (`latchWeighFirst`).
         if (LATCH_WEIGH_FIRST.enabled) {
@@ -6385,10 +6489,27 @@ export const ECONOMIES_ROSTER_WIDE = false;
 export function strikePolicyFor(run, { dashPlan = null,
     dashMode = DEFAULT_DASH_MODE,
     // ⛓ LAPSECOST D1 — the walk's i-frame-lapse permission (`createStrikePolicy`); `true`: the switch decides.
-    iframeLapse = true } = {}) {
+    iframeLapse = true,
+    // ⛓ hammer-phase AXIS — an axis-aligned walk's row (`axisStrikeFor`, `AXIS_STRIKE` ON only): see `axisAlongStrike`.
+    axisAlong = false } = {}) {
     assertDashMode(dashMode, 'strikePolicyFor');
     const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
     if (!hasSword) return null;
+    /**
+     * ⛓⛓ hammer-phase STRIKE-SLOT (`STRIKE_SLOT`, OFF) — THE GATE IS WHAT THE PRESS DOES, NOT WHAT THE BAG HOLDS. The
+     * policy presses `primary`, which the game runs as `useItem(Main.primary)`: with Fire (or any non-blade) selected
+     * that is a Fire press, not a strike (CORPSEBUMP2: L40's corpse weigh walks between bumps with Fire selected and
+     * its "strike" bumps the corpse). ON, a non-blade selection builds no policy (the strike-free walk), and a built
+     * one re-reads the slot each tick (`slotIsBlade`). With the Ghost Sword held, only `ghostsword` is a blade
+     * (`strikeSlot.pressIsBlade`, ⚖ it replaces the sword). OFF, nothing is read.
+     */
+    const slotIsBlade = STRIKE_SLOT.enabled
+        ? () => pressIsBlade(run.progress('primaryWeapon'), run.progress('inventory'))
+        : null;
+    if (slotIsBlade && !slotIsBlade()) {
+        STRIKE_SLOT_COUNTS.refused += 1;
+        return null;
+    }
     /**
      * ⛔ A PLANNED DASH IS A MOVE, AND A MOVE DOES NOT NEED A BODY. The
      * body-count fast path below is right for a STRIKE policy — with nothing
@@ -6399,7 +6520,7 @@ export function strikePolicyFor(run, { dashPlan = null,
      * preview would carry it and the drive would not).
      */
     if (!dashPlan && (run.entities('strikeBodies') ?? []).length === 0) return null;
-    return createStrikePolicy({
+    const policy = createStrikePolicy({
         facingToward, facingKeys: FACING_KEYS, hasSword, dashPlan,
         /**
          * ⛓ R9 SLICE 12i — the boolean the policy enforces is now a QUESTION
@@ -6424,7 +6545,94 @@ export function strikePolicyFor(run, { dashPlan = null,
          */
         vetoBody: dropKillVetoFor(run),
         ...(iframeLapse === false ? { iframeLapse: false } : {}),
+        ...(slotIsBlade ? { slotIsBlade } : {}),
     });
+    if (!axisAlong) return policy;
+    if (dashPlan) fail('strikePolicyFor: an axis-along policy carries no dash plan (an axis-aligned walk is undashed)');
+    AXIS_STRIKE_COUNTS.policies += 1;
+    return axisAlongStrike(policy);
+}
+
+/** ⛓ hammer-phase AXIS — the axis of each `Player.direction` (`FACING_KEYS`' numbering). */
+const AXIS_OF_FACING = Object.freeze({ [RIGHT]: 'x', [LEFT]: 'x', [UP]: 'y', [DOWN]: 'y' });
+
+/**
+ * ⛓⛓ hammer-phase AXIS — THE AXIS AN AXIS-ALIGNED WALK IS ON THIS TICK: `'x'` / `'y'`, or `null` when it has none.
+ * The velocity's axis when exactly one component moves (`holdOneAxis` keeps it so); at rest, the axis of the walk's own
+ * held direction keys when they name one. A diagonal velocity, or a held set at rest with both axes or none (a stance's
+ * stand, a corner `holdOneAxis` settles by the target) has no single axis, so nothing may be aimed.
+ */
+export function walkAxisOf(state, walkHeld) {
+    const vx = state.vx ?? 0;
+    const vy = state.vy ?? 0;
+    if (vx !== 0 || vy !== 0) return vx !== 0 && vy !== 0 ? null : (vx !== 0 ? 'x' : 'y');
+    const hx = walkHeld.has('left') || walkHeld.has('right');
+    const hy = walkHeld.has('up') || walkHeld.has('down');
+    return hx === hy ? null : (hx ? 'x' : 'y');
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase AXIS (`AXIS_STRIKE`, OFF) — **THE ONE POLICY, AIMED ONLY ALONG THE WALK'S OWN AXIS.** On an aim
+ * tick (no press owed) the policy is offered only the bodies whose facing (`facingToward`, the key the aim would hold)
+ * lies on `walkAxisOf`'s axis, so the aim key is the walk's own axis, forward or back; the press holds `primary` alone
+ * (friction on a one-axis velocity is exact, `holdOneAxis`' docblock). The other coordinate does not move on either
+ * tick, which is what the skirted lane needs (Swim U2, fidelity PROXIMITY). The press half is asked with EVERY body,
+ * so its Bulb veto and the swing see the whole rect, as the game does. Every other getter is the wrapped policy's.
+ */
+export function axisAlongStrike(policy) {
+    const decide = (state, bodies, tick, walkHeld, opts) => {
+        if (policy.aimed !== null) {
+            const out = policy.decide(state, bodies, tick, walkHeld, opts);
+            if (out.decision === STRIKE_PRESS) AXIS_STRIKE_COUNTS.pressed += 1;
+            return out;
+        }
+        const axis = walkAxisOf(state, walkHeld);
+        let along = [];
+        if (axis === null) {
+            if (bodies.length > 0) AXIS_STRIKE_COUNTS.noAxis += 1;
+        } else {
+            along = bodies.filter((b) => AXIS_OF_FACING[facingToward(state, b.rect)] === axis);
+            AXIS_STRIKE_COUNTS.withheld += bodies.length - along.length;
+        }
+        if (bodies.length > 0) AXIS_STRIKE_COUNTS.asked += 1;
+        const out = policy.decide(state, along, tick, walkHeld, opts);
+        if (out.decision === STRIKE_AIM) AXIS_STRIKE_COUNTS.aimed += 1;
+        return out;
+    };
+    return new Proxy(policy, { get: (target, key) => (key === 'decide' ? decide : Reflect.get(target, key)) });
+}
+
+/**
+ * ⛓ hammer-phase AXIS — an axis-aligned walk's strike: `null` OFF (the walk's strike-free policy, byte-identical), and
+ * ON the axis-along row of `strikePolicyFor`. Asked at every site an axis-aligned walk was handed `strike: null`, the
+ * drive and every preview that certifies it alike (⚖ 30(c)).
+ */
+export function axisStrikeFor(run, dashMode = DEFAULT_DASH_MODE) {
+    return AXIS_STRIKE.enabled ? strikePolicyFor(run, { dashMode, axisAlong: true }) : null;
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase AXIS-L12HITS (`AXIS_STRIKE`, OFF) — **THE CLEAR-TAG ARM'S KEYLOCK STANCE WALK IS CERTIFIED WITH
+ * ITS HOLD** (⚖ 30(c): the walk certified is the walk driven, and the executor's stand is part of the drive). ⚖ The
+ * user queued this on 2026-11-02, from the divergence sweep (CI runs 41245586575 vs 41245582842, and all four new
+ * switches 41370177273 vs 41370172948): with the switch ON, the 8 L12 legs to `bosslock@416,240` / `@432,240` still
+ * pass but take 2 hits (roomHits max 0 → 2).
+ *
+ * MEASURED (`seedling-hammer-axis-l12hits.md`): the hits are `puncher@416,256`'s punches, billed by the model at the
+ * game's own ticks, 29-40 ticks AFTER the stance walk ends, inside the keylock's 110-tick hold. None lands on a strike
+ * tick. OFF the strike-free walk to the stance (424,264) is punched in transit, so the walk climbs the ladder and the
+ * kill rung clears the puncher first. ON, RULESREF's `punchGateTimed` asks the aligned corridor, which now carries the
+ * axis strikes; they land 1-2 hits that keep the transit clean, so it is adopted, and the puncher is left alive beside the
+ * stance. The frontier arm prices that hold (`keylockStandWalk`, L30KEYLOCK); this arm never did, so the stand the
+ * executor drives was never previewed. ON the walk carries the same tail (`stand`), its probe meets the punch, and the
+ * solve kills first, as OFF does: all 8 legs answer OFF's plan byte for byte.
+ *
+ * `{}` OFF (byte-identical: the walk is handed exactly what it was), for any verb but `keylock`, with
+ * `KEYLOCK_WAIT_PRICED` off, and for a resolution without a hold or a key line (`keylockStandWalk`'s own `{}`).
+ */
+export function axisClearTagStand(run, verb, resolved) {
+    if (!AXIS_STRIKE.enabled || verb !== 'keylock' || !KEYLOCK_WAIT_PRICED.enabled) return {};
+    return keylockStandWalk(run, resolved);
 }
 
 /**
@@ -6458,6 +6666,17 @@ function corridorSwing(forecast, state, thrust) {
  * `solverBot.test.js` calls both, from one starting state, and compares the
  * held-set sequences.
  */
+/**
+ * ⛓ hammer DASHCERT — the run's own line of sight from the player to a chaser's entity point (`run.collideLineSolid`,
+ * the "Solid" pixelmasks included, as `levelRun`'s chaser arm asks it). A run without the query cannot certify a swing.
+ */
+function dashCertLineBlocked(run, state, b) {
+    if (typeof run.collideLineSolid !== 'function') {
+        fail('solverBot: DASH_CERT_SIGHT asks the run\'s line of sight (`run.collideLineSolid`), and this run has none');
+    }
+    return Boolean(run.collideLineSolid(state.x, state.y, b.x, b.y, { masks: true }));
+}
+
 export function previewWalk(run, wps, tolerance = 0,
     { strike = null, standFor = 0, axisAligned = false, stall = null,
         /**
@@ -6765,6 +6984,13 @@ export function previewWalk(run, wps, tolerance = 0,
             for (const b of bodiesNow ?? []) {
                 if (!rectsOverlapLocal(rectNow, b.rect)) continue;
                 if (distanceRectPoint(state.x, state.y, b.rect) > reachLimit) continue;
+                // ⛓ hammer DASHCERT (`DASH_CERT_SIGHT`, OFF; inside `spinnerDashWhole` only): `slash()`'s line, as the
+                // run's chaser arm asks it (MASKS D2) — a Flyer waives it. OFF the depth is 0 and nothing is asked.
+                if (dashCertSightDepth > 0 && CONTACT_FIDELITY.pixelMaskSightLines && b.tag !== 'flyer'
+                    && dashCertLineBlocked(run, state, b)) {
+                    DASH_CERT_SIGHT.counts.refused += 1;
+                    continue;
+                }
                 /**
                  * ⛔ THE RECEIVER DECIDES. `chasers.hit` runs `enemyHit`, whose
                  * own five gates refuse an i-framed body, a dying one and a
@@ -7473,6 +7699,37 @@ export function withDashStandWhole(enabled, fn) {
     return withSwitch(DASH_STAND_WHOLE, enabled, fn);
 }
 
+/**
+ * ⛓ SEEDLING HAMMER-PHASE DASHCERT (`seedling-hammer-dashcert`; ⚖ the user queued it 2026-11-02, planner
+ * `seedling-hammer-phase-planning-2`; fidelity L100LATTICE's hand-over (a)) — **THE WHOLE-CHAIN DASH CERTIFICATE SEES
+ * THE SWING'S LINE OF SIGHT.** OFF by default.
+ *  - The gap (measured, survey step 216 with fidelity's `fineStanceWalk` ON): the run's sword arm refuses a chaser whose
+ *    line from the player meets a Solid (`slash()`'s `collideLine("Solid", x, y, v[i].x, v[i].y)`, `Player.as:917`;
+ *    fidelity MASKS D2, `CONTACT_FIDELITY.pixelMaskSightLines`, ON), but `previewWalk`'s chaser arm tests only the rect
+ *    and the reach. The preview landed the t48 press on `jellyfish@80,16` at t50; the run (and the game) refused t49 and
+ *    t50 on `tile:Cliff` and landed it at t51. The knockback and the i-frame then differ, so the preview certified a
+ *    scheduled dash at t81 that the drive's own `certifyDash` yields (the body's i-frame expires mid-dash there), the
+ *    walks part at t82, and the drive is hit by `jellyfish@80,112` at t125: "certified whole", UNBILLED DAMAGE.
+ *  - ON: every preview `spinnerDashWhole` makes (the press-blind scan, the whole-chain preview, the window-by-window
+ *    fallback) asks the run's own line test (`run.collideLineSolid`, masks included) before a swing lands on a chaser,
+ *    with the run arm's waivers (a Flyer; the key OFF asks nothing). The chain certified is then the chain driven
+ *    (⚖ 30(c)). Every other preview is untouched.
+ *  - OFF: no line is asked anywhere a preview did not ask one before; byte-identical.
+ * `counts` hears each swing the line refused inside the certificate (`refused`) and each certificate asked (`asks`).
+ * `audit` (null, or an array a measurement installs) hears one row per whole-chain preview `spinnerDashWhole` makes,
+ * either arm: whether it certified, and the kinds of the danger that refused it; it changes nothing the solver decides.
+ */
+export const DASH_CERT_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_DASH_CERT_SIGHT === '1',
+    counts: { asks: 0, refused: 0 }, audit: null };
+
+/** Run `fn` with `DASH_CERT_SIGHT` set to `enabled`, restoring the previous value (also on a throw). */
+export function withDashCertSight(enabled, fn) {
+    return withSwitch(DASH_CERT_SIGHT, enabled, fn);
+}
+
+/** ⛓ hammer DASHCERT — how many `spinnerDashWhole` asks are on the stack (counted with `DASH_CERT_SIGHT` ON only). */
+let dashCertSightDepth = 0;
+
 /** The `all` sets without the swing-only prefix (`DASH_NO_SWING_PREFIX`), derived: a length-1 prefix is the swing. */
 const DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
 const GHOST_DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(GHOST_DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
@@ -7615,6 +7872,16 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     if (!(run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword)) {
         return refuse('this room holds no sword, so `set slashing`\'s outer gate refuses '
             + 'every press and no schedule can buy a single pixel');
+    }
+    /**
+     * ⛓ hammer-phase STRIKE-SLOT (`STRIKE_SLOT`, OFF) — AND NO BLADE SELECTED, NO DASH: a scheduled press is
+     * `useItem(Main.primary)`, so with Fire selected it is a Fire press, not a dash (CORPSEBUMP2's walk to bump 2).
+     * ON, refused here by name; `strikePolicyFor` would hand both the preview and the drive no policy anyway.
+     */
+    if (STRIKE_SLOT.enabled && !pressIsBlade(run.progress('primaryWeapon'), run.progress('inventory'))) {
+        STRIKE_SLOT_COUNTS.dashRefused += 1;
+        return refuse(`the selected slot fires \`${run.progress('primaryWeapon')}\`, not a blade, so a scheduled `
+            + '`primary` press would be that item\'s press and no schedule can buy a dash');
     }
     // ⛓ SF2: a deadline already reached costs this corridor not even its baseline.
     if (deadlineReached('sword-dash')) return refuse('deadline');
@@ -10182,6 +10449,68 @@ function stancePrerequisite(run, candidates, exempt, hypothesis, contacts, block
             };
         }
     }
+    // ⛓ hammer-phase POCKET-BURN (`STANCE_BURN`, OFF): arm (c), a burnable tree in the lane — see `stanceBurnPrerequisite`.
+    return STANCE_BURN.enabled ? stanceBurnPrerequisite(run, candidates, exempt, hypothesis, blocked) : null;
+}
+
+/**
+ * The trees arm (c) may offer: standing, not refused, and burnable by this run — Fire held, no Fire Wand (whose case-5
+ * press the model refuses, `resolveBurnStrategy`), and `burn` available through the strategy switch's gate. Empty
+ * otherwise, so a run without Fire is offered nothing (the tree stays a wall, as it is OFF).
+ */
+function stanceBurnTrees(run, blocked) {
+    const inv = run.progress('inventory') ?? {};
+    if (!inv.hasFire || inv.hasFireWand || !executorFor('burn', 'stancePrerequisite:burn')) return [];
+    const burned = run.entities('burnedTrees') ?? new Set();
+    return (run.world.burnableTrees ?? []).filter((t) => !burned.has(t.id) && !blocked.includes(t.id));
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase POCKET-BURN (`STANCE_BURN`, OFF) — **ARM (c): THE TREE IN THE LANE.** Arms (a) and (b) have both
+ * failed, so the stance is reachable neither through a weigh's mechanism nor by shoving a walk block aside. A
+ * `BurnableTree` is the third obstacle an order can discharge for good (`burnEnd -> die()` removes it for the visit
+ * and writes its tag; ⚖ Fire is a plain AP item), and the frontier already has its verb (`resolveBurnStrategy`). The
+ * probe is the corridor with that ONE tree burnt — the field a real burn writes (`burnedTrees`) — first in the world
+ * as it is, then under the hypothesis with its volumes exempted (`stanceReaches`' own reading). ⇒ the prerequisite is
+ * the TREE; `prerequisiteOrder` resolves it with the frontier's own `burn` (its gate, its stance, its Fire), and the
+ * hold is re-derived against the world the burn changed.
+ *
+ * Measured on L40's Boss Key 2 arrivals (POCKET-BURN W0): `hold(wandlock@480,560)`'s stance `buttonroom@880,768` is
+ * behind `burnabletree@872,784` from (488,578); arms (a) and (b) refuse, and the run holds Fire.
+ *
+ * ⚠ LAST, after the geometry arm: OFF and wherever (a)/(b) answer, nothing moves.
+ */
+function stanceBurnPrerequisite(run, candidates, exempt, hypothesis, blocked) {
+    const trees = stanceBurnTrees(run, blocked);
+    if (!trees.length) return null;
+    const live = run.liveGeometryOpts();
+    const withBurnt = (bag, id) => ({ ...bag, burnedTrees: new Set([...(bag.burnedTrees ?? []), id]) });
+    const hExempt = new Set([...exempt,
+        ...hypothesis.filter((h) => h.kind === 'activator' || h.kind === 'rock').map((h) => `proximity-hazard:${h.id}`),
+        ...hypothesis.flatMap((h) => h.exempt ?? [])]);
+    const arms = [{ bag: live, exempt, under: false }];
+    if (hypothesis.length) arms.push({ bag: bagWithDischarged(run, live, hypothesis), exempt: hExempt, under: true });
+    for (const arm of arms) {
+        for (const tree of trees) {
+            const bag = withBurnt(arm.bag, tree.id);
+            for (const c of candidates) {
+                if (!corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null,
+                    solverPlanOpts(run, arm.exempt, { liveBag: bag }))) continue;
+                return {
+                    stance: { x: c.x, y: c.y },
+                    prerequisite: {
+                        id: tree.id,
+                        kind: 'solid',
+                        tag: 'burnabletree',
+                        via: 'burn',
+                        why: `the stance is reachable once ${tree.id} is burnt${arm.under
+                            ? ' (and the rest of the hypothesis discharged)' : ''}: the run holds Fire, and a burnt `
+                            + 'tree is gone for the visit (`burnEnd -> die()`), so the corridor it shut stays open',
+                    },
+                };
+            }
+        }
+    }
     return null;
 }
 
@@ -10215,6 +10544,10 @@ function prerequisiteRefusalClause(run, hypothesis, walls, blocked) {
         return Boolean(live) && !live.removed;
     });
     for (const row of blocks) parts.push(`${row.id} (no shove of it plans the corridor)`);
+    // ⛓ POCKET-BURN (`STANCE_BURN`, OFF): the trees arm (c) tried, named
+    if (STANCE_BURN.enabled) {
+        for (const t of stanceBurnTrees(run, blocked)) parts.push(`${t.id} (no burn of it plans the corridor)`);
+    }
     if (parts.length === 0) {
         return ` ⛔ AND NO PREREQUISITE EXISTS TO RAISE: level ${run.level} holds no `
             + 'walk-family pushable and no hypothesised activator whose own verb moves one, '
@@ -10271,7 +10604,7 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
         if (wall.has(a.id) || run.entities('openActivators').has(a.id)) continue;
         const strategy = refineStrategy(run,
             OBSTACLE_STRATEGIES[`solid:${a.tag}`] ?? null, { id: a.id, tag: a.tag });
-        if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
+        if (!strategy || !executorFor(strategy, 'stanceHypothesis')) continue;
         /**
          * ⛓⛓⛓ **GUARD (iii) — NO OPTIMISM WITHOUT A DISCHARGE THAT OUTLIVES THE
          * WALKER.** PROCGEN ELEMENTS arc 3, slice S1, gap 2.
@@ -10352,7 +10685,7 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
     for (const b of (run.world.shieldBosses ?? [])) {
         if (wall.has(b.id)) continue;
         const strategy = OBSTACLE_STRATEGIES['solid:shieldboss'];
-        if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
+        if (!strategy || !executorFor(strategy, 'stanceHypothesis')) continue;
         out.push({ id: b.id, kind: 'shieldBoss', strategy });
     }
     if (STANCE_ROCKS.enabled) out.push(...rockHypothesis(run, wall));
@@ -10461,7 +10794,7 @@ function rockHypothesis(run, wall) {
     for (const s of (run.world.solids ?? [])) {
         if (!s.rockId || wall.has(s.rockId) || broken.has(s.rockId)) continue;
         const strategy = OBSTACLE_STRATEGIES[`solid:${s.tag}`] ?? null;
-        if (strategy !== 'break' || !STRATEGY_EXECUTORS[strategy]) continue;
+        if (strategy !== 'break' || !executorFor(strategy, 'rockHypothesis')) continue;
         if (!rockBreaksUnder(s.rockType, inventory)) continue;
         out.push({ id: s.rockId, kind: 'rock', tag: s.tag, strategy });
     }
@@ -10478,6 +10811,36 @@ export const STANCE_ROCKS = { enabled: globalThis.process?.env?.SEEDLING_STANCE_
 /** Run `fn` with `STANCE_ROCKS` set to `enabled`, restoring the previous value. */
 export function withStanceRocks(enabled, fn) {
     return withSwitch(STANCE_ROCKS, enabled, fn);
+}
+
+/**
+ * `STANCE_BURN` (OFF): a hold stance shut by a burnable tree raises the tree's `burn` as its prerequisite
+ * (`stancePrerequisite`'s arm (c), `stanceBurnPrerequisite`). ⚖ The user queued POCKET-BURN on 2026-11-02, from
+ * SOUTHDOOR's hand-over: on L40's Boss Key 2 arrivals `burnabletree@872,784` shuts the latch pocket and the hold's
+ * prerequisite search named only activators and a pushable. `SEEDLING_STANCE_BURN=1` / `withStanceBurn(enabled, fn)`.
+ */
+export const STANCE_BURN = { enabled: globalThis.process?.env?.SEEDLING_STANCE_BURN === '1' };
+export const STANCE_BURN_DEFAULT = false;
+
+/** Run `fn` with `STANCE_BURN` set to `enabled`, restoring the previous value. */
+export function withStanceBurn(enabled, fn) {
+    return withSwitch(STANCE_BURN, enabled, fn);
+}
+
+/**
+ * ⛓ READ-ONLY PROBE for `hammerPocketBurn.test.js`: the hold stance `resolveHoldStrategy` derives for the presser at
+ * `at` (`{x, y}`), with the prerequisite search on, from `run` as it stands: `{stance, prerequisite, refusal}` (the
+ * refusal's message, or null). No contacts are passed (the walk's own are the caller's). It steps nothing.
+ */
+export function holdStanceProbe(run, at, blocked = []) {
+    const presser = resolvePresser(run.world, at, 'holdStanceProbe');
+    try {
+        const r = deriveHoldStance(run, presser, NO_CONTACTS, blocked, { prerequisites: true });
+        return { stance: r.stance, prerequisite: r.prerequisite ?? null, refusal: null };
+    } catch (e) {
+        if (!(e instanceof SolverRefusal)) throw e;
+        return { stance: null, prerequisite: null, refusal: e.message };
+    }
 }
 
 /**
@@ -11623,6 +11986,7 @@ function execCorpseWeigh(run, perTick, resolved, ctx, armed) {
         }
     }
     const prior = run.progress('primary');
+    if (!turret()?.dead) requireVerb('kill', 'weigh:killForCorpse', c.turret); // ⛓ strategy switch r1: a nested kill
     const kill = turret()?.dead ? null : killForCorpse(run, perTick, c, exempt, ctx);
     const NONE = new Set();
     const presses = [];
@@ -11890,6 +12254,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     const id = c.turret;
     const t = run.entities('turrets')?.get?.(id) ?? null;
     if (!t || t.dead) return null;
+    requireVerb('kill', 'weigh:approachKillForCorpse', id); // ⛓ strategy switch r1: a nested kill, before any fork
     const refuse = (msg) => {
         throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'danger', id },
             perTick: [...perTick] });
@@ -11927,6 +12292,17 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
             contactsOverride: new Set(resolved.exempt ?? []) });
     }
     if (run.ledger('playerHits').length !== hitsBefore) refuse(`the player was HIT on the staging walk to ${id}`);
+    // ⛓ hammer-phase SOUTHDOOR (`APPROACH_DOOR`, OFF): a hypothesis door between the staging point and every side is
+    // discharged on the live run first, and the approach stages in its cell
+    if (APPROACH_DOOR.enabled) {
+        const door = approachDoorFirst(run, sides, exempt, resolved, ctx, id);
+        if (door !== null) {
+            if (run.ledger('playerHits').length !== hitsBefore) {
+                refuse(`the player was HIT discharging ${door.door} before the approach to ${id}`);
+            }
+            stage = { x: run.state.x, y: run.state.y };
+        }
+    }
     if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
     // 2. the tries, each on a fork
     const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
@@ -12048,6 +12424,72 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     TURRET_APPROACH_COUNTS.approaches.push({ turret: id, t: run.ticksCompleted, side: null, forks, tally });
     return refuse(`no approach to ${id} from the staging point (${stage.x},${stage.y}) is hitless — ${forks} fork(s), `
         + `${JSON.stringify(tally)}: ${whys.join(' | ')}`);
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SOUTHDOOR (`APPROACH_DOOR`, OFF) — THE APPROACH'S DOOR, DISCHARGED BEFORE ITS FORKS.
+ *
+ * The approach's fork routes plan with `planWaypoints` against the world as it is: no ladder, so a door between the
+ * staging point and the turret is a wall to every try (APPROACH, measured on L40 legs 860/861: the staging walk reached
+ * (488,579) hitless, south of the latched `wandlock@480,560` {t 3}, and all 12 forks were `no-plan`). The order that
+ * opens it — the latch's `hold` at `buttonroom@880,768` — was raised by the uncertified stance walk's own ladder before
+ * the approach replaced it.
+ *
+ * ON, and only when NO side plans from where the player stands: the stance hypothesis is asked (`stanceHypothesis`,
+ * with the order's exemptions); a side that plans under its discharged doors (`bagWithDischarged`) names the first
+ * hypothesis door its route crosses (the player's box sampled along the waypoints). The live run walks to that door's
+ * cell with the loop's own `walkTo` — its ladder raises the door's order and the walk ends in the open doorway — and
+ * returns the record. No side planning under the hypothesis either, or no door on the route, returns null: the
+ * approach is APPROACH's, and its own named refusal stands. The door's order is the ladder's, not chosen here.
+ *
+ * `approachDoorFor` is the question alone (no tick spent): null where a side plans from where the player stands (the
+ * near side: nothing is asked), else `{door, side, cell}` or `{door: null, why}`. `sides` are `{key, x, y}` stances.
+ */
+export function approachDoorFor(run, sides, exempt, contacts = NO_CONTACTS) {
+    const opts = solverPlanOpts(run, exempt);
+    if (sides.some((s) => planWaypointsOrNull(run.world, run.state, s, null, opts) !== null)) return null;
+    const hypothesis = stanceHypothesis(run, [], contacts);
+    const doors = new Set(hypothesis.filter((h) => h.kind === 'activator').map((h) => h.id));
+    if (doors.size === 0) return { door: null, why: 'no-hypothesis-door' };
+    const hopts = solverPlanOpts(run, exempt, { liveBag: bagWithDischarged(run, run.liveGeometryOpts(), hypothesis) });
+    const rows = (run.world.activators ?? []).filter((a) => doors.has(a.id) && a.rect);
+    for (const s of sides) {
+        const wps = planWaypointsOrNull(run.world, run.state, s, null, hopts);
+        if (wps === null) continue;
+        let from = { x: run.state.x, y: run.state.y };
+        for (const w of wps) {
+            const n = Math.max(1, Math.ceil(Math.hypot(w.x - from.x, w.y - from.y) / 2));
+            for (let i = 1; i <= n; i += 1) {
+                const box = playerBoxAt(from.x + ((w.x - from.x) * i) / n, from.y + ((w.y - from.y) * i) / n);
+                const a = rows.find((r) => rectsOverlapLocal(box, r.rect));
+                if (a) {
+                    return { door: a.id, side: s.key,
+                        cell: { x: (a.rect.x + a.rect.right) / 2, y: (a.rect.y + a.rect.bottom) / 2 } };
+                }
+            }
+            from = w;
+        }
+    }
+    return { door: null, why: 'no-door-on-a-hypothesis-route' };
+}
+
+/**
+ * The live half of SOUTHDOOR: `approachDoorFor`'s door, discharged by the loop's own `walkTo` to its cell (the ladder
+ * raises the door's order). Every ask is noted on `APPROACH_DOOR_COUNTS` (a door's row before its walk, so a door whose
+ * own order refuses is still on the instrument). Returns the door's row, or null (nothing to discharge).
+ */
+function approachDoorFirst(run, sides, exempt, resolved, ctx, id) {
+    const found = approachDoorFor(run, sides, exempt, new Set(resolved.exempt ?? []));
+    if (found === null) return null;
+    const row = Object.assign(found, { turret: id, t: run.ticksCompleted });
+    APPROACH_DOOR_COUNTS.doors.push(row);
+    if (row.door === null) return null;
+    const t0 = run.ticksCompleted;
+    ctx.walkTo(ctx.goal, row.cell, { what: `${ctx.what} -> ${id} approach door ${row.door} (${row.cell.x},${row.cell.y})`,
+        contactsOverride: new Set(resolved.exempt ?? []) });
+    row.ticks = run.ticksCompleted - t0;
+    row.open = run.entities('openActivators').has(row.door);
+    return row;
 }
 
 /** ICEST: the arm's staging point stands this far past the turret's attack range, px (outside it no volley starts). */
@@ -14909,11 +15351,17 @@ let escapeScopes = 0;
  * them, through its `Object.create(run)` view (`solveSegmentUnder`'s `viewOf`); a Proxy over a run is not reached,
  * and is not served.
  */
-export function escapeCrossPassScope() {
+export function escapeCrossPassScope({ disabled = liveDisableKey() } = {}) {
     const runs = new WeakMap();
     let adopted = 0;
     return {
         id: (escapeScopes += 1),
+        /**
+         * ⛓ STRATEGY SWITCH r1 (hammer-2's option (a)) — the `disable` set this scope's entries are answers UNDER
+         * (`null`: none), captured once at creation (`twoPassSolve` passes its own list's key). A read or write
+         * under a different live set refuses `STRATEGY_DISABLED_SCOPE_CHANGED` (`pressEscapeScoped`).
+         */
+        disabled,
         entries: new Map(),
         nodes: 0,
         counts: { lookups: 0, hits: 0, crossPassHits: 0, stored: 0 },
@@ -15000,7 +15448,9 @@ function escapeKeyOf(run, { state, at, keys = [], pressAt, id, deadline = true }
     const p = activeProgress;
     const { horizon, follow, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
     const globals = [horizon, follow, cell, maxExpansions, GHOST_SPINNER_PRESS.enabled, PRESS_KILL_COST.enabled,
-        d === null ? 'none' : `live:${d.fine === true}`, p === null ? 'none' : (p.seg === null ? 'outside' : 'segment')];
+        d === null ? 'none' : `live:${d.fine === true}`, p === null ? 'none' : (p.seg === null ? 'outside' : 'segment'),
+        // ⛓ ESCAPE-EXACT: its answers differ, so it is keyed — and only when ON, so OFF's key text is OFF's
+        ...(PRESS_ESCAPE_EXACT.enabled ? [`exact:${canonicalDigestText(PRESS_ESCAPE_EXACT.parts)}`] : [])];
     return { digest, key: `${digest}|${canonicalDigestText(globals)}|${
         canonicalDigestText({ state, at, keys, pressAt, id, deadline })}` };
 }
@@ -15107,11 +15557,24 @@ function escapeEntryDiffers(entry, got) {
     return null;
 }
 
+/**
+ * ⛓ STRATEGY SWITCH r1 — an escape answer cached under one `disable` set is not an answer under another (a disabled
+ * verb changes what the search may do), so the cache refuses rather than mixing them.
+ */
+function escapeScopeChangedRefusal(scope, live) {
+    const e = new SolverRefusal(`solverBot: the cross-pass escape cache (scope ${scope.id}) holds answers made under `
+        + `\`disable: [${scope.disabled ?? ''}]\` and was asked under \`disable: [${live ?? ''}]\`. The disable scope `
+        + 'must be installed OUTSIDE the cache\'s scope (`twoPassSolve` takes `disable` and captures it at entry).');
+    e.code = STRATEGY_DISABLED_SCOPE_CHANGED;
+    return e;
+}
+
 /** `pressEscapeOnce` through the scope in hand, when there is one and it adopted `run`. */
 function pressEscapeScoped(run, opts, trace) {
     const scope = activeEscapeScope;
     const inner = scope === null ? null : scope.innerOf(run);
     if (inner === null) return pressEscapeOnce(run, opts, trace, null);
+    if (scope.disabled !== liveDisableKey()) throw escapeScopeChangedRefusal(scope, liveDisableKey());
     const C = ESCAPE_CROSS_PASS_CACHE_COUNTS;
     const sink = ESCAPE_CROSS_PASS_CACHE_TRACE.sink;
     const note = (outcome) => {
@@ -15195,15 +15658,37 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         states.set(t + 1, st);
     }
     const direction = st.direction;
-    const probe = run.spinnerForecastWithPress(0, { pressAt, direction, id, positions: [] });
+    /**
+     * ⛓ hammer-phase SLASHRECT — THE PRESS TICK MAY START WITH NO FACING: on the tick the i-frames run out `hitUpdate`
+     * writes `direction = directionFace` (-1 when no knockback parked one) AFTER `sprites()`, so the aim cannot set it
+     * and the press swings `getSlashRect`'s all-zero default rect (`pressNoFacing.js`). Always: a forecast that throws
+     * on it refuses the solve by name (`PRESS_NO_FACING`). Under `PRESS_NO_FACING` (OFF): a claimed negative, before
+     * any forecast, so the aim waits a tick.
+     */
+    if (PRESS_NO_FACING.enabled && !isFacing(direction)) {
+        PRESS_NO_FACING_COUNTS.escapeDeclined += 1;
+        return { ok: false, claim: true, bound: 'no-facing', why: noFacingWhy({ direction, pressAt, caller: 'escape' }) };
+    }
+    const forecastPress = (rows, o) => refuseNoFacing(SolverRefusal, { direction, pressAt, caller: 'escape', id },
+        () => run.spinnerForecastWithPress(rows, o));
+    const probe = forecastPress(0, { pressAt, direction, id, positions: [] });
     /**
      * ⛓ hammer-phase SPIN (`PRESS_ESCAPE_SHIELD_CLAIM`, OFF ⇒ `false` and the no-claim below is OFF's) — the shield
      * bump as the ONLY unmodelled source: the escape is asked of the bump-blind forecast, a certificate is adopted only
      * where the shield's envelope meets no body on its path, and of the negatives only an exhausted search is claimed
      * (`shieldNoClaim` keeps every other one OFF's no-claim). The docblock is the switch's (`pressKillGuards.js`).
      */
-    const shieldClaim = PRESS_ESCAPE_SHIELD_CLAIM.enabled && shieldOnlyUnmodelled(probe.unmodelled);
-    if (probe.unmodelled.length > 0 && !shieldClaim) {
+    /**
+     * ⛓ hammer-phase ESCAPE-EXACT (`PRESS_ESCAPE_EXACT`, OFF ⇒ `exact` false and every line below is OFF's) — part (i):
+     * the shield bump as the only unmodelled source, with a forecast that steps it, is read off `first`'s own
+     * coverage, not off this probe; SPIN is then not consulted. The docblock is the switch's (`pressEscapeExact.js`).
+     */
+    const XP = PRESS_ESCAPE_EXACT.enabled ? PRESS_ESCAPE_EXACT.parts : null;
+    const exact = XP !== null && XP.probe && shieldOnlyUnmodelled(probe.unmodelled) && shieldBumpForecastStepped();
+    const XC = PRESS_ESCAPE_EXACT_COUNTS;
+    if (exact) XC.asked += 1;
+    const shieldClaim = !exact && PRESS_ESCAPE_SHIELD_CLAIM.enabled && shieldOnlyUnmodelled(probe.unmodelled);
+    if (probe.unmodelled.length > 0 && !shieldClaim && !exact) {
         return { ok: false, claim: false, why: `the forecast names ${probe.unmodelled.join(', ')} as unmodelled` };
     }
     if (shieldClaim) PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.asked += 1;
@@ -15225,8 +15710,18 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     }
     const { horizon, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
     const rowsFor = (land) => land + horizon + 2 - n;
-    const first = run.spinnerForecastWithPress(rowsFor(trainEnd), { pressAt, direction, id,
-        positions: (t) => states.get(t) ?? null });
+    // ⛓ ESCAPE-EXACT (i): told every previewed state (the approach and the stood train), the forecast steps the bump
+    const told = (last) => (t) => (t <= last ? states.get(t) ?? null : null);
+    const first = forecastPress(rowsFor(trainEnd), { pressAt, direction, id,
+        positions: (t) => states.get(t) ?? null, ...(exact ? { players: told(trainEnd + 1) } : {}) });
+    if (exact && (first.unmodelled.some((u) => !shieldOnlyUnmodelled([u]))
+        || !bumpCoveredThrough(first, n, trainEnd + 1 - n))) {
+        XC.uncovered += 1;
+        XC.noClaim += 1;
+        return { ok: false, claim: false, why: `the forecast names ${probe.unmodelled.join(', ')} as unmodelled `
+            + `(PRESS_ESCAPE_EXACT: the bump was not stepped on every row from t${n} to t${trainEnd + 1}: `
+            + `${first.shieldBump ? `uncovered from t${first.shieldBump.uncoveredFrom}` : 'no coverage report'})` };
+    }
     if (first.lineBlocked) {
         return shieldNoClaim({ ok: false, claim: true, bound: 'line', why: 'the press\'s line of sight is blocked' });
     }
@@ -15242,8 +15737,20 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
      * latched at the start is the run's), or a fall whose tile `fallDestination` refuses (a lethal pit).
      */
     const lethalFloor = lethalFloorFrom(run, state);
-    const safeIn = (rows) => (q, i) => q !== null && !lethalFloor(q)
-        && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i);
+    /**
+     * ⛓ ESCAPE-EXACT (ii): past `exactFrom` (the last row the forecast stepped with a told state) a state a bump would
+     * fire on is pruned; `cut` counts the states the prune ALONE refused (the search's negative is then no claim).
+     */
+    const prune = exact && XP.prune;
+    let cut = 0;
+    const safeIn = (rows, bodies = null, exactFrom = Infinity) => (q, i) => {
+        if (!(q !== null && !lethalFloor(q) && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i))) return false;
+        if (prune && i > exactFrom && shieldBumpFiresAt(q, rows, bodies, i)) {
+            cut += 1;
+            return false;
+        }
+        return true;
+    };
     const safe = safeIn(first.rows);
     // ⛓ hammer-phase XC: `tap` (the cache's recorder or its silent re-derivation) sees each search; `null` is today's
     const traced = (phase, r) => {
@@ -15251,14 +15758,30 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         if (tap === null || !tap.silent) escapeSearchEmit(trace, phase, r);
         return r;
     };
-    for (let t = at + 1; t <= L; t += 1) {
+    // ⛓ ESCAPE-EXACT (iii): the aim tick's own row is asked too (a body that steps onto the player during it)
+    const contactFrom = XP !== null && XP.contact ? at : at + 1;
+    for (let t = contactFrom; t <= L; t += 1) {
         if (!safe(states.get(t), t - n)) {
+            if (t === at) XC.contact += 1;
+            if (exact) XC.claimedNegative += 1;
             return shieldNoClaim({ ok: false, claim: true, bound: 'approach', why: `the approach or the train meets a `
                 + `body or the line at t${t}, before the press lands` });
         }
     }
-    const search = (start, startIndex, rows, phase) => traced(phase, spaceTimeReach({
-        start, startIndex, step: (q, k) => stepOrNull(q, k), safe: safeIn(rows), horizon: L + horizon - n - startIndex,
+    /**
+     * ⛓ ESCAPE-EXACT (ii): the free search's rows. `first` was told the STOOD train through `trainEnd + 1`; a bump it
+     * stepped after the landing moved a body on a path the free search does not take, so those rows are re-forecast
+     * told the path only through the landing (the prune covers the rest).
+     */
+    let free = first;
+    if (exact && first.shieldBump.bumps.some((b) => b.shoved && b.t > L)) {
+        XC.rowsReforecast += 1;
+        free = forecastPress(rowsFor(trainEnd), { pressAt, direction, id, positions: (t) => states.get(t) ?? null,
+            players: told(L) });
+    }
+    const search = (start, startIndex, rows, phase, bodies = null, exactFrom = Infinity) => traced(phase, spaceTimeReach({
+        start, startIndex, step: (q, k) => stepOrNull(q, k), safe: safeIn(rows, bodies, exactFrom),
+        horizon: L + horizon - n - startIndex,
         keySets: HOLD_FIRST_KEY_SETS, keyOf: coarseKey(cell), maxExpansions,
         // ⛓ of two states with one coarse key, keep the one farther from every hammer's disc (the refuge's
         // preference, `discClearanceAt` — a robustness score, never the safety test)
@@ -15272,19 +15795,35 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         // ⚠ a search cut by its BUDGET proves nothing either way: only an EXHAUSTED one refuses the press
         if (r.bound === 'deadline' || r.bound === 'expansions') return { ok: false, claim: false, why: r.why };
         const claimed = { ok: false, claim: true, bound: r.bound, why: `no ESCAPE from the landing at t${L} (${pre}): ${r.why}` };
+        if (exact) {
+            // ⛓ ESCAPE-EXACT (ii): a negative the bump prune shaped is no claim; one it did not shape is exact
+            if (cut > 0) {
+                XC.exhaustedCut += 1;
+                XC.noClaim += 1;
+                return { ok: false, claim: false, why: `${unmodelledWhy} (PRESS_ESCAPE_EXACT: ${claimed.why}; the search `
+                    + `pruned ${cut} state(s) a shield bump would have moved a body on)` };
+            }
+            if (r.bound === 'exhausted') XC.exhausted += 1;
+            XC.claimedNegative += 1;
+            return claimed;
+        }
         if (shieldClaim && r.bound === 'exhausted') PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.exhausted += 1;
         return shieldClaim && r.bound !== 'exhausted' ? shieldNoClaim(claimed) : claimed;
     };
     // ⛓ First: free from the landing. Then re-aim the remaining tests from the certificate's own points.
-    let found = search(states.get(L), L - n, first.rows, 'free');
+    let found = search(states.get(L), L - n, free.rows, 'free', free.bodies, L - n);
+    if (exact) XC.cuts += cut;
     const bad = verdict(found, L, 'free from the landing');
     if (bad) return bad;
     const at2 = (t) => (t <= L ? states.get(t) : found.states[t - L]);
-    const again = run.spinnerForecastWithPress(rowsFor(trainEnd), { pressAt, direction, id, positions: at2 });
+    const again = forecastPress(rowsFor(trainEnd), { pressAt, direction, id, positions: at2,
+        ...(exact ? { players: told(L) } : {}) });
     const sameTests = JSON.stringify(again.tests.map((x) => [x.t, x.id, x.landed]))
         === JSON.stringify(first.tests.map((x) => [x.t, x.id, x.landed]));
     let pre = [];
-    if (!sameTests || !found.states.every((q, k) => safe(q, L - n + k) && safeIn(again.rows)(q, L - n + k))) {
+    const safeFree = exact ? safeIn(free.rows, free.bodies, L - n) : safe;
+    const safeAgain = exact ? safeIn(again.rows, again.bodies, L - n) : safeIn(again.rows);
+    if (!sameTests || !found.states.every((q, k) => safeFree(q, L - n + k) && safeAgain(q, L - n + k))) {
         // ⛓ The fallback: the whole train stood, the search from its last test.
         for (let t = L + 1; t <= trainEnd + 1; t += 1) {
             if (!safe(states.get(t), t - n)) {
@@ -15293,7 +15832,9 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
             }
         }
         pre = Array.from({ length: trainEnd + 1 - L }, () => NO_KEYS);
-        found = search(states.get(trainEnd + 1), trainEnd + 1 - n, first.rows, 'stood');
+        cut = 0;
+        found = search(states.get(trainEnd + 1), trainEnd + 1 - n, first.rows, 'stood', first.bodies, trainEnd + 1 - n);
+        if (exact) XC.cuts += cut;
         const bad2 = verdict(found, trainEnd + 1, 'the train stood');
         if (bad2) return bad2;
     }
@@ -15310,6 +15851,7 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         }
         PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.certified += 1;
     }
+    if (exact) XC.certified += 1;
     return {
         ok: true, claim: true, pressAt, landing: L, outcome: first.outcome, impulse: first.impulse,
         keys: [...pre, ...found.keys], expansions: found.expansions,
@@ -15770,18 +16312,19 @@ export function withChooserHitSources(enabled, fn, mode = null) {
  * the next blocker: the bobsoldier, or the press kill's chaser death that OPP removes. `size: 3` (env
  * `SEEDLING_CHOOSER_PAIR_SIZE=3`) is the measurement arm that asks triples too.
  *
- * OFF by default. `SEEDLING_CHOOSER_PAIR=1` turns it on in a node process (the page's worker has no `process`, so it is
- * OFF there), and `withChooserPair(enabled, fn)` is for a test or a witness. OFF, no pair is asked and every walk and
- * trace is byte-identical. ON where the chooser or C1 already admits a body, no pair is asked either.
+ * ON by default at `size: 3` (⚖ the user's flip, after CPWIT's game witness: the L43 pits `out_pit_5_21/22/23` ← L39
+ * played hitless to the exit in the game). `SEEDLING_CHOOSER_PAIR=0` or `withChooserPair(false, fn)` opts out (OFF,
+ * no pair is asked and every walk and trace is the BEFORE model); `SEEDLING_CHOOSER_PAIR_SIZE=2` asks pairs only. ON
+ * where the chooser or C1 already admits a body, no pair is asked either.
  */
 export const CHOOSER_PAIR = {
-    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR === '1',
+    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR !== '0',
     /** How many live chasers nearest the hit point are partnered with each of the hit's own chasers. */
     near: 4,
-    /** The largest set asked: 2 (a pair). `SEEDLING_CHOOSER_PAIR_SIZE=3` is the measurement arm (a triple too). */
-    size: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR_SIZE === '3' ? 3 : 2,
+    /** The largest set asked: 3 (a triple too). `SEEDLING_CHOOSER_PAIR_SIZE=2` asks pairs only (CPAIR's shipped arm). */
+    size: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR_SIZE === '2' ? 2 : 3,
 };
-export const CHOOSER_PAIR_DEFAULT = false;
+export const CHOOSER_PAIR_DEFAULT = true;
 
 /** Run `fn` with `CHOOSER_PAIR` set to `enabled`, restoring the previous value (`withChooserHitSources`'s shape). */
 export function withChooserPair(enabled, fn) {
@@ -15924,6 +16467,36 @@ export const TURRET_APPROACH_COUNTS = { approaches: [] };
 /** Zero `TURRET_APPROACH_COUNTS`. */
 export function resetTurretApproachCounts() {
     TURRET_APPROACH_COUNTS.approaches = [];
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SOUTHDOOR — THE APPROACH'S DOOR FIRST (⚖ the user queued the slice on 2026-10-31, one of four
+ * hammer slices run in parallel; APPROACH's hand-over, its report § 9: *"from 860/861 the approach's staging point
+ * (488,579) is south of the latched `wandlock@480,560`, and the fork routes (`planWaypoints`) have no ladder to discharge
+ * it. The door's hold must come first, or the approach must stage inside the door's discharge"*).
+ *
+ * `APPROACH_DOOR` (OFF; asked only under `TURRET_APPROACH`): when no side of the turret's snapped box plans from the
+ * approach's staging point in the world as it is, but one plans under the stance hypothesis (`stanceHypothesis`, its
+ * discharged doors open), the hypothesis door the route crosses first is discharged on the LIVE run before any fork:
+ * the loop's own `walkTo` (its ladder raises the door's order — the latch's `hold` — exactly as the uncertified stance
+ * walk's did) to the door's cell, and the approach stages there (`approachDoorFirst`). Where a side plans from the
+ * staging point (the near side, the latch staging), nothing is asked and the approach is APPROACH's, byte for byte.
+ * `SEEDLING_APPROACH_DOOR=1` / `withApproachDoor(enabled, fn)`. OFF, nothing is read.
+ */
+export const APPROACH_DOOR = { enabled: globalThis.process?.env?.SEEDLING_APPROACH_DOOR === '1' };
+export const APPROACH_DOOR_DEFAULT = false;
+
+/** Run `fn` with `APPROACH_DOOR` set to `enabled`, restoring the previous value. */
+export function withApproachDoor(enabled, fn) {
+    return withSwitch(APPROACH_DOOR, enabled, fn);
+}
+
+/** The switch's instrument, written only ON, read by nothing that decides: `doors`, each discharge asked. */
+export const APPROACH_DOOR_COUNTS = { doors: [] };
+
+/** Zero `APPROACH_DOOR_COUNTS`. */
+export function resetApproachDoorCounts() {
+    APPROACH_DOOR_COUNTS.doors = [];
 }
 
 /**
@@ -16300,8 +16873,16 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         const { q, i, cur } = node;
         const q1 = step({ ...q }, aim);
         if (q1 === null) return null;
+        // ⛓ hammer-phase SLASHRECT (`PRESS_NO_FACING`, OFF ⇒ never here): no press macro from an aim tick that ends
+        // facing -1 (`Player.as:1424`); the press would swing `getSlashRect`'s all-zero default rect
+        if (PRESS_NO_FACING.enabled && !isFacing(q1.direction)) {
+            PRESS_NO_FACING_COUNTS.fightDeclined += 1;
+            return null;
+        }
         const C = cur.fork(i);
-        const press = C.advance(q1, { direction: q1.direction });
+        // ⛓ SLASHRECT: always — a forecast test that throws on a no-facing press refuses the solve by name
+        const noFacing = { direction: q1.direction, pressAt: n + i + 1, caller: 'fight' };
+        const press = refuseNoFacing(SolverRefusal, noFacing, () => C.advance(q1, { direction: q1.direction }));
         if (!press.opens || !safe(C, q1, i + 1)) return null;
         const q2 = step({ ...q1 }, PRESS, { dashImpulse: press.outcome === 'dash' ? press.impulse : null });
         const keys = [aim, PRESS];
@@ -16310,7 +16891,7 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
         let j = i + 2;
         for (;;) {
             if (st === null) return null;
-            C.advance(st);
+            refuseNoFacing(SolverRefusal, noFacing, () => C.advance(st));
             if (C.lineBlocked !== null || !safe(C, st, j)) return null;
             if (C.quiet()) break;
             st = step({ ...st }, NO_KEYS);
@@ -18667,6 +19248,12 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 const aimKeys = new Set([FACING_KEYS[facingToward(run.state, body.rect)]]);
                 aimEscape = pressEscape(run, { state: run.state, at: run.ticksCompleted, keys: [aimKeys],
                     pressAt: run.ticksCompleted + 1, id: plan.id, caller: 'aim' });
+                // ⛓ hammer-phase SLASHRECT (`PRESS_NO_FACING`, OFF ⇒ never this bound): a press with no facing is a
+                // whiff no model prices, so no fallback admits it; the aim waits a tick
+                if (aimEscape.bound === 'no-facing') {
+                    PRESS_NO_FACING_COUNTS.aimDeclined += 1;
+                    return false;
+                }
                 if (aimEscape.ok || !aimEscape.claim) return true;
                 if (!HAMMER_ESCAPE_FALLBACK.enabled) return false;
                 const lapsed = !strike || run.ticksCompleted > strike.pressAt;
@@ -18683,6 +19270,15 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 refuge = null;
                 escape = null;
                 phaseStall = null;
+            } else if (aimed && PRESS_NO_FACING.enabled && !isFacing(run.state.direction)) {
+                /**
+                 * ⛓ hammer-phase SLASHRECT (`PRESS_NO_FACING`, OFF ⇒ never here): the aimed press tick STARTS with no
+                 * facing (the i-frames ran out on the aim tick: `Player.as:1424`), so pressing would latch
+                 * `slashDirection = -1` — a whiff the run refuses to model. Aim again instead; the next tick takes its
+                 * facing from `v` (`sprites()`, `directionFace` is -1 by then).
+                 */
+                PRESS_NO_FACING_COUNTS.pressDeferred += 1;
+                held = new Set([FACING_KEYS[facingToward(run.state, body.rect)]]);
             } else if (aimed) {
                 held = PRESS;
                 lastPressAt = run.ticksCompleted;
@@ -20855,8 +21451,12 @@ function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
  * `deriveKeylockStance` walk.
  */
 /** Is a swing from `at` on the rock? — `execBreak`'s own in-reach test. */
-const swingReaches = (at, rock) => distanceRectPoint(at.x, at.y, rock.rect) <= SLASH_REACH
-    && rectsOverlapLocal(slashRectToward(at, rock.rect), rock.rect);
+const swingReaches = (at, rock, press = null) => (press === null
+    ? distanceRectPoint(at.x, at.y, rock.rect) <= SLASH_REACH
+        && rectsOverlapLocal(slashRectToward(at, rock.rect), rock.rect)
+    // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): a swing priced with its OWN press (`ROPE_SWING_PRESS`).
+    : distanceRectPoint(at.x, at.y, rock.rect) <= press.reach
+        && rectsOverlapLocal(press.rectAt(at.x, at.y, facingToward(at, rock.rect)), rock.rect));
 
 /**
  * The candidate cells for a swing at `rock`, in `deriveBreakStance`'s own
@@ -20865,7 +21465,7 @@ const swingReaches = (at, rock) => distanceRectPoint(at.x, at.y, rock.rect) <= S
  * have derived on arrival. `opts` decides which world the candidate is
  * tested in (the live bag, or a route state's).
  */
-function breakStanceCandidates(run, rock, opts, pitch = DEFAULT_LATTICE) {
+function breakStanceCandidates(run, rock, opts, pitch = DEFAULT_LATTICE, press = null) {
     // ⛓ fidelity L100: the same pixel window at any pitch (±2 cells at 16 px, ±4 at 8 px).
     const span = Math.round((2 * DEFAULT_LATTICE) / pitch);
     const cell = nodeAt((rock.rect.x + rock.rect.right) / 2,
@@ -20889,8 +21489,9 @@ function breakStanceCandidates(run, rock, opts, pitch = DEFAULT_LATTICE) {
             const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
             if (c.x < 0 || c.y < 0 || c.x > levelW || c.y > levelH) { offLevel += 1; continue; }
             if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
-            if (distanceRectPoint(c.x, c.y, rock.rect) > SLASH_REACH) { outOfReach += 1; continue; }
-            if (!rectsOverlapLocal(slashRectToward(c, rock.rect), rock.rect)) {
+            if (distanceRectPoint(c.x, c.y, rock.rect) > (press?.reach ?? SLASH_REACH)) { outOfReach += 1; continue; }
+            if (!rectsOverlapLocal(press === null ? slashRectToward(c, rock.rect)
+                : press.rectAt(c.x, c.y, facingToward(c, rock.rect)), rock.rect)) {
                 noRect += 1;
                 continue;
             }
@@ -20944,7 +21545,12 @@ function breakStanceUnder(run, rock, contacts, from, bag,
  * stands in no danger volume — a rope hangs in rooms with a sandtrap beside
  * it; `break` passes none, so its stances cannot move).
  */
-function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null) {
+/**
+ * ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): `press` (null = the sword's, every caller OFF) prices the swing with
+ * its own reach and rect (`ROPE_SWING_PRESS`), and its `stray(cell, rect)` refuses a cell — the live one included —
+ * whose swing would reach a responder the cut must not touch.
+ */
+function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null, press = null) {
     /**
      * ⛓⛓⛓ **THE CHEAPEST STANCE IS THE ONE THE WALK IS ALREADY STANDING IN,
      * AND ROUTE STEP 12 IS WHY IT IS ASKED FIRST.**
@@ -20969,11 +21575,15 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
      * the one case where it is safe is the case where the run is demonstrably
      * already in it and has not transitioned.
      */
-    if (swingReaches(run.state, target)) {
+    if (swingReaches(run.state, target, press) && !(press?.stray?.(run.state, target.rect))) {
         return { stance: null, discharged: [] };
     }
     const { candidates, outOfReach, noRect } = breakStanceCandidates(run, target,
-        solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }));
+        solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }), DEFAULT_LATTICE, press);
+    if (press?.stray) {
+        const base = admit;
+        admit = (c) => (base === null || base(c)) && !press.stray(c, target.rect);
+    }
     // ⛓ L40BUTTON: a rock is never in its OWN swing stance's hypothesis — "reachable once this rock is broken" is
     // a stance on the rock's far side (measured: (168,136) for `breakablerock@176,128`, STANCE_REENTRY at t1188).
     // Only `rockHypothesis` entries are filtered, so with `STANCE_ROCKS` OFF the set is the one it always was.
@@ -21022,7 +21632,7 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
      */
     if (CONTACT_FIDELITY.fineSwingStance) {
         const fine = breakStanceCandidates(run, target,
-            solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }), FINE_LATTICE);
+            solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }), FINE_LATTICE, press);
         const named = new Set(candidates.map((c) => `${c.x},${c.y}`));
         const fresh = fine.candidates.filter((c) => {
             const n = nodeAt(c.x, c.y, DEFAULT_LATTICE);
@@ -21265,6 +21875,8 @@ function execPull(run, perTick, resolved, ctx) {
     const PRESS = new Set(['primary']);
     const from = perTick.length;
     const latched = () => (run.entities('latchedGroups') ?? NO_KEYS).has(resolved.group);
+    // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): a ghost swing's order names it (`swing`); OFF none does.
+    const press = resolved.swing === undefined ? null : ghostRopeSwing(run, resolved.swing);
     /**
      * ⛓ THE APPROACH MAY HAVE PULLED IT ALREADY. The walk to the stance carries
      * the strike policy and the dash windows, and a swing up the handle's column
@@ -21278,31 +21890,59 @@ function execPull(run, perTick, resolved, ctx) {
         return { verb: 'pull', target: resolved.rope, group: resolved.group, from,
             ticks: 0, pressedAt: null, stance: resolved.stance, silenced: resolved.traps,
             pulledBy: `the approach — ${resolved.rope} was pulled at tick `
-                + `${pull ? pull.t : '?'} by a swing of the walk to the stance` };
+                + `${pull ? pull.t : '?'} by a swing of the walk to the stance`,
+            ...(press === null ? {} : { weapon: press.weapon }) };
     }
-    const bound = 2 * (2 + SLASH_HIT_TICKS);
+    /**
+     * ⛓ GHOSTROPE: a ghost press is made AT REST. Its seven tests follow the player, and a press taken mid-drift (the
+     * walk's arrival, the aim tap) slides the 24 x 48 rect on past the stance — measured on the LightPole room: the press
+     * at (20,173) drifted to y 179 by the seventh test and toggled `lightpole@32,208`. So the walk settles first (no
+     * keys until the box stops, as `execRopeCut` does for a spear or fire press), and the reach and `stray` are asked
+     * where it actually stands.
+     */
+    const bound = press === null ? 2 * (2 + SLASH_HIT_TICKS) : 2 * (2 + press.hitTicks + BURN_SETTLE_MAX);
+    let settles = 0;
+    // ⛓ GHOSTROPE: the facing is fixed at the first ask. A stance on the diagonal from the rope's centre flips
+    // `facingToward` under the aim tap (measured: (60,172) LEFT → (59.2,172) DOWN, onto `lightpole@32,208`).
+    let ghostWant = null;
     let pressedAt = null;
     let aimed = false;
     for (let spent = 0; spent <= bound; spent += 1) {
         if (pressedAt !== null && latched()) {
             return { verb: 'pull', target: resolved.rope, group: resolved.group, from,
                 ticks: perTick.length - from, pressedAt, stance: resolved.stance,
-                silenced: resolved.traps };
+                silenced: resolved.traps, ...(press === null ? {} : { weapon: press.weapon }) };
         }
         let held = NO_KEYS;
-        if (pressedAt === null) {
-            const want = facingToward(run.state, resolved.target);
-            const inReach = distanceRectPoint(run.state.x, run.state.y, resolved.target)
-                <= SLASH_REACH
-                && rectsOverlapLocal(slashRect(run.state.x, run.state.y, want),
-                    resolved.target);
+        if (pressedAt === null && press !== null && (run.state.vx !== 0 || run.state.vy !== 0)) {
+            settles += 1;
+            if (settles > BURN_SETTLE_MAX) {
+                refuse(`${ctx.what}: the ${press.weapon} swing at ${resolved.rope} waits for the walk to come to rest, `
+                    + `and it did not in ${BURN_SETTLE_MAX} ticks.`);
+            }
+        } else if (pressedAt === null) {
+            const want = press === null ? facingToward(run.state, resolved.target)
+                : (ghostWant ??= facingToward(run.state, resolved.target));
+            const inReach = press === null
+                ? distanceRectPoint(run.state.x, run.state.y, resolved.target)
+                    <= SLASH_REACH
+                    && rectsOverlapLocal(slashRect(run.state.x, run.state.y, want),
+                        resolved.target)
+                : distanceRectPoint(run.state.x, run.state.y, resolved.target) <= press.reach
+                    && rectsOverlapLocal(press.rectAt(run.state.x, run.state.y, want), resolved.target);
             if (!inReach) {
                 refuse(`${ctx.what}: the walk arrived at (${run.state.x},${run.state.y}) and `
                     + `${resolved.rope} is not in reach of a swing from there `
-                    + `(SLASH_REACH ${SLASH_REACH} px). The stance this verb derived was `
+                    + `(${press === null ? `SLASH_REACH ${SLASH_REACH}` : `the ${press.weapon}'s reach ${press.reach}`} px). The stance this verb derived was `
                     + `${resolved.stance
                         ? `(${resolved.stance.x},${resolved.stance.y})`
                         : 'THE LIVE POSITION'} — a walk that ends somewhere else is a `
+                    + 'corridor finding, not a rope one.');
+            }
+            if (press?.stray?.(run.state, resolved.target, 0, want)) {
+                refuse(`${ctx.what}: a ${press.weapon} swing at ${resolved.rope} from (${run.state.x},${run.state.y}) `
+                    + `would also reach ${press.stray(run.state, resolved.target, 0, want).join(', ')} — a "Spear" arm the cut `
+                    + 'must not touch (`GHOST_ROPE_STRAY_ARMS`). A walk that ends somewhere else than the stance is a '
                     + 'corridor finding, not a rope one.');
             }
             if (aimed || run.direction === want) {
@@ -21337,6 +21977,62 @@ const pullStanceAdmit = (run) => (c) => !dangerVolumes(run, 0).some((v) => rects
     playerBoxAt(c.x, c.y), v.rect));
 
 /**
+ * ⛓⛓⛓ hammer-phase GHOSTROPE (behind `ghostRopeCut.GHOST_ROPE_CUT`, OFF) — **THE GHOST SWORD CUTS THE ROPE ITSELF.**
+ * ⚖ The user (2026-10-30): *"ghost sword replaces the sword, so the solver shouldn't attempt to switch to regular sword
+ * when it has ghost sword."* The game cuts a `RopeStart` with a ghost swing (`slash()` under `hasSword`, the 24 x 48
+ * rect, reach 24, the line waived, `RopeStart.hit()` takes no `t`; witnessed: `ghostRopeWitness.js`), and the run
+ * models it (`GHOST_PRESS_ARMS.RopeStart`). So the PULL rung and the `rope` verb ask THIS swing — never the sword.
+ *
+ * The swing a ghost cut is priced with, or null (OFF; a `weapon` that is not `ghostsword`; a ghost swing that would
+ * not test — `GHOSTSWORD_PRESS` off, or `ghostSwingRefusal`'s ghost-without-sword). `ROPE_SWING_PRESS.ghostsword`'s
+ * reach and rect, plus `stray(at, rect)`: the "Spear" responders (`GHOST_ROPE_STRAY_ARMS`: a `LightPole` toggles, a
+ * bridge `Tile` / `PushableBlockSpear` is an arm the run refuses for a ghost swing) the swing toward `rect` would reach
+ * from `at` — null when none — so a stance whose swing would touch one is not offered.
+ */
+/**
+ * The derivation's margin on `stray` (px, every side and the reach): a stance is judged where the walk is ASKED to
+ * stop, and the press is made where it comes to rest after the arrival, the aim tap and the settle — measured on the
+ * LightPole room, ~2 px off. The press itself re-asks `stray` at its rest point with no margin (`execPull`).
+ */
+const GHOST_ROPE_STANCE_SLACK = 4;
+
+function ghostRopeSwing(run, weapon = run.progress('primaryWeapon')) {
+    const swing = weapon === 'ghostsword' ? ropeSwingFor(weapon, run.progress('inventory')) : null;
+    if (swing === null) return null;
+    return {
+        ...swing,
+        stray: (at, rect, slack = GHOST_ROPE_STANCE_SLACK, dir = facingToward(at, rect)) => {
+            const swept = sweptAlong(swing.rectAt(at.x, at.y, dir), dir, DASH_DISPLACEMENT.total);
+            const grown = { x: swept.x - slack, y: swept.y - slack, w: swept.w + 2 * slack, h: swept.h + 2 * slack,
+                right: swept.right + slack, bottom: swept.bottom + slack };
+            const audit = auditPress(run.world, grown, { weapon: 'spear' });
+            const hits = audit.live.filter((r) => GHOST_ROPE_STRAY_ARMS.includes(r.as3)
+                && (!r.rect || distanceRectPoint(at.x, at.y, r.rect) <= swing.reach + DASH_DISPLACEMENT.total + slack));
+            return hits.length === 0 ? null : hits.map((r) => `${r.tag}@${r.x},${r.y}`);
+        },
+    };
+}
+
+/**
+ * `rect` extended `d` px along facing `dir`. ⛓ GHOSTROPE: a ghost press DASHES the player along its facing while its
+ * seven tests run (the game's knockback, `DASH_DISPLACEMENT`: 9 px over 8 ticks; measured on the LightPole room, 5.4 px
+ * between the first test and the seventh), so the stray audit covers the rect over the whole travel — conservative: it
+ * can only refuse a stance.
+ */
+function sweptAlong(rect, dir, d) {
+    const r = { ...rect };
+    if (dir === RIGHT) r.w += d;
+    else if (dir === LEFT) { r.x -= d; r.w += d; }
+    else if (dir === DOWN) r.h += d;
+    else { r.y -= d; r.h += d; }
+    return { ...r, right: r.x + r.w, bottom: r.y + r.h };
+}
+
+/** The reach a swing refusal names: the sword's spelling OFF (byte-identical), the ghost's own ON. */
+const swingReachText = (press) => (press === null ? `SLASH_REACH (${SLASH_REACH} px)`
+    : `the ${press.weapon}'s reach (${press.reach} px)`);
+
+/**
  * ⛓⛓⛓ fidelity ROPESTANCE (wave 23, behind `CONTACT_FIDELITY.ropeCutAnyWeapon`) — **THE ROPE IS CUT BY THE WEAPON THE
  * RUN HOLDS.** `RopeStart` is in the player's `hitables` (`Player.as:99`) and `genericHit` calls `hit()` with no `t`
  * (`:1095-1097`), so all three weapons cut it, each through its own filter:
@@ -21369,7 +22065,14 @@ function ropeCutWeapons(run) {
     const inv = run.progress('inventory') ?? {};
     for (const weapon of ROPE_CUT_WEAPONS) {
         if (weapon === primary) continue;
-        if (weapon === 'sword' && inv.hasGhostSword) continue;
+        if (weapon === 'sword' && inv.hasGhostSword) {
+            // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): the sword's row is the GHOST sword's slot — the item that
+            // replaced it (⚖ user, 2026-10-30) — never the plain sword's. OFF it is skipped, as it always was.
+            const ghostSlot = ropeSwingFor('ghostsword', inv) === null || primary === 'ghostsword' ? -1
+                : slots.indexOf(INVENTORY_ITEM_IDS.ghostsword);
+            if (ghostSlot >= 0) out.push({ weapon: 'ghostsword', slot: ghostSlot });
+            continue;
+        }
         const slot = slots.indexOf(INVENTORY_ITEM_IDS[weapon]);
         if (slot >= 0) out.push({ weapon, slot });
     }
@@ -21666,19 +22369,21 @@ function resolveRopeCut(run, rope, contacts, blocked = []) {
     const tried = [];
     for (const w of weapons) {
         try {
-            if (w.weapon === 'sword') {
+            if (w.weapon === 'sword' || w.weapon === 'ghostsword') {
                 if (!(rope.ropeT >= 0)) {
-                    tried.push({ option: `cut ${rope.ropeId} with the sword`, why: `it publishes no group (t=`
+                    tried.push({ option: `cut ${rope.ropeId} with the ${w.weapon}`, why: `it publishes no group (t=`
                         + `${rope.ropeT ?? -1}), and \`execPull\`'s post-condition is that group's latch` });
                     continue;
                 }
+                // ⛓ hammer-phase GHOSTROPE: a ghost slot's swing is priced with the ghost's press (only ON is it listed).
+                const press = w.weapon === 'ghostsword' ? ghostRopeSwing(run, 'ghostsword') : null;
                 const { stance, discharged } = deriveSwingStance(run, { rect: rope.rect, id: rope.ropeId }, contacts,
                     blocked, ({ candidates, outOfReach, noRect, unsafe }) => `solverBot: no REACHABLE stance for a swing `
                         + `at ${rope.ropeId} in level ${run.level} — ${candidates.length} cell(s) put the slash rect on `
                         + `the rope, ${unsafe} of them inside a danger volume, and none of the rest plans a corridor; `
-                        + `${outOfReach} more were beyond SLASH_REACH (${SLASH_REACH} px) and ${noRect} were in reach `
-                        + 'with the rect pointing elsewhere.', pullStanceAdmit(run));
-                return { weapon: 'sword', slot: w.slot, stance, discharged, tried };
+                        + `${outOfReach} more were beyond ${swingReachText(press)} and ${noRect} were in reach `
+                        + 'with the rect pointing elsewhere.', pullStanceAdmit(run), press);
+                return { weapon: w.weapon, slot: w.slot, stance, discharged, tried };
             }
             const s = w.weapon === 'fire' ? ropeFireStance(run, rope, contacts, blocked)
                 : ropeSpearStance(run, rope, contacts, blocked);
@@ -21697,6 +22402,9 @@ function resolveRopeCut(run, rope, contacts, blocked = []) {
  * `resolveRopeCut`'s answer as a `rope` work order: the sword path's fields plus the weapon's own. A spear or fire order
  * carries `stance: null` and its ranked `approach`, which the EXECUTOR walks (a caller walks only a `stance`).
  */
+/** The cuts that are a SWING (`execPull`'s): the sword, and ⛓ GHOSTROPE's ghost sword (listed only ON). */
+const ROPE_SWING_WEAPONS = new Set(['sword', 'ghostsword']);
+
 function ropeCutOrder(run, rope, cut) {
     const group = rope.ropeT >= 0 ? rope.ropeT : null;
     return {
@@ -21707,8 +22415,8 @@ function ropeCutOrder(run, rope, cut) {
         target: rope.rect,
         weapon: cut.weapon,
         slot: cut.slot,
-        stance: cut.weapon === 'sword' ? cut.stance : null,
-        ...(cut.weapon === 'sword' ? {} : { approach: cut.approach }),
+        stance: ROPE_SWING_WEAPONS.has(cut.weapon) ? cut.stance : null,
+        ...(ROPE_SWING_WEAPONS.has(cut.weapon) ? {} : { approach: cut.approach }),
         ...(cut.weapon === 'spear' && cut.approach.length === 0 ? { dir: cut.dir, facing: cut.facing } : {}),
         discharged: cut.discharged,
         rejected: [...cut.tried, ...hypothesisRejection(cut.discharged)],
@@ -21799,10 +22507,11 @@ function execRopeCutOnce(run, perTick, resolved, ctx) {
         if (resolved.slot !== null && run.progress('primary') !== resolved.slot) ctx.equip(resolved.slot);
     };
     const restore = () => { if (run.progress('primary') !== prior) ctx.equip(prior); };
-    if (resolved.weapon === 'sword') {
+    if (ROPE_SWING_WEAPONS.has(resolved.weapon)) {
         select();
         const rec = execPull(run, perTick, { rope: resolved.rope, group: resolved.group, traps: resolved.traps,
-            target: resolved.target, stance }, { what: ctx.what });
+            target: resolved.target, stance, ...(resolved.weapon === 'ghostsword' ? { swing: 'ghostsword' } : {}) },
+        { what: ctx.what });
         restore();
         return { ...rec, ...base, stance, restoredSlot: prior };
     }
@@ -21888,7 +22597,9 @@ function resolveRopeStrategy(run, obstacle, contacts, blocked = []) {
             + 'verb removes');
     }
     const weapon = run.progress('primaryWeapon');
-    if (weapon !== 'sword') {
+    // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): a ghost primary swings at the rope itself (`ghostRopeSwing`).
+    const ghostSwing = ghostRopeSwing(run, weapon);
+    if (weapon !== 'sword' && ghostSwing === null) {
         if (!CONTACT_FIDELITY.ropeCutAnyWeapon) {
             return cannot(`the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``} — `
                 + 'the cut this verb drives is the PULL rung\'s SWORD swing (`execPull`). The game also cuts with the '
@@ -21915,9 +22626,9 @@ function resolveRopeStrategy(run, obstacle, contacts, blocked = []) {
         ({ candidates, outOfReach, noRect, unsafe }) => `solverBot: no REACHABLE stance for a swing at `
             + `${rope.ropeId} in level ${run.level} — ${candidates.length} cell(s) put the slash rect on the rope, `
             + `${unsafe} of them inside a danger volume, and none of the rest plans a corridor from `
-            + `(${run.state.x},${run.state.y}); ${outOfReach} more were beyond SLASH_REACH (${SLASH_REACH} px) and `
+            + `(${run.state.x},${run.state.y}); ${outOfReach} more were beyond ${swingReachText(ghostSwing)} and `
             + `${noRect} were in reach with the rect pointing elsewhere.`,
-        pullStanceAdmit(run));
+        pullStanceAdmit(run), ghostSwing);
     const group = pub.group;
     return {
         strategy: 'rope',
@@ -21928,6 +22639,8 @@ function resolveRopeStrategy(run, obstacle, contacts, blocked = []) {
         stance,
         discharged,
         rejected: hypothesisRejection(discharged),
+        // ⛓ hammer-phase GHOSTROPE: the order names the ghost swing `execPull` prices (only ON is it set).
+        ...(ghostSwing === null ? {} : { swing: ghostSwing.weapon }),
     };
 }
 
@@ -22706,6 +23419,7 @@ function execRope(run, perTick, resolved, ctx) {
     const record = resolved.weapon !== undefined ? execRopeCut(run, perTick, resolved, ctx) : execPull(run, perTick, {
         rope: resolved.rope, group: resolved.group, traps: resolved.traps,
         target: resolved.target, stance: resolved.stance,
+        ...(resolved.swing === undefined ? {} : { swing: resolved.swing }),
     }, { what: ctx.what });
     const pulled = (run.ledger('ropePulls') ?? []).find((p) => p.id === resolved.rope) ?? null;
     if (!pulled) {
@@ -24976,11 +25690,81 @@ const deadlineClause = (d) => ` ⏱ DEADLINE: the caller's \`shouldStop\` trippe
  *   `deadline` is present only when the hook tripped.
  */
 export function solveSegment(o) {
+    // ⛓ SEEDLING STRATEGY SWITCH r1 — `disable` (absent: nothing installed, today's solve exactly)
+    if (o?.disable !== undefined) {
+        const { disable, ...rest } = o;
+        return withStrategyDisable(disable, () => solveSegment(rest));
+    }
     const onProgress = o?.onProgress ?? null;
     if (onProgress !== null) return withSolveProgress(onProgress, () => solveSegment({ ...o, onProgress: null }));
     // ⛓ hammer-phase D1 — under an installed hook the segment is a progress segment (its tree, tiles and budget)
     if (activeProgress !== null) return progressSegment(o?.name, o?.run, () => solveSegmentDeadlined(o));
     return solveSegmentDeadlined(o);
+}
+
+/**
+ * ⛓⛓ SEEDLING STRATEGY SWITCH r1 — **THE `disable:` INSTALL**, `solveSegment`'s own and exported for a caller that
+ * owns a synchronous solve one layer out (the CPWIT solve worker carries a request's `disable` around its solve).
+ *
+ *   absent / `[]`  → `fn()`, nothing installed and nothing stamped (byte-identical);
+ *   flag OFF       → refused BY NAME (`STRATEGY_SWITCH_OFF`), never ignored — an ignored switch grades every room INERT;
+ *   otherwise      → the list is parsed (an unknown name refuses, `STRATEGY_DISABLE_UNKNOWN`), installed for `fn`'s
+ *                    dynamic extent (SYNC: `withDisabledScope` refuses a thenable), and the outcome stamped: an object
+ *                    result gains `disabled` ({asked, hits, first, absent}; its non-enumerable `liveRun` carried, as
+ *                    `withSolveDeadline` does), a `SolverRefusal` gains `e.disabled` and the `⊘ DISABLED` clause.
+ */
+export function withStrategyDisable(disable, fn) {
+    if (disable === undefined || (Array.isArray(disable) && disable.length === 0)) return fn();
+    // ⛓ js-14 r1 condition 1 — a non-array is refused by name at either flag state (never spread, never ignored)
+    if (!Array.isArray(disable)) {
+        const e = new SolverRefusal(`solveSegment: \`disable\` must be an array of strategy names, got `
+            + `${disable === null ? 'null' : typeof disable} ${JSON.stringify(disable)}.`);
+        e.code = STRATEGY_DISABLE_UNKNOWN;
+        throw e;
+    }
+    if (!STRATEGY_SWITCH.enabled) {
+        const asked = [...disable];
+        const e = new SolverRefusal(`solveSegment: \`disable: ${JSON.stringify(asked)}\` was asked with the strategy `
+            + 'switch OFF (`STRATEGY_SWITCH`, ON by default; `SEEDLING_STRATEGY_SWITCH=0` turns it off). Refused by name: '
+            + 'a disable request the solver silently ignored would grade every room INERT.');
+        e.code = STRATEGY_SWITCH_OFF;
+        e.disabled = Object.freeze({ asked, hits: {}, first: null, absent: [], switch: 'off' });
+        throw e;
+    }
+    const scope = parseDisable(disable, strategyDisableVocabulary(), (code, message) => {
+        const e = new SolverRefusal(message);
+        e.code = code;
+        throw e;
+    });
+    try {
+        const out = withDisabledScope(scope, fn);
+        if (out === null || typeof out !== 'object') return out;
+        const stamped = { ...out, disabled: disabledReport(scope) };
+        if (out.liveRun !== undefined) Object.defineProperty(stamped, 'liveRun', { value: out.liveRun });
+        return stamped;
+    } catch (e) {
+        if (e instanceof SolverRefusal && e.disabled === undefined) {
+            e.message += disabledClause(scope);
+            e.disabled = disabledReport(scope);
+        }
+        throw e;
+    }
+}
+
+/**
+ * ⛓ STRATEGY SWITCH r1 — `withStrategyDisable` for a caller that SETTLES answers (the CPWIT solve worker, which CARRIES
+ * a request's `disable` and never originates one): `fn`'s answer under the scope (an object answer gains `disabled`),
+ * or the install's own refusal (flag OFF, an unknown name) as a refusal answer carrying `disabled` — never a throw.
+ * `undefined` = `fn()` exactly.
+ */
+export function settleUnderDisable(disable, fn) {
+    if (disable === undefined) return fn();
+    try {
+        return withStrategyDisable(disable, fn);
+    } catch (e) {
+        if (!(e instanceof SolverRefusal)) throw e;
+        return { ok: false, kind: 'refusal', message: String(e.message), ...(e.disabled ? { disabled: e.disabled } : {}) };
+    }
 }
 
 /** `solveSegment` after the progress install: the deadline install, then the loop. */
@@ -26243,7 +27027,7 @@ function solveSegmentUnder({
          */
         const tail = standTailOpts(stand);
         const walk = previewWalk(run, wps, tolerance, axisAligned
-            ? { strike: null, axisAligned, ...tail }
+            ? { strike: axisStrikeFor(run, dashMode), axisAligned, ...tail }
             : { strike: strikePolicyFor(run, { dashMode, iframeLapse }), ...tail });
         const hit = probeSamples(walk.samples, except, { walkCheck });
         if (hit) {
@@ -26330,6 +27114,17 @@ function solveSegmentUnder({
      * ceremony sample), untruncated; anything less falls back to the window-by-window plan, as a failed chain does.
      */
     const spinnerDashWhole = (wps, except, stand = null) => {
+        // ⛓ hammer DASHCERT (`DASH_CERT_SIGHT`, OFF): ON, every preview below asks the swing's line of sight.
+        if (!DASH_CERT_SIGHT.enabled) return spinnerDashWholeAsked(wps, except, stand);
+        DASH_CERT_SIGHT.counts.asks += 1;
+        dashCertSightDepth += 1;
+        try {
+            return spinnerDashWholeAsked(wps, except, stand);
+        } finally {
+            dashCertSightDepth -= 1;
+        }
+    };
+    const spinnerDashWholeAsked = (wps, except, stand = null) => {
         // ⛓ hammer DASH (`DASH_STAND_WHOLE`, OFF): a `stand` tail reaches here only ON; null is the shape before it.
         const opts = { tolerance, dashMode, ...(stand ? { stand } : {}) };
         const blind = (samples) => probeSamples(samples.map((sm) => (sm.spinners ? { ...sm, spinners: null } : sm)),
@@ -26345,7 +27140,16 @@ function solveSegmentUnder({
         const stood = tail ? tail.length : null;
         const arrived = stand ? !walk.truncated && (stood === stand.ticks || tail.at(-1)?.ceremony === true)
             : !walk.truncated || walk.truncated.kind === 'crossed';
-        if (arrived && !probeSamples(walk.samples, except)) {
+        // OFF-shape: probed only where the certificate always probed (an arrival), or for a measurement's audit row.
+        const wholeHit = (arrived || DASH_CERT_SIGHT.audit) ? probeSamples(walk.samples, except) : null;
+        // ⛓ hammer DASHCERT: a measurement's row per whole-chain preview (`DASH_CERT_SIGHT.audit`, null by default).
+        if (DASH_CERT_SIGHT.audit) {
+            DASH_CERT_SIGHT.audit.push({ tick: walk.startTick, level: run.level, sight: DASH_CERT_SIGHT.enabled,
+                arrived, certified: arrived && !wholeHit, hitTick: wholeHit?.tick ?? null,
+                kinds: wholeHit ? [...new Set((wholeHit.sources ?? []).map((sx) => sx.kind ?? sx.source ?? '?'))] : [],
+                ids: wholeHit ? (wholeHit.sources ?? []).map((sx) => sx.id ?? null) : [] });
+        }
+        if (arrived && !wholeHit) {
             return { ...c, why: stand ? `certified whole with its ${stood}-tick stand (hammer DASH)`
                 : 'certified whole (fidelity L40BK2)' };
         }
@@ -26767,7 +27571,7 @@ function solveSegmentUnder({
          * a spit climbs again; `DODGE_RUNG.maxPerSegment` bounds the stalls.
          * ⛓ fidelity CORRIDOR D2: a wallflyer's or a drill's forecast contact asks it too (`corridorBodyOnly`).
          */
-        if ((spitOnly || corridorBodyOnly) && corridor) {
+        if ((spitOnly || corridorBodyOnly) && corridor && !rungGate('dodge', 'dodge:spit')) {
             if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
@@ -26788,7 +27592,7 @@ function solveSegmentUnder({
                 search: for (let at = lastAt; at >= firstAt; at -= DODGE_RUNG.step) {
                     for (let ticks = 1; ticks <= DODGE_RUNG.maxTicks; ticks += 1) {
                         const walk = previewWalkOrDeath(run, corridor, tolerance, axisAligned
-                            ? { strike: null, axisAligned, stall: { at, ticks }, ...stopEarly }
+                            ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall: { at, ticks }, ...stopEarly }
                             : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks }, ...stopEarly });
                         if (walk.truncated && walk.truncated.kind !== 'crossed') continue;
                         if (walk.samples.length < at + ticks) continue;
@@ -26828,7 +27632,7 @@ function solveSegmentUnder({
          * priced on every tick of it). It drives the stall and hands back `{}`, and the walk re-plans with the
          * whirlpools as they then stand. Bounded by the spit arm's `maxPerSegment`.
          */
-        if (whirlpoolOnly && corridor) {
+        if (whirlpoolOnly && corridor && !rungGate('dodge', 'dodge:whirlpool')) {
             if (activeProgress !== null) progressRung('dodge');
             const named = new Set(hit.sources.map((s) => s.id));
             const left = Math.max(0, ...(run.entities('tentacleBeastFight')?.whirlpools ?? [])
@@ -26841,7 +27645,7 @@ function solveSegmentUnder({
                 whirlWhy = `the named whirlpool(s) [${[...named].join(', ')}] are not in this room's fight any more`;
             } else {
                 walk = previewWalkOrDeath(run, corridor, tolerance, axisAligned
-                    ? { strike: null, axisAligned, stall: { at: 0, ticks: left } }
+                    ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall: { at: 0, ticks: left } }
                     : { strike: strikePolicyFor(run, { dashMode }), stall: { at: 0, ticks: left } });
                 const bad = walk.truncated && walk.truncated.kind !== 'crossed' ? `the preview truncates (${walk.truncated.kind})`
                     : walk.samples.length < left ? 'the preview ends inside the stall'
@@ -26877,7 +27681,7 @@ function solveSegmentUnder({
          * own predicate over the whole walk. Bounded, and a `shouldStop` site
          * (`axe-dodge`).
          */
-        if (axeOnly && corridor) {
+        if (axeOnly && corridor && !rungGate('dodge', 'dodge:axe')) {
             if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
@@ -26895,7 +27699,7 @@ function solveSegmentUnder({
                 const hitAt = Math.max(0, h.tick - run.ticksCompleted - 1);
                 const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
                 const optsFor = (stall) => (axisAligned
-                    ? { strike: null, axisAligned, stall, stopWhen: dangerous }
+                    ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall, stopWhen: dangerous }
                     : { strike: strikePolicyFor(run, { dashMode }), stall, stopWhen: dangerous });
                 const base = previewWalkOrDeath(run, wps, tolerance, optsFor(null));
                 // ⛓ PDS: a base walk that DIED has no doorstep, so no stall of it is a candidate
@@ -26954,7 +27758,7 @@ function solveSegmentUnder({
                                 if (AXE_DODGE_ASK_PER_PREVIEW.enabled && askAxe()) return null;
                                 previews += 1;
                                 const full = previewWalkOrDeath(run, wps, tolerance, axisAligned
-                                    ? { strike: null, axisAligned, stall: { at, ticks: rest } }
+                                    ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall: { at, ticks: rest } }
                                     : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks: rest } });
                                 const sm = full.samples;
                                 const still = sm.length > at + rest && sm[at + rest - 1].x === sm[at + rest - 2]?.x
@@ -27023,7 +27827,7 @@ function solveSegmentUnder({
             let timingBaseWalk = null;
             /** The corridor walked as it stands, undashed and unstalled (one preview, kept). */
             const timingBase = () => (timingBaseWalk ??= previewWalkOrDeath(run, corridor, tolerance, axisAligned
-                ? { strike: null, axisAligned } : { strike: strikePolicyFor(run, { dashMode }) }));
+                ? { strike: axisStrikeFor(run, dashMode), axisAligned } : { strike: strikePolicyFor(run, { dashMode }) }));
             /**
              * ⛓ AXETIMING — **WHEN THE STALLS CANNOT HELP, THE RUNG IS ASKED FIRST.** The walk's angle round each
              * hit axe's hub, relative to the blade's, over the samples whose box centre is inside the blade's length
@@ -27225,7 +28029,7 @@ function solveSegmentUnder({
                         certify: (wps) => {
                             const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
                             const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
-                                ? { strike: null, axisAligned, stopWhen: dangerous }
+                                ? { strike: axisStrikeFor(run, dashMode), axisAligned, stopWhen: dangerous }
                                 : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
                             const h = probeSamples(walk.samples, dangerExcept);
                             const out = { hit: h, hitWp: h ? walk.samples.at(-1).wp : null,
@@ -27338,7 +28142,7 @@ function solveSegmentUnder({
          */
         const phaseOnly = hit.sources.length > 0
             && hit.sources.every((s) => s.kind === 'hazard' && s.phase);
-        if (phaseOnly && corridor) {
+        if (phaseOnly && corridor && !rungGate('dodge', 'dodge:phase')) {
             if (activeProgress !== null) progressRung('dodge');
             let dodge = null;
             let dodgeWhy = null;
@@ -27357,7 +28161,7 @@ function solveSegmentUnder({
                 const hitAt = Math.max(0, h.tick - run.ticksCompleted - 1);
                 const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
                 const optsFor = (stall) => (axisAligned
-                    ? { strike: null, axisAligned, stall, stopWhen: dangerous }
+                    ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall, stopWhen: dangerous }
                     : { strike: strikePolicyFor(run, { dashMode }), stall, stopWhen: dangerous });
                 const base = previewWalkOrDeath(run, wps, tolerance, optsFor(null));
                 // ⛓ PDS: a base walk that DIED has no doorstep, so no stall of it is a candidate
@@ -27427,7 +28231,7 @@ function solveSegmentUnder({
                             if (ticks === rest && clock.v !== null) {
                                 previews += 1;
                                 const full = previewWalkOrDeath(run, wps, tolerance, axisAligned
-                                    ? { strike: null, axisAligned, stall: { at, ticks: rest } }
+                                    ? { strike: axisStrikeFor(run, dashMode), axisAligned, stall: { at, ticks: rest } }
                                     : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks: rest } });
                                 const sm = full.samples;
                                 const still = sm.length > at + rest && sm[at + rest - 1].x === sm[at + rest - 2]?.x
@@ -27523,7 +28327,7 @@ function solveSegmentUnder({
                         certify: (wps) => {
                             const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
                             const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
-                                ? { strike: null, axisAligned, stopWhen: dangerous }
+                                ? { strike: axisStrikeFor(run, dashMode), axisAligned, stopWhen: dangerous }
                                 : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
                             const h = probeSamples(walk.samples, dangerExcept);
                             const out = { hit: h, hitWp: h ? walk.samples.at(-1).wp : null,
@@ -27631,7 +28435,9 @@ function solveSegmentUnder({
          * silencer at all (`roomHasLaneSilencer`: L16 alone in the atlas).
          */
         // ⛓ fidelity ROPESTANCE (`ropeCutAnyWeapon`, OFF): or with any weapon that cuts a rope (`ropeCutWeapons`).
+        // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): or with the ghost sword the primary swings (`ghostRopeSwing`).
         if (!silencer && corridor && (run.progress('primaryWeapon') === 'sword'
+            || ghostRopeSwing(run) !== null
             || (CONTACT_FIDELITY.ropeCutAnyWeapon && ropeCutWeapons(run).length > 0))
             && roomHasLaneSilencer(run)) {
             const passed = new Set(dangerExcept ?? []);
@@ -27641,14 +28447,16 @@ function solveSegmentUnder({
                 if (next) silencer = deriveLaneSilencer(run, next, what, pullingRopes);
             }
         }
-        if (silencer) {
+        if (silencer && !rungGate('pull')) {
             const ropeId = silencer.rope.ropeId;
             let pull = null;
             let pullWhy = null;
             // ⛓ fidelity ROPESTANCE: a swordless cut's order (`resolveRopeCut`), switch ON only.
             let cut = null;
             const weapon = run.progress('primaryWeapon');
-            if (weapon !== 'sword' && CONTACT_FIDELITY.ropeCutAnyWeapon) {
+            // ⛓ hammer-phase GHOSTROPE (`GHOST_ROPE_CUT`, OFF): a ghost primary is the rung's own swing, priced as one.
+            const ghostSwing = ghostRopeSwing(run, weapon);
+            if (weapon !== 'sword' && ghostSwing === null && CONTACT_FIDELITY.ropeCutAnyWeapon) {
                 try {
                     const answer = resolveRopeCut(run, silencer.rope, contacts, []);
                     if (answer === null) {
@@ -27664,7 +28472,7 @@ function solveSegmentUnder({
                     pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
                         + `t=${silencer.group}), but ${e.message}`;
                 }
-            } else if (weapon !== 'sword') {
+            } else if (weapon !== 'sword' && ghostSwing === null) {
                 // ⛔ `break`'s own gate: the pull this rung derives is a SWORD swing.
                 pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
                     + `t=${silencer.group}), but the run's \`primary\` slot `
@@ -27680,11 +28488,11 @@ function solveSegmentUnder({
                             + `${candidates.length} cell(s) put the slash rect on the rope, `
                             + `${unsafe} of them inside a danger volume, and none of the rest plans `
                             + `a corridor from (${run.state.x},${run.state.y}); ${outOfReach} more `
-                            + `were beyond SLASH_REACH (${SLASH_REACH} px) and ${noRect} were in `
+                            + `were beyond ${swingReachText(ghostSwing)} and ${noRect} were in `
                             + 'reach with the rect pointing elsewhere.',
                         // ⛔ THE STANCE IS STOOD IN FOR A SWING, so it must be out of every
                         // static danger volume — the same map AVOID forbids.
-                        pullStanceAdmit(run));
+                        pullStanceAdmit(run), ghostSwing);
                 } catch (e) {
                     if (!(e instanceof SolverRefusal)) throw e;
                     pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
@@ -27717,7 +28525,7 @@ function solveSegmentUnder({
             }
             if (pull) {
                 rowFor('pull', refused, { target: ropeId, group: silencer.group,
-                    stance: pull.stance });
+                    stance: pull.stance, ...(ghostSwing === null ? {} : { weapon: ghostSwing.weapon }) });
                 if (pull.stance) {
                     pullingRopes.add(ropeId);
                     try {
@@ -27729,6 +28537,7 @@ function solveSegmentUnder({
                 const record = execPull(run, perTick, {
                     rope: ropeId, group: silencer.group, traps: silencer.traps,
                     target: silencer.rope.rect, stance: pull.stance,
+                    ...(ghostSwing === null ? {} : { swing: ghostSwing.weapon }),
                 }, { what: `${what} -> pull (${ropeId})` });
                 records.push({ goal: goal.kind, strategy: 'pull', ...record });
                 return { escalations };
@@ -27774,6 +28583,8 @@ function solveSegmentUnder({
             // not run and the ladder falls through to the next rung.
             timeWhy = 'deadline — the caller\'s anytime deadline (`shouldStop`) was reached '
                 + 'before the TIME rung\'s search, so it was not run.';
+        } else if (rungGate('time')) {
+            timeWhy = disabledRungWhy('time'); // ⛓ strategy switch r1: the rung's row says why, the ladder falls through
         } else {
             const dash = planDash({
                 start: {
@@ -27888,6 +28699,8 @@ function solveSegmentUnder({
             baitWhy = `${body.id} is a Spinner: a billiard whose \`v\` reflects off walls and `
                 + 'never turns toward the player, so there is no line to bend. That is a KILL '
                 + 'question, and the kill is the player\'s own press.';
+        } else if (rungGate('bait')) {
+            baitWhy = disabledRungWhy('bait'); // ⛓ strategy switch r1
         } else {
             const derived = deriveBaitStance(run, body, contacts, { allowTeleporter, tolerance, dashMode });
             /**
@@ -27944,7 +28757,12 @@ function solveSegmentUnder({
         if (activeProgress !== null) progressRung('kill');
         let killWhy = null;
         const target = body ?? null;
-        if (target && target.iceTurret === true && ICETURRET_STATIC_KILL.enabled) {
+        // ⛓ strategy switch r1 — the KILL rung off gates every arm below (ice turret, static sword, press, chaser,
+        // orbit, light): it is asked only where some arm would run — a target, or a live darktrap ON the corridor (the
+        // light arm's own filter below); a room with no trap and no target counts nothing (p17 review A).
+        if (killRungArmRuns(run, target, hit) && rungGate('kill')) {
+            killWhy = disabledRungWhy('kill');
+        } else if (target && target.iceTurret === true && ICETURRET_STATIC_KILL.enabled) {
             /**
              * ⛓⛓ HAMMER-PHASE ICEST (`ICETURRET_STATIC_KILL`, OFF) — a LIVE ice turret (the chooser's, a set's head,
              * or the hit's): killed where it stands (`killIceTurretOnWalk`), the death the model's, and the ladder
@@ -28293,6 +29111,7 @@ function solveSegmentUnder({
         } else {
             const kill = deriveKillByCeiling(run, target, contacts);
             if (kill.presser) {
+                requireVerb('hold', 'kill:ceiling-hold', target.id); // ⛓ strategy switch r1: the ladder's hold arm
                 rowFor('kill', refused, { presser: kill.presser.tag, target: target.id });
                 /**
                  * ⛓⛓⛓ SEEDLING FIDELITY F1 D2 — §11.7's law, the FOURTH place it
@@ -28587,7 +29406,7 @@ function solveSegmentUnder({
         // escalates from (measured under the flip: fidelity L14's swordless arrival).
         if (Array.isArray(corridor) && corridor.length > 0 && !axisAligned
             && CONTACT_FIDELITY.strikeIframeLapse && LAPSE_NARROW_RETRY.enabled
-            && strikePolicyFor(run, { dashMode }) !== null) {
+            && strikePolicyFor(run, { dashMode }) !== null && !rungGate('narrow')) {
             if (activeProgress !== null) progressRung('narrow');
             const killRefused = { rung: 'kill', why: killWhy };
             const again = probeCorridor(corridor, dangerExcept, { axisAligned, walkCheck: true,
@@ -28620,7 +29439,7 @@ function solveSegmentUnder({
             rowFor('detour', { rung: lastOption, why: lastWhy }, { coveredGoal: coveredGoal.id, previews: 0, planned: 0 });
             lastWhy = coveredGoal.why;
             lastOption = 'detour';
-        } else if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
+        } else if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser') && !rungGate('detour')) {
             if (activeProgress !== null) progressRung('detour');
             const detour = deriveChaserDetour(run, {
                 aim, allowTeleporter,
@@ -28634,7 +29453,7 @@ function solveSegmentUnder({
                     const end = wps[wps.length - 1];
                     const tail = stand && end && end.x === aim.x && end.y === aim.y ? standTailOpts(stand) : {};
                     const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
-                        ? { strike: null, axisAligned, stopWhen: dangerous, ...tail }
+                        ? { strike: axisStrikeFor(run, dashMode), axisAligned, stopWhen: dangerous, ...tail }
                         : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous, ...tail });
                     const hit = probeSamples(walk.samples, dangerExcept);
                     return { hit, hitWp: hit ? walk.samples.at(-1).wp : null,
@@ -28673,7 +29492,8 @@ function solveSegmentUnder({
             // ⛓ L40GUARD D3: a forced crossing ends on the covered tile too — refused by name, no proof asked.
             rowFor('forced-hit', { rung: lastOption, why: lastWhy }, { coveredGoal: coveredGoal.id });
             lastOption = 'forced-hit';
-        } else if (FORCED_HITS.enabled && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
+        } else if (FORCED_HITS.enabled && fork !== null && Array.isArray(corridor) && corridor.length > 0
+            && !rungGate('forced-hit')) {
             if (activeProgress !== null) progressRung('forced-hit');
             const lastRefused = { rung: lastOption, why: lastWhy };
             const proof = proveForcedHit(fork, { replayTicks: perTick.length });
@@ -28689,7 +29509,8 @@ function solveSegmentUnder({
                 const hitsMax = run.progress('inventory')?.hitsMax ?? 3;
                 const plan = planForcedCrossing(fork, proof, corridor, {
                     crossTo, tolerance, maxTicks: maxTicksPerTarget, contacts, axisAligned,
-                    strikeFor: axisAligned ? null : (f) => strikePolicyFor(f, { dashMode }),
+                    strikeFor: axisAligned ? (AXIS_STRIKE.enabled ? (f) => axisStrikeFor(f, dashMode) : null)
+                        : (f) => strikePolicyFor(f, { dashMode }),
                     hitsMax, hitsNow: worldHitsOf(run).hits, budgetLeft: FORCED_HITS.maxPerSegment - spent,
                 });
                 if (!plan.best) {
@@ -28755,7 +29576,8 @@ function solveSegmentUnder({
          *   3. THE BILL: the fewest-billed member replayed on the live run, whose rows must be the fork's; a
          *      `forced-hit` row with `proof: {kind: 'axe-phase'}`, and `forcedHits` carries it.
          */
-        if (AXE_PRICED_CROSSING.enabled && axeOnly && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
+        if (AXE_PRICED_CROSSING.enabled && axeOnly && fork !== null && Array.isArray(corridor) && corridor.length > 0
+            && !rungGate('forced-hit', 'forced-hit:axe-priced')) {
             if (activeProgress !== null) progressRung('forced-hit');
             const pricedRefused = { rung: lastOption, why: lastWhy };
             const at = { level: run.level, x: run.state.x, y: run.state.y, tick: perTick.length };
@@ -28791,7 +29613,7 @@ function solveSegmentUnder({
             }
             let door = 0;
             let span = 1;
-            const strikeFor = (r, fam, s) => (axisAligned ? null : strikePolicyFor(r, fam.offset === null ? { dashMode }
+            const strikeFor = (r, fam, s) => (axisAligned ? axisStrikeFor(r, dashMode) : strikePolicyFor(r, fam.offset === null ? { dashMode }
                 : { dashMode, dashPlan: (() => {
                     const ticks = new Set();
                     const resume = t0 + door + s;
@@ -29011,7 +29833,7 @@ function solveSegmentUnder({
         if (ARROW_LANE_CROSSING.enabled && !(dangerExcept instanceof LaneCrossingExcept)) {
             const lane = laneCrossingFor(run, aim, { boxAt: playerBoxAt,
                 separates: (vols) => laneSeparates(aim, allowTeleporter, contacts, goalPlanExtra, vols) });
-            if (lane) {
+            if (lane && !rungGate('arrow-lane')) {
                 if (activeProgress !== null) progressRung('arrow-lane');
                 const laneRefused = { rung: lastOption, why: lastWhy };
                 const ex = laneCrossingExcept(dangerExcept, lane.ids);
@@ -29137,7 +29959,7 @@ function solveSegmentUnder({
         const keys = [];
         let transition = null;
         try {
-            const strike = axisAligned ? null
+            const strike = axisAligned ? axisStrikeFor(f, dashMode)
                 : strikePolicyFor(f, { dashPlan: null, dashMode, ...(narrow ? { iframeLapse: false } : {}) });
             for (let wi = 0; wi < wps.length; wi += 1) {
                 const last = wi === wps.length - 1;
@@ -29194,6 +30016,8 @@ function solveSegmentUnder({
          * and no opportunistic strike, whose presses and aim keys would add
          * the second axis back. Asked only by a resolution that says
          * `approach: 'axis-aligned'` — `skirt`'s, whose lane admits one x.
+         * ⛓ hammer-phase AXIS (`AXIS_STRIKE`, OFF): ON, the walk strikes, aimed only along its own axis
+         * (`axisAlongStrike`), so no aim key adds the second axis back.
          */
         axisAligned: axisAlignedAsked = false,
         /**
@@ -29525,7 +30349,8 @@ function solveSegmentUnder({
                             stanceWalks.delete(walking);
                         }
                     }
-                    const record = frontierExecutor(plan.strategy)(run, perTick, plan.resolved, {
+                    const record = callableExecutor(frontierExecutor(plan.strategy), plan.strategy,
+                        'frontier-apply')(run, perTick, plan.resolved, {
                         maxTicksPerTarget,
                         economies,
                         dashMode,
@@ -29796,7 +30621,8 @@ function solveSegmentUnder({
              * this existed.
              */
             const strike = axisAligned
-                ? null
+                // ⛓ hammer-phase AXIS: OFF `null` (strike-free on purpose); ON the axis-along row, as every preview above.
+                ? axisStrikeFor(run, dashMode)
                 : strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode,
                     ...(narrow ? { iframeLapse: false } : {}) });
             // ⛓ D3: the walk's dash record — see `dashWalks`. `pressed` is filled
@@ -30029,6 +30855,12 @@ function solveSegmentUnder({
                     rejected.push({ option: `break ${rock.rockId}`, why: 'a swing from the door does '
                         + `not reach it (SLASH_REACH ${SLASH_REACH} px), and the latched run has no `
                         + 'other cell to swing from' });
+                    continue;
+                }
+                // ⛓ strategy switch r1 — the step-off's own `break` (a composition), off: a rejection like the one above
+                if (ACTIVE_DISABLE !== null && verbOff('break', 'step-off', rock.rockId)) {
+                    rejected.push({ option: `break ${rock.rockId}`, why: 'the `break` strategy is switched off for '
+                        + 'this solve (`disable`)' });
                     continue;
                 }
                 seeRow({
@@ -30515,7 +31347,8 @@ function solveSegmentUnder({
                 contactsOverride: resolved.exempt,
                 axisAligned: resolved.approach === 'axis-aligned',
             });
-            const record = written() ? { pressedOnTheWay: true } : clearTagExecutor(verb)(run, perTick, resolved, {
+            const record = written() ? { pressedOnTheWay: true } : callableExecutor(clearTagExecutor(verb), verb,
+                'cross-room-press')(run, perTick, resolved, {
                 maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb} ${pid}`,
                 before, walkTo, goal, equip, rewind,
             });
@@ -30582,7 +31415,8 @@ function solveSegmentUnder({
                 rejected: [],
                 keys: [],
             });
-            const record = STRATEGY_EXECUTORS[verb](run, perTick, { strategy: verb, obstacle: { kind: 'solid', tag: cls, id } },
+            const record = callableExecutor(executorFor(verb, 'cross-room-solid'), verb, 'cross-room-solid')(run, perTick,
+                { strategy: verb, obstacle: { kind: 'solid', tag: cls, id } },
                 { walkTo, goal, what: `${whatCT} -> ${verb}`, refuse: (reason, why) => refuseCT(reason, why) });
             const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
             done('verb', { strategy: verb, waited, ...record });
@@ -30740,6 +31574,8 @@ function solveSegmentUnder({
                 what: `${whatCT} -> ${verb} stance`,
                 contactsOverride: resolved.exempt,
                 axisAligned: resolved.approach === 'axis-aligned',
+                // ⛓ hammer-phase AXIS-L12HITS (`AXIS_STRIKE` ON only): the keylock's hold priced as this walk's tail.
+                ...axisClearTagStand(run, verb, resolved),
             });
         }
         if (written()) {
@@ -30750,7 +31586,7 @@ function solveSegmentUnder({
                 ...(drillKills ? { drillKills } : {}), ...(drillPass ? { drillPass } : {}) });
             return;
         }
-        const record = clearTagExecutor(verb)(run, perTick, verbResolved, {
+        const record = callableExecutor(clearTagExecutor(verb), verb, 'clear-tag')(run, perTick, verbResolved, {
             maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
             before, walkTo, goal, equip, rewind,
             // ⛓ fidelity BOSSFORK D1: the segment's own fork (`forkRun`, above; null without one), as the frontier arm
@@ -31144,7 +31980,7 @@ function solveSegmentUnder({
                 : refineStrategy(run,
                     OBSTACLE_STRATEGIES[key] ?? OBSTACLE_STRATEGIES[blocker.kind] ?? null,
                     blocker);
-            const resolvedBlocker = strategy && STRATEGY_EXECUTORS[strategy]
+            const resolvedBlocker = strategy && executorFor(strategy, 'placement-blocker')
                 ? resolveObstacleStrategy(run, strategy, blocker, contacts,
                     { x: goal.placement.x, y: goal.placement.y }, null, [...refusedOrders])
                 : null;
@@ -31216,7 +32052,7 @@ function solveSegmentUnder({
         refuseDanger(run.state.x, run.state.y, goal, what, null,
             CONTACT_FIDELITY.strikeIframeLapse && resolved.strategy === 'collect' ? { timedSword: true } : {});
         const verbTick = perTick.length;
-        const exec = STRATEGY_EXECUTORS[resolved.strategy];
+        const exec = executorFor(resolved.strategy, 'goal-verb');
         if (!exec) {
             refuse(`${what}: strategy '${resolved.strategy}' is selected and NOT `
                 + 'registered this slice.', {

@@ -57,6 +57,7 @@ describe('the covered presets — DERIVED from the committed presets', () => {
         expect(covered).toEqual([
             'seedling_atlas',
             'seedling_atlas_location',
+            'seedling_generated_chestdoor',
             'seedling_generated_host',
             'seedling_generated_room',
             'seedling_playthrough',

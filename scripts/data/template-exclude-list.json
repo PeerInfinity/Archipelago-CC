@@ -44,6 +44,14 @@
     {
       "name": "Celeste (Open World).yaml",
       "reason": "Preset too slow to load in the frontend (~1.0 MB _rules.json)."
+    },
+    {
+      "name": "Zillion.yaml",
+      "reason": "Logic runs in the external zilliandomizer tool, which this system cannot evaluate (147 undetermined rows in the Regions panel; already on main_test_exclude_list). Preset removed (user ruling 2026-11-01)."
+    },
+    {
+      "name": "SMZ3.yaml",
+      "reason": "Logic is TotalSMZ3's Progression object model, which this system cannot evaluate (no Progression port, user ruling 2026-10-21; already on main_test_exclude_list). Preset removed (user ruling 2026-11-01)."
     }
   ],
   "ut_fuzz_exclude_list_comment": "Excluded from UT fuzz tests (bundled worlds) -- typically hangs or timeouts.",
@@ -114,6 +122,10 @@
   ],
   "worldgen_test_exclude_list_comment": "Excluded from world-generator tests and worldgen preset generation.",
   "worldgen_test_exclude_list": [
+    {
+      "name": "APCalc.yaml",
+      "reason": "Ruled out (user, 2026-10-31): apcalc_worldgen was deleted and must not be regenerated, by generate-presets.yml or by test-world-generator.py. worlds/apcalc is procedural (its rules.json is one seed's puzzle), so a worldgen round trip of it tests nothing the frontend-built APCalc Puzzle .apworld does not; the whitelist entry was removed in the same slice (sdc-apcalc-rename)."
+    },
     {
       "name": "Seedling.yaml",
       "reason": "WorldGen variant generation produces a broken world (worlds/seedling_worldgen missing Items.py, causing ModuleNotFoundError on load)."
@@ -223,10 +235,6 @@
   "worldgen_generation_whitelist": [
     {
       "name": "A Link to the Past.yaml",
-      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
-    },
-    {
-      "name": "APCalc.yaml",
       "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
     },
     {

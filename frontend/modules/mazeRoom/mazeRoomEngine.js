@@ -480,6 +480,8 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.pulls !== undefined) world.pulls = checkPulls(sidecar.pulls, world, 'deserializeMazeWorld');
     // ⛓ PULSERS: absent on every other sidecar, so `world.pulsers` stays undefined and no step pulses.
     if (sidecar.pulsers !== undefined) world.pulsers = checkPulsers(sidecar.pulsers, world, 'deserializeMazeWorld');
+    // ⛓ LATCHING BUTTONS: last, once every cell they could collide with is placed.
+    checkButtonLib(world, 'deserializeMazeWorld');
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
     // immutable shape (tiles + cycleLength + length + shape); phase
@@ -1285,9 +1287,10 @@ export function pulseShoves(world, state, inv, clearanceOpts) {
  */
 function settlePulses(world, next, carried, clearanceOpts) {
     for (;;) {
-        const inv = effectiveInventory(world, carried, next.player_pos, next.blocks, next.broken);
+        const inv = effectiveInventory(world, carried, next.player_pos, next.blocks, next.broken, next.latched);
         const pushes = pulseShoves(world, next, inv, clearanceOpts);
         if (pushes.length === 0) return pulsingAt(world, inv, next.player_pos.x, next.player_pos.y);
+        noteLatches(world, next, carried);
         for (const p of pushes) moveBlockIn(world, next, p.from, p.to);
     }
 }
@@ -1519,11 +1522,15 @@ export function createState(world) {
         state.facing = world.startFacing ?? DEFAULT_FACING;
         state.broken = [];
     }
+    // ⛓ LATCHING BUTTONS — the same "absence is the switch" rule: `latched` (a SORTED array of the posKeys of the
+    // latching buttons pressed THIS VISIT) exists only on a world that places one.
+    if (hasLatches(world)) state.latched = [];
     // ⛓ PULSERS (designer review, session tile-mechanisms-m1): the START is settled too — a world entered with a token
     // already held and a pulsed block on its reach is shoved before the first step, so a WAIT from the start is a
     // self-loop like every other (the searches never branch on one). Asked with the fresh state's own (empty) carried
     // inventory: a pulser's token is a held token, derived from the stance.
     if (world.pulsers) settlePulses(world, state, state.inventory);
+    noteLatches(world, state);
     return state;
 }
 
@@ -1555,6 +1562,7 @@ function cloneState(state) {
     if (state.blockKinds !== undefined) next.blockKinds = { ...state.blockKinds };
     if (state.facing !== undefined) next.facing = state.facing;
     if (state.broken !== undefined) next.broken = state.broken.slice();
+    if (state.latched !== undefined) next.latched = state.latched.slice();
     return next;
 }
 
@@ -1680,14 +1688,125 @@ function heldTokens(world, playerPos, blocks) {
  * of `heldTokens` outside this file would answer that question differently the
  * next time a gadget lands — the same argument that put `whyBlocked` here.
  */
-export function effectiveInventory(world, inventory, playerPos, blocks, broken) {
+export function effectiveInventory(world, inventory, playerPos, blocks, broken, latched) {
     const held = heldTokens(world, playerPos, blocks);
     const cut = ropeTokens(world, inventory, broken);
-    if (held === null && cut === null) return inventory;
+    const down = latchTokens(world, inventory, latched);
+    if (held === null && cut === null && down === null) return inventory;
     const out = copyInventory(inventory);
     for (const token of held ?? []) holdInInventory(out, token);
     for (const token of cut ?? []) holdInInventory(out, token);
+    for (const token of down ?? []) holdInInventory(out, token);
     return out;
+}
+
+/**
+ * ⛓⛓ LATCHING BUTTONS (session tile-mechanisms-m4-latch; ⚖ user 2026-10-31 "Record it as owed", the shape m2-l40
+ * proposed) — `buttonLib[id].latch: {event?}`. Seedling's `ButtonRoom` (`ButtonRoom.as`): `update` presses it while any
+ * Player / Enemy / Solid (not a Cover) stands on it, and its `activate` setter "Can't be reset to false!!" — once
+ * pressed it stays down for the rest of the visit — and it persists by `tag` (`Game.setPersistence(tag, …)`), so a
+ * later visit enters with it down.
+ *
+ * The ROPE shape (`ropeTokens`): a latching button derives its `holds` token while it is pressed NOW (`heldTokens`,
+ * unchanged), OR when it was pressed earlier THIS visit (its cell is in `state.latched`, per visit like
+ * `state.broken`), OR when its `event` is carried (pressed on an earlier visit: an 'ap' search grants nothing at a
+ * location, so the press itself is an AP event the world carries as an item). Without `event` it latches for the visit only.
+ * `null` when the world has no latching button, so the common case allocates nothing.
+ */
+export function latchTokens(world, inventory, latched) {
+    const cells = latchCells(world);
+    if (cells.length === 0) return null;
+    let out = null;
+    for (const cell of cells) {
+        if (!latchIsDown(cell, inventory, latched)) continue;
+        if (out === null) out = [];
+        out.push(cell.entry.holds);
+    }
+    return out;
+}
+
+/** A latching button (a `latchCells` row) stays down: latched this visit, or its event carried. */
+const latchIsDown = ({ key, entry }, inventory, latched) => !!(latched?.includes(key) || (entry.latch.event && inventory?.has(entry.latch.event)));
+
+/**
+ * The posKeys of the latching buttons that stay DOWN whatever stands on them — latched this visit or their event
+ * carried (`latchTokens`' rule) — for the art: a ButtonRoom is drawn down from `check()` on a later visit too
+ * (`_active = !Game.checkPersistence(tag)`). Empty on a world without a latch.
+ */
+export function latchesDown(world, inventory, latched) {
+    return new Set(latchCells(world).filter((cell) => latchIsDown(cell, inventory, latched)).map((cell) => cell.key));
+}
+
+/**
+ * The world's placed LATCHING buttons `[{key, id, entry}]`, row order of the Map — CACHED per (button map, library),
+ * rebuilt when either object or the button count changes (an edit), because `step` asks on every move.
+ */
+const LATCH_CACHE = new WeakMap();
+export function latchCells(world) {
+    const lib = world.buttonLib;
+    if (!lib || !world.buttons || world.buttons.size === 0) return [];
+    const hit = LATCH_CACHE.get(world.buttons);
+    if (hit && hit.lib === lib && hit.size === world.buttons.size) return hit.cells;
+    const cells = [];
+    for (const [key, id] of world.buttons) if (lib[id]?.latch) cells.push({ key, id, entry: lib[id] });
+    LATCH_CACHE.set(world.buttons, { lib, size: world.buttons.size, cells });
+    return cells;
+}
+
+/** True iff this world places a latching button — the switch for `state.latched` (absence keeps every other key). */
+export function hasLatches(world) {
+    return latchCells(world).length > 0;
+}
+
+/**
+ * The LATCH primitive's effect, on a FRESH state (mutated): every latching button pressed NOW — the player or a block
+ * on its cell (`heldTokens`' own rule) — joins `state.latched` (sorted, once). Run where a stance is final: the end of
+ * every step, each pulse round (a block shoved on and off within one settle still pressed it), and the start.
+ * ⛓ A latch whose event `carried` holds is NOT recorded: it is down already (`latchTokens`), and a carried item is never
+ * dropped within a visit, so the record would only split each state in two (measured, session tile-mechanisms-m4-latch:
+ * L40's three latches laid, full inventory, 138,112 states = the base 17,312 × 8 with it; the base's without).
+ */
+function noteLatches(world, state, carried = state.inventory) {
+    if (state.latched === undefined) return;
+    const here = posKey(state.player_pos.x, state.player_pos.y);
+    let added = false;
+    for (const { key, entry } of latchCells(world)) {
+        if (state.latched.includes(key) || (entry.latch.event && carried.has(entry.latch.event))) continue;
+        if (key !== here && !state.blocks?.includes(key)) continue;
+        state.latched.push(key);
+        added = true;
+    }
+    if (added) state.latched.sort();
+}
+
+/** The LATCH entry keys `checkButtonLib` accepts. */
+const LATCH_KEYS = Object.freeze(['event']);
+
+/**
+ * ⛔ The latch half of a `buttonLib`, checked once a world's buttons, obstacles, pulls and pulsers are placed
+ * (`deserializeMazeWorld` asks it last). Refused BY NAME: a `latch` that is not an object, a key it does not know, an
+ * `event` that is not a non-empty string, a latch that `holds` no token, a latching button on an obstacle's cell (its
+ * press and a cut would share one event key), one inside a pull's disc (a reel crosses cells the step never stands
+ * on: which it presses is not modelled), and a pulser its token lights (`checkPulsers`' carried-token reason).
+ * Returns nothing; sets nothing.
+ */
+export function checkButtonLib(world, who) {
+    const bad = (why) => new Error(`${who}: "buttonLib" ${why}`);
+    for (const [id, entry] of Object.entries(world.buttonLib ?? {})) {
+        if (entry?.latch === undefined) continue;
+        const latch = entry.latch;
+        if (latch === null || typeof latch !== 'object' || Array.isArray(latch)) throw bad(`${id}.latch must be an object ({event?})`);
+        for (const k of Object.keys(latch)) if (!LATCH_KEYS.includes(k)) throw bad(`${id}.latch.${k} is not modelled (keys: ${LATCH_KEYS.join(', ')})`);
+        if (latch.event !== undefined && (typeof latch.event !== 'string' || latch.event === '')) throw bad(`${id}.latch.event must be a non-empty string`);
+        if (typeof entry.holds !== 'string' || entry.holds === '') throw bad(`${id} latches but holds no token`);
+    }
+    for (const { key, id, entry } of latchCells(world)) {
+        if (world.obstacles?.has(key)) throw bad(`${id} latches on (${key}), an obstacle's cell — not modelled`);
+        const pull = world.pulls?.find((p) => p.disc.has(key));
+        if (pull) throw bad(`${id} latches on (${key}), inside the disc of the pull at (${pull.x},${pull.y}) — not modelled`);
+        const pulser = world.pulsers?.find((p) => p.token === entry.holds);
+        if (pulser) throw bad(`${id} latches the token (${entry.holds}) that lights the pulser at (${pulser.x},${pulser.y}) — a CARRIED token, which a start is not settled on (not modelled)`);
+    }
 }
 
 /**
@@ -1761,7 +1880,7 @@ export function armedTrapAt(world, inv, x, y) {
 export function armedTraps(world, state, inventoryOverride) {
     if (!world?.traps?.length || !state) return null;
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
     return world.traps.map((trap) => {
         const entry = world.trapLib[trap.id];
         const active = inv.has(entry.active);
@@ -1777,7 +1896,7 @@ export function armedTraps(world, state, inventoryOverride) {
 export function standsInArmedLane(world, state, inventoryOverride) {
     if (!world.trapLanes) return false;
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
     return armedTrapAt(world, inv, state.player_pos.x, state.player_pos.y) !== null;
 }
 
@@ -1830,10 +1949,14 @@ export function standsInArmedLane(world, state, inventoryOverride) {
 // a block, and it is a fact about the model rather than a defect in it.
 export function step(world, state, input, inventoryOverride, clearanceOpts) {
     const next = stepCore(world, state, input, inventoryOverride, clearanceOpts);
-    if (next === null || !world.pulsers) return next;
+    if (next === null) return null;
     // ⛓ PULSERS — the pulse ends every step (see `checkPulsers`); a player left in a live reach refuses it.
-    return settlePulses(world, next, inventoryOverride !== undefined ? inventoryOverride : next.inventory, clearanceOpts) === null
-        ? next : null;
+    if (world.pulsers && settlePulses(world, next, inventoryOverride !== undefined ? inventoryOverride : next.inventory, clearanceOpts) !== null) {
+        return null;
+    }
+    // ⛓ LATCHING BUTTONS — on the final stance: what is pressed now stays down for the visit.
+    noteLatches(world, next, inventoryOverride !== undefined ? inventoryOverride : next.inventory);
+    return next;
 }
 
 /** `step` before the pulse that ends it (`settlePulses`): every input's own effect and guards. */
@@ -1859,7 +1982,7 @@ function stepCore(world, state, input, inventoryOverride, clearanceOpts) {
         const entry = state.facing === undefined ? undefined : world.actionLib?.[actionId];
         if (!entry) return null;
         const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-        const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+        const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
         if (actionItems(entry).length > 0 && !actionUsable(entry, inv)) return null;
         const used = cloneState(state);
         used.turn += 1;
@@ -1876,7 +1999,7 @@ function stepCore(world, state, input, inventoryOverride, clearanceOpts) {
         if (wakes.length > 0) used.blockKinds = { ...used.blockKinds, ...Object.fromEntries(wakes.map((w) => [w.at, w.becomes])) };
         if (pushes.length > 0) {
             for (const p of pushes) moveBlockIn(world, used, p.from, p.to);
-            if (world.trapLanes && armedTrapAt(world, effectiveInventory(world, carried, used.player_pos, used.blocks, used.broken),
+            if (world.trapLanes && armedTrapAt(world, effectiveInventory(world, carried, used.player_pos, used.blocks, used.broken, used.latched),
                 used.player_pos.x, used.player_pos.y) !== null) return null;
         }
         return used;
@@ -1887,7 +2010,7 @@ function stepCore(world, state, input, inventoryOverride, clearanceOpts) {
     const ny = state.player_pos.y + delta.dy;
     if (!isFloor(world, nx, ny)) return null;
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
     if (shutObstacleAt(world, state, nx, ny, inv, clearanceOpts) !== null) {
         return null;
     }
@@ -1919,7 +2042,7 @@ function stepCore(world, state, input, inventoryOverride, clearanceOpts) {
     if (pushedFrom !== null) moveBlockIn(world, next, pushedFrom, pushedTo);
     // ⛓ ARROW TRAPS — LAST, on the stance AFTER the move (see `armedTrapAt`).
     if (world.trapLanes && armedTrapAt(world,
-        effectiveInventory(world, carried, next.player_pos, next.blocks, next.broken), nx, ny) !== null) {
+        effectiveInventory(world, carried, next.player_pos, next.blocks, next.broken, next.latched), nx, ny) !== null) {
         return null;
     }
     if (inventoryOverride === undefined) {
@@ -1930,7 +2053,7 @@ function stepCore(world, state, input, inventoryOverride, clearanceOpts) {
     // the player is reeled onto the trap's cell (`pullAfterMove`) and picks up what lies there.
     if (world.pulls) {
         const pulled = pullAfterMove(world, state.player_pos, next.player_pos,
-            effectiveInventory(world, inventoryOverride !== undefined ? inventoryOverride : next.inventory, next.player_pos, next.blocks, next.broken),
+            effectiveInventory(world, inventoryOverride !== undefined ? inventoryOverride : next.inventory, next.player_pos, next.blocks, next.broken, next.latched),
             clearanceOpts);
         if (pulled !== null) {
             next.player_pos.x = pulled.x;
@@ -2004,6 +2127,9 @@ function shutBecause(world, obstacleId, inv) {
     if (best.length === 0) return head;
     const phrases = best.map((token) => {
         const button = buttonHolding(world, token);
+        // ⛓ LATCHING BUTTONS: a latch is pressed ONCE (this visit), or its event is carried (an earlier one).
+        const latch = button !== null ? world.buttonLib[button].latch : undefined;
+        if (latch) return `nothing has pressed ${button} (it latches${latch.event ? `; or carry ${latch.event}` : ''})`;
         if (button !== null) return `nothing on ${button}`;
         // ⛓ A pole's token (session tile-primitives-lightpoles): light it from a stance, or carry what lights it.
         const pole = Object.values(world.obstacleLib ?? {}).find((e) => e?.activates === token && e.struck_from);
@@ -2057,16 +2183,16 @@ function whyRefused(world, state, input, inventoryOverride, clearanceOpts) {
         if (!entry) return `no action '${actionId}' in this world's action_lib`;
         if (actionItems(entry).length > 0) {
             const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
             if (!actionUsable(entry, inv)) return `use ${actionId} needs ${actionItems(entry).join(' + ')}`;
         }
         if (world.blockLib && world.trapLanes) {
             const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
             let blocks = state.blocks;
             for (const p of strikePushes(world, state, actionId, inv, clearanceOpts)) blocks = blocksAfterPush(world, blocks, p.from, p.to);
             if (blocks !== state.blocks) {
-                const trap = armedTrapAt(world, effectiveInventory(world, carried, state.player_pos, blocks, state.broken),
+                const trap = armedTrapAt(world, effectiveInventory(world, carried, state.player_pos, blocks, state.broken, state.latched),
                     state.player_pos.x, state.player_pos.y);
                 if (trap !== null) return armedBecause(world, trap);
             }
@@ -2081,7 +2207,7 @@ function whyRefused(world, state, input, inventoryOverride, clearanceOpts) {
     if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) return 'off the grid';
     if (!isFloor(world, nx, ny)) return `wall at (${nx},${ny})`;
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
     const obstacleId = shutObstacleAt(world, state, nx, ny, inv, clearanceOpts);
     if (obstacleId !== null) {
         return shutBecause(world, obstacleId, inv);
@@ -2118,7 +2244,7 @@ function whyRefused(world, state, input, inventoryOverride, clearanceOpts) {
         if (blocks !== undefined && blocks.includes(posKey(nx, ny))) {
             blocks = blocksAfterPush(world, blocks, posKey(nx, ny), posKey(nx + delta.dx, ny + delta.dy));
         }
-        const after = effectiveInventory(world, carried, { x: nx, y: ny }, blocks, state.broken);
+        const after = effectiveInventory(world, carried, { x: nx, y: ny }, blocks, state.broken, state.latched);
         const trap = armedTrapAt(world, after, nx, ny);
         if (trap !== null) return armedBecause(world, trap);
     }
@@ -2288,9 +2414,11 @@ export function mazeVisitedKey(state) {
     const withBlocks = state.blockKinds === undefined ? placed : `${placed}|k${state.blocks.map((k) => state.blockKinds[k]).join(';')}`;
     // ⛓ ITEM ACTIONS append `|f<dir>|<broken>` ONLY when the state has a facing,
     // so a key on any world without an `action_lib` is unchanged, byte for byte.
-    return state.facing === undefined
+    const withActions = state.facing === undefined
         ? withBlocks
         : `${withBlocks}|f${state.facing}|${state.broken.join(';')}`;
+    // ⛓ LATCHING BUTTONS append `|l<latched>` ONLY on a world that places one (`state.latched`).
+    return state.latched === undefined ? withActions : `${withActions}|l${state.latched.join(';')}`;
 }
 
 export const bfsSolver = makeBfsSolver({
@@ -2586,6 +2714,8 @@ function blockWorldAccessRules(world) {
             for (const item of actionItems(world.actionLib?.[actionId])) axis.add(item);
         }
     }
+    // ⛓ LATCHING BUTTONS: a latch's event, carried, holds its token down from the start (an earlier visit's press).
+    for (const { entry } of latchCells(world)) if (entry.latch.event) axis.add(entry.latch.event);
     const inputs = worldInputs(world);
     const items = [...axis].filter((i) => !held.has(i)).sort();
     if (items.length > BLOCK_WORLD_MAX_ITEMS) {

@@ -80,6 +80,15 @@
  *                                  layout (`world.blocks`, the pre-play view — the element
  *                                  overlay's spelling). A button reads DOWN under the player
  *                                  or a block (the engine's `heldTokens`).
+ *   blockKinds            {[posKey]: kind}|null  BLOCK KINDS (maze-seedling-art-4): `state.blockKinds` —
+ *                                  the `block_lib` kind of each live block (a woken turret is its
+ *                                  corpse); null = the kinds the world lays (`world.blocks`' values),
+ *                                  which is also every world without a `block_lib`.
+ *   livePulsers           boolean[]|null  PULSERS (maze-seedling-art-4): per `world.pulsers` entry, is
+ *                                  its token held now (`livePulsers` below); null = none drawn live.
+ *   latched               string[]|null  LATCHING BUTTONS (session tile-mechanisms-m4-latch): `state.latched`
+ *                                  — the latching buttons pressed this visit, drawn DOWN with nothing
+ *                                  on them (and so is one whose event `inventory` carries); null = none.
  *
  * ── ⛓ THE GATE IS AN ORDERED DRAW-OP LOG, AND WHY THAT IS THE PIXELS ──
  *
@@ -106,7 +115,7 @@ import {
     DEFAULT_ITEMS, DEFAULT_OBSTACLES, getItemRenderHints, isObstacleCleared,
 } from '../shared/procgen/library.js';
 import { drawHazards } from '../shared/procgen/contentModules/hazardRender.js';
-import { TILE_WALL, getTile } from './mazeRoomEngine.js';
+import { TILE_WALL, effectiveInventory, getTile, latchesDown } from './mazeRoomEngine.js';
 import { isConceptGate, paintConceptGate } from './mazeConcepts.js';
 
 export class MazeRenderError extends Error {
@@ -153,6 +162,11 @@ export const COLORS = {
     pullInert: '#808080',
     pullTrap: '#a8401a',
     pullMouth: '#000000',
+    // BLOCK KINDS (maze-seedling-art-4): a struck block (fire / spear / corpse) and a dormant one (a turret) — the
+    // walked block keeps `block`. A pulser's body on its wall cell; its reach is a lane (`laneArmed` / `laneSilent`).
+    blockStruck: '#d05a3a',
+    blockDormant: '#7ab8d8',
+    pulser: '#e0e070',
 };
 
 /**
@@ -178,7 +192,8 @@ export function consumableTileColor(substrateId) {
 export const VIEW_FIELDS = Object.freeze([
     'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations', 'ruleEvaluator',
     'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible', 'isLocationVisible',
-    'isConsumableCollected', 'broken', 'facing', 'armedTraps', 'seedlingSkin', 'blocks',
+    'isConsumableCollected', 'broken', 'facing', 'armedTraps', 'seedlingSkin', 'blocks', 'blockKinds', 'livePulsers',
+    'latched',
 ]);
 
 /**
@@ -268,6 +283,18 @@ export function assertView(view) {
         fail('mazeRoomRender: view.blocks must be null or an array of "x,y" position keys (`state.blocks`), got '
             + `${JSON.stringify(view.blocks)}.`);
     }
+    if (view.blockKinds !== null && (typeof view.blockKinds !== 'object' || Array.isArray(view.blockKinds))) {
+        fail('mazeRoomRender: view.blockKinds must be null or an object of "x,y" → kind (`state.blockKinds`), got '
+            + `${JSON.stringify(view.blockKinds)}.`);
+    }
+    if (view.latched !== null && !Array.isArray(view.latched)) {
+        fail('mazeRoomRender: view.latched must be null or an array of "x,y" position keys (`state.latched`), got '
+            + `${JSON.stringify(view.latched)}.`);
+    }
+    if (view.livePulsers !== null && !Array.isArray(view.livePulsers)) {
+        fail('mazeRoomRender: view.livePulsers must be null or one boolean per `world.pulsers` entry, got '
+            + `${JSON.stringify(view.livePulsers)}.`);
+    }
     for (const key of ['isTileVisible', 'isExitVisible', 'isLocationVisible']) {
         if (typeof view[key] !== 'function') {
             fail(`mazeRoomRender: view.${key} must be a function, got `
@@ -287,7 +314,8 @@ export function assertView(view) {
  */
 export function plainView({
     tilePx = TILE_PX, playerPos = null, inventory = null, ruleEvaluator = null,
-    broken = null, facing = null, armedTraps = null, seedlingSkin = null, blocks = null,
+    broken = null, facing = null, armedTraps = null, seedlingSkin = null, blocks = null, blockKinds = null,
+    livePulsers = null, latched = null,
 } = {}) {
     return {
         tilePx,
@@ -307,7 +335,34 @@ export function plainView({
         armedTraps,
         seedlingSkin,
         blocks,
+        blockKinds,
+        livePulsers,
+        latched,
     };
+}
+
+/**
+ * ⛓ PULSERS (maze-seedling-art-4) — per `world.pulsers` entry, is its token held right now for `state` (the
+ * EFFECTIVE inventory: a button the player or a block holds, the engine's `pulsingAt` rule) — the panel's reach tint,
+ * as `armedTraps` is the lane's. `null` on a world with no pulsers.
+ */
+export function livePulsers(world, state, inventoryOverride) {
+    if (!world?.pulsers?.length || !state) return null;
+    const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
+    return world.pulsers.map((p) => inv.has(p.token));
+}
+
+/**
+ * A live block's marker look from its `block_lib` entry — DATA, never the kind's name: `walk` (or no `block_lib`) =
+ * the S3 square; a kind a strike WAKES and nothing moves (the IceTurret) = `dormant`, a disc; any other = `struck`,
+ * the square in the struck colour (fire, spear, a woken corpse).
+ */
+export function blockLook(world, kind) {
+    const entry = world.blockLib?.[kind];
+    if (!entry || entry.walk) return 'walk';
+    if (entry.wake && !(entry.struckBy?.length) && !entry.pulsed) return 'dormant';
+    return 'struck';
 }
 
 /**
@@ -317,8 +372,13 @@ export function plainView({
  *   · a PULL (sphere-order-9's LavaTrap): every disc cell but the trap's tinted — `pullLive` while its gate is
  *     cleared for `view.inventory` (a step in would reel the player), `pullInert` while it is not — and the trap's
  *     cell a disc with a mouth;
- *   · a BUTTON: a ring, filled while DOWN (the player or a block on it);
- *   · a BLOCK: a square at `view.blocks` (null = `world.blocks`, the world's own layout).
+ *   · a BUTTON: a ring, filled while DOWN (the player or a block on it, or a latch that stays down: `view.latched`, or its
+ *     event carried — `latchesDown`);
+ *   · a BLOCK: a square at `view.blocks` (null = `world.blocks`, the world's own layout) — BY KIND (maze-seedling-art-4,
+ *     `blockLook`): the walked square, a struck square in `blockStruck`, a dormant disc in `blockDormant`; a woken
+ *     block switches look with its kind (`view.blockKinds`);
+ *   · a PULSER (maze-seedling-art-4): its reach an armed lane — `laneArmed` while its token is held
+ *     (`view.livePulsers`), `laneSilent` otherwise, like an arrow trap's — and its wall cell a disc with a ring.
  * `spriteCells` (S2's `sprites.cells`, or null): a cell the art owns draws no marker. The art draws the LIVE blocks
  * whenever it owns every block of the world, so their markers then go whole; the disc tint stays (like a lane's).
  * A world with none of the three draws nothing, so every other draw log is unchanged.
@@ -326,6 +386,29 @@ export function plainView({
 export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
     const px = view.tilePx;
     const owned = (x, y) => spriteCells?.has(`${x},${y}`) ?? false;
+    if (Array.isArray(w.pulsers) && w.pulsers.length > 0) {
+        ctx.save();
+        w.pulsers.forEach((p, i) => {
+            ctx.globalAlpha = 0.3;
+            ctx.fillStyle = view.livePulsers?.[i] ? COLORS.laneArmed : COLORS.laneSilent;
+            for (const key of p.reach) {
+                const [rx, ry] = key.split(',').map(Number);
+                ctx.fillRect(rx * px, ry * px, px, px);
+            }
+            ctx.globalAlpha = 1;
+            if (owned(p.x, p.y)) return;
+            ctx.fillStyle = COLORS.pulser;
+            ctx.strokeStyle = view.livePulsers?.[i] ? COLORS.laneArmed : COLORS.laneSilent;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(p.x * px + px / 2, p.y * px + px / 2, px * 0.25, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(p.x * px + px / 2, p.y * px + px / 2, px * 0.42, 0, Math.PI * 2);
+            ctx.stroke();
+        });
+        ctx.restore();
+    }
     if (Array.isArray(w.pulls) && w.pulls.length > 0) {
         const lib = w.obstacleLib ?? DEFAULT_OBSTACLES;
         const clearOpts = view.ruleEvaluator ? { evaluateRule: view.ruleEvaluator } : undefined;
@@ -356,6 +439,7 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
     if (!w.buttons?.size && live.length === 0) return;
     const onCell = new Set(live);
     if (view.playerPos) onCell.add(`${view.playerPos.x},${view.playerPos.y}`);
+    for (const key of latchesDown(w, view.inventory, view.latched)) onCell.add(key);
     ctx.save();
     ctx.strokeStyle = COLORS.button;
     ctx.fillStyle = COLORS.button;
@@ -374,8 +458,20 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
         ctx.strokeStyle = COLORS.blockEdge;
         for (const key of live) {
             const [x, y] = key.split(',').map(Number);
+            const look = w.blockLib ? blockLook(w, view.blockKinds?.[key] ?? w.blocks.get(key)) : 'walk';
+            if (look === 'dormant') {
+                ctx.fillStyle = COLORS.blockDormant;
+                ctx.beginPath();
+                ctx.arc(x * px + px / 2, y * px + px / 2, px * 0.36, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.fillStyle = COLORS.block;
+                continue;
+            }
+            if (look === 'struck') ctx.fillStyle = COLORS.blockStruck;
             ctx.fillRect(x * px + px * 0.15, y * px + px * 0.15, px * 0.7, px * 0.7);
             ctx.strokeRect(x * px + px * 0.15, y * px + px * 0.15, px * 0.7, px * 0.7);
+            if (look === 'struck') ctx.fillStyle = COLORS.block;
         }
     }
     ctx.restore();
