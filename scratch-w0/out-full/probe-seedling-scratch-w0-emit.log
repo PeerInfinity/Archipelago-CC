@@ -1,0 +1,6 @@
+CHANNEL: headless logic-only (no wasm: scratch emit of maze-derived rules)
+EMIT: 115 levels, wall 66636 ms, shard ms 66127/27211/26509/31655, searches 16421, states 5429206, heap MB 2389/193/187/341
+CERT: 2 problems / 18 accepted / 0 threw
+PASS: emitted
+ALL CHECKS PASSED
+MEASURED: probe-seedling-scratch-w0-emit.mjs rc=0 wall 78s nproc 4 at 35373cb69d107128fa86995c1ffe91db9bc2c485

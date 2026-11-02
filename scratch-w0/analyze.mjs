@@ -84,14 +84,26 @@ if (LIST) { for (const s of lists.boundary) console.log('B', s); for (const s of
 // Arrival structure: per region, the distinct arrivals its rows were priced from; and the regions where an element's rule differs by arrival.
 const arr = new Map();
 for (const x of [...exits, ...rec.filter((r) => !r.closure)]) {
-  const m = x.label.match(/^(level_\d+__r\d+c\d+)/); if (!m) continue;
+  const m = x.label.match(/^(level_\d+(?:__r\d+c\d+)?)/); if (!m) continue;
   if (!arr.has(m[1])) arr.set(m[1], new Set()); arr.get(m[1]).add(tagOf(x.label));
 }
 const hist = {}; for (const s of arr.values()) hist[s.size] = (hist[s.size] ?? 0) + 1;
 const dep = new Set();
 const byEl = new Map();
 for (const x of exits) { const k = `${x.region}|${x.exit}`; if (!byEl.has(k)) byEl.set(k, []); byEl.get(k).push(fromMin(x.minimal)); }
-for (const r of rec.filter((r) => !r.closure && r.derived)) { const m = r.label.match(/^(level_\d+__r\d+c\d+) @ (.*?)( \((landing [\d,]+|from [^)]+)\))?$/); if (!m) continue; const k = `${m[1]}|@${m[2]}`; if (!byEl.has(k)) byEl.set(k, []); byEl.get(k).push(r.derived); }
+for (const r of rec.filter((r) => !r.closure && r.derived)) { const m = r.label.match(/^(level_\d+(?:__r\d+c\d+)?) @ (.*?)( \((landing [\d,]+|from [^)]+)\))?$/); if (!m) continue; const k = `${m[1]}|@${m[2]}`; if (!byEl.has(k)) byEl.set(k, []); byEl.get(k).push(r.derived); }
 for (const [k, rules] of byEl) if (rules.some((r) => !same(r, rules[0]))) dep.add(k.split('|')[0]);
 const nodes = [...arr.values()].reduce((a, s) => a + s.size, 0);
 console.log(JSON.stringify({ regionsPriced: arr.size, arrivalsPerRegion: hist, arrivalNodes: nodes, regionsArrivalDependent: dep.size, elementsPriced: byEl.size }));
+// Every AP exit, by how the derivation prices it.
+const cls = {};
+const pairs = new Set(rec.filter((r) => r.closure).map((r) => r.label));
+const exitSet = new Set(exits.map((x) => `${x.region}|${x.exit}`));
+for (const [name, reg] of Object.entries(R)) for (const e of reg.exits) {
+  const k = exitSet.has(`${name}|${e.name}`) ? (lv(e.connected_region) === lv(name) ? 'world exit, same level (plain worlds)' : 'world exit, other level')
+    : pairs.has(`${name} → ${e.connected_region}`) ? 'in-world pair from its source' : lv(e.connected_region) === lv(name) ? 'in-world, source internal-only (no own row)' : 'UNPRICED';
+  tally(cls, k);
+}
+console.log('AP exits by pricing:', JSON.stringify(cls));
+const locs = {}; for (const [name, reg] of Object.entries(R)) for (const l of reg.locations ?? []) tally(locs, rec.some((r) => !r.closure && (r.label === `${name} @ ${l.name}` || r.label.startsWith(`${name} @ ${l.name} (`))) ? 'priced' : 'UNPRICED');
+console.log('AP locations by pricing:', JSON.stringify(locs));

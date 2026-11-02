@@ -1,0 +1,80 @@
+atlas regions 115 internal_exits 301 { analyzer: 292, manual: 9 }
+atlas boundary exits 640 with an access_rule 21 out_ 320
+manual internal rows: level_40 r23c29->r32c36 {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire"}},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}]}
+  level_40 r23c29->r36c35 {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire"}},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}]}
+  level_40 r23c29->r48c54 {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire"}},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}]}
+  level_40 r32c36->r36c35 {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire"}},{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]}]}
+  level_80 r16c1->r12c3 {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  level_80 r8c4->r6c4 {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  level_108 r2c0->r5c8 {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  level_108 r5c8->r8c8 {"rule":"Has","args":{"item_name":"Dark Suit"}}
+  level_108 r8c8->r11c8 {"rule":"Has","args":{"item_name":"Dark Suit"}}
+permissiveBindings: 18
+arrivalsUncharged: 28
+crossingCharged: 9
+sealedDoorsCharged: 12
+directionalDoorsCharged: 1
+pocketDoorsCharged: 0
+sealedLocationsCharged: 1
+modelVerdicts: 8
+prunedPockets: 143
+droppedRegions: 1
+lavaTrapLifts: 5
+locationGuards: 10
+pitChains: 1
+crossingCharged: level_12/out_teleporter_32_848, level_82/out_teleporter_144_0, level_96/out_teleporter_32_64, level_56/out_pit_6_10, level_58/out_teleporter_48_112, level_58/out_teleporter_64_112, level_57/out_tentaclebeast_80_48, level_70/out_pit_3_8, level_69/out_lightbosscontroller_72_72
+sealedDoorsCharged: 12 directional: 1 sealedLoc 1
+events 30 +ropes 2 internalExitRules 13 internalExitGates 1 exitGates 26 landingGates 25 ropeExitGates 1
+OV exports 52
+  OV.A_WEAPON: 1
+  OV.CHARGED_DOORS: 3
+  OV.COMPLETION: 6
+  OV.CROSS_ROOM_PREREQUISITES: 2
+  OV.DEATH_EXIT_ARENAS: 2
+  OV.GROUPED_LOCK_EXCEPTIONS: 1
+  OV.IGNEOUS_IS_FREE: 4
+  OV.KILL_ARM_CONDITION: 1
+  OV.KILL_ARM_EXCLUDED: 3
+  OV.KILL_ARM_ITEMS: 4
+  OV.KILL_LOCK_BODY_CLASSES: 7
+  OV.KILL_LOCK_ENEMY_HITTERS: 7
+  OV.KILL_LOCK_MEASURED_ARMS: 1
+  OV.KILL_LOCK_SPAWNERS: 5
+  OV.KILL_LOCK_UNREAD_COUNTED_TAGS: 15
+  OV.L40_EAST_RULE: 6
+  OV.LAVABOSS_ARENA: 4
+  OV.LAVATRAP_PULL: 5
+  OV.LIGHTS_ARENA: 4
+  OV.LOCATION_GUARDS: 10
+  OV.NEVER_ENTER_CITE: 0
+  OV.NEVER_ENTER_LEVELS: 0
+  OV.OVERLAY_CONDITIONS: 1
+  OV.OVERRULES_TRANSCRIPTION: 1
+  OV.PIXEL_MASK_TAGS: 13
+  OV.PLAYTHROUGH_ENTITY_OVERLAY: 17
+  OV.PLAYTHROUGH_TILE_OVERLAY: 1
+  OV.RECLOSING_LOCK: 2
+  OV.REFUTATION_FIELDS: 4
+  OV.REFUTATION_LOG: 4
+  OV.SCRIPT_GROUP_OPENERS: 1
+  OV.SEAL_ITEM_NAME: string
+  OV.SEAL_TOTAL: number
+  OV.TENTACLE_ARENA: 4
+  OV.WANDLOCK_IS_A_LOCK: 2
+  OV.allOf: function
+  OV.anyOf: function
+  OV.buildBlockHolders: function
+  OV.buildCrossLevelOpeners: function
+  OV.buildGroupOpeners: function
+  OV.buildKillLockRulings: function
+  OV.buildScriptOpeners: function
+  OV.flag: function
+  OV.groupedLocksWithoutOpener: function
+  OV.isRefutation: function
+  OV.key: function
+  OV.killLockRoomRuling: function
+  OV.lavaTrapPulls: function
+  OV.locationGuard: function
+  OV.overlayEntitySemantics: function
+  OV.overlayTileSemantics: function
+  OV.resolveOverlayCondition: function

@@ -1,0 +1,116 @@
+{
+ "levels": 115,
+ "wall": 66636,
+ "searches": 16421,
+ "states": 5429206,
+ "boundary": {
+  "of which same-level (separate worlds)": 500,
+  "exits": 392,
+  "arrivals=1": 341,
+  "equal": 346,
+  "arrivals=2": 45,
+  "ARRIVAL-DEPENDENT": 27,
+  "mixed:equal+stricter": 14,
+  "mixed:stricter": 9,
+  "stricter": 10,
+  "looser": 9,
+  "mixed:equal+looser": 3,
+  "mixed:incomparable+looser": 1,
+  "arrivals=3": 6
+ },
+ "location": {
+  "events": 32,
+  "equal": 61,
+  "locations": 48,
+  "stricter": 11,
+  "ARRIVAL-DEPENDENT": 8,
+  "mixed:equal+stricter": 4,
+  "mixed:stricter": 4
+ },
+ "inworld": {
+  "rows": 226,
+  "accepted": 6,
+  "agrees": 219,
+  "PROBLEM": 1,
+  "AP internal exits": 428,
+  "edge: no pair row (internal-only source or not a shared world)": 287,
+  "edge vs pair: stricter": 4,
+  "edge vs pair: equal": 127,
+  "edge vs pair: looser": 9,
+  "edge vs pair: incomparable": 1
+ },
+ "cert": {
+  "rows": 491,
+  "agrees": 485,
+  "accepted": 5,
+  "PROBLEM": 1
+ }
+}
+B mixed:equal+stricter level_3__r0c4 -> level_111: today {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Ghost Sword Fusion"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]} | derived entrance=[["Ghost Spear","Ghost Sword Fusion","Progressive Swim","Progressive Sword"]] ; landing 1,4=[["Ghost Spear","Ghost Sword Fusion","Progressive Sword"]]
+B mixed:stricter level_16__r1c9 -> level_17: today {"rule":"True_"} | derived from level_16__r1c1=[["Fire"],["Ghost Spear"],["L16 flag 0: rope@32,16 cleared"],["Progressive Sword"]] ; from level_16__r3c7=[["L16 flag 0: rope@32,16 cleared"]]
+B mixed:stricter level_16__r1c9 -> level_17 #2: today {"rule":"True_"} | derived from level_16__r1c1=[["Fire"],["Ghost Spear"],["L16 flag 0: rope@32,16 cleared"],["Progressive Sword"]] ; from level_16__r3c7=[["L16 flag 0: rope@32,16 cleared"]]
+B mixed:stricter level_16__r1c9 -> level_17 #3: today {"rule":"True_"} | derived from level_16__r1c1=[["Fire"],["Ghost Spear"],["L16 flag 0: rope@32,16 cleared"],["Progressive Sword"]] ; from level_16__r3c7=[["L16 flag 0: rope@32,16 cleared"]]
+B mixed:stricter level_16__r1c9 -> level_17 #4: today {"rule":"True_"} | derived from level_16__r1c1=[["Fire"],["Ghost Spear"],["L16 flag 0: rope@32,16 cleared"],["Progressive Sword"]] ; from level_16__r3c7=[["L16 flag 0: rope@32,16 cleared"]]
+B stricter level_16__r1c9 -> level_17 #5: today {"rule":"True_"} | derived from level_16__r1c1=[] ; from level_16__r3c7=[]
+B mixed:stricter level_16__r1c9 -> level_17 #6: today {"rule":"True_"} | derived from level_16__r1c1=[["Fire"],["Ghost Spear"],["L16 flag 0: rope@32,16 cleared"],["Progressive Sword"]] ; from level_16__r3c7=[["L16 flag 0: rope@32,16 cleared"]]
+B mixed:stricter level_16__r1c9 -> level_17 #7: today {"rule":"True_"} | derived from level_16__r1c1=[["Fire"],["Ghost Spear"],["L16 flag 0: rope@32,16 cleared"],["Progressive Sword"]] ; from level_16__r3c7=[["L16 flag 0: rope@32,16 cleared"]]
+B stricter level_16__r3c7 -> level_17: today {"rule":"True_"} | derived landing 7,3=[["L16 flag 0: rope@32,16 cleared"]]
+B looser level_24 -> level_12__r40c4: today {"rule":"Has","args":{"item_name":"Fire"}} | derived landing 3,8=[["Fire"],["L24 flag 0: burnabletree@32,128 cleared"]] ; landing 6,5=[["Fire"],["L24 flag 0: burnabletree@32,128 cleared"]]
+B looser level_24 -> level_12__r40c4 #2: today {"rule":"Has","args":{"item_name":"Fire"}} | derived landing 3,8=[["Fire"],["L24 flag 0: burnabletree@32,128 cleared"]] ; landing 6,5=[["Fire"],["L24 flag 0: burnabletree@32,128 cleared"]]
+B looser level_48__r7c0 -> level_48__r4c3: today {"rule":"Has","args":{"item_name":"Progressive Swim"}} | derived landing 1,7=[[]]
+B mixed:equal+stricter level_51__r3c10 -> level_53__r2c2: today {"rule":"True_"} | derived landing 10,9=[[]] ; landing 9,1=[["Progressive Swim"]]
+B stricter level_54__r1c8 -> level_53__r14c9: today {"rule":"True_"} | derived landing 9,1=[["Progressive Swim"]]
+B mixed:equal+looser level_57 -> level_58__r4c1: today {"rule":"And","children":[{"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}}]},{"rule":"Has","args":{"item_name":"Progressive Swim"}}]} | derived entrance=[["Ghost Spear","Progressive Swim"],["Progressive Swim","Progressive Sword"],["Progressive Swim","Wand"]] ; landing 6,4=[["Progressive Swim"]]
+B stricter level_58__r1c4 -> level_46__r6c24: today {"rule":"Has","args":{"item_name":"L58 flag 1: yeti@56,56 cleared"}} | derived from level_58__r4c1=[["L58 flag 1: yeti@56,56 cleared","Progressive Swim"]]
+B mixed:equal+stricter level_62 -> level_61__r0c7: today {"rule":"True_"} | derived entrance=[[]] ; landing 7,5=[["Ghost Spear"],["L62 flag 0: lightpole@120,200 cleared"]]
+B mixed:equal+stricter level_62 -> level_61__r0c10: today {"rule":"True_"} | derived entrance=[[]] ; landing 7,5=[["Ghost Spear"],["L62 flag 0: lightpole@120,200 cleared"]]
+B mixed:equal+looser level_62 -> level_64: today {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L62 flag 0: lightpole@120,200 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]} | derived entrance=[["Ghost Spear"],["L62 flag 0: lightpole@120,200 cleared"]] ; landing 7,5=[[]]
+B mixed:equal+stricter level_62 -> level_63__r0c1: today {"rule":"True_"} | derived entrance=[[]] ; landing 7,5=[["Ghost Spear"],["L62 flag 0: lightpole@120,200 cleared"]]
+B mixed:incomparable+looser level_62 -> level_63__r0c1 #2: today {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 1: lightpole@64,88 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]} | derived entrance=[[]] ; landing 7,5=[["Ghost Spear"],["L62 flag 0: lightpole@120,200 cleared"]]
+B mixed:equal+stricter level_63__r0c1 -> level_61__r0c10: today {"rule":"True_"} | derived entrance=[[]] ; landing 4,1=[["Ghost Spear"],["L63 flag 1: lightpole@64,88 cleared"]]
+B mixed:equal+stricter level_63__r0c1 -> level_61__r0c7: today {"rule":"True_"} | derived entrance=[[]] ; landing 4,1=[["Ghost Spear"],["L63 flag 1: lightpole@64,88 cleared"]]
+B mixed:equal+stricter level_63__r0c1 -> level_62: today {"rule":"True_"} | derived entrance=[[]] ; landing 4,1=[["Ghost Spear"],["L63 flag 1: lightpole@64,88 cleared"]]
+B mixed:equal+looser level_63__r0c1 -> level_62 #2: today {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L63 flag 1: lightpole@64,88 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]} | derived entrance=[["Ghost Spear"],["L63 flag 1: lightpole@64,88 cleared"]] ; landing 4,1=[[]]
+B mixed:equal+stricter level_63__r10c2 -> level_61__r13c12: today {"rule":"True_"} | derived entrance=[[]] ; landing 2,18=[["L63 flag 6: lightpole@48,272 cleared"],["Ghost Spear","Ghost Sword Fusion","Progressive Sword"]]
+B looser level_64 -> level_62: today {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"L62 flag 0: lightpole@120,200 cleared"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]} | derived landing 2,5=[[]]
+B mixed:stricter level_71__r14c12 -> level_82: today {"rule":"True_"} | derived from level_71__r0c6=[["Dark Suit"]] ; from level_71__r13c7=[["Dark Suit","Ghost Spear"],["Dark Suit","Progressive Sword"]]
+B mixed:stricter level_71__r16c19 -> level_76: today {"rule":"True_"} | derived from level_71__r0c6=[["L71 flag 2: shieldlock@288,256 cleared"],["Progressive Shield","Progressive Shield"]] ; from level_71__r13c7=[["Ghost Spear","L71 flag 2: shieldlock@288,256 cleared"],["L71 flag 2: shieldlock@288,256 cleared","Progressive Sword"],["Ghost Spear","Progressive Shield","Progressive Shield"],["Progressive Shield","Progressive Shield","Progressive Sword"]]
+B stricter level_84__r0c0 -> level_85 #2: today {"rule":"True_"} | derived entrance=[]
+B stricter level_84__r0c0 -> level_85 #3: today {"rule":"True_"} | derived entrance=[]
+B stricter level_84__r2c4 -> level_85: today {"rule":"True_"} | derived landing 2,2=[]
+B stricter level_84__r2c4 -> level_85 #4: today {"rule":"True_"} | derived landing 2,2=[]
+B stricter level_84__r3c0 -> level_85 #2: today {"rule":"True_"} | derived entrance=[]
+B mixed:equal+stricter level_89__r11c12 -> level_87__r1c3: today {"rule":"True_"} | derived entrance=[[]] ; landing 10,18=[["Progressive Swim"]]
+B mixed:equal+stricter level_91 -> level_89__r1c10: today {"rule":"True_"} | derived landing 1,8=[[]] ; landing 15,4=[["Progressive Swim"]]
+B mixed:equal+stricter level_91 -> level_92__r4c2: today {"rule":"True_"} | derived landing 1,8=[["Progressive Swim"]] ; landing 15,4=[[]]
+B looser level_93__r5c7 -> level_93__r10c7: today {"rule":"Has","args":{"item_name":"Progressive Swim"}} | derived landing 7,6=[[]]
+B stricter level_100__r4c10 -> level_101__r4c2: today {"rule":"True_"} | derived from level_100__r2c3=[["Ghost Spear"],["Progressive Sword"]]
+B mixed:stricter level_101__r0c6 -> level_110: today {"rule":"True_"} | derived from level_101__r4c2=[["Fire","Fire Wand Fusion","Wand"]] ; from level_101__r4c9=[["Fire","Fire Wand Fusion","Ghost Spear","Ghost Sword Fusion","Progressive Sword","Wand"]]
+B looser level_112__r0c7 -> level_112__r2c2: today {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]} | derived landing 7,1=[[]]
+B looser level_112__r2c2 -> level_112__r0c7: today {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]} | derived landing 2,13=[["Ghost Spear"],["L112 flag 1: rocklock@112,16 cleared"],["Progressive Sword"]]
+B looser level_113 -> level_115__r9c4: today {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Seal","count":16}},{"rule":"Has","args":{"item_name":"L114 flag 0: watcher@72,72 cleared"}},{"rule":"Has","args":{"item_name":"Progressive Swim"}}]} | derived landing 1,1=[["L113 flag 0: finaldoor@112,0 cleared","Progressive Swim"],["L114 flag 0: watcher@72,72 cleared","Progressive Swim","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal"]] ; landing 7,1=[["L113 flag 0: finaldoor@112,0 cleared","Progressive Swim"],["L114 flag 0: watcher@72,72 cleared","Progressive Swim","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal"]] ; landing 8,1=[["L113 flag 0: finaldoor@112,0 cleared","Progressive Swim"],["L114 flag 0: watcher@72,72 cleared","Progressive Swim","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal"]]
+B looser level_113 -> level_115__r9c4 #2: today {"rule":"And","children":[{"rule":"Has","args":{"item_name":"Seal","count":16}},{"rule":"Has","args":{"item_name":"L114 flag 0: watcher@72,72 cleared"}},{"rule":"Has","args":{"item_name":"Progressive Swim"}}]} | derived landing 1,1=[["L113 flag 0: finaldoor@112,0 cleared","Progressive Swim"],["L114 flag 0: watcher@72,72 cleared","Progressive Swim","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal"]] ; landing 7,1=[["L113 flag 0: finaldoor@112,0 cleared","Progressive Swim"],["L114 flag 0: watcher@72,72 cleared","Progressive Swim","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal"]] ; landing 8,1=[["L113 flag 0: finaldoor@112,0 cleared","Progressive Swim"],["L114 flag 0: watcher@72,72 cleared","Progressive Swim","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal","Seal"]]
+B mixed:equal+stricter level_115__r9c4 -> level_113: today {"rule":"Has","args":{"item_name":"L113 flag 0: finaldoor@112,0 cleared"}} | derived landing 4,8=[["L113 flag 0: finaldoor@112,0 cleared"]] ; landing 5,8=[["L113 flag 0: finaldoor@112,0 cleared","Progressive Swim"]]
+B mixed:equal+stricter level_115__r9c4 -> level_113 #2: today {"rule":"Has","args":{"item_name":"L113 flag 0: finaldoor@112,0 cleared"}} | derived landing 4,8=[["L113 flag 0: finaldoor@112,0 cleared","Progressive Swim"]] ; landing 5,8=[["L113 flag 0: finaldoor@112,0 cleared"]]
+L stricter level_15__r6c8 @ Level 015 - Chest: today {"rule":"True_"} | derived from level_15__r1c5={"rule":"Has","args":{"item_name":"Progressive Swim"}} ; from level_15__r1c9={"rule":"Has","args":{"item_name":"Progressive Swim"}}
+L mixed:equal+stricter level_19__r1c5 @ Level 019 - Shieldspire: today {"rule":"Has","args":{"item_name":"Progressive Sword"}} | derived from level_19__r1c1={"rule":"And","children":[{"rule":"Has","args":{"item_name":"L19 flag 1: bosslock@48,32 cleared"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Red Key"}}]} ; from level_19__r5c5={"rule":"Has","args":{"item_name":"Progressive Sword"}}
+L mixed:stricter level_19__r3c3 @ L19 flag 1: bosslock@48,32 cleared: today {"rule":"Has","args":{"item_name":"Red Key"}} | derived from level_19__r1c1={"rule":"False_"} ; from level_19__r5c5={"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Red Key"}}]}
+L mixed:stricter level_40__r32c36 @ Level 040 - Boss Key 2: today {"rule":"True_"} | derived from level_40__r0c53={"rule":"Or","children":[{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"L40 flag 8: bosslock@480,352 cleared"}},{"rule":"Has","args":{"item_name":"Purple Key"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire"}},{"rule":"Has","args":{"item_name":"L40 flag 8: bosslock@480,352 cleared"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Purple Key"}}]}]} ; from level_40__r23c29={"rule":"Or","children":[{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}]}
+L stricter level_41__r7c15 @ Level 041 - Totem Part 240,144: today {"rule":"True_"} | derived from level_41__r4c3={"rule":"Or","children":[{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}]}
+L stricter level_46__r1c26 @ Level 046 - Chest: today {"rule":"True_"} | derived from level_46__r0c11={"rule":"Has","args":{"item_name":"Progressive Swim"}} ; from level_46__r6c24={"rule":"Has","args":{"item_name":"Progressive Swim"}}
+L mixed:equal+stricter level_49 @ Level 049 - Conch: today {"rule":"True_"} | derived landing 2,2={"rule":"True_"} ; landing 2,7={"rule":"Has","args":{"item_name":"Progressive Swim"}}
+L stricter level_55 @ Level 055 - Boss Key 3: today {"rule":"True_"} | derived landing 4,3={"rule":"Has","args":{"item_name":"Progressive Swim"}}
+L stricter level_57 @ Level 057 - Tentacled Beast: today {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Wand"}}]} | derived entrance={"rule":"Or","children":[{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Swim"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Swim"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Swim"}},{"rule":"Has","args":{"item_name":"Wand"}}]}]} ; landing 6,4={"rule":"Or","children":[{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Progressive Swim"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Swim"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Progressive Swim"}},{"rule":"Has","args":{"item_name":"Wand"}}]}]}
+L stricter level_58__r3c3 @ L58 flag 1: yeti@56,56 cleared: today {"rule":"True_"} | derived from level_58__r4c1={"rule":"Has","args":{"item_name":"Progressive Swim"}}
+L mixed:equal+stricter level_63__r0c1 @ L62 flag 0: lightpole@120,200 cleared: today {"rule":"True_"} | derived entrance={"rule":"True_"} ; landing 4,1={"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"L63 flag 1: lightpole@64,88 cleared"}}]}
+L mixed:stricter level_63__r5c14 @ Level 063 - Chest: today {"rule":"True_"} | derived from level_63__r0c1={"rule":"And","children":[{"rule":"Has","args":{"item_name":"Dark Suit"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]} ; from level_63__r10c2={"rule":"And","children":[{"rule":"Has","args":{"item_name":"Dark Suit"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]} ; from level_63__r6c9={"rule":"Or","children":[{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Dark Suit"}},{"rule":"Has","args":{"item_name":"L63 flag 7: lightpole@112,272 cleared"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Dark Suit"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Ghost Sword Fusion"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}]}
+L stricter level_63__r6c9 @ L63 flag 7: lightpole@112,272 cleared: today {"rule":"Has","args":{"item_name":"Ghost Spear"}} | derived landing 8,18={"rule":"And","children":[{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Ghost Sword Fusion"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}
+L mixed:equal+stricter level_63__r10c2 @ L63 flag 6: lightpole@48,272 cleared: today {"rule":"Has","args":{"item_name":"Ghost Spear"}} | derived entrance={"rule":"Has","args":{"item_name":"Ghost Spear"}} ; landing 2,18={"rule":"And","children":[{"rule":"Has","args":{"item_name":"Ghost Spear"}},{"rule":"Has","args":{"item_name":"Ghost Sword Fusion"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}
+L stricter level_67__r3c2 @ Level 067 - Boss Key 4: today {"rule":"True_"} | derived from level_67__r6c11={"rule":"Has","args":{"item_name":"Ghost Spear"}}
+L stricter level_80__r8c1 @ Level 080 - Chest: today {"rule":"True_"} | derived from level_80__r0c2={"rule":"Has","args":{"item_name":"Dark Suit"}} ; from level_80__r16c1={"rule":"Has","args":{"item_name":"Dark Suit"}}
+L stricter level_82 @ Level 082 - King of Fire: today {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Progressive Sword"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]} | derived entrance={"rule":"Or","children":[{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Dark Suit"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Dark Suit"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}]} ; landing 9,1={"rule":"Or","children":[{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Dark Suit"}},{"rule":"Has","args":{"item_name":"Ghost Spear"}}]},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Dark Suit"}},{"rule":"Has","args":{"item_name":"Progressive Sword"}}]}]}
+L mixed:stricter level_89__r9c6 @ Level 089 - Feather: today {"rule":"True_"} | derived from level_89__r11c12={"rule":"Has","args":{"item_name":"Progressive Swim","count":2}} ; from level_89__r1c10={"rule":"Has","args":{"item_name":"Progressive Swim"}} ; from level_89__r1c15={"rule":"Has","args":{"item_name":"Progressive Swim"}}
+L stricter level_115__r4c4 @ Level 115 - The Seed: today {"rule":"True_"} | derived from level_115__r9c4={"rule":"Has","args":{"item_name":"Progressive Swim","count":2}}
+{"regionsPriced":204,"arrivalsPerRegion":{"1":176,"2":25,"3":3},"arrivalNodes":235,"regionsArrivalDependent":19,"elementsPriced":472}
+AP exits by pricing: {"in-world, source internal-only (no own row)":287,"in-world pair from its source":141,"world exit, other level":320,"world exit, same level (plain worlds)":72,"UNPRICED":1}
+AP locations by pricing: {"priced":80}
