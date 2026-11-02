@@ -128,6 +128,16 @@
             "category": "cloudberrySubstrate"
         },
         {
+            "id": "cloudberry-loop-record-then-instant-playback",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
+            "id": "cloudberry-loop-bot-blocks-reset-victory",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "runner-preset-sidecar-configured",
             "enabled": true,
             "category": "runnerDemo"
