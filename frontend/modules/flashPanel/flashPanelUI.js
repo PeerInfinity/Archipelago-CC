@@ -23,6 +23,7 @@ import { createHeldKeyRelease, dispatchGameKey, focusGameCanvas } from './gameIn
 import { TOUCH_SETTING_KEY, mountTouchControls, parseTouchLayout, touchControlsVisible } from './touchControls.js';
 import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
+import { isEditorLoad, seedlingMountKey } from './seedlingMountKey.js';
 import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
 import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
 import { KILLLOCK_SETTING_KEYS, killLockPageQuery } from './seedlingKillLockSettings.js';
@@ -257,6 +258,17 @@ export class FlashPanelUI {
     // preset through the UI.
     this._rulesLoadedHandler = () => { this._onRulesLoaded(); };
     this.eventBus.subscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
+    /**
+     * ⛓ THE EDITOR LOADS — the documents an editor handed back (`isEditorLoad`), by identity: the state manager's
+     * `rawJsonDataLoaded` carries the SAME object as `rawJsonData` and drops the APWorld editor's `appliedBy`
+     * marker, so this is the one place that can still tell such a load from a preset switch. ⛔ A same-wiring
+     * re-mount for them is a separate ruling (`_mountedRoomsDiffer`).
+     */
+    this._editorLoads = new WeakSet();
+    this._jsonLoadedHandler = (data) => {
+      if (isEditorLoad(data) && data.jsonData && typeof data.jsonData === 'object') this._editorLoads.add(data.jsonData);
+    };
+    this.eventBus.subscribe('files:jsonLoaded', this._jsonLoadedHandler);
 
     /**
      * ⛓ Seedling JS J1 — a RUNTIME change re-initializes the embed (the
@@ -445,8 +457,16 @@ export class FlashPanelUI {
       this._initializeAdapter();
       return;
     }
-    if (this.componentState.configPath || this.componentState.swfPath
-        || this.componentState.wasmPath || key === this._lastFlashPanelKey) {
+    const pinned = !!(this.componentState.configPath || this.componentState.swfPath
+        || this.componentState.wasmPath);
+    if (!pinned && key === this._lastFlashPanelKey && this._mountedRoomsDiffer()) {
+      // ⛓ SAME WIRING, OTHER ROOMS — the wiring change's own path: the game restarts on the loaded rules' rooms.
+      this._panelLog('rules changed (same game wiring, different rooms) — re-mounting so the game plays the loaded rules\' rooms');
+      this._teardownForReinit();
+      this._initializeAdapter();
+      return;
+    }
+    if (pinned || key === this._lastFlashPanelKey) {
       // ⛓ SAME WIRING, NEW RULES — no re-mount, but the region data the attach built is the OLD rules'.
       this._reloadRulesDerived();
       return;
@@ -455,6 +475,36 @@ export class FlashPanelUI {
     this._panelLog('rules changed — reinitializing');
     this._teardownForReinit();
     this._initializeAdapter();
+  }
+
+  /**
+   * ⛓⛓ WOULD THE AP LOAD MOUNT SOMETHING ELSE NOW? (⚖ Robert, 2026-11-02 — a same-wiring Seedling preset switch while
+   * the game runs loads the NEW preset's rooms; a visible restart accepted.) `_apLoadKey` is the `seedlingMountKey`
+   * of the rules `_startSeedlingRandomizer` read for THIS adapter; this compares it with the loaded rules'.
+   *   · no key yet (no adapter, or the bridge is not ready) — the load has not read the rules: it will read these;
+   *   · `_rulesIgnored` — the load refused on the wiring alone (transport / capability): no rules change can matter;
+   *   · equal — the same rooms (a reload of the same document, a fresh object): nothing;
+   *   · an EDITOR's document (`_editorLoads`) — ⛔ STOPPED for a separate ruling: today's behaviour (no re-mount),
+   *     said in the log.
+   */
+  _mountedRoomsDiffer() {
+    const mounted = this._apLoadKey;
+    if (!this.adapter || mounted === undefined || this._apLoadRulesIgnored) return false;
+    const now = this._mountKeyNow();
+    if (now === mounted) return false;
+    if (this._editorLoads?.has(rulesOfRawPayload(getLastRawJsonData?.()))) {
+      this._panelLog('rules changed by an editor (same game wiring, different rooms) — the running game keeps the '
+        + 'rooms it was loaded with; re-load the preset to play the edited ones');
+      return false;
+    }
+    return true;
+  }
+
+  /** The `seedlingMountKey` of the rules loaded NOW — what `_startSeedlingRandomizer` would read. */
+  _mountKeyNow() {
+    const staticData = stateManager.getStaticData?.() ?? null;
+    return seedlingMountKey({ rules: rulesOfRawPayload(getLastRawJsonData?.()), playerId: staticData?.playerId,
+      locations: staticData?.locations });
   }
 
   /**
@@ -870,6 +920,8 @@ export class FlashPanelUI {
   _teardownForReinit() {
     this._initEpoch = (this._initEpoch ?? 0) + 1;
     this._initRuntime = undefined;
+    this._apLoadKey = undefined;
+    this._apLoadRulesIgnored = false;
     this._seedlingGenReport = null;
     this._seedlingGenSet = null;
     this._seedlingAtlas = null;
@@ -1734,6 +1786,9 @@ export class FlashPanelUI {
   async _startSeedlingRandomizer(adapter) {
     this._apLoadRefusal = null;
     this._seedlingDelivery = null;
+    // ⛓ WHAT THIS LOAD MOUNTS FROM, read before its first await — `_mountedRoomsDiffer` compares the loaded rules'.
+    this._apLoadKey = this._mountKeyNow();
+    this._apLoadRulesIgnored = false;
     const staticData = stateManager.getStaticData?.() ?? null;
     const flashPanel = staticData?.flash_panel ?? null;
     const transport = this.transport === 'js' ? 'js' : 'wasm';
@@ -1767,6 +1822,9 @@ export class FlashPanelUI {
       // is the shape a data-driven feature fails in.
       this._panelLog(`ap placement: not applicable — ${cheap.why}`);
       this._apLoadRefusal = cheap.why;
+      // ⛓ Refused on the WIRING (the transport, the build): the same wiring refuses every rules load the same way,
+      // so no same-wiring rules change re-mounts this game (a non-Seedling flash game keeps running).
+      this._apLoadRulesIgnored = cheap.failed === 'transport' || cheap.failed === 'capability';
       return;
     }
 
@@ -2419,6 +2477,10 @@ export class FlashPanelUI {
     if (this._rulesLoadedHandler) {
       this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
       this._rulesLoadedHandler = null;
+    }
+    if (this._jsonLoadedHandler) {
+      this.eventBus.unsubscribe('files:jsonLoaded', this._jsonLoadedHandler);
+      this._jsonLoadedHandler = null;
     }
     if (this._settingsChangedHandler) {
       this.eventBus.unsubscribe('settings:changed', this._settingsChangedHandler);
