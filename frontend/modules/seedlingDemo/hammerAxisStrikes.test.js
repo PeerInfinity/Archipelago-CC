@@ -215,8 +215,18 @@ describe('hammer-phase AXIS — strikes on axis-aligned walks, aimed along the w
     });
 
     it('AXIS-L12HITS: the clear-tag keylock stance walk is certified with its hold (`axisClearTagStand`)', () => {
-        const run = l6();
-        const resolved = { lock: 'none', hold: { ticks: 10 }, target: { x: 0, y: 0 } };
+        // L12's own lock (its key line `{x0: 418, x1: 427, y: 257}`) and the clear-tag resolution's hold, as measured.
+        const run = createLevelRun({
+            levelSource, boot: { level: 12, x: 376, y: 264 }, noclip: false, noHazards: [], noDamage: false,
+            grants: [], persistence: [], despawn: [], equips: [], pins: ['dead_frames'],
+            save: { totem_parts: [], keys: [], seal_parts: [] }, rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+        });
+        const resolved = { lock: 'bosslock@416,240', hold: { ticks: 110 }, target: { x: 416, y: 240 },
+            stance: { x: 424, y: 264 } };
+        // ON, a keylock: the walk is handed the hold as its tail (`keylockStandWalk`'s `stand`), standing 110 ticks.
+        const on = withAxisStrike(true, () => axisClearTagStand(run, 'keylock', resolved));
+        expect(on.stand?.ticks).toBe(110);
+        expect(typeof on.stand.keys).toBe('function');
         // OFF, another verb, or the tail's own instrument off: nothing is handed to the walk (OFF byte-identical).
         expect(withAxisStrike(false, () => axisClearTagStand(run, 'keylock', resolved))).toEqual({});
         expect(withAxisStrike(true, () => axisClearTagStand(run, 'kill', resolved))).toEqual({});
