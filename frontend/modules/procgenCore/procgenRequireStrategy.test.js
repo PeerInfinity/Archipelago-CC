@@ -19,7 +19,9 @@ const PRE_SWORD = { hasSword: false, hasShield: false, canSwim: false, hasFeathe
 
 describe('require — strategy entries (strategy switch r1, D2)', () => {
     it('the catalogue\'s strategies are read off `needsStrategy`; the four gadgets carry theirs', () => {
-        expect(STRATEGIES_ELEMENTS_NEED).toEqual(['break', 'kill', 'shove', 'touch']);
+        expect(STRATEGIES_ELEMENTS_NEED).toEqual(['break', 'burn', 'kill', 'shove', 'touch']);
+        // ⛓ strategy switch r2 — the burn gate carries `burn`
+        expect(headsNeeding('strategy:burn')).toEqual(['burngate']);
         expect(headsNeeding('strategy:break')).toEqual(['rockgate']);
         expect(headsNeeding('strategy:touch')).toEqual(['shieldgate']);
         expect(headsNeeding('strategy:kill')).toEqual(['killgate', 'arena']);
@@ -49,12 +51,12 @@ describe('require — strategy entries (strategy switch r1, D2)', () => {
     });
 
     it('refusals by name: no element declares it; the biome cannot host the head', () => {
-        for (const v of ['time', 'burn', 'nope']) {
+        for (const v of ['time', 'rope', 'nope']) { // ⛓ r2: `burn` has a gadget now, `rope` has none
             expect(resolveRequireDirective({ require: [`strategy:${v}`], items: POST_SWORD }).refused.reason)
                 .toBe('no-element-needs-this-item');
         }
         expect(resolveRequireDirective({ require: ['strategy:time'], items: POST_SWORD }).refused.detail)
-            .toMatch(/declares `needsStrategy` on "time"\. The strategies some element needs are \[break, kill, shove, touch\]/);
+            .toMatch(/declares `needsStrategy` on "time"\. The strategies some element needs are \[break, burn, kill, shove, touch\]/);
         const r = resolveRequireDirective({ require: ['strategy:touch'], items: POST_SWORD });
         expect(r.refused.reason).toBe('the-biome-lacks-the-item');
         expect(r.refused.detail).toMatch(/shieldgate \[hasShield\]/);

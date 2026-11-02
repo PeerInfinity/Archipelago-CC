@@ -134,6 +134,16 @@ const REFUSAL_SOURCES = [
             + 'on both pages, and the ELEMENTS CENSUS counts them',
     },
     {
+        id: 'burn-gate',
+        title: 'The BURN GATE — a burnable tree (2x2) on a main-path cut, burned with Fire',
+        kind: 'constant',
+        constant: 'BURN_GATE_REFUSALS',
+        names: M.burnGate.BURN_GATE_REFUSALS,
+        file: SOURCES.burnGate,
+        channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
+            + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
         id: 'open-chamber',
         title: 'The OPEN CHAMBER element',
         kind: 'constant',

@@ -115,6 +115,7 @@ import {
 } from '../procgenCore/elements/soloDoor.js';
 import { ROPE_GATE_ROPE_ID, ROPE_GATE_TRAP_ID } from '../procgenCore/elements/ropeGate.js';
 import { CHEST_DOOR_CHEST_ID } from '../procgenCore/elements/chestDoor.js';
+import { BURN_GATE_DOOR_ID } from '../procgenCore/elements/burnGate.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
 
@@ -1239,6 +1240,22 @@ export function seedlingOnConnectorEntities({ placed, tagFor, groupIdFor = null 
             const tag = tagFor();
             tags.lock = tag;
             entities.push({ type: 'shieldlocknorm', tx: e.x, ty: e.y,
+                attrs: { tag: String(tag) } });
+            continue;
+        }
+        /**
+         * ⛓⛓ Strategy switch r2 — THE BURN GATE'S ONE OBSTACLE: a `burnabletree`
+         * written at the element's 2x2 `anchor` (`Tree`'s ctor is
+         * `super(_x + 16, _y + 16)` with a 32 px hitbox, so OEL `(tx, ty)` is
+         * solid over `tx..tx+1 x ty..ty+1`). ⛔ A TAG OF ITS OWN, the rock's
+         * reason: `BurnableTree.removed()` is `Game.setPersistence(tag, false)`
+         * UNCONDITIONALLY, so a `-1` tree would write out of band; an allocated
+         * tag keeps the write in band and keeps a burned tree burned.
+         */
+        if (e.id === BURN_GATE_DOOR_ID) {
+            const tag = tagFor();
+            tags.tree = tag;
+            entities.push({ type: 'burnabletree', tx: e.anchor.x, ty: e.anchor.y,
                 attrs: { tag: String(tag) } });
             continue;
         }
