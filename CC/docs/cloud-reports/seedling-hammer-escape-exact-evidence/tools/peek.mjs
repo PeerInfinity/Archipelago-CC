@@ -1,0 +1,20 @@
+import { readFileSync } from 'node:fs';
+import { gunzipSync } from 'node:zlib';
+const root = process.argv[2];
+const M = (p) => import(`${root}/${p}`);
+const { restoreRequest } = await M('scripts/procgen/seedlingSolveRequestCodec.js');
+const { levelSourceFromAtlas } = await M('frontend/modules/seedlingDemo/atlasSource.js');
+const { replayTape } = await M('frontend/modules/seedlingDemo/jsRuntimeSolver.js');
+const row = JSON.parse(gunzipSync(readFileSync(`${root}/frontend/modules/seedlingDemo/fixtures/spin-witness/leg860-request.json.gz`)).toString('utf8'));
+const c = row.request;
+const REQ = restoreRequest({ ...c, staging: { ...c.staging, seam: { ...c.staging.seam, time: 5950 } } });
+const SOURCE = levelSourceFromAtlas(REQ.source.records);
+const run = replayTape({ staging: { ...REQ.staging, boot: { ...REQ.staging.boot, x: 821, y: 852 } }, perTick: [], levelSource: SOURCE, scratchPersistence: REQ.scratchPersistence === true, equips: REQ.equips ?? null, holds: REQ.holds ?? null });
+const step = run.previewStepper();
+let s = { ...run.state };
+console.log(Reflect.ownKeys(s).map(String).join(' '));
+s = step({ ...s }, new Set(['left'])); s = step({ ...s }, new Set(['primary']), {});
+console.log(Reflect.ownKeys(s).map(String).join(' '));
+for (const k of Reflect.ownKeys(s)) if (/slash|Slash/.test(String(k))) console.log(String(k), JSON.stringify(s[k]));
+for (let i=0;i<10;i++){ s = step({ ...s }, new Set()); for (const k of Reflect.ownKeys(s)) if (/slash/i.test(String(k))) console.log(i, String(k), JSON.stringify(s[k])); }
+console.log(run.ticksCompleted, Object.keys(run).filter(k=>/slash/i.test(k)).join(' '));
