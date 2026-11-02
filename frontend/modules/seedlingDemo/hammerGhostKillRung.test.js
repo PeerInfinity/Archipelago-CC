@@ -21,7 +21,7 @@ import { withPressKillRebootGuard, withPressKillShakeGuard } from './pressKillGu
 // ⛓ hammer-phase PKC / OPP: the witness is the kill across the bob's death, so `PRESS_KILL_CHASERS` and
 // `OPPORTUNISTIC_STRIKE` are pinned OFF (both ship OFF)
 import { withOpportunisticStrike, withPressKillChasers } from './pressKillCost.js';
-import { solveSegment, withStrikeEtaFloor } from './solverBot.js';
+import { solveSegment, withChooserPair, withStrikeEtaFloor } from './solverBot.js';
 import { SPINNER } from './spinner.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
@@ -100,7 +100,12 @@ function stagingA() {
  * (2026-10-23) flipped the floor ON. ON, this staging's kill moves (t2114 → t1616, the death t1216 → t778); the floor's
  * own gate, `hammerStrikeEtaFloor.test.js`, pins that answer against its own witness (`hammer-sf-l40-strikefloor`).
  */
+/** ⛓ CPWIT flip: `CHOOSER_PAIR` pinned OFF (ON since its flip), as the other switches below are. */
 function solveA(enabled, guards = false) {
+    return withChooserPair(false, () => solveAUnpinned(enabled, guards));
+}
+
+function solveAUnpinned(enabled, guards) {
     const staging = stagingA();
     const run = createRunForStaging(staging, atlasLevelSource());
     return withOpportunisticStrike(false, () => withPressKillChasers(false, () => withStrikeEtaFloor(false, () => withPressKillShakeGuard(guards, () => withPressKillRebootGuard(guards, () => withGhostKillRung(enabled, () => {

@@ -97,6 +97,10 @@ export class StateManagerProxy {
     // Numbers each loadRules; the worker echoes it on rulesLoadedConfirmation
     // so a confirmation a newer loadRules has overtaken can be told apart.
     this.rulesLoadSeq = 0;
+    // The latest load's rulesLoadFailed (game, player, phase, where, message), or null.
+    // Set when the worker names a failed load; cleared by the next loadRules, which
+    // re-arms initialLoadPromise because of it.
+    this.lastLoadFailure = null;
     this.messageCounter = 0; // DEPRECATED or RENAMED? Let's ensure nextMessageId is primary.
     this.nextMessageId = 0; // MODIFIED: Initialize nextMessageId
     this.config = null; // To store initial config like playerId
@@ -385,6 +389,9 @@ export class StateManagerProxy {
         
         // Worker is up, but we still wait for rules to be loaded for the main "ready" state.
         // This event could be used for finer-grained readiness if needed in the future.
+        break;
+      case 'rulesLoadFailed':
+        this._handleRulesLoadFailed(message);
         break;
       case 'rulesLoadedConfirmation': {
         log(
@@ -1405,8 +1412,10 @@ export class StateManagerProxy {
 
     // Ensure the initial load promise is reset if we are loading new rules after the first time.
     // This allows ensureReady to correctly wait for the new rules to be processed.
-    if (this.staticDataIsSet) {
-      // If static data was already set, this is a reload.
+    // A failed load also re-arms: it settled the promise (false), and a later good load
+    // must give ensureReady() a fresh one to wait on.
+    if (this.staticDataIsSet || this.lastLoadFailure) {
+      // If static data was already set (or the last load failed), this is a reload.
       log(
         'info',
         '[StateManagerProxy loadRules] Rules are being reloaded. Resetting initialLoadPromise.'
@@ -1417,6 +1426,7 @@ export class StateManagerProxy {
       this.uiCache = null; // Clear stale cache to prevent stale display during reload
       this.isPotentialStaleSnapshot = true; // Suppress stale snapshots until new rules confirmed
     }
+    this.lastLoadFailure = null;
 
     log('info', '[StateManagerProxy] Sending loadRules command to worker...');
     // Send the rules data and player info to the worker
@@ -1433,6 +1443,47 @@ export class StateManagerProxy {
     });
     log('info', '[StateManagerProxy] loadRules command sent.');
     // Note: The actual confirmation and caching happen in handleWorkerMessage when 'rulesLoadedConfirmation' is received.
+  }
+
+  /**
+   * The worker's `rulesLoadFailed`: a loadRules whose loadFromJSON (or the getSnapshot /
+   * getStaticGameData after it) threw. Settles initialLoadPromise with FALSE, never a
+   * rejection: loadRules is fire-and-forget, so a rejected promise nobody awaits would be
+   * an unhandledrejection, and ensureReady() already answers "not ready" with false.
+   * Publishes `stateManager:loadFailed`. The next loadRules re-arms the promise.
+   * @param {object} message - {loadSeq, game, player, phase, where, message, stack}
+   * @private
+   */
+  _handleRulesLoadFailed(message) {
+    if (message.loadSeq !== undefined && message.loadSeq !== this.rulesLoadSeq) {
+      log(
+        'info',
+        `[StateManagerProxy] Dropping rulesLoadFailed for overtaken load #${message.loadSeq} (latest #${this.rulesLoadSeq}).`
+      );
+      return;
+    }
+    const failure = {
+      loadSeq: message.loadSeq,
+      game: message.game ?? null,
+      player: message.player ?? null,
+      phase: message.phase ?? null,
+      where: message.where ?? null,
+      message: message.message ?? null,
+      stack: message.stack ?? null,
+      source: this.currentRulesSource,
+    };
+    log(
+      'error',
+      `[StateManagerProxy] Rules load FAILED: game ${failure.game}, player ${failure.player}, phase ${failure.phase}${failure.where ? ` (${failure.where})` : ''}: ${failure.message}`
+    );
+    this.lastLoadFailure = failure;
+    // The worker is left half-loaded: no snapshot from it is published until a good load.
+    this.isPotentialStaleSnapshot = true;
+    if (this.initialLoadResolver) {
+      this.initialLoadResolver(false);
+      this.initialLoadResolver = null;
+    }
+    this.eventBus.publish('stateManager:loadFailed', failure, 'stateManager');
   }
 
   /**
@@ -1469,6 +1520,10 @@ export class StateManagerProxy {
             '[StateManagerProxy ensureReady] initialLoadPromise resolved. Ready.'
           );
           return true;
+        }
+        if (this.lastLoadFailure) {
+          // The worker named a failed load (rulesLoadFailed): settled, not ready.
+          return false;
         }
       } catch (error) {
         log(

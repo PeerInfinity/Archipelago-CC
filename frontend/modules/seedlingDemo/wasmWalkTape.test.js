@@ -45,7 +45,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
 const GAME_CONFIG = readJson('frontend/modules/flashPanel/games/seedling.json');
 const BRIDGE_CONFIG = JSON.stringify({ classes: GAME_CONFIG.classes, state_properties: GAME_CONFIG.state_properties });
-const PRESETS = ['seedling_generated_room', 'seedling_generated_leaf', 'seedling_generated_host', 'seedling_generated_swim'];
+const PRESETS = ['seedling_generated_room', 'seedling_generated_leaf', 'seedling_generated_host', 'seedling_generated_swim',
+    'seedling_generated_chestdoor'];
 const FLAGS = Object.fromEntries(Object.values(ITEM_PROPERTIES).map((s) => [s.property, s.kind === 'add' ? s.base : false]));
 const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-gen-p4g.json').arrivals;
 
@@ -64,6 +65,9 @@ function goalsOf({ assembled }, level) {
             .map((a) => ({ kind: 'location', level, tag: a.tag, name: a.location })),
         ...assembled.report.doors.filter((d) => d.room === level)
             .map((d) => ({ kind: 'exit', level, tile: [d.cell.tx, d.cell.ty], name: `${d.region}__${d.exitName}` })),
+        // ⛓ chestdoor preset — a DOOR CHEST is a location goal naming its entity (absent from a world without one)
+        ...(assembled.report.chestDoors ?? []).filter((c) => c.room === level)
+            .map((c) => ({ kind: 'location', level, tag: c.tag, entityType: 'chest', name: c.location })),
     ];
 }
 /** Every arrival into a room: the set's start, and every door's (its `arrival` is the player CENTRE — ctor = −8). */
@@ -103,6 +107,20 @@ const TAPES = {
     // is blind to what the solver certifies, and swimming is the swim arc's) — refused, by name.
     'seedling_generated_swim|start→L0(80,16)|region_3_2__loc_0': ['refused', /did not reach region_3_2__loc_0 in level 0: not reached within 1800 ticks/],
     'seedling_generated_swim|start→L0(80,16)|region_3_2__region_2_2': ['crossed', 7, '4e1540ca5e2c'],
+    // ⛓ chestdoor preset — the door chests are OPENED (the walk ends on the chest's clear). Room 0's apitem stands
+    // past its chest door; the walker's planner does not open it and wanders onto a door — refused, by name (the
+    // solver opens the chest first: jsRuntimeGeneratedSolver.test.js's `chest+walk`).
+    'seedling_generated_chestdoor|start→L0(32,112)|region_0_0__key_blue_pickup': ['refused', /the walk left level 0 for 2 at tick 6 without reaching region_0_0__key_blue_pickup — no tape/],
+    'seedling_generated_chestdoor|start→L0(32,112)|region_0_0__exit_0': ['crossed', 6, 'b3fe0993168a'],
+    'seedling_generated_chestdoor|start→L0(32,112)|region_0_0__exit_1': ['crossed', 7, 'e48104637688'],
+    'seedling_generated_chestdoor|start→L0(32,112)|region_0_0 - Chest': ['opened', 81, 'aee5d9bda146'],
+    'seedling_generated_chestdoor|L0→L1(64,16)|region_0_1__exit_0': ['crossed', 7, '18ccffbbd455'],
+    'seedling_generated_chestdoor|L0→L1(64,16)|region_0_1__exit_1': ['crossed', 7, 'ece6c30d2276'],
+    'seedling_generated_chestdoor|L0→L1(64,16)|region_0_1 - Chest': ['opened', 72, '37a512259e1f'],
+    'seedling_generated_chestdoor|L1→L0(32,112)|region_0_0__key_blue_pickup': ['refused', /the walk left level 0 for 2 at tick 6 without reaching region_0_0__key_blue_pickup — no tape/],
+    'seedling_generated_chestdoor|L1→L0(32,112)|region_0_0__exit_0': ['crossed', 6, 'b3fe0993168a'],
+    'seedling_generated_chestdoor|L1→L0(32,112)|region_0_0__exit_1': ['crossed', 7, 'e48104637688'],
+    'seedling_generated_chestdoor|L1→L0(32,112)|region_0_0 - Chest': ['opened', 81, 'aee5d9bda146'],
 };
 
 const MEMBERS = PRESETS.flatMap((name) => arrivalsOf(PRESET[name])

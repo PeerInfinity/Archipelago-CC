@@ -70,9 +70,12 @@ async function replayLatch(perTick, equips) {
 describe('hammer-phase LWEIGH on the latch chain (slow)', () => {
     it('OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271', async () => {
         const boot = await l40LatchBoot();
-        const off = await withTurretApproach(false, () => withLatchWeighFirst(false, () => l40LatchSolve(boot)));
+        // ⛓ CPAIR flip: `CHOOSER_PAIR` pinned OFF (ON at size 3 since its flip); this row is the pre-pair walk west
+        const off = await withChooserPair(false, () => withTurretApproach(false, () => withLatchWeighFirst(false,
+            () => l40LatchSolve(boot))));
         resetLatchWeighFirstCounts();
-        const on = await withTurretApproach(false, () => withLatchWeighFirst(true, () => l40LatchSolve(boot)));
+        const on = await withChooserPair(false, () => withTurretApproach(false, () => withLatchWeighFirst(true,
+            () => l40LatchSolve(boot))));
         expect(off.refusal.message).toMatch(/-> shove stance \(pushableblockfire@576,576\) -> hold stance \(wandlock@448,432\): the combat ladder is EXHAUSTED/);
         expect(on.refusal.message).toMatch(/-> shove stance \(pushableblockfire@576,576\) -> weigh stance \(wandlock@448,432\): the combat ladder is EXHAUSTED/);
         for (const r of [off, on]) {

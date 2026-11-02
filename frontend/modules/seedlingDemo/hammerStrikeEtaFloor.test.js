@@ -23,7 +23,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     STRIKE_ETA_FLOOR, STRIKE_ETA_FLOOR_DEFAULT, STRIKE_PREVIEW_CAP, deriveStrike, solveSegment, strikeEtaFloorOf,
-    withStrikeEtaFloor,
+    withChooserPair, withStrikeEtaFloor,
 } from './solverBot.js';
 import { SPINNER } from './spinner.js';
 import { PROFILE } from './seedlingProfile.js';
@@ -284,7 +284,9 @@ describe(`${WNAME} — the strike the admissible floor lets the scan see, on the
      * guard refuses the kill at that death, so the row that reproduces the witness pins the guards OFF, and a sibling
      * row pins the ON answer (the witness's own first 778 ticks, then the guard's refusal).
      */
-    const solveOn = (guards) => {
+    // ⛓ CPWIT flip: `CHOOSER_PAIR` pinned OFF (ON since its flip), as the other switches below are
+    const solveOn = (guards) => withChooserPair(false, () => solveOnUnpinned(guards));
+    const solveOnUnpinned = (guards) => {
         const staging = solveStaging(stagingFromTape(parseTape(readFileSync(join(HERE, 'fixtures',
             'hammer-p1-l40-south-boot.json'), 'utf8'))));
         staging.seam = { ...staging.seam, items: { ...staging.seam.items, hasSword: true, hasGhostSword: true } };

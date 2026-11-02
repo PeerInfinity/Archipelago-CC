@@ -122,4 +122,64 @@ describe('SWIM T4 D2 — every bosslock against the committed atlas', () => {
             expect(eventOf({ level: 12, persistTag: 12 })).toHaveLength(1);
         });
     });
+
+    // ⛓ RULES sided-openers — the two bosslocks that mint NO event (L56 @96,16, L66 @72,64) guard an EXIT, not a
+    // place: L56's sits on its pit to L57 (`out_pit_6_10` binds to the lock's tile), L66's covers its door to L70
+    // (`out_teleporter_72_64`, the off-grid lock's overlapped tiles). No game landing (`in_*`) binds beyond either, so
+    // no entrance shuffle can put a player on the far side: the exit's own rule (the key) IS the sided rule. Pinned
+    // so a later landing on that side reds here instead of silently loosening.
+    describe('rules sided-openers: an event-less bosslock guards only an exit', () => {
+        const RULES = readJson('frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json');
+        const events = Object.values(RULES.regions['1']).flatMap((r) => r.locations.filter((l) => l.event_kind === 'game_state'));
+        const keyOf = new Map(rows.filter((r) => /^AGREES/.test(r.verdict))
+            .map((r) => [r.keyType, JSON.stringify(r.rule.access_rule).match(/"([A-Za-z]+ Key)"/)[1]]));
+        const eventLess = rows.filter((r) => !/^AGREES/.test(r.verdict)
+            && !events.some((e) => e.event_id === `flag:L${r.level}:${r.persistTag}`));
+        it('they are exactly L56@96,16 and L66@72,64', () => {
+            expect(eventLess.map((r) => `L${r.level}@${r.at}`)).toEqual(['L56@96,16', 'L66@72,64']);
+        });
+        it('every exit bound under the lock is an out_ exit charged its key; no landing binds there', () => {
+            for (const r of eventLess) {
+                const [x, y] = r.at.split(',').map(Number);
+                const under = new Set();
+                for (let ty = Math.floor(y / 16); ty <= Math.floor((y + 15) / 16); ty += 1) {
+                    for (let tx = Math.floor(x / 16); tx <= Math.floor((x + 15) / 16); tx += 1) under.add(`${tx},${ty}`);
+                }
+                const region = ATLAS.regions.find((g) => g.map_ref === r.level);
+                const bound = region.exits.filter((e) => under.has(e.entrance_tile.join(',')));
+                expect(bound.length, `L${r.level}@${r.at}`).toBeGreaterThan(0);
+                expect(bound.filter((e) => !/^out_/.test(e.exit_id)), `L${r.level}@${r.at}`).toEqual([]);
+                for (const e of bound) expect(JSON.stringify(e.access_rule), `${e.exit_id}`).toContain(JSON.stringify(keyOf.get(r.keyType)));
+            }
+        });
+    });
+});
+
+// ⛓ RULES sided-openers — the ShieldLocks, by the same census (LOCK_PROBE_SIDES: W). Before this slice the
+// semantics priced them two-way (no `probe`), so a far side crossed back on the Shield alone.
+describe('rules sided-openers: every shieldlock against the committed atlas and rules', () => {
+    const rows = censusLocks({ levels: MAP.levels, atlas: ATLAS, gridFor: playthroughGridFor, findComponents,
+        tags: ['shieldlock', 'shieldlocknorm'] });
+    const RULES = readJson('frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json');
+    const regions = RULES.regions['1'];
+    const events = Object.values(regions).flatMap((r) => r.locations.filter((l) => l.event_kind === 'game_state')
+        .map((l) => ({ ...l, region: r.name })));
+    const names = (rule) => (!rule ? [] : [rule.args?.item_name, ...(rule.children ?? []).flatMap(names)].filter(Boolean));
+    it('the game places 3, each probed from the WEST, persisted, and one-way from its probe side', () => {
+        expect(rows.map((r) => `L${r.level}@${r.at}`)).toEqual(['L12@288,704', 'L20@176,16', 'L71@288,256']);
+        expect(rows.every((r) => r.probe === 'W' && r.persistTag >= 0)).toBe(true);
+        expect(censusCounts(rows)).toEqual({ AGREES: 3 });
+    });
+    it('each → ONE game_state event at its west side, and its far side\'s return needs that event', () => {
+        for (const x of rows) {
+            const evs = events.filter((e) => e.event_id === `flag:L${x.level}:${x.persistTag}`);
+            expect(evs, `L${x.level}@${x.at}`).toHaveLength(1);
+            expect(evs[0]).toMatchObject({ region: `level_${x.level}__${x.probeSide}`, obstacle: { class: x.tag } });
+            expect(evs[0].across).toContain(`level_${x.level}__${x.farSide}`);
+            expect(x.returnRows, `L${x.level}@${x.at}`).toEqual([`${x.farSide}->${x.probeSide}`]);
+            const back = regions[`level_${x.level}__${x.farSide}`].exits
+                .find((e) => e.connected_region === `level_${x.level}__${x.probeSide}`);
+            expect(names(back.access_rule)).toContain(evs[0].name);
+        }
+    });
 });
