@@ -1,0 +1,76 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index de8d9164..30438801 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -6544,6 +6544,11 @@ export function strikePolicyFor(run, { dashPlan = null,
+         vetoBody: dropKillVetoFor(run),
+         ...(iframeLapse === false ? { iframeLapse: false } : {}),
+     });
++    if (globalThis.__DEC && dashPlan) {
++        const id = (globalThis.__PID = (globalThis.__PID ?? 0) + 1); const d0 = policy.decide.bind(policy);
++        const log = []; globalThis.__DEC.push({ id, plan: dashPlan, log, stack: new Error().stack.split('\n').slice(2, 5).join(' | ') });
++        policy.decide = (state, bodies, tick, walkHeld, opts) => { const out = d0(state, bodies, tick, walkHeld, opts); log.push({ tick, x: state.x, y: state.y, n: bodies.length, b: bodies.map((b) => b.id ?? b.tag ?? '?').join(','), dec: out.decision, held: out.held ? [...out.held].join('+') : null, j16: JSON.stringify(bodies.filter((b) => b.id === 'jellyfish@80,16').map((b) => [+b.rect.x.toFixed(3), +b.rect.y.toFixed(3), b.hitsTimer, b.hits])), last: (policy.plannedSkipped.at(-1)?.tick === tick ? JSON.stringify(policy.plannedSkipped.at(-1).plannedSkipped) : ''), bodies: (tick === 81 ? JSON.stringify(bodies.map((b) => ({ id: b.id, rect: b.rect, ht: b.hitsTimer, vx: b.vx, vy: b.vy, k: Object.keys(b).join('/') }))) : ''), slash: (tick === 81 ? JSON.stringify(opts?.slash ?? null) : '') }); return out; };
++    }
+     if (!axisAlong) return policy;
+     if (dashPlan) fail('strikePolicyFor: an axis-along policy carries no dash plan (an axis-aligned walk is undashed)');
+     AXIS_STRIKE_COUNTS.policies += 1;
+@@ -6946,6 +6951,8 @@ export function previewWalk(run, wps, tolerance = 0,
+             for (const b of bodiesNow ?? []) {
+                 if (!rectsOverlapLocal(rectNow, b.rect)) continue;
+                 if (distanceRectPoint(state.x, state.y, b.rect) > reachLimit) continue;
++                if ((globalThis.process?.env?.SCR_SIGHT === '1' || ((globalThis.process?.env?.SCR_SIGHT === 'cert' || globalThis.process?.env?.SCR_SIGHT === 'refuse') && (globalThis.__CERTDEPTH ?? 0) > 0)) && CONTACT_FIDELITY.pixelMaskSightLines && b.tag !== 'flyer'
++                    && run.collideLineSolid(state.x, state.y, b.x, b.y, { masks: true })) { (globalThis.__SIGHT ??= []).push({ at, id: b.id }); if (globalThis.process?.env?.SCR_SIGHT !== 'refuse') continue; }
+                 /**
+                  * ⛔ THE RECEIVER DECIDES. `chasers.hit` runs `enemyHit`, whose
+                  * own five gates refuse an i-framed body, a dying one and a
+@@ -26869,14 +26876,24 @@ function solveSegmentUnder({
+      * ceremony sample), untruncated; anything less falls back to the window-by-window plan, as a failed chain does.
+      */
+     const spinnerDashWhole = (wps, except, stand = null) => {
++        globalThis.__CERTDEPTH = (globalThis.__CERTDEPTH ?? 0) + 1;
++        try { return spinnerDashWholeIn(wps, except, stand); } finally { globalThis.__CERTDEPTH -= 1; }
++    };
++    const spinnerDashWholeIn = (wps, except, stand = null) => {
+         // ⛓ hammer DASH (`DASH_STAND_WHOLE`, OFF): a `stand` tail reaches here only ON; null is the shape before it.
+         const opts = { tolerance, dashMode, ...(stand ? { stand } : {}) };
+         const blind = (samples) => probeSamples(samples.map((sm) => (sm.spinners ? { ...sm, spinners: null } : sm)),
+             except);
++        const T = (globalThis.__T ??= { calls: 0, blind: 0, whole: 0, fallback: 0, blindScanned: 0, fallbackScanned: 0, certified: 0, wps: [] });
++        T.calls += 1; let t0 = performance.now();
+         const c = planSwordDash(run, wps, { ...opts, certify: blind });
++        T.blind += performance.now() - t0; T.blindScanned += c.scanned ?? 0; T.wps.push(wps.length);
+         if (!c.plan) return c;
++        t0 = performance.now();
+         const walk = previewWalkOrDeath(run, wps, tolerance, { strike: strikePolicyFor(run, { dashPlan: c.plan, dashMode }),
+             ...standTailOpts(stand) });
++        T.whole += performance.now() - t0;
++        if (globalThis.process?.env?.SCR_SIGHT === 'refuse') { const n0 = globalThis.__SIGHTN ?? 0; const n = (globalThis.__SIGHT ?? []).length; globalThis.__SIGHTN = n; if (n > n0) { T.refusedBlind = (T.refusedBlind ?? 0) + 1; walk.truncated = walk.truncated ?? { kind: 'blind' }; } }
+         // ⛓ hammer DASH: under a tail the certificate holds the WHOLE stand after the dashed walk — every one of its
+         // ticks (or up to the ceremony sample a collect tail ends on), and no truncation: a `crossed` there is a dwell
+         // that left the room (trap 150), not an arrival.
+@@ -26884,11 +26901,15 @@ function solveSegmentUnder({
+         const stood = tail ? tail.length : null;
+         const arrived = stand ? !walk.truncated && (stood === stand.ticks || tail.at(-1)?.ceremony === true)
+             : !walk.truncated || walk.truncated.kind === 'crossed';
++        (globalThis.__CERT ??= []).push({ wps: wps.map((w) => [w.x, w.y]), plan: c.plan, startTick: walk.startTick, samples: walk.samples, except: except ? [...except] : null, probe: probeSamples(walk.samples, except), truncated: walk.truncated ?? null });
+         if (arrived && !probeSamples(walk.samples, except)) {
+             return { ...c, why: stand ? `certified whole with its ${stood}-tick stand (hammer DASH)`
+                 : 'certified whole (fidelity L40BK2)' };
+         }
+-        return planSwordDash(run, wps, { ...opts, certify: (samples) => probeSamples(samples, except) });
++        t0 = performance.now();
++        const fb = planSwordDash(run, wps, { ...opts, certify: (samples) => probeSamples(samples, except) });
++        T.fallback += performance.now() - t0; T.fallbackScanned += fb.scanned ?? 0;
++        return fb;
+     };
+ 
+     /**
+@@ -29759,7 +29780,7 @@ function solveSegmentUnder({
+             || (solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) <= FINE_LATTICE) return null;
+         const n = nodeAt(aim.x, aim.y, FINE_LATTICE);
+         const centre = nodeCentre(n.tx, n.ty, FINE_LATTICE);
+-        const axis = centre.x !== aim.x || centre.y !== aim.y;
++        const axis = globalThis.process?.env?.SCR_M4 === '1' ? false : (centre.x !== aim.x || centre.y !== aim.y);
+         let wps;
+         try {
+             wps = planWaypoints(run.world, run.state, aim, allowTeleporter,

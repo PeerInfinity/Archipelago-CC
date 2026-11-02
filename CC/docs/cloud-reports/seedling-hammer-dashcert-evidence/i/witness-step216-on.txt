@@ -1,0 +1,10 @@
+# box lock: TAKEN by probe-seedling-chaser-mobiles.mjs (browser, pid 2092) — head 6d9f99173, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the sample clock is the model's — 327 sampled tick(s) inside the tape; shifts that fit every player x: [0] (must be exactly [0])
+PASS: every Jellyfish's position, velocity, hits and hits_timer are the model's at every sampled tick, and they exist exactly when the model's do — 1103 comparison(s), worst |Δ| 0
+wrote /tmp/claude-0/-home-user-Archipelago-CC/55a7bcd5-8c11-5588-9eb0-29679ab0f567/scratchpad/step216-dashcert-on.frames.json
+## cmp216.mjs (L100LATTICE's tool): model replay vs the game's frames
+ticks 327; compared 327 tick(s) (first frame per tick); level mismatches 0; worst |Δ| player 0
+game hits steps []
+model playerHits []
+end: game level 101 tick 327 | model level 101

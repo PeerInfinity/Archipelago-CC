@@ -1,0 +1,20 @@
+# part216.mjs: the t0 certificate's preview samples vs the drive (keys replayed); sample tick k = drive after k-1 advances (OFF=1)
+certificates asked 3
+ cert wps [[44,92],[60,44],[76,44],[108,28],[116,36],[124,140]] start 0 n 217 probe null trunc null except null
+ cert wps [[116,36],[124,140]] start 479 n 150 probe null trunc null except null
+ cert wps [[148,148],[296,104]] start 650 n 81 probe null trunc {"kind":"crossed","at":{"x":287.51324920040054,"y":104.46568267550104},"why":"the preview crossed to level 101; the danger map is scoped to one room"} except null
+t76 preview (75.02,44.33) drive (75.02,44.33) Δ0.000 hits 0 | prev jelly [["86.21","91.22",null]] | drive jelly [[86.43,91.73,null,0]] keys [] held [] wp 2
+t77 preview (75.62,44.33) drive (75.62,44.33) Δ0.000 hits 0 | prev jelly [["86.43","90.72",null]] | drive jelly [[86.21,91.22,null,0]] keys [] held [] wp 2
+t78 preview (75.97,44.33) drive (75.97,44.33) Δ0.000 hits 0 | prev jelly [["86.21","90.22",null]] | drive jelly [[86.43,90.72,null,0]] keys [] held [] wp 2
+t79 preview (76.07,44.33) drive (76.07,44.33) Δ0.000 hits 0 | prev jelly [["86.43","89.71",null]] | drive jelly [[86.21,90.22,null,0]] keys [] held [] wp 2
+t80 preview (76.07,44.33) drive (76.07,44.33) Δ0.000 hits 0 | prev jelly [["86.21","89.21",null]] | drive jelly [[86.43,89.71,null,0]] keys ["right","up"] held ["right","up"] wp 3
+t81 preview (76.87,43.53) drive (76.87,43.53) Δ0.000 hits 0 | prev jelly [["86.43","88.71",null]] | drive jelly [[86.21,89.21,null,0]] keys ["right","up"] held ["right","up"] wp 3
+t82 preview (78.29,42.11) drive (78.29,42.11) Δ0.000 hits 0 | prev jelly [["86.21","88.21",null]] | drive jelly [[86.43,88.71,null,0]] keys ["right","up"] held ["right","up","primary"] wp 3
+t83 preview (80.95,39.44) drive (79.54,40.86) Δ1.414 hits 0 | prev jelly [["86.43","87.70",null]] | drive jelly [[86.21,88.21,null,0]] keys ["right","up"] held ["right","down"] wp 3
+t84 preview (83.26,37.61) drive (80.61,39.79) Δ2.652 hits 0 | prev jelly [["86.21","87.20",null]] | drive jelly [[86.43,87.7,null,0]] keys ["right","up"] held ["right","down"] wp 3
+t85 preview (85.17,36.57) drive (81.32,39.07) Δ3.851 hits 0 | prev jelly [["86.43","86.70",null]] | drive jelly [[86.21,87.2,null,0]] keys ["right","up"] held ["right","up"] wp 3
+t86 preview (86.65,35.76) drive (82.16,38.24) Δ4.490 hits 0 | prev jelly [["86.21","86.19",null]] | drive jelly [[86.43,86.7,null,0]] keys ["right","up"] held ["right","up"] wp 3
+first jelly parting 2
+first parting tick 83 sample keys x,y,tick,arrows,chasers,wp,held
+drive non-move keys (perTick index): [[3,"right+up+primary"],[5,"up+primary"],[23,"right+up+primary"],[25,"right+up+primary"],[31,"right+up+primary"],[46,"right+up+primary"],[48,"up+primary"],[67,"right+primary"],[69,"right+primary"],[107,"primary"],[130,"primary"],[155,"up+primary"],[175,"up+primary"],[195,"primary"],[215,"primary"]]
+preview non-move held (sample tick): [[4,"right+up+primary"],[6,"up+primary"],[24,"right+up+primary"],[26,"right+up+primary"],[32,"right+up+primary"],[47,"right+up+primary"],[49,"up+primary"],[68,"right+primary"],[70,"right+primary"],[82,"right+up+primary"],[116,"right+primary"],[136,"primary"],[156,"primary"],[158,"right+down+primary"],[164,"left+down+primary"],[170,"down+primary"],[176,"down+primary"],[178,"down+primary"],[196,"down+primary"],[204,"down+primary"]]

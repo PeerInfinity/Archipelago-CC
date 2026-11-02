@@ -1,0 +1,3 @@
+{"design":"","strikes":[[10,"aim"],[11,"press"],[37,"aim"],[38,"press"]],"landed":[[12,"bob@112,48",1]],"playerHits":[]}
+{"design":"1","strikes":[],"landed":[],"playerHits":[[20,"bob@112,48"]]}
+{"design":"3","strikes":[[10,"aim"],[11,"press"],[37,"aim"],[38,"press"]],"landed":[[12,"bob@112,48",1]],"playerHits":[]}

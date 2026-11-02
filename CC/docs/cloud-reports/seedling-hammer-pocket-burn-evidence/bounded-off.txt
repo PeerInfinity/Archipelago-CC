@@ -1,0 +1,2 @@
+[2m Test Files [22m [1m[32m65 passed[39m[22m[90m (65)[39m
+[2m      Tests [22m [1m[32m1257 passed[39m[22m[90m (1257)[39m

@@ -1,0 +1,3 @@
+base REFUSED null "solverBot(survey-step-79) reach-exit (144,240)->L54 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 167-tick bound (0 guard step(s)); it stands at (115.9,119.4), 40.2 px from the player."
+1 REFUSED null "solverBot(survey-step-79) reach-exit (144,240)->L54 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 166-tick bound (0 guard step(s)); it stands at (115.6,119.4), 39.7 px from the player."
+3 REFUSED null "solverBot(survey-step-79) reach-exit (144,240)->L54 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 166-tick bound (0 guard step(s)); it stands at (115.9,119.4), 39.4 px from the player."

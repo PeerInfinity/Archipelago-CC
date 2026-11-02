@@ -1,0 +1,58 @@
+{"tag":"base","id":366,"i":0,"ok":true,"kind":null,"ticks":5,"plan":"856d0b65ada0","work":9,"message":""}
+{"tag":"base","id":375,"i":0,"ok":true,"kind":null,"ticks":172,"plan":"aa56d3fa3e0a","work":85,"message":""}
+{"tag":"base","id":376,"i":0,"ok":true,"kind":null,"ticks":4,"plan":"497c1673b306","work":9,"message":""}
+{"tag":"base","id":377,"i":0,"ok":true,"kind":null,"ticks":861,"plan":"c5cd19461687","work":105,"message":""}
+{"tag":"base","id":378,"i":0,"ok":true,"kind":null,"ticks":913,"plan":"2a34b215e63c","work":157,"message":""}
+{"tag":"base","id":379,"i":0,"ok":true,"kind":null,"ticks":1025,"plan":"124e576c2caa","work":175,"message":""}
+{"tag":"base","id":380,"i":0,"ok":true,"kind":null,"ticks":1088,"plan":"bba780f0a0da","work":181,"message":""}
+{"tag":"base","id":381,"i":0,"ok":true,"kind":null,"ticks":844,"plan":"5e96bbbea1c8","work":103,"message":""}
+{"tag":"base","id":382,"i":0,"ok":true,"kind":null,"ticks":955,"plan":"bef31d3abaf6","work":425,"message":""}
+{"tag":"base","id":383,"i":0,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":642,"message":"solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (23,28)->L43's corridor (attempt 1) — the segment's own wo"}
+{"tag":"base","id":383,"i":1,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":2562,"message":"solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (23,28)->L43's corridor (attempt 1) — the segment's own wo"}
+{"tag":"base","id":384,"i":0,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":642,"message":"solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (24,28)->L43's corridor (attempt 1) — the segment's own wo"}
+{"tag":"base","id":384,"i":1,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":2562,"message":"solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-40) reach-pit (24,28)->L43's corridor (attempt 1) — the segment's own wo"}
+{"tag":"base","id":385,"i":0,"ok":true,"kind":null,"ticks":828,"plan":"ee9a57cdf7a8","work":101,"message":""}
+{"tag":"base","id":386,"i":0,"ok":true,"kind":null,"ticks":938,"plan":"bd5d728178e9","work":420,"message":""}
+{"tag":"base","id":387,"i":0,"ok":true,"kind":null,"ticks":809,"plan":"9a82a143d09a","work":99,"message":""}
+{"tag":"base","id":388,"i":0,"ok":true,"kind":null,"ticks":909,"plan":"d896c367409b","work":388,"message":""}
+{"tag":"base","id":392,"i":0,"ok":true,"kind":null,"ticks":5,"plan":"856d0b65ada0","work":9,"message":""}
+{"tag":"base","id":393,"i":0,"ok":true,"kind":null,"ticks":417,"plan":"d67f648477e9","work":142,"message":""}
+{"tag":"base","id":394,"i":0,"ok":true,"kind":null,"ticks":416,"plan":"ec0ffea1f979","work":153,"message":""}
+{"tag":"base","id":395,"i":0,"ok":true,"kind":null,"ticks":480,"plan":"5e63a1cb28b5","work":188,"message":""}
+{"tag":"base","id":396,"i":0,"ok":true,"kind":null,"ticks":642,"plan":"073fcd4a857e","work":208,"message":""}
+{"tag":"base","id":397,"i":0,"ok":true,"kind":null,"ticks":718,"plan":"29163d6a7aab","work":216,"message":""}
+{"tag":"base","id":398,"i":0,"ok":true,"kind":null,"ticks":482,"plan":"1ab541e0527c","work":153,"message":""}
+{"tag":"base","id":399,"i":0,"ok":true,"kind":null,"ticks":527,"plan":"4b6d58820416","work":191,"message":""}
+{"tag":"base","id":400,"i":0,"ok":true,"kind":null,"ticks":598,"plan":"65a1ccab8647","work":206,"message":""}
+{"tag":"base","id":401,"i":0,"ok":true,"kind":null,"ticks":637,"plan":"22a657829b2f","work":211,"message":""}
+{"tag":"base","id":402,"i":0,"ok":true,"kind":null,"ticks":340,"plan":"99d0dd3a19e2","work":147,"message":""}
+{"tag":"base","id":403,"i":0,"ok":true,"kind":null,"ticks":476,"plan":"302589f7405d","work":186,"message":""}
+{"tag":"base","id":404,"i":0,"ok":true,"kind":null,"ticks":433,"plan":"6a728f4eb489","work":148,"message":""}
+{"tag":"base","id":405,"i":0,"ok":true,"kind":null,"ticks":499,"plan":"054adc5449e2","work":184,"message":""}
+{"tag":"base","id":412,"i":0,"ok":true,"kind":null,"ticks":4,"plan":"497c1673b306","work":9,"message":""}
+{"tag":"base","id":369,"i":0,"ok":true,"kind":null,"ticks":70,"plan":"0dbae91cd01f","work":35,"message":""}
+{"tag":"base","id":370,"i":0,"ok":true,"kind":null,"ticks":5,"plan":"089066b99bc6","work":9,"message":""}
+{"tag":"base","id":372,"i":0,"ok":true,"kind":null,"ticks":5,"plan":"856d0b65ada0","work":9,"message":""}
+{"tag":"base","id":373,"i":0,"ok":true,"kind":null,"ticks":70,"plan":"fec766cf506c","work":35,"message":""}
+{"tag":"base","id":409,"i":0,"ok":true,"kind":null,"ticks":5,"plan":"f9a7ec30e744","work":9,"message":""}
+{"tag":"base","id":410,"i":0,"ok":true,"kind":null,"ticks":4,"plan":"497c1673b306","work":9,"message":""}
+{"tag":"base","id":867,"i":0,"ok":true,"kind":null,"ticks":1054,"plan":"822a1ca5659f","work":199,"message":""}
+{"tag":"base","id":867,"i":1,"ok":true,"kind":null,"ticks":389,"plan":"20f435ae4f1f","work":66,"message":""}
+{"tag":"base","id":367,"i":0,"ok":true,"kind":null,"ticks":75,"plan":"030e862d1f4a","work":88,"message":""}
+{"tag":"base","id":389,"i":0,"ok":true,"kind":null,"ticks":494,"plan":"acb3a63487eb","work":65,"message":""}
+{"tag":"base","id":390,"i":0,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":643,"message":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segmen"}
+{"tag":"base","id":390,"i":1,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":1398,"message":"solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.9,854.7) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `coll"}
+{"tag":"base","id":864,"i":0,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":642,"message":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segmen"}
+{"tag":"base","id":864,"i":1,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":1542,"message":"solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784) -> kill (spinner@816,848) by pr"}
+{"tag":"base","id":371,"i":0,"ok":true,"kind":null,"ticks":1558,"plan":"32f29414cd8e","work":596,"message":""}
+{"tag":"base","id":391,"i":0,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":20,"message":"solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (488,904): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put"}
+{"tag":"base","id":411,"i":0,"ok":true,"kind":null,"ticks":1331,"plan":"4b8cf02ac01b","work":433,"message":""}
+{"tag":"base","id":866,"i":0,"ok":true,"kind":null,"ticks":2269,"plan":"86d6c4da7198","work":532,"message":""}
+{"tag":"base","id":413,"i":0,"ok":true,"kind":null,"ticks":96,"plan":"e82712b554f8","work":48,"message":""}
+{"tag":"base","id":880,"i":0,"ok":true,"kind":null,"ticks":808,"plan":"283b84f70c1b","work":131,"message":""}
+{"tag":"base","id":406,"i":0,"ok":true,"kind":null,"ticks":118,"plan":"ecfb8d875945","work":73,"message":""}
+{"tag":"base","id":407,"i":0,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":78,"message":"solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t745 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboo"}
+{"tag":"base","id":865,"i":0,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":642,"message":"solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) contact's corridor (attempt 1) — the segmen"}
+{"tag":"base","id":865,"i":1,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":1320,"message":"solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by pr"}
+{"tag":"base","id":374,"i":0,"ok":true,"kind":null,"ticks":1866,"plan":"c4ad5e891b3f","work":568,"message":""}
+{"tag":"base","id":408,"i":0,"ok":false,"kind":"refusal","ticks":null,"plan":null,"work":20,"message":"solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (328,600): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put"}
