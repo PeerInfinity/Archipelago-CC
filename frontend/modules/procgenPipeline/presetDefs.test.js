@@ -25,7 +25,7 @@ function makeStorage(initial = {}) {
 
 const DEFAULTS = {
     seed: 7, sphereCount: 3, startSubstrate: 'auto',
-    runnerPhysicsProfile: 'celeste', bouncePhysicsProfile: 'dj',
+    cloudberryDifficulty: 2, bouncePhysicsProfile: 'dj',
 };
 const CURRENT = {
     params: { seed: 42 },
@@ -35,7 +35,7 @@ const CURRENT = {
     substrateMode: 'mix',
     mode: 'gridGrowth',
 };
-const HAS = (id) => ['maze', 'bounce', 'runner'].includes(id);
+const HAS = (id) => ['maze', 'bounce', 'cloudberry'].includes(id);
 
 describe('SHIPPED_PRESETS', () => {
     it('every shipped preset has a resolvable shape and a valid mode', () => {
@@ -155,13 +155,13 @@ describe('SHIPPED_PRESETS', () => {
         ]);
     });
 
-    it('runner library spiral demo takes the served runner pack beside the maze pack, no runner quota', () => {
-        const p = getPresetById('shipped:runner-library-spiral-demo');
+    it('cloudberry library spiral demo takes the served Cloudberry pack ×4 alone, no quota (the embed check\'s spiral)', () => {
+        const p = getPresetById('shipped:cloudberry-library-spiral-demo');
         expect(p.state.mode).toBe('shuffledSpiral');
+        expect(p.state.params.seed).toBe(1);
         expect(p.state.substrateQuotas).toEqual({});
         expect(p.state.libraries.map(({ source, file, count }) => [source, file, count])).toEqual([
-            ['served', 'demo-maze-pack.json', 2],
-            ['served', 'demo-runner-pack.json', 2],
+            ['served', 'demo-cloudberry-pack.json', 4],
         ]);
     });
 
@@ -302,32 +302,12 @@ describe('SHIPPED_PRESETS', () => {
         }
     });
 
-    it('runner sphere demo pins the runner_sphere_worldgen config + Springs', () => {
-        const p = getPresetById('shipped:runner-sphere-demo');
-        expect(p.state.params.seed).toBe(1);
-        expect(p.state.params.sphereCount).toBe(3);
-        expect(p.state.params.startSubstrate).toBe('runner');
-        expect(p.state.params.runnerPhysicsProfile).toBe('celeste');
-        expect(p.state.substrateQuotas).toEqual({ runner: 99 });
-        expect(p.state.scenario.items).toEqual({
-            'Double Jump': 1, 'Blue Platforms': 1, Springs: 1, Victory: 1,
-        });
-    });
-
-    it('runner placement demo pins the sphere config with the placement knobs on', () => {
-        const p = getPresetById('shipped:runner-placement-demo');
-        expect(p.state.mode).toBe('sphereGrowth');
-        expect(p.state.params.runnerJitter).toBe(0.75);
-        expect(p.state.params.runnerSplitChance).toBe(0.6);
-        expect(p.state.params.startSubstrate).toBe('runner');
-        expect(p.state.scenario.items).toEqual({
-            'Double Jump': 1, 'Blue Platforms': 1, Springs: 1, Victory: 1,
-        });
-    });
-
-    it('the dropped runner zone-table demo no longer resolves (⚖ 30 s headless ceiling)', () => {
-        expect(getPresetById('shipped:runner-zone-demo')).toBeNull();
-        expect(SHIPPED_PRESETS.some((p) => p.id === 'shipped:runner-zone-demo')).toBe(false);
+    it('the dropped runner presets no longer resolve (zone table: ⚖ 30 s headless ceiling; the rest: runner deleted, P4b)', () => {
+        for (const id of ['shipped:runner-zone-demo', 'shipped:runner-sphere-demo',
+            'shipped:runner-placement-demo', 'shipped:runner-library-spiral-demo']) {
+            expect(getPresetById(id), id).toBeNull();
+            expect(SHIPPED_PRESETS.some((p) => p.id === id), id).toBe(false);
+        }
     });
 });
 
@@ -425,19 +405,19 @@ describe('applyPresetState', () => {
     it('merges sparse params over defaults; full-state fields replace', () => {
         const next = applyPresetState({
             mode: 'sphereGrowth',
-            params: { seed: 1, startSubstrate: 'runner' },
+            params: { seed: 1, startSubstrate: 'cloudberry' },
             scenario: { items: { Victory: 1 } },
-            substrateQuotas: { runner: 99 },
+            substrateQuotas: { cloudberry: 99 },
             substrateMix: {},
             substrateMode: 'quotas',
         }, { defaults: DEFAULTS, hasSubstrate: HAS, current: CURRENT });
         expect(next.params).toEqual({
-            ...DEFAULTS, seed: 1, startSubstrate: 'runner',
+            ...DEFAULTS, seed: 1, startSubstrate: 'cloudberry',
         });
         // default keys from other substrates survive the merge
         expect(next.params.bouncePhysicsProfile).toBe('dj');
         expect(next.scenario).toEqual({ items: { Victory: 1 }, obstacles: {} });
-        expect(next.substrateQuotas).toEqual({ runner: 99 });
+        expect(next.substrateQuotas).toEqual({ cloudberry: 99 });
         expect(next.substrateMix).toEqual({});
         expect(next.substrateMode).toBe('quotas');
         expect(next.mode).toBe('sphereGrowth');
@@ -464,10 +444,10 @@ describe('applyPresetState', () => {
 
     it('filters unregistered substrates and non-positive counts from quota/mix dicts', () => {
         const next = applyPresetState({
-            substrateQuotas: { runner: 99, ghost: 5, maze: 0 },
+            substrateQuotas: { cloudberry: 99, ghost: 5, maze: 0 },
             substrateMix: { bounce: 1, ghost: 2, maze: -1 },
         }, { defaults: DEFAULTS, hasSubstrate: HAS, current: CURRENT });
-        expect(next.substrateQuotas).toEqual({ runner: 99 });
+        expect(next.substrateQuotas).toEqual({ cloudberry: 99 });
         expect(next.substrateMix).toEqual({ bounce: 1 });
     });
 
@@ -494,17 +474,19 @@ describe('applyPresetState', () => {
     });
 
     it('does not mutate the preset state or defaults', () => {
-        const state = getPresetById('shipped:runner-sphere-demo').state;
+        // A plain copy: the cloudberry sphere state is deep-frozen, which would
+        // make the no-mutation check vacuous.
+        const state = structuredClone(getPresetById('shipped:cloudberry-sphere-demo').state);
         const defaults = { ...DEFAULTS };
         const next = applyPresetState(state, {
             defaults, hasSubstrate: HAS, current: CURRENT,
         });
         next.params.seed = 999;
         next.scenario.items.Victory = 999;
-        next.substrateQuotas.runner = 0;
+        next.substrateQuotas.cloudberry = 0;
         expect(state.params.seed).toBe(1);
         expect(state.scenario.items.Victory).toBe(1);
-        expect(state.substrateQuotas.runner).toBe(99);
+        expect(state.substrateQuotas.cloudberry).toBe(99);
         expect(defaults).toEqual(DEFAULTS);
     });
 });
