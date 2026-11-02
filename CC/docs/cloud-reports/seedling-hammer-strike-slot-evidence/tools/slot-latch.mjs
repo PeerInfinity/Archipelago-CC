@@ -3,7 +3,7 @@
 // LATCH_WEIGH_FIRST ON, TURRET_APPROACH OFF, turretSnapPricing OFF, orbitFreeAim + strategyBoundDistinct ON);
 // `ta` = hammer-2's solved arm (CPAIR size 3 + LATCH_WEIGH_FIRST + TURRET_APPROACH, contact keys at their defaults).
 // Prints one JSON line: the verdict, ticks, the refusal head, the equips and a plan sha. Switches by env.
-// Usage: node --import ./slot-register.mjs slot-latch.mjs --arm=lweigh|ta [--root=<tree>]
+// Usage: node --import ./slot-register.mjs slot-latch.mjs --arm=lweigh|ta [--root=<tree>] [--keys-out=<json>]
 import { createHash } from 'node:crypto';
 const args = Object.fromEntries(process.argv.slice(2).map((a) => a.replace(/^--/, '').split(/=(.*)/s).slice(0, 2)));
 const ROOT = args.root ?? process.env.SLOT_ROOT ?? '/home/user/Archipelago-CC';
@@ -21,9 +21,11 @@ const r = await SB.withChooserPair(true, () => SB.withLatchWeighFirst(true, () =
 SB.CHOOSER_PAIR.size = was;
 const res = r.out ?? r.refusal;
 const keys = (res?.perTick ?? []).map((k) => [...k].sort().join('+'));
+if (args['keys-out']) (await import('node:fs')).writeFileSync(args['keys-out'], JSON.stringify({ keys, equips: res?.equips ?? null,
+    hits: res?.playerHits ?? null }));
 console.log(JSON.stringify({ arm, ok: Boolean(r.out), ms: Date.now() - t0, ticks: keys.length,
     plan: createHash('sha1').update(JSON.stringify(keys)).digest('hex').slice(0, 12),
-    refusal: r.refusal ? String(r.refusal.message).slice(0, 400) : null,
+    refusal: r.refusal ? String(r.refusal.message).slice(0, 900) : null,
     obstacle: r.refusal?.obstacle ?? null, equips: res?.equips ?? null,
     census: globalThis.__slotStats ? { policies: __slotStats.policies, presses: __slotStats.presses,
         byWeapon: __slotStats.byWeapon, nonBlade: __slotStats.rows.length } : null }));
