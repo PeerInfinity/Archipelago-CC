@@ -26936,7 +26936,9 @@ verdict movers; the route survey, r9 campaign, latch chain and pocket boot are u
 - **ON.** LWEIGH's arm no longer refuses *"ALREADY on (30,24)"*: it runs on hitless to the strategy bound at
   `pushableblock@576,560` (3586 t). The TA arm loses only the walk's Fire press (t1117), 4142 t both ways. L40: 55/58
   identical; 867:0, 867:1 and 880:0 move in work only (199 → 168, 66 → 52, 131 → 130), same plan. Survey and r9: no
-  mover.
+  mover. The producer roster: one committed tape moves, `apb-l32-fresh-fire-held` (`plan-seedling-encounters`, L32 with
+  the Fire held): its walks' three scheduled Fire presses (t840, t854, t934) are gone, 1056 t, the same burn (t880), level
+  30, hitless; a flip re-records it.
 - **Gate** `hammerStrikeSlot.test.js` (L6's `bob@112,48` with Fire selected: OFF the policy aims and presses at t11, 23,
   35, 47, 59, each a Fire press whose five dispatches miss the bob; ON no policy, no `primary`, the same two contacts; a
   built policy stands down when Fire is equipped; `planSwordDash` refuses by name; a blade walk is OFF's key for key; the
