@@ -12,6 +12,13 @@
  *                         PATH from an arrival, the rules the EDGE (L15's chest = Swim, the edge into r6c8 carries it);
  *   - `derived`           the derived rule equals today's, truth table for truth table, independently of the rule.
  *
+ * ⛓ An EXPLAINED problem (`explained`): a certifier problem whose cause a census has named is labelled by that cause, not
+ * `problem`, and keeps `verdict: 'problem'` and the reason (`explainedBy`). OPEN_L63 (r6c9 → r0c1) is the one: a
+ * partition-granularity row under block state — r0c1's foothold groups (6,6), which the Spear reaches, with (5,5), which
+ * needs L63 flag 1 once the spear block is parked on (5,6) (rules-4's Q4 DarkTrap census, session rules-l63-darktrap-census;
+ * designer tile-primitives-design-2, 2026-11-02: "Label it path-vs-edge (block-state framing)"). Matched by the certifier's
+ * row label, exactly.
+ *
  * The labels are exclusive and taken in that order, so an echo is never counted as agreement and a problem is never
  * hidden behind an echo. The facts behind them (`echoed`, `arrivalDependent`, `compare`, `overridable`, `verdict`) ride
  * along on every row, for rules-4's per-approach charge (Q2) and the override (R-A3) to filter on. Pure: no I/O.
@@ -85,12 +92,17 @@ function sharedMembersOf(rules) {
  * Label the certifier's rows.
  *
  * @param {object[]} rows `certifyPlaythroughMaze(…, {rows: true}).rows`
- * @param {{rules: object, echoes: Set<string>}} opts `rules` = the compiled maze document the rows came from (its AP
- *   regions and shared worlds); `echoes` = the AP element keys whose rule the maze payload copies (`findEchoes`)
+ * @param {{rules: object, echoes: Set<string>, explained?: {label: string, as: string, why: string}[]}} opts `rules` = the
+ *   compiled maze document the rows came from (its AP regions and shared worlds); `echoes` = the AP element keys whose rule
+ *   the maze payload copies (`findEchoes`); `explained` = the named problems (above), by certifier row label
  * @returns {{elements: object[], regions: Map<string, object>}} one row per element per arrival, and per region its
  *   arrivals and its Route A class ('overridable', 'internal-only', 'several arrivals', 'walk-in from another member')
  */
-export function labelDerivedRows(rows, { rules, echoes }) {
+export function labelDerivedRows(rows, { rules, echoes, explained = [] }) {
+    for (const x of explained) {
+        if (!DERIVED_ROW_LABELS.includes(x.as) || x.as === 'problem') throw new Error(`derived rows: an explained problem's label must be one of the others, got ${x.as}`);
+    }
+    const why = new Map(explained.map((x) => [x.label, x]));
     const REGIONS = rules.regions['1'];
     const members = sharedMembersOf(rules);
     const elements = [];
@@ -141,7 +153,9 @@ export function labelDerivedRows(rows, { rules, echoes }) {
     for (const e of elements) {
         e.compare = compareRules(e.derived, e.ap ?? FALSE);
         e.overridable = e.kind !== 'pair' && regions.get(e.region)?.class === 'overridable';
-        e.label = e.verdict === 'problem' ? 'problem' : e.echoed ? 'echoed' : e.arrivalDependent ? 'arrival-dependent'
+        const named = e.verdict === 'problem' ? why.get(e.certifierLabel) : undefined;
+        if (named) e.explainedBy = named.why;
+        e.label = named ? named.as : e.verdict === 'problem' ? 'problem' : e.echoed ? 'echoed' : e.arrivalDependent ? 'arrival-dependent'
             : e.compare === 'equal' ? 'derived' : 'path-vs-edge';
     }
     return { elements, regions };

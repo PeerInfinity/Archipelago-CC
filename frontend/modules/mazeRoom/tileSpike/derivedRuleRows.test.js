@@ -129,3 +129,22 @@ describe('summarizeDerivedRows', () => {
             overridableEchoFree: 0, regionsWithAnEchoFreeOverride: 0 });
     });
 });
+
+describe('explained problems (OPEN_L63 is labelled by its named cause)', () => {
+    const named = [{ label: 'A → B', as: 'path-vs-edge', why: 'block-state framing' }];
+    it('a named problem takes the named label, keeps its verdict and says why', () => {
+        const row = exitRow('A', 'A -> B', 'entrance', T, has('Swim'), 'problem');
+        expect(labelDerivedRows([row], { rules: RULES, echoes: new Set(), explained: named }).elements[0])
+            .toMatchObject({ label: 'path-vs-edge', verdict: 'problem', explainedBy: 'block-state framing' });
+    });
+    it('an unnamed problem, and a named label on a row that agrees, are untouched', () => {
+        const other = { ...exitRow('A', 'A -> B', 'entrance', T, has('Swim'), 'problem'), label: 'A → C' };
+        expect(labelDerivedRows([other], { rules: RULES, echoes: new Set(), explained: named }).elements[0].label).toBe('problem');
+        const fine = exitRow('A', 'A -> B', 'entrance', T, T);
+        expect(labelDerivedRows([fine], { rules: RULES, echoes: new Set(), explained: named }).elements[0]).not.toHaveProperty('explainedBy');
+    });
+    it('an explanation cannot relabel a problem as a problem, or as an unknown label', () => {
+        expect(() => labelDerivedRows([], { rules: RULES, echoes: new Set(), explained: [{ label: 'x', as: 'problem', why: '' }] })).toThrow(/label/);
+        expect(() => labelDerivedRows([], { rules: RULES, echoes: new Set(), explained: [{ label: 'x', as: 'fine', why: '' }] })).toThrow(/label/);
+    });
+});

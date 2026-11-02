@@ -33,6 +33,18 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const T = (p) => resolve(REPO, p);
 export const EXPECTED_FILE = T('scripts/procgen/seedling-derived-rules-expected.json');
 
+/**
+ * The certifier problems whose cause a census has named (`labelDerivedRows`'s `explained`): labelled by that cause, the
+ * verdict kept. Each must still match a problem row, or the run FAILs by name (a stale explanation).
+ */
+export const EXPLAINED_PROBLEMS = Object.freeze([
+    {
+        label: 'level_63__r6c9 → level_63__r0c1',
+        as: 'path-vs-edge',
+        why: 'block-state framing: r0c1\'s foothold groups (6,6), which the Spear reaches, with (5,5), which needs L63 flag 1 once the spear block is parked on (5,6) (rules-4 Q4 census, session rules-l63-darktrap-census)',
+    },
+]);
+
 /** The probe's flags. Exported for the unit rows. */
 export function parseArgs(argv) {
     const arg = (k, d) => argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3) ?? d;
@@ -123,7 +135,7 @@ async function main() {
     console.log(`CERT: ${problems.length} problems / ${accepted} accepted / ${threw.length} threw; ${rows.length} rows; wall ${wall} ms, shard ms ${parts.map((p) => p.ms).join('/')}, heap MB ${parts.map((p) => p.heapMb).join('/')}`);
     for (const p of problems) console.log(`  PROBLEM ${p}`);
     for (const p of threw) console.log(`  THREW shard ${p.shard}: ${p.threw}`);
-    const table = labelDerivedRows(rows, { rules, echoes: new Set(echoes.elements) });
+    const table = labelDerivedRows(rows, { rules, echoes: new Set(echoes.elements), explained: EXPLAINED_PROBLEMS });
     const summary = { certifier: { problems: problems.length, accepted, threw: threw.length }, echoes: { copied: counts, elements: echoes.elements.length }, ...summarizeDerivedRows(table) };
     console.log(`SUMMARY: ${JSON.stringify(summary)}`);
     const sha = process.env.GITHUB_SHA ?? '';
@@ -133,6 +145,11 @@ async function main() {
     let failed = threw.length;
     if (threw.length) console.log(`FAIL: ${threw.length} shard(s) threw`);
     if (echoes.unmapped.length) { failed += 1; console.log(`FAIL: ${echoes.unmapped.length} echoed rule(s) name no AP element`); }
+    for (const x of EXPLAINED_PROBLEMS) {
+        const hit = table.elements.some((e) => e.certifierLabel === x.label && e.verdict === 'problem');
+        if (hit) console.log(`PASS: explained problem ${x.label} → ${x.as}`);
+        else if (!only) { failed += 1; console.log(`FAIL: explained problem ${x.label} matches no problem row (stale explanation)`); }
+    }
     if (only) {
         console.log('PASS: emitted (a --levels run is not held against the whole-game pin)');
     } else {
