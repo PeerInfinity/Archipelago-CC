@@ -26911,3 +26911,15 @@ packet (`seedling-hammer-chooser-witness-evidence/flip/cpair3-flip.patch`), appl
 rows pin the switch OFF (or ask at size 2) beside the switches they already pin, so no tape is re-recorded. Evidence: the
 three L43 pits (`out_pit_5_21/22/23` from L39) play hitless to the exit in the game; on the 52 L40 keys they are the only
 verdict movers; the route survey, r9 campaign, latch chain and pocket boot are unchanged (L40C A1).
+
+
+### Seedling fidelity REFUSALS — the unowned survey refusals (`chestBodyPlacementProbe`, `inPitFallOut`, both OFF)
+
+Wave 36, base `b646d32d95`. Report: `CC/docs/cloud-reports/seedling-fidelity-refusals.md`.
+- **D1 `chestBodyPlacementProbe`:** `world.chests` rows have no rect, so `placementBlocker` probed the OEL corner. The chest body is
+  the cell itself (`Chest.as:27,30`). L25's chest only touches rock2. ON, step 35's refusal turns truthful: the chest opens only
+  from (6,7), a pocket entered from L28 ⇒ a **rules** row (handed over).
+- **D2 `inPitFallOut`:** a run whose start cell is a non-goal pit falls out idle (`checkFallingInPit`); L84 steps 174/202
+  REFUSED → SOLVED 100 t. The only survey movers.
+- **STOP:** the lavatrap (L77/L78/L108; `levelRun` does not step `LavaTrap` at all: tongue, ferry and wand kill are owed) and
+  the Owl verb (L112; the fight is modelled, no executor).

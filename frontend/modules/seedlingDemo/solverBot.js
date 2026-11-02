@@ -5878,9 +5878,18 @@ function deriveWeighSource(run, onto, contacts, blocked = [], { liveBag = null }
  */
 function placementBlocker(run, resolved, contacts) {
     const t = resolved.target;
+    /**
+     * ⛓ fidelity REFUSALS D1 (`CONTACT_FIDELITY.chestBodyPlacementProbe`) — a `world.chests` row carries no `rect`, so
+     * the probe stood on its OEL cell CORNER (x, y). The game's chest is `super(_x + Tile.w/2, _y + Tile.h/2)` with
+     * `setHitbox(16, 16, 8, 8)` (`Chest.as:27,30`): its body is the cell (x..x+16, y..y+16), centred at (x+8, y+8).
+     * L25's `chest@96,96` only TOUCHES `rock2@80,96` (x 80..96) at x = 96, but the player box at the corner reached over
+     * it. ON: a chest is probed at its body's centre. OFF: byte-identical.
+     */
     const centre = t.rect
         ? { x: (t.rect.x + t.rect.right) / 2, y: (t.rect.y + t.rect.bottom) / 2 }
-        : { x: t.x, y: t.y };
+        : (CONTACT_FIDELITY.chestBodyPlacementProbe && resolved.strategy === 'chest'
+            ? { x: t.x + TILE_SIZE / 2, y: t.y + TILE_SIZE / 2 }
+            : { x: t.x, y: t.y });
     const hit = plannerObstacleAt(run.world, centre.x, centre.y, null,
         solverPlanOpts(run, contacts, {
             avoidVolumes: false, nodeMargin: 0, triggerMargin: 0,
@@ -31375,6 +31384,62 @@ function solveSegmentUnder({
                 });
             }
             const crossTo = { level: fall.to_level, pit, arrival: { ...fall.ctor } };
+            /**
+             * ⛓ fidelity REFUSALS D2 (`CONTACT_FIDELITY.inPitFallOut`) — A RUN ALREADY STANDING IN A PIT FALLS WITHOUT
+             * INPUT. A fall can land the player inside a pit of the next level (L84 `fallhole1`, whose 3x3 middle is one
+             * pit: survey steps 174/202, sweep leg 671 from the L83 pit), and `checkFallingInPit` drops it again with
+             * nothing pressed. The walk below plans an A* from that start tile, which is a pit, and refused: *"A* start
+             * tile (2,2) … is not walkable"*. ON: when the player's terrain probe overlaps a pit tile of this level that
+             * falls to the goal's level, the run is stepped with no input until the edge fires (bounded by
+             * `maxTicksPerTarget`), then coasts as the walk's arm does. OFF: byte-identical.
+             */
+            const standingPit = CONTACT_FIDELITY.inPitFallOut
+                // ⚠ The START TILE, the planner's own refusal condition (`planTilePath`: the 16 px cell of the
+                // position) — not a probe overlap: a live start beside a pit's edge (jsRuntimeVerbs S4, L48) walks.
+                ? (run.world.pitTiles ?? []).find((p) => p.tx === Math.floor(run.state.x / TILE_SIZE)
+                    && p.ty === Math.floor(run.state.y / TILE_SIZE)
+                    // the goal's own pit is the walk's (its `allowPit` exempts it; wasmArrivalComposite W4's L84 row)
+                    && !(p.tx === tx && p.ty === ty)
+                    && rectsOverlap(terrainProbeRect(run.state.x, run.state.y), p.rect))
+                : null;
+            if (standingPit) {
+                let fellTo = null;
+                try {
+                    fellTo = fallDestination(run.world, {
+                        x: standingPit.rect.x + standingPit.rect.w / 2, y: standingPit.rect.y + standingPit.rect.h / 2,
+                    }).to_level;
+                } catch (e) {
+                    if (!(e instanceof PhysicsV2Error)) throw e;
+                }
+                if (fellTo === fall.to_level) {
+                    const t0 = perTick.length;
+                    let edge = null;
+                    for (let i = 0; i < maxTicksPerTarget && !edge; i += 1) {
+                        perTick.push(NO_HELD_PREVIEW);
+                        const r = run.advance(NO_HELD_PREVIEW);
+                        if (r.transition) edge = r.transition;
+                    }
+                    if (!edge || edge.to_level !== fall.to_level) {
+                        refuse(`${whatPit}: the run stands in pit (${standingPit.tx},${standingPit.ty}) and ${perTick.length - t0} `
+                            + `idle ticks did not fall it to level ${fall.to_level} (${JSON.stringify(edge)}).`,
+                        { goal, obstacle: { kind: 'pit', id: `pit@${standingPit.rect.x},${standingPit.rect.y}` } });
+                    }
+                    const swapsBefore = run.transitions.length;
+                    const coast = coastThroughTransport(run, perTick, maxTicksPerTarget, `${whatPit}->L${fall.to_level}`);
+                    const swaps = run.transitions.slice(swapsBefore);
+                    records.push({
+                        goal: 'reach-pit', to: fall.to_level, t: edge.t, coast,
+                        standing: { tx: standingPit.tx, ty: standingPit.ty, idle: edge.t - t0 },
+                        ...(swaps.length > 0 ? {
+                            chained: {
+                                via: swaps.map((sw) => ({ t: sw.t, from_level: sw.from_level, to_level: sw.to_level })),
+                                ends: { level: run.level, x: run.state.x, y: run.state.y },
+                            },
+                        } : {}),
+                    });
+                    return;
+                }
+            }
             // ⛓⛓ fidelity L1516 D3: an ENCLOSED pit (`enclosedPitCorners`) is entered across a corner. OFF, or any
             // pit with a non-pit orthogonal neighbour: the walk below, byte-identical.
             // ⚠ Only with a diagonal floor cell, and only from OUTSIDE the pit's cell: a fall that lands the player in

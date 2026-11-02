@@ -361,7 +361,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity WATERFALL D1 (wave 35): the corridor planner prices the waterfall's push — ON since the W35 flip.
             waterfallPushPricing: true,
             // ⛓ fidelity L32ROCK D1 (wave 35): the BobBoss arena rock's arm banks its {32,1} clear — ON since the W35 flip.
-            bobArenaRockClear: true });
+            bobArenaRockClear: true,
+            // ⛓ fidelity REFUSALS D1 (wave 36): a chest placement is probed at its body's centre — ships OFF.
+            chestBodyPlacementProbe: false,
+            // ⛓ fidelity REFUSALS D2 (wave 36): a run standing in a pit falls out with no input — ships OFF.
+            inPitFallOut: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

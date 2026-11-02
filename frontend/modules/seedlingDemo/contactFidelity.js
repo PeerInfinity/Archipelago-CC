@@ -1741,6 +1741,26 @@ export const CONTACT_FIDELITY = {
      * `pendingEarnedClears`). OFF: byte-identical. `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`.
      */
     bobArenaRockClear: true,
+    /**
+     * fidelity REFUSALS D1 (wave 36) — A CHEST PLACEMENT IS PROBED AT ITS BODY (`solverBot.placementBlocker`).
+     *
+     * `Chest(_x, _y)` is `super(_x + Tile.w/2, _y + Tile.h/2)` + `setHitbox(16, 16, 8, 8)` (`Chest.as:27,30`): the body
+     * is the OEL cell itself. `world.chests` rows carry no rect, so the "what else is in this cell" probe stood a player
+     * box on the cell's top-left CORNER and named L25's neighbouring `rock2@80,96` (which only touches the chest at
+     * x = 96) as the solid the placement is inside. ON: a chest is probed at (x + 8, y + 8). OFF: byte-identical.
+     * `SEEDLING_CHEST_BODY_PLACEMENT_PROBE=0|1`.
+     */
+    chestBodyPlacementProbe: false,
+    /**
+     * fidelity REFUSALS D2 (wave 36) — A RUN STANDING IN A PIT FALLS OUT WITH NO INPUT (`solverBot` `execReachPit`).
+     *
+     * A fall can land the player inside a pit of the next level (L84 `fallhole1`: its 3x3 middle is one pit), and
+     * `Player.checkFallingInPit` drops it again with nothing pressed. The reach-pit walk planned an A* from that start
+     * tile and refused it as unwalkable (survey steps 174/202). ON: a run whose terrain probe overlaps a pit tile that
+     * falls to the goal's level is stepped idle until the edge, then coasts. OFF: byte-identical.
+     * `SEEDLING_IN_PIT_FALL_OUT=0|1`.
+     */
+    inPitFallOut: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2088,6 +2108,12 @@ if (globalThis.process?.env?.SEEDLING_WATERFALL_PUSH_PRICING === '0') CONTACT_FI
 // ⛓ fidelity L32ROCK D1: `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '1') CONTACT_FIDELITY.bobArenaRockClear = true;
 if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '0') CONTACT_FIDELITY.bobArenaRockClear = false;
+// ⛓ fidelity REFUSALS D1: `SEEDLING_CHEST_BODY_PLACEMENT_PROBE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CHEST_BODY_PLACEMENT_PROBE === '1') CONTACT_FIDELITY.chestBodyPlacementProbe = true;
+if (globalThis.process?.env?.SEEDLING_CHEST_BODY_PLACEMENT_PROBE === '0') CONTACT_FIDELITY.chestBodyPlacementProbe = false;
+// ⛓ fidelity REFUSALS D2: `SEEDLING_IN_PIT_FALL_OUT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_IN_PIT_FALL_OUT === '1') CONTACT_FIDELITY.inPitFallOut = true;
+if (globalThis.process?.env?.SEEDLING_IN_PIT_FALL_OUT === '0') CONTACT_FIDELITY.inPitFallOut = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
