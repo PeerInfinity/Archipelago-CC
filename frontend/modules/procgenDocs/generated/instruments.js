@@ -53,8 +53,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 67,
-            "count": 107,
+            "browser": 65,
+            "count": 105,
             "id": "check"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 509,
-        "browser": 209,
+        "blockStyle": 507,
+        "browser": 207,
         "cited": 271,
-        "files": 527,
+        "files": 525,
         "lineStyle": 18,
-        "withDocblock": 527,
-        "withFlags": 441
+        "withDocblock": 525,
+        "withFlags": 439
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4485,86 +4485,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-hammer-monotonicity — ⛓ SEEDLING HAMMER-PHASE B2 (W0): NO RECORD SOLVED OFF MAY BE REFUSED ON.",
             "path": "scripts/procgen/check-seedling-hammer-monotonicity.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "check",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host",
-                "shots"
-            ],
-            "file": "check-seedling-lab-art.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "shots"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "check-seedling-lab-art — THE LAB ARC L2 ACCEPTANCE ROW (seedling-lab-static-art): does `watch.html` boot, load the Seedling art, and draw the room in it (statically) in every arm — and fall back to the rectangles when told?",
-            "path": "scripts/procgen/check-seedling-lab-art.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "check",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host",
-                "shots"
-            ],
-            "file": "check-seedling-lab-art.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "shots"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "check-seedling-lab-art — THE LAB ARC L2 ACCEPTANCE ROW (seedling-lab-static-art): does `watch.html` boot, load the Seedling art, and draw the room in it (statically) in every arm — and fall back to the rectangles when told?",
-            "path": "scripts/procgen/check-seedling-lab-art.mjs"
         },
         {
             "argvHelpers": [
