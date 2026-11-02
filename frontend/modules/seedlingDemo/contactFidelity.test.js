@@ -370,7 +370,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity CORPSEBUMP2 D1 (wave 36): a bumped corpse is re-read at the stance after the walk — ships OFF.
             corpseBumpRestRead: false,
             // ⛓ fidelity SHIELDBUMP D1 (wave 36): the spinner forecasts step the plain shield bump — ships OFF.
-            forecastShieldBump: false });
+            forecastShieldBump: false,
+            // ⛓ fidelity L100LATTICE D1 (wave 36): a walk to an 8 px arm's stance plans on the 8 px lattice — OFF.
+            fineStanceWalk: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

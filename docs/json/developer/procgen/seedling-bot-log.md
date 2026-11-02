@@ -27039,3 +27039,47 @@ no-claim and identity c4 (`62bc5f69` → `23ce5b2a`).
   evidence (rows stepped), never vacuous truth, or the probe that gates a claim starts claiming.
 - A shield bump can fire on a tick the player stood still at the top: a same-tick contact writes the live `v` first.
   A forecast told the top-of-tick state misses it by construction.
+
+
+
+### Seedling fidelity L100LATTICE — a walk to an 8 px stance plans on the 8 px lattice (`fineStanceWalk`, OFF)
+
+Planner `seedling-fidelity-planning-17`, wave 36. The report is `CC/docs/cloud-reports/seedling-fidelity-l100lattice.md`.
+
+**W0.** At base `b646d32d95`, survey step 216 (L100 → L101; step 219 at W35's base) refuses with the stall WATERFALL
+named. `fineSwingStance` finds the break stance (124,140) on the 8 px lattice, and the walk to it plans on the run's 16 px
+lattice. There `nearestGoalNode` aims at the pool node (104,136), and the string-pull's fallback keeps (124,140) as a last
+segment through `cliffside0@112,128`. Six producers name a stance from an 8 px answer: `fineSwingStance`, `fineWandStance`,
+`fineFrontierFlood`, and the bridge, pole-thrust and light-pole stances. Each of them walked at 16 px, reaching 8 px only when
+the 16 px plan THREW (FRONTIER3) or re-entered (STANCE_REENTRY). Fallback census over the full OFF survey (instrumented
+scratch copy): 364 substitutions, all 16 px. 355 are exit aims past the level edge, where the walk transitions first. Of the
+9 in-level substitutions, only L100's (124,140) keeps a last segment that fails `controllerPathClear`.
+
+**D1.** A stance answered on 8 px is marked in an identity set (`FINE_STANCES`; nothing is added to the object).
+`walkToUnder` plans the walk to a marked aim on `FINE_LATTICE` first. An aim off the 8 px node grid is walked axis-aligned,
+STANCE_REENTRY's shape, so it asks no dash. A throw falls back to the 16 px plan. Two reasons for this over "an unchecked
+last segment counts as no plan": the census, which would have needed an exit carve-out for 355 calls, and the cost, since
+only marked walks change. The axis rule is measured: without it, steps 172/200 (L12's wand stance (40,888), off-node)
+walked a free fine corridor whose whole-chain dash certificate (`spinnerDashWhole`) took ~60 s / ~105 s of the solve,
+against ~2 s.
+
+**D2.** ON, step 216 solves: 731 t, the rock broken from (124,140), L101. It takes one hit, `jellyfish@80,112` at t125 on
+the first corridor, which knocks the player into the pool. The Feather climb back stalls, and the re-plan
+(116,36)→(124,140) arrives. p4g witness `fixtures/l100lattice-witness/step216-on.json`: model = game at every sampled
+tick (728, 0 px), the game bills the hit at t125 and is in L101 at t731. The jellyfish press dwell is not met. With
+`unbilledDamageGate` ON the leg refuses as UNBILLED DAMAGE: the whole-dash certificate passed the corridor as clean and
+the drive was hit (for hammer).
+
+**Movers.** Local full survey ON vs OFF: 201 → 202 SOLVED. Step 216 REFUSED → SOLVED. Step 168 (L66 → L70)
+230 → 241 t: `fineFrontierFlood`'s keylock stance (76,84) walked on 8 px, game-witnessed (0 px, hitless). Flip owes
+re-records of `l100-sliver-rock` (185 → 267 t, ON plan game-witnessed 0 px, hitless, L101) and `rulesref-l66-door`
+(230 → 241 t, the keys of the step-168 witness). jsRuntimeTape's `NO_TAPE_CHAIN` (2 rows) moves with the new key (js).
+
+**Trap candidates.**
+- A stance found on a finer lattice is not reachable on the coarser one just because the coarser plan does not throw.
+  `nearestGoalNode` substitutes a node up to two cells away, and the string-pull's fallback keeps the target as an
+  unchecked last segment. The walk then "stalls" on a wall that no plan ever tested.
+- A free fine corridor can be ~50× costlier than an axis-aligned one. The whole-chain dash certificate re-previews every
+  tick of a long walk. A rule that moves walks onto the 8 px lattice must measure solve time, not only ticks.
+- `git checkout <sha> -- frontend` in a worktree whose submodules are symlinks replaces the links with empty directories.
+  Re-link before running anything there.

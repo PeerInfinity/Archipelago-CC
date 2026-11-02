@@ -1,0 +1,4 @@
+ticks 267; compared 268 tick(s) (first frame per tick); level mismatches 0; worst |Δ| player 0
+game hits steps []
+model playerHits []
+end: game level 101 tick 267 | model level 101
