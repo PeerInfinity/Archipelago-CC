@@ -12,12 +12,22 @@
  * axis-aligned walk east along y = 56 from (88,56), with the bob dead ahead on the lane. OFF the walk holds `right` into
  * it and is hit at t20. ON the policy aims `right` (the walk's own key) at t10, presses at t11, and the hit lands in the
  * model at t12; y is 56 on every tick and x stays on the 0.05 grid. The preview spends the same keys (⚖ 30(c)).
+ *
+ * ⛓⛓ AXIS-L12HITS (⚖ the user queued it on 2026-11-02, from the divergence sweep: ON, the 8 L12 legs to
+ * `bosslock@416,240` / `@432,240` pass with 2 hits). The state is the page's own request: leg 149 (`level_12__r0c19 <-
+ * in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared`), captured at main `6d9f9917`, its atlas records cut to
+ * level 12 (byte-identical answers to the uncut capture, OFF, ON and at the base). ON without the clear-tag hold's tail
+ * (what the base did; reproduced here with `KEYLOCK_WAIT_PRICED` off, the tail's own instrument) the axis strikes keep
+ * the transit to the keylock stance clean, so the aligned walk is adopted, the puncher is left alive on its first hits,
+ * and it punches the standing player at t375 and t415 — the game's own ticks (the sweep's `exact` rows). With the tail
+ * (`axisClearTagStand`) the walk's probe meets the punch, the kill runs first, and the answer is OFF's byte for byte.
  */
 
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gunzipSync } from 'node:zlib';
 
 import { atlasLevelSource } from './levelSource.js';
 import { createLevelRun } from './levelRun.js';
@@ -26,7 +36,13 @@ import { drive } from './botDriverV2.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
-import { axisStrikeFor, previewWalk, solveSegment, strikePolicyFor, walkAxisOf } from './solverBot.js';
+import {
+    axisClearTagStand, axisStrikeFor, KEYLOCK_WAIT_PRICED, previewWalk, solveSegment, strikePolicyFor, walkAxisOf,
+    withKeylockWaitPriced,
+} from './solverBot.js';
+import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
+import { levelSourceFromAtlas } from './atlasSource.js';
+import { ANYTIME_PASSES, replayTape, solveAnytime } from './jsRuntimeSolver.js';
 import {
     AXIS_STRIKE, AXIS_STRIKE_COUNTS, AXIS_STRIKE_DEFAULT, resetAxisStrikeCounts, withAxisStrike,
 } from './pressKillCost.js';
@@ -69,6 +85,25 @@ function driveLane(on, cap = 40) {
         if (!e.sentinel) throw e;
     }
     return { run, strike, keys: perTick.map(key), pos, counts: { ...AXIS_STRIKE_COUNTS } };
+}
+
+const L12_LEG = JSON.parse(gunzipSync(readFileSync(join(HERE, 'fixtures', 'hammer-axis-l12',
+    'leg149-l12-request.json.gz'))).toString('utf8'));
+const PUNCHER = 'puncher@416,256';
+/** The regression's hits, measured (the base tree ON, the sweep's game rows): the puncher's punches in the hold. */
+const L12_REGRESSED_HITS = [[375, 'punch', PUNCHER], [415, 'punch', PUNCHER]];
+
+/** Leg 149's captured request solved as the worker does, the switch at `on`; the model's hits re-driven from the plan. */
+function solveL12(on) {
+    const req = restoreRequest(L12_LEG.requests[0].request);
+    const { passes = ANYTIME_PASSES, source, ...tape } = req;
+    const levelSource12 = levelSourceFromAtlas(source.records);
+    const answer = withAxisStrike(on, () => solveAnytime({ ...tape, source, levelSource: levelSource12 }, { passes }));
+    expect(answer.ok).toBe(true);
+    const shadow = replayTape({ staging: tape.staging, perTick: [...tape.perTick, ...answer.plan.solution],
+        levelSource: levelSource12, scratchPersistence: tape.scratchPersistence });
+    return { ticks: answer.plan.solution.length, plan: JSON.stringify(answer.plan.solution.map((k) => [...k])),
+        hits: shadow.ledger('playerHits').map((h) => [h.t, h.source, h.id]) };
 }
 
 /** A body of L6's room and a state beside it, for the policy's own question (`decide`), asked once. */
@@ -178,4 +213,29 @@ describe('hammer-phase AXIS — strikes on axis-aligned walks, aimed along the w
         expect(segOn).toEqual(segOff);
         expect(AXIS_STRIKE_COUNTS.policies).toBe(0);
     });
+
+    it('AXIS-L12HITS: the clear-tag keylock stance walk is certified with its hold (`axisClearTagStand`)', () => {
+        const run = l6();
+        const resolved = { lock: 'none', hold: { ticks: 10 }, target: { x: 0, y: 0 } };
+        // OFF, another verb, or the tail's own instrument off: nothing is handed to the walk (OFF byte-identical).
+        expect(withAxisStrike(false, () => axisClearTagStand(run, 'keylock', resolved))).toEqual({});
+        expect(withAxisStrike(true, () => axisClearTagStand(run, 'kill', resolved))).toEqual({});
+        expect(withKeylockWaitPriced(false, () => withAxisStrike(true,
+            () => axisClearTagStand(run, 'keylock', resolved)))).toEqual({});
+        expect(KEYLOCK_WAIT_PRICED.enabled).toBe(ENV.SEEDLING_KEYLOCK_WAIT_PRICED !== '0');
+    });
+
+    it('AXIS-L12HITS: L12 leg 149 ON takes 0 hits and answers OFF\'s plan; without the hold\'s tail it is punched', () => {
+        const off = solveL12(false);
+        expect(off.hits).toEqual([]);
+        expect(off.ticks).toBe(444);
+        const on = solveL12(true);
+        expect(on.hits).toEqual([]);
+        expect(on.ticks).toBe(off.ticks);
+        expect(on.plan).toBe(off.plan);
+        // the non-vacuity arm: ON with the stance walk's hold unpriced is the regression, at its measured ticks.
+        const regressed = withKeylockWaitPriced(false, () => solveL12(true));
+        expect(regressed.hits).toEqual(L12_REGRESSED_HITS);
+        expect(regressed.ticks).toBe(430);
+    }, 120_000);
 });

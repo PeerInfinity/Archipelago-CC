@@ -6591,6 +6591,30 @@ export function axisStrikeFor(run, dashMode = DEFAULT_DASH_MODE) {
 }
 
 /**
+ * ⛓⛓⛓ hammer-phase AXIS-L12HITS (`AXIS_STRIKE`, OFF) — **THE CLEAR-TAG ARM'S KEYLOCK STANCE WALK IS CERTIFIED WITH
+ * ITS HOLD** (⚖ 30(c): the walk certified is the walk driven, and the executor's stand is part of the drive). ⚖ The
+ * user queued this on 2026-11-02, from the divergence sweep (CI runs 41245586575 vs 41245582842, and all four new
+ * switches 41370177273 vs 41370172948): with the switch ON, the 8 L12 legs to `bosslock@416,240` / `@432,240` still
+ * pass but take 2 hits (roomHits max 0 → 2).
+ *
+ * MEASURED (`seedling-hammer-axis-l12hits.md`): the hits are `puncher@416,256`'s punches, billed by the model at the
+ * game's own ticks, 29-40 ticks AFTER the stance walk ends, inside the keylock's 110-tick hold. None lands on a strike
+ * tick. OFF the strike-free walk to the stance (424,264) is punched in transit, so the walk climbs the ladder and the
+ * kill rung clears the puncher first. ON, RULESREF's `punchGateTimed` asks the aligned corridor, which now carries the
+ * axis strikes; they land 1-2 hits that keep the transit clean, so it is adopted, and the puncher is left alive beside the
+ * stance. The frontier arm prices that hold (`keylockStandWalk`, L30KEYLOCK); this arm never did, so the stand the
+ * executor drives was never previewed. ON the walk carries the same tail (`stand`), its probe meets the punch, and the
+ * solve kills first, as OFF does: all 8 legs answer OFF's plan byte for byte.
+ *
+ * `{}` OFF (byte-identical: the walk is handed exactly what it was), for any verb but `keylock`, with
+ * `KEYLOCK_WAIT_PRICED` off, and for a resolution without a hold or a key line (`keylockStandWalk`'s own `{}`).
+ */
+export function axisClearTagStand(run, verb, resolved) {
+    if (!AXIS_STRIKE.enabled || verb !== 'keylock' || !KEYLOCK_WAIT_PRICED.enabled) return {};
+    return keylockStandWalk(run, resolved);
+}
+
+/**
  * ⛓⛓ SEEDLING FIDELITY LAPSECOST D1 — **THE WALK'S NARROW-POLICY CANDIDATE** (`CONTACT_FIDELITY.strikeIframeLapse`
  * ON only; `walkTo`'s probe has the measurement). When the lapse-admitting walk probes dangerous, the same corridor
  * is probed once with the pre-lapse admissions (`strikePolicyFor`'s `iframeLapse: false`) before the ladder climbs,
@@ -31286,6 +31310,8 @@ function solveSegmentUnder({
                 what: `${whatCT} -> ${verb} stance`,
                 contactsOverride: resolved.exempt,
                 axisAligned: resolved.approach === 'axis-aligned',
+                // ⛓ hammer-phase AXIS-L12HITS (`AXIS_STRIKE` ON only): the keylock's hold priced as this walk's tail.
+                ...axisClearTagStand(run, verb, resolved),
             });
         }
         if (written()) {
