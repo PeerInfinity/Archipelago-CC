@@ -134,6 +134,16 @@ const REFUSAL_SOURCES = [
             + 'on both pages, and the ELEMENTS CENSUS counts them',
     },
     {
+        id: 'strategy-gate',
+        title: 'The HOLD GATE and the WEIGH GATE — a lock on a cut and its presser off the main path',
+        kind: 'constant',
+        constant: 'STRATEGY_GATE_REFUSALS',
+        names: M.strategyGate.STRATEGY_GATE_REFUSALS,
+        file: SOURCES.strategyGate,
+        channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
+            + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
         id: 'open-chamber',
         title: 'The OPEN CHAMBER element',
         kind: 'constant',

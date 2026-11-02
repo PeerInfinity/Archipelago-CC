@@ -27,6 +27,10 @@
  *   ⛓ seedling-gen-chestdoor: a generated CHEST DOOR room (`?elements=chestdoor`, pre-sword) certifies, holds one
  *   tagged chest, and draws the chest in sprites (the `solids` family).
  *
+ *   ⛓ seedling-gen-strategy-gadgets: a generated HOLD GATE room (`?elements=holdgate`) and WEIGH GATE room
+ *   (`?elements=weighgate`), pre-sword, each certify, hold a lock and its presser in ONE group (a latching
+ *   `buttonroom` / a momentary `button` plus one `pushableblock`), and draw them in sprites.
+ *
  *   ⛓ gen-biomes-1: the generate arm's LOOK select — one generated room in every look, the canvas's floor and
  *   wall pixels following each look's COLUMN (stills `look-<name>.png`) — and the four new item presets boot.
  *
@@ -410,6 +414,54 @@ async function main() {
         if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-chestdoor${mode === 'off' ? '-off' : ''}.png`) });
         check(errors.length === 0, `chestdoor (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
         await page.close();
+    }
+
+    // ── ⛓ seedling-gen-strategy-gadgets: a generated HOLD GATE room and WEIGH GATE room, art on and off ──
+    //
+    // The generate arm with `?elements=holdgate` / `weighgate` (pre-sword: a press or a shove takes no item). The room
+    // holds ONE `lock` and its presser in the lock's group (`tset`), the presser off the main path — a latching
+    // `buttonroom {room:-1}` for the hold gate, a momentary `button` plus ONE `pushableblock` for the weigh gate — and
+    // it certifies (its verb is the unit rows' to pin, `procgenStrategyGates.test.js`). Lock, button and buttonroom
+    // are the `solids` family's skins; the block is the `puzzle` family's.
+    for (const [element, presser] of [['holdgate', 'buttonroom'], ['weighgate', 'button']]) {
+        console.log(`\n## ${element} — a generated ${element === 'holdgate' ? 'hold' : 'weigh'} gate room`);
+        for (const mode of ['on', 'off']) {
+            const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errors = [];
+            page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+            await page.goto(`${PAGE}?source=generate&seed=1&biome=pre-sword&elements=${element}${mode === 'off' ? '&art=off' : ''}`,
+                { waitUntil: 'domcontentloaded' });
+            await page.waitForFunction((want) => {
+                const a = window.__labArt;
+                return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                    && (want === 'off' ? a.drawn === null : a.drawn !== null);
+            }, mode, { timeout: 180000 }).catch(() => {});
+            await page.waitForTimeout(1200);
+            const { art, payload } = await page.evaluate(() => ({ art: window.__labArt ?? null,
+                payload: window.__watch?.payload ? { certified: window.__watch.payload.certified,
+                    entities: window.__watch.payload.level.entities } : null }));
+            if (mode === 'on') {
+                const ents = payload?.entities ?? [];
+                const locks = ents.filter((e) => e.type === 'lock');
+                const pressers = ents.filter((e) => e.type === presser);
+                const blocks = ents.filter((e) => e.type === 'pushableblock');
+                check(payload?.certified === true && locks.length === 1 && pressers.length === 1
+                    && locks[0].attrs?.tset === pressers[0].attrs?.tset
+                    && blocks.length === (element === 'weighgate' ? 1 : 0),
+                `${element}: the generated room CERTIFIES and holds ONE lock and its ${presser} in one group`
+                    + (element === 'weighgate' ? ', and ONE block' : ''),
+                JSON.stringify({ certified: payload?.certified, locks, pressers, blocks }));
+                check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && (art.drawn.families?.solids ?? 0) > 0
+                    && (element !== 'weighgate' || (art.drawn.families?.puzzle ?? 0) > 0),
+                `${element}: drawn in sprites, the lock and presser among them (\`solids\`)`
+                    + (element === 'weighgate' ? ' and the block (`puzzle`)' : ''), JSON.stringify(art?.drawn));
+            } else {
+                check(art?.drawn === null, `${element} ?art=off: the rectangles`, JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+            }
+            if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-${element}${mode === 'off' ? '-off' : ''}.png`) });
+            check(errors.length === 0, `${element} (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+            await page.close();
+        }
     }
 
     // ── ⛓ seedling-gen-biomes-1 (C1 + C2): the generate arm's LOOK select and the four new item presets ──

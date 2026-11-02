@@ -48,6 +48,7 @@ import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { ROAM } from './elements/roam.js';
 import { ROPE_GATE } from './elements/ropeGate.js';
 import { CHEST_DOOR } from './elements/chestDoor.js';
+import { HOLD_GATE, WEIGH_GATE } from './elements/strategyGate.js';
 import {
     CORRIDOR_BODY, ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT,
     WATERFALL_GATE,
@@ -507,6 +508,40 @@ export const ELEMENT_TABLE = Object.freeze({
         extra: Object.freeze([]),
         needs: Object.freeze([]),
         meetsRequire: false,
+    }),
+    /**
+     * ⛓⛓⛓ **THE HOLD GATE and THE WEIGH GATE — the solver's `hold` and `weigh`,
+     * as gadgets** (seedling gen strategy-switch r3; ⚖ the user 2026-11-01, "(b)
+     * More strategy elements"). A lock on a main-path cut whose presser stands on
+     * the start side, OFF the main path: a LATCHING `buttonroom {room:-1}` for the
+     * hold gate, a MOMENTARY `button` plus one `pushableblock` a shove short of it
+     * for the weigh gate (`solverBot.refineStrategy`'s outlive question picks the
+     * verb from the presser). Graded by the strategy arm: `--require=strategy:hold`
+     * / `strategy:weigh`.
+     *
+     * ⛓ `needs: []` — pressing a button or shoving a block takes no item. Placed
+     * LAST so no head moves in `ELEMENT_NAMES`; OPT-IN (in no biome default).
+     * ⛔ `meetsRequire` is left at its default: with `needs: []` neither is ever an
+     * ITEM directive's head, and no other row declares `hold` or `weigh`, so being
+     * the `strategy:` heads moves no room any default or directive builds today.
+     */
+    holdgate: Object.freeze({
+        element: HOLD_GATE,
+        why: 'The HOLD GATE (the L20/L38 latch): a `lock` on a main-path cut and a latching '
+            + '`buttonroom {room:-1}` of its group on the start side, off the main path. Certified by '
+            + 'the solver\'s `hold` (press once, the group stays published).',
+        extra: Object.freeze([]),
+        needs: Object.freeze([]),
+        needsStrategy: Object.freeze(['hold']),
+    }),
+    weighgate: Object.freeze({
+        element: WEIGH_GATE,
+        why: 'The WEIGH GATE (the L15 pattern): a `lock` on a main-path cut, a momentary `button` of its '
+            + 'group off the main path, and one `pushableblock` a shove short of the button. Certified by '
+            + 'the solver\'s `weigh` (the block parked on the button holds the lock open).',
+        extra: Object.freeze([]),
+        needs: Object.freeze([]),
+        needsStrategy: Object.freeze(['weigh']),
     }),
 });
 

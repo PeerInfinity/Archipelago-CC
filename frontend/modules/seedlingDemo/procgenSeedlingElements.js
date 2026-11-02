@@ -115,6 +115,9 @@ import {
 } from '../procgenCore/elements/soloDoor.js';
 import { ROPE_GATE_ROPE_ID, ROPE_GATE_TRAP_ID } from '../procgenCore/elements/ropeGate.js';
 import { CHEST_DOOR_CHEST_ID } from '../procgenCore/elements/chestDoor.js';
+import {
+    HOLD_GATE_BUTTON_ID, HOLD_GATE_DOOR_ID, WEIGH_GATE_BUTTON_ID, WEIGH_GATE_DOOR_ID,
+} from '../procgenCore/elements/strategyGate.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
 
@@ -1171,6 +1174,16 @@ export function seedlingOnConnectorEntities({ placed, tagFor, groupIdFor = null 
         }
         return String(groupIdFor({ tx: trapCell.x, ty: trapCell.y }));
     })() : null;
+    /** ⛓ Strategy gadgets (r3) — the hold/weigh gate's ONE group: the PRESSER cell's. */
+    const presserCell = placed.entities.find((e) => e.id === HOLD_GATE_BUTTON_ID
+        || e.id === WEIGH_GATE_BUTTON_ID);
+    const presserGroup = presserCell ? (() => {
+        if (typeof groupIdFor !== 'function') {
+            fail('procgenSeedlingElements: a HOLD/WEIGH GATE needs `groupIdFor` — its lock and its '
+                + 'presser share a `tset` group, and the group is the binding\'s allocation.');
+        }
+        return String(groupIdFor({ tx: presserCell.x, ty: presserCell.y }));
+    })() : null;
     for (const e of placed.entities) {
         if (e.role === 'block') {
             entities.push({ type: 'pushableblock', tx: e.x, ty: e.y });
@@ -1294,6 +1307,35 @@ export function seedlingOnConnectorEntities({ placed, tagFor, groupIdFor = null 
             const tag = tagFor();
             tags.chest = tag;
             entities.push({ type: 'chest', tx: e.x, ty: e.y, attrs: { tag: String(tag) } });
+            continue;
+        }
+        /**
+         * ⛓⛓⛓ Strategy gadgets (r3) — **THE HOLD GATE'S TWO and THE WEIGH GATE'S TWO**
+         * (the weigh gate's block is a `role: 'block'` row, above):
+         *   `holdgate_door` / `weighgate_door` -> `lock {tset: g, tag: <own>}`, the
+         *                      guard's own spelling of a grouped lock (ONE tag);
+         *   `holdgate_button`  -> `buttonroom {tset: g, tag: <own>, flip:'0', room:'-1'}`,
+         *                      the guard's FLAG spelling: the local arm latches the
+         *                      group (`activators.localPublish`) — ONE more tag;
+         *   `weighgate_button` -> `button {tset: g}`, momentary, NO tag.
+         * `g` = `placementGroupId(presser cell)`.
+         */
+        if (e.id === HOLD_GATE_DOOR_ID || e.id === WEIGH_GATE_DOOR_ID) {
+            const tag = tagFor(...Object.values(tags));
+            tags.lock = tag;
+            entities.push({ type: 'lock', tx: e.x, ty: e.y,
+                attrs: { tset: presserGroup, tag: String(tag) } });
+            continue;
+        }
+        if (e.id === HOLD_GATE_BUTTON_ID) {
+            const tag = tagFor(...Object.values(tags));
+            tags.presser = tag;
+            entities.push({ type: 'buttonroom', tx: e.x, ty: e.y,
+                attrs: { tset: presserGroup, tag: String(tag), flip: '0', room: '-1' } });
+            continue;
+        }
+        if (e.id === WEIGH_GATE_BUTTON_ID) {
+            entities.push({ type: 'button', tx: e.x, ty: e.y, attrs: { tset: presserGroup } });
             continue;
         }
         fail(`procgenSeedlingElements: the on-connector element named the id `
