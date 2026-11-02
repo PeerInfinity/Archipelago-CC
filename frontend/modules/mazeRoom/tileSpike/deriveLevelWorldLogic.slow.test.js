@@ -45,7 +45,7 @@
  * producer's own permissive bound (L89's Feather, entered only from above; `permissive`, read from the producer), and (session
  * tile-primitives-sphere-order-8, ⚖ "Excuse on mismatch") L63 r6c9's rows at points no crossing into it from outside admits — its
  * entrance is the L65 pocket landing. One row stays OPEN by name (`OPEN_L63`, ⚖ "Land, name it; route to rules"),
- * and since sphere 11.6 a second (`OPEN_L3_L111`: the maze is game-right, the rules looser).
+ * and from sphere 11.6 a second (`OPEN_L3_L111`), since closed by the rules (below).
  * Sphere 0.1 (2026-10-26, measured): native every region + the native sample 59 s, the scripted sample 256 s.
  */
 import { describe, it, expect } from 'vitest';
@@ -74,13 +74,12 @@ const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8'
  */
 const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false';
 /**
- * The second OPEN row (⚖ user 2026-10-31, session tile-primitives-sphere-order-12: "Going from L3 to L111 requires swim, and the rules
- * should model that", with the rules left unchanged until the maze arc is done): the teleporter cell (0,4) is reached only through the water
- * at (1,4), so the world needs Progressive Swim (a game probe drowned dry 0/3 and arrived wet 3/3). The rules charge only the ghost rock.
- * It stays a PROBLEM, not accepted: the rules producer lists `level_3/out_teleporter_0_64` in its `permissiveBindings`, which is the
- * list of hand exceptions the user means to revert once the maze's rules replace the hand ones. This row is one of those revert candidates.
+ * ⛓ The second OPEN row, `OPEN_L3_L111` (⚖ user 2026-10-31, session tile-primitives-sphere-order-12: "Going from L3 to L111 requires
+ * swim, and the rules should model that"), is GONE: `level_3__r0c4 → level_111 holding [Ghost Spear,Ghost Sword Fusion,Progressive
+ * Sword]: derived false, atlas true` closed when ⛓ RULES rules-certifier-tail landed (⚖ 2026-11-02 "Yes, land it"). A door now costs
+ * what EVERY way onto its tile pays (`chargeNecessaryApproaches`), and the only way onto L3's teleporter (0,4) is the water at (1,4),
+ * so the rules charge the Swim the world always did. Its pin and both expectations were removed with it.
  */
-const OPEN_L3_L111 = 'level_3__r0c4 → level_111 holding [Ghost Spear,Ghost Sword Fusion,Progressive Sword]: derived false, atlas true';
 const PERMISSIVE = playthroughPermissiveLocations();
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -96,7 +95,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     let sampleLines;
     it('native engine, every region', () => {
         const { problems, lines, accepted, skipped } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, permissive: PERMISSIVE });
-        expect(problems).toEqual([OPEN_L3_L111, OPEN_L63]);
+        expect(problems).toEqual([OPEN_L63]);
         expect(lines.length).toBeGreaterThan(0);
         expect(accepted.map((a) => `${a.label} | ${a.by}`).sort()).toEqual([
             'level_0__r2c13 → level_0__r1c6 | Progressive Swim',
@@ -247,6 +246,10 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_101__r4c9 → level_102__r5c9 (landing 9,5) | 32/128',
             'level_102__r5c9 → level_101__r4c9 (landing 11,6) | 2/4',
             'level_102__r5c9 → level_107 (landing 11,6) | 2/4',
+            // ⛓ rules-certifier-tail: L3's door to L111 now charges the Swim every way onto it pays, so L111's landing (18,11)
+            // admits only holding it, on both crossings that land there.
+            'level_111 → level_112__r2c2 (landing 18,11) | 1/2',
+            'level_111 → level_3__r0c4 (landing 18,11) | 1/2',
             'level_112__r0c7 → level_112__r2c2 (landing 7,1) | 4/8',
             'level_112__r0c7 → level_113 (landing 7,1) | 4/8',
             'level_112__r2c2 @ L112 flag 1: rocklock@112,16 cleared (landing 2,13) | 3/8 [own event]',
@@ -275,7 +278,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     it('scripted tile definition on the sample — and it agrees with the native one', () => {
         for (const r of SAMPLE) expect(Object.keys(RULES.preset_sidecars['1'])).toContain(r);
         const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: false, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE });
-        expect(problems).toEqual([OPEN_L3_L111, OPEN_L63]);
+        expect(problems).toEqual([OPEN_L63]);
         expect(lines).toEqual(sampleLines);
         // ⛓ RULES l63-pole-crossings: the poles' Ghost Sword arm grows L63's subset universe 4x; measured scripted on its two
         // sample regions, main's preset 18.6 + 17.8 s → 61.7 + 58.8 s (+84 s over the ~450 s pass), so 600 s left too thin a margin.
