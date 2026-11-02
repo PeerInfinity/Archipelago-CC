@@ -537,7 +537,9 @@ async function main() {
             { terrain: 'ice', biome: 'post-swim', terrains: 'ice', seed: 1 },
             { terrain: 'stairs', biome: 'post-feather', terrains: 'stairs', seed: 1 },
             { terrain: 'ghoststep', biome: 'post-feather', terrains: 'ghoststep', seed: 1 },
-            { terrain: 'lava', biome: 'post-dark-suit', terrains: '', seed: 2 },
+            // ⛓ seedling-gen-post-swim-fix: seed 2 → 4. The `hasFire` fold row (`+burngate`) moved post-dark-suit's
+            // draw, and seed 2's room paints no lava now; seeds 4–8 do (lab arm, count 6, measured).
+            { terrain: 'lava', biome: 'post-dark-suit', terrains: '', seed: 4 },
             { terrain: 'melt', biome: 'post-dark-suit', terrains: '', seed: 1 },
         ];
         let offersChecked = false;
