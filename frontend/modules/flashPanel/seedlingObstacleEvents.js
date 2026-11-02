@@ -286,18 +286,20 @@ export function deriveLockEvents(projection, ctx) {
  * @param {(presser:object) => object|null} ctx.reach standing on the presser within `side` (null = True_)
  * @param {(target:object, eventName:string) => {region_id:string, exit_id:string, arm?:boolean}[]} ctx.gates the
  *   crossings through the target, as departures (throws by name when it cannot say); `arm: false` = the in-room way
- *   cannot be taken from that door's side
+ *   cannot be taken from that door's side; ⛓ RULES l20-button-latch: a row `{region_id, from, to}` names an
+ *   INTERNAL crossing instead (returned as `internalExitGates`), and an empty list skips the target by name
  * @param {(target:object) => {bodies:string[], why:string}|null} [ctx.kills] the bodies a clear of a target that is
  *   solid in neither state removes (none = the target is cosmetic)
  * @param {(target:object) => object|null} [ctx.inRoom] another way, in the target's own level, to clear it (a
  *   rules.json rule), or null
  * @param {object[]} [ctx.existing] events already minted
- * @returns {{events:object[], exitGates:object[], skipped:string[], reused:string[]}}
+ * @returns {{events:object[], exitGates:object[], internalExitGates:object[], skipped:string[], reused:string[]}}
  */
 export function deriveButtonEvents(rows, ctx) {
     const existing = new Map((ctx.existing ?? []).map((e) => [e.fields?.event_id, e]));
     const events = new Map();
     const exitGates = [];
+    const internalExitGates = [];
     const skipped = [];
     const refused = [];
     const reused = new Set();
@@ -321,6 +323,11 @@ export function deriveButtonEvents(rows, ctx) {
             const id = obstacleEventId({ level: t.level, tag: t.tag });
             const name = obstacleEventName({ level: t.level, tag: t.tag, cls: t.type, x: t.x, y: t.y });
             if (events.has(id)) { refused.push(`${what}: ${id} is already this slice's event for another button`); continue; }
+            // ⛓ RULES l20-button-latch: the gates are asked BEFORE the event is minted — a press whose target no
+            // crossing passes through gates nothing, so it mints nothing (`ctx.gates` for a cross-room row throws
+            // instead, so its rows are unchanged).
+            const deps = ctx.gates(t, name);
+            if (deps.length === 0) { skipped.push(`${what}: no crossing passes through it`); continue; }
             const place = ctx.place(p);
             const prior = existing.get(id);
             if (prior) {
@@ -352,9 +359,15 @@ export function deriveButtonEvents(rows, ctx) {
             // ⛓ RULES l63-darktrap: a door whose side holds no stance for the in-room way (`arm: false`) costs the
             // event alone.
             // ⛓ RULES l63-pole-crossings: a door whose side holds only a SECOND arm's stances (`armRule`) costs that.
-            for (const dep of ctx.gates(t, name)) {
-                exitGates.push({ region_id: dep.region_id, exit_id: dep.exit_id, kind: BUTTON_GATE_KIND,
-                    rule: dep.arm === false ? has : dep.armRule ? { rule: 'Or', children: [has, dep.armRule] } : rule });
+            for (const dep of deps) {
+                const gateRule = dep.arm === false ? has : dep.armRule ? { rule: 'Or', children: [has, dep.armRule] } : rule;
+                // ⛓ RULES l20-button-latch: a gate naming an INTERNAL crossing (`from`/`to`, an in-room latch's lock
+                // between two sub-regions) is the compiler's `internalExitGates` row, ANDed onto that one direction.
+                if (dep.from !== undefined) {
+                    internalExitGates.push({ region_id: dep.region_id, from: dep.from, to: dep.to, kind: IN_ROOM_PRESS_GATE_KIND, rule: gateRule });
+                } else {
+                    exitGates.push({ region_id: dep.region_id, exit_id: dep.exit_id, kind: BUTTON_GATE_KIND, rule: gateRule });
+                }
             }
         }
     }
@@ -364,7 +377,9 @@ export function deriveButtonEvents(rows, ctx) {
     const byId = (a, b) => a.fields.event_id.localeCompare(b.fields.event_id, 'en', { numeric: true });
     exitGates.sort((a, b) => a.region_id.localeCompare(b.region_id, 'en', { numeric: true })
         || a.exit_id.localeCompare(b.exit_id, 'en', { numeric: true }));
-    return { events: [...events.values()].sort(byId), exitGates, skipped, reused: [...reused].sort() };
+    internalExitGates.sort((a, b) => a.region_id.localeCompare(b.region_id, 'en', { numeric: true })
+        || a.from.localeCompare(b.from, 'en', { numeric: true }) || a.to.localeCompare(b.to, 'en', { numeric: true }));
+    return { events: [...events.values()].sort(byId), exitGates, internalExitGates, skipped, reused: [...reused].sort() };
 }
 
 /**
@@ -455,6 +470,8 @@ export const POLE_GHOST_ARM = Object.freeze({
  * `region_id`, `exit_id` and `rule`, so the tag changes no rules output.
  */
 export const BUTTON_GATE_KIND = 'cross-room-press';
+/** ⛓ RULES l20-button-latch — an in-room latching press's gate on an INTERNAL crossing (`internalExitGates`). */
+export const IN_ROOM_PRESS_GATE_KIND = 'in-room-press';
 export const IN_ROOM_POLE_GATE_KIND = 'in-room-pole';
 
 /**
@@ -659,6 +676,34 @@ export function crossRoomButtonsOf(map) {
             targets: (levelOf(room)?.entities ?? []).filter((x) => Number(x.attrs?.tag) === t).map((x) => ({
                 level: room, type: x.type, x: x.x, y: x.y, tset: Number(x.attrs?.tset), tag: t,
             })),
+        };
+    }));
+}
+
+/**
+ * ⛓⛓ RULES l20-button-latch — every IN-ROOM latching `ButtonRoom` of a map extract (`room == -1`, `tset >= 0`, its own
+ * `tag >= 0`), in `crossRoomButtonsOf`'s row shape so `deriveButtonEvents` prices it the same way. Such a button
+ * publishes its group in its OWN level (`ButtonRoom.as:79-89`: every other `Activators` with `t == tset` gets
+ * `activate = persist`), then writes its own slot `setPersistence(tag, !activate)` (`:96`) — under `if (a)`, so the
+ * write is always a CLEAR, whatever `flip` says. Its `check()` reads that slot back on every build
+ * (`:43-44`, `_active = !checkPersistence(tag); activate = _active`) and so re-publishes the group: the press LATCHES,
+ * and the flag the game keeps is the BUTTON's own `{level, tag}` (the target's own tag is inert — law 2 of
+ * `seedlingPlaythroughOverlay`). So `write` = `{level, tag: <the button's tag>, value: false}` and every target carries
+ * that tag (the event's `obstacle` is the target, its flag the one the game writes, as for a cross-room row);
+ * `targets` = the level's other entities whose `tset` is the button's (`inRoom: true`, `publish` = the `activate` the
+ * press hands them: `!flip`, `ButtonRoom.as:74-78`).
+ */
+export function inRoomLatchButtonsOf(map) {
+    return map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === 'buttonroom'
+        && Number(e.attrs?.room) === -1 && Number(e.attrs?.tset) >= 0 && Number(e.attrs?.tag) >= 0).map((e) => {
+        const t = Number(e.attrs.tset);
+        const tag = Number(e.attrs.tag);
+        const flip = Number(e.attrs.flip) === 1;
+        return {
+            presser: { level: l.level, x: e.x, y: e.y, t, tag, flip, room: -1 },
+            write: { level: l.level, tag, value: false },
+            targets: (l.entities ?? []).filter((x) => x !== e && x.attrs?.tset !== undefined && Number(x.attrs.tset) === t)
+                .map((x) => ({ level: l.level, type: x.type, x: x.x, y: x.y, tset: t, tag, inRoom: true, publish: !flip })),
         };
     }));
 }
