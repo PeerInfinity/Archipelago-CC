@@ -1080,6 +1080,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Grid growth is the pipeline's first mode, kept as the legacy grower: it grows regions cell by cell on a grid, drawing from the scenario pool, until the pool or the frontier runs out. How many…"
     },
     {
+        "path": "docs/json/user/tutorials/procgen-loop-mode-cloudberry.md",
+        "title": "Procgen: Cloudberry Kingdom in Loop mode",
+        "section": "user/tutorials",
+        "summary": "*Loop mode* turns a world into an incremental game: every action costs mana, and when the mana runs out the loop restarts — keeping what you have learned. In a Cloudberry Kingdom level the cost is…"
+    },
+    {
         "path": "docs/json/user/tutorials/procgen-loop-mode-everything.md",
         "title": "Procgen: everything, in Loop mode",
         "section": "user/tutorials",
@@ -1257,6 +1263,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/procgen-bounce-region-editor.md",
                     "docs/json/user/tutorials/procgen-cloudberry.md",
                     "docs/json/user/tutorials/procgen-grid-growth.md",
+                    "docs/json/user/tutorials/procgen-loop-mode-cloudberry.md",
                     "docs/json/user/tutorials/procgen-loop-mode-everything.md",
                     "docs/json/user/tutorials/procgen-loop-mode-jta.md",
                     "docs/json/user/tutorials/procgen-mixed-world.md",

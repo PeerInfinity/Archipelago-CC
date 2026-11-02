@@ -58,6 +58,7 @@ Tutorials are grouped by what they teach; procgen is the project's core use. Eac
 - **Procgen: Journey to Ascension in Loop mode** ([guide](../tutorials/procgen-loop-mode-jta.md)) — Generate a world of Journey to Ascension zones with loop mode on, see the loop panels, and watch the bot finish it. `?tutorial=procgen-loop-mode-jta`
 - **Procgen: everything, in Loop mode** ([guide](../tutorials/procgen-loop-mode-everything.md)) — Mix every substrate — Idle Loops included — into one loop-mode world sharing one mana pool, and watch the bot finish it. `?tutorial=procgen-loop-mode-everything`
 - **Procgen: a Cloudberry Kingdom world** ([guide](../tutorials/procgen-cloudberry.md)) — Play a generated world of Cloudberry Kingdom levels, where the kinds of platform you can land on are the items you hold. `?tutorial=procgen-cloudberry`
+- **Procgen: Cloudberry Kingdom in Loop mode** ([guide](../tutorials/procgen-loop-mode-cloudberry.md)) — Generate the Cloudberry demo world with loop mode on, and watch the bot finish it while every level costs the seconds it is played. `?tutorial=procgen-loop-mode-cloudberry`
 
 ### Seedling
 
@@ -86,7 +87,6 @@ Written, but not working all the way through yet. The panel lists these in a col
 
 - **Your workbench** — Find any panel with Quick Launch, arrange the tabs, follow a tutorial beside your work, and switch modules on and off. `?tutorial=start-workbench`
 - **Saving your setup** — Change the options and settings, save the layout and settings as a mode of your own, and clear what the app keeps in your browser. `?tutorial=start-saving-your-setup`
-- **Procgen: Cloudberry Kingdom in Loop mode** — Generate the Cloudberry demo world with loop mode on, and watch the bot finish it while every level costs the seconds it is played. `?tutorial=procgen-loop-mode-cloudberry`
 - **Seedling: the bot through the whole game** — Watch the Playback Bot play the original Seedling from the first chest to the end. `?tutorial=seedling-whole-game`
 - **MetaMath: prove 2 + 2 = 4** — Play a MetaMath proof as an Archipelago game: each proof step is a location, unlocked when the steps it depends on are proved. `?tutorial=metamath-demo`
 - **DepGraph: a coding adventure** — Play a dependency graph as an Archipelago game: each task is a location, unlocked when the tasks it depends on are done. `?tutorial=depgraph-demo`

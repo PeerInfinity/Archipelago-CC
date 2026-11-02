@@ -79,7 +79,7 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 
 - **Maze Room** (`mazeRoom`) — the maze substrate: engine, biomes, hazards, autopather. See [Maze Substrate](../developer/procgen/maze.md).
 - **Bounce Demo** (`bounceDemo`) — the Doodle-Jump-style platformer substrate. See [Bounce Substrate](../developer/procgen/bounce.md).
-- **Runner Demo** (`runnerDemo`) — the auto-runner platformer substrate. See [Runner Substrate](../developer/procgen/runner.md).
+- **Cloudberry Kingdom** (`cloudberryDemo`) — the Cloudberry Kingdom platformer substrate (it replaced the runner substrate, deleted 2026-11-02). See [Cloudberry Substrate](../developer/procgen/cloudberry.md).
 - **Flash Substrate** (`flashSubstrate`) — recompiled Flash games as regions. See [Flash Substrate](../developer/procgen/flash.md).
 - [Text Adventure](./textAdventure.md) (`textAdventureSubstrateWrapper`) — the enabled iframe-hosted text-adventure path: regions as prose with clickable exits and locations. [User guide](../user/modules/textAdventure.md) · [Text Adventure Substrate](../developer/procgen/text-adventure.md).
 - **JtA Substrate Wrapper** (`jtaSubstrateWrapper`) — Journey to Ascension as a zone-based substrate. See [JtA Substrate](../developer/procgen/jta.md).

@@ -8,7 +8,7 @@ The registry is a singleton with `register(entry)`, `get(id)`, `has(id)`, `getAl
 
 Each entry is registered twice, both times behind a `has()` guard: when its `*Library.js` is imported (so `scripts/procgen/` CLIs and tests get a populated registry without panels), and again from the module's `register()` hook in the live app. Headless scripts depend on the first — see [Gotchas](./gotchas.md#substrate-libraries-register-on-import--headless-scripts-depend-on-it).
 
-Entry factories build families of entries: `createFlashSubstrateEntry` (`flashSubstrate/flashSubstrateLibrary.js`) builds one per Flash game, and `createBounceSubstrateEntry` (`bounceDemo/bounceDemoLibrary.js`) builds on it for bounce and runner. The Seedling entries use the Flash factory but render in the flashPanel — see [Flash Substrate](./flash.md#flash_seedling--a-real-games-map-as-procgen-regions).
+Entry factories build families of entries: `createFlashSubstrateEntry` (`flashSubstrate/flashSubstrateLibrary.js`) builds one per Flash game, and `createBounceSubstrateEntry` (`bounceDemo/bounceDemoLibrary.js`) builds on it for bounce. The Seedling entries use the Flash factory but render in the flashPanel — see [Flash Substrate](./flash.md#flash_seedling--a-real-games-map-as-procgen-regions).
 
 ## Entry contract
 
@@ -130,13 +130,13 @@ Implemented by `maze` (tile-grid helpers in `adapterPrimitives.js`), `text_adven
 
 ### Build-time — content sources (zone-based substrates)
 
-A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The pool items a content cell holds were dealt to it up front by the spiral's [item layer](./stepped-pipeline.md#the-item-layer). The content sources are the zone games (`jta`, `bounce`, `runner`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
+A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The pool items a content cell holds were dealt to it up front by the spiral's [item layer](./stepped-pipeline.md#the-item-layer). The content sources are the zone games (`jta`, `bounce`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
 
 | Field | Meaning |
 |-------|---------|
 | `zoneCount` | Pool size. `arrangeShuffledSpiral` allocates no more regions than this, and the APWorld editor's *Zone N* source (`apworldEditor/regionContent.js`) offers `0..zoneCount-1`. |
 | `extractZoneRules(zoneIdx, ctx)` | Instantiate one entry: locations, per-side exit rules, obstacle defs and `playable_payload` fragment. In a spiral, `ctx.itemsToPlace` holds the pool items the item layer dealt this cell (the goal, `Victory`, among them on the goal cell), and the region must hold every one of them or the spiral refuses it by name. `ctx.goalOwned` says the engine places the world's goal, so the entry must not place a victory item of its own. |
-| `spiralItemCapacity(ordinal)` | How many pool items the source's `ordinal`th region can hold (the engine caps it at `maxItemsPerRegion`; `Infinity` = as many as it is dealt). A source without it holds none, so it never receives the goal: bounce, runner, `flash_seedling` and omsi are the ruled known gaps. jta answers its perk-free tasks (none with zone locations off); noiz2sa grows a location per item. |
+| `spiralItemCapacity(ordinal)` | How many pool items the source's `ordinal`th region can hold (the engine caps it at `maxItemsPerRegion`; `Infinity` = as many as it is dealt). A source without it holds none, so it never receives the goal: bounce, `flash_seedling` and omsi are the ruled known gaps. jta answers its perk-free tasks (none with zone locations off); noiz2sa grows a location per item. |
 | `fillerItem` | The item a location of this substrate holds when the engine takes a victory item off it (the spiral keeps ONE goal: a known-gap substrate's own victory becomes filler when the goal was placed elsewhere). Absent: the engine's slot filler, `Region Library Filler`. |
 | `getSpiralContent()` | The installed content document, for the stepped pipeline's content step; `null` when none is installed. |
 | `applyPipelineConfig(cfg)` | Install this source's pipeline config (called via `applySubstrateConfig`); `applyPipelineConfig({})` restores defaults. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
@@ -152,7 +152,7 @@ A **content source** supplies existing region content by ordinal: its Nth planne
 | `restartWarp` | Declared when this substrate's runtime answers the Menu panel's Restart by warping the player to the start region (`procgenCore/restartWarp.js`'s `RESTART_WARP`). If any substrate that realised a region declares it, `buildRulesJson` writes `exporter[p].return_to_menu: true`: returning to the menu is always possible. It is a flag, never an edge (no region gets an exit into `Menu`). `region-atlas-compile.mjs` and the playthrough generator ask the same declaration. Position-aware readers honour it: `scripts/procgen/census-soft-locks.mjs` lists Restart-only regions as a diagnostic, the route survey may Restart, and the client's route planners (the Playback Bot, the region graph's one-step move) begin a route with a RESTART step when no walk exists (`procgenCore/restartRoute.js`). Seedling's two entries declare it; a world of maze rooms only does not. |
 | `victoryItem` | Declares that a world with this substrate in its quota has a goal even when the scenario pool has no `is_victory` item. In the shuffled spiral and sphere growth the goal is always the one item `Victory` (`procgenCore/goalItem.js`); grid growth still completes on this item. |
 
-A source that feeds a *document* into the pipeline (jta's dataset) declares `emitsSpiralContent: true` and names its config field with `spiralContentConfigKey` (default `datasetDoc`). Only jta is truly pre-built (indices into one game build); bounce and runner generate their zones and store them by value.
+A source that feeds a *document* into the pipeline (jta's dataset) declares `emitsSpiralContent: true` and names its config field with `spiralContentConfigKey` (default `datasetDoc`). Only jta is truly pre-built (indices into one game build); bounce generates its zones and stores them by value.
 
 ### Build-time — region geometry
 
@@ -160,7 +160,7 @@ A source that feeds a *document* into the pipeline (jta's dataset) declares `emi
 |-------|------|---------|
 | `regionGeometry` | `'tiles'` \| `'sides'` (optional) | `'tiles'` (the default): each exit stands on a tile, so the engine writes `exits[].x/y`, `exits_placed[].tile_position` and `extracted_rules.exits[].position`. `'sides'`: exits are only sides, and the engine writes none of those and no `entrance` tile. Declare it on the entry, never as a factory default. |
 
-`procgenCore/regionGeometry.js` holds `REGION_GEOMETRY`, `DEFAULT_REGION_GEOMETRY` and `geometryOf(entry)`, the only reader; unknown values are refused. When a tile region mirrors a sides-only neighbour's exit, the engine uses `perimeterMidpoint(side, regionSize)`, so maze regions do not change. omsi reaches the engine only through `assembleZoneRegion`; the sphere and top-down drivers refuse substrates without `generateRegionCore` or `generateZoneForSpecs`. A substrate with `generateZoneForSpecs` and no `generateRegionCore` (bounce, runner, jta, noiz2sa) is built through the zone path, which gives every exit its own side, so such a room has at most four exits (`ZONE_PATH_EXIT_CEILING`). The top-down driver refuses a region with more by name before it builds anything (`zoneExitCeilingRefusal`). A `'sides'` geometry alone sets no such limit: `text_adventure` is `'sides'` but is built through its own `generateRegionCore`, which this limit does not cover.
+`procgenCore/regionGeometry.js` holds `REGION_GEOMETRY`, `DEFAULT_REGION_GEOMETRY` and `geometryOf(entry)`, the only reader; unknown values are refused. When a tile region mirrors a sides-only neighbour's exit, the engine uses `perimeterMidpoint(side, regionSize)`, so maze regions do not change. omsi reaches the engine only through `assembleZoneRegion`; the sphere and top-down drivers refuse substrates without `generateRegionCore` or `generateZoneForSpecs`. A substrate with `generateZoneForSpecs` and no `generateRegionCore` (bounce, cloudberry, jta, noiz2sa) is built through the zone path, which gives every exit its own side, so such a room has at most four exits (`ZONE_PATH_EXIT_CEILING`). The top-down driver refuses a region with more by name before it builds anything (`zoneExitCeilingRefusal`). A `'sides'` geometry alone sets no such limit: `text_adventure` is `'sides'` but is built through its own `generateRegionCore`, which this limit does not cover.
 
 ### Build-time — generation cost
 
@@ -168,7 +168,7 @@ A source that feeds a *document* into the pipeline (jta's dataset) declares `emi
 |-------|------|---------|
 | `generationCost` | `'light'` \| `'heavy'` (optional) | `'heavy'` means seconds per region, so the CI row `procgenPipeline/presetDefs.generate.slow.test.js` skips presets that use the substrate and requires the skipped set to equal `PRESETS_SKIPPED_AS_HEAVY`. Default `'light'`. Read by `procgenPipeline/presetRun.js` (`substrateGenerationCost`, `heavySubstrateIds`). |
 
-`runner` and `cloudberry` declare `'heavy'` (cloudberry: a game page boots, then a generator search per level). `flash_seedling_gen` declares `'light'` explicitly, with its measurements beside it: a room is one generator draw plus re-rolls, 0.1–1.5 s at 10×10, and its committed presets build in 0.3–0.7 s.
+`cloudberry` declares `'heavy'`: a game page boots, then a generator search per level (the deleted runner substrate declared it too). `flash_seedling_gen` declares `'light'` explicitly, with its measurements beside it: a room is one generator draw plus re-rolls, 0.1–1.5 s at 10×10, and its committed presets build in 0.3–0.7 s.
 
 ### Build-time — location capacity
 
@@ -189,11 +189,11 @@ The maze declares `mazeCapacityAt` (`mazeRoom/mazeLocationCapacity.js`). In an o
 
 ### Build-time — region library entries (capture / instantiate / validate)
 
-A **region library** stores a generated region as an entry and re-instantiates it into a later world. Implementations are in `mazeLibraryEntry.js`, `bounceLibraryEntry.js` and `runnerLibraryEntry.js`; the atlas pool is `procgenPipeline/regionAtlasPool.js`.
+A **region library** stores a generated region as an entry and re-instantiates it into a later world. Implementations are in `mazeLibraryEntry.js`, `bounceLibraryEntry.js` and `cloudberryLibrary.js`; the atlas pool is `procgenPipeline/regionAtlasPool.js`.
 
 | Field | Meaning |
 |-------|---------|
-| `captureLibraryEntry(region, meta)` | Turn a region into an entry. The maze stores geometry only (`carried_rules: null`); bounce and runner store their rules verbatim. |
+| `captureLibraryEntry(region, meta)` | Turn a region into an entry. The maze stores geometry only (`carried_rules: null`); bounce and cloudberry store their rules verbatim (`carried_rules`). |
 | `instantiateLibraryEntry(entry, ctx)` | Rebuild a region from an entry for a slot, drawing no rng. |
 | `instantiateLibraryEntryForSpecs(entry, ctx)` | Requirement-aware variant, used by sphere placement (`buildSphereLibraryRegion`) and the APWorld editor's *Library entry* source (`apworldEditor/regionRegenerate.js`): relabels openings onto the slot's sides and reassigns items. |
 | `libraryEntryRefusal(entry, ctx)` | Why `instantiateLibraryEntryForSpecs` would refuse this entry for `ctx`, or `null`. The editor's picker disables such entries, and the engine's sphere library source does not pick them; there `ctx` also carries `entranceSide`, `entryGate` and `exitPlans`. Cloudberry uses it to refuse slots where its level's geometry is not sound. |
@@ -202,7 +202,7 @@ A **region library** stores a generated region as an entry and re-instantiates i
 
 `regionLibraryValidator.js` keeps its own `LIBRARY_V1_SUBSTRATES` list because it runs with nothing registered; `procgenCore/sidecarFieldsRegistry.test.js` checks it against the registry.
 
-### Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)
+### Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)
 
 Optional hooks the sphere-growth driver and the Procgen Pipeline panel read, so the engine never names a substrate. Semantics are documented at the consumers, `procgenPipelineEngine.js` and `sphereConfigHooks.js`.
 
@@ -382,7 +382,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `libraryEntryRefusal` | fn | fn | — | — | — | fn | — | — | — |
 | `validateLibraryEntry` | fn | fn | — | — | — | fn | — | — | — |
 
-**Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)**
+**Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)**
 
 | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
@@ -432,14 +432,14 @@ What the declarations mean, which the generated table cannot show.
 |---|---|
 | `maze` | The playback controller is the live panel's own. Fine-grained, with its own per-tile live-play drain. Bot mode works by delegation, not `walkTo`. |
 | `bounce` | The playback controller is a host-side proxy (`bounce:playbackControl`) to an in-game bot that plays real physics. Summary capture. |
-| `runner` | Like bounce; its `zoneCount` comes from a lazily built zone table. |
+| `cloudberry` | Like bounce, but the level is the Cloudberry game page's own and so is its bot; the time is game time (`playClock`). Generation is heavy (the page's generator); spiral worlds take it from a library only ([Cloudberry Substrate](./cloudberry.md)). |
 | `text_adventure` | The playback controller is a host proxy to an iframe bridge (`textAdventureSubstrateWrapper:control`). Coarse capture. |
 | `flash` | No `getPlaybackController`, so the Playback Bot cannot walk a Flash region; a per-game entry that gains a bot declares its own (`flash_seedling_gen` does). |
 | `flash_seedling` | No bot. Host-side glue turns the game's level changes into region moves ([Flash Substrate](./flash.md#flash_seedling--a-real-games-map-as-procgen-regions)). `zoneCount` counts placeable rooms (with at least one wired door), not all atlas regions. |
 | `flash_seedling_gen` | Like `flash_seedling`, but its rooms are built by the Seedling generator; `flashSeedlingGenBuild.js` installs the generator hooks ([Flash Substrate](./flash.md#generated-rooms-flash_seedling_gen)). Its playback controller walks only on the Flash Panel's JS runtime (`playbackScope`) and refuses by name on any other ([Flash Substrate](./flash.md#the-playback-bot-on-the-js-runtime)). |
 | `jta` | Fine-grained; the Bot honours Instant. Zones are indices into one game build, so it cannot go into a region library. |
 | `omsi` | Fine-grained; the recording is the region's authored plan. Bot mode uses the omsi fork's planner; Instant runs the same ticks without waiting. `zoneCount` is the region-split or town count. |
-| `noiz2sa` | Summary capture like runner, on flashSubstrate's iframe panel and bridge; no Bot yet, so no playback controller. `zoneCount` is its fixed zone table ([Noiz2sa Substrate](./noiz2sa.md)). |
+| `noiz2sa` | Summary capture like bounce and cloudberry, on flashSubstrate's iframe panel and bridge; no Bot yet, so no playback controller. `zoneCount` is its fixed zone table ([Noiz2sa Substrate](./noiz2sa.md)). |
 
 ## Adding a substrate
 

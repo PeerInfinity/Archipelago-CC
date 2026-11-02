@@ -7212,7 +7212,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Generate the committed demo CLOUDBERRY region-library pack + register it in the region-libraries index — the Cloudberry analogue of make-demo-runner-pack.mjs.",
+            "oneLiner": "Generate the committed demo CLOUDBERRY region-library pack + register it in the region-libraries index — the Cloudberry analogue of make-demo-bounce-pack.mjs (and of the runner one, make-demo-runner-pack.mjs, which went with the runner substrate).",
             "path": "scripts/procgen/make-demo-cloudberry-pack.mjs"
         },
         {
