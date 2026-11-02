@@ -1,6 +1,6 @@
 /**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE GHOSTROPE — the PULL rung (and the `rope` verb) cut a rope with the GHOST SWORD
- * (`ghostRopeCut.GHOST_ROPE_CUT`, OFF; `SEEDLING_GHOST_ROPE_CUT=1`).
+ * (`ghostRopeCut.GHOST_ROPE_CUT`, ON since its 2026-11-02 flip; `SEEDLING_GHOST_ROPE_CUT=0` opts out).
  *
  * ⚖ The user (2026-10-30): *"ghost sword replaces the sword, so the solver shouldn't attempt to switch to regular sword
  * when it has ghost sword."* The rows:
@@ -137,10 +137,10 @@ describe('⛓⛓⛓ GHOSTROPE — the game: the ghost sword cuts a rope, from up
     });
 });
 
-describe('⛓ GHOSTROPE — ships OFF', () => {
-    it('the default is OFF, the switch reads only `=1`, and the page channel knows its name', () => {
-        expect(GHOST_ROPE_CUT_DEFAULT).toBe(false);
-        expect(GHOST_ROPE_CUT.enabled).toBe(globalThis.process?.env?.SEEDLING_GHOST_ROPE_CUT === '1');
+describe('⛓ GHOSTROPE — ships ON (⚖ the user, 2026-11-02: "Flip GHOST_ROPE_CUT")', () => {
+    it('the default is ON, the switch reads only `=0` to opt out, and the page channel knows its name', () => {
+        expect(GHOST_ROPE_CUT_DEFAULT).toBe(true);
+        expect(GHOST_ROPE_CUT.enabled).toBe(globalThis.process?.env?.SEEDLING_GHOST_ROPE_CUT !== '0');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_GHOST_ROPE_CUT');
     });
 

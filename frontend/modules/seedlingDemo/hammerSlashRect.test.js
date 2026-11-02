@@ -31,7 +31,7 @@ import {
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REQ = JSON.parse(readFileSync(join(HERE, 'fixtures', 'hammer-slashrect', 'seed7-request.json'), 'utf8'));
-const OPTED = globalThis.process?.env?.SEEDLING_PRESS_NO_FACING === '1';
+const OPTED_OUT = globalThis.process?.env?.SEEDLING_PRESS_NO_FACING === '0';
 const solveSeed7 = () => solve(REQ.record, REQ.staging, REQ.goals, REQ.budget, { name: REQ.name });
 
 describe('hammer-phase SLASHRECT — where the -1 comes from (`Player.as:1424`)', () => {
@@ -87,9 +87,10 @@ describe('hammer-phase SLASHRECT — `refuseNoFacing`', () => {
 });
 
 describe('hammer-phase SLASHRECT — the caldera counterfactual, seed 7 (the request that aborted the level)', () => {
-    it.skipIf(OPTED)('ships OFF', () => {
-        expect(PRESS_NO_FACING.enabled).toBe(false);
-        expect(PRESS_NO_FACING_DEFAULT).toBe(false);
+    // ⛓ flipped ON (⚖ the user, 2026-11-02: "Flip SLASHRECT")
+    it.skipIf(OPTED_OUT)('ships ON', () => {
+        expect(PRESS_NO_FACING.enabled).toBe(true);
+        expect(PRESS_NO_FACING_DEFAULT).toBe(true);
     });
 
     it('always: the press forecast\'s throw is REFUSED by name (it threw `PressError` at the base)', () => {
