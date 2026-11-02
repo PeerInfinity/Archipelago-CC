@@ -1,0 +1,7 @@
+t0 L40 (488.0,579.0) turret live tile(30,26) open[] hits 0 burnt[] chasers[bobsoldier@880,832,bob@736,752,bob@736,800]
+t458 L40 (744.3,760.5) turret live tile(30,26) open[] hits 0 burnt[] chasers[bobsoldier@880,832,bob@736,800]
+t551 L40 (744.3,805.4) turret live tile(30,26) open[] hits 1 burnt[] chasers[bobsoldier@880,832,bob@736,800]
+t793 L40 (752.8,852.2) turret live tile(30,26) open[] hits 1 burnt[] chasers[bobsoldier@880,832]
+t1033 L40 (829.5,860.4) turret live tile(30,26) open[] hits 1 burnt[] chasers[]
+END t ? pos 487.7 578.2 deaths 0 collected []
+HITS [{"t":551,"source":"chaser","id":"bob@736,800","died":false}]
