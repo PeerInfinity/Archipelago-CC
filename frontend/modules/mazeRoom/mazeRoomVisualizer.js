@@ -420,6 +420,8 @@ export class MazeRoomVisualizer {
             // item-action world), so every other getState() bag is unchanged.
             ...(this._state?.facing !== undefined ? { facing: this._state.facing } : {}),
             ...(this._state?.broken !== undefined ? { broken: this._state.broken.slice() } : {}),
+            // ⛓ LATCHING BUTTONS: present only on a world that places one (session tile-mechanisms-m4-latch).
+            ...(this._state?.latched !== undefined ? { latched: this._state.latched.slice() } : {}),
             inventory: new Map(this._inventory),
             checkedLocations: new Set(this._checkedLocations),
             target: this._target ? { ...this._target } : null,

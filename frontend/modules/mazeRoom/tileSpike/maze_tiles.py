@@ -12,7 +12,9 @@
 # PIT SINKS: even when the cell is not floor, a pit the player cannot walk),
 # pull (PULLS: the combos the trap whose disc this step enters from outside needs to reel the player in; None = no pull),
 # kind / block_struck / wakes / pulsed (BLOCK KINDS, session tile-mechanisms-m1: the block's kind; the acting use moves it;
-# the acting use wakes it; a pulse moves it), pulse (PULSERS: the group token of the pulser whose reach holds the cell; None = none).
+# the acting use wakes it; a pulse moves it), pulse (PULSERS: the group token of the pulser whose reach holds the cell; None = none),
+# latched / latch_event (LATCHING BUTTONS, session tile-mechanisms-m4-latch: the cell's latching button was pressed earlier this
+# visit; the event its latch carries from an earlier visit, None = none).
 
 
 def cleared(state, player, tile):
@@ -65,3 +67,7 @@ def rope_cut(state, player, cell, tile):
 
 def pulled(state, player, cell, tile):
     return tile.pull is not None and any(all(state.count(p[0], player) >= p[1] for p in combo) for combo in tile.pull)
+
+
+def latched(state, player, cell, tile):
+    return tile.latched or (tile.latch_event is not None and state.has(tile.latch_event, player))
