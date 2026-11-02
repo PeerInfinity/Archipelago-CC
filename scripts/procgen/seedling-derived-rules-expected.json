@@ -71,7 +71,7 @@
       "regionsArrivalDependent": 19
     },
     "routeA": {
-      "$comment": "W0's overridable.mjs classes (echo-independent): 114 overridable regions, 296 elements in them. The echo split is this probe's: 61 echoed / 235 echo-free in 109 regions (W0 read 53 / 243 / 111 on its 68 keys, 3 of them named under the carrier sub-region).",
+      "$comment": "W0's overridable.mjs classes (echo-independent): 114 overridable regions, 296 elements in them. The echo split is this probe's: 61 echoed / 235 echo-free in 109 regions (W0 read 53 / 243 / 111 on its 68 keys, 3 of them named under the carrier sub-region). PARTIAL (designer review): of the 235, 36 sit on an element a row of which skipped points (an unadmitted landing, its own event), so 199 EXACT candidates remain, in 96 regions.",
       "classes": {
         "overridable": 114,
         "walk-in from another member": 55,
@@ -81,7 +81,10 @@
       "overridableElements": 296,
       "overridableEchoed": 61,
       "overridableEchoFree": 235,
-      "regionsWithAnEchoFreeOverride": 109
+      "regionsWithAnEchoFreeOverride": 109,
+      "overridablePartial": 36,
+      "overridableExact": 199,
+      "regionsWithAnExactOverride": 96
     }
   }
 }

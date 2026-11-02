@@ -116,3 +116,24 @@ describe('the explained problems (OPEN_L63 is path-vs-edge, block-state framing)
         expect(OPEN_L63.startsWith(`${EXPLAINED_PROBLEMS[0].label} holding`)).toBe(true);
     });
 });
+
+describe('a row with skipped points is PARTIAL, never overridable (L12 r42c28 from the L83 landing)', () => {
+    // The skip census names it: L12 r42c28 is entered only from L83, landing (2,54), and its magical lock's event is
+    // asked there at no point at all (64 unadmitted + 8 own-event of 128 — every point skipped). The region is in the
+    // overridable class (one arrival, rooted, no walk-in), so without the counts the event's "agrees" would be an override.
+    const rules = compile(['level_12', 'level_83']);
+    const { rows } = certify(rules);
+    const flag7 = (rs) => labelDerivedRows(rs, { rules, echoes: new Set() }).elements
+        .find((e) => e.name === 'L12 flag 7: magicallock@32,864 cleared');
+
+    it('agrees on ZERO compared points, says so, and is not overridable though its region is', () => {
+        const e = flag7(rows);
+        expect(e).toMatchObject({ verdict: 'agrees', partial: true, overridable: false });
+        expect(e.counts).toEqual({ compared: 0, unadmitted: 64, ownEvent: 8, of: 128 });
+        expect(labelDerivedRows(rows, { rules, echoes: new Set() }).regions.get('level_12__r42c28').class).toBe('overridable');
+    });
+
+    it('MUTANT: drop the counts from the verdict and the same row reads as an override', () => {
+        expect(flag7(rows.map(({ counts, ...r }) => r))).toMatchObject({ partial: false, overridable: true });
+    });
+});

@@ -21,7 +21,8 @@
  *
  * The labels are exclusive and taken in that order, so an echo is never counted as agreement and a problem is never
  * hidden behind an echo. The facts behind them (`echoed`, `arrivalDependent`, `compare`, `overridable`, `verdict`) ride
- * along on every row, for rules-4's per-approach charge (Q2) and the override (R-A3) to filter on. Pure: no I/O.
+ * along on every row (`partial`: the row skipped points, so its verdict covers only `counts.compared` of them; an
+ * element with a partial row is never `overridable`), for rules-4's per-approach charge (Q2) and the override (R-A3) to filter on. Pure: no I/O.
  */
 
 /** The labels, in precedence order. */
@@ -107,7 +108,9 @@ export function labelDerivedRows(rows, { rules, echoes, explained = [] }) {
     const members = sharedMembersOf(rules);
     const elements = [];
     for (const row of rows) {
-        const base = { arrival: row.arrival, verdict: row.verdict, by: row.by, problem: row.problem, certifierLabel: row.label };
+        const skippedPoints = (row.counts?.unadmitted ?? 0) + (row.counts?.ownEvent ?? 0);
+        const base = { arrival: row.arrival, verdict: row.verdict, by: row.by, problem: row.problem, certifierLabel: row.label,
+            counts: row.counts, partial: skippedPoints > 0 };
         if (row.kind === 'location') {
             elements.push({ ...base, kind: 'location', key: locationKey(row.region, row.name), region: row.region, name: row.name,
                 event: row.event, derived: row.derived, ap: row.ap, echoed: echoes.has(locationKey(row.region, row.name)) });
@@ -132,7 +135,8 @@ export function labelDerivedRows(rows, { rules, echoes, explained = [] }) {
     }
     for (const group of byKey.values()) {
         const dependent = group.some((e) => !same(e.derived, group[0].derived));
-        for (const e of group) e.arrivalDependent = dependent;
+        const partial = group.some((e) => e.partial);
+        for (const e of group) { e.arrivalDependent = dependent; e.elementPartial = partial; }
     }
     // ROUTE A's class per region (the sizing's `overridable` test): ONE arrival, rooted (not priced from another member),
     // and never walked into from another member of its shared world.
@@ -152,7 +156,9 @@ export function labelDerivedRows(rows, { rules, echoes, explained = [] }) {
     }
     for (const e of elements) {
         e.compare = compareRules(e.derived, e.ap ?? FALSE);
-        e.overridable = e.kind !== 'pair' && regions.get(e.region)?.class === 'overridable';
+        // ⛓ PARTIAL (designer review, R-A1): an element any of whose rows skipped points (an unadmitted landing, its own
+        // event) was never compared there, so an override would rest on inventories the certifier did not look at.
+        e.overridable = e.kind !== 'pair' && regions.get(e.region)?.class === 'overridable' && !e.elementPartial;
         const named = e.verdict === 'problem' ? why.get(e.certifierLabel) : undefined;
         if (named) e.explainedBy = named.why;
         e.label = named ? named.as : e.verdict === 'problem' ? 'problem' : e.echoed ? 'echoed' : e.arrivalDependent ? 'arrival-dependent'
@@ -169,7 +175,8 @@ const tally = (o, k) => { o[k] = (o[k] ?? 0) + 1; };
  *   - `w0` per ELEMENT (arrivals collapsed): an exit or location is 'arrival-dependent' when its rows differ, else its
  *     derived rule's comparison with today's ('equal' / 'stricter' / 'looser' / 'incomparable');
  *   - `arrivals`: regions priced, arrival nodes, regions per arrival count, regions with an arrival-dependent element;
- *   - `routeA`: regions per class, and the overridable regions' elements split echoed / echo-free.
+ *   - `routeA`: regions per class, and the overridable regions' elements split echoed / echo-free, and the echo-free ones
+ *     split partial (a row skipped points) / EXACT (the override candidates).
  */
 export function summarizeDerivedRows({ elements, regions }) {
     const labels = {};
@@ -187,8 +194,12 @@ export function summarizeDerivedRows({ elements, regions }) {
     const hist = {};
     let nodes = 0;
     for (const r of regions.values()) { tally(hist, r.arrivals.size); nodes += r.arrivals.size; }
-    const routeA = { classes: {}, overridableElements: 0, overridableEchoed: 0, overridableEchoFree: 0, regionsWithAnEchoFreeOverride: 0 };
+    const routeA = {
+        classes: {}, overridableElements: 0, overridableEchoed: 0, overridableEchoFree: 0, regionsWithAnEchoFreeOverride: 0,
+        overridablePartial: 0, overridableExact: 0, regionsWithAnExactOverride: 0,
+    };
     const echoedKey = new Set(elements.filter((e) => e.echoed).map((e) => e.key));
+    const partialKey = new Set(elements.filter((e) => e.elementPartial).map((e) => e.key));
     for (const r of regions.values()) {
         tally(routeA.classes, r.class);
         if (r.class !== 'overridable') continue;
@@ -197,6 +208,10 @@ export function summarizeDerivedRows({ elements, regions }) {
         routeA.overridableEchoed += echoed;
         routeA.overridableEchoFree += r.elements.size - echoed;
         if (r.elements.size > echoed) routeA.regionsWithAnEchoFreeOverride += 1;
+        const exact = [...r.elements].filter((k) => !echoedKey.has(k) && !partialKey.has(k)).length;
+        routeA.overridablePartial += [...r.elements].filter((k) => !echoedKey.has(k) && partialKey.has(k)).length;
+        routeA.overridableExact += exact;
+        if (exact > 0) routeA.regionsWithAnExactOverride += 1;
     }
     const keys = [...seen];
     return {

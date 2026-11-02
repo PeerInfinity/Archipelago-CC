@@ -297,12 +297,17 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         let unadmitted = 0;
         let ownEvent = 0;
         let points = 0;
+        let compared = 0;
+        // ⛓ What the verdict rests on (designer review, R-A1): a row that agrees on the points it COMPARED says so with its
+        // counts, so an all-skipped row never reads as proven (`counts` rides on every returned verdict).
+        const counts = () => ({ compared, unadmitted, ownEvent, of: points });
         for (const inv of allPoints(axis)) {
             points += 1;
             if (impossible(inv)) continue;
             if (notHere?.unadmitted?.(inv)) { unadmitted += 1; continue; }
             if (notHere?.ownEvent?.(inv)) { ownEvent += 1; continue; }
             if (notHere?.(inv)) continue;
+            compared += 1;
             const derived = derivedAt(inv);
             const atlas = atlasAt(inv);
             if (derived === atlas) continue;
@@ -313,7 +318,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
                 problems.push(problem);
                 if (unadmitted > 0) skipped.push({ label, points: unadmitted, of: points, partial: true });
                 if (ownEvent > 0) skipped.push({ label, points: ownEvent, of: points, partial: true, why: 'own event' });
-                return { verdict: 'problem', problem, by: [] };
+                return { verdict: 'problem', problem, by: [], counts: counts() };
             }
             by.add(excuse);
         }
@@ -321,7 +326,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         if (ownEvent > 0) skipped.push({ label, points: ownEvent, of: points, why: 'own event' });
         for (const item of by) accepted.push({ label, source, by: item });
         if (stricterOk !== null && by.has(stricterOk)) lines.push(`accepted: ${label} — ${stricterOk}`);
-        return { verdict: by.size > 0 ? 'accepted' : 'agrees', problem: null, by: [...by] };
+        return { verdict: by.size > 0 ? 'accepted' : 'agrees', problem: null, by: [...by], counts: counts() };
     };
     // ⛓ The rules producer's permissive locations (see `permissive` above), by AP region name → the reason a STRICTER row is accepted.
     const permissiveSet = new Set(permissive);
@@ -601,14 +606,16 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
      * member's arrival). `derived` is the search's rule (`ruleFromMinimalSets(minimal)`), `ap` the AP element's OWN rule (a
      * location's rule; the Or of the exits to a target; for an in-world pair, the Or of the DIRECT exits between the two, or
      * null when the pair is only transitive) — not the closure it was compared with. `verdict` is the certifier's:
-     * 'agrees' / 'accepted' (`by` = what excused it) / 'problem' (`problem` = its line).
+     * 'agrees' / 'accepted' (`by` = what excused it) / 'problem' (`problem` = its line). `counts` = the lattice points the
+     * verdict rests on: `compared`, the `unadmitted` landing points and `ownEvent` points skipped (`skipped`), `of` all
+     * (a problem's counts stop at its first mismatch).
      */
     function perExitOf(map, to) {
         if (!map.has(to)) map.set(to, []);
         return map.get(to);
     }
     function verdictOf(v) {
-        return { verdict: v.verdict, by: v.by, problem: v.problem };
+        return { verdict: v.verdict, by: v.by, problem: v.problem, counts: v.counts };
     }
     function locationRow(region, loc, arrival, label, minimal, v) {
         return {

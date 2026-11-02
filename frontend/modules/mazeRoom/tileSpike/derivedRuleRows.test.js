@@ -126,7 +126,15 @@ describe('summarizeDerivedRows', () => {
         expect(s.echoedElements).toBe(1);
         expect(s.arrivals).toEqual({ regionsPriced: 2, arrivalNodes: 3, regionsPerArrivalCount: { 1: 1, 2: 1 }, regionsArrivalDependent: 1 });
         expect(s.routeA).toEqual({ classes: { 'several arrivals': 1, overridable: 1 }, overridableElements: 1, overridableEchoed: 1,
-            overridableEchoFree: 0, regionsWithAnEchoFreeOverride: 0 });
+            overridableEchoFree: 0, regionsWithAnEchoFreeOverride: 0, overridablePartial: 0, overridableExact: 0, regionsWithAnExactOverride: 0 });
+    });
+
+    it('an echo-free overridable element with a skipped point is PARTIAL, not exact', () => {
+        const skipped = { ...exitRow('S1', 'S1 -> B', 'entrance', T, T), counts: { compared: 1, unadmitted: 1, ownEvent: 0, of: 2 } };
+        const clean = { ...exitRow('S1', 'S1 -> C', 'entrance', T, T), counts: { compared: 2, unadmitted: 0, ownEvent: 0, of: 2 } };
+        const table = label([skipped, clean]);
+        expect(table.elements.map((e) => [e.name, e.partial, e.overridable])).toEqual([['S1 -> B', true, false], ['S1 -> C', false, true]]);
+        expect(summarizeDerivedRows(table).routeA).toMatchObject({ overridableEchoFree: 2, overridablePartial: 1, overridableExact: 1, regionsWithAnExactOverride: 1 });
     });
 });
 
