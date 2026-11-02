@@ -249,8 +249,12 @@ A room whose `elements` knob is empty (`''`, the default) draws its element from
 | `pre-sword` (the knob's default) | `guard;len=2\|3\|4+blockpocket+chamber;w=2;h=3` (unchanged) |
 | `post-sword` | the above with `killgate` second, then `+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody` |
 | `post-shield` | post-sword's `+shieldgate` |
-| `post-swim` | post-shield's `+watergate+watershortcut` |
-| `post-feather` | post-swim's `+waterfallgate` (all 13 heads) |
+| `post-swim` | post-shield's `+watergate+watershortcut`, then `+burngate` |
+| `post-feather` | post-shield's `+watergate+watershortcut+waterfallgate+burngate` |
+| `post-fire` | post-shield's `+burngate` |
+| `post-spear`, `post-dark-suit`, `endgame` | post-feather's list |
+
+- **The fire's row (seedling-gen-post-swim-fix, ⚖ 2026-11-02).** `post-swim`'s boot was corrected to hold the torch, the fire and the wand, which the vanilla order gives before the conch; `post-feather` holds them too, because it is post-swim plus the feather. In the same re-record `burngate` joined the defaults as the fold's last row, `hasFire`, so every boot holding the fire ends its list with `+burngate`. The boot fix alone moved no default room. The join moves rooms only where the longer list changes the seed's pick.
 
 - **One draw, uniform, decided by the seed.** The list is a choice, not a conjunction: one `rng.pick`, equal over its members. The pick is made before the room is built, so every kind and size at one seed draws the same head. A head that cannot place in the room is a graded drop, and the level ships element-less.
 - **Named parameters.** `arena` carries the chamber's `w=2;h=3` (post-sword: 47 placed, 25 certified, against 25 and 12 bare). `roam` stays bare (its `w=2;h=3` measured 11 placed, 2 certified).
@@ -265,6 +269,8 @@ A room whose `elements` knob is empty (`''`, the default) draws its element from
   | `post-shield` | 95 / 64 | 104 / 82 |
   | `post-swim` | 95 / 64 | 54 / 50 |
   | `post-feather` | 95 / 64 | 66 / 58 |
+
+  Re-measured at the fire's row (`seedling-gen-sweep.yml`, the same 168 cells, the list named explicitly): `post-swim` 55 / 51 before the join → 70 / 68 after it, 4 of the 68 certified with `burn`.
 
   The 12 seeds are 12 draws per biome, so these numbers depend on which heads the seeds landed on. In `post-swim`, three seeds drew `arena`, one drew `roam` and none drew `watergate`. Read them as one 12-draw sample, not as a rate. The per-head yields are in the swim reports. `roam` placed 0 of 14 cells in every sword biome here (10 of 168 on its own sweep). `waterfallgate` placed 0 of 14 in `post-feather`: the default skeleton seats no fall (open, R-m).
 

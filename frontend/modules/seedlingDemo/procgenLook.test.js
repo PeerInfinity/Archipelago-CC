@@ -134,8 +134,12 @@ describe('C2 — the four later item presets', () => {
         for (const name of NEW) expect(GEN_ROOM_BIOMES[name].items).not.toHaveProperty('hasDarkSword');
     });
 
-    it('⛔ post-swim is NOT corrected here: sword, shield, conch — no torch, fire or wand', () => {
-        expect(POST_SWIM_ITEMS).toEqual({ hasSword: true, hasShield: true, canSwim: true });
+    // ⛓ seedling-gen-post-swim-fix (⚖ Robert 2026-11-02): was "post-swim is NOT corrected here".
+    it('post-swim is CORRECTED: sword, shield, torch, fire, wand, conch — the census\'s order before D5', () => {
+        expect(POST_SWIM_ITEMS).toEqual({
+            hasSword: true, hasShield: true, hasTorch: true, hasFire: true, hasWand: true, canSwim: true,
+        });
+        expect(POST_SPEAR_ITEMS).toEqual({ ...POST_SWIM_ITEMS, hasFeather: true, hasSpear: true });
         expect(GEN_ROOM_BIOMES['post-swim'].items).toBe(POST_SWIM_ITEMS);
     });
 

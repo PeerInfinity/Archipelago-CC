@@ -76,7 +76,10 @@ describe('⛓⛓⛓ the WATER GATE element and its table row (swim S1, D3)', () 
     });
 
     it('`post-swim` is a biome on every list that offers one, the census default included (⚖ Q13)', () => {
-        expect(POST_SWIM_ITEMS).toEqual({ hasSword: true, hasShield: true, canSwim: true });
+        // ⛓ seedling-gen-post-swim-fix: + torch, fire, wand (the census's boot before D5).
+        expect(POST_SWIM_ITEMS).toEqual({
+            hasSword: true, hasShield: true, hasTorch: true, hasFire: true, hasWand: true, canSwim: true,
+        });
         expect(POST_SWIM_PALETTE.templates).toBe(POST_SWORD_PALETTE.templates);
         expect(POST_SWIM_PALETTE.excluded).toBe(POST_SWORD_PALETTE.excluded);
         expect(paletteFor('post-swim')).toBe(POST_SWIM_PALETTE);

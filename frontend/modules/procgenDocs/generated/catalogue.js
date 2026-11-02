@@ -1392,7 +1392,7 @@ export const CATALOGUE = frz({
             ]
         },
         {
-            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut",
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+burngate",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
@@ -1494,8 +1494,11 @@ export const CATALOGUE = frz({
             "id": "post-swim",
             "items": {
                 "canSwim": true,
+                "hasFire": true,
                 "hasShield": true,
-                "hasSword": true
+                "hasSword": true,
+                "hasTorch": true,
+                "hasWand": true
             },
             "page": "/frontend/modules/seedlingDemo/watch.html",
             "skeletonKinds": [
@@ -1860,7 +1863,7 @@ export const CATALOGUE = frz({
             ]
         },
         {
-            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate",
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate+burngate",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
@@ -1963,8 +1966,11 @@ export const CATALOGUE = frz({
             "items": {
                 "canSwim": true,
                 "hasFeather": true,
+                "hasFire": true,
                 "hasShield": true,
-                "hasSword": true
+                "hasSword": true,
+                "hasTorch": true,
+                "hasWand": true
             },
             "page": "/frontend/modules/seedlingDemo/watch.html",
             "skeletonKinds": [
@@ -2329,7 +2335,7 @@ export const CATALOGUE = frz({
             ]
         },
         {
-            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate",
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+burngate",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
@@ -2798,7 +2804,7 @@ export const CATALOGUE = frz({
             ]
         },
         {
-            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate",
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate+burngate",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
@@ -3326,7 +3332,7 @@ export const CATALOGUE = frz({
             ]
         },
         {
-            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate",
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate+burngate",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
@@ -3856,7 +3862,7 @@ export const CATALOGUE = frz({
             ]
         },
         {
-            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate",
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate+burngate",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
@@ -4910,7 +4916,7 @@ export const CATALOGUE = frz({
             ]
         },
         {
-            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate",
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate+burngate",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
@@ -5439,7 +5445,7 @@ export const CATALOGUE = frz({
             ]
         },
         {
-            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate",
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate+burngate",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",
@@ -5542,8 +5548,11 @@ export const CATALOGUE = frz({
             "items": {
                 "canSwim": true,
                 "hasFeather": true,
+                "hasFire": true,
                 "hasShield": true,
-                "hasSword": true
+                "hasSword": true,
+                "hasTorch": true,
+                "hasWand": true
             },
             "page": "/frontend/modules/seedlingDemo/watch.html",
             "skeletonKinds": [
@@ -6649,7 +6658,16 @@ export const CATALOGUE = frz({
             "why": "The CHEST DOOR (seedling gen B2, the L38 pattern): a `chest` standing in a main-path cut, opened from the cell directly below it. Certified only by a plan that OPENS the chest (`[chest, …]`); a certificate that reaches the goal without it is refused. Its seal piece is an AP location."
         },
         {
-            "defaultIn": [],
+            "defaultIn": [
+                "post-swim",
+                "post-feather",
+                "post-fire",
+                "post-spear",
+                "post-dark-suit",
+                "endgame",
+                "frozen-forge",
+                "flooded-ruins"
+            ],
             "head": "burngate",
             "module": "burn-gate",
             "needs": [

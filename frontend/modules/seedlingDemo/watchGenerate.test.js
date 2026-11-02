@@ -65,10 +65,14 @@ describe('the biome map — ONE map, two readers', () => {
         expect(paletteFor('post-shield').items).toEqual({ hasSword: true, hasShield: true });
         // ⛓ its roster IS post-sword's, by reference — no second list to keep in step
         expect(paletteFor('post-shield').templates).toBe(POST_SWORD_PALETTE.templates);
-        expect(paletteFor('post-swim').items).toEqual({ hasSword: true, hasShield: true, canSwim: true });
+        // ⛓ seedling-gen-post-swim-fix: + torch, fire, wand (the census's boot before D5).
+        expect(paletteFor('post-swim').items).toEqual({
+            hasSword: true, hasShield: true, hasTorch: true, hasFire: true, hasWand: true, canSwim: true,
+        });
         expect(paletteFor('post-swim').templates).toBe(POST_SWORD_PALETTE.templates);
-        expect(paletteFor('post-feather').items)
-            .toEqual({ hasSword: true, hasShield: true, canSwim: true, hasFeather: true });
+        expect(paletteFor('post-feather').items).toEqual({
+            hasSword: true, hasShield: true, hasTorch: true, hasFire: true, hasWand: true, canSwim: true, hasFeather: true,
+        });
         expect(paletteFor('post-feather').templates).toBe(POST_SWORD_PALETTE.templates);
     });
 

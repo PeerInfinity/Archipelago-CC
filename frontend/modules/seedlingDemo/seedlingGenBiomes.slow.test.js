@@ -24,7 +24,12 @@ const payloadOf = (seedlingGen, seed) => serializeGenRoom(generateGenRoom({
     region_id: 'r', exits: [{}], size: { width: 10, height: 10 }, rng: rngDrawing(seed), params: { seedlingGen },
 }).world, null, null, null, {});
 
-/** Measured at base 9c0f904549 and on this slice: identical. */
+/**
+ * Measured at base 9c0f904549 and on this slice: identical. ⛓ RE-RECORDED by
+ * `seedling-gen-post-swim-fix` (⚖ Robert 2026-11-02, "Both, one re-record"): post-swim 2
+ * and post-feather 2 moved, both because their boots now hold the fire and so draw from a
+ * list one head longer (`+burngate`); the boot fix alone moved none of the 15.
+ */
 const BASE_DIGESTS = Object.freeze({
     'room pre-sword 1': '057aba413bd143dd',
     'room pre-sword 2': '840a937f37415e18',
@@ -36,10 +41,10 @@ const BASE_DIGESTS = Object.freeze({
     'room post-shield 2': '5713789c2e3b093b',
     'lab post-shield': 'f2eec8d91bdca36c',
     'room post-swim 1': '626d3b038577faa3',
-    'room post-swim 2': '91b15d28f1d8ebc2',
+    'room post-swim 2': '8c8865701483e3bf', // post-swim-fix, was 91b15d28f1d8ebc2
     'lab post-swim': 'aeac6fa85ba6fe43',
     'room post-feather 1': '93888643fa2b52de',
-    'room post-feather 2': '29327f906a5b0ada',
+    'room post-feather 2': 'db03a603aa64b28f', // post-swim-fix, was 29327f906a5b0ada
     'lab post-feather': 'aeac6fa85ba6fe43',
 });
 
