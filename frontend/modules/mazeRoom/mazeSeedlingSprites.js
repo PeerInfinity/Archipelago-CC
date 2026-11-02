@@ -28,7 +28,8 @@
  * ── WHAT IS DRAWN, from each skin's own art table (⛔ no run, no levelRun view: the maze has neither) ──
  * Frame 0 of each class (open question A: the maze has no game tick); a body is hidden once the maze clears it
  * (`state.broken`, or its obstacle cleared for the EFFECTIVE inventory — held buttons and cut ropes included,
- * `effectiveInventory`), a block at its live cell, a button down (frame 1) under the player or a block, an item as
+ * `effectiveInventory`), a block at its live cell, a button down (frame 1) under the player or a block (or a latch that
+ * stays down, `view.latched` / its event carried: session tile-mechanisms-m4-latch), an item as
  * its LOOK (`apItemOps`; the Archipelago logo for an item no Seedling table names), the player as the stand frame
  * of its facing. A row whose art the stack lacks keeps the maze's marker (a rope: there is no rope sheet).
  *
@@ -45,7 +46,7 @@ import { SUIT_KEYS } from '../seedlingDemo/seedlingPlayerSkin.js';
 import { KEYS as ROOM_BODIES } from '../seedlingDemo/seedlingRoomBodySkin.js';
 import { KEYS as MACHINES } from '../seedlingDemo/seedlingMachineSkin.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
-import { effectiveInventory, posKey } from './mazeRoomEngine.js';
+import { effectiveInventory, latchesDown, posKey } from './mazeRoomEngine.js';
 
 /** The AS3 classes a maze object of each kind is drawn by (`seedlingSemantics`' `class`). */
 const LOCKS = ['Lock', 'WandLock', 'GrassLock', 'ShieldLock'];
@@ -166,6 +167,17 @@ export function seedlingCensus(mazeWorld, record) {
             const row = claim(what, r, cell);
             // `ButtonRoom.as:44-48`: `frameAdd` 2 when a Wire lies under it
             if (r.cls === 'ButtonRoom') row.wire = here(cell).some((w) => w.e.type === 'wire');
+            // ⛓ LATCHING BUTTONS (session tile-mechanisms-m4-latch): only a ButtonRoom latches in the game (`Button.as` holds),
+            // and a room −1 ButtonRoom always does (`ButtonRoom.as` `activate` "Can't be reset") — either mismatch would
+            // draw the wrong look (a latched one popping up, or a per-visit one staying down), so it is refused by name.
+            if (what === 'button') {
+                const latches = !!mazeWorld.buttonLib?.[mazeWorld.buttons.get(cell)]?.latch;
+                if (latches && r.cls !== 'ButtonRoom') {
+                    refusals.push(`L${record.level} button at ${cell}: it latches, but ${r.id} is a ${r.cls}, which holds per visit`);
+                } else if (!latches && r.cls === 'ButtonRoom' && String(r.e.attrs?.room) === '-1') {
+                    refusals.push(`L${record.level} button at ${cell}: ${r.id} is a room −1 ButtonRoom, which latches, laid as a per-visit hold`);
+                }
+            }
             if (what === 'block' && blockLib) {
                 const kind = mazeWorld.blocks.get(cell);
                 if (!kindRows.has(kind)) kindRows.set(kind, new Map());
@@ -322,11 +334,12 @@ export function seedlingSprites(census, art, { mazeWorld, view, blocks = null, b
     const broken = new Set(view.broken ?? []);
     const playerPos = view.playerPos ?? null;
     const inv = playerPos
-        ? effectiveInventory(mazeWorld, view.inventory ?? new Set(), playerPos, blocks ?? undefined, view.broken ?? undefined)
+        ? effectiveInventory(mazeWorld, view.inventory ?? new Set(), playerPos, blocks ?? undefined, view.broken ?? undefined, view.latched ?? undefined)
         : (view.inventory ?? new Set());
     const clearOpts = view.ruleEvaluator ? { evaluateRule: view.ruleEvaluator } : undefined;
     const cleared = ([cell, id]) => broken.has(cell) || isObstacleCleared(id, inv, lib, clearOpts);
     const liveBlocks = new Set(blocks ?? []);
+    const latched = latchesDown(mazeWorld, view.inventory, view.latched);
     const playerKey = playerPos ? posKey(playerPos.x, playerPos.y) : null;
 
     for (const row of census.rows) {
@@ -338,7 +351,8 @@ export function seedlingSprites(census, art, { mazeWorld, view, blocks = null, b
             if (!row.obstacles.every(cleared)) ops.push(probe);
         } else if (row.what === 'button') {
             const cell = row.cells[0];
-            const down = cell === playerKey || liveBlocks.has(cell);
+            // ⛓ LATCHING BUTTONS (session tile-mechanisms-m4-latch): a latch stays down (`ButtonRoom.as` "Can't be reset").
+            const down = cell === playerKey || liveBlocks.has(cell) || latched.has(cell);
             const op = entityOp(art, row, Number(e.x), Number(e.y), { down, wire: !!row.wire });
             if (!op) continue;
             cells.add(cell);

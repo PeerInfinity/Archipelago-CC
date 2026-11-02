@@ -27,7 +27,7 @@
 
 import {
     createState, getExitAt, getObstacle, mazeVisitedKey, hasItemActions, worldInputs, USE_PREFIX, TURN_PREFIX, INPUTS, turnInput,
-    actionItems, actionUsable, blockWithinReach, blockActionIds, footprintCells, stanceStrikes,
+    actionItems, actionUsable, blockWithinReach, blockActionIds, footprintCells, stanceStrikes, latchCells,
 } from '../mazeRoomEngine.js';
 import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
 import { isObstacleCleared } from '../../shared/procgen/library.js';
@@ -148,12 +148,29 @@ export function ropeEvents(world) {
 }
 
 /**
+ * ⛓ LATCHING BUTTONS (session tile-mechanisms-m4-latch) — every latching button whose `latch` names an `event`:
+ * `[{key, x, y, event, latch: true}]`, keyed at its cell. Reached when some state has it LATCHED (`state.latched`),
+ * which the press does — the player or a block on it, never with the event in hand — as a rope's by its cut.
+ */
+export function latchEvents(world) {
+    return latchCells(world).filter(({ entry }) => entry.latch.event).map(({ key, entry }) => {
+        const [x, y] = key.split(',').map(Number);
+        return { key, x, y, event: entry.latch.event, latch: true };
+    });
+}
+
+/** Has `state` reached cut event `r`: a latch by its press (`state.latched`), anything else by its cut (`state.broken`). */
+export function cutReached(r, state) {
+    return r.latch ? (state.latched?.includes(r.key) ?? false) : (state.broken?.includes(r.key) ?? false);
+}
+
+/**
  * ⛓ EVENTS AS LOCATIONS (session tile-primitives-events-as-locations) — every STRUCK obstacle that is an AP event:
  * the ropes (`ropeEvents`) and the rocks the projection bound an event to (`bindWorldEvents`: `events` + `struck_by`),
  * `[{key, x, y, event, side?}]`, keyed at the obstacle's canonical cell. Reached by its CUT, as a rope's.
  */
 export function cutEvents(world) {
-    const out = ropeEvents(world);
+    const out = [...ropeEvents(world), ...latchEvents(world)];
     const seen = new Set();
     for (const [cell, id] of world.obstacles) {
         const entry = world.obstacleLib?.[id];
@@ -215,9 +232,9 @@ export function eventAdjacentCell(world, reach, t, set) {
 }
 
 /** Per reached state: the rope events it has cut (`cuts`: rope posKey → the first visited key that cut it). */
-function noteCuts(world, ropes, cuts, state, key) {
-    if (ropes.length === 0 || !state.broken) return;
-    for (const r of ropes) if (!cuts.has(r.key) && state.broken.includes(r.key)) cuts.set(r.key, key);
+export function noteCuts(world, ropes, cuts, state, key) {
+    if (ropes.length === 0) return;
+    for (const r of ropes) if (!cuts.has(r.key) && cutReached(r, state)) cuts.set(r.key, key);
 }
 
 /** The reach of an arrival that stands in an armed lane: nothing (no cell, no cut). */
@@ -235,6 +252,7 @@ export function regionItems(world) {
     const held = new Set(Object.values(world.buttonLib ?? {}).map((b) => b.holds).filter(Boolean));
     for (const entry of Object.values(world.obstacleLib ?? {})) if (entry?.activates) held.add(entry.activates);
     for (const r of ropeEvents(world)) held.delete(r.event);
+    for (const r of latchEvents(world)) held.delete(r.event);
     const out = new Set();
     for (const id of gateIds(world)) {
         const entry = world.obstacleLib?.[id];
@@ -258,6 +276,8 @@ export function regionItems(world) {
             for (const item of actionItems(world.actionLib?.[actionId])) if (!held.has(item)) out.add(item);
         }
     }
+    // ⛓ LATCHING BUTTONS: a latch's event, carried, holds its token down from the start (a press on an earlier visit).
+    for (const r of latchEvents(world)) out.add(r.event);
     return [...out].sort();
 }
 
@@ -374,6 +394,7 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
     const cuts = new Map();
     const seen = new Map([[reachKey(start), null]]);
     const cells = new Map([[`${start.player_pos.x},${start.player_pos.y}`, reachKey(start)]]);
+    noteCuts(world, ropes, cuts, start, reachKey(start)); // a latch the arrival stands on is pressed from the start
     const queue = [start];
     const inputs = reachInputs(searchInputs(world, inventory, pickups));
     const latch = pickups === 'in-room';

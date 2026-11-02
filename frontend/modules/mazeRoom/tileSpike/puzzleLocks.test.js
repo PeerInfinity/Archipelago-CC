@@ -112,4 +112,60 @@ describe('refused by name', () => {
     it('a group with no opener in its level', () => {
         expect(() => locks(gadget(['#######', '#ah.D.#', '#######'], { group: 3 }))).toThrow(/group t3 has no opener in L900/);
     });
+
+    it('a hand verdict on a lock the analyzer\'s block paths already DECIDE (the derived price stands; a hand row only where derivation fails)', () => {
+        const decided = gadget(['#######', '#ah.D.#', '#######']);
+        decided.grid.lockVerdicts = [{ tiles: [[4, 1]], decided: true, why: null }];
+        expect(() => locks(decided)).toThrow(/analyzer already DERIVES its price/);
+        const undecided = gadget(['#######', '#ah.D.#', '#######']);
+        undecided.grid.lockVerdicts = [{ tiles: [[4, 1]], decided: false, why: 'pulser-arm' }];
+        expect(locks(undecided)).toHaveLength(1);                    // the control: undecided is where a hand verdict belongs
+    });
+});
+
+/**
+ * ⛓ tile-mechanisms-m3 (⚖ user 2026-11-01 "Pin + guard, no preset change"): THE DERIVED / HAND SPLIT. Every grouped re-closing
+ * lock whose group is HELD (a Button, not a latch) is priced by the analyzer's block paths (`blockHolderVerdict` decided →
+ * `cell.enter`) or, where they cannot decide, keeps the player-reach fallback; a hand verdict (`puzzleLockVerdicts`) exists only
+ * on an UNDECIDED lock. m2-w1's rollout line ("L39/L41 would need rules-arc verdict rows") is overturned: both are derived.
+ */
+describe('the derived / hand split, over the whole map', () => {
+    const RC = new Set(['lock', 'wandlock', 'grasslock']);
+    const rows = [];
+    for (const level of PLAYTHROUGH_MAP.levels) {
+        const grid = playthroughHandRuledGridFor(level);
+        for (const v of grid.lockVerdicts ?? []) {
+            for (const [x, y] of v.tiles) {
+                const e = (level.entities ?? []).find((n) => RC.has(n.type) && Math.floor(n.x / 16) === x && Math.floor(n.y / 16) === y);
+                rows.push({ level: level.level, door: e ? `${e.type}@${e.x},${e.y}` : null, decided: v.decided, why: v.why });
+            }
+        }
+    }
+    const tag = (r) => `L${r.level} ${r.door}`;
+
+    it('the analyzer DECIDES every held lock but L40\'s three (pulser-arm: a fire block starts beside the pulser)', () => {
+        expect(rows.filter((r) => !r.decided).map((r) => `${tag(r)} ${r.why}`)).toEqual([
+            'L40 wandlock@448,432 pulser-arm', 'L40 wandlock@512,480 pulser-arm', 'L40 wandlock@800,400 pulser-arm',
+        ]);
+        // L39's lock run + (3,10) and L41's (15,6) are derived (non-vacuous: the puzzle locks m2-w1 thought needed rows).
+        const decided = rows.filter((r) => r.decided).map(tag);
+        for (const d of ['L39 wandlock@144,64', 'L39 wandlock@144,48', 'L39 wandlock@144,32', 'L39 wandlock@48,160', 'L41 wandlock@240,96']) {
+            expect(decided).toContain(d);
+        }
+    });
+
+    it('every hand verdict sits on an undecided lock, and none on a decided one', () => {
+        const undecided = new Set(rows.filter((r) => !r.decided).map(tag));
+        for (const v of puzzleLockVerdicts()) expect(undecided.has(`L${v.level} ${v.door}`)).toBe(true);
+    });
+
+    it('OPEN (rules discussion after the maze arc): L40 (28,27) t2 and (50,25) t5 keep the player-reach fallback', () => {
+        // Undecided and unruled: entered free from their button's side, though the player cannot hold its own button. The
+        // rules and the maze agree (the certifier is clean), so this is a named divergence from the game, not a maze defect.
+        const verdicts = new Set(puzzleLockVerdicts().map((v) => `L${v.level} ${v.door}`));
+        expect(['L40 wandlock@448,432', 'L40 wandlock@800,400'].filter((d) => !verdicts.has(d))).toHaveLength(2);
+        const hand = playthroughHandRuledGridFor(L40);
+        expect(at(hand, 28, 27).enter).toEqual({ N: null, S: null });
+        expect(at(hand, 50, 25).enter).toEqual({ S: null });
+    });
 });
