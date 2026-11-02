@@ -52,6 +52,7 @@ import {
     setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
 } from './make-seedling-playthrough-rules.mjs';
 import { itemNamesInRule } from '../../frontend/modules/procgenCore/ruleItemNames.js';
+import { VICTORY_ITEM } from '../../frontend/modules/seedlingDemo/seedlingAtlasDerivation.js';
 import * as OV from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
 import { PUSHABLE_KINDS } from '../../frontend/modules/flashPanel/seedlingBlockPaths.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
@@ -540,6 +541,17 @@ export function playthroughPuzzleLockGridFor(level, { atlas, partition }) {
     return { ...grid, cells };
 }
 
+/**
+ * ⛓ THE GOAL (session tile-primitives-completion, ⚖ the user 2026-11-02: "Derived Seed goal"): the rules preset's own
+ * goal item (`VICTORY_ITEM`, the item the atlas's ending row places), when the restricted atlas still places it — else
+ * undefined, and the compile keeps its constant-true scaffold goal, so a partial `levels` never asks for an item it
+ * cannot place. Pure.
+ */
+export function completionItemFor(atlas) {
+    const placed = atlas.regions.some((r) => (r.locations ?? []).some((l) => l.vanilla_item === VICTORY_ITEM));
+    return placed ? VICTORY_ITEM : undefined;
+}
+
 /** Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`. */
 export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
@@ -563,8 +575,10 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
             resolveCondition: playthroughAnalyzerOptions.resolveCondition,
         },
     });
-    const { rules, report } = compileRegionAtlas(restrictAtlas(atlas, levels, { start: START_LEVEL }), {
+    const restricted = restrictAtlas(atlas, levels, { start: START_LEVEL });
+    const { rules, report } = compileRegionAtlas(restricted, {
         mapDoc,
+        completionItem: completionItemFor(restricted),
         embedSphereLog: true,
         sidecarFlavor: 'maze',
         mazeProjection,

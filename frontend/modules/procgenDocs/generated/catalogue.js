@@ -6243,7 +6243,9 @@ export const CATALOGUE = frz({
         "corridorbody",
         "ropegate",
         "chestdoor",
-        "burngate"
+        "burngate",
+        "holdgate",
+        "weighgate"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -6675,6 +6677,22 @@ export const CATALOGUE = frz({
             ],
             "params": [],
             "why": "The BURN GATE (strategy switch r2): a `burnabletree` (2x2 tiles) on a main-path cut with its wall GROWN to seal the room, burned by FIRE from its start side. Certified by the existing `burn`."
+        },
+        {
+            "defaultIn": [],
+            "head": "holdgate",
+            "module": "hold-gate",
+            "needs": [],
+            "params": [],
+            "why": "The HOLD GATE (the L20/L38 latch): a `lock` on a main-path cut and a latching `buttonroom {room:-1}` of its group on the start side, off the main path. Certified by the solver's `hold` (press once, the group stays published)."
+        },
+        {
+            "defaultIn": [],
+            "head": "weighgate",
+            "module": "weigh-gate",
+            "needs": [],
+            "params": [],
+            "why": "The WEIGH GATE (the L15 pattern): a `lock` on a main-path cut, a momentary `button` of its group off the main path, and one `pushableblock` a shove short of the button. Certified by the solver's `weigh` (the block parked on the button holds the lock open)."
         }
     ],
     "itemsElementsNeed": [
