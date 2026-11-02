@@ -486,6 +486,64 @@ export function resetOpportunisticStrikeCounts() {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE AXIS — STRIKES ON AXIS-ALIGNED WALKS, AIMED ONLY ALONG THE WALK'S OWN AXIS
+ * (`AXIS_STRIKE`, OFF).
+ *
+ * ⚖ The user queued this on 2026-10-31 (the hammer-phase AXIS slice), from OPP's hand-over: *"Axis-aligned walks (a new
+ * hand-over): 262 missed ticks on the L40 legs. A grid-preserving strike (aim only along the held axis, or only at
+ * bodies the walk already faces) would be a new policy row, needing its own measurement against the skirted-lane rows
+ * (L29, survey step 57)."* OPP's ruling was that these walks are *"not safe as the policy stands"*: `walkToUnder`'s
+ * `axisAligned` walks (Swim U2's skirt approach, fidelity PROXIMITY's `skirtGridKept`, RULESREF's puncher exit) are
+ * strike-free on purpose, because the policy's aim key toward a body OFF the walk's axis adds back the second axis,
+ * and the lane admits one x exactly (L29: 126.000).
+ *
+ * ⇒ ON, every axis-aligned walk that was strike-free (its drive and every preview that certifies it, ⚖ 30(c)) is
+ * handed `solverBot.strikePolicyFor(run, {axisAlong: true})`: the ONE policy, offered on each aim tick only the bodies
+ * whose facing (`facingToward`, the direction the aim key would take) lies on the walk's axis. That axis is the
+ * velocity's (one component nonzero), or at rest the walk's own held key's. With no single axis (a diagonal velocity,
+ * or a two-axis or empty held set at rest) nothing is offered. Then the aim key is the walk's own axis (forward or
+ * back), the press holds no direction key (friction on one axis is exact), and the other coordinate never moves. Every
+ * cost the policy prices stays: the aim tick, ⚖ 53's talk circle, the Bulb veto (re-asked with every body at the
+ * press), the dash refusal and the i-frame lapse.
+ *
+ * ⛓ THE SWITCH: `SEEDLING_AXIS_STRIKE=1` in a node process (or the page's `?seedlingSolverEnv=SEEDLING_AXIS_STRIKE=1`
+ * through `solverEnvChannel`), `withAxisStrike(enabled, fn)` for a row or a witness. OFF, nothing new is read or
+ * built: every axis-aligned walk keeps `strike: null` and is byte-identical.
+ */
+export const AXIS_STRIKE = {
+    enabled: globalThis.process?.env?.SEEDLING_AXIS_STRIKE === '1',
+};
+export const AXIS_STRIKE_DEFAULT = false;
+
+/** Run `fn` with `AXIS_STRIKE` set to `enabled`, restoring the previous value (`withOpportunisticStrike`'s shape). */
+export function withAxisStrike(enabled, fn) {
+    const was = AXIS_STRIKE.enabled;
+    AXIS_STRIKE.enabled = enabled === true;
+    const restore = () => { AXIS_STRIKE.enabled = was; };
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') return out.finally(restore);
+        restore();
+        return out;
+    } catch (e) {
+        restore();
+        throw e;
+    }
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `policies` axis-along policies
+ * built, `asked` aim ticks offered to one, `withheld` bodies left out because their facing is off the walk's axis,
+ * `noAxis` aim ticks with no single axis (nothing offered), `aimed` / `pressed` the aims and presses taken.
+ */
+export const AXIS_STRIKE_COUNTS = {
+    policies: 0, asked: 0, withheld: 0, noAxis: 0, aimed: 0, pressed: 0,
+};
+export function resetAxisStrikeCounts() {
+    for (const k of Object.keys(AXIS_STRIKE_COUNTS)) AXIS_STRIKE_COUNTS[k] = 0;
+}
+
+/**
  * ⛓⛓⛓ SEEDLING HAMMER-PHASE RE — THE REFUGE'S BEST-ETA CUT (`REFUGE_ETA_CUT`, ON by default since the user's flip).
  *
  * `deriveRefuge` previews its `REFUGE_CANDIDATES` (12) nearest clear cells on every tick the press kill has nowhere to

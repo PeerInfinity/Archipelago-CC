@@ -1,0 +1,4 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  scripts/procgen/boxLock.test.js > who takes the box > takes conditionally exactly where a headless arm would have been queued
+ Test Files  1 failed | 197 passed (198)
+      Tests  1 failed | 5705 passed (5706)

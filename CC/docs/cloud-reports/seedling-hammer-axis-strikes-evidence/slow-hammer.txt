@@ -1,0 +1,26 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 928019[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271 [33m 737812[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name [33m 190204[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 412290[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast [33m 178083[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run [33m 190665[2mms[22m[39m
+     [33m[2m✓[22m[39m ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached [33m 43538[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 592625[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall) [33m 247922[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death [33m 344700[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 898312[2mms[22m[39m
+     [33m[2m✓[22m[39m ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte [33m 610442[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit [33m 287866[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashShape.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 63743[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, sweep request 392:0 solved whole ships the same ticks for less work [33m 63740[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 59055[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown) [33m 59054[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m      Tests [22m [1m[32m11 passed[39m[22m[90m (11)[39m
+[2m   Start at [22m 18:24:51
+[2m   Duration [22m 2965.43s[2m (transform 4.64s, setup 0ms, import 10.23s, tests 2954.04s, environment 1ms)[22m
+

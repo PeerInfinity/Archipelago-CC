@@ -1,0 +1,26 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js (2 tests) 724520ms
+     ✓ OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271  582433ms
+     ✓ ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name  142084ms
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js (3 tests) 318549ms
+     ✓ OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast  136223ms
+     ✓ ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run  149354ms
+     ✓ ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached  32967ms
+ ✓ frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js (2 tests) 410964ms
+     ✓ OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall)  172269ms
+     ✓ ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death  238693ms
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js (2 tests) 741728ms
+     ✓ ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte  493293ms
+     ✓ ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit  248431ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 54590ms
+     ✓ ON, sweep request 392:0 solved whole ships the same ticks for less work  54587ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 45225ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  45223ms
+
+ Test Files  6 passed (6)
+      Tests  11 passed (11)
+   Start at  17:52:31
+   Duration  2304.54s (transform 3.01s, setup 0ms, import 7.83s, tests 2295.58s, environment 1ms)
+

@@ -1,0 +1,7 @@
+ms 48817
+REFUSED solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488,579) is hitless — 12 fork(s), {"no-plan":12}: up corridor, wait 0: no corridor to (488,445) | up via (466,445), wait 0: no corridor to (466,445) | up via (510,445), wait 0: no corridor to (510,445)
+obstacle {"kind":"danger","id":"iceturret@472,400"} perTick 0
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}
+TA {"approaches":[{"turret":"iceturret@472,400","t":0,"side":null,"forks":12,"tally":{"no-plan":12}}]}
+DOOR {"doors":[]}

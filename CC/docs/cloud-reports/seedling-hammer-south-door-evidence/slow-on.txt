@@ -1,0 +1,31 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 722492[2mms[22m[39m
+     [33m[2m✓[22m[39m ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte [33m 498020[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit [33m 224469[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 705910[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271 [33m 541331[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name [33m 164576[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 460138[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall) [33m 195095[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death [33m 265040[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Latch.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 364407[2mms[22m[39m
+     [33m[2m✓[22m[39m holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier [33m 133015[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON: the solve's refused prefix is the recorded tape [33m 231389[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Bk2.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 378996[2mms[22m[39m
+     [33m[2m✓[22m[39m the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape [33m 378994[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 335562[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast [33m 146386[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run [33m 153642[2mms[22m[39m
+     [33m[2m✓[22m[39m ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached [33m 35530[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashShape.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 47264[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, sweep request 392:0 solved whole ships the same ticks for less work [33m 47262[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 46854[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown) [33m 46852[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+[2m      Tests [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+[2m   Start at [22m 19:25:17
+[2m   Duration [22m 3070.73s[2m (transform 3.33s, setup 0ms, import 7.91s, tests 3061.62s, environment 1ms)[22m
+
