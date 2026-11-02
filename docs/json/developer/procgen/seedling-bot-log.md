@@ -26911,3 +26911,31 @@ packet (`seedling-hammer-chooser-witness-evidence/flip/cpair3-flip.patch`), appl
 rows pin the switch OFF (or ask at size 2) beside the switches they already pin, so no tape is re-recorded. Evidence: the
 three L43 pits (`out_pit_5_21/22/23` from L39) play hitless to the exit in the game; on the 52 L40 keys they are the only
 verdict movers; the route survey, r9 campaign, latch chain and pocket boot are unchanged (L40C A1).
+
+### Seedling hammer-phase ESCAPE-EXACT — `PRESS_ESCAPE_EXACT` (OFF): the press escape exact under a carried shield
+
+⚖ The user queued the slice on 2026-11-02 (one of five parallel hammer slices); report
+`CC/docs/cloud-reports/seedling-hammer-escape-exact.md`. Fidelity's SHIELDBUMP (`forecastShieldBump`, OFF, on fidelity's
+branch) made the press forecast step the plain shield bump on rows it is TOLD the player's state, and handed the escape
+three parts. They are built behind one switch, in `pressEscapeExact.js`:
+- **(i)** under a shield, with the key present and ON, `first` is told the previewed approach and train, and its own
+  coverage report must reach the last of them. The zero-row probe no longer decides.
+- **(ii)** past those rows the search prunes every state a bump would fire on. A certificate is then exact, and a
+  negative the prune shaped is no claim.
+- **(iii)** the approach check asks the aim tick's own row. A body stepping onto the player during the aim tick was
+  never asked.
+
+The key is read through `Object.hasOwn`, so main without the key is OFF's under a shield.
+- **Measured** (key ON in a scratch merge): SPIN's four stands. ON certifies two, each driven hitless, and claims the
+  other two at t0, where the run is in fact hit (SPIN claimed one of them "exhausted"). A 1,140-case room scan: 132
+  certificates (SPIN 85), and the one driven hit is a bobsoldier the spinner escape never models. c3 / c6 / c4 move; c3's
+  9 movers are all shield-carrying rows, ticks only. Four L39 survey steps solve shorter, hitless.
+- ⚠ **Leg 860 is not hitless ON.** At t541 the exact escape claims `no-landing` for `deriveStrike`'s candidates, the
+  claim it makes with no shield (no bump on those paths). The walk then refuses at t2119, `FROZEN_TICK_PRESS`. SPIN passes
+  860 only because it leaves every non-exhausted negative as no claim. So SPIN cannot be retired until presses are
+  scheduled around a freeze.
+- Gates `hammerEscapeExact.test.js` (12 rows; 4 skip by name without the key) and `.slow` (860, key-only). Mutants:
+  probe restored, path not told, contact dropped, prune dropped; each red.
+- **Trap candidates:** (1) a forecast "modelled" flag over rows nobody told is never true for a search, so read the
+  coverage of the told rows; (2) a looser no-claim upstream can hide a downstream defect (SPIN's blanket no-claim on 860);
+  (3) `CONTACT_FIDELITY_KEYS` is not on the solver's door (`solverView.js`).

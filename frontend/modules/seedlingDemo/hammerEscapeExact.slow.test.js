@@ -50,11 +50,13 @@ function solve860Exact() {
     const size = CHOOSER_PAIR.size;
     CHOOSER_PAIR.size = 3;
     try {
+        const solve = () => solveAnytime({ ...tape, budgetWork: 10240, source,
+            levelSource: levelSourceFromAtlas(source.records) }, { passes });
+        const exact = () => withPressEscapeShieldClaim(false, () => withPressEscapeExact(true, solve));
+        const keys = () => withContactFidelity({ orbitFreeAim: true, strategyBoundDistinct: true,
+            [SHIELD_BUMP_FORECAST_KEY]: true }, exact);
         const answer = withChooserPair(true, () => withIceTurretStaticKill(true, () => withOpportunisticStrike(true,
-            () => withLatchWeighFirst(true, () => withContactFidelity({ orbitFreeAim: true, strategyBoundDistinct: true,
-                [SHIELD_BUMP_FORECAST_KEY]: true }, () => withPressEscapeShieldClaim(false, () => withPressEscapeExact(true,
-                () => solveAnytime({ ...tape, budgetWork: 10240, source, levelSource: levelSourceFromAtlas(source.records) },
-                    { passes })))))))));
+            () => withLatchWeighFirst(true, keys))));
         return { answer, kills, escapes };
     } finally {
         CHOOSER_PAIR.size = size;
