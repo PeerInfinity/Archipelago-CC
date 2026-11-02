@@ -22,6 +22,7 @@
     "test:unit": "vitest run",
     "test:unit:slow": "vitest run --config vitest.slow.config.js",
     "test:unit:calib": "vitest run --config vitest.calib.config.js",
+    "test:unit:train": "vitest run --config vitest.train.config.js",
     "test:unit:watch": "vitest",
     "test:unit:ui": "vitest --ui",
     "test:unit:coverage": "vitest run --coverage",

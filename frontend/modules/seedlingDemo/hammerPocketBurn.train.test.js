@@ -1,5 +1,8 @@
+// ⚖ Robert 2026-11-02 CI manual-only P1: TRAIN tier (was `hammerPocketBurn.slow.test.js`). Runs on js-land/** train pushes and
+// on dispatch (`-f train=true`), NOT on a slice push — a solver change that moves this pin reds at the train,
+// unless the slice dispatches the train tier first (js-16's packet rule). `npm run test:unit:train`.
 /**
- * seedlingDemo/hammerPocketBurn.slow.test — ⛓⛓ SEEDLING HAMMER-PHASE POCKET-BURN (`STANCE_BURN`, OFF), Boss Key 2's
+ * seedlingDemo/hammerPocketBurn.train.test — ⛓⛓ SEEDLING HAMMER-PHASE POCKET-BURN (`STANCE_BURN`, OFF), Boss Key 2's
  * chain on L40LATCH's latch boot re-booted at (488,579) (APPROACH's staging point on the arrival legs), under the arm
  * SOUTHDOOR's chain needs: CPAIR size 3 (the default) + `LATCH_WEIGH_FIRST` + `TURRET_APPROACH` + `APPROACH_DOOR` +
  * `FIFTH_ORDER`.

@@ -5,6 +5,11 @@
  *
  * Mutant (run at A2): `previewOrDeath` returning the raw step (the throw escapes) -> this row red (GenerationAborted,
  * "the player DROWNED in level 900").
+ *
+ * ⚖ Robert 2026-11-02 CI manual-only P1 — THE ON-PUSH SMOKE ROW for the solver pins that moved to the train tier
+ * (`*.train.test.js`): it stays in the slow tier ON PURPOSE. It drives the whole solver (every certify solve of a
+ * generated level's attempt loop) for ~1 min, so a change that breaks the solver harness outright still reds the
+ * slice push, while the walk-by-walk behaviour pins wait for the train. Keep it here when moving pins out.
  */
 import { describe, expect, it } from 'vitest';
 

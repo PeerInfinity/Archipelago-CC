@@ -1,5 +1,7 @@
+// ⚖ Robert 2026-11-02 CI manual-only P5: TRAIN tier (was the default-tier `hammerGhostKillRung.test.js`). Runs on js-land/** train
+// pushes and on dispatch (`-f train=true`), NOT on a slice push. `npm run test:unit:train`.
 /**
- * seedlingDemo/hammerGhostKillRung.test — ⛓⛓⛓ SEEDLING HAMMER-PHASE G1: THE KILL RUNG'S GHOST-SWORD GATE.
+ * seedlingDemo/hammerGhostKillRung.train.test — ⛓⛓⛓ SEEDLING HAMMER-PHASE G1: THE KILL RUNG'S GHOST-SWORD GATE.
  *
  * The combat ladder's kill rung, in its lock-less spinner arm, asked `derivePressKill` only for a `sword` primary and
  * refused every other one by name, although C2 had taught `derivePressKill` the ghost's press (hammer-phase D's
