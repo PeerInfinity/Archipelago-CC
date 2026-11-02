@@ -45,7 +45,13 @@ describe('C3 — the `terrains` knob is absent by default', () => {
     }, 60_000);
 });
 
-const SEEDS = [1, 2, 3];
+/**
+ * ⛓ seedling-gen-post-swim-fix (⚖ Robert 2026-11-02): WIDENED 1–3 → 1–4, the clause kept. With
+ * the `hasFire` fold row, post-dark-suit and endgame paint lava first at seed 4 and the
+ * ghoststep+stairs room paints ghoststep first at seed 4 (measured over seeds 1–8: 56/56
+ * certified; lava at s4–s8 except endgame s7, ghoststep at s4–s8).
+ */
+const SEEDS = [1, 2, 3, 4];
 const COMBOS = [
     ['post-swim', 'ice', ['ice']],
     ['post-feather', 'stairs', ['stairs']],
@@ -55,7 +61,7 @@ const COMBOS = [
     ['post-dark-suit', '', ['lava', 'melt']],
     ['endgame', '', ['lava', 'melt']],
 ];
-describe('C3 — every terrain-biome builds and CERTIFIES (3 seeds each)', () => {
+describe('C3 — every terrain-biome builds and CERTIFIES (4 seeds each)', () => {
     it.each(COMBOS)('%s terrains=%j', (biome, terrains, expectPainted) => {
         const seen = new Set();
         for (const seed of SEEDS) {
