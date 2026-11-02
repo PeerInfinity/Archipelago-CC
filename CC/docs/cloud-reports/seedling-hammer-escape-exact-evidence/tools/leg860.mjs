@@ -19,7 +19,7 @@ const { passes = ANYTIME_PASSES, source, ...tape } = REQ;
 const kills = [];
 G.PRESS_KILL_DONE_TRACE.sink = (k) => kills.push(k);
 const esc = { asked: 0, claimed: 0, noClaim: 0, ok: 0 };
-SB.HAMMER_ESCAPE_TRACE.sink = (r) => { esc.asked++; if (r.ok) esc.ok++; else if (r.claim) esc.claimed++; else esc.noClaim++; };
+const tally = {}; SB.HAMMER_ESCAPE_TRACE.sink = (r) => { const k = `${r.caller}:${r.ok ? 'ok' : (r.claim ? r.bound : 'noclaim')}`; const e = (tally[k] ??= { n: 0, ts: [] , why: r.why?.slice(0, 140) }); e.n++; if (e.ts.length < 6) e.ts.push(r.t); esc.asked++; if (r.ok) esc.ok++; else if (r.claim) esc.claimed++; else esc.noClaim++; };
 SB.CHOOSER_PAIR.size = 3;
 const t0 = performance.now();
 const answer = SB.withChooserPair(true, () => SB.withIceTurretStaticKill(true, () => withOpportunisticStrike(true,
@@ -36,4 +36,4 @@ if (mine.length) {
   replay = { gone: !(run.entities('spinnerBodies') ?? []).some((b) => b.id === 'spinner@816,848'), hits: run.playerHits.length, deaths: run.playerDeaths.length, landings: k.landings.filter((l) => l.id === 'spinner@816,848').map((l) => l.t) };
 }
 console.log(JSON.stringify({ env: { X: process.env.SEEDLING_PRESS_ESCAPE_EXACT ?? '0', S: process.env.SEEDLING_PRESS_ESCAPE_SHIELD_CLAIM ?? '0', K: process.env.SEEDLING_FORECAST_SHIELD_BUMP ?? '0', off: process.env.XPARTS_OFF ?? '' },
-  ok: answer.ok, work: answer.work ?? answer.budget?.work ?? null, msg: (answer.message ?? '').slice(0, 200), killed: mine.length > 0, replay, esc, spin: { ...G.PRESS_ESCAPE_SHIELD_CLAIM_COUNTS }, x: { ...X.PRESS_ESCAPE_EXACT_COUNTS }, ms }));
+  ok: answer.ok, work: answer.work ?? answer.budget?.work ?? null, msg: (answer.message ?? '').slice(0, 200), killed: mine.length > 0, replay, esc, spin: { ...G.PRESS_ESCAPE_SHIELD_CLAIM_COUNTS }, x: { ...X.PRESS_ESCAPE_EXACT_COUNTS }, ms, tally, stack: answer.error?.stack?.slice(0, 1500) ?? answer.stack?.slice(0,1500) ?? null, keys: Object.keys(answer) }));
