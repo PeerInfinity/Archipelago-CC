@@ -31,6 +31,7 @@ Level 011 - Chest: Seal
 Level 012 - Witch: Progressive Sword
 L12 flag 4: bosslock@416,240 cleared: L12 flag 4: bosslock@416,240 cleared
 L12 flag 5: bosslock@432,240 cleared: L12 flag 5: bosslock@432,240 cleared
+L12 flag 10: shieldlocknorm@288,704 cleared: L12 flag 10: shieldlocknorm@288,704 cleared
 L12 flag 11: bosslock@112,192 cleared: L12 flag 11: bosslock@112,192 cleared
 L12 flag 3: bosslock@80,656 cleared: L12 flag 3: bosslock@80,656 cleared
 Level 012 - Chest: Seal
@@ -43,6 +44,7 @@ Level 019 - Shieldspire: Seal
 L19 flag 1: bosslock@48,32 cleared: L19 flag 1: bosslock@48,32 cleared
 Level 019 - Boss Key 0: Red Key
 Level 020 - Shield: Progressive Shield
+L20 flag 0: shieldlocknorm@176,16 cleared: L20 flag 0: shieldlocknorm@176,16 cleared
 L24 flag 0: burnabletree@32,128 cleared: L24 flag 0: burnabletree@32,128 cleared
 Level 025 - Chest: Seal
 L28 flag 0: rope@160,64 cleared: L28 flag 0: rope@160,64 cleared
@@ -134,6 +136,8 @@ Playthrough:
   Level 029 - Boss Key 1: Green Key
 }
 5: {
+  L12 flag 10: shieldlocknorm@288,704 cleared: L12 flag 10: shieldlocknorm@288,704 cleared
+  L20 flag 0: shieldlocknorm@176,16 cleared: L20 flag 0: shieldlocknorm@176,16 cleared
   L30 flag 0: bosslock@64,32 cleared: L30 flag 0: bosslock@64,32 cleared
   L30 flag 2: bosslock@224,208 cleared: L30 flag 2: bosslock@224,208 cleared
   L31 flag 0: bosslock@192,432 cleared: L31 flag 0: bosslock@192,432 cleared

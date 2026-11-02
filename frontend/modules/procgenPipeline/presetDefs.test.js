@@ -5,7 +5,7 @@ import {
     PRESET_HEADLESS_BUDGET_MS, PRESETS_SKIPPED_AS_HEAVY,
     SEEDLING_SPIRAL_ROOM_STATE, SEEDLING_SPHERE_ROOM_STATE,
     SEEDLING_GENERATED_ROOM_STATE, SEEDLING_GENERATED_LEAF_STATE, SEEDLING_GENERATED_HOST_STATE,
-    SEEDLING_GENERATED_SWIM_STATE,
+    SEEDLING_GENERATED_SWIM_STATE, SEEDLING_GENERATED_CHESTDOOR_STATE,
     CONCEPT_TRIAL_STATE,
     SEEDLING_ATLAS_HOST_STATE,
     SEEDLING_ATLAS_LOCATION_STATE,
@@ -226,6 +226,19 @@ describe('SHIPPED_PRESETS', () => {
             seedlingGenElements: 'watergate', seedlingGenRequire: 'canSwim' });
         expect(p.state.scenario.items).toEqual({ 'Progressive Swim': 1, victory: 1 });
         expect(p.state.substrateQuotas).toEqual({ maze: 1, flash_seedling_gen: 1 });
+    });
+
+    it('seedling generated chestdoor demo IS the committed preset\'s state — the generated room world + chestdoor', () => {
+        const p = getPresetById('shipped:seedling-generated-chestdoor-demo');
+        // ONE spelling: the drop-down, the committed seedling_generated_chestdoor preset and
+        // its in-app rows all read this object.
+        expect(p.state).toBe(SEEDLING_GENERATED_CHESTDOOR_STATE);
+        expect(p.group).toBe(PRESET_GROUPS.shuffledSpiral);
+        // seedling_generated_room's world, its ONE difference the element knob
+        const { params, ...rest } = SEEDLING_GENERATED_CHESTDOOR_STATE;
+        const { params: baseParams, ...baseRest } = SEEDLING_GENERATED_ROOM_STATE;
+        expect(rest).toEqual(baseRest);
+        expect(params).toEqual({ ...baseParams, seedlingGenElements: 'chestdoor' });
     });
 
     it('concept trial demo IS the committed preset\'s state — the first world that names concepts (T4)', () => {

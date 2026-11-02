@@ -25,6 +25,9 @@
  *            maze START holds `Progressive Swim` and whose GENERATED `post-swim`
  *            room behind `Has(Progressive Swim)` holds victory past its
  *            `watergate` (seedling swim T1), from `SEEDLING_GENERATED_SWIM_STATE`;
+ *   generated-chestdoor → `seedling_generated_chestdoor`: `generated` with the
+ *            `chestdoor` element — each generated room's chest is an AP location
+ *            (seedling gen chestdoor), from `SEEDLING_GENERATED_CHESTDOOR_STATE`;
  *   atlas-host → `seedling_atlas_host`: the sphere-growth world (maze START)
  *            whose REAL two-door room `overworld_start__r8c0` HOSTS a maze child
  *            behind `Has(key_red)`, its back door gated `Has(key_blue)` — the host
@@ -43,7 +46,7 @@
  *            `flash_panel` block of its own (a Seedling preset's comes from its
  *            substrates' compile), so it takes any state unchanged.
  *
- * ONE recipe, nine states: the same assembly, the same bytes rule, the same
+ * ONE recipe, ten states: the same assembly, the same bytes rule, the same
  * `--check`.
  *
  * The preset is a FUNCTION of that committed state, never a hand edit: this
@@ -63,11 +66,12 @@
  * `check-seedling-spiral-room-play.mjs`, `check-seedling-sphere-room-play.mjs`,
  * `check-seedling-generated-room-play.mjs`, `check-seedling-generated-leaf-play.mjs`,
  * `check-seedling-generated-host-play.mjs`, `check-seedling-generated-swim-play.mjs`,
+ * the in-app row `seedling-wasm-generated-chestdoor-chest` (for `generated-chestdoor`),
  * `check-seedling-atlas-host-play.mjs`, `check-seedling-atlas-location-play.mjs` and
  * `check-concept-trial-play.mjs`.
  *
  * Usage:
- *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated|generated-leaf|generated-host|generated-swim|atlas-host|atlas-location|concept-trial] [--check]
+ *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated|generated-leaf|generated-host|generated-swim|generated-chestdoor|atlas-host|atlas-location|concept-trial] [--check]
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -86,6 +90,8 @@ const PRESETS = Object.freeze({
     'generated-leaf': Object.freeze({ stateExport: 'SEEDLING_GENERATED_LEAF_STATE', gameId: 'seedling_generated_leaf' }),
     'generated-host': Object.freeze({ stateExport: 'SEEDLING_GENERATED_HOST_STATE', gameId: 'seedling_generated_host' }),
     'generated-swim': Object.freeze({ stateExport: 'SEEDLING_GENERATED_SWIM_STATE', gameId: 'seedling_generated_swim' }),
+    'generated-chestdoor': Object.freeze({ stateExport: 'SEEDLING_GENERATED_CHESTDOOR_STATE',
+        gameId: 'seedling_generated_chestdoor' }),
     'atlas-host': Object.freeze({ stateExport: 'SEEDLING_ATLAS_HOST_STATE', gameId: 'seedling_atlas_host' }),
     'atlas-location': Object.freeze({ stateExport: 'SEEDLING_ATLAS_LOCATION_STATE',
         gameId: 'seedling_atlas_location' }),
