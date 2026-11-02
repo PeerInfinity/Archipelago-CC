@@ -26,3 +26,4 @@ console.log('ICEST', JSON.stringify(SB.ICETURRET_STATIC_KILL_COUNTS ?? null));
 console.log('LWF', JSON.stringify(SB.LATCH_WEIGH_FIRST_COUNTS ?? null));
 console.log('TA', JSON.stringify(SB.TURRET_APPROACH_COUNTS ?? null));
 console.log('DOOR', JSON.stringify(SB.APPROACH_DOOR_COUNTS ?? null));
+console.log('STAGED', JSON.stringify(SB.CHASER_STAGED_HUNT_COUNTS ?? null));

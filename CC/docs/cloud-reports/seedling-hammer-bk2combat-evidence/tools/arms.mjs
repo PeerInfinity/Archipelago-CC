@@ -20,7 +20,7 @@ const md5 = (s) => createHash('md5').update(s).digest('hex').slice(0, 12);
 const arm = { cpair: SB.CHOOSER_PAIR?.enabled ? SB.CHOOSER_PAIR.size : 0, icest: !!SB.ICETURRET_STATIC_KILL?.enabled,
     opp: !!PK.OPPORTUNISTIC_STRIKE?.enabled, lwf: !!SB.LATCH_WEIGH_FIRST?.enabled,
     ofa: !!CONTACT_FIDELITY.orbitFreeAim, sbd: !!CONTACT_FIDELITY.strategyBoundDistinct,
-    ta: !!SB.TURRET_APPROACH?.enabled, fo: !!SB.FIFTH_ORDER?.enabled, sd: !!SB.APPROACH_DOOR?.enabled, sb: !!SB.STANCE_BURN?.enabled, bc: !!SB.BK2_COMBAT?.enabled };
+    ta: !!SB.TURRET_APPROACH?.enabled, fo: !!SB.FIFTH_ORDER?.enabled, sd: !!SB.APPROACH_DOOR?.enabled, sb: !!SB.STANCE_BURN?.enabled, sh: !!SB.CHASER_STAGED_HUNT?.enabled };
 console.log('ARM', JSON.stringify(arm));
 const rowOf = (run) => ({ level: run.level, x: run.state.x, y: run.state.y, deaths: run.playerDeaths.length });
 const same = (a, b) => a.level === b.level && a.x === b.x && a.y === b.y && a.deaths === b.deaths;
@@ -60,6 +60,7 @@ for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
         SB.resetChooserPairCounts?.();
         SB.resetTurretApproachCounts?.();
         SB.resetApproachDoorCounts?.();
+        SB.resetChaserStagedHuntCounts?.();
         const levelSource = levelSourceFromAtlas(source.records);
         const t0 = Date.now();
         let answer;
@@ -83,7 +84,8 @@ for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
             lwf: SB.LATCH_WEIGH_FIRST_COUNTS ? JSON.parse(JSON.stringify(SB.LATCH_WEIGH_FIRST_COUNTS.asked)) : null,
             cpair: SB.CHOOSER_PAIR_COUNTS ? { admitted: SB.CHOOSER_PAIR_COUNTS.admitted } : null,
             door: SB.APPROACH_DOOR_COUNTS ? JSON.parse(JSON.stringify(SB.APPROACH_DOOR_COUNTS.doors)) : null,
-            ta: SB.TURRET_APPROACH_COUNTS ? JSON.parse(JSON.stringify(SB.TURRET_APPROACH_COUNTS.approaches)) : null };
+            ta: SB.TURRET_APPROACH_COUNTS ? JSON.parse(JSON.stringify(SB.TURRET_APPROACH_COUNTS.approaches)) : null,
+            staged: SB.CHASER_STAGED_HUNT_COUNTS ? JSON.parse(JSON.stringify(SB.CHASER_STAGED_HUNT_COUNTS.asks)) : null };
         appendFileSync(args.out, JSON.stringify(out) + '\n');
         console.log(`${row.id}/${c.i} ${out.ok ? `SOLVED ${out.ticks} gm=${gm?.gm}` : `REFUSED ${out.kind}`} ${out.digest} ${ms}ms`);
     }

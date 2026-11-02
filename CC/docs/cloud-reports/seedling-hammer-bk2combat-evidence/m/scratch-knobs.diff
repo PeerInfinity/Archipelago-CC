@@ -1,0 +1,125 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 5c0960cd..e1b81e23 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -24543,12 +24543,25 @@ export function deriveKillByChaser(run, body, contacts,
+                 sm.arrows, sm.chasers, sm.spits ?? null, sm.grenades ?? null);
+             if (dg.danger) danger = { tick: sm.tick, phase: sm.phase ?? 'transit', ...dg };
+         }
++        if (danger && globalThis.process?.env?.SCRATCH_HUNTDUMP === '1') {
++            const tr = walk.samples.filter((sm) => Math.abs(sm.tick - danger.tick) <= 40).map((sm) => {
++                const b = (sm.chasers ?? []).find((q) => q.id === target.id);
++                return `${sm.tick - walk.startTick}${(sm.phase ?? 't')[0]}(${sm.x.toFixed(0)},${sm.y.toFixed(0)})${b ? `b(${b.x.toFixed(0)},${b.y.toFixed(0)}h${b.hits ?? '?'})` : 'DEAD'}`;
++            });
++            console.error('HUNTDANGER', run.ticksCompleted, target.id, `(${c.x},${c.y})`, danger.tick - walk.startTick, tr.join(' ').slice(0, 2500));
++        }
+         if (danger) {
+             rejected.push({ ...c, why: `${danger.phase === 'dwell' ? 'the WAIT' : 'the APPROACH'} `
+                 + `is dangerous at tick ${danger.tick - walk.startTick} — `
+                 + `${danger.sources.map((x) => `${x.kind}:${x.id}`).join(', ')}` });
+             continue;
+         }
++        if (globalThis.process?.env?.SCRATCH_HUNTDUMP === '1') {
++            const tr = walk.samples.map((sm) => ({ t: sm.tick - walk.startTick, ph: sm.phase ?? 't', px: Math.round(sm.x), py: Math.round(sm.y),
++                b: (sm.chasers ?? []).find((b) => b.id === target.id) }));
++            const brief = tr.filter((_, i) => i % 10 === 0 || i === tr.length - 1).map((s) => `${s.t}${s.ph[0]}(${s.px},${s.py})${s.b ? `b(${Math.round(s.b.x)},${Math.round(s.b.y)}${s.b.hits !== undefined ? `h${s.b.hits}` : ''})` : 'DEAD'}`).join(' ');
++            console.error('HUNT', run.ticksCompleted, target.id, `(${c.x},${c.y})`, 'ceil', ceilingFor(c), 'death', deathTick, brief.slice(0, 1500));
++        }
+         if (deathTick === null) {
+             rejected.push({ ...c, why: `${target.id} is still standing after the whole `
+                 + `${ceilingFor(c)}-tick ceiling — it does not reach this stance inside its `
+@@ -24641,7 +24654,7 @@ export function deriveKillByChaser(run, body, contacts,
+                 + `${candidates.length} of those reachable`
+                 + `${aimIsPlannable ? ' and with a corridor onward' : ''}, `
+                 + `and ${rejected.length} of THOSE refused by the forecast `
+-                + `[${rejected.slice(0, 3).map((r) => `(${r.x},${r.y}): ${r.why}`).join('; ')}`
++                + `[${rejected.slice(0, globalThis.process?.env?.SCRATCH_ALLREJ === "1" ? 99 : 3).map((r) => `(${r.x},${r.y}): ${r.why}`).join('; ')}`
+                 + `${rejected.length > 3 ? '; …' : ''}]. ⛔ A stance safe to PASS is not safe `
+                 + 'to WAIT in (trap 154), and this rung asks the waiting question over the '
+                 + 'whole duration rather than at the instant.'
+@@ -29012,6 +29025,41 @@ function solveSegmentUnder({
+                     // ⛓ hammer-phase B3 — named only when the admission fallback ran
+                     + (admitted ? ` ${fightFallbackSentence(admitted)}` : '');
+             } else {
++                // SCRATCH_PCF (BK2COMBAT M): the chasers whose leash covers the press first, by the chaser arm
++                if (globalThis.process?.env?.SCRATCH_PCF === '1') {
++                    const f = press.first;
++                    const cell = f.cell ?? f.stance ?? f.at ?? f;
++                    const sb = run.entities('strikeBodies') ?? [];
++                    const near = (b) => {
++                        const L = ENEMY_CLASSES[b.tag]?.aggro?.range ?? null;
++                        if (L === null || !b.rect) return null;
++                        const cx = (b.rect.x + b.rect.right) / 2;
++                        const cy = (b.rect.y + b.rect.bottom) / 2;
++                        const d = Math.min(Math.hypot(cx - cell.x, cy - cell.y), Math.hypot(cx - run.state.x, cy - run.state.y));
++                        return d <= L + Number(globalThis.process.env.SCRATCH_PCF_MARGIN ?? 0) ? d : null;
++                    };
++                    const threats = (run.entities('chasers') ?? []).map((c) => sb.find((b) => b.id === (c.id ?? c)))
++                        .filter((b) => b && b.kind !== 'spinner' && near(b) !== null).sort((a, b) => near(a) - near(b));
++                    console.error('PCF', perTick.length, target.id, 'firstKeys', Object.keys(f).join(','), 'cell', JSON.stringify({ x: cell.x, y: cell.y }), 'threats', threats.map((b) => `${b.id}:${near(b).toFixed(0)}`).join(' '));
++                    for (const b of threats) {
++                        const hunt = deriveKillByChaser(run, b, contacts, { aim, allowTeleporter, tolerance, dashMode });
++                        console.error('PCF hunt', b.id, hunt.stance ? JSON.stringify(hunt.stance) : String(hunt.why).slice(0, 400));
++                        const strike = hunt.stance ? strikePolicyFor(run, { dashMode }) : null;
++                        if (!strike) continue;
++                        if (hunt.stance.x !== run.state.x || hunt.stance.y !== run.state.y) {
++                            walkTo(goal, hunt.stance, { what: `${what} -> kill (${b.id}) stance` });
++                        }
++                        if ((run.entities('strikeBodies') ?? []).some((c) => c.id === b.id)) {
++                            const record = runDwell(run, perTick, { ticks: hunt.ticks, strike, why: hunt.why,
++                                until: { why: `${b.id} has left the world — ${hunt.why}`,
++                                    test: (r) => !(r.entities('strikeBodies') ?? []).some((c) => c.id === b.id) } },
++                            `${what} -> kill (${b.id}) by press`);
++                            records.push({ goal: goal.kind, strategy: 'kill', arm: 'chaser', target: b.id, stance: hunt.stance, clears: hunt.clears, ...record });
++                        }
++                        console.error('PCF done', b.id, 't', perTick.length, 'alive', (run.entities('strikeBodies') ?? []).some((c) => c.id === b.id), 'hits', run.playerHits.length);
++                        return { escalations };
++                    }
++                }
+                 rowFor('kill', refused, { arm: 'press', target: target.id });
+                 const writesBefore = (run.ledger('spinnerWrites') ?? []).length;
+                 let record = null;
+@@ -29228,12 +29276,42 @@ function solveSegmentUnder({
+              */
+             const swordless = !(run.progress('inventory')?.hasSword
+                 || run.progress('inventory')?.hasGhostSword);
+-            const hunt = swordless
++            let hunt = swordless
+                 ? { stance: null, why: `this run holds no sword, so \`set slashing\`'s `
+                     + `outer gate refuses every press — no stance could strike ${hunted.id}, `
+                     + 'and the stance scan was not run (SF3)' }
+                 : deriveKillByChaser(run, hunted, contacts,
+                     { aim, allowTeleporter, tolerance, dashMode });
++            // SCRATCH_STAGE (BK2COMBAT M): a refused hunt asked again from a staging cell, walked to first
++            if (!hunt.stance && !swordless && globalThis.process?.env?.SCRATCH_STAGE
++                && hunted.id === (globalThis.process.env.SCRATCH_STAGE_BODY ?? 'bobsoldier@880,832')) {
++                const [sx, sy] = globalThis.process.env.SCRATCH_STAGE.split(',').map(Number);
++                const h0 = run.playerHits.length;
++                walkTo(goal, { x: sx, y: sy }, { what: `${what} -> kill (${hunted.id}) staging` });
++                hunt = deriveKillByChaser(run, hunted, contacts, { aim, allowTeleporter, tolerance, dashMode });
++                console.error('STAGE', perTick.length, `(${run.state.x.toFixed(1)},${run.state.y.toFixed(1)})`, 'hits+', run.playerHits.length - h0,
++                    hunt.stance ? `STANCE ${JSON.stringify(hunt.stance)} ticks ${hunt.ticks}` : String(hunt.why).slice(0, 300));
++            }
++            // SCRATCH_DELAY (BK2COMBAT M): a refused hunt asked again after d still ticks, on a fork
++            if (!hunt.stance && !swordless && globalThis.process?.env?.SCRATCH_DELAY === '1' && fork) {
++                const max = Number(globalThis.process.env.SCRATCH_DELAY_MAX ?? 64);
++                const stepD = Number(globalThis.process.env.SCRATCH_DELAY_STEP ?? 4);
++                for (let d = stepD; d <= max; d += stepD) {
++                    const f = fork();
++                    const h0 = f.playerHits.length;
++                    for (let k = 0; k < d; k += 1) f.advance(new Set());
++                    if (f.playerHits.length > h0) { console.error('DELAY', d, 'wait hit'); break; }
++                    if (!(f.entities('strikeBodies') ?? []).some((b) => b.id === hunted.id)) { console.error('DELAY', d, 'gone'); break; }
++                    const h = deriveKillByChaser(f, hunted, contacts, { aim, allowTeleporter, tolerance, dashMode });
++                    console.error('DELAY', perTick.length, hunted.id, d, h.stance ? `STANCE ${JSON.stringify(h.stance)} ticks ${h.ticks}` : 'none');
++                    if (h.stance) {
++                        for (let k = 0; k < d; k += 1) { const held = new Set(); perTick.push(held); run.advance(held); }
++                        hunt = deriveKillByChaser(run, hunted, contacts, { aim, allowTeleporter, tolerance, dashMode });
++                        console.error('DELAY live', JSON.stringify(hunt.stance), 'hits', run.playerHits.length);
++                        break;
++                    }
++                }
++            }
+             if (hunt.stance) {
+                 rowFor('kill', refused, { arm: 'chaser', target: hunted.id,
+                     stance: hunt.stance, runnersUp: hunt.runnersUp });

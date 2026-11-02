@@ -26,6 +26,6 @@ console.log('at t', run.ticksCompleted, 'pos', run.state.x.toFixed(1), run.state
 const body = run.entities('strikeBodies').find((b) => b.id === process.env.BODY);
 console.log('body', JSON.stringify(body && { id: body.id, rect: body.rect, kind: body.kind }));
 const [ax, ay] = (process.env.AIM ?? '888,824').split(',').map(Number);
-const h = SB.deriveKillByChaser(run, body, new Set(), { aim: { x: ax, y: ay } });
+const h = SB.deriveKillByChaser(run, body, new Set(), { aim: { x: ax, y: ay }, tolerance: 1.0 });
 console.log(h.stance ? `STANCE ${JSON.stringify(h.stance)} ticks ${h.ticks}` : `NONE ${String(h.why).slice(0, 4000)}`);
 for (const r of h.runnersUp ?? []) console.log('RUNNERUP', JSON.stringify(r));

@@ -1,0 +1,45 @@
+DELAY 712 bobsoldier@880,832 4 none
+DELAY 712 bobsoldier@880,832 8 none
+DELAY 712 bobsoldier@880,832 12 none
+DELAY 712 bobsoldier@880,832 16 none
+DELAY 712 bobsoldier@880,832 20 none
+DELAY 712 bobsoldier@880,832 24 none
+DELAY 712 bobsoldier@880,832 28 none
+DELAY 712 bobsoldier@880,832 32 none
+DELAY 712 bobsoldier@880,832 36 none
+DELAY 712 bobsoldier@880,832 40 none
+DELAY 712 bobsoldier@880,832 44 none
+DELAY 712 bobsoldier@880,832 48 none
+DELAY 712 bobsoldier@880,832 52 none
+DELAY 712 bobsoldier@880,832 56 none
+DELAY 712 bobsoldier@880,832 60 none
+DELAY 712 bobsoldier@880,832 64 none
+ms 39389
+REFUSED solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh -> iceturret@472,400 approach door wandlock@480,560 (488,568) -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,853.4) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 16 volume(s) forbidden — A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The planner works in whole tiles, so both ends o
+  time: the aim is 157 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: no stance within bobsoldier@880,832's leash (80) both pulls its straight line through a kill region and is itself danger-free: 32 cell(s) in leash, 5 of them crossing a region, none of
+obstacle {"kind":"danger","id":"bobsoldier@880,832","sources":["chaser:bobsoldier@880,832"]} perTick 712
+STRATROWS 0 shove pushableblockfire@576,576
+STRATROWS 0 weigh wandlock@448,432
+STRATROWS 0 burn burnabletree@872,784
+STRATROWS 0 walk bob@736,752
+STRATROWS 0 time bob@736,752
+STRATROWS 0 bait bob@736,752
+STRATROWS 0 kill bob@736,752
+STRATROWS 0 walk undefined
+STRATROWS 447 walk spinner@816,848
+STRATROWS 447 time spinner@816,848
+STRATROWS 447 bait spinner@816,848
+STRATROWS 447 kill spinner@816,848
+STRATROWS 712 walk bobsoldier@880,832
+STRATROWS 712 time bobsoldier@880,832
+STRATROWS 712 bait bobsoldier@880,832
+STRATROWS 712 kill bobsoldier@880,832
+STRATROWS 712 narrow bobsoldier@880,832
+STRATROWS 712 detour bobsoldier@880,832
+STRATROWS 712 forced-hit bobsoldier@880,832
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}
+TA {"approaches":[]}
+DOOR {"doors":[{"door":"wandlock@480,560","side":"up","cell":{"x":488,"y":568},"turret":"iceturret@472,400","t":0}]}

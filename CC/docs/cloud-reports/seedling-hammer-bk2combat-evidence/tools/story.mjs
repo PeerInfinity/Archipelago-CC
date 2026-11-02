@@ -1,3 +1,4 @@
+// scratch (BK2COMBAT: equips read from e.equips — the scratch SCRATCH_EQUIPS=1 hook in refuse(); + chaser ids; from POCKET-BURN)
 // scratch (POCKET-BURN): one captured request (--id, --i) solved ONCE (dashless, no deadline) under the env's switches; a
 // refusal's spent ticks (with its slot selections — needs the scratch SCRATCH_EQUIPS=1 hook) are replayed on a FRESH run of
 // the request's staging, and the story printed: trees burnt, activators opened, chasers/spinners/turret removed, hits,
@@ -25,7 +26,7 @@ try {
 } catch (e) {
     if (!(e instanceof SB.SolverRefusal)) throw e;
     msg = 'REFUSED: ' + e.message.slice(0, 600);
-    perTick = e.perTick; equips = e.scratchEquips ?? [];
+    perTick = e.perTick; equips = e.equips ?? [];
 }
 console.log(msg);
 const run = replayTape({ staging: tape.staging, perTick: tape.perTick, levelSource: levelSourceFromAtlas(source.records),
