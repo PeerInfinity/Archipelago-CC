@@ -1,0 +1,26 @@
+=== node scripts/procgen/census-seedling-solver-surface.mjs --check
+same seedling-solver-surface: 220714 bytes
+GREEN: 371 rows match a fresh census
+exit 0
+=== node scripts/procgen/census-seedling-constants.mjs --check
+census-seedling-constants --check — 7045 literals; green drift: 0 new + 0 vanished cosmetic/structural, 13 moved
+PASS
+exit 0
+=== node scripts/procgen/generate-procgen-reference.mjs
+instruments: 525 files over 42 categories, 207 browser rows, 439 with flags, 271 cited by a doc, 0 FINDING(S)
+capabilities: 29 statements × 10 substrates, 39 fields read, 51 not yet read
+docsIndex:  29 documents (496,391 words) + 4 pages
+exit 0
+=== node scripts/procgen/check-procgen-reference.mjs
+PASS: …and that link LOADS from this page's own host — http://127.0.0.1:33235/frontend/modules/procgenDocs/reference.html → 200
+
+ALL CHECKS PASSED
+exit 0
+=== node scripts/quicklaunch/generate-docs-index.mjs --check
+OK: frontend/modules/quickLaunch/generated/docsIndex.js is current (192 docs, 9 sections, 12 categories).
+exit 0
+=== node scripts/procgen/derive-seedling-tick0.mjs --check
+PASS: r9-solve-32's tick-0 clock is declared + bootCost — declared 16414 + 21 = 16435, measured 16435 (delta 21)
+
+ALL CHECKS PASSED
+exit 0
