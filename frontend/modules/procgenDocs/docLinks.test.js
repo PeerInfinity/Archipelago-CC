@@ -299,20 +299,24 @@ describe('the corpus census — printed, then pinned', () => {
          *   377 → 381  cloudberry P2b (2026-10-31): substrate-registry.md and sphere-growth.md →
          *              cloudberry.md § Build-time generation (`doc` 290 → 292); cloudberry.md's new
          *              § Setting up the game page and § CLI tools pointers (`same-doc` 25 → 27).
+         *   381 → 387  cloudberry P3b (2026-11-01, loop mode): loop-recording.md's Bot flow and play-clock
+         *              paragraphs → cloudberry.md § Loop mode, and cloudberry.md § Loop mode →
+         *              loop-recording.md § Summary substrates (`doc` 292 → 295); cloudberry.md § Loop mode's
+         *              pointers to its own § The bot, § Testing and § Mixed worlds (`same-doc` 27 → 30).
          */
         expect(by).toEqual({
-            'same-doc': 27,
-            doc: 292,
+            'same-doc': 30,
+            doc: 295,
             external: 22,
             repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(381);
+        expect(CORPUS.length).toBe(387);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(292);
+        expect(docs).toHaveLength(295);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

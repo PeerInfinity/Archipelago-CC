@@ -51,6 +51,7 @@ export const TEST_CASE_FILES = [
   './testCases/flashSubstrateTests.js',
   './testCases/runnerDemoTests.js',
   './testCases/cloudberrySubstrateTests.js',
+  './testCases/cloudberryLoopModeTests.js',
   './testCases/runnerBlockModeTests.js',
   './testCases/noiz2saSubstrateTests.js',
   './testCases/jtaSubstrateWrapperTests.js',

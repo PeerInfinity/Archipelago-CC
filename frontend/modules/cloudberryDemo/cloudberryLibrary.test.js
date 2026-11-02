@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { validateRegionLibrary } from '../procgenPipeline/regionLibraryValidator.js';
+import { captureShapeOf, solverKindOf, offersPlayback, botHonorsInstant } from '../procgenCore/substratePredicates.js';
+import { classifyRegion, generateLoopCosts, REGION_CLASS } from '../shared/procgen/loopCostGenerator.js';
 import {
     CLOUDBERRY_EXIT_SIDES, substrateRegistryEntry as entry, instantiateCloudberryLibraryEntry, instantiateCloudberryLibraryEntryForSpecs,
     validateCloudberryLibraryEntry, captureCloudberryLibraryEntry, cloudberryLibraryEntryRefusal,
@@ -137,5 +139,36 @@ describe('libraryEntryRefusal (sphere slots, P3a)', () => {
         const e = byId('cb_jetpack_flyblob');
         expect(fits(e, { entryGate: [], locationSpecs: L(1) })).toBe(false);
         expect(fits(e, { entryGate: ['Jetpack'], locationSpecs: L(1) })).toBe(true);
+    });
+});
+
+describe('loop mode (P3b): a summary substrate on the page\'s game clock', () => {
+    it('declares what loops reads: summary capture, the page\'s bot as solver, Playback, the play clock', () => {
+        const ls = entry.loopSupport;
+        expect(captureShapeOf(entry)).toBe('summary');
+        expect(solverKindOf(entry)).toBe('walkTo');
+        expect(offersPlayback(entry)).toBe(true);
+        expect(ls.record && ls.playback && ls.instant).toBe(true);
+        // the time drain is charged per GAME second the page reports (setPlayClock), never wall seconds
+        expect(ls.playClock).toBe(true);
+        expect([...ls.queueActions].sort()).toEqual(['locationCheck', 'regionMove']);
+        // the bot walks in real time; Instant is a summary Playback's, not the Bot's
+        expect(botHonorsInstant(entry)).toBe(false);
+        // no recorder of its own: a summary is loops' capture (one channel per visit)
+        expect(entry.takeLastRecording).toBeUndefined();
+    });
+
+    it('the committed preset\'s generated loop_costs price every Cloudberry region by TIME', () => {
+        expect(classifyRegion('cloudberry')).toBe(REGION_CLASS.SUMMARY);
+        const dir = join(dirname(fileURLToPath(import.meta.url)),
+            '../../presets/cloudberry_sphere_worldgen/AP_14089154938208861744/AP_14089154938208861744_');
+        const rulesJson = JSON.parse(readFileSync(`${dir}rules.json`, 'utf8'));
+        const sphereLog = readFileSync(`${dir}sphere_log.jsonl`, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+        const costs = generateLoopCosts({ rulesJson, sphereLog, sourceFileName: 'cloudberryLibrary.test' });
+        for (const region of ['region_2_2', 'region_2_3', 'region_3_3']) {
+            expect(costs.regions[region]).toEqual({ timeDrainPerSecond: 1, xpEffect: 'cost' });
+        }
+        // a summary action is never charged the coarse defaults (it would pay twice): no per-location cost
+        expect(costs.locations).toEqual({});
     });
 });

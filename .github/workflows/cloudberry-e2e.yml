@@ -10,7 +10,7 @@ name: Cloudberry end-to-end
 #                                Victory; then --check against the committed cloudberry_sphere_worldgen
 #   check-cloudberry-embed.mjs   the demo region-library pack in a spiral world, played; then a
 #                                sphere world from the same pack, played to Victory by the Playback Bot
-#   the `cloudberry` in-app batch (P3a): the substrate's in-app rows and its tutorial walk, which
+#   the `cloudberry` in-app batch (P3a): the substrate's in-app rows (P3b: + its loop-mode rows) and its tutorial walk, which
 #                                play the same same-origin copy (testBatches.js: manual, so no
 #                                on-push job runs it — its rows refuse by name without the site)
 #
@@ -30,6 +30,7 @@ on:
       - 'scripts/procgen/*cloudberry*'
       - 'scripts/setup/fetch-cloudberry-site.mjs'
       - 'frontend/modules/tests/testCases/cloudberrySubstrateTests.js'
+      - 'frontend/modules/tests/testCases/cloudberryLoopModeTests.js'
       - 'frontend/modules/tutorials/content/procgen/cloudberry.js'
       - '.github/workflows/cloudberry-e2e.yml'
 
@@ -75,7 +76,12 @@ jobs:
       - name: Run ModuleUpdate
         run: |
           source .venv/bin/activate
-          python ModuleUpdate.py --yes
+          # As test-templates.yml: an upstream world's loose floor (worlds/tloz `bsdiff4>=1.2.2`) upgrades past the
+          # root pin (`bsdiff4==1.2.6`); `Launcher.py --update_settings` then asks "press enter to install" and dies
+          # on EOF. Hold every exact root pin as a pip constraint for the world installs and the later steps.
+          grep -E '^[A-Za-z0-9_.-]+==[^ #]+' requirements.txt | sed 's/[[:space:]]*#.*//' > "$RUNNER_TEMP/root-pins.txt"
+          echo "PIP_CONSTRAINT=$RUNNER_TEMP/root-pins.txt" >> "$GITHUB_ENV"
+          PIP_CONSTRAINT="$RUNNER_TEMP/root-pins.txt" python ModuleUpdate.py --yes
 
       - name: Configure host settings (the preset recipe is minimal-spoilers)
         run: |
