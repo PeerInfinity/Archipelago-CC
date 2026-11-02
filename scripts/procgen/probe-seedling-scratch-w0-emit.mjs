@@ -4,7 +4,7 @@
  * Emits the maze-DERIVED rule for every row the whole-game certifier prices, in the rules shape, and diffs it
  * against the seedling_playthrough rule it is compared with. The certifier runs UNCHANGED except for recording hooks
  * (a runtime source patch, like the whole-game probe's old arm), so its verdict per row rides along.
- * Run: node scripts/procgen/probe-scratch-w0-emit-derived.mjs [--levels=level_3,level_40] [--shards=4] [--out=test-results/seedling-probe] [--doc=preset|build]
+ * Run: node scripts/procgen/probe-seedling-scratch-w0-emit.mjs [--levels=level_3,level_40] [--shards=4] [--out=test-results/seedling-probe] [--doc=preset|build]
  */
 import { readFileSync, writeFileSync, mkdirSync, unlinkSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';

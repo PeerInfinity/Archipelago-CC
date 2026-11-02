@@ -81,3 +81,17 @@ for (const [name, reg] of Object.entries(R)) {
 const cost = E.parts.flatMap((p) => p.cost);
 console.log(JSON.stringify({ levels: E.levels.length, wall: E.wall, searches: cost.reduce((a, c) => a + c.searched, 0), states: cost.reduce((a, c) => a + c.states, 0), ...out }, null, 1));
 if (LIST) { for (const s of lists.boundary) console.log('B', s); for (const s of lists.location) console.log('L', s); }
+// Arrival structure: per region, the distinct arrivals its rows were priced from; and the regions where an element's rule differs by arrival.
+const arr = new Map();
+for (const x of [...exits, ...rec.filter((r) => !r.closure)]) {
+  const m = x.label.match(/^(level_\d+__r\d+c\d+)/); if (!m) continue;
+  if (!arr.has(m[1])) arr.set(m[1], new Set()); arr.get(m[1]).add(tagOf(x.label));
+}
+const hist = {}; for (const s of arr.values()) hist[s.size] = (hist[s.size] ?? 0) + 1;
+const dep = new Set();
+const byEl = new Map();
+for (const x of exits) { const k = `${x.region}|${x.exit}`; if (!byEl.has(k)) byEl.set(k, []); byEl.get(k).push(fromMin(x.minimal)); }
+for (const r of rec.filter((r) => !r.closure && r.derived)) { const m = r.label.match(/^(level_\d+__r\d+c\d+) @ (.*?)( \((landing [\d,]+|from [^)]+)\))?$/); if (!m) continue; const k = `${m[1]}|@${m[2]}`; if (!byEl.has(k)) byEl.set(k, []); byEl.get(k).push(r.derived); }
+for (const [k, rules] of byEl) if (rules.some((r) => !same(r, rules[0]))) dep.add(k.split('|')[0]);
+const nodes = [...arr.values()].reduce((a, s) => a + s.size, 0);
+console.log(JSON.stringify({ regionsPriced: arr.size, arrivalsPerRegion: hist, arrivalNodes: nodes, regionsArrivalDependent: dep.size, elementsPriced: byEl.size }));
