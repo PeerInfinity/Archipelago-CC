@@ -61,9 +61,9 @@ describe('⛓⛓⛓ the ROPE GATE\'s table row and binding rows (seedling gen A1
     it('the head is `ropegate`, before chestdoor, sword-gated, opt-in and not a `require` head', () => {
         expect(ELEMENT_TABLE.ropegate.element).toBe(ROPE_GATE);
         expect(ELEMENT_TABLE.ropegate.needs).toEqual(['hasSword']);
-        /** ⛓ seedling gen B2 appended `chestdoor` after it, and r3 `holdgate`/`weighgate`;
+        /** ⛓ seedling gen B2 appended `chestdoor` after it, r2 `burngate`, and r3 `holdgate`/`weighgate`;
          *  nothing before it moved. */
-        expect(ELEMENT_NAMES.slice(-4)).toEqual(['ropegate', 'chestdoor', 'holdgate', 'weighgate']);
+        expect(ELEMENT_NAMES.slice(-5)).toEqual(['ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate']);
         /** ⛔ joining `require:['hasSword']`'s `+` list would move every such room */
         expect(headsNeeding('hasSword')).not.toContain('ropegate');
     });

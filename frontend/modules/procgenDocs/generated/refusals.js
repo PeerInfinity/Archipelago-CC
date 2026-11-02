@@ -511,6 +511,7 @@ export const REFUSALS = frz({
                 "solo-door",
                 "rope-gate",
                 "chest-door",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -532,6 +533,7 @@ export const REFUSALS = frz({
                 "solo-door",
                 "rope-gate",
                 "chest-door",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -553,6 +555,7 @@ export const REFUSALS = frz({
                 "block-pocket",
                 "rope-gate",
                 "chest-door",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -574,6 +577,7 @@ export const REFUSALS = frz({
                 "block-pocket",
                 "solo-door",
                 "chest-door",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -595,6 +599,7 @@ export const REFUSALS = frz({
                 "block-pocket",
                 "solo-door",
                 "rope-gate",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -616,7 +621,30 @@ export const REFUSALS = frz({
                 "block-pocket",
                 "solo-door",
                 "rope-gate",
-                "chest-door"
+                "chest-door",
+                "strategy-gate"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "BURN_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/burnGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "goal-too-close",
+            "named": true,
+            "scanFound": true,
+            "source": "burn-gate",
+            "sourceTitle": "The BURN GATE — a burnable tree (2x2) on a main-path cut, burned with Fire",
+            "where": "frontend/modules/procgenCore/elements/burnGate.js — `BURN_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket",
+                "solo-door",
+                "rope-gate",
+                "chest-door",
+                "burn-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "STRATEGY_GATE_REFUSALS",
@@ -774,6 +802,7 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "block-pocket",
                 "solo-door",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -793,6 +822,7 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "kill-gate",
                 "solo-door",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -812,6 +842,7 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "kill-gate",
                 "block-pocket",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -831,7 +862,28 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "kill-gate",
                 "block-pocket",
-                "solo-door"
+                "solo-door",
+                "strategy-gate"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "BURN_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/burnGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "no cell of the …-cell main path can carry a BURN GATE: … interior path cell(s) tried, the deepest stage any reached was \"…\". ⛓ A burnable tree is 2x2 tiles (`Tree`'s 32 px hitbox), so the door is the path cell, the cell beyond it and one side's two — all FLOOR inside the room, neither endpoint under it, and the four together a CUT.",
+            "name": "no-cut-cell",
+            "named": true,
+            "scanFound": true,
+            "source": "burn-gate",
+            "sourceTitle": "The BURN GATE — a burnable tree (2x2) on a main-path cut, burned with Fire",
+            "where": "frontend/modules/procgenCore/elements/burnGate.js — `BURN_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket",
+                "solo-door",
+                "burn-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "STRATEGY_GATE_REFUSALS",
@@ -2387,6 +2439,21 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "BURN_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/burnGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-tree-does-not-fit",
+            "named": true,
+            "scanFound": true,
+            "source": "burn-gate",
+            "sourceTitle": "The BURN GATE — a burnable tree (2x2) on a main-path cut, burned with Fire",
+            "where": "frontend/modules/procgenCore/elements/burnGate.js — `BURN_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
             "channel": "`summary.elementInfo.refused` on `watch.html`; `generate-seedling-level.mjs --json` `elementInfo.refused`",
             "constant": "SEEDLING_ELEMENT_REFUSALS",
             "file": "frontend/modules/seedlingDemo/procgenSeedlingElements.js",
@@ -2419,6 +2486,7 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "block-pocket",
                 "solo-door",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -2438,6 +2506,7 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "kill-gate",
                 "solo-door",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -2457,6 +2526,7 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "kill-gate",
                 "block-pocket",
+                "burn-gate",
                 "strategy-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -2476,7 +2546,28 @@ export const REFUSALS = frz({
             "alsoFiresIn": [
                 "kill-gate",
                 "block-pocket",
-                "solo-door"
+                "solo-door",
+                "strategy-gate"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "BURN_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/burnGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "no cell of the …-cell main path can carry a BURN GATE: … interior path cell(s) tried, the deepest stage any reached was \"…\". ⛓ A burnable tree is 2x2 tiles (`Tree`'s 32 px hitbox), so the door is the path cell, the cell beyond it and one side's two — all FLOOR inside the room, neither endpoint under it, and the four together a CUT.",
+            "name": "wall-does-not-seal",
+            "named": true,
+            "scanFound": true,
+            "source": "burn-gate",
+            "sourceTitle": "The BURN GATE — a burnable tree (2x2) on a main-path cut, burned with Fire",
+            "where": "frontend/modules/procgenCore/elements/burnGate.js — `BURN_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket",
+                "solo-door",
+                "burn-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "STRATEGY_GATE_REFUSALS",
@@ -2522,6 +2613,21 @@ export const REFUSALS = frz({
             "spansModules": false,
             "title": "The BLOCK POCKET element",
             "where": "frontend/modules/procgenCore/elements/blockPocket.js — `BLOCK_POCKET_REFUSALS`"
+        },
+        {
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "BURN_GATE_REFUSALS",
+            "declaredCount": 4,
+            "file": "frontend/modules/procgenCore/elements/burnGate.js",
+            "id": "burn-gate",
+            "kind": "constant",
+            "patterns": [
+                "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
+            ],
+            "scannedCount": 4,
+            "spansModules": false,
+            "title": "The BURN GATE — a burnable tree (2x2) on a main-path cut, burned with Fire",
+            "where": "frontend/modules/procgenCore/elements/burnGate.js — `BURN_GATE_REFUSALS`"
         },
         {
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",

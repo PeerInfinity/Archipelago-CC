@@ -48,6 +48,7 @@ import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { ROAM } from './elements/roam.js';
 import { ROPE_GATE } from './elements/ropeGate.js';
 import { CHEST_DOOR } from './elements/chestDoor.js';
+import { BURN_GATE } from './elements/burnGate.js';
 import { HOLD_GATE, WEIGH_GATE } from './elements/strategyGate.js';
 import {
     CORRIDOR_BODY, ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT,
@@ -508,6 +509,30 @@ export const ELEMENT_TABLE = Object.freeze({
         extra: Object.freeze([]),
         needs: Object.freeze([]),
         meetsRequire: false,
+    }),
+    /**
+     * ⛓⛓⛓ **THE BURN GATE** (strategy switch r2, the design's D3; ⚖ Robert
+     * 2026-11-01). A `burnabletree` — 2x2 tiles, `Tree`'s 32 px hitbox — on a
+     * main-path cut, its wall grown to seal the room, burned from its start side
+     * by FIRE. Measured on vanilla before it was built: L24 and L44 both REFUSE
+     * at the tree with `burn` disabled (the switch design's §2.1).
+     *
+     * ⛓ `needs: ['hasFire']` — `BurnableTree.hit` answers only `"Fire"`, and
+     * `hasFire` is the SEAM's own boot flag (`items.hasFire`), granted by
+     * biomes-1's `post-fire` boot. The seam refuses it BY NAME on every biome
+     * without it. ⛓ `needsStrategy: ['burn']`: `require:['strategy:burn']`.
+     *
+     * Placed LAST so no head moves in `ELEMENT_NAMES`. It ships OPT-IN: in no
+     * biome default (`BIOME_DEFAULT_FOLD` untouched), so no default run moves.
+     */
+    burngate: Object.freeze({
+        element: BURN_GATE,
+        why: 'The BURN GATE (strategy switch r2): a `burnabletree` (2x2 tiles) on a main-path cut '
+            + 'with its wall GROWN to seal the room, burned by FIRE from its start side. '
+            + 'Certified by the existing `burn`.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasFire']),
+        needsStrategy: Object.freeze(['burn']),
     }),
     /**
      * ⛓⛓⛓ **THE HOLD GATE and THE WEIGH GATE — the solver's `hold` and `weigh`,

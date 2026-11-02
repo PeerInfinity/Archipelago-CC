@@ -27,6 +27,9 @@
  *   ⛓ seedling-gen-chestdoor: a generated CHEST DOOR room (`?elements=chestdoor`, pre-sword) certifies, holds one
  *   tagged chest, and draws the chest in sprites (the `solids` family).
  *
+ *   ⛓ seedling-gen-burngate: a generated BURN GATE room (`?elements=burngate`, post-fire) certifies, holds one
+ *   tagged burnable tree, and draws it with its existing sheet (≤ 10% of its box left as the stand-in rect).
+ *
  *   ⛓ seedling-gen-strategy-gadgets: a generated HOLD GATE room (`?elements=holdgate`) and WEIGH GATE room
  *   (`?elements=weighgate`), pre-sword, each certify, hold a lock and its presser in ONE group (a latching
  *   `buttonroom` / a momentary `button` plus one `pushableblock`), and draw them in sprites.
@@ -784,6 +787,65 @@ async function main() {
                 `L${room.level}: ≤ ${ROPE_BRIDGE_SAME_MAX * 100}% of the ${boxes.length} ${room.family} box(es)' pixels are the stand-in rect`,
                 `${((same / Math.max(1, total)) * 100).toFixed(1)}% identical of ${total} px`);
         }
+    }
+
+    // ── ⛓ strategy switch r2 (seedling-gen-burngate): a generated BURN GATE room, art on ──
+    //
+    // The generate arm with `?elements=burngate` (post-fire: the boot that grants Fire): the room holds ONE
+    // `burnabletree` with its own tag on a main-path cut, and it certifies. The tree draws with its existing sheet
+    // (`seedling:scenery/burnabletree`, BurnableTreeBurn frame 0): ≤ `TREE_SAME_MAX` of its 32 px box's pixels are
+    // the stand-in rect (art on vs off, every overlay off as the rope row measures).
+    console.log('\n## burngate — a generated burn gate room');
+    {
+        const TREE_SAME_MAX = 0.1;
+        const URL = `${PAGE}?source=generate&seed=1&biome=post-fire&elements=burngate`;
+        const ready = (page, mode) => page.waitForFunction((want) => {
+            const a = window.__labArt;
+            return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                && (want === 'off' ? a.drawn === null : a.drawn !== null);
+        }, mode, { timeout: 180000 }).catch(() => {});
+        let treeBox = null;
+        const treePx = {};
+        for (const mode of ['on', 'off']) {
+            const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errors = [];
+            page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+            await page.goto(`${URL}${mode === 'off' ? '&art=off' : ''}`, { waitUntil: 'domcontentloaded' });
+            await ready(page, mode);
+            await page.waitForTimeout(1200);
+            const { art, payload } = await page.evaluate(() => ({ art: window.__labArt ?? null,
+                payload: window.__watch?.payload ? { certified: window.__watch.payload.certified,
+                    entities: window.__watch.payload.level.entities } : null }));
+            if (mode === 'on') {
+                const trees = (payload?.entities ?? []).filter((e) => e.type === 'burnabletree');
+                check(payload?.certified === true && trees.length === 1 && Number(trees[0].attrs?.tag) >= 0,
+                    'burngate: the generated room CERTIFIES and holds ONE tagged burnable tree',
+                    JSON.stringify({ certified: payload?.certified, trees }));
+                check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && art.drawn?.fallbacks === 0,
+                    'burngate: drawn in sprites, no missing-key fallback', JSON.stringify(art?.drawn));
+                if (trees[0]) treeBox = { x: trees[0].x, y: trees[0].y, w: 32, h: 32 };
+            } else {
+                check(art?.drawn === null, 'burngate ?art=off: the rectangles', JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+            }
+            if (treeBox) {
+                const bare = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+                await bare.goto(`${URL}&layers=${mode === 'off' ? '&art=off' : ''}`, { waitUntil: 'domcontentloaded' });
+                await ready(bare, mode);
+                await bare.waitForTimeout(1200);
+                const roomW = 16 * await bare.evaluate(() => (window.__watch?.payload?.level?.width ?? 0));
+                [treePx[mode]] = await boxPixels(bare, [treeBox], roomW);
+                await bare.close();
+            }
+            if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-burngate${mode === 'off' ? '-off' : ''}.png`) });
+            check(errors.length === 0, `burngate (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+            await page.close();
+        }
+        const { on = [], off = [] } = treePx;
+        let same = 0;
+        for (let j = 0; j < on.length; j += 1) if (on[j] === off[j]) same += 1;
+        check(on.length > 0 && on.length === off.length && same / on.length <= TREE_SAME_MAX,
+            `burngate: ≤ ${TREE_SAME_MAX * 100}% of the tree box's pixels are the stand-in rect`,
+            `${((same / Math.max(1, on.length)) * 100).toFixed(1)}% identical of ${on.length} px; box ${JSON.stringify(treeBox)}`);
     }
 
     await browser.close();

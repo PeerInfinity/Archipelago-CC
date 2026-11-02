@@ -70,3 +70,29 @@ describe('strategy switch D2 — the existing gadgets grade STRONG by strategy (
         }
     }, 900000);
 });
+
+/**
+ * ⛓ STRATEGY SWITCH r2 (D3) — **THE BURN GATE**, the first gadget built FOR a strategy: a `burnabletree` on a cut,
+ * post-fire (the boot that grants `hasFire`). Its own `describe` so a parallel gadget's rows append beside it.
+ */
+describe('strategy switch D3 — the burn gate grades STRONG by strategy (seeds 1–3)', () => {
+    it('burngate/burn on post-fire: STRONG at the disabled gate, 3/3', async () => {
+        const runs = await Promise.all([1, 2, 3].map((seed) => generate(`burn-${seed}`,
+            [`--seed=${seed}`, '--biome=post-fire', '--elements=burngate', '--require=strategy:burn'])
+            .then((r) => ({ seed, r }))));
+        for (const { seed, r } of runs) {
+            const what = `burngate strategy:burn seed ${seed}`;
+            expect(r.met, what).toBe(true);
+            expect(r.grade, what).toBe('STRONG');
+            expect(r.evidence, what).toBe('STRONG (solver refusal at the disabled gate)');
+            expect(r.without.verdict, what).toBe('REFUSED');
+        }
+    }, 900000);
+
+    it('burngate with the flag OFF: NOT-ESTABLISHED, never STRONG', async () => {
+        const r = await generate('burn-off', ['--seed=1', '--biome=post-fire', '--require=strategy:burn'], '0');
+        expect(r.met).toBe(false);
+        expect(r.grade).toBe('NOT-ESTABLISHED');
+        expect(r.refused.reason).toBe('the-item-is-not-required: NOT-ESTABLISHED');
+    }, 900000);
+});

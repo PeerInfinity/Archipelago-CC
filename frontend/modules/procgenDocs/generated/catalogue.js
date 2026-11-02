@@ -6234,6 +6234,7 @@ export const CATALOGUE = frz({
         "corridorbody",
         "ropegate",
         "chestdoor",
+        "burngate",
         "holdgate",
         "weighgate"
     ],
@@ -6651,6 +6652,16 @@ export const CATALOGUE = frz({
         },
         {
             "defaultIn": [],
+            "head": "burngate",
+            "module": "burn-gate",
+            "needs": [
+                "hasFire"
+            ],
+            "params": [],
+            "why": "The BURN GATE (strategy switch r2): a `burnabletree` (2x2 tiles) on a main-path cut with its wall GROWN to seal the room, burned by FIRE from its start side. Certified by the existing `burn`."
+        },
+        {
+            "defaultIn": [],
             "head": "holdgate",
             "module": "hold-gate",
             "needs": [],
@@ -6669,6 +6680,7 @@ export const CATALOGUE = frz({
     "itemsElementsNeed": [
         "canSwim",
         "hasFeather",
+        "hasFire",
         "hasShield",
         "hasSword"
     ],

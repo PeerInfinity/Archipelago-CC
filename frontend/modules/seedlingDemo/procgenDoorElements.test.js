@@ -46,12 +46,13 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
          *  existing head moved. ⛓ Swim U3 added `corridorbody` (a lock-less body on a
          *  main-path cut), LAST for the same reason. ⛓ Seedling gen A1 added
          *  `ropegate` (an armed arrow trap and its rope), LAST, OPT-IN. ⛓ Seedling
-         *  gen B2 added `chestdoor` (a chest in a wall's only gap), LAST, OPT-IN. ⛓ The
+         *  gen B2 added `chestdoor` (a chest in a wall's only gap), LAST, OPT-IN.
+         *  ⛓ Strategy switch r2 added `burngate` (a burnable tree on a cut), LAST, OPT-IN. ⛓ The
          *  strategy gadgets (r3) added `holdgate` and `weighgate`, LAST, OPT-IN. */
         expect(ELEMENT_NAMES).toEqual([
             'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena', 'rockgate',
             'shortcut', 'shieldgate', 'watergate', 'watershortcut', 'waterfallgate', 'roam',
-            'corridorbody', 'ropegate', 'chestdoor', 'holdgate', 'weighgate',
+            'corridorbody', 'ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate',
         ]);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });
@@ -130,7 +131,7 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
          *  default only by a re-record of its own). */
         expect([...names(POST_FEATHER_ITEMS)].sort())
             .toEqual(Object.keys(ELEMENT_TABLE)
-                .filter((n) => !['ropegate', 'chestdoor', 'holdgate', 'weighgate'].includes(n)).sort());
+                .filter((n) => !['ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate'].includes(n)).sort());
         /**
          * ⛔ THE TWO-STREAMS HALF, READ OFF THE NORMALIZED SPEC — and since
          * SEEDLING BOT R9 slice 1 (D1) the guard's `len` is the THIRD kind:

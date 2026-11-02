@@ -57,8 +57,8 @@ describe('⛓⛓⛓ the CHEST DOOR\'s table row and binding row (seedling gen B2
         expect(ELEMENT_TABLE.chestdoor.element).toBe(CHEST_DOOR);
         expect(ELEMENT_TABLE.chestdoor.needs).toEqual([]);
         expect(ELEMENT_TABLE.chestdoor.meetsRequire).toBe(false);
-        /** ⛓ r3 appended `holdgate` and `weighgate` after it; nothing before it moved. */
-        expect(ELEMENT_NAMES.slice(-3)).toEqual(['chestdoor', 'holdgate', 'weighgate']);
+        /** ⛓ strategy switch r2 appended `burngate` after it, and r3 `holdgate`/`weighgate`; nothing before it moved. */
+        expect(ELEMENT_NAMES.slice(-4)).toEqual(['chestdoor', 'burngate', 'holdgate', 'weighgate']);
         for (const flag of ['hasSword', 'hasShield', 'hasSwim', 'hasFeather']) {
             expect(headsNeeding(flag)).not.toContain('chestdoor');
         }
