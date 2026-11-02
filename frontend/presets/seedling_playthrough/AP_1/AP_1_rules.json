@@ -2380,10 +2380,21 @@
             "name": "level_20__r1c4 -> level_20__r3c1",
             "connected_region": "level_20__r3c1",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Shield"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L20 flag 4: lock@32,80 cleared"
+                  }
+                }
+              ]
             }
           },
           {
@@ -2470,7 +2481,44 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L20 flag 4: lock@32,80 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L20 flag 4: lock@32,80 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L20:4",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 20,
+              "tag": 4,
+              "class": "lock",
+              "x": 32,
+              "y": 80
+            },
+            "action": {
+              "verb": "press",
+              "item": null,
+              "presser": {
+                "level": 20,
+                "class": "buttonroom",
+                "x": 192,
+                "y": 16
+              }
+            },
+            "side": "level_20__r1c12",
+            "across": []
+          }
+        ]
       },
       "level_20__r3c1": {
         "name": "level_20__r3c1",
@@ -2479,10 +2527,21 @@
             "name": "level_20__r3c1 -> level_20__r1c4",
             "connected_region": "level_20__r1c4",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Shield"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L20 flag 4: lock@32,80 cleared"
+                  }
+                }
+              ]
             }
           },
           {
@@ -13552,6 +13611,17 @@
         "type": "Event",
         "max_count": 1
       },
+      "L20 flag 4: lock@32,80 cleared": {
+        "name": "L20 flag 4: lock@32,80 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L39 flag 8: wandlock@144,592 cleared": {
         "name": "L39 flag 8: wandlock@144,592 cleared",
         "id": null,
@@ -13728,6 +13798,7 @@
       "L40 flag 8: bosslock@480,352 cleared": 1,
       "L48 flag 1: bosslock@48,144 cleared": 1,
       "L68 flag 0: bosslock@16,32 cleared": 1,
+      "L20 flag 4: lock@32,80 cleared": 1,
       "L39 flag 8: wandlock@144,592 cleared": 1,
       "L62 flag 0: lightpole@120,200 cleared": 1,
       "L63 flag 1: lightpole@64,88 cleared": 1,
