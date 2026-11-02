@@ -1,0 +1,33 @@
+== key 0 spin 0 (switch OFF)
+{"name":"certified","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled","ms":11,"spin":{"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"envelope","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled","ms":4,"spin":{"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"exhausted","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled","ms":5,"spin":{"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"approach","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled","ms":7,"spin":{"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0},"x":{}}
+== key 0 spin 1 (switch OFF)
+{"name":"certified","ok":true,"claim":true,"bound":null,"keys":75,"why":null,"ms":109,"spin":{"asked":1,"certified":1,"envelope":0,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"envelope","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled (PRESS_ESCAPE_SHIELD_CLAIM: the certificate's path puts the shield's envelope on a body at t0)","ms":96,"spin":{"asked":1,"certified":0,"envelope":1,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"exhausted","ok":false,"claim":true,"bound":"exhausted","keys":null,"why":"no ESCAPE from the landing at t2 (free from the landing): depth first (deepest 3) and then breadth first: no state reachable from index 2 survives to index 4 (t","ms":36,"spin":{"asked":1,"certified":0,"envelope":0,"exhausted":1,"noClaim":0},"x":{}}
+{"name":"approach","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled (PRESS_ESCAPE_SHIELD_CLAIM: the approach or the train meets a body or the line at t1, before the ","ms":9,"spin":{"asked":1,"certified":0,"envelope":0,"exhausted":0,"noClaim":1},"x":{}}
+== key 1 spin 0 (switch OFF)
+{"name":"certified","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled","ms":16,"spin":{"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"envelope","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled","ms":5,"spin":{"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"exhausted","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled","ms":11,"spin":{"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"approach","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled","ms":3,"spin":{"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0},"x":{}}
+== key 1 spin 1 (switch OFF)
+{"name":"certified","ok":true,"claim":true,"bound":null,"keys":75,"why":null,"ms":82,"spin":{"asked":1,"certified":1,"envelope":0,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"envelope","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled (PRESS_ESCAPE_SHIELD_CLAIM: the certificate's path puts the shield's envelope on a body at t0)","ms":45,"spin":{"asked":1,"certified":0,"envelope":1,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"exhausted","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled (PRESS_ESCAPE_SHIELD_CLAIM: the certificate's path puts the shield's envelope on a body at t0)","ms":42,"spin":{"asked":1,"certified":0,"envelope":1,"exhausted":0,"noClaim":0},"x":{}}
+{"name":"approach","ok":false,"claim":false,"bound":null,"keys":null,"why":"the forecast names shield bump (`shieldBumpNow`) as unmodelled (PRESS_ESCAPE_SHIELD_CLAIM: the approach or the train meets a body or the line at t1, before the ","ms":7,"spin":{"asked":1,"certified":0,"envelope":0,"exhausted":0,"noClaim":1},"x":{}}
+== drive (verify.mjs), key1 spin0 X0 / X1, key0 spin1 X0
+certified {"ok":false,"claim":false,"bound":null,"driven":2,"hitsAt":[],"bumps":[],"bodyHits":0}
+envelope {"ok":false,"claim":false,"bound":null,"driven":2,"hitsAt":[],"bumps":[],"bodyHits":0}
+exhausted {"ok":false,"claim":false,"bound":null,"driven":2,"hitsAt":[0],"bumps":[],"bodyHits":0}
+approach {"ok":false,"claim":false,"bound":null,"driven":2,"hitsAt":[0],"bumps":[[1,true]],"bodyHits":0}
+certified {"ok":true,"claim":true,"bound":null,"driven":77,"hitsAt":[],"bumps":[],"bodyHits":1}
+envelope {"ok":true,"claim":true,"bound":null,"driven":77,"hitsAt":[],"bumps":[],"bodyHits":1}
+exhausted {"ok":false,"claim":true,"bound":"approach","driven":2,"hitsAt":[0],"bumps":[],"bodyHits":0}
+approach {"ok":false,"claim":true,"bound":"approach","driven":2,"hitsAt":[0],"bumps":[[1,true]],"bodyHits":0}
+certified {"ok":true,"claim":true,"bound":null,"driven":77,"hitsAt":[],"bumps":[],"bodyHits":1}
+envelope {"ok":false,"claim":false,"bound":null,"driven":2,"hitsAt":[],"bumps":[],"bodyHits":0}
+exhausted {"ok":false,"claim":true,"bound":"exhausted","driven":2,"hitsAt":[0],"bumps":[],"bodyHits":0}
+approach {"ok":false,"claim":false,"bound":null,"driven":2,"hitsAt":[0],"bumps":[[1,true]],"bodyHits":0}
