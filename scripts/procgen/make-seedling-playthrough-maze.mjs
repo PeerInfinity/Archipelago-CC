@@ -313,14 +313,16 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     // level is listed. A target the press does NOT remove is not laid: a cross-room LIGHTPOLE is lit, not gone (its light kills the
     // DarkTraps it reaches): its level's world takes the press as the pole's `opened_by` instead (mode 'lit', session
     // tile-primitives-lightpoles) — the pole's bodies open by the press, or by a thrust from one of its stances.
-    // ⛓ RULES l20-button-latch: an IN-ROOM latch's target (`inRoomLatchButtonsOf`) is not laid as a 'target': its flag is the
-    // button's own, never read by the lock (a grouped lock's tag is inert), so the lock stands in the world as its crossing prices it.
+    // ⛓ RULES l20-button-latch: an IN-ROOM latch's target (`inRoomLatchButtonsOf`) is laid like a cross-room one when the press
+    // OPENS it — a `Lock` (model response 'lock-despawn') handed `activate = true` (`publish`): its cell opens by the event alone,
+    // as the game's lock does once its group is published (the producer's `inRoomLatchAnalysis` asks the same question).
     const targets = crossRoomButtonsOf(PLAYTHROUGH_MAP).flatMap((b) => b.targets);
     const inRoomTargets = inRoomLatchButtonsOf(PLAYTHROUGH_MAP).flatMap((b) => b.targets);
     const opens = (o) => {
         const t = targets.find((x) => x.level === o.level && x.type === o.class && x.x === o.x && x.y === o.y);
         if (!t) {
-            if (inRoomTargets.some((x) => x.level === o.level && x.type === o.class && x.x === o.x && x.y === o.y && x.tag === o.tag)) return false;
+            const own = inRoomTargets.find((x) => x.level === o.level && x.type === o.class && x.x === o.x && x.y === o.y && x.tag === o.tag);
+            if (own) return PERSISTENCE_RESPONSE[own.type] === 'lock-despawn' && own.publish === true;
             throw new Error(`press target ${o.class}@${o.x},${o.y} in L${o.level} is no cross-room button's target`);
         }
         return persistenceEffect(t, PERSISTENCE_RESPONSE[t.type]).effect === 'opens';
