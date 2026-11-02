@@ -503,6 +503,8 @@ export const PROGRESS_FIELD_NAMES = Object.freeze([
     'inventorySlots',
     'saveState',
     'takenPickups',
+    // ⛓ fidelity FROZENPRESS D1: `{ refusedNext, timerNext, contact }` (`freezeForecastNow`).
+    'freezeForecast',
 ]);
 export const LEDGER_KIND_NAMES = Object.freeze([
     'collected',
@@ -18134,6 +18136,44 @@ export function createLevelRun({
         }
         return keys;
     };
+    /**
+     * ⛓ fidelity FROZENPRESS D1 (`CONTACT_FIDELITY.frozenPressForecast`) — **WILL `Player.input()` REFUSE THE NEXT
+     * TICK?** Asked at a tick boundary, before `advance`, of the state the previous tick left.
+     *
+     * The next tick runs, in the game's order: every `IceTurretBlast` first (`World.addUpdate` prepends; `stepBlastsNow`
+     * against the player's box at the tick's TOP), then the player's `freezeStep()` above `input()` (`Player.as:532`,
+     * `:591-601`, `:1521`). So the next tick refuses input iff a blast in flight touches the player this step
+     * (`IceTurretBlast.as:51-53`: `freeze(15)`, then the decrement: 14) or the timer the previous tick left is > 1.
+     * Both are stepped here on COPIES with `stepBlastsNow`'s own context — exact, nothing written (a blast a volley
+     * spawns this tick is added by its turret, below the blasts, and first steps the tick after: a contact on a
+     * later tick is caught when that tick is asked).
+     *
+     * `{ refusedNext, timerNext, contact }`: `timerNext` is `frozenTimer` after the next tick's `freezeStep`,
+     * `contact` the blast id that freezes the player on it (else null). ⚠ A pure read:
+     * `blastStates.get`, never `blastsFor` (DIGESTREAD — a getter read creates nothing).
+     */
+    const freezeForecastNow = () => {
+        let contact = null;
+        const list = noclip ? null : blastStates.get(level);
+        if (list && list.length > 0) {
+            const opts = normalizeLiveOpts(liveSolidOpts());
+            const box = playerBoxAt(state.x, state.y);
+            const shieldBox = CONTACT_FIDELITY.iceBlastShield && inventory?.hasShield
+                ? playerShieldRect(shieldRenderState ?? state, slashState.slashing) : null;
+            for (const b of list) {
+                const copy = { ...b, v: { ...b.v } };
+                const r = stepIceTurretBlast(copy, {
+                    frozen: ceremony !== null,
+                    playerBox: box,
+                    blockedAt: (bx) => !!world.collidesBlast(bx, opts),
+                    ...(shieldBox ? { shieldBox } : {}),
+                });
+                if (r.hitPlayer) { contact = b.id; break; }
+            }
+        }
+        const timerNext = contact !== null ? BLAST_FREEZE_TICKS - 1 : Math.max(frozenTimer - 1, 0);
+        return { refusedNext: timerNext > 0, timerNext, contact };
+    };
     const collectedNow = () => collected.map((c) => ({ ...c }));
     const sealCollectionsNow = () => sealCollections.map((c) => ({ ...c }));
     const equipsFiredNow = () => firedEquips.map((e) => ({ ...e }));
@@ -18376,6 +18416,8 @@ export function createLevelRun({
         inventorySlots: inventorySlotsNow,
         saveState: saveStateNow,
         takenPickups: takenPickupsNow,
+        // ⛓ fidelity FROZENPRESS D1: the next tick's input refusal (a pure read; the strike policy's freeze guard).
+        freezeForecast: freezeForecastNow,
     });
     const LEDGER_KINDS = Object.freeze({
         collected: collectedNow,
@@ -19550,6 +19592,8 @@ export function createLevelRun({
          * refuses; reading it off the run means the two cannot disagree.
          */
         get takenPickups() { return takenPickupsNow(); },
+        /** ⛓ fidelity FROZENPRESS D1: will input be refused on the next tick (`freezeForecastNow`). */
+        get freezeForecast() { return freezeForecastNow(); },
         /**
          * The `(level, tag)` clears this run EARNED — turned off by opening
          * something rather than by the tape declaring it.

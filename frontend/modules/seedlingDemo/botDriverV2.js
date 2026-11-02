@@ -65,6 +65,8 @@
  */
 
 import { activeProgress, progressHeartbeat, progressStringPull } from './solveProgress.js';
+// ⛓ fidelity FROZENPRESS D1: the run-side `decide` options (`frozenPressForecast` OFF: `{ slash }`, as before).
+import { strikeDecideOpts } from './strikePolicy.js';
 import {
     KEY_CODES, assertTapeWithinRuntimeBudget, coerceTerrainState, serializeTape,
     createLevelRun,
@@ -2230,7 +2232,7 @@ function runDwell(run, perTick, dwell, what) {
                 // SWING or DASH. Read before `advance`, which is where the
                 // preview reads its own threaded copy from — `slashTimerTick`
                 // runs at the TOP of the tick, above the press.
-                { slash: run.progress('slashInfo') }).held
+                strikeDecideOpts(run)).held
             : NO_HELD;
         perTick.push(held);
         const { transition } = run.advance(held);
@@ -4176,7 +4178,7 @@ function runShove(run, perTick, shove, what) {
          */
         const held = shove.strike && !run.state.fall
             ? shove.strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, NO_HELD,
-                { slash: run.progress('slashInfo') }).held
+                strikeDecideOpts(run)).held
             : NO_HELD;
         perTick.push(held);
         const { transition } = run.advance(held);
@@ -5615,7 +5617,7 @@ export function driveStepHeld(run, target, tolerance, { strike = null, axisAlign
         held = strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, held,
             // ⛓ R9 SLICE 12c — see `runDwell`'s own call: ONE policy, one
             // question, and now one model of what the press will do.
-            { slash: run.progress('slashInfo') }).held;
+            strikeDecideOpts(run)).held;
     }
     // ⛓ SEEDLING SWIM U2, D1 — see `holdOneAxis`; `previewWalk` applies the
     // same filter at the same point, so the preview and the drive still agree.
