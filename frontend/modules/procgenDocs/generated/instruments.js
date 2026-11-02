@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 135,
-            "count": 185,
+            "browser": 136,
+            "count": 186,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 505,
-        "browser": 205,
+        "blockStyle": 506,
+        "browser": 206,
         "cited": 270,
-        "files": 523,
+        "files": 524,
         "lineStyle": 18,
-        "withDocblock": 523,
-        "withFlags": 437
+        "withDocblock": 524,
+        "withFlags": 438
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14099,6 +14099,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's L16 ENCLOSED PIT, ON THE GAME (fidelity L1516 D3, sweep leg 206 `level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_8_3`).",
             "path": "scripts/procgen/probe-seedling-l16-corner-pit.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l16-holder-bobs.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L16 walk-in block against its five Bobs, ON THE GAME (slice rules-l16-holder-enemies): do the Bobs stop the block on its way to the button that holds lock@320,112 open, where the rules price the entry from (19,7) on Sword|Spear alone?",
+            "path": "scripts/procgen/probe-seedling-l16-holder-bobs.mjs"
         },
         {
             "argvHelpers": [

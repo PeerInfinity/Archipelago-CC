@@ -538,6 +538,7 @@ describe('who takes the box', () => {
          * rules-weapon-reach-census the Spear thrust vs the Ghost Sword swing at the census's pole stances, `probe-seedling-weapon-reach.mjs`;
          * rules-l63-pole-crossings L63's spear block against its DarkTrap, `probe-seedling-l63-spear-block.mjs`;
          * rules-block-stoppers L65's spear block against its Bob (alive, and killed first), `probe-seedling-l65-bob-block.mjs`;
+         * rules-l16-holder-enemies L16's walk-in block against its Bobs on the way to the button, `probe-seedling-l16-holder-bobs.mjs`;
          * tile-primitives-sphere-order-10 L78's LavaTraps on one step into two discs (the disc entered first wins), `probe-seedling-l78-pull-order.mjs`;
          * hammer-phase GHOSTROPE the ghost sword's rope cut on the game, `probe-seedling-ghost-rope.mjs`.)
          */
@@ -608,6 +609,8 @@ describe('who takes the box', () => {
             'probe-seedling-weapon-reach.mjs',
             'probe-seedling-l63-spear-block.mjs',
             'probe-seedling-l65-bob-block.mjs',
+            // rules-l16-holder-enemies: L16's walk-in block against its Bobs on the way to the button (import door: `isEntryPoint` → main())
+            'probe-seedling-l16-holder-bobs.mjs',
             'probe-seedling-l78-pull-order.mjs',
             'probe-seedling-ghost-rope.mjs',
             // seedling-js-mobile-polish: the phone-viewport fit witness (import door: `isEntryPoint` → main())

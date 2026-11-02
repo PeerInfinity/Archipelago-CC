@@ -26902,3 +26902,12 @@ approach). The report is `CC/docs/cloud-reports/seedling-hammer-south-door.md`.
   SPIN's switch changes nothing there; 10240 only moves `/0` off the anytime deadline.
 - **Radius.** ON alone: 0 of 59 L40 requests move, producers 0 red. Behind L+TA: the 4 BK2 requests change refusal text,
   nothing else. Latch staging 4142 and ICEST's pocket 4495 unchanged; identity block unchanged.
+### Seedling hammer-phase CPAIR FLIP — `CHOOSER_PAIR` ON at size 3
+
+⚖ The user approved the flip on 2026-10-31, after CPWIT's game witness. `CHOOSER_PAIR` now defaults ON with `size` 3
+(`SEEDLING_CHOOSER_PAIR=0` opts out; `SEEDLING_CHOOSER_PAIR_SIZE=2` asks pairs only). The change is CPWIT's prepared
+packet (`seedling-hammer-chooser-witness-evidence/flip/cpair3-flip.patch`), applied unchanged on main `8440451386`:
+`solverBot.js`'s defaults, and the two hammer witnesses (`hammer-g1-ghostkill`, `hammer-sf-strikefloor`) plus their four
+rows pin the switch OFF (or ask at size 2) beside the switches they already pin, so no tape is re-recorded. Evidence: the
+three L43 pits (`out_pit_5_21/22/23` from L39) play hitless to the exit in the game; on the 52 L40 keys they are the only
+verdict movers; the route survey, r9 campaign, latch chain and pocket boot are unchanged (L40C A1).

@@ -300,6 +300,23 @@ describe('grid construction over real levels', () => {
         expect(on.cells.filter((c) => c.enter)).toHaveLength(2); // L30's two locks
     });
 
+    // ⛓ RULES sided-openers — a ShieldLock opens only from its WEST face (ShieldLock.as:32 `collide("Player", x - 1, y)`)
+    // and stays open (tSet -2, Lock.as:42/96), so under `directionalLocks` it is entered only moving east, latched.
+    it('a shieldlock / shieldlocknorm is one-sided from the WEST and latching under `directionalLocks`', () => {
+        expect(ENTITY_SEMANTICS.shieldlock).toMatchObject({ probe: 'W', persistAttr: 'tag' });
+        expect(ENTITY_SEMANTICS.shieldlocknorm).toMatchObject({ probe: 'W', persistAttr: 'tag' });
+        const level = levelById(20);
+        const bounds = { x: 0, y: 0, w: level.width, h: level.height };
+        const lockCell = (g) => g.cells[1 * g.width + 11]; // shieldlocknorm@176,16 {tag 0} = tile (11,1)
+        const lock = level.entities.find((e) => e.type === 'shieldlocknorm' && e.x === 176 && e.y === 16);
+        expect(entitySemantics(lock)).toMatchObject({ kind: 'gated', persists: true });
+        expect(entitySemantics({ ...lock, attrs: { ...lock.attrs, tag: '-1' } }).persists).toBe(false);
+        expect(lockCell(buildSeedlingRegionGrid(bounds, level)).enter).toBeUndefined();
+        const on = lockCell(buildSeedlingRegionGrid(bounds, level, { directionalLocks: true }));
+        expect(on.enter).toEqual({ N: null, S: null, W: null });
+        expect(on.latch).toBe(true);
+    });
+
     // ⛓ RULES (A) — a bosslock whose `tag` is >= 0 stays open once opened
     // (BossLock.as:43,81), so its cell is `latch`ed — and only under `directionalLocks`.
     it('a persistent bosslock latches its `enter` gates under `directionalLocks`, and a tag < 0 one does not', () => {

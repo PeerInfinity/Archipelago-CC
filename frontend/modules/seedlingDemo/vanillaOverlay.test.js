@@ -410,8 +410,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-l112-owl-rocklock (e1b1c33a… -> 141195a8): L112's rock costs the Owl's kill (`SCRIPT_GROUP_OPENERS`), so
         //   L112 splits into r0c7 + r2c2 (sub_region on its exits and locations). No name, exit or location moves (the
         //   overlay fixture rewrites byte-identical).
+        // ⛓ rules-sided-openers (141195a8… -> 51d2f8d1): the three ShieldLocks are one-sided (west probe) and latching,
+        //   so their two-way internal rows split (internal exits only). No name, exit or location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('141195a8b18ffe5187bad889d84c39ea');
+            .toBe('51d2f8d11bef8b7bc8b81a558abd4320');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

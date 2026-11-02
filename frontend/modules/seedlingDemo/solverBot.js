@@ -16044,18 +16044,19 @@ export function withChooserHitSources(enabled, fn, mode = null) {
  * the next blocker: the bobsoldier, or the press kill's chaser death that OPP removes. `size: 3` (env
  * `SEEDLING_CHOOSER_PAIR_SIZE=3`) is the measurement arm that asks triples too.
  *
- * OFF by default. `SEEDLING_CHOOSER_PAIR=1` turns it on in a node process (the page's worker has no `process`, so it is
- * OFF there), and `withChooserPair(enabled, fn)` is for a test or a witness. OFF, no pair is asked and every walk and
- * trace is byte-identical. ON where the chooser or C1 already admits a body, no pair is asked either.
+ * ON by default at `size: 3` (⚖ the user's flip, after CPWIT's game witness: the L43 pits `out_pit_5_21/22/23` ← L39
+ * played hitless to the exit in the game). `SEEDLING_CHOOSER_PAIR=0` or `withChooserPair(false, fn)` opts out (OFF,
+ * no pair is asked and every walk and trace is the BEFORE model); `SEEDLING_CHOOSER_PAIR_SIZE=2` asks pairs only. ON
+ * where the chooser or C1 already admits a body, no pair is asked either.
  */
 export const CHOOSER_PAIR = {
-    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR === '1',
+    enabled: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR !== '0',
     /** How many live chasers nearest the hit point are partnered with each of the hit's own chasers. */
     near: 4,
-    /** The largest set asked: 2 (a pair). `SEEDLING_CHOOSER_PAIR_SIZE=3` is the measurement arm (a triple too). */
-    size: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR_SIZE === '3' ? 3 : 2,
+    /** The largest set asked: 3 (a triple too). `SEEDLING_CHOOSER_PAIR_SIZE=2` asks pairs only (CPAIR's shipped arm). */
+    size: globalThis.process?.env?.SEEDLING_CHOOSER_PAIR_SIZE === '2' ? 2 : 3,
 };
-export const CHOOSER_PAIR_DEFAULT = false;
+export const CHOOSER_PAIR_DEFAULT = true;
 
 /** Run `fn` with `CHOOSER_PAIR` set to `enabled`, restoring the previous value (`withChooserHitSources`'s shape). */
 export function withChooserPair(enabled, fn) {

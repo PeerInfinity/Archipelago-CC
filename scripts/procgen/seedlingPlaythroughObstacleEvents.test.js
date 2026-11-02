@@ -111,7 +111,10 @@ describe('the playthrough\'s obstacle events', () => {
 
     it('every census landing edge is gated (stacked: both events; moot edges too), and nothing else is', () => {
         const names = new Set(derived.events.map((e) => e.name));
-        const gates = gatesOf(RULES, names);
+        // ⛓ RULES sided-openers: a LOCK RETURN that reuses an obstacle event (L71's shield lock, a landing inside
+        // it AND a one-sided latch) asks that event too; those rows are the next test's, not a landing edge.
+        const lockReturns = new Set(locks.internalExitRules.map((r) => `${r.region_id}__${r.from}->${r.region_id}__${r.to}`));
+        const gates = gatesOf(RULES, names).filter((g) => !lockReturns.has(`${g.from}->${g.to}`));
         const want = FIXTURE.edges.reduce((m, e) => {
             const k = `L${e.edge.from}->L${e.edge.to}|${e.edge.door}`;
             const name = derived.events.find((ev) => ev.fields.event_id === `flag:L${e.flag.level}:${e.flag.tag}`).name;
@@ -124,15 +127,22 @@ describe('the playthrough\'s obstacle events', () => {
         expect(gates.filter((g) => g.edge === 'L1->L0' || g.edge === 'L115->L113')).toHaveLength(3);
     });
 
-    it('rules lock-events: exactly the derived returns ask a lock event, inside the lock\'s own level; none reuses an obstacle event', () => {
-        const names = new Set(locks.events.map((e) => e.name));
+    it('rules lock-events: exactly the derived returns ask a lock event, inside the lock\'s own level; only L71\'s shield lock reuses an obstacle event', () => {
+        // ⛓ RULES sided-openers: L71's `shieldlock@288,256` is BOTH a landing inside a solid (its obstacle event)
+        // and a one-sided latching lock (ShieldLock.as:32 west probe), so its return reuses that one event.
+        expect(locks.reused).toEqual(['flag:L71:2']);
+        const names = new Set([...locks.events.map((e) => e.name),
+            ...derived.events.filter((e) => locks.reused.includes(e.fields.event_id)).map((e) => e.name)]);
         expect(locks.events.length).toBeGreaterThan(0);
-        expect(locks.reused).toEqual([]);
-        const gates = gatesOf(RULES, names);
+        const all = gatesOf(RULES, names);
+        // the reused obstacle event keeps gating its landing edge (another level): only its rows may leave the level
+        const reusedNames = new Set(derived.events.filter((e) => locks.reused.includes(e.fields.event_id)).map((e) => e.name));
+        const outside = all.filter((g) => levelOf(g.from) !== levelOf(g.to));
+        for (const g of outside) expect(g.items.every((n) => reusedNames.has(n)), `${g.from}->${g.to}`).toBe(true);
+        const gates = all.filter((g) => levelOf(g.from) === levelOf(g.to));
         const apName = (r, sub) => `${r}__${sub}`;
         expect(gates.map((g) => `${g.from}->${g.to}`).sort())
             .toEqual(locks.internalExitRules.map((r) => `${apName(r.region_id, r.from)}->${apName(r.region_id, r.to)}`).sort());
-        for (const g of gates) expect(levelOf(g.from)).toBe(levelOf(g.to));
         expect(JSON.stringify(RULES)).not.toContain('CanReachRegion');
     });
 
