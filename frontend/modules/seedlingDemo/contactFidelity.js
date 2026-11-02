@@ -1761,6 +1761,27 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_IN_PIT_FALL_OUT=0|1`.
      */
     inPitFallOut: false,
+    /**
+     * fidelity CORPSEBUMP2 D1 (wave 36) — A CORPSE IS READ AT REST WHERE IT IS PRESSED, NOT WHERE IT WAS BEFORE THE WALK
+     * (`solverBot.execCorpseWeigh`).
+     *
+     *     Player.as   useItem(Main.primary)   an X press with the Fire slot selected IS a Fire press, wherever it
+     *                                         comes from — the walk's strike/dash policy (`strikePolicyFor` gates on
+     *                                         the INVENTORY's sword, not the selected slot) presses X too
+     *     IceTurret.as:172-203  bump          a Fire press near a corpse bumps it one tile away
+     *
+     * `execCorpseWeigh` read the corpse's tile at rest after a press, walked to the next stance, and pressed toward
+     * `at + dir` — but between the read and the press the walk is driven with Fire selected, and a walk press bumps
+     * the corpse on (measured: L40's latch chain with CPAIR-3 + `orbitFreeAim` + `turretSnapPricing` OFF, the walk to
+     * bump 2's stance pressed `up+primary` on its first tick and the corpse glided (30,25) → (30,24); `runFire` then
+     * refused *"ALREADY on (30,24)"* as a `BotDriverV2Error` with no `perTick`; the game, p4g at 0 px, moves it the
+     * same way). ON: after each stance walk the corpse is re-read — a walk Fire press younger than its bump window is
+     * stood out, and a corpse that is gliding or off the rest cycle it was read on is waited to rest by the press's
+     * own rest rule and the loop re-reads it (a bump the walk already made is not made again; a corpse the walk
+     * carried past the presser refuses by name); an unmoved corpse costs no tick. A refusal inside `runFire` carries
+     * the run's `perTick`. OFF: byte-identical. `SEEDLING_CORPSE_BUMP_REST_READ=0|1`.
+     */
+    corpseBumpRestRead: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2114,6 +2135,9 @@ if (globalThis.process?.env?.SEEDLING_CHEST_BODY_PLACEMENT_PROBE === '0') CONTAC
 // ⛓ fidelity REFUSALS D2: `SEEDLING_IN_PIT_FALL_OUT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_IN_PIT_FALL_OUT === '1') CONTACT_FIDELITY.inPitFallOut = true;
 if (globalThis.process?.env?.SEEDLING_IN_PIT_FALL_OUT === '0') CONTACT_FIDELITY.inPitFallOut = false;
+// ⛓ fidelity CORPSEBUMP2 D1: `SEEDLING_CORPSE_BUMP_REST_READ=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_REST_READ === '1') CONTACT_FIDELITY.corpseBumpRestRead = true;
+if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_REST_READ === '0') CONTACT_FIDELITY.corpseBumpRestRead = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
