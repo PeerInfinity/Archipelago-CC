@@ -138,6 +138,12 @@ jobs:
         run: |
           npx playwright install chromium
 
+      # The cloudberry batch plays the same-origin copy of the live Cloudberry site
+      # (⚖ R18: downloaded at test time, gitignored); without it its rows refuse by name.
+      - name: Download the live Cloudberry site (cloudberry batch only)
+        if: ${{ matrix.batch == 'cloudberry' }}
+        run: node scripts/setup/fetch-cloudberry-site.mjs
+
       - name: Run substrate tests (${{ matrix.batch }} batch)
         env:
           BATCH: ${{ matrix.batch }}

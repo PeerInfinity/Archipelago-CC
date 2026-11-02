@@ -89,6 +89,7 @@
 import { IframeClient } from '../iframe-base/iframeClient.js';
 import { evaluateRuleAgainstInventory } from '../shared/procgen/library.js';
 import { createLocationReportLedger } from './locationReportLedger.js';
+import { createCheckedSeedVerifier } from './checkedSeedVerifier.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -484,6 +485,13 @@ function _handlePlaybackControl(payload) {
 // A loadRegion that arrived before the game created __swfBridge.configure
 // (see the header): held, and re-applied by a poll once configure exists.
 const LATE_GAME_SIDE_MS = 180000;
+
+// A configure is SEEDED with the host's checked locations from this iframe's cached
+// snapshot, which after a rules (re)load can still be the PREVIOUS world's; the first
+// snapshot heard after the configure decides whether to configure again (once). The
+// rule and why it needs no clock: checkedSeedVerifier.js.
+const _seedVerifier = createCheckedSeedVerifier();
+
 const LATE_GAME_SIDE_POLL_MS = 200;
 let _pendingLoad = null;
 let _pendingLoadTimer = null;
@@ -529,7 +537,17 @@ function _pushCheckedLocations() {
     }
 }
 
-function _handleLoadRegion(payload) {
+/** The first snapshot after a configure: was it seeded with checks the host does not have? Then configure again, once. */
+function _reseedIfStale() {
+    const verdict = _seedVerifier.snapshot(_hostCheckedNames());
+    if (!verdict) return false;
+    log('info', `region ${_currentRegionId}: configured with checks the host does not have `
+        + `(${verdict.stale.join(', ')}; a snapshot from the previous world) — configuring again`);
+    _handleLoadRegion(verdict.payload, { reconfigure: true });
+    return true;
+}
+
+function _handleLoadRegion(payload, { reconfigure = false } = {}) {
     if (!payload || !payload.region_id) {
         log('warn', `${LOAD_REGION_EVENT} with no region_id`, payload);
         return;
@@ -556,6 +574,7 @@ function _handleLoadRegion(payload) {
         }
     }
     _locationReports.reset(acceptedNames);
+    _seedVerifier.configured(payload, acceptedNames, { reconfigure });
 
     const b = _bridge();
     if (!b || typeof b.configure !== 'function') {
@@ -632,7 +651,7 @@ async function main() {
     _w.__swfBridge.requestHost = _onRequestHost;
 
     // Step 3: subscribe to host events.
-    _client.subscribeEventBus(LOAD_REGION_EVENT, _handleLoadRegion);
+    _client.subscribeEventBus(LOAD_REGION_EVENT, (payload) => _handleLoadRegion(payload));
 
     // Playback-bot control channel (only when the embedding panel
     // declared one via the iframe URL — see header).
@@ -645,6 +664,7 @@ async function main() {
     // authored gate rules (a new key may open a locked portal/pickup).
     _client.subscribeEventBus('stateManager:snapshotUpdated', () => {
         if (_isActive) {
+            if (_reseedIfStale()) return;
             // An in-flight check the host now has is accepted (never resent).
             _locationReports.noteHostChecked(_hostCheckedNames());
             _pollItemsIntoGame();
@@ -670,7 +690,10 @@ async function main() {
     });
 
     // Re-request static data whenever rules (re)load (mirrors JtA).
+    // rulesLoaded carries the new world's snapshot (the client caches it): it can be the
+    // first snapshot after a configure that loadRegion's subscriber order put ahead of it.
     _client.subscribeEventBus('stateManager:rulesLoaded', () => {
+        if (_isActive) _reseedIfStale();
         _client?.requestStaticData?.();
     });
 

@@ -35,6 +35,9 @@ const DEV_ONLY = Object.freeze({
     // In-progress; Runner WorldGen stays a dev demo (⚖ the user, 2026-10-26: "Exempt for now").
     // Revisit when the runner-demo tutorial is ready.
     'procgen-runner-demo': 'runner_worldgen',
+    // Cloudberry P3a (2026-11-01): Cloudberry Sphere WorldGen is a dev preset like Runner WorldGen; whether it
+    // ships in a release (a `public` line) is the planner's call, not this slice's.
+    'procgen-cloudberry': 'cloudberry_sphere_worldgen',
 });
 
 /** The preset ids a tutorial loads. */

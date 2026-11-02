@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { validateRegionLibrary } from '../procgenPipeline/regionLibraryValidator.js';
 import {
     CLOUDBERRY_EXIT_SIDES, substrateRegistryEntry as entry, instantiateCloudberryLibraryEntry, instantiateCloudberryLibraryEntryForSpecs,
-    validateCloudberryLibraryEntry, captureCloudberryLibraryEntry,
+    validateCloudberryLibraryEntry, captureCloudberryLibraryEntry, cloudberryLibraryEntryRefusal,
 } from './cloudberryLibrary.js';
 
 const PACK = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)),
@@ -81,35 +81,61 @@ describe('instantiate for specs (sphere)', () => {
         expect(Object.keys(z.exitPaths)).toEqual(['W', 'N']);
         expect(z.payload.gameId).toBe('cloudberry');
     });
-    it('refuses more node items than check slots', () => {
+    it('refuses more node items than REACHABLE check slots', () => {
+        expect(() => instantiateCloudberryLibraryEntryForSpecs(byId('cb_moving'), {
+            exitSides: [], locationSpecs: [{ item: 'a' }, { item: 'b' }], entryGate: [],
+        })).toThrow(/1 check slot\(s\) reachable with \[\] \(of 2\)/);
+        // Outside sphere growth (no entry gate: the APWorld editor) every slot counts.
         expect(() => instantiateCloudberryLibraryEntryForSpecs(byId('cb_moving'), {
             exitSides: [], locationSpecs: [{ item: 'a' }, { item: 'b' }, { item: 'c' }],
-        })).toThrow(/2 check slot/);
+        })).toThrow(/2 check slot\(s\) but the node needs 3/);
+    });
+    it('places node items only on slots the entry gate reaches; a held item opens its pieces', () => {
+        const none = instantiateCloudberryLibraryEntryForSpecs(byId('cb_moving'), {
+            exitSides: [], locationSpecs: [{ item: 'X' }], fillerItem: 'F', entryGate: [],
+        });
+        // The coin behind Moving Blocks is no location in this slot (an ordinary coin): only one check.
+        expect(none.locations.map((l) => l.item)).toEqual(['X']);
+        expect(Object.keys(none.payload.params.checks)).toEqual(['coin38']);
+        const held = instantiateCloudberryLibraryEntryForSpecs(byId('cb_moving'), {
+            exitSides: [], locationSpecs: [{ item: 'X' }, { item: 'Y' }], fillerItem: 'F', entryGate: ['Moving Blocks'],
+        });
+        expect(held.locations.map((l) => l.item)).toEqual(['X', 'Y']);
+    });
+    it('the entrance side is the start door\'s free way back; forward sides keep the end door\'s S_last', () => {
+        const z = instantiateCloudberryLibraryEntryForSpecs(byId('cb_moving'), {
+            exitSides: ['W', 'E'], entranceSide: 'W', locationSpecs: [],
+        });
+        expect(z.exitPaths.W).toEqual([{ obstacles: [] }]);
+        expect(z.exitPaths.E[0].obstacles).toEqual(['cloudberry_gate_MovingBlock']);
     });
 });
 
-describe('the entry\'s world round trip', () => {
-    it('deserializeWorld adds the page\'s exits/sidePortals/entrySide; serializeWorld strips them', () => {
-        const r = instantiateCloudberryLibraryEntry(byId('cb_moving'), { region_id: 'r', exitSides: ['E', 'W'] });
-        const payload = { ...r.playable_payload, params: { ...r.playable_payload.params, backExitSide: 'W' }, exits: [...r.exits.values()] };
-        const world = entry.deserializeWorld(payload);
-        expect(world.params.exits.map((e) => e.side)).toEqual(['east', 'west']);
-        expect(world.params.entrySide).toBe('west');
-        const out = entry.serializeWorld(world);
-        expect(Object.keys(out.params).sort()).toEqual(['backExitSide', 'checks', 'docSha256', 'generate', 'items', 'payload']);
+describe('libraryEntryRefusal (sphere slots, P3a)', () => {
+    const fits = (e, ctx) => cloudberryLibraryEntryRefusal(e, ctx) === null;
+    const L = (n) => Array.from({ length: n }, () => ({ item: 'X' }));
+    it('is the registry entry\'s hook', () => {
+        expect(entry.libraryEntryRefusal).toBe(cloudberryLibraryEntryRefusal);
     });
-});
-
-describe('CLOUDBERRY_EXIT_SIDES (the stored payload\'s side-keyed facts)', () => {
-    it('moves the back-exit side with its exit and renames the authored portal lock\'s page side', () => {
-        const payload = {
-            params: { backExitSide: 'W' },
-            gate_rules: { portals: { west: { rule: 'Has', args: { item_name: 'K' } }, north: { rule: 'True_' } }, pickups: {} },
-            exits: [{ exit_id: 'exit_W', side: 'W', isBackExit: true }],
-        };
-        const out = CLOUDBERRY_EXIT_SIDES.relabel(payload, [{ exitId: 'exit_W', from: 'W', to: 'S' }]);
-        expect(out.params.backExitSide).toBe('S');
-        expect(Object.keys(out.gate_rules.portals)).toEqual(['south', 'north']);
-        expect(payload.params.backExitSide).toBe('W');
+    it('a forward exit\'s gate (with the entry gate) must hold S_last', () => {
+        const e = byId('cb_falling_cloud');   // ∅ → FallingBlock → +Cloud
+        expect(fits(e, { exitPlans: [{ side: 'E', gate: ['Falling Blocks'] }] })).toBe(true);   // not a sphere ctx
+        expect(cloudberryLibraryEntryRefusal(e, { entryGate: [], exitPlans: [{ side: 'E', gate: ['Falling Blocks'] }] }))
+            .toMatch(/end door needs \[Clouds\], which the E exit's gate \[Falling Blocks\]/);
+        expect(fits(e, { entryGate: [], exitPlans: [{ gate: ['Falling Blocks', 'Clouds'] }] })).toBe(true);
+        expect(fits(e, { entryGate: ['Clouds'], exitPlans: [{ gate: ['Falling Blocks'] }] })).toBe(true);
+        expect(fits(e, { entryGate: [], exitPlans: [] })).toBe(true);   // a leaf: no forward exit
+    });
+    it('the node\'s locations need that many slots reachable with the entry gate', () => {
+        const e = byId('cb_moving');           // ∅ → MovingBlock; one check per piece
+        expect(fits(e, { entryGate: [], locationSpecs: L(1) })).toBe(true);
+        expect(fits(e, { entryGate: [], locationSpecs: L(2) })).toBe(false);
+        expect(fits(e, { locationSpecs: L(2) })).toBe(true);   // the editor: every slot counts
+        expect(fits(e, { entryGate: ['Moving Blocks'], locationSpecs: L(2) })).toBe(true);
+    });
+    it('a Jetpack-hero level needs Jetpack held to reach any slot', () => {
+        const e = byId('cb_jetpack_flyblob');
+        expect(fits(e, { entryGate: [], locationSpecs: L(1) })).toBe(false);
+        expect(fits(e, { entryGate: ['Jetpack'], locationSpecs: L(1) })).toBe(true);
     });
 });

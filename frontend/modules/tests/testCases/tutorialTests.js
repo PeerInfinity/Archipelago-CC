@@ -54,6 +54,9 @@ const WALK_CATEGORY_BY_TUTORIAL = Object.freeze({
     // ⚖ The user, 2026-10-15: S4 plays to its 180 s bot-plays timeout every run, and
     // beside seedling-bot's 420 s first-checks worst case it overran tutorials-seedling's budget.
     'seedling-whole-game': 'Tutorial walks: seedling whole game',
+    // Cloudberry plays the same-origin site copy (fetch-cloudberry-site.mjs), which only the
+    // `cloudberry` batch's CI job fetches: its walk runs there, next to the substrate's rows.
+    'procgen-cloudberry': 'Tutorial walks: cloudberry',
 });
 const walkCategory = (tutorial) => WALK_CATEGORY_BY_TUTORIAL[tutorial.id] ?? WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;

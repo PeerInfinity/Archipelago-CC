@@ -39,7 +39,6 @@ export const PLANNED_PANELS = Object.freeze({
 
 /** Panels a tutorial is planned for, not written yet: componentType → the planned tutorial. */
 export const NOT_COVERED_YET = Object.freeze({
-    cloudberryDemoPanel: 'A Cloudberry Kingdom walk (cloudberry substrate P3, with its bot and in-app test rows).',
 });
 
 /**
