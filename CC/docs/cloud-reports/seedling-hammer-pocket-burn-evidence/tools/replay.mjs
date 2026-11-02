@@ -1,4 +1,4 @@
-// scratch (SOUTHDOOR): unchanged from APPROACH; AT=x,y is the boot header (state - 8)
+// scratch (POCKET-BURN: TREE=1 un-banks the tree, + chasers/burnt in the story; from SOUTHDOOR): AT=x,y is the boot header (state - 8)
 // scratch (APPROACH, from L40C, from LWEIGH tools/replay.mjs): replay saved latch keys on a fresh run of the latch boot; print the turret/doors/hits story.
 const ROOT = process.env.ROOT ?? '/home/user/Archipelago-CC';
 const M = ROOT + '/frontend/modules/seedlingDemo/';
@@ -11,6 +11,7 @@ const { atlasLevelSource } = await import(M + 'levelSource.js');
 const saved = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 let boot = await l40LatchBoot();
 if (process.env.AT) { const [x, y] = process.env.AT.split(',').map(Number); boot = { ...boot, boot: { ...boot.boot, x, y } }; }
+if (process.env.TREE === '1') boot = { ...boot, persistence: boot.persistence.filter((p) => !(p.level === 40 && p.tag === 0)) };
 const folded = buildTape(saved.perTick.map((k) => new Set(k)), boot.boot, 'lw', { noclip: false, noDamage: false, noHazards: [], grants: [] });
 const tape = parseTape(JSON.stringify({ ...boot, name: 'lw', tick_count: saved.perTick.length, inputs: folded.inputs, equips: [...(boot.equips ?? []), ...(saved.equips ?? [])] }));
 let run = null;
@@ -22,7 +23,7 @@ while (!r.done) {
   if (run) {
     const t = run.entities('turrets')?.get('iceturret@472,400');
     const open = [...run.entities('openActivators')].filter((a) => /448,432|480,560|512,480|800,400/.test(a)).sort().join(',');
-    const s = `turret ${t ? `${t.dead ? "DEAD" : "live"}${t.removed ? "/removed" : ""} tile(${Math.floor(t.x/16)},${Math.floor(t.y/16)})` : "-"} open[${open}] hits ${run.playerHits.length}`;
+    const s = `turret ${t ? `${t.dead ? "DEAD" : "live"}${t.removed ? "/removed" : ""} tile(${Math.floor(t.x/16)},${Math.floor(t.y/16)})` : "-"} open[${open}] hits ${run.playerHits.length} burnt[${[...(run.entities('burnedTrees') ?? [])].join(',')}] chasers[${run.entities('chasers').map((c) => c.id ?? c).filter((id) => /736,752|880,832|736,800/.test(id)).join(',')}]`;
     if (s !== last) { console.log(`t${o.t} L${run.level} (${o.x.toFixed(1)},${o.y.toFixed(1)}) ${s}`); last = s; }
   }
   r = st.next();
