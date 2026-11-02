@@ -1,0 +1,24 @@
+maze byte-identity                             d41d8cd98f00b204e9800998ecf8427e
+acceptance batch                               d41d8cd98f00b204e9800998ecf8427e
+empty pairs c3                                 d41d8cd98f00b204e9800998ecf8427e
+empty pairs c6                                 d41d8cd98f00b204e9800998ecf8427e
+carved pairs c4                                d41d8cd98f00b204e9800998ecf8427e
+ENEMY census default                           d41d8cd98f00b204e9800998ecf8427e
+guard census (elements)                        d41d8cd98f00b204e9800998ecf8427e
+AREA census default    [*]                     d41d8cd98f00b204e9800998ecf8427e
+killgate s2            [*]                     d41d8cd98f00b204e9800998ecf8427e
+killgate s5            [*]                     d41d8cd98f00b204e9800998ecf8427e
+killgate s9            [*]                     d41d8cd98f00b204e9800998ecf8427e
+level pre-sword s1     [*]                     d41d8cd98f00b204e9800998ecf8427e
+level post-sword s1    [*]                     d41d8cd98f00b204e9800998ecf8427e
+generated set                                  Node.js v22.23.4
+--- every producer's own --check (⚖ ruling 8's 2026-08-21 extension) ---
+solve-seedling-r8-battery --check              7486f32e1d18f28f18cdfeb72181fdb3 [exit 0]
+solve-seedling-r8-d2-chain --check             93f75467fd6cb82329c97427e735cb33 [exit 0]
+solve-seedling-r8-l18 --check                  88e33db739066a02a07c40ea08c130eb [exit 0]
+solve-seedling-r8-tail --check                 35456fbc07e7151ddbc4c2a1fd00c789 [exit 0]
+solve-seedling-r9-l3 --check                   6cd35fe1414af6bf5beb7605f235cb8e [exit 0]
+solve-seedling-r9-campaign --check             be9c19c87bdb4844f166978b19608ce5 [exit 0]
+--- reference ---
+Node.js v22.23.4
+[*] = command chosen by this script; NOT ruling 8's original — see the header.

@@ -197,6 +197,8 @@ import {
     // ⛓ hammer-phase ICEST: the turret's attack range bounds the arm's staging point (`killIceTurretOnWalk`).
     ICE_TURRET,
 } from './solverView.js';
+// ⛓ hammer-phase STRIKE-SLOT: the policy's selected-slot gate (a family file, OFF).
+import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
@@ -6494,6 +6496,21 @@ export function strikePolicyFor(run, { dashPlan = null,
     const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
     if (!hasSword) return null;
     /**
+     * ⛓⛓ hammer-phase STRIKE-SLOT (`STRIKE_SLOT`, OFF) — THE GATE IS WHAT THE PRESS DOES, NOT WHAT THE BAG HOLDS. The
+     * policy presses `primary`, which the game runs as `useItem(Main.primary)`: with Fire (or any non-blade) selected
+     * that is a Fire press, not a strike (CORPSEBUMP2: L40's corpse weigh walks between bumps with Fire selected and
+     * its "strike" bumps the corpse). ON, a non-blade selection builds no policy (the strike-free walk), and a built
+     * one re-reads the slot each tick (`slotIsBlade`). With the Ghost Sword held, only `ghostsword` is a blade
+     * (`strikeSlot.pressIsBlade`, ⚖ it replaces the sword). OFF, nothing is read.
+     */
+    const slotIsBlade = STRIKE_SLOT.enabled
+        ? () => pressIsBlade(run.progress('primaryWeapon'), run.progress('inventory'))
+        : null;
+    if (slotIsBlade && !slotIsBlade()) {
+        STRIKE_SLOT_COUNTS.refused += 1;
+        return null;
+    }
+    /**
      * ⛔ A PLANNED DASH IS A MOVE, AND A MOVE DOES NOT NEED A BODY. The
      * body-count fast path below is right for a STRIKE policy — with nothing
      * in reach `decide` only ever hands back the walk's own keys — but a
@@ -6528,6 +6545,7 @@ export function strikePolicyFor(run, { dashPlan = null,
          */
         vetoBody: dropKillVetoFor(run),
         ...(iframeLapse === false ? { iframeLapse: false } : {}),
+        ...(slotIsBlade ? { slotIsBlade } : {}),
     });
     if (!axisAlong) return policy;
     if (dashPlan) fail('strikePolicyFor: an axis-along policy carries no dash plan (an axis-aligned walk is undashed)');
@@ -7805,6 +7823,16 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     if (!(run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword)) {
         return refuse('this room holds no sword, so `set slashing`\'s outer gate refuses '
             + 'every press and no schedule can buy a single pixel');
+    }
+    /**
+     * ⛓ hammer-phase STRIKE-SLOT (`STRIKE_SLOT`, OFF) — AND NO BLADE SELECTED, NO DASH: a scheduled press is
+     * `useItem(Main.primary)`, so with Fire selected it is a Fire press, not a dash (CORPSEBUMP2's walk to bump 2).
+     * ON, refused here by name; `strikePolicyFor` would hand both the preview and the drive no policy anyway.
+     */
+    if (STRIKE_SLOT.enabled && !pressIsBlade(run.progress('primaryWeapon'), run.progress('inventory'))) {
+        STRIKE_SLOT_COUNTS.dashRefused += 1;
+        return refuse(`the selected slot fires \`${run.progress('primaryWeapon')}\`, not a blade, so a scheduled `
+            + '`primary` press would be that item\'s press and no schedule can buy a dash');
     }
     // ⛓ SF2: a deadline already reached costs this corridor not even its baseline.
     if (deadlineReached('sword-dash')) return refuse('deadline');

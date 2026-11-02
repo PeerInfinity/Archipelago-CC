@@ -26990,3 +26990,36 @@ The key is read through `Object.hasOwn`, so main without the key is OFF's under 
 - **Trap candidates:** (1) a forecast "modelled" flag over rows nobody told is never true for a search, so read the
   coverage of the told rows; (2) a looser no-claim upstream can hide a downstream defect (SPIN's blanket no-claim on 860);
   (3) `CONTACT_FIDELITY_KEYS` is not on the solver's door (`solverView.js`).
+
+### Seedling hammer-phase STRIKE-SLOT — the strike policy reads the selected slot
+
+⚖ User, queued 2026-11-02 (one of five parallel hammer slices; fidelity CORPSEBUMP2's hand-over). The report is
+`CC/docs/cloud-reports/seedling-hammer-strike-slot.md`. **A new switch, OFF; nothing flips.**
+
+- **The switch.** `strikeSlot.STRIKE_SLOT` (`SEEDLING_STRIKE_SLOT=1`, `withStrikeSlot`, the page channel's
+  `SOLVER_ENV_NAMES`; a family file beside `strikePolicy.js`). OFF, `strikePolicyFor` gates on the INVENTORY's blade and
+  nothing new is read. ON, it gates on what the press does: `primaryWeapon` must be a blade (`pressIsBlade`: `ghostsword`,
+  or `sword` only while the Ghost Sword is not held). A non-blade selection gets no policy, a built policy re-reads the
+  slot on each `decide` (`slotIsBlade`) and stands down, and `planSwordDash` refuses by name.
+- **The census at `6d9f991739`** (a load hook wrapping every `strikePolicyFor` policy's `decide`): r9 campaign 26,582
+  presses and the route survey 446,481 (237 steps), all blades. L40's latch chain (`latch-boot`): one driven non-blade
+  press per arm (LWEIGH's and hammer-2's TA), a `planSwordDash` scheduled press on `execCorpseWeigh`'s walk to corpse
+  bump 2's stance with Fire selected: a Fire press whose 5th dispatch reaches the corpse. The 58 captured L40 requests
+  (the 52 keys, CPAIR size 3 default): 10 driven non-blade presses, all on leg 867 (L43, the Wand selected by the
+  arrival), each a scheduled "dash" that fires a WandShot, all in the dashed pass the anytime solver does not choose.
+- **The design check.** (1) No policy for a non-blade slot: built. (2) Pricing the item's own press: not built (no
+  measured press was wanted for its item's effect; a Fire or Wand press buys no displacement). (3) Re-selecting the
+  blade before the walk: an equip costs no tick, and a scratch hook in `execCorpseWeigh` saves 12 t on the TA arm
+  (4142 → 4130) and 25 t on LWEIGH's (3586 → 3561), hitless; not built here (an executor change in fidelity's corpse
+  weigh, or a drive/preview equip channel in `botDriverV2`, out of bounds): handed over.
+- **ON.** LWEIGH's arm no longer refuses *"ALREADY on (30,24)"*: it runs on hitless to the strategy bound at
+  `pushableblock@576,560` (3586 t). The TA arm loses only the walk's Fire press (t1117), 4142 t both ways. L40: 55/58
+  identical; 867:0, 867:1 and 880:0 move in work only (199 → 168, 66 → 52, 131 → 130), same plan. Survey and r9: no
+  mover. The producer roster: one committed tape moves, `apb-l32-fresh-fire-held` (`plan-seedling-encounters`, L32 with
+  the Fire held): its walks' three scheduled Fire presses (t840, t854, t934) are gone, 1056 t, the same burn (t880), level
+  30, hitless; a flip re-records it.
+- **Gate** `hammerStrikeSlot.test.js` (L6's `bob@112,48` with Fire selected: OFF the policy aims and presses at t11, 23,
+  35, 47, 59, each a Fire press whose five dispatches miss the bob; ON no policy, no `primary`, the same two contacts; a
+  built policy stands down when Fire is equipped; `planSwordDash` refuses by name; a blade walk is OFF's key for key; the
+  Ghost Sword selects `ghostsword` and a `sword` reading under it is refused). Mutants: the inventory gate, `sword`
+  accepted under the Ghost Sword, no per-tick re-read and an unguarded `planSwordDash` each red a row.
