@@ -145,8 +145,7 @@ model fix for every preview and is handed over (§ 9). Its radius is unmeasured.
 | **JSUT** | `4d1cdc25` (run `41392363873`): 25,269 pass / **1 failed** / 1 skipped, slow battery **365 / 365**. The one red was shard 1, most likely the surface census I committed red there and fixed in the next commit `65e1916b` (I did not pull the failing name out of the log). The later runs are below |
 | not run | pytest, unfiltered local vitest (⚖ 52), `standing-values --write`, any dispatch (cloud: 403) |
 
-JSUT at the later heads (`13f84ac3` run `41399366402`, `dda5608a` run `41406437270`) were still running when this report
-was written. The planner reads them with `node scripts/procgen/ci-summary.mjs --run=41406437270`.
+**JSUT at the last code head `dda5608a` (run `41406437270`): unfiltered vitest 25,270 passed / 0 failed / 1 skipped, slow battery 365 / 365 — green.** (`13f84ac3`'s run `41399366402` was cancelled by the next push; the later commits touch `CC/docs/` only.) So the shard-1 red at `4d1cdc25` is gone with the census fix.
 
 ## 7. What the harvest A/B should expect, and the ON sweep to run
 
