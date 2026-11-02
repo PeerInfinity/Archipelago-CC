@@ -429,13 +429,23 @@ export function createCloudberrySubstrateEntry({ id = CLOUDBERRY_SUBSTRATE_ID, l
 
         getPlaybackController: () => _playbackProxy,
 
-        // Manual play + queued region moves and checks walked by the page's bot.
-        // Record/playback and loop-mode summaries are P3.
+        // Loop mode (P3b): a SUMMARY substrate, as runner and noiz2sa — Record keeps a
+        // visit's net result (checks, the exit taken, its play time), Playback applies it
+        // at once, priced by TIME. The page reports its own clock (`setPlayClock(running,
+        // {gameSeconds})`: physics steps / 60 since configure; stopped while the exit menu
+        // is open or the tab hidden), so live play and the Bot block are charged per GAME
+        // second played. The Bot walks queued checks (coins by name) and exits (by side;
+        // the way back = the start door, item-free) through the page's bot.
         loopSupport: Object.freeze({
             queueActions: Object.freeze(['regionMove', 'locationCheck']),
             executeVia: 'solver',
             manual: true,
             customQueues: false,
+            record: true,
+            playback: true,
+            instant: true,
+            summaryRecording: true,
+            playClock: true,
         }),
 
         victoryItem: CLOUDBERRY_VICTORY_ITEM,

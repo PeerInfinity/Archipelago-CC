@@ -4252,13 +4252,18 @@ export const REGISTRY = frz({
                 {
                     "id": "cloudberry",
                     "present": true,
-                    "short": "4 keys",
+                    "short": "9 keys",
                     "type": "object",
                     "value": [
                         "customQueues",
                         "executeVia",
+                        "instant",
                         "manual",
-                        "queueActions"
+                        "playClock",
+                        "playback",
+                        "queueActions",
+                        "record",
+                        "summaryRecording"
                     ]
                 },
                 {
@@ -4647,6 +4652,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "jta",
                 "maze",
                 "noiz2sa",
@@ -4664,10 +4670,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling",
@@ -4821,6 +4827,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "noiz2sa"
@@ -4835,10 +4842,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling",
@@ -4904,6 +4911,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "jta",
                 "maze",
                 "noiz2sa",
@@ -4921,10 +4929,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling",
@@ -5109,6 +5117,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "jta",
                 "maze",
                 "noiz2sa",
@@ -5126,10 +5135,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling",
@@ -5276,6 +5285,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "noiz2sa",
                 "runner"
             ],
@@ -5289,10 +5299,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling",
