@@ -17,10 +17,11 @@
  *
  * ── THE MUTATION LIST (each row's catcher named) ──
  *   m1 the old certificate restored (`spinnerDashWhole` ON does not raise `dashCertSightDepth`)
- *        → 'ON: step 216 …' red (UNBILLED DAMAGE), and 'ON counts …' red (refused 0)
- *   m2 the chaser not billed (the certificate's `probeSamples` with each sample's `chasers` set aside)
- *        → see the report § 5: measured, no row reds on step 216 ON (its certified walk meets no chaser), so the
- *          billing half is pinned by the OFF arm of 'step 216 …' instead (the drive's hit IS a chaser contact)
+ *        → 'ON: step 216 …' red (UNBILLED DAMAGE; measured: 1 red, 3 pass)
+ *   m2 the chaser not billed (the whole-chain check's `probeSamples` with each sample's `chasers` set aside)
+ *        → NO ROW REDS (measured). No whole-chain preview on the route meets a chaser (the survey's audit ON: 330 of
+ *          330 certified), and step 216's certified walk is hitless in the preview and in the game. The billing half
+ *          has no catcher here; the report names it as residue.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
