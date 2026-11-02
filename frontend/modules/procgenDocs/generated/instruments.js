@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 23,
+            "count": 24,
             "id": "census"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 505,
+        "blockStyle": 506,
         "browser": 205,
         "cited": 269,
-        "files": 523,
+        "files": 524,
         "lineStyle": 18,
-        "withDocblock": 523,
-        "withFlags": 437
+        "withDocblock": 524,
+        "withFlags": 438
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1447,6 +1447,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-enemies — **ONE ENEMY IN ONE CHAMBER, AND WHAT THE SOLVER DOES ABOUT IT** (PROCGEN ELEMENTS arc 3, slice 4d, D5; ⚖ design ruling 19).",
             "path": "scripts/procgen/census-seedling-enemies.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-er-doorways.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-seedling-er-doorways — **THE ER DOOR CENSUS** (ENTRANCE RANDOMIZATION E1, a design check, no shuffle): every doorway of the Seedling playthrough atlas classified by a STATED rule, each doorway's reverse derived from GAME DATA (`seedlingReturnSpawns.returnSpawnTable`, a landing-distance heuristic only as a cro…",
+            "path": "scripts/procgen/census-seedling-er-doorways.mjs"
         },
         {
             "argvHelpers": [
