@@ -27,9 +27,10 @@ const w = JSON.parse(readFileSync(join(L40LATCH_WITNESS_DIR, 'corpsebump2-walk-p
 const game = w.samples.map(unpackL40LatchSample);
 
 describe('CORPSEBUMP2 — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.corpseBumpRestRead).toBe(false);
-        if (!process.env.SEEDLING_CORPSE_BUMP_REST_READ) expect(CONTACT_FIDELITY.corpseBumpRestRead).toBe(false);
+    // ⛓ shipped OFF (wave 36); ⚖ (user, 2026-11-02, "Flip all four") ON since the W36 flip.
+    it('ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.corpseBumpRestRead).toBe(true);
+        if (!process.env.SEEDLING_CORPSE_BUMP_REST_READ) expect(CONTACT_FIDELITY.corpseBumpRestRead).toBe(true);
     });
 
     it('the witness is registered with the probe, under its arm\'s contact keys', () => {

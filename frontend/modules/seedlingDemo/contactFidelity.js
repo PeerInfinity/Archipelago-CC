@@ -1653,7 +1653,7 @@ export const CONTACT_FIDELITY = {
      * X press's own `useItem` arms against `secondary`'s slot, and in the same frame an X press goes first. OFF:
      * byte-identical (no committed tape presses C). `SEEDLING_SECONDARY_USE=0|1`.
      */
-    secondaryUse: false,
+    secondaryUse: true,
     /**
      * fidelity LIGHTPOLE D2 (wave 34) — AN IN-ROOM POLE IS LIT BY A SPEAR THRUST FROM ITS OWN ROOM.
      *
@@ -1750,7 +1750,7 @@ export const CONTACT_FIDELITY = {
      * x = 96) as the solid the placement is inside. ON: a chest is probed at (x + 8, y + 8). OFF: byte-identical.
      * `SEEDLING_CHEST_BODY_PLACEMENT_PROBE=0|1`.
      */
-    chestBodyPlacementProbe: false,
+    chestBodyPlacementProbe: true,
     /**
      * fidelity REFUSALS D2 (wave 36) — A RUN STANDING IN A PIT FALLS OUT WITH NO INPUT (`solverBot` `execReachPit`).
      *
@@ -1760,7 +1760,7 @@ export const CONTACT_FIDELITY = {
      * falls to the goal's level is stepped idle until the edge, then coasts. OFF: byte-identical.
      * `SEEDLING_IN_PIT_FALL_OUT=0|1`.
      */
-    inPitFallOut: false,
+    inPitFallOut: true,
     /**
      * fidelity CORPSEBUMP2 D1 (wave 36) — A CORPSE IS READ AT REST WHERE IT IS PRESSED, NOT WHERE IT WAS BEFORE THE WALK
      * (`solverBot.execCorpseWeigh`).
@@ -1781,7 +1781,7 @@ export const CONTACT_FIDELITY = {
      * carried past the presser refuses by name); an unmoved corpse costs no tick. A refusal inside `runFire` carries
      * the run's `perTick`. OFF: byte-identical. `SEEDLING_CORPSE_BUMP_REST_READ=0|1`.
      */
-    corpseBumpRestRead: false,
+    corpseBumpRestRead: true,
     /**
      * fidelity SHIELDBUMP D1 (wave 36, ⚖ hammer-2's licence 2026-10-31) — THE SPINNER FORECASTS STEP THE PLAIN SHIELD
      * BUMP (`levelRun.spinnerForecastWithPress`, `spinnerFightForecast`).

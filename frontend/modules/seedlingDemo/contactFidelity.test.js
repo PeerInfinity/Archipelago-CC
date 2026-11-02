@@ -347,8 +347,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             orbitFreeAim: false,
             // ⛓ fidelity L40BK2B D2 (wave 33): the strategy bound counts distinct applications — ships OFF.
             strategyBoundDistinct: false,
-            // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — ships OFF.
-            secondaryUse: false,
+            // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — ON since the W36 flip (⚖ user,
+            // 2026-11-02, "Flip all four"; FORCEDHITXC: leg 612/622 L73→L74 hitless, game-witnessed).
+            secondaryUse: true,
             // ⛓ fidelity LIGHTPOLE D2 (wave 34): an in-room pole's clear-tag is a Spear thrust — ON since the W34 flip.
             inRoomPoleThrust: true,
             // ⛓ fidelity L12DOORS D1 (wave 34): a WandShot in a room with a stepped chaser — ON since the W34 flip.
@@ -363,12 +364,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             waterfallPushPricing: true,
             // ⛓ fidelity L32ROCK D1 (wave 35): the BobBoss arena rock's arm banks its {32,1} clear — ON since the W35 flip.
             bobArenaRockClear: true,
-            // ⛓ fidelity REFUSALS D1 (wave 36): a chest placement is probed at its body's centre — ships OFF.
-            chestBodyPlacementProbe: false,
-            // ⛓ fidelity REFUSALS D2 (wave 36): a run standing in a pit falls out with no input — ships OFF.
-            inPitFallOut: false,
-            // ⛓ fidelity CORPSEBUMP2 D1 (wave 36): a bumped corpse is re-read at the stance after the walk — ships OFF.
-            corpseBumpRestRead: false,
+            // ⛓ fidelity REFUSALS D1 (wave 36): a chest placement is probed at its body's centre — ON since the W36 flip.
+            chestBodyPlacementProbe: true,
+            // ⛓ fidelity REFUSALS D2 (wave 36): a run standing in a pit falls out with no input — ON since the W36 flip.
+            inPitFallOut: true,
+            // ⛓ fidelity CORPSEBUMP2 D1 (wave 36): a bumped corpse is re-read at the stance after the walk — ON since the W36 flip.
+            corpseBumpRestRead: true,
             // ⛓ fidelity SHIELDBUMP D1 (wave 36): the spinner forecasts step the plain shield bump — ships OFF.
             forecastShieldBump: false,
             // ⛓ fidelity L100LATTICE D1 (wave 36): a walk to an 8 px arm's stance plans on the 8 px lattice — OFF.
