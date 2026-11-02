@@ -1,0 +1,2 @@
+step 200 SOLVED 1416 t, hits 0 ms 88844 | spinnerDashWhole calls 2 blind 87231 ms (scanned 5256) whole 0 ms fallback 0 ms (scanned 0) wps [16,1]
+  t1402 1 wps {"planned":true,"ticks":14,"baseline":19,"saved":5,"windows":[{"at":0,"prefix":[0,2,8]}],"legs":[14],"scanned":4,"why":"certified whole (fidelity L40BK2)"}

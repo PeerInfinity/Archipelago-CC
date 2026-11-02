@@ -1,0 +1,41 @@
+# dec216.mjs: the certificate's strike policy (261) vs the drive's (262), same plan object
+policy 261 (217 decides)     at spinnerDashWholeIn (solverBot.js:26893:72) |     at spinnerDashWhole (solverBot.js:26880:22) |     at walkToUnder (solverBot.js:30341:31)
+   t66 (63.57,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=right   
+   t67 (64.42,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] press held=right+primary   
+   t68 (65.82,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=right   
+   t69 (66.97,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] press held=right+primary   
+   t70 (69.87,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=left   
+   t71 (71.72,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=left   
+   t72 (72.52,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=right   
+   t73 (73.87,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=left   
+   t74 (74.17,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=right   
+   t75 (75.02,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held= {"outcome":"dash","why":"the scheduled dash is NOT CERTIFIED: jellyfish@80,16 is inside its own i-frame (hitsTimer 5) but it EXPIRES MID-DASH: `Enemy.hitPlayer` can fire again from path offset 3 of 8. Up to there it cannot damage; from there it can, and pricing that remainder needs the body's position at those offsets — a knocked chase takes the `pushed` branch, which does not re-normalize to `moveSpeed`, so the step bound `chaseEnvelope` rests on does not hold, and a walk may 
+   t76 (75.62,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=   
+   t77 (75.97,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=   
+   t78 (76.07,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=   
+   t79 (76.07,44.33) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=right+up   
+   t80 (76.87,43.53) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=right+up   
+   t81 (78.29,42.11) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] press held=right+up+primary  [{"id":"jellyfish@80,16","rect":{"x":80.85566049060947,"y":33.13155496219519,"w":12,"h":12,"right":92.85566049060947,"bottom":45.13155496219519},"ht":29,"k":"id/tag/x/y/rect/as3/enemyClass/hits/hitsTimer"},{"id":"jellyfish@88,88","rect":{"x":80.10655638067595,"y":68.96364167996319,"w":12,"h":12,"right":92.10655638067595,"bottom":80.96364167996319},"ht":0,"k":"id/tag/x/y/rect/as3/enemyClass/hits/hitsTimer"},{"id":"jellyfish@88,144","rect":{"x":80.24336578335217,"
+   t82 (80.95,39.44) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=right+down   
+   t83 (83.26,37.61) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=right+down   
+   t84 (85.17,36.57) n5 [jellyfish@80,16,jellyfish@88,88,jellyfish@88,144,jellyfish@80,112,flyer@224,96] none held=right+up   
+policy 262 (479 decides)     at walkToUnder (solverBot.js:30416:19) |     at walkToRun (solverBot.js:30487:71) |     at walkTo (solverBot.js:30510:19)
+   t66 (63.57,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=right   
+   t67 (64.42,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] press held=right+primary   
+   t68 (65.82,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=right   
+   t69 (66.97,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] press held=right+primary   
+   t70 (69.87,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=left   
+   t71 (71.72,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=left   
+   t72 (72.52,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=right   
+   t73 (73.87,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=left   
+   t74 (74.17,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=right   
+   t75 (75.02,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held= {"outcome":"dash","why":"the scheduled dash is NOT CERTIFIED: jellyfish@80,16 is inside its own i-frame (hitsTimer 7) but it EXPIRES MID-DASH: `Enemy.hitPlayer` can fire again from path offset 5 of 8. Up to there it cannot damage; from there it can, and pricing that remainder needs the body's position at those offsets — a knocked chase takes the `pushed` branch, which does not re-normalize to `moveSpeed`, so the step bound `chaseEnvelope` rests on does not hold, and a walk may 
+   t76 (75.62,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=   
+   t77 (75.97,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=   
+   t78 (76.07,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=   
+   t79 (76.07,44.33) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=right+up   
+   t80 (76.87,43.53) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=right+up   
+   t81 (78.29,42.11) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=right+up {"outcome":"dash","why":"the scheduled dash is NOT CERTIFIED: jellyfish@80,16 is inside its own i-frame (hitsTimer 1) but it EXPIRES MID-DASH: `Enemy.hitPlayer` can fire again from path offset 0 of 8. Up to there it cannot damage; from there it can, and pricing that remainder needs the body's position at those offsets — a knocked chase takes the `pushed` branch, which does not re-normalize to `moveSpeed`, so the step bound `chaseEnvelope` rests on does not hold, and a w
+   t82 (79.54,40.86) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=right+up   
+   t83 (80.61,39.79) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=right+up   
+   t84 (81.32,39.07) n5 [flyer@224,96,jellyfish@80,112,jellyfish@88,144,jellyfish@88,88,jellyfish@80,16] none held=right+up   

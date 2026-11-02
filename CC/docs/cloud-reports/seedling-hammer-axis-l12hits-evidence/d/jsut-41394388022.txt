@@ -1,0 +1,18 @@
+⏳ run 41394388022: waiting on (no suite job listed yet)
+⏳ run 41394388022: waiting on "JavaScript Unit Tests (Vitest shard 3/3)" queued, "JavaScript Unit Tests (Vitest shard 1/3)" queued, "JavaScript Unit Tests (slow Vitest)" queued, "JavaScript Unit Tests (Vitest shard 2/3)" queued
+⏳ run 41394388022: waiting on "JavaScript Unit Tests (Vitest shard 3/3)" in_progress, "JavaScript Unit Tests (Vitest shard 1/3)" queued, "JavaScript Unit Tests (slow Vitest)" queued, "JavaScript Unit Tests (Vitest shard 2/3)" queued
+⏳ run 41394388022: waiting on "JavaScript Unit Tests (Vitest shard 3/3)" in_progress, "JavaScript Unit Tests (Vitest shard 1/3)" in_progress, "JavaScript Unit Tests (slow Vitest)" in_progress, "JavaScript Unit Tests (Vitest shard 2/3)" queued
+⏳ run 41394388022: waiting on "JavaScript Unit Tests (Vitest shard 3/3)" in_progress, "JavaScript Unit Tests (Vitest shard 1/3)" in_progress, "JavaScript Unit Tests (slow Vitest)" in_progress, "JavaScript Unit Tests (Vitest shard 2/3)" in_progress
+⏳ run 41394388022: waiting on "JavaScript Unit Tests (Vitest shard 3/3)" in_progress, "JavaScript Unit Tests (slow Vitest)" in_progress, "JavaScript Unit Tests (Vitest shard 2/3)" in_progress
+⏳ run 41394388022: waiting on "JavaScript Unit Tests (slow Vitest)" in_progress, "JavaScript Unit Tests (Vitest shard 2/3)" in_progress
+⏳ run 41394388022: waiting on "JavaScript Unit Tests (slow Vitest)" in_progress
+run 41394388022 still in_progress after 40 min — still waiting on "JavaScript Unit Tests (slow Vitest)" in_progress
+  job "JavaScript Unit Tests (Vitest shard 1/3)"  completed failure  367/8794 (1 failed)
+  job "JavaScript Unit Tests (Vitest shard 2/3)"  completed success  366/8695
+  job "JavaScript Unit Tests (Vitest shard 3/3)"  completed success  366/7780
+  job "JavaScript Unit Tests (slow Vitest)"  completed success  38/365
+  suite: vitest (unfiltered)  1099/25269   (25268 passed | 0 skipped | 1 failed)
+  slow battery                38/365   (365 passed | 0 failed)
+⛔ red member(s): "JavaScript Unit Tests (Vitest shard 1/3)" failure
+
+[exited with code 0]

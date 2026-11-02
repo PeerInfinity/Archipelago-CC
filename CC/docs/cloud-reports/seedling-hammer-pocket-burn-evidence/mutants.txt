@@ -1,0 +1,13 @@
+== M1 drop the burn offer: exit 1
+[31m     [31m×[31m pocket shut: OFF refuses the stance and names no burn; ON offers the tree's burn at (888,776); no Fire or `burn` disabled = OFF[39m[33m 13309[2mms[22m[39m
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerPocketBurn.test.js[2m > [22mhammer-phase POCKET-BURN: STANCE_BURN[2m > [22mpocket shut: OFF refuses the stance and names no burn; ON offers the tree's burn at (888,776); no Fire or `burn` disabled = OFF
+[31m[1mAssertionError[22m: expected 'solverBot: no REACHABLE stance inside…' to be null[39m
+== M2 offer it with no Fire held: exit 1
+[31m     [31m×[31m pocket shut: OFF refuses the stance and names no burn; ON offers the tree's burn at (888,776); no Fire or `burn` disabled = OFF[39m[33m 17384[2mms[22m[39m
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerPocketBurn.test.js[2m > [22mhammer-phase POCKET-BURN: STANCE_BURN[2m > [22mpocket shut: OFF refuses the stance and names no burn; ON offers the tree's burn at (888,776); no Fire or `burn` disabled = OFF
+[31m[1mAssertionError[22m: expected { stance: { x: 888, y: 776 }, …(2) } to deeply equal { stance: null, …(2) }[39m
+== M3 offer it past the strategy switch's gate: exit 1
+[31m     [31m×[31m pocket shut: OFF refuses the stance and names no burn; ON offers the tree's burn at (888,776); no Fire or `burn` disabled = OFF[39m[33m 21864[2mms[22m[39m
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerPocketBurn.test.js[2m > [22mhammer-phase POCKET-BURN: STANCE_BURN[2m > [22mpocket shut: OFF refuses the stance and names no burn; ON offers the tree's burn at (888,776); no Fire or `burn` disabled = OFF
+[31m[1mAssertionError[22m: expected { stance: { x: 888, y: 776 }, …(2) } to deeply equal { stance: null, …(2) }[39m
+restored byte for byte

@@ -227,7 +227,8 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
                     'Level 079 - Darksuit', 'Level 080 - Chest', 'Level 082 - King of Fire',
                     'Level 098 - Chest', 'Level 106 - Ghostsword', 'Level 109 - Firewand', 'Level 112 - Owl', 'Level 115 - The Seed'],
             });
-        expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'constant', value: true });
+        // ⛓ session tile-primitives-completion (⚖ the user 2026-11-02, "Derived Seed goal"): the rules preset's goal, since L115 is listed.
+        expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'item_check', item: 'The Seed' });
     });
 
     // ⚖ user 2026-10-21 (memory feedback_l16_arrowtrap_from_l17_refusal_is_correct): L16 from L17 with the arrow trap

@@ -1,0 +1,15 @@
+cut of survey-seedling-route --through=end --only=27,66,67,94,95,97,135,136,148,149 (full JSON 490 KB each, not committed)
+x0 (main, OFF) md5(all fields but ms)= 8d3fca8c
+x1 (main, key absent, ON) md5(all fields but ms)= 8d3fca8c
+k1x1 (scratch, key ON, ON) md5(all fields but ms)= 35f8e63a
+step level | x0 (main, OFF) | x1 (main, key absent, ON) | k1x1 (scratch, key ON, ON)
+27 18 | SOLVED 467 hits=0 | SOLVED 467 hits=0 | SOLVED 467 hits=0
+66 39 | SOLVED 3496 hits=0 | SOLVED 3496 hits=0 | SOLVED 3389 hits=0
+67 40 | TIMEOUT None hits=None | TIMEOUT None hits=None | TIMEOUT None hits=None
+94 39 | SOLVED 3376 hits=0 | SOLVED 3376 hits=0 | SOLVED 3275 hits=0
+95 40 | TIMEOUT None hits=None | TIMEOUT None hits=None | TIMEOUT None hits=None
+97 40 | SOLVED 70 hits=0 | SOLVED 70 hits=0 | SOLVED 70 hits=0
+135 39 | SOLVED 3376 hits=0 | SOLVED 3376 hits=0 | SOLVED 3275 hits=0
+136 40 | SOLVED 172 hits=0 | SOLVED 172 hits=0 | SOLVED 172 hits=0
+148 39 | SOLVED 3253 hits=0 | SOLVED 3253 hits=0 | SOLVED 3236 hits=0
+149 40 | SOLVED 172 hits=0 | SOLVED 172 hits=0 | SOLVED 172 hits=0
