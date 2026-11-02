@@ -682,8 +682,15 @@ async function main() {
         if (typeof name === 'string') _locationReports.noteRefused(name);
     });
 
-    // If we move away from this region, go inactive.
+    // If we move away from this region, go inactive. A `resync` is not a move: gameState and the
+    // iframe adapter publish one to EVERY iframe whenever ANY iframe connects or announces ready
+    // ("tells the newly connected page where the player is"), so it says nothing about this page's
+    // region; a real move always arrives as a regionChanged without it. Reading a resync as a move
+    // silenced a page configured with a region the host is not in (cloudberry P4a: the demo-pack
+    // row's injected region, when another iframe panel finished booting mid-row — walkTo held
+    // forever, pollItems stopped).
     _client.subscribeEventBus('gameState:regionChanged', (data) => {
+        if (data?.resync === true) return;
         if (data?.newRegion && data.newRegion !== _currentRegionId) {
             _isActive = false;
         }
@@ -695,6 +702,15 @@ async function main() {
     _client.subscribeEventBus('stateManager:rulesLoaded', () => {
         if (_isActive) _reseedIfStale();
         _client?.requestStaticData?.();
+    });
+
+    // A read-only view of the bridge's state, for a test's failure message (never read by a game).
+    _w.__swfBridgeHostState = () => ({
+        regionId: _currentRegionId,
+        active: _isActive,
+        pendingWalkTo: _pendingWalkTo ? { ..._pendingWalkTo } : null,
+        pendingLoad: _pendingLoad?.region_id ?? null,
+        iframeId: _client?.iframeId ?? null,
     });
 
     // Step 4: announce ready.

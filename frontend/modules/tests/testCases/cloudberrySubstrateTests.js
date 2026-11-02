@@ -18,6 +18,7 @@
  *
  * Runs only in the test-substrates mode (enabled:false; the full module config).
  */
+import appEventBus from '../../../app/core/eventBus.js';
 import { registerTest } from '../testRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { buildCloudberryPayload, pageParamsForWorld } from '../../cloudberryDemo/cloudberryRules.js';
@@ -175,7 +176,22 @@ registerTest({
 
 // ── 2. a region from the DEMO PACK: boots, its coin checks a location, an unheld item ─────
 
+/** Host events that can move the bridge's notion of the active region, timestamped (a failure names them). */
+function watchRegionEvents(tc) {
+    const t0 = performance.now();
+    const seen = [];
+    const subs = ['gameState:regionChanged', 'iframe:connected', 'iframe:disconnected', 'iframe:appReady',
+        'cloudberry:loadRegion', 'cloudberry:playbackControl'].map((ev) => {
+        const fn = (d) => seen.push({ ev, t: Math.round(performance.now() - t0),
+            region: d?.newRegion ?? d?.region_id ?? d?.iframeId ?? null, resync: d?.resync ?? undefined });
+        tc.eventBus.subscribe(ev, fn, 'tests');
+        return [ev, fn];
+    });
+    return { seen, stop: () => subs.forEach(([ev, fn]) => tc.eventBus.unsubscribe(ev, fn, 'tests')) };
+}
+
 async function demoPackRegion(tc) {
+    const watch = watchRegionEvents(tc);
     try {
         if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
         if (!(await loadPreset(tc))) return tc.getOverallResult();
@@ -201,6 +217,20 @@ async function demoPackRegion(tc) {
         const a = await configured(tc, REGION, { after: before, timeoutMs: 60000 });
         if (!a) return tc.getOverallResult();
         tc.assertEqual('the demo pack\'s document hash is the one the page generated', entry.payload.docSha256, a.doc.sha);
+        // ⛓ P4a: another iframe panel announcing ready makes gameState publish a RESYNC regionChanged naming the host's
+        // region (region_2_2, not this row's cb_demo_inapp) to every iframe. The bridge once read that as a move and went
+        // inactive: the row's 1-in-7 "silent bridge" (P3b). Published here on purpose, so the race is always run.
+        // (the app's bus, as the iframe adapter publishes it: the test controller's publish does not carry this event)
+        const seenBefore = watch.seen.length;
+        appEventBus.publish('iframe:appReady', { iframeId: 'cloudberry-row-other-panel', timestamp: Date.now() }, 'iframeAdapter');
+        const resynced = await tc.pollForValue(() => (watch.seen.slice(seenBefore).some((e) => e.ev === 'gameState:regionChanged'
+            && e.resync === true && e.region === 'region_2_2') ? true : null), 'gameState answered with a resync regionChanged', 3000, 50);
+        tc.reportCondition('⛓ premise: the injected appReady made gameState publish a resync regionChanged naming region_2_2', !!resynced);
+        await sleep(300);
+        let bridgeNow = null;
+        try { bridgeNow = gameWin()?.__swfBridgeHostState?.() ?? null; } catch { bridgeNow = null; }
+        tc.reportCondition(`another iframe's appReady (a resync regionChanged to region_2_2) leaves the bridge active on ${REGION} `
+            + `(${JSON.stringify(bridgeNow)})`, bridgeNow?.active === true && bridgeNow.regionId === REGION);
 
         // Unheld: the bot dies on the gated coin's way; nothing checked.
         const died = await botWalk(tc, { kind: 'location', name: target[gated.name] }, `the bot's walk to ${gated.name} ends`);
@@ -228,6 +258,18 @@ async function demoPackRegion(tc) {
         tc.reportCondition(`${target[gated.name]} checked`, !!checked2);
     } catch (e) {
         tc.reportCondition(`Test error: ${e.message}`, false);
+    } finally {
+        watch.stop();
+        tc.log(`host region events during the row: ${JSON.stringify(watch.seen)}`);
+        let bridge = null;
+        try { bridge = gameWin()?.__swfBridgeHostState?.() ?? null; } catch { bridge = null; }
+        const frames = (window.iframeAdapterCore?.getConnectedIframes?.() ?? [])
+            .map((f) => ({ id: f.iframeId, connected: f.connected, beatAgoMs: Date.now() - f.lastHeartbeat, subs: f.eventBusSubscriptions.length }));
+        const a = app();
+        const page = a ? { region: a.config?.regionId ?? null, configures: a.configures, ok: a.playResult?.ok ?? null,
+            refusal: a.refusal, pendingBot: a.pendingBot, items: a.items, platforms: a.itemsState?.platforms ?? null,
+            bots: (a.events ?? []).filter((e) => e.kind === 'bot').length } : null;
+        tc.log(`bridge state: ${JSON.stringify(bridge)}; page: ${JSON.stringify(page)}; adapter iframes: ${JSON.stringify(frames)}`);
     }
     return tc.getOverallResult();
 }
