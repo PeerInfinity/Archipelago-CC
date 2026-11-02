@@ -26911,3 +26911,32 @@ packet (`seedling-hammer-chooser-witness-evidence/flip/cpair3-flip.patch`), appl
 rows pin the switch OFF (or ask at size 2) beside the switches they already pin, so no tape is re-recorded. Evidence: the
 three L43 pits (`out_pit_5_21/22/23` from L39) play hitless to the exit in the game; on the 52 L40 keys they are the only
 verdict movers; the route survey, r9 campaign, latch chain and pocket boot are unchanged (L40C A1).
+### Seedling hammer-phase AXIS-L12HITS — the clear-tag keylock hold priced under `AXIS_STRIKE`
+
+⚖ User, queued 2026-11-02 (one of five parallel hammer slices), from the divergence sweep: with `AXIS_STRIKE` ON the
+8 L12 legs to `bosslock@416,240` / `@432,240` passed with 2 hits each (CI 41245586575 vs 41245582842; all four new
+switches, 41370177273 vs 41370172948). The report is `CC/docs/cloud-reports/seedling-hammer-axis-l12hits.md`. **No new
+switch; still OFF; OFF byte-identical.**
+
+- **What hits.** `puncher@416,256`'s punches, 29–40 ticks AFTER the stance walk ends, inside the keylock's 110-tick
+  hold; billed by the model at the game's own ticks (the sweep's `exact` rows, e.g. leg 105 t782/t822). No hit lands on
+  an aim or press tick. OFF the strike-free walk to the stance (424,264) is punched in transit, so the ladder's kill rung
+  clears the puncher first. ON, RULESREF's `punchGateTimed` asks the aligned corridor, now armed with the axis strikes;
+  they land 1–2 hits and keep the transit clean, so it is adopted with the puncher alive beside the stance.
+- **Why the certifier did not price it.** The clear-tag arm's stance walk (`execClearTag`, `walkTo(goal,
+  resolved.stance, …)`) never carried the keylock's hold as its tail; only the frontier arm does (`keylockStandWalk`,
+  L30KEYLOCK). The probe ran with `stand: null`.
+- **The fix.** `solverBot.axisClearTagStand(run, verb, resolved)`: ON, a keylock's stance walk on the clear-tag arm gets
+  `keylockStandWalk`'s tail; `{}` OFF, for any other verb, or with `KEYLOCK_WAIT_PRICED` off. ON its probe meets the punch
+  and the kill runs first: the 8 legs answer OFF's plan byte for byte, 0 hits (node replays; page sweep at the head 8/8,
+  roomHits 0).
+- **Designs weighed.** (1) offer only bodies the press kills: OFF's answer on the 8 legs, but loses AXIS's L6 lane kill
+  and survey step 79's strike. (3) withhold near a puncher in contact range: OFF's answer on the 8 legs, loses step 79's
+  strike, and plans around the game rather than modelling it. (2)-as-built: the strike's own ticks were already priced;
+  the unpriced ticks were the hold's.
+- **ON radius** (base ON vs fix ON): the 8 L12 legs (2 hits → 0, all to OFF's plan); L40's 58 captured requests (52
+  keys) 58/58 identical; the route survey 0 movers of 237; r9 campaign `--check` green; producers 97/0 red; identity
+  block ON = OFF.
+- **Gate** `hammerAxisStrikes.test.js` (+2 rows; fixture `fixtures/hammer-axis-l12/leg149-l12-request.json.gz`, cut to
+  L12, byte-identical to the uncut capture): ON = OFF with 0 hits, and the regression at t375/t415 with the tail
+  withheld. Mutants (remove the fix, drop the call, OFF too, every verb) each red a row.
