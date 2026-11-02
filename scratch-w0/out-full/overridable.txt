@@ -1,1 +1,1 @@
-{"regionsWithRows":204,"byClass":{"walk-in from another member":55,"OVERRIDABLE":114,"internal-only (priced from roots)":19,"several arrivals":16},"overridableRegions":114,"overridableElements":296,"elementsInRowedRegions":472}
+{"regionsWithRows":204,"byClass":{"walk-in from another member":55,"OVERRIDABLE":114,"internal-only (priced from roots)":19,"several arrivals":16},"overridableRegions":114,"overridableElements":296,"overridableEchoed":53,"overridableEchoFree":243,"regionsWithAnEchoFreeOverride":111,"elementsInRowedRegions":472}

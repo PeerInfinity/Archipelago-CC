@@ -12,11 +12,14 @@ const arrivals = new Map();
 for (const x of [...exits, ...rec]) { const r = reg(x.label); if (!arrivals.has(r)) arrivals.set(r, new Set()); arrivals.get(r).add(tag(x.label)); }
 const walkIn = (n) => { const m = sharedOf(n); if (!m) return false; return m.some((o) => o !== n && R[o].exits.some((e) => e.connected_region === n)); };
 const why = {}; const t = (k) => { why[k] = (why[k] ?? 0) + 1; };
-let ok = 0, okEl = 0, allEl = 0;
+const echo = new Set(JSON.parse(readFileSync('scratch-w0/out-full/echo-keys.json', 'utf8')));
+let ok = 0, okEl = 0, allEl = 0, okEcho = 0, okClean = 0, cleanRegions = 0;
 for (const [n, a] of arrivals) {
   const els = R[n].exits.filter((e) => exits.some((x) => x.region === n && x.exit === e.name)).length + (R[n].locations ?? []).length;
   allEl += els;
   const k = [...a].some((s) => s.startsWith('from')) ? 'internal-only (priced from roots)' : a.size > 1 ? 'several arrivals' : walkIn(n) ? 'walk-in from another member' : 'OVERRIDABLE';
-  t(k); if (k === 'OVERRIDABLE') { ok++; okEl += els; }
+  t(k); if (k === 'OVERRIDABLE') { ok++; okEl += els;
+    const keys = [...R[n].exits.filter((e) => exits.some((x) => x.region === n && x.exit === e.name)).map((e) => `${n}|${e.name}`), ...(R[n].locations ?? []).map((l) => `${n}|@${l.name}`)];
+    const e = keys.filter((x) => echo.has(x)).length; okEcho += e; okClean += keys.length - e; if (keys.length > e) cleanRegions++; }
 }
-console.log(JSON.stringify({ regionsWithRows: arrivals.size, byClass: why, overridableRegions: ok, overridableElements: okEl, elementsInRowedRegions: allEl }));
+console.log(JSON.stringify({ regionsWithRows: arrivals.size, byClass: why, overridableRegions: ok, overridableElements: okEl, overridableEchoed: okEcho, overridableEchoFree: okClean, regionsWithAnEchoFreeOverride: cleanRegions, elementsInRowedRegions: allEl }));

@@ -51,3 +51,15 @@ const byLvl = {}; for (const [k, v] of found.ix) byLvl[v.lvl] = (byLvl[v.lvl] ??
 console.log('ix copied by level:', JSON.stringify(byLvl));
 const sharedLv = new Set(Object.entries(S).filter(([, s]) => s.playable_payload?.shared_world).map(([n]) => n.split('__')[0]));
 console.log('shared levels:', [...sharedLv].sort((a, b) => +a.slice(6) - +b.slice(6)).join(' '));
+// AP element keys of the echoes ("region|exitName" / "region|@location"), for overridable.mjs.
+import { writeFileSync } from 'node:fs';
+const apExit = new Map();
+for (const [name, s] of Object.entries(S)) for (const e of s.playable_payload?.exits ?? []) if (e.targetRegion && e.atlas_exit_id) apExit.set(`${s.playable_payload.atlas_region}/${e.atlas_exit_id}`, { region: name, exit: e.exitName ?? e.exit_id });
+const keys = new Set();
+const RG = rules.regions['1'];
+for (const k of found.ex.keys()) { const id = k.match(/^(level_\d+\/[a-z_0-9]+)/)?.[1]; const a = id && apExit.get(id); if (a) keys.add(`${a.region}|${a.exit}`); }
+for (const k of found.ix.keys()) { const m = k.match(/^(level_\d+)\/(r\d+c\d+)->(r\d+c\d+)$/); if (!m) continue; const from = `${m[1]}__${m[2]}`, to = `${m[1]}__${m[3]}`;
+  for (const e of RG[from]?.exits ?? []) if (e.connected_region === to) keys.add(`${from}|${e.name}`); }
+for (const k of found.loc.keys()) { const [lvl, ...rest] = k.split('/'); const loc = rest.join('/'); for (const [n, r] of Object.entries(RG)) if (n.split('__')[0] === lvl && (r.locations ?? []).some((l) => l.name === loc)) keys.add(`${n}|@${loc}`); }
+writeFileSync('scratch-w0/out-full/echo-keys.json', JSON.stringify([...keys].sort(), null, 1));
+console.log('echo keys (AP elements):', keys.size);
