@@ -6561,9 +6561,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 3
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
         "import"
