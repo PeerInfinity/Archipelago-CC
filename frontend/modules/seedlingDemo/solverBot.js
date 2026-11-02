@@ -10369,6 +10369,68 @@ function stancePrerequisite(run, candidates, exempt, hypothesis, contacts, block
             };
         }
     }
+    // ⛓ hammer-phase POCKET-BURN (`STANCE_BURN`, OFF): arm (c), a burnable tree in the lane — see `stanceBurnPrerequisite`.
+    return STANCE_BURN.enabled ? stanceBurnPrerequisite(run, candidates, exempt, hypothesis, blocked) : null;
+}
+
+/**
+ * The trees arm (c) may offer: standing, not refused, and burnable by this run — Fire held, no Fire Wand (whose case-5
+ * press the model refuses, `resolveBurnStrategy`), and `burn` available through the strategy switch's gate. Empty
+ * otherwise, so a run without Fire is offered nothing (the tree stays a wall, as it is OFF).
+ */
+function stanceBurnTrees(run, blocked) {
+    const inv = run.progress('inventory') ?? {};
+    if (!inv.hasFire || inv.hasFireWand || !executorFor('burn', 'stancePrerequisite:burn')) return [];
+    const burned = run.entities('burnedTrees') ?? new Set();
+    return (run.world.burnableTrees ?? []).filter((t) => !burned.has(t.id) && !blocked.includes(t.id));
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase POCKET-BURN (`STANCE_BURN`, OFF) — **ARM (c): THE TREE IN THE LANE.** Arms (a) and (b) have both
+ * failed, so the stance is reachable neither through a weigh's mechanism nor by shoving a walk block aside. A
+ * `BurnableTree` is the third obstacle an order can discharge for good (`burnEnd -> die()` removes it for the visit
+ * and writes its tag; ⚖ Fire is a plain AP item), and the frontier already has its verb (`resolveBurnStrategy`). The
+ * probe is the corridor with that ONE tree burnt — the field a real burn writes (`burnedTrees`) — first in the world
+ * as it is, then under the hypothesis with its volumes exempted (`stanceReaches`' own reading). ⇒ the prerequisite is
+ * the TREE; `prerequisiteOrder` resolves it with the frontier's own `burn` (its gate, its stance, its Fire), and the
+ * hold is re-derived against the world the burn changed.
+ *
+ * Measured on L40's Boss Key 2 arrivals (POCKET-BURN W0): `hold(wandlock@480,560)`'s stance `buttonroom@880,768` is
+ * behind `burnabletree@872,784` from (488,578); arms (a) and (b) refuse, and the run holds Fire.
+ *
+ * ⚠ LAST, after the geometry arm: OFF and wherever (a)/(b) answer, nothing moves.
+ */
+function stanceBurnPrerequisite(run, candidates, exempt, hypothesis, blocked) {
+    const trees = stanceBurnTrees(run, blocked);
+    if (!trees.length) return null;
+    const live = run.liveGeometryOpts();
+    const withBurnt = (bag, id) => ({ ...bag, burnedTrees: new Set([...(bag.burnedTrees ?? []), id]) });
+    const hExempt = new Set([...exempt,
+        ...hypothesis.filter((h) => h.kind === 'activator' || h.kind === 'rock').map((h) => `proximity-hazard:${h.id}`),
+        ...hypothesis.flatMap((h) => h.exempt ?? [])]);
+    const arms = [{ bag: live, exempt, under: false }];
+    if (hypothesis.length) arms.push({ bag: bagWithDischarged(run, live, hypothesis), exempt: hExempt, under: true });
+    for (const arm of arms) {
+        for (const tree of trees) {
+            const bag = withBurnt(arm.bag, tree.id);
+            for (const c of candidates) {
+                if (!corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null,
+                    solverPlanOpts(run, arm.exempt, { liveBag: bag }))) continue;
+                return {
+                    stance: { x: c.x, y: c.y },
+                    prerequisite: {
+                        id: tree.id,
+                        kind: 'solid',
+                        tag: 'burnabletree',
+                        via: 'burn',
+                        why: `the stance is reachable once ${tree.id} is burnt${arm.under
+                            ? ' (and the rest of the hypothesis discharged)' : ''}: the run holds Fire, and a burnt `
+                            + 'tree is gone for the visit (`burnEnd -> die()`), so the corridor it shut stays open',
+                    },
+                };
+            }
+        }
+    }
     return null;
 }
 
@@ -10402,6 +10464,10 @@ function prerequisiteRefusalClause(run, hypothesis, walls, blocked) {
         return Boolean(live) && !live.removed;
     });
     for (const row of blocks) parts.push(`${row.id} (no shove of it plans the corridor)`);
+    // ⛓ POCKET-BURN (`STANCE_BURN`, OFF): the trees arm (c) tried, named
+    if (STANCE_BURN.enabled) {
+        for (const t of stanceBurnTrees(run, blocked)) parts.push(`${t.id} (no burn of it plans the corridor)`);
+    }
     if (parts.length === 0) {
         return ` ⛔ AND NO PREREQUISITE EXISTS TO RAISE: level ${run.level} holds no `
             + 'walk-family pushable and no hypothesised activator whose own verb moves one, '
@@ -10665,6 +10731,36 @@ export const STANCE_ROCKS = { enabled: globalThis.process?.env?.SEEDLING_STANCE_
 /** Run `fn` with `STANCE_ROCKS` set to `enabled`, restoring the previous value. */
 export function withStanceRocks(enabled, fn) {
     return withSwitch(STANCE_ROCKS, enabled, fn);
+}
+
+/**
+ * `STANCE_BURN` (OFF): a hold stance shut by a burnable tree raises the tree's `burn` as its prerequisite
+ * (`stancePrerequisite`'s arm (c), `stanceBurnPrerequisite`). ⚖ The user queued POCKET-BURN on 2026-11-02, from
+ * SOUTHDOOR's hand-over: on L40's Boss Key 2 arrivals `burnabletree@872,784` shuts the latch pocket and the hold's
+ * prerequisite search named only activators and a pushable. `SEEDLING_STANCE_BURN=1` / `withStanceBurn(enabled, fn)`.
+ */
+export const STANCE_BURN = { enabled: globalThis.process?.env?.SEEDLING_STANCE_BURN === '1' };
+export const STANCE_BURN_DEFAULT = false;
+
+/** Run `fn` with `STANCE_BURN` set to `enabled`, restoring the previous value. */
+export function withStanceBurn(enabled, fn) {
+    return withSwitch(STANCE_BURN, enabled, fn);
+}
+
+/**
+ * ⛓ READ-ONLY PROBE for `hammerPocketBurn.test.js`: the hold stance `resolveHoldStrategy` derives for the presser at
+ * `at` (`{x, y}`), with the prerequisite search on, from `run` as it stands: `{stance, prerequisite, refusal}` (the
+ * refusal's message, or null). No contacts are passed (the walk's own are the caller's). It steps nothing.
+ */
+export function holdStanceProbe(run, at, blocked = []) {
+    const presser = resolvePresser(run.world, at, 'holdStanceProbe');
+    try {
+        const r = deriveHoldStance(run, presser, NO_CONTACTS, blocked, { prerequisites: true });
+        return { stance: r.stance, prerequisite: r.prerequisite ?? null, refusal: null };
+    } catch (e) {
+        if (!(e instanceof SolverRefusal)) throw e;
+        return { stance: null, prerequisite: null, refusal: e.message };
+    }
 }
 
 /**
