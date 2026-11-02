@@ -27,6 +27,7 @@
     "spaceTimeReach.js",
     "strategySwitch.js",
     "strikePolicy.js",
+    "strikeSlot.js",
     "tentacleBeastPolicy.js"
   ],
   "simulation": {
@@ -1162,9 +1163,9 @@
         "botDriverV2.js": 29,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 155
+        "solverBot.js": 160
       },
-      "sites": 190,
+      "sites": 195,
       "seen": "both",
       "via": [
         "direct",
@@ -1195,7 +1196,7 @@
         "inventory": {
           "botDriverV2.js": 7,
           "lightsVerb.js": 3,
-          "solverBot.js": 54
+          "solverBot.js": 56
         },
         "inventorySlots": {
           "solverBot.js": 23
@@ -1211,7 +1212,7 @@
         "primaryWeapon": {
           "botDriverV2.js": 3,
           "lightsVerb.js": 1,
-          "solverBot.js": 22
+          "solverBot.js": 25
         },
         "saveState": {
           "director.js": 1
