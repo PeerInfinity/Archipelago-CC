@@ -6233,7 +6233,8 @@ export const CATALOGUE = frz({
         "roam",
         "corridorbody",
         "ropegate",
-        "chestdoor"
+        "chestdoor",
+        "burngate"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -6646,11 +6647,22 @@ export const CATALOGUE = frz({
             "needs": [],
             "params": [],
             "why": "The CHEST DOOR (seedling gen B2, the L38 pattern): a `chest` standing in a main-path cut, opened from the cell directly below it. Certified only by a plan that OPENS the chest (`[chest, …]`); a certificate that reaches the goal without it is refused. Its seal piece is an AP location."
+        },
+        {
+            "defaultIn": [],
+            "head": "burngate",
+            "module": "burn-gate",
+            "needs": [
+                "hasFire"
+            ],
+            "params": [],
+            "why": "The BURN GATE (strategy switch r2): a `burnabletree` (2x2 tiles) on a main-path cut with its wall GROWN to seal the room, burned by FIRE from its start side. Certified by the existing `burn`."
         }
     ],
     "itemsElementsNeed": [
         "canSwim",
         "hasFeather",
+        "hasFire",
         "hasShield",
         "hasSword"
     ],
