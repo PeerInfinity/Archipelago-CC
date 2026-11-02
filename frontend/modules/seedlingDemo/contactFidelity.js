@@ -1653,7 +1653,7 @@ export const CONTACT_FIDELITY = {
      * X press's own `useItem` arms against `secondary`'s slot, and in the same frame an X press goes first. OFF:
      * byte-identical (no committed tape presses C). `SEEDLING_SECONDARY_USE=0|1`.
      */
-    secondaryUse: true,
+    secondaryUse: false,
     /**
      * fidelity LIGHTPOLE D2 (wave 34) — AN IN-ROOM POLE IS LIT BY A SPEAR THRUST FROM ITS OWN ROOM.
      *
