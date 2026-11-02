@@ -1,0 +1,35 @@
+{
+  "$comment": "The whole-game pin of probe-seedling-derived-rules.mjs (session tile-rules-automation-r-a1). Every leaf under `summary` must equal the probe's SUMMARY; a key not named here is not pinned. Provenance per block in its own $comment. A rules slice that moves rows re-records this file (and says which rows moved).",
+  "measuredAt": "1e5b7efd98",
+  "summary": {
+    "certifier": {
+      "$comment": "The whole-game certifier's triple (problems / accepted / threw): OPEN L3→L111 and the L63 framing row.",
+      "problems": 2,
+      "accepted": 18,
+      "threw": 0
+    },
+    "echoes": {
+      "$comment": "The sentinel method. W0 (main 31ce3077a1) planted loc/ex/ix only and read 11 / 21 / 45; the 45 counted composed obstacle names as extra ids (36 distinct rows). This probe also plants the event layer's own rules: its lock returns (ixr) are copied in 8 rows. 76 AP elements = W0's 68 + the 8 ixr exits; W0's 68 also named 3 elements under the shared world's carrier sub-region instead of the exit's source.",
+      "copied": { "loc": 11, "ex": 21, "ix": 36, "evt": 0, "gate": 0, "ixr": 8, "ixg": 0, "rope": 0, "ropegate": 0 },
+      "elements": 76
+    },
+    "w0": {
+      "$comment": "W0's per-element truth table (scratch analyze.mjs, CI 41533423669 @35373cb69d): exits leaving a world 392, locations 80. Independent of the echo.",
+      "exit": { "equal": 346, "stricter": 10, "looser": 9, "arrival-dependent": 27 },
+      "location": { "equal": 61, "stricter": 11, "arrival-dependent": 8 }
+    },
+    "elements": 472,
+    "arrivals": {
+      "$comment": "W0's arrival structure: 204 regions priced, 235 arrival nodes (176 / 25 / 3), 19 regions with an arrival-dependent element.",
+      "regionsPriced": 204,
+      "arrivalNodes": 235,
+      "regionsPerArrivalCount": { "1": 176, "2": 25, "3": 3 },
+      "regionsArrivalDependent": 19
+    },
+    "routeA": {
+      "$comment": "W0's overridable.mjs classes (echo-independent): 114 overridable regions, 296 elements in them.",
+      "classes": { "overridable": 114, "walk-in from another member": 55, "internal-only": 19, "several arrivals": 16 },
+      "overridableElements": 296
+    }
+  }
+}
