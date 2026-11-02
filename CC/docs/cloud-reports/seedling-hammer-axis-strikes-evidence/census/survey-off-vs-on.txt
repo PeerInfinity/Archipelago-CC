@@ -1,0 +1,6 @@
+# route survey --through=end at 84404513 (OFF, the base tree) vs SEEDLING_AXIS_STRIKE=1 (the branch code); compared on (verdict, ticks, refusal)
+# rows 237 237 | OFF {'SOLVED': 201, 'REFUSED': 36} | ON {'SOLVED': 201, 'REFUSED': 36}
+# movers 1
+step 79 L53
+  OFF REFUSED None solverBot(survey-step-79) reach-exit (144,240)->L54 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 166-tick bound (0 guard step(s)); it stands at (115.6,119.4), 39.7 px from the player.
+  ON  REFUSED None solverBot(survey-step-79) reach-exit (144,240)->L54 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 167-tick bound (0 guard step(s)); it stands at (115.9,119.4), 40.2 px from the player.

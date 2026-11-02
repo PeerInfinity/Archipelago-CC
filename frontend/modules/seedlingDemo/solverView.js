@@ -90,6 +90,8 @@ export {
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD, SLASH_ANIM_TICKS, SLASH_DASH_FORCE,
     SLASH_SCALE_NORMAL, slashPressForecast, slashScaleFor, slashSet, slashTimerTick,
 } from './combatVerbs.js';
+// ⛓ hammer-phase SLASHRECT: the ghost sword's rect throw, recognised by `pressNoFacing.refuseNoFacing`.
+export { CombatVerbError } from './combatVerbs.js';
 // crusher.js — botDriverV2, crusherBait · seedling 5
 export { collideLineSolid, CRUSHER, crusherRect, DIRECTIONS, scanCrusher } from './crusher.js';
 // endingChain.js — strikePolicy · seedling 1
@@ -113,6 +115,8 @@ export {
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
     // ⛓ fidelity LIGHTPOLE D2: the ghost swing's rect and reach, for the pole verb's ghost arm.
     GHOST_SWORD_REACH, ghostSlashRect,
+    // ⛓⛓⛓ hammer-phase GHOSTROPE: the ghost swing's tests and its per-class arms, for `ghostRopeCut`'s rope swing.
+    GHOST_PRESS_ARMS, GHOST_SLASH_ANIM_TICKS,
 } from './ghostSword.js';
 // ghostSpinnerPress.js — solverBot · seedling 3
 // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (its switch, the sword's row, the chooser).
@@ -135,6 +139,8 @@ export {
     PRESS_KILL_CHASERS, PRESS_KILL_CHASERS_COUNTS,
     // ⛓⛓⛓ hammer-phase OPP: opportunistic strikes in the press kill (its switch and instrument, OFF).
     OPPORTUNISTIC_STRIKE, OPPORTUNISTIC_STRIKE_COUNTS, OPPORTUNISTIC_STRIKE_TRACE,
+    // ⛓⛓⛓ hammer-phase AXIS: strikes on axis-aligned walks, aimed along the walk's axis (its switch and instrument, OFF).
+    AXIS_STRIKE, AXIS_STRIKE_COUNTS,
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (its switch, the cut and its instrument; ON by default since the user's flip).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
 } from './pressKillCost.js';
@@ -197,6 +203,8 @@ export { pressRectTouches, spearHitRect } from './presses.js';
 export { auditPress, PRESS_ARM_POLICY } from './presses.js';
 // ⛓ fidelity FIREMOVE: the fire route's flame audit (what else a Fire press reaches, by its arm's policy).
 export { FIRE_ARM_POLICY } from './presses.js';
+// ⛓ hammer-phase SLASHRECT: the sword/spear rect throw, recognised by `pressNoFacing.refuseNoFacing`.
+export { PressError } from './presses.js';
 // pull.js — solverBot · seedling 2
 export { pullModelled, pullsDrainingInto } from './pull.js';
 // pulser.js — solverBot · seedling 3

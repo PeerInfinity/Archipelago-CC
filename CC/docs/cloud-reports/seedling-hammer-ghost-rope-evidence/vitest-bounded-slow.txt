@@ -1,0 +1,60 @@
+ ✓ frontend/modules/procgenPipeline/atlasMazeBot.slow.test.js (21 tests) 94ms
+ ✓ frontend/modules/procgenPipeline/sphereAtlas.slow.test.js (29 tests) 117ms
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.slow.test.js (3 tests) 336994ms
+     ✓ native engine, every region  79211ms
+     ✓ scripted tile definition on the sample — and it agrees with the native one  257024ms
+     ✓ the closure comparison still catches an in-world row the world disagrees with, both ways  755ms
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js (2 tests) 584379ms
+     ✓ OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271  449190ms
+     ✓ ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name  135185ms
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js (3 tests) 309204ms
+     ✓ OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast  129827ms
+     ✓ ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run  144737ms
+     ✓ ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached  34633ms
+ ✓ frontend/modules/seedlingDemo/seedlingGenNewBiomes.slow.test.js (32 tests) 21922ms
+     ✓ caldera  2207ms
+     ✓ frozen-forge  3307ms
+     ✓ flooded-ruins  2269ms
+     ✓ caldera seed 1 (`empty`, 8 obstacles): reachable on caldera's flood, not on post-sword's; certified  525ms
+     ✓ room post-fire 1  480ms
+     ✓ room post-fire 2  1702ms
+     ✓ room post-spear 2  315ms
+     ✓ room post-spear 3  654ms
+     ✓ room post-dark-suit 2  838ms
+     ✓ room post-dark-suit 3  639ms
+     ✓ room endgame 1  429ms
+     ✓ room endgame 2  567ms
+     ✓ room endgame 3  872ms
+     ✓ room post-swim+ice 1  416ms
+     ✓ room post-swim+ice 2  434ms
+     ✓ room post-swim+ice 3  584ms
+     ✓ room post-feather+stairs 1  404ms
+     ✓ room post-feather+stairs 2  666ms
+     ✓ room post-feather+stairs 3  619ms
+     ✓ room post-feather+ghoststep 1  409ms
+     ✓ room post-feather+ghoststep 2  600ms
+     ✓ room post-feather+ghoststep 3  555ms
+     ✓ room post-feather+ghoststep,stairs 2  772ms
+     ✓ room post-feather+ghoststep,stairs 3  520ms
+ ✓ frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js (2 tests) 425270ms
+     ✓ OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall)  174328ms
+     ✓ ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death  250939ms
+ ✓ frontend/modules/seedlingDemo/seedlingGenTerrains.slow.test.js (10 tests) 25062ms
+     ✓ post-swim: `terrains: ''` is the room with no knob, and `generation` gains no key  1473ms
+     ✓ post-swim terrains="ice"  2816ms
+     ✓ post-feather terrains="stairs"  3002ms
+     ✓ post-feather terrains="ghoststep"  3116ms
+     ✓ post-feather terrains="ghoststep,stairs"  2785ms
+     ✓ post-spear terrains=""  2022ms
+     ✓ post-dark-suit terrains=""  2830ms
+     ✓ endgame terrains=""  3506ms
+     ✓ post-dark-suit seed 10 (`empty`, 8 obstacles): the cut is lava, and `hasDarkSuit` is REQUIRED, STRONG  3505ms
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js (2 tests) 735000ms
+     ✓ ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte  497831ms
+     ✓ ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit  237166ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 44095ms
+     ✓ ON, sweep request 392:0 solved whole ships the same ticks for less work  44093ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 39804ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  39802ms
+ Test Files  11 passed (11)
+      Tests  106 passed (106)

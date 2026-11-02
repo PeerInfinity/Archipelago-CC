@@ -1,0 +1,14 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerSouthDoor.slow.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 450245[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF, south of the latched door: APPROACH's refusal on the arrival legs — 12 forks, all no-plan, from (488,579) [33m 23318[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, south of the latched door: the door's hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run [33m 229706[2mms[22m[39m
+     [33m[2m✓[22m[39m the latch staging (the near side once the latch has faded the door): SOLVED 4142 ON, nothing asked [33m 158372[2mms[22m[39m
+     [33m[2m✓[22m[39m ICEST's pocket boot (480,456): ON keys identical to OFF, nothing asked [33m 38843[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m   Start at [22m 17:38:48
+[2m   Duration [22m 453.96s[2m (transform 2.75s, setup 0ms, import 3.58s, tests 450.25s, environment 0ms)[22m
+

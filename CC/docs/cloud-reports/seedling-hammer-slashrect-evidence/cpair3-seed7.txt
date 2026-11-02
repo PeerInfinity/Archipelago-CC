@@ -1,0 +1,2 @@
+CPAIR3 PRESS_NO_FACING=0: VERDICT REFUSED PRESS_NO_FACING: the press at t101 (escape) starts with facing -1, not 0..3: `hitUpdate` ended the previous tick's i-frames with `direction = directionFace` = -1 (`Player.as:1424`, aft
+CPAIR3 PRESS_NO_FACING=1: VERDICT REFUSED solverBot(procgen-l900) collect (64,48) stance -> kill (spinner@16,32) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or 
