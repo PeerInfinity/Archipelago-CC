@@ -16,8 +16,8 @@
  * These are SUFFICIENT sets (what the computer's recording used), not minimal:
  * the safe direction — the logic never claims a coin the player cannot reach.
  *
- * Emission is in the shared paths-and-obstacles vocabulary (runner's pattern,
- * `runnerDemo/apRules.js`): one physics obstacle per game item,
+ * Emission is in the shared paths-and-obstacles vocabulary (the pattern of the
+ * since-deleted runner substrate's `apRules.js`): one physics obstacle per game item,
  * `cloudberry_gate_<GameItem>`, cleared by its AP item; authored terms the level
  * cannot realise (foreign items, counts above 1) become per-term `logic_gate`
  * obstacles ANDed onto every path, and ride the payload as `gate_rules` for the

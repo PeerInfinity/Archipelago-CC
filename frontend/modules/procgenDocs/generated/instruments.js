@@ -53,8 +53,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 65,
-            "count": 105,
+            "browser": 61,
+            "count": 100,
             "id": "check"
         },
         {
@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 12,
+            "count": 11,
             "id": "make"
         },
         {
@@ -234,12 +234,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 507,
-        "browser": 207,
-        "cited": 271,
-        "files": 525,
+        "blockStyle": 501,
+        "browser": 203,
+        "cited": 265,
+        "files": 519,
         "lineStyle": 18,
-        "withDocblock": 525,
+        "withDocblock": 519,
         "withFlags": 439
     },
     "dir": "scripts/procgen",
@@ -1953,7 +1953,8 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/cloudberry.md"
+                "docs/json/developer/procgen/cloudberry.md",
+                "docs/json/developer/procgen/pipeline-presets.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -3021,26 +3022,6 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "check-region-library-sphere-roundtrip-runner.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode with a RUNNER library (region-library F6c, the runner analogue of check-region-library-sphere-roundtrip.mjs).",
-            "path": "scripts/procgen/check-region-library-sphere-roundtrip-runner.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "check",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -3169,106 +3150,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "In-app smoke test for RULE-GATED PORTALS (sphere-driven growth priority #2): a bounce world where a non-ability item (key_red) gates a portal as an AUTHORED LOCK — no geometry; the host bridge evaluates the payload's gate_rules against live inventory and pushes booleans into the game (__swfBridge.setGateStates).",
             "path": "scripts/procgen/check-rule-gated-portals.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host"
-            ],
-            "file": "check-runner-bot.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Runner phase-8 gate (plan §4.8, phase table row 8) — the playback bot drives a runner_worldgen region in the REAL frontend, end to end through the phase-8 chain: the registry entry's getPlaybackController (the PlaybackProxy runnerDemo/index.js injects) publishes walkTo on runner:playbackControl → the in-iframe flash…",
-            "path": "scripts/procgen/check-runner-bot.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host"
-            ],
-            "file": "check-runner-embed.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Runner phase-9 gate (plan §4.9, phase table row 9) — the full embed round-trip on a SPHERE-GROWN world, first check → Victory, driven end to end by the phase-8 playback bot (no sendLocation/sendExit shortcuts — every check and region move is the game playing itself). check-bounce-embed.mjs is the template; check-run…",
-            "path": "scripts/procgen/check-runner-embed.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "check-runner-game.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere. ⇒ deleting this one line is how a later slice adopts it into CI.",
-            "path": "scripts/procgen/check-runner-game.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "check-runner-smoke.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "check-runner-smoke — **VERIFIES THAT A GENERATED RUNNER WORLD BOOTS, RENDERS AND IS PLAYED THROUGH BY ITS OWN SOLVER WITNESS IN THE REAL FRONTEND** (runner phase-7 gate, plan §5 row 7) — no manual play anywhere in it.",
-            "path": "scripts/procgen/check-runner-smoke.mjs"
         },
         {
             "argvHelpers": [],
@@ -7333,26 +7214,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Generate the committed demo CLOUDBERRY region-library pack + register it in the region-libraries index — the Cloudberry analogue of make-demo-runner-pack.mjs.",
             "path": "scripts/procgen/make-demo-cloudberry-pack.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "make",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "make-demo-runner-pack.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Generate the committed demo RUNNER region-library pack + register it in the region-libraries index (region-library F6c).",
-            "path": "scripts/procgen/make-demo-runner-pack.mjs"
         },
         {
             "argvHelpers": [],

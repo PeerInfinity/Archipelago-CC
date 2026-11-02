@@ -90,7 +90,7 @@ import { peekSphereStateSingleton } from '../sphereState/singleton.js';
 import {
     SHIPPED_PRESETS, capturePresetState, applyPresetState,
     getPresetById, loadUserPresets, saveUserPreset, deleteUserPreset,
-    restoredActivePresetId, groupShippedPresets, LS_PRESETS_KEY,
+    restoredActivePresetId, groupShippedPresets, LS_PRESETS_KEY, droppedSubstratesWarning,
 } from './presetDefs.js';
 // Region-library (F3/F5) — the headless loader core (fetch/parse/validate served
 // + ad-hoc libraries; selection → spiral config) plus the identity stamper the
@@ -745,7 +745,7 @@ export class ProcgenPipelineUI {
         this._stepState = null;
         this._tdState = null;
         this._spiralState = null;
-        this.warning = '';
+        this.warning = next.droppedSubstrates.length ? droppedSubstratesWarning(next.droppedSubstrates) : '';
         this.activePresetId = id;
         this._saveToLocalStorage({ fromPreset: true });
         this.message = `Preset "${preset.label}" applied.`;
@@ -2617,7 +2617,12 @@ export class ProcgenPipelineUI {
     _renderSphereSteps() {
         const wrap = document.createElement('div');
         const st = this._stepState;
-        if (!st) return wrap;
+        // ⛓ A plan that FAILED (planSpheres threw — its sentence is already the
+        //   panel's ERROR line) leaves no draft; drawing the editor over it threw
+        //   `Cannot read properties of null (reading 'spheres')` out of the
+        //   render, uncaught. Found by Cloudberry P4b's old-save probe; not
+        //   runner-specific (a maze bundle whose pool is too small does it too).
+        if (!st?.draft) return wrap;
         wrap.appendChild(this._renderStepBlock('1 Plan — edit, then run the next step',
             this._renderPlanEditor()));
         if (st.completed >= 1 && st.allocation) {
@@ -5460,6 +5465,11 @@ export class ProcgenPipelineUI {
             this.substrateMode = next.substrateMode;
             this.mode = next.mode;
             this._setPersistedLibraries(next.libraries);
+            // ⛓ Cloudberry P4b — a saved setup naming a substrate this app no
+            //   longer has (runner, deleted) is REFUSED BY NAME on the panel.
+            if (next.droppedSubstrates.length) {
+                this.warning = droppedSubstratesWarning(next.droppedSubstrates);
+            }
             // Keep the preset selection across refreshes — but only if
             // the id still resolves (the preset may have been deleted).
             this.activePresetId = restoredActivePresetId(

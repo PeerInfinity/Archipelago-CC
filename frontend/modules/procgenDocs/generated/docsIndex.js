@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 29,
-        "headings": 1249,
+        "docs": 28,
+        "headings": 1229,
         "indexHeadings": 2,
-        "lines": 34465,
+        "lines": 34247,
         "pages": 4,
-        "words": 497025
+        "words": 494120
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -149,24 +149,6 @@ export const DOCS_INDEX = frz({
             "words": 2077
         },
         {
-            "description": "Runner (substrate id `runner`, in `frontend/modules/runnerDemo/`) is an auto-runner platformer: the player always runs right. Each region is one level, a left-to-right strip from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.",
-            "file": "runner.md",
-            "h1": "Runner Substrate",
-            "headings": 20,
-            "lines": 216,
-            "links": [
-                "architecture.md",
-                "bounce.md",
-                "loop-recording.md",
-                "paths-and-obstacles.md",
-                "pipeline-presets.md",
-                "sphere-growth.md",
-                "substrate-registry.md"
-            ],
-            "path": "docs/json/developer/procgen/runner.md",
-            "words": 2874
-        },
-        {
             "description": "Cloudberry (substrate id `cloudberry`, in `frontend/modules/cloudberryDemo/`) plays each region as a Cloudberry Kingdom level.",
             "file": "cloudberry.md",
             "h1": "Cloudberry Substrate",
@@ -176,7 +158,6 @@ export const DOCS_INDEX = frz({
                 "flash.md",
                 "loop-recording.md",
                 "paths-and-obstacles.md",
-                "runner.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/cloudberry.md",
@@ -212,7 +193,6 @@ export const DOCS_INDEX = frz({
                 "maze.md",
                 "omsi.md",
                 "playback-and-debugging.md",
-                "runner.md",
                 "substrate-registry.md",
                 "text-adventure.md"
             ],
@@ -323,13 +303,13 @@ export const DOCS_INDEX = frz({
             "file": "pipeline-presets.md",
             "h1": "Pipeline Presets",
             "headings": 12,
-            "lines": 126,
+            "lines": 124,
             "links": [
                 "concepts.md",
                 "flash.md"
             ],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 2055
+            "words": 2024
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",
@@ -482,7 +462,6 @@ export const DOCS_INDEX = frz({
             "links": [
                 "flash.md",
                 "loop-recording.md",
-                "runner.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/noiz2sa.md",

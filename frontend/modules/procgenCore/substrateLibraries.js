@@ -29,7 +29,6 @@
 export const SUBSTRATE_LIBRARIES = Object.freeze([
     'mazeRoom/mazeRoomLibrary.js',
     'bounceDemo/bounceDemoLibrary.js',
-    'runnerDemo/runnerDemoLibrary.js',
     'cloudberryDemo/cloudberryLibrary.js',
     'textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
     'flashPanel/flashSeedlingLibrary.js',

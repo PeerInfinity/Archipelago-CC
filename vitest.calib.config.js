@@ -1,6 +1,8 @@
 import { defineConfig, configDefaults } from 'vitest/config';
 
-// Calibration tier (runner test-strategy rebalance §3). Home for the DEMOTED
+// Calibration tier (runner test-strategy rebalance §3; its runner sweeps went with
+// the runner substrate, Cloudberry P4b — the maze tileSpike calib suite remains).
+// Home for the DEMOTED
 // proofs that define gate windows but do not need to run every battery: the
 // full requirement×seed generate-and-verify sweep, the full-graph-vs-layered
 // agreement, and the bounded-budget gate-window exclusivity runs. These are

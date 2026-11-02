@@ -9,7 +9,7 @@ import {
     CONCEPT_TRIAL_STATE,
     SEEDLING_ATLAS_HOST_STATE,
     SEEDLING_ATLAS_LOCATION_STATE,
-    capturePresetState, applyPresetState, getPresetById, restoredActivePresetId, groupShippedPresets,
+    capturePresetState, applyPresetState, droppedSubstratesWarning, getPresetById, restoredActivePresetId, groupShippedPresets,
     TOPDOWN_GRID_KEYS,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
@@ -449,6 +449,24 @@ describe('applyPresetState', () => {
         }, { defaults: DEFAULTS, hasSubstrate: HAS, current: CURRENT });
         expect(next.substrateQuotas).toEqual({ cloudberry: 99 });
         expect(next.substrateMix).toEqual({ bounce: 1 });
+    });
+
+    it('names every unregistered substrate it drops, and an unregistered start falls back to auto (old runner saves)', () => {
+        const next = applyPresetState({
+            params: { seed: 1, startSubstrate: 'runner' },
+            substrateQuotas: { runner: 99, maze: 2 },
+            substrateMix: { ghost: 1, bounce: 0 },
+        }, { defaults: DEFAULTS, hasSubstrate: HAS, current: CURRENT });
+        expect(next.params.startSubstrate).toBe('auto');
+        expect(next.substrateQuotas).toEqual({ maze: 2 });
+        expect(next.droppedSubstrates).toEqual(['ghost', 'runner']);
+        expect(droppedSubstratesWarning(next.droppedSubstrates))
+            .toMatch(/names substrates this app does not have \('ghost', 'runner': deleted/);
+        // a clean state drops nothing, and a registered start is kept
+        const clean = applyPresetState({ params: { startSubstrate: 'maze' }, substrateQuotas: { maze: 1 } },
+            { defaults: DEFAULTS, hasSubstrate: HAS, current: CURRENT });
+        expect(clean.droppedSubstrates).toEqual([]);
+        expect(clean.params.startSubstrate).toBe('maze');
     });
 
     it('passes a region-library selection through unfiltered; defaults to current when absent', () => {

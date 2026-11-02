@@ -1019,31 +1019,45 @@ export function capturePresetState({
  *   value isn't > 0 — a missing dict comes back empty.
  * - `substrateMode`/`mode` only apply when valid; otherwise the
  *   `current` value is kept.
+ * - a `params.startSubstrate` naming an unregistered substrate falls back
+ *   to `'auto'`, and `droppedSubstrates` NAMES every unregistered id the
+ *   state carried (quotas, mix or start) so the caller can say so — a saved
+ *   setup from before a substrate was deleted (runner, Cloudberry P4b) is
+ *   refused by name, not silently thinned.
  *
  * Pure: returns a new state object, mutates nothing.
  */
 export function applyPresetState(state, { defaults, hasSubstrate, current }) {
+    const dropped = new Set();
     const filterDict = (raw) => {
         const out = {};
         if (raw && typeof raw === 'object') {
             for (const [id, v] of Object.entries(raw)) {
-                if (hasSubstrate(id) && v > 0) out[id] = v;
+                if (!hasSubstrate(id)) { if (v > 0) dropped.add(id); continue; }
+                if (v > 0) out[id] = v;
             }
         }
         return out;
     };
+    let params = state?.params ? { ...defaults, ...state.params } : current.params;
+    const start = state?.params?.startSubstrate;
+    if (typeof start === 'string' && start !== 'auto' && !hasSubstrate(start)) {
+        dropped.add(start);
+        params = { ...params, startSubstrate: 'auto' };
+    }
+    const substrateMix = filterDict(state?.substrateMix);
+    const substrateQuotas = filterDict(state?.substrateQuotas);
     return {
-        params: state?.params
-            ? { ...defaults, ...state.params }
-            : current.params,
+        params,
         scenario: state?.scenario
             ? {
                 items: { ...(state.scenario.items ?? {}) },
                 obstacles: { ...(state.scenario.obstacles ?? {}) },
             }
             : current.scenario,
-        substrateMix: filterDict(state?.substrateMix),
-        substrateQuotas: filterDict(state?.substrateQuotas),
+        substrateMix,
+        substrateQuotas,
+        droppedSubstrates: [...dropped].sort(),
         substrateMode: (state?.substrateMode === 'quotas' || state?.substrateMode === 'mix')
             ? state.substrateMode
             : current.substrateMode,
@@ -1054,6 +1068,14 @@ export function applyPresetState(state, { defaults, hasSubstrate, current }) {
         // A present-but-empty selection clears; absent keeps `current`.
         libraries: Array.isArray(state?.libraries) ? state.libraries : (current.libraries ?? []),
     };
+}
+
+/** The panel's sentence for `applyPresetState`'s `droppedSubstrates` (non-empty). */
+export function droppedSubstratesWarning(ids) {
+    const named = ids.map((id) => `'${id}'`).join(', ');
+    return `This setup names ${ids.length === 1 ? 'a substrate' : 'substrates'} this app does not `
+        + `have (${named}: deleted, or its module is not loaded) — dropped from the quotas and mix, `
+        + 'and a start substrate naming it is back to Auto.';
 }
 
 /**

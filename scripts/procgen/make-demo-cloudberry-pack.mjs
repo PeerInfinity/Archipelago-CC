@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Generate the committed demo CLOUDBERRY region-library pack + register it in the
- * region-libraries index — the Cloudberry analogue of make-demo-runner-pack.mjs.
+ * region-libraries index — the Cloudberry analogue of make-demo-bounce-pack.mjs (and of the
+ * runner one, make-demo-runner-pack.mjs, which went with the runner substrate).
  *
  * Each entry is one Cloudberry Kingdom level made by the GAME'S OWN generator: this
  * script opens the Cloudberry page headless (served from the same-origin local copy,
