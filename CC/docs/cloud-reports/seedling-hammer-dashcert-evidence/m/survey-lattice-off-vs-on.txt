@@ -1,0 +1,6 @@
+# scratch tree (main + L100LATTICE scratch-merge + this slice), SEEDLING_FINE_STANCE_WALK=1 both arms; A = switch OFF, B = ON
+steps 237 / 237; SOLVED 202 / 202
+MOVER step 216 L 100 
+  A {"level": 100, "passes": [{"kind": "solve", "pass": 1, "ticks": 731}], "refusal": null, "replans": 1, "replay": {"deaths": 0, "earnedClears": ["{100,0}"], "endLevel": 101, "hits": 1, "transitions": ["undefined->undefined@731"]}, "ticks": 731, "traceRows": 3, "verdict": "SOLVED"} 
+  B {"level": 100, "passes": [{"kind": "solve", "pass": 1, "ticks": 327}], "refusal": null, "replans": 0, "replay": {"deaths": 0, "earnedClears": ["{100,0}"], "endLevel": 101, "hits": 0, "transitions": ["undefined->undefined@327"]}, "ticks": 327, "traceRows": 2, "verdict": "SOLVED"}
+movers 1

@@ -1,0 +1,7 @@
+# press216.mjs: the drive's own swing tests (run.ledger chaserPressHits), t46..t56
+{"t":47,"level":100,"id":"jellyfish@80,16","tag":"jellyfish","weapon":"sword","landed":false,"killed":false,"reach":18.280244401303822,"hits":0,"hitsTimer":0,"why":"distanceRectPoint 18.280 > 16 — the rect reached it and `slash()`'s own gate did not"}
+{"t":48,"level":100,"id":"jellyfish@80,16","tag":"jellyfish","weapon":"sword","landed":false,"killed":false,"reach":16.469257492219707,"hits":0,"hitsTimer":0,"why":"distanceRectPoint 16.469 > 16 — the rect reached it and `slash()`'s own gate did not"}
+{"t":49,"level":100,"id":"jellyfish@80,16","tag":"jellyfish","weapon":"sword","landed":false,"killed":false,"reach":14.009770890908422,"hits":0,"hitsTimer":0,"why":"collideLine(\"Solid\") meets tile:Cliff at (64, 50.263157894736835)"}
+{"t":50,"level":100,"id":"jellyfish@80,16","tag":"jellyfish","weapon":"sword","landed":false,"killed":false,"reach":13.105405953854937,"hits":0,"hitsTimer":0,"why":"collideLine(\"Solid\") meets tile:Cliff at (64, 48.578947368421055)"}
+{"t":51,"level":100,"id":"jellyfish@80,16","tag":"jellyfish","weapon":"sword","landed":true,"killed":false,"reach":12.503071369517826,"hits":2,"hitsTimer":30,"knockback":{"dx":4.580648226020864,"dy":-2.0044105940280574},"why":null}
+{"t":52,"level":100,"id":"jellyfish@80,16","tag":"jellyfish","weapon":"sword","landed":false,"killed":false,"reach":16.90016451186445,"hits":2,"hitsTimer":29,"knockback":null,"why":"i-frames — hitsTimer 29 > 0 and hitByDarkStuff is false"}

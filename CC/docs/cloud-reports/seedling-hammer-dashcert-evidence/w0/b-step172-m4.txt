@@ -1,0 +1,3 @@
+# l12.mjs on the scratch tree (+ scratch-instrument.patch), SCR_M4=1 (L100LATTICE's mutant M4: the D1b axis rule off), SEEDLING_FINE_STANCE_WALK=1
+step 172 SOLVED 1066 t, hits 0 ms 44663 | spinnerDashWhole calls 2 blind 43539 ms (scanned 3860) whole 0 ms fallback 0 ms (scanned 0) wps [11,1]
+  t1052 1 wps {"planned":true,"ticks":14,"baseline":19,"saved":5,"windows":[{"at":0,"prefix":[0,2,8]}],"legs":[14],"scanned":4,"why":"certified whole (fidelity L40BK2)"}

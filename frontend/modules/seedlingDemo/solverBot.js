@@ -197,6 +197,8 @@ import {
     // ⛓ hammer-phase ICEST: the turret's attack range bounds the arm's staging point (`killIceTurretOnWalk`).
     ICE_TURRET,
 } from './solverView.js';
+// ⛓ hammer-phase STRIKE-SLOT: the policy's selected-slot gate (a family file, OFF).
+import { STRIKE_SLOT, STRIKE_SLOT_COUNTS, pressIsBlade } from './strikeSlot.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
@@ -228,6 +230,9 @@ import { PRESS_ESCAPE_SHIELD_CLAIM, PRESS_ESCAPE_SHIELD_CLAIM_COUNTS, PRESS_KILL
     shieldOnlyUnmodelled } from './pressKillGuards.js';
 // ⛓ hammer-phase SLASHRECT: a press on a tick that starts with no facing (`direction -1`, `Player.as:1424`)
 import { PRESS_NO_FACING, PRESS_NO_FACING_COUNTS, isFacing, noFacingWhy, refuseNoFacing } from './pressNoFacing.js';
+// ⛓ hammer-phase ESCAPE-EXACT — the press escape search, exact under a carried shield (`PRESS_ESCAPE_EXACT`, OFF).
+import { PRESS_ESCAPE_EXACT, PRESS_ESCAPE_EXACT_COUNTS, bumpCoveredThrough, shieldBumpFiresAt,
+    shieldBumpForecastStepped } from './pressEscapeExact.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
 import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
 // ⛓ seedling-fidelity-axeforcedu D2 — a spinning axe's forced U, crossed and billed (`AXE_PRICED_CROSSING`, OFF).
@@ -6491,6 +6496,21 @@ export function strikePolicyFor(run, { dashPlan = null,
     const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
     if (!hasSword) return null;
     /**
+     * ⛓⛓ hammer-phase STRIKE-SLOT (`STRIKE_SLOT`, OFF) — THE GATE IS WHAT THE PRESS DOES, NOT WHAT THE BAG HOLDS. The
+     * policy presses `primary`, which the game runs as `useItem(Main.primary)`: with Fire (or any non-blade) selected
+     * that is a Fire press, not a strike (CORPSEBUMP2: L40's corpse weigh walks between bumps with Fire selected and
+     * its "strike" bumps the corpse). ON, a non-blade selection builds no policy (the strike-free walk), and a built
+     * one re-reads the slot each tick (`slotIsBlade`). With the Ghost Sword held, only `ghostsword` is a blade
+     * (`strikeSlot.pressIsBlade`, ⚖ it replaces the sword). OFF, nothing is read.
+     */
+    const slotIsBlade = STRIKE_SLOT.enabled
+        ? () => pressIsBlade(run.progress('primaryWeapon'), run.progress('inventory'))
+        : null;
+    if (slotIsBlade && !slotIsBlade()) {
+        STRIKE_SLOT_COUNTS.refused += 1;
+        return null;
+    }
+    /**
      * ⛔ A PLANNED DASH IS A MOVE, AND A MOVE DOES NOT NEED A BODY. The
      * body-count fast path below is right for a STRIKE policy — with nothing
      * in reach `decide` only ever hands back the walk's own keys — but a
@@ -6525,6 +6545,7 @@ export function strikePolicyFor(run, { dashPlan = null,
          */
         vetoBody: dropKillVetoFor(run),
         ...(iframeLapse === false ? { iframeLapse: false } : {}),
+        ...(slotIsBlade ? { slotIsBlade } : {}),
     });
     if (!axisAlong) return policy;
     if (dashPlan) fail('strikePolicyFor: an axis-along policy carries no dash plan (an axis-aligned walk is undashed)');
@@ -6591,6 +6612,30 @@ export function axisStrikeFor(run, dashMode = DEFAULT_DASH_MODE) {
 }
 
 /**
+ * ⛓⛓⛓ hammer-phase AXIS-L12HITS (`AXIS_STRIKE`, OFF) — **THE CLEAR-TAG ARM'S KEYLOCK STANCE WALK IS CERTIFIED WITH
+ * ITS HOLD** (⚖ 30(c): the walk certified is the walk driven, and the executor's stand is part of the drive). ⚖ The
+ * user queued this on 2026-11-02, from the divergence sweep (CI runs 41245586575 vs 41245582842, and all four new
+ * switches 41370177273 vs 41370172948): with the switch ON, the 8 L12 legs to `bosslock@416,240` / `@432,240` still
+ * pass but take 2 hits (roomHits max 0 → 2).
+ *
+ * MEASURED (`seedling-hammer-axis-l12hits.md`): the hits are `puncher@416,256`'s punches, billed by the model at the
+ * game's own ticks, 29-40 ticks AFTER the stance walk ends, inside the keylock's 110-tick hold. None lands on a strike
+ * tick. OFF the strike-free walk to the stance (424,264) is punched in transit, so the walk climbs the ladder and the
+ * kill rung clears the puncher first. ON, RULESREF's `punchGateTimed` asks the aligned corridor, which now carries the
+ * axis strikes; they land 1-2 hits that keep the transit clean, so it is adopted, and the puncher is left alive beside the
+ * stance. The frontier arm prices that hold (`keylockStandWalk`, L30KEYLOCK); this arm never did, so the stand the
+ * executor drives was never previewed. ON the walk carries the same tail (`stand`), its probe meets the punch, and the
+ * solve kills first, as OFF does: all 8 legs answer OFF's plan byte for byte.
+ *
+ * `{}` OFF (byte-identical: the walk is handed exactly what it was), for any verb but `keylock`, with
+ * `KEYLOCK_WAIT_PRICED` off, and for a resolution without a hold or a key line (`keylockStandWalk`'s own `{}`).
+ */
+export function axisClearTagStand(run, verb, resolved) {
+    if (!AXIS_STRIKE.enabled || verb !== 'keylock' || !KEYLOCK_WAIT_PRICED.enabled) return {};
+    return keylockStandWalk(run, resolved);
+}
+
+/**
  * ⛓⛓ SEEDLING FIDELITY LAPSECOST D1 — **THE WALK'S NARROW-POLICY CANDIDATE** (`CONTACT_FIDELITY.strikeIframeLapse`
  * ON only; `walkTo`'s probe has the measurement). When the lapse-admitting walk probes dangerous, the same corridor
  * is probed once with the pre-lapse admissions (`strikePolicyFor`'s `iframeLapse: false`) before the ladder climbs,
@@ -6621,6 +6666,17 @@ function corridorSwing(forecast, state, thrust) {
  * `solverBot.test.js` calls both, from one starting state, and compares the
  * held-set sequences.
  */
+/**
+ * ⛓ hammer DASHCERT — the run's own line of sight from the player to a chaser's entity point (`run.collideLineSolid`,
+ * the "Solid" pixelmasks included, as `levelRun`'s chaser arm asks it). A run without the query cannot certify a swing.
+ */
+function dashCertLineBlocked(run, state, b) {
+    if (typeof run.collideLineSolid !== 'function') {
+        fail('solverBot: DASH_CERT_SIGHT asks the run\'s line of sight (`run.collideLineSolid`), and this run has none');
+    }
+    return Boolean(run.collideLineSolid(state.x, state.y, b.x, b.y, { masks: true }));
+}
+
 export function previewWalk(run, wps, tolerance = 0,
     { strike = null, standFor = 0, axisAligned = false, stall = null,
         /**
@@ -6928,6 +6984,13 @@ export function previewWalk(run, wps, tolerance = 0,
             for (const b of bodiesNow ?? []) {
                 if (!rectsOverlapLocal(rectNow, b.rect)) continue;
                 if (distanceRectPoint(state.x, state.y, b.rect) > reachLimit) continue;
+                // ⛓ hammer DASHCERT (`DASH_CERT_SIGHT`, OFF; inside `spinnerDashWhole` only): `slash()`'s line, as the
+                // run's chaser arm asks it (MASKS D2) — a Flyer waives it. OFF the depth is 0 and nothing is asked.
+                if (dashCertSightDepth > 0 && CONTACT_FIDELITY.pixelMaskSightLines && b.tag !== 'flyer'
+                    && dashCertLineBlocked(run, state, b)) {
+                    DASH_CERT_SIGHT.counts.refused += 1;
+                    continue;
+                }
                 /**
                  * ⛔ THE RECEIVER DECIDES. `chasers.hit` runs `enemyHit`, whose
                  * own five gates refuse an i-framed body, a dying one and a
@@ -7636,6 +7699,37 @@ export function withDashStandWhole(enabled, fn) {
     return withSwitch(DASH_STAND_WHOLE, enabled, fn);
 }
 
+/**
+ * ⛓ SEEDLING HAMMER-PHASE DASHCERT (`seedling-hammer-dashcert`; ⚖ the user queued it 2026-11-02, planner
+ * `seedling-hammer-phase-planning-2`; fidelity L100LATTICE's hand-over (a)) — **THE WHOLE-CHAIN DASH CERTIFICATE SEES
+ * THE SWING'S LINE OF SIGHT.** OFF by default.
+ *  - The gap (measured, survey step 216 with fidelity's `fineStanceWalk` ON): the run's sword arm refuses a chaser whose
+ *    line from the player meets a Solid (`slash()`'s `collideLine("Solid", x, y, v[i].x, v[i].y)`, `Player.as:917`;
+ *    fidelity MASKS D2, `CONTACT_FIDELITY.pixelMaskSightLines`, ON), but `previewWalk`'s chaser arm tests only the rect
+ *    and the reach. The preview landed the t48 press on `jellyfish@80,16` at t50; the run (and the game) refused t49 and
+ *    t50 on `tile:Cliff` and landed it at t51. The knockback and the i-frame then differ, so the preview certified a
+ *    scheduled dash at t81 that the drive's own `certifyDash` yields (the body's i-frame expires mid-dash there), the
+ *    walks part at t82, and the drive is hit by `jellyfish@80,112` at t125: "certified whole", UNBILLED DAMAGE.
+ *  - ON: every preview `spinnerDashWhole` makes (the press-blind scan, the whole-chain preview, the window-by-window
+ *    fallback) asks the run's own line test (`run.collideLineSolid`, masks included) before a swing lands on a chaser,
+ *    with the run arm's waivers (a Flyer; the key OFF asks nothing). The chain certified is then the chain driven
+ *    (⚖ 30(c)). Every other preview is untouched.
+ *  - OFF: no line is asked anywhere a preview did not ask one before; byte-identical.
+ * `counts` hears each swing the line refused inside the certificate (`refused`) and each certificate asked (`asks`).
+ * `audit` (null, or an array a measurement installs) hears one row per whole-chain preview `spinnerDashWhole` makes,
+ * either arm: whether it certified, and the kinds of the danger that refused it; it changes nothing the solver decides.
+ */
+export const DASH_CERT_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_DASH_CERT_SIGHT === '1',
+    counts: { asks: 0, refused: 0 }, audit: null };
+
+/** Run `fn` with `DASH_CERT_SIGHT` set to `enabled`, restoring the previous value (also on a throw). */
+export function withDashCertSight(enabled, fn) {
+    return withSwitch(DASH_CERT_SIGHT, enabled, fn);
+}
+
+/** ⛓ hammer DASHCERT — how many `spinnerDashWhole` asks are on the stack (counted with `DASH_CERT_SIGHT` ON only). */
+let dashCertSightDepth = 0;
+
 /** The `all` sets without the swing-only prefix (`DASH_NO_SWING_PREFIX`), derived: a length-1 prefix is the swing. */
 const DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
 const GHOST_DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(GHOST_DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
@@ -7778,6 +7872,16 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     if (!(run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword)) {
         return refuse('this room holds no sword, so `set slashing`\'s outer gate refuses '
             + 'every press and no schedule can buy a single pixel');
+    }
+    /**
+     * ⛓ hammer-phase STRIKE-SLOT (`STRIKE_SLOT`, OFF) — AND NO BLADE SELECTED, NO DASH: a scheduled press is
+     * `useItem(Main.primary)`, so with Fire selected it is a Fire press, not a dash (CORPSEBUMP2's walk to bump 2).
+     * ON, refused here by name; `strikePolicyFor` would hand both the preview and the drive no policy anyway.
+     */
+    if (STRIKE_SLOT.enabled && !pressIsBlade(run.progress('primaryWeapon'), run.progress('inventory'))) {
+        STRIKE_SLOT_COUNTS.dashRefused += 1;
+        return refuse(`the selected slot fires \`${run.progress('primaryWeapon')}\`, not a blade, so a scheduled `
+            + '`primary` press would be that item\'s press and no schedule can buy a dash');
     }
     // ⛓ SF2: a deadline already reached costs this corridor not even its baseline.
     if (deadlineReached('sword-dash')) return refuse('deadline');
@@ -10345,6 +10449,68 @@ function stancePrerequisite(run, candidates, exempt, hypothesis, contacts, block
             };
         }
     }
+    // ⛓ hammer-phase POCKET-BURN (`STANCE_BURN`, OFF): arm (c), a burnable tree in the lane — see `stanceBurnPrerequisite`.
+    return STANCE_BURN.enabled ? stanceBurnPrerequisite(run, candidates, exempt, hypothesis, blocked) : null;
+}
+
+/**
+ * The trees arm (c) may offer: standing, not refused, and burnable by this run — Fire held, no Fire Wand (whose case-5
+ * press the model refuses, `resolveBurnStrategy`), and `burn` available through the strategy switch's gate. Empty
+ * otherwise, so a run without Fire is offered nothing (the tree stays a wall, as it is OFF).
+ */
+function stanceBurnTrees(run, blocked) {
+    const inv = run.progress('inventory') ?? {};
+    if (!inv.hasFire || inv.hasFireWand || !executorFor('burn', 'stancePrerequisite:burn')) return [];
+    const burned = run.entities('burnedTrees') ?? new Set();
+    return (run.world.burnableTrees ?? []).filter((t) => !burned.has(t.id) && !blocked.includes(t.id));
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase POCKET-BURN (`STANCE_BURN`, OFF) — **ARM (c): THE TREE IN THE LANE.** Arms (a) and (b) have both
+ * failed, so the stance is reachable neither through a weigh's mechanism nor by shoving a walk block aside. A
+ * `BurnableTree` is the third obstacle an order can discharge for good (`burnEnd -> die()` removes it for the visit
+ * and writes its tag; ⚖ Fire is a plain AP item), and the frontier already has its verb (`resolveBurnStrategy`). The
+ * probe is the corridor with that ONE tree burnt — the field a real burn writes (`burnedTrees`) — first in the world
+ * as it is, then under the hypothesis with its volumes exempted (`stanceReaches`' own reading). ⇒ the prerequisite is
+ * the TREE; `prerequisiteOrder` resolves it with the frontier's own `burn` (its gate, its stance, its Fire), and the
+ * hold is re-derived against the world the burn changed.
+ *
+ * Measured on L40's Boss Key 2 arrivals (POCKET-BURN W0): `hold(wandlock@480,560)`'s stance `buttonroom@880,768` is
+ * behind `burnabletree@872,784` from (488,578); arms (a) and (b) refuse, and the run holds Fire.
+ *
+ * ⚠ LAST, after the geometry arm: OFF and wherever (a)/(b) answer, nothing moves.
+ */
+function stanceBurnPrerequisite(run, candidates, exempt, hypothesis, blocked) {
+    const trees = stanceBurnTrees(run, blocked);
+    if (!trees.length) return null;
+    const live = run.liveGeometryOpts();
+    const withBurnt = (bag, id) => ({ ...bag, burnedTrees: new Set([...(bag.burnedTrees ?? []), id]) });
+    const hExempt = new Set([...exempt,
+        ...hypothesis.filter((h) => h.kind === 'activator' || h.kind === 'rock').map((h) => `proximity-hazard:${h.id}`),
+        ...hypothesis.flatMap((h) => h.exempt ?? [])]);
+    const arms = [{ bag: live, exempt, under: false }];
+    if (hypothesis.length) arms.push({ bag: bagWithDischarged(run, live, hypothesis), exempt: hExempt, under: true });
+    for (const arm of arms) {
+        for (const tree of trees) {
+            const bag = withBurnt(arm.bag, tree.id);
+            for (const c of candidates) {
+                if (!corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null,
+                    solverPlanOpts(run, arm.exempt, { liveBag: bag }))) continue;
+                return {
+                    stance: { x: c.x, y: c.y },
+                    prerequisite: {
+                        id: tree.id,
+                        kind: 'solid',
+                        tag: 'burnabletree',
+                        via: 'burn',
+                        why: `the stance is reachable once ${tree.id} is burnt${arm.under
+                            ? ' (and the rest of the hypothesis discharged)' : ''}: the run holds Fire, and a burnt `
+                            + 'tree is gone for the visit (`burnEnd -> die()`), so the corridor it shut stays open',
+                    },
+                };
+            }
+        }
+    }
     return null;
 }
 
@@ -10378,6 +10544,10 @@ function prerequisiteRefusalClause(run, hypothesis, walls, blocked) {
         return Boolean(live) && !live.removed;
     });
     for (const row of blocks) parts.push(`${row.id} (no shove of it plans the corridor)`);
+    // ⛓ POCKET-BURN (`STANCE_BURN`, OFF): the trees arm (c) tried, named
+    if (STANCE_BURN.enabled) {
+        for (const t of stanceBurnTrees(run, blocked)) parts.push(`${t.id} (no burn of it plans the corridor)`);
+    }
     if (parts.length === 0) {
         return ` ⛔ AND NO PREREQUISITE EXISTS TO RAISE: level ${run.level} holds no `
             + 'walk-family pushable and no hypothesised activator whose own verb moves one, '
@@ -10641,6 +10811,36 @@ export const STANCE_ROCKS = { enabled: globalThis.process?.env?.SEEDLING_STANCE_
 /** Run `fn` with `STANCE_ROCKS` set to `enabled`, restoring the previous value. */
 export function withStanceRocks(enabled, fn) {
     return withSwitch(STANCE_ROCKS, enabled, fn);
+}
+
+/**
+ * `STANCE_BURN` (OFF): a hold stance shut by a burnable tree raises the tree's `burn` as its prerequisite
+ * (`stancePrerequisite`'s arm (c), `stanceBurnPrerequisite`). ⚖ The user queued POCKET-BURN on 2026-11-02, from
+ * SOUTHDOOR's hand-over: on L40's Boss Key 2 arrivals `burnabletree@872,784` shuts the latch pocket and the hold's
+ * prerequisite search named only activators and a pushable. `SEEDLING_STANCE_BURN=1` / `withStanceBurn(enabled, fn)`.
+ */
+export const STANCE_BURN = { enabled: globalThis.process?.env?.SEEDLING_STANCE_BURN === '1' };
+export const STANCE_BURN_DEFAULT = false;
+
+/** Run `fn` with `STANCE_BURN` set to `enabled`, restoring the previous value. */
+export function withStanceBurn(enabled, fn) {
+    return withSwitch(STANCE_BURN, enabled, fn);
+}
+
+/**
+ * ⛓ READ-ONLY PROBE for `hammerPocketBurn.test.js`: the hold stance `resolveHoldStrategy` derives for the presser at
+ * `at` (`{x, y}`), with the prerequisite search on, from `run` as it stands: `{stance, prerequisite, refusal}` (the
+ * refusal's message, or null). No contacts are passed (the walk's own are the caller's). It steps nothing.
+ */
+export function holdStanceProbe(run, at, blocked = []) {
+    const presser = resolvePresser(run.world, at, 'holdStanceProbe');
+    try {
+        const r = deriveHoldStance(run, presser, NO_CONTACTS, blocked, { prerequisites: true });
+        return { stance: r.stance, prerequisite: r.prerequisite ?? null, refusal: null };
+    } catch (e) {
+        if (!(e instanceof SolverRefusal)) throw e;
+        return { stance: null, prerequisite: null, refusal: e.message };
+    }
 }
 
 /**
@@ -15248,7 +15448,9 @@ function escapeKeyOf(run, { state, at, keys = [], pressAt, id, deadline = true }
     const p = activeProgress;
     const { horizon, follow, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
     const globals = [horizon, follow, cell, maxExpansions, GHOST_SPINNER_PRESS.enabled, PRESS_KILL_COST.enabled,
-        d === null ? 'none' : `live:${d.fine === true}`, p === null ? 'none' : (p.seg === null ? 'outside' : 'segment')];
+        d === null ? 'none' : `live:${d.fine === true}`, p === null ? 'none' : (p.seg === null ? 'outside' : 'segment'),
+        // ⛓ ESCAPE-EXACT: its answers differ, so it is keyed — and only when ON, so OFF's key text is OFF's
+        ...(PRESS_ESCAPE_EXACT.enabled ? [`exact:${canonicalDigestText(PRESS_ESCAPE_EXACT.parts)}`] : [])];
     return { digest, key: `${digest}|${canonicalDigestText(globals)}|${
         canonicalDigestText({ state, at, keys, pressAt, id, deadline })}` };
 }
@@ -15476,8 +15678,17 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
      * where the shield's envelope meets no body on its path, and of the negatives only an exhausted search is claimed
      * (`shieldNoClaim` keeps every other one OFF's no-claim). The docblock is the switch's (`pressKillGuards.js`).
      */
-    const shieldClaim = PRESS_ESCAPE_SHIELD_CLAIM.enabled && shieldOnlyUnmodelled(probe.unmodelled);
-    if (probe.unmodelled.length > 0 && !shieldClaim) {
+    /**
+     * ⛓ hammer-phase ESCAPE-EXACT (`PRESS_ESCAPE_EXACT`, OFF ⇒ `exact` false and every line below is OFF's) — part (i):
+     * the shield bump as the only unmodelled source, with a forecast that steps it, is read off `first`'s own
+     * coverage, not off this probe; SPIN is then not consulted. The docblock is the switch's (`pressEscapeExact.js`).
+     */
+    const XP = PRESS_ESCAPE_EXACT.enabled ? PRESS_ESCAPE_EXACT.parts : null;
+    const exact = XP !== null && XP.probe && shieldOnlyUnmodelled(probe.unmodelled) && shieldBumpForecastStepped();
+    const XC = PRESS_ESCAPE_EXACT_COUNTS;
+    if (exact) XC.asked += 1;
+    const shieldClaim = !exact && PRESS_ESCAPE_SHIELD_CLAIM.enabled && shieldOnlyUnmodelled(probe.unmodelled);
+    if (probe.unmodelled.length > 0 && !shieldClaim && !exact) {
         return { ok: false, claim: false, why: `the forecast names ${probe.unmodelled.join(', ')} as unmodelled` };
     }
     if (shieldClaim) PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.asked += 1;
@@ -15499,8 +15710,18 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     }
     const { horizon, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
     const rowsFor = (land) => land + horizon + 2 - n;
+    // ⛓ ESCAPE-EXACT (i): told every previewed state (the approach and the stood train), the forecast steps the bump
+    const told = (last) => (t) => (t <= last ? states.get(t) ?? null : null);
     const first = forecastPress(rowsFor(trainEnd), { pressAt, direction, id,
-        positions: (t) => states.get(t) ?? null });
+        positions: (t) => states.get(t) ?? null, ...(exact ? { players: told(trainEnd + 1) } : {}) });
+    if (exact && (first.unmodelled.some((u) => !shieldOnlyUnmodelled([u]))
+        || !bumpCoveredThrough(first, n, trainEnd + 1 - n))) {
+        XC.uncovered += 1;
+        XC.noClaim += 1;
+        return { ok: false, claim: false, why: `the forecast names ${probe.unmodelled.join(', ')} as unmodelled `
+            + `(PRESS_ESCAPE_EXACT: the bump was not stepped on every row from t${n} to t${trainEnd + 1}: `
+            + `${first.shieldBump ? `uncovered from t${first.shieldBump.uncoveredFrom}` : 'no coverage report'})` };
+    }
     if (first.lineBlocked) {
         return shieldNoClaim({ ok: false, claim: true, bound: 'line', why: 'the press\'s line of sight is blocked' });
     }
@@ -15516,8 +15737,20 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
      * latched at the start is the run's), or a fall whose tile `fallDestination` refuses (a lethal pit).
      */
     const lethalFloor = lethalFloorFrom(run, state);
-    const safeIn = (rows) => (q, i) => q !== null && !lethalFloor(q)
-        && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i);
+    /**
+     * ⛓ ESCAPE-EXACT (ii): past `exactFrom` (the last row the forecast stepped with a told state) a state a bump would
+     * fire on is pruned; `cut` counts the states the prune ALONE refused (the search's negative is then no claim).
+     */
+    const prune = exact && XP.prune;
+    let cut = 0;
+    const safeIn = (rows, bodies = null, exactFrom = Infinity) => (q, i) => {
+        if (!(q !== null && !lethalFloor(q) && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i))) return false;
+        if (prune && i > exactFrom && shieldBumpFiresAt(q, rows, bodies, i)) {
+            cut += 1;
+            return false;
+        }
+        return true;
+    };
     const safe = safeIn(first.rows);
     // ⛓ hammer-phase XC: `tap` (the cache's recorder or its silent re-derivation) sees each search; `null` is today's
     const traced = (phase, r) => {
@@ -15525,14 +15758,30 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         if (tap === null || !tap.silent) escapeSearchEmit(trace, phase, r);
         return r;
     };
-    for (let t = at + 1; t <= L; t += 1) {
+    // ⛓ ESCAPE-EXACT (iii): the aim tick's own row is asked too (a body that steps onto the player during it)
+    const contactFrom = XP !== null && XP.contact ? at : at + 1;
+    for (let t = contactFrom; t <= L; t += 1) {
         if (!safe(states.get(t), t - n)) {
+            if (t === at) XC.contact += 1;
+            if (exact) XC.claimedNegative += 1;
             return shieldNoClaim({ ok: false, claim: true, bound: 'approach', why: `the approach or the train meets a `
                 + `body or the line at t${t}, before the press lands` });
         }
     }
-    const search = (start, startIndex, rows, phase) => traced(phase, spaceTimeReach({
-        start, startIndex, step: (q, k) => stepOrNull(q, k), safe: safeIn(rows), horizon: L + horizon - n - startIndex,
+    /**
+     * ⛓ ESCAPE-EXACT (ii): the free search's rows. `first` was told the STOOD train through `trainEnd + 1`; a bump it
+     * stepped after the landing moved a body on a path the free search does not take, so those rows are re-forecast
+     * told the path only through the landing (the prune covers the rest).
+     */
+    let free = first;
+    if (exact && first.shieldBump.bumps.some((b) => b.shoved && b.t > L)) {
+        XC.rowsReforecast += 1;
+        free = forecastPress(rowsFor(trainEnd), { pressAt, direction, id, positions: (t) => states.get(t) ?? null,
+            players: told(L) });
+    }
+    const search = (start, startIndex, rows, phase, bodies = null, exactFrom = Infinity) => traced(phase, spaceTimeReach({
+        start, startIndex, step: (q, k) => stepOrNull(q, k), safe: safeIn(rows, bodies, exactFrom),
+        horizon: L + horizon - n - startIndex,
         keySets: HOLD_FIRST_KEY_SETS, keyOf: coarseKey(cell), maxExpansions,
         // ⛓ of two states with one coarse key, keep the one farther from every hammer's disc (the refuge's
         // preference, `discClearanceAt` — a robustness score, never the safety test)
@@ -15546,19 +15795,35 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         // ⚠ a search cut by its BUDGET proves nothing either way: only an EXHAUSTED one refuses the press
         if (r.bound === 'deadline' || r.bound === 'expansions') return { ok: false, claim: false, why: r.why };
         const claimed = { ok: false, claim: true, bound: r.bound, why: `no ESCAPE from the landing at t${L} (${pre}): ${r.why}` };
+        if (exact) {
+            // ⛓ ESCAPE-EXACT (ii): a negative the bump prune shaped is no claim; one it did not shape is exact
+            if (cut > 0) {
+                XC.exhaustedCut += 1;
+                XC.noClaim += 1;
+                return { ok: false, claim: false, why: `${unmodelledWhy} (PRESS_ESCAPE_EXACT: ${claimed.why}; the search `
+                    + `pruned ${cut} state(s) a shield bump would have moved a body on)` };
+            }
+            if (r.bound === 'exhausted') XC.exhausted += 1;
+            XC.claimedNegative += 1;
+            return claimed;
+        }
         if (shieldClaim && r.bound === 'exhausted') PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.exhausted += 1;
         return shieldClaim && r.bound !== 'exhausted' ? shieldNoClaim(claimed) : claimed;
     };
     // ⛓ First: free from the landing. Then re-aim the remaining tests from the certificate's own points.
-    let found = search(states.get(L), L - n, first.rows, 'free');
+    let found = search(states.get(L), L - n, free.rows, 'free', free.bodies, L - n);
+    if (exact) XC.cuts += cut;
     const bad = verdict(found, L, 'free from the landing');
     if (bad) return bad;
     const at2 = (t) => (t <= L ? states.get(t) : found.states[t - L]);
-    const again = forecastPress(rowsFor(trainEnd), { pressAt, direction, id, positions: at2 });
+    const again = forecastPress(rowsFor(trainEnd), { pressAt, direction, id, positions: at2,
+        ...(exact ? { players: told(L) } : {}) });
     const sameTests = JSON.stringify(again.tests.map((x) => [x.t, x.id, x.landed]))
         === JSON.stringify(first.tests.map((x) => [x.t, x.id, x.landed]));
     let pre = [];
-    if (!sameTests || !found.states.every((q, k) => safe(q, L - n + k) && safeIn(again.rows)(q, L - n + k))) {
+    const safeFree = exact ? safeIn(free.rows, free.bodies, L - n) : safe;
+    const safeAgain = exact ? safeIn(again.rows, again.bodies, L - n) : safeIn(again.rows);
+    if (!sameTests || !found.states.every((q, k) => safeFree(q, L - n + k) && safeAgain(q, L - n + k))) {
         // ⛓ The fallback: the whole train stood, the search from its last test.
         for (let t = L + 1; t <= trainEnd + 1; t += 1) {
             if (!safe(states.get(t), t - n)) {
@@ -15567,7 +15832,9 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
             }
         }
         pre = Array.from({ length: trainEnd + 1 - L }, () => NO_KEYS);
-        found = search(states.get(trainEnd + 1), trainEnd + 1 - n, first.rows, 'stood');
+        cut = 0;
+        found = search(states.get(trainEnd + 1), trainEnd + 1 - n, first.rows, 'stood', first.bodies, trainEnd + 1 - n);
+        if (exact) XC.cuts += cut;
         const bad2 = verdict(found, trainEnd + 1, 'the train stood');
         if (bad2) return bad2;
     }
@@ -15584,6 +15851,7 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         }
         PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.certified += 1;
     }
+    if (exact) XC.certified += 1;
     return {
         ok: true, claim: true, pressAt, landing: L, outcome: first.outcome, impulse: first.impulse,
         keys: [...pre, ...found.keys], expansions: found.expansions,
@@ -26846,6 +27114,17 @@ function solveSegmentUnder({
      * ceremony sample), untruncated; anything less falls back to the window-by-window plan, as a failed chain does.
      */
     const spinnerDashWhole = (wps, except, stand = null) => {
+        // ⛓ hammer DASHCERT (`DASH_CERT_SIGHT`, OFF): ON, every preview below asks the swing's line of sight.
+        if (!DASH_CERT_SIGHT.enabled) return spinnerDashWholeAsked(wps, except, stand);
+        DASH_CERT_SIGHT.counts.asks += 1;
+        dashCertSightDepth += 1;
+        try {
+            return spinnerDashWholeAsked(wps, except, stand);
+        } finally {
+            dashCertSightDepth -= 1;
+        }
+    };
+    const spinnerDashWholeAsked = (wps, except, stand = null) => {
         // ⛓ hammer DASH (`DASH_STAND_WHOLE`, OFF): a `stand` tail reaches here only ON; null is the shape before it.
         const opts = { tolerance, dashMode, ...(stand ? { stand } : {}) };
         const blind = (samples) => probeSamples(samples.map((sm) => (sm.spinners ? { ...sm, spinners: null } : sm)),
@@ -26861,7 +27140,16 @@ function solveSegmentUnder({
         const stood = tail ? tail.length : null;
         const arrived = stand ? !walk.truncated && (stood === stand.ticks || tail.at(-1)?.ceremony === true)
             : !walk.truncated || walk.truncated.kind === 'crossed';
-        if (arrived && !probeSamples(walk.samples, except)) {
+        // OFF-shape: probed only where the certificate always probed (an arrival), or for a measurement's audit row.
+        const wholeHit = (arrived || DASH_CERT_SIGHT.audit) ? probeSamples(walk.samples, except) : null;
+        // ⛓ hammer DASHCERT: a measurement's row per whole-chain preview (`DASH_CERT_SIGHT.audit`, null by default).
+        if (DASH_CERT_SIGHT.audit) {
+            DASH_CERT_SIGHT.audit.push({ tick: walk.startTick, level: run.level, sight: DASH_CERT_SIGHT.enabled,
+                arrived, certified: arrived && !wholeHit, hitTick: wholeHit?.tick ?? null,
+                kinds: wholeHit ? [...new Set((wholeHit.sources ?? []).map((sx) => sx.kind ?? sx.source ?? '?'))] : [],
+                ids: wholeHit ? (wholeHit.sources ?? []).map((sx) => sx.id ?? null) : [] });
+        }
+        if (arrived && !wholeHit) {
             return { ...c, why: stand ? `certified whole with its ${stood}-tick stand (hammer DASH)`
                 : 'certified whole (fidelity L40BK2)' };
         }
@@ -31286,6 +31574,8 @@ function solveSegmentUnder({
                 what: `${whatCT} -> ${verb} stance`,
                 contactsOverride: resolved.exempt,
                 axisAligned: resolved.approach === 'axis-aligned',
+                // ⛓ hammer-phase AXIS-L12HITS (`AXIS_STRIKE` ON only): the keylock's hold priced as this walk's tail.
+                ...axisClearTagStand(run, verb, resolved),
             });
         }
         if (written()) {

@@ -1,0 +1,6 @@
+# mutants: copy + restore of solverBot.js in the scratch tree (main + L100LATTICE scratch-merge + this slice), gate hammerDashCert.test.js
+m1 the old certificate restored (spinnerDashWhole ON does not raise dashCertSightDepth):
+   1 red — 'ON: step 216 with fidelity's `fineStanceWalk` — certified on the walk the drive takes; …' (3 passed)
+m2 the chaser not billed (the whole-chain check's probeSamples with each sample's `chasers` set to null):
+   0 red (4 passed). Measured why: no whole-chain preview on the route meets a chaser (survey audit ON: 330 of 330
+   certified, no danger kinds), and step 216's certified walk is hitless on both the preview and the game.

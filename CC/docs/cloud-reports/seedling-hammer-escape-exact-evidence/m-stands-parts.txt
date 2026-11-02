@@ -1,0 +1,40 @@
+== key 0 XPARTS_OFF=prune
+  certified False False None 11 ms {}
+  envelope False False None 3 ms {}
+  exhausted False False None 4 ms {}
+  approach False False None 4 ms {}
+== key 1 XPARTS_OFF=prune
+  certified True True None 76 ms {'asked': 1, 'certified': 1}
+  envelope True True None 45 ms {'asked': 1, 'certified': 1}
+  exhausted False True approach 18 ms {'asked': 1, 'claimedNegative': 1, 'contact': 1}
+  approach False True approach 7 ms {'asked': 1, 'claimedNegative': 1, 'contact': 1}
+== key 0 XPARTS_OFF=prune,contact
+  certified False False None 11 ms {}
+  envelope False False None 3 ms {}
+  exhausted False False None 4 ms {}
+  approach False False None 4 ms {}
+== key 1 XPARTS_OFF=prune,contact
+  certified True True None 90 ms {'asked': 1, 'certified': 1}
+  envelope True True None 53 ms {'asked': 1, 'certified': 1}
+  exhausted True True None 39 ms {'asked': 1, 'certified': 1}
+  approach False True approach 13 ms {'asked': 1, 'claimedNegative': 1}
+== key 0 XPARTS_OFF=contact
+  certified False False None 11 ms {}
+  envelope False False None 3 ms {}
+  exhausted False False None 4 ms {}
+  approach False False None 3 ms {}
+== key 1 XPARTS_OFF=contact
+  certified True True None 84 ms {'asked': 1, 'certified': 1}
+  envelope True True None 41 ms {'asked': 1, 'certified': 1}
+  exhausted True True None 43 ms {'asked': 1, 'certified': 1}
+  approach False True approach 11 ms {'asked': 1, 'claimedNegative': 1}
+== key 0 XPARTS_OFF=
+  certified False False None 10 ms {}
+  envelope False False None 5 ms {}
+  exhausted False False None 5 ms {}
+  approach False False None 4 ms {}
+== key 1 XPARTS_OFF=
+  certified True True None 91 ms {'asked': 1, 'certified': 1}
+  envelope True True None 52 ms {'asked': 1, 'certified': 1}
+  exhausted False True approach 13 ms {'asked': 1, 'claimedNegative': 1, 'contact': 1}
+  approach False True approach 13 ms {'asked': 1, 'claimedNegative': 1, 'contact': 1}

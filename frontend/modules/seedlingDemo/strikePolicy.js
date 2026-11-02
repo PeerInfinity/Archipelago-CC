@@ -152,6 +152,8 @@ import {
     // ⛓ fidelity L74LEG624 D3: the contact switches, through the door (`STRIKE_IFRAME_LAPSE`).
     CONTACT_FIDELITY,
 } from './solverView.js';
+// ⛓ hammer-phase STRIKE-SLOT: the stood-down count (`slotIsBlade`; a family file).
+import { STRIKE_SLOT_COUNTS } from './strikeSlot.js';
 import { chaseEnvelope } from './encounters.js';
 
 export class StrikePolicyError extends Error {
@@ -806,6 +808,12 @@ export function createStrikePolicy({
     vetoBody = null,
     /** ⛓ seedling-fidelity LAPSECOST D1 — see `strikeCandidates`' `iframeLapse`. `true`: the switch decides. */
     iframeLapse: lapseAllowed = true,
+    /**
+     * ⛓ hammer-phase STRIKE-SLOT (`strikeSlot.STRIKE_SLOT`, ON only) — `() => boolean`: is a `primary` press, with the
+     * slot selected NOW, a blade swing? Asked on every `decide`; `false` stands the policy down for that tick (the walk
+     * keeps its own keys, an owed aim is dropped). `null` (the default, and OFF): nothing is asked.
+     */
+    slotIsBlade = null,
 } = {}) {
     if (typeof facingToward !== 'function') fail('createStrikePolicy: facingToward is required');
     if (!facingKeys) fail('createStrikePolicy: facingKeys is required');
@@ -912,6 +920,11 @@ export function createStrikePolicy({
          */
         decide(state, bodies, tick, walkHeld, { slash = null } = {}) {
             if (!hasSword) return { held: walkHeld, decision: STRIKE_NONE };
+            if (slotIsBlade !== null && !slotIsBlade()) {
+                aimed = null;
+                STRIKE_SLOT_COUNTS.stoodDown += 1;
+                return { held: walkHeld, decision: STRIKE_NONE };
+            }
             // ── the PRESS half of a two-tick strike ──────────────────
             if (aimed !== null) {
                 const target = aimed.id;

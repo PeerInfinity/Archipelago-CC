@@ -1,0 +1,11 @@
+M1 gate back on the inventory (no slot read in strikePolicyFor): RED
+         × ships OFF (`SEEDLING_STRIKE_SLOT=1` turns it on in node; the page channel knows the name) 50ms
+         × a Fire-selected walk: OFF the policy "strikes" the bob and every press is a Fire press; ON it presses nothing 79ms
+         × a built policy stands down when the slot leaves the blade; `planSwordDash` refuses by name ON 8ms
+         × the Ghost Sword held selects `ghostsword` and never `sword` (⚖ it replaces the sword) 41ms
+M2 accept `sword` while the Ghost Sword is held: RED
+         × the Ghost Sword held selects `ghostsword` and never `sword` (⚖ it replaces the sword) 28ms
+M3 a built policy never stands down (no per-tick read): RED
+         × a built policy stands down when the slot leaves the blade; `planSwordDash` refuses by name ON 14ms
+M4 planSwordDash ignores the slot: RED
+         × a built policy stands down when the slot leaves the blade; `planSwordDash` refuses by name ON 28ms
