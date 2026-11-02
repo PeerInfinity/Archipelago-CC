@@ -430,6 +430,8 @@ async function botBlocksResetVictory(tc) {
             loopStateSingleton.stopProcessing?.();
             tc.reportCondition(`Victory (region_3_3__loc_0 checked by the Bot block) — ${queueDiag()}`,
                 !!victory && checkedList(victory).includes('region_3_3__loc_0') && checkedList(victory).includes('region_2_3__loc_0'));
+            // (the Victory coin's location can reach the host a frame before the page records its bot result)
+            await tc.pollForValue(() => (pageEvents('bot').length >= bots + 6 ? true : null), 'the page recorded the sixth bot result', 5000, 50);
             const goals = pageEvents('bot').slice(bots).slice(0, 6).map((e) => `${e.goal?.kind}:${e.goal?.id}:${e.result}`);
             const sent = pageEvents('sendExit').slice(exits).slice(0, 4).map((e) => `${e.side}:${e.door}`);
             tc.log(`after the reset, the page's bot goals ${JSON.stringify(goals)}, exits ${JSON.stringify(sent)}`);
