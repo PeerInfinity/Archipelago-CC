@@ -138,6 +138,11 @@
             "category": "cloudberrySubstrate"
         },
         {
+            "id": "cloudberry-mixed-loop-bot-victory",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "runner-preset-sidecar-configured",
             "enabled": true,
             "category": "runnerDemo"
@@ -1956,6 +1961,12 @@
             "enabled": true,
             "category": "Tutorial walks: cloudberry",
             "_comment": "Cloudberry P3a (2026-11-01): the walk row of procgen-cloudberry (the committed Cloudberry Sphere WorldGen preset played to the end by the Playback Bot). Manual batch cloudberry, run by cloudberry-e2e.yml after its site fetch."
+        },
+        {
+            "id": "tutorial-walk-procgen-loop-mode-cloudberry",
+            "enabled": true,
+            "category": "Tutorial walks: cloudberry",
+            "_comment": "Cloudberry P4a (2026-11-02): the walk row of procgen-loop-mode-cloudberry (the shipped Cloudberry demo generated in the panel with loop mode on, played to the end by the Playback Bot). Manual batch cloudberry, not tutorials-procgen-loops: only the cloudberry batch's job fetches the Cloudberry site."
         },
         {
             "id": "tutorial-walk-seedling-recompile",

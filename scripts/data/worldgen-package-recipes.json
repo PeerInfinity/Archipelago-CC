@@ -57,6 +57,11 @@
       "game_name": "Procgen Maze WorldGen",
       "canonical_seed": null
     },
+    "cloudberry_maze_mix_worldgen": {
+      "source": "frontend/presets/cloudberry_maze_mix_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Cloudberry Maze Mix WorldGen",
+      "canonical_seed": 1
+    },
     "cloudberry_sphere_worldgen": {
       "source": "frontend/presets/cloudberry_sphere_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
       "game_name": "Cloudberry Sphere WorldGen",

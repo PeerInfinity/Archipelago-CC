@@ -303,20 +303,23 @@ describe('the corpus census — printed, then pinned', () => {
          *              paragraphs → cloudberry.md § Loop mode, and cloudberry.md § Loop mode →
          *              loop-recording.md § Summary substrates (`doc` 292 → 295); cloudberry.md § Loop mode's
          *              pointers to its own § The bot, § Testing and § Mixed worlds (`same-doc` 27 → 30).
+         *   387 → 389  cloudberry P4a (2026-11-02): cloudberry.md's demo-pack-row note → flash.md § The
+         *              `__swfBridge` contract (`doc` 295 → 296); the files table → its own § The bot and § Mixed
+         *              worlds → § Presets, its "Not yet" pointer to § Mixed worlds gone (`same-doc` 30 → 31).
          */
         expect(by).toEqual({
-            'same-doc': 30,
-            doc: 295,
+            'same-doc': 31,
+            doc: 296,
             external: 22,
             repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(387);
+        expect(CORPUS.length).toBe(389);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(295);
+        expect(docs).toHaveLength(296);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

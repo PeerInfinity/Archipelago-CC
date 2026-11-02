@@ -1074,6 +1074,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "A generated region is not final: the pipeline's step 3 lists every region it built, and Edit ▸ opens one in its substrate's editor. For a bounce zone that is the Bounce Region Editor — its…"
     },
     {
+        "path": "docs/json/user/tutorials/procgen-cloudberry.md",
+        "title": "Procgen: a Cloudberry Kingdom world",
+        "section": "user/tutorials",
+        "summary": "The Cloudberry Kingdom substrate turns each region into a level made by Cloudberry Kingdom's own level generator. A level is a row of pieces, and each piece adds a kind of platform — moving blocks…"
+    },
+    {
         "path": "docs/json/user/tutorials/procgen-grid-growth.md",
         "title": "Procgen: Grid growth, with Maze",
         "section": "user/tutorials",
@@ -1255,6 +1261,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/depgraph-multiworld.md",
                     "docs/json/user/tutorials/metamath-multiworld.md",
                     "docs/json/user/tutorials/procgen-bounce-region-editor.md",
+                    "docs/json/user/tutorials/procgen-cloudberry.md",
                     "docs/json/user/tutorials/procgen-grid-growth.md",
                     "docs/json/user/tutorials/procgen-loop-mode-everything.md",
                     "docs/json/user/tutorials/procgen-loop-mode-jta.md",

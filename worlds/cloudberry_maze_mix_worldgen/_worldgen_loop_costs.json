@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "generatedFrom": "seed_1",
+  "regions": {
+    "Menu": {
+      "moveCost": 0,
+      "xpEffect": "cost"
+    },
+    "region_3_1": {
+      "timeDrainPerSecond": 1,
+      "xpEffect": "cost"
+    },
+    "region_4_1": {
+      "timeDrainPerSecond": 1,
+      "xpEffect": "cost"
+    },
+    "region_3_2": {
+      "moveCost": 32,
+      "xpEffect": "cost"
+    },
+    "region_4_2": {
+      "timeDrainPerSecond": 1,
+      "xpEffect": "cost"
+    },
+    "region_3_3": {
+      "moveCost": 50,
+      "xpEffect": "cost"
+    }
+  },
+  "locations": {
+    "region_3_2__loc_0__7_2": 66,
+    "region_3_3__loc_0__4_2": 100
+  },
+  "defaultRegionCost": 50,
+  "defaultLocationCost": 10,
+  "defaultRegionXpEffect": "cost"
+}

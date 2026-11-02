@@ -1,0 +1,46 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Cloudberry Maze Mix WorldGen
+Location Count:                  4
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+Use Canonical Options:           Yes
+
+
+Locations:
+
+region_3_1__loc_0: Clouds
+region_4_1__loc_0: Victory
+region_3_2__loc_0__7_2: key_red
+region_3_3__loc_0__4_2: Moving Blocks
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  region_3_3__loc_0__4_2: Moving Blocks
+}
+2: {
+  region_3_2__loc_0__7_2: key_red
+}
+3: {
+  region_3_1__loc_0: Clouds
+}
+4: {
+  region_4_1__loc_0: Victory
+}

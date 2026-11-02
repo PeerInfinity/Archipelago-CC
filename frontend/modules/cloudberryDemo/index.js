@@ -36,6 +36,7 @@ import {
 } from './cloudberryLibrary.js';
 import { installCloudberryGenerator, localStorageCloudberryStore } from './cloudberryGeneration.js';
 import { createFrameGenerator } from './cloudberryGenFrame.js';
+import { createHeldWalkTo } from './heldWalkTo.js';
 
 const SITE_SETTING_KEY = 'moduleSettings.cloudberryDemo.siteUrl';
 /** The same-origin local copy (relative to the frontend page). */
@@ -74,7 +75,29 @@ function iframeSrc() {
     return `${cloudberrySiteUrl()}index.html?${q}`;
 }
 
+// The bot's walk while the game page is not up (the waiting page, or a site swap): heldWalkTo.js.
+const _heldWalkTo = createHeldWalkTo();
+
+/** Is the panel's iframe the game page (not the waiting page)? */
+function gamePageShowing() {
+    if (typeof document === 'undefined') return false;
+    const id = `iframeId=${encodeURIComponent(CLOUDBERRY_IFRAME_ID)}`;
+    return [...document.querySelectorAll('iframe')].some((f) => {
+        const src = f.getAttribute('src') ?? '';
+        return src.includes(id) && src.includes('embed=1');
+    });
+}
+
+/** The panel's playback proxy: remembers a walkTo the game page cannot hear yet. */
+class CloudberryPlaybackProxy extends PlaybackProxy {
+    _send(method, args) {
+        _heldWalkTo.sent(method, args);
+        super._send(method, args);
+    }
+}
+
 function siteChanged() {
+    _heldWalkTo.pageGone();
     _eventBus?.publish?.(SITE_CHANGED_EVENT, { site: cloudberrySiteUrl() }, 'cloudberryDemo');
 }
 
@@ -168,7 +191,16 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         else if (data?.key === '*') settingsManager.getSetting(SITE_SETTING_KEY, '').then(applySetting).catch(() => {});
     }, 'cloudberryDemo');
 
-    setPlaybackProxy(new PlaybackProxy({ eventBus, controlEvent: CLOUDBERRY_PLAYBACK_CONTROL_EVENT }));
+    setPlaybackProxy(new CloudberryPlaybackProxy({ eventBus, controlEvent: CLOUDBERRY_PLAYBACK_CONTROL_EVENT }));
+    // The game page's bridge is up: a walkTo sent before it (to the waiting page) goes again. procgenPlayer re-publishes
+    // the region on the same appReady; the bridge holds a walkTo until its region is configured, so the order is free.
+    eventBus.subscribe('iframe:appReady', (data) => {
+        if (data?.iframeId !== CLOUDBERRY_IFRAME_ID || !gamePageShowing()) return;
+        const walk = _heldWalkTo.pageReady();
+        if (!walk) return;
+        console.log(`[cloudberryDemo] the game page is up: sending the bot's walk again (${JSON.stringify(walk[0])})`);
+        eventBus.publish(CLOUDBERRY_PLAYBACK_CONTROL_EVENT, { method: 'walkTo', args: walk }, 'cloudberryDemo');
+    }, 'cloudberryDemo');
 
     // Build-time generation (P2b): the pipeline's Cloudberry levels come from a hidden
     // game page on the same site the panel plays, created on the first generation.

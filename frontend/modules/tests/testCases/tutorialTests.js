@@ -57,6 +57,8 @@ const WALK_CATEGORY_BY_TUTORIAL = Object.freeze({
     // Cloudberry plays the same-origin site copy (fetch-cloudberry-site.mjs), which only the
     // `cloudberry` batch's CI job fetches: its walk runs there, next to the substrate's rows.
     'procgen-cloudberry': 'Tutorial walks: cloudberry',
+    // P4a: the Cloudberry loop-mode walk runs there too (not in tutorials-procgen-loops, whose job does not fetch the site).
+    'procgen-loop-mode-cloudberry': 'Tutorial walks: cloudberry',
 });
 const walkCategory = (tutorial) => WALK_CATEGORY_BY_TUTORIAL[tutorial.id] ?? WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
 const walkId = (id) => `tutorial-walk-${id}`;

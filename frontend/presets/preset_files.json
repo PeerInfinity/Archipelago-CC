@@ -7264,5 +7264,28 @@
         "has_procgen_data": true
       }
     }
+  },
+  "cloudberry_maze_mix_worldgen": {
+    "name": "Cloudberry Maze Mix WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Cloudberry Maze Mix WorldGen",
+            "is_canonical": true
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }
