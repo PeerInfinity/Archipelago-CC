@@ -27023,3 +27023,25 @@ The key is read through `Object.hasOwn`, so main without the key is OFF's under 
   built policy stands down when Fire is equipped; `planSwordDash` refuses by name; a blade walk is OFF's key for key; the
   Ghost Sword selects `ghostsword` and a `sword` reading under it is refused). Mutants: the inventory gate, `sword`
   accepted under the Ghost Sword, no per-tick re-read and an unguarded `planSwordDash` each red a row.
+
+### Seedling hammer-phase DASHCERT — the whole-dash certificate sees the swing's line of sight
+
+⚖ User, queued 2026-11-02 (one of five parallel hammer slices; fidelity L100LATTICE's hand-over to hammer). Switch
+`solverBot.DASH_CERT_SIGHT`, **OFF** (`SEEDLING_DASH_CERT_SIGHT=1` / `withDashCertSight`; asked only inside
+`spinnerDashWhole`). The report is `CC/docs/cloud-reports/seedling-hammer-dashcert.md`.
+
+- **The gap, measured** (fidelity's `fineStanceWalk` scratch-merged, survey step 216, L100 → L101). The certificate's
+  preview and the drive press the same keys until t81; at t81 the preview presses its scheduled dash and the drive yields
+  it (`certifyDash`: `jellyfish@80,16`'s i-frame expires mid-dash). The cause is 33 ticks earlier: the t48 press reaches
+  that jellyfish on t49 and t50 through `tile:Cliff`, which the run refuses on `slash()`'s line of sight (MASKS D2's
+  `pixelMaskSightLines`) and lands at t51; the preview's chaser arm asks no line and lands it at t50. The drive is then hit
+  by `jellyfish@80,112` at t125, in a room the preview never saw.
+- **The design.** The certificate's previews ask the run's own line (`run.collideLineSolid`, masks included, a Flyer
+  waived) before a swing lands. Billing chaser contact in the certificate was already there (`probeSamples`), and it bills
+  nothing because the preview's room has no contact. Refusing the whole chain when a preview swing is line-blocked does not
+  fix it: the window-by-window fallback is just as blind and plans the same hit (731 t, UNBILLED).
+- **Measured.** Step 216 ON: 327 t, hitless, L101, game-witnessed (p4g, 0 px over 327 ticks, Jellyfish worst |Δ| 0).
+  The route survey at the defaults is identical ON (237 rows, 201 solved); with `fineStanceWalk` ON, step 216 is the
+  only mover (731 t / 1 hit → 327 t / 0). The bounded set (34 files) is green both ways.
+- **The L12 cost** (hand-over (b)) is the press-blind `planSwordDash` scan, not the certificate: 43.5 of 44.7 s (step
+  172) and 87.2 of 88.8 s (step 200) under L100LATTICE's mutant M4. Handed on as a dash-search question.

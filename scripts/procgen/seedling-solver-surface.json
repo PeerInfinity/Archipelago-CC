@@ -403,9 +403,9 @@
       "class": "seedling",
       "form": "geometry-query",
       "files": {
-        "solverBot.js": 12
+        "solverBot.js": 14
       },
-      "sites": 12,
+      "sites": 14,
       "seen": "static",
       "via": [
         "direct"
@@ -1001,9 +1001,9 @@
         "dangerMap.js": 14,
         "director.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 127
+        "solverBot.js": 128
       },
-      "sites": 178,
+      "sites": 179,
       "seen": "both",
       "via": [
         "direct",
@@ -4390,10 +4390,10 @@
         "forcedHit.js": 5,
         "lightsVerb.js": 3,
         "pressEscapeExact.js": 2,
-        "solverBot.js": 139,
+        "solverBot.js": 140,
         "strikePolicy.js": 2
       },
-      "sites": 176,
+      "sites": 177,
       "seen": "static",
       "via": [
         "import"

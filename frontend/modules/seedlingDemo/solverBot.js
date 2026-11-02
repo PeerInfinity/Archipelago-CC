@@ -6666,6 +6666,17 @@ function corridorSwing(forecast, state, thrust) {
  * `solverBot.test.js` calls both, from one starting state, and compares the
  * held-set sequences.
  */
+/**
+ * ⛓ hammer DASHCERT — the run's own line of sight from the player to a chaser's entity point (`run.collideLineSolid`,
+ * the "Solid" pixelmasks included, as `levelRun`'s chaser arm asks it). A run without the query cannot certify a swing.
+ */
+function dashCertLineBlocked(run, state, b) {
+    if (typeof run.collideLineSolid !== 'function') {
+        fail('solverBot: DASH_CERT_SIGHT asks the run\'s line of sight (`run.collideLineSolid`), and this run has none');
+    }
+    return Boolean(run.collideLineSolid(state.x, state.y, b.x, b.y, { masks: true }));
+}
+
 export function previewWalk(run, wps, tolerance = 0,
     { strike = null, standFor = 0, axisAligned = false, stall = null,
         /**
@@ -6973,6 +6984,13 @@ export function previewWalk(run, wps, tolerance = 0,
             for (const b of bodiesNow ?? []) {
                 if (!rectsOverlapLocal(rectNow, b.rect)) continue;
                 if (distanceRectPoint(state.x, state.y, b.rect) > reachLimit) continue;
+                // ⛓ hammer DASHCERT (`DASH_CERT_SIGHT`, OFF; inside `spinnerDashWhole` only): `slash()`'s line, as the
+                // run's chaser arm asks it (MASKS D2) — a Flyer waives it. OFF the depth is 0 and nothing is asked.
+                if (dashCertSightDepth > 0 && CONTACT_FIDELITY.pixelMaskSightLines && b.tag !== 'flyer'
+                    && dashCertLineBlocked(run, state, b)) {
+                    DASH_CERT_SIGHT.counts.refused += 1;
+                    continue;
+                }
                 /**
                  * ⛔ THE RECEIVER DECIDES. `chasers.hit` runs `enemyHit`, whose
                  * own five gates refuse an i-framed body, a dying one and a
@@ -7680,6 +7698,37 @@ export const DASH_STAND_WHOLE = { enabled: globalThis.process?.env?.SEEDLING_DAS
 export function withDashStandWhole(enabled, fn) {
     return withSwitch(DASH_STAND_WHOLE, enabled, fn);
 }
+
+/**
+ * ⛓ SEEDLING HAMMER-PHASE DASHCERT (`seedling-hammer-dashcert`; ⚖ the user queued it 2026-11-02, planner
+ * `seedling-hammer-phase-planning-2`; fidelity L100LATTICE's hand-over (a)) — **THE WHOLE-CHAIN DASH CERTIFICATE SEES
+ * THE SWING'S LINE OF SIGHT.** OFF by default.
+ *  - The gap (measured, survey step 216 with fidelity's `fineStanceWalk` ON): the run's sword arm refuses a chaser whose
+ *    line from the player meets a Solid (`slash()`'s `collideLine("Solid", x, y, v[i].x, v[i].y)`, `Player.as:917`;
+ *    fidelity MASKS D2, `CONTACT_FIDELITY.pixelMaskSightLines`, ON), but `previewWalk`'s chaser arm tests only the rect
+ *    and the reach. The preview landed the t48 press on `jellyfish@80,16` at t50; the run (and the game) refused t49 and
+ *    t50 on `tile:Cliff` and landed it at t51. The knockback and the i-frame then differ, so the preview certified a
+ *    scheduled dash at t81 that the drive's own `certifyDash` yields (the body's i-frame expires mid-dash there), the
+ *    walks part at t82, and the drive is hit by `jellyfish@80,112` at t125: "certified whole", UNBILLED DAMAGE.
+ *  - ON: every preview `spinnerDashWhole` makes (the press-blind scan, the whole-chain preview, the window-by-window
+ *    fallback) asks the run's own line test (`run.collideLineSolid`, masks included) before a swing lands on a chaser,
+ *    with the run arm's waivers (a Flyer; the key OFF asks nothing). The chain certified is then the chain driven
+ *    (⚖ 30(c)). Every other preview is untouched.
+ *  - OFF: no line is asked anywhere a preview did not ask one before; byte-identical.
+ * `counts` hears each swing the line refused inside the certificate (`refused`) and each certificate asked (`asks`).
+ * `audit` (null, or an array a measurement installs) hears one row per whole-chain preview `spinnerDashWhole` makes,
+ * either arm: whether it certified, and the kinds of the danger that refused it; it changes nothing the solver decides.
+ */
+export const DASH_CERT_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_DASH_CERT_SIGHT === '1',
+    counts: { asks: 0, refused: 0 }, audit: null };
+
+/** Run `fn` with `DASH_CERT_SIGHT` set to `enabled`, restoring the previous value (also on a throw). */
+export function withDashCertSight(enabled, fn) {
+    return withSwitch(DASH_CERT_SIGHT, enabled, fn);
+}
+
+/** ⛓ hammer DASHCERT — how many `spinnerDashWhole` asks are on the stack (counted with `DASH_CERT_SIGHT` ON only). */
+let dashCertSightDepth = 0;
 
 /** The `all` sets without the swing-only prefix (`DASH_NO_SWING_PREFIX`), derived: a length-1 prefix is the swing. */
 const DASH_CHAIN_PREFIXES_NO_SWING = Object.freeze(DASH_CHAIN_PREFIXES.filter((p) => p.length > 1));
@@ -27065,6 +27114,17 @@ function solveSegmentUnder({
      * ceremony sample), untruncated; anything less falls back to the window-by-window plan, as a failed chain does.
      */
     const spinnerDashWhole = (wps, except, stand = null) => {
+        // ⛓ hammer DASHCERT (`DASH_CERT_SIGHT`, OFF): ON, every preview below asks the swing's line of sight.
+        if (!DASH_CERT_SIGHT.enabled) return spinnerDashWholeAsked(wps, except, stand);
+        DASH_CERT_SIGHT.counts.asks += 1;
+        dashCertSightDepth += 1;
+        try {
+            return spinnerDashWholeAsked(wps, except, stand);
+        } finally {
+            dashCertSightDepth -= 1;
+        }
+    };
+    const spinnerDashWholeAsked = (wps, except, stand = null) => {
         // ⛓ hammer DASH (`DASH_STAND_WHOLE`, OFF): a `stand` tail reaches here only ON; null is the shape before it.
         const opts = { tolerance, dashMode, ...(stand ? { stand } : {}) };
         const blind = (samples) => probeSamples(samples.map((sm) => (sm.spinners ? { ...sm, spinners: null } : sm)),
@@ -27080,7 +27140,16 @@ function solveSegmentUnder({
         const stood = tail ? tail.length : null;
         const arrived = stand ? !walk.truncated && (stood === stand.ticks || tail.at(-1)?.ceremony === true)
             : !walk.truncated || walk.truncated.kind === 'crossed';
-        if (arrived && !probeSamples(walk.samples, except)) {
+        // OFF-shape: probed only where the certificate always probed (an arrival), or for a measurement's audit row.
+        const wholeHit = (arrived || DASH_CERT_SIGHT.audit) ? probeSamples(walk.samples, except) : null;
+        // ⛓ hammer DASHCERT: a measurement's row per whole-chain preview (`DASH_CERT_SIGHT.audit`, null by default).
+        if (DASH_CERT_SIGHT.audit) {
+            DASH_CERT_SIGHT.audit.push({ tick: walk.startTick, level: run.level, sight: DASH_CERT_SIGHT.enabled,
+                arrived, certified: arrived && !wholeHit, hitTick: wholeHit?.tick ?? null,
+                kinds: wholeHit ? [...new Set((wholeHit.sources ?? []).map((sx) => sx.kind ?? sx.source ?? '?'))] : [],
+                ids: wholeHit ? (wholeHit.sources ?? []).map((sx) => sx.id ?? null) : [] });
+        }
+        if (arrived && !wholeHit) {
             return { ...c, why: stand ? `certified whole with its ${stood}-tick stand (hammer DASH)`
                 : 'certified whole (fidelity L40BK2)' };
         }
