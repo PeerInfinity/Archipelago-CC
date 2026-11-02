@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 7,
+            "count": 8,
             "id": "no prefix"
         },
         {
@@ -139,7 +139,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 137,
-            "count": 187,
+            "count": 188,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 507,
+        "blockStyle": 509,
         "browser": 207,
-        "cited": 271,
-        "files": 525,
+        "cited": 273,
+        "files": 527,
         "lineStyle": 18,
-        "withDocblock": 525,
-        "withFlags": 439
+        "withDocblock": 527,
+        "withFlags": 440
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12478,6 +12478,51 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-deadframes.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "levels",
+                "out",
+                "shards"
+            ],
+            "file": "probe-seedling-derived-rules.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "levels"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shards"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "MEASUREMENT (slice tile-rules-automation-r-a1, ⚖ Robert 2026-11-02: \"Route A, R-A1 first (Recommended)\"): the DERIVED-RULES TABLE.",
+            "path": "scripts/procgen/probe-seedling-derived-rules.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": true,
             "category": "probe",
@@ -20996,6 +21041,21 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "seedling-wasm-readme — **WRITE (AND GATE) THE seedling-wasm README'S BUILD TABLE FROM `builds.json`** (SEEDLING ORIGINAL WASM slice W2, ⚖ user 2026-09-07: the build table *\"GENERATED from `builds.json` with a check gate\"*, and *\"I want to fix the false and stale things in the readme\"*).",
             "path": "scripts/procgen/seedling-wasm-readme.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "no prefix",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "seedlingEchoSentinels.mjs",
+            "flags": [],
+            "inheritedFlags": [],
+            "oneLiner": "⛓ THE ECHO TEST (session tile-rules-automation-r-a1; the method is the rules-automation W0's `circularity` scratch).",
+            "path": "scripts/procgen/seedlingEchoSentinels.mjs"
         },
         {
             "argvHelpers": [],

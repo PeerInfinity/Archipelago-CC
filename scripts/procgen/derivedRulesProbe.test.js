@@ -107,3 +107,12 @@ describe('probe-seedling-derived-rules — argv and the pin', () => {
         expect(Object.keys(pin.summary)).toEqual(expect.arrayContaining(['certifier', 'echoes', 'w0', 'arrivals', 'routeA', 'labels']));
     });
 });
+
+describe('the explained problems (OPEN_L63 is path-vs-edge, block-state framing)', () => {
+    it('OPEN_L63 is named by the certifier row the slow tier pins open, and labelled path-vs-edge', async () => {
+        const { EXPLAINED_PROBLEMS } = await import('./probe-seedling-derived-rules.mjs');
+        const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false';
+        expect(EXPLAINED_PROBLEMS.map((x) => [x.label, x.as])).toEqual([['level_63__r6c9 → level_63__r0c1', 'path-vs-edge']]);
+        expect(OPEN_L63.startsWith(`${EXPLAINED_PROBLEMS[0].label} holding`)).toBe(true);
+    });
+});
