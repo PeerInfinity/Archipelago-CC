@@ -32,7 +32,7 @@ if (answer.ok) { const sh = replayTape({ staging: tape.staging, perTick: [...tap
 const out = { id: row.id ?? null, key: row.key ?? null, i: c.i ?? 0, d: Number(args.d ?? 0), seam: captured.staging?.seam?.time,
     on: 'on' in args, ok: answer.ok, kind: answer.kind ?? null, work: answer.work ?? null, ms: Date.now() - t0,
     ticks: answer.ok ? answer.plan.solution.length : null, hits,
-    message: answer.ok ? null : String(answer.message ?? '').slice(0, 600),
+    message: answer.ok ? null : String(answer.message ?? '').slice(0, 6000),
     plan: answer.ok ? (await import('node:crypto')).createHash('sha1').update(JSON.stringify(answer.plan.solution.map((k) => [...k]))).digest('hex').slice(0, 12) : null,
     counts: PK.AXIS_STRIKE_COUNTS ? { ...PK.AXIS_STRIKE_COUNTS } : null,
     census: S ? { driveTicks: S.driveTicks, axisTicks: S.axisTicks, axisArmed: S.axisArmed, inReach: S.rows.length,
