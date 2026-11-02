@@ -1,0 +1,20 @@
+ ✓ frontend/modules/seedlingDemo/hammerSouthDoor.slow.test.js (4 tests) 454526ms
+     ✓ OFF, south of the latched door: APPROACH's refusal on the arrival legs — 12 forks, all no-plan, from (488,579)  19138ms
+     ✓ ON, south of the latched door: the door's hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run  229746ms
+     ✓ the latch staging (the near side once the latch has faded the door): SOLVED 4142 ON, nothing asked  166597ms
+     ✓ ICEST's pocket boot (480,456): ON keys identical to OFF, nothing asked  39041ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverCalibration.slow.test.js (5 tests) 6149ms
+     ✓ swordless L14 (the slowest shipping dashless pass, DETOUR): ships its 173 t plan in ONE attempt, 624 units, nothing cut  1246ms
+     ✓ L30 with the sword: the full pass UPGRADES inside the window (207 → 97 t; wave 8's live BobSoldier), the whole pass done at unit 42  429ms
+     ✓ L40 with the sword at the default window: ⛓ WINDOW 85 holds the WHOLE full pass (28 + 57 = 85) — it UPGRADES (417 → 172 t)  2174ms
+     ✓ L40 with the sword at a window of 84 (one unit short of the whole full pass): the full pass is cut at the window — the dashless 417 t ships  2296ms
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js (2 tests) 673046ms
+     ✓ OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271  517547ms
+     ✓ ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name  155495ms
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js (3 tests) 348812ms
+     ✓ OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast  142872ms
+     ✓ ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run  167461ms
+     ✓ ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached  38476ms
+ ✓ frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js (2 tests) 543665ms
+     ✓ OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall)  225991ms
+     ✓ ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death  317671ms
