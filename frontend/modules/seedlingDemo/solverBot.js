@@ -27411,7 +27411,7 @@ function solveSegmentUnder({
                 break;
             }
             const t0 = perTick.length;
-            const hits0 = run.playerHits.length;
+            const hits0 = run.ledger('playerHits').length;
             const row = { id: hunted.id, t: t0, cell: { x: cell.x, y: cell.y }, wait: null, verdict: null };
             CHASER_STAGED_HUNT_COUNTS.asks.push(row);
             const at = `(${cell.x},${cell.y})`;
@@ -27424,7 +27424,7 @@ function solveSegmentUnder({
                 whys.push(`${at}: the staging walk refused — ${String(e.message).split('\n')[0].slice(0, 160)}`);
                 continue;
             }
-            if (run.playerHits.length > hits0) {
+            if (run.ledger('playerHits').length > hits0) {
                 rewind.to(t0);
                 row.verdict = 'hit';
                 whys.push(`${at}: the staging walk was hit`);
@@ -27438,11 +27438,11 @@ function solveSegmentUnder({
                     why: `${hunted.id} died on the staging walk to ${at}`, staged: { cell: row.cell, wait: 0, from: t0 } };
             }
             const f = fork();
-            const fh0 = f.playerHits.length;
+            const fh0 = f.ledger('playerHits').length;
             let found = null;
             for (let d = 0; d <= cell.ceiling; d += 1) {
                 if (d > 0) f.advance(new Set());
-                if (f.playerHits.length > fh0) { row.verdict = 'hit'; break; }
+                if (f.ledger('playerHits').length > fh0) { row.verdict = 'hit'; break; }
                 if (!alive(f)) { row.verdict = 'gone'; break; }
                 if (deadlineReached('kill-chaser')) { row.verdict = 'deadline'; break; }
                 if (ask(f).stance) { found = d; break; }
@@ -27462,7 +27462,7 @@ function solveSegmentUnder({
                 perTick.push(held);
                 run.advance(held);
             }
-            const h = run.playerHits.length === hits0 ? ask(run) : { stance: null };
+            const h = run.ledger('playerHits').length === hits0 ? ask(run) : { stance: null };
             if (!h.stance) {
                 rewind.to(t0);
                 row.verdict = 'diverged';
