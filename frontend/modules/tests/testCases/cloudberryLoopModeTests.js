@@ -26,6 +26,8 @@ import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import loopStateSingleton from '../../loops/loopStateSingleton.js';
 import { resolveQueueBlocks } from '../../loops/blockIdentity.js';
+import { getActivePanel } from '../../playbackBot/index.js';
+import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 
 const CATEGORY = 'cloudberrySubstrate';
 const SITE = './external/cloudberry/';
@@ -465,6 +467,115 @@ registerTest({
                + 're-drives from its first move and region_2_2 is configured again with its coin drawn checked. Then block '
                + '2 takes its coin and leaves by the START door (the way back), and the rest reaches Victory.',
     testFunction: restoresSavedQueues(botBlocksResetVictory),
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 3. A MIXED world in loop mode: maze rooms and Cloudberry levels, the Playback Bot to the end (P4a) ────────────
+
+const MIX_DIR = `./presets/cloudberry_maze_mix_worldgen/${SEED}/`;
+const MIX_RULES = `${MIX_DIR}${SEED}_rules.json`;
+const MIX_SPHERE_LOG = `${MIX_DIR}${SEED}_sphere_log.jsonl`;
+const MIX_BUDGET_MS = 300000;
+
+/**
+ * The committed `cloudberry_maze_mix_worldgen` (check-cloudberry-sphere.mjs --write: two maze rooms, the start among them,
+ * and three Cloudberry levels; keys and platform items over four spheres), generated in loop mode (its own loop_costs, every
+ * payload manaEnabled), played by the Playback Bot in loop mode: the bot writes the Loops queue loop by loop, each maze block walked by Loops'
+ * maze delegation, each Cloudberry block by the page's bot (the region's solver `walkTo`), all on one mana pool. Nothing in
+ * loops is per world (`classifyRegion` / the solver per region): this row is the evidence.
+ */
+async function mixedWorldLoopBot(tc) {
+    const book = ledger(tc);
+    const trace = [];
+    const onRC = (d) => trace.push(`${d?.oldRegion}->${d?.newRegion}${d?.fromReset ? ' (reset)' : ''}`);
+    tc.eventBus.subscribe('gameState:regionChanged', onRC, 'tests');
+    try {
+        return await guarded(tc, async () => {
+            let rulesJson, sphereLog;
+            try {
+                rulesJson = await (await fetch(MIX_RULES, { cache: 'no-store' })).json();
+                sphereLog = (await (await fetch(MIX_SPHERE_LOG, { cache: 'no-store' })).text())
+                    .split('\n').filter((l) => l.trim()).map((l) => JSON.parse(l));
+            } catch (e) {
+                tc.reportCondition(`read the mixed preset (${e.message})`, false);
+                return;
+            }
+            const sidecars = rulesJson.preset_sidecars?.['1'] ?? {};
+            // Generated in loop mode (check-cloudberry-sphere.mjs MIXED_STATE): its own loop_costs, and every payload manaEnabled
+            // (Loops' maze delegation needs it; a Cloudberry block's solver is the page's bot either way).
+            tc.reportCondition('⛓ premise: the preset carries its loop_costs and every payload is manaEnabled',
+                !!rulesJson.loop_costs?.['1'] && Object.values(sidecars).every((v) => v.playable_payload?.manaEnabled === true));
+            const bySub = (sub) => Object.keys(sidecars).filter((r) => sidecars[r].substrate === sub);
+            const mazes = bySub('maze'), clouds = bySub('cloudberry');
+            tc.reportCondition(`⛓ premise: the preset mixes maze (${mazes.join(',')}) and cloudberry (${clouds.join(',')}) regions`,
+                mazes.length > 0 && clouds.length > 0);
+            if (!mazes.length || !clouds.length) return;
+
+            const panel = await tc.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
+            const bot = panel?.getBot?.();
+            tc.reportCondition('the Playback Bot is reachable', !!bot);
+            if (!bot) return;
+            bot.reset();
+
+            const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+            tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: 'cloudberryMixedLoop' });
+            await loaded;
+            await tc.stateManager.pingWorker('after-rules-load', 3000);
+            const sphereState = getSphereStateSingleton();
+            await sphereState.loadSphereLog('embedded:cloudberryMixedLoop', sphereLog.map((e) => JSON.stringify(e)).join('\n'));
+            const sphereLocations = (sphereState.getSphereData() ?? []).flatMap((e) => e?.locations ?? []);
+            tc.reportCondition(`the sphere log has locations (${sphereLocations.length})`, sphereLocations.length > 0);
+            const on = await tc.pollForCondition(() => gs()?.isLoopModeActive === true, 'loop mode active (loop_costs)', 8000, 100);
+            tc.reportCondition('loop mode active (auto-enabled by the generated loop_costs)', !!on);
+            if (!on) return;
+            const how = Object.keys(sidecars).map((r) => `${r}:${sidecars[r].substrate}/${loopStateSingleton.getRegionCaptureShape?.(r)}/${loopStateSingleton.regionSolver?.(r)}`);
+            tc.log(`regions: ${how.join(', ')}`);
+            tc.reportCondition(`maze regions are walked by delegation, Cloudberry levels by the page's bot (${how.join(', ')})`,
+                mazes.every((r) => loopStateSingleton.regionSolver?.(r) === 'delegation')
+                && clouds.every((r) => loopStateSingleton.regionSolver?.(r) === 'walkTo'
+                    && loopStateSingleton.getRegionCaptureShape?.(r) === 'summary'));
+            bot.refresh();
+
+            // Real time, no Instant: a Cloudberry Bot block is the page's own play, priced by its game clock.
+            try {
+                book.clear();
+                tc.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+                await bot.play();
+                const finished = await tc.pollForCondition(() => (bot.getStatus() || '').startsWith('finished'),
+                    'the bot finishes the mixed world in loop mode', MIX_BUDGET_MS, 500);
+                const runner = bot.getLoopRunner?.();
+                tc.reportCondition(`the bot finished (status: "${bot.getStatus()}", loops: ${runner?.getLoopCount?.() ?? '?'})`, !!finished);
+                if (!finished) tc.log(`TRACE ${JSON.stringify(trace.slice(0, 60))}; ${queueDiag()}`);
+                const snap = await snapshot(tc);
+                const checked = new Set(checkedList(snap));
+                const missing = sphereLocations.filter((n) => !checked.has(n));
+                tc.reportCondition(`every sphere-log location checked (missing: ${missing.slice(0, 5).join(', ') || 'none'})`, missing.length === 0);
+                tc.reportCondition('Victory received', Number(snap.inventory?.Victory ?? 0) > 0);
+                const visited = new Set(trace.map((t) => t.split('->')[1]?.split(' ')[0]));
+                tc.reportCondition(`the player went through maze rooms AND Cloudberry levels (${[...visited].join(',')})`,
+                    mazes.some((r) => visited.has(r)) && clouds.some((r) => visited.has(r)));
+                const cbSpent = clouds.reduce((t, r) => t + book.spentIn(r), 0);
+                tc.reportCondition(`the Cloudberry levels spent mana from the shared pool (their game seconds: ${cbSpent})`, cbSpent > 0);
+                tc.log(`COST per region: ${JSON.stringify(Object.fromEntries(Object.keys(sidecars).map((r) => [r, book.spentIn(r)])))}; `
+                    + `loops ${runner?.getLoopCount?.() ?? '?'}; bot log ${JSON.stringify((bot.getLog?.() ?? []).map((e) => e.text ?? e).slice(-20))}`);
+            } finally {
+                bot.stop();
+            }
+        });
+    } finally {
+        tc.eventBus.unsubscribe('gameState:regionChanged', onRC, 'tests');
+        book.stop();
+    }
+}
+
+registerTest({
+    id: 'cloudberry-mixed-loop-bot-victory',
+    name: 'Cloudberry loop mode, MIXED world: the Playback Bot plays maze rooms and Cloudberry levels on one mana pool to Victory',
+    description: 'The committed cloudberry_maze_mix_worldgen (maze start + three Cloudberry levels), generated in loop mode '
+               + '(its own loop_costs), and its sphere log. The Playback Bot plays it in loop mode: maze blocks by delegation, Cloudberry '
+               + 'blocks by the page\'s bot (priced by the game clock), until every sphere-log location is checked.',
+    testFunction: restoresSavedQueues(mixedWorldLoopBot),
     category: CATEGORY,
     enabled: false,
 });

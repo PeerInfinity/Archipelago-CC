@@ -21,14 +21,17 @@
  *   4. the bot collects Victory: the goal is reached.
  *
  * And a MIXED world (`MIXED_STATE`: two maze regions, the start among them, and three Cloudberry levels;
- * maze keys and Cloudberry items over four spheres, one filler): generated the same way, the oracle holds,
- * and world_generator + Generate.py make it a winnable seed (not played: its start is a maze room).
+ * maze keys and Cloudberry items over four spheres, one filler; loop mode on): generated the same way, the oracle holds,
+ * and world_generator + Generate.py make it a winnable seed (not played here: its start is a maze room; the
+ * in-app row `cloudberry-mixed-loop-bot-blocks-victory` plays the committed one in loop mode).
  *
  * Modes:
  *   (default)  the world is generated under a THROWAWAY name and removed afterwards;
  *   --write    the world is generated as the COMMITTED `cloudberry_sphere_worldgen` world + preset
- *              (worlds/cloudberry_sphere_worldgen, frontend/presets/cloudberry_sphere_worldgen) and kept;
- *   --check    no play: regenerate and compare every region's payload with the committed preset;
+ *              (worlds/cloudberry_sphere_worldgen, frontend/presets/cloudberry_sphere_worldgen) and kept, and
+ *              the mixed world as the COMMITTED `cloudberry_maze_mix_worldgen` (P4a), each through its recipe
+ *              in scripts/data/worldgen-package-recipes.json;
+ *   --check    no play: regenerate both and compare every region's payload with the committed presets;
  *   --no-play  stop after Generate.py.
  *
  * Needs the same-origin Cloudberry site (`node scripts/setup/fetch-cloudberry-site.mjs`) and, to play,
@@ -37,7 +40,7 @@
  *   node scripts/procgen/check-cloudberry-sphere.mjs [--port <n>] [--shots <dir>] [--keep] [--write|--check|--no-play]
  *
  * @ci-box it shells out to this tree's Python venv, `world_generator` and `Generate.py`, and needs the fetched Cloudberry site, a headless WebGL page and a dev server.
- * @tree-writes frontend/presets/preset_files.json: `Generate.py` registers the export there; the gate restores the file's bytes in its `finally` (except with --write, which keeps the committed preset's entry) — a SIGKILL skips that.
+ * @tree-writes frontend/presets/preset_files.json: `Generate.py` registers the export there; the gate restores the file's bytes in its `finally` (except with --write, which keeps the committed presets' entries) — a SIGKILL skips that.
  */
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -54,6 +57,23 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { generatePythonOrExit } from './repoPython.js';
 
 argvHelp(import.meta.url);
+
+/** The paths (up to depth 4) where two JSON values differ, for a failure message. */
+function jsonDiffPaths(a, b, at = '', depth = 0, out = []) {
+    if (JSON.stringify(a) === JSON.stringify(b)) return out;
+    if (depth >= 4 || !a || !b || typeof a !== 'object' || typeof b !== 'object') { out.push(at || '/'); return out; }
+    for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) jsonDiffPaths(a[k], b[k], `${at}/${k}`, depth + 1, out);
+    return out;
+}
+
+/** The first line where two texts differ: its number and both versions (a byte-level failure that JSON hides). */
+function firstDifferingLine(a, b) {
+    const x = a.split('\n'), y = b.split('\n');
+    for (let i = 0; i < Math.max(x.length, y.length); i++) {
+        if (x[i] !== y[i]) return { line: i + 1, first: x[i]?.slice(0, 160) ?? null, second: y[i]?.slice(0, 160) ?? null };
+    }
+    return null;
+}
 
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
@@ -87,13 +107,17 @@ async function main() {
     const SITE_DIR = path.join(repoRoot, 'frontend/external/cloudberry');
     const SEED = 1;
     const tmpRules = path.join(repoRoot, `scripts/procgen/.${NAME}-rules.json`);
-    const MIX = { name: 'cloudberry_maze_mix_check_worldgen', game: 'Cloudberry Maze Mix Check WorldGen' };
+    const MIX_COMMITTED = 'cloudberry_maze_mix_worldgen';
+    const MIX = WRITE ? { name: MIX_COMMITTED, game: 'Cloudberry Maze Mix WorldGen' }
+        : { name: 'cloudberry_maze_mix_check_worldgen', game: 'Cloudberry Maze Mix Check WorldGen' };
     MIX.world = path.join(repoRoot, 'worlds', MIX.name);
     MIX.preset = path.join(repoRoot, 'frontend/presets', MIX.name);
     MIX.rules = path.join(repoRoot, `scripts/procgen/.${MIX.name}-rules.json`);
     const MIXED_STATE = {
         mode: 'sphereGrowth',
-        params: { seed: 1, startSubstrate: 'maze', sphereCount: 4, fillerCount: 1 },
+        // P4a: generated in LOOP MODE (loop_costs + every payload manaEnabled: Loops' maze delegation needs it), so the
+        // committed world is the in-app mixed loop row's (`cloudberry-mixed-loop-bot-victory`).
+        params: { seed: 1, startSubstrate: 'maze', sphereCount: 4, fillerCount: 1, enableLoopMode: true },
         scenario: { items: { key_red: 1, 'Moving Blocks': 1, Clouds: 1, Victory: 1 }, obstacles: {} },
         substrateQuotas: { maze: 2, cloudberry: 3 },
         substrateMix: {},
@@ -123,7 +147,7 @@ async function main() {
         fs.rmSync(tmpRules, { force: true });
         fs.rmSync(MIX.rules, { force: true });
         if (CHECK) return;
-        for (const p of [MIX.world, MIX.preset]) fs.rmSync(p, { recursive: true, force: true });
+        if (!WRITE) for (const p of [MIX.world, MIX.preset]) fs.rmSync(p, { recursive: true, force: true });
         if (!WRITE && presetFilesBefore !== null) fs.writeFileSync(PRESET_FILES_JSON, presetFilesBefore);
         if (fs.existsSync(OUTPUT_DIR)) {
             for (const f of fs.readdirSync(OUTPUT_DIR)) if (/^AP_\d+\.zip$/.test(f)) fs.rmSync(path.join(OUTPUT_DIR, f), { force: true });
@@ -187,9 +211,31 @@ async function main() {
                 + `rerolls [${p.generate.rerolls}], checks ${JSON.stringify(p.checks)}, back ${p.backExitSide ?? '-'}`);
         }
 
+        // The committed presets' payloads, compared per region: a cloudberry region by its request, document hash,
+        // check coins and way back (the canonical text blanks the build); any other region by its whole payload.
+        const pickPayloads = (s) => Object.fromEntries(Object.entries(s).map(([id, v]) => [id, v.substrate === 'cloudberry' ? {
+            generate: v.playable_payload?.params?.generate, docSha256: v.playable_payload?.params?.docSha256,
+            checks: v.playable_payload?.params?.checks, backExitSide: v.playable_payload?.params?.backExitSide ?? null,
+        } : v.playable_payload]));
+        const committedSidecars = (name) => {
+            const presetRoot = path.join(repoRoot, 'frontend/presets', name);
+            const ap = fs.existsSync(presetRoot) ? fs.readdirSync(presetRoot).find((n) => n.startsWith('AP_')) : null;
+            ok(!!ap, `--check: the committed preset ${name} is present (${ap})`);
+            if (!ap) return null;
+            return JSON.parse(fs.readFileSync(path.join(presetRoot, ap, `${ap}_rules.json`), 'utf8')).preset_sidecars?.['1'] ?? {};
+        };
+
         // ── The mixed world (maze + cloudberry): generated twice, oracle, Python round trip ──
-        if (!CHECK) {
-            // The mixed world is always a throwaway: preset_files.json is restored after it, in every mode.
+        if (CHECK) {
+            gen.clearCloudberryLevelCache();
+            const r = await runPresetHeadless(buildRunFromState({ ...MIXED_STATE }));
+            const cs = committedSidecars(MIX_COMMITTED);
+            if (cs) {
+                ok(JSON.stringify(pickPayloads(cs)) === JSON.stringify(pickPayloads(r.rulesJson.preset_sidecars?.['1'] ?? {})),
+                    `--check: every region's payload of the mixed world equals the committed ${MIX_COMMITTED}'s (${Object.keys(cs).length} regions)`);
+            }
+        } else {
+            // Without --write the mixed world is a throwaway: preset_files.json is restored after it.
             const pfBeforeMix = fs.existsSync(PRESET_FILES_JSON) ? fs.readFileSync(PRESET_FILES_JSON, 'utf8') : null;
             const mixRuns = [];
             for (let i = 0; i < 2; i++) {
@@ -209,27 +255,50 @@ async function main() {
             run(py, ['-c', `from Options import generate_yaml_templates; generate_yaml_templates(${JSON.stringify(tmpTemplates)})`]);
             run(py, ['Generate.py', '--weights_file_path', path.join(tmpTemplates, `${MIX.game}.yaml`), '--multi', '1', '--seed', String(SEED)]);
             const mixAp = fs.readdirSync(MIX.preset).find((n) => n.startsWith('AP_'));
+            if (WRITE) {
+                // As the sphere world below: the template, and the package regenerated by its recipe FROM THE EXPORT.
+                const tpl = path.join(repoRoot, 'Players/Templates', `${MIX.game}.yaml`);
+                fs.copyFileSync(path.join(tmpTemplates, `${MIX.game}.yaml`), tpl);
+                console.log(`  [written] ${path.relative(repoRoot, tpl)}`);
+                const exportFile = path.join(MIX.preset, mixAp, `${mixAp}_rules.json`);
+                const recipe = () => {
+                    const recipeSource = path.join(repoRoot, `scripts/procgen/.${MIX.name}-export.json`);
+                    fs.copyFileSync(exportFile, recipeSource);
+                    run(py, ['-m', 'world_generator', recipeSource, '--output', MIX.world, '--game-name', MIX.game, '--force',
+                        '--apply-name-substitutions', '--canonical-seed', '1']);
+                    fs.rmSync(recipeSource, { force: true });
+                    run(py, ['Generate.py', '--weights_file_path', path.join(tmpTemplates, `${MIX.game}.yaml`), '--multi', '1', '--seed', String(SEED)]);
+                    return fs.readFileSync(exportFile, 'utf8');
+                };
+                const first = fs.readFileSync(exportFile, 'utf8');
+                const second = recipe();
+                // Measured (P4a): unlike the all-Cloudberry world, the package written from the pipeline's rules orders a
+                // maze item's keys differently (`hint_text` before `id`) from the package regenerated from the export; the
+                // JSON is the same. What the recipe needs is a FIXPOINT: the committed export regenerates byte for byte.
+                ok(jsonDiffPaths(JSON.parse(first), JSON.parse(second)).length === 0,
+                    `--write: the mixed package regenerated by its recipe exports the same JSON as the pipeline's export${
+                        second === first ? ' (and the same bytes)' : ` (key order differs from line ${firstDifferingLine(first, second)?.line})`}`);
+                const third = recipe();
+                ok(third === second, `--write: the committed mixed export is a fixpoint of its recipe (regenerated again: the same bytes${
+                    third === second ? '' : `; first differing line ${JSON.stringify(firstDifferingLine(second, third))}`})`);
+            }
             const mixLog = fs.readFileSync(path.join(MIX.preset, mixAp, `${mixAp}_sphere_log.jsonl`), 'utf8');
             const mixLocs = Object.values(mixRuns[0].rules.regions['1']).flatMap((r) => r.locations ?? []).map((l) => l.name);
             ok(mixLocs.every((n) => mixLog.includes(JSON.stringify(n))) && /"Victory"/.test(
                 fs.readFileSync(path.join(MIX.preset, mixAp, `${mixAp}_rules.json`), 'utf8')),
             `mixed: Generate.py makes a winnable seed (the sphere log reaches all ${mixLocs.length} locations; Victory placed)`);
-            if (pfBeforeMix !== null) fs.writeFileSync(PRESET_FILES_JSON, pfBeforeMix);
-            for (const p of [MIX.world, MIX.preset]) fs.rmSync(p, { recursive: true, force: true });
+            if (WRITE) {
+                console.log(`[kept] ${MIX.world}\n[kept] ${MIX.preset}`);
+            } else {
+                if (pfBeforeMix !== null) fs.writeFileSync(PRESET_FILES_JSON, pfBeforeMix);
+                for (const p of [MIX.world, MIX.preset]) fs.rmSync(p, { recursive: true, force: true });
+            }
         }
 
         if (CHECK) {
-            const presetRoot = path.join(repoRoot, 'frontend/presets', COMMITTED);
-            const ap = fs.existsSync(presetRoot) ? fs.readdirSync(presetRoot).find((n) => n.startsWith('AP_')) : null;
-            ok(!!ap, `--check: the committed preset ${COMMITTED} is present (${ap})`);
-            if (ap) {
-                const committed = JSON.parse(fs.readFileSync(path.join(presetRoot, ap, `${ap}_rules.json`), 'utf8'));
-                const cs = committed.preset_sidecars?.['1'] ?? {};
-                const pick = (s) => Object.fromEntries(Object.entries(s).map(([id, v]) => [id, {
-                    generate: v.playable_payload?.params?.generate, docSha256: v.playable_payload?.params?.docSha256,
-                    checks: v.playable_payload?.params?.checks, backExitSide: v.playable_payload?.params?.backExitSide ?? null,
-                }]));
-                ok(JSON.stringify(pick(cs)) === JSON.stringify(pick(sidecars)),
+            const cs = committedSidecars(COMMITTED);
+            if (cs) {
+                ok(JSON.stringify(pickPayloads(cs)) === JSON.stringify(pickPayloads(sidecars)),
                     `--check: every region's request, document hash and check coins equal the committed preset's (${Object.keys(cs).length} regions)`);
             }
             throw STOP;

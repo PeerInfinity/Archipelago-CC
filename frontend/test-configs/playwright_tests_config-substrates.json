@@ -138,6 +138,11 @@
             "category": "cloudberrySubstrate"
         },
         {
+            "id": "cloudberry-mixed-loop-bot-victory",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "runner-preset-sidecar-configured",
             "enabled": true,
             "category": "runnerDemo"

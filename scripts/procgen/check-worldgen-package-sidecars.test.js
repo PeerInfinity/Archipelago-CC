@@ -54,7 +54,8 @@ describe('check-worldgen-package-sidecars — the packages carry what their pres
         //   export now carries the package's sidecars (the handler re-injects by presence,
         //   not by the `_worldgen` suffix); before, it was "not compared".
         // ⛓ + `cloudberry_sphere_worldgen` (cloudberry P2b, 2026-10-31): the committed generated Cloudberry world.
-        expect(new Set(pairs.map((p) => p.pkg))).toEqual(new Set(['bounce_worldgen', 'cloudberry_sphere_worldgen',
+        // ⛓ + `cloudberry_maze_mix_worldgen` (cloudberry P4a, 2026-11-02): the committed mixed maze + Cloudberry world.
+        expect(new Set(pairs.map((p) => p.pkg))).toEqual(new Set(['bounce_worldgen', 'cloudberry_maze_mix_worldgen', 'cloudberry_sphere_worldgen',
             'procgen_maze_worldgen', 'runner_sphere_worldgen', 'runner_worldgen', 'seedling_playthrough']));
     });
 
