@@ -75,7 +75,12 @@ jobs:
       - name: Run ModuleUpdate
         run: |
           source .venv/bin/activate
-          python ModuleUpdate.py --yes
+          # As test-templates.yml: an upstream world's loose floor (worlds/tloz `bsdiff4>=1.2.2`) upgrades past the
+          # root pin (`bsdiff4==1.2.6`); `Launcher.py --update_settings` then asks "press enter to install" and dies
+          # on EOF. Hold every exact root pin as a pip constraint for the world installs and the later steps.
+          grep -E '^[A-Za-z0-9_.-]+==[^ #]+' requirements.txt | sed 's/[[:space:]]*#.*//' > "$RUNNER_TEMP/root-pins.txt"
+          echo "PIP_CONSTRAINT=$RUNNER_TEMP/root-pins.txt" >> "$GITHUB_ENV"
+          PIP_CONSTRAINT="$RUNNER_TEMP/root-pins.txt" python ModuleUpdate.py --yes
 
       - name: Configure host settings (the preset recipe is minimal-spoilers)
         run: |
