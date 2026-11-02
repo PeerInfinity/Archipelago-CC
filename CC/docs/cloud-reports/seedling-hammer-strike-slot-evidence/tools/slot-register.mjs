@@ -44,6 +44,8 @@ if (process.env.SLOT_OUT) {
             const led = r._run.ledger?.('presses') ?? [];
             r.game = led.filter((p) => p.t === r.tick).map((p) => ({ weapon: p.weapon, fired: p.fired,
                 hits: (p.hits ?? []).map((h) => (typeof h === 'string' ? h : h.id ?? h.as3 ?? JSON.stringify(h).slice(0, 60))) }));
+            r.wandShots = (r._run.wandShots ?? []).filter((w) => w.pressTick === r.tick)
+                .map((w) => ({ t: w.t, id: w.id, direction: w.direction }));
             r.playerHitsAfter = (r._run.ledger?.('playerHits') ?? []).filter((h) => h.t >= r.tick).length;
             delete r._run;
         }

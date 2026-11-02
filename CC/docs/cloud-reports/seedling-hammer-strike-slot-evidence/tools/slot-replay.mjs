@@ -10,7 +10,7 @@ const ROOT = args.root ?? process.env.SLOT_ROOT ?? '/home/user/Archipelago-CC';
 const { restoreRequest } = await import(ROOT + '/scripts/procgen/seedlingSolveRequestCodec.js');
 const { levelSourceFromAtlas } = await import(ROOT + '/frontend/modules/seedlingDemo/atlasSource.js');
 const { solveAnytime, ANYTIME_PASSES } = await import(ROOT + '/frontend/modules/seedlingDemo/jsRuntimeSolver.js');
-const PK = await import(ROOT + '/frontend/modules/seedlingDemo/pressKillCost.js');
+const SS = await import(ROOT + '/frontend/modules/seedlingDemo/strikeSlot.js').catch(() => null);
 let row;
 if (args.fixture) row = JSON.parse(gunzipSync(readFileSync(args.fixture)).toString('utf8'));
 else row = readFileSync(args.requests, 'utf8').trim().split('\n').map(JSON.parse).find((r) => String(r.id) === String(args.id));
@@ -28,6 +28,8 @@ const out = { id: row.id ?? null, key: row.key ?? null, i: c.i ?? 0, d: Number(a
     ticks: answer.ok ? answer.plan.solution.length : null,
     message: answer.ok ? null : String(answer.message ?? '').slice(0, 600),
     plan: answer.ok ? (await import('node:crypto')).createHash('sha1').update(JSON.stringify(answer.plan.solution.map((k) => [...k]))).digest('hex').slice(0, 12) : null,
+    strikeSlot: SS ? { enabled: SS.STRIKE_SLOT.enabled, ...SS.STRIKE_SLOT_COUNTS } : null,
+    passes: answer.passes ?? answer.plan?.passes ?? null, pass: answer.pass ?? answer.plan?.pass ?? null,
     census: S ? { policies: S.policies, presses: S.presses, driven: S.driven, preview: S.preview, byWeapon: S.byWeapon,
         nonBlade: S.rows.length, nonBladeDriven: S.rows.filter((r) => r.driven).length } : null };
 console.log(JSON.stringify(out));
