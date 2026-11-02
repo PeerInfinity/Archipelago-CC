@@ -1,6 +1,6 @@
 // MEASUREMENT ONLY: fold a slot-latch --keys-out dump onto the latch boot (`fidelityL40Latch.l40LatchTape`) and replay
-// it through the model (`l40LatchModelSamples`): the player's hits, the run's Fire presses with their hits, and the
-// corpse's tile at the end. Usage: node slot-replay-tape.mjs <keys.json> [--arm=lweigh|ta]
+// it through the model (`createTapeStepper`): the player's hits, the run's Fire press ticks, and the dead corpse's
+// tile each time it changes. Usage: node slot-replay-tape.mjs <keys.json> [--arm=lweigh|ta]
 import { readFileSync } from 'node:fs';
 const ROOT = process.env.SLOT_ROOT ?? '/home/user/Archipelago-CC';
 const D = ROOT + '/frontend/modules/seedlingDemo/';
@@ -19,9 +19,16 @@ let run = null;
 const st = withContactFidelity(over, () => createTapeStepper(parseTape(JSON.stringify(tape)),
     { levelSource: atlasLevelSource(), onTick: (t, s, h, rn) => { run = rn; } }));
 let err = null;
-try { for (let r = st.next(); !r.done; r = st.next()); } catch (e) { err = e.message.slice(0, 300); }
+const tiles = [];
+try {
+    for (let r = st.next(); !r.done; r = st.next()) {
+        const k = run.entities('turrets').get('iceturret@472,400');
+        const tile = k ? `${Math.floor(k.x / 16)},${Math.floor(k.y / 16)}` : null;
+        if (k?.dead && tiles.at(-1)?.[1] !== tile) tiles.push([run.ticksCompleted, tile, k.y]);
+    }
+} catch (e) { err = e.message.slice(0, 300); }
 const c = run.entities('turrets').get('iceturret@472,400');
 const firePresses = [...new Set(run.ledger('presses').filter((p) => p.weapon === 'fire').map((p) => p.t))];
 console.log(JSON.stringify({ file: process.argv[2].split('/').pop(), ticks: dump.keys.length, err, t: run.ticksCompleted,
     playerHits: run.ledger('playerHits').map((h) => [h.t, h.id ?? h.source]),
-    firePresses, corpse: c ? [Math.floor(c.x / 16), Math.floor(c.y / 16), c.dead] : null }));
+    firePresses, corpseTiles: tiles, corpse: c ? [Math.floor(c.x / 16), Math.floor(c.y / 16), c.dead] : null }));
