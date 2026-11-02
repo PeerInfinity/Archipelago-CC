@@ -368,7 +368,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity REFUSALS D2 (wave 36): a run standing in a pit falls out with no input — ships OFF.
             inPitFallOut: false,
             // ⛓ fidelity CORPSEBUMP2 D1 (wave 36): a bumped corpse is re-read at the stance after the walk — ships OFF.
-            corpseBumpRestRead: false });
+            corpseBumpRestRead: false,
+            // ⛓ fidelity SHIELDBUMP D1 (wave 36): the spinner forecasts step the plain shield bump — ships OFF.
+            forecastShieldBump: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

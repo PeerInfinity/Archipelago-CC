@@ -27001,3 +27001,41 @@ Wave 36, planner `seedling-fidelity-planning-17`; LWEIGH's § 9 hand-over. Key `
   Fire across a walk owns what that press does.
 
 ---
+
+
+### Seedling fidelity SHIELDBUMP — the spinner forecasts step the plain shield bump (`forecastShieldBump`, OFF)
+
+Wave 36, planner `seedling-fidelity-planning-17`, base `b646d32d95` (105 ON of 116), under ⚖ hammer-2's licence
+(2026-10-31: the forecasts are the only seam). Hammer SPIN handed it over: `levelRun.spinnerForecastWithPress` and
+`spinnerFightForecast` named `shieldBumpNow` unmodelled for any carried shield, so `pressEscape` made no claim after the
+shield. The report is `CC/docs/cloud-reports/seedling-fidelity-shieldbump.md` (evidence beside it).
+
+**W0 — what the bump needs, and who supplies it.** `shieldBumpNow` reads the player's live `v` (the gate), the box the
+previous frame rendered (`shieldRenderState`: `x`, `y`, `vx`, `direction`) and `slashing`; it runs after the bodies'
+update and above `slash()`'s tests. The forecasts are told the player only as POINTS, and only at ticks with a sword
+test due; `deriveApproach` even reads WHICH ticks were asked (its `windowEnd`), and the fight cursor shares a quiet
+cursor across paths. So a bump can be stepped only where a caller states the player, never on the paths the escape's
+search explores after the forecast is taken. Measured on SPIN's 860 witness (A5, 10240, seam 5950, SPIN ON): 6 of 37
+escape forecasts put the shield on a body on their supplied path (27 ticks); the kill paths themselves never shove a
+live spinner. At SPIN's `approach` stand the run's t0 shove is opened by a same-tick spinner CONTACT (the live `v`), which
+no forecast carries.
+
+**D1 — the key.** ON, with the plain shield, a forecast steps the bump on every row it is told the player's state: an
+optional `players` source, else the `positions` the tests ask (up to the last of them, never past a blocked line, so the
+asked ticks' maximum is OFF's), or a cursor `advance(state)`. The bump is reported modelled only when every row was so
+stepped; a zero-row probe, a bare point and the dark shield still name it, in the same words. Game witness (p4g):
+`l40button-l42-part0`'s three plain shoves of `spinner@192,160`; run = game at every sample t1304–1347; a forecast at
+t1310 / t1331 told the run's states = the game across the shoves ON (OFF leaves at t1319 / t1333).
+
+**D2 — the 2×2.** The key alone changes no claim (`pressEscape`'s probe still names the shield; `shieldOnlyUnmodelled`
+stays true; SPIN's switch is not inert). 860: the wall with SPIN OFF in both key arms; the kill of `spinner@816,848`
+hitless with SPIN ON in both (landings 2626/2761/2817). Under SPIN, the key moves the `exhausted` stand to an envelope
+no-claim and identity c4 (`62bc5f69` → `23ce5b2a`).
+
+**Trap candidates.**
+- A forecast's `positions` callback is not a pure input: `deriveApproach` reads the latest tick it was asked. Asking it
+  at more ticks changes the caller's answer, even if every value returned is the same.
+- A zero-row forecast is a question about the source list, not about rows. Treat "modelled" as needing positive
+  evidence (rows stepped), never vacuous truth, or the probe that gates a claim starts claiming.
+- A shield bump can fire on a tick the player stood still at the top: a same-tick contact writes the live `v` first.
+  A forecast told the top-of-tick state misses it by construction.

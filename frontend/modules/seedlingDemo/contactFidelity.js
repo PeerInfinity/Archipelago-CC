@@ -1782,6 +1782,23 @@ export const CONTACT_FIDELITY = {
      * the run's `perTick`. OFF: byte-identical. `SEEDLING_CORPSE_BUMP_REST_READ=0|1`.
      */
     corpseBumpRestRead: false,
+    /**
+     * fidelity SHIELDBUMP D1 (wave 36, ⚖ hammer-2's licence 2026-10-31) — THE SPINNER FORECASTS STEP THE PLAIN SHIELD
+     * BUMP (`levelRun.spinnerForecastWithPress`, `spinnerFightForecast`).
+     *
+     *     Player.update       `addShield(); shieldBump();` above `super.update()`, after every enemy's update
+     *     Player.shieldBump   `if (shieldObj && v.length > 0)` each "Enemy" the box touches: `o.knockback(shieldForce, p)`
+     *
+     * Both forecasts named `shieldBumpNow` unmodelled for ANY carried shield, so hammer-phase A's `pressEscape` made no
+     * claim after the shield. ON, with the PLAIN shield: on every row the forecast is TOLD the player's state (`x`, `y`,
+     * `vx`, `vy`, `direction`: a new optional `players` source, the `positions` the press's own tests ask, up to the
+     * last of them, or a cursor `advance(state)`), the bump is stepped as the run steps it (`shieldBumpTouches` /
+     * `enemyKnockbackV` with `SHIELD_FORCE`, after the bodies' step and before the sword's tests). The bump is reported
+     * modelled ONLY on a forecast whose every row was stepped with a state; any other forecast (a row with no state, a
+     * zero-row probe, the dark shield) names it as before, in the same words. OFF: byte-identical.
+     * `SEEDLING_FORECAST_SHIELD_BUMP=0|1`.
+     */
+    forecastShieldBump: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2138,6 +2155,9 @@ if (globalThis.process?.env?.SEEDLING_IN_PIT_FALL_OUT === '0') CONTACT_FIDELITY.
 // ⛓ fidelity CORPSEBUMP2 D1: `SEEDLING_CORPSE_BUMP_REST_READ=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_REST_READ === '1') CONTACT_FIDELITY.corpseBumpRestRead = true;
 if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_REST_READ === '0') CONTACT_FIDELITY.corpseBumpRestRead = false;
+// ⛓ fidelity SHIELDBUMP D1: `SEEDLING_FORECAST_SHIELD_BUMP=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FORECAST_SHIELD_BUMP === '1') CONTACT_FIDELITY.forecastShieldBump = true;
+if (globalThis.process?.env?.SEEDLING_FORECAST_SHIELD_BUMP === '0') CONTACT_FIDELITY.forecastShieldBump = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
