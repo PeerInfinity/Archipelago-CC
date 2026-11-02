@@ -2520,6 +2520,8 @@ export class MazeRoomUI {
                 // the broken set without moving — same one-fact-per-tick copy.
                 ...(vState.facing !== undefined ? { facing: vState.facing } : {}),
                 ...(Array.isArray(vState.broken) ? { broken: vState.broken.slice() } : {}),
+                // ⛓ LATCHING BUTTONS: the visit's latched presses, the same copy (session tile-mechanisms-m4-latch).
+                ...(Array.isArray(vState.latched) ? { latched: vState.latched.slice() } : {}),
             });
         }
         // Tick detection: the visualizer's turn counter strictly
@@ -3969,6 +3971,7 @@ export class MazeRoomUI {
             blocks: this.state?.blocks ?? null,
             blockKinds: this.state?.blockKinds ?? null,
             livePulsers: this.state ? livePulsers(this.world, this.state, this.externalInventory ?? undefined) : null,
+            latched: this.state?.latched ?? null,
         };
         view.seedlingSkin = seedlingSkin ? this._withSeedlingSprites(seedlingSkin, view, canvas) : null;
         drawWorld(ctx, this.world, view);

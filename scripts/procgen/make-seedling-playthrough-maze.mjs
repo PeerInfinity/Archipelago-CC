@@ -409,7 +409,9 @@ export function playthroughPermissiveLocations() {
  *     (`buildGroupOpeners`) — for L40's door, the west, where the t2 button is;
  *   - the far side: a re-closing lock held open from its opener side is open both ways for the rest of that visit, so the far
  *     side's entry costs the same. That is exact only while no ARRIVAL stands on the far side (an arrival there meets the lock
- *     shut), so a far-side arrival — any exit's landing tile in the closed lock's far terrain — is REFUSED by name; so is a group
+ *     shut), so a far-side arrival — any exit's landing tile in the closed lock's far terrain — is REFUSED by name; so is a verdict
+ *     on a lock the analyzer's block paths already DECIDE (`grid.lockVerdicts`; tile-mechanisms-m3: a hand row only where
+ *     derivation fails — L39's and L41's puzzle locks are derived, L40's three are `pulser-arm`); so is a group
  *     that latches (a ButtonRoom / rope: open for good, an event — the OWED in-level latch), a door whose verdict names no
  *     entity, and a lock no holder reaches.
  * The puzzle's own PIECES are not gates any more: in a level with an annotated lock, the hand ruling's condition on a pushable
@@ -463,6 +465,11 @@ export function puzzleLocksFor(level, grid, { arrivals = [], groups = OV.buildGr
         if (!e) throw new Error(`${who}: the verdict names no entity of L${v.level}`);
         const [x, y] = [Math.floor(px / SEEDLING_TILE_SIZE), Math.floor(py / SEEDLING_TILE_SIZE)];
         if (x !== v.tile[0] || y !== v.tile[1]) throw new Error(`${who}: its entity stands on (${x},${y}), the verdict says (${v.tile})`);
+        const derived = (grid.lockVerdicts ?? []).find((lv) => lv.decided && lv.tiles.some(([tx, ty]) => tx === x && ty === y));
+        if (derived) {
+            throw new Error(`${who}: the analyzer already DERIVES its price (its block paths decide the lock) — a hand verdict `
+                + 'belongs only on a lock they cannot decide');
+        }
         const group = Number(e.attrs?.tset);
         const opener = groups.get(`${v.level}:${group}`);
         if (!opener) throw new Error(`${who}: its group t${group} has no opener in L${v.level}`);
