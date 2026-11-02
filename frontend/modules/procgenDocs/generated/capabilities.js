@@ -169,6 +169,21 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "loop",
+                    "statement": "You can record a visit and replay it",
+                    "text": null
+                },
+                {
+                    "group": "loop",
+                    "statement": "How a replay works",
+                    "text": "applies the result instantly"
+                },
+                {
+                    "group": "loop",
+                    "statement": "Instant fast-forward",
+                    "text": "always — a replay is already instant"
+                },
+                {
+                    "group": "loop",
                     "statement": "A Bot block can play it for you",
                     "text": "the game's own automation walks it"
                 },
@@ -2288,16 +2303,16 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "loopSupport.record",
-                            "value": "—"
+                            "value": "yes"
                         },
                         {
                             "field": "loopSupport.playback",
-                            "value": "—"
+                            "value": "yes"
                         }
                     ]
                 },
@@ -2449,8 +2464,8 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "kind": "na",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "applies the result instantly",
                     "why": [
                         {
                             "field": "takeLastRecording",
@@ -2458,7 +2473,7 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.summaryRecording",
-                            "value": "—"
+                            "value": "yes"
                         }
                     ]
                 },
@@ -2610,16 +2625,16 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "always — a replay is already instant",
                     "why": [
                         {
                             "field": "loopSupport.instant",
-                            "value": "—"
+                            "value": "yes"
                         },
                         {
                             "field": "loopSupport.summaryRecording",
-                            "value": "—"
+                            "value": "yes"
                         }
                     ]
                 },
@@ -2944,12 +2959,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
                             "field": "loopSupport.instant",
-                            "value": "—"
+                            "value": "yes"
                         },
                         {
                             "field": "loopSupport.executeVia",
@@ -2961,7 +2976,7 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.summaryRecording",
-                            "value": "—"
+                            "value": "yes"
                         },
                         {
                             "field": "loopSupport.botActsAtOnce",

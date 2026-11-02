@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 29,
-        "headings": 1236,
+        "headings": 1240,
         "indexHeadings": 2,
-        "lines": 34152,
+        "lines": 34196,
         "pages": 4,
-        "words": 488677
+        "words": 489636
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -170,16 +170,17 @@ export const DOCS_INDEX = frz({
             "description": "Cloudberry (substrate id `cloudberry`, in `frontend/modules/cloudberryDemo/`) plays each region as a Cloudberry Kingdom level.",
             "file": "cloudberry.md",
             "h1": "Cloudberry Substrate",
-            "headings": 17,
-            "lines": 243,
+            "headings": 21,
+            "lines": 285,
             "links": [
                 "flash.md",
+                "loop-recording.md",
                 "paths-and-obstacles.md",
                 "runner.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/cloudberry.md",
-            "words": 3750
+            "words": 4613
         },
         {
             "description": "Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward simulator that writes sphere logs, and per-substrate visualizers.",
@@ -202,9 +203,10 @@ export const DOCS_INDEX = frz({
             "file": "loop-recording.md",
             "h1": "Loop Recording and Block Modes",
             "headings": 25,
-            "lines": 282,
+            "lines": 284,
             "links": [
                 "bounce.md",
+                "cloudberry.md",
                 "gotchas.md",
                 "jta.md",
                 "maze.md",
@@ -215,7 +217,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/loop-recording.md",
-            "words": 4785
+            "words": 4881
         },
         {
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles. It is the only substrate with saved custom queues, and it doubles as the second binding of the procgen level generator.",

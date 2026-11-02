@@ -286,18 +286,18 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `loopSupport` | 8 keys | 4 keys | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys | 8 keys |
+| `loopSupport` | 8 keys | 9 keys | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys | 8 keys |
 | `loopSupport.botActsAtOnce` | — | — | — | — | — | — | — | — | — | yes |
 | `loopSupport.customQueues` | no | no | no | no | no | yes | no | no | no | no |
 | `loopSupport.executeVia` | solver | solver | solver | solver | solver | — | solver | solver | solver | solver |
-| `loopSupport.instant` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
+| `loopSupport.instant` | yes | yes | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.manual` | yes | yes | yes | yes | yes | yes | yes | yes | yes | yes |
-| `loopSupport.playClock` | — | — | yes | yes | — | — | yes | — | — | — |
-| `loopSupport.playback` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
+| `loopSupport.playClock` | — | yes | yes | yes | — | — | yes | — | — | — |
+| `loopSupport.playback` | yes | yes | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.queueActions` | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove, locationCheck | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove | regionMove, locationCheck | regionMove, locationCheck, explore |
-| `loopSupport.record` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
+| `loopSupport.record` | yes | yes | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.requiresLoopMode` | — | — | — | — | yes | — | — | yes | — | — |
-| `loopSupport.summaryRecording` | yes | — | — | — | — | — | yes | — | yes | — |
+| `loopSupport.summaryRecording` | yes | yes | — | — | — | — | yes | — | yes | — |
 | `priceRegions` | — | — | — | — | — | — | fn | — | — | — |
 | `takeLastRecording` | — | — | — | — | fn | fn | — | fn | — | — |
 
