@@ -26911,3 +26911,25 @@ packet (`seedling-hammer-chooser-witness-evidence/flip/cpair3-flip.patch`), appl
 rows pin the switch OFF (or ask at size 2) beside the switches they already pin, so no tape is re-recorded. Evidence: the
 three L43 pits (`out_pit_5_21/22/23` from L39) play hitless to the exit in the game; on the 52 L40 keys they are the only
 verdict movers; the route survey, r9 campaign, latch chain and pocket boot are unchanged (L40C A1).
+### Seedling hammer-phase POCKET-BURN — a burn opens BK2's latch pocket
+
+⚖ User, queued 2026-11-02 (one of five parallel hammer slices; SOUTHDOOR's hand-over, its report § 9). Switch
+`solverBot.STANCE_BURN`, **OFF** (`SEEDLING_STANCE_BURN=1` / `withStanceBurn`). The report is
+`CC/docs/cloud-reports/seedling-hammer-pocket-burn.md`.
+
+- **The wall, re-measured.** The Boss Key 2 arrival legs are 864/865 on this main. Under LWF + TA + APPROACH_DOOR +
+  FIFTH_ORDER (CPAIR-3 the default) `/1` refuses on `hold(wandlock@480,560)`'s stance `buttonroom@880,768` with
+  SOUTHDOOR's digests; the prerequisite list names three guard-(iii) wandlocks, `bosslock@480,352` and
+  `pushableblock@576,560` — no burn, though the run holds Fire. At the defaults the frontier already raises the burn
+  (through `wandlock@448,432`'s hypothesis) and dies on `bobsoldier@880,832`.
+- **The design.** `stancePrerequisite` (the one derivation `resolveHoldStrategy` asks with prerequisites) gains arm (c)
+  after the mechanism and geometry arms: a standing tree whose burn (`burnedTrees` in the bag) plans a corridor to a
+  candidate is the prerequisite, `via: 'burn'`; `prerequisiteOrder` resolves it with the frontier's own `burn`. Offered
+  only with Fire held (no Fire Wand) and `burn` through the strategy switch's gate. Putting trees in the stance
+  HYPOTHESIS instead (design 1) passed the hold inside the door's nested walk and then hit the strategy bound on a
+  repeat of `wandlock@448,432`; it was not built.
+- **Measured.** ON, both arrivals and the pocket-shut south re-boot raise the burn; the refusal moves past the pocket to
+  the burn walk's combat (`bobsoldier@880,832`; on 864 a death to `bob@736,752` inside the spinner press kill) — the
+  defaults' own wall there. ⚠ Not a solve: from a shut pocket the chain is SIX distinct orders (the burn + SOUTHDOOR's
+  five), `FIFTH_ORDER` admits five. The pocket-open re-boot stays SOLVED 4810 hitless.
+- **Radius.** ON alone: 0 of 58 L40 requests move; behind LWF+TA+SD+FO 2 move (864/1, 865/1), refusal text only.
