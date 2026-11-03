@@ -27228,3 +27228,12 @@ meeting a rope (the lab's ENDGAME `ropegate` rooms REFUSED → SOLVED; the route
 rope room). PRESS_NO_FACING ON moves only a press planned on the game's one-tick `direction = -1` (caldera-cf seed 7 meets
 the kill's own refusal instead). The two "ships OFF" rows now read "ships ON"; every other row pins its arm by name.
 
+### Seedling hammer-phase FLIP — `DASH_CERT_SIGHT` ON (the joint flip with fidelity's `fineStanceWalk`)
+
+⚖ The user, 2026-11-02: *"Yes, flip both + re-record"* (the L100 joint flip; confirmed in the hammer planner's session).
+This is hammer's half: `DASH_CERT_SIGHT` reads `!== '0'` and ships ON; the "ships OFF" row reads "ships ON". Fidelity's
+branch `fidelity-flip/l100-joint` merges it, flips `fineStanceWalk` and re-records `l100-sliver-rock` and
+`rulesref-l66-door`. Measured at DASHCERT's harvest: at main's defaults the certificate's line refuses 1,831 swings in
+4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
+327 t, 0 hits, game-witnessed.
+
