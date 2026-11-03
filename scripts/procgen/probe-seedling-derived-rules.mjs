@@ -4,7 +4,7 @@
  * DERIVED-RULES TABLE. The whole game is compiled (`buildPlaythroughMaze({levels: all})`) and certified natively in N
  * worker shards with `rows: true`, so the certifier RETURNS every row it compares — its maze-derived rule, the
  * seedling_playthrough rule, its arrival and its verdict. A second compile plants a sentinel item in every rule
- * (`seedlingEchoSentinels.mjs`) to find the rules the maze payloads COPY. `derivedRuleRows.js` then labels every element
+ * (`seedlingEchoSentinels.js`) to find the rules the maze payloads COPY. `derivedRuleRows.js` then labels every element
  * row derived / echoed / arrival-dependent / path-vs-edge / problem.
  *
  * It MOVES NO PRESET and changes no rule: it writes `derived-rules.json` (every labelled row, the echoes, the counts) into
@@ -96,7 +96,7 @@ async function main() {
     mkdirSync(outDir, { recursive: true });
     console.log('CHANNEL: headless logic-only (no wasm: a node measurement of the maze-derived rules)');
     const M = await import(pathToFileURL(T('scripts/procgen/make-seedling-playthrough-maze.mjs')).href);
-    const { plantEchoSentinels, findEchoes } = await import(pathToFileURL(T('scripts/procgen/seedlingEchoSentinels.mjs')).href);
+    const { plantEchoSentinels, findEchoes } = await import(pathToFileURL(T('scripts/procgen/seedlingEchoSentinels.js')).href);
     const { shardRegions } = await import(pathToFileURL(T('scripts/procgen/probe-seedling-whole-game-certify.mjs')).href);
     const { labelDerivedRows, summarizeDerivedRows } = await import(pathToFileURL(T('frontend/modules/mazeRoom/tileSpike/derivedRuleRows.js')).href);
     const ATLAS = JSON.parse(readFileSync(T('frontend/modules/flashPanel/atlases/seedling-playthrough.json'), 'utf8'));

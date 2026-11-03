@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 8,
+            "count": 7,
             "id": "no prefix"
         },
         {
@@ -234,12 +234,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 509,
+        "blockStyle": 508,
         "browser": 207,
-        "cited": 273,
-        "files": 527,
+        "cited": 272,
+        "files": 526,
         "lineStyle": 18,
-        "withDocblock": 527,
+        "withDocblock": 526,
         "withFlags": 440
     },
     "dir": "scripts/procgen",
@@ -21041,21 +21041,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "seedling-wasm-readme — **WRITE (AND GATE) THE seedling-wasm README'S BUILD TABLE FROM `builds.json`** (SEEDLING ORIGINAL WASM slice W2, ⚖ user 2026-09-07: the build table *\"GENERATED from `builds.json` with a check gate\"*, and *\"I want to fix the false and stale things in the readme\"*).",
             "path": "scripts/procgen/seedling-wasm-readme.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "no prefix",
-            "citedBy": [
-                "docs/json/developer/procgen/maze.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "seedlingEchoSentinels.mjs",
-            "flags": [],
-            "inheritedFlags": [],
-            "oneLiner": "⛓ THE ECHO TEST (session tile-rules-automation-r-a1; the method is the rules-automation W0's `circularity` scratch).",
-            "path": "scripts/procgen/seedlingEchoSentinels.mjs"
         },
         {
             "argvHelpers": [],

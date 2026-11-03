@@ -12,7 +12,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { buildPlaythroughMaze } from './make-seedling-playthrough-maze.mjs';
-import { plantEchoSentinels, findEchoes, sentinelItem, ECHO_KINDS } from './seedlingEchoSentinels.mjs';
+import { plantEchoSentinels, findEchoes, sentinelItem, ECHO_KINDS } from './seedlingEchoSentinels.js';
 import { parseArgs, expectedMismatches, EXPECTED_FILE } from './probe-seedling-derived-rules.mjs';
 import { certifyPlaythroughMaze } from '../../frontend/modules/mazeRoom/tileSpike/certifyPlaythroughMaze.js';
 import { labelDerivedRows, summarizeDerivedRows, exitKey, locationKey } from '../../frontend/modules/mazeRoom/tileSpike/derivedRuleRows.js';

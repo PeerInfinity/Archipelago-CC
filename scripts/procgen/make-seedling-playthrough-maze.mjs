@@ -556,7 +556,7 @@ export function completionItemFor(atlas) {
  * Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`.
  * ⛓ `plant` (session tile-rules-automation-r-a1, the ECHO test): called once with `{atlas, layer, ropes}` after the event
  * layer and the rope events are derived from the TRUE atlas and before anything is projected or compiled; it may rewrite
- * their access rules in place (it is handed copies of the layer and the ropes, never the producer's cached rows) (the derived-rules probe plants a sentinel item in each, `seedlingEchoSentinels.mjs`, and
+ * their access rules in place (it is handed copies of the layer and the ropes, never the producer's cached rows) (the derived-rules probe plants a sentinel item in each, `seedlingEchoSentinels.js`, and
  * looks for them in the payloads). Absent, the compile is the preset's, byte for byte. `embedSphereLog: false` skips the
  * sphere log (a sentinel compile places items no state can hold).
  */

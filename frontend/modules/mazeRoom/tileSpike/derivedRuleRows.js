@@ -4,7 +4,7 @@
  * arrival — an AP exit, a location, or an in-world pair — each carrying its derived rule, today's rule and ONE label:
  *
  *   - `problem`           the certifier reports the row it sits in (the maze and the rules disagree; a named open row);
- *   - `echoed`            today's rule is COPIED into the maze payload (the sentinel method, `seedlingEchoSentinels.mjs`):
+ *   - `echoed`            today's rule is COPIED into the maze payload (the sentinel method, `seedlingEchoSentinels.js`):
  *                         the derivation reads it back, so agreement there holds by construction and is no evidence;
  *   - `arrival-dependent` the element's derived rule differs between the cells it is priced from (L91 → L89 r1c10 lands
  *                         free at (1,8) and needs Swim at (15,4)): no one region rule is exact;
