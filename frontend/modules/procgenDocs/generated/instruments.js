@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 23,
+            "count": 24,
             "id": "census"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 501,
+        "blockStyle": 502,
         "browser": 203,
         "cited": 265,
-        "files": 519,
+        "files": 520,
         "lineStyle": 18,
-        "withDocblock": 519,
-        "withFlags": 439
+        "withDocblock": 520,
+        "withFlags": 440
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1087,6 +1087,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-constants — every numeric literal in Seedling's JS simulation, with its reviewed class (engine-prep A1).",
             "path": "scripts/procgen/census-seedling-constants.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-darktrap-gates.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "⛓ RULES rules-l63-darktrap-census — **WHAT IF A LIVE DARKTRAP BODY WERE AN ANALYZER GATE ON ITS POLE'S FLAG?** (option (b) for the L63 r6c9 → r0c1 framing row, ⚖ user 2026-11-02; the designer set the census FIRST.) REPORT ONLY: it edits nothing and exits 0. The producer and the analyzer are IMPORTED, never patched: …",
+            "path": "scripts/procgen/census-seedling-darktrap-gates.mjs"
         },
         {
             "argvHelpers": [],
