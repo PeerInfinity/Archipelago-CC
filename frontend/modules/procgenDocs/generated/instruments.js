@@ -22253,7 +22253,7 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
-                        "arg"
+                        "startsWith"
                     ],
                     "name": "goal"
                 },
