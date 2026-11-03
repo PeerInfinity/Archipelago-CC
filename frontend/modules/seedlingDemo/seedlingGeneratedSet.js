@@ -30,6 +30,9 @@
  *               gap would open), so it is never replaced. Its check is the chest's
  *               own clear at its fixed tag, the R4b report-row path: a table row
  *               with `tagSource: 'fixed'` and `rewrite: false`, no room byte moved
+ *             · ⛔ AND A LOOT CHEST (`kind: 'chest-loot'`, seedling gen B1): the same
+ *               row, its own `report.lootChests` (the chest is the location — the
+ *               generator certified it opened; an `apitem` there would drop it)
  *   parking   level N (appended): a walled 3×3 with one floor cell, no exits;
  *             the game sits there while the host plays another substrate
  *   start     level 0 on its first door's approach cell (the Menu hop's own
@@ -120,6 +123,8 @@ const cellPx = (cell) => ({ x: cell.tx * GEN_ROOM_TILE_SIZE, y: cell.ty * GEN_RO
 
 /** ⛓ seedling-gen-chestdoor-ap — `seedlingGenRoom.CHEST_DOOR_KIND` (this module imports no generator). */
 export const CHEST_DOOR_KIND = 'chest-door';
+/** ⛓ seedling gen B1 — `seedlingGenRoom.CHEST_LOOT_KIND`: a loot chest's row, kept exactly as a door chest's. */
+export const CHEST_LOOT_KIND = 'chest-loot';
 
 /**
  * One room's `apitem`s, on the record: REPLACING an entity on the location's
@@ -133,11 +138,13 @@ export function placeApItems(record, locations, region = '?') {
     const chests = [];
     for (const loc of locations) {
         const { x, y } = cellPx(loc.cell);
-        if (loc.kind === CHEST_DOOR_KIND) {
+        if (loc.kind === CHEST_DOOR_KIND || loc.kind === CHEST_LOOT_KIND) {
             const chest = entities.find((e) => e.type === 'chest' && e.x === x && e.y === y
                 && Number.parseInt(e.attrs?.tag, 10) === loc.tag);
             if (!chest) refuse(GENERATED_SET_REFUSALS.chestDoorMissing(region, loc.name, loc.cell, loc.tag));
-            chests.push({ location: loc.name, cell: loc.cell, tag: loc.tag, rewrite: false });
+            // ⛓ B1 — a loot chest's row says so (`kind`); a door chest's row is unchanged.
+            chests.push({ location: loc.name, cell: loc.cell, tag: loc.tag, rewrite: false,
+                ...(loc.kind === CHEST_LOOT_KIND ? { kind: CHEST_LOOT_KIND } : {}) });
             continue;
         }
         const item = { type: AP_ITEM_TYPE, x, y, attrs: { tag: String(loc.tag), look: AP_LOOK } };
@@ -180,6 +187,7 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
     const doors = [];
     const apitems = [];
     const chestDoors = [];
+    const lootChests = [];
     const entries = census.rooms.map((region, level) => {
         const p = payloads[level];
         const roomDoors = p.exits.map((e) => {
@@ -203,7 +211,7 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
         });
         const { record: withItems, placed, chests } = placeApItems(p.record, p.locations, region);
         for (const a of placed) apitems.push({ room: level, region, ...a });
-        for (const c of chests) chestDoors.push({ room: level, region, ...c });
+        for (const c of chests) (c.kind === CHEST_LOOT_KIND ? lootChests : chestDoors).push({ room: level, region, ...c });
         return { record: emitDoorEntities(withItems, roomDoors), name: region };
     });
     entries.push({ record: parkingRoomRecord(), name: PARKING_ROOM_NAME });
@@ -225,7 +233,7 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
 
     const table = new Map();
     const unjoined = [];
-    for (const a of [...apitems, ...chestDoors]) {
+    for (const a of [...apitems, ...chestDoors, ...lootChests]) {
         const joined = locationItemOf(a.location);
         if (!joined) unjoined.push(a.location);
         table.set(placementKey(a.room, a.tag), {
@@ -253,6 +261,8 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
             apitems,
             // ⛓ seedling-gen-chestdoor-ap — the door chests' report rows; the key is ABSENT without one.
             ...(chestDoors.length > 0 ? { chestDoors } : {}),
+            // ⛓ seedling gen B1 — the loot chests' report rows; the key is ABSENT without one.
+            ...(lootChests.length > 0 ? { lootChests } : {}),
             unjoined,
             unsigned: doors.length,
             warnings: validation.warnings,

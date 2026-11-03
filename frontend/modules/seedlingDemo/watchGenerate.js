@@ -103,7 +103,7 @@ import {
 } from '../procgenCore/skeletonKinds.js';
 import { FILL_DENSE, assertRoomSize, fillByName } from './procgenLevel.js';
 import {
-    SEEDLING_DEFAULTS, SEEDLING_SKELETON_KINDS, areaSummaryOf, generateSeedlingLevel,
+    GOAL_CHEST_CLASS, SEEDLING_DEFAULTS, SEEDLING_SKELETON_KINDS, areaSummaryOf, generateSeedlingLevel,
     seedlingExplicitSkeletonParams, seedlingOracle, seedlingSeam, seedlingSkeletonSpec,
     shellLevel,
 } from './procgenSeedling.js';
@@ -272,6 +272,21 @@ export const DIRECTED_ANCHOR_TRIES = 12;
  * SECONDS of a synchronous solve per press — so it is asked for by name.
  * `?gen=` is unambiguous: nothing else in the page's vocabulary spells it.
  */
+/**
+ * ⛓ seedling gen B3 — **`?goal=`, THE GOAL CLASS** (`defaults.goalClass`). URL-only, like `?tickbudget=`: no
+ * form control. Absent ≡ the default torch (`null`, and the writer DELETES it, so every link ever copied off this
+ * page is unmoved); `chest` asks for a GOAL CHEST; anything else REFUSES by name.
+ */
+export function readGoalParam(q) {
+    const raw = q.get('goal');
+    if (raw === null || raw === '') return null;
+    if (raw !== GOAL_CHEST_CLASS) {
+        throw new Error(`watchGenerate: ?goal="${raw}" — the only goal class this page can ask for is `
+            + `\`${GOAL_CHEST_CLASS}\` (absent = the default \`${SEEDLING_DEFAULTS.goalClass}\`).`);
+    }
+    return raw;
+}
+
 export function readGenerateParams(search) {
     const q = new URLSearchParams(search);
     const int = (name, fallback) => intParam(q, name, fallback);
@@ -415,6 +430,8 @@ export function readGenerateParams(search) {
         fill: readFill(q, {
             fallback: FILL_DENSE, grammar: fillByName, substrate: 'the Seedling page',
         }),
+        /** ⛓ seedling gen B3 — `?goal=chest`: a GOAL CHEST (`readGoalParam`). `null` when absent. */
+        goal: readGoalParam(q),
         /** ⛓ The four the loop runs under — `urlParams.readBounds`, shared. */
         bounds: readBounds(q),
         /**
@@ -531,7 +548,7 @@ export function readGenerateParams(search) {
 export function writeGenerateParams(search, {
     seed, biome, bounds, step, roster = null, payloadOwned = false, terrains = '',
     skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS, require = null,
-    size = SEEDLING_DEFAULTS, fill = FILL_DENSE, phase = null,
+    size = SEEDLING_DEFAULTS, fill = FILL_DENSE, phase = null, goal = null,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
@@ -566,6 +583,9 @@ export function writeGenerateParams(search, {
      */
     writeSizeParams(q, size, { defaults: SEEDLING_DEFAULTS, grammar: assertRoomSize });
     writeFillParam(q, fill, { fallback: FILL_DENSE, grammar: fillByName });
+    // ⛓ seedling gen B3 — written only when asked, DELETED at the default (refused on the way out as on the way in).
+    if (goal === null || goal === undefined) q.delete('goal');
+    else q.set('goal', readGoalParam(new URLSearchParams({ goal })));
     // ⛓ SLICE 3: the anchor-search bound is a BOUND like the other three, so it
     // rides with them in `urlParams.writeBounds` (§8.6's standing law: every new
     // control arrives WITH its parameter in the one writer). The integer refusal
@@ -827,11 +847,13 @@ export function generateStep({
      * room whether the page names the size or not.
      */
     size = SEEDLING_DEFAULTS, fill = FILL_DENSE,
+    /** ⛓ seedling gen B3 — `null` (the default torch) or `'chest'`; it rides `defaults.goalClass`. */
+    goal = null,
 } = {}) {
     /** ⛔ REFUSED HERE TOO, BEFORE ANY SOLVE — a page that reached the model
      *  with a bad size would pay a carve to find out. */
     assertRoomSize(size, 'the Seedling page');
-    const defaults = { width: size.width, height: size.height };
+    const defaults = { width: size.width, height: size.height, ...(goal ? { goalClass: goal } : {}) };
     /**
      * ⛓ SLICE 5 OF THE CONSTRUCTIVE ARC — the room this ladder starts from,
      * validated ONCE here so step 0 and step k cannot disagree about it, and
@@ -947,6 +969,8 @@ export function generateStep({
              *  rather than off the reader's answer (one spelling per setting). */
             size: Object.freeze({ width: size.width, height: size.height }),
             fill,
+            /** ⛓ seedling gen B3 — the goal class ASKED (`null` = default), for the URL writer. */
+            goal,
             /** ⛓⛓ SLICE 5a (D1) — the three blocks, `null` when not asked. */
             elements: elementsBlockOf(model, seam.certification),
             areas: areas?.keys > 0
@@ -1013,6 +1037,7 @@ export function generateStep({
         /** ⛓ ARC 5, SLICE 1 — see the step-0 branch. */
         size: Object.freeze({ width: size.width, height: size.height }),
         fill,
+        goal,
         /**
          * ⛓⛓ SLICE 5a (D1) — READ OFF `out.summary`, which is where
          * `generateSeedlingLevel` already puts the CLI's own three blocks. ⛔ A

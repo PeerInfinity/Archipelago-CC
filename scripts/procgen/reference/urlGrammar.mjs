@@ -202,6 +202,8 @@ const PARAM_NOTES = {
     width: { field: { watch: 'size.width', lab: 'width' }, codec: 'intParam', terms: ['room-size', 'skeleton'] },
     height: { field: { watch: 'size.height', lab: 'height' }, codec: 'intParam', terms: ['room-size', 'skeleton'] },
     fill: { field: { watch: 'fill', lab: null }, codec: 'fillByName', terms: ['room-fill', 'level'] },
+    /** ⛓ seedling gen B3 — the GOAL CLASS: absent is the default torch, `chest` a GOAL CHEST. URL-only. */
+    goal: { field: { watch: 'goal', lab: null }, codec: 'watchGenerate.readGoalParam (absent, or the literal `chest`)', terms: ['goal'] },
     tape: { field: { watch: 'tape', lab: null }, codec: 'a path to a tape JSON', terms: ['tape'] },
     /**
      * ⛓⛓⛓ R9 SLICE 2 (⚖ ruling 10) — the SEQUENCE, beside the single tape. A

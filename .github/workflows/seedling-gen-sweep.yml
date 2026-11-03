@@ -49,9 +49,13 @@ on:
         type: number
         default: 600
       verb:
-        description: The certification verb the summary counts (`pull` for ropegate, `chest` for chestdoor).
+        description: The certification verb the summary counts (`pull` for ropegate, `chest` for chestdoor/chestloot).
         type: string
         default: pull
+      goal:
+        description: The goal class (`--goal=`); empty = the default torch, `chest` = a GOAL CHEST (seedling gen B3).
+        type: string
+        default: ''
   push:
     branches:
       - 'seedling-gen-sweep/**'
@@ -136,6 +140,7 @@ jobs:
           SEEDS: ${{ inputs.seeds }}
           SIZES: ${{ inputs.sizes }}
           CELLBUDGET: ${{ inputs.cellbudget }}
+          GOAL: ${{ inputs.goal }}
         run: |
           set -o pipefail
           mkdir -p test-results/seedling-gen-sweep
@@ -144,6 +149,7 @@ jobs:
             --palette="${PALETTE:-$DEFAULT_PALETTE}" --elements="$ARM" --kinds="$KIND" \
             --seeds="${SEEDS:-$DEFAULT_SEEDS}" --sizes="${SIZES:-$DEFAULT_SIZES}" \
             --cellbudget="${CELLBUDGET:-$DEFAULT_CELLBUDGET}" \
+            ${GOAL:+--goal="$GOAL"} \
             --json="test-results/seedling-gen-sweep/${ID}.json" \
             2>"test-results/seedling-gen-sweep/${ID}.err" | tee "test-results/seedling-gen-sweep/${ID}.md"
           echo "MEASURED: --elements=$ARM --kinds=$KIND wall $(( $(date +%s) - S ))s nproc $(nproc) at ${GITHUB_SHA}" \
@@ -190,8 +196,9 @@ jobs:
             }
             const lines = [`SEEDLING GENERATOR SWEEP @ ${process.env.GITHUB_SHA}`];
             const verb = process.env.VERB || "pull";
-            lines.push(`| arm | kind x size | cells | aborted | placed | certified | certified with ${verb} | REVERTs | worst solve ms | worst cell ms |`);
-            lines.push("|---|---|---|---|---|---|---|---|---|---|");
+            const goal = [...arms.values()].some((rs) => rs.some((r) => r.goal));
+            lines.push(`| arm | kind x size | cells | aborted | placed | certified | certified with ${verb} | REVERTs | worst solve ms | worst cell ms |${goal ? " goal chests | goal chest certified | goal chest refused |" : ""}`);
+            lines.push(`|---|---|---|---|---|---|---|---|---|---|${goal ? "---|---|---|" : ""}`);
             const sumRow = (arm, label, rs) => {
               const ok = rs.filter((r) => r.stop);
               const reverts = ok.reduce((n, r) => n + Object.values(r.byTemplate ?? {})
@@ -201,7 +208,9 @@ jobs:
               const pull = rs.filter((r) => r.elements?.certified && (r.elements.certVerbs ?? []).includes(verb)).length;
               const worst = Math.max(0, ...ok.map((r) => r.maxSolveMs ?? 0));
               const cell = Math.max(0, ...ok.map((r) => r.genMs ?? 0));
-              lines.push(`| ${arm} | ${label} | ${rs.length} | ${rs.length - ok.length} | ${placed} | ${cert} | ${pull} | ${reverts} | ${worst} | ${cell} |`);
+              // ⛓ seedling gen B3 — under `goal: chest`, the goal chests that SHIPPED and certified as a chest.
+              const goalCol = goal ? ` ${rs.filter((r) => r.goal?.class === "chest").length} | ${rs.filter((r) => r.goal?.class === "chest" && r.goal?.certified && (r.goal.collected ?? []).at(-1) === "chest").length} | ${rs.filter((r) => r.goal?.refused).length} |` : "";
+              lines.push(`| ${arm} | ${label} | ${rs.length} | ${rs.length - ok.length} | ${placed} | ${cert} | ${pull} | ${reverts} | ${worst} | ${cell} |${goalCol}`);
             };
             for (const [arm, rs] of [...arms].sort()) {
               const by = new Map();

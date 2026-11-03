@@ -22254,6 +22254,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "goal"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "json"
                 },
                 {

@@ -30,6 +30,11 @@
  *   ⛓ seedling-gen-burngate: a generated BURN GATE room (`?elements=burngate`, post-fire) certifies, holds one
  *   tagged burnable tree, and draws it with its existing sheet (≤ 10% of its box left as the stand-in rect).
  *
+ *   ⛓ seedling-gen-chest-loot-goal: a generated LOOT CHEST room (`?elements=chestloot`, pre-sword) certifies, holds
+ *   one tagged chest beside its torch goal, and draws it in sprites; a generated GOAL CHEST room (`?goal=chest`,
+ *   winding seed 3: the stance pocket) certifies with the chest AS the goal (tag 0, no torch), keeps `goal=chest` in
+ *   the rewritten bar, and draws it in sprites.
+ *
  *   ⛓ seedling-gen-strategy-gadgets: a generated HOLD GATE room (`?elements=holdgate`) and WEIGH GATE room
  *   (`?elements=weighgate`), pre-sword, each certify, hold a lock and its presser in ONE group (a latching
  *   `buttonroom` / a momentary `button` plus one `pushableblock`), and draw them in sprites.
@@ -848,6 +853,55 @@ async function main() {
         check(on.length > 0 && on.length === off.length && same / on.length <= TREE_SAME_MAX,
             `burngate: ≤ ${TREE_SAME_MAX * 100}% of the tree box's pixels are the stand-in rect`,
             `${((same / Math.max(1, on.length)) * 100).toFixed(1)}% identical of ${on.length} px; box ${JSON.stringify(treeBox)}`);
+    }
+
+    // ── ⛓ seedling-gen-chest-loot-goal: a generated LOOT CHEST room and a GOAL CHEST room, art on and off ──
+    //
+    // B1 `?elements=chestloot` (pre-sword): ONE tagged `chest` off the main path BESIDE the torch goal; the
+    // certificate opens it (a second collect goal — the unit rows pin the order). B3 `?goal=chest` (winding seed 3,
+    // whose stance is wall, so the generator carves its pocket): the goal IS the chest (`tag 0`), no torch. Both draw
+    // the chest with its skin (`seedling:puzzlement/chest`, the `solids` family).
+    for (const [name, query, want] of [
+        ['chestloot', 'seed=1&biome=pre-sword&elements=chestloot', { chests: 1, torch: 1, tag0: false }],
+        ['goalchest', 'seed=3&biome=pre-sword&skeleton=winding&elements=none&goal=chest', { chests: 1, torch: 0, tag0: true }],
+    ]) {
+        console.log(`\n## ${name} — a generated ${name === 'chestloot' ? 'loot chest' : 'goal chest'} room`);
+        for (const mode of ['on', 'off']) {
+            const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errors = [];
+            page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+            await page.goto(`${PAGE}?source=generate&${query}${mode === 'off' ? '&art=off' : ''}`,
+                { waitUntil: 'domcontentloaded' });
+            await page.waitForFunction((m) => {
+                const a = window.__labArt;
+                return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                    && (m === 'off' ? a.drawn === null : a.drawn !== null);
+            }, mode, { timeout: 180000 }).catch(() => {});
+            await page.waitForTimeout(1200);
+            const { art, payload, search } = await page.evaluate(() => ({ art: window.__labArt ?? null,
+                search: window.location.search,
+                payload: window.__watch?.payload ? { certified: window.__watch.payload.certified,
+                    entities: window.__watch.payload.level.entities } : null }));
+            if (mode === 'on') {
+                const chests = (payload?.entities ?? []).filter((e) => e.type === 'chest');
+                const torches = (payload?.entities ?? []).filter((e) => e.type === 'torchpickup');
+                check(payload?.certified === true && chests.length === want.chests && torches.length === want.torch
+                    && chests.every((c) => (Number(c.attrs?.tag) === 0) === want.tag0 && Number(c.attrs?.tag) >= 0),
+                    `${name}: the generated room CERTIFIES and holds ${want.chests} tagged chest(s), ${want.torch} torch`,
+                    JSON.stringify({ certified: payload?.certified, chests, torches: torches.length }));
+                check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && (art.drawn.families?.solids ?? 0) > 0,
+                    `${name}: drawn in sprites, the chest among them (\`solids\` family)`, JSON.stringify(art?.drawn));
+                if (name === 'goalchest') {
+                    check(new URLSearchParams(search).get('goal') === 'chest',
+                        'goalchest: the rewritten bar keeps `goal=chest`', search);
+                }
+            } else {
+                check(art?.drawn === null, `${name} ?art=off: the rectangles`, JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+            }
+            if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-${name}${mode === 'off' ? '-off' : ''}.png`) });
+            check(errors.length === 0, `${name} (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+            await page.close();
+        }
     }
 
     await browser.close();

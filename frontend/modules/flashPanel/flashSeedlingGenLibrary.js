@@ -191,7 +191,9 @@ export const FLASH_SEEDLING_GEN_SIDECAR_FIELDS = Object.freeze({
             + '`tag` its persistence tag (`procgenSeedling.placementTagId`, allocated against the record '
             + 'without its goal pickup). `kind: \'chest-door\'` (only on a door-chest row, `seedlingGenRoom.'
             + 'chestDoorRows`, always LAST): the location is the room\'s chest itself, at the chest\'s fixed tag, '
-            + 'and the assembler keeps the chest (no `apitem`).',
+            + 'and the assembler keeps the chest (no `apitem`). `kind: \'chest-loot\'` (seedling gen B1, only on a '
+            + 'loot-chest row, `seedlingGenRoom.chestRows`, LAST after any door chest): the same, for a chest standing '
+            + 'off the main path.',
         schema: Object.freeze({
             items: Object.freeze({
                 type: 'object',
@@ -203,7 +205,7 @@ export const FLASH_SEEDLING_GEN_SIDECAR_FIELDS = Object.freeze({
                     cell: CELL,
                     tag: Object.freeze({ type: 'integer' }),
                     access_rule: Object.freeze({ type: 'object' }),
-                    kind: Object.freeze({ type: 'string', enum: Object.freeze(['chest-door']) }),
+                    kind: Object.freeze({ type: 'string', enum: Object.freeze(['chest-door', 'chest-loot']) }),
                 }),
             }),
         }),

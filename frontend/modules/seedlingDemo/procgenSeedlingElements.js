@@ -103,7 +103,7 @@
 
 import { TILE_FLOOR } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
 import {
-    DIR_DELTA, LAW_CUT, LAW_SHORTCUT, chooseEntryPort, guardIdsFor,
+    DIR_DELTA, LAW_CUT, LAW_NONE, LAW_SHORTCUT, chooseEntryPort, guardIdsFor,
 } from '../procgenCore/elements.js';
 import { KILL_BODY_ID, KILL_DOOR_ID } from '../procgenCore/elements/killGate.js';
 import {
@@ -115,6 +115,7 @@ import {
 } from '../procgenCore/elements/soloDoor.js';
 import { ROPE_GATE_ROPE_ID, ROPE_GATE_TRAP_ID } from '../procgenCore/elements/ropeGate.js';
 import { CHEST_DOOR_CHEST_ID } from '../procgenCore/elements/chestDoor.js';
+import { CHEST_LOOT_CHEST_ID } from '../procgenCore/elements/chestLoot.js';
 import { BURN_GATE_DOOR_ID } from '../procgenCore/elements/burnGate.js';
 import {
     HOLD_GATE_BUTTON_ID, HOLD_GATE_DOOR_ID, WEIGH_GATE_BUTTON_ID, WEIGH_GATE_DOOR_ID,
@@ -215,6 +216,10 @@ export const SEEDLING_ELEMENT_REFUSALS = Object.freeze([
     'the-exit-port-cannot-be-joined',
     'the-through-room-is-not-on-the-route',
     'the-through-room-shortens-the-way',
+    /** ⛓ seedling gen B1 — the `none` law at the ON-CONNECTOR commit (the loot chest): its two, named apart
+     *  from the door law's because a loot chest is never meant to be a cut. */
+    'the-elements-open-cell-walls-off-the-room',
+    'the-elements-open-law-is-not-offered',
 ]);
 
 /** The RESERVED rectangle: the site plus the one-cell ring the binding writes. */
@@ -956,7 +961,7 @@ export const DOOR_TERRAIN = Object.freeze({
  */
 export function compositeSeedlingOnConnector({
     width, height, groundAt, skeletonWallAt, placement, start, goal, doorLaw, carveLaw,
-    law = LAW_CUT, shortcutLaw = null,
+    law = LAW_CUT, shortcutLaw = null, openLaw = null,
 }) {
     const painted = new Map();
     for (const t of placement.tiles) {
@@ -1074,6 +1079,25 @@ export function compositeSeedlingOnConnector({
         if (why) {
             return { refused: { reason: 'the-elements-shortcut-is-not-a-shortcut',
                 detail: why } };
+        }
+    } else if (law === LAW_NONE) {
+        /**
+         * ⛓ seedling gen B1 — **THE `none` LAW, AT THE ON-CONNECTOR COMMIT.** A
+         * LOOT CHEST is solid and gates nothing: with its cell walled the goal
+         * must STILL be reachable and so must its clearer (the stance it is
+         * opened from). ⛔ Asked only of an element that DECLARES `none` — no
+         * other element's commit moves. A binding that offers no `openLaw`
+         * refuses by name, as one with no `shortcutLaw` does.
+         */
+        if (typeof openLaw !== 'function') {
+            return { refused: { reason: 'the-elements-open-law-is-not-offered',
+                detail: 'the element declares `law: "none"` at the on-connector phase and the '
+                    + 'binding offered no `openLaw`. ⛔ The door law would refuse every such '
+                    + 'placement (it is not a cut by definition), so the run refuses BY NAME.' } };
+        }
+        const why = openLaw({ paintedFor, doorKeys, clearerKeys });
+        if (why) {
+            return { refused: { reason: 'the-elements-open-cell-walls-off-the-room', detail: why } };
         }
     } else {
         const doorWhy = doorLaw({ paintedFor, doorKeys, clearerKeys });
@@ -1320,7 +1344,8 @@ export function seedlingOnConnectorEntities({ placed, tagFor, groupIdFor = null 
          *                        chest as `pendingCheck "<seq>|<level>|<tag>|0"`,
          *                        so `(level, tag)` is this chest's AP location.
          */
-        if (e.id === CHEST_DOOR_CHEST_ID) {
+        /** ⛓ seedling gen B1 — the LOOT chest is the same entity, spelled the same way (ONE tag). */
+        if (e.id === CHEST_DOOR_CHEST_ID || e.id === CHEST_LOOT_CHEST_ID) {
             const tag = tagFor();
             tags.chest = tag;
             entities.push({ type: 'chest', tx: e.x, ty: e.y, attrs: { tag: String(tag) } });

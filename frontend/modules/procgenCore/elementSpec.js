@@ -48,6 +48,7 @@ import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { ROAM } from './elements/roam.js';
 import { ROPE_GATE } from './elements/ropeGate.js';
 import { CHEST_DOOR } from './elements/chestDoor.js';
+import { CHEST_LOOT } from './elements/chestLoot.js';
 import { BURN_GATE } from './elements/burnGate.js';
 import { HOLD_GATE, WEIGH_GATE } from './elements/strategyGate.js';
 import {
@@ -568,6 +569,29 @@ export const ELEMENT_TABLE = Object.freeze({
         extra: Object.freeze([]),
         needs: Object.freeze([]),
         needsStrategy: Object.freeze(['weigh']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE LOOT CHEST — A CHEST OFF THE MAIN PATH** (seedling gen content
+     * B1; ⚖ the user 2026-11-01: *"(e) Loot/goal chests"*, after the oracle's
+     * chest-goal fix). A `chest` on a floor cell off the main path whose cell
+     * directly below (the game's trigger line) the start reaches with the chest
+     * standing. It gates nothing (law `none`); the binding certifies it as a
+     * SECOND collect goal ahead of the room's own, so a certificate always opens
+     * it. Its seal piece is an AP location (`seedlingGenRoom`'s `chest-loot` row).
+     *
+     * ⛓ `needs: []` — opening a chest takes no item. Placed LAST so no head moves
+     * in `ELEMENT_NAMES`; OPT-IN (in no biome default). ⛔ `meetsRequire: false`:
+     * a `none`-law element can never answer a directive (`headsNeeding` reads the
+     * CUT law only), and this says so in the row too.
+     */
+    chestloot: Object.freeze({
+        element: CHEST_LOOT,
+        why: 'The LOOT CHEST (seedling gen B1): a `chest` on a floor cell OFF the main path, opened from '
+            + 'the cell directly below it, a nook preferred. Gates nothing; certified by a plan that opens it '
+            + '(the chest is a second collect goal). Its seal piece is an AP location.',
+        extra: Object.freeze([]),
+        needs: Object.freeze([]),
+        meetsRequire: false,
     }),
 });
 
