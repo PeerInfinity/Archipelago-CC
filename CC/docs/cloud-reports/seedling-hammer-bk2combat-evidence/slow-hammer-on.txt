@@ -1,0 +1,19 @@
+ ✓ frontend/modules/seedlingDemo/hammerSouthDoor.slow.test.js (4 tests) 648547ms
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js (2 tests) 946491ms
+ ✓ frontend/modules/seedlingDemo/hammerBk2Combat.slow.test.js (4 tests) 878246ms
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js (3 tests) 477198ms
+     × OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall) 301512ms
+     × ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death 308781ms
+     × pocket shut, ON: the burn is raised for the hold's stance, and the refusal moves past the pocket to the burn walk's combat (bobsoldier@880,832) 177906ms
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js (2 tests) 1092689ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 75222ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 64561ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/hammerPocketBurn.slow.test.js > hammer-phase POCKET-BURN on the latch boot, south of the door (slow) > pocket shut, ON: the burn is raised for the hold's stance, and the refusal moves past the pocket to the burn walk's combat (bobsoldier@880,832)
+AssertionError: expected 'solverBot(l40latch) collect (656,528)…' to contain '-> burn stance (burnabletree@872,784)…'
+ FAIL  frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js > hammer-phase SPIN — leg 860, A5, deadline 10240, seam 5950 > OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall)
+AssertionError: expected 'solverBot(wasm-location-40) apitem (6…' to match /kill \(spinner@816,848\) by press: ev…/
+ FAIL  frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js > hammer-phase SPIN — leg 860, A5, deadline 10240, seam 5950 > ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death
+AssertionError: expected 0 to be greater than 0
+ Test Files  2 failed | 7 passed (9)
+      Tests  3 failed | 20 passed (23)
