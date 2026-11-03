@@ -118,8 +118,8 @@ describe('census-seedling-er-doorways — the committed playthrough atlas', () =
         ]);
     });
 
-    it('(B) 63 of 320 cross-level AP exits are gated; 5 sit on a stairs doorway, each conjunct owned by rule', () => {
-        expect(c.gates).toMatchObject({ crossLevel: 320, gated: 63, gatedLandingEvent: 17, gatedLandingTerrain: 25 });
+    it('(B) 65 of 320 cross-level AP exits are gated (63 before rules-certifier-tail charged L54 r1c8 -> L53 r14c9 and L91 -> L89 r1c10 with Swim); 5 sit on a stairs doorway, each conjunct owned by rule', () => {
+        expect(c.gates).toMatchObject({ crossLevel: 320, gated: 65, gatedLandingEvent: 17, gatedLandingTerrain: 15 });
         expect(c.gates.apExitsWithNoConnection).toEqual([]);
         expect(c.gates.stairsRows.map((r) => `${r.apExit} ${r.owners.map((o) => o.owner).join('+')}`)).toEqual([
             'level_101__r4c9 -> level_102__r5c9 DEPARTURE',
@@ -135,8 +135,10 @@ describe('census-seedling-er-doorways — the committed playthrough atlas', () =
         expect(c.chains).toEqual([expect.objectContaining({
             pit: 'L110:out_pit_3_2', landsIn: 0, stairsDoorway: 'L0:out_stairsdown_256_272', stairsReverse: 'L2:out_stairsup_48_16',
         })]);
-        expect(c.permissive).toHaveLength(18);
-        expect(c.permissive.filter((p) => p.atRisk).map((p) => p.binding)).toEqual(['level_51/out_teleporter_144_0']);
+        // rules-certifier-tail's chargeNecessaryApproaches charges 16 of the 18 bindings, so 2 remain and none is at risk
+        // (level_51/out_teleporter_144_0, the one at risk before, is now charged).
+        expect(c.permissive.map((p) => p.binding)).toEqual(['level_66/out_teleporter_72_64', 'level_89/Level 089 - Feather']);
+        expect(c.permissive.filter((p) => p.atRisk)).toEqual([]);
         expect(c.start).toEqual({ level: 0, subRegion: 'r7c6',
             stairsInStartSubRegion: ['L0:out_stairsdown_256_272', 'L0:out_stairsdown_32_192'],
             stairsIntoStartSubRegion: ['L13:out_stairsup_64_144', 'L2:out_stairsup_48_16'] });
