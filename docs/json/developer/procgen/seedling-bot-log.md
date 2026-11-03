@@ -26963,6 +26963,48 @@ switch; still OFF; OFF byte-identical.**
   five), `FIFTH_ORDER` admits five. The pocket-open re-boot stays SOLVED 4810 hitless.
 - **Radius.** ON alone: 0 of 58 L40 requests move; behind LWF+TA+SD+FO 2 move (864/1, 865/1), refusal text only.
 
+### Seedling hammer-phase BK2COMBAT — the chaser arm asks again from a cell it certified safe to wait in
+
+⚖ User, queued 2026-11-02 (one of three parallel hammer slices; POCKET-BURN's hand-over, its report § 9). Switch
+`solverBot.CHASER_STAGED_HUNT`, **OFF** (`SEEDLING_CHASER_STAGED_HUNT=1` / `withChaserStagedHunt`). The report is
+`CC/docs/cloud-reports/seedling-hammer-bk2combat.md`.
+
+- **The walls, re-measured.** Boss Key 2's arrivals are legs 864/865 on this main. The burn walk has TWO fights. (a) The
+  spinner press with a shaft bob alive: under POCKET-BURN's five switches `/1` dies to `bob@736,752` inside the press of
+  `spinner@816,848` (t780 / t798); at the defaults 865 dies the same way (`spinner@880,848`, t800). On the pocket-shut
+  re-boot `bob@736,800` lands one hit inside the press. (b) `bobsoldier@880,832` in its notch: the defaults' 864/1, and
+  every arm once (a) is passed. The pocket-open 4810 chain wins both because it meets the bodies in a different order:
+  the hold walk kills `bob@736,752` first, and asks for the BobSoldier with the player already in the corridor.
+- **What answers (a).** The existing OFF switch `OPPORTUNISTIC_STRIKE` (and `PRESS_KILL_CHASERS`) — measured, not
+  built here: OPP kills `bob@736,800` inside the press at t576, hitless on a fresh run.
+- **What answers (b), and the design.** The chaser arm prices one walk plus a dwell from where the player stands. From
+  the x 744 shaft the BobSoldier never comes to the cells west of it (*"still standing after the whole ceiling"*), and
+  the cells beside it meet its blade on arrival. A timed delay from the shaft (0–64 still ticks) prices nothing;
+  staging at (856,856) alone prices nothing; staging and THEN waiting prices (888,856) after 15 ticks. ON, the cells the
+  arm refused only because the body never came are staging cells (nearest the body first); the arm is asked again on a
+  fork after each still tick up to that cell's ceiling, the first tick that prices is driven, a cell that prices none
+  is rewound. Fidelity's `orbitFreeAim` (OFF) answers (b) too; it is fidelity's key and was only measured.
+- **Measured.** Pocket-shut re-boot, F + OPP + ON: staged at (856,856), wait 15, the BobSoldier dead at t883; the tree
+  burns (t957), the door opens (t1083), and the refusal is the ice turret's approach from the door — hitless and
+  death-free on a fresh run. Leg 864 (F + OPP + ON, budget 10240): past the combat, the door and the turret to the
+  order bound, *"applied 5 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432),
+  burn(burnabletree@872,784), hold(wandlock@480,560), weigh(wandlock@800,400)]"*, 5216 spent ticks hitless. Leg 865:
+  past the combat (t2114), then the walk back to the door meets `spinner@880,848` while the chooser hands the kill rung
+  `bob@352,448`. At the captured budget both end on the anytime deadline. The pocket-open re-boot stays SOLVED 4810,
+  keys byte-identical, the staged hunt never asked.
+- **Radius.** ON alone: 1 of 58 L40 requests moves — 390/1 (`Level 040 - Chest` from the L39 arrival, the BobSoldier's
+  own chest) refusal → SOLVED 1279, hitless and game-modelled (staged at (856,856), wait 8); survey 0 of 237. Behind
+  F + OPP: 3 requests move (390/1, 864/1, 865/1), the BobSoldier's refusal → the anytime deadline.
+- **ON movers in fidelity's rows (a pin to sign).** With the switch ON the chaser arm answers before the orbit arm on two
+  fidelity workloads: L30's pit landing (224,80) (`fidelityL30KeyLock.test.js`'s both-OFF and WAIT-alone rows, and
+  `plan-seedling-l30keylock`'s BEFORE witness, the one red ON producer) refusal (2 hits) → SOLVED 318 hitless, staged at
+  (120,104); L40BK2B's corridor boot (`fidelityL40Bk2b.test.js`'s two orbit rows) the BobSoldier removed at t112
+  hitless (staged at (856,856), wait 17; the D1 orbit's t125). A flip pins those rows with `withChaserStagedHunt(false)`.
+  Survey behind F + OPP: 0 of 237.
+- **Gate** `hammerBk2Combat.test.js` (ships OFF; where it sits; OFF/ON answers of the arm) and
+  `hammerBk2Combat.slow.test.js` (shut OFF/ON with the fresh replay; 4810 unchanged). Mutants (drop the fix; no still
+  wait; stage on a danger-refused cell; one still tick short): all red.
+
 ### Seedling hammer-phase ESCAPE-EXACT — `PRESS_ESCAPE_EXACT` (OFF): the press escape exact under a carried shield
 
 ⚖ The user queued the slice on 2026-11-02 (one of five parallel hammer slices); report

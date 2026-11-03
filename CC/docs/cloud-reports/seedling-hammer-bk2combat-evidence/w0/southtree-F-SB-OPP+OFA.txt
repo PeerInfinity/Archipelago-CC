@@ -1,0 +1,7 @@
+ms 191763
+REFUSED solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh: no approach to iceturret@472,400 from the staging point (488.7988645477415,568.322442349811) is hitless — 492 fork(s), {"approach-body":2,"approach-hit":393,"kill-refused":41,"kill-hit":55,"stance-hit":1}: up corridor, wait 0: hit t1820 by iceturret:iceturret@472,400 at (469.8,443.1) | up via (510,445), wait 0: hit t1822 by blast:iceturret@472,400#3.1 at (495.1,445.5) | up via (510,445), wait 1:  (fork, up via (510,445), wait 1): no side of iceturret@472,400 is reachable — up: a fork does not walk | right: a fork does not walk | left: a fork does not wa
+obstacle {"kind":"danger","id":"iceturret@472,400"} perTick 1678
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}
+TA {"approaches":[{"turret":"iceturret@472,400","t":1678,"side":null,"forks":492,"tally":{"approach-body":2,"approach-hit":393,"kill-refused":41,"kill-hit":55,"stance-hit":1}}]}
+DOOR {"doors":[{"door":"wandlock@480,560","side":"up","cell":{"x":488,"y":568},"turret":"iceturret@472,400","t":0,"ticks":1678,"open":true}]}

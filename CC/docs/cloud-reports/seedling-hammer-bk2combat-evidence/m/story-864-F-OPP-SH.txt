@@ -1,0 +1,36 @@
+REFUSED: solverBot(wasm-location-40) apitem (656,528) contact: applied 5 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), burn(burnabletree@872,784), hold(wandlock@480,560), weigh(wandlock@800,400)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.
+t0 start (488,904) {"burnt":"","open":"","chasers":"bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bob@736,752,bob@736,800,bobsoldier@880,832,puncher@128,624,puncher@816,128","hits":0,"deaths":0}
+t200 at (488,669)
+t400 at (536,685)
+t600 at (744,696)
+t740 (744,792) chasers: bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bob@736,752,bob@736,800,bobsoldier@880,832,puncher@128,624,puncher@816,128 -> bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bob@736,800,bobsoldier@880,832,puncher@128,624,puncher@816,128
+t800 at (744,776)
+t930 (743,801) chasers: bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bob@736,800,bobsoldier@880,832,puncher@128,624,puncher@816,128 -> bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bobsoldier@880,832,puncher@128,624,puncher@816,128
+t1000 at (766,857)
+t1177 (877,861) chasers: bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bobsoldier@880,832,puncher@128,624,puncher@816,128 -> bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,puncher@128,624,puncher@816,128
+t1200 at (889,835)
+t1261 (888,824) burnt:  -> burnabletree@872,784
+t1400 at (888,777)
+t1407 (888,777) open:  -> wandlock@480,560
+t1600 at (747,856)
+t1800 at (707,679)
+t2000 at (488,669)
+t2200 at (470,501)
+t2400 at (487,441)
+t2600 at (487,424)
+t2617 (487,424) open: wandlock@480,560 -> wandlock@448,432,wandlock@480,560,wandlock@512,480
+t2800 at (504,488)
+t3000 at (552,498)
+t3200 at (552,440)
+t3400 at (536,392)
+t3600 at (602,392)
+t3800 at (648,392)
+t4000 at (696,392)
+t4200 at (711,376)
+t4400 at (711,425)
+t4600 at (712,472)
+t4800 at (770,488)
+t5000 at (776,440)
+t5111 (776,440) open: wandlock@448,432,wandlock@480,560,wandlock@512,480 -> wandlock@448,432,wandlock@480,560,wandlock@512,480,wandlock@800,400
+t5200 at (824,408)
+END 5216 hits [] collected []

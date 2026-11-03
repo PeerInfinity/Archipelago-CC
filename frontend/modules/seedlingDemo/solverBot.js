@@ -24310,6 +24310,52 @@ function orbitKillChaser(run, perTick, id, { fork, dashMode, what }) {
         + `${whys.join(' | ')}` };
 }
 
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE BK2COMBAT — THE CHASER ARM ASKS AGAIN FROM A CELL IT CERTIFIED SAFE TO WAIT IN
+ * (`CHASER_STAGED_HUNT`, OFF).
+ *
+ * ⚖ The user queued BK2COMBAT on 2026-11-02 (POCKET-BURN's hand-over: the burn walk's combat on L40's Boss Key 2).
+ * `bobsoldier@880,832` stands in a one-tile notch above L40's one-tile corridor (y 848–864), and the burn's stance
+ * (888,824) is inside it. The chaser arm (`deriveKillByChaser`) prices each reachable leash cell as ONE walk from where
+ * the player stands plus a dwell. MEASURED (the latch boot re-booted at (488,579) with the pocket shut, OPP ON): asked
+ * from the x 744 shaft at t680, every cell is refused — the three west of the notch because the body never comes
+ * (*"still standing after the whole ceiling"*: a BobSoldier only leaves its notch when the player is close), the three
+ * beside it because the arrival meets the blade (the WAIT at (888,856) is hit 37 ticks in). On the pocket-open re-boot
+ * the same arm is asked with the player ALREADY in the corridor at (856,856) and kills it from (888,856) hitless (4810):
+ * the stance is the same, the body's phase on arrival is not.
+ *
+ * ⇒ ON, when the arm prices no stance, the cells it refused ONLY because the body did not come — a walk and a wait the
+ * forecast saw hitless for the cell's whole ceiling (`waits`) — are staging cells, nearest the body first. The player
+ * walks to one (an ordinary `walkTo`, the ladder's own), and the arm is asked again on a fork of the run after each
+ * still tick, up to that cell's own ceiling (the wait the forecast certified): the first tick at which a stance prices
+ * is the plan — the still ticks are driven on the run, checked hitless, and the stance is re-derived on the run itself.
+ * A cell from which no tick prices one is rewound (`rewind.to`), so a refused staging spends nothing. Measured scratch
+ * (`m/`): staged at (856,856), the arm prices (888,856) after 16 still ticks and the BobSoldier dies hitless.
+ *
+ * ⛔ It is the chaser arm's own question asked again (the same `deriveKillByChaser`, the same strike policy, the same
+ * `walkTo` and `runDwell`), so it sits under the KILL rung's gate with the arm (strategy switch: `kill`), and it needs
+ * the fork and the rewind (`forkRun`); without them it is not asked. OFF: nothing is read, `deriveKillByChaser`'s
+ * answer carries no `waits`, every walk is byte-identical. `SEEDLING_CHASER_STAGED_HUNT=1` /
+ * `withChaserStagedHunt(enabled, fn)`.
+ */
+export const CHASER_STAGED_HUNT = { enabled: globalThis.process?.env?.SEEDLING_CHASER_STAGED_HUNT === '1' };
+export const CHASER_STAGED_HUNT_DEFAULT = false;
+
+/** Run `fn` with `CHASER_STAGED_HUNT` set to `enabled`, restoring the previous value. */
+export function withChaserStagedHunt(enabled, fn) {
+    return withSwitch(CHASER_STAGED_HUNT, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: one row per staged ask
+ * (`{id, t, cell, wait, verdict}`; verdict `staged` | `no-stance` | `hit` | `refused` | `gone` | `deadline` |
+ * `diverged`).
+ */
+export const CHASER_STAGED_HUNT_COUNTS = { asks: [] };
+export function resetChaserStagedHuntCounts() {
+    CHASER_STAGED_HUNT_COUNTS.asks = [];
+}
+
 export function deriveKillByChaser(run, body, contacts,
     /**
      * ⛓ R9 slice 12i — `dashMode` rides down here for the same reason ⚖ 46's
@@ -24596,7 +24642,9 @@ export function deriveKillByChaser(run, body, contacts,
         if (deathTick === null) {
             rejected.push({ ...c, why: `${target.id} is still standing after the whole `
                 + `${ceilingFor(c)}-tick ceiling — it does not reach this stance inside its `
-                + 'own travel time plus three kill windows' });
+                + 'own travel time plus three kill windows',
+            // ⛓ BK2COMBAT (`CHASER_STAGED_HUNT`, OFF): a walk and a wait the forecast saw hitless — a staging cell
+            ...(CHASER_STAGED_HUNT.enabled ? { wait: true, ceiling: ceilingFor(c) } : {}) });
             continue;
         }
         const arrival = walk.startTick + walk.samples.filter((sm) => sm.phase !== 'dwell').length;
@@ -24676,6 +24724,10 @@ export function deriveKillByChaser(run, body, contacts,
         return {
             stance: null,
             ...(approachWhy !== null ? { approach: approachWhy } : {}),
+            // ⛓ BK2COMBAT (`CHASER_STAGED_HUNT`, OFF): the cells refused only because the body did not come
+            ...(CHASER_STAGED_HUNT.enabled ? { waits: rejected.filter((r) => r.wait === true)
+                .map((r) => ({ x: r.x, y: r.y, ceiling: r.ceiling,
+                    d: Math.hypot(r.x - targetCentre.x, r.y - targetCentre.y) })) } : {}),
             why: `no stance derives for ${body.id} on level ${run.level}: `
                 + `${aroundTarget ? `the ${STANCE_SCAN_CELLS}-cell box around the player's `
                     + 'node held 0 leash cells, so the box around the TARGET was scanned: ' : ''}`
@@ -27384,6 +27436,89 @@ function solveSegmentUnder({
     const stanceWalks = new Set();
     /** ⛓ U15-swim D2 — the DODGE rung's stalls this segment (`DODGE_RUNG.maxPerSegment`). */
     let dodgesSpent = 0;
+    /**
+     * ⛓⛓ BK2COMBAT (`CHASER_STAGED_HUNT`, OFF) — the chaser arm's question asked again from a staging cell
+     * (`first.waits`: the cells `deriveKillByChaser` refused only because the body did not come, nearest the body
+     * first). Walk there (the ladder's own walk), then ask on ONE fork after each still tick up to the cell's ceiling;
+     * the first tick a stance prices is driven on the run (checked hitless) and the stance re-derived there. A cell
+     * that prices nothing is rewound. Returns the run's own hunt with `staged`, or `first` with the staged whys.
+     */
+    const stagedChaserHunt = (hunted, first, { goal, aim, contacts, allowTeleporter, what }) => {
+        if (!fork || !rewind) return first;
+        const alive = (r) => (r.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id);
+        const ask = (r) => deriveKillByChaser(r, hunted, contacts, { aim, allowTeleporter, tolerance, dashMode });
+        const whys = [];
+        const cells = [...first.waits].sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+        for (const cell of cells) {
+            if (deadlineReached('kill-chaser')) {
+                whys.push('the caller\'s anytime deadline was reached');
+                break;
+            }
+            const t0 = perTick.length;
+            const hits0 = run.ledger('playerHits').length;
+            const row = { id: hunted.id, t: t0, cell: { x: cell.x, y: cell.y }, wait: null, verdict: null };
+            CHASER_STAGED_HUNT_COUNTS.asks.push(row);
+            const at = `(${cell.x},${cell.y})`;
+            try {
+                walkTo(goal, { x: cell.x, y: cell.y }, { what: `${what} -> kill (${hunted.id}) staging ${at}` });
+            } catch (e) {
+                if (!(e instanceof SolverRefusal) || e instanceof PendingDeclaration || e?.undeclaredKillLock) throw e;
+                rewind.to(t0);
+                row.verdict = 'refused';
+                whys.push(`${at}: the staging walk refused — ${String(e.message).split('\n')[0].slice(0, 160)}`);
+                continue;
+            }
+            if (run.ledger('playerHits').length > hits0) {
+                rewind.to(t0);
+                row.verdict = 'hit';
+                whys.push(`${at}: the staging walk was hit`);
+                continue;
+            }
+            if (!alive(run)) {
+                // the walk's own strikes killed it: the dwell below ends on its first tick
+                row.verdict = 'staged';
+                row.wait = 0;
+                return { stance: { x: run.state.x, y: run.state.y }, ticks: 1, clears: [hunted.id],
+                    why: `${hunted.id} died on the staging walk to ${at}`, staged: { cell: row.cell, wait: 0, from: t0 } };
+            }
+            const f = fork();
+            const fh0 = f.ledger('playerHits').length;
+            let found = null;
+            for (let d = 0; d <= cell.ceiling; d += 1) {
+                if (d > 0) f.advance(new Set());
+                if (f.ledger('playerHits').length > fh0) { row.verdict = 'hit'; break; }
+                if (!alive(f)) { row.verdict = 'gone'; break; }
+                if (deadlineReached('kill-chaser')) { row.verdict = 'deadline'; break; }
+                if (ask(f).stance) { found = d; break; }
+            }
+            if (found === null) {
+                rewind.to(t0);
+                row.verdict = row.verdict ?? 'no-stance';
+                whys.push(`${at}: ${row.verdict === 'hit' ? 'the still wait there is hit'
+                    : row.verdict === 'gone' ? `${hunted.id} left the world during the still wait (not by this arm)`
+                        : row.verdict === 'deadline' ? 'the caller\'s anytime deadline was reached during the still wait'
+                            : `no stance prices in ${cell.ceiling + 1} still tick(s)`}`);
+                if (row.verdict === 'deadline') break;
+                continue;
+            }
+            for (let k = 0; k < found; k += 1) {
+                const held = new Set();
+                perTick.push(held);
+                run.advance(held);
+            }
+            const h = run.ledger('playerHits').length === hits0 ? ask(run) : { stance: null };
+            if (!h.stance) {
+                rewind.to(t0);
+                row.verdict = 'diverged';
+                whys.push(`${at}: the fork priced a stance after ${found} still tick(s) and the run did not`);
+                continue;
+            }
+            row.wait = found;
+            row.verdict = 'staged';
+            return { ...h, staged: { cell: row.cell, wait: found, from: t0 } };
+        }
+        return { ...first, why: `${first.why} STAGED HUNT (CHASER_STAGED_HUNT): ${whys.join('; ') || 'no staging cell'}.` };
+    };
     const climbLadderUnder = ({ goal, aim, contacts, allowTeleporter, what, hit,
         dangerExcept = null, corridor = null, axisAligned = false,
         // ⛓ fidelity CORRIDOR D2 — the walk will not dash (`walkTo`'s `undashed`): no dashed rescue is asked.
@@ -29272,15 +29407,19 @@ function solveSegmentUnder({
              */
             const swordless = !(run.progress('inventory')?.hasSword
                 || run.progress('inventory')?.hasGhostSword);
-            const hunt = swordless
+            const firstHunt = swordless
                 ? { stance: null, why: `this run holds no sword, so \`set slashing\`'s `
                     + `outer gate refuses every press — no stance could strike ${hunted.id}, `
                     + 'and the stance scan was not run (SF3)' }
                 : deriveKillByChaser(run, hunted, contacts,
                     { aim, allowTeleporter, tolerance, dashMode });
+            // ⛓ BK2COMBAT (`CHASER_STAGED_HUNT`, OFF): no stance — asked again from a cell it certified safe to wait in
+            const hunt = !firstHunt.stance && firstHunt.waits?.length > 0
+                ? stagedChaserHunt(hunted, firstHunt, { goal, aim, contacts, allowTeleporter, what }) : firstHunt;
             if (hunt.stance) {
                 rowFor('kill', refused, { arm: 'chaser', target: hunted.id,
-                    stance: hunt.stance, runnersUp: hunt.runnersUp });
+                    stance: hunt.stance, runnersUp: hunt.runnersUp,
+                    ...(hunt.staged ? { staged: hunt.staged } : {}) });
                 const strike = strikePolicyFor(run, { dashMode });
                 if (!strike) {
                     killWhy = `${hunt.why} — but this run holds no sword, so `
@@ -29370,6 +29509,7 @@ function solveSegmentUnder({
                         goal: goal.kind, strategy: 'kill', arm: 'chaser',
                         target: hunted.id, stance: hunt.stance,
                         clears: hunt.clears, ...record,
+                        ...(hunt.staged ? { staged: hunt.staged } : {}),
                     });
                     /**
                      * ⛓⛓ **THE ARM IS ITERATIVE AND THIS IS WHERE IT
