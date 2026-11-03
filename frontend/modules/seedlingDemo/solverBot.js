@@ -7746,8 +7746,8 @@ export function withDashStandWhole(enabled, fn) {
  * `audit` (null, or an array a measurement installs) hears one row per whole-chain preview `spinnerDashWhole` makes,
  * either arm: whether it certified, and the kinds of the danger that refused it; it changes nothing the solver decides.
  */
-// ⛓ ON by default since the joint flip with fidelity's `fineStanceWalk` (⚖ the user, 2026-11-02: "Yes, flip both +
-// re-record"); `SEEDLING_DASH_CERT_SIGHT=0` or `withDashCertSight(false, …)` opts out.
+// ⛓ ON by default (⚖ the user, 2026-11-03; planned with fidelity's `fineStanceWalk`, which was held back: "Land 2, hold
+// fineStanceWalk"); `SEEDLING_DASH_CERT_SIGHT=0` or `withDashCertSight(false, …)` opts out.
 export const DASH_CERT_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_DASH_CERT_SIGHT !== '0',
     counts: { asks: 0, refused: 0 }, audit: null };
 
