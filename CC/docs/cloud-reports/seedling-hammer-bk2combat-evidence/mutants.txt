@@ -1,0 +1,21 @@
+== M1 drop the fix (the arm's first answer is final): exit 1
+     × pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the combat to the ice turret's approach from the door 59530ms
+ FAIL  frontend/modules/seedlingDemo/hammerBk2Combat.slow.test.js > hammer-phase BK2COMBAT on the latch boot, south of the door (slow) > pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the combat to the ice turret's approach from the door
+AssertionError: expected [] to deeply equal [ { id: 'bobsoldier@880,832', …(4) } ]
+- Expected
+== M2 no still wait (ask once, on arrival at the staging cell): exit 1
+     × pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the combat to the ice turret's approach from the door 60026ms
+ FAIL  frontend/modules/seedlingDemo/hammerBk2Combat.slow.test.js > hammer-phase BK2COMBAT on the latch boot, south of the door (slow) > pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the combat to the ice turret's approach from the door
+AssertionError: expected [ …(3) ] to deeply equal [ { id: 'bobsoldier@880,832', …(4) } ]
+- Expected
+== M3 stage on every refused cell (a danger-refused one too): exit 1
+     × OFF: deriveKillByChaser carries no `waits`; ON: the same answer plus the cells the body never came to, nearest last 2199ms
+ FAIL  frontend/modules/seedlingDemo/hammerBk2Combat.test.js > hammer-phase BK2COMBAT: CHASER_STAGED_HUNT > OFF: deriveKillByChaser carries no `waits`; ON: the same answer plus the cells the body never came to, nearest last
+AssertionError: expected [ [ 824, 856, 115 ], …(6) ] to deeply equal [ [ 824, 856, 115 ], …(2) ]
+- Expected
+== M4 drive one still tick fewer than the fork priced: exit 1
+     × pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the combat to the ice turret's approach from the door 162785ms
+ FAIL  frontend/modules/seedlingDemo/hammerBk2Combat.slow.test.js > hammer-phase BK2COMBAT on the latch boot, south of the door (slow) > pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the combat to the ice turret's approach from the door
+AssertionError: expected [ …(3) ] to deeply equal [ { id: 'bobsoldier@880,832', …(4) } ]
+- Expected
+restored byte for byte

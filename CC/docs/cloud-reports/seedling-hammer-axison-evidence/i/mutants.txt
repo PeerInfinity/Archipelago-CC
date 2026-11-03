@@ -1,0 +1,22 @@
+M1 the stand applied with KEYLOCK_WAIT_PRICED off (row 7's isolation instrument broken)
+1
+     ✓ ships OFF (`SEEDLING_AXIS_STRIKE=1` turns it on in node; the page channel knows the name) 20ms
+     ✓ the census tick: OFF walks the lane into the bob, ON strikes it ALONG the axis with the lane exact 91ms
+     ✓ a body reachable only OFF the walk's axis is not aimed at (the plain policy would aim across the lane) 4ms
+     ✓ a non-axis walk is OFF's, switch or no switch (the drive and a solve) 205ms
+     × AXIS-L12HITS: the clear-tag keylock stance walk is certified with its hold (`axisClearTagStand`) 16ms
+     × AXIS-L12HITS: L12 leg 149 ON takes 0 hits and answers OFF's plan; without the hold's tail it is punched 5016ms
+     × AXISON: on L95 flag 4 and L105 the axis strikes alone build no policy and answer OFF's plan 11403ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 4 passed (7)
+M2 axisStrikeFor ignores the switch (a policy OFF too)
+1
+     × ships OFF (`SEEDLING_AXIS_STRIKE=1` turns it on in node; the page channel knows the name) 29ms
+     × the census tick: OFF walks the lane into the bob, ON strikes it ALONG the axis with the lane exact 59ms
+     ✓ a body reachable only OFF the walk's axis is not aimed at (the plain policy would aim across the lane) 5ms
+     ✓ a non-axis walk is OFF's, switch or no switch (the drive and a solve) 227ms
+     ✓ AXIS-L12HITS: the clear-tag keylock stance walk is certified with its hold (`axisClearTagStand`) 4ms
+     × AXIS-L12HITS: L12 leg 149 ON takes 0 hits and answers OFF's plan; without the hold's tail it is punched 389ms
+     ✓ AXISON: on L95 flag 4 and L105 the axis strikes alone build no policy and answer OFF's plan  3596ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 4 passed (7)

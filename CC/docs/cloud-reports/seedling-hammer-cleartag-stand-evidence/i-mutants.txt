@@ -1,0 +1,4 @@
+M1 drop the tail (ON asks axisClearTagStand): RED       × the clear-tag site's options: OFF `axisClearTagStand`'s (`{}` unless AXIS), ON the hold's 110-tick tail 34ms |      × L35 leg 127: OFF the hold is punched twice; ON the kill runs first and it takes 0 hits 6532ms
+M2 tail without the hold length: RED       × the clear-tag site's options: OFF `axisClearTagStand`'s (`{}` unless AXIS), ON the hold's 110-tick tail 36ms |      × L35 leg 127: OFF the hold is punched twice; ON the kill runs first and it takes 0 hits 6352ms
+M3 the switch ignored (the tail OFF too): RED       × the clear-tag site's options: OFF `axisClearTagStand`'s (`{}` unless AXIS), ON the hold's 110-tick tail 62ms |      × L35 leg 127: OFF the hold is punched twice; ON the kill runs first and it takes 0 hits 5897ms
+M4 every verb (the keylock gate dropped): RED       × the clear-tag site's options: OFF `axisClearTagStand`'s (`{}` unless AXIS), ON the hold's 110-tick tail 38ms
