@@ -140,6 +140,14 @@ Every region generator may be handed one optional, substrate-agnostic field, `he
 
 Where it arrives: `generateRegionCore(input)` as `input.held`; the zone path's context as `ctx.held`; a spiral content cell's `extractZoneRules(zoneIdx, ctx)` and `instantiateLibraryEntry(entry, ctx)` as `ctx.held`; sphere growth's `instantiateLibraryEntryForSpecs` and `instantiateAtlasEntryForSpecs` as `ctx.held`. It draws no rng and is written into no region, rules.json or sidecar. No substrate acts on it yet: a generator that destructures its input ignores it for free.
 
+### A substrate's own rules (`markAuthoredRule`)
+
+Where the pipeline has its own rule for an extracted location or exit, the engine REPLACES the extracted rule with it, so path-walk pollution never leaks into the world's logic. This happens in three places: sphere growth's composed gate (and its `True_` default for locations), top-down's source rule, and the sphere library tile branch's driver gate. The atlas branch already ANDs, and the shuffled spiral and grid growth keep extracted rules.
+
+A rule the substrate itself AUTHORS is not pollution. One example is a generated Seedling room's key gate: `Has(<key>)` on the location behind its lock. The substrate MARKS that part with `markAuthoredRule(entry, rule)` (`procgenCore/authoredRule.js`) on the entry `extractPathsAndObstacles` returns, and the engine's override sites write `And(<pipeline rule>, <authored rule>)` instead (`keepAuthoredRule`; a `True_` pipeline rule counts as none, so the authored rule stands alone). Where the pipeline has no rule, the extracted rule stays as it is. An unmarked entry behaves exactly as before.
+
+The mark is a non-enumerable, symbol-keyed property, so it never reaches rules.json, a `structuredClone`, a spread or a deep-equality check. It is read only on the object the substrate returned, between extraction and the override. Only `flash_seedling_gen` marks a rule today (its key gate), so no shipped world moves.
+
 ### Build-time — content sources (zone-based substrates)
 
 A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The pool items a content cell holds were dealt to it up front by the spiral's [item layer](./stepped-pipeline.md#the-item-layer). The content sources are the zone games (`jta`, `bounce`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
