@@ -100,14 +100,17 @@ describe('the families — one NON-default fact each, that a neighbour\'s copy w
     });
 
     it('flash-zone: `ap_locations` is DERIVED, and each game requires its OWN level key', () => {
+        // (The neighbour was runner until the runner substrate was deleted, Cloudberry P4b;
+        //  cloudberry is the other flash-zone game.)
         const bounce = fieldsOf('bounce');
-        const runner = fieldsOf('runner');
+        const cloudberry = fieldsOf('cloudberry');
         expect(bounce.ap_locations.derived).toBe(true);
+        expect(cloudberry.ap_locations.derived).toBe(true);
         expect(bounce.params.schema.required).toContain('bounceLevel');
-        expect(bounce.params.schema.required).not.toContain('runnerLevel');
-        expect(runner.params.schema.required).toEqual(expect.arrayContaining(['runnerLevel', 'physics']));
-        expect(bounce.params.schema.required).not.toContain('physics');
-        expect(bounce.gameId.enum).not.toEqual(runner.gameId.enum);
+        expect(bounce.params.schema.required).not.toContain('payload');
+        expect(cloudberry.params.schema.required).toEqual(expect.arrayContaining(['payload', 'generate']));
+        expect(cloudberry.params.schema.required).not.toContain('bounceLevel');
+        expect(bounce.gameId.enum).not.toEqual(cloudberry.gameId.enum);
     });
 
     it('jta: `jtaZone` is the one required field, and it is DERIVED; `manaEnabled` stays the '

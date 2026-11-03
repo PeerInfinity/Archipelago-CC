@@ -45,6 +45,7 @@ import { ROOM_BODY_OBJECT_TAGS, roomBodyOps, roomBodySkinView, stepRoomBodySkin 
 import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from './seedlingHazardSkin.js';
 import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from './seedlingPuzzleSkin.js';
 import { ROPE_FRAMES, ROPE_KEY, SOLIDS_OBJECT_TAGS, ropeOps, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
+import { BRIDGE_OBJECT_TAGS, BRIDGE_TILE_KEY } from './seedlingBridgeSkin.js';
 import { NPC_TAGS, npcOps, npcSkinView, stepNpcSkin } from './seedlingNpcSkin.js';
 import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
@@ -258,7 +259,7 @@ export const FAMILY_OBJECT_TAGS = Object.freeze({
     roomBody: ROOM_BODY_OBJECT_TAGS,
     // ⛓ LAB rope-bridge: lab-side, not a skin (`staticRopeOps`, `BRIDGE_TILE_KEY`)
     rope: new Set(['rope']),
-    bridge: new Set(['tile:Bridge']),
+    bridge: BRIDGE_OBJECT_TAGS,
 });
 export function labDrawnObjects(byFamily) {
     const sets = Object.entries(FAMILY_OBJECT_TAGS)
@@ -318,7 +319,9 @@ export function staticRopeOps(world, art, { sample = null } = {}) {
  * lab claims it whenever the tile's key is in the stack (without it the tile is its colour and the stand-in stays).
  * ⚠ LIMIT: the sample carries no `openBridges`, so a speared bridge is drawn CLOSED (the build look).
  */
-export const BRIDGE_TILE_KEY = 'seedling:tile/bridge';
+// ⛓ seedling-js-bridge-art — the key and the tag are `seedlingBridgeSkin`'s (the JS page draws the run's look from
+// them); the lab passes no `bridgeLook`, so its bridges stay `closed`, byte-identical
+export { BRIDGE_TILE_KEY };
 
 /**
  * The bodies to draw when the sample has none for this room (the editor, a still, a scrub off the tape's

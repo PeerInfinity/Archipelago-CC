@@ -90,17 +90,9 @@ UPSTREAM_WORLDS: frozenset[str] = frozenset({
 # Fork worlds that are OURS but still work-in-progress: excluded from the
 # iterate-over-all-worlds tests until they stabilize.
 #
-# - runner_worldgen: the Runner substrate's generated world is still being
-#   built out. Its item/location balance isn't settled, so on many random
-#   seeds fill cannot place its progression items and
-#   test/general/test_implemented.py SUBFAILs nondeterministically with
-#   ``Fill.FillError: No more spots to place 5 items``. (Previously masked by
-#   the json_tools kivy xdist worker crash aborting the session early.)
+# (runner_worldgen / runner_sphere_worldgen were listed here until the runner
+# substrate was deleted, Cloudberry P4b 2026-11-02.)
 WIP_WORLDS: frozenset[str] = frozenset({
-    # Runner family — still in active development; seed-flaky generation
-    # (e.g. sphere-chain RuntimeErrors) until the generator stabilizes.
-    "runner_worldgen",
-    "runner_sphere_worldgen",
     # Hero Core (Minish-Link v1.0.4 apworld, imported 2026-10-06) — roving
     # seed-dependent FillError ("No more spots to place N items") in
     # test_ids / test_implemented; not expected to pass consistently yet

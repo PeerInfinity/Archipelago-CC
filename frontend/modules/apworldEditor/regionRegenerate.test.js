@@ -60,7 +60,9 @@ const PAIRS = [
     ['four', '3', 'region_1_0', 'maze'],
     ['four', '1', 'region_1_0', 'bounce'],
     ['four', '1', 'region_1_0', 'text_adventure'],
-    ['four', '3', 'region_2_0', 'runner'],
+    // (slot 3 region_2_0 → runner until the runner substrate was deleted, Cloudberry
+    //  P4b; bounce is the pure-JS zone target in its place.)
+    ['four', '3', 'region_2_0', 'bounce'],
     ['ap10', '1', 'Overworld', 'text_adventure'],
     ['ap10', '1', 'YellowCastle', 'maze'],
     ['ap10', '1', 'WhiteCastle', 'maze'],

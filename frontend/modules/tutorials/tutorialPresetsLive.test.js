@@ -32,9 +32,8 @@ const PUBLIC = readFileSync(join(REPO, 'scripts/release/preserved-dev-presets.tx
  * with its reason. Keep it short; the fix is usually a `public` line.
  */
 const DEV_ONLY = Object.freeze({
-    // In-progress; Runner WorldGen stays a dev demo (⚖ the user, 2026-10-26: "Exempt for now").
-    // Revisit when the runner-demo tutorial is ready.
-    'procgen-runner-demo': 'runner_worldgen',
+    // (empty: the last exemption, procgen-runner-demo → runner_worldgen, went with the
+    // runner substrate in Cloudberry P4b.)
 });
 
 /** The preset ids a tutorial loads. */

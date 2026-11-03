@@ -1,0 +1,4 @@
+ticks 731; compared 728 tick(s) (first frame per tick); level mismatches 0; worst |Δ| player 0
+game hits steps [{"t":125,"hits":1,"x":96.84682696074005,"y":63.92468821803975}]
+model playerHits [{"t":125,"id":"jellyfish@80,112","hits":1}]
+end: game level 101 tick 731 | model level 101

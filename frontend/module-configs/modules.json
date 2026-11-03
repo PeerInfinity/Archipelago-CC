@@ -296,10 +296,6 @@
       "path": "./modules/bounceDemo/index.js",
       "enabled": true
     },
-    "runnerDemo": {
-      "path": "./modules/runnerDemo/index.js",
-      "enabled": true
-    },
     "cloudberryDemo": {
       "path": "./modules/cloudberryDemo/index.js",
       "enabled": true
@@ -403,7 +399,6 @@
     "omsiSubstrateWrapper",
     "flashSubstrate",
     "bounceDemo",
-    "runnerDemo",
     "cloudberryDemo",
     "noiz2saSubstrate",
     "procgenPipeline",

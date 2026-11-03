@@ -1,0 +1,14 @@
+rows 10 10
+fields ['agreesWithKnown', 'boot', 'clock', 'declarations', 'family', 'goals', 'knownAnswer', 'knownTicks', 'level', 'ms', 'passes', 'refusal', 'replans', 'replay', 'step', 'ticks', 'traceRows', 'verdict', 'views', 'visit', 'withCommittedDeclarations']
+step level verdict ticks | OFF vs ON (all fields but ms)
+27 18 SOLVED 467 | SOLVED 467 same
+66 39 SOLVED 3496 | SOLVED 3496 same
+67 40 REFUSED None | REFUSED None same
+94 39 SOLVED 3376 | SOLVED 3376 same
+95 40 REFUSED None | REFUSED None same
+97 40 SOLVED 70 | SOLVED 70 same
+135 39 SOLVED 3376 | SOLVED 3376 same
+136 40 SOLVED 172 | SOLVED 172 same
+148 39 SOLVED 3253 | SOLVED 3253 same
+149 40 SOLVED 172 | SOLVED 172 same
+moved 0

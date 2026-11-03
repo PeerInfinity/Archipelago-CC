@@ -26,6 +26,7 @@ import {
     DEFAULT_REGION_SIZE, buildRulesJson, linkIsAdjacentOnSide, topDownFromRulesJson, sourceLocationsOf,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { SIDE_SHARING, exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
+import { flashZoneExitSides } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { resolveExitTilePositions } from '../procgenCore/compositeMapRenderer.js';
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { createEditSession } from '../procgenCore/editCore.js';
@@ -443,7 +444,24 @@ describe('⛓⛓⛓ the write-back — every free move and every swap of the pop
             }
         }
         expect(pointed).toBeGreaterThan(0);
-        expect(kept).toBeGreaterThan(0);
+        // ⛓ The committed corpus no longer holds an entry that declares no arrow
+        //   key (runner's worlds were the population; deleted, Cloudberry P4b), so
+        //   the KEPT arm is asserted on the declaration itself in the row below.
+        expect(kept).toBe(0);
+    });
+
+    it('the arrow-free flash-zone declaration (no extra keys) keeps every arrow of a payload it relabels', () => {
+        const plain = flashZoneExitSides();
+        expect(plain.keys.some((k) => k.includes('[]'))).toBe(false);
+        let checked = 0;
+        for (const { entry, op } of PORTAL_MAP_CHANGES) {
+            const level = Object.keys(entry.playable_payload.params).find((k) => k.endsWith('Level'));
+            if (!level) continue;
+            const after = plain.relabel(entry.playable_payload, movesOf(entry, op));
+            expect(bytes(after.params[level])).toBe(bytes(entry.playable_payload.params[level]));
+            checked += 1;
+        }
+        expect(checked).toBeGreaterThan(0);
     });
 });
 

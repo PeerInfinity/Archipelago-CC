@@ -202,7 +202,9 @@ describe('F1 task 0 / 0b — the writer never creates an unbounded NEW row', () 
 
     /**
      * ⛔ EIGHT OF THE NINE the sidecars write ran red, each with its MEASURED
-     * result (the ninth, jta-balance-pass, is no longer derived — F2 task 6). All unpriced `@ci-box` gates, so 0b PROBES them (a deadline
+     * result (the ninth, jta-balance-pass, is no longer derived — F2 task 6; the
+     * eighth, region-library-sphere-roundtrip-runner, was deleted with the runner
+     * substrate, Cloudberry P4b, so seven rows remain). All unpriced `@ci-box` gates, so 0b PROBES them (a deadline
      * run) — and the admission refuses every one of those results by name.
      */
     it.each([
@@ -213,7 +215,6 @@ describe('F1 task 0 / 0b — the writer never creates an unbounded NEW row', () 
         ['gate: region-library-roundtrip', { exit: 1, ms: 9000, value: '8/0', total: null }, /green by PASS tally only \(PASS tally 8\/0\)/],
         ['gate: region-library-sphere-roundtrip', { exit: 1, ms: 20000, value: '11/0', total: null }, /green by PASS tally only/],
         ['gate: region-library-sphere-roundtrip-maze', { exit: 1, ms: 20000, value: '9/0', total: null }, /green by PASS tally only/],
-        ['gate: region-library-sphere-roundtrip-runner', { exit: 1, ms: 20000, value: '10/0', total: null }, /green by PASS tally only/],
     ])('%s is probed under the deadline (or refused first, if it writes tracked files), and its measured run is REFUSED', (key, measured, why) => {
         const row = ROWS.find((r) => r.key === key);
         expect(row).toBeDefined();

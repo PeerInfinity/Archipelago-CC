@@ -10,7 +10,6 @@ import { fileURLToPath } from 'node:url';
 // TEST's imports, not about the document.
 import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
-import '../runnerDemo/runnerDemoLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 import {
@@ -456,13 +455,12 @@ const PROBES = ['', '-3', '0', '2.7', '0.5', '99', 'abc'];
 // `defaultProcgenParams` (the maze twice: hazards on, and off); the behaviour
 // rows are, per control, [typed, bag keys that moved off the defaults, the
 // box afterwards, onChange calls]; the key lists are every bag key a
-// Parameters-section control writes, per mode, with maze + bounce + runner
-// active and hazards on (so the maze's sub-fields are drawn).
+// Parameters-section control writes, per mode, with maze + bounce (+ runner,
+// until its deletion in Cloudberry P4b) active and hazards on (so the maze's sub-fields are drawn).
 const HOOKS_BEFORE_R1 = Object.freeze({
     'maze-on': "<div><div class=\"procgen-pipeline-field\"><label title=\"Procgen places hazards (2/3/5-tile linear paths or 4/8-tile loops) on every region\">Enable hazards</label><input type=\"checkbox\"{checked=true}></input></div><div class=\"procgen-pipeline-hazard-fields\"><div class=\"procgen-pipeline-field\"><label title=\"Target hazard count for each region (0 disables)\">Hazards per region</label><input type=\"number\" min=\"0\" step=\"1\"{value=3}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Stop early after this many failed placement attempts in a row\">Max consecutive fails</label><input type=\"number\" min=\"1\" step=\"1\"{value=10}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Hazard paths may include wall tiles (still must contain ≥1 floor tile)\">Allow wall overlap</label><input type=\"checkbox\"{checked=false}></input></div></div></div>",
     'maze-off': "<div><div class=\"procgen-pipeline-field\"><label title=\"Procgen places hazards (2/3/5-tile linear paths or 4/8-tile loops) on every region\">Enable hazards</label><input type=\"checkbox\"{checked=false}></input></div></div>",
     'bounce': "<div><div class=\"procgen-pipeline-field\"><label title=\"What falling off the level bottom does. Routing never depends on it — every non-start region has a real back portal.\">Fall behavior</label><select{value=current}><option{value=current}>Restart current region</option><option{value=previous}>Return to previous region</option><option{value=start,disabled=true}>Return to starting region (v2)</option></select></div><div class=\"procgen-pipeline-field\"><label title=\"Logic-affecting: access rules derive from the profile's physics, and the profile is stamped into every bounce payload so the world plays under the constants it was generated with. dj is provisional until probe calibration.\">Physics profile</label><select{value=dj}><option{value=dj}>Doodle Jump (measured, 20Hz)</option><option{value=experimental}>Experimental (original model)</option></select></div><div><div class=\"procgen-pipeline-field\"><label title=\"Wrap-ring width in px. 240 is DJ-authentic and fits two simultaneous branches; three need ≥318.\">Braid width</label><input type=\"number\" min=\"0\" step=\"1\"{value=240}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-row horizontal meander in px (clamped to ~one hop's reach). 0 = straight lanes.\">Max jitter</label><input type=\"number\" min=\"0\" step=\"1\"{value=40}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Extra plain climb rows added per region AFTER the logic-gating content (sphere-growth / gated braid only). Spread across the gate segments to make levels taller and lift the hardest exit to the summit. 0 = minimal gated chain.\">Platform rows</label><input type=\"number\" min=\"0\" step=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-eligible-platform probability (0–1) of a blue platform (moving, full-width sweep; 1-lane rows only). Capped per level so the reachability check stays fast.\">Blue chance</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0.3}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-eligible-platform probability (0–1) of a brown platform (breaks on landing; terminal only — a pre-merge branch or the top). Capped per level.\">Brown chance</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0.3}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-eligible-platform probability (0–1) of a spring (1-lane rows; launches higher, so the gap above grows to the spring window).\">Spring chance</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0.3}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-eligible-platform probability (0–1) of a jetpack (1-lane rows). Launches FAR higher — under dj the gap is ~6200px, making very tall levels. Default 0.\">Jetpack chance</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-extra-row probability (0–1) of a decorative 2-wide fork/merge beside the gated spine (sphere growth). Adds companion platforms BEYOND the platform-rows target; the terminal merge branch breaks at Brown chance. Default 0.\">Fork chance</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div></div></div>",
-    'runner': "<div><div class=\"procgen-pipeline-field\"><label title=\"Logic-affecting: access rules derive from the profile's physics, and the profile is stamped into every runner payload. Profiles that saturate the calibration sweep cannot host physics gates (double-jump / blue-platform gaps are vetoed there).\">Physics profile</label><select{value=celeste}><option{value=toolkit}>Toolkit defaults</option><option{value=celeste}>Celeste-like</option><option{value=nsmbu}>NSMBU-like</option><option{value=sonic}>Sonic-like (no physics gates)</option><option{value=meatboy}>Meat Boy-like (no physics gates)</option></select></div><div class=\"procgen-pipeline-field\"><label title=\"How close plain run gaps sit to the max grounded jump (0–1). 0 = the calibrated default window; 1 = gaps up to the 0.75×reach structural cap. Gate windows never move.\">Gap margin</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Spike-patch probability per eligible plain floor (0–1). Spiked floors always get a flush partner floor.\">Hazard density</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0.35}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Max plain floors between features (1 + random·N) — longer strips per region.\">Length steps</label><input type=\"number\" min=\"0\" step=\"1\" max=\"8\"{value=2}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Vertical placement jitter (0–1): plain floors rise up to jitter × 1.2 units above the base line. Gates and branch tips stay flat — gap windows never move.\">Jitter</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Split-segment probability per plains slot (0–1): a rising ramp forks into a one-way top lane (jump) over a bottom lane (no jump / drop), merging where the lane ends. Route texture only — requirements never change.\">Splits</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Ceiling-hazard probability per plains slot (0–1): a kill slab hung over its own short gap — full jumps clip it, short holds cross underneath. Difficulty texture only — requirements never change. Some physics profiles have no safe ceiling window and skip these.\">Ceiling hazards</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Margin of error under ceiling hazards (0–1). 1 (default): a plain short hop pressed before the lip crosses — no coyote-time tricks needed. 0: expert — gaps widen so only a late run-off tap fits under the slab. Mid and full jumps are punished at every setting.\">Ceiling margin</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=1}></input></div></div>",
 });
 const BEHAVIOUR_BEFORE_R1 = Object.freeze({
     'maze-on': [
@@ -486,50 +484,35 @@ const BEHAVIOUR_BEFORE_R1 = Object.freeze({
         [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"bounceJetpackChance": 1}, "1", 1], ["0.5", {"bounceJetpackChance": 0.5}, "0.5", 1], ["99", {"bounceJetpackChance": 1}, "1", 1], ["abc", {}, "0", 1]],
         [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"bounceForkChance": 1}, "1", 1], ["0.5", {"bounceForkChance": 0.5}, "0.5", 1], ["99", {"bounceForkChance": 1}, "1", 1], ["abc", {}, "0", 1]],
     ],
-    'runner': [
-        [["", {"runnerPhysicsProfile": "toolkit"}, "toolkit", 1]],
-        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"runnerGapMargin": 1}, "1", 1], ["0.5", {"runnerGapMargin": 0.5}, "0.5", 1], ["99", {"runnerGapMargin": 1}, "1", 1], ["abc", {}, "0", 1]],
-        [["", {"runnerHazardDensity": 0}, "0", 1], ["-3", {}, "0.35", 1], ["0", {"runnerHazardDensity": 0}, "0", 1], ["2.7", {"runnerHazardDensity": 1}, "1", 1], ["0.5", {"runnerHazardDensity": 0.5}, "0.5", 1], ["99", {"runnerHazardDensity": 1}, "1", 1], ["abc", {}, "0.35", 1]],
-        [["", {"runnerLengthSteps": 0}, "0", 1], ["-3", {}, "2", 1], ["0", {"runnerLengthSteps": 0}, "0", 1], ["2.7", {"runnerLengthSteps": 2.7}, "2.7", 1], ["0.5", {"runnerLengthSteps": 0.5}, "0.5", 1], ["99", {"runnerLengthSteps": 8}, "8", 1], ["abc", {}, "2", 1]],
-        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"runnerJitter": 1}, "1", 1], ["0.5", {"runnerJitter": 0.5}, "0.5", 1], ["99", {"runnerJitter": 1}, "1", 1], ["abc", {}, "0", 1]],
-        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"runnerSplitChance": 1}, "1", 1], ["0.5", {"runnerSplitChance": 0.5}, "0.5", 1], ["99", {"runnerSplitChance": 1}, "1", 1], ["abc", {}, "0", 1]],
-        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"runnerCeilingDensity": 1}, "1", 1], ["0.5", {"runnerCeilingDensity": 0.5}, "0.5", 1], ["99", {"runnerCeilingDensity": 1}, "1", 1], ["abc", {}, "0", 1]],
-        [["", {"runnerCeilingMargin": 0}, "0", 1], ["-3", {}, "1", 1], ["0", {"runnerCeilingMargin": 0}, "0", 1], ["2.7", {}, "1", 1], ["0.5", {"runnerCeilingMargin": 0.5}, "0.5", 1], ["99", {}, "1", 1], ["abc", {}, "1", 1]],
-    ],
 });
 const PARAMETER_KEYS_BEFORE_R1 = Object.freeze({
     gridGrowth: [
         'asymmetricExits', 'bounceBlueChance', 'bounceBraidWidth', 'bounceBrownChance', 'bounceFallBehavior',
         'bounceForkChance', 'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows',
         'bounceSpringChance', 'enableHazards', 'enableLoopMode', 'gridHeight', 'gridWidth', 'hazardCount',
-        'hazardMaxConsecutiveFails', 'hazardWallOverlapAllowed', 'maxItemsPerRegion', 'regionHeight', 'regionWidth',
-        'regionXpEffect', 'runnerCeilingDensity', 'runnerCeilingMargin', 'runnerGapMargin', 'runnerHazardDensity',
-        'runnerJitter', 'runnerLengthSteps', 'runnerPhysicsProfile', 'runnerSplitChance', 'seed', 'stopOnPoolEmpty',
+        'hazardMaxConsecutiveFails', 'hazardWallOverlapAllowed', 'maxItemsPerRegion', 'regionHeight',
+        'regionWidth', 'regionXpEffect', 'seed', 'stopOnPoolEmpty',
     ],
     sphereGrowth: [
         'bounceBlueChance', 'bounceBraidWidth', 'bounceBrownChance', 'bounceFallBehavior', 'bounceForkChance',
-        'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows', 'bounceSpringChance',
-        'enableHazards', 'enableLoopMode', 'fillerCount', 'hazardCount', 'hazardMaxConsecutiveFails',
-        'hazardWallOverlapAllowed', 'maxItemsPerRegion', 'regionHeight', 'regionWidth', 'regionXpEffect',
-        'revisitPercent', 'runnerCeilingDensity', 'runnerCeilingMargin', 'runnerGapMargin', 'runnerHazardDensity',
-        'runnerJitter', 'runnerLengthSteps', 'runnerPhysicsProfile', 'runnerSplitChance', 'seed', 'sphereCount',
-        'spheresPerBatch',
+        'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows',
+        'bounceSpringChance', 'enableHazards', 'enableLoopMode', 'fillerCount', 'hazardCount',
+        'hazardMaxConsecutiveFails', 'hazardWallOverlapAllowed', 'maxItemsPerRegion', 'regionHeight',
+        'regionWidth', 'regionXpEffect', 'revisitPercent', 'seed', 'sphereCount', 'spheresPerBatch',
     ],
     shuffledSpiral: [
         'bounceBlueChance', 'bounceBraidWidth', 'bounceBrownChance', 'bounceFallBehavior', 'bounceForkChance',
-        'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows', 'bounceSpringChance',
-        'enableHazards', 'enableLoopMode', 'hazardCount', 'hazardMaxConsecutiveFails', 'hazardWallOverlapAllowed',
-        'maxItemsPerRegion', 'regionHeight', 'regionWidth', 'regionXpEffect', 'runnerCeilingDensity',
-        'runnerCeilingMargin', 'runnerGapMargin', 'runnerHazardDensity', 'runnerJitter', 'runnerLengthSteps',
-        'runnerPhysicsProfile', 'runnerSplitChance', 'seed',
+        'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows',
+        'bounceSpringChance', 'enableHazards', 'enableLoopMode', 'hazardCount', 'hazardMaxConsecutiveFails',
+        'hazardWallOverlapAllowed', 'maxItemsPerRegion', 'regionHeight', 'regionWidth', 'regionXpEffect',
+        'seed',
     ],
     topDown: [
         'bounceBlueChance', 'bounceBraidWidth', 'bounceBrownChance', 'bounceFallBehavior', 'bounceForkChance',
-        'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows', 'bounceSpringChance',
-        'enableHazards', 'enableLoopMode', 'gridHeight', 'gridWidth', 'hazardCount', 'hazardMaxConsecutiveFails',
-        'hazardWallOverlapAllowed', 'maxItemsPerRegion', 'regionHeight', 'regionWidth', 'regionXpEffect',
-        'runnerCeilingDensity', 'runnerCeilingMargin', 'runnerGapMargin', 'runnerHazardDensity', 'runnerJitter',
-        'runnerLengthSteps', 'runnerPhysicsProfile', 'runnerSplitChance', 'seed',
+        'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows',
+        'bounceSpringChance', 'enableHazards', 'enableLoopMode', 'gridHeight', 'gridWidth', 'hazardCount',
+        'hazardMaxConsecutiveFails', 'hazardWallOverlapAllowed', 'maxItemsPerRegion', 'regionHeight',
+        'regionWidth', 'regionXpEffect', 'seed',
     ],
 });
 
@@ -548,7 +531,6 @@ const HOOK_CASES = Object.freeze([
     ['maze-on', 'maze', { enableHazards: true }],
     ['maze-off', 'maze', {}],
     ['bounce', 'bounce', {}],
-    ['runner', 'runner', {}],
 ]);
 
 describe('R1 — the substrate hooks draw with the shared helpers exactly as their own copies did', () => {
@@ -618,7 +600,7 @@ describe('R1 — the Parameters section binds the same bag keys it bound before 
         const ctx = Object.create(ProcgenPipelineUI.prototype);
         ctx.mode = mode;
         ctx.params = new Proxy(bag, { set(t, k, v) { written.add(k); t[k] = v; return true; } });
-        ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
+        ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1 });
         ctx._saveToLocalStorage = () => {};
         ctx._handEditedGridKeys = new Set();
         withFakeDocument(() => {
@@ -642,12 +624,19 @@ describe('R1 — the Parameters section binds the same bag keys it bound before 
  * inputs' `max` moved 10 → `TOPDOWN_GRID_INPUT_MAX` by design. With that
  * constant set back to 10 the R1 capture `666aeec3…` held — the attribute is
  * the whole delta.
+ * ⛓ ALL FOUR RE-RECORDED by Cloudberry P4b (2026-11-02): the runner substrate
+ * (and its form) was deleted, so the active set is maze + bounce. CONTROL: at
+ * the parent tree `b9512ad4a7` (runner still registered) the same render with
+ * `{ maze: 1, bounce: 1 }` active gave exactly these four hashes — the delete
+ * changes nothing in the section but runner's own form. The key lists above
+ * lost exactly the `runner*` keys, and the runner hook/behaviour fixtures went
+ * with the hook.
  */
 const PARAMETERS_SECTION_SHA256_BEFORE_R1 = Object.freeze({
-    gridGrowth: 'f49e89f68ba8a5cb858d3abd74e9b4d1825b42a0f0e98b5d238fb83067e1c298',
-    sphereGrowth: 'd19a7149611d9cd1289e8f9fac457b81da16df18742771c6ff57b049834ea71a',
-    shuffledSpiral: 'cbd1d83f8490db92a82331113efd87544be267f2471c54f6dbe7e9b0f3eecf9b',
-    topDown: '55923d59e185ecb8aeb3ca78347ef9e514d5017888fc651f261b04f2ac9c1585',
+    gridGrowth: '54a3dbb56eb774e8c44e5d6ae2cbaaac67410283d6c19dcb8b584313bcc36547',
+    sphereGrowth: '1926221e1fb04201b5055ae36165aa249bf6f06a53aec28449f278b426d1e0c8',
+    shuffledSpiral: '00d4f3f8129471bc50e87eb9f167e1a0762ef0d3b76178b8ea95cb468e59c83e',
+    topDown: '25faf48371394734c33d5b861dfdebe01a133e1f6fb039050162bcd5b3166668',
 });
 /**
  * ⛓ TUTORIAL CATALOGUE C2 (2026-10-10) — each number box now carries
@@ -671,7 +660,7 @@ describe('R1 — the Parameters section draws the DOM it drew before the split',
         const ctx = Object.create(ProcgenPipelineUI.prototype);
         ctx.mode = mode;
         ctx.params = { ...panelDefaultParams(), enableHazards: true };
-        ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
+        ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1 });
         ctx._saveToLocalStorage = () => {};
         const html = withFakeDocument(() => serialize(withoutParamKeys(unwrapForms(withoutDiscoveryRow(withoutArrivalRow(withoutConceptsRow(ctx._renderParams())))))));
         expect(createHash('sha256').update(html).digest('hex')).toBe(PARAMETERS_SECTION_SHA256_BEFORE_R1[mode]);

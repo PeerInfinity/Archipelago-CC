@@ -139,7 +139,6 @@ import * as omsiSubstrateWrapperModule from './modules/omsiSubstrateWrapper/inde
 import * as jtaBalanceModule from './modules/jtaBalance/index.js';
 import * as flashSubstrateModule from './modules/flashSubstrate/index.js';
 import * as bounceDemoModule from './modules/bounceDemo/index.js';
-import * as runnerDemoModule from './modules/runnerDemo/index.js';
 import * as cloudberryDemoModule from './modules/cloudberryDemo/index.js';
 import * as noiz2saSubstrateModule from './modules/noiz2saSubstrate/index.js';
 import * as bounceRegionEditorModule from './modules/bounceRegionEditor/index.js';
@@ -171,10 +170,8 @@ import './modules/tests/testCases/playbackBotTests.js';
 import './modules/tests/testCases/discoveryModeTests.js';
 import './modules/tests/testCases/textAdventureWrapperTests.js';
 import './modules/tests/testCases/flashSubstrateTests.js';
-import './modules/tests/testCases/runnerDemoTests.js';
 import './modules/tests/testCases/cloudberrySubstrateTests.js';
 import './modules/tests/testCases/cloudberryLoopModeTests.js';
-import './modules/tests/testCases/runnerBlockModeTests.js';
 import './modules/tests/testCases/noiz2saSubstrateTests.js';
 import './modules/tests/testCases/jtaSubstrateWrapperTests.js';
 import './modules/tests/testCases/omsiSubstrateWrapperTests.js';
@@ -280,7 +277,6 @@ const BUNDLED_MODULES = {
   jtaBalance: jtaBalanceModule,
   flashSubstrate: flashSubstrateModule,
   bounceDemo: bounceDemoModule,
-  runnerDemo: runnerDemoModule,
   cloudberryDemo: cloudberryDemoModule,
   noiz2saSubstrate: noiz2saSubstrateModule,
   bounceRegionEditor: bounceRegionEditorModule,

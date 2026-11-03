@@ -285,11 +285,6 @@
             },
             {
               "type": "component",
-              "componentType": "runnerDemoPanel",
-              "title": "Runner Demo"
-            },
-            {
-              "type": "component",
               "componentType": "cloudberryDemoPanel",
               "title": "Cloudberry Kingdom"
             },

@@ -388,7 +388,7 @@ describe('labRoomEditor — what it is allowed to know', () => {
          * documentation of the rule it is checking.
          */
         for (const dir of ['mazeRoom', 'seedlingDemo', 'bounceDemo', 'flashPanel',
-            'bounceRegionEditor', 'runnerDemo', 'procgenPipeline']) {
+            'bounceRegionEditor', 'cloudberryDemo', 'procgenPipeline']) {
             expect(specs.some((s) => s.includes(`${dir}/`))).toBe(false);
         }
         // ⛓ …and there is no DYNAMIC one either — the same rule, the other spelling.

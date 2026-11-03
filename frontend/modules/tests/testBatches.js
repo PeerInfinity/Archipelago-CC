@@ -110,14 +110,6 @@ export const TEST_BATCHES = Object.freeze({
         manual: true,
         categories: Object.freeze(['noiz2saSubstrate']),
     }),
-    runner: Object.freeze({
-        description:
-            'The runner substrate rows (runnerDemo + Runner block modes). Manual '
-            + 'by the user\'s ruling (2026-10-09); one smoke row stays on push via '
-            + 'its config `batch` field.',
-        manual: true,
-        categories: Object.freeze(['runnerDemo', 'Runner block modes']),
-    }),
     cloudberry: Object.freeze({
         description:
             'The Cloudberry substrate rows and its tutorial walk. They play the '

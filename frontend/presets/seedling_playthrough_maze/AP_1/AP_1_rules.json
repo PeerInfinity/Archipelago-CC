@@ -479,21 +479,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Sword Fusion"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Sword Fusion"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
+                    "item_name": "Progressive Swim"
                   }
                 }
               ]
@@ -6920,7 +6931,10 @@
             "name": "level_54__r1c8 -> level_53__r14c9",
             "connected_region": "level_53__r14c9",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
             }
           }
         ],
@@ -11168,7 +11182,10 @@
             "name": "level_91 -> level_89__r1c10",
             "connected_region": "level_89__r1c10",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
             }
           },
           {
@@ -13762,7 +13779,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-7ecee70c",
+      "atlas_id": "seedling-52d1d2cd",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -14951,27 +14968,38 @@
             },
             "atlas_gate_1": {
               "id": "atlas_gate_1",
-              "name": "(Ghost Sword Fusion AND Ghost Spear AND Progressive Sword)",
+              "name": "((Ghost Sword Fusion AND Ghost Spear AND Progressive Sword) AND Progressive Swim)",
               "clear_set_type": "rule",
               "clear_rule": {
                 "rule": "And",
                 "children": [
                   {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Ghost Sword Fusion"
-                    }
+                    "rule": "And",
+                    "children": [
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Ghost Sword Fusion"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Ghost Spear"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Progressive Sword"
+                        }
+                      }
+                    ]
                   },
                   {
                     "rule": "Has",
                     "args": {
-                      "item_name": "Ghost Spear"
-                    }
-                  },
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Progressive Sword"
+                      "item_name": "Progressive Swim"
                     }
                   }
                 ]
@@ -66308,6 +66336,11 @@
             {
               "x": 1,
               "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 9,
               "id": "atlas_gate_0"
             }
           ],

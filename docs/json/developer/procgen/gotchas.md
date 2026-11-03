@@ -39,7 +39,7 @@ A flood fill (`componentsOf` in `scripts/procgen/seedlingRouteGraph.mjs`) treats
 
 ### Generating a procgen world in-page can time out every iframe
 
-`arrangeShuffledSpiral` and `buildRulesJson` (`procgenPipelineEngine.js`) run synchronously on the main thread, and expensive substrates' level generators can block it for minutes. The iframe adapter then declares every substrate bridge dead on heartbeat timeout, and an unrelated test fails. Cheap substrates are fine (`taswBlockModeTests.js` builds a spiral in-page); for an expensive one load a committed preset and generate only the piece you need, as `runnerBlockModeTests.js` does with `runner_worldgen` and `generateLoopCosts`.
+`arrangeShuffledSpiral` and `buildRulesJson` (`procgenPipelineEngine.js`) run synchronously on the main thread, and expensive substrates' level generators can block it for minutes. The iframe adapter then declares every substrate bridge dead on heartbeat timeout, and an unrelated test fails. Cheap substrates are fine (`taswBlockModeTests.js` builds a spiral in-page); for an expensive one load a committed preset and generate only the piece you need, as `cloudberryLoopModeTests.js` does with `cloudberry_sphere_worldgen` and `generateLoopCosts`.
 
 ### A maze exit tile is a dead end to the generator
 
@@ -61,7 +61,7 @@ if (!substrateRegistry.has(substrateRegistryEntry.id)) {
 }
 ```
 
-The libraries are `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `jtaSubstrateWrapperLibrary.js`, `omsiSubstrateWrapperLibrary.js`, `noiz2saSubstrateLibrary.js`, `flashSeedlingLibrary.js` and `flashSeedlingGenLibrary.js` (`flashSubstrateLibrary.js` holds only the factory and registers nothing); `rg -a -l "substrateRegistry.register\(substrateRegistryEntry\)" frontend/modules` lists them with their `index.js` twins. The app registers from each module's `register()`, but headless scripts (`scripts/procgen/*.js`, `scripts/utils/generate-topdown-preset.js`) and engine tests never run `register()`: they get substrates only by importing the libraries.
+The libraries are `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `cloudberryLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `jtaSubstrateWrapperLibrary.js`, `omsiSubstrateWrapperLibrary.js`, `noiz2saSubstrateLibrary.js`, `flashSeedlingLibrary.js` and `flashSeedlingGenLibrary.js` (`flashSubstrateLibrary.js` holds only the factory and registers nothing); `rg -a -l "substrateRegistry.register\(substrateRegistryEntry\)" frontend/modules` lists them with their `index.js` twins. The app registers from each module's `register()`, but headless scripts (`scripts/procgen/*.js`, `scripts/utils/generate-topdown-preset.js`) and engine tests never run `register()`: they get substrates only by importing the libraries.
 
 **Warning:** a substrate that is not registered is not an error. The pipeline skips regions that ask for it, so a script writes a world missing that substrate and exits 0. When you change such an import, assert the registry holds the id afterwards, and check the entry's shape, not just its presence.
 
@@ -109,7 +109,7 @@ The simulation prices every region as if it were coarse; what reaches the block 
 | Class | Substrates | What the block holds |
 |---|---|---|
 | coarse | no substrate, text adventure, maze | `{moveCost, xpEffect}` plus its locations' costs |
-| summary | runner, bounce (`loopSupport.summaryRecording`) | `{timeDrainPerSecond, xpEffect}` only; a per-action cost would be charged on top of the time drain |
+| summary | bounce, noiz2sa, cloudberry (`loopSupport.summaryRecording`) | `{timeDrainPerSecond, xpEffect}` only; a per-action cost would be charged on top of the time drain |
 | native | jta, omsi | nothing; their resource-channel router charges the pool with no region attached |
 
 **Note:** maze is coarse even though it has a recorder and declares `sharing.mana`, because it sets `sharing.mana.loopActionDelegation` and hands the loop action back to the host (`mazeRoomUI._perTileMoveCost` divides the region's `moveCost` by `longestShortestPath`). Text adventure also declares `sharing.mana` but has no recorder. The start region's move is free by rule (`START_REGION_MOVE_COST` in `loopCostDefaults.js`), and `loopState._calculateActionCost` applies that rule itself, whatever the block says.

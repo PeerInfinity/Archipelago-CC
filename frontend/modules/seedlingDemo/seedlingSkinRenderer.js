@@ -212,6 +212,14 @@ export const TILE_ART = Object.freeze([
 ]);
 
 const CLIFF = 9;
+/** Tile 29, the bridge (`TILE_ART[29]`): its look can be the run's (`roomOps`' `bridgeLook`). */
+const BRIDGE_TILE = 29;
+/**
+ * An OPENING bridge op's extra fields (`Tile.as:353-354`): `BlendMode.INVERT` in the solids skin's spelling (a white
+ * silhouette under `difference`, `seedlingSolidsSkin.INVERT_SILHOUETTE`), and `bridgeOpening` for the night copy
+ * (`:370-373`: alpha 1, NORMAL blend — `seedlingNightSkin.nightOps`).
+ */
+const BRIDGE_OPENING_FIELDS = Object.freeze({ blend: 'difference', tint: '=#ffffff', bridgeOpening: true });
 
 /** The `Tile.check()` mask of the cell at (tx, ty) of type t, over `grid` (`'tx,ty'` → t). */
 export function autotileMask(grid, tx, ty, t) {
@@ -366,11 +374,14 @@ const sprite = (art, key, frame, at, extra = {}) => {
  *   every teleporter `roomOps` paints is the stand-in.
  * @param {number} [opts.visitTick] the tick this visit's `Game` was built (`portalVisitTick`): the portal's "spin"
  *   has run `tick − visitTick` updates. Default 0.
+ * @param {function} [opts.bridgeLook] `(bridgeId) → null | {anim} | {opening}`: a bridge tile's look from the run
+ *   (`seedlingBridgeSkin.bridgeSkinView(run).look`) — `{anim: 'open'}` the world-clock open anim, `{opening: frame}`
+ *   one inverted opening frame, `null` the rule's `closed`. Omitted (the lab, a still): every bridge is `closed`.
  * @param {Function} [opts.mask] the autotiler (a test's MUTANT; default `autotileMask`)
  */
 export function roomOps(world, art, {
     level, tick = 0, player = null, playerSprites = null, apItems = [], apItemSprites = null, entitySprites = null, mask = autotileMask,
-    drawnObjects = null, drawnTeleporters = null, drawnPickups = null, shownTeleporter = null, visitTick = 0,
+    drawnObjects = null, drawnTeleporters = null, drawnPickups = null, shownTeleporter = null, visitTick = 0, bridgeLook = null,
 } = {}) {
     const plan = planFor(world, level, mask);
     const ops = [];
@@ -385,8 +396,21 @@ export function roomOps(world, art, {
     const frameNow = new Map();
     for (const e of tileEntriesFor(plan, art)) {
         if (!e.anim) { ops.push(e.op); continue; }
-        const at = `${e.key}|${e.choice.anim}|${e.choice.phase ?? 0}`;
-        if (!frameNow.has(at)) frameNow.set(at, art.frameAt(e.key, e.choice.anim, tick, e.choice.phase ?? 0) ?? 0);
+        // ⛓ seedling-js-bridge-art — a bridge the run says is OPEN (the `open` anim, the world clock) or OPENING (one
+        // frame per timer, inverted: `seedlingBridgeSkin`); `null` (or no `bridgeLook`: the lab) is the rule's `closed`
+        const look = e.bridgeId !== undefined && bridgeLook ? bridgeLook(e.bridgeId) : null;
+        if (look && look.opening !== undefined) {
+            if (!e.byOpening) e.byOpening = new Map();
+            if (!e.byOpening.has(look.opening)) {
+                const op = sprite(art, e.key, look.opening, e.rect, { ...e.choice, layer: TILE_LAYER, fallback: e.fallback });
+                e.byOpening.set(look.opening, op && Object.freeze(Object.assign(op, { still: false, ...BRIDGE_OPENING_FIELDS })));
+            }
+            ops.push(e.byOpening.get(look.opening));
+            continue;
+        }
+        const anim = look?.anim ?? e.choice.anim;
+        const at = `${e.key}|${anim}|${e.choice.phase ?? 0}`;
+        if (!frameNow.has(at)) frameNow.set(at, art.frameAt(e.key, anim, tick, e.choice.phase ?? 0) ?? 0);
         const frame = frameNow.get(at);
         if (!e.byFrame.has(frame)) {
             const op = sprite(art, e.key, frame, e.rect, { ...e.choice, layer: TILE_LAYER, fallback: e.fallback });
@@ -473,7 +497,11 @@ function tileEntriesFor(plan, art) {
         else if (spec.rule === 'single') choice = { frame: 0 };
         else if (spec.rule === 'anim') choice = { anim: spec.anim, phase: Math.floor(r[0] * (art.resolve(spec.key).sprite.anims?.[spec.anim]?.frames.length ?? 1)) };
         else choice = spec.rule(r, { img, column: t.column });
-        if (choice.anim) entries.push({ anim: true, key: spec.key, choice, rect: t.rect, fallback, byFrame: new Map() });
+        if (choice.anim) {
+            entries.push({ anim: true, key: spec.key, choice, rect: t.rect, fallback, byFrame: new Map(),
+                // ⛓ seedling-js-bridge-art — the join to the run's bridge state (`levelWorld`'s `bridgeId`)
+                ...(t.t === BRIDGE_TILE ? { bridgeId: `${t.tx},${t.ty}` } : {}) });
+        }
         else still(sprite(art, spec.key, choice.frame, t.rect, { ...choice, layer: TILE_LAYER, fallback }));
         if (t.t === 25 && TILE_COLUMN_VARIANTS[t.column]?.pit && has('seedling:tile/pitShadow')) {
             still(sprite(art, 'seedling:tile/pitShadow', 0, t.rect, { layer: TILE_LAYER }));
@@ -866,7 +894,7 @@ export function createTileLayer(newCanvas) {
 
 /** What a live tile op's picture is made of — every field `drawOp` reads for a run op. */
 const LIVE_FIELDS = ['sheetRef', 'sx', 'sy', 'sw', 'sh', 'dx', 'dy', 'rot', 'flipX', 'flipY', 'alpha', 'tint', 'colour',
-    'rect', 'pivotX', 'pivotY', 'scaleX', 'scaleY'];
+    'rect', 'pivotX', 'pivotY', 'scaleX', 'scaleY', 'blend'];
 
 /** Redraw the layer's second canvas when a live op of the run changed its picture (or the layer was rebuilt). */
 function frameTileLayer(layer, ops, pen) {
