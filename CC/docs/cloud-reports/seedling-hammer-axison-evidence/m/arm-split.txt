@@ -1,0 +1,10 @@
+127/0  OFF ok 494t 2h 91e93cad7d53    ON ok 643t 0h 7a2ec2b99461    strikes =OFF  stand =ON pol 2
+128/0  OFF ok 541t 2h 31be66c2f0ec    ON ok 648t 0h ae83f13a5b19    strikes =OFF  stand =ON pol 2
+160/0  OFF ok 632t 2h f7765903792f    ON refusal w356               strikes =OFF  stand =ON pol 2
+161/0  OFF ok 610t 2h 438f8950b48a    ON ok 783t 0h 53628759dbdc    strikes =OFF  stand =ON pol 2
+171/0  OFF ok 672t 2h 4bca4e01f593    ON ok 700t 0h 3c7606677bfd    strikes =OFF  stand =ON pol 0
+172/0  OFF ok 675t 2h e6001dc3720f    ON ok 750t 0h f30f628627d1    strikes =OFF  stand =ON pol 2
+330/0  OFF refusal w126               ON ok 306t 0h c0b523713a24    strikes =OFF  stand =ON pol 0
+617/0  OFF refusal w643               ON refusal w643               strikes =OFF  stand =ON pol 0
+617/1  OFF refusal w2562              ON refusal w2562              strikes =OFF  stand =ON pol 0
+775/0  OFF ok 348t 0h d4c21c2f23e6    ON ok 348t 0h d4c21c2f23e6    strikes =OFF  stand =ON pol 0

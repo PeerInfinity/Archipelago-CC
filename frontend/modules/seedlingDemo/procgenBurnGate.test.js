@@ -50,7 +50,7 @@ const gen = (palette, { seed = 1, elements = 'burngate', require } = {}) => gene
 describe('⛓⛓⛓ the BURN GATE head, its boot flag and its biomes (strategy switch r2)', () => {
     it('the head is `burngate`, LAST, needs `hasFire`, requires strategy `burn`', () => {
         /** ⛓ r3 appended `holdgate` and `weighgate` after it; nothing before it moved. */
-        expect(ELEMENT_NAMES.slice(-3)).toEqual(['burngate', 'holdgate', 'weighgate']);
+        expect(ELEMENT_NAMES.slice(-4)).toEqual(['burngate', 'holdgate', 'weighgate', 'chestloot']); // + seedling gen B1
         expect(ELEMENT_TABLE.burngate.element).toBe(BURN_GATE);
         expect(ELEMENT_TABLE.burngate.needs).toEqual(['hasFire']);
         expect(ELEMENT_TABLE.burngate.needsStrategy).toEqual(['burn']);

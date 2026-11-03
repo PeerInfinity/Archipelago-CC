@@ -1,7 +1,7 @@
 /**
  * cloudberryDemo — host module for the Cloudberry Kingdom substrate (`cloudberry`).
  *
- * Like runnerDemo, it rides flashSubstrate's machinery as shared CODE: the panel
+ * Like bounceDemo and noiz2saSubstrate, it rides flashSubstrate's machinery as shared CODE: the panel
  * class comes from the flash panel factory and the injected bridge is
  * flashSubstrate/bridge.js. What is Cloudberry's own is its identity (panel
  * component, load event, iframe id, playback event) and WHERE the game page lives:

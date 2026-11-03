@@ -99,7 +99,7 @@ describe('the served catalog', () => {
 });
 
 describe('the options', () => {
-    it.each([['1', 'region_1_0', 'maze'], ['3', 'region_2_0', 'bounce'], ['3', 'region_2_0', 'runner']])(
+    it.each([['1', 'region_1_0', 'maze'], ['3', 'region_2_0', 'bounce'], ['3', 'region_2_0', 'cloudberry']])(
         'slot %s %s → %s: every entry of the target\'s substrate, disabled exactly when too few slots',
         async (p, region, target) => {
             const { fetchImpl } = diskFetch();

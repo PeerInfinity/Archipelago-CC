@@ -220,7 +220,7 @@ describe('P4 / P5 — the split DERIVED from the items\' own feature tags (S3, �
     const W0_TAGS = {
         maze: ['colored_doors_and_keys'],
         bounce: ['bounce_abilities'],
-        runner: ['runner_abilities'],
+        // (runner: ['runner_abilities'] until the runner substrate was deleted, Cloudberry P4b.)
         cloudberry: ['cloudberry_items'],
         // ⛓ Re-pinned by name at the swim T1 merge (2026-09-29): the generated
         // Seedling entry declares its gate items (`itemLabels.SEEDLING_LIBRARY_ITEMS`,

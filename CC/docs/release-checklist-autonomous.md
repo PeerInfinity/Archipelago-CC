@@ -391,8 +391,8 @@ It:
 The preserved set is every preset dir on `main` that the workflow does not
 produce: the dev/demo/test presets (`jta_*_test`, `omsi_*_test`,
 `robotkitty_tilemap`, `seedling_atlas*`, `seedling_playthrough`) **and** the
-hand-maintained worldgen demos (`bounce_worldgen`, `runner_worldgen`,
-`runner_sphere_worldgen`), whose `worlds/<id>` package the script restores as
+hand-maintained worldgen demos (`bounce_worldgen` and the Cloudberry worlds; `runner_worldgen` /
+`runner_sphere_worldgen` until the runner substrate was deleted, 2026-11-02), whose `worlds/<id>` package the script restores as
 well (2026-08-30). *Workflow-produced* worldgen worlds and their preset dirs —
 the `worldgen_generation_whitelist` set — are **not** preserved: the workflow
 regenerates them; do not add those. Nor is `procgen_maze` since 2026-09-28: the script's

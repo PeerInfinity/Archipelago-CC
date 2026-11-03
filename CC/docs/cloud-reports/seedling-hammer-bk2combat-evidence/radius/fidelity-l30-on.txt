@@ -1,0 +1,4 @@
+both OFF 224 OFF {"solved":null,"hits":[{"t":173,"id":"bobsoldier@48,80"},{"t":193,"id":"bobsoldier@48,80"}],"refusal":"solverBot(survey-step-52) reach-exit (64,0)->L22: the danger map forbids (71.77489816433159,50.115857077274356) — chaser:bobsoldier@48,80 (the BobSoldier's 8x8 body, bare, one forecast tick on (its sw"} []
+both OFF 224 ON  {"solved":318,"hits":[],"refusal":null} [{"id":"bobsoldier@48,80","t":0,"cell":{"x":120,"y":104},"wait":0,"verdict":"staged"}]
+WAIT alone 224 OFF {"solved":309,"hits":[],"refusal":null} []
+WAIT alone 224 ON  {"solved":318,"hits":[],"refusal":null} [{"id":"bobsoldier@48,80","t":0,"cell":{"x":120,"y":104},"wait":0,"verdict":"staged"}]

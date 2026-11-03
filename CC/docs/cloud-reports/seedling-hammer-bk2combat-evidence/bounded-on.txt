@@ -1,0 +1,12 @@
+     × both OFF, (224,80): the survey's refusal, the keys driven are the BEFORE witness, and they were hit twice 1433ms
+     × WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick 1071ms
+     × OFF the solver's orbit arm finds no hitless candidate 9362ms
+     × ON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape's, key for key 8620ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the solver, switch by switch, from both pit landings > both OFF, (224,80): the survey's refusal, the keys driven are the BEFORE witness, and they were hit twice
+ FAIL  frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the solver, switch by switch, from both pit landings > WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick
+ FAIL  frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js > L40BK2B W0 — the shipped orbit in the notch, on the game (`l40bk2b-orbit-plain`) > OFF the solver's orbit arm finds no hitless candidate
+ FAIL  frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js > L40BK2B D1 — the projected orbit, on the game (`l40bk2b-orbit-free`) > ON the solver kills the BobSoldier by the orbit arm: its ticks are the recorded tape's, key for key
+ Test Files  2 failed | 73 passed (75)
+      Tests  4 failed | 1488 passed | 1 skipped (1493)
+rc 1

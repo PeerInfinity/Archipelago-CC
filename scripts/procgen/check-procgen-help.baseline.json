@@ -202,10 +202,6 @@
       "inheritedOutput": [],
       "helpResidue": null
     },
-    "check-region-library-sphere-roundtrip-runner.mjs": {
-      "inheritedOutput": [],
-      "helpResidue": null
-    },
     "check-region-library-sphere-roundtrip.mjs": {
       "inheritedOutput": [],
       "helpResidue": null
@@ -232,22 +228,6 @@
         "[discoveryState] [DiscoveryState] Constructed",
         "[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined"
       ],
-      "helpResidue": null
-    },
-    "check-runner-bot.mjs": {
-      "inheritedOutput": [],
-      "helpResidue": null
-    },
-    "check-runner-embed.mjs": {
-      "inheritedOutput": [],
-      "helpResidue": null
-    },
-    "check-runner-game.mjs": {
-      "inheritedOutput": [],
-      "helpResidue": null
-    },
-    "check-runner-smoke.mjs": {
-      "inheritedOutput": [],
       "helpResidue": null
     },
     "check-seedling-ap-placement.mjs": {
@@ -519,10 +499,6 @@
       "helpResidue": null
     },
     "make-demo-bounce-pack.mjs": {
-      "inheritedOutput": [],
-      "helpResidue": null
-    },
-    "make-demo-runner-pack.mjs": {
       "inheritedOutput": [],
       "helpResidue": null
     },

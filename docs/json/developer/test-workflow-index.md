@@ -14,7 +14,7 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 | Unit Tests | `unittests.yml` | push, PR, dispatch | Python pytest (`pytest -n auto`); the Windows/macOS legs only on a PR or a `full_matrix` dispatch |
 | JavaScript Unit Tests | `unittests_frontend.yml` | push, PR, dispatch | Parallel jobs: JS Vitest (`npm run test:unit` + `test:unit:slow`), the headless procgen gates (`ci-gates.mjs`), the browser gate shards |
 | Test ALTTP & Regression | `test-templates.yml` | push (main), PR, dispatch | Spoiler test + frontend regression (both boots) + substrate tests, one parallel job per on-push batch (`testBatches.js`) with a budget-headroom check each |
-| Substrate tests — manual batches | `test-substrates-manual.yml` | dispatch | The manual substrate batches (`bot-walks`, `noiz2sa`, `runner`; `manual: true` in `testBatches.js`), one or `all` |
+| Substrate tests — manual batches | `test-substrates-manual.yml` | dispatch | The manual substrate batches (`bot-walks`, `noiz2sa`, `cloudberry`, the `tutorials*` batches, `feature-checks`; `manual: true` in `testBatches.js`), one or `all` |
 | Test All Templates (Sequential) | `test-all-sequential.yml` | dispatch | Comprehensive: spoilers, multiclient, multiworld (original/worldgen/apworld) |
 | Test UT Fuzzer | `test-ut-fuzz.yml` | dispatch | UT fuzz across all modes, 10-way parallel split |
 | Test UT Fuzzer (Single Game) | `test-ut-fuzz-single-game.yml` | dispatch | Single-game UT fuzz |
@@ -71,7 +71,7 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 | Playwright (spoilers) | `npm test -- --mode=test-spoilers` | `test-templates.yml` + others | Invoked indirectly by Python test scripts |
 | Playwright (regression) | `npm test -- --mode=test-regression` | `test-templates.yml` | push/PR trigger |
 | Playwright (substrates, on-push batches) | `npm test -- --mode=test-substrates --batch=<fast\|seedling-js\|seedling-wasm\|playback-bot\|apworld>` | `test-templates.yml` | push/PR trigger |
-| Playwright (substrates, manual batches) | `npm test -- --mode=test-substrates --batch=<bot-walks\|noiz2sa\|runner>` | `test-substrates-manual.yml` | manual only |
+| Playwright (substrates, manual batches) | `npm test -- --mode=test-substrates --batch=<bot-walks\|noiz2sa\|cloudberry\|tutorials…>` | `test-substrates-manual.yml` | manual only |
 | Playwright (multiclient) | `npm run test:multiclient` | `test-all-sequential.yml` | dispatch only |
 | Health check | `npm run test:health` | **No workflow** | |
 | Full suite | `npm run test:full-suite` | **No workflow** | Compound: health + tests + analysis |

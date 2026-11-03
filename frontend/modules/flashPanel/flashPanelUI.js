@@ -446,10 +446,11 @@ export class FlashPanelUI {
       return;
     }
     if (this.componentState.configPath || this.componentState.swfPath
-        || this.componentState.wasmPath) {
+        || this.componentState.wasmPath || key === this._lastFlashPanelKey) {
+      // ⛓ SAME WIRING, NEW RULES — no re-mount, but the region data the attach built is the OLD rules'.
+      this._reloadRulesDerived();
       return;
     }
-    if (key === this._lastFlashPanelKey) return;
     this._lastFlashPanelKey = key;
     this._panelLog('rules changed — reinitializing');
     this._teardownForReinit();
@@ -2147,9 +2148,44 @@ export class FlashPanelUI {
     } catch (err) {
       this._panelLog(`region-atlas glue attach failed: ${err.message}`, 'error');
     }
+    this._loadRulesDerived(adapter);
+  }
+
+  /**
+   * ⛓⛓ THE REGION DATA FOLLOWS THE RULES, NOT THE ATTACH. The return spawns, the sub-region map and the slot data
+   * are built from the rules loaded NOW (`getLastRawJsonData`). An attach is not the only moment those change: a
+   * rules load whose `flash_panel` wiring is the SAME (seedling_atlas_location → seedling_atlas: one config, one
+   * page) re-mounts nothing (`_onRulesLoaded`), and an init flow started by a RUNTIME change attaches whenever its
+   * awaits finish — before or after the next preset's rules land. Measured (TT 41252552833, both attempts): the
+   * wasm row's runtime switch attached first, built the map from the PREVIOUS row's seedling_atlas_location rules
+   * (no `dungeon1_room1__r0c4 -> dungeon1_room1__r8c6`), and seedling_atlas's own rulesLoaded rebuilt nothing — the
+   * Bot block's credited link was "not a logical sub-region link of this preset". `_rulesDerivedFor` records which
+   * rules (and slot) the data was built from; `_reloadRulesDerived` rebuilds it when they are not the loaded ones.
+   */
+  _loadRulesDerived(adapter) {
+    this._rulesDerivedFor = this._loadedRulesKey();
     this._loadReturnSpawns(adapter);
     this._loadSubRegions(adapter);
     this._applySlotData(adapter);
+  }
+
+  /** A rules load that re-mounted nothing: rebuild the region data if the attach built it from other rules. */
+  _reloadRulesDerived() {
+    if (!this.adapter) return; // an init still in flight attaches against the loaded rules itself
+    const now = this._loadedRulesKey();
+    if (now.rules === this._rulesDerivedFor?.rules && now.player === this._rulesDerivedFor?.player) return;
+    this._panelLog('rules changed (same game wiring) — rebuilding the region data from the loaded rules');
+    this._loadRulesDerived(this.adapter);
+  }
+
+  /** The loaded rules and slot (`stateManager:rawJsonDataLoaded`'s, unwrapped): what the region data is built from. */
+  _loadedRulesKey() {
+    return { rules: rulesOfRawPayload(getLastRawJsonData?.()) ?? null, player: playerOfRawPayload(getLastRawJsonData?.()) };
+  }
+
+  /** Did a newer rules load (or another adapter) take over while a region-data fetch was in flight? */
+  _rulesDerivedStale(adapter, raw) {
+    return this.adapter !== adapter || rulesOfRawPayload(getLastRawJsonData?.()) !== raw;
   }
 
   /**
@@ -2185,7 +2221,7 @@ export class FlashPanelUI {
       const res = await fetch(new URL(SUB_REGION_PARTITION_PATH, document.baseURI).href);
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       const partition = await res.json();
-      if (this.adapter !== adapter) return;
+      if (this._rulesDerivedStale(adapter, raw)) return;
       glue?.binding?.setPartition?.(partition);
       const { map, why } = buildSubRegionMap({ rules: raw, partition, player });
       if (!map) {
@@ -2223,7 +2259,7 @@ export class FlashPanelUI {
       const res = await fetch(new URL(path, document.baseURI).href);
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       const table = returnSpawnTable(await res.json());
-      if (this.adapter !== adapter) return;
+      if (this._rulesDerivedStale(adapter, raw)) return;
       getSeedlingRegionGlue()?.binding?.setReturnSpawns(table);
       this._panelLog(`[region atlas] return spawns: ${table.size} door(s) from ${path} (${source})`);
     } catch (err) {

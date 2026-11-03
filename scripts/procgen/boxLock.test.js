@@ -637,7 +637,9 @@ describe('who takes the box', () => {
             // cloudberry P2b: the sphere gate (generation + Generate.py + play), same door
             'check-cloudberry-sphere.mjs',
             // cloudberry P3a: the touch-↑ probe (real pointer taps at the doors), same door
-            'probe-cloudberry-touch-up.mjs'];
+            'probe-cloudberry-touch-up.mjs',
+            // rules-certifier-tail: L3's water door and L25's apitem on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-certifier-tail.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

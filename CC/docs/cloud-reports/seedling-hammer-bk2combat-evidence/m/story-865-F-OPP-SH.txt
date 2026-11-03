@@ -1,0 +1,20 @@
+REFUSED: solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> weigh -> iceturret@472,400 approach door wandlock@480,560 (488,568): the combat ladder is EXHAUSTED. The corridor passes through danger at (840.2,855.5) — spinner:spinner@880,848 (a live Spinner BODY at (835.7,854.6) at horizon 118 — `Enemy.hitPlayer`'s 7x7 `collide("Player", x, y)` at force 3) — and every rung of ⚖ §11.8a's order refused:
+  avoid: the danger-forbidden corridor STILL probes dangerous at (840.2,855.5) — spinner:spinner@880,848 (a live Spinner BODY at (835.7,854.6) at horizon 118 
+t0 start (328,600) {"burnt":"","open":"","chasers":"bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bob@736,752,bob@736,800,bobsoldier@880,832,puncher@128,624,puncher@816,128","hits":0,"deaths":0}
+t200 at (474,679)
+t400 at (504,680)
+t600 at (743,680)
+t779 (744,792) chasers: bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bob@736,752,bob@736,800,bobsoldier@880,832,puncher@128,624,puncher@816,128 -> bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bob@736,800,bobsoldier@880,832,puncher@128,624,puncher@816,128
+t800 at (744,792)
+t942 (744,829) chasers: bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bob@736,800,bobsoldier@880,832,puncher@128,624,puncher@816,128 -> bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bobsoldier@880,832,puncher@128,624,puncher@816,128
+t1000 at (744,856)
+t1200 at (744,856)
+t1400 at (744,856)
+t1600 at (744,856)
+t1800 at (744,856)
+t2000 at (841,855)
+t2114 (878,861) chasers: bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bobsoldier@880,832,puncher@128,624,puncher@816,128 -> bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,puncher@128,624,puncher@816,128
+t2200 (888,823) burnt:  -> burnabletree@872,784
+t2200 at (888,823)
+t2346 (888,776) open:  -> wandlock@480,560
+END 2346 hits [] collected []

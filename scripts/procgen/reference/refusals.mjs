@@ -154,6 +154,16 @@ const REFUSAL_SOURCES = [
             + 'on both pages, and the ELEMENTS CENSUS counts them',
     },
     {
+        id: 'chest-loot',
+        title: 'The LOOT CHEST — a chest off the main path, opened from the cell below it',
+        kind: 'constant',
+        constant: 'CHEST_LOOT_REFUSALS',
+        names: M.chestLoot.CHEST_LOOT_REFUSALS,
+        file: SOURCES.chestLoot,
+        channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
+            + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
         id: 'open-chamber',
         title: 'The OPEN CHAMBER element',
         kind: 'constant',

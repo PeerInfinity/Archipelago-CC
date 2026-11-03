@@ -462,12 +462,6 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward…"
     },
     {
-        "path": "docs/json/developer/procgen/runner.md",
-        "title": "Runner Substrate",
-        "section": "developer/procgen",
-        "summary": "Runner (substrate id runner, in frontend/modules/runnerDemo/) is an auto-runner platformer: the player always runs right. Each region is one level, a left-to-right strip from the entrance to pickups…"
-    },
-    {
         "path": "docs/json/developer/procgen/seedling-bot-log.md",
         "title": "Seedling Bot and Procgen Arcs: the Build Log",
         "section": "developer/procgen",
@@ -1086,6 +1080,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Grid growth is the pipeline's first mode, kept as the legacy grower: it grows regions cell by cell on a grid, drawing from the scenario pool, until the pool or the frontier runs out. How many…"
     },
     {
+        "path": "docs/json/user/tutorials/procgen-loop-mode-cloudberry.md",
+        "title": "Procgen: Cloudberry Kingdom in Loop mode",
+        "section": "user/tutorials",
+        "summary": "*Loop mode* turns a world into an incremental game: every action costs mana, and when the mana runs out the loop restarts — keeping what you have learned. In a Cloudberry Kingdom level the cost is…"
+    },
+    {
         "path": "docs/json/user/tutorials/procgen-loop-mode-everything.md",
         "title": "Procgen: everything, in Loop mode",
         "section": "user/tutorials",
@@ -1263,6 +1263,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/procgen-bounce-region-editor.md",
                     "docs/json/user/tutorials/procgen-cloudberry.md",
                     "docs/json/user/tutorials/procgen-grid-growth.md",
+                    "docs/json/user/tutorials/procgen-loop-mode-cloudberry.md",
                     "docs/json/user/tutorials/procgen-loop-mode-everything.md",
                     "docs/json/user/tutorials/procgen-loop-mode-jta.md",
                     "docs/json/user/tutorials/procgen-mixed-world.md",
@@ -1632,7 +1633,6 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/paths-and-obstacles.md",
             "docs/json/developer/procgen/pipeline-presets.md",
             "docs/json/developer/procgen/playback-and-debugging.md",
-            "docs/json/developer/procgen/runner.md",
             "docs/json/developer/procgen/seedling-bot-log.md",
             "docs/json/developer/procgen/seedling-bot.md",
             "docs/json/developer/procgen/seedling-constants.md",

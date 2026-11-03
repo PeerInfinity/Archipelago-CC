@@ -158,8 +158,9 @@ describe('C4 — a C press is `useItem(Main.secondary)` behind `secondaryUse` (P
         }
         return run;
     };
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.secondaryUse).toBe(false);
+    // ⛓ shipped OFF; ⚖ (user, 2026-11-02, "Flip after W36 lands") ON after seedling-js-help-dismiss-press.
+    it('ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.secondaryUse).toBe(true);
     });
     it('OFF: a C press is read by nothing — the run equals an idle one, byte for byte', () => {
         withContactFidelity({ secondaryUse: false }, () => {

@@ -6245,7 +6245,8 @@ export const CATALOGUE = frz({
         "chestdoor",
         "burngate",
         "holdgate",
-        "weighgate"
+        "weighgate",
+        "chestloot"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -6693,6 +6694,14 @@ export const CATALOGUE = frz({
             "needs": [],
             "params": [],
             "why": "The WEIGH GATE (the L15 pattern): a `lock` on a main-path cut, a momentary `button` of its group off the main path, and one `pushableblock` a shove short of the button. Certified by the solver's `weigh` (the block parked on the button holds the lock open)."
+        },
+        {
+            "defaultIn": [],
+            "head": "chestloot",
+            "module": "chest-loot",
+            "needs": [],
+            "params": [],
+            "why": "The LOOT CHEST (seedling gen B1): a `chest` on a floor cell OFF the main path, opened from the cell directly below it, a nook preferred. Gates nothing; certified by a plan that opens it (the chest is a second collect goal). Its seal piece is an AP location."
         }
     ],
     "itemsElementsNeed": [

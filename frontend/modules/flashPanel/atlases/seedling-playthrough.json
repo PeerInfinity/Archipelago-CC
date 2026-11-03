@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-07d995bd",
+  "atlas_id": "seedling-ecbd44ee",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "07d995bd" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "ecbd44ee" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -54,7 +54,8 @@
           "kind": "teleporter",
           "exit_tiles": [[15,0]],
           "entrance_tile": [15,0],
-          "sub_region": "r2c13"
+          "sub_region": "r2c13",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
         },
         {
           "exit_id": "out_stairsdown_256_272",
@@ -303,9 +304,15 @@
           "access_rule": {
             "rule": "And",
             "children": [
-              { "rule": "Has", "args": { "item_name": "Ghost Sword Fusion" } },
-              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
-              { "rule": "Has", "args": { "item_name": "Progressive Sword" } }
+              {
+                "rule": "And",
+                "children": [
+                  { "rule": "Has", "args": { "item_name": "Ghost Sword Fusion" } },
+                  { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                  { "rule": "Has", "args": { "item_name": "Progressive Sword" } }
+                ]
+              },
+              { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
             ]
           }
         },
@@ -4100,7 +4107,8 @@
           "exit_id": "out_teleporter_32_128",
           "kind": "teleporter",
           "exit_tiles": [[2,8]],
-          "entrance_tile": [2,8]
+          "entrance_tile": [2,8],
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
         },
         {
           "exit_id": "in_L50_32_0",
@@ -4168,7 +4176,8 @@
           "kind": "teleporter",
           "exit_tiles": [[9,0]],
           "entrance_tile": [9,0],
-          "sub_region": "r3c10"
+          "sub_region": "r3c10",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
         },
         {
           "exit_id": "out_stairsup_176_144",
@@ -4182,7 +4191,8 @@
           "kind": "teleporter",
           "exit_tiles": [[16,16]],
           "entrance_tile": [16,16],
-          "sub_region": "r14c6"
+          "sub_region": "r14c6",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
         },
         {
           "exit_id": "in_L52_0_112",
@@ -4463,14 +4473,16 @@
           "kind": "teleporter",
           "exit_tiles": [[8,29]],
           "entrance_tile": [8,29],
-          "sub_region": "r27c8"
+          "sub_region": "r27c8",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
         },
         {
           "exit_id": "out_teleporter_144_0",
           "kind": "teleporter",
           "exit_tiles": [[9,0]],
           "entrance_tile": [9,0],
-          "sub_region": "r1c8"
+          "sub_region": "r1c8",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
         }
       ],
       "locations": [],
@@ -4750,7 +4762,8 @@
           "exit_id": "out_teleporter_80_48",
           "kind": "teleporter",
           "exit_tiles": [[5,3]],
-          "entrance_tile": [5,3]
+          "entrance_tile": [5,3],
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
         }
       ],
       "locations": [
@@ -4775,7 +4788,8 @@
           "exit_id": "out_teleporter_0_112",
           "kind": "teleporter",
           "exit_tiles": [[0,7]],
-          "entrance_tile": [0,7]
+          "entrance_tile": [0,7],
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
         },
         {
           "exit_id": "out_pit_6_10",
@@ -4872,11 +4886,17 @@
           "entrance_tile": [3,7],
           "sub_region": "r4c1",
           "access_rule": {
-            "rule": "Or",
+            "rule": "And",
             "children": [
-              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
-              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
-              { "rule": "Has", "args": { "item_name": "Wand" } }
+              {
+                "rule": "Or",
+                "children": [
+                  { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                  { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                  { "rule": "Has", "args": { "item_name": "Wand" } }
+                ]
+              },
+              { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
             ]
           }
         },
@@ -4887,11 +4907,17 @@
           "entrance_tile": [4,7],
           "sub_region": "r6c5",
           "access_rule": {
-            "rule": "Or",
+            "rule": "And",
             "children": [
-              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
-              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
-              { "rule": "Has", "args": { "item_name": "Wand" } }
+              {
+                "rule": "Or",
+                "children": [
+                  { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                  { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                  { "rule": "Has", "args": { "item_name": "Wand" } }
+                ]
+              },
+              { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
             ]
           }
         },
@@ -6951,7 +6977,8 @@
           "kind": "teleporter",
           "exit_tiles": [[10,19]],
           "entrance_tile": [10,19],
-          "sub_region": "r11c12"
+          "sub_region": "r11c12",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
         },
         {
           "exit_id": "out_teleporter_208_0",
@@ -7208,7 +7235,8 @@
           "exit_id": "out_teleporter_16_144",
           "kind": "teleporter",
           "exit_tiles": [[1,9]],
-          "entrance_tile": [1,9]
+          "entrance_tile": [1,9],
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
         },
         {
           "exit_id": "out_teleporter_240_48",

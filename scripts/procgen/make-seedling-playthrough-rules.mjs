@@ -689,6 +689,7 @@ export function buildPlaythroughAtlas() {
     crossingCharged.length = 0;
     sealedDoorsCharged.length = 0;
     directionalDoorsCharged.length = 0;
+    necessaryDoorsCharged.length = 0;
     pocketDoorsCharged.length = 0;
     sealedLocationsCharged.length = 0;
     arrivalsUncharged.length = 0;
@@ -752,6 +753,8 @@ export function buildPlaythroughAtlas() {
         refuseUnboundMembers(session.atlas.regions.find((r) => r.region_id === regionId), unbound);
     }
     applyHandRulings(session.atlas);
+    // After the hand rulings, so a condition a ruled door already asks for is not written twice (L82's arena door).
+    for (const [regionId, analysis] of regionAnalyses) chargeNecessaryApproaches(session.atlas, regionId, analysis);
     return session.toDocument();
 }
 
@@ -913,6 +916,47 @@ function chargeDirectionalApproaches(atlas, regionId, level, analysis) {
         directionalDoorsCharged.push(`${regionId}/${b.id}`);
         note(`${regionId}: exit "${b.id}" at [${b.tile}] is reached only by moving a direction-gated way — CHARGED `
             + `${due.map((c) => SEM.conditionKey(c)).join(' + ')} (every way onto the tile pays it)`);
+    }
+}
+
+/**
+ * ⛓ RULES certifier-tail — **A DOOR EVERY WAY ONTO WHICH PAYS A CONDITION COSTS THAT CONDITION.**
+ *
+ * `chargeDirectionalApproaches` charged only the direction gates of the binding's `necessary`, on the
+ * assumption that every other necessary condition is the region's entry gate, already charged on every way
+ * in. That held for the water levels and failed for L3: its door to L111 (`out_teleporter_0_64`, [0,4]) is
+ * one water tile ([1,4]) west of r0c4's DRY lane, and r0c4 is entered dry from L2 and L4. The rules charged
+ * the ghost rock on the door and dropped the Swim, which the game needs (probe-seedling-certifier-tail.mjs
+ * `l3-noswim`: no Swim, the player drowns at x 21, `Player.as:1456`, and never touches the door).
+ * `necessary` is what EVERY way onto the tile pays, from every component and every landing (a landing on
+ * gated material pays that cell's own conditions), so charging all of it is never stricter than the game;
+ * a condition the sub-region's entry already costs is only a redundant conjunct. A departure whose charged
+ * conditions now cover one whole way of its component is no longer permissive.
+ */
+function chargeNecessaryApproaches(atlas, regionId, analysis) {
+    const region = atlas.regions.find((r) => r.region_id === regionId);
+    if (!region) return;
+    for (const b of analysis.bindings) {
+        if (b.kind !== 'exit' || !b.id.startsWith('out_') || !b.reachable || b.exact || !(b.necessary ?? []).length) continue;
+        const exit = (region.exits ?? []).find((e) => e.exit_id === b.id);
+        if (!exit) continue;
+        // A condition already riding on the exit (its own cell, a direction gate, a hand ruling) is not written twice.
+        const due = (b.necessary ?? []).filter((c) => !ruleImplies(exit.access_rule, analyzerOptions.resolveCondition(c) ?? { rule: 'False_' }));
+        const parts = due.map((c) => analyzerOptions.resolveCondition(c));
+        if (parts.some((p) => !p)) continue;
+        if (due.length > 0) {
+            const cost = parts.length === 1 ? parts[0] : { rule: 'And', children: parts };
+            exit.access_rule = exit.access_rule === undefined ? cost : { rule: 'And', children: [exit.access_rule, cost] };
+            necessaryDoorsCharged.push(`${regionId}/${b.id}`);
+        }
+        // No longer permissive once the rule requires one whole way of the component.
+        const covers = (b.conditionSets ?? []).some((set) => set.conditions
+            .every((c) => ruleImplies(exit.access_rule, analyzerOptions.resolveCondition(c) ?? { rule: 'False_' })));
+        const at = permissiveBindings.indexOf(`${regionId}/${b.id}`);
+        if (covers && at >= 0) permissiveBindings.splice(at, 1);
+        if (due.length === 0) continue;
+        note(`${regionId}: exit "${b.id}" at [${b.tile}] — every way onto its tile pays `
+            + `${due.map((c) => SEM.conditionKey(c)).join(' + ')}: CHARGED${covers ? ' (no longer permissive)' : ''}`);
     }
 }
 
@@ -1251,6 +1295,9 @@ export const sealedDoorsCharged = [];
 
 /** ⛓ RULES waterfall-door — every departure charged the direction gate every way onto its tile pays. */
 export const directionalDoorsCharged = [];
+
+/** ⛓ RULES certifier-tail — every departure charged the conditions EVERY way onto its tile pays (`chargeNecessaryApproaches`). */
+export const necessaryDoorsCharged = [];
 
 /** ⛓ RULES obstacle-events — every departure charged the solids that alone open its model pocket. */
 export const pocketDoorsCharged = [];
@@ -2415,6 +2462,8 @@ function main() {
     console.log(`${landingGates.length} landing edge(s) gated on the lethal terrain they land on; `
         + `${lethalLandings.filter((l) => !l.gated).length} lethal-terrain landing(s) not gated`
         + `${quiet ? '' : lethalLandings.map((l) => `\n  ${l.gated ? 'GATED' : 'not gated'} ${l.where}: ${l.why}`).join('')}`);
+    console.log(`${necessaryDoorsCharged.length} departure(s) charged what every way onto their tile pays`
+        + `${quiet ? '' : necessaryDoorsCharged.map((m) => `\n  ${m}`).join('')}`);
     console.log(`${pocketDoorsCharged.length} departure(s) charged the solids that alone open their pocket`
         + `${quiet ? '' : pocketDoorsCharged.map((m) => `\n  ${m}`).join('')}`);
     console.log(`${notes.length} analysis note(s)${quiet ? ' (suppressed; drop --quiet to read them)' : ''}`);

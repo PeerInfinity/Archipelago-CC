@@ -88,7 +88,7 @@ Every site that dispatches on a kind follows the rule for its class:
   or `'True'` for a kind they cannot translate.
 - **Display and editing** (rule-tree renderers, editors): render the node as **unknown** and still
   recurse into its children.
-- **Closed-vocabulary oracles** (`bounceDemo` / `runnerDemo` `verifyObstacles.js`, which evaluate a
+- **Closed-vocabulary oracles** (`bounceDemo`'s `verifyObstacles.js`, which evaluate a
   substrate's own fixed set): keep **throwing**. That throw is their drift guard.
 
 The known gaps above are where today's code breaks this policy. Fixing them is the follow-up work.
