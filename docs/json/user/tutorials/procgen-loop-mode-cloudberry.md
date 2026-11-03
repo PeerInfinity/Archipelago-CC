@@ -19,7 +19,7 @@ With loop mode on, the world carries its loop costs: what each region costs per 
 ## Watch it played
 
 1. Open the **Playback Bot** tab. It says "Sphere log loaded" — it has the world's solution path, sphere by sphere.
-2. Press **▶** (Play), then open the **Cloudberry Kingdom** tab to watch the bot play each level to its check coin, then out by the end door, collect each sphere's items and finish.
+2. Press **▶** (Play), then open the **Cloudberry Kingdom** tab to watch the bot play each level to its check coins, then out by the end door, collect each sphere's items and finish.
 3. Open the **Loops** tab. The world brought its costs, so loop mode is on — the button in its controls reads **Exit Loop Mode**. Each Cloudberry level is a block; its cost is the seconds the bot played it.
 
 ## Tidy up

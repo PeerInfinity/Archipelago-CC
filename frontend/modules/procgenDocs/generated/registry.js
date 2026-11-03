@@ -3553,10 +3553,11 @@ export const REGISTRY = frz({
                 {
                     "id": "cloudberry",
                     "present": true,
-                    "short": "11 keys",
+                    "short": "12 keys",
                     "type": "object",
                     "value": [
                         "Bouncy Blocks",
+                        "Cloudberry Gem",
                         "Clouds",
                         "Conveyors",
                         "Elevators",
