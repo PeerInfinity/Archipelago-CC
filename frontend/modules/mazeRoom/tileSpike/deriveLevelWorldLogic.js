@@ -15,7 +15,7 @@
 
 import {
     regionItems, reachUnder, regionTargets, cutEvents, noteCuts, NOTHING_REACHED, reachedTarget, planToTarget, targetCell, reachKey, reachInputs,
-    regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint, endsWalk, latchEvents,
+    regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint, endsWalk, latchEvents, gateEvents,
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
@@ -97,7 +97,7 @@ function nativeReachUnder0(world, inventory, { cap = 400000 } = {}) {
 function cachedReach(cache, entered, reach, extra = null) {
     const keyOf = (set) => `${entered.entrance.x},${entered.entrance.y}|${set.join('\u0001')}`;
     const subsume = latchSubsumption(entered, extra);
-    if (!cache && !subsume && !(LATCH_SANDWICH.on && latchEvents(entered).length > 0)) return reach;
+    if (!cache && !subsume && !(LATCH_SANDWICH.on && sandwichEvents(entered).length > 0)) return reach;
     const store = cache ?? new Map();
     return (set) => {
         const key = keyOf(set);
@@ -154,10 +154,17 @@ function latchSubsumption(entered, extra) {
  * never taken holding its event (`reachedTarget`), so its probe is U \ {its event}. The probes are lattice points
  * (memoised in the same reach cache), searched at most once.
  */
-export const LATCH_SANDWICH = { on: true, skips: 0 };
+function sandwichEvents(world) {
+    const axis = new Set(regionItems(world));
+    const named = LATCH_SANDWICH.events === 'all'
+        ? [...cutEvents(world), ...gateEvents(world)].map((e) => e.event) : latchEvents(world).map((l) => l.event);
+    return [...new Set(named)].filter((e) => axis.has(e)).sort();
+}
+export const LATCH_SANDWICH = { on: true, skips: 0, events: globalThis.process?.env?.SANDWICH_EVENTS ?? 'latch' };
 function latchSandwich(world, reachOf) {
     if (!LATCH_SANDWICH.on) return null;
-    const E = [...new Set(latchEvents(world).map((l) => l.event))].sort();
+    // events: 'latch' = the latch events only; 'all' = every in-world EVENT on the axis (latches, ropes/struck, gate/lock events).
+    const E = sandwichEvents(world);
     if (E.length === 0) return null;
     const probeOf = (set, minus = null) => [...new Set([...set, ...E])].filter((i) => i !== minus).sort();
     const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
