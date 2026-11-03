@@ -15,7 +15,7 @@
 
 import {
     regionItems, reachUnder, regionTargets, cutEvents, noteCuts, NOTHING_REACHED, reachedTarget, planToTarget, targetCell, reachKey, reachInputs,
-    regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint, endsWalk,
+    regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint, endsWalk, latchEvents,
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
@@ -28,7 +28,13 @@ import {
  * suite holds the scripted step ≡ the native one). `'ap'` mode: the inventory is fixed and a location tile
  * grants nothing, so the walk runs on the world without its item overlay.
  */
-export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
+export function nativeReachUnder(world, inventory, opts = {}) {
+    const t0 = globalThis.__reachLog ? performance.now() : 0;
+    const out = nativeReachUnder0(world, inventory, opts);
+    globalThis.__reachLog?.push({ engine: 'native', at: `${world.entrance.x},${world.entrance.y}`, inv: [...inventory], states: out.states, ms: performance.now() - t0, tag: globalThis.__reachTag, ...(globalThis.__reachSig ? { cells: [...out.cells.keys()].sort().join(' '), cuts: [...out.cuts.keys()].sort().join(' ') } : {}) });
+    return out;
+}
+function nativeReachUnder0(world, inventory, { cap = 400000 } = {}) {
     const w = { ...world, items: new Map() };
     const start = createState(w);
     start.inventory = inventoryOf(inventory);
@@ -88,12 +94,80 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
  * `reach(set)` through an optional CACHE (a Map the caller owns, one per world and engine): the pairs and
  * the entry pricing of one region ask the same (arrival, inventory) reach — the certifier shares it.
  */
-function cachedReach(cache, entered, reach) {
-    if (!cache) return reach;
+function cachedReach(cache, entered, reach, extra = null) {
+    const keyOf = (set) => `${entered.entrance.x},${entered.entrance.y}|${set.join('\u0001')}`;
+    const subsume = latchSubsumption(entered, extra);
+    if (!cache && !subsume && !(LATCH_SANDWICH.on && latchEvents(entered).length > 0)) return reach;
+    const store = cache ?? new Map();
     return (set) => {
-        const key = `${entered.entrance.x},${entered.entrance.y}|${set.join('\u0001')}`;
-        if (!cache.has(key)) cache.set(key, reach(set));
-        return cache.get(key);
+        const key = keyOf(set);
+        if (!store.has(key)) store.set(key, subsume?.(set, (lower) => store.get(keyOf(lower))) ?? reach(set));
+        return store.get(key);
+    };
+}
+
+/**
+ * ⛓ PROTOTYPE (scratch, session tile-l40-latch-slowness) — LATCH SUBSUMPTION. A point P holding latch event e (its
+ * button at cell L) prices exactly as P' = P \ {e} when, in P''s search, the player can press L and stand again on the
+ * arrival in its FRESH state (blocks home, nothing broken, the same this-visit latches) with L latched: every state of
+ * P's search maps (inventory P → P', latched ∪ {L}) onto a state of P''s search, step for step, because e does nothing
+ * but hold L down. So P reaches no target P' does not; P' is lower in rank, so any target it reaches already covers P.
+ * Eligible only when e is named NOWHERE else in the world (no clear set, rule, gate, action, trap, pull, pulser) and the
+ * caller's arrival judge does not read it; never on a world with a while_active trap on an axis token (non-monotone).
+ */
+export const LATCH_SUBSUMPTION = { on: false, hits: 0, misses: 0 };
+function latchSubsumption(entered, extra) {
+    if (!LATCH_SUBSUMPTION.on) return null;
+    const latches = latchEvents(entered);
+    if (latches.length === 0) return null;
+    const axis = new Set(regionItems(entered));
+    if (Object.values(entered.trapLib ?? {}).some((t) => t?.fires === 'while_active' && axis.has(t.active))) return null;
+    const elsewhere = JSON.stringify([entered.obstacleLib ?? {}, entered.actionLib ?? {}, entered.trapLib ?? {},
+        [...(entered.entryGates?.values() ?? [])], entered.pulls ?? [], entered.pulsers ?? [], entered.blockLib ?? {},
+        Object.values(entered.buttonLib ?? {}).map((b) => ({ ...b, latch: undefined }))]);
+    const judged = new Set(extra?.items ?? []);
+    const eligible = latches.filter((l) => !elsewhere.includes(JSON.stringify(l.event)) && !judged.has(l.event)
+        && latches.filter((m) => m.event === l.event).length === 1);
+    if (eligible.length === 0) return null;
+    const w = { ...entered, items: new Map() };
+    return (set, peek) => {
+        for (const l of eligible) {
+            if (!set.includes(l.event)) continue;
+            const lower = set.filter((i) => i !== l.event);
+            const r = peek(lower);
+            if (!r?.reached) continue;
+            const s = createState(w);
+            s.inventory = inventoryOf(lower);
+            s.latched = [...new Set([...(s.latched ?? []), l.key])].sort();
+            if (r.reached(s)) { LATCH_SUBSUMPTION.hits += 1; return r; }
+        }
+        LATCH_SUBSUMPTION.misses += 1;
+        return null;
+    };
+}
+
+/**
+ * ⛓ PROTOTYPE (scratch, session tile-l40-latch-slowness) — LATCH SANDWICH. The lattice walk already skips, for good, a
+ * target the TOP point does not reach (monotone: reach only grows with the inventory). The sandwich applies the same
+ * inference with a LOWER top: point Q's upper probe is U = Q ∪ E (E = the world's latch events). A target U does not
+ * take, Q cannot take either, so if no uncovered target is taken at U, Q is skipped. A latch's OWN event target is
+ * never taken holding its event (`reachedTarget`), so its probe is U \ {its event}. The probes are lattice points
+ * (memoised in the same reach cache), searched at most once.
+ */
+export const LATCH_SANDWICH = { on: true, skips: 0 };
+function latchSandwich(world, reachOf) {
+    if (!LATCH_SANDWICH.on) return null;
+    const E = [...new Set(latchEvents(world).map((l) => l.event))].sort();
+    if (E.length === 0) return null;
+    const probeOf = (set, minus = null) => [...new Set([...set, ...E])].filter((i) => i !== minus).sort();
+    const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+    /** Is `takenAt(reach, point)` false at Q's upper probe (so false at Q)? `null` when the probe IS Q (no saving). */
+    return (set, target, takenAt) => {
+        const own = target?.event && E.includes(target.event) ? target.event : null;
+        if (own && set.includes(own)) return true; // never taken holding its own event
+        const u = probeOf(set, own);
+        if (same(u, [...set].sort())) return false;
+        return !takenAt(reachOf(u), u);
     };
 }
 
@@ -162,7 +236,7 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
     for (const from of sw.regions) {
         const entered = enteredAt(world, from);
         const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
-            : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })));
+            : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })), null);
         const full = reachOf(fullPoint(axis));
         searched += 1;
         states += full.states;
@@ -172,8 +246,13 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
         pairs.push(...live);
         const open = live.filter((p) => !p.unreachable);
         const covered = (p, set) => p.minimal.some((m) => pointCovers(set, m));
+        const sandwich = latchSandwich(entered, reachOf);
         for (const set of latticePoints(axis)) {
             if (open.every((p) => covered(p, set))) continue;
+            if (sandwich && open.every((p) => covered(p, set) || sandwich(set, null, (r) => owned(r.cells, p.to) === null ? false : true))) {
+                LATCH_SANDWICH.skips += 1;
+                continue;
+            }
             const reach = reachOf(set);
             searched += 1;
             states += reach.states;
@@ -245,7 +324,7 @@ export function deriveEntryLogic(world, region, helpers, {
         return [{ ...t, locationName: t.locationName ?? world.itemLocationNames?.get?.(`${t.x},${t.y}`) ?? null }];
     });
     const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
-        : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })));
+        : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })), arrivalBlocked);
     const full = reachOf(top);
     let searched = 1;
     let states = full.states;
@@ -256,8 +335,13 @@ export function deriveEntryLogic(world, region, helpers, {
     }
     const live = targets.filter((t) => !t.unreachable);
     const covered = (t, set) => t.minimal.some((m) => pointCovers(set, m));
+    const sandwich = latchSandwich(entered, reachOf);
     for (const set of latticePoints(axis)) {
         if (live.every((t) => covered(t, set))) continue;
+        if (sandwich && live.every((t) => covered(t, set) || sandwich(set, t, (r, u) => taken(r, t, u)))) {
+            LATCH_SANDWICH.skips += 1;
+            continue;
+        }
         const reach = reachOf(set);
         searched += 1;
         states += reach.states;

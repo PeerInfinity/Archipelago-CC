@@ -386,7 +386,13 @@ export function endsWalk(world, from, next) {
  * BFS over `scriptedStep` from the entrance holding `inventory`. Returns the cells stood on
  * (`"x,y"` → the state that first stood there, for the witness plan) and the state count.
  */
-export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib = MAZE_TILE_LIB, cap = 200000 } = {}) {
+export function reachUnder(world, inventory, helpers, opts = {}) {
+    const t0 = globalThis.__reachLog ? performance.now() : 0;
+    const out = reachUnder0(world, inventory, helpers, opts);
+    globalThis.__reachLog?.push({ engine: 'scripted', at: `${world.entrance.x},${world.entrance.y}`, inv: [...inventory], states: out.states, ms: performance.now() - t0, tag: globalThis.__reachTag, ...(globalThis.__reachSig ? { cells: [...out.cells.keys()].sort().join(' '), cuts: [...out.cuts.keys()].sort().join(' ') } : {}) });
+    return out;
+}
+function reachUnder0(world, inventory, helpers, { pickups = 'ap', tileLib = MAZE_TILE_LIB, cap = 200000 } = {}) {
     const start = createState(world);
     start.inventory = inventoryOf(inventory);
     if (scriptedStandsInArmedLane(world, start, helpers, tileLib)) return NOTHING_REACHED;
@@ -429,6 +435,7 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
     };
     return {
         cells, cuts, states: seen.size, planTo: (cell) => planFrom(cells.get(cell)), planToCut: (key) => planFrom(cuts.get(key)),
+        reached: (state) => seen.has(reachKey(state)),
     };
 }
 
