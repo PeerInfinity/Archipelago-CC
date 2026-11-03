@@ -27218,3 +27218,13 @@ The key is read through `Object.hasOwn`, so main without the key is OFF's under 
   only mover (731 t / 1 hit → 327 t / 0). The bounded set (34 files) is green both ways.
 - **The L12 cost** (hand-over (b)) is the press-blind `planSwordDash` scan, not the certificate: 43.5 of 44.7 s (step
   172) and 87.2 of 88.8 s (step 200) under L100LATTICE's mutant M4. Handed on as a dash-search question.
+
+### Seedling hammer-phase FLIP — `GHOST_ROPE_CUT` and `PRESS_NO_FACING` ON
+
+⚖ The user, 2026-11-02: *"Flip GHOST_ROPE_CUT, Flip SLASHRECT"*. Both switches ship ON from this commit (`=0` opts out).
+Their ON sweeps were noise only: GHOSTROPE's own (41237980520 vs 41237976973) and SLASHRECT's (41246425361 vs
+41246421171), and the stacked ON run on main 05dc442022 (41370177273). GHOSTROPE ON moves only a `ghostsword` primary
+meeting a rope (the lab's ENDGAME `ropegate` rooms REFUSED → SOLVED; the route holds the ghost sword only after its last
+rope room). PRESS_NO_FACING ON moves only a press planned on the game's one-tick `direction = -1` (caldera-cf seed 7 meets
+the kill's own refusal instead). The two "ships OFF" rows now read "ships ON"; every other row pins its arm by name.
+
