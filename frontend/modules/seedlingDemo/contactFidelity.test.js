@@ -347,9 +347,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             orbitFreeAim: false,
             // ⛓ fidelity L40BK2B D2 (wave 33): the strategy bound counts distinct applications — ships OFF.
             strategyBoundDistinct: false,
-            // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — ships OFF. ⚖ (user, 2026-11-02)
-            // HELD OFF at the W36 flip: helpFrame's C-on-the-Help-tick rows move +19 ON; a wasm witness decides.
-            secondaryUse: false,
+            // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — held OFF at the W36 flip, then ⚖ (user,
+            // 2026-11-02, "Flip after W36 lands") ON once seedling-js-help-dismiss-press witnessed the Help-dismiss swing.
+            secondaryUse: true,
             // ⛓ fidelity LIGHTPOLE D2 (wave 34): an in-room pole's clear-tag is a Spear thrust — ON since the W34 flip.
             inRoomPoleThrust: true,
             // ⛓ fidelity L12DOORS D1 (wave 34): a WandShot in a room with a stepped chaser — ON since the W34 flip.
