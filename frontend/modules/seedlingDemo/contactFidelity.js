@@ -1811,7 +1811,7 @@ export const CONTACT_FIDELITY = {
      * the 8 px lattice first (the FRONTIER3 fine walk), and a throw there falls back to the 16 px plan as before.
      * OFF: byte-identical. `SEEDLING_FINE_STANCE_WALK=0|1`.
      */
-    fineStanceWalk: true,
+    fineStanceWalk: false,
     /**
      * fidelity FROZENPRESS D1 (wave 37) — THE WALK'S STRIKE STANDS DOWN ON A TICK WHOSE INPUT THE GAME REFUSES.
      *

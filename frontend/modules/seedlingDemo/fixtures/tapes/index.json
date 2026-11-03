@@ -407,7 +407,7 @@
     },
     {
       "file": "l100-sliver-rock.json",
-      "tickCount": 162,
+      "tickCount": 185,
       "bootLevel": 100,
       "tapeVersion": 8,
       "noHazards": []
@@ -2010,7 +2010,7 @@
     },
     {
       "file": "rulesref-l66-door.json",
-      "tickCount": 241,
+      "tickCount": 230,
       "bootLevel": 66,
       "tapeVersion": 8,
       "noHazards": []

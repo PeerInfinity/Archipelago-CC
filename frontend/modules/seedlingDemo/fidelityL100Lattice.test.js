@@ -55,9 +55,9 @@ const solve216 = (on) => withContactFidelity({ fineStanceWalk: on }, () => {
 });
 
 describe('L100 — the walk to an 8 px swing stance plans on the 8 px lattice (fineStanceWalk)', () => {
-    // ⛓ shipped OFF (wave 36); ⚖ (user, 2026-11-02, "Yes, after W36 lands") ON at the L100 joint flip with hammer's DASH_CERT_SIGHT.
-    it('ships ON', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.fineStanceWalk).toBe(true);
+    // ⛓ ships OFF (wave 36); ⚖ (user, 2026-11-03) HELD at the L100 joint flip until L105's one-hit walk is fixed.
+    it('ships OFF', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.fineStanceWalk).toBe(false);
     });
 
     it('OFF: the break-stance walk is planned at 16 px, aims (124,140) past the pool node, and stalls on the mask', () => {

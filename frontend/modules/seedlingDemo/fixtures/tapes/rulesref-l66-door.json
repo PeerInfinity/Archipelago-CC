@@ -183,7 +183,7 @@
             "index": 1
         }
     },
-    "tick_count": 241,
+    "tick_count": 230,
     "inputs": [
         {
             "key": "left",
@@ -201,99 +201,44 @@
             "to": 65
         },
         {
-            "key": "up",
-            "from": 64,
-            "to": 66
-        },
-        {
             "key": "primary",
             "from": 66,
             "to": 67
         },
         {
-            "key": "down",
-            "from": 66,
-            "to": 68
-        },
-        {
-            "key": "up",
-            "from": 68,
-            "to": 69
-        },
-        {
-            "key": "down",
-            "from": 69,
-            "to": 70
-        },
-        {
-            "key": "up",
-            "from": 70,
-            "to": 71
-        },
-        {
-            "key": "down",
-            "from": 71,
-            "to": 72
-        },
-        {
-            "key": "up",
+            "key": "primary",
             "from": 72,
             "to": 73
         },
         {
-            "key": "down",
-            "from": 73,
-            "to": 74
-        },
-        {
-            "key": "up",
-            "from": 74,
-            "to": 76
-        },
-        {
-            "key": "down",
-            "from": 78,
-            "to": 80
-        },
-        {
-            "key": "up",
-            "from": 84,
+            "key": "left",
+            "from": 64,
             "to": 85
         },
         {
-            "key": "left",
-            "from": 64,
-            "to": 91
-        },
-        {
             "key": "right",
-            "from": 91,
-            "to": 92
+            "from": 85,
+            "to": 86
         },
         {
             "key": "primary",
-            "from": 92,
-            "to": 93
-        },
-        {
-            "key": "left",
-            "from": 94,
-            "to": 95
+            "from": 85,
+            "to": 86
         },
         {
             "key": "primary",
-            "from": 94,
-            "to": 95
+            "from": 87,
+            "to": 88
         },
         {
-            "key": "right",
-            "from": 95,
-            "to": 97
+            "key": "primary",
+            "from": 93,
+            "to": 94
         },
         {
-            "key": "left",
-            "from": 97,
-            "to": 103
+            "key": "primary",
+            "from": 117,
+            "to": 118
         },
         {
             "key": "primary",
@@ -302,80 +247,85 @@
         },
         {
             "key": "primary",
+            "from": 137,
+            "to": 138
+        },
+        {
+            "key": "up",
+            "from": 88,
+            "to": 140
+        },
+        {
+            "key": "primary",
+            "from": 139,
+            "to": 140
+        },
+        {
+            "key": "down",
+            "from": 140,
+            "to": 142
+        },
+        {
+            "key": "left",
+            "from": 145,
+            "to": 146
+        },
+        {
+            "key": "up",
             "from": 145,
             "to": 146
         },
         {
             "key": "primary",
-            "from": 152,
-            "to": 153
+            "from": 145,
+            "to": 146
         },
         {
-            "key": "up",
-            "from": 94,
-            "to": 155
+            "key": "right",
+            "from": 146,
+            "to": 147
         },
         {
-            "key": "primary",
+            "key": "down",
+            "from": 146,
+            "to": 147
+        },
+        {
+            "key": "down",
+            "from": 149,
+            "to": 151
+        },
+        {
+            "key": "left",
+            "from": 147,
+            "to": 154
+        },
+        {
+            "key": "right",
             "from": 154,
             "to": 155
         },
         {
-            "key": "down",
-            "from": 155,
-            "to": 157
+            "key": "up",
+            "from": 154,
+            "to": 155
         },
         {
             "key": "up",
-            "from": 157,
-            "to": 158
-        },
-        {
-            "key": "left",
-            "from": 160,
-            "to": 161
-        },
-        {
-            "key": "down",
-            "from": 160,
-            "to": 161
-        },
-        {
-            "key": "primary",
-            "from": 160,
-            "to": 161
+            "from": 158,
+            "to": 160
         },
         {
             "key": "right",
-            "from": 161,
-            "to": 163
-        },
-        {
-            "key": "left",
-            "from": 163,
-            "to": 166
-        },
-        {
-            "key": "right",
-            "from": 167,
-            "to": 169
+            "from": 228,
+            "to": 230
         },
         {
             "key": "up",
-            "from": 173,
-            "to": 175
-        },
-        {
-            "key": "right",
-            "from": 239,
-            "to": 241
-        },
-        {
-            "key": "up",
-            "from": 239,
-            "to": 241
+            "from": 228,
+            "to": 230
         }
     ],
     "tape_version": 8,
-    "description": "⛓⛓⛓ SEEDLING FIDELITY RULESREF — L66 from the L65 arrival: the spear bridge (7,9) opened by one thrust, the walk up `building8`'s x 72-87 doorway notch on the 8 px lattice, `bosslock@72,64`'s key line, and `teleporter@72,64` → L70. The survey's staging (step 163's boot view). The solver's own plan with spearBridgeVerb + fineFrontierFlood ON: 241 t, equips [{\"t\":0,\"slot\":3},{\"t\":64,\"slot\":0}]. Authored by scripts/procgen/plan-seedling-rulesref-witness.mjs."
+    "description": "⛓⛓⛓ SEEDLING FIDELITY RULESREF — L66 from the L65 arrival: the spear bridge (7,9) opened by one thrust, the walk up `building8`'s x 72-87 doorway notch on the 8 px lattice, `bosslock@72,64`'s key line, and `teleporter@72,64` → L70. The survey's staging (step 163's boot view). The solver's own plan with spearBridgeVerb + fineFrontierFlood ON: 230 t, equips [{\"t\":0,\"slot\":3},{\"t\":64,\"slot\":0}]. Authored by scripts/procgen/plan-seedling-rulesref-witness.mjs."
 }
