@@ -1300,6 +1300,31 @@ export function locationGuard(ledgerId) {
 }
 
 /**
+ * ⛓ THE HAND LOCATION TERMS (session tile-rules-automation-r-a2; rules-4's review: "make it PURE like handExitTerms"):
+ * the location rules this overlay AUTHORS, by the location NAME the atlas gives each guarded ledger row — the
+ * `LOCATION_GUARDS` term alone, resolved, never a rule the producer composed onto the location (`chargeSealedLocation`).
+ * The same term deriveAtlas's guard step writes (`locationGuard` + `resolveCondition`); the maze compile gates its worlds on
+ * these and no other location rule. Pure. Refuses a guard no ledger row names and a guard that does not resolve.
+ * @param {Array<{id: string}>} ledger the location ledger rows (R7_GOAL_LEDGER)
+ * @param {{resolveCondition: (c: object) => object|null, nameOf: (row: object) => string}} deps
+ * @returns {Map<string, {rule: object, ledgerId: string, why: string, cite: string}>}
+ */
+export function handLocationTerms(ledger, { resolveCondition, nameOf }) {
+    const out = new Map();
+    for (const row of ledger) {
+        const guard = locationGuard(row.id);
+        if (!guard) continue;
+        const rule = resolveCondition(guard.condition);
+        if (!rule) throw new Error(`location guard for ${row.id} does not resolve to a rule`);
+        out.set(nameOf(row), { rule, ledgerId: row.id, why: guard.why, cite: guard.cite });
+    }
+    const named = new Set(ledger.map((r) => r.id));
+    const stray = Object.keys(LOCATION_GUARDS).filter((id) => !named.has(id));
+    if (stray.length) throw new Error(`location guards no ledger row names: ${stray.join(', ')}`);
+    return out;
+}
+
+/**
  * ⛔⛔⛔ THE IGNEOUS TILE IS FREE, AND SLICE 4's HAND RULING ON IT PUT THE DARK
  * SUIT BEHIND ITSELF (R7 slice 5 — the refutation log's first real customer).
  *

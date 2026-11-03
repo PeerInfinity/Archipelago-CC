@@ -74,7 +74,7 @@ const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance
 //   only the OVERLAY below is authored. The vanilla 116 and an edited level set
 //   now go through ONE `deriveAtlas`.
 const {
-    deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM, levelName, BOSS_LOCATION_ITEM, BOSS_FILLER_ITEM,
+    deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM, levelName, labelFor, BOSS_LOCATION_ITEM, BOSS_FILLER_ITEM,
 } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
 const { buildLevelWorld, ROLES, PERSISTENCE_RESPONSE, combatCensusOf, rectsOverlap } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
@@ -1255,6 +1255,20 @@ export const lavaTrapLifts = [];
 
 /** Every ledger location this run gave a guard rule (OV.LOCATION_GUARDS). */
 export const locationGuards = [];
+
+/**
+ * ⛓ The overlay's HAND inputs to the atlas rules, for the maze compile's input/output split (session
+ * tile-rules-automation-r-a2): the exit terms (`OV.handExitTerms`) and the location terms (`OV.handLocationTerms`, over this
+ * producer's ledger, named as deriveAtlas names its locations). Pure over `atlas`: no producer state is read, so it is the
+ * same in any process, before or after a build.
+ */
+export function playthroughHandInputs(atlas) {
+    const resolveCondition = (c) => analyzerOptions.resolveCondition(c);
+    return {
+        exitTerms: OV.handExitTerms(atlas, { resolveCondition, regionIdFor }),
+        locationTerms: OV.handLocationTerms(R7_GOAL_LEDGER, { resolveCondition, nameOf: (row) => `${levelName(row.level)} - ${labelFor(row)}` }),
+    };
+}
 
 /**
  * Every exit or location whose tile is reachable only THROUGH gated crossing
