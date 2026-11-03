@@ -58,6 +58,8 @@ const NODES = [
     { index: 3, wave: 0, gate: ['a'], gateCounts: {}, parent: 0, isFiller: true },  // wave-0 filler (sphere-1 gate)
     { index: 4, wave: 2, gate: ['b'], gateCounts: { b: 2 }, parent: 0 },            // count gate: b ×2 → sphere 2
     { index: 5, wave: 0, gate: [], gateCounts: {}, parent: 2 },                     // ungated child of a wave-2 host
+    { index: 6, wave: 0, gate: [], gateCounts: {}, parent: 0 },                     // ungated wave-0 (not the root)
+    { index: 7, wave: 1, gate: ['a'], gateCounts: {}, parent: 2 },                  // deep: own gate sphere 1, ANCESTOR's sphere 2
 ];
 const SPHERES_1_2 = { a: 1, b: 2, c: 1 };
 
@@ -90,6 +92,14 @@ describe('sphere growth: held is EXACT', () => {
 
     it('sphere-sweep, not wave: a wave-0 FILLER gated on a sphere-1 item holds sphere 1', () => {
         expect(sphereHeldItems(PLAN, NODES[3], NODES).sphere).toBe(1);
+    });
+
+    it('an ungated wave-0 node (not the root) holds exactly nothing: k=0, {}', () => {
+        expect(sphereHeldItems(PLAN, NODES[6], NODES)).toEqual({ items: {}, source: 'sphere', exact: true, sphere: 0 });
+    });
+
+    it('a deep node whose ANCESTOR\'s gate is the latest takes the ancestor\'s sphere (MUTANT: no ancestor walk → k=1)', () => {
+        expect(sphereHeldItems(PLAN, NODES[7], NODES)).toEqual({ items: SPHERES_1_2, source: 'sphere', exact: true, sphere: 2 });
     });
 
     it('a count gate (b ×2) is first met by sphere 2; an ungated child inherits its host\'s sphere', () => {

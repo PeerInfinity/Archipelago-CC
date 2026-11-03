@@ -136,6 +136,8 @@ Every region generator may be handed one optional, substrate-agnostic field, `he
 - **Grid growth and the shuffled spiral** give the placer's arrival approximation (`heldFromArrivalInventory`: every item placed in an already-built region, counted; its keys are `accumulatedInventory`), with `exact: false`.
 - **Top-down** gives none yet. Absent means unknown, and is never faked.
 
+`held` is the sphere sweep's cumulative set at the arrival sphere. It is not a per-player guarantee in either direction: a player may arrive holding only the gate items, or arrive late holding items from later spheres. `exact: true` means "the exact sweep answer". It does not mean a guaranteed inventory, and it is not a lower bound.
+
 Where it arrives: `generateRegionCore(input)` as `input.held`; the zone path's context as `ctx.held`; a spiral content cell's `extractZoneRules(zoneIdx, ctx)` and `instantiateLibraryEntry(entry, ctx)` as `ctx.held`; sphere growth's `instantiateLibraryEntryForSpecs` and `instantiateAtlasEntryForSpecs` as `ctx.held`. It draws no rng and is written into no region, rules.json or sidecar. No substrate acts on it yet: a generator that destructures its input ignores it for free.
 
 ### Build-time — content sources (zone-based substrates)

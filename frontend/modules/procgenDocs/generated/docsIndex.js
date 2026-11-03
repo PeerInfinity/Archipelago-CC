@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1236,
         "indexHeadings": 2,
-        "lines": 34452,
+        "lines": 34454,
         "pages": 4,
-        "words": 497981
+        "words": 498078
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -60,7 +60,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 23,
-            "lines": 284,
+            "lines": 286,
             "links": [
                 "architecture.md",
                 "cloudberry.md",
@@ -72,7 +72,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 5976
+            "words": 6034
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -251,7 +251,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/sphere-growth.md",
-            "words": 2128
+            "words": 2167
         },
         {
             "description": "Paths-and-obstacles is the intermediate representation procgen uses for access rules. Substrates reason spatially — \"to reach this goal you cross these obstacles\" — while Archipelago reasons in Boolean item logic. This representation is the bridge: rules are *authored* as paths of obstacles during generation, verified against the geometry, and *compiled* to Rule Builder JSON only at the end.",

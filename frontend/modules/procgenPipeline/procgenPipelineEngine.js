@@ -779,7 +779,10 @@ export function accumulatedInventory(grid) {
 //   input, so an unread key is free). It is frozen so a reader cannot edit a
 //   shared count.
 //
-// The sphere form is EXACT (sphere-sweep semantics: `sphereHeldItems`); the
+// The sphere form is EXACT (sphere-sweep semantics: `sphereHeldItems`) — the
+// exact SWEEP answer, not a guaranteed per-player inventory and not a lower
+// bound (a player may arrive holding only the gate items, or late, holding
+// more); the
 // grid-growth / spiral form is the `accumulatedInventory` approximation above
 // with counts (`heldFromArrivalInventory`), marked `exact: false`.
 const freezeHeld = (held) => Object.freeze({ ...held, items: Object.freeze(held.items) });
@@ -813,6 +816,12 @@ export function heldFromArrivalInventory(grid) {
  *
  * Returns null (unknown — the caller then passes no `held`) when there is no
  * plan or a gate names an item/count the plan never supplies.
+ *
+ * ⚠ SEMANTICS: `held` is the SWEEP's cumulative set at the arrival sphere. It
+ * is NOT a per-player guarantee in either direction — a player may arrive
+ * holding only the gate items, or arrive late holding items from spheres > k.
+ * `exact: true` means "the exact sweep answer", not "a guaranteed inventory"
+ * and not a lower bound.
  */
 export function sphereHeldItems(plan, node, nodes) {
     const spheres = plan?.spheres;
