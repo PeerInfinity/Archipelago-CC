@@ -288,8 +288,9 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'each ice turret\'s `hits`/`hitsMax`/`hitsTimer` and its volley clock (`shootTimer`, `angle`, `volleys`) (`levelRun.js:10672`).' },
     { family: 'turretsSettled', kind: RUN_ENTITIES, blocks: ['pushable'],
-        solverReads: ['botDriverV2'], strategies: [],
-        why: 'whether every ice turret corpse has finished its glide (`levelRun.js:10664`).' },
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
+        why: 'whether every ice turret corpse has finished its glide (`levelRun.js:10664`); `execCorpseWeigh` asks it '
+            + 'after a stance walk, whether the walk moved the corpse (fidelity CORPSEBUMP2, `corpseBumpRestRead`).' },
     { family: 'arrowFlights', kind: RUN_ENTITIES, blocks: ['emitter'],
         solverReads: ['dangerMap'], strategies: [],
         why: 'live arrows with velocity and lifetime (`levelRun.js:10725`), for `dangerMap.predictArrows`.' },

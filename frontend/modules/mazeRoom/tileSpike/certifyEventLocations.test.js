@@ -99,6 +99,37 @@ describe('gated-cell events: L24\'s burnable tree, gating L12 r40c4 → L24', ()
     });
 });
 
+// ⛓ ONE ENTITY, ONE GATE (session tile-primitives-sphere-order-13, ⚖ user 2026-11-01 "Switch to (B) unified gate"). L113's FinalDoor
+// is one 2×2 entity (7..8, 0..1), solid until `hasAllSealParts() && talkedToWatcher` (`FinalDoor.as`), then gone as a whole. The
+// transcription gates its door row on the Watcher's talk and its lower row on the Seals alone, so the event was priced from beside
+// the lower row at Seal×16 (and that row was passable without the talk). Every body cell of an event's entity now carries the And of
+// its cells' gates. It needs L115 in the compile: only then is the lower row (L115's landing) in L113's world.
+describe('an event entity whose body cells carry different gates: L113\'s FinalDoor', () => {
+    const LEVELS = ['level_112', 'level_113', 'level_114', 'level_115'];
+    const E = 'L113 flag 0: finaldoor@112,0 cleared';
+    const W = 'L114 flag 0: watcher@72,72 cleared';
+    const RULES = JSON.parse(buildPlaythroughMaze({ levels: LEVELS }).text);
+    const SEALS = { rule: 'Has', args: { item_name: 'Seal', count: 16 } };
+
+    it('all four body cells carry one gate: (Seal×16 and the talk) or the event', () => {
+        const payload = RULES.preset_sidecars['1'].level_113.playable_payload;
+        const cells = [[7, 0], [8, 0], [7, 1], [8, 1]].map(([x, y]) => payload.obstacles.find((o) => o.x === x && o.y === y));
+        expect(cells.every(Boolean)).toBe(true);
+        const libs = cells.map((o) => payload.obstacleLib[o.id]);
+        expect(new Set(cells.map((o) => o.id)).size).toBe(1);
+        expect(libs[0].clear_rule).toEqual({ rule: 'Or', children: [{ rule: 'And', children: [SEALS, has(W)] }, has(E)] });
+        expect(libs[0].events).toEqual([{ name: E, side: 'level_113' }]);
+    });
+
+    it('certifies: the event is priced at Seal×16 and the talk, from every landing', () => {
+        const out = certify(RULES, ['level_113']);
+        expect(out.problems).toEqual([]);
+        const priced = out.lines.filter((l) => l.startsWith(`level_113@${E}<`));
+        expect(priced.length).toBeGreaterThan(0);
+        for (const l of priced) expect(JSON.parse(l.slice(l.indexOf('=') + 1))).toEqual([[W, ...Array(16).fill('Seal')]]);
+    });
+});
+
 describe('latched-lock events: L19\'s Red Key boss lock', () => {
     const LEVELS = ['level_19'];
     const E = 'L19 flag 1: bosslock@48,32 cleared';

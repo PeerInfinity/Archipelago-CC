@@ -1,0 +1,4 @@
+# processes 238 | driven ticks 65234 | axis-aligned ticks 4165 | axis ticks armed 0 | axis ticks with a body in reach 40 | of those, reachable ALONG the axis 22
+survey | L53 | axis x | in reach: puncher@136,96(dir 1) | along: - | 18 tick(s) t120..t138
+survey | L53 | axis x | in reach: puncher@136,96(dir 2) | along: puncher@136,96 | 1 tick(s) t133..t133
+survey | L53 | axis y | in reach: puncher@136,96(dir 1) | along: puncher@136,96 | 21 tick(s) t139..t159

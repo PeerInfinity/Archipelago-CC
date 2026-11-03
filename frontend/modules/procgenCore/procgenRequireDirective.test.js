@@ -30,7 +30,8 @@ const SWORD = Object.freeze({ hasSword: true, hasShield: false });
 describe('the item vocabulary, read from the table', () => {
     it('ITEMS_ELEMENTS_NEED is the UNION of every head\'s `needs` — the sword, (S1) the shield, (swim S1) the conch, (swim T2) the feather',
         () => {
-            expect(ITEMS_ELEMENTS_NEED).toEqual(['canSwim', 'hasFeather', 'hasShield', 'hasSword']);
+            // ⛓ strategy switch r2 — the burn gate needs `hasFire`
+            expect(ITEMS_ELEMENTS_NEED).toEqual(['canSwim', 'hasFeather', 'hasFire', 'hasShield', 'hasSword']);
             // ⛔ DERIVED, not spelled: the union really comes off the table.
             expect(ITEMS_ELEMENTS_NEED).toEqual([...new Set(
                 Object.values(ELEMENT_TABLE).flatMap((e) => e.needs ?? []))].sort());

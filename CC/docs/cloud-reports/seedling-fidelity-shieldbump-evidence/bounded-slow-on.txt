@@ -1,0 +1,27 @@
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js (2 tests) 697689ms
+     ✓ ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte  473632ms
+     ✓ ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit  224054ms
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js (2 tests) 574777ms
+     ✓ OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271  444164ms
+     ✓ ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name  130610ms
+ ✓ frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js (2 tests) 408305ms
+     ✓ OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall)  171249ms
+     ✓ ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death  237053ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Bk2.slow.test.js (1 test) 325276ms
+     ✓ the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape  325274ms
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js (3 tests) 267302ms
+     ✓ OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast  116186ms
+     ✓ ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run  124185ms
+     ✓ ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached  26928ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 42203ms
+     ✓ ON, sweep request 392:0 solved whole ships the same ticks for less work  42201ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 40960ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  40958ms
+ ✓ frontend/modules/seedlingDemo/fidelityL32ArenaPrefix.slow.test.js (5 tests) 28410ms
+     ✓ leg 349, the 'dashless' pass: solves through the kill and the burn, and lands on L30  7111ms
+     ✓ leg 349, the 'full' pass: solves through the kill and the burn, and lands on L30  6600ms
+     ✓ leg 350, the 'dashless' pass: solves through the kill and the burn, and lands on L30  7501ms
+     ✓ leg 350, the 'full' pass: solves through the kill and the burn, and lands on L30  7193ms
+ Test Files  8 passed (8)
+      Tests  17 passed (17)
+   Duration  2393.57s (transform 2.80s, setup 0ms, import 7.55s, tests 2384.92s, environment 1ms)

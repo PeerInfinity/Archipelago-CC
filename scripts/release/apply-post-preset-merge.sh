@@ -28,7 +28,7 @@
 # The set of preserved presets is read from preserved-dev-presets.txt (one
 # game-id per line, optionally followed by `public`). Workflow-produced worldgen worlds (worlds/*_worldgen) and *_worldgen preset
 # dirs are intentionally NOT restored; hand-maintained worldgen presets that ARE
-# listed (bounce/runner/runner_sphere) get both their preset dir and their
+# listed (bounce_worldgen, the cloudberry worlds) get both their preset dir and their
 # worlds/<id> package restored.
 #
 # Idempotent: re-running recomputes the canonical index by stripping the

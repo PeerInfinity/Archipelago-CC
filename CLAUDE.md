@@ -208,7 +208,7 @@ npm test -- --mode=test-substrates --batch=playback-bot  # the Playback Bot rows
 npm test -- --mode=test-substrates --batch=apworld       # the apworld editor rows only (on push only when its pushPaths hit)
 npm test -- --mode=test-substrates --batch=bot-walks     # MANUAL: the real-time bot legs only
 npm test -- --mode=test-substrates --batch=noiz2sa       # MANUAL: the noiz2sa substrate rows
-npm test -- --mode=test-substrates --batch=runner        # MANUAL: runnerDemo + Runner block modes
+npm test -- --mode=test-substrates --batch=cloudberry    # MANUAL: the Cloudberry rows + its tutorial walks (needs frontend/external/cloudberry/ — scripts/setup/fetch-cloudberry-site.mjs; on push via cloudberry-e2e.yml)
 npm test -- --mode=test-substrates --batch=tutorials     # MANUAL: the Tutorial panel rows + one walk row per tutorial (but procgen's, the tracker's and Seedling's)
 npm test -- --mode=test-substrates --batch=tutorials-procgen  # MANUAL: the procgen tutorials' walk rows
 npm test -- --mode=test-substrates --batch=tutorials-procgen-loops  # MANUAL: the procgen loop-mode tutorials' walk rows (WebGPU)
@@ -319,12 +319,11 @@ alone but flake with `STACK_TRACE_ERROR` under the default run's parallelism,
 because vitest's `testTimeout` cannot interrupt synchronous work. `test:unit:slow`
 sets `fileParallelism: false` so each file gets the whole CPU.
 
-⚠ **`vitest.slow.config.js` carries deliberate exclusions with reasons in the
-file** — read the comment block before concluding a suite is missing. The
-runnerDemo slow battery is excluded by a ⚖ user ruling ahead of a runner
-redesign, and the patterns there are deliberately BROAD, so a newly written
-`runnerDemo/*.slow.test.js` would also be skipped. That is the opposite of
-`testBatches.js`'s default-batch rule, and it is why the config says so out loud.
+⚠ **`vitest.slow.config.js` excludes nothing beyond vitest's defaults** since the
+runner substrate was deleted (Cloudberry P4b, 2026-11-02): its runnerDemo exclusion
+(⚖ user 2026-08-20, ahead of a runner redesign that was then cancelled for
+Cloudberry) went with its subject. Any future exclusion there must carry its reason
+in the file — a silent one is how a suite stops gating without anybody noticing.
 
 ⛔ **⚖ RULING 52 (user, 2026-08-25): do NOT run the local unfiltered vitest.**
 - Pre-push check = `npx vitest run <the test paths you touched>`, bounded.

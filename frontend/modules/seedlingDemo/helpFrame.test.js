@@ -34,11 +34,30 @@ import { PICKUP_HELP_DEAD_FRAMES } from './gameClock.js';
 import { loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
 import { runTape } from './tapeRunner.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ORACLE = JSON.parse(readFileSync(
     join(HERE, 'fixtures', 'r8-solve-10-help-frame-oracle.json'), 'utf8'));
 const levelSource = atlasLevelSource();
+/**
+ * ⛓ seedling-js-help-dismiss-press: the GAME's four arms on `notDismissed()`'s base (none / C on the Help tick / X on
+ * it / C one tick early), recorded by `probe-seedling-secondary-use.mjs --record`.
+ */
+const WITNESS = JSON.parse(readFileSync(
+    join(HERE, 'fixtures', 'secondary-use-witness', 'help-dismiss-r8-solve-10.json'), 'utf8'));
+/** The game's `dead_frames` on an arm's final row. */
+const witnessFinalDead = (arm) => WITNESS.arms[arm].samples.at(-1).dead_frames;
+/**
+ * The model's `deadFramesOwed` as the witness's FINAL row reads it: the probe keeps the final tick's FIRST poll, so
+ * the build of a level the tape enters ON its final tick is not in it yet. Subtracts exactly those `load` spans
+ * (the transition's `to_level` names the build), nothing else.
+ */
+const deadAtFinalRow = (r, tape) => r.deadFramesOwed - r.transitions
+    .filter((tr) => tr.t === tape.tick_count)
+    .reduce((n, tr) => n + r.deadFrameSpans
+        .filter((s) => s.kind === 'load' && s.why === `level ${tr.to_level} build`)
+        .reduce((m, s) => m + s.frames, 0), 0);
 
 /** The `{tick, dead}` rows where the counter actually CLIMBED. */
 const climbs = (curve) => {
@@ -116,10 +135,19 @@ describe('the game\'s own dead-frame curve says where the frame is', () => {
  * the press perturbs the walk from t=68 (dy=2) and moves `deadFramesOwed` to
  * 171. That is fine and it is the point — the rule rows below compare the
  * synthetic base against ITSELF plus one press, never against the committed
- * walk. ⛔ The probe key is `secondary` throughout for the reason the last row
- * already gave: X is ALSO the dialogue key, and on this base it re-advances
- * the ceremony's pages (measured: +19 frames, not −1), so only C isolates
- * `Help.as:23`'s rule. [[feedback_fixture_must_discriminate_two_builds]]
+ * walk. ⛔ The probe key is `secondary` throughout because, at the defaults
+ * (`CONTACT_FIDELITY.secondaryUse` OFF), C is read by `Help.as:23` and by
+ * nothing else, so only C isolates its rule. X moves `deadFramesOwed` by +19,
+ * not −1, and ⛔ NOT because it "re-advances the ceremony's pages" (the
+ * attribution this comment carried until seedling-js-help-dismiss-press): X is
+ * `useItem(Main.primary)` = the SWORD, it SWINGS on the dismiss tick, the
+ * walk's own press two ticks later becomes a DASH, and the dash carries the
+ * player out of L10 on the final tick — −1 (the Help) +20 (the L11 build).
+ * The game does the same (`fixtures/secondary-use-witness/
+ * help-dismiss-r8-solve-10.json`, `fidelityHelpDismissPress.test.js`), and so
+ * does C under `secondaryUse` ON (slot 0 is the sword too), which is why the
+ * frame rows below read the witness through `deadAtFinalRow`.
+ * [[feedback_fixture_must_discriminate_two_builds]]
  */
 describe('the MODEL reproduces both halves of the pair', () => {
     /** The oracle row for whatever `r8-solve-10` is TODAY, refusing by name. */
@@ -180,7 +208,6 @@ describe('the MODEL reproduces both halves of the pair', () => {
         const withPress = { ...base,
             inputs: [...base.inputs, { key: 'secondary', from: helpTick, to: helpTick + 1 }] };
         const pressed = runTape(withPress, { levelSource });
-        expect(pressed.deadFramesOwed).toBe(control.deadFramesOwed - 1);
         expect(pressed.deadFrameSpans.filter((x) => x.kind === 'help')).toHaveLength(0);
 
         // ⛔ THE NEGATIVE CONTROL, and it is what makes the rule a rule: the
@@ -189,7 +216,25 @@ describe('the MODEL reproduces both halves of the pair', () => {
         const early = { ...base,
             inputs: [...base.inputs,
                 { key: 'secondary', from: helpTick - 1, to: helpTick }] };
-        expect(runTape(early, { levelSource }).deadFramesOwed).toBe(control.deadFramesOwed);
+        const earlyRun = runTape(early, { levelSource });
+        if (!CONTACT_FIDELITY.secondaryUse) {
+            expect(pressed.deadFramesOwed).toBe(control.deadFramesOwed - 1);
+            expect(earlyRun.deadFramesOwed).toBe(control.deadFramesOwed);
+        }
+        // ⛓⛓ seedling-js-help-dismiss-press — READ OFF THE GAME, BOTH MODES. These are the witness's own arms (the
+        // inputs are asserted equal), so the numbers are the game's. ON, C swings on the dismiss tick (as the game
+        // does) and the walk leaves L10 on its final tick, which the witness's final row has not paid yet —
+        // `deadAtFinalRow` removes exactly that build. Mutants: C not dismissing (171 ≠ 170); dropping the final-tick
+        // build from the subtraction under ON (190 ≠ 170); an early press that dismissed (170 ≠ 171).
+        expect(base.inputs).toEqual(WITNESS.arms.none.inputs);
+        expect(withPress.inputs).toEqual(WITNESS.arms['c-help'].inputs);
+        expect(early.inputs).toEqual(WITNESS.arms['c-early'].inputs);
+        expect(deadAtFinalRow(control, base)).toBe(witnessFinalDead('none'));
+        expect(deadAtFinalRow(pressed, withPress)).toBe(witnessFinalDead('c-help'));
+        expect(deadAtFinalRow(earlyRun, early)).toBe(witnessFinalDead('c-early'));
+        // …and the game's own rule, on the game's own rows.
+        expect(witnessFinalDead('c-help')).toBe(witnessFinalDead('none') - 1);
+        expect(witnessFinalDead('c-early')).toBe(witnessFinalDead('none'));
     });
 
     it('⛓ BOTH keys in `Help.as:23` dismiss it — the SPAN is what they share', () => {
@@ -200,10 +245,13 @@ describe('the MODEL reproduces both halves of the pair', () => {
             expect(runTape(t, { levelSource }).deadFrameSpans
                 .filter((x) => x.kind === 'help'), key).toHaveLength(0);
         }
-        // ⚠ THE FRAME ARITHMETIC IS ASSERTED FOR `secondary` ONLY, ABOVE, and
-        //   this row says why rather than averaging over the two: X is the
-        //   dialogue key as well, so on this base it also re-advances the
-        //   ceremony's pages and `deadFramesOwed` moves by +19 instead of −1.
+        // ⚠ THE RAW FRAME ARITHMETIC IS ASSERTED FOR `secondary` ONLY, ABOVE,
+        //   and this row says why rather than averaging over the two: X is the
+        //   sword, it SWINGS on the dismiss tick (the game too — the witness's
+        //   `x-help` arm), the walk's own press two ticks later becomes a dash
+        //   and leaves L10 on the final tick, so `deadFramesOwed` moves by
+        //   −1 + 20 = +19 instead of −1. (Until seedling-js-help-dismiss-press
+        //   this said X "re-advances the ceremony's pages" — a mis-attribution.)
         //   The Help is dismissed either way, which is this row's claim.
         expect([...HELP_DISMISS_KEYS]).toEqual(['primary', 'secondary']);
     });
@@ -222,8 +270,12 @@ describe('the MODEL reproduces both halves of the pair', () => {
         const edge = { ...base,
             inputs: [...base.inputs,
                 { key: 'secondary', from: helpTick, to: helpTick + 1 }] };
-        expect(runTape(edge, { levelSource }).deadFramesOwed)
-            .toBe(control.deadFramesOwed - 1);
+        const edgeRun = runTape(edge, { levelSource });
+        if (!CONTACT_FIDELITY.secondaryUse) expect(edgeRun.deadFramesOwed).toBe(control.deadFramesOwed - 1);
+        // ⛓ seedling-js-help-dismiss-press: the edge arm IS the witness's `c-help`; read off the game in both modes
+        // (see the row above for `deadAtFinalRow`). Mutant: an edge that did not dismiss → 171 ≠ 170.
+        expect(edge.inputs).toEqual(WITNESS.arms['c-help'].inputs);
+        expect(deadAtFinalRow(edgeRun, edge)).toBe(witnessFinalDead('c-help'));
     });
 
     it('⛓ the table still names exactly one pickup, and it is the sword', () => {

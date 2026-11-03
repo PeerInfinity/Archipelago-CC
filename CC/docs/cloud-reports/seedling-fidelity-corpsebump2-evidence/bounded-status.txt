@@ -1,0 +1,5 @@
+base-fast exit 0
+off-fast exit 1
+on-fast exit 1
+on-slow exit 0
+off-slow exit 0

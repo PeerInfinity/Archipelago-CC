@@ -86,6 +86,9 @@
  *                                  which is also every world without a `block_lib`.
  *   livePulsers           boolean[]|null  PULSERS (maze-seedling-art-4): per `world.pulsers` entry, is
  *                                  its token held now (`livePulsers` below); null = none drawn live.
+ *   latched               string[]|null  LATCHING BUTTONS (session tile-mechanisms-m4-latch): `state.latched`
+ *                                  — the latching buttons pressed this visit, drawn DOWN with nothing
+ *                                  on them (and so is one whose event `inventory` carries); null = none.
  *
  * ── ⛓ THE GATE IS AN ORDERED DRAW-OP LOG, AND WHY THAT IS THE PIXELS ──
  *
@@ -112,7 +115,7 @@ import {
     DEFAULT_ITEMS, DEFAULT_OBSTACLES, getItemRenderHints, isObstacleCleared,
 } from '../shared/procgen/library.js';
 import { drawHazards } from '../shared/procgen/contentModules/hazardRender.js';
-import { TILE_WALL, effectiveInventory, getTile } from './mazeRoomEngine.js';
+import { TILE_WALL, effectiveInventory, getTile, latchesDown } from './mazeRoomEngine.js';
 import { isConceptGate, paintConceptGate } from './mazeConcepts.js';
 
 export class MazeRenderError extends Error {
@@ -190,6 +193,7 @@ export const VIEW_FIELDS = Object.freeze([
     'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations', 'ruleEvaluator',
     'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible', 'isLocationVisible',
     'isConsumableCollected', 'broken', 'facing', 'armedTraps', 'seedlingSkin', 'blocks', 'blockKinds', 'livePulsers',
+    'latched',
 ]);
 
 /**
@@ -283,6 +287,10 @@ export function assertView(view) {
         fail('mazeRoomRender: view.blockKinds must be null or an object of "x,y" → kind (`state.blockKinds`), got '
             + `${JSON.stringify(view.blockKinds)}.`);
     }
+    if (view.latched !== null && !Array.isArray(view.latched)) {
+        fail('mazeRoomRender: view.latched must be null or an array of "x,y" position keys (`state.latched`), got '
+            + `${JSON.stringify(view.latched)}.`);
+    }
     if (view.livePulsers !== null && !Array.isArray(view.livePulsers)) {
         fail('mazeRoomRender: view.livePulsers must be null or one boolean per `world.pulsers` entry, got '
             + `${JSON.stringify(view.livePulsers)}.`);
@@ -307,7 +315,7 @@ export function assertView(view) {
 export function plainView({
     tilePx = TILE_PX, playerPos = null, inventory = null, ruleEvaluator = null,
     broken = null, facing = null, armedTraps = null, seedlingSkin = null, blocks = null, blockKinds = null,
-    livePulsers = null,
+    livePulsers = null, latched = null,
 } = {}) {
     return {
         tilePx,
@@ -329,6 +337,7 @@ export function plainView({
         blocks,
         blockKinds,
         livePulsers,
+        latched,
     };
 }
 
@@ -340,7 +349,7 @@ export function plainView({
 export function livePulsers(world, state, inventoryOverride) {
     if (!world?.pulsers?.length || !state) return null;
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken, state.latched);
     return world.pulsers.map((p) => inv.has(p.token));
 }
 
@@ -363,7 +372,8 @@ export function blockLook(world, kind) {
  *   · a PULL (sphere-order-9's LavaTrap): every disc cell but the trap's tinted — `pullLive` while its gate is
  *     cleared for `view.inventory` (a step in would reel the player), `pullInert` while it is not — and the trap's
  *     cell a disc with a mouth;
- *   · a BUTTON: a ring, filled while DOWN (the player or a block on it);
+ *   · a BUTTON: a ring, filled while DOWN (the player or a block on it, or a latch that stays down: `view.latched`, or its
+ *     event carried — `latchesDown`);
  *   · a BLOCK: a square at `view.blocks` (null = `world.blocks`, the world's own layout) — BY KIND (maze-seedling-art-4,
  *     `blockLook`): the walked square, a struck square in `blockStruck`, a dormant disc in `blockDormant`; a woken
  *     block switches look with its kind (`view.blockKinds`);
@@ -429,6 +439,7 @@ export function drawLiveMarkers(ctx, w, view, spriteCells = null) {
     if (!w.buttons?.size && live.length === 0) return;
     const onCell = new Set(live);
     if (view.playerPos) onCell.add(`${view.playerPos.x},${view.playerPos.y}`);
+    for (const key of latchesDown(w, view.inventory, view.latched)) onCell.add(key);
     ctx.save();
     ctx.strokeStyle = COLORS.button;
     ctx.fillStyle = COLORS.button;

@@ -52,6 +52,7 @@ import {
     setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
 } from './make-seedling-playthrough-rules.mjs';
 import { itemNamesInRule } from '../../frontend/modules/procgenCore/ruleItemNames.js';
+import { VICTORY_ITEM } from '../../frontend/modules/seedlingDemo/seedlingAtlasDerivation.js';
 import * as OV from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
 import { PUSHABLE_KINDS } from '../../frontend/modules/flashPanel/seedlingBlockPaths.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
@@ -97,6 +98,9 @@ export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maz
  * feature. L107 plays as the rules have it (⚖ "As the rules have it"): its fire block and pulser sit in walled cells behind an
  * in-level latching ButtonRoom whose shove only tames the Crusher, a hazard neither model carries. L3 → L111 needs Swim in the maze
  * (the approach is water; probe-confirmed), which the rules do not charge: a named open row, the rules unchanged for now.
+ * Spheres 12.2 + 12.3 (session tile-primitives-sphere-order-13, ⚖ 2026-11-01 "L115 + L110"): L115 and L110 — the last levels the
+ * sphere log reaches (L81 is not in the atlas). L115 brings L113's FinalDoor lower row into L113's world, whose transcription gated it on
+ * the Seals alone; one entity's body cells now share one gate (`unifyEntityGates` in the projection, ⚖ "Switch to (B) unified gate").
  */
 export const LEVELS = Object.freeze([
     'level_0', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
@@ -109,7 +113,8 @@ export const LEVELS = Object.freeze([
     'level_82', 'level_83', 'level_84', 'level_85', 'level_86',
     'level_87', 'level_88', 'level_89', 'level_90', 'level_91', 'level_92', 'level_93', 'level_94',
     'level_95', 'level_96', 'level_97', 'level_98', 'level_99', 'level_100', 'level_101', 'level_102', 'level_103', 'level_104',
-    'level_105', 'level_106', 'level_107', 'level_108', 'level_109', 'level_111', 'level_112', 'level_113', 'level_114',
+    'level_105', 'level_106', 'level_107', 'level_108', 'level_109', 'level_110', 'level_111', 'level_112', 'level_113', 'level_114',
+    'level_115',
 ]);
 
 /**
@@ -413,7 +418,9 @@ export function playthroughPermissiveLocations() {
  *     (`buildGroupOpeners`) — for L40's door, the west, where the t2 button is;
  *   - the far side: a re-closing lock held open from its opener side is open both ways for the rest of that visit, so the far
  *     side's entry costs the same. That is exact only while no ARRIVAL stands on the far side (an arrival there meets the lock
- *     shut), so a far-side arrival — any exit's landing tile in the closed lock's far terrain — is REFUSED by name; so is a group
+ *     shut), so a far-side arrival — any exit's landing tile in the closed lock's far terrain — is REFUSED by name; so is a verdict
+ *     on a lock the analyzer's block paths already DECIDE (`grid.lockVerdicts`; tile-mechanisms-m3: a hand row only where
+ *     derivation fails — L39's and L41's puzzle locks are derived, L40's three are `pulser-arm`); so is a group
  *     that latches (a ButtonRoom / rope: open for good, an event — the OWED in-level latch), a door whose verdict names no
  *     entity, and a lock no holder reaches.
  * The puzzle's own PIECES are not gates any more: in a level with an annotated lock, the hand ruling's condition on a pushable
@@ -467,6 +474,11 @@ export function puzzleLocksFor(level, grid, { arrivals = [], groups = OV.buildGr
         if (!e) throw new Error(`${who}: the verdict names no entity of L${v.level}`);
         const [x, y] = [Math.floor(px / SEEDLING_TILE_SIZE), Math.floor(py / SEEDLING_TILE_SIZE)];
         if (x !== v.tile[0] || y !== v.tile[1]) throw new Error(`${who}: its entity stands on (${x},${y}), the verdict says (${v.tile})`);
+        const derived = (grid.lockVerdicts ?? []).find((lv) => lv.decided && lv.tiles.some(([tx, ty]) => tx === x && ty === y));
+        if (derived) {
+            throw new Error(`${who}: the analyzer already DERIVES its price (its block paths decide the lock) — a hand verdict `
+                + 'belongs only on a lock they cannot decide');
+        }
         const group = Number(e.attrs?.tset);
         const opener = groups.get(`${v.level}:${group}`);
         if (!opener) throw new Error(`${who}: its group t${group} has no opener in L${v.level}`);
@@ -537,6 +549,17 @@ export function playthroughPuzzleLockGridFor(level, { atlas, partition }) {
     return { ...grid, cells };
 }
 
+/**
+ * ⛓ THE GOAL (session tile-primitives-completion, ⚖ the user 2026-11-02: "Derived Seed goal"): the rules preset's own
+ * goal item (`VICTORY_ITEM`, the item the atlas's ending row places), when the restricted atlas still places it — else
+ * undefined, and the compile keeps its constant-true scaffold goal, so a partial `levels` never asks for an item it
+ * cannot place. Pure.
+ */
+export function completionItemFor(atlas) {
+    const placed = atlas.regions.some((r) => (r.locations ?? []).some((l) => l.vanilla_item === VICTORY_ITEM));
+    return placed ? VICTORY_ITEM : undefined;
+}
+
 /** Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`. */
 export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
@@ -560,8 +583,10 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
             resolveCondition: playthroughAnalyzerOptions.resolveCondition,
         },
     });
-    const { rules, report } = compileRegionAtlas(restrictAtlas(atlas, levels, { start: START_LEVEL }), {
+    const restricted = restrictAtlas(atlas, levels, { start: START_LEVEL });
+    const { rules, report } = compileRegionAtlas(restricted, {
         mapDoc,
+        completionItem: completionItemFor(restricted),
         embedSphereLog: true,
         sidecarFlavor: 'maze',
         mazeProjection,

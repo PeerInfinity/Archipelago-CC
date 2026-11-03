@@ -89,6 +89,7 @@
 import { IframeClient } from '../iframe-base/iframeClient.js';
 import { evaluateRuleAgainstInventory } from '../shared/procgen/library.js';
 import { createLocationReportLedger } from './locationReportLedger.js';
+import { createCheckedSeedVerifier } from './checkedSeedVerifier.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -484,6 +485,13 @@ function _handlePlaybackControl(payload) {
 // A loadRegion that arrived before the game created __swfBridge.configure
 // (see the header): held, and re-applied by a poll once configure exists.
 const LATE_GAME_SIDE_MS = 180000;
+
+// A configure is SEEDED with the host's checked locations from this iframe's cached
+// snapshot, which after a rules (re)load can still be the PREVIOUS world's; the first
+// snapshot heard after the configure decides whether to configure again (once). The
+// rule and why it needs no clock: checkedSeedVerifier.js.
+const _seedVerifier = createCheckedSeedVerifier();
+
 const LATE_GAME_SIDE_POLL_MS = 200;
 let _pendingLoad = null;
 let _pendingLoadTimer = null;
@@ -529,7 +537,17 @@ function _pushCheckedLocations() {
     }
 }
 
-function _handleLoadRegion(payload) {
+/** The first snapshot after a configure: was it seeded with checks the host does not have? Then configure again, once. */
+function _reseedIfStale() {
+    const verdict = _seedVerifier.snapshot(_hostCheckedNames());
+    if (!verdict) return false;
+    log('info', `region ${_currentRegionId}: configured with checks the host does not have `
+        + `(${verdict.stale.join(', ')}; a snapshot from the previous world) — configuring again`);
+    _handleLoadRegion(verdict.payload, { reconfigure: true });
+    return true;
+}
+
+function _handleLoadRegion(payload, { reconfigure = false } = {}) {
     if (!payload || !payload.region_id) {
         log('warn', `${LOAD_REGION_EVENT} with no region_id`, payload);
         return;
@@ -556,6 +574,7 @@ function _handleLoadRegion(payload) {
         }
     }
     _locationReports.reset(acceptedNames);
+    _seedVerifier.configured(payload, acceptedNames, { reconfigure });
 
     const b = _bridge();
     if (!b || typeof b.configure !== 'function') {
@@ -632,7 +651,7 @@ async function main() {
     _w.__swfBridge.requestHost = _onRequestHost;
 
     // Step 3: subscribe to host events.
-    _client.subscribeEventBus(LOAD_REGION_EVENT, _handleLoadRegion);
+    _client.subscribeEventBus(LOAD_REGION_EVENT, (payload) => _handleLoadRegion(payload));
 
     // Playback-bot control channel (only when the embedding panel
     // declared one via the iframe URL — see header).
@@ -645,6 +664,7 @@ async function main() {
     // authored gate rules (a new key may open a locked portal/pickup).
     _client.subscribeEventBus('stateManager:snapshotUpdated', () => {
         if (_isActive) {
+            if (_reseedIfStale()) return;
             // An in-flight check the host now has is accepted (never resent).
             _locationReports.noteHostChecked(_hostCheckedNames());
             _pollItemsIntoGame();
@@ -662,16 +682,35 @@ async function main() {
         if (typeof name === 'string') _locationReports.noteRefused(name);
     });
 
-    // If we move away from this region, go inactive.
+    // If we move away from this region, go inactive. A `resync` is not a move: gameState and the
+    // iframe adapter publish one to EVERY iframe whenever ANY iframe connects or announces ready
+    // ("tells the newly connected page where the player is"), so it says nothing about this page's
+    // region; a real move always arrives as a regionChanged without it. Reading a resync as a move
+    // silenced a page configured with a region the host is not in (cloudberry P4a: the demo-pack
+    // row's injected region, when another iframe panel finished booting mid-row — walkTo held
+    // forever, pollItems stopped).
     _client.subscribeEventBus('gameState:regionChanged', (data) => {
+        if (data?.resync === true) return;
         if (data?.newRegion && data.newRegion !== _currentRegionId) {
             _isActive = false;
         }
     });
 
     // Re-request static data whenever rules (re)load (mirrors JtA).
+    // rulesLoaded carries the new world's snapshot (the client caches it): it can be the
+    // first snapshot after a configure that loadRegion's subscriber order put ahead of it.
     _client.subscribeEventBus('stateManager:rulesLoaded', () => {
+        if (_isActive) _reseedIfStale();
         _client?.requestStaticData?.();
+    });
+
+    // A read-only view of the bridge's state, for a test's failure message (never read by a game).
+    _w.__swfBridgeHostState = () => ({
+        regionId: _currentRegionId,
+        active: _isActive,
+        pendingWalkTo: _pendingWalkTo ? { ..._pendingWalkTo } : null,
+        pendingLoad: _pendingLoad?.region_id ?? null,
+        iframeId: _client?.iframeId ?? null,
     });
 
     // Step 4: announce ready.

@@ -773,13 +773,31 @@ function componentsReaching(grid, componentsResult, sx, sy, options = {}) {
         .map(([ax, ay]) => [ax - ox, ay - oy])
         .filter(([gx, gy]) => gx >= 0 && gy >= 0 && gx < width && gy < height)
         .map(([gx, gy]) => gy * width + gx));
+    /** The bits of a cell's OWN conditions (what standing on it pays); null when one overflows. */
+    const standMask = (ci) => {
+        let mask = 0;
+        for (const c of grid.cells[ci].conditions ?? []) {
+            const bit = bitFor(c);
+            if (bit >= MAX_DISTINCT_CONDITIONS) return null;
+            mask |= 1 << bit;
+        }
+        return mask;
+    };
     let necessaryMask = ~0;
     let waysIn = 0;
     let overflowedAny = false;
     push({ cellIndex: sy * width + sx, mask: 0, manual: false, reasons: [], depth: 0 });
     while (queue.length > 0) {
         const state = queue.shift();
-        if (landings.has(state.cellIndex)) { necessaryMask &= state.mask; waysIn += 1; }
+        if (landings.has(state.cellIndex)) {
+            // ⛓ RULES certifier-tail — a landing ON gated material pays that cell's own conditions: the game puts
+            // the player there, but standing there needs them (L111 lands L3's way in on the water at [1,4]; without
+            // the Swim the player drowns, `Player.as:1456`, before the door at [0,4] is touched). The crossing that
+            // lands there is charged the same cell by the landing gates, so this is never stricter than the game.
+            const own = standMask(state.cellIndex);
+            if (own === null) overflowedAny = true;
+            else { necessaryMask &= state.mask | own; waysIn += 1; }
+        }
         const cx = state.cellIndex % width;
         const cy = (state.cellIndex - cx) / width;
         for (const dir of DIR_NAMES) {

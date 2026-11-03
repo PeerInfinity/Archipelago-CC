@@ -299,20 +299,31 @@ describe('the corpus census — printed, then pinned', () => {
          *   377 → 381  cloudberry P2b (2026-10-31): substrate-registry.md and sphere-growth.md →
          *              cloudberry.md § Build-time generation (`doc` 290 → 292); cloudberry.md's new
          *              § Setting up the game page and § CLI tools pointers (`same-doc` 25 → 27).
+         *   381 → 387  cloudberry P3b (2026-11-01, loop mode): loop-recording.md's Bot flow and play-clock
+         *              paragraphs → cloudberry.md § Loop mode, and cloudberry.md § Loop mode →
+         *              loop-recording.md § Summary substrates (`doc` 292 → 295); cloudberry.md § Loop mode's
+         *              pointers to its own § The bot, § Testing and § Mixed worlds (`same-doc` 27 → 30).
+         *   387 → 389  cloudberry P4a (2026-11-02): cloudberry.md's demo-pack-row note → flash.md § The
+         *              `__swfBridge` contract (`doc` 295 → 296); the files table → its own § The bot and § Mixed
+         *              worlds → § Presets, its "Not yet" pointer to § Mixed worlds gone (`same-doc` 30 → 31).
+         *   389 → 383  cloudberry P4b (2026-11-02, runner DELETED): the README index's runner.md row and every
+         *              sibling link into runner.md gone; the pointers that named it re-aimed (cloudberry.md,
+         *              noiz2sa.md, loop-recording.md → bounce.md / cloudberry.md / noiz2sa.md; architecture.md's
+         *              table row → cloudberry.md) (`doc` 296 → 290, net).
          */
         expect(by).toEqual({
-            'same-doc': 27,
-            doc: 292,
+            'same-doc': 31,
+            doc: 290,
             external: 22,
             repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(381);
+        expect(CORPUS.length).toBe(383);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(292);
+        expect(docs).toHaveLength(290);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

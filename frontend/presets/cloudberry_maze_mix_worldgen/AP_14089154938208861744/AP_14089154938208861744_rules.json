@@ -1,0 +1,1040 @@
+{
+  "schema_version": 3,
+  "game_name": "Cloudberry Maze Mix WorldGen",
+  "game_directory": "cloudberry_maze_mix_worldgen",
+  "archipelago_version": "0.6.8",
+  "generation_seed": 1,
+  "seed_name": "14089154938208861744",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_3_3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_3_1": {
+        "name": "region_3_1",
+        "exits": [
+          {
+            "name": "region_3_1__region_3_2",
+            "connected_region": "region_3_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_3_1__loc_0",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Clouds",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_4_1": {
+        "name": "region_4_1",
+        "exits": [
+          {
+            "name": "region_4_2",
+            "connected_region": "region_4_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Clouds"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_4_1__loc_0",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_3_2": {
+        "name": "region_3_2",
+        "exits": [
+          {
+            "name": "exit_0",
+            "connected_region": "region_3_1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          },
+          {
+            "name": "exit_1",
+            "connected_region": "region_4_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          },
+          {
+            "name": "region_3_3",
+            "connected_region": "region_3_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Moving Blocks"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_3_2__loc_0__7_2",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "key_red",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "region_4_2": {
+        "name": "region_4_2",
+        "exits": [
+          {
+            "name": "exit_N",
+            "connected_region": "region_4_1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Clouds"
+              }
+            }
+          },
+          {
+            "name": "region_4_2__region_3_2",
+            "connected_region": "region_3_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_3_3": {
+        "name": "region_3_3",
+        "exits": [
+          {
+            "name": "exit",
+            "connected_region": "region_3_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Moving Blocks"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_3_3__loc_0__4_2",
+            "id": 1003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Moving Blocks",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Clouds": {
+        "name": "Clouds",
+        "id": 1,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": 2,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "key_red": {
+        "name": "key_red",
+        "id": 3,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1,
+        "hint_text": "key red"
+      },
+      "Moving Blocks": {
+        "name": "Moving Blocks",
+        "id": 4,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Clouds": 1,
+      "Moving Blocks": 1,
+      "Victory": 1,
+      "key_red": 1
+    }
+  },
+  "canonical_placements": {
+    "1": {
+      "region_3_1__loc_0": "Clouds",
+      "region_4_1__loc_0": "Victory",
+      "region_3_2__loc_0__7_2": "key_red",
+      "region_3_3__loc_0__4_2": "Moving Blocks"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "preset_sidecars": {
+    "1": {
+      "region_3_3": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 3
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 4,
+            "y": 3
+          },
+          "exits": [
+            {
+              "exit_id": "exit",
+              "x": 3,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit",
+              "targetRegion": "region_3_2",
+              "targetExitId": "region_3_3",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 3,
+              "y": 0,
+              "id": "logic_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 4,
+              "y": 2,
+              "id": "Moving Blocks",
+              "locationName": "region_3_3__loc_0__4_2"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Moving Blocks"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 4,
+          "manaEnabled": true,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_3_2": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 2
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,1,1,1,0,0,0,0,1],
+          "entrance": {
+            "x": 3,
+            "y": 5
+          },
+          "exits": [
+            {
+              "exit_id": "exit_0",
+              "x": 2,
+              "y": 0,
+              "side": "N",
+              "exitName": "exit_0",
+              "targetRegion": "region_3_1",
+              "targetExitId": "region_3_2",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_1",
+              "x": 7,
+              "y": 1,
+              "side": "E",
+              "exitName": "exit_1",
+              "targetRegion": "region_4_2",
+              "targetExitId": "region_3_2",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "region_3_3",
+              "x": 3,
+              "y": 5,
+              "side": "S",
+              "exitName": "region_3_3",
+              "targetRegion": "region_3_3",
+              "targetExitId": "exit",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 2,
+              "y": 0,
+              "id": "logic_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "id": "logic_gate_1"
+            }
+          ],
+          "items": [
+            {
+              "x": 7,
+              "y": 2,
+              "id": "key_red",
+              "locationName": "region_3_2__loc_0__7_2"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "key_red"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_1": {
+              "name": "Logic Gate",
+              "id": "logic_gate_1",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "key_red"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 12,
+          "manaEnabled": true,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_3_1": {
+        "substrate": "cloudberry",
+        "render_hint": "cloudberry",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 1
+        },
+        "playable_payload": {
+          "gameId": "cloudberry",
+          "params": {
+            "payload": "cloudberry-region/1",
+            "generate": {
+              "seed": 1715161292,
+              "difficulty": 2,
+              "tileset": "hills",
+              "pieceLength": 3500,
+              "pieces": [
+                {
+                  "upgrades": {
+                    "Jump": 2
+                  }
+                },
+                {
+                  "upgrades": {
+                    "Jump": 2
+                  }
+                }
+              ],
+              "trace": false,
+              "settings": false,
+              "rerolls": [
+                0,
+                0
+              ]
+            },
+            "docSha256": "74d0dadbd85eea19ed068f042da68fef8713331eb9b1adc380982a94d0dbeb3d",
+            "checks": {
+              "loc_0": 39
+            },
+            "items": {
+              "Moving Blocks": "MovingBlock",
+              "Falling Blocks": "FallingBlock",
+              "Bouncy Blocks": "BouncyBlock",
+              "Ghost Blocks": "GhostBlock",
+              "Clouds": "Cloud",
+              "Elevators": "Elevator",
+              "Pendulums": "Pendulum",
+              "Conveyors": "Conveyor",
+              "Fly Blobs": "FlyBlob",
+              "Jetpack": "Jetpack"
+            },
+            "backExitSide": "S"
+          },
+          "ap_locations": {
+            "loc_0": "region_3_1__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "region_3_2",
+              "side": "S",
+              "exitName": "region_3_2",
+              "targetRegion": "region_3_2",
+              "targetExitId": "exit_0",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "manaEnabled": true,
+          "fogEnabled": true
+        }
+      },
+      "region_4_2": {
+        "substrate": "cloudberry",
+        "render_hint": "cloudberry",
+        "grid_cell": {
+          "gx": 4,
+          "gy": 2
+        },
+        "playable_payload": {
+          "gameId": "cloudberry",
+          "params": {
+            "payload": "cloudberry-region/1",
+            "generate": {
+              "seed": 633228225,
+              "difficulty": 2,
+              "tileset": "forest_snow",
+              "pieceLength": 3500,
+              "pieces": [
+                {
+                  "upgrades": {
+                    "Jump": 2
+                  }
+                },
+                {
+                  "upgrades": {
+                    "Cloud": 5,
+                    "Jump": 2
+                  }
+                }
+              ],
+              "trace": false,
+              "settings": false,
+              "rerolls": [
+                0,
+                0
+              ]
+            },
+            "docSha256": "422224d7524ec6d24e9966410930b72e4b5093ecff78b12af264f6cce0823b5e",
+            "checks": {},
+            "items": {
+              "Moving Blocks": "MovingBlock",
+              "Falling Blocks": "FallingBlock",
+              "Bouncy Blocks": "BouncyBlock",
+              "Ghost Blocks": "GhostBlock",
+              "Clouds": "Cloud",
+              "Elevators": "Elevator",
+              "Pendulums": "Pendulum",
+              "Conveyors": "Conveyor",
+              "Fly Blobs": "FlyBlob",
+              "Jetpack": "Jetpack"
+            },
+            "backExitSide": "W"
+          },
+          "ap_locations": {},
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_N",
+              "side": "N",
+              "exitName": "exit_N",
+              "targetRegion": "region_4_1",
+              "isBackExit": false,
+              "isTeleporter": false,
+              "targetExitId": "region_4_2"
+            },
+            {
+              "exit_id": "region_3_2",
+              "side": "W",
+              "exitName": "region_3_2",
+              "targetRegion": "region_3_2",
+              "targetExitId": "exit_1",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "manaEnabled": true,
+          "fogEnabled": true
+        }
+      },
+      "region_4_1": {
+        "substrate": "cloudberry",
+        "render_hint": "cloudberry",
+        "grid_cell": {
+          "gx": 4,
+          "gy": 1
+        },
+        "playable_payload": {
+          "gameId": "cloudberry",
+          "params": {
+            "payload": "cloudberry-region/1",
+            "generate": {
+              "seed": 441243006,
+              "difficulty": 2,
+              "tileset": "cave",
+              "pieceLength": 3500,
+              "pieces": [
+                {
+                  "upgrades": {
+                    "Jump": 2
+                  }
+                },
+                {
+                  "upgrades": {
+                    "Jump": 2
+                  }
+                }
+              ],
+              "trace": false,
+              "settings": false,
+              "rerolls": [
+                0,
+                0
+              ]
+            },
+            "docSha256": "3cd2ac5a1c748f515ed4e3599e90b345ec09fa0fd8deb3239afe3a1bd6a598cd",
+            "checks": {
+              "loc_0": 37
+            },
+            "items": {
+              "Moving Blocks": "MovingBlock",
+              "Falling Blocks": "FallingBlock",
+              "Bouncy Blocks": "BouncyBlock",
+              "Ghost Blocks": "GhostBlock",
+              "Clouds": "Cloud",
+              "Elevators": "Elevator",
+              "Pendulums": "Pendulum",
+              "Conveyors": "Conveyor",
+              "Fly Blobs": "FlyBlob",
+              "Jetpack": "Jetpack"
+            },
+            "backExitSide": "S"
+          },
+          "ap_locations": {
+            "loc_0": "region_4_1__loc_0"
+          },
+          "flashCapabilities": {
+            "locations": "cooperative",
+            "items": "pull",
+            "start": "auto"
+          },
+          "exits": [
+            {
+              "exit_id": "region_4_2",
+              "side": "S",
+              "exitName": "region_4_2",
+              "targetRegion": "region_4_2",
+              "targetExitId": "exit_N",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "manaEnabled": true,
+          "fogEnabled": true
+        }
+      }
+    }
+  },
+  "procgen_metadata": {
+    "1": {
+      "driver": "sphere-growth",
+      "stop_reason": "plan_complete",
+      "sphere_plan": {
+        "seed": 1,
+        "spheres": [
+          {
+            "sphere": 1,
+            "items": [
+              "Moving Blocks"
+            ]
+          },
+          {
+            "sphere": 2,
+            "items": [
+              "key_red"
+            ]
+          },
+          {
+            "sphere": 3,
+            "items": [
+              "Clouds"
+            ]
+          },
+          {
+            "sphere": 4,
+            "items": [
+              "Victory"
+            ]
+          }
+        ]
+      },
+      "sphere_tree": {
+        "nodes": [
+          {
+            "index": 0,
+            "wave": 0,
+            "parent": null,
+            "side": null,
+            "cell": {
+              "gx": 3,
+              "gy": 3
+            },
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [
+              [
+                {
+                  "item": "Moving Blocks",
+                  "count": 1
+                }
+              ]
+            ],
+            "isFiller": false
+          },
+          {
+            "index": 1,
+            "wave": 1,
+            "parent": 0,
+            "side": "N",
+            "cell": {
+              "gx": 3,
+              "gy": 2
+            },
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [
+              "Moving Blocks"
+            ],
+            "gateCounts": {
+              "Moving Blocks": 1
+            },
+            "usedSides": [
+              "W",
+              "N",
+              "E"
+            ],
+            "childGates": [
+              [
+                {
+                  "item": "Moving Blocks",
+                  "count": 1
+                }
+              ],
+              [
+                {
+                  "item": "key_red",
+                  "count": 1
+                }
+              ],
+              [
+                {
+                  "item": "key_red",
+                  "count": 1
+                }
+              ]
+            ],
+            "isFiller": false
+          },
+          {
+            "index": 2,
+            "wave": 2,
+            "parent": 1,
+            "side": "N",
+            "cell": {
+              "gx": 3,
+              "gy": 1
+            },
+            "isTeleporter": false,
+            "substrate": "cloudberry",
+            "gate": [
+              "key_red"
+            ],
+            "gateCounts": {
+              "key_red": 1
+            },
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 3,
+            "wave": 2,
+            "parent": 1,
+            "side": "E",
+            "cell": {
+              "gx": 4,
+              "gy": 2
+            },
+            "isTeleporter": false,
+            "substrate": "cloudberry",
+            "gate": [
+              "key_red"
+            ],
+            "gateCounts": {
+              "key_red": 1
+            },
+            "usedSides": [
+              "W",
+              "S"
+            ],
+            "childGates": [
+              [
+                {
+                  "item": "Clouds",
+                  "count": 1
+                }
+              ]
+            ],
+            "isFiller": true
+          },
+          {
+            "index": 4,
+            "wave": 3,
+            "parent": 3,
+            "side": "N",
+            "cell": {
+              "gx": 4,
+              "gy": 1
+            },
+            "isTeleporter": false,
+            "substrate": "cloudberry",
+            "gate": [
+              "Clouds"
+            ],
+            "gateCounts": {
+              "Clouds": 1
+            },
+            "usedSides": [
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          }
+        ],
+        "substrateCounts": {
+          "maze": 2,
+          "cloudberry": 3
+        },
+        "quotaFallbacks": 0
+      },
+      "region_count": 5,
+      "grid_dims": {
+        "width": 5,
+        "height": 4
+      }
+    }
+  },
+  "loop_costs": {
+    "1": {
+      "version": "1.0",
+      "generatedFrom": "seed_1",
+      "regions": {
+        "Menu": {
+          "moveCost": 0,
+          "xpEffect": "cost"
+        },
+        "region_3_1": {
+          "timeDrainPerSecond": 1,
+          "xpEffect": "cost"
+        },
+        "region_4_1": {
+          "timeDrainPerSecond": 1,
+          "xpEffect": "cost"
+        },
+        "region_3_2": {
+          "moveCost": 32,
+          "xpEffect": "cost"
+        },
+        "region_4_2": {
+          "timeDrainPerSecond": 1,
+          "xpEffect": "cost"
+        },
+        "region_3_3": {
+          "moveCost": 50,
+          "xpEffect": "cost"
+        }
+      },
+      "locations": {
+        "region_3_2__loc_0__7_2": 66,
+        "region_3_3__loc_0__4_2": 100
+      },
+      "defaultRegionCost": 50,
+      "defaultLocationCost": 10,
+      "defaultRegionXpEffect": "cost"
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Cloudberry Maze Mix WorldGen",
+      "world_class_name": "ProcgenMazeWorld",
+      "count_non_advancement_items": true,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        }
+      },
+      "world_description": "Cloudberry Maze Mix WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Cloudberry Maze Mix WorldGen world for Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Auto-generated"
+            ]
+          }
+        ]
+      },
+      "world_directory": "cloudberry_maze_mix_worldgen"
+    }
+  },
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "is_canonical": {
+    "1": true
+  }
+}

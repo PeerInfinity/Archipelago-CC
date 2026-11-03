@@ -147,4 +147,8 @@ Branch: ff from `efbeb33501`, **0 gitlinks** (160000 count 0). Main moved to `16
 --write-tree origin/main HEAD` gives rc=0, and so-12's 8 files are disjoint from this branch.
 
 ## Landing
-_(after it lands)_
+- **Landed in TRAIN 8** (`js-land/train-2026-11-01b`, built on main `0c75654cfd`), second of five. Train commit
+  `c2d2f8edbd train: region-block-double-class bdd4b0c98e`. Main fast-forwarded `0c75654cfd` → **`05dc442022`**.
+- `git merge-base --is-ancestor bdd4b0c98e origin/main` → rc 0 (checked at `05dc442022`).
+- The train ran the apworld batch explicitly. Its JSUT / ut / TT / apworld / probe runs were green (js-15, p-finisher).
+- This § Landing is a docs-only commit on top of `05dc442022`, handed to js-15 as a packet; it is not pushed to main.

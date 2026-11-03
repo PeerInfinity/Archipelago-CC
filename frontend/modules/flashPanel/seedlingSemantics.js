@@ -1184,6 +1184,7 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
     // free enters freely, one it reaches only through gates enters on Or over
     // those condition sets, and one it never reaches is walled. Leaving is
     // free: whoever came in held it open from the button side.
+    const lockVerdicts = [];
     if (directionalLocks) {
         const { arrivalTiles = null } = options;
         const arrivals = new Set((arrivalTiles ?? []).map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x)));
@@ -1199,6 +1200,8 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
                 if (inside(tx - bounds.x, ty - bounds.y)) groupOfCell.set((ty - bounds.y) * width + (tx - bounds.x), JSON.stringify(opensFrom));
             }
         }
+        // ⛓ tile-mechanisms-m3 — each re-closing lock's verdict, for the reader that may hand-price ONLY a lock the block
+        // paths cannot decide (`make-seedling-playthrough-maze.mjs` `puzzleLocksFor`). Not read by the analyzer.
         for (const { tiles, opensFrom, heldBy } of reclosing) {
             const lockCells = new Set(tiles.filter(([tx, ty]) => inside(tx - bounds.x, ty - bounds.y))
                 .map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x)));
@@ -1215,6 +1218,7 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
                 tileTypes: tileTypeAt,
                 keyOf: conditionKey,
             }) : null;
+            lockVerdicts.push({ tiles, decided: Boolean(verdict?.decided), why: verdict ? verdict.why : 'no-holder-census' });
             const selfHold = selfHoldTiles(opensFrom.map(([tx, ty]) => [tx - bounds.x, ty - bounds.y]), lockCells, width);
             const standable = (i) => !lockCells.has(i) && !['wall', 'sink', 'manual'].includes(cells[i].kind);
             const byKey = new Map();
@@ -1360,5 +1364,6 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
         unclassified,
         review,
         sinks,
+        lockVerdicts,
     };
 }

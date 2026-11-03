@@ -1,0 +1,4 @@
+REFUSED: solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> weigh -> iceturret@472,400 approach door wandlock@480,560 (488,568) -> hold stance (wandlock@480,560) -> burn stance (burnabletree@872,784): applied 5 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), hold(wandlock@480,560), burn(burnabletree@872,784), brave(iceturret@472,400)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.
+t0 start (488,904) {"burnt":"","open":"","chasers":"bob@192,480,bob@208,448,bob@224,496,bob@272,112,bob@288,112,bob@288,80,bob@304,144,bob@320,112,bob@352,416,bob@352,448,bob@736,752,bob@736,800,bobsoldier@880,832,puncher@128,624,puncher@816,128","hits":0,"deaths":0}
+t200 at (488,669)
+END 283 hits [] collected []

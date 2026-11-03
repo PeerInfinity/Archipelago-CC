@@ -11,7 +11,7 @@ import {
 import { seedlingMazeProjectionDeps, seedlingLevelEntities } from '../flashPanel/seedlingAtlasAnalysis.js';
 import { weaponFootprint } from '../flashPanel/seedlingWeaponFootprints.js';
 import {
-    buildPlaythroughMaze, OUT_FILE, LEVELS, restrictAtlas,
+    buildPlaythroughMaze, OUT_FILE, LEVELS, restrictAtlas, completionItemFor,
 } from '../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
 import {
     PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions,
@@ -316,4 +316,22 @@ describe('the committed seedling_playthrough_maze preset', () => {
         expect(LEVELS).toContain('level_15');
         expect(readFileSync(OUT_FILE, 'utf8')).toBe(buildPlaythroughMaze().text);
     }, 60_000);
+
+    // ⛓ THE GOAL (session tile-primitives-completion, ⚖ the user 2026-11-02: "Derived Seed goal"): the maze preset's goal is
+    // the RULES preset's own, derived off the atlas row that places it, never typed here.
+    it('has the rules preset\'s goal (item_check The Seed), and its sphere log ends on collecting it', () => {
+        const maze = JSON.parse(readFileSync(OUT_FILE, 'utf8'));
+        const rules = JSON.parse(readFileSync(OUT_FILE.replace('seedling_playthrough_maze', 'seedling_playthrough'), 'utf8'));
+        const goal = rules.game_info['1'].completion_condition;
+        expect(goal.type).toBe('item_check');
+        expect(maze.game_info['1'].completion_condition).toEqual(goal);
+        const last = maze.sphere_log.at(-1).player_data['1'].new_inventory_details.base_items;
+        expect(Object.keys(last)).toContain(goal.item);
+    });
+
+    it('a restriction that leaves the ending out keeps the constant goal (no unplaceable goal item)', () => {
+        expect(completionItemFor(restrictAtlas(ATLAS, LEVELS, { start: 'level_14' }))).toBe('The Seed');
+        const partial = restrictAtlas(ATLAS, ['level_15', 'level_16', 'level_17'], { start: 'level_15' });
+        expect(completionItemFor(partial)).toBeUndefined();
+    });
 });

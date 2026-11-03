@@ -23,7 +23,7 @@ const MODULES_DIR = fileURLToPath(new URL('..', import.meta.url));
 const LIBRARIES = [
     'mazeRoom/mazeRoomLibrary.js',
     'bounceDemo/bounceDemoLibrary.js',
-    'runnerDemo/runnerDemoLibrary.js',
+    'cloudberryDemo/cloudberryLibrary.js',
     'textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
     'flashPanel/flashSeedlingLibrary.js',
     'jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js',
@@ -196,7 +196,7 @@ describe('regionEditors — the answer comes off the substrate entry', () => {
         // ⛓ Derived, then NAMED — a roster nobody can read is a roster nobody
         //   notices changing.
         expect(declaring.sort()).toEqual(['bounce', 'flash_seedling', 'maze']);
-        expect(silent.sort()).toEqual(['jta', 'omsi', 'runner', 'text_adventure']);
+        expect(silent.sort()).toEqual(['cloudberry', 'jta', 'omsi', 'text_adventure']);
         for (const id of declaring) expect(typeof mod.getRegionEditor(id)).toBe('function');
         // ⛔ The pipeline's "No region editor for X yet" stays true for these.
         for (const id of silent) expect(mod.getRegionEditor(id)).toBe(null);

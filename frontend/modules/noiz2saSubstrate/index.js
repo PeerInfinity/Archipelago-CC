@@ -2,7 +2,7 @@
  * noiz2saSubstrate — host module for the Noiz2sa (BulletML shoot-'em-up) substrate (`noiz2saSubstrateLibrary.js`
  * holds the registry entry and the rulings it follows).
  *
- * Like runnerDemo, it rides flashSubstrate's machinery as shared CODE: the panel class comes from
+ * Like bounceDemo and cloudberryDemo, it rides flashSubstrate's machinery as shared CODE: the panel class comes from
  * flashSubstratePanel.js's factory, pointed at this module's own game page (`game/index.html`, which imports
  * the engine from the `bulletml-dodge` submodule), and the injected bridge is flashSubstrate/bridge.js itself
  * (the page speaks the `__swfBridge` contract). What this module owns is its identity: the panel component

@@ -13,7 +13,13 @@
  * (`fidelitySecondaryUse.test.js`), which is what lets it record an input the model refuses.
  *
  * The arms file: `{"base": "<chaser-witness name>", "tick_count": N, "arms": {"<name>": {"inputs": [...],
- * "seam": {...}?}}}`.
+ * "seam": {...}?}}}`. ⛓ seedling-js-help-dismiss-press: `"baseTape": "<fixtures/tapes name>"` in place of `base` takes
+ * a committed tape (`fixtures/tapes/<name>.json`) as the base instead of a chaser witness's embedded one — each arm's
+ * `inputs` still REPLACE the base's whole list. Each row also carries the player's sprite `anim`/`frame` (a sword
+ * press does NOT show there — the sword is its own entity), the run's `dead_frames`, and `botStatus().slash`'s
+ * `tests`/`hits` as `slash_tests`/`slash_hits` — the game's own count of sword hit-test DISPATCHES, five per swing
+ * (`Bot.slashTests`), which is what says whether a press swung — and the edge echo
+ * (`botStatus().input`, `Bot.recordEdges`) as `edge_t`/`pressed`: the presses `Player.input()` was handed that frame.
  *
  * The dev server at the repo root, `SEEDLING_PORT` (default 8000).
  *
@@ -47,7 +53,9 @@ async function main() {
     const HERE = dirname(fileURLToPath(import.meta.url));
     const MODULE = join(HERE, '..', '..', 'frontend', 'modules', 'seedlingDemo');
     const spec = JSON.parse(readFileSync(ARMS, 'utf8'));
-    const base = JSON.parse(readFileSync(join(MODULE, 'fixtures', 'chaser-witness', `${spec.base}.json`), 'utf8')).tape;
+    const base = spec.baseTape
+        ? JSON.parse(readFileSync(join(MODULE, 'fixtures', 'tapes', `${spec.baseTape}.json`), 'utf8'))
+        : JSON.parse(readFileSync(join(MODULE, 'fixtures', 'chaser-witness', `${spec.base}.json`), 'utf8')).tape;
 
     takeBoxLockOrExit({ name: 'probe-seedling-secondary-use.mjs', kind: 'browser' });
 
@@ -59,6 +67,9 @@ async function main() {
     const arms = {};
     try {
         for (const [armName, arm] of Object.entries(spec.arms)) {
+          // ⛓ seedling-js-help-dismiss-press: the poller is a SAMPLER — a long arm can run two ticks between polls
+          // and lose a row. Re-run the arm (the game is deterministic) and refuse to record a gap.
+          for (let attempt = 1; ; attempt++) {
             const tapeJson = { ...base, name: `${NAME ?? 'secuse'}-${armName}`, tick_count: spec.tick_count,
                 inputs: arm.inputs, seam: { ...base.seam, ...(arm.seam ?? {}) } };
             const tape = parseTape(JSON.stringify(tapeJson));
@@ -94,18 +105,28 @@ async function main() {
                     // the LAST poll before the tick advanced; the final tick keeps its first (`s.finished` polls after)
                     if (!(t === spec.tick_count && byTick.has(t))) {
                         byTick.set(t, { t, level: s.level, x: p.x, y: p.y, vx: p.vx, vy: p.vy, hits: s.hits,
-                            hits_timer: s.hits_timer });
+                            hits_timer: s.hits_timer, anim: p.anim, frame: p.frame, dead_frames: s.dead_frames,
+                            slash_tests: s.slash?.tests ?? null, slash_hits: s.slash?.hits ?? null,
+                            edge_t: s.input?.t ?? null, pressed: s.input?.pressed ?? null });
                     }
                 }
                 if (s.finished) { finished = true; break; }
             }
             await page.close();
             if (!finished) throw new Error(`arm ${armName}: the tape never finished inside the deadline`);
+            const missing = [...Array(spec.tick_count + 1).keys()].filter((t) => !byTick.has(t));
+            if (missing.length) {
+                if (attempt >= 4) throw new Error(`arm ${armName}: rows ${missing.join(',')} never polled in 4 runs`);
+                console.log(`${armName}: rows ${missing.join(',')} missed by the poller — re-running (${attempt})`);
+                continue;
+            }
             arms[armName] = { inputs: arm.inputs, seam: arm.seam ?? {}, tape: tapeJson,
                 samples: [...byTick.values()].sort((a, b) => a.t - b.t) };
             const s = arms[armName].samples;
             console.log(`${armName.padEnd(10)} ` + s.map((r) => `t${r.t} L${r.level} (${r.x.toFixed(2)},${r.y.toFixed(2)}) `
                 + `v(${r.vx.toFixed(2)},${r.vy.toFixed(2)}) hits ${r.hits}`).join(' | '));
+            break;
+          }
         }
     } finally {
         await browser.close();
@@ -113,7 +134,7 @@ async function main() {
     if (RECORD) {
         const dir = join(MODULE, 'fixtures', 'secondary-use-witness');
         mkdirSync(dir, { recursive: true });
-        const out = { name: NAME, page: PAGE_NAME, base: spec.base, tick_count: spec.tick_count,
+        const out = { name: NAME, page: PAGE_NAME, base: spec.base ?? null, baseTape: spec.baseTape ?? null, tick_count: spec.tick_count,
             recordedBy: 'scripts/procgen/probe-seedling-secondary-use.mjs --record', note: spec.note ?? null, arms };
         writeFileSync(join(dir, `${NAME}.json`), `${JSON.stringify(out, null, 1)}\n`);
         console.log(`recorded fixtures/secondary-use-witness/${NAME}.json`);

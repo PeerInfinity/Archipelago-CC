@@ -1,0 +1,6 @@
+ARM {"key":"0","spin":true}
+ANSWER REFUSED work 10241
+ESCAPE FORECASTS {"first":37,"withShield":37,"wouldBump":6,"wouldBumpTicks":27,"stepped":0,"steppedTicks":0,"certs":17} [{"t":882,"pressAt":922,"would":5},{"t":906,"pressAt":924,"would":7},{"t":882,"pressAt":922,"would":5},{"t":906,"pressAt":924,"would":7},{"t":2631,"pressAt":2749,"would":1},{"t":2798,"pressAt":2821,"would":2}]
+KILL {"bodies":["spinner@880,848"],"t":919,"shield":true,"spinnerBumps":[[912,"spinner@880,848",false],[913,"spinner@880,848",false],[914,"spinner@880,848",false]]}
+KILL {"bodies":["spinner@880,848"],"t":919,"shield":true,"spinnerBumps":[[912,"spinner@880,848",false],[913,"spinner@880,848",false],[914,"spinner@880,848",false]]}
+KILL {"bodies":["spinner@816,848"],"t":2830,"shield":true,"spinnerBumps":[[912,"spinner@880,848",false],[913,"spinner@880,848",false],[914,"spinner@880,848",false]]}

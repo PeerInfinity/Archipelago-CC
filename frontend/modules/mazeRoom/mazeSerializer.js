@@ -189,8 +189,10 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
     }),
     buttonLib: Object.freeze({
         type: 'object', required: false,
-        description: 'Button id → `{kind, holds}`: the token a pressed button DERIVES for that step (a HOLD, '
-            + 'never stored). Written beside `buttons`.',
+        description: 'Button id → `{kind, holds, latch?}`: the token a pressed button DERIVES for that step (a HOLD, '
+            + 'never stored). `latch: {event?}` (session tile-mechanisms-m4-latch) makes it LATCH: once pressed it stays '
+            + 'down for the visit (`state.latched`), and its carried `event` holds it down on a later one. Read through '
+            + '`checkButtonLib`. Written beside `buttons`.',
     }),
     action_lib: Object.freeze({
         type: 'object', required: false,

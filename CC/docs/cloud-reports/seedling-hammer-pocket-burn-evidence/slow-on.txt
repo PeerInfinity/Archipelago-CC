@@ -1,0 +1,40 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 703301[2mms[22m[39m
+     [33m[2m✓[22m[39m ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte [33m 486923[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit [33m 216375[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 616913[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271 [33m 479900[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name [33m 137010[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 399859[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall) [33m 167772[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death [33m 232084[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerSouthDoor.slow.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 401131[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF, south of the latched door: APPROACH's refusal on the arrival legs — 12 forks, all no-plan, from (488,579) [33m 17353[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, south of the latched door: the door's hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run [33m 209067[2mms[22m[39m
+     [33m[2m✓[22m[39m the latch staging (the near side once the latch has faded the door): SOLVED 4142 ON, nothing asked [33m 141870[2mms[22m[39m
+     [33m[2m✓[22m[39m ICEST's pocket boot (480,456): ON keys identical to OFF, nothing asked [33m 32837[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Bk2.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 331765[2mms[22m[39m
+     [33m[2m✓[22m[39m the solve from the pocket boot (D1 ON) refuses where it did, and its spent ticks are the recorded tape [33m 331763[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL40Latch.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 321114[2mms[22m[39m
+     [33m[2m✓[22m[39m holdWaitPriced alone: the hold's wait is a corridor hit; TIME refuses its tail; no still stance kills the BobSoldier [33m 118651[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON: the solve's refused prefix is the recorded tape [33m 202460[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 313494[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast [33m 135991[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run [33m 142507[2mms[22m[39m
+     [33m[2m✓[22m[39m ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached [33m 34994[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPocketBurn.slow.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 297714[2mms[22m[39m
+     [33m[2m✓[22m[39m pocket shut, OFF: the latch hold's stance refuses on the tree, and its prerequisite list names no burn [33m 34349[2mms[22m[39m
+     [33m[2m✓[22m[39m pocket shut, ON: the burn is raised for the hold's stance, and the refusal moves past the pocket to the burn walk's combat (bobsoldier@880,832) [33m 31665[2mms[22m[39m
+     [33m[2m✓[22m[39m pocket open, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4810 on a fresh run [33m 231695[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 50062[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown) [33m 50060[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashShape.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 48956[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, sweep request 392:0 solved whole ships the same ticks for less work [33m 48953[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[32m22 passed[39m[22m[90m (22)[39m
+[2m   Start at [22m 07:16:12
+[2m   Duration [22m 3495.43s[2m (transform 3.05s, setup 0ms, import 9.58s, tests 3484.31s, environment 2ms)[22m
+

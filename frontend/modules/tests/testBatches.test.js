@@ -84,12 +84,17 @@ describe('testBatches', () => {
         expect(listOnPushBatches()).toContain('seedling-wasm');
     });
 
-    it('noiz2sa and runner claim their categories, and fast no longer does', () => {
+    it('noiz2sa claims its category, and fast no longer does', () => {
         expect(categoryInBatch('noiz2saSubstrate', 'noiz2sa')).toBe(true);
-        expect(categoryInBatch('runnerDemo', 'runner')).toBe(true);
-        expect(categoryInBatch('Runner block modes', 'runner')).toBe(true);
-        for (const c of ['noiz2saSubstrate', 'runnerDemo', 'Runner block modes']) {
-            expect(categoryInBatch(c, 'fast'), c).toBe(false);
+        expect(categoryInBatch('noiz2saSubstrate', 'fast')).toBe(false);
+    });
+
+    it('the runner batch is gone with the runner substrate (Cloudberry P4b, ⚖ user 2026-10-30)', () => {
+        expect(listBatchNames()).not.toContain('runner');
+        // Its two categories have no rows left; were one to reappear it would
+        // fall to the default batch and still RUN, never vanish.
+        for (const c of ['runnerDemo', 'Runner block modes']) {
+            expect(categoryInBatch(c, getDefaultBatchName()), c).toBe(true);
         }
     });
 
@@ -144,7 +149,7 @@ describe('testBatches', () => {
 
     describe('manual vs on push', () => {
         it('the user\'s manual batches are manual (rulings 2026-09-27, 2026-10-09, 2026-10-10)', () => {
-            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'runner', 'tutorials', 'tutorials-procgen', 'tutorials-procgen-loops', 'tutorials-tracker', 'tutorials-seedling', 'tutorials-seedling-whole-game', 'feature-checks']));
+            expect(listManualBatches()).toEqual(expect.arrayContaining(['bot-walks', 'noiz2sa', 'cloudberry', 'tutorials', 'tutorials-procgen', 'tutorials-procgen-loops', 'tutorials-tracker', 'tutorials-seedling', 'tutorials-seedling-whole-game', 'feature-checks']));
         });
 
         it('on push = every batch not marked manual, the default among them', () => {
@@ -163,9 +168,9 @@ describe('testBatches', () => {
     });
 
     describe('smoke rows (the per-row config `batch` override)', () => {
-        it('each manual batch with live rows keeps at most one smoke row on push; noiz2sa, runner and tutorials exactly one', () => {
+        it('each manual batch with live rows keeps at most one smoke row on push; noiz2sa and tutorials exactly one', () => {
             const smoke = assertRowOverrides(substrateRows());
-            for (const b of ['noiz2sa', 'runner', 'tutorials']) expect(smoke.has(b), b).toBe(true);
+            for (const b of ['noiz2sa', 'tutorials']) expect(smoke.has(b), b).toBe(true);
             for (const [manual, id] of smoke) {
                 expect(TEST_BATCHES[manual].manual, manual).toBe(true);
                 const row = substrateRows().find((r) => r.id === id);
@@ -187,8 +192,8 @@ describe('testBatches', () => {
         });
 
         it('an override INTO a manual batch is refused', () => {
-            expect(() => batchOfTest({ id: 'x', category: 'noiz2saSubstrate', batch: 'runner' }))
-                .toThrow(/manual batch 'runner'/);
+            expect(() => batchOfTest({ id: 'x', category: 'noiz2saSubstrate', batch: 'cloudberry' }))
+                .toThrow(/manual batch 'cloudberry'/);
         });
 
         it('an override naming an unknown batch is refused', () => {
@@ -198,9 +203,9 @@ describe('testBatches', () => {
 
         it('two smoke rows for one manual batch are refused', () => {
             expect(() => assertRowOverrides([
-                { id: 'a', category: 'runnerDemo', batch: 'fast' },
-                { id: 'b', category: 'Runner block modes', batch: 'seedling-js' },
-            ])).toThrow(/'runner' has two smoke rows, 'a' and 'b'/);
+                { id: 'a', category: 'cloudberrySubstrate', batch: 'fast' },
+                { id: 'b', category: 'Tutorial walks: cloudberry', batch: 'seedling-js' },
+            ])).toThrow(/'cloudberry' has two smoke rows, 'a' and 'b'/);
         });
     });
 

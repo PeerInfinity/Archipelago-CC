@@ -1,0 +1,1 @@
+== /tmp/claude-0/-home-user-Archipelago-CC/bb8be42c-5766-5d75-9761-219d5eb4fb8d/scratchpad/survey-on.jsonl: policies 77154, presses 446481, non-blade 0 (driven 0, preview 0)

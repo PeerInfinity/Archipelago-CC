@@ -55,6 +55,8 @@ import { ROOM_DOOR_REFUSALS } from './elements/roomDoor.js';
 import { SOLO_DOOR_REFUSALS } from './elements/soloDoor.js';
 import { ROPE_GATE_REFUSALS } from './elements/ropeGate.js';
 import { CHEST_DOOR_REFUSALS } from './elements/chestDoor.js';
+import { BURN_GATE_REFUSALS } from './elements/burnGate.js';
+import { STRATEGY_GATE_REFUSALS } from './elements/strategyGate.js';
 import { SEEDLING_ELEMENT_REFUSALS } from '../seedlingDemo/procgenSeedlingElements.js';
 import { SEEDLING_AREA_REFUSALS } from '../seedlingDemo/procgenSeedling.js';
 import { MAZE_REFUSALS, MAZE_REQUIRE_REFUSALS } from '../mazeRoom/procgenMaze.js';
@@ -104,6 +106,8 @@ const SOURCES = {
     soloDoor: 'frontend/modules/procgenCore/elements/soloDoor.js',
     ropeGate: 'frontend/modules/procgenCore/elements/ropeGate.js',
     chestDoor: 'frontend/modules/procgenCore/elements/chestDoor.js',
+    burnGate: 'frontend/modules/procgenCore/elements/burnGate.js',
+    strategyGate: 'frontend/modules/procgenCore/elements/strategyGate.js',
     seedlingElements: 'frontend/modules/seedlingDemo/procgenSeedlingElements.js',
     seedling: 'frontend/modules/seedlingDemo/procgenSeedling.js',
     maze: 'frontend/modules/mazeRoom/procgenMaze.js',
@@ -173,6 +177,18 @@ const KEYS = [
         constant: 'CHEST_DOOR_REFUSALS',
         declared: CHEST_DOOR_REFUSALS,
         text: () => read(SOURCES.chestDoor),
+    },
+    {
+        /** ⛓ strategy switch r2 — the BURN GATE: one builder, one file, one key. */
+        constant: 'BURN_GATE_REFUSALS',
+        declared: BURN_GATE_REFUSALS,
+        text: () => read(SOURCES.burnGate),
+    },
+    {
+        /** ⛓ strategy gadgets (r3) — the HOLD and WEIGH gates: one builder, one file, one key. */
+        constant: 'STRATEGY_GATE_REFUSALS',
+        declared: STRATEGY_GATE_REFUSALS,
+        text: () => read(SOURCES.strategyGate),
     },
     {
         constant: 'SEEDLING_ELEMENT_REFUSALS',

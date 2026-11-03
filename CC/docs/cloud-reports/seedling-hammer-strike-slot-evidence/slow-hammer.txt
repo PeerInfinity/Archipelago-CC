@@ -1,0 +1,24 @@
+ ✓ frontend/modules/seedlingDemo/hammerSouthDoor.slow.test.js (4 tests) 492403ms
+     ✓ OFF, south of the latched door: APPROACH's refusal on the arrival legs — 12 forks, all no-plan, from (488,579)  21992ms
+     ✓ ON, south of the latched door: the door's hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run  259878ms
+     ✓ the latch staging (the near side once the latch has faded the door): SOLVED 4142 ON, nothing asked  171620ms
+     ✓ ICEST's pocket boot (480,456): ON keys identical to OFF, nothing asked  38908ms
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js (2 tests) 755077ms
+     ✓ OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271  592070ms
+     ✓ ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name  163001ms
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js (3 tests) 382938ms
+     ✓ OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast  157579ms
+     ✓ ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run  183905ms
+     ✓ ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached  41450ms
+ ✓ frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js (2 tests) 524883ms
+     ✓ OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall)  233802ms
+     ✓ ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death  291079ms
+ ✓ frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js (2 tests) 876278ms
+     ✓ ON alone: the walk back refuses at t271 on bob@736,800, OFF's refusal byte for byte  582999ms
+     ✓ ON with CPAIR size 3: the turret is handed at t577 and the arm refuses by name, no hit  293275ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 58745ms
+     ✓ ON, sweep request 392:0 solved whole ships the same ticks for less work  58741ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 52009ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  52007ms
+ Test Files  7 passed (7)
+      Tests  15 passed (15)

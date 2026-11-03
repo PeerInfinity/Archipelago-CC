@@ -193,6 +193,7 @@ import {
 } from './seedlingEffectSkin.js';
 import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from './seedlingPuzzleSkin.js';
 import { ROPE_OBJECT_TAGS, SOLIDS_OBJECT_TAGS, ropeOps, ropeSkinView, solidsOps, solidsSkinView, stepSolidsSkin } from './seedlingSolidsSkin.js';
+import { BRIDGE_OBJECT_TAGS, BRIDGE_TILE_KEY, bridgeSkinView } from './seedlingBridgeSkin.js';
 import { NPC_TAGS, npcOps, npcSkinView, stepNpcSkin } from './seedlingNpcSkin.js';
 import { rockHoldSlot, stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
@@ -305,7 +306,7 @@ export function mountJsRuntimePage(win = window) {
         // ⛓ G7 — the stairs', pushable blocks' and sand traps' pictures and the last paint's ops.
         puzzleSkin: null, puzzles: null,
         // ⛓ G8 — the changeable solids' and buttons' pictures and the last paint's ops.
-        solidsSkin: null, solids: null,
+        solidsSkin: null, solids: null, bridges: null,
         // ⛓ G8 — the placed NPCs' pictures and the last paint's ops.
         npcSkin: null, npcs: null,
         // ⛓ G8 — the traps' and falling rocks' pictures and the last paint's ops.
@@ -346,7 +347,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, npcSkin: null, npcs: null, trapSkin: null, traps: null, lamps: null, pickupSkin: null, pickups: null, machineSkin: null, machines: null, bossSkin: null, bosses: null, effectSkin: null, effects: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, solidsSkin: null, solids: null, bridges: null, npcSkin: null, npcs: null, trapSkin: null, traps: null, lamps: null, pickupSkin: null, pickups: null, machineSkin: null, machines: null, bossSkin: null, bosses: null, effectSkin: null, effects: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -441,6 +442,8 @@ export function mountJsRuntimePage(win = window) {
         get puzzles() { return graphics.puzzles ? { ...graphics.puzzles, ops: graphics.puzzles.ops.map((o) => ({ ...o })) } : null; },
         /** ⛓ G8 — the last paint's chests, rocks, trees, locks and buttons. */
         get solids() { return graphics.solids ? { ...graphics.solids, ops: graphics.solids.ops.map((o) => ({ ...o })) } : null; },
+        // ⛓ seedling-js-bridge-art — each bridge's state (closed / opening / open) and frame, and the stand-in rects left
+        get bridges() { return graphics.bridges ? { ...graphics.bridges, tiles: graphics.bridges.tiles.map((t) => ({ ...t })) } : null; },
         /** ⛓ G8 — the last paint's NPCs and talk prompts. */
         get npcs() { return graphics.npcs ? { ...graphics.npcs, ops: graphics.npcs.ops.map((o) => ({ ...o })) } : null; },
         /** ⛓ G8 — the last paint's traps and falling rocks. */
@@ -787,16 +790,36 @@ export function mountJsRuntimePage(win = window) {
                     pack: o.key ? art.packOf(o.key) : null })) }
             : null;
         const roomRecord = (runtime.mounted ?? runtime.vanilla)?.records?.get(level) ?? null;
+        // ⛓ seedling-js-bridge-art — tile 29 is drawn by the tile pass from the RUN's bridge state (closed / opening /
+        // open, `seedlingBridgeSkin`); its object solid's stand-in goes only while the tile's key is in the stack
+        const bridgeView = art ? bridgeSkinView(runtime.run) : null;
+        const bridgesDrawn = !!art?.has(BRIDGE_TILE_KEY);
         // ⛓ the ice turret's corpse-wall stand-in goes when the room-body skin draws (the lab's rule, one shared set)
         const roomBodyDrawn = roomBodyDrawnObjects(bodySprites);
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
-            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || (ropeSprites !== null && ROPE_OBJECT_TAGS.has(o.tag)) || NPC_TAGS.has(o.tag)
+            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag) || SOLIDS_OBJECT_TAGS.has(o.tag) || (ropeSprites !== null && ROPE_OBJECT_TAGS.has(o.tag)) || (bridgesDrawn && BRIDGE_OBJECT_TAGS.has(o.tag)) || NPC_TAGS.has(o.tag)
                 || MACHINE_OBJECT_TAGS.has(o.tag) || BOSS_OBJECT_TAGS.has(o.tag) || roomBodyDrawn(o),
                 // ⚖ only the game's SHOWN portals are drawn, as the spinning Portal.png; the invisible teleporters draw nothing
                 drawnTeleporters: teleporterArtFilter(roomRecord), shownTeleporter: shownTeleporters(roomRecord), visitTick: portalVisitTick(runtime.run),
-                drawnPickups: (p) => PICKUP_TAGS.has(p.tag) } : {}),
+                drawnPickups: (p) => PICKUP_TAGS.has(p.tag), bridgeLook: bridgeView?.look ?? null } : {}),
         });
+        // ⛓ seedling-js-bridge-art — the readout: every bridge tile's drawn frame, and whether a stand-in rect remains
+        graphics.bridges = art
+            ? (() => {
+                const solids = world.objectSolids.filter((o) => BRIDGE_OBJECT_TAGS.has(o.tag));
+                const rects = new Set(solids.map((o) => o.rect));
+                return { drawn: bridgesDrawn,
+                    tiles: solids.map((o) => {
+                        const look = bridgeView?.look(o.bridgeId) ?? null;
+                        const state = look === null ? 'closed' : (look.opening !== undefined ? 'opening' : look.anim);
+                        const frame = look?.opening ?? art.frameAt(BRIDGE_TILE_KEY, state, runtime.ticks) ?? null;
+                        return { id: o.bridgeId, state, frame, pack: art.packOf(BRIDGE_TILE_KEY) };
+                    }),
+                    // the object solid's `fillRect` stand-ins still in the list (0 once the tile's picture claims them)
+                    standIns: ops.filter((op) => !op?.sheetRef && rects.has(op?.rect) && op.layer === -op.rect.bottom).length };
+            })()
+            : null;
         // ⛓ G10 — the boss bodies' build-time rectangles still painted (0 once the skin draws them)
         if (graphics.bosses) {
             const bossRects = [...world.objectSolids, ...world.pixelmasks].filter((o) => BOSS_OBJECT_TAGS.has(o.tag)).map((o) => o.rect);

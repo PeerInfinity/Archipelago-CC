@@ -1,0 +1,119 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (58 tests) 133344ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  19301ms
+     ✓ ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  430ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21), the strike floor at its shipped ON: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  11489ms
+     ✓ ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count  6681ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall  4998ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises  1127ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  6962ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  17268ms
+     ✓ ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message  2516ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  8535ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  15116ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  7914ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  12612ms
+     ✓ ⛓⛓⛓ non-vacuous, the cross-pass escape cache ON (the test only, wired by its hook): L18's segments report the solve's own hits and misses  6889ms
+     ✓ ⛓⛓ the solver wires the escape member: counted with the switch ON and no installer, null with it OFF; a null hand-in is null  9447ms
+ ✓ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js (19 tests) 143540ms
+     ✓ ⛓⛓⛓ L18 residue 21: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  22208ms
+     ✓ ⛓⛓⛓ L18 residue 21, STRIKE_ETA_FLOOR ON: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  12840ms
+     ✓ ⛓ L6 ladder climb: ON is OFF (no escape is asked; nothing is looked up)  321ms
+     ✓ ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included  29622ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches, and the bytes are OFF's  9320ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches (floor ON), and the bytes are OFF's  7071ms
+     ✓ ⛓⛓ maxEntries 0: OFF exactly, and a full scope misses rather than evicts  10182ms
+     ✓ ⛓⛓ maxEntries 1: OFF exactly, and a full scope misses rather than evicts  12394ms
+     ✓ ⛓⛓ maxEntries 7: OFF exactly, and a full scope misses rather than evicts  12029ms
+     ✓ ⛓⛓⛓ two solves back to back: the second's first lookup misses, and it hits exactly as the first did  7461ms
+     ✓ ⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer's phase is two entries, and the two answers differ  1889ms
+     ✓ ⛓⛓⛓ a drifting beam tower inside a SEARCH (L18 + a tower): two seam times a hammer period apart — the drift alone parts the answers, two entries, verify 0 mismatches  4477ms
+     ✓ ⛓⛓⛓ the digest's `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` ALONE, and the answers differ  2741ms
+     ✓ ⛓⛓⛓ the arguments: `pressAt` and the held sets' ORDER are in the key — each variant is OFF's answer  4759ms
+     ✓ ⛓⛓⛓ the deadline's presence is in the key; a tripped miss is never stored; an entry stored before a trip is never read after one  5992ms
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 25983ms
+     ✓ ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared  382ms
+     ✓ ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more  671ms
+     ✓ ⛔ derives a stance for the body that CANNOT reach where the walk stands  918ms
+     ✓ ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why  645ms
+     ✓ ⛓ takes the BEST stance, not the first viable one — and carries the runners-up  831ms
+     ✓ ⛔ the dwell bound is the forecast's own death tick, not a per-class constant  4673ms
+     ✓ ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned  748ms
+     ✓ ⛓ L18 spends the fade WALKING, and the wait is the subtraction  2493ms
+     ✓ ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin  5119ms
+     ✓ ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room  1607ms
+     ✓ ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell  429ms
+     ✓ ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it  2459ms
+     ✓ ⛓ `economies` DEFAULTS TO the roster-wide flag — the same walk either way  639ms
+ ✓ frontend/modules/seedlingDemo/fidelityApBosses.test.js (22 tests) 26367ms
+     ✓ fresh, Fire from the server: the fight anyway, {32,3} then {32,4}, no grant, no {31,29}; burn, pit  10231ms
+     ✓ fresh, NO Fire: the fight and both reports, then the burn is refused BY NAME (a precondition)  11074ms
+     ✓ slot held, wand: the sword is added and collected, {12,1} written in band, NO hasDarkSword grant  2490ms
+     ✓ the sword ALREADY from the server and the slot held: she still adds it (the location is unreported)  2166ms
+ ✓ frontend/modules/seedlingDemo/breakVerb.test.js (14 tests) 557ms
+ ✓ frontend/modules/seedlingDemo/blockRoute.test.js (8 tests) 1820ms
+     ✓ L15 SOLVES: five orders, the dwell, the crossing into L16  628ms
+     ✓ L16's weigh is a three-order press route: E1 · break the rock at (19,4) · N2  391ms
+     ✓ swordless L16: the old cap cut a live search; the raised cap EXHAUSTS it at depth 11  474ms
+ ✓ scripts/procgen/seedlingSolverSurface.test.js (36 tests) 57658ms
+     ✓ (iv) the family file list equals the import closure  1724ms
+     ✓ the import door's closure is the simulation's: solverView.js pulls in no family file  876ms
+     ✓ (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED  2518ms
+     ✓ (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files`  2458ms
+     ✓ (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door  2151ms
+     ✓ (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED"  2308ms
+     ✓ (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments)  2061ms
+     ✓ (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule  2413ms
+     ✓ (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED"  2822ms
+     ✓ (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice  2301ms
+     ✓ (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table"  1981ms
+     ✓ (d) a COMMENT naming a simulation module in a family file ⇒ GREEN  2575ms
+     ✓ (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once  2240ms
+     ✓ (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family"  1854ms
+     ✓ (c) run.entities(name) with a variable ⇒ RED, a named blind spot  2051ms
+     ✓ (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table  2076ms
+     ✓ (e) a COMMENT naming run.pushables in a family file ⇒ GREEN  1824ms
+     ✓ (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once  2239ms
+     ✓ (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once  1798ms
+     ✓ (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS  2035ms
+     ✓ (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name)  2128ms
+     ✓ (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table  2455ms
+     ✓ (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values  1810ms
+     ✓ (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN  2038ms
+     ✓ (f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both"  2354ms
+ ✓ frontend/modules/seedlingDemo/stringPullFast.test.js (13 tests) 55636ms
+     ✓ L40 kill rung (the lever's target)  37144ms
+     ✓ L18 hammer room (residue 21)  6921ms
+     ✓ the L42 crusher witness (a moving crusher, solved with the bait): OFF = ON, every pull audited  10946ms
+ ✓ frontend/modules/seedlingDemo/fidelityLights.test.js (22 tests) 1147ms
+ ✓ frontend/modules/seedlingDemo/fidelityL74Leg624.test.js (13 tests) 177ms
+ ✓ frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js (5 tests) 51523ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only  17770ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only  33116ms
+     ✓ ⛓⛓⛓ planWaypoints: the string-pull plan is byte-identical with a hook installed and without; unhooked, no heartbeat path runs  375ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Guard.test.js (9 tests) 5495ms
+     ✓ D2: OFF the arm refuses as before; ON the approach pass is asked and its refusal names REACH / TIMING / LEASH  3359ms
+       ✓ OFF the live run throws the band at t878 (bob@736,752, at rest at home)  381ms
+       ✓ ON it steps through, and both shaft bobs equal the game's rows t860–1000  321ms
+       ✓ OFF the press at t2166 throws the line-of-sight assertion  554ms
+       ✓ ON the blocked test is a miss row and the spinner equals the game's rows t2160–2200  497ms
+ ✓ frontend/modules/seedlingDemo/fidelitySpinningAxe.test.js (15 tests) 17742ms
+     ✓ OFF: step 163 solves in 366 t — the plan the game hits at t160  8149ms
+     ✓ ON: the re-probe meets the axe at its update 160 and the ladder refuses BY NAME  9008ms
+ ✓ frontend/modules/seedlingDemo/fidelityHousekeep.test.js (6 tests) 586ms
+     ✓ ROCKMOVE leg 311 (L29, the rock removed, its button kept): the orphan presser  476ms
+ ✓ frontend/modules/seedlingDemo/hammerSlashRect.test.js (8 tests) 1489ms
+     ✓ always: the press forecast's throw is REFUSED by name (it threw `PressError` at the base)  800ms
+     ✓ ON: the aim waits a tick instead (no forecast at -1), and the solve meets the kill's own refusal  681ms
+ ✓ frontend/modules/seedlingDemo/hammerPressKillGuards.test.js (5 tests) 58679ms
+     ✓ HO1: at t2439 the strike preview throws OFF; ON the band's candidates are refused by name (the strike floor OFF: the keys' own)  4066ms
+     ✓ HO2 OFF: the press kill carries on past the death at t788  29258ms
+     ✓ HO2 ON: the press kill is refused by name on the tick of the first death  25349ms
+
+ Test Files  16 passed (16)
+      Tests  355 passed (355)
+   Start at  18:27:49
+   Duration  326.40s (transform 8.49s, setup 0ms, import 24.77s, tests 581.74s, environment 2ms)
+
