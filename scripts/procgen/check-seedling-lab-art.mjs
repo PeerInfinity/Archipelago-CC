@@ -35,6 +35,8 @@
  *   winding seed 3: the stance pocket) certifies with the chest AS the goal (tag 0, no torch), keeps `goal=chest` in
  *   the rewritten bar, and draws it in sprites.
  *
+ *   ⛓ seedling-gen-keygate: a generated KEY GATE room (`?elements=keygate`, pre-sword; and `keygate;type=3`)
+ *     certifies, holds ONE `bosslock` and ONE `bosskey` of one key type, and draws in sprites; art off: the rectangles.
  *   ⛓ seedling-gen-strategy-gadgets: a generated HOLD GATE room (`?elements=holdgate`) and WEIGH GATE room
  *   (`?elements=weighgate`), pre-sword, each certify, hold a lock and its presser in ONE group (a latching
  *   `buttonroom` / a momentary `button` plus one `pushableblock`), and draw them in sprites.
@@ -895,6 +897,49 @@ async function main() {
                     check(new URLSearchParams(search).get('goal') === 'chest',
                         'goalchest: the rewritten bar keeps `goal=chest`', search);
                 }
+            } else {
+                check(art?.drawn === null, `${name} ?art=off: the rectangles`, JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+            }
+            if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-${name}${mode === 'off' ? '-off' : ''}.png`) });
+            check(errors.length === 0, `${name} (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+            await page.close();
+        }
+    }
+
+    // ── ⛓ seedling-gen-keygate: a generated KEY GATE room, red (the default type) and blue (`type=3`), art on and off ──
+    //
+    // `?elements=keygate` (pre-sword): ONE `bosslock` in a wall's only gap and its `bosskey` on the start side, ONE
+    // key type between them (⚖ "B: Distinct colour per room": the type is the element's parameter). The certificate
+    // collects the key, then opens the lock. Both draw with their skin (the lock among the `solids`).
+    for (const [name, query, keyType] of [
+        ['keygate', 'seed=1&biome=pre-sword&elements=keygate', '0'],
+        ['keygate-blue', `seed=1&biome=pre-sword&elements=${encodeURIComponent('keygate;type=3')}`, '3'],
+    ]) {
+        console.log(`\n## ${name} — a generated key gate room (key type ${keyType})`);
+        for (const mode of ['on', 'off']) {
+            const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errors = [];
+            page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+            await page.goto(`${PAGE}?source=generate&${query}${mode === 'off' ? '&art=off' : ''}`,
+                { waitUntil: 'domcontentloaded' });
+            await page.waitForFunction((m) => {
+                const a = window.__labArt;
+                return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                    && (m === 'off' ? a.drawn === null : a.drawn !== null);
+            }, mode, { timeout: 180000 }).catch(() => {});
+            await page.waitForTimeout(1200);
+            const { art, payload } = await page.evaluate(() => ({ art: window.__labArt ?? null,
+                payload: window.__watch?.payload ? { certified: window.__watch.payload.certified,
+                    entities: window.__watch.payload.level.entities } : null }));
+            if (mode === 'on') {
+                const locks = (payload?.entities ?? []).filter((e) => e.type === 'bosslock');
+                const keys = (payload?.entities ?? []).filter((e) => e.type === 'bosskey');
+                check(payload?.certified === true && locks.length === 1 && keys.length === 1
+                    && [...locks, ...keys].every((e) => e.attrs?.keyType === keyType && Number(e.attrs?.tag) >= 0),
+                    `${name}: the generated room CERTIFIES and holds ONE bosslock and ONE bosskey, key type ${keyType}, tagged`,
+                    JSON.stringify({ certified: payload?.certified, locks, keys }));
+                check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && (art.drawn.families?.solids ?? 0) > 0,
+                    `${name}: drawn in sprites, the lock among them (\`solids\` family)`, JSON.stringify(art?.drawn));
             } else {
                 check(art?.drawn === null, `${name} ?art=off: the rectangles`, JSON.stringify(art && { on: art.on, drawn: art.drawn }));
             }

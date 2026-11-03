@@ -164,6 +164,16 @@ const REFUSAL_SOURCES = [
             + 'on both pages, and the ELEMENTS CENSUS counts them',
     },
     {
+        id: 'key-gate',
+        title: 'The KEY GATE — a lock in a wall\'s only gap, its key on the start side',
+        kind: 'constant',
+        constant: 'KEY_GATE_REFUSALS',
+        names: M.keyGate.KEY_GATE_REFUSALS,
+        file: SOURCES.keyGate,
+        channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
+            + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
         id: 'open-chamber',
         title: 'The OPEN CHAMBER element',
         kind: 'constant',

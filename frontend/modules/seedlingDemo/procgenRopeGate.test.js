@@ -63,7 +63,8 @@ describe('⛓⛓⛓ the ROPE GATE\'s table row and binding rows (seedling gen A1
         expect(ELEMENT_TABLE.ropegate.needs).toEqual(['hasSword']);
         /** ⛓ seedling gen B2 appended `chestdoor` after it, r2 `burngate`, and r3 `holdgate`/`weighgate`;
          *  nothing before it moved. */
-        expect(ELEMENT_NAMES.slice(-6)).toEqual(['ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate', 'chestloot']);
+        expect(ELEMENT_NAMES.slice(-7)).toEqual(['ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate', 'chestloot',
+            'keygate']);
         /** ⛔ joining `require:['hasSword']`'s `+` list would move every such room */
         expect(headsNeeding('hasSword')).not.toContain('ropegate');
     });

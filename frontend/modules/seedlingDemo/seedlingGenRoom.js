@@ -149,12 +149,33 @@ export const CHEST_DOOR_ITEM = 'Region Library Filler';
  * rows are byte-identical to `chestDoorRows`'.
  */
 export const CHEST_LOOT_KIND = 'chest-loot';
+/**
+ * ⛓⛓ strategy elements round 2 — **THE KEY GATE'S KEY SPOT IS AN AP LOCATION, AND THE KEY AN AP ITEM** (⚖ the
+ * user 2026-11-03: *"a randomized AP item whose vanilla placement is the key"*). The draw's `summary.bossKeys`
+ * (`procgenSeedling.bossKeyLocationsOf`) becomes one row per key: `kind: 'boss-key'`, the key's own cell and
+ * FIXED tag (never seated: the element chose the cell, the binding the tag), named the vanilla way
+ * (`Level 019 - Boss Key 0` → `<region> - Boss Key <t>`), holding the Seedling world's key ITEM for its type
+ * (`Red Key` for type 0; `BOSS_KEY_ITEMS` is `seedlingAtlasDerivation.ITEM_FOR_KEY`, pinned equal). So the
+ * compiled pool gains that item (+1 location, +1 item) and VANILLA PLACEMENT puts the key on its own spot.
+ *
+ * ⛔ UNLIKE A CHEST the assembler REPLACES the `bosskey` with an `apitem` like any location (⚖ no special
+ * grants: the key reaches the player only through that location's item). And the lock is a LOGIC rule: every
+ * location on the goal cell — behind the lock by the element's cut — requires the key item (`keyRuleOf`).
+ */
+export const BOSS_KEY_KIND = 'boss-key';
+/** The Seedling world's key items by `keyType` (`seedlingAtlasDerivation.ITEM_FOR_KEY`, pinned equal). */
+export const BOSS_KEY_ITEMS = Object.freeze(['Red Key', 'Green Key', 'Purple Key', 'Blue Key', 'Yellow Key']);
+/** `<room> - Boss Key <t>`, vanilla's `Level 019 - Boss Key 0` shape. */
+export const bossKeyLocationName = (regionId, keyType) => `${regionId} - Boss Key ${keyType}`;
 const isChestDoor = (l) => l?.kind === CHEST_DOOR_KIND;
 const isLootChest = (l) => l?.kind === CHEST_LOOT_KIND;
+const isBossKey = (l) => l?.kind === BOSS_KEY_KIND;
 /** A row whose cell and tag are a CHEST's (door or loot): never seated, never replaced. */
 const isChestRow = (l) => isChestDoor(l) || isLootChest(l);
-/** The locations a placer seats (every row but a chest's). */
-const seatedOf = (world) => world.locations.filter((l) => !isChestRow(l));
+/** A row whose cell and tag the DRAW fixed (a chest's, or a key spot's): never seated, kept LAST. */
+const isFixedRow = (l) => isChestRow(l) || isBossKey(l);
+/** The locations a placer seats (every row but a fixed one). */
+const seatedOf = (world) => world.locations.filter((l) => !isFixedRow(l));
 
 /** One location row per door chest of the draw's `summary` — `[]` without one. */
 export function chestDoorRows(regionId, summary) {
@@ -182,11 +203,57 @@ export function chestRows(regionId, summary) {
     });
 }
 
-/** The world's `summary` from a draw's: `stop`, `keptCount`, and `chestDoors` / `lootChests` ONLY when the
- *  draw placed one. */
+/** One location row per key spot of the draw's `summary` — `[]` without one. ⛓ ONE key gate per level, so
+ *  the name is unique per room; a second key (none is placed today) would take ` 2` after the type. */
+export function bossKeyRows(regionId, summary) {
+    return (summary?.bossKeys ?? []).map((k, n) => ({
+        id: n === 0 ? 'boss_key' : `boss_key_${n + 1}`,
+        name: n === 0 ? bossKeyLocationName(regionId, k.keyType) : `${bossKeyLocationName(regionId, k.keyType)} ${n + 1}`,
+        kind: BOSS_KEY_KIND,
+        item: BOSS_KEY_ITEMS[k.keyType],
+        cell: { tx: k.cell.tx, ty: k.cell.ty },
+        tag: k.tag,
+    }));
+}
+
+/** Every FIXED row of a draw: its chests (`chestRows`), then its key spots (`bossKeyRows`). */
+export function fixedRows(regionId, summary) {
+    return [...chestRows(regionId, summary), ...bossKeyRows(regionId, summary)];
+}
+
+/**
+ * ⛓ THE LOCK AS A RULE — a location standing on the GOAL cell of a room with a key spot requires that key's
+ * item (`Has(<key item>)`, ANDed onto its own rule; `True_` becomes the bare `Has`). The goal is behind the lock
+ * BY CONSTRUCTION (the key gate is a CUT between the start and the goal) and every other location stands on
+ * the start side (`locationCells` floods with the lock solid). `null`: no key spot, or not the goal cell.
+ */
+function keyRuleOf(world, loc) {
+    const key = (world.locations ?? []).find(isBossKey);
+    if (!key || !world.goalCell || isFixedRow(loc) || cellKey(loc.cell) !== cellKey(world.goalCell)) return null;
+    return { rule: 'Has', args: { item_name: key.item } };
+}
+
+/** Does `rule` REQUIRE `item` — `Has(item)` itself, or an `And` with it among its children? */
+function ruleHas(rule, item) {
+    if (!rule) return false;
+    if (rule.rule === 'Has' && rule.args?.item_name === item) return true;
+    return rule.rule === 'And' && (rule.children ?? []).some((c) => ruleHas(c, item));
+}
+
+/** `rule` with the room's own key requirement for `loc` ANDed on (unchanged without one). */
+function withKeyRule(world, loc, rule) {
+    const need = keyRuleOf(world, loc);
+    if (!need) return rule;
+    if (!rule || isTrueRule(rule)) return need;
+    return { rule: 'And', children: [cloneRule(rule), need] };
+}
+
+/** The world's `summary` from a draw's: `stop`, `keptCount`, and `chestDoors` / `lootChests` / `bossKeys` ONLY
+ *  when the draw placed one. */
 const summaryOf = (out) => ({ stop: out.summary.stop ?? null, keptCount: out.summary.keptCount ?? null,
     ...(out.summary.chestDoors ? { chestDoors: out.summary.chestDoors } : {}),
-    ...(out.summary.lootChests ? { lootChests: out.summary.lootChests } : {}) });
+    ...(out.summary.lootChests ? { lootChests: out.summary.lootChests } : {}),
+    ...(out.summary.bossKeys ? { bossKeys: out.summary.bossKeys } : {}) });
 const around = (c) => [[0, -1], [-1, 0], [1, 0], [0, 1]].map(([dx, dy]) => ({ tx: c.tx + dx, ty: c.ty + dy }));
 
 /** Read one knob of the bag, falling back to the default; strings are trimmed. */
@@ -304,7 +371,8 @@ export function certifyGenRoom(payload, regionId = '?') {
         // ⛓ seedling-gen-chestdoor-ap — a door chest is no pickup cell: the generator's own seam
         //   (`chestDoorBypassRefusal`) is what certifies it; a pickup there would replace the door.
         //   ⛓ B1 — nor is a loot chest: its row is certified by the generator (a second collect goal).
-        ...payload.locations.filter((l) => cellKey(l.cell) !== cellKey(goal) && !isChestRow(l))
+        //   ⛓ strategy elements r2 — nor is a key spot: it is the goal solve's FIRST collect (below).
+        ...payload.locations.filter((l) => cellKey(l.cell) !== cellKey(goal) && !isFixedRow(l))
             .map((l) => ({ name: l.name, cell: l.cell, own: false }))];
     for (const t of targets) {
         const x = t.cell.tx * TILE_SIZE;
@@ -316,7 +384,13 @@ export function certifyGenRoom(payload, regionId = '?') {
             record = { ...record, entities: [...(record.entities ?? []).filter((e) => !(e.x === x && e.y === y)),
                 { type: 'torchpickup', x, y, attrs: {} }] };
         }
-        const model = { boot: drawn.model.boot, goals: Object.freeze([collectGoal(x, y)]) };
+        // ⛓ strategy elements r2 — a key gate's lock opens only with its key IN HAND: every target is solved
+        //   after collecting the key spot first (the generator's own goal list, `keyGateGoals`).
+        //   ⛔ ONLY for the goal (the one target behind the lock): a start-side target is certified alone, as
+        //   before — a pickup standing in the corridor would otherwise read as an obstacle on the walk to the key.
+        const keyGoals = !t.own ? [] : payload.locations.filter(isBossKey)
+            .map((k) => collectGoal(k.cell.tx * TILE_SIZE, k.cell.ty * TILE_SIZE));
+        const model = { boot: drawn.model.boot, goals: Object.freeze([...keyGoals, collectGoal(x, y)]) };
         const verdict = seedlingOracle({ model, items }).solve(record).verdict;
         if (verdict !== VERDICT.SOLVED) failures.push(`${t.name} (${String(verdict)})`);
     }
@@ -531,6 +605,22 @@ function safeReach(world) {
     return seen;
 }
 
+/**
+ * ⛓ strategy elements r2 — **THE KEY GATE'S CELLS A DOOR MAY NOT SEAL OR TAKE**: the cell BELOW each `bosslock`
+ * (the stance its key line is walked from) and each `bosskey`'s cell. MEASURED (hook room, drawn seed 0.5): a
+ * door on the stance's only approach left the doors-as-walls re-certification throwing in `keylock` ("the key line
+ * was NEVER touched") instead of refusing. Read off the RECORD, so a room without a key gate gets `[]`.
+ */
+function keyGateCells(record) {
+    return (record.entities ?? []).flatMap((e) => {
+        const tx = Math.floor(e.x / TILE_SIZE);
+        const ty = Math.floor(e.y / TILE_SIZE);
+        if (e.type === 'bosslock') return [{ tx, ty: ty + 1 }];
+        if (e.type === 'bosskey') return [{ tx, ty }];
+        return [];
+    });
+}
+
 /** The goal cell's neighbours: no door may stand there (the approach would be the check). */
 function goalGuard(goalCell) {
     return new Set(around(goalCell).map(cellKey));
@@ -546,9 +636,11 @@ function goalGuard(goalCell) {
 export function pickGenRoomDoors(record, start, goalCell, doorCount, items, room = '?') {
     const lethal = hazardCells(record);
     const hazards = hazardCells(record, items);
+    // ⛓ strategy elements r2 — a key gate's stance and key: never a door, always reachable (`[]` without one).
+    const keyCells = keyGateCells(record);
     return pickDoorCells(record, start, doorCount, {
-        room, exclude: new Set([...goalGuard(goalCell), ...lethal]),
-        keepReachable: { walls: hazards, approachWalls: lethal, cells: [goalCell] },
+        room, exclude: new Set([...goalGuard(goalCell), ...lethal, ...keyCells.map(cellKey)]),
+        keepReachable: { walls: hazards, approachWalls: lethal, cells: [goalCell, ...keyCells] },
     }).doors;
 }
 
@@ -692,7 +784,7 @@ export function generateGenRoom(input = {}) {
             drawnSeed: drawn,
             exits: roomExits,
             // ⛓ seedling-gen-chestdoor-ap — the door chests' rows, AFTER the draw (`[]` without one).
-            locations: chestRows(regionId, out.summary),
+            locations: fixedRows(regionId, out.summary),
             summary: summaryOf(out),
         },
         exits_placed: [...roomExits.values()].map(({ exit_id: exitId, side }) => ({ exit_id: exitId, side })),
@@ -789,7 +881,9 @@ export function rerollGenRoom(world, entries, rows, cause) {
     const chests = world.locations.filter(isChestDoor).length;
     // ⛓ B1 — and as many loot chests, by the same law.
     const loots = world.locations.filter(isLootChest).length;
-    rows = rows.filter((r) => !isChestRow(r));
+    // ⛓ strategy elements r2 — and as many key spots, by the same law.
+    const keys = world.locations.filter(isBossKey).length;
+    rows = rows.filter((r) => !isFixedRow(r));
     const origin = originOf(world);
     const last = lastAttempt(origin);
     let err = null;
@@ -811,6 +905,11 @@ export function rerollGenRoom(world, entries, rows, cause) {
                 + `${draw.out.summary.lootChests?.length ?? 0} loot chest(s), and the room declared ${loots}`);
             continue;
         }
+        if ((draw.out.summary.bossKeys?.length ?? 0) !== keys) {
+            err = new Error(`levelSetExits: room '${world.region_id}' seed ${draw.seed} holds `
+                + `${draw.out.summary.bossKeys?.length ?? 0} key spot(s), and the room declared ${keys}`);
+            continue;
+        }
         const bound = entries.map(([key, e], i) => [key, { ...e, ...doorFields(draw.doors[i]) }]);
         const size = { width: draw.record.width, height: draw.record.height };
         const room = {
@@ -822,7 +921,7 @@ export function rerollGenRoom(world, entries, rows, cause) {
             goalCell: draw.goalCell,
             generation: generationAfter(knobs, k, cause, origin, size),
             exits: new Map(bound),
-            locations: chestRows(world.region_id, draw.out.summary),
+            locations: fixedRows(world.region_id, draw.out.summary),
             summary: summaryOf(draw.out),
         };
         const seats = seatsFor(room, rows);
@@ -878,7 +977,7 @@ function seatRows(world, rows, free) {
         reserved.push(tag);
         seated.push({ ...row, cell: { ...free[k] }, tag });
     });
-    world.locations = [...seated, ...world.locations.filter(isChestRow)];
+    world.locations = [...seated, ...world.locations.filter(isFixedRow)];
 }
 
 /**
@@ -957,7 +1056,8 @@ export function extractGenRules(world, opts = {}) {
         locations: world.locations.map((l) => ({
             id: l.id,
             item: l.item ?? null,
-            access_rule: cloneRule(l.access_rule ?? TRUE_RULE),
+            // ⛓ strategy elements r2 — the lock as a rule: the goal cell requires the room's key item.
+            access_rule: cloneRule(withKeyRule(world, l, l.access_rule ?? TRUE_RULE)),
             ...(l.name ? { global_name: l.name } : {}),
         })),
     };
@@ -994,6 +1094,8 @@ function bindAllDoors(world, entries) {
         //   ⛓ B1 — a loot chest's is solid too, and its STANCE (the cell below) is what must stay reachable.
         cells: [world.goalCell, ...seatedOf(world).map((l) => l.cell),
             ...world.locations.filter(isLootChest).map((l) => ({ tx: l.cell.tx, ty: l.cell.ty + 1 })),
+            // ⛓ strategy elements r2 — a key gate's stance and key (`[]` without one).
+            ...keyGateCells(world.record),
             ...bound.map(([, e]) => ({ tx: e.entrance_spawn.x / TILE_SIZE, ty: e.entrance_spawn.y / TILE_SIZE }))],
     };
     const pick = (ex) => pickDoorCells(world.record, world.start, unbound.length, {
@@ -1095,13 +1197,33 @@ export function serializeGenRoom(world, extractedRules, _obstacleLib, _itemLib, 
             name,
             ...(l.item != null ? { item: l.item } : {}),
             // ⛓ seedling-gen-chestdoor-ap — ONLY on a door chest's row, so no other payload moves.
-            ...(isChestRow(l) ? { kind: l.kind } : {}),
+            ...(isFixedRow(l) ? { kind: l.kind } : {}),
             cell: { ...l.cell },
             tag: l.tag,
-            ...(l.access_rule && !isTrueRule(l.access_rule) ? { access_rule: cloneRule(l.access_rule) } : {}),
+            ...(() => {
+                // ⛓ strategy elements r2 — the goal cell's key requirement rides the payload's rule too.
+                const rule = withKeyRule(room, l, l.access_rule ?? null);
+                return rule && !isTrueRule(rule) ? { access_rule: cloneRule(rule) } : {};
+            })(),
         };
     });
     const ordinal = context?.ordinalOfRegion?.(world.region_id);
+    // ⛓ strategy elements r2 — ⚖ "B: Distinct colour per room", until the pipeline allocates colours: a key gate
+    //   past generated room #0 is REFUSED BY NAME (`keygate-colour-not-allocated`), never shipped in a colour
+    //   another room may also hold. Conservative: a world whose room #0 placed none is refused too (named limit).
+    if (room.locations.some(isBossKey) && Number.isInteger(ordinal) && ordinal > 0) {
+        throw new Error(GEN_ROOM_REFUSALS.keygateColour(world.region_id, ordinal));
+    }
+    // ⛓ strategy elements r2 — the lock as a rule MUST reach the world: every location behind the lock carries
+    //   `Has(<key item>)` in its FINAL rule (the one the engine compiles), else refused by name.
+    for (const l of room.locations) {
+        const need = keyRuleOf(room, l);
+        const final = extractedLocations.get(l.id)?.access_rule;
+        if (need && !ruleHas(final, need.args.item_name)) {
+            throw new Error(GEN_ROOM_REFUSALS.keygateRule(world.region_id,
+                extractedLocations.get(l.id)?.global_name ?? l.name ?? l.id, need.args.item_name));
+        }
+    }
     return {
         gameId: 'seedling',
         generated: true,

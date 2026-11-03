@@ -49,6 +49,7 @@ import { ROAM } from './elements/roam.js';
 import { ROPE_GATE } from './elements/ropeGate.js';
 import { CHEST_DOOR } from './elements/chestDoor.js';
 import { CHEST_LOOT } from './elements/chestLoot.js';
+import { KEY_GATE } from './elements/keyGate.js';
 import { BURN_GATE } from './elements/burnGate.js';
 import { HOLD_GATE, WEIGH_GATE } from './elements/strategyGate.js';
 import {
@@ -592,6 +593,30 @@ export const ELEMENT_TABLE = Object.freeze({
         extra: Object.freeze([]),
         needs: Object.freeze([]),
         meetsRequire: false,
+    }),
+    /**
+     * ⛓⛓⛓ **THE KEY GATE — the solver's `keylock`, as a gadget** (seedling gen
+     * strategy elements round 2; ⚖ the user 2026-11-01, "(b) More strategy
+     * elements"; 2026-11-03: *"a randomized AP item whose vanilla placement is the
+     * key"*). A lock in the only gap of a wall on a main-path CUT, opened from the
+     * cell below it (the chest door's geometry), and its KEY on the start side, off
+     * the main path when it can be — the key's vanilla location. Graded by the
+     * strategy arm: `--require=strategy:keylock`.
+     *
+     * ⛓ `needs: []` — the key is IN the room, so no boot item opens it (in an AP
+     * world the key spot is a location and the key an item: `seedlingGenRoom`'s
+     * `boss-key` row). Placed LAST so no head moves in `ELEMENT_NAMES`; OPT-IN (in
+     * no biome default). ⛔ `meetsRequire` is left at its default: with `needs: []`
+     * it is never an ITEM directive's head, and no other row declares `keylock`.
+     */
+    keygate: Object.freeze({
+        element: KEY_GATE,
+        why: 'The KEY GATE (the L19 pattern): a `bosslock` in the only gap of a wall on a main-path cut, '
+            + 'opened from the cell directly below it, and its `bosskey` on the start side, off the main '
+            + 'path when it can be. Certified by the solver\'s `keylock` (collect the key, walk the key line).',
+        extra: Object.freeze([]),
+        needs: Object.freeze([]),
+        needsStrategy: Object.freeze(['keylock']),
     }),
 });
 

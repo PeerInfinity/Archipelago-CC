@@ -99,6 +99,11 @@ export const GENERATED_SET_REFUSALS = Object.freeze({
     oneWay: (region, exitName, target) => `generated Seedling set: region '${region}' exit '${exitName}' `
         + `leads to generated room '${target}', which has no door back to '${region}' — the arrival cell `
         + 'is the paired door\'s approach, and there is no paired door',
+    /** ⛓ strategy elements r2 — ⚖ "B: Distinct colour per room": two key-gate rooms are refused by name. */
+    keygateColour: (rooms) => 'keygate-colour-not-allocated: multi-room keygate colours await the pipeline\'s '
+        + `held-items-at-region-entry. Generated Seedling set: rooms ${rooms.join(', ')} each hold a KEY GATE, and `
+        + 'each key-gate room must have its own colour (⚖ "B: Distinct colour per room"); this set is refused rather '
+        + 'than mounted with two rooms that may share one.',
     chestDoorMissing: (region, name, cell, tag) => `generated Seedling set: region '${region}' location `
         + `'${name}' is a door chest at (${cell.tx},${cell.ty}) tag ${tag}, and the room holds no chest with that tag `
         + 'there — the check is the chest\'s own clear, so without the chest it could never fire',
@@ -125,6 +130,8 @@ const cellPx = (cell) => ({ x: cell.tx * GEN_ROOM_TILE_SIZE, y: cell.ty * GEN_RO
 export const CHEST_DOOR_KIND = 'chest-door';
 /** ⛓ seedling gen B1 — `seedlingGenRoom.CHEST_LOOT_KIND`: a loot chest's row, kept exactly as a door chest's. */
 export const CHEST_LOOT_KIND = 'chest-loot';
+/** ⛓ strategy elements r2 — `seedlingGenRoom.BOSS_KEY_KIND`: a key spot (an ordinary, REPLACED location). */
+export const BOSS_KEY_KIND = 'boss-key';
 
 /**
  * One room's `apitem`s, on the record: REPLACING an entity on the location's
@@ -183,6 +190,8 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
         if (p.level !== ordinal) refuse(GENERATED_SET_REFUSALS.wrongLevel(region, p.level, ordinal));
         return p;
     });
+    const keyRooms = census.rooms.filter((r, i) => (payloads[i].locations ?? []).some((l) => l.kind === BOSS_KEY_KIND));
+    if (keyRooms.length > 1) refuse(GENERATED_SET_REFUSALS.keygateColour(keyRooms));
 
     const doors = [];
     const apitems = [];

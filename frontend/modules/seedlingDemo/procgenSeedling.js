@@ -1747,8 +1747,13 @@ export function seedlingModel({
     if (elementPhase === PHASE_ON_CONNECTOR) {
         const entry = ELEMENT_TABLE[elementValues.name];
         const drawsBefore = roomRng.draws;
+        /** ⛓ strategy elements r2 — the KEY GATE's `type` is never DRAWN: omitted, it is its declared default
+         *  (the colour is the world's allocation, not the room stream's), so `keygate` spends ONE draw like its
+         *  peers. Read off the schema (`type`), as the guard's `turns` is above. */
+        const named = namedParams(elementHead, { elementOnly: true });
+        const typeParam = entry.element.params.find((pp) => pp.key === 'type');
         const concrete = entry.element.instantiate(roomRng,
-            namedParams(elementHead, { elementOnly: true }));
+            typeParam && named.type === undefined ? { ...named, type: typeParam.default } : named);
         const drawsAtConstruct = roomRng.draws;
         const site = { x: 1, y: 1, w: d.width - 2, h: d.height - 2, room: probeWithStash() };
         doorLawStash = recordLedger ? [] : null;
@@ -3780,6 +3785,7 @@ export function seedlingModel({
          */
         goals: Object.freeze([
             ...lootChestGoals(elementInfo),
+            ...keyGateGoals(elementInfo),
             Object.freeze(collectGoal(goalOel.x, goalOel.y)),
         ]),
         boot: () => bootAtTile(blank, d.start.tx, d.start.ty),
@@ -4061,6 +4067,37 @@ function lootChestGoals(elementInfo) {
     if (p?.family !== 'chestloot') return [];
     const { x, y } = oelAtTile(p.doorCell.x, p.doorCell.y);
     return [Object.freeze(collectGoal(x, y))];
+}
+
+/**
+ * ⛓⛓ Strategy elements round 2 — **THE KEY GATE'S KEY IS A COLLECT GOAL, AHEAD OF THE ROOM'S OWN.** The
+ * solver's `keylock` opens a lock with a key the run HOLDS; a key it does not hold is "a SUB-ORDER — a
+ * `collect-placement` goal the macro layer owes" (`solverBot`'s own refusal). So the committed key is named
+ * here, and every solve of the room (the certification and every pass-2 keep) collects it and then opens the
+ * lock. ⛔ `[]` for every level without a committed key gate: their goal lists stay byte for byte.
+ */
+function keyGateGoals(elementInfo) {
+    const p = elementInfo?.ran ? elementInfo.placed[0] : null;
+    if (p?.family !== 'keygate') return [];
+    const key = p.clearer[1];
+    const { x, y } = oelAtTile(key.x, key.y);
+    return [Object.freeze(collectGoal(x, y))];
+}
+
+/**
+ * ⛓ Strategy elements round 2 — the KEY GATE's key of a FINISHED level, as location rows
+ * `{kind: 'boss-key', cell, tag, keyType}`: the key's VANILLA LOCATION (its tag is the one the binding
+ * allocated, the game's check address). `[]` for a level without one.
+ */
+export function bossKeyLocationsOf(model, record) {
+    const p = model.elements?.ran ? model.elements.placed[0] : null;
+    if (p?.family !== 'keygate') return [];
+    const cell = p.clearer[1];
+    const { x, y } = oelAtTile(cell.x, cell.y);
+    const key = (record.entities ?? []).find((e) => e.type === 'bosskey' && e.x === x && e.y === y);
+    if (!key) return [];
+    return [Object.freeze({ kind: 'boss-key', cell: Object.freeze({ tx: cell.x, ty: cell.y }),
+        tag: Number.parseInt(key.attrs.tag, 10), keyType: Number.parseInt(key.attrs.keyType, 10) })];
 }
 
 /** The chest a chest-door element placed, as the solver's id (`chest@x,y`, OEL px). */
@@ -5042,6 +5079,7 @@ export function generateSeedlingLevel({
     const finalRecord = shellLevel(out.record, model, fill);
     const chestDoors = chestDoorLocationsOf(model, finalRecord);
     const lootChests = lootChestLocationsOf(model, finalRecord);
+    const bossKeys = bossKeyLocationsOf(model, finalRecord);
     return {
         ...out,
         /**
@@ -5107,6 +5145,9 @@ export function generateSeedlingLevel({
             /** ⛓⛓ Seedling gen B1 — **THE LOOT CHEST'S AP LOCATION**, the same shape (`kind: 'chest-loot'`).
              *  ⛔ OMITTED ENTIRELY on a level without one. */
             ...(lootChests.length > 0 ? { lootChests: Object.freeze(lootChests) } : {}),
+            /** ⛓⛓ Strategy elements round 2 — **THE KEY GATE'S KEY SPOT**, its AP location (`kind: 'boss-key'`,
+             *  cell, tag, keyType). ⛔ OMITTED ENTIRELY on a level without one. */
+            ...(bossKeys.length > 0 ? { bossKeys: Object.freeze(bossKeys) } : {}),
             /** ⛓ B3 — the goal chest's refusal, ONLY when one was asked and refused (a placed goal chest
              *  reads off `goalClass: 'chest'`). */
             ...(model.goalChest?.refused ? { goalChestRefused: model.goalChest.refused.reason } : {}),

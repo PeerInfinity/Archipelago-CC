@@ -89,8 +89,36 @@ const grownClause = (grown) => (grown.sizes.length > 1
     : ` at ${grown.sizes[0]} (already at the room contract's maximum, ${grown.max} tiles, so it cannot grow)`);
 
 /** ⛓ Every refusal of this module, as a printed SENTENCE. */
+/**
+ * ⛓ strategy elements r2 — the NAME of the key-gate colour refusal (⚖ the user 2026-11-03, *"B: Distinct colour
+ * per room"*). A room is drawn knowing nothing of the other rooms, so a multi-room world cannot yet give each
+ * key-gate room its own colour. ⚖ The user redirected that part (2026-11-03) to a general pipeline feature, *"items
+ * the player is expected to already have on first reaching the region being generated"*; until it exists, a world
+ * whose key gate is not its FIRST generated room is refused by this name at serialize, and a set holding two
+ * key-gate rooms at assembly.
+ */
+export const KEYGATE_COLOUR_REFUSAL = 'keygate-colour-not-allocated';
+/**
+ * ⛓ strategy elements r2 — the NAME of the key-gate RULE refusal. The room ANDs `Has(<key item>)` onto its goal
+ * cell's location (`seedlingGenRoom.extractGenRules`), and a driver that REPLACES a room's location rules with its
+ * own spec's (MEASURED: sphere growth, the engine's procedural branch) drops it — a rules.json whose logic says the
+ * goal needs no key while the lock says it does. Refused at serialize, where the FINAL rules are read.
+ */
+export const KEYGATE_RULE_REFUSAL = 'keygate-rule-not-carried';
+
 export const GEN_ROOM_REFUSALS = Object.freeze({
     noRegionId: () => 'generated Seedling room: a region_id is required',
+    keygateRule: (regionId, location, item) => `${KEYGATE_RULE_REFUSAL}: generated Seedling room '${regionId}' `
+        + `holds a KEY GATE, and its location '${location}' stands behind the lock, but the world's final rule for it `
+        + `does not require '${item}' — the pipeline driver replaced the room's own rule with its spec's. The logic `
+        + 'would say the goal needs no key while the lock says it does, so the room is refused. ⛓ Build key-gate '
+        + 'worlds with a driver that keeps a room\'s location rules (measured: shuffled spiral), until the pipeline carries them.',
+    keygateColour: (regionId, ordinal) => `${KEYGATE_COLOUR_REFUSAL}: multi-room keygate colours await the `
+        + 'pipeline\'s held-items-at-region-entry. Generated Seedling room '
+        + `'${regionId}' (generated room #${ordinal}) holds a KEY GATE, and only generated room #0 may: each key-gate `
+        + 'room must have its own colour (⚖ "B: Distinct colour per room"), and a room is drawn knowing nothing of '
+        + 'the others. ⚠ KNOWN LIMIT: this also refuses a world whose room #0 placed no key gate. Ask for the key '
+        + 'gate in a one-generated-room world.',
     duplicateExit: (regionId, exitId) => `generated Seedling room '${regionId}': exit '${exitId}' is `
         + 'requested twice',
     unknownExit: (regionId, exitId) => `generated Seedling room '${regionId}': a rule names exit `
