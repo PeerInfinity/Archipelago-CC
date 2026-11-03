@@ -695,6 +695,38 @@ describe('growSpheres (bounce) — zone realisation + oracle', () => {
     }, 120000);
 });
 
+describe('growSpheres — an unrealisable wave gate aborts LOUDLY with the substrate hint', () => {
+    // Re-pointed from runnerSphereGrowth.slow.test.js's "sweep-saturating
+    // profiles abort growth loudly with the runner hint" when the runner
+    // substrate was deleted (Cloudberry P4b). The ENGINE claim is the same:
+    // when no host can realise a wave's entry gate, growSpheres THROWS (no
+    // silent fallback) and the message carries each active substrate's
+    // `gateHostingHint` — the realisable-gate constraint is the substrate's,
+    // the error is the engine's. Bounce's constraint: one physics-arrowless
+    // portal per level, so sphere 1 must fit in at most 2 regions; four
+    // sphere-1 items at one item per region cannot.
+    it('bounce-only, 4 sphere-1 items at 1 item/region: throws with the bounce hint', () => {
+        const plan = {
+            seed: 1,
+            spheres: [
+                { sphere: 1, items: ['Right arrow', 'Left arrow', 'Springs', 'Blue platforms'] },
+                { sphere: 2, items: ['key_red', 'key_blue', 'key_green'] },
+                { sphere: 3, items: ['Victory'] },
+            ],
+        };
+        expect(() => growSpheres({
+            regionSize: { width: 8, height: 6 },
+            seed: 1,
+            growthParams: {
+                spherePlan: plan,
+                substrateQuotas: { bounce: 99 },
+                startSubstrate: 'bounce',
+                maxItemsPerRegion: 1,
+            },
+        })).toThrow(/no host can realise a wave-\d+ entry gate\. For bounce-only worlds/);
+    }, 120000);
+});
+
 describe('growSpheresGen / growSpheresAsync (progress events)', () => {
     const CONFIG = {
         regionSize: { width: 8, height: 6 },

@@ -314,8 +314,8 @@ describe('a zone substrate given more exits than sides is refused by name', () =
                 + 'per side today, so 4 at most; give that region another substrate');
         expect(zoneExitCeilingRefusal([
             { name: 'a', substrate: 'bounce', exits: 5 },
-            { name: 'b', substrate: 'runner', exits: 6 },
-        ])).toContain('bounce and runner rooms have one exit per side today');
+            { name: 'b', substrate: 'cloudberry', exits: 6 },
+        ])).toContain('bounce and cloudberry rooms have one exit per side today');
     });
 
     it('topdown-zones-demo over APCalc refuses by name, before any region builds', async () => {

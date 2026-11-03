@@ -49,7 +49,7 @@
  *
  * Run:
  *   node scripts/procgen/check-procgen-presets.mjs [--host=<origin>]
- * @ci-box it generates EVERY shipped preset in a browser, including the runner presets the CI preset row skips by ruling (⚖ user 2026-09-16, "Skip runner presets in CI, by a declared field": their generator is seconds per region and was cut from the CI slow battery), so only the box runs the whole list.
+ * @ci-box it generates EVERY shipped preset in a browser, including the generationCost-heavy presets the CI preset row skips by ruling (⚖ user 2026-09-16, "Skip runner presets in CI, by a declared field"; since runner's deletion that is the Cloudberry sphere preset, whose levels the game page generates), so only the box runs the whole list.
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
  */
 
@@ -95,6 +95,8 @@ const PAGE_URL = `${HOST}/frontend/?game=adventure&seed=1`;
  * browser ÷ headless ratio of a runner preset 1.30, and every other preset under
  * 0.9 s in the browser. 2 × the 30 s budget leaves 2.5× the slowest measured
  * run for the box's load, which has moved that preset 11.7 s → 26.7 s headless.
+ * (The runner presets are deleted since Cloudberry P4b; the factor was not
+ * re-derived, so it is now looser than it needs to be, not tighter.)
  */
 const BROWSER_BUDGET_FACTOR = 2;
 

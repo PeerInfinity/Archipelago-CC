@@ -102,7 +102,7 @@ The start door's walk is a Cloudberry page feature: the page says it has it with
 
 ## Loop mode
 
-Cloudberry is a **summary** substrate, like runner and Noiz2sa (`loopSupport`: `summaryRecording`, `record`, `playback`, `instant`, `playClock`, `executeVia: 'solver'`, queue actions `regionMove` and `locationCheck`). The mechanics are loops' own; see [Loop Recording and Block Modes](./loop-recording.md#summary-substrates). What is Cloudberry's:
+Cloudberry is a **summary** substrate, like bounce and Noiz2sa (`loopSupport`: `summaryRecording`, `record`, `playback`, `instant`, `playClock`, `executeVia: 'solver'`, queue actions `regionMove` and `locationCheck`). The mechanics are loops' own; see [Loop Recording and Block Modes](./loop-recording.md#summary-substrates). What is Cloudberry's:
 
 - **Manual / Record.** The queue parks and the player plays the level. Record keeps the visit's net result: the check coins collected, the exit taken, and the play time (`summary.durationSeconds`, with the page's last report as `playStats: {gameSeconds}`). A loop reset during the visit discards it.
 - **Playback** applies the summary at once: loops spends its price, refires the checks and crosses the recorded exit. The page plays nothing.
@@ -110,7 +110,7 @@ Cloudberry is a **summary** substrate, like runner and Noiz2sa (`loopSupport`: `
 
 ### The cost: the page's game clock
 
-Every mode is priced by **game time**. The page calls `setPlayClock(running, {gameSeconds})` every second and on every change, where `gameSeconds` is physics steps / 60 since the configure. Loops charges the region `timeDrainPerSecond` (from `loop_costs`, 1 by default, discounted by region XP) for each whole game second played. This is the runner formula, except that the seconds come from the game, not the wall clock. So:
+Every mode is priced by **game time**. The page calls `setPlayClock(running, {gameSeconds})` every second and on every change, where `gameSeconds` is physics steps / 60 since the configure. Loops charges the region `timeDrainPerSecond` (from `loop_costs`, 1 by default, discounted by region XP) for each whole game second played. This is the summary substrates' time-drain formula ([Loop Recording](./loop-recording.md)), except that the seconds come from the game, not the wall clock. So:
 
 - Boot, the level's regeneration on a configure, an open exit menu and a hidden tab cost nothing: the game does not step, and the page reports its clock stopped.
 - Live play and the Bot cost the same per second of play.
@@ -152,7 +152,7 @@ These are sufficient sets (what the computer's own run used), not minimal ones. 
 
 Check coins are a subset of the coins the computer collects. `chooseCheckCoins` takes a number per piece (default 1), spread through the piece by the tick at which the computer collects them.
 
-Emission uses the shared [paths-and-obstacles](./paths-and-obstacles.md) vocabulary, like [runner](./runner.md): one path per goal, holding one physics obstacle per required item. Authored terms the level cannot realise (foreign items, counts above 1) become `logic_gate` obstacles ANDed onto the path, and ride the payload as `gate_rules` for the bridge to evaluate at run time.
+Emission uses the shared [paths-and-obstacles](./paths-and-obstacles.md) vocabulary, like [bounce](./bounce.md): one path per goal, holding one physics obstacle per required item. Authored terms the level cannot realise (foreign items, counts above 1) become `logic_gate` obstacles ANDed onto the path, and ride the payload as `gate_rules` for the bridge to evaluate at run time.
 
 ## Build-time generation (sphere growth)
 
@@ -163,8 +163,8 @@ Sphere growth realises a Cloudberry node by generating a new level for it with t
 `planCloudberryLevel` turns a node's specs into a `ck-level/2` request, synchronously and deterministically:
 
 - Requirements are split by `splitCloudberryRequirement`. Platform items with count 1 are **physics**: pieces realise them. Everything else is **authored**: `Jetpack`, items of other games, and counts above 1. An authored term becomes a `logic_gate` obstacle on the path and a `gate_rules` entry. The page's exit menu greys out a locked exit.
-- The requirements form one nested chain S_0 ⊆ S_1 ⊆ … ⊆ S_last, as in runner's `planStripSpecs`. Each set gets pieces. Item-free pieces come first and hold the check coins, `cloudberryChecksPerPiece` per piece (⚖ R19). Then come the pieces that bring in the exits' platform items. A piece's new items are at upgrade level 5 and its carried items at 3. Item-free pieces are added at the start up to `cloudberryMinPieces`.
-- Every **forward** exit leaves by the end door, after the last piece, so it needs S_last. Because they share one door, the forward exits' platform requirements must be **equal**: a smaller one would be over-required. `canHostCloudberryExitGates` (also `exitGateVeto`) declines unequal gates the way runner declines incomparable ones, and `gateHostingHint` says why. Incomparable location requirements are refused by name.
+- The requirements form one nested chain S_0 ⊆ S_1 ⊆ … ⊆ S_last (the shape the deleted runner substrate's strip planner used). Each set gets pieces. Item-free pieces come first and hold the check coins, `cloudberryChecksPerPiece` per piece (⚖ R19). Then come the pieces that bring in the exits' platform items. A piece's new items are at upgrade level 5 and its carried items at 3. Item-free pieces are added at the start up to `cloudberryMinPieces`.
+- Every **forward** exit leaves by the end door, after the last piece, so it needs S_last. Because they share one door, the forward exits' platform requirements must be **equal**: a smaller one would be over-required. `canHostCloudberryExitGates` (also `exitGateVeto`) declines unequal gates the way bounce declines non-nested ones, and `gateHostingHint` says why. Incomparable location requirements are refused by name.
 - The **back** exit (the entrance side) is free. The start door offers it, so `backPortalGated` is false. The engine's zone context (`ctx.entrance`) says which side it is and what the entry gate holds.
 - **Jetpack levels.** A region whose entry gate holds `Jetpack` is generated with the Jetpack hero with probability `cloudberryJetpackChance`. Everything in it then needs Jetpack, which every player inside already holds. Jetpack in an exit gate is a lock, since the hero is level-wide.
 - `hostsSurplusExitsNatively` is true: every exit is listed in the end door's menu.
@@ -287,7 +287,7 @@ On CI the batch runs in `cloudberry-e2e.yml`, after its site fetch.
 
 ## Related documentation
 
-- [Runner](./runner.md): the sibling substrate whose patterns this follows.
+- [Bounce](./bounce.md): the other flash-zone platformer substrate. Cloudberry follows the patterns of the runner substrate, which it replaced (runner was deleted in P4b, 2026-11-02).
 - [Flash](./flash.md): the bridge and the panel factory.
 - [Substrate Registry Reference](./substrate-registry.md): the entry contract.
 - [Paths and Obstacles](./paths-and-obstacles.md): the rule vocabulary.

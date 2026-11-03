@@ -319,7 +319,7 @@ ruling asked for: costs scale with what the player can afford by the time they
 get there.
 
 **A region's substrate decides whether the block speaks for it at all** —
-coarse regions (and maze) get full numbers, summary regions (runner, bounce) get
+coarse regions (and maze) get full numbers, summary regions (bounce, Noiz2sa, Cloudberry) get
 a time-drain rate and nothing else, and substrates with their own mana economy
 (jta, omsi) get no entries. See
 [one loop-cost engine, one store](../developer/procgen/gotchas.md#one-loop-cost-engine-one-store--and-the-debugger-is-its-inspector).
