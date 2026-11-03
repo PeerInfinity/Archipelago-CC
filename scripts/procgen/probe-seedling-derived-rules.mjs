@@ -135,12 +135,12 @@ async function main() {
     console.log(`CERT: ${problems.length} problems / ${accepted} accepted / ${threw.length} threw; ${rows.length} rows; wall ${wall} ms, shard ms ${parts.map((p) => p.ms).join('/')}, heap MB ${parts.map((p) => p.heapMb).join('/')}`);
     for (const p of problems) console.log(`  PROBLEM ${p}`);
     for (const p of threw) console.log(`  THREW shard ${p.shard}: ${p.threw}`);
-    const table = labelDerivedRows(rows, { rules, echoes: new Set(echoes.elements), explained: EXPLAINED_PROBLEMS });
+    const table = labelDerivedRows(rows, { rules, echoes: new Set(echoes.elements), explained: EXPLAINED_PROBLEMS, lockEvents: new Set(M.playthroughLockEventNames()) });
     const summary = { certifier: { problems: problems.length, accepted, threw: threw.length }, echoes: { copied: counts, elements: echoes.elements.length }, ...summarizeDerivedRows(table) };
     console.log(`SUMMARY: ${JSON.stringify(summary)}`);
     const sha = process.env.GITHUB_SHA ?? '';
     const regionClass = Object.fromEntries([...table.regions].map(([k, r]) => [k, { class: r.class, arrivals: [...r.arrivals].sort() }]));
-    writeFileSync(resolve(outDir, 'derived-rules.json'), `${JSON.stringify({ sha, levels: levels.length, summary, echoes, problems, regions: regionClass, rows: table.elements }, null, 1)}\n`);
+    writeFileSync(resolve(outDir, 'derived-rules.json'), `${JSON.stringify({ sha, levels: levels.length, summary, echoes, problems, regions: regionClass, unpriced: table.unpriced, rows: table.elements }, null, 1)}\n`);
     console.log(`WROTE: ${resolve(outDir, 'derived-rules.json')} (${table.elements.length} element rows)`);
     let failed = threw.length;
     if (threw.length) console.log(`FAIL: ${threw.length} shard(s) threw`);

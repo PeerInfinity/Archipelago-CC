@@ -615,6 +615,10 @@ export function projectRegionToMaze(region, grid, ctx) {
     const entities = typeof ctx.levelEntitiesFor === 'function' ? ctx.levelEntitiesFor(region, grid) : null;
     if (levelHasInteraction(entities)) return projectLevelWorld(region, grid, ctx, entities);
     const analysis = analyzeRegion(region, grid, { conditionKey, resolveCondition });
+    // TEST-ONLY (session tile-rules-automation-r-a2, the designer's red-first pin): a hook that may rewrite the analyzer's
+    // PRICING output (`bindings[].conditionSets/necessary/sealedIn`, `crossings[].conditionSets`) — the binder the rules
+    // producer composes its charges from. The worlds must not read it: a world is built from geometry and the grid only.
+    ctx.analysisHook?.(region, analysis);
     const components = analysis.components;
     const bindings = bindingsFor(region);
 
@@ -725,10 +729,14 @@ export function projectRegionToMaze(region, grid, ctx) {
     // A caller that supplies `plainLevelWorldFits(world)` asks for the level world instead, whose crossings are WALKED over
     // the grid, and keeps it when the test says it fits (Seedling's: its item axis fits the certifier's lattice cap; L12's
     // 15 items do not, so L12 stays per sub-region, named). Only analyzer rows, as for colliding crossings above.
+    // A crossing between two declared sub-regions through material the grid cannot price (`needs_authoring`: a per-pixel
+    // collision mask, whose crossing the rules producer's PHYSICS MODEL decides — L94 r2c16 <-> r3c4 through TreeLarge) has
+    // no terrain a level world could walk: the world walls that footprint, so such a level stays per sub-region.
+    const unwalkable = (analysis.needs_authoring ?? []).filter((n) => kept.has(n.from) && kept.has(n.to));
     let keptPlain = null;
     if (walkable && declared.length > 0 && typeof ctx.levelEntitiesFor === 'function' && typeof ctx.plainLevelWorldFits === 'function') {
-        const world = projectLevelWorld(region, grid, ctx, entities ?? []);
-        const fit = ctx.plainLevelWorldFits(world);
+        const world = unwalkable.length > 0 ? null : projectLevelWorld(region, grid, ctx, entities ?? []);
+        const fit = world ? ctx.plainLevelWorldFits(world) : `its crossing ${unwalkable[0].from} <-> ${unwalkable[0].to} goes through material only the physics model walks (${unwalkable[0].reasons[0]})`;
         if (fit === true) {
             world.notes.unshift({
                 region_id: region.region_id,

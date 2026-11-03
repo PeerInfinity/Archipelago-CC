@@ -99,7 +99,7 @@ function sharedMembersOf(rules) {
  * @returns {{elements: object[], regions: Map<string, object>}} one row per element per arrival, and per region its
  *   arrivals and its Route A class ('overridable', 'internal-only', 'several arrivals', 'walk-in from another member')
  */
-export function labelDerivedRows(rows, { rules, echoes, explained = [] }) {
+export function labelDerivedRows(rows, { rules, echoes, explained = [], lockEvents = new Set() }) {
     for (const x of explained) {
         if (!DERIVED_ROW_LABELS.includes(x.as) || x.as === 'problem') throw new Error(`derived rows: an explained problem's label must be one of the others, got ${x.as}`);
     }
@@ -164,8 +164,35 @@ export function labelDerivedRows(rows, { rules, echoes, explained = [] }) {
         e.label = named ? named.as : e.verdict === 'problem' ? 'problem' : e.echoed ? 'echoed' : e.arrivalDependent ? 'arrival-dependent'
             : e.compare === 'equal' ? 'derived' : 'path-vs-edge';
     }
-    return { elements, regions };
+    // ⛓ SHARED BINDING (session tile-rules-automation-r-a2, rules-4's review): a derived rule that names a LOCK's event was
+    // walked through a lock the maze laid from the rules producer's own event layer (`playthroughLockEvents`: which entity,
+    // which event). Its price is derived, but the lock ↔ event BINDING is shared, so a wrong binding would agree on both
+    // sides. A fact, so R-A3 never overrides on such a row without a game witness (the lock censuses check the binding).
+    for (const e of elements) {
+        const named = [...ruleItemNames(e.derived)].filter((n) => lockEvents.has(n)).sort();
+        if (named.length > 0) e.sharedBinding = { by: 'playthroughLockEvents', events: named };
+    }
+    // ⛓ UNPRICED (designer's condition 1, R-A2): an AP exit between two members of one shared level world that no row
+    // prices — its source is internal-only, priced only as paths from inbound members — has no verdict of its own. It is
+    // no echo, and it is no evidence either; counted, never folded into a label.
+    const pairs = new Set(elements.filter((e) => e.kind === 'pair').map((e) => e.key));
+    const unpriced = [];
+    for (const [name, others] of members) {
+        for (const x of REGIONS[name]?.exits ?? []) {
+            if (others && x.connected_region !== name && others.includes(x.connected_region) && !pairs.has(pairKey(name, x.connected_region))) {
+                unpriced.push(exitKey(name, x.name));
+            }
+        }
+    }
+    return { elements, regions, unpriced: [...new Set(unpriced)].sort() };
 }
+
+const ruleItemNames = (rule, out = new Set()) => {
+    if (!rule || typeof rule !== 'object') return out;
+    if (typeof rule.args?.item_name === 'string') out.add(rule.args.item_name);
+    for (const c of rule.children ?? []) ruleItemNames(c, out);
+    return out;
+};
 
 const tally = (o, k) => { o[k] = (o[k] ?? 0) + 1; };
 
@@ -178,7 +205,7 @@ const tally = (o, k) => { o[k] = (o[k] ?? 0) + 1; };
  *   - `routeA`: regions per class, and the overridable regions' elements split echoed / echo-free, and the echo-free ones
  *     split partial (a row skipped points) / EXACT (the override candidates).
  */
-export function summarizeDerivedRows({ elements, regions }) {
+export function summarizeDerivedRows({ elements, regions, unpriced = [] }) {
     const labels = {};
     for (const e of elements) {
         if (!labels[e.kind]) labels[e.kind] = {};
@@ -219,6 +246,8 @@ export function summarizeDerivedRows({ elements, regions }) {
         w0,
         elements: keys.length,
         echoedElements: keys.filter((k) => echoedKey.has(k)).length,
+        unpriced: unpriced.length,
+        sharedBinding: new Set(elements.filter((e) => e.sharedBinding).map((e) => e.key)).size,
         arrivals: {
             regionsPriced: regions.size, arrivalNodes: nodes, regionsPerArrivalCount: hist,
             regionsArrivalDependent: [...regions.values()].filter((r) => r.dependent).length,

@@ -387,6 +387,11 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     return out;
 }
 
+/** The rules producer's LOCK events (`playthroughLockEvents`), by name: the bindings the maze lays from its event layer. */
+export function playthroughLockEventNames() {
+    return wholeEventLayer(readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'))).locks.events.map((e) => e.name);
+}
+
 /**
  * ⛓ The rules producer's OWN permissive bound (`permissiveBindings`, `"<atlas region>/<binding>"`: what its analysis
  * pass leaves uncharged on purpose, e.g. L89's Feather), read from its run — never copied — for the certifier's
@@ -604,7 +609,8 @@ export function projectionRegionOf(region, hand) {
 
 /**
  * ⛓ A PLAIN LEVEL BECOMES ONE LEVEL WORLD when its item axis fits the certifier's lattice cap (`LEVEL_WORLD_LATTICE_CAP`,
- * read from its one constant, never a level list; designer GO, L12 option (a)). Returns true, or why not.
+ * read from its one constant, never a level list; designer GO, L12 option (a)). The projection asks only for a level whose
+ * crossings the grid prices (see `projectRegionToMaze`). Returns true, or why not. Pure.
  */
 export function plainLevelWorldFits(world) {
     const carrier = Object.values(world.sidecars).find((sc) => sc.playable_payload)?.playable_payload;
@@ -622,7 +628,7 @@ export function plainLevelWorldFits(world) {
 only rules the worlds copy, to plant in. Absent, the compile is the preset's, byte for byte. `embedSphereLog: false` skips the
  * sphere log (a sentinel compile places items no state can hold).
  */
-export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSphereLog = true } = {}) {
+export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSphereLog = true, analysisHook = null } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
     const mapDoc = readJson(resolve(ATLAS_DIR, atlas.tile_space.map_document));
     const gameConfig = readJson(resolve(REPO, 'frontend/modules/flashPanel/games/seedling.json'));
@@ -654,6 +660,8 @@ export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSpher
     });
     mazeProjection.projectionRegion = (region) => projectionRegionOf(region, hand);
     mazeProjection.plainLevelWorldFits = plainLevelWorldFits;
+    // TEST-ONLY: the red-first pin's hook into the analyzer's pricing output (`projectRegionToMaze`).
+    if (analysisHook) mazeProjection.analysisHook = analysisHook;
     const restricted = restrictAtlas(atlas, levels, { start: START_LEVEL });
     const { rules, report } = compileRegionAtlas(restricted, {
         mapDoc,

@@ -75,10 +75,13 @@ describe('arrival dependence (L91 → L92 r4c2)', () => {
         ]);
     });
 
-    it('L91 → L89 r1c10 was the W0 example (free from (1,8)); rules-certifier-tail gates it on Swim from both, so it is no longer arrival-dependent', () => {
+    it('L91 → L89 r1c10, the W0 example: free from the WATER landing (1,8), Swim from (15,4) — arrival framing', () => {
+        // rules-certifier-tail charges the door Swim from both (`chargeNecessaryApproaches`). Until the input/output split
+        // (session tile-rules-automation-r-a2) the maze COPIED that charge, so both rows read 'derived'. Derived from the
+        // grid, the arrival placed ON the water landing never pays that cell's Swim, which AP charges as the landing's own.
         expect(of('level_91', 'level_91 -> level_89__r1c10')).toEqual([
-            ['landing 1,8', SWIM, 'derived'],
-            ['landing 15,4', SWIM, 'derived'],
+            ['landing 1,8', { rule: 'True_' }, 'arrival-dependent'],
+            ['landing 15,4', SWIM, 'arrival-dependent'],
         ]);
     });
 
