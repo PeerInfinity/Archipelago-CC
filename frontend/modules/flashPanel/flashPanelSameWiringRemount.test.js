@@ -30,7 +30,7 @@ vi.mock('./index.js', async (importOriginal) => ({
 
 const { FlashPanelUI } = await import('./flashPanelUI.js');
 const { SeedlingRegionGlue } = await import('./seedlingRegionGlue.js');
-const { isEditorLoad, seedlingMountKey } = await import('./seedlingMountKey.js');
+const { seedlingMountKey } = await import('./seedlingMountKey.js');
 const { atlasRoomRegions } = await import('../seedlingDemo/seedlingAtlasCheckTable.js');
 const { AP_ASSET_PATHS } = await import('./seedlingRandomizerWiring.js');
 const { atlasIndexPath } = await import('./mapDocumentPath.js');
@@ -53,10 +53,12 @@ function locationsMapOf(rules) {
     return out;
 }
 
-/** What `files:jsonLoaded` → `stateManager:rulesLoaded` leaves behind: the raw payload and the static data. */
+/**
+ * What `files:jsonLoaded` → `stateManager:rulesLoaded` leaves behind: the raw payload and the static data. The panel
+ * reads nothing else of the publish (⚖ Robert, 2026-11-03: an editor's republish is not told apart from a preset).
+ */
 function loadRules(panel, rules, eventData = {}) {
     const jsonData = rules;
-    panel._jsonLoadedHandler?.({ jsonData, selectedPlayerId: '1', sourceName: 'presets/x', ...eventData });
     state.payload = { source: eventData.sourceName ?? 'presets/x', rawJsonData: jsonData, selectedPlayerInfo: { playerId: '1' } };
     state.staticData = { flash_panel: rules.flash_panel['1'], playerId: '1', locations: locationsMapOf(rules), game_name: rules.game_name };
 }
@@ -108,7 +110,6 @@ function barePanel({ transport = 'js' } = {}) {
         _heldKeys: { uninstall() {}, install() {} },
         swfContainer: { innerHTML: '', style: {} },
         teleportRow: { style: {} },
-        _editorLoads: new WeakSet(),
         // ⛓ the init flow, from its adapter to bridge ready: what a re-mount ends in
         _initializeAdapter() {
             this.isInitialized = true;
@@ -119,11 +120,6 @@ function barePanel({ transport = 'js' } = {}) {
         },
         _loads: [],
     });
-    panel._jsonLoadedHandler = (data) => {
-        if (isEditorLoad(data) && data?.jsonData) { // the constructor's handler, on a panel built without it
-            panel._editorLoads.add(data.jsonData);
-        }
-    };
     return { panel, inits, logs };
 }
 
@@ -240,22 +236,34 @@ describe('a same-wiring rules load while the game runs', () => {
         const applied = clone(edited);
         loadRules(panel, applied, { sourceName: 'presets/seedling_atlas/AP_1/AP_1_rules.json', appliedBy: 'apworldEditorApply' });
         panel._onRulesLoaded();
-        // …and the same edit loaded as a plain preset: the KEY says the rooms are the same, not the editor exemption
+        // …and a JSON editor's Apply
+        loadRules(panel, clone(edited), { sourceName: 'editorApply' });
+        panel._onRulesLoaded();
+        // …and the same edit loaded as a plain preset: the KEY says the rooms are the same
         loadRules(panel, clone(edited));
         panel._onRulesLoaded();
         await settle(fetchStub, panel._loads);
         expect(inits.length).toBe(1);
-        expect(logs.filter((l) => /rules changed by an editor/.test(l))).toEqual([]);
+        expect(logs.filter((l) => /re-mounting/.test(l))).toEqual([]);
     });
 
-    it('⛔ STOPPED: an editor republish that DOES change the rooms keeps today\'s behaviour (no re-mount, said in the log)', async () => {
+    // ⚖ Robert, 2026-11-03: an editor's Apply / "Load into frontend" that changes the running game's rooms RESTARTS it
+    // on the edited rooms — the same visible restart as a preset switch.
+    it.each([
+        ['the procgen pipeline\'s "Load into frontend"', { sourceName: 'procgenPipeline' }],
+        ['the APWorld editor\'s Apply (origin preset name + `appliedBy`)',
+            { sourceName: 'presets/seedling_location/AP_1/AP_1_rules.json', appliedBy: 'apworldEditorApply' }],
+        ['a JSON editor\'s Apply', { sourceName: 'editorApply' }],
+    ])('an editor republish that DOES change the rooms re-mounts on the edited rooms: %s', async (_label, eventData) => {
         const { panel, inits, logs } = await running(LOCATION);
-        loadRules(panel, clone(ATLAS), { sourceName: 'procgenPipeline' });
+        expect(boundRooms(panel)).toEqual(roomsOf(LOCATION));
+        loadRules(panel, clone(ATLAS), eventData);
         panel._onRulesLoaded();
         await settle(fetchStub, panel._loads);
-        expect(inits.length).toBe(1);
-        expect(boundRooms(panel)).toEqual(roomsOf(LOCATION));
-        expect(logs.some((l) => /rules changed by an editor/.test(l))).toBe(true);
+        expect(inits.length).toBe(2);
+        expect(panel.adapter).toBe(inits[1]);
+        expect(boundRooms(panel)).toEqual(roomsOf(ATLAS));
+        expect(logs.some((l) => /different rooms\) — re-mounting/.test(l))).toBe(true);
     });
 
     it('a load refused on the WIRING (the build: no readable manifest) restarts on no same-wiring rules change', async () => {

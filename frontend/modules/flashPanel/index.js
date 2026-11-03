@@ -284,8 +284,6 @@ export function register(registrationApi) {
   });
 
   registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
-  // ⛓ the editor loads' documents, so a same-wiring re-mount can tell them from a preset switch (`seedlingMountKey.js`)
-  registrationApi.registerEventBusSubscriberIntent('files:jsonLoaded');
   // ⛓ Seedling JS J1: the panel re-initializes when `runtime` changes.
   registrationApi.registerEventBusSubscriberIntent('settings:changed');
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');

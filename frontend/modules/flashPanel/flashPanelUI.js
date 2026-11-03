@@ -23,7 +23,7 @@ import { createHeldKeyRelease, dispatchGameKey, focusGameCanvas } from './gameIn
 import { TOUCH_SETTING_KEY, mountTouchControls, parseTouchLayout, touchControlsVisible } from './touchControls.js';
 import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
-import { isEditorLoad, seedlingMountKey } from './seedlingMountKey.js';
+import { seedlingMountKey } from './seedlingMountKey.js';
 import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
 import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
 import { KILLLOCK_SETTING_KEYS, killLockPageQuery } from './seedlingKillLockSettings.js';
@@ -258,17 +258,6 @@ export class FlashPanelUI {
     // preset through the UI.
     this._rulesLoadedHandler = () => { this._onRulesLoaded(); };
     this.eventBus.subscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
-    /**
-     * ⛓ THE EDITOR LOADS — the documents an editor handed back (`isEditorLoad`), by identity: the state manager's
-     * `rawJsonDataLoaded` carries the SAME object as `rawJsonData` and drops the APWorld editor's `appliedBy`
-     * marker, so this is the one place that can still tell such a load from a preset switch. ⛔ A same-wiring
-     * re-mount for them is a separate ruling (`_mountedRoomsDiffer`).
-     */
-    this._editorLoads = new WeakSet();
-    this._jsonLoadedHandler = (data) => {
-      if (isEditorLoad(data) && data.jsonData && typeof data.jsonData === 'object') this._editorLoads.add(data.jsonData);
-    };
-    this.eventBus.subscribe('files:jsonLoaded', this._jsonLoadedHandler);
 
     /**
      * ⛓ Seedling JS J1 — a RUNTIME change re-initializes the embed (the
@@ -483,21 +472,17 @@ export class FlashPanelUI {
    * of the rules `_startSeedlingRandomizer` read for THIS adapter; this compares it with the loaded rules'.
    *   · no key yet (no adapter, or the bridge is not ready) — the load has not read the rules: it will read these;
    *   · `_rulesIgnored` — the load refused on the wiring alone (transport / capability): no rules change can matter;
-   *   · equal — the same rooms (a reload of the same document, a fresh object): nothing;
-   *   · an EDITOR's document (`_editorLoads`) — ⛔ STOPPED for a separate ruling: today's behaviour (no re-mount),
-   *     said in the log.
+   *   · equal — the same rooms (a reload of the same document, a fresh object): nothing.
+   * ⚖ Robert, 2026-11-03 — an EDITOR's republish (the procgen pipeline's "Load into frontend", the APWorld editor's
+   * Apply, a JSON editor's Apply) is NOT exempt: when it changes the running game's rooms the game restarts on the
+   * edited rooms, the same visible restart as a preset switch (on wasm it asks for ▶ Start again). Once per click:
+   * no editor auto-save publishes a rules load.
    */
   _mountedRoomsDiffer() {
     const mounted = this._apLoadKey;
     if (!this.adapter || mounted === undefined || this._apLoadRulesIgnored) return false;
     const now = this._mountKeyNow();
-    if (now === mounted) return false;
-    if (this._editorLoads?.has(rulesOfRawPayload(getLastRawJsonData?.()))) {
-      this._panelLog('rules changed by an editor (same game wiring, different rooms) — the running game keeps the '
-        + 'rooms it was loaded with; re-load the preset to play the edited ones');
-      return false;
-    }
-    return true;
+    return now !== mounted;
   }
 
   /** The `seedlingMountKey` of the rules loaded NOW — what `_startSeedlingRandomizer` would read. */
@@ -2477,10 +2462,6 @@ export class FlashPanelUI {
     if (this._rulesLoadedHandler) {
       this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
       this._rulesLoadedHandler = null;
-    }
-    if (this._jsonLoadedHandler) {
-      this.eventBus.unsubscribe('files:jsonLoaded', this._jsonLoadedHandler);
-      this._jsonLoadedHandler = null;
     }
     if (this._settingsChangedHandler) {
       this.eventBus.unsubscribe('settings:changed', this._settingsChangedHandler);
