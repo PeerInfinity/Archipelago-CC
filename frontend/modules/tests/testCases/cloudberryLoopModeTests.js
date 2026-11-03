@@ -302,7 +302,9 @@ async function recordThenPlayback(tc) {
                 + `wall clock parked ${((performance.now() - wall0) / 1000).toFixed(2)} s`);
             tc.assertEqual('the summary keeps the checked coin', JSON.stringify(['region_2_2__loc_0']),
                 JSON.stringify((saved.summary.checks ?? []).map((c) => c?.locationName ?? c)));
-            tc.assertEqual('…and the exit taken', 'region_2_2__exit_E', saved.departureExitId);
+            // The summary keeps the PAGE's exit id (the payload's `exit_id`), not the AP exit name: two regions both have
+            // an `exit_E`, so the world generator prefixes the AP name (`region_2_2__exit_E`); the payload keeps `exit_E`.
+            tc.assertEqual('…and the exit taken', 'exit_E', saved.departureExitId);
             const ps = saved.summary.playStats;
             // A page that settles its clock at the door reports the visit's game seconds up to it, so the duration is
             // their floor — plus at most the one wall second loops' fail-safe may charge between the park and the
