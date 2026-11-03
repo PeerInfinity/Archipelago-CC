@@ -15,12 +15,12 @@
 
 import {
     regionItems, reachUnder, regionTargets, cutEvents, noteCuts, NOTHING_REACHED, reachedTarget, planToTarget, targetCell, reachKey, reachInputs,
-    regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint, endsWalk,
+    regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint, endsWalk, latchEvents,
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
     createState, step, getExitAt, worldInputs, sharedWorldOwnerAt, standsInArmedLane, strikeTargets, USE_PREFIX, TURN_PREFIX,
-    actionUsable, blockWithinReach,
+    actionUsable, blockWithinReach, latchCells,
 } from '../mazeRoomEngine.js';
 
 /**
@@ -87,13 +87,56 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
 /**
  * `reach(set)` through an optional CACHE (a Map the caller owns, one per world and engine): the pairs and
  * the entry pricing of one region ask the same (arrival, inventory) reach — the certifier shares it.
+ * ⛓ `memo`: memoise even with no cache passed (the LATCH SANDWICH's probes are lattice points the walk may ask again —
+ * without the memo L40 laid re-searches them: 5,871 searches, more than with no prune). `count` sees each REAL search.
  */
-function cachedReach(cache, entered, reach) {
-    if (!cache) return reach;
+function cachedReach(cache, entered, reach, { memo = false, count = null } = {}) {
+    const run = count ? (set) => { const r = reach(set); count(r); return r; } : reach;
+    if (!cache && !memo) return run;
+    const store = cache ?? new Map();
     return (set) => {
         const key = `${entered.entrance.x},${entered.entrance.y}|${set.join('\u0001')}`;
-        if (!cache.has(key)) cache.set(key, reach(set));
-        return cache.get(key);
+        if (!store.has(key)) store.set(key, run(set));
+        return store.get(key);
+    };
+}
+
+/**
+ * ⛓ LATCH SANDWICH (session tile-latch-prune; ⚖ Robert 2026-11-03 "B: Prune, then lay"; measured by session
+ * tile-l40-latch-slowness): a lattice point is skipped when a HIGHER point already proves it takes nothing new.
+ * The walk already rests on MONOTONICITY — reach only grows with the inventory — when it drops, for good, a target the
+ * TOP point does not reach. The sandwich makes the same inference from a lower top: point Q's upper probe is
+ * U = Q ∪ E (E = the world's latch events). A target U does not take, Q cannot take either; so if no target still
+ * uncovered is taken at U, Q is skipped. A latch's OWN event target is never taken holding its event (`reachedTarget`),
+ * so its probe is U \ {its event}. The probes are lattice points, memoised in the same reach cache. Witnesses are
+ * unchanged: a skipped point is never minimal, and every minimal point is still searched. L40 with its three latches
+ * laid: 2,045 → 283 searches (native derive pass). No latch → `null`: a provable no-op on every other world.
+ * ⛔ REFUSED BY NAME: a latch whose held token arms a trap. Holding its event then ARMS something, and reach can shrink
+ * with the inventory — the premise is unproven there. (A latch on a pulser's token is refused by `checkButtonLib`.)
+ * `reachOf(set)` = the memoised reach; returns `(set, target, takenAt) → true when Q certainly takes nothing for target`.
+ * ⛓ The OWN-event branch is unreachable through `deriveEntryLogic` today: a latch's event target is priced unreachable by the
+ * top search (which holds the event, and a carried latch records no press), so it is never live. It is kept — the inference
+ * would be unsound for that target without it — and pinned directly (`latchSandwich.test.js`).
+ */
+export function latchSandwich(world, reachOf) {
+    const E = [...new Set(latchEvents(world).map((l) => l.event))].sort();
+    if (E.length === 0) return null;
+    for (const { id, entry } of latchCells(world)) {
+        if (!entry.latch.event) continue;
+        const trap = Object.entries(world.trapLib ?? {}).find(([, t]) => t?.active === entry.holds);
+        if (trap) {
+            throw new Error(`latch sandwich: ${id} latches the token (${entry.holds}) that arms trap ${trap[0]} — `
+                + 'reach may shrink holding its event (not proven monotone; not modelled)');
+        }
+    }
+    const probeOf = (set, minus) => [...new Set([...set, ...E])].filter((i) => i !== minus).sort();
+    const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+    return (set, target, takenAt) => {
+        const own = target?.event && E.includes(target.event) ? target.event : null;
+        if (own && set.includes(own)) return true; // never taken holding its own event
+        const u = probeOf(set, own);
+        if (same(u, [...set].sort())) return false; // the probe IS Q: nothing to save
+        return !takenAt(reachOf(u), u);
     };
 }
 
@@ -137,10 +180,17 @@ export function enteredAt(world, region) {
 /**
  * Per-(from, to) minimal inventories over a shared level world.
  *
+ * `latchSandwich: false` turns the LATCH SANDWICH off — a TEST-ONLY switch (the on ≡ off pins); every caller keeps it on.
+ * `engine` = the work this call really did: `searches`/`states` of the engine searches it ran (cache misses, the
+ * sandwich's probes included) and the lattice points the sandwich `skipped`.
+ *
  * @returns {{ items: string[], pairs: Array<{from, to, minimal: string[][], witnesses: Array<{inventory,
- *   plan, cell}>, unreachable: boolean}>, searched: number, states: number }}
+ *   plan, cell}>, unreachable: boolean}>, searched: number, states: number,
+ *   engine: {searches: number, states: number, skipped: number} }}
  */
-export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, cache = null } = {}) {
+export function deriveLevelWorldLogic(world, helpers, {
+    tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, cache = null, latchSandwich: sandwiching = true,
+} = {}) {
     const sw = world.sharedWorld;
     if (!sw) throw new Error('level-world logic: the world is not a shared level world');
     const items = regionItems(world);
@@ -159,10 +209,13 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
     const pairs = [];
     let searched = 0;
     let states = 0;
+    const engine = { searches: 0, states: 0, skipped: 0 };
+    const count = (r) => { engine.searches += 1; engine.states += r.states; };
+    const latched = sandwiching && latchEvents(world).length > 0;
     for (const from of sw.regions) {
         const entered = enteredAt(world, from);
         const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
-            : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })));
+            : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })), { memo: latched, count });
         const full = reachOf(fullPoint(axis));
         searched += 1;
         states += full.states;
@@ -172,8 +225,13 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
         pairs.push(...live);
         const open = live.filter((p) => !p.unreachable);
         const covered = (p, set) => p.minimal.some((m) => pointCovers(set, m));
+        const sandwich = latched ? latchSandwich(entered, reachOf) : null;
         for (const set of latticePoints(axis)) {
             if (open.every((p) => covered(p, set))) continue;
+            if (sandwich && open.every((p) => covered(p, set) || sandwich(set, null, (r) => owned(r.cells, p.to) !== null))) {
+                engine.skipped += 1;
+                continue;
+            }
             const reach = reachOf(set);
             searched += 1;
             states += reach.states;
@@ -186,7 +244,7 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
             }
         }
     }
-    return { items, levels, pairs, searched, states };
+    return { items, levels, pairs, searched, states, engine };
 }
 
 /**
@@ -210,10 +268,12 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
  * into `region` (the certifier's `atlasLandings`) — instead of the region's entrance cell.
  *
  * @returns {{ items: string[], targets: Array<{id, kind, x, y, exitName?, locationName?, minimal: string[][],
- *   witnesses: Array<{inventory, plan}>, unreachable: boolean}>, searched: number, states: number }}
+ *   witnesses: Array<{inventory, plan}>, unreachable: boolean}>, searched: number, states: number,
+ *   engine: {searches: number, states: number, skipped: number} }} — `latchSandwich` and `engine` as `deriveLevelWorldLogic`'s.
  */
 export function deriveEntryLogic(world, region, helpers, {
     tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, arrivalBlocked = null, cache = null, arriveFrom = null, arriveAt = null,
+    latchSandwich: sandwiching = true,
 } = {}) {
     const shared = Boolean(world.sharedWorld);
     if (arriveFrom !== null && !shared) throw new Error(`entry logic: arriveFrom "${arriveFrom}" needs a shared level world`);
@@ -244,8 +304,12 @@ export function deriveEntryLogic(world, region, helpers, {
         }
         return [{ ...t, locationName: t.locationName ?? world.itemLocationNames?.get?.(`${t.x},${t.y}`) ?? null }];
     });
+    const engine = { searches: 0, states: 0, skipped: 0 };
+    const latched = sandwiching && latchEvents(entered).length > 0;
     const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
-        : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })));
+        : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })), {
+        memo: latched, count: (r) => { engine.searches += 1; engine.states += r.states; },
+    });
     const full = reachOf(top);
     let searched = 1;
     let states = full.states;
@@ -256,8 +320,13 @@ export function deriveEntryLogic(world, region, helpers, {
     }
     const live = targets.filter((t) => !t.unreachable);
     const covered = (t, set) => t.minimal.some((m) => pointCovers(set, m));
+    const sandwich = latched ? latchSandwich(entered, reachOf) : null;
     for (const set of latticePoints(axis)) {
         if (live.every((t) => covered(t, set))) continue;
+        if (sandwich && live.every((t) => covered(t, set) || sandwich(set, t, (r, u) => taken(r, t, u)))) {
+            engine.skipped += 1;
+            continue;
+        }
         const reach = reachOf(set);
         searched += 1;
         states += reach.states;
@@ -268,5 +337,5 @@ export function deriveEntryLogic(world, region, helpers, {
         }
     }
     for (const t of targets) delete t.exit;
-    return { items, levels, targets, searched, states };
+    return { items, levels, targets, searched, states, engine };
 }

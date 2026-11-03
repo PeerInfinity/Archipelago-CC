@@ -35,3 +35,35 @@ export const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,
  * so the rules charge the Swim the world always did. Its pin and both expectations were removed with it.
  */
 export const PERMISSIVE = playthroughPermissiveLocations();
+
+/**
+ * ⛓ L40 WITH ITS LATCHES LAID (session tile-latch-prune; the lay session tile-mechanisms-m4-latch measured, read from the game's
+ * three in-level ButtonRooms and the wandlocks each opens): the LATCH SANDWICH's subject (`deriveLevelWorldLogic.js`). The committed
+ * preset does NOT lay them (⚖ Robert 2026-11-03 "B: Prune, then lay" — the lay is its own later slice), so the pins lay them by hand
+ * onto `level_40__r0c53`'s payload: each latch `buttonLib.latch: {event: "L40 latch tN"}`, its locks doors on its held token.
+ * The item axis grows 6 → 9. Returns a deep copy of `rules`; the payload's other entities are untouched.
+ */
+export const L40_LATCHES = Object.freeze({
+    t0: { button: [17, 13], locks: [[13, 8], [13, 9], [13, 10]] },
+    t1: { button: [10, 8], locks: [[11, 5], [11, 13]] },
+    t3: { button: [55, 48], locks: [[30, 35]] },
+});
+export const L40_REGIONS = ['level_40__r0c53', 'level_40__r23c29', 'level_40__r32c36', 'level_40__r36c35', 'level_40__r48c54'];
+export function layL40Latches(rules = RULES) {
+    const r = structuredClone(rules);
+    const lay = r.preset_sidecars['1'].level_40__r0c53.playable_payload;
+    lay.buttons = [...(lay.buttons ?? [])];
+    lay.buttonLib = { ...(lay.buttonLib ?? {}) };
+    lay.obstacleLib = { ...(lay.obstacleLib ?? {}) };
+    for (const [g, { button: [bx, by], locks }] of Object.entries(L40_LATCHES)) {
+        lay.buttons.push({ x: bx, y: by, id: `latch_${g}` });
+        lay.buttonLib[`latch_${g}`] = { kind: 'button', holds: `sw_l${g}`, latch: { event: `L40 latch ${g}` } };
+        lay.obstacleLib[`wl_${g}`] = { id: `wl_${g}`, name: `wandlock ${g}`, kind: 'door', clear_set: [[`sw_l${g}`]] };
+        for (const [x, y] of locks) {
+            lay.obstacles = lay.obstacles.filter((o) => !(o.x === x && o.y === y));
+            lay.tiles[y * lay.width + x] = 0;
+            lay.obstacles.push({ x, y, id: `wl_${g}` });
+        }
+    }
+    return r;
+}
