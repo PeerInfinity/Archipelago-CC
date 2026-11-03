@@ -2391,10 +2391,21 @@
             "name": "level_20__r1c4 -> level_20__r3c1",
             "connected_region": "level_20__r3c1",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Shield"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L20 flag 4: lock@32,80 cleared"
+                  }
+                }
+              ]
             }
           },
           {
@@ -2481,7 +2492,44 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L20 flag 4: lock@32,80 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L20 flag 4: lock@32,80 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L20:4",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 20,
+              "tag": 4,
+              "class": "lock",
+              "x": 32,
+              "y": 80
+            },
+            "action": {
+              "verb": "press",
+              "item": null,
+              "presser": {
+                "level": 20,
+                "class": "buttonroom",
+                "x": 192,
+                "y": 16
+              }
+            },
+            "side": "level_20__r1c12",
+            "across": []
+          }
+        ]
       },
       "level_20__r3c1": {
         "name": "level_20__r3c1",
@@ -2490,10 +2538,21 @@
             "name": "level_20__r3c1 -> level_20__r1c4",
             "connected_region": "level_20__r1c4",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Shield"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L20 flag 4: lock@32,80 cleared"
+                  }
+                }
+              ]
             }
           },
           {
@@ -13569,6 +13628,17 @@
         "type": "Event",
         "max_count": 1
       },
+      "L20 flag 4: lock@32,80 cleared": {
+        "name": "L20 flag 4: lock@32,80 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L39 flag 8: wandlock@144,592 cleared": {
         "name": "L39 flag 8: wandlock@144,592 cleared",
         "id": null,
@@ -13737,6 +13807,7 @@
       "L40 flag 8: bosslock@480,352 cleared": 1,
       "L48 flag 1: bosslock@48,144 cleared": 1,
       "L68 flag 0: bosslock@16,32 cleared": 1,
+      "L20 flag 4: lock@32,80 cleared": 1,
       "L39 flag 8: wandlock@144,592 cleared": 1,
       "L62 flag 0: lightpole@120,200 cleared": 1,
       "L63 flag 1: lightpole@64,88 cleared": 1,
@@ -20494,7 +20565,7 @@
             {
               "x": 2,
               "y": 5,
-              "id": "atlas_gate_0"
+              "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0"
             }
           ],
           "items": [
@@ -20516,6 +20587,33 @@
                   "item_name": "Progressive Shield"
                 }
               },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0": {
+              "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0",
+              "name": "Progressive Shield + L20 flag 4: lock@32,80 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L20 flag 4: lock@32,80 cleared"
+                    }
+                  }
+                ]
+              },
+              "opened_by": "L20 flag 4: lock@32,80 cleared",
               "color": "#b06eb8",
               "display": {
                 "mode": "tree"
@@ -20584,7 +20682,14 @@
               "id": "atlas_gate_0~L20 flag 0: shieldlocknorm@176,16 cleared"
             }
           ],
-          "items": [],
+          "items": [
+            {
+              "x": 12,
+              "y": 1,
+              "id": "L20 flag 4: lock@32,80 cleared",
+              "locationName": "L20 flag 4: lock@32,80 cleared"
+            }
+          ],
           "obstacleLib": {
             "atlas_gate_0": {
               "id": "atlas_gate_0",
@@ -20694,7 +20799,7 @@
             {
               "x": 2,
               "y": 5,
-              "id": "atlas_gate_0"
+              "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0"
             }
           ],
           "items": [],
@@ -20709,6 +20814,33 @@
                   "item_name": "Progressive Shield"
                 }
               },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0": {
+              "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0",
+              "name": "Progressive Shield + L20 flag 4: lock@32,80 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L20 flag 4: lock@32,80 cleared"
+                    }
+                  }
+                ]
+              },
+              "opened_by": "L20 flag 4: lock@32,80 cleared",
               "color": "#b06eb8",
               "display": {
                 "mode": "tree"
@@ -71638,7 +71770,8 @@
           },
           "new_accessible_locations": [
             "L12 flag 10: shieldlocknorm@288,704 cleared",
-            "L20 flag 0: shieldlocknorm@176,16 cleared"
+            "L20 flag 0: shieldlocknorm@176,16 cleared",
+            "L20 flag 4: lock@32,80 cleared"
           ],
           "new_accessible_regions": [
             "level_12__r43c21",
@@ -71751,6 +71884,27 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "L20 flag 4: lock@32,80 cleared": 1
+            },
+            "resolved_items": {
+              "L20 flag 4: lock@32,80 cleared": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "L20 flag 4: lock@32,80 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "L30 flag 0: bosslock@64,32 cleared": 1
             },
             "resolved_items": {
@@ -71767,7 +71921,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "4.4",
+      "sphere_index": "4.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -71788,7 +71942,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "4.5",
+      "sphere_index": "4.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -71809,7 +71963,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "4.6",
+      "sphere_index": "4.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -71830,7 +71984,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "4.7",
+      "sphere_index": "4.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -71870,7 +72024,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "4.8",
+      "sphere_index": "4.9",
       "player_data": {
         "1": {
           "new_inventory_details": {
