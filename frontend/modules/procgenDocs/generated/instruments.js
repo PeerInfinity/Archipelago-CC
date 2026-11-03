@@ -139,7 +139,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 138,
-            "count": 188,
+            "count": 189,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 504,
+        "blockStyle": 505,
         "browser": 204,
-        "cited": 265,
-        "files": 522,
+        "cited": 266,
+        "files": 523,
         "lineStyle": 18,
-        "withDocblock": 522,
-        "withFlags": 442
+        "withDocblock": 523,
+        "withFlags": 443
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12450,6 +12450,51 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-deadframes — how much does the fade cost VARY, and does it care about wall-clock?",
             "path": "scripts/procgen/probe-seedling-deadframes.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "levels",
+                "out",
+                "shards"
+            ],
+            "file": "probe-seedling-derived-rules.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "levels"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shards"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "MEASUREMENT (slice tile-rules-automation-r-a1, ⚖ Robert 2026-11-02: \"Route A, R-A1 first (Recommended)\"): the DERIVED-RULES TABLE.",
+            "path": "scripts/procgen/probe-seedling-derived-rules.mjs"
         },
         {
             "argvHelpers": [],

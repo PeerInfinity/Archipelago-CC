@@ -552,8 +552,15 @@ export function completionItemFor(atlas) {
     return placed ? VICTORY_ITEM : undefined;
 }
 
-/** Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`. */
-export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
+/**
+ * Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`.
+ * ⛓ `plant` (session tile-rules-automation-r-a1, the ECHO test): called once with `{atlas, layer, ropes}` after the event
+ * layer and the rope events are derived from the TRUE atlas and before anything is projected or compiled; it may rewrite
+ * their access rules in place (it is handed copies of the layer and the ropes, never the producer's cached rows) (the derived-rules probe plants a sentinel item in each, `seedlingEchoSentinels.js`, and
+ * looks for them in the payloads). Absent, the compile is the preset's, byte for byte. `embedSphereLog: false` skips the
+ * sphere log (a sentinel compile places items no state can hold).
+ */
+export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSphereLog = true } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
     const mapDoc = readJson(resolve(ATLAS_DIR, atlas.tile_space.map_document));
     const gameConfig = readJson(resolve(REPO, 'frontend/modules/flashPanel/games/seedling.json'));
@@ -562,8 +569,14 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     if (!partition) {
         throw new Error(`the sub-region partition has no entry for "${atlas.atlas_id}" — run make-seedling-subregion-partition.mjs`);
     }
-    const ropes = ropeEventsFor(atlas, partition, levels);
-    const layer = eventLayerFor(atlas, levels, { minted: ropes.events.map((e) => e.name) });
+    let ropes = ropeEventsFor(atlas, partition, levels);
+    let layer = eventLayerFor(atlas, levels, { minted: ropes.events.map((e) => e.name) });
+    if (plant) {
+        // The layer's rows are the producer's process-wide cache (`wholeEventLayer`): a plant rewrites COPIES.
+        ropes = structuredClone(ropes);
+        layer = structuredClone(layer);
+        plant({ atlas, layer, ropes });
+    }
     const mazeProjection = seedlingMazeProjectionDeps({
         mapDoc: PLAYTHROUGH_MAP,
         events: layer.world,
@@ -579,7 +592,7 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     const { rules, report } = compileRegionAtlas(restricted, {
         mapDoc,
         completionItem: completionItemFor(restricted),
-        embedSphereLog: true,
+        embedSphereLog,
         sidecarFlavor: 'maze',
         mazeProjection,
         events: [...layer.events, ...ropes.events],
