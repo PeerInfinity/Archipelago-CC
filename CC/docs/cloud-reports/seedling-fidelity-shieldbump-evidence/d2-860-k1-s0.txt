@@ -1,0 +1,3 @@
+SWITCH false COUNTS {"asked":0,"certified":0,"envelope":0,"exhausted":0,"noClaim":0}
+ANSWER REFUSED work 3068: solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> weigh stance (wandlock@448,432) -> weigh stance (wandlock@448,432) -> kill (iceturret@472,400) -> iceturret@472,400 staging (up) -> kill (spinner@816,848) by press: every key set — the plan's own and 
+KILLS 2 of spinner@816,848 0 []

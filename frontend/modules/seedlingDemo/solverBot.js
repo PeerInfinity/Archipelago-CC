@@ -234,7 +234,7 @@ import { PRESS_NO_FACING, PRESS_NO_FACING_COUNTS, isFacing, noFacingWhy, refuseN
 import { PRESS_ESCAPE_EXACT, PRESS_ESCAPE_EXACT_COUNTS, bumpCoveredThrough, shieldBumpFiresAt,
     shieldBumpForecastStepped } from './pressEscapeExact.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
-import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
+import { FORCED_HITS, FORCED_HIT_TRACE, crossingMatches, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
 // ⛓ seedling-fidelity-axeforcedu D2 — a spinning axe's forced U, crossed and billed (`AXE_PRICED_CROSSING`, OFF).
 import { AXE_PRICED_CROSSING, AXE_PRICED_TRACE, admitAxeCrossing } from './axePricedCrossing.js';
 // ⛓ seedling-fidelity-arrowlane D2 — the armed-lane crossing arm (`ARROW_LANE_CROSSING`, OFF).
@@ -2449,7 +2449,8 @@ function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
             missed += 1;
             continue;
         }
-        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis)
+        const coarse = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        const reached = coarse
             ?? (CONTACT_FIDELITY.fineWandStance ? fineWandStanceReaches(run, c, contacts) : null);
         if (!reached) { unreached += 1; continue; }
         const here = run.state.x === c.x && run.state.y === c.y;
@@ -2459,7 +2460,8 @@ function resolveWandStrategy(run, obstacle, contacts, blocked = []) {
             lock: lock.id,
             tag: lock.tag,
             lockType: lock.lockType,
-            stance: here ? null : { x: c.x, y: c.y },
+            // ⛓ L100LATTICE D1: a stance only the 8 px ask reached is walked on that lattice (`fineStance`).
+            stance: here ? null : (coarse ? { x: c.x, y: c.y } : fineStance(c)),
             at: { ...leaned },
             lean: c.key,
             direction: WAND_LEAN_DIRECTION[c.key],
@@ -5883,9 +5885,18 @@ function deriveWeighSource(run, onto, contacts, blocked = [], { liveBag = null }
  */
 function placementBlocker(run, resolved, contacts) {
     const t = resolved.target;
+    /**
+     * ⛓ fidelity REFUSALS D1 (`CONTACT_FIDELITY.chestBodyPlacementProbe`) — a `world.chests` row carries no `rect`, so
+     * the probe stood on its OEL cell CORNER (x, y). The game's chest is `super(_x + Tile.w/2, _y + Tile.h/2)` with
+     * `setHitbox(16, 16, 8, 8)` (`Chest.as:27,30`): its body is the cell (x..x+16, y..y+16), centred at (x+8, y+8).
+     * L25's `chest@96,96` only TOUCHES `rock2@80,96` (x 80..96) at x = 96, but the player box at the corner reached over
+     * it. ON: a chest is probed at its body's centre. OFF: byte-identical.
+     */
     const centre = t.rect
         ? { x: (t.rect.x + t.rect.right) / 2, y: (t.rect.y + t.rect.bottom) / 2 }
-        : { x: t.x, y: t.y };
+        : (CONTACT_FIDELITY.chestBodyPlacementProbe && resolved.strategy === 'chest'
+            ? { x: t.x + TILE_SIZE / 2, y: t.y + TILE_SIZE / 2 }
+            : { x: t.x, y: t.y });
     const hit = plannerObstacleAt(run.world, centre.x, centre.y, null,
         solverPlanOpts(run, contacts, {
             avoidVolumes: false, nodeMargin: 0, triggerMargin: 0,
@@ -6093,6 +6104,22 @@ export const FINE_LATTICE = TILE_SIZE / 2;
  * `economies` is; this constant is the roster-wide default.
  */
 export const FINE_LATTICE_ROSTER_WIDE = true;
+
+/**
+ * ⛓⛓ fidelity L100LATTICE D1 (`CONTACT_FIDELITY.fineStanceWalk`, OFF) — **THE STANCES AN 8 px ARM ANSWERED.** A stance
+ * whose existence the 8 px lattice decided (the 16 px ask refused it, or no 16 px cell names it) is a stance the 16 px
+ * WALK may not reach: `nearestGoalNode` aims at a 16 px node up to two cells away and the string-pull's fallback keeps
+ * the target as a last segment whose clearance nothing checks. Measured, survey step 219 (L100): `fineSwingStance`'s
+ * (124,140) walked as `… (104,136) (124,140)` through `cliffside0@112,128`, a 400-tick stall. So such a stance is
+ * MARKED here (an identity set: nothing is added to the object, so no record or trace that carries it changes) and
+ * `walkToUnder` plans the walk to a marked aim on `FINE_LATTICE` first. OFF: the same `{x, y}`, unmarked.
+ */
+const FINE_STANCES = new WeakSet();
+function fineStance(c) {
+    const stance = { x: c.x, y: c.y };
+    if (CONTACT_FIDELITY.fineStanceWalk) FINE_STANCES.add(stance);
+    return stance;
+}
 
 /**
  * The point a reach-exit walks at: the trigger's centre, or — when the player
@@ -11581,12 +11608,14 @@ function resolveBridgeStrategy(run, obstacle, contacts) {
                 continue;
             }
             const here = run.state.x === c.x && run.state.y === c.y;
+            let viaFine = false; // ⛓ L100LATTICE D1: the 8 px ask answered (`fineStance`)
             if (!here) {
                 let ok = false;
                 for (const lattice of [DEFAULT_LATTICE, FINE_LATTICE]) {
                     try {
                         planWaypoints(run.world, run.state, c, null, solverPlanOpts(run, contacts, { lattice }));
                         ok = true;
+                        viaFine = lattice === FINE_LATTICE;
                         break;
                     } catch (e) {
                         if (!(e instanceof BotDriverV2Error)) throw e;
@@ -11594,7 +11623,8 @@ function resolveBridgeStrategy(run, obstacle, contacts) {
                 }
                 if (!ok) { tried.push(`no corridor reaches ${at}`); continue; }
             }
-            found.push({ stance: { x: c.x, y: c.y }, dir, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+            found.push({ stance: viaFine ? fineStance(c) : { x: c.x, y: c.y }, dir,
+                d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
         }
     }
     if (found.length === 0) {
@@ -11761,10 +11791,12 @@ function resolvePoleThrustStrategy(run, obstacle, contacts) {
         if (traps.some((b) => rectsOverlapLocal(playerBoxAt(c.x, c.y), b.rect))) { unsafe += 1; continue; }
         const here = Math.abs(run.state.x - c.x) < 0.5 && Math.abs(run.state.y - c.y) < 0.5;
         let ok = here;
+        let viaFine = false; // ⛓ L100LATTICE D1: the 8 px ask answered (`fineStance`)
         for (const lattice of here ? [] : [DEFAULT_LATTICE, FINE_LATTICE]) {
             try {
                 planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null, solverPlanOpts(run, contacts, { lattice }));
                 ok = true;
+                viaFine = lattice === FINE_LATTICE;
                 break;
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
@@ -11780,7 +11812,7 @@ function resolvePoleThrustStrategy(run, obstacle, contacts) {
             slot: arm.slot,
             reach: arm.reach,
             dir: c.dir,
-            stance: { x: c.x, y: c.y },
+            stance: viaFine ? fineStance(c) : { x: c.x, y: c.y },
             core,
             rejected: [{
                 option: ghost ? 'a plain sword swing / a second swing' : 'a sword slash / a second thrust',
@@ -12047,9 +12079,40 @@ function execCorpseWeigh(run, perTick, resolved, ctx, armed) {
         throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'solid', id: c.turret },
             perTick: [...perTick] });
     };
+    // at rest: the corpse's two-cycle moves it 0.5 px a tick for ever and a glide moves 0.5 px a tick too, so
+    // "at rest" is the position two and four ticks ago, exactly (the cycle's period), and not before
+    // `CORPSE_GLIDE_MIN` ticks (a glide can pause on the cycle: measured, L40 at y 408 mid-way to (30,24))
+    const waitRest = (after) => {
+        const seen = [{ ...turret() }];
+        for (let w = 0; ; w += 1) {
+            if (w > CORPSE_GLIDE_MAX) refuseHere(`${c.turret}'s corpse never came to rest after ${after}`);
+            perTick.push(NONE);
+            if (run.advance(NONE).transition) refuseHere('the run crossed a door while the corpse glided');
+            const now = turret();
+            if (now.removed) refuseHere(`${c.turret}'s corpse was destroyed gliding after ${after}`);
+            seen.push({ ...now });
+            const b2 = seen.at(-3);
+            const b4 = seen.at(-5);
+            if (w >= CORPSE_GLIDE_MIN && b2 && b4 && b2.x === now.x && b2.y === now.y && b4.x === now.x
+                && b4.y === now.y) break;
+        }
+    };
+    /**
+     * ⛓ fidelity CORPSEBUMP2 D1 (`CONTACT_FIDELITY.corpseBumpRestRead`, OFF): the corpse the press is aimed at is the
+     * one AT the stance, so after each stance walk it is re-read. A walk driven with Fire selected can press X (the
+     * strike/dash policy gates on the inventory's sword, not the selected slot), and that press is a bump. A walk
+     * press younger than its bump window is stood out; a corpse then gliding or off the rest cycle it was read on is
+     * counted (at most `k` such walks), waited to rest by the press's own rule, and the loop re-reads the tile — so a
+     * bump the walk already made is not made again, and an unmoved corpse costs no tick. Measured on L40's latch chain
+     * (CPAIR-3 + `LATCH_WEIGH_FIRST` + `orbitFreeAim`, `turretSnapPricing` OFF; the game agrees at 0 px).
+     */
+    const restRead = CONTACT_FIDELITY.corpseBumpRestRead;
+    const walkBumps = [];
     for (let i = 0; along(tileOf(turret())) < c.k; i += 1) {
         if (i >= c.k) refuseHere(`${c.k} press(es) and ${c.turret}'s corpse is at ${JSON.stringify(tileOf(turret()))}`);
         const at = tileOf(turret());
+        const atBody = restRead ? { ...turret() } : null;
+        const walkFrom = perTick.length;
         const stance = { x: (at.tx - c.dir.dx) * TILE_SIZE + 8, y: (at.ty - c.dir.dy) * TILE_SIZE + 8 };
         const to = { tx: at.tx + c.dir.dx, ty: at.ty + c.dir.dy };
         if (!hasArrived(run.state, stance, DEFAULT_TOLERANCE)) {
@@ -12061,29 +12124,44 @@ function execCorpseWeigh(run, perTick, resolved, ctx, armed) {
             perTick.push(NONE);
             if (run.advance(NONE).transition) refuseHere('the run crossed a door while settling at a corpse bump stance');
         }
+        if (restRead) {
+            // a walk press's bumps land `FIRE_WINDOW.lastHitTick` ticks after it: one that recent is stood out first
+            const lastPress = run.progress('primaryWeapon') === 'fire'
+                ? perTick.findLastIndex((k, j) => j >= walkFrom && k.has('primary')) : -1;
+            for (let w = 0; lastPress >= 0 && perTick.length - lastPress <= FIRE_WINDOW.lastHitTick + 1; w += 1) {
+                perTick.push(NONE);
+                if (run.advance(NONE).transition) refuseHere('the run crossed a door after the walk\'s Fire press');
+            }
+            // moved: gliding (not where it was two ticks ago), or off the rest cycle it was read on
+            const now = turret();
+            const moved = !run.entities('turretsSettled')
+                || Math.abs(now.x - atBody.x) > 0.5 || Math.abs(now.y - atBody.y) > 0.5;
+            if (moved) {
+                if (walkBumps.length >= c.k) {
+                    refuseHere(`the walks to ${c.turret}'s bump stances pressed Fire ${walkBumps.length + 1} times`);
+                }
+                waitRest(`the walk to bump ${i + 1}'s stance`);
+                walkBumps.push({ before: i + 1, from: at, pressTick: lastPress >= 0 ? lastPress : null,
+                    rest: tileOf(turret()) });
+                i -= 1;
+                continue;
+            }
+        }
         if (run.progress('primaryWeapon') !== 'fire') {
             const slot = run.progress('inventorySlots').indexOf(INVENTORY_ITEM_IDS.fire);
             if (slot < 0) refuseHere('the inventory has no Fire slot');
             ctx.equip(slot);
         }
-        const rec = runFire(run, perTick, { bumps: [{ id: c.turret, to }] },
-            `${ctx.what} (corpse bump ${i + 1}, ${c.turret})`);
-        // at rest: the corpse's two-cycle moves it 0.5 px a tick for ever and a glide moves 0.5 px a tick too, so
-        // "at rest" is the position two and four ticks ago, exactly (the cycle's period), and not before
-        // `CORPSE_GLIDE_MIN` ticks (a glide can pause on the cycle: measured, L40 at y 408 mid-way to (30,24))
-        const seen = [{ ...turret() }];
-        for (let w = 0; ; w += 1) {
-            if (w > CORPSE_GLIDE_MAX) refuseHere(`${c.turret}'s corpse never came to rest after bump ${i + 1}`);
-            perTick.push(NONE);
-            if (run.advance(NONE).transition) refuseHere('the run crossed a door while the corpse glided');
-            const now = turret();
-            if (now.removed) refuseHere(`${c.turret}'s corpse was destroyed gliding after bump ${i + 1}`);
-            seen.push({ ...now });
-            const b2 = seen.at(-3);
-            const b4 = seen.at(-5);
-            if (w >= CORPSE_GLIDE_MIN && b2 && b4 && b2.x === now.x && b2.y === now.y && b4.x === now.x
-                && b4.y === now.y) break;
+        let rec;
+        try {
+            rec = runFire(run, perTick, { bumps: [{ id: c.turret, to }] },
+                `${ctx.what} (corpse bump ${i + 1}, ${c.turret})`);
+        } catch (e) {
+            // ⛓ CORPSEBUMP2 D1: the press's own refusal carries the run's ticks (an OPTIONAL field on the error)
+            if (restRead && e instanceof BotDriverV2Error && e.perTick === undefined) e.perTick = [...perTick];
+            throw e;
         }
+        waitRest(`bump ${i + 1}`);
         presses.push({ stance, to, pressTick: rec?.pressTick ?? null, rest: tileOf(turret()) });
     }
     if (along(tileOf(turret())) !== c.k) refuseHere(`${c.turret}'s corpse rests past the presser at `
@@ -12109,7 +12187,8 @@ function execCorpseWeigh(run, perTick, resolved, ctx, armed) {
         kind: 'weigh',
         postCondition: 'press',
         presser: { ...resolved.target },
-        corpse: { turret: c.turret, kill, presses, restoredSlot: prior, shakeWait },
+        corpse: { turret: c.turret, kill, presses, restoredSlot: prior, shakeWait,
+            ...(walkBumps.length ? { walkBumps } : {}) },
         dwell,
         ticks: perTick.length - from,
     };
@@ -20702,7 +20781,7 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
             try {
                 planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
                     solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
-                return { stance: { x: c.x, y: c.y }, discharged: [] };
+                return { stance: fineStance(c), discharged: [] }; // ⛓ L100LATTICE D1
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
             }
@@ -21686,12 +21765,12 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
         if (STANCE_ROCKS.enabled) {
             for (const c of fresh) {
                 const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, () => [], FINE_LATTICE);
-                if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+                if (reached) return { stance: fineStance(c), discharged: reached.discharged }; // ⛓ L100LATTICE D1
             }
         }
         for (const c of fresh) {
             const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis, FINE_LATTICE);
-            if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+            if (reached) return { stance: fineStance(c), discharged: reached.discharged }; // ⛓ L100LATTICE D1
         }
     }
     throw new SolverRefusal(refusal({ candidates, outOfReach, noRect, unsafe }),
@@ -25411,14 +25490,14 @@ function deriveLightPole(run, body, contacts, blocked = []) {
                 try {
                     planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
                         solverPlanOpts(run, contacts, { lattice: FINE_LATTICE }));
-                    reached = { discharged: [] };
+                    reached = { discharged: [], fine: true }; // ⛓ L100LATTICE D1: `fine` read below only
                 } catch (e) {
                     if (!(e instanceof BotDriverV2Error)) throw e;
                 }
             }
             if (!reached) { unreached += 1; continue; }
             return {
-                pole, stance: { x: c.x, y: c.y }, dir: c.dir, discharged: reached.discharged,
+                pole, stance: reached.fine ? fineStance(c) : { x: c.x, y: c.y }, dir: c.dir, discharged: reached.discharged,
                 why: `${pole.id}'s light comes within ${pole.min.toFixed(1)}–${pole.max.toFixed(1)} px of ${body.id}; a Spear `
                     + `thrust facing ${FACING_KEYS[c.dir]} from (${c.x},${c.y}) lights it`,
             };
@@ -29680,11 +29759,44 @@ function solveSegmentUnder({
             && !rungGate('forced-hit')) {
             if (activeProgress !== null) progressRung('forced-hit');
             const lastRefused = { rung: lastOption, why: lastWhy };
-            const proof = proveForcedHit(fork, { replayTicks: perTick.length });
+            // ⛓ FORCEDHITXC D3: the hitless continuation only for a walk with an exit to cross (`crossTo`)
+            const proof = proveForcedHit(fork, { replayTicks: perTick.length,
+                ...(crossTo ? { crossTo } : { continuation: false }) });
             const proofRow = { proven: proof.proven, depth: proof.depth, nodes: proof.nodes,
                 leaves: proof.leaves, alphabet: proof.alphabet ?? null, minHits: proof.minHits ?? null };
             let forcedWhy = null;
             const at = { level: run.level, x: run.state.x, y: run.state.y, tick: perTick.length };
+            /**
+             * ⛓ FORCEDHITXC D1 (`secondaryUse` ON only; OFF `proof.crossing` is never set): the proof found a HITLESS
+             * input that leaves the room (its tree, its witness, or the hitless continuation of an open prefix). When
+             * it leaves by THIS walk's exit (`crossTo`, `crossingMatches`), it is the walk: replayed on the live run, which must cross
+             * on its last key with no hit, as the fork did. A row `forced-hit` with `billed: []` and the proof's
+             * `proven: false` — the rung's verdict that nothing is forced, walked.
+             */
+            // ⛓ FORCEDHITXC D3: by the walk's OWN exit (`crossingMatches`, the drive's crossTo test), not its level alone
+            const xc = (!proof.proven && proof.crossing && crossingMatches(proof.crossing, crossTo)) ? proof.crossing : null;
+            if (xc) {
+                rowFor('forced-hit', lastRefused, { proof: proofRow, candidate: 'hitless-continuation', billed: [],
+                    ticks: xc.ticks });
+                const hitsBefore = run.ledger('playerHits').length;
+                const from = perTick.length;
+                let transition = null;
+                for (let i = 0; i < xc.keys.length; i += 1) {
+                    const held = new Set(xc.keys[i]);
+                    perTick.push(held);
+                    const o = run.advance(held);
+                    if (o.transition) { transition = o.transition; break; }
+                }
+                if (transition === null || perTick.length - from !== xc.keys.length
+                    || run.ledger('playerHits').length !== hitsBefore) {
+                    fail(`${what} -> forced-hit: the hitless crossing [${xc.label}] did not replay as the fork played it `
+                        + '(crossing on its last key, no hit) — the fork is not this run.');
+                }
+                FORCED_HIT_TRACE.sink?.({ what, at, proof: proofRow, outcome: 'hitless', candidate: 'hitless-continuation',
+                    billed: [], ticks: xc.ticks, keys: xc.keys.map((k) => [...k].sort()), why: proof.why,
+                    damage: worldHitsOf(run) });
+                return { forced: { transition }, escalations };
+            }
             if (!proof.proven) {
                 forcedWhy = `no forced hit is proven from (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)}): `
                     + `${proof.why} (${proof.nodes} fork step(s))`;
@@ -30190,6 +30302,37 @@ function solveSegmentUnder({
             lanes: cert.laneWalk.lanes, outcome: cert.billed.length > 0 ? 'billed' : 'clean', billed: cert.billed,
             ticks: cert.ticks, transition: transition ? transition.to_level : null });
     };
+    /**
+     * ⛓⛓ fidelity L100LATTICE D1 (`CONTACT_FIDELITY.fineStanceWalk`, OFF → null) — THE WALK TO A STANCE AN 8 px ARM
+     * ANSWERED (`FINE_STANCES`) IS PLANNED ON `FINE_LATTICE` FIRST, with the attempt's own contacts and goal extras. A
+     * throw there (the arm answered under a hypothesis the world has not discharged yet) returns null and the 16 px
+     * plan runs as before. Skipped for an axis-aligned walk (its corners are the skirt's), a run already on the fine
+     * pitch, and `fineLattice: false`. A row in `fineLatticeWalks` names each fine-first walk.
+     *
+     * ⚠ AN AIM OFF THE 8 px NODE GRID IS WALKED AXIS-ALIGNED (`manhattan`, `holdOneAxis`), STANCE_REENTRY's shape and
+     * for its measured reason (L48: a diagonal bang-bang approach to a half-tile point cycles at ±1.5 px for the whole
+     * budget). It is also what bounds the cost: an axis-aligned walk asks no sword dash, and MEASURED on route steps
+     * 172/200 (L12, the wand stance (40,888), x 40 on no 8 px node) a free fine corridor's whole-chain dash certificate
+     * (`spinnerDashWhole`) took ~60 s / ~105 s of the solve against ~2 s. Returns `{wps, axis}` or null.
+     */
+    const fineStanceWalkPlan = (aim, contacts, allowTeleporter, axisAligned, goalPlanExtra, what) => {
+        if (!CONTACT_FIDELITY.fineStanceWalk || !FINE_STANCES.has(aim) || !fineLattice || axisAligned
+            || (solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) <= FINE_LATTICE) return null;
+        const n = nodeAt(aim.x, aim.y, FINE_LATTICE);
+        const centre = nodeCentre(n.tx, n.ty, FINE_LATTICE);
+        const axis = centre.x !== aim.x || centre.y !== aim.y;
+        let wps;
+        try {
+            wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
+                solverPlanOpts(run, contacts, { ...goalPlanExtra, lattice: FINE_LATTICE, ...(axis ? { manhattan: true } : {}) }));
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+            return null;
+        }
+        fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y }, waypoints: wps.length,
+            refused: `FINE_STANCE (the stance an 8 px arm answered${axis ? '; off the 8 px grid, axis-aligned' : ''})` });
+        return { wps, axis };
+    };
     const walkToUnder = (goal, aim, {
         allowTeleporter = null, crossTo = null, what, contactsOverride = null,
         dangerExcept = null,
@@ -30262,10 +30405,13 @@ function solveSegmentUnder({
             // ⛓ BOBSOLDIER2 D2b: a WALK's gate — the transit probe follows it (`SWORD_GATE_TIMED`).
             // ⛓ AXETIMING D2b: and a spinning axe's blade at the walk's first sample (`axeGateTransit`).
             refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true, timedAxe: true });
+            // ⛓ L100LATTICE D1 (`fineStanceWalk`, OFF: null) — an aim an 8 px arm answered is planned on that lattice.
+            const fineFirst = fineStanceWalkPlan(aim, contacts, allowTeleporter, axisAligned, goalPlanExtra, what);
+            if (fineFirst?.axis) axisAligned = true;
             let wps;
-            let fine = false;
+            let fine = fineFirst !== null;
             try {
-                wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
+                wps = fineFirst?.wps ?? planWaypoints(run.world, run.state, aim, allowTeleporter,
                     axisAligned
                         ? { ...solverPlanOpts(run, contacts, goalPlanExtra), manhattan: true }
                         : solverPlanOpts(run, contacts, goalPlanExtra));
@@ -31850,6 +31996,62 @@ function solveSegmentUnder({
                 });
             }
             const crossTo = { level: fall.to_level, pit, arrival: { ...fall.ctor } };
+            /**
+             * ⛓ fidelity REFUSALS D2 (`CONTACT_FIDELITY.inPitFallOut`) — A RUN ALREADY STANDING IN A PIT FALLS WITHOUT
+             * INPUT. A fall can land the player inside a pit of the next level (L84 `fallhole1`, whose 3x3 middle is one
+             * pit: survey steps 174/202, sweep leg 671 from the L83 pit), and `checkFallingInPit` drops it again with
+             * nothing pressed. The walk below plans an A* from that start tile, which is a pit, and refused: *"A* start
+             * tile (2,2) … is not walkable"*. ON: when the player's terrain probe overlaps a pit tile of this level that
+             * falls to the goal's level, the run is stepped with no input until the edge fires (bounded by
+             * `maxTicksPerTarget`), then coasts as the walk's arm does. OFF: byte-identical.
+             */
+            const standingPit = CONTACT_FIDELITY.inPitFallOut
+                // ⚠ The START TILE, the planner's own refusal condition (`planTilePath`: the 16 px cell of the
+                // position) — not a probe overlap: a live start beside a pit's edge (jsRuntimeVerbs S4, L48) walks.
+                ? (run.world.pitTiles ?? []).find((p) => p.tx === Math.floor(run.state.x / TILE_SIZE)
+                    && p.ty === Math.floor(run.state.y / TILE_SIZE)
+                    // the goal's own pit is the walk's (its `allowPit` exempts it; wasmArrivalComposite W4's L84 row)
+                    && !(p.tx === tx && p.ty === ty)
+                    && rectsOverlap(terrainProbeRect(run.state.x, run.state.y), p.rect))
+                : null;
+            if (standingPit) {
+                let fellTo = null;
+                try {
+                    fellTo = fallDestination(run.world, {
+                        x: standingPit.rect.x + standingPit.rect.w / 2, y: standingPit.rect.y + standingPit.rect.h / 2,
+                    }).to_level;
+                } catch (e) {
+                    if (!(e instanceof PhysicsV2Error)) throw e;
+                }
+                if (fellTo === fall.to_level) {
+                    const t0 = perTick.length;
+                    let edge = null;
+                    for (let i = 0; i < maxTicksPerTarget && !edge; i += 1) {
+                        perTick.push(NO_HELD_PREVIEW);
+                        const r = run.advance(NO_HELD_PREVIEW);
+                        if (r.transition) edge = r.transition;
+                    }
+                    if (!edge || edge.to_level !== fall.to_level) {
+                        refuse(`${whatPit}: the run stands in pit (${standingPit.tx},${standingPit.ty}) and ${perTick.length - t0} `
+                            + `idle ticks did not fall it to level ${fall.to_level} (${JSON.stringify(edge)}).`,
+                        { goal, obstacle: { kind: 'pit', id: `pit@${standingPit.rect.x},${standingPit.rect.y}` } });
+                    }
+                    const swapsBefore = run.transitions.length;
+                    const coast = coastThroughTransport(run, perTick, maxTicksPerTarget, `${whatPit}->L${fall.to_level}`);
+                    const swaps = run.transitions.slice(swapsBefore);
+                    records.push({
+                        goal: 'reach-pit', to: fall.to_level, t: edge.t, coast,
+                        standing: { tx: standingPit.tx, ty: standingPit.ty, idle: edge.t - t0 },
+                        ...(swaps.length > 0 ? {
+                            chained: {
+                                via: swaps.map((sw) => ({ t: sw.t, from_level: sw.from_level, to_level: sw.to_level })),
+                                ends: { level: run.level, x: run.state.x, y: run.state.y },
+                            },
+                        } : {}),
+                    });
+                    return;
+                }
+            }
             // ⛓⛓ fidelity L1516 D3: an ENCLOSED pit (`enclosedPitCorners`) is entered across a corner. OFF, or any
             // pit with a non-pit orthogonal neighbour: the walk below, byte-identical.
             // ⚠ Only with a diagonal floor cell, and only from OUTSIDE the pit's cell: a fall that lands the player in

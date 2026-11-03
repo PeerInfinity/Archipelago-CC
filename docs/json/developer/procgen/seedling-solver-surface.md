@@ -250,7 +250,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `latchedGroups` | `channel` | `dangerMap`, `solverBot` |
 | `pulledRopes` | — | `botDriverV2`, `solverBot` |
 | `turretDamage` | `hp`, `emitter` | `botDriverV2`, `solverBot` |
-| `turretsSettled` | `pushable` | `botDriverV2` |
+| `turretsSettled` | `pushable` | `botDriverV2`, `solverBot` |
 | `arrowFlights` | `emitter` | `dangerMap` |
 | `bosses` | — | `botDriverV2`, `solverBot` |
 | `talkCircles` | — | `solverBot` |

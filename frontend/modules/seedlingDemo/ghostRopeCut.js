@@ -21,8 +21,8 @@
  *   · the `rope` verb (`resolveRopeStrategy`), the same two gates.
  * Measured at the start SHA: the lab's ENDGAME `ropegate` rooms (seeds 1-3, 10x10 `empty`) REFUSE at that rung.
  *
- * ⛓ THE SWITCH — `GHOST_ROPE_CUT`, OFF by default (`SEEDLING_GHOST_ROPE_CUT=1` for a process, or
- * `withGhostRopeCut(true, fn)`). ON, a `ghostsword` primary (with `GHOSTSWORD_PRESS` modelled and the sword's flag up,
+ * ⛓ THE SWITCH — `GHOST_ROPE_CUT`, ON by default since its flip (⚖ the user, 2026-11-02: "Flip GHOST_ROPE_CUT"; its ON
+ * sweeps were noise only). `SEEDLING_GHOST_ROPE_CUT=0` for a process, or `withGhostRopeCut(false, fn)`, opts out. ON, a `ghostsword` primary (with `GHOSTSWORD_PRESS` modelled and the sword's flag up,
  * `ghostSwingRefusal`) is a swing these gates admit, PRICED WITH ITS OWN PRESS (`ROPE_SWING_PRESS.ghostsword`: the
  * 24 x 48 rect, reach 24, seven tests), and a held ghost sword is the swordless cut's swing row in place of the sword's
  * (selected by `equip`, never the plain sword). OFF, every reader takes the sword's row and the old gates exactly.
@@ -35,9 +35,9 @@ import {
 } from './solverView.js';
 
 export const GHOST_ROPE_CUT = {
-    enabled: globalThis.process?.env?.SEEDLING_GHOST_ROPE_CUT === '1',
+    enabled: globalThis.process?.env?.SEEDLING_GHOST_ROPE_CUT !== '0',
 };
-export const GHOST_ROPE_CUT_DEFAULT = false;
+export const GHOST_ROPE_CUT_DEFAULT = true;
 
 /** Run `fn` with `GHOST_ROPE_CUT` set to `enabled`, restoring the previous value (`withGhostKillRung`'s shape). */
 export function withGhostRopeCut(enabled, fn) {

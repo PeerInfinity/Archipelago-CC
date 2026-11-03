@@ -522,8 +522,9 @@ export const ELEMENT_TABLE = Object.freeze({
      * biomes-1's `post-fire` boot. The seam refuses it BY NAME on every biome
      * without it. ⛓ `needsStrategy: ['burn']`: `require:['strategy:burn']`.
      *
-     * Placed LAST so no head moves in `ELEMENT_NAMES`. It ships OPT-IN: in no
-     * biome default (`BIOME_DEFAULT_FOLD` untouched), so no default run moves.
+     * Placed LAST so no head moves in `ELEMENT_NAMES`. It shipped OPT-IN; since
+     * `seedling-gen-post-swim-fix` (⚖ Robert 2026-11-02) it is in every biome
+     * default whose boot holds the fire (`BIOME_DEFAULT_FOLD`'s `hasFire` row).
      */
     burngate: Object.freeze({
         element: BURN_GATE,

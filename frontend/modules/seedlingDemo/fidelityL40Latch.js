@@ -197,8 +197,81 @@ export function l40LatchOrbitChecks(samples) {
     }];
 }
 
+/**
+ * ⛓⛓ fidelity CORPSEBUMP2 (wave 36) — THE WALK'S OWN FIRE PRESS. LWEIGH's hand-over: on the latch chain with CPAIR's
+ * size-3 arm, `LATCH_WEIGH_FIRST`, `orbitFreeAim` and `strategyBoundDistinct` ON and `turretSnapPricing` OFF, the
+ * corpse weigh's second bump was refused inside `runFire` (*"iceturret@472,400 is ALREADY on (30,24)"*). Both reads
+ * are the corpse's ENTITY tile; the corpse MOVED between them, because the walk to bump 2's stance was driven with
+ * Fire selected and its strike/dash policy pressed X on the walk's first tick (`up+primary`), a third bump.
+ * `corpseBumpRestRead` re-reads the corpse at the stance. These are the model contact keys of that arm (the hammer
+ * switches are the solver's, set by `corpseBump2Solve`), and the tape is the solver's first `CORPSEBUMP2_CUT` ticks
+ * from the latch boot: the kill, bump 1, the walk's press, the lock's fade.
+ */
+export const CORPSEBUMP2_SWITCHES = Object.freeze({ turretSnapPricing: false, orbitFreeAim: true,
+    strategyBoundDistinct: true, corpseBumpRestRead: true });
+export const CORPSEBUMP2_CUT = 1400;
+
+/** The latch chain under CORPSEBUMP2's arm: CPAIR size 3 + `LATCH_WEIGH_FIRST` ON, `TURRET_APPROACH` OFF, and `over`. */
+export async function corpseBump2Solve(over = {}) {
+    const { CHOOSER_PAIR, withChooserPair, withLatchWeighFirst, withTurretApproach } = await import('./solverBot.js');
+    const boot = await l40LatchBoot();
+    const was = CHOOSER_PAIR.size;
+    CHOOSER_PAIR.size = 3;
+    try {
+        return await withChooserPair(true, () => withLatchWeighFirst(true, () => withTurretApproach(false,
+            () => l40LatchSolve(boot, { ...CORPSEBUMP2_SWITCHES, ...over }))));
+    } finally {
+        CHOOSER_PAIR.size = was;
+    }
+}
+
+/**
+ * `corpsebump2-walk-press`: the solver's own first `CORPSEBUMP2_CUT` ticks (and equips) under the arm, key ON. `solved`
+ * is a `corpseBump2Solve()` answer already in hand (the slow row's), else it is solved here.
+ */
+export async function corpseBump2WalkPressTape(solved = null) {
+    const { out, refusal } = solved ?? await corpseBump2Solve();
+    const r = out ?? refusal;
+    const boot = await l40LatchBoot();
+    return l40LatchTape('corpsebump2-walk-press', r.perTick.slice(0, CORPSEBUMP2_CUT).map((k) => [...k]), {
+        equips: [...(boot.equips ?? []), ...(r.equips ?? []).filter((e) => e.t < CORPSEBUMP2_CUT)],
+        description: 'seedling-fidelity-corpsebump2: L40 from the held latch (L40LATCH\'s boot), the SOLVER\'s own ticks '
+            + 'under CPAIR size 3 + LATCH_WEIGH_FIRST + orbitFreeAim + strategyBoundDistinct, turretSnapPricing OFF, '
+            + 'corpseBumpRestRead ON: iceturret@472,400 killed hitless, bump 1 rests its corpse on (30,25), the walk to '
+            + 'bump 2\'s stance presses X with Fire selected and carries it to (30,24) = button@480,384, no second bump, '
+            + 'wandlock@448,432 fades open (probe-seedling-l40latch.mjs)',
+    });
+}
+
+/** The corpse's ENTITY tile in a sample (`{tx, ty, dead}`), or null. */
+const corpseTileOf = (g) => {
+    const t = (g.bodies ?? []).find((b) => b.cls === 'IceTurret');
+    return t ? { tx: Math.floor(t.x / 16), ty: Math.floor(t.y / 16), dead: t.anim === 'dead' } : null;
+};
+
+/** The game-side checks of `corpsebump2-walk-press` (each `{name, ok, detail}`). */
+export function corpseBump2Checks(samples) {
+    const tiles = [];
+    for (const g of samples) {
+        const c = corpseTileOf(g);
+        const k = c?.dead ? `${c.tx},${c.ty}` : null;
+        if (k && tiles.at(-1) !== k) tiles.push(k);
+    }
+    return [{
+        name: 'the game never hits the player',
+        ok: samples.every((g) => (g.hits ?? 0) === 0),
+        detail: `max hits ${Math.max(...samples.map((g) => g.hits ?? 0))}`,
+    }, {
+        name: 'the game\'s corpse rests on (30,26), then (30,25), then (30,24) = button@480,384, and stays there',
+        ok: tiles.join(' ') === '30,26 30,25 30,24',
+        detail: tiles.join(' → '),
+    }];
+}
+
 export const L40LATCH_WITNESSES = Object.freeze({
     'l40latch-stand': Object.freeze({ tape: l40LatchStandTape, switches: {}, checks: l40LatchStandChecks }),
     'l40latch-orbit-chain': Object.freeze({ tape: l40LatchOrbitTape, switches: L40LATCH_D1_SWITCHES,
         checks: l40LatchOrbitChecks }),
+    'corpsebump2-walk-press': Object.freeze({ tape: corpseBump2WalkPressTape, switches: CORPSEBUMP2_SWITCHES,
+        checks: corpseBump2Checks }),
 });

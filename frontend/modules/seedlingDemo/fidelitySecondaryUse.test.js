@@ -146,10 +146,12 @@ describe('SECUSE D1 — the forced-hit proof at leg 622 (STOP: X+C escapes the h
         expect(both({ secondaryUse: false })).toMatchObject({ proven: true, depth: 2, nodes: 1332, minHits: 1 });
     });
     it('ON (C4 modelled): the proof is no longer refused — it finds the game\'s hitless [up+primary+secondary] '
-        + 'and stays OPEN on it (the hitless-leaf crossing is fidelity\'s follow-up)', () => {
+        + 'and (⛓ FORCEDHITXC D1) carries the open prefix on to the game\'s hitless crossing at t4', () => {
         const before = CONTACT_FIDELITY.secondaryUse;
         const p = both({ secondaryUse: true });
-        expect(p).toMatchObject({ proven: false, hitless: 'up+primary+secondary ·' });
+        expect(p).toMatchObject({ proven: false, hitless: 'up+primary+secondary · · ·',
+            crossing: { ticks: 4, transition: { to_level: 74 } } });
+        expect(p.openWhy).toMatch(/first \[up\+primary\+secondary ·\]/);
         expect(p.unmodelled).toBeUndefined();
         expect(CONTACT_FIDELITY.secondaryUse).toBe(before);
     });

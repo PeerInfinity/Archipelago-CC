@@ -104,7 +104,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_WEIGH_HYPOTHESIS_CHAIN || !!process.env.SEEDLING_DASH_SPINNER_FORECAST
         || !!process.env.SEEDLING_ENCOUNTER_SWING_IN_FLIGHT
         || !!process.env.SEEDLING_BAIT_COMPONENT_MEMO || !!process.env.SEEDLING_BAIT_ALIGN_SAFE_MEMO
-        || !!process.env.SEEDLING_BAIT_PARKED_TAIL)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_BAIT_PARKED_TAIL
+        || !!process.env.SEEDLING_CORPSE_BUMP_REST_READ)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -346,7 +347,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             orbitFreeAim: false,
             // ⛓ fidelity L40BK2B D2 (wave 33): the strategy bound counts distinct applications — ships OFF.
             strategyBoundDistinct: false,
-            // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — ships OFF.
+            // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — ships OFF. ⚖ (user, 2026-11-02)
+            // HELD OFF at the W36 flip: helpFrame's C-on-the-Help-tick rows move +19 ON; a wasm witness decides.
             secondaryUse: false,
             // ⛓ fidelity LIGHTPOLE D2 (wave 34): an in-room pole's clear-tag is a Spear thrust — ON since the W34 flip.
             inRoomPoleThrust: true,
@@ -361,7 +363,17 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity WATERFALL D1 (wave 35): the corridor planner prices the waterfall's push — ON since the W35 flip.
             waterfallPushPricing: true,
             // ⛓ fidelity L32ROCK D1 (wave 35): the BobBoss arena rock's arm banks its {32,1} clear — ON since the W35 flip.
-            bobArenaRockClear: true });
+            bobArenaRockClear: true,
+            // ⛓ fidelity REFUSALS D1 (wave 36): a chest placement is probed at its body's centre — ON since the W36 flip.
+            chestBodyPlacementProbe: true,
+            // ⛓ fidelity REFUSALS D2 (wave 36): a run standing in a pit falls out with no input — ON since the W36 flip.
+            inPitFallOut: true,
+            // ⛓ fidelity CORPSEBUMP2 D1 (wave 36): a bumped corpse is re-read at the stance after the walk — ON since the W36 flip.
+            corpseBumpRestRead: true,
+            // ⛓ fidelity SHIELDBUMP D1 (wave 36): the spinner forecasts step the plain shield bump — ships OFF.
+            forecastShieldBump: false,
+            // ⛓ fidelity L100LATTICE D1 (wave 36): a walk to an 8 px arm's stance plans on the 8 px lattice — OFF.
+            fineStanceWalk: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
