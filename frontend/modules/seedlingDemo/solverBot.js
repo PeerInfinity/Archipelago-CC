@@ -213,6 +213,8 @@ import { createTraceBuilder } from './decisionTrace.js';
 import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arrivalSolid.js';
 import {
     STRIKE_AIM, STRIKE_NONE, STRIKE_PRESS, armIsModelled, createStrikePolicy,
+    // ⛓ fidelity FROZENPRESS D1: the run-side `decide` options (OFF: `{ slash }`).
+    strikeDecideOpts,
 } from './strikePolicy.js';
 // ⛓⛓⛓ seedling-fidelity-bulb D3: a Bulb's kill is PLACED — the strike policy's veto and the segment's needs.
 import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
@@ -7790,7 +7792,9 @@ export function withDashStandWhole(enabled, fn) {
  * `audit` (null, or an array a measurement installs) hears one row per whole-chain preview `spinnerDashWhole` makes,
  * either arm: whether it certified, and the kinds of the danger that refused it; it changes nothing the solver decides.
  */
-export const DASH_CERT_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_DASH_CERT_SIGHT === '1',
+// ⛓ ON by default (⚖ the user, 2026-11-03; planned with fidelity's `fineStanceWalk`, which was held back: "Land 2, hold
+// fineStanceWalk"); `SEEDLING_DASH_CERT_SIGHT=0` or `withDashCertSight(false, …)` opts out.
+export const DASH_CERT_SIGHT = { enabled: globalThis.process?.env?.SEEDLING_DASH_CERT_SIGHT !== '0',
     counts: { asks: 0, refused: 0 }, audit: null };
 
 /** Run `fn` with `DASH_CERT_SIGHT` set to `enabled`, restoring the previous value (also on a throw). */
@@ -17942,7 +17946,7 @@ function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, c
     for (let i = 1; i <= bound; i += 1) {
         let held = strike && !run.state.fall
             ? strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, new Set(),
-                { slash: run.progress('slashInfo') }).held
+                strikeDecideOpts(run)).held
             : new Set();
         if (keepOut && held.size > 0) {
             const pr = project(held, 2);
@@ -21855,7 +21859,7 @@ function execBreak(run, perTick, resolved, ctx) {
         // ⛓ R9 slice L16 — a weigh route's break waits ARMED (`execWeigh`).
         let held = pressedAt !== null && ctx.idleStrike && !run.state.fall
             ? ctx.idleStrike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, NO_KEYS,
-                { slash: run.progress('slashInfo') }).held
+                strikeDecideOpts(run)).held
             : NO_KEYS;
         if (pressedAt === null) {
             const want = facingToward(run.state, resolved.target);
@@ -24291,7 +24295,7 @@ export function orbitKillPolicy(run, id, { r, dir, safe }, strike) {
     const held = chooseHeld(s, aim, DEFAULT_TOLERANCE);
     if (c.destroy || !strike || s.fall) return held;
     return strike.decide(s, run.entities('strikeBodies'), run.ticksCompleted, held,
-        { slash: run.progress('slashInfo') }).held;
+        strikeDecideOpts(run)).held;
 }
 
 /**
