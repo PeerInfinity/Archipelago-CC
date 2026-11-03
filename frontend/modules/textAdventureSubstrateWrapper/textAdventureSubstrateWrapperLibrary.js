@@ -173,7 +173,7 @@ export const substrateRegistryEntry = Object.freeze({
 });
 
 // Side-effect on import: register the substrate, matching mazeRoomLibrary.js,
-// bounceDemoLibrary.js and runnerDemoLibrary.js — "substrate libraries register
+// bounceDemoLibrary.js and cloudberryLibrary.js — "substrate libraries register
 // their adapters on import" is the house contract the headless procgen scripts
 // rely on (scripts/procgen/*.js, scripts/utils/generate-topdown-preset.js,
 // procgenPipelineEngine.test.js). Those are a SEPARATE BOOT CONTEXT from the

@@ -371,26 +371,63 @@ export const collectGoal = (x, y) => ({ kind: 'collect-placement', placement: { 
  */
 export function certifyCollects(goals, records) {
     const missing = [];
+    const rows = records ?? [];
+    /** The goal-chest records, each the one a goal named (a door chest is not one of them). */
+    const goalChests = new Set();
     for (const goal of goals) {
         if (goal.kind !== 'collect-placement') continue;
-        const found = (records ?? []).find((r) => r.goal === 'collect-placement'
-            && r.pickup && r.pickup.x === goal.placement.x
-            && r.pickup.y === goal.placement.y);
+        const at = (p) => p && p.x === goal.placement.x && p.y === goal.placement.y;
+        const found = rows.find((r) => r.goal === 'collect-placement' && r.pickup && at(r.pickup))
+            ?? rows.find((r) => isChestCollect(r) && at(r.chest));
         if (!found) missing.push(`place:${goal.placement.x},${goal.placement.y}`);
+        else if (!found.pickup) goalChests.add(found);
     }
     return {
         certified: missing.length === 0,
         missing,
-        collected: (records ?? [])
-            .filter((r) => r.goal === 'collect-placement' && r.pickup)
-            .map((r) => ({
+        collected: rows
+            .filter((r) => (r.goal === 'collect-placement' && r.pickup) || goalChests.has(r))
+            .map((r) => (r.pickup ? {
                 tag: r.pickup.tag,
                 x: r.pickup.x,
                 y: r.pickup.y,
                 item: r.item ?? null,
                 strategy: r.strategy,
+            } : {
+                tag: 'chest',
+                x: r.chest.x,
+                y: r.chest.y,
+                // `Chest.open()` spawns the SealPiece (`Chest.as:78`); a seal-removed chest spawns none (`:47-57`).
+                item: r.arm === 'seal-removed' ? null : 'sealpiece',
+                strategy: r.strategy,
+                id: r.chest.id,
+                ...(r.arm ? { arm: r.arm } : {}),
             })),
     };
+}
+
+/**
+ * ⛓⛓ seedling-js-chest-goal-collect — **A CHEST NAMED AS THE GOAL IS CERTIFIED BY ITS OWN `chest` RECORD.**
+ *
+ * `collect-placement` is ONE goal kind with three verbs (`solverBot.resolveCollectStrategy`: a chest at the
+ * placement selects `chest`, a pickup `collect`, an apitem `apitem`), and the record each verb writes names its
+ * target under its own key. The `collect` record carries `pickup:{tag,x,y}`; the `chest` record carries
+ * `chest:{id,x,y,persistTag}` and NO `pickup` — so a goal on a loot chest's placement, which the solve DID take,
+ * was read as "no collect record" and threw the seam error (lab, 4/4).
+ *
+ * What the `chest` record attests is the collect itself: `runChest` (`botDriverV2.js`) returns only after the
+ * SealPiece `Chest.open()` spawns at the chest's own position (`Chest.as:78`) was collected — its `collectedAt`
+ * is the `sealCollections` row whose `from` is THIS chest, and it `fail`s otherwise. The seal-removed arm
+ * (`CONTACT_FIDELITY.chestSealRemoval`) is the game's `checkBySeal()` writing the same persistence flag the open
+ * would (`Chest.as:47-57` vs `:89`), which is the location's check with no piece to take.
+ *
+ * ⛔ A DOOR CHEST IS NOT A GOAL: its record is keyed at the door cell, which no goal names, so it certifies
+ * nothing and stays out of `collected` (its certificate is unchanged byte for byte). ⛔ A chest record with no
+ * collect (no `collectedAt`, not seal-removed) certifies nothing either, and the seam throw stands for it.
+ */
+function isChestCollect(r) {
+    return r.goal === 'collect-placement' && r.strategy === 'chest' && Boolean(r.chest)
+        && (Number.isInteger(r.collectedAt) || r.arm === 'seal-removed');
 }
 
 /**

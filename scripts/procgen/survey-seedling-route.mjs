@@ -94,7 +94,7 @@
  *   node scripts/procgen/survey-seedling-route.mjs --through=2.2 --out=<file.json> --only=21,22,…
  *   node scripts/procgen/survey-seedling-route.mjs --through=end --out=<file.json>
  *   node scripts/procgen/survey-seedling-route.mjs --through=3.1 --route=route-only --out=<file.json>
- *   SEEDLING_STRATEGY_SWITCH=1 node scripts/procgen/survey-seedling-route.mjs --through=end --only=4 --disable=shove
+ *   node scripts/procgen/survey-seedling-route.mjs --through=end --only=4 --disable=shove
  *
  * ── `--through=2.2` AND `--out=` (SEEDLING SWIM S2, D5) ────────────────
  *
@@ -198,7 +198,8 @@ const STEP = argOf('step', null);
 const ONLY = argOf('only', null);
 /**
  * ⛓ STRATEGY SWITCH r1 — `--disable=<name>[,<name>…]`: every step solved with those strategies switched off
- * (`twoPassSolve`'s `disable`, which needs `SEEDLING_STRATEGY_SWITCH=1`; with the flag OFF every step REFUSES by name).
+ * (`twoPassSolve`'s `disable`; the flag is ON by default, and with `SEEDLING_STRATEGY_SWITCH=0` every step REFUSES by
+ * name).
  * Forwarded to each step's child, and the row records `disable` and the gate's `disabled` count. ⛔ ABSENT = today's
  * survey, byte for byte: nothing is forwarded and no row gains a field.
  */

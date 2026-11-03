@@ -57,7 +57,6 @@ export const README_ORDER = Object.freeze([
     'editing-core.md',
     'seedling-editor.md',
     'bounce.md',
-    'runner.md',
     'cloudberry.md',
     'playback-and-debugging.md',
     'loop-recording.md',

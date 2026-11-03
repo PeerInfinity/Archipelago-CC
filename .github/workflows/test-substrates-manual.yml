@@ -4,7 +4,8 @@ name: Substrate tests — manual batches
 #
 # Every batch marked `manual: true` in frontend/modules/tests/testBatches.js
 # runs here and never on push: the real-time omsi bot walks (`bot-walks`), and
-# since slice tests-batch-split (2026-10-09) `noiz2sa` and `runner` too.
+# since slice tests-batch-split (2026-10-09) `noiz2sa` too (`runner` was one
+# until the runner substrate was deleted, Cloudberry P4b 2026-11-02).
 # test-templates.yml runs every other batch on push, one matrix job each; one
 # smoke row of each manual substrate stays on push through its config `batch`
 # field (testBatches.js batchOfTest).
@@ -38,7 +39,7 @@ on:
       batch:
         description: >-
           A manual test-substrates batch (testBatches.js `manual: true`:
-          bot-walks, noiz2sa, runner, tutorials, tutorials-procgen, tutorials-procgen-loops, tutorials-tracker, tutorials-seedling, tutorials-seedling-whole-game, feature-checks),
+          bot-walks, noiz2sa, cloudberry, tutorials, tutorials-procgen, tutorials-procgen-loops, tutorials-tracker, tutorials-seedling, tutorials-seedling-whole-game, feature-checks),
           a path-filtered on-push batch (`pushPaths`: apworld), or `all` to run every manual batch as
           parallel jobs.
         type: string
@@ -137,6 +138,12 @@ jobs:
         if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: |
           npx playwright install chromium
+
+      # The cloudberry batch plays the same-origin copy of the live Cloudberry site
+      # (⚖ R18: downloaded at test time, gitignored); without it its rows refuse by name.
+      - name: Download the live Cloudberry site (cloudberry batch only)
+        if: ${{ matrix.batch == 'cloudberry' }}
+        run: node scripts/setup/fetch-cloudberry-site.mjs
 
       - name: Run substrate tests (${{ matrix.batch }} batch)
         env:

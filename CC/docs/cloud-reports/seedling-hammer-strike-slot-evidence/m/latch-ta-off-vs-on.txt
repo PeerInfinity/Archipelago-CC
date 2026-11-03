@@ -1,0 +1,3 @@
+TA arm (CPAIR3+LWF+TA, latch-boot): OFF 4142 t; ON 4142 t; ticks whose keys differ: [(1117, 'primary+up', 'up')]
+equips OFF == ON: True
+design (3) scratch (m3-loader):  4130 t; first differing tick vs OFF: 1119

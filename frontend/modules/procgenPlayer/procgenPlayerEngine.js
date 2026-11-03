@@ -44,7 +44,8 @@ export class WorldWarehouse {
  * player should stay out of the way.
  *
  * Skips (with a warning) sidecar entries whose substrate isn't in the
- * registry or whose registry entry is missing `deserializeWorld`.
+ * registry (recorded on `warehouse.refused` by name) or whose registry
+ * entry is missing `deserializeWorld`.
  * That's a defensive log rather than an error so a partial warehouse
  * can still drive the regions whose substrates are wired up. A payload
  * whose substrate REFUSES it (its `deserializeWorld` throws) is skipped
@@ -84,7 +85,12 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
         }
         const adapter = registry.get(entry.substrate);
         if (!adapter) {
+            // ⛓ Cloudberry P4b — a world saved before a substrate was deleted
+            //   (runner) names one this app does not have: the region is REFUSED
+            //   BY NAME (kept on `warehouse.refused`), the tracker keeps the rest.
             logger.warn?.(`procgenPlayer: unknown substrate '${entry.substrate}' for region ${regionId}; skipping`);
+            warehouse.refused.set(regionId, `region ${regionId} names substrate '${entry.substrate}', `
+                + 'which is not registered in this app (deleted, or its module is not loaded)');
             continue;
         }
         if (typeof adapter.deserializeWorld !== 'function') {

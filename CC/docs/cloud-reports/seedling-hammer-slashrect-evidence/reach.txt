@@ -1,0 +1,30 @@
+
+── DATA REACH: 1 changed fixture name(s) ──
+   seed7-request
+
+── TESTS THAT NAME A CHANGED FIXTURE (not importers — spellers) (1) ──
+   frontend/modules/seedlingDemo/hammerSlashRect.test.js
+
+── check-*.mjs GATES THAT NAME A CHANGED FIXTURE (the third population) (0) ──
+   (none)
+
+⛓ THE BOUND IS THE UNION: 436 test(s) reached by IMPORT ∪ 1 test(s) that NAME a changed fixture = 436 file(s).
+   ⛔ AND NEITHER POPULATION SEES a consumer carrying a NUMBER derived from a tape without naming the tape — CLAIM 8's `/865 observations/` was found only because the gate ALSO spelled `r8-d2-19`. That is what this union does NOT cover, and it is stated rather than left to be discovered.
+
+── OTHER MODULES REACHED (182) ──
+   182 module file(s); pass --json for the list
+
+⚠ 660 DYNAMIC IMPORT(S) COULD NOT BE RESOLVED STATICALLY — a variable segment. They are reported rather than dropped, because a silently-pruned edge makes an upper bound untrue:
+   frontend/modules/apworldEditor/exitSides.test.js: import(join(ROOT, rel))
+   frontend/modules/apworldEditor/initialiseFlow.test.js: import(join(ROOT, rel))
+   frontend/modules/apworldEditor/librarySourcePicker.test.js: import(join(ROOT, rel))
+   frontend/modules/apworldEditor/menuMarker.test.js: import(join(ROOT, rel))
+   frontend/modules/apworldEditor/recordedZoneConfig.test.js: import(join(ROOT, rel))
+   frontend/modules/apworldEditor/regionContent.test.js: import(join(ROOT, rel))
+   frontend/modules/apworldEditor/regionGenerationFlow.test.js: import(join(ROOT, rel))
+   frontend/modules/apworldEditor/regionLayout.test.js: import(join(ROOT, rel))
+   frontend/modules/apworldEditor/regionRederive.test.js: import(see regionRoundTrip.test.js)
+   frontend/modules/apworldEditor/regionRegenerate.test.js: import(join(ROOT, rel))
+   frontend/modules/apworldEditor/regionRegenerateLibrary.test.js: import(join(ROOT, rel))
+   frontend/modules/apworldEditor/regionRegenerateWorker.js: import(new URL(`../${library}`, import.meta.url).href)
+   … and 648 more

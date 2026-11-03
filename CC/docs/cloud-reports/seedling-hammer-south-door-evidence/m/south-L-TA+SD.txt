@@ -1,0 +1,65 @@
+ms 282845
+REFUSED solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it): applied 4 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), hold(wandlock@480,560), weigh(wandlock@800,400)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.
+obstacle {"kind":"solid","tag":"pushableblock","id":"pushableblock@576,560","d":93.2952303175248} perTick 4182
+STRATROWS 0 shove pushableblockfire@576,576
+STRATROWS 0 weigh wandlock@448,432
+STRATROWS 0 hold wandlock@480,560
+STRATROWS 0 walk bob@736,752
+STRATROWS 0 time bob@736,752
+STRATROWS 0 bait bob@736,752
+STRATROWS 0 kill bob@736,752
+STRATROWS 0 walk undefined
+STRATROWS 444 walk spinner@816,848
+STRATROWS 444 time spinner@816,848
+STRATROWS 444 bait spinner@816,848
+STRATROWS 444 kill spinner@816,848
+STRATROWS 684 walk bobsoldier@880,832
+STRATROWS 684 time bobsoldier@880,832
+STRATROWS 684 bait bobsoldier@880,832
+STRATROWS 684 kill bobsoldier@880,832
+STRATROWS 684 walk undefined
+STRATROWS 755 walk undefined
+STRATROWS 884 walk undefined
+STRATROWS 1632 walk undefined
+STRATROWS 1772 walk undefined
+STRATROWS 1908 weigh wandlock@800,400
+STRATROWS 1908 walk undefined
+STRATROWS 1980 walk undefined
+STRATROWS 2030 walk undefined
+STRATROWS 2084 walk undefined
+STRATROWS 2139 walk undefined
+STRATROWS 2234 walk undefined
+STRATROWS 2284 walk undefined
+STRATROWS 2338 walk undefined
+STRATROWS 2393 walk undefined
+STRATROWS 2443 walk undefined
+STRATROWS 2497 walk undefined
+STRATROWS 2586 walk undefined
+STRATROWS 2640 walk undefined
+STRATROWS 2695 walk undefined
+STRATROWS 2745 walk undefined
+STRATROWS 2799 walk undefined
+STRATROWS 2854 walk undefined
+STRATROWS 2912 walk undefined
+STRATROWS 2966 walk undefined
+STRATROWS 3020 walk undefined
+STRATROWS 3071 walk undefined
+STRATROWS 3127 walk undefined
+STRATROWS 3237 walk undefined
+STRATROWS 3301 walk undefined
+STRATROWS 3357 walk undefined
+STRATROWS 3415 walk undefined
+STRATROWS 3469 walk undefined
+STRATROWS 3524 walk undefined
+STRATROWS 3613 walk undefined
+STRATROWS 3667 walk undefined
+STRATROWS 3722 walk undefined
+STRATROWS 3772 walk undefined
+STRATROWS 3861 walk undefined
+STRATROWS 3915 walk undefined
+STRATROWS 3970 walk undefined
+STRATROWS 4098 walk undefined
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}
+TA {"approaches":[{"turret":"iceturret@472,400","t":1632,"side":"right","via":{"x":467,"y":446},"wait":25,"forks":321}]}
+DOOR {"doors":[{"door":"wandlock@480,560","side":"up","cell":{"x":488,"y":568},"turret":"iceturret@472,400","t":0,"ticks":1368,"open":true}]}

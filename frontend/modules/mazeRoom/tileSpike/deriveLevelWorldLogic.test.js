@@ -205,11 +205,13 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
             'level_99__r2c7'];
         const SPHERE116_WEAPON_GATED = ['level_107', 'level_108__r11c8', 'level_108__r2c0', 'level_108__r5c8', 'level_108__r8c8', 'level_109',
             'level_111', 'level_112__r0c7', 'level_112__r2c2', 'level_113', 'level_114'];
+        const SPHERE122_WEAPON_GATED = ['level_110', 'level_115__r2c2', 'level_115__r4c4', 'level_115__r5c1', 'level_115__r6c7',
+            'level_115__r8c2', 'level_115__r8c7', 'level_115__r9c4'];
         expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
             .toEqual({
                 unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED, ...SPHERE01_WEAPON_GATED, ...SPHERE45_WEAPON_GATED,
                     ...SPHERE53_WEAPON_GATED, ...SPHERE56_WEAPON_GATED, ...SPHERE8_WEAPON_GATED, ...SPHERE85_WEAPON_GATED,
-                    ...SPHERE910_WEAPON_GATED, ...SPHERE102_WEAPON_GATED, ...SPHERE116_WEAPON_GATED, ...UNENTERED].sort(),
+                    ...SPHERE910_WEAPON_GATED, ...SPHERE102_WEAPON_GATED, ...SPHERE116_WEAPON_GATED, ...SPHERE122_WEAPON_GATED, ...UNENTERED].sort(),
                 unchecked: ['L0 flag 1: breakablerock@288,176 cleared', 'L0 flag 4: breakablerock@80,112 cleared',
                     'L101 flag 0: lightpole@144,64 cleared', 'L112 flag 1: rocklock@112,16 cleared', 'L113 flag 0: finaldoor@112,0 cleared',
                     'L114 flag 0: watcher@72,72 cleared', ROPE,
@@ -223,9 +225,10 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
                     'Level 048 - Chest', 'Level 049 - Conch', 'Level 055 - Boss Key 3', 'Level 057 - Tentacled Beast', 'Level 063 - Chest',
                     'Level 067 - Boss Key 4', 'Level 068 - Health', 'Level 069 - Lights', 'Level 071 - Chest', 'Level 074 - Darkshield',
                     'Level 079 - Darksuit', 'Level 080 - Chest', 'Level 082 - King of Fire',
-                    'Level 098 - Chest', 'Level 106 - Ghostsword', 'Level 109 - Firewand', 'Level 112 - Owl'],
+                    'Level 098 - Chest', 'Level 106 - Ghostsword', 'Level 109 - Firewand', 'Level 112 - Owl', 'Level 115 - The Seed'],
             });
-        expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'constant', value: true });
+        // ⛓ session tile-primitives-completion (⚖ the user 2026-11-02, "Derived Seed goal"): the rules preset's goal, since L115 is listed.
+        expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'item_check', item: 'The Seed' });
     });
 
     // ⚖ user 2026-10-21 (memory feedback_l16_arrowtrap_from_l17_refusal_is_correct): L16 from L17 with the arrow trap

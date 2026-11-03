@@ -30,7 +30,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 35,
+            "fields": 36,
             "id": "cloudberry",
             "label": "Cloudberry Kingdom",
             "registeredBy": "frontend/modules/cloudberryDemo/cloudberryLibrary.js"
@@ -70,12 +70,6 @@ export const REGISTRY = frz({
             "id": "omsi",
             "label": "Idle Loops",
             "registeredBy": "frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js"
-        },
-        {
-            "fields": 38,
-            "id": "runner",
-            "label": "Runner Demo",
-            "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
         },
         {
             "fields": 24,
@@ -252,7 +246,7 @@ export const REGISTRY = frz({
                 "renderProcgenParams",
                 "startingInventory"
             ],
-            "title": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)"
+            "title": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)"
         }
     ],
     "libraries": [
@@ -270,14 +264,6 @@ export const REGISTRY = frz({
             "loadable": true,
             "registered": [
                 "bounce"
-            ]
-        },
-        {
-            "error": null,
-            "file": "frontend/modules/runnerDemo/runnerDemoLibrary.js",
-            "loadable": true,
-            "registered": [
-                "runner"
             ]
         },
         {
@@ -347,7 +333,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -402,13 +387,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -435,7 +413,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -490,13 +467,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -570,13 +540,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -658,13 +621,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -681,8 +637,7 @@ export const REGISTRY = frz({
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
-                "flash_seedling_gen",
-                "runner"
+                "flash_seedling_gen"
             ],
             "cells": [
                 {
@@ -742,13 +697,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -757,7 +705,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "backPortalGated"
         },
         {
@@ -822,13 +770,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -837,13 +778,12 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "buildLibraryRegionParams"
         },
         {
             "carriedBy": [
-                "bounce",
-                "runner"
+                "bounce"
             ],
             "cells": [
                 {
@@ -903,13 +843,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -918,7 +851,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "buildRegionContract"
         },
         {
@@ -926,8 +859,7 @@ export const REGISTRY = frz({
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
-                "flash_seedling_gen",
-                "runner"
+                "flash_seedling_gen"
             ],
             "cells": [
                 {
@@ -987,13 +919,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -1002,15 +927,14 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "buildRegionParams"
         },
         {
             "carriedBy": [
                 "bounce",
                 "cloudberry",
-                "flash_seedling",
-                "runner"
+                "flash_seedling"
             ],
             "cells": [
                 {
@@ -1070,13 +994,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -1085,7 +1002,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "buildZoneSpecs"
         },
         {
@@ -1093,8 +1010,7 @@ export const REGISTRY = frz({
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
-                "flash_seedling_gen",
-                "runner"
+                "flash_seedling_gen"
             ],
             "cells": [
                 {
@@ -1154,13 +1070,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -1169,7 +1078,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "canHostExitGates"
         },
         {
@@ -1234,13 +1143,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -1249,15 +1151,14 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "canHostExitGatesBraid"
         },
         {
             "carriedBy": [
                 "bounce",
                 "cloudberry",
-                "maze",
-                "runner"
+                "maze"
             ],
             "cells": [
                 {
@@ -1314,13 +1215,6 @@ export const REGISTRY = frz({
                     "present": false,
                     "short": "—",
                     "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
                     "value": null
                 },
                 {
@@ -1400,13 +1294,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "{drawRegion}",
@@ -1477,13 +1364,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -1569,13 +1449,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "{guardian, swim, sword, water}",
@@ -1599,8 +1472,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
-                "noiz2sa",
-                "runner"
+                "noiz2sa"
             ],
             "cells": [
                 {
@@ -1707,22 +1579,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "8 keys",
-                    "type": "object",
-                    "value": [
-                        "runnerCeilingDensity",
-                        "runnerCeilingMargin",
-                        "runnerGapMargin",
-                        "runnerHazardDensity",
-                        "runnerJitter",
-                        "runnerLengthSteps",
-                        "runnerPhysicsProfile",
-                        "runnerSplitChance"
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -1731,7 +1587,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "defaultProcgenParams"
         },
         {
@@ -1798,13 +1654,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -1826,7 +1675,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -1881,13 +1729,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -1970,13 +1811,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -1985,7 +1819,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "driftItems"
         },
         {
@@ -2050,13 +1884,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -2073,8 +1900,7 @@ export const REGISTRY = frz({
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
-                "flash_seedling_gen",
-                "runner"
+                "flash_seedling_gen"
             ],
             "cells": [
                 {
@@ -2134,13 +1960,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -2149,7 +1968,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "exitGateVeto"
         },
         {
@@ -2161,7 +1980,6 @@ export const REGISTRY = frz({
                 "jta",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -2234,16 +2052,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "{keys, relabel}",
-                    "type": "object",
-                    "value": [
-                        "keys",
-                        "relabel"
-                    ]
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "{keys, relabel}",
                     "type": "object",
@@ -2331,13 +2139,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "fn",
@@ -2355,8 +2156,7 @@ export const REGISTRY = frz({
                 "flash_seedling",
                 "jta",
                 "noiz2sa",
-                "omsi",
-                "runner"
+                "omsi"
             ],
             "cells": [
                 {
@@ -2410,13 +2210,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -2496,13 +2289,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -2517,8 +2303,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
-                "cloudberry",
-                "runner"
+                "cloudberry"
             ],
             "cells": [
                 {
@@ -2578,13 +2363,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -2593,14 +2371,13 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "gateHostingHint"
         },
         {
             "carriedBy": [
                 "bounce",
-                "cloudberry",
-                "runner"
+                "cloudberry"
             ],
             "cells": [
                 {
@@ -2671,19 +2448,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "5 items",
-                    "type": "array",
-                    "value": [
-                        "Double Jump",
-                        "Blue Platforms",
-                        "Springs",
-                        "Glide",
-                        "Shield"
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -2692,7 +2456,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "gateableItems"
         },
         {
@@ -2759,13 +2523,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "fn",
@@ -2783,8 +2540,7 @@ export const REGISTRY = frz({
                 "cloudberry",
                 "flash_seedling",
                 "jta",
-                "noiz2sa",
-                "runner"
+                "noiz2sa"
             ],
             "cells": [
                 {
@@ -2844,13 +2600,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -2859,14 +2608,13 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "generateZoneForSpecs"
         },
         {
             "carriedBy": [
                 "bounce",
-                "cloudberry",
-                "runner"
+                "cloudberry"
             ],
             "cells": [
                 {
@@ -2926,13 +2674,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -2941,14 +2682,13 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "generateZoneForSpecsGen"
         },
         {
             "carriedBy": [
                 "cloudberry",
-                "flash_seedling_gen",
-                "runner"
+                "flash_seedling_gen"
             ],
             "cells": [
                 {
@@ -3008,13 +2748,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "heavy",
-                    "type": "string",
-                    "value": "heavy"
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -3036,7 +2769,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -3091,13 +2823,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -3177,13 +2902,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -3198,8 +2916,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
-                "cloudberry",
-                "runner"
+                "cloudberry"
             ],
             "cells": [
                 {
@@ -3259,13 +2976,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -3274,7 +2984,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "hostsSurplusExitsNatively"
         },
         {
@@ -3287,7 +2997,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -3348,13 +3057,6 @@ export const REGISTRY = frz({
                     "value": "omsi"
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "runner",
-                    "type": "string",
-                    "value": "runner"
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "text_adventure",
@@ -3373,7 +3075,6 @@ export const REGISTRY = frz({
                 "jta",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -3432,13 +3133,6 @@ export const REGISTRY = frz({
                     "short": "omsiSubstrateWrapper",
                     "type": "string",
                     "value": "omsiSubstrateWrapper"
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "runnerDemo",
-                    "type": "string",
-                    "value": "runnerDemo"
                 },
                 {
                     "id": "text_adventure",
@@ -3514,13 +3208,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -3536,8 +3223,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "cloudberry",
-                "maze",
-                "runner"
+                "maze"
             ],
             "cells": [
                 {
@@ -3594,13 +3280,6 @@ export const REGISTRY = frz({
                     "present": false,
                     "short": "—",
                     "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
                     "value": null
                 },
                 {
@@ -3619,8 +3298,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "cloudberry",
-                "maze",
-                "runner"
+                "maze"
             ],
             "cells": [
                 {
@@ -3677,13 +3355,6 @@ export const REGISTRY = frz({
                     "present": false,
                     "short": "—",
                     "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
                     "value": null
                 },
                 {
@@ -3708,7 +3379,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -3769,13 +3439,6 @@ export const REGISTRY = frz({
                     "value": "Idle Loops"
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "Runner Demo",
-                    "type": "string",
-                    "value": "Runner Demo"
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "Text Adventure",
@@ -3790,6 +3453,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "maze"
             ],
             "cells": [
@@ -3802,9 +3466,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -3850,13 +3514,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -3875,8 +3532,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "noiz2sa",
-                "omsi",
-                "runner"
+                "omsi"
             ],
             "cells": [
                 {
@@ -4014,20 +3670,6 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "6 keys",
-                    "type": "object",
-                    "value": [
-                        "Blue Platforms",
-                        "Double Jump",
-                        "Glide",
-                        "Shield",
-                        "Springs",
-                        "Victory"
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -4036,7 +3678,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "libraryItems"
         },
         {
@@ -4049,7 +3691,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -4108,13 +3749,6 @@ export const REGISTRY = frz({
                     "short": "omsi:loadRegion",
                     "type": "string",
                     "value": "omsi:loadRegion"
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "runner:loadRegion",
-                    "type": "string",
-                    "value": "runner:loadRegion"
                 },
                 {
                     "id": "text_adventure",
@@ -4198,13 +3832,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "{kind}",
@@ -4228,7 +3855,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -4251,13 +3877,18 @@ export const REGISTRY = frz({
                 {
                     "id": "cloudberry",
                     "present": true,
-                    "short": "4 keys",
+                    "short": "9 keys",
                     "type": "object",
                     "value": [
                         "customQueues",
                         "executeVia",
+                        "instant",
                         "manual",
-                        "queueActions"
+                        "playClock",
+                        "playback",
+                        "queueActions",
+                        "record",
+                        "summaryRecording"
                     ]
                 },
                 {
@@ -4350,22 +3981,6 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "8 keys",
-                    "type": "object",
-                    "value": [
-                        "customQueues",
-                        "executeVia",
-                        "instant",
-                        "manual",
-                        "playback",
-                        "queueActions",
-                        "record",
-                        "summaryRecording"
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "8 keys",
@@ -4448,13 +4063,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "yes",
@@ -4476,7 +4084,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -4531,13 +4138,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "no",
-                    "type": "boolean",
-                    "value": false
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "no",
                     "type": "boolean",
@@ -4564,7 +4164,6 @@ export const REGISTRY = frz({
                 "jta",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -4619,13 +4218,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "solver",
-                    "type": "string",
-                    "value": "solver"
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "solver",
                     "type": "string",
@@ -4646,11 +4238,11 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "jta",
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -4663,10 +4255,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling",
@@ -4705,13 +4297,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "yes",
-                    "type": "boolean",
-                    "value": true
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "yes",
                     "type": "boolean",
@@ -4739,7 +4324,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -4800,13 +4384,6 @@ export const REGISTRY = frz({
                     "value": true
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "yes",
-                    "type": "boolean",
-                    "value": true
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "yes",
@@ -4820,6 +4397,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "cloudberry",
                 "flash_seedling",
                 "flash_seedling_gen",
                 "noiz2sa"
@@ -4834,10 +4412,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling",
@@ -4876,13 +4454,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -4903,11 +4474,11 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "jta",
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -4920,10 +4491,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling",
@@ -4962,13 +4533,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "yes",
-                    "type": "boolean",
-                    "value": true
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "yes",
                     "type": "boolean",
@@ -4996,7 +4560,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -5077,16 +4640,6 @@ export const REGISTRY = frz({
                     "type": "array",
                     "value": [
                         "regionMove"
-                    ]
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "regionMove, locationCheck",
-                    "type": "array",
-                    "value": [
-                        "regionMove",
-                        "locationCheck"
                     ]
                 },
                 {
@@ -5108,11 +4661,11 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "cloudberry",
                 "jta",
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -5125,10 +4678,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling",
@@ -5167,13 +4720,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "yes",
-                    "type": "boolean",
-                    "value": true
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "yes",
                     "type": "boolean",
@@ -5254,13 +4800,6 @@ export const REGISTRY = frz({
                     "value": true
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -5275,8 +4814,8 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
-                "noiz2sa",
-                "runner"
+                "cloudberry",
+                "noiz2sa"
             ],
             "cells": [
                 {
@@ -5288,10 +4827,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "cloudberry",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
                 },
                 {
                     "id": "flash_seedling",
@@ -5334,13 +4873,6 @@ export const REGISTRY = frz({
                     "short": "—",
                     "type": "absent",
                     "value": null
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "yes",
-                    "type": "boolean",
-                    "value": true
                 },
                 {
                     "id": "text_adventure",
@@ -5416,13 +4948,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -5444,7 +4969,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -5503,13 +5027,6 @@ export const REGISTRY = frz({
                     "short": "omsiSubstrateWrapperPanel",
                     "type": "string",
                     "value": "omsiSubstrateWrapperPanel"
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "runnerDemoPanel",
-                    "type": "string",
-                    "value": "runnerDemoPanel"
                 },
                 {
                     "id": "text_adventure",
@@ -5580,13 +5097,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -5685,13 +5195,6 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -5761,13 +5264,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -5849,13 +5345,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "fn",
@@ -5924,13 +5413,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -6011,13 +5493,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -6026,7 +5501,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "prepareSphereGrowth"
         },
         {
@@ -6091,13 +5566,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -6113,8 +5581,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "cloudberry",
-                "flash_seedling_gen",
-                "runner"
+                "flash_seedling_gen"
             ],
             "cells": [
                 {
@@ -6174,13 +5641,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -6189,7 +5649,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "procgenParamsFromPayload"
         },
         {
@@ -6252,13 +5712,6 @@ export const REGISTRY = frz({
                     "present": true,
                     "short": "fn",
                     "type": "function",
-                    "value": null
-                },
-                {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
                     "value": null
                 },
                 {
@@ -6335,13 +5788,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -6362,7 +5808,6 @@ export const REGISTRY = frz({
                 "jta",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -6417,13 +5862,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "sides",
-                    "type": "string",
-                    "value": "sides"
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "sides",
                     "type": "string",
@@ -6518,13 +5956,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "{open, rules, save}",
@@ -6596,13 +6027,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -6682,13 +6106,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -6697,7 +6114,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "renderLibraryProcgenParams"
         },
         {
@@ -6708,8 +6125,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
-                "noiz2sa",
-                "runner"
+                "noiz2sa"
             ],
             "cells": [
                 {
@@ -6769,13 +6185,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -6784,7 +6193,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "bullet",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "renderProcgenParams"
         },
         {
@@ -6852,13 +6261,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -6957,13 +6359,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -7038,13 +6433,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -7066,7 +6454,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -7121,13 +6508,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "fn",
                     "type": "function",
@@ -7218,13 +6598,6 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "{mana}",
@@ -7305,13 +6678,6 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -7390,13 +6756,6 @@ export const REGISTRY = frz({
                     "value": []
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "{}",
@@ -7470,13 +6829,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -7498,7 +6850,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -7658,21 +7009,6 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "7 keys",
-                    "type": "object",
-                    "value": [
-                        "ap_locations",
-                        "exits",
-                        "flashCapabilities",
-                        "fogEnabled",
-                        "gameId",
-                        "gate_rules",
-                        "params"
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "5 keys",
@@ -7752,13 +7088,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -7827,13 +7156,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": false,
                     "short": "—",
                     "type": "absent",
@@ -7915,13 +7237,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -7930,7 +7245,7 @@ export const REGISTRY = frz({
                 }
             ],
             "documentedHow": "table",
-            "group": "Build-time — driver-facing adapter hooks (bounce, runner, jta, noiz2sa, and the maze's panel subset)",
+            "group": "Build-time — driver-facing adapter hooks (bounce, cloudberry, jta, noiz2sa, and the maze's panel subset)",
             "name": "startingInventory"
         },
         {
@@ -7943,7 +7258,6 @@ export const REGISTRY = frz({
                 "maze",
                 "noiz2sa",
                 "omsi",
-                "runner",
                 "text_adventure"
             ],
             "cells": [
@@ -8031,16 +7345,6 @@ export const REGISTRY = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "present": true,
-                    "short": "arbitrary_ap_locations, runner_abilities",
-                    "type": "array",
-                    "value": [
-                        "arbitrary_ap_locations",
-                        "runner_abilities"
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "present": true,
                     "short": "6 items",
@@ -8123,13 +7427,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -8145,8 +7442,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "cloudberry",
-                "maze",
-                "runner"
+                "maze"
             ],
             "cells": [
                 {
@@ -8203,13 +7499,6 @@ export const REGISTRY = frz({
                     "present": false,
                     "short": "—",
                     "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
                     "value": null
                 },
                 {
@@ -8230,8 +7519,7 @@ export const REGISTRY = frz({
                 "cloudberry",
                 "jta",
                 "noiz2sa",
-                "omsi",
-                "runner"
+                "omsi"
             ],
             "cells": [
                 {
@@ -8285,13 +7573,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": true,
-                    "short": "Victory",
-                    "type": "string",
-                    "value": "Victory"
-                },
-                {
-                    "id": "runner",
                     "present": true,
                     "short": "Victory",
                     "type": "string",
@@ -8372,13 +7653,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -8396,8 +7670,7 @@ export const REGISTRY = frz({
                 "flash_seedling",
                 "jta",
                 "noiz2sa",
-                "omsi",
-                "runner"
+                "omsi"
             ],
             "cells": [
                 {
@@ -8455,13 +7728,6 @@ export const REGISTRY = frz({
                     "short": "1",
                     "type": "number",
                     "value": 1
-                },
-                {
-                    "id": "runner",
-                    "present": true,
-                    "short": "6",
-                    "type": "number",
-                    "value": 6
                 },
                 {
                     "id": "text_adventure",
@@ -8538,13 +7804,6 @@ export const REGISTRY = frz({
                     "value": null
                 },
                 {
-                    "id": "runner",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
                     "id": "text_adventure",
                     "present": false,
                     "short": "—",
@@ -8613,13 +7872,6 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "omsi",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
-                },
-                {
-                    "id": "runner",
                     "present": false,
                     "short": "—",
                     "type": "absent",

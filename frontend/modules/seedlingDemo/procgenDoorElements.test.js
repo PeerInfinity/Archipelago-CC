@@ -46,11 +46,13 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
          *  existing head moved. ⛓ Swim U3 added `corridorbody` (a lock-less body on a
          *  main-path cut), LAST for the same reason. ⛓ Seedling gen A1 added
          *  `ropegate` (an armed arrow trap and its rope), LAST, OPT-IN. ⛓ Seedling
-         *  gen B2 added `chestdoor` (a chest in a wall's only gap), LAST, OPT-IN. */
+         *  gen B2 added `chestdoor` (a chest in a wall's only gap), LAST, OPT-IN.
+         *  ⛓ Strategy switch r2 added `burngate` (a burnable tree on a cut), LAST, OPT-IN. ⛓ The
+         *  strategy gadgets (r3) added `holdgate` and `weighgate`, LAST, OPT-IN. */
         expect(ELEMENT_NAMES).toEqual([
             'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena', 'rockgate',
             'shortcut', 'shieldgate', 'watergate', 'watershortcut', 'waterfallgate', 'roam',
-            'corridorbody', 'ropegate', 'chestdoor',
+            'corridorbody', 'ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate',
         ]);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });
@@ -107,11 +109,13 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
                 + '+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate');
         expect(formatElementSpec(defaultElementsFor(POST_SWIM_ITEMS)))
             .toBe('guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3'
-                + '+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut');
+                + '+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut'
+                // ⛓ seedling-gen-post-swim-fix: post-swim's boot holds the fire, so the `hasFire` row joins.
+                + '+burngate');
         expect(formatElementSpec(defaultElementsFor(POST_FEATHER_ITEMS)))
             .toBe('guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3'
                 + '+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut'
-                + '+waterfallgate');
+                + '+waterfallgate+burngate');
         /** ⛓ each biome differs from the one before by EXACTLY the heads its new item admits. */
         const names = (items) => defaultElementsFor(items).any.map((m) => m.name);
         const pre = names(PRE_SWORD_ITEMS);
@@ -122,14 +126,16 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
         expect(post.filter((n) => !pre.includes(n)))
             .toEqual(['killgate', 'arena', 'rockgate', 'shortcut', 'roam', 'corridorbody']);
         expect(added(POST_SWORD_ITEMS, POST_SHIELD_ITEMS)).toEqual(['shieldgate']);
-        expect(added(POST_SHIELD_ITEMS, POST_SWIM_ITEMS)).toEqual(['watergate', 'watershortcut']);
+        // ⛓ seedling-gen-post-swim-fix: the conch's boot also brings the torch, fire and wand.
+        expect(added(POST_SHIELD_ITEMS, POST_SWIM_ITEMS)).toEqual(['watergate', 'watershortcut', 'burngate']);
         expect(added(POST_SWIM_ITEMS, POST_FEATHER_ITEMS)).toEqual(['waterfallgate']);
         /** ⛓ by post-feather every head in the table is drawn by default — but
-         *  `ropegate` and `chestdoor`, which ship OPT-IN (⚖ Q5: a new head joins a
-         *  default only by a re-record of its own). */
+         *  `ropegate`, `chestdoor`, `holdgate` and `weighgate`, which ship OPT-IN (⚖ Q5: a new head joins a
+         *  default only by a re-record of its own). `burngate` joined by its own
+         *  re-record (seedling-gen-post-swim-fix). */
         expect([...names(POST_FEATHER_ITEMS)].sort())
             .toEqual(Object.keys(ELEMENT_TABLE)
-                .filter((n) => n !== 'ropegate' && n !== 'chestdoor').sort());
+                .filter((n) => !['ropegate', 'chestdoor', 'holdgate', 'weighgate'].includes(n)).sort());
         /**
          * ⛔ THE TWO-STREAMS HALF, READ OFF THE NORMALIZED SPEC — and since
          * SEEDLING BOT R9 slice 1 (D1) the guard's `len` is the THIRD kind:
@@ -172,11 +178,13 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
                 expect((ELEMENT_TABLE[name].needs ?? []).every((k) => k === row.item)).toBe(true);
             }
         }
-        expect(BIOME_DEFAULT_FOLD.map((r) => r.item)).toEqual(['hasSword', 'hasShield', 'canSwim', 'hasFeather']);
+        expect(BIOME_DEFAULT_FOLD.map((r) => r.item))
+            .toEqual(['hasSword', 'hasShield', 'canSwim', 'hasFeather', 'hasFire']);
         expect(headsNeeding('hasSword')).toEqual(['killgate', 'arena', 'rockgate']);
         expect(headsNeeding('hasShield')).toEqual(['shieldgate']);
         expect(headsNeeding('canSwim')).toEqual(['watergate']);
         expect(headsNeeding('hasFeather')).toEqual(['waterfallgate']);
+        expect(headsNeeding('hasFire')).toEqual(['burngate']);
     });
 
     /** ⛔ `none` IS A LEGAL MEMBER — *"and sometimes nothing"* is sayable, which

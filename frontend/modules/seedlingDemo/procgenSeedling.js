@@ -4125,6 +4125,12 @@ function certificationGap(cert) {
  *   post-shield  … `+shieldgate`
  *   post-swim    … `+watergate+watershortcut`
  *   post-feather … `+waterfallgate`
+ *   any boot with the fire … `+burngate` (last; post-swim and later, post-fire)
+ *
+ * ⛓ The `hasFire` row joined with `seedling-gen-post-swim-fix` (⚖ Robert
+ * 2026-11-02, "Both, one re-record"), together with post-swim's boot gaining the
+ * torch, fire and wand. It is a ROW, not an insertion: every earlier member keeps
+ * its index, and only the boots that hold the fire draw a longer list.
  *
  * (`BIOME_DEFAULT_FOLD` is the table; each later boot holds every earlier
  * item, so a biome's list is every row its boot grants.)
@@ -4211,6 +4217,7 @@ export const BIOME_DEFAULT_FOLD = Object.freeze([
     Object.freeze({ item: 'hasShield', heads: Object.freeze([{ name: 'shieldgate' }]) }),
     Object.freeze({ item: 'canSwim', heads: Object.freeze([{ name: 'watergate' }, { name: 'watershortcut' }]) }),
     Object.freeze({ item: 'hasFeather', heads: Object.freeze([{ name: 'waterfallgate' }]) }),
+    Object.freeze({ item: 'hasFire', heads: Object.freeze([{ name: 'burngate' }]) }),
 ]);
 for (const row of BIOME_DEFAULT_FOLD) {
     for (const { name } of row.heads) {

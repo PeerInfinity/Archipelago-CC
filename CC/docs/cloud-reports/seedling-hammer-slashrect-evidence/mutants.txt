@@ -1,0 +1,48 @@
+== M1 drop the guard (refuseNoFacing never converts)
+     ✓ a hit with no knockback source parks no facing, and the recovery tick hands back -1 2ms
+     ✓ `isFacing` is the four values and nothing else 1ms
+     ✓ the rect throws on -1 by design (no model has `getSlashRect`'s all-zero default arm) 0ms
+     ✓ a value, a throw at a facing, and a non-rect throw all pass through unchanged 0ms
+     × a rect throw with no facing becomes a SolverRefusal NAMED `PRESS_NO_FACING` (sword and ghost sword) 7ms
+     ✓ ships OFF 0ms
+     × always: the press forecast's throw is REFUSED by name (it threw `PressError` at the base) 767ms
+     ✓ ON: the aim waits a tick instead (no forecast at -1), and the solve meets the kill's own refusal  398ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 6 passed (8)
+== M2 the facing check accepts -1 again
+     × a hit with no knockback source parks no facing, and the recovery tick hands back -1 8ms
+     × `isFacing` is the four values and nothing else 1ms
+     ✓ the rect throws on -1 by design (no model has `getSlashRect`'s all-zero default arm) 1ms
+     ✓ a value, a throw at a facing, and a non-rect throw all pass through unchanged 0ms
+     × a rect throw with no facing becomes a SolverRefusal NAMED `PRESS_NO_FACING` (sword and ghost sword) 1ms
+     ✓ ships OFF 0ms
+     × always: the press forecast's throw is REFUSED by name (it threw `PressError` at the base) 777ms
+     × ON: the aim waits a tick instead (no forecast at -1), and the solve meets the kill's own refusal 316ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  5 failed | 3 passed (8)
+== M3 refuse with no name
+     ✓ a hit with no knockback source parks no facing, and the recovery tick hands back -1 2ms
+     ✓ `isFacing` is the four values and nothing else 1ms
+     ✓ the rect throws on -1 by design (no model has `getSlashRect`'s all-zero default arm) 0ms
+     ✓ a value, a throw at a facing, and a non-rect throw all pass through unchanged 0ms
+     × a rect throw with no facing becomes a SolverRefusal NAMED `PRESS_NO_FACING` (sword and ghost sword) 6ms
+     ✓ ships OFF 0ms
+     × always: the press forecast's throw is REFUSED by name (it threw `PressError` at the base) 460ms
+     ✓ ON: the aim waits a tick instead (no forecast at -1), and the solve meets the kill's own refusal 289ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 6 passed (8)
+== M3b refuse with no name (no bound, no code)
+     ✓ a hit with no knockback source parks no facing, and the recovery tick hands back -1 3ms
+     ✓ `isFacing` is the four values and nothing else 1ms
+     ✓ the rect throws on -1 by design (no model has `getSlashRect`'s all-zero default arm) 0ms
+     ✓ a value, a throw at a facing, and a non-rect throw all pass through unchanged 1ms
+     × a rect throw with no facing becomes a SolverRefusal NAMED `PRESS_NO_FACING` (sword and ghost sword) 7ms
+     ✓ ships OFF 0ms
+     ✓ always: the press forecast's throw is REFUSED by name (it threw `PressError` at the base)  466ms
+     ✓ ON: the aim waits a tick instead (no forecast at -1), and the solve meets the kill's own refusal  332ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 7 passed (8)
+== M4 ON: drop the escape's no-facing decline (solverBot pressEscapeOnce)
+     × ON: the aim waits a tick instead (no forecast at -1), and the solve meets the kill's own refusal 273ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 7 passed (8)

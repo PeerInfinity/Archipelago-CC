@@ -410,16 +410,18 @@ describe('L100–L102 — L101\'s pole event is priced where the rules place it'
  *     an in-level LATCHING ButtonRoom (18,11), and the shove only tames the Crusher (2,0), a hazard neither model carries. So no
  *     piece is laid and both crossings are free.
  *   - L3 r0c4 → L111 is STRICTER in the world: the teleporter (0,4) is reached only through the water at (1,4), so it needs Swim (a game
- *     probe agrees: dry 0/3, wet 3/3). The rules charge only the ghost rock. ⚖ the user: "Going from L3 to L111 requires swim, and the
- *     rules should model that", with the rules unchanged until the maze arc is done. So this is the one row, pinned OPEN by name.
+ *     probe agrees: dry 0/3, wet 3/3). ⚖ the user: "Going from L3 to L111 requires swim, and the rules should model that". It was
+ *     pinned OPEN by name here until ⛓ RULES rules-certifier-tail (⚖ 2026-11-02 "Yes, land it"): a door now costs what EVERY way
+ *     onto its tile pays (`chargeNecessaryApproaches`), so the rules charge the Swim too and the row closes. The mutant below is now the
+ *     control: drop that Swim and the row reopens.
  */
-describe('L107–L114 — sphere 11.6 certifies but for the L3 → L111 water approach', () => {
+describe('L107–L114 — sphere 11.6 certifies, the L3 → L111 water approach charged its Swim', () => {
     const LV = ['level_3', 'level_101', 'level_102', 'level_107', 'level_108', 'level_109', 'level_111', 'level_112', 'level_113', 'level_114'];
     const L3_L111 = 'level_3__r0c4 → level_111 holding [Ghost Spear,Ghost Sword Fusion,Progressive Sword]: derived false, atlas true';
 
-    it('the cut certifies with one problem, the water approach; the world prices it And(rock, Swim)', () => {
+    it('the cut certifies with no problem; the world prices the water approach And(rock, Swim), as the rules now do', () => {
         const out = certify(LV);
-        expect(out.problems).toEqual([L3_L111]);
+        expect(out.problems).toEqual([]);
         expect(out.accepted).toEqual([]);
         expect(line(out, 'level_3__r0c4->level_111=')).toBe(JSON.stringify([['Ghost Spear', 'Ghost Sword Fusion', 'Progressive Swim', 'Progressive Sword']]));
     }, 300_000);
@@ -432,11 +434,52 @@ describe('L107–L114 — sphere 11.6 certifies but for the L3 → L111 water ap
         expect(rules.regions['1'].level_107.exits.map((e) => e.access_rule)).toEqual([{ rule: 'True_' }, { rule: 'True_' }]);
     }, 180_000);
 
-    it('a mutant rules exit that charges the Swim too closes the row: the world is right, the rules looser', () => {
+    it('the rules exit charges the Swim; a mutant that drops it reopens the row (the world stays right)', () => {
         const rules = structuredClone(compile(LV));
         const exit = rules.regions['1'].level_3__r0c4.exits.find((e) => e.connected_region === 'level_111');
-        exit.access_rule = { rule: 'And', children: [...exit.access_rule.children, { rule: 'Has', args: { item_name: 'Progressive Swim' } }] };
+        expect(exit.access_rule.children[1]).toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim' } });
+        exit.access_rule = exit.access_rule.children[0];
         const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS, regions: ['level_3__r0c4'] });
+        expect(out.problems).toEqual([L3_L111]);
+    }, 180_000);
+});
+
+/**
+ * ⛓ SPHERES 12.2 + 12.3 (session tile-primitives-sphere-order-13, ⚖ 2026-11-01 "L115 + L110"): L115 and L110, the last levels the
+ * seed-1 sphere log reaches. L110 needs nothing new: it is wired from L101 r0c6 and leads to L2. L115 brings L113's FinalDoor
+ * lower row (7..8, 1), its landing, into L113's world. That row's transcribed gate was the Seals alone, while the door row's was
+ * the Seals and the Watcher's talk, so the event was priced at Seal×16. The projection now gives one entity's body cells one gate
+ * (⚖ "Switch to (B) unified gate"), and the cut certifies.
+ */
+describe('L110 + L115 — spheres 12.2 and 12.3 certify, the FinalDoor body one gate', () => {
+    const LV = ['level_2', 'level_101', 'level_102', 'level_110', 'level_112', 'level_113', 'level_114', 'level_115'];
+    const E = 'L113 flag 0: finaldoor@112,0 cleared';
+
+    it('the cut certifies with no problem; the finaldoor event costs the Watcher\'s talk', () => {
+        const out = certify(LV);
         expect(out.problems).toEqual([]);
+        expect(out.accepted).toEqual([]);
+        const seals = Array(16).fill('Seal');
+        for (const at of ['1,1', '7,1', '8,1']) {
+            expect(line(out, `level_113@${E}<@${at}=`)).toBe(JSON.stringify([['L114 flag 0: watcher@72,72 cleared', ...seals]]));
+        }
+    }, 300_000);
+
+    it('L110 is wired both ways the atlas has it: from L101 r0c6, and on to L2', () => {
+        const rules = compile(LV);
+        expect(rules.regions['1'].level_110.exits.map((e) => e.connected_region)).toEqual(['level_2']);
+        expect(rules.regions['1'].level_101__r0c6.exits.map((e) => e.connected_region)).toContain('level_110');
+    }, 180_000);
+
+    it('a mutant lower row gated on the Seals alone reopens the row: the event priced without the talk', () => {
+        const rules = structuredClone(compile(LV));
+        const p = rules.preset_sidecars['1'].level_113.playable_payload;
+        const lower = p.obstacles.find((o) => o.x === 7 && o.y === 1).id;
+        const weak = { ...p.obstacleLib[lower], id: 'weak' };
+        weak.clear_rule = { rule: 'Or', children: [{ rule: 'Has', args: { item_name: 'Seal', count: 16 } }, { rule: 'Has', args: { item_name: E } }] };
+        p.obstacleLib.weak = weak;
+        for (const o of p.obstacles) if (o.y === 1 && (o.x === 7 || o.x === 8)) o.id = 'weak';
+        const out = certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS, regions: ['level_113'] });
+        expect(out.problems.some((pr) => pr.startsWith(`level_113 @ ${E}`) && pr.includes('derived true, atlas false'))).toBe(true);
     }, 180_000);
 });

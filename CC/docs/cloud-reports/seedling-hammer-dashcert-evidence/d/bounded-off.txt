@@ -1,0 +1,186 @@
+ ✓ frontend/modules/flashPanel/seedlingSolveProgressView.test.js (59 tests) 110ms
+ ✓ frontend/modules/flashPanel/seedlingWasmPlayback.test.js (145 tests) 27951ms
+     ✓ clause BEGIN — the begin record names another level (a swap pending) and never lands → WAITED, then not adopted (named)  571ms
+     ✓ clause FADE — too few frames since the begin record, and the clock never moves → WAITED, then not adopted (named)  15377ms
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 32176ms
+     ✓ ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared  383ms
+     ✓ ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more  405ms
+     ✓ ⛔ derives a stance for the body that CANNOT reach where the walk stands  1623ms
+     ✓ ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why  1757ms
+     ✓ ⛓ takes the BEST stance, not the first viable one — and carries the runners-up  1666ms
+     ✓ ⛔ the dwell bound is the forecast's own death tick, not a per-class constant  6027ms
+     ✓ ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned  679ms
+     ✓ ⛓ L18 spends the fade WALKING, and the wait is the subtraction  2533ms
+     ✓ ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin  6930ms
+     ✓ ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room  1916ms
+     ✓ ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell  538ms
+     ✓ ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it  3149ms
+     ✓ ⛓ `economies` DEFAULTS TO the roster-wide flag — the same walk either way  598ms
+ ✓ frontend/modules/seedlingDemo/contactFidelity.test.js (62 tests) 2960ms
+     ✓ leg 243 — the shipped defaults: fixed rows at 0 px, residue at its tick  764ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js (14 tests) 8702ms
+     ✓ L6 bare (bait — ENEMIES), 150 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress  1807ms
+     ✓ L4 kit (hold + shove), 40 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress  2812ms
+     ✓ L4 kit (hold + shove), 40 walker ticks in: at 100 ms and at 1000 ms: the REQUEST, the plan, the digest and the shouldStop total are identical; only the envelope's rate differs  2727ms
+     ✓ at most one post per the envelope's interval (default 100 ms) plus the FINAL, which comes just before the result and meters the attempt's whole work  1300ms
+ ✓ frontend/modules/seedlingDemo/seedlingEnemySkin.test.js (47 tests) 4745ms
+     ✓ the bob-L14 tape: every tick's Bob ops  308ms
+     ✓ bob-L14: per-tick state (bodies included), readState and stateLog byte-identical with the renderer on and off  346ms
+     ✓ lavarunner-L71: per-tick state (bodies included), readState and stateLog byte-identical with the renderer on and off  351ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (58 tests) 126495ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  21782ms
+     ✓ ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  617ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21), the strike floor at its shipped ON: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  12962ms
+     ✓ ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count  7800ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall  4200ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises  953ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  6845ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  14567ms
+     ✓ ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message  1895ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  7394ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  11056ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  6778ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  12533ms
+     ✓ ⛓⛓⛓ non-vacuous, the cross-pass escape cache ON (the test only, wired by its hook): L18's segments report the solve's own hits and misses  7745ms
+     ✓ ⛓⛓ the solver wires the escape member: counted with the switch ON and no installer, null with it OFF; a null hand-in is null  7690ms
+ ✓ frontend/modules/seedlingDemo/hammerFightFallback.test.js (15 tests) 80713ms
+     ✓ ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte  4581ms
+     ✓ ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's  32754ms
+     ✓ ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence  3344ms
+     ✓ ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing  5491ms
+     ✓ ⛓⛓ inert while the fight itself is on (the retry would be the same path)  17125ms
+     ✓ ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged  1036ms
+     ✓ ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged  6208ms
+     ✓ ⛓⛓⛓ ON: the rewind that solves is a plan whose `expected` IS a replay of its keys, row by row  4627ms
+     ✓ ⛓⛓⛓ ON, the deadline tripping AFTER the rewind solved: the plan's `expected` IS a replay of its keys  5426ms
+ ✓ frontend/modules/seedlingDemo/procgenRoam.test.js (23 tests) 5076ms
+     ✓ winding 14x14 seed 12, post-sword: certified at U4b; refuses by the DWELL since U6, with the count  338ms
+     ✓ rooms s10 post-sword: COSTS — the route crosses the bodies (101 vs 69 ticks) (dashSpinnerForecast OFF)  2806ms
+     ✓ rooms s10 post-sword: INERT — the struck bodies are priced where the strike left them (69 vs 69 ticks)  922ms
+ ✓ frontend/modules/seedlingDemo/solverDeadline.test.js (16 tests) 7737ms
+     ✓ swordless L14: the chaser arm refuses on the missing sword without its stance scan; DETOUR then solves; with the sword it still solves  3126ms
+     ✓ `detour` is a named site, and a trip there refuses swordless L14 BY NAME (no hook: it solves)  1307ms
+     ✓ `time` in a solve: bare L6 from (208,32) runs the TIME rung's search; a trip there FALLS THROUGH to BAIT, and the climb says why  439ms
+     ✓ untripped, opted out: one ask (the entry), the stance unchanged; opted in: one ask per cell and per candidate, the stance unchanged  1597ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverShouldStop.test.js (18 tests) 3182ms
+     ✓ a window of the whole budget: the full plan (219 t) replaces the dashless one, nothing tripped; the units are counted  742ms
+     ✓ the clock decides nothing: the default budgets on a clock that jumps a DAY per read answer exactly as on a counter  728ms
+     ✓ L4: the window that holds the WHOLE full pass (23 dashless + 61 full = 84 units) upgrades to 219 t; one unit less ships the dashless 255 t — the window bounds the pass, not its last dash ask  559ms
+     ✓ the switch is ON, and the work clock counts fine units: the dashless pass asks `walk` too (coarse it asks block-route only)  308ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.test.js (20 tests) 7182ms
+     ✓ ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one refuses by name with nothing scanned  648ms
+     ✓ the D2 counter-example: the axe corridor's 305-tick leg is not a clean run, so ON it SCANS, exactly as OFF  608ms
+     ✓ the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-reach-l49 at 368 ticks (K = 40: 585)  4785ms
+ ✓ frontend/modules/seedlingDemo/solveProgressTap.test.js (34 tests) 58ms
+ ✓ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js (19 tests) 137209ms
+     ✓ ⛓⛓⛓ L18 residue 21: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  21355ms
+     ✓ ⛓⛓⛓ L18 residue 21, STRIKE_ETA_FLOOR ON: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  13354ms
+     ✓ ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included  23039ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches, and the bytes are OFF's  10409ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches (floor ON), and the bytes are OFF's  7960ms
+     ✓ ⛓⛓ maxEntries 0: OFF exactly, and a full scope misses rather than evicts  12671ms
+     ✓ ⛓⛓ maxEntries 1: OFF exactly, and a full scope misses rather than evicts  10437ms
+     ✓ ⛓⛓ maxEntries 7: OFF exactly, and a full scope misses rather than evicts  12010ms
+     ✓ ⛓⛓⛓ two solves back to back: the second's first lookup misses, and it hits exactly as the first did  7516ms
+     ✓ ⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer's phase is two entries, and the two answers differ  1919ms
+     ✓ ⛓⛓⛓ a drifting beam tower inside a SEARCH (L18 + a tower): two seam times a hammer period apart — the drift alone parts the answers, two entries, verify 0 mismatches  4894ms
+     ✓ ⛓⛓⛓ the digest's `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` ALONE, and the answers differ  3088ms
+     ✓ ⛓⛓⛓ the arguments: `pressAt` and the held sets' ORDER are in the key — each variant is OFF's answer  4592ms
+     ✓ ⛓⛓⛓ the deadline's presence is in the key; a tripped miss is never stored; an entry stored before a trip is never read after one  3573ms
+ ✓ frontend/modules/seedlingDemo/dashOnlyWindow.test.js (14 tests) 3663ms
+     ✓ window 75: OFF cuts the WHOLE full pass and ships the dashless 255 t — stamped; ON (the default) lets its non-dash work run on the budget and upgrades to 219 t  1184ms
+     ✓ ON: the smallest window that holds the full pass's dash asks is 39 (219 t); at 38 the full pass trips at `sword-dash` (never `walk`), keeping the partial schedule that dash scan returns  829ms
+     ✓ L4 at window 75 through a real worker: the posting instance OFF → the worker ships the dashless 255 t and stamps `dashOnlyWindow: false`; at the default (ON) it upgrades to 219 t, unstamped  1622ms
+ ✓ frontend/modules/seedlingDemo/fidelityApBosses.test.js (22 tests) 24189ms
+     ✓ fresh, Fire from the server: the fight anyway, {32,3} then {32,4}, no grant, no {31,29}; burn, pit  9327ms
+     ✓ fresh, NO Fire: the fight and both reports, then the burn is refused BY NAME (a precondition)  9394ms
+     ✓ slot held, wand: the sword is added and collected, {12,1} written in band, NO hasDarkSword grant  3000ms
+     ✓ the sword ALREADY from the server and the slot held: she still adds it (the location is unreported)  2093ms
+ ✓ frontend/modules/seedlingDemo/fidelityLadder2.test.js (12 tests) 1552ms
+     ✓ every arm agrees on K = 0, and each class has a positive control  771ms
+ ✓ frontend/modules/seedlingDemo/blockRoute.test.js (8 tests) 1618ms
+     ✓ L15 SOLVES: five orders, the dwell, the crossing into L16  419ms
+     ✓ L16's weigh is a three-order press route: E1 · break the rock at (19,4) · N2  385ms
+     ✓ swordless L16: the old cap cut a live search; the raised cap EXHAUSTS it at depth 11  515ms
+ ✓ frontend/modules/seedlingDemo/hammerDashWindow.test.js (12 tests) 25404ms
+     ✓ L4: the thresholds — ON 39 (38 keeps the partial 235 t), OFF 84 (83 ships the dashless 255 t)  1916ms
+     ✓ THE MARGIN PIN: L4 ships its full 219 t at the window minus each arm's floor (ON 40, OFF 1)  640ms
+     ✓ leg 108 (L12) on the shipped arm: 328 t at 85 (the full pass, a kept partial), 343 t at 84 — the threshold IS the window  3802ms
+     ✓ THE MARGIN PIN: leg 108 ships 328 t at the window minus its floor (ON 0); OFF, its dashless 561 t  1997ms
+     ✓ OFF reproduces today: L20 in 560 t; both stand-tail corridors are planned window by window (no whole-chain ask)  619ms
+     ✓ ON: the same keys; each stand-tail dash is certified whole with its stand — the hold's all 131 ticks, the collect's to its ceremony  842ms
+     ✓ ON under the window: L4's hold stance (button@16,64, a 126-tick stand) — the same keys AND the same units (the window does not move)  682ms
+     ✓ ON dashes where it should: generated bushy post-feather seed 9 — the collect approach in a spinner room, 96 → 80 t, certified with its 7-tick stand; the level 102 → 86 t  3823ms
+     ✓ ON is not monotone: generated winding post-feather seed 9 — the whole-certified press-blind chain is 204 t where OFF's is 199 t (the skeleton walk 205 → 210 t)  7920ms
+     ✓ ON with no stand tail = OFF: leg 108 (no corridor of it ends standing), key for key and unit for unit  3154ms
+ ✓ frontend/modules/seedlingDemo/dashShape.test.js (14 tests) 112766ms
+     ✓ in process: each key has its own witness — noSwingPrefix L4 full pass 57 → 48 units; keepPartial (dash-only window 20) 255 → 235 t; legPrecheck 392:0 the same ticks for less work  63641ms
+     ✓ through a real worker: the posting instance's shape rides on the request; the worker's plan moves as in process and is stamped with what it READ; at the defaults unstamped  49079ms
+ ✓ frontend/modules/seedlingDemo/stringPullFast.test.js (13 tests) 59341ms
+     ✓ L40 kill rung (the lever's target)  35919ms
+     ✓ L18 hammer room (residue 21)  8828ms
+     ✓ the L42 crusher witness (a moving crusher, solved with the bait): OFF = ON, every pull audited  13927ms
+ ✓ frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js (5 tests) 56647ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only  18240ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only  37578ms
+     ✓ ⛓⛓⛓ planWaypoints: the string-pull plan is byte-identical with a hook installed and without; unhooked, no heartbeat path runs  582ms
+ ✓ frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js (13 tests) 8429ms
+     ✓ both ON: the dwell kills from the stance (88,56) inside its bound, 460 t  1672ms
+     ✓ both OFF: the dwell refuses (the survey's text), and the keys it drove are `bobsoldier2-l30-dash-stance`  1043ms
+     ✓ D2a alone: the stance walk keeps the forecast, and the corpse's PAD refuses the next walk's gate  472ms
+     ✓ D2b alone: the dashed stance walk still runs the dwell out  913ms
+     ✓ both ON: the solver's own plan IS the witness `bobsoldier2-l30-torch` (395 t); the collect first, then the walk towards the stance (72,88) kills the body with its own press  1519ms
+     ✓ D2b alone: 404 t, the same kill on the walk (the stance walk dashed)  1068ms
+     ✓ both OFF: the exit walk's gate refuses the LIVE body by its pad at 168 t, after the collect  664ms
+     ✓ D2a alone: the exit walk's gate refuses the LIVE body by its pad at 168 t, after the collect  604ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Guard.test.js (9 tests) 5848ms
+     ✓ D2: OFF the arm refuses as before; ON the approach pass is asked and its refusal names REACH / TIMING / LEASH  2763ms
+       ✓ OFF the live run throws the band at t878 (bob@736,752, at rest at home)  526ms
+       ✓ ON it steps through, and both shaft bobs equal the game's rows t860–1000  513ms
+       ✓ OFF the press at t2166 throws the line-of-sight assertion  883ms
+       ✓ ON the blocked test is a miss row and the spinner equals the game's rows t2160–2200  680ms
+ ✓ frontend/modules/seedlingDemo/fidelityMasks.test.js (10 tests) 1621ms
+     ✓ the bounding prefilter answers what every mask, every sample answers (L12, L28, L91: 3,000 lines each)  1281ms
+ ✓ frontend/modules/seedlingDemo/hammerPreviewDeathSweep.test.js (15 tests) 18018ms
+     ✓ G1's witness at t1251: (488,872) at eta 15; a pool there skips it for (488,856) at eta 16  5037ms
+     ✓ a drown latched before the preview (every walk dies): no refuge, not a throw  1165ms
+     ✓ a non-death error still throws  1278ms
+     ✓ G1's witness at t1251: the band on (488,872) skips it for (488,856) at eta 16, every banded candidate counted in shakeRefused  1159ms
+     ✓ every preview banded: no refuge (the kill's "nowhere to be"), not a throw  1030ms
+     ✓ the shake guard OFF rethrows the band (the pre-PKB behaviour)  1020ms
+     ✓ ON, an error that is not the forecast's band still throws (the live run's own band words included)  2055ms
+     ✓ planPacedWait: a pacing that dies is rejected at its tick; with no death it plans  309ms
+     ✓ the encounter (L32, r5-bobboss-fire at t20): a plan that dies is touched there; a key set that dies is safe only until then  4589ms
+ ✓ frontend/modules/seedlingDemo/fidelitySkinSwing.test.js (7 tests) 1577ms
+     ✓ skinswing-l71-resite: the staged tape run IS the stand's createJsRuntime boot, tick for tick (key ON)  542ms
+     ✓ skinswing-l71-resite (L71 (80,208)): the game lands and kills; at the defaults ON = OFF = the game at 0 px; removedBodyBlocks OFF leaves it at t63  466ms
+ ✓ scripts/procgen/seedlingDivergenceWindow.test.js (12 tests) 2055ms
+     ✓ empty flags are byte-identical to no flag (no stamp); set, the plan is stamped  2043ms
+ ✓ frontend/modules/seedlingDemo/fidelityHousekeep.test.js (6 tests) 735ms
+     ✓ ROCKMOVE leg 311 (L29, the rock removed, its button kept): the orphan presser  526ms
+ ✓ frontend/modules/seedlingDemo/hammerSlashRect.test.js (8 tests) 1637ms
+     ✓ always: the press forecast's throw is REFUSED by name (it threw `PressError` at the base)  901ms
+     ✓ ON: the aim waits a tick instead (no forecast at -1), and the solve meets the kill's own refusal  717ms
+ ✓ frontend/modules/seedlingDemo/hammerDashCert.test.js (4 tests | 1 skipped) 1208ms
+     ✓ a corridor whose certificate meets no blocked line is OFF exactly: step 216 at the defaults (no fine walk)  1029ms
+ ✓ frontend/modules/seedlingDemo/seedlingRobust.test.js (6 tests) 6248ms
+     ✓ one idle tick: `can` (220 t, 0 hits), and the committed game witness IS the oracle's  1250ms
+     ✓ every idle count asked crosses with 0 hits; idle 0 is the committed CANCROSS plan  2105ms
+     ✓ {sword, conch}: `can` (797 t, 0 hits), and the committed game witness IS the oracle's  1128ms
+     ✓ {sword} alone (882 t, PULL; 878 t with pixelMaskSightLines OFF)  1515ms
+ ✓ frontend/modules/seedlingDemo/hammerPressKillGuards.test.js (5 tests) 71332ms
+     ✓ HO1: at t2439 the strike preview throws OFF; ON the band's candidates are refused by name (the strike floor OFF: the keys' own)  4402ms
+     ✓ HO2 OFF: the press kill carries on past the death at t788  38268ms
+     ✓ HO2 ON: the press kill is refused by name on the tick of the first death  28656ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Bk2.test.js (12 tests) 159445ms
+     ✓ OFF: none of the chain's three weigh locks is in the hypothesis at the arrival (guard iii walls them)  1492ms
+     ✓ ON: t2's two locks (the corpse, behind the south door) and t5's (the fire block's route, across t2) join it  8244ms
+     ✓ OFF: survey step 67 refuses at button@816,400 with the three locks walled — the sweep's text  2102ms
+     ✓ ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)  61129ms
+     ✓ the model (D1 ON) reproduces the game at 0 px — the player, every block, every chaser and the turret  1197ms
+     ✓ the model at the shipped defaults (D1 OFF) reproduces it too: D1 is solver-only  824ms
+     ✓ OFF, seam 5290: the 1600 t plan, and the model takes spinner@192,144's hammer at t1222 (L40RES's hit)  22676ms
+     ✓ ON, seam 5290: that plan is not certified — the answer is the bomb-pusher hold's refusal, no hit plan  19864ms
+     ✓ ON, seam 5280: OFF's hitless 1558 t plan, the same plan byte for byte  41898ms
+ Test Files  34 passed (34)
+      Tests  838 passed | 1 skipped (839)

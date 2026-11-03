@@ -743,5 +743,56 @@
         }
       ]
     }
+  },
+  "latched": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "or",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "latched"
+        },
+        {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "compare",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "tile"
+                },
+                "attr": "latch_event"
+              },
+              "op": "is not",
+              "right": {
+                "type": "constant",
+                "value": null
+              }
+            },
+            {
+              "type": "item_check",
+              "item": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "tile"
+                },
+                "attr": "latch_event"
+              }
+            }
+          ]
+        }
+      ]
+    }
   }
 }

@@ -479,21 +479,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ghost Sword Fusion"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Sword Fusion"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Ghost Spear"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
+                    "item_name": "Progressive Swim"
                   }
                 }
               ]
@@ -6920,7 +6931,10 @@
             "name": "level_54__r1c8 -> level_53__r14c9",
             "connected_region": "level_53__r14c9",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
             }
           }
         ],
@@ -11168,7 +11182,10 @@
             "name": "level_91 -> level_89__r1c10",
             "connected_region": "level_89__r1c10",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
             }
           },
           {
@@ -11832,6 +11849,13 @@
                 }
               ]
             }
+          },
+          {
+            "name": "level_101__r0c6 -> level_110",
+            "connected_region": "level_110",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -12250,6 +12274,19 @@
           }
         ]
       },
+      "level_110": {
+        "name": "level_110",
+        "exits": [
+          {
+            "name": "level_110 -> level_2",
+            "connected_region": "level_2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
       "level_111": {
         "name": "level_111",
         "exits": [
@@ -12451,6 +12488,62 @@
                 "item_name": "L112 flag 1: rocklock@112,16 cleared"
               }
             }
+          },
+          {
+            "name": "level_113 -> level_115__r9c4",
+            "connected_region": "level_115__r9c4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Seal",
+                    "count": 16
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L114 flag 0: watcher@72,72 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Swim"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_113 -> level_115__r9c4 #2",
+            "connected_region": "level_115__r9c4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Seal",
+                    "count": 16
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L114 flag 0: watcher@72,72 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Swim"
+                  }
+                }
+              ]
+            }
           }
         ],
         "locations": [
@@ -12559,6 +12652,514 @@
             "across": []
           }
         ]
+      },
+      "level_115__r2c2": {
+        "name": "level_115__r2c2",
+        "exits": [
+          {
+            "name": "level_115__r2c2 -> level_115__r4c4",
+            "connected_region": "level_115__r4c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r2c2 -> level_115__r5c1",
+            "connected_region": "level_115__r5c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r2c2 -> level_115__r6c7",
+            "connected_region": "level_115__r6c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r2c2 -> level_115__r8c2",
+            "connected_region": "level_115__r8c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r2c2 -> level_115__r8c7",
+            "connected_region": "level_115__r8c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r2c2 -> level_115__r9c4",
+            "connected_region": "level_115__r9c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_115__r4c4": {
+        "name": "level_115__r4c4",
+        "exits": [
+          {
+            "name": "level_115__r4c4 -> level_115__r2c2",
+            "connected_region": "level_115__r2c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r4c4 -> level_115__r5c1",
+            "connected_region": "level_115__r5c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r4c4 -> level_115__r6c7",
+            "connected_region": "level_115__r6c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r4c4 -> level_115__r8c2",
+            "connected_region": "level_115__r8c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r4c4 -> level_115__r8c7",
+            "connected_region": "level_115__r8c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r4c4 -> level_115__r9c4",
+            "connected_region": "level_115__r9c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 115 - The Seed",
+            "id": 30000047,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "The Seed",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "level_115__r5c1": {
+        "name": "level_115__r5c1",
+        "exits": [
+          {
+            "name": "level_115__r5c1 -> level_115__r2c2",
+            "connected_region": "level_115__r2c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r5c1 -> level_115__r4c4",
+            "connected_region": "level_115__r4c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r5c1 -> level_115__r6c7",
+            "connected_region": "level_115__r6c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r5c1 -> level_115__r8c2",
+            "connected_region": "level_115__r8c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r5c1 -> level_115__r8c7",
+            "connected_region": "level_115__r8c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r5c1 -> level_115__r9c4",
+            "connected_region": "level_115__r9c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_115__r6c7": {
+        "name": "level_115__r6c7",
+        "exits": [
+          {
+            "name": "level_115__r6c7 -> level_115__r2c2",
+            "connected_region": "level_115__r2c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r6c7 -> level_115__r4c4",
+            "connected_region": "level_115__r4c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r6c7 -> level_115__r5c1",
+            "connected_region": "level_115__r5c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r6c7 -> level_115__r8c2",
+            "connected_region": "level_115__r8c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r6c7 -> level_115__r8c7",
+            "connected_region": "level_115__r8c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r6c7 -> level_115__r9c4",
+            "connected_region": "level_115__r9c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_115__r8c2": {
+        "name": "level_115__r8c2",
+        "exits": [
+          {
+            "name": "level_115__r8c2 -> level_115__r2c2",
+            "connected_region": "level_115__r2c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r8c2 -> level_115__r4c4",
+            "connected_region": "level_115__r4c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r8c2 -> level_115__r5c1",
+            "connected_region": "level_115__r5c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r8c2 -> level_115__r6c7",
+            "connected_region": "level_115__r6c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r8c2 -> level_115__r8c7",
+            "connected_region": "level_115__r8c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r8c2 -> level_115__r9c4",
+            "connected_region": "level_115__r9c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_115__r8c7": {
+        "name": "level_115__r8c7",
+        "exits": [
+          {
+            "name": "level_115__r8c7 -> level_115__r8c2",
+            "connected_region": "level_115__r8c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r8c7 -> level_115__r2c2",
+            "connected_region": "level_115__r2c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r8c7 -> level_115__r4c4",
+            "connected_region": "level_115__r4c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r8c7 -> level_115__r5c1",
+            "connected_region": "level_115__r5c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r8c7 -> level_115__r6c7",
+            "connected_region": "level_115__r6c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r8c7 -> level_115__r9c4",
+            "connected_region": "level_115__r9c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_115__r9c4": {
+        "name": "level_115__r9c4",
+        "exits": [
+          {
+            "name": "level_115__r9c4 -> level_115__r8c2",
+            "connected_region": "level_115__r8c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r9c4 -> level_115__r8c7",
+            "connected_region": "level_115__r8c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_115__r9c4 -> level_115__r2c2",
+            "connected_region": "level_115__r2c2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r9c4 -> level_115__r4c4",
+            "connected_region": "level_115__r4c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r9c4 -> level_115__r5c1",
+            "connected_region": "level_115__r5c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r9c4 -> level_115__r6c7",
+            "connected_region": "level_115__r6c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_115__r9c4 -> level_113",
+            "connected_region": "level_113",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L113 flag 0: finaldoor@112,0 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_115__r9c4 -> level_113 #2",
+            "connected_region": "level_113",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L113 flag 0: finaldoor@112,0 cleared"
+              }
+            }
+          }
+        ],
+        "locations": []
       },
       "Menu": {
         "name": "Menu",
@@ -12705,9 +13306,17 @@
         "type": null,
         "max_count": 23
       },
+      "The Seed": {
+        "name": "The Seed",
+        "id": 30000015,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Totem Shard": {
         "name": "Totem Shard",
-        "id": 30000015,
+        "id": 30000016,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -12715,7 +13324,7 @@
       },
       "Wand": {
         "name": "Wand",
-        "id": 30000016,
+        "id": 30000017,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -12723,7 +13332,7 @@
       },
       "Yellow Key": {
         "name": "Yellow Key",
-        "id": 30000017,
+        "id": 30000018,
         "groups": [],
         "classification": "progression",
         "type": null,
@@ -13106,6 +13715,7 @@
       "Dark Suit": 1,
       "Ghost Sword Fusion": 1,
       "Fire Wand Fusion": 1,
+      "The Seed": 1,
       "L0 flag 1: breakablerock@288,176 cleared": 1,
       "L0 flag 4: breakablerock@80,112 cleared": 1,
       "L12 flag 7: magicallock@32,864 cleared": 1,
@@ -13151,8 +13761,8 @@
   "game_info": {
     "1": {
       "completion_condition": {
-        "type": "constant",
-        "value": true
+        "type": "item_check",
+        "item": "The Seed"
       }
     }
   },
@@ -13169,7 +13779,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-9c91d59d",
+      "atlas_id": "seedling-52d1d2cd",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -14358,27 +14968,38 @@
             },
             "atlas_gate_1": {
               "id": "atlas_gate_1",
-              "name": "(Ghost Sword Fusion AND Ghost Spear AND Progressive Sword)",
+              "name": "((Ghost Sword Fusion AND Ghost Spear AND Progressive Sword) AND Progressive Swim)",
               "clear_set_type": "rule",
               "clear_rule": {
                 "rule": "And",
                 "children": [
                   {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Ghost Sword Fusion"
-                    }
+                    "rule": "And",
+                    "children": [
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Ghost Sword Fusion"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Ghost Spear"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Progressive Sword"
+                        }
+                      }
+                    ]
                   },
                   {
                     "rule": "Has",
                     "args": {
-                      "item_name": "Ghost Spear"
-                    }
-                  },
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Progressive Sword"
+                      "item_name": "Progressive Swim"
                     }
                   }
                 ]
@@ -65716,6 +66337,11 @@
               "x": 1,
               "y": 8,
               "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 9,
+              "id": "atlas_gate_0"
             }
           ],
           "items": [],
@@ -68100,6 +68726,17 @@
               "atlas_exit_id": "out_stairsup_48_96"
             },
             {
+              "exit_id": "level_101__r0c6 -> level_110",
+              "x": 6,
+              "y": 1,
+              "side": null,
+              "exitName": "level_101__r0c6 -> level_110",
+              "targetRegion": "level_110",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_104_24"
+            },
+            {
               "exit_id": "level_101__r4c9 -> level_102__r5c9",
               "x": 9,
               "y": 6,
@@ -69088,6 +69725,41 @@
           }
         }
       },
+      "level_110": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 10,
+          "height": 11,
+          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          "entrance": {
+            "x": 0,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "level_110 -> level_2",
+              "x": 4,
+              "y": 4,
+              "side": null,
+              "exitName": "level_110 -> level_2",
+              "targetRegion": "level_2",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_3_2"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_110",
+          "level": 110,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
       "level_111": {
         "substrate": "maze",
         "playable_payload": {
@@ -69835,7 +70507,7 @@
         "playable_payload": {
           "width": 10,
           "height": 10,
-          "tiles": [1,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1],
+          "tiles": [1,0,0,1,1,1,1,0,0,1,1,0,0,1,1,1,1,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,1],
           "entrance": {
             "x": 1,
             "y": 0
@@ -69884,24 +70556,72 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_teleporter_80_144"
+            },
+            {
+              "exit_id": "level_113 -> level_115__r9c4",
+              "x": 7,
+              "y": 0,
+              "side": null,
+              "exitName": "level_113 -> level_115__r9c4",
+              "targetRegion": "level_115__r9c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_112_0"
+            },
+            {
+              "exit_id": "level_113 -> level_115__r9c4 #2",
+              "x": 8,
+              "y": 0,
+              "side": null,
+              "exitName": "level_113 -> level_115__r9c4 #2",
+              "targetRegion": "level_115__r9c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_128_0"
             }
           ],
           "obstacles": [
             {
               "x": 7,
+              "y": 0,
+              "id": "atlas_gate_1&atlas_gate_0~L113 flag 0: finaldoor@112,0 cleared"
+            },
+            {
+              "x": 8,
+              "y": 0,
+              "id": "atlas_gate_1&atlas_gate_0~L113 flag 0: finaldoor@112,0 cleared"
+            },
+            {
+              "x": 7,
               "y": 1,
-              "id": "atlas_gate_0~L113 flag 0: finaldoor@112,0 cleared"
+              "id": "atlas_gate_1&atlas_gate_0~L113 flag 0: finaldoor@112,0 cleared"
             },
             {
               "x": 8,
               "y": 1,
-              "id": "atlas_gate_0~L113 flag 0: finaldoor@112,0 cleared"
+              "id": "atlas_gate_1&atlas_gate_0~L113 flag 0: finaldoor@112,0 cleared"
             }
           ],
           "items": [],
           "obstacleLib": {
             "atlas_gate_0": {
               "id": "atlas_gate_0",
+              "name": "Seal x16",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Seal",
+                  "count": 16
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
               "name": "(Seal x16 AND L114 flag 0: watcher@72,72 cleared)",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -69927,9 +70647,36 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_0~L113 flag 0: finaldoor@112,0 cleared": {
-              "id": "atlas_gate_0~L113 flag 0: finaldoor@112,0 cleared",
-              "name": "(Seal x16 AND L114 flag 0: watcher@72,72 cleared): L113 flag 0: finaldoor@112,0 cleared",
+            "atlas_gate_1&atlas_gate_0": {
+              "id": "atlas_gate_1&atlas_gate_0",
+              "name": "(Seal x16 AND L114 flag 0: watcher@72,72 cleared) & Seal x16",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Seal",
+                      "count": 16
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L114 flag 0: watcher@72,72 cleared"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1&atlas_gate_0~L113 flag 0: finaldoor@112,0 cleared": {
+              "id": "atlas_gate_1&atlas_gate_0~L113 flag 0: finaldoor@112,0 cleared",
+              "name": "(Seal x16 AND L114 flag 0: watcher@72,72 cleared) & Seal x16: L113 flag 0: finaldoor@112,0 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
                 "rule": "Or",
@@ -70033,6 +70780,429 @@
             "y": 0
           }
         }
+      },
+      "level_115__r2c2": {
+        "substrate": "maze",
+        "shared_world": "level_115",
+        "playable_payload": {
+          "width": 10,
+          "height": 10,
+          "tiles": [1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,1,1,1,0],
+          "entrance": {
+            "x": 2,
+            "y": 2
+          },
+          "exits": [
+            {
+              "exit_id": "level_115__r9c4 -> level_113",
+              "x": 4,
+              "y": 9,
+              "side": null,
+              "exitName": "level_115__r9c4 -> level_113",
+              "targetRegion": "level_113",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_64_144"
+            },
+            {
+              "exit_id": "level_115__r9c4 -> level_113 #2",
+              "x": 5,
+              "y": 9,
+              "side": null,
+              "exitName": "level_115__r9c4 -> level_113 #2",
+              "targetRegion": "level_113",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_80_144"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 3,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 8,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 4,
+              "y": 4,
+              "id": "The Seed",
+              "locationName": "Level 115 - The Seed"
+            }
+          ],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "Progressive Swim x2",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim",
+                  "count": 2
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 8,
+              "y": 3,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 9,
+              "y": 3,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 5,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 6,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 6,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 3,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 4,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 8,
+              "y": 6,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 9,
+              "y": 6,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 3,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 4,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 9,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 8,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 8,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 8,
+              "dir": "S",
+              "gate": null
+            }
+          ],
+          "shared_world": {
+            "key": "level_115",
+            "regions": [
+              "level_115__r2c2",
+              "level_115__r4c4",
+              "level_115__r5c1",
+              "level_115__r6c7",
+              "level_115__r8c2",
+              "level_115__r8c7",
+              "level_115__r9c4"
+            ],
+            "rows": [
+              "..........",
+              "..........",
+              "..AAAAAA..",
+              ".......AA.",
+              "....BB....",
+              ".CC.BB....",
+              ".CC....DD.",
+              ".C......D.",
+              "..E....F..",
+              "....GG...."
+            ],
+            "entrances": {
+              "level_115__r2c2": {
+                "x": 2,
+                "y": 2
+              },
+              "level_115__r4c4": {
+                "x": 4,
+                "y": 4
+              },
+              "level_115__r5c1": {
+                "x": 1,
+                "y": 5
+              },
+              "level_115__r6c7": {
+                "x": 7,
+                "y": 6
+              },
+              "level_115__r8c2": {
+                "x": 2,
+                "y": 8
+              },
+              "level_115__r8c7": {
+                "x": 7,
+                "y": 8
+              },
+              "level_115__r9c4": {
+                "x": 4,
+                "y": 9
+              }
+            },
+            "links": {
+              "level_115__r2c2>level_115__r4c4": "level_115__r2c2 -> level_115__r4c4",
+              "level_115__r4c4>level_115__r2c2": "level_115__r4c4 -> level_115__r2c2",
+              "level_115__r2c2>level_115__r5c1": "level_115__r2c2 -> level_115__r5c1",
+              "level_115__r5c1>level_115__r2c2": "level_115__r5c1 -> level_115__r2c2",
+              "level_115__r2c2>level_115__r6c7": "level_115__r2c2 -> level_115__r6c7",
+              "level_115__r6c7>level_115__r2c2": "level_115__r6c7 -> level_115__r2c2",
+              "level_115__r2c2>level_115__r8c2": "level_115__r2c2 -> level_115__r8c2",
+              "level_115__r2c2>level_115__r8c7": "level_115__r2c2 -> level_115__r8c7",
+              "level_115__r2c2>level_115__r9c4": "level_115__r2c2 -> level_115__r9c4",
+              "level_115__r4c4>level_115__r5c1": "level_115__r4c4 -> level_115__r5c1",
+              "level_115__r5c1>level_115__r4c4": "level_115__r5c1 -> level_115__r4c4",
+              "level_115__r4c4>level_115__r6c7": "level_115__r4c4 -> level_115__r6c7",
+              "level_115__r6c7>level_115__r4c4": "level_115__r6c7 -> level_115__r4c4",
+              "level_115__r4c4>level_115__r8c2": "level_115__r4c4 -> level_115__r8c2",
+              "level_115__r4c4>level_115__r8c7": "level_115__r4c4 -> level_115__r8c7",
+              "level_115__r4c4>level_115__r9c4": "level_115__r4c4 -> level_115__r9c4",
+              "level_115__r5c1>level_115__r6c7": "level_115__r5c1 -> level_115__r6c7",
+              "level_115__r6c7>level_115__r5c1": "level_115__r6c7 -> level_115__r5c1",
+              "level_115__r5c1>level_115__r8c2": "level_115__r5c1 -> level_115__r8c2",
+              "level_115__r5c1>level_115__r8c7": "level_115__r5c1 -> level_115__r8c7",
+              "level_115__r5c1>level_115__r9c4": "level_115__r5c1 -> level_115__r9c4",
+              "level_115__r6c7>level_115__r8c2": "level_115__r6c7 -> level_115__r8c2",
+              "level_115__r6c7>level_115__r8c7": "level_115__r6c7 -> level_115__r8c7",
+              "level_115__r6c7>level_115__r9c4": "level_115__r6c7 -> level_115__r9c4",
+              "level_115__r8c2>level_115__r2c2": "level_115__r8c2 -> level_115__r2c2",
+              "level_115__r8c2>level_115__r4c4": "level_115__r8c2 -> level_115__r4c4",
+              "level_115__r8c2>level_115__r5c1": "level_115__r8c2 -> level_115__r5c1",
+              "level_115__r8c2>level_115__r6c7": "level_115__r8c2 -> level_115__r6c7",
+              "level_115__r8c2>level_115__r8c7": "level_115__r8c2 -> level_115__r8c7",
+              "level_115__r8c7>level_115__r8c2": "level_115__r8c7 -> level_115__r8c2",
+              "level_115__r8c2>level_115__r9c4": "level_115__r8c2 -> level_115__r9c4",
+              "level_115__r9c4>level_115__r8c2": "level_115__r9c4 -> level_115__r8c2",
+              "level_115__r8c7>level_115__r2c2": "level_115__r8c7 -> level_115__r2c2",
+              "level_115__r8c7>level_115__r4c4": "level_115__r8c7 -> level_115__r4c4",
+              "level_115__r8c7>level_115__r5c1": "level_115__r8c7 -> level_115__r5c1",
+              "level_115__r8c7>level_115__r6c7": "level_115__r8c7 -> level_115__r6c7",
+              "level_115__r8c7>level_115__r9c4": "level_115__r8c7 -> level_115__r9c4",
+              "level_115__r9c4>level_115__r8c7": "level_115__r9c4 -> level_115__r8c7",
+              "level_115__r9c4>level_115__r2c2": "level_115__r9c4 -> level_115__r2c2",
+              "level_115__r9c4>level_115__r4c4": "level_115__r9c4 -> level_115__r4c4",
+              "level_115__r9c4>level_115__r5c1": "level_115__r9c4 -> level_115__r5c1",
+              "level_115__r9c4>level_115__r6c7": "level_115__r9c4 -> level_115__r6c7"
+            }
+          },
+          "atlas_region": "level_115",
+          "level": 115,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_115__r4c4": {
+        "substrate": "maze",
+        "shared_world": "level_115"
+      },
+      "level_115__r5c1": {
+        "substrate": "maze",
+        "shared_world": "level_115"
+      },
+      "level_115__r6c7": {
+        "substrate": "maze",
+        "shared_world": "level_115"
+      },
+      "level_115__r8c2": {
+        "substrate": "maze",
+        "shared_world": "level_115"
+      },
+      "level_115__r8c7": {
+        "substrate": "maze",
+        "shared_world": "level_115"
+      },
+      "level_115__r9c4": {
+        "substrate": "maze",
+        "shared_world": "level_115"
       }
     }
   },
@@ -72017,9 +73187,18 @@
             }
           },
           "new_accessible_locations": [
-            "L113 flag 0: finaldoor@112,0 cleared"
+            "L113 flag 0: finaldoor@112,0 cleared",
+            "Level 115 - The Seed"
           ],
-          "new_accessible_regions": [],
+          "new_accessible_regions": [
+            "level_115__r2c2",
+            "level_115__r4c4",
+            "level_115__r5c1",
+            "level_115__r6c7",
+            "level_115__r8c2",
+            "level_115__r8c7",
+            "level_115__r9c4"
+          ],
           "sphere_locations": [
             "L114 flag 0: watcher@72,72 cleared"
           ]
@@ -72041,7 +73220,8 @@
           },
           "new_accessible_locations": [],
           "new_accessible_regions": [
-            "level_101__r0c6"
+            "level_101__r0c6",
+            "level_110"
           ],
           "sphere_locations": [
             "Level 109 - Firewand"
@@ -72087,6 +73267,27 @@
           "new_accessible_regions": [],
           "sphere_locations": [
             "L113 flag 0: finaldoor@112,0 cleared"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "13.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "The Seed": 1
+            },
+            "resolved_items": {
+              "The Seed": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Level 115 - The Seed"
           ]
         }
       }

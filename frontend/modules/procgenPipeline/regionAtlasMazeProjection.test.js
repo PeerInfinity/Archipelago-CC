@@ -45,6 +45,7 @@ import {
     MAZE_TILE_WALL,
     MAZE_SUBSTRATE,
     ATLAS_LOCATION_SLOT_ITEM,
+    unifyEntityGates,
 } from './regionAtlasMazeProjection.js';
 
 const read = (relative) => JSON.parse(readFileSync(fileURLToPath(new URL(relative, import.meta.url)), 'utf8'));
@@ -1160,3 +1161,34 @@ describe('a level world lays the terrain\'s direction physics as ENTRY GATES (se
     });
 });
 
+
+// ⛓ ONE ENTITY, ONE GATE (session tile-primitives-sphere-order-13; designer review): an event's body cells share the And of their
+// gates, but a cell carrying two events is two STACKED entities (L12's magical lock on its boss lock), so it never welds them.
+describe('unifyEntityGates', () => {
+    const has = (item) => ({ rule: 'Has', args: { item_name: item } });
+    const gate = (id, item) => ({ id, name: id, clear_set_type: 'rule', clear_rule: has(item) });
+    const builderOf = (cells, lib) => ({ obstacles: new Map(Object.entries(cells)), obstacleLib: { ...lib } });
+    const ev = (name) => ({ name, mode: 'open' });
+
+    it('one event over cells with different gates: every cell takes the And', () => {
+        const b = builderOf({ '0,0': 'a', '1,0': 'b' }, { a: gate('a', 'X'), b: gate('b', 'Y') });
+        unifyEntityGates(b, new Map([['0,0', [ev('E')]], ['1,0', [ev('E')]]]));
+        expect(b.obstacles.get('0,0')).toBe('a&b');
+        expect(b.obstacles.get('1,0')).toBe('a&b');
+        expect(b.obstacleLib['a&b'].clear_rule).toEqual({ rule: 'And', children: [has('X'), has('Y')] });
+    });
+
+    it('a stacked cell (two events) joins neither body: the other entity\'s cells keep their gates', () => {
+        // E1 = cells (0,0) [gate X] + (1,0) [stacked, gate Z]; E2 = (1,0) + (2,0) [gate Y]. Welding would And X, Y and Z everywhere.
+        const b = builderOf({ '0,0': 'a', '1,0': 'z', '2,0': 'c' }, { a: gate('a', 'X'), z: gate('z', 'Z'), c: gate('c', 'Y') });
+        unifyEntityGates(b, new Map([['0,0', [ev('E1')]], ['1,0', [ev('E1'), ev('E2')]], ['2,0', [ev('E2')]]]));
+        expect([...b.obstacles.values()]).toEqual(['a', 'z', 'c']);
+    });
+
+    it('a struck body is left alone', () => {
+        const rock = { id: 'r', name: 'r', struck_by: ['Sword'], clear_set: [['Sword']] };
+        const b = builderOf({ '0,0': 'r', '1,0': 'a' }, { r: rock, a: gate('a', 'X') });
+        unifyEntityGates(b, new Map([['0,0', [ev('E')]], ['1,0', [ev('E')]]]));
+        expect([...b.obstacles.values()]).toEqual(['r', 'a']);
+    });
+});

@@ -146,4 +146,8 @@ Main moved to `166a15274d` (so-12, maze files only, disjoint) during the slice. 
 
 ## Landing
 
-(Pending: it rides a js-15 train.)
+- Landed in js-15's **TRAIN 8** (`js-land/train-2026-11-01b`), the first member. The finisher fast-forwarded main
+  `0c75654cfd` → **`05dc442022`**.
+- The landed slice is the frozen tip `4ba809def2`. Measured: `git merge-base --is-ancestor 4ba809def2 05dc442022` → yes.
+- The train's gates were run by the finisher (JSUT, ut, TT, apworld and probe all green).
+- This § Landing is a docs-only commit on the branch. It goes to js-15 as a packet and is not pushed to main.

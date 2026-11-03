@@ -1410,6 +1410,10 @@ export const POST_SWORD_EXCLUDED_TEMPLATES = Object.freeze([
             + 'place:112,112. `solveSegment` is supposed to refuse rather than return '
             + 'short, so this is a seam defect, not a rejected candidate."* Recorded for '
             + 'a future engine slice; nothing in this arc touches it. '
+            + '⛓ FIXED (seedling-js-chest-goal-collect): the placement selects the `chest` verb, and '
+            + '`procgenOracle.certifyCollects` now reads that verb\'s own record (the SealPiece taken, keyed '
+            + 'to the chest\'s placement), so this shape CERTIFIES as a goal chest; a goal chest with no '
+            + 'stance (the row below it a wall) REFUSES (`STANCE_REENTRY`) and reverts. '
             + '⛓ RE-OPENED AS AN ELEMENT (seedling gen B2; ⚖ the user, 2026-10-30: "I agree '
             + 'with your recommendations", approving chests as DOORS now and each door chest an '
             + 'AP location): the `chestdoor` element (`procgenCore/elements/chestDoor.js`) '
@@ -1588,8 +1592,20 @@ export const POST_SHIELD_PALETTE = Object.freeze({
  * ⚠ DECLARED, NOT EARNED — the campaign does not hold the conch. It shipped
  * OPT-IN (trap 1447; ⚖ Q5); since swim U8 (⚖ Q13) it is in
  * `watchGenerate.DEFAULT_CENSUS_BIOMES`, so the census identities iterate it.
+ *
+ * ⛓⛓ **THE BOOT HOLDS THE TORCH, THE FIRE AND THE WAND** (`seedling-gen-post-swim-fix`,
+ * ⚖ Robert 2026-11-02, "Both, one re-record"). The vanilla order gives the torch and
+ * the fire (D3) and the wand (D4) BEFORE the conch (D5), and the boot used to skip
+ * them. Measured inert on its own: no default room moved, because no fold row read
+ * those flags. What it changes is that `hasFire` is now true here, so `burngate`
+ * certifies in this biome and joins its default list (`BIOME_DEFAULT_FOLD`'s
+ * `hasFire` row). ⛓ `POST_FEATHER_ITEMS` spreads this object, so post-feather (and
+ * `flooded-ruins`, which boots post-feather) inherits the three as well, as the
+ * census says it should.
  */
-export const POST_SWIM_ITEMS = Object.freeze({ hasSword: true, hasShield: true, canSwim: true });
+export const POST_SWIM_ITEMS = Object.freeze({
+    hasSword: true, hasShield: true, hasTorch: true, hasFire: true, hasWand: true, canSwim: true,
+});
 
 export const POST_SWIM_PALETTE = Object.freeze({
     name: 'post-swim',
@@ -1624,14 +1640,17 @@ export const POST_FEATHER_PALETTE = Object.freeze({
  * area census (the gen-content design's §3.1 "Player arrives with" column). Each
  * holds every earlier item, the torch, fire and wand included.
  *
- * ⛔ THEY DO NOT EXTEND `POST_SWIM_ITEMS`. Post-swim's boot skips the torch, the
- * fire and the wand, and it stays byte-identical here (its correction is a later
- * change of its own). These four are built from the census instead.
+ * ⛔ THEY DO NOT EXTEND `POST_SWIM_ITEMS`: they were built from the census while
+ * post-swim's boot still skipped the torch, the fire and the wand. That boot has
+ * since been corrected (`seedling-gen-post-swim-fix`), so `POST_SPEAR_ITEMS` now
+ * equals `POST_FEATHER_ITEMS` plus the spear; the literal spelling is kept so these
+ * key orders do not move.
  *
  * ⛔ THE ROSTER IS POST-SWORD'S, BY REFERENCE, as for every biome since post-shield:
  * none of these items gates a pass-2 template. Their element defaults are the ones
- * their items meet (`procgenSeedling.BIOME_DEFAULT_FOLD`); no element needs the
- * torch, fire, wand, spear, dark suit or ghost sword yet.
+ * their items meet (`procgenSeedling.BIOME_DEFAULT_FOLD`): since
+ * `seedling-gen-post-swim-fix` the fire admits `burngate`; no element needs the
+ * torch, wand, spear, dark suit or ghost sword yet.
  *
  * ⚠ DECLARED, NOT EARNED, and OPT-IN: not in `watchGenerate.DEFAULT_CENSUS_BIOMES`.
  * `hasDarkSword` is in no preset: the census does not place it in any area's boot.

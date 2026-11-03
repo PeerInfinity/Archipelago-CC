@@ -1,0 +1,16 @@
+M1-drop-reorder: exit 1 (RED)
+    [31m❯[39m frontend/modules/seedlingDemo/hammerSouthDoor.slow.test.js [2m([22m[2m4 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m3 skipped[39m[2m)[22m[33m 20543[2mms[22m[39m
+    [2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m3 skipped[39m[90m (4)[39m
+    [31m[1mAssertionError[22m: expected SolverRefusal: solverBot(l40latch) collec… { …(8) } to be null[39m
+M2-near-side: exit 1 (RED)
+    [31m❯[39m frontend/modules/seedlingDemo/hammerSouthDoor.test.js [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m2 skipped[39m[2m)[22m[33m 356[2mms[22m[39m
+    [2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m2 skipped[39m[90m (3)[39m
+    [31m[1mAssertionError[22m: expected { door: null, …(1) } to be null[39m
+M3-skip-discharge: exit 1 (RED)
+    [31m❯[39m frontend/modules/seedlingDemo/hammerSouthDoor.slow.test.js [2m([22m[2m4 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m3 skipped[39m[2m)[22m[33m 21278[2mms[22m[39m
+    [2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m3 skipped[39m[90m (4)[39m
+    [31m[1mAssertionError[22m: expected SolverRefusal: solverBot(l40latch) collec… { …(8) } to be null[39m
+restored 0f10cf075bf6036f5b0fa26deae07aff

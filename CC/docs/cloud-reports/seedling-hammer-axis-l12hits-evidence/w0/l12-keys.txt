@@ -1,0 +1,8 @@
+level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared
+level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared
+level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared

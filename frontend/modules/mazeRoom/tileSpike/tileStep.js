@@ -24,6 +24,10 @@
  *            then tileLib.block.may_enter (asked of its next cell)
  *   wake   — BLOCK KINDS: a use turns a block of its footprint into the kind its `wake` names (data)
  *                                                       condition: tileLib.block.woken
+ *   stay   — LATCHING BUTTONS (`buttonLib.<id>.latch`, session tile-mechanisms-m4-latch; not the item `latch` above): a latching button that its
+ *            `pressed` condition holds on at the end of a step (or a pulse round) is recorded in the per-visit
+ *            `latched`; it holds its token while pressed OR while its `latched` condition holds
+ *                                                       condition: tileLib.button.latched
  *   pulse  — PULSERS: at the end of every step each block on a pulser's reach is pushed away from it (the native
  *            `awayDelta`), simultaneously; then the player may not stand on a live reach
  *                                                       conditions: tileLib.pulser.shoves (asked of each block on a
@@ -46,7 +50,7 @@ const PLAYER = '1';
 export const MAZE_TILE_LIB = {
     cell: { primitive: 'enter', enter: 'player_may_enter' },
     block: { primitive: 'push', may_enter: 'block_may_enter', struck: 'block_struck', woken: 'woken' },
-    button: { primitive: 'hold', pressed: 'presses' },
+    button: { primitive: 'hold', pressed: 'presses', latched: 'latched' },
     trap: { primitive: 'lane', armed: 'lane_armed' },
     rope: { primitive: 'cut', cut: 'rope_cut' },
     pull: { primitive: 'pull', fires: 'pulled' },
@@ -80,8 +84,10 @@ function callHelper(context, name, cell, tile) {
  * The facts a v1 (cell-local) helper sees about one cell. `broken` is the state's per-visit list;
  * `actionId` is the use being asked about (`struck` = the obstacle lists it in `struck_by`).
  */
-function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = null, dir = null, blockKinds = undefined) {
+function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = null, dir = null, blockKinds = undefined, latched = undefined) {
     const key = posKey(x, y);
+    // ⛓ LATCHING BUTTONS: the latch's carried event (null: the button does not latch, or names none).
+    const latch = world.buttons?.has(key) ? world.buttonLib?.[world.buttons.get(key)]?.latch ?? null : null;
     // ⛓ BLOCK KINDS (session tile-mechanisms-m1): the block's kind here and what its kind entry says (data the conditions read).
     const onBlock = blocks?.includes(key) ?? false;
     const kindEntry = onBlock ? blockEntryAt(world, { blockKinds }, key) : null;
@@ -112,6 +118,10 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         pulse: pulser?.token ?? null,
         player: playerPos.x === x && playerPos.y === y,
         button: world.buttons?.get(key) ?? null,
+        // LATCHING BUTTONS: this cell's latching button was pressed earlier this visit (`state.latched`); the event its
+        // latch carries from an earlier visit (null: none, or the button does not latch)
+        latched: latched?.includes(key) ?? false,
+        latch_event: latch?.event ?? null,
         obstacle,
         clear_set: clearSet,
         // ⛓ rules-l39: an obstacle's cut is recorded at its canonical cell (`at`, a rope's run), so that is where
@@ -184,16 +194,21 @@ function ropeCells(world) {
     return ropes;
 }
 
-export function scriptedEffectiveInventory(world, carried, playerPos, blocks, tileLib, helpers, broken = undefined) {
+export function scriptedEffectiveInventory(world, carried, playerPos, blocks, tileLib, helpers, broken = undefined, latched = undefined) {
     const ropes = ropeCells(world);
     if ((!world.buttons || world.buttons.size === 0) && ropes.length === 0) return carried;
     const out = copyInventory(carried);
     const ctx = makeContext(helpers, carried);
     for (const [key, buttonId] of world.buttons ?? []) {
-        const token = world.buttonLib?.[buttonId]?.holds;
+        const entry = world.buttonLib?.[buttonId];
+        const token = entry?.holds;
         if (!token) continue;
         const [x, y] = key.split(',').map(Number);
-        if (callHelper(ctx, tileLib.button.pressed, { x, y }, tileAt(world, x, y, blocks, playerPos))) holdInInventory(out, token);
+        const here = tileAt(world, x, y, blocks, playerPos, undefined, null, null, undefined, latched);
+        // ⛓ LATCHING BUTTONS (session tile-mechanisms-m4-latch): a latching button (data: its entry's `latch`) holds
+        // its token while pressed now OR while its `latched` condition holds (pressed this visit, or its event carried).
+        if (callHelper(ctx, tileLib.button.pressed, { x, y }, here)
+            || (entry.latch && callHelper(ctx, tileLib.button.latched, { x, y }, here))) holdInInventory(out, token);
     }
     for (const [key, id] of ropes) {
         const [x, y] = key.split(',').map(Number);
@@ -211,7 +226,7 @@ export function scriptedEffectiveInventory(world, carried, playerPos, blocks, ti
 export function scriptedStandsInArmedLane(world, state, helpers, tileLib = MAZE_TILE_LIB) {
     const { x, y } = state.player_pos;
     if (!world.trapLanes?.has(posKey(x, y))) return false;
-    const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken);
+    const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken, state.latched);
     return callHelper(makeContext(helpers, inv), tileLib.trap.armed, { x, y },
         tileAt(world, x, y, state.blocks, state.player_pos, state.broken));
 }
@@ -222,9 +237,30 @@ export function scriptedStandsInArmedLane(world, state, helpers, tileLib = MAZE_
  * off: an AP-logic search holds a fixed inventory and a location tile grants nothing.
  */
 export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_LIB, opts = {}) {
-    const out = scriptedStepCore(world, state, input, helpers, tileLib, opts);
-    if (out.next === null || !world.pulsers) return out;
-    return scriptedPulse(world, out.next, helpers, tileLib);
+    let out = scriptedStepCore(world, state, input, helpers, tileLib, opts);
+    if (out.next !== null && world.pulsers) out = scriptedPulse(world, out.next, helpers, tileLib);
+    if (out.next !== null) scriptedLatch(world, out.next, helpers, tileLib);
+    return out;
+}
+
+/**
+ * ⛓ LATCHING BUTTONS — the LATCH primitive's effect on `next` (FRESH, mutated): each latching button (data) whose
+ * `pressed` condition holds on this stance joins `next.latched` (sorted, once) — the native `noteLatches`, which skips
+ * one whose event is carried (data: it is down already, and the record would only split the state).
+ */
+function scriptedLatch(world, next, helpers, tileLib) {
+    if (next.latched === undefined) return;
+    const ctx = makeContext(helpers, next.inventory);
+    let added = false;
+    for (const [key, buttonId] of world.buttons ?? []) {
+        const latch = world.buttonLib?.[buttonId]?.latch;
+        if (!latch || next.latched.includes(key) || (latch.event && next.inventory.has(latch.event))) continue;
+        const [x, y] = key.split(',').map(Number);
+        if (!callHelper(ctx, tileLib.button.pressed, { x, y }, tileAt(world, x, y, next.blocks, next.player_pos))) continue;
+        next.latched.push(key);
+        added = true;
+    }
+    if (added) next.latched.sort();
 }
 
 /**
@@ -236,8 +272,9 @@ function scriptedPulse(world, next, helpers, tileLib) {
     const at = (x, y, dir = null) => tileAt(world, x, y, next.blocks, next.player_pos, next.broken, null, dir, next.blockKinds);
     // Rounds until one moves nothing (the native `settlePulses`; `checkPulsers` makes it end).
     for (let moves = null; moves === null || moves.length > 0;) {
-        const ctx = makeContext(helpers, scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken));
+        const ctx = makeContext(helpers, scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken, next.latched));
         moves = [];
+        scriptedLatch(world, next, helpers, tileLib);
         for (const key of next.blocks ?? []) {
             const [x, y] = key.split(',').map(Number);
             const here = at(x, y);
@@ -253,7 +290,7 @@ function scriptedPulse(world, next, helpers, tileLib) {
     const { x, y } = next.player_pos;
     const stand = at(x, y);
     if (stand.pulse !== null) {
-        const after = makeContext(helpers, scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken));
+        const after = makeContext(helpers, scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken, next.latched));
         if (callHelper(after, tileLib.pulser.armed, { x, y }, stand)) {
             return { next: null, refused: { primitive: 'pulse', cell: { x, y }, helper: tileLib.pulser.armed } };
         }
@@ -278,7 +315,7 @@ function scriptedStepCore(world, state, input, helpers, tileLib, { latch = true 
         const actionId = input.slice(USE_PREFIX.length);
         const entry = state.facing === undefined ? undefined : world.actionLib?.[actionId];
         if (!entry) return noInput;
-        const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken);
+        const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken, state.latched);
         if (!actionUsable(entry, inv)) {
             return { next: null, refused: { primitive: 'strike', cell: null, helper: null, item: actionItems(entry).join(' + ') } };
         }
@@ -346,7 +383,7 @@ function scriptedStepCore(world, state, input, helpers, tileLib, { latch = true 
     if (!delta) return noInput;
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
-    const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken);
+    const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken, state.latched);
     const ctx = makeContext(helpers, inv);
     const target = tileAt(world, nx, ny, state.blocks, state.player_pos, state.broken, null, input);
     if (!callHelper(ctx, tileLib.cell.enter, { x: nx, y: ny }, target)) {
@@ -382,7 +419,7 @@ function scriptedStepCore(world, state, input, helpers, tileLib, { latch = true 
     // `pulled` helper, against the effective inventory after the move landed (a pickup there included) — the native
     // `pullAfterMove`'s clearance, answered by the tile definition. Pulled, the step ends on the trap's cell.
     if (target.pull !== null) {
-        const after = makeContext(helpers, scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken));
+        const after = makeContext(helpers, scriptedEffectiveInventory(world, next.inventory, next.player_pos, next.blocks, tileLib, helpers, next.broken, next.latched));
         if (callHelper(after, tileLib.pull.fires, { x: nx, y: ny }, target)) {
             const trap = pullCatching(world, state.player_pos, next.player_pos);
             next.player_pos = { x: trap.x, y: trap.y };
@@ -403,5 +440,6 @@ function cloneState(state) {
     if (state.blockKinds !== undefined) next.blockKinds = { ...state.blockKinds };
     if (state.facing !== undefined) next.facing = state.facing;
     if (state.broken !== undefined) next.broken = state.broken.slice();
+    if (state.latched !== undefined) next.latched = state.latched.slice();
     return next;
 }

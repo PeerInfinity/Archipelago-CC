@@ -27,6 +27,13 @@
  *   ⛓ seedling-gen-chestdoor: a generated CHEST DOOR room (`?elements=chestdoor`, pre-sword) certifies, holds one
  *   tagged chest, and draws the chest in sprites (the `solids` family).
  *
+ *   ⛓ seedling-gen-burngate: a generated BURN GATE room (`?elements=burngate`, post-fire) certifies, holds one
+ *   tagged burnable tree, and draws it with its existing sheet (≤ 10% of its box left as the stand-in rect).
+ *
+ *   ⛓ seedling-gen-strategy-gadgets: a generated HOLD GATE room (`?elements=holdgate`) and WEIGH GATE room
+ *   (`?elements=weighgate`), pre-sword, each certify, hold a lock and its presser in ONE group (a latching
+ *   `buttonroom` / a momentary `button` plus one `pushableblock`), and draw them in sprites.
+ *
  *   ⛓ gen-biomes-1: the generate arm's LOOK select — one generated room in every look, the canvas's floor and
  *   wall pixels following each look's COLUMN (stills `look-<name>.png`) — and the four new item presets boot.
  *
@@ -412,6 +419,54 @@ async function main() {
         await page.close();
     }
 
+    // ── ⛓ seedling-gen-strategy-gadgets: a generated HOLD GATE room and WEIGH GATE room, art on and off ──
+    //
+    // The generate arm with `?elements=holdgate` / `weighgate` (pre-sword: a press or a shove takes no item). The room
+    // holds ONE `lock` and its presser in the lock's group (`tset`), the presser off the main path — a latching
+    // `buttonroom {room:-1}` for the hold gate, a momentary `button` plus ONE `pushableblock` for the weigh gate — and
+    // it certifies (its verb is the unit rows' to pin, `procgenStrategyGates.test.js`). Lock, button and buttonroom
+    // are the `solids` family's skins; the block is the `puzzle` family's.
+    for (const [element, presser] of [['holdgate', 'buttonroom'], ['weighgate', 'button']]) {
+        console.log(`\n## ${element} — a generated ${element === 'holdgate' ? 'hold' : 'weigh'} gate room`);
+        for (const mode of ['on', 'off']) {
+            const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errors = [];
+            page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+            await page.goto(`${PAGE}?source=generate&seed=1&biome=pre-sword&elements=${element}${mode === 'off' ? '&art=off' : ''}`,
+                { waitUntil: 'domcontentloaded' });
+            await page.waitForFunction((want) => {
+                const a = window.__labArt;
+                return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                    && (want === 'off' ? a.drawn === null : a.drawn !== null);
+            }, mode, { timeout: 180000 }).catch(() => {});
+            await page.waitForTimeout(1200);
+            const { art, payload } = await page.evaluate(() => ({ art: window.__labArt ?? null,
+                payload: window.__watch?.payload ? { certified: window.__watch.payload.certified,
+                    entities: window.__watch.payload.level.entities } : null }));
+            if (mode === 'on') {
+                const ents = payload?.entities ?? [];
+                const locks = ents.filter((e) => e.type === 'lock');
+                const pressers = ents.filter((e) => e.type === presser);
+                const blocks = ents.filter((e) => e.type === 'pushableblock');
+                check(payload?.certified === true && locks.length === 1 && pressers.length === 1
+                    && locks[0].attrs?.tset === pressers[0].attrs?.tset
+                    && blocks.length === (element === 'weighgate' ? 1 : 0),
+                `${element}: the generated room CERTIFIES and holds ONE lock and its ${presser} in one group`
+                    + (element === 'weighgate' ? ', and ONE block' : ''),
+                JSON.stringify({ certified: payload?.certified, locks, pressers, blocks }));
+                check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && (art.drawn.families?.solids ?? 0) > 0
+                    && (element !== 'weighgate' || (art.drawn.families?.puzzle ?? 0) > 0),
+                `${element}: drawn in sprites, the lock and presser among them (\`solids\`)`
+                    + (element === 'weighgate' ? ' and the block (`puzzle`)' : ''), JSON.stringify(art?.drawn));
+            } else {
+                check(art?.drawn === null, `${element} ?art=off: the rectangles`, JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+            }
+            if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-${element}${mode === 'off' ? '-off' : ''}.png`) });
+            check(errors.length === 0, `${element} (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+            await page.close();
+        }
+    }
+
     // ── ⛓ seedling-gen-biomes-1 (C1 + C2): the generate arm's LOOK select and the four new item presets ──
     //
     // One generated room (seed 1, pre-sword), redrawn in every look with the art on. The record's own GROUND and
@@ -534,7 +589,9 @@ async function main() {
             { terrain: 'ice', biome: 'post-swim', terrains: 'ice', seed: 1 },
             { terrain: 'stairs', biome: 'post-feather', terrains: 'stairs', seed: 1 },
             { terrain: 'ghoststep', biome: 'post-feather', terrains: 'ghoststep', seed: 1 },
-            { terrain: 'lava', biome: 'post-dark-suit', terrains: '', seed: 2 },
+            // ⛓ seedling-gen-post-swim-fix: seed 2 → 4. The `hasFire` fold row (`+burngate`) moved post-dark-suit's
+            // draw, and seed 2's room paints no lava now; seeds 4–8 do (lab arm, count 6, measured).
+            { terrain: 'lava', biome: 'post-dark-suit', terrains: '', seed: 4 },
             { terrain: 'melt', biome: 'post-dark-suit', terrains: '', seed: 1 },
         ];
         let offersChecked = false;
@@ -732,6 +789,65 @@ async function main() {
                 `L${room.level}: ≤ ${ROPE_BRIDGE_SAME_MAX * 100}% of the ${boxes.length} ${room.family} box(es)' pixels are the stand-in rect`,
                 `${((same / Math.max(1, total)) * 100).toFixed(1)}% identical of ${total} px`);
         }
+    }
+
+    // ── ⛓ strategy switch r2 (seedling-gen-burngate): a generated BURN GATE room, art on ──
+    //
+    // The generate arm with `?elements=burngate` (post-fire: the boot that grants Fire): the room holds ONE
+    // `burnabletree` with its own tag on a main-path cut, and it certifies. The tree draws with its existing sheet
+    // (`seedling:scenery/burnabletree`, BurnableTreeBurn frame 0): ≤ `TREE_SAME_MAX` of its 32 px box's pixels are
+    // the stand-in rect (art on vs off, every overlay off as the rope row measures).
+    console.log('\n## burngate — a generated burn gate room');
+    {
+        const TREE_SAME_MAX = 0.1;
+        const URL = `${PAGE}?source=generate&seed=1&biome=post-fire&elements=burngate`;
+        const ready = (page, mode) => page.waitForFunction((want) => {
+            const a = window.__labArt;
+            return !!a && a.status === 'ready' && !!window.__watch?.payload?.level
+                && (want === 'off' ? a.drawn === null : a.drawn !== null);
+        }, mode, { timeout: 180000 }).catch(() => {});
+        let treeBox = null;
+        const treePx = {};
+        for (const mode of ['on', 'off']) {
+            const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+            const errors = [];
+            page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+            await page.goto(`${URL}${mode === 'off' ? '&art=off' : ''}`, { waitUntil: 'domcontentloaded' });
+            await ready(page, mode);
+            await page.waitForTimeout(1200);
+            const { art, payload } = await page.evaluate(() => ({ art: window.__labArt ?? null,
+                payload: window.__watch?.payload ? { certified: window.__watch.payload.certified,
+                    entities: window.__watch.payload.level.entities } : null }));
+            if (mode === 'on') {
+                const trees = (payload?.entities ?? []).filter((e) => e.type === 'burnabletree');
+                check(payload?.certified === true && trees.length === 1 && Number(trees[0].attrs?.tag) >= 0,
+                    'burngate: the generated room CERTIFIES and holds ONE tagged burnable tree',
+                    JSON.stringify({ certified: payload?.certified, trees }));
+                check(art?.active === true && (art.drawn?.sprites ?? 0) > 0 && art.drawn?.fallbacks === 0,
+                    'burngate: drawn in sprites, no missing-key fallback', JSON.stringify(art?.drawn));
+                if (trees[0]) treeBox = { x: trees[0].x, y: trees[0].y, w: 32, h: 32 };
+            } else {
+                check(art?.drawn === null, 'burngate ?art=off: the rectangles', JSON.stringify(art && { on: art.on, drawn: art.drawn }));
+            }
+            if (treeBox) {
+                const bare = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+                await bare.goto(`${URL}&layers=${mode === 'off' ? '&art=off' : ''}`, { waitUntil: 'domcontentloaded' });
+                await ready(bare, mode);
+                await bare.waitForTimeout(1200);
+                const roomW = 16 * await bare.evaluate(() => (window.__watch?.payload?.level?.width ?? 0));
+                [treePx[mode]] = await boxPixels(bare, [treeBox], roomW);
+                await bare.close();
+            }
+            if (SHOTS) await page.locator('#canvas').screenshot({ path: join(SHOTS, `lab-art-burngate${mode === 'off' ? '-off' : ''}.png`) });
+            check(errors.length === 0, `burngate (${mode}): no page errors`, errors.slice(0, 2).join(' | '));
+            await page.close();
+        }
+        const { on = [], off = [] } = treePx;
+        let same = 0;
+        for (let j = 0; j < on.length; j += 1) if (on[j] === off[j]) same += 1;
+        check(on.length > 0 && on.length === off.length && same / on.length <= TREE_SAME_MAX,
+            `burngate: ≤ ${TREE_SAME_MAX * 100}% of the tree box's pixels are the stand-in rect`,
+            `${((same / Math.max(1, on.length)) * 100).toFixed(1)}% identical of ${on.length} px; box ${JSON.stringify(treeBox)}`);
     }
 
     await browser.close();

@@ -1,0 +1,12 @@
+ms 26658
+REFUSED solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh -> iceturret@472,400 approach door wandlock@480,560 (488,568) -> hold stance (wandlock@480,560) -> burn stance (burnabletree@872,784): applied 5 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), hold(wandlock@480,560), burn(burnabletree@872,784), brave(iceturret@472,400)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.
+obstacle {"kind":"solid","tag":"wandlock","id":"wandlock@448,432","d":534.7447989461889} perTick 0
+STRATROWS 0 shove pushableblockfire@576,576
+STRATROWS 0 weigh wandlock@448,432
+STRATROWS 0 hold wandlock@480,560
+STRATROWS 0 burn burnabletree@872,784
+STRATROWS 0 brave iceturret@472,400
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]},{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}
+TA {"approaches":[]}
+DOOR {"doors":[{"door":"wandlock@480,560","side":"up","cell":{"x":488,"y":568},"turret":"iceturret@472,400","t":0}]}

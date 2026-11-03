@@ -1377,6 +1377,8 @@ export function frameOf(t, input = null) {
         ...(t.facing !== undefined
             ? { facing: t.facing, broken: Object.freeze([...t.broken]) }
             : {}),
+        // ⛓ LATCHING BUTTONS: present ONLY on a world that places one (session tile-mechanisms-m4-latch).
+        ...(t.latched !== undefined ? { latched: Object.freeze([...t.latched]) } : {}),
     });
 }
 

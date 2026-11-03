@@ -60,7 +60,7 @@ A run is `createRegionRun` on one of the two spans.
 
 ## Runtime
 
-Like runner and bounce, the iframe rides `flashSubstrate`'s shared code: the panel factory and the injected `bridge.js`, which speaks the `__swfBridge` contract. The bridge forwards only `params` to the game, so `deserializeWorld` writes the checked region (`move`, `seed`, `locations`) and the exit list into `params`; `serializeWorld` drops it again.
+Like bounce and Cloudberry, the iframe rides `flashSubstrate`'s shared code: the panel factory and the injected `bridge.js`, which speaks the `__swfBridge` contract. The bridge forwards only `params` to the game, so `deserializeWorld` writes the checked region (`move`, `seed`, `locations`) and the exit list into `params`; `serializeWorld` drops it again.
 
 - The page implements `configure`. It calls `sendLocation(<location id>)` when that location's check run clears and `sendExit(exitName, null)` when a move run clears (the clear performs the move: [Loop mode](#loop-mode)).
 - The exits are closed until a move run is cleared on this visit, in loop mode and outside it alike: a move out of the region is played to a clear on every visit, cleared before or not.
@@ -120,7 +120,7 @@ The trainer is the game repo's `src/game/tracks.js`: five tracks (seeing, thinki
 
 **A first entry explores the region fully.** Elsewhere a full explore is explore actions ending in `loop:exploreCompleted {regionName}`, each answered by the discovery module with the region and one random undiscovered location or exit of it (an exit also reveals its connected region under the `onExitDiscovered` trigger); a region is fully explored when every location and exit of it is discovered (`loopState._isRegionFullyExplored`, which drops the queued explores of such a region). So on a Noiz2sa region's first load since the last rules load (`noiz2sa:loadRegion`: the player arrived), `index.js` publishes as many `loop:exploreCompleted` as the region has locations and exits (`noiz2saFirstEntry.js`). They carry `fromLoop: true` and `source: 'noiz2sa:firstEntry'`: an arrival is no player action, and loops must not gate or capture an explore this substrate does not have. The discovery panel, path finding (which follows discovered exits) and queue building then see a fully explored region. Nothing is checked: the locations are discovered, and each is checked by its check run's clear. A region with no locations is fully explored by one explore per exit.
 
-Noiz2sa is a summary substrate (`loopSupport.summaryRecording`) with runner's declarations, the Bot included (`executeVia: 'solver'`; no Bot × Instant, as for every summary substrate). Record keeps the visit's net result: the drain seconds, the checks (the check runs cleared on the visit), the departure and the visit's `playStats`. Playback applies it instantly, and live play is priced by time through `loopState._timeDrainTick`. A hit costs nothing extra: the time already spent stays spent. It declares `loopSupport.playClock`, so only time the game plays is charged and recorded: a region waiting for its first key, in the choice list, paused, or cleared and waiting for what comes next costs nothing. The page's reports carry `gameSeconds`, so the drain charges per game second: the bot at 2× or 4× costs the same mana per region as at 1×, and a visit costs `floor(its game seconds)` times the region's rate (see [the play clock](./loop-recording.md#the-play-clock)). See [Loop Recording and Block Modes](./loop-recording.md#summary-substrates).
+Noiz2sa is a summary substrate (`loopSupport.summaryRecording`) with the summary declarations runner had (bounce's and Cloudberry's too), the Bot included (`executeVia: 'solver'`; no Bot × Instant, as for every summary substrate). Record keeps the visit's net result: the drain seconds, the checks (the check runs cleared on the visit), the departure and the visit's `playStats`. Playback applies it instantly, and live play is priced by time through `loopState._timeDrainTick`. A hit costs nothing extra: the time already spent stays spent. It declares `loopSupport.playClock`, so only time the game plays is charged and recorded: a region waiting for its first key, in the choice list, paused, or cleared and waiting for what comes next costs nothing. The page's reports carry `gameSeconds`, so the drain charges per game second: the bot at 2× or 4× costs the same mana per region as at 1×, and a visit costs `floor(its game seconds)` times the region's rate (see [the play clock](./loop-recording.md#the-play-clock)). See [Loop Recording and Block Modes](./loop-recording.md#summary-substrates).
 
 ## Pricing (N5)
 
@@ -171,7 +171,7 @@ The unit tests are `noiz2saDifficulty.test.js` (the data, the smoothing, a span'
 
 ## Related documentation
 
-- [Runner Substrate](./runner.md) — the summary substrate whose declarations this one copies
+- [Bounce Substrate](./bounce.md) — the summary substrate whose declarations this one shares (it copied runner's, deleted 2026-11-02)
 - [Loop Recording and Block Modes](./loop-recording.md) — summary capture and the time drain
 - [Flash Substrate](./flash.md) — the iframe panel and bridge this substrate reuses
 - [Substrate Registry Reference](./substrate-registry.md) — the entry contract
