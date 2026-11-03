@@ -1,5 +1,8 @@
+// ⚖ Robert 2026-11-02 CI manual-only P1: TRAIN tier (was `hammerLatchWeigh.slow.test.js`). Runs on js-land/** train pushes and
+// on dispatch (`-f train=true`), NOT on a slice push — a solver change that moves this pin reds at the train,
+// unless the slice dispatches the train tier first (js-16's packet rule). `npm run test:unit:train`.
 /**
- * seedlingDemo/hammerLatchWeigh.slow.test — ⛓⛓ SEEDLING HAMMER-PHASE LWEIGH on L40LATCH's latch chain
+ * seedlingDemo/hammerLatchWeigh.train.test — ⛓⛓ SEEDLING HAMMER-PHASE LWEIGH on L40LATCH's latch chain
  * (`fixtures/l40latch-witness/latch-boot.json`, Boss Key 2 from the held latch at (888,776)). Each solve is ~1–2 min.
  *   - OFF the chain plans `hold stance (wandlock@448,432)`: the player on `button@480,384`, inside
  *     `iceturret@472,400`'s range, because the corpse weigh is asked live and its first press's stance (488,440) is
@@ -13,7 +16,7 @@
  * built in `hammerLatchWeigh.test.js`: on L40 every switch that removes the corpse route (`fireLiveTurretReach`,
  * `blockSweepBodies`, `corpseBumpWeigh`) refuses the whole chain at t0 on `button@816,400`, before the reorder is asked.
  * ⛓ hammer-phase APPROACH: both rows are LWEIGH's own walk, so they run with `TURRET_APPROACH` pinned OFF (ON, the
- * second solves — `hammerTurretApproach.slow.test.js` — and the first meets the arrival's bobsoldier on the staging walk).
+ * second solves — `hammerTurretApproach.train.test.js` — and the first meets the arrival's bobsoldier on the staging walk).
  */
 import { describe, expect, it } from 'vitest';
 

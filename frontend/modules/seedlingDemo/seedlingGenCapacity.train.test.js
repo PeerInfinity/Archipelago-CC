@@ -1,3 +1,6 @@
+// ⚖ Robert 2026-11-02 CI manual-only P2: TRAIN tier (was `seedlingGenCapacity.slow.test.js`). Runs on js-land/** train pushes and
+// on dispatch (`-f train=true`), NOT on a slice push — generator-capacity drift reds at the train. The cheap
+// seedlingGen{Biomes,NewBiomes,Terrains}.slow pins stay on push. `npm run test:unit:train`.
 /**
  * ⛓⛓ THE CEILING'S CENSUS (SEEDLING GENERATED G9; ⚖ planner 2026-09-29, design
  * B, condition (b)): `flash_seedling_gen`'s declared ceiling is the CERTAIN
@@ -10,7 +13,7 @@
  * Measured at G9 (10×10, 2 doors, drawn seeds 1–60, loaded box): pre-sword
  * 60/60 seat 30 — extra re-rolls 0×23, 1×16, 2×9, 3×7, 4×2, 6×1, two rooms
  * GREW once — and 31 is refused at 60/60, 83 s; post-sword: plan §16.
- * ⚠ ~3 min for both biomes: the slow tier (serial), never the default run.
+ * ⚠ ~3 min for both biomes: the train tier (serial, P2), never the default run.
  */
 import { describe, it, expect } from 'vitest';
 

@@ -1,5 +1,8 @@
+// ⚖ Robert 2026-11-02 CI manual-only P1: TRAIN tier (was `hammerSouthDoor.slow.test.js`). Runs on js-land/** train pushes and
+// on dispatch (`-f train=true`), NOT on a slice push — a solver change that moves this pin reds at the train,
+// unless the slice dispatches the train tier first (js-16's packet rule). `npm run test:unit:train`.
 /**
- * seedlingDemo/hammerSouthDoor.slow.test — ⛓⛓ SEEDLING HAMMER-PHASE SOUTHDOOR (`APPROACH_DOOR`, OFF) on L40LATCH's
+ * seedlingDemo/hammerSouthDoor.train.test — ⛓⛓ SEEDLING HAMMER-PHASE SOUTHDOOR (`APPROACH_DOOR`, OFF) on L40LATCH's
  * latch boot (`fixtures/l40latch-witness/latch-boot.json`), under the smallest arm that reaches the approach: CPAIR's
  * size-3 arm + `LATCH_WEIGH_FIRST` + `TURRET_APPROACH`.
  *   - SOUTH of the latched door: the boot re-booted at (488,579), APPROACH's staging point on L40 legs 860/861, with the

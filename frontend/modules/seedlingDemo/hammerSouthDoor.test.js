@@ -4,7 +4,7 @@
  * question alone on L40's latch boot re-booted on either side of the latched south door `wandlock@480,560` {t 3} —
  * SOUTH of it (488,579), APPROACH's staging point on L40 legs 860/861, no side of `iceturret@472,400`'s box plans and the
  * hypothesis route crosses the door, so the door is named with its cell; NORTH of it (488,504), a side plans, so
- * nothing is asked (null). The solves (each minutes) are `hammerSouthDoor.slow.test.js`.
+ * nothing is asked (null). The solves (each minutes) are `hammerSouthDoor.train.test.js`.
  */
 import { describe, expect, it } from 'vitest';
 

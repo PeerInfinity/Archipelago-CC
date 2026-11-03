@@ -5,7 +5,7 @@
  * The fast rows: both switches ship OFF; the fifth-order rule on L40C's measured order list; the ctor-box row (a kill
  * stance derived before the turret's first on-screen update, off the run's rect and off the snap); the weigh's
  * fallback with no turret in range is OFF's byte for byte.
- * The latch chain's rows (each solve ~2–4 min) and ICEST's pocket boot (~1 min) are `hammerTurretApproach.slow.test.js`.
+ * The latch chain's rows (each solve ~2–4 min) and ICEST's pocket boot (~1 min) are `hammerTurretApproach.train.test.js`.
  */
 import { describe, expect, it } from 'vitest';
 

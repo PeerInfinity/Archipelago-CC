@@ -5612,6 +5612,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "push-scope"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "run"
                 },
                 {
@@ -5995,7 +6001,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "dump-seedling-gen-capacity — ⛓ SEEDLING HAMMER-PHASE B2: `seedlingGenCapacity.slow`'s census AS A DUMP (the draws and their seating, one row per drawn seed), so the capacity rows' certify solves can be captured and re-solved by `check-seedling-hammer-monotonicity` (a vitest file runs under its own module loader, whi…",
+            "oneLiner": "dump-seedling-gen-capacity — ⛓ SEEDLING HAMMER-PHASE B2: `seedlingGenCapacity.train`'s census AS A DUMP (the draws and their seating, one row per drawn seed), so the capacity rows' certify solves can be captured and re-solved by `check-seedling-hammer-monotonicity` (a vitest file runs under its own module loader, wh…",
             "path": "scripts/procgen/dump-seedling-gen-capacity.mjs"
         },
         {

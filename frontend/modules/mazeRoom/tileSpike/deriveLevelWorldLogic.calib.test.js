@@ -2,7 +2,8 @@
  * The FULL scripted certifier pass (⚖ "Native all + scripted sample", user 2026-10-21, session
  * tile-primitives-grow-levels): every region of the committed `seedling_playthrough_maze` preset on the
  * SCRIPTED tile definition, which must produce exactly the native engine's lines. The slow tier runs the
- * native pass on every region and the scripted one on a sample (`deriveLevelWorldLogic.slow.test.js`); this
+ * native pass on every region (`deriveLevelWorldLogic.slow.test.js`) and the train tier the scripted one on a
+ * sample (`deriveLevelWorldLogic.train.test.js`, ⚖ Robert 2026-11-02 CI manual-only P3); this
  * is the manual tier, for a change to `tileStep.js`, the helper bodies or the certifier itself.
  *
  *   npm run test:unit:calib -- frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.calib.test.js
