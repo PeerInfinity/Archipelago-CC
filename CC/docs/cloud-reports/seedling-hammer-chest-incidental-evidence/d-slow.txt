@@ -1,0 +1,10 @@
+== hammer *.slow, SEEDLING_CHEST_LEG_DELTA=0
+ Test Files  9 passed (9)
+      Tests  20 passed (20)
+   Duration  3888.28s (transform 3.49s, setup 0ms, import 11.23s, tests 3875.56s, environment 1ms)
+== hammer *.slow, SEEDLING_CHEST_LEG_DELTA=1
+   (this ON arm was cut off by the session's 2-hour background limit, shared with the OFF arm; re-run solo below)
+== hammer *.slow, SEEDLING_CHEST_LEG_DELTA=1 (solo re-run)
+ Test Files  9 passed (9)
+      Tests  20 passed (20)
+   Duration  3618.44s (transform 3.16s, setup 0ms, import 10.22s, tests 3606.71s, environment 1ms)
