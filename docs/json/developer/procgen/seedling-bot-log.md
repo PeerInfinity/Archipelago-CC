@@ -27263,8 +27263,10 @@ press's own coast hid (step 126).
 
 ⚖ The user, 2026-11-02: *"Yes, flip both + re-record"* (the L100 joint flip; confirmed in the hammer planner's session).
 This is hammer's half: `DASH_CERT_SIGHT` reads `!== '0'` and ships ON; the "ships OFF" row reads "ships ON". Fidelity's
-branch `fidelity-flip/l100-joint` merges it, flips `fineStanceWalk` and re-records `l100-sliver-rock` and
-`rulesref-l66-door`. Measured at DASHCERT's harvest: at main's defaults the certificate's line refuses 1,831 swings in
+branch `fidelity-flip/l100-joint` merges it with fidelity's `frozenPressForecast` flip. ⚖ The user then ruled (2026-11-03,
+in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fineStanceWalk"*: `fineStanceWalk` stays OFF
+(with it ON, L105 `in_L104_0_16 -> teleporter_80_144` takes an unbilled hit at t243) and its two re-records are reverted, so
+`DASH_CERT_SIGHT` lands ON on its own: a line-of-sight correctness fix that moves nothing at today's defaults. Measured at DASHCERT's harvest: at main's defaults the certificate's line refuses 1,831 swings in
 4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
 327 t, 0 hits, game-witnessed.
 

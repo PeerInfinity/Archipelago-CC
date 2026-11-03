@@ -59,7 +59,7 @@ const solve216 = () => {
 };
 
 describe('hammer DASHCERT — the whole-dash certificate sees the swing\'s line of sight (`DASH_CERT_SIGHT`, ON)', () => {
-    // ⛓ flipped ON with fidelity's `fineStanceWalk` (⚖ the user, 2026-11-02: "Yes, flip both + re-record")
+    // ⛓ flipped ON (⚖ the user, 2026-11-03: "Land 2, hold fineStanceWalk": this switch lands without the fine walk)
     it.skipIf(ENV.SEEDLING_DASH_CERT_SIGHT !== undefined)('ships ON', () => {
         expect(DASH_CERT_SIGHT.enabled).toBe(true);
     });
