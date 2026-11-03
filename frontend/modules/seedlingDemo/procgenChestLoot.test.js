@@ -23,6 +23,13 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 
 import {
     GOAL_CHEST_CLASS, GOAL_CHEST_REFUSALS, SEEDLING_AREA_REFUSALS, SEEDLING_DEFAULTS, carveLawRefusal,
@@ -232,5 +239,23 @@ describe('⛓⛓⛓ B3 — `goalClass: \'chest\'`: the room\'s certified target 
         expect('goalChest' in out.model).toBe(false);
         expect('goalChestRefused' in out.summary).toBe(false);
         expect(out.summary.goalClass).toBe('torchpickup');
+    }, 60_000);
+});
+
+describe('⛓ the sweep\'s `--goal` flag — absent means the default class, never an exit', () => {
+    /** Found on CI at decfd88b62: `arg('goal', null)` came back as the STRING 'null', so every sweep job
+     *  WITHOUT `--goal` exited 2 before its first cell (28/28 jobs of both B1 dispatches). One cell each way. */
+    const sweep = (extra) => spawnSync(process.execPath, ['scripts/procgen/sweep-yield-table.mjs', '--substrate=seedling',
+        '--palette=pre-sword', '--elements=none', '--kinds=empty', '--seeds=1', '--sizes=10x10', ...extra],
+    { cwd: REPO_ROOT, encoding: 'utf8' });
+
+    it('no `--goal` runs (exit 0, no goal row); `--goal=bogus` refuses by name (exit 2)', () => {
+        const json = join(mkdtempSync(join(tmpdir(), 'sweep-goal-')), 'out.json');
+        const ok = sweep([`--json=${json}`]);
+        expect(ok.status, ok.stderr).toBe(0);
+        expect(readFileSync(json, 'utf8')).not.toMatch(/"goal":\s*\{/);
+        const bad = sweep(['--goal=bogus']);
+        expect(bad.status).toBe(2);
+        expect(bad.stderr).toMatch(/--goal=bogus — the only goal class/);
     }, 60_000);
 });

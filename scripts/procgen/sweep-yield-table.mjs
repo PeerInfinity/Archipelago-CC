@@ -287,7 +287,9 @@ const PALETTE_NAME = arg('palette', 'pre-sword');
  * `procgenSeedling.GOAL_CHEST_CLASS`). ⛔ Absent = the default class, and every cell this sweep ever ran is
  * unmoved (no `defaults` key, no `goal` row in the JSON).
  */
-const GOAL_CLASS = arg('goal', null);
+/** ⚠ NOT `arg('goal', null)`: `arg` spells its fallback into the flag, so a null fallback comes back as the
+ *  STRING 'null' and every sweep without `--goal` exited 2 (measured on CI at decfd88b62, all 28 jobs). */
+const GOAL_CLASS = process.argv.find((a) => a.startsWith('--goal='))?.slice('--goal='.length) ?? null;
 if (GOAL_CLASS !== null && GOAL_CLASS !== 'chest') {
     note(`sweep-yield-table: --goal=${GOAL_CLASS} — the only goal class a sweep can ask for is \`chest\`.`);
     process.exit(2);
