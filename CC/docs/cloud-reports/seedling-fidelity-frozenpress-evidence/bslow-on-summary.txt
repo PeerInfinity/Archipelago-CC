@@ -1,0 +1,5 @@
+      Tests  1 failed | 28 passed (29)
+     × [needs fidelity's forecastShieldBump] key ON, SPIN OFF, ON: the t541 no-landing claims, then the frozen-tick press refusal at t2119 — spinner@816,848 is not reached (measured; not the brief's "hitless") 280522ms
+ FAIL  frontend/modules/seedlingDemo/hammerEscapeExact.slow.test.js > hammer-phase ESCAPE-EXACT — leg 860, A5, deadline 10240, seam 5950 > [needs fidelity's forecastShieldBump] key ON, SPIN OFF, ON: the t541 no-landing claims, then the frozen-tick press refusal at t2119 — spinner@816,848 is not reached (measured; not the brief's "hitless")
+ Test Files  1 failed | 11 passed (12)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯

@@ -27228,3 +27228,33 @@ meeting a rope (the lab's ENDGAME `ropegate` rooms REFUSED → SOLVED; the route
 rope room). PRESS_NO_FACING ON moves only a press planned on the game's one-tick `direction = -1` (caldera-cf seed 7 meets
 the kill's own refusal instead). The two "ships OFF" rows now read "ships ON"; every other row pins its arm by name.
 
+### Seedling fidelity FROZENPRESS — the walk's strike stands down on a refused input tick (`frozenPressForecast`, OFF)
+
+Planner `seedling-fidelity-planning-17`, wave 37 (⚖ the user's GO 2026-11-02, hammer-2's FROZEN-PRESS). The report is
+`CC/docs/cloud-reports/seedling-fidelity-frozenpress.md`.
+
+**W0.** At base `fa5c098bfb`, leg 860 (A5 arm, `forecastShieldBump` + `PRESS_ESCAPE_EXACT` ON, seam 5950, deadline 10240)
+refuses at work 5067 by `FROZEN_TICK_PRESS` (throw 3: an X edge while `frozenTimer > 0`, 12 after t2119's `freezeStep`; the
+contact was t2117, an `IceTurretBlast` of `iceturret@472,400`). The press is the OPPORTUNISTIC STRIKE's, not a hammer
+executor's: stack `levelRun.advance` ← `solverBot` advance ← `botDriverV2.drive` (`strike.decide`) ← nested `walkTo`. The
+freeze is fully determined at scheduling time: the run's `frozenTimer` and the blasts in flight. Census on the base, full
+survey (237 steps) at the defaults and with both 860 switches ON: one frozen-press row, step 126 (L64 Ghostspear), throw 2
+(a sword press whose thrust fires on a pickup ceremony's first frame), also `drive`'s strike. Sweep 12 (`40912321813`): 0 rows.
+
+**D1.** `levelRun.freezeForecastNow` (`run.progress('freezeForecast')`, a pure read): copies of the blasts in flight stepped
+one tick with `stepBlastsNow`'s own context against the tick-top box, then the timer's decrement → `{ refusedNext,
+timerNext, contact }`. `strikePolicy.decide` takes an optional `freeze`: on a refused tick, no aim and no press (an owed aim
+dropped, `owed` untouched). `strikeDecideOpts(run)` is what the six run-side decide sites ask (OFF: `{ slash }`). Game
+witness on p4g (L40 pocket, 0 px): presses on inputs 52 and 65 of a freeze are lost (= the press-free model); the press on
+66, the forecast's first free input, lands (turret hit at t68); the forecast = the game's refused inputs on all 120.
+A pickup-ceremony arm (one-tick travel bound) was prototyped and NOT kept: it moves step 126 to a walk stall at the
+Ghostspear (the press's coast was what carried the player onto it).
+
+**D2.** 860 A5, key × (K+X): OFF·OFF 3068 = ON·OFF 3068 (identical; 0 stand-downs). OFF·ON 5067 `FROZEN_TICK_PRESS`;
+ON·ON 5171, past t2119 (14 stand-downs, 1 owed press dropped), refused by name: *"the reordered corpse weigh took a hit at
+t2118 (blast) … LWEIGH: a volley-aware approach is the unbuilt arm"* — hammer's. Hammer switches at their defaults: all
+four arms refuse at `bobsoldier@880,832`'s burn stance (3094 / 3132), the key inert.
+
+**Trap candidates.** (1) A frozen-tick refusal reads like an executor's defect; the opportunistic strike is asked by
+every walk, so trace the stack before naming a verb. (2) A guard that withholds a press can unmask a walk defect the
+press's own coast hid (step 126).

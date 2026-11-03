@@ -213,6 +213,8 @@ import { createTraceBuilder } from './decisionTrace.js';
 import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arrivalSolid.js';
 import {
     STRIKE_AIM, STRIKE_NONE, STRIKE_PRESS, armIsModelled, createStrikePolicy,
+    // ⛓ fidelity FROZENPRESS D1: the run-side `decide` options (OFF: `{ slash }`).
+    strikeDecideOpts,
 } from './strikePolicy.js';
 // ⛓⛓⛓ seedling-fidelity-bulb D3: a Bulb's kill is PLACED — the strike policy's veto and the segment's needs.
 import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
@@ -17898,7 +17900,7 @@ function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, c
     for (let i = 1; i <= bound; i += 1) {
         let held = strike && !run.state.fall
             ? strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, new Set(),
-                { slash: run.progress('slashInfo') }).held
+                strikeDecideOpts(run)).held
             : new Set();
         if (keepOut && held.size > 0) {
             const pr = project(held, 2);
@@ -21811,7 +21813,7 @@ function execBreak(run, perTick, resolved, ctx) {
         // ⛓ R9 slice L16 — a weigh route's break waits ARMED (`execWeigh`).
         let held = pressedAt !== null && ctx.idleStrike && !run.state.fall
             ? ctx.idleStrike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, NO_KEYS,
-                { slash: run.progress('slashInfo') }).held
+                strikeDecideOpts(run)).held
             : NO_KEYS;
         if (pressedAt === null) {
             const want = facingToward(run.state, resolved.target);
@@ -24247,7 +24249,7 @@ export function orbitKillPolicy(run, id, { r, dir, safe }, strike) {
     const held = chooseHeld(s, aim, DEFAULT_TOLERANCE);
     if (c.destroy || !strike || s.fall) return held;
     return strike.decide(s, run.entities('strikeBodies'), run.ticksCompleted, held,
-        { slash: run.progress('slashInfo') }).held;
+        strikeDecideOpts(run)).held;
 }
 
 /**

@@ -1812,6 +1812,20 @@ export const CONTACT_FIDELITY = {
      * OFF: byte-identical. `SEEDLING_FINE_STANCE_WALK=0|1`.
      */
     fineStanceWalk: false,
+    /**
+     * fidelity FROZENPRESS D1 (wave 37) — THE WALK'S STRIKE STANDS DOWN ON A TICK WHOSE INPUT THE GAME REFUSES.
+     *
+     * `Player.input()` returns at its first line while `frozenTimer > 0` (`Player.as:1521`), and an `IceTurretBlast`
+     * contact sets it to 15 above the player's `freezeStep` (`IceTurretBlast.as:51-53`, `Player.as:532`): fourteen
+     * refused ticks, a `primary` press on any of them LOST (`levelRun`'s `FROZEN_TICK_PRESS`, kept). The opportunistic
+     * strike (`strikePolicy.decide`, asked by every run-side walk: `drive`, `runDwell`, `runShove`,
+     * `guardedChaserDwell`, `execBreak`, `orbitKillPolicy`) pressed into that span — leg 860 (A5, `forecastShieldBump`
+     * + `PRESS_ESCAPE_EXACT` ON) refused at t2119 so. ON: each of those sites hands `decide` the run's
+     * `freezeForecast` (`strikeDecideOpts`): the blasts in flight stepped one tick on copies against the tick-top box,
+     * and the timer's decrement — exact from the state at scheduling time. On a refused tick the policy takes no aim and
+     * no press (an owed aim is dropped). OFF: byte-identical. `SEEDLING_FROZEN_PRESS_FORECAST=0|1`.
+     */
+    frozenPressForecast: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2174,6 +2188,9 @@ if (globalThis.process?.env?.SEEDLING_FORECAST_SHIELD_BUMP === '0') CONTACT_FIDE
 // ⛓ fidelity L100LATTICE D1: `SEEDLING_FINE_STANCE_WALK=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FINE_STANCE_WALK === '1') CONTACT_FIDELITY.fineStanceWalk = true;
 if (globalThis.process?.env?.SEEDLING_FINE_STANCE_WALK === '0') CONTACT_FIDELITY.fineStanceWalk = false;
+// ⛓ fidelity FROZENPRESS D1: `SEEDLING_FROZEN_PRESS_FORECAST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FROZEN_PRESS_FORECAST === '1') CONTACT_FIDELITY.frozenPressForecast = true;
+if (globalThis.process?.env?.SEEDLING_FROZEN_PRESS_FORECAST === '0') CONTACT_FIDELITY.frozenPressForecast = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

@@ -162,6 +162,23 @@ export class StrikePolicyError extends Error {
 const fail = (m) => { throw new StrikePolicyError(m); };
 
 /** What a tick's decision can be. */
+/**
+ * ⛓ fidelity FROZENPRESS D1 — the freeze guard's counts (`decide`'s `freeze`): `stoodDown` every tick the policy was
+ * asked on a refused tick; `dropped` the ones that withheld an owed press or a scheduled one. Reset by the reader.
+ */
+export const FROZEN_PRESS_COUNTS = { stoodDown: 0, dropped: 0 };
+
+/**
+ * ⛓ fidelity FROZENPRESS D1 — **THE OPTIONS A RUN-SIDE `decide` IS ASKED WITH**: the run's slash state, and with
+ * `CONTACT_FIDELITY.frozenPressForecast` ON the run's `freezeForecast` (`levelRun.freezeForecastNow`: will the next
+ * tick's input be refused). OFF: `{ slash }`, the object every caller built before — byte-identical. The preview
+ * (`solverBot.previewWalk`) steps no blast and passes its own threaded slash state, so it is not a caller.
+ */
+export function strikeDecideOpts(run) {
+    const slash = run.progress('slashInfo');
+    return CONTACT_FIDELITY.frozenPressForecast ? { slash, freeze: run.progress('freezeForecast') } : { slash };
+}
+
 export const STRIKE_NONE = 'none';
 export const STRIKE_AIM = 'aim';
 export const STRIKE_PRESS = 'press';
@@ -918,11 +935,34 @@ export function createStrikePolicy({
          *   THIS tick, from whichever side is asking.
          * @param {number} tick
          */
-        decide(state, bodies, tick, walkHeld, { slash = null } = {}) {
+        decide(state, bodies, tick, walkHeld, { slash = null, freeze = null } = {}) {
             if (!hasSword) return { held: walkHeld, decision: STRIKE_NONE };
             if (slotIsBlade !== null && !slotIsBlade()) {
                 aimed = null;
                 STRIKE_SLOT_COUNTS.stoodDown += 1;
+                return { held: walkHeld, decision: STRIKE_NONE };
+            }
+            /**
+             * ⛓ fidelity FROZENPRESS D1 (`CONTACT_FIDELITY.frozenPressForecast`) — **A TICK WHOSE INPUT THE GAME
+             * REFUSES IS NOT A TICK THIS POLICY SPENDS.** `freeze` is the run's `freezeForecast` (`strikeDecideOpts`;
+             * `null` OFF and on the preview, byte-identical). On a refused tick `Player.input()` returns at its first
+             * line (`Player.as:1521`), so an aim key steers nothing and a press is LOST (`levelRun`'s
+             * `FROZEN_TICK_PRESS`): the policy stands down (an owed aim is dropped, `owed` untouched, so the body is
+             * aimable again once the freeze drains). ⚠ No aim-time half: past this guard the timer is 0, so the
+             * press tick can only be refused by a blast contact ON that tick, which depends on where the aim key
+             * puts the player — it is caught exactly when that tick is asked (the aim is then dropped here).
+             */
+            if (freeze !== null && freeze.refusedNext) {
+                const dropped = aimed;
+                aimed = null;
+                FROZEN_PRESS_COUNTS.stoodDown += 1;
+                if (dropped !== null || plannedTicks.has(tick)) {
+                    FROZEN_PRESS_COUNTS.dropped += 1;
+                    trace.push({ tick, decision: STRIKE_NONE, target: dropped?.id ?? null,
+                        frozenRefused: { timerNext: freeze.timerNext, contact: freeze.contact ?? null },
+                        why: `input is refused at tick ${tick} (frozenTimer ${freeze.timerNext} after its `
+                            + '`freezeStep`): a press there is lost, so the policy stands down' });
+                }
                 return { held: walkHeld, decision: STRIKE_NONE };
             }
             // ── the PRESS half of a two-tick strike ──────────────────
