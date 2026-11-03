@@ -602,6 +602,12 @@ function collidingCrossings(planned) {
  * @returns {{ sidecars: object, notes: Array, analysis: object }}
  */
 export function projectRegionToMaze(region, grid, ctx) {
+    // ⛓⛓ THE INPUT/OUTPUT SPLIT (session tile-rules-automation-r-a2, ⚖ Robert 2026-11-03 "3: Both at once"). A caller may
+    // hand the worlds a different view of the region than the one its AP layer compiles: `projectionRegion(region)` → the
+    // same geometry (sub-regions, tiles, exits, locations) carrying only the rules the world may COPY. Seedling's compile
+    // passes the overlay's hand terms alone, so a charge the rules producer COMPOSED from the grid is derived here by walking
+    // the grid, never read back (an echo). Absent, the world is built from `region` as before.
+    if (typeof ctx.projectionRegion === 'function') region = ctx.projectionRegion(region);
     const { resolveCondition, conditionKey, wiredExit, internalExitName, tileSize } = ctx;
     // ⛓ A level whose entity rows carry an INTERACTION plays as one shared
     // level world (below). Only a compile that supplies `levelEntitiesFor`
@@ -714,7 +720,31 @@ export function projectRegionToMaze(region, grid, ctx) {
         });
         return world;
     }
+    // ⛓ A PLAIN LEVEL AS ONE LEVEL WORLD (session tile-rules-automation-r-a2, ⚖ Robert 2026-11-03 "3: Both at once"). Per
+    // sub-region, each crossing is a tile carrying its atlas row's rule: copied, so the derivation reads it back (an echo).
+    // A caller that supplies `plainLevelWorldFits(world)` asks for the level world instead, whose crossings are WALKED over
+    // the grid, and keeps it when the test says it fits (Seedling's: its item axis fits the certifier's lattice cap; L12's
+    // 15 items do not, so L12 stays per sub-region, named). Only analyzer rows, as for colliding crossings above.
+    let keptPlain = null;
+    if (walkable && declared.length > 0 && typeof ctx.levelEntitiesFor === 'function' && typeof ctx.plainLevelWorldFits === 'function') {
+        const world = projectLevelWorld(region, grid, ctx, entities ?? []);
+        const fit = ctx.plainLevelWorldFits(world);
+        if (fit === true) {
+            world.notes.unshift({
+                region_id: region.region_id,
+                kind: 'plain_level_world',
+                message: 'no interaction, but projected as one level world: its crossings are walked over the grid, not copied',
+            });
+            return world;
+        }
+        keptPlain = {
+            region_id: region.region_id,
+            kind: 'plain_kept_per_sub_region',
+            message: `kept per sub-region: ${fit} — its crossings carry their atlas rows' rules (copied)`,
+        };
+    }
     const notes = crossingNotes.map((n) => ({ region_id: region.region_id, ...n }));
+    if (keptPlain) notes.unshift(keptPlain);
     for (const c of pockets) {
         notes.push({
             region_id: region.region_id,
@@ -822,7 +852,14 @@ export function projectRegionToMaze(region, grid, ctx) {
             const before = builder.obstacles.get(`${x},${y}`);
             for (const n of openTileTowards(builder, grid, component, [x, y], `exit "${exit.exit_id}"`, resolveCondition)) note(n);
             const exitRule = withPressDoor(exit, ctx.eventsFor?.(region));
-            if (exitRule) builder.gate(x, y, exitRule);
+            // ⛓ The exit's rule JOINS its cell's own gate (session tile-rules-automation-r-a2, the designer's fix 2), as in a
+            // level world: one cell holds one obstacle, and L56's pit at (6,1) under bosslock@96,16 {keyType 3} lost its Blue
+            // Key gate to the arena's weapon term once the producer's composed charge was no longer copied onto the exit.
+            const own = builder.obstacleLib[builder.obstacles.get(`${x},${y}`)];
+            if (exitRule) {
+                builder.gate(x, y, own?.clear_set_type === 'rule' && own.clear_rule
+                    ? simplifyRule({ rule: 'And', children: [own.clear_rule, exitRule] }) : exitRule);
+            }
             const kept = addExit({
                 x,
                 y,

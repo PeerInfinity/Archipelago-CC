@@ -35,8 +35,14 @@ export const ECHO_KINDS = Object.freeze({
  * kind. An internal-exit row the event layer rewrites (`internalExitRules`) is planted as `ixr`, not `ix`: the layer's
  * rule is the one the compile reads there.
  */
-export function plantEchoSentinels({ atlas, layer, ropes }) {
+export function plantEchoSentinels({ atlas, layer, ropes, hand = null }) {
     const n = Object.fromEntries(Object.keys(ECHO_KINDS).map((k) => [k, 0]));
+    // ⛓ THE HAND INPUTS (session tile-rules-automation-r-a2): since the input/output split the maze worlds copy only the
+    // overlay's hand terms (`handInputsFor`), never the atlas's rules — so a sentinel goes there too, under the same kind and
+    // id as the atlas rule it stands beside (`ex`/`loc`), or every hand rule would read as derived. Counted apart (`hand`).
+    n.hand = 0;
+    for (const k of [...(hand?.exits?.keys() ?? [])]) { hand.exits.set(k, sentinel('ex', k)); n.hand += 1; }
+    for (const k of [...(hand?.locations?.keys() ?? [])]) { hand.locations.set(k, sentinel('loc', k)); n.hand += 1; }
     const overridden = new Set(layer.internalExitRules.map((q) => `${q.region_id}/${q.from}->${q.to}`));
     for (const r of atlas.regions) {
         for (const l of r.locations ?? []) if (l.access_rule) { l.access_rule = sentinel('loc', `${r.region_id}/${l.name}`); n.loc += 1; }

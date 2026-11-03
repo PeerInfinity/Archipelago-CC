@@ -50,7 +50,11 @@ import { PERSISTENCE_RESPONSE } from '../../frontend/modules/seedlingDemo/levelW
 import {
     PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
     setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
+    playthroughHandInputs,
 } from './make-seedling-playthrough-rules.mjs';
+import { regionItems } from '../../frontend/modules/mazeRoom/tileSpike/deriveTileLogic.js';
+import { LEVEL_WORLD_LATTICE_CAP } from '../../frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.js';
+import { deserializeMazeWorld } from '../../frontend/modules/mazeRoom/mazeRoomEngine.js';
 import { itemNamesInRule } from '../../frontend/modules/procgenCore/ruleItemNames.js';
 import { VICTORY_ITEM } from '../../frontend/modules/seedlingDemo/seedlingAtlasDerivation.js';
 import * as OV from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
@@ -553,11 +557,69 @@ export function completionItemFor(atlas) {
 }
 
 /**
+ * ⛓⛓ THE INPUT/OUTPUT SPLIT (session tile-rules-automation-r-a2, ⚖ Robert 2026-11-03 "3: Both at once"; designer GO).
+ * The rules producer WRITES the atlas, and until this slice the maze worlds gated on the atlas's rules: every charge
+ * the producer composed from the grid (`chargeSealedDoor`, `chargeNecessaryApproaches`, the analyzer's Pareto rows,
+ * the event layer's lock returns) was copied into the worlds, so the maze-derived logic read it back and agreed by
+ * construction (R-A1: 86 echoed elements). Now the worlds read only the overlay's HAND inputs
+ * (`playthroughHandInputs`: `OV.handExitTerms` + `OV.handLocationTerms`), keyed `<region>/<exit_id>` and
+ * `<region>/<location>`; everything composed is derived by walking the grid. The AP layer keeps the atlas's full rules —
+ * they are what the certifier compares against. Pure over `atlas`.
+ */
+export function handInputsFor(atlas) {
+    const { exitTerms, locationTerms } = playthroughHandInputs(atlas);
+    const exits = new Map();
+    for (const t of exitTerms) {
+        const k = `${t.region_id}/${t.exit_id}`;
+        exits.set(k, exits.has(k) ? { rule: 'And', children: [exits.get(k), t.rule] } : t.rule);
+    }
+    const locations = new Map();
+    const found = new Set();
+    for (const r of atlas.regions) {
+        for (const l of r.locations ?? []) {
+            const t = locationTerms.get(l.name);
+            if (t) { locations.set(`${r.region_id}/${l.name}`, t.rule); found.add(l.name); }
+        }
+    }
+    const missing = [...locationTerms.keys()].filter((n) => !found.has(n));
+    if (missing.length) throw new Error(`hand location terms the atlas has no location for: ${missing.join(', ')}`);
+    return { exits, locations };
+}
+
+/** The region the maze WORLDS are built from: `region` with only its hand rules (`handInputsFor`). Pure. */
+export function projectionRegionOf(region, hand) {
+    const strip = ({ access_rule: _rule, ...rest }) => rest;
+    return {
+        ...region,
+        exits: (region.exits ?? []).map((e) => {
+            const rule = hand.exits.get(`${region.region_id}/${e.exit_id}`);
+            return rule ? { ...strip(e), access_rule: rule } : strip(e);
+        }),
+        locations: (region.locations ?? []).map((l) => {
+            const rule = hand.locations.get(`${region.region_id}/${l.name}`);
+            return rule ? { ...strip(l), access_rule: rule } : strip(l);
+        }),
+    };
+}
+
+/**
+ * ⛓ A PLAIN LEVEL BECOMES ONE LEVEL WORLD when its item axis fits the certifier's lattice cap (`LEVEL_WORLD_LATTICE_CAP`,
+ * read from its one constant, never a level list; designer GO, L12 option (a)). Returns true, or why not.
+ */
+export function plainLevelWorldFits(world) {
+    const carrier = Object.values(world.sidecars).find((sc) => sc.playable_payload)?.playable_payload;
+    if (!carrier) return 'no level-world payload';
+    const n = regionItems(deserializeMazeWorld(carrier)).length;
+    return n <= LEVEL_WORLD_LATTICE_CAP ? true : `its item axis has ${n} items, over the lattice cap ${LEVEL_WORLD_LATTICE_CAP}`;
+}
+
+/**
  * Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`.
  * ⛓ `plant` (session tile-rules-automation-r-a1, the ECHO test): called once with `{atlas, layer, ropes}` after the event
  * layer and the rope events are derived from the TRUE atlas and before anything is projected or compiled; it may rewrite
  * their access rules in place (it is handed copies of the layer and the ropes, never the producer's cached rows) (the derived-rules probe plants a sentinel item in each, `seedlingEchoSentinels.js`, and
- * looks for them in the payloads). Absent, the compile is the preset's, byte for byte. `embedSphereLog: false` skips the
+ * looks for them in the payloads); since session tile-rules-automation-r-a2 it is also handed `hand` (`handInputsFor`), the
+only rules the worlds copy, to plant in. Absent, the compile is the preset's, byte for byte. `embedSphereLog: false` skips the
  * sphere log (a sentinel compile places items no state can hold).
  */
 export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSphereLog = true } = {}) {
@@ -571,11 +633,13 @@ export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSpher
     }
     let ropes = ropeEventsFor(atlas, partition, levels);
     let layer = eventLayerFor(atlas, levels, { minted: ropes.events.map((e) => e.name) });
+    // Read from the TRUE atlas, before any plant: the hand inputs are the overlay's, not the atlas's.
+    const hand = handInputsFor(atlas);
     if (plant) {
         // The layer's rows are the producer's process-wide cache (`wholeEventLayer`): a plant rewrites COPIES.
         ropes = structuredClone(ropes);
         layer = structuredClone(layer);
-        plant({ atlas, layer, ropes });
+        plant({ atlas, layer, ropes, hand });
     }
     const mazeProjection = seedlingMazeProjectionDeps({
         mapDoc: PLAYTHROUGH_MAP,
@@ -588,6 +652,8 @@ export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSpher
             resolveCondition: playthroughAnalyzerOptions.resolveCondition,
         },
     });
+    mazeProjection.projectionRegion = (region) => projectionRegionOf(region, hand);
+    mazeProjection.plainLevelWorldFits = plainLevelWorldFits;
     const restricted = restrictAtlas(atlas, levels, { start: START_LEVEL });
     const { rules, report } = compileRegionAtlas(restricted, {
         mapDoc,
