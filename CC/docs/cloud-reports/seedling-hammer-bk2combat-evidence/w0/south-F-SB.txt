@@ -1,0 +1,61 @@
+ms 165639
+SOLVED 4810
+REC {"goal":"collect-placement","strategy":"kill","arm":"chaser","target":"bob@736,752","stance":{"x":744,"y":776},"clears":["bob@736,752"],"kind":"dwell","at":{"x":744.3499999999993,"y":775.7499999999997},"ticks":40,"bound":82,"why":"bob@736,752 is a `modelled` press target (KILL_ARM_POLICY.Bob) 307.9 px from the walk; the stance (744,776) puts it 16.0 px away, inside its 80 px leash, so it CHASES. The forecast walks there in 404 tick(s) and stands: bob@736,752 dies at tick 456, and NO body reaches
+REC {"goal":"collect-placement","strategy":"kill","arm":"press","target":"spinner@816,848","ledger":"spinnerWrites","verb":"kill","from":444,"ticks":240,"landings":[{"t":539,"id":"spinner@816,848","hits":1},{"t":572,"id":"spinner@816,848","hits":2},{"t":671,"id":"spinner@816,848","hits":3}],"cycles":[{"body":"spinner@816,848","cell":{"x":744,"y":840},"pressAt":535,"eta":61,"considered":40,"rejected":[]},{"body":"spinner@816,848","cell":{"x":744,"y":840},"pressAt":538,"eta":0,"considered":40,"rejecte
+REC {"goal":"collect-placement","strategy":"kill","arm":"chaser","target":"bobsoldier@880,832","stance":{"x":888,"y":856},"clears":["bobsoldier@880,832"],"kind":"dwell","at":{"x":888.9273361321167,"y":856.2393759496701},"ticks":27,"bound":58,"why":"bobsoldier@880,832 is a `modelled` press target (KILL_ARM_POLICY.BobSoldier) 24.0 px from the walk; the stance (888,856) puts it 8.3 px away, inside its 80 px leash, so it CHASES. The forecast walks there in 44 tick(s) and stands: bobsoldier@880,832 dies 
+REC {"goal":"collect-placement","strategy":"hold","presser":{"tag":"buttonroom","x":880,"y":768,"t":3},"ticks":131,"heldFor":89,"stoppedOn":"every shut responder in group t=3 [wandlock@480,560] is open — and the group is LATCHED by `localPublish`, so the fade completes whoever is standing where","at":{"x":888.9273361321167,"y":776.1893759496703},"opened":["wandlock@480,560"],"armed":[],"traps":[],"volleys":[],"wrote":[]}
+REC {"goal":"collect-placement","strategy":"weigh","kind":"weigh","postCondition":"press","presser":{"x":480,"y":384},"corpse":{"turret":"iceturret@472,400","kill":null,"presses":[{"stance":{"x":488,"y":440},"to":{"tx":30,"ty":25},"pressTick":1658,"rest":{"tx":30,"ty":25}},{"stance":{"x":488,"y":424},"to":{"tx":30,"ty":24},"pressTick":1793,"rest":{"tx":30,"ty":24}}],"restoredSlot":0,"shakeWait":0},"dwell":{"kind":"dwell","at":{"x":488.39917442976287,"y":424.35518883993427},"ticks":1,"bound":131,"why
+REC {"goal":"collect-placement","strategy":"weigh","kind":"weigh","postCondition":"press","presser":{"x":768,"y":400},"shove":{"verb":"fire","target":"pushableblockfire@480,480","from":3982,"to":{"tx":48,"ty":25},"pressTick":3982,"weapon":"fire","restoredSlot":0,"ticks":1330,"steps":[{"verb":"fire","ticks":38,"from":1942,"to":{"tx":31,"ty":30}},{"verb":"fire","ticks":38,"from":1992,"to":{"tx":32,"ty":30}},{"verb":"fire","ticks":38,"from":2046,"to":{"tx":33,"ty":30}},{"verb":"fire","ticks":38,"from":
+REC {"goal":"collect-placement","strategy":"shove","verb":"shove","via":"pulse","target":"pushableblockfire@576,576","pulser":"pulser@592,576","to":{"tx":35,"ty":36},"dir":"W","hold":{"presser":{"tag":"button","x":816,"y":400,"t":4},"ticks":164,"heldFor":29,"stoppedOn":"pushableblockfire@576,576 is at rest on (35,36) — pulser@592,576's pulse pushed it W","at":{"x":823.047621292363,"y":408.0906553857187},"opened":[],"armed":["pulser@592,576"],"traps":[],"volleys":[],"wrote":[]},"from":4153,"ticks":29
+REC {"goal":"collect-placement","strategy":"shove","kind":"shove","id":"pushableblock@576,560","dir":"N","key":"up","at":{"x":584.4095566749711,"y":583.0197377960009},"from":{"tx":36,"ty":35},"to":{"tx":36,"ty":32},"destroys":false,"contactTick":5,"leanTicks":69,"startTick":4645,"ticks":101}
+REC {"goal":"collect-placement","strategy":"collect","pickup":{"tag":"bosskey","x":656,"y":528},"item":null,"level":40,"approach":9,"ceremony":0,"releases":0,"from":4801}
+STRATROWS 0 kill bob@736,752
+STRATROWS 444 kill spinner@816,848
+STRATROWS 684 kill bobsoldier@880,832
+STRATROWS 755 walk undefined
+STRATROWS 884 walk undefined
+STRATROWS 1632 walk undefined
+STRATROWS 1772 walk undefined
+STRATROWS 1908 weigh wandlock@800,400
+STRATROWS 1980 walk undefined
+STRATROWS 2030 walk undefined
+STRATROWS 2084 walk undefined
+STRATROWS 2139 walk undefined
+STRATROWS 2234 walk undefined
+STRATROWS 2284 walk undefined
+STRATROWS 2338 walk undefined
+STRATROWS 2393 walk undefined
+STRATROWS 2443 walk undefined
+STRATROWS 2497 walk undefined
+STRATROWS 2586 walk undefined
+STRATROWS 2640 walk undefined
+STRATROWS 2695 walk undefined
+STRATROWS 2745 walk undefined
+STRATROWS 2799 walk undefined
+STRATROWS 2854 walk undefined
+STRATROWS 2912 walk undefined
+STRATROWS 2966 walk undefined
+STRATROWS 3020 walk undefined
+STRATROWS 3071 walk undefined
+STRATROWS 3127 walk undefined
+STRATROWS 3237 walk undefined
+STRATROWS 3301 walk undefined
+STRATROWS 3357 walk undefined
+STRATROWS 3415 walk undefined
+STRATROWS 3469 walk undefined
+STRATROWS 3524 walk undefined
+STRATROWS 3613 walk undefined
+STRATROWS 3667 walk undefined
+STRATROWS 3722 walk undefined
+STRATROWS 3772 walk undefined
+STRATROWS 3861 walk undefined
+STRATROWS 3915 walk undefined
+STRATROWS 3970 walk undefined
+STRATROWS 4098 walk undefined
+STRATROWS 4182 shove pushableblock@576,560
+STRATROWS 4746 walk undefined
+STRATROWS 4801 collect undefined
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}
+TA {"approaches":[{"turret":"iceturret@472,400","t":1632,"side":"right","via":{"x":467,"y":446},"wait":25,"forks":321}]}
+DOOR {"doors":[{"door":"wandlock@480,560","side":"up","cell":{"x":488,"y":568},"turret":"iceturret@472,400","t":0,"ticks":1368,"open":true}]}

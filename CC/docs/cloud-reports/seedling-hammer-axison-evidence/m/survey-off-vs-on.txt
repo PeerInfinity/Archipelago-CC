@@ -1,0 +1,27 @@
+[ 'generator', 'route', 'rows' ]
+237 237 [
+  'step',
+  'level',
+  'boot',
+  'withCommittedDeclarations',
+  'goals',
+  'views',
+  'clock',
+  'verdict',
+  'refusal',
+  'ticks',
+  'traceRows',
+  'replans',
+  'passes',
+  'declarations',
+  'replay',
+  'ms',
+  'knownAnswer',
+  'knownTicks',
+  'agreesWithKnown',
+  'visit',
+  'family'
+]
+{ SOLVED: 201, REFUSED: 36 } { SOLVED: 201, REFUSED: 36 }
+MOVER 79 REFUSED REFUSED solverBot(survey-step-79) reach-exit (144,240)->L54 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 166-tick bound (0 guard step(s)); it stands a || solverBot(survey-step-79) reach-exit (144,240)->L54 -> kill -> chaser kill (puncher@136,96) by press: puncher@136,96 is still in the world after the whole 167-tick bound (0 guard step(s)); it stands a
+movers 1

@@ -5,7 +5,7 @@
  * `placeGenItems`/`placeGenRules` accept: N seats, N+1 is refused by name), a
  * draw whose own elements spend the tags is RE-ROLLED like one short of cells,
  * and a slot past the ceiling is refused BY NAME at Initialise before any build.
- * The census over seeds 1–60 is `seedlingGenCapacity.slow.test.js`.
+ * The census over seeds 1–60 is `seedlingGenCapacity.train.test.js`.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';

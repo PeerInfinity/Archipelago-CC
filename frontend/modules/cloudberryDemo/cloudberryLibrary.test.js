@@ -165,7 +165,7 @@ describe('loop mode (P3b): a summary substrate on the page\'s game clock', () =>
         const rulesJson = JSON.parse(readFileSync(`${dir}rules.json`, 'utf8'));
         const sphereLog = readFileSync(`${dir}sphere_log.jsonl`, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
         const costs = generateLoopCosts({ rulesJson, sphereLog, sourceFileName: 'cloudberryLibrary.test' });
-        for (const region of ['region_2_2', 'region_2_3', 'region_3_3']) {
+        for (const region of ['region_2_2', 'region_3_2', 'region_4_2']) {
             expect(costs.regions[region]).toEqual({ timeDrainPerSecond: 1, xpEffect: 'cost' });
         }
         // a summary action is never charged the coarse defaults (it would pay twice): no per-location cost

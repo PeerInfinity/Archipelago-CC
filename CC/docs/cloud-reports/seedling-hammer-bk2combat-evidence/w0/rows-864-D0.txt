@@ -1,0 +1,19 @@
+REFUSED ms 31384 solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,853.4) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The planner works in whole tiles, so both ends o
+  time: the aim is 156 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: no stance within bobsoldier@880,832's leash (80) both pulls its straight line through a kill region and is itself danger-free: 32 cell(s) in leash, 5 of them crossing a region, none of those reachable. ⛔ A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.
+  kill: no presser in level 40 arms a trap whose lane covers bobsoldier@880,832 — the room has 6 presser(s) and 0 trap(s), and a button that arms nothing over the body 
+perTick 879 prefix 0 obstacle {"kind":"danger","id":"bobsoldier@880,832","sources":["chaser:bobsoldier@880,832"]}
+ROW 0 apitem undefined
+ROW 0 shove pushableblockfire@576,576
+ROW 0 hold wandlock@448,432
+ROW 0 burn burnabletree@872,784
+ROW 0 bait spinner@880,848 {"verb":"bait","rung":"bait","climb":1}
+ROW 0 kill spinner@880,848 {"verb":"kill","rung":"kill","climb":1,"arm":"press","target":"spinner@880,848"}
+ROW 779 bait bob@736,752 {"verb":"bait","rung":"bait","climb":2}
+ROW 779 kill bob@736,752 {"verb":"kill","rung":"kill","climb":2,"arm":"chaser","target":"bob@736,752","stance":{"x":744,"y":760},"runnersUp":[{"x":744,"y":776,"deathAt":125},{"x":744,"y":744,"deathAt":148}]}
+ROW 879 bait bobsoldier@880,832 {"verb":"bait","rung":"bait","climb":3}
+ROW 879 kill bobsoldier@880,832 {"verb":"kill","rung":"kill","climb":3}
+ROW 879 narrow bobsoldier@880,832
+ROW 879 detour bobsoldier@880,832
+ROW 879 forced-hit bobsoldier@880,832

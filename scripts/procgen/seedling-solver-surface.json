@@ -159,9 +159,9 @@
       "files": {
         "botDriverV2.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 75
+        "solverBot.js": 76
       },
-      "sites": 103,
+      "sites": 104,
       "seen": "both",
       "via": [
         "direct",
@@ -558,9 +558,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 221
+        "solverBot.js": 222
       },
-      "sites": 362,
+      "sites": 363,
       "seen": "both",
       "via": [
         "direct",
@@ -698,7 +698,7 @@
         },
         "strikeBodies": {
           "botDriverV2.js": 3,
-          "solverBot.js": 19
+          "solverBot.js": 20
         },
         "talkCircles": {
           "solverBot.js": 4
@@ -857,9 +857,9 @@
         "dangerMap.js": 3,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 127
+        "solverBot.js": 130
       },
-      "sites": 190,
+      "sites": 193,
       "seen": "both",
       "via": [
         "direct",
@@ -930,7 +930,7 @@
         "playerHits": {
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
-          "solverBot.js": 70
+          "solverBot.js": 73
         },
         "presses": {
           "botDriverV2.js": 1,
@@ -1391,9 +1391,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 685
+        "solverBot.js": 687
       },
-      "sites": 826,
+      "sites": 828,
       "seen": "both",
       "via": [
         "direct",
@@ -2884,9 +2884,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 256
+        "solverBot.js": 257
       },
-      "sites": 326,
+      "sites": 327,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2920,9 +2920,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 260
+        "solverBot.js": 261
       },
-      "sites": 333,
+      "sites": 334,
       "seen": "both",
       "via": [
         "const-alias",

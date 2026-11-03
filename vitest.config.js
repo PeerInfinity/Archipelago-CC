@@ -20,6 +20,11 @@ export default defineConfig({
       // Calibration tier (vitest.calib.config.js) — demoted heavy sweeps,
       // run manually via `npm run test:unit:calib`, never in the default run.
       '**/*.calib.test.js',
+      // ⚖ Robert 2026-11-02 CI manual-only P1–P3, P5 — the TRAIN tier
+      // (vitest.train.config.js, `npm run test:unit:train`): run by CI on
+      // js-land/** train pushes and on dispatch, never on a slice push and
+      // never in this default run.
+      '**/*.train.test.js',
     ],
 
     // Environment settings

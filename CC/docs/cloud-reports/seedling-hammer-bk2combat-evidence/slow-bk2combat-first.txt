@@ -1,0 +1,13 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/hammerBk2Combat.slow.test.js (4 tests) 567757ms
+     ✓ pocket shut, OPP, OFF: the burn walk's combat ladder is EXHAUSTED on the BobSoldier in its notch  49127ms
+     ✓ pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the combat to the ice turret's approach from the door  296983ms
+     ✓ pocket open, no OPP, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4810, the staged hunt never asked  221641ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  22:26:35
+   Duration  571.12s (transform 2.36s, setup 0ms, import 3.17s, tests 567.76s, environment 0ms)
+

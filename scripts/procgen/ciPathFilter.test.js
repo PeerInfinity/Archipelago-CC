@@ -1,7 +1,12 @@
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import { ciPathFilterFor, globRe, jobScripts, pathFilterHits } from './ciPathFilter.js';
-import { REPO, gateRoster } from './gateRoster.js';
+import { REPO, ciPathsIn, gateRoster } from './gateRoster.js';
 
 describe('globRe — the @ci-paths glob grammar', () => {
     it('`**` matches any depth, and `dir/**` matches the gitlink path itself', () => {
@@ -53,5 +58,55 @@ describe('ciPathFilterFor — seedling-wasm-ship (js-7\'s conditions)', () => {
         for (const p of ['docs/json/README.md', 'worlds/alttp/__init__.py', 'frontend/modules/apworldEditor/x.js']) {
             expect(hits(p), p).toBe(false);
         }
+    });
+});
+
+/**
+ * ⚖ Robert 2026-11-02 CI manual-only P4 — `@ci-paths-slice declared`: on a SLICE-branch push
+ * (`ci-gates.mjs --push-scope=slice`) seedling-wasm-ship is filtered by its declared globs and its own
+ * file alone; its import closure (seedlingDemo, procgenCore, shared, …) reaches it at the train.
+ */
+describe('P4 — @ci-paths-slice declared scopes wasm-ship on a slice push only', () => {
+    const plan = (paths, scope) => {
+        const dir = mkdtempSync(join(tmpdir(), 'ci-scope-'));
+        const file = join(dir, 'changed.txt');
+        writeFileSync(file, `${paths.join('\n')}\n`);
+        try {
+            const r = spawnSync(process.execPath, [join(REPO, 'scripts/procgen/ci-gates.mjs'), '--plan', '--set=browser',
+                '--json', `--changed=${file}`, `--push-scope=${scope}`], { cwd: REPO, encoding: 'utf8' });
+            expect(r.status, r.stderr).toBe(0);
+            return JSON.parse(r.stdout).some((s) => s.name === 'seedling-wasm-ship');
+        } finally { rmSync(dir, { recursive: true, force: true }); }
+    };
+    const gate = gateRoster({ repo: REPO }).find((g) => g.file === 'check-seedling-wasm-ship.mjs');
+
+    it('the gate opts in, and seedlingDemo/** left its declared globs', () => {
+        expect(gate.ciPaths.slice).toBe('declared');
+        expect(gate.ciPaths.globs).not.toContain('frontend/modules/seedlingDemo/**');
+        expect(gate.ciPaths.globs).toContain('frontend/modules/flashPanel/**');
+    });
+    it('a seedlingDemo-only change: RUNS on a full-scope push, SKIPPED on a slice push', () => {
+        const p = ['frontend/modules/seedlingDemo/solverBot.js'];
+        expect(plan(p, 'full')).toBe(true);
+        expect(plan(p, 'slice')).toBe(false);
+    });
+    it('a declared path or the gate file itself still runs it on a slice push', () => {
+        expect(plan(['frontend/modules/flashPanel/flashSeedlingGenLibrary.js'], 'slice')).toBe(true);
+        expect(plan(['scripts/procgen/check-seedling-wasm-ship.mjs'], 'slice')).toBe(true);
+    });
+    it('the closure is kept for full scope: the filter function itself is unchanged', () => {
+        const f = ciPathFilterFor({ gate, repo: REPO });
+        expect(f.derived.some((p) => p.startsWith('frontend/modules/seedlingDemo/'))).toBe(true);
+    });
+});
+
+describe('gateRoster.ciPathsIn — the @ci-paths-slice line', () => {
+    const text = (...lines) => ['/**', ...lines.map((l) => ` * ${l}`), ' */'].join('\n');
+    it('defaults to closure, reads declared, refuses the rest by name', () => {
+        expect(ciPathsIn(text('@ci-paths a/**'))).toEqual({ globs: ['a/**'], slice: 'closure' });
+        expect(ciPathsIn(text('@ci-paths a/**', '@ci-paths-slice declared'))).toEqual({ globs: ['a/**'], slice: 'declared' });
+        expect(() => ciPathsIn(text('@ci-paths a/**', '@ci-paths-slice nope'))).toThrow(/@ci-paths-slice nope/);
+        expect(() => ciPathsIn(text('@ci-paths a/**', '@ci-paths-slice declared', '@ci-paths-slice declared'))).toThrow(/2 @ci-paths-slice/);
+        expect(() => ciPathsIn(text('@ci-paths-slice declared'))).toThrow(/without @ci-paths/);
     });
 });

@@ -11,7 +11,7 @@
  * no browser, no box lock, writes nothing unless `--json=`.
  *
  * Workloads (any number, run in order):
- *   --gen=<biome>:<seeds>          `generateGenRoom` as `seedlingGenCapacity.slow` draws it (2 exits, 10×10, the
+ *   --gen=<biome>:<seeds>          `generateGenRoom` as `seedlingGenCapacity.train` draws it (2 exits, 10×10, the
  *                                  default elements), one draw per seed: `--gen=post-sword:30`
  *   --killgate=<seed>:<k-range>    the killgate row's re-roll draws: the room at `rerollSeed(seed, k)`, post-sword,
  *                                  1 exit, `elements: killgate`: `--killgate=57:0-5`

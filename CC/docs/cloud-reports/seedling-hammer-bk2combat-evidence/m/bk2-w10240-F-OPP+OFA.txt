@@ -1,0 +1,9 @@
+ARM {"cpair":3,"icest":false,"opp":true,"lwf":true,"ofa":true,"sbd":false,"ta":true,"fo":true,"sd":true,"sb":true,"bc":false}
+864/0 refusal 70780dd3cd05 181199ms staged null
+   solverBot(wasm-location-40) apitem (656,528) contact: applied 5 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), burn(burnabletree@872,784), hold(wandlock@480,560), weigh(wandlock@800,400)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.
+864/1 refusal 70780dd3cd05 169041ms staged null
+   solverBot(wasm-location-40) apitem (656,528) contact: applied 5 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), burn(burnabletree@872,784), hold(wandlock@480,560), weigh(wandlock@800,400)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.
+865/0 refusal 70780dd3cd05 105448ms staged null
+   solverBot(wasm-location-40) apitem (656,528) contact: applied 5 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), burn(burnabletree@872,784), hold(wandlock@480,560), weigh(wandlock@800,400)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.
+865/1 refusal 70780dd3cd05 105403ms staged null
+   solverBot(wasm-location-40) apitem (656,528) contact: applied 5 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), burn(burnabletree@872,784), hold(wandlock@480,560), weigh(wandlock@800,400)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.

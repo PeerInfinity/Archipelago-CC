@@ -1,0 +1,4 @@
+127 ON=0 uncut: 494 91e93cad7d53 [[433,"punch","puncher@416,256"],[474,"punch","puncher@416,256"]] | cut: 494 91e93cad7d53 [[433,"punch","puncher@416,256"],[474,"punch","puncher@416,256"]] | IDENTICAL
+127 ON=1 uncut: 643 7a2ec2b99461 [] | cut: 643 7a2ec2b99461 [] | IDENTICAL
+105 ON=0 uncut: 771 df49abb695af [] | cut: 771 df49abb695af [] | IDENTICAL
+105 ON=1 uncut: 771 df49abb695af [] | cut: 771 df49abb695af [] | IDENTICAL

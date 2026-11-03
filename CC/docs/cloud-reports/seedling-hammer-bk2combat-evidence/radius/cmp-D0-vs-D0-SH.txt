@@ -1,0 +1,4 @@
+# base 44/58 solved (44 hitless+modelled), arm 45/58 solved (45 hitless+modelled), 1 mover(s)
+## 390/1 level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+   base: refusal (55,51) lies inside the live body bobsoldier@880,832's volume (a stepped bobsoldier at its LIVE position), so the danger map forbids the goal itself — every DETOUR candidate and every forced crossing ends on that tile, and neither rung is asked while it stands
+   arm:  SOLVED 1279 gm=True hits=[]

@@ -7,7 +7,8 @@
       {
         "sphere": 1,
         "items": [
-          "Clouds"
+          "Clouds",
+          "Cloudberry Gem"
         ]
       },
       {
@@ -40,7 +41,7 @@
         "gate": [],
         "gateCounts": {},
         "usedSides": [
-          "N"
+          "E"
         ],
         "childGates": [
           [
@@ -56,10 +57,10 @@
         "index": 1,
         "wave": 1,
         "parent": 0,
-        "side": "S",
+        "side": "E",
         "cell": {
-          "gx": 2,
-          "gy": 3
+          "gx": 3,
+          "gy": 2
         },
         "isTeleporter": false,
         "substrate": "cloudberry",
@@ -70,8 +71,8 @@
           "Clouds": 1
         },
         "usedSides": [
-          "S",
-          "W"
+          "W",
+          "N"
         ],
         "childGates": [
           [
@@ -89,8 +90,8 @@
         "parent": 1,
         "side": "E",
         "cell": {
-          "gx": 3,
-          "gy": 3
+          "gx": 4,
+          "gy": 2
         },
         "isTeleporter": false,
         "substrate": "cloudberry",
@@ -101,7 +102,7 @@
           "Moving Blocks": 1
         },
         "usedSides": [
-          "E"
+          "S"
         ],
         "childGates": [],
         "isFiller": false
@@ -114,7 +115,7 @@
   },
   "region_count": 3,
   "grid_dims": {
-    "width": 4,
-    "height": 4
+    "width": 5,
+    "height": 3
   }
 }

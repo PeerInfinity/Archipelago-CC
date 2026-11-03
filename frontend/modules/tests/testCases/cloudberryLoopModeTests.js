@@ -2,8 +2,8 @@
  * In-app tests for the Cloudberry substrate in LOOP MODE (P3b): a summary substrate, as runner and
  * noiz2sa (`loopSupport.summaryRecording` + `playClock`, cloudberryLibrary.js).
  *
- * The world is the committed `cloudberry_sphere_worldgen` preset (region_2_2 [coin → Clouds] →exit_S→
- * region_2_3 [coin → Moving Blocks] →exit_E→ region_3_3 [coin → Victory]; every back exit is the next
+ * The world is the committed `cloudberry_sphere_worldgen` preset (region_2_2 [coin → Clouds] →region_2_2__exit_E→
+ * region_3_2 [coin → Moving Blocks] →region_3_2__exit_E→ region_4_2 [coin → Victory]; every back exit is the next
  * region's start door), loaded with a loop_costs sidecar GENERATED from its sphere log (the
  * runnerBlockModeTests recipe), so loop mode auto-enables and the strict action gate is live. ⚖ Every row
  * sets its own state (it loads the world itself; the items come from the coins it collects).
@@ -224,7 +224,7 @@ async function recordThenPlayback(tc) {
             g.noManaDepletionReset = false;
             loopStateSingleton.setAutoRestartQueue(true);   // the mana-out reset resumes the queue
 
-            const block = queueBlock(tc, { region: 'region_2_2', check: 'region_2_2__loc_0', exit: 'exit_S', target: 'region_2_3', mode: 'record' });
+            const block = queueBlock(tc, { region: 'region_2_2', check: 'region_2_2__loc_0', exit: 'region_2_2__exit_E', target: 'region_3_2', mode: 'record' });
             if (!block) return;
             g.refillMana();
             loopStateSingleton.startProcessing();
@@ -255,7 +255,7 @@ async function recordThenPlayback(tc) {
 
             // ── a reset BEFORE the Record completes (mana out, on the region itself) ──
             // The player runs deep into the level (the end door's walk without Clouds ends short of it: nothing sent).
-            const deep = await botWalk(tc, { kind: 'exit', name: 'exit_S' }, 'a run toward the end door (no Clouds)');
+            const deep = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'a run toward the end door (no Clouds)');
             tc.reportCondition(`the player ran toward the end door and stopped short (${deep?.result})`,
                 deep?.result === 'timeout' || deep?.result === 'died');
             const statusBefore = pageStatus();
@@ -290,10 +290,10 @@ async function recordThenPlayback(tc) {
             }, 'region_2_2__loc_0 checked → Clouds', 20000, 250);
             tc.reportCondition('live play checked region_2_2__loc_0 through the action gate → Clouds received', !!clouds);
             await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('Cloud') ? true : null), 'Cloud held in the page', 20000, 200);
-            const left = await botWalk(tc, { kind: 'exit', name: 'exit_S' }, 'the end door');
+            const left = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the end door');
             tc.reportCondition(`left by the end door (${left?.result})`, left?.result === 'reached');
-            const crossed = await tc.pollForCondition(() => currentRegion() === 'region_2_3', 'the visit ended: region_2_3', 15000, 100);
-            tc.reportCondition('the Record visit ended through its queued exit (region_2_3)', !!crossed);
+            const crossed = await tc.pollForCondition(() => currentRegion() === 'region_3_2', 'the visit ended: region_3_2', 15000, 100);
+            tc.reportCondition('the Record visit ended through its queued exit (region_3_2)', !!crossed);
             if (!crossed) return;
             const saved = loopStateSingleton._lookupBoundSummary('region_2_2', block.instance);
             tc.reportCondition('a summary recording is bound to the block', !!saved);
@@ -302,7 +302,9 @@ async function recordThenPlayback(tc) {
                 + `wall clock parked ${((performance.now() - wall0) / 1000).toFixed(2)} s`);
             tc.assertEqual('the summary keeps the checked coin', JSON.stringify(['region_2_2__loc_0']),
                 JSON.stringify((saved.summary.checks ?? []).map((c) => c?.locationName ?? c)));
-            tc.assertEqual('…and the exit taken', 'exit_S', saved.departureExitId);
+            // The summary keeps the PAGE's exit id (the payload's `exit_id`), not the AP exit name: two regions both have
+            // an `exit_E`, so the world generator prefixes the AP name (`region_2_2__exit_E`); the payload keeps `exit_E`.
+            tc.assertEqual('…and the exit taken', 'exit_E', saved.departureExitId);
             const ps = saved.summary.playStats;
             // A page that settles its clock at the door reports the visit's game seconds up to it, so the duration is
             // their floor — plus at most the one wall second loops' fail-safe may charge between the park and the
@@ -319,7 +321,7 @@ async function recordThenPlayback(tc) {
             tc.reportCondition(`live play drained the visit's game seconds × the rate (${drained} for ${saved.summary.durationSeconds} s at ${rate}/s, ± one tick)`,
                 Math.abs(drained - saved.summary.durationSeconds * rate) <= rate + 0.001);
             tc.assertEqual('the block auto-switched to Playback', 'playback', loopStateSingleton.getBlockMode('region_2_2', block.instance));
-            await configured(tc, 'region_2_3', { label: 'Record: ' });
+            await configured(tc, 'region_3_2', { label: 'Record: ' });
 
             // ── a reset AFTER the Record (the Loops panel's Restart): the queue re-drives, Playback applies at once ──
             const expected = loopStateSingleton._priceSummaryReplay('region_2_2', saved.summary);
@@ -328,9 +330,9 @@ async function recordThenPlayback(tc) {
             const t0 = performance.now();
             loopStateSingleton.restartFromStart();
             const ap = await applied;
-            const again = await tc.pollForCondition(() => currentRegion() === 'region_2_3', 'Playback crossed into region_2_3', 15000, 20);
+            const again = await tc.pollForCondition(() => currentRegion() === 'region_3_2', 'Playback crossed into region_3_2', 15000, 20);
             const ms = Math.round(performance.now() - t0);
-            tc.reportCondition(`after the Restart, Playback applied the summary and crossed exit_S at once (${ms} ms)`, !!ap && !!again);
+            tc.reportCondition(`after the Restart, Playback applied the summary and crossed region_2_2__exit_E at once (${ms} ms)`, !!ap && !!again);
             tc.log(`Playback: ${ms} ms; price ${expected}; ${queueDiag()}`);
             const spent = book.spentIn('region_2_2');
             tc.reportCondition(`Playback spent exactly the repriced summary in region_2_2 (${expected}; spent ${spent})`,
@@ -348,8 +350,8 @@ registerTest({
                + 'parks for live play; the page reports a running game clock and play drains; the page hidden stops the '
                + 'clock and drains nothing. The player runs deep into the level, then mana runs out: the loop reset '
                + 'discards the capture and the page is configured again (the player back at the start door). Re-parked, '
-               + 'the coin (→ Clouds) and the end door: the summary keeps the check, exit_S and floor(game seconds), and '
-               + 'the drain equals it. The Loops Restart re-drives the queue and Playback crosses exit_S at once for the '
+               + 'the coin (→ Clouds) and the end door: the summary keeps the check, region_2_2__exit_E and floor(game seconds), and '
+               + 'the drain equals it. The Loops Restart re-drives the queue and Playback crosses region_2_2__exit_E at once for the '
                + 'repriced summary.',
     testFunction: restoresSavedQueues(recordThenPlayback),
     category: CATEGORY,
@@ -367,11 +369,11 @@ async function botBlocksResetVictory(tc) {
             g.noManaDepletionReset = false;
             loopStateSingleton.setAutoRestartQueue(true);
             const blocks = [
-                queueBlock(tc, { region: 'region_2_2', check: 'region_2_2__loc_0', exit: 'exit_S', target: 'region_2_3', mode: 'bot' }),
-                queueBlock(tc, { region: 'region_2_3', check: 'region_2_3__loc_0', exit: 'region_2_2', target: 'region_2_2', mode: 'bot' }),
-                queueBlock(tc, { region: 'region_2_2', exit: 'exit_S', target: 'region_2_3', mode: 'bot' }),
-                queueBlock(tc, { region: 'region_2_3', exit: 'exit_E', target: 'region_3_3', mode: 'bot' }),
-                queueBlock(tc, { region: 'region_3_3', check: 'region_3_3__loc_0', mode: 'bot' }),
+                queueBlock(tc, { region: 'region_2_2', check: 'region_2_2__loc_0', exit: 'region_2_2__exit_E', target: 'region_3_2', mode: 'bot' }),
+                queueBlock(tc, { region: 'region_3_2', check: 'region_3_2__loc_0', exit: 'region_2_2', target: 'region_2_2', mode: 'bot' }),
+                queueBlock(tc, { region: 'region_2_2', exit: 'region_2_2__exit_E', target: 'region_3_2', mode: 'bot' }),
+                queueBlock(tc, { region: 'region_3_2', exit: 'region_3_2__exit_E', target: 'region_4_2', mode: 'bot' }),
+                queueBlock(tc, { region: 'region_4_2', check: 'region_4_2__loc_0', mode: 'bot' }),
             ];
             if (blocks.some((b) => !b)) return;
             g.refillMana();
@@ -381,7 +383,7 @@ async function botBlocksResetVictory(tc) {
             loopStateSingleton.startProcessing();
 
             // ── B1: region_2_2's coin and its end door, priced by the page's game seconds ──
-            if (!(await arriveIn(tc, 'region_2_3', before, 'Bot block 1'))) return;
+            if (!(await arriveIn(tc, 'region_3_2', before, 'Bot block 1'))) return;
             const b1 = pageEvents('bot').slice(bots);
             tc.reportCondition(`Bot block 1: coin and end door reached (${b1.map((e) => `${e.goal?.kind}:${e.result}:${e.steps}`).join(', ')})`,
                 b1.length === 2 && b1.every((e) => e.result === 'reached') && b1[1].goal?.kind === 'portal');
@@ -398,10 +400,10 @@ async function botBlocksResetVictory(tc) {
                 : `Bot block 1 cost the game seconds it played, less the unreported tail: ${cost1} mana, last report ${gs1?.toFixed(2)} s (no settle at the door on this page)`,
                 Number.isFinite(gs1) && (settles ? cost1 === Math.floor(gs1) : cost1 >= Math.floor(gs1) - 1 && cost1 <= Math.ceil(gs1)));
 
-            // ── B2: mid-walk to region_2_3's coin, the pool runs out → a loops-owned reset ──
+            // ── B2: mid-walk to region_3_2's coin, the pool runs out → a loops-owned reset ──
             const walking = await tc.pollForCondition(() => loopStateSingleton._botExecutedAction?.type === 'locationCheck'
-                && currentRegion() === 'region_2_3', 'Bot block 2 walking to its coin', 20000, 50);
-            tc.reportCondition('Bot block 2: the bot walks to region_2_3\'s coin', !!walking);
+                && currentRegion() === 'region_3_2', 'Bot block 2 walking to its coin', 20000, 50);
+            tc.reportCondition('Bot block 2: the bot walks to region_3_2\'s coin', !!walking);
             before = app()?.configures ?? 0;
             bots = pageEvents('bot').length;
             const resetSeen = tc.waitForEvent('loopState:loopReset', 20000);
@@ -411,7 +413,7 @@ async function botBlocksResetVictory(tc) {
             const stoppedWalk = await tc.pollForValue(() => pageEvents('bot').slice(bots)[0] ?? null, 'the page\'s bot walk ended', 10000, 100);
             tc.reportCondition(`the reset stopped the bot's walk (${JSON.stringify(stoppedWalk)})`, stoppedWalk?.result === 'stopped');
             const s2 = await snapshot(tc);
-            tc.reportCondition('region_2_3__loc_0 NOT checked (the walk was cut short)', !checkedList(s2).includes('region_2_3__loc_0'));
+            tc.reportCondition('region_3_2__loc_0 NOT checked (the walk was cut short)', !checkedList(s2).includes('region_3_2__loc_0'));
             // The queue re-drives from its first move: the player back in region_2_2, the page configured again.
             const re = await arriveIn(tc, 'region_2_2', before, 'after the reset');
             if (!re) return;
@@ -422,7 +424,7 @@ async function botBlocksResetVictory(tc) {
 
             // ── then the queue plays on to Victory: B1 again (its check is done: the move only), B2 the coin and the
             // way back by the START door, B3 out of region_2_2 (by its start door: the side the player arrived by is
-            // offered there too, P2b), B4 exit_E (Moving Blocks), B5 the Victory coin ──
+            // offered there too, P2b), B4 region_3_2__exit_E (Moving Blocks), B5 the Victory coin ──
             bots = pageEvents('bot').length;
             const exits = pageEvents('sendExit').length;
             const victory = await tc.pollForValue(async () => {
@@ -430,20 +432,20 @@ async function botBlocksResetVictory(tc) {
                 return Number(s.inventory?.Victory ?? 0) > 0 ? s : null;
             }, 'Victory', 240000, 250);
             loopStateSingleton.stopProcessing?.();
-            tc.reportCondition(`Victory (region_3_3__loc_0 checked by the Bot block) — ${queueDiag()}`,
-                !!victory && checkedList(victory).includes('region_3_3__loc_0') && checkedList(victory).includes('region_2_3__loc_0'));
+            tc.reportCondition(`Victory (region_4_2__loc_0 checked by the Bot block) — ${queueDiag()}`,
+                !!victory && checkedList(victory).includes('region_4_2__loc_0') && checkedList(victory).includes('region_3_2__loc_0'));
             // (the Victory coin's location can reach the host a frame before the page records its bot result)
             await tc.pollForValue(() => (pageEvents('bot').length >= bots + 6 ? true : null), 'the page recorded the sixth bot result', 5000, 50);
             const goals = pageEvents('bot').slice(bots).slice(0, 6).map((e) => `${e.goal?.kind}:${e.goal?.id}:${e.result}`);
             const sent = pageEvents('sendExit').slice(exits).slice(0, 4).map((e) => `${e.side}:${e.door}`);
             tc.log(`after the reset, the page's bot goals ${JSON.stringify(goals)}, exits ${JSON.stringify(sent)}`);
             tc.assertEqual('after the reset the bot played B1 (end door), B2 (coin, START door back), B3 (start door), B4 (end door), B5 (coin)',
-                JSON.stringify(['portal:south:reached', 'pickup:loc_0:reached', 'startdoor:north:reached', 'startdoor:south:reached', 'portal:east:reached', 'pickup:loc_0:reached']),
+                JSON.stringify(['portal:east:reached', 'pickup:loc_0:reached', 'startdoor:west:reached', 'startdoor:east:reached', 'portal:east:reached', 'pickup:loc_0:reached']),
                 JSON.stringify(goals));
-            tc.assertEqual('…leaving by south (end door), north (START door: the way back), south (start door), east (end door)',
-                JSON.stringify(['south:end', 'north:start', 'south:start', 'east:end']), JSON.stringify(sent));
+            tc.assertEqual('…leaving by east (end door), west (START door: the way back), east (start door), east (end door)',
+                JSON.stringify(['east:end', 'west:start', 'east:start', 'east:end']), JSON.stringify(sent));
             tc.log(`COST per region (mana spent since the load, all blocks): ${JSON.stringify(Object.fromEntries(
-                ['region_2_2', 'region_2_3', 'region_3_3'].map((r) => [r, book.spentIn(r)])))}`);
+                ['region_2_2', 'region_3_2', 'region_4_2'].map((r) => [r, book.spentIn(r)])))}`);
         });
     } finally {
         book.stop();
@@ -461,8 +463,8 @@ async function arriveIn(tc, region, after, label) {
 registerTest({
     id: 'cloudberry-loop-bot-blocks-reset-victory',
     name: 'Cloudberry loop mode: Bot blocks walk to the next region and back by the start door; a reset mid-Bot puts the region back; Victory',
-    description: 'The committed preset with a generated loop_costs sidecar. Five Bot blocks: region_2_2 (coin, exit_S), '
-               + 'region_2_3 (coin, back), region_2_2 (exit_S), region_2_3 (exit_E), region_3_3 (coin). Block 1 costs the '
+    description: 'The committed preset with a generated loop_costs sidecar. Five Bot blocks: region_2_2 (coin, region_2_2__exit_E), '
+               + 'region_3_2 (coin, back), region_2_2 (region_2_2__exit_E), region_3_2 (region_3_2__exit_E), region_4_2 (coin). Block 1 costs the '
                + 'game seconds the page played. Mid-walk in block 2 the pool runs out: the reset stops the walk, the queue '
                + 're-drives from its first move and region_2_2 is configured again with its coin drawn checked. Then block '
                + '2 takes its coin and leaves by the START door (the way back), and the rest reaches Victory.',

@@ -413,7 +413,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `generateZoneForSpecs` | fn | fn | fn | — | fn | — | fn | — | — |
 | `generateZoneForSpecsGen` | fn | fn | — | — | — | — | — | — | — |
 | `hostsSurplusExitsNatively` | fn | fn | — | — | — | — | — | — | — |
-| `libraryItems` | 7 keys | 11 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | — |
+| `libraryItems` | 7 keys | 12 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | — |
 | `prepareSphereGrowth` | fn | — | fn | — | — | — | — | — | — |
 | `procgenParamsFromPayload` | fn | fn | — | fn | — | — | — | — | — |
 | `renderLibraryProcgenParams` | — | — | — | — | — | fn | — | — | — |

@@ -1,0 +1,2 @@
++        solverEquips.push({ t: run.ticksCompleted, slot }); if (globalThis.process?.env?.SCRATCH_EQUIPS === '1') console.error('EQUIP', JSON.stringify({ t: run.ticksCompleted, slot, n: perTick.length }));
++        if (CONTACT_FIDELITY.weighHypothesisChain || globalThis.process?.env?.SCRATCH_EQUIPS === '1') e.equips = solverEquips.map((q) => ({ ...q }));

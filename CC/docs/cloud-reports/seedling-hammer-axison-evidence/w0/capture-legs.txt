@@ -1,0 +1,14 @@
+326 level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_teleporter_0_128 requests=1
+327 level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_stairsdown_192_48 requests=1
+328 level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_pit_3_34 requests=1
+617 level_72 <- in_L71_304_96 -> exit:out_teleporter_176_0 requests=2
+775 level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144 requests=1
+127 level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared requests=1
+128 level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared requests=1
+329 level_30__r2c10 <- in_pit_L32_15_5 -> location:Level 030 - Torchpickup requests=1
+330 level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared requests=1
+331 level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared requests=1
+160 level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared requests=1
+161 level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared requests=1
+171 level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared requests=1
+172 level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared requests=1
