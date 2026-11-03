@@ -483,3 +483,90 @@ registerTest({
     category: CATEGORY,
     enabled: false,
 });
+
+// ── 7. a Double Jump level (P5a): one jump without the item, two with it ──────────────
+
+const DOUBLE_JUMP_RULES = `./presets/cloudberry_double_jump_worldgen/${PRESET_SEED}/${PRESET_SEED}_rules.json`;
+const DOUBLE_JUMP_REGION = 'region_3_2';
+
+async function doubleJumpLevelNeedsTheItem(tc) {
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        if (!(await loadPreset(tc))) return tc.getOverallResult();
+        const features = embed()?.features ?? {};
+        tc.reportCondition(features.doubleJump === true
+            ? `the page has the Double Jump feature (${JSON.stringify(features)})`
+            : `REFUSED: this Cloudberry page has no Double Jump (__cloudberryEmbed.features.doubleJump; ${JSON.stringify(features)}) `
+              + '— a Double Jump level needs the Cloudberry Double Jump change (cdc77c9) deployed, or `--link` a build of it',
+        features.doubleJump === true);
+        if (features.doubleJump !== true) return tc.getOverallResult();
+
+        // The committed Double Jump world's Double level, published into the loaded world with its own AP locations.
+        const rules = await (await fetch(DOUBLE_JUMP_RULES, { cache: 'no-store' })).json();
+        const sc = rules.preset_sidecars?.['1']?.[DOUBLE_JUMP_REGION]?.playable_payload;
+        const params = sc?.params ?? {};
+        tc.reportCondition(`⛓ premise: ${DOUBLE_JUMP_REGION} of cloudberry_double_jump_worldgen is a Double-hero level `
+            + `(${JSON.stringify(params.generate?.heroCustom ?? null)}; items map ${JSON.stringify(params.items?.['Double Jump'])})`,
+        params.generate?.heroCustom?.move === 'Double' && params.items?.['Double Jump'] === 'DoubleJump');
+        const coin = Object.keys(params.checks ?? {})[0];
+        if (!coin) return tc.getOverallResult();
+        const REGION = 'cb_double_jump_inapp';
+        const target = 'region_2_2__loc_0';   // a real location of the loaded preset (its own checks stay the Double level's)
+        const world = { ...sc, params: { ...params }, ap_locations: { [coin]: target }, exits: [] };
+        world.params = pageParamsForWorld(world);
+        const before = app()?.configures ?? 0;
+        tc.eventBus.publish('cloudberry:loadRegion', { region_id: REGION, world });
+        const a = await configured(tc, REGION, { after: before, timeoutMs: 60000 });
+        if (!a) return tc.getOverallResult();
+        tc.assertEqual('the Double level\'s document hash is the one the page generated', params.docSha256, a.doc.sha);
+        tc.reportCondition(`the page plays it with the Double hero (heroJumps ${a.playResult?.heroJumps})`, a.playResult?.heroJumps === 2);
+        const one = await tc.pollForValue(() => (app()?.itemsState?.jumpsOn === 1 ? app().itemsState : null),
+            'Double Jump unheld: the hero has ONE jump', 20000, 200);
+        tc.reportCondition(`Double Jump unheld: the hero has one jump (${JSON.stringify(one)})`, !!one);
+
+        // The level's last piece is Moving Blocks: granted, so only Double Jump is missing at the end door.
+        await tc.stateManager.addItemToInventory('Moving Blocks', 1);
+        await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('MovingBlock') ? true : null),
+            'MovingBlock held in the page', 20000, 200);
+        // Park at the end door by a side with no exit (the world here has none), as cloudberry-end-door-menu-by-key does.
+        const toDoor = async (label) => {
+            const n = botEvents().length;
+            gameWin().__swfBridge.botWalkTo({ kind: 'portal', id: 'north' }, { door: 'end' });
+            return tc.pollForValue(() => (botEvents().length > n ? botEvents().at(-1) : null), label, BOT_TIMEOUT_MS, 200);
+        };
+        // Unheld: one jump cannot follow the recording to the end door. (Early coins can be reachable with one jump —
+        // the rules are SUFFICIENT, not minimal — so the enforced goal measured here is the door, which needs S_last.)
+        const failed = await toDoor('the bot\'s walk to the end door ends');
+        tc.reportCondition(`Double Jump unheld: the bot does not reach the end door (${JSON.stringify(failed)})`,
+            failed?.result === 'died' || failed?.result === 'timeout');
+
+        // Receiving Double Jump: two jumps; the bot reaches the end door, and the check coin (its AP location checked).
+        await tc.stateManager.addItemToInventory('Double Jump', 1);
+        const two = await tc.pollForValue(() => (app()?.itemsState?.jumpsOn === 2 ? app().itemsState : null),
+            'pollItems reaches the page with DoubleJump', 20000, 200);
+        tc.reportCondition(`receiving Double Jump reached the page: two jumps (${JSON.stringify(two)})`, !!two);
+        const door = await toDoor('the bot reaches the end door');
+        tc.reportCondition(`…and now the bot reaches the end door (${JSON.stringify(door)})`, door?.result === 'reached');
+        const reached = await botWalk(tc, { kind: 'location', name: target }, 'the bot reaches the coin');
+        tc.reportCondition(`the bot reaches the check coin (${JSON.stringify(reached)})`, reached?.result === 'reached');
+        const checked = await tc.pollForValue(async () => (checkedList(await snapshot(tc)).includes(target) ? true : null),
+            `${target} checked`, 20000, 250);
+        tc.reportCondition(`${target} checked`, !!checked);
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-double-jump-level-needs-the-item',
+    name: 'Cloudberry: a Double Jump level — one jump and the bot falls short of the end door without the item; with it, two jumps, the door and the coin',
+    description: 'P5a. Loads cloudberry_sphere_worldgen, then publishes cloudberry:loadRegion with the committed '
+               + 'cloudberry_double_jump_worldgen\'s Double-hero level (region_3_2; its check mapped onto a location of the '
+               + 'loaded world). The page plays it (hash matched, heroJumps 2); with Moving Blocks granted but not Double Jump '
+               + 'the hero has one jump and the bot falls short of the end door; Double Jump added to the inventory reaches '
+               + 'the page (two jumps), the bot reaches the end door and the check coin, which is checked. Refuses by name on a page without features.doubleJump.',
+    testFunction: doubleJumpLevelNeedsTheItem,
+    category: CATEGORY,
+    enabled: false,
+});

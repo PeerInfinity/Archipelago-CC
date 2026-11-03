@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 138,
-            "count": 189,
+            "browser": 139,
+            "count": 190,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 505,
-        "browser": 204,
+        "blockStyle": 506,
+        "browser": 205,
         "cited": 266,
-        "files": 523,
+        "files": 524,
         "lineStyle": 18,
-        "withDocblock": 523,
-        "withFlags": 443
+        "withDocblock": 524,
+        "withFlags": 444
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -2076,6 +2076,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "double-jump"
                 },
                 {
                     "how": [
@@ -13148,6 +13154,50 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-fire-push — ⛓⛓⛓ seedling-fidelity-firepush: L40's BOSS KEY 2 BEHIND `pushableblockfire@576,576`, THE ROOM'S PULSER MOVING IT (`CONTACT_FIDELITY.fireBlockPulseShove`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-fire-push.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-frozen-press.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-frozen-press — ⛓⛓⛓ seedling-fidelity-frozenpress: A `primary` PRESS INSIDE AN ICE TURRET'S FREEZE IS LOST ON THE GAME, AND THE SAME PRESS MOVED TO THE FIRST INPUT THE MODEL'S `freezeForecast` CALLS FREE LANDS — PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-frozen-press.mjs"
         },
         {
             "argvHelpers": [

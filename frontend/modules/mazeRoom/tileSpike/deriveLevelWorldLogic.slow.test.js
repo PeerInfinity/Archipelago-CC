@@ -146,7 +146,9 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_12__r42c28 → level_12__r0c37 (landing 2,54) | 64/128',
             'level_12__r42c28 → level_83 (landing 2,54) | 64/128',
             'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
-            'level_20__r1c4 @ L20 flag 0: shieldlocknorm@176,16 cleared (landing 12,4) | 1/4 [own event]',
+            // ⛓ RULES l20-button-latch: L20's in-room latch event (flag 4: lock@32,80) joins r1c4's subset universe (the
+            // r1c4 <-> r3c1 crossing costs And(Shield, press)), so this row's points and subsets both double: 1/4 -> 2/8.
+            'level_20__r1c4 @ L20 flag 0: shieldlocknorm@176,16 cleared (landing 12,4) | 2/8 [own event]',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 2/4',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 1/4 [own event]',
             'level_24 → level_12__r40c4 (landing 3,8) | 2/4',

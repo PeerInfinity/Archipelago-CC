@@ -21,6 +21,12 @@
  *   - Jetpack levels: a region whose ENTRY gate holds Jetpack may be generated with the
  *     Jetpack hero (`cloudberryJetpackChance`); everything in it then needs Jetpack,
  *     which every player inside already holds.
+ *   - Double Jump levels (P5a), the same way: a region whose ENTRY gate holds Double Jump
+ *     may be generated with the Double hero (2 jumps; `cloudberryDoubleJumpChance`).
+ *     ONE ability hero per level: when the entry gate holds both, the Jetpack draw comes
+ *     first and a Jetpack level is never also a Double Jump level (the Hero Factory's
+ *     move is one choice; a combined hero was never measured to replay). Double Jump in
+ *     an EXIT gate is a lock, like Jetpack.
  *
  * Pure: no DOM, no fetch, no generator. The plan is turned into a document by
  * `cloudberryGeneration.js`; `emitCloudberryZone` turns plan + generated result into
@@ -30,21 +36,26 @@
  * region seed — `(rng.next() * 0x7fffffff) | 0` of the pipeline's stream): (1) the
  * tileset, only when `cloudberryTileset` is 'random'; (2) the hazard kinds, only
  * when hazards are on; (3) the Jetpack draw, only when the entry gate holds Jetpack
- * and the chance is strictly between 0 and 1. The level's own seed IS the engine's
+ * and the chance is strictly between 0 and 1; (4) the Double Jump draw, only when the
+ * entry gate holds Double Jump, the level is not a Jetpack level, and the chance is
+ * strictly between 0 and 1. Draws (3)–(4) come last, so a world without these gates
+ * draws exactly what it drew before them. The level's own seed IS the engine's
  * region seed; a retry derives attempt a's seed with `cloudberryAttemptSeed`.
  */
 
 import { createRng } from '../shared/rng.js';
 import {
-    CLOUDBERRY_GAME_ITEMS, CLOUDBERRY_ITEMS_BY_AP_NAME, CLOUDBERRY_LIBRARY_OBSTACLES, PAGE_SIDE,
-    buildCloudberryPayload, emitCloudberryPaths, requirementRule, requiredItems,
+    CLOUDBERRY_ABILITY_ITEMS, CLOUDBERRY_GAME_ITEMS, CLOUDBERRY_ITEMS_BY_AP_NAME, CLOUDBERRY_LIBRARY_OBSTACLES, PAGE_SIDE,
+    buildCloudberryPayload, emitCloudberryPaths, heroDoubleJump, requirementRule, requiredItems,
 } from './cloudberryRules.js';
 import {
     CLOUDBERRY_HAZARD_UPGRADES, CLOUDBERRY_TILESETS, DEFAULT_CLOUDBERRY_PROCGEN_PARAMS,
 } from './cloudberryProcgenParams.js';
 
 /** The nine platform items (game names): what a piece can gate on. */
-export const CLOUDBERRY_PLATFORM_ITEMS = Object.freeze(CLOUDBERRY_GAME_ITEMS.filter((g) => g !== 'Jetpack'));
+export const CLOUDBERRY_PLATFORM_ITEMS = Object.freeze(CLOUDBERRY_GAME_ITEMS.filter((g) => !CLOUDBERRY_ABILITY_ITEMS.includes(g)));
+/** The hero a Double Jump level is generated with (P5a: 2 jumps, replayed 230/230 from inputs on the fixed page). */
+export const CLOUDBERRY_DOUBLE_JUMP_HERO = Object.freeze({ move: 'Double', phsx: Object.freeze({ numjumps: 2 }) });
 const PLATFORM = new Set(CLOUDBERRY_PLATFORM_ITEMS);
 
 const sortItems = (items) => [...new Set(items)]
@@ -211,6 +222,11 @@ export function planCloudberryLevel(specs, ctx = {}) {
         const chance = Number(knob(params, 'cloudberryJetpackChance'));
         jetpack = chance >= 1 ? true : chance <= 0 ? false : rng.next() < chance;
     }
+    let doubleJump = false;
+    if (!jetpack && entryTerms.some((t) => t.item === 'Double Jump')) {
+        const chance = Number(knob(params, 'cloudberryDoubleJumpChance'));
+        doubleJump = chance >= 1 ? true : chance <= 0 ? false : rng.next() < chance;
+    }
 
     const jump = Math.min(10, Math.max(0, Number(knob(params, 'cloudberryJumpLevel'))));
     const pieces = pieceSets.map((S, k) => {
@@ -228,6 +244,7 @@ export function planCloudberryLevel(specs, ctx = {}) {
         pieceLength: knob(params, 'cloudberryPieceLength') | 0,
         pieces,
         ...(jetpack ? { heroCustom: { move: 'Jetpack', phsx: { jetpackfuel: 1 } } } : {}),
+        ...(doubleJump ? { heroCustom: { move: CLOUDBERRY_DOUBLE_JUMP_HERO.move, phsx: { ...CLOUDBERRY_DOUBLE_JUMP_HERO.phsx } } } : {}),
         trace: false,
         settings: false,
     };
@@ -235,6 +252,7 @@ export function planCloudberryLevel(specs, ctx = {}) {
     const retries = Math.max(0, knob(params, 'cloudberryRetries') | 0);
     return {
         region_id, args, needs, retries, pieceSets, locations, exits, jetpack,
+        ...(doubleJump ? { doubleJump: true } : {}),
         key: cloudberryLevelKey(args, needs),
     };
 }
@@ -254,7 +272,7 @@ export function cloudberryLevelKey(args, needs) {
 
 /**
  * Read a generated document against a plan's needs. Returns
- *   { ok: true, facts: {pieceItems, jetpack}, checks: [[coin id, …] per piece], startDoor }
+ *   { ok: true, facts: {pieceItems, jetpack, doubleJump?}, checks: [[coin id, …] per piece], startDoor }
  * or { ok: false, reason }.
  * Check coins (⚖ R19) are spread through each piece by witness tick among the coins
  * the computer collects there (one → the middle one).
@@ -280,6 +298,10 @@ export function readCloudberryDocument(doc, plan) {
     }
     const jetpack = doc.level?.heroAbility?.JetPack === true;
     if (jetpack !== plan.jetpack) return { ok: false, reason: `Jetpack hero ${jetpack}, planned ${plan.jetpack}` };
+    const doubleJump = heroDoubleJump(doc);
+    if (doubleJump !== !!plan.doubleJump) {
+        return { ok: false, reason: `Double hero ${doubleJump} (NumJumps ${doc.level?.heroAbility?.NumJumps}), planned ${!!plan.doubleJump}` };
+    }
     const startDoor = Array.isArray(doc.goal?.startDoor);
     if (plan.needs.startDoor && !startDoor) return { ok: false, reason: 'no start door (the way back needs one)' };
     const witnessed = (doc.coins?.list ?? []).filter((c) => c.witness);
@@ -293,7 +315,7 @@ export function readCloudberryDocument(doc, plan) {
         for (let i = 0; i < want; i++) chosen.push(list[Math.floor(((i + 0.5) * list.length) / want)].id);
         checks.push(chosen);
     }
-    return { ok: true, facts: { pieceItems, jetpack }, checks, startDoor };
+    return { ok: true, facts: { pieceItems, jetpack, ...(doubleJump ? { doubleJump: true } : {}) }, checks, startDoor };
 }
 
 /**
@@ -303,7 +325,10 @@ export function readCloudberryDocument(doc, plan) {
  */
 export function emitCloudberryZone(plan, result) {
     const { region_id } = plan;
-    const facts = { pieceItems: result.facts.pieceItems, jetpack: result.facts.jetpack };
+    const facts = {
+        pieceItems: result.facts.pieceItems, jetpack: result.facts.jetpack,
+        ...(result.facts.doubleJump ? { doubleJump: true } : {}),
+    };
     const obstacleDefs = {};
     const gateRules = { portals: {}, pickups: {} };
     const take = ({ paths, authoredDefs }) => {
@@ -342,5 +367,6 @@ export function emitCloudberryZone(plan, result) {
 export function cloudberryZonePayload(plan, result, zone) {
     return buildCloudberryPayload(plan.region_id, {
         generate: result.generate, docSha256: result.docSha256, checks: zone.checks, gateRules: zone.gateRules,
+        doubleJump: result.facts?.doubleJump === true,
     });
 }

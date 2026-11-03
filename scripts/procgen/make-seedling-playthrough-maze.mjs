@@ -45,7 +45,7 @@ import { seedlingMazeProjectionDeps } from '../../frontend/modules/flashPanel/se
 import { apRegionName } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
 import { SHARED_WORLD_ALPHABET } from '../../frontend/modules/procgenPipeline/regionAtlasMazeProjection.js';
 import { SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
-import { crossRoomButtonsOf, persistenceEffect, IN_ROOM_POLE_GATE_KIND } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
+import { crossRoomButtonsOf, inRoomLatchButtonsOf, persistenceEffect, IN_ROOM_POLE_GATE_KIND } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
 import { PERSISTENCE_RESPONSE } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 import {
     PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
@@ -322,10 +322,18 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     // level is listed. A target the press does NOT remove is not laid: a cross-room LIGHTPOLE is lit, not gone (its light kills the
     // DarkTraps it reaches): its level's world takes the press as the pole's `opened_by` instead (mode 'lit', session
     // tile-primitives-lightpoles) — the pole's bodies open by the press, or by a thrust from one of its stances.
+    // ⛓ RULES l20-button-latch: an IN-ROOM latch's target (`inRoomLatchButtonsOf`) is laid like a cross-room one when the press
+    // OPENS it — a `Lock` (model response 'lock-despawn') handed `activate = true` (`publish`): its cell opens by the event alone,
+    // as the game's lock does once its group is published (the producer's `inRoomLatchAnalysis` asks the same question).
     const targets = crossRoomButtonsOf(PLAYTHROUGH_MAP).flatMap((b) => b.targets);
+    const inRoomTargets = inRoomLatchButtonsOf(PLAYTHROUGH_MAP).flatMap((b) => b.targets);
     const opens = (o) => {
         const t = targets.find((x) => x.level === o.level && x.type === o.class && x.x === o.x && x.y === o.y);
-        if (!t) throw new Error(`press target ${o.class}@${o.x},${o.y} in L${o.level} is no cross-room button's target`);
+        if (!t) {
+            const own = inRoomTargets.find((x) => x.level === o.level && x.type === o.class && x.x === o.x && x.y === o.y && x.tag === o.tag);
+            if (own) return PERSISTENCE_RESPONSE[own.type] === 'lock-despawn' && own.publish === true;
+            throw new Error(`press target ${o.class}@${o.x},${o.y} in L${o.level} is no cross-room button's target`);
+        }
         return persistenceEffect(t, PERSISTENCE_RESPONSE[t.type]).effect === 'opens';
     };
     const opened = new Set();

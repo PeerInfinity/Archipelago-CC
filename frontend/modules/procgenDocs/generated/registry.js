@@ -1496,11 +1496,12 @@ export const REGISTRY = frz({
                 {
                     "id": "cloudberry",
                     "present": true,
-                    "short": "11 keys",
+                    "short": "12 keys",
                     "type": "object",
                     "value": [
                         "cloudberryChecksPerPiece",
                         "cloudberryDifficulty",
+                        "cloudberryDoubleJumpChance",
                         "cloudberryHazardKinds",
                         "cloudberryHazardLevel",
                         "cloudberryHazards",
@@ -2390,7 +2391,7 @@ export const REGISTRY = frz({
                 {
                     "id": "cloudberry",
                     "present": true,
-                    "short": "10 items",
+                    "short": "11 items",
                     "type": "array",
                     "value": [
                         "Moving Blocks",
@@ -2402,7 +2403,8 @@ export const REGISTRY = frz({
                         "Pendulums",
                         "Conveyors",
                         "Fly Blobs",
-                        "Jetpack"
+                        "Jetpack",
+                        "Double Jump"
                     ]
                 },
                 {
@@ -3553,13 +3555,14 @@ export const REGISTRY = frz({
                 {
                     "id": "cloudberry",
                     "present": true,
-                    "short": "12 keys",
+                    "short": "13 keys",
                     "type": "object",
                     "value": [
                         "Bouncy Blocks",
                         "Cloudberry Gem",
                         "Clouds",
                         "Conveyors",
+                        "Double Jump",
                         "Elevators",
                         "Falling Blocks",
                         "Fly Blobs",

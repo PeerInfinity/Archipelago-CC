@@ -2888,7 +2888,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
 describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the getters, by other names', () => {
     const FOLDS = [
         // ⛓ fidelity SLOTS: 13 — `inventorySlots`, the slot array as run state.
-        { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 13, noun: 'progress field', plural: 'fields' },
+        { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 14, noun: 'progress field', plural: 'fields' },
         // ⛓ fidelity ENCOUNTERS D3: 34 — `witchEvents`, L12's Witch.
         // ⛓ fidelity CROSSROOM D2: 35 — `unreadRoomWrites`, a cross-room write no entity of its level reads.
         // ⛓ fidelity BOMBPUSHER D2: 36 — `bombEvents`, the lobber's bombs spawned and their Explosions.

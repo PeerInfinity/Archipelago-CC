@@ -48,7 +48,7 @@ export const CLOUDBERRY_LOAD_REGION_EVENT = 'cloudberry:loadRegion';
 export const CLOUDBERRY_IFRAME_ID = 'cloudberryDemo';
 export const CLOUDBERRY_PLAYBACK_CONTROL_EVENT = 'cloudberry:playbackControl';
 
-/** AP item names a Cloudberry region realises as level geometry (the ten items). */
+/** AP item names a Cloudberry region gates on: the eleven items (platforms as level geometry, abilities as the hero). */
 export const GATEABLE_ITEMS = Object.freeze(Object.values(CLOUDBERRY_ITEM_NAMES));
 
 // Host-side PlaybackProxy, injected by index.js (null headless: the bot no-ops).
@@ -245,7 +245,7 @@ function heldGameItems(gate = []) {
 
 /**
  * The entry's check slots a player ENTERING with `entryGate` can reach: a slot in
- * piece k needs S_k (+ Jetpack on a Jetpack-hero level). Piece order. With NO entry
+ * piece k needs S_k (+ Jetpack / Double Jump on an ability-hero level). Piece order. With NO entry
  * gate (`undefined`: a caller that is not sphere growth, e.g. the APWorld editor,
  * where every coin keeps its own emitted rule) every slot counts.
  */
@@ -459,8 +459,9 @@ export function createCloudberrySubstrateEntry({ id = CLOUDBERRY_SUBSTRATE_ID, l
 
         libraryItems: CLOUDBERRY_LIBRARY_ITEMS,
         supportedFeatures: Object.freeze(['arbitrary_ap_locations', 'cloudberry_items']),
-        // The ten items. Platform items gate as pieces; Jetpack in an exit gate rides
-        // as a lock (and makes the child behind it a possible Jetpack-hero level).
+        // The eleven items. Platform items gate as pieces; Jetpack and Double Jump in an exit
+        // gate ride as locks (and make the child behind it a possible Jetpack- or Double-hero
+        // level).
         gateableItems: GATEABLE_ITEMS,
 
         // Sphere growth (P2b).

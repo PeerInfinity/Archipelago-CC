@@ -128,6 +128,18 @@ Implemented by `maze` (tile-grid helpers in `adapterPrimitives.js`), `text_adven
 | `applyContentModules` | Optional post-build pass for content modules (the maze's hazards). |
 | `conceptRealisations` | Optional. The substrate's half of the concept library: `{<concept id>: {tier, art?, placements?}}`, which concepts it can realise and how, checked by `assertRealisations`. `placeFromRules` selects a gate's realisation by its rule over the world's offered concepts (`selectRealisation`). See [Concepts](./concepts.md). |
 
+### What the player holds on arrival (`held`)
+
+Every region generator may be handed one optional, substrate-agnostic field, `held`: the items the player is expected to hold on FIRST reaching the region being generated, under the world's logic. Its shape is `{ items: {<item>: <count>}, source: 'sphere' | 'arrival-approx', exact, sphere? }`, keyed by the identifier the growth mode deals and gates on.
+
+- **Sphere growth** gives it EXACTLY (`sphereHeldItems`): every item instance of spheres 1..k, where k is the first sphere after which the region is reachable (the least sphere whose cumulative counts meet every entry gate on its path from the root, `gateCounts` included). A wave-k region gated on a sphere-k item holds spheres 1..k; the start holds nothing; a wave-0 filler gated on a sphere-1 item holds sphere 1. `sphere` names k.
+- **Grid growth and the shuffled spiral** give the placer's arrival approximation (`heldFromArrivalInventory`: every item placed in an already-built region, counted; its keys are `accumulatedInventory`), with `exact: false`.
+- **Top-down** gives none yet. Absent means unknown, and is never faked.
+
+`held` is the sphere sweep's cumulative set at the arrival sphere. It is not a per-player guarantee in either direction: a player may arrive holding only the gate items, or arrive late holding items from later spheres. `exact: true` means "the exact sweep answer". It does not mean a guaranteed inventory, and it is not a lower bound.
+
+Where it arrives: `generateRegionCore(input)` as `input.held`; the zone path's context as `ctx.held`; a spiral content cell's `extractZoneRules(zoneIdx, ctx)` and `instantiateLibraryEntry(entry, ctx)` as `ctx.held`; sphere growth's `instantiateLibraryEntryForSpecs` and `instantiateAtlasEntryForSpecs` as `ctx.held`. It draws no rng and is written into no region, rules.json or sidecar. No substrate acts on it yet: a generator that destructures its input ignores it for free.
+
 ### Build-time — content sources (zone-based substrates)
 
 A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The pool items a content cell holds were dealt to it up front by the spiral's [item layer](./stepped-pipeline.md#the-item-layer). The content sources are the zone games (`jta`, `bounce`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
@@ -206,7 +218,7 @@ A **region library** stores a generated region as an entry and re-instantiates i
 
 Optional hooks the sphere-growth driver and the Procgen Pipeline panel read, so the engine never names a substrate. Semantics are documented at the consumers, `procgenPipelineEngine.js` and `sphereConfigHooks.js`.
 
-- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal, entrance})`. `ordinal` is which of the substrate's zones the region is: sphere growth's `sphereZoneOrdinal`, top-down's running count, or the APWorld editor's own or first free zone. A source whose regions are content reads it (jta's zones, noiz2sa's spans). `entrance` is `{side, requirement, counts}` for the region's way back and entry gate, or `null`; cloudberry reads it because its way back is a door of its own. A `…Gen` generator may yield an event carrying `await` (a promise). The asynchronous drivers wait on it before resuming (`yieldedWait`), and a synchronous drain does not. This is how cloudberry waits for its game page's generator ([Cloudberry](./cloudberry.md#build-time-generation-sphere-growth)). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
+- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal, entrance, held?})` (`held`: see *What the player holds on arrival* above). `ordinal` is which of the substrate's zones the region is: sphere growth's `sphereZoneOrdinal`, top-down's running count, or the APWorld editor's own or first free zone. A source whose regions are content reads it (jta's zones, noiz2sa's spans). `entrance` is `{side, requirement, counts}` for the region's way back and entry gate, or `null`; cloudberry reads it because its way back is a door of its own. A `…Gen` generator may yield an event carrying `await` (a promise). The asynchronous drivers wait on it before resuming (`yieldedWait`), and a synchronous drain does not. This is how cloudberry waits for its game page's generator ([Cloudberry](./cloudberry.md#build-time-generation-sphere-growth)). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
 - **Gate vetoes and hints:** `canHostExitGates`, `canHostExitGatesBraid`, `exitGateVeto`, `backPortalGated`, `hostsSurplusExitsNatively`, `gateHostingHint`.
 - **Region contract:** `buildRegionContract`, used by the panel's Edit flow.
 - **Panel parameters:** `defaultProcgenParams`, `prepareSphereGrowth`, `buildRegionParams`, `renderProcgenParams`; for a selected region library, `buildLibraryRegionParams` and `renderLibraryProcgenParams`. `procgenParamsFromPayload(payload)` recovers the params an existing payload records.
@@ -393,15 +405,15 @@ Groups are this document's own § headings, matched to a field by the section th
 | `buildZoneSpecs` | fn | fn | fn | — | — | — | — | — | — |
 | `canHostExitGates` | fn | fn | fn | fn | — | — | — | — | — |
 | `canHostExitGatesBraid` | fn | — | — | — | — | — | — | — | — |
-| `defaultProcgenParams` | 10 keys | 11 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | — |
+| `defaultProcgenParams` | 10 keys | 12 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | — |
 | `driftItems` | Left arrow, Right arrow | — | — | — | — | — | — | — | — |
 | `exitGateVeto` | fn | fn | fn | fn | — | — | — | — | — |
 | `gateHostingHint` | fn | fn | — | — | — | — | — | — | — |
-| `gateableItems` | `null` | 10 items | — | — | — | — | — | — | — |
+| `gateableItems` | `null` | 11 items | — | — | — | — | — | — | — |
 | `generateZoneForSpecs` | fn | fn | fn | — | fn | — | fn | — | — |
 | `generateZoneForSpecsGen` | fn | fn | — | — | — | — | — | — | — |
 | `hostsSurplusExitsNatively` | fn | fn | — | — | — | — | — | — | — |
-| `libraryItems` | 7 keys | 12 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | — |
+| `libraryItems` | 7 keys | 13 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | — |
 | `prepareSphereGrowth` | fn | — | fn | — | — | — | — | — | — |
 | `procgenParamsFromPayload` | fn | fn | — | fn | — | — | — | — | — |
 | `renderLibraryProcgenParams` | — | — | — | — | — | fn | — | — | — |

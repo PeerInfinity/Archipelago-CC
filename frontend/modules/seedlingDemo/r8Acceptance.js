@@ -311,6 +311,12 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
                 + 'boss step and its player-hit tests, normalised at the site (swim U5).',
         }),
         Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'freezeForecast getter',
+            addedBy: 'fidelity FROZENPRESS D1', action: 'already',
+            why: '`freezeForecastNow` steps copies of the blasts in flight one tick with `stepBlastsNow`\'s own '
+                + 'context, so it builds the same bag the same way, normalised at the site.',
+        }),
+        Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'liveGeometryOpts getter',
             addedBy: 'R8 slice 2', action: 'brand',
             why: 'the solver hoists it once per PLAN (the cadence the per-visit state '

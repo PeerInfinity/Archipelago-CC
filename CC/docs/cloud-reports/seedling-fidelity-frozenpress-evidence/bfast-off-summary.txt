@@ -1,0 +1,66 @@
+      Tests  31 failed | 4053 passed (4084)
+     × (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once 1651ms
+     × (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once 1609ms
+     × (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED 1630ms
+     × (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule 1302ms
+     × (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once 1418ms
+     × (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files` 1415ms
+     × (b) PREDICTED GREEN: a new literal inside a cosmetic table 1007ms
+     × (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door 1669ms
+     × (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family" 1665ms
+     × (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS 1717ms
+     × (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED" 1435ms
+     × (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice 1570ms
+     × (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table" 1344ms
+     × (c) run.entities(name) with a variable ⇒ RED, a named blind spot 1721ms
+     × (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name) 1845ms
+     × (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED" 1566ms
+     × (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments) 1734ms
+     × (d) a COMMENT naming a simulation module in a family file ⇒ GREEN 1332ms
+     × (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table 1709ms
+     × (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table 1711ms
+     × (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values 1813ms
+     × (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN 1698ms
+     × (e) a COMMENT naming run.pushables in a family file ⇒ GREEN 1872ms
+     × (i) every static row's files and site counts match 28ms
+     × (ii) nothing the family reaches is missing from the table (the surface did not GROW) 12ms
+     × (vi) the entities fold: no family file reads a folded getter, every run.entities(…) names a known family with a literal, and the table's folded list IS levelRun.js's ENTITY_FAMILY_NAMES 20ms
+     × (vii) the progress fold: names = dispatch = levelRun.js's runtime PROGRESS_FIELD_NAMES = the table's folded.progress; no folded row; the fields column is a fresh census and sums to the row 1ms
+     × accounts for every live-geometry bag builder call site on disk 235ms
+     × takes conditionally exactly where a headless arm would have been queued 58ms
+     × the progress name list is its dispatch table: 13 fields, each one a getter on the run 48ms
+     × the shipped defaults: all three ON 26ms
+     ✓ ⛔ MEMOISED === COLD, over 3 ticks × 6 horizons, in a hostile query order 32ms
+ FAIL  frontend/modules/seedlingDemo/contactFidelity.test.js > contact witnesses (fixtures/contact-witness) > the shipped defaults: all three ON
+ FAIL  frontend/modules/seedlingDemo/levelRun.test.js > engine-prep C4: run.progress(field) and run.ledger(kind) are the getters, by other names > the progress name list is its dispatch table: 13 fields, each one a getter on the run
+ FAIL  frontend/modules/seedlingDemo/r8Acceptance.test.js > R8_NORMALIZE_LIVE_BATCH — the prediction, stated first > accounts for every live-geometry bag builder call site on disk
+ FAIL  scripts/procgen/boxLock.test.js > who takes the box > takes conditionally exactly where a headless arm would have been queued
+ FAIL  scripts/procgen/seedlingConstantsCensus.test.js > the mutants — each in a temp copy of the closure > (b) PREDICTED GREEN: a new literal inside a cosmetic table
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > mutants, over a temporary copy of the family > (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > mutants, over a temporary copy of the family > (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files`
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > mutants, over a temporary copy of the family > (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > mutants, over a temporary copy of the family > (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED"
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > mutants, over a temporary copy of the family > (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments)
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the committed contract equals a fresh census > (i) every static row's files and site counts match
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the committed contract equals a fresh census > (ii) nothing the family reaches is missing from the table (the surface did not GROW)
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the committed contract equals a fresh census > (vi) the entities fold: no family file reads a folded getter, every run.entities(…) names a known family with a literal, and the table's folded list IS levelRun.js's ENTITY_FAMILY_NAMES
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the committed contract equals a fresh census > (vii) the progress fold: names = dispatch = levelRun.js's runtime PROGRESS_FIELD_NAMES = the table's folded.progress; no folded row; the fields column is a fresh census and sums to the row
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the entities fold (engine-prep C3), mutants over a temporary copy > (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the entities fold (engine-prep C3), mutants over a temporary copy > (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family"
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the entities fold (engine-prep C3), mutants over a temporary copy > (c) run.entities(name) with a variable ⇒ RED, a named blind spot
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the entities fold (engine-prep C3), mutants over a temporary copy > (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the entities fold (engine-prep C3), mutants over a temporary copy > (e) a COMMENT naming run.pushables in a family file ⇒ GREEN
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the import door (engine-prep C2), mutants over a temporary copy > (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the import door (engine-prep C2), mutants over a temporary copy > (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED"
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the import door (engine-prep C2), mutants over a temporary copy > (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the import door (engine-prep C2), mutants over a temporary copy > (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table"
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the import door (engine-prep C2), mutants over a temporary copy > (d) a COMMENT naming a simulation module in a family file ⇒ GREEN
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the progress and ledger folds (engine-prep C4), mutants over a temporary copy > (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the progress and ledger folds (engine-prep C4), mutants over a temporary copy > (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the progress and ledger folds (engine-prep C4), mutants over a temporary copy > (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the progress and ledger folds (engine-prep C4), mutants over a temporary copy > (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name)
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the progress and ledger folds (engine-prep C4), mutants over a temporary copy > (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the progress and ledger folds (engine-prep C4), mutants over a temporary copy > (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values
+ FAIL  scripts/procgen/seedlingSolverSurface.test.js > the progress and ledger folds (engine-prep C4), mutants over a temporary copy > (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN
+ Test Files  6 failed | 154 passed (160)
+⎯⎯⎯⎯⎯⎯ Failed Tests 31 ⎯⎯⎯⎯⎯⎯⎯

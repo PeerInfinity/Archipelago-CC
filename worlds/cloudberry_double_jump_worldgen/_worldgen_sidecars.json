@@ -1,0 +1,256 @@
+{
+  "region_2_2": {
+    "substrate": "cloudberry",
+    "render_hint": "cloudberry",
+    "grid_cell": {
+      "gx": 2,
+      "gy": 2
+    },
+    "playable_payload": {
+      "gameId": "cloudberry",
+      "params": {
+        "payload": "cloudberry-region/1",
+        "generate": {
+          "seed": 914391991,
+          "difficulty": 2,
+          "tileset": "sea",
+          "pieceLength": 3500,
+          "pieces": [
+            {
+              "upgrades": {
+                "Jump": 2
+              }
+            },
+            {
+              "upgrades": {
+                "Jump": 2
+              }
+            }
+          ],
+          "trace": false,
+          "settings": false,
+          "rerolls": [
+            0,
+            0
+          ]
+        },
+        "docSha256": "d714b4dad2121f98e1c2808ddaba84000a83a0a252d7e7e229259ba3650781aa",
+        "checks": {
+          "loc_0": 38,
+          "loc_1": 40
+        },
+        "items": {
+          "Moving Blocks": "MovingBlock",
+          "Falling Blocks": "FallingBlock",
+          "Bouncy Blocks": "BouncyBlock",
+          "Ghost Blocks": "GhostBlock",
+          "Clouds": "Cloud",
+          "Elevators": "Elevator",
+          "Pendulums": "Pendulum",
+          "Conveyors": "Conveyor",
+          "Fly Blobs": "FlyBlob",
+          "Jetpack": "Jetpack"
+        }
+      },
+      "ap_locations": {
+        "loc_0": "region_2_2__loc_0",
+        "loc_1": "region_2_2__loc_1"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "gate_rules": {
+        "portals": {
+          "east": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Double Jump"
+            }
+          }
+        },
+        "pickups": {}
+      },
+      "exits": [
+        {
+          "exit_id": "exit_E",
+          "side": "E",
+          "exitName": "exit_E",
+          "targetRegion": "region_3_2",
+          "isBackExit": false,
+          "isTeleporter": false,
+          "targetExitId": "region_2_2"
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_3_2": {
+    "substrate": "cloudberry",
+    "render_hint": "cloudberry",
+    "grid_cell": {
+      "gx": 3,
+      "gy": 2
+    },
+    "playable_payload": {
+      "gameId": "cloudberry",
+      "params": {
+        "payload": "cloudberry-region/1",
+        "generate": {
+          "seed": 2136366007,
+          "difficulty": 2,
+          "tileset": "forest",
+          "pieceLength": 3500,
+          "pieces": [
+            {
+              "upgrades": {
+                "Jump": 2
+              }
+            },
+            {
+              "upgrades": {
+                "MovingBlock": 5,
+                "Jump": 2
+              }
+            }
+          ],
+          "heroCustom": {
+            "move": "Double",
+            "phsx": {
+              "numjumps": 2
+            }
+          },
+          "trace": false,
+          "settings": false,
+          "rerolls": [
+            0,
+            0
+          ]
+        },
+        "docSha256": "ab053afa286d4576694ca20e8d0a4cd843e924bf30db086b0815074f5f8d1bbe",
+        "checks": {
+          "loc_0": 28
+        },
+        "items": {
+          "Moving Blocks": "MovingBlock",
+          "Falling Blocks": "FallingBlock",
+          "Bouncy Blocks": "BouncyBlock",
+          "Ghost Blocks": "GhostBlock",
+          "Clouds": "Cloud",
+          "Elevators": "Elevator",
+          "Pendulums": "Pendulum",
+          "Conveyors": "Conveyor",
+          "Fly Blobs": "FlyBlob",
+          "Jetpack": "Jetpack",
+          "Double Jump": "DoubleJump"
+        },
+        "backExitSide": "W"
+      },
+      "ap_locations": {
+        "loc_0": "region_3_2__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "exit_E",
+          "side": "E",
+          "exitName": "exit_E",
+          "targetRegion": "region_4_2",
+          "isBackExit": false,
+          "isTeleporter": false,
+          "targetExitId": "region_3_2"
+        },
+        {
+          "exit_id": "region_2_2",
+          "side": "W",
+          "exitName": "region_2_2",
+          "targetRegion": "region_2_2",
+          "targetExitId": "exit_E",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_4_2": {
+    "substrate": "cloudberry",
+    "render_hint": "cloudberry",
+    "grid_cell": {
+      "gx": 4,
+      "gy": 2
+    },
+    "playable_payload": {
+      "gameId": "cloudberry",
+      "params": {
+        "payload": "cloudberry-region/1",
+        "generate": {
+          "seed": 977687300,
+          "difficulty": 2,
+          "tileset": "forest_snow",
+          "pieceLength": 3500,
+          "pieces": [
+            {
+              "upgrades": {
+                "Jump": 2
+              }
+            },
+            {
+              "upgrades": {
+                "Jump": 2
+              }
+            }
+          ],
+          "trace": false,
+          "settings": false,
+          "rerolls": [
+            0,
+            0
+          ]
+        },
+        "docSha256": "c7b37a56111c699a9007fab5c816929a8cd24530b4c05c322f7ab4c70e186c26",
+        "checks": {
+          "loc_0": 35
+        },
+        "items": {
+          "Moving Blocks": "MovingBlock",
+          "Falling Blocks": "FallingBlock",
+          "Bouncy Blocks": "BouncyBlock",
+          "Ghost Blocks": "GhostBlock",
+          "Clouds": "Cloud",
+          "Elevators": "Elevator",
+          "Pendulums": "Pendulum",
+          "Conveyors": "Conveyor",
+          "Fly Blobs": "FlyBlob",
+          "Jetpack": "Jetpack"
+        },
+        "backExitSide": "W"
+      },
+      "ap_locations": {
+        "loc_0": "region_4_2__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "region_3_2",
+          "side": "W",
+          "exitName": "region_3_2",
+          "targetRegion": "region_3_2",
+          "targetExitId": "exit_E",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  }
+}

@@ -172,3 +172,24 @@ describe('loop mode (P3b): a summary substrate on the page\'s game clock', () =>
         expect(costs.locations).toEqual({});
     });
 });
+
+describe('CLOUDBERRY_EXIT_SIDES.relabel (P5a: its first committed exerciser is cloudberry_double_jump_worldgen)', () => {
+    const lock = { rule: 'Has', args: { item_name: 'Double Jump' } };
+    const payload = {
+        params: { backExitSide: 'W' },
+        exits: [{ exit_id: 'exit_E', side: 'E' }, { exit_id: 'region_2_2', side: 'W', isBackExit: true }],
+        gate_rules: { portals: { east: lock }, pickups: {} },
+    };
+    it('re-keys an authored portal lock by the page side the exit moved to; the rule is unchanged', () => {
+        const next = CLOUDBERRY_EXIT_SIDES.relabel(payload, [{ exitId: 'exit_E', from: 'E', to: 'N' }]);
+        expect(next.gate_rules.portals).toEqual({ north: lock });
+        expect(next.params.backExitSide).toBe('W');
+        expect(payload.gate_rules.portals).toEqual({ east: lock });   // the input is not mutated
+    });
+    it('a swap moves both keys; the back exit moved carries backExitSide', () => {
+        const two = { ...payload, gate_rules: { portals: { east: lock, south: { rule: 'Has', args: { item_name: 'K' } } } } };
+        const next = CLOUDBERRY_EXIT_SIDES.relabel(two, [{ exitId: 'exit_E', from: 'E', to: 'S' }, { exitId: 'x', from: 'S', to: 'E' }]);
+        expect(next.gate_rules.portals).toEqual({ south: lock, east: { rule: 'Has', args: { item_name: 'K' } } });
+        expect(CLOUDBERRY_EXIT_SIDES.relabel(payload, [{ exitId: 'region_2_2', from: 'W', to: 'S' }]).params.backExitSide).toBe('S');
+    });
+});

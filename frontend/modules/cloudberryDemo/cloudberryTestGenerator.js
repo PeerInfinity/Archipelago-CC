@@ -25,17 +25,27 @@ export function cloudberryTestDocument(args, { coinsPerPiece = 3 } = {}) {
         format: 'ck-level/2',
         args: { request: { ...request, rerolls: pieces.map(() => 0) } },
         engine: { build: 'test', generator: 'test' },
-        level: { heroAbility: { JetPack: !!args.heroCustom } },
+        level: {
+            heroAbility: {
+                JetPack: !!args.heroCustom && args.heroCustom.move !== 'Double',
+                NumJumps: args.heroCustom?.move === 'Double' ? (args.heroCustom.phsx?.numjumps ?? 2) : 1,
+            },
+        },
         goal: { startDoor: [0, 0], door: [1000, 0] },
         seedPieces,
         coins: { count: coins.length, list: coins },
     };
 }
 
-/** A generator over `cloudberryTestDocument`; `docSha256` = 64 hex digits from the request. */
+/**
+ * A generator over `cloudberryTestDocument`; `docSha256` = 64 hex digits from the request.
+ * `opts.features` = what the stand-in page offers (default: everything, `{ doubleJump: true }`).
+ */
 export function cloudberryTestGenerator(opts = {}) {
+    const features = opts.features ?? { doubleJump: true };
     return {
         build: 'test',
+        async features() { return { ...features }; },
         async generate(args) {
             const text = JSON.stringify(cloudberryTestDocument(args, opts));
             let h = 0;

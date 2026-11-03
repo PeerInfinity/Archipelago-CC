@@ -162,6 +162,9 @@ export function buildCrossLevelOpeners(mapDoc) {
 const RECLOSING_LOCK_CLASSES = new Set(['lock', 'wandlock', 'grasslock']);
 const LATCHING_OPENER = (e) => (e.type === 'buttonroom' && Number(e.attrs?.room) === -1) || e.type === 'rope';
 const HOLDING_OPENER = (e) => e.type === 'button';
+/** ⛓ RULES l20-button-latch — the two opener predicates, for the rules producer's in-room press census. */
+export const isLatchingOpener = LATCHING_OPENER;
+export const isHoldingOpener = HOLDING_OPENER;
 
 export function buildGroupOpeners(mapDoc, tileSize = 16) {
     const out = new Map();
@@ -288,6 +291,14 @@ export const RECLOSING_LOCK = Object.freeze({
  *
  * Keyed by `<level>:<type>@<x>,<y>` so it names ONE placement and cannot
  * quietly widen to a family.
+ *
+ * ⛓ RULES l20-button-latch — the Shield is the presser's REACH, not the press:
+ * an arrival on the alcove side (ER v1 shuffles its two stairs doorways) held
+ * the Shield and crossed without pressing. The rules layer now ANDs the press
+ * itself onto both directions — the button's own flag `{20,4}` as an event at
+ * the button (`make-seedling-playthrough-rules.mjs` `inRoomLatchAnalysis`,
+ * through `deriveButtonEvents`, derived from `inRoomLatchButtonsOf`). This row
+ * stays: it is what keeps the alcove its own sub-region for the event to gate.
  */
 export const GROUPED_LOCK_EXCEPTIONS = Object.freeze({
     '20:lock@32,80': Object.freeze({

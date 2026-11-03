@@ -23,13 +23,14 @@ import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
-import { solveSegment } from './solverBot.js';
+import { solveSegment, withDashCertSight } from './solverBot.js';
 import { DEFAULT_DASH_MODE } from '../../../scripts/procgen/dashMode.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = atlasLevelSource();
 const W = JSON.parse(readFileSync(join(HERE, 'fixtures', 'l100lattice-witness', 'step216-on.json'), 'utf8'));
 const L89 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'waterfall-witness', 'l89-step89-on.json'), 'utf8'));
+const WDC = JSON.parse(readFileSync(join(HERE, 'fixtures', 'dashcert-witness', 'step216-on.json'), 'utf8'));
 const W168 = JSON.parse(readFileSync(join(HERE, 'fixtures', 'l100lattice-witness', 'step168-on.json'), 'utf8'));
 const bootOf = (step) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'l100lattice-witness', `step${step}-boot.json`), 'utf8'));
 
@@ -54,6 +55,7 @@ const solve216 = (on) => withContactFidelity({ fineStanceWalk: on }, () => {
 });
 
 describe('L100 — the walk to an 8 px swing stance plans on the 8 px lattice (fineStanceWalk)', () => {
+    // ⛓ ships OFF (wave 36); ⚖ (user, 2026-11-03) HELD at the L100 joint flip until L105's one-hit walk is fixed.
     it('ships OFF', () => {
         expect(CONTACT_FIDELITY_DEFAULTS.fineStanceWalk).toBe(false);
     });
@@ -69,8 +71,9 @@ describe('L100 — the walk to an 8 px swing stance plans on the 8 px lattice (f
         expect(walk.path.slice(-2)).toEqual([{ x: 104, y: 136 }, { x: 124, y: 140 }]);
     }, 120_000);
 
-    it('ON: the walk is planned on FINE_LATTICE, the rock breaks, and the plan IS the game witness, key for key', () => {
-        const { r, run, e } = solve216(true);
+    // ⛓ The L100LATTICE witness (731 t, one unbilled jellyfish hit) is the plan with DASH_CERT_SIGHT OFF — its control row.
+    it('ON, DASH_CERT_SIGHT OFF: the walk is planned on FINE_LATTICE, the rock breaks, and the plan IS the game witness, key for key', () => {
+        const { r, run, e } = withDashCertSight(false, () => solve216(true));
         expect(e).toBeUndefined();
         expect(keysOf(r.perTick)).toEqual(tapeKeys(W.tape));
         expect(run.level).toBe(101);
@@ -82,6 +85,16 @@ describe('L100 — the walk to an 8 px swing stance plans on the 8 px lattice (f
         expect(replan.path).toEqual([{ x: 116, y: 36 }, { x: 124, y: 140 }]);
         // the one hit is the jellyfish's on the first corridor (unbilled; `unbilledDamageGate` is OFF)
         expect(run.playerHits.map((h) => [h.t, h.id])).toEqual([[125, 'jellyfish@80,112']]);
+    }, 120_000);
+
+    // ⛓ L100 joint flip: with DASH_CERT_SIGHT ON (hammer DASHCERT: previewWalk's chaser swing asks the run's line of sight)
+    // the fine-lattice walk on step 216 is DASHCERT's hitless 327-t plan, game-witnessed (`fixtures/dashcert-witness/`, p4g, 0 px).
+    it('ON, DASH_CERT_SIGHT ON: the plan IS the DASHCERT game witness, key for key, hitless, into L101', () => {
+        const { r, run, e } = withDashCertSight(true, () => solve216(true));
+        expect(e).toBeUndefined();
+        expect(keysOf(r.perTick)).toEqual(tapeKeys(WDC.tape));
+        expect(run.level).toBe(101);
+        expect(run.playerHits).toEqual([]);
     }, 120_000);
 
     it.each([['step 216 (L100)', W, 700], ['step 168 (L66, a mover)', W168, 230]])(

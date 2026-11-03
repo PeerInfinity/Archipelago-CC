@@ -56,7 +56,9 @@ describe('check-worldgen-package-sidecars — the packages carry what their pres
         // ⛓ + `cloudberry_sphere_worldgen` (cloudberry P2b, 2026-10-31): the committed generated Cloudberry world.
         // ⛓ + `cloudberry_maze_mix_worldgen` (cloudberry P4a, 2026-11-02): the committed mixed maze + Cloudberry world.
         // ⛓ − `runner_worldgen`, `runner_sphere_worldgen` (cloudberry P4b, 2026-11-02): deleted with the runner substrate.
-        expect(new Set(pairs.map((p) => p.pkg))).toEqual(new Set(['bounce_worldgen', 'cloudberry_maze_mix_worldgen', 'cloudberry_sphere_worldgen',
+        // ⛓ + `cloudberry_double_jump_worldgen` (cloudberry P5a, 2026-11-03): the committed Double Jump world.
+        expect(new Set(pairs.map((p) => p.pkg))).toEqual(new Set(['bounce_worldgen', 'cloudberry_double_jump_worldgen',
+            'cloudberry_maze_mix_worldgen', 'cloudberry_sphere_worldgen',
             'procgen_maze_worldgen', 'seedling_playthrough']));
     });
 

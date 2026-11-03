@@ -376,9 +376,24 @@ describe('⛓⛓⛓ the write-back — every free move and every swap of the pop
                 if (exitsBefore[i].isBackExit === true) allowed.add('params.backExitSide');
             }
             const extra = decl.keys.filter((k) => k.includes('[]')).map(keyPattern);
+            // ⛓ P5a: a declared SIDE-KEYED MAP (Cloudberry's `gate_rules.portals`, keyed by the page's side
+            // name) may re-key its entries — the rules themselves only move: same count, same rules.
+            // (The first committed world with one is cloudberry_double_jump_worldgen.)
+            const at = (o, key) => key.split('.').reduce((x, k) => x?.[k], o);
+            const before = doc.preset_sidecars[slot][name].playable_payload;
+            const mine = after.preset_sidecars[slot][name].playable_payload;
+            const maps = decl.keys.filter((k) => !k.includes('[]')
+                && at(before, k) && typeof at(before, k) === 'object' && !Array.isArray(at(before, k)));
+            for (const k of maps) {
+                const canon = (m) => Object.values(m ?? {}).map((r) => JSON.stringify(r)).sort();
+                if (JSON.stringify(canon(at(before, k))) !== JSON.stringify(canon(at(mine, k)))) {
+                    bad.push(`${file} ${bytes(op)}: ${prefix}${k} — its rules changed, not only their keys`);
+                }
+            }
             for (const leaf of leafDiff(doc, after)) {
                 const rel = leaf.startsWith(prefix) ? leaf.slice(prefix.length) : null;
-                if (rel !== null && (allowed.has(rel) || extra.some((re) => re.test(rel)))) continue;
+                if (rel !== null && (allowed.has(rel) || extra.some((re) => re.test(rel))
+                    || maps.some((k) => rel.startsWith(`${k}.`)))) continue;
                 bad.push(`${file} ${bytes(op)}: ${leaf}`);
             }
             // …and each allowed flag leaf IS written (a row that only bounds the diff
