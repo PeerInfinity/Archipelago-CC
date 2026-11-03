@@ -55,6 +55,15 @@ export const CLOUDBERRY_GAME_ITEMS = Object.freeze(Object.keys(CLOUDBERRY_ITEM_N
 export const CLOUDBERRY_ITEMS_BY_AP_NAME = Object.freeze(Object.fromEntries(
     Object.entries(CLOUDBERRY_ITEM_NAMES).map(([game, ap]) => [ap, game])));
 export const CLOUDBERRY_VICTORY_ITEM = 'Victory';
+/**
+ * The slack item (P4c): it opens nothing and does nothing in the game (not a platform item, so not
+ * gateable here); it exists so a tiny world can hold a second FREE location in its start region. Two
+ * players with one start location each box Archipelago's restrictive fill in (FillError in ~0.2% of
+ * 2-player seeds); a second start location removes that (docs/json/developer/procgen/cloudberry.md
+ * § Fill slack). Classified progression, not filler: the sphere plan, its oracle and AP's sphere log
+ * count progression items only, so a filler in the plan never matches.
+ */
+export const CLOUDBERRY_FILLER_ITEM = 'Cloudberry Gem';
 
 /** Archipelago-CC grid sides → the game page's side names (its exit menu and bot portals). */
 export const PAGE_SIDE = Object.freeze({ N: 'north', E: 'east', S: 'south', W: 'west' });
@@ -62,7 +71,7 @@ export const GRID_SIDE = Object.freeze(Object.fromEntries(Object.entries(PAGE_SI
 
 export const obstacleIdFor = (gameItem) => `cloudberry_gate_${gameItem}`;
 
-/** Registry-declared item library: the ten items + Victory (panel colours; ids = AP names). */
+/** Registry-declared item library: the ten items + Victory + the filler (panel colours; ids = AP names). */
 export const CLOUDBERRY_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
     ['MovingBlock', '#4f8fd6'], ['FallingBlock', '#c9773b'], ['BouncyBlock', '#5cc25c'],
     ['GhostBlock', '#a0a0c8'], ['Cloud', '#d8e8f8'], ['Elevator', '#8a7bd0'],
@@ -73,6 +82,9 @@ export const CLOUDBERRY_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
 }).concat([[CLOUDBERRY_VICTORY_ITEM, {
     id: CLOUDBERRY_VICTORY_ITEM, name: CLOUDBERRY_VICTORY_ITEM, classification: 'progression',
     color: '#f5d020', symbol: 'star', feature: 'cloudberry_items', is_victory: true,
+}], [CLOUDBERRY_FILLER_ITEM, {
+    id: CLOUDBERRY_FILLER_ITEM, name: CLOUDBERRY_FILLER_ITEM, classification: 'progression',
+    color: '#c43d7a', symbol: 'star', feature: 'cloudberry_items',
 }]])));
 
 /** The physics obstacle library: one per game item, cleared by its AP item. */

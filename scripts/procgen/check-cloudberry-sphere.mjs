@@ -75,6 +75,27 @@ function firstDifferingLine(a, b) {
     return null;
 }
 
+/**
+ * ⛓ P4c FILL SLACK — the start region's FREE locations (`True_` rule) and the gem among them. Two
+ * copies of a world whose start holds ONE free location box Archipelago's restrictive fill in on some
+ * seeds; the committed worlds carry a second one (`Cloudberry Gem`, which opens nothing). The
+ * scenario's key order puts it there.
+ */
+function startFreeLocations(rules) {
+    const regions = rules.regions?.['1'] ?? {};
+    const start = (regions.Menu?.exits ?? []).find((e) => e.name === 'GameStart')?.connected_region;
+    const locs = (regions[start]?.locations ?? []).filter((l) => l.access_rule?.rule === 'True_');
+    // The gem is slack only while it opens nothing: no exit or location rule may name it.
+    const gates = Object.values(regions).some((r) => [...(r.exits ?? []), ...(r.locations ?? [])]
+        .some((x) => JSON.stringify(x.access_rule ?? null).includes('"Cloudberry Gem"')));
+    return { start, free: locs.length, gem: locs.some((l) => l.item?.name === 'Cloudberry Gem'), gates };
+}
+const slackOk = (rules) => {
+    const s = startFreeLocations(rules);
+    return { ok: s.free >= 2 && s.gem && !s.gates,
+        text: `start ${s.start}: ${s.free} free locations, the gem ${s.gem ? 'among them' : 'MISSING'}, ${s.gates ? 'and it GATES something' : 'gating nothing'}` };
+};
+
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
 
@@ -118,7 +139,10 @@ async function main() {
         // P4a: generated in LOOP MODE (loop_costs + every payload manaEnabled: Loops' maze delegation needs it), so the
         // committed world is the in-app mixed loop row's (`cloudberry-mixed-loop-bot-victory`).
         params: { seed: 1, startSubstrate: 'maze', sphereCount: 4, fillerCount: 1, enableLoopMode: true },
-        scenario: { items: { key_red: 1, 'Moving Blocks': 1, Clouds: 1, Victory: 1 }, obstacles: {} },
+        // ⛓ P4c FILL SLACK: the gem is a second FREE location in the start room (see
+        // CLOUDBERRY_SPHERE_DEMO_STATE). KEY ORDER load-bearing: at seed 1 it puts the gem in sphere 1 AFTER
+        // Moving Blocks, and with that order the maze gates its start exit on Moving Blocks, not on the gem.
+        scenario: { items: { 'Cloudberry Gem': 1, key_red: 1, 'Moving Blocks': 1, Clouds: 1, Victory: 1 }, obstacles: {} },
         substrateQuotas: { maze: 2, cloudberry: 3 },
         substrateMix: {},
         substrateMode: 'quotas',
@@ -191,6 +215,7 @@ async function main() {
         const [A, B] = runs;
         console.log(`  generation ms per level: run 1 [${A.ms.join(', ')}] (total ${A.total}), run 2 [${B.ms.join(', ')}] (total ${B.total})`);
         ok(Array.isArray(A.oracle) && A.oracle.length === 0, `Pass A: the sphere oracle holds (${JSON.stringify(A.oracle)})`);
+        { const k = slackOk(A.rules); ok(k.ok, `Pass A: fill slack (P4c) — ${k.text}`); }
         ok(A.text === B.text, `Pass A: two generations from scratch give the same rules.json bytes (${sha(A.text).slice(0, 16)} / ${sha(B.text).slice(0, 16)})`);
         // A third run with the memory cache warm generates nothing.
         const warmBefore = gen.cloudberryGenerationStats().generated;
@@ -229,6 +254,7 @@ async function main() {
         if (CHECK) {
             gen.clearCloudberryLevelCache();
             const r = await runPresetHeadless(buildRunFromState({ ...MIXED_STATE }));
+            { const k = slackOk(r.rulesJson); ok(k.ok, `--check: mixed fill slack (P4c) — ${k.text}`); }
             const cs = committedSidecars(MIX_COMMITTED);
             if (cs) {
                 ok(JSON.stringify(pickPayloads(cs)) === JSON.stringify(pickPayloads(r.rulesJson.preset_sidecars?.['1'] ?? {})),
@@ -249,6 +275,7 @@ async function main() {
                 `mixed: maze and cloudberry regions in one world (${subs.join(',')})`);
             ok(Array.isArray(mixRuns[0].oracle) && mixRuns[0].oracle.length === 0, `mixed: the sphere oracle holds (${JSON.stringify(mixRuns[0].oracle)})`);
             ok(mixRuns[0].text === mixRuns[1].text, 'mixed: two generations from scratch give the same bytes');
+            { const k = slackOk(mixRuns[0].rules); ok(k.ok, `mixed: fill slack (P4c) — ${k.text}`); }
             fs.writeFileSync(MIX.rules, mixRuns[0].text);
             fs.rmSync(MIX.preset, { recursive: true, force: true });
             run(py, ['-m', 'world_generator', MIX.rules, '-o', MIX.world, '--game-name', MIX.game, '--force', '--canonical-seed', '1']);

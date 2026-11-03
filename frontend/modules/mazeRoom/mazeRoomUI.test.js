@@ -1326,6 +1326,34 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(calls[0]).toMatchObject({ x: 5, y: 5 });
     });
 
+    it('_onLoopsSubstrateActionBegan — seeds the visualizer with the snapshot inventory before walking (cloudberry P4c)', async () => {
+        // An item received OUTSIDE the maze (a Cloudberry level's Clouds) gating this maze's exit: the
+        // visualizer's own set only sees in-region pickups, so the walk must hand it the snapshot's.
+        const { default: proxy } = await import('../stateManager/stateManagerProxySingleton.js');
+        const spy = vi.spyOn(proxy, 'getLatestStateSnapshot').mockReturnValue({ inventory: { Clouds: 1 } });
+        try {
+            const order = [];
+            const panel = new MazeRoomUI(null, {});
+            panel.world = {
+                exits: new Map([['e', { exit_id: 'e', x: 5, y: 5, targetRegion: 'B' }]]),
+                itemLocationNames: new Map(),
+            };
+            panel.currentRegionId = 'A';
+            panel._visualizer = {
+                setInventory: (inv) => order.push(['setInventory', inv]),
+                walkToTile: () => order.push(['walkToTile']),
+            };
+            panel._onLoopsSubstrateActionBegan({
+                action: { type: 'regionMove', sourceRegion: 'A', destinationRegion: 'B' },
+            });
+            expect(order.map((o) => o[0])).toEqual(['setInventory', 'walkToTile']);
+            expect(panel.externalInventory).toEqual(order[0][1]);
+            expect(order[0][1].get('Clouds')).toBe(1);
+        } finally {
+            spy.mockRestore();
+        }
+    });
+
     it('_shouldDeductMazeMana allows deduction during queue-driven walks (Phase 6d)', () => {
         const panel = new MazeRoomUI(null, {});
         panel.world = { manaEnabled: true };

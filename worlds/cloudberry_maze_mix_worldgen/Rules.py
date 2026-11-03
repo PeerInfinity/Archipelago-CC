@@ -26,7 +26,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("region_4_2", player),
+        multiworld.get_entrance("region_2_2__region_3_2", player),
         Has('Clouds', 1)
     )
 
@@ -41,13 +41,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("region_3_3", player),
-        Has('Moving Blocks', 1)
+        multiworld.get_entrance("exit_2", player),
+        Has('Clouds', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("exit_N", player),
-        Has('Clouds', 1)
+        multiworld.get_entrance("region_3_3", player),
+        Has('Moving Blocks', 1)
     )
 
     world.set_rule(

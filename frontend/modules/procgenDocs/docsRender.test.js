@@ -290,7 +290,8 @@ describe('⛓ the links the render emits', () => {
         //   387 → 389: cloudberry P4a — cloudberry.md → flash.md § The __swfBridge contract (1 doc), net +1 same-doc.
         //   389 → 383: cloudberry P4b — runner deleted: its README row and every link into runner.md gone, the
         //              pointers that named it re-aimed (net −6 doc).
-        expect(checked).toBe(383);
+        //   383 → 384: cloudberry P4c — cloudberry.md § Items → its own § Fill slack for tiny worlds (1 same-doc).
+        expect(checked).toBe(384);
     });
 
     it('tags each link with the kind that produced it', () => {

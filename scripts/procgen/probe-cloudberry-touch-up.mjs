@@ -11,8 +11,8 @@
  *           the context of P1b's miss: bot parks the player at the end door, doors re-armed, 400 ms, tap
  *   end     the end door, the menu closed by its × and ↑ tapped again at once (the menu just closed)
  *   start   the start door after a reset (the level reconfigured: the player respawns there), re-armed, tap
- *   swap    after a region swap: ↓ in the menu chooses south → region_2_3 configures → back by the start door
- *           (↑ in its menu) → park at region_2_2's end door → tap
+ *   swap    after a region swap: → in the menu chooses east → region_3_2 configures → back by the start door
+ *           (← in its menu) → park at region_2_2's end door → tap
  *
  * A miss records the page's door state at the tap (`__cloudberryEmbed.status()`: doorArmed, startDoorArmed, the
  * bob, the input) and the touch layer's state. Prints a tally per variant; exits 1 when any tap missed.
@@ -96,7 +96,7 @@ async function main() {
         await configured('region_2_2');
         const build = await game(() => fetch('build-info.json').then((r) => r.json()).then((j) => j.build));
         console.log(`page build ${build}; ${ROUNDS} rounds per variant; hold ${HOLD} ms; a miss = no menu within ${WAIT} ms`);
-        // Clouds held (the swap variant leaves by the south exit, which needs it).
+        // Clouds held (the swap variant leaves by the east exit, which needs it).
         await page.evaluate(async () => {
             const { default: proxy } = await import('./modules/stateManager/stateManagerProxySingleton.js');
             await proxy.addItemToInventory('Clouds', 1);
@@ -167,17 +167,17 @@ async function main() {
         if (ONLY.has('start')) {
             await touch(true);
             for (let i = 0; i < ROUNDS; i++) {
-                // The start door offers nothing in region_2_2 (no way back): go to region_2_3 first.
+                // The start door offers nothing in region_2_2 (no way back): go to region_3_2 first.
                 const a = await app();
-                if (a.region !== 'region_2_3') {
+                if (a.region !== 'region_3_2') {
                     await park(); await rearm();
-                    await trial('(to region_2_3)', 'end');
-                    await tap('#touch [data-key="down"]', 150);
-                    await configured('region_2_3', a.configures);
+                    await trial('(to region_3_2)', 'end');
+                    await tap('#touch [data-key="right"]', 150);
+                    await configured('region_3_2', a.configures);
                 }
                 const b = await app();
                 await game(() => window.__swfBridge.reset());
-                await configured('region_2_3', b.configures);
+                await configured('region_3_2', b.configures);
                 await rearm();
                 await trial('start', 'start');
                 await closeMenu();
@@ -190,14 +190,14 @@ async function main() {
                 if (a.region !== 'region_2_2') {
                     await rearm();
                     await trial('(start door back)', 'start');
-                    await tap('#touch [data-key="up"]', 150);
+                    await tap('#touch [data-key="left"]', 150);
                     await configured('region_2_2', a.configures);
                 }
                 await park(); await rearm();
                 await trial('swap', 'end');
                 a = await app();
-                await tap('#touch [data-key="down"]', 150);
-                await configured('region_2_3', a.configures);
+                await tap('#touch [data-key="right"]', 150);
+                await configured('region_3_2', a.configures);
             }
         }
         const errors = logs.filter((l) => !l.includes('unwind'));
