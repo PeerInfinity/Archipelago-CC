@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 137,
-            "count": 187,
+            "browser": 138,
+            "count": 188,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 502,
-        "browser": 203,
+        "blockStyle": 503,
+        "browser": 204,
         "cited": 265,
-        "files": 520,
+        "files": 521,
         "lineStyle": 18,
-        "withDocblock": 520,
-        "withFlags": 440
+        "withDocblock": 521,
+        "withFlags": 441
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11665,6 +11665,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-ceremony — walk the player onto a real pickup and watch what the game does. `Bot.autoAdvance`'s FIRST LIVE FIRE.",
             "path": "scripts/procgen/probe-seedling-ceremony.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-certifier-tail.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "The whole-game certifier's TAIL, ON THE GAME (slice rules-certifier-tail): the two rows whose verdict the rules and the maze dispute, each answered by the game itself.",
+            "path": "scripts/procgen/probe-seedling-certifier-tail.mjs"
         },
         {
             "argvHelpers": [

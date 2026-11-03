@@ -99,7 +99,10 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ rules-sided-openers — restamped (1973beee -> 07d995bd): the ShieldLock is one-sided (ShieldLock.as:32, a WEST
         //   probe) and latching, so its two-way rows split: L12 r0c19 -> r43c21, L20 r1c4 -> r1c12, L71 r0c6 -> r16c19 plus one
         //   return each (298 -> 301 internal exits). No sub-region or swim row moves.
-        expect(c.atlasId).toBe('seedling-07d995bd');
+        // ⛓ rules-certifier-tail — restamped (07d995bd -> ecbd44ee): thirteen doors are charged what every way onto their
+        //   tile pays (L3's door to L111 the Swim of the water before it), boundary exit rules only; no door, sub-region or
+        //   internal-exit count moves.
+        expect(c.atlasId).toBe('seedling-ecbd44ee');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
