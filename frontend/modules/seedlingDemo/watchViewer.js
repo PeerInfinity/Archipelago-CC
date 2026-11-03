@@ -6003,6 +6003,8 @@ async function runGenerate(params, lifetime) {
      */
     let size = gp.size;
     let fill = gp.fill;
+    /** ⛓ seedling gen B3 — `?goal=chest` (URL-only; `watchGenerate.readGoalParam`). */
+    const goal = gp.goal ?? null;
 
     /**
      * ⛓ `?gen=` — a payload emitted by `generate-seedling-level.mjs`, whose
@@ -7074,6 +7076,8 @@ async function runGenerate(params, lifetime) {
              *  `dense` by the writer. */
             size: state.size,
             fill: state.fill,
+            // ⛓ seedling gen B3 — from the STATE; DELETED at the default by the writer.
+            goal: state.goal ?? null,
             // ⛓ CONSTRUCTIVE SLICE 5: from the STATE — the kind the room on
             // screen was really CARVED from, so a link cannot name a skeleton
             // the page did not build. DELETED at the open room by the writer.
@@ -7999,7 +8003,7 @@ async function runGenerate(params, lifetime) {
                 // with the old text on it, which is a lie about what it does.
                 await new Promise((r) => requestAnimationFrame(r));
                 if (!lifetime.alive()) return;
-                state = generateStep({ seed, biome, step: k, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
+                state = generateStep({ seed, biome, step: k, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill, goal });
                 step = k;
                 const out = await show(why);
                 if (!out.drew) return;
@@ -8028,7 +8032,7 @@ async function runGenerate(params, lifetime) {
         // ⛓ A FRESH `generateStep` STATE CARRIES AN EMPTY DIRECTIVE LIST, so
         // the reset drops them BY CONSTRUCTION rather than by a second line
         // somebody could forget to write.
-        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
+        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill, goal });
         await show(why);
     };
     /**
@@ -8243,7 +8247,7 @@ async function runGenerate(params, lifetime) {
             if (step === 0) {
                 await resetToSkeleton(`${cleared} — back to the skeleton`);
             } else {
-                state = generateStep({ seed, biome, step, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
+                state = generateStep({ seed, biome, step, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill, goal });
                 await show(`${cleared} — back to seed ${seed}'s ladder at step ${step}`);
             }
         } finally {
@@ -8544,7 +8548,7 @@ async function runGenerate(params, lifetime) {
     };
 
     // ── the skeleton, before anything is drawn ───────────────────────────
-    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
+    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill, goal });
 
     const ogmoSchema = await loadOgmoSchema();
     if (!lifetime.alive()) return;
