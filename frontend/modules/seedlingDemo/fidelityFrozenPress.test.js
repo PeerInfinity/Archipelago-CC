@@ -32,9 +32,9 @@ const turretHitAt = (samples) => samples.find((g) => (g?.turret?.hits ?? 0) > 0)
 
 describe('FROZENPRESS — the switch', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_FROZEN_PRESS_FORECAST)(
-        'frozenPressForecast ships OFF, last in the defaults; its env name is in the worker channel', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.frozenPressForecast).toBe(false);
-            expect(CONTACT_FIDELITY.frozenPressForecast).toBe(false);
+        'frozenPressForecast ships ON (⚖ user 2026-11-02, the L100 joint flip), last in the defaults; its env name is in the worker channel', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.frozenPressForecast).toBe(true);
+            expect(CONTACT_FIDELITY.frozenPressForecast).toBe(true);
             expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('frozenPressForecast');
         });
     it('`SEEDLING_FROZEN_PRESS_FORECAST` is a known worker env name; `freezeForecast` is a progress field', () => {

@@ -372,10 +372,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             corpseBumpRestRead: true,
             // ⛓ fidelity SHIELDBUMP D1 (wave 36): the spinner forecasts step the plain shield bump — ships OFF.
             forecastShieldBump: false,
-            // ⛓ fidelity L100LATTICE D1 (wave 36): a walk to an 8 px arm's stance plans on the 8 px lattice — OFF.
-            fineStanceWalk: false,
-            // ⛓ fidelity FROZENPRESS D1 (wave 37): the walk's strike stands down on a refused input tick — ships OFF.
-            frozenPressForecast: false });
+            // ⛓ fidelity L100LATTICE D1 (wave 36): a walk to an 8 px arm's stance plans on the 8 px lattice — ON since the L100 joint flip (with hammer's DASH_CERT_SIGHT).
+            fineStanceWalk: true,
+            // ⛓ fidelity FROZENPRESS D1 (wave 37): the walk's strike stands down on a refused input tick — ON since the L100 joint flip.
+            frozenPressForecast: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
