@@ -1457,6 +1457,43 @@ describe('⛓ DOOR CHESTS — the wasm engine solves and ships a door-chest goal
     });
 });
 
+/**
+ * ⛓ LOOT CHESTS (seedling-gen-playback-loot-chest) — the same engine path for a loot chest (`report.lootChests`):
+ * the resolver's goal names the chest, the solver plans `collect-placement` at it with `chest`, shipped, held.
+ * ⚠ No committed preset holds a loot chest, so the world is seedlingGenChestLootAp's (built headless) and the
+ * arrival is the same SYNTHETIC G_A0-at-start; the real wasm game playing it is the open gap.
+ */
+describe('⛓ LOOT CHESTS — the wasm engine solves and ships a loot-chest goal (generated set, synthetic arrival)', () => {
+    let lootSet = null;
+    beforeAll(async () => {
+        const { REGISTRY_LIBRARIES } = await import('../../../scripts/procgen/reference/registry.mjs');
+        for (const rel of REGISTRY_LIBRARIES) await import(join(ROOT, rel)); // eslint-disable-line no-await-in-loop
+        const { buildRunFromState, runPresetHeadless } = await import('../procgenPipeline/presetRun.js');
+        const { SEEDLING_GENERATED_ROOM_STATE: S } = await import('../procgenPipeline/presetDefs.js');
+        const state = { ...S, params: { ...S.params, seedlingGenElements: 'chestloot' } };
+        lootSet = assembleGeneratedSeedlingSet((await runPresetHeadless(buildRunFromState(structuredClone(state)))).rulesJson, { selfPlayer: 1 });
+    }, 120_000);
+
+    it('`region_0_0 - Chest` (loot): forced re-arrival → the SOLVER\'s chest plan → shipped → done, the room HELD', () => {
+        const { goal } = resolveSeedlingGoal({ kind: 'location', name: 'region_0_0 - Chest' }, lootSet.report);
+        expect(goal).toMatchObject({ kind: 'location', level: 0, entityType: 'chest' });
+        const { start } = lootSet.set;
+        const arrival = { ...G_A0, state: { ...G_A0.state, playerPositionX: start.x, playerPositionY: start.y },
+            status: { ...G_A0.status, x: start.x + 8, y: start.y + 8 } };
+        const e = engineOver(arrival, { records: mountedRecordsOf(lootSet.set), generated: true });
+        expect(e.engine.walkTo(goal)).toEqual({ ok: true, action: 'force-re-arrival' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        const chest = lootSet.report.lootChests[0];
+        expect(e.service.seen[0].request).toMatchObject({ solverGoal: { kind: 'collect-placement',
+            placement: { x: chest.cell.tx * 16, y: chest.cell.ty * 16 } }, scratchPersistence: true });
+        expect(e.service.seen[0].result.plan.verbs).toContain('chest');
+        expect(e.dones).toHaveLength(1);
+        expect(e.dones[0]).toMatchObject({ producer: 'solver', divergence: null, heldEnd: true });
+        expect(e.engine.status().phase).toBe('held');
+    });
+});
+
 describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly when the room is "its arrival + idle ticks"', () => {
     const PLAYER = { cls: 'Player', x: 56, y: 56, vx: 0, vy: 0, anim: 'down-stand' };
     const unwatched = (o = {}) => ({ elapsed: 200, mobiles: [PLAYER], patch: {}, ...o });
