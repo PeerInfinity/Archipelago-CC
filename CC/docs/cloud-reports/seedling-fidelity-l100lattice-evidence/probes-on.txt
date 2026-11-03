@@ -1,0 +1,57 @@
+=== probe-seedling-wasm-logical-links.mjs --only=B,R
+exit 0
+      1 ALL CH
+     26 PASS: 
+ALL CHECKS PASSED
+=== probe-seedling-wasm-vanilla-map.mjs 
+exit 0
+      1 ALL CH
+     23 PASS: 
+ALL CHECKS PASSED
+=== probe-seedling-wasm-arrival-composites.mjs 
+exit 0
+      1 ALL CH
+     95 PASS: 
+ALL CHECKS PASSED
+=== probe-seedling-wasm-midroom-replan.mjs --only=D
+exit 0
+      1 ALL CH
+     10 PASS: 
+ALL CHECKS PASSED
+=== probe-seedling-restart-route.mjs --only=W,J
+exit 0
+      1 ALL CH
+     18 PASS: 
+ALL CHECKS PASSED
+=== probe-seedling-restart-warp.mjs --only=W,J
+exit 0
+      1 ALL CH
+     28 PASS: 
+ALL CHECKS PASSED
+=== probe-seedling-wasm-adopt.mjs 
+exit 0
+      1 ALL CH
+     51 PASS: 
+ALL CHECKS PASSED
+=== probe-seedling-obstacle-events.mjs --only=W,J
+exit 0
+      1 ALL CH
+     22 PASS: 
+ALL CHECKS PASSED
+=== probe-seedling-wasm-generated-playback.mjs 
+exit 0
+      1 ALL CH
+     35 PASS: 
+ALL CHECKS PASSED
+=== probe-seedling-loop-restart.mjs 
+exit 0
+      1 ALL CH
+     30 PASS: 
+ALL CHECKS PASSED
+=== probe-seedling-seal-delivery.mjs 
+exit 0
+      1 ALL CH
+     52 PASS: 
+      1 SKIP: 
+ALL CHECKS PASSED
+ALLDONE

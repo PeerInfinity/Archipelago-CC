@@ -31,14 +31,15 @@
  *    instead of pressing at -1, and the fight search's press macro is not offered from a node whose aim tick ends
  *    facing -1. One tick later `directionFace` is -1 and `sprites()` takes the facing from `v` again.
  *
- * `SEEDLING_PRESS_NO_FACING=1` turns part 2 ON in a node process (the page's worker reads it through
- * `?seedlingSolverEnv=`); `withPressNoFacing(true, fn)` for a test or a witness.
+ * Part 2 is ON by default since its flip (⚖ the user, 2026-11-02: "Flip SLASHRECT"; its ON sweeps were noise only).
+ * `SEEDLING_PRESS_NO_FACING=0` turns it OFF in a node process (the page's worker reads it through
+ * `?seedlingSolverEnv=`); `withPressNoFacing(false, fn)` for a test or a witness.
  */
 
 import { CombatVerbError, PressError } from './solverView.js';
 
-export const PRESS_NO_FACING = { enabled: globalThis.process?.env?.SEEDLING_PRESS_NO_FACING === '1' };
-export const PRESS_NO_FACING_DEFAULT = false;
+export const PRESS_NO_FACING = { enabled: globalThis.process?.env?.SEEDLING_PRESS_NO_FACING !== '0' };
+export const PRESS_NO_FACING_DEFAULT = true;
 
 /** The refusal's name (`SolverRefusal.bound`, and the claimed negative's `bound` under the switch). */
 export const PRESS_NO_FACING_BOUND = 'PRESS_NO_FACING';

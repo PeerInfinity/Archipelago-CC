@@ -1,0 +1,12 @@
+L100LATTICE W0 — the "nearest node + appended target" fallback, census over the full OFF survey at b646d32d (237 steps)
+instrument: tools/census-patch.py (scratch worktree only); one row per planWaypoints call whose goal node nearestGoalNode SUBSTITUTED
+total substitutions 364 | lattice Counter({16: 364})
+
+target OFF the level (an exit aim past the edge: the walk transitions first): 355 call(s); last segment fails controllerPathClear in 355
+
+target IN the level: 9 call(s); last segment fails controllerPathClear in 2
+  3x to=(224, 120) goal node=(216, 136) lattice=16 lastSegmentClear=True level tiles=(30, 30)
+  2x to=(192, 72) goal node=(184, 88) lattice=16 lastSegmentClear=True level tiles=(15, 15)
+  2x to=(124, 140) goal node=(104, 136) lattice=16 lastSegmentClear=False level tiles=(23, 13)
+  1x to=(176, 376) goal node=(168, 392) lattice=16 lastSegmentClear=True level tiles=(40, 60)
+  1x to=(80, 72) goal node=(72, 88) lattice=16 lastSegmentClear=True level tiles=(10, 12)

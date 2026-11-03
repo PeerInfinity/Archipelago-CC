@@ -1,0 +1,11 @@
+on-slow: 22/22
+frontend/modules/seedlingDemo/fidelityCorpseBump2.slow.test.js 3/3
+frontend/modules/seedlingDemo/fidelityL32ArenaPrefix.slow.test.js 5/5
+frontend/modules/seedlingDemo/fidelityL40Bk2.slow.test.js 1/1
+frontend/modules/seedlingDemo/fidelityL40Latch.slow.test.js 2/2
+frontend/modules/seedlingDemo/hammerDashShape.slow.test.js 1/1
+frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js 1/1
+frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js 2/2
+frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js 2/2
+frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js 2/2
+frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js 3/3

@@ -1,0 +1,20 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 11830028..b3aa0790 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -15227,6 +15227,7 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
+     const rowsFor = (land) => land + horizon + 2 - n;
+     const first = run.spinnerForecastWithPress(rowsFor(trainEnd), { pressAt, direction, id,
+         positions: (t) => states.get(t) ?? null });
++    globalThis.__sbW0?.('first', { run, n, at, pressAt, trainEnd, states, first, keys });
+     if (first.lineBlocked) {
+         return shieldNoClaim({ ok: false, claim: true, bound: 'line', why: 'the press\'s line of sight is blocked' });
+     }
+@@ -15310,6 +15311,7 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
+         }
+         PRESS_ESCAPE_SHIELD_CLAIM_COUNTS.certified += 1;
+     }
++    globalThis.__sbW0?.('cert', { run, n, L, certified, first, keys: [...pre, ...found.keys], shieldClaim });
+     return {
+         ok: true, claim: true, pressAt, landing: L, outcome: first.outcome, impulse: first.impulse,
+         keys: [...pre, ...found.keys], expansions: found.expansions,

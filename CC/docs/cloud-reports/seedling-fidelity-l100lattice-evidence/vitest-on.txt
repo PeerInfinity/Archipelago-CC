@@ -1,0 +1,127 @@
+ ❯ frontend/modules/seedlingDemo/fidelityL100Lattice.test.js (9 tests | 1 failed) 34622ms
+     × ships OFF 23ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (58 tests) 195547ms
+ ✓ frontend/modules/seedlingDemo/fidelityFirePush.test.js (10 tests) 222292ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Bk2.test.js (12 tests) 275902ms
+ ✓ frontend/modules/seedlingDemo/dashShape.test.js (14 tests) 149470ms
+ ✓ frontend/modules/seedlingDemo/stringPullFast.test.js (13 tests) 80226ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Button.test.js (7 tests) 117064ms
+ ✓ scripts/procgen/seedlingSolverSurface.test.js (36 tests) 69164ms
+ ✓ frontend/modules/seedlingDemo/fidelityL12Doors.test.js (17 tests) 62184ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Res.test.js (10 tests) 95834ms
+ ✓ frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js (5 tests) 76173ms
+ ✓ frontend/modules/seedlingDemo/fidelityCorridorBody.test.js (8 tests) 92815ms
+ ✓ frontend/modules/seedlingDemo/fidelityL39Shaft.test.js (15 tests) 58494ms
+ ✓ frontend/modules/seedlingDemo/fidelityIceTurretSpear.test.js (7 tests) 33420ms
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 34245ms
+ ✓ frontend/modules/seedlingDemo/fidelityLapseCost.test.js (13 tests) 39894ms
+ ❯ frontend/modules/flashPanel/seedlingWasmPlayback.test.js (145 tests | 1 skipped) 23396ms
+ ✓ frontend/modules/seedlingDemo/fidelityEncounters.test.js (15 tests) 84061ms
+ ✓ frontend/modules/seedlingDemo/fidelityApBosses.test.js (22 tests) 34324ms
+ ✓ frontend/modules/seedlingDemo/dialogueAutoAdvance.test.js (8 tests) 43100ms
+ ✓ frontend/modules/seedlingDemo/observationTolerance.test.js (116 tests) 45354ms
+ ✓ frontend/modules/seedlingDemo/seedlingCanCross.test.js (17 tests) 39985ms
+ ✓ frontend/modules/seedlingDemo/fidelityL100Fix.test.js (1 test) 22815ms
+ ✓ frontend/modules/seedlingDemo/fidelityLightPole.test.js (14 tests) 43084ms
+ ✓ frontend/modules/seedlingDemo/fidelityStance.test.js (15 tests) 47113ms
+ ✓ scripts/procgen/boxLock.test.js (26 tests) 20154ms
+ ✓ frontend/modules/seedlingDemo/fidelityMovingWait.test.js (25 tests) 16747ms
+ ✓ frontend/modules/seedlingDemo/fidelityStagedHits.test.js (26 tests) 19438ms
+ ✓ frontend/modules/seedlingDemo/dangerMap.test.js (62 tests) 22511ms
+ ✓ frontend/modules/seedlingDemo/r8Acceptance.test.js (94 tests) 12553ms
+ ✓ frontend/modules/seedlingDemo/fidelityUnbilledGate.test.js (7 tests) 11963ms
+ ✓ frontend/modules/seedlingDemo/fidelitySpinningAxe.test.js (15 tests) 29905ms
+ ✓ scripts/procgen/seedlingConstantsCensus.test.js (24 tests) 13558ms
+ ✓ frontend/modules/seedlingDemo/fidelityEncounters2.test.js (9 tests) 6834ms
+ ✓ frontend/modules/seedlingDemo/fidelityCrusher.test.js (12 tests) 19607ms
+ ✓ frontend/modules/seedlingDemo/fidelityForcedHit.test.js (14 tests) 10358ms
+ ✓ frontend/modules/seedlingDemo/fidelityCorpseBump.test.js (19 tests) 16793ms
+ ✓ frontend/modules/seedlingDemo/fidelityAxe.test.js (10 tests) 6360ms
+ ✓ frontend/modules/seedlingDemo/fidelityAxeTiming.test.js (24 tests) 20500ms
+ ✓ frontend/modules/seedlingDemo/solverDeadline.test.js (16 tests) 12396ms
+ ✓ frontend/modules/seedlingDemo/watchOverlays.test.js (88 tests) 14488ms
+ ✓ frontend/modules/seedlingDemo/fidelityTurretCircle.test.js (18 tests) 22029ms
+ ✓ frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js (13 tests) 17436ms
+ ✓ scripts/procgen/oneSpelling.test.js (11 tests) 15739ms
+ ✓ frontend/modules/seedlingDemo/procgenRoam.test.js (23 tests) 8218ms
+ ✓ frontend/modules/seedlingDemo/fidelityBombPusher.test.js (12 tests) 9759ms
+ ✓ frontend/modules/seedlingDemo/fidelityBeamLane.test.js (9 tests) 8732ms
+ ✓ frontend/modules/seedlingDemo/fidelityL67Bk4.test.js (9 tests) 9431ms
+ ✓ frontend/modules/seedlingDemo/fidelityLeash.test.js (10 tests) 10715ms
+ ✓ frontend/modules/seedlingDemo/fidelitySecondaryUse.test.js (19 tests) 6863ms
+ ✓ frontend/modules/seedlingDemo/fidelityStrikeLapse.test.js (6 tests) 7832ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Bk2b.test.js (16 tests) 10289ms
+ ✓ frontend/modules/seedlingDemo/ropeSword.test.js (9 tests) 4234ms
+ ✓ frontend/modules/seedlingDemo/dashOnlyWindow.test.js (14 tests) 5790ms
+ ✓ frontend/modules/seedlingDemo/fidelityWaterfall.test.js (9 tests) 9253ms
+ ✓ frontend/modules/seedlingDemo/botDriverV2.test.js (136 tests) 4761ms
+ ✓ frontend/modules/seedlingDemo/fidelityClearTag.test.js (37 tests) 6143ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Guard.test.js (9 tests) 9567ms
+ ✓ frontend/modules/seedlingDemo/entityBlocks.test.js (30 tests) 4587ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Contact.test.js (8 tests) 7838ms
+ ✓ frontend/modules/seedlingDemo/solverSkirt.test.js (4 tests) 3033ms
+ ✓ frontend/modules/seedlingDemo/fidelityWatcher.test.js (28 tests) 4329ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverShouldStop.test.js (18 tests) 5935ms
+ ✓ frontend/modules/seedlingDemo/fidelityShakeExact.test.js (13 tests) 4502ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeDeclarations.test.js (6 tests) 4164ms
+ ❯ frontend/modules/seedlingDemo/contactFidelity.test.js (62 tests | 1 failed) 5708ms
+     × the shipped defaults: all three ON 60ms
+ ✓ frontend/modules/seedlingDemo/tapeEnvelope.test.js (23 tests) 2600ms
+ ✓ frontend/modules/seedlingDemo/seedlingSkinRenderer.test.js (24 tests) 2171ms
+ ✓ frontend/modules/seedlingDemo/levelRunStateDigest.test.js (13 tests) 2662ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeWalker.test.js (22 tests) 3038ms
+ ✓ frontend/modules/seedlingDemo/fidelityFrontier3.test.js (14 tests) 4055ms
+ ✓ frontend/modules/seedlingDemo/fidelityF1.test.js (11 tests) 2442ms
+ ✓ frontend/modules/seedlingDemo/procgenCollectPath.test.js (11 tests) 1400ms
+ ✓ frontend/modules/seedlingDemo/fidelityStaticSword.test.js (14 tests) 1969ms
+ ✓ frontend/modules/seedlingDemo/solverReachPit.test.js (9 tests) 1125ms
+ ✓ frontend/modules/seedlingDemo/fidelitySealDoor.test.js (20 tests) 856ms
+ ✓ frontend/modules/seedlingDemo/fidelityLadder2.test.js (12 tests) 1731ms
+ ❯ frontend/modules/seedlingDemo/fidelityL100.test.js (3 tests | 1 failed) 12193ms
+     × ON: the solver's plan from the sliver IS the committed game witness, and breaks the rock from x 124 1678ms
+ ✓ frontend/modules/seedlingDemo/fidelityL74Arrival.test.js (13 tests) 1760ms
+ ✓ frontend/modules/seedlingDemo/shoveWeighParity.test.js (5 tests) 1574ms
+ ❯ frontend/modules/seedlingDemo/fidelityRulesref.test.js (11 tests | 1 failed) 1860ms
+     × both ON: the committed witness, byte for byte — bridge, key line, door, L70, no hit 1007ms
+ ✓ frontend/modules/seedlingDemo/fidelityDarkTrap.test.js (18 tests) 1546ms
+ ✓ frontend/modules/seedlingDemo/watchGenOverlay.test.js (16 tests) 975ms
+ ✓ frontend/modules/seedlingDemo/fidelityTurretSnap.test.js (9 tests) 1177ms
+ ✓ frontend/modules/seedlingDemo/fidelityArrowLane.test.js (10 tests) 2099ms
+ ✓ frontend/modules/seedlingDemo/pull.test.js (8 tests) 349ms
+ ✓ frontend/modules/seedlingDemo/fidelityArrival.test.js (94 tests) 1392ms
+ ✓ frontend/modules/seedlingDemo/procgenSwimSolver.test.js (3 tests) 529ms
+ ✓ frontend/modules/seedlingDemo/fidelityCeremonyShove.test.js (17 tests) 763ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverEventGoal.test.js (36 tests) 497ms
+ ✓ frontend/modules/seedlingDemo/fidelityBeamTower.test.js (15 tests) 685ms
+ ✓ frontend/modules/seedlingDemo/fidelityStatueTalk.test.js (6 tests) 252ms
+ ✓ frontend/modules/seedlingDemo/fidelityPitLatch.test.js (6 tests) 75ms
+ ✓ frontend/modules/seedlingDemo/ghostSword.test.js (13 tests) 637ms
+ ✓ frontend/modules/seedlingDemo/r5Shaft.test.js (28 tests) 205ms
+ ✓ frontend/modules/seedlingDemo/fidelityL74Leg624.test.js (13 tests) 298ms
+ ✓ scripts/procgen/lintGateLabels.test.js (14 tests) 310ms
+ ✓ frontend/modules/seedlingDemo/fidelityInventoryMenu.test.js (18 tests) 201ms
+ ✓ frontend/modules/seedlingDemo/tapeIndexManifest.test.js (296 tests) 85ms
+ ✓ frontend/modules/seedlingDemo/bobSoldier.test.js (17 tests) 133ms
+ ✓ frontend/modules/seedlingDemo/enemyDamage.test.js (47 tests) 24ms
+ ✓ frontend/modules/seedlingDemo/arrowTrap.test.js (49 tests) 160ms
+ ✓ frontend/modules/seedlingDemo/fidelityHousekeepWalker.test.js (4 tests) 73ms
+ ✓ frontend/modules/seedlingDemo/fidelityKillLock.test.js (14 tests) 23ms
+ ✓ frontend/modules/seedlingDemo/campaignChain.test.js (18 tests) 28ms
+ ✓ frontend/modules/seedlingDemo/decisionTrace.test.js (25 tests) 28ms
+ FAIL  frontend/modules/flashPanel/seedlingWasmPlayback.test.js > ⛓ DOOR CHESTS — the wasm engine solves and ships a door-chest goal (generated set, synthetic arrival)
+ ❯ registerBackend ../Archipelago-CC/frontend/modules/shared/procgen/mazeAlgorithms/registry.js:33:15
+ ❯ ../Archipelago-CC/frontend/modules/mazeRoom/mazeAlgorithms/empty.js:26:16
+ ❯ ../Archipelago-CC/frontend/modules/mazeRoom/mazeAlgorithms/index.js:16:1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/contactFidelity.test.js > contact witnesses (fixtures/contact-witness) > the shipped defaults: all three ON
+ ❯ frontend/modules/seedlingDemo/contactFidelity.test.js:113:34
+ FAIL  frontend/modules/seedlingDemo/fidelityL100.test.js > L100 — the rock door's swing stance on the 8 px lattice (fineSwingStance) > ON: the solver's plan from the sliver IS the committed game witness, and breaks the rock from x 124
+ ❯ frontend/modules/seedlingDemo/fidelityL100.test.js:63:36
+ FAIL  frontend/modules/seedlingDemo/fidelityL100Lattice.test.js > L100 — the walk to an 8 px swing stance plans on the 8 px lattice (fineStanceWalk) > ships OFF
+ ❯ frontend/modules/seedlingDemo/fidelityL100Lattice.test.js:58:58
+ FAIL  frontend/modules/seedlingDemo/fidelityRulesref.test.js > RULESREF D2/D3 — L66: a spear bridge, then a door half a tile off the grid > both ON: the committed witness, byte for byte — bridge, key line, door, L70, no hit
+ ❯ frontend/modules/seedlingDemo/fidelityRulesref.test.js:99:30
+ Test Files  5 failed | 101 passed (106)
+      Tests  4 failed | 2683 passed | 1 skipped (2688)
+   Duration  912.34s (transform 17.89s, setup 0ms, import 171.23s, tests 2535.61s, environment 15ms)
+exit 1

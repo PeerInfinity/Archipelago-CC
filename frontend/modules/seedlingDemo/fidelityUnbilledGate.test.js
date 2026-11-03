@@ -143,7 +143,9 @@ describe('fidelity UNBILLEDGATE — a solve with damage no plan billed', () => {
         UNBILLED_DAMAGE_TRACE.sink = (row) => seen.push(row);
         let res;
         try {
-            res = withGate(true, () => createInPlaceProduceService().start(req).result);
+            // ⛓ FORCEDHITXC D2: the BILLED arm is the model where C is nothing (`secondaryUse` OFF, the default)
+            res = withContactFidelity({ secondaryUse: false },
+                () => withGate(true, () => createInPlaceProduceService().start(req).result));
         } finally {
             UNBILLED_DAMAGE_TRACE.sink = null;
         }
@@ -151,5 +153,19 @@ describe('fidelity UNBILLEDGATE — a solve with damage no plan billed', () => {
         expect(res.plan.verbs).toEqual(['forced-hit']);
         expect(seen.length).toBeGreaterThan(0);
         for (const row of seen) expect(row).toMatchObject({ billed: 1, unbilled: [], deaths: [], gate: true });
+        // ON (⛓ FORCEDHITXC D2): the game's hitless X+C — nothing billed, nothing unbilled; the gate passes it
+        const seenOn = [];
+        UNBILLED_DAMAGE_TRACE.sink = (row) => seenOn.push(row);
+        let on;
+        try {
+            on = withContactFidelity({ secondaryUse: true },
+                () => withGate(true, () => createInPlaceProduceService().start(req).result));
+        } finally {
+            UNBILLED_DAMAGE_TRACE.sink = null;
+        }
+        expect(on.ok).toBe(true);
+        expect(on.plan.solution.map((k) => [...k].sort())).toEqual([['primary', 'secondary', 'up'], [], [], []]);
+        expect(seenOn.length).toBeGreaterThan(0);
+        for (const row of seenOn) expect(row).toMatchObject({ billed: 0, unbilled: [], deaths: [], gate: true });
     });
 });

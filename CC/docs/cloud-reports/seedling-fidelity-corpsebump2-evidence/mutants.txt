@@ -1,0 +1,16 @@
+== M1 drop the re-read
+  fast: exit 0; red: []
+  slow (-t no second press): exit 1; × ON: no second press; the lock opens and the chain refuses on the strategy bound at pushableblock@576,560 56494ms
+== M2 any walk press counts as a move (the first cut)
+  fast: exit 0; red: []
+  slow (-t unmoved|no second press): exit 1; ✓ ON: no second press; the lock opens and the chain refuses on the strategy bound at pushableblock@576,560  65871ms; × ON costs an unmoved corpse nothing: the solved L+CP3+TA arm's ticks equal OFF's, key for key 297037ms
+== M3 no stand-out of a young walk press
+  fast: exit 0; red: []
+  slow (-t no second press): exit 0; ✓ ON: no second press; the lock opens and the chain refuses on the strategy bound at pushableblock@576,560  71102ms
+== M4 no perTick on runFire's refusal
+  fast: exit 0; red: []
+  slow (-t no second press): exit 0; ✓ ON: no second press; the lock opens and the chain refuses on the strategy bound at pushableblock@576,560  64532ms
+== M5 refuse the first walk bump
+  fast: exit 0; red: []
+  slow (-t no second press): exit 1; × ON: no second press; the lock opens and the chain refuses on the strategy bound at pushableblock@576,560 55885ms
+restored c736a03d8caf9039a40e5dc8f08b93e7

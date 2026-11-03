@@ -1,0 +1,11 @@
+CB2 loop-start c={"from":{"tx":30,"ty":26},"dir":{"dx":0,"dy":-1},"k":2} t1018 {"x":487.5,"y":424,"dead":true} p 468.01732904907493 403.156621594295 cam null
+CB2 iter0 t1018 {"x":487.5,"y":424,"dead":true} p 468.01732904907493 403.156621594295 cam null
+CB2 after-walk t1068 {"x":487.5,"y":424,"dead":true} p 487.97271353988407 440.0206686923256 cam null
+CB2 keys ["right+down+primary","left+down","down","left+down","left+down","left+down","down","down","down+primary","right+down","right+down","down","down","left+down","left+down+primary","right+down","right+down","right+down","right+down","left+down","right+down","down+primary","left+up","left+up","left+down","left","right","up","up","primary","","","","right","right","right+primary","left","right","right","right","right","right","","","left","left","","","",""]
+CB2 pre-fire to={"tx":30,"ty":25} t1068 {"x":487.5,"y":424,"dead":true} p 487.97271353988407 440.0206686923256 cam null
+CB2 rest t1182 {"x":487.5,"y":408,"dead":true} p 487.97271353988407 440.0206686923256 cam null
+CB2 iter1 t1182 {"x":487.5,"y":408,"dead":true} p 487.97271353988407 440.0206686923256 cam null
+CB2 STACK     at advanceNamingRefusals (frontend/modules/seedlingDemo/solverBot.js:480:20) |     at Object.advance (frontend/modules/seedlingDemo/solverBot.js:25266:25) |     at drive (frontend/modules/seedlingDemo/botDriverV2.js:5694:48) |     at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:29832:31) |     at walkToRun (frontend/modules/seedlingDemo/solverBot.js:29878:71) |     at Object.walkTo (frontend/modules/seedlingDemo/solverBot.js:29901:19) |     at execCorpseWeigh (frontend/modules/seedlingDemo/solverBot.js:11652:17) |     at execWeigh (frontend/modules/seedlingDemo/solverBot.js:11548:33) |     at walkToUnder (frontend/modules/seedlingDemo/solverBot.js:29535:67)
+CB2 after-walk t1208 {"x":487.5,"y":399,"dead":true} p 487.97271353988407 423.62066869232564 cam null
+CB2 keys ["up+primary","up","up","up","up","up","up","up","up","up","up","down","up","up","","","down","down","down","","up","up","","","",""]
+CB2 pre-fire to={"tx":30,"ty":24} t1208 {"x":487.5,"y":399,"dead":true} p 487.97271353988407 423.62066869232564 cam null

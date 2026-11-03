@@ -18054,6 +18054,35 @@ export function createLevelRun({
         }
         return blocked;
     };
+    /**
+     * ⛓⛓ fidelity SHIELDBUMP D1 (`CONTACT_FIDELITY.forecastShieldBump`, OFF) — ONE PLAIN SHIELD BUMP OF A FORECAST,
+     * `shieldBumpNow`'s spinner arm transcribed in order: each live body whose rect the shield box touches
+     * (`shieldBumpTouches`: the live `v` moving, the box `playerShieldRect` places), a dying one (`destroy`) not
+     * shoved, every other one `knockback(SHIELD_FORCE, p)` (`enemyKnockbackV`, the `Spinner`'s inherited arm). `q` is
+     * the player at the TOP of the tick (the run's `shieldRenderState`, and its live `state` absent a contact this
+     * tick); `slashing` the run's `slashState.slashing` there (above `slashTimerTick` and the press). Mutates `st.byId`
+     * and pushes one row per touch to `bumps` (the `shieldBumps` ledger's spinner shape). The DARK shield's hit is not
+     * this (its callers do not ask it there).
+     */
+    const forecastShieldBumpStep = (st, q, slashing, t, bumps) => {
+        for (const [id, s] of st.byId) {
+            if (s.removed) continue;
+            if (!shieldBumpTouches(q, slashing, spinnerRect(s), q)) continue;
+            if (s.destroy) {
+                bumps.push({ t, id, shoved: false, why: 'destroy' });
+                continue;
+            }
+            const v = enemyKnockbackV(s, { x: s.vx, y: s.vy }, SHIELD_FORCE, { x: q.x, y: q.y });
+            st.byId.set(id, { ...s, vx: v.x, vy: v.y });
+            bumps.push({ t, id, shoved: true, v });
+        }
+    };
+    /** ⛓ SHIELDBUMP D1: a point that is a player STATE (what the bump reads), or null. */
+    const forecastPlayerState = (p) => (p && Number.isFinite(p.x) && Number.isFinite(p.y) && Number.isFinite(p.vx)
+        && Number.isFinite(p.vy) && Number.isInteger(p.direction) ? p : null);
+    /** ⛓ SHIELDBUMP D1: does a forecast step the plain shield bump now (the key ON, a shield carried, not the dark one)? */
+    const forecastStepsShieldBump = () => CONTACT_FIDELITY.forecastShieldBump === true && inventory?.hasShield === true
+        && inventory?.hasDarkShield !== true;
     const inputRefusedNow = () => lockSnap !== null || bobNoInput;
     const unfiredEquipTicksNow = () => [...equipsByTick.keys()];
     const unfiredGrantLevelsNow = () => [...grantsByLevel.keys()];
@@ -18921,7 +18950,7 @@ export function createLevelRun({
          *   dash's deferred `{force}` (`slashSet`), for a preview to step the press tick with (`previewStepper`).  `bodies[i]` is row i's `{id, hits, hitsTimer, destroy}`, in
          *   `rows[i]`'s order (the i-frame a later strike has to wait out is read there).
          */
-        spinnerForecastWithPress(n, { pressAt, direction, id = null, positions } = {}) {
+        spinnerForecastWithPress(n, { pressAt, direction, id = null, positions, players = null } = {}) {
             const live = spinnerStateFor(level);
             const need = Number.isFinite(n) ? Math.max(0, Math.ceil(n)) : 0;
             if (!Number.isInteger(pressAt) || pressAt < ticksCompleted) {
@@ -18956,6 +18985,48 @@ export function createLevelRun({
             let win = swordWindow;
             const rows = [];
             const bodies = [];
+            /**
+             * ⛓⛓ fidelity SHIELDBUMP D1 (`forecastShieldBump`, OFF ⇒ `stepsBump` false and nothing below is read): the
+             * plain shield's bump, stepped on each row whose player STATE the forecast is told — `players(t)` (an
+             * optional source asked once per row, for the bump only), else the `positions(t)` the tests ask, but ONLY
+             * at a tick no later than the last test the window would ask (`lastAsk`, a dry pass of the same window)
+             * and never after a blocked line: a caller that reads WHICH ticks were asked (`deriveApproach`'s
+             * `windowEnd`) sees the same latest tick as OFF. `slashingAt(t)` is the run's `slashState.slashing` at the
+             * top of tick `t`: the run's own swing aged (`slashEndsAt` releases below the press), and from `pressAt + 1`
+             * the press's own swing when it opens one (the cursor's end clock).
+             */
+            const stepsBump = forecastStepsShieldBump() && live.byId.size > 0;
+            const shieldBumps = [];
+            let bumpRows = 0;
+            let bumpUncoveredFrom = null;
+            let lastAsk = -Infinity;
+            if (stepsBump && players === null) {
+                let w = swordWindow;
+                for (let i = 0; i < need; i += 1) {
+                    const t = ticksCompleted + i;
+                    const f = swordWindowStep(w, t);
+                    w = f.window;
+                    if (f.fires.some((th) => th.weapon === 'sword' || ghostSpinnerPressFor(th.weapon))) lastAsk = t;
+                    if (t === pressAt && thrust) w = swordWindowSchedule(swordWindowReplace(w), thrust);
+                }
+            }
+            const slashNow = stepsBump ? slashInfoNow() : null;
+            const pressEndsAt = stepsBump && thrust ? pressAt + (ghostSpinnerPressFor(weapon)
+                ? slashEndTicksFor(press.state.anim, weapon) : SLASH_ANIM_TICKS[press.state.anim]) : null;
+            const slashingAt = (t) => (t > pressAt && thrust ? t <= pressEndsAt
+                : slashNow.state.slashing === true && !(slashNow.endsAt !== null && slashNow.endsAt <= t - 1));
+            const sourceAt = (src, t) => (typeof src === 'function' ? src(t)
+                : (Array.isArray(src) ? src[t - ticksCompleted] : null));
+            const bumpRow = (t) => {
+                const q = forecastPlayerState(players !== null ? sourceAt(players, t)
+                    : (!lineBlocked && t <= lastAsk ? sourceAt(positions, t) : null));
+                if (q === null) {
+                    if (bumpUncoveredFrom === null) bumpUncoveredFrom = t;
+                    return;
+                }
+                bumpRows += 1;
+                forecastShieldBumpStep(st, q, slashingAt(t), t, shieldBumps);
+            };
             const fire = (th, t) => {
                 // ⛓ hammer-phase C2: a ghost thrust tests too, under `GHOST_SPINNER_PRESS` (ON by default; OFF: the sword's only)
                 if (th.weapon !== 'sword' && !ghostSpinnerPressFor(th.weapon)) return;
@@ -18969,6 +19040,8 @@ export function createLevelRun({
             for (let i = 0; i < need; i += 1) {
                 const t = ticksCompleted + i;
                 if (live.byId.size > 0) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                // ⛓ SHIELDBUMP D1: `shieldBumpNow` runs after the bodies' update and above `slash()`'s tests
+                if (stepsBump) bumpRow(t);
                 if (!lineBlocked) {
                     const fired = swordWindowStep(win, t);
                     win = fired.window;
@@ -18993,10 +19066,17 @@ export function createLevelRun({
              * moves the body's `hits` and `v`, and the forecast taken BEFORE it is wrong from that row; taken at
              * the press (after it) it is exact. So a shield in the inventory is reported, never ignored.
              */
-            const unmodelled = inventory?.hasShield ? ['shield bump (`shieldBumpNow`)'] : [];
+            /**
+             * ⛓ SHIELDBUMP D1: ON, the bump is MODELLED (and not named) only when every row was stepped with the
+             * player's state — a zero-row probe stepped none, so it names it, in the same words.
+             */
+            const bumpModelled = stepsBump && need > 0 && bumpRows === need;
+            const unmodelled = inventory?.hasShield && !bumpModelled ? ['shield bump (`shieldBumpNow`)'] : [];
             return {
                 rows: live.byId.size > 0 ? rows : [], bodies: live.byId.size > 0 ? bodies : [],
                 tests, outcome: press.outcome, impulse: press.impulse ?? null, unmodelled,
+                ...(stepsBump ? { shieldBump: { bumps: shieldBumps, stepped: bumpRows,
+                    uncoveredFrom: bumpUncoveredFrom } } : {}),
                 landing: landing ? { t: landing.t, index: landing.t - ticksCompleted, id: landing.id,
                     killed: landing.killed } : null,
                 why, lineBlocked,
@@ -19057,14 +19137,27 @@ export function createLevelRun({
             const unmodelled = inventory?.hasShield ? ['shield bump (`shieldBumpNow`)'] : [];
             const hasBodies = live.byId.size > 0;
             /**
+             * ⛓⛓ fidelity SHIELDBUMP D1 (`forecastShieldBump`, OFF ⇒ false and the cursor is OFF's, field for field):
+             * `advance(point)` steps the plain shield's bump when `point` is the player's STATE (`x`, `y`, `vx`, `vy`,
+             * `direction`), after the bodies' step and above the window's tests, with `slashing` the cursor's own slash
+             * state aged to the top of the tick. A row advanced with a bare point or none (`ensure`) is not stepped.
+             * `unmodelled` is then a getter: the bump is named unless the cursor HAS rows and every one was stepped
+             * with a state (a fresh cursor has none, so it names it — the fight search's own reading at its root).
+             */
+            const stepsBump = forecastStepsShieldBump() && hasBodies;
+            /**
              * A cursor: `rows`/`bodies` are whole arrays from row 0 (a fork copies its parent's prefix by reference);
              * `snaps` (the bodies' map after each own row), `wins` and `slashes` are its own rows only, the earlier
              * ones its parent's.
              */
-            const cursor = ({ parent, from, st, win, slash, rows, bodies, tests, lineBlocked }) => {
+            const cursor = ({ parent, from, st, win, slash, rows, bodies, tests, lineBlocked, bumped = null,
+                shieldBumps = null }) => {
                 const snaps = [];
                 const wins = [];
                 const slashes = [];
+                // ⛓ SHIELDBUMP D1: per row, was the bump stepped (a state given)? Whole arrays from row 0, as `rows`.
+                const covered = stepsBump ? (bumped ?? []) : null;
+                const bumps = stepsBump ? (shieldBumps ?? []) : null;
                 const c = {
                     n: n0, rows, bodies, tests, unmodelled,
                     get lineBlocked() { return lineBlocked; },
@@ -19076,6 +19169,16 @@ export function createLevelRun({
                         const i = rows.length;
                         const t = n0 + i;
                         if (hasBodies) stepSpinners(st, i === 0 ? ctxNow : ctxAfter);
+                        if (stepsBump) {
+                            // ⛓ SHIELDBUMP D1: `shieldBumpNow`, the top-of-tick `slashing` (a swing ending ON t-1 is out)
+                            const q = forecastPlayerState(point);
+                            covered.push(q !== null);
+                            if (q !== null) {
+                                const slashing = slash.state.slashing === true
+                                    && !(slash.endsAt !== null && slash.endsAt <= t - 1);
+                                forecastShieldBumpStep(st, q, slashing, t, bumps);
+                            }
+                        }
                         if (!lineBlocked) {
                             const fired = swordWindowStep(win, t);
                             win = fired.window;
@@ -19146,9 +19249,17 @@ export function createLevelRun({
                         return cursor({ parent: c, from: j + 1, st: { byId: new Map(s.st), level },
                             win: s.win, slash: s.slash, rows: rows.slice(0, j + 1), bodies: bodies.slice(0, j + 1),
                             tests: tests.filter((x) => x.t <= n0 + j),
-                            lineBlocked: lineBlocked !== null && lineBlocked.t <= n0 + j ? lineBlocked : null });
+                            lineBlocked: lineBlocked !== null && lineBlocked.t <= n0 + j ? lineBlocked : null,
+                            ...(stepsBump ? { bumped: covered.slice(0, j + 1),
+                                shieldBumps: bumps.filter((b) => b.t <= n0 + j) } : {}) });
                     },
                 };
+                if (stepsBump) {
+                    Object.defineProperty(c, 'unmodelled', { enumerable: true,
+                        get: () => (covered.length > 0 && covered.every(Boolean) ? [] : unmodelled) });
+                    /** ⛓ SHIELDBUMP D1: the bumps this cursor's path stepped (the `shieldBumps` spinner shape). */
+                    c.shieldBumps = bumps;
+                }
                 return c;
             };
             return cursor({ parent: null, from: 0,
