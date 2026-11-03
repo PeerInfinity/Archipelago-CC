@@ -70,14 +70,16 @@ describe('red-first: a COMPOSED charge never reaches a world; a HAND term always
 
 describe('which plain levels become level worlds: the item-axis test, not a list', () => {
     // A level that starts failing (or passing) a test shows up here by name.
-    it('every plain multi-sub-region level is one level world but two, each kept per sub-region and saying why', () => {
+    it('every plain multi-sub-region level is one level world but three, each kept per sub-region and saying why', () => {
         const { report } = buildPlaythroughMaze({ levels: LEVELS, embedSphereLog: false });
         const kept = Object.fromEntries(report.maze_notes.filter((n) => n.kind === 'plain_kept_per_sub_region').map((n) => [n.region_id, n.message]));
-        expect(Object.keys(kept).sort()).toEqual(['level_12', 'level_94']);
+        expect(Object.keys(kept).sort()).toEqual(['level_12', 'level_20', 'level_94']);
+        // L20: its ButtonRoom latches lock@32,80 in the same level (an in-room press, rules-l20-button-latch).
+        expect(kept.level_20).toContain('L20 flag 4: lock@32,80 cleared');
         // L12: 15 items (8 of them its lock events) over the certifier's lattice cap.
         expect(kept.level_12).toContain(`over the lattice cap ${LEVEL_WORLD_LATTICE_CAP}`);
         // L94: r2c16 <-> r3c4 crosses TreeLarge's per-pixel mask; the physics model prices it, the grid cannot.
         expect(kept.level_94).toContain('r2c16 <-> r3c4 goes through material only the physics model walks');
-        expect(report.maze_notes.filter((n) => n.kind === 'plain_level_world').length).toBe(19);
+        expect(report.maze_notes.filter((n) => n.kind === 'plain_level_world').length).toBe(18);
     });
 });

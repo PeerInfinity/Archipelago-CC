@@ -20413,27 +20413,15 @@
       },
       "level_20__r1c4": {
         "substrate": "maze",
-        "shared_world": "level_20",
         "playable_payload": {
           "width": 15,
           "height": 9,
-          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,0,1,0,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,0,1,0,1,0,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
           "entrance": {
-            "x": 12,
-            "y": 4
+            "x": 4,
+            "y": 1
           },
           "exits": [
-            {
-              "exit_id": "level_20__r3c1 -> level_13",
-              "x": 1,
-              "y": 3,
-              "side": null,
-              "exitName": "level_20__r3c1 -> level_13",
-              "targetRegion": "level_13",
-              "targetExitId": null,
-              "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_16_48"
-            },
             {
               "exit_id": "level_20__r1c4 -> level_19__r1c1",
               "x": 12,
@@ -20444,6 +20432,28 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsdown_192_48"
+            },
+            {
+              "exit_id": "level_20__r1c4 -> level_20__r1c12",
+              "x": 11,
+              "y": 1,
+              "side": null,
+              "exitName": "level_20__r1c4 -> level_20__r1c12",
+              "targetRegion": "level_20__r1c12",
+              "targetExitId": "level_20__r1c12 -> level_20__r1c4",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r1c12"
+            },
+            {
+              "exit_id": "level_20__r1c4 -> level_20__r3c1",
+              "x": 2,
+              "y": 5,
+              "side": null,
+              "exitName": "level_20__r1c4 -> level_20__r3c1",
+              "targetRegion": "level_20__r3c1",
+              "targetExitId": "level_20__r3c1 -> level_20__r1c4",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r3c1"
             }
           ],
           "obstacles": [
@@ -20456,105 +20466,9 @@
               "x": 2,
               "y": 5,
               "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0"
-            },
-            {
-              "x": 5,
-              "y": 5,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 9,
-              "y": 5,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 5,
-              "y": 6,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 6,
-              "y": 6,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 7,
-              "y": 6,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 8,
-              "y": 6,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 9,
-              "y": 6,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 2,
-              "y": 7,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 3,
-              "y": 7,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 4,
-              "y": 7,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 5,
-              "y": 7,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 6,
-              "y": 7,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 7,
-              "y": 7,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 8,
-              "y": 7,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 9,
-              "y": 7,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 10,
-              "y": 7,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 11,
-              "y": 7,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 12,
-              "y": 7,
-              "id": "atlas_gate_1"
             }
           ],
           "items": [
-            {
-              "x": 12,
-              "y": 1,
-              "id": "L20 flag 4: lock@32,80 cleared",
-              "locationName": "L20 flag 4: lock@32,80 cleared"
-            },
             {
               "x": 7,
               "y": 3,
@@ -20571,21 +20485,6 @@
                 "rule": "Has",
                 "args": {
                   "item_name": "Progressive Shield"
-                }
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              }
-            },
-            "atlas_gate_1": {
-              "id": "atlas_gate_1",
-              "name": "Progressive Swim",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "Has",
-                "args": {
-                  "item_name": "Progressive Swim"
                 }
               },
               "color": "#b06eb8",
@@ -20641,71 +20540,10 @@
                   "probe": "W"
                 }
               ]
-            },
-            "atlas_gate_2": {
-              "id": "atlas_gate_2",
-              "name": "L20 flag 0: shieldlocknorm@176,16 cleared",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "Has",
-                "args": {
-                  "item_name": "L20 flag 0: shieldlocknorm@176,16 cleared"
-                }
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              }
-            }
-          },
-          "entry_gates": [
-            {
-              "x": 11,
-              "y": 1,
-              "dir": "W",
-              "gate": "atlas_gate_2"
-            }
-          ],
-          "shared_world": {
-            "key": "level_20",
-            "regions": [
-              "level_20__r1c4",
-              "level_20__r1c12",
-              "level_20__r3c1"
-            ],
-            "rows": [
-              "...............",
-              "....AAAAAAA.B..",
-              "....A.AAA.A....",
-              ".CC.AAAAAAA.A..",
-              "..C.AAAAAAA.A..",
-              "....A.AAA.A.A..",
-              "..AAA.....AAA..",
-              "...............",
-              "..............."
-            ],
-            "entrances": {
-              "level_20__r1c4": {
-                "x": 12,
-                "y": 4
-              },
-              "level_20__r1c12": {
-                "x": 12,
-                "y": 1
-              },
-              "level_20__r3c1": {
-                "x": 2,
-                "y": 3
-              }
-            },
-            "links": {
-              "level_20__r1c12>level_20__r1c4": "level_20__r1c12 -> level_20__r1c4",
-              "level_20__r1c4>level_20__r1c12": "level_20__r1c4 -> level_20__r1c12",
-              "level_20__r1c4>level_20__r3c1": "level_20__r1c4 -> level_20__r3c1",
-              "level_20__r3c1>level_20__r1c4": "level_20__r3c1 -> level_20__r1c4"
             }
           },
           "atlas_region": "level_20",
+          "atlas_sub_region": "r1c4",
           "level": 20,
           "tile_size": 16,
           "origin": {
@@ -20716,11 +20554,208 @@
       },
       "level_20__r1c12": {
         "substrate": "maze",
-        "shared_world": "level_20"
+        "playable_payload": {
+          "width": 15,
+          "height": 9,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 12,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_20__r1c12 -> level_20__r1c4",
+              "x": 11,
+              "y": 1,
+              "side": null,
+              "exitName": "level_20__r1c12 -> level_20__r1c4",
+              "targetRegion": "level_20__r1c4",
+              "targetExitId": "level_20__r1c4 -> level_20__r1c12",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r1c4"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 11,
+              "y": 1,
+              "id": "atlas_gate_0~L20 flag 0: shieldlocknorm@176,16 cleared"
+            }
+          ],
+          "items": [
+            {
+              "x": 12,
+              "y": 1,
+              "id": "L20 flag 4: lock@32,80 cleared",
+              "locationName": "L20 flag 4: lock@32,80 cleared"
+            }
+          ],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Shield AND L20 flag 0: shieldlocknorm@176,16 cleared)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L20 flag 0: shieldlocknorm@176,16 cleared"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_0~L20 flag 0: shieldlocknorm@176,16 cleared": {
+              "id": "atlas_gate_0~L20 flag 0: shieldlocknorm@176,16 cleared",
+              "name": "(Progressive Shield AND L20 flag 0: shieldlocknorm@176,16 cleared): L20 flag 0: shieldlocknorm@176,16 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L20 flag 0: shieldlocknorm@176,16 cleared"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L20 flag 0: shieldlocknorm@176,16 cleared",
+                  "side": "level_20__r1c4",
+                  "probe": "W"
+                }
+              ]
+            }
+          },
+          "atlas_region": "level_20",
+          "atlas_sub_region": "r1c12",
+          "level": 20,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
       },
       "level_20__r3c1": {
         "substrate": "maze",
-        "shared_world": "level_20"
+        "playable_payload": {
+          "width": 15,
+          "height": 9,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 1,
+            "y": 3
+          },
+          "exits": [
+            {
+              "exit_id": "level_20__r3c1 -> level_13",
+              "x": 1,
+              "y": 3,
+              "side": null,
+              "exitName": "level_20__r3c1 -> level_13",
+              "targetRegion": "level_13",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_16_48"
+            },
+            {
+              "exit_id": "level_20__r3c1 -> level_20__r1c4",
+              "x": 2,
+              "y": 5,
+              "side": null,
+              "exitName": "level_20__r3c1 -> level_20__r1c4",
+              "targetRegion": "level_20__r1c4",
+              "targetExitId": "level_20__r1c4 -> level_20__r3c1",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r1c4"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 2,
+              "y": 5,
+              "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Shield",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Shield"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0": {
+              "id": "press_target~L20 flag 4: lock@32,80 cleared+atlas_gate_0",
+              "name": "Progressive Shield + L20 flag 4: lock@32,80 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "L20 flag 4: lock@32,80 cleared"
+                    }
+                  }
+                ]
+              },
+              "opened_by": "L20 flag 4: lock@32,80 cleared",
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_20",
+          "atlas_sub_region": "r3c1",
+          "level": 20,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
       },
       "level_21": {
         "substrate": "maze",

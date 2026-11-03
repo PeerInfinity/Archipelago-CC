@@ -752,10 +752,17 @@ export function projectRegionToMaze(region, grid, ctx) {
     // collision mask, whose crossing the rules producer's PHYSICS MODEL decides — L94 r2c16 <-> r3c4 through TreeLarge) has
     // no terrain a level world could walk: the world walls that footprint, so such a level stays per sub-region.
     const unwalkable = (analysis.needs_authoring ?? []).filter((n) => kept.has(n.from) && kept.has(n.to));
+    // A press in this level whose TARGET is in this level too (an in-room press: L20's ButtonRoom latching lock@32,80, rules
+    // l20-button-latch) would be a location and a target of ONE world, and one search does not grant a location's event
+    // mid-walk (the AP closure does), so the world would read the crossing it opens as shut. Such a level stays per sub-region.
+    const levelEvents = ctx.eventsFor?.(region) ?? [];
+    const selfPress = levelEvents.find((ev) => ev.mode === 'target' && levelEvents.some((p) => p.mode === 'press' && p.name === ev.name));
     let keptPlain = null;
     if (walkable && declared.length > 0 && typeof ctx.levelEntitiesFor === 'function' && typeof ctx.plainLevelWorldFits === 'function') {
-        const world = unwalkable.length > 0 ? null : projectLevelWorld(region, grid, ctx, entities ?? []);
-        const fit = world ? ctx.plainLevelWorldFits(world) : `its crossing ${unwalkable[0].from} <-> ${unwalkable[0].to} goes through material only the physics model walks (${unwalkable[0].reasons[0]})`;
+        const world = unwalkable.length > 0 || selfPress ? null : projectLevelWorld(region, grid, ctx, entities ?? []);
+        const fit = world ? ctx.plainLevelWorldFits(world)
+            : selfPress ? `its own press "${selfPress.name}" opens a target in the same world, which one search does not grant mid-walk`
+                : `its crossing ${unwalkable[0].from} <-> ${unwalkable[0].to} goes through material only the physics model walks (${unwalkable[0].reasons[0]})`;
         if (fit === true) {
             world.notes.unshift({
                 region_id: region.region_id,
