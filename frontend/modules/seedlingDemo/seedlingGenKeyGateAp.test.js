@@ -12,7 +12,9 @@
  *      grants: the key reaches the player only through the location's item).
  *   4. ⚖ "B": until the pipeline allocates colours across rooms, a key gate past generated room #0 is refused at
  *      SERIALIZE and two key-gate rooms at ASSEMBLY, both by name (`keygate-colour-not-allocated`). And a driver
- *      that drops the room's goal rule is refused at serialize (`keygate-rule-not-carried`).
+ *      that drops the room's goal rule is refused at serialize (`keygate-rule-not-carried`) — since
+ *      procgen-region-authored-rules a BACKSTOP only: the key rule is marked as the room's own, and sphere growth and
+ *      top-down AND it on (`seedlingGenAuthoredRule.test.js`).
  *
  * Plus the END TO END on the JS runtime: walk to the key spot → its `locationCheck` fires; the AP item `Red Key`
  * delivered through the shipped bridge config (`Main.hasKeySet(0, true)`); walk to the goal → the lock opens →
@@ -246,7 +248,7 @@ describe('3 — ⚖ "B: Distinct colour per room": refused BY NAME until the pip
             rng: { next: () => 0.2 }, params: { seedlingGen: { elements: 'keygate', skeleton: 'empty', biome: 'pre-sword' } } });
         placeGenItems(core.world, { items_to_place: ['key_blue'] });
         const extracted = extractGenRules(core.world, { regionId: 'region_0_0' });
-        /** what the procedural driver does (`procgenPipelineEngine`'s spec override): the spec's rule wins */
+        /** what a driver that IGNORES the mark would do (the engine's override before procgen-region-authored-rules) */
         for (const l of extracted.locations) l.access_rule = { rule: 'True_' };
         expect(() => serializeGenRoom(core.world, extracted, null, null, { ordinalOfRegion: () => 0 }))
             .toThrow(new RegExp(`^${KEYGATE_RULE_REFUSAL}: .*key_blue_pickup.*'Red Key'`));

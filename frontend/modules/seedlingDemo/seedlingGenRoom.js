@@ -87,6 +87,7 @@ import {
     REQUIRE_DIRECTIVE_REFUSALS, parseElementSpec, parseItemRequireList,
 } from '../procgenCore/elementSpec.js';
 import { parseAreaSpec } from '../procgenCore/areaSpec.js';
+import { markAuthoredRule } from '../procgenCore/authoredRule.js';
 import { GEN_ROOM_LOCATION_CEILING, genRoomFloorCells } from './seedlingGenCapacity.js';
 import {
     GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
@@ -1053,13 +1054,15 @@ export function extractGenRules(world, opts = {}) {
             target_region: e.targetRegion ?? null,
             access_rule: cloneRule(e.access_rule ?? TRUE_RULE),
         })),
-        locations: world.locations.map((l) => ({
+        // ⛓ procgen-region-authored-rules — the key requirement is the room's OWN rule, MARKED so a driver that
+        //   replaces the extracted rule with its spec's (sphere growth, top-down) ANDs it on instead.
+        locations: world.locations.map((l) => markAuthoredRule({
             id: l.id,
             item: l.item ?? null,
             // ⛓ strategy elements r2 — the lock as a rule: the goal cell requires the room's key item.
             access_rule: cloneRule(withKeyRule(world, l, l.access_rule ?? TRUE_RULE)),
             ...(l.name ? { global_name: l.name } : {}),
-        })),
+        }, keyRuleOf(world, l))),
     };
 }
 
