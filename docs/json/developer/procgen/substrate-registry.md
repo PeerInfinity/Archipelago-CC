@@ -140,6 +140,22 @@ Every region generator may be handed one optional, substrate-agnostic field, `he
 
 Where it arrives: `generateRegionCore(input)` as `input.held`; the zone path's context as `ctx.held`; a spiral content cell's `extractZoneRules(zoneIdx, ctx)` and `instantiateLibraryEntry(entry, ctx)` as `ctx.held`; sphere growth's `instantiateLibraryEntryForSpecs` and `instantiateAtlasEntryForSpecs` as `ctx.held`. It draws no rng and is written into no region, rules.json or sidecar. No substrate acts on it yet: a generator that destructures its input ignores it for free.
 
+### Build-time — item introduction
+
+A substrate may put an item of its own into a region. For example, a lock and the key that opens it, where the key is the substrate's item and not one the growth mode dealt. It declares this with `itemIntroduction`, read only through `procgenCore/itemIntroduction.js`:
+
+| Field | Meaning |
+|-------|---------|
+| `itemIntroduction.introducibleItems(params)` | The items a region of this substrate built under `params` (the world's region params) can introduce, in preference order. `[]` means none under these params. Introducing item K means the region holds a location of its own carrying K, and every location the pipeline rules `Has(K)` stands behind what K opens. |
+| `itemIntroduction.replayableItems()` | Optional. Every item the substrate can introduce under any params. A spec that already carries a request for one of them is replayed even when the regenerate's params would not have asked for it. Absent: `introducibleItems(params)`. |
+| `itemIntroduction.exhaustedRefusal(regionId, items)` | Optional. The substrate's sentence for a region that would need an item when every listed one is already in the world. Absent: `introducible-items-exhausted`. |
+
+**The request.** The realiser hands `generateRegionCore` an optional `input.introduce = { items: {K: 1} }`, and `{ items: {} }` when requests are on and the region is asked for nothing. It is derived from the spec (`introductionRequestOf`): one location holds a replayable item K, and another location's rule requires K. So a regenerate that passes a region's own document locations (the APWorld editor's `buildDocumentRegionSpec`) replays the first generation's request with nothing recomputed. A substrate without the declaration gets no `introduce`, and its input is unchanged.
+
+**Sphere growth requests, and refuses what it did not request.** An unplanned key moves every later sphere, and the plan is sphere growth's oracle (one key-gate room, seeds 1–3, measured: `sphere count mismatch: computed 4, planned 3`). So the planner's pre-pass, `procgenPipeline/sphereIntroductions.js`, decides each declaring node's item before any region is drawn. It runs rng-free, after ②c and before ③. See [Sphere Growth](./sphere-growth.md). A built region that holds a declared item it was not asked for is refused by name: `unrequested-introduction`. Non-declared fixed items, such as a chest door's filler, are not affected. Grid growth, the shuffled spiral and top-down make no requests.
+
+`flash_seedling_gen` declares it: its key gate's five key items ([Flash Substrate](./flash.md#declarations-g9)).
+
 ### Build-time — content sources (zone-based substrates)
 
 A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The pool items a content cell holds were dealt to it up front by the spiral's [item layer](./stepped-pipeline.md#the-item-layer). The content sources are the zone games (`jta`, `bounce`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
@@ -244,7 +260,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 93 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 97 fields · 16 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -340,6 +356,15 @@ Groups are this document's own § headings, matched to a field by the section th
 | `generateRegionCore` | — | — | — | fn | — | fn | — | — | fn |
 | `placeFromItems` | — | — | — | fn | — | fn | — | — | fn |
 | `placeFromRules` | — | — | — | fn | — | fn | — | — | fn |
+
+**Build-time — item introduction**
+
+| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|
+| `itemIntroduction` | — | — | — | 3 keys | — | — | — | — | — |
+| `itemIntroduction.exhaustedRefusal` | — | — | — | fn | — | — | — | — | — |
+| `itemIntroduction.introducibleItems` | — | — | — | fn | — | — | — | — | — |
+| `itemIntroduction.replayableItems` | — | — | — | fn | — | — | — | — | — |
 
 **Build-time — content sources (zone-based substrates)**
 

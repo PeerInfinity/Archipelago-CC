@@ -314,20 +314,22 @@ describe('the corpus census — printed, then pinned', () => {
          *              its own § Fill slack for tiny worlds (`same-doc` 31 → 32).
          *   384 → 385  cloudberry P5a (2026-11-03, Double Jump): cloudberry.md § Items' Double Jump note →
          *              its own § Generating it (`same-doc` 32 → 33).
+         *   385 → 387  keygate colours (2026-11-03, item introduction): substrate-registry.md § Build-time — item
+         *              introduction → sphere-growth.md and → flash.md § Declarations (G9) (`doc` 290 → 292).
          */
         expect(by).toEqual({
             'same-doc': 33,
-            doc: 290,
+            doc: 292,
             external: 22,
             repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(385);
+        expect(CORPUS.length).toBe(387);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(290);
+        expect(docs).toHaveLength(292);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

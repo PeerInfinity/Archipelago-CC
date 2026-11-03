@@ -981,9 +981,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 93,
+        "fields": 97,
         "fieldsRead": 39,
-        "fieldsUnread": 51,
+        "fieldsUnread": 55,
         "statements": 29,
         "substrates": 9
     },
@@ -4968,6 +4968,10 @@ export const CAPABILITIES = frz({
         "iframeId",
         "instantiateAtlasEntryForSpecs",
         "instantiateLibraryEntryForSpecs",
+        "itemIntroduction",
+        "itemIntroduction.exhaustedRefusal",
+        "itemIntroduction.introducibleItems",
+        "itemIntroduction.replayableItems",
         "label",
         "libraryEntryRefusal",
         "loadRegionEvent",
