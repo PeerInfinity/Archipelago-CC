@@ -27045,3 +27045,26 @@ The key is read through `Object.hasOwn`, so main without the key is OFF's under 
   only mover (731 t / 1 hit → 327 t / 0). The bounded set (34 files) is green both ways.
 - **The L12 cost** (hand-over (b)) is the press-blind `planSwordDash` scan, not the certificate: 43.5 of 44.7 s (step
   172) and 87.2 of 88.8 s (step 200) under L100LATTICE's mutant M4. Handed on as a dash-search question.
+
+### Seedling hammer-phase CLEARTAG-STAND — the clear-tag arm's keylock hold, priced at the defaults
+
+⚖ User, queued 2026-11-02 (one of three parallel hammer slices; AXIS-L12HITS's residue). Switch
+`solverBot.CLEARTAG_STAND`, **OFF** (`SEEDLING_CLEARTAG_STAND=1` / `withClearTagStand`; asked only at the clear-tag
+arm's stance walk, `clearTagStandWalk`). The report is `CC/docs/cloud-reports/seedling-hammer-cleartag-stand.md`.
+
+- **The gap, measured at `31ce3077a1`, at the defaults.** The 6 L12 bosslock legs from L35 / L95 pass with 2 hits:
+  `puncher@416,256` punches the standing player in the keylock's 110-tick hold, 23–37 ticks after the clear-tag arm's
+  stance walk ends, billed by the model at the game's ticks (`exact: true`). That walk was certified in transit only
+  (`stand: null`). All 14 legs walk the same last corridor (344,184) → (376,264) → (424|440,264); the split is TIMING:
+  on the 8 from L0/L33/L36/L88 the transit probe meets a punch at x≈401, so the ladder's kill rung clears the puncher
+  first, and on the 6 the transit passes between punches.
+- **The design.** One helper, `clearTagKeylockStand` (`keylockStandWalk`'s tail for a `keylock` verb with
+  `KEYLOCK_WAIT_PRICED` on), used by `axisClearTagStand` behind `AXIS_STRIKE` (unchanged) and by the clear-tag site
+  ON. A separate hold probe after the walk (design 2) refuses 5 of the 6 legs (no rung is left once the walk is
+  driven); a kill before the hold (design 3) is what design 1's ladder already does.
+- **Measured ON** (node replays of the page's captured requests): the 2 L35 and 2 L95_624_80 legs go 2 hits → 0; the
+  8 others answer OFF's plan byte for byte; **the 2 L95_624_64 legs go from a 2-hit pass to a refusal** (the ladder
+  exhausts: the kill rung's chaser arm finds no dwell stance whose wait is clean; forced-hit is refused by
+  `coveredGoalRefusal`). The page sweep ON agrees leg for leg (12 pass, roomHits max 0; the 2 L95_624_64 legs fail).
+  L40's 58 captured requests, the survey (237 steps), r9 `--check` and L30KEYLOCK's `--check` do not move. Handed on:
+  the kill rung on the L95_624_64 legs.

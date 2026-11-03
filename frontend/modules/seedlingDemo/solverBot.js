@@ -6631,8 +6631,52 @@ export function axisStrikeFor(run, dashMode = DEFAULT_DASH_MODE) {
  * `KEYLOCK_WAIT_PRICED` off, and for a resolution without a hold or a key line (`keylockStandWalk`'s own `{}`).
  */
 export function axisClearTagStand(run, verb, resolved) {
-    if (!AXIS_STRIKE.enabled || verb !== 'keylock' || !KEYLOCK_WAIT_PRICED.enabled) return {};
+    return AXIS_STRIKE.enabled ? clearTagKeylockStand(run, verb, resolved) : {};
+}
+
+/**
+ * ⛓ hammer-phase CLEARTAG-STAND — THE ONE HELPER both gates share: a clear-tag keylock stance walk's tail, the hold
+ * (`keylockStandWalk`, L30KEYLOCK's instrument, the frontier arm's own). `{}` for any verb but `keylock`, with
+ * `KEYLOCK_WAIT_PRICED` off, and for a resolution without a hold or a key line. Ungated: the callers gate it.
+ */
+export function clearTagKeylockStand(run, verb, resolved) {
+    if (verb !== 'keylock' || !KEYLOCK_WAIT_PRICED.enabled) return {};
     return keylockStandWalk(run, resolved);
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE CLEARTAG-STAND — **THE CLEAR-TAG ARM'S KEYLOCK HOLD IS PRICED AT THE DEFAULTS**
+ * (`CLEARTAG_STAND`, OFF).
+ *
+ * ⚖ The user queued this on 2026-11-02 (planner `seedling-hammer-phase-planning-2`), from AXIS-L12HITS's residue: the
+ * clear-tag arm (`execClearTag`) walks to a keylock's stance with the walk certified in TRANSIT only, then
+ * `execKeylock` stands for the hold (110 ticks on L12's bosslocks). Only the frontier arm carried the hold as the
+ * walk's tail (`keylockStandWalk`, L30KEYLOCK); AXIS-L12HITS gave this arm the tail under `AXIS_STRIKE` alone.
+ * MEASURED at the defaults (`seedling-hammer-cleartag-stand.md`): the 6 L12 bosslock legs from L35 / L95 reach the
+ * stance (424,264) / (440,264) unpunched, so no rung climbs, and `puncher@416,256` punches twice in the hold (billed
+ * by the model, `exact: true`: ⚖ 30(c), the walk certified was not the walk driven). The other 8 legs' transit is
+ * punched, so the kill rung clears the puncher first and the hold is never reached with it alive.
+ *
+ * ON, the clear-tag arm's keylock stance walk carries the tail whatever `AXIS_STRIKE` says (`clearTagKeylockStand`,
+ * the helper `axisClearTagStand` also uses), so its probe meets the punch and the combat ladder climbs. OFF, the site
+ * asks `axisClearTagStand` exactly as before (`{}` unless `AXIS_STRIKE`): byte-identical.
+ *
+ * ⛓ THE SWITCH: `SEEDLING_CLEARTAG_STAND=1` in a node process (or the page's
+ * `?seedlingSolverEnv=SEEDLING_CLEARTAG_STAND=1`), `withClearTagStand(enabled, fn)` for a row or a witness.
+ */
+export const CLEARTAG_STAND = {
+    enabled: globalThis.process?.env?.SEEDLING_CLEARTAG_STAND === '1',
+};
+export const CLEARTAG_STAND_DEFAULT = false;
+
+/** Run `fn` with `CLEARTAG_STAND` set to `enabled`, restoring the previous value. */
+export function withClearTagStand(enabled, fn) {
+    return withSwitch(CLEARTAG_STAND, enabled, fn);
+}
+
+/** The clear-tag arm's stance walk options: the hold's tail ON (`CLEARTAG_STAND`), else `axisClearTagStand`'s. */
+export function clearTagStandWalk(run, verb, resolved) {
+    return CLEARTAG_STAND.enabled ? clearTagKeylockStand(run, verb, resolved) : axisClearTagStand(run, verb, resolved);
 }
 
 /**
@@ -31574,8 +31618,9 @@ function solveSegmentUnder({
                 what: `${whatCT} -> ${verb} stance`,
                 contactsOverride: resolved.exempt,
                 axisAligned: resolved.approach === 'axis-aligned',
-                // ⛓ hammer-phase AXIS-L12HITS (`AXIS_STRIKE` ON only): the keylock's hold priced as this walk's tail.
-                ...axisClearTagStand(run, verb, resolved),
+                // ⛓ hammer-phase AXIS-L12HITS (`AXIS_STRIKE` ON) / CLEARTAG-STAND (`CLEARTAG_STAND` ON): the keylock's
+                // hold priced as this walk's tail (`clearTagStandWalk`; OFF both, `{}`).
+                ...clearTagStandWalk(run, verb, resolved),
             });
         }
         if (written()) {
