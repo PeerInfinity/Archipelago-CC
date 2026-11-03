@@ -1,0 +1,52 @@
+# box lock: TAKEN by corpsebump2 witness.mjs (browser, pid 2247) — head b646d32d9, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+model error null model hits []
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+status {"input":{"release_totals":{"right":50,"up":65,"left":60,"down":64,"primary":74,"secondary":0,"inventory":0,"inventory2":0},"press_totals":{"right":50,"up":65,"left":60,"down":64,"primary":74,"secondary":0,"inventory":0,"inventory2":0},"held":[],"released":[],"pressed":[],"t":1400},"seam":{"why":"",
+0px compare: 1397 sampled ticks, 0 differ 
+hits compare: 0 differ 
+GAME-TL t0 live 30,26 (488,416) p(888,776)
+GAME-TL t900 startshot 30,26 (488,416) p(484.86056445952386,503.4766964726211)
+GAME-TL t903 finishshot 30,26 (487.5,424) p(478.26056445952383,503.4766964726211)
+GAME-TL t919 live 30,26 (487.5,424) p(471.5605644595237,496.82669647262105)
+GAME-TL t971 startshot 30,26 (487.5,424) p(483.0539844025129,445.6772352369809)
+GAME-TL t974 finishshot 30,26 (488,423.5) p(479.603984402513,445.6772352369809)
+GAME-TL t990 live 30,26 (488,423.5) p(467.5063453457087,437.4347104045342)
+GAME-TL t1006 dead 30,26 (487.5,424) p(468.01732904907493,417.85227382633946)
+GAME-TL t1089 dead 30,25 (488,415.5) p(487.97271353988407,440.0206686923256)
+GAME-TL t1207 dead 30,24 (488,399.5) p(487.97271353988407,423.62066869232564)
+t1180 game p(487.97271353988407,440.0206686923256) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}] | model p(487.97271353988407,440.0206686923256) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}]
+t1181 game p(487.97271353988407,440.0206686923256) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}] | model p(487.97271353988407,440.0206686923256) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}]
+t1182 game p(487.97271353988407,440.0206686923256) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}] | model p(487.97271353988407,440.0206686923256) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}]
+t1183 game p(487.97271353988407,439.2206686923256) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}] | model p(487.97271353988407,439.2206686923256) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}]
+t1184 game p(487.97271353988407,437.8706686923256) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}] | model p(487.97271353988407,437.8706686923256) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}]
+t1185 game p(487.97271353988407,436.77066869232556) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}] | model p(487.97271353988407,436.77066869232556) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}]
+t1186 game p(487.97271353988407,435.92066869232553) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}] | model p(487.97271353988407,435.92066869232553) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}]
+t1187 game p(487.97271353988407,434.52066869232556) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}] | model p(487.97271353988407,434.52066869232556) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}]
+t1188 game p(487.97271353988407,433.3706686923256) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}] | model p(487.97271353988407,433.3706686923256) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}]
+t1189 game p(487.97271353988407,432.4706686923256) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}] | model p(487.97271353988407,432.4706686923256) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}]
+t1190 game p(487.97271353988407,431.0206686923256) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}] | model p(487.97271353988407,431.0206686923256) [{"cls":"IceTurret","x":487.5,"y":408,"anim":"dead"}]
+t1191 game p(487.97271353988407,429.8206686923256) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}] | model p(487.97271353988407,429.8206686923256) [{"cls":"IceTurret","x":488,"y":407.5,"anim":"dead"}]
+t1192 game p(487.97271353988407,428.87066869232564) [{"cls":"IceTurret","x":487.5,"y":407,"anim":"dead"}] | model p(487.97271353988407,428.87066869232564) [{"cls":"IceTurret","x":487.5,"y":407,"anim":"dead"}]
+t1193 game p(487.97271353988407,427.37066869232564) [{"cls":"IceTurret","x":488,"y":406.5,"anim":"dead"}] | model p(487.97271353988407,427.37066869232564) [{"cls":"IceTurret","x":488,"y":406.5,"anim":"dead"}]
+t1194 game p(487.97271353988407,426.92066869232565) [{"cls":"IceTurret","x":487.5,"y":406,"anim":"dead"}] | model p(487.97271353988407,426.92066869232565) [{"cls":"IceTurret","x":487.5,"y":406,"anim":"dead"}]
+t1195 game p(487.97271353988407,425.92066869232565) [{"cls":"IceTurret","x":488,"y":405.5,"anim":"dead"}] | model p(487.97271353988407,425.92066869232565) [{"cls":"IceTurret","x":488,"y":405.5,"anim":"dead"}]
+t1196 game p(487.97271353988407,424.37066869232564) [{"cls":"IceTurret","x":487.5,"y":405,"anim":"dead"}] | model p(487.97271353988407,424.37066869232564) [{"cls":"IceTurret","x":487.5,"y":405,"anim":"dead"}]
+t1197 game p(487.97271353988407,423.0706686923256) [{"cls":"IceTurret","x":488,"y":404.5,"anim":"dead"}] | model p(487.97271353988407,423.0706686923256) [{"cls":"IceTurret","x":488,"y":404.5,"anim":"dead"}]
+t1198 game p(487.97271353988407,422.0206686923256) [{"cls":"IceTurret","x":487.5,"y":404,"anim":"dead"}] | model p(487.97271353988407,422.0206686923256) [{"cls":"IceTurret","x":487.5,"y":404,"anim":"dead"}]
+t1199 game p(487.97271353988407,422.0206686923256) [{"cls":"IceTurret","x":488,"y":403.5,"anim":"dead"}] | model p(487.97271353988407,422.0206686923256) [{"cls":"IceTurret","x":488,"y":403.5,"anim":"dead"}]
+t1200 game p(487.97271353988407,422.8206686923256) [{"cls":"IceTurret","x":487.5,"y":403,"anim":"dead"}] | model p(487.97271353988407,422.8206686923256) [{"cls":"IceTurret","x":487.5,"y":403,"anim":"dead"}]
+t1201 game p(487.97271353988407,424.17066869232565) [{"cls":"IceTurret","x":488,"y":402.5,"anim":"dead"}] | model p(487.97271353988407,424.17066869232565) [{"cls":"IceTurret","x":488,"y":402.5,"anim":"dead"}]
+t1202 game p(487.97271353988407,425.27066869232567) [{"cls":"IceTurret","x":487.5,"y":402,"anim":"dead"}] | model p(487.97271353988407,425.27066869232567) [{"cls":"IceTurret","x":487.5,"y":402,"anim":"dead"}]
+t1203 game p(487.97271353988407,425.3206686923257) [{"cls":"IceTurret","x":488,"y":401.5,"anim":"dead"}] | model p(487.97271353988407,425.3206686923257) [{"cls":"IceTurret","x":488,"y":401.5,"anim":"dead"}]
+t1204 game p(487.97271353988407,424.52066869232567) [{"cls":"IceTurret","x":487.5,"y":401,"anim":"dead"}] | model p(487.97271353988407,424.52066869232567) [{"cls":"IceTurret","x":487.5,"y":401,"anim":"dead"}]
+t1205 game p(487.97271353988407,423.97066869232566) [{"cls":"IceTurret","x":488,"y":400.5,"anim":"dead"}] | model p(487.97271353988407,423.97066869232566) [{"cls":"IceTurret","x":488,"y":400.5,"anim":"dead"}]
+t1206 game p(487.97271353988407,423.67066869232565) [{"cls":"IceTurret","x":487.5,"y":400,"anim":"dead"}] | model p(487.97271353988407,423.67066869232565) [{"cls":"IceTurret","x":487.5,"y":400,"anim":"dead"}]
+t1207 game p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":488,"y":399.5,"anim":"dead"}] | model p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":488,"y":399.5,"anim":"dead"}]
+t1208 game p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":487.5,"y":399,"anim":"dead"}] | model p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":487.5,"y":399,"anim":"dead"}]
+t1209 game p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":488,"y":398.5,"anim":"dead"}] | model p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":488,"y":398.5,"anim":"dead"}]
+t1210 game p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":487.5,"y":398,"anim":"dead"}] | model p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":487.5,"y":398,"anim":"dead"}]
+t1211 game p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":488,"y":397.5,"anim":"dead"}] | model p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":488,"y":397.5,"anim":"dead"}]
+t1212 game p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":487.5,"y":397,"anim":"dead"}] | model p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":487.5,"y":397,"anim":"dead"}]
+t1213 game p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":488,"y":396.5,"anim":"dead"}] | model p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":488,"y":396.5,"anim":"dead"}]
+t1214 game p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":487.5,"y":396,"anim":"dead"}] | model p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":487.5,"y":396,"anim":"dead"}]
+t1215 game p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":488,"y":395.5,"anim":"dead"}] | model p(487.97271353988407,423.62066869232564) [{"cls":"IceTurret","x":488,"y":395.5,"anim":"dead"}]

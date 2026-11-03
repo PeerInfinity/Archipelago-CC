@@ -8,6 +8,7 @@
  * lavarunner's hit, a HOLD inside its i-frame, the continuation on the game's skip path — replayed here at 0 px.
  */
 import { describe, expect, it } from 'vitest';
+import { withContactFidelity } from './contactFidelity.js';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -134,9 +135,17 @@ describe('STAGEDHITS D2 — the staged state is the run\'s own: the i-frame, the
         // unstaged: exactly the BEFORE shape
         expect(worldHitsOf(run())).toEqual({ hits: 0, lastHitAt: null, id: null });
     });
+    // ⛓ FORCEDHITXC D2: the proof rows below read the model where C is nothing (`secondaryUse` OFF, the default)
+    const off = (fn) => withContactFidelity({ secondaryUse: false }, fn);
     it('the proof steps forks that carry the staging: at hitsMax − 1 every leaf is a death', () => {
-        const p = proveForcedHit(() => run({ ...ARRIVAL, player_damage: { hits: 2, hits_timer: 0 } }));
+        const p = off(() => proveForcedHit(() => run({ ...ARRIVAL, player_damage: { hits: 2, hits_timer: 0 } })));
         expect(p).toMatchObject({ proven: true, depth: 2, deadly: 1296, minHits: null });
+    });
+    it('ON (⛓ FORCEDHITXC D2): at hitsMax − 1 the game\'s hitless X+C still crosses — no leaf of it is hit, so none dies', () => {
+        const p = withContactFidelity({ secondaryUse: true },
+            () => proveForcedHit(() => run({ ...ARRIVAL, player_damage: { hits: 2, hits_timer: 0 } })));
+        expect(p).toMatchObject({ proven: false, crossing: { ticks: 4, transition: { to_level: 74 } } });
+        expect(p.crossing.keys.map((k) => [...k].sort())).toEqual([['primary', 'secondary', 'up'], [], [], []]);
     });
 });
 
@@ -171,20 +180,30 @@ function solve622(playerDamage) {
 }
 
 describe('STAGEDHITS D2 — leg 622 with the game\'s damage staged: the forced-hit budget reads it, never a death', () => {
+    // ⛓ FORCEDHITXC D2: OFF rows (C is nothing); ON, every staging solves by the game's hitless X+C — the budget never
+    // applies (`fidelityForcedHitXc.test.js` pins staged 1 and 2; staged 0 below)
+    const off = (fn) => withContactFidelity({ secondaryUse: false }, fn);
     it('staged 0 (= absent): the FORCEDHIT plan, 4 ticks, billing the one hit', () => {
-        const { res } = withForcedHits(true, () => solve622({ hits: 0, hits_timer: 0 }));
+        const { res } = off(() => withForcedHits(true, () => solve622({ hits: 0, hits_timer: 0 })));
         expect(res.ok).toBe(true);
         expect(res.plan.verbs).toEqual(['forced-hit']);
     });
+    it('ON (⛓ FORCEDHITXC D2) staged 0: the game\'s hitless X+C, 4 ticks, nothing billed', () => {
+        const { res, rows } = withContactFidelity({ secondaryUse: true },
+            () => withForcedHits(true, () => solve622({ hits: 0, hits_timer: 0 })));
+        expect(res.ok).toBe(true);
+        expect(res.plan.solution.map((k) => [...k].sort())).toEqual([['primary', 'secondary', 'up'], [], [], []]);
+        expect(rows.every((r) => r.outcome === 'hitless' && r.billed.length === 0)).toBe(true);
+    });
     it('staged hits 1 of 3: the proof holds, and the budget refuses the crossing BY NAME (hits now 1, margin 1)', () => {
-        const { res, rows } = withForcedHits(true, () => solve622({ hits: 1, hits_timer: 0 }));
+        const { res, rows } = off(() => withForcedHits(true, () => solve622({ hits: 1, hits_timer: 0 })));
         expect(res.ok).toBe(false);
         expect(res.message).toMatch(/the combat ladder is EXHAUSTED/);
         expect(res.message).toMatch(/forced-hit: every input from here is hit .*over the budget's 0 \(hits now 1, hitsMax 3, margin 1/s);
         expect(rows.every((r) => r.outcome === 'no-crossing')).toBe(true);
     });
     it('staged hits 2 of 3 (hitsMax − 1): every proof leaf DIES, so no crossing is planned — never a death', () => {
-        const { res, rows } = withForcedHits(true, () => solve622({ hits: 2, hits_timer: 0 }));
+        const { res, rows } = off(() => withForcedHits(true, () => solve622({ hits: 2, hits_timer: 0 })));
         expect(res.ok).toBe(false);
         expect(res.message).toMatch(/forced-hit: .*every proof leaf dies/s);
         expect(rows.every((r) => r.outcome === 'no-crossing')).toBe(true);
