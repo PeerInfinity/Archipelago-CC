@@ -137,6 +137,11 @@
             "category": "cloudberrySubstrate"
         },
         {
+            "id": "cloudberry-double-jump-level-needs-the-item",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "noiz2sa-region-loop-visit",
             "enabled": true,
             "category": "noiz2saSubstrate",
