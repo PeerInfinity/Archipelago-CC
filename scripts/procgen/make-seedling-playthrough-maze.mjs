@@ -628,7 +628,7 @@ export function plainLevelWorldFits(world) {
 only rules the worlds copy, to plant in. Absent, the compile is the preset's, byte for byte. `embedSphereLog: false` skips the
  * sphere log (a sentinel compile places items no state can hold).
  */
-export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSphereLog = true, analysisHook = null } = {}) {
+export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSphereLog = true, analysisHook = null, plainLevelWorlds = true } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
     const mapDoc = readJson(resolve(ATLAS_DIR, atlas.tile_space.map_document));
     const gameConfig = readJson(resolve(REPO, 'frontend/modules/flashPanel/games/seedling.json'));
@@ -659,7 +659,8 @@ export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSpher
         },
     });
     mazeProjection.projectionRegion = (region) => projectionRegionOf(region, hand);
-    mazeProjection.plainLevelWorldFits = plainLevelWorldFits;
+    // `plainLevelWorlds: false` keeps every plain level per sub-region (a regression row of that path, which L12/L94 still take).
+    if (plainLevelWorlds) mazeProjection.plainLevelWorldFits = plainLevelWorldFits;
     // TEST-ONLY: the red-first pin's hook into the analyzer's pricing output (`projectRegionToMaze`).
     if (analysisHook) mazeProjection.analysisHook = analysisHook;
     const restricted = restrictAtlas(atlas, levels, { start: START_LEVEL });

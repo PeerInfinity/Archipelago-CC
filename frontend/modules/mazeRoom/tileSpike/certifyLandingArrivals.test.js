@@ -29,7 +29,9 @@ const withLanding = (tile) => {
 };
 
 describe('landing-rooted arrivals (L29 → L31 r5c24, the stairs down)', () => {
-    const RULES = JSON.parse(buildPlaythroughMaze({ levels: ['level_29', 'level_31'] }).text);
+    // ⛓ PER SUB-REGION on purpose (session tile-rules-automation-r-a2): since the input/output split L31 plays as ONE level
+    // world, whose r5c24 entrance IS the landing. This row pins the per-sub-region path, which L12 and L94 still take.
+    const RULES = JSON.parse(buildPlaythroughMaze({ levels: ['level_29', 'level_31'], plainLevelWorlds: false }).text);
     const payload = RULES.preset_sidecars['1'][REGION].playable_payload;
     const run = (atlas) => certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: [REGION], atlas });
 

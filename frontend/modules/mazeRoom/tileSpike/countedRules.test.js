@@ -20,7 +20,7 @@ import { evaluateRuleAgainstInventory } from '../../shared/procgen/library.js';
 import {
     deriveRegionLogic, regionItems, regionLevels, ruleFromMinimalSets, latticeAxis, latticePoints, allPoints, inventoryOf,
 } from './deriveTileLogic.js';
-import { deriveEntryLogic } from './deriveLevelWorldLogic.js';
+import { deriveEntryLogic, deriveLevelWorldLogic } from './deriveLevelWorldLogic.js';
 import { scriptedStep, ruleToClearSet } from './tileStep.js';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import { buildPlaythroughMaze } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
@@ -195,15 +195,16 @@ describe('L18: Or(two Shields, Ghost Spear, Sword, Wand) between r1c1 and r7c10'
     });
 
     it('one Shield is refused and two pass, natively and scripted; the derived rule counts', () => {
+        // ⛓ Since the input/output split (session tile-rules-automation-r-a2) L18 plays as ONE level world: the crossing to
+        // r7c10 is WALKED over the counted cell, so it is the in-world pair r1c1 → r7c10 that counts the Shields.
         const w = deserializeMazeWorld(SIDECARS.level_18__r1c1.playable_payload);
+        expect(w.sharedWorld.regions).toEqual(['level_18__r1c1', 'level_18__r7c10']);
         const lines = [false, true].map((native) => {
-            const out = deriveEntryLogic(w, 'level_18__r1c1', HELPERS, { native });
-            const exit = out.targets.find((t) => t.kind === 'exit' && t.exitName && RULES.regions['1'].level_18__r1c1.exits
-                .find((e) => e.name === t.exitName)?.connected_region === 'level_18__r7c10');
-            expect(exit, 'the exit to r7c10').toBeDefined();
-            expect(exit.minimal).toContainEqual([SHIELD, SHIELD]);
-            expect(exit.minimal).not.toContainEqual([SHIELD]);
-            return JSON.stringify(exit.minimal);
+            const pair = deriveLevelWorldLogic(w, HELPERS, { native }).pairs.find((p) => p.from === 'level_18__r1c1' && p.to === 'level_18__r7c10');
+            expect(pair, 'the pair to r7c10').toBeDefined();
+            expect(pair.minimal).toContainEqual([SHIELD, SHIELD]);
+            expect(pair.minimal).not.toContainEqual([SHIELD]);
+            return JSON.stringify(pair.minimal);
         });
         expect(lines[0]).toBe(lines[1]);
     });

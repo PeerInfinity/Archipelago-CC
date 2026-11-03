@@ -860,13 +860,19 @@ export function projectRegionToMaze(region, grid, ctx) {
             const before = builder.obstacles.get(`${x},${y}`);
             for (const n of openTileTowards(builder, grid, component, [x, y], `exit "${exit.exit_id}"`, resolveCondition)) note(n);
             const exitRule = withPressDoor(exit, ctx.eventsFor?.(region));
-            // ⛓ The exit's rule JOINS its cell's own gate (session tile-rules-automation-r-a2, the designer's fix 2), as in a
-            // level world: one cell holds one obstacle, and L56's pit at (6,1) under bosslock@96,16 {keyType 3} lost its Blue
-            // Key gate to the arena's weapon term once the producer's composed charge was no longer copied onto the exit.
-            const own = builder.obstacleLib[builder.obstacles.get(`${x},${y}`)];
+            // ⛓ The exit's rule JOINS its cell's own TERRAIN gate (session tile-rules-automation-r-a2, the designer's fix 2):
+            // one cell holds one obstacle, and L56's pit at (6,1) under bosslock@96,16 {keyType 3} lost its Blue Key gate
+            // (laid by `openTileTowards`) to the arena's weapon term once the producer's composed charge was no longer
+            // copied onto the exit. The join is with the grid cell's own occupancy, never with whatever else stands there (a
+            // dropped crossing's rule is not this door's, `colliding crossings`); a NON-rule obstacle there (an event's,
+            // a press target's) would be overwritten, so it is refused by name.
             if (exitRule) {
-                builder.gate(x, y, own?.clear_set_type === 'rule' && own.clear_rule
-                    ? simplifyRule({ rule: 'And', children: [own.clear_rule, exitRule] }) : exitRule);
+                const held = builder.obstacleLib[builder.obstacles.get(`${x},${y}`)];
+                if (held && held.clear_set_type !== 'rule') {
+                    throw new Error(`atlas region "${region.region_id}": exit "${exit.exit_id}" at [${exit.entrance_tile}] stands on obstacle "${held.id}", which its gate would overwrite`);
+                }
+                const terrain = occupancyRule(grid.cells[y * grid.width + x], resolveCondition);
+                builder.gate(x, y, terrain.rule ? simplifyRule({ rule: 'And', children: [terrain.rule, exitRule] }) : exitRule);
             }
             const kept = addExit({
                 x,
@@ -1605,6 +1611,9 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         // Yellow Key charge (`chargeSealedDoor`) was no longer copied onto the exit.
         const opened = occupancyRule(grid.cells[y * grid.width + x], resolveCondition);
         if (opened.rule && opened.unresolved.length === 0) builder.gate(x, y, opened.rule);
+        if (opened.unresolved.length > 0) {
+            note({ kind: 'opened_unresolved_gate', tile: [x + ox, y + oy], label, message: `${label} at [${x + ox},${y + oy}] opens on a cell whose condition(s) ${JSON.stringify(opened.unresolved)} have no AP item behind them — opened WITHOUT its gate` });
+        }
         note({ kind: 'opened_solid', tile: [x + ox, y + oy], label, message: `${label} at [${x + ox},${y + oy}] sits on a cell the level world walls — opened, because that is where the atlas puts it` });
         if (MOVES.some(([, dx, dy]) => builder.isFloor(x + dx, y + dy))) return;
         const prev = new Map([[keyOf(x, y), null]]);
@@ -1682,6 +1691,9 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         // (L58 r4c1's (3,7) → r6c5's (4,7) walked the water holding only a weapon).
         const terrain = builder.obstacleLib[builder.obstacles.get(keyOf(x, y))];
         const exitRule = withPressDoor(exit, ctx.eventsFor?.(region));
+        if (exitRule && terrain && terrain.clear_set_type !== 'rule') {
+            throw new Error(`atlas region "${regionId}": exit "${exit.exit_id}" at [${exit.entrance_tile}] stands on obstacle "${terrain.id}", which its gate would overwrite`);
+        }
         if (exitRule) {
             builder.gate(x, y, terrain?.clear_set_type === 'rule' && terrain.clear_rule
                 ? simplifyRule({ rule: 'And', children: [terrain.clear_rule, exitRule] }) : exitRule);
