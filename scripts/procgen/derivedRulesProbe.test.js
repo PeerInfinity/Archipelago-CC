@@ -6,7 +6,8 @@
  *   - ECHOED (the sentinel method): L12 is a plain world whose boss location (the Witch) and lock rows the maze COPIES
  *     (W0: all 11 location rules; L12 the largest internal-row echo). The same certifier row reads "agrees" either way:
  *     only the sentinel can tell that agreement holds by construction;
- *   - ARRIVAL-DEPENDENT: L91 → L89 r1c10 — free from the landing (1,8), Swim from (15,4) (W0 § 2, "Arrivals");
+ *   - ARRIVAL-DEPENDENT: L91 → L92 r4c2 — Swim from the landing (1,8), free from (15,4). W0's example (§ 2, "Arrivals"),
+ *     L91 → L89 r1c10, is Swim from both since rules-certifier-tail (main 491f3286d9);
  *   - the certifier's `rows` option changes nothing else it returns.
  */
 import { describe, it, expect } from 'vitest';
@@ -60,16 +61,24 @@ describe('the echo sentinels (L12, a plain world)', () => {
     });
 });
 
-describe('arrival dependence (L91 → L89 r1c10)', () => {
+describe('arrival dependence (L91 → L92 r4c2)', () => {
     const rules = compile(['level_89', 'level_91', 'level_92']);
     const { rows, lines, problems } = certify(rules);
     const { elements } = labelDerivedRows(rows, { rules, echoes: new Set() });
+    const of = (from, name) => elements.filter((e) => e.key === exitKey(from, name)).map((e) => [e.arrival, e.derived, e.label]);
+    const SWIM = { rule: 'Has', args: { item_name: 'Progressive Swim' } };
 
-    it('priced from both landings: free from (1,8), Swim from (15,4), and labelled arrival-dependent', () => {
-        const mine = elements.filter((e) => e.key === exitKey('level_91', 'level_91 -> level_89__r1c10'));
-        expect(mine.map((e) => [e.arrival, e.derived, e.label])).toEqual([
-            ['landing 1,8', { rule: 'True_' }, 'arrival-dependent'],
-            ['landing 15,4', { rule: 'Has', args: { item_name: 'Progressive Swim' } }, 'arrival-dependent'],
+    it('priced from both landings: Swim from (1,8), free from (15,4), and labelled arrival-dependent', () => {
+        expect(of('level_91', 'level_91 -> level_92__r4c2')).toEqual([
+            ['landing 1,8', SWIM, 'arrival-dependent'],
+            ['landing 15,4', { rule: 'True_' }, 'arrival-dependent'],
+        ]);
+    });
+
+    it('L91 → L89 r1c10 was the W0 example (free from (1,8)); rules-certifier-tail gates it on Swim from both, so it is no longer arrival-dependent', () => {
+        expect(of('level_91', 'level_91 -> level_89__r1c10')).toEqual([
+            ['landing 1,8', SWIM, 'derived'],
+            ['landing 15,4', SWIM, 'derived'],
         ]);
     });
 
