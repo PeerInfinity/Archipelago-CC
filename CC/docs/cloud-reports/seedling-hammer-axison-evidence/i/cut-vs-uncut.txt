@@ -1,0 +1,6 @@
+160 off  | uncut: true  632 [[575,"punch","puncher@416,256"],[615,"punch","puncher@416,256"]] f7765903792f 166 0 0 | cut: true  632 [[575,"punch","puncher@416,256"],[615,"punch","puncher@416,256"]] f7765903792f 166 0 0 | SAME
+160 on  | uncut: false refusal  null  356 2 3697 | cut: false refusal  null  356 2 3697 | SAME
+160 on KWP0 | uncut: true  632 [[575,"punch","puncher@416,256"],[615,"punch","puncher@416,256"]] f7765903792f 166 0 0 | cut: true  632 [[575,"punch","puncher@416,256"],[615,"punch","puncher@416,256"]] f7765903792f 166 0 0 | SAME
+160 off KWP0 | uncut: true  632 [[575,"punch","puncher@416,256"],[615,"punch","puncher@416,256"]] f7765903792f 166 0 0 | cut: true  632 [[575,"punch","puncher@416,256"],[615,"punch","puncher@416,256"]] f7765903792f 166 0 0 | SAME
+775(d+37) off | uncut: true  310 [[283,"drop","flyer@192,16"],[303,"drop","flyer@192,16"]] ff54741e235c 34 0  | cut: true  310 [[283,"drop","flyer@192,16"],[303,"drop","flyer@192,16"]] ff54741e235c 34 0  | SAME
+775(d+37) on | uncut: true  310 [[283,"drop","flyer@192,16"],[303,"drop","flyer@192,16"]] ff54741e235c 34 0  | cut: true  310 [[283,"drop","flyer@192,16"],[303,"drop","flyer@192,16"]] ff54741e235c 34 0  | SAME

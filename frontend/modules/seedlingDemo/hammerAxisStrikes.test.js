@@ -248,4 +248,52 @@ describe('hammer-phase AXIS — strikes on axis-aligned walks, aimed along the w
         expect(regressed.hits).toEqual(L12_REGRESSED_HITS);
         expect(regressed.ticks).toBe(430);
     }, 120_000);
+
+    /**
+     * ⛓⛓ AXISON (⚖ the user queued it on 2026-11-02, from the ON sweep 41477361069 vs 41477345657): the two movers the
+     * brief named as AXIS's regressions, pinned by WHICH HALF OF THE SWITCH moves them. Both requests are the page's own
+     * (main `31ce3077`), cut to the levels the solve reads (cut and uncut answer byte-identically, the report's
+     * `i/cut-vs-uncut.txt`). The axis strikes alone (the clear-tag stand withheld with its own instrument,
+     * `KEYLOCK_WAIT_PRICED` off, as row 6 does) build NO axis-along policy on either leg and answer OFF's plan byte for
+     * byte. The L95 refusal ON is the clear-tag stand's (`axisClearTagStand`, CLEARTAG-STAND's slice), so this row does
+     * not pin ON at the defaults there; the L105 hits are `flyer@192,16`'s drops at an arrival seam (6224) where OFF
+     * takes them too.
+     */
+    it('AXISON: on L95 flag 4 and L105 the axis strikes alone build no policy and answer OFF\'s plan', () => {
+        const solveFixture = (name, on, kwp = true) => {
+            const leg = JSON.parse(gunzipSync(readFileSync(join(HERE, 'fixtures', 'hammer-axison', name))).toString('utf8'));
+            const req = restoreRequest(leg.requests[0].request);
+            const { passes = ANYTIME_PASSES, source, ...tape } = req;
+            const ls = levelSourceFromAtlas(source.records);
+            resetAxisStrikeCounts();
+            const answer = withKeylockWaitPriced(kwp, () => withAxisStrike(on,
+                () => solveAnytime({ ...tape, source, levelSource: ls }, { passes })));
+            const policies = AXIS_STRIKE_COUNTS.policies;
+            if (!answer.ok) return { ok: false, kind: answer.kind, policies };
+            const shadow = replayTape({ staging: tape.staging, perTick: [...tape.perTick, ...answer.plan.solution],
+                levelSource: ls, scratchPersistence: tape.scratchPersistence });
+            return { ok: true, ticks: answer.plan.solution.length, policies,
+                plan: JSON.stringify(answer.plan.solution.map((k) => [...k])),
+                hits: shadow.ledger('playerHits').map((h) => [h.t, h.source, h.id]) };
+        };
+        // L95 → L12 flag 4 (leg 160): OFF passes, punched twice in the keylock's hold (the gap AXIS-L12HITS named).
+        const l95 = 'leg160-l12-request.json.gz';
+        const off = solveFixture(l95, false);
+        expect(off.ok).toBe(true);
+        expect(off.ticks).toBe(632);
+        expect(off.hits).toEqual([[575, 'punch', PUNCHER], [615, 'punch', PUNCHER]]);
+        const strikesAlone = solveFixture(l95, true, false);
+        expect(strikesAlone.policies).toBe(0);
+        expect(strikesAlone.plan).toBe(off.plan);
+        // L105 (leg 775) at the arrival seam where the page's ON run took 2 hits: OFF takes the same two drops.
+        const l105 = 'leg775-l105-seam6224-request.json.gz';
+        const FLYER = 'flyer@192,16';
+        const off105 = solveFixture(l105, false);
+        expect(off105.ticks).toBe(310);
+        expect(off105.hits).toEqual([[283, 'drop', FLYER], [303, 'drop', FLYER]]);
+        const on105 = solveFixture(l105, true);
+        expect(on105.policies).toBe(0);
+        expect(on105.plan).toBe(off105.plan);
+        expect(on105.hits).toEqual(off105.hits);
+    }, 120_000);
 });
