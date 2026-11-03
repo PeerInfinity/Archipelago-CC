@@ -26995,6 +26995,12 @@ switch; still OFF; OFF byte-identical.**
 - **Radius.** ON alone: 1 of 58 L40 requests moves — 390/1 (`Level 040 - Chest` from the L39 arrival, the BobSoldier's
   own chest) refusal → SOLVED 1279, hitless and game-modelled (staged at (856,856), wait 8); survey 0 of 237. Behind
   F + OPP: 3 requests move (390/1, 864/1, 865/1), the BobSoldier's refusal → the anytime deadline.
+- **ON movers in fidelity's rows (a pin to sign).** With the switch ON the chaser arm answers before the orbit arm on two
+  fidelity workloads: L30's pit landing (224,80) (`fidelityL30KeyLock.test.js`'s both-OFF and WAIT-alone rows, and
+  `plan-seedling-l30keylock`'s BEFORE witness, the one red ON producer) refusal (2 hits) → SOLVED 318 hitless, staged at
+  (120,104); L40BK2B's corridor boot (`fidelityL40Bk2b.test.js`'s two orbit rows) the BobSoldier removed at t112
+  hitless (staged at (856,856), wait 17; the D1 orbit's t125). A flip pins those rows with `withChaserStagedHunt(false)`.
+  Survey behind F + OPP: 0 of 237.
 - **Gate** `hammerBk2Combat.test.js` (ships OFF; where it sits; OFF/ON answers of the arm) and
   `hammerBk2Combat.slow.test.js` (shut OFF/ON with the fresh replay; 4810 unchanged). Mutants (drop the fix; no still
   wait; stage on a danger-refused cell; one still tick short): all red.
