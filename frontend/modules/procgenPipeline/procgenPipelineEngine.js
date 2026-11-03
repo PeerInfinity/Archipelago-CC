@@ -40,6 +40,7 @@ import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/subs
 import { ROUND_TRIP_RULES, roundTripRulesOf } from '../procgenCore/roundTripRules.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 import { declareReturnToMenu } from '../procgenCore/restartWarp.js';
+import { authoredRuleOf } from '../procgenCore/authoredRule.js';
 import {
     GOAL_ITEM, isVictoryItem, goalItemPool, withGoalItemDef,
 } from '../procgenCore/goalItem.js';
@@ -3475,11 +3476,11 @@ function generateRegionProcedural(spec) {
         loc.id = specLocId;
         if (spec.useSourceLocationName) loc.global_name = specLocId;
         const sl = specById.get(specLocId);
-        if (sl?.access_rule) loc.access_rule = sl.access_rule;
-        else if (spec.defaultLocationRuleToTrue) loc.access_rule = { rule: 'True_' };
+        if (sl?.access_rule) loc.access_rule = keepAuthoredRule(loc, sl.access_rule);
+        else if (spec.defaultLocationRuleToTrue) loc.access_rule = keepAuthoredRule(loc, { rule: 'True_' });
     }
     for (const ex of extracted_rules.exits) {
-        if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
+        if (exit_rules[ex.id]) ex.access_rule = keepAuthoredRule(ex, exit_rules[ex.id]);
     }
 
     adapter.applyContentModules?.(core.world, {
@@ -5673,7 +5674,7 @@ function buildSphereLibraryRegion(sourceId, entry, {
             const r = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
             if (!r) continue;
             const ex = exitById.get(sideToExitId.get(e.side));
-            if (ex) ex.access_rule = r;
+            if (ex) ex.access_rule = keepAuthoredRule(ex, r);
         }
         region.placed_logic_gates = region.placed_logic_gates ?? [];
         return region;
@@ -5904,6 +5905,19 @@ function andComposeRules(a, b) {
     if (!b) return a;
     if (rulesEqual(a, b)) return a;
     return makeAndRule([a, b]);
+}
+
+/**
+ * ⛓⛓ procgen-region-authored-rules — **THE RULE A SITE THAT OVERRIDES AN EXTRACTED RULE WRITES** (⚖ the user
+ * 2026-11-03, *"A: Fix, marked rules only"*). `pipelineRule` is what the site wrote before: the spec's rule, the
+ * sphere default `True_`, or the driver's gate. An entry the substrate did NOT mark (`procgenCore/authoredRule.js`)
+ * gets exactly that, as before — path-walk pollution still never leaks. A MARKED entry gets the pipeline's rule AND
+ * the substrate's own (`andComposeRules`; a `True_` pipeline rule is no rule, so it yields the authored rule alone).
+ */
+function keepAuthoredRule(entry, pipelineRule) {
+    const authored = authoredRuleOf(entry);
+    if (!authored) return pipelineRule;
+    return andComposeRules(pipelineRule?.rule === 'True_' ? null : pipelineRule, authored);
 }
 
 /**

@@ -101,8 +101,12 @@ export const KEYGATE_COLOUR_REFUSAL = 'keygate-colour-not-allocated';
 /**
  * ⛓ strategy elements r2 — the NAME of the key-gate RULE refusal. The room ANDs `Has(<key item>)` onto its goal
  * cell's location (`seedlingGenRoom.extractGenRules`), and a driver that REPLACES a room's location rules with its
- * own spec's (MEASURED: sphere growth, the engine's procedural branch) drops it — a rules.json whose logic says the
- * goal needs no key while the lock says it does. Refused at serialize, where the FINAL rules are read.
+ * own spec's drops it — a rules.json whose logic says the goal needs no key while the lock says it does. Refused at
+ * serialize, where the FINAL rules are read.
+ * ⛓ procgen-region-authored-rules (⚖ "A: Fix, marked rules only"): the key rule is MARKED as the room's own
+ * (`procgenCore/authoredRule.js`), and the engine's override sites (sphere growth, top-down, the sphere library
+ * tile branch) AND a marked rule on instead of replacing it — so no shipped driver trips this any more. It stays as
+ * the BACKSTOP for a driver that drops the mark (`seedlingGenAuthoredRule.test.js`, mutants a1/a2).
  */
 export const KEYGATE_RULE_REFUSAL = 'keygate-rule-not-carried';
 /**
@@ -125,8 +129,9 @@ export const GEN_ROOM_REFUSALS = Object.freeze({
     keygateRule: (regionId, location, item) => `${KEYGATE_RULE_REFUSAL}: generated Seedling room '${regionId}' `
         + `holds a KEY GATE, and its location '${location}' stands behind the lock, but the world's final rule for it `
         + `does not require '${item}' — the pipeline driver replaced the room's own rule with its spec's. The logic `
-        + 'would say the goal needs no key while the lock says it does, so the room is refused. ⛓ Build key-gate '
-        + 'worlds with a driver that keeps a room\'s location rules (measured: shuffled spiral), until the pipeline carries them.',
+        + 'would say the goal needs no key while the lock says it does, so the room is refused. ⛓ The room MARKS the '
+        + 'key rule as its own (procgenCore/authoredRule.js); a driver that overrides a location rule must AND a '
+        + 'marked one on (procgenPipelineEngine keepAuthoredRule), never drop it.',
     keygateColour: (regionId, ordinal) => `${KEYGATE_COLOUR_REFUSAL}: multi-room keygate colours are allocated by `
         + 'the sphere planner\'s requests, and this room\'s key gate was not requested. Generated Seedling room '
         + `'${regionId}' (generated room #${ordinal}) holds a KEY GATE, and only generated room #0 may: each key-gate `
