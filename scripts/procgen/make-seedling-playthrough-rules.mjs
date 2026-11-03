@@ -86,7 +86,7 @@ const { patchedMapDocument, SEEDLING_SET_PATCHES } = await imp('frontend/modules
 const { arrivalSolidCensus, gameLandings } = await imp('frontend/modules/seedlingDemo/fidelityArrival.js');
 const { levelSourceFromAtlas } = await imp('frontend/modules/seedlingDemo/atlasSource.js');
 const {
-    deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
+    deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, inRoomLatchButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
     deriveTalkEvents, crossRoomPrerequisitesOf,
     poleKillsOf, POLE_LIGHT_ARM, POLE_GHOST_ARM, poleThrustStances, poleSwingStances, inRoomPolesOf, deriveInRoomPoleEvents,
     ropesOf, ropeVerdict, deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges,
@@ -1531,15 +1531,18 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
     const ruling = (t, crossLevelOpeners) => OV.overlayEntitySemantics(entityOf(t), SEM.entitySemantics(entityOf(t)), {
         level: t.level, crossLevelOpeners, groupOpeners: GROUP_OPENERS, scriptOpeners: SCRIPT_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
     });
-    return deriveButtonEvents(crossRoomButtonsOf(MAP), {
+    const latch = inRoomLatchAnalysis(doc);
+    return deriveButtonEvents([...crossRoomButtonsOf(MAP), ...inRoomLatchButtonsOf(MAP)], {
         existing,
-        effect: (t) => persistenceEffect(t, PERSISTENCE_RESPONSE[t.type]),
+        effect: (t) => (t.inRoom ? latch.effect(t) : persistenceEffect(t, PERSISTENCE_RESPONSE[t.type])),
         kills: (t) => {
+            if (t.inRoom) return null;
             const k = killsOf(t);
             return k && { bodies: k.map((b) => b.id), why: B.killsWhy(k) };
         },
-        inRoom: (t) => (killsOf(t) ? B.arm : null),
+        inRoom: (t) => (!t.inRoom && killsOf(t) ? B.arm : null),
         pricedByButton: (t) => {
+            if (t.inRoom) return latch.pricedByButton(t);
             const k = killsOf(t);
             if (k) {
                 // The rules price a crossing through a body free when the overlay rules the body OPEN — then nothing
@@ -1574,8 +1577,63 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
         // ButtonRoom.update: any body on it presses it — standing in its sub-region is the whole cost.
         reach: () => null,
         // A pole's doors carry their `arm` (⛓ RULES l63-darktrap: the Spear way only where a stance stands).
-        gates: (t, eventName) => B.barrierCut(t, eventName).pockets.flatMap((v) => v.doors),
+        // ⛓ RULES l20-button-latch: an in-room latch's gates are the internal crossings through its target.
+        gates: (t, eventName) => (t.inRoom ? latch.gates(t) : B.barrierCut(t, eventName).pockets.flatMap((v) => v.doors)),
     });
+}
+
+/**
+ * ⛓⛓ RULES l20-button-latch — **AN IN-ROOM LATCHING PRESS AS AN AP EVENT, THROUGH THE CROSS-ROOM PATH.** The rows are
+ * `inRoomLatchButtonsOf(MAP)` (every `room == -1` ButtonRoom with a tag: the press clears its OWN tag and its `check()`
+ * re-publishes the group on every build, so the opening is durable — law 1 of the overlay). `deriveButtonEvents` mints
+ * the event (`flag:L<level>:<the button's tag>`, side = the button's sub-region, `action.presser`) exactly as for a
+ * cross-room press; this answers the three questions that differ in-room:
+ *   - EFFECT: a target the model answers `lock-despawn` (a `Lock`: `set activate(true)` fades it and `turnOff()` types
+ *     it `""`, `Lock.as:activationStep`) handed `activate = true` (`publish`, `!flip`) → 'opens'; anything else → null;
+ *   - PRICED BY THE BUTTON: the target's group has NO other in-level opener (`OV.isLatchingOpener`/`isHoldingOpener`
+ *     over the level's `tset` group) — with two, crossing it is an `Or` of their events, which this does not state;
+ *   - GATES: the analyzer's crossings of the target's region whose EVERY way steps through the target's tiles (the
+ *     lock separates them), as the atlas's internal exit rows in that direction (`internalExitGates`: the compiler ANDs
+ *     the event onto whatever the row already costs). A target no crossing passes through (the overlay rules it OPEN
+ *     and the analyzer folded it, or it walls nothing) gates nothing and mints nothing (skipped by name).
+ */
+function inRoomLatchAnalysis(doc) {
+    const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
+    const entityAt = (level, type, x, y) => (levelOf(level)?.entities ?? []).find((e) => e.type === type && e.x === x && e.y === y);
+    const tilesOf = (t) => {
+        const e = entityAt(t.level, t.type, t.x, t.y);
+        const sem = SEM.entitySemantics(e);
+        const claimed = SEM.entityClaims(e, sem, { pixelMaskFootprints: true }).map((c) => c.tile);
+        return new Set((claimed.length ? claimed : [[Math.floor(t.x / TILE), Math.floor(t.y / TILE)]]).map(([x, y]) => `${x},${y}`));
+    };
+    return {
+        effect: (t) => (PERSISTENCE_RESPONSE[t.type] === 'lock-despawn' && t.publish === true
+            ? { effect: 'opens', why: 'a Lock handed activate = true by its latching group (ButtonRoom.as:79-89, Lock.as:activationStep)' }
+            : { effect: null, why: `${t.type}: not a Lock opened by the group's publish (response '${PERSISTENCE_RESPONSE[t.type]}', publish ${t.publish})` }),
+        pricedByButton: (t) => {
+            const others = (levelOf(t.level)?.entities ?? []).filter((e) => Number(e.attrs?.tset) === t.tset
+                && (OV.isLatchingOpener(e) || OV.isHoldingOpener(e)) && !(e.type === 'buttonroom' && Number(e.attrs?.tag) === t.tag));
+            return others.length === 0
+                ? { free: true, why: 'the group\'s ONLY in-level opener is this press' }
+                : { free: false, why: `the group has other openers [${others.map((e) => `${e.type}@${e.x},${e.y}`).join(', ')}]` };
+        },
+        gates: (t) => {
+            const regionId = regionIdFor(t.level);
+            const region = regionOf(regionId);
+            const analysis = regionAnalyses.get(regionId);
+            const rows = region?.subgraph?.internal_exits ?? [];
+            if (!analysis || rows.length === 0) return [];
+            const tiles = tilesOf(t);
+            const out = [];
+            for (const c of analysis.crossings) {
+                if (c.free || c.conditionSets.length === 0) continue;
+                if (!c.conditionSets.every((w) => w.tiles.some(([x, y]) => tiles.has(`${x},${y}`)))) continue;
+                const row = rows.find((r) => (r.from === c.from && r.to === c.to) || (r.bidirectional === true && r.from === c.to && r.to === c.from));
+                if (row) out.push({ region_id: regionId, from: c.from, to: c.to });
+            }
+            return out;
+        },
+    };
 }
 
 /**
@@ -2106,7 +2164,8 @@ export function playthroughEventLayer(doc) {
         events: [...priorEvents, ...talks.events],
         // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
         internalExitRules: locks.internalExitRules,
-        internalExitGates: blocks.internalExitGates,
+        // ⛓ RULES l20-button-latch: and an in-room latching press's crossings through its lock.
+        internalExitGates: [...blocks.internalExitGates, ...buttons.internalExitGates],
         exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...poles.exitGates, ...talks.exitGates],
     };
 }
@@ -2440,11 +2499,13 @@ function main() {
         + `${quiet ? '' : locks.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side} `
             + `across [${e.fields.across.join(', ')}] rule ${JSON.stringify(e.access_rule)}`).join('')}`
         + `${quiet ? '' : locks.internalExitRules.map((r) => `\n  ${r.region_id} ${r.from} -> ${r.to}: ${JSON.stringify(r.rule)}`).join('')}`);
-    console.log(`${buttons.events.length} cross-room button event(s), ${buttons.exitGates.length} crossing(s) through their targets gated`
+    console.log(`${buttons.events.length} button event(s), ${buttons.exitGates.length} crossing(s) through their targets gated, `
+        + `${buttons.internalExitGates.length} internal crossing(s) through an in-room latch's lock gated`
         + `${buttons.reused.length ? ` (${buttons.reused.join(', ')} reused)` : ''}`
         + `${quiet ? '' : buttons.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side} `
             + `(pressed at L${e.fields.action.presser.level} buttonroom@${e.fields.action.presser.x},${e.fields.action.presser.y})`).join('')}`
         + `${quiet ? '' : buttons.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}`
+        + `${quiet ? '' : buttons.internalExitGates.map((g) => `\n  gated ${g.region_id} ${g.from} -> ${g.to} (in-room press): ${JSON.stringify(g.rule)}`).join('')}`
         + `${buttons.skipped.length ? `; ${buttons.skipped.length} skipped: ${buttons.skipped.join('; ')}` : ''}`);
     console.log(`${poles.events.length} in-room pole event(s), ${poles.exitGates.length} crossing(s) through the bodies they kill gated`
         + `${quiet ? '' : poles.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side}`).join('')}`

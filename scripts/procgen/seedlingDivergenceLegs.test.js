@@ -299,7 +299,8 @@ describe('the committed playthrough\'s leg list', () => {
         //   contact, never a solid, so their arrivals are never inside one either)
         // ⛓ RULES yeti-event: + the L58 Yeti's talk (`action.gates`: the portal to L46, never a solid)
         // ⛓ RULES l63-darktrap: + the four in-room poles (L63:6, L63:7, L65:0, L101:0)
-        expect([...PRESS].sort()).toEqual(['flag:L101:0', 'flag:L114:0', 'flag:L16:0', 'flag:L28:0', 'flag:L39:8', 'flag:L58:1',
+        // ⛓ RULES l20-button-latch: + L20's in-room press (L20:4: its barrier is an internal lock, no landing is inside it)
+        expect([...PRESS].sort()).toEqual(['flag:L101:0', 'flag:L114:0', 'flag:L16:0', 'flag:L20:4', 'flag:L28:0', 'flag:L39:8', 'flag:L58:1',
             'flag:L62:0', 'flag:L63:1', 'flag:L63:6', 'flag:L63:7', 'flag:L65:0']);
         // the ARRIVAL's staging only (a goal event stages for the goal, never for the landing)
         const arrivalStaged = legs.filter((l) => l.arrive.events && l.stagedEvents)

@@ -357,7 +357,8 @@ function withPressDoor(exit, events) {
  * the target's cells (mode 'target': the obstacle's entity, in its own level) are laid in this world as one obstacle
  * opened by the event alone, `opened_by` naming it. The analyzer grid has the cell OPEN (the rules charge the exits of the
  * pocket it seals), so a floor cell is gated here; a cell this world does not floor is left out (another world lays it). A
- * cell that already holds an obstacle is refused by name — what a stacked target costs is not settled.
+ * cell that already holds an obstacle is refused by name — what a stacked target costs is not settled — except an atlas
+ * crossing gate, which the target joins (⛓ RULES l20-button-latch, below).
  */
 function layPressTargets(builder, events, local, inGrid) {
     for (const ev of events ?? []) {
@@ -366,8 +367,26 @@ function layPressTargets(builder, events, local, inGrid) {
         for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
             if (!builder.isFloor(x, y)) continue;
             const held = builder.obstacles.get(`${x},${y}`);
-            if (held !== undefined) {
+            // ⛓ RULES l20-button-latch — a target ON an atlas crossing gate (an IN-ROOM latch's lock the analyzer kept as a
+            // split: L20's lock@32,80, priced the Shield by the overlay) costs BOTH, as the rules price that crossing
+            // (`internalExitGates`: And(<the crossing's rule>, the press)). Any other stacked obstacle is still refused.
+            const gate = held !== undefined && /^atlas_gate_\d+$/.test(held) ? builder.obstacleLib[held] : null;
+            if (held !== undefined && !gate) {
                 throw new Error(`press target "${ev.name}": its cell (${x},${y}) already holds obstacle "${held}"`);
+            }
+            if (gate) {
+                const sid = `${id}+${held}`;
+                builder.obstacleLib[sid] ??= {
+                    id: sid,
+                    name: `${gate.name} + ${ev.name}`,
+                    clear_set_type: 'rule',
+                    clear_rule: { rule: 'And', children: [gate.clear_rule, { rule: 'Has', args: { item_name: ev.name } }] },
+                    opened_by: ev.name,
+                    color: '#b06eb8',
+                    display: { mode: 'tree' },
+                };
+                builder.obstacles.set(`${x},${y}`, sid);
+                continue;
             }
             builder.obstacleLib[id] ??= {
                 id,

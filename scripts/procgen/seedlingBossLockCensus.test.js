@@ -183,3 +183,78 @@ describe('rules sided-openers: every shieldlock against the committed atlas and 
         }
     });
 });
+
+// ⛓ RULES l20-button-latch — the IN-ROOM latching presses (`inRoomLatchButtonsOf`), against the committed rules. A
+// grouped lock opened only by a `room == -1` ButtonRoom stays open once pressed (the button's `check()` re-publishes
+// its group from its own cleared tag), so a crossing through it costs the PRESS, from either side. Before this slice
+// L20's `lock@32,80` cost the Shield both ways (`OV.GROUPED_LOCK_EXCEPTIONS`, the presser's reach): an arrival on the
+// press-less side crossed on the Shield alone, without the press. ER v1 shuffles the STAIRS (coupled), and both of
+// that side's doorways are stairs, so a shuffle reaches it — the residue was in scope, and is closed here.
+describe('rules l20-button-latch: an in-room latch\'s crossings cost its press event', () => {
+    const RULES = readJson('frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json');
+    const regions = RULES.regions['1'];
+    const names = (rule) => (!rule ? [] : [rule.args?.item_name, ...(rule.children ?? []).flatMap(names)].filter(Boolean));
+    const presses = Object.values(regions).flatMap((r) => r.locations.filter((l) => l.event_kind === 'game_state'
+        && l.action?.presser && l.action.presser.level === l.obstacle.level).map((l) => ({ ...l, region: r.name })));
+    const gatedBy = (e) => Object.values(regions).flatMap((r) => r.exits.filter((x) => names(x.access_rule).includes(e.name))
+        .map((x) => ({ from: r.name, to: x.connected_region, rule: x.access_rule })));
+
+    it('exactly ONE in-room press event: L20\'s button, at the button, in the button\'s own flag', () => {
+        expect(presses.map((e) => e.event_id)).toEqual(['flag:L20:4']);
+        expect(presses[0]).toMatchObject({
+            name: 'L20 flag 4: lock@32,80 cleared', region: 'level_20__r1c12', side: 'level_20__r1c12', across: [],
+            obstacle: { level: 20, tag: 4, class: 'lock', x: 32, y: 80 },
+            action: { verb: 'press', item: null, presser: { level: 20, class: 'buttonroom', x: 192, y: 16 } },
+        });
+        expect(MAP.levels.find((l) => l.level === 20).entities.find((e) => e.type === 'buttonroom').attrs)
+            .toMatchObject({ tset: '0', tag: '4', room: '-1' });
+    });
+
+    it('both directions through the lock cost And(the crossing\'s own rule, the press); nothing else names it', () => {
+        const [e] = presses;
+        const shield = { rule: 'Has', args: { item_name: 'Progressive Shield' } };
+        const has = { rule: 'Has', args: { item_name: e.name } };
+        expect(gatedBy(e)).toEqual([
+            { from: 'level_20__r1c4', to: 'level_20__r3c1', rule: { rule: 'And', children: [shield, has] } },
+            { from: 'level_20__r3c1', to: 'level_20__r1c4', rule: { rule: 'And', children: [shield, has] } },
+        ]);
+    });
+
+    it('the press-less side (no internal way to the button but through the lock) has only STAIRS doorways: ER v1 reaches it', () => {
+        const [e] = presses;
+        const gated = gatedBy(e);
+        const level = e.obstacle.level;
+        const own = (n) => n.startsWith(`level_${level}__`);
+        const reachesPress = (start) => {
+            const seen = new Set([start]);
+            const queue = [start];
+            while (queue.length) {
+                const n = queue.shift();
+                for (const x of regions[n].exits) {
+                    if (!own(x.connected_region) || seen.has(x.connected_region)) continue;
+                    if (gated.some((g) => g.from === n && g.to === x.connected_region)) continue;
+                    seen.add(x.connected_region);
+                    queue.push(x.connected_region);
+                }
+            }
+            return seen.has(e.side);
+        };
+        const sides = [...new Set(gated.flatMap((g) => [g.from, g.to]))];
+        const pressLess = sides.filter((n) => !reachesPress(n));
+        expect(pressLess).toEqual(['level_20__r3c1']);
+        // its doorways, by the class of the entity that makes them (an `out_` exit's own; an `in_L<n>` landing's
+        // source entity in level n)
+        const region = ATLAS.regions.find((g) => g.map_ref === level);
+        const classOf = (id) => {
+            const out = /^out_([a-z]+)_/.exec(id);
+            if (out) return out[1];
+            const [, n, x, y] = /^in_L(\d+)_(-?\d+)_(-?\d+)$/.exec(id);
+            return MAP.levels.find((l) => l.level === Number(n)).entities.find((q) => q.x === Number(x) && q.y === Number(y)
+                && Number(q.attrs?.to) === level).type;
+        };
+        const doors = region.exits.filter((x) => `level_${level}__${x.sub_region}` === pressLess[0])
+            .map((x) => `${x.exit_id}:${classOf(x.exit_id)}`).sort();
+        expect(doors).toEqual(['in_L13_96_32:stairsdown', 'out_stairsup_16_48:stairsup']);
+        expect(doors.every((d) => /:stairs(up|down)$/.test(d))).toBe(true);
+    });
+});
