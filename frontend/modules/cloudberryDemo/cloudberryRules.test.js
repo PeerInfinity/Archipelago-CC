@@ -30,9 +30,12 @@ const FALL_CLOUD = doc({
 });
 
 describe('items', () => {
-    it('names the ten game items (FlyBlob and Jetpack included) and maps both ways', () => {
+    it('names the eleven game items (FlyBlob, Jetpack and DoubleJump included) and maps both ways', () => {
         expect(CLOUDBERRY_GAME_ITEMS).toEqual(['MovingBlock', 'FallingBlock', 'BouncyBlock', 'GhostBlock', 'Cloud',
-            'Elevator', 'Pendulum', 'Conveyor', 'FlyBlob', 'Jetpack']);
+            'Elevator', 'Pendulum', 'Conveyor', 'FlyBlob', 'Jetpack', 'DoubleJump']);
+        expect(CLOUDBERRY_ITEM_NAMES.DoubleJump).toBe('Double Jump');
+        expect(CLOUDBERRY_LIBRARY_OBSTACLES.cloudberry_gate_DoubleJump.name).toBe('Double Jump Level');
+        expect(CLOUDBERRY_LIBRARY_OBSTACLES.cloudberry_gate_Jetpack.name).toBe('Jetpack Level');
         for (const g of CLOUDBERRY_GAME_ITEMS) expect(CLOUDBERRY_ITEMS_BY_AP_NAME[CLOUDBERRY_ITEM_NAMES[g]]).toBe(g);
         expect(Object.keys(CLOUDBERRY_LIBRARY_OBSTACLES)).toEqual(CLOUDBERRY_GAME_ITEMS.map((g) => `cloudberry_gate_${g}`));
     });
@@ -45,6 +48,16 @@ describe('documentFacts', () => {
         expect(f.jetpack).toBe(false);
         expect(f.coins.map((c) => c.id)).toEqual([1, 2, 3, 4, 6, 7]);
         expect(documentFacts(doc({ pieces: [[]], jetpack: true })).jetpack).toBe(true);
+    });
+    it('a Double-hero document (NumJumps > 1) needs Double Jump everywhere; other facts keep their shape (P5a)', () => {
+        const d = { ...doc({ pieces: [[], ['MovingBlock']] }), level: { heroAbility: { JetPack: false, NumJumps: 2 } } };
+        const f = documentFacts(d);
+        expect(f.doubleJump).toBe(true);
+        expect(requiredItems(f, 0)).toEqual(['DoubleJump']);
+        expect(exitItems(f)).toEqual(['MovingBlock', 'DoubleJump']);
+        const one = documentFacts({ ...d, level: { heroAbility: { JetPack: false, NumJumps: 1 } } });
+        expect('doubleJump' in one).toBe(false);
+        expect(exitItems(one)).toEqual(['MovingBlock']);
     });
     it('sorts a piece\'s items into the item order', () => {
         expect(documentFacts(doc({ pieces: [['Cloud', 'MovingBlock']] })).pieceItems).toEqual([['MovingBlock', 'Cloud']]);
@@ -132,9 +145,14 @@ describe('buildCloudberryPayload', () => {
     it('is the page\'s cloudberry-region/1 payload in params, with AP location names <region>__<check>', () => {
         const p = buildCloudberryPayload('region_2_2', { generate, docSha256: SHA, checks });
         expect(p.gameId).toBe('cloudberry');
-        expect(p.params).toEqual({ payload: CLOUDBERRY_PAYLOAD_VERSION, generate, docSha256: SHA, checks: { coin2: 2, coin4: 4 }, items: CLOUDBERRY_ITEMS_BY_AP_NAME });
+        expect(p.params).toEqual({ payload: CLOUDBERRY_PAYLOAD_VERSION, generate, docSha256: SHA, checks: { coin2: 2, coin4: 4 }, items: Object.fromEntries(
+            Object.entries(CLOUDBERRY_ITEMS_BY_AP_NAME).filter(([ap]) => ap !== 'Double Jump')) });
         expect(p.ap_locations).toEqual({ coin2: 'region_2_2__coin2', coin4: 'region_2_2__coin4' });
         expect(p.gate_rules).toBeUndefined();
+        // P5a: the map names Double Jump only for a Double-hero level, so every earlier payload keeps its bytes.
+        expect('Double Jump' in p.params.items).toBe(false);
+        expect(buildCloudberryPayload('r', { generate, docSha256: SHA, checks, doubleJump: true }).params.items)
+            .toEqual(CLOUDBERRY_ITEMS_BY_AP_NAME);
     });
     it('carries gate_rules only when something is authored', () => {
         const gateRules = { portals: { east: { rule: 'Has', args: { item_name: 'K' } } }, pickups: {} };

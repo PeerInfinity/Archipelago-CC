@@ -84,6 +84,12 @@ export function createFrameGenerator({ siteUrl, packsUrl = '', log = () => {} })
     return {
         get build() { return build; },
         close,
+        /** The page's feature flags (`__cloudberryEmbed.features`, e.g. doubleJump): opens the page if needed. */
+        async features() {
+            ready ??= open().catch((err) => { close(); throw err; });
+            const w = await ready;
+            return { ...(w.__cloudberryEmbed?.features ?? {}) };
+        },
         async generate(args) {
             ready ??= open().catch((err) => { close(); throw err; });
             const w = await ready;

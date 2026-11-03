@@ -12,12 +12,16 @@
  * browser, a gitignored folder headless) — is used without regenerating, so a re-run,
  * a stepped replay or a second Generate costs nothing.
  *
- * A GENERATOR is `{ build, generate(args) → Promise<{ text, docSha256 }> }`: the
+ * A GENERATOR is `{ build, generate(args) → Promise<{ text, docSha256 }>, features?() → Promise<{…}> }`: the
  * document text of `window.cloudberry.generateText(args)` and its canonical sha256
  * (the page's `__cloudberryEmbed.canonicalDocText`, the build id blanked — exactly
  * what the page checks at configure). Installed by the environment:
  *   - the browser: `cloudberryGenFrame.js` (a hidden same-origin game page);
  *   - headless: `scripts/procgen/cloudberryHeadlessGenerator.mjs` (`cloudberrySite.mjs`).
+ * `features()` = the page's `__cloudberryEmbed.features`. A plan that needs one the page
+ * lacks (P5a: a Double Jump level needs `doubleJump` — the replay fix and the DoubleJump
+ * item, Cloudberry `cdc77c9`) is refused BY NAME before anything is generated
+ * (`CloudberryFeatureMissing`), and not cached: another page may have it.
  *
  * Each level is generated with `reroll: true` (the generator's own gate search, ⚖ R14).
  * A refusal — `RerollExhausted:`, too few witnessed coins in a piece, the pieces not
@@ -86,7 +90,20 @@ export function lookupCloudberryLevel(plan) {
     return null;
 }
 
+/** The page features a plan needs (P5a: a Double-hero level needs `doubleJump`). */
+export function cloudberryPlanFeatures(plan) {
+    return plan.doubleJump ? ['doubleJump'] : [];
+}
+
 async function resolveLevel(plan, onAttempt) {
+    const needed = cloudberryPlanFeatures(plan);
+    if (needed.length) {
+        const features = (await _generator.features?.()) ?? {};
+        const missing = needed.filter((f) => features[f] !== true);
+        if (missing.length) {
+            return { refused: [`the Cloudberry page (build ${_generator.build || '?'}) has no ${missing.join(', ')}`], missingFeatures: missing, transient: true };
+        }
+    }
     const reasons = [];
     for (let attempt = 0; attempt <= plan.retries; attempt++) {
         const args = cloudberryAttemptArgs(plan.args, attempt);
@@ -145,6 +162,12 @@ export function ensureCloudberryLevel(plan, { onAttempt = null } = {}) {
 
 /** The named refusal for a refused level. */
 export function cloudberryRefusalMessage(plan, result) {
+    if (result.missingFeatures?.length) {
+        return `CloudberryFeatureMissing: cloudberry zone '${plan.region_id}' is a Double Jump level, but `
+            + `${result.refused.join('; ')} (__cloudberryEmbed.features.${result.missingFeatures[0]}) — it would play `
+            + 'unreplayable and ungated. Use a Cloudberry page that has it (the Cloudberry repo\'s Double Jump '
+            + 'change, cdc77c9), or set "Double Jump chance" (cloudberryDoubleJumpChance) to 0.';
+    }
     return `CloudberryLevelRefused: cloudberry zone '${plan.region_id}' — no attempt made a level that `
         + `realises its plan (pieces [${plan.pieceSets.map((s) => `{${s.join(',')}}`).join(' ')}], check coins `
         + `per piece [${plan.needs.checks.join(',')}]): ${result.refused.join('; ')}. Change the region seed `
