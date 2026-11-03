@@ -10,7 +10,7 @@
  * ⛔ THE BRIEF'S CAUSE WAS NOT THE MEASURED ONE. The brief (and the lab's note) read the refusal as an INCIDENTAL
  * open — the walk to one chest crossing the other chest's trigger line. Measured on all 11 refusals (and on 32 of 32
  * hand-built two-chest rooms that name both chests): the "unnamed" chest is the one the PREVIOUS chest leg of the same
- * visit opened, BY NAME, and `runChest`'s effect check compares `run.entities('openChests')` — the VISIT's open set,
+ * visit opened, BY NAME, and `runChest`'s effect check compares the run's `openChests` entity read — the VISIT's open set,
  * which a chest never leaves (`Chest.open()` sets `type = ""` and clears its persistence flag; the cell stays open
  * for the rest of the visit, `levelRun.openChestIdsNow`) — against `{target}`. So every second chest leg of a visit
  * refused, whatever it crossed. No measured walk (100 lab rooms, 64 hand-built rooms with adjacent and diagonal
@@ -50,7 +50,7 @@ export function withChestLegDelta(enabled, fn) {
 
 /**
  * The set `runChest`'s exact-set check reads, what it left out, and its verdict.
- * @param {Iterable<string>} openNow     `run.entities('openChests')` after the leg
+ * @param {Iterable<string>} openNow     the run's `openChests` read after the leg
  * @param {Iterable<string>|null} openBefore  the chests open before the leg's approach (`before.chests`)
  * @param {string} targetId              the chest the leg names
  * @returns {{opened: string[], openBefore: string[], exact: boolean}} OFF: `opened` is the whole set (insertion

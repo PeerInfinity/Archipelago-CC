@@ -156,7 +156,7 @@ async function main() {
             if (d > maxDrift) maxDrift = d;
         }
         row = {
-            set_id: set.set_id, mounted: mounted?.active, page: PAGE, tick_count: tape.tick_count,
+            witness_set: set.set_id, mounted: mounted?.active, page: PAGE, tick_count: tape.tick_count,
             observations: ticks.length, clears, model: { chestOpens: model.chestOpens }, chestRecords,
             maxDrift, firstDrift, final: { game: ticks.at(-1) ?? null, model: model.ticks.at(-1) ?? null },
         };
