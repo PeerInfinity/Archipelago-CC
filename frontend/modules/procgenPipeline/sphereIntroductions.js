@@ -12,7 +12,8 @@
  *   1. ELIGIBLE when the plan has a sphere after the node's own (w+1 < N) and a
  *      wave-(w+1) non-filler host holds an item: the first holding ≥ 2, else the
  *      first holding one (it is left a pass-through region), in index order. The
- *      item is its LAST, so the host keeps every other location id. Otherwise the
+ *      item is its LAST DEALT one (no rule, not an introduced item: R1), so the
+ *      host keeps every other location id. Otherwise the
  *      node is decided NONE (`introduces: []`).
  *   2. The ITEM is the first declared one in neither the plan (any sphere's items
  *      or introductions) nor another node's request. Distinct BY CONSTRUCTION.
@@ -49,11 +50,20 @@ function planItems(plan) {
     return out;
 }
 
+/**
+ * ⛓ R1 (js-16) — a DEALT item: no rule, and not an introduced item. A host that is itself a declaring node may
+ * already hold its own key and its own locked item. Taking either would lock a key, or re-gate a sphere-(w+3)
+ * item as sphere w+2, so only dealt items are ever moved, whatever order the nodes come in.
+ */
+const isDealt = (introduced) => (it) => !it.rule && !introduced.has(it.item);
+const lastDealtIndex = (host, introduced, name = null) => (host?.items ?? [])
+    .findLastIndex((it) => isDealt(introduced)(it) && (name === null || it.item === name));
+
 /** Apply one recorded decision onto the freshly dealt items (idempotent per deal). */
-function applyDecision(node, nodes, decision) {
+function applyDecision(node, nodes, decision, introduced) {
     const host = nodes[decision.lockedFrom]?.index === decision.lockedFrom
         ? nodes[decision.lockedFrom] : nodes.find((n) => n.index === decision.lockedFrom);
-    const at = host?.items?.findLastIndex?.((it) => it.item === decision.lockedItem) ?? -1;
+    const at = lastDealtIndex(host, introduced, decision.lockedItem);
     if (!host || at < 0) {
         throw new Error(`scheduleSphereIntroductions: node ${node.index}'s recorded introduction of `
             + `'${decision.item}' locks '${decision.lockedItem}' from node ${decision.lockedFrom}, which no longer `
@@ -79,15 +89,17 @@ export function scheduleSphereIntroductions(plan, nodes, { regionParams = {}, en
         return declaredFor.get(node.substrate);
     };
     const taken = planItems(plan);
+    const introduced = new Set(spheres.flatMap((s) => s.introduced ?? []));
+    const dealtCount = (n) => (n.items ?? []).filter(isDealt(introduced)).length;
     for (const node of nodes) {
         if (node.isFiller || declared(node).length === 0) continue;
         if (Array.isArray(node.introduces)) {
-            for (const d of node.introduces) applyDecision(node, nodes, d);
+            for (const d of node.introduces) applyDecision(node, nodes, d, introduced);
             continue;
         }
         const w = node.wave;
         const hosts = w + 1 < spheres.length ? nodes.filter((n) => n.wave === w + 1 && !n.isFiller) : [];
-        const host = hosts.find((n) => (n.items?.length ?? 0) >= 2) ?? hosts.find((n) => (n.items?.length ?? 0) >= 1);
+        const host = hosts.find((n) => dealtCount(n) >= 2) ?? hosts.find((n) => dealtCount(n) >= 1);
         if (!host) { node.introduces = []; continue; }
         const item = declared(node).find((k) => !taken.has(k));
         if (item === undefined) {
@@ -95,10 +107,11 @@ export function scheduleSphereIntroductions(plan, nodes, { regionParams = {}, en
                 declared(node)));
         }
         taken.add(item);
+        introduced.add(item);
         spheres[w].introduced = [...(spheres[w].introduced ?? []), item];
-        const decision = { item, lockedItem: host.items[host.items.length - 1].item, lockedFrom: host.index };
+        const decision = { item, lockedItem: host.items[lastDealtIndex(host, introduced)].item, lockedFrom: host.index };
         node.introduces = [decision];
-        applyDecision(node, nodes, decision);
+        applyDecision(node, nodes, decision, introduced);
     }
     return nodes;
 }

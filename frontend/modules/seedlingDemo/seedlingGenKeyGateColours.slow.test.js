@@ -32,18 +32,32 @@ const NOT_MET_BOUND = 0.25;
 const SHAPES = {
     deep: { sphereCount: 4, quota: 5, items: { key_red: 1, key_blue: 1, key_green: 1, victory: 1 } },
     wide: { sphereCount: 2, quota: 6, items: { key_red: 1, key_blue: 1, key_green: 1, key_yellow: 1, victory: 1 } },
+    /** ⛓ R3 (js-16): batched, so a batch's last wave is decided NONE at a BATCH BOUNDARY */
+    batched: { sphereCount: 6, quota: 7, spheresPerBatch: 3,
+        items: { key_red: 1, key_blue: 1, key_green: 1, key_yellow: 1, key_purple: 1, victory: 1 } },
 };
-const stateOf = (seed, { sphereCount, quota, items }) => ({
+/**
+ * ⛓ R3 — why a declaring node was decided NONE (`introduces: []`): the END OF THE PLAN (no sphere w+2), a BATCH
+ * BOUNDARY (its batch's last wave: the next wave was not wired when it was decided), or NO HOST (a next wave with
+ * no dealt item). This is not surfaced in the registry or the sidecar; `sphere_tree` records only `[]`.
+ */
+function noneReason(node, sphereCount, batch) {
+    if (node.wave + 2 > sphereCount) return 'endOfPlan';
+    if (batch && node.wave % batch === batch - 1) return 'batchBoundary';
+    return 'noHost';
+}
+const stateOf = (seed, { sphereCount, quota, items, spheresPerBatch = null }) => ({
     ...SEEDLING_GENERATED_LEAF_STATE,
     substrateQuotas: { maze: 1, flash_seedling_gen: quota },
     scenario: { items, obstacles: {} },
     params: { ...SEEDLING_GENERATED_LEAF_STATE.params, seed, sphereCount, maxItemsPerRegion: 1,
-        seedlingGenHostChildren: true, startSubstrate: 'maze', seedlingGenElements: 'keygate' },
+        seedlingGenHostChildren: true, startSubstrate: 'maze', seedlingGenElements: 'keygate',
+        ...(spheresPerBatch ? { spheresPerBatch } : {}) },
 });
 
 describe('the keygate request sweep', () => {
     it.each(Object.keys(SHAPES))('%s: every world builds exact with distinct colours, or is refused not-met BY NAME', async (shape) => {
-        const tally = { built: 0, keyRooms: 0, notMet: 0 };
+        const tally = { built: 0, keyRooms: 0, notMet: 0, endOfPlan: 0, batchBoundary: 0, noHost: 0 };
         for (const seed of SEEDS) {
             let res;
             try {
@@ -61,9 +75,15 @@ describe('the keygate request sweep', () => {
             expect(new Set(keys).size, `${shape} s${seed}: distinct colours`).toBe(keys.length);
             tally.built += 1;
             tally.keyRooms += keys.length;
+            for (const n of res.rulesJson.procgen_metadata['1'].sphere_tree.nodes) {
+                if (Array.isArray(n.introduces) && n.introduces.length === 0) {
+                    tally[noneReason(n, SHAPES[shape].sphereCount, SHAPES[shape].spheresPerBatch ?? null)] += 1;
+                }
+            }
         }
         console.log(`## KEYGATE-REQUEST-SWEEP | shape: ${shape} | seeds: ${SEEDS[0]}-${SEEDS.at(-1)} | built: `
-            + `${tally.built} | key-gate rooms: ${tally.keyRooms} | ${KEYGATE_REQUEST_REFUSAL}: ${tally.notMet}`);
+            + `${tally.built} | key-gate rooms: ${tally.keyRooms} | ${KEYGATE_REQUEST_REFUSAL}: ${tally.notMet} | `
+            + `decided NONE: end-of-plan ${tally.endOfPlan}, batch-boundary ${tally.batchBoundary}, no-host ${tally.noHost}`);
         expect(tally.notMet / SEEDS.length).toBeLessThanOrEqual(NOT_MET_BOUND);
     }, 900_000);
 });

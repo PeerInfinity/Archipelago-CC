@@ -75,6 +75,75 @@ describe('the vocabulary', () => {
     });
 });
 
+/**
+ * A miniature sphere sweep over hand-built nodes (AP's semantics: everything reachable with the items held at
+ * the start of a sphere is collected in it). A node is open once its parent is and its `gate` items are held; a
+ * location once its node is and its rule's `Has` items are held.
+ */
+function sweep(nodes) {
+    const held = new Set();
+    const got = new Set();
+    const spheres = [];
+    const needs = (rule) => (rule?.rule === 'Has' ? [rule.args.item_name] : []);
+    const open = (n) => (n.parent == null || open(nodes.find((m) => m.index === n.parent)))
+        && (n.gate ?? []).every((g) => held.has(g));
+    for (let s = 1; s < 20; s++) {
+        const items = [];
+        for (const n of nodes) {
+            if (!open(n)) continue;
+            for (const l of n.items) {
+                const key = `${n.index}/${l.id}`;
+                if (got.has(key) || !needs(l.rule).every((i) => held.has(i))) continue;
+                got.add(key);
+                items.push(l.item);
+            }
+        }
+        if (items.length === 0) break;
+        items.forEach((i) => held.add(i));
+        spheres.push({ sphere: s, items });
+    }
+    return spheres;
+}
+
+/** Four spheres; a declaring node in waves 0 AND 1, so the wave-1 one is the wave-0 one's HOST (chained). */
+function chained() {
+    const plan = { spheres: [
+        { sphere: 1, items: ['a'] }, { sphere: 2, items: ['b0', 'b1'] },
+        { sphere: 3, items: ['c0', 'c1'] }, { sphere: 4, items: ['v'] },
+    ] };
+    const nodes = [
+        { index: 0, wave: 0, parent: null, substrate: 'locks', gate: [], items: [{ id: 'loc_0', item: 'a' }] },
+        { index: 1, wave: 1, parent: 0, substrate: 'locks', gate: ['a'],
+            items: [{ id: 'loc_0', item: 'b0' }, { id: 'loc_1', item: 'b1' }] },
+        { index: 2, wave: 2, parent: 1, substrate: 'plain', gate: ['b0'],
+            items: [{ id: 'loc_0', item: 'c0' }, { id: 'loc_1', item: 'c1' }] },
+        { index: 3, wave: 3, parent: 2, substrate: 'plain', gate: ['c0'], items: [{ id: 'loc_0', item: 'v' }] },
+    ];
+    return { plan, nodes };
+}
+
+describe('⛓ R1 — CHAINED key-gate rooms: only DEALT items move, in any node order', () => {
+    it.each([['index order', [0, 1, 2, 3]], ['host BEFORE its client (shuffled)', [1, 0, 2, 3]]])(
+        '%s: each room locks a DEALT item of its host, and the sweep matches the plan', (_, order) => {
+            const { plan, nodes } = chained();
+            const ordered = order.map((i) => nodes[i]);
+            scheduleSphereIntroductions(plan, ordered, { regionParams: { on: true }, entryOf });
+            const [client, host] = [nodes[0], nodes[1]];
+            expect(client.introduces).toHaveLength(1);
+            expect(host.introduces).toHaveLength(1);
+            /** the client never takes the host's own key or the item the host locked */
+            expect(client.introduces[0].lockedItem).toMatch(/^b[01]$/);
+            expect(host.introduces[0].lockedItem).toMatch(/^c[01]$/);
+            expect(compareSpheresToPlan(sweep(nodes), plan)).toEqual([]);
+            /** and a re-deal REPLAYS the same, in the same order */
+            const first = JSON.stringify(nodes.map((n) => n.items));
+            const fresh = chained();
+            nodes.forEach((n, i) => { n.items = fresh.nodes[i].items; });
+            scheduleSphereIntroductions(plan, ordered, { regionParams: { on: true }, entryOf });
+            expect(JSON.stringify(nodes.map((n) => n.items))).toBe(first);
+        });
+});
+
 describe('the planner pre-pass', () => {
     it('a declaring node takes the first FREE item, a sphere-(w+2) item moves behind it, the plan stays exact', () => {
         const { plan, nodes } = world();

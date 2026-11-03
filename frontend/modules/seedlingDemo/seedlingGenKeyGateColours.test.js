@@ -42,12 +42,13 @@ for (const rel of REGISTRY_LIBRARIES) {
 const GEN = 'flash_seedling_gen';
 /** A sphere world of generated rooms behind a maze start, every room asked for `keygate` (no type). */
 const keyWorld = (seed, { sphereCount = 4, quota = 5, items = { key_red: 1, key_blue: 1, key_green: 1, victory: 1 },
-    maxItemsPerRegion = 1 } = {}) => ({
+    maxItemsPerRegion = 1, spheresPerBatch = null } = {}) => ({
     ...SEEDLING_GENERATED_LEAF_STATE,
     substrateQuotas: { maze: 1, [GEN]: quota },
     scenario: { items, obstacles: {} },
     params: { ...SEEDLING_GENERATED_LEAF_STATE.params, seed, sphereCount, maxItemsPerRegion,
-        seedlingGenHostChildren: true, startSubstrate: 'maze', seedlingGenElements: 'keygate' },
+        seedlingGenHostChildren: true, startSubstrate: 'maze', seedlingGenElements: 'keygate',
+        ...(spheresPerBatch ? { spheresPerBatch } : {}) },
 });
 const build = async (state) => runPresetHeadless(buildRunFromState(structuredClone(state)));
 const HAS = (item) => ({ rule: 'Has', args: { item_name: item } });
@@ -115,6 +116,38 @@ describe('1 — sphere growth: one colour per key-gate room, the key a SPHERE it
         for (const n of nodes) if (n.substrate !== GEN) expect(n).not.toHaveProperty('introduces');
         expect(() => assembleGeneratedSeedlingSet(rulesJson, { selfPlayer: 1 })).not.toThrow();
     });
+});
+
+describe('1b — R1/R2 (js-16): CHAINED rooms, and a decision REPLAYED across batches', () => {
+    it('a key-gate room whose host is ITSELF a key-gate room (chained): every seed, oracle exact', () => {
+        for (const seed of [1, 2, 3]) {
+            const { rulesJson, oracleErrors } = WORLDS[seed];
+            const nodes = rulesJson.procgen_metadata['1'].sphere_tree.nodes;
+            const keyed = new Set(nodes.filter((n) => n.introduces?.length).map((n) => n.index));
+            const chainedPairs = nodes.filter((n) => n.introduces?.some((d) => keyed.has(d.lockedFrom)));
+            expect(chainedPairs.length, `seed ${seed}`).toBeGreaterThanOrEqual(1);
+            /** the client locked a DEALT item of its host, never the host's own key */
+            for (const n of chainedPairs) expect(BOSS_KEY_ITEMS).not.toContain(n.introduces[0].lockedItem);
+            expect(oracleErrors).toEqual([]);
+        }
+    });
+
+    it.each([1, 2, 3])('seed %i, spheresPerBatch=3 over 6 spheres: a decision of batch 1 is replayed in batch 2', async (seed) => {
+        const items = { key_red: 1, key_blue: 1, key_green: 1, key_yellow: 1, key_purple: 1, victory: 1 };
+        const { rulesJson, oracleErrors } = await build(keyWorld(seed, { sphereCount: 6, quota: 7, items, spheresPerBatch: 3 }));
+        const nodes = rulesJson.procgen_metadata['1'].sphere_tree.nodes;
+        const early = nodes.filter((n) => n.wave < 3 && n.introduces?.length);
+        expect(early.length, 'a key-gate room decided in batch 1').toBeGreaterThanOrEqual(1);
+        /** batch 2 re-dealt every item and found each locked item on its host again (no throw), and logic is exact */
+        for (const n of early) {
+            const [d] = n.introduces;
+            const region = Object.keys(rulesJson.regions['1']).find((r) => (rulesJson.regions['1'][r].locations ?? [])
+                .some((l) => JSON.stringify(l.access_rule) === JSON.stringify(HAS(d.item))));
+            expect(region, `${d.item}'s lock is in the world`).toBeTruthy();
+        }
+        expect(oracleErrors).toEqual([]);
+        expect(new Set(keyRooms(rulesJson).map((r) => r.key.item)).size).toBe(keyRooms(rulesJson).length);
+    }, 120_000);
 });
 
 describe('2 — both sides of the logic, and the GATE', () => {
