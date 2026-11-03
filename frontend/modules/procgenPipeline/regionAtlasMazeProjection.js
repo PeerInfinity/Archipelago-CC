@@ -1553,6 +1553,13 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     const openAt = ([x, y], label) => {
         if (builder.isFloor(x, y)) return;
         builder.floor(x, y);
+        // ⛓ THE OPENED CELL KEEPS ITS OWN GATE (session tile-rules-automation-r-a2, the designer's fix 1): a door or a
+        // location drawn inside an item-gated solid is touched only once that solid is gone, so the cell's own resolvable
+        // condition gates it here, as the per-sub-region opener does (`openTileTowards`). L66's teleporter@72,64 sits inside
+        // bosslock@72,64 {keyType 4}: opened bare, the level world reached L70 holding nothing once the producer's composed
+        // Yellow Key charge (`chargeSealedDoor`) was no longer copied onto the exit.
+        const opened = occupancyRule(grid.cells[y * grid.width + x], resolveCondition);
+        if (opened.rule && opened.unresolved.length === 0) builder.gate(x, y, opened.rule);
         note({ kind: 'opened_solid', tile: [x + ox, y + oy], label, message: `${label} at [${x + ox},${y + oy}] sits on a cell the level world walls — opened, because that is where the atlas puts it` });
         if (MOVES.some(([, dx, dy]) => builder.isFloor(x + dx, y + dy))) return;
         const prev = new Map([[keyOf(x, y), null]]);
