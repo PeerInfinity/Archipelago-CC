@@ -1,7 +1,10 @@
+// ⚖ Robert 2026-11-02 CI manual-only P1: TRAIN tier (was `hammerIceTurretStatic.slow.test.js`). Runs on js-land/** train pushes and
+// on dispatch (`-f train=true`), NOT on a slice push — a solver change that moves this pin reds at the train,
+// unless the slice dispatches the train tier first (js-16's packet rule). `npm run test:unit:train`.
 /**
- * seedlingDemo/hammerIceTurretStatic.slow.test — ⛓⛓ SEEDLING HAMMER-PHASE ICEST on L40LATCH's latch chain
+ * seedlingDemo/hammerIceTurretStatic.train.test — ⛓⛓ SEEDLING HAMMER-PHASE ICEST on L40LATCH's latch chain
  * (`fixtures/l40latch-witness/latch-boot.json`, Boss Key 2 from the held latch; `holdWaitPriced` + `chaserOrbitKill`
- * at their defaults, ON). Each solve is ~1–2 min, so these rows are the slow tier.
+ * at their defaults, ON). Each solve is ~1–2 min, so these rows are the train tier (P1).
  *   - ON alone the walk back west refuses at t271 on `bob@736,800`, OFF's words byte for byte: the smallest set whose
  *     removal admits a corridor there is `bob@736,800` + `bob@736,752` + `iceturret@472,400`, and no single removal does.
  *   - ON with CPAIR's size-3 arm, the triple with the turret admits: the chaser arm kills `bob@736,800` (t577) and the

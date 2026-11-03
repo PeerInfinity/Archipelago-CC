@@ -4,7 +4,7 @@
  * The fast rows: the switch ships OFF; the weigh's fallback to the hold in a room with no turret (`procgenWeigh`'s
  * `C2-no-block` gadget) and L16's committed solve (a block weigh) are OFF's byte for byte; and ICEST's pocket boot (the
  * latch boot's persistence at (480,456)), whose corpse weigh binds live, is unchanged ON.
- * The latch chain's own rows (each solve ~1–2 min) are `hammerLatchWeigh.slow.test.js`.
+ * The latch chain's own rows (each solve ~1–2 min) are `hammerLatchWeigh.train.test.js`.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';

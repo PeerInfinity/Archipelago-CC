@@ -23,6 +23,7 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Cloudberry Gem": 1,
     "Clouds": 1,
     "Moving Blocks": 1,
     "Victory": 1,
@@ -87,7 +88,7 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Clouds", "Moving Blocks", "Victory"]),
+        "Everything": frozenset(["Clouds", "Cloudberry Gem", "Moving Blocks", "Victory"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -97,24 +98,27 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
         "region_2_2__loc_0": "Clouds",
-        "region_2_3__loc_0": "Moving Blocks",
-        "region_3_3__loc_0": "Victory",
+        "region_2_2__loc_1": "Cloudberry Gem",
+        "region_3_2__loc_0": "Moving Blocks",
+        "region_4_2__loc_0": "Victory",
     }
 
     # Original seed placements - actual item placements from the original seed generation
     # Used by _place_original_items() to reproduce exact original item placement
     original_seed_placements: ClassVar[Dict[str, str]] = {
         "region_2_2__loc_0": "Clouds",
-        "region_2_3__loc_0": "Moving Blocks",
-        "region_3_3__loc_0": "Victory",
+        "region_2_2__loc_1": "Cloudberry Gem",
+        "region_3_2__loc_0": "Moving Blocks",
+        "region_4_2__loc_0": "Victory",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
         "region_2_2__loc_0": True,
-        "region_2_3__loc_0": True,
-        "region_3_3__loc_0": True,
+        "region_2_2__loc_1": True,
+        "region_3_2__loc_0": True,
+        "region_4_2__loc_0": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):

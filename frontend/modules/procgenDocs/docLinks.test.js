@@ -310,15 +310,17 @@ describe('the corpus census — printed, then pinned', () => {
          *              sibling link into runner.md gone; the pointers that named it re-aimed (cloudberry.md,
          *              noiz2sa.md, loop-recording.md → bounce.md / cloudberry.md / noiz2sa.md; architecture.md's
          *              table row → cloudberry.md) (`doc` 296 → 290, net).
+         *   383 → 384  cloudberry P4c (2026-11-03, fill slack): cloudberry.md § Items' Cloudberry Gem note →
+         *              its own § Fill slack for tiny worlds (`same-doc` 31 → 32).
          */
         expect(by).toEqual({
-            'same-doc': 31,
+            'same-doc': 32,
             doc: 290,
             external: 22,
             repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(383);
+        expect(CORPUS.length).toBe(384);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {

@@ -414,7 +414,13 @@ export function ciShallowIn(text, { file = '(text)' } = {}) {
  */
 export function ciPathsIn(text, { file = '(text)' } = {}) {
     const hits = [...text.matchAll(CI_PATHS_LINE_RE)];
-    if (!hits.length) return null;
+    if (!hits.length) {
+        if (CI_PATHS_SLICE_LINE_RE.test(text)) {
+            CI_PATHS_SLICE_LINE_RE.lastIndex = 0;
+            throw new Error(`gateRoster: ${file} declares @ci-paths-slice without @ci-paths — there is no filter to scope`);
+        }
+        return null;
+    }
     if (hits.length > 1) {
         throw new Error(`gateRoster: ${file} declares ${hits.length} @ci-paths lines — one filter `
             + 'per gate, or two readers disagree on which one decides');
@@ -424,10 +430,30 @@ export function ciPathsIn(text, { file = '(text)' } = {}) {
         throw new Error(`gateRoster: ${file} has an empty @ci-paths line — an empty filter would `
             + 'take the gate off every push silently');
     }
-    return { globs };
+    /**
+     * ⚖ Robert 2026-11-02 CI manual-only P4 — **`@ci-paths-slice declared`: ON A SLICE-BRANCH PUSH,
+     * ONLY THE DECLARED GLOBS (and the gate file itself) TRIGGER THE ARM.** The derived import closure
+     * (`ciPathFilter.closureFilter`) still decides on every other run that path-filters; main and
+     * js-land/** train pushes, PRs and dispatches run the arm outright (the plan job's `ALL`). Opt-in
+     * per gate, so every other `@ci-paths` gate keeps its closure on slice pushes. ⛔ What a slice push
+     * no longer catches is then a change in the closure alone — the train catches it.
+     */
+    const slices = [...text.matchAll(CI_PATHS_SLICE_LINE_RE)];
+    if (slices.length > 1) {
+        throw new Error(`gateRoster: ${file} declares ${slices.length} @ci-paths-slice lines — one per gate`);
+    }
+    const slice = slices.length ? slices[0][1].trim() : 'closure';
+    if (!CI_PATHS_SLICE_SCOPES.includes(slice)) {
+        throw new Error(`gateRoster: ${file} has \`@ci-paths-slice ${slice}\` — expected one of `
+            + `${CI_PATHS_SLICE_SCOPES.filter((x) => x !== 'closure').join(', ')}`);
+    }
+    return { globs, slice };
 }
 
-const CI_PATHS_LINE_RE = /^[ \t]*\*[ \t]*@ci-paths\b(.*)$/gm;
+const CI_PATHS_LINE_RE = /^[ \t]*\*[ \t]*@ci-paths(?![-\w])(.*)$/gm;
+const CI_PATHS_SLICE_LINE_RE = /^[ \t]*\*[ \t]*@ci-paths-slice\b(.*)$/gm;
+/** `closure` (the default): declared ∪ derived on every push; `declared`: declared only on a slice push. */
+export const CI_PATHS_SLICE_SCOPES = Object.freeze(['closure', 'declared']);
 
 /**
  * The box-only refusal a gate declares, or `null`. ⛔ Same refusals as

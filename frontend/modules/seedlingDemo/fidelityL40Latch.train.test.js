@@ -1,3 +1,6 @@
+// ⚖ Robert 2026-11-02 CI manual-only P1: TRAIN tier (was `fidelityL40Latch.slow.test.js`). Runs on js-land/** train pushes and
+// on dispatch (`-f train=true`), NOT on a slice push — a solver change that moves this pin reds at the train,
+// unless the slice dispatches the train tier first (js-16's packet rule). `npm run test:unit:train`.
 /**
  * seedling-fidelity-l40latch (wave 32), the SLOW rows: the latch solves under each switch arm (~1 min each).
  * `holdWaitPriced` alone climbs the ladder and refuses with the chaser arm's stance scan (every still stance hit) and

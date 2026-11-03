@@ -117,14 +117,19 @@ export const CLOUDBERRY_SPHERE_DEMO_STATE = Object.freeze({
         cloudberryDifficulty: 2,
         cloudberryPieceLength: 3500,
         cloudberryMinPieces: 2,
-        cloudberryChecksPerPiece: 1,
+        // P4c: the start level holds TWO checks (Clouds + the filler), on one piece.
+        cloudberryChecksPerPiece: 2,
         cloudberryHazards: false,
         cloudberryTileset: 'random',
         cloudberryJumpLevel: 2,
         cloudberryRetries: 4,
     }),
     scenario: Object.freeze({
-        items: Object.freeze({ 'Moving Blocks': 1, Clouds: 1, Victory: 1 }),
+        // ⛓ P4c FILL SLACK: the gem (it opens nothing) gives the start level a second, FREE location, so
+        // two copies of this world fill (restrictive, full accessibility) on every seed. The KEY ORDER is
+        // load-bearing: the planner shuffles the pool in insertion order, and this order puts the gem in
+        // sphere 1 (with Clouds) at seed 1; check-cloudberry-sphere.mjs asserts it.
+        items: Object.freeze({ 'Cloudberry Gem': 1, Clouds: 1, 'Moving Blocks': 1, Victory: 1 }),
         obstacles: Object.freeze({}),
     }),
     substrateQuotas: Object.freeze({ cloudberry: 99 }),

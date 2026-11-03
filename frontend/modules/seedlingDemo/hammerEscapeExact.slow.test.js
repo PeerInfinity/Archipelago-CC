@@ -1,7 +1,7 @@
 /**
  * ⛓⛓ SEEDLING HAMMER-PHASE ESCAPE-EXACT — `PRESS_ESCAPE_EXACT` on leg 860 (the slow row; the fast ones are
  * `hammerEscapeExact.test.js`). Leg 860's captured request 860/1 at L40C's seam 5950, under SPIN's arm A5
- * (`hammerSpinnerPress.slow.test.js`: CPAIR-3, ICEST, OPP, LWF, `orbitFreeAim`, SBD), the deadline at 10240 work units.
+ * (`hammerSpinnerPress.train.test.js`: CPAIR-3, ICEST, OPP, LWF, `orbitFreeAim`, SBD), the deadline at 10240 work units.
  *
  * ⚠ THE BRIEF EXPECTED "860 HITLESS WITH SPIN OFF + THE SWITCH ON". MEASURED, IT IS NOT: with fidelity's key ON the
  * exact escape answers 200 asks (OFF 29, all no claim), and at t541 it CLAIMS `no-landing` for `deriveStrike`'s

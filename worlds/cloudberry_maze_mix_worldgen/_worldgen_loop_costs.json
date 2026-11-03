@@ -10,12 +10,12 @@
       "timeDrainPerSecond": 1,
       "xpEffect": "cost"
     },
-    "region_4_1": {
+    "region_2_2": {
       "timeDrainPerSecond": 1,
       "xpEffect": "cost"
     },
     "region_3_2": {
-      "moveCost": 32,
+      "moveCost": 38,
       "xpEffect": "cost"
     },
     "region_4_2": {
@@ -28,8 +28,9 @@
     }
   },
   "locations": {
-    "region_3_2__loc_0__7_2": 66,
-    "region_3_3__loc_0__4_2": 100
+    "region_3_2__loc_0__6_4": 78,
+    "region_3_3__loc_0__4_2": 100,
+    "region_3_3__loc_1__4_1": 110
   },
   "defaultRegionCost": 50,
   "defaultLocationCost": 10,

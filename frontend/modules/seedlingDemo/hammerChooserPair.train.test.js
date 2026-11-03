@@ -1,5 +1,7 @@
+// ⚖ Robert 2026-11-02 CI manual-only P5: TRAIN tier (was the default-tier `hammerChooserPair.test.js`). Runs on js-land/** train
+// pushes and on dispatch (`-f train=true`), NOT on a slice push. `npm run test:unit:train`.
 /**
- * seedlingDemo/hammerChooserPair.test — ⛓⛓ SEEDLING HAMMER-PHASE CPAIR: THE REMOVAL CHOOSER ANSWERS A CHASER PAIR
+ * seedlingDemo/hammerChooserPair.train.test — ⛓⛓ SEEDLING HAMMER-PHASE CPAIR: THE REMOVAL CHOOSER ANSWERS A CHASER PAIR
  * (`CHOOSER_PAIR`, OFF). ⚖ The user queued the slice on 2026-10-26 (*"Chooser: chaser pair"*), after fidelity
  * L40LATCH's hand-over D2.1: on L40 `chooseBodyToRemove` names no body where no SINGLE removal admits a corridor, and
  * `CHOOSER_HIT_SOURCES` never takes a chaser, so the kill rung gets no target.

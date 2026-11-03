@@ -1,5 +1,8 @@
+// ⚖ Robert 2026-11-02 CI manual-only P1: TRAIN tier (was `hammerTurretApproach.slow.test.js`). Runs on js-land/** train pushes and
+// on dispatch (`-f train=true`), NOT on a slice push — a solver change that moves this pin reds at the train,
+// unless the slice dispatches the train tier first (js-16's packet rule). `npm run test:unit:train`.
 /**
- * seedlingDemo/hammerTurretApproach.slow.test — ⛓⛓ SEEDLING HAMMER-PHASE APPROACH (`TURRET_APPROACH`, OFF) on
+ * seedlingDemo/hammerTurretApproach.train.test — ⛓⛓ SEEDLING HAMMER-PHASE APPROACH (`TURRET_APPROACH`, OFF) on
  * L40LATCH's latch chain (`fixtures/l40latch-witness/latch-boot.json`, Boss Key 2 from the held latch at (888,776)),
  * with CPAIR's size-3 arm and `LATCH_WEIGH_FIRST` (the smallest arm that reaches the corpse weigh, L40C § 6).
  *   - OFF: LWEIGH's refusal — the stance walk into `iceturret@472,400`'s range is not certified, and a blast lands at

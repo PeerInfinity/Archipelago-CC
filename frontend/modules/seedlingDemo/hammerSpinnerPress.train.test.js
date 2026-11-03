@@ -1,3 +1,6 @@
+// ⚖ Robert 2026-11-02 CI manual-only P1: TRAIN tier (was `hammerSpinnerPress.slow.test.js`). Runs on js-land/** train pushes and
+// on dispatch (`-f train=true`), NOT on a slice push — a solver change that moves this pin reds at the train,
+// unless the slice dispatches the train tier first (js-16's packet rule). `npm run test:unit:train`.
 /**
  * ⛓⛓ SEEDLING HAMMER-PHASE SPIN — `PRESS_ESCAPE_SHIELD_CLAIM` on leg 860 (the slow rows; the fast ones are
  * `hammerSpinnerPress.test.js`). Leg 860 = `level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> Boss Key 2`, its

@@ -13,6 +13,6 @@ The game is about 26 MB. It is loaded when the first Cloudberry level opens, so 
 1. Load **Cloudberry Sphere WorldGen** (seed 1) — in the **Presets** panel, or by opening the page with `?game=cloudberry_sphere_worldgen&seed=1`. **Do it** loads it for you.
 2. Open the **Cloudberry Kingdom** tab: the first level. Click into it and use the **arrow keys** to run and jump yourself; **Up** at a door opens its menu.
 3. Open the **Playback Bot** tab. It says "Sphere log loaded" — it has the world's solution path, sphere by sphere.
-4. Press **▶** (Play), then open the **Cloudberry Kingdom** tab to watch the bot play each level to its check coin, then out by the end door, collect each sphere's items and finish.
+4. Press **▶** (Play), then open the **Cloudberry Kingdom** tab to watch the bot play each level to its check coins, then out by the end door, collect each sphere's items and finish.
 
 <!-- GENERATED from frontend/modules/tutorials/content/procgen/cloudberry.js by scripts/tutorials/generate-tutorial-docs.mjs — edit the tutorial, then run the generator; a hand edit here fails the pin. -->

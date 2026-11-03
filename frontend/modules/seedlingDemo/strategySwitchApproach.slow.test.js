@@ -4,7 +4,7 @@
  * own `requireVerb('kill', 'weigh:approachKillForCorpse')` at its head, before any fork.
  *
  * The row: L40LATCH's latch chain under CPAIR size 3 + `LATCH_WEIGH_FIRST` + `TURRET_APPROACH` (the arm
- * `hammerTurretApproach.slow.test.js` solves to Boss Key 2 at t4142), solved with `disable: ['kill']`: it REFUSES
+ * `hammerTurretApproach.train.test.js` solves to Boss Key 2 at t4142), solved with `disable: ['kill']`: it REFUSES
  * `STRATEGY_DISABLED` at that site, and no approach was made (nothing killed).
  */
 import { describe, expect, it } from 'vitest';

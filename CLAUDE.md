@@ -305,14 +305,32 @@ changed.
 ### JS unit tests (vitest) — a separate suite from `npm test`
 
 Everything above drives the BROWSER (Playwright + the in-app runner). The
-JavaScript unit tests are a different suite entirely, run by vitest, in three
+JavaScript unit tests are a different suite entirely, run by vitest, in four
 tiers:
 
 ```
-npm run test:unit          # default tier — the fast one; excludes *.slow and *.calib
+npm run test:unit          # default tier — the fast one; excludes *.slow, *.train and *.calib
 npm run test:unit:slow     # heavy generate-and-test property suites, run SERIALLY
+npm run test:unit:train    # the heaviest pins, SERIAL; CI runs them on js-land/** + main pushes and on dispatch only
 npm run test:unit:calib    # demoted calibration sweeps, manual only, never in CI
 ```
+
+**The train tier** (`*.train.test.js`, `vitest.train.config.js`; ⚖ Robert 2026-11-02,
+CI manual-only P1–P5) holds the solverBot hammer/fidelity pins, the generator
+capacity pin and the scripted `deriveLevelWorldLogic` sample — heavy rows moved off
+the slice push. CI's job is `Train-tier Vitest` in `unittests_frontend.yml` (its name
+deliberately does NOT match `/JavaScript Unit Tests/`, so `ci-vitest-summary.mjs`'s
+suite row is the same with it present or skipped). It runs on a `js-land/**` push, on
+a main push not already train-green, and on
+`gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f train=true`.
+⚖ A packet whose slice touches solverBot, the hammer, fidelity, a generator or
+`tileStep` quotes a DISPATCHED train-tier run at its tip; a slice push alone never
+runs it. `hammerEscapeGenerated.slow.test.js` stays in the slow tier as the on-push
+smoke row. Two more checks left the slice push in the same ruling (P4, P6): the
+`seedling-wasm-ship` browser gate's import closure (`@ci-paths-slice declared` — a
+slice push runs it only for its declared paths) and `unittests.yml`'s ubuntu
+3.12/3.13 legs; both still run on `js-land/**`, main, PRs and dispatch. Detail:
+`.github/workflows/README.md` § *Checks moved off the slice push*.
 
 The tiers exist because the slow suites are synchronous and CPU-bound: they pass
 alone but flake with `STACK_TRACE_ERROR` under the default run's parallelism,
