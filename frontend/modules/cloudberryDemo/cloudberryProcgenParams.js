@@ -46,6 +46,10 @@ export const DEFAULT_CLOUDBERRY_PROCGEN_PARAMS = Object.freeze({
     // The chance that a region entered through a Jetpack gate is a Jetpack-hero level
     // (everything in it needs Jetpack, which the player holds on the way in).
     cloudberryJetpackChance: 0.5,
+    // The chance that a region entered through a Double Jump gate is a Double-hero level
+    // (2 jumps; everything in it needs Double Jump). Drawn after the Jetpack draw: a
+    // Jetpack level is never also a Double Jump level (P5a).
+    cloudberryDoubleJumpChance: 0.5,
     // A tileset name (CLOUDBERRY_TILESETS), or 'random' (drawn per region).
     cloudberryTileset: 'random',
     // The generator's Jump upgrade on every piece (0–10): wider, higher jumps.
@@ -132,6 +136,12 @@ export function renderCloudberryProcgenParams({ params, onChange = () => {} } = 
         key: 'cloudberryJetpackChance', label: 'Jetpack chance',
         title: 'The chance that a region entered through a Jetpack gate is a Jetpack-hero level.',
         def: D.cloudberryJetpackChance, step: 0.05, max: 1,
+    }, onChange));
+    wrap.appendChild(numberField(params, {
+        key: 'cloudberryDoubleJumpChance', label: 'Double Jump chance',
+        title: 'The chance that a region entered through a Double Jump gate is a Double-hero level '
+            + '(not when it is already a Jetpack level).',
+        def: D.cloudberryDoubleJumpChance, step: 0.05, max: 1,
     }, onChange));
     wrap.appendChild(selectRow(params, {
         key: 'cloudberryTileset', label: 'Tileset',

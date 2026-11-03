@@ -2081,6 +2081,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "includes"
                     ],
+                    "name": "double-jump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
                     "name": "keep"
                 },
                 {

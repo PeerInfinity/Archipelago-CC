@@ -150,7 +150,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "play",
                     "statement": "It brings progression items of its own",
-                    "text": "12 items"
+                    "text": "13 items"
                 },
                 {
                     "group": "play",
@@ -1505,11 +1505,11 @@ export const CAPABILITIES = frz({
                 {
                     "id": "cloudberry",
                     "kind": "yes",
-                    "text": "12 items",
+                    "text": "13 items",
                     "why": [
                         {
                             "field": "libraryItems",
-                            "value": "12 keys"
+                            "value": "13 keys"
                         },
                         {
                             "field": "supportedFeatures",

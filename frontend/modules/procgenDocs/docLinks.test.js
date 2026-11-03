@@ -312,15 +312,17 @@ describe('the corpus census — printed, then pinned', () => {
          *              table row → cloudberry.md) (`doc` 296 → 290, net).
          *   383 → 384  cloudberry P4c (2026-11-03, fill slack): cloudberry.md § Items' Cloudberry Gem note →
          *              its own § Fill slack for tiny worlds (`same-doc` 31 → 32).
+         *   384 → 385  cloudberry P5a (2026-11-03, Double Jump): cloudberry.md § Items' Double Jump note →
+         *              its own § Generating it (`same-doc` 32 → 33).
          */
         expect(by).toEqual({
-            'same-doc': 32,
+            'same-doc': 33,
             doc: 290,
             external: 22,
             repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(384);
+        expect(CORPUS.length).toBe(385);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {

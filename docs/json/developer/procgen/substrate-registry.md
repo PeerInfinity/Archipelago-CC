@@ -405,15 +405,15 @@ Groups are this document's own § headings, matched to a field by the section th
 | `buildZoneSpecs` | fn | fn | fn | — | — | — | — | — | — |
 | `canHostExitGates` | fn | fn | fn | fn | — | — | — | — | — |
 | `canHostExitGatesBraid` | fn | — | — | — | — | — | — | — | — |
-| `defaultProcgenParams` | 10 keys | 11 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | — |
+| `defaultProcgenParams` | 10 keys | 12 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | — |
 | `driftItems` | Left arrow, Right arrow | — | — | — | — | — | — | — | — |
 | `exitGateVeto` | fn | fn | fn | fn | — | — | — | — | — |
 | `gateHostingHint` | fn | fn | — | — | — | — | — | — | — |
-| `gateableItems` | `null` | 10 items | — | — | — | — | — | — | — |
+| `gateableItems` | `null` | 11 items | — | — | — | — | — | — | — |
 | `generateZoneForSpecs` | fn | fn | fn | — | fn | — | fn | — | — |
 | `generateZoneForSpecsGen` | fn | fn | — | — | — | — | — | — | — |
 | `hostsSurplusExitsNatively` | fn | fn | — | — | — | — | — | — | — |
-| `libraryItems` | 7 keys | 12 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | — |
+| `libraryItems` | 7 keys | 13 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | — |
 | `prepareSphereGrowth` | fn | — | fn | — | — | — | — | — | — |
 | `procgenParamsFromPayload` | fn | fn | — | fn | — | — | — | — | — |
 | `renderLibraryProcgenParams` | — | — | — | — | — | fn | — | — | — |
