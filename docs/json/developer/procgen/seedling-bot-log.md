@@ -27258,3 +27258,13 @@ four arms refuse at `bobsoldier@880,832`'s burn stance (3094 / 3132), the key in
 **Trap candidates.** (1) A frozen-tick refusal reads like an executor's defect; the opportunistic strike is asked by
 every walk, so trace the stack before naming a verb. (2) A guard that withholds a press can unmask a walk defect the
 press's own coast hid (step 126).
+
+### Seedling hammer-phase FLIP — `DASH_CERT_SIGHT` ON (the joint flip with fidelity's `fineStanceWalk`)
+
+⚖ The user, 2026-11-02: *"Yes, flip both + re-record"* (the L100 joint flip; confirmed in the hammer planner's session).
+This is hammer's half: `DASH_CERT_SIGHT` reads `!== '0'` and ships ON; the "ships OFF" row reads "ships ON". Fidelity's
+branch `fidelity-flip/l100-joint` merges it, flips `fineStanceWalk` and re-records `l100-sliver-rock` and
+`rulesref-l66-door`. Measured at DASHCERT's harvest: at main's defaults the certificate's line refuses 1,831 swings in
+4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
+327 t, 0 hits, game-witnessed.
+
