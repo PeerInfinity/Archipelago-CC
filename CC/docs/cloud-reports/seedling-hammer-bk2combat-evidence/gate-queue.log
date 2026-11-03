@@ -7,3 +7,5 @@
 23:55:35 wasm ship
 00:10:36 rc 0
 00:10:36 slow ON frontend/modules/seedlingDemo/hammerBk2Combat.slow.test.js frontend/modules/seedlingDemo/hammerDashShape.slow.test.js frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js frontend/modules/seedlingDemo/hammerIceTurretStatic.slow.test.js frontend/modules/seedlingDemo/hammerLatchWeigh.slow.test.js frontend/modules/seedlingDemo/hammerPocketBurn.slow.test.js frontend/modules/seedlingDemo/hammerSouthDoor.slow.test.js frontend/modules/seedlingDemo/hammerSpinnerPress.slow.test.js frontend/modules/seedlingDemo/hammerTurretApproach.slow.test.js
+00:16:40 slow ON (restart after the worker restart)
+01:46:40 rc 0

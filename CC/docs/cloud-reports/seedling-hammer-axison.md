@@ -153,7 +153,7 @@ both lose L6's lane hit and survey step 79's.
 | `derive-seedling-tick0 --check` | ALL CHECKS PASSED |
 | `check-seedling-wasm-ship` (headless, :8000) | **ALL PASS** (416 PASS rows, `d/wasm-ship.txt`). A first run was killed by a worker restart and re-run whole |
 | docs | `seedling-bot.md` (AXIS's entry gains the AXISON sentence; the switch stays OFF); `seedling-bot-log.md` (`### Seedling hammer-phase AXISON — …`) |
-| JSUT | run **41531074777** at `65b96fc9` (the row commit): **suite 25,387 passed / 0 failed / 6 skipped; slow Vitest job green (373 tests)**. Run **41545548330** at `105d8f8b` (the docs and regenerated reference) was QUEUED when this report was written; read it with `node scripts/procgen/ci-summary.mjs 105d8f8b --wait`. The report and evidence commits after it touch no path its filter watches |
+| JSUT | run **41531074777** at `65b96fc9` (the row commit): **suite 25,387 passed / 0 failed / 6 skipped; slow Vitest job green**. Run **41545548330** at `105d8f8b` (the docs and regenerated reference): **suite 25,387 passed / 0 failed / 6 skipped; slow battery 372 / 373 passed, 0 failed** (40 files). The report and evidence commits after it touch no path its filter watches |
 
 ## 7. What the harvest A/B should expect
 

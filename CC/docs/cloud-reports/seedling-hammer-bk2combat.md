@@ -132,10 +132,28 @@ pocket-shut re-boot (the arrivals' shape, POCKET-BURN's workload); 864/865 at 10
 | bounded fast set OFF / ON (`bounded-{off,on}.txt`, 75 files) | OFF **0**; ON **4 rows in 2 fidelity files** | OFF 1492 passed, 1 skipped. ON: `fidelityL30KeyLock.test.js` (both-OFF and WAIT-alone rows at (224,80): refusal with 2 hits → **SOLVED 318 hitless**, staged (120,104), wait 0; WAIT alone 309 → 318 hitless) and `fidelityL40Bk2b.test.js` (the two orbit rows: the BobSoldier removed by the staged hunt at **t112 hitless** — staged (856,856), wait 17 — before the orbit arm is asked; D1's orbit removes it at t125). Class: the chaser arm answers before the orbit arm (`radius/fidelity-{l30,l40bk2b}-on.txt`) |
 | producer roster OFF / ON (`producer-{off,on}.txt`) | OFF **0** red; ON **1** red | 97 run, 1 skipped. ON red: `plan-seedling-l30keylock` — its BEFORE witness (both fidelity switches OFF, (224,80)) now SOLVES hitless (the L30 mover above) |
 | r9 campaign (identity block and producers) | **0** | `be9c19c8`, exit 0 |
+| the hammer `.slow` files ON (`slow-hammer-on.txt`, 9 files) | **3 rows in 2 files** | 20 / 23 pass. `hammerPocketBurn.slow`'s pocket-shut ON row (it asserts the BobSoldier wall this switch removes: the refusal moves past the combat — the intended move). `hammerSpinnerPress.slow`'s two leg-860 rows under L40C's A5 (`radius/spin860-on.txt`): the staged hunt runs at t1022 (wait 13, then 15 on the held retry) and the same press-kill wall stands with new text (the corner at (761.48,858.50), 12 t after the t2744 landing, OFF (770.96,860.99), 19 t) — refusal text; and SPIN's own switch no longer completes that kill on this path (its ON row: 0 kills). A flip pins these rows with `withChaserStagedHunt(false)` (hammer's files) |
 
 ## 6. D — the gates
 
-__GATES__
+| gate | result |
+|---|---|
+| bounded vitest by path (⚖ 52), OFF / ON (`bounded-files.txt`: POCKET-BURN's 65 + every test naming the chaser arm/orbit + this slice's) | 75 fast files: OFF **1492 passed**, 1 skipped; ON 4 rows red, all fidelity's (§5) |
+| `solverEnvChannel.test.js`, `strategySwitch.test.js`, `lintGateLabels.test.js` | 11/11, 21/21, green (49 with the new fast file) |
+| the new files | fast 3/3 (~3 s); slow 4/4 (571 s first run; 878 s inside the 9-file ON battery) |
+| hammer `.slow` files ON (9 files) | 20/23; 3 rows move (§5). OFF: the CI slow battery below (the local OFF re-run was lost to a worker restart) |
+| `ci-producer-checks --jobs=4` OFF / ON | OFF: 97 run, **0 red**, 1 skipped. ON: 1 red (`plan-seedling-l30keylock`, §5) |
+| `census-seedling-solver-surface --check` | the fold rule caught three direct `run.playerHits` reads (now `run.ledger('playerHits')`); `--write` (site counts only, 371 rows, none new to classify), then GREEN |
+| `census-seedling-constants --check` | PASS (0 drift) |
+| `generate-procgen-reference` → `check-procgen-reference` | regenerated twice (after the log entry, after its ON-mover bullet); **ALL CHECKS PASSED** |
+| `generate-docs-index.mjs --check` | OK |
+| `derive-seedling-tick0 --check` | ALL CHECKS PASSED |
+| identity block (`identity-after.txt`) | every hash equals POCKET-BURN's published `identity-after.txt` (r9 campaign `be9c19c8`, exit 0) |
+| `check-seedling-wasm-ship` headless (:8000) | **ALL PASS** (`wasm-ship-tail.txt`) |
+| JSUT at `c21cb75c` (run **41551800804**; code identical to the head) | **the slow battery: 41 files, 376 passed, 0 failed** (`hammerBk2Combat.slow.test.js` among them); shards 1/3, 3/3 green; shard 2/3 2 failed: `procgenDocs/generated.test.js` (the reference stale at that commit — the log edit was pushed before its regeneration, which was held so the run would not be cancelled; regenerated at `690aa4de`) and `scripts/procgen/boxLock.test.js` *"lets a QUEUED taker die on SIGTERM"* (not touched by this slice; 26/26 locally). Suite 25387 passed, 6 skipped, 2 failed. Headless gates shard 1 red on the same stale reference |
+| JSUT at the head | run 41564296858 (`690aa4de`) was still QUEUED when this report was written; this report's push supersedes it. ⚠ Every branch push here restarts JSUT and cancels the run in flight (`cancel-in-progress`), which is why the runs at `91e76f90`, `94f8b39d`, `af74e403` read cancelled |
+| `seedling-bot.md` / `seedling-bot-log.md` | a paragraph names `CHASER_STAGED_HUNT` (OFF); `### Seedling hammer-phase BK2COMBAT — the chaser arm asks again from a cell it certified safe to wait in` |
+| the planner's sweeps | already dispatched at `c21cb75c` (runs 41552372375 `env=SEEDLING_CHASER_STAGED_HUNT=1`, 41552378231 the BK2 ON arm, 41552375072 the control): not read here |
 
 ## 7. What the harvest A/B should expect
 
@@ -153,7 +171,8 @@ solver_env = SEEDLING_CHASER_STAGED_HUNT=1
 expected: 1 mover, leg 390 (`… -> location:Level 040 - Chest`) `failed` → `done`; no other leg moves (the L30 pit
 landing moves only with fidelity's `strikeIframeLapse`/`chaserOrbitKill` OFF, which is not the shipped arm; the survey's
 step 52 does not move). ⚠ At a flip, the 4 fidelity rows and the one producer of §5 need `withChaserStagedHunt(false)`
-pins (fidelity's files: the planner gets them signed). And the BK2 arm:
+pins (fidelity's files: the planner gets them signed), and so do three hammer rows (`hammerPocketBurn.slow`'s shut ON,
+`hammerSpinnerPress.slow`'s two leg-860 rows; §5). And the BK2 arm:
 
 ```
 keys = level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2|level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
@@ -195,6 +214,8 @@ deadline (that is the captured-budget answer, not a regression).
 - **The page budget:** at the captured budget the staged asks (one fork stepped up to the cell's ceiling, the arm asked
   each tick) end on the deadline for 864/865/390 behind F+OPP. A cheaper ask (only the cells beside the body) is the
   obvious next cut; not built (not measured).
+- **To SPIN's line: leg 860 under A5 with this switch ON.** The BobSoldier is staged at t1022 and SPIN's press-kill
+  certificate no longer completes on the changed path (the corner moves to (761.48,858.50)); measured, not chased.
 - **Not touched:** the press kill and its guards, the strike policy, `orbitKillChaser`, `strategySwitch.js`, every
   fidelity file, `levelRun.js`, `dangerMap.js`, `botDriverV*.js`, `iceTurret.js`, `flashPanel/*`.
 - **Not committed:** the captures (2.1 MB BK2, the 52-leg L40 one) and the request-arm jsonl; the summaries are in `w0/`,
