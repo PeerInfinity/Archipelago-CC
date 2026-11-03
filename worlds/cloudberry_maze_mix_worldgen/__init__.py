@@ -23,6 +23,7 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Cloudberry Gem": 1,
     "Clouds": 1,
     "Moving Blocks": 1,
     "Victory": 1,
@@ -88,7 +89,7 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Clouds", "Victory", "key_red", "Moving Blocks"]),
+        "Everything": frozenset(["Victory", "key_red", "Clouds", "Moving Blocks", "Cloudberry Gem"]),
     }
 
     # Placements are deterministically reproduced by world generator
@@ -97,28 +98,31 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "region_3_1__loc_0": "Clouds",
-        "region_4_1__loc_0": "Victory",
-        "region_3_2__loc_0__7_2": "key_red",
+        "region_2_2__loc_0": "Victory",
+        "region_3_2__loc_0__6_4": "key_red",
+        "region_4_2__loc_0": "Clouds",
         "region_3_3__loc_0__4_2": "Moving Blocks",
+        "region_3_3__loc_1__4_1": "Cloudberry Gem",
     }
 
     # Original seed placements - actual item placements from the original seed generation
     # Used by _place_original_items() to reproduce exact original item placement
     original_seed_placements: ClassVar[Dict[str, str]] = {
-        "region_3_1__loc_0": "Clouds",
-        "region_4_1__loc_0": "Victory",
-        "region_3_2__loc_0__7_2": "key_red",
+        "region_2_2__loc_0": "Victory",
+        "region_3_2__loc_0__6_4": "key_red",
+        "region_4_2__loc_0": "Clouds",
         "region_3_3__loc_0__4_2": "Moving Blocks",
+        "region_3_3__loc_1__4_1": "Cloudberry Gem",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
-        "region_3_1__loc_0": True,
-        "region_4_1__loc_0": True,
-        "region_3_2__loc_0__7_2": True,
+        "region_2_2__loc_0": True,
+        "region_3_2__loc_0__6_4": True,
+        "region_4_2__loc_0": True,
         "region_3_3__loc_0__4_2": True,
+        "region_3_3__loc_1__4_1": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
