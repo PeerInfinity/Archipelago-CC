@@ -106,7 +106,7 @@ async function resolveLevel(plan, onAttempt) {
     }
     const reasons = [];
     for (let attempt = 0; attempt <= plan.retries; attempt++) {
-        const args = cloudberryAttemptArgs(plan.args, attempt);
+        const args = cloudberryAttemptArgs(plan.args, attempt, plan);
         onAttempt?.({ attempt, attempts: plan.retries + 1 });
         const t0 = Date.now();
         // eslint-disable-next-line no-await-in-loop
@@ -115,7 +115,7 @@ async function resolveLevel(plan, onAttempt) {
         _stats.generateMs.push(Date.now() - t0);
         let doc;
         try { doc = JSON.parse(text); } catch (err) { doc = { error: `the document is not JSON: ${err.message}` }; }
-        const read = readCloudberryDocument(doc, plan);
+        const read = readCloudberryDocument(doc, plan, args);
         if (read.ok) {
             const generate = doc.args?.request;
             if (!generate || generate.reroll !== undefined) {
