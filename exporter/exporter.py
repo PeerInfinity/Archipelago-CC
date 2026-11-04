@@ -1953,6 +1953,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                     'connected_region': getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None,
                                     'access_rule': expanded_rule,
                                 }
+                                # ENTRANCE RANDOMIZATION E2: a world_generator package keeps its
+                                # exits' `er` by name (`_worldgen_exit_er.json`); re-attach it.
+                                exit_er = game_handler.get_worldgen_exit_er(exit_name) if hasattr(game_handler, 'get_worldgen_exit_er') else None
+                                if exit_er is not None:
+                                    exit_data['er'] = exit_er
                                 region_data['exits'].append(exit_data)
                             except Exception as e:
                                 logger.error(f"Error processing exit {getattr(exit, 'name', 'Unknown')}: {str(e)}")
@@ -2743,6 +2748,7 @@ DESIRED_KEY_ORDER = [
     'procgen_metadata',
     'loop_costs',
     'discovery_mode',
+    'entrance_randomization',
     'world',
     'exporter',
     'game_info',
@@ -2764,6 +2770,8 @@ PLAYER_SPECIFIC_KEYS = [
     'procgen_metadata', 'loop_costs',
     # the world's Discovery-mode choice (`{"<p>": {"enabled": bool}}`).
     'discovery_mode',
+    # ENTRANCE RANDOMIZATION E2: the slot's shuffle block (`{"<p>": block}`).
+    'entrance_randomization',
     # rules F2: the region-atlas compile's blocks are per-player maps too, so a
     # `_P<n>` slice carries only its own slot's (never slot 1's wiring).
     'provenance', 'region_atlas', 'flash_panel',

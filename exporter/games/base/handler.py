@@ -2089,6 +2089,7 @@ class BaseGameExportHandler(
         self._inject_worldgen_procgen_metadata(world, export_data, player)
         self._inject_worldgen_loop_costs(world, export_data, player)
         self._inject_worldgen_page_blocks(world, export_data, player)
+        self._load_worldgen_exit_er(world)
 
     def _inject_worldgen_page_blocks(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_flash_panel.json` / `_worldgen_region_atlas.json`
@@ -2100,16 +2101,31 @@ class BaseGameExportHandler(
         and bot anchor the atlas on (`region_atlas`), so without them a
         Generate.py export of a Seedling world cannot drive the wasm game.
         `_worldgen_discovery_mode.json` (the world's Discovery-mode choice,
-        `{"enabled": bool}`) re-injects the same way.
+        `{"enabled": bool}`) re-injects the same way, and so does
+        `_worldgen_entrance_randomization.json` (the slot's ER block).
         """
         for key, filename in (
             ('flash_panel', '_worldgen_flash_panel.json'),
             ('region_atlas', '_worldgen_region_atlas.json'),
             ('discovery_mode', '_worldgen_discovery_mode.json'),
+            ('entrance_randomization', '_worldgen_entrance_randomization.json'),
         ):
             block = self._read_worldgen_package_json(world, filename, f'worldgen {key}')
             if block is not None:
                 export_data.setdefault(key, {})[str(player)] = block
+
+    def _load_worldgen_exit_er(self, world) -> None:
+        """Load `_worldgen_exit_er.json` (ENTRANCE RANDOMIZATION E2: the
+        source slot's per-exit `er` blocks, keyed by exit name — written by
+        world_generator, since Regions.py carries no exit properties) for
+        `get_worldgen_exit_er`, which exporter.py asks for every exported exit.
+        A package without the file carries none."""
+        self._worldgen_exit_er = self._read_worldgen_package_json(
+            world, '_worldgen_exit_er.json', 'worldgen exit er') or {}
+
+    def get_worldgen_exit_er(self, exit_name: Optional[str]) -> Optional[Dict[str, Any]]:
+        """The `er` block the worldgen package keeps for `exit_name`, or None."""
+        return getattr(self, '_worldgen_exit_er', {}).get(exit_name)
 
     def _inject_worldgen_sidecars(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_sidecars.json` from the worldgen world's package

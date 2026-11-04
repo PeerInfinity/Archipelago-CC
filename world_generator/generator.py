@@ -8,7 +8,7 @@ process of converting a JSON rules file into an Archipelago world package.
 import json
 import logging
 from pathlib import Path
-from typing import List, Optional, Dict
+from typing import Any, List, Optional, Dict
 
 from ._unknown_kind import lossy_codegen, unobtainable_record
 from .extractors import extract_all, apply_name_substitutions, ExtractedData, sanitize_identifier
@@ -192,6 +192,35 @@ class WorldGenerator:
 
         logger.info(f"Renamed game from '{old_name}' to '{new_name}'")
 
+    def _exit_er_by_name(self, source_json: Dict[str, Any]) -> Dict[str, Any]:
+        """This slot's exits' `er` blocks, keyed by exit name, in document order.
+
+        The package's exits keep their source names unless two regions share
+        one (extractors.extract_regions prefixes `<region>__`); an `er` names
+        its reverse and the block's placements BY NAME, so an `er` on a
+        shared name is refused here, by name, rather than baked under a name
+        nothing refers to (the runtime loader refuses the same document).
+        """
+        regions = source_json.get('regions', {}).get(self.player_id, {}) or {}
+        counts: Dict[str, int] = {}
+        for region in regions.values():
+            for ex in region.get('exits', []) or []:
+                counts[ex.get('name', '')] = counts.get(ex.get('name', ''), 0) + 1
+        out: Dict[str, Any] = {}
+        for region_name, region in regions.items():
+            for ex in region.get('exits', []) or []:
+                if 'er' not in ex:
+                    continue
+                name = ex.get('name', '')
+                if counts.get(name, 0) > 1:
+                    raise ValueError(
+                        f"exit {name!r} (region {region_name!r}) carries `er`, but "
+                        f"{counts[name]} exits of player {self.player_id} share that name — "
+                        "an `er` reverse or placement names an exit by name, so it must be one exit"
+                    )
+                out[name] = ex['er']
+        return out
+
     def generate(self, dry_run: bool = False) -> None:
         """
         Generate all world files.
@@ -371,11 +400,14 @@ class WorldGenerator:
         # `provenance` is NOT carried: it describes how the SOURCE document
         # was made (no page reads it), so it would mislabel an export.
         # `discovery_mode` (the world's Discovery-mode choice) rides the same
-        # way; a slot without one writes no file (the default).
+        # way; a slot without one writes no file (the default). So does
+        # `entrance_randomization` (ENTRANCE RANDOMIZATION E2: the slot's
+        # shuffle block — how it was made and what moved).
         for key, filename in (
             ('flash_panel', '_worldgen_flash_panel.json'),
             ('region_atlas', '_worldgen_region_atlas.json'),
             ('discovery_mode', '_worldgen_discovery_mode.json'),
+            ('entrance_randomization', '_worldgen_entrance_randomization.json'),
         ):
             block = source_json.get(key, {}).get(self.player_id)
             if not block:
@@ -386,6 +418,20 @@ class WorldGenerator:
                 logger.info(f"Wrote {key} to {block_path}")
             else:
                 logger.info(f"Would write: {block_path}")
+
+        # ENTRANCE RANDOMIZATION E2: each exit's `er` (group, type, reverse,
+        # shuffle) is a property of the exit, which Regions.py does not carry,
+        # so this slot's are kept by exit name in `_worldgen_exit_er.json`;
+        # exporter/exporter.py re-attaches them to the exported exits by name
+        # (the handler's `get_worldgen_exit_er`). A slot with none writes no file.
+        exit_er = self._exit_er_by_name(source_json)
+        if exit_er:
+            exit_er_path = output_dir / '_worldgen_exit_er.json'
+            if not dry_run:
+                exit_er_path.write_text(json.dumps(exit_er, indent=2), encoding='utf-8')
+                logger.info(f"Wrote exit er to {exit_er_path}")
+            else:
+                logger.info(f"Would write: {exit_er_path}")
 
         for filename, content in files.items():
             file_path = output_dir / filename
