@@ -126,6 +126,12 @@ describe('derivedRuleTable: the selection', () => {
         expect(t.rows).toEqual([]);
         expect(t.excluded).toEqual([{ key: 'a|a -> b', why: 'sharedBinding (playthroughEventLayer): E' }]);
     });
+    it('an EVENT LOCATION is sharedBinding too (its place is the event layer\'s side; `event` is a boolean on the row)', () => {
+        const rows = [{ kind: 'location', region: 'a', name: 'E', event: true, arrival: 'entrance', verdict: 'agrees', derived: TRUE, ap: TRUE }];
+        const t = derivedRuleTable(label(rows), { rules });
+        expect(t.rows).toEqual([]);
+        expect(t.excluded).toEqual([{ key: 'a|@E', why: 'sharedBinding (playthroughEventLayer): E' }]);
+    });
     it('a named exclusion is listed with its reason; a stale one is refused', () => {
         const t = derivedRuleTable(label([exitRow(has('X'), has('X'))]), { rules, exclusions: [{ key: 'a|a -> b', why: 'because' }] });
         expect(t).toEqual({ rows: [], excluded: [{ key: 'a|a -> b', why: 'because' }] });

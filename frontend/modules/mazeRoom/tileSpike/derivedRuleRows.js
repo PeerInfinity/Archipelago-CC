@@ -177,7 +177,7 @@ export function labelDerivedRows(rows, { rules, echoes, explained = [] }) {
     for (const r of Object.values(REGIONS)) for (const l of r.locations ?? []) if (l.event) bound.add(l.item?.name ?? l.name);
     for (const e of elements) {
         const named = [...ruleItemNames(e.derived)].filter((n) => bound.has(n));
-        if (e.kind === 'location' && bound.has(e.event ?? e.name)) named.push(e.event ?? e.name);
+        if (e.kind === 'location' && bound.has(e.name)) named.push(e.name);
         if (named.length > 0) e.sharedBinding = { by: 'playthroughEventLayer', events: [...new Set(named)].sort() };
     }
     // ⛓ EXACT (session tile-rules-automation-r-a3, designer GO: "re-define the pin's routeA exact to exclude path-vs-edge"):
