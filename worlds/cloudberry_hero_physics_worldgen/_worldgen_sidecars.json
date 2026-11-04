@@ -34,9 +34,9 @@
               "maxspeed": 1.297,
               "maxfall": 1.45,
               "jumplength": 1.13,
-              "jumpaccel": 0.982,
-              "friction": 0.601,
-              "size": 0.847
+              "jumpaccel": 1.071,
+              "friction": 0.726,
+              "size": 0.906
             }
           },
           "trace": false,
@@ -46,10 +46,10 @@
             0
           ]
         },
-        "docSha256": "d7b069ef2a715def9f7bd96a1b546455b1d1887a5ec8bf733d45289a87b5f6bb",
+        "docSha256": "e9563632fef3f5b088269960d6c71d4b13829044d542bf1428ada3c6d387b78f",
         "checks": {
-          "loc_0": 37,
-          "loc_1": 39
+          "loc_0": 35,
+          "loc_1": 38
         },
         "items": {
           "Moving Blocks": "MovingBlock",
@@ -136,9 +136,9 @@
               "maxspeed": 1.365,
               "maxfall": 1.442,
               "jumplength": 1.125,
-              "jumpaccel": 0.978,
-              "friction": 1.339,
-              "size": 0.905,
+              "jumpaccel": 1.068,
+              "friction": 1.341,
+              "size": 0.953,
               "jumplength2": 0.974,
               "jumpaccel2": 0.897
             }
@@ -150,9 +150,9 @@
             0
           ]
         },
-        "docSha256": "81fa53cd89ca9a6ac73eeb7f0e84e5219ff46f9b384ada40cffd8e21f2392693",
+        "docSha256": "465809e9ea88453675673e42b127f3ec3a38ec0297c44ff3ed53922c5824d70e",
         "checks": {
-          "loc_0": 24
+          "loc_0": 25
         },
         "items": {
           "Moving Blocks": "MovingBlock",
@@ -235,9 +235,9 @@
               "maxspeed": 1.197,
               "maxfall": 1.536,
               "jumplength": 1.135,
-              "jumpaccel": 1.215,
-              "friction": 1.179,
-              "size": 1.116
+              "jumpaccel": 1.223,
+              "friction": 1.208,
+              "size": 1.125
             }
           },
           "trace": false,
@@ -247,7 +247,7 @@
             0
           ]
         },
-        "docSha256": "967635e72cb83d90b6e809a904cd0de987190a1d7efc399db1c35b7324d9c0af",
+        "docSha256": "b7dd7ece8a46374637f694d456c34251ed97a1c549106a02bb01b32b226b6e2e",
         "checks": {
           "loc_0": 34
         },

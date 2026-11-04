@@ -37,8 +37,9 @@ describe('the settings table', () => {
         // The ruled restrictions (P5b Phase A): size ≥ 0.5, numjumps 2–4, jumplength2 ≤ 1.35; the ladder (option A):
         // gravity ≤ 1.5, jumplength ≥ 0.85.
         const by = Object.fromEntries(CLOUDBERRY_HERO_PHYSICS.map((h) => [h.phsx, h]));
-        expect([by.size.min, by.numjumps.min, by.numjumps.max, by.jumplength2.max]).toEqual([0.5, 2, 4, 1.35]);
-        expect([by.gravity.max, by.jumplength.min]).toEqual([1.5, 0.85]);
+        expect([by.numjumps.min, by.numjumps.max, by.jumplength2.max]).toEqual([2, 4, 1.35]);
+        // The ladder (rulings A then A3): gravity ≤ 1.5, jumplength ≥ 0.85, jumpaccel ≥ 0.9, friction ≥ 0.5, size ≥ 0.8.
+        expect([by.gravity.max, by.jumplength.min, by.jumpaccel.min, by.friction.min, by.size.min]).toEqual([1.5, 0.85, 0.9, 0.5, 0.8]);
     });
 });
 
@@ -65,7 +66,7 @@ describe('the plan\'s hero', () => {
     });
 
     it('a value outside its ruled range is refused by name', () => {
-        expect(() => planCloudberryLevel(specs({ cloudberryHeroSize: 0.2 }), ctx())).toThrow(/cloudberryHeroSize = 0\.2 is outside 0\.5–2\.1/);
+        expect(() => planCloudberryLevel(specs({ cloudberryHeroSize: 0.2 }), ctx())).toThrow(/cloudberryHeroSize = 0\.2 is outside 0\.8–2\.1/);
         expect(() => planCloudberryLevel(specs({ cloudberryHeroNumJumps: 2.5 }), ctx())).toThrow(/cloudberryHeroNumJumps .*whole number/);
         expect(() => planCloudberryLevel(specs({ cloudberryHeroVariation: 1.5 }), ctx())).toThrow(/cloudberryHeroVariation = 1\.5 is outside 0–1/);
     });

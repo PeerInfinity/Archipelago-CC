@@ -234,9 +234,9 @@ Prefixed so they survive mixed-substrate merging; defaults in `DEFAULT_CLOUDBERR
 | `cloudberryHeroMaxSpeed` | The hero's top speed (0.5–2). |
 | `cloudberryHeroMaxFall` | The hero's top fall speed (0.33–3). |
 | `cloudberryHeroJumpLength` | How long a held jump keeps rising (0.85–1.65). |
-| `cloudberryHeroJumpAccel` | The jump's acceleration (0.5–1.65). |
-| `cloudberryHeroFriction` | Ground friction (0–3). |
-| `cloudberryHeroSize` | The hero's size (0.5–2.1). |
+| `cloudberryHeroJumpAccel` | The jump's acceleration (0.9–1.65). |
+| `cloudberryHeroFriction` | Ground friction (0.5–3). |
+| `cloudberryHeroSize` | The hero's size (0.8–2.1). |
 | `cloudberryHeroNumJumps` | Jumps on a Double Jump level (2–4, whole; default 2). |
 | `cloudberryHeroJumpLength2` | The double jump's length, Double Jump levels only (0.5–1.35). |
 | `cloudberryHeroJumpAccel2` | The double jump's acceleration, Double Jump levels only (0.5–1.65). |
@@ -249,7 +249,7 @@ The ranges are narrower than the game's own slider bounds where P5b measured tro
 - **Size below 0.5**: the computer passes coins without touching them, so 3–13% of levels fail the replay check and are rerolled.
 - **More than 4 jumps**: the hero no longer needs the platform items, so the reroll search refuses more levels.
 - **Double jump length above 1.35**: rerolls climb, and the bot died more often in combined settings.
-- **Gravity above 1.5 and jump length below 0.85**: the hero crossed the fixed elevator ladder between pieces less often than the default hero.
+- **Gravity above 1.5, jump length below 0.85, jump acceleration below 0.9, friction below 0.5 and size below 0.8**: the hero crossed the fixed elevator ladder between pieces less often than the default hero (a scripted crossing on the same levels, paired per seed; ⚖ rulings A, then A3).
 
 Every other slider keeps the game's full range.
 

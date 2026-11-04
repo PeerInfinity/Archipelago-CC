@@ -28,8 +28,9 @@ export const CLOUDBERRY_HAZARD_UPGRADES = Object.freeze([
  * P5b — the Hero Factory's physics sliders as world settings (⚖ Robert 2026-11-04: the proposed ranges, per world +
  * a variation knob, on ability levels too). `phsx` = the generator's `heroCustom.phsx` name; `def` = the game's own
  * default hero (the Hero Factory's slider default); `min`/`max` = the RULED range (narrower than the game's bounds
- * table where P5b measured trouble — replay/reroll: size ≥ 0.5, numjumps 2–4, jumplength2 ≤ 1.35; crossing the fixed
- * ladder between pieces (⚖ Robert's second ruling, option A): gravity ≤ 1.5, jumplength ≥ 0.85); `levels` = which levels the
+ * table where P5b measured trouble — replay/reroll: numjumps 2–4, jumplength2 ≤ 1.35; crossing the fixed ladder between
+ * pieces as often as the default hero (⚖ Robert's rulings A then A3): gravity ≤ 1.5, jumplength ≥ 0.85, jumpaccel ≥ 0.9,
+ * friction ≥ 0.5, size ≥ 0.8 (also ≥ the 0.5 the replay needs)); `levels` = which levels the
  * slider acts on ('all', 'double' = Double Jump-hero levels, 'jetpack' = Jetpack-hero levels). ORDER IS LOAD-BEARING:
  * the variation draw (draw order (5)) takes one rng number per applicable slider in this order.
  */
@@ -39,9 +40,9 @@ export const CLOUDBERRY_HERO_PHYSICS = Object.freeze([
     { key: 'cloudberryHeroMaxSpeed', phsx: 'maxspeed', label: 'Max speed', def: 1, min: 0.5, max: 2, levels: 'all' },
     { key: 'cloudberryHeroMaxFall', phsx: 'maxfall', label: 'Max fall speed', def: 1, min: 0.33, max: 3, levels: 'all' },
     { key: 'cloudberryHeroJumpLength', phsx: 'jumplength', label: 'Jump length', def: 1, min: 0.85, max: 1.65, levels: 'all' },
-    { key: 'cloudberryHeroJumpAccel', phsx: 'jumpaccel', label: 'Jump acceleration', def: 1, min: 0.5, max: 1.65, levels: 'all' },
-    { key: 'cloudberryHeroFriction', phsx: 'friction', label: 'Friction', def: 1, min: 0, max: 3, levels: 'all' },
-    { key: 'cloudberryHeroSize', phsx: 'size', label: 'Size', def: 1, min: 0.5, max: 2.1, levels: 'all' },
+    { key: 'cloudberryHeroJumpAccel', phsx: 'jumpaccel', label: 'Jump acceleration', def: 1, min: 0.9, max: 1.65, levels: 'all' },
+    { key: 'cloudberryHeroFriction', phsx: 'friction', label: 'Friction', def: 1, min: 0.5, max: 3, levels: 'all' },
+    { key: 'cloudberryHeroSize', phsx: 'size', label: 'Size', def: 1, min: 0.8, max: 2.1, levels: 'all' },
     { key: 'cloudberryHeroNumJumps', phsx: 'numjumps', label: 'Jumps (Double Jump levels)', def: 2, min: 2, max: 4, levels: 'double', integer: true },
     { key: 'cloudberryHeroJumpLength2', phsx: 'jumplength2', label: 'Double jump length', def: 1, min: 0.5, max: 1.35, levels: 'double' },
     { key: 'cloudberryHeroJumpAccel2', phsx: 'jumpaccel2', label: 'Double jump acceleration', def: 1, min: 0.5, max: 1.65, levels: 'double' },
