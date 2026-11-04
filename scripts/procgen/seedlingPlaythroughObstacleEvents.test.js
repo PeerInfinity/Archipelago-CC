@@ -149,7 +149,8 @@ describe('the playthrough\'s obstacle events', () => {
     it('rules l38-button-event: the L38 press is ONE event in L39\'s flag at the button, gating exactly the plug\'s two crossings', () => {
         // (+ RULES darktrap-events' two pole presses, the next row)
         // ⛓ RULES l20-button-latch: + L20's IN-ROOM latch press (its own row, below)
-        expect(buttons.events.map((e) => e.fields.event_id)).toEqual(['flag:L20:4', 'flag:L39:8', 'flag:L62:0', 'flag:L63:1']);
+        // ⛓ tile-lay-l40-latches: + L40's three in-room presses (zero-gate: no crossing passes through their wand locks)
+        expect(buttons.events.map((e) => e.fields.event_id)).toEqual(['flag:L20:4', 'flag:L39:8', 'flag:L40:1', 'flag:L40:7', 'flag:L40:12', 'flag:L62:0', 'flag:L63:1']);
         expect(buttons.reused).toEqual([]);
         const e = buttons.events.find((x) => x.fields.event_id === 'flag:L39:8');
         // ⛓ rules-l39: L38 is ONE region now (its static pulser's empty pocket r12c5 is gone), and the plug's L39
@@ -174,15 +175,12 @@ describe('the playthrough\'s obstacle events', () => {
         // reaches NO target on the playthrough's map (it was `-> {37,4} fallrock@288,32`, an arm).
         // ⛓ RULES darktrap-events: L61's and L63's presses are no longer skipped as cosmetic (next row).
         // ⛓ RULES l20-button-latch: + the in-room latches that gate nothing — L38's and L107's publish to a non-Lock (a
-        // pulser, a cover), and no crossing passes through L40's wand locks (the overlay rules them open: one sub-region)
+        // pulser, a cover). ⛓ tile-lay-l40-latches: L40's wand locks (the overlay rules them open: no crossing passes
+        // through them) are no longer skipped — their presses MINT, with no gate (next row).
         expect(buttons.skipped.map((x) => x.split(':')[0]).sort()).toEqual([
             'L107 buttonroom@288,176 -> {107,1} pulser@80,32', 'L38 buttonroom@144,128 -> {38,0} cover@208,224',
             'L38 buttonroom@144,288 -> {37,4}', 'L38 buttonroom@208,224 -> {38,3} pulser@80,224',
-            'L40 buttonroom@160,128 -> {40,1} wandlock@176,208', 'L40 buttonroom@160,128 -> {40,1} wandlock@176,80',
-            'L40 buttonroom@272,208 -> {40,7} wandlock@208,128', 'L40 buttonroom@272,208 -> {40,7} wandlock@208,144',
-            'L40 buttonroom@272,208 -> {40,7} wandlock@208,160', 'L40 buttonroom@880,768 -> {40,12} wandlock@480,560',
         ]);
-        expect(buttons.skipped.filter((x) => x.startsWith('L40 ')).every((x) => /no crossing passes through it$/.test(x))).toBe(true);
     });
 
     it('rules l20-button-latch: L20\'s in-room press is ONE event in the BUTTON\'s flag at the button, gating the lock\'s two internal crossings', () => {

@@ -757,11 +757,13 @@ export function projectRegionToMaze(region, grid, ctx) {
     // mid-walk (the AP closure does), so the world would read the crossing it opens as shut. Such a level stays per sub-region.
     const levelEvents = ctx.eventsFor?.(region) ?? [];
     const selfPress = levelEvents.find((ev) => ev.mode === 'target' && levelEvents.some((p) => p.mode === 'press' && p.name === ev.name));
+    const pressOf = (ev) => levelEvents.find((p) => p.mode === 'press' && p.name === ev.name);
     let keptPlain = null;
     if (walkable && declared.length > 0 && typeof ctx.levelEntitiesFor === 'function' && typeof ctx.plainLevelWorldFits === 'function') {
         const world = unwalkable.length > 0 || selfPress ? null : projectLevelWorld(region, grid, ctx, entities ?? []);
         const fit = world ? ctx.plainLevelWorldFits(world)
             : selfPress ? `its own press "${selfPress.name}" opens a target in the same world, which one search does not grant mid-walk`
+                + (pressOf(selfPress)?.latch_kept ? ` (not laid as a latch: ${pressOf(selfPress).latch_kept})` : '')
                 : `its crossing ${unwalkable[0].from} <-> ${unwalkable[0].to} goes through material only the physics model walks (${unwalkable[0].reasons[0]})`;
         if (fit === true) {
             world.notes.unshift({
@@ -1031,7 +1033,8 @@ export function projectRegionToMaze(region, grid, ctx) {
 //   floor          every non-wall cell of the level
 //   gated cell     floor + the rule obstacle of its terrain (water = Swim)
 //   block          `blocks` (the cell is floor)
-//   button         `buttons` + `buttonLib.<id>.holds` = the group's token
+//   button         `buttons` + `buttonLib.<id>.holds` = the group's token; a row with `latch: {event}` latches
+//                  (`buttonLib.<id>.latch`, session tile-lay-l40-latches: Seedling's in-room ButtonRoom)
 //   lock           an obstacle cleared by the HELD token of its group
 //   rock           an obstacle with `clear_set: []` and `struck_by` = one
 //                  action per item its condition names (`action_lib`)
@@ -1392,7 +1395,15 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         }
         if (e.kind === 'button') {
             const group = String(e.group);
-            buttonLib[buttonId(group)] = { kind: 'button', holds: groupToken(group) };
+            // ⛓ A LATCHING button (`latch: {event}`, session tile-lay-l40-latches: an in-room ButtonRoom the rules minted a
+            // press event for) holds its group's token for good once pressed, and its press is that event's location.
+            const entry = { kind: 'button', holds: groupToken(group), ...(e.latch ? { latch: { ...e.latch } } : {}) };
+            const had = buttonLib[buttonId(group)];
+            if (had && JSON.stringify(had) !== JSON.stringify(entry)) {
+                throw new Error(`atlas region "${regionId}": group ${group} has a holding and a latching button `
+                    + `(${JSON.stringify(had)}, ${JSON.stringify(entry)}) — one button entry per group`);
+            }
+            buttonLib[buttonId(group)] = entry;
             for (const [x, y] of tiles) {
                 builder.floor(x, y);
                 claimed.add(keyOf(x, y));

@@ -1,5 +1,5 @@
 /**
- * ⛓ LATCH SANDWICH — prune ON ≡ prune OFF on L40 with its latches LAID (session tile-latch-prune; ⚖ Robert 2026-11-03 "B: Prune, then
+ * ⛓ LATCH SANDWICH — prune ON ≡ prune OFF on L40 with its latches LAID (the committed preset since session tile-lay-l40-latches) (session tile-latch-prune; ⚖ Robert 2026-11-03 "B: Prune, then
  * lay"). TRAIN tier (⚖ Robert 2026-11-02 P3): the prune-off native pass is ~38 s on CI and the scripted pass ~130 s, too heavy for push.
  * Byte for byte: the derive pass over `level_40__r0c53`'s world (items, levels, every pair's minimal sets and witness plans) and the
  * entry pricing of its five regions (every target's minimal sets, witnesses, unreachable flag).
@@ -14,9 +14,9 @@ import { describe, it, expect } from 'vitest';
 import { deserializeMazeWorld } from '../mazeRoomEngine.js';
 import { deriveLevelWorldLogic, deriveEntryLogic } from './deriveLevelWorldLogic.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
-import { layL40Latches, L40_REGIONS } from './deriveLevelWorldLogic.fixture.js';
+import { RULES, L40_REGIONS } from './deriveLevelWorldLogic.fixture.js';
 
-const WORLD = () => deserializeMazeWorld(layL40Latches().preset_sidecars['1'].level_40__r0c53.playable_payload);
+const WORLD = () => deserializeMazeWorld(RULES.preset_sidecars['1'].level_40__r0c53.playable_payload);
 /** The whole answer, in one string; `engine` = the summed real work. */
 function derive(opts) {
     const w = WORLD();

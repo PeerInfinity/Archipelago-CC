@@ -114,9 +114,9 @@ function cachedReach(cache, entered, reach, { memo = false, count = null } = {})
  * ⛔ REFUSED BY NAME: a latch whose held token arms a trap. Holding its event then ARMS something, and reach can shrink
  * with the inventory — the premise is unproven there. (A latch on a pulser's token is refused by `checkButtonLib`.)
  * `reachOf(set)` = the memoised reach; returns `(set, target, takenAt) → true when Q certainly takes nothing for target`.
- * ⛓ The OWN-event branch is unreachable through `deriveEntryLogic` today: a latch's event target is priced unreachable by the
- * top search (which holds the event, and a carried latch records no press), so it is never live. It is kept — the inference
- * would be unsound for that target without it — and pinned directly (`latchSandwich.test.js`).
+ * ⛓ The OWN-event branch is LIVE through `deriveEntryLogic` (session tile-lay-l40-latches): a latch's event target is priced
+ * from top \ {its event}, so it is a live target, and this branch decides it; `judge.ownEvent` counts its decisions
+ * (`engine.ownEvent`). Pinned directly (`latchSandwich.test.js`) and through the derive on L40 (slow tier).
  */
 export function latchSandwich(world, reachOf) {
     const E = [...new Set(latchEvents(world).map((l) => l.event))].sort();
@@ -131,13 +131,18 @@ export function latchSandwich(world, reachOf) {
     }
     const probeOf = (set, minus) => [...new Set([...set, ...E])].filter((i) => i !== minus).sort();
     const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
-    return (set, target, takenAt) => {
+    const judge = (set, target, takenAt) => {
         const own = target?.event && E.includes(target.event) ? target.event : null;
-        if (own && set.includes(own)) return true; // never taken holding its own event
+        if (own && set.includes(own)) { judge.ownEvent += 1; return true; } // never taken holding its own event
         const u = probeOf(set, own);
         if (same(u, [...set].sort())) return false; // the probe IS Q: nothing to save
-        return !takenAt(reachOf(u), u);
+        const skip = !takenAt(reachOf(u), u);
+        if (skip && own) judge.ownEvent += 1;
+        return skip;
     };
+    // How many target judgements the OWN-event branch decided (session tile-lay-l40-latches: live through the derive now).
+    judge.ownEvent = 0;
+    return judge;
 }
 
 /**
@@ -320,10 +325,21 @@ export function deriveEntryLogic(world, region, helpers, {
     const full = reachOf(top);
     let searched = 1;
     let states = full.states;
+    const priced = new Map(); // event → the reach of top \ {event}
     for (const t of targets) {
         t.minimal = [];
         t.witnesses = [];
-        t.unreachable = !taken(full, t, t.event ? top.filter((i) => i !== t.event) : top);
+        // ⛓ AN EVENT TARGET IS PRICED WITHOUT ITS EVENT (session tile-lay-l40-latches; the in-world event class, half (a)).
+        // The top point HOLDS every event, and a latch held is pre-latched, so its press is never recorded there: judged
+        // on `full`, every latch's own target read unreachable. When `full` does not take it, it is judged again on the
+        // search of top \ {its event} (memoised: one search per such event). Nothing else can move — no point holding the
+        // event takes it, and every point without it lies under top \ {event}.
+        const own = t.event ? top.filter((i) => i !== t.event) : top;
+        if (taken(full, t, own) || !t.event || own.length === top.length) { t.unreachable = !taken(full, t, own); continue; }
+        const fresh = !priced.has(t.event);
+        if (fresh) priced.set(t.event, reachOf(own));
+        if (fresh) { searched += 1; states += priced.get(t.event).states; }
+        t.unreachable = !taken(priced.get(t.event), t, own);
     }
     const live = targets.filter((t) => !t.unreachable);
     const covered = (t, set) => t.minimal.some((m) => pointCovers(set, m));
@@ -344,5 +360,6 @@ export function deriveEntryLogic(world, region, helpers, {
         }
     }
     for (const t of targets) delete t.exit;
+    if (sandwich) engine.ownEvent = sandwich.ownEvent;
     return { items, levels, targets, searched, states, engine };
 }
