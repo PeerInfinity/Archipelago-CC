@@ -45,11 +45,14 @@ export function plantEchoSentinels({ atlas, layer, ropes, hand = null }) {
     for (const k of [...(hand?.locations?.keys() ?? [])]) { hand.locations.set(k, sentinel('loc', k)); n.hand += 1; }
     const overridden = new Set(layer.internalExitRules.map((q) => `${q.region_id}/${q.from}->${q.to}`));
     for (const r of atlas.regions) {
-        for (const l of r.locations ?? []) if (l.access_rule) { l.access_rule = sentinel('loc', `${r.region_id}/${l.name}`); n.loc += 1; }
-        for (const e of r.exits ?? []) if (e.access_rule) { e.access_rule = sentinel('ex', `${r.region_id}/${e.exit_id}`); n.ex += 1; }
+        // ⛓ RULE-LESS ROWS TOO (session tile-rules-automation-r-a3, designer GO; rules-4 PASS): an ABSENT rule is True_, and a
+        // world that copies it carries an open crossing — an echo no sentinel saw while only present rules were planted (L94's
+        // kept-plain r2c16 <-> r3c4 read as derived). Every atlas row is planted, with or without a rule.
+        for (const l of r.locations ?? []) { l.access_rule = sentinel('loc', `${r.region_id}/${l.name}`); n.loc += 1; }
+        for (const e of r.exits ?? []) { e.access_rule = sentinel('ex', `${r.region_id}/${e.exit_id}`); n.ex += 1; }
         for (const x of r.subgraph?.internal_exits ?? []) {
             const id = `${r.region_id}/${x.from}->${x.to}`;
-            if (x.access_rule && !overridden.has(id)) { x.access_rule = sentinel('ix', id); n.ix += 1; }
+            if (!overridden.has(id)) { x.access_rule = sentinel('ix', id); n.ix += 1; }
         }
     }
     for (const e of layer.events) if (e.access_rule) { e.access_rule = sentinel('evt', e.name); n.evt += 1; }
@@ -84,12 +87,18 @@ function sentinelsIn(text) {
  */
 export function findEchoes(planted, rules) {
     const found = new Map(Object.keys(ECHO_KINDS).map((k) => [k, new Map()]));
-    for (const sc of Object.values(planted.preset_sidecars['1'])) {
+    // ⛓ WHICH WORLD carries each sentinel (session tile-rules-automation-r-a3): an internal row copied into BOTH ends' worlds (a
+    // bidirectional crossing: L94's r2c16 <-> r3c4) is an echo of BOTH directions' AP exits, not only the row's from -> to.
+    const carriers = new Map();
+    for (const [name, sc] of Object.entries(planted.preset_sidecars['1'])) {
         const p = sc.playable_payload;
         if (!p) continue;
         for (const [kind, id] of sentinelsIn(JSON.stringify(p))) {
             if (!found.has(kind)) throw new Error(`echo sentinels: unknown kind ${kind}`);
             if (!found.get(kind).has(id)) found.get(kind).set(id, Boolean(p.shared_world));
+            const k = `${kind} ${id}`;
+            if (!carriers.has(k)) carriers.set(k, new Set());
+            carriers.get(k).add(name);
         }
     }
     const REGIONS = rules.regions['1'];
@@ -102,7 +111,7 @@ export function findEchoes(planted, rules) {
     const sourceOf = new Map();
     for (const [name, r] of Object.entries(REGIONS)) for (const e of r.exits ?? []) sourceOf.set(e.name, name);
     /** The AP element keys one planted rule stands for. */
-    const elementsOf = (what, id) => {
+    const elementsOf = (what, id, carriedBy = new Set()) => {
         if (what === 'exit') {
             const exit = exitByAtlasId.get(id);
             return exit && sourceOf.has(exit) ? [`${sourceOf.get(exit)}|${exit}`] : [];
@@ -111,7 +120,9 @@ export function findEchoes(planted, rules) {
             const m = id.match(/^(level_\d+)\/(.+)->(.+)$/);
             const from = m && `${m[1]}__${m[2]}`;
             const to = m && `${m[1]}__${m[3]}`;
-            return (REGIONS[from]?.exits ?? []).filter((e) => e.connected_region === to).map((e) => `${from}|${e.name}`);
+            const exitsOf = (a, b) => (REGIONS[a]?.exits ?? []).filter((e) => e.connected_region === b).map((e) => `${a}|${e.name}`);
+            // The TARGET's own world carrying the row copies it into the reverse crossing too.
+            return [...exitsOf(from, to), ...(carriedBy.has(to) ? exitsOf(to, from) : [])];
         }
         const owners = [];
         for (const [n, r] of Object.entries(REGIONS)) {
@@ -128,7 +139,7 @@ export function findEchoes(planted, rules) {
     const kindOf = { ex: 'exit', gate: 'exit', ropegate: 'exit', ix: 'internal', ixr: 'internal', ixg: 'internal', loc: 'location', evt: 'event', rope: 'event' };
     for (const [kind, ids] of found) {
         for (const id of ids.keys()) {
-            const keys = elementsOf(kindOf[kind], id);
+            const keys = elementsOf(kindOf[kind], id, carriers.get(`${kind} ${id}`));
             if (keys.length === 0) unmapped.push(`${kind} ${id}`);
             for (const k of keys) elements.add(k);
         }
