@@ -118,12 +118,17 @@ async function main() {
     const bad = levels.filter((l) => !all.includes(l));
     if (bad.length) throw new Error(`--levels: not in the playthrough atlas: ${bad.join(', ')}`);
     let t0 = Date.now();
-    const built = M.buildPlaythroughMaze({ levels });
+    // ⛔ Both compiles measure the COMPOSED rules (`derivedTable: {rows: []}`): with the committed table applied the AP
+    // column would be the table itself (a self-confirming comparison that hides composed ≠ derived), and the sentinel
+    // compile would trip guard 2 on every planted table row. The world payloads are byte-identical either way
+    // (derivedRuleOverride.test.js), so the derivation is unchanged; the shipped override is held by the producers' --check.
+    const NO_TABLE = { rows: [], excluded: [], inputs: null };
+    const built = M.buildPlaythroughMaze({ levels, derivedTable: NO_TABLE });
     const rules = JSON.parse(built.text);
     console.log(`BUILT: ${levels.length} levels, ${Object.keys(rules.regions['1']).length} regions, ${built.text.length} B in ${Date.now() - t0} ms`);
     t0 = Date.now();
     let planted = null;
-    const plantedDoc = JSON.parse(M.buildPlaythroughMaze({ levels, plant: (x) => { planted = plantEchoSentinels(x); }, embedSphereLog: false }).text);
+    const plantedDoc = JSON.parse(M.buildPlaythroughMaze({ levels, plant: (x) => { planted = plantEchoSentinels(x); }, embedSphereLog: false, derivedTable: NO_TABLE }).text);
     const echoes = findEchoes(plantedDoc, rules);
     const counts = Object.fromEntries(Object.entries(echoes.byKind).map(([k, v]) => [k, v.length]));
     console.log(`ECHOES: planted ${JSON.stringify(planted)}; copied ${JSON.stringify(counts)}; in shared worlds ${JSON.stringify(echoes.inShared)}; ${echoes.elements.length} AP elements; ${Date.now() - t0} ms`);
