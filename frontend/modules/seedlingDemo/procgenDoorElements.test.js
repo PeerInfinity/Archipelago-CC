@@ -54,7 +54,7 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
         expect(ELEMENT_NAMES).toEqual([
             'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena', 'rockgate',
             'shortcut', 'shieldgate', 'watergate', 'watershortcut', 'waterfallgate', 'roam',
-            'corridorbody', 'ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate', 'chestloot', 'keygate',
+            'corridorbody', 'ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate', 'chestloot', 'keygate', 'baitgate',
         ]);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });
@@ -137,7 +137,7 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
          *  re-record (seedling-gen-post-swim-fix). */
         expect([...names(POST_FEATHER_ITEMS)].sort())
             .toEqual(Object.keys(ELEMENT_TABLE)
-                .filter((n) => !['ropegate', 'chestdoor', 'holdgate', 'weighgate', 'chestloot', 'keygate'].includes(n)).sort());
+                .filter((n) => !['ropegate', 'chestdoor', 'holdgate', 'weighgate', 'chestloot', 'keygate', 'baitgate'].includes(n)).sort());
         /**
          * ⛔ THE TWO-STREAMS HALF, READ OFF THE NORMALIZED SPEC — and since
          * SEEDLING BOT R9 slice 1 (D1) the guard's `len` is the THIRD kind:

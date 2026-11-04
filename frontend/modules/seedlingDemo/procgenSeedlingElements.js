@@ -121,6 +121,7 @@ import { BURN_GATE_DOOR_ID } from '../procgenCore/elements/burnGate.js';
 import {
     HOLD_GATE_BUTTON_ID, HOLD_GATE_DOOR_ID, WEIGH_GATE_BUTTON_ID, WEIGH_GATE_DOOR_ID,
 } from '../procgenCore/elements/strategyGate.js';
+import { BAIT_GATE_BODY_ID, BAIT_GATE_LURE_ID } from '../procgenCore/elements/baitGate.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
 
@@ -936,6 +937,15 @@ export const DOOR_TERRAIN = Object.freeze({
 });
 
 /**
+ * ⛓⛓ Seedling gen baitgate — **THE PARTS THAT ARE TERRAIN BUT NOT A DOOR**: the bait gate's LURE, one `water`
+ * cell on the start side (the cell a chaser drowns in). Painted with the water doors, after both laws are asked,
+ * and like them it realises as no entity and no tag. ⛔ Not in `WATER_DOOR_IDS`: the lure is never the door.
+ */
+export const PART_TERRAIN = Object.freeze({
+    [BAIT_GATE_LURE_ID]: 'water',
+});
+
+/**
  * ⛓⛓⛓ **THE `on-connector` COMPOSITE — EVERY CHECK THE BINDING OWES A ROOM-
  * AWARE DOOR**, PROCGEN ELEMENTS arc 3, slice 4a (D1).
  *
@@ -1110,6 +1120,8 @@ export function compositeSeedlingOnConnector({
     /** ⛓ Swim S1 — the water door's cell, painted only now (see `WATER_DOOR_IDS`). */
     for (const o of placement.entities.obstacles) {
         if (WATER_DOOR_IDS.includes(o.id)) painted.set(`${o.x},${o.y}`, DOOR_TERRAIN[o.id]);
+        /** ⛓ seedling gen baitgate — the lure (`PART_TERRAIN`) */
+        if (Object.hasOwn(PART_TERRAIN, o.id)) painted.set(`${o.x},${o.y}`, PART_TERRAIN[o.id]);
     }
     /** ⛓ Swim U3 — the obstacles that are BODIES (`ON_CONNECTOR_BODY_IDS`). */
     const bodies = placement.entities.obstacles.filter((o) => ON_CONNECTOR_BODY_IDS.includes(o.id));
@@ -1300,6 +1312,16 @@ export function seedlingOnConnectorEntities({ placed, tagFor, groupIdFor = null 
         /** ⛓ Swim S1 — a water door is TERRAIN, already in `placed.painted`:
          *  no entity and no tag (`WATER_DOOR_IDS`). */
         if (WATER_DOOR_IDS.includes(e.id)) continue;
+        /** ⛓ seedling gen baitgate — the lure is terrain too (`PART_TERRAIN`). */
+        if (Object.hasOwn(PART_TERRAIN, e.id)) continue;
+        /**
+         * ⛓⛓ Seedling gen baitgate — THE BAIT GATE'S BODY: a `bob`, the vanilla spelling (every map-doc bob is
+         * `<bob x y/>`, no attributes), and nothing else: no lock, so NO TAG from the 30.
+         */
+        if (e.id === BAIT_GATE_BODY_ID) {
+            entities.push({ type: 'bob', tx: e.x, ty: e.y, attrs: {} });
+            continue;
+        }
         /**
          * ⛓⛓ Swim U3 (D3) — THE CORRIDOR BODY: a `spinner {tag:'-1'}`, the
          * roam's and the kill gate's own spelling, and NOTHING else — no lock,
