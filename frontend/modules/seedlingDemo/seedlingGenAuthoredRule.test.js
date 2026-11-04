@@ -9,8 +9,9 @@
  *
  *   1. the marker itself: non-enumerable and symbol-keyed — invisible to JSON, `structuredClone`, spreads and
  *      `toEqual`, so no serialised byte can move;
- *   2. SPHERE GROWTH, one key-gate room (`SEEDLING_GENERATED_LEAF_STATE` + `keygate`): the goal's rules.json rule
- *      IS `Has(Red Key)` (the sphere default `True_` is no rule, so the authored rule stands alone);
+ *   2. SPHERE GROWTH, one key-gate room (`SEEDLING_GENERATED_HOST_STATE` + `keygate`; since keygate colours the
+ *      planner REQUESTS the key): the goal's rules.json rule IS `Has(Red Key)` (the planner's rule and the marked
+ *      authored rule compose to one);
  *   3. TOP-DOWN over the committed Adventure preset, seed 1, mix {maze 1, flash_seedling_gen 1}: the key-gate room
  *      `YellowCastle`'s goal `Inside Yellow Castle` carries `Has(Red Key)`; with the SOURCE's rule for it set to
  *      `Has(Yellow Key)`, the world's rule is the AND of both.
@@ -29,7 +30,7 @@ import { describe, it, expect } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { buildRunFromState, runPresetHeadless } from '../procgenPipeline/presetRun.js';
-import { SEEDLING_GENERATED_LEAF_STATE } from '../procgenPipeline/presetDefs.js';
+import { SEEDLING_GENERATED_HOST_STATE, SEEDLING_GENERATED_LEAF_STATE } from '../procgenPipeline/presetDefs.js';
 import { AUTHORED_RULE, authoredRuleOf, markAuthoredRule } from '../procgenCore/authoredRule.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -73,10 +74,25 @@ describe('1 — the marker: a non-enumerable symbol, invisible to every copy and
 });
 
 describe('2 — sphere growth: a one-key-gate world\'s goal requires the key', () => {
-    it('SEEDLING_GENERATED_LEAF_STATE + keygate: region_3_3\'s goal is `Has(Red Key)`', async () => {
-        const rulesJson = await build({ ...SEEDLING_GENERATED_LEAF_STATE,
-            params: { ...SEEDLING_GENERATED_LEAF_STATE.params, seedlingGenElements: 'keygate' } });
-        expect(keyGoalRules(rulesJson)).toEqual({ region_3_3: { goal: 'region_3_3__loc_0', rule: HAS('Red Key') } });
+    /**
+     * ⛓ keygate colours (slice 2) — since sphere growth REQUESTS a room's key (`procgenPipeline/sphereIntroductions.js`),
+     * a key gate is drawn only where the planner scheduled its key. The planner's own `Has(Red Key)` on the locked
+     * location and the room's MARKED key rule compose to ONE `Has(Red Key)` (`andComposeRules(R, R)` is `R`).
+     */
+    it('SEEDLING_GENERATED_HOST_STATE + keygate: the start room\'s goal is exactly `Has(Red Key)`, oracle exact', async () => {
+        const res = await runPresetHeadless(buildRunFromState(structuredClone({ ...SEEDLING_GENERATED_HOST_STATE,
+            params: { ...SEEDLING_GENERATED_HOST_STATE.params, seedlingGenElements: 'keygate' } })));
+        const rules = keyGoalRules(res.rulesJson);
+        expect(Object.values(rules).map((r) => r.rule)).toEqual([HAS('Red Key')]);
+        expect(res.oracleErrors).toEqual([]);
+    }, 120_000);
+
+    it('SEEDLING_GENERATED_LEAF_STATE + keygate: the leaf is the LAST wave, so no key is requested and none is drawn', async () => {
+        /** before the requests this world shipped an unplanned key and its oracle broke (sphere count 4 vs 3) */
+        const res = await runPresetHeadless(buildRunFromState(structuredClone({ ...SEEDLING_GENERATED_LEAF_STATE,
+            params: { ...SEEDLING_GENERATED_LEAF_STATE.params, seedlingGenElements: 'keygate' } })));
+        expect(keyGoalRules(res.rulesJson)).toEqual({});
+        expect(res.oracleErrors).toEqual([]);
     }, 120_000);
 });
 

@@ -10,9 +10,10 @@
  *      ANDed onto its rule in the extracted rules AND the payload.
  *   3. `seedlingGeneratedSet.placeApItems` REPLACES the `bosskey` with an `apitem` like any location (⚖ no special
  *      grants: the key reaches the player only through the location's item).
- *   4. ⚖ "B": until the pipeline allocates colours across rooms, a key gate past generated room #0 is refused at
- *      SERIALIZE and two key-gate rooms at ASSEMBLY, both by name (`keygate-colour-not-allocated`). And a driver
- *      that drops the room's goal rule is refused at serialize (`keygate-rule-not-carried`) — since
+ *   4. ⚖ "B": an UNREQUESTED key gate past generated room #0 is refused at SERIALIZE (`keygate-colour-not-allocated`),
+ *      and a set where two rooms hold ONE colour at ASSEMBLY (`keygate-colour-shared`). The sphere planner REQUESTS a
+ *      distinct colour per room (keygate colours slice 2: `seedlingGenKeyGateColours.test.js`). And a driver that
+ *      drops the room's goal rule is refused at serialize (`keygate-rule-not-carried`) — since
  *      procgen-region-authored-rules a BACKSTOP only: the key rule is marked as the room's own, and sphere growth and
  *      top-down AND it on (`seedlingGenAuthoredRule.test.js`).
  *
@@ -41,7 +42,7 @@ import {
     BOSS_KEY_ITEMS, BOSS_KEY_KIND, bossKeyLocationName, bossKeyRows, extractGenRules, generateGenRoom, placeGenItems,
     rerollGenRoom, serializeGenRoom,
 } from './seedlingGenRoom.js';
-import { KEYGATE_COLOUR_REFUSAL, KEYGATE_RULE_REFUSAL } from './seedlingGenRoomPayload.js';
+import { KEYGATE_COLOUR_REFUSAL, KEYGATE_RULE_REFUSAL, KEYGATE_SHARED_REFUSAL } from './seedlingGenRoomPayload.js';
 import { BOSS_KEY_KIND as SET_BOSS_KEY_KIND, assembleGeneratedSeedlingSet, placeApItems } from './seedlingGeneratedSet.js';
 import { ITEM_FOR_KEY } from './seedlingAtlasDerivation.js';
 import { AP_ITEM_TYPE, placementKey } from './apPlacementRewriter.js';
@@ -220,12 +221,12 @@ describe('2 — the built world: +1 location, +1 item, the goal requires its key
     });
 });
 
-describe('3 — ⚖ "B: Distinct colour per room": refused BY NAME until the pipeline allocates colours', () => {
-    it('two generated key-gate rooms: refused at SERIALIZE (`keygate-colour-not-allocated`)', async () => {
-        await expect(build(TWO_ROOMS)).rejects.toThrow(new RegExp(`^${KEYGATE_COLOUR_REFUSAL}: multi-room keygate colours await the pipeline's held-items-at-region-entry\\. .*region_0_1.*#1`));
+describe('3 — ⚖ "B: Distinct colour per room": an UNREQUESTED key gate past room #0, and a shared colour, refused BY NAME', () => {
+    it('two generated key-gate rooms in a spiral (no planner request): refused at SERIALIZE (`keygate-colour-not-allocated`)', async () => {
+        await expect(build(TWO_ROOMS)).rejects.toThrow(new RegExp(`^${KEYGATE_COLOUR_REFUSAL}: multi-room keygate colours are allocated by the sphere planner's requests, and this room's key gate was not requested\\. .*region_0_1.*#1`));
     }, 120_000);
 
-    it('two key-gate rooms in one set: refused at ASSEMBLY, by the same name', () => {
+    it('two key-gate rooms holding ONE colour in a set: refused at ASSEMBLY (`keygate-colour-shared`)', () => {
         const rules = structuredClone(readJson('frontend/presets/seedling_generated_room/AP_1/AP_1_rules.json'));
         for (const sc of Object.values(rules.preset_sidecars['1'])) {
             const p = sc.playable_payload;
@@ -234,7 +235,15 @@ describe('3 — ⚖ "B: Distinct colour per room": refused BY NAME until the pip
                 cell: { ...p.start }, tag: 29 });
         }
         expect(() => assembleGeneratedSeedlingSet(rules, { selfPlayer: 1 }))
-            .toThrow(new RegExp(`^${KEYGATE_COLOUR_REFUSAL}: multi-room .*rooms region_0_0, region_0_1 each hold`));
+            .toThrow(new RegExp(`^${KEYGATE_SHARED_REFUSAL}: generated Seedling set: rooms region_0_0, region_0_1 each hold a KEY GATE opened by 'Red Key'`));
+        /** DISTINCT colours are no longer refused here (the planner allocates them; ⛓ keygate colours slice 2) */
+        let n = 0;
+        for (const sc of Object.values(rules.preset_sidecars['1'])) {
+            const key = sc.playable_payload?.locations?.find((l) => l.kind === BOSS_KEY_KIND);
+            if (key) { key.item = BOSS_KEY_ITEMS[n]; n += 1; }
+        }
+        expect(() => assembleGeneratedSeedlingSet(rules, { selfPlayer: 1 }))
+            .not.toThrow(new RegExp(`^(${KEYGATE_SHARED_REFUSAL}|${KEYGATE_COLOUR_REFUSAL})`));
     });
 
     it('⚠ KNOWN LIMIT, named: a key gate in generated room #1 is refused even when room #0 has none', () => {

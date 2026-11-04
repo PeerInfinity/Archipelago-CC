@@ -292,7 +292,9 @@ describe('⛓ the links the render emits', () => {
         //              pointers that named it re-aimed (net −6 doc).
         //   383 → 384: cloudberry P4c — cloudberry.md § Items → its own § Fill slack for tiny worlds (1 same-doc).
         //   384 → 385: cloudberry P5a — cloudberry.md § Items' Double Jump note → its own § Generating it (1 same-doc).
-        expect(checked).toBe(385);
+        //   385 → 387: keygate colours — substrate-registry.md § Build-time — item introduction → sphere-growth.md and
+        //              → flash.md § Declarations (G9) (2 doc).
+        expect(checked).toBe(387);
     });
 
     it('tags each link with the kind that produced it', () => {

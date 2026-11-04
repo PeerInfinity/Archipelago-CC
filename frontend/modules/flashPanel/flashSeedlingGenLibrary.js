@@ -61,7 +61,9 @@ import {
     seedlingFlashPanelBlock,
 } from './flashSeedlingLibrary.js';
 import {
-    GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_SUBSTRATE_ID, deserializeGenRoom, genRoomApLocationNames,
+    BOSS_KEY_ITEM_NAMES, GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_SUBSTRATE_ID,
+    deserializeGenRoom,
+    genRoomApLocationNames,
 } from '../seedlingDemo/seedlingGenRoomPayload.js';
 
 /** ⛓ Spelled ONCE, in the light payload module — the play-time assembler reads it there (G2). */
@@ -69,7 +71,7 @@ export const FLASH_SEEDLING_GEN_SUBSTRATE_ID = GEN_ROOM_SUBSTRATE_ID;
 
 /** The room module's build functions this entry delegates to — the install seam's contract. */
 export const SEEDLING_GEN_ROOM_EXPORTS = Object.freeze([
-    'generateGenRoom', 'placeGenItems', 'placeGenRules', 'extractGenRules', 'serializeGenRoom',
+    'generateGenRoom', 'placeGenItems', 'placeGenRules', 'extractGenRules', 'serializeGenRoom', 'introducibleGenItems',
 ]);
 
 /** Where the live app loads the room module from (relative to the document) — a computed specifier. */
@@ -550,6 +552,19 @@ export const substrateRegistryEntry = Object.freeze({
      * CERTAIN one, not the worst case: `seedlingDemo/seedlingGenCapacity.js`.
      */
     locationCapacity: Object.freeze({ kind: LOCATION_CAPACITY_KINDS.TILES, capacityAt: genRoomCapacityAt }),
+
+    /**
+     * ⛓ keygate colours (slice 2) — Item introduction (`procgenCore/itemIntroduction.js`): the key items a room's
+     * KEY GATE may introduce under the world's params, in colour order (`seedlingGenRoom.introducibleGenItems`),
+     * so the sphere planner REQUESTS a distinct colour per room before any room is drawn. `[]` without a key
+     * gate, so a world without one is untouched. A sixth key-gate room is refused by the substrate's own name.
+     * `replayableItems`: all five, so a regenerate whose spec carries a key request rebuilds that key gate.
+     */
+    itemIntroduction: Object.freeze({
+        introducibleItems: (params) => roomFor('itemIntroduction').introducibleGenItems(params),
+        replayableItems: () => [...BOSS_KEY_ITEM_NAMES],
+        exhaustedRefusal: (regionId, items) => GEN_ROOM_REFUSALS.keygateExhausted(regionId, items),
+    }),
 
     defaultProcgenParams: DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS,
     buildRegionParams: buildSeedlingGenRegionParams,

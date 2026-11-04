@@ -89,6 +89,8 @@ import {
 // SPHERE binding (below); layoutEdits.js stays envelope-agnostic.
 import { deriveSphereRerollSeed, reRollCountFor } from './layoutEdits.js';
 import { unplacedGoalSentence } from '../procgenCore/goalItem.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { scheduleSphereIntroductions } from './sphereIntroductions.js';
 
 /** Step names in run order; index === the `completed` value the step yields. */
 export const SPHERE_STEPS = Object.freeze([
@@ -326,6 +328,10 @@ function stepTopology(env) {
 function stepItems(env) {
     for (const nd of env.nodes) nd.items = [];
     placeSphereTreeItems(env.plan, env.nodes);
+    // ⛓ ITEM INTRODUCTION — the planner's requests, after the deal and before ③ (`sphereIntroductions.js`).
+    scheduleSphereIntroductions(env.plan, env.nodes, {
+        regionParams: env.config.regionParams ?? {}, entryOf: (id) => substrateRegistry.get(id),
+    });
     env.tree = {
         nodes: env.nodes,
         substrateCounts: env.substrateCounts,

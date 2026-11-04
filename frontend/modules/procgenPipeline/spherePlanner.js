@@ -331,7 +331,8 @@ export function compareSpheresToPlan(computed, plan) {
     const n = Math.min(computed.length, plan.spheres.length);
     for (let i = 0; i < n; i++) {
         const got = [...computed[i].items].sort();
-        const want = [...plan.spheres[i].items].sort();
+        // ⛓ ITEM INTRODUCTION — a planner-requested substrate item is a planned item of its sphere.
+        const want = [...plan.spheres[i].items, ...(plan.spheres[i].introduced ?? [])].sort();
         if (got.length !== want.length || got.some((x, j) => x !== want[j])) {
             errors.push(`sphere ${i + 1}: computed [${got.join(', ')}] != `
                 + `planned [${want.join(', ')}]`);

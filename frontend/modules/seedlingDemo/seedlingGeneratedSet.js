@@ -51,7 +51,7 @@ import { validateLevelSet } from './levelSetValidator.js';
 import { emitDoorEntities } from './levelSetExits.js';
 import { AP_ITEM_TYPE, AP_LOOK, placementKey } from './apPlacementRewriter.js';
 import {
-    GEN_ROOM_TILE_SIZE, genDoorId, genRoomRefusal, generatedRoomCensus,
+    GEN_ROOM_TILE_SIZE, KEYGATE_SHARED_REFUSAL, genDoorId, genRoomRefusal, generatedRoomCensus,
 } from './seedlingGenRoomPayload.js';
 
 /** ⛓ The table's key function, re-exported so the check binding is handed the rewriter's own. */
@@ -99,11 +99,11 @@ export const GENERATED_SET_REFUSALS = Object.freeze({
     oneWay: (region, exitName, target) => `generated Seedling set: region '${region}' exit '${exitName}' `
         + `leads to generated room '${target}', which has no door back to '${region}' — the arrival cell `
         + 'is the paired door\'s approach, and there is no paired door',
-    /** ⛓ strategy elements r2 — ⚖ "B: Distinct colour per room": two key-gate rooms are refused by name. */
-    keygateColour: (rooms) => 'keygate-colour-not-allocated: multi-room keygate colours await the pipeline\'s '
-        + `held-items-at-region-entry. Generated Seedling set: rooms ${rooms.join(', ')} each hold a KEY GATE, and `
-        + 'each key-gate room must have its own colour (⚖ "B: Distinct colour per room"); this set is refused rather '
-        + 'than mounted with two rooms that may share one.',
+    /** ⛓ keygate colours (slice 2) — ⚖ "B: Distinct colour per room": two rooms holding ONE key are refused. */
+    keygateShared: (item, rooms) => `${KEYGATE_SHARED_REFUSAL}: generated Seedling set: rooms ${rooms.join(', ')} `
+        + `each hold a KEY GATE opened by '${item}'. Each key-gate room must have its own colour (⚖ "B: Distinct colour `
+        + 'per room"), or one key opens both locks; this set is refused rather than mounted. ⛓ Build key-gate worlds '
+        + 'with sphere growth, whose planner requests a distinct colour for each room.',
     chestDoorMissing: (region, name, cell, tag) => `generated Seedling set: region '${region}' location `
         + `'${name}' is a door chest at (${cell.tx},${cell.ty}) tag ${tag}, and the room holds no chest with that tag `
         + 'there — the check is the chest\'s own clear, so without the chest it could never fire',
@@ -190,8 +190,18 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
         if (p.level !== ordinal) refuse(GENERATED_SET_REFUSALS.wrongLevel(region, p.level, ordinal));
         return p;
     });
-    const keyRooms = census.rooms.filter((r, i) => (payloads[i].locations ?? []).some((l) => l.kind === BOSS_KEY_KIND));
-    if (keyRooms.length > 1) refuse(GENERATED_SET_REFUSALS.keygateColour(keyRooms));
+    // ⛓ keygate colours (slice 2) — the BACKSTOP of ⚖ "B: Distinct colour per room". The planner hands each requested
+    //   key-gate room its own colour; a set where two rooms still hold ONE key item is refused by name.
+    const keyRoomsByItem = new Map();
+    census.rooms.forEach((r, i) => {
+        for (const l of payloads[i].locations ?? []) {
+            if (l.kind !== BOSS_KEY_KIND) continue;
+            keyRoomsByItem.set(l.item, [...(keyRoomsByItem.get(l.item) ?? []), r]);
+        }
+    });
+    for (const [item, rooms] of keyRoomsByItem) {
+        if (rooms.length > 1) refuse(GENERATED_SET_REFUSALS.keygateShared(item, rooms));
+    }
 
     const doors = [];
     const apitems = [];

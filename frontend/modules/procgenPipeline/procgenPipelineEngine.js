@@ -48,6 +48,13 @@ import {
     exceedsCeiling, locationCeilingRefusal, locationDemandOf, sizeForLocations,
 } from '../procgenCore/locationCapacity.js';
 import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
+import {
+    ITEM_INTRODUCTION_REFUSALS, introductionRequestOf, unrequestedIntroductions,
+} from '../procgenCore/itemIntroduction.js';
+import { scheduleSphereIntroductions } from './sphereIntroductions.js';
+
+/** The registry entry for an id, or `undefined` (a library / atlas source id): the planner's lookup. */
+const registryEntryOf = (substrateId) => substrateRegistry.get(substrateId);
 
 function getAdapter(substrateId) {
     const adapter = substrateRegistry.get(substrateId);
@@ -832,6 +839,9 @@ export function sphereHeldItems(plan, node, nodes) {
         const running = new Map();
         for (const s of spheres) {
             for (const item of s.items ?? []) running.set(item, (running.get(item) ?? 0) + 1);
+            // ⛓ ITEM INTRODUCTION — a substrate item the planner REQUESTED is a sphere item too
+            //   (`sphereIntroductions.js`); absent everywhere else, so nothing moves.
+            for (const item of s.introduced ?? []) running.set(item, (running.get(item) ?? 0) + 1);
             cum.push(new Map(running));
         }
     }
@@ -3349,6 +3359,10 @@ function generateRegionProcedural(spec) {
             item_placements.push({ item_id: loc.item, location_id: loc.id });
         }
     }
+    // ⛓ ITEM INTRODUCTION — the items this spec asks the region to introduce, DERIVED from its locations
+    //   (`procgenCore/itemIntroduction.js`), so a regenerate from a document replays the first request.
+    //   `null` for a substrate that declares nothing: its core input is unchanged.
+    const introduce = introductionRequestOf(adapter, spec);
     // Every location id placeFromRules is responsible for realising.
     const requestedLocIds = new Set([
         ...Object.keys(location_rules),
@@ -3404,6 +3418,7 @@ function generateRegionProcedural(spec) {
             params: spec.params,
             biome: spec.biome ?? null,
             ...(spec.held ? { held: spec.held } : {}),
+            ...(introduce ? { introduce } : {}),
         });
         // exit_rules maps the core's resolved exit_id (by side) to the
         // spec's access rule — rebuilt per attempt since exits_placed is
@@ -5242,6 +5257,7 @@ export function buildSphereTree(plan, opts = {}, rng) {
     const { allocation } = allocateSphereTree(plan, opts, rng);
     const wired = wireSphereTree(plan, allocation, opts, rng);
     placeSphereTreeItems(plan, wired.nodes);
+    scheduleSphereIntroductions(plan, wired.nodes, { regionParams: opts.regionParams ?? {}, entryOf: registryEntryOf });
     return {
         nodes: wired.nodes,
         substrateCounts: wired.substrateCounts,
@@ -5291,6 +5307,9 @@ export function compactSphereTree(tree) {
             // disjunct and narrow an OR. Omitted otherwise, so every other
             // world's compacted tree is byte-identical.
             ...(n.gateRule ? { gateRule: n.gateRule } : {}),
+            // ⛓ ITEM INTRODUCTION — the planner's recorded decision (`sphereIntroductions.js`), ONLY on a node
+            //   of a substrate that declares `itemIntroduction`, so every other world's tree is byte-identical.
+            ...(Array.isArray(n.introduces) ? { introduces: n.introduces.map((d) => ({ ...d })) } : {}),
             usedSides: [...(n.usedSides ?? [])],
             childGates: n.childGates,
             isFiller: n.isFiller,
@@ -5417,7 +5436,7 @@ export function rebuildSphereTopology(plan, nodes, opts = {}) {
 // is left to makeLocationName (sphere ids aren't AP-canonical names).
 function buildSphereProceduralRegion({
     substrate, region_id, size, entrances, exitPlans, locations,
-    itemLib, obstacleLib, rng, params, hazardOpts, consumableTileOpts, held = null,
+    itemLib, obstacleLib, rng, params, hazardOpts, consumableTileOpts, held = null, introductionRequests = false,
 }) {
     return generateRegion({
         substrate,
@@ -5439,6 +5458,7 @@ function buildSphereProceduralRegion({
         })),
         defaultLocationRuleToTrue: true,
         ...(held ? { held } : {}),
+        ...(introductionRequests ? { introductionRequests: true } : {}),
     });
 }
 
@@ -6094,7 +6114,8 @@ function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
         entrances = [{ side: entranceSide, tile: entranceTile }];
     }
 
-    const locations = node.items.map((it) => ({ id: it.id, item: it.item, rule: null }));
+    // ⛓ ITEM INTRODUCTION — a location the planner put behind an introduced item carries its rule.
+    const locations = node.items.map((it) => ({ id: it.id, item: it.item, rule: it.rule ?? null }));
 
     return {
         region_id, cell, parentNode, parentExitPlaced,
@@ -6793,7 +6814,15 @@ function* realiseOneSphereNode(grid, node, tree, rng, {
                 locations,
                 itemLib, obstacleLib, rng, params: regionParams, hazardOpts, consumableTileOpts,
                 ...heldSpec,
+                ...(Array.isArray(node.introduces) ? { introductionRequests: true } : {}),
             });
+            // ⛓ ITEM INTRODUCTION — requests are the GATE here: a declared item the planner did not
+            //   request would move every later sphere (the plan IS the oracle), so it is refused by name.
+            if (Array.isArray(node.introduces)) {
+                const extra = unrequestedIntroductions(adapter, regionParams, region.extracted_rules?.locations,
+                    { items: Object.fromEntries(node.introduces.map((d) => [d.item, 1])) });
+                if (extra.length) throw new Error(ITEM_INTRODUCTION_REFUSALS.unrequested(region_id, extra));
+            }
         } else if (typeof adapter.generateZoneForSpecs === 'function'
                 || typeof adapter.generateZoneForSpecsGen === 'function') {
             region = yield* buildSphereZoneRegion({
@@ -7175,6 +7204,7 @@ export function* growSpheresBatchedGen(config) {
         // already-realised waves; the new waves' items land on their nodes).
         for (const nd of nodes) nd.items = [];
         placeSphereTreeItems(spherePlan, nodes);
+        scheduleSphereIntroductions(spherePlan, nodes, { regionParams, entryOf: registryEntryOf });
 
         // ③ — place + realise this batch (and re-realise the affected tail).
         yield* realiseSphereBatchGen(grid, nodes, tree, rng, {

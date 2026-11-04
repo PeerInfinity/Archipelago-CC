@@ -664,6 +664,8 @@ export const isElementList = (spec) => Boolean(spec && typeof spec === 'object'
     && Array.isArray(spec.any));
 
 const LIST_SEP = '+';
+/** ⛓ The list separator, for a caller that EDITS a spec string member by member (keygate colours, slice 2). */
+export const ELEMENT_LIST_SEP = LIST_SEP;
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ **`len=2|3|4` — THE SUBSET, THE CODEC'S THIRD SPELLING OF A
