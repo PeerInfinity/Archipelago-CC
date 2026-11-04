@@ -68,21 +68,3 @@ export function seedlingMountKey({ rules, playerId = null, locations = null } = 
         return `unkeyable: ${err?.message ?? err}`;
     }
 }
-
-/**
- * ⛓ THE EDITOR LOADS — the `files:jsonLoaded` publishes that are an EDITOR handing its document back, not a preset
- * or a server picked by a person. ⛔ A same-wiring re-mount for these is a SEPARATE ruling (the brief's STOP): the
- * panel keeps today's behaviour for them (no re-mount) and says so in its log.
- *   `editorApply`        the JSON Editor / CodeMirror editor's Apply
- *   `procgenPipeline`    the procgen pipeline's "Load into frontend"
- *   `appliedBy`          the APWorld editor's Apply (its `sourceName` is the ORIGIN preset's path, so the marker is
- *                        the only thing that names it; `apworldEditorUI._handleApply`)
- */
-export const EDITOR_LOAD_SOURCES = Object.freeze(['editorApply', 'procgenPipeline']);
-
-/** Is this `files:jsonLoaded` payload an editor's republish? */
-export function isEditorLoad(eventData) {
-    if (!eventData) return false;
-    if (typeof eventData.appliedBy === 'string' && eventData.appliedBy !== '') return true;
-    return EDITOR_LOAD_SOURCES.includes(eventData.sourceName);
-}
