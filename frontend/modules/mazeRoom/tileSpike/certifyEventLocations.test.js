@@ -210,6 +210,11 @@ describe('eventLayerFor', () => {
             // its gates are the lock's two internal crossings, which the target's cell carries itself
             'target L20 flag 4: lock@32,80 cleared',
             'target L39 flag 8: wandlock@144,592 cleared',
+            // ⛓ tile-lay-l40-latches: L40's three in-room presses open their wand locks (the maze lays each as a LATCH instead:
+            // `seedlingAtlasAnalysis.layableLatches`, so the projection drops these target rows for them)
+            'target L40 flag 1: wandlock@176,80 cleared',
+            'target L40 flag 7: wandlock@208,128 cleared',
+            'target L40 flag 12: wandlock@480,560 cleared',
             'door L39 flag 8: wandlock@144,592 cleared out_teleporter_144_0',
             'door L39 flag 8: wandlock@144,592 cleared out_teleporter_144_624',
             // ⛓ session tile-primitives-sphere-order-8 (⚖ 2026-10-29 "World doors + framing", "Talk location + portal door"): the

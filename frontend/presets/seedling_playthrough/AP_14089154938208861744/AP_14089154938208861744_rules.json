@@ -3598,6 +3598,117 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "L40 flag 1: wandlock@176,80 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L40 flag 1: wandlock@176,80 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L40:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 40,
+              "tag": 1,
+              "class": "wandlock",
+              "x": 176,
+              "y": 80
+            },
+            "action": {
+              "verb": "press",
+              "item": null,
+              "presser": {
+                "level": 40,
+                "class": "buttonroom",
+                "x": 160,
+                "y": 128
+              }
+            },
+            "side": "level_40__r0c53",
+            "across": [],
+            "targets": [
+              {
+                "level": 40,
+                "tag": 1,
+                "class": "wandlock",
+                "x": 176,
+                "y": 80
+              },
+              {
+                "level": 40,
+                "tag": 1,
+                "class": "wandlock",
+                "x": 176,
+                "y": 208
+              }
+            ]
+          },
+          {
+            "name": "L40 flag 7: wandlock@208,128 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L40 flag 7: wandlock@208,128 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L40:7",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 40,
+              "tag": 7,
+              "class": "wandlock",
+              "x": 208,
+              "y": 128
+            },
+            "action": {
+              "verb": "press",
+              "item": null,
+              "presser": {
+                "level": 40,
+                "class": "buttonroom",
+                "x": 272,
+                "y": 208
+              }
+            },
+            "side": "level_40__r0c53",
+            "across": [],
+            "targets": [
+              {
+                "level": 40,
+                "tag": 7,
+                "class": "wandlock",
+                "x": 208,
+                "y": 128
+              },
+              {
+                "level": 40,
+                "tag": 7,
+                "class": "wandlock",
+                "x": 208,
+                "y": 144
+              },
+              {
+                "level": 40,
+                "tag": 7,
+                "class": "wandlock",
+                "x": 208,
+                "y": 160
+              }
+            ]
           }
         ]
       },
@@ -4002,7 +4113,44 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L40 flag 12: wandlock@480,560 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L40 flag 12: wandlock@480,560 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L40:12",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 40,
+              "tag": 12,
+              "class": "wandlock",
+              "x": 480,
+              "y": 560
+            },
+            "action": {
+              "verb": "press",
+              "item": null,
+              "presser": {
+                "level": 40,
+                "class": "buttonroom",
+                "x": 880,
+                "y": 768
+              }
+            },
+            "side": "level_40__r48c54",
+            "across": []
+          }
+        ]
       },
       "level_41__r4c3": {
         "name": "level_41__r4c3",
@@ -12341,8 +12489,41 @@
         "type": "Event",
         "max_count": 1
       },
+      "L40 flag 1: wandlock@176,80 cleared": {
+        "name": "L40 flag 1: wandlock@176,80 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L40 flag 7: wandlock@208,128 cleared": {
+        "name": "L40 flag 7: wandlock@208,128 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L40 flag 8: bosslock@480,352 cleared": {
         "name": "L40 flag 8: bosslock@480,352 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L40 flag 12: wandlock@480,560 cleared": {
+        "name": "L40 flag 12: wandlock@480,560 cleared",
         "id": null,
         "groups": [
           "Event"
@@ -12535,6 +12716,9 @@
       "L30 flag 2: bosslock@224,208 cleared": 1,
       "L31 flag 0: bosslock@192,432 cleared": 1,
       "L39 flag 8: wandlock@144,592 cleared": 1,
+      "L40 flag 12: wandlock@480,560 cleared": 1,
+      "L40 flag 1: wandlock@176,80 cleared": 1,
+      "L40 flag 7: wandlock@208,128 cleared": 1,
       "L40 flag 8: bosslock@480,352 cleared": 1,
       "L48 flag 1: bosslock@48,144 cleared": 1,
       "L58 flag 1: yeti@56,56 cleared": 1,
@@ -12615,8 +12799,11 @@
       "Level 040 - Totem Part 64,144": "Totem Shard",
       "Level 041 - Totem Part 240,144": "Totem Shard",
       "Level 042 - Totem Part 184,152": "Totem Shard",
+      "L40 flag 1: wandlock@176,80 cleared": "L40 flag 1: wandlock@176,80 cleared",
+      "L40 flag 7: wandlock@208,128 cleared": "L40 flag 7: wandlock@208,128 cleared",
       "L40 flag 8: bosslock@480,352 cleared": "L40 flag 8: bosslock@480,352 cleared",
       "Level 040 - Boss Key 2": "Purple Key",
+      "L40 flag 12: wandlock@480,560 cleared": "L40 flag 12: wandlock@480,560 cleared",
       "Level 043 - Wand": "Wand",
       "L48 flag 1: bosslock@48,144 cleared": "L48 flag 1: bosslock@48,144 cleared",
       "Level 049 - Conch": "Progressive Swim",

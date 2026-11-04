@@ -363,6 +363,27 @@ describe('obstacle events in the leg walk', () => {
         expect(noWayBack).toBeNull(); // the open side is behind the landing too: refused, never walked through
     });
 
+    // ⛓ session tile-lay-l40-latches: an event NO AP rule names (L40's in-room presses gate nothing) is never a
+    // prerequisite. Offered first to the greedy closure, it walked it into a dead end and the leg was given up (the CI survey
+    // at 40a6f357c8: L64's Ghostspear lost its L58 Yeti leg and the Wand was pulled forward, 239 → 230 steps).
+    it('an event no rule names is never a prerequisite, so it cannot walk the closure into a dead end', () => {
+        const ev = (name, id) => ({ name, event_kind: 'game_state', event_id: id, access_rule: TRUE, item: { name } });
+        const R = {
+            Dead: { exits: [], locations: [ev('Unnamed press', 'flag:L9:1')] },
+            Start: {
+                exits: [{ name: 'to-dead', connected_region: 'Dead', access_rule: TRUE },
+                    { name: 'to-gate', connected_region: 'Gate', access_rule: has('Opened') }],
+                locations: [ev('Opened', 'flag:L9:2')],
+            },
+            Gate: { exits: [], locations: [{ name: 'Prize' }] },
+        };
+        const rules = doc(R);
+        const events = gameStateEventsOf(R);
+        expect(events.map((e) => e.item)).toEqual(['Unnamed press', 'Opened']); // the unnamed one is offered FIRST
+        const pre = eventPrerequisites({ regions: R, ruleHolds: makeRuleHolds(rules), here: 'Start', items: {}, events, target: 'Gate' });
+        expect(pre.map((e) => e.item)).toEqual(['Opened']);
+    });
+
     it('deriveLegs credits the crossing and never walks the gated landing without its event', () => {
         const rules = graph();
         rules.regions[1].Far.locations = [{ name: 'Far chest' }];

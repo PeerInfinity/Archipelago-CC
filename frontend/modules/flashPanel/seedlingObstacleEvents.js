@@ -287,7 +287,8 @@ export function deriveLockEvents(projection, ctx) {
  * @param {(target:object, eventName:string) => {region_id:string, exit_id:string, arm?:boolean}[]} ctx.gates the
  *   crossings through the target, as departures (throws by name when it cannot say); `arm: false` = the in-room way
  *   cannot be taken from that door's side; ⛓ RULES l20-button-latch: a row `{region_id, from, to}` names an
- *   INTERNAL crossing instead (returned as `internalExitGates`), and an empty list skips the target by name
+ *   INTERNAL crossing instead (returned as `internalExitGates`); an empty list skips a cross-room target by name, and an
+ *   in-room one still mints its event, with no gate (session tile-lay-l40-latches)
  * @param {(target:object) => {bodies:string[], why:string}|null} [ctx.kills] the bodies a clear of a target that is
  *   solid in neither state removes (none = the target is cosmetic)
  * @param {(target:object) => object|null} [ctx.inRoom] another way, in the target's own level, to clear it (a
@@ -322,15 +323,29 @@ export function deriveButtonEvents(rows, ctx) {
             if (!priced.free) { skipped.push(`${what}: the rules do not price it free on the button's account (${priced.why})`); continue; }
             const id = obstacleEventId({ level: t.level, tag: t.tag });
             const name = obstacleEventName({ level: t.level, tag: t.tag, cls: t.type, x: t.x, y: t.y });
-            if (events.has(id)) { refused.push(`${what}: ${id} is already this slice's event for another button`); continue; }
-            // ⛓ RULES l20-button-latch: the gates are asked BEFORE the event is minted — a press whose target no
-            // crossing passes through gates nothing, so it mints nothing (`ctx.gates` for a cross-room row throws
-            // instead, so its rows are unchanged).
-            const deps = ctx.gates(t, name);
-            if (deps.length === 0) { skipped.push(`${what}: no crossing passes through it`); continue; }
+            // ⛓ ONE PRESS, ONE EVENT (session tile-lay-l40-latches): an in-room row's id is the BUTTON's flag, so every
+            // target of one press shares it — a later target of the SAME presser reuses the event its first target minted
+            // (named after that first target, in map order) and adds its own gates. Two different pressers on one id refuse.
+            const mine = events.get(id);
+            const samePresser = mine && ['level', 'x', 'y'].every((k) => mine.fields.action.presser[k] === p[k]);
+            if (mine && !samePresser) { refused.push(`${what}: ${id} is already this slice's event for another button`); continue; }
+            const eventName = mine ? mine.name : name;
+            // ⛓ RULES l20-button-latch: the gates are asked BEFORE the event is minted. A CROSS-ROOM row's `ctx.gates`
+            // throws when it cannot say, so its rows are unchanged. ⛓ An IN-ROOM press whose target no crossing passes
+            // through (session tile-lay-l40-latches, ⚖ Robert 2026-11-03 "B: Prune, then lay") still MINTS its event, with
+            // no gate: the game writes the button's flag (`ButtonRoom.as:96`), and the maze world lays the press as a latch
+            // location (`seedlingAtlasAnalysis.seedlingLevelEntities`), which the AP layer must hold.
+            const deps = ctx.gates(t, eventName);
+            if (deps.length === 0 && !t.inRoom) { skipped.push(`${what}: no crossing passes through it`); continue; }
             const place = ctx.place(p);
             const prior = existing.get(id);
-            if (prior) {
+            if (mine) {
+                // The presser's event is already minted here. Its record names EVERY target the press opens (`targets`,
+                // written only when there are several, so a one-target press's record is unchanged): the name's single
+                // target never hides another (rules-4, 2026-11-03).
+                const row = { level: t.level, tag: t.tag, class: t.type, x: t.x, y: t.y };
+                mine.fields.targets = [...(mine.fields.targets ?? [mine.fields.obstacle]), row];
+            } else if (prior) {
                 if (prior.name !== name || prior.fields.side !== place.side) {
                     refused.push(`${what}: ${id} is already the event "${prior.name}" @ ${prior.fields.side}; `
                         + `the button would make "${name}" @ ${place.side}`);
@@ -353,7 +368,7 @@ export function deriveButtonEvents(rows, ctx) {
                     },
                 });
             }
-            const has = { rule: 'Has', args: { item_name: name } };
+            const has = { rule: 'Has', args: { item_name: eventName } };
             const other = ctx.inRoom?.(t) ?? null;
             const rule = other ? { rule: 'Or', children: [has, other] } : has;
             // ⛓ RULES l63-darktrap: a door whose side holds no stance for the in-room way (`arm: false`) costs the

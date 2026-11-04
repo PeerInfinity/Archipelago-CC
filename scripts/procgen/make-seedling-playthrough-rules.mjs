@@ -1585,7 +1585,9 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
  *   - GATES: the analyzer's crossings of the target's region whose EVERY way steps through the target's tiles (the
  *     lock separates them), as the atlas's internal exit rows in that direction (`internalExitGates`: the compiler ANDs
  *     the event onto whatever the row already costs). A target no crossing passes through (the overlay rules it OPEN
- *     and the analyzer folded it, or it walls nothing) gates nothing and mints nothing (skipped by name).
+ *     and the analyzer folded it, or it walls nothing) gates nothing, but its press still MINTS the event, with no gate
+ *     (session tile-lay-l40-latches: the maze world lays the press as a latch location, so the AP layer holds it — today
+ *     L40's three presses, by census). Every target of one press shares the press's one event.
  */
 function inRoomLatchAnalysis(doc) {
     const regionOf = (id) => doc.regions.find((r) => r.region_id === id);

@@ -184,25 +184,45 @@ export function analyzeSeedlingAtlas(atlas, deps) {
 export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null, analysis = null, events = null }) {
     const levels = indexSeedlingLevels(mapDoc);
     const options = seedlingAnalyzerOptions(gameConfig);
+    // ⛓ IN-ROOM LATCHES (session tile-lay-l40-latches): a level world lays each in-room press the rules minted as a
+    // LATCHING button (`seedlingLevelEntities`), whose press is the event's location and whose held token opens the
+    // group's locks — so that event's `press` and `target` modes are the latch's, and are not laid a second time.
+    // ⛓ A latch is laid only where it drops no charge (`layableLatches`): which ones is read off the level's grid.
+    const latchCache = new Map();
+    const latchesOf = (level, grid) => {
+        if (!levelWorlds || !level) return { laid: [], kept: [] };
+        if (!latchCache.has(level.level)) latchCache.set(level.level, layableLatches(level, events, grid));
+        return latchCache.get(level.level);
+    };
+    const gridFor = (region) => {
+        const level = levels.get(levelKeyOf(region.map_ref));
+        if (!level) return null;
+        if (!analysis) return buildSeedlingRegionGrid(region.bounds, level);
+        const b = region.bounds;
+        if (b.x !== 0 || b.y !== 0 || b.w !== level.width || b.h !== level.height) {
+            throw new Error(`region "${region.region_id}" bounds ${JSON.stringify(b)} are not the whole level `
+                + `${level.level} (${level.width}x${level.height}) — the atlas's own grid covers a whole level`);
+        }
+        return analysis.gridForLevel(level);
+    };
     return {
         // ⛓ EVENTS AS LOCATIONS (session tile-primitives-events-as-locations) — OPT-IN: the rules producer's AP
         // events the world can model (`events`: `{name, side, mode, obstacle: {level, class, x, y}}`), each with its
         // entity's tiles, for the projection's `bindWorldEvents`. A compile without `events` is byte-identical.
-        ...(events ? { eventsFor: (region) => seedlingEventTiles(levels.get(levelKeyOf(region.map_ref)), events) } : {}),
+        ...(events ? {
+            eventsFor: (region) => {
+                const level = levels.get(levelKeyOf(region.map_ref));
+                const { laid, kept } = level ? latchesOf(level, gridFor(region)) : { laid: [], kept: [] };
+                const latched = new Set(laid.map((ev) => ev.name));
+                const why = new Map(kept.map((k) => [k.name, k.why]));
+                return seedlingEventTiles(level, events.filter((ev) => !latched.has(ev.name)))
+                    .map((ev) => (ev.mode === 'press' && why.has(ev.name) ? { ...ev, latch_kept: why.get(ev.name) } : ev));
+            },
+        } : {}),
         conditionKey: analysis?.conditionKey ?? options.conditionKey,
         resolveCondition: analysis?.resolveCondition ?? options.resolveCondition,
         unresolved: options.unresolved,
-        gridFor: (region) => {
-            const level = levels.get(levelKeyOf(region.map_ref));
-            if (!level) return null;
-            if (!analysis) return buildSeedlingRegionGrid(region.bounds, level);
-            const b = region.bounds;
-            if (b.x !== 0 || b.y !== 0 || b.w !== level.width || b.h !== level.height) {
-                throw new Error(`region "${region.region_id}" bounds ${JSON.stringify(b)} are not the whole level `
-                    + `${level.level} (${level.width}x${level.height}) — the atlas's own grid covers a whole level`);
-            }
-            return analysis.gridForLevel(level);
-        },
+        gridFor,
         // ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2) — OPT-IN. Only a
         // compile that passes `levelWorlds: {partition}` (the atlas's entry of
         // `seedling-subregion-partition.json`) projects a level with an
@@ -211,7 +231,7 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
         ...(levelWorlds ? {
             levelEntitiesFor: (region, grid) => {
                 const level = levels.get(levelKeyOf(region.map_ref));
-                return level ? seedlingLevelEntities(level, options.resolveCondition, { grid }) : null;
+                return level ? seedlingLevelEntities(level, options.resolveCondition, { grid, latches: latchesOf(level, grid).laid }) : null;
             },
             partitionFor: (region) => levelWorlds.partition?.regions?.[region.region_id] ?? null,
             // ⛓ BLOCK SINKS: a grid cell of the terrain a pushed block sinks into (water, lava, pit).
@@ -219,6 +239,60 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
         } : {}),
     };
 }
+
+/**
+ * ⛓ IN-ROOM LATCHES (session tile-lay-l40-latches, ⚖ Robert 2026-11-03 "B: Prune, then lay") — the rules' world events
+ * (`events`, mode 'press') whose PRESSER and target both stand in `level`: an in-room latching `ButtonRoom` the rules minted
+ * an event for (`seedlingObstacleEvents.deriveButtonEvents`, from `inRoomLatchButtonsOf`). Read, never listed: L20's press
+ * and L40's three today.
+ */
+export function inRoomPressEvents(level, events) {
+    return (events ?? []).filter((ev) => ev.mode === 'press' && ev.presser?.level === level.level && ev.obstacle?.level === level.level);
+}
+
+/**
+ * The in-room presses of `level` a level world LAYS as latches, and the ones it keeps out, with why. A latch's door
+ * replaces its targets' cells with a lock on its group's token, so a target whose cell the GRID charges (a hand ruling on
+ * the lock: L20's `GROUPED_LOCK_EXCEPTIONS` prices lock@32,80 `hasShield`, the presser's reach, which the rules AND onto the
+ * press) would lose that charge in the world and read LOOSER than the rules at the event without it. Such a press is not
+ * laid (derived from the grid, not listed); its level keeps the press/target shape and its own reason. L40's six wand
+ * locks are `open` cells (the overlay rules them free), so its three presses are laid. Session tile-lay-l40-latches.
+ * @returns {{laid: object[], kept: {name: string, why: string}[]}}
+ */
+export function layableLatches(level, events, grid) {
+    const laid = [];
+    const kept = [];
+    const { x: ox, y: oy } = grid?.origin ?? { x: 0, y: 0 };
+    const cellAt = (x, y) => grid?.cells?.[(y - oy) * grid.width + (x - ox)] ?? null;
+    for (const ev of inRoomPressEvents(level, events)) {
+        const charged = [];
+        for (const t of ev.targets ?? [ev.obstacle]) {
+            const entity = (level.entities ?? []).find((e) => e.type === t.class && e.x === t.x && e.y === t.y);
+            if (!entity) throw new Error(`latch "${ev.name}": L${level.level} has no ${t.class}@${t.x},${t.y}`);
+            for (const [x, y] of entityTilesOf(entity)) {
+                const c = cellAt(x, y);
+                if (c?.conditions?.length) charged.push(`${t.class}@${t.x},${t.y} (${x},${y}) is charged ${JSON.stringify(c.conditions)}`);
+            }
+        }
+        if (charged.length === 0) laid.push(ev);
+        else kept.push({ name: ev.name, why: `its latch would drop the grid's charge on its target: ${charged.join('; ')}` });
+    }
+    return { laid, kept };
+}
+
+/** The tiles an entity's row lays: its sealed tiles, else its footprint (`seedlingLevelEntities`' own rule). */
+function entityTilesOf(entity) {
+    const sem = entitySemantics(entity);
+    const sealed = sem ? entityClaims(entity, sem, { pixelMaskFootprints: true }).map((c) => c.tile) : [];
+    if (sealed.length > 0) return sealed;
+    const f = entityFootprint(entity, sem);
+    const out = [];
+    for (let ty = f.y; ty < f.y + f.h; ty += 1) for (let tx = f.x; tx < f.x + f.w; tx += 1) out.push([tx, ty]);
+    return out;
+}
+
+/** The cell a `ButtonRoom` is pressed on: it centres itself on (x + Tile.w/2, y + Tile.h/2) (`ButtonRoom.as`). */
+const pressCellOf = ({ x, y }) => [Math.floor((x + TILE / 2) / TILE), Math.floor((y + TILE / 2) / TILE)];
 
 /**
  * The `events` of one level with the TILES of the entity each names (its sealed tiles, else its footprint — the cells
@@ -240,7 +314,7 @@ export function seedlingEventTiles(level, events) {
         // A press is made where the button IS: `ButtonRoom` centres itself on (x + Tile.w/2, y + Tile.h/2), and its 8x6
         // hitbox straddles two tiles when it stands off the grid (L61's at y = 40), so its cell is the tile of that centre.
         if (ev.mode === 'press') {
-            return { name: ev.name, side: ev.side, mode: ev.mode, tiles: [[Math.floor((x + TILE / 2) / TILE), Math.floor((y + TILE / 2) / TILE)]], ...(ev.rule ? { rule: ev.rule } : {}) };
+            return { name: ev.name, side: ev.side, mode: ev.mode, tiles: [pressCellOf({ x, y })], ...(ev.rule ? { rule: ev.rule } : {}) };
         }
         // ⛓ A TALK (session tile-primitives-sphere-order-8, ⚖ 2026-10-29 "Talk location + portal door") is started from any
         // tile inside the NPC's talk circle (`talkStances`, the class's own radius); the projection puts its location on the
@@ -297,7 +371,10 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *
  *   block   a PushableBlock's sealed tile; a PushableBlockSpear's carries `strike` (its condition's flag →
  *           one action): moved only by a thrust, never walked into
- *   button  a Button's tile, grouped by its `tset`
+ *   button  a Button's tile, grouped by its `tset`; ⛓ and (session tile-lay-l40-latches) each in-room `ButtonRoom` the
+ *           rules minted a press event for (`latches`, `inRoomPressEvents`): its press cell, its `tset`, and `latch: {event}`
+ *           — the press LATCHES (`ButtonRoom.as:79-96`) and is the event's location; a ButtonRoom with no minted event
+ *           (L38's and L107's publish to a non-Lock) is no row
  *   lock    a Lock's sealed tiles, grouped by its `tset` (⚖ enemies are not
  *           holders — the room-clear half of Lock is not modelled)
  *   rock    a BreakableRock's sealed tiles; `strike` = one action per flag its
@@ -340,13 +417,30 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  * @param {{grid?: object}} [opts] the level's analysis grid (whole level, origin 0) — a trap's lane needs it
  * @returns {Array<{kind:string, tiles:number[][], group?:string, strike?:object[], label:string}>}
  */
-export function seedlingLevelEntities(level, resolveCondition, { grid = null } = {}) {
+export function seedlingLevelEntities(level, resolveCondition, { grid = null, latches = [] } = {}) {
     const rows = [];
     const ropes = ropesOf({ levels: [level] }).map((r) => ({ ...r, verdict: ropeVerdict(r, level) }));
     const minted = ropes.filter((r) => !r.verdict.refuse);
+    const latchLocks = new Map(); // "class@x,y" → the group of the in-room press that opens it
+    for (const ev of latches) {
+        const { class: cls, x, y } = ev.presser;
+        const entity = (level.entities ?? []).find((e) => e.type === cls && e.x === x && e.y === y);
+        if (!entity || entity.type !== 'buttonroom' || Number(entity.attrs?.room) !== -1) {
+            throw new Error(`latch "${ev.name}": L${level.level} has no in-room buttonroom@${x},${y}`);
+        }
+        const group = String(Number(entity.attrs.tset));
+        rows.push({ kind: 'button', tiles: [pressCellOf(entity)], group, latch: { event: ev.name }, label: `${cls}@${x},${y}` });
+        // The press's targets are the group's LOCKS (the rules opened each: a `Lock` handed `activate = true`), whatever
+        // picture they wear — a `WandLock` is a `Lock` (`seedlingPlaythroughOverlay`'s LOCK_FAMILY).
+        for (const t of ev.targets ?? [ev.obstacle]) latchLocks.set(`${t.class}@${t.x},${t.y}`, group);
+    }
     for (const entity of level.entities ?? []) {
         const sem = entitySemantics(entity);
-        const kind = SEEDLING_LEVEL_WORLD_CLASSES[sem?.class];
+        const latchGroup = latchLocks.get(`${entity.type}@${entity.x},${entity.y}`);
+        const kind = latchGroup !== undefined ? 'lock' : SEEDLING_LEVEL_WORLD_CLASSES[sem?.class];
+        if (latchGroup !== undefined && Number(entity.attrs?.tset) !== Number(latchGroup)) {
+            throw new Error(`latch target ${entity.type}@${entity.x},${entity.y}: its tset ${entity.attrs?.tset} is not its press's group ${latchGroup}`);
+        }
         if (!kind) continue;
         const label = `${entity.type}@${entity.x},${entity.y}`;
         if (kind === 'trap') {

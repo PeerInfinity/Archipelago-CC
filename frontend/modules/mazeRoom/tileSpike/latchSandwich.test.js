@@ -5,7 +5,8 @@
  *     prune really skips there (a pin that never skips proves nothing). Mutant MEASURED red by this file: the own-event
  *     exclusion dropped (a latch's own event target probed holding its event) loses the press's minimal set.
  *   - A latch whose held token arms a TRAP is refused by name (holding its event arms something: not proven monotone).
- *   - The committed `seedling_playthrough_maze` preset lays no latch, so the prune is a provable NO-OP there (0 skips).
+ *   - The committed `seedling_playthrough_maze` preset lays exactly L40's three latches (session tile-lay-l40-latches; the
+ *     producer lays them from the rules' in-room press events): one payload, the cells `L40_LATCHES` checks.
  * The L40-laid pins (search count; on ≡ off native and scripted) are the slow and train tiers':
  * `deriveLevelWorldLogic.latchSandwich.slow.test.js`, `deriveLevelWorldLogic.latchSandwich.train.test.js`.
  */
@@ -14,7 +15,7 @@ import { deserializeMazeWorld } from '../mazeRoomEngine.js';
 import { deriveEntryLogic, latchSandwich, nativeReachUnder } from './deriveLevelWorldLogic.js';
 import { latchEvents, regionItems, regionTargets, reachedTarget } from './deriveTileLogic.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
-import { RULES } from './deriveLevelWorldLogic.fixture.js';
+import { RULES, L40_LATCHES, payloadLatches, unlayLatches } from './deriveLevelWorldLogic.fixture.js';
 
 const EV = 'Latch L pressed';
 
@@ -54,6 +55,8 @@ const GATED = ['#########', '#P.L.D.G#', '##a######', '##.######', '#########'];
 // The latch is sealed (nothing presses it this visit): the goal needs the CARRIED event.
 const SEALED = ['########', '#P..DG##', '######L#', '########'];
 const ROOMS = { series: SERIES, gated: GATED, sealed: SEALED };
+// The press is the room's only target, behind door a (it opens a dead end).
+const PRESS_ONLY = ['#######', '#P.a.L#', '#####D#', '#######'];
 
 const derive = (w, opts) => {
     const r = deriveEntryLogic(w, null, HELPERS, opts);
@@ -73,13 +76,29 @@ describe('latch sandwich — gadget rooms: prune on ≡ prune off, and it skips'
             });
         }
     }
-    it('the series room really skips (non-vacuous): 3 of its 8 points, 5 searches against 8 (measured)', () => {
+    // ⛓ session tile-lay-l40-latches: 3/5/8 → 2/6/9. The press's own target is now priced WITHOUT its event (one more search
+    // in each arm, of top \ {EV}); before, the top search (holding EV, so the latch pre-latched) read it unreachable.
+    it('the series room really skips (non-vacuous): 2 of its 8 points, 6 searches against 9 (measured)', () => {
         const w = deserializeMazeWorld(room(SERIES));
         expect(regionItems(w)).toEqual(['A', 'B', EV]);
         const on = derive(w, { native: true });
         const off = derive(w, { native: true, latchSandwich: false });
-        expect([on.engine.skipped, on.engine.searches, off.engine.searches]).toEqual([3, 5, 8]);
+        expect([on.engine.skipped, on.engine.searches, off.engine.searches]).toEqual([2, 6, 9]);
     });
+    // ⛓ THE OWN-EVENT BRANCH THROUGH THE DERIVE (session tile-lay-l40-latches): the press is the room's only target, behind A.
+    // At [EV] the press is uncovered and its own event is held: the branch skips the point. A press priced True_ (L40's three)
+    // is covered at every point before the sandwich is asked, so there it never runs (the slow tier pins that, engine.ownEvent 0).
+    for (const native of [true, false]) {
+        it(`a press behind a door, ${native ? 'native' : 'scripted'}: the own-event branch decides one point (engine.ownEvent 1), on ≡ off`, () => {
+            const w = deserializeMazeWorld(room(PRESS_ONLY));
+            const on = derive(w, { native });
+            const off = derive(w, { native, latchSandwich: false });
+            expect(on.out).toBe(off.out);
+            expect(JSON.parse(on.out).targets.map((t) => [t.id, t.minimal, t.unreachable])).toEqual([[`event:${EV}@5,1`, [['A']], false]]);
+            expect(on.engine).toMatchObject({ skipped: 1, ownEvent: 1, searches: 3 });
+            expect(off.engine).toMatchObject({ skipped: 0, searches: 5 });
+        });
+    }
 });
 
 describe("latch sandwich — a latch's OWN event target is probed without its event", () => {
@@ -117,13 +136,25 @@ describe('latch sandwich — the unproven case is refused by name', () => {
     });
 });
 
-describe('latch sandwich — a provable no-op on the committed preset', () => {
-    it('no payload of seedling_playthrough_maze lays a latch, so no world has a latch event and the prune never runs', () => {
-        const payloads = Object.values(RULES.preset_sidecars['1']).map((s) => s.playable_payload).filter(Boolean);
+describe('latch sandwich — the committed preset lays exactly L40\'s three latches (session tile-lay-l40-latches)', () => {
+    it('one payload lays latches, level_40__r0c53: the cells L40_LATCHES names (a literal that only CHECKS the producer)', () => {
+        const payloads = Object.entries(RULES.preset_sidecars['1']).filter(([, s]) => s.playable_payload);
         expect(payloads.length).toBeGreaterThan(50);
-        const latching = payloads.flatMap((p) => Object.entries(p.buttonLib ?? {}).filter(([, b]) => b.latch).map(([id]) => id));
+        const laying = payloads.filter(([, s]) => Object.values(s.playable_payload.buttonLib ?? {}).some((b) => b.latch)).map(([k]) => k);
+        expect(laying).toEqual(['level_40__r0c53']);
+        const laid = payloadLatches(RULES.preset_sidecars['1'].level_40__r0c53.playable_payload);
+        expect(Object.fromEntries(Object.entries(laid).map(([g, { button, locks }]) => [g, { button, locks }])))
+            .toEqual(JSON.parse(JSON.stringify(L40_LATCHES)));
+        // each latch's event is an AP event location of the rules (the certifier's "no AP location" would name it otherwise)
+        const apEvents = new Set(Object.values(RULES.regions['1']).flatMap((r) => r.locations.filter((l) => l.event).map((l) => l.name)));
+        expect(Object.values(laid).every((l) => apEvents.has(l.event))).toBe(true);
+        const withEvents = payloads.map(([, s]) => deserializeMazeWorld(s.playable_payload)).filter((w) => latchEvents(w).length > 0);
+        expect(withEvents.length).toBe(1);
+    });
+    it('unlayLatches strips every latch (no level named): no payload lays one after it', () => {
+        const bare = unlayLatches(RULES);
+        const latching = Object.values(bare.preset_sidecars['1']).map((s) => s.playable_payload).filter(Boolean)
+            .flatMap((p) => Object.values(p.buttonLib ?? {}).filter((b) => b.latch));
         expect(latching).toEqual([]);
-        const withEvents = payloads.map((p) => deserializeMazeWorld(p)).filter((w) => latchEvents(w).length > 0);
-        expect(withEvents.length).toBe(0);
     });
 });

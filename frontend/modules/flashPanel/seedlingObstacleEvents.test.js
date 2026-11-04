@@ -298,16 +298,41 @@ describe('in-room latching button events (inRoomLatchButtonsOf + deriveButtonEve
         ]);
     });
 
-    it('a target no crossing passes through mints NOTHING (skipped by name); a non-lock target is skipped by its effect', () => {
+    it('⛓ tile-lay-l40-latches: a target no crossing passes through still MINTS its press\'s event, with NO gate; a non-lock target is skipped by its effect', () => {
         const l40 = rows.filter((r) => r.presser.level === 40);
-        expect(l40.length).toBeGreaterThan(0);
+        expect(l40.length).toBe(3);
         const out = deriveButtonEvents(l40, ictx({ effect: () => ({ effect: 'opens', why: 'latched' }) }));
-        expect(out.events).toEqual([]);
         expect(out.internalExitGates).toEqual([]);
-        expect(out.skipped.every((x) => /: no crossing passes through it$/.test(x))).toBe(true);
+        expect(out.exitGates).toEqual([]);
+        expect(out.skipped).toEqual([]);
+        // ONE PRESS, ONE EVENT: in the BUTTON's flag (the N in "flag N" is the button's own tag, not a target's), named after
+        // its FIRST target in map order, and its record lists EVERY target when there are several (rules-4, 2026-11-03)
+        expect(out.events.map((e) => [e.fields.event_id, e.name, e.fields.targets?.length ?? 1])).toEqual([
+            ['flag:L40:1', 'L40 flag 1: wandlock@176,80 cleared', 2],
+            ['flag:L40:7', 'L40 flag 7: wandlock@208,128 cleared', 3],
+            ['flag:L40:12', 'L40 flag 12: wandlock@480,560 cleared', 1],
+        ]);
+        const t0 = out.events.find((e) => e.fields.event_id === 'flag:L40:7');
+        expect(t0.fields.targets.map((t) => `${t.class}@${t.x},${t.y}`)).toEqual(['wandlock@208,128', 'wandlock@208,144', 'wandlock@208,160']);
+        expect(t0.fields.targets.every((t) => t.tag === 7)).toBe(true);
+        expect(out.events.find((e) => e.fields.event_id === 'flag:L40:12').fields.targets).toBeUndefined();
         const l38 = deriveButtonEvents(rows.filter((r) => r.presser.level === 38), ictx());
         expect(l38.events).toEqual([]);
         expect(l38.skipped.every((x) => /solid in neither state \(not a lock\)/.test(x))).toBe(true);
+    });
+
+    it('two DIFFERENT in-room pressers on one flag are refused by name (one ButtonRoom writes one tag)', () => {
+        const t0 = rows.find((r) => r.presser.level === 40 && r.presser.tag === 7);
+        const twin = { ...t0, presser: { ...t0.presser, x: t0.presser.x + 16 } };
+        expect(() => deriveButtonEvents([t0, twin], ictx({ effect: () => ({ effect: 'opens', why: 'latched' }) })))
+            .toThrow(/flag:L40:7 is already this slice's event for another button/);
+    });
+    it('a CROSS-ROOM target no crossing passes through is still skipped by name (its gates() is the one that throws)', () => {
+        const t0 = rows.find((r) => r.presser.level === 40 && r.presser.tag === 7);
+        const cross = { ...t0, targets: t0.targets.map((t) => ({ ...t, inRoom: false })) };
+        const out = deriveButtonEvents([cross], ictx({ effect: () => ({ effect: 'opens', why: 'x' }) }));
+        expect(out.events).toEqual([]);
+        expect(out.skipped.every((x) => /: no crossing passes through it$/.test(x))).toBe(true);
     });
 });
 
