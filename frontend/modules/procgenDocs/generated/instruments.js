@@ -2097,6 +2097,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "physics"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "port"

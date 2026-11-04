@@ -142,6 +142,11 @@
             "category": "cloudberrySubstrate"
         },
         {
+            "id": "cloudberry-hero-physics-world-plays",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "noiz2sa-region-loop-visit",
             "enabled": true,
             "category": "noiz2saSubstrate",

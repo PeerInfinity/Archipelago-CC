@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
 import {
-    canHostCloudberryExitGates, cloudberryAttemptArgs, cloudberryAttemptSeed, emitCloudberryZone,
+    canHostCloudberryExitGates, cloudberryAttemptArgs, cloudberryHeroPhsxText, cloudberryAttemptSeed, emitCloudberryZone,
     planCloudberryLevel, readCloudberryDocument, splitCloudberryRequirement,
 } from './cloudberryZonePlan.js';
 import {
@@ -29,6 +29,7 @@ function fakeDoc(plan, { args = plan.args, withoutStartDoor = false, coinsPerPie
     return {
         args: { request: { ...request, rerolls: plan.pieceSets.map(() => 0) } },
         level: {
+            ...(args.heroCustom ? { heroPhsx: cloudberryHeroPhsxText(args.heroCustom), heroPhsxClamped: [] } : {}),
             heroAbility: {
                 JetPack: args.heroCustom?.move === 'Jetpack',
                 NumJumps: args.heroCustom?.move === 'Double' ? args.heroCustom.phsx?.numjumps ?? 2 : 1,

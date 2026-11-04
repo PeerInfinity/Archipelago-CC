@@ -24,6 +24,34 @@ export const CLOUDBERRY_HAZARD_UPGRADES = Object.freeze([
     'Spike', 'Fireball', 'FireSpinner', 'SpikeyGuy', 'Pinky', 'SpikeyLine', 'Laser', 'Firesnake', 'Serpent', 'LavaDrip',
 ]);
 
+/**
+ * P5b — the Hero Factory's physics sliders as world settings (⚖ Robert 2026-11-04: the proposed ranges, per world +
+ * a variation knob, on ability levels too). `phsx` = the generator's `heroCustom.phsx` name; `def` = the game's own
+ * default hero (the Hero Factory's slider default); `min`/`max` = the RULED range (narrower than the game's bounds
+ * table where P5b measured trouble — replay/reroll: numjumps 2–4, jumplength2 ≤ 1.35; crossing the fixed ladder between
+ * pieces as often as the default hero (⚖ Robert's rulings A then A3): gravity ≤ 1.5, jumplength ≥ 0.85, jumpaccel ≥ 0.9,
+ * friction ≥ 0.5, size ≥ 0.8 (also ≥ the 0.5 the replay needs)); `levels` = which levels the
+ * slider acts on ('all', 'double' = Double Jump-hero levels, 'jetpack' = Jetpack-hero levels). ORDER IS LOAD-BEARING:
+ * the variation draw (draw order (5)) takes one rng number per applicable slider in this order.
+ */
+export const CLOUDBERRY_HERO_PHYSICS = Object.freeze([
+    { key: 'cloudberryHeroGravity', phsx: 'gravity', label: 'Gravity', def: 1, min: 0.5, max: 1.5, levels: 'all' },
+    { key: 'cloudberryHeroAccel', phsx: 'accel', label: 'Acceleration', def: 1, min: 0.5, max: 2, levels: 'all' },
+    { key: 'cloudberryHeroMaxSpeed', phsx: 'maxspeed', label: 'Max speed', def: 1, min: 0.5, max: 2, levels: 'all' },
+    { key: 'cloudberryHeroMaxFall', phsx: 'maxfall', label: 'Max fall speed', def: 1, min: 0.33, max: 3, levels: 'all' },
+    { key: 'cloudberryHeroJumpLength', phsx: 'jumplength', label: 'Jump length', def: 1, min: 0.85, max: 1.65, levels: 'all' },
+    { key: 'cloudberryHeroJumpAccel', phsx: 'jumpaccel', label: 'Jump acceleration', def: 1, min: 0.9, max: 1.65, levels: 'all' },
+    { key: 'cloudberryHeroFriction', phsx: 'friction', label: 'Friction', def: 1, min: 0.5, max: 3, levels: 'all' },
+    { key: 'cloudberryHeroSize', phsx: 'size', label: 'Size', def: 1, min: 0.8, max: 2.1, levels: 'all' },
+    { key: 'cloudberryHeroNumJumps', phsx: 'numjumps', label: 'Jumps (Double Jump levels)', def: 2, min: 2, max: 4, levels: 'double', integer: true },
+    { key: 'cloudberryHeroJumpLength2', phsx: 'jumplength2', label: 'Double jump length', def: 1, min: 0.5, max: 1.35, levels: 'double' },
+    { key: 'cloudberryHeroJumpAccel2', phsx: 'jumpaccel2', label: 'Double jump acceleration', def: 1, min: 0.5, max: 1.65, levels: 'double' },
+    { key: 'cloudberryHeroJetpackAccel', phsx: 'jetpackaccel', label: 'Jetpack acceleration', def: 1, min: 0.75, max: 2, levels: 'jetpack' },
+    { key: 'cloudberryHeroJetpackFuel', phsx: 'jetpackfuel', label: 'Jetpack fuel', def: 1, min: 0.5, max: 4, levels: 'jetpack' },
+].map(Object.freeze));
+/** The variation knob's range: 0 = every level has the world's hero; 1 = each slider drawn over its whole range. */
+export const CLOUDBERRY_HERO_VARIATION_MAX = 1;
+
 export const DEFAULT_CLOUDBERRY_PROCGEN_PARAMS = Object.freeze({
     // The generator's `difficulty` (0 Easy .. 4 Masochistic). Each piece names its own
     // upgrades, so difficulty only shapes what the upgrades leave to the generator.
@@ -57,6 +85,11 @@ export const DEFAULT_CLOUDBERRY_PROCGEN_PARAMS = Object.freeze({
     // How many times a refused region is generated again with a derived seed before the
     // run is refused by name (RerollExhausted, too few witnessed coins, no start door).
     cloudberryRetries: 4,
+    // P5b: the hero's physics (CLOUDBERRY_HERO_PHYSICS; defaults = the game's own hero).
+    ...Object.fromEntries(CLOUDBERRY_HERO_PHYSICS.map((h) => [h.key, h.def])),
+    // P5b: how far each region's hero is drawn from the world's values toward a random point of each
+    // slider's range (0 = off: every level has the world's hero). A refused attempt redraws.
+    cloudberryHeroVariation: 0,
 });
 
 const D = DEFAULT_CLOUDBERRY_PROCGEN_PARAMS;
@@ -74,6 +107,10 @@ export function cloudberryProcgenParamsFromPayload(payload) {
     if (typeof g.difficulty === 'number') out.cloudberryDifficulty = g.difficulty;
     if (typeof g.pieceLength === 'number') out.cloudberryPieceLength = g.pieceLength;
     if (typeof g.tileset === 'string') out.cloudberryTileset = g.tileset;
+    const phsx = g.heroCustom?.phsx ?? {};
+    for (const h of CLOUDBERRY_HERO_PHYSICS) {
+        if (typeof phsx[h.phsx] === 'number') out[h.key] = phsx[h.phsx];
+    }
     return out;
 }
 
@@ -157,6 +194,20 @@ export function renderCloudberryProcgenParams({ params, onChange = () => {} } = 
         key: 'cloudberryRetries', label: 'Retries',
         title: 'How often a refused level is generated again with a derived seed before generation stops.',
         def: D.cloudberryRetries, step: 1, max: 16, integer: true,
+    }, onChange));
+    for (const h of CLOUDBERRY_HERO_PHYSICS) {
+        const where = h.levels === 'double' ? ' Double Jump levels only.' : h.levels === 'jetpack' ? ' Jetpack levels only.' : '';
+        wrap.appendChild(numberField(params, {
+            key: h.key, label: `Hero: ${h.label}`,
+            title: `The Hero Factory's ${h.label.toLowerCase()} (${h.def} = the game's own hero; ${h.min}–${h.max}).${where}`,
+            def: h.def, min: h.min, max: h.max, step: h.integer ? 1 : 0.05, ...(h.integer ? { integer: true } : {}),
+        }, onChange));
+    }
+    wrap.appendChild(numberField(params, {
+        key: 'cloudberryHeroVariation', label: 'Hero variation',
+        title: 'How far each region\'s hero is drawn from the values above toward a random point of each slider\'s '
+            + 'range: 0 = every level has the same hero, 1 = drawn over the whole range.',
+        def: D.cloudberryHeroVariation, step: 0.05, max: CLOUDBERRY_HERO_VARIATION_MAX,
     }, onChange));
     return wrap;
 }

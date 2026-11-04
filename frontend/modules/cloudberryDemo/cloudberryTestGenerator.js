@@ -8,6 +8,8 @@
  *   installCloudberryGenerator(cloudberryTestGenerator(), { store: null })
  */
 
+import { cloudberryHeroPhsxText } from './cloudberryZonePlan.js';
+
 const PLATFORM = ['MovingBlock', 'FallingBlock', 'BouncyBlock', 'GhostBlock', 'Cloud', 'Elevator', 'Pendulum', 'Conveyor', 'FlyBlob'];
 
 /** The stand-in document for a request (args may carry reroll: true; it is dropped). */
@@ -26,8 +28,10 @@ export function cloudberryTestDocument(args, { coinsPerPiece = 3 } = {}) {
         args: { request: { ...request, rerolls: pieces.map(() => 0) } },
         engine: { build: 'test', generator: 'test' },
         level: {
+            // As the game writes it: custom hero physics only for a heroCustom request (P5b).
+            ...(args.heroCustom ? { heroPhsx: cloudberryHeroPhsxText(args.heroCustom), heroPhsxClamped: [] } : {}),
             heroAbility: {
-                JetPack: !!args.heroCustom && args.heroCustom.move !== 'Double',
+                JetPack: args.heroCustom?.move === 'Jetpack',
                 NumJumps: args.heroCustom?.move === 'Double' ? (args.heroCustom.phsx?.numjumps ?? 2) : 1,
             },
         },
