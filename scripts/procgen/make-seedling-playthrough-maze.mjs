@@ -314,7 +314,8 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     // touched event cells", session tile-primitives-sphere-order-2).
     out.world = out.events.filter((e) => mode.has(e.name)).map((e) => ({
         name: e.name, side: e.fields.side, mode: mode.get(e.name), obstacle: e.fields.obstacle, rule: e.access_rule ?? null,
-        ...(mode.get(e.name) === 'press' ? { presser: e.fields.action.presser } : {}),
+        // ⛓ every target the press opens (session tile-lay-l40-latches: an in-room press's group, laid as its latch's locks)
+        ...(mode.get(e.name) === 'press' ? { presser: e.fields.action.presser, targets: e.fields.targets ?? [e.fields.obstacle] } : {}),
     }));
     // ⛓ A press's FAR side (session tile-primitives-sphere-order-6, ⚖ 2026-10-28 "Lock cell opened by event"): a target the press
     // REMOVES — the producer's own `persistenceEffect` says 'opens' (L39's wand lock, `tSet < 0`: built gone once {39,8} is in

@@ -37,33 +37,56 @@ export const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,
 export const PERMISSIVE = playthroughPermissiveLocations();
 
 /**
- * ⛓ L40 WITH ITS LATCHES LAID (session tile-latch-prune; the lay session tile-mechanisms-m4-latch measured, read from the game's
- * three in-level ButtonRooms and the wandlocks each opens): the LATCH SANDWICH's subject (`deriveLevelWorldLogic.js`). The committed
- * preset does NOT lay them (⚖ Robert 2026-11-03 "B: Prune, then lay" — the lay is its own later slice), so the pins lay them by hand
- * onto `level_40__r0c53`'s payload: each latch `buttonLib.latch: {event: "L40 latch tN"}`, its locks doors on its held token.
- * The item axis grows 6 → 9. Returns a deep copy of `rules`; the payload's other entities are untouched.
+ * ⛓ L40'S THREE LATCHES (session tile-latch-prune measured them; session tile-lay-l40-latches LAYS them from the data —
+ * `seedlingAtlasAnalysis.seedlingLevelEntities` from the rules' in-room press events). Read from the game's three in-level
+ * ButtonRooms and the wandlocks each opens, by GROUP (the ButtonRoom's `tset`). ⛔ Not an input: the producer never reads it.
+ * `latchSandwich.test.js` asserts the committed payload lays exactly these (a literal only ever CHECKS).
  */
 export const L40_LATCHES = Object.freeze({
-    t0: { button: [17, 13], locks: [[13, 8], [13, 9], [13, 10]] },
-    t1: { button: [10, 8], locks: [[11, 5], [11, 13]] },
-    t3: { button: [55, 48], locks: [[30, 35]] },
+    0: { button: [17, 13], locks: [[13, 8], [13, 9], [13, 10]] },
+    1: { button: [10, 8], locks: [[11, 5], [11, 13]] },
+    3: { button: [55, 48], locks: [[30, 35]] },
 });
 export const L40_REGIONS = ['level_40__r0c53', 'level_40__r23c29', 'level_40__r32c36', 'level_40__r36c35', 'level_40__r48c54'];
-export function layL40Latches(rules = RULES) {
+
+/**
+ * The latches a payload LAYS, by group: `{<group>: {button: [x, y], locks: [[x, y]…], event}}` — each latching button
+ * (`buttonLib.<id>.latch`) and the doors its held token clears. Read off the payload, for the equality pin.
+ */
+export function payloadLatches(payload) {
+    const out = {};
+    for (const [id, entry] of Object.entries(payload.buttonLib ?? {})) {
+        if (!entry.latch) continue;
+        const group = id.replace(/^button_/, '');
+        const cells = (payload.buttons ?? []).filter((b) => b.id === id).map((b) => [b.x, b.y]);
+        const locks = (payload.obstacles ?? []).filter((o) => (payload.obstacleLib?.[o.id]?.clear_set ?? []).some((c) => c.includes(entry.holds)))
+            .map((o) => [o.x, o.y]).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+        out[group] = { button: cells.length === 1 ? cells[0] : cells, locks, event: entry.latch.event };
+    }
+    return out;
+}
+
+/**
+ * Every latch UNLAID (the sandwich pins' "not laid" arm, no level named): each latching button, its entry, and the doors on
+ * its held token are removed, which leaves those cells the plain floor the grid has them as (the overlay rules a latched
+ * group's locks open). Returns a deep copy of `rules`.
+ */
+export function unlayLatches(rules = RULES) {
     const r = structuredClone(rules);
-    const lay = r.preset_sidecars['1'].level_40__r0c53.playable_payload;
-    lay.buttons = [...(lay.buttons ?? [])];
-    lay.buttonLib = { ...(lay.buttonLib ?? {}) };
-    lay.obstacleLib = { ...(lay.obstacleLib ?? {}) };
-    for (const [g, { button: [bx, by], locks }] of Object.entries(L40_LATCHES)) {
-        lay.buttons.push({ x: bx, y: by, id: `latch_${g}` });
-        lay.buttonLib[`latch_${g}`] = { kind: 'button', holds: `sw_l${g}`, latch: { event: `L40 latch ${g}` } };
-        lay.obstacleLib[`wl_${g}`] = { id: `wl_${g}`, name: `wandlock ${g}`, kind: 'door', clear_set: [[`sw_l${g}`]] };
-        for (const [x, y] of locks) {
-            lay.obstacles = lay.obstacles.filter((o) => !(o.x === x && o.y === y));
-            lay.tiles[y * lay.width + x] = 0;
-            lay.obstacles.push({ x, y, id: `wl_${g}` });
-        }
+    for (const sc of Object.values(r.preset_sidecars['1'])) {
+        const p = sc.playable_payload;
+        if (!p?.buttonLib) continue;
+        const latched = Object.entries(p.buttonLib).filter(([, e]) => e.latch);
+        if (latched.length === 0) continue;
+        const tokens = new Set(latched.map(([, e]) => e.holds));
+        const ids = new Set(latched.map(([id]) => id));
+        const doors = new Set(Object.entries(p.obstacleLib ?? {})
+            .filter(([, o]) => (o.clear_set ?? []).some((c) => c.some((t) => tokens.has(t)))).map(([id]) => id));
+        p.buttons = p.buttons.filter((b) => !ids.has(b.id));
+        for (const id of ids) delete p.buttonLib[id];
+        p.obstacles = p.obstacles.filter((o) => !doors.has(o.id));
+        for (const id of doors) delete p.obstacleLib[id];
+        if (p.buttons.length === 0) { delete p.buttons; delete p.buttonLib; }
     }
     return r;
 }

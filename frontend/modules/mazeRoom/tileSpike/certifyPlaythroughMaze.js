@@ -58,7 +58,7 @@ import {
 } from './deriveTileLogic.js';
 import { evaluateRuleAgainstInventory, isObstacleCleared } from '../../shared/procgen/library.js';
 import { deriveLevelWorldLogic, deriveEntryLogic, enteredAt, distinctArrivals } from './deriveLevelWorldLogic.js';
-import { ruleFromMinimalSets } from './deriveTileLogic.js';
+import { ruleFromMinimalSets, latchEvents } from './deriveTileLogic.js';
 
 const ruleItems = (rule, out = new Set()) => {
     if (rule?.rule === 'Has') out.add(rule.args.item_name);
@@ -236,6 +236,8 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
                 for (const r of sc.playable_payload.shared_world?.regions ?? [name]) boundIn.get(ev.name).add(r);
             }
         }
+        // ⛓ A LATCHING button's event (session tile-lay-l40-latches: an in-room press) is produced by its press, in its world.
+        for (const entry of Object.values(sc.playable_payload?.buttonLib ?? {})) if (entry.latch?.event) bound.add(entry.latch.event);
     }
     // ⛓ A cross-room PRESS is a location on its button (session tile-primitives-sphere-order-5): produced where its item
     // cell stands. Its far side is the target the event opens in another level, laid there as an obstacle `opened_by` it
@@ -459,6 +461,11 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         s.inventory = inventoryOf(inventory);
         for (const input of plan) s = step(w, s, input);
         if (cut) {
+            // ⛓ A LATCH's event is reached by its PRESS (`state.latched`, session tile-lay-l40-latches), a rope's by its cut.
+            if (latchEvents(world).some((l) => l.key === cell)) {
+                if (!s.latched?.includes(cell)) problems.push(`${label}: witness [${formatPoint(inventory)}] does not press the latch at ${cell}`);
+                return;
+            }
             if (!s.broken?.includes(cell)) problems.push(`${label}: witness [${formatPoint(inventory)}] does not cut the rope at ${cell}`);
             return;
         }

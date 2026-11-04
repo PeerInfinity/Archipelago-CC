@@ -61,10 +61,13 @@ Level 038 - Chest: Seal
 L39 flag 8: wandlock@144,592 cleared: L39 flag 8: wandlock@144,592 cleared
 Level 039 - Totem Part 72,40: Totem Shard
 Level 040 - Totem Part 64,144: Totem Shard
+L40 flag 1: wandlock@176,80 cleared: L40 flag 1: wandlock@176,80 cleared
+L40 flag 7: wandlock@208,128 cleared: L40 flag 7: wandlock@208,128 cleared
 Level 040 - Totem Part 160,640: Totem Shard
 Level 040 - Chest: Seal
 L40 flag 8: bosslock@480,352 cleared: L40 flag 8: bosslock@480,352 cleared
 Level 040 - Boss Key 2: Purple Key
+L40 flag 12: wandlock@480,560 cleared: L40 flag 12: wandlock@480,560 cleared
 Level 041 - Totem Part 240,144: Totem Shard
 Level 042 - Totem Part 184,152: Totem Shard
 Level 043 - Totem of Lacste: Seal
@@ -156,6 +159,7 @@ Playthrough:
   Level 049 - Conch: Progressive Swim
 }
 7: {
+  L40 flag 12: wandlock@480,560 cleared: L40 flag 12: wandlock@480,560 cleared
   L62 flag 0: lightpole@120,200 cleared: L62 flag 0: lightpole@120,200 cleared
   L63 flag 1: lightpole@64,88 cleared: L63 flag 1: lightpole@64,88 cleared
   Level 015 - Chest: Seal
@@ -170,6 +174,8 @@ Playthrough:
   Level 090 - Chest: Seal
 }
 8: {
+  L40 flag 1: wandlock@176,80 cleared: L40 flag 1: wandlock@176,80 cleared
+  L40 flag 7: wandlock@208,128 cleared: L40 flag 7: wandlock@208,128 cleared
   L40 flag 8: bosslock@480,352 cleared: L40 flag 8: bosslock@480,352 cleared
   L48 flag 1: bosslock@48,144 cleared: L48 flag 1: bosslock@48,144 cleared
   L58 flag 1: yeti@56,56 cleared: L58 flag 1: yeti@56,56 cleared
