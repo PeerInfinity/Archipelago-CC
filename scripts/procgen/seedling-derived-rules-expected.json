@@ -1,6 +1,6 @@
 {
-  "$comment": "The whole-game pin of probe-seedling-derived-rules.mjs (session tile-rules-automation-r-a1). Every leaf under `summary` must equal the probe's SUMMARY; a key not named here is not pinned. Provenance per block in its own $comment. A rules slice that moves rows re-records this file (and says which rows moved). RE-RECORDED for rules-l20-button-latch (rules-4): its one new location, the in-room press event 'L20 flag 4: lock@32,80 cleared' at level_20__r1c12, is +1 element: derived, equal to today's rule, and an exact echo-free override in one more region (elements 472→473, location derived 58→59, w0 location equal 61→62, routeA overridable/echo-free/exact +1, their regions +1). Certifier and echoes unchanged.",
-  "measuredAt": "c5764cf46f",
+  "$comment": "The whole-game pin of probe-seedling-derived-rules.mjs (session tile-rules-automation-r-a1). Every leaf under `summary` must equal the probe's SUMMARY; a key not named here is not pinned. Provenance per block in its own $comment. A rules slice that moves rows re-records this file (and says which rows moved). RE-RECORDED for rules-l20-button-latch (rules-4): its one new location, the in-room press event 'L20 flag 4: lock@32,80 cleared' at level_20__r1c12, is +1 element: derived, equal to today's rule, and an exact echo-free override in one more region (elements 472→473, location derived 58→59, w0 location equal 61→62, routeA overridable/echo-free/exact +1, their regions +1). Certifier and echoes unchanged. RE-RECORDED for tile-lay-l40-latches (Q5 slice 2, ⚖ 'B: Prune, then lay'; CI probe 41771063364 @40a6f357c8 vs control 41771066033 @d928ddb77d, which matched the previous pin): L40's three in-room presses are new event locations, laid as latches. +3 elements (414→417). The two r0c53 presses (L40 flag 1, flag 7) are derived True_ from its landing (53,1): location.derived 57→59, w0.location.equal 59→61. L40 flag 12's press is the FIRST element of level_40__r48c54, an internal-only member no AP exit lands in, priced from both inbound members (r0c53, r23c29) — arrival-dependent and agreeing: location.arrival-dependent 20→22, w0.location.arrival-dependent 10→11, arrivals.regionsPriced 199→200, arrivalNodes 232→234, regionsPerArrivalCount.2 27→28, regionsArrivalDependent 21→22, routeA internal-only 24→25, sharedBinding 28→29. Certifier (1/17/0) and echoes (32) unchanged; L20 stays per sub-region (its latch would drop GROUPED_LOCK_EXCEPTIONS' hasShield charge).",
+  "measuredAt": "40a6f357c8",
   "summary": {
     "certifier": {
       "$comment": "The whole-game certifier's triple (problems / accepted / threw). At main 491f3286d9 (Q1 landed): 1 / 17 / 0, the L63 framing row only (was 2/18/0 at 1e5b7efd98 with OPEN L3→L111).",
@@ -36,10 +36,10 @@
         "path-vs-edge": 19
       },
       "location": {
-        "derived": 57,
+        "derived": 59,
         "echoed": 13,
         "path-vs-edge": 13,
-        "arrival-dependent": 20
+        "arrival-dependent": 22
       }
     },
     "w0": {
@@ -51,30 +51,30 @@
         "looser": 5
       },
       "location": {
-        "equal": 59,
+        "equal": 61,
         "stricter": 12,
-        "arrival-dependent": 10
+        "arrival-dependent": 11
       }
     },
-    "elements": 414,
+    "elements": 417,
     "echoedElements": 32,
     "arrivals": {
       "$comment": "W0's arrival structure: 204 regions priced, 235 arrival nodes (176 / 25 / 3), 19 regions with an arrival-dependent element. At 491f3286d9: 18 (L91's arrival dependence gone). RE-RECORDED by R-A2 (session tile-rules-automation-r-a2; CI probe 41736083977 @c5764cf46f = main 06fe11dea5 + R-A2; control 41735447136 @06fe11dea5 matched the previous pin): the INPUT/OUTPUT SPLIT. The maze worlds copy only the overlay hand terms (OV.handExitTerms + OV.handLocationTerms); 18 plain multi-sub-region levels are one level world each; kept per sub-region, by derived tests: L12 (15 items over LEVEL_WORLD_LATTICE_CAP), L20 (its own in-room press opens a target in the same world), L94 (r2c16↔r3c4 crosses TreeLarge per-pixel mask, priced by the physics model). Members of the converted levels with no element row of their own drop out of regionsPriced. Moved: regionsPriced 204→199; arrivalNodes 235→232; regionsPerArrivalCount.1 176→169; regionsPerArrivalCount.2 25→27; regionsArrivalDependent 18→21.",
-      "regionsPriced": 199,
-      "arrivalNodes": 232,
+      "regionsPriced": 200,
+      "arrivalNodes": 234,
       "regionsPerArrivalCount": {
         "1": 169,
-        "2": 27,
+        "2": 28,
         "3": 3
       },
-      "regionsArrivalDependent": 21
+      "regionsArrivalDependent": 22
     },
     "routeA": {
       "$comment": "W0's overridable.mjs classes (echo-independent): 114 overridable regions, 296 elements in them. The echo split is this probe's: 61 echoed / 235 echo-free in 109 regions (W0 read 53 / 243 / 111 on its 68 keys, 3 of them named under the carrier sub-region). PARTIAL (designer review): of the 235, 36 sit on an element a row of which skipped points (an unadmitted landing, its own event), so 199 EXACT candidates remain, in 96 regions. At 491f3286d9: 63 echoed / 233 echo-free in 108 regions; 197 exact in 95 (the Swim-gate echoes, see labels). RE-RECORDED for rules-l20-button-latch (rules-4): its one new location, the in-room press event 'L20 flag 4: lock@32,80 cleared' at level_20__r1c12, is +1 element: derived, equal to today's rule, and an exact echo-free override in one more region (elements 472→473, location derived 58→59, w0 location equal 61→62, routeA overridable/echo-free/exact +1, their regions +1). Certifier and echoes unchanged. RE-RECORDED by R-A2 (session tile-rules-automation-r-a2; CI probe 41736083977 @c5764cf46f = main 06fe11dea5 + R-A2; control 41735447136 @06fe11dea5 matched the previous pin): the INPUT/OUTPUT SPLIT. The maze worlds copy only the overlay hand terms (OV.handExitTerms + OV.handLocationTerms); 18 plain multi-sub-region levels are one level world each; kept per sub-region, by derived tests: L12 (15 items over LEVEL_WORLD_LATTICE_CAP), L20 (its own in-room press opens a target in the same world), L94 (r2c16↔r3c4 crosses TreeLarge per-pixel mask, priced by the physics model). OVERTURNS R-A1's standing number (exact 198/96 at main): the converted levels' sub-regions are members of one shared world that AP also enters by walking from another member, a framing the per-sub-region projection HID. Not re-admitted here (R-A3's). Moved: classes.walk-in from another member 55→88; classes.overridable 114→71; classes.internal-only 19→24; overridableElements 297→188; overridableEchoed 63→22; overridableEchoFree 234→166; regionsWithAnEchoFreeOverride 109→70; overridablePartial 36→22; overridableExact 198→144; regionsWithAnExactOverride 96→63.",
       "classes": {
         "walk-in from another member": 88,
         "overridable": 71,
-        "internal-only": 24,
+        "internal-only": 25,
         "several arrivals": 16
       },
       "overridableElements": 188,
@@ -86,7 +86,7 @@
       "regionsWithAnExactOverride": 63
     },
     "unpriced": 301,
-    "sharedBinding": 28,
+    "sharedBinding": 29,
     "$unpriced": "R-A2 (designer condition 1): AP exits between two members of one shared level world that no row prices (the source member is internal-only). 301 whole game, of which 9 are de-echoed crossings (L37 r5c33→r9c36, L43 r3c8→r8c7, L48 ×4, L68 r1c1→r3c1, L93 r10c7 ×2); the rest are the existing shared worlds' internal-only edges (W0: 287).",
     "$sharedBinding": "R-A2 (rules-4): elements whose derived rule names a LOCK event the maze lays from playthroughLockEvents (the lock↔event binding is shared; the lock censuses check it against the game). R-A3 must not override on them without a game witness."
   }

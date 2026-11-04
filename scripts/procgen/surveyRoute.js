@@ -366,6 +366,8 @@ export function eventPrerequisites({ regions, ruleHolds, here, items, events, ta
     // ⛓ An event NO AP rule names can never open a way, so it is never a prerequisite (session tile-lay-l40-latches: L40's
     // three in-room presses gate nothing; offered to the greedy closure first, they walked it into L40 and it gave up on
     // L64's Ghostspear, pulling the Wand forward). At d928ddb77d every game-state event is named, so this drops nothing there.
+    // ⚠ OPEN: the closure below stays ORDER-SENSITIVE (the first reachable pending event, in list order); this removes one
+    // trigger, it does not make the closure order-free.
     const named = namedItemsOf(regions);
     const pending = events.filter((e) => !(items[e.item] > 0) && named.has(e.item));
     const walkThrough = (seq) => {
