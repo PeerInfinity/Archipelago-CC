@@ -99,6 +99,10 @@ const { DARKTRAP_LIGHT_DEATH } = await imp('frontend/modules/seedlingDemo/enemyD
 const { FLAG_ACTIONS } = await imp('frontend/modules/seedlingDemo/arrivalSolid.js');
 const { apRegionName } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
 const { pitChainsFromCensus } = await import('./seedlingPitChains.js');
+// ⛓⛓ THE DERIVED-RULE OVERRIDE (session tile-rules-automation-r-a3): the committed table the maze derivation emits (on CI)
+// overrides the composed rule on every element it holds, in the atlas and in AP_1 (`seedlingDerivedRuleTable.js`).
+const TBL = await import('./seedlingDerivedRuleTable.js');
+const DERIVED_TABLE = TBL.readDerivedRuleTable();
 const { PUSHABLE_KINDS, blockCrossingCost } = await imp('frontend/modules/flashPanel/seedlingBlockPaths.js');
 const { deriveWeaponFootprint } = await imp('frontend/modules/flashPanel/seedlingWeaponFootprints.js');
 
@@ -695,6 +699,7 @@ export function buildPlaythroughAtlas() {
     arrivalsUncharged.length = 0;
     exitComponents.clear();
     regionAnalyses.clear();
+    derivedTableAtlasRows.length = 0;
     pitChains.length = 0;
     /**
      * ⛓⛓ THE ATLAS IS DERIVED; ONLY THE OVERLAY IS AUTHORED (plan §16.3, ⚖
@@ -755,8 +760,15 @@ export function buildPlaythroughAtlas() {
     applyHandRulings(session.atlas);
     // After the hand rulings, so a condition a ruled door already asks for is not written twice (L82's arena door).
     for (const [regionId, analysis] of regionAnalyses) chargeNecessaryApproaches(session.atlas, regionId, analysis);
+    // ⛓⛓ THE DERIVED-RULE TABLE OVERRIDES THE COMPOSITION (session tile-rules-automation-r-a3; designer GO, rules-4 PASS):
+    // last, over every charge above, and before the id is stamped. A hand term on a table element is refused by name.
+    TBL.refuseHandRowsUnderTable(DERIVED_TABLE, playthroughHandInputs(session.atlas));
+    derivedTableAtlasRows.push(...TBL.applyDerivedRuleTableToAtlas(session.atlas, DERIVED_TABLE));
     return session.toDocument();
 }
+
+/** The atlas rows the derived-rule table rewrote this run: `{key, composed, table, compare}` (`main` refuses compare ≠ equal). */
+export const derivedTableAtlasRows = [];
 
 /**
  * ⛔⛔ THE COST OF STANDING ON THE DOOR (R7 slice 5).
@@ -2434,6 +2446,19 @@ function main() {
         exitGates: [...layer.exitGates, ...landingGates, ...ropes.exitGates],
     });
     applyBossLocationOptions(rules);
+    // ⛓⛓ THE DERIVED-RULE TABLE onto AP_1 (session tile-rules-automation-r-a3). Guard 2: the composed rule must equal the
+    // table's, truth table for truth table (in the atlas rows before the override, and in the compiled rules, where an event
+    // or landing gate ANDs onto the atlas row); the count is held at zero, each disagreement named with what to do.
+    const override = TBL.applyDerivedRuleTable(rules, DERIVED_TABLE);
+    const disagrees = [...derivedTableAtlasRows.filter((r) => r.compare !== 'equal'), ...override.composedDisagrees];
+    if (disagrees.length) {
+        for (const d of disagrees) console.error(`ERROR: ${TBL.composedDisagreeMessage(d)}`);
+        process.exit(1);
+    }
+    // Guard 3: the table's inputs (the maze world payloads, the derivation engine) — on --check a stale table fails.
+    const stale = fs.existsSync(TBL.MAZE_PRESET) ? TBL.tableStaleness(DERIVED_TABLE, JSON.parse(fs.readFileSync(TBL.MAZE_PRESET, 'utf8'))) : [];
+    for (const s of stale) console.error(`${check ? 'ERROR' : 'WARN'}: ${s}`);
+    if (check && stale.length) process.exit(1);
     // ⛓ RULES l55-waterfall: a floored level is sound only if its entry gate is charged on every way in.
     const uncharged = playthroughEntryGateUncharged(rules);
     if (uncharged.length) {
@@ -2479,6 +2504,8 @@ function main() {
         + `${rows.filter((e) => e.source === 'analyzer').length} computed internal exit(s), `
         + `${rows.filter((e) => (e.source ?? 'manual') !== 'analyzer').length} awaiting a hand-written rule`,
     );
+    console.log(`derived-rule table: ${override.applied} element(s) overridden in AP_1, ${derivedTableAtlasRows.length} atlas row(s); `
+        + `composed ≠ table: ${disagrees.length}; ${DERIVED_TABLE.excluded?.length ?? 0} exact element(s) excluded by name`);
     console.log(`rules.json — ${report.ap_regions} AP regions, ${report.exits} exits, `
         + `${report.locations ?? s.locations} locations, ${report.unwired_exits?.length ?? 0} unwired exit(s)`);
     console.log(`${movedArrivalSpawns.length} departure-door spawn(s) moved off the door tile (no game link lands there, or the model cannot stand there)`

@@ -45,6 +45,18 @@ export const EXPLAINED_PROBLEMS = Object.freeze([
     },
 ]);
 
+/**
+ * ⛓ THE TABLE'S NAMED EXCLUSIONS (session tile-rules-automation-r-a3, designer GO: "name it in the table's exclusion list WITH
+ * ITS REASON, not silently"): exact elements the derived-rule table must NOT override, each with why. A stale entry (no
+ * longer an exact element) is refused by `derivedRuleTable`. The `sharedBinding` rows are excluded by their fact, not here.
+ */
+export const TABLE_EXCLUSIONS = Object.freeze([
+    // (empty) L20 r3c1 -> r1c4 was named here in phase 1 (a hidden hand input: GROUPED_LOCK_EXCEPTIONS['20:lock@32,80']'s
+    // hasShield through the grid). The echo plant's carrier mapping (this slice) shows it is an ECHO: the bidirectional atlas
+    // row r1c4 <-> r3c1 is copied into r3c1's own world, a direction the forward-only mapping never counted. The `echoed`
+    // label keeps it out of the table, so an entry here would be stale (refused). R-A4 rewrites the row (rules-4).
+]);
+
 /** The probe's flags. Exported for the unit rows. */
 export function parseArgs(argv) {
     const arg = (k, d) => argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3) ?? d;
@@ -98,19 +110,25 @@ async function main() {
     const M = await import(pathToFileURL(T('scripts/procgen/make-seedling-playthrough-maze.mjs')).href);
     const { plantEchoSentinels, findEchoes } = await import(pathToFileURL(T('scripts/procgen/seedlingEchoSentinels.js')).href);
     const { shardRegions } = await import(pathToFileURL(T('scripts/procgen/probe-seedling-whole-game-certify.mjs')).href);
-    const { labelDerivedRows, summarizeDerivedRows } = await import(pathToFileURL(T('frontend/modules/mazeRoom/tileSpike/derivedRuleRows.js')).href);
+    const { labelDerivedRows, summarizeDerivedRows, derivedRuleTable } = await import(pathToFileURL(T('frontend/modules/mazeRoom/tileSpike/derivedRuleRows.js')).href);
+    const TBL = await import(pathToFileURL(T('scripts/procgen/seedlingDerivedRuleTable.js')).href);
     const ATLAS = JSON.parse(readFileSync(T('frontend/modules/flashPanel/atlases/seedling-playthrough.json'), 'utf8'));
     const all = ATLAS.regions.map((r) => r.region_id);
     const levels = only ?? all;
     const bad = levels.filter((l) => !all.includes(l));
     if (bad.length) throw new Error(`--levels: not in the playthrough atlas: ${bad.join(', ')}`);
     let t0 = Date.now();
-    const built = M.buildPlaythroughMaze({ levels });
+    // ⛔ Both compiles measure the COMPOSED rules (`derivedTable: {rows: []}`): with the committed table applied the AP
+    // column would be the table itself (a self-confirming comparison that hides composed ≠ derived), and the sentinel
+    // compile would trip guard 2 on every planted table row. The world payloads are byte-identical either way
+    // (derivedRuleOverride.test.js), so the derivation is unchanged; the shipped override is held by the producers' --check.
+    const NO_TABLE = { rows: [], excluded: [], inputs: null };
+    const built = M.buildPlaythroughMaze({ levels, derivedTable: NO_TABLE });
     const rules = JSON.parse(built.text);
     console.log(`BUILT: ${levels.length} levels, ${Object.keys(rules.regions['1']).length} regions, ${built.text.length} B in ${Date.now() - t0} ms`);
     t0 = Date.now();
     let planted = null;
-    const plantedDoc = JSON.parse(M.buildPlaythroughMaze({ levels, plant: (x) => { planted = plantEchoSentinels(x); }, embedSphereLog: false }).text);
+    const plantedDoc = JSON.parse(M.buildPlaythroughMaze({ levels, plant: (x) => { planted = plantEchoSentinels(x); }, embedSphereLog: false, derivedTable: NO_TABLE }).text);
     const echoes = findEchoes(plantedDoc, rules);
     const counts = Object.fromEntries(Object.entries(echoes.byKind).map(([k, v]) => [k, v.length]));
     console.log(`ECHOES: planted ${JSON.stringify(planted)}; copied ${JSON.stringify(counts)}; in shared worlds ${JSON.stringify(echoes.inShared)}; ${echoes.elements.length} AP elements; ${Date.now() - t0} ms`);
@@ -135,14 +153,51 @@ async function main() {
     console.log(`CERT: ${problems.length} problems / ${accepted} accepted / ${threw.length} threw; ${rows.length} rows; wall ${wall} ms, shard ms ${parts.map((p) => p.ms).join('/')}, heap MB ${parts.map((p) => p.heapMb).join('/')}`);
     for (const p of problems) console.log(`  PROBLEM ${p}`);
     for (const p of threw) console.log(`  THREW shard ${p.shard}: ${p.threw}`);
-    const table = labelDerivedRows(rows, { rules, echoes: new Set(echoes.elements), explained: EXPLAINED_PROBLEMS, lockEvents: new Set(M.playthroughLockEventNames()) });
-    const summary = { certifier: { problems: problems.length, accepted, threw: threw.length }, echoes: { copied: counts, elements: echoes.elements.length }, ...summarizeDerivedRows(table) };
+    const table = labelDerivedRows(rows, { rules, echoes: new Set(echoes.elements), explained: EXPLAINED_PROBLEMS });
+    const override = derivedRuleTable(table, { rules, exclusions: TABLE_EXCLUSIONS });
+    const summary = {
+        certifier: { problems: problems.length, accepted, threw: threw.length }, echoes: { copied: counts, elements: echoes.elements.length }, ...summarizeDerivedRows(table),
+        table: { rows: override.rows.length, regions: new Set(override.rows.map((r) => r.region)).size, excluded: override.excluded.length },
+    };
     console.log(`SUMMARY: ${JSON.stringify(summary)}`);
     const sha = process.env.GITHUB_SHA ?? '';
     const regionClass = Object.fromEntries([...table.regions].map(([k, r]) => [k, { class: r.class, arrivals: [...r.arrivals].sort() }]));
     writeFileSync(resolve(outDir, 'derived-rules.json'), `${JSON.stringify({ sha, levels: levels.length, summary, echoes, problems, regions: regionClass, unpriced: table.unpriced, rows: table.elements }, null, 1)}\n`);
     console.log(`WROTE: ${resolve(outDir, 'derived-rules.json')} (${table.elements.length} element rows)`);
+    // ⛓ THE DERIVED-RULE TABLE (session tile-rules-automation-r-a3): emitted beside derived-rules.json, and held against the
+    // committed file (`TABLE_FILE`) on a whole-game run — a regeneration is this artifact copied over it.
+    const tableDoc = {
+        $comment: 'GENERATED by scripts/procgen/probe-seedling-derived-rules.mjs (seedling-probe.yml, manual) — never hand-edited. The rules '
+            + 'producers OVERRIDE their composed rule with `rule` on every row (seedlingDerivedRuleTable.js). Selection: EXACT elements '
+            + '(overridable: one fresh arrival, rooted, not walked in, no partial row; echo-free; derived rule truth-table EQUAL to the '
+            + 'composed one) minus sharedBinding (every event-layer event, rules-4 ruling (a)) minus the named exclusions.',
+        measuredAt: sha.slice(0, 10),
+        inputs: only ? null : TBL.tableInputs(rules),
+        counts: summary.table,
+        excluded: override.excluded,
+        rows: override.rows,
+    };
+    const tableText = `${JSON.stringify(tableDoc, null, 1)}\n`;
+    writeFileSync(resolve(outDir, 'seedling-playthrough-derived-rules.json'), tableText);
+    console.log(`TABLE: ${override.rows.length} rows in ${summary.table.regions} regions; ${override.excluded.length} exact elements excluded`);
     let failed = threw.length;
+    if (!only) {
+        const committed = TBL.readDerivedRuleTable();
+        const strip = (d) => JSON.stringify({ inputs: d.inputs, excluded: d.excluded, rows: d.rows });
+        if (strip(committed) === strip(tableDoc)) {
+            console.log(`PASS: the derived-rule table matches ${TBL.TABLE_FILE.slice(REPO.length + 1)}`);
+        } else {
+            failed += 1;
+            const key = (r) => JSON.stringify(r);
+            const was = new Map((committed.rows ?? []).map((r) => [r.key, key(r)]));
+            const now = new Map(tableDoc.rows.map((r) => [r.key, key(r)]));
+            for (const [k, v] of now) if (!was.has(k)) console.log(`  TABLE ADDED ${k}`); else if (was.get(k) !== v) console.log(`  TABLE CHANGED ${k}`);
+            for (const k of was.keys()) if (!now.has(k)) console.log(`  TABLE REMOVED ${k}`);
+            if (JSON.stringify(committed.inputs) !== JSON.stringify(tableDoc.inputs)) console.log(`  TABLE INPUTS ${JSON.stringify(committed.inputs)} → ${JSON.stringify(tableDoc.inputs)}`);
+            if (JSON.stringify(committed.excluded) !== JSON.stringify(tableDoc.excluded)) console.log('  TABLE EXCLUDED list moved');
+            console.log(`FAIL: the derived-rule table differs from ${TBL.TABLE_FILE.slice(REPO.length + 1)} — ${TBL.REGEN_RECIPE}`);
+        }
+    }
     if (threw.length) console.log(`FAIL: ${threw.length} shard(s) threw`);
     if (echoes.unmapped.length) { failed += 1; console.log(`FAIL: ${echoes.unmapped.length} echoed rule(s) name no AP element`); }
     for (const x of EXPLAINED_PROBLEMS) {

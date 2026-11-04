@@ -60,6 +60,7 @@ import { VICTORY_ITEM } from '../../frontend/modules/seedlingDemo/seedlingAtlasD
 import * as OV from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
 import { PUSHABLE_KINDS } from '../../frontend/modules/flashPanel/seedlingBlockPaths.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { readDerivedRuleTable, applyDerivedRuleTable, composedDisagreeMessage } from './seedlingDerivedRuleTable.js';
 
 argvHelp(import.meta.url);
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -396,11 +397,6 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     return out;
 }
 
-/** The rules producer's LOCK events (`playthroughLockEvents`), by name: the bindings the maze lays from its event layer. */
-export function playthroughLockEventNames() {
-    return wholeEventLayer(readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'))).locks.events.map((e) => e.name);
-}
-
 /**
  * ⛓ The rules producer's OWN permissive bound (`permissiveBindings`, `"<atlas region>/<binding>"`: what its analysis
  * pass leaves uncharged on purpose, e.g. L89's Feather), read from its run — never copied — for the certifier's
@@ -637,7 +633,7 @@ export function plainLevelWorldFits(world) {
 only rules the worlds copy, to plant in. Absent, the compile is the preset's, byte for byte. `embedSphereLog: false` skips the
  * sphere log (a sentinel compile places items no state can hold).
  */
-export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSphereLog = true, analysisHook = null, plainLevelWorlds = true } = {}) {
+export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSphereLog = true, analysisHook = null, plainLevelWorlds = true, derivedTable = readDerivedRuleTable() } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
     const mapDoc = readJson(resolve(ATLAS_DIR, atlas.tile_space.map_document));
     const gameConfig = readJson(resolve(REPO, 'frontend/modules/flashPanel/games/seedling.json'));
@@ -684,6 +680,12 @@ export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSpher
         internalExitGates: layer.internalExitGates,
         exitGates: [...layer.exitGates, ...landingGatesFor(atlas, levels), ...ropes.exitGates],
     });
+    // ⛓⛓ THE DERIVED-RULE TABLE onto the AP layer (session tile-rules-automation-r-a3), as the rules producer puts it onto AP_1,
+    // so the certifier compares against what ships. AFTER the worlds are projected: they never read it (the sentinel pin,
+    // derivedRuleOverride.test.js). The table rule is truth-table EQUAL to the composed one (guard 2, refused otherwise), so the
+    // sphere log embedded above from the composed rules is the same log.
+    const override = applyDerivedRuleTable(rules, derivedTable, { partial: levels.length !== LEVELS.length || levels.some((l, i) => l !== LEVELS[i]) });
+    if (override.composedDisagrees.length) throw new Error(override.composedDisagrees.map(composedDisagreeMessage).join('\n'));
     return { text: `${stringifyRulesJson(rules)}\n`, report, unresolved: mazeProjection.unresolved ?? [] };
 }
 

@@ -7371,6 +7371,10 @@ export const INSTRUMENTS = frz({
                 {
                     "from": "make-seedling-playthrough-rules.mjs",
                     "name": "no-directional-locks"
+                },
+                {
+                    "from": "seedlingDerivedRuleTable.js",
+                    "name": "print-engine-closure"
                 }
             ],
             "oneLiner": "The `seedling_playthrough_maze` preset: Seedling's PLAYTHROUGH atlas, restricted to a growing list of levels, projected into the MAZE substrate (tile-primitives Stage 2, session tile-primitives-stage2-l15).",

@@ -53,6 +53,15 @@ describe('red-first: a COMPOSED charge never reaches a world; a HAND term always
         });
         expect(findEchoes(doc, compile(['level_49', 'level_50'])).byKind.ex).toEqual(['level_49/out_teleporter_32_128']);
     });
+    it('RULE-LESS rows are planted too: L94\'s kept-plain crossing r2c16 <-> r3c4 (no access_rule, copied open) reads as an echo', () => {
+        // ⛓ session tile-rules-automation-r-a3 (designer GO; rules-4 PASS): the plant used to skip a row with no rule, so a kept-plain
+        // world that copies an ABSENT rule as an open crossing read as derived True_ — an echo the sentinel could not see.
+        const row = ATLAS.regions.find((r) => r.region_id === 'level_94').subgraph.internal_exits.find((x) => x.from === 'r2c16' && x.to === 'r3c4');
+        expect(row.access_rule).toBeUndefined();
+        const e = echoesOf(['level_94']);
+        expect(e.byKind.ix).toEqual(['level_94/r2c16->r3c4']);
+        expect(e.elements).toEqual(['level_94__r2c16|level_94__r2c16 -> level_94__r3c4', 'level_94__r3c4|level_94__r3c4 -> level_94__r2c16']);
+    });
     it('the analyzer\'s PRICING output does not move a payload byte (L12 per sub-region, L56 and L49 plain)', () => {
         const levels = ['level_12', 'level_49', 'level_50', 'level_56', 'level_52', 'level_57'];
         const KEY = { key: 4 };   // a condition that RESOLVES (Yellow Key): an unknown one would resolve to null, silently
