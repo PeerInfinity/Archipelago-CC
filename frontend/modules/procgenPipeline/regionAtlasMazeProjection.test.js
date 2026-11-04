@@ -1104,7 +1104,11 @@ describe('colliding crossings (session tile-primitives-water-exits)', () => {
         });
         const p = sidecars.vault__r1c0.playable_payload;
         expect(p.exits.map((e) => e.atlas_exit_id)).toEqual(['on_the_door']);
-        expect(p.obstacleLib[obstacleAt(p, 1, 1).id].clear_rule).toEqual(HAS_LANTERN);
+        // ⛓ Since session tile-rules-automation-r-a2 (fix 2) the door's rule JOINS its cell's own TERRAIN gate: the door is
+        // drawn on K, a key-gated cell, so standing on it costs the key AND the lantern (L56's pit inside bosslock@96,16).
+        // The key is the GRID cell's own condition, laid by the opener — not the dropped crossing's obstacle, which the
+        // exit's gate replaces.
+        expect(p.obstacleLib[obstacleAt(p, 1, 1).id].clear_rule).toEqual({ rule: 'And', children: [HAS_KEY, HAS_LANTERN] });
     });
 
     it('with a level-world builder, the level is ONE level world (the walk is the crossing)', () => {

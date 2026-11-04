@@ -74,7 +74,7 @@ const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance
 //   only the OVERLAY below is authored. The vanilla 116 and an edited level set
 //   now go through ONE `deriveAtlas`.
 const {
-    deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM, levelName, BOSS_LOCATION_ITEM, BOSS_FILLER_ITEM,
+    deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM, levelName, labelFor, BOSS_LOCATION_ITEM, BOSS_FILLER_ITEM,
 } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
 const { buildLevelWorld, ROLES, PERSISTENCE_RESPONSE, combatCensusOf, rectsOverlap } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
@@ -1145,45 +1145,21 @@ function applyHandRulings(atlas) {
     //    the SPHERE LOG caught — D7's entrance (the endgame door's two rows
     //    retired in RULES location-crossing: the FinalDoor is a `solidBody`, so
     //    `chargeSealedDoor` charges them) — and the LavaBoss arena's doors.
-    for (const door of OV.CHARGED_DOORS) {
-        const region = atlas.regions.find((r) => r.region_id === regionIdFor(door.level));
-        const exit = (region?.exits ?? []).find((e) => e.exit_id === door.exitId);
-        if (!exit) {
-            throw new Error(`charged door ${door.level}/${door.exitId} is not in the atlas — `
-                + 'a hand ruling whose target vanished is a silent hole, not a no-op');
-        }
-        const rule = analyzerOptions.resolveCondition(door.condition);
-        if (!rule) throw new Error(`charged door ${door.level}/${door.exitId} does not resolve to a rule`);
+    // ⛓ The overlay's HAND exit terms (`OV.handExitTerms`, session tile-rules-automation-r-a2): the maze compile reads the
+    // same terms, and only these, so a composed charge below is never copied into its worlds.
+    for (const term of OV.handExitTerms(atlas, { resolveCondition: (c) => analyzerOptions.resolveCondition(c), regionIdFor })) {
+        const region = atlas.regions.find((r) => r.region_id === term.region_id);
+        const exit = region.exits.find((e) => e.exit_id === term.exit_id);
         exit.access_rule = exit.access_rule === undefined
-            ? rule : { rule: 'And', children: [exit.access_rule, rule] };
+            ? term.rule : { rule: 'And', children: [exit.access_rule, term.rule] };
         // `rules_source` is DERIVED from the internal exits (the validator's
         // rule); a charged EXIT is not one, so it only fills the gap.
         region.annotations.rules_source = derivedRulesSource(region) ?? 'mixed';
-        crossingCharged.push(`${regionIdFor(door.level)}/${door.exitId}`);
-        note(`${regionIdFor(door.level)}: ${door.exitId} CHARGED its approach by hand — `
-            + `${door.why} (${door.cite})`);
-    }
-
-    // ── ⛓ RULES game-truth-gaps: the arenas whose exit is created on death (`OV.DEATH_EXIT_ARENAS`) — every
-    //    connection INTO or OUT OF the arena's level costs the arena (the L82 precedent: gated both ways).
-    for (const arena of OV.DEATH_EXIT_ARENAS) {
-        const arenaRegion = regionIdFor(arena.level);
-        const rule = analyzerOptions.resolveCondition(arena.condition);
-        if (!rule) throw new Error(`death-exit arena L${arena.level} does not resolve to a rule`);
-        const conns = (atlas.vanilla_layout?.connections ?? [])
-            .filter((c) => c.from[0] === arenaRegion || c.to[0] === arenaRegion);
-        const out = conns.filter((c) => c.from[0] === arenaRegion && c.to[1].startsWith(`in_${arena.namedRoom}_`));
-        if (out.length === 0) {
-            throw new Error(`death-exit arena L${arena.level}: the atlas wires no ${arena.namedRoom} warp out of it`);
-        }
-        for (const c of conns) {
-            const region = atlas.regions.find((r) => r.region_id === c.from[0]);
-            const exit = (region?.exits ?? []).find((e) => e.exit_id === c.from[1]);
-            if (!exit) throw new Error(`death-exit arena L${arena.level}: ${c.from.join('/')} is not in the atlas`);
-            exit.access_rule = exit.access_rule === undefined ? rule : { rule: 'And', children: [exit.access_rule, rule] };
-            region.annotations.rules_source = derivedRulesSource(region) ?? 'mixed';
-            crossingCharged.push(`${c.from[0]}/${c.from[1]}`);
-            note(`${c.from[0]}: ${c.from[1]} -> ${c.to.join('/')} CHARGED the L${arena.level} arena — ${arena.why} (${arena.cite})`);
+        crossingCharged.push(`${term.region_id}/${term.exit_id}`);
+        if (term.source === 'charged-door') {
+            note(`${term.region_id}: ${term.exit_id} CHARGED its approach by hand — ${term.why} (${term.cite})`);
+        } else {
+            note(`${term.region_id}: ${term.exit_id} -> ${term.to.join('/')} CHARGED the L${term.arenaLevel} arena — ${term.why} (${term.cite})`);
         }
     }
 
@@ -1279,6 +1255,20 @@ export const lavaTrapLifts = [];
 
 /** Every ledger location this run gave a guard rule (OV.LOCATION_GUARDS). */
 export const locationGuards = [];
+
+/**
+ * ⛓ The overlay's HAND inputs to the atlas rules, for the maze compile's input/output split (session
+ * tile-rules-automation-r-a2): the exit terms (`OV.handExitTerms`) and the location terms (`OV.handLocationTerms`, over this
+ * producer's ledger, named as deriveAtlas names its locations). Pure over `atlas`: no producer state is read, so it is the
+ * same in any process, before or after a build.
+ */
+export function playthroughHandInputs(atlas) {
+    const resolveCondition = (c) => analyzerOptions.resolveCondition(c);
+    return {
+        exitTerms: OV.handExitTerms(atlas, { resolveCondition, regionIdFor }),
+        locationTerms: OV.handLocationTerms(R7_GOAL_LEDGER, { resolveCondition, nameOf: (row) => `${levelName(row.level)} - ${labelFor(row)}` }),
+    };
+}
 
 /**
  * Every exit or location whose tile is reachable only THROUGH gated crossing

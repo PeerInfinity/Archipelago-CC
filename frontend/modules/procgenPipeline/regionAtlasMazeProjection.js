@@ -621,6 +621,12 @@ function collidingCrossings(planned) {
  * @returns {{ sidecars: object, notes: Array, analysis: object }}
  */
 export function projectRegionToMaze(region, grid, ctx) {
+    // ⛓⛓ THE INPUT/OUTPUT SPLIT (session tile-rules-automation-r-a2, ⚖ Robert 2026-11-03 "3: Both at once"). A caller may
+    // hand the worlds a different view of the region than the one its AP layer compiles: `projectionRegion(region)` → the
+    // same geometry (sub-regions, tiles, exits, locations) carrying only the rules the world may COPY. Seedling's compile
+    // passes the overlay's hand terms alone, so a charge the rules producer COMPOSED from the grid is derived here by walking
+    // the grid, never read back (an echo). Absent, the world is built from `region` as before.
+    if (typeof ctx.projectionRegion === 'function') region = ctx.projectionRegion(region);
     const { resolveCondition, conditionKey, wiredExit, internalExitName, tileSize } = ctx;
     // ⛓ A level whose entity rows carry an INTERACTION plays as one shared
     // level world (below). Only a compile that supplies `levelEntitiesFor`
@@ -628,6 +634,10 @@ export function projectRegionToMaze(region, grid, ctx) {
     const entities = typeof ctx.levelEntitiesFor === 'function' ? ctx.levelEntitiesFor(region, grid) : null;
     if (levelHasInteraction(entities)) return projectLevelWorld(region, grid, ctx, entities);
     const analysis = analyzeRegion(region, grid, { conditionKey, resolveCondition });
+    // TEST-ONLY (session tile-rules-automation-r-a2, the designer's red-first pin): a hook that may rewrite the analyzer's
+    // PRICING output (`bindings[].conditionSets/necessary/sealedIn`, `crossings[].conditionSets`) — the binder the rules
+    // producer composes its charges from. The worlds must not read it: a world is built from geometry and the grid only.
+    ctx.analysisHook?.(region, analysis);
     const components = analysis.components;
     const bindings = bindingsFor(region);
 
@@ -733,7 +743,42 @@ export function projectRegionToMaze(region, grid, ctx) {
         });
         return world;
     }
+    // ⛓ A PLAIN LEVEL AS ONE LEVEL WORLD (session tile-rules-automation-r-a2, ⚖ Robert 2026-11-03 "3: Both at once"). Per
+    // sub-region, each crossing is a tile carrying its atlas row's rule: copied, so the derivation reads it back (an echo).
+    // A caller that supplies `plainLevelWorldFits(world)` asks for the level world instead, whose crossings are WALKED over
+    // the grid, and keeps it when the test says it fits (Seedling's: its item axis fits the certifier's lattice cap; L12's
+    // 15 items do not, so L12 stays per sub-region, named). Only analyzer rows, as for colliding crossings above.
+    // A crossing between two declared sub-regions through material the grid cannot price (`needs_authoring`: a per-pixel
+    // collision mask, whose crossing the rules producer's PHYSICS MODEL decides — L94 r2c16 <-> r3c4 through TreeLarge) has
+    // no terrain a level world could walk: the world walls that footprint, so such a level stays per sub-region.
+    const unwalkable = (analysis.needs_authoring ?? []).filter((n) => kept.has(n.from) && kept.has(n.to));
+    // A press in this level whose TARGET is in this level too (an in-room press: L20's ButtonRoom latching lock@32,80, rules
+    // l20-button-latch) would be a location and a target of ONE world, and one search does not grant a location's event
+    // mid-walk (the AP closure does), so the world would read the crossing it opens as shut. Such a level stays per sub-region.
+    const levelEvents = ctx.eventsFor?.(region) ?? [];
+    const selfPress = levelEvents.find((ev) => ev.mode === 'target' && levelEvents.some((p) => p.mode === 'press' && p.name === ev.name));
+    let keptPlain = null;
+    if (walkable && declared.length > 0 && typeof ctx.levelEntitiesFor === 'function' && typeof ctx.plainLevelWorldFits === 'function') {
+        const world = unwalkable.length > 0 || selfPress ? null : projectLevelWorld(region, grid, ctx, entities ?? []);
+        const fit = world ? ctx.plainLevelWorldFits(world)
+            : selfPress ? `its own press "${selfPress.name}" opens a target in the same world, which one search does not grant mid-walk`
+                : `its crossing ${unwalkable[0].from} <-> ${unwalkable[0].to} goes through material only the physics model walks (${unwalkable[0].reasons[0]})`;
+        if (fit === true) {
+            world.notes.unshift({
+                region_id: region.region_id,
+                kind: 'plain_level_world',
+                message: 'no interaction, but projected as one level world: its crossings are walked over the grid, not copied',
+            });
+            return world;
+        }
+        keptPlain = {
+            region_id: region.region_id,
+            kind: 'plain_kept_per_sub_region',
+            message: `kept per sub-region: ${fit} — its crossings carry their atlas rows' rules (copied)`,
+        };
+    }
     const notes = crossingNotes.map((n) => ({ region_id: region.region_id, ...n }));
+    if (keptPlain) notes.unshift(keptPlain);
     for (const c of pockets) {
         notes.push({
             region_id: region.region_id,
@@ -841,7 +886,20 @@ export function projectRegionToMaze(region, grid, ctx) {
             const before = builder.obstacles.get(`${x},${y}`);
             for (const n of openTileTowards(builder, grid, component, [x, y], `exit "${exit.exit_id}"`, resolveCondition)) note(n);
             const exitRule = withPressDoor(exit, ctx.eventsFor?.(region));
-            if (exitRule) builder.gate(x, y, exitRule);
+            // ⛓ The exit's rule JOINS its cell's own TERRAIN gate (session tile-rules-automation-r-a2, the designer's fix 2):
+            // one cell holds one obstacle, and L56's pit at (6,1) under bosslock@96,16 {keyType 3} lost its Blue Key gate
+            // (laid by `openTileTowards`) to the arena's weapon term once the producer's composed charge was no longer
+            // copied onto the exit. The join is with the grid cell's own occupancy, never with whatever else stands there (a
+            // dropped crossing's rule is not this door's, `colliding crossings`); a NON-rule obstacle there (an event's,
+            // a press target's) would be overwritten, so it is refused by name.
+            if (exitRule) {
+                const held = builder.obstacleLib[builder.obstacles.get(`${x},${y}`)];
+                if (held && held.clear_set_type !== 'rule') {
+                    throw new Error(`atlas region "${region.region_id}": exit "${exit.exit_id}" at [${exit.entrance_tile}] stands on obstacle "${held.id}", which its gate would overwrite`);
+                }
+                const terrain = occupancyRule(grid.cells[y * grid.width + x], resolveCondition);
+                builder.gate(x, y, terrain.rule ? simplifyRule({ rule: 'And', children: [terrain.rule, exitRule] }) : exitRule);
+            }
             const kept = addExit({
                 x,
                 y,
@@ -1572,6 +1630,16 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     const openAt = ([x, y], label) => {
         if (builder.isFloor(x, y)) return;
         builder.floor(x, y);
+        // ⛓ THE OPENED CELL KEEPS ITS OWN GATE (session tile-rules-automation-r-a2, the designer's fix 1): a door or a
+        // location drawn inside an item-gated solid is touched only once that solid is gone, so the cell's own resolvable
+        // condition gates it here, as the per-sub-region opener does (`openTileTowards`). L66's teleporter@72,64 sits inside
+        // bosslock@72,64 {keyType 4}: opened bare, the level world reached L70 holding nothing once the producer's composed
+        // Yellow Key charge (`chargeSealedDoor`) was no longer copied onto the exit.
+        const opened = occupancyRule(grid.cells[y * grid.width + x], resolveCondition);
+        if (opened.rule && opened.unresolved.length === 0) builder.gate(x, y, opened.rule);
+        if (opened.unresolved.length > 0) {
+            note({ kind: 'opened_unresolved_gate', tile: [x + ox, y + oy], label, message: `${label} at [${x + ox},${y + oy}] opens on a cell whose condition(s) ${JSON.stringify(opened.unresolved)} have no AP item behind them — opened WITHOUT its gate` });
+        }
         note({ kind: 'opened_solid', tile: [x + ox, y + oy], label, message: `${label} at [${x + ox},${y + oy}] sits on a cell the level world walls — opened, because that is where the atlas puts it` });
         if (MOVES.some(([, dx, dy]) => builder.isFloor(x + dx, y + dy))) return;
         const prev = new Map([[keyOf(x, y), null]]);
@@ -1649,6 +1717,9 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         // (L58 r4c1's (3,7) → r6c5's (4,7) walked the water holding only a weapon).
         const terrain = builder.obstacleLib[builder.obstacles.get(keyOf(x, y))];
         const exitRule = withPressDoor(exit, ctx.eventsFor?.(region));
+        if (exitRule && terrain && terrain.clear_set_type !== 'rule') {
+            throw new Error(`atlas region "${regionId}": exit "${exit.exit_id}" at [${exit.entrance_tile}] stands on obstacle "${terrain.id}", which its gate would overwrite`);
+        }
         if (exitRule) {
             builder.gate(x, y, terrain?.clear_set_type === 'rule' && terrain.clear_rule
                 ? simplifyRule({ rule: 'And', children: [terrain.clear_rule, exitRule] }) : exitRule);

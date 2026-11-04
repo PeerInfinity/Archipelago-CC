@@ -1079,6 +1079,52 @@ export const CHARGED_DOORS = Object.freeze([
 ]);
 
 /**
+ * ⛓⛓ THE HAND EXIT TERMS (session tile-rules-automation-r-a2, ⚖ Robert 2026-11-03 "3: Both at once"; the designer's GO:
+ * "a pure hand-terms function in seedlingPlaythroughOverlay.js, called by applyHandRulings … and the maze"). The exit
+ * rules this overlay AUTHORS, as terms: every `CHARGED_DOORS` row, then every connection into or out of a
+ * `DEATH_EXIT_ARENAS` level (the L82 precedent: gated both ways), in that order. Nothing here is composed from the
+ * grid. The rules producer ANDs each term onto its exit (`applyHandRulings`), and the maze compile gates its worlds on
+ * these terms ALONE (the input/output split: never on the producer's composed charges, which the maze must derive).
+ * Pure. Refuses by name a door whose region or exit the atlas lacks, a term that does not resolve, and an arena with no
+ * warp out.
+ * @param {object} atlas the atlas (its regions' exits and `vanilla_layout.connections`)
+ * @param {{resolveCondition: (c: object) => object|null, regionIdFor: (level: number) => string, namedRooms?: object}} deps
+ * @returns {Array<{region_id: string, exit_id: string, rule: object, source: 'charged-door'|'death-exit-arena',
+ *   why: string, cite: string, level?: number, arenaLevel?: number, to?: string[]}>}
+ */
+export function handExitTerms(atlas, { resolveCondition, regionIdFor }) {
+    const out = [];
+    const exitOf = (regionId, exitId) => (atlas.regions ?? []).find((r) => r.region_id === regionId)?.exits?.find((e) => e.exit_id === exitId);
+    for (const door of CHARGED_DOORS) {
+        const regionId = regionIdFor(door.level);
+        if (!exitOf(regionId, door.exitId)) {
+            throw new Error(`charged door ${door.level}/${door.exitId} is not in the atlas — `
+                + 'a hand ruling whose target vanished is a silent hole, not a no-op');
+        }
+        const rule = resolveCondition(door.condition);
+        if (!rule) throw new Error(`charged door ${door.level}/${door.exitId} does not resolve to a rule`);
+        out.push({ region_id: regionId, exit_id: door.exitId, rule, source: 'charged-door', why: door.why, cite: door.cite, level: door.level });
+    }
+    for (const arena of DEATH_EXIT_ARENAS) {
+        const arenaRegion = regionIdFor(arena.level);
+        const rule = resolveCondition(arena.condition);
+        if (!rule) throw new Error(`death-exit arena L${arena.level} does not resolve to a rule`);
+        const conns = (atlas.vanilla_layout?.connections ?? []).filter((c) => c.from[0] === arenaRegion || c.to[0] === arenaRegion);
+        if (!conns.some((c) => c.from[0] === arenaRegion && c.to[1].startsWith(`in_${arena.namedRoom}_`))) {
+            throw new Error(`death-exit arena L${arena.level}: the atlas wires no ${arena.namedRoom} warp out of it`);
+        }
+        for (const c of conns) {
+            if (!exitOf(c.from[0], c.from[1])) throw new Error(`death-exit arena L${arena.level}: ${c.from.join('/')} is not in the atlas`);
+            out.push({
+                region_id: c.from[0], exit_id: c.from[1], rule, source: 'death-exit-arena', why: arena.why, cite: arena.cite,
+                arenaLevel: arena.level, to: c.to,
+            });
+        }
+    }
+    return out;
+}
+
+/**
  * ⚠ THE COMPLETION CONDITION, STATED — and the branch that is NOT the goal.
  *
  * The goal is the BLOODLESS Seed: `seed@(4,4)` in L115, whose own text is *"You
@@ -1262,6 +1308,31 @@ export const LOCATION_GUARDS = Object.freeze({
 /** The guard on one ledger row, or null. */
 export function locationGuard(ledgerId) {
     return LOCATION_GUARDS[ledgerId] ?? null;
+}
+
+/**
+ * ⛓ THE HAND LOCATION TERMS (session tile-rules-automation-r-a2; rules-4's review: "make it PURE like handExitTerms"):
+ * the location rules this overlay AUTHORS, by the location NAME the atlas gives each guarded ledger row — the
+ * `LOCATION_GUARDS` term alone, resolved, never a rule the producer composed onto the location (`chargeSealedLocation`).
+ * The same term deriveAtlas's guard step writes (`locationGuard` + `resolveCondition`); the maze compile gates its worlds on
+ * these and no other location rule. Pure. Refuses a guard no ledger row names and a guard that does not resolve.
+ * @param {Array<{id: string}>} ledger the location ledger rows (R7_GOAL_LEDGER)
+ * @param {{resolveCondition: (c: object) => object|null, nameOf: (row: object) => string}} deps
+ * @returns {Map<string, {rule: object, ledgerId: string, why: string, cite: string}>}
+ */
+export function handLocationTerms(ledger, { resolveCondition, nameOf }) {
+    const out = new Map();
+    for (const row of ledger) {
+        const guard = locationGuard(row.id);
+        if (!guard) continue;
+        const rule = resolveCondition(guard.condition);
+        if (!rule) throw new Error(`location guard for ${row.id} does not resolve to a rule`);
+        out.set(nameOf(row), { rule, ledgerId: row.id, why: guard.why, cite: guard.cite });
+    }
+    const named = new Set(ledger.map((r) => r.id));
+    const stray = Object.keys(LOCATION_GUARDS).filter((id) => !named.has(id));
+    if (stray.length) throw new Error(`location guards no ledger row names: ${stray.join(', ')}`);
+    return out;
 }
 
 /**
