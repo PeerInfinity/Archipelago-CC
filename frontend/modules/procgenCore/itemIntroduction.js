@@ -159,3 +159,107 @@ export function unrequestedIntroductions(entry, params, locations, requested) {
     const asked = new Set(Object.keys(requested?.items ?? {}));
     return [...new Set((locations ?? []).map((l) => l.item).filter((i) => declared.has(i) && !asked.has(i)))];
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ REGION INTRODUCED ITEMS (slice 2b) — **WHAT ALREADY STANDS ELSEWHERE IN
+ * THIS RUN** (⚖ the user, 2026-11-03: *"Yes, add introduced"*; on top-down with
+ * several key gates *"Yes, allow"*).
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ *   introduced = { items: { [item]: count }, source: 'run', exact: true }   frozen
+ *
+ * The items standing at the locations of the OTHER regions generated in this
+ * run, EXCLUDING the region being (re)generated. It is a fact of the run at the
+ * draw, not a logic estimate, so it is exact in every mode. ABSENT means
+ * unknown. It is handed to every region generator in the PLAN-LESS modes
+ * (shuffled spiral, grid growth, top-down) beside `held`; sphere growth keeps its
+ * REQUESTS above and is not handed it. It draws no rng and is never serialised.
+ * A generator that introduces an item of its own picks one in neither `held`
+ * nor `introduced`, so two regions never introduce the same one (by induction:
+ * each draw avoids every item standing elsewhere, and a later draw sees it).
+ */
+export const freezeIntroduced = (items) => Object.freeze({
+    items: Object.freeze({ ...items }), source: 'run', exact: true,
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ THE INTRODUCTIONS REPORT (slice 2b) — **HOW MANY REGIONS CONFIGURED TO
+ * INTRODUCE AN ITEM GOT ONE, AND WHY THE REST DID NOT** (⚖ the user, on rooms
+ * configured for a key gate that got none: *"Accept, and report it"*).
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ *   procgen_metadata[<player>].introductions =
+ *       { requested, placed, notPlaced: { [reason]: count } }
+ *
+ * `requested` counts the regions whose substrate's `introducibleItems(params)`
+ * is non-empty (configured to introduce one); `placed` the ones that hold an
+ * item they introduced; `notPlaced` the rest, by reason. The field is ABSENT,
+ * never empty, on a world with no such region. The engine notes each region as
+ * it builds it (`markRegionIntroduction`, a symbol key, so nothing
+ * serialises it) and `introductionReport` folds the notes.
+ */
+
+/** ⛓ The NOT-PLACED reason names, spelled once (beside the refusal names above). */
+export const INTRODUCTION_NOT_PLACED_REASONS = Object.freeze({
+    /** sphere growth: the region is in the plan's last wave, so no later sphere can hold what its item opens */
+    lastWaveOfPlan: 'last-wave-of-plan',
+    /** batched sphere growth: the region is in its batch's last wave; the next wave was not wired when it was decided */
+    batchBoundary: 'batch-boundary',
+    /** sphere growth: the next wave exists, and none of its regions holds a dealt item to move behind the lock */
+    noHost: 'no-host',
+    /** sphere growth: a FILLER region; the planner asks no filler for an item (it is not on the progression path) */
+    filler: 'filler-region',
+    /** the plan-less modes: nothing was requested, and the region's own draw placed none (an element it could not
+     *  seat in that room, or another member of an element list drawn) */
+    notDrawn: 'not-drawn',
+});
+
+export const REGION_INTRODUCTION = Symbol.for('procgen.regionIntroduction');
+
+/**
+ * The note for one built region, or `null` when its substrate (`entry`) is not
+ * configured to introduce anything under `params`. `locations` are the region's
+ * extracted locations (`{item}`); `driverItems` the items the DRIVER put there
+ * (a top-down source's own items), which are not the region's introductions even
+ * when their names coincide. `reasonIfNone` is a name from
+ * `INTRODUCTION_NOT_PLACED_REASONS`.
+ */
+export function regionIntroductionNote(entry, params, locations, { driverItems = [], reasonIfNone } = {}) {
+    const declared = introducibleItemsOf(entry, params);
+    if (declared.length === 0) return null;
+    const left = new Map();
+    for (const l of locations ?? []) if (declared.includes(l.item)) left.set(l.item, (left.get(l.item) ?? 0) + 1);
+    for (const i of driverItems) if (left.has(i)) left.set(i, left.get(i) - 1);
+    const placed = declared.filter((i) => (left.get(i) ?? 0) > 0);
+    return Object.freeze(placed.length > 0 ? { placed: Object.freeze(placed) }
+        : { placed: Object.freeze([]), reason: reasonIfNone ?? INTRODUCTION_NOT_PLACED_REASONS.notDrawn });
+}
+
+/**
+ * Attach a note to a region descriptor under a SYMBOL key. It is enumerable on purpose: the grid copies a region
+ * with a spread (`Grid.placeRegion`), and a spread keeps an own enumerable symbol, while JSON, `structuredClone` and
+ * `Object.keys` never see one. So the note rides the grid and never reaches rules.json or a sidecar.
+ */
+export function markRegionIntroduction(region, note) {
+    if (!region) return region;
+    if (!note) { delete region[REGION_INTRODUCTION]; return region; }
+    Object.defineProperty(region, REGION_INTRODUCTION, {
+        value: note, enumerable: true, configurable: true, writable: true,
+    });
+    return region;
+}
+
+export const regionIntroductionOf = (region) => region?.[REGION_INTRODUCTION] ?? null;
+
+/** Fold the notes of a world's regions into the report, or `null` when none was configured (the field is ABSENT). */
+export function introductionReport(notes) {
+    const ns = [...(notes ?? [])].filter(Boolean);
+    if (ns.length === 0) return null;
+    const notPlaced = {};
+    let placed = 0;
+    for (const n of ns) {
+        if (n.placed.length > 0) placed += 1;
+        else notPlaced[n.reason] = (notPlaced[n.reason] ?? 0) + 1;
+    }
+    return { requested: ns.length, placed, notPlaced };
+}

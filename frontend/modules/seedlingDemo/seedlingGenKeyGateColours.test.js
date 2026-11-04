@@ -212,3 +212,60 @@ describe('4 — REPLAY: the APWorld editor\'s regenerate reproduces the first ge
         }
     }, 120_000);
 });
+
+/**
+ * ⛓⛓ slice 2b (`procgen-region-introduced`) — THE INTRODUCTIONS REPORT under sphere growth (⚖ the user, on rooms
+ * configured for a key gate that got none: *"Accept, and report it"*). `procgen_metadata["1"].introductions` must
+ * agree with the R3 sweep's own classification of every node decided NONE (`seedlingGenKeyGateColours.slow.test.js`
+ * `noneReason`: the plan's last wave, a batch's last wave, else no host), plus fillers, which the planner now decides
+ * NONE outright (left unasked, a filler drew a key the plan never scheduled: refused, measured seeds 1 and 2).
+ */
+describe('5 — the introductions report agrees with the sweep\'s classification, each sphere reason produced', () => {
+    const sweepReason = (n, sphereCount, batch) => {
+        if (n.isFiller) return 'filler-region';
+        if (n.wave + 2 > sphereCount) return 'last-wave-of-plan';
+        if (batch && n.wave % batch === batch - 1) return 'batch-boundary';
+        return 'no-host';
+    };
+    const recount = (rules, sphereCount, batch = null) => {
+        const nodes = rules.procgen_metadata['1'].sphere_tree.nodes.filter((n) => Array.isArray(n.introduces));
+        const notPlaced = {};
+        for (const n of nodes.filter((x) => x.introduces.length === 0)) {
+            const r = sweepReason(n, sphereCount, batch);
+            notPlaced[r] = (notPlaced[r] ?? 0) + 1;
+        }
+        return { requested: nodes.length, placed: nodes.filter((n) => n.introduces.length > 0).length, notPlaced };
+    };
+
+    it.each([1, 2, 3])('seed %i (4 spheres, mono): last-wave-of-plan; the report equals the recount', (seed) => {
+        const report = WORLDS[seed].rulesJson.procgen_metadata['1'].introductions;
+        expect(report).toEqual(recount(WORLDS[seed].rulesJson, 4));
+        expect(report.notPlaced['last-wave-of-plan']).toBeGreaterThanOrEqual(1);
+        expect(report.placed).toBe(keyRooms(WORLDS[seed].rulesJson).length);
+    });
+
+    it('batched (6 spheres, 3 per batch, seed 1): batch-boundary is produced and counted', async () => {
+        const items = { key_red: 1, key_blue: 1, key_green: 1, key_yellow: 1, key_purple: 1, victory: 1 };
+        const { rulesJson } = await build(keyWorld(1, { sphereCount: 6, quota: 7, items, spheresPerBatch: 3 }));
+        const report = rulesJson.procgen_metadata['1'].introductions;
+        expect(report).toEqual(recount(rulesJson, 6, 3));
+        expect(report.notPlaced['batch-boundary']).toBeGreaterThanOrEqual(1);
+    }, 120_000);
+
+    it('fillers (fillerCount 2, seed 1 — refused before this slice): filler-region, and the oracle exact', async () => {
+        const state = keyWorld(1, { quota: 8 });
+        state.params.fillerCount = 2;
+        const { rulesJson, oracleErrors } = await build(state);
+        const report = rulesJson.procgen_metadata['1'].introductions;
+        expect(report).toEqual(recount(rulesJson, 4));
+        expect(report.notPlaced['filler-region']).toBe(2);
+        expect(oracleErrors).toEqual([]);
+    }, 120_000);
+
+    it('a world whose declaring substrate is configured for NO key gate carries no report (R4)', async () => {
+        const state = keyWorld(1);
+        state.params.seedlingGenElements = '';
+        const { rulesJson } = await build(state);
+        expect(rulesJson.procgen_metadata['1']).not.toHaveProperty('introductions');
+    }, 120_000);
+});

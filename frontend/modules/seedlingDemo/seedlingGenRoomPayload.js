@@ -133,7 +133,8 @@ export const GEN_ROOM_REFUSALS = Object.freeze({
         + 'key rule as its own (procgenCore/authoredRule.js); a driver that overrides a location rule must AND a '
         + 'marked one on (procgenPipelineEngine keepAuthoredRule), never drop it.',
     keygateColour: (regionId, ordinal) => `${KEYGATE_COLOUR_REFUSAL}: multi-room keygate colours are allocated by `
-        + 'the sphere planner\'s requests, and this room\'s key gate was not requested. Generated Seedling room '
+        + 'the sphere planner\'s requests or, in the plan-less modes, from the items already in the world '
+        + '(`introduced`), and this room\'s key gate had neither. Generated Seedling room '
         + `'${regionId}' (generated room #${ordinal}) holds a KEY GATE, and only generated room #0 may: each key-gate `
         + 'room must have its own colour (⚖ "B: Distinct colour per room"), and a room is drawn knowing nothing of '
         + 'the others. ⚠ KNOWN LIMIT: this also refuses a world whose room #0 placed no key gate. Ask for the key '
@@ -147,6 +148,11 @@ export const GEN_ROOM_REFUSALS = Object.freeze({
         + `was asked by the pipeline for a KEY GATE opened by '${item}', and no draw within its re-roll budget placed `
         + `one that the solver grades required (${why}). The planner's logic already counts the key, so the room `
         + 'is refused rather than built without it.',
+    /** ⛓ slice 2b — an EXPLICIT `keygate;type=N` whose colour already stands elsewhere in the run (`introduced`). */
+    keygateTaken: (regionId, item) => `${KEYGATE_SHARED_REFUSAL}: generated Seedling room '${regionId}' asks for `
+        + `the KEY GATE opened by '${item}' (an explicit type), and '${item}' already stands elsewhere in this world. `
+        + 'Each key-gate room has its own colour (⚖ "B: Distinct colour per room"), so the room is refused rather '
+        + 'than given a key another room\'s lock also takes. Omit the type and the room takes a free colour.',
     keygateTwoKeys: (regionId, items) => `generated Seedling room '${regionId}': the pipeline asks it to introduce `
         + `${items.join(', ')}, and a room holds ONE key gate`,
     duplicateExit: (regionId, exitId) => `generated Seedling room '${regionId}': exit '${exitId}' is `
