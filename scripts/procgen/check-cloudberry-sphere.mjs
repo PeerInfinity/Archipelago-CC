@@ -112,8 +112,8 @@ export const CLOUDBERRY_DOUBLE_JUMP_STATE = Object.freeze({
  * ⛓ CLOUDBERRY P5b — **THE HERO PHYSICS WORLD, SPELLED ONCE** (`--physics`; the committed
  * `cloudberry_hero_physics_worldgen` and the in-app row `cloudberry-hero-physics-world-plays` read it).
  * CLOUDBERRY_DOUBLE_JUMP_STATE with a non-default world hero and variation 0.25: each region draws its own hero
- * near the world's (draw (5)). The values keep every draw inside the narrower ladder-safe ranges measured in P5b
- * (gravity ≤ 1.5, jump length ≥ 0.85), whatever the ruled range edges.
+ * near the world's (draw (5)), inside the ruled ranges (gravity ≤ 1.5 and jump length ≥ 0.85 among them: the ladder
+ * ruling, option A).
  */
 export const CLOUDBERRY_HERO_PHYSICS_STATE = Object.freeze({
     ...CLOUDBERRY_DOUBLE_JUMP_STATE,

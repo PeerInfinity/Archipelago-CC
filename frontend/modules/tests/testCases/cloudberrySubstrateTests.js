@@ -570,3 +570,69 @@ registerTest({
     category: CATEGORY,
     enabled: false,
 });
+
+// ── 8. a world with the hero's physics as settings (P5b) ───────────────────────────────
+
+const HERO_PHYSICS_RULES = `./presets/cloudberry_hero_physics_worldgen/${PRESET_SEED}/${PRESET_SEED}_rules.json`;
+
+/** A level's hero as its payload asks for it. */
+const heroOf = (a) => a?.payload?.generate?.heroCustom ?? null;
+
+async function heroPhysicsWorldPlays(tc) {
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        // The committed hero physics world itself (its own start: region_2_2 holds Double Jump + the gem).
+        const before = app()?.configures ?? 0;
+        await tc.loadRulesFromFile(HERO_PHYSICS_RULES);
+        await tc.stateManager.pingWorker('after-rules-load', 3000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: PANEL });
+        const a = await configured(tc, 'region_2_2', { after: gameIframe() ? before : null });
+        if (!a) return tc.getOverallResult();
+        tc.assertEqual('the start level\'s document hash is the one the page generated (the same hero)', a.payload.docSha256, a.doc.sha);
+        const h1 = heroOf(a);
+        tc.reportCondition(`⛓ premise: the start level is a custom-physics plain hero (${JSON.stringify(h1)})`,
+            !!h1?.phsx && h1.move === undefined && typeof h1.phsx.gravity === 'number');
+
+        const got = await botWalk(tc, { kind: 'location', name: 'region_2_2__loc_0' }, 'the bot reaches the check coin');
+        tc.reportCondition(`the bot reaches the check coin with this hero (${JSON.stringify(got)})`, got?.result === 'reached');
+        const snap = await tc.pollForValue(async () => {
+            const s = await snapshot(tc);
+            return checkedList(s).includes('region_2_2__loc_0') && held(s, 'Double Jump') ? s : null;
+        }, 'region_2_2__loc_0 checked → Double Jump received', 20000, 250);
+        tc.reportCondition(`region_2_2__loc_0 checked → Double Jump received${snap ? '' : ` — ${await checkDiag(tc)}`}`, !!snap);
+        if (!snap) return tc.getOverallResult();
+
+        const n = app()?.configures ?? 0;
+        const left = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot reaches the end door');
+        tc.reportCondition(`the bot reaches the end door (${JSON.stringify(left)})`, left?.result === 'reached');
+        const b = await configured(tc, 'region_3_2', { after: n });
+        if (!b) return tc.getOverallResult();
+        tc.assertEqual('the Double level\'s document hash is the one the page generated (its own hero)', b.payload.docSha256, b.doc.sha);
+        const h2 = heroOf(b);
+        tc.reportCondition(`its hero is the Double hero with its own physics, not the start level's (${JSON.stringify(h2)})`,
+            h2?.move === 'Double' && typeof h2.phsx?.gravity === 'number' && JSON.stringify(h2.phsx) !== JSON.stringify(h1.phsx));
+        const two = await tc.pollForValue(() => (app()?.itemsState?.jumpsOn === 2 ? app().itemsState : null),
+            'Double Jump held: two jumps', 20000, 200);
+        tc.reportCondition(`Double Jump held: two jumps (${JSON.stringify(two)})`, !!two);
+        const coin = await botWalk(tc, { kind: 'location', name: 'region_3_2__loc_0' }, 'the bot reaches the Double level\'s coin');
+        tc.reportCondition(`the bot reaches the Double level's check coin (${JSON.stringify(coin)})`, coin?.result === 'reached');
+        const checked = await tc.pollForValue(async () => (checkedList(await snapshot(tc)).includes('region_3_2__loc_0') ? true : null),
+            'region_3_2__loc_0 checked', 20000, 250);
+        tc.reportCondition('region_3_2__loc_0 checked', !!checked);
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-hero-physics-world-plays',
+    name: 'Cloudberry: a world with hero physics settings — each level plays its own hero; the bot collects and leaves',
+    description: 'P5b. Loads the committed cloudberry_hero_physics_worldgen (world physics + per-region variation). The start '
+               + 'level configures with its custom-physics hero (hash matched: the page regenerated the same hero); the bot '
+               + 'reaches its check coin (Double Jump received) and the end door; the next level is a Double hero with its '
+               + 'OWN physics (two jumps held), and the bot reaches its check coin, which is checked.',
+    testFunction: heroPhysicsWorldPlays,
+    category: CATEGORY,
+    enabled: false,
+});

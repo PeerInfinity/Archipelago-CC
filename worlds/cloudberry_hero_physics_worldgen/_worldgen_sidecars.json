@@ -1,0 +1,290 @@
+{
+  "region_2_2": {
+    "substrate": "cloudberry",
+    "render_hint": "cloudberry",
+    "grid_cell": {
+      "gx": 2,
+      "gy": 2
+    },
+    "playable_payload": {
+      "gameId": "cloudberry",
+      "params": {
+        "payload": "cloudberry-region/1",
+        "generate": {
+          "seed": 914391991,
+          "difficulty": 2,
+          "tileset": "sea",
+          "pieceLength": 3500,
+          "pieces": [
+            {
+              "upgrades": {
+                "Jump": 2
+              }
+            },
+            {
+              "upgrades": {
+                "Jump": 2
+              }
+            }
+          ],
+          "heroCustom": {
+            "phsx": {
+              "gravity": 1.213,
+              "accel": 1.209,
+              "maxspeed": 1.297,
+              "maxfall": 1.45,
+              "jumplength": 1.13,
+              "jumpaccel": 0.982,
+              "friction": 0.601,
+              "size": 0.847
+            }
+          },
+          "trace": false,
+          "settings": false,
+          "rerolls": [
+            0,
+            0
+          ]
+        },
+        "docSha256": "d7b069ef2a715def9f7bd96a1b546455b1d1887a5ec8bf733d45289a87b5f6bb",
+        "checks": {
+          "loc_0": 37,
+          "loc_1": 39
+        },
+        "items": {
+          "Moving Blocks": "MovingBlock",
+          "Falling Blocks": "FallingBlock",
+          "Bouncy Blocks": "BouncyBlock",
+          "Ghost Blocks": "GhostBlock",
+          "Clouds": "Cloud",
+          "Elevators": "Elevator",
+          "Pendulums": "Pendulum",
+          "Conveyors": "Conveyor",
+          "Fly Blobs": "FlyBlob",
+          "Jetpack": "Jetpack"
+        }
+      },
+      "ap_locations": {
+        "loc_0": "region_2_2__loc_0",
+        "loc_1": "region_2_2__loc_1"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "gate_rules": {
+        "portals": {
+          "east": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Double Jump"
+            }
+          }
+        },
+        "pickups": {}
+      },
+      "exits": [
+        {
+          "exit_id": "exit_E",
+          "side": "E",
+          "exitName": "exit_E",
+          "targetRegion": "region_3_2",
+          "isBackExit": false,
+          "isTeleporter": false,
+          "targetExitId": "region_2_2"
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_3_2": {
+    "substrate": "cloudberry",
+    "render_hint": "cloudberry",
+    "grid_cell": {
+      "gx": 3,
+      "gy": 2
+    },
+    "playable_payload": {
+      "gameId": "cloudberry",
+      "params": {
+        "payload": "cloudberry-region/1",
+        "generate": {
+          "seed": 2136366007,
+          "difficulty": 2,
+          "tileset": "forest",
+          "pieceLength": 3500,
+          "pieces": [
+            {
+              "upgrades": {
+                "Jump": 2
+              }
+            },
+            {
+              "upgrades": {
+                "MovingBlock": 5,
+                "Jump": 2
+              }
+            }
+          ],
+          "heroCustom": {
+            "move": "Double",
+            "phsx": {
+              "numjumps": 2,
+              "gravity": 1.15,
+              "accel": 1.117,
+              "maxspeed": 1.365,
+              "maxfall": 1.442,
+              "jumplength": 1.125,
+              "jumpaccel": 0.978,
+              "friction": 1.339,
+              "size": 0.905,
+              "jumplength2": 0.974,
+              "jumpaccel2": 0.897
+            }
+          },
+          "trace": false,
+          "settings": false,
+          "rerolls": [
+            0,
+            0
+          ]
+        },
+        "docSha256": "81fa53cd89ca9a6ac73eeb7f0e84e5219ff46f9b384ada40cffd8e21f2392693",
+        "checks": {
+          "loc_0": 24
+        },
+        "items": {
+          "Moving Blocks": "MovingBlock",
+          "Falling Blocks": "FallingBlock",
+          "Bouncy Blocks": "BouncyBlock",
+          "Ghost Blocks": "GhostBlock",
+          "Clouds": "Cloud",
+          "Elevators": "Elevator",
+          "Pendulums": "Pendulum",
+          "Conveyors": "Conveyor",
+          "Fly Blobs": "FlyBlob",
+          "Jetpack": "Jetpack",
+          "Double Jump": "DoubleJump"
+        },
+        "backExitSide": "W"
+      },
+      "ap_locations": {
+        "loc_0": "region_3_2__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "exit_E",
+          "side": "E",
+          "exitName": "exit_E",
+          "targetRegion": "region_4_2",
+          "isBackExit": false,
+          "isTeleporter": false,
+          "targetExitId": "region_3_2"
+        },
+        {
+          "exit_id": "region_2_2",
+          "side": "W",
+          "exitName": "region_2_2",
+          "targetRegion": "region_2_2",
+          "targetExitId": "exit_E",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  },
+  "region_4_2": {
+    "substrate": "cloudberry",
+    "render_hint": "cloudberry",
+    "grid_cell": {
+      "gx": 4,
+      "gy": 2
+    },
+    "playable_payload": {
+      "gameId": "cloudberry",
+      "params": {
+        "payload": "cloudberry-region/1",
+        "generate": {
+          "seed": 977687300,
+          "difficulty": 2,
+          "tileset": "forest_snow",
+          "pieceLength": 3500,
+          "pieces": [
+            {
+              "upgrades": {
+                "Jump": 2
+              }
+            },
+            {
+              "upgrades": {
+                "Jump": 2
+              }
+            }
+          ],
+          "heroCustom": {
+            "phsx": {
+              "gravity": 1.179,
+              "accel": 1.122,
+              "maxspeed": 1.197,
+              "maxfall": 1.536,
+              "jumplength": 1.135,
+              "jumpaccel": 1.215,
+              "friction": 1.179,
+              "size": 1.116
+            }
+          },
+          "trace": false,
+          "settings": false,
+          "rerolls": [
+            0,
+            0
+          ]
+        },
+        "docSha256": "967635e72cb83d90b6e809a904cd0de987190a1d7efc399db1c35b7324d9c0af",
+        "checks": {
+          "loc_0": 34
+        },
+        "items": {
+          "Moving Blocks": "MovingBlock",
+          "Falling Blocks": "FallingBlock",
+          "Bouncy Blocks": "BouncyBlock",
+          "Ghost Blocks": "GhostBlock",
+          "Clouds": "Cloud",
+          "Elevators": "Elevator",
+          "Pendulums": "Pendulum",
+          "Conveyors": "Conveyor",
+          "Fly Blobs": "FlyBlob",
+          "Jetpack": "Jetpack"
+        },
+        "backExitSide": "W"
+      },
+      "ap_locations": {
+        "loc_0": "region_4_2__loc_0"
+      },
+      "flashCapabilities": {
+        "locations": "cooperative",
+        "items": "pull",
+        "start": "auto"
+      },
+      "exits": [
+        {
+          "exit_id": "region_3_2",
+          "side": "W",
+          "exitName": "region_3_2",
+          "targetRegion": "region_3_2",
+          "targetExitId": "exit_E",
+          "isBackExit": true,
+          "isTeleporter": false
+        }
+      ],
+      "fogEnabled": true
+    }
+  }
+}
