@@ -2,8 +2,9 @@
  * The level-world CERTIFIER on Seedling L15 (⚖ "Certifier", user 2026-10-21; session
  * tile-primitives-stage2-l15) — the default tier's cut: the oracle's crossing r1c5 → r1c9 at the four
  * inventories that decide it, from the NATIVE engine (`nativeReachUnder`), every witness replayed on the
- * real `step`. The full certification (every sub-region pair, the whole lattice, the scripted tile
- * definition too) is `deriveLevelWorldLogic.slow.test.js`.
+ * real `step`. The full certification (every sub-region pair, the whole lattice) is
+ * `deriveLevelWorldLogic.slow.test.js`; the scripted tile definition on the sample is
+ * `deriveLevelWorldLogic.train.test.js` (⚖ Robert 2026-11-02 CI manual-only P3).
  *
  * The oracle (rules-block-path, `flashPanel/seedlingBlockPaths.js`): r1c5 → r1c9 = Or(weapon, Swim),
  * weapon = Progressive Sword | Ghost Spear — the atlas row the preset compiles.

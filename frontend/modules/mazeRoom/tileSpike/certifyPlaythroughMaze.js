@@ -201,7 +201,7 @@ export function atlasLandings(atlas, rules) {
  *   STRICTER is accepted by that name (⚖ 2026-10-26, session tile-primitives-sphere-order-2 — L89's Feather, entered
  *   only from above, which the rules leave at Swim); a LOOSER row there is still a problem
  */
-export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas, permissive = [] } = {}) {
+export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas, permissive = [], rows: wantRows = false } = {}) {
     if (!atlas) throw new Error('certifier: the atlas is required — a crossing is judged by the cell the game lands it on');
     const landings = atlasLandings(atlas, rules);
     const REGIONS = rules.regions['1'];
@@ -210,6 +210,12 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
     const lines = [];
     const accepted = [];
     const skipped = [];
+    // ⛓ DERIVED ROWS (session tile-rules-automation-r-a1, ⚖ Robert 2026-11-02 "Route A, R-A1 first"): with `rows`, every
+    // compared row is also RETURNED — its derived rule, the AP rule it was compared with, its arrival and its verdict — so a
+    // consumer (the derived-rules probe, `derivedRuleRows.js`) reads the rows instead of patching this file. Off by default:
+    // the result is then exactly what it was.
+    const rowsOut = [];
+    const record = (row) => { if (wantRows) rowsOut.push(row); };
     const starts = rules.start_regions?.['1']?.default ?? ['Menu'];
     const everyItem = new Set();
     for (const r of Object.values(REGIONS)) {
@@ -291,22 +297,28 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         let unadmitted = 0;
         let ownEvent = 0;
         let points = 0;
+        let compared = 0;
+        // ⛓ What the verdict rests on (designer review, R-A1): a row that agrees on the points it COMPARED says so with its
+        // counts, so an all-skipped row never reads as proven (`counts` rides on every returned verdict).
+        const counts = () => ({ compared, unadmitted, ownEvent, of: points });
         for (const inv of allPoints(axis)) {
             points += 1;
             if (impossible(inv)) continue;
             if (notHere?.unadmitted?.(inv)) { unadmitted += 1; continue; }
             if (notHere?.ownEvent?.(inv)) { ownEvent += 1; continue; }
             if (notHere?.(inv)) continue;
+            compared += 1;
             const derived = derivedAt(inv);
             const atlas = atlasAt(inv);
             if (derived === atlas) continue;
             const held = new Set(inv);
             const excuse = derived ? null : items.find((i) => !held.has(i) && needs(source, i)) ?? stricterOk ?? notHere?.unadmittedFresh?.(inv) ?? null;
             if (!excuse) {
-                problems.push(`${label} holding [${formatPoint(inv)}]: derived ${derived}, atlas ${atlas}${why}`);
+                const problem = `${label} holding [${formatPoint(inv)}]: derived ${derived}, atlas ${atlas}${why}`;
+                problems.push(problem);
                 if (unadmitted > 0) skipped.push({ label, points: unadmitted, of: points, partial: true });
                 if (ownEvent > 0) skipped.push({ label, points: ownEvent, of: points, partial: true, why: 'own event' });
-                return;
+                return { verdict: 'problem', problem, by: [], counts: counts() };
             }
             by.add(excuse);
         }
@@ -314,6 +326,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         if (ownEvent > 0) skipped.push({ label, points: ownEvent, of: points, why: 'own event' });
         for (const item of by) accepted.push({ label, source, by: item });
         if (stricterOk !== null && by.has(stricterOk)) lines.push(`accepted: ${label} — ${stricterOk}`);
+        return { verdict: by.size > 0 ? 'accepted' : 'agrees', problem: null, by: [...by], counts: counts() };
     };
     // ⛓ The rules producer's permissive locations (see `permissive` above), by AP region name → the reason a STRICTER row is accepted.
     const permissiveSet = new Set(permissive);
@@ -383,7 +396,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
     };
     const agree = (label, source, atlas, minimal, out, { notHere = null, why = '', stricterOk = null } = {}) => {
         const derived = ruleFromMinimalSets(minimal);
-        compareRow(label, source, [...new Set([...out.items, ...ruleItems(atlas)])].sort(), mergeLevels(out.levels, ruleLevels(atlas)),
+        return compareRow(label, source, [...new Set([...out.items, ...ruleItems(atlas)])].sort(), mergeLevels(out.levels, ruleLevels(atlas)),
             (inv) => holds(derived, inv), (inv) => holds(atlas, inv), notHere, `${explain(atlas)}${why}`, stricterOk);
     };
     /** The atlas's reach over the AP exits BETWEEN `members` (one level world's sub-regions), per inventory. */
@@ -414,7 +427,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         const asked = new Set(out.items);
         const levels = mergeLevels(out.levels);
         for (const e of closure.edges) { ruleItems(e.rule, asked); ruleLevels(e.rule, levels); }
-        compareRow(label, pair.from, [...asked].sort(), levels,
+        return compareRow(label, pair.from, [...asked].sort(), levels,
             (inv) => holds(derived, inv), (inv) => closure.reaches(pair.from, pair.to, inv), admittedFresh(members, pair.from, asked),
             [...new Set(closure.edges.map((e) => explain(e.rule)))].join(''));
     };
@@ -507,11 +520,12 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
                 // ⛓ The root's fresh arrival is an AP state only where a crossing into it admits the point (`admittedFresh`).
                 const fresh = admittedFresh(world.sharedWorld.regions, via, asked);
                 const skip = fresh === null ? own : Object.assign((inv) => Boolean(own?.(inv)), { unadmittedFresh: fresh.unadmittedFresh });
-                compareRow(label, via, asked, levels, (inv) => holds(derived, inv),
+                return compareRow(label, via, asked, levels, (inv) => holds(derived, inv),
                     (inv) => closure.reaches(via, name, inv) && holds(atlas, inv), skip, explain(atlas), stricterOk);
             };
             const exitTo = new Map(REGIONS[name].exits.map((e) => [e.name, e.connected_region]));
             const byTarget = new Map();
+            const perExit = new Map();
             for (const t of out.targets) {
                 const label = `${name} @ ${t.exitName ?? t.locationName} (from ${via})`;
                 for (const w of t.witnesses) {
@@ -522,12 +536,14 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
                     if (to === undefined) { problems.push(`${label}: no AP exit of that name`); continue; }
                     if (!byTarget.has(to)) byTarget.set(to, []);
                     byTarget.get(to).push(...t.minimal);
+                    perExitOf(perExit, to).push({ name: t.exitName, minimal: t.minimal });
                     continue;
                 }
                 const loc = (REGIONS[name].locations ?? []).find((l) => l.name === t.locationName);
                 if (!loc) { problems.push(`${label}: no AP location of that name`); continue; }
-                row(label, loc.access_rule ?? { rule: 'True_' }, t.minimal, loc.event ? (loc.item?.name ?? loc.name) : null,
+                const v = row(label, loc.access_rule ?? { rule: 'True_' }, t.minimal, loc.event ? (loc.item?.name ?? loc.name) : null,
                     permissiveWhy(name, loc.name));
+                record(locationRow(name, loc, `from ${via}`, label, t.minimal, v));
                 priced.add(loc.name);
                 lines.push(`${name}@${t.locationName}<${via}=${JSON.stringify(t.minimal)}`);
             }
@@ -536,7 +552,8 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
                 if (inWorld.has(to)) continue;
                 if (!byTarget.has(to)) { problems.push(`${name}: its exit(s) to ${to} are not priced (from ${via})`); continue; }
                 const atlas = anyOf(REGIONS[name].exits.filter((e) => e.connected_region === to).map((e) => e.access_rule ?? { rule: 'True_' }));
-                row(`${name} → ${to} (from ${via})`, atlas, byTarget.get(to));
+                const v = row(`${name} → ${to} (from ${via})`, atlas, byTarget.get(to));
+                record(exitRow(name, to, `from ${via}`, `${name} → ${to} (from ${via})`, byTarget.get(to), atlas, perExit.get(to), v));
                 lines.push(`${name}->${to}<${via}=${JSON.stringify(byTarget.get(to))}`);
             }
         }
@@ -568,7 +585,8 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             for (const p of out.pairs) {
                 // An internal-only member's own arrival is no AP state: what it reaches, its inbound members' pairs reach.
                 if (internalOnly(world, p.from)) continue;
-                agreeWithClosure(`${p.from} → ${p.to}`, closure, p, out, world.sharedWorld.regions);
+                const v = agreeWithClosure(`${p.from} → ${p.to}`, closure, p, out, world.sharedWorld.regions);
+                record(pairRow(p, v));
                 for (const w of p.witnesses) replay(`${p.from} → ${p.to}`, enteredAt(world, p.from), w.inventory, w.plan, w.cell);
                 lines.push(`${p.from}>${p.to}=${JSON.stringify(p.minimal)}`);
             }
@@ -580,7 +598,48 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         const into = world.sharedWorld ? enteredAt(world, name) : world;
         for (const arrival of distinctArrivals(into, arrivalsOf(world, name))) priceFrom(world, name, arrival);
     }
-    return { problems, lines, accepted, skipped };
+    return wantRows ? { problems, lines, accepted, skipped, rows: rowsOut } : { problems, lines, accepted, skipped };
+
+    /**
+     * The returned ROW shapes (`rows`). `arrival` is where the row was priced from: 'entrance' (the region's entrance cell),
+     * 'landing x,y' (a cell the game lands a crossing on) or 'from <member>' (an internal-only member, priced from a rooted
+     * member's arrival). `derived` is the search's rule (`ruleFromMinimalSets(minimal)`), `ap` the AP element's OWN rule (a
+     * location's rule; the Or of the exits to a target; for an in-world pair, the Or of the DIRECT exits between the two, or
+     * null when the pair is only transitive) — not the closure it was compared with. `verdict` is the certifier's:
+     * 'agrees' / 'accepted' (`by` = what excused it) / 'problem' (`problem` = its line). `counts` = the lattice points the
+     * verdict rests on: `compared`, the `unadmitted` landing points and `ownEvent` points skipped (`skipped`), `of` all
+     * (a problem's counts stop at its first mismatch).
+     */
+    function perExitOf(map, to) {
+        if (!map.has(to)) map.set(to, []);
+        return map.get(to);
+    }
+    function verdictOf(v) {
+        return { verdict: v.verdict, by: v.by, problem: v.problem, counts: v.counts };
+    }
+    function locationRow(region, loc, arrival, label, minimal, v) {
+        return {
+            kind: 'location', region, name: loc.name, event: Boolean(loc.event), arrival, label,
+            minimal, derived: ruleFromMinimalSets(minimal), ap: loc.access_rule ?? { rule: 'True_' }, ...verdictOf(v),
+        };
+    }
+    function exitRow(region, to, arrival, label, minimal, ap, exits, v) {
+        const rule = new Map(REGIONS[region].exits.map((e) => [e.name, e.access_rule ?? { rule: 'True_' }]));
+        return {
+            kind: 'exit', region, name: to, arrival, label, minimal, derived: ruleFromMinimalSets(minimal), ap,
+            exits: (exits ?? []).map((x) => ({ name: x.name, minimal: x.minimal, derived: ruleFromMinimalSets(x.minimal), ap: rule.get(x.name) })),
+            ...verdictOf(v),
+        };
+    }
+    function pairRow(p, v) {
+        const direct = REGIONS[p.from].exits.filter((e) => e.connected_region === p.to);
+        return {
+            kind: 'pair', region: p.from, name: p.to, arrival: 'entrance', label: `${p.from} → ${p.to}`, minimal: p.minimal,
+            derived: ruleFromMinimalSets(p.minimal), ap: direct.length ? anyOf(direct.map((e) => e.access_rule ?? { rule: 'True_' })) : null,
+            exits: direct.map((e) => ({ name: e.name, ap: e.access_rule ?? { rule: 'True_' } })),
+            ...verdictOf(v),
+        };
+    }
 
     /**
      * ⛓ LANDING-ROOTED ARRIVALS (session tile-primitives-pit-sinks-landings): a region is priced from every cell the GAME
@@ -664,6 +723,8 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
         };
         const exitTo = new Map(REGIONS[name].exits.map((e) => [e.name, e.connected_region]));
         const byTarget = new Map();
+        const perExit = new Map();
+        const arrivalTag = arrival ? `landing ${arrival.x},${arrival.y}` : 'entrance';
         for (const t of out.targets) {
             const label = `${name} @ ${t.exitName ?? t.locationName}${tag}`;
             for (const w of t.witnesses) {
@@ -674,6 +735,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
                 if (to === undefined) { problems.push(`${label}: no AP exit of that name`); continue; }
                 if (!byTarget.has(to)) byTarget.set(to, []);
                 byTarget.get(to).push(...t.minimal);
+                perExitOf(perExit, to).push({ name: t.exitName, minimal: t.minimal });
                 continue;
             }
             const loc = (REGIONS[name].locations ?? []).find((l) => l.name === t.locationName);
@@ -691,9 +753,10 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
                 if (base?.unadmitted) notHere.unadmitted = base.unadmitted;
                 notHere.ownEvent = (inv) => inv.includes(own);
             }
-            agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out, {
+            const v = agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out, {
                 stricterOk: permissiveWhy(name, loc.name), notHere,
             });
+            record(locationRow(name, loc, arrivalTag, label, t.minimal, v));
             lines.push(`${name}@${t.locationName}${lineTag}=${JSON.stringify(t.minimal)}`);
         }
         const inWorld = new Set(world.sharedWorld?.regions ?? []);
@@ -701,7 +764,8 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             if (inWorld.has(to)) continue;
             if (!byTarget.has(to)) { problems.push(`${name}: its exit(s) to ${to} are not priced${tag}`); continue; }
             const atlas = anyOf(REGIONS[name].exits.filter((e) => e.connected_region === to).map((e) => e.access_rule ?? { rule: 'True_' }));
-            agree(`${name} → ${to}${tag}`, name, atlas, byTarget.get(to), out, { notHere: notHereFor(atlas) });
+            const v = agree(`${name} → ${to}${tag}`, name, atlas, byTarget.get(to), out, { notHere: notHereFor(atlas) });
+            record(exitRow(name, to, arrivalTag, `${name} → ${to}${tag}`, byTarget.get(to), atlas, perExit.get(to), v));
             lines.push(`${name}->${to}${lineTag}=${JSON.stringify(byTarget.get(to))}`);
         }
         const priced = new Set(out.targets.map((t) => t.locationName).filter(Boolean));

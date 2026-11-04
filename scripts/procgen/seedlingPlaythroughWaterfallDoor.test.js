@@ -55,17 +55,21 @@ describe('waterfall doors', () => {
         ]);
     });
 
-    it('the one reached only by climbing is charged the Feather; the one reached going down is not', () => {
+    // ⛓ RULES certifier-tail: the one reached going down pays no DIRECTION gate, but every way onto it (the L89 landing
+    // on the water below included) pays the Swim, which `chargeNecessaryApproaches` now charges (it was the certifier's
+    // accepted "every way into L91 needs the Swim" row).
+    it('the one reached only by climbing is charged the Feather; the one reached going down only the Swim', () => {
         expect(directionalDoorsCharged).toEqual(['level_89/out_teleporter_208_0']);
         const rows = new Map(census().map((r) => [r.door, r.rule]));
         expect(rows.get('level_89/out_teleporter_208_0')).toEqual(FEATHER);
-        expect(rows.get('level_91/out_teleporter_16_144')).toBe(null);
+        expect(rows.get('level_91/out_teleporter_16_144')).toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim' } });
     });
 
     it('the committed rules carry it: level_89__r1c10 -> level_91 is Has(Progressive Swim, 2)', () => {
         const rules = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
         const exits = Object.values(rules.regions['1']).flatMap((r) => r.exits ?? []);
         expect(exits.find((e) => e.name === 'level_89__r1c10 -> level_91').access_rule).toEqual(FEATHER);
-        expect(exits.find((e) => e.name === 'level_91 -> level_89__r1c10').access_rule).toEqual({ rule: 'True_' });
+        expect(exits.find((e) => e.name === 'level_91 -> level_89__r1c10').access_rule)
+            .toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim' } });
     });
 });

@@ -914,6 +914,17 @@ export class MazeRoomUI {
             this._loopsDrivenAction = null;
             return;
         }
+        // ⛓ cloudberry P4c: the visualizer plans with its OWN item set, which only
+        // in-region pickups fill. Seed it from the latest snapshot, as walkTo does
+        // (below), or a gate on an item received ELSEWHERE — a Cloudberry level's
+        // Clouds gating this maze's exit — reads as locked, the plan is `stuck`,
+        // and the queue stops with completed:false (a silent loop-mode stall).
+        const snap = stateManagerProxySingleton.getLatestStateSnapshot?.();
+        if (snap) {
+            this.externalInventory = inventoryFromSnapshot(snap);
+            this.externalCheckedLocations = checkedLocationsFromSnapshot(snap);
+            visualizer.setInventory?.(this.externalInventory);
+        }
         // Populate the maze queue with the planned action sequence
         // so the user sees the substrate's expansion of this loops
         // action. The queue mirrors the walk: as the visualizer

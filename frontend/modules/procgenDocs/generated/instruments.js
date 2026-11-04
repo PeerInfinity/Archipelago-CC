@@ -49,12 +49,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 23,
+            "count": 25,
             "id": "census"
         },
         {
-            "browser": 65,
-            "count": 105,
+            "browser": 61,
+            "count": 100,
             "id": "check"
         },
         {
@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 12,
+            "count": 11,
             "id": "make"
         },
         {
@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 137,
-            "count": 187,
+            "browser": 139,
+            "count": 190,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 507,
-        "browser": 207,
-        "cited": 271,
-        "files": 525,
+        "blockStyle": 506,
+        "browser": 205,
+        "cited": 266,
+        "files": 524,
         "lineStyle": 18,
-        "withDocblock": 525,
-        "withFlags": 439
+        "withDocblock": 524,
+        "withFlags": 444
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1092,6 +1092,33 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "census",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-darktrap-gates.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "⛓ RULES rules-l63-darktrap-census — **WHAT IF A LIVE DARKTRAP BODY WERE AN ANALYZER GATE ON ITS POLE'S FLAG?** (option (b) for the L63 r6c9 → r0c1 framing row, ⚖ user 2026-11-02; the designer set the census FIRST.) REPORT ONLY: it edits nothing and exits 0. The producer and the analyzer are IMPORTED, never patched: …",
+            "path": "scripts/procgen/census-seedling-darktrap-gates.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
             "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],
@@ -1447,6 +1474,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-enemies — **ONE ENEMY IN ONE CHAMBER, AND WHAT THE SOLVER DOES ABOUT IT** (PROCGEN ELEMENTS arc 3, slice 4d, D5; ⚖ design ruling 19).",
             "path": "scripts/procgen/census-seedling-enemies.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-er-doorways.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-seedling-er-doorways — **THE ER DOOR CENSUS** (ENTRANCE RANDOMIZATION E1, a design check, no shuffle): every doorway of the Seedling playthrough atlas classified by a STATED rule, each doorway's reverse derived from GAME DATA (`seedlingReturnSpawns.returnSpawnTable`, a landing-distance heuristic only as a cro…",
+            "path": "scripts/procgen/census-seedling-er-doorways.mjs"
         },
         {
             "argvHelpers": [
@@ -1953,7 +2007,8 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/cloudberry.md"
+                "docs/json/developer/procgen/cloudberry.md",
+                "docs/json/developer/procgen/pipeline-presets.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -2021,6 +2076,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "double-jump"
                 },
                 {
                     "how": [
@@ -3021,26 +3082,6 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "check-region-library-sphere-roundtrip-runner.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode with a RUNNER library (region-library F6c, the runner analogue of check-region-library-sphere-roundtrip.mjs).",
-            "path": "scripts/procgen/check-region-library-sphere-roundtrip-runner.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "check",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -3169,106 +3210,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "In-app smoke test for RULE-GATED PORTALS (sphere-driven growth priority #2): a bounce world where a non-ability item (key_red) gates a portal as an AUTHORED LOCK — no geometry; the host bridge evaluates the payload's gate_rules against live inventory and pushes booleans into the game (__swfBridge.setGateStates).",
             "path": "scripts/procgen/check-rule-gated-portals.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host"
-            ],
-            "file": "check-runner-bot.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Runner phase-8 gate (plan §4.8, phase table row 8) — the playback bot drives a runner_worldgen region in the REAL frontend, end to end through the phase-8 chain: the registry entry's getPlaybackController (the PlaybackProxy runnerDemo/index.js injects) publishes walkTo on runner:playbackControl → the in-iframe flash…",
-            "path": "scripts/procgen/check-runner-bot.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host"
-            ],
-            "file": "check-runner-embed.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Runner phase-9 gate (plan §4.9, phase table row 9) — the full embed round-trip on a SPHERE-GROWN world, first check → Victory, driven end to end by the phase-8 playback bot (no sendLocation/sendExit shortcuts — every check and region move is the game playing itself). check-bounce-embed.mjs is the template; check-run…",
-            "path": "scripts/procgen/check-runner-embed.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "check-runner-game.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "@ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere. ⇒ deleting this one line is how a later slice adopts it into CI.",
-            "path": "scripts/procgen/check-runner-game.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "check-runner-smoke.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "check-runner-smoke — **VERIFIES THAT A GENERATED RUNNER WORLD BOOTS, RENDERS AND IS PLAYED THROUGH BY ITS OWN SOLVER WITNESS IN THE REAL FRONTEND** (runner phase-7 gate, plan §5 row 7) — no manual play anywhere in it.",
-            "path": "scripts/procgen/check-runner-smoke.mjs"
         },
         {
             "argvHelpers": [],
@@ -5677,6 +5618,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "push-scope"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "run"
                 },
                 {
@@ -6060,7 +6007,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "dump-seedling-gen-capacity — ⛓ SEEDLING HAMMER-PHASE B2: `seedlingGenCapacity.slow`'s census AS A DUMP (the draws and their seating, one row per drawn seed), so the capacity rows' certify solves can be captured and re-solved by `check-seedling-hammer-monotonicity` (a vitest file runs under its own module loader, whi…",
+            "oneLiner": "dump-seedling-gen-capacity — ⛓ SEEDLING HAMMER-PHASE B2: `seedlingGenCapacity.train`'s census AS A DUMP (the draws and their seating, one row per drawn seed), so the capacity rows' certify solves can be captured and re-solved by `check-seedling-hammer-monotonicity` (a vitest file runs under its own module loader, wh…",
             "path": "scripts/procgen/dump-seedling-gen-capacity.mjs"
         },
         {
@@ -7331,28 +7278,8 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Generate the committed demo CLOUDBERRY region-library pack + register it in the region-libraries index — the Cloudberry analogue of make-demo-runner-pack.mjs.",
+            "oneLiner": "Generate the committed demo CLOUDBERRY region-library pack + register it in the region-libraries index — the Cloudberry analogue of make-demo-bounce-pack.mjs (and of the runner one, make-demo-runner-pack.mjs, which went with the runner substrate).",
             "path": "scripts/procgen/make-demo-cloudberry-pack.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "make",
-            "citedBy": [
-                "docs/json/developer/procgen/runner.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "make-demo-runner-pack.mjs",
-            "flags": [],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Generate the committed demo RUNNER region-library pack + register it in the region-libraries index (region-library F6c).",
-            "path": "scripts/procgen/make-demo-runner-pack.mjs"
         },
         {
             "argvHelpers": [],
@@ -11784,6 +11711,59 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-certifier-tail.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "The whole-game certifier's TAIL, ON THE GAME (slice rules-certifier-tail): the two rows whose verdict the rules and the maze dispute, each answered by the game itself.",
+            "path": "scripts/procgen/probe-seedling-certifier-tail.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
             "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
@@ -12478,6 +12458,51 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-deadframes.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "levels",
+                "out",
+                "shards"
+            ],
+            "file": "probe-seedling-derived-rules.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "levels"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shards"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "MEASUREMENT (slice tile-rules-automation-r-a1, ⚖ Robert 2026-11-02: \"Route A, R-A1 first (Recommended)\"): the DERIVED-RULES TABLE.",
+            "path": "scripts/procgen/probe-seedling-derived-rules.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": true,
             "category": "probe",
@@ -13129,6 +13154,50 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-fire-push — ⛓⛓⛓ seedling-fidelity-firepush: L40's BOSS KEY 2 BEHIND `pushableblockfire@576,576`, THE ROOM'S PULSER MOVING IT (`CONTACT_FIDELITY.fireBlockPulseShove`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-fire-push.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-frozen-press.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-frozen-press — ⛓⛓⛓ seedling-fidelity-frozenpress: A `primary` PRESS INSIDE AN ICE TURRET'S FREEZE IS LOST ON THE GAME, AND THE SAME PRESS MOVED TO THE FIRST INPUT THE MODEL'S `freezeForecast` CALLS FREE LANDS — PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-frozen-press.mjs"
         },
         {
             "argvHelpers": [
@@ -14646,6 +14715,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "probe",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -22249,6 +22319,12 @@ export const INSTRUMENTS = frz({
                         "has"
                     ],
                     "name": "estimate-only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "goal"
                 },
                 {
                     "how": [

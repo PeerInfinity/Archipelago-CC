@@ -5,7 +5,7 @@
  * The preview stepper THROWS the run's death refusal (`deathRefusal`, a `PhysicsV2Error`) when a previewed step dies.
  * `walkTo`'s catch handled only the shake band, so a strike walk that drowned left the whole solve: with
  * `STRIKE_ETA_FLOOR` ON (SFF) the bounded pass previews there, and `empty post-sword seed 30`'s first certify solve
- * aborted the generator (`hammerEscapeGenerated.slow`, `seedlingGenCapacity.slow`). A2's rule (`previewOrDeath`: a
+ * aborted the generator (`hammerEscapeGenerated.slow`, `seedlingGenCapacity.train`). A2's rule (`previewOrDeath`: a
  * previewed death is a step not taken, its test `instanceof PhysicsV2Error`) now reads it as a TRUNCATED walk that names
  * the death: no pass picks the candidate, and the walk loop refuses it by name.
  *

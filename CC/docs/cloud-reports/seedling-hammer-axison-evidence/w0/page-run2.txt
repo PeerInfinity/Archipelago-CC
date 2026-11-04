@@ -1,0 +1,30 @@
+## w0b/rows-off.jsonl
+326 done hits 0  | ok:97 
+327 done hits 0  | ok:30 
+328 done hits 0  | ok:246 
+617 failed hits 0  | X:refusal:solverBot(wasm-exit-72): the caller's anytime deadline (`shouldStop`) was reached at the ` / X:refusal:solverBot(wasm-exit-72): the caller's anytime deadline (`shouldStop`) was reached at the ` FAILED "the solver ran out of 640, 
+775 done hits 0  | ok:396 
+127 done hits 2 433,474 | ok:494 
+128 done hits 2 493,520 | ok:541 
+329 done hits 0  | ok:213 
+330 failed hits 0  | X:refusal:solverBot(wasm-location-30) clear-tag {30,0} bosslock@64,32 -> keylock: bosslock@64,32 did FAILED "the solver declined L30 flag 0: bosslock@64,32 cleared in level 30 (refusal): solverBot(wasm-location-30) clear-tag {30,0} bossloc
+331 done hits 0  | ok:217 
+160 done hits 2 575,615 | ok:632 
+161 done hits 2 562,589 | ok:610 
+171 done hits 2 610,652 | ok:672 
+172 done hits 2 627,654 | ok:675 
+## w0b/rows-on.jsonl
+326 done hits 0  | ok:97 
+327 done hits 0  | ok:30 
+328 done hits 0  | ok:246 
+617 failed hits 0  | X:refusal:solverBot(wasm-exit-72): the caller's anytime deadline (`shouldStop`) was reached at the ` / X:refusal:solverBot(wasm-exit-72): no corridor for goal reach-exit toward (184,8) in level 72. Obsta FAILED "the solver declined level_7
+775 done hits 0  | ok:398 
+127 done hits 0  | ok:643 
+128 done hits 0  | ok:648 
+329 done hits 0  | ok:213 
+330 done hits 0  | ok:306 
+331 done hits 0  | ok:217 
+160 failed hits 0  | X:refusal:solverBot(wasm-location-12) clear-tag {12,4} bosslock@416,240 -> keylock stance: the comba FAILED "the solver declined L12 flag 4: bosslock@416,240 cleared in level 12 (refusal): solverBot(wasm-location-12) clear-tag {12,4} bossl
+161 failed hits 0  | X:refusal:solverBot(wasm-location-12): the caller's anytime deadline (`shouldStop`) was reached at t / X:refusal:solverBot(wasm-location-12): the caller's anytime deadline (`shouldStop`) was reached at t FAILED "the solver ran out of 640, 
+171 done hits 0  | ok:700 
+172 done hits 0  | ok:750 

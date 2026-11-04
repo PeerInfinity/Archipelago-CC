@@ -1,0 +1,10 @@
+ms 48111
+REFUSED SolverRefusal solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh stance (wandlock@448,432): the combat ladder is EXHAUSTED. The corridor passes through danger at (471.8,441.5) — enemy:iceturret@472,400 (a live ice turret, priced at the hull of its rest two-cycle (487.5,424 / 488,423.5) — `input()` snaps it before `hitPlayer` in the same update, so its ctor box (488,416) is never a contact (the run's turret has not been on screen yet; `turretSnapPricing`)) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 16 volume(s) forbidden — no walkable tile path in level 40 from tile (46,49) to (30,28). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by wat
+  time: the aim is 430 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [enemy:iceturret@472,400] and this room's live roster is [bob@320,112, bob@288,112, bob@288,8
+obstacle {"kind":"danger","id":"iceturret@472,400","sources":["enemy:iceturret@472,400"]} perTick 658
+EQUIPS []
+HITS []
+TL t0 L 30,26 open false (488,416) p(888,776) open448 false
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]},{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}

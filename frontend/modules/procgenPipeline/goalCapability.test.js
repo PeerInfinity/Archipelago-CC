@@ -29,7 +29,6 @@ const KNOWN_SPIRAL_GOAL_GAPS = Object.freeze({
     bounce: '⚖ "leave bounce … for now": its zones come from authored tables (ability pickups only)',
     flash_seedling: '⚖ "leave … Seedling for now": a real atlas room offers only the locations it was marked with',
     omsi: '⚖ "Defer omsi": a town region has no slot for a planned item',
-    runner: '⚖ "leave … runner … for now": its zones come from a generated table (ability pickups only)',
 });
 
 /** The ruled sphere gaps: spiral substrates with no region realiser, so sphere growth cannot place them at all. */

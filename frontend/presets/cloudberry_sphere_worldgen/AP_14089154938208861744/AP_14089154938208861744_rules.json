@@ -27,8 +27,8 @@
         "name": "region_2_2",
         "exits": [
           {
-            "name": "exit_S",
-            "connected_region": "region_2_3",
+            "name": "region_2_2__exit_E",
+            "connected_region": "region_3_2",
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -51,15 +51,29 @@
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "region_2_2__loc_1",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Cloudberry Gem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
           }
         ]
       },
-      "region_2_3": {
-        "name": "region_2_3",
+      "region_3_2": {
+        "name": "region_3_2",
         "exits": [
           {
-            "name": "exit_E",
-            "connected_region": "region_3_3",
+            "name": "region_3_2__exit_E",
+            "connected_region": "region_4_2",
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -80,8 +94,8 @@
         ],
         "locations": [
           {
-            "name": "region_2_3__loc_0",
-            "id": 1001,
+            "name": "region_3_2__loc_0",
+            "id": 1002,
             "access_rule": {
               "rule": "True_"
             },
@@ -95,12 +109,12 @@
           }
         ]
       },
-      "region_3_3": {
-        "name": "region_3_3",
+      "region_4_2": {
+        "name": "region_4_2",
         "exits": [
           {
-            "name": "region_2_3",
-            "connected_region": "region_2_3",
+            "name": "region_3_2",
+            "connected_region": "region_3_2",
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -111,8 +125,8 @@
         ],
         "locations": [
           {
-            "name": "region_3_3__loc_0",
-            "id": 1002,
+            "name": "region_4_2__loc_0",
+            "id": 1003,
             "access_rule": {
               "rule": "True_"
             },
@@ -148,9 +162,19 @@
         "type": null,
         "max_count": 1
       },
+      "Cloudberry Gem": {
+        "name": "Cloudberry Gem",
+        "id": 2,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
       "Moving Blocks": {
         "name": "Moving Blocks",
-        "id": 2,
+        "id": 3,
         "groups": [
           "Everything"
         ],
@@ -160,7 +184,7 @@
       },
       "Victory": {
         "name": "Victory",
-        "id": 3,
+        "id": 4,
         "groups": [
           "Everything"
         ],
@@ -177,6 +201,7 @@
   },
   "itempool_counts": {
     "1": {
+      "Cloudberry Gem": 1,
       "Clouds": 1,
       "Moving Blocks": 1,
       "Victory": 1
@@ -185,8 +210,9 @@
   "canonical_placements": {
     "1": {
       "region_2_2__loc_0": "Clouds",
-      "region_2_3__loc_0": "Moving Blocks",
-      "region_3_3__loc_0": "Victory"
+      "region_2_2__loc_1": "Cloudberry Gem",
+      "region_3_2__loc_0": "Moving Blocks",
+      "region_4_2__loc_0": "Victory"
     }
   },
   "progression_mapping": {
@@ -209,9 +235,9 @@
           "params": {
             "payload": "cloudberry-region/1",
             "generate": {
-              "seed": 1547784109,
+              "seed": 914391991,
               "difficulty": 2,
-              "tileset": "cave",
+              "tileset": "sea",
               "pieceLength": 3500,
               "pieces": [
                 {
@@ -233,9 +259,10 @@
                 0
               ]
             },
-            "docSha256": "2679e108c166f7555c569cbeeac38c0b970c7e41bd18cc969ebae3e825eab826",
+            "docSha256": "381d7b30b731520e9c0f741937d9c0c2999cd932ec698fb6d2682f14ed2bb628",
             "checks": {
-              "loc_0": 29
+              "loc_0": 23,
+              "loc_1": 27
             },
             "items": {
               "Moving Blocks": "MovingBlock",
@@ -251,7 +278,8 @@
             }
           },
           "ap_locations": {
-            "loc_0": "region_2_2__loc_0"
+            "loc_0": "region_2_2__loc_0",
+            "loc_1": "region_2_2__loc_1"
           },
           "flashCapabilities": {
             "locations": "cooperative",
@@ -260,10 +288,10 @@
           },
           "exits": [
             {
-              "exit_id": "exit_S",
-              "side": "S",
-              "exitName": "exit_S",
-              "targetRegion": "region_2_3",
+              "exit_id": "exit_E",
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_3_2",
               "isBackExit": false,
               "isTeleporter": false,
               "targetExitId": "region_2_2"
@@ -272,21 +300,21 @@
           "fogEnabled": true
         }
       },
-      "region_2_3": {
+      "region_3_2": {
         "substrate": "cloudberry",
         "render_hint": "cloudberry",
         "grid_cell": {
-          "gx": 2,
-          "gy": 3
+          "gx": 3,
+          "gy": 2
         },
         "playable_payload": {
           "gameId": "cloudberry",
           "params": {
             "payload": "cloudberry-region/1",
             "generate": {
-              "seed": 914391991,
+              "seed": 2136366007,
               "difficulty": 2,
-              "tileset": "sea",
+              "tileset": "forest",
               "pieceLength": 3500,
               "pieces": [
                 {
@@ -308,7 +336,7 @@
                 0
               ]
             },
-            "docSha256": "a2e3e2bf1a9567191a8daeacb1730e4c43f90e9c4fad870ed8f00ec085fdca8a",
+            "docSha256": "3c7996e633e777b0ac9c7217f8c1645c1420475b11cb3435685cebc2a2f35637",
             "checks": {
               "loc_0": 30
             },
@@ -324,10 +352,10 @@
               "Fly Blobs": "FlyBlob",
               "Jetpack": "Jetpack"
             },
-            "backExitSide": "N"
+            "backExitSide": "W"
           },
           "ap_locations": {
-            "loc_0": "region_2_3__loc_0"
+            "loc_0": "region_3_2__loc_0"
           },
           "flashCapabilities": {
             "locations": "cooperative",
@@ -339,17 +367,17 @@
               "exit_id": "exit_E",
               "side": "E",
               "exitName": "exit_E",
-              "targetRegion": "region_3_3",
+              "targetRegion": "region_4_2",
               "isBackExit": false,
               "isTeleporter": false,
-              "targetExitId": "region_2_3"
+              "targetExitId": "region_3_2"
             },
             {
               "exit_id": "region_2_2",
-              "side": "N",
+              "side": "W",
               "exitName": "region_2_2",
               "targetRegion": "region_2_2",
-              "targetExitId": "exit_S",
+              "targetExitId": "exit_E",
               "isBackExit": true,
               "isTeleporter": false
             }
@@ -357,21 +385,21 @@
           "fogEnabled": true
         }
       },
-      "region_3_3": {
+      "region_4_2": {
         "substrate": "cloudberry",
         "render_hint": "cloudberry",
         "grid_cell": {
-          "gx": 3,
-          "gy": 3
+          "gx": 4,
+          "gy": 2
         },
         "playable_payload": {
           "gameId": "cloudberry",
           "params": {
             "payload": "cloudberry-region/1",
             "generate": {
-              "seed": 2136366007,
+              "seed": 977687300,
               "difficulty": 2,
-              "tileset": "forest",
+              "tileset": "forest_snow",
               "pieceLength": 3500,
               "pieces": [
                 {
@@ -392,9 +420,9 @@
                 0
               ]
             },
-            "docSha256": "13bf5731ac60955f2deda679670f1e9659d88b06e5ce5530d2c5d6eb803a78a0",
+            "docSha256": "c7b37a56111c699a9007fab5c816929a8cd24530b4c05c322f7ab4c70e186c26",
             "checks": {
-              "loc_0": 41
+              "loc_0": 35
             },
             "items": {
               "Moving Blocks": "MovingBlock",
@@ -411,7 +439,7 @@
             "backExitSide": "W"
           },
           "ap_locations": {
-            "loc_0": "region_3_3__loc_0"
+            "loc_0": "region_4_2__loc_0"
           },
           "flashCapabilities": {
             "locations": "cooperative",
@@ -420,10 +448,10 @@
           },
           "exits": [
             {
-              "exit_id": "region_2_3",
+              "exit_id": "region_3_2",
               "side": "W",
-              "exitName": "region_2_3",
-              "targetRegion": "region_2_3",
+              "exitName": "region_3_2",
+              "targetRegion": "region_3_2",
               "targetExitId": "exit_E",
               "isBackExit": true,
               "isTeleporter": false
@@ -444,7 +472,8 @@
           {
             "sphere": 1,
             "items": [
-              "Clouds"
+              "Clouds",
+              "Cloudberry Gem"
             ]
           },
           {
@@ -477,7 +506,7 @@
             "gate": [],
             "gateCounts": {},
             "usedSides": [
-              "N"
+              "E"
             ],
             "childGates": [
               [
@@ -493,10 +522,10 @@
             "index": 1,
             "wave": 1,
             "parent": 0,
-            "side": "S",
+            "side": "E",
             "cell": {
-              "gx": 2,
-              "gy": 3
+              "gx": 3,
+              "gy": 2
             },
             "isTeleporter": false,
             "substrate": "cloudberry",
@@ -507,8 +536,8 @@
               "Clouds": 1
             },
             "usedSides": [
-              "S",
-              "W"
+              "W",
+              "N"
             ],
             "childGates": [
               [
@@ -526,8 +555,8 @@
             "parent": 1,
             "side": "E",
             "cell": {
-              "gx": 3,
-              "gy": 3
+              "gx": 4,
+              "gy": 2
             },
             "isTeleporter": false,
             "substrate": "cloudberry",
@@ -538,7 +567,7 @@
               "Moving Blocks": 1
             },
             "usedSides": [
-              "E"
+              "S"
             ],
             "childGates": [],
             "isFiller": false
@@ -551,8 +580,8 @@
       },
       "region_count": 3,
       "grid_dims": {
-        "width": 4,
-        "height": 4
+        "width": 5,
+        "height": 3
       }
     }
   },

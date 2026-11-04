@@ -8,8 +8,8 @@
  * `cloudberry-e2e.yml` right after the site fetch, and not in an on-push batch whose job has no site.
  *
  * ⚖ (the user, 2026-09-26) every row SETS the state it expects: it loads its world itself (the
- * committed `cloudberry_sphere_worldgen` preset: region_2_2 [∅ | Cloud] holds Clouds → exit_S →
- * region_2_3 [∅ | MovingBlock] holds Moving Blocks → exit_E → region_3_3 holds Victory; each back
+ * committed `cloudberry_sphere_worldgen` preset: region_2_2 [∅ | Cloud] holds Clouds → region_2_2__exit_E →
+ * region_3_2 [∅ | MovingBlock] holds Moving Blocks → region_3_2__exit_E → region_4_2 holds Victory; each back
  * exit is the next region's start door), and grants the items it needs with addItemToInventory.
  *
  * The bot is the page's own (the computer's recording), driven through the substrate's host-side
@@ -152,7 +152,8 @@ async function presetStartRegionConfigures(tc) {
         if (!a) return tc.getOverallResult();
         tc.assertEqual('the document hash the payload names is the one the page generated', a.payload.docSha256, a.doc.sha);
         tc.assertEqual('nothing held at the start', '[]', JSON.stringify(a.itemsState?.platforms ?? []));
-        tc.reportCondition(`one check coin (${JSON.stringify(a.payload.checks)})`, Object.keys(a.payload.checks ?? {}).length === 1);
+        // P4c fill slack: the start level holds TWO free check coins (Clouds and the Cloudberry Gem).
+        tc.reportCondition(`two check coins (${JSON.stringify(a.payload.checks)})`, Object.keys(a.payload.checks ?? {}).length === 2);
         const look = await tc.pollForValue(() => app()?.look ?? null, 'the check-coin look', 20000, 200);
         tc.reportCondition(`check coins draw the Archipelago logo from THIS frontend's art library (${look?.sheet ?? look?.reason})`,
             look?.source === 'logo' && String(look.sheet).startsWith(new URL('./packs/archipelago/', document.baseURI).href));
@@ -209,7 +210,7 @@ async function demoPackRegion(tc) {
         const payload = buildCloudberryPayload(REGION, {
             generate: entry.payload.generate, docSha256: entry.payload.docSha256, checks: entry.payload.checks,
         });
-        const target = { [free.name]: 'region_2_2__loc_0', [gated.name]: 'region_2_3__loc_0' };
+        const target = { [free.name]: 'region_2_2__loc_0', [gated.name]: 'region_3_2__loc_0' };
         const world = { ...payload, ap_locations: target, exits: [] };
         world.params = pageParamsForWorld(world);
         const before = app()?.configures ?? 0;
@@ -293,7 +294,7 @@ async function botEndDoorRegionMove(tc) {
         if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
         if (!(await loadPreset(tc))) return tc.getOverallResult();
         const n0 = exitEvents().length;
-        const died = await botWalk(tc, { kind: 'exit', name: 'exit_S' }, 'the bot\'s walk to the end door ends');
+        const died = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot\'s walk to the end door ends');
         // Its walk ends short of the door: 'died', or 'timeout' (the recording ran out, the door not reached;
         // measured on region_2_2), never 'reached'.
         tc.reportCondition(`Clouds unheld: the bot's walk ends short of the end door (${JSON.stringify(died)})`,
@@ -311,11 +312,11 @@ async function botEndDoorRegionMove(tc) {
         await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('Cloud') ? true : null), 'Cloud held in the page', 20000, 200);
 
         const before = app()?.configures ?? 0;
-        const left = await botWalk(tc, { kind: 'exit', name: 'exit_S' }, 'the bot reaches the end door');
+        const left = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot reaches the end door');
         tc.reportCondition(`Clouds held: the bot reaches the end door (${JSON.stringify(left)})`, left?.result === 'reached');
         const sent = exitEvents().slice(n0).at(-1);
-        tc.reportCondition(`the page sent the exit by the end door (${JSON.stringify(sent)})`, sent?.side === 'south' && sent?.door === 'end');
-        await configured(tc, 'region_2_3', { after: before });
+        tc.reportCondition(`the page sent the exit by the end door (${JSON.stringify(sent)})`, sent?.side === 'east' && sent?.door === 'end');
+        await configured(tc, 'region_3_2', { after: before });
     } catch (e) {
         tc.reportCondition(`Test error: ${e.message}`, false);
     }
@@ -325,9 +326,9 @@ async function botEndDoorRegionMove(tc) {
 registerTest({
     id: 'cloudberry-bot-end-door-region-move',
     name: 'Cloudberry: the bot dies short of the end door without the item; with it, the end door sends the exit → user:regionMove',
-    description: 'Preset region_2_2: the bot to exit_S without Clouds dies and nothing is sent; the bot collects the check '
-               + 'coin (region_2_2__loc_0 → Clouds received); the bot to exit_S then reaches the end door, the page sends '
-               + 'south by the end door, and region_2_3 configures in the panel.',
+    description: 'Preset region_2_2: the bot to region_2_2__exit_E without Clouds dies and nothing is sent; the bot collects the check '
+               + 'coin (region_2_2__loc_0 → Clouds received); the bot to region_2_2__exit_E then reaches the end door, the page sends '
+               + 'east by the end door, and region_3_2 configures in the panel.',
     testFunction: botEndDoorRegionMove,
     category: CATEGORY,
     enabled: false,
@@ -351,10 +352,10 @@ async function endDoorMenuByKey(tc) {
         if (!menu) return tc.getOverallResult();
         tc.reportCondition('the game is paused while the menu is open (play clock stopped)', await tc.pollForValue(() => (app()?.clockRunning === false ? true : null), 'clock stopped', 3000, 100) === true);
         const before = app()?.configures ?? 0;
-        await pressKey(PAGE_KEY.south);
-        const sent = await tc.pollForValue(() => exitEvents().at(-1)?.side === 'south' ? exitEvents().at(-1) : null, 'south sent', 5000, 100);
-        tc.reportCondition(`↓ chose south (${JSON.stringify(sent)})`, !!sent);
-        await configured(tc, 'region_2_3', { after: before });
+        await pressKey(PAGE_KEY.east);
+        const sent = await tc.pollForValue(() => exitEvents().at(-1)?.side === 'east' ? exitEvents().at(-1) : null, 'east sent', 5000, 100);
+        tc.reportCondition(`→ chose east (${JSON.stringify(sent)})`, !!sent);
+        await configured(tc, 'region_3_2', { after: before });
     } catch (e) {
         tc.reportCondition(`Test error: ${e.message}`, false);
     }
@@ -363,10 +364,10 @@ async function endDoorMenuByKey(tc) {
 
 registerTest({
     id: 'cloudberry-end-door-menu-by-key',
-    name: 'Cloudberry: Up at the end door opens the exit menu; ↓ chooses south → user:regionMove',
+    name: 'Cloudberry: Up at the end door opens the exit menu; → chooses east → user:regionMove',
     description: 'Preset region_2_2 with Clouds granted: the page\'s bot parks the player at the end door, Up (sent as the '
-               + 'page\'s on-screen controls send it) opens the exit menu and pauses the game, ↓ chooses south, and '
-               + 'region_2_3 configures in the panel.',
+               + 'page\'s on-screen controls send it) opens the exit menu and pauses the game, → chooses east, and '
+               + 'region_3_2 configures in the panel.',
     testFunction: endDoorMenuByKey,
     category: CATEGORY,
     enabled: false,
@@ -382,28 +383,28 @@ async function startDoorWayBack(tc) {
         await tc.stateManager.addItemToInventory('Clouds', 1);
         await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('Cloud') ? true : null), 'Cloud held in the page', 20000, 200);
         let before = app()?.configures ?? 0;
-        const left = await botWalk(tc, { kind: 'exit', name: 'exit_S' }, 'the bot leaves region_2_2');
+        const left = await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot leaves region_2_2');
         tc.reportCondition(`the bot left region_2_2 by its end door (${JSON.stringify(left)})`, left?.result === 'reached');
-        let a = await configured(tc, 'region_2_3', { after: before });
+        let a = await configured(tc, 'region_3_2', { after: before });
         if (!a) return tc.getOverallResult();
         const sides = embed().startDoorSides?.() ?? [];
-        tc.reportCondition(`the start door of region_2_3 offers north, the way back (${JSON.stringify(sides)})`, sides.includes('north'));
+        tc.reportCondition(`the start door of region_3_2 offers west, the way back (${JSON.stringify(sides)})`, sides.includes('west'));
 
-        // By key: Up at the start door (the player respawned there) → the way-back menu → ↑ north → region_2_2.
+        // By key: Up at the start door (the player respawned there) → the way-back menu → ← west → region_2_2.
         const menu = await upAtDoor(tc, 'start');
         tc.reportCondition(`Up at the start door opened the way-back menu (${JSON.stringify(menu)})`, !!menu);
         if (!menu) return tc.getOverallResult();
         before = app()?.configures ?? 0;
-        await pressKey(PAGE_KEY.north);
+        await pressKey(PAGE_KEY.west);
         a = await configured(tc, 'region_2_2', { after: before });
         if (!a) return tc.getOverallResult();
-        tc.reportCondition(`…↑ chose north (${JSON.stringify(exitEvents().at(-1))})`, exitEvents().at(-1)?.side === 'north');
+        tc.reportCondition(`…← chose west (${JSON.stringify(exitEvents().at(-1))})`, exitEvents().at(-1)?.side === 'west');
 
-        // By the bot (Moving Blocks NOT held, which region_2_3's end door needs): a page with the bot's start door
+        // By the bot (Moving Blocks NOT held, which region_3_2's end door needs): a page with the bot's start door
         // leaves by it; an older page has none, and this leg says so by name (feature test, not a pass of the leg).
         before = app()?.configures ?? 0;
-        await botWalk(tc, { kind: 'exit', name: 'exit_S' }, 'the bot leaves region_2_2 again');
-        a = await configured(tc, 'region_2_3', { after: before });
+        await botWalk(tc, { kind: 'exit', name: 'region_2_2__exit_E' }, 'the bot leaves region_2_2 again');
+        a = await configured(tc, 'region_3_2', { after: before });
         if (!a) return tc.getOverallResult();
         if (!embed().features?.botStartDoor) {
             tc.log(`NOT RUN BY NAME: this page (build ${String(site.build).slice(0, 12)}) has no bot start door `
@@ -417,7 +418,7 @@ async function startDoorWayBack(tc) {
         const back = await botWalk(tc, { kind: 'exit', name: 'region_2_2' }, 'the bot walks the way back');
         tc.reportCondition(`the bot reached the START door (${JSON.stringify(back)})`, back?.result === 'reached' && back?.goal?.kind === 'startdoor');
         const sent = exitEvents().slice(n).at(-1);
-        tc.reportCondition(`…and left by it: north, door start (${JSON.stringify(sent)})`, sent?.side === 'north' && sent?.door === 'start');
+        tc.reportCondition(`…and left by it: west, door start (${JSON.stringify(sent)})`, sent?.side === 'west' && sent?.door === 'start');
         await configured(tc, 'region_2_2', { after: before });
     } catch (e) {
         tc.reportCondition(`Test error: ${e.message}`, false);
@@ -427,11 +428,11 @@ async function startDoorWayBack(tc) {
 
 registerTest({
     id: 'cloudberry-start-door-way-back',
-    name: 'Cloudberry: the start door offers the way back — Up opens it, ↑ goes back; the bot walks to it without the end door\'s item',
-    description: 'Preset with Clouds granted: the bot leaves region_2_2 → region_2_3, whose start door offers north. Up at '
-               + 'the start door → the way-back menu → ↑ → region_2_2. Then on a page with the bot\'s start door '
+    name: 'Cloudberry: the start door offers the way back — Up opens it, ← goes back; the bot walks to it without the end door\'s item',
+    description: 'Preset with Clouds granted: the bot leaves region_2_2 → region_3_2, whose start door offers west. Up at '
+               + 'the start door → the way-back menu → ← → region_2_2. Then on a page with the bot\'s start door '
                + '(features.botStartDoor), the bot\'s walk to the back exit, with Moving Blocks (the end door\'s item) NOT '
-               + 'held, reaches the start door and leaves by it (sendExit north, door start) → region_2_2. On an older '
+               + 'held, reaches the start door and leaves by it (sendExit west, door start) → region_2_2. On an older '
                + 'page that leg is logged as not run, by name.',
     testFunction: startDoorWayBack,
     category: CATEGORY,
@@ -479,6 +480,93 @@ registerTest({
                + 'regenerates nothing). Every region\'s request, document hash and check coins equal the committed '
                + 'cloudberry_sphere_worldgen preset\'s.',
     testFunction: shippedPresetGenerates,
+    category: CATEGORY,
+    enabled: false,
+});
+
+// ── 7. a Double Jump level (P5a): one jump without the item, two with it ──────────────
+
+const DOUBLE_JUMP_RULES = `./presets/cloudberry_double_jump_worldgen/${PRESET_SEED}/${PRESET_SEED}_rules.json`;
+const DOUBLE_JUMP_REGION = 'region_3_2';
+
+async function doubleJumpLevelNeedsTheItem(tc) {
+    try {
+        if (!(await siteOrRefuse(tc))) return tc.getOverallResult();
+        if (!(await loadPreset(tc))) return tc.getOverallResult();
+        const features = embed()?.features ?? {};
+        tc.reportCondition(features.doubleJump === true
+            ? `the page has the Double Jump feature (${JSON.stringify(features)})`
+            : `REFUSED: this Cloudberry page has no Double Jump (__cloudberryEmbed.features.doubleJump; ${JSON.stringify(features)}) `
+              + '— a Double Jump level needs the Cloudberry Double Jump change (cdc77c9) deployed, or `--link` a build of it',
+        features.doubleJump === true);
+        if (features.doubleJump !== true) return tc.getOverallResult();
+
+        // The committed Double Jump world's Double level, published into the loaded world with its own AP locations.
+        const rules = await (await fetch(DOUBLE_JUMP_RULES, { cache: 'no-store' })).json();
+        const sc = rules.preset_sidecars?.['1']?.[DOUBLE_JUMP_REGION]?.playable_payload;
+        const params = sc?.params ?? {};
+        tc.reportCondition(`⛓ premise: ${DOUBLE_JUMP_REGION} of cloudberry_double_jump_worldgen is a Double-hero level `
+            + `(${JSON.stringify(params.generate?.heroCustom ?? null)}; items map ${JSON.stringify(params.items?.['Double Jump'])})`,
+        params.generate?.heroCustom?.move === 'Double' && params.items?.['Double Jump'] === 'DoubleJump');
+        const coin = Object.keys(params.checks ?? {})[0];
+        if (!coin) return tc.getOverallResult();
+        const REGION = 'cb_double_jump_inapp';
+        const target = 'region_2_2__loc_0';   // a real location of the loaded preset (its own checks stay the Double level's)
+        const world = { ...sc, params: { ...params }, ap_locations: { [coin]: target }, exits: [] };
+        world.params = pageParamsForWorld(world);
+        const before = app()?.configures ?? 0;
+        tc.eventBus.publish('cloudberry:loadRegion', { region_id: REGION, world });
+        const a = await configured(tc, REGION, { after: before, timeoutMs: 60000 });
+        if (!a) return tc.getOverallResult();
+        tc.assertEqual('the Double level\'s document hash is the one the page generated', params.docSha256, a.doc.sha);
+        tc.reportCondition(`the page plays it with the Double hero (heroJumps ${a.playResult?.heroJumps})`, a.playResult?.heroJumps === 2);
+        const one = await tc.pollForValue(() => (app()?.itemsState?.jumpsOn === 1 ? app().itemsState : null),
+            'Double Jump unheld: the hero has ONE jump', 20000, 200);
+        tc.reportCondition(`Double Jump unheld: the hero has one jump (${JSON.stringify(one)})`, !!one);
+
+        // The level's last piece is Moving Blocks: granted, so only Double Jump is missing at the end door.
+        await tc.stateManager.addItemToInventory('Moving Blocks', 1);
+        await tc.pollForValue(() => ((app()?.itemsState?.platforms ?? []).includes('MovingBlock') ? true : null),
+            'MovingBlock held in the page', 20000, 200);
+        // Park at the end door by a side with no exit (the world here has none), as cloudberry-end-door-menu-by-key does.
+        const toDoor = async (label) => {
+            const n = botEvents().length;
+            gameWin().__swfBridge.botWalkTo({ kind: 'portal', id: 'north' }, { door: 'end' });
+            return tc.pollForValue(() => (botEvents().length > n ? botEvents().at(-1) : null), label, BOT_TIMEOUT_MS, 200);
+        };
+        // Unheld: one jump cannot follow the recording to the end door. (Early coins can be reachable with one jump —
+        // the rules are SUFFICIENT, not minimal — so the enforced goal measured here is the door, which needs S_last.)
+        const failed = await toDoor('the bot\'s walk to the end door ends');
+        tc.reportCondition(`Double Jump unheld: the bot does not reach the end door (${JSON.stringify(failed)})`,
+            failed?.result === 'died' || failed?.result === 'timeout');
+
+        // Receiving Double Jump: two jumps; the bot reaches the end door, and the check coin (its AP location checked).
+        await tc.stateManager.addItemToInventory('Double Jump', 1);
+        const two = await tc.pollForValue(() => (app()?.itemsState?.jumpsOn === 2 ? app().itemsState : null),
+            'pollItems reaches the page with DoubleJump', 20000, 200);
+        tc.reportCondition(`receiving Double Jump reached the page: two jumps (${JSON.stringify(two)})`, !!two);
+        const door = await toDoor('the bot reaches the end door');
+        tc.reportCondition(`…and now the bot reaches the end door (${JSON.stringify(door)})`, door?.result === 'reached');
+        const reached = await botWalk(tc, { kind: 'location', name: target }, 'the bot reaches the coin');
+        tc.reportCondition(`the bot reaches the check coin (${JSON.stringify(reached)})`, reached?.result === 'reached');
+        const checked = await tc.pollForValue(async () => (checkedList(await snapshot(tc)).includes(target) ? true : null),
+            `${target} checked`, 20000, 250);
+        tc.reportCondition(`${target} checked`, !!checked);
+    } catch (e) {
+        tc.reportCondition(`Test error: ${e.message}`, false);
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'cloudberry-double-jump-level-needs-the-item',
+    name: 'Cloudberry: a Double Jump level — one jump and the bot falls short of the end door without the item; with it, two jumps, the door and the coin',
+    description: 'P5a. Loads cloudberry_sphere_worldgen, then publishes cloudberry:loadRegion with the committed '
+               + 'cloudberry_double_jump_worldgen\'s Double-hero level (region_3_2; its check mapped onto a location of the '
+               + 'loaded world). The page plays it (hash matched, heroJumps 2); with Moving Blocks granted but not Double Jump '
+               + 'the hero has one jump and the bot falls short of the end door; Double Jump added to the inventory reaches '
+               + 'the page (two jumps), the bot reaches the end door and the check coin, which is checked. Refuses by name on a page without features.doubleJump.',
+    testFunction: doubleJumpLevelNeedsTheItem,
     category: CATEGORY,
     enabled: false,
 });

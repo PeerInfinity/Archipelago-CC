@@ -96,3 +96,31 @@ describe('strategy switch D3 — the burn gate grades STRONG by strategy (seeds 
         expect(r.refused.reason).toBe('the-item-is-not-required: NOT-ESTABLISHED');
     }, 900000);
 });
+
+/**
+ * ⛓ STRATEGY ELEMENTS ROUND 2 — **THE KEY GATE**, the solver's `keylock`: a `bosslock` in a wall's only gap and its
+ * `bosskey` on the start side (⚖ the user 2026-11-03: the key is a randomized AP item whose VANILLA placement is that
+ * spot). Graded pre-sword AND post-sword, as the brief asked. Its own `describe` so a parallel gadget appends beside it.
+ */
+describe('strategy elements r2 — the key gate grades STRONG by strategy (seeds 1–3)', () => {
+    it('keygate/keylock on pre-sword and post-sword: STRONG at the disabled gate, 6/6', async () => {
+        const runs = await Promise.all(['pre-sword', 'post-sword'].flatMap((biome) => [1, 2, 3].map((seed) => generate(
+            `keylock-${biome}-${seed}`, [`--seed=${seed}`, `--biome=${biome}`, '--elements=keygate',
+                '--require=strategy:keylock']).then((r) => ({ biome, seed, r })))));
+        for (const { biome, seed, r } of runs) {
+            const what = `keygate strategy:keylock ${biome} seed ${seed}`;
+            expect(r.met, what).toBe(true);
+            expect(r.grade, what).toBe('STRONG');
+            expect(r.evidence, what).toBe('STRONG (solver refusal at the disabled gate)');
+            expect(r.without.verdict, what).toBe('REFUSED');
+        }
+    }, 900000);
+
+    it('keygate with the flag OFF: NOT-ESTABLISHED, never STRONG', async () => {
+        const r = await generate('keylock-off', ['--seed=1', '--biome=pre-sword', '--elements=keygate',
+            '--require=strategy:keylock'], '0');
+        expect(r.met).toBe(false);
+        expect(r.grade).toBe('NOT-ESTABLISHED');
+        expect(r.refused.reason).toBe('the-item-is-not-required: NOT-ESTABLISHED');
+    }, 900000);
+});

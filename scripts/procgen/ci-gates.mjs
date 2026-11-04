@@ -139,6 +139,18 @@ const { arms, shards, budgetMs, measuredAt, pricedFrom } = ciGatePlanFor({
  * filter that cannot be derived keeps the shard and says why.
  */
 const CHANGED = arg('changed');
+/**
+ * ⚖ Robert 2026-11-02 CI manual-only P4 — `--push-scope=slice`: the workflow passes it on a push to a
+ * branch that is neither main nor a js-land/** train. A gate declaring `@ci-paths-slice declared`
+ * (gateRoster.ciPathsIn) is then filtered by its DECLARED globs and its own file only — its derived
+ * import closure is not consulted, so a change in that closure alone reaches it at the train. Every
+ * other path-filtered gate, and every other scope, keeps the closure. ⛔ FAIL-OPEN as below.
+ */
+const PUSH_SCOPE = arg('push-scope', 'full');
+if (!['full', 'slice'].includes(PUSH_SCOPE)) {
+    console.error(`ci-gates: --push-scope=${PUSH_SCOPE} — expected full or slice`);
+    process.exit(2);
+}
 async function keptShards() {
     if (CHANGED === null || !shards.some((s) => s.pathFiltered)) return shards;
     let changed = null;
@@ -158,11 +170,17 @@ async function keptShards() {
         if (!s.pathFiltered) return true;
         try {
             const gate = roster.find((g) => g.file === s.pathFiltered);
-            const hits = pathFilterHits({ filter: ciPathFilterFor({ gate, repo: REPO }), changed });
+            const declaredOnly = PUSH_SCOPE === 'slice' && gate.ciPaths.slice === 'declared';
+            const filter = declaredOnly
+                ? { declared: gate.ciPaths.globs, derived: [gate.path] }
+                : ciPathFilterFor({ gate, repo: REPO });
+            const hits = pathFilterHits({ filter, changed });
+            const scope = declaredOnly ? 'its @ci-paths or its own file (slice push: @ci-paths-slice declared, '
+                + 'the import closure is the train\'s)' : 'its @ci-paths or its derived inputs';
             console.error(`# path filter: ${s.pathFiltered} — ${hits.length ? `RUNS: ${hits.length} of `
-                + `${changed.length} changed path(s) hit it (${hits.slice(0, 5).join(', ')}`
+                + `${changed.length} changed path(s) hit ${scope} (${hits.slice(0, 5).join(', ')}`
                 + `${hits.length > 5 ? ', …' : ''})` : `SKIPPED: none of ${changed.length} changed path(s) `
-                + 'is in its @ci-paths or its derived inputs'}`);
+                + `is in ${scope}`}`);
             return hits.length > 0;
         } catch (e) {
             console.error(`# path filter: ${s.pathFiltered} — filter not derivable (${e.message}); kept`);

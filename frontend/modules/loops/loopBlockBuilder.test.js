@@ -198,7 +198,7 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         const tasw = (await import('../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js')).substrateRegistryEntry;
         const jta = (await import('../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')).substrateRegistryEntry;
         const bounce = (await import('../bounceDemo/bounceDemoLibrary.js')).substrateRegistryEntry;
-        const runner = (await import('../runnerDemo/runnerDemoLibrary.js')).substrateRegistryEntry;
+        const cloudberry = (await import('../cloudberryDemo/cloudberryLibrary.js')).substrateRegistryEntry;
         // The factory's bare shape (not registered: there is no generic `flash` entry).
         const flash = (await import('../flashSubstrate/flashSubstrateLibrary.js'))
             .createFlashSubstrateEntry({ id: 'flash_factory_probe' });
@@ -207,7 +207,7 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         // M2: maze + textAdventure DECLARE record + playback (Record requires
         // both). M4: jta additionally DECLARES record + playback + instant
         // (fine-grained via the fork recorder; executor replay + stepTick
-        // pump). M5: runner + bounce declare record + playback + instant too,
+        // pump). M5: bounce (+ cloudberry, P1) declare record + playback + instant too,
         // as the SUMMARY category (`summaryRecording`) — no recorder, so they
         // are not fine-grained. Arc D1: omsi joins as the third FINE-GRAINED
         // substrate. Only the bare flash factory entry still doesn't declare.
@@ -278,12 +278,13 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         expect(bounce.loopSupport.requiresLoopMode ?? false).toBe(false);
         expect(flash.loopSupport.requiresLoopMode ?? false).toBe(false);
 
-        // M5: runner + bounce are the SUMMARY substrates — field-for-field
-        // equal declarations (one implementation, two declaration sites).
+        // M5: bounce + cloudberry are the SUMMARY substrates — field-for-field
+        // equal declarations (one implementation, two declaration sites;
+        // cloudberry took runner's place when runner was deleted, P4b).
         // They declare `summaryRecording` and NO recorder; `instant` is
         // declared for the focus-suppression seam (summary playback is
         // inherently instant, so no per-block Instant checkbox is offered).
-        for (const [name, entry] of [['bounce', bounce], ['runner', runner]]) {
+        for (const [name, entry] of [['bounce', bounce], ['cloudberry', cloudberry]]) {
             expect(entry.loopSupport, name).toMatchObject({
                 manual: true, customQueues: false,
                 record: true, playback: true, instant: true, summaryRecording: true,
@@ -294,7 +295,7 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
             expect([...entry.loopSupport.queueActions], name).not.toContain('explore');
             // Not fine-grained: no full-visit recorder to pull a stream from.
             expect(typeof entry.takeLastRecording, name).not.toBe('function');
-            // Ruling 7: runner/bounce are NOT loop games — no native
+            // Ruling 7: bounce/cloudberry are NOT loop games — no native
             // "resource out → restart run" economy — so they must not
             // cargo-cult jta's loop-game contract flag.
             expect(entry.loopSupport.requiresLoopMode ?? false, name).toBe(false);

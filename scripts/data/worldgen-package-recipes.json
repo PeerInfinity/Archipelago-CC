@@ -57,6 +57,11 @@
       "game_name": "Procgen Maze WorldGen",
       "canonical_seed": null
     },
+    "cloudberry_double_jump_worldgen": {
+      "source": "frontend/presets/cloudberry_double_jump_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Cloudberry Double Jump WorldGen",
+      "canonical_seed": 1
+    },
     "cloudberry_maze_mix_worldgen": {
       "source": "frontend/presets/cloudberry_maze_mix_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
       "game_name": "Cloudberry Maze Mix WorldGen",
@@ -65,16 +70,6 @@
     "cloudberry_sphere_worldgen": {
       "source": "frontend/presets/cloudberry_sphere_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
       "game_name": "Cloudberry Sphere WorldGen",
-      "canonical_seed": 1
-    },
-    "runner_sphere_worldgen": {
-      "source": "frontend/presets/runner_sphere_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-      "game_name": "Runner Sphere WorldGen",
-      "canonical_seed": 1
-    },
-    "runner_worldgen": {
-      "source": "frontend/presets/runner_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-      "game_name": "Runner WorldGen",
       "canonical_seed": 1
     },
     "seedling_playthrough": {

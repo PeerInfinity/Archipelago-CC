@@ -231,7 +231,7 @@
       "reason": "Strict world_generator refuses it (rule-node F1, 2026-10-23): 9 helper name(s) with no definition in the rules file's helpers block (e.g. yugioh06_difficulty ×49; the bodies live only in the JS gameLogic module), so it generates only with --lossy. It is on main_test_exclude_list too, for a different reason."
     }
   ],
-  "worldgen_generation_whitelist_comment": "WHITELIST (not an exclude list): the ONLY base templates for which scripts/utils/generate_all_templates.sh (run by generate-presets.yml) generates and commits a worlds/<x>_worldgen world and its frontend/presets/<x>_worldgen preset -- applied via list-template-files.py --include, AFTER the exclude lists. Everything else's worldgen variant is transient: test-world-generator.py builds and deletes it. bounce/runner/runner_sphere are hand-committed worldgen worlds, not produced by the script, and are preserved at release by scripts/release/preserved-dev-presets.txt.",
+  "worldgen_generation_whitelist_comment": "WHITELIST (not an exclude list): the ONLY base templates for which scripts/utils/generate_all_templates.sh (run by generate-presets.yml) generates and commits a worlds/<x>_worldgen world and its frontend/presets/<x>_worldgen preset -- applied via list-template-files.py --include, AFTER the exclude lists. Everything else's worldgen variant is transient: test-world-generator.py builds and deletes it. bounce and the cloudberry worlds are hand-committed worldgen worlds, not produced by the script, and are preserved at release by scripts/release/preserved-dev-presets.txt.",
   "worldgen_generation_whitelist": [
     {
       "name": "A Link to the Past.yaml",

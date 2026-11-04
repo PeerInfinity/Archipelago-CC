@@ -1,7 +1,7 @@
 /**
  * ⛓⛓ SEEDLING HAMMER-PHASE SPIN — `PRESS_ESCAPE_SHIELD_CLAIM` (OFF): the press kill's escape claims through a carried
  * shield. The fast rows; the leg-860 solve (OFF's corner at (770.96,860.99), ON's kill of `spinner@816,848` replayed
- * on a fresh run) is `hammerSpinnerPress.slow.test.js`.
+ * on a fresh run) is `hammerSpinnerPress.train.test.js`.
  *
  * The real rows stand the player beside `spinner@816,848`'s spawn on leg 860's own captured staging
  * (`fixtures/spin-witness/leg860-request.json.gz`, the page's request 860/1 at main `9c0f9045`, its seam re-stamped to

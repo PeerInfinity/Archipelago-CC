@@ -1,0 +1,6 @@
+{"base": "forcedhit-l73-622-plan", "tick_count": 6,
+ "note": "FORCEDHITXC D1: the solver's secondaryUse-ON plan for leg 612/622 — X+C+up on t0, then nothing held (the hitless continuation holds the alphabet's first member, none); XC (up held throughout) re-recorded beside it as the control",
+ "arms": {
+  "XC-stand": {"inputs": [{"key":"up","from":0,"to":1},{"key":"primary","from":0,"to":1},{"key":"secondary","from":0,"to":1}]},
+  "XC": {"inputs": [{"key":"up","from":0,"to":6},{"key":"primary","from":0,"to":1},{"key":"secondary","from":0,"to":1}]}
+ }}

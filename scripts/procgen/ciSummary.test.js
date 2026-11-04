@@ -483,6 +483,25 @@ describe('suiteJobs — the suite family, and every way it can be partial', () =
         expect(s.missing).toEqual([]);
     });
 
+    /**
+     * ⚖ Robert 2026-11-02 CI manual-only — the `Train-tier Vitest` job runs on train pushes, main and a
+     * `-f train=true` dispatch, and SKIPS on a slice push. ⛔ It is not a member of the suite: in any
+     * conclusion it must leave the suite's answer exactly as the shards and the slow job give it.
+     */
+    it('the Train-tier Vitest job, skipped or run, is NOT in the suite family', () => {
+        const WORKFLOW = readFileSync(new URL('../../.github/workflows/unittests_frontend.yml', import.meta.url), 'utf8');
+        const name = WORKFLOW.match(/^  train-tier:\n    name: (.+)$/m)?.[1];
+        expect(name).toBe('Train-tier Vitest');
+        expect(VITEST_JOB.test(name)).toBe(false);
+        for (const c of ['skipped', 'success', 'failure']) {
+            const s = suiteJobs([...OTHERS, shard(1), shard(2), shard(3), SLOW, job(name, c)]);
+            expect(s.layout).toBe('split');
+            expect(s.missing).toEqual([]);
+            expect(s.family.map((j) => j.name)).not.toContain(name);
+        }
+        expect(pickVitestJob([job(name), shard(1)]).name).toBe(shard(1).name);
+    });
+
     it('no suite job at all is `none`', () => {
         expect(suiteJobs(OTHERS).layout).toBe('none');
         expect(suiteJobs(undefined).layout).toBe('none');

@@ -75,6 +75,8 @@ describe('buildWarehouse', () => {
         expect(wh.size()).toBe(0);
         expect(warnings.length).toBe(1);
         expect(warnings[0]).toMatch(/unknown substrate 'maze'/);
+        // ⛓ …and REFUSED BY NAME: an old world naming a deleted substrate (runner).
+        expect(wh.refused.get('region_0_0')).toMatch(/names substrate 'maze', which is not registered in this app/);
     });
 
     it('skips substrates whose entry lacks deserializeWorld', () => {

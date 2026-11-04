@@ -3,7 +3,7 @@
     "hideDisabledTests": true,
     "randomizeOrder": false,
     "defaultEnabledState": false,
-    "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes). A row's \"batch\" field is the smoke-row override (frontend/modules/tests/testBatches.js): it keeps ONE row of a manual batch on push; delete the line to drop it.",
+    "_comment": "Substrate in-app tests (text-adventure wrapper + flash + cloudberry + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes). A row's \"batch\" field is the smoke-row override (frontend/modules/tests/testBatches.js): it keeps ONE row of a manual batch on push; delete the line to drop it.",
     "tests": [
         {
             "id": "tasw-location-check-direct-dispatch",
@@ -92,12 +92,6 @@
             "category": "flashSubstrate"
         },
         {
-            "id": "runner-location-check-real-physics",
-            "batch": "fast",
-            "enabled": true,
-            "category": "runnerDemo"
-        },
-        {
             "id": "cloudberry-preset-start-region-configures",
             "enabled": true,
             "category": "cloudberrySubstrate"
@@ -143,14 +137,9 @@
             "category": "cloudberrySubstrate"
         },
         {
-            "id": "runner-preset-sidecar-configured",
+            "id": "cloudberry-double-jump-level-needs-the-item",
             "enabled": true,
-            "category": "runnerDemo"
-        },
-        {
-            "id": "runner-summary-record-playback",
-            "enabled": true,
-            "category": "Runner block modes"
+            "category": "cloudberrySubstrate"
         },
         {
             "id": "noiz2sa-region-loop-visit",
@@ -230,12 +219,6 @@
             "enabled": true,
             "category": "noiz2saSubstrate",
             "_comment": "bulletml-incremental N3b fix 2 (N4c: on the check run): the shared flash bridge's location ledger. The check of 1:1 queued, a Record block parks on it; with the queue paused the bot's (B) check clear is refused by the loop-mode action gate (loops:clickIgnored); unpaused, on the same visit (no loadRegion), R plays the check again and the resent clear checks the location (loops observes one parked check); the player stays, back at the choice list with the exits only. Batch fast: two 4x bot check clears."
-        },
-        {
-            "id": "runner-bot-block-summary-economy",
-            "enabled": true,
-            "category": "Runner block modes",
-            "_comment": "M6 slice 5c: the summary Bot economy leg. Replaces the deleted scripts/procgen/verify-bounce-loop-mode.mjs (whose premise — auto walkTo with no mode system — is obsolete, and which rotted red for months because nothing gate-ran it). A Bot block hands the queued regionMove to the walkTo solver; the auto-runner plays the flat level on real physics and the pool falls by the per-second TIME drain, not per-action defaults."
         },
         {
             "id": "jta-out-of-mana-loop-reset",
@@ -1963,12 +1946,6 @@
             "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft other-vibe-coding; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
         },
         {
-            "id": "tutorial-walk-procgen-runner-demo",
-            "enabled": true,
-            "category": "Tutorial walks: procgen",
-            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft procgen-runner-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen."
-        },
-        {
             "id": "tutorial-walk-procgen-cloudberry",
             "enabled": true,
             "category": "Tutorial walks: cloudberry",
@@ -2124,6 +2101,12 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "slice seedling-js-rope-art. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 16: the rope drawn from seedling:puzzlement/rope as RopeStart.render does uncut (span frame 1 x3, pulley 0, handle 2); every sheet decodes, zero console errors. The cut look is pinned in node (seedlingSolidsRope.test.js). No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-bridge",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "slice seedling-js-bridge-art. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 66 (rulesref-l66-door's boot): the bridge (7,9) drawn from seedling:tile/bridge in its closed anim, the tile:Bridge object's stand-in rect claimed (0 left); every sheet decodes, zero console errors. The opening/open looks are pinned in node (seedlingBridgeArt.test.js). No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
             "id": "seedling-js-runtime-graphics-npcs",

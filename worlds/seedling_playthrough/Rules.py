@@ -109,7 +109,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_3__r0c4 -> level_111", player),
-        HasAll('Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword')
+        And(HasAll('Ghost Sword Fusion', 'Ghost Spear', 'Progressive Sword'), Has('Progressive Swim'))
     )
 
     world.set_rule(
@@ -364,7 +364,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_20__r1c4 -> level_20__r3c1", player),
-        Has('Progressive Shield', 1)
+        HasAll('Progressive Shield', 'L20 flag 4: lock@32,80 cleared')
     )
 
     world.set_rule(
@@ -374,7 +374,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_20__r3c1 -> level_20__r1c4", player),
-        Has('Progressive Shield', 1)
+        HasAll('Progressive Shield', 'L20 flag 4: lock@32,80 cleared')
     )
 
     world.set_rule(
@@ -1403,6 +1403,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_54__r1c8 -> level_53__r14c9", player),
+        Has('Progressive Swim', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_54__r8c11 -> level_54__r10c5", player),
         Has('Progressive Swim', 1)
     )
@@ -2394,6 +2399,11 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_89__r11c12 -> level_0__r2c13", player),
+        Has('Progressive Swim', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_91 -> level_89__r1c10", player),
         Has('Progressive Swim', 1)
     )
 

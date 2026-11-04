@@ -26,6 +26,7 @@ import {
     DEFAULT_REGION_SIZE, buildRulesJson, linkIsAdjacentOnSide, topDownFromRulesJson, sourceLocationsOf,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { SIDE_SHARING, exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
+import { flashZoneExitSides } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { resolveExitTilePositions } from '../procgenCore/compositeMapRenderer.js';
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { createEditSession } from '../procgenCore/editCore.js';
@@ -375,9 +376,24 @@ describe('⛓⛓⛓ the write-back — every free move and every swap of the pop
                 if (exitsBefore[i].isBackExit === true) allowed.add('params.backExitSide');
             }
             const extra = decl.keys.filter((k) => k.includes('[]')).map(keyPattern);
+            // ⛓ P5a: a declared SIDE-KEYED MAP (Cloudberry's `gate_rules.portals`, keyed by the page's side
+            // name) may re-key its entries — the rules themselves only move: same count, same rules.
+            // (The first committed world with one is cloudberry_double_jump_worldgen.)
+            const at = (o, key) => key.split('.').reduce((x, k) => x?.[k], o);
+            const before = doc.preset_sidecars[slot][name].playable_payload;
+            const mine = after.preset_sidecars[slot][name].playable_payload;
+            const maps = decl.keys.filter((k) => !k.includes('[]')
+                && at(before, k) && typeof at(before, k) === 'object' && !Array.isArray(at(before, k)));
+            for (const k of maps) {
+                const canon = (m) => Object.values(m ?? {}).map((r) => JSON.stringify(r)).sort();
+                if (JSON.stringify(canon(at(before, k))) !== JSON.stringify(canon(at(mine, k)))) {
+                    bad.push(`${file} ${bytes(op)}: ${prefix}${k} — its rules changed, not only their keys`);
+                }
+            }
             for (const leaf of leafDiff(doc, after)) {
                 const rel = leaf.startsWith(prefix) ? leaf.slice(prefix.length) : null;
-                if (rel !== null && (allowed.has(rel) || extra.some((re) => re.test(rel)))) continue;
+                if (rel !== null && (allowed.has(rel) || extra.some((re) => re.test(rel))
+                    || maps.some((k) => rel.startsWith(`${k}.`)))) continue;
                 bad.push(`${file} ${bytes(op)}: ${leaf}`);
             }
             // …and each allowed flag leaf IS written (a row that only bounds the diff
@@ -443,7 +459,24 @@ describe('⛓⛓⛓ the write-back — every free move and every swap of the pop
             }
         }
         expect(pointed).toBeGreaterThan(0);
-        expect(kept).toBeGreaterThan(0);
+        // ⛓ The committed corpus no longer holds an entry that declares no arrow
+        //   key (runner's worlds were the population; deleted, Cloudberry P4b), so
+        //   the KEPT arm is asserted on the declaration itself in the row below.
+        expect(kept).toBe(0);
+    });
+
+    it('the arrow-free flash-zone declaration (no extra keys) keeps every arrow of a payload it relabels', () => {
+        const plain = flashZoneExitSides();
+        expect(plain.keys.some((k) => k.includes('[]'))).toBe(false);
+        let checked = 0;
+        for (const { entry, op } of PORTAL_MAP_CHANGES) {
+            const level = Object.keys(entry.playable_payload.params).find((k) => k.endsWith('Level'));
+            if (!level) continue;
+            const after = plain.relabel(entry.playable_payload, movesOf(entry, op));
+            expect(bytes(after.params[level])).toBe(bytes(entry.playable_payload.params[level]));
+            checked += 1;
+        }
+        expect(checked).toBeGreaterThan(0);
     });
 });
 

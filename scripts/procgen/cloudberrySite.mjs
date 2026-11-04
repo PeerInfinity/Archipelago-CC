@@ -107,6 +107,10 @@ export async function configurePayload(page, params, { regionId = 'probe' } = {}
 export function cloudberryPageGenerator({ page, build }) {
     return {
         build: build ?? '',
+        /** The page's feature flags (`__cloudberryEmbed.features`, e.g. doubleJump). */
+        async features() {
+            return page.evaluate(() => ({ ...(window.__cloudberryEmbed?.features ?? {}) }));
+        },
         async generate(args) {
             const { text, docSha256 } = await generateDocument(page, args);
             return { text, docSha256 };

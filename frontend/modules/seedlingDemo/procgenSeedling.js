@@ -130,6 +130,7 @@ import {
  * construct's own law calls rather than re-derived. Corrected here, in the file.
  */
 import { doorCandidates } from '../procgenCore/elements/roomDoor.js';
+import { stancePocket } from '../procgenCore/elements/chestDoor.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, formatSkeleton,
     kindsOffered, normalizeSkeleton, paramSchemaFor, parseSkeleton,
@@ -208,6 +209,9 @@ export const SEEDLING_AREA_REFUSALS = Object.freeze([
      *  the solver REFUSED the room with the body in it, in its own words. */
     'the-solver-cannot-cross-the-roaming-body',
     'the-tag-budget-is-exceeded',
+    /** ⛓ seedling gen B3 — the GOAL CHEST's two (`GOAL_CHEST_REFUSALS`, the same names). */
+    'the-goal-chest-has-no-stance-pocket',
+    'the-goal-chest-pocket-is-not-legal',
 ]);
 
 /**
@@ -538,6 +542,32 @@ export function doorLawRefusal({
 }
 
 /**
+ * ⛓⛓ seedling gen B1 — **THE `none` LAW AT THE ON-CONNECTOR COMMIT** (the loot
+ * chest). The door law's clause 1 with its answer REQUIRED the other way round,
+ * and its clause 2 unchanged: with the door cell(s) walled the GOAL is still
+ * reachable from the START, and so is every clearer. ⛔ No length clause: walling
+ * a cell can never shorten a walk, and the element is off the main path by
+ * construction, so the main path itself is unmoved.
+ */
+export function openLawRefusal({ width, height, walkableFor, start, goal, doorKeys, clearerKeys, name }) {
+    const doorList = [...doorKeys].map((k) => `(${k})`).join(' ');
+    const reach = reachableFrom(width, height, walkableFor(doorKeys), start);
+    if (!reach.has(`${goal.x},${goal.y}`)) {
+        return `${name} stands at ${doorList}, and with it solid the GOAL (${goal.x},${goal.y}) is `
+            + `UNREACHABLE from the START (${start.x},${start.y}). ⛔ A \`none\`-law element gates `
+            + 'nothing — one that cuts the room is a door, and a door is the door law\'s to adjudicate.';
+    }
+    for (const key of clearerKeys) {
+        if (!reach.has(key)) {
+            return `${name} stands at ${doorList}, and with it solid its CLEARER (${key}) is `
+                + `unreachable from the START (${start.x},${start.y}): the cell it is opened from `
+                + 'is behind the thing it opens.';
+        }
+    }
+    return null;
+}
+
+/**
  * ⛓⛓⛓ **THE CARVE RULE — ONE RULE, TWO CLAUSES** (arc 3, slice 2, D3), at
  * module scope for the same reason the door law is: arc-3 slice 4a's
  * `on-connector` elements CARVE (the kill gate's pocket, the block pocket's
@@ -681,6 +711,33 @@ export const SEEDLING_DEFAULTS = Object.freeze({
  * which matches by POSITION, not by class.
  */
 export const ROAMING_GOAL_CLASS = 'totempart';
+
+/**
+ * ⛓⛓⛓ **THE GOAL CHEST** (seedling gen content B3; ⚖ the user 2026-11-01: *"(e) Loot/goal chests"*).
+ * `defaults.goalClass: 'chest'` makes the room's certified target a CHEST: the goal is the one goal entity, a
+ * `chest {tag: goalTag}`, and the solver's `collect-placement` picks its `chest` verb there
+ * (`solverBot.resolveCollectStrategy`); the certificate reads the chest record
+ * (`procgenOracle.certifyCollects`' chest arm, seedling-js-chest-goal-collect). OPT-IN: the default class is
+ * still `torchpickup`, and nothing below runs for it.
+ *
+ * ⛓ A chest opens from the one-pixel line BELOW it (`Chest.update`; the solver's `chestStanceBand` searches
+ * downward only), so a goal chest owes a STANCE — the cell under it, floor, reached from the start without
+ * crossing the chest:
+ *   · the goal pick excludes the bottom interior row (whose stance would be the border ring) — still ONE
+ *     `pick`, over a shorter list, so only an opted-in room moves;
+ *   · after the carve, a stance that is wall (or cut off) gets the chest door's own POCKET
+ *     (`chestDoor.stancePocket`, at most `CHEST_POCKET_MAX` carved cells), asked of the binding's carve law
+ *     with the chest read as wall;
+ *   · a room that can give it no stance REFUSES the goal chest BY NAME (`GOAL_CHEST_REFUSALS`) and keeps the
+ *     default class — an element's own rule (*a refused gadget leaves an ordinary level, labelled*), on
+ *     `model.goalChest.refused`.
+ * ⛓ A roaming body does NOT swap a goal chest for `ROAMING_GOAL_CLASS`: that swap exists because the torch
+ * shows TEXT, and a chest's seal piece has no `PICKUP_CEREMONY` row.
+ */
+export const GOAL_CHEST_CLASS = 'chest';
+export const GOAL_CHEST_REFUSALS = Object.freeze([
+    'the-goal-chest-has-no-stance-pocket', 'the-goal-chest-pocket-is-not-legal',
+]);
 
 /**
  * ⛓⛓⛓ THE PLACEMENT'S OWN ACTIVATOR GROUP, DERIVED FROM ITS ANCHOR.
@@ -938,8 +995,11 @@ export function seedlingModel({
      * ⚠ **IT MOVES EVERY COMMITTED PAIR**, and that is the point of bundling it
      * with the retirement: one re-record, not two (⚖ review §4 item 2).
      */
+    const goalChestAsked = d.goalClass === GOAL_CHEST_CLASS;
     const goalCandidates = interiorCells(blank)
         .filter((c) => !(c.tx === d.start.tx && c.ty === d.start.ty))
+        /** ⛓ B3 — a goal chest's stance (the row below) must be interior; inert for every other class. */
+        .filter((c) => !goalChestAsked || c.ty <= d.height - 3)
         .filter((c) => Math.abs(c.tx - d.start.tx) + Math.abs(c.ty - d.start.ty)
             >= GOAL_MIN_FROM_START);
     if (goalCandidates.length === 0) {
@@ -1475,6 +1535,68 @@ export function seedlingModel({
     const carved = skeletonKind === DEFAULT_SKELETON_KIND ? null : carveRoom();
     let base = carved ? carved.record : blank;
     /**
+     * ⛓⛓ B3 — **THE GOAL CHEST'S STANCE**, decided on the carved room and BEFORE the skeleton is frozen, so
+     * every element, template and solve sees the room with its stance. ⛔ Not entered for any other class, and
+     * it spends NO draw (the pocket is the shortest, found in `NB4` order).
+     */
+    let goalChest = null;
+    if (goalChestAsked) {
+        const floorAt = (x, y) => x >= 0 && y >= 0 && x < d.width && y < d.height
+            && terrainAt(base, x, y) === 'ground';
+        const isGoal = (x, y) => x === goalCell.tx && y === goalCell.ty;
+        const startSide = reachableFrom(d.width, d.height, (x, y) => floorAt(x, y) && !isGoal(x, y),
+            { x: d.start.tx, y: d.start.ty });
+        const stance = Object.freeze({ x: goalCell.tx, y: goalCell.ty + 1 });
+        let pocket = [];
+        let refused = null;
+        if (!(floorAt(stance.x, stance.y) && startSide.has(`${stance.x},${stance.y}`))) {
+            const room = { width: d.width, height: d.height };
+            const p = floorAt(stance.x, stance.y) ? null
+                : stancePocket(room, floorAt, { x: goalCell.tx, y: goalCell.ty }, stance, startSide);
+            if (!p) {
+                refused = { reason: 'the-goal-chest-has-no-stance-pocket',
+                    detail: `the goal chest at (${goalCell.tx},${goalCell.ty}) opens from (${stance.x},`
+                        + `${stance.y}), which the start does not reach without crossing the chest, and no `
+                        + 'pocket of at most 3 carved wall cells joins it to the start side. The level keeps '
+                        + `the default goal class \`${SEEDLING_DEFAULTS.goalClass}\`.` };
+            } else {
+                const keys = new Set(p.map((c) => `${c.x},${c.y}`));
+                const why = carveLawRefusal({
+                    width: d.width,
+                    height: d.height,
+                    carved: p,
+                    walkableAfter: (x, y) => !isGoal(x, y) && (keys.has(`${x},${y}`) || floorAt(x, y)),
+                    walkableBefore: floorAt,
+                    start: { x: d.start.tx, y: d.start.ty },
+                    goal: { x: goalCell.tx, y: goalCell.ty },
+                    name: 'the goal chest\'s stance pocket',
+                });
+                if (why) refused = { reason: 'the-goal-chest-pocket-is-not-legal', detail: why };
+                else pocket = p;
+            }
+        }
+        if (refused) {
+            goalClass = SEEDLING_DEFAULTS.goalClass;
+            goalEntity = { ...goalEntity, type: goalClass };
+        } else if (pocket.length > 0) {
+            base = withTerrain(base, pocket.map((c) => ({ tx: c.x, ty: c.y, terrain: 'ground' })));
+        }
+        goalChest = Object.freeze(refused
+            ? { placed: false, refused: Object.freeze(refused) }
+            : { placed: true, stance, pocket: Object.freeze(pocket.map((c) => Object.freeze({ ...c }))) });
+        ledger.phase('goal-chest', {
+            sentence: refused
+                ? `the GOAL CHEST REFUSED: ${refused.reason} — the goal stays \`${goalClass}\``
+                : `the GOAL is a CHEST, opened from (${stance.x},${stance.y})`
+                    + (pocket.length > 0 ? ` — a pocket of ${pocket.length} carved cell(s)` : ''),
+            draws: roomRng.draws,
+            record: base,
+            entities: [goalEntity],
+            refusal: refused,
+            data: { stance, pocket: pocket.length, refused: refused?.reason ?? null },
+        });
+    }
+    /**
      * ⛓ THE CARVE ROW. ⛔ Written for `empty` TOO, and the sentence says what
      * happened: `empty` is not "the `empty` backend", it is the open bordered
      * room this file has always built, and a ledger that skipped the row would
@@ -1625,8 +1747,13 @@ export function seedlingModel({
     if (elementPhase === PHASE_ON_CONNECTOR) {
         const entry = ELEMENT_TABLE[elementValues.name];
         const drawsBefore = roomRng.draws;
+        /** ⛓ strategy elements r2 — the KEY GATE's `type` is never DRAWN: omitted, it is its declared default
+         *  (the colour is the world's allocation, not the room stream's), so `keygate` spends ONE draw like its
+         *  peers. Read off the schema (`type`), as the guard's `turns` is above. */
+        const named = namedParams(elementHead, { elementOnly: true });
+        const typeParam = entry.element.params.find((pp) => pp.key === 'type');
         const concrete = entry.element.instantiate(roomRng,
-            namedParams(elementHead, { elementOnly: true }));
+            typeParam && named.type === undefined ? { ...named, type: typeParam.default } : named);
         const drawsAtConstruct = roomRng.draws;
         const site = { x: 1, y: 1, w: d.width - 2, h: d.height - 2, room: probeWithStash() };
         doorLawStash = recordLedger ? [] : null;
@@ -1819,7 +1946,7 @@ export function seedlingModel({
              * bodies and no kill lock. ⛔ Decided HERE, on the committed
              * placement, so a dropped or refused roam level keeps the torch.
              */
-            if ((p.bodies?.length ?? 0) > 0 && p.killLockCell === null) {
+            if ((p.bodies?.length ?? 0) > 0 && p.killLockCell === null && goalClass !== GOAL_CHEST_CLASS) {
                 goalClass = ROAMING_GOAL_CLASS;
                 goalEntity = { ...goalEntity, type: goalClass };
             }
@@ -2089,6 +2216,17 @@ export function seedlingModel({
                 askOpenHalf: true,
                 sets: doorSets,
             }),
+            /** ⛓ seedling gen B1 — the `none` law (the loot chest), asked only when the element declares it. */
+            openLaw: ({ paintedFor, doorKeys, clearerKeys }) => openLawRefusal({
+                width: d.width,
+                height: d.height,
+                walkableFor: paintedFor,
+                start: { x: d.start.tx, y: d.start.ty },
+                goal: { x: goalCell.tx, y: goalCell.ty },
+                doorKeys,
+                clearerKeys,
+                name: `the element "${onConnectorPlan.concrete.instance}"`,
+            }),
             carveLaw: ({ carved: cells, walkableAfter, walkableBefore }) => carveLawRefusal({
                 width: d.width,
                 height: d.height,
@@ -2122,7 +2260,7 @@ export function seedlingModel({
             /** ⛓ Swim U3 (D3) — F1's TEXTLESS GOAL, one phase over: an
              *  on-connector element that committed a lock-less BODY (the
              *  corridor body) certifies against `ROAMING_GOAL_CLASS` too. */
-            if ((p.bodies?.length ?? 0) > 0 && p.killLockCell === null) {
+            if ((p.bodies?.length ?? 0) > 0 && p.killLockCell === null && goalClass !== GOAL_CHEST_CLASS) {
                 goalClass = ROAMING_GOAL_CLASS;
                 goalEntity = { ...goalEntity, type: goalClass };
             }
@@ -3632,11 +3770,24 @@ export function seedlingModel({
         /** ⛓ F1 (D4) — the goal's EFFECTIVE class: `defaults.goalClass`, or
          *  `ROAMING_GOAL_CLASS` when the committed record holds a roaming body. */
         goalClass,
+        /** ⛓ B3 — the goal chest's stance / pocket or its refusal; ABSENT unless `goalClass: 'chest'` was asked. */
+        ...(goalChest ? { goalChest } : {}),
         /** ⛓ F1 (D4/D5) — the committed roaming bodies (`[]` for every other
          *  level): what the body ablation removes and the kill-lock clause reads. */
         roamingBodies,
         goalOel: Object.freeze({ ...goalOel }),
-        goals: Object.freeze([Object.freeze(collectGoal(goalOel.x, goalOel.y))]),
+        /**
+         * ⛓⛓ seedling gen B1 — **A LOOT CHEST IS A SECOND COLLECT GOAL, AHEAD OF THE ROOM'S OWN.** The
+         * chest gates nothing, so nothing else would make a certificate open it; with it named here every
+         * solve of the room (the certification and every pass-2 keep) must open it and take its seal piece
+         * (`procgenOracle.certifyCollects`' chest arm, seedling-js-chest-goal-collect). ⛔ Every level
+         * without a committed loot chest keeps the one-goal list byte for byte.
+         */
+        goals: Object.freeze([
+            ...lootChestGoals(elementInfo),
+            ...keyGateGoals(elementInfo),
+            Object.freeze(collectGoal(goalOel.x, goalOel.y)),
+        ]),
         boot: () => bootAtTile(blank, d.start.tx, d.start.ty),
         interiorCells,
         isFree,
@@ -3910,6 +4061,45 @@ export function seedlingOracle({ model, items = null, budget = DEFAULT_BUDGET,
     };
 }
 
+/** ⛓ seedling gen B1 — the committed loot chest's collect goal (`[]` for every other level). */
+function lootChestGoals(elementInfo) {
+    const p = elementInfo?.ran ? elementInfo.placed[0] : null;
+    if (p?.family !== 'chestloot') return [];
+    const { x, y } = oelAtTile(p.doorCell.x, p.doorCell.y);
+    return [Object.freeze(collectGoal(x, y))];
+}
+
+/**
+ * ⛓⛓ Strategy elements round 2 — **THE KEY GATE'S KEY IS A COLLECT GOAL, AHEAD OF THE ROOM'S OWN.** The
+ * solver's `keylock` opens a lock with a key the run HOLDS; a key it does not hold is "a SUB-ORDER — a
+ * `collect-placement` goal the macro layer owes" (`solverBot`'s own refusal). So the committed key is named
+ * here, and every solve of the room (the certification and every pass-2 keep) collects it and then opens the
+ * lock. ⛔ `[]` for every level without a committed key gate: their goal lists stay byte for byte.
+ */
+function keyGateGoals(elementInfo) {
+    const p = elementInfo?.ran ? elementInfo.placed[0] : null;
+    if (p?.family !== 'keygate') return [];
+    const key = p.clearer[1];
+    const { x, y } = oelAtTile(key.x, key.y);
+    return [Object.freeze(collectGoal(x, y))];
+}
+
+/**
+ * ⛓ Strategy elements round 2 — the KEY GATE's key of a FINISHED level, as location rows
+ * `{kind: 'boss-key', cell, tag, keyType}`: the key's VANILLA LOCATION (its tag is the one the binding
+ * allocated, the game's check address). `[]` for a level without one.
+ */
+export function bossKeyLocationsOf(model, record) {
+    const p = model.elements?.ran ? model.elements.placed[0] : null;
+    if (p?.family !== 'keygate') return [];
+    const cell = p.clearer[1];
+    const { x, y } = oelAtTile(cell.x, cell.y);
+    const key = (record.entities ?? []).find((e) => e.type === 'bosskey' && e.x === x && e.y === y);
+    if (!key) return [];
+    return [Object.freeze({ kind: 'boss-key', cell: Object.freeze({ tx: cell.x, ty: cell.y }),
+        tag: Number.parseInt(key.attrs.tag, 10), keyType: Number.parseInt(key.attrs.keyType, 10) })];
+}
+
 /** The chest a chest-door element placed, as the solver's id (`chest@x,y`, OEL px). */
 function chestDoorIdOf(model) {
     const p = model.elements?.ran ? model.elements.placed[0] : null;
@@ -3945,6 +4135,20 @@ export function chestDoorLocationsOf(model, record) {
     if (!chest) return [];
     const { doorCell } = model.elements.placed[0];
     return [Object.freeze({ kind: 'chest-door', cell: Object.freeze({ tx: doorCell.x, ty: doorCell.y }),
+        tag: Number.parseInt(chest.attrs.tag, 10) })];
+}
+
+/**
+ * ⛓ Seedling gen B1 — the LOOT chest of a FINISHED level, as location rows `{kind: 'chest-loot', cell, tag}`
+ * (`chestDoorLocationsOf`' shape; the tag is the one the binding allocated). `[]` for a level without one.
+ */
+export function lootChestLocationsOf(model, record) {
+    const p = model.elements?.ran ? model.elements.placed[0] : null;
+    if (p?.family !== 'chestloot') return [];
+    const { x, y } = oelAtTile(p.doorCell.x, p.doorCell.y);
+    const chest = (record.entities ?? []).find((e) => e.type === 'chest' && e.x === x && e.y === y);
+    if (!chest) return [];
+    return [Object.freeze({ kind: 'chest-loot', cell: Object.freeze({ tx: p.doorCell.x, ty: p.doorCell.y }),
         tag: Number.parseInt(chest.attrs.tag, 10) })];
 }
 
@@ -4125,6 +4329,12 @@ function certificationGap(cert) {
  *   post-shield  … `+shieldgate`
  *   post-swim    … `+watergate+watershortcut`
  *   post-feather … `+waterfallgate`
+ *   any boot with the fire … `+burngate` (last; post-swim and later, post-fire)
+ *
+ * ⛓ The `hasFire` row joined with `seedling-gen-post-swim-fix` (⚖ Robert
+ * 2026-11-02, "Both, one re-record"), together with post-swim's boot gaining the
+ * torch, fire and wand. It is a ROW, not an insertion: every earlier member keeps
+ * its index, and only the boots that hold the fire draw a longer list.
  *
  * (`BIOME_DEFAULT_FOLD` is the table; each later boot holds every earlier
  * item, so a biome's list is every row its boot grants.)
@@ -4211,6 +4421,7 @@ export const BIOME_DEFAULT_FOLD = Object.freeze([
     Object.freeze({ item: 'hasShield', heads: Object.freeze([{ name: 'shieldgate' }]) }),
     Object.freeze({ item: 'canSwim', heads: Object.freeze([{ name: 'watergate' }, { name: 'watershortcut' }]) }),
     Object.freeze({ item: 'hasFeather', heads: Object.freeze([{ name: 'waterfallgate' }]) }),
+    Object.freeze({ item: 'hasFire', heads: Object.freeze([{ name: 'burngate' }]) }),
 ]);
 for (const row of BIOME_DEFAULT_FOLD) {
     for (const { name } of row.heads) {
@@ -4867,6 +5078,8 @@ export function generateSeedlingLevel({
     const ablation = bodyAblation({ model, out, palette, budget, dashMode });
     const finalRecord = shellLevel(out.record, model, fill);
     const chestDoors = chestDoorLocationsOf(model, finalRecord);
+    const lootChests = lootChestLocationsOf(model, finalRecord);
+    const bossKeys = bossKeyLocationsOf(model, finalRecord);
     return {
         ...out,
         /**
@@ -4929,6 +5142,15 @@ export function generateSeedlingLevel({
              * level without one, which keeps every committed payload unmoved.
              */
             ...(chestDoors.length > 0 ? { chestDoors: Object.freeze(chestDoors) } : {}),
+            /** ⛓⛓ Seedling gen B1 — **THE LOOT CHEST'S AP LOCATION**, the same shape (`kind: 'chest-loot'`).
+             *  ⛔ OMITTED ENTIRELY on a level without one. */
+            ...(lootChests.length > 0 ? { lootChests: Object.freeze(lootChests) } : {}),
+            /** ⛓⛓ Strategy elements round 2 — **THE KEY GATE'S KEY SPOT**, its AP location (`kind: 'boss-key'`,
+             *  cell, tag, keyType). ⛔ OMITTED ENTIRELY on a level without one. */
+            ...(bossKeys.length > 0 ? { bossKeys: Object.freeze(bossKeys) } : {}),
+            /** ⛓ B3 — the goal chest's refusal, ONLY when one was asked and refused (a placed goal chest
+             *  reads off `goalClass: 'chest'`). */
+            ...(model.goalChest?.refused ? { goalChestRefused: model.goalChest.refused.reason } : {}),
             goalCell: model.goalCell,
             goalOel: model.goalOel,
             goalClass: model.goalClass ?? model.defaults.goalClass,

@@ -208,7 +208,7 @@ npm test -- --mode=test-substrates --batch=playback-bot  # the Playback Bot rows
 npm test -- --mode=test-substrates --batch=apworld       # the apworld editor rows only (on push only when its pushPaths hit)
 npm test -- --mode=test-substrates --batch=bot-walks     # MANUAL: the real-time bot legs only
 npm test -- --mode=test-substrates --batch=noiz2sa       # MANUAL: the noiz2sa substrate rows
-npm test -- --mode=test-substrates --batch=runner        # MANUAL: runnerDemo + Runner block modes
+npm test -- --mode=test-substrates --batch=cloudberry    # MANUAL: the Cloudberry rows + its tutorial walks (needs frontend/external/cloudberry/ — scripts/setup/fetch-cloudberry-site.mjs; on push via cloudberry-e2e.yml)
 npm test -- --mode=test-substrates --batch=tutorials     # MANUAL: the Tutorial panel rows + one walk row per tutorial (but procgen's, the tracker's and Seedling's)
 npm test -- --mode=test-substrates --batch=tutorials-procgen  # MANUAL: the procgen tutorials' walk rows
 npm test -- --mode=test-substrates --batch=tutorials-procgen-loops  # MANUAL: the procgen loop-mode tutorials' walk rows (WebGPU)
@@ -305,26 +305,43 @@ changed.
 ### JS unit tests (vitest) — a separate suite from `npm test`
 
 Everything above drives the BROWSER (Playwright + the in-app runner). The
-JavaScript unit tests are a different suite entirely, run by vitest, in three
+JavaScript unit tests are a different suite entirely, run by vitest, in four
 tiers:
 
 ```
-npm run test:unit          # default tier — the fast one; excludes *.slow and *.calib
+npm run test:unit          # default tier — the fast one; excludes *.slow, *.train and *.calib
 npm run test:unit:slow     # heavy generate-and-test property suites, run SERIALLY
+npm run test:unit:train    # the heaviest pins, SERIAL; CI runs them on js-land/** + main pushes and on dispatch only
 npm run test:unit:calib    # demoted calibration sweeps, manual only, never in CI
 ```
+
+**The train tier** (`*.train.test.js`, `vitest.train.config.js`; ⚖ Robert 2026-11-02,
+CI manual-only P1–P5) holds the solverBot hammer/fidelity pins, the generator
+capacity pin and the scripted `deriveLevelWorldLogic` sample — heavy rows moved off
+the slice push. CI's job is `Train-tier Vitest` in `unittests_frontend.yml` (its name
+deliberately does NOT match `/JavaScript Unit Tests/`, so `ci-vitest-summary.mjs`'s
+suite row is the same with it present or skipped). It runs on a `js-land/**` push, on
+a main push not already train-green, and on
+`gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f train=true`.
+⚖ A packet whose slice touches solverBot, the hammer, fidelity, a generator or
+`tileStep` quotes a DISPATCHED train-tier run at its tip; a slice push alone never
+runs it. `hammerEscapeGenerated.slow.test.js` stays in the slow tier as the on-push
+smoke row. Two more checks left the slice push in the same ruling (P4, P6): the
+`seedling-wasm-ship` browser gate's import closure (`@ci-paths-slice declared` — a
+slice push runs it only for its declared paths) and `unittests.yml`'s ubuntu
+3.12/3.13 legs; both still run on `js-land/**`, main, PRs and dispatch. Detail:
+`.github/workflows/README.md` § *Checks moved off the slice push*.
 
 The tiers exist because the slow suites are synchronous and CPU-bound: they pass
 alone but flake with `STACK_TRACE_ERROR` under the default run's parallelism,
 because vitest's `testTimeout` cannot interrupt synchronous work. `test:unit:slow`
 sets `fileParallelism: false` so each file gets the whole CPU.
 
-⚠ **`vitest.slow.config.js` carries deliberate exclusions with reasons in the
-file** — read the comment block before concluding a suite is missing. The
-runnerDemo slow battery is excluded by a ⚖ user ruling ahead of a runner
-redesign, and the patterns there are deliberately BROAD, so a newly written
-`runnerDemo/*.slow.test.js` would also be skipped. That is the opposite of
-`testBatches.js`'s default-batch rule, and it is why the config says so out loud.
+⚠ **`vitest.slow.config.js` excludes nothing beyond vitest's defaults** since the
+runner substrate was deleted (Cloudberry P4b, 2026-11-02): its runnerDemo exclusion
+(⚖ user 2026-08-20, ahead of a runner redesign that was then cancelled for
+Cloudberry) went with its subject. Any future exclusion there must carry its reason
+in the file — a silent one is how a suite stops gating without anybody noticing.
 
 ⛔ **⚖ RULING 52 (user, 2026-08-25): do NOT run the local unfiltered vitest.**
 - Pre-push check = `npx vitest run <the test paths you touched>`, bounded.

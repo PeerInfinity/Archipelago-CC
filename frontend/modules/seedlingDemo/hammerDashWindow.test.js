@@ -55,6 +55,7 @@ import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner
 import { twoPassSolve } from './twoPassSolve.js';
 import { paletteFor } from './watchGenerate.js';
 import { generateSeedlingLevel, seedlingSkeletonSpec } from './procgenSeedling.js';
+import { parseElementSpec } from '../procgenCore/elementSpec.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -148,13 +149,22 @@ async function l20(on) {
 /**
  * A generated post-feather level (`dump-seedling-kind-pairs`' `carved pairs c4` row: count 4) with `DASH_STAND_WHOLE`
  * at `on`: its skeleton and final ticks, and the audit of its first skeleton solve's stand-tail corridors.
+ *
+ * ⛓ seedling-gen-post-swim-fix (⚖ Robert 2026-11-02, "Both, one re-record") — THE ELEMENT LIST IS NAMED. These rooms
+ * were drawn from post-feather's DEFAULT list, and that list gained `+burngate` when the boot gained the fire, so the
+ * default now draws a different head at seed 9 (the `+` list's one `pick` indexes a list one longer) and builds a
+ * different room. `POST_FEATHER_PRE_FIRE` spells the default as it stood before the join, so the SAME two rooms are
+ * built, byte for byte: the same skeleton, the same spinner, the same collect stance and its 7-tick stand. The rows
+ * below keep their numbers because they are measuring the same rooms.
  */
+const POST_FEATHER_PRE_FIRE = parseElementSpec('guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3'
+    + '+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut+waterfallgate');
 function generated(kind, seed, on) {
     const audit = [];
     DASH_STAND_WHOLE.audit = audit;
     try {
         const out = withDashStandWhole(on, () => generateSeedlingLevel({ seed, palette: paletteFor('post-feather'),
-            bounds: { obstacleTarget: 4 }, skeleton: seedlingSkeletonSpec(kind) }));
+            elements: POST_FEATHER_PRE_FIRE, bounds: { obstacleTarget: 4 }, skeleton: seedlingSkeletonSpec(kind) }));
         return { skeletonTicks: out.summary.skeletonTicks, ticks: out.summary.finalTicks,
             audit: audit.map(({ what, standTicks, whole, ticks, baseline, why }) => ({
                 what: what.replace(/^solverBot\([^)]*\) /, ''), standTicks, whole, ticks, baseline, why })) };

@@ -53,8 +53,13 @@ describe('landings on lethal terrain', () => {
         }
     });
 
+    // ⛓ rules-certifier-tail: a door whose every approach is water now carries the Swim in the ATLAS (the analyzer's
+    // `necessary`), so its landing gate is not written twice — gated either way, never neither.
     it('the R2 water doors are gated on Swim, both ways where both land in water', () => {
         const gated = new Set(gates.filter((g) => JSON.stringify(g.rule) === JSON.stringify(SWIM)).map((g) => `${g.region_id}/${g.exit_id}`));
+        for (const r of atlas.regions) {
+            for (const e of r.exits ?? []) if (requires(e.access_rule, SWIM)) gated.add(`${r.region_id}/${e.exit_id}`);
+        }
         for (const door of ['level_49/out_teleporter_32_128', 'level_50/out_teleporter_32_0', 'level_50/out_teleporter_48_304',
             'level_51/out_teleporter_144_0', 'level_53/out_teleporter_208_64', 'level_0/out_teleporter_240_0',
             'level_89/out_teleporter_160_304', 'level_111/out_teleporter_304_176', 'level_113/out_teleporter_112_0',
@@ -71,8 +76,13 @@ describe('landings on lethal terrain', () => {
             expect(row(door)).toMatchObject({ gated: false });
             expect(row(door).why).toMatch(/already requires/);
         }
-        expect(lethalLandings.filter((l) => !l.gated).map((l) => l.where.split(' ')[0]))
-            .toEqual(['level_89/out_teleporter_208_0', 'level_96/out_teleporter_32_64']);
+        // ⛓ rules-certifier-tail: + the ten water doors charged their Swim in the atlas (every way onto them is water).
+        expect(lethalLandings.filter((l) => !l.gated).map((l) => l.where.split(' ')[0])).toEqual([
+            'level_0/out_teleporter_240_0', 'level_49/out_teleporter_32_128', 'level_51/out_teleporter_144_0',
+            'level_51/out_teleporter_256_256', 'level_54/out_teleporter_128_464', 'level_55/out_teleporter_80_48',
+            'level_56/out_teleporter_0_112', 'level_58/out_teleporter_48_112', 'level_58/out_teleporter_64_112',
+            'level_89/out_teleporter_160_304', 'level_89/out_teleporter_208_0', 'level_96/out_teleporter_32_64']);
+        for (const l of lethalLandings.filter((x) => !x.gated)) expect(l.why).toMatch(/already requires/);
     });
 
     it('⚖ game truth first: the shores the model walked off are gated (L53 -> L54 (144,16), the mouth -> L58)', () => {

@@ -45,7 +45,7 @@ import { seedlingMazeProjectionDeps } from '../../frontend/modules/flashPanel/se
 import { apRegionName } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
 import { SHARED_WORLD_ALPHABET } from '../../frontend/modules/procgenPipeline/regionAtlasMazeProjection.js';
 import { SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
-import { crossRoomButtonsOf, persistenceEffect, IN_ROOM_POLE_GATE_KIND } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
+import { crossRoomButtonsOf, inRoomLatchButtonsOf, persistenceEffect, IN_ROOM_POLE_GATE_KIND } from '../../frontend/modules/flashPanel/seedlingObstacleEvents.js';
 import { PERSISTENCE_RESPONSE } from '../../frontend/modules/seedlingDemo/levelWorld.js';
 import {
     PLAYTHROUGH_MAP, playthroughHandRuledGridFor, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
@@ -318,10 +318,18 @@ export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
     // level is listed. A target the press does NOT remove is not laid: a cross-room LIGHTPOLE is lit, not gone (its light kills the
     // DarkTraps it reaches): its level's world takes the press as the pole's `opened_by` instead (mode 'lit', session
     // tile-primitives-lightpoles) — the pole's bodies open by the press, or by a thrust from one of its stances.
+    // ⛓ RULES l20-button-latch: an IN-ROOM latch's target (`inRoomLatchButtonsOf`) is laid like a cross-room one when the press
+    // OPENS it — a `Lock` (model response 'lock-despawn') handed `activate = true` (`publish`): its cell opens by the event alone,
+    // as the game's lock does once its group is published (the producer's `inRoomLatchAnalysis` asks the same question).
     const targets = crossRoomButtonsOf(PLAYTHROUGH_MAP).flatMap((b) => b.targets);
+    const inRoomTargets = inRoomLatchButtonsOf(PLAYTHROUGH_MAP).flatMap((b) => b.targets);
     const opens = (o) => {
         const t = targets.find((x) => x.level === o.level && x.type === o.class && x.x === o.x && x.y === o.y);
-        if (!t) throw new Error(`press target ${o.class}@${o.x},${o.y} in L${o.level} is no cross-room button's target`);
+        if (!t) {
+            const own = inRoomTargets.find((x) => x.level === o.level && x.type === o.class && x.x === o.x && x.y === o.y && x.tag === o.tag);
+            if (own) return PERSISTENCE_RESPONSE[own.type] === 'lock-despawn' && own.publish === true;
+            throw new Error(`press target ${o.class}@${o.x},${o.y} in L${o.level} is no cross-room button's target`);
+        }
         return persistenceEffect(t, PERSISTENCE_RESPONSE[t.type]).effect === 'opens';
     };
     const opened = new Set();
@@ -552,8 +560,15 @@ export function completionItemFor(atlas) {
     return placed ? VICTORY_ITEM : undefined;
 }
 
-/** Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`. */
-export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
+/**
+ * Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`.
+ * ⛓ `plant` (session tile-rules-automation-r-a1, the ECHO test): called once with `{atlas, layer, ropes}` after the event
+ * layer and the rope events are derived from the TRUE atlas and before anything is projected or compiled; it may rewrite
+ * their access rules in place (it is handed copies of the layer and the ropes, never the producer's cached rows) (the derived-rules probe plants a sentinel item in each, `seedlingEchoSentinels.js`, and
+ * looks for them in the payloads). Absent, the compile is the preset's, byte for byte. `embedSphereLog: false` skips the
+ * sphere log (a sentinel compile places items no state can hold).
+ */
+export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSphereLog = true } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
     const mapDoc = readJson(resolve(ATLAS_DIR, atlas.tile_space.map_document));
     const gameConfig = readJson(resolve(REPO, 'frontend/modules/flashPanel/games/seedling.json'));
@@ -562,8 +577,14 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     if (!partition) {
         throw new Error(`the sub-region partition has no entry for "${atlas.atlas_id}" — run make-seedling-subregion-partition.mjs`);
     }
-    const ropes = ropeEventsFor(atlas, partition, levels);
-    const layer = eventLayerFor(atlas, levels, { minted: ropes.events.map((e) => e.name) });
+    let ropes = ropeEventsFor(atlas, partition, levels);
+    let layer = eventLayerFor(atlas, levels, { minted: ropes.events.map((e) => e.name) });
+    if (plant) {
+        // The layer's rows are the producer's process-wide cache (`wholeEventLayer`): a plant rewrites COPIES.
+        ropes = structuredClone(ropes);
+        layer = structuredClone(layer);
+        plant({ atlas, layer, ropes });
+    }
     const mazeProjection = seedlingMazeProjectionDeps({
         mapDoc: PLAYTHROUGH_MAP,
         events: layer.world,
@@ -579,7 +600,7 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     const { rules, report } = compileRegionAtlas(restricted, {
         mapDoc,
         completionItem: completionItemFor(restricted),
-        embedSphereLog: true,
+        embedSphereLog,
         sidecarFlavor: 'maze',
         mazeProjection,
         events: [...layer.events, ...ropes.events],

@@ -86,7 +86,7 @@ const { patchedMapDocument, SEEDLING_SET_PATCHES } = await imp('frontend/modules
 const { arrivalSolidCensus, gameLandings } = await imp('frontend/modules/seedlingDemo/fidelityArrival.js');
 const { levelSourceFromAtlas } = await imp('frontend/modules/seedlingDemo/atlasSource.js');
 const {
-    deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
+    deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, inRoomLatchButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
     deriveTalkEvents, crossRoomPrerequisitesOf,
     poleKillsOf, POLE_LIGHT_ARM, POLE_GHOST_ARM, poleThrustStances, poleSwingStances, inRoomPolesOf, deriveInRoomPoleEvents,
     ropesOf, ropeVerdict, deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges,
@@ -689,6 +689,7 @@ export function buildPlaythroughAtlas() {
     crossingCharged.length = 0;
     sealedDoorsCharged.length = 0;
     directionalDoorsCharged.length = 0;
+    necessaryDoorsCharged.length = 0;
     pocketDoorsCharged.length = 0;
     sealedLocationsCharged.length = 0;
     arrivalsUncharged.length = 0;
@@ -752,6 +753,8 @@ export function buildPlaythroughAtlas() {
         refuseUnboundMembers(session.atlas.regions.find((r) => r.region_id === regionId), unbound);
     }
     applyHandRulings(session.atlas);
+    // After the hand rulings, so a condition a ruled door already asks for is not written twice (L82's arena door).
+    for (const [regionId, analysis] of regionAnalyses) chargeNecessaryApproaches(session.atlas, regionId, analysis);
     return session.toDocument();
 }
 
@@ -913,6 +916,47 @@ function chargeDirectionalApproaches(atlas, regionId, level, analysis) {
         directionalDoorsCharged.push(`${regionId}/${b.id}`);
         note(`${regionId}: exit "${b.id}" at [${b.tile}] is reached only by moving a direction-gated way — CHARGED `
             + `${due.map((c) => SEM.conditionKey(c)).join(' + ')} (every way onto the tile pays it)`);
+    }
+}
+
+/**
+ * ⛓ RULES certifier-tail — **A DOOR EVERY WAY ONTO WHICH PAYS A CONDITION COSTS THAT CONDITION.**
+ *
+ * `chargeDirectionalApproaches` charged only the direction gates of the binding's `necessary`, on the
+ * assumption that every other necessary condition is the region's entry gate, already charged on every way
+ * in. That held for the water levels and failed for L3: its door to L111 (`out_teleporter_0_64`, [0,4]) is
+ * one water tile ([1,4]) west of r0c4's DRY lane, and r0c4 is entered dry from L2 and L4. The rules charged
+ * the ghost rock on the door and dropped the Swim, which the game needs (probe-seedling-certifier-tail.mjs
+ * `l3-noswim`: no Swim, the player drowns at x 21, `Player.as:1456`, and never touches the door).
+ * `necessary` is what EVERY way onto the tile pays, from every component and every landing (a landing on
+ * gated material pays that cell's own conditions), so charging all of it is never stricter than the game;
+ * a condition the sub-region's entry already costs is only a redundant conjunct. A departure whose charged
+ * conditions now cover one whole way of its component is no longer permissive.
+ */
+function chargeNecessaryApproaches(atlas, regionId, analysis) {
+    const region = atlas.regions.find((r) => r.region_id === regionId);
+    if (!region) return;
+    for (const b of analysis.bindings) {
+        if (b.kind !== 'exit' || !b.id.startsWith('out_') || !b.reachable || b.exact || !(b.necessary ?? []).length) continue;
+        const exit = (region.exits ?? []).find((e) => e.exit_id === b.id);
+        if (!exit) continue;
+        // A condition already riding on the exit (its own cell, a direction gate, a hand ruling) is not written twice.
+        const due = (b.necessary ?? []).filter((c) => !ruleImplies(exit.access_rule, analyzerOptions.resolveCondition(c) ?? { rule: 'False_' }));
+        const parts = due.map((c) => analyzerOptions.resolveCondition(c));
+        if (parts.some((p) => !p)) continue;
+        if (due.length > 0) {
+            const cost = parts.length === 1 ? parts[0] : { rule: 'And', children: parts };
+            exit.access_rule = exit.access_rule === undefined ? cost : { rule: 'And', children: [exit.access_rule, cost] };
+            necessaryDoorsCharged.push(`${regionId}/${b.id}`);
+        }
+        // No longer permissive once the rule requires one whole way of the component.
+        const covers = (b.conditionSets ?? []).some((set) => set.conditions
+            .every((c) => ruleImplies(exit.access_rule, analyzerOptions.resolveCondition(c) ?? { rule: 'False_' })));
+        const at = permissiveBindings.indexOf(`${regionId}/${b.id}`);
+        if (covers && at >= 0) permissiveBindings.splice(at, 1);
+        if (due.length === 0) continue;
+        note(`${regionId}: exit "${b.id}" at [${b.tile}] — every way onto its tile pays `
+            + `${due.map((c) => SEM.conditionKey(c)).join(' + ')}: CHARGED${covers ? ' (no longer permissive)' : ''}`);
     }
 }
 
@@ -1252,6 +1296,9 @@ export const sealedDoorsCharged = [];
 /** ⛓ RULES waterfall-door — every departure charged the direction gate every way onto its tile pays. */
 export const directionalDoorsCharged = [];
 
+/** ⛓ RULES certifier-tail — every departure charged the conditions EVERY way onto its tile pays (`chargeNecessaryApproaches`). */
+export const necessaryDoorsCharged = [];
+
 /** ⛓ RULES obstacle-events — every departure charged the solids that alone open its model pocket. */
 export const pocketDoorsCharged = [];
 /** ⛓ RULES location-crossing — every LOCATION this run charged the item-gated solid it sits inside. */
@@ -1484,15 +1531,18 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
     const ruling = (t, crossLevelOpeners) => OV.overlayEntitySemantics(entityOf(t), SEM.entitySemantics(entityOf(t)), {
         level: t.level, crossLevelOpeners, groupOpeners: GROUP_OPENERS, scriptOpeners: SCRIPT_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
     });
-    return deriveButtonEvents(crossRoomButtonsOf(MAP), {
+    const latch = inRoomLatchAnalysis(doc);
+    return deriveButtonEvents([...crossRoomButtonsOf(MAP), ...inRoomLatchButtonsOf(MAP)], {
         existing,
-        effect: (t) => persistenceEffect(t, PERSISTENCE_RESPONSE[t.type]),
+        effect: (t) => (t.inRoom ? latch.effect(t) : persistenceEffect(t, PERSISTENCE_RESPONSE[t.type])),
         kills: (t) => {
+            if (t.inRoom) return null;
             const k = killsOf(t);
             return k && { bodies: k.map((b) => b.id), why: B.killsWhy(k) };
         },
-        inRoom: (t) => (killsOf(t) ? B.arm : null),
+        inRoom: (t) => (!t.inRoom && killsOf(t) ? B.arm : null),
         pricedByButton: (t) => {
+            if (t.inRoom) return latch.pricedByButton(t);
             const k = killsOf(t);
             if (k) {
                 // The rules price a crossing through a body free when the overlay rules the body OPEN — then nothing
@@ -1527,8 +1577,63 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
         // ButtonRoom.update: any body on it presses it — standing in its sub-region is the whole cost.
         reach: () => null,
         // A pole's doors carry their `arm` (⛓ RULES l63-darktrap: the Spear way only where a stance stands).
-        gates: (t, eventName) => B.barrierCut(t, eventName).pockets.flatMap((v) => v.doors),
+        // ⛓ RULES l20-button-latch: an in-room latch's gates are the internal crossings through its target.
+        gates: (t, eventName) => (t.inRoom ? latch.gates(t) : B.barrierCut(t, eventName).pockets.flatMap((v) => v.doors)),
     });
+}
+
+/**
+ * ⛓⛓ RULES l20-button-latch — **AN IN-ROOM LATCHING PRESS AS AN AP EVENT, THROUGH THE CROSS-ROOM PATH.** The rows are
+ * `inRoomLatchButtonsOf(MAP)` (every `room == -1` ButtonRoom with a tag: the press clears its OWN tag and its `check()`
+ * re-publishes the group on every build, so the opening is durable — law 1 of the overlay). `deriveButtonEvents` mints
+ * the event (`flag:L<level>:<the button's tag>`, side = the button's sub-region, `action.presser`) exactly as for a
+ * cross-room press; this answers the three questions that differ in-room:
+ *   - EFFECT: a target the model answers `lock-despawn` (a `Lock`: `set activate(true)` fades it and `turnOff()` types
+ *     it `""`, `Lock.as:activationStep`) handed `activate = true` (`publish`, `!flip`) → 'opens'; anything else → null;
+ *   - PRICED BY THE BUTTON: the target's group has NO other in-level opener (`OV.isLatchingOpener`/`isHoldingOpener`
+ *     over the level's `tset` group) — with two, crossing it is an `Or` of their events, which this does not state;
+ *   - GATES: the analyzer's crossings of the target's region whose EVERY way steps through the target's tiles (the
+ *     lock separates them), as the atlas's internal exit rows in that direction (`internalExitGates`: the compiler ANDs
+ *     the event onto whatever the row already costs). A target no crossing passes through (the overlay rules it OPEN
+ *     and the analyzer folded it, or it walls nothing) gates nothing and mints nothing (skipped by name).
+ */
+function inRoomLatchAnalysis(doc) {
+    const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
+    const entityAt = (level, type, x, y) => (levelOf(level)?.entities ?? []).find((e) => e.type === type && e.x === x && e.y === y);
+    const tilesOf = (t) => {
+        const e = entityAt(t.level, t.type, t.x, t.y);
+        const sem = SEM.entitySemantics(e);
+        const claimed = SEM.entityClaims(e, sem, { pixelMaskFootprints: true }).map((c) => c.tile);
+        return new Set((claimed.length ? claimed : [[Math.floor(t.x / TILE), Math.floor(t.y / TILE)]]).map(([x, y]) => `${x},${y}`));
+    };
+    return {
+        effect: (t) => (PERSISTENCE_RESPONSE[t.type] === 'lock-despawn' && t.publish === true
+            ? { effect: 'opens', why: 'a Lock handed activate = true by its latching group (ButtonRoom.as:79-89, Lock.as:activationStep)' }
+            : { effect: null, why: `${t.type}: not a Lock opened by the group's publish (response '${PERSISTENCE_RESPONSE[t.type]}', publish ${t.publish})` }),
+        pricedByButton: (t) => {
+            const others = (levelOf(t.level)?.entities ?? []).filter((e) => Number(e.attrs?.tset) === t.tset
+                && (OV.isLatchingOpener(e) || OV.isHoldingOpener(e)) && !(e.type === 'buttonroom' && Number(e.attrs?.tag) === t.tag));
+            return others.length === 0
+                ? { free: true, why: 'the group\'s ONLY in-level opener is this press' }
+                : { free: false, why: `the group has other openers [${others.map((e) => `${e.type}@${e.x},${e.y}`).join(', ')}]` };
+        },
+        gates: (t) => {
+            const regionId = regionIdFor(t.level);
+            const region = regionOf(regionId);
+            const analysis = regionAnalyses.get(regionId);
+            const rows = region?.subgraph?.internal_exits ?? [];
+            if (!analysis || rows.length === 0) return [];
+            const tiles = tilesOf(t);
+            const out = [];
+            for (const c of analysis.crossings) {
+                if (c.free || c.conditionSets.length === 0) continue;
+                if (!c.conditionSets.every((w) => w.tiles.some(([x, y]) => tiles.has(`${x},${y}`)))) continue;
+                const row = rows.find((r) => (r.from === c.from && r.to === c.to) || (r.bidirectional === true && r.from === c.to && r.to === c.from));
+                if (row) out.push({ region_id: regionId, from: c.from, to: c.to });
+            }
+            return out;
+        },
+    };
 }
 
 /**
@@ -2059,7 +2164,8 @@ export function playthroughEventLayer(doc) {
         events: [...priorEvents, ...talks.events],
         // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
         internalExitRules: locks.internalExitRules,
-        internalExitGates: blocks.internalExitGates,
+        // ⛓ RULES l20-button-latch: and an in-room latching press's crossings through its lock.
+        internalExitGates: [...blocks.internalExitGates, ...buttons.internalExitGates],
         exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...poles.exitGates, ...talks.exitGates],
     };
 }
@@ -2393,11 +2499,13 @@ function main() {
         + `${quiet ? '' : locks.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side} `
             + `across [${e.fields.across.join(', ')}] rule ${JSON.stringify(e.access_rule)}`).join('')}`
         + `${quiet ? '' : locks.internalExitRules.map((r) => `\n  ${r.region_id} ${r.from} -> ${r.to}: ${JSON.stringify(r.rule)}`).join('')}`);
-    console.log(`${buttons.events.length} cross-room button event(s), ${buttons.exitGates.length} crossing(s) through their targets gated`
+    console.log(`${buttons.events.length} button event(s), ${buttons.exitGates.length} crossing(s) through their targets gated, `
+        + `${buttons.internalExitGates.length} internal crossing(s) through an in-room latch's lock gated`
         + `${buttons.reused.length ? ` (${buttons.reused.join(', ')} reused)` : ''}`
         + `${quiet ? '' : buttons.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side} `
             + `(pressed at L${e.fields.action.presser.level} buttonroom@${e.fields.action.presser.x},${e.fields.action.presser.y})`).join('')}`
         + `${quiet ? '' : buttons.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}`
+        + `${quiet ? '' : buttons.internalExitGates.map((g) => `\n  gated ${g.region_id} ${g.from} -> ${g.to} (in-room press): ${JSON.stringify(g.rule)}`).join('')}`
         + `${buttons.skipped.length ? `; ${buttons.skipped.length} skipped: ${buttons.skipped.join('; ')}` : ''}`);
     console.log(`${poles.events.length} in-room pole event(s), ${poles.exitGates.length} crossing(s) through the bodies they kill gated`
         + `${quiet ? '' : poles.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side}`).join('')}`
@@ -2415,6 +2523,8 @@ function main() {
     console.log(`${landingGates.length} landing edge(s) gated on the lethal terrain they land on; `
         + `${lethalLandings.filter((l) => !l.gated).length} lethal-terrain landing(s) not gated`
         + `${quiet ? '' : lethalLandings.map((l) => `\n  ${l.gated ? 'GATED' : 'not gated'} ${l.where}: ${l.why}`).join('')}`);
+    console.log(`${necessaryDoorsCharged.length} departure(s) charged what every way onto their tile pays`
+        + `${quiet ? '' : necessaryDoorsCharged.map((m) => `\n  ${m}`).join('')}`);
     console.log(`${pocketDoorsCharged.length} departure(s) charged the solids that alone open their pocket`
         + `${quiet ? '' : pocketDoorsCharged.map((m) => `\n  ${m}`).join('')}`);
     console.log(`${notes.length} analysis note(s)${quiet ? ' (suppressed; drop --quiet to read them)' : ''}`);

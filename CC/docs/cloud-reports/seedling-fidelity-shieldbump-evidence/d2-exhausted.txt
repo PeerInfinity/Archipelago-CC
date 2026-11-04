@@ -1,0 +1,7 @@
+KEY false why no ESCAPE from the landing at t2 (free from the landing): depth first (deepest 3) and then breadth first: no state reachable from index 2 survives to index 4 (the dedup on the coarse key may have dropped an alternative)
+  first.shieldBump null landing {"t":2,"index":2,"id":"spinner@816,848","killed":false}
+  states 0:(829.00,860.00 v 0.00,0.00 d3) 1:(828.20,860.00 v -0.80,0.00 d2) 2:(827.65,860.00 v -0.55,0.00 d2) 3:(827.35,860.00 v -0.30,0.00 d2) 4:(827.30,860.00 v -0.05,0.00 d2) 5:(827.30,860.00 v 0.00,0.00 d2) 6:(827.30,860.00 v 0.00,0.00 d2) 7:(827.30,860.00 v 0.00,0.00 d2)
+KEY true why the forecast names shield bump (`shieldBumpNow`) as unmodelled (PRESS_ESCAPE_SHIELD_CLAIM: the certificate's path puts the shield's envelope on a body at t0)
+  first.shieldBump {"bumps":[{"t":1,"id":"spinner@816,848","shoved":true,"v":{"x":-1.5804993863653296,"y":-5.153100260958938}}],"stepped":7,"uncoveredFrom":7} landing {"t":2,"index":2,"id":"spinner@816,848","killed":false}
+  states 0:(829.00,860.00 v 0.00,0.00 d3) 1:(828.20,860.00 v -0.80,0.00 d2) 2:(827.65,860.00 v -0.55,0.00 d2) 3:(827.35,860.00 v -0.30,0.00 d2) 4:(827.30,860.00 v -0.05,0.00 d2) 5:(827.30,860.00 v 0.00,0.00 d2) 6:(827.30,860.00 v 0.00,0.00 d2) 7:(827.30,860.00 v 0.00,0.00 d2)
+RUN states 0:(829.00,860.00 v 0.00,0.00) 1:(830.85,862.03 v 1.85,2.03) 2:(830.85,862.03 v 1.68,1.85) 3:(830.85,862.03 v 1.52,1.66) 4:(830.85,862.03 v 1.35,1.48) 5:(830.85,862.03 v 1.18,1.29) 6:(830.85,862.03 v 1.01,1.11) 7:(830.85,862.03 v 0.84,0.92) hits [[1,"spinner","spinner@816,848"]] bumps []

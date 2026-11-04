@@ -58,9 +58,10 @@ const solve216 = () => {
     }
 };
 
-describe('hammer DASHCERT — the whole-dash certificate sees the swing\'s line of sight (`DASH_CERT_SIGHT`, OFF)', () => {
-    it.skipIf(ENV.SEEDLING_DASH_CERT_SIGHT !== undefined)('ships OFF', () => {
-        expect(DASH_CERT_SIGHT.enabled).toBe(false);
+describe('hammer DASHCERT — the whole-dash certificate sees the swing\'s line of sight (`DASH_CERT_SIGHT`, ON)', () => {
+    // ⛓ flipped ON (⚖ the user, 2026-11-03: "Land 2, hold fineStanceWalk": this switch lands without the fine walk)
+    it.skipIf(ENV.SEEDLING_DASH_CERT_SIGHT !== undefined)('ships ON', () => {
+        expect(DASH_CERT_SIGHT.enabled).toBe(true);
     });
 
     it('the witness replays on the model: 327 t, 0 hits, L101 — the game\'s own end (p4g, 0 px at every tick)', () => {

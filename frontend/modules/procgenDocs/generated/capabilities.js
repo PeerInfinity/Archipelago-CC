@@ -150,7 +150,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "play",
                     "statement": "It brings progression items of its own",
-                    "text": "11 items"
+                    "text": "13 items"
                 },
                 {
                     "group": "play",
@@ -831,107 +831,6 @@ export const CAPABILITIES = frz({
             ]
         },
         {
-            "id": "runner",
-            "label": "Runner Demo",
-            "lines": [
-                {
-                    "group": "play",
-                    "statement": "You can play its regions by hand",
-                    "text": null
-                },
-                {
-                    "group": "play",
-                    "statement": "The Playback Bot can walk it (replaying a world's solution)",
-                    "text": null
-                },
-                {
-                    "group": "play",
-                    "statement": "It brings progression items of its own",
-                    "text": "Double Jump, Blue Platforms, Springs, Glide, Shield, Victory"
-                },
-                {
-                    "group": "play",
-                    "statement": "What the generator may do with it",
-                    "text": "locations placed anywhere"
-                },
-                {
-                    "group": "loop",
-                    "statement": "You can play it in loop mode",
-                    "text": null
-                },
-                {
-                    "group": "loop",
-                    "statement": "What you can queue for it",
-                    "text": "moves between regions, location checks"
-                },
-                {
-                    "group": "loop",
-                    "statement": "You can record a visit and replay it",
-                    "text": null
-                },
-                {
-                    "group": "loop",
-                    "statement": "How a replay works",
-                    "text": "applies the result instantly"
-                },
-                {
-                    "group": "loop",
-                    "statement": "Instant fast-forward",
-                    "text": "always — a replay is already instant"
-                },
-                {
-                    "group": "loop",
-                    "statement": "A Bot block can play it for you",
-                    "text": "the game's own automation walks it"
-                },
-                {
-                    "group": "loop",
-                    "statement": "You can play it outside loop mode",
-                    "text": null
-                },
-                {
-                    "group": "generate",
-                    "statement": "The pipeline can build regions of it",
-                    "text": "picked from its own levels to fit the plan"
-                },
-                {
-                    "group": "generate",
-                    "statement": "How many ready-made rooms / levels it brings",
-                    "text": "6"
-                },
-                {
-                    "group": "generate",
-                    "statement": "Its rooms can be captured into a library and reused",
-                    "text": null
-                },
-                {
-                    "group": "generate",
-                    "statement": "Exits can be locked behind items",
-                    "text": null
-                },
-                {
-                    "group": "generate",
-                    "statement": "It has its own settings in the generation form",
-                    "text": null
-                },
-                {
-                    "group": "generate",
-                    "statement": "A world of it can start with an empty inventory",
-                    "text": null
-                },
-                {
-                    "group": "edit",
-                    "statement": "An exit can be moved to another side (and a side can hold more than one)",
-                    "text": "one exit per side"
-                },
-                {
-                    "group": "edit",
-                    "statement": "The editor's validity report checks its location and exit names",
-                    "text": null
-                }
-            ]
-        },
-        {
             "id": "text_adventure",
             "label": "Text Adventure",
             "lines": [
@@ -1077,10 +976,6 @@ export const CAPABILITIES = frz({
             "label": "Idle Loops"
         },
         {
-            "id": "runner",
-            "label": "Runner Demo"
-        },
-        {
             "id": "text_adventure",
             "label": "Text Adventure"
         }
@@ -1090,7 +985,7 @@ export const CAPABILITIES = frz({
         "fieldsRead": 39,
         "fieldsUnread": 51,
         "statements": 29,
-        "substrates": 10
+        "substrates": 9
     },
     "fieldsRead": [
         "apExitNamesOf",
@@ -1312,21 +1207,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "panelComponentType",
-                            "value": "runnerDemoPanel"
-                        },
-                        {
-                            "field": "deserializeWorld",
-                            "value": "fn"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": null,
@@ -1473,21 +1353,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "getPlaybackController",
-                            "value": "fn"
-                        },
-                        {
-                            "field": "playbackScope",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": null,
@@ -1602,17 +1467,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "compositeMap.drawRegion",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": null,
@@ -1651,11 +1505,11 @@ export const CAPABILITIES = frz({
                 {
                     "id": "cloudberry",
                     "kind": "yes",
-                    "text": "11 items",
+                    "text": "13 items",
                     "why": [
                         {
                             "field": "libraryItems",
-                            "value": "11 keys"
+                            "value": "13 keys"
                         },
                         {
                             "field": "supportedFeatures",
@@ -1750,21 +1604,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "supportedFeatures",
                             "value": "2 items"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": "Double Jump, Blue Platforms, Springs, Glide, Shield, Victory",
-                    "why": [
-                        {
-                            "field": "libraryItems",
-                            "value": "6 keys"
-                        },
-                        {
-                            "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations, runner_abilities"
                         }
                     ]
                 },
@@ -1883,17 +1722,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": "locations placed anywhere",
-                    "why": [
-                        {
-                            "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations, runner_abilities"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": "item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit",
@@ -1999,17 +1827,6 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "omsi",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "conceptRealisations",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
                     "kind": "no",
                     "text": null,
                     "why": [
@@ -2135,17 +1952,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.manual",
-                            "value": "yes"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": null,
@@ -2251,17 +2057,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.queueActions",
                             "value": "regionMove"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": "moves between regions, location checks",
-                    "why": [
-                        {
-                            "field": "loopSupport.queueActions",
-                            "value": "regionMove, locationCheck"
                         }
                     ]
                 },
@@ -2393,21 +2188,6 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "omsi",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.record",
-                            "value": "yes"
-                        },
-                        {
-                            "field": "loopSupport.playback",
-                            "value": "yes"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
                     "kind": "yes",
                     "text": null,
                     "why": [
@@ -2568,21 +2348,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": "applies the result instantly",
-                    "why": [
-                        {
-                            "field": "takeLastRecording",
-                            "value": "—"
-                        },
-                        {
-                            "field": "loopSupport.summaryRecording",
-                            "value": "yes"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": "re-runs the queued actions",
@@ -2729,21 +2494,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": "always — a replay is already instant",
-                    "why": [
-                        {
-                            "field": "loopSupport.instant",
-                            "value": "yes"
-                        },
-                        {
-                            "field": "loopSupport.summaryRecording",
-                            "value": "yes"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": "a per-block toggle",
@@ -2876,21 +2626,6 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "omsi",
-                    "kind": "yes",
-                    "text": "the game's own automation walks it",
-                    "why": [
-                        {
-                            "field": "loopSupport.executeVia",
-                            "value": "solver"
-                        },
-                        {
-                            "field": "sharing.mana.loopActionDelegation",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
                     "kind": "yes",
                     "text": "the game's own automation walks it",
                     "why": [
@@ -3147,33 +2882,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "na",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.instant",
-                            "value": "yes"
-                        },
-                        {
-                            "field": "loopSupport.executeVia",
-                            "value": "solver"
-                        },
-                        {
-                            "field": "takeLastRecording",
-                            "value": "—"
-                        },
-                        {
-                            "field": "loopSupport.summaryRecording",
-                            "value": "yes"
-                        },
-                        {
-                            "field": "loopSupport.botActsAtOnce",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "na",
                     "text": null,
@@ -3303,17 +3011,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.requiresLoopMode",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": null,
@@ -3419,17 +3116,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "sharing.mana",
                             "value": "{}"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "sharing.mana",
-                            "value": "—"
                         }
                     ]
                 },
@@ -3563,17 +3249,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "sharing.items",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "no",
                     "text": null,
@@ -3679,17 +3354,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "describeAction",
                             "value": "fn"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "describeAction",
-                            "value": "—"
                         }
                     ]
                 },
@@ -3863,25 +3527,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "generateZoneForSpecsGen",
                             "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": "picked from its own levels to fit the plan",
-                    "why": [
-                        {
-                            "field": "generateRegionCore",
-                            "value": "—"
-                        },
-                        {
-                            "field": "generateZoneForSpecs",
-                            "value": "fn"
-                        },
-                        {
-                            "field": "generateZoneForSpecsGen",
-                            "value": "fn"
                         }
                     ]
                 },
@@ -4069,25 +3714,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": "6",
-                    "why": [
-                        {
-                            "field": "zoneCount",
-                            "value": "6"
-                        },
-                        {
-                            "field": "zoneSourceLabel",
-                            "value": "—"
-                        },
-                        {
-                            "field": "generateRegionCore",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "na",
                     "text": null,
@@ -4203,17 +3829,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "generationCost",
                             "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
-                    "kind": "no",
-                    "text": "its generation cost is declared `heavy`",
-                    "why": [
-                        {
-                            "field": "generationCost",
-                            "value": "heavy"
                         }
                     ]
                 },
@@ -4355,21 +3970,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "instantiateLibraryEntry",
                             "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "captureLibraryEntry",
-                            "value": "fn"
-                        },
-                        {
-                            "field": "instantiateLibraryEntry",
-                            "value": "fn"
                         }
                     ]
                 },
@@ -4520,21 +4120,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "canHostExitGates",
-                            "value": "fn"
-                        },
-                        {
-                            "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations, runner_abilities"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": null,
@@ -4649,17 +4234,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "renderProcgenParams",
-                            "value": "fn"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "no",
                     "text": null,
@@ -4759,17 +4333,6 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "omsi",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "startingInventory",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
                     "kind": "yes",
                     "text": null,
                     "why": [
@@ -4889,17 +4452,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "na",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "locationCapacity",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": null,
@@ -4999,17 +4551,6 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "omsi",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "roomEditor",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
                     "kind": "no",
                     "text": null,
                     "why": [
@@ -5129,17 +4670,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "runner",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "regionRoundTrip",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "text_adventure",
                     "kind": "yes",
                     "text": null,
@@ -5241,17 +4771,6 @@ export const CAPABILITIES = frz({
                     "id": "omsi",
                     "kind": "yes",
                     "text": "and a side can hold more than one",
-                    "why": [
-                        {
-                            "field": "exitSides",
-                            "value": "{keys, relabel}"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
-                    "kind": "partial",
-                    "text": "one exit per side",
                     "why": [
                         {
                             "field": "exitSides",
@@ -5387,21 +4906,6 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "omsi",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "apLocationNamesOf",
-                            "value": "fn"
-                        },
-                        {
-                            "field": "apExitNamesOf",
-                            "value": "fn"
-                        }
-                    ]
-                },
-                {
-                    "id": "runner",
                     "kind": "yes",
                     "text": null,
                     "why": [

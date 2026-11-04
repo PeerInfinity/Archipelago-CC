@@ -93,7 +93,7 @@ describe('mazeSetLab — the served picker offers what this arm can OPEN', () =>
         const ids = rows.map((r) => r.library_id);
         expect(ids).toContain(MAZE_PACK.library_id);
         expect(ids).not.toContain(BOUNCE_PACK.library_id);
-        expect(ids).not.toContain(readJson(`${LIB_DIR}/demo-runner-pack.json`).library_id);
+        expect(ids).not.toContain(readJson(`${LIB_DIR}/demo-cloudberry-pack.json`).library_id);
         // ⛔ …and it is the DECLARED field that decides, not the file name.
         expect(INDEX.filter((r) => r.substrates.includes(LAB_SUBSTRATE)).length)
             .toBe(rows.length);

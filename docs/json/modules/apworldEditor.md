@@ -883,7 +883,7 @@ arrowless); both arrows build every bounce region. The corpus control takes
 `--from=<id>` and counts the ops whose rules were owned (`rules owned`).
 
 **The free-item clause follows the target** (R2, §7.7 ⚖ #5): a target whose
-`hostsSurplusExitsNatively(regionParams)` answers true (bounce's `braid`, runner)
+`hostsSurplusExitsNatively(regionParams)` answers true (bounce's `braid`, cloudberry)
 never drifts an exit onto a free item, so the description and the realiser's
 refusal DROP *"M items rode free"* there (`res.hostsSurplus`); `column` keeps it.
 The op's pre-realiser refusals are one exported function, `regenerateOpRefusal`,
@@ -1007,7 +1007,7 @@ The form's **Source** row — *Generate* (the default: the realiser, everything
 above) · *Library entry* — is drawn when the TARGET's registry entry declares
 `instantiateLibraryEntryForSpecs`, the same test the pipeline's sphere path makes
 before it hands a slot to a library entry (`regionGenerationSourcesFor`; today
-maze, bounce and runner). *Library entry* fetches the served packs
+maze, bounce and cloudberry). *Library entry* fetches the served packs
 (`frontend/region-libraries/`, the index once per page) and lists every entry
 whose `substrate` is the target, grouped by pack, as *"Crossroads · 3 slots · exit
 sides N,E,S,W"*. An entry the op would refuse for this region (fewer captured
@@ -1041,7 +1041,7 @@ hook's flags default to "don't require"). A tile entry (maze) reserves
 `exitSides[0]` for the sphere driver's back portal. The hub has no back portal
 (the document's exit to the parent is a real exit), so every document exit follows
 that slot and gets a captured opening. The hook opens same-wall first, then
-relabels a leftover opening onto the side. A zone entry (bounce, runner) gets one
+relabels a leftover opening onto the side. A zone entry (bounce) gets one
 side per exit, and the hook relabels its portals by index. The document's exits
 then key the descriptor's exits (the short names, their targets, the spec's
 rules), and **the k-th document location's name and rule go onto the k-th
@@ -1084,7 +1084,7 @@ around the document's locations (R0, R5a), it is the region's **content**. The
 form's Source row offers **Zone N** when the target declares the zone channel
 (`zoneCount` + `extractZoneRules`) AND can read back, from the document, the
 config its zones were built with (`zoneConfigFromSlot`). Today that is jta and,
-since R5c, flash_seedling (*Atlas room*, below). The bounce, runner and omsi
+since R5c, flash_seedling (*Atlas room*, below). The bounce and omsi
 channels have no read-back, so the op refuses them by name and the form does not
 offer them. A target with no realiser (jta) opens on the zone.
 
@@ -1368,7 +1368,7 @@ whose answer arrives after the document changed is discarded, and says so.
 `open`/`save`** (`regionRoundTripOf` — the registry lookup Edit ▸ already makes;
 no world is deserialized per render). Elsewhere it is **disabled** and its title
 is that lookup's own sentence: a `refused` declaration's words (Seedling), or
-*"the X substrate declares no `regionRoundTrip` …"* (jta, omsi, runner today —
+*"the X substrate declares no `regionRoundTrip` …"* (jta, omsi, cloudberry today —
 `text_adventure` declares one since PRESET SIDECARS G2b-1, with no room editor).
 ⛔ It needs no room editor — only the round trip. The work
 (two round trips — measured at C1, `7f83de86d4`, in headless Chromium: 0.4–0.8 ms
@@ -2090,7 +2090,7 @@ counted off the reconstruction, are the same before and after).
 ### Moving an exit to another side (M3)
 
 ⚖ §5e Q1 A: M2's shape — native hub ops, no relayout, for every substrate that
-declares `exitSides` (bounce and runner at M3; the text adventure since G2a; jta
+declares `exitSides` (bounce at M3, with runner until its deletion; cloudberry; the text adventure since G2a; jta
 and omsi since PIPELINE RELAYOUT R2). An exit of a flash zone does not stand
 anywhere: its `side` is a LINKING KEY, which play resolves through
 `params.sidePortals[side]` to a level portal whose geometry does not depend on the
@@ -2125,7 +2125,7 @@ the payload is keyed by side."*
   other verdict can change). Written through the substrate's own
   `deserializeWorld` → `serializeWorld`, the path M2's flag writes take;
 - what the substrate's `exitSides.relabel` re-keys (registry reference §
-  *Editing*): for bounce and runner, `params.sidePortals` renamed in place and
+  *Editing*): for bounce, `params.sidePortals` renamed in place and
   `params.backExitSide` moved with a back exit; for bounce, also the arrow of the
   portal now serving the side. The hub names none of these fields — the
   declaration does, and the answer quotes its `keys`.
@@ -2532,7 +2532,7 @@ and the same ⚖.
 | the region | the button |
 |---|---|
 | no `preset_sidecars` entry | **no block and no button** — a classic AP region has no room, and a disabled control would imply it might have one |
-| a substrate with no `roomEditor` (jta, omsi, runner, text_adventure) | **disabled**, titled *"No region editor for X yet"* |
+| a substrate with no `roomEditor` (cloudberry, jta, omsi, text_adventure) | **disabled**, titled *"No region editor for X yet"* |
 | a substrate that declares `regionRoundTrip: {refused}` (Seedling) | **disabled**, titled with the substrate's own sentence — its payload is an atlas reference, not a room record |
 | a region whose payload does not round-trip | **enabled until pressed**, then disabled with the reason (see below) — for as long as the document is the one it was asked about: the verdict is remembered against the RECORD, so any applied op, an Undo or a new document re-asks it (S1; until S1 it was cleared only by an applied op, and an Undo left a refusal standing on a restored payload) |
 | anything else | **enabled** |
@@ -2571,7 +2571,7 @@ registration): **1,036 of 1,046** maze-payload sidecar regions and **25 of 25**
 bounce regions are editable, and every one of the rest gets a named reason. All
 ten maze refusals are `seedling_atlas_maze`'s atlas-derived rooms, and they fail
 check 1: an unchanged save would already rewrite their payloads. Every region of
-the other substrates (jta, text_adventure, omsi, runner, flash_seedling) is
+the other substrates (jta, text_adventure, omsi, cloudberry, flash_seedling) is
 refused before the press, by the registry — `text_adventure` declares a round trip
 since G2b-1 (so *Re-derive rules ▸* reaches its 15 regions) but no `roomEditor`, so
 Edit ▸ still says *"No region editor"*. The *"394 of 1,046 … 15 of 25"* this

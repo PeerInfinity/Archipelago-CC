@@ -58,7 +58,7 @@ function gradeRecord(out, record, verb) {
 
 describe('⛓⛓⛓ the HOLD and WEIGH gates\' table rows and binding rows', () => {
     it('the heads are `holdgate` then `weighgate`, LAST, need no item, opt-in, and the `strategy:` heads', () => {
-        expect(ELEMENT_NAMES.slice(-2)).toEqual(['holdgate', 'weighgate']);
+        expect(ELEMENT_NAMES.slice(-4)).toEqual(['holdgate', 'weighgate', 'chestloot', 'keygate']); // ⛓ + B1, + keygate
         expect(ELEMENT_TABLE.holdgate.element).toBe(HOLD_GATE);
         expect(ELEMENT_TABLE.weighgate.element).toBe(WEIGH_GATE);
         for (const name of ['holdgate', 'weighgate']) {

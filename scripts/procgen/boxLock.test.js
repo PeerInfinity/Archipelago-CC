@@ -517,6 +517,7 @@ describe('who takes the box', () => {
          * fidelity FIREMOVE the L41 fire-route witness, `probe-seedling-fire-move.mjs`;
          * fidelity CORPSEBUMP the block/corpse sweep and corpse-weigh witnesses, `probe-seedling-corpse-bump.mjs`;
          * fidelity TURRETCIRCLE the L40 circling-kill and shield witnesses, `probe-seedling-turret-circle.mjs`;
+         * fidelity FROZENPRESS the L40 press-in-a-freeze witnesses, `probe-seedling-frozen-press.mjs`;
          * fidelity TURRETSNAP the L40 live turret's snapped-body contact witnesses, `probe-seedling-turret-snap.mjs`;
          * rules-l55-waterfall L52's pools into L55, with and without the Feather, `probe-seedling-l55-waterfall.mjs`;
          * rules-l0-tighter-probe L0's lake to the L89 door, past the house and up the falls, `probe-seedling-l0-tighter.mjs`;
@@ -588,6 +589,7 @@ describe('who takes the box', () => {
             'probe-seedling-fire-move.mjs',
             'probe-seedling-corpse-bump.mjs',
             'probe-seedling-turret-circle.mjs',
+            'probe-seedling-frozen-press.mjs',
             'probe-seedling-l55-waterfall.mjs',
             'probe-seedling-l0-tighter.mjs',
             'probe-seedling-shake-exact.mjs',
@@ -635,7 +637,9 @@ describe('who takes the box', () => {
             // cloudberry P2b: the sphere gate (generation + Generate.py + play), same door
             'check-cloudberry-sphere.mjs',
             // cloudberry P3a: the touch-↑ probe (real pointer taps at the doors), same door
-            'probe-cloudberry-touch-up.mjs'];
+            'probe-cloudberry-touch-up.mjs',
+            // rules-certifier-tail: L3's water door and L25's apitem on the game (import door: `isEntryPoint` → main())
+            'probe-seedling-certifier-tail.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

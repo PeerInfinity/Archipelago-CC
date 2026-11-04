@@ -566,6 +566,18 @@ describe('placing exits and locations', () => {
             expect(hit.necessary).toEqual(['f']);
         });
 
+        // ⛓ RULES certifier-tail — L3's door to L111 is one water tile west of a dry lane, and L111 lands ON that water.
+        it('a landing ON gated material pays that cell\'s own conditions (it cannot stand there without them)', () => {
+            const g = gridOf(['=', '~', '.']);
+            expect([...componentForTile(g, findComponents(g), [0, 0], OPTIONS).necessary].sort()).toEqual(['a', 'b']);
+            const landed = componentForTile(g, findComponents(g), [0, 0], { ...OPTIONS, arrivalTiles: () => [[0, 1]] });
+            expect([...landed.necessary].sort()).toEqual(['a', 'b']);
+            // mutant control: the same landing on an OPEN cell pays nothing for itself
+            const dry = gridOf(['=', '.', '#', '~', '.']);
+            expect(componentForTile(dry, findComponents(dry), [0, 0], { ...OPTIONS, arrivalTiles: () => [[0, 1]] }).necessary)
+                .toEqual(['b']);
+        });
+
         it('a landing ON the door, or a way down the fall, needs nothing', () => {
             const g = gridOf(['w', 'w', '~', '.']);
             expect(componentForTile(g, findComponents(g), [0, 0], { ...OPTIONS, arrivalTiles: () => [[0, 0]] }).necessary)

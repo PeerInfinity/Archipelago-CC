@@ -25,8 +25,8 @@ import { describe, expect, it } from 'vitest';
 import { generateSeedlingLevel } from './procgenSeedling.js';
 import { seedlingOnConnectorEntities } from './procgenSeedlingElements.js';
 import {
-    POST_DARK_SUIT_PALETTE, POST_FIRE_ITEMS, POST_FIRE_PALETTE, POST_SPEAR_PALETTE,
-    POST_SWORD_PALETTE,
+    POST_DARK_SUIT_PALETTE, POST_FEATHER_PALETTE, POST_FIRE_ITEMS, POST_FIRE_PALETTE, POST_SHIELD_PALETTE,
+    POST_SPEAR_PALETTE, POST_SWIM_PALETTE, POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
 } from './procgenPalette.js';
 import { BIOME_DEFAULT_FOLD, defaultElementsFor } from './procgenSeedling.js';
 import { GEN_ROOM_BIOMES } from './seedlingGenRoom.js';
@@ -50,7 +50,7 @@ const gen = (palette, { seed = 1, elements = 'burngate', require } = {}) => gene
 describe('⛓⛓⛓ the BURN GATE head, its boot flag and its biomes (strategy switch r2)', () => {
     it('the head is `burngate`, LAST, needs `hasFire`, requires strategy `burn`', () => {
         /** ⛓ r3 appended `holdgate` and `weighgate` after it; nothing before it moved. */
-        expect(ELEMENT_NAMES.slice(-3)).toEqual(['burngate', 'holdgate', 'weighgate']);
+        expect(ELEMENT_NAMES.slice(-5)).toEqual(['burngate', 'holdgate', 'weighgate', 'chestloot', 'keygate']); // + B1, + keygate
         expect(ELEMENT_TABLE.burngate.element).toBe(BURN_GATE);
         expect(ELEMENT_TABLE.burngate.needs).toEqual(['hasFire']);
         expect(ELEMENT_TABLE.burngate.needsStrategy).toEqual(['burn']);
@@ -68,9 +68,15 @@ describe('⛓⛓⛓ the BURN GATE head, its boot flag and its biomes (strategy s
         expect(BIOME_NAMES).toContain('post-fire');
     });
 
-    it('OPT-IN: in no biome default, and the 5 old biomes\' defaults are unchanged', () => {
-        expect(BIOME_DEFAULT_FOLD.flatMap((r) => r.heads.map((h) => h.name))).not.toContain('burngate');
-        for (const items of [POST_FIRE_ITEMS, POST_SPEAR_PALETTE.items, POST_DARK_SUIT_PALETTE.items]) {
+    // ⛓ seedling-gen-post-swim-fix (⚖ Robert 2026-11-02, "Both, one re-record"): was "OPT-IN: in no
+    // biome default". The head joins by its OWN item, as a last row, and only the fire's boots draw it.
+    it('JOINED: the fold\'s last row is `hasFire` → burngate; every boot with the fire draws it, none without', () => {
+        expect(BIOME_DEFAULT_FOLD.at(-1)).toEqual({ item: 'hasFire', heads: [{ name: 'burngate' }] });
+        for (const items of [POST_FIRE_ITEMS, POST_SPEAR_PALETTE.items, POST_DARK_SUIT_PALETTE.items,
+            POST_SWIM_PALETTE.items, POST_FEATHER_PALETTE.items]) {
+            expect(formatElementSpec(defaultElementsFor(items))).toMatch(/\+burngate$/);
+        }
+        for (const items of [PRE_SWORD_PALETTE.items, POST_SWORD_PALETTE.items, POST_SHIELD_PALETTE.items]) {
             expect(formatElementSpec(defaultElementsFor(items))).not.toMatch(/burngate/);
         }
         expect(DEFAULT_CENSUS_BIOMES).not.toContain('post-fire');

@@ -1,0 +1,21 @@
+levelRun: a sword press at tick 43 would fire its rect on a FROZEN tick (a pickup ceremony), and `genericHit` returns immediately under `Game.freezeObjects` — so the press would do nothing at all. Pre
+    at runFrozenTick (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:15331:26)
+    at Object.advance (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:22635:28)
+    at advanceNamingRefusals (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:499:20)
+    at Object.advance (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:26124:25)
+    at drive (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/botDriverV2.js:5696:48)
+    at walkToUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:30799:31)
+    at walkToRun (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:30845:71)
+    at walkTo (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:30868:19)
+    at solveSegmentUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:32245:9)
+    at file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25857:58
+    at refusingByName (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:512:16)
+    at solveSegmentDeadlined (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25857:37)
+    at solveSegment (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25783:12)
+    at file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/twoPassSolve.js:203:77
+    at withEscapeCrossPassScope (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:15470:16)
+    at solvePass (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/twoPassSolve.js:203:33)
+    at twoPassSolve (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/twoPassSolve.js:208:23)
+    at solveOneStep (file:///home/user/Archipelago-CC/scripts/procgen/survey-seedling-route.mjs:1559:24)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/survey-seedling-route.mjs:1772:20
+----

@@ -1653,7 +1653,7 @@ export const CONTACT_FIDELITY = {
      * X press's own `useItem` arms against `secondary`'s slot, and in the same frame an X press goes first. OFF:
      * byte-identical (no committed tape presses C). `SEEDLING_SECONDARY_USE=0|1`.
      */
-    secondaryUse: false,
+    secondaryUse: true,
     /**
      * fidelity LIGHTPOLE D2 (wave 34) — AN IN-ROOM POLE IS LIT BY A SPEAR THRUST FROM ITS OWN ROOM.
      *
@@ -1741,6 +1741,91 @@ export const CONTACT_FIDELITY = {
      * `pendingEarnedClears`). OFF: byte-identical. `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`.
      */
     bobArenaRockClear: true,
+    /**
+     * fidelity REFUSALS D1 (wave 36) — A CHEST PLACEMENT IS PROBED AT ITS BODY (`solverBot.placementBlocker`).
+     *
+     * `Chest(_x, _y)` is `super(_x + Tile.w/2, _y + Tile.h/2)` + `setHitbox(16, 16, 8, 8)` (`Chest.as:27,30`): the body
+     * is the OEL cell itself. `world.chests` rows carry no rect, so the "what else is in this cell" probe stood a player
+     * box on the cell's top-left CORNER and named L25's neighbouring `rock2@80,96` (which only touches the chest at
+     * x = 96) as the solid the placement is inside. ON: a chest is probed at (x + 8, y + 8). OFF: byte-identical.
+     * `SEEDLING_CHEST_BODY_PLACEMENT_PROBE=0|1`.
+     */
+    chestBodyPlacementProbe: true,
+    /**
+     * fidelity REFUSALS D2 (wave 36) — A RUN STANDING IN A PIT FALLS OUT WITH NO INPUT (`solverBot` `execReachPit`).
+     *
+     * A fall can land the player inside a pit of the next level (L84 `fallhole1`: its 3x3 middle is one pit), and
+     * `Player.checkFallingInPit` drops it again with nothing pressed. The reach-pit walk planned an A* from that start
+     * tile and refused it as unwalkable (survey steps 174/202). ON: a run whose terrain probe overlaps a pit tile that
+     * falls to the goal's level is stepped idle until the edge, then coasts. OFF: byte-identical.
+     * `SEEDLING_IN_PIT_FALL_OUT=0|1`.
+     */
+    inPitFallOut: true,
+    /**
+     * fidelity CORPSEBUMP2 D1 (wave 36) — A CORPSE IS READ AT REST WHERE IT IS PRESSED, NOT WHERE IT WAS BEFORE THE WALK
+     * (`solverBot.execCorpseWeigh`).
+     *
+     *     Player.as   useItem(Main.primary)   an X press with the Fire slot selected IS a Fire press, wherever it
+     *                                         comes from — the walk's strike/dash policy (`strikePolicyFor` gates on
+     *                                         the INVENTORY's sword, not the selected slot) presses X too
+     *     IceTurret.as:172-203  bump          a Fire press near a corpse bumps it one tile away
+     *
+     * `execCorpseWeigh` read the corpse's tile at rest after a press, walked to the next stance, and pressed toward
+     * `at + dir` — but between the read and the press the walk is driven with Fire selected, and a walk press bumps
+     * the corpse on (measured: L40's latch chain with CPAIR-3 + `orbitFreeAim` + `turretSnapPricing` OFF, the walk to
+     * bump 2's stance pressed `up+primary` on its first tick and the corpse glided (30,25) → (30,24); `runFire` then
+     * refused *"ALREADY on (30,24)"* as a `BotDriverV2Error` with no `perTick`; the game, p4g at 0 px, moves it the
+     * same way). ON: after each stance walk the corpse is re-read — a walk Fire press younger than its bump window is
+     * stood out, and a corpse that is gliding or off the rest cycle it was read on is waited to rest by the press's
+     * own rest rule and the loop re-reads it (a bump the walk already made is not made again; a corpse the walk
+     * carried past the presser refuses by name); an unmoved corpse costs no tick. A refusal inside `runFire` carries
+     * the run's `perTick`. OFF: byte-identical. `SEEDLING_CORPSE_BUMP_REST_READ=0|1`.
+     */
+    corpseBumpRestRead: true,
+    /**
+     * fidelity SHIELDBUMP D1 (wave 36, ⚖ hammer-2's licence 2026-10-31) — THE SPINNER FORECASTS STEP THE PLAIN SHIELD
+     * BUMP (`levelRun.spinnerForecastWithPress`, `spinnerFightForecast`).
+     *
+     *     Player.update       `addShield(); shieldBump();` above `super.update()`, after every enemy's update
+     *     Player.shieldBump   `if (shieldObj && v.length > 0)` each "Enemy" the box touches: `o.knockback(shieldForce, p)`
+     *
+     * Both forecasts named `shieldBumpNow` unmodelled for ANY carried shield, so hammer-phase A's `pressEscape` made no
+     * claim after the shield. ON, with the PLAIN shield: on every row the forecast is TOLD the player's state (`x`, `y`,
+     * `vx`, `vy`, `direction`: a new optional `players` source, the `positions` the press's own tests ask, up to the
+     * last of them, or a cursor `advance(state)`), the bump is stepped as the run steps it (`shieldBumpTouches` /
+     * `enemyKnockbackV` with `SHIELD_FORCE`, after the bodies' step and before the sword's tests). The bump is reported
+     * modelled ONLY on a forecast whose every row was stepped with a state; any other forecast (a row with no state, a
+     * zero-row probe, the dark shield) names it as before, in the same words. OFF: byte-identical.
+     * `SEEDLING_FORECAST_SHIELD_BUMP=0|1`.
+     */
+    forecastShieldBump: false,
+    /**
+     * fidelity L100LATTICE D1 (wave 36) — A WALK TO AN 8 px STANCE PLANS ON THE 8 px LATTICE (`solverBot.walkToUnder`).
+     *
+     * A stance whose existence was answered on `FINE_LATTICE` (`fineSwingStance`'s fresh cells, `fineWandStance`,
+     * `fineFrontierFlood`, the bridge / pole-thrust / light-pole stances the 16 px plan refused) was then WALKED on the
+     * run's 16 px lattice, whose plan reaches it only when no 16 px node is near: `nearestGoalNode` otherwise aims at a
+     * node up to two cells away and the string-pull's fallback keeps the target as a last segment nothing checks.
+     * Measured on survey step 219 (L100): the break stance (124,140) for `breakablerock@128,144` was walked as
+     * `… (104,136) (124,140)` through `cliffside0@112,128` and stalled 400 ticks. ON: the walk to such a stance asks
+     * the 8 px lattice first (the FRONTIER3 fine walk), and a throw there falls back to the 16 px plan as before.
+     * OFF: byte-identical. `SEEDLING_FINE_STANCE_WALK=0|1`.
+     */
+    fineStanceWalk: false,
+    /**
+     * fidelity FROZENPRESS D1 (wave 37) — THE WALK'S STRIKE STANDS DOWN ON A TICK WHOSE INPUT THE GAME REFUSES.
+     *
+     * `Player.input()` returns at its first line while `frozenTimer > 0` (`Player.as:1521`), and an `IceTurretBlast`
+     * contact sets it to 15 above the player's `freezeStep` (`IceTurretBlast.as:51-53`, `Player.as:532`): fourteen
+     * refused ticks, a `primary` press on any of them LOST (`levelRun`'s `FROZEN_TICK_PRESS`, kept). The opportunistic
+     * strike (`strikePolicy.decide`, asked by every run-side walk: `drive`, `runDwell`, `runShove`,
+     * `guardedChaserDwell`, `execBreak`, `orbitKillPolicy`) pressed into that span — leg 860 (A5, `forecastShieldBump`
+     * + `PRESS_ESCAPE_EXACT` ON) refused at t2119 so. ON: each of those sites hands `decide` the run's
+     * `freezeForecast` (`strikeDecideOpts`): the blasts in flight stepped one tick on copies against the tick-top box,
+     * and the timer's decrement — exact from the state at scheduling time. On a refused tick the policy takes no aim and
+     * no press (an owed aim is dropped). OFF: byte-identical. `SEEDLING_FROZEN_PRESS_FORECAST=0|1`.
+     */
+    frozenPressForecast: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2088,6 +2173,24 @@ if (globalThis.process?.env?.SEEDLING_WATERFALL_PUSH_PRICING === '0') CONTACT_FI
 // ⛓ fidelity L32ROCK D1: `SEEDLING_BOB_ARENA_ROCK_CLEAR=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '1') CONTACT_FIDELITY.bobArenaRockClear = true;
 if (globalThis.process?.env?.SEEDLING_BOB_ARENA_ROCK_CLEAR === '0') CONTACT_FIDELITY.bobArenaRockClear = false;
+// ⛓ fidelity REFUSALS D1: `SEEDLING_CHEST_BODY_PLACEMENT_PROBE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CHEST_BODY_PLACEMENT_PROBE === '1') CONTACT_FIDELITY.chestBodyPlacementProbe = true;
+if (globalThis.process?.env?.SEEDLING_CHEST_BODY_PLACEMENT_PROBE === '0') CONTACT_FIDELITY.chestBodyPlacementProbe = false;
+// ⛓ fidelity REFUSALS D2: `SEEDLING_IN_PIT_FALL_OUT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_IN_PIT_FALL_OUT === '1') CONTACT_FIDELITY.inPitFallOut = true;
+if (globalThis.process?.env?.SEEDLING_IN_PIT_FALL_OUT === '0') CONTACT_FIDELITY.inPitFallOut = false;
+// ⛓ fidelity CORPSEBUMP2 D1: `SEEDLING_CORPSE_BUMP_REST_READ=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_REST_READ === '1') CONTACT_FIDELITY.corpseBumpRestRead = true;
+if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_REST_READ === '0') CONTACT_FIDELITY.corpseBumpRestRead = false;
+// ⛓ fidelity SHIELDBUMP D1: `SEEDLING_FORECAST_SHIELD_BUMP=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FORECAST_SHIELD_BUMP === '1') CONTACT_FIDELITY.forecastShieldBump = true;
+if (globalThis.process?.env?.SEEDLING_FORECAST_SHIELD_BUMP === '0') CONTACT_FIDELITY.forecastShieldBump = false;
+// ⛓ fidelity L100LATTICE D1: `SEEDLING_FINE_STANCE_WALK=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FINE_STANCE_WALK === '1') CONTACT_FIDELITY.fineStanceWalk = true;
+if (globalThis.process?.env?.SEEDLING_FINE_STANCE_WALK === '0') CONTACT_FIDELITY.fineStanceWalk = false;
+// ⛓ fidelity FROZENPRESS D1: `SEEDLING_FROZEN_PRESS_FORECAST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FROZEN_PRESS_FORECAST === '1') CONTACT_FIDELITY.frozenPressForecast = true;
+if (globalThis.process?.env?.SEEDLING_FROZEN_PRESS_FORECAST === '0') CONTACT_FIDELITY.frozenPressForecast = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

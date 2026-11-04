@@ -435,6 +435,7 @@ async function stepRegions(env, { onProgress = null } = {}) {
         assumeBidirectional,
         stats,
         librarySources: env.librarySources,
+        spherePlan: env.plan,
     });
     let r = gen.next();
     while (!r.done) {
@@ -779,6 +780,7 @@ function sphereReRoll(env, edit) {
         regionSize: growConfig.regionSize,
         regionParams: growConfig.regionParams,
         assumeBidirectional: growConfig.growthParams?.assumeBidirectional ?? true,
+        spherePlan: env.plan,
     });
     return `Re-rolled "${node.region_id}" (#${edit.n})`;
 }

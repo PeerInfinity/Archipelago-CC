@@ -1,0 +1,245 @@
+diff --git a/frontend/modules/seedlingDemo/levelRun.js b/frontend/modules/seedlingDemo/levelRun.js
+index 320e5994..921015fa 100644
+--- a/frontend/modules/seedlingDemo/levelRun.js
++++ b/frontend/modules/seedlingDemo/levelRun.js
+@@ -503,6 +503,8 @@ export const PROGRESS_FIELD_NAMES = Object.freeze([
+     'inventorySlots',
+     'saveState',
+     'takenPickups',
++    // ⛓ fidelity FROZENPRESS D1: `{ refusedNext, timerNext, contact, pickupGap }` (`freezeForecastNow`).
++    'freezeForecast',
+ ]);
+ export const LEDGER_KIND_NAMES = Object.freeze([
+     'collected',
+@@ -15232,7 +15234,9 @@ export function createLevelRun({
+      * covers 23..57, i.e. the pickup saw observation 23 and the advance that
+      * would have produced 24 became phase B's first frame instead.
+      */
+-    function pickupUnderfoot() {
++    // ⛓ fidelity FROZENPRESS D1: `onTouch(p, box)` replaces the overlap test (default: today's, byte-identical) —
++    // `freezeForecastNow` asks the same eligible pickups for their gap.
++    function pickupUnderfoot(onTouch = null) {
+         if (!world.pickups) return null;
+         const box = playerBoxAt(state.x, state.y);
+         for (const p of world.pickups) {
+@@ -15277,6 +15281,7 @@ export function createLevelRun({
+             // never collected from, and it would stop skipping the moment
+             // anything reset the set.
+             if (p.tag === 'seed' && cutscene[2]) continue;
++            if (onTouch !== null) { onTouch(p, box); continue; }
+             if (rectsOverlap(box, p.rect)) return p;
+         }
+         return null;
+@@ -18134,6 +18139,57 @@ export function createLevelRun({
+         }
+         return keys;
+     };
++    /**
++     * ⛓ fidelity FROZENPRESS D1 (`CONTACT_FIDELITY.frozenPressForecast`) — **WILL `Player.input()` REFUSE THE NEXT
++     * TICK?** Asked at a tick boundary, before `advance`, of the state the previous tick left.
++     *
++     * The next tick runs, in the game's order: every `IceTurretBlast` first (`World.addUpdate` prepends; `stepBlastsNow`
++     * against the player's box at the tick's TOP), then the player's `freezeStep()` above `input()` (`Player.as:532`,
++     * `:591-601`, `:1521`). So the next tick refuses input iff a blast in flight touches the player this step
++     * (`IceTurretBlast.as:51-53`: `freeze(15)`, then the decrement: 14) or the timer the previous tick left is > 1.
++     * Both are stepped here on COPIES with `stepBlastsNow`'s own context — exact, nothing written (a blast a volley
++     * spawns this tick is added by its turret, below the blasts, and first steps the tick after: a contact on a
++     * later tick is caught when that tick is asked).
++     *
++     * `{ refusedNext, timerNext, contact, pickupGap }`: `timerNext` is `frozenTimer` after the next tick's
++     * `freezeStep`, `contact` the blast id that freezes the player on it (else null), `pickupGap` below. ⚠ A pure read:
++     * `blastStates.get`, never `blastsFor` (DIGESTREAD — a getter read creates nothing).
++     */
++    const freezeForecastNow = () => {
++        let contact = null;
++        const list = noclip ? null : blastStates.get(level);
++        if (list && list.length > 0) {
++            const opts = normalizeLiveOpts(liveSolidOpts());
++            const box = playerBoxAt(state.x, state.y);
++            const shieldBox = CONTACT_FIDELITY.iceBlastShield && inventory?.hasShield
++                ? playerShieldRect(shieldRenderState ?? state, slashState.slashing) : null;
++            for (const b of list) {
++                const copy = { ...b, v: { ...b.v } };
++                const r = stepIceTurretBlast(copy, {
++                    frozen: ceremony !== null,
++                    playerBox: box,
++                    blockedAt: (bx) => !!world.collidesBlast(bx, opts),
++                    ...(shieldBox ? { shieldBox } : {}),
++                });
++                if (r.hitPlayer) { contact = b.id; break; }
++            }
++        }
++        const timerNext = contact !== null ? BLAST_FREEZE_TICKS - 1 : Math.max(frozenTimer - 1, 0);
++        // The placed pickups' ceremony (`Game.freezeObjects`): a contact is found at a tick's TOP from where the
++        // previous tick left the player (`pickupUnderfoot`), and that tick is the ceremony's first frozen frame — a
++        // press whose pending thrust falls on it is lost (`runFrozenTick`). `pickupGap`: the least Chebyshev gap (px)
++        // from the player's box to an uncollected pickup that can be touched (`pickupUnderfoot`'s own skips), or
++        // null; the policy prices it against its own travel bound (`strikePolicy.oneTickTravelBound`).
++        let pickupGap = null;
++        if (!noclip && ceremony === null) {
++            pickupUnderfoot((p, box) => {
++                const g = Math.max(p.rect.x - box.right, box.x - p.rect.right, p.rect.y - box.bottom,
++                    box.y - p.rect.bottom, 0);
++                if (pickupGap === null || g < pickupGap) pickupGap = g;
++            });
++        }
++        return { refusedNext: timerNext > 0, timerNext, contact, pickupGap };
++    };
+     const collectedNow = () => collected.map((c) => ({ ...c }));
+     const sealCollectionsNow = () => sealCollections.map((c) => ({ ...c }));
+     const equipsFiredNow = () => firedEquips.map((e) => ({ ...e }));
+@@ -18376,6 +18432,8 @@ export function createLevelRun({
+         inventorySlots: inventorySlotsNow,
+         saveState: saveStateNow,
+         takenPickups: takenPickupsNow,
++        // ⛓ fidelity FROZENPRESS D1: the next tick's input refusal (a pure read; the strike policy's freeze guard).
++        freezeForecast: freezeForecastNow,
+     });
+     const LEDGER_KINDS = Object.freeze({
+         collected: collectedNow,
+@@ -19550,6 +19608,8 @@ export function createLevelRun({
+          * refuses; reading it off the run means the two cannot disagree.
+          */
+         get takenPickups() { return takenPickupsNow(); },
++        /** ⛓ fidelity FROZENPRESS D1: will input be refused on the next tick (`freezeForecastNow`). */
++        get freezeForecast() { return freezeForecastNow(); },
+         /**
+          * The `(level, tag)` clears this run EARNED — turned off by opening
+          * something rather than by the tape declaring it.
+diff --git a/frontend/modules/seedlingDemo/strikePolicy.js b/frontend/modules/seedlingDemo/strikePolicy.js
+index f55a37db..59646608 100644
+--- a/frontend/modules/seedlingDemo/strikePolicy.js
++++ b/frontend/modules/seedlingDemo/strikePolicy.js
+@@ -162,6 +162,24 @@ export class StrikePolicyError extends Error {
+ const fail = (m) => { throw new StrikePolicyError(m); };
+ 
+ /** What a tick's decision can be. */
++/**
++ * ⛓ fidelity FROZENPRESS D1 — the freeze guard's counts (`decide`'s `freeze`): `stoodDown` every tick the policy was
++ * asked on a refused tick; `dropped` the ones that withheld an owed press or a scheduled one; `ceremony` the aims,
++ * presses and scheduled presses withheld by `ceremonyGuard`. Reset by the reader.
++ */
++export const FROZEN_PRESS_COUNTS = { stoodDown: 0, dropped: 0, ceremony: 0 };
++
++/**
++ * ⛓ fidelity FROZENPRESS D1 — **THE OPTIONS A RUN-SIDE `decide` IS ASKED WITH**: the run's slash state, and with
++ * `CONTACT_FIDELITY.frozenPressForecast` ON the run's `freezeForecast` (`levelRun.freezeForecastNow`: will the next
++ * tick's input be refused). OFF: `{ slash }`, the object every caller built before — byte-identical. The preview
++ * (`solverBot.previewWalk`) steps no blast and passes its own threaded slash state, so it is not a caller.
++ */
++export function strikeDecideOpts(run) {
++    const slash = run.progress('slashInfo');
++    return CONTACT_FIDELITY.frozenPressForecast ? { slash, freeze: run.progress('freezeForecast') } : { slash };
++}
++
+ export const STRIKE_NONE = 'none';
+ export const STRIKE_AIM = 'aim';
+ export const STRIKE_PRESS = 'press';
+@@ -801,6 +819,19 @@ function talkWhy(g, pressTick) {
+         + '53). The press is refused, not priced — re-time it or route around the circle.';
+ }
+ 
++/**
++ * ⛓ fidelity FROZENPRESS D1 — **WOULD A PICKUP'S CEREMONY START ON THE TICK THIS PRESS'S THRUST FIRES?** The
++ * thrust a press schedules fires at the next tick's top; a placed pickup is touched at a tick's top from where the
++ * previous tick left the player, and that tick is the ceremony's first `Game.freezeObjects` frame — the thrust is
++ * lost (`levelRun.runFrozenTick`'s `FROZEN_TICK_PRESS`). `aheadTicks` of travel (1 for a press decided now, 2 for an
++ * aim whose press lands next tick) against `freeze.pickupGap` (`levelRun.freezeForecastNow`). `null` when clear.
++ */
++export function ceremonyGuard(state, freeze, aheadTicks) {
++    if (freeze === null || freeze.pickupGap === null || freeze.pickupGap === undefined) return null;
++    const bound = aheadTicks * oneTickTravelBound(state.vx ?? 0, state.vy ?? 0);
++    return freeze.pickupGap <= bound ? { pickupGap: freeze.pickupGap, bound, aheadTicks } : null;
++}
++
+ export function createStrikePolicy({
+     facingToward, facingKeys, allowDash = false, hasSword = true, dashPlan = null,
+     talkCircles = [],
+@@ -918,13 +949,36 @@ export function createStrikePolicy({
+          *   THIS tick, from whichever side is asking.
+          * @param {number} tick
+          */
+-        decide(state, bodies, tick, walkHeld, { slash = null } = {}) {
++        decide(state, bodies, tick, walkHeld, { slash = null, freeze = null } = {}) {
+             if (!hasSword) return { held: walkHeld, decision: STRIKE_NONE };
+             if (slotIsBlade !== null && !slotIsBlade()) {
+                 aimed = null;
+                 STRIKE_SLOT_COUNTS.stoodDown += 1;
+                 return { held: walkHeld, decision: STRIKE_NONE };
+             }
++            /**
++             * ⛓ fidelity FROZENPRESS D1 (`CONTACT_FIDELITY.frozenPressForecast`) — **A TICK WHOSE INPUT THE GAME
++             * REFUSES IS NOT A TICK THIS POLICY SPENDS.** `freeze` is the run's `freezeForecast` (`strikeDecideOpts`;
++             * `null` OFF and on the preview, byte-identical). On a refused tick `Player.input()` returns at its first
++             * line (`Player.as:1521`), so an aim key steers nothing and a press is LOST (`levelRun`'s
++             * `FROZEN_TICK_PRESS`): the policy stands down (an owed aim is dropped, `owed` untouched, so the body is
++             * aimable again once the freeze drains). ⚠ No aim-time half: past this guard the timer is 0, so the
++             * press tick can only be refused by a blast contact ON that tick, which depends on where the aim key
++             * puts the player — it is caught exactly when that tick is asked (the aim is then dropped here).
++             */
++            if (freeze !== null && freeze.refusedNext) {
++                const dropped = aimed;
++                aimed = null;
++                FROZEN_PRESS_COUNTS.stoodDown += 1;
++                if (dropped !== null || plannedTicks.has(tick)) {
++                    FROZEN_PRESS_COUNTS.dropped += 1;
++                    trace.push({ tick, decision: STRIKE_NONE, target: dropped?.id ?? null,
++                        frozenRefused: { timerNext: freeze.timerNext, contact: freeze.contact ?? null },
++                        why: `input is refused at tick ${tick} (frozenTimer ${freeze.timerNext} after its `
++                            + '`freezeStep`): a press there is lost, so the policy stands down' });
++                }
++                return { held: walkHeld, decision: STRIKE_NONE };
++            }
+             // ── the PRESS half of a two-tick strike ──────────────────
+             if (aimed !== null) {
+                 const target = aimed.id;
+@@ -938,6 +992,16 @@ export function createStrikePolicy({
+                  * The aim is dropped, not deferred: `owed` is untouched, so
+                  * the same body is aimable again once the walk is clear.
+                  */
++                // ⛓ fidelity FROZENPRESS D1: a ceremony starting on the thrust's tick — dropped like the talk refusal.
++                const lateCeremony = ceremonyGuard(state, freeze, 1);
++                if (lateCeremony !== null) {
++                    aimed = null;
++                    FROZEN_PRESS_COUNTS.ceremony += 1;
++                    trace.push({ tick, decision: STRIKE_NONE, target, ceremonyRefused: lateCeremony,
++                        why: `a pickup is ${lateCeremony.pickupGap} px away (bound ${lateCeremony.bound.toFixed(2)}): its `
++                            + 'ceremony could start on the tick this press\'s thrust fires, and the thrust would be lost' });
++                    return { held: walkHeld, decision: STRIKE_NONE };
++                }
+                 const late = talkGuard(state, talkCircles, 1);
+                 if (late !== null) {
+                     aimed = null;
+@@ -1001,6 +1065,14 @@ export function createStrikePolicy({
+                 // release opens the same dialogue. The plan yields rather
+                 // than triggers; `planSwordDash` is free to schedule the
+                 // displacement elsewhere on the route.
++                // ⛓ fidelity FROZENPRESS D1: a scheduled press yields to a ceremony starting on its thrust's tick.
++                const nearCeremony = ceremonyGuard(state, freeze, 1);
++                if (nearCeremony !== null) {
++                    FROZEN_PRESS_COUNTS.ceremony += 1;
++                    trace.push({ tick, decision: STRIKE_NONE, planned: true, ceremonyRefused: nearCeremony,
++                        why: `a pickup is ${nearCeremony.pickupGap} px away: the scheduled press's thrust could be lost` });
++                    return { held: walkHeld, decision: STRIKE_NONE };
++                }
+                 const near = talkGuard(state, talkCircles, 1);
+                 if (near !== null) {
+                     trace.push({
+@@ -1112,6 +1184,17 @@ export function createStrikePolicy({
+              * travel — and the press arm re-checks with one tick's when the
+              * real position is known.
+              */
++            // ⛓ fidelity FROZENPRESS D1: the press this aim earns would fire its thrust two ticks of travel from here.
++            const aimCeremony = ceremonyGuard(state, freeze, 2);
++            if (aimCeremony !== null) {
++                if (bodies.length > 0) {
++                    FROZEN_PRESS_COUNTS.ceremony += 1;
++                    trace.push({ tick, decision: STRIKE_NONE, saw: bodies.length, ceremonyRefused: aimCeremony,
++                        why: `a pickup is ${aimCeremony.pickupGap} px away: the press this aim earns could be lost to `
++                            + 'its ceremony' });
++                }
++                return { held: walkHeld, decision: STRIKE_NONE };
++            }
+             const aimTalk = talkGuard(state, talkCircles, 2);
+             if (aimTalk !== null) {
+                 trace.push({

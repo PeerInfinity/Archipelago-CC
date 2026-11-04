@@ -31,6 +31,7 @@ class LocationData:
 
 location_table: Dict[str, LocationData] = {
     "region_2_2__loc_0": LocationData("region_2_2", "region_2_2__loc_0", 1000, False),
-    "region_2_3__loc_0": LocationData("region_2_3", "region_2_3__loc_0", 1001, False),
-    "region_3_3__loc_0": LocationData("region_3_3", "region_3_3__loc_0", 1002, False),
+    "region_2_2__loc_1": LocationData("region_2_2", "region_2_2__loc_1", 1001, False),
+    "region_3_2__loc_0": LocationData("region_3_2", "region_3_2__loc_0", 1002, False),
+    "region_4_2__loc_0": LocationData("region_4_2", "region_4_2__loc_0", 1003, False),
 }

@@ -288,7 +288,11 @@ describe('⛓ the links the render emits', () => {
         //   377 → 381: cloudberry P2b — two links into cloudberry.md § Build-time generation, two same-doc ones.
         //   381 → 387: cloudberry P3b — cloudberry.md § Loop mode ↔ loop-recording.md (3 doc) + its own 3 same-doc.
         //   387 → 389: cloudberry P4a — cloudberry.md → flash.md § The __swfBridge contract (1 doc), net +1 same-doc.
-        expect(checked).toBe(389);
+        //   389 → 383: cloudberry P4b — runner deleted: its README row and every link into runner.md gone, the
+        //              pointers that named it re-aimed (net −6 doc).
+        //   383 → 384: cloudberry P4c — cloudberry.md § Items → its own § Fill slack for tiny worlds (1 same-doc).
+        //   384 → 385: cloudberry P5a — cloudberry.md § Items' Double Jump note → its own § Generating it (1 same-doc).
+        expect(checked).toBe(385);
     });
 
     it('tags each link with the kind that produced it', () => {

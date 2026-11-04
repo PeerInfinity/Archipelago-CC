@@ -1,0 +1,44 @@
+﻿Archipelago Version 0.6.8  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Cloudberry Double Jump WorldGen
+Location Count:                  4
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+Use Canonical Options:           Yes
+
+
+Locations:
+
+region_2_2__loc_0: Double Jump
+region_2_2__loc_1: Cloudberry Gem
+region_3_2__loc_0: Moving Blocks
+region_4_2__loc_0: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  region_2_2__loc_0: Double Jump
+  region_2_2__loc_1: Cloudberry Gem
+}
+2: {
+  region_3_2__loc_0: Moving Blocks
+}
+3: {
+  region_4_2__loc_0: Victory
+}

@@ -73,7 +73,7 @@ From that, each substrate has one of three capture shapes. `captureShapeOf(entry
 |-------|-----------|---------|--------|-----------------|
 | **Coarse** | text adventure | Loops buffers the observed actions and writes them into the block interior | The generic executor runs the block's entries | Loops charges each action its `loop_costs` value |
 | **Fine-grained** | maze, jta, omsi | The substrate recorder captures the whole visit | The substrate replays it (`replayActions`) | The substrate charges natively: the maze per tile (only while `livePlayRegion()` names its region), jta and omsi by mirroring the fork's energy or mana into the pool |
-| **Summary** | runner, bounce, noiz2sa, cloudberry | Loops records the net result: drain seconds, performed checks, explicitly costed actions, departure exit | Loops applies the result instantly; the game replays nothing | Loops charges a per-second time drain, plus any action cost the data names explicitly |
+| **Summary** | bounce, noiz2sa, cloudberry | Loops records the net result: drain seconds, performed checks, explicitly costed actions, departure exit | Loops applies the result instantly; the game replays nothing | Loops charges a per-second time drain, plus any action cost the data names explicitly |
 
 For fine-grained substrates the block interior is a *projection*: loops filters the capture down to queue-grade entries. All three record in the shared `actionQueue` vocabulary (`{ actionType, actionId, substrate, loops }`, runs of identical entries compressed through `loops`).
 
@@ -88,7 +88,7 @@ A new queue-grade verb on a coarse substrate is declared in `loopSupport.queueAc
 
 ### Summary substrates
 
-Runner, bounce, Noiz2sa and Cloudberry play in real time, so their action stream is not worth replaying; the pickups and the exit are the outcome. Their recording is a result:
+Bounce, Noiz2sa and Cloudberry play in real time, so their action stream is not worth replaying; the pickups and the exit are the outcome. Their recording is a result:
 
 ```
 { actions: [], annotations, departureExitId,
@@ -103,14 +103,14 @@ Runner, bounce, Noiz2sa and Cloudberry play in real time, so their action stream
 
 **Every spend is published.** `_spendMana` — the one spend path of the live drain, a Bot block's drain, a summary Playback's replay price and every live-play charge — publishes `loops:manaSpent` `{region, substrate, mana}` after the deduct, so a substrate whose resources come from the mana spent in its regions earns from one feed whichever mode spent it (Noiz2sa's training since bulletml N5: [noiz2sa.md](./noiz2sa.md#the-bots-training)).
 
-Runner and bounce do not declare `requiresLoopMode`: they have no native "out of resource, restart the run" economy.
+Bounce, Noiz2sa and Cloudberry do not declare `requiresLoopMode`: they have no native "out of resource, restart the run" economy.
 
 ### The play clock
 
 Some summary games do not advance on every wall-clock second: Noiz2sa waits for a key before a region starts and pauses on blur or P. A substrate that declares `loopSupport.playClock` lets its page say so, and the drain then charges only time the game actually plays.
 
 - **The report.** The page calls `__swfBridge.setPlayClock(running)` on every change of its own state. `flashSubstrate/bridge.js` relays it to the host as the eventBus event `substrate:playClock` `{region, running}`, stamped with the bridge's active region.
-- **Loops keeps the last one.** `loopState.notePlayClock` stores `{region, running}` only when the region's substrate declares `playClock`, so a substrate that never opted in (runner, bounce) cannot make its time free.
+- **Loops keeps the last one.** `loopState.notePlayClock` stores `{region, running}` only when the region's substrate declares `playClock`, so a substrate that never opted in (bounce) cannot make its time free.
 - **The gate.** `_timeDrainTick` skips a second in which the drained region's last report is `running: false`: no mana, and no `_summaryDrainSeconds`, so the recorded duration and Playback's price exclude it. Both branches are gated, live play and the Bot, so a bot-driven page reports through the same call (it drives the same input and the same states) and waiting between goals is free the same way.
 - **Fail safe.** No report, a report for another region, or a malformed one leaves the drain charging. A `gameState:regionChanged` to any other region drops the report, so a revisit is charged until the page reports again.
 - **Game time.** A report may carry `stats` (`setPlayClock(running, stats)`). When `stats.gameSeconds` is present (the visit's game seconds so far) the clock is a game-time clock: a tick charges the whole game seconds played since the last charge, whether the clock runs or not, and counts them into the recorded duration. A page that plays at 2× is charged 2 seconds per wall second, so the same play costs the same at any speed. A report that stops the clock settles at once, before the clear or the exit that follows can end the park, so a visit costs `floor(game seconds)`. A counter that goes back (the page configured again) starts a new count. Noiz2sa reports game time for its bot's speed setting ([noiz2sa.md](./noiz2sa.md)). Cloudberry reports physics steps / 60 since the configure, stopped while its exit menu is open or the page is hidden ([cloudberry.md](./cloudberry.md#loop-mode)).
@@ -168,7 +168,7 @@ Cloudberry's bot is the page's own (the computer's recording of the level): a lo
 A bot costs what live play of the same content costs, by capture shape:
 
 - **Fine-grained (jta, maze, omsi):** nothing is charged on completion. The substrate bills the play natively, so `_completeBotExecutedAction` charges only when the shape is not fine.
-- **Summary (runner, bounce, noiz2sa, cloudberry):** priced by time. `_timeDrainTick` charges a bot-driven summary region exactly as it charges a live-play one (the two states are exclusive), and completion costs only what `loop_costs` names explicitly. Both go through `_chargeLiveAction`, so the spend awards region XP like any other.
+- **Summary (bounce, noiz2sa, cloudberry):** priced by time. `_timeDrainTick` charges a bot-driven summary region exactly as it charges a live-play one (the two states are exclusive), and completion costs only what `loop_costs` names explicitly. Both go through `_chargeLiveAction`, so the spend awards region XP like any other.
 
 **Warning:** a solver park runs no frames and does not set `_manualActionEntered`, so neither the frame loop's `_maybeResetForOOM` nor the mana wake notices a depletion. `_timeDrainTick` therefore calls `_maybeResetForOOM()` itself after charging on the bot branch. Any new spend that can fire while a solver drives needs the same check, or the pool runs negative.
 
@@ -256,7 +256,7 @@ Where the gate is consulted:
 - `user:regionMove` is gated in procgenPlayer's receiver through the loops public function `gateSubstrateAction`. procgenPlayer receives the move first, so only a check there stops the region switch.
 - clickToQueue's `append` / `rebuildPath` modes turn a blocked click into planning; `off` blocks it with feedback.
 
-**Which substrates are gated:** those that declare both `record` and `playback` — maze, text adventure, jta, omsi, runner and bounce. The flash-family entries (`flash`, `flash_seedling`, `flash_seedling_gen`) use the flash factory's manual-only `loopSupport` and are not gated.
+**Which substrates are gated:** those that declare both `record` and `playback` — maze, text adventure, jta, omsi, bounce, noiz2sa and cloudberry. The flash-family entries (`flash`, `flash_seedling`, `flash_seedling_gen`) use the flash factory's manual-only `loopSupport` and are not gated.
 
 ## `requiresLoopMode` — loop-game substrates
 
@@ -280,4 +280,4 @@ Some substrates are loop games themselves: their native economy restarts from th
 - [JtA Substrate](./jta.md) — fine-grained recording in the shared vocabulary; `requiresLoopMode`
 - [Omsi Substrate](./omsi.md) — plan-snapshot recordings, the step gate, multi-run replays
 - [Text Adventure Substrate](./text-adventure.md) — the coarse substrate
-- [Runner Substrate](./runner.md) / [Bounce Substrate](./bounce.md) — the summary substrates
+- [Bounce Substrate](./bounce.md) / [Cloudberry Substrate](./cloudberry.md) / [Noiz2sa Substrate](./noiz2sa.md) — the summary substrates

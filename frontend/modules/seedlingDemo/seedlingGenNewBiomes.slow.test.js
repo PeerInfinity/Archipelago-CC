@@ -64,32 +64,37 @@ describe('C4 — caldera\'s melt cuts before the dark suit', () => {
     }, 300_000);
 });
 
-/** Measured at base 2ce525e323 and on this slice: identical. */
+/**
+ * Measured at base 2ce525e323 and on this slice: identical. ⛓ RE-RECORDED by
+ * `seedling-gen-post-swim-fix` (⚖ Robert 2026-11-02): the 14 rows marked `post-swim-fix`
+ * moved because their boot holds the fire and the `hasFire` fold row adds `burngate` to
+ * the list they draw from (post-swim and post-feather hold it since the same change).
+ */
 const BASE_DIGESTS = Object.freeze({
     'room post-fire 1': '65523314d6d79f42',
     'room post-fire 2': 'df39b8c15f541bff',
-    'room post-fire 3': 'ed93a0cd9941084b',
+    'room post-fire 3': 'ce83d6c9f582f775', // post-swim-fix, was ed93a0cd9941084b
     'room post-spear 1': 'e2cade35ac2448c8',
-    'room post-spear 2': 'da1f6522d08ddf01',
-    'room post-spear 3': 'c553d494f1abcfab',
+    'room post-spear 2': '6d5f0c919e1aac6e', // post-swim-fix, was da1f6522d08ddf01
+    'room post-spear 3': 'f4eb119c3464dd12', // post-swim-fix, was c553d494f1abcfab
     'room post-dark-suit 1': '030cd727c9837fea',
-    'room post-dark-suit 2': '88252a2f0196e99e',
-    'room post-dark-suit 3': '5359aa69f6eaa93b',
+    'room post-dark-suit 2': 'b4f00355215bc44a', // post-swim-fix, was 88252a2f0196e99e
+    'room post-dark-suit 3': '06f48f1a570e1fc2', // post-swim-fix, was 5359aa69f6eaa93b
     'room endgame 1': 'c341ef82a7f4fe2d',
-    'room endgame 2': 'abd253820cd8adc2',
-    'room endgame 3': '064ae17d9f7253ec',
+    'room endgame 2': 'e04b3a2efb54ba44', // post-swim-fix, was abd253820cd8adc2
+    'room endgame 3': '4032fd8d8fca4b49', // post-swim-fix, was 064ae17d9f7253ec
     'room post-swim+ice 1': '6fb3d7adba32d01e',
-    'room post-swim+ice 2': 'da370593922a0ef4',
+    'room post-swim+ice 2': '4d2dcab4580a7feb', // post-swim-fix, was da370593922a0ef4
     'room post-swim+ice 3': 'c72ebbfabe0fbfc7',
     'room post-feather+stairs 1': 'f35531fd1f033045',
-    'room post-feather+stairs 2': 'da58cfe9d4b70e7e',
-    'room post-feather+stairs 3': 'c9d1180f800531ec',
+    'room post-feather+stairs 2': '21224120a5c6a889', // post-swim-fix, was da58cfe9d4b70e7e
+    'room post-feather+stairs 3': 'a54cebe2a8c7e9a2', // post-swim-fix, was c9d1180f800531ec
     'room post-feather+ghoststep 1': '5cca5b3891d69d9e',
-    'room post-feather+ghoststep 2': '034a471b90ff0db2',
-    'room post-feather+ghoststep 3': '7b459e95685d05ac',
+    'room post-feather+ghoststep 2': 'e5969b64b89f7431', // post-swim-fix, was 034a471b90ff0db2
+    'room post-feather+ghoststep 3': '0f886d6495af6e99', // post-swim-fix, was 7b459e95685d05ac
     'room post-feather+ghoststep,stairs 1': '945d3e15b709ff01',
-    'room post-feather+ghoststep,stairs 2': 'fb163d1a85a7e318',
-    'room post-feather+ghoststep,stairs 3': 'b581a6d13ab53a4b',
+    'room post-feather+ghoststep,stairs 2': '2bce68d895c3f6c8', // post-swim-fix, was fb163d1a85a7e318
+    'room post-feather+ghoststep,stairs 3': 'de024178d567188b', // post-swim-fix, was b581a6d13ab53a4b
     'lab post-fire': 'f2eec8d91bdca36c',
     'lab post-spear': '3b5a718835db0dd6',
     'lab post-dark-suit': '3b5a718835db0dd6',
