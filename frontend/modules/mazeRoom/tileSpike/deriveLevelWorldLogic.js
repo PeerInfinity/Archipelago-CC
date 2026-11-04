@@ -178,6 +178,13 @@ export function enteredAt(world, region) {
 }
 
 /**
+ * The lattice cap: the most items a world's item axis may carry before `deriveLevelWorldLogic` / `deriveEntryLogic`
+ * refuse it (the search walks every point of 2^items). One constant, read by the maze compile's plain-level test
+ * (session tile-rules-automation-r-a2: a plain level becomes one level world only when its axis fits).
+ */
+export const LEVEL_WORLD_LATTICE_CAP = 12;
+
+/**
  * Per-(from, to) minimal inventories over a shared level world.
  *
  * `latchSandwich: false` turns the LATCH SANDWICH off — a TEST-ONLY switch (the on ≡ off pins); every caller keeps it on.
@@ -189,7 +196,7 @@ export function enteredAt(world, region) {
  *   engine: {searches: number, states: number, skipped: number} }}
  */
 export function deriveLevelWorldLogic(world, helpers, {
-    tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, cache = null, latchSandwich: sandwiching = true,
+    tileLib = MAZE_TILE_LIB, maxItems = LEVEL_WORLD_LATTICE_CAP, native = false, cache = null, latchSandwich: sandwiching = true,
 } = {}) {
     const sw = world.sharedWorld;
     if (!sw) throw new Error('level-world logic: the world is not a shared level world');
@@ -272,7 +279,7 @@ export function deriveLevelWorldLogic(world, helpers, {
  *   engine: {searches: number, states: number, skipped: number} }} — `latchSandwich` and `engine` as `deriveLevelWorldLogic`'s.
  */
 export function deriveEntryLogic(world, region, helpers, {
-    tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, arrivalBlocked = null, cache = null, arriveFrom = null, arriveAt = null,
+    tileLib = MAZE_TILE_LIB, maxItems = LEVEL_WORLD_LATTICE_CAP, native = false, arrivalBlocked = null, cache = null, arriveFrom = null, arriveAt = null,
     latchSandwich: sandwiching = true,
 } = {}) {
     const shared = Boolean(world.sharedWorld);
