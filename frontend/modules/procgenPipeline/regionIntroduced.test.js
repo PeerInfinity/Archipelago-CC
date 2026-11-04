@@ -259,41 +259,42 @@ describe('3 — the report: notes folded into {requested, placed, notPlaced}; re
 // --- 4. per player, and absent ---------------------------------------------------------------------------
 
 describe('4 — the report is the SLOT\'s, and ABSENT where nothing was configured', () => {
-    const keygateGrid = (seed) => {
+    /** A grid-growth world: `withGen` mixes in generated rooms configured `keygate` (a DECLARING substrate);
+     *  without it the world is maze + text adventure only (no declaring substrate). */
+    const gridWorld = (seed, withGen) => {
         const { run } = buildRunFromState({ mode: 'gridGrowth',
-            params: { seed, gridWidth: 3, gridHeight: 3, seedlingGenElements: 'keygate' },
+            params: { seed, gridWidth: 3, gridHeight: 3, ...(withGen ? { seedlingGenElements: 'keygate' } : {}) },
             scenario: { items: { key_red: 1, key_blue: 1, victory: 1 }, obstacles: { door_red: 1, door_blue: 1 } },
-            substrateQuotas: {}, substrateMix: { maze: 1, [GEN]: 2 }, substrateMode: 'mix' });
+            substrateQuotas: {}, substrateMix: withGen ? { maze: 1, [GEN]: 2 } : { maze: 1, text_adventure: 1 },
+            substrateMode: 'mix' });
         return { run, grown: growMaze(run.grow) };
     };
     /** ⚠ MEASURED, not this slice's: `buildRulesJson` with a playerId other than '1' AND a completion condition
-     *  throws (`scaffold.game_info[playerId]` is never created), so the slot-2 compile names none. */
+     *  throws (`scaffold.game_info[playerId]` is never created), so BOTH slots compile with none — the report is
+     *  independent of it. */
     const compile = ({ run, grown }, playerId) => buildRulesJson(grown.grid, {
         startCell: grown.startCell, ...run.compile, completionConditionItem: null, playerId,
         procgenMetadata: { driver: 'grid-growth' },
     });
 
-    it('a 2-player document: each slot carries ITS OWN report under procgen_metadata["<p>"], none at the top', () => {
-        const p1 = compile(keygateGrid(1), '1');
-        const p2 = compile(keygateGrid(2), '2');
+    it('a 2-player document: slot "2" (declaring) carries ITS report under procgen_metadata["2"]; slot "1" (no declaring substrate) carries NONE', () => {
+        const p1 = compile(gridWorld(1, false), '1');
+        const p2 = compile(gridWorld(1, true), '2');
         const doc = { procgen_metadata: { ...p1.procgen_metadata, ...p2.procgen_metadata } };
         expect(Object.keys(doc.procgen_metadata)).toEqual(['1', '2']);
-        const r1 = doc.procgen_metadata['1'].introductions;
+        expect(doc.procgen_metadata['1']).not.toHaveProperty('introductions');
         const r2 = doc.procgen_metadata['2'].introductions;
-        expect(r1).toBeTruthy();
         expect(r2).toBeTruthy();
-        /** each slot's numbers are its own world's: requested = its generated rooms, placed = its key-gate rooms */
-        for (const [p, rules] of [['1', p1], ['2', p2]]) {
-            const gens = Object.values(rules.preset_sidecars[p]).filter((sc) => sc.substrate === GEN);
-            const keyed = gens.filter((sc) => sc.playable_payload.locations.some((l) => l.kind === 'boss-key'));
-            const r = rules.procgen_metadata[p].introductions;
-            expect(r.requested, `slot ${p}`).toBe(gens.length);
-            expect(r.placed, `slot ${p}`).toBe(keyed.length);
-            expect(Object.values(r.notPlaced).reduce((a, b) => a + b, 0)).toBe(r.requested - r.placed);
-        }
-        expect(r1).not.toEqual(r2);
-        expect(p1).not.toHaveProperty('introductions');
-        expect(p1.procgen_metadata).not.toHaveProperty('introductions');
+        /** slot 2's numbers are its own world's: requested = its generated rooms, placed = its key-gate rooms */
+        const gens = Object.values(p2.preset_sidecars['2']).filter((sc) => sc.substrate === GEN);
+        const keyed = gens.filter((sc) => sc.playable_payload.locations.some((l) => l.kind === 'boss-key'));
+        expect(r2.requested).toBe(gens.length);
+        expect(r2.placed).toBe(keyed.length);
+        expect(keyed.length).toBeGreaterThanOrEqual(2);
+        expect(Object.values(r2.notPlaced).reduce((a, b) => a + b, 0)).toBe(r2.requested - r2.placed);
+        /** never at the document level, nor under a slot that did not build it */
+        expect(doc).not.toHaveProperty('introductions');
+        expect(p2.procgen_metadata).not.toHaveProperty('1');
     });
 
     it('ABSENT, not empty: a world with no declaring substrate, and one whose declaring substrate is configured for none', async () => {
