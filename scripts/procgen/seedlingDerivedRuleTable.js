@@ -25,6 +25,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { resolve, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isEntryPoint } from './argvHelp.js';
 import { compareRules } from '../../frontend/modules/mazeRoom/tileSpike/derivedRuleRows.js';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -34,11 +35,14 @@ export const TABLE_FILE = resolve(REPO, 'frontend/modules/flashPanel/atlases/see
 export const MAZE_PRESET = resolve(REPO, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json');
 export const ENGINE_ROOT = resolve(REPO, 'frontend/modules/mazeRoom/tileSpike/certifyPlaythroughMaze.js');
 /** How a stale table is regenerated (named in every staleness failure). */
-export const REGEN_RECIPE = 'dispatch `gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> '
-    + '-f probes=probe-seedling-derived-rules.mjs`, download its artifact (`gh run download <run> -R PeerInfinity/Archipelago-CC`), '
-    + 'copy probe-seedling-derived-rules-log/seedling-playthrough-derived-rules.json over '
-    + 'frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json, then re-run make-seedling-playthrough-rules.mjs '
-    + 'and make-seedling-playthrough-maze.mjs (and the rest of the atlas recipe if the atlas id moves)';
+export const REGEN_RECIPE = 'run alone, in this order: (1) `gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> '
+    + '-f probes=probe-seedling-derived-rules.mjs`; (2) `gh run download <run> -R PeerInfinity/Archipelago-CC` and copy '
+    + 'probe-seedling-derived-rules-log/seedling-playthrough-derived-rules.json over '
+    + 'frontend/modules/flashPanel/atlases/seedling-playthrough-derived-rules.json; (3) `node scripts/procgen/make-seedling-playthrough-rules.mjs` '
+    + 'then `node scripts/procgen/make-seedling-playthrough-maze.mjs` (and the rest of the atlas recipe if the atlas id moves); '
+    + '(4) COMMIT THE TABLE IN THE SAME PACKET as the change that staled it. If the regenerated table\'s VERDICTS move (its rows or '
+    + 'exclusions, not only its `inputs` hashes), the packet owes a tile-primitives designer review before js-16 slots it. '
+    + 'The engine closure: `node scripts/procgen/seedlingDerivedRuleTable.js --print-engine-closure`';
 
 const EMPTY = Object.freeze({ rows: [], excluded: [], inputs: null });
 
@@ -164,4 +168,10 @@ export function composedDisagreeMessage(d) {
         + `(composed ${JSON.stringify(d.composed)}, table ${JSON.stringify(d.table)}). The table OVERRIDES this element, so a rules fix `
         + 'made only in the composition is overwritten: change the derivation\'s INPUT (the overlay / the grid) and regenerate the '
         + `table, or take the element out of the table by name. Regenerate: ${REGEN_RECIPE}`;
+}
+
+// `--print-engine-closure`: the files `engineMd5` hashes (by CONTENT, never a submodule SHA), and the md5.
+if (isEntryPoint(import.meta.url) && process.argv.includes('--print-engine-closure')) {
+    for (const f of importClosure()) console.log(f);
+    console.log(`engineMd5 ${engineMd5()} (${importClosure().length} files, root ${relative(REPO, ENGINE_ROOT)})`);
 }

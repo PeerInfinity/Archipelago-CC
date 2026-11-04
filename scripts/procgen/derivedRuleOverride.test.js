@@ -95,7 +95,7 @@ describe('guard 3: staleness — the maze payloads and the engine closure', () =
         expect(tableStaleness(table, maze)).toEqual([]);
         const moved = tableStaleness(table, { preset_sidecars: { 1: { a: { playable_payload: { x: 2 } } } } });
         expect(moved).toHaveLength(1);
-        expect(moved[0]).toMatch(/maze world payloads moved.*regenerate: dispatch `gh workflow run seedling-probe\.yml/s);
+        expect(moved[0]).toMatch(/maze world payloads moved.*regenerate: run alone.*gh workflow run seedling-probe\.yml/s);
         expect(tableStaleness({ ...table, inputs: { ...table.inputs, engineMd5: 'x' } }, maze)[0]).toMatch(/derivation engine moved.*comment-only edit counts/s);
         expect(tableStaleness({ rows: [], excluded: [], inputs: null }, maze)).toEqual([]);
     });
