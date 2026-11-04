@@ -26,7 +26,8 @@
  *      `keygate-rule-not-carried` (the serialize guard catches the dropped rule before any row runs);
  *  k2  `placeApItems` keeps the `bosskey` (a `boss-key` row skipped) ⇒ the replace row and the e2e red;
  *  k3  the sidecar enum without 'boss-key' ⇒ the validation row reds;
- *  k4  the serialize-time colour rule off ⇒ the two-room row reds.
+ *  k4  the serialize-time colour rule off ⇒ the two-room row reds (⛓ slice 2b: the KNOWN LIMIT row, a room handed no
+ *      `introduced`; the spiral now hands it, so the two-room world builds with distinct colours).
  */
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -222,8 +223,16 @@ describe('2 — the built world: +1 location, +1 item, the goal requires its key
 });
 
 describe('3 — ⚖ "B: Distinct colour per room": an UNREQUESTED key gate past room #0, and a shared colour, refused BY NAME', () => {
-    it('two generated key-gate rooms in a spiral (no planner request): refused at SERIALIZE (`keygate-colour-not-allocated`)', async () => {
-        await expect(build(TWO_ROOMS)).rejects.toThrow(new RegExp(`^${KEYGATE_COLOUR_REFUSAL}: multi-room keygate colours are allocated by the sphere planner's requests, and this room's key gate was not requested\\. .*region_0_1.*#1`));
+    /** ⛓ slice 2b (procgen-region-introduced): the spiral hands each room `introduced`, so the second key-gate room
+     *  takes a colour no other room holds and the world BUILDS. The refusal stays for a room handed NO `introduced`
+     *  (the KNOWN LIMIT row below), which is what this row pinned before. */
+    it('two generated key-gate rooms in a spiral (no planner request): DISTINCT colours from `introduced`, it builds', async () => {
+        const rules = await build(TWO_ROOMS);
+        const keys = Object.values(rules.preset_sidecars['1'])
+            .flatMap((sc) => (sc.playable_payload?.locations ?? []).filter((l) => l.kind === BOSS_KEY_KIND))
+            .map((l) => l.item);
+        expect(new Set(keys).size).toBe(keys.length);
+        expect(() => assembleGeneratedSeedlingSet(rules, { selfPlayer: 1 })).not.toThrow();
     }, 120_000);
 
     it('two key-gate rooms holding ONE colour in a set: refused at ASSEMBLY (`keygate-colour-shared`)', () => {

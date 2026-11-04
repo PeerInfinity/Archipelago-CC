@@ -49,7 +49,9 @@ import {
 } from '../procgenCore/locationCapacity.js';
 import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
 import {
-    ITEM_INTRODUCTION_REFUSALS, introductionRequestOf, unrequestedIntroductions,
+    ITEM_INTRODUCTION_REFUSALS, INTRODUCTION_NOT_PLACED_REASONS, freezeIntroduced, introductionReport,
+    introductionRequestOf, markRegionIntroduction, regionIntroductionNote, regionIntroductionOf,
+    unrequestedIntroductions,
 } from '../procgenCore/itemIntroduction.js';
 import { scheduleSphereIntroductions } from './sphereIntroductions.js';
 
@@ -812,6 +814,44 @@ export function heldFromArrivalInventory(grid) {
 }
 
 /**
+ * ⛓⛓ REGION INTRODUCED ITEMS (slice 2b; vocabulary `procgenCore/itemIntroduction.js`) — the items standing at the
+ * locations of every OTHER region of `grid`, EXCLUDING `regionId` (the region being (re)generated), with instance
+ * counts: an extracted location's item, else the pool item `placed_items` put on it. Exact (a fact of the run, not a
+ * logic estimate). Handed to the region generators of the PLAN-LESS modes beside `held`; draws no rng.
+ *
+ * ⛓ REGENERATE: the RECORD of a region's introduction is the region itself, its location holding the item and the
+ * location ruled `Has(<item>)`. A regenerate from a document REPLAYS it (`introductionRequestOf` derives the request
+ * from those locations), never recomputes it from `introduced`.
+ */
+export function introducedFromGrid(grid, regionId) {
+    const items = {};
+    for (const region of grid.allRegions()) {
+        if (region.region_id === regionId) continue;
+        const atLocation = new Map();
+        for (const l of region.extracted_rules?.locations ?? []) {
+            if (l.item != null) atLocation.set(l.id, typeof l.item === 'string' ? l.item : l.item?.name);
+        }
+        for (const p of region.placed_items ?? []) {
+            if (!atLocation.has(p.location_id) && p.item_id != null) atLocation.set(p.location_id, p.item_id);
+        }
+        for (const item of atLocation.values()) if (item != null) items[item] = (items[item] ?? 0) + 1;
+    }
+    return freezeIntroduced(items);
+}
+
+/**
+ * ⛓ THE INTRODUCTIONS REPORT — note a built region for `procgen_metadata[p].introductions`: is its substrate
+ * configured to introduce an item under `params`, and did it (`regionIntroductionNote`)? A symbol-keyed mark on
+ * the descriptor, so nothing serialises it. A region of a substrate configured for nothing is left unmarked.
+ */
+function noteRegionIntroduction(region, params, opts = {}) {
+    const entry = substrateRegistry.get(region?.substrate);
+    if (!entry) return region;
+    return markRegionIntroduction(region,
+        regionIntroductionNote(entry, params, region.extracted_rules?.locations, opts));
+}
+
+/**
  * The EXACT held form for a sphere-growth node: every item instance of spheres
  * 1..k, where k is the first sphere after which the node becomes reachable — the
  * least sphere whose cumulative counts satisfy EVERY entry gate on the node's
@@ -1101,6 +1141,8 @@ function buildSubstrateRegion({
     consumableTileOpts = null,
     // ⛓ REGION HELD ITEMS — optional; handed to the core, read by none today.
     held = null,
+    // ⛓ REGION INTRODUCED ITEMS (slice 2b) — optional; handed to the core (`introducedFromGrid`).
+    introduced = null,
 }) {
     const adapter = getAdapter(substrate);
     if (typeof adapter.generateRegionCore !== 'function') {
@@ -1122,6 +1164,7 @@ function buildSubstrateRegion({
         params,
         biome,
         ...(held ? { held } : {}),
+        ...(introduced ? { introduced } : {}),
     });
     const placement = adapter.placeFromItems(core.world, {
         items_to_place,
@@ -1373,7 +1416,9 @@ export function* growMazeGen(config) {
         hazardOpts,
         consumableTileOpts,
         held: heldFromArrivalInventory(grid),
+        introduced: introducedFromGrid(grid, startRegionId),
     });
+    noteRegionIntroduction(startRegion, regionParams);
     grid.placeRegion(startCell, startRegion);
     pool.markPlaced({
         placed_items: startRegion.placed_items,
@@ -1490,7 +1535,9 @@ export function* growMazeGen(config) {
             hazardOpts,
             consumableTileOpts,
             held: heldFromArrivalInventory(grid),
+            introduced: introducedFromGrid(grid, childRegionId),
         });
+        noteRegionIntroduction(region, regionParams);
 
         grid.placeRegion(childCell, region);
         if (isTeleporter) {
@@ -2265,6 +2312,10 @@ export function* realiseTopDownGen(layout, opts) {
         // the exit/location access rules onto substrate geometry, sets
         // global_name from the AP-canonical source ids, applies the
         // hazard module (maze only), and returns the region descriptor.
+        // ⛓ REGION INTRODUCED ITEMS (slice 2b): what stands at every OTHER region realised so far. A re-roll or a
+        // substrate edit replays the recording from a fresh ① (`topDownSteps.js`), so this pass sees exactly the
+        // regions before this one in placement order — determined by config + seed + edits, never a hidden record.
+        const introduced = introducedFromGrid(grid, name);
         const region = generateRegion({
             substrate: substrateId,
             region_id: name,
@@ -2272,6 +2323,7 @@ export function* realiseTopDownGen(layout, opts) {
             entrances,
             exits: exitSpecs,
             locations: locationSpecs,
+            introduced,
             itemLib,
             obstacleLib,
             rng: regionRng,
@@ -2314,6 +2366,10 @@ export function* realiseTopDownGen(layout, opts) {
             sidecar_filename: region.sidecar_filename,
             biome: region.biome,
             grow_telemetry: region.grow_telemetry,
+        });
+        // ⛓ THE INTRODUCTIONS REPORT — the source's own items are the driver's, never the room's introductions.
+        noteRegionIntroduction(stub, regionParams, {
+            driverItems: locationSpecs.map((l) => l.item).filter((i) => i != null),
         });
 
         stats.regionsBuilt += 1;
@@ -3169,7 +3225,7 @@ export function perimeterMidpoint(side, size) {
  */
 function synthesizeZoneRegion({
     substrate, region_id, zoneIdx, regionSize, exitSides, adapter, itemsToPlace = [], goalOwned = false,
-    held = null,
+    held = null, introduced = null,
 }) {
     // `itemsToPlace`: the pool items the spiral dealt this cell (the goal among
     // them on the goal cell). `goalOwned`: the engine places the world's goal,
@@ -3180,6 +3236,7 @@ function synthesizeZoneRegion({
             ...(itemsToPlace.length ? { itemsToPlace } : {}),
             ...(goalOwned ? { goalOwned: true } : {}),
             ...(held ? { held } : {}),
+            ...(introduced ? { introduced } : {}),
         })
         : null;
     // Zone payload comes entirely from the extractZoneRules channel now
@@ -3307,6 +3364,10 @@ export function assembleZoneRegion({
 //                            // heldFromArrivalInventory): forwarded as
 //                            // generateRegionCore's `held` / zoneCtx.held;
 //                            // absent = unknown (top-down passes none)
+//   introduced,              // optional REGION INTRODUCED ITEMS (see
+//                            // introducedFromGrid): forwarded as
+//                            // generateRegionCore's `introduced` /
+//                            // zoneCtx.introduced (top-down passes it)
 // }
 //
 // Two branches by substrate kind:
@@ -3418,6 +3479,7 @@ function generateRegionProcedural(spec) {
             params: spec.params,
             biome: spec.biome ?? null,
             ...(spec.held ? { held: spec.held } : {}),
+            ...(spec.introduced ? { introduced: spec.introduced } : {}),
             ...(introduce ? { introduce } : {}),
         });
         // exit_rules maps the core's resolved exit_id (by side) to the
@@ -3696,6 +3758,7 @@ function* generateRegionZoneGen(spec) {
         ordinal: spec.zoneOrdinal ?? 0,
         entrance: ent?.side ? { side: ent.side, ...requirementOf(ent) } : null,
         ...(spec.held ? { held: spec.held } : {}),
+        ...(spec.introduced ? { introduced: spec.introduced } : {}),
     };
     const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
         ? yield* adapter.generateZoneForSpecsGen(zoneSpecs, zoneCtx)
@@ -4134,7 +4197,7 @@ function resolveSpiralContentSource(id, config = {}) {
     if (adapter && typeof adapter.zoneCount === 'number') {
         return {
             poolSize: adapter.zoneCount,
-            instantiate: ({ region_id, ordinal, regionSize, exitSides, itemsToPlace, goalOwned, held }) =>
+            instantiate: ({ region_id, ordinal, regionSize, exitSides, itemsToPlace, goalOwned, held, introduced }) =>
                 synthesizeZoneRegion({
                     substrate: id,
                     region_id,
@@ -4145,6 +4208,7 @@ function resolveSpiralContentSource(id, config = {}) {
                     itemsToPlace,
                     goalOwned,
                     held,
+                    introduced,
                 }),
         };
     }
@@ -4190,7 +4254,7 @@ function buildLibraryContentSource(sourceId, doc) {
     const usage = new Map(); // entry_id -> times used
     return {
         poolSize: entries.length,
-        instantiate: ({ region_id, regionSize, exitSides, held = null }) => {
+        instantiate: ({ region_id, regionSize, exitSides, held = null, introduced = null }) => {
             const need = new Set(exitSides);
             const fitting = entries.filter((e) => {
                 const has = new Set(e.exit_sides ?? []);
@@ -4218,7 +4282,7 @@ function buildLibraryContentSource(sourceId, doc) {
                     + 'has no instantiateLibraryEntry hook');
             }
             const region = sub.instantiateLibraryEntry(pick, {
-                region_id, exitSides, regionSize, ...(held ? { held } : {}),
+                region_id, exitSides, regionSize, ...(held ? { held } : {}), ...(introduced ? { introduced } : {}),
             });
             // The engine owns items on "pure geometry" slots: stamp a filler on
             // any slot the substrate left un-itemed so the compiled pool balances
@@ -4309,12 +4373,14 @@ export function realiseSpiralRegions(plan, config) {
         // REGION HELD ITEMS: the arrival approximation, for content cells and
         // procedural cells alike (no rng; the grid as it stands before this cell).
         const held = heldFromArrivalInventory(grid);
+        // ⛓ REGION INTRODUCED ITEMS (slice 2b): what stands at every other cell built so far.
+        const introduced = introducedFromGrid(grid, region_id);
         let region;
         if (source) {
             // Content source: instantiate its Nth entry from the items it was
             // dealt. It draws no rng.
             region = source.instantiate({
-                region_id, ordinal, regionSize, exitSides, itemsToPlace, goalOwned: goalCell >= 0, held,
+                region_id, ordinal, regionSize, exitSides, itemsToPlace, goalOwned: goalCell >= 0, held, introduced,
             });
             if (region.notes?.length) contentNotes.push(...region.notes);
         } else {
@@ -4335,9 +4401,11 @@ export function realiseSpiralRegions(plan, config) {
                 hazardOpts,
                 consumableTileOpts,
                 held,
+                introduced,
             });
             pool.markPlaced({ placed_obstacles: region.placed_obstacles });
         }
+        noteRegionIntroduction(region, regionParams);
         assertSpiralCellItemsPlaced(region, itemsToPlace, substrate);
         grid.placeRegion(cell, region);
     }
@@ -6846,6 +6914,14 @@ function* realiseOneSphereNode(grid, node, tree, rng, {
         }
     }
 
+    // ⛓ THE INTRODUCTIONS REPORT — a node the planner decided NONE carries the planner's reason; a filler is never
+    //   asked. The plan's own items (the spec's) are the driver's, never the region's introductions.
+    noteRegionIntroduction(region, regionParams, {
+        driverItems: locations.map((l) => l.item).filter((i) => i != null && !(node.introduces ?? [])
+            .some((d) => d.item === i)),
+        reasonIfNone: node.isFiller ? INTRODUCTION_NOT_PLACED_REASONS.filler
+            : (node.introductionNone ?? INTRODUCTION_NOT_PLACED_REASONS.notDrawn),
+    });
     if (replace) grid.replaceRegion(cell, region);
     else grid.placeRegion(cell, region);
     if (isTeleporter) {
@@ -7930,6 +8006,12 @@ export function buildRulesJson(grid, opts = {}) {
                 height: maxGy >= 0 ? maxGy + 1 : 0,
             },
         };
+        // ⛓⛓ THE INTRODUCTIONS REPORT (slice 2b; `procgenCore/itemIntroduction.js`) — how many regions configured to
+        // introduce an item got one, and why the rest did not, folded from the notes each driver left on the
+        // regions it built. ABSENT (never empty) when no region was configured, so every other world's metadata is
+        // what it was. The SLOT's, like the rest of this block.
+        const introductions = introductionReport(allRegions.map(regionIntroductionOf));
+        if (introductions) slotMetadata.introductions = introductions;
         scaffold.procgen_metadata = { [String(playerId)]: slotMetadata };
         // ⛓⛓ APWORLD SUBSTRATE CHANGE R6b — the config each content source was
         // installed with, for every source that declares

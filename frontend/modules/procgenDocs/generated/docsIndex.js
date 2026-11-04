@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1244,
         "indexHeadings": 2,
-        "lines": 34664,
+        "lines": 34678,
         "pages": 4,
-        "words": 504336
+        "words": 505148
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -60,7 +60,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 25,
-            "lines": 310,
+            "lines": 322,
             "links": [
                 "architecture.md",
                 "cloudberry.md",
@@ -73,7 +73,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 6623
+            "words": 7247
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -180,7 +180,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/playback-and-debugging.md",
-            "words": 4435
+            "words": 4546
         },
         {
             "description": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that decides who records, queue annotations, summary substrates, reset handling and multi-run replay, and the strict action gate.",
@@ -242,7 +242,7 @@ export const DOCS_INDEX = frz({
             "file": "sphere-growth.md",
             "h1": "Sphere-Driven Growth",
             "headings": 13,
-            "lines": 120,
+            "lines": 122,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -252,7 +252,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/sphere-growth.md",
-            "words": 2426
+            "words": 2503
         },
         {
             "description": "Paths-and-obstacles is the intermediate representation procgen uses for access rules. Substrates reason spatially — \"to reach this goal you cross these obstacles\" — while Archipelago reasons in Boolean item logic. This representation is the bridge: rules are *authored* as paths of obstacles during generation, verified against the geometry, and *compiled* to Rule Builder JSON only at the end.",

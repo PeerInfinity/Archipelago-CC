@@ -330,6 +330,41 @@ function requestedKnobs(regionId, knobs, introduce) {
     };
 }
 
+/**
+ * ⛓⛓ slice 2b — **THE PLAN-LESS MODES' COLOUR** (⚖ the user 2026-11-03, *"Yes, add introduced"*; top-down *"Yes,
+ * allow"*). Nothing requests a key here, so the room takes the LEAST key colour in neither `held` nor `introduced`
+ * (`procgenCore/itemIntroduction.js`: the items already standing at the run's other regions). Distinct by induction:
+ * each room avoids every key standing elsewhere, and a later room sees this one.
+ *   · an untyped `keygate` member becomes `keygate;type=<c>`; for c = 0 (red, the omitted type's own colour) the
+ *     knobs are left exactly as written, so a world's first key-gate room is byte-unchanged;
+ *   · an explicit `keygate;type=N` whose key already stands elsewhere is refused (`keygate-colour-shared`);
+ *   · with all five taken, refused (`keygate-colours-exhausted`).
+ * Draws no rng. A member whose type is a SUBSET (`type=1|3`) draws its own colour and is left alone (the set
+ * assembler's shared-colour backstop still refuses a collision).
+ */
+function allocatedKnobs(regionId, knobs, held, introduced) {
+    if (!knobs.elements) return knobs;
+    const members = knobs.elements.split(ELEMENT_LIST_SEP);
+    const at = members.findIndex((m) => headOf(m) === KEYGATE_HEAD);
+    if (at < 0) return knobs;
+    const standing = (item) => (held?.items?.[item] ?? 0) > 0 || (introduced?.items?.[item] ?? 0) > 0;
+    let gate;
+    try { gate = (parseElementSpec(members[at].trim()).any ?? [parseElementSpec(members[at].trim())])[0]; } catch {
+        return knobs; // the draw refuses an unparsable spec by name
+    }
+    if (Number.isInteger(gate.params?.type)) {
+        const item = BOSS_KEY_ITEMS[gate.params.type];
+        if (standing(item)) throw new Error(GEN_ROOM_REFUSALS.keygateTaken(regionId, item));
+        return knobs;
+    }
+    if (gate.params?.type !== undefined) return knobs;
+    const type = BOSS_KEY_ITEMS.findIndex((item) => !standing(item));
+    if (type < 0) throw new Error(GEN_ROOM_REFUSALS.keygateExhausted(regionId, [...BOSS_KEY_ITEMS]));
+    if (type === 0) return knobs;
+    members[at] = `${KEYGATE_HEAD};type=${type}`;
+    return { ...knobs, elements: members.join(ELEMENT_LIST_SEP) };
+}
+
 /** The one key item a request asks for, or `null`. */
 const requestedKey = (introduce) => Object.keys(introduce?.items ?? {})[0] ?? null;
 
@@ -785,11 +820,16 @@ const originOf = (world) => world.generation?.grownFrom ?? world.size;
  * yet. `entrances`, the libraries and `biome` are accepted and IGNORED.
  */
 export function generateGenRoom(input = {}) {
-    const { region_id: regionId, exits = [], size = { width: 10, height: 10 }, rng, params, introduce } = input;
+    const {
+        region_id: regionId, exits = [], size = { width: 10, height: 10 }, rng, params, introduce, held, introduced,
+    } = input;
     if (!regionId) throw new Error(GEN_ROOM_REFUSALS.noRegionId());
     const drawn = ((rng.next() * 0x7fffffff) | 0) || 1;
-    // ⛓ keygate colours — a REQUESTED room draws the asked-for gate (or none); an unrequested one is unchanged.
-    const knobs = introduce ? requestedKnobs(regionId, knobsOf(params), introduce) : knobsOf(params);
+    // ⛓ keygate colours — a REQUESTED room draws the asked-for gate (or none). ⛓ slice 2b — an unrequested room
+    //   handed `introduced` (the plan-less modes) takes a colour no other room holds. Otherwise unchanged.
+    const colourFromRun = !introduce && introduced != null;
+    const knobs = introduce ? requestedKnobs(regionId, knobsOf(params), introduce)
+        : colourFromRun ? allocatedKnobs(regionId, knobsOf(params), held, introduced) : knobsOf(params);
     const askedKey = requestedKey(introduce);
     let draw; let rerolls = 0;
     // ⛓ G2 (⚖ planner): a room that cannot seat its doors UNSEALED is re-rolled —
@@ -862,6 +902,8 @@ export function generateGenRoom(input = {}) {
             summary: summaryOf(out),
             // ⛓ keygate colours — the pipeline's request, ONLY when there is one (never serialized).
             ...(introduce ? { introduce } : {}),
+            // ⛓ slice 2b — the colour came from `introduced` (never serialized; lifts the ordinal>0 refusal).
+            ...(colourFromRun ? { keyColourFromRun: true } : {}),
         },
         exits_placed: [...roomExits.values()].map(({ exit_id: exitId, side }) => ({ exit_id: exitId, side })),
     };
@@ -1309,7 +1351,9 @@ export function serializeGenRoom(world, extractedRules, _obstacleLib, _itemLib, 
     //   past generated room #0 is REFUSED BY NAME (`keygate-colour-not-allocated`), never shipped in a colour
     //   another room may also hold. Conservative: a world whose room #0 placed none is refused too (named limit).
     // ⛓ keygate colours — LIFTED for a REQUESTED key: the planner gave this room a colour no other room holds.
-    if (room.locations.some(isBossKey) && !requestedKey(room.introduce) && Number.isInteger(ordinal) && ordinal > 0) {
+    // ⛓ slice 2b — LIFTED too where the room was handed `introduced`: its colour is one no other room holds.
+    if (room.locations.some(isBossKey) && !requestedKey(room.introduce) && !room.keyColourFromRun
+            && Number.isInteger(ordinal) && ordinal > 0) {
         throw new Error(GEN_ROOM_REFUSALS.keygateColour(world.region_id, ordinal));
     }
     // ⛓ strategy elements r2 — the lock as a rule MUST reach the world: every location behind the lock carries

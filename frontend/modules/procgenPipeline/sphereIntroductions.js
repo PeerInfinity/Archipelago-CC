@@ -7,7 +7,8 @@
  * ── WHAT IT DOES (after ②c item placement, before ③ realisation) ──────
  *
  * For each node whose substrate DECLARES `itemIntroduction` with a non-empty
- * list under the world's region params, in node-index order, rng-free:
+ * list under the world's region params, in node-index order, rng-free
+ * (a FILLER node is decided NONE outright, `introduces: []`):
  *
  *   1. ELIGIBLE when the plan has a sphere after the node's own (w+1 < N) and a
  *      wave-(w+1) non-filler host holds an item: the first holding ≥ 2, else the
@@ -35,7 +36,7 @@
  */
 
 import {
-    exhaustedRefusalOf, introducibleItemsOf,
+    INTRODUCTION_NOT_PLACED_REASONS, exhaustedRefusalOf, introducibleItemsOf,
 } from '../procgenCore/itemIntroduction.js';
 
 const hasRule = (item) => ({ rule: 'Has', args: { item_name: item } });
@@ -58,6 +59,17 @@ function planItems(plan) {
 const isDealt = (introduced) => (it) => !it.rule && !introduced.has(it.item);
 const lastDealtIndex = (host, introduced, name = null) => (host?.items ?? [])
     .findLastIndex((it) => isDealt(introduced)(it) && (name === null || it.item === name));
+
+/**
+ * ⛓ THE INTRODUCTIONS REPORT — why a declaring node was decided NONE (`INTRODUCTION_NOT_PLACED_REASONS`): the plan's
+ * LAST WAVE (no sphere w+2), a BATCH BOUNDARY (no node of wave w+1 is wired yet: its batch ends at w), or NO HOST
+ * (wave w+1 exists, and none of its non-filler nodes holds a dealt item).
+ */
+function noneReason(w, sphereCount, nodes) {
+    if (w + 1 >= sphereCount) return INTRODUCTION_NOT_PLACED_REASONS.lastWaveOfPlan;
+    if (!nodes.some((n) => n.wave === w + 1)) return INTRODUCTION_NOT_PLACED_REASONS.batchBoundary;
+    return INTRODUCTION_NOT_PLACED_REASONS.noHost;
+}
 
 /** Apply one recorded decision onto the freshly dealt items (idempotent per deal). */
 function applyDecision(node, nodes, decision, introduced) {
@@ -92,7 +104,18 @@ export function scheduleSphereIntroductions(plan, nodes, { regionParams = {}, en
     const introduced = new Set(spheres.flatMap((s) => s.introduced ?? []));
     const dealtCount = (n) => (n.items ?? []).filter(isDealt(introduced)).length;
     for (const node of nodes) {
-        if (node.isFiller || declared(node).length === 0) continue;
+        if (declared(node).length === 0) continue;
+        // ⛓ slice 2b — a FILLER is never asked for an item (it is not on the progression path), and it is decided
+        //   NONE by name, so its region draws none: left unasked it drew one the plan never scheduled and the world
+        //   was refused (`keygate-colour-not-allocated`, measured on SEEDLING_GENERATED_LEAF_STATE + fillerCount 2,
+        //   seeds 1 and 2).
+        if (node.isFiller) {
+            if (!Array.isArray(node.introduces)) {
+                node.introduces = [];
+                node.introductionNone = INTRODUCTION_NOT_PLACED_REASONS.filler;
+            }
+            continue;
+        }
         if (Array.isArray(node.introduces)) {
             for (const d of node.introduces) applyDecision(node, nodes, d, introduced);
             continue;
@@ -100,7 +123,13 @@ export function scheduleSphereIntroductions(plan, nodes, { regionParams = {}, en
         const w = node.wave;
         const hosts = w + 1 < spheres.length ? nodes.filter((n) => n.wave === w + 1 && !n.isFiller) : [];
         const host = hosts.find((n) => dealtCount(n) >= 2) ?? hosts.find((n) => dealtCount(n) >= 1);
-        if (!host) { node.introduces = []; continue; }
+        if (!host) {
+            node.introduces = [];
+            // ⛓ THE INTRODUCTIONS REPORT (slice 2b) — WHY none, decided here because only here is it knowable: a
+            //   batch's last wave has no wave w+1 wired yet. A live field, never compacted into `sphere_tree`.
+            node.introductionNone = noneReason(w, spheres.length, nodes);
+            continue;
+        }
         const item = declared(node).find((k) => !taken.has(k));
         if (item === undefined) {
             throw new Error(exhaustedRefusalOf(entryOf?.(node.substrate), node.region_id ?? `node ${node.index}`,

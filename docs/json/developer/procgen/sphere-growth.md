@@ -38,6 +38,8 @@ The tree is realised in wave order on a Grid, using the same machinery as the ot
 - The item joins sphere w+1 as `spheres[w].introduced`, which the oracle and `held` count and the round-robin deal never hands out. The node holds it at a location of its own. The host's LAST item, a sphere-(w+2) item, moves onto the node at a location ruled `Has(<item>)`. Behind the lock it is reachable exactly at sphere w+2, so the oracle stays exact.
 - The decision is recorded on the node as `introduces: [{item, lockedItem, lockedFrom}]`, compacted into `sphere_tree` only on a declaring node, and later deals REPLAY it.
 - An ineligible declaring node records `introduces: []` and is asked for nothing. Under batched growth, a node in its batch's last wave has no next wave wired yet, so it is ineligible.
+- A FILLER node of a declaring substrate records `introduces: []` outright: it is not on the progression path. If left unasked, it drew a key the plan never scheduled, and the world was refused.
+- Each node decided NONE carries its reason (`last-wave-of-plan`, `batch-boundary`, `no-host`, `filler-region`), and the world reports the counts in `procgen_metadata["<p>"].introductions` (see the substrate registry's *The introductions report*). Sphere growth's generators are not handed `introduced`; the plan's requests already make each item distinct.
 - A world without a declaring node is byte-identical.
 
 **One goal item.** The plan pins `Victory` to the final sphere. The scenario's victory item is the switch: `presetRun.buildSphereConfig` (and `sphereConfigHooks.resolveSphereGoal` for the CLIs) folds the pool's victory items into one `Victory`, and adds it when only an in-quota substrate declares a goal, so a goal is always planned and placed.
