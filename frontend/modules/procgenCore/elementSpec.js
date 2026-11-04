@@ -112,6 +112,12 @@ export const BINDS_PARAM = Object.freeze({
 });
 
 /**
+ * ⛓ rope strategy — a row's `meetsRequire` value that lets it head `strategy:<verb>` directives (its
+ * `needsStrategy`) but never an ITEM directive (its `needs`). `false` refuses both; omitted allows both.
+ */
+export const MEETS_STRATEGY_ONLY = 'strategy-only';
+
+/**
  * ⛓ THE TABLE — the element a head names, and the knobs the BINDING adds to the
  * element's own. v1 has ONE entry (⚖ §3.3: "v1 ONE gadget"); a second element is
  * a row here plus its own module, exactly as a skeleton kind is.
@@ -470,10 +476,17 @@ export const ELEMENT_TABLE = Object.freeze({
      * route). Measured: the sword differential grades it REQUIRED.
      *
      * Placed LAST so no head moves in `ELEMENT_NAMES`. It ships OPT-IN (⚖ Q5).
-     * ⛔ `meetsRequire: false` — not because it grades SHORTENS (it does not)
-     * but because joining `require:['hasSword']`'s `+` list moves every room a
-     * `--require=hasSword` run builds today (the list spends ONE pick over its
-     * members); that is a re-record, a decision of its own.
+     * ⛔ `meetsRequire: MEETS_STRATEGY_ONLY` — never an ITEM directive's head:
+     * not because it grades SHORTENS (it does not) but because joining
+     * `require:['hasSword']`'s `+` list moves every room a `--require=hasSword`
+     * run builds today (the list spends ONE pick over its members); that is a
+     * re-record, a decision of its own.
+     *
+     * ⛓ `needsStrategy: ['rope']` (seedling gen rope strategy; ⚖ the user
+     * 2026-11-04, "(1) Rope gate gadget"): the solver's `rope` verb is the cut,
+     * and it IS a head for `require:['strategy:rope']` — the only row declaring
+     * `rope`, so being that head moves no room. With `rope` disabled the lane is
+     * uncrossable without an arrow hit, which the oracle refuses.
      */
     ropegate: Object.freeze({
         element: ROPE_GATE,
@@ -483,7 +496,8 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'lane-crossing arm OFF; a certificate that tanks an arrow is refused.',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasSword']),
-        meetsRequire: false,
+        needsStrategy: Object.freeze(['rope']),
+        meetsRequire: MEETS_STRATEGY_ONLY,
     }),
     /**
      * ⛓⛓⛓ **THE CHEST DOOR — A CHEST IN THE ONLY GAP OF A WALL** (seedling gen
@@ -1199,7 +1213,9 @@ export function headsNeeding(item, table = ELEMENT_TABLE) {
             && (table[n].element?.law ?? LAW_CUT) === LAW_CUT
             // ⛓ U3 D3 — a cut head whose differential is MEASURED to grade
             // SHORTENS declares it (`corridorbody`); see its table row.
-            && table[n].meetsRequire !== false));
+            && table[n].meetsRequire !== false
+            // ⛓ rope strategy — a row that heads `strategy:` directives but never an ITEM one (`ropegate`).
+            && !(verb === null && table[n].meetsRequire === MEETS_STRATEGY_ONLY)));
 }
 
 /**

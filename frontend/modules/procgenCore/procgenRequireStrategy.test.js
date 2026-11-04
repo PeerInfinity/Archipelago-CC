@@ -19,7 +19,10 @@ const PRE_SWORD = { hasSword: false, hasShield: false, canSwim: false, hasFeathe
 
 describe('require — strategy entries (strategy switch r1, D2)', () => {
     it('the catalogue\'s strategies are read off `needsStrategy`; the gadgets carry theirs', () => {
-        expect(STRATEGIES_ELEMENTS_NEED).toEqual(['break', 'burn', 'hold', 'keylock', 'kill', 'shove', 'touch', 'weigh']);
+        expect(STRATEGIES_ELEMENTS_NEED).toEqual(['break', 'burn', 'hold', 'keylock', 'kill', 'rope', 'shove', 'touch', 'weigh']);
+        // ⛓ rope strategy — the rope gate carries `rope` (and heads ONLY strategy directives: `MEETS_STRATEGY_ONLY`)
+        expect(headsNeeding('strategy:rope')).toEqual(['ropegate']);
+        expect(headsNeeding('hasSword')).not.toContain('ropegate');
         // ⛓ strategy elements r2 — the key gate carries `keylock`
         expect(headsNeeding('strategy:keylock')).toEqual(['keygate']);
         // ⛓ strategy switch r2 — the burn gate carries `burn`
@@ -56,12 +59,12 @@ describe('require — strategy entries (strategy switch r1, D2)', () => {
     });
 
     it('refusals by name: no element declares it; the biome cannot host the head', () => {
-        for (const v of ['time', 'rope', 'nope']) { // ⛓ r2: `burn` has a gadget now, `rope` has none
+        for (const v of ['time', 'pull', 'nope']) { // ⛓ r2: `burn` has a gadget now; rope strategy: `rope` too
             expect(resolveRequireDirective({ require: [`strategy:${v}`], items: POST_SWORD }).refused.reason)
                 .toBe('no-element-needs-this-item');
         }
         expect(resolveRequireDirective({ require: ['strategy:time'], items: POST_SWORD }).refused.detail)
-            .toMatch(/declares `needsStrategy` on "time"\. The strategies some element needs are \[break, burn, hold, keylock, kill, shove, touch, weigh\]/);
+            .toMatch(/declares `needsStrategy` on "time"\. The strategies some element needs are \[break, burn, hold, keylock, kill, rope, shove, touch, weigh\]/);
         const r = resolveRequireDirective({ require: ['strategy:touch'], items: POST_SWORD });
         expect(r.refused.reason).toBe('the-biome-lacks-the-item');
         expect(r.refused.detail).toMatch(/shieldgate \[hasShield\]/);
