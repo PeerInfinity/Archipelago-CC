@@ -34,9 +34,11 @@ describe('the settings table', () => {
             expect(CLOUDBERRY_HERO_PHSX_ORDER.find(([n]) => n === h.phsx)?.[1]).toBe(h.def);
         }
         expect(DEFAULT_CLOUDBERRY_PROCGEN_PARAMS.cloudberryHeroVariation).toBe(0);
-        // The ruled restrictions (P5b Phase A): size ≥ 0.5, numjumps 2–4, jumplength2 ≤ 1.35.
+        // The ruled restrictions (P5b Phase A): size ≥ 0.5, numjumps 2–4, jumplength2 ≤ 1.35; the ladder (option A):
+        // gravity ≤ 1.5, jumplength ≥ 0.85.
         const by = Object.fromEntries(CLOUDBERRY_HERO_PHYSICS.map((h) => [h.phsx, h]));
         expect([by.size.min, by.numjumps.min, by.numjumps.max, by.jumplength2.max]).toEqual([0.5, 2, 4, 1.35]);
+        expect([by.gravity.max, by.jumplength.min]).toEqual([1.5, 0.85]);
     });
 });
 
@@ -88,7 +90,7 @@ describe('the plan\'s hero', () => {
     it('variation moves each slider from the world value toward a uniform point by the knob', () => {
         const base = cloudberryHeroBase({ cloudberryHeroGravity: 1.2 });
         const at = (variation) => drawCloudberryHero('plain', base, variation, createRng(7)).gravity;
-        const target = 0.5 + createRng(7).next() * 1.5;
+        const target = 0.5 + createRng(7).next() * 1.0;
         expect(at(0)).toBe(1.2);
         expect(at(1)).toBeCloseTo(target, 3);
         expect(at(0.5)).toBeCloseTo(1.2 + 0.5 * (target - 1.2), 3);
