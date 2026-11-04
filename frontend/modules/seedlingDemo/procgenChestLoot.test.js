@@ -57,7 +57,7 @@ const chestsOf = (record) => record.entities.filter((e) => e.type === 'chest');
 describe('⛓⛓⛓ B1 — the LOOT CHEST\'s table row and binding row', () => {
     it('the head is `chestloot`, LAST, needs no item, law `none`, opt-in, never a `require` head', () => {
         expect(ELEMENT_TABLE.chestloot.element).toBe(CHEST_LOOT);
-        expect(ELEMENT_NAMES.slice(-2)).toEqual(['chestloot', 'keygate']); // ⛓ strategy elements r2 appended `keygate` after it
+        expect(ELEMENT_NAMES.slice(-3)).toEqual(['chestloot', 'keygate', 'baitgate']); // ⛓ strategy elements r2 appended `keygate` after it, baitgate `baitgate`
         expect(ELEMENT_TABLE.chestloot.needs).toEqual([]);
         expect(ELEMENT_TABLE.chestloot.meetsRequire).toBe(false);
         expect(CHEST_LOOT.law).toBe(LAW_NONE);

@@ -6247,7 +6247,8 @@ export const CATALOGUE = frz({
         "holdgate",
         "weighgate",
         "chestloot",
-        "keygate"
+        "keygate",
+        "baitgate"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -6724,6 +6725,14 @@ export const CATALOGUE = frz({
                 }
             ],
             "why": "The KEY GATE (the L19 pattern): a `bosslock` in the only gap of a wall on a main-path cut, opened from the cell directly below it, and its `bosskey` on the start side, off the main path when it can be. Certified by the solver's `keylock` (collect the key, walk the key line)."
+        },
+        {
+            "defaultIn": [],
+            "head": "baitgate",
+            "module": "bait-gate",
+            "needs": [],
+            "params": [],
+            "why": "The BAIT GATE (the L6 pattern): a live `bob` on a main-path cut and one `water` cell (the lure) on the start side beside the door's approach. Certified by the solver's `bait` rung (stand where the chase line crosses the water, and wait for the body to drown)."
         }
     ],
     "itemsElementsNeed": [
