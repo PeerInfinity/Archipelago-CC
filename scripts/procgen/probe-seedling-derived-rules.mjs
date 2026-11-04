@@ -51,12 +51,10 @@ export const EXPLAINED_PROBLEMS = Object.freeze([
  * longer an exact element) is refused by `derivedRuleTable`. The `sharedBinding` rows are excluded by their fact, not here.
  */
 export const TABLE_EXCLUSIONS = Object.freeze([
-    {
-        key: 'level_20__r3c1|level_20__r3c1 -> level_20__r1c4',
-        why: 'a HIDDEN HAND INPUT through the grid: lock@32,80\'s cell is GATED by OV.GROUPED_LOCK_EXCEPTIONS[\'20:lock@32,80\'] '
-            + '(hasShield), so the derived And(Shield, L20 flag 4) reads that ruling back; R-A4 rewrites the row (rules-4: load-bearing '
-            + 'for keeping the lock closed, its hasShield term redundant)',
-    },
+    // (empty) L20 r3c1 -> r1c4 was named here in phase 1 (a hidden hand input: GROUPED_LOCK_EXCEPTIONS['20:lock@32,80']'s
+    // hasShield through the grid). The echo plant's carrier mapping (this slice) shows it is an ECHO: the bidirectional atlas
+    // row r1c4 <-> r3c1 is copied into r3c1's own world, a direction the forward-only mapping never counted. The `echoed`
+    // label keeps it out of the table, so an entry here would be stale (refused). R-A4 rewrites the row (rules-4).
 ]);
 
 /** The probe's flags. Exported for the unit rows. */
