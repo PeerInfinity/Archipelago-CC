@@ -384,6 +384,93 @@ describe('obstacle events in the leg walk', () => {
         expect(pre.map((e) => e.item)).toEqual(['Opened']);
     });
 
+    // ⛓ session tile-survey-closure — THE CLOSURE'S ANSWER IS INDEPENDENT OF THE ORDER OF `events`. The fewest events
+    // that open the way, the lexicographically smallest eventId sequence among them; list position is never read.
+    const gsEv = (name, id, rule = TRUE) => ({ name, event_kind: 'game_state', event_id: id, access_rule: rule, item: { name } });
+    const permutations = (xs) => (xs.length <= 1 ? [xs]
+        : xs.flatMap((x, i) => permutations([...xs.slice(0, i), ...xs.slice(i + 1)]).map((p) => [x, ...p])));
+    // The L20 shape (row 6.2 on main: L15 → L20 → … → L39). Start ─► Side, whose lock (B) is behind its own press (A)
+    // and whose way back to Start needs B; the Gate needs G, broken at Start itself. Greedy in list order walks into
+    // Side first and breaks A then B to get out again, and the one-at-a-time prune can drop neither (from Side's
+    // position each is needed): a POSITION TRAP. The answer is G alone.
+    const trap = () => {
+        const R = {
+            Start: {
+                exits: [{ name: 'to-side', connected_region: 'Side', access_rule: TRUE },
+                    { name: 'to-gate', connected_region: 'Gate', access_rule: has('G') }],
+                locations: [gsEv('G', 'flag:L30:0')],
+            },
+            Side: {
+                exits: [{ name: 'side-start', connected_region: 'Start', access_rule: has('B') }],
+                locations: [gsEv('A', 'flag:L20:0'), gsEv('B', 'flag:L20:4', has('A'))],
+            },
+            Gate: { exits: [], locations: [{ name: 'Prize' }] },
+        };
+        return { R, holds: makeRuleHolds(doc(R)), events: gameStateEventsOf(R) };
+    };
+
+    it('position trap: the side room\'s two presses are never broken eagerly — the answer is the one event the Gate needs', () => {
+        const { R, holds, events } = trap();
+        expect(events.map((e) => e.item)).toEqual(['G', 'A', 'B']);
+        const sideFirst = [events[1], events[2], events[0]];  // the order that walks the greedy into Side
+        const pre = eventPrerequisites({ regions: R, ruleHolds: holds, here: 'Start', items: {}, events: sideFirst, target: 'Gate' });
+        expect(pre.map((e) => e.eventId)).toEqual(['flag:L30:0']);
+    });
+
+    it('the same input with `events` permuted gives the same answer, every permutation', () => {
+        const { R, holds, events } = trap();
+        const answers = new Set(permutations(events).map((evs) => JSON.stringify(eventPrerequisites({
+            regions: R, ruleHolds: holds, here: 'Start', items: {}, events: evs, target: 'Gate',
+        })?.map((e) => e.eventId) ?? null)));
+        expect([...answers]).toEqual([JSON.stringify(['flag:L30:0'])]);
+    });
+
+    it('a tie between equal-size sets is broken by eventId (numeric), never by list position', () => {
+        // two independent ways through the Gate, one event each: the smaller id wins (L9 < L10, numerically)
+        const R = {
+            Start: {
+                exits: [{ name: 'gate-a', connected_region: 'Gate', access_rule: has('P10') },
+                    { name: 'gate-b', connected_region: 'Gate', access_rule: has('P9') }],
+                locations: [gsEv('P10', 'flag:L10:0'), gsEv('P9', 'flag:L9:0')],
+            },
+            Gate: { exits: [] },
+        };
+        const holds = makeRuleHolds(doc(R));
+        for (const evs of permutations(gameStateEventsOf(R))) {
+            expect(eventPrerequisites({ regions: R, ruleHolds: holds, here: 'Start', items: {}, events: evs, target: 'Gate' })
+                .map((e) => e.eventId)).toEqual(['flag:L9:0']);
+        }
+    });
+
+    it('the L40 derailment is survived WITHOUT the namedItemsOf filter: a named dead-end event offered first is not taken', () => {
+        // the Dead room's press IS named (by an exit nowhere near the target), so the filter keeps it: the closure itself
+        // must not walk into the dead end
+        const R = {
+            Dead: { exits: [], locations: [gsEv('Press', 'flag:L40:1')] },
+            Start: {
+                exits: [{ name: 'to-dead', connected_region: 'Dead', access_rule: TRUE },
+                    { name: 'to-gate', connected_region: 'Gate', access_rule: has('Opened') }],
+                locations: [gsEv('Opened', 'flag:L64:2')],
+            },
+            Gate: { exits: [{ name: 'gate-far', connected_region: 'Far', access_rule: has('Press') }], locations: [{ name: 'Prize' }] },
+            Far: { exits: [] },
+        };
+        const events = gameStateEventsOf(R);
+        expect(events.map((e) => e.item)).toEqual(['Press', 'Opened']); // the dead-end one is offered FIRST
+        const pre = eventPrerequisites({ regions: R, ruleHolds: makeRuleHolds(doc(R)), here: 'Start', items: {}, events, target: 'Gate' });
+        expect(pre.map((e) => e.item)).toEqual(['Opened']);
+    });
+
+    it('a search past its node budget THROWS by name — never a guess', () => {
+        const { R, holds, events } = trap();
+        // from inside Side the way out needs B, and B needs A: a two-event answer (iterative deepening visits 3 nodes)
+        const ask = (nodeBudget) => eventPrerequisites({
+            regions: R, ruleHolds: holds, here: 'Side', items: {}, events, target: 'Start', ...(nodeBudget ? { nodeBudget } : {}),
+        });
+        expect(ask().map((e) => e.eventId)).toEqual(['flag:L20:0', 'flag:L20:4']);
+        expect(() => ask(2)).toThrow(/eventPrerequisites: .*node budget of 2/);
+    });
+
     it('deriveLegs credits the crossing and never walks the gated landing without its event', () => {
         const rules = graph();
         rules.regions[1].Far.locations = [{ name: 'Far chest' }];
