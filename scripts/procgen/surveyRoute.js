@@ -363,7 +363,11 @@ export function gameStateEventsOf(regions) {
  * and a gated landing is never walked without its event.
  */
 export function eventPrerequisites({ regions, ruleHolds, here, items, events, target, targetRule = null }) {
-    const pending = events.filter((e) => !(items[e.item] > 0));
+    // ⛓ An event NO AP rule names can never open a way, so it is never a prerequisite (session tile-lay-l40-latches: L40's
+    // three in-room presses gate nothing; offered to the greedy closure first, they walked it into L40 and it gave up on
+    // L64's Ghostspear, pulling the Wand forward). At d928ddb77d every game-state event is named, so this drops nothing there.
+    const named = namedItemsOf(regions);
+    const pending = events.filter((e) => !(items[e.item] > 0) && named.has(e.item));
     const walkThrough = (seq) => {
         const its = { ...items };
         let cur = here;
@@ -391,6 +395,26 @@ export function eventPrerequisites({ regions, ruleHolds, here, items, events, ta
         if (walkThrough(without)) seq.splice(i, 1);
     }
     return seq;
+}
+
+const NAMED_ITEMS = new WeakMap();
+/** Every item name some exit or location rule of `regions` names (`Has`), memoised per regions object. */
+export function namedItemsOf(regions) {
+    if (!NAMED_ITEMS.has(regions)) {
+        const out = new Set();
+        const walk = (r) => {
+            if (!r || typeof r !== 'object') return;
+            if (Array.isArray(r)) { r.forEach(walk); return; }
+            if (r.rule === 'Has' && r.args?.item_name) out.add(r.args.item_name);
+            for (const v of Object.values(r)) walk(v);
+        };
+        for (const reg of Object.values(regions)) {
+            for (const e of reg.exits ?? []) walk(e.access_rule);
+            for (const l of reg.locations ?? []) walk(l.access_rule);
+        }
+        NAMED_ITEMS.set(regions, out);
+    }
+    return NAMED_ITEMS.get(regions);
 }
 
 /**
