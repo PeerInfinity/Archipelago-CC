@@ -25,7 +25,7 @@ import { Worker as NodeWorker } from 'node:worker_threads';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-    ACTIVE_DISABLE, STRATEGY_DISABLE_UNKNOWN, STRATEGY_SWITCH, STRATEGY_SWITCH_OFF, disableKeyOf, parseDisable,
+    ACTIVE_DISABLE, DISABLE_ACT_ALIASES, STRATEGY_DISABLE_UNKNOWN, STRATEGY_SWITCH, STRATEGY_SWITCH_OFF, disableKeyOf, parseDisable,
     withDisabledScope, withStrategySwitch,
 } from './strategySwitch.js';
 import * as strategySwitch from './strategySwitch.js';
@@ -121,6 +121,25 @@ describe('strategy switch — the parse', () => {
         expect(disableKeyOf(['verb:bait', 'kill', 'rung:time', 'kill'])).toBe(s.key);
         expect(disableKeyOf([])).toBe(null);
         expect(disableKeyOf(undefined)).toBe(null);
+    });
+
+    it('⚖ one act, two entry points: a bare `rope` also turns off the PULL rung; `verb:rope`/`rung:pull` stay alone', () => {
+        expect(DISABLE_ACT_ALIASES).toEqual({ rope: ['pull'] });
+        const v = { verbs: new Set(['rope', 'kill']), rungs: new Set(['pull', 'time']) };
+        const bare = parseDisable(['rope'], v, refuseWith);
+        expect([...bare.verbs]).toEqual(['rope']);
+        expect([...bare.rungs]).toEqual(['pull']);
+        expect(bare.asked).toEqual(['rope']);
+        const verbOnly = parseDisable(['verb:rope'], v, refuseWith);
+        expect([...verbOnly.rungs]).toEqual([]);
+        const rungOnly = parseDisable(['rung:pull'], v, refuseWith);
+        expect([...rungOnly.verbs]).toEqual([]);
+        expect([...rungOnly.rungs]).toEqual(['pull']);
+        // a prototype key is not an alias
+        expect([...parseDisable(['kill'], { ...v, verbs: new Set(['kill', 'constructor']) }, refuseWith).rungs]).toEqual([]);
+        // the solver's own vocabulary: `rope` is a verb and `pull` a rung, so the alias is live there
+        const { verbs, rungs } = strategyDisableVocabulary();
+        expect(verbs.has('rope') && rungs.has('pull')).toBe(true);
     });
 
     it('unknown names, `avoid` and `dash` are refused BY NAME, in the parse', () => {

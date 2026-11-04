@@ -4,6 +4,7 @@
  * strategy arm (`disable: [verb]`, `SEEDLING_STRATEGY_SWITCH=1`). Each existing gadget grades STRONG on seeds 1–3:
  *   blockpocket (shove, pre-sword) · rockgate (break, post-sword) · shieldgate (touch, post-shield) · killgate (kill).
  *   ⛓ strategy gadgets (r3): holdgate (hold, pre-sword) · weighgate (weigh, pre-sword).
+ *   ⛓ rope strategy: ropegate (rope, post-sword — the act; `disable: ['rope']` also turns off the PULL rung).
  * And the arm's honesty rows: the flag OFF refuses with 0 hits, which is "rule not established" (NOT-ESTABLISHED),
  * never STRONG; the row records `disabled` and the `CONTACT_FIDELITY` stamp beside it (fidelity p17 condition 3).
  */
@@ -119,6 +120,36 @@ describe('strategy elements r2 — the key gate grades STRONG by strategy (seeds
     it('keygate with the flag OFF: NOT-ESTABLISHED, never STRONG', async () => {
         const r = await generate('keylock-off', ['--seed=1', '--biome=pre-sword', '--elements=keygate',
             '--require=strategy:keylock'], '0');
+        expect(r.met).toBe(false);
+        expect(r.grade).toBe('NOT-ESTABLISHED');
+        expect(r.refused.reason).toBe('the-item-is-not-required: NOT-ESTABLISHED');
+    }, 900000);
+});
+
+/**
+ * ⛓ ROPE STRATEGY — **THE ROPE GATE**, graded by the `rope` ACT (⚖ the user 2026-11-04, "(1) Rope gate gadget"): an
+ * armed `arrowtrap` whose lane is the only corridor and a `rope` of its group on the start side. The generated rope is
+ * off the route, so the solver reaches the cut through the ladder's PULL rung, not the `rope` verb; `strategySwitch`'s
+ * `DISABLE_ACT_ALIASES` makes the bare `rope` disable both (one game act, two entry points; source hammer-2). Post-sword
+ * (the rope is cut by a sword). Its own `describe` so a parallel gadget appends beside it.
+ */
+describe('rope strategy — the rope gate grades STRONG by the rope act (seeds 1–3)', () => {
+    it('ropegate/rope on post-sword: STRONG at the disabled gate, 3/3', async () => {
+        const runs = await Promise.all([1, 2, 3].map((seed) => generate(`rope-${seed}`,
+            [`--seed=${seed}`, '--biome=post-sword', '--elements=ropegate', '--require=strategy:rope'])
+            .then((r) => ({ seed, r }))));
+        for (const { seed, r } of runs) {
+            const what = `ropegate strategy:rope seed ${seed}`;
+            expect(r.met, what).toBe(true);
+            expect(r.grade, what).toBe('STRONG');
+            expect(r.evidence, what).toBe('STRONG (solver refusal at the disabled gate)');
+            expect(r.without.verdict, what).toBe('REFUSED');
+        }
+    }, 900000);
+
+    it('ropegate with the flag OFF: NOT-ESTABLISHED, never STRONG', async () => {
+        const r = await generate('rope-off', ['--seed=1', '--biome=post-sword', '--elements=ropegate',
+            '--require=strategy:rope'], '0');
         expect(r.met).toBe(false);
         expect(r.grade).toBe('NOT-ESTABLISHED');
         expect(r.refused.reason).toBe('the-item-is-not-required: NOT-ESTABLISHED');
