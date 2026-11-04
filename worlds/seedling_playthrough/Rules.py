@@ -514,7 +514,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_34 -> level_12__r0c37", player),
-        Or(HasAll('Fire Wand Fusion', 'Wand', 'Fire'), Has('Wand'))
+        Has('Wand', 1)
     )
 
     world.set_rule(
