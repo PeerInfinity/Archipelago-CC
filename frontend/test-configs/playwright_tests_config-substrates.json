@@ -703,6 +703,18 @@
             "_comment": "Seedling loop mode, the WASM runtime (WebGPU): the JS row's stairs, descent and logical-link credit under Bot blocks."
         },
         {
+            "id": "seedling-js-runtime-same-wiring-switch-loads-new-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "⚖ Robert 2026-11-02 (same-wiring re-mount). Runtime js: seedling_atlas_location booted and running, then seedling_atlas (the SAME flash_panel wiring, the same runtime): the panel re-mounts (a fresh adapter; flashPanelUI._mountedRoomsDiffer on seedlingMountKey), the AP load binds the atlas rooms, and the Playback Bot walks overworld_start__r8c0 -> owls_nest_entrance (an exit only those rooms have) into the owl's nest. Before the fix the switch re-mounted nothing and the controller refused that exit."
+        },
+        {
+            "id": "seedling-wasm-runtime-same-wiring-switch-loads-new-rooms",
+            "enabled": true,
+            "category": "Seedling wasm runtime",
+            "_comment": "The JS row's same-wiring switch on the WASM runtime (WebGPU): the house preset's game started (▶ Start), the atlas preset loaded with the same wiring and runtime, the game re-mounted (▶ Start again — the visible restart Robert accepted), the stairs walked by the controller."
+        },
+        {
             "id": "seedling-flash-runtime-loop-bot-block-names-its-stop",
             "enabled": true,
             "category": "Seedling wasm runtime",
