@@ -139,7 +139,7 @@ export function applyDerivedRuleTableToAtlas(atlas, table) {
 
 /**
  * The table onto a COMPILED rules document (in place, player '1'). Every row must name one compiled element (else a
- * refusal by name; with `partial`, a row whose region the document does not hold is skipped). Returns `{applied, composedDisagrees}`: the elements whose compiled rule was not truth-table equal
+ * refusal by name; with `partial`, a row whose element the document does not hold is skipped). Returns `{applied, composedDisagrees}`: the elements whose compiled rule was not truth-table equal
  * to the table's before the override.
  */
 export function applyDerivedRuleTable(rules, table, { partial = false } = {}) {
@@ -148,10 +148,11 @@ export function applyDerivedRuleTable(rules, table, { partial = false } = {}) {
     let applied = 0;
     for (const row of table.rows) {
         const region = REGIONS[row.region];
-        // `partial`: a compile restricted to some levels (a measurement) carries only those levels' rows.
-        if (partial && !region) continue;
         const target = row.kind === 'exit' ? region?.exits?.find((e) => e.name === row.name)
             : region?.locations?.find((l) => l.name === row.name);
+        // `partial`: a compile restricted to some levels (a measurement) carries only those levels' elements, and only the
+        // exits into levels it holds — the rest are skipped there (the whole compile refuses a missing one).
+        if (partial && !target) continue;
         if (!target) throw new Error(`derived-rule table: ${row.key} names no element of the compiled document`);
         const composed = target.access_rule ?? { rule: 'True_' };
         const compare = compareRules(row.rule, composed);

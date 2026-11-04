@@ -309,10 +309,13 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-location-crossing: 15,730 -> 15,835 B — L19's Boss Key 0 (inside the ShieldBoss body) lifts its
         //   Sword rule beside the Shieldspire's.
         // ⛓ rules-certifier-tail: 15,835 -> 16,334 B — the four expressible doors charged their Swim (L49, L55, L56, L91).
-        expect(Buffer.byteLength(committed, 'utf8')).toBe(16334);
+        // ⛓ tile-rules-automation-r-a3: 16,334 -> 15,909 B — the derived-rule table re-spells L34's door rule
+        //   Or(Wand, And(Fire Wand Fusion, Wand, Fire)) -> Wand (truth-table equal) and reorders L98's stairs rule.
+        expect(Buffer.byteLength(committed, 'utf8')).toBe(15909);
         // ⛓ rules-r4b-followup: the bytes hold (out_pit_3_7 -> out_pit_3_8, the same length); the id moves.
         // ⛓ rules-certifier-tail: f9c6d0ec -> 2ef0551f (the four Swim rules above).
-        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-2ef0551f');
+        // ⛓ tile-rules-automation-r-a3: 2ef0551f -> 8eefdf47 (L34's door re-spelled to Wand, L98's stairs reordered).
+        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-8eefdf47');
         // ⛔ AND THE SUFFIXES ARE GONE — the artifact, not the producer.
         expect(committed).not.toMatch(/Chest \(L\d/);
     });
@@ -426,8 +429,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-certifier-tail (51d2f8d1… -> 4a96e1ec): thirteen doors are charged what every way onto their tile pays
         //   (L3's door to L111 the Swim of the water before it; twelve more the Swim they already paid through their
         //   landing gate or their sub-region's entry). No name, exit or location moves.
+        // ⛓ tile-rules-automation-r-a3 (4a96e1ec… -> 45f28a9f): the derived-rule table overrides 4 boundary exit rows, 2
+        //   re-spelled and truth-table equal (L34 out_teleporter_128_0, L98 out_stairsup_112_112). No name, exit or location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('4a96e1ec25e25a9e9f5e63a0a0bee409');
+            .toBe('45f28a9ffc9aa1f0a59aa304d3fe9a1a');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
