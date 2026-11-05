@@ -1,0 +1,6 @@
+the 5 L40 movers (default vs both ON), replayed with each switch alone:
+(394, 0) STAGED alone = both ON: True | CLEARTAG alone = default: True | staged: False None 644
+(394, 1) STAGED alone = both ON: True | CLEARTAG alone = default: True | staged: False None 2564
+(411, 0) STAGED alone = both ON: True | CLEARTAG alone = default: True | staged: False None 644
+(411, 1) STAGED alone = both ON: True | CLEARTAG alone = default: True | staged: True 1333 2563
+(869, 1) STAGED alone = both ON: True | CLEARTAG alone = default: True | staged: False None 2561
