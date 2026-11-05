@@ -16627,6 +16627,54 @@ export function resetApproachDoorCounts() {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE KEYLOCK-TURRET — A KEY LINE INSIDE A LIVE ICE TURRET'S RANGE: THE TURRET DIES FIRST (⚖ the
+ * user queued the slice on 2026-11-05, the L40 census's step 5, wall F; ⚖ "Carry the door for now, solve in visit after
+ * that works").
+ *
+ * L40's `bosslock@480,352` (flag 8) has its key line `{x 482–491, y 369}` in a three-cell pocket whose only way in is
+ * the column `iceturret@472,400` stands in: every lattice cell whose pinned box meets the line is inside the turret's
+ * 129 px `attackRange` disc, so `keylockCandidates` (planned with the disc as a volume) finds 0 cells and the arm
+ * refuses *"no REACHABLE stance … 0 cell(s)"* (legs 395/412). The disc is the game's: a live turret fires a three-blast
+ * volley at a player inside 128 px every `shootTimerMax` + its shot animation, and the keylock stands ~80 ticks for
+ * `BossLock`'s `keyTimer` and fade (measured on the model: braved, the stand is hit). The turret has no persistence
+ * tag, so it must die in the same visit.
+ *
+ * ON (`keylockTurretStance`), where the 16 px cells are empty and a cell around the lock is removed by an IceTurret's
+ * disc, the stance is derived again with those discs exempt. A LIVE turret among them becomes the resolution's
+ * `turretFirst` prerequisite, and the stance walk is then the executor's, not the arm's: `execKeylock` first kills it
+ * by APPROACH's fork-certified search (`approachKillForCorpse`: the loop's own walk to a staging point past the range,
+ * then per side, route and in-range wait an approach and the standing kill tried on forks, the first hitless try played
+ * on the live run; under `requireVerb('kill', …)`), reads the death back off the live run, walks to the stance with the
+ * disc exempt (a corpse does not shoot) and stands the hold as before. A dead turret's disc is exempt with no kill.
+ * Measured (W0, the model): on the key line with the turret alive a blast lands at t54 of the stand, before the lock
+ * opens at t83; with no turret the same stand is hitless. Braved instead (the disc exempt, no kill), L40's walk meets
+ * the live body: the column to the key line is the turret's own (`AVOID`: different components).
+ *
+ * OFF by default. `SEEDLING_KEYLOCK_TURRET=1` turns it on in a node process (the page's worker reads it through the
+ * solver env channel), and `withKeylockTurret(enabled, fn)` is for a test or a witness. OFF, nothing below is asked:
+ * the refusal is the one it was, byte for byte.
+ */
+export const KEYLOCK_TURRET = { enabled: globalThis.process?.env?.SEEDLING_KEYLOCK_TURRET === '1' };
+export const KEYLOCK_TURRET_DEFAULT = false;
+
+/** Run `fn` with `KEYLOCK_TURRET` set to `enabled`, restoring the previous value. */
+export function withKeylockTurret(enabled, fn) {
+    return withSwitch(KEYLOCK_TURRET, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `stances` each re-derivation
+ * (`{lock, t, turrets, live, stance}`; `stance: null` when the exempt discs still leave no reachable cell) and `kills`
+ * each prerequisite kill's end (`{lock, turret, t, dead, ticks, why}`).
+ */
+export const KEYLOCK_TURRET_COUNTS = { stances: [], kills: [] };
+
+/** Zero `KEYLOCK_TURRET_COUNTS`. */
+export function resetKeylockTurretCounts() {
+    Object.assign(KEYLOCK_TURRET_COUNTS, { stances: [], kills: [] });
+}
+
+/**
  * `FIFTH_ORDER` (OFF): the strategy bound admits a FIFTH application when the four before it are distinct and it is
  * a fifth distinct one (`fifthOrderAdmits`); a repeat is still bounded at four, and nothing is admitted past five.
  * ⚖ The bound is named rather than generous (`MAX_STRATEGIES_PER_GOAL`), so the fifth is its own switch, argued from
@@ -20694,7 +20742,7 @@ function resolveKeylockStrategy(run, obstacle, contacts, blocked = []) {
             }],
         };
     }
-    const { stance, discharged } = deriveKeylockStance(run, row, contacts, blocked);
+    const { stance, discharged, turretFirst = null } = deriveKeylockStance(run, row, contacts, blocked);
     const responder = KEY_RESPONDERS[row.tag];
     return {
         strategy: 'keylock',
@@ -20702,7 +20750,9 @@ function resolveKeylockStrategy(run, obstacle, contacts, blocked = []) {
         target: { x: row.x, y: row.y },
         lock: obstacle.id,
         keyType: row.keyType,
-        stance,
+        // ⛓ hammer-phase KEYLOCK-TURRET (`KEYLOCK_TURRET` ON): the stance walk is `execKeylock`'s, after the kill
+        stance: turretFirst ? null : stance,
+        ...(turretFirst ? { turretFirst } : {}),
         discharged,
         /**
          * ⛔ THE FADE IS NOT A `Lock`'S, and `opensOnKeyTick` is why this is
@@ -20791,6 +20841,11 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
             }
         }
     }
+    // ⛓ hammer-phase KEYLOCK-TURRET (`KEYLOCK_TURRET`, OFF): every key-line cell removed by an ice turret's disc
+    if (KEYLOCK_TURRET.enabled && candidates.length === 0) {
+        const viaTurret = keylockTurretStance(run, row, contacts, hypothesis);
+        if (viaTurret) return viaTurret;
+    }
     const siblings = base().filter((h) => keylockOutOfReach(run, h, contacts));
     const sealed = keyLineBehindLock(run, row, candidates, contacts, siblings);
     const refusal = new SolverRefusal(
@@ -20828,6 +20883,55 @@ function keylockCandidates(run, row, contacts, pitch = DEFAULT_LATTICE) {
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
     return candidates;
+}
+
+/**
+ * ⛓ hammer-phase KEYLOCK-TURRET (`KEYLOCK_TURRET` ON) — `deriveKeylockStance`'s answer where its 16 px cells are empty:
+ * the IceTurret discs that remove the cells around the lock are exempted (up to every turret the cells name), the
+ * candidates are asked again, and the first one a corridor reaches (the same `stanceReaches` and hypothesis) is the
+ * stance. `null` (the arm's refusal stands, unchanged) when no cell around the lock is removed by a turret's disc, or
+ * when the discs exempt still leave no candidate or no reachable one. A LIVE turret is carried as
+ * `turretFirst` for `execKeylock`; a dead or removed one (a corpse does not shoot) only exempts its disc.
+ */
+function keylockTurretStance(run, row, contacts, hypothesis) {
+    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    const cell = nodeAt((row.rect.x + row.rect.right) / 2, (row.rect.y + row.rect.bottom) / 2, DEFAULT_LATTICE);
+    const turrets = new Set(run.world.iceTurrets?.map((t) => t.id) ?? []);
+    const ids = new Set();
+    let exempt = new Set(contacts);
+    // Each pass exempts the turret discs the cells still name (a cell inside two discs names one per ask).
+    for (let pass = 0; pass < Math.max(1, turrets.size); pass += 1) {
+        const before = ids.size;
+        const passOpts = pass === 0 ? opts : solverPlanOpts(run, exempt, { nodeMargin: 0, triggerMargin: 0 });
+        for (let dy = -2; dy <= 2; dy += 1) {
+            for (let dx = -2; dx <= 2; dx += 1) {
+                if (dx === 0 && dy === 0) continue;
+                const c = nodeCentre(cell.tx + dx, cell.ty + dy, DEFAULT_LATTICE);
+                const ob = plannerObstacleAt(run.world, c.x, c.y, null, passOpts);
+                const h = ob?.kind === 'proximity-hazard' ? ob.blocker : null;
+                const id = h ? `${h.tag}@${h.x},${h.y}` : null;
+                if (id && turrets.has(id)) ids.add(id);
+            }
+        }
+        exempt = new Set([...contacts, ...[...ids].map((id) => `proximity-hazard:${id}`)]);
+        if (ids.size === before) break;
+    }
+    if (ids.size === 0) return null;
+    const live = [...ids].filter((id) => {
+        const t = run.entities('turrets')?.get?.(id) ?? null;
+        return t !== null && !t.dead && !t.removed;
+    });
+    const note = (stance) => KEYLOCK_TURRET_COUNTS.stances.push({ lock: row.id, t: run.ticksCompleted,
+        turrets: [...ids], live, stance });
+    for (const c of keylockCandidates(run, row, exempt)) {
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, exempt, hypothesis);
+        if (!reached) continue;
+        const stance = { x: c.x, y: c.y };
+        note(stance);
+        return { stance, discharged: reached.discharged, turretFirst: { kill: live, stance, exempt } };
+    }
+    note(null);
+    return null;
 }
 
 /**
@@ -20958,6 +21062,8 @@ function execKeylock(run, perTick, resolved, ctx) {
             + '— and inventing a stance for an unkeyed lock would be a wait with no '
             + 'mechanism behind it.');
     }
+    // ⛓ hammer-phase KEYLOCK-TURRET (`KEYLOCK_TURRET` ON): the turret dies, then the stance walk (absent OFF)
+    if (resolved.turretFirst) keylockTurretFirst(run, perTick, resolved, ctx);
     const NO_KEYS = new Set();
     const into = leanKeys(run.state, resolved.target);
     const from = perTick.length;
@@ -20985,6 +21091,49 @@ function execKeylock(run, perTick, resolved, ctx) {
     return fail(`${ctx.what}: ${resolved.lock} did not open inside its own derived bound `
         + `of ${resolved.hold.ticks} ticks (\`opensOnKeyTick\` + slack), and the key line `
         + `was ${touched ? '' : 'NEVER '}touched. ${resolved.hold.until.why}.`);
+}
+
+/**
+ * ⛓ hammer-phase KEYLOCK-TURRET (`KEYLOCK_TURRET` ON) — the keylock's prerequisite: each LIVE turret of
+ * `resolved.turretFirst.kill` killed by APPROACH's search (`approachKillForCorpse`, its "push" side the one facing the
+ * turret from the player: for a kill alone the side is free, the corpse stays where the turret dies) and its death read
+ * back off the live run; then the stance walk the arm skipped, the loop's own `walkTo` with the discs exempt (a corpse
+ * does not shoot) and the hold priced as its tail as the frontier prices it (`KEYLOCK_WAIT_PRICED`). No hitless try
+ * refuses by name (APPROACH's words); a refusal is propagated as it is, its ticks spent or not.
+ */
+function keylockTurretFirst(run, perTick, resolved, ctx) {
+    const { kill, stance, exempt } = resolved.turretFirst;
+    const lockRow = (run.world.activators ?? []).find((a) => a.id === resolved.lock);
+    for (const id of kill) {
+        requireVerb('kill', 'keylock:turretFirst', id); // ⛓ strategy switch: a nested kill, before any fork
+        const from = perTick.length;
+        const t = run.entities('turrets').get(id);
+        // The side is free (the corpse stays where the turret dies): the push direction faces it from the player.
+        const dx = t.x - run.state.x;
+        const dy = t.y - run.state.y;
+        const dir = Math.abs(dy) >= Math.abs(dx) ? { dx: 0, dy: Math.sign(dy) || -1 } : { dx: Math.sign(dx), dy: 0 };
+        let record;
+        try {
+            record = approachKillForCorpse(run, perTick, { corpse: { turret: id, dir }, exempt }, { walkTo: ctx.walkTo,
+                goal: ctx.goal, equip: ctx.equip, fork: ctx.fork, what: `${ctx.what} -> kill (${id})` });
+        } catch (e) {
+            KEYLOCK_TURRET_COUNTS.kills.push({ lock: resolved.lock, turret: id, t: from, dead: false,
+                ticks: perTick.length - from, why: String(e?.message ?? e).split('\n')[0].slice(0, 240) });
+            throw e;
+        }
+        const dead = run.entities('turrets')?.get?.(id)?.dead === true;
+        KEYLOCK_TURRET_COUNTS.kills.push({ lock: resolved.lock, turret: id, t: from, dead, ticks: perTick.length - from,
+            ...(record ? { side: record.side, wait: record.wait, forks: record.forks } : {}) });
+        if (!dead) fail(`${ctx.what} -> kill (${id}): the ice-turret arm returned and the run's turret is not dead`);
+    }
+    if (!hasArrived(run.state, stance, DEFAULT_TOLERANCE)) {
+        const why = kill.length ? `${kill.join(', ')} dead` : 'its turret a corpse';
+        ctx.walkTo(ctx.goal, stance, {
+            what: `${ctx.what} stance (${resolved.lock}, ${why})`,
+            contactsOverride: exempt,
+            ...(KEYLOCK_WAIT_PRICED.enabled && lockRow?.keyLine ? keylockStandWalk(run, resolved) : {}),
+        });
+    }
 }
 
 /**
