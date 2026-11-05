@@ -981,9 +981,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 97,
+        "fields": 99,
         "fieldsRead": 39,
-        "fieldsUnread": 55,
+        "fieldsUnread": 57,
         "statements": 29,
         "substrates": 9
     },
@@ -4963,6 +4963,8 @@ export const CAPABILITIES = frz({
         "gateHostingHint",
         "gateableItems",
         "getSpiralContent",
+        "goalContainer",
+        "goalContainer.noteOf",
         "hostsSurplusExitsNatively",
         "id",
         "iframeId",
