@@ -169,7 +169,7 @@ I did not add a coupled-mirror rule ({D,E} ⇒ {E,D}), because E2's fixture list
 - **Bounded vitest: 108 files, 2058 tests, all passed (266 s).** The run covered:
   - every non-slow test file that greps for the playthrough atlas, the maze preset, AP_1, the producers, `seedlingObstacleEvents`,
     `entranceRandomization*` or `forwardSimulator`;
-  - plus `boxLock`, `checkProcgenHelp`, `seedlingConstantsCensus`, `seedlingErDoorCensus`, `noNewDocsReferences`, E3's
+  - plus `boxLock`, `checkProcgenHelp`, `seedlingConstantsCensus`, `seedlingErDoorCensus`, the no-retired-docs-path test (`scripts/test/noN…References.test.js`), E3's
     `entranceRandomizer.test.js` and my 3 new files.
   - The slow/train `deriveLevelWorldLogic` pins were not run; the maze they read is byte-identical.
 - **E1 census at my tip:** its pin passes. No count moved.
