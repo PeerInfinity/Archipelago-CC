@@ -29,8 +29,9 @@ import { ANYTIME_PASSES, solveAnytime } from './jsRuntimeSolver.js';
 import { withOpportunisticStrike } from './pressKillCost.js';
 import { PRESS_KILL_DONE_TRACE, withPressEscapeShieldClaim } from './pressKillGuards.js';
 import { SHIELD_BUMP_FORECAST_KEY, withPressEscapeExact } from './pressEscapeExact.js';
-import { CHOOSER_PAIR, HAMMER_ESCAPE_TRACE, withChooserPair, withIceTurretStaticKill, withLatchWeighFirst }
-    from './solverBot.js';
+import {
+    CHOOSER_PAIR, HAMMER_ESCAPE_TRACE, withChooserPair, withIceTurretStaticKill, withLatchWeighFirst, withVolleyApproach,
+} from './solverBot.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -62,8 +63,10 @@ function solve860Exact(frozen = false) {
         const exact = () => withPressEscapeShieldClaim(false, () => withPressEscapeExact(true, solve));
         const keys = () => withContactFidelity({ orbitFreeAim: true, strategyBoundDistinct: true,
             [SHIELD_BUMP_FORECAST_KEY]: true, ...(NO_FROZEN_KEY ? {} : { [FROZEN_KEY]: frozen }) }, exact);
-        const answer = withChooserPair(true, () => withIceTurretStaticKill(true, () => withOpportunisticStrike(true,
-            () => withLatchWeighFirst(true, keys))));
+        // ⛓ hammer-phase VOLLEY-APPROACH: both rows are LWEIGH's own approach, so `VOLLEY_APPROACH` is pinned OFF (ON,
+        // the t2118 refusal below moves past the hit to the weigh's fade dwell: `hammerVolleyApproach.train.test.js`)
+        const answer = withVolleyApproach(false, () => withChooserPair(true, () => withIceTurretStaticKill(true,
+            () => withOpportunisticStrike(true, () => withLatchWeighFirst(true, keys)))));
         return { answer, kills, escapes };
     } finally {
         CHOOSER_PAIR.size = size;

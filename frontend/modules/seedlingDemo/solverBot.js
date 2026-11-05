@@ -12335,6 +12335,22 @@ export function iceTurretKillBox(t) {
 }
 
 /**
+ * APPROACH's side order (moved out of `approachKillForCorpse` unchanged by hammer-phase VOLLEY-APPROACH, which asks it
+ * too): the push side of the SNAPPED box `r` first, then the other sides nearest the player first, each carrying its
+ * `dir` (the push side the corpse's), and only those on plannable floor. `opts` is the plan options they were tested with.
+ */
+function approachSides(run, r, dir, exempt) {
+    const opts = solverPlanOpts(run, exempt);
+    const DIRS = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
+    const push = corpseKillSide(r, dir);
+    const sides = [push, ...DIRS.map((d) => ({ ...corpseKillSide(r, d), dir: d })).filter((s) => s.key !== push.key)
+        .sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y) - Math.hypot(b.x - run.state.x, b.y - run.state.y))]
+        .map((s) => (s.dir ? s : { ...s, dir }))
+        .filter((s) => plannerObstacleAt(run.world, s.x, s.y, null, opts) === null);
+    return { opts, push, sides };
+}
+
+/**
  * ⛓⛓ SEEDLING HAMMER-PHASE APPROACH (`TURRET_APPROACH`, OFF) — THE REORDERED CORPSE WEIGH'S APPROACH AND KILL, ONE
  * CERTIFICATE.
  *
@@ -12395,13 +12411,7 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     const r = iceTurretSnappedRect(t);
     const at = { x: (r.x + r.right) / 2, y: (r.y + r.bottom) / 2 };
     const clear = ICE_TURRET.attackRange + 1 + TURRET_APPROACH_STAGE_CLEAR;
-    const opts = solverPlanOpts(run, exempt);
-    const DIRS = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }];
-    const push = corpseKillSide(r, c.dir);
-    const sides = [push, ...DIRS.map((d) => ({ ...corpseKillSide(r, d), dir: d })).filter((s) => s.key !== push.key)
-        .sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y) - Math.hypot(b.x - run.state.x, b.y - run.state.y))]
-        .map((s) => (s.dir ? s : { ...s, dir: c.dir }))
-        .filter((s) => plannerObstacleAt(run.world, s.x, s.y, null, opts) === null);
+    const { opts, push, sides } = approachSides(run, r, c.dir, exempt);
     if (sides.length === 0) refuse(`no side of ${id}'s snapped box is plannable floor`);
     // 1. the staging point, past the range on the push side's outward normal
     const NORMAL = { up: [0, 1], down: [0, -1], left: [1, 0], right: [-1, 0] };
@@ -12431,7 +12441,20 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
         }
     }
     if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
-    // 2. the tries, each on a fork
+    // 2. the tries, each on a fork (⛓ VOLLEY-APPROACH: one helper, `approachForkTries`, shared with `volleyApproachRetry`)
+    return approachForkTries(run, perTick, ctx, { id, r, sides, stage, exempt, opts, hitsBefore, refuse });
+}
+
+/**
+ * APPROACH's tries (`approachKillForCorpse` step 2 and 3, moved here unchanged by hammer-phase VOLLEY-APPROACH so
+ * `volleyApproachRetry` asks the same search): per side (`sides`, in order), per route (the corridor, then a via point
+ * beside the SNAPPED box `r` on the stance's line), per wait 0 … `TURRET_APPROACH_WAIT_MAX` stood at the route's first
+ * waypoint, each on a FORK — the walk to the stance, the snap wait, the settle on the live box's side, the
+ * `corpseOnly` kill and the stand until no blast flies. The first try with the turret dead, no hit and no blast in
+ * flight is played on the live run, key for key, and read back against `hitsBefore`; none refuses by name (`refuse`),
+ * with the tries tallied. `stage` is only named in that refusal: the tries start where the live player stands.
+ */
+function approachForkTries(run, perTick, ctx, { id, r, sides, stage, exempt, opts, hitsBefore, refuse }) {
     const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
     const onSnap = (f) => {
         const u = f.entities('turrets')?.get?.(id);
@@ -12551,6 +12574,108 @@ function approachKillForCorpse(run, perTick, resolved, ctx) {
     TURRET_APPROACH_COUNTS.approaches.push({ turret: id, t: run.ticksCompleted, side: null, forks, tally });
     return refuse(`no approach to ${id} from the staging point (${stage.x},${stage.y}) is hitless — ${forks} fork(s), `
         + `${JSON.stringify(tally)}: ${whys.join(' | ')}`);
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE VOLLEY-APPROACH (`VOLLEY_APPROACH`, OFF) — LWEIGH'S HIT APPROACH, REWOUND TO THE RANGE'S EDGE
+ * AND TRIED AGAIN ON FORKS.
+ *
+ * LWEIGH's reordered corpse weigh walks to `killForCorpse`'s kill stance with the turret's range braved, and refuses
+ * by name when a hit lands between that walk's first tick and the verb's end. Measured on L40 leg 860 (arm A5 +
+ * `PRESS_ESCAPE_EXACT` + `forecastShieldBump`, `frozenPressForecast` ON): the live stance walk crosses the open south
+ * door at t2036, comes into `iceturret@472,400`'s range at t2041 (its clock runs from there), dodges volley 1 (t2069)
+ * behind `pushableblockfire@480,480`, climbs x 471 and STANDS at (471.2,456.0) through the t2111 startshot; volley 2
+ * spawns at t2114 aimed at the player and #2.0 lands at t2118. A walk's certificate never sees a blast (its preview
+ * steps none), and the one-tick `freezeForecast` names the contact only on the tick it lands.
+ *
+ * ON, where that guard would refuse (and `TURRET_APPROACH` did not replace the walk):
+ *   1. the walk is replayed from its first tick (`rewind.replay`, the slot selections on the run clock) to the
+ *      ENTRY: the last tick before the player first comes within `ICE_TURRET.attackRange + 1 +
+ *      TURRET_APPROACH_STAGE_CLEAR` px of the SNAPPED box's centre. Outside the range `IceTurret.update`'s `else`
+ *      re-arms `shootTimer` every tick, so every volley the approach can meet starts after that tick, and the door
+ *      the walk's ladder discharged on the way is already behind it;
+ *   2. the run is rewound there (`rewind.to`: the keys, slot selections, apitem takes and dashes cut back), and
+ *      APPROACH's own search (`approachSides` + `approachForkTries`) runs from where the player stands: per side,
+ *      per route (the corridor, then a via point), per wait at the route's first waypoint, each on a fork, the
+ *      first with the turret dead, no hit and no blast in flight played on the live run and read back;
+ *   3. the caller then runs the weigh's executor again (`execCorpseWeigh` finds the turret dead and goes to the
+ *      bumps), and LWEIGH's guard is asked from the entry.
+ * A hit that is not this turret's (its blast or its body), no rewind or fork, a walk that starts inside the range (no
+ * earlier state of it is outside) or never comes into it, or no live turret at the entry returns null: nothing more is
+ * asked and LWEIGH's refusal stands.
+ * No hitless try refuses by name, with APPROACH's tally. `killForCorpse`, `execCorpseWeigh`, `deriveCorpseWeigh` and
+ * APPROACH's search are called, not changed. ⛔ The nested kill sits under the strategy switch's `kill` gate.
+ */
+function volleyApproachRetry(run, perTick, resolved, ctx) {
+    const c = resolved.corpse;
+    const id = c?.turret ?? null;
+    const t0 = run.entities('turrets')?.get?.(id) ?? null;
+    if (!t0 || typeof ctx.fork !== 'function' || !ctx.rewind) return null;
+    // only a hit by this turret's own volley (a blast of it, or its body) is the approach's to answer
+    if (!(ctx.hit?.source === 'blast' && String(ctx.hit.id).startsWith(`${id}#`))
+        && !(ctx.hit?.source === 'iceturret' && ctx.hit.id === id)) return null;
+    const row = { turret: id, from: ctx.from, t: run.ticksCompleted, entry: null, verdict: null };
+    VOLLEY_APPROACH_COUNTS.retries.push(row);
+    // 1. the entry, on a replay of the walk (decides nothing on the live run)
+    const f = ctx.rewind.replay(ctx.from);
+    const clear = ICE_TURRET.attackRange + 1 + TURRET_APPROACH_STAGE_CLEAR;
+    const away = (r) => {
+        const u = r.entities('turrets')?.get?.(id) ?? null;
+        if (!u || u.dead) return Infinity;
+        const b = iceTurretSnappedRect(u);
+        return Math.hypot(r.state.x - (b.x + b.right) / 2, r.state.y - (b.y + b.bottom) / 2);
+    };
+    let k = ctx.equips.findIndex((e) => e.t >= f.ticksCompleted);
+    if (k < 0) k = ctx.equips.length;
+    let entry = null;
+    let inRange = false;
+    for (let i = ctx.from; i < perTick.length; i += 1) {
+        if (away(f) < clear) {
+            inRange = true;
+            break;
+        }
+        entry = i;
+        while (k < ctx.equips.length && ctx.equips[k].t === f.ticksCompleted) f.equipNow(ctx.equips[k++].slot);
+        f.advance(perTick[i]);
+    }
+    if (entry === null || !inRange) {
+        row.verdict = entry === null ? 'in-range-at-start' : 'never-in-range';
+        return null;
+    }
+    row.entry = entry;
+    requireVerb('kill', 'weigh:volleyApproachRetry', id); // ⛓ strategy switch r1: a nested kill, before any fork
+    // 2. rewound, then APPROACH's search from where the player stands
+    const { run: back } = ctx.rewind.to(entry);
+    const t = back.entities('turrets')?.get?.(id) ?? null;
+    if (!t || t.dead) {
+        row.verdict = 'no-live-turret';
+        return null;
+    }
+    row.t = back.ticksCompleted;
+    const refuse = (msg) => {
+        row.verdict = 'refused';
+        throw new SolverRefusal(`${ctx.what}: (⛓ VOLLEY-APPROACH, rewound to t${back.ticksCompleted} at `
+            + `(${back.state.x.toFixed(1)},${back.state.y.toFixed(1)}), outside ${id}'s range) ${msg}`,
+        { goal: ctx.goal, obstacle: { kind: 'danger', id }, perTick: [...perTick] });
+    };
+    const slots = back.progress('inventorySlots') ?? [];
+    const blade = slots.includes(INVENTORY_ITEM_IDS.ghostsword) ? INVENTORY_ITEM_IDS.ghostsword
+        : (slots.includes(INVENTORY_ITEM_IDS.sword) ? INVENTORY_ITEM_IDS.sword : null);
+    if (blade === null) refuse(`the inventory has no Sword or Ghost Sword slot to kill ${id} with`);
+    const exempt = new Set([...(resolved.exempt ?? []), `proximity-hazard:${id}`]);
+    const r = iceTurretSnappedRect(t);
+    const { opts, sides } = approachSides(back, r, c.dir, exempt);
+    if (sides.length === 0) refuse(`no side of ${id}'s snapped box is plannable floor`);
+    if (back.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
+    const hitsBefore = back.ledger('playerHits').length;
+    const stage = { x: back.state.x, y: back.state.y };
+    const record = approachForkTries(back, perTick, ctx, { id, r, sides, stage, exempt, opts, hitsBefore, refuse });
+    row.verdict = 'approached';
+    row.side = record.side;
+    row.via = record.via;
+    row.wait = record.wait;
+    row.forks = record.forks;
+    return { run: back, hitsBefore, record };
 }
 
 /**
@@ -16594,6 +16719,38 @@ export const TURRET_APPROACH_COUNTS = { approaches: [] };
 /** Zero `TURRET_APPROACH_COUNTS`. */
 export function resetTurretApproachCounts() {
     TURRET_APPROACH_COUNTS.approaches = [];
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE VOLLEY-APPROACH — LWEIGH'S CORPSE-WEIGH APPROACH, VOLLEY-AWARE (⚖ the user queued the slice
+ * on 2026-11-04; fidelity FROZENPRESS's hand-over, its report § 7: with `frozenPressForecast` ON leg 860 (arm A5)
+ * refuses at work 5171 on *"the reordered corpse weigh took a hit at t2118 (blast:iceturret@472,400#2.0) … (⛓ LWEIGH:
+ * a volley-aware approach is the unbuilt arm)"*).
+ *
+ * `VOLLEY_APPROACH` (OFF; asked only where LWEIGH's guard would refuse a hit on the reordered weigh's approach, and only
+ * when `TURRET_APPROACH` did not replace that walk): the run is rewound to the last tick before the walk came into the
+ * turret's range, and APPROACH's fork search (sides × routes × in-range waits) runs from there (`volleyApproachRetry`).
+ * `SEEDLING_VOLLEY_APPROACH=1` turns it on in a node process (the page's worker has no `process`), and
+ * `withVolleyApproach(enabled, fn)` is for a test or a witness. OFF, nothing is read and every walk is byte-identical.
+ */
+export const VOLLEY_APPROACH = { enabled: globalThis.process?.env?.SEEDLING_VOLLEY_APPROACH === '1' };
+export const VOLLEY_APPROACH_DEFAULT = false;
+
+/** Run `fn` with `VOLLEY_APPROACH` set to `enabled`, restoring the previous value. */
+export function withVolleyApproach(enabled, fn) {
+    return withSwitch(VOLLEY_APPROACH, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `retries`, each retry asked
+ * (`{turret, from, t, entry, verdict, side, via, wait, forks}`; `verdict` 'approached', 'refused', 'in-range-at-start'
+ * or 'no-live-turret').
+ */
+export const VOLLEY_APPROACH_COUNTS = { retries: [] };
+
+/** Zero `VOLLEY_APPROACH_COUNTS`. */
+export function resetVolleyApproachCounts() {
+    VOLLEY_APPROACH_COUNTS.retries = [];
 }
 
 /**
@@ -30650,12 +30807,15 @@ function solveSegmentUnder({
                     // ADDS its presser to the exemptions, so the stance and the
                     // exemption are one decision).
                     // ⛓ hammer-phase LWEIGH: the hits before the reordered weigh's stance walk (OFF: null, nothing read)
-                    const hitsBeforeStance = plan.resolved.latchWeighFirst ? run.ledger('playerHits').length : null;
+                    let hitsBeforeStance = plan.resolved.latchWeighFirst ? run.ledger('playerHits').length : null;
                     // ⛓ hammer-phase APPROACH (`TURRET_APPROACH`, OFF): the reordered weigh's approach and kill, on forks
                     const approached = TURRET_APPROACH.enabled && plan.resolved.latchWeighFirst && plan.resolved.corpse
                         ? approachKillForCorpse(run, perTick, plan.resolved, { what: `${what} -> ${plan.strategy}`,
                             goal, walkTo, fork, equip })
                         : null;
+                    // ⛓ hammer-phase VOLLEY-APPROACH (`VOLLEY_APPROACH`, OFF: null): where the walk begins, for a retry
+                    const volleyFrom = VOLLEY_APPROACH.enabled && hitsBeforeStance !== null && approached === null
+                        && plan.resolved.corpse ? perTick.length : null;
                     if (plan.resolved.stance && approached === null) {
                         // ⛓ STANCE: the walk is registered so its own frontier can
                         // see a re-entry (`STANCE_REENTRY`, above).
@@ -30683,7 +30843,7 @@ function solveSegmentUnder({
                             stanceWalks.delete(walking);
                         }
                     }
-                    const record = callableExecutor(frontierExecutor(plan.strategy), plan.strategy,
+                    const applyVerb = () => callableExecutor(frontierExecutor(plan.strategy), plan.strategy,
                         'frontier-apply')(run, perTick, plan.resolved, {
                         maxTicksPerTarget,
                         economies,
@@ -30705,6 +30865,21 @@ function solveSegmentUnder({
                         // ⛓ CRUSHER — a try-before-commit run (`forkRun`); null without one.
                         fork, rewind,
                     });
+                    let record = applyVerb();
+                    /**
+                     * ⛓ hammer-phase VOLLEY-APPROACH (`VOLLEY_APPROACH`, OFF: never asked): a hit by the turret's volley
+                     * on the way is answered by rewinding to the range's edge and APPROACH's fork search from there
+                     * (`volleyApproachRetry`); the executor then runs again, and the guard below counts from the entry.
+                     */
+                    if (volleyFrom !== null && run.ledger('playerHits').length > hitsBeforeStance) {
+                        const retried = volleyApproachRetry(run, perTick, plan.resolved, {
+                            what: `${what} -> ${plan.strategy}`, goal, walkTo, fork, equip, rewind,
+                            equips: solverEquips, from: volleyFrom, hit: run.ledger('playerHits')[hitsBeforeStance] });
+                        if (retried !== null) {
+                            hitsBeforeStance = retried.hitsBefore;
+                            record = applyVerb();
+                        }
+                    }
                     /**
                      * ⛓ hammer-phase LWEIGH: the reordered weigh's kill stance is inside the turret's range, and the
                      * walk there is not fork-certified (`killForCorpse` certifies the kill, from the stance), so a
