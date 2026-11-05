@@ -212,13 +212,14 @@ describe('rules l20-button-latch: an in-room latch\'s crossings cost its press e
             .toMatchObject({ tset: '0', tag: '4', room: '-1' });
     });
 
-    it('both directions through the lock cost And(the crossing\'s own rule, the press); nothing else names it', () => {
+    // ⛓ tile-rules-automation-r-a4 (⚖ Robert 2026-11-04 "Yes, in R-A4 (Recommended)"; rules-4's rewrite): the Shield term was
+    // REDUNDANT (the press implies it, pinned below), so both directions cost exactly the press. Was And(Shield, press).
+    it('both directions through the lock cost exactly the press, with no item; nothing else names it', () => {
         const [e] = presses;
-        const shield = { rule: 'Has', args: { item_name: 'Progressive Shield' } };
         const has = { rule: 'Has', args: { item_name: e.name } };
         expect(gatedBy(e)).toEqual([
-            { from: 'level_20__r1c4', to: 'level_20__r3c1', rule: { rule: 'And', children: [shield, has] } },
-            { from: 'level_20__r3c1', to: 'level_20__r1c4', rule: { rule: 'And', children: [shield, has] } },
+            { from: 'level_20__r1c4', to: 'level_20__r3c1', rule: has },
+            { from: 'level_20__r3c1', to: 'level_20__r1c4', rule: has },
         ]);
     });
 

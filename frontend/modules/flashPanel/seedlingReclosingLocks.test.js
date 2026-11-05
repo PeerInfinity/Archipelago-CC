@@ -44,7 +44,7 @@ const cellAt = (grid, x, y) => grid.cells[y * grid.width + x];
 
 describe('the group census — which grouped locks re-close', () => {
     it('a plain Button group HOLDS (L15 group 0: the button at (7,2), nothing latching)', () => {
-        expect(GROUPS.get('15:0')).toEqual({ latching: false, holders: [[7, 2]] });
+        expect(GROUPS.get('15:0')).toEqual({ latching: false, holders: [[7, 2]], latchers: [] }); // ⛓ R-A4: + `latchers`
     });
 
     it('a ButtonRoom with room -1 LATCHES its group (L20 group 0), so its lock is not re-closing', () => {
