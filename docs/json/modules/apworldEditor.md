@@ -989,6 +989,44 @@ All Settings › apworldEditor). The worker was stopped; nothing was recorded."*
 worker is `terminate()`d on a timeout, on Cancel and after every answer, and a
 message that arrives after the outcome is ignored.
 
+**A generation the worker cannot wait on (P5c, ⚖ Robert R24, 2026-11-04).** Some
+realisers generate outside JS: cloudberry's levels are made by the Cloudberry game
+page, which only the PAGE has (a hidden same-origin frame). Such a realiser yields
+the promise of that work (an event with `await`, the pipeline's `yieldedWait`
+contract) and, drained synchronously, refuses: it could not wait. The engine's
+synchronous `generateRegion` drain records every yielded `await`
+(`collectPendingGenerations(fn)` → `{value, pending}`), so one press works like this:
+1. The worker runs the job as usual. Its refusal, with work pending, comes back
+   `pendingGeneration: true` (`flagPendingGeneration`). The worker has no generator,
+   so it cannot finish the job.
+2. The page runs the same job itself (`runRegenerateOnPage`), in the same run:
+   Generate ▸ stays replaced by the elapsed readout, which now reads *Generating as
+   `cloudberry` (on this page)… 1.2 s / 60 s*, and **Cancel** still works.
+   `regenerateAwaitingGeneration` awaits EXACTLY the promises the realiser yielded
+   (no timer, no poll), then asks once more. The result lands like any other.
+
+Nothing is declared: a substrate that never yields `await` is never flagged, so
+maze, bounce, text_adventure and the rest are one worker call with the same answer
+as before (unit pin: the same answer object, the bytes equal to the bare op).
+- **The bound** is that one retry. A retry that again finds work pending is refused
+  as `REGION_GENERATION_STILL_PENDING`, never retried again. The wait is bounded by
+  the same `regionGenerationTimeoutSeconds`, which answers *"the `cloudberry`
+  generation gave up after 60 s … Nothing was recorded; the generation already
+  started keeps running and is cached."* Cancel answers
+  `REGION_GENERATION_CANCELLED_ON_PAGE` (the page cannot stop the game page's
+  generation; its result is cached for the next press).
+- **A failed generation** is the retry's named refusal (`CloudberryLevelRefused`,
+  `CloudberryFeatureMissing`, or the generator's own failure), never a silent retry.
+- **A second press while it generates** starts nothing: the form has a live run.
+  Concurrent asks for one level share one generation (cloudberry's in-flight map).
+- A refusal with nothing pending (a cloudberry region whose way back needs items,
+  say) is answered exactly as before.
+
+Unit pins: `regionGenerationPending.test.js` (each pin names the mutant it kills).
+In-app row: `cloudberry-editor-regenerate-one-press` (the `cloudberry` batch: it
+needs the site copy). ⚠ *Initialise procgen data* is not covered: a slot
+initialised as `cloudberry` is still refused in the worker.
+
 **Teardown.** The worker run and the elapsed ticker live on the panel instance
 and are stopped on `onPanelDestroy`, a new document, a slot pick, Cancel, the
 form's ✕, and a pick that opens another form — a remounted panel keeps old
