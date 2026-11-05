@@ -27359,3 +27359,28 @@ in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fin
 4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
 327 t, 0 hits, game-witnessed.
 
+
+### Seedling hammer-phase OPP-FREEZE — the press kill's opportunistic strike asks the frozen-tick forecast
+
+⚖ The user queued it 2026-11-04 from fidelity FROZENPRESS's hand-over (its report § 7): `execKillByPressOnce`'s
+`opp.decide` built its own `{ slash }` and never asked `strikeDecideOpts(run)`, the options the six run-side decide
+sites ask. Report `CC/docs/cloud-reports/seedling-hammer-opp-freeze.md`.
+
+**W0 (measure first).** OPP ON (`SEEDLING_OPPORTUNISTIC_STRIKE=1`) at `26ed405d3f`, a load hook that reads
+`freezeForecast` at the call on every ask and records every `FROZEN_TICK_PRESS` with its stack: the route survey
+(236 steps, `--through=end --route=full`; 202 SOLVED / 34 REFUSED), leg 860's A5 arm (K+X OFF 3068, K+X ON 5171, both
+= the frozenpress report's) and the 11 committed sweep request fixtures. **6577 asks inside the press kill, 0 on a
+refused tick, 0 frozen-press throws from the press kill.** The one survey throw is step 126's pickup ceremony, pressed by
+`drive`'s strike (fidelity's residue). The asks come from two survey children (765 each; by shard, L40 steps 66 and 94, which share the (488,904) boot),
+leg 860, and legs 371 and 853.
+
+**I.** Switch `solverBot.OPP_FREEZE_FORECAST` (OFF; `SEEDLING_OPP_FREEZE_FORECAST=1`, `withOppFreezeForecast`;
+`SOLVER_ENV_NAMES`). The call asks `oppDecideOpts(run)`: OFF the `{ slash }` it always built, ON `strikeDecideOpts(run)`
+(so the forecast rides fidelity's `frozenPressForecast` too: with that key OFF it is `{ slash }`). ON = OFF on every
+solve that reaches the call (860 ×2, legs 371/853, steps 66/94: identical answers, counts and messages). The gap is closed
+by a constructed row on fidelity's L40 freeze tape (`hammerOppFreeze.test.js`): an aim on t51, the owed press on t52, the
+contact tick. OFF, `FROZEN_TICK_PRESS`; ON, the policy stands down t52..t65, re-aims t66 and presses t67. Mutants:
+the options ignore the switch → 2 red; the call site reverted → 1 red.
+
+**Trap candidate.** A run-side `decide` that builds its own options object silently opts out of every option a later
+slice adds to `strikeDecideOpts`; ask the helper rather than spell `{ slash }`.

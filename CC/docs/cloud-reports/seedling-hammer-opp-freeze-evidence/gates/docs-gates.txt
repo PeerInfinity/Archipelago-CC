@@ -1,0 +1,10 @@
+instruments: 524 files over 42 categories, 205 browser rows, 444 with flags, 266 cited by a doc, 0 FINDING(S)
+capabilities: 29 statements × 9 substrates, 39 fields read, 55 not yet read
+docsIndex:  28 documents (506,354 words) + 4 pages
+PASS: …and that link LOADS from this page's own host — http://127.0.0.1:43343/frontend/modules/procgenDocs/reference.html → 200
+
+ALL CHECKS PASSED
+OK: frontend/modules/quickLaunch/generated/docsIndex.js is current (193 docs, 9 sections, 12 categories).
+PASS: r9-solve-32's tick-0 clock is declared + bootCost — declared 16414 + 21 = 16435, measured 16435 (delta 21)
+
+ALL CHECKS PASSED

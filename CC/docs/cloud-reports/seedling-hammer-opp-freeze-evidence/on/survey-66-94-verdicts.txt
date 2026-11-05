@@ -1,0 +1,2 @@
+66 40 REFUSED None solverBot(survey-step-66) collect (656,528) stance (ladder-routed: no corridor from (488,904) to a stance that can collect bosskey@656,528 — 16 walkable candida
+94 40 REFUSED None solverBot(survey-step-94) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 — 22 walkable candida

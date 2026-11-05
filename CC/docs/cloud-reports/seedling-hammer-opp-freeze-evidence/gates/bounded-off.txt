@@ -1,0 +1,91 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/strategySwitch.test.js [2m([22m[2m22 tests[22m[2m)[22m[33m 2347[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) absent: the worker's answer gains no field; present: it names the list, even on a refusal [33m 2096[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/procgenRoam.test.js [2m([22m[2m23 tests[22m[2m)[22m[33m 4457[2mms[22m[39m
+     [33m[2m✓[22m[39m rooms s10 post-sword: COSTS — the route crosses the bodies (101 vs 69 ticks) (dashSpinnerForecast OFF) [33m 2435[2mms[22m[39m
+     [33m[2m✓[22m[39m rooms s10 post-sword: INERT — the struck bodies are priced where the strike left them (69 vs 69 ticks) [33m 746[2mms[22m[39m
+file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172
+        throw new Error(`boxLock: unknown kind ${JSON.stringify(kind)} — one of `
+              ^
+
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+    at takeBoxLock (file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172:15)
+    at file:///tmp/p3b-boxlock-Dlq0wz/snippet-11398570.mjs:3:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.4
+ [32m✓[39m frontend/modules/seedlingDemo/hammerAxisStrikes.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 10509[2mms[22m[39m
+     [33m[2m✓[22m[39m a non-axis walk is OFF's, switch or no switch (the drive and a solve) [33m 557[2mms[22m[39m
+     [33m[2m✓[22m[39m AXIS-L12HITS: L12 leg 149 ON takes 0 hits and answers OFF's plan; without the hold's tail it is punched [33m 5042[2mms[22m[39m
+     [33m[2m✓[22m[39m AXISON: on L95 flag 4 and L105 the axis strikes alone build no policy and answer OFF's plan [33m 4751[2mms[22m[39m
+ [32m✓[39m scripts/procgen/boxLock.test.js [2m([22m[2m26 tests[22m[2m)[22m[33m 19324[2mms[22m[39m
+     [33m[2m✓[22m[39m releases on exit, so the next taker takes it cleanly [33m 327[2mms[22m[39m
+     [33m[2m✓[22m[39m reclaims a stale lock by `kill -0`, naming whom it reclaimed from [33m 334[2mms[22m[39m
+     [33m[2m✓[22m[39m lets exactly ONE of eight simultaneous takers hold the box; the rest refuse [33m 3324[2mms[22m[39m
+     [33m[2m✓[22m[39m serialises four QUEUED simultaneous takers — every one takes, no two hold at once [33m 9183[2mms[22m[39m
+     [33m[2m✓[22m[39m lets a QUEUED taker die on SIGTERM — it never takes the box later [33m 2624[2mms[22m[39m
+     [33m[2m✓[22m[39m passes when nothing moved, and refuses BY ROW when the head does [33m 321[2mms[22m[39m
+     [33m[2m✓[22m[39m makes a REAL browser gate refuse before it spends anything [33m 968[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/entityBlocks.test.js [2m([22m[2m30 tests[22m[2m)[22m[33m 5143[2mms[22m[39m
+     [33m[2m✓[22m[39m is in neither the simulation closure nor the solver-family closure [33m 1919[2mms[22m[39m
+     [33m[2m✓[22m[39m is imported by nothing but its own test [33m 2478[2mms[22m[39m
+     [33m[2m✓[22m[39m …and a grep of `entities('<family>')` over the family files finds the same files [33m 483[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerEscapeExact.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 1258[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF is OFF's answer at every stand, SPIN OFF and ON (SPIN's own four classes) [33m 380[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostRope.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 6594[2mms[22m[39m
+     [33m[2m✓[22m[39m the four recordings: game = model at 0 px, and the cut where (and only where) the witness says [33m 405[2mms[22m[39m
+     [33m[2m✓[22m[39m seed 1: OFF the PULL rung refuses naming the ghost sword; ON it cuts with it and the walk is driven [33m 579[2mms[22m[39m
+     [33m[2m✓[22m[39m ON (pole at (3,13)): the cut stands 20 px off the rope — beyond the sword's reach — with the swing's swept rect off the pole, and the walk toggles no pole; OFF refuses [33m 4616[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverEnvChannel.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 2760[2mms[22m[39m
+     [33m[2m✓[22m[39m sets CHOOSER_PAIR (on, size 3) in the worker before solverBot loads; nothing else [33m 319[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env [33m 725[2mms[22m[39m
+     [33m[2m✓[22m[39m the result records the switches set (and carries no stamp at the defaults) [33m 652[2mms[22m[39m
+     [33m[2m✓[22m[39m an unknown switch refuses BY NAME in the worker too: every solve, nothing installed [33m 884[2mms[22m[39m
+ [32m✓[39m frontend/modules/procgenCore/contentIdentity.test.js [2m([22m[2m30 tests[22m[2m)[22m[32m 202[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStrikeSlot.test.js [2m([22m[2m5 tests[22m[2m)[22m[32m 255[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPreviewDeathSweep.test.js [2m([22m[2m15 tests[22m[2m)[22m[33m 19158[2mms[22m[39m
+     [33m[2m✓[22m[39m G1's witness at t1251: (488,872) at eta 15; a pool there skips it for (488,856) at eta 16 [33m 4776[2mms[22m[39m
+     [33m[2m✓[22m[39m a drown latched before the preview (every walk dies): no refuge, not a throw [33m 1398[2mms[22m[39m
+     [33m[2m✓[22m[39m a non-death error still throws [33m 1535[2mms[22m[39m
+     [33m[2m✓[22m[39m G1's witness at t1251: the band on (488,872) skips it for (488,856) at eta 16, every banded candidate counted in shakeRefused [33m 1720[2mms[22m[39m
+     [33m[2m✓[22m[39m every preview banded: no refuge (the kill's "nowhere to be"), not a throw [33m 1067[2mms[22m[39m
+     [33m[2m✓[22m[39m the shake guard OFF rethrows the band (the pre-PKB behaviour) [33m 1537[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, an error that is not the forecast's band still throws (the live run's own band words included) [33m 2549[2mms[22m[39m
+     [33m[2m✓[22m[39m planPacedWait: a pacing that dies is rejected at its tick; with no death it plans [33m 355[2mms[22m[39m
+     [33m[2m✓[22m[39m the encounter (L32, r5-bobboss-fire at t20): a plan that dies is touched there; a key set that dies is safe only until then [33m 3765[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityStrikeLapse.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 3805[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: survey step 50 solves in 413 t with zero hits; the body dies on the walk, gone before the ceremony [33m 2841[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the plan is the pre-lapse witness (the retired 460-t `bobsoldier2-l30-torch`), key for key [33m 920[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityFrozenPress.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 466[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerClearTagStand.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 17780[2mms[22m[39m
+     [33m[2m✓[22m[39m L35 leg 127: OFF the hold is punched twice; ON the kill runs first and it takes 0 hits [33m 8348[2mms[22m[39m
+     [33m[2m✓[22m[39m L0 leg 105: ON answers OFF's plan byte for byte (its transit is punched, so the kill already ran first) [33m 9344[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerOppFreeze.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 359[2mms[22m[39m
+     [33m[2m✓[22m[39m a frozen tick offered to OPP: OFF the owed press lands on the contact tick and the model refuses it (`FROZEN_TICK_PRESS`); ON the policy stands down through the freeze, re-aims on the first free tick and presses the next [33m 345[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerBk2Combat.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 2858[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: deriveKillByChaser carries no `waits`; ON: the same answer plus the cells the body never came to, nearest last [33m 2847[2mms[22m[39m
+ [32m✓[39m scripts/git-hooks/boxLockCommit.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 779[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerRefugeBandText.test.js [2m([22m[2m3 tests[22m[2m)[22m[33m 25673[2mms[22m[39m
+     [33m[2m✓[22m[39m 371 at 5266, `PRESS_KILL_BOMBS` OFF: every one of the 12 previewed refuges is banded, and the refusal says so (shakeExactSplit OFF) [33m 8374[2mms[22m[39m
+     [33m[2m✓[22m[39m 371 at 5266, `PRESS_KILL_BOMBS` OFF, shakeExactSplit ON (the default since wave 31): no refuge is banded — the press kill is passed and the dashless pass refuses later, at the paced bomb-pusher hold [33m 10148[2mms[22m[39m
+     [33m[2m✓[22m[39m 371 at 5265, the defaults: no refuge was banded, and the refusal is the words it was (BW's suffix, no other) [33m 7149[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m17 tests[22m[2m)[22m[33m 96605[2mms[22m[39m
+     [33m[2m✓[22m[39m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick [33m 1614[2mms[22m[39m
+     [33m[2m✓[22m[39m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA) [33m 3237[2mms[22m[39m
+     [33m[2m✓[22m[39m K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike [33m 4165[2mms[22m[39m
+     [33m[2m✓[22m[39m the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen [33m 4563[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts [33m 815[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death) [33m 48597[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t778), and the executed prefix is the witness's first 778 ticks [33m 33588[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerOpportunisticStrike.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 99956[2mms[22m[39m
+     [33m[2m✓[22m[39m step 67: OFF the kill passes bob@736,752 in reach without pressing and dies; ON it strikes the bob from t651, the hits land in the model and the bob dies, the keys are OFF's until the first aim, and the walk the kill certified struck the bob on the same ticks (preview = drive) [33m 99953[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m20 passed[39m[22m[90m (20)[39m
+[2m      Tests [22m [1m[32m253 passed[39m[22m[90m (253)[39m
+[2m   Start at [22m 03:07:04
+[2m   Duration [22m 134.47s[2m (transform 8.88s, setup 0ms, import 27.65s, tests 320.29s, environment 2ms)[22m
+
