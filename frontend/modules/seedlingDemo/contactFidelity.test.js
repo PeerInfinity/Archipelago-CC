@@ -347,9 +347,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             orbitFreeAim: false,
             // ⛓ fidelity L40BK2B D2 (wave 33): the strategy bound counts distinct applications — ships OFF.
             strategyBoundDistinct: false,
-            // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — ships OFF. ⚖ (user, 2026-11-02)
-            // HELD OFF at the W36 flip: helpFrame's C-on-the-Help-tick rows move +19 ON; a wasm witness decides.
-            secondaryUse: false,
+            // ⛓ seedling-js-inventory-menu C4: a C press is `useItem(Main.secondary)` — held OFF at the W36 flip, then ⚖ (user,
+            // 2026-11-02, "Flip after W36 lands") ON once seedling-js-help-dismiss-press witnessed the Help-dismiss swing.
+            secondaryUse: true,
             // ⛓ fidelity LIGHTPOLE D2 (wave 34): an in-room pole's clear-tag is a Spear thrust — ON since the W34 flip.
             inRoomPoleThrust: true,
             // ⛓ fidelity L12DOORS D1 (wave 34): a WandShot in a room with a stepped chaser — ON since the W34 flip.
@@ -372,8 +372,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             corpseBumpRestRead: true,
             // ⛓ fidelity SHIELDBUMP D1 (wave 36): the spinner forecasts step the plain shield bump — ships OFF.
             forecastShieldBump: false,
-            // ⛓ fidelity L100LATTICE D1 (wave 36): a walk to an 8 px arm's stance plans on the 8 px lattice — OFF.
-            fineStanceWalk: false });
+            // ⛓ fidelity L100LATTICE D1 (wave 36): a walk to an 8 px arm's stance plans on the 8 px lattice — OFF; ⚖ (user, 2026-11-03) HELD at the L100 joint flip: ON, L105
+            // `in_L104_0_16 -> teleporter_80_144` takes a shorter walk with one hit (a W37 fix first).
+            fineStanceWalk: false,
+            // ⛓ fidelity FROZENPRESS D1 (wave 37): the walk's strike stands down on a refused input tick — ON since the L100 joint flip.
+            frozenPressForecast: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

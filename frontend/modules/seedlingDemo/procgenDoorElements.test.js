@@ -48,11 +48,13 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
          *  `ropegate` (an armed arrow trap and its rope), LAST, OPT-IN. ⛓ Seedling
          *  gen B2 added `chestdoor` (a chest in a wall's only gap), LAST, OPT-IN.
          *  ⛓ Strategy switch r2 added `burngate` (a burnable tree on a cut), LAST, OPT-IN. ⛓ The
-         *  strategy gadgets (r3) added `holdgate` and `weighgate`, LAST, OPT-IN. */
+         *  strategy gadgets (r3) added `holdgate` and `weighgate`, LAST, OPT-IN. ⛓ Seedling gen B1
+         *  added `chestloot` (a loot chest off the main path), LAST, OPT-IN. ⛓ Strategy elements r2 added
+         *  `keygate` (a boss lock and its key), LAST, OPT-IN. */
         expect(ELEMENT_NAMES).toEqual([
             'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena', 'rockgate',
             'shortcut', 'shieldgate', 'watergate', 'watershortcut', 'waterfallgate', 'roam',
-            'corridorbody', 'ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate',
+            'corridorbody', 'ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate', 'chestloot', 'keygate', 'baitgate',
         ]);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });
@@ -130,12 +132,12 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
         expect(added(POST_SHIELD_ITEMS, POST_SWIM_ITEMS)).toEqual(['watergate', 'watershortcut', 'burngate']);
         expect(added(POST_SWIM_ITEMS, POST_FEATHER_ITEMS)).toEqual(['waterfallgate']);
         /** ⛓ by post-feather every head in the table is drawn by default — but
-         *  `ropegate`, `chestdoor`, `holdgate` and `weighgate`, which ship OPT-IN (⚖ Q5: a new head joins a
+         *  `ropegate`, `chestdoor`, `holdgate`, `weighgate`, `chestloot` and `keygate`, which ship OPT-IN (⚖ Q5: a new head joins a
          *  default only by a re-record of its own). `burngate` joined by its own
          *  re-record (seedling-gen-post-swim-fix). */
         expect([...names(POST_FEATHER_ITEMS)].sort())
             .toEqual(Object.keys(ELEMENT_TABLE)
-                .filter((n) => !['ropegate', 'chestdoor', 'holdgate', 'weighgate'].includes(n)).sort());
+                .filter((n) => !['ropegate', 'chestdoor', 'holdgate', 'weighgate', 'chestloot', 'keygate', 'baitgate'].includes(n)).sort());
         /**
          * ⛔ THE TWO-STREAMS HALF, READ OFF THE NORMALIZED SPEC — and since
          * SEEDLING BOT R9 slice 1 (D1) the guard's `len` is the THIRD kind:

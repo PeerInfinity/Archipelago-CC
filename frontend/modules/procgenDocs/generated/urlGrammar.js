@@ -80,6 +80,7 @@ export const URL_GRAMMAR = frz({
                 },
                 "fill": "dense",
                 "gen": null,
+                "goal": null,
                 "goals": null,
                 "isGenerate": false,
                 "layers": null,
@@ -436,6 +437,27 @@ export const URL_GRAMMAR = frz({
                             "file": "frontend/modules/seedlingDemo/watchGenerate.js",
                             "fn": "writeGenerateParams",
                             "how": "delete",
+                            "role": "write"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
+                    "atDefault": "DELETED at the default",
+                    "codec": "watchGenerate.readGoalParam (absent, or the literal `chest`)",
+                    "defaultField": "goal",
+                    "defaultIsUndefined": false,
+                    "defaultValue": null,
+                    "name": "goal",
+                    "retired": false,
+                    "terms": [
+                        "goal"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/seedlingDemo/watchGenerate.js",
+                            "fn": "writeGenerateParams",
+                            "how": "delete+set",
                             "role": "write"
                         }
                     ]
@@ -1057,13 +1079,13 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchGenerate.js",
                     "fn": "readGenerateParams",
-                    "line": 275,
+                    "line": 290,
                     "role": "read"
                 },
                 {
                     "file": "frontend/modules/seedlingDemo/watchViewer.js",
                     "fn": "readParams",
-                    "line": 615,
+                    "line": 616,
                     "role": "read"
                 },
                 {
@@ -1084,7 +1106,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchGenerate.js",
                     "fn": "writeGenerateParams",
-                    "line": 531,
+                    "line": 548,
                     "role": "write"
                 }
             ],

@@ -512,7 +512,9 @@ export const REFUSALS = frz({
                 "rope-gate",
                 "chest-door",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "key-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "KILL_GATE_REFUSALS",
@@ -534,7 +536,9 @@ export const REFUSALS = frz({
                 "rope-gate",
                 "chest-door",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "key-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BLOCK_POCKET_REFUSALS",
@@ -556,7 +560,9 @@ export const REFUSALS = frz({
                 "rope-gate",
                 "chest-door",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "key-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "SOLO_DOOR_REFUSALS",
@@ -578,7 +584,9 @@ export const REFUSALS = frz({
                 "solo-door",
                 "chest-door",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "key-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "ROPE_GATE_REFUSALS",
@@ -600,7 +608,9 @@ export const REFUSALS = frz({
                 "solo-door",
                 "rope-gate",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "key-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "CHEST_DOOR_REFUSALS",
@@ -622,7 +632,9 @@ export const REFUSALS = frz({
                 "solo-door",
                 "rope-gate",
                 "chest-door",
-                "strategy-gate"
+                "strategy-gate",
+                "key-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BURN_GATE_REFUSALS",
@@ -644,7 +656,9 @@ export const REFUSALS = frz({
                 "solo-door",
                 "rope-gate",
                 "chest-door",
-                "burn-gate"
+                "burn-gate",
+                "key-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "STRATEGY_GATE_REFUSALS",
@@ -658,6 +672,54 @@ export const REFUSALS = frz({
             "source": "strategy-gate",
             "sourceTitle": "The HOLD GATE and the WEIGH GATE — a lock on a cut and its presser off the main path",
             "where": "frontend/modules/procgenCore/elements/strategyGate.js — `STRATEGY_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket",
+                "solo-door",
+                "rope-gate",
+                "chest-door",
+                "burn-gate",
+                "strategy-gate",
+                "bait-gate"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "KEY_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/keyGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "goal-too-close",
+            "named": true,
+            "scanFound": true,
+            "source": "key-gate",
+            "sourceTitle": "The KEY GATE — a lock in a wall's only gap, its key on the start side",
+            "where": "frontend/modules/procgenCore/elements/keyGate.js — `KEY_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket",
+                "solo-door",
+                "rope-gate",
+                "chest-door",
+                "burn-gate",
+                "strategy-gate",
+                "key-gate"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "BAIT_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/baitGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "goal-too-close",
+            "named": true,
+            "scanFound": true,
+            "source": "bait-gate",
+            "sourceTitle": "The BAIT GATE — a chaser on a cut and a water lure on its start side",
+            "where": "frontend/modules/procgenCore/elements/baitGate.js — `BAIT_GATE_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -803,7 +865,8 @@ export const REFUSALS = frz({
                 "block-pocket",
                 "solo-door",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "KILL_GATE_REFUSALS",
@@ -823,7 +886,8 @@ export const REFUSALS = frz({
                 "kill-gate",
                 "solo-door",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BLOCK_POCKET_REFUSALS",
@@ -843,7 +907,8 @@ export const REFUSALS = frz({
                 "kill-gate",
                 "block-pocket",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "SOLO_DOOR_REFUSALS",
@@ -863,7 +928,8 @@ export const REFUSALS = frz({
                 "kill-gate",
                 "block-pocket",
                 "solo-door",
-                "strategy-gate"
+                "strategy-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BURN_GATE_REFUSALS",
@@ -883,7 +949,8 @@ export const REFUSALS = frz({
                 "kill-gate",
                 "block-pocket",
                 "solo-door",
-                "burn-gate"
+                "burn-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "STRATEGY_GATE_REFUSALS",
@@ -897,6 +964,27 @@ export const REFUSALS = frz({
             "source": "strategy-gate",
             "sourceTitle": "The HOLD GATE and the WEIGH GATE — a lock on a cut and its presser off the main path",
             "where": "frontend/modules/procgenCore/elements/strategyGate.js — `STRATEGY_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket",
+                "solo-door",
+                "burn-gate",
+                "strategy-gate"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "BAIT_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/baitGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "no cell of the …-cell main path can carry a BAIT GATE: … interior path cell(s) tried, the deepest stage any reached was \"…\". ⛓ The body stands on the cut; the lure is one water cell on the start side beside the door's approach, off the main path, blocking no route and bridging nothing for a swimmer.",
+            "name": "no-cut-cell",
+            "named": true,
+            "scanFound": true,
+            "source": "bait-gate",
+            "sourceTitle": "The BAIT GATE — a chaser on a cut and a water lure on its start side",
+            "where": "frontend/modules/procgenCore/elements/baitGate.js — `BAIT_GATE_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -942,6 +1030,21 @@ export const REFUSALS = frz({
             "source": "require-directive",
             "sourceTitle": "The `?require=` directive (the ITEM vocabulary)",
             "where": "elementSpec.resolveRequireDirective"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "KEY_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/keyGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "… lock cell(s) passed the chest door's rules, and none has a START-SIDE floor cell for its key (not the start, the goal, the stance or a pocket cell). ⛓ A key behind its own lock is a room nobody can solve.",
+            "name": "no-key-cell",
+            "named": true,
+            "scanFound": true,
+            "source": "key-gate",
+            "sourceTitle": "The KEY GATE — a lock in a wall's only gap, its key on the start side",
+            "where": "frontend/modules/procgenCore/elements/keyGate.js — `KEY_GATE_REFUSALS`"
         },
         {
             "alsoFiresIn": [
@@ -1006,6 +1109,51 @@ export const REFUSALS = frz({
             "source": "maze-area-binding",
             "sourceTitle": "The MAZE area + element binding",
             "where": "procgenMaze.js (the whole module)"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "KEY_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/keyGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "no-lock-cell",
+            "named": true,
+            "scanFound": true,
+            "source": "key-gate",
+            "sourceTitle": "The KEY GATE — a lock in a wall's only gap, its key on the start side",
+            "where": "frontend/modules/procgenCore/elements/keyGate.js — `KEY_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "CHEST_LOOT_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/chestLoot.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "no floor cell off the …-cell main path can hold a LOOT CHEST: the deepest stage any cell reached was \"…\". ⛓ A chest opens from the one-pixel line BELOW it, so the cell under the chest must be floor the start reaches with the chest standing; a loot chest never stands on the main path and never carves.",
+            "name": "no-loot-cell",
+            "named": true,
+            "scanFound": true,
+            "source": "chest-loot",
+            "sourceTitle": "The LOOT CHEST — a chest off the main path, opened from the cell below it",
+            "where": "frontend/modules/procgenCore/elements/chestLoot.js — `CHEST_LOOT_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "BAIT_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/baitGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "no cell of the …-cell main path can carry a BAIT GATE: … interior path cell(s) tried, the deepest stage any reached was \"…\". ⛓ The body stands on the cut; the lure is one water cell on the start side beside the door's approach, off the main path, blocking no route and bridging nothing for a swimmer.",
+            "name": "no-lure-site",
+            "named": true,
+            "scanFound": true,
+            "source": "bait-gate",
+            "sourceTitle": "The BAIT GATE — a chaser on a cut and a water lure on its start side",
+            "where": "frontend/modules/procgenCore/elements/baitGate.js — `BAIT_GATE_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -1187,7 +1335,9 @@ export const REFUSALS = frz({
             "where": "procgenSeedling.js (the whole module)"
         },
         {
-            "alsoFiresIn": [],
+            "alsoFiresIn": [
+                "key-gate"
+            ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "CHEST_DOOR_REFUSALS",
             "file": "frontend/modules/procgenCore/elements/chestDoor.js",
@@ -1200,6 +1350,23 @@ export const REFUSALS = frz({
             "source": "chest-door",
             "sourceTitle": "The CHEST DOOR — a chest in the only gap of a wall, opened from the south",
             "where": "frontend/modules/procgenCore/elements/chestDoor.js — `CHEST_DOOR_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "chest-door"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "KEY_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/keyGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "no-stance-pocket",
+            "named": true,
+            "scanFound": true,
+            "source": "key-gate",
+            "sourceTitle": "The KEY GATE — a lock in a wall's only gap, its key on the start side",
+            "where": "frontend/modules/procgenCore/elements/keyGate.js — `KEY_GATE_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -1625,6 +1792,21 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "CHEST_LOOT_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/chestLoot.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-chest-walls-off-its-stance",
+            "named": true,
+            "scanFound": true,
+            "source": "chest-loot",
+            "sourceTitle": "The LOOT CHEST — a chest off the main path, opened from the cell below it",
+            "where": "frontend/modules/procgenCore/elements/chestLoot.js — `CHEST_LOOT_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
             "channel": "`summary.require.refused` on `watch.html`; the CLI exits 6",
             "constant": "REQUIRE_DIRECTIVE_REFUSALS",
             "file": "frontend/modules/procgenCore/elementSpec.js",
@@ -1804,6 +1986,36 @@ export const REFUSALS = frz({
             "inTheConstant": true,
             "kind": "constant",
             "meaning": "",
+            "name": "the-elements-open-cell-walls-off-the-room",
+            "named": true,
+            "scanFound": true,
+            "source": "seedling-element-binding",
+            "sourceTitle": "The SEEDLING element binding",
+            "where": "frontend/modules/seedlingDemo/procgenSeedlingElements.js — `SEEDLING_ELEMENT_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "`summary.elementInfo.refused` on `watch.html`; `generate-seedling-level.mjs --json` `elementInfo.refused`",
+            "constant": "SEEDLING_ELEMENT_REFUSALS",
+            "file": "frontend/modules/seedlingDemo/procgenSeedlingElements.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "the element declares `law: \"none\"` at the on-connector phase and the binding offered no `openLaw`. ⛔ The door law would refuse every such placement (it is not a cut by definition), so the run refuses BY NAME.",
+            "name": "the-elements-open-law-is-not-offered",
+            "named": true,
+            "scanFound": true,
+            "source": "seedling-element-binding",
+            "sourceTitle": "The SEEDLING element binding",
+            "where": "frontend/modules/seedlingDemo/procgenSeedlingElements.js — `SEEDLING_ELEMENT_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "`summary.elementInfo.refused` on `watch.html`; `generate-seedling-level.mjs --json` `elementInfo.refused`",
+            "constant": "SEEDLING_ELEMENT_REFUSALS",
+            "file": "frontend/modules/seedlingDemo/procgenSeedlingElements.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "",
             "name": "the-elements-shortcut-is-not-a-shortcut",
             "named": true,
             "scanFound": true,
@@ -1951,6 +2163,36 @@ export const REFUSALS = frz({
             "where": "procgenSeedling.js (the whole module)"
         },
         {
+            "alsoFiresIn": [],
+            "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `watch.html`",
+            "constant": "SEEDLING_AREA_REFUSALS",
+            "file": "frontend/modules/seedlingDemo/procgenSeedling.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "the goal chest at (…,…) opens from (…,…), which the start does not reach without crossing the chest, and no pocket of at most 3 carved wall cells joins it to the start side. The level keeps the default goal class `…`.",
+            "name": "the-goal-chest-has-no-stance-pocket",
+            "named": true,
+            "scanFound": true,
+            "source": "seedling-area-binding",
+            "sourceTitle": "The SEEDLING area binding",
+            "where": "procgenSeedling.js (the whole module)"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `watch.html`",
+            "constant": "SEEDLING_AREA_REFUSALS",
+            "file": "frontend/modules/seedlingDemo/procgenSeedling.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "",
+            "name": "the-goal-chest-pocket-is-not-legal",
+            "named": true,
+            "scanFound": true,
+            "source": "seedling-area-binding",
+            "sourceTitle": "The SEEDLING area binding",
+            "where": "procgenSeedling.js (the whole module)"
+        },
+        {
             "alsoFiresIn": [
                 "maze-area-binding"
             ],
@@ -2062,6 +2304,21 @@ export const REFUSALS = frz({
             "source": "maze-area-binding",
             "sourceTitle": "The MAZE area + element binding",
             "where": "procgenMaze.js (the whole module)"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "KEY_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/keyGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-lock-is-not-a-cut",
+            "named": true,
+            "scanFound": true,
+            "source": "key-gate",
+            "sourceTitle": "The KEY GATE — a lock in a wall's only gap, its key on the start side",
+            "where": "frontend/modules/procgenCore/elements/keyGate.js — `KEY_GATE_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -2379,6 +2636,36 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "KEY_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/keyGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-stance-is-beyond-the-lock",
+            "named": true,
+            "scanFound": true,
+            "source": "key-gate",
+            "sourceTitle": "The KEY GATE — a lock in a wall's only gap, its key on the start side",
+            "where": "frontend/modules/procgenCore/elements/keyGate.js — `KEY_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "CHEST_LOOT_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/chestLoot.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-stance-is-not-floor",
+            "named": true,
+            "scanFound": true,
+            "source": "chest-loot",
+            "sourceTitle": "The LOOT CHEST — a chest off the main path, opened from the cell below it",
+            "where": "frontend/modules/procgenCore/elements/chestLoot.js — `CHEST_LOOT_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
             "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `watch.html`",
             "constant": "SEEDLING_AREA_REFUSALS",
             "file": "frontend/modules/seedlingDemo/procgenSeedling.js",
@@ -2487,7 +2774,8 @@ export const REFUSALS = frz({
                 "block-pocket",
                 "solo-door",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "KILL_GATE_REFUSALS",
@@ -2507,7 +2795,8 @@ export const REFUSALS = frz({
                 "kill-gate",
                 "solo-door",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BLOCK_POCKET_REFUSALS",
@@ -2527,7 +2816,8 @@ export const REFUSALS = frz({
                 "kill-gate",
                 "block-pocket",
                 "burn-gate",
-                "strategy-gate"
+                "strategy-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "SOLO_DOOR_REFUSALS",
@@ -2547,7 +2837,8 @@ export const REFUSALS = frz({
                 "kill-gate",
                 "block-pocket",
                 "solo-door",
-                "strategy-gate"
+                "strategy-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BURN_GATE_REFUSALS",
@@ -2567,7 +2858,8 @@ export const REFUSALS = frz({
                 "kill-gate",
                 "block-pocket",
                 "solo-door",
-                "burn-gate"
+                "burn-gate",
+                "bait-gate"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "STRATEGY_GATE_REFUSALS",
@@ -2581,6 +2873,27 @@ export const REFUSALS = frz({
             "source": "strategy-gate",
             "sourceTitle": "The HOLD GATE and the WEIGH GATE — a lock on a cut and its presser off the main path",
             "where": "frontend/modules/procgenCore/elements/strategyGate.js — `STRATEGY_GATE_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "kill-gate",
+                "block-pocket",
+                "solo-door",
+                "burn-gate",
+                "strategy-gate"
+            ],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "BAIT_GATE_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/baitGate.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "wall-does-not-seal",
+            "named": true,
+            "scanFound": true,
+            "source": "bait-gate",
+            "sourceTitle": "The BAIT GATE — a chaser on a cut and a water lure on its start side",
+            "where": "frontend/modules/procgenCore/elements/baitGate.js — `BAIT_GATE_REFUSALS`"
         }
     ],
     "sources": [
@@ -2598,6 +2911,21 @@ export const REFUSALS = frz({
             "spansModules": false,
             "title": "The AREA GRAPH itself",
             "where": "areaGraph.REASONS"
+        },
+        {
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "BAIT_GATE_REFUSALS",
+            "declaredCount": 4,
+            "file": "frontend/modules/procgenCore/elements/baitGate.js",
+            "id": "bait-gate",
+            "kind": "constant",
+            "patterns": [
+                "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
+            ],
+            "scannedCount": 4,
+            "spansModules": false,
+            "title": "The BAIT GATE — a chaser on a cut and a water lure on its start side",
+            "where": "frontend/modules/procgenCore/elements/baitGate.js — `BAIT_GATE_REFUSALS`"
         },
         {
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -2643,6 +2971,36 @@ export const REFUSALS = frz({
             "spansModules": false,
             "title": "The CHEST DOOR — a chest in the only gap of a wall, opened from the south",
             "where": "frontend/modules/procgenCore/elements/chestDoor.js — `CHEST_DOOR_REFUSALS`"
+        },
+        {
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "CHEST_LOOT_REFUSALS",
+            "declaredCount": 3,
+            "file": "frontend/modules/procgenCore/elements/chestLoot.js",
+            "id": "chest-loot",
+            "kind": "constant",
+            "patterns": [
+                "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
+            ],
+            "scannedCount": 3,
+            "spansModules": false,
+            "title": "The LOOT CHEST — a chest off the main path, opened from the cell below it",
+            "where": "frontend/modules/procgenCore/elements/chestLoot.js — `CHEST_LOOT_REFUSALS`"
+        },
+        {
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "KEY_GATE_REFUSALS",
+            "declaredCount": 6,
+            "file": "frontend/modules/procgenCore/elements/keyGate.js",
+            "id": "key-gate",
+            "kind": "constant",
+            "patterns": [
+                "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
+            ],
+            "scannedCount": 6,
+            "spansModules": false,
+            "title": "The KEY GATE — a lock in a wall's only gap, its key on the start side",
+            "where": "frontend/modules/procgenCore/elements/keyGate.js — `KEY_GATE_REFUSALS`"
         },
         {
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -2783,14 +3141,14 @@ export const REFUSALS = frz({
         {
             "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `watch.html`",
             "constant": "SEEDLING_AREA_REFUSALS",
-            "declaredCount": 20,
+            "declaredCount": 22,
             "file": "frontend/modules/seedlingDemo/procgenSeedling.js",
             "id": "seedling-area-binding",
             "kind": "constant",
             "patterns": [
                 "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
             ],
-            "scannedCount": 20,
+            "scannedCount": 22,
             "spansModules": false,
             "title": "The SEEDLING area binding",
             "where": "procgenSeedling.js (the whole module)"
@@ -2798,14 +3156,14 @@ export const REFUSALS = frz({
         {
             "channel": "`summary.elementInfo.refused` on `watch.html`; `generate-seedling-level.mjs --json` `elementInfo.refused`",
             "constant": "SEEDLING_ELEMENT_REFUSALS",
-            "declaredCount": 21,
+            "declaredCount": 23,
             "file": "frontend/modules/seedlingDemo/procgenSeedlingElements.js",
             "id": "seedling-element-binding",
             "kind": "constant",
             "patterns": [
                 "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
             ],
-            "scannedCount": 18,
+            "scannedCount": 20,
             "spansModules": true,
             "title": "The SEEDLING element binding",
             "where": "frontend/modules/seedlingDemo/procgenSeedlingElements.js — `SEEDLING_ELEMENT_REFUSALS`"

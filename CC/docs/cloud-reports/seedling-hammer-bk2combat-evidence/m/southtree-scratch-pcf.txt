@@ -1,0 +1,33 @@
+PCF 447 spinner@816,848 firstKeys cell,pressAt,aimAt,eta,rejected,considered,sighted,dwelt,escaped cell {"x":744,"y":776} threats bob@736,800:13
+PCF hunt bob@736,800 no stance derives for bob@736,800 on level 40: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 77 cell(s) inside its 80 px leash, 12 of those reachable and with a corridor onward, and 12 of THOSE refused by the forecast [(744,744): the WAIT is dangerous at tick 105 — spinner:spinner@816,848; (744,760): the WAIT is dangerous at tick 71 — spinner:spinne
+ms 30002
+REFUSED solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh -> iceturret@472,400 approach door wandlock@480,560 (488,568) -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,853.4) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 16 volume(s) forbidden — A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The planner works in whole tiles, so both ends o
+  time: the aim is 157 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: no stance within bobsoldier@880,832's leash (80) both pulls its straight line through a kill region and is itself danger-free: 32 cell(s) in leash, 5 of them crossing a region, none of those reachable. ⛔ A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.
+  kill: no presser in level 40 arms a trap whose lane covers bobsoldier@880,832 — the room has 6 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).
+         chaser arm: no stance derives for bobsoldier@880,832 on level 40: the player's box priced no stance, so the TARGET's box was scanned too (+3 reachable cell(s)): 76 cell(s) inside its 80 px leash, 7 of those reachable and with a corridor onward, and 7 of THOSE refused by the forecast [(824,856): bobsoldier@880,832 is still standing after the whole 115-tick ceiling — it does not reach this stance inside its own travel time plus three kill windows; (840,856): bobsoldier@880,832 is still standing after the whole 96-tick ceiling — it does not reach this stance inside its own travel time plus three kill windows; (856,856): bobsoldier@880,832 is still standing after the whole 77-tick ceiling — it does not reach this stance inside its own travel time plus three kill windows; …]. ⛔ A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant. GUARD APPROACH (guardApproachStance): no approach stance for bobsoldier@880,832 either — REACH: 7 lattice cell(s) within the sword's 16 px of its box, 3 of those with 
+obstacle {"kind":"danger","id":"bobsoldier@880,832","sources":["chaser:bobsoldier@880,832"]} perTick 712
+STRATROWS 0 shove pushableblockfire@576,576
+STRATROWS 0 weigh wandlock@448,432
+STRATROWS 0 burn burnabletree@872,784
+STRATROWS 0 walk bob@736,752
+STRATROWS 0 time bob@736,752
+STRATROWS 0 bait bob@736,752
+STRATROWS 0 kill bob@736,752
+STRATROWS 0 walk undefined
+STRATROWS 447 walk spinner@816,848
+STRATROWS 447 time spinner@816,848
+STRATROWS 447 bait spinner@816,848
+STRATROWS 447 kill spinner@816,848
+STRATROWS 712 walk bobsoldier@880,832
+STRATROWS 712 time bobsoldier@880,832
+STRATROWS 712 bait bobsoldier@880,832
+STRATROWS 712 kill bobsoldier@880,832
+STRATROWS 712 narrow bobsoldier@880,832
+STRATROWS 712 detour bobsoldier@880,832
+STRATROWS 712 forced-hit bobsoldier@880,832
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}
+TA {"approaches":[]}
+DOOR {"doors":[{"door":"wandlock@480,560","side":"up","cell":{"x":488,"y":568},"turret":"iceturret@472,400","t":0}]}

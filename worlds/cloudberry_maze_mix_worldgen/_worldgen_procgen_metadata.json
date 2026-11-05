@@ -7,7 +7,8 @@
       {
         "sphere": 1,
         "items": [
-          "Moving Blocks"
+          "Moving Blocks",
+          "Cloudberry Gem"
         ]
       },
       {
@@ -46,7 +47,7 @@
         "gate": [],
         "gateCounts": {},
         "usedSides": [
-          "E"
+          "W"
         ],
         "childGates": [
           [
@@ -76,9 +77,10 @@
           "Moving Blocks": 1
         },
         "usedSides": [
-          "W",
+          "E",
+          "S",
           "N",
-          "E"
+          "W"
         ],
         "childGates": [
           [
@@ -98,12 +100,41 @@
               "item": "key_red",
               "count": 1
             }
+          ],
+          [
+            {
+              "item": "Clouds",
+              "count": 1
+            }
           ]
         ],
         "isFiller": false
       },
       {
         "index": 2,
+        "wave": 2,
+        "parent": 1,
+        "side": "E",
+        "cell": {
+          "gx": 4,
+          "gy": 2
+        },
+        "isTeleporter": false,
+        "substrate": "cloudberry",
+        "gate": [
+          "key_red"
+        ],
+        "gateCounts": {
+          "key_red": 1
+        },
+        "usedSides": [
+          "N"
+        ],
+        "childGates": [],
+        "isFiller": false
+      },
+      {
+        "index": 3,
         "wave": 2,
         "parent": 1,
         "side": "N",
@@ -123,47 +154,16 @@
           "S"
         ],
         "childGates": [],
-        "isFiller": false
-      },
-      {
-        "index": 3,
-        "wave": 2,
-        "parent": 1,
-        "side": "E",
-        "cell": {
-          "gx": 4,
-          "gy": 2
-        },
-        "isTeleporter": false,
-        "substrate": "cloudberry",
-        "gate": [
-          "key_red"
-        ],
-        "gateCounts": {
-          "key_red": 1
-        },
-        "usedSides": [
-          "W",
-          "S"
-        ],
-        "childGates": [
-          [
-            {
-              "item": "Clouds",
-              "count": 1
-            }
-          ]
-        ],
         "isFiller": true
       },
       {
         "index": 4,
         "wave": 3,
-        "parent": 3,
-        "side": "N",
+        "parent": 1,
+        "side": "W",
         "cell": {
-          "gx": 4,
-          "gy": 1
+          "gx": 2,
+          "gy": 2
         },
         "isTeleporter": false,
         "substrate": "cloudberry",
@@ -174,7 +174,7 @@
           "Clouds": 1
         },
         "usedSides": [
-          "N"
+          "E"
         ],
         "childGates": [],
         "isFiller": false

@@ -1,0 +1,54 @@
+id	end	requests	key
+366	done	1	level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0
+375	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+376	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912
+377	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20
+378	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20
+379	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20
+380	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+381	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21
+382	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+383	failed	2	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+384	failed	2	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+385	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22
+386	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+387	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23
+388	done	1	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+392	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+393	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912
+394	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+395	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+396	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+397	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20
+398	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+399	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+400	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+401	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+402	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+403	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+404	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+405	done	1	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+412	done	1	level_43__r13c7 <- in_L40_320_576 -> exit:out_stairsup_176_464
+369	done	1	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+370	done	1	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+372	done	1	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+373	done	1	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+409	done	1	level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160
+410	done	1	level_42 <- in_L40_848_0 -> exit:out_teleporter_240_336
+867	done	2	level_43__r3c8 <- in_L40_320_576 ~> level_43__r13c7 ~> level_43__r8c7 -> exit:out_teleporter_144_64
+367	done	1	level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40
+389	done	1	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+390	failed	2	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+864	timeout	2	level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+371	failed	1	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+391	failed	1	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+411	done	1	level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152
+866	done	1	level_41__r7c15 <- in_L40_944_96 ~> level_41__r4c3 ~> level_41__r4c15 -> location:Level 041 - Totem Part 240,144
+413	done	1	level_43__r13c7 <- in_L40_320_576 -> location:Level 043 - Wand
+880	done	1	level_43__r8c7 <- in_L40_320_576 ~> level_43__r13c7 -> location:Level 043 - Totem of Lacste
+406	done	1	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+407	failed	1	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+865	failed	2	level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+374	done	1	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+408	failed	1	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
+# {"done":43,"failed":8,"timeout":1} requests 58

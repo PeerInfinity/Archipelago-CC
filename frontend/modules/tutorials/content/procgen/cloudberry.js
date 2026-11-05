@@ -46,7 +46,7 @@ export const PROCGEN_CLOUDBERRY = Object.freeze({
                         doneTimeoutMs: 30000,
                     },
                 },
-                ...botPlaysToTheEnd('bot-plays', { watch: CLOUDBERRY, watchName: 'Cloudberry Kingdom', how: 'play each level to its check coin, then out by the end door' }),
+                ...botPlaysToTheEnd('bot-plays', { watch: CLOUDBERRY, watchName: 'Cloudberry Kingdom', how: 'play each level to its check coins, then out by the end door' }),
             ],
         },
     ],
@@ -94,7 +94,7 @@ export const PROCGEN_LOOP_MODE_CLOUDBERRY = Object.freeze({
             id: 'play',
             title: 'Watch it played',
             blocks: [
-                ...botPlaysToTheEnd('bot-plays', { watch: CLOUDBERRY, watchName: 'Cloudberry Kingdom', how: 'play each level to its check coin, then out by the end door', doneTimeoutMs: 300000 }),
+                ...botPlaysToTheEnd('bot-plays', { watch: CLOUDBERRY, watchName: 'Cloudberry Kingdom', how: 'play each level to its check coins, then out by the end door', doneTimeoutMs: 300000 }),
                 ...look('look-loops', LOOPS, 'Open the **Loops** tab. The world brought its costs, so loop mode is on — the button in its controls reads **Exit Loop Mode**. Each Cloudberry level is a block; its cost is the seconds the bot played it.',
                     (ctx) => ctx.text(loopToggle) === 'Exit Loop Mode'),
             ],

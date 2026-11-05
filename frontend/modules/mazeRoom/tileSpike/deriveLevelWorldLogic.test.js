@@ -2,8 +2,9 @@
  * The level-world CERTIFIER on Seedling L15 (⚖ "Certifier", user 2026-10-21; session
  * tile-primitives-stage2-l15) — the default tier's cut: the oracle's crossing r1c5 → r1c9 at the four
  * inventories that decide it, from the NATIVE engine (`nativeReachUnder`), every witness replayed on the
- * real `step`. The full certification (every sub-region pair, the whole lattice, the scripted tile
- * definition too) is `deriveLevelWorldLogic.slow.test.js`.
+ * real `step`. The full certification (every sub-region pair, the whole lattice) is
+ * `deriveLevelWorldLogic.slow.test.js`; the scripted tile definition on the sample is
+ * `deriveLevelWorldLogic.train.test.js` (⚖ Robert 2026-11-02 CI manual-only P3).
  *
  * The oracle (rules-block-path, `flashPanel/seedlingBlockPaths.js`): r1c5 → r1c9 = Or(weapon, Swim),
  * weapon = Progressive Sword | Ghost Spear — the atlas row the preset compiles.
@@ -215,7 +216,10 @@ describe('L0 + L13–L20 — the doors and the second level world', () => {
                 unchecked: ['L0 flag 1: breakablerock@288,176 cleared', 'L0 flag 4: breakablerock@80,112 cleared',
                     'L101 flag 0: lightpole@144,64 cleared', 'L112 flag 1: rocklock@112,16 cleared', 'L113 flag 0: finaldoor@112,0 cleared',
                     'L114 flag 0: watcher@72,72 cleared', ROPE,
-                    'L24 flag 0: burnabletree@32,128 cleared', 'L28 flag 0: rope@160,64 cleared', 'L40 flag 8: bosslock@480,352 cleared',
+                    'L24 flag 0: burnabletree@32,128 cleared', 'L28 flag 0: rope@160,64 cleared',
+                    // ⛓ tile-lay-l40-latches: L40's three in-room presses (behind its weapon-gated arrivals)
+                    'L40 flag 12: wandlock@480,560 cleared', 'L40 flag 1: wandlock@176,80 cleared', 'L40 flag 7: wandlock@208,128 cleared',
+                    'L40 flag 8: bosslock@480,352 cleared',
                     'L48 flag 1: bosslock@48,144 cleared', 'L58 flag 1: yeti@56,56 cleared', 'L63 flag 6: lightpole@48,272 cleared',
                     'L63 flag 7: lightpole@112,272 cleared', 'L65 flag 0: lightpole@128,168 cleared', 'L68 flag 0: bosslock@16,32 cleared', 'L71 flag 2: shieldlock@288,256 cleared',
                     'Level 017 - Chest', 'Level 019 - Boss Key 0', 'Level 019 - Shieldspire',

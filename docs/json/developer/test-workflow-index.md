@@ -11,8 +11,8 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 
 | Workflow | File | Trigger | Description |
 |----------|------|---------|-------------|
-| Unit Tests | `unittests.yml` | push, PR, dispatch | Python pytest (`pytest -n auto`); the Windows/macOS legs only on a PR or a `full_matrix` dispatch |
-| JavaScript Unit Tests | `unittests_frontend.yml` | push, PR, dispatch | Parallel jobs: JS Vitest (`npm run test:unit` + `test:unit:slow`), the headless procgen gates (`ci-gates.mjs`), the browser gate shards |
+| Unit Tests | `unittests.yml` | push, PR, dispatch | Python pytest (`pytest -n auto`); the Windows/macOS legs only on a PR or a `full_matrix` dispatch; the ubuntu 3.12/3.13 legs not on a slice-branch push (main, js-land/**, PR and dispatch only) |
+| JavaScript Unit Tests | `unittests_frontend.yml` | push, PR, dispatch (`-f train=true`) | Parallel jobs: JS Vitest (`npm run test:unit` shards + `test:unit:slow`), `Train-tier Vitest` (`test:unit:train`; js-land/** train pushes, main and a `train` dispatch only), the headless procgen gates (`ci-gates.mjs`), the browser gate shards |
 | Test ALTTP & Regression | `test-templates.yml` | push (main), PR, dispatch | Spoiler test + frontend regression (both boots) + substrate tests, one parallel job per on-push batch (`testBatches.js`) with a budget-headroom check each |
 | Substrate tests — manual batches | `test-substrates-manual.yml` | dispatch | The manual substrate batches (`bot-walks`, `noiz2sa`, `cloudberry`, the `tutorials*` batches, `feature-checks`; `manual: true` in `testBatches.js`), one or `all` |
 | Test All Templates (Sequential) | `test-all-sequential.yml` | dispatch | Comprehensive: spoilers, multiclient, multiworld (original/worldgen/apworld) |

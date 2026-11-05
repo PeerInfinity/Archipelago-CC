@@ -241,6 +241,19 @@ function wallsAround(room, pick) {
     return [...out.values()];
 }
 
+/**
+ * ⛓ The tiles a chosen candidate writes — its wall, its pocket (FLOOR) and the
+ * walls around the chest and the pocket — in the placement's order. Exported
+ * for the KEY GATE (`keyGate.js`), whose lock is this element's chest cell.
+ */
+export function chestDoorTiles(room, pick) {
+    return [
+        ...pick.wall.map((c) => ({ x: c.x, y: c.y, tile: TILE_WALL })),
+        ...pick.pocket.map((c) => ({ x: c.x, y: c.y, tile: TILE_FLOOR })),
+        ...wallsAround(room, pick).map((c) => ({ x: c.x, y: c.y, tile: TILE_WALL })),
+    ];
+}
+
 /** One chosen candidate → the contract's placement. Absolute cells throughout. */
 function placementOf(room, pick, count) {
     return {
@@ -253,11 +266,7 @@ function placementOf(room, pick, count) {
          * demand is asserted to SURVIVE the `shell` strip, and a wall cell deep
          * in wall mass is rightly dropped by it.
          */
-        tiles: [
-            ...pick.wall.map((c) => ({ x: c.x, y: c.y, tile: TILE_WALL })),
-            ...pick.pocket.map((c) => ({ x: c.x, y: c.y, tile: TILE_FLOOR })),
-            ...wallsAround(room, pick).map((c) => ({ x: c.x, y: c.y, tile: TILE_WALL })),
-        ],
+        tiles: chestDoorTiles(room, pick),
         entities: {
             blocks: [],
             buttons: [],

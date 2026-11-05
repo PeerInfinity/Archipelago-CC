@@ -128,6 +128,54 @@ Implemented by `maze` (tile-grid helpers in `adapterPrimitives.js`), `text_adven
 | `applyContentModules` | Optional post-build pass for content modules (the maze's hazards). |
 | `conceptRealisations` | Optional. The substrate's half of the concept library: `{<concept id>: {tier, art?, placements?}}`, which concepts it can realise and how, checked by `assertRealisations`. `placeFromRules` selects a gate's realisation by its rule over the world's offered concepts (`selectRealisation`). See [Concepts](./concepts.md). |
 
+### What the player holds on arrival (`held`)
+
+Every region generator may be handed one optional, substrate-agnostic field, `held`: the items the player is expected to hold on FIRST reaching the region being generated, under the world's logic. Its shape is `{ items: {<item>: <count>}, source: 'sphere' | 'arrival-approx', exact, sphere? }`, keyed by the identifier the growth mode deals and gates on.
+
+- **Sphere growth** gives it EXACTLY (`sphereHeldItems`): every item instance of spheres 1..k, where k is the first sphere after which the region is reachable (the least sphere whose cumulative counts meet every entry gate on its path from the root, `gateCounts` included). A wave-k region gated on a sphere-k item holds spheres 1..k; the start holds nothing; a wave-0 filler gated on a sphere-1 item holds sphere 1. `sphere` names k.
+- **Grid growth and the shuffled spiral** give the placer's arrival approximation (`heldFromArrivalInventory`: every item placed in an already-built region, counted; its keys are `accumulatedInventory`), with `exact: false`.
+- **Top-down** gives none yet. Absent means unknown, and is never faked.
+
+`held` is the sphere sweep's cumulative set at the arrival sphere. It is not a per-player guarantee in either direction: a player may arrive holding only the gate items, or arrive late holding items from later spheres. `exact: true` means "the exact sweep answer". It does not mean a guaranteed inventory, and it is not a lower bound.
+
+Where it arrives (and `introduced`, below, beside it in the plan-less modes): `generateRegionCore(input)` as `input.held`; the zone path's context as `ctx.held`; a spiral content cell's `extractZoneRules(zoneIdx, ctx)` and `instantiateLibraryEntry(entry, ctx)` as `ctx.held`; sphere growth's `instantiateLibraryEntryForSpecs` and `instantiateAtlasEntryForSpecs` as `ctx.held`. It draws no rng and is written into no region, rules.json or sidecar. No substrate acts on it yet: a generator that destructures its input ignores it for free.
+
+### A substrate's own rules (`markAuthoredRule`)
+
+Where the pipeline has its own rule for an extracted location or exit, the engine REPLACES the extracted rule with it, so path-walk pollution never leaks into the world's logic. This happens in three places: sphere growth's composed gate (and its `True_` default for locations), top-down's source rule, and the sphere library tile branch's driver gate. The atlas branch already ANDs, and the shuffled spiral and grid growth keep extracted rules.
+
+A rule the substrate itself AUTHORS is not pollution. One example is a generated Seedling room's key gate: `Has(<key>)` on the location behind its lock. The substrate MARKS that part with `markAuthoredRule(entry, rule)` (`procgenCore/authoredRule.js`) on the entry `extractPathsAndObstacles` returns, and the engine's override sites write `And(<pipeline rule>, <authored rule>)` instead (`keepAuthoredRule`; a `True_` pipeline rule counts as none, so the authored rule stands alone). Where the pipeline has no rule, the extracted rule stays as it is. An unmarked entry behaves exactly as before.
+
+The mark is a non-enumerable, symbol-keyed property, so it never reaches rules.json, a `structuredClone`, a spread or a deep-equality check. It is read only on the object the substrate returned, between extraction and the override. Only `flash_seedling_gen` marks a rule today (its key gate), so no shipped world moves.
+
+### Build-time — item introduction
+
+A substrate may put an item of its own into a region. For example, a lock and the key that opens it, where the key is the substrate's item and not one the growth mode dealt. It declares this with `itemIntroduction`, read only through `procgenCore/itemIntroduction.js`:
+
+| Field | Meaning |
+|-------|---------|
+| `itemIntroduction.introducibleItems(params)` | The items a region of this substrate built under `params` (the world's region params) can introduce, in preference order. `[]` means none under these params. Introducing item K means the region holds a location of its own carrying K, and every location the pipeline rules `Has(K)` stands behind what K opens. |
+| `itemIntroduction.replayableItems()` | Optional. Every item the substrate can introduce under any params. A spec that already carries a request for one of them is replayed even when the regenerate's params would not have asked for it. Absent: `introducibleItems(params)`. |
+| `itemIntroduction.exhaustedRefusal(regionId, items)` | Optional. The substrate's sentence for a region that would need an item when every listed one is already in the world. Absent: `introducible-items-exhausted`. |
+
+**The request.** The realiser hands `generateRegionCore` an optional `input.introduce = { items: {K: 1} }`, and `{ items: {} }` when requests are on and the region is asked for nothing. It is derived from the spec (`introductionRequestOf`): one location holds a replayable item K, and another location's rule requires K. So a regenerate that passes a region's own document locations (the APWorld editor's `buildDocumentRegionSpec`) replays the first generation's request with nothing recomputed. A substrate without the declaration gets no `introduce`, and its input is unchanged.
+
+**Sphere growth requests, and refuses what it did not request.** An unplanned key moves every later sphere, and the plan is sphere growth's oracle (one key-gate room, seeds 1–3, measured: `sphere count mismatch: computed 4, planned 3`). So the planner's pre-pass, `procgenPipeline/sphereIntroductions.js`, decides each declaring node's item before any region is drawn. It runs rng-free, after ②c and before ③. See [Sphere Growth](./sphere-growth.md). A built region that holds a declared item it was not asked for is refused by name: `unrequested-introduction`. Non-declared fixed items, such as a chest door's filler, are not affected. Grid growth, the shuffled spiral and top-down make no requests.
+
+**The plan-less modes hand `introduced` instead.** Grid growth, the shuffled spiral and top-down make no requests. Each of their region generators is handed one more optional field beside `held`: `introduced = { items: {<item>: <count>}, source: 'run', exact: true }`, frozen (`introducedFromGrid`). It holds the items standing at the locations of every OTHER region built so far in this run, and leaves out the region being (re)generated. It is exact in every mode, because it is a fact of the run and not a logic estimate. A generator that introduces an item of its own picks one in neither `held` nor `introduced`, so two regions never introduce the same one. The proof is by induction: each draw avoids every item standing elsewhere, and a later draw sees it. It arrives where `held` does: `input.introduced`, `ctx.introduced` on the zone path, and on a spiral content cell's `extractZoneRules` and `instantiateLibraryEntry`. Top-down gets it too, although it has no `held`. Absent means unknown. It draws no rng and is never serialised. Sphere growth is NOT handed it. Its planner requests what a region introduces, and its `held` already counts each requested item (`spheres[w].introduced`), so a second colour source could only disagree with the plan, and the plan is the oracle.
+
+**Regenerate replays, it never recomputes.** A region's record of its introduction is the region itself: the location holding K, and the location ruled `Has(K)`. A regenerate from a document derives the request from those (`introductionRequestOf`), so the region keeps its item, its location name and its rule. A top-down re-roll or substrate edit replays the recording (config + seed + edits) from a fresh ①. Each region therefore sees exactly the regions placed before it, and a re-roll of one region leaves every other region's introduction where it was, unless the re-rolled region gains or loses its own (named limit). A region whose introduced item guards no location carries no `Has(K)` in its document, so an editor regenerate does not replay it (named limit). This happens with a spiral or grid room dealt no item.
+
+**The introductions report.** `procgen_metadata["<p>"].introductions = { requested, placed, notPlaced: {<reason>: <count>} }`. It is the SLOT's, like the rest of that block. `requested` counts the regions configured to introduce an item: their substrate's `introducibleItems(params)` is non-empty. `placed` counts the ones that hold an item they introduced; the driver's own items, such as a top-down source's same-named item, never count. `notPlaced` holds the rest, by reason. Each driver leaves a note on the regions it builds (`markRegionIntroduction`, under a symbol key, so JSON and `structuredClone` never see it), and `buildRulesJson` folds them (`introductionReport`). The field is ABSENT, never empty, when no region was configured, so every other world's metadata is unchanged. The reason names are declared once, in `INTRODUCTION_NOT_PLACED_REASONS`:
+
+- `last-wave-of-plan` (sphere growth): the region is in the plan's last wave, so no later sphere can hold what its item opens.
+- `batch-boundary` (batched sphere growth): the region is in its batch's last wave, and the next wave was not wired when it was decided.
+- `no-host` (sphere growth): the next wave exists, and none of its regions holds a dealt item to move behind the lock.
+- `filler-region` (sphere growth): a filler region. The planner asks no filler for an item, because it is not on the progression path.
+- `not-drawn` (the plan-less modes): nothing was requested, and the region's own draw placed none.
+
+`flash_seedling_gen` declares it: its key gate's five key items ([Flash Substrate](./flash.md#declarations-g9)). In the plan-less modes a generated room's key gate takes the least colour in neither `held` nor `introduced`. An explicit `keygate;type=N` whose key already stands elsewhere is refused (`keygate-colour-shared`), and so is a sixth key-gate room (`keygate-colours-exhausted`). `keygate-colour-not-allocated` stays only for a room handed neither a request nor `introduced`.
+
 ### Build-time — content sources (zone-based substrates)
 
 A **content source** supplies existing region content by ordinal: its Nth planned cell becomes its Nth entry. The shuffled-spiral driver resolves one per cell through `resolveSpiralContentSource` in `procgenPipelineEngine.js`, and content slots draw no rng ([byte-identity](./stepped-pipeline.md)). The pool items a content cell holds were dealt to it up front by the spiral's [item layer](./stepped-pipeline.md#the-item-layer). The content sources are the zone games (`jta`, `bounce`, `omsi`) and `flash_seedling`, whose entries are real atlas rooms ([Flash Substrate](./flash.md#as-a-content-source-in-the-pipeline)).
@@ -206,7 +254,7 @@ A **region library** stores a generated region as an entry and re-instantiates i
 
 Optional hooks the sphere-growth driver and the Procgen Pipeline panel read, so the engine never names a substrate. Semantics are documented at the consumers, `procgenPipelineEngine.js` and `sphereConfigHooks.js`.
 
-- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal, entrance})`. `ordinal` is which of the substrate's zones the region is: sphere growth's `sphereZoneOrdinal`, top-down's running count, or the APWorld editor's own or first free zone. A source whose regions are content reads it (jta's zones, noiz2sa's spans). `entrance` is `{side, requirement, counts}` for the region's way back and entry gate, or `null`; cloudberry reads it because its way back is a door of its own. A `…Gen` generator may yield an event carrying `await` (a promise). The asynchronous drivers wait on it before resuming (`yieldedWait`), and a synchronous drain does not. This is how cloudberry waits for its game page's generator ([Cloudberry](./cloudberry.md#build-time-generation-sphere-growth)). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
+- **Zone generation:** `generateZoneForSpecs` / `generateZoneForSpecsGen`, `buildZoneSpecs`, `gateableItems` (`null` means every item). The zone path calls the generator as `(zoneSpecs, {ordinal, entrance, held?})` (`held`: see *What the player holds on arrival* above). `ordinal` is which of the substrate's zones the region is: sphere growth's `sphereZoneOrdinal`, top-down's running count, or the APWorld editor's own or first free zone. A source whose regions are content reads it (jta's zones, noiz2sa's spans). `entrance` is `{side, requirement, counts}` for the region's way back and entry gate, or `null`; cloudberry reads it because its way back is a door of its own. A `…Gen` generator may yield an event carrying `await` (a promise). The asynchronous drivers wait on it before resuming (`yieldedWait`), and a synchronous drain does not. This is how cloudberry waits for its game page's generator ([Cloudberry](./cloudberry.md#build-time-generation-sphere-growth)). A substrate whose runtime does not enforce exit rules expresses the tree's gates as logic-only locks (`procgenCore/logicExitLocks.js`: jta, noiz2sa).
 - **Gate vetoes and hints:** `canHostExitGates`, `canHostExitGatesBraid`, `exitGateVeto`, `backPortalGated`, `hostsSurplusExitsNatively`, `gateHostingHint`.
 - **Region contract:** `buildRegionContract`, used by the panel's Edit flow.
 - **Panel parameters:** `defaultProcgenParams`, `prepareSphereGrowth`, `buildRegionParams`, `renderProcgenParams`; for a selected region library, `buildLibraryRegionParams` and `renderLibraryProcgenParams`. `procgenParamsFromPayload(payload)` recovers the params an existing payload records.
@@ -232,7 +280,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 93 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 97 fields · 16 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -329,6 +377,15 @@ Groups are this document's own § headings, matched to a field by the section th
 | `placeFromItems` | — | — | — | fn | — | fn | — | — | fn |
 | `placeFromRules` | — | — | — | fn | — | fn | — | — | fn |
 
+**Build-time — item introduction**
+
+| Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
+|---|---|---|---|---|---|---|---|---|---|
+| `itemIntroduction` | — | — | — | 3 keys | — | — | — | — | — |
+| `itemIntroduction.exhaustedRefusal` | — | — | — | fn | — | — | — | — | — |
+| `itemIntroduction.introducibleItems` | — | — | — | fn | — | — | — | — | — |
+| `itemIntroduction.replayableItems` | — | — | — | fn | — | — | — | — | — |
+
 **Build-time — content sources (zone-based substrates)**
 
 | Field | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `text_adventure` |
@@ -393,15 +450,15 @@ Groups are this document's own § headings, matched to a field by the section th
 | `buildZoneSpecs` | fn | fn | fn | — | — | — | — | — | — |
 | `canHostExitGates` | fn | fn | fn | fn | — | — | — | — | — |
 | `canHostExitGatesBraid` | fn | — | — | — | — | — | — | — | — |
-| `defaultProcgenParams` | 10 keys | 11 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | — |
+| `defaultProcgenParams` | 10 keys | 26 keys | — | 7 keys | 4 keys | 7 keys | {noiz2saFinalSpan, noiz2saVictorySkill} | — | — |
 | `driftItems` | Left arrow, Right arrow | — | — | — | — | — | — | — | — |
 | `exitGateVeto` | fn | fn | fn | fn | — | — | — | — | — |
 | `gateHostingHint` | fn | fn | — | — | — | — | — | — | — |
-| `gateableItems` | `null` | 10 items | — | — | — | — | — | — | — |
+| `gateableItems` | `null` | 11 items | — | — | — | — | — | — | — |
 | `generateZoneForSpecs` | fn | fn | fn | — | fn | — | fn | — | — |
 | `generateZoneForSpecsGen` | fn | fn | — | — | — | — | — | — | — |
 | `hostsSurplusExitsNatively` | fn | fn | — | — | — | — | — | — | — |
-| `libraryItems` | 7 keys | 11 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | — |
+| `libraryItems` | 7 keys | 13 keys | — | 3 keys | 48 keys | — | {Noiz2sa Star, Victory} | {Victory} | — |
 | `prepareSphereGrowth` | fn | — | fn | — | — | — | — | — | — |
 | `procgenParamsFromPayload` | fn | fn | — | fn | — | — | — | — | — |
 | `renderLibraryProcgenParams` | — | — | — | — | — | fn | — | — | — |

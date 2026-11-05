@@ -17669,12 +17669,14 @@ its byte-frozen free oracle is compared against.
 | 29 | `r9-solve-30` | L30 → L32 | 210 | — |
 | 30 | `r9-solve-32` | L32 → END | 839 | — |
 
-**ROUTE COMPLETE** — the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 4.2) → Fire); there is no next room on this route.
+**ROUTE COMPLETE** — the chain walks all 30 steps of the route it was recorded on (route-only through 4.2, as the survey derived it at 55c279a0), from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 4.2) → Fire); there is no next room on that route.
 
-**COVERAGE, BY ROUTE MODE** (`campaign-frontier.json` `coverage`; `route-only` is the route the chain was recorded on):
+**COVERAGE, BY ROUTE MODE** (`campaign-frontier.json` `coverage`; `recorded` is the route the chain was recorded on, `campaign-recording-route.json`, the survey's route-only route as derived at `55c279a01d`; `route-only` and `full` are today's survey routes):
 
-- `route-only` through 4.2: **30/30** route steps — COMPLETE
-- `full` through 4.2: **13/40** route steps — the chain leaves this route at segment 14: `r9-solve-0` arrives in L13, route step 14 crosses to L86
+- `recorded` through 4.2: **30/30** route steps — COMPLETE
+- `route-only` through 4.2: **20/29** route steps — the chain leaves this route at segment 21: `r9-solve-20` arrives in L13, route step 21 crosses to L0
+  - ⚠ today's `route-only` route leaves the recorded route at step 21 (30 → 29 steps): recorded L20: Level 020 - Shield (sphere 3.1) → Progressive Shield; stairsup@16,48 → L13 — leaves to L13; today L20: Level 020 - Shield (sphere 3.1) → Progressive Shield — restarts to L0
+- `full` through 4.2: **13/39** route steps — the chain leaves this route at segment 14: `r9-solve-0` arrives in L13, route step 14 crosses to L86
 
 <!-- GENERATED:campaign-chain END -->
 
@@ -27136,6 +27138,48 @@ switch; still OFF; OFF byte-identical.**
   five), `FIFTH_ORDER` admits five. The pocket-open re-boot stays SOLVED 4810 hitless.
 - **Radius.** ON alone: 0 of 58 L40 requests move; behind LWF+TA+SD+FO 2 move (864/1, 865/1), refusal text only.
 
+### Seedling hammer-phase BK2COMBAT — the chaser arm asks again from a cell it certified safe to wait in
+
+⚖ User, queued 2026-11-02 (one of three parallel hammer slices; POCKET-BURN's hand-over, its report § 9). Switch
+`solverBot.CHASER_STAGED_HUNT`, **OFF** (`SEEDLING_CHASER_STAGED_HUNT=1` / `withChaserStagedHunt`). The report is
+`CC/docs/cloud-reports/seedling-hammer-bk2combat.md`.
+
+- **The walls, re-measured.** Boss Key 2's arrivals are legs 864/865 on this main. The burn walk has TWO fights. (a) The
+  spinner press with a shaft bob alive: under POCKET-BURN's five switches `/1` dies to `bob@736,752` inside the press of
+  `spinner@816,848` (t780 / t798); at the defaults 865 dies the same way (`spinner@880,848`, t800). On the pocket-shut
+  re-boot `bob@736,800` lands one hit inside the press. (b) `bobsoldier@880,832` in its notch: the defaults' 864/1, and
+  every arm once (a) is passed. The pocket-open 4810 chain wins both because it meets the bodies in a different order:
+  the hold walk kills `bob@736,752` first, and asks for the BobSoldier with the player already in the corridor.
+- **What answers (a).** The existing OFF switch `OPPORTUNISTIC_STRIKE` (and `PRESS_KILL_CHASERS`) — measured, not
+  built here: OPP kills `bob@736,800` inside the press at t576, hitless on a fresh run.
+- **What answers (b), and the design.** The chaser arm prices one walk plus a dwell from where the player stands. From
+  the x 744 shaft the BobSoldier never comes to the cells west of it (*"still standing after the whole ceiling"*), and
+  the cells beside it meet its blade on arrival. A timed delay from the shaft (0–64 still ticks) prices nothing;
+  staging at (856,856) alone prices nothing; staging and THEN waiting prices (888,856) after 15 ticks. ON, the cells the
+  arm refused only because the body never came are staging cells (nearest the body first); the arm is asked again on a
+  fork after each still tick up to that cell's ceiling, the first tick that prices is driven, a cell that prices none
+  is rewound. Fidelity's `orbitFreeAim` (OFF) answers (b) too; it is fidelity's key and was only measured.
+- **Measured.** Pocket-shut re-boot, F + OPP + ON: staged at (856,856), wait 15, the BobSoldier dead at t883; the tree
+  burns (t957), the door opens (t1083), and the refusal is the ice turret's approach from the door — hitless and
+  death-free on a fresh run. Leg 864 (F + OPP + ON, budget 10240): past the combat, the door and the turret to the
+  order bound, *"applied 5 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432),
+  burn(burnabletree@872,784), hold(wandlock@480,560), weigh(wandlock@800,400)]"*, 5216 spent ticks hitless. Leg 865:
+  past the combat (t2114), then the walk back to the door meets `spinner@880,848` while the chooser hands the kill rung
+  `bob@352,448`. At the captured budget both end on the anytime deadline. The pocket-open re-boot stays SOLVED 4810,
+  keys byte-identical, the staged hunt never asked.
+- **Radius.** ON alone: 1 of 58 L40 requests moves — 390/1 (`Level 040 - Chest` from the L39 arrival, the BobSoldier's
+  own chest) refusal → SOLVED 1279, hitless and game-modelled (staged at (856,856), wait 8); survey 0 of 237. Behind
+  F + OPP: 3 requests move (390/1, 864/1, 865/1), the BobSoldier's refusal → the anytime deadline.
+- **ON movers in fidelity's rows (a pin to sign).** With the switch ON the chaser arm answers before the orbit arm on two
+  fidelity workloads: L30's pit landing (224,80) (`fidelityL30KeyLock.test.js`'s both-OFF and WAIT-alone rows, and
+  `plan-seedling-l30keylock`'s BEFORE witness, the one red ON producer) refusal (2 hits) → SOLVED 318 hitless, staged at
+  (120,104); L40BK2B's corridor boot (`fidelityL40Bk2b.test.js`'s two orbit rows) the BobSoldier removed at t112
+  hitless (staged at (856,856), wait 17; the D1 orbit's t125). A flip pins those rows with `withChaserStagedHunt(false)`.
+  Survey behind F + OPP: 0 of 237.
+- **Gate** `hammerBk2Combat.test.js` (ships OFF; where it sits; OFF/ON answers of the arm) and
+  `hammerBk2Combat.slow.test.js` (shut OFF/ON with the fresh replay; 4810 unchanged). Mutants (drop the fix; no still
+  wait; stage on a danger-refused cell; one still tick short): all red.
+
 ### Seedling hammer-phase ESCAPE-EXACT — `PRESS_ESCAPE_EXACT` (OFF): the press escape exact under a carried shield
 
 ⚖ The user queued the slice on 2026-11-02 (one of five parallel hammer slices); report
@@ -27219,6 +27263,51 @@ The key is read through `Object.hasOwn`, so main without the key is OFF's under 
 - **The L12 cost** (hand-over (b)) is the press-blind `planSwordDash` scan, not the certificate: 43.5 of 44.7 s (step
   172) and 87.2 of 88.8 s (step 200) under L100LATTICE's mutant M4. Handed on as a dash-search question.
 
+### Seedling hammer-phase CLEARTAG-STAND — the clear-tag arm's keylock hold, priced at the defaults
+
+⚖ User, queued 2026-11-02 (one of three parallel hammer slices; AXIS-L12HITS's residue). Switch
+`solverBot.CLEARTAG_STAND`, **OFF** (`SEEDLING_CLEARTAG_STAND=1` / `withClearTagStand`; asked only at the clear-tag
+arm's stance walk, `clearTagStandWalk`). The report is `CC/docs/cloud-reports/seedling-hammer-cleartag-stand.md`.
+
+- **The gap, measured at `31ce3077a1`, at the defaults.** The 6 L12 bosslock legs from L35 / L95 pass with 2 hits:
+  `puncher@416,256` punches the standing player in the keylock's 110-tick hold, 23–37 ticks after the clear-tag arm's
+  stance walk ends, billed by the model at the game's ticks (`exact: true`). That walk was certified in transit only
+  (`stand: null`). All 14 legs walk the same last corridor (344,184) → (376,264) → (424|440,264); the split is TIMING:
+  on the 8 from L0/L33/L36/L88 the transit probe meets a punch at x≈401, so the ladder's kill rung clears the puncher
+  first, and on the 6 the transit passes between punches.
+- **The design.** One helper, `clearTagKeylockStand` (`keylockStandWalk`'s tail for a `keylock` verb with
+  `KEYLOCK_WAIT_PRICED` on), used by `axisClearTagStand` behind `AXIS_STRIKE` (unchanged) and by the clear-tag site
+  ON. A separate hold probe after the walk (design 2) refuses 5 of the 6 legs (no rung is left once the walk is
+  driven); a kill before the hold (design 3) is what design 1's ladder already does.
+- **Measured ON** (node replays of the page's captured requests): the 2 L35 and 2 L95_624_80 legs go 2 hits → 0; the
+  8 others answer OFF's plan byte for byte; **the 2 L95_624_64 legs go from a 2-hit pass to a refusal** (the ladder
+  exhausts: the kill rung's chaser arm finds no dwell stance whose wait is clean; forced-hit is refused by
+  `coveredGoalRefusal`). The page sweep ON agrees leg for leg (12 pass, roomHits max 0; the 2 L95_624_64 legs fail).
+  L40's 58 captured requests, the survey (237 steps), r9 `--check` and L30KEYLOCK's `--check` do not move. Handed on:
+  the kill rung on the L95_624_64 legs.
+### Seedling hammer-phase AXISON — what AXIS_STRIKE ON still breaks: none of it is the axis strike
+
+⚖ User, queued 2026-11-02 (one of three parallel hammer slices: CLEARTAG-STAND, AXISON, BK2COMBAT). Switch
+`pressKillCost.AXIS_STRIKE`, still **OFF**; no code change. The report is `CC/docs/cloud-reports/seedling-hammer-axison.md`.
+
+- **The movers, reproduced.** CI sweep 41477361069 vs 41477345657 named L95 → L12 flag 4 pass → refused, flag 5 pass →
+  budget, and L105 0 → 2 hits as regressions. Two page runs per arm on the 14 mover legs (main `31ce3077`) reproduce the
+  L12 and L30 ones in kind both times; L105 takes no hit on either ON run, and L72's "gain" refuses ON both times.
+- **The split.** A scratch load hook runs ON with either half withheld. On all 10 captured requests the axis strikes alone
+  (the clear-tag stand withheld) answer OFF's plan byte for byte, and the clear-tag stand alone (`axisClearTagStand`,
+  AXIS-L12HITS) answers ON's. Every L12 / L30 regression AND gain is the stand's, so it is CLEARTAG-STAND's: on L95 flag 4
+  the priced hold meets `puncher@416,256`'s punch and every kill stance's WAIT is punched (t603–607). On these legs OFF
+  itself passes with 2 hits in the hold.
+- **L105 is a seam flake.** The page's OFF and ON requests differ only in the arrival seam (6187 / 6202). Over seams
+  6167–6227 OFF and ON answer identically (61 / 61) and build no axis policy. From seam 6224 both take `flyer@192,16`'s two
+  drops.
+- **Radius of the strikes at this head.** Route survey OFF vs ON: 201 / 36 both ways, 1 mover (step 79, refusal text 166 →
+  167 t, as AXIS measured). r9 `--check` ON green.
+- **Row.** `hammerAxisStrikes.test.js` row 7 pins the attribution on two cut page requests
+  (`fixtures/hammer-axison/`). On L95 flag 4, with the stand withheld (`KEYLOCK_WAIT_PRICED` off), the strikes build no
+  policy and answer OFF's 632 t plan. On L105 at seam 6224, ON = OFF, with the drops at t283 and t303.
+- **Flip-readiness.** The axis strikes are regression-free on every measured mover. The switch is not, because it also
+  carries the clear-tag stand. That half waits on CLEARTAG-STAND.
 ### Seedling hammer-phase FLIP — `GHOST_ROPE_CUT` and `PRESS_NO_FACING` ON
 
 ⚖ The user, 2026-11-02: *"Flip GHOST_ROPE_CUT, Flip SLASHRECT"*. Both switches ship ON from this commit (`=0` opts out).
@@ -27227,6 +27316,48 @@ Their ON sweeps were noise only: GHOSTROPE's own (41237980520 vs 41237976973) an
 meeting a rope (the lab's ENDGAME `ropegate` rooms REFUSED → SOLVED; the route holds the ghost sword only after its last
 rope room). PRESS_NO_FACING ON moves only a press planned on the game's one-tick `direction = -1` (caldera-cf seed 7 meets
 the kill's own refusal instead). The two "ships OFF" rows now read "ships ON"; every other row pins its arm by name.
+
+### Seedling fidelity FROZENPRESS — the walk's strike stands down on a refused input tick (`frozenPressForecast`, OFF)
+
+Planner `seedling-fidelity-planning-17`, wave 37 (⚖ the user's GO 2026-11-02, hammer-2's FROZEN-PRESS). The report is
+`CC/docs/cloud-reports/seedling-fidelity-frozenpress.md`.
+
+**W0.** At base `fa5c098bfb`, leg 860 (A5 arm, `forecastShieldBump` + `PRESS_ESCAPE_EXACT` ON, seam 5950, deadline 10240)
+refuses at work 5067 by `FROZEN_TICK_PRESS` (throw 3: an X edge while `frozenTimer > 0`, 12 after t2119's `freezeStep`; the
+contact was t2117, an `IceTurretBlast` of `iceturret@472,400`). The press is the OPPORTUNISTIC STRIKE's, not a hammer
+executor's: stack `levelRun.advance` ← `solverBot` advance ← `botDriverV2.drive` (`strike.decide`) ← nested `walkTo`. The
+freeze is fully determined at scheduling time: the run's `frozenTimer` and the blasts in flight. Census on the base, full
+survey (237 steps) at the defaults and with both 860 switches ON: one frozen-press row, step 126 (L64 Ghostspear), throw 2
+(a sword press whose thrust fires on a pickup ceremony's first frame), also `drive`'s strike. Sweep 12 (`40912321813`): 0 rows.
+
+**D1.** `levelRun.freezeForecastNow` (`run.progress('freezeForecast')`, a pure read): copies of the blasts in flight stepped
+one tick with `stepBlastsNow`'s own context against the tick-top box, then the timer's decrement → `{ refusedNext,
+timerNext, contact }`. `strikePolicy.decide` takes an optional `freeze`: on a refused tick, no aim and no press (an owed aim
+dropped, `owed` untouched). `strikeDecideOpts(run)` is what the six run-side decide sites ask (OFF: `{ slash }`). Game
+witness on p4g (L40 pocket, 0 px): presses on inputs 52 and 65 of a freeze are lost (= the press-free model); the press on
+66, the forecast's first free input, lands (turret hit at t68); the forecast = the game's refused inputs on all 120.
+A pickup-ceremony arm (one-tick travel bound) was prototyped and NOT kept: it moves step 126 to a walk stall at the
+Ghostspear (the press's coast was what carried the player onto it).
+
+**D2.** 860 A5, key × (K+X): OFF·OFF 3068 = ON·OFF 3068 (identical; 0 stand-downs). OFF·ON 5067 `FROZEN_TICK_PRESS`;
+ON·ON 5171, past t2119 (14 stand-downs, 1 owed press dropped), refused by name: *"the reordered corpse weigh took a hit at
+t2118 (blast) … LWEIGH: a volley-aware approach is the unbuilt arm"* — hammer's. Hammer switches at their defaults: all
+four arms refuse at `bobsoldier@880,832`'s burn stance (3094 / 3132), the key inert.
+
+**Trap candidates.** (1) A frozen-tick refusal reads like an executor's defect; the opportunistic strike is asked by
+every walk, so trace the stack before naming a verb. (2) A guard that withholds a press can unmask a walk defect the
+press's own coast hid (step 126).
+
+### Seedling hammer-phase FLIP — `DASH_CERT_SIGHT` ON (the joint flip with fidelity's `fineStanceWalk`)
+
+⚖ The user, 2026-11-02: *"Yes, flip both + re-record"* (the L100 joint flip; confirmed in the hammer planner's session).
+This is hammer's half: `DASH_CERT_SIGHT` reads `!== '0'` and ships ON; the "ships OFF" row reads "ships ON". Fidelity's
+branch `fidelity-flip/l100-joint` merges it with fidelity's `frozenPressForecast` flip. ⚖ The user then ruled (2026-11-03,
+in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fineStanceWalk"*: `fineStanceWalk` stays OFF
+(with it ON, L105 `in_L104_0_16 -> teleporter_80_144` takes an unbilled hit at t243) and its two re-records are reverted, so
+`DASH_CERT_SIGHT` lands ON on its own: a line-of-sight correctness fix that moves nothing at today's defaults. Measured at DASHCERT's harvest: at main's defaults the certificate's line refuses 1,831 swings in
+4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
+327 t, 0 hits, game-witnessed.
 
 
 ### Seedling hammer-phase CHEST-INCIDENTAL — `CHEST_LEG_DELTA` (OFF): the chest leg's exact set is the leg's delta

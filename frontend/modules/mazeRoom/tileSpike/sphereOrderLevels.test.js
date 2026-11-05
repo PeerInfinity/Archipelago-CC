@@ -29,6 +29,9 @@ import { pressLocations } from '../../procgenPipeline/regionAtlasMazeProjection.
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
 const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
+/** A region's played payload: its own, or (a member of a shared level world) its carrier's. */
+const payloadOf = (sc, name) => sc[name].playable_payload
+    ?? Object.values(sc).find((x) => x.playable_payload?.shared_world && x.shared_world === sc[name].shared_world)?.playable_payload;
 const compiled = new Map();
 const compile = (levels) => {
     const key = levels.join(',');
@@ -163,7 +166,7 @@ describe('L38 — a cross-room press is a location on its button', () => {
 
     it('a button off the grid presses from the tile of its centre: L61\'s (176,40) → (11,3), one cell', () => {
         // Its 8x6 hitbox straddles tiles y 2 and 3; the whole-game compile threw on the two-tile footprint before this.
-        const items = compile(['level_61']).preset_sidecars['1'].level_61__r0c10.playable_payload.items;
+        const items = payloadOf(compile(['level_61']).preset_sidecars['1'], 'level_61__r0c10').items;
         const POLE = 'L63 flag 1: lightpole@64,88 cleared';
         expect(items.filter((i) => i.locationName === POLE)).toEqual([{ x: 11, y: 3, id: POLE, locationName: POLE }]);
     });
@@ -306,7 +309,7 @@ describe('L61–L64 — the poles are laid; the press lights L62\'s, L63\'s in-r
         expect(out.problems).toEqual([]);
         expect(out.accepted).toEqual([]);
         const sc = compile(LV).preset_sidecars['1'];
-        expect(sc.level_61__r0c10.playable_payload.items.filter((i) => i.locationName === F1).map((i) => [i.x, i.y])).toEqual([[11, 3]]);
+        expect(payloadOf(sc, 'level_61__r0c10').items.filter((i) => i.locationName === F1).map((i) => [i.x, i.y])).toEqual([[11, 3]]);
         expect(sc.level_63__r0c1.playable_payload.items.filter((i) => i.locationName === F0).map((i) => [i.x, i.y])).toEqual([[2, 4]]);
         // L61's press from its landing; L63's from its entrance — from the L62 door #2 landing (4,1), behind L63 flag 1's own trap,
         // it costs that pole's press or the Spear

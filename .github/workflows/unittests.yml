@@ -87,11 +87,13 @@ jobs:
           if [ "$EVENT" = "push" ] && [ "$REF" = "refs/heads/main" ]; then
             # Only a run whose MATRIX ran counts: a branch run that F1 skipped
             # is green without testing anything, and main stays its backstop.
+            # ⚖ Robert 2026-11-02 CI manual-only P6: and only one that ran the 3.12 AND 3.13 ubuntu
+            # legs — a slice-branch run carries 3.11.2 alone now, so its green says nothing about them.
             if ids=$(gh api "repos/$REPO/actions/workflows/unittests.yml/runs?head_sha=$SHA&status=success&per_page=20" \
                 --jq "[.workflow_runs[] | select(.id != $RUN_ID) | .id] | map(tostring) | join(\" \")"); then
               for id in $ids; do
                 ran=$(gh api "repos/$REPO/actions/runs/$id/jobs?per_page=50" \
-                  --jq '[.jobs[] | select(.name | startswith("Test Python")) | .conclusion] | (length > 0 and all(. == "success"))' || echo false)
+                  --jq '[.jobs[] | select(.name | startswith("Test Python"))] | (length > 0 and all(.conclusion == "success") and any(.name | startswith("Test Python 3.12 ")) and any(.name | startswith("Test Python 3.13 ubuntu")))' || echo false)
                 if [ "$ran" = true ]; then
                   echo "skip: $SHA already passed the matrix in run $id — rule 1" >&2; echo false; return
                 fi
@@ -133,11 +135,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python:
-          # Pinned, not ubuntu-latest: setup-python has no 3.11.2 for ubuntu-26.04 (2026-10-22). Un-pin once it ships one, or once this leg moves to a version 26.04 has.
-          - {version: '3.11.2', runner: ubuntu-24.04} # Change to '3.11' around 2026-06-10
-          - {version: '3.12'}
-          - {version: '3.13'}
+        # Fork change (⚖ Robert 2026-11-02 CI manual-only P6): the ubuntu 3.12 and 3.13 legs run on main,
+        # js-land/** train pushes, pull requests and every dispatch; a SLICE-branch push runs 3.11.2 and
+        # hosting only. What a slice push no longer catches: a 3.12/3.13-only Python break — the train
+        # (or main) catches it. Upstream's list, for a re-sync: 3.11.2 (runner ubuntu-24.04), 3.12, 3.13.
+        # Pinned, not ubuntu-latest: setup-python has no 3.11.2 for ubuntu-26.04 (2026-10-22). Un-pin once it ships one, or once this leg moves to a version 26.04 has.
+        # Change '3.11.2' to '3.11' around 2026-06-10.
+        python: ${{ fromJSON((github.event_name != 'push' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/js-land/')) && '[{"version":"3.11.2","runner":"ubuntu-24.04"},{"version":"3.12"},{"version":"3.13"}]' || '[{"version":"3.11.2","runner":"ubuntu-24.04"}]') }}
         # Fork change (ci-manual-moves): upstream's three include legs —
         # Windows 3.11 (old compat), Windows 3.13 and macOS 3.13 (current) —
         # are added only on a pull request or a `full_matrix` dispatch:

@@ -131,6 +131,7 @@
  */
 import { buildLevelWorld, ENTITY_CLASSES, LevelWorldError, TILE_SIZE } from './levelWorld.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
+import { routeDiffersLine } from './frontierReadout.js';
 /**
  * ⛓ THE ▶ LOAD-IN-WASM PAYLOAD BUILDERS — the ONE fold (`buildStagedTape`) and
  * the ONE exporter/validator/chunker the CLI rows already use. ⛔ All four are
@@ -1899,6 +1900,14 @@ function publishCampaign(seq, parsedTapes, names, run) {
                 refusal: artifact.refusal,
                 complete: artifact.complete === true,
                 why: artifact.why,
+                /**
+                 * ⛓ TILE-FRONTIER-ROUTE — the route the chain was recorded on,
+                 * and where TODAY's route-only route leaves it. `undefined` (the
+                 * field absent) means the census had no survey to compare, which
+                 * the readout says rather than reading it as "the same route".
+                 */
+                recordingRoute: artifact.recordingRoute ?? null,
+                routeDiffers: artifact.coverage?.['route-only']?.differsFromRecorded,
                 source: FRONTIER_PATH,
             }
             : { chain: null, lastArrival: null, nextStep: null, refusal: null,
@@ -1953,6 +1962,8 @@ function renderCampaign(c) {
         // ⛓ R9 slice L18b: the chain walks EVERY route step — nothing is in front
         //   of it on this route, which is not the same sentence as "no work order".
         parts.push(`<b>ROUTE COMPLETE</b> — ${esc(c.frontier.why)}`);
+        const moved = routeDiffersLine(c.frontier);
+        if (moved) parts.push(esc(moved));
     } else {
         parts.push(`⚠ no work order — ${esc(c.frontier.why ?? 'the frontier artifact '
             + 'names no refused step')}`);
@@ -6003,6 +6014,8 @@ async function runGenerate(params, lifetime) {
      */
     let size = gp.size;
     let fill = gp.fill;
+    /** ⛓ seedling gen B3 — `?goal=chest` (URL-only; `watchGenerate.readGoalParam`). */
+    const goal = gp.goal ?? null;
 
     /**
      * ⛓ `?gen=` — a payload emitted by `generate-seedling-level.mjs`, whose
@@ -7074,6 +7087,8 @@ async function runGenerate(params, lifetime) {
              *  `dense` by the writer. */
             size: state.size,
             fill: state.fill,
+            // ⛓ seedling gen B3 — from the STATE; DELETED at the default by the writer.
+            goal: state.goal ?? null,
             // ⛓ CONSTRUCTIVE SLICE 5: from the STATE — the kind the room on
             // screen was really CARVED from, so a link cannot name a skeleton
             // the page did not build. DELETED at the open room by the writer.
@@ -7999,7 +8014,7 @@ async function runGenerate(params, lifetime) {
                 // with the old text on it, which is a lie about what it does.
                 await new Promise((r) => requestAnimationFrame(r));
                 if (!lifetime.alive()) return;
-                state = generateStep({ seed, biome, step: k, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
+                state = generateStep({ seed, biome, step: k, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill, goal });
                 step = k;
                 const out = await show(why);
                 if (!out.drew) return;
@@ -8028,7 +8043,7 @@ async function runGenerate(params, lifetime) {
         // ⛓ A FRESH `generateStep` STATE CARRIES AN EMPTY DIRECTIVE LIST, so
         // the reset drops them BY CONSTRUCTION rather than by a second line
         // somebody could forget to write.
-        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
+        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill, goal });
         await show(why);
     };
     /**
@@ -8243,7 +8258,7 @@ async function runGenerate(params, lifetime) {
             if (step === 0) {
                 await resetToSkeleton(`${cleared} — back to the skeleton`);
             } else {
-                state = generateStep({ seed, biome, step, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
+                state = generateStep({ seed, biome, step, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill, goal });
                 await show(`${cleared} — back to seed ${seed}'s ladder at step ${step}`);
             }
         } finally {
@@ -8544,7 +8559,7 @@ async function runGenerate(params, lifetime) {
     };
 
     // ── the skeleton, before anything is drawn ───────────────────────────
-    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill });
+    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, terrains, skeleton, elements, areas, require, size, fill, goal });
 
     const ogmoSchema = await loadOgmoSchema();
     if (!lifetime.alive()) return;

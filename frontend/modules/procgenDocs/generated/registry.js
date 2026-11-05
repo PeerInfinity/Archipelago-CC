@@ -42,7 +42,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 34,
+            "fields": 35,
             "id": "flash_seedling_gen",
             "label": "Seedling (generated room)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
@@ -168,6 +168,15 @@ export const REGISTRY = frz({
                 "placeFromRules"
             ],
             "title": "Build-time — procedural substrates"
+        },
+        {
+            "rows": [
+                "itemIntroduction",
+                "itemIntroduction.exhaustedRefusal",
+                "itemIntroduction.introducibleItems",
+                "itemIntroduction.replayableItems"
+            ],
+            "title": "Build-time — item introduction"
         },
         {
             "rows": [
@@ -1496,14 +1505,29 @@ export const REGISTRY = frz({
                 {
                     "id": "cloudberry",
                     "present": true,
-                    "short": "11 keys",
+                    "short": "26 keys",
                     "type": "object",
                     "value": [
                         "cloudberryChecksPerPiece",
                         "cloudberryDifficulty",
+                        "cloudberryDoubleJumpChance",
                         "cloudberryHazardKinds",
                         "cloudberryHazardLevel",
                         "cloudberryHazards",
+                        "cloudberryHeroAccel",
+                        "cloudberryHeroFriction",
+                        "cloudberryHeroGravity",
+                        "cloudberryHeroJetpackAccel",
+                        "cloudberryHeroJetpackFuel",
+                        "cloudberryHeroJumpAccel",
+                        "cloudberryHeroJumpAccel2",
+                        "cloudberryHeroJumpLength",
+                        "cloudberryHeroJumpLength2",
+                        "cloudberryHeroMaxFall",
+                        "cloudberryHeroMaxSpeed",
+                        "cloudberryHeroNumJumps",
+                        "cloudberryHeroSize",
+                        "cloudberryHeroVariation",
                         "cloudberryJetpackChance",
                         "cloudberryJumpLevel",
                         "cloudberryMinPieces",
@@ -2390,7 +2414,7 @@ export const REGISTRY = frz({
                 {
                     "id": "cloudberry",
                     "present": true,
-                    "short": "10 items",
+                    "short": "11 items",
                     "type": "array",
                     "value": [
                         "Moving Blocks",
@@ -2402,7 +2426,8 @@ export const REGISTRY = frz({
                         "Pendulums",
                         "Conveyors",
                         "Fly Blobs",
-                        "Jetpack"
+                        "Jetpack",
+                        "Double Jump"
                     ]
                 },
                 {
@@ -3371,6 +3396,302 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "3 keys",
+                    "type": "object",
+                    "value": [
+                        "exhaustedRefusal",
+                        "introducibleItems",
+                        "replayableItems"
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "prose",
+            "group": "Build-time — item introduction",
+            "name": "itemIntroduction"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — item introduction",
+            "name": "itemIntroduction.exhaustedRefusal"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — item introduction",
+            "name": "itemIntroduction.introducibleItems"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "cloudberry",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — item introduction",
+            "name": "itemIntroduction.replayableItems"
+        },
+        {
+            "carriedBy": [
                 "bounce",
                 "cloudberry",
                 "flash_seedling",
@@ -3553,12 +3874,14 @@ export const REGISTRY = frz({
                 {
                     "id": "cloudberry",
                     "present": true,
-                    "short": "11 keys",
+                    "short": "13 keys",
                     "type": "object",
                     "value": [
                         "Bouncy Blocks",
+                        "Cloudberry Gem",
                         "Clouds",
                         "Conveyors",
+                        "Double Jump",
                         "Elevators",
                         "Falling Blocks",
                         "Fly Blobs",

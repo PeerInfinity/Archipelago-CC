@@ -37,9 +37,11 @@ describe('the events the collector reads', () => {
         //   RULES l63-darktrap the in-room poles only their room's Spear lights (L63:7 in level_63__r6c9, L63:6 in
         //   r10c2, L65:0 in level_65__r0c8, L101:0 in level_101__r4c2 — region order)
         //   RULES sided-openers the two latching ShieldLocks (L12:10 in level_12__r0c19, L20:0 in level_20__r1c4)
+        //   RULES l20-button-latch L20's in-room press (L20:4, the button's own tag, in level_20__r1c12)
+        //   tile-lay-l40-latches L40's three in-room presses (L40:1, L40:7 in level_40__r0c53; L40:12 in r48c54 — region order)
         expect(EVENTS.map((e) => e.eventId)).toEqual(['flag:L0:1', 'flag:L0:4', 'flag:L12:4', 'flag:L12:5', 'flag:L12:10', 'flag:L12:11',
-            'flag:L12:3', 'flag:L12:7', 'flag:L12:12', 'flag:L16:0', 'flag:L19:1', 'flag:L20:0', 'flag:L24:0', 'flag:L28:0', 'flag:L30:0', 'flag:L30:2', 'flag:L31:0',
-            'flag:L39:8', 'flag:L40:8', 'flag:L48:1', 'flag:L58:1', 'flag:L63:1', 'flag:L62:0', 'flag:L63:7', 'flag:L63:6', 'flag:L65:0',
+            'flag:L12:3', 'flag:L12:7', 'flag:L12:12', 'flag:L16:0', 'flag:L19:1', 'flag:L20:0', 'flag:L20:4', 'flag:L24:0', 'flag:L28:0', 'flag:L30:0', 'flag:L30:2', 'flag:L31:0',
+            'flag:L39:8', 'flag:L40:1', 'flag:L40:7', 'flag:L40:8', 'flag:L40:12', 'flag:L48:1', 'flag:L58:1', 'flag:L63:1', 'flag:L62:0', 'flag:L63:7', 'flag:L63:6', 'flag:L65:0',
             'flag:L68:0', 'flag:L71:2', 'flag:L101:0', 'flag:L112:1', 'flag:L113:0', 'flag:L114:0']);
         expect(ROCK).toMatchObject({ location: 'L0 flag 1: breakablerock@288,176 cleared', level: 0, tag: 1 });
     });

@@ -282,6 +282,18 @@ if (REQUIRE && SUBSTRATE !== 'seedling' && AREAS.keys === 0) {
  * pre-sword solve against a post-sword one and call the difference a kind.
  */
 const PALETTE_NAME = arg('palette', 'pre-sword');
+/**
+ * ⛓ seedling gen B3 — `--goal=chest` asks every Seedling cell for a GOAL CHEST (`defaults.goalClass`,
+ * `procgenSeedling.GOAL_CHEST_CLASS`). ⛔ Absent = the default class, and every cell this sweep ever ran is
+ * unmoved (no `defaults` key, no `goal` row in the JSON).
+ */
+/** ⚠ NOT `arg('goal', null)`: `arg` spells its fallback into the flag, so a null fallback comes back as the
+ *  STRING 'null' and every sweep without `--goal` exited 2 (measured on CI at decfd88b62, all 28 jobs). */
+const GOAL_CLASS = process.argv.find((a) => a.startsWith('--goal='))?.slice('--goal='.length) ?? null;
+if (GOAL_CLASS !== null && GOAL_CLASS !== 'chest') {
+    note(`sweep-yield-table: --goal=${GOAL_CLASS} — the only goal class a sweep can ask for is \`chest\`.`);
+    process.exit(2);
+}
 /** ⛓ S1 — the biome names are `watchGenerate.GENERATE_BIOMES`'s, not a second list. */
 const SEEDLING_BIOMES = SUBSTRATE === 'seedling'
     ? (await M('seedlingDemo/watchGenerate.js')).GENERATE_BIOMES : {};
@@ -407,7 +419,7 @@ if (CELL !== '') {
              * `10x10` this passes exactly what `SEEDLING_DEFAULTS` says, so
              * every cell this sweep ever ran is unmoved.
              */
-            defaults: { width: size.width, height: size.height },
+            defaults: { width: size.width, height: size.height, ...(GOAL_CLASS ? { goalClass: GOAL_CLASS } : {}) },
             /** ⛓ arc 3 slice 4b — the SEEDLING resolver, so the five carved tree
              *  kinds get their `chambers` default and a typed 0 survives. */
             skeleton: seedlingSkeletonSpec(kind),
@@ -757,6 +769,16 @@ if (CELL !== '') {
         shellCensus,
         areaCensus,
         elements: elementRow,
+        /** ⛓ B3 — ONLY under `--goal=`: the class the level shipped, the goal chest's refusal, and the final
+         *  certificate's collected tags (a goal chest certifies as `chest`). */
+        ...(GOAL_CLASS ? { goal: {
+            asked: GOAL_CLASS,
+            class: model?.goalClass ?? null,
+            refused: model?.goalChest?.refused?.reason ?? null,
+            pocket: model?.goalChest?.pocket?.length ?? null,
+            certified: out?.summary.finalCertification?.certified ?? null,
+            collected: (out?.summary.finalCertification?.collected ?? []).map((c) => c.tag),
+        } } : {}),
         require: requireRow,
         error,
         stop: out?.summary.stop ?? null,
@@ -887,6 +909,7 @@ const header = [
         + `${REQUIRE ? `--require=${formatRequireList(REQUIRE)} ` : ''}`
         + `${SUBSTRATE === 'seedling' ? `--palette=${PALETTE_NAME} ` : ''}`
         + `${TERRAINS ? `--terrains=${TERRAINS} ` : ''}`
+        + `${GOAL_CLASS ? `--goal=${GOAL_CLASS} ` : ''}`
         + `--seeds=${arg('seeds', '1-8')} --count=${BOUNDS.obstacleTarget} `
         + `--tries=${BOUNDS.triesPerStep} --k=${BOUNDS.saturationK} `
         + `--anchortries=${BOUNDS.anchorTriesPerCandidate} --cellbudget=${CELL_BUDGET_S}\``,
@@ -933,6 +956,7 @@ for (const c of cells) {
         ...(SUBSTRATE === 'seedling' ? [`--palette=${PALETTE_NAME}`] : []),
         // ⛓ seedling-gen-terrains (C3) — and the opted-in terrains, for the same reason.
         ...(TERRAINS ? [`--terrains=${TERRAINS}`] : []),
+        ...(GOAL_CLASS ? [`--goal=${GOAL_CLASS}`] : []),
         ...(REQUIRE ? [`--require=${formatRequireList(REQUIRE)}`] : []),
         `--cell=${c.kind}|${c.size.label}|${c.seed}`,
         `--count=${BOUNDS.obstacleTarget}`, `--tries=${BOUNDS.triesPerStep}`,

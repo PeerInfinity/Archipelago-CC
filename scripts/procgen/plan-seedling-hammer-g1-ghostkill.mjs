@@ -23,7 +23,7 @@
  * `pressKillGuards.PRESS_KILL_SHAKE_GUARD` / `PRESS_KILL_REBOOT_GUARD` ON; ON, the reboot guard refuses the press kill
  * at the chaser's death (t1216), so the kill this witness is ABOUT never lands. The witness stays the OFF kill the game
  * played, and this script's solves run with both guards OFF (`withPressKillShakeGuard(false, …)`,
- * `withPressKillRebootGuard(false, …)`). The ON answer is pinned in `hammerGhostKillRung.test.js` beside the witness row.
+ * `withPressKillRebootGuard(false, …)`). The ON answer is pinned in `hammerGhostKillRung.train.test.js` beside the witness row.
  *
  * ⚖ AND `PRESS_KILL_CHASERS` IS PINNED OFF HERE (hammer-phase PKC, 2026-10-26; the switch ships OFF). ON, the press
  * kill's step keeps clear of `bob@736,752`, so the death this witness's kill crosses never happens and the solve leaves

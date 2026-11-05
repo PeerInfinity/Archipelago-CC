@@ -5148,3 +5148,74 @@ registerTest({
     category: seedlingRuntimeCategory('seedling-wasm-runtime-restart-no-walk-hand-walk'),
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+// ── SAME-WIRING RE-MOUNT (⚖ Robert, 2026-11-02 — "Fix it": a same-wiring Seedling preset switch while the game runs
+// loads the NEW preset's rooms; a visible restart accepted) ─────────────────────────────────────────────────────────
+// seedling_atlas_location and seedling_atlas wire the SAME flash_panel, so the switch re-mounted nothing and the
+// running game kept the previous preset's rooms: the atlas map the AP load bound at bridge ready was the house's, and
+// the Playback Bot refused `"overworld_start__r8c0 -> owls_nest_entrance" is not an exit of the atlas rooms`
+// (flashPanelUI._mountedRoomsDiffer, seedlingMountKey.js). This row boots the house preset and starts its game, then
+// switches to the atlas preset WITHOUT any runtime change (the rows above all change the runtime too, which re-mounts
+// by itself) and walks the overworld's owl's-nest stairs, an exit only the atlas preset's rooms have.
+
+const sameWiringSwitchLoadsNewRooms = (runtime) => async (tc) => withRuntimeRestored(tc, async () => {
+    // ⛓ THIS ROW'S OWN STATE: the house preset, its game running on this runtime
+    const first = await atlasPresetOn(tc, runtime, ATLAS_LOCATION_PATH, HOUSE_REGION);
+    if (!first) return;
+    const roomsOf = (panel) => [...(panel?.seedlingPlaybackSurface()?.atlas?.regions?.keys() ?? [])].sort();
+    tc.assertEqual(`[${runtime}] the house preset's rooms are bound (the stairs' room is not among them)`,
+        `false/${HOUSE_REGION}`, `${roomsOf(first.panel).includes(TOOLS_START)}/${roomsOf(first.panel).join(',')}`);
+    const settingBefore = await settingsManager.getSetting(RUNTIME_KEY, 'auto');
+    const firstAdapter = first.panel.adapter;
+
+    // ── THE SWITCH: the same wiring, the same runtime — the rooms are what differ ──
+    const atlasRules = await (await fetch(ATLAS_PATH)).json();
+    tc.assertEqual(`[${runtime}] the two presets wire the same game (the switch is a same-wiring one)`,
+        first.panel._lastFlashPanelKey, JSON.stringify(atlasRules.flash_panel['1']));
+    const second = await atlasPresetOn(tc, runtime, ATLAS_PATH, TOOLS_START);
+    tc.assertEqual(`[${runtime}] the runtime setting did not change (the re-mount is the rooms', not a runtime switch)`,
+        settingBefore, await settingsManager.getSetting(RUNTIME_KEY, 'auto'));
+    tc.reportCondition(`[${runtime}] the switch re-mounted the game (a fresh adapter) on the atlas preset's rooms`,
+        !!second && second.panel.adapter !== firstAdapter);
+    if (!second) {
+        tc.log(`[${runtime}] panel log: ${(document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-20).join(' | ')}`, 'error');
+        return;
+    }
+    tc.assertEqual(`[${runtime}] the atlas map the AP load bound holds the stairs' room`, true, roomsOf(second.panel).includes(TOOLS_START));
+    const landed = await toolsSettledIn(tc, `[${runtime}] the new game stands in ${TOOLS_START}`, TOOLS_START, 0, 60000);
+    tc.reportCondition(`[${runtime}] the new game stands in ${TOOLS_START} (level 0)`, !!landed);
+    if (!landed) return;
+
+    // ── AN EXIT ONLY THE NEW ROOMS HAVE, walked by the Playback Bot's controller ──
+    const botPanel = getBotPanel();
+    (botPanel?.getBot?.() ?? botPanel ?? null)?.stop?.();
+    const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
+    const exitName = `${TOOLS_START} -> ${TOOLS_OWLS}`;
+    const answer = controller?.walkTo?.({ kind: 'exit', name: exitName }) ?? null;
+    const nest = await toolsSettledIn(tc, `[${runtime}] the walk took the stairs into ${TOOLS_OWLS}`, TOOLS_OWLS, 2, 90000);
+    tc.log(`[${runtime}] walk "${exitName}": answer ${JSON.stringify(answer)}; refusal ${JSON.stringify(controller?.lastRefusal ?? null)}`);
+    tc.assertEqual(`[${runtime}] the controller did not refuse "${exitName}"`, null, controller?.lastRefusal ?? null);
+    tc.reportCondition(`[${runtime}] the Playback Bot walked "${exitName}" (the game is in ${TOOLS_OWLS}, level 2)`, !!nest);
+    controller?.stop?.();
+    assertNoDeathNoHalt(tc, runtime, second.rt);
+});
+
+export const seedlingJsRuntimeSameWiringSwitchLoadsNewRooms = sameWiringSwitchLoadsNewRooms('js');
+export const seedlingWasmRuntimeSameWiringSwitchLoadsNewRooms = sameWiringSwitchLoadsNewRooms('wasm');
+
+for (const [id, fn, rt] of [
+    ['seedling-js-runtime-same-wiring-switch-loads-new-rooms', seedlingJsRuntimeSameWiringSwitchLoadsNewRooms, 'js'],
+    ['seedling-wasm-runtime-same-wiring-switch-loads-new-rooms', seedlingWasmRuntimeSameWiringSwitchLoadsNewRooms, 'wasm'],
+]) {
+    registerTest({
+        id,
+        name: `Seedling ${rt} runtime: a same-wiring preset switch while the game runs loads the new preset's rooms`,
+        description: `flashPanel.runtime = ${rt}: seedling_atlas_location booted and its game running, then seedling_atlas `
+            + '(the same flash_panel wiring, the same runtime): the panel re-mounts (a fresh adapter), the AP load binds '
+            + `the atlas preset's rooms, and the Playback Bot walks "${TOOLS_START} -> ${TOOLS_OWLS}" — an exit only those `
+            + 'rooms have — into the owl\'s nest.',
+        testFunction: fn,
+        category: seedlingRuntimeCategory(id),
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}

@@ -285,6 +285,28 @@
     "template_file": "Civilization VI.yaml",
     "world_directory": "civ_6"
   },
+  "Cloudberry Double Jump WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Cloudberry Double Jump WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Cloudberry Double Jump WorldGen.yaml",
+    "world_directory": "cloudberry_double_jump_worldgen"
+  },
+  "Cloudberry Hero Physics WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Cloudberry Hero Physics WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Cloudberry Hero Physics WorldGen.yaml",
+    "world_directory": "cloudberry_hero_physics_worldgen"
+  },
   "Cloudberry Maze Mix WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,

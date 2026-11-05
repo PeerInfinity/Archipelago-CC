@@ -25,6 +25,18 @@
  * and world_generator + Generate.py make it a winnable seed (not played here: its start is a maze room; the
  * in-app row `cloudberry-mixed-loop-bot-blocks-victory` plays the committed one in loop mode).
  *
+ * --double-jump (P5a) runs the same gate on `CLOUDBERRY_DOUBLE_JUMP_STATE` (below) instead — the start level holds
+ * Double Jump, the level behind the Double Jump gate is generated with the Double hero (`cloudberryDoubleJumpChance` 1),
+ * so its check coin and end door need Double Jump, and the last level holds Victory — with its committed world
+ * `cloudberry_double_jump_worldgen` (--write / --check), no mixed world, and two more legs: the generator REFUSES the
+ * Double level BY NAME on a page without `__cloudberryEmbed.features.doubleJump` (`CloudberryFeatureMissing`), and the
+ * Double level's rules name Double Jump everywhere. It needs a Cloudberry page that has the feature.
+ *
+ * --physics (P5b) runs the --double-jump gate on `CLOUDBERRY_HERO_PHYSICS_STATE` (below): the same world with the hero's
+ * physics as world settings (non-default values) and `cloudberryHeroVariation` on, so every level's request carries its
+ * own `heroCustom.phsx` (the Double level's with its Double Jump sliders), every value inside its ruled range, the three
+ * heroes differ, and the world plays to Victory — with its committed world `cloudberry_hero_physics_worldgen`.
+ *
  * Modes:
  *   (default)  the world is generated under a THROWAWAY name and removed afterwards;
  *   --write    the world is generated as the COMMITTED `cloudberry_sphere_worldgen` world + preset
@@ -37,7 +49,7 @@
  * Needs the same-origin Cloudberry site (`node scripts/setup/fetch-cloudberry-site.mjs`) and, to play,
  * a dev server serving this tree (`--port`). Screenshots: `--shots <dir>`.
  *
- *   node scripts/procgen/check-cloudberry-sphere.mjs [--port <n>] [--shots <dir>] [--keep] [--write|--check|--no-play]
+ *   node scripts/procgen/check-cloudberry-sphere.mjs [--double-jump|--physics] [--port <n>] [--shots <dir>] [--keep] [--write|--check|--no-play]
  *
  * @ci-box it shells out to this tree's Python venv, `world_generator` and `Generate.py`, and needs the fetched Cloudberry site, a headless WebGL page and a dev server.
  * @tree-writes frontend/presets/preset_files.json: `Generate.py` registers the export there; the gate restores the file's bytes in its `finally` (except with --write, which keeps the committed presets' entries) — a SIGKILL skips that.
@@ -58,6 +70,67 @@ import { generatePythonOrExit } from './repoPython.js';
 
 argvHelp(import.meta.url);
 
+/**
+ * ⛓ CLOUDBERRY P5a — **THE DOUBLE JUMP WORLD, SPELLED ONCE** (`--double-jump`; the committed
+ * `cloudberry_double_jump_worldgen` and the in-app row `cloudberry-double-jump-level-needs-the-item` read it).
+ * CLOUDBERRY_SPHERE_DEMO_STATE's shape with Double Jump in the pool and `cloudberryDoubleJumpChance` 1: at seed 1 the
+ * start level holds Double Jump + the gem (P4c slack), the level behind the Double Jump gate is a Double-hero level
+ * holding Moving Blocks, and the level behind Moving Blocks + Double Jump holds Victory (the gate asserts that shape).
+ */
+export const CLOUDBERRY_DOUBLE_JUMP_STATE = Object.freeze({
+    mode: 'sphereGrowth',
+    params: Object.freeze({
+        seed: 1,
+        regionWidth: 8,
+        regionHeight: 6,
+        maxItemsPerRegion: 2,
+        sphereCount: 3,
+        fillerCount: 0,
+        revisitPercent: 0,
+        startSubstrate: 'cloudberry',
+        cloudberryDifficulty: 2,
+        cloudberryPieceLength: 3500,
+        cloudberryMinPieces: 2,
+        cloudberryChecksPerPiece: 2,
+        cloudberryHazards: false,
+        cloudberryTileset: 'random',
+        cloudberryJumpLevel: 2,
+        cloudberryRetries: 4,
+        cloudberryDoubleJumpChance: 1,
+    }),
+    // KEY ORDER load-bearing (as the sphere demo's): at seed 1 it puts Double Jump and the gem in the start level.
+    scenario: Object.freeze({
+        items: Object.freeze({ 'Cloudberry Gem': 1, 'Double Jump': 1, 'Moving Blocks': 1, Victory: 1 }),
+        obstacles: Object.freeze({}),
+    }),
+    substrateQuotas: Object.freeze({ cloudberry: 99 }),
+    substrateMix: Object.freeze({}),
+    substrateMode: 'quotas',
+});
+
+/**
+ * ⛓ CLOUDBERRY P5b — **THE HERO PHYSICS WORLD, SPELLED ONCE** (`--physics`; the committed
+ * `cloudberry_hero_physics_worldgen` and the in-app row `cloudberry-hero-physics-world-plays` read it).
+ * CLOUDBERRY_DOUBLE_JUMP_STATE with a non-default world hero and variation 0.25: each region draws its own hero
+ * near the world's (draw (5)), inside the ruled ranges (gravity ≤ 1.5 and jump length ≥ 0.85 among them: the ladder
+ * ruling, option A).
+ */
+export const CLOUDBERRY_HERO_PHYSICS_STATE = Object.freeze({
+    ...CLOUDBERRY_DOUBLE_JUMP_STATE,
+    params: Object.freeze({
+        ...CLOUDBERRY_DOUBLE_JUMP_STATE.params,
+        cloudberryHeroGravity: 1.3,
+        cloudberryHeroAccel: 1.2,
+        cloudberryHeroMaxSpeed: 1.3,
+        cloudberryHeroMaxFall: 1.2,
+        cloudberryHeroJumpLength: 1.1,
+        cloudberryHeroJumpAccel: 1.1,
+        cloudberryHeroFriction: 0.8,
+        cloudberryHeroSize: 0.85,
+        cloudberryHeroVariation: 0.25,
+    }),
+});
+
 /** The paths (up to depth 4) where two JSON values differ, for a failure message. */
 function jsonDiffPaths(a, b, at = '', depth = 0, out = []) {
     if (JSON.stringify(a) === JSON.stringify(b)) return out;
@@ -74,6 +147,27 @@ function firstDifferingLine(a, b) {
     }
     return null;
 }
+
+/**
+ * ⛓ P4c FILL SLACK — the start region's FREE locations (`True_` rule) and the gem among them. Two
+ * copies of a world whose start holds ONE free location box Archipelago's restrictive fill in on some
+ * seeds; the committed worlds carry a second one (`Cloudberry Gem`, which opens nothing). The
+ * scenario's key order puts it there.
+ */
+function startFreeLocations(rules) {
+    const regions = rules.regions?.['1'] ?? {};
+    const start = (regions.Menu?.exits ?? []).find((e) => e.name === 'GameStart')?.connected_region;
+    const locs = (regions[start]?.locations ?? []).filter((l) => l.access_rule?.rule === 'True_');
+    // The gem is slack only while it opens nothing: no exit or location rule may name it.
+    const gates = Object.values(regions).some((r) => [...(r.exits ?? []), ...(r.locations ?? [])]
+        .some((x) => JSON.stringify(x.access_rule ?? null).includes('"Cloudberry Gem"')));
+    return { start, free: locs.length, gem: locs.some((l) => l.item?.name === 'Cloudberry Gem'), gates };
+}
+const slackOk = (rules) => {
+    const s = startFreeLocations(rules);
+    return { ok: s.free >= 2 && s.gem && !s.gates,
+        text: `start ${s.start}: ${s.free} free locations, the gem ${s.gem ? 'among them' : 'MISSING'}, ${s.gates ? 'and it GATES something' : 'gating nothing'}` };
+};
 
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
@@ -94,12 +188,15 @@ async function main() {
     const WRITE = argv.includes('--write');
     const CHECK = argv.includes('--check');
     const PLAY = !CHECK && !argv.includes('--no-play');
+    const PHYSICS = argv.includes('--physics');
+    // --physics is the Double Jump world with hero physics: every --double-jump leg runs on it too.
+    const DOUBLE_JUMP = argv.includes('--double-jump') || PHYSICS;
 
     const here = path.dirname(fileURLToPath(import.meta.url));
     const repoRoot = path.resolve(here, '../..');
-    const COMMITTED = 'cloudberry_sphere_worldgen';
-    const NAME = WRITE ? COMMITTED : 'cloudberry_sphere_check_worldgen';
-    const GAME_NAME = WRITE ? 'Cloudberry Sphere WorldGen' : 'Cloudberry Sphere Check WorldGen';
+    const COMMITTED = PHYSICS ? 'cloudberry_hero_physics_worldgen' : DOUBLE_JUMP ? 'cloudberry_double_jump_worldgen' : 'cloudberry_sphere_worldgen';
+    const NAME = WRITE ? COMMITTED : COMMITTED.replace(/_worldgen$/, '_check_worldgen');
+    const GAME_NAME = `Cloudberry ${PHYSICS ? 'Hero Physics' : DOUBLE_JUMP ? 'Double Jump' : 'Sphere'}${WRITE ? '' : ' Check'} WorldGen`;
     const WORLD_DIR = path.join(repoRoot, 'worlds', NAME);
     const PRESET_DIR = path.join(repoRoot, 'frontend/presets', NAME);
     const PRESET_FILES_JSON = path.join(repoRoot, 'frontend/presets/preset_files.json');
@@ -118,7 +215,10 @@ async function main() {
         // P4a: generated in LOOP MODE (loop_costs + every payload manaEnabled: Loops' maze delegation needs it), so the
         // committed world is the in-app mixed loop row's (`cloudberry-mixed-loop-bot-victory`).
         params: { seed: 1, startSubstrate: 'maze', sphereCount: 4, fillerCount: 1, enableLoopMode: true },
-        scenario: { items: { key_red: 1, 'Moving Blocks': 1, Clouds: 1, Victory: 1 }, obstacles: {} },
+        // ⛓ P4c FILL SLACK: the gem is a second FREE location in the start room (see
+        // CLOUDBERRY_SPHERE_DEMO_STATE). KEY ORDER load-bearing: at seed 1 it puts the gem in sphere 1 AFTER
+        // Moving Blocks, and with that order the maze gates its start exit on Moving Blocks, not on the gem.
+        scenario: { items: { 'Cloudberry Gem': 1, key_red: 1, 'Moving Blocks': 1, Clouds: 1, Victory: 1 }, obstacles: {} },
         substrateQuotas: { maze: 2, cloudberry: 3 },
         substrateMix: {},
         substrateMode: 'quotas',
@@ -166,6 +266,7 @@ async function main() {
         await loadPipelineSubstrates();
         const { buildRunFromState, runPresetHeadless, heavySubstrateIds } = await imp('frontend/modules/procgenPipeline/presetRun.js');
         const { CLOUDBERRY_SPHERE_DEMO_STATE, PRESETS_SKIPPED_AS_HEAVY } = await imp('frontend/modules/procgenPipeline/presetDefs.js');
+        const STATE = PHYSICS ? CLOUDBERRY_HERO_PHYSICS_STATE : DOUBLE_JUMP ? CLOUDBERRY_DOUBLE_JUMP_STATE : CLOUDBERRY_SPHERE_DEMO_STATE;
         const gen = await imp('frontend/modules/cloudberryDemo/cloudberryGeneration.js');
         const { installHeadlessCloudberryGenerator } = await import('./cloudberrySite.mjs');
 
@@ -177,6 +278,23 @@ async function main() {
         let t0 = Date.now();
         generator = await installHeadlessCloudberryGenerator(browser, { cache: false, log: (m) => console.log(`  [page] ${m}`) });
         console.log(`  the generator page is ready in ${Date.now() - t0} ms (build ${generator.build})`);
+        if (DOUBLE_JUMP) {
+            const features = await generator.page.evaluate(() => ({ ...(window.__cloudberryEmbed?.features ?? {}) }));
+            if (!ok(features.doubleJump === true, `--double-jump: the Cloudberry page has the Double Jump feature (${JSON.stringify(features)})`)) {
+                console.error('REFUSED: this Cloudberry site has no Double Jump (__cloudberryEmbed.features.doubleJump) — link a build that has it '
+                    + '(node scripts/setup/fetch-cloudberry-site.mjs --link <site>)');
+                throw STOP;
+            }
+            // The same page with the feature hidden: the Double level is refused BY NAME, before anything is generated.
+            const real = gen.cloudberryGenerator();
+            gen.installCloudberryGenerator({ build: real.build, generate: (a) => real.generate(a), features: async () => ({}) }, { store: null });
+            gen.clearCloudberryLevelCache();
+            let refusal = null;
+            try { await runPresetHeadless(buildRunFromState({ ...STATE })); } catch (err) { refusal = String(err?.message ?? err); }
+            gen.installCloudberryGenerator(real, { store: null });
+            ok(/CloudberryFeatureMissing: cloudberry zone '[^']+' is a Double Jump level/.test(refusal ?? ''),
+                `--double-jump: a page without the feature refuses the Double level by name (${(refusal ?? 'NOT refused').slice(0, 200)})`);
+        }
 
         const runs = [];
         for (let i = 0; i < 2; i++) {
@@ -184,17 +302,18 @@ async function main() {
             const before = gen.cloudberryGenerationStats().generateMs.length;
             t0 = Date.now();
             // eslint-disable-next-line no-await-in-loop
-            const r = await runPresetHeadless(buildRunFromState({ ...CLOUDBERRY_SPHERE_DEMO_STATE }));
+            const r = await runPresetHeadless(buildRunFromState({ ...STATE }));
             const ms = gen.cloudberryGenerationStats().generateMs.slice(before);
             runs.push({ text: JSON.stringify(r.rulesJson, null, 2), rules: r.rulesJson, oracle: r.oracleErrors, ms, total: Date.now() - t0 });
         }
         const [A, B] = runs;
         console.log(`  generation ms per level: run 1 [${A.ms.join(', ')}] (total ${A.total}), run 2 [${B.ms.join(', ')}] (total ${B.total})`);
         ok(Array.isArray(A.oracle) && A.oracle.length === 0, `Pass A: the sphere oracle holds (${JSON.stringify(A.oracle)})`);
+        { const k = slackOk(A.rules); ok(k.ok, `Pass A: fill slack (P4c) — ${k.text}`); }
         ok(A.text === B.text, `Pass A: two generations from scratch give the same rules.json bytes (${sha(A.text).slice(0, 16)} / ${sha(B.text).slice(0, 16)})`);
         // A third run with the memory cache warm generates nothing.
         const warmBefore = gen.cloudberryGenerationStats().generated;
-        const C = await runPresetHeadless(buildRunFromState({ ...CLOUDBERRY_SPHERE_DEMO_STATE }));
+        const C = await runPresetHeadless(buildRunFromState({ ...STATE }));
         ok(gen.cloudberryGenerationStats().generated === warmBefore && JSON.stringify(C.rulesJson, null, 2) === A.text,
             'Pass A: a re-run takes every level from the cache (nothing regenerated, same bytes)');
 
@@ -225,10 +344,57 @@ async function main() {
             return JSON.parse(fs.readFileSync(path.join(presetRoot, ap, `${ap}_rules.json`), 'utf8')).preset_sidecars?.['1'] ?? {};
         };
 
+        if (DOUBLE_JUMP) {
+            // The Double level: generated with the Double hero; its payload maps Double Jump; every rule in it names Double
+            // Jump (its coin, its end door; the way back carries the entry gate); and only its entry gate leads in.
+            const dj = regionIds.filter((id) => sidecars[id].playable_payload.params.generate.heroCustom?.move === 'Double');
+            ok(dj.length === 1, `--double-jump: exactly one Double-hero level (${dj.join(',')})`);
+            const id = dj[0];
+            const p = id ? sidecars[id].playable_payload.params : {};
+            ok(p.items?.['Double Jump'] === 'DoubleJump'
+                && regionIds.filter((r) => r !== id).every((r) => !('Double Jump' in (sidecars[r].playable_payload.params.items ?? {}))),
+            `--double-jump: only the Double level's payload maps Double Jump → DoubleJump (${JSON.stringify(p.items?.['Double Jump'])})`);
+            const reg = compiled[id] ?? { locations: [], exits: [] };
+            const rulesOf = [...reg.locations, ...reg.exits].map((x) => [x.name, JSON.stringify(x.access_rule ?? null)]);
+            ok(rulesOf.length > 0 && rulesOf.every(([, r]) => r.includes('"Double Jump"')),
+                `--double-jump: every location and exit of ${id} needs Double Jump (${rulesOf.map(([n]) => n).join(', ')})`);
+            const into = Object.values(compiled).flatMap((r) => r.exits ?? []).filter((e) => e.connected_region === id);
+            ok(into.length > 0 && into.every((e) => JSON.stringify(e.access_rule).includes('"Double Jump"')),
+                `--double-jump: every exit into ${id} is gated on Double Jump (${into.map((e) => e.name).join(', ')})`);
+            const djLoc = Object.values(compiled).flatMap((r) => r.locations ?? []).find((l) => (l.item?.name ?? l.item) === 'Double Jump');
+            ok(!!djLoc && JSON.stringify(djLoc.access_rule) === '{"rule":"True_"}',
+                `--double-jump: Double Jump sits on a free location (${djLoc?.name})`);
+        }
+
+        if (PHYSICS) {
+            // P5b: every level carries its own hero (world values varied per region), inside the ruled ranges; the
+            // Double level's hero also carries its Double Jump sliders; the plain levels carry none of the ability ones.
+            const { CLOUDBERRY_HERO_PHYSICS } = await imp('frontend/modules/cloudberryDemo/cloudberryProcgenParams.js');
+            const heroes = regionIds.map((id) => [id, sidecars[id].playable_payload.params.generate.heroCustom ?? null]);
+            for (const [id, hc] of heroes) console.log(`  ${id}: hero ${JSON.stringify(hc)}`);
+            const general = CLOUDBERRY_HERO_PHYSICS.filter((h) => h.levels === 'all');
+            ok(heroes.every(([, hc]) => general.every((h) => typeof hc?.phsx?.[h.phsx] === 'number')),
+                '--physics: every level\'s request carries every general physics slider (the world hero is not the default)');
+            ok(heroes.every(([, hc]) => CLOUDBERRY_HERO_PHYSICS.every((h) => {
+                const v = hc?.phsx?.[h.phsx];
+                return v === undefined || (v >= h.min && v <= h.max && (!h.integer || Number.isInteger(v)));
+            })), '--physics: every value is inside its ruled range');
+            ok(new Set(heroes.map(([, hc]) => JSON.stringify(hc?.phsx))).size === heroes.length,
+                `--physics: the variation gives each level its own hero (${heroes.length} distinct)`);
+            const abilityOnly = CLOUDBERRY_HERO_PHYSICS.filter((h) => h.levels !== 'all').map((h) => h.phsx);
+            ok(heroes.every(([, hc]) => hc?.move === 'Double'
+                ? typeof hc.phsx.numjumps === 'number' && !('jetpackfuel' in hc.phsx)
+                : abilityOnly.every((k) => !(k in (hc?.phsx ?? {})))),
+            '--physics: the Double level carries its Double Jump sliders; the plain levels carry no ability slider');
+        }
+
         // ── The mixed world (maze + cloudberry): generated twice, oracle, Python round trip ──
-        if (CHECK) {
+        if (DOUBLE_JUMP) {
+            console.log('  (--double-jump: no mixed world)');
+        } else if (CHECK) {
             gen.clearCloudberryLevelCache();
             const r = await runPresetHeadless(buildRunFromState({ ...MIXED_STATE }));
+            { const k = slackOk(r.rulesJson); ok(k.ok, `--check: mixed fill slack (P4c) — ${k.text}`); }
             const cs = committedSidecars(MIX_COMMITTED);
             if (cs) {
                 ok(JSON.stringify(pickPayloads(cs)) === JSON.stringify(pickPayloads(r.rulesJson.preset_sidecars?.['1'] ?? {})),
@@ -249,6 +415,7 @@ async function main() {
                 `mixed: maze and cloudberry regions in one world (${subs.join(',')})`);
             ok(Array.isArray(mixRuns[0].oracle) && mixRuns[0].oracle.length === 0, `mixed: the sphere oracle holds (${JSON.stringify(mixRuns[0].oracle)})`);
             ok(mixRuns[0].text === mixRuns[1].text, 'mixed: two generations from scratch give the same bytes');
+            { const k = slackOk(mixRuns[0].rules); ok(k.ok, `mixed: fill slack (P4c) — ${k.text}`); }
             fs.writeFileSync(MIX.rules, mixRuns[0].text);
             fs.rmSync(MIX.preset, { recursive: true, force: true });
             run(py, ['-m', 'world_generator', MIX.rules, '-o', MIX.world, '--game-name', MIX.game, '--force', '--canonical-seed', '1']);
@@ -369,7 +536,7 @@ async function main() {
         const app = () => game(() => {
             const a = window.__cloudberryEmbed?.app;
             return a ? { region: a.config?.regionId ?? null, arrivedFrom: a.config?.arrivedFrom ?? null, refusal: a.refusal ?? null,
-                play: a.playResult ?? null, checked: [...(a.checked ?? [])], events: a.events ?? [], menu: a.menu ?? null,
+                play: a.playResult ?? null, itemsState: a.itemsState ?? null, checked: [...(a.checked ?? [])], events: a.events ?? [], menu: a.menu ?? null,
                 startDoorSides: window.__cloudberryEmbed.startDoorSides?.() ?? null } : null;
         });
         async function waitFor(desc, fn, timeoutMs = 90000) {
@@ -457,6 +624,14 @@ async function main() {
         await collect(chain[0], '2a');
         const a2 = await leave(chain[0], chain[1], '2a');
         ok((a2.startDoorSides ?? []).length >= 1, `2a. in ${chain[1]} the start door offers the way back (${JSON.stringify(a2.startDoorSides)}, arrived by ${JSON.stringify(a2.arrivedFrom)})`);
+        if (DOUBLE_JUMP) {
+            const dj = await waitFor('the Double hero has its 2 jumps (Double Jump held)', async () => {
+                const a = await app();
+                return a?.play?.heroJumps === 2 && a?.itemsState?.jumpsOn === 2 ? a : null;
+            }, 30000).catch(() => null);
+            ok(!!dj, `2a. ${chain[1]} is played with the Double hero and Double Jump held: heroJumps ${dj?.play?.heroJumps}, `
+                + `jumpsOn ${dj?.itemsState?.jumpsOn} (the page's build ${await game(() => fetch('build-info.json').then((r) => r.json()).then((j) => j.build)).catch(() => '?')})`);
+        }
         await page.waitForTimeout(1500);
         await shot('2-second-level');
         await collect(chain[1], '2b');

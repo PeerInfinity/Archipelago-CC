@@ -57,6 +57,16 @@
       "game_name": "Procgen Maze WorldGen",
       "canonical_seed": null
     },
+    "cloudberry_double_jump_worldgen": {
+      "source": "frontend/presets/cloudberry_double_jump_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Cloudberry Double Jump WorldGen",
+      "canonical_seed": 1
+    },
+    "cloudberry_hero_physics_worldgen": {
+      "source": "frontend/presets/cloudberry_hero_physics_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+      "game_name": "Cloudberry Hero Physics WorldGen",
+      "canonical_seed": 1
+    },
     "cloudberry_maze_mix_worldgen": {
       "source": "frontend/presets/cloudberry_maze_mix_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
       "game_name": "Cloudberry Maze Mix WorldGen",

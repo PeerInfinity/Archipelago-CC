@@ -364,7 +364,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_20__r1c4 -> level_20__r3c1", player),
-        Has('Progressive Shield', 1)
+        HasAll('Progressive Shield', 'L20 flag 4: lock@32,80 cleared')
     )
 
     world.set_rule(
@@ -374,7 +374,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_20__r3c1 -> level_20__r1c4", player),
-        Has('Progressive Shield', 1)
+        HasAll('Progressive Shield', 'L20 flag 4: lock@32,80 cleared')
     )
 
     world.set_rule(
@@ -514,7 +514,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_34 -> level_12__r0c37", player),
-        Or(HasAll('Fire Wand Fusion', 'Wand', 'Fire'), Has('Wand'))
+        Has('Wand', 1)
     )
 
     world.set_rule(

@@ -1,0 +1,19 @@
+STAGE 785 (855.3,855.7) hits+ 0 no stance derives for bobsoldier@880,832 on level 40: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 79 cell(s) inside its 80 px leash, 8 of those reachable and with a corridor onward, and 8 of THOSE refused by the forecast [(856,856): bobsoldier@880,8
+DELAY 785 bobsoldier@880,832 2 none
+DELAY 785 bobsoldier@880,832 4 none
+DELAY 785 bobsoldier@880,832 6 none
+DELAY 785 bobsoldier@880,832 8 none
+DELAY 785 bobsoldier@880,832 10 none
+DELAY 785 bobsoldier@880,832 12 none
+DELAY 785 bobsoldier@880,832 14 none
+DELAY 785 bobsoldier@880,832 16 STANCE {"x":888,"y":856} ticks 70
+DELAY live {"x":888,"y":856} hits 0
+STAGE 903 (856.3,856.6) hits+ 0 bobsoldier@880,832 is not a body this run steps — the chaser arm needs a live position, and a static census body has none
+DELAY 2 gone
+ms 148286
+REFUSED solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (488,579) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (corpse bump 2, iceturret@472,400): iceturret@472,400 was already on (30,24) 10 tick(s) after the press. A corpse glides at 0.5 px/tick and a tile is 16 px, so arriving inside the press window is a model that moved it instantly rather than one that pushed it.
+obstacle null perTick 0
+ICEST {"handed":[],"kills":[]}
+LWF {"asked":[{"id":"wandlock@448,432","t":0,"taken":true,"turret":"iceturret@472,400","inRange":["iceturret@472,400"]}]}
+TA {"approaches":[{"turret":"iceturret@472,400","t":1875,"side":"right","via":null,"wait":27,"forks":274}]}
+DOOR {"doors":[{"door":"wandlock@480,560","side":"up","cell":{"x":488,"y":568},"turret":"iceturret@472,400","t":0,"ticks":1607,"open":true}]}

@@ -84,12 +84,14 @@ import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
 import {
-    REQUIRE_DIRECTIVE_REFUSALS, parseElementSpec, parseItemRequireList,
+    ELEMENT_LIST_SEP, REQUIRE_DIRECTIVE_REFUSALS, STRATEGY_REQUIRE_PREFIX, parseElementSpec, parseItemRequireList,
 } from '../procgenCore/elementSpec.js';
+import { KEY_GATE } from '../procgenCore/elements/keyGate.js';
 import { parseAreaSpec } from '../procgenCore/areaSpec.js';
+import { markAuthoredRule } from '../procgenCore/authoredRule.js';
 import { GEN_ROOM_LOCATION_CEILING, genRoomFloorCells } from './seedlingGenCapacity.js';
 import {
-    GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
+    BOSS_KEY_ITEM_NAMES, GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
 } from './seedlingGenRoomPayload.js';
 
 export {
@@ -136,25 +138,126 @@ const cellKey = (c) => `${c.tx},${c.ty}`;
  */
 export const CHEST_DOOR_KIND = 'chest-door';
 export const CHEST_DOOR_ITEM = 'Region Library Filler';
+/**
+ * ⛓⛓ seedling gen B1 — **A LOOT CHEST IS AN AP LOCATION THE SAME WAY** (⚖ the user 2026-11-01, *"(e)
+ * Loot/goal chests"*): the draw's `summary.lootChests` (`procgenSeedling.lootChestLocationsOf`) becomes one
+ * row per chest, `kind: 'chest-loot'`, the chest's own cell and FIXED tag, the same filler item (pool +1), never
+ * seated, never replaced by an `apitem`.
+ *
+ * ⛓ THE NAMES ARE UNIQUE PER ROOM BY ONE NUMBERING: every chest of a room is `<region> - Chest`, door chests
+ * first and loot chests after them, the second and later ones suffixed ` 2`, ` 3`, … (`chestRows`). A level
+ * holds one element, so today a room has at most ONE chest and every name is the plain vanilla shape; a room
+ * that held a door chest AND a loot chest would name them `… - Chest` and `… - Chest 2`. A door-chest room's
+ * rows are byte-identical to `chestDoorRows`'.
+ */
+export const CHEST_LOOT_KIND = 'chest-loot';
+/**
+ * ⛓⛓ strategy elements round 2 — **THE KEY GATE'S KEY SPOT IS AN AP LOCATION, AND THE KEY AN AP ITEM** (⚖ the
+ * user 2026-11-03: *"a randomized AP item whose vanilla placement is the key"*). The draw's `summary.bossKeys`
+ * (`procgenSeedling.bossKeyLocationsOf`) becomes one row per key: `kind: 'boss-key'`, the key's own cell and
+ * FIXED tag (never seated: the element chose the cell, the binding the tag), named the vanilla way
+ * (`Level 019 - Boss Key 0` → `<region> - Boss Key <t>`), holding the Seedling world's key ITEM for its type
+ * (`Red Key` for type 0; `BOSS_KEY_ITEMS` is `seedlingAtlasDerivation.ITEM_FOR_KEY`, pinned equal). So the
+ * compiled pool gains that item (+1 location, +1 item) and VANILLA PLACEMENT puts the key on its own spot.
+ *
+ * ⛔ UNLIKE A CHEST the assembler REPLACES the `bosskey` with an `apitem` like any location (⚖ no special
+ * grants: the key reaches the player only through that location's item). And the lock is a LOGIC rule: every
+ * location on the goal cell — behind the lock by the element's cut — requires the key item (`keyRuleOf`).
+ */
+export const BOSS_KEY_KIND = 'boss-key';
+/** The Seedling world's key items by `keyType` (`seedlingAtlasDerivation.ITEM_FOR_KEY`, pinned equal). */
+export const BOSS_KEY_ITEMS = BOSS_KEY_ITEM_NAMES;
+/** `<room> - Boss Key <t>`, vanilla's `Level 019 - Boss Key 0` shape. */
+export const bossKeyLocationName = (regionId, keyType) => `${regionId} - Boss Key ${keyType}`;
 const isChestDoor = (l) => l?.kind === CHEST_DOOR_KIND;
-/** The locations a placer seats (every row but a door chest's). */
-const seatedOf = (world) => world.locations.filter((l) => !isChestDoor(l));
+const isLootChest = (l) => l?.kind === CHEST_LOOT_KIND;
+const isBossKey = (l) => l?.kind === BOSS_KEY_KIND;
+/** A row whose cell and tag are a CHEST's (door or loot): never seated, never replaced. */
+const isChestRow = (l) => isChestDoor(l) || isLootChest(l);
+/** A row whose cell and tag the DRAW fixed (a chest's, or a key spot's): never seated, kept LAST. */
+const isFixedRow = (l) => isChestRow(l) || isBossKey(l);
+/** The locations a placer seats (every row but a fixed one). */
+const seatedOf = (world) => world.locations.filter((l) => !isFixedRow(l));
 
 /** One location row per door chest of the draw's `summary` — `[]` without one. */
 export function chestDoorRows(regionId, summary) {
-    return (summary?.chestDoors ?? []).map((c, k) => ({
-        id: k === 0 ? 'chest_door' : `chest_door_${k + 1}`,
-        name: k === 0 ? chestDoorLocationName(regionId) : `${chestDoorLocationName(regionId)} ${k + 1}`,
-        kind: CHEST_DOOR_KIND,
-        item: CHEST_DOOR_ITEM,
-        cell: { tx: c.cell.tx, ty: c.cell.ty },
-        tag: c.tag,
+    return chestRows(regionId, { chestDoors: summary?.chestDoors });
+}
+
+/** One location row per chest (door chests, then loot chests) of the draw's `summary` — `[]` without one. */
+export function chestRows(regionId, summary) {
+    const all = [
+        ...(summary?.chestDoors ?? []).map((c) => ({ c, kind: CHEST_DOOR_KIND, id: 'chest_door' })),
+        ...(summary?.lootChests ?? []).map((c) => ({ c, kind: CHEST_LOOT_KIND, id: 'chest_loot' })),
+    ];
+    const perKind = new Map();
+    return all.map(({ c, kind, id }, n) => {
+        const k = perKind.get(kind) ?? 0;
+        perKind.set(kind, k + 1);
+        return {
+            id: k === 0 ? id : `${id}_${k + 1}`,
+            name: n === 0 ? chestDoorLocationName(regionId) : `${chestDoorLocationName(regionId)} ${n + 1}`,
+            kind,
+            item: CHEST_DOOR_ITEM,
+            cell: { tx: c.cell.tx, ty: c.cell.ty },
+            tag: c.tag,
+        };
+    });
+}
+
+/** One location row per key spot of the draw's `summary` — `[]` without one. ⛓ ONE key gate per level, so
+ *  the name is unique per room; a second key (none is placed today) would take ` 2` after the type. */
+export function bossKeyRows(regionId, summary) {
+    return (summary?.bossKeys ?? []).map((k, n) => ({
+        id: n === 0 ? 'boss_key' : `boss_key_${n + 1}`,
+        name: n === 0 ? bossKeyLocationName(regionId, k.keyType) : `${bossKeyLocationName(regionId, k.keyType)} ${n + 1}`,
+        kind: BOSS_KEY_KIND,
+        item: BOSS_KEY_ITEMS[k.keyType],
+        cell: { tx: k.cell.tx, ty: k.cell.ty },
+        tag: k.tag,
     }));
 }
 
-/** The world's `summary` from a draw's: `stop`, `keptCount`, and `chestDoors` ONLY when the draw placed one. */
+/** Every FIXED row of a draw: its chests (`chestRows`), then its key spots (`bossKeyRows`). */
+export function fixedRows(regionId, summary) {
+    return [...chestRows(regionId, summary), ...bossKeyRows(regionId, summary)];
+}
+
+/**
+ * ⛓ THE LOCK AS A RULE — a location standing on the GOAL cell of a room with a key spot requires that key's
+ * item (`Has(<key item>)`, ANDed onto its own rule; `True_` becomes the bare `Has`). The goal is behind the lock
+ * BY CONSTRUCTION (the key gate is a CUT between the start and the goal) and every other location stands on
+ * the start side (`locationCells` floods with the lock solid). `null`: no key spot, or not the goal cell.
+ */
+function keyRuleOf(world, loc) {
+    const key = (world.locations ?? []).find(isBossKey);
+    if (!key || !world.goalCell || isFixedRow(loc) || cellKey(loc.cell) !== cellKey(world.goalCell)) return null;
+    return { rule: 'Has', args: { item_name: key.item } };
+}
+
+/** Does `rule` REQUIRE `item` — `Has(item)` itself, or an `And` with it among its children? */
+function ruleHas(rule, item) {
+    if (!rule) return false;
+    if (rule.rule === 'Has' && rule.args?.item_name === item) return true;
+    return rule.rule === 'And' && (rule.children ?? []).some((c) => ruleHas(c, item));
+}
+
+/** `rule` with the room's own key requirement for `loc` ANDed on (unchanged without one). */
+function withKeyRule(world, loc, rule) {
+    const need = keyRuleOf(world, loc);
+    if (!need) return rule;
+    // ⛓ keygate colours — a location the PLANNER already ruled behind the key keeps its rule as is.
+    if (ruleHas(rule, need.args.item_name)) return rule;
+    if (!rule || isTrueRule(rule)) return need;
+    return { rule: 'And', children: [cloneRule(rule), need] };
+}
+
+/** The world's `summary` from a draw's: `stop`, `keptCount`, and `chestDoors` / `lootChests` / `bossKeys` ONLY
+ *  when the draw placed one. */
 const summaryOf = (out) => ({ stop: out.summary.stop ?? null, keptCount: out.summary.keptCount ?? null,
-    ...(out.summary.chestDoors ? { chestDoors: out.summary.chestDoors } : {}) });
+    ...(out.summary.chestDoors ? { chestDoors: out.summary.chestDoors } : {}),
+    ...(out.summary.lootChests ? { lootChests: out.summary.lootChests } : {}),
+    ...(out.summary.bossKeys ? { bossKeys: out.summary.bossKeys } : {}) });
 const around = (c) => [[0, -1], [-1, 0], [1, 0], [0, 1]].map(([dx, dy]) => ({ tx: c.tx + dx, ty: c.ty + dy }));
 
 /** Read one knob of the bag, falling back to the default; strings are trimmed. */
@@ -178,6 +281,100 @@ function knobsOf(params) {
          *  GIVEN, as `require`: absent, `generation` is byte-identical. Normalized sorted, comma-joined. */
         ...(parseTerrainList(bag.terrains).length > 0 ? { terrains: parseTerrainList(bag.terrains).join(',') } : {}),
     };
+}
+
+/** The key gate's element head (`ELEMENT_TABLE` key = the element's family). */
+const KEYGATE_HEAD = KEY_GATE.family;
+const KEYLOCK_REQUIRE = `${STRATEGY_REQUIRE_PREFIX}keylock`;
+const headOf = (member) => member.split(';')[0].trim();
+
+/**
+ * ⛓⛓ keygate colours (slice 2) — **WHICH ITEMS A ROOM UNDER `params` CAN INTRODUCE** (the entry's
+ * `itemIntroduction.introducibleItems`; vocabulary `procgenCore/itemIntroduction.js`). It is the key items of the
+ * colours its key gate may take: all five, in `keyType` order, for a `keygate` with no `type`; the ONE colour of an
+ * explicit `keygate;type=N`; and `[]` when the elements name no key gate. A knob that does not parse answers `[]`
+ * here, because the draw refuses it by name.
+ */
+export function introducibleGenItems(params) {
+    const { elements } = knobsOf(params);
+    if (elements === '') return [];
+    let spec;
+    try { spec = parseElementSpec(elements); } catch { return []; }
+    const gate = (spec.any ?? [spec]).find((m) => m.name === KEYGATE_HEAD);
+    if (!gate) return [];
+    return Number.isInteger(gate.params?.type) ? [BOSS_KEY_ITEMS[gate.params.type]] : [...BOSS_KEY_ITEMS];
+}
+
+/**
+ * The knobs a REQUESTED room draws with (`input.introduce`, `procgenCore/itemIntroduction.js`):
+ *   · asked for key K: the elements become `keygate;type=<K's colour>`, and `strategy:keylock` joins `require`, so
+ *     every draw the budget keeps is a key-gate room the solver grades REQUIRED;
+ *   · asked for NONE (requests on, this room not chosen): the key gate is dropped from the elements, because a key
+ *     the planner did not schedule would move every later sphere.
+ * `generation` spreads these knobs, so a payload re-draws (`redrawGenRoom`) the room it was built as.
+ */
+function requestedKnobs(regionId, knobs, introduce) {
+    const keys = Object.keys(introduce?.items ?? {});
+    if (keys.length > 1) throw new Error(GEN_ROOM_REFUSALS.keygateTwoKeys(regionId, keys));
+    if (keys.length === 0) {
+        const kept = knobs.elements.split(ELEMENT_LIST_SEP).filter((m) => headOf(m) !== KEYGATE_HEAD);
+        return { ...knobs, elements: kept.join(ELEMENT_LIST_SEP) };
+    }
+    const type = BOSS_KEY_ITEMS.indexOf(keys[0]);
+    if (type < 0) throw new Error(GEN_ROOM_REFUSALS.keygateRequest(regionId, keys[0], 'it is not a key item'));
+    const asked = knobs.require ? knobs.require.split(',').map((r) => r.trim()) : [];
+    return {
+        ...knobs,
+        elements: `${KEYGATE_HEAD};type=${type}`,
+        require: [...asked.filter((r) => r !== KEYLOCK_REQUIRE), KEYLOCK_REQUIRE].join(','),
+    };
+}
+
+/**
+ * ⛓⛓ slice 2b — **THE PLAN-LESS MODES' COLOUR** (⚖ the user 2026-11-03, *"Yes, add introduced"*; top-down *"Yes,
+ * allow"*). Nothing requests a key here, so the room takes the LEAST key colour in neither `held` nor `introduced`
+ * (`procgenCore/itemIntroduction.js`: the items already standing at the run's other regions). Distinct by induction:
+ * each room avoids every key standing elsewhere, and a later room sees this one.
+ *   · an untyped `keygate` member becomes `keygate;type=<c>`; for c = 0 (red, the omitted type's own colour) the
+ *     knobs are left exactly as written, so a world's first key-gate room is byte-unchanged;
+ *   · an explicit `keygate;type=N` whose key already stands elsewhere is refused (`keygate-colour-shared`);
+ *   · with all five taken, refused (`keygate-colours-exhausted`).
+ * Draws no rng. A member whose type is a SUBSET (`type=1|3`) draws its own colour and is left alone (the set
+ * assembler's shared-colour backstop still refuses a collision).
+ */
+function allocatedKnobs(regionId, knobs, held, introduced) {
+    if (!knobs.elements) return knobs;
+    const members = knobs.elements.split(ELEMENT_LIST_SEP);
+    const at = members.findIndex((m) => headOf(m) === KEYGATE_HEAD);
+    if (at < 0) return knobs;
+    const standing = (item) => (held?.items?.[item] ?? 0) > 0 || (introduced?.items?.[item] ?? 0) > 0;
+    let gate;
+    try { gate = (parseElementSpec(members[at].trim()).any ?? [parseElementSpec(members[at].trim())])[0]; } catch {
+        return knobs; // the draw refuses an unparsable spec by name
+    }
+    if (Number.isInteger(gate.params?.type)) {
+        const item = BOSS_KEY_ITEMS[gate.params.type];
+        if (standing(item)) throw new Error(GEN_ROOM_REFUSALS.keygateTaken(regionId, item));
+        return knobs;
+    }
+    if (gate.params?.type !== undefined) return knobs;
+    const type = BOSS_KEY_ITEMS.findIndex((item) => !standing(item));
+    if (type < 0) throw new Error(GEN_ROOM_REFUSALS.keygateExhausted(regionId, [...BOSS_KEY_ITEMS]));
+    if (type === 0) return knobs;
+    members[at] = `${KEYGATE_HEAD};type=${type}`;
+    return { ...knobs, elements: members.join(ELEMENT_LIST_SEP) };
+}
+
+/** The one key item a request asks for, or `null`. */
+const requestedKey = (introduce) => Object.keys(introduce?.items ?? {})[0] ?? null;
+
+/**
+ * A draw's fixed rows with a REQUESTED key spot under the pipeline's own location id: the planner placed the key
+ * at that location (`world.introducedIds`), so a re-roll keeps the id the AP logic names.
+ */
+function introducedFixedRows(world, regionId, summary) {
+    const ids = world.introducedIds ?? {};
+    return fixedRows(regionId, summary).map((r) => (isBossKey(r) && ids[r.item] ? { ...r, id: ids[r.item] } : r));
 }
 
 /**
@@ -271,7 +468,9 @@ export function certifyGenRoom(payload, regionId = '?') {
     const targets = [{ name: 'the goal', cell: goal, own: true },
         // ⛓ seedling-gen-chestdoor-ap — a door chest is no pickup cell: the generator's own seam
         //   (`chestDoorBypassRefusal`) is what certifies it; a pickup there would replace the door.
-        ...payload.locations.filter((l) => cellKey(l.cell) !== cellKey(goal) && !isChestDoor(l))
+        //   ⛓ B1 — nor is a loot chest: its row is certified by the generator (a second collect goal).
+        //   ⛓ strategy elements r2 — nor is a key spot: it is the goal solve's FIRST collect (below).
+        ...payload.locations.filter((l) => cellKey(l.cell) !== cellKey(goal) && !isFixedRow(l))
             .map((l) => ({ name: l.name, cell: l.cell, own: false }))];
     for (const t of targets) {
         const x = t.cell.tx * TILE_SIZE;
@@ -283,7 +482,13 @@ export function certifyGenRoom(payload, regionId = '?') {
             record = { ...record, entities: [...(record.entities ?? []).filter((e) => !(e.x === x && e.y === y)),
                 { type: 'torchpickup', x, y, attrs: {} }] };
         }
-        const model = { boot: drawn.model.boot, goals: Object.freeze([collectGoal(x, y)]) };
+        // ⛓ strategy elements r2 — a key gate's lock opens only with its key IN HAND: every target is solved
+        //   after collecting the key spot first (the generator's own goal list, `keyGateGoals`).
+        //   ⛔ ONLY for the goal (the one target behind the lock): a start-side target is certified alone, as
+        //   before — a pickup standing in the corridor would otherwise read as an obstacle on the walk to the key.
+        const keyGoals = !t.own ? [] : payload.locations.filter(isBossKey)
+            .map((k) => collectGoal(k.cell.tx * TILE_SIZE, k.cell.ty * TILE_SIZE));
+        const model = { boot: drawn.model.boot, goals: Object.freeze([...keyGoals, collectGoal(x, y)]) };
         const verdict = seedlingOracle({ model, items }).solve(record).verdict;
         if (verdict !== VERDICT.SOLVED) failures.push(`${t.name} (${String(verdict)})`);
     }
@@ -498,6 +703,22 @@ function safeReach(world) {
     return seen;
 }
 
+/**
+ * ⛓ strategy elements r2 — **THE KEY GATE'S CELLS A DOOR MAY NOT SEAL OR TAKE**: the cell BELOW each `bosslock`
+ * (the stance its key line is walked from) and each `bosskey`'s cell. MEASURED (hook room, drawn seed 0.5): a
+ * door on the stance's only approach left the doors-as-walls re-certification throwing in `keylock` ("the key line
+ * was NEVER touched") instead of refusing. Read off the RECORD, so a room without a key gate gets `[]`.
+ */
+function keyGateCells(record) {
+    return (record.entities ?? []).flatMap((e) => {
+        const tx = Math.floor(e.x / TILE_SIZE);
+        const ty = Math.floor(e.y / TILE_SIZE);
+        if (e.type === 'bosslock') return [{ tx, ty: ty + 1 }];
+        if (e.type === 'bosskey') return [{ tx, ty }];
+        return [];
+    });
+}
+
 /** The goal cell's neighbours: no door may stand there (the approach would be the check). */
 function goalGuard(goalCell) {
     return new Set(around(goalCell).map(cellKey));
@@ -513,9 +734,11 @@ function goalGuard(goalCell) {
 export function pickGenRoomDoors(record, start, goalCell, doorCount, items, room = '?') {
     const lethal = hazardCells(record);
     const hazards = hazardCells(record, items);
+    // ⛓ strategy elements r2 — a key gate's stance and key: never a door, always reachable (`[]` without one).
+    const keyCells = keyGateCells(record);
     return pickDoorCells(record, start, doorCount, {
-        room, exclude: new Set([...goalGuard(goalCell), ...lethal]),
-        keepReachable: { walls: hazards, approachWalls: lethal, cells: [goalCell] },
+        room, exclude: new Set([...goalGuard(goalCell), ...lethal, ...keyCells.map(cellKey)]),
+        keepReachable: { walls: hazards, approachWalls: lethal, cells: [goalCell, ...keyCells] },
     }).doors;
 }
 
@@ -597,10 +820,17 @@ const originOf = (world) => world.generation?.grownFrom ?? world.size;
  * yet. `entrances`, the libraries and `biome` are accepted and IGNORED.
  */
 export function generateGenRoom(input = {}) {
-    const { region_id: regionId, exits = [], size = { width: 10, height: 10 }, rng, params } = input;
+    const {
+        region_id: regionId, exits = [], size = { width: 10, height: 10 }, rng, params, introduce, held, introduced,
+    } = input;
     if (!regionId) throw new Error(GEN_ROOM_REFUSALS.noRegionId());
     const drawn = ((rng.next() * 0x7fffffff) | 0) || 1;
-    const knobs = knobsOf(params);
+    // ⛓ keygate colours — a REQUESTED room draws the asked-for gate (or none). ⛓ slice 2b — an unrequested room
+    //   handed `introduced` (the plan-less modes) takes a colour no other room holds. Otherwise unchanged.
+    const colourFromRun = !introduce && introduced != null;
+    const knobs = introduce ? requestedKnobs(regionId, knobsOf(params), introduce)
+        : colourFromRun ? allocatedKnobs(regionId, knobsOf(params), held, introduced) : knobsOf(params);
+    const askedKey = requestedKey(introduce);
     let draw; let rerolls = 0;
     // ⛓ G2 (⚖ planner): a room that cannot seat its doors UNSEALED is re-rolled —
     //   `rerollSeed(drawn, k)`, no engine rng consumed, so a room that seats on the
@@ -618,16 +848,25 @@ export function generateGenRoom(input = {}) {
         /** ⛓ S1, D4 — a `require` gets the per-size budget and no growth (a bigger
          *  room is not a likelier sword gate), then it is refused BY NAME. */
         cause = draw.err.requireUnmet ? GEN_ROOM_REROLL_CAUSES.require : GEN_ROOM_REROLL_CAUSES.doors;
-        if (draw.err.requireUnmet && k >= GEN_ROOM_DOOR_REROLLS) {
+        // ⛓ keygate colours — a REQUESTED key gate is not a sword gate: a bigger room IS a likelier one (the
+        //   element needs a cut with a stance pocket below it), so it takes the WHOLE ladder, growth included,
+        //   and is refused by its own name only after the last attempt (below).
+        if (draw.err.requireUnmet && k >= GEN_ROOM_DOOR_REROLLS && !askedKey) {
             throw new Error(GEN_ROOM_REFUSALS.requireNotMet(regionId, draw.seed, draw.record, knobs.require,
                 GEN_ROOM_DOOR_REROLLS, draw.err.requireUnmet));
         }
+    }
+    if (draw.err?.requireUnmet && askedKey) {
+        throw new Error(GEN_ROOM_REFUSALS.keygateRequest(regionId, askedKey, draw.err.requireUnmet));
     }
     if (draw.err) {
         throw new Error(GEN_ROOM_REFUSALS.tooManyDoors(regionId, draw.seed, draw.record, exits.length, draw.err.message,
             grownRefusal(size, last)));
     }
     const { seed, out, record, start, goalCell, doors } = draw;
+    if (askedKey && !(out.summary.bossKeys ?? []).some((k) => BOSS_KEY_ITEMS[k.keyType] === askedKey)) {
+        throw new Error(GEN_ROOM_REFUSALS.keygateRequest(regionId, askedKey, 'the kept draw placed no key gate of that colour'));
+    }
     const nextSide = sideAssigner(exits);
     const defaultExitId = (i) => (exits.length === 1 ? 'exit' : `exit_${i}`);
     const roomExits = new Map();
@@ -659,8 +898,12 @@ export function generateGenRoom(input = {}) {
             drawnSeed: drawn,
             exits: roomExits,
             // ⛓ seedling-gen-chestdoor-ap — the door chests' rows, AFTER the draw (`[]` without one).
-            locations: chestDoorRows(regionId, out.summary),
+            locations: fixedRows(regionId, out.summary),
             summary: summaryOf(out),
+            // ⛓ keygate colours — the pipeline's request, ONLY when there is one (never serialized).
+            ...(introduce ? { introduce } : {}),
+            // ⛓ slice 2b — the colour came from `introduced` (never serialized; lifts the ordinal>0 refusal).
+            ...(colourFromRun ? { keyColourFromRun: true } : {}),
         },
         exits_placed: [...roomExits.values()].map(({ exit_id: exitId, side }) => ({ exit_id: exitId, side })),
     };
@@ -754,7 +997,11 @@ export function rerollGenRoom(world, entries, rows, cause) {
     //   (their location ids are the AP logic's, which a re-roll never moves). Their rows are re-derived from
     //   the new draw, never seated.
     const chests = world.locations.filter(isChestDoor).length;
-    rows = rows.filter((r) => !isChestDoor(r));
+    // ⛓ B1 — and as many loot chests, by the same law.
+    const loots = world.locations.filter(isLootChest).length;
+    // ⛓ strategy elements r2 — and as many key spots, by the same law.
+    const keys = world.locations.filter(isBossKey).length;
+    rows = rows.filter((r) => !isFixedRow(r));
     const origin = originOf(world);
     const last = lastAttempt(origin);
     let err = null;
@@ -771,6 +1018,16 @@ export function rerollGenRoom(world, entries, rows, cause) {
                 + `${draw.out.summary.chestDoors?.length ?? 0} door chest(s), and the room declared ${chests}`);
             continue;
         }
+        if ((draw.out.summary.lootChests?.length ?? 0) !== loots) {
+            err = new Error(`levelSetExits: room '${world.region_id}' seed ${draw.seed} holds `
+                + `${draw.out.summary.lootChests?.length ?? 0} loot chest(s), and the room declared ${loots}`);
+            continue;
+        }
+        if ((draw.out.summary.bossKeys?.length ?? 0) !== keys) {
+            err = new Error(`levelSetExits: room '${world.region_id}' seed ${draw.seed} holds `
+                + `${draw.out.summary.bossKeys?.length ?? 0} key spot(s), and the room declared ${keys}`);
+            continue;
+        }
         const bound = entries.map(([key, e], i) => [key, { ...e, ...doorFields(draw.doors[i]) }]);
         const size = { width: draw.record.width, height: draw.record.height };
         const room = {
@@ -782,7 +1039,7 @@ export function rerollGenRoom(world, entries, rows, cause) {
             goalCell: draw.goalCell,
             generation: generationAfter(knobs, k, cause, origin, size),
             exits: new Map(bound),
-            locations: chestDoorRows(world.region_id, draw.out.summary),
+            locations: introducedFixedRows(world, world.region_id, draw.out.summary),
             summary: summaryOf(draw.out),
         };
         const seats = seatsFor(room, rows);
@@ -838,7 +1095,7 @@ function seatRows(world, rows, free) {
         reserved.push(tag);
         seated.push({ ...row, cell: { ...free[k] }, tag });
     });
-    world.locations = [...seated, ...world.locations.filter(isChestDoor)];
+    world.locations = [...seated, ...world.locations.filter(isFixedRow)];
 }
 
 /**
@@ -881,7 +1138,25 @@ export function placeGenRules(world, input = {}) {
         else exit.access_rule = cloneRule(rule);
     }
     const itemByLocation = Object.fromEntries(placements.map((p) => [p.location_id, p.item_id]));
-    const order = [...new Set([...Object.keys(locationRules), ...placements.map((p) => p.location_id)])];
+    let order = [...new Set([...Object.keys(locationRules), ...placements.map((p) => p.location_id)])];
+    // ⛓⛓ keygate colours — A REQUESTED KEY (`world.introduce`): the spec location holding the key IS the draw's key
+    //   spot (it takes that row's cell and tag, under the spec's id), and the location(s) ruled behind the key are
+    //   seated FIRST, so location 0 (the goal cell, behind the lock) is one of them.
+    const askedKey = requestedKey(world.introduce);
+    const introduced = [];
+    if (askedKey) {
+        const keyId = order.find((id) => itemByLocation[id] === askedKey);
+        const spot = world.locations.find((l) => isBossKey(l) && l.item === askedKey);
+        if (keyId === undefined || !spot) {
+            throw new Error(GEN_ROOM_REFUSALS.keygateRequest(world.region_id ?? '?', askedKey,
+                keyId === undefined ? 'no spec location holds the key' : 'the room holds no key spot of that colour'));
+        }
+        spot.id = keyId;
+        world.introducedIds = { [askedKey]: keyId };
+        introduced.push({ id: keyId, item: askedKey });
+        const behind = (id) => ruleHas(locationRules[id], askedKey);
+        order = [...order.filter((id) => id !== keyId && behind(id)), ...order.filter((id) => id !== keyId && !behind(id))];
+    }
     const rows = order.map((id) => {
         const rule = locationRules[id];
         return {
@@ -891,10 +1166,11 @@ export function placeGenRules(world, input = {}) {
         };
     });
     addLocations(world, rows);
+    const all = [...introduced, ...rows];
     return {
         placed_logic_gates: [],
-        placed_items: rows.filter((r) => r.item != null).map((r) => ({ item_id: r.item, location_id: r.id })),
-        placed_locations: rows.map((r) => ({ location_id: r.id })),
+        placed_items: all.filter((r) => r.item != null).map((r) => ({ item_id: r.item, location_id: r.id })),
+        placed_locations: all.map((r) => ({ location_id: r.id })),
     };
 }
 
@@ -914,12 +1190,15 @@ export function extractGenRules(world, opts = {}) {
             target_region: e.targetRegion ?? null,
             access_rule: cloneRule(e.access_rule ?? TRUE_RULE),
         })),
-        locations: world.locations.map((l) => ({
+        // ⛓ procgen-region-authored-rules — the key requirement is the room's OWN rule, MARKED so a driver that
+        //   replaces the extracted rule with its spec's (sphere growth, top-down) ANDs it on instead.
+        locations: world.locations.map((l) => markAuthoredRule({
             id: l.id,
             item: l.item ?? null,
-            access_rule: cloneRule(l.access_rule ?? TRUE_RULE),
+            // ⛓ strategy elements r2 — the lock as a rule: the goal cell requires the room's key item.
+            access_rule: cloneRule(withKeyRule(world, l, l.access_rule ?? TRUE_RULE)),
             ...(l.name ? { global_name: l.name } : {}),
-        })),
+        }, keyRuleOf(world, l))),
     };
 }
 
@@ -951,7 +1230,11 @@ function bindAllDoors(world, entries) {
         walls,
         approachWalls: new Set([...lethal, ...doorWalls]),
         // ⛓ a door chest's cell is SOLID (the chest): it is never a cell to keep reachable.
+        //   ⛓ B1 — a loot chest's is solid too, and its STANCE (the cell below) is what must stay reachable.
         cells: [world.goalCell, ...seatedOf(world).map((l) => l.cell),
+            ...world.locations.filter(isLootChest).map((l) => ({ tx: l.cell.tx, ty: l.cell.ty + 1 })),
+            // ⛓ strategy elements r2 — a key gate's stance and key (`[]` without one).
+            ...keyGateCells(world.record),
             ...bound.map(([, e]) => ({ tx: e.entrance_spawn.x / TILE_SIZE, ty: e.entrance_spawn.y / TILE_SIZE }))],
     };
     const pick = (ex) => pickDoorCells(world.record, world.start, unbound.length, {
@@ -1053,13 +1336,36 @@ export function serializeGenRoom(world, extractedRules, _obstacleLib, _itemLib, 
             name,
             ...(l.item != null ? { item: l.item } : {}),
             // ⛓ seedling-gen-chestdoor-ap — ONLY on a door chest's row, so no other payload moves.
-            ...(isChestDoor(l) ? { kind: CHEST_DOOR_KIND } : {}),
+            ...(isFixedRow(l) ? { kind: l.kind } : {}),
             cell: { ...l.cell },
             tag: l.tag,
-            ...(l.access_rule && !isTrueRule(l.access_rule) ? { access_rule: cloneRule(l.access_rule) } : {}),
+            ...(() => {
+                // ⛓ strategy elements r2 — the goal cell's key requirement rides the payload's rule too.
+                const rule = withKeyRule(room, l, l.access_rule ?? null);
+                return rule && !isTrueRule(rule) ? { access_rule: cloneRule(rule) } : {};
+            })(),
         };
     });
     const ordinal = context?.ordinalOfRegion?.(world.region_id);
+    // ⛓ strategy elements r2 — ⚖ "B: Distinct colour per room", until the pipeline allocates colours: a key gate
+    //   past generated room #0 is REFUSED BY NAME (`keygate-colour-not-allocated`), never shipped in a colour
+    //   another room may also hold. Conservative: a world whose room #0 placed none is refused too (named limit).
+    // ⛓ keygate colours — LIFTED for a REQUESTED key: the planner gave this room a colour no other room holds.
+    // ⛓ slice 2b — LIFTED too where the room was handed `introduced`: its colour is one no other room holds.
+    if (room.locations.some(isBossKey) && !requestedKey(room.introduce) && !room.keyColourFromRun
+            && Number.isInteger(ordinal) && ordinal > 0) {
+        throw new Error(GEN_ROOM_REFUSALS.keygateColour(world.region_id, ordinal));
+    }
+    // ⛓ strategy elements r2 — the lock as a rule MUST reach the world: every location behind the lock carries
+    //   `Has(<key item>)` in its FINAL rule (the one the engine compiles), else refused by name.
+    for (const l of room.locations) {
+        const need = keyRuleOf(room, l);
+        const final = extractedLocations.get(l.id)?.access_rule;
+        if (need && !ruleHas(final, need.args.item_name)) {
+            throw new Error(GEN_ROOM_REFUSALS.keygateRule(world.region_id,
+                extractedLocations.get(l.id)?.global_name ?? l.name ?? l.id, need.args.item_name));
+        }
+    }
     return {
         gameId: 'seedling',
         generated: true,

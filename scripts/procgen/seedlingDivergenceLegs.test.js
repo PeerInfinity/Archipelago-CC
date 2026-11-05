@@ -255,23 +255,26 @@ describe('the committed playthrough\'s leg list', () => {
         // ⛓ rules-sided-openers: the SAME legs by key, every id from 107 on shifted — the two new ShieldLock events are
         //   locations, so L12 r0c19's seven arrivals each gain a leg to `L12 flag 10` (+1 at 107, 118, 129, 140, 151, 162,
         //   173) and L20 r1c4's L19 arrival one to `L20 flag 0` (+1 at 229): +7 from 107…, +8 from 229 on.
+        // ⛓ tile-lay-l40-latches: the SAME legs by key, every id from 374 on shifted by +2 and from 379 by +4 — L40 r0c53's
+        //   two arrivals (in_L41_0_160, in_L42_240_336) each gain a leg to its two in-room presses (L40 flag 1, flag 7; legs
+        //   372-373, 377-378). L40 flag 12's press stands in r48c54, which no AP exit lands in: no door leg.
         expect(by).toEqual({
             'flag:L0:4': [45], 'flag:L0:1': [97, 108, 119, 130, 141, 152, 163], 'flag:L24:0': [180],
             'flag:L16:0': [206, 208, 210, 212, 214, 216, 218, 220], 'flag:L39:8': [358],
-            'flag:L62:0': [526, 531, 536, 541, 546, 577], 'flag:L63:1': [528, 533, 538, 543, 548, 552, 557, 562, 567],
-            'flag:L63:6': [580, 582], 'flag:L63:7': [583],
-            'flag:L71:2': [632, 634], 'flag:L12:7+flag:L12:12': [652], 'flag:L101:0': [758],
-            'flag:L112:1': [802, 803, 809, 810, 816, 817, 823, 824, 830, 831],
-            'flag:L114:0': [804, 805, 806, 811, 812, 813, 818, 819, 820, 825, 826, 832, 833],
-            'flag:L113:0': [841, 842, 843, 844],
+            'flag:L62:0': [530, 535, 540, 545, 550, 581], 'flag:L63:1': [532, 537, 542, 547, 552, 556, 561, 566, 571],
+            'flag:L63:6': [584, 586], 'flag:L63:7': [587],
+            'flag:L71:2': [636, 638], 'flag:L12:7+flag:L12:12': [656], 'flag:L101:0': [762],
+            'flag:L112:1': [806, 807, 813, 814, 820, 821, 827, 828, 834, 835],
+            'flag:L114:0': [808, 809, 810, 815, 816, 817, 822, 823, 824, 829, 830, 836, 837],
+            'flag:L113:0': [845, 846, 847, 848],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[805].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[809].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
-        expect(legs[526].sphere.inventory).not.toContain('Ghost Spear');
-        expect(legs[528].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
+        expect(legs[530].sphere.inventory).not.toContain('Ghost Spear');
+        expect(legs[532].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
         // a goal that needs no event keeps no goalEvents key at all (its row is byte-identical)
         expect(legs.filter((l) => !l.goalEvents).every((l) => !('goalEvents' in l))).toBe(true);
     });
@@ -299,7 +302,10 @@ describe('the committed playthrough\'s leg list', () => {
         //   contact, never a solid, so their arrivals are never inside one either)
         // ⛓ RULES yeti-event: + the L58 Yeti's talk (`action.gates`: the portal to L46, never a solid)
         // ⛓ RULES l63-darktrap: + the four in-room poles (L63:6, L63:7, L65:0, L101:0)
-        expect([...PRESS].sort()).toEqual(['flag:L101:0', 'flag:L114:0', 'flag:L16:0', 'flag:L28:0', 'flag:L39:8', 'flag:L58:1',
+        // ⛓ RULES l20-button-latch: + L20's in-room press (L20:4: its barrier is an internal lock, no landing is inside it)
+        // ⛓ tile-lay-l40-latches: + L40's three in-room presses (L40:1, L40:7, L40:12: their wand locks wall no crossing)
+        expect([...PRESS].sort()).toEqual(['flag:L101:0', 'flag:L114:0', 'flag:L16:0', 'flag:L20:4', 'flag:L28:0', 'flag:L39:8',
+            'flag:L40:1', 'flag:L40:12', 'flag:L40:7', 'flag:L58:1',
             'flag:L62:0', 'flag:L63:1', 'flag:L63:6', 'flag:L63:7', 'flag:L65:0']);
         // the ARRIVAL's staging only (a goal event stages for the goal, never for the landing)
         const arrivalStaged = legs.filter((l) => l.arrive.events && l.stagedEvents)

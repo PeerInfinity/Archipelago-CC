@@ -470,14 +470,23 @@ export function deriveRegionLogic(world, helpers, { pickups = 'ap', tileLib = MA
     const axis = latticeAxis(items, levels);
     const top = fullPoint(axis);
     const full = reachUnder(world, top, helpers, { pickups, tileLib });
-    const targets = regionTargets(world).map((t) => ({
-        ...t, minimal: [], witnesses: [], unreachable: !reachedTarget(full, t, top.filter((i) => i !== t.event), world),
-    }));
+    // ⛓ An event target is priced WITHOUT its event (session tile-lay-l40-latches; `deriveEntryLogic`'s twin): when the
+    // top search (which holds it) does not take it, the search of top \ {its event} is asked, once per such event.
+    const without = new Map();
+    const takenWithout = (t, own) => {
+        if (!without.has(t.event)) without.set(t.event, reachUnder(world, own, helpers, { pickups, tileLib }));
+        return reachedTarget(without.get(t.event), t, own, world);
+    };
+    const targets = regionTargets(world).map((t) => {
+        const own = top.filter((i) => i !== t.event);
+        const reached = reachedTarget(full, t, own, world) || (t.event !== undefined && own.length < top.length && takenWithout(t, own));
+        return { ...t, minimal: [], witnesses: [], unreachable: !reached };
+    });
     const live = targets.filter((t) => !t.unreachable);
     const covered = (t, set) => t.minimal.some((m) => pointCovers(set, m));
-    let searched = 1;
+    let searched = 1 + without.size;
     let skipped = 0;
-    let states = full.states;
+    let states = full.states + [...without.values()].reduce((n, r) => n + r.states, 0);
     for (const set of latticePoints(axis)) {
         if (live.every((t) => covered(t, set))) { skipped += 1; continue; }
         const reach = reachUnder(world, set, helpers, { pickups, tileLib });

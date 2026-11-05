@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import {
-    crossRoomButtonsOf, crossRoomPrerequisitesOf, deriveButtonEvents, deriveLockEvents, deriveTalkEvents, deriveObstacleEvents, persistenceEffect, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
+    crossRoomButtonsOf, inRoomLatchButtonsOf, IN_ROOM_PRESS_GATE_KIND, crossRoomPrerequisitesOf, deriveButtonEvents, deriveLockEvents, deriveTalkEvents, deriveObstacleEvents, persistenceEffect, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
     parseSolidId, poleKillsOf, poleLightReaches, POLE_LIGHT_ARM, rowVerdict, ruleItemNames,
     deriveInRoomPoleEvents, inRoomPolesOf, poleThrustStances, BUTTON_GATE_KIND, IN_ROOM_POLE_GATE_KIND,
     deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges, ropePeerEffect, ropesOf, ropeVerdict,
@@ -249,6 +249,90 @@ describe('cross-room button events (deriveButtonEvents) — RULES l38-button-eve
         const l38 = rows.find((r) => r.presser.level === 38 && r.presser.x === 32 && r.presser.y === 48);
         expect(l38.write).toEqual({ level: 39, tag: 8, value: false });
         expect(l38.targets).toEqual([plug]);
+    });
+});
+
+// ⛓ RULES l20-button-latch — an IN-ROOM latching ButtonRoom through the same derivation: its flag is its OWN tag
+// (`ButtonRoom.as:96`), its gates are INTERNAL crossings (`internalExitGates`), and a target no crossing passes through
+// mints nothing.
+describe('in-room latching button events (inRoomLatchButtonsOf + deriveButtonEvents) — RULES l20-button-latch', () => {
+    const MAP = JSON.parse(readFileSync(new URL('./atlases/seedling-map.json', import.meta.url), 'utf8'));
+    const rows = inRoomLatchButtonsOf(MAP);
+    const l20 = rows.find((r) => r.presser.level === 20);
+    const NAME = 'L20 flag 4: lock@32,80 cleared';
+    const ictx = (over = {}) => ({
+        effect: (t) => (t.type === 'lock' && t.publish ? { effect: 'opens', why: 'latched' } : { effect: null, why: 'not a lock' }),
+        pricedByButton: () => ({ free: true, why: 'only opener' }),
+        place: (p) => ({ region_id: `level_${p.level}`, sub_region: 'r1c12', side: `level_${p.level}__r1c12` }),
+        reach: () => null,
+        gates: (t) => (t.level === 20 ? [{ region_id: 'level_20', from: 'r1c4', to: 'r3c1' }, { region_id: 'level_20', from: 'r3c1', to: 'r1c4' }] : []),
+        ...over,
+    });
+
+    it('the census: every room == -1 ButtonRoom with a tset and a tag; the write is its OWN tag, cleared; targets share its tset', () => {
+        const all = MAP.levels.flatMap((l) => l.entities.filter((e) => e.type === 'buttonroom' && Number(e.attrs.room) === -1
+            && Number(e.attrs.tset) >= 0 && Number(e.attrs.tag) >= 0));
+        expect(rows).toHaveLength(all.length);
+        expect(rows.every((r) => r.presser.room === -1 && r.write.level === r.presser.level && r.write.value === false)).toBe(true);
+        expect(l20.presser).toEqual({ level: 20, x: 192, y: 16, t: 0, tag: 4, flip: false, room: -1 });
+        expect(l20.write).toEqual({ level: 20, tag: 4, value: false });
+        expect(l20.targets).toEqual([{ level: 20, type: 'lock', x: 32, y: 80, tset: 0, tag: 4, inRoom: true, publish: true }]);
+        // the cross-room census is unchanged by it: the two sets are disjoint
+        expect(crossRoomButtonsOf(MAP).some((r) => r.presser.room === -1)).toBe(false);
+    });
+
+    it('one event in the BUTTON\'s flag at the button, its gates on the INTERNAL crossings; no exit gate', () => {
+        const out = deriveButtonEvents([l20], ictx());
+        expect(out.events).toHaveLength(1);
+        expect(out.events[0]).toMatchObject({ region_id: 'level_20', sub_region: 'r1c12', name: NAME, access_rule: null });
+        expect(out.events[0].fields).toMatchObject({
+            event_id: 'flag:L20:4', obstacle: { level: 20, tag: 4, class: 'lock', x: 32, y: 80 },
+            action: { verb: 'press', item: null, presser: { level: 20, class: 'buttonroom', x: 192, y: 16 } },
+            side: 'level_20__r1c12', across: [],
+        });
+        expect(out.exitGates).toEqual([]);
+        const has = { rule: 'Has', args: { item_name: NAME } };
+        expect(out.internalExitGates).toEqual([
+            { region_id: 'level_20', from: 'r1c4', to: 'r3c1', kind: IN_ROOM_PRESS_GATE_KIND, rule: has },
+            { region_id: 'level_20', from: 'r3c1', to: 'r1c4', kind: IN_ROOM_PRESS_GATE_KIND, rule: has },
+        ]);
+    });
+
+    it('⛓ tile-lay-l40-latches: a target no crossing passes through still MINTS its press\'s event, with NO gate; a non-lock target is skipped by its effect', () => {
+        const l40 = rows.filter((r) => r.presser.level === 40);
+        expect(l40.length).toBe(3);
+        const out = deriveButtonEvents(l40, ictx({ effect: () => ({ effect: 'opens', why: 'latched' }) }));
+        expect(out.internalExitGates).toEqual([]);
+        expect(out.exitGates).toEqual([]);
+        expect(out.skipped).toEqual([]);
+        // ONE PRESS, ONE EVENT: in the BUTTON's flag (the N in "flag N" is the button's own tag, not a target's), named after
+        // its FIRST target in map order, and its record lists EVERY target when there are several (rules-4, 2026-11-03)
+        expect(out.events.map((e) => [e.fields.event_id, e.name, e.fields.targets?.length ?? 1])).toEqual([
+            ['flag:L40:1', 'L40 flag 1: wandlock@176,80 cleared', 2],
+            ['flag:L40:7', 'L40 flag 7: wandlock@208,128 cleared', 3],
+            ['flag:L40:12', 'L40 flag 12: wandlock@480,560 cleared', 1],
+        ]);
+        const t0 = out.events.find((e) => e.fields.event_id === 'flag:L40:7');
+        expect(t0.fields.targets.map((t) => `${t.class}@${t.x},${t.y}`)).toEqual(['wandlock@208,128', 'wandlock@208,144', 'wandlock@208,160']);
+        expect(t0.fields.targets.every((t) => t.tag === 7)).toBe(true);
+        expect(out.events.find((e) => e.fields.event_id === 'flag:L40:12').fields.targets).toBeUndefined();
+        const l38 = deriveButtonEvents(rows.filter((r) => r.presser.level === 38), ictx());
+        expect(l38.events).toEqual([]);
+        expect(l38.skipped.every((x) => /solid in neither state \(not a lock\)/.test(x))).toBe(true);
+    });
+
+    it('two DIFFERENT in-room pressers on one flag are refused by name (one ButtonRoom writes one tag)', () => {
+        const t0 = rows.find((r) => r.presser.level === 40 && r.presser.tag === 7);
+        const twin = { ...t0, presser: { ...t0.presser, x: t0.presser.x + 16 } };
+        expect(() => deriveButtonEvents([t0, twin], ictx({ effect: () => ({ effect: 'opens', why: 'latched' }) })))
+            .toThrow(/flag:L40:7 is already this slice's event for another button/);
+    });
+    it('a CROSS-ROOM target no crossing passes through is still skipped by name (its gates() is the one that throws)', () => {
+        const t0 = rows.find((r) => r.presser.level === 40 && r.presser.tag === 7);
+        const cross = { ...t0, targets: t0.targets.map((t) => ({ ...t, inRoom: false })) };
+        const out = deriveButtonEvents([cross], ictx({ effect: () => ({ effect: 'opens', why: 'x' }) }));
+        expect(out.events).toEqual([]);
+        expect(out.skipped.every((x) => /: no crossing passes through it$/.test(x))).toBe(true);
     });
 });
 

@@ -6245,7 +6245,10 @@ export const CATALOGUE = frz({
         "chestdoor",
         "burngate",
         "holdgate",
-        "weighgate"
+        "weighgate",
+        "chestloot",
+        "keygate",
+        "baitgate"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -6693,6 +6696,43 @@ export const CATALOGUE = frz({
             "needs": [],
             "params": [],
             "why": "The WEIGH GATE (the L15 pattern): a `lock` on a main-path cut, a momentary `button` of its group off the main path, and one `pushableblock` a shove short of the button. Certified by the solver's `weigh` (the block parked on the button holds the lock open)."
+        },
+        {
+            "defaultIn": [],
+            "head": "chestloot",
+            "module": "chest-loot",
+            "needs": [],
+            "params": [],
+            "why": "The LOOT CHEST (seedling gen B1): a `chest` on a floor cell OFF the main path, opened from the cell directly below it, a nook preferred. Gates nothing; certified by a plan that opens it (the chest is a second collect goal). Its seal piece is an AP location."
+        },
+        {
+            "defaultIn": [],
+            "head": "keygate",
+            "module": "key-gate",
+            "needs": [],
+            "params": [
+                {
+                    "default": 0,
+                    "domain": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                    ],
+                    "key": "type",
+                    "why": "the key type — the lock's and its key's colour, one of the game's five (0 red, 1 green, 2 purple, 3 blue, 4 yellow). ⛓ A pipeline world gives each key-gate room its own (⚖ \"B: Distinct colour per room\"); an omitted `type` is 0, never drawn."
+                }
+            ],
+            "why": "The KEY GATE (the L19 pattern): a `bosslock` in the only gap of a wall on a main-path cut, opened from the cell directly below it, and its `bosskey` on the start side, off the main path when it can be. Certified by the solver's `keylock` (collect the key, walk the key line)."
+        },
+        {
+            "defaultIn": [],
+            "head": "baitgate",
+            "module": "bait-gate",
+            "needs": [],
+            "params": [],
+            "why": "The BAIT GATE (the L6 pattern): a live `bob` on a main-path cut and one `water` cell (the lure) on the start side beside the door's approach. Certified by the solver's `bait` rung (stand where the chase line crosses the water, and wait for the body to drown)."
         }
     ],
     "itemsElementsNeed": [

@@ -1,0 +1,7 @@
+      Tests  2 failed | 4081 passed | 1 skipped (4084)
+     × REFUSED at the gate (hits > 0) is STRONG; the solve asked disable:[verb] at the same budget 12ms
+     × the shipped defaults: all three ON 36ms
+ FAIL  frontend/modules/seedlingDemo/contactFidelity.test.js > contact witnesses (fixtures/contact-witness) > the shipped defaults: all three ON
+ FAIL  frontend/modules/seedlingDemo/procgenRequirementsStrategy.test.js > requirementsFor — the strategy arm (strategy switch r1, D2) > REFUSED at the gate (hits > 0) is STRONG; the solve asked disable:[verb] at the same budget
+ Test Files  2 failed | 158 passed (160)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
 import {
-    canHostCloudberryExitGates, cloudberryAttemptArgs, cloudberryAttemptSeed, emitCloudberryZone,
+    canHostCloudberryExitGates, cloudberryAttemptArgs, cloudberryHeroPhsxText, cloudberryAttemptSeed, emitCloudberryZone,
     planCloudberryLevel, readCloudberryDocument, splitCloudberryRequirement,
 } from './cloudberryZonePlan.js';
 import {
@@ -10,6 +10,7 @@ import {
 } from './cloudberryGeneration.js';
 import { substrateRegistryEntry, generateCloudberryZoneForSpecsGen } from './cloudberryLibrary.js';
 import { CLOUDBERRY_LIBRARY_OBSTACLES } from './cloudberryRules.js';
+import { cloudberryRefusalMessage } from './cloudberryGeneration.js';
 
 const SHA = 'a'.repeat(64);
 
@@ -27,7 +28,13 @@ function fakeDoc(plan, { args = plan.args, withoutStartDoor = false, coinsPerPie
     const { reroll, ...request } = args;
     return {
         args: { request: { ...request, rerolls: plan.pieceSets.map(() => 0) } },
-        level: { heroAbility: { JetPack: !!args.heroCustom } },
+        level: {
+            ...(args.heroCustom ? { heroPhsx: cloudberryHeroPhsxText(args.heroCustom), heroPhsxClamped: [] } : {}),
+            heroAbility: {
+                JetPack: args.heroCustom?.move === 'Jetpack',
+                NumJumps: args.heroCustom?.move === 'Double' ? args.heroCustom.phsx?.numjumps ?? 2 : 1,
+            },
+        },
         goal: withoutStartDoor ? { door: [1, 1] } : { startDoor: [0, 0], door: [1, 1] },
         seedPieces,
         coins: { count: coins.length, list: coins },
@@ -134,6 +141,46 @@ describe('planCloudberryLevel', () => {
         expect(a.args).toEqual(b.args);
     });
 
+    it('a Double Jump entry gate makes a Double-hero level by the chance (rng draw 4, P5a)', () => {
+        const entry = { entrance: { side: 'W', requirement: ['Double Jump'], counts: {} } };
+        const dj = planCloudberryLevel(specs({ cloudberry: { cloudberryDoubleJumpChance: 1 } }), entry);
+        expect(dj.args.heroCustom).toEqual({ move: 'Double', phsx: { numjumps: 2 } });
+        expect(dj.doubleJump).toBe(true);
+        const none = planCloudberryLevel(specs({ cloudberry: { cloudberryDoubleJumpChance: 0 } }), entry);
+        expect(none.args.heroCustom).toBeUndefined();
+        expect('doubleJump' in none).toBe(false);
+        // Without Double Jump in the entry gate the chance draws nothing (a world without it plans what it planned before).
+        const a = planCloudberryLevel(specs({ cloudberry: { cloudberryDoubleJumpChance: 0.5 } }), ctx);
+        const b = planCloudberryLevel(specs({ cloudberry: { cloudberryDoubleJumpChance: 0.9 } }), ctx);
+        expect(a.args).toEqual(b.args);
+        expect(a.key).toBe(planCloudberryLevel(specs(), ctx).key);
+    });
+
+    it('Jetpack + Double Jump in one entry gate: ONE ability hero, the Jetpack draw first (P5a)', () => {
+        const both = { entrance: { side: 'W', requirement: ['Jetpack', 'Double Jump'], counts: {} } };
+        const jet = planCloudberryLevel(specs({ cloudberry: { cloudberryJetpackChance: 1, cloudberryDoubleJumpChance: 1 } }), both);
+        expect(jet.args.heroCustom).toEqual({ move: 'Jetpack', phsx: { jetpackfuel: 1 } });
+        expect(jet.jetpack).toBe(true);
+        expect(jet.doubleJump).toBeUndefined();
+        const dj = planCloudberryLevel(specs({ cloudberry: { cloudberryJetpackChance: 0, cloudberryDoubleJumpChance: 1 } }), both);
+        expect(dj.args.heroCustom.move).toBe('Double');
+        expect(dj.jetpack).toBe(false);
+        // Over many seeds no plan is both, and both kinds occur.
+        const kinds = new Set();
+        for (let seed = 1; seed <= 60; seed++) {
+            const p = planCloudberryLevel(specs({ seed, cloudberry: { cloudberryJetpackChance: 0.5, cloudberryDoubleJumpChance: 0.5 } }), both);
+            expect(p.jetpack && p.doubleJump).toBeFalsy();
+            kinds.add(p.jetpack ? 'jet' : p.doubleJump ? 'dj' : 'none');
+        }
+        expect([...kinds].sort()).toEqual(['dj', 'jet', 'none']);
+    });
+
+    it('Double Jump in an EXIT gate is a lock (authored), not a piece', () => {
+        const p = planCloudberryLevel(specs({ exitSpecs: [{ side: 'E', requirement: ['Double Jump'] }, { side: 'W', requirement: [] }] }), ctx);
+        expect(p.exits.find((e) => e.side === 'E')).toMatchObject({ physics: [], authored: [{ item: 'Double Jump', count: 1 }] });
+        expect(p.pieceSets.every((S) => S.length === 0)).toBe(true);
+    });
+
     it('hazards: N kinds drawn per level at the level, on every piece', () => {
         const plan = planCloudberryLevel(specs({
             cloudberry: { cloudberryHazards: true, cloudberryHazardKinds: 2, cloudberryHazardLevel: 4, cloudberryTileset: 'cave' },
@@ -176,6 +223,20 @@ describe('readCloudberryDocument', () => {
         const doc = fakeDoc(plan);
         doc.seedPieces[2].items = ['Cloud'];
         expect(readCloudberryDocument(doc, plan).reason).toMatch(/piece 2 realised \[Cloud\], planned \[MovingBlock\]/);
+    });
+    it('a Double Jump plan reads the Double hero and refuses any other (P5a)', () => {
+        const entry = { entrance: { side: 'W', requirement: ['Double Jump'], counts: {} } };
+        const dj = planCloudberryLevel(specs({ cloudberry: { cloudberryTileset: 'cave', cloudberryDoubleJumpChance: 1 } }), entry);
+        const r = readCloudberryDocument(fakeDoc(dj), dj);
+        expect(r.ok).toBe(true);
+        expect(r.facts.doubleJump).toBe(true);
+        expect(readCloudberryDocument(fakeDoc(dj, { args: plan.args }), dj).reason).toMatch(/Double hero false .*planned true/);
+        expect(readCloudberryDocument(fakeDoc(plan, { args: dj.args }), plan).reason).toMatch(/Double hero true .*planned false/);
+        // Every location and forward exit of the level needs Double Jump; the payload maps it.
+        const zone = emitCloudberryZone(dj, { ...r, generate: {}, docSha256: SHA });
+        expect(zone.locations.every((l) => l.paths[0].obstacles.includes('cloudberry_gate_DoubleJump'))).toBe(true);
+        expect(zone.exitPaths.E[0].obstacles).toEqual(['cloudberry_gate_MovingBlock', 'cloudberry_gate_DoubleJump']);
+        expect(zone.obstacleDefs.cloudberry_gate_DoubleJump).toBe(CLOUDBERRY_LIBRARY_OBSTACLES.cloudberry_gate_DoubleJump);
     });
 });
 
@@ -249,6 +310,35 @@ describe('generation: cache, retry and the hook', () => {
         clearCloudberryLevelCache();
         expect(() => substrateRegistryEntry.generateZoneForSpecs(specs({ seed: 999 }), ctx))
             .toThrow(/being generated by the Cloudberry game page.*cannot wait/);
+        installCloudberryGenerator(null, { store: null });
+    });
+
+    it('a Double Jump level on a page WITHOUT the feature is refused by name, before generating, and not cached (P5a)', async () => {
+        const entry = { entrance: { side: 'W', requirement: ['Double Jump'], counts: {} } };
+        const djSpecs = specs({ cloudberry: { cloudberryTileset: 'cave', cloudberryDoubleJumpChance: 1 } });
+        const dj = planCloudberryLevel(djSpecs, entry);
+        installCloudberryGenerator({ ...generatorFor((args) => fakeDoc(dj, { args })), features: async () => ({ botStartDoor: true }) }, { store: null });
+        const r = await ensureCloudberryLevel(dj);
+        expect(calls).toHaveLength(0);
+        expect(r.missingFeatures).toEqual(['doubleJump']);
+        expect(cloudberryRefusalMessage(dj, r)).toMatch(/^CloudberryFeatureMissing: cloudberry zone 'region_1_0' is a Double Jump level, .*features\.doubleJump.*cloudberryDoubleJumpChance/);
+        expect(lookupCloudberryLevel(dj)).toBeNull();
+        const gen = generateCloudberryZoneForSpecsGen(djSpecs, entry);
+        await gen.next().value.await;
+        expect(() => gen.next()).toThrow(/CloudberryFeatureMissing/);
+        // A page without features() at all (an old page) is refused the same way; one with the feature generates.
+        clearCloudberryLevelCache();
+        installCloudberryGenerator(generatorFor((args) => fakeDoc(dj, { args })), { store: null });
+        expect((await ensureCloudberryLevel(dj)).missingFeatures).toEqual(['doubleJump']);
+        clearCloudberryLevelCache();
+        installCloudberryGenerator({ ...generatorFor((args) => fakeDoc(dj, { args })), features: async () => ({ doubleJump: true }) }, { store: null });
+        const ok = await ensureCloudberryLevel(dj);
+        expect(ok.facts.doubleJump).toBe(true);
+        expect(calls).toHaveLength(1);
+        // A plan without Double Jump never asks for features.
+        clearCloudberryLevelCache();
+        installCloudberryGenerator({ ...generatorFor((args) => fakeDoc(plan, { args })), features: async () => { throw new Error('asked'); } }, { store: null });
+        expect((await ensureCloudberryLevel(plan)).generate).toBeTruthy();
         installCloudberryGenerator(null, { store: null });
     });
 

@@ -47,40 +47,19 @@
  * entrance is the L65 pocket landing. One row stays OPEN by name (`OPEN_L63`, ⚖ "Land, name it; route to rules"),
  * and from sphere 11.6 a second (`OPEN_L3_L111`), since closed by the rules (below).
  * Sphere 0.1 (2026-10-26, measured): native every region + the native sample 59 s, the scripted sample 256 s.
+ *
+ * ⚖ Robert 2026-11-02 CI manual-only P3 — SUPERSEDES the 2026-10-21 tier split ("Native all + scripted sample") for push:
+ * the SCRIPTED-sample case moved to `deriveLevelWorldLogic.train.test.js` (train pushes + dispatch `-f train=true`). On push
+ * this file keeps the NATIVE certifier on every region and the closure mutants; the per-helper parity stays on push in the
+ * gadget-room tests (tileStep.test.js and the latch/pull/pulser rooms). What a push no longer catches: scripted ≠ native on
+ * REAL levels. design-2's rule: a slice that touches tileStep.js, maze_tiles.helpers.json, maze_tiles.py or an engine
+ * primitive runs the train tier (CI dispatch or cloud, not the box) before its designer review, and reports it.
  */
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
 import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
-import { playthroughPermissiveLocations } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
+import { RULES, ATLAS, SAMPLE, OPEN_L63, PERMISSIVE } from './deriveLevelWorldLogic.fixture.js';
 
-const RULES = JSON.parse(readFileSync(
-    new URL('../../../presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
-const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
-const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
-    'level_18__r1c1', 'level_18__r7c10', 'level_0__r7c6', 'level_19__r5c5', 'level_20__r1c4',
-    'level_3__r0c4', 'level_8', 'level_94__r3c4', 'level_12__r42c28', 'level_67__r3c2', 'level_28__r0c6', 'level_30__r0c4', 'level_32', 'level_38',
-    'level_39__r25c9', 'level_40__r23c29', 'level_61__r0c10', 'level_63__r0c1', 'level_62', 'level_63__r10c2', 'level_58__r3c3', 'level_65__r0c8',
-    'level_80__r0c2', 'level_71__r0c6', 'level_78__r0c2', 'level_101__r4c2'];
-/**
- * The one OPEN row (⚖ 2026-10-29 "Land, name it; route to rules", session tile-primitives-sphere-order-8) was r6c9 → r10c2 derived
- * false: from the L65 pocket landing, L63 r0c1's east end is cut from its west by the DarkTrap at (4,6) and the spear block that jams
- * (5,6) (a block never enters an Enemy's tile, `PushableBlock.as:28`), so the world needs L61's press (L63 flag 1). ⛓ RULES
- * l63-pole-crossings closed it: the rules charge r6c9 -> r0c1 that flag too (`playthroughBlockCrossings`), and r10c2 now agrees. The
- * row left is its mirror, the ACCEPTED framing row (design-2): r6c9's world entrance is the L65 pocket cell (8,19), whose dark trap
- * (8,17) costs f7 (or the swing); the witness pushes the block (7,6) → (5,6), where it stops at the trap, and stands on (6,6), a cell
- * of the dead end (5,5)/(5,6)/(6,6) the partition gives r0c1 — per-cell ownership, which the game agrees with (the probe's
- * east-no-f1 tape halts the block on [5,6]). AP's crossing into r0c1 proper still costs f1.
- */
-const OPEN_L63 = 'level_63__r6c9 → level_63__r0c1 holding [Ghost Spear,L63 flag 7: lightpole@112,272 cleared]: derived true, atlas false';
-/**
- * ⛓ The second OPEN row, `OPEN_L3_L111` (⚖ user 2026-10-31, session tile-primitives-sphere-order-12: "Going from L3 to L111 requires
- * swim, and the rules should model that"), is GONE: `level_3__r0c4 → level_111 holding [Ghost Spear,Ghost Sword Fusion,Progressive
- * Sword]: derived false, atlas true` closed when ⛓ RULES rules-certifier-tail landed (⚖ 2026-11-02 "Yes, land it"). A door now costs
- * what EVERY way onto its tile pays (`chargeNecessaryApproaches`), and the only way onto L3's teleporter (0,4) is the water at (1,4),
- * so the rules charge the Swim the world always did. Its pin and both expectations were removed with it.
- */
-const PERMISSIVE = playthroughPermissiveLocations();
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
 const withExitRule = (from, to, rule) => {
@@ -142,6 +121,11 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         // landings from L113 (4,8)/(5,8) (2). L110 adds none.
         // ⛓ rules-sided-openers adds 2 [own event] rows: the two latching ShieldLocks' events (L12 flag 10, L20 flag 0), and
         // L12 r0c19's subset universe doubles with its new event item (2048 → 4096; the two bosslock rows 144 → 216).
+        // ⛓ R-A2 (session tile-rules-automation-r-a2, the input/output split; re-recorded at c5764cf46f on main 06fe11dea5): 18 plain
+        // levels play as ONE level world. Their in-world crossings are walked pairs, not exit rows, and a member is priced over
+        // the whole world's axis: 16 rows go (L52 ×8, L48 r7c0 → r4c3, L93 r5c7 → r10c7, L102 ×2, L112 r0c7 → r2c2, and the
+        // [own event] rows of L31, L68 and L112), and 3 are RE-COUNTED over the larger axis (L48 r7c0 → L53 1/2 → 6/16, L93 → L98
+        // 1/2 → 4/12, L112 → L113 4/8 → 8/16). 118 → 102.
         expect(skipped.map((k) => `${k.label} | ${k.points}/${k.of}${k.partial ? ' (problem)' : ''}${k.why ? ` [${k.why}]` : ''}`)).toEqual([
             'level_0__r2c13 → level_89__r11c12 (landing 15,1) | 13/48',
             'level_0__r6c5 → level_1 (landing 5,7) | 21/48',
@@ -167,15 +151,18 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_12__r42c28 → level_12__r0c37 (landing 2,54) | 64/128',
             'level_12__r42c28 → level_83 (landing 2,54) | 64/128',
             'level_16__r3c7 → level_17 (landing 7,3) | 16/32',
-            'level_20__r1c4 @ L20 flag 0: shieldlocknorm@176,16 cleared (landing 12,4) | 1/4 [own event]',
+            'level_20__r1c4 @ L20 flag 0: shieldlocknorm@176,16 cleared (landing 12,4) | 2/8 [own event]',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 2/4',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 3,8) | 1/4 [own event]',
             'level_24 → level_12__r40c4 (landing 3,8) | 2/4',
             'level_24 → level_23 (landing 3,8) | 2/4',
             'level_24 @ L24 flag 0: burnabletree@32,128 cleared (landing 6,5) | 1/4 [own event]',
-            'level_31__r5c24 @ L31 flag 0: bosslock@192,432 cleared (landing 24,7) | 1/4 [own event]',
-            'level_48__r7c0 → level_48__r4c3 (landing 1,7) | 1/2',
-            'level_48__r7c0 → level_53__r2c2 (landing 1,7) | 1/2',
+            // ⛓ tile-lay-l40-latches: L40's two r0c53 presses, priced from r0c53's second landing (53,1): the points holding
+            // the press's own event are skipped [own event] (as L24's tree). L40 flag 12's press stands in r48c54, which no AP
+            // exit lands in (walked in from another member), so it has no landing row. 102 → 104.
+            'level_40__r0c53 @ L40 flag 1: wandlock@176,80 cleared (landing 53,1) | 192/512 [own event]',
+            'level_40__r0c53 @ L40 flag 7: wandlock@208,128 cleared (landing 53,1) | 192/512 [own event]',
+            'level_48__r7c0 → level_53__r2c2 (landing 1,7) | 6/16',
             'level_49 @ Level 049 - Conch (landing 2,7) | 1/2',
             'level_49 → level_50 (landing 2,7) | 1/2',
             'level_50 → level_49 (landing 2,1) | 1/2',
@@ -183,18 +170,8 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_51__r3c10 → level_50 (landing 9,1) | 1/2',
             'level_51__r3c10 → level_53__r2c2 (landing 9,1) | 1/2',
             'level_51__r14c6 → level_52__r5c10 (landing 15,16) | 1/2',
-            'level_52__r0c7 → level_52__r2c2 (landing 7,1) | 1/3',
-            'level_52__r0c7 → level_52__r5c10 (landing 7,1) | 1/3',
             'level_52__r0c7 → level_54__r27c8 (landing 7,1) | 1/3',
-            'level_52__r2c2 → level_52__r0c7 (landing 1,3) | 1/3',
-            'level_52__r2c2 → level_52__r5c10 (landing 1,3) | 1/3',
             'level_52__r2c2 → level_55 (landing 1,3) | 1/3',
-            'level_52__r5c10 → level_52__r0c7 (landing 1,7) | 1/3',
-            'level_52__r5c10 → level_52__r2c2 (landing 1,7) | 1/3',
-            'level_52__r5c10 → level_51__r14c6 (landing 1,7) | 1/3',
-            'level_52__r5c10 → level_56 (landing 1,7) | 1/3',
-            // ⛓ rules-certifier-tail: L54's door to L53 now charges the Swim every way onto it pays, so its landing (9,14)
-            // admits only holding it.
             'level_53__r14c9 → level_54__r1c8 (landing 9,14) | 24/48',
             'level_54__r1c8 → level_53__r14c9 (landing 9,1) | 1/3',
             'level_54__r27c8 → level_52__r0c7 (landing 8,28) | 1/3',
@@ -221,7 +198,6 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_63__r10c2 → level_61__r13c12 (landing 2,18) | 192/768',
             'level_63__r10c2 → level_65__r0c2 (landing 2,18) | 192/768',
             'level_64 → level_62 (landing 2,5) | 1/4',
-            'level_68__r3c1 @ L68 flag 0: bosslock@16,32 cleared (landing 1,4) | 4/32 [own event]',
             'level_69 @ Level 069 - Lights (landing 3,8) | 1/8',
             'level_69 → level_36 (landing 3,8) | 1/8',
             'level_71__r0c6 @ L71 flag 2: shieldlock@288,256 cleared (landing 14,18) | 8/48 [own event]',
@@ -235,24 +211,16 @@ describe('seedling_playthrough_maze — every region certified against the atlas
             'level_82 → level_96 (landing 9,1) | 5/8',
             'level_83 → level_12__r42c28 (landing 2,3) | 20/64',
             'level_83 → level_84__r2c4 (landing 2,3) | 20/64',
-            // ⛓ rules-certifier-tail: L91's door down the fall now charges the Swim, so its landing (13,1) admits only holding it.
             'level_89__r1c10 → level_91 (landing 13,1) | 1/3',
             'level_89__r11c12 → level_0__r2c13 (landing 10,18) | 1/3',
             'level_89__r11c12 → level_87__r1c3 (landing 10,18) | 1/3',
             'level_91 → level_89__r1c10 (landing 1,8) | 2/3',
             'level_91 → level_92__r4c2 (landing 1,8) | 2/3',
-            'level_93__r5c7 → level_93__r10c7 (landing 7,6) | 1/2',
-            'level_93__r5c7 → level_98 (landing 7,6) | 1/2',
+            'level_93__r5c7 → level_98 (landing 7,6) | 4/12',
             'level_101__r4c9 → level_102__r5c9 (landing 9,5) | 32/128',
-            'level_102__r5c9 → level_101__r4c9 (landing 11,6) | 2/4',
-            'level_102__r5c9 → level_107 (landing 11,6) | 2/4',
-            // ⛓ rules-certifier-tail: L3's door to L111 now charges the Swim every way onto it pays, so L111's landing (18,11)
-            // admits only holding it, on both crossings that land there.
             'level_111 → level_112__r2c2 (landing 18,11) | 1/2',
             'level_111 → level_3__r0c4 (landing 18,11) | 1/2',
-            'level_112__r0c7 → level_112__r2c2 (landing 7,1) | 4/8',
-            'level_112__r0c7 → level_113 (landing 7,1) | 4/8',
-            'level_112__r2c2 @ L112 flag 1: rocklock@112,16 cleared (landing 2,13) | 3/8 [own event]',
+            'level_112__r0c7 → level_113 (landing 7,1) | 8/16',
             'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 1,1) | 14/192 [own event]',
             'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 7,1) | 84/192',
             'level_113 @ L113 flag 0: finaldoor@112,0 cleared (landing 7,1) | 14/192 [own event]',
@@ -275,14 +243,6 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         expect(sampleLines).toContain(`level_28__r1c18>level_28__r11c4=${JSON.stringify([[ROPE28]])}`);
         expect(sampleLines).toContain(`level_28__r0c6@${ROPE28}=${JSON.stringify([['Fire'], ['Ghost Spear'], ['Progressive Sword']])}`);
     }, 300_000);
-    it('scripted tile definition on the sample — and it agrees with the native one', () => {
-        for (const r of SAMPLE) expect(Object.keys(RULES.preset_sidecars['1'])).toContain(r);
-        const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: false, regions: SAMPLE, atlas: ATLAS, permissive: PERMISSIVE });
-        expect(problems).toEqual([OPEN_L63]);
-        expect(lines).toEqual(sampleLines);
-        // ⛓ RULES l63-pole-crossings: the poles' Ghost Sword arm grows L63's subset universe 4x; measured scripted on its two
-        // sample regions, main's preset 18.6 + 17.8 s → 61.7 + 58.8 s (+84 s over the ~450 s pass), so 600 s left too thin a margin.
-    }, 900_000);
     // ⛓ The in-world CLOSURE comparison is two-sided: a mutated in-world AP row that makes the atlas stricter than
     // the world (the world LOOSER), or looser than it, is still caught (rules-rope-events; asked by
     // tile-primitives-design). L15 alone: its world is certified when any member is in the sample.

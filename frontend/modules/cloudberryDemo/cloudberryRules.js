@@ -11,7 +11,8 @@
  *     items verified real by the generator's reroll search (⚖ R14);
  *   - a CHECK COIN in piece k needs S_k; the END DOOR (every exit) needs S_last;
  *   - a level generated with the Jetpack hero (`level.heroAbility.JetPack`) needs
- *     `Jetpack` everywhere (⚖ R15).
+ *     `Jetpack` everywhere (⚖ R15); one generated with the Double hero
+ *     (`level.heroAbility.NumJumps` > 1) needs `Double Jump` everywhere (P5a).
  *
  * These are SUFFICIENT sets (what the computer's recording used), not minimal:
  * the safe direction — the logic never claims a coin the player cannot reach.
@@ -35,8 +36,8 @@ export const CLOUDBERRY_PAYLOAD_VERSION = 'cloudberry-region/1';
 export const CLOUDBERRY_GAME_ID = 'cloudberry';
 
 /**
- * The ten game items (⚖ R3/R8: the nine platform types, FlyBlob included; ⚖ R15:
- * Jetpack) → their AP item names. Order is the emission order of obstacles on a path.
+ * The eleven game items (⚖ R3/R8: the nine platform types, FlyBlob included; ⚖ R15:
+ * Jetpack; P5a: DoubleJump) → their AP item names. Order is the emission order of obstacles on a path.
  */
 export const CLOUDBERRY_ITEM_NAMES = Object.freeze({
     MovingBlock: 'Moving Blocks',
@@ -49,12 +50,30 @@ export const CLOUDBERRY_ITEM_NAMES = Object.freeze({
     Conveyor: 'Conveyors',
     FlyBlob: 'Fly Blobs',
     Jetpack: 'Jetpack',
+    DoubleJump: 'Double Jump',
 });
+/** The ability items: a level-wide hero, never a piece's platforms (`cloudberryZonePlan.js`). */
+export const CLOUDBERRY_ABILITY_ITEMS = Object.freeze(['Jetpack', 'DoubleJump']);
+/**
+ * Game item → the obstacle name of a level generated with that ability's hero. Double Jump joined
+ * the item map after presets were committed; a payload names it only when its level needs it
+ * (`buildCloudberryPayload`), so every earlier payload keeps its bytes.
+ */
+const ABILITY_LEVEL_NAMES = Object.freeze({ Jetpack: 'Jetpack Level', DoubleJump: 'Double Jump Level' });
 export const CLOUDBERRY_GAME_ITEMS = Object.freeze(Object.keys(CLOUDBERRY_ITEM_NAMES));
 /** AP item name → game item (the payload's `items` map; the page's pollItems reads it). */
 export const CLOUDBERRY_ITEMS_BY_AP_NAME = Object.freeze(Object.fromEntries(
     Object.entries(CLOUDBERRY_ITEM_NAMES).map(([game, ap]) => [ap, game])));
 export const CLOUDBERRY_VICTORY_ITEM = 'Victory';
+/**
+ * The slack item (P4c): it opens nothing and does nothing in the game (not a platform item, so not
+ * gateable here); it exists so a tiny world can hold a second FREE location in its start region. Two
+ * players with one start location each box Archipelago's restrictive fill in (FillError in ~0.2% of
+ * 2-player seeds); a second start location removes that (docs/json/developer/procgen/cloudberry.md
+ * § Fill slack). Classified progression, not filler: the sphere plan, its oracle and AP's sphere log
+ * count progression items only, so a filler in the plan never matches.
+ */
+export const CLOUDBERRY_FILLER_ITEM = 'Cloudberry Gem';
 
 /** Archipelago-CC grid sides → the game page's side names (its exit menu and bot portals). */
 export const PAGE_SIDE = Object.freeze({ N: 'north', E: 'east', S: 'south', W: 'west' });
@@ -62,17 +81,21 @@ export const GRID_SIDE = Object.freeze(Object.fromEntries(Object.entries(PAGE_SI
 
 export const obstacleIdFor = (gameItem) => `cloudberry_gate_${gameItem}`;
 
-/** Registry-declared item library: the ten items + Victory (panel colours; ids = AP names). */
+/** Registry-declared item library: the eleven items + Victory + the filler (panel colours; ids = AP names). */
 export const CLOUDBERRY_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
     ['MovingBlock', '#4f8fd6'], ['FallingBlock', '#c9773b'], ['BouncyBlock', '#5cc25c'],
     ['GhostBlock', '#a0a0c8'], ['Cloud', '#d8e8f8'], ['Elevator', '#8a7bd0'],
     ['Pendulum', '#c4a24a'], ['Conveyor', '#6d6d6d'], ['FlyBlob', '#d0608f'], ['Jetpack', '#e04b2a'],
+    ['DoubleJump', '#2fb5a8'],
 ].map(([game, color]) => {
     const name = CLOUDBERRY_ITEM_NAMES[game];
     return [name, { id: name, name, classification: 'progression', color, symbol: 'star', feature: 'cloudberry_items' }];
 }).concat([[CLOUDBERRY_VICTORY_ITEM, {
     id: CLOUDBERRY_VICTORY_ITEM, name: CLOUDBERRY_VICTORY_ITEM, classification: 'progression',
     color: '#f5d020', symbol: 'star', feature: 'cloudberry_items', is_victory: true,
+}], [CLOUDBERRY_FILLER_ITEM, {
+    id: CLOUDBERRY_FILLER_ITEM, name: CLOUDBERRY_FILLER_ITEM, classification: 'progression',
+    color: '#c43d7a', symbol: 'star', feature: 'cloudberry_items',
 }]])));
 
 /** The physics obstacle library: one per game item, cleared by its AP item. */
@@ -82,7 +105,7 @@ export const CLOUDBERRY_LIBRARY_OBSTACLES = Object.freeze(Object.fromEntries(
         const name = CLOUDBERRY_ITEM_NAMES[game];
         return [id, {
             id,
-            name: game === 'Jetpack' ? 'Jetpack Level' : `${name} Section`,
+            name: ABILITY_LEVEL_NAMES[game] ?? `${name} Section`,
             clear_set_type: 'combo_list',
             clear_set: [[name]],
             color: CLOUDBERRY_LIBRARY_ITEMS[name].color,
@@ -102,8 +125,9 @@ function assertGameItems(items, where) {
 
 /**
  * The rule-relevant FACTS of a generated document:
- *   { pieceItems: [[game items of piece 0], …], jetpack: bool,
+ *   { pieceItems: [[game items of piece 0], …], jetpack: bool, doubleJump?: true,
  *     coins: [{ id, piece, tick }] }   — only WITNESSED coins (the computer collects them)
+ * `doubleJump` is present only for a Double-hero level (earlier facts keep their shape).
  * `doc` is the parsed `ck-level/2` document. Refuses a document with an error.
  */
 export function documentFacts(doc) {
@@ -120,7 +144,15 @@ export function documentFacts(doc) {
     });
     const coins = (doc.coins?.list ?? []).filter((c) => c.witness)
         .map((c) => ({ id: c.id, piece: c.piece, tick: c.witness.tick }));
-    return { pieceItems, jetpack: doc.level?.heroAbility?.JetPack === true, coins };
+    return {
+        pieceItems, jetpack: doc.level?.heroAbility?.JetPack === true,
+        ...(heroDoubleJump(doc) ? { doubleJump: true } : {}), coins,
+    };
+}
+
+/** The document's hero has more than one jump (generated with the Double hero, P5a). */
+export function heroDoubleJump(doc) {
+    return (Number(doc?.level?.heroAbility?.NumJumps) || 1) > 1;
 }
 
 /**
@@ -141,13 +173,14 @@ export function chooseCheckCoins(facts, perPiece = 1) {
     return out;
 }
 
-/** S_k as game items: the union of pieces 0..k, + Jetpack for a Jetpack level. */
+/** S_k as game items: the union of pieces 0..k, + Jetpack / DoubleJump for an ability level. */
 export function requiredItems(facts, piece) {
     if (piece < 0 || piece >= facts.pieceItems.length) {
         throw new Error(`requiredItems: piece ${piece} out of range (${facts.pieceItems.length} pieces)`);
     }
     const set = facts.pieceItems.slice(0, piece + 1).flat();
     if (facts.jetpack) set.push('Jetpack');
+    if (facts.doubleJump) set.push('DoubleJump');
     return sortGameItems(set);
 }
 
@@ -233,15 +266,24 @@ export function emitCloudberryRules(facts, { checks, items = {}, exitSides = [],
     return { locations, exitPaths, obstacleDefs, gateRules };
 }
 
+/** The payload's AP name → game item map: Double Jump only for a Double-hero level. */
+function payloadItems(doubleJump) {
+    const items = { ...CLOUDBERRY_ITEMS_BY_AP_NAME };
+    if (!doubleJump) delete items[CLOUDBERRY_ITEM_NAMES.DoubleJump];
+    return items;
+}
+
 /**
  * The region payload the registry entry stores (`playable_payload`). `params` is the
  * Cloudberry page's region payload minus what is derived at load time from the world
  * (the exits, the side portals, entrySide — see the entry's deserializeWorld).
  *
  * @param {string} region_id
- * @param {object} region  { generate, docSha256, checks: [{name, coin}], gateRules? }
+ * @param {object} region  { generate, docSha256, checks: [{name, coin}], gateRules?, doubleJump? }
+ *   doubleJump: the level is a Double-hero level — only then does `items` name Double Jump
+ *   (the map every earlier payload carries stays byte-identical).
  */
-export function buildCloudberryPayload(region_id, { generate, docSha256, checks, gateRules = null }) {
+export function buildCloudberryPayload(region_id, { generate, docSha256, checks, gateRules = null, doubleJump = false }) {
     if (!generate || typeof generate !== 'object') throw new Error('buildCloudberryPayload: no generate request');
     if (generate.reroll !== undefined) throw new Error('buildCloudberryPayload: a reroll search, not the resolved request');
     if (!/^[0-9a-f]{64}$/.test(docSha256 ?? '')) throw new Error('buildCloudberryPayload: docSha256 is not 64 hex');
@@ -252,7 +294,7 @@ export function buildCloudberryPayload(region_id, { generate, docSha256, checks,
             generate,
             docSha256,
             checks: Object.fromEntries(checks.map((c) => [c.name, c.coin])),
-            items: { ...CLOUDBERRY_ITEMS_BY_AP_NAME },
+            items: payloadItems(doubleJump),
         },
         ap_locations: Object.fromEntries(checks.map((c) => [c.name, `${region_id}__${c.name}`])),
         flashCapabilities: { locations: 'cooperative', items: 'pull', start: 'auto' },

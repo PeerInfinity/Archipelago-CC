@@ -206,7 +206,15 @@ describe('eventLayerFor', () => {
     it('over the whole atlas, only a target the press removes is laid, with its pocket doors — no lightpole target', () => {
         const rows = eventLayerFor(ATLAS, ATLAS.regions.map((r) => r.region_id)).world.filter((w) => w.mode === 'target' || w.mode === 'door');
         expect(rows.map((w) => `${w.mode} ${w.name} ${w.door?.exit_id ?? ''}`.trim())).toEqual([
+            // ⛓ RULES l20-button-latch: L20's in-room press opens its lock (a Lock handed activate = true); no pocket doors —
+            // its gates are the lock's two internal crossings, which the target's cell carries itself
+            'target L20 flag 4: lock@32,80 cleared',
             'target L39 flag 8: wandlock@144,592 cleared',
+            // ⛓ tile-lay-l40-latches: L40's three in-room presses open their wand locks (the maze lays each as a LATCH instead:
+            // `seedlingAtlasAnalysis.layableLatches`, so the projection drops these target rows for them)
+            'target L40 flag 1: wandlock@176,80 cleared',
+            'target L40 flag 7: wandlock@208,128 cleared',
+            'target L40 flag 12: wandlock@480,560 cleared',
             'door L39 flag 8: wandlock@144,592 cleared out_teleporter_144_0',
             'door L39 flag 8: wandlock@144,592 cleared out_teleporter_144_624',
             // ⛓ session tile-primitives-sphere-order-8 (⚖ 2026-10-29 "World doors + framing", "Talk location + portal door"): the

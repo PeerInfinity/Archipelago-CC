@@ -139,6 +139,7 @@ import {
 } from './rehearsalTree.js';
 import { takeBoxLock } from './boxLock.js';
 import { throughSurveyDir } from './seedlingSurveyDir.js';
+import { RECORDING_ROUTE_REL, growRouteRefusal } from './recordingRoute.js';
 import { driverChannel } from './seedlingDriver.js';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 
@@ -2058,6 +2059,22 @@ async function grow(ctx) {
     }
     const route = JSON.parse(readFileSync(routeP, 'utf8'));
     const survey = JSON.parse(readFileSync(surveyP, 'utf8'));
+    /**
+     * ⛓ TILE-FRONTIER-ROUTE — **THE CHAIN GROWS ONLY ON THE ROUTE IT WAS
+     * RECORDED ON.** The frontier's `covered` counts steps of the RECORDING route
+     * (`fixtures/campaign-recording-route.json`); `route` is TODAY's. When the two
+     * walk differently, `route.steps[covered]` is a step of another route — and
+     * on a shorter one it reads past the end and says "THE ROUTE ENDS HERE",
+     * which is false. Refused by name, with the step where they part.
+     */
+    const recP = join(ROOT, RECORDING_ROUTE_REL);
+    if (!existsSync(recP)) {
+        growCannotAsk(`${RECORDING_ROUTE_REL} is not on disk — the route the chain was `
+            + 'recorded on is unstated, so today\'s route cannot be checked against it',
+        'node scripts/procgen/census-seedling-campaign.mjs --write-recording-route');
+    }
+    const moved = growRouteRefusal(JSON.parse(readFileSync(recP, 'utf8')).steps, route.steps, names);
+    if (moved) growRefuses(moved.what, moved.detail);
     const step = route.steps[frontier.covered] ?? null;
     if (!step) {
         growRefuses('THE ROUTE ENDS HERE',

@@ -23,6 +23,7 @@ import { createHeldKeyRelease, dispatchGameKey, focusGameCanvas } from './gameIn
 import { TOUCH_SETTING_KEY, mountTouchControls, parseTouchLayout, touchControlsVisible } from './touchControls.js';
 import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
+import { seedlingMountKey } from './seedlingMountKey.js';
 import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
 import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
 import { KILLLOCK_SETTING_KEYS, killLockPageQuery } from './seedlingKillLockSettings.js';
@@ -445,15 +446,50 @@ export class FlashPanelUI {
       this._initializeAdapter();
       return;
     }
-    if (this.componentState.configPath || this.componentState.swfPath
-        || this.componentState.wasmPath) {
+    const pinned = !!(this.componentState.configPath || this.componentState.swfPath
+        || this.componentState.wasmPath);
+    if (!pinned && key === this._lastFlashPanelKey && this._mountedRoomsDiffer()) {
+      // ⛓ SAME WIRING, OTHER ROOMS — the wiring change's own path: the game restarts on the loaded rules' rooms.
+      this._panelLog('rules changed (same game wiring, different rooms) — re-mounting so the game plays the loaded rules\' rooms');
+      this._teardownForReinit();
+      this._initializeAdapter();
       return;
     }
-    if (key === this._lastFlashPanelKey) return;
+    if (pinned || key === this._lastFlashPanelKey) {
+      // ⛓ SAME WIRING, NEW RULES — no re-mount, but the region data the attach built is the OLD rules'.
+      this._reloadRulesDerived();
+      return;
+    }
     this._lastFlashPanelKey = key;
     this._panelLog('rules changed — reinitializing');
     this._teardownForReinit();
     this._initializeAdapter();
+  }
+
+  /**
+   * ⛓⛓ WOULD THE AP LOAD MOUNT SOMETHING ELSE NOW? (⚖ Robert, 2026-11-02 — a same-wiring Seedling preset switch while
+   * the game runs loads the NEW preset's rooms; a visible restart accepted.) `_apLoadKey` is the `seedlingMountKey`
+   * of the rules `_startSeedlingRandomizer` read for THIS adapter; this compares it with the loaded rules'.
+   *   · no key yet (no adapter, or the bridge is not ready) — the load has not read the rules: it will read these;
+   *   · `_rulesIgnored` — the load refused on the wiring alone (transport / capability): no rules change can matter;
+   *   · equal — the same rooms (a reload of the same document, a fresh object): nothing.
+   * ⚖ Robert, 2026-11-03 — an EDITOR's republish (the procgen pipeline's "Load into frontend", the APWorld editor's
+   * Apply, a JSON editor's Apply) is NOT exempt: when it changes the running game's rooms the game restarts on the
+   * edited rooms, the same visible restart as a preset switch (on wasm it asks for ▶ Start again). Once per click:
+   * no editor auto-save publishes a rules load.
+   */
+  _mountedRoomsDiffer() {
+    const mounted = this._apLoadKey;
+    if (!this.adapter || mounted === undefined || this._apLoadRulesIgnored) return false;
+    const now = this._mountKeyNow();
+    return now !== mounted;
+  }
+
+  /** The `seedlingMountKey` of the rules loaded NOW — what `_startSeedlingRandomizer` would read. */
+  _mountKeyNow() {
+    const staticData = stateManager.getStaticData?.() ?? null;
+    return seedlingMountKey({ rules: rulesOfRawPayload(getLastRawJsonData?.()), playerId: staticData?.playerId,
+      locations: staticData?.locations });
   }
 
   /**
@@ -869,6 +905,8 @@ export class FlashPanelUI {
   _teardownForReinit() {
     this._initEpoch = (this._initEpoch ?? 0) + 1;
     this._initRuntime = undefined;
+    this._apLoadKey = undefined;
+    this._apLoadRulesIgnored = false;
     this._seedlingGenReport = null;
     this._seedlingGenSet = null;
     this._seedlingAtlas = null;
@@ -1733,6 +1771,9 @@ export class FlashPanelUI {
   async _startSeedlingRandomizer(adapter) {
     this._apLoadRefusal = null;
     this._seedlingDelivery = null;
+    // ⛓ WHAT THIS LOAD MOUNTS FROM, read before its first await — `_mountedRoomsDiffer` compares the loaded rules'.
+    this._apLoadKey = this._mountKeyNow();
+    this._apLoadRulesIgnored = false;
     const staticData = stateManager.getStaticData?.() ?? null;
     const flashPanel = staticData?.flash_panel ?? null;
     const transport = this.transport === 'js' ? 'js' : 'wasm';
@@ -1766,6 +1807,9 @@ export class FlashPanelUI {
       // is the shape a data-driven feature fails in.
       this._panelLog(`ap placement: not applicable — ${cheap.why}`);
       this._apLoadRefusal = cheap.why;
+      // ⛓ Refused on the WIRING (the transport, the build): the same wiring refuses every rules load the same way,
+      // so no same-wiring rules change re-mounts this game (a non-Seedling flash game keeps running).
+      this._apLoadRulesIgnored = cheap.failed === 'transport' || cheap.failed === 'capability';
       return;
     }
 
@@ -2147,9 +2191,44 @@ export class FlashPanelUI {
     } catch (err) {
       this._panelLog(`region-atlas glue attach failed: ${err.message}`, 'error');
     }
+    this._loadRulesDerived(adapter);
+  }
+
+  /**
+   * ⛓⛓ THE REGION DATA FOLLOWS THE RULES, NOT THE ATTACH. The return spawns, the sub-region map and the slot data
+   * are built from the rules loaded NOW (`getLastRawJsonData`). An attach is not the only moment those change: a
+   * rules load whose `flash_panel` wiring is the SAME (seedling_atlas_location → seedling_atlas: one config, one
+   * page) re-mounts nothing (`_onRulesLoaded`), and an init flow started by a RUNTIME change attaches whenever its
+   * awaits finish — before or after the next preset's rules land. Measured (TT 41252552833, both attempts): the
+   * wasm row's runtime switch attached first, built the map from the PREVIOUS row's seedling_atlas_location rules
+   * (no `dungeon1_room1__r0c4 -> dungeon1_room1__r8c6`), and seedling_atlas's own rulesLoaded rebuilt nothing — the
+   * Bot block's credited link was "not a logical sub-region link of this preset". `_rulesDerivedFor` records which
+   * rules (and slot) the data was built from; `_reloadRulesDerived` rebuilds it when they are not the loaded ones.
+   */
+  _loadRulesDerived(adapter) {
+    this._rulesDerivedFor = this._loadedRulesKey();
     this._loadReturnSpawns(adapter);
     this._loadSubRegions(adapter);
     this._applySlotData(adapter);
+  }
+
+  /** A rules load that re-mounted nothing: rebuild the region data if the attach built it from other rules. */
+  _reloadRulesDerived() {
+    if (!this.adapter) return; // an init still in flight attaches against the loaded rules itself
+    const now = this._loadedRulesKey();
+    if (now.rules === this._rulesDerivedFor?.rules && now.player === this._rulesDerivedFor?.player) return;
+    this._panelLog('rules changed (same game wiring) — rebuilding the region data from the loaded rules');
+    this._loadRulesDerived(this.adapter);
+  }
+
+  /** The loaded rules and slot (`stateManager:rawJsonDataLoaded`'s, unwrapped): what the region data is built from. */
+  _loadedRulesKey() {
+    return { rules: rulesOfRawPayload(getLastRawJsonData?.()) ?? null, player: playerOfRawPayload(getLastRawJsonData?.()) };
+  }
+
+  /** Did a newer rules load (or another adapter) take over while a region-data fetch was in flight? */
+  _rulesDerivedStale(adapter, raw) {
+    return this.adapter !== adapter || rulesOfRawPayload(getLastRawJsonData?.()) !== raw;
   }
 
   /**
@@ -2185,7 +2264,7 @@ export class FlashPanelUI {
       const res = await fetch(new URL(SUB_REGION_PARTITION_PATH, document.baseURI).href);
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       const partition = await res.json();
-      if (this.adapter !== adapter) return;
+      if (this._rulesDerivedStale(adapter, raw)) return;
       glue?.binding?.setPartition?.(partition);
       const { map, why } = buildSubRegionMap({ rules: raw, partition, player });
       if (!map) {
@@ -2223,7 +2302,7 @@ export class FlashPanelUI {
       const res = await fetch(new URL(path, document.baseURI).href);
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       const table = returnSpawnTable(await res.json());
-      if (this.adapter !== adapter) return;
+      if (this._rulesDerivedStale(adapter, raw)) return;
       getSeedlingRegionGlue()?.binding?.setReturnSpawns(table);
       this._panelLog(`[region atlas] return spawns: ${table.size} door(s) from ${path} (${source})`);
     } catch (err) {

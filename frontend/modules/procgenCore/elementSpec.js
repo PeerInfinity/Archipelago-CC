@@ -48,8 +48,11 @@ import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { ROAM } from './elements/roam.js';
 import { ROPE_GATE } from './elements/ropeGate.js';
 import { CHEST_DOOR } from './elements/chestDoor.js';
+import { CHEST_LOOT } from './elements/chestLoot.js';
+import { KEY_GATE } from './elements/keyGate.js';
 import { BURN_GATE } from './elements/burnGate.js';
 import { HOLD_GATE, WEIGH_GATE } from './elements/strategyGate.js';
+import { BAIT_GATE } from './elements/baitGate.js';
 import {
     CORRIDOR_BODY, ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT,
     WATERFALL_GATE,
@@ -108,6 +111,12 @@ export const BINDS_PARAM = Object.freeze({
         + 'acceptance; `any` lets it compete, which accepts more runs and guards about one '
         + 'in seven. Measured both ways — see the ELEMENTS CENSUS.',
 });
+
+/**
+ * ⛓ rope strategy — a row's `meetsRequire` value that lets it head `strategy:<verb>` directives (its
+ * `needsStrategy`) but never an ITEM directive (its `needs`). `false` refuses both; omitted allows both.
+ */
+export const MEETS_STRATEGY_ONLY = 'strategy-only';
 
 /**
  * ⛓ THE TABLE — the element a head names, and the knobs the BINDING adds to the
@@ -468,10 +477,17 @@ export const ELEMENT_TABLE = Object.freeze({
      * route). Measured: the sword differential grades it REQUIRED.
      *
      * Placed LAST so no head moves in `ELEMENT_NAMES`. It ships OPT-IN (⚖ Q5).
-     * ⛔ `meetsRequire: false` — not because it grades SHORTENS (it does not)
-     * but because joining `require:['hasSword']`'s `+` list moves every room a
-     * `--require=hasSword` run builds today (the list spends ONE pick over its
-     * members); that is a re-record, a decision of its own.
+     * ⛔ `meetsRequire: MEETS_STRATEGY_ONLY` — never an ITEM directive's head:
+     * not because it grades SHORTENS (it does not) but because joining
+     * `require:['hasSword']`'s `+` list moves every room a `--require=hasSword`
+     * run builds today (the list spends ONE pick over its members); that is a
+     * re-record, a decision of its own.
+     *
+     * ⛓ `needsStrategy: ['rope']` (seedling gen rope strategy; ⚖ the user
+     * 2026-11-04, "(1) Rope gate gadget"): the solver's `rope` verb is the cut,
+     * and it IS a head for `require:['strategy:rope']` — the only row declaring
+     * `rope`, so being that head moves no room. With `rope` disabled the lane is
+     * uncrossable without an arrow hit, which the oracle refuses.
      */
     ropegate: Object.freeze({
         element: ROPE_GATE,
@@ -481,7 +497,8 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'lane-crossing arm OFF; a certificate that tanks an arrow is refused.',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasSword']),
-        meetsRequire: false,
+        needsStrategy: Object.freeze(['rope']),
+        meetsRequire: MEETS_STRATEGY_ONLY,
     }),
     /**
      * ⛓⛓⛓ **THE CHEST DOOR — A CHEST IN THE ONLY GAP OF A WALL** (seedling gen
@@ -569,6 +586,76 @@ export const ELEMENT_TABLE = Object.freeze({
         needs: Object.freeze([]),
         needsStrategy: Object.freeze(['weigh']),
     }),
+    /**
+     * ⛓⛓⛓ **THE LOOT CHEST — A CHEST OFF THE MAIN PATH** (seedling gen content
+     * B1; ⚖ the user 2026-11-01: *"(e) Loot/goal chests"*, after the oracle's
+     * chest-goal fix). A `chest` on a floor cell off the main path whose cell
+     * directly below (the game's trigger line) the start reaches with the chest
+     * standing. It gates nothing (law `none`); the binding certifies it as a
+     * SECOND collect goal ahead of the room's own, so a certificate always opens
+     * it. Its seal piece is an AP location (`seedlingGenRoom`'s `chest-loot` row).
+     *
+     * ⛓ `needs: []` — opening a chest takes no item. Placed LAST so no head moves
+     * in `ELEMENT_NAMES`; OPT-IN (in no biome default). ⛔ `meetsRequire: false`:
+     * a `none`-law element can never answer a directive (`headsNeeding` reads the
+     * CUT law only), and this says so in the row too.
+     */
+    chestloot: Object.freeze({
+        element: CHEST_LOOT,
+        why: 'The LOOT CHEST (seedling gen B1): a `chest` on a floor cell OFF the main path, opened from '
+            + 'the cell directly below it, a nook preferred. Gates nothing; certified by a plan that opens it '
+            + '(the chest is a second collect goal). Its seal piece is an AP location.',
+        extra: Object.freeze([]),
+        needs: Object.freeze([]),
+        meetsRequire: false,
+    }),
+    /**
+     * ⛓⛓⛓ **THE KEY GATE — the solver's `keylock`, as a gadget** (seedling gen
+     * strategy elements round 2; ⚖ the user 2026-11-01, "(b) More strategy
+     * elements"; 2026-11-03: *"a randomized AP item whose vanilla placement is the
+     * key"*). A lock in the only gap of a wall on a main-path CUT, opened from the
+     * cell below it (the chest door's geometry), and its KEY on the start side, off
+     * the main path when it can be — the key's vanilla location. Graded by the
+     * strategy arm: `--require=strategy:keylock`.
+     *
+     * ⛓ `needs: []` — the key is IN the room, so no boot item opens it (in an AP
+     * world the key spot is a location and the key an item: `seedlingGenRoom`'s
+     * `boss-key` row). Placed LAST so no head moves in `ELEMENT_NAMES`; OPT-IN (in
+     * no biome default). ⛔ `meetsRequire` is left at its default: with `needs: []`
+     * it is never an ITEM directive's head, and no other row declares `keylock`.
+     */
+    keygate: Object.freeze({
+        element: KEY_GATE,
+        why: 'The KEY GATE (the L19 pattern): a `bosslock` in the only gap of a wall on a main-path cut, '
+            + 'opened from the cell directly below it, and its `bosskey` on the start side, off the main '
+            + 'path when it can be. Certified by the solver\'s `keylock` (collect the key, walk the key line).',
+        extra: Object.freeze([]),
+        needs: Object.freeze([]),
+        needsStrategy: Object.freeze(['keylock']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE BAIT GATE — the solver's `bait` rung, as a gadget** (seedling gen
+     * baitgate; ⚖ the user 2026-11-04, "(1) Bait gadget", the last of "(b) More
+     * strategy elements"). The L6 pattern: a live chaser (a `bob`) on a main-path
+     * CUT, its wall grown, and ONE water cell (the lure) on the start side beside
+     * the door's approach. Pre-sword the body cannot be passed; the solver's ladder
+     * baits it (a stance whose chase line crosses the lure, then a dwell) and it
+     * drowns. Graded by the strategy arm: `--require=strategy:bait`.
+     *
+     * ⛓ `needs: []` — a lure takes no item. Placed LAST so no head moves in
+     * `ELEMENT_NAMES`; OPT-IN (in no biome default). ⛔ `meetsRequire` is left at its
+     * default: with `needs: []` it is never an ITEM directive's head, and no other
+     * row declares `bait`, so being the `strategy:bait` head moves no room.
+     */
+    baitgate: Object.freeze({
+        element: BAIT_GATE,
+        why: 'The BAIT GATE (the L6 pattern): a live `bob` on a main-path cut and one `water` cell (the lure) '
+            + 'on the start side beside the door\'s approach. Certified by the solver\'s `bait` rung (stand where '
+            + 'the chase line crosses the water, and wait for the body to drown).',
+        extra: Object.freeze([]),
+        needs: Object.freeze([]),
+        needsStrategy: Object.freeze(['bait']),
+    }),
 });
 
 /** ⛓ `none` is a HEAD, not a missing value: it is what "the machinery does not
@@ -615,6 +702,8 @@ export const isElementList = (spec) => Boolean(spec && typeof spec === 'object'
     && Array.isArray(spec.any));
 
 const LIST_SEP = '+';
+/** ⛓ The list separator, for a caller that EDITS a spec string member by member (keygate colours, slice 2). */
+export const ELEMENT_LIST_SEP = LIST_SEP;
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ **`len=2|3|4` — THE SUBSET, THE CODEC'S THIRD SPELLING OF A
@@ -1148,7 +1237,9 @@ export function headsNeeding(item, table = ELEMENT_TABLE) {
             && (table[n].element?.law ?? LAW_CUT) === LAW_CUT
             // ⛓ U3 D3 — a cut head whose differential is MEASURED to grade
             // SHORTENS declares it (`corridorbody`); see its table row.
-            && table[n].meetsRequire !== false));
+            && table[n].meetsRequire !== false
+            // ⛓ rope strategy — a row that heads `strategy:` directives but never an ITEM one (`ropegate`).
+            && !(verb === null && table[n].meetsRequire === MEETS_STRATEGY_ONLY)));
 }
 
 /**

@@ -136,24 +136,7 @@
         "exit:out_pit_15_5": { "rule": "Has", "args": { "item_name": "Fire" } }
       }
     },
-    "34": {
-      "rules": {
-        "exit:out_teleporter_128_0": {
-          "rule": "Or",
-          "children": [
-            { "rule": "Has", "args": { "item_name": "Wand" } },
-            {
-              "rule": "And",
-              "children": [
-                { "rule": "Has", "args": { "item_name": "Fire Wand Fusion" } },
-                { "rule": "Has", "args": { "item_name": "Wand" } },
-                { "rule": "Has", "args": { "item_name": "Fire" } }
-              ]
-            }
-          ]
-        }
-      }
-    },
+    "34": { "rules": { "exit:out_teleporter_128_0": { "rule": "Has", "args": { "item_name": "Wand" } } } },
     "36": {
       "locations": [
         { "entity": { "type": "chest", "x": 64, "y": 48 }, "name": "Chest", "vanilla_item": "Seal" }
@@ -534,10 +517,10 @@
         "exit:out_stairsup_112_112": {
           "rule": "Or",
           "children": [
-            { "rule": "Has", "args": { "item_name": "Progressive Shield", "count": 2 } },
             { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
             { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
-            { "rule": "Has", "args": { "item_name": "Wand" } }
+            { "rule": "Has", "args": { "item_name": "Wand" } },
+            { "rule": "Has", "args": { "item_name": "Progressive Shield", "count": 2 } }
           ]
         }
       }
@@ -594,6 +577,6 @@
       ]
     }
   },
-  "provenance": { "content_hash": "2ef0551f" },
-  "overlay_id": "seedling-vanilla-overlay-2ef0551f"
+  "provenance": { "content_hash": "8eefdf47" },
+  "overlay_id": "seedling-vanilla-overlay-8eefdf47"
 }

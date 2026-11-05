@@ -7241,5 +7241,51 @@
         "has_procgen_data": true
       }
     }
+  },
+  "cloudberry_double_jump_worldgen": {
+    "name": "Cloudberry Double Jump WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Cloudberry Double Jump WorldGen",
+            "is_canonical": true
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "has_procgen_data": true
+      }
+    }
+  },
+  "cloudberry_hero_physics_worldgen": {
+    "name": "Cloudberry Hero Physics WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Cloudberry Hero Physics WorldGen",
+            "is_canonical": true
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }

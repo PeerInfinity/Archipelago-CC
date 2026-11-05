@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 24,
+            "count": 25,
             "id": "census"
         },
         {
@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 139,
-            "count": 189,
+            "browser": 140,
+            "count": 191,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 504,
-        "browser": 205,
-        "cited": 266,
-        "files": 522,
+        "blockStyle": 507,
+        "browser": 206,
+        "cited": 267,
+        "files": 525,
         "lineStyle": 18,
-        "withDocblock": 522,
-        "withFlags": 442
+        "withDocblock": 525,
+        "withFlags": 445
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -966,7 +966,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/census-seedling-bosslocks.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "argValue"
+            ],
             "browser": false,
             "category": "census",
             "citedBy": [
@@ -975,18 +977,33 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "at",
                 "check-frontier",
+                "from",
                 "json",
                 "no-write",
-                "write-frontier"
+                "write-frontier",
+                "write-recording-route"
             ],
             "file": "census-seedling-campaign.mjs",
             "flags": [
                 {
                     "how": [
+                        "argValue"
+                    ],
+                    "name": "at"
+                },
+                {
+                    "how": [
                         "includes"
                     ],
                     "name": "check-frontier"
+                },
+                {
+                    "how": [
+                        "argValue"
+                    ],
+                    "name": "from"
                 },
                 {
                     "how": [
@@ -1005,6 +1022,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write-frontier"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write-recording-route"
                 }
             ],
             "inheritedFlags": [
@@ -1474,6 +1497,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-enemies — **ONE ENEMY IN ONE CHAMBER, AND WHAT THE SOLVER DOES ABOUT IT** (PROCGEN ELEMENTS arc 3, slice 4d, D5; ⚖ design ruling 19).",
             "path": "scripts/procgen/census-seedling-enemies.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-er-doorways.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-seedling-er-doorways — **THE ER DOOR CENSUS** (ENTRANCE RANDOMIZATION E1, a design check, no shuffle): every doorway of the Seedling playthrough atlas classified by a STATED rule, each doorway's reverse derived from GAME DATA (`seedlingReturnSpawns.returnSpawnTable`, a landing-distance heuristic only as a cro…",
+            "path": "scripts/procgen/census-seedling-er-doorways.mjs"
         },
         {
             "argvHelpers": [
@@ -2054,6 +2104,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "includes"
                     ],
+                    "name": "double-jump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
                     "name": "keep"
                 },
                 {
@@ -2061,6 +2117,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "no-play"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "physics"
                 },
                 {
                     "how": [
@@ -3866,7 +3928,8 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -5585,6 +5648,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "push-scope"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "run"
                 },
                 {
@@ -5968,7 +6037,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "dump-seedling-gen-capacity — ⛓ SEEDLING HAMMER-PHASE B2: `seedlingGenCapacity.slow`'s census AS A DUMP (the draws and their seating, one row per drawn seed), so the capacity rows' certify solves can be captured and re-solved by `check-seedling-hammer-monotonicity` (a vitest file runs under its own module loader, whi…",
+            "oneLiner": "dump-seedling-gen-capacity — ⛓ SEEDLING HAMMER-PHASE B2: `seedlingGenCapacity.train`'s census AS A DUMP (the draws and their seating, one row per drawn seed), so the capacity rows' certify solves can be captured and re-solved by `check-seedling-hammer-monotonicity` (a vitest file runs under its own module loader, wh…",
             "path": "scripts/procgen/dump-seedling-gen-capacity.mjs"
         },
         {
@@ -7332,6 +7401,10 @@ export const INSTRUMENTS = frz({
                 {
                     "from": "make-seedling-playthrough-rules.mjs",
                     "name": "no-directional-locks"
+                },
+                {
+                    "from": "seedlingDerivedRuleTable.js",
+                    "name": "print-engine-closure"
                 }
             ],
             "oneLiner": "The `seedling_playthrough_maze` preset: Seedling's PLAYTHROUGH atlas, restricted to a growing list of levels, projected into the MAZE substrate (tile-primitives Stage 2, session tile-primitives-stage2-l15).",
@@ -12468,6 +12541,51 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-deadframes.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "levels",
+                "out",
+                "shards"
+            ],
+            "file": "probe-seedling-derived-rules.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "levels"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shards"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "MEASUREMENT (slice tile-rules-automation-r-a1, ⚖ Robert 2026-11-02: \"Route A, R-A1 first (Recommended)\"): the DERIVED-RULES TABLE.",
+            "path": "scripts/procgen/probe-seedling-derived-rules.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": true,
             "category": "probe",
@@ -13119,6 +13237,50 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-fire-push — ⛓⛓⛓ seedling-fidelity-firepush: L40's BOSS KEY 2 BEHIND `pushableblockfire@576,576`, THE ROOM'S PULSER MOVING IT (`CONTACT_FIDELITY.fireBlockPulseShove`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-fire-push.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-frozen-press.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-frozen-press — ⛓⛓⛓ seedling-fidelity-frozenpress: A `primary` PRESS INSIDE AN ICE TURRET'S FREEZE IS LOST ON THE GAME, AND THE SAME PRESS MOVED TO THE FIRST INPUT THE MODEL'S `freezeForecast` CALLS FREE LANDS — PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-frozen-press.mjs"
         },
         {
             "argvHelpers": [
@@ -20497,7 +20659,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "rerecord",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -22240,6 +22403,12 @@ export const INSTRUMENTS = frz({
                         "has"
                     ],
                     "name": "estimate-only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "goal"
                 },
                 {
                     "how": [

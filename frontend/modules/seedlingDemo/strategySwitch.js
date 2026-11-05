@@ -69,7 +69,24 @@ export function withStrategySwitch(enabled, fn) {
  * own internal mechanics are not the verb: `pulse` and the fire-pulse `shove` press a button through `execHold`'s
  * runner, and that press does not count as `hold` — `disable: ['hold']` leaves them running (0 `hold` hits),
  * `disable: ['pulse']` stops a pulse.
+ *
+ * ⚖ ONE GAME ACT, TWO SOLVER ENTRY POINTS — `rope` (source hammer-2, 2026-11-04, for seedling-gen-rope-strategy):
+ * the `rope` verb (`execRope`) and the ladder's PULL rung are the SAME act. `execRope` calls `execPull`, and both cut
+ * through the run's `pullRope` (`RopeStart.hit`, `setPersistence(tag, false)`, the group latched). Only the trigger
+ * differs: `rope` fires on a rope that is a wall on the route or a `clear-tag` on its tag (vanilla L16), and the PULL
+ * rung fires on an ARMED lane's danger whose group has a rope (the generated rope gate, whose rope is off the route by
+ * construction). So the bare name `rope` names the ACT and disables both (`DISABLE_ACT_ALIASES`). A rope-off solve
+ * then cannot cut a rope by either door, and `strategy:rope` grades "needs the rope pulled". `verb:rope` still means the
+ * verb alone, and `rung:pull` the rung alone (`pull` alone stays a budget rung: on L16 it is INERT).
  */
+/**
+ * ⚖ The bare names that name a game ACT reached through more than one entry point: name → the RUNGS it also disables.
+ * A bare entry only (`verb:<name>` keeps the verb alone). The hits are counted under each gate's own name
+ * (`rope`, `rung:pull`), so the attribution says which door the solve tried.
+ */
+export const DISABLE_ACT_ALIASES = Object.freeze({
+    rope: Object.freeze(['pull']),
+});
 
 /** The refusal codes (`SolverRefusal.code`). */
 export const STRATEGY_DISABLED = 'STRATEGY_DISABLED';
@@ -128,6 +145,10 @@ export function parseDisable(list, { verbs, rungs, available = () => true }, ref
         }
         if (isVerb) offVerbs.add(name);
         if (isRung) offRungs.add(name);
+        // ⚖ one act, two entry points (`DISABLE_ACT_ALIASES`): a bare `rope` also turns off the PULL rung
+        if (qual === null && isVerb) {
+            for (const r of (Object.hasOwn(DISABLE_ACT_ALIASES, name) ? DISABLE_ACT_ALIASES[name] : [])) if (rungs.has(r)) offRungs.add(r);
+        }
         if (!asked.includes(raw)) asked.push(raw);
     }
     asked.sort();

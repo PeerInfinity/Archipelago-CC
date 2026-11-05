@@ -329,6 +329,9 @@
         "vitest.slow.config.js": {
             "description": "Vitest config for the slow/long-running JS test suite (e.g. full-solver braid cross-checks)."
         },
+        "vitest.train.config.js": {
+            "description": "Train vitest tier (⚖ Robert 2026-11-02, CI manual-only review): heavy Seedling solver/generator pins and the maze certifier's scripted sample, run by CI's `Train-tier Vitest` job on js-land/** train pushes, main and a `-f train=true` dispatch, never on a slice push (`npm run test:unit:train`)."
+        },
         "vitest.calib.config.js": {
             "description": "Manual calibration vitest tier (not in CI): home for the demoted heavy runner sweeps that define gate windows but do not need to run every battery (`npm run test:unit:calib`)."
         },

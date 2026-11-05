@@ -23,8 +23,9 @@ class ItemData:
 
 
 item_table: Dict[str, ItemData] = {
-    "Clouds": ItemData(1, ItemClassification.progression, None),
-    "Victory": ItemData(2, ItemClassification.progression, None),
-    "key_red": ItemData(3, ItemClassification.progression, "key red"),
+    "Victory": ItemData(1, ItemClassification.progression, None),
+    "key_red": ItemData(2, ItemClassification.progression, "key red"),
+    "Clouds": ItemData(3, ItemClassification.progression, None),
     "Moving Blocks": ItemData(4, ItemClassification.progression, None),
+    "Cloudberry Gem": ItemData(5, ItemClassification.progression, None),
 }

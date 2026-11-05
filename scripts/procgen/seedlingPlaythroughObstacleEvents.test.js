@@ -148,9 +148,11 @@ describe('the playthrough\'s obstacle events', () => {
 
     it('rules l38-button-event: the L38 press is ONE event in L39\'s flag at the button, gating exactly the plug\'s two crossings', () => {
         // (+ RULES darktrap-events' two pole presses, the next row)
-        expect(buttons.events.map((e) => e.fields.event_id)).toEqual(['flag:L39:8', 'flag:L62:0', 'flag:L63:1']);
+        // ⛓ RULES l20-button-latch: + L20's IN-ROOM latch press (its own row, below)
+        // ⛓ tile-lay-l40-latches: + L40's three in-room presses (zero-gate: no crossing passes through their wand locks)
+        expect(buttons.events.map((e) => e.fields.event_id)).toEqual(['flag:L20:4', 'flag:L39:8', 'flag:L40:1', 'flag:L40:7', 'flag:L40:12', 'flag:L62:0', 'flag:L63:1']);
         expect(buttons.reused).toEqual([]);
-        const [e] = buttons.events;
+        const e = buttons.events.find((x) => x.fields.event_id === 'flag:L39:8');
         // ⛓ rules-l39: L38 is ONE region now (its static pulser's empty pocket r12c5 is gone), and the plug's L39
         // side is the corridor r25c9 (the rope's run, solid until cut, splits it from the room r2c11)
         expect(e.fields.side).toBe('level_38');
@@ -172,7 +174,27 @@ describe('the playthrough\'s obstacle events', () => {
         // ⚖ rules l37-fallrock-patch: the delivered set drops L37's fallrock, so the L38 arrival button's write
         // reaches NO target on the playthrough's map (it was `-> {37,4} fallrock@288,32`, an arm).
         // ⛓ RULES darktrap-events: L61's and L63's presses are no longer skipped as cosmetic (next row).
-        expect(buttons.skipped.map((x) => x.split(':')[0]).sort()).toEqual(['L38 buttonroom@144,288 -> {37,4}']);
+        // ⛓ RULES l20-button-latch: + the in-room latches that gate nothing — L38's and L107's publish to a non-Lock (a
+        // pulser, a cover). ⛓ tile-lay-l40-latches: L40's wand locks (the overlay rules them open: no crossing passes
+        // through them) are no longer skipped — their presses MINT, with no gate (next row).
+        expect(buttons.skipped.map((x) => x.split(':')[0]).sort()).toEqual([
+            'L107 buttonroom@288,176 -> {107,1} pulser@80,32', 'L38 buttonroom@144,128 -> {38,0} cover@208,224',
+            'L38 buttonroom@144,288 -> {37,4}', 'L38 buttonroom@208,224 -> {38,3} pulser@80,224',
+        ]);
+    });
+
+    it('rules l20-button-latch: L20\'s in-room press is ONE event in the BUTTON\'s flag at the button, gating the lock\'s two internal crossings', () => {
+        const e = buttons.events.find((x) => x.fields.event_id === 'flag:L20:4');
+        expect(e).toMatchObject({ region_id: 'level_20', sub_region: 'r1c12', name: 'L20 flag 4: lock@32,80 cleared', access_rule: null });
+        expect(e.fields).toMatchObject({ side: 'level_20__r1c12', across: [], obstacle: { level: 20, tag: 4, class: 'lock', x: 32, y: 80 },
+            action: { verb: 'press', item: null, presser: { level: 20, class: 'buttonroom', x: 192, y: 16 } } });
+        const has = { rule: 'Has', args: { item_name: e.name } };
+        expect(buttons.internalExitGates).toEqual([
+            { region_id: 'level_20', from: 'r1c4', to: 'r3c1', kind: 'in-room-press', rule: has },
+            { region_id: 'level_20', from: 'r3c1', to: 'r1c4', kind: 'in-room-press', rule: has },
+        ]);
+        expect(gatesOf(RULES, new Set([e.name])).map((g) => `${g.from}->${g.to}`).sort())
+            .toEqual(['level_20__r1c4->level_20__r3c1', 'level_20__r3c1->level_20__r1c4']);
     });
 
     it('rules darktrap-events: the L61/L63 presses light L63\'s/L62\'s poles — events in the POLE\'s flag at the button, gating exactly the darktrap pockets\' doors on Or(event, Ghost Spear)', () => {

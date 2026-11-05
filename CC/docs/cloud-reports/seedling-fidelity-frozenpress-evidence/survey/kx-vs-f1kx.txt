@@ -1,0 +1,5 @@
+A survey-kx.json {'SOLVED': 203, 'REFUSED': 34}
+  frozen-press rows: [(126, 64, 'levelRun: a sword press at tick 43 would fire its rect on a FROZEN tick (a pickup ceremony), and `genericHit` returns immediately under `Gam')]
+B survey-f1kx.json {'SOLVED': 203, 'REFUSED': 34}
+  frozen-press rows: [(126, 64, 'levelRun: a sword press at tick 43 would fire its rect on a FROZEN tick (a pickup ceremony), and `genericHit` returns immediately under `Gam')]
+movers 0

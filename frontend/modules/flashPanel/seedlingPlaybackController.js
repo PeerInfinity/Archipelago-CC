@@ -45,7 +45,7 @@
  *
  * Name → cell maps come from the generated arm's assembly REPORT
  * (`assembleGeneratedSeedlingSet(...).report`: `apitems` and `doors`, and
- * ⛓ `chestDoors` — a door chest is a location too), which the panel keeps
+ * ⛓ `chestDoors` and `lootChests` — a door or loot chest is a location too), which the panel keeps
  * from its load. Exit names arrive in either spelling the
  * graph uses — bare `exit_0` or `{regionId}__{exitName}` — as
  * `flashSubstrate/bridge.js` `_translateWalkTo` accepts them; a bare name is
@@ -123,7 +123,7 @@ export const PENDING_GIVE_UP_MS = 60000;
  * Map an AP-vocabulary target to a goal in the generated set's own terms.
  *
  * @param {{kind:string, name?:string, x?:number, y?:number}} target
- * @param {{apitems:Array, doors:Array, chestDoors?:Array}} report  the assembly report
+ * @param {{apitems:Array, doors:Array, chestDoors?:Array, lootChests?:Array}} report  the assembly report
  * @param {{liveLevel?:number|null, region?:string|null}} [where]
  * @returns {{goal:object}|{refused:string}}
  */
@@ -135,7 +135,9 @@ export function resolveSeedlingGoal(target, report, { liveLevel = null, region =
         // ⛓ DOOR CHESTS — a door chest is no apitem (`seedlingGeneratedSet.placeApItems` keeps the chest): its check
         // is the chest's own clear at its FIXED tag, so the goal names the entity, and the page and the wasm engine
         // walk it as a real room's chest (`locationEntityOf` → the solver's `collect-placement` → strategy `chest`).
-        const c = (report?.chestDoors ?? []).find((x) => x.location === name);
+        // ⛓ LOOT CHESTS (seedling gen B1) — the same: no apitem, its own fixed tag, kept in `report.lootChests`.
+        const c = (report?.chestDoors ?? []).find((x) => x.location === name)
+            ?? (report?.lootChests ?? []).find((x) => x.location === name);
         if (c) return { goal: { kind: 'location', level: c.room, tag: c.tag, entityType: 'chest', name } };
         return { refused: `"${name}" is not an AP location of the generated Seedling rooms` };
     }

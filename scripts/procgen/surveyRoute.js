@@ -356,41 +356,130 @@ export function gameStateEventsOf(regions) {
 
 /**
  * ⛓ RULES obstacle-events — **BREAK BEFORE FIRST USE**, as the leg walk's rule (⚖ the user; the planner's
- * condition on option B). The fewest pending game-state events, taken in order, each reachable from where
- * the walk stands with its own rule held, after which `target` is reachable (and its rule holds when
- * `targetRule` is given). null when no set of them opens the way. Greedy closure over the reachable events,
- * then pruned one at a time, so an event is only ever broken because this leg NEEDS it — never eagerly —
- * and a gated landing is never walked without its event.
+ * condition on option B). The FEWEST pending game-state events, walked in sequence (each reachable from where the
+ * walk stands, with its own rule held), after which `target` is reachable (and its rule holds when `targetRule` is
+ * given). null when no set of them opens the way. An event is only ever broken because this leg NEEDS it — a
+ * smallest set has no member it could drop — never eagerly, and a gated landing is never walked without its event.
+ *
+ * ⛓ ORDER-FREE (session tile-survey-closure). The answer never depends on the order of `events`:
+ *  1. pending is sorted by eventId (`EVENT_ORDER`, numeric: L9 < L10); list position is never read again;
+ *  2. a FIXED POINT from `here` takes every pending event reachable with its rule held, until stable. It
+ *     over-approximates every walkable sequence (each position a walk reaches is reached from `here` with fewer
+ *     items, and rules are monotone in items), so a target it leaves shut is null with no search;
+ *  3. iterative deepening over the fixed point's events, in eventId order: the first walkable sequence is of the
+ *     fewest events, and the lexicographically smallest id sequence of that size (the tiebreak).
+ * Main's greedy closure (the first reachable event in list order, then pruned one at a time) walked into side rooms
+ * it then could not prune (row 6.2 broke L20's two locks on the way to L39's wandlock), and into dead ends
+ * (session tile-lay-l40-latches: L40's presses). The cost is one BFS per distinct (position, set), memoised; the
+ * search is exponential only in the answer's size, and past `nodeBudget` it THROWS by name rather than guess.
  */
-export function eventPrerequisites({ regions, ruleHolds, here, items, events, target, targetRule = null }) {
-    const pending = events.filter((e) => !(items[e.item] > 0));
-    const walkThrough = (seq) => {
-        const its = { ...items };
-        let cur = here;
-        for (const e of seq) {
-            if (!regionPathHops(regions, ruleHolds, cur, e.region, its) || !ruleHolds(e.rule, its)) return false;
-            its[e.item] = 1;
-            cur = e.region;
-        }
-        return !!regionPathHops(regions, ruleHolds, cur, target, its) && (!targetRule || ruleHolds(targetRule, its));
-    };
+export function eventPrerequisites({
+    regions, ruleHolds, here, items, events, target, targetRule = null, nodeBudget = EVENT_SEARCH_BUDGET,
+}) {
+    // ⛓ An event NO AP rule names can never open a way (session tile-lay-l40-latches: L40's in-room presses). Kept as a
+    // cheap guard that shrinks the search; correctness no longer rests on it (the order-free search survives a named
+    // dead end too — surveyRoute.test.js pins that case).
+    const named = namedItemsOf(regions);
+    const pending = events.filter((e) => !(items[e.item] > 0) && named.has(e.item))
+        .sort((x, y) => EVENT_ORDER.compare(eventKey(x), eventKey(y)));
     if (pending.length === 0) return null;
-    const seq = [];
-    const its = { ...items };
-    let cur = here;
-    while (!walkThrough(seq)) {
-        const next = pending.find((e) => !seq.includes(e)
-            && regionPathHops(regions, ruleHolds, cur, e.region, its) && ruleHolds(e.rule, its));
-        if (!next) return null;
-        seq.push(next);
-        its[next.item] = 1;
-        cur = next.region;
+    const rank = new Map(pending.map((e, i) => [e, i]));
+    const setKey = (set) => [...set].map((e) => rank.get(e)).sort((x, y) => x - y).join(',');
+    const itemsWith = (set) => {
+        const its = { ...items };
+        for (const e of set) its[e.item] = 1;
+        return its;
+    };
+    const reachMemo = new Map();
+    const reach = (cur, set) => {
+        const key = `${cur}|${setKey(set)}`;
+        if (!reachMemo.has(key)) reachMemo.set(key, reachableFrom(regions, ruleHolds, cur, itemsWith(set)));
+        return reachMemo.get(key);
+    };
+    const opens = (cur, set) => reach(cur, set).has(target) && (!targetRule || ruleHolds(targetRule, itemsWith(set)));
+    const fixed = new Set();
+    for (;;) {
+        const R = reach(here, fixed);
+        const its = itemsWith(fixed);
+        const add = pending.filter((e) => !fixed.has(e) && R.has(e.region) && ruleHolds(e.rule, its));
+        if (add.length === 0) break;
+        add.forEach((e) => fixed.add(e));
     }
-    for (let i = seq.length - 1; i >= 0; i -= 1) {
-        const without = seq.filter((_, j) => j !== i);
-        if (walkThrough(without)) seq.splice(i, 1);
+    if (!opens(here, fixed)) return null;
+    if (opens(here, new Set())) return [];
+    const candidates = pending.filter((e) => fixed.has(e));
+    const dead = new Set();
+    let nodes = 0;
+    const search = (cur, set, seq, left) => {
+        nodes += 1;
+        if (nodes > nodeBudget) {
+            throw new Error(`eventPrerequisites: ${here} -> ${target} passed its node budget of ${nodeBudget} `
+                + `(${candidates.length} candidate events, depth ${seq.length + left}) — the closure refuses rather than guess`);
+        }
+        const key = `${cur}|${setKey(set)}|${left}`;
+        if (dead.has(key)) return null;
+        const R = reach(cur, set);
+        const its = itemsWith(set);
+        for (const e of candidates) {
+            if (set.has(e) || !R.has(e.region) || !ruleHolds(e.rule, its)) continue;
+            const next = new Set(set).add(e);
+            if (left === 1) {
+                if (opens(e.region, next)) return [...seq, e];
+                continue;
+            }
+            const found = search(e.region, next, [...seq, e], left - 1);
+            if (found) return found;
+        }
+        dead.add(key);
+        return null;
+    };
+    for (let k = 1; k <= candidates.length; k += 1) {
+        const found = search(here, new Set(), [], k);
+        if (found) return found;
     }
-    return seq;
+    return null;
+}
+
+/** `eventPrerequisites`' search cap (DFS nodes): far above today's (≤ 3 per call at 6ee66ca952), so a hit is a finding. */
+export const EVENT_SEARCH_BUDGET = 200000;
+/** The closure's tiebreak: eventId (else name), numeric-aware, so `flag:L9:0` < `flag:L10:0`. */
+const EVENT_ORDER = new Intl.Collator('en', { numeric: true });
+const eventKey = (e) => String(e.eventId ?? e.name);
+
+/** Every region a BFS from `src` under `items` reaches (`src` included). */
+export function reachableFrom(regions, ruleHolds, src, items) {
+    const seen = new Set([src]);
+    const queue = [src];
+    while (queue.length) {
+        const u = queue.shift();
+        for (const e of regions[u]?.exits ?? []) {
+            const v = e.connected_region;
+            if (seen.has(v) || !ruleHolds(e.access_rule, items)) continue;
+            seen.add(v);
+            queue.push(v);
+        }
+    }
+    return seen;
+}
+
+const NAMED_ITEMS = new WeakMap();
+/** Every item name some exit or location rule of `regions` names (`Has`), memoised per regions object. */
+export function namedItemsOf(regions) {
+    if (!NAMED_ITEMS.has(regions)) {
+        const out = new Set();
+        const walk = (r) => {
+            if (!r || typeof r !== 'object') return;
+            if (Array.isArray(r)) { r.forEach(walk); return; }
+            if (r.rule === 'Has' && r.args?.item_name) out.add(r.args.item_name);
+            for (const v of Object.values(r)) walk(v);
+        };
+        for (const reg of Object.values(regions)) {
+            for (const e of reg.exits ?? []) walk(e.access_rule);
+            for (const l of reg.locations ?? []) walk(l.access_rule);
+        }
+        NAMED_ITEMS.set(regions, out);
+    }
+    return NAMED_ITEMS.get(regions);
 }
 
 /**

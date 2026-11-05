@@ -150,7 +150,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "play",
                     "statement": "It brings progression items of its own",
-                    "text": "11 items"
+                    "text": "13 items"
                 },
                 {
                     "group": "play",
@@ -981,9 +981,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 93,
+        "fields": 97,
         "fieldsRead": 39,
-        "fieldsUnread": 51,
+        "fieldsUnread": 55,
         "statements": 29,
         "substrates": 9
     },
@@ -1505,11 +1505,11 @@ export const CAPABILITIES = frz({
                 {
                     "id": "cloudberry",
                     "kind": "yes",
-                    "text": "11 items",
+                    "text": "13 items",
                     "why": [
                         {
                             "field": "libraryItems",
-                            "value": "11 keys"
+                            "value": "13 keys"
                         },
                         {
                             "field": "supportedFeatures",
@@ -4968,6 +4968,10 @@ export const CAPABILITIES = frz({
         "iframeId",
         "instantiateAtlasEntryForSpecs",
         "instantiateLibraryEntryForSpecs",
+        "itemIntroduction",
+        "itemIntroduction.exhaustedRefusal",
+        "itemIntroduction.introducibleItems",
+        "itemIntroduction.replayableItems",
         "label",
         "libraryEntryRefusal",
         "loadRegionEvent",

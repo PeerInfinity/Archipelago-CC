@@ -4,6 +4,8 @@
  * strategy arm (`disable: [verb]`, `SEEDLING_STRATEGY_SWITCH=1`). Each existing gadget grades STRONG on seeds 1–3:
  *   blockpocket (shove, pre-sword) · rockgate (break, post-sword) · shieldgate (touch, post-shield) · killgate (kill).
  *   ⛓ strategy gadgets (r3): holdgate (hold, pre-sword) · weighgate (weigh, pre-sword).
+ *   ⛓ rope strategy: ropegate (rope, post-sword — the act; `disable: ['rope']` also turns off the PULL rung).
+ *   ⛓ seedling gen baitgate: baitgate (bait, pre-sword — seeds 1–2 STRONG; seed 3 NOT-ESTABLISHED, the detour's).
  * And the arm's honesty rows: the flag OFF refuses with 0 hits, which is "rule not established" (NOT-ESTABLISHED),
  * never STRONG; the row records `disabled` and the `CONTACT_FIDELITY` stamp beside it (fidelity p17 condition 3).
  */
@@ -91,6 +93,102 @@ describe('strategy switch D3 — the burn gate grades STRONG by strategy (seeds 
 
     it('burngate with the flag OFF: NOT-ESTABLISHED, never STRONG', async () => {
         const r = await generate('burn-off', ['--seed=1', '--biome=post-fire', '--require=strategy:burn'], '0');
+        expect(r.met).toBe(false);
+        expect(r.grade).toBe('NOT-ESTABLISHED');
+        expect(r.refused.reason).toBe('the-item-is-not-required: NOT-ESTABLISHED');
+    }, 900000);
+});
+
+/**
+ * ⛓ STRATEGY ELEMENTS ROUND 2 — **THE KEY GATE**, the solver's `keylock`: a `bosslock` in a wall's only gap and its
+ * `bosskey` on the start side (⚖ the user 2026-11-03: the key is a randomized AP item whose VANILLA placement is that
+ * spot). Graded pre-sword AND post-sword, as the brief asked. Its own `describe` so a parallel gadget appends beside it.
+ */
+describe('strategy elements r2 — the key gate grades STRONG by strategy (seeds 1–3)', () => {
+    it('keygate/keylock on pre-sword and post-sword: STRONG at the disabled gate, 6/6', async () => {
+        const runs = await Promise.all(['pre-sword', 'post-sword'].flatMap((biome) => [1, 2, 3].map((seed) => generate(
+            `keylock-${biome}-${seed}`, [`--seed=${seed}`, `--biome=${biome}`, '--elements=keygate',
+                '--require=strategy:keylock']).then((r) => ({ biome, seed, r })))));
+        for (const { biome, seed, r } of runs) {
+            const what = `keygate strategy:keylock ${biome} seed ${seed}`;
+            expect(r.met, what).toBe(true);
+            expect(r.grade, what).toBe('STRONG');
+            expect(r.evidence, what).toBe('STRONG (solver refusal at the disabled gate)');
+            expect(r.without.verdict, what).toBe('REFUSED');
+        }
+    }, 900000);
+
+    it('keygate with the flag OFF: NOT-ESTABLISHED, never STRONG', async () => {
+        const r = await generate('keylock-off', ['--seed=1', '--biome=pre-sword', '--elements=keygate',
+            '--require=strategy:keylock'], '0');
+        expect(r.met).toBe(false);
+        expect(r.grade).toBe('NOT-ESTABLISHED');
+        expect(r.refused.reason).toBe('the-item-is-not-required: NOT-ESTABLISHED');
+    }, 900000);
+});
+
+/**
+ * ⛓ ROPE STRATEGY — **THE ROPE GATE**, graded by the `rope` ACT (⚖ the user 2026-11-04, "(1) Rope gate gadget"): an
+ * armed `arrowtrap` whose lane is the only corridor and a `rope` of its group on the start side. The generated rope is
+ * off the route, so the solver reaches the cut through the ladder's PULL rung, not the `rope` verb; `strategySwitch`'s
+ * `DISABLE_ACT_ALIASES` makes the bare `rope` disable both (one game act, two entry points; source hammer-2). Post-sword
+ * (the rope is cut by a sword). Its own `describe` so a parallel gadget appends beside it.
+ */
+describe('rope strategy — the rope gate grades STRONG by the rope act (seeds 1–3)', () => {
+    it('ropegate/rope on post-sword: STRONG at the disabled gate, 3/3', async () => {
+        const runs = await Promise.all([1, 2, 3].map((seed) => generate(`rope-${seed}`,
+            [`--seed=${seed}`, '--biome=post-sword', '--elements=ropegate', '--require=strategy:rope'])
+            .then((r) => ({ seed, r }))));
+        for (const { seed, r } of runs) {
+            const what = `ropegate strategy:rope seed ${seed}`;
+            expect(r.met, what).toBe(true);
+            expect(r.grade, what).toBe('STRONG');
+            expect(r.evidence, what).toBe('STRONG (solver refusal at the disabled gate)');
+            expect(r.without.verdict, what).toBe('REFUSED');
+        }
+    }, 900000);
+
+    it('ropegate with the flag OFF: NOT-ESTABLISHED, never STRONG', async () => {
+        const r = await generate('rope-off', ['--seed=1', '--biome=post-sword', '--elements=ropegate',
+            '--require=strategy:rope'], '0');
+        expect(r.met).toBe(false);
+        expect(r.grade).toBe('NOT-ESTABLISHED');
+        expect(r.refused.reason).toBe('the-item-is-not-required: NOT-ESTABLISHED');
+    }, 900000);
+});
+
+/**
+ * ⛓ SEEDLING GEN BAITGATE — **THE BAIT GATE**, the solver's `bait` RUNG (⚖ the user 2026-11-04, "(1) Bait gadget"): a
+ * `bob` on a main-path cut and one `water` lure on its start side; the bait stance drowns it. Pre-sword (post-sword the
+ * sword's strike kills the body, so `bait` is not needed there). A bare `bait` is both the verb and the rung, so
+ * `disable: ['bait']` turns off both with no alias. ⛔ SEED 3 IS NOT STRONG, and that is pinned rather than hidden: with
+ * `bait` off the ladder's DETOUR walks the body across the lure and it drowns — ⚖ hammer-2 (2026-11-04): *"a
+ * LEGITIMATE DIFFERENT solution: the game really drowns a chaser that follows you into water"*. Its own `describe` so a
+ * parallel gadget appends beside it.
+ */
+describe('seedling gen baitgate — the bait gate grades STRONG by the bait rung (seeds 1–2; seed 3 the detour)', () => {
+    it('baitgate/bait on pre-sword: STRONG at the disabled gate on seeds 1 and 2; seed 3 solves WITHOUT it', async () => {
+        const runs = await Promise.all([1, 2, 3].map((seed) => generate(`bait-${seed}`,
+            [`--seed=${seed}`, '--biome=pre-sword', '--elements=baitgate', '--require=strategy:bait'])
+            .then((r) => ({ seed, r }))));
+        for (const { seed, r } of runs) {
+            const what = `baitgate strategy:bait seed ${seed}`;
+            if (seed === 3) {
+                expect(r.met, what).toBe(false);
+                expect(r.grade, what).toBe('NOT-ESTABLISHED');
+                expect(r.without.verdict, what).toBe('SOLVED');
+                continue;
+            }
+            expect(r.met, what).toBe(true);
+            expect(r.grade, what).toBe('STRONG');
+            expect(r.evidence, what).toBe('STRONG (solver refusal at the disabled gate)');
+            expect(r.without.verdict, what).toBe('REFUSED');
+        }
+    }, 900000);
+
+    it('baitgate with the flag OFF: NOT-ESTABLISHED, never STRONG', async () => {
+        const r = await generate('bait-off', ['--seed=1', '--biome=pre-sword', '--elements=baitgate',
+            '--require=strategy:bait'], '0');
         expect(r.met).toBe(false);
         expect(r.grade).toBe('NOT-ESTABLISHED');
         expect(r.refused.reason).toBe('the-item-is-not-required: NOT-ESTABLISHED');

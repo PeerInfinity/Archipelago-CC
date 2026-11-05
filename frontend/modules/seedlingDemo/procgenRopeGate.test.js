@@ -41,7 +41,9 @@ import {
 } from './procgenOracle.js';
 import { bootAtTile, emptyLevel, oelAtTile, withEntities } from './procgenLevel.js';
 import { withArrowLaneCrossing } from './arrowLaneCrossing.js';
-import { ELEMENT_NAMES, ELEMENT_TABLE, headsNeeding, parseElementSpec } from '../procgenCore/elementSpec.js';
+import {
+    ELEMENT_NAMES, ELEMENT_TABLE, MEETS_STRATEGY_ONLY, headsNeeding, parseElementSpec,
+} from '../procgenCore/elementSpec.js';
 import { ROPE_GATE, ROPE_GATE_ROPE_ID, ROPE_GATE_TRAP_ID } from '../procgenCore/elements/ropeGate.js';
 import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
 
@@ -63,9 +65,14 @@ describe('⛓⛓⛓ the ROPE GATE\'s table row and binding rows (seedling gen A1
         expect(ELEMENT_TABLE.ropegate.needs).toEqual(['hasSword']);
         /** ⛓ seedling gen B2 appended `chestdoor` after it, r2 `burngate`, and r3 `holdgate`/`weighgate`;
          *  nothing before it moved. */
-        expect(ELEMENT_NAMES.slice(-5)).toEqual(['ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate']);
+        expect(ELEMENT_NAMES.slice(-8)).toEqual(['ropegate', 'chestdoor', 'burngate', 'holdgate', 'weighgate', 'chestloot',
+            'keygate', 'baitgate']);
         /** ⛔ joining `require:['hasSword']`'s `+` list would move every such room */
         expect(headsNeeding('hasSword')).not.toContain('ropegate');
+        /** ⛓ rope strategy — it heads `strategy:rope` (the only row declaring it), and ONLY strategy directives */
+        expect(ELEMENT_TABLE.ropegate.needsStrategy).toEqual(['rope']);
+        expect(ELEMENT_TABLE.ropegate.meetsRequire).toBe(MEETS_STRATEGY_ONLY);
+        expect(headsNeeding('strategy:rope')).toEqual(['ropegate']);
     });
 
     it('trap → `arrowtrap {tset g, shoot 1}`, rope → `rope {tset g, tag}` + its node; ONE group, '
@@ -137,6 +144,30 @@ describe('⛓⛓⛓ the ROPE GATE on a generated Seedling level', () => {
         expect(row.verdict).toBe('REQUIRED');
         expect(row.withoutVerdict).toBe('REFUSED');
         expect(gradeOf(row)).toBe('STRONG');
+    }, 120000);
+
+    /**
+     * ⛓ ROPE STRATEGY — the `rope` ACT (`strategySwitch.DISABLE_ACT_ALIASES`): with `rope` off the PULL rung is off
+     * too, so the lane cannot be silenced and the ladder EXHAUSTS — refused AT the gate (`rung:pull` hits; the `rope`
+     * verb itself is never asked, the generated rope being off the route). Control: the same room with its TRAP
+     * removed solves with `rope` off — the rope is then no requirement (the grade drops).
+     */
+    it('the strategy arm: `rope` is REQUIRED — STRONG, refused at the PULL rung; with the trap removed it is not', () => {
+        const out = gen(POST_SWORD_PALETTE);
+        const state = (record) => ({ record, model: out.model, palette: POST_SWORD_PALETTE,
+            summary: out.summary, seed: WITNESS.seed, biome: 'post-sword' });
+        const withOut = { verdict: 'SOLVED', ticks: out.summary.finalTicks };
+        const row = requirementsFor(state(out.record), withOut, { budget: DEFAULT_BUDGET, strategies: ['rope'] })
+            .rows.find((r) => r.flag === 'strategy:rope');
+        expect(row.verdict).toBe('REQUIRED');
+        expect(row.withoutVerdict).toBe('REFUSED');
+        expect(gradeOf(row)).toBe('STRONG');
+        expect(row.disabled.hits['rung:pull']).toBeGreaterThan(0);
+        const noTrap = { ...out.record, entities: out.record.entities.filter((e) => e.type !== 'arrowtrap') };
+        const bare = requirementsFor(state(noTrap), withOut, { budget: DEFAULT_BUDGET, strategies: ['rope'] })
+            .rows.find((r) => r.flag === 'strategy:rope');
+        expect(bare.verdict).not.toBe('REQUIRED');
+        expect(bare.withoutVerdict).toBe('SOLVED');
     }, 120000);
 
     it('pre-sword: REFUSED BY NAME with no solve — the boot grants no sword', () => {

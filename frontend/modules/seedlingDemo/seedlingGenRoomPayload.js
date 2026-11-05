@@ -89,8 +89,72 @@ const grownClause = (grown) => (grown.sizes.length > 1
     : ` at ${grown.sizes[0]} (already at the room contract's maximum, ${grown.max} tiles, so it cannot grow)`);
 
 /** ⛓ Every refusal of this module, as a printed SENTENCE. */
+/**
+ * ⛓ strategy elements r2 — the NAME of the key-gate colour refusal (⚖ the user 2026-11-03, *"B: Distinct colour
+ * per room"*). A room is drawn knowing nothing of the other rooms, so a multi-room world cannot yet give each
+ * key-gate room its own colour. ⚖ The user redirected that part (2026-11-03) to a general pipeline feature, *"items
+ * the player is expected to already have on first reaching the region being generated"*; until it exists, a world
+ * whose key gate is not its FIRST generated room is refused by this name at serialize, and a set holding two
+ * key-gate rooms at assembly.
+ */
+export const KEYGATE_COLOUR_REFUSAL = 'keygate-colour-not-allocated';
+/**
+ * ⛓ strategy elements r2 — the NAME of the key-gate RULE refusal. The room ANDs `Has(<key item>)` onto its goal
+ * cell's location (`seedlingGenRoom.extractGenRules`), and a driver that REPLACES a room's location rules with its
+ * own spec's drops it — a rules.json whose logic says the goal needs no key while the lock says it does. Refused at
+ * serialize, where the FINAL rules are read.
+ * ⛓ procgen-region-authored-rules (⚖ "A: Fix, marked rules only"): the key rule is MARKED as the room's own
+ * (`procgenCore/authoredRule.js`), and the engine's override sites (sphere growth, top-down, the sphere library
+ * tile branch) AND a marked rule on instead of replacing it — so no shipped driver trips this any more. It stays as
+ * the BACKSTOP for a driver that drops the mark (`seedlingGenAuthoredRule.test.js`, mutants a1/a2).
+ */
+export const KEYGATE_RULE_REFUSAL = 'keygate-rule-not-carried';
+/**
+ * ⛓ keygate colours (slice 2) — the names of a REQUESTED key gate's refusals. Under sphere growth the PLANNER asks
+ * a room for its key (`procgenPipeline/sphereIntroductions.js`, through the entry's `itemIntroduction`): each room
+ * is handed a colour no other room holds (⚖ "B: Distinct colour per room"). With all five in the world a sixth
+ * room is refused (`keygate-colours-exhausted`). A room that cannot draw the requested gate inside its re-roll
+ * budget is refused too (`keygate-request-not-met`).
+ */
+export const KEYGATE_EXHAUSTED_REFUSAL = 'keygate-colours-exhausted';
+/** The Seedling world's key items by `keyType`, spelled ONCE in this light module (`seedlingGenRoom.BOSS_KEY_ITEMS`
+ *  is this list; `seedlingAtlasDerivation.ITEM_FOR_KEY` is pinned equal). */
+export const BOSS_KEY_ITEM_NAMES = Object.freeze(['Red Key', 'Green Key', 'Purple Key', 'Blue Key', 'Yellow Key']);
+export const KEYGATE_REQUEST_REFUSAL = 'keygate-request-not-met';
+/** ⛓ The set assembler's backstop: two rooms holding ONE key colour. */
+export const KEYGATE_SHARED_REFUSAL = 'keygate-colour-shared';
+
 export const GEN_ROOM_REFUSALS = Object.freeze({
     noRegionId: () => 'generated Seedling room: a region_id is required',
+    keygateRule: (regionId, location, item) => `${KEYGATE_RULE_REFUSAL}: generated Seedling room '${regionId}' `
+        + `holds a KEY GATE, and its location '${location}' stands behind the lock, but the world's final rule for it `
+        + `does not require '${item}' — the pipeline driver replaced the room's own rule with its spec's. The logic `
+        + 'would say the goal needs no key while the lock says it does, so the room is refused. ⛓ The room MARKS the '
+        + 'key rule as its own (procgenCore/authoredRule.js); a driver that overrides a location rule must AND a '
+        + 'marked one on (procgenPipelineEngine keepAuthoredRule), never drop it.',
+    keygateColour: (regionId, ordinal) => `${KEYGATE_COLOUR_REFUSAL}: multi-room keygate colours are allocated by `
+        + 'the sphere planner\'s requests or, in the plan-less modes, from the items already in the world '
+        + '(`introduced`), and this room\'s key gate had neither. Generated Seedling room '
+        + `'${regionId}' (generated room #${ordinal}) holds a KEY GATE, and only generated room #0 may: each key-gate `
+        + 'room must have its own colour (⚖ "B: Distinct colour per room"), and a room is drawn knowing nothing of '
+        + 'the others. ⚠ KNOWN LIMIT: this also refuses a world whose room #0 placed no key gate. Ask for the key '
+        + 'gates in a sphere-growth world (the planner gives each room its own colour), or for one key gate in a '
+        + 'one-generated-room world.',
+    keygateExhausted: (regionId, items) => `${KEYGATE_EXHAUSTED_REFUSAL}: generated Seedling room '${regionId}' `
+        + `would take a KEY GATE, and all ${items.length} key colours (${items.join(', ')}) are already in the world. `
+        + 'Each key-gate room has its own colour (⚖ "B: Distinct colour per room"), so a room past the last colour is '
+        + 'refused rather than given a key another room\'s lock also takes.',
+    keygateRequest: (regionId, item, why) => `${KEYGATE_REQUEST_REFUSAL}: generated Seedling room '${regionId}' `
+        + `was asked by the pipeline for a KEY GATE opened by '${item}', and no draw within its re-roll budget placed `
+        + `one that the solver grades required (${why}). The planner's logic already counts the key, so the room `
+        + 'is refused rather than built without it.',
+    /** ⛓ slice 2b — an EXPLICIT `keygate;type=N` whose colour already stands elsewhere in the run (`introduced`). */
+    keygateTaken: (regionId, item) => `${KEYGATE_SHARED_REFUSAL}: generated Seedling room '${regionId}' asks for `
+        + `the KEY GATE opened by '${item}' (an explicit type), and '${item}' already stands elsewhere in this world. `
+        + 'Each key-gate room has its own colour (⚖ "B: Distinct colour per room"), so the room is refused rather '
+        + 'than given a key another room\'s lock also takes. Omit the type and the room takes a free colour.',
+    keygateTwoKeys: (regionId, items) => `generated Seedling room '${regionId}': the pipeline asks it to introduce `
+        + `${items.join(', ')}, and a room holds ONE key gate`,
     duplicateExit: (regionId, exitId) => `generated Seedling room '${regionId}': exit '${exitId}' is `
         + 'requested twice',
     unknownExit: (regionId, exitId) => `generated Seedling room '${regionId}': a rule names exit `
