@@ -27359,3 +27359,31 @@ in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fin
 4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
 327 t, 0 hits, game-witnessed.
 
+
+### Seedling fidelity L105 — a preview steps the drifting BeamTower Solid (`previewBeamTowerDrift`, OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37b (⚖ the user's GO 2026-11-04: make L105 hitless so `fineStanceWalk` can
+flip). The report is `CC/docs/cloud-reports/seedling-fidelity-l105.md`.
+
+**W0.** The hit is not `fineStanceWalk`'s. At base `26ed405d3f` both captured requests of sweep leg `level_105 <-
+in_L104_0_16 -> exit:out_teleporter_80_144` answer the same, trace for trace, with the switch ON and OFF, over seam −8..+8.
+The hit window (seams 5684–5690 of the captured clocks: 1 beam hit, or 2 flyer hits) belongs to the default solver; p17's
+attribution runs were single sweep rows at other seams. The plan is BEAMLANE's (`beamLaneWalk`): the lane walk previewed
+clean for 413 ticks, the arm drove its keys open-loop, and the run was stopped by `beamtower@48,40`'s Solid at x 58.41 from
+t211 (the tower's drift, `beamTowerDrift` ON, raised it into the lane; the preview's stepper held the Solid where it stood at
+the preview's start). The beam hit at t243 knocked the player into `pit@48,0`; two more pit deaths followed, then the arrival
+door to L104, which `{forced: {transition}}` returned as the goal. The sweep scored it `done`; the game agrees (divs []).
+
+**D1.** (a) `levelRun.previewStepper`'s step takes an optional `previewTick`; under the key the towers' Solids are swapped for
+`beamTowerSolidForecast(k)` (`beamTower.beamTowerDriftedY`: `stepBeamTowerFrame`'s drift summed in its order from the live
+`y` and `Game.time`; a ceremony, an unknown `y` or no clock keeps the snapshot). `previewWalk` passes its own tick at all three
+step sites. (b) The PHASE arm drives a preview's keys only while the run is on the preview (else `{escalations}`: the walk
+re-plans; a row in the new optional result field `phaseDriveLeft`), and a lane crossing is returned only through the walk's
+own exit (`drive`'s identity), else refused by name. ON: every seam of both requests solves hitless into L106 (2 refusals
+also solve). Game witness (p4g, 0 px, 308 ticks, no hit, L106 at t307); the OFF control reproduces on the game (hit t243, L104).
+Mutant M1 (forecast removed, guard kept): every hit seam refuses by name at the tower instead of a fake solve.
+
+**Trap candidates.** (1) A switch named by a 3-of-4 sweep A/B is a hypothesis: replay the captured request with the switch
+both ways before working on it. (2) A preview built from a snapshot of a moving Solid is right only while the Solid does not
+move; open-loop drive of such a preview turns a forecast miss into deaths. (3) A transition returned as the goal must be the
+goal's own exit — check identity at every place that returns one.
