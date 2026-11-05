@@ -317,3 +317,118 @@ export function runRegenerateInWorker(args, {
         terminated: () => terminated,
     };
 }
+
+/* ── P5c: a generation the worker cannot wait on, finished on the PAGE ─── */
+
+/**
+ * ⛓⛓ **A REALISER WHOSE GENERATION RUNS OUTSIDE JS** (cloudberry's game page)
+ * yields the promise of that work and, drained synchronously, refuses: it could not
+ * wait. The worker has no such generator (it lives on the page), so it answers the
+ * refusal with `pendingGeneration: true`; the page then runs the same job itself
+ * (`runRegenerateOnPage`), awaiting what the realiser yielded. Derived from what the
+ * realiser DID, not declared: a substrate that never yields `await` is never flagged.
+ *
+ * @param {Function} run a synchronous job answering `{ok, …}`
+ * @param {Function} collect `procgenPipelineEngine.collectPendingGenerations`
+ * @returns {object} the job's answer, with `pendingGeneration: true` on a refusal that left work pending
+ */
+export function flagPendingGeneration(run, collect) {
+    const { value, pending } = collect(run);
+    return value && !value.ok && pending.length > 0 ? { ...value, pendingGeneration: true } : value;
+}
+
+/** ⛓ The refusal when the ONE retry after the awaited work still finds work pending. EXPORTED for the rows. */
+export const REGION_GENERATION_STILL_PENDING = 'the generation finished, but the realiser asked again still found '
+    + 'work pending (it was retried once)';
+
+/**
+ * ⛓⛓⛓ **AWAIT THE YIELDED WORK, THEN ASK ONCE MORE.** Runs `run` under `collect`;
+ * a success, or a refusal with nothing pending, is the answer as it stands (a
+ * synchronous substrate: one call, its own answer). A refusal with work pending
+ * awaits EXACTLY that work (the promises the realiser yielded — no timer, no poll)
+ * and runs `run` once more. The bound is that one retry: a retry that again leaves
+ * work pending is refused as `REGION_GENERATION_STILL_PENDING`, never retried.
+ * A generation that FAILED is the retry's own named refusal (the substrate reports
+ * it; cloudberry: `CloudberryLevelRefused`, or the generator's failure).
+ *
+ * @param {Function} run a synchronous job answering `{ok, threw?, …}`
+ * @param {{collect: Function, onPending?: Function}} io `onPending(promises)` is told when it waits
+ * @returns {Promise<object>} the job's answer, `retried: true` when it waited
+ */
+export async function regenerateAwaitingGeneration(run, { collect, onPending = () => {} }) {
+    const first = collect(run);
+    if (first.value?.ok || first.pending.length === 0) return first.value;
+    onPending(first.pending);
+    await Promise.all(first.pending);
+    const again = collect(run);
+    if (again.value?.ok || again.pending.length === 0) return { ...again.value, retried: true };
+    return {
+        ...again.value, ok: false, retried: true, stillPending: true,
+        threw: `${REGION_GENERATION_STILL_PENDING}; its last refusal: ${again.value?.threw ?? 'none'}`,
+    };
+}
+
+/** ⛓ The Cancel and timeout sentences of a page run (the page cannot stop the generation it started). */
+export const REGION_GENERATION_CANCELLED_ON_PAGE = 'generation cancelled — nothing was recorded (the generation '
+    + 'already started keeps running and is cached)';
+export function regionGenerationPageTimeoutSentence(seconds, substrate, region) {
+    return `apworld: the \`${substrate}\` generation ${REGION_GENERATION_GAVE_UP} ${seconds} s on region `
+        + `"${region}" — \`${REGION_GENERATION_TIMEOUT_KEY}\` = ${seconds} (${REGION_GENERATION_TIMEOUT_WHERE}). `
+        + 'Nothing was recorded; the generation already started keeps running and is cached.';
+}
+
+/**
+ * ⛓⛓⛓ **THE PAGE'S RUN** — `runRegenerateInWorker`'s handle shape, for a job the
+ * worker flagged `pendingGeneration`: `regenerateAwaitingGeneration` on the page,
+ * whose own registry has the generator. One outcome: the job's answer (with `ms`
+ * and `onPage: true`); `{ok: false, timedOut: true, onPage: true}` when the budget
+ * (the same setting) runs out while it waits; `{ok: false, cancelled: true,
+ * onPage: true}` on `cancel()`. After any outcome a late answer is ignored.
+ *
+ * @param {object} args the job
+ * @param {{timeoutMs: number, regenerate: Function, collect: Function, now?: Function,
+ *   setTimer?: Function, clearTimer?: Function, onPhase?: Function}} opts
+ */
+export function runRegenerateOnPage(args, {
+    timeoutMs,
+    regenerate,
+    collect,
+    now = () => performance.now(),
+    setTimer = (fn, ms) => setTimeout(fn, ms),
+    clearTimer = (t) => clearTimeout(t),
+    onPhase = () => {},
+} = {}) {
+    let phase = 'running';
+    const startedAt = now();
+    let settled = false;
+    let late = 0;
+    let timer = null;
+    let settle = null;
+    const promise = new Promise((resolve) => { settle = resolve; });
+    const finish = (outcome) => {
+        if (settled) {
+            late += 1;
+            return;
+        }
+        settled = true;
+        if (timer !== null) clearTimer(timer);
+        timer = null;
+        phase = 'done';
+        settle({ ...outcome, onPage: true });
+    };
+    timer = setTimer(() => finish({ ok: false, timedOut: true, phase: 'running', ms: now() - startedAt, budgetMs: timeoutMs }),
+        timeoutMs);
+    onPhase(phase);
+    regenerateAwaitingGeneration(() => regenerate(args), { collect })
+        .catch((e) => ({ ok: false, threw: String(e?.message ?? e), freeItems: [], hostsSurplus: false }))
+        .then((res) => finish({ ...res, ms: now() - startedAt }));
+    return {
+        promise,
+        cancel: () => finish({ ok: false, cancelled: true, phase, ms: now() - startedAt }),
+        phase: () => phase,
+        startedAt: () => startedAt,
+        budgetMs: timeoutMs,
+        late: () => late,
+        terminated: () => false,
+    };
+}

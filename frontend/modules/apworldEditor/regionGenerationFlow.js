@@ -41,7 +41,8 @@ import {
 } from './regionContent.js';
 import { payloadBuiltBy } from './sidecarIssues.js';
 import {
-    REGION_GENERATION_CANCELLED, regionGenerationLoadTimeoutSentence, regionGenerationTimeoutSentence,
+    REGION_GENERATION_CANCELLED, REGION_GENERATION_CANCELLED_ON_PAGE, regionGenerationLoadTimeoutSentence,
+    regionGenerationPageTimeoutSentence, regionGenerationTimeoutSentence,
 } from './regionGenerationRun.js';
 
 /** ⛓ The bag key the form's seed row binds. */
@@ -332,6 +333,9 @@ export function regenerationAnswer(args, res, budgetS) {
     if (res.timedOut && res.phase === 'loading') {
         return { landed: false, text: regionGenerationLoadTimeoutSentence(res.budgetMs) };
     }
+    // ⛓ P5c — a run finished on the page stopped no worker: its own sentences.
+    if (res.timedOut && res.onPage) return { landed: false, text: regionGenerationPageTimeoutSentence(budgetS, substrate, region) };
+    if (res.cancelled && res.onPage) return { landed: false, text: `apworld: ${REGION_GENERATION_CANCELLED_ON_PAGE}.` };
     if (res.timedOut) return { landed: false, text: regionGenerationTimeoutSentence(budgetS, substrate, region) };
     if (res.cancelled) return { landed: false, text: `apworld: ${REGION_GENERATION_CANCELLED}.` };
     if (res.unavailable || res.workerFailed) return { landed: false, text: `apworld: ${res.threw}` };
