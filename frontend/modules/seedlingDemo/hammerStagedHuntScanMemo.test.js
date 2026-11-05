@@ -12,7 +12,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import { l40LatchBoot } from './fidelityL40Latch.js';
-import { deriveKillByChaser, withChaserStagedHunt } from './solverBot.js';
+import { deriveKillByChaser, withChaserStagedHunt, withSolveDeadline } from './solverBot.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 import { canonicalDigestText } from './solverView.js';
 import {
@@ -100,16 +100,20 @@ describe('hammer-phase STAGED-HUNT-CHEAP: STAGED_HUNT_SCAN_MEMO', () => {
             expect(stagedScanEntry(memo, { ...ask, state: { x: 1, y: 2 } }, build)).toBe(a);
             expect(stagedScanEntry(memo, { ...ask, world: {} }, build).reach.n).toBe(4);
             expect(stagedScanEntry(memo, { ...ask, world: {} }, build).reach.n).toBe(5); // a new world object again
-            expect(stagedScanEntry(memo, { ...ask, state: { x: 1, y: 2.5 } }, build).reach.n).toBe(6);
-            expect(stagedScanEntry(memo, { ...ask, state: { x: 1, y: 2.5 } }, build).reach.n).toBe(6);
-            expect(stagedScanEntry(memo, { ...ask, planOpts: { liveBag: { a: new Set([2]) } } }, build).reach.n)
-                .toBe(7);
+            const w2 = {};
+            expect(stagedScanEntry(memo, { ...ask, world: w2 }, build).reach.n).toBe(6);
+            expect(stagedScanEntry(memo, { ...ask, world: w2 }, build).reach.n).toBe(6);
+            // the same world, the player half a pixel lower: another key
+            expect(stagedScanEntry(memo, { ...ask, world: w2, state: { x: 1, y: 2.5 } }, build).reach.n).toBe(7);
+            expect(stagedScanEntry(memo, { ...ask, world: w2, state: { x: 1, y: 2.5 } }, build).reach.n).toBe(7);
+            expect(stagedScanEntry(memo, { ...ask, world: w2, state: { x: 1, y: 2.5 },
+                planOpts: { liveBag: { a: new Set([2]) } } }, build).reach.n).toBe(8);
             const fnOpts = { ...ask, planOpts: { f: () => 0 } };
             expect(stagedScanEntry(memo, fnOpts, build).cells).toBeNull();
-            expect(stagedScanEntry(memo, fnOpts, build).reach.n).toBe(9);
+            expect(stagedScanEntry(memo, fnOpts, build).reach.n).toBe(10);
             // the string "fn" is a value, not a function
             expect(stagedScanEntry(memo, { ...ask, aim: { id: 'fn' } }, build).cells).toBeInstanceOf(Map);
-            expect(STAGED_HUNT_SCAN_MEMO_COUNTS).toMatchObject({ builds: 6, hits: 2, unkeyed: 2 });
+            expect(STAGED_HUNT_SCAN_MEMO_COUNTS).toMatchObject({ builds: 7, hits: 3, unkeyed: 2 });
         });
 
     it('on BK2COMBAT\'s corridor run: the memo\'s answer is the no-memo answer, ask after ask and after a still tick; '
@@ -119,21 +123,34 @@ describe('hammer-phase STAGED-HUNT-CHEAP: STAGED_HUNT_SCAN_MEMO', () => {
         const text = (a) => canonicalDigestText(a);
         withChaserStagedHunt(true, () => {
             const memo = withStagedHuntScanMemo(true, newStagedHuntScanMemo);
-            const bare = () => deriveKillByChaser(run, { id: BODY }, new Set(), { aim: AIM, tolerance });
-            const memoised = () => deriveKillByChaser(run, { id: BODY }, new Set(),
-                { aim: AIM, tolerance, scanMemo: memo });
+            // every ask runs under a fine deadline that never stops, and counts its work units (`shouldStop` calls)
+            let units = 0;
+            const counted = (fn) => withSolveDeadline({ shouldStop: () => { units += 1; return false; },
+                fineCheckpoints: true }, fn);
+            const bare = () => counted(() => deriveKillByChaser(run, { id: BODY }, new Set(), { aim: AIM, tolerance }));
+            const memoised = () => counted(() => deriveKillByChaser(run, { id: BODY }, new Set(),
+                { aim: AIM, tolerance, scanMemo: memo }));
             resetStagedHuntScanMemoCounts();
+            units = 0;
             const off = bare();
+            const offUnits = units;
             expect(off.stance).toBeNull();
             expect(off.waits.length).toBeGreaterThan(0);
             const first = memoised();
             expect(text(first)).toBe(text(off));
             const asked = STAGED_HUNT_SCAN_MEMO_COUNTS.cellsAsked;
+            const firstUnits = units - offUnits;
+            // the first memoised ask computes each distinct cell once: the boxes' overlap is not asked twice
+            expect(firstUnits).toBe(offUnits - STAGED_HUNT_SCAN_MEMO_COUNTS.cellsReused);
             expect(asked).toBeGreaterThan(20);
             // the target box overlaps the player's: the rescan already reuses the cells both boxes hold
             expect(STAGED_HUNT_SCAN_MEMO_COUNTS).toMatchObject({ builds: 1, hits: 0 });
             const reused = STAGED_HUNT_SCAN_MEMO_COUNTS.cellsReused;
+            units = 0;
             expect(text(memoised())).toBe(text(off));
+            // the second spends no unit on any cell: what is left is the entry ask and the scored candidates
+            expect(units).toBe(firstUnits - asked);
+            expect(units).toBeLessThan(offUnits / 4);
             expect(STAGED_HUNT_SCAN_MEMO_COUNTS).toMatchObject({ builds: 1, hits: 1, cellsAsked: asked });
             expect(STAGED_HUNT_SCAN_MEMO_COUNTS.cellsReused - reused).toBe(asked + reused);
             // one still tick: the bodies moved, the player did not — the memo still answers what a fresh ask does
