@@ -30362,6 +30362,12 @@ function solveSegmentUnder({
          * with that wait as its tail.
          */
         stand = null,
+        /**
+         * ⛓ fidelity CEREMONY126 D2 (`CONTACT_FIDELITY.ceremonyWalkHandoff`) — the walk ends when a pickup ceremony
+         * starts on it (`drive`'s `endOnCeremony`), and the pickup's own volume `{x, y}` is entered, not refused; asked
+         * only by the collect goal's stance walk, whose verb pages the ceremony. null: today's walk.
+         */
+        ceremonyEnds = null,
     }) => {
         /**
          * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **A SKIRTED LANE IS CROSSED TWICE,
@@ -30994,6 +31000,7 @@ function solveSegmentUnder({
                         axisAligned,
                         intermediate: !last,
                         what: `${what} waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
+                        ...(ceremonyEnds !== null ? { endOnCeremony: ceremonyEnds } : {}),
                     });
                     if (t && crossTo) {
                         if (laneCert) settleLaneWalk(laneCert, t);
@@ -32436,6 +32443,9 @@ function solveSegmentUnder({
             // ⛓ STRIKELAPSE D1: the collect's approach is the walk's priced tail (`collectStandWalk`; lapse ON only).
             ...(CONTACT_FIDELITY.strikeIframeLapse && resolved.strategy === 'collect'
                 ? collectStandWalk(run, resolved, stance) : {}),
+            // ⛓ fidelity CEREMONY126 D2: a ceremony this walk starts ends it; `execCollect` pages it.
+            ...(CONTACT_FIDELITY.ceremonyWalkHandoff && resolved.strategy === 'collect'
+                ? { ceremonyEnds: { x: resolved.target.x, y: resolved.target.y } } : {}),
         });
         if (collectedInPassing('on the walk to its stance')) continue;
         // ⛓ STRIKELAPSE D1: the approach that follows was PROBED as the walk's tail (`collectStandWalk`), so the gate
