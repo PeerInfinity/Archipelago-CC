@@ -32,10 +32,13 @@ const turretHitAt = (samples) => samples.find((g) => (g?.turret?.hits ?? 0) > 0)
 
 describe('FROZENPRESS — the switch', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_FROZEN_PRESS_FORECAST)(
-        'frozenPressForecast ships ON (⚖ user 2026-11-02, the L100 joint flip), last in the defaults; its env name is in the worker channel', () => {
+        'frozenPressForecast ships ON (⚖ user 2026-11-02, the L100 joint flip), followed only by CEREMONY126's two keys; its env name is in the worker channel', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.frozenPressForecast).toBe(true);
             expect(CONTACT_FIDELITY.frozenPressForecast).toBe(true);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).at(-1)).toBe('frozenPressForecast');
+            // ⛓ fidelity CEREMONY126 (wave 37b) appended `ceremonyPressForecast`, `ceremonyWalkHandoff` after it.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf('frozenPressForecast'))).toEqual(
+                ['frozenPressForecast', 'ceremonyPressForecast', 'ceremonyWalkHandoff']);
         });
     it('`SEEDLING_FROZEN_PRESS_FORECAST` is a known worker env name; `freezeForecast` is a progress field', () => {
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_FROZEN_PRESS_FORECAST');

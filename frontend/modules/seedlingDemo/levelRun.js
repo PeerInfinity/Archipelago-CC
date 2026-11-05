@@ -15234,7 +15234,9 @@ export function createLevelRun({
      * covers 23..57, i.e. the pickup saw observation 23 and the advance that
      * would have produced 24 became phase B's first frame instead.
      */
-    function pickupUnderfoot() {
+    // ⛓ fidelity CEREMONY126 D1: `onTouch(p, box)` replaces the overlap test (default null: today's, byte-identical)
+    // — `freezeForecastNow` asks the same eligible pickups (the same skips) for their gap.
+    function pickupUnderfoot(onTouch = null) {
         if (!world.pickups) return null;
         const box = playerBoxAt(state.x, state.y);
         for (const p of world.pickups) {
@@ -15279,6 +15281,7 @@ export function createLevelRun({
             // never collected from, and it would stop skipping the moment
             // anything reset the set.
             if (p.tag === 'seed' && cutscene[2]) continue;
+            if (onTouch !== null) { onTouch(p, box); continue; }
             if (rectsOverlap(box, p.rect)) return p;
         }
         return null;
@@ -18172,7 +18175,24 @@ export function createLevelRun({
             }
         }
         const timerNext = contact !== null ? BLAST_FREEZE_TICKS - 1 : Math.max(frozenTimer - 1, 0);
-        return { refusedNext: timerNext > 0, timerNext, contact };
+        if (!CONTACT_FIDELITY.ceremonyPressForecast) return { refusedNext: timerNext > 0, timerNext, contact };
+        /**
+         * ⛓ fidelity CEREMONY126 D1 (`CONTACT_FIDELITY.ceremonyPressForecast`) — **HOW FAR IS THE NEAREST PICKUP
+         * THAT COULD START A CEREMONY?** A placed pickup is touched at a tick's TOP from where the previous tick left
+         * the player (`pickupUnderfoot`), and that tick is the ceremony's first `Game.freezeObjects` frame — a thrust
+         * scheduled onto it is lost (`runFrozenTick`). `pickupGap`: the least Chebyshev gap (px) from the player's box
+         * to an uncollected pickup `pickupUnderfoot` would test (its own skips), or null (none, a ceremony already up,
+         * noclip). The policy prices it against its own travel bound (`strikePolicy.ceremonyGuard`). A pure read.
+         */
+        let pickupGap = null;
+        if (!noclip && ceremony === null) {
+            pickupUnderfoot((p, box) => {
+                const g = Math.max(p.rect.x - box.right, box.x - p.rect.right, p.rect.y - box.bottom,
+                    box.y - p.rect.bottom, 0);
+                if (pickupGap === null || g < pickupGap) pickupGap = g;
+            });
+        }
+        return { refusedNext: timerNext > 0, timerNext, contact, pickupGap };
     };
     const collectedNow = () => collected.map((c) => ({ ...c }));
     const sealCollectionsNow = () => sealCollections.map((c) => ({ ...c }));

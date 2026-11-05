@@ -376,7 +376,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // `in_L104_0_16 -> teleporter_80_144` takes a shorter walk with one hit (a W37 fix first).
             fineStanceWalk: false,
             // ⛓ fidelity FROZENPRESS D1 (wave 37): the walk's strike stands down on a refused input tick — ON since the L100 joint flip.
-            frozenPressForecast: true });
+            frozenPressForecast: true,
+            // ⛓ fidelity CEREMONY126 D1 (wave 37b): the walk's strike stands down where a pickup ceremony would swallow its thrust — ships OFF.
+            ceremonyPressForecast: false,
+            // ⛓ fidelity CEREMONY126 D2 (wave 37b): a collect stance walk hands its pickup's ceremony to the verb — ships OFF.
+            ceremonyWalkHandoff: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

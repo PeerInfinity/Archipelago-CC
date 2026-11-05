@@ -1826,6 +1826,33 @@ export const CONTACT_FIDELITY = {
      * no press (an owed aim is dropped). OFF: byte-identical. `SEEDLING_FROZEN_PRESS_FORECAST=0|1`.
      */
     frozenPressForecast: true,
+    /**
+     * fidelity CEREMONY126 D1 (wave 37b) — THE WALK'S STRIKE STANDS DOWN WHERE A PICKUP'S CEREMONY WOULD SWALLOW ITS
+     * THRUST. A placed pickup is touched at a tick's TOP from where the previous tick left the player
+     * (`Pickup.update` → `collide("Player")` → `pick_up()`, `Pickups/Pickup.as:78-83`; `levelRun.pickupUnderfoot`), and
+     * that tick is the ceremony's first `Game.freezeObjects` frame (`Pickup.as:95`). `Player.update` still calls
+     * `slash()` on it (`Player.as:560-563`; only `Mobile.mobileUpdate`'s friction/input/move is gated, `Mobile.as:35-41`)
+     * and `genericHit` returns at its first line (`Player.as:1075-1078`): the thrust a press scheduled on the tick
+     * before is LOST (`levelRun`'s `FROZEN_TICK_PRESS`, kept — the game's rule). Measured: route-survey step 125 (L64
+     * Ghostspear; the brief's "126") refused so at t43/t44. ON: `levelRun.freezeForecast` also carries `pickupGap` (the
+     * least Chebyshev gap from the box to a touchable uncollected pickup, `pickupUnderfoot`'s own skips), and
+     * `strikePolicy.ceremonyGuard` drops an aim (two ticks of travel) or a press / scheduled press (one tick) whose
+     * thrust could land on that first frozen frame — `owed` untouched, as the talk guard. Needs `frozenPressForecast`
+     * (it rides `strikeDecideOpts`). OFF: byte-identical (`pickupGap` absent). `SEEDLING_CEREMONY_PRESS_FORECAST=0|1`.
+     */
+    ceremonyPressForecast: false,
+    /**
+     * fidelity CEREMONY126 D2 (wave 37b) — A COLLECT GOAL'S STANCE WALK ENDS WHEN ITS PICKUP'S CEREMONY STARTS ON IT.
+     * The walk to a collect stance can cross the pickup's own rect (L64's Ghostspear: rect [74,86)×[30,34), stance =
+     * the placement (72,24) above it, the walk from the south). The touch starts the ceremony (t44 at (72.958,34.784),
+     * measured) and the player is frozen while its dialogue waits for X releases (`NPC.talk`, `Input.released`) — but
+     * `drive` kept holding movement keys toward the stance for its whole 400-tick budget: *"collect (72,24) stance
+     * waypoint 0 (72,24): not reached within 400 ticks; stalled at (72.958,34.784)"*. ON: that walk (`walkTo`'s
+     * `ceremonyEnds`, asked only by the collect goal's stance walk) returns as soon as `inCeremony` is up, and the
+     * verb (`execCollect` → `runCollect`, whose approach loop already exits on `inCeremony`) pages the ceremony with
+     * `ceremonyCadenceStep`. OFF: byte-identical. `SEEDLING_CEREMONY_WALK_HANDOFF=0|1`.
+     */
+    ceremonyWalkHandoff: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2191,6 +2218,11 @@ if (globalThis.process?.env?.SEEDLING_FINE_STANCE_WALK === '0') CONTACT_FIDELITY
 // ⛓ fidelity FROZENPRESS D1: `SEEDLING_FROZEN_PRESS_FORECAST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FROZEN_PRESS_FORECAST === '1') CONTACT_FIDELITY.frozenPressForecast = true;
 if (globalThis.process?.env?.SEEDLING_FROZEN_PRESS_FORECAST === '0') CONTACT_FIDELITY.frozenPressForecast = false;
+// ⛓ fidelity CEREMONY126 D1/D2: `SEEDLING_CEREMONY_PRESS_FORECAST=0|1`, `SEEDLING_CEREMONY_WALK_HANDOFF=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '1') CONTACT_FIDELITY.ceremonyPressForecast = true;
+if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '0') CONTACT_FIDELITY.ceremonyPressForecast = false;
+if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '1') CONTACT_FIDELITY.ceremonyWalkHandoff = true;
+if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '0') CONTACT_FIDELITY.ceremonyWalkHandoff = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
