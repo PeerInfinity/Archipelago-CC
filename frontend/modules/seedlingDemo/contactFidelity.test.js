@@ -372,17 +372,18 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             corpseBumpRestRead: true,
             // ⛓ fidelity SHIELDBUMP D1 (wave 36): the spinner forecasts step the plain shield bump — ships OFF.
             forecastShieldBump: false,
-            // ⛓ fidelity L100LATTICE D1 (wave 36): a walk to an 8 px arm's stance plans on the 8 px lattice — OFF; ⚖ (user, 2026-11-03) HELD at the L100 joint flip: ON, L105
-            // `in_L104_0_16 -> teleporter_80_144` takes a shorter walk with one hit (a W37 fix first).
-            fineStanceWalk: false,
+            // ⛓ fidelity L100LATTICE D1 (wave 36): a walk to an 8 px arm's stance plans on the 8 px lattice — HELD 2026-11-03;
+            // ⚖ (user, 2026-11-05) ON since the W37b flip (L105's hit was the preview's frozen BeamTower, fixed by previewBeamTowerDrift).
+            fineStanceWalk: true,
             // ⛓ fidelity FROZENPRESS D1 (wave 37): the walk's strike stands down on a refused input tick — ON since the L100 joint flip.
             frozenPressForecast: true,
-            // ⛓ fidelity L105 D1 (wave 37): a preview steps the drifting BeamTower Solid per previewed tick — ships OFF.
-            previewBeamTowerDrift: false,
-            // ⛓ fidelity CEREMONY126 D1 (wave 37b): the walk's strike stands down where a pickup ceremony would swallow its thrust — ships OFF.
+            // ⛓ fidelity L105 D1 (wave 37): a preview steps the drifting BeamTower Solid per previewed tick — ON since the W37b flip.
+            previewBeamTowerDrift: true,
+            // ⛓ fidelity CEREMONY126 D1 (wave 37b): the walk's strike stands down where a pickup ceremony would swallow its thrust — ships OFF;
+            // ⚖ (user, 2026-11-05) HELD at the W37b flip for an EXACT forecast (its conservative bound moves the L40 WANDHOLD/L100FIX witness plans).
             ceremonyPressForecast: false,
-            // ⛓ fidelity CEREMONY126 D2 (wave 37b): a collect stance walk hands its pickup's ceremony to the verb — ships OFF.
-            ceremonyWalkHandoff: false });
+            // ⛓ fidelity CEREMONY126 D2 (wave 37b): a collect stance walk hands its pickup's ceremony to the verb — ON since the W37b flip.
+            ceremonyWalkHandoff: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

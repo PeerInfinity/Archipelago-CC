@@ -23,9 +23,9 @@ import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 describe('CEREMONY126 — the switches', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_CEREMONY_PRESS_FORECAST
         || process.env.SEEDLING_CEREMONY_WALK_HANDOFF)(
-        'both keys ship OFF, last in the defaults (D1 then D2); their env names are in the worker channel', () => {
+        'D1 ships OFF (⚖ user 2026-11-05: held for an exact forecast — its conservative bound moves the L40 WANDHOLD/L100FIX witness plans), D2 ships ON (the W37b flip); last in the defaults (D1 then D2)', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyPressForecast).toBe(false);
-            expect(CONTACT_FIDELITY_DEFAULTS.ceremonyWalkHandoff).toBe(false);
+            expect(CONTACT_FIDELITY_DEFAULTS.ceremonyWalkHandoff).toBe(true);
             expect(CONTACT_FIDELITY.ceremonyPressForecast).toBe(false);
             expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(-2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
         });

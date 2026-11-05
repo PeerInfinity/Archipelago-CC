@@ -55,9 +55,11 @@ const solve216 = (on) => withContactFidelity({ fineStanceWalk: on }, () => {
 });
 
 describe('L100 — the walk to an 8 px swing stance plans on the 8 px lattice (fineStanceWalk)', () => {
-    // ⛓ ships OFF (wave 36); ⚖ (user, 2026-11-03) HELD at the L100 joint flip until L105's one-hit walk is fixed.
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.fineStanceWalk).toBe(false);
+    // ⛓ ships OFF (wave 36); ⚖ (user, 2026-11-03) HELD at the L100 joint flip until L105's one-hit walk is fixed;
+    // ⚖ (user, 2026-11-05) ships ON at the W37b flip, with L105's `previewBeamTowerDrift` (the one-hit walk was the
+    // preview's frozen-BeamTower gap, not this key).
+    it('ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.fineStanceWalk).toBe(true);
     });
 
     it('OFF: the break-stance walk is planned at 16 px, aims (124,140) past the pool node, and stalls on the mask', () => {

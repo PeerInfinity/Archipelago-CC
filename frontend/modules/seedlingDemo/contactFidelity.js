@@ -1811,7 +1811,7 @@ export const CONTACT_FIDELITY = {
      * the 8 px lattice first (the FRONTIER3 fine walk), and a throw there falls back to the 16 px plan as before.
      * OFF: byte-identical. `SEEDLING_FINE_STANCE_WALK=0|1`.
      */
-    fineStanceWalk: false,
+    fineStanceWalk: true,
     /**
      * fidelity FROZENPRESS D1 (wave 37) — THE WALK'S STRIKE STANDS DOWN ON A TICK WHOSE INPUT THE GAME REFUSES.
      *
@@ -1840,7 +1840,7 @@ export const CONTACT_FIDELITY = {
      * `Game.time`; a ceremony, an unknown `y` or no clock keeps the snapshot). OFF: byte-identical.
      * `SEEDLING_PREVIEW_BEAM_TOWER_DRIFT=0|1`.
      */
-    previewBeamTowerDrift: false,
+    previewBeamTowerDrift: true,
     /**
      * fidelity CEREMONY126 D1 (wave 37b) — THE WALK'S STRIKE STANDS DOWN WHERE A PICKUP'S CEREMONY WOULD SWALLOW ITS
      * THRUST. A placed pickup is touched at a tick's TOP from where the previous tick left the player
@@ -1867,7 +1867,7 @@ export const CONTACT_FIDELITY = {
      * verb (`execCollect` → `runCollect`, whose approach loop already exits on `inCeremony`) pages the ceremony with
      * `ceremonyCadenceStep`. OFF: byte-identical. `SEEDLING_CEREMONY_WALK_HANDOFF=0|1`.
      */
-    ceremonyWalkHandoff: false,
+    ceremonyWalkHandoff: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

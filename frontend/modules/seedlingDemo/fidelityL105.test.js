@@ -73,9 +73,11 @@ const replayAgainstGame = (w) => {
 };
 
 describe('L105 — a preview steps the drifting BeamTower Solid (previewBeamTowerDrift)', () => {
-    it('ships OFF, with its env name on the solver channel', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.previewBeamTowerDrift).toBe(false);
-        expect(CONTACT_FIDELITY.previewBeamTowerDrift).toBe(false);
+    // ⚖ (user, 2026-11-05) ships ON at the W37b flip.
+    it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_PREVIEW_BEAM_TOWER_DRIFT)(
+        'ships ON, with its env name on the solver channel', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.previewBeamTowerDrift).toBe(true);
+        expect(CONTACT_FIDELITY.previewBeamTowerDrift).toBe(true);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_PREVIEW_BEAM_TOWER_DRIFT');
     });
 
