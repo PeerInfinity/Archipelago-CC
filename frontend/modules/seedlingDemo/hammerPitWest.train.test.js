@@ -14,7 +14,8 @@
  *     reaches the pit — SOLVED hitless inside the page's 640 units, its plan replayed on a fresh run (⚖ 30(c)).
  *   - `DETOUR_VIA_BOUND` ON (alone): the same EXHAUSTED refusal by name, no deadline, a fraction of the work.
  * Leg 367 (CPAIR's fixture, the same arrival → `out_pit_5_21`, whose climb a TRIPLE answers) is the control: the cut is
- * never asked and ON = OFF. The L16 guard re-derives `r9-solve-16` with both switches ON.
+ * never asked and ON = OFF; leg 403 (← L43 → `out_pit_5_21`, `fixtures/hammer-pit-west/`) pins the cut's deferral to NARROW
+ * (ON = OFF in plan and work). The L16 guard re-derives `r9-solve-16` with both switches ON.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -38,6 +39,7 @@ const fixture = (dir, name) => JSON.parse(gunzipSync(readFileSync(join(HERE, 'fi
 const LEG387 = fixture('hammer-pit-west', 'leg387-l40-l43-request.json.gz');
 const LEG388 = fixture('hammer-pit-west', 'leg388-l40-l43-request.json.gz');
 const LEG367 = fixture('hammer-cpair', 'leg367-l40-l43-request.json.gz');
+const LEG403 = fixture('hammer-pit-west', 'leg403-l40-l43-request.json.gz');
 
 /** A captured request solved as the page asks it (its passes, its budget), the two switches as given. */
 function solveLeg(row, { cut = false, bound = false, budget = undefined } = {}) {
@@ -132,6 +134,16 @@ describe('hammer-phase PIT-WEST — the L40 west pit corridor (`CHOOSER_CUT`, `D
         const on = solveLeg(LEG367, { cut: true });
         expect(on.counts.asked).toBe(0);
         expect([on.ok, on.work, on.keys, on.message]).toEqual([off.ok, off.work, off.keys, off.message]);
+    }, 360_000);
+
+    it('403 (← L43 → out_pit_5_21, solved OFF through NARROW): the cut defers, and ON = OFF in plan and work', () => {
+        const off = solveLeg(LEG403);
+        const on = solveLeg(LEG403, { cut: true });
+        expect(off.ok).toBe(true);
+        expect(off.plan.solution.length).toBe(527);
+        expect(on.counts.deferred).toBeGreaterThan(0);
+        expect(on.counts.asked).toBe(0);
+        expect([on.ok, on.work, on.keys]).toEqual([off.ok, off.work, off.keys]);
     }, 360_000);
 
     it('the L16 guard: with both switches ON the solver re-derives r9-solve-16', () => {
