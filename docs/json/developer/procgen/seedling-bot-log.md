@@ -27436,3 +27436,29 @@ the block at y 83.83, the game's number). No tape byte moved.
 **Trap candidate.** A `probe-*` producer is not in `ci-producer-checks`' roster (its globs are `plan-seedling-*.mjs` and
 `regenerate-*-tapes.mjs`): the retired probe's drive was dead and no gate saw it, and `probe-seedling-r5-spinner --check` —
 where its pair now lives — runs on no CI job either. Run it by hand; enrolling it is a planner call (it is a CI change).
+
+### Seedling fidelity CEREMONYEXACT — `ceremonyPressForecast` made exact: one tick, stepped (still OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37c (⚖ the user's GO 2026-11-05: *"Flip 3, hold ceremonyPressForecast"*,
+then this follow-up). The report is `CC/docs/cloud-reports/seedling-fidelity-ceremonyexact.md`.
+
+**W0.** At base `028da05be1`, a census arm that followed CEREMONY126's bound while asking a stepped forecast at every
+refusal: L40 legs 368 / 371 and the L40 kill rung stood down 19 / 18 / 84 times, and **none** of them was a press the game
+would lose — the next tick's box (an aim: both ticks, every facing) never touched a pickup. The first stand-down that
+changed keys was a planned DASH press 4.13 / 4.20 px from the part (t1586 / t1654), which the committed p4g witnesses
+`wandhold-l4{1,2}-*-paced` played at 0 px; on the rung, the t491 aim. The survey's −8 / +5 / +27 / +1 movers (141, 183,
+221, 236) were bound-only too.
+
+**D1.** `levelRun.ceremonyStepNow(heldSeq)` (a pure read; carried non-enumerable on `freezeForecast` as `ceremonyStep`)
+steps the held sets the policy is about to send with the run's own stepper (`previewStepperNow`, `previewStepper`'s body
+as a const), a press's dash impulse priced by `slashPressForecast`, and names the tick a ceremony would start on.
+`ceremonyGuard(state, freeze, aheadTicks, { held })` refuses only when it is the thrust's tick; 3-argument callers keep the
+bound. Key ON: legs 368/371, the L100FIX row and the kill rung = the OFF plans key for key; full survey moves only step
+125 (REFUSED → SOLVED 150 t). Game witness `ceremonyexact-kept` (p4g, 0 px): the press one input before the lost one.
+
+**D2.** Flip-ready with no pin moves: bounded fast set ON 109/111 (the two default-value rows a flip re-pins), identity
+block + six producer `--check`s = OFF, `ci-producer-checks` 97 run / 0 red.
+
+**Trap candidate.** `seedlingSolverSurface.returnedObjectOf` reads `createLevelRun`'s literal `return { … }`: naming the
+run object (`return (api = { … })`) throws "expected ONE top-level object return, found 0". Give a closure the run's own
+method by moving its body to a const, not by naming the object.
