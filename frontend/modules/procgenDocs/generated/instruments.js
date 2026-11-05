@@ -139,7 +139,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 140,
-            "count": 191,
+            "count": 190,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 507,
+        "blockStyle": 506,
         "browser": 206,
         "cited": 267,
-        "files": 525,
+        "files": 524,
         "lineStyle": 18,
-        "withDocblock": 525,
-        "withFlags": 445
+        "withDocblock": 524,
+        "withFlags": 444
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -16451,39 +16451,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-r5-mobiles — ⛓⛓ THE SLICE-23 BATCH'S TWO NEW SURFACES, ASKED OF THE REAL GAME.",
             "path": "scripts/procgen/probe-seedling-r5-mobiles.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "probe",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "write"
-            ],
-            "file": "probe-seedling-r5-press-axes.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "write"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "write-probes"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "probe-seedling-r5-press-axes — WHICH PRESS DID THE GAME REFUSE, AND WHY?",
-            "path": "scripts/procgen/probe-seedling-r5-press-axes.mjs"
         },
         {
             "argvHelpers": [],
