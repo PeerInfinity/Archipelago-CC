@@ -131,7 +131,7 @@ Row 5 ties the builder to the call.
 | `derive-seedling-tick0 --check` | ALL CHECKS PASSED |
 | `check-seedling-wasm-ship` headless | **ALL PASS**, exit 0 (the r9 campaign ship, 30 windows; `gates/wasm-ship.txt`) |
 | `solverEnvChannel.test.js`, `strategySwitch.test.js` | green (in the bounded set) |
-| JSUT (CI) | run **`41964327210`** at `3da6938d` (code = the head; only this report follows it, and `CC/docs/**` does not trigger the workflow). The three fast shards finished; the **slow battery was still `in_progress` when this report was committed**: read it with `node scripts/procgen/ci-summary.mjs --run=41964327210`. The earlier run `41959131978` (at `343eb883`) was cancelled when the next push superseded it |
+| JSUT (CI) | run **`41964327210`** at `3da6938d` (code = the head; only this report follows it, and `CC/docs/**` does not trigger the workflow): **success**, suite 1135 files / **25516 passed**, 0 skipped, 0 failed; **slow battery 35 files / 372 passed, 0 failed** (`ci-summary.mjs --run=41964327210`). The earlier run `41959131978` (at `343eb883`) was cancelled when the next push superseded it |
 
 ## 7. What the harvest A/B should expect, and the dispatches
 
