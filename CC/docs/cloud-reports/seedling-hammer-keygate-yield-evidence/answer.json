@@ -1,0 +1,731 @@
+{
+  "certification": {
+    "certified": false,
+    "verdict": "REFUSED",
+    "classifiedBy": "the solver refused within budget",
+    "reasonText": "solverBot(procgen-l900): no corridor for goal collect-placement toward (24,104) in level 900. Obstacle: pickup:torchpickup (torchpickup@32,96); also on the frontier: bosskey@160,144. Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 900 from tile (3,8) to (1,6). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+    "ticks": 488,
+    "strategies": [],
+    "heldAtDoor": null,
+    "geometry": [
+      {
+        "element": "key-gate",
+        "family": "keygate",
+        "phase": "on-connector",
+        "instance": "key-gate(type=0)",
+        "index": 0,
+        "params": {
+          "type": 0
+        },
+        "drawsBefore": 110,
+        "drawsAtConstruct": 110,
+        "tags": {
+          "lock": 1,
+          "key": 2
+        },
+        "doorCell": {
+          "x": 3,
+          "y": 7
+        },
+        "doorCells": [
+          {
+            "x": 3,
+            "y": 7
+          }
+        ],
+        "clearer": [
+          {
+            "x": 3,
+            "y": 8
+          },
+          {
+            "x": 10,
+            "y": 9
+          }
+        ],
+        "wall": [
+          {
+            "x": 2,
+            "y": 7
+          },
+          {
+            "x": 1,
+            "y": 7
+          },
+          {
+            "x": 4,
+            "y": 7
+          }
+        ],
+        "carved": [],
+        "entities": [
+          {
+            "role": "obstacle",
+            "x": 3,
+            "y": 7,
+            "id": "keygate_lock",
+            "keyType": 0
+          },
+          {
+            "role": "obstacle",
+            "x": 10,
+            "y": 9,
+            "id": "keygate_key",
+            "keyType": 0
+          }
+        ],
+        "owned": [
+          {
+            "x": 3,
+            "y": 7
+          },
+          {
+            "x": 3,
+            "y": 8
+          },
+          {
+            "x": 10,
+            "y": 9
+          },
+          {
+            "x": 2,
+            "y": 7
+          },
+          {
+            "x": 1,
+            "y": 7
+          },
+          {
+            "x": 4,
+            "y": 7
+          },
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          },
+          {
+            "x": 4,
+            "y": 1
+          },
+          {
+            "x": 5,
+            "y": 1
+          },
+          {
+            "x": 6,
+            "y": 1
+          },
+          {
+            "x": 7,
+            "y": 1
+          },
+          {
+            "x": 7,
+            "y": 2
+          },
+          {
+            "x": 7,
+            "y": 3
+          },
+          {
+            "x": 7,
+            "y": 4
+          },
+          {
+            "x": 7,
+            "y": 5
+          },
+          {
+            "x": 8,
+            "y": 5
+          },
+          {
+            "x": 9,
+            "y": 5
+          },
+          {
+            "x": 9,
+            "y": 6
+          },
+          {
+            "x": 9,
+            "y": 7
+          },
+          {
+            "x": 9,
+            "y": 8
+          },
+          {
+            "x": 9,
+            "y": 9
+          },
+          {
+            "x": 10,
+            "y": 9
+          }
+        ],
+        "painted": [
+          {
+            "tx": 2,
+            "ty": 7,
+            "terrain": "wall"
+          },
+          {
+            "tx": 1,
+            "ty": 7,
+            "terrain": "wall"
+          },
+          {
+            "tx": 4,
+            "ty": 7,
+            "terrain": "wall"
+          },
+          {
+            "tx": 2,
+            "ty": 1,
+            "terrain": "ground"
+          },
+          {
+            "tx": 3,
+            "ty": 1,
+            "terrain": "ground"
+          },
+          {
+            "tx": 4,
+            "ty": 1,
+            "terrain": "ground"
+          },
+          {
+            "tx": 5,
+            "ty": 1,
+            "terrain": "ground"
+          },
+          {
+            "tx": 6,
+            "ty": 1,
+            "terrain": "ground"
+          },
+          {
+            "tx": 7,
+            "ty": 1,
+            "terrain": "ground"
+          },
+          {
+            "tx": 7,
+            "ty": 2,
+            "terrain": "ground"
+          },
+          {
+            "tx": 7,
+            "ty": 3,
+            "terrain": "ground"
+          },
+          {
+            "tx": 7,
+            "ty": 4,
+            "terrain": "ground"
+          },
+          {
+            "tx": 7,
+            "ty": 5,
+            "terrain": "ground"
+          },
+          {
+            "tx": 8,
+            "ty": 5,
+            "terrain": "ground"
+          },
+          {
+            "tx": 9,
+            "ty": 5,
+            "terrain": "ground"
+          },
+          {
+            "tx": 9,
+            "ty": 6,
+            "terrain": "ground"
+          },
+          {
+            "tx": 9,
+            "ty": 7,
+            "terrain": "ground"
+          },
+          {
+            "tx": 9,
+            "ty": 8,
+            "terrain": "ground"
+          },
+          {
+            "tx": 9,
+            "ty": 9,
+            "terrain": "ground"
+          },
+          {
+            "tx": 10,
+            "ty": 9,
+            "terrain": "ground"
+          }
+        ],
+        "cost": {
+          "wall": 2,
+          "carved": 0,
+          "candidates": 82,
+          "goalDistance": 2,
+          "keyDistance": 9,
+          "keyOnPath": 0,
+          "keyPath": 18
+        }
+      }
+    ],
+    "obstacle": {
+      "kind": "pickup",
+      "tag": "torchpickup",
+      "id": "torchpickup@32,96",
+      "d": 16
+    },
+    "gap": "the-goal-approach-is-blocked"
+  },
+  "seamSolveAnswer": {
+    "level": 900,
+    "name": "procgen-l900",
+    "goals": [
+      {
+        "kind": "collect-placement",
+        "placement": {
+          "x": 160,
+          "y": 144
+        }
+      },
+      {
+        "kind": "collect-placement",
+        "placement": {
+          "x": 32,
+          "y": 96
+        }
+      }
+    ],
+    "budget": {
+      "maxTicksPerTarget": 400
+    },
+    "verdict": "REFUSED",
+    "ms": 375,
+    "reasonText": "solverBot(procgen-l900): no corridor for goal collect-placement toward (24,104) in level 900. Obstacle: pickup:torchpickup (torchpickup@32,96); also on the frontier: bosskey@160,144. Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 900 from tile (3,8) to (1,6). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+    "errorName": "SolverRefusal",
+    "classifiedBy": "the solver refused within budget",
+    "refusalGoal": {
+      "kind": "collect-placement",
+      "placement": {
+        "x": 32,
+        "y": 96
+      }
+    },
+    "obstacle": {
+      "kind": "pickup",
+      "tag": "torchpickup",
+      "id": "torchpickup@32,96",
+      "d": 16
+    },
+    "considered": [
+      {
+        "option": "collect",
+        "why": "selected for pickup:torchpickup and REGISTERED, but the obstacle could not be resolved against live state — the census row the frontier named is not one this executor can bind"
+      }
+    ],
+    "pending": null,
+    "rows": [
+      {
+        "tick": 0,
+        "saw": {
+          "level": 900,
+          "x": 24,
+          "y": 24,
+          "vx": 0,
+          "vy": 0,
+          "danger": []
+        },
+        "goal": {
+          "kind": "collect-placement",
+          "aim": {
+            "x": 152,
+            "y": 152
+          }
+        },
+        "strategy": {
+          "verb": "walk",
+          "waypoints": 4,
+          "swordDash": {
+            "planned": false,
+            "ticks": null,
+            "baseline": null,
+            "saved": null,
+            "windows": null,
+            "legs": null,
+            "scanned": 0,
+            "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+          }
+        },
+        "path": [
+          {
+            "x": 120,
+            "y": 24
+          },
+          {
+            "x": 120,
+            "y": 88
+          },
+          {
+            "x": 152,
+            "y": 88
+          },
+          {
+            "x": 152,
+            "y": 152
+          }
+        ],
+        "rejected": [
+          {
+            "option": "sword-dash",
+            "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+          }
+        ],
+        "keys": []
+      },
+      {
+        "tick": 242,
+        "saw": {
+          "level": 900,
+          "x": 163.21574301113486,
+          "y": 151.00269710905292,
+          "vx": 1.1957056104432584,
+          "vy": -0.676846091260817,
+          "danger": []
+        },
+        "goal": {
+          "kind": "collect-placement",
+          "placement": {
+            "x": 160,
+            "y": 144
+          }
+        },
+        "strategy": {
+          "verb": "collect"
+        },
+        "obstacle": null,
+        "rejected": [
+          {
+            "option": "chest",
+            "why": "placement (160,144) resolves to bosskey@160,144 in `world.pickups` — a live pickup with its own ceremony, no probe line to stand on"
+          }
+        ],
+        "keys": []
+      },
+      {
+        "tick": 281,
+        "saw": {
+          "level": 900,
+          "x": 163.21574301113486,
+          "y": 151.00269710905292,
+          "vx": 1.1957056104432584,
+          "vy": -0.676846091260817,
+          "danger": []
+        },
+        "goal": {
+          "kind": "collect-placement",
+          "aim": {
+            "x": 24,
+            "y": 104
+          }
+        },
+        "obstacle": {
+          "kind": "solid",
+          "id": "bosslock@48,112"
+        },
+        "strategy": {
+          "verb": "keylock",
+          "postCondition": "open"
+        },
+        "rejected": [
+          {
+            "option": "hold",
+            "why": "bosslock@48,112 answers to no group at all — `BossLock`'s ctor forces `tSet` to -1, so no `Button.activateAll` ever republishes it and the re-close arm is unreachable. What opens it is the player standing on its one-pixel key line holding the key, which is a THIRD activation shape and not a button."
+          }
+        ],
+        "keys": []
+      },
+      {
+        "tick": 281,
+        "saw": {
+          "level": 900,
+          "x": 163.21574301113486,
+          "y": 151.00269710905292,
+          "vx": 1.1957056104432584,
+          "vy": -0.676846091260817,
+          "danger": []
+        },
+        "goal": {
+          "kind": "collect-placement",
+          "aim": {
+            "x": 56,
+            "y": 136
+          }
+        },
+        "strategy": {
+          "verb": "walk",
+          "waypoints": 2,
+          "swordDash": {
+            "planned": false,
+            "ticks": null,
+            "baseline": null,
+            "saved": null,
+            "windows": null,
+            "legs": null,
+            "scanned": 0,
+            "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+          }
+        },
+        "path": [
+          {
+            "x": 56,
+            "y": 152
+          },
+          {
+            "x": 56,
+            "y": 136
+          }
+        ],
+        "rejected": [
+          {
+            "option": "sword-dash",
+            "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+          }
+        ],
+        "keys": []
+      }
+    ],
+    "ticksSpent": 488
+  },
+  "replayAnswer": {
+    "level": 900,
+    "name": "procgen-l900",
+    "goals": [
+      {
+        "kind": "collect-placement",
+        "placement": {
+          "x": 160,
+          "y": 144
+        }
+      },
+      {
+        "kind": "collect-placement",
+        "placement": {
+          "x": 32,
+          "y": 96
+        }
+      }
+    ],
+    "budget": {
+      "maxTicksPerTarget": 400
+    },
+    "verdict": "REFUSED",
+    "ms": 121,
+    "reasonText": "solverBot(procgen-l900): no corridor for goal collect-placement toward (24,104) in level 900. Obstacle: pickup:torchpickup (torchpickup@32,96); also on the frontier: bosskey@160,144. Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 900 from tile (3,8) to (1,6). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+    "errorName": "SolverRefusal",
+    "classifiedBy": "the solver refused within budget",
+    "refusalGoal": {
+      "kind": "collect-placement",
+      "placement": {
+        "x": 32,
+        "y": 96
+      }
+    },
+    "obstacle": {
+      "kind": "pickup",
+      "tag": "torchpickup",
+      "id": "torchpickup@32,96",
+      "d": 16
+    },
+    "considered": [
+      {
+        "option": "collect",
+        "why": "selected for pickup:torchpickup and REGISTERED, but the obstacle could not be resolved against live state — the census row the frontier named is not one this executor can bind"
+      }
+    ],
+    "pending": null,
+    "rows": [
+      {
+        "tick": 0,
+        "saw": {
+          "level": 900,
+          "x": 24,
+          "y": 24,
+          "vx": 0,
+          "vy": 0,
+          "danger": []
+        },
+        "goal": {
+          "kind": "collect-placement",
+          "aim": {
+            "x": 152,
+            "y": 152
+          }
+        },
+        "strategy": {
+          "verb": "walk",
+          "waypoints": 4,
+          "swordDash": {
+            "planned": false,
+            "ticks": null,
+            "baseline": null,
+            "saved": null,
+            "windows": null,
+            "legs": null,
+            "scanned": 0,
+            "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+          }
+        },
+        "path": [
+          {
+            "x": 120,
+            "y": 24
+          },
+          {
+            "x": 120,
+            "y": 88
+          },
+          {
+            "x": 152,
+            "y": 88
+          },
+          {
+            "x": 152,
+            "y": 152
+          }
+        ],
+        "rejected": [
+          {
+            "option": "sword-dash",
+            "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+          }
+        ],
+        "keys": []
+      },
+      {
+        "tick": 242,
+        "saw": {
+          "level": 900,
+          "x": 163.21574301113486,
+          "y": 151.00269710905292,
+          "vx": 1.1957056104432584,
+          "vy": -0.676846091260817,
+          "danger": []
+        },
+        "goal": {
+          "kind": "collect-placement",
+          "placement": {
+            "x": 160,
+            "y": 144
+          }
+        },
+        "strategy": {
+          "verb": "collect"
+        },
+        "obstacle": null,
+        "rejected": [
+          {
+            "option": "chest",
+            "why": "placement (160,144) resolves to bosskey@160,144 in `world.pickups` — a live pickup with its own ceremony, no probe line to stand on"
+          }
+        ],
+        "keys": []
+      },
+      {
+        "tick": 281,
+        "saw": {
+          "level": 900,
+          "x": 163.21574301113486,
+          "y": 151.00269710905292,
+          "vx": 1.1957056104432584,
+          "vy": -0.676846091260817,
+          "danger": []
+        },
+        "goal": {
+          "kind": "collect-placement",
+          "aim": {
+            "x": 24,
+            "y": 104
+          }
+        },
+        "obstacle": {
+          "kind": "solid",
+          "id": "bosslock@48,112"
+        },
+        "strategy": {
+          "verb": "keylock",
+          "postCondition": "open"
+        },
+        "rejected": [
+          {
+            "option": "hold",
+            "why": "bosslock@48,112 answers to no group at all — `BossLock`'s ctor forces `tSet` to -1, so no `Button.activateAll` ever republishes it and the re-close arm is unreachable. What opens it is the player standing on its one-pixel key line holding the key, which is a THIRD activation shape and not a button."
+          }
+        ],
+        "keys": []
+      },
+      {
+        "tick": 281,
+        "saw": {
+          "level": 900,
+          "x": 163.21574301113486,
+          "y": 151.00269710905292,
+          "vx": 1.1957056104432584,
+          "vy": -0.676846091260817,
+          "danger": []
+        },
+        "goal": {
+          "kind": "collect-placement",
+          "aim": {
+            "x": 56,
+            "y": 136
+          }
+        },
+        "strategy": {
+          "verb": "walk",
+          "waypoints": 2,
+          "swordDash": {
+            "planned": false,
+            "ticks": null,
+            "baseline": null,
+            "saved": null,
+            "windows": null,
+            "legs": null,
+            "scanned": 0,
+            "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+          }
+        },
+        "path": [
+          {
+            "x": 56,
+            "y": 152
+          },
+          {
+            "x": 56,
+            "y": 136
+          }
+        ],
+        "rejected": [
+          {
+            "option": "sword-dash",
+            "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+          }
+        ],
+        "keys": []
+      }
+    ],
+    "ticksSpent": 488
+  },
+  "replayMatchesSeam": true
+}

@@ -1,0 +1,128 @@
+{
+ "pre-sword": {
+  "cells": 168,
+  "placed": 83,
+  "certified": 75,
+  "refused": [
+   {
+    "kind": "branchy",
+    "size": "10x10",
+    "seed": 1,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (104,104) in level 900. Obstacle: pickup:torchpickup (torchpickup@96,112); also on the frontier: bosskey@16,96. Strategy 'collect"
+   },
+   {
+    "kind": "branchy",
+    "size": "10x10",
+    "seed": 11,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (88,24) in level 900. Obstacle: pickup:torchpickup (torchpickup@80,32); also on the frontier: bosskey@16,96. Strategy 'collect' f"
+   },
+   {
+    "kind": "branchy",
+    "size": "14x14",
+    "seed": 11,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (184,24) in level 900. Obstacle: pickup:torchpickup (torchpickup@176,32); also on the frontier: bosskey@96,16. Strategy 'collect'"
+   },
+   {
+    "kind": "bushy",
+    "size": "14x14",
+    "seed": 3,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (24,104) in level 900. Obstacle: pickup:torchpickup (torchpickup@32,96); also on the frontier: bosskey@160,144. Strategy 'collect"
+   },
+   {
+    "kind": "bushy",
+    "size": "14x14",
+    "seed": 4,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (152,40) in level 900. Obstacle: pickup:torchpickup (torchpickup@144,48); also on the frontier: bosskey@48,16. Strategy 'collect'"
+   },
+   {
+    "kind": "bushy",
+    "size": "14x14",
+    "seed": 11,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (184,24) in level 900. Obstacle: pickup:torchpickup (torchpickup@176,32); also on the frontier: bosskey@96,112. Strategy 'collect"
+   },
+   {
+    "kind": "loopy",
+    "size": "14x14",
+    "seed": 1,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (184,152) in level 900. Obstacle: pickup:torchpickup (torchpickup@176,160); also on the frontier: bosskey@80,176. Strategy 'colle"
+   },
+   {
+    "kind": "loopy",
+    "size": "14x14",
+    "seed": 2,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (152,104) in level 900. Obstacle: pickup:torchpickup (torchpickup@144,112); also on the frontier: bosskey@160,16. Strategy 'colle"
+   }
+  ]
+ },
+ "post-sword": {
+  "cells": 168,
+  "placed": 83,
+  "certified": 75,
+  "refused": [
+   {
+    "kind": "branchy",
+    "size": "10x10",
+    "seed": 1,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (104,104) in level 900. Obstacle: pickup:torchpickup (torchpickup@96,112); also on the frontier: bosskey@16,96. Strategy 'collect"
+   },
+   {
+    "kind": "branchy",
+    "size": "10x10",
+    "seed": 11,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (88,24) in level 900. Obstacle: pickup:torchpickup (torchpickup@80,32); also on the frontier: bosskey@16,96. Strategy 'collect' f"
+   },
+   {
+    "kind": "branchy",
+    "size": "14x14",
+    "seed": 11,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (184,24) in level 900. Obstacle: pickup:torchpickup (torchpickup@176,32); also on the frontier: bosskey@96,16. Strategy 'collect'"
+   },
+   {
+    "kind": "bushy",
+    "size": "14x14",
+    "seed": 3,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (24,104) in level 900. Obstacle: pickup:torchpickup (torchpickup@32,96); also on the frontier: bosskey@160,144. Strategy 'collect"
+   },
+   {
+    "kind": "bushy",
+    "size": "14x14",
+    "seed": 4,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (152,40) in level 900. Obstacle: pickup:torchpickup (torchpickup@144,48); also on the frontier: bosskey@48,16. Strategy 'collect'"
+   },
+   {
+    "kind": "bushy",
+    "size": "14x14",
+    "seed": 11,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (184,24) in level 900. Obstacle: pickup:torchpickup (torchpickup@176,32); also on the frontier: bosskey@96,112. Strategy 'collect"
+   },
+   {
+    "kind": "loopy",
+    "size": "14x14",
+    "seed": 1,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (184,152) in level 900. Obstacle: pickup:torchpickup (torchpickup@176,160); also on the frontier: bosskey@80,176. Strategy 'colle"
+   },
+   {
+    "kind": "loopy",
+    "size": "14x14",
+    "seed": 2,
+    "gap": "the-goal-approach-is-blocked",
+    "reason": "solverBot(procgen-l900): no corridor for goal collect-placement toward (152,104) in level 900. Obstacle: pickup:torchpickup (torchpickup@144,112); also on the frontier: bosskey@160,16. Strategy 'colle"
+   }
+  ]
+ }
+}
