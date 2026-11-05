@@ -98,7 +98,7 @@ describe('L86 — its landing under L0\'s building is floor', () => {
     });
 });
 
-describe('L12 — a sub-region world lays the event locks it touches', () => {
+describe('L12 — the event locks it touches are laid (per sub-region, and as one level world)', () => {
     it('L12 certifies clean; the doorway\'s second lock is Red Key from r0c19, the stacked locks each their own item', () => {
         const out = certify(['level_12']);
         expect(out.problems).toEqual([]);
@@ -110,7 +110,9 @@ describe('L12 — a sub-region world lays the event locks it touches', () => {
     });
 
     it('the touched lock is a dead-end gate in its world; the stacked cell carries both events', () => {
-        const sc = compile(['level_12']).preset_sidecars['1'];
+        // ⛓ Per sub-region (`plainLevelWorlds: false`, the regression row of that path): since session tile-l12-one-world L12 is
+        // ONE level world in the preset, so the per-sub-region lay is held here on the switch that still takes it.
+        const sc = JSON.parse(buildPlaythroughMaze({ levels: ['level_12'], plainLevelWorlds: false }).text).preset_sidecars['1'];
         const at = (name, x, y) => {
             const p = sc[name].playable_payload;
             const ob = p.obstacles.find((o) => o.x === x && o.y === y);
@@ -120,6 +122,15 @@ describe('L12 — a sub-region world lays the event locks it touches', () => {
         expect(at('level_12__r0c37', 26, 15).events.map((e) => e.name)).toEqual(['L12 flag 4: bosslock@416,240 cleared']);
         expect(at('level_12__r42c28', 2, 54).events.map((e) => e.name).sort())
             .toEqual(['L12 flag 12: bosslock@32,864 cleared', 'L12 flag 7: magicallock@32,864 cleared']);
+    });
+    it('as ONE level world (the preset since session tile-l12-one-world) its one payload lays the same three cells', () => {
+        const sc = compile(['level_12']).preset_sidecars['1'];
+        expect(sc.level_12__r0c37).toEqual({ substrate: 'maze', shared_world: 'level_12' });
+        const p = sc.level_12__r0c19.playable_payload;
+        const events = (x, y) => p.obstacles.filter((o) => o.x === x && o.y === y).flatMap((o) => p.obstacleLib[o.id].events.map((e) => e.name)).sort();
+        expect(events(27, 15)).toEqual(['L12 flag 5: bosslock@432,240 cleared']);
+        expect(events(26, 15)).toEqual(['L12 flag 4: bosslock@416,240 cleared']);
+        expect(events(2, 54)).toEqual(['L12 flag 12: bosslock@32,864 cleared', 'L12 flag 7: magicallock@32,864 cleared']);
     });
 });
 

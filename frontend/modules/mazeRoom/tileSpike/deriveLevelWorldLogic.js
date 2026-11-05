@@ -18,6 +18,7 @@ import {
     regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint, endsWalk, latchEvents,
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
+import { LEARN_MAX_POINTS, learnMinimal, assertMonotoneWorld } from './learnLattice.js';
 import {
     createState, step, getExitAt, worldInputs, sharedWorldOwnerAt, standsInArmedLane, strikeTargets, USE_PREFIX, TURN_PREFIX,
     actionUsable, blockWithinReach, latchCells,
@@ -96,8 +97,70 @@ function cachedReach(cache, entered, reach, { memo = false, count = null } = {})
     const store = cache ?? new Map();
     return (set) => {
         const key = `${entered.entrance.x},${entered.entrance.y}|${set.join('\u0001')}`;
-        if (!store.has(key)) store.set(key, run(set));
+        if (!store.has(key)) {
+            // ⛓ The MISS returns the FULL value (its caller may take witnesses from it at once); the store keeps the COMPACT one.
+            // The lazy re-search calls `reach`, not `run`: it is no new search of the lattice, so `count` does not see it.
+            const full = run(set);
+            COMPACT_REACH.misses += 1;
+            store.set(key, COMPACT_REACH.on ? compactReach(full, (mutant) => reach(mutant ? mutant(set) : set)) : full);
+            return full;
+        }
         return store.get(key);
+    };
+}
+
+/**
+ * The compact cache's counters (`misses`: real searches stored; `replans`: lazy re-searches for a plan) and its TEST-ONLY hooks:
+ * `on: false` stores the full values (the on ≡ off pin), `mutant(set)` makes the lazy re-search use ANOTHER inventory (the
+ * lazy-plan pin's mutant, shown red). Every caller leaves both alone.
+ */
+export const COMPACT_REACH = { on: true, mutant: null, replans: 0, misses: 0 };
+
+/**
+ * ⛓ COMPACT REACH (session tile-l12-one-world; measured by tile-l12-level-world; ⚖ Robert 2026-11-04 "A: Build after R-A3
+ * (Recommended)"): what the walk reads from a reach after it returns — `cells.has`,
+ * `cells.keys()` IN INSERTION ORDER (`owned()` takes the FIRST owned cell: the witness cell), `cells.size`, `cuts.has` /
+ * `cuts.keys()`, `states` — kept without the search's `seen`. Cells pack to (x<<8)|y in a Uint16Array when every
+ * coordinate is in 0..255 (else Int32 of x*65536+y); `has` is a bitset over the reached bounding box. `planTo`,
+ * `planToCut` and `reached` RE-SEARCH the same (arrival, inventory) once (`again`), deterministic BFS, so the plan is
+ * the original's. Independent of what a state holds beyond its cell: a latch/block/rope world keeps the same cell order.
+ * Measured: the derived-rules probe's heaviest shard 2.38 GB → 0.40–0.53 GB of heap; the whole game's rows byte-identical (CI).
+ * A cached reach holds ≈ 8.5 KB (L12 one world, rank walk), where the full value held its whole `seen` Map (0.4–1.3 MB).
+ */
+export function compactReach(full, again) {
+    if (full === NOTHING_REACHED || !full?.cells) return full;
+    const keys = [...full.cells.keys()];
+    const xy = keys.map((k) => k.split(',').map(Number));
+    const small = xy.every(([x, y]) => x >= 0 && y >= 0 && x < 256 && y < 256);
+    const order = small ? Uint16Array.from(xy, ([x, y]) => (x << 8) | y) : Int32Array.from(xy, ([x, y]) => x * 65536 + y);
+    let x0 = Infinity; let y0 = Infinity; let x1 = -Infinity; let y1 = -Infinity;
+    for (const [x, y] of xy) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+    const bw = xy.length ? x1 - x0 + 1 : 0;
+    const bits = new Uint8Array(xy.length ? Math.ceil((bw * (y1 - y0 + 1)) / 8) : 0);
+    for (const [x, y] of xy) { const i = (y - y0) * bw + (x - x0); bits[i >> 3] |= 1 << (i & 7); }
+    const decode = small ? (v) => `${v >> 8},${v & 255}` : (v) => `${Math.floor(v / 65536)},${v % 65536}`;
+    const cells = {
+        size: order.length,
+        has(cell) {
+            if (typeof cell !== 'string') return false;
+            const [x, y] = cell.split(',').map(Number);
+            if (!(x >= x0 && x <= x1 && y >= y0 && y <= y1)) return false;
+            const i = (y - y0) * bw + (x - x0);
+            return (bits[i >> 3] & (1 << (i & 7))) !== 0;
+        },
+        * keys() { for (const v of order) yield decode(v); },
+        [Symbol.iterator]() { throw new Error('compact reach: cells holds no state keys (iterate keys())'); },
+    };
+    const cutKeys = [...full.cuts.keys()];
+    const cutSet = new Set(cutKeys);
+    const cuts = { size: cutKeys.length, has: (k) => cutSet.has(k), keys: () => cutKeys[Symbol.iterator]() };
+    // One re-search per plan asked, used once and dropped. `COMPACT_REACH.mutant(set)` (pin only) re-searches ANOTHER inventory.
+    const redo = () => { COMPACT_REACH.replans += 1; return again(COMPACT_REACH.mutant); };
+    return {
+        cells, cuts, states: full.states, compact: true,
+        planTo: (cell) => redo().planTo(cell),
+        planToCut: (key) => redo().planToCut(key),
+        ...(full.reached ? { reached: (state) => redo().reached(state) } : {}),
     };
 }
 
@@ -182,17 +245,62 @@ export function enteredAt(world, region) {
     return { ...world, entrance: { x: at.x, y: at.y } };
 }
 
+/** The number of points of a lattice axis: Π (levels + 1) — 2^n for an all-binary axis. */
+export function latticeSize(axis) {
+    return axis.reduce((p, { levels }) => p * (levels.length + 1), 1);
+}
+
 /**
- * The lattice cap: the most items a world's item axis may carry before `deriveLevelWorldLogic` / `deriveEntryLogic`
- * refuse it (the search walks every point of 2^items). One constant, read by the maze compile's plain-level test
- * (session tile-rules-automation-r-a2: a plain level becomes one level world only when its axis fits).
+ * ⛓ THE RANK WALK'S BOUND, now the HYBRID'S SWITCH (session tile-l12-one-world, ⚖ design-3 GO "the MEMORY form"): the
+ * rank walk (+ the latch sandwich) enumerates every point of the lattice by rank; it runs where the lattice has at most
+ * 2^LEVEL_WORLD_LATTICE_CAP points (4,096), and the LEARNING walk (`learnLattice.js`) above. Why there: it is the boundary of
+ * what the rank walk ran before the learner existed — MEASURED, every derive call of the whole game at main 0885fec4b3 had
+ * ≤ 4,096 points (the largest exactly 4,096: L12 r0c19's per-sub-region entry, 11 world items + 1 landing event; then 768,
+ * L63) — so every such call is byte-identical to before; and below it the learner is MEASURED SLOWER (one search answers
+ * every target of the rank walk, the learner asks per target: +10–15 s on the push slow tier, ≈ ×1.7 on the train
+ * scripted sample, research tile-l12-level-world). It is no longer a refusal: `LEVEL_WORLD_MAX_POINTS` is.
  */
 export const LEVEL_WORLD_LATTICE_CAP = 12;
+export const RANK_WALK_MAX_POINTS = 2 ** LEVEL_WORLD_LATTICE_CAP;
+
+/** Which walk a lattice gets: `'rank'` at or under `RANK_WALK_MAX_POINTS`, else `'learn'`. */
+export function walkFor(axis) {
+    return latticeSize(axis) <= RANK_WALK_MAX_POINTS ? 'rank' : 'learn';
+}
+
+/**
+ * ⛓ THE REFUSAL (session tile-l12-one-world, ⚖ design-3 GO "the MEMORY form"): a lattice over `LEVEL_WORLD_MAX_POINTS`
+ * points is refused BY NAME, by the derives and — through `levelWorldFits`, the same function — by the maze compile's
+ * plain-level test. The bound is the LEARNER'S MEMORY (`LEARN_MAX_POINTS`: per point n + 8 bytes shared and 2 bytes per
+ * target), not any level's number. ⚠ Time still grows with the points (the certifier's `compareRow` walks every point per
+ * row; L12's 131,072-point rows cost ≈ +8 s of CERT on CI), so a world far past L12 shows up on the slow tier's clock first.
+ * ⛓ ONE CROSS-WORLD GAP, named: the compile tests a world's OWN axis (`regionItems` + `regionLevels`), but the certifier's
+ * entry pricing WIDENS it with `arrivalBlocked`'s items — the landing obstacles of OTHER worlds its exits land in (L12: its
+ * 15 items + `L0 flag 1: breakablerock` + `L24 flag 0: burnabletree` = 17). The compile cannot see those, so a widened axis
+ * past the bound is a LOUD refusal of the derive (a throw naming the items), never a silent per-sub-region fallback.
+ */
+export const LEVEL_WORLD_MAX_POINTS = LEARN_MAX_POINTS;
+
+/**
+ * Whether a world's own item axis fits one level world: `true`, or why not. The maze compile's plain-level test and the
+ * derives' refusal read this one function.
+ */
+export function levelWorldFits(world, { maxPoints = LEVEL_WORLD_MAX_POINTS } = {}) {
+    const items = regionItems(world);
+    const n = latticeSize(latticeAxis(items, regionLevels(world)));
+    return n <= maxPoints ? true : `its item axis (${items.length} items) has ${n} lattice points, over the bound ${maxPoints}`;
+}
+
+function refuseLattice(what, items, axis, maxPoints) {
+    const n = latticeSize(axis);
+    if (n > maxPoints) throw new Error(`${what}: ${items.length} items, ${n} lattice points exceed the bound ${maxPoints}: ${items.join(', ')}`);
+}
 
 /**
  * Per-(from, to) minimal inventories over a shared level world.
  *
  * `latchSandwich: false` turns the LATCH SANDWICH off — a TEST-ONLY switch (the on ≡ off pins); every caller keeps it on.
+ * `walk: 'rank' | 'learn'` forces one walk of the HYBRID (`walkFor`) — TEST-ONLY too (the learner ≡ rank pins).
  * `engine` = the work this call really did: `searches`/`states` of the engine searches it ran (cache misses, the
  * sandwich's probes included) and the lattice points the sandwich `skipped`.
  *
@@ -201,14 +309,11 @@ export const LEVEL_WORLD_LATTICE_CAP = 12;
  *   engine: {searches: number, states: number, skipped: number} }}
  */
 export function deriveLevelWorldLogic(world, helpers, {
-    tileLib = MAZE_TILE_LIB, maxItems = LEVEL_WORLD_LATTICE_CAP, native = false, cache = null, latchSandwich: sandwiching = true,
+    tileLib = MAZE_TILE_LIB, maxPoints = LEVEL_WORLD_MAX_POINTS, native = false, cache = null, latchSandwich: sandwiching = true, walk: forcedWalk = null,
 } = {}) {
     const sw = world.sharedWorld;
     if (!sw) throw new Error('level-world logic: the world is not a shared level world');
     const items = regionItems(world);
-    if (items.length > maxItems) {
-        throw new Error(`level-world logic: ${items.length} items exceed the lattice cap ${maxItems}: ${items.join(', ')}`);
-    }
     const owned = (cells, to) => {
         for (const cell of cells.keys()) {
             const [x, y] = cell.split(',').map(Number);
@@ -218,6 +323,9 @@ export function deriveLevelWorldLogic(world, helpers, {
     };
     const levels = regionLevels(world);
     const axis = latticeAxis(items, levels);
+    refuseLattice('level-world logic', items, axis, maxPoints);
+    const learning = (forcedWalk ?? walkFor(axis)) === 'learn';
+    if (learning) assertMonotoneWorld(world, items);
     const pairs = [];
     let searched = 0;
     let states = 0;
@@ -227,7 +335,7 @@ export function deriveLevelWorldLogic(world, helpers, {
     for (const from of sw.regions) {
         const entered = enteredAt(world, from);
         const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
-            : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })), { memo: latched, count });
+            : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })), { memo: latched || learning, count });
         const full = reachOf(fullPoint(axis));
         searched += 1;
         states += full.states;
@@ -237,6 +345,20 @@ export function deriveLevelWorldLogic(world, helpers, {
         pairs.push(...live);
         const open = live.filter((p) => !p.unreachable);
         const covered = (p, set) => p.minimal.some((m) => pointCovers(set, m));
+        if (learning) {
+            // ⛓ THE LEARNING WALK above `RANK_WALK_MAX_POINTS` (`learnLattice.js`): the same minimal sets and witnesses as the rank
+            // walk, by membership queries through the same memoised reach. The monotone census ran above, before any search.
+            const { learned, queries } = learnMinimal(axis, open, { query: reachOf, taken: (r, p) => owned(r.cells, p.to) !== null });
+            for (const p of open) {
+                for (const { point, reach } of learned.get(p)) {
+                    const cell = owned(reach.cells, p.to);
+                    p.minimal.push(point);
+                    p.witnesses.push({ inventory: point, plan: reach.planTo(cell), cell });
+                }
+            }
+            searched += queries;
+            continue;
+        }
         const sandwich = latched ? latchSandwich(entered, reachOf) : null;
         for (const set of latticePoints(axis)) {
             if (open.every((p) => covered(p, set))) continue;
@@ -284,8 +406,8 @@ export function deriveLevelWorldLogic(world, helpers, {
  *   engine: {searches: number, states: number, skipped: number} }} — `latchSandwich` and `engine` as `deriveLevelWorldLogic`'s.
  */
 export function deriveEntryLogic(world, region, helpers, {
-    tileLib = MAZE_TILE_LIB, maxItems = LEVEL_WORLD_LATTICE_CAP, native = false, arrivalBlocked = null, cache = null, arriveFrom = null, arriveAt = null,
-    latchSandwich: sandwiching = true,
+    tileLib = MAZE_TILE_LIB, maxPoints = LEVEL_WORLD_MAX_POINTS, native = false, arrivalBlocked = null, cache = null, arriveFrom = null, arriveAt = null,
+    latchSandwich: sandwiching = true, walk: forcedWalk = null,
 } = {}) {
     const shared = Boolean(world.sharedWorld);
     if (arriveFrom !== null && !shared) throw new Error(`entry logic: arriveFrom "${arriveFrom}" needs a shared level world`);
@@ -293,9 +415,6 @@ export function deriveEntryLogic(world, region, helpers, {
     const into = shared ? enteredAt(world, arriveFrom ?? region) : world;
     const entered = arriveAt !== null ? { ...into, entrance: { x: arriveAt.x, y: arriveAt.y } } : into;
     const items = [...new Set([...regionItems(world), ...(arrivalBlocked?.items ?? [])])].sort();
-    if (items.length > maxItems) {
-        throw new Error(`entry logic: ${items.length} items exceed the lattice cap ${maxItems}: ${items.join(', ')}`);
-    }
     // ⛓ COUNTED ITEMS: this world's counts, and those of the landing obstacles the caller judges arrivals by.
     const levels = regionLevels(world);
     for (const [item, ns] of arrivalBlocked?.levels ?? []) {
@@ -303,6 +422,9 @@ export function deriveEntryLogic(world, region, helpers, {
         for (const n of ns) levels.get(item).add(n);
     }
     const axis = latticeAxis(items, levels);
+    refuseLattice('entry logic', items, axis, maxPoints);
+    const learning = (forcedWalk ?? walkFor(axis)) === 'learn';
+    if (learning) assertMonotoneWorld(entered, items);
     const top = fullPoint(axis);
     const taken = (reach, t, set) => reachedTarget(reach, t, set, entered) && !(t.exit && arrivalBlocked?.(t.exit, set));
     const owns = (x, y) => !shared || sharedWorldOwnerAt(world, x, y) === region;
@@ -320,7 +442,7 @@ export function deriveEntryLogic(world, region, helpers, {
     const latched = sandwiching && latchEvents(entered).length > 0;
     const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
         : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })), {
-        memo: latched, count: (r) => { engine.searches += 1; engine.states += r.states; },
+        memo: latched || learning, count: (r) => { engine.searches += 1; engine.states += r.states; },
     });
     const full = reachOf(top);
     let searched = 1;
@@ -343,6 +465,22 @@ export function deriveEntryLogic(world, region, helpers, {
     }
     const live = targets.filter((t) => !t.unreachable);
     const covered = (t, set) => t.minimal.some((m) => pointCovers(set, m));
+    if (learning) {
+        // ⛓ THE LEARNING WALK (above `RANK_WALK_MAX_POINTS`). An event target is learned on the axis WITHOUT its own event (never
+        // taken holding it, `reachedTarget`): every point holding it is decided not taken up front, shrink/grow never touch it.
+        const { learned, queries } = learnMinimal(axis, live, {
+            query: reachOf, taken: (r, t, set) => taken(r, t, set), exclude: (t) => (t.event && items.includes(t.event) ? t.event : null),
+        });
+        for (const t of live) {
+            for (const { point, reach } of learned.get(t)) {
+                t.minimal.push(point);
+                t.witnesses.push({ inventory: point, plan: planToTarget(reach, t, point, entered), cell: targetCell(reach, t, point, entered) });
+            }
+        }
+        searched += queries;
+        for (const t of targets) delete t.exit;
+        return { items, levels, targets, searched, states, engine };
+    }
     const sandwich = latched ? latchSandwich(entered, reachOf) : null;
     for (const set of latticePoints(axis)) {
         if (live.every((t) => covered(t, set))) continue;

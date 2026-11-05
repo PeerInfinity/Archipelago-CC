@@ -128,7 +128,11 @@ async function main() {
     console.log(`BUILT: ${levels.length} levels, ${Object.keys(rules.regions['1']).length} regions, ${built.text.length} B in ${Date.now() - t0} ms`);
     t0 = Date.now();
     let planted = null;
-    const plantedDoc = JSON.parse(M.buildPlaythroughMaze({ levels, plant: (x) => { planted = plantEchoSentinels(x); }, embedSphereLog: false, derivedTable: NO_TABLE }).text);
+    // ⛓ The sentinel compile takes the true compile's level-world decisions (session tile-l12-one-world): the plant replaces
+    // rules, so its own axis count could decide a level differently and read one-world pairs as echoed.
+    const plantedDoc = JSON.parse(M.buildPlaythroughMaze({
+        levels, plant: (x) => { planted = plantEchoSentinels(x); }, embedSphereLog: false, derivedTable: NO_TABLE, levelWorlds: built.levelWorlds,
+    }).text);
     const echoes = findEchoes(plantedDoc, rules);
     const counts = Object.fromEntries(Object.entries(echoes.byKind).map(([k, v]) => [k, v.length]));
     console.log(`ECHOES: planted ${JSON.stringify(planted)}; copied ${JSON.stringify(counts)}; in shared worlds ${JSON.stringify(echoes.inShared)}; ${echoes.elements.length} AP elements; ${Date.now() - t0} ms`);
