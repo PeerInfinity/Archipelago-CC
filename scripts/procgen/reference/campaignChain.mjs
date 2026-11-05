@@ -30,6 +30,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { REPO } from './lib.mjs';
+import { describeWalk } from '../recordingRoute.js';
 
 /** The document this region lives in. */
 export const CAMPAIGN_DOC = 'docs/json/developer/procgen/seedling-bot-log.md';
@@ -82,6 +83,8 @@ export async function buildCampaignChain() {
         why: frontier.why ?? null,
         // ⛓ FRONTIER2: both route modes' coverage, reported separately (⚖ user 2026-10-05)
         coverage: Object.values(frontier.coverage ?? {}),
+        // ⛓ tile-frontier-route: the route the chain was recorded on (a committed fixture)
+        recordingRoute: frontier.recordingRoute ?? null,
         findings: missing.length
             ? [`${missing.join(', ')}: declared in the chain and NOT on disk`]
             : [],
@@ -121,7 +124,12 @@ export function campaignChainMarkdown(v) {
     }
     if ((v.coverage ?? []).length) {
         lines.push('', '**COVERAGE, BY ROUTE MODE** (`campaign-frontier.json` `coverage`; '
-            + '`route-only` is the route the chain was recorded on):', '');
+            + (v.recordingRoute
+                ? '`recorded` is the route the chain was recorded on, `'
+                    + `${v.recordingRoute.path.split('/').pop()}\`, the survey's `
+                    + `${v.recordingRoute.mode} route as derived at \`${v.recordingRoute.derivedAt.slice(0, 10)}\`; `
+                    + '`route-only` and `full` are today\'s survey routes):'
+                : '`route-only` is the route the chain was recorded on):'), '');
         for (const c of v.coverage) {
             lines.push(`- \`${c.mode}\` through ${c.through}: `
                 + (c.covered === null ? `UNASSERTED — ${c.why}`
@@ -131,6 +139,12 @@ export function campaignChainMarkdown(v) {
                             + `\`${c.divergence.segment}\` arrives in L${c.divergence.arrives}, route step `
                             + `${c.divergence.routeStep} crosses to L${c.divergence.routeCrossesTo}`
                             : c.nextStep ? ` — next: route step ${c.nextStep.step} (L${c.nextStep.level})` : '')));
+            const d = c.differsFromRecorded;
+            if (d) {
+                lines.push(`  - ⚠ today's \`${c.mode}\` route leaves the recorded route at step `
+                    + `${d.fromStep} (${d.recordedSteps} → ${d.currentSteps} steps): recorded `
+                    + `${describeWalk(d.recorded)}; today ${describeWalk(d.current)}`);
+            }
         }
     }
     if (v.findings.length) {

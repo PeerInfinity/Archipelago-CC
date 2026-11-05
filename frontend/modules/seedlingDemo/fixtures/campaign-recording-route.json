@@ -1,0 +1,428 @@
+{
+  "artifact_version": 1,
+  "generatedBy": "node scripts/procgen/census-seedling-campaign.mjs --write-recording-route --from=<survey dir> --at=55c279a01d",
+  "derivedBy": "node scripts/procgen/survey-seedling-route.mjs --through=4.2 --route=route-only --derive-only",
+  "derivedAt": "55c279a01d95d329890c43156afd69480b7e2824",
+  "routeMode": {
+    "mode": "route-only",
+    "through": "4.2"
+  },
+  "sources": {
+    "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "25692337fdaa6c4464258fd56f297151",
+    "frontend/modules/flashPanel/atlases/seedling-map.json": "647bd46a7ff6f1eacb0d956b81344a44",
+    "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "f1978f3d95789fa976e47d0562f3efc2"
+  },
+  "steps": [
+    {
+      "step": 1,
+      "level": 0,
+      "visit": 1,
+      "crossesTo": 2,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsdown@256,272 → L2"
+        }
+      ]
+    },
+    {
+      "step": 2,
+      "level": 2,
+      "visit": 1,
+      "crossesTo": 3,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@48,96 → L3"
+        }
+      ]
+    },
+    {
+      "step": 3,
+      "level": 3,
+      "visit": 1,
+      "crossesTo": 4,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@128,48 → L4"
+        }
+      ]
+    },
+    {
+      "step": 4,
+      "level": 4,
+      "visit": 1,
+      "crossesTo": 5,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsdown@64,16 → L5"
+        }
+      ]
+    },
+    {
+      "step": 5,
+      "level": 5,
+      "visit": 1,
+      "crossesTo": 6,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@48,112 → L6"
+        }
+      ]
+    },
+    {
+      "step": 6,
+      "level": 6,
+      "visit": 1,
+      "crossesTo": 7,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsup@224,32 → L7"
+        }
+      ]
+    },
+    {
+      "step": 7,
+      "level": 7,
+      "visit": 1,
+      "crossesTo": 8,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsdown@192,32 → L8"
+        }
+      ]
+    },
+    {
+      "step": 8,
+      "level": 8,
+      "visit": 1,
+      "crossesTo": 9,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@96,192 → L9"
+        }
+      ]
+    },
+    {
+      "step": 9,
+      "level": 9,
+      "visit": 1,
+      "crossesTo": 10,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@16,0 → L10"
+        }
+      ]
+    },
+    {
+      "step": 10,
+      "level": 10,
+      "visit": 1,
+      "crossesTo": 11,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "collect-placement",
+          "why": "Level 010 - Sword (sphere 0.1) → Progressive Sword"
+        },
+        {
+          "kind": "reach-exit",
+          "why": "stairsup@48,16 → L11"
+        }
+      ]
+    },
+    {
+      "step": 11,
+      "level": 11,
+      "visit": 1,
+      "crossesTo": 3,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@32,0 → L3"
+        }
+      ]
+    },
+    {
+      "step": 12,
+      "level": 3,
+      "visit": 2,
+      "crossesTo": 2,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@64,0 → L2"
+        }
+      ]
+    },
+    {
+      "step": 13,
+      "level": 2,
+      "visit": 2,
+      "crossesTo": 0,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsup@48,16 → L0"
+        }
+      ]
+    },
+    {
+      "step": 14,
+      "level": 0,
+      "visit": 2,
+      "crossesTo": 13,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsdown@32,192 → L13"
+        }
+      ]
+    },
+    {
+      "step": 15,
+      "level": 13,
+      "visit": 1,
+      "crossesTo": 14,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsdown@32,32 → L14"
+        }
+      ]
+    },
+    {
+      "step": 16,
+      "level": 14,
+      "visit": 1,
+      "crossesTo": 15,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsdown@32,64 → L15"
+        }
+      ]
+    },
+    {
+      "step": 17,
+      "level": 15,
+      "visit": 1,
+      "crossesTo": 16,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsdown@144,16 → L16"
+        }
+      ]
+    },
+    {
+      "step": 18,
+      "level": 16,
+      "visit": 1,
+      "crossesTo": 18,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "clear-tag",
+          "why": "L16 flag 0: rope@32,16 cleared (flag:L16:0) — broken before row 2.2 walks its landing"
+        },
+        {
+          "kind": "reach-exit",
+          "why": "stairsup@352,80 → L18"
+        }
+      ]
+    },
+    {
+      "step": 19,
+      "level": 18,
+      "visit": 1,
+      "crossesTo": 19,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@176,112 → L19"
+        }
+      ]
+    },
+    {
+      "step": 20,
+      "level": 19,
+      "visit": 1,
+      "crossesTo": 20,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "collect-placement",
+          "why": "Level 019 - Boss Key 0 (sphere 2.2) → Red Key"
+        },
+        {
+          "kind": "reach-exit",
+          "why": "stairsup@16,96 → L20"
+        }
+      ]
+    },
+    {
+      "step": 21,
+      "level": 20,
+      "visit": 1,
+      "crossesTo": 13,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "collect-placement",
+          "why": "Level 020 - Shield (sphere 3.1) → Progressive Shield"
+        },
+        {
+          "kind": "reach-exit",
+          "why": "stairsup@16,48 → L13"
+        }
+      ]
+    },
+    {
+      "step": 22,
+      "level": 13,
+      "visit": 2,
+      "crossesTo": 0,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsup@64,144 → L0"
+        }
+      ]
+    },
+    {
+      "step": 23,
+      "level": 0,
+      "visit": 3,
+      "crossesTo": 12,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@304,176 → L12"
+        }
+      ]
+    },
+    {
+      "step": 24,
+      "level": 12,
+      "visit": 1,
+      "crossesTo": 21,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-pit",
+          "why": "pit@576,688 (out_pit_5_5, tile 36,43) → L21"
+        }
+      ]
+    },
+    {
+      "step": 25,
+      "level": 21,
+      "visit": 1,
+      "crossesTo": 22,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@80,160 → L22"
+        }
+      ]
+    },
+    {
+      "step": 26,
+      "level": 22,
+      "visit": 1,
+      "crossesTo": 29,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "teleporter@192,64 → L29"
+        }
+      ]
+    },
+    {
+      "step": 27,
+      "level": 29,
+      "visit": 1,
+      "crossesTo": 31,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "collect-placement",
+          "why": "Level 029 - Boss Key 1 (sphere 3.3) → Green Key"
+        },
+        {
+          "kind": "reach-exit",
+          "why": "stairsdown@112,32 → L31"
+        }
+      ]
+    },
+    {
+      "step": 28,
+      "level": 31,
+      "visit": 1,
+      "crossesTo": 30,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsup@160,384 → L30"
+        }
+      ]
+    },
+    {
+      "step": 29,
+      "level": 30,
+      "visit": 1,
+      "crossesTo": 32,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "why": "stairsup@224,160 → L32"
+        }
+      ]
+    },
+    {
+      "step": 30,
+      "level": 32,
+      "visit": 1,
+      "crossesTo": null,
+      "restart": false,
+      "goals": [
+        {
+          "kind": "encounter",
+          "why": "Level 032 - Bob Boss (sphere 4.2) → Fire",
+          "then": null
+        }
+      ]
+    }
+  ]
+}

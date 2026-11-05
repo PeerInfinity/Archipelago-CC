@@ -61,7 +61,8 @@
  *     ⛔ A PRESS, not an existence check: a control nobody presses is a control
  *     nobody has gated (trap 479).
  * 13. **⛓⛓⛓ EVERY READOUT FIELD IS RE-DERIVED** — rooms crossed, the ledger
- *     rows credited and their segments, the end level, and the frontier —
+ *     rows credited and their segments, the end level, the frontier, and
+ *     where today's route leaves the route the chain was recorded on —
  *     computed HERE from the chain table, the committed tapes and the committed
  *     frontier artifact, and compared to `window.__campaign`. ⛔ Never echoed.
  *  9. **⛓ THE act2 REPORT** — which of the true-start chain's windows admit,
@@ -75,7 +76,10 @@
 
 import { chromium } from '@playwright/test';
 import { dirname, join } from 'node:path';
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
@@ -90,6 +94,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { routeDifference } from './recordingRoute.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-seedling-editor-sequence.mjs', kind: 'browser' });
@@ -113,6 +118,7 @@ const { PAGE_CHAINS, campaignChoice } = await import(join(MODULE, 'director.js')
 const { goalEarnedWitness, R7_GOAL_LEDGER, seamBootFields } = await import(
     join(MODULE, 'r7Acceptance.js'));
 const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
+const { routeDiffersLine } = await import(join(MODULE, 'frontierReadout.js'));
 
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 const tapeOf = (n) => JSON.parse(readFileSync(join(MODULE, 'fixtures', 'tapes', `${n}.json`), 'utf8'));
@@ -784,6 +790,52 @@ if (control.disabled) {
                 ? '⛓ …and with every route step walked the readout SAYS ROUTE COMPLETE'
                 : '⛓ …and with no refused step the readout SAYS there is no work order',
         camp.readout.slice(-160));
+
+    /**
+     * ⛓ TILE-FRONTIER-ROUTE (⚖ user 2026-11-04: "A: Small follow-up") — THE
+     * ROUTE SENTENCE, RE-DERIVED. Where today's route-only route leaves the route
+     * the chain was recorded on is computed HERE from its two sources — the
+     * committed `campaign-recording-route.json` and today's route, derived fresh
+     * by the survey's own `--derive-only` into a scratch directory — never read
+     * off the artifact. It goes through `routeDiffersLine` (the page's own
+     * sentence), and the page must show exactly that. ⛔ A fixture whose step
+     * moved, or an artifact nobody re-wrote, reds here.
+     */
+    const recording = JSON.parse(readFileSync(
+        join(MODULE, 'fixtures', 'campaign-recording-route.json'), 'utf8'));
+    const todayDir = mkdtempSync(join(tmpdir(), 'editor-seq-route-'));
+    let today = null;
+    let todayWhy = null;
+    try {
+        const out = join(todayDir, `through-${recording.routeMode.through}-route-only`, 'survey.json');
+        execFileSync('node', [join(HERE, 'survey-seedling-route.mjs'),
+            `--through=${recording.routeMode.through}`, '--route=route-only', '--derive-only',
+            `--out=${out}`], { cwd: REPO, stdio: 'pipe',
+            env: { ...process.env, SEEDLING_SURVEY_DIR: todayDir } });
+        today = JSON.parse(readFileSync(join(dirname(out), 'route.json'), 'utf8'));
+    } catch (e) {
+        todayWhy = e.message.split('\n')[0];
+    } finally {
+        rmSync(todayDir, { recursive: true, force: true });
+    }
+    if (!today) {
+        check(false, '⛔ THE ROUTE SENTENCE CANNOT BE RE-DERIVED — today\'s route did not derive',
+            todayWhy);
+    } else {
+        const d = routeDifference(recording.steps, today.steps, CHOICE.segments);
+        const line = routeDiffersLine({ recordingRoute: frontier.recordingRoute, routeDiffers: d });
+        const fixtureMd5 = createHash('md5').update(readFileSync(
+            join(MODULE, 'fixtures', 'campaign-recording-route.json'))).digest('hex');
+        check(camp.camp.frontier.recordingRoute?.md5 === fixtureMd5
+            && JSON.stringify(camp.camp.frontier.routeDiffers ?? null) === JSON.stringify(d)
+            && (line === null ? !/Today's survey picks/.test(camp.readout)
+                : camp.readout.includes(line)),
+        d ? `⛓⛓ …and the ROUTE SENTENCE is RE-DERIVED: today's route leaves the recording at `
+            + `step ${d.fromStep} (${d.recordedSteps} → ${d.currentSteps} steps), and the reader `
+            + 'sees exactly that'
+            : '⛓⛓ …and today\'s route walks the recording\'s, so the readout names no move',
+        line ?? `page md5 ${camp.camp.frontier.recordingRoute?.md5} · fixture ${fixtureMd5}`);
+    }
     }
 }
 
