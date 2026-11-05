@@ -27359,3 +27359,27 @@ in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fin
 4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
 327 t, 0 hits, game-witnessed.
 
+### Seedling hammer-phase L95-PUNCHER — the L95_624_64 refusals under `CLEARTAG_STAND` are answered by `CHASER_STAGED_HUNT`
+
+⚖ The user queued it on 2026-11-04 ("Hold; fix L95 first"): the `CLEARTAG_STAND` flip (and `AXIS_STRIKE` after it) is
+held until it stops losing the 2 `in_L95_624_64` → L12 bosslock solves. **No new switch was built.** The measured answer is
+an existing OFF switch, `CHASER_STAGED_HUNT` (BK2COMBAT). Measured at main `26ed405d3f`, with the page's own captured
+requests replayed in node and a page sweep:
+
+- With the tail, the kill rung's chaser arm is asked at the walk's start. On every L12 leg only (376,248) of the 17
+  reachable leash stances kills. From L95_624_64 the walk arrives there 0.5 px lower (y 248.8 vs 248.3). The puncher's
+  second wind-up ends at t610, the tick its i-frame lapses, so the punch is live, and the third strike lands at t611.
+  The other 16 stances are hit (the bare body as its i-frame lapses under the strike's aim step, or a punch). Two,
+  (376,232) and (376,216), are hitless, but the body never comes inside their ceiling: they are the staged hunt's `waits`.
+- With both switches ON the arm stages at (376,232) and, asked again there, prices (376,248) at once (wait 0); the puncher
+  dies hitless. **All 14 L12 bosslock legs pass with 0 hits**, in node and on the page (160/161 at 794/809 t; the other
+  12 at `CLEARTAG_STAND`'s ticks byte for byte). `CHASER_STAGED_HUNT` alone moves none of the 14.
+- Radius with both ON: the route survey has 0 movers (236 steps). L40's 59 captured requests have 5 movers, all at the
+  BobSoldier pocket chest and all reproduced by `CHASER_STAGED_HUNT` alone: 411/1 goes refusal → SOLVED 1333 t, hitless,
+  and the other four stay refused with a different text or work. `plan-seedling-l30keylock --check` is red with STAGED
+  ON (its BEFORE witness now solves hitless, BK2COMBAT's known red).
+- Design (2), a forced-hit rung pricing the hold, does not help: with `coveredGoalRefusal` off (diagnosis only) DETOUR
+  spends the budget, and at 6,000 units the proof is asked from the walk's start (24,360), where nothing is forced.
+
+Rows: `hammerL95Puncher.test.js` (fixture `fixtures/hammer-l95-puncher/leg160-l95-l12-request.json.gz`). The report is
+`CC/docs/cloud-reports/seedling-hammer-l95-puncher.md`.
