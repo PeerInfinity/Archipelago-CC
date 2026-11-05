@@ -294,7 +294,9 @@ describe('⛓ the links the render emits', () => {
         //   384 → 385: cloudberry P5a — cloudberry.md § Items' Double Jump note → its own § Generating it (1 same-doc).
         //   385 → 387: keygate colours — substrate-registry.md § Build-time — item introduction → sphere-growth.md and
         //              → flash.md § Declarations (G9) (2 doc).
-        expect(checked).toBe(387);
+        //   387 → 388: goal-chest pipeline — substrate-registry.md § Build-time — goal containers → flash.md
+        //              § Declarations (G9) (1 doc).
+        expect(checked).toBe(388);
     });
 
     it('tags each link with the kind that produced it', () => {

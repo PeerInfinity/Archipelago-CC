@@ -316,20 +316,22 @@ describe('the corpus census — printed, then pinned', () => {
          *              its own § Generating it (`same-doc` 32 → 33).
          *   385 → 387  keygate colours (2026-11-03, item introduction): substrate-registry.md § Build-time — item
          *              introduction → sphere-growth.md and → flash.md § Declarations (G9) (`doc` 290 → 292).
+         *   387 → 388  goal-chest pipeline (2026-11-04): substrate-registry.md § Build-time — goal containers →
+         *              flash.md § Declarations (G9) (`doc` 292 → 293).
          */
         expect(by).toEqual({
             'same-doc': 33,
-            doc: 292,
+            doc: 293,
             external: 22,
             repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(387);
+        expect(CORPUS.length).toBe(388);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(292);
+        expect(docs).toHaveLength(293);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
