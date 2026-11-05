@@ -24,7 +24,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { OPPOSITE_SIDE, SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { createRng } from '../shared/rng.js';
 import {
-    DEFAULT_REGION_SIZE, generateRegion, getRegionExits, linkIsAdjacentOnSide,
+    DEFAULT_REGION_SIZE, collectPendingGenerations, generateRegion, getRegionExits, linkIsAdjacentOnSide,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import {
     REGENERATE_NARROWED_BY_START, REGENERATE_RULES_UNCHANGED, REGENERATE_SATISFIED_BY_START,
@@ -33,6 +33,7 @@ import {
 import { ruleWithOwned } from '../procgenCore/ruleWithOwned.js';
 import { installCloudberryGenerator } from '../cloudberryDemo/cloudberryGeneration.js';
 import { cloudberryTestGenerator } from '../cloudberryDemo/cloudberryTestGenerator.js';
+import { regenerateAwaitingGeneration } from './regionGenerationRun.js';
 import { sidecarIssues } from './sidecarIssues.js';
 import { slotLayout } from './regionLayout.js';
 import {
@@ -318,14 +319,14 @@ describe('one exit per side for a KEYED target (found by the R0 corpus control)'
                         `${e.id}: ${x.exit_id} kept ${x.side} but is not the adjacent link`).toBe(true);
                 }
             }
-            let res = applyRulesDocOp(doc, regenOp(p, region, e.id));
-            if (!res.ok && /cannot wait — ask again once it is done/.test(res.error)) {
-                // A realiser whose generator runs outside JS (cloudberry's game page; here a stand-in)
-                // refuses the synchronous press while it generates, and the next press builds.
-                // eslint-disable-next-line no-await-in-loop
-                await new Promise((r) => { setTimeout(r, 0); });
-                res = applyRulesDocOp(doc, regenOp(p, region, e.id));
-            }
+            // ⛓ P5c — ONE press: a realiser whose generator runs outside JS (cloudberry's game
+            //   page; here a stand-in) yields its work; the press awaits exactly that and asks once more.
+            let waited = 0;
+            // eslint-disable-next-line no-await-in-loop
+            const res = await regenerateAwaitingGeneration(() => applyRulesDocOp(doc, regenOp(p, region, e.id)), {
+                collect: collectPendingGenerations, onPending: () => { waited += 1; },
+            });
+            if (e.id === 'cloudberry') expect(waited, 'the premise: cloudberry generates asynchronously').toBe(1);
             expect(res.ok, `${e.id}: ${res.error}`).toBe(true);
             expect(res.description).toContain(`${REGENERATE_SIDES_REASSIGNED} ${spec.sidesReassigned.join(', ')}`);
         }

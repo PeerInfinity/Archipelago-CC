@@ -10,7 +10,9 @@
  * location (`resolveRegenerateWorkerUrl`), where its relative imports resolve.
  */
 
-import { INITIALISE_JOB, REGENERATE_WORKER_LIBRARIES, runRegenerateJob } from './regionGenerationRun.js';
+import {
+    INITIALISE_JOB, REGENERATE_WORKER_LIBRARIES, flagPendingGeneration, runRegenerateJob,
+} from './regionGenerationRun.js';
 
 let loaded = null;
 
@@ -46,6 +48,9 @@ function loadLibraries() {
             const { zoneJobAnswer } = await import('./regionContent.js');
             // ⛓ R7 — a WHOLE bare slot laid out and realised, one progress message per region.
             const { initialiseSlot } = await import('./slotInitialise.js');
+            // ⛓ P5c — a realiser that yielded work it could not wait on (cloudberry's game
+            //   page, which this worker does not have) is flagged; the page finishes it.
+            const { collectPendingGenerations } = await import('../procgenPipeline/procgenPipelineEngine.js');
             return {
                 registered: substrateRegistry.getAll().map((e) => e.id),
                 failed,
@@ -53,7 +58,7 @@ function loadLibraries() {
                     if (args?.job === INITIALISE_JOB) return initialiseSlot({ ...args, onProgress: progress });
                     return args?.source?.kind === 'zone'
                         ? zoneJobAnswer(args, { fetchJson: fetchServedJson })
-                        : regenerateRegionEntry(args);
+                        : flagPendingGeneration(() => regenerateRegionEntry(args), collectPendingGenerations);
                 },
             };
         })();

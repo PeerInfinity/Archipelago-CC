@@ -294,7 +294,8 @@ describe('⛓ the links the render emits', () => {
         //   384 → 385: cloudberry P5a — cloudberry.md § Items' Double Jump note → its own § Generating it (1 same-doc).
         //   385 → 387: keygate colours — substrate-registry.md § Build-time — item introduction → sphere-growth.md and
         //              → flash.md § Declarations (G9) (2 doc).
-        expect(checked).toBe(387);
+        //   387 → 388: cloudberry P5c — cloudberry.md § Generating it → modules/apworldEditor.md (1 repo).
+        expect(checked).toBe(388);
     });
 
     it('tags each link with the kind that produced it', () => {

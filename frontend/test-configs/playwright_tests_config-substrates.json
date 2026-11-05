@@ -147,6 +147,11 @@
             "category": "cloudberrySubstrate"
         },
         {
+            "id": "cloudberry-editor-regenerate-one-press",
+            "enabled": true,
+            "category": "cloudberrySubstrate"
+        },
+        {
             "id": "noiz2sa-region-loop-visit",
             "enabled": true,
             "category": "noiz2saSubstrate",
