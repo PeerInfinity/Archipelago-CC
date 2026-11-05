@@ -1,0 +1,72 @@
+From 72037fc261110cdf077a53c8714b10a3f21f8f3d Mon Sep 17 00:00:00 2001
+From: PeerInfinity <163462+PeerInfinity@users.noreply.github.com>
+Date: Thu, 5 Nov 2026 03:14:44 +0000
+Subject: [PATCH] =?UTF-8?q?forwardSimulator:=20computeTraversableExits=20?=
+ =?UTF-8?q?=E2=80=94=20the=20ER=20reach=20hook's=20traversable=20exits?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Export computeTraversableExits(model, inventory, reachableRegions, undecided)
+beside computeReachableRegions: the exits whose parent region is reachable
+AND whose access_rule holds, decided by the same module-private decide()
+the region sweep uses (no copy). The entrance randomizer's injected
+reach(connections) returns this set (Archipelago-CC
+procgenCore/entranceRandomizer.js, ER step E3/E4a).
+
+An UNDECIDED rule is not traversable (the walkers' reading): counting an
+exit the evaluator cannot decide as open could let a shuffle hang the only
+way on with an unpriced requirement; counting it shut can only cost a
+layout that would have worked. Pass undecided (a Map) to see them.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_018CoDi4grTGbUhiNiYP2ZGM
+---
+ procgen/forwardSimulator.js | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
+diff --git a/procgen/forwardSimulator.js b/procgen/forwardSimulator.js
+index eea1f50..19b2ae0 100644
+--- a/procgen/forwardSimulator.js
++++ b/procgen/forwardSimulator.js
+@@ -195,6 +195,37 @@ export function computeReachableRegions(model, inventory, undecided = null) {
+     return reachable;
+ }
+ 
++/**
++ * Compute the set of exit names currently TRAVERSABLE — an exit whose
++ * parent region is reachable AND whose access_rule holds, decided by the
++ * same `decide` the region sweep uses (CanReachRegion reads
++ * `reachableRegions`). The entrance randomizer's `reach` hook needs this
++ * set (procgenCore/entranceRandomizer.js: `{regions, exits}`).
++ *
++ * An UNDECIDED rule (evaluateRuleWithInventory → undefined: a game
++ * helper, CanReachLocation, a setting) is NOT traversable — the walkers'
++ * reading, and the conservative one for a shuffle: counting an exit the
++ * evaluator cannot decide as open could let the randomizer hang the only
++ * way on with a requirement nobody priced, and the layout would be
++ * unbeatable; counting it shut can only cost a layout that would have
++ * worked. Pass `undecided` (a Map, as for computeReachableRegions) to
++ * see which exits were read that way.
++ */
++export function computeTraversableExits(model, inventory, reachableRegions = null, undecided = null) {
++    const reach = reachableRegions ?? computeReachableRegions(model, inventory, undecided);
++    const exits = new Set();
++    for (const regionName of reach) {
++        const region = model.regions.get(regionName);
++        if (!region) continue;
++        for (const exit of region.exits) {
++            if (decide(model, exit.access_rule, inventory, reach, undecided, `exit ${regionName} -> ${exit.name}`)) {
++                exits.add(exit.name);
++            }
++        }
++    }
++    return exits;
++}
++
+ /**
+  * Compute the set of location names currently accessible — i.e.,
+  * located in a reachable region AND with their access_rule satisfied.
+-- 
+2.43.0
+
