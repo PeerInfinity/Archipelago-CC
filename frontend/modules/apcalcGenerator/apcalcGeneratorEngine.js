@@ -13,6 +13,21 @@ const OPERATIONS = ['+', '-', '*', '/'];
 const OPERATION_ORDER = ['+', '-', '*', '/'];
 const TRASH_ITEM = 'Junk';
 
+// Whole-generation retry (see `generate`), mirrored from generator.py
+// (GENERATION_ATTEMPTS, RETRY_SEED_STEP, retry_seed). Attempt 0 is the seed itself,
+// so a seed that succeeds first time gives exactly the puzzle it always gave.
+export const GENERATION_ATTEMPTS = 8;
+export const RETRY_SEED_STEP = 0x9E3779B9; // 2654435769, the 32-bit golden-ratio constant
+
+/** The seed of generation attempt `attempt` (0 = the config's own seed). */
+export function retrySeed(seed, attempt) {
+    // attempt 0 hands the seed through untouched (createRng sees exactly what it always saw)
+    return attempt ? Number(seed) + attempt * RETRY_SEED_STEP : seed;
+}
+
+/** A sphere could not place a chain: this attempt is a dead end (generate() retries it). */
+export class ChainGenerationError extends Error {}
+
 // --- Counter helpers ---
 function counterSubtract(a, b) {
     const result = { ...a };
@@ -336,7 +351,7 @@ function generateChain(sphere, nodes, edges, nodeLookup, outgoingCounts,
         }
     }
 
-    throw new Error(`Failed to generate chain for sphere ${sphere} after ${maxAttempts} attempts.`);
+    throw new ChainGenerationError(`Failed to generate chain for sphere ${sphere} after ${maxAttempts} attempts.`);
 }
 
 function generateChainPartial(sphere, nodes, edges, nodeLookup, outgoingCounts,
@@ -664,8 +679,31 @@ function ensureDivisiblePaths(nodes, edges, nodeLookup, outgoingCounts,
 
 // --- Main generation (async for UI responsiveness) ---
 
+/**
+ * Generate a puzzle. About 1 seed in 2,500 at the default options dead-ends (when
+ * spheres 4 and 5 both award '/', every path holds one '+', '-' and '*', and sphere 6
+ * finds no chain whose values are new); such a seed is generated again from
+ * `retrySeed(seed, 1)`, then 2, ..., up to GENERATION_ATTEMPTS. The retry runs only
+ * after a failure, so a seed that succeeded before is unchanged.
+ */
 export async function generate(config, log) {
-    const rng = createRng(config.seed);
+    for (let attempt = 0; attempt < GENERATION_ATTEMPTS; attempt++) {
+        const seed = retrySeed(config.seed, attempt);
+        if (attempt) log(`\n=== Retry ${attempt}/${GENERATION_ATTEMPTS - 1}: seed ${seed} ===`);
+        try {
+            const result = await generateAttempt(config, createRng(seed), log);
+            result.generationAttempt = attempt;
+            return result;
+        } catch (error) {
+            if (!(error instanceof ChainGenerationError)) throw error;
+            log(`  Dead end: ${error.message}`);
+            if (attempt === GENERATION_ATTEMPTS - 1) throw error;
+        }
+    }
+}
+
+/** One generation attempt from one RNG; throws ChainGenerationError on a dead end. */
+async function generateAttempt(config, rng, log) {
 
     const nodes = [];
     const edges = [];
@@ -876,8 +914,21 @@ function pathCostsToRule(pathCosts) {
 }
 
 /**
+ * The generator's output version, hashed into every puzzle name (`puzzleIdentity`)
+ * so that one name never means two different puzzles. BUMP IT whenever `generate`
+ * gives a different puzzle for the same seed + params. The place that notices is
+ * the JS<->Python parity test (worlds/apcalc/test/test_generator_parity.py): it
+ * pins a digest of the puzzles it generates against this version, and goes red
+ * when the output moves without a bump.
+ * History: 1 = the first versioned engine (2026-11-04, sdc-apcalc-parity; adds
+ * the whole-generation retry, which changes only seeds that used to fail).
+ */
+export const APCALC_GENERATOR_VERSION = 1;
+
+/**
  * The generation params that shape a puzzle besides its seed, in a fixed
- * order. The hash in a puzzle's name is taken over these.
+ * order. The hash in a puzzle's name is taken over these, after the
+ * generator version.
  */
 export const PUZZLE_PARAM_KEYS = Object.freeze([
     'numSpheres', 'opsPerSphere', 'numsPerSphere', 'trashPerSphere', 'maxBranches', 'reuseAttempts',
@@ -904,11 +955,14 @@ function fnv1aHex(text) {
  * params. The hash is ALWAYS present, never only when the params differ from the
  * defaults: the name is then a function of the puzzle alone, and does not change
  * meaning when the panel's defaults change (`DEFAULT_PARAMS` in the UI and the
- * Python world's option defaults already differ).
+ * Python world's option defaults already differ). The generator version is hashed
+ * too (APCALC_GENERATOR_VERSION), so a generator change that alters the puzzle
+ * renames it.
  * @param {object} config generation config (`seed` plus PUZZLE_PARAM_KEYS)
  */
 export function puzzleIdentity(config) {
-    const params = PUZZLE_PARAM_KEYS.map(k => `${k}=${Number(config[k]) || 0}`).join(';');
+    const params = [`v=${APCALC_GENERATOR_VERSION}`,
+        ...PUZZLE_PARAM_KEYS.map(k => `${k}=${Number(config[k]) || 0}`)].join(';');
     const hash = fnv1aHex(params).slice(0, 6);
     const seed = String(config.seed);
     const seedId = seed.replace(/[^0-9a-zA-Z]/g, '_');
