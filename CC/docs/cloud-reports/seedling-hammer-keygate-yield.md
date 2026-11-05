@@ -8,7 +8,7 @@ Slice `seedling-hammer-keygate-yield` (cloud, Opus). Planner: `seedling-hammer-p
 - Start: `origin/main` @ `26ed405d3f45d3cb86ebae87207035fc08a57e04`
 - Branch: `claude/keygate-yield-blocked-goal-kzv751`
 - Head: see the last commit on the branch (this report is the last commit; the code head it reports on is
-  `476d7f2277`).
+  `476d7f2277`; the last code change, the test-label fix, is `d9b030beb2`).
 
 ## 2. The answer first
 
@@ -162,7 +162,7 @@ certified with the approach it drives (⚖ 30(c)).
 | `generate-docs-index --check` | OK (193 docs) |
 | `derive-seedling-tick0 --check` | ALL CHECKS PASSED |
 | `check-seedling-wasm-ship` (headless) | ALL PASS — 415 PASS, 0 FAIL, 0 SKIP (dev server on :8000) |
-| JSUT | run **41961040388** on `476d7f2277`: **slow battery 372/372 passed**; shards 1 and 3 green; shard 2 had **1 red, mine**: `scripts/procgen/lintGateLabels.test.js` flagged `hammerKeygateYield.test.js:54` (`toHaveLength(1)`, a pinned count). Fixed in the next commit (the row matches the whole one-entry array), and both files are green locally. The re-run on the new head is the planner's to read (`node scripts/procgen/ci-summary.mjs <sha> --wait`). |
+| JSUT | run **41961040388** on `476d7f2277`: **slow battery 372/372 passed**; shards 1 and 3 green; shard 2 had **1 red, mine**: `scripts/procgen/lintGateLabels.test.js` flagged `hammerKeygateYield.test.js:54` (`toHaveLength(1)`, a pinned count). Fixed in the next commit (the row matches the whole one-entry array), and both files are green locally. Re-run **41967956329** at `d9b030beb2`, when this report was written: **shard 2/3 success**, Producer --checks success, headless procgen gates shard 0 success; shards 1/3 and 3/3, the slow battery and headless shard 1 were still running or queued. The planner should read the rest with `node scripts/procgen/ci-summary.mjs --run=41967956329`. |
 | Train tier | **None run locally, by reasoning.** OFF is byte-identical by construction (no `reaim` is passed), and the train pins run at the defaults. The planner's dispatched train-tier run is the measurement. |
 
 Docs: `seedling-bot.md` gets a paragraph after POCKET-BURN naming `COLLECT_RESTANCE` (OFF) and what it does.
