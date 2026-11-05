@@ -141,6 +141,8 @@ export function applyDerivedRuleTableToAtlas(atlas, table) {
     const regions = new Map(atlas.regions.map((r) => [r.region_id, r]));
     const out = [];
     for (const row of table.rows) {
+        // An event location has no atlas row (the event layer mints it at compile time): `applyDerivedRuleTable` holds it.
+        if (row.event) continue;
         const region = regions.get(row.atlas.region_id);
         if (!region) throw new Error(`derived-rule table: ${row.key} names atlas region ${row.atlas.region_id}, which the atlas does not hold`);
         const target = row.kind === 'exit' ? (region.exits ?? []).find((e) => e.exit_id === row.atlas.exit_id)

@@ -315,7 +315,9 @@ export function derivedRuleTable({ elements }, { rules, exclusions = [] }) {
         const level = e.region.split('__')[0];
         const atlas = e.kind === 'exit' ? { region_id: level, exit_id: atlasExitId.get(e.name) ?? null } : { region_id: level, location: e.name };
         if (e.kind === 'exit' && !atlas.exit_id) throw new Error(`derived-rule table: ${e.key} has no atlas exit id in the compiled sidecars`);
-        rows.push({ key: e.key, kind: e.kind, region: e.region, name: e.name, arrival: e.arrival, atlas, rule: e.derived });
+        // ⛓ An EVENT location (re-admitted by a binding witness) is minted by the rules producer's event layer at compile
+        // time, not an atlas row: the row says so (`event`), and only the compiled override applies it.
+        rows.push({ key: e.key, kind: e.kind, region: e.region, name: e.name, arrival: e.arrival, ...(e.kind === 'location' && e.event ? { event: true } : {}), atlas, rule: e.derived });
     }
     const byKey = (a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0);
     return { rows: rows.sort(byKey), excluded: excluded.sort(byKey) };

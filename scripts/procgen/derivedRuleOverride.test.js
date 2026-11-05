@@ -74,6 +74,10 @@ describe('guard 2: composed ≠ table is refused by name, with what to do', () =
         expect(out.map((r) => [r.key, r.compare])).toEqual([['k1', 'equal']]);
         expect(atlas.regions[0].exits[0].access_rule.rule).toBe('Or');
         expect(atlas.regions[0].exits[1].access_rule).toBeUndefined();
+        // An EVENT location row has no atlas row: skipped here (the compiled override holds it); a plain one is refused.
+        const ev = { rows: [{ key: 'k3', kind: 'location', event: true, atlas: { region_id: 'level_1', location: 'E' }, rule: TRUE }] };
+        expect(applyDerivedRuleTableToAtlas(atlas, ev)).toEqual([]);
+        expect(() => applyDerivedRuleTableToAtlas(atlas, { rows: [{ ...ev.rows[0], event: undefined }] })).toThrow(/which the atlas does not hold/);
     });
 });
 
@@ -131,6 +135,9 @@ describe('derivedRuleTable: the selection', () => {
         const t = derivedRuleTable(label(rows), { rules });
         expect(t.rows).toEqual([]);
         expect(t.excluded).toEqual([{ key: 'a|@E', why: 'sharedBinding (playthroughEventLayer): E' }]);
+        // Witnessed: the row is admitted and says it is an EVENT location (no atlas row).
+        const w = derivedRuleTable(labelDerivedRows(rows, { rules, echoes: new Set(), witnessed: [{ event: 'E' }] }), { rules });
+        expect(w.rows).toEqual([{ key: 'a|@E', kind: 'location', region: 'a', name: 'E', arrival: 'entrance', event: true, atlas: { region_id: 'a', location: 'E' }, rule: TRUE }]);
     });
     // ⛓ BINDING WITNESSES (slice rules-sharedbinding-witnesses; rules-4's R-A3 ruling (c)): a sharedBinding element is
     // re-admitted only when EVERY event it names has a ledger entry — the ledger is data, never a list in code.
