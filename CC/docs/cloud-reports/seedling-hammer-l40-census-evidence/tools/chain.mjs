@@ -24,6 +24,12 @@ for (const line of readFileSync(args.requests, 'utf8').trim().split('\n')) {
 }
 if (!req) { console.error('no such request'); process.exit(2); }
 const { passes = JR.ANYTIME_PASSES, source, budgetWork: capturedBudget, upgradeWindowWork: windowWork = null, ...tape } = req;
+// WHAT-IF (measure only): --persist=40:12,40:0 adds those persistence rows to the request's staging (a flag a
+// route that went there first would have banked; the page sweep stages only arrival/goal-rule events).
+if (args.persist) {
+    const add = args.persist.split(',').map((s) => { const [level, tag] = s.split(':').map(Number); return { level, tag, note: 'census what-if' }; });
+    tape.staging = { ...tape.staging, persistence: [...(tape.staging.persistence ?? []), ...add] };
+}
 const levelSource = levelSourceFromAtlas(source.records);
 let units = 0;
 const rows = [];
@@ -80,11 +86,32 @@ for (const p of passes) {
     if (answer.kind === 'divergence') { best = answer; break; }
 }
 Array.prototype.push = origPush;
+// 30(c): a SOLVED plan's keys on a FRESH run of the request's staging, row by row against the plan's expected rows;
+// its hits and deaths (BK2COMBAT's arms.mjs `modelled`, copied).
+const rowOf = (run) => ({ level: run.level, x: run.state.x, y: run.state.y, deaths: run.playerDeaths.length });
+const same = (a, b) => a.level === b.level && a.x === b.x && a.y === b.y && a.deaths === b.deaths;
+function modelled(plan) {
+    const run = JR.replayTape({ staging: tape.staging, perTick: tape.perTick, levelSource: levelSourceFromAtlas(source.records),
+        scratchPersistence: tape.scratchPersistence === true, equips: tape.equips ?? null, holds: tape.holds ?? null });
+    const hits0 = run.playerHits.length; const deaths0 = run.playerDeaths.length;
+    if (!same(rowOf(run), plan.expected[0])) return { gm: false, at: -1, why: 'prefix row differs' };
+    for (let k = 0; k < plan.solution.length; k += 1) {
+        const slot = plan.equipsAt?.get?.(k);
+        if (slot !== undefined) run.equipNow(slot);
+        run.advance(plan.solution[k]);
+        const want = plan.expected[k + 1];
+        if (want && !same(rowOf(run), want)) return { gm: false, at: k, why: `row ${JSON.stringify(rowOf(run))} != ${JSON.stringify(want)}` };
+    }
+    const hits = run.playerHits.slice(hits0).map((h) => ({ t: h.t, source: h.source, id: h.id }));
+    return { gm: run.playerDeaths.length === deaths0, hits, deaths: run.playerDeaths.length - deaths0 };
+}
+let gm = null;
+if (best.ok) { try { gm = modelled(best.plan); } catch (e) { gm = { gm: false, why: `THREW ${e?.message ?? e}` }; } }
 const msg = best.ok ? null : best.message;
-const out = { id: Number(args.id), key, i: Number(args.i), arm: args.arm ?? 'D0', cap: CAP, capturedBudget,
-    ok: best.ok, ticks: best.ok ? best.plan.solution.length : null, work: units, ms: Date.now() - t0, passes: passRows,
+const out = { id: Number(args.id), key, i: Number(args.i), arm: args.arm ?? 'D0', persist: args.persist ?? null, cap: CAP, capturedBudget,
+    ok: best.ok, gm, verbs: best.ok ? best.plan.verbs : null, ticks: best.ok ? best.plan.solution.length : null, work: units, ms: Date.now() - t0, passes: passRows,
     digest: createHash('md5').update(best.ok ? JSON.stringify(best.plan.solution.map((k) => [...k])) : msg).digest('hex').slice(0, 12),
     head: msg ? msg.slice(0, 4000) : null, marks, bySite, byFrame, rows };
 if (args.out) appendFileSync(args.out, JSON.stringify(out) + '\n');
-console.log(`${args.id}/${args.i} ${args.arm ?? 'D0'} ${out.ok ? `SOLVED ${out.ticks}` : 'REFUSED'} work=${units} ms=${out.ms} passes=${JSON.stringify(passRows)}`);
+console.log(`${args.id}/${args.i} ${args.arm ?? 'D0'} ${out.ok ? `SOLVED ${out.ticks} gm=${JSON.stringify(gm)}` : 'REFUSED'} work=${units} ms=${out.ms} passes=${JSON.stringify(passRows)}`);
 if (msg) console.log(msg.slice(0, 1200));
