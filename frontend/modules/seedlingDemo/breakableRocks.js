@@ -139,6 +139,21 @@ export function animCallbackTick(anim = BREAK_ANIM, elapsed = FP_MAX_ELAPSED) {
 export const HIT_TO_GONE_TICKS = animCallbackTick();
 
 /**
+ * ⛓⛓⛓ fidelity KNOCKBACK376 D1 (`CONTACT_FIDELITY.rockGoneFencepost`) — THE GAME'S COUNT, MEASURED: the cell is free
+ * for the move from observation `fired + HIT_TO_GONE_TICKS_GAME` (the `goneAt` `brokenRockIds` reads with
+ * `ticksCompleted + 1`). Two fenceposts on top of the animation's 7, each derived, then witnessed together on p4g
+ * (`fidelityRockGone.js`: `rockgone-l40-plain`, `rockgone-l40-dash`, the leg-376 play):
+ *   +1 — the animation's first `Spritemap.update` is the frame AFTER the hit: `World.update` runs a graphic right after
+ *        its entity's update (`World.as:47-61`) down a list `addUpdate` PREPENDS to, and the player is added before
+ *        the level's entities, so a rock's graphic is updated before the player's `slash()` calls its `hit()`. (This
+ *        is the "±1" the note above left open: it is +1, never 0.)
+ *   +1 — `endAnim`'s `FP.world.remove(this)` only queues; the callback frame's `updateLists` (`Engine.as:69-78`)
+ *        drops the solid at that frame's END, so the frame's own move is still blocked.
+ */
+export const ROCK_GONE_FENCEPOST_TICKS = 2;
+export const HIT_TO_GONE_TICKS_GAME = HIT_TO_GONE_TICKS + ROCK_GONE_FENCEPOST_TICKS;
+
+/**
  * The leg obligation: how long after the press a leg must wait before it
  * may plan through the cell.
  *
@@ -211,9 +226,11 @@ export function createRockState() {
  * so a second swing does NOT restart the timer, and a model that reset it
  * would push the despawn later than the game does.
  *
+ * @param {{hitToGone?: number}} [opts] `hitToGone` — the fired-to-gone count (`HIT_TO_GONE_TICKS`, or
+ *   `HIT_TO_GONE_TICKS_GAME` under `CONTACT_FIDELITY.rockGoneFencepost`; the caller decides)
  * @returns {{id: string, started: boolean, goneAt: number}}
  */
-export function hitRock(state, rock, firedTick) {
+export function hitRock(state, rock, firedTick, { hitToGone = HIT_TO_GONE_TICKS } = {}) {
     if (!(state instanceof Map)) fail('hitRock: needs the run\'s rock state');
     if (!Number.isInteger(firedTick) || firedTick < 0) {
         fail(`hitRock: firedTick must be a non-negative integer, got ${firedTick}`);
@@ -224,7 +241,7 @@ export function hitRock(state, rock, firedTick) {
     if (already) return { id, started: false, goneAt: already.goneAt };
     const entry = {
         hitTick: firedTick,
-        goneAt: firedTick + HIT_TO_GONE_TICKS,
+        goneAt: firedTick + hitToGone,
         tag: rock.persistTag ?? rock.tag ?? -1,
         rockType: rock.rockType ?? 0,
         x: rock.x,

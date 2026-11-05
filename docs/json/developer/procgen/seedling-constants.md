@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**84 files, 7067 literals.** Class × position:
+**84 files, 7068 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 7 | 1718 | 610 | 2335 |
-| rule | 14 | 1197 | 588 | 1799 |
+| rule | 15 | 1197 | 588 | 1800 |
 | cosmetic | 0 | 62 | 14 | 76 |
 | structural | 15 | 404 | 2438 | 2857 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 36 | 3381 | 3650 | 7067 |
+| total | 37 | 3381 | 3650 | 7068 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1811 | 0 | 97 | 123 | 4 | 300 | 2335 |
-| rule | 663 | 142 | 244 | 22 | 619 | 109 | 1799 |
+| rule | 663 | 143 | 244 | 22 | 619 | 109 | 1800 |
 
 Rows whose note starts `REVIEW:`: **116**.
 
@@ -464,7 +464,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 44 derived or aliased top-level constants
+### The 45 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -478,6 +478,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `SLASH_REACH_DASH` | seedlingDemo/presses.js | `SLASH_REACH * SLASH_SCALE_DASH.x` |
 | `FIRE_PRESS_CADENCE` | seedlingDemo/fireVerb.js | `FIRE_WINDOW.endTick + 1` |
 | `FIRE_RADIUS` | seedlingDemo/fireVerb.js | `FIRE_SPRITE.w / 2` |
+| `HIT_TO_GONE_TICKS_GAME` | seedlingDemo/breakableRocks.js | `HIT_TO_GONE_TICKS + ROCK_GONE_FENCEPOST_TICKS` |
 | `WAIT_AFTER_PRESS_TICKS` | seedlingDemo/burnableTree.js | `HIT_TO_GONE_TICKS + 12` |
 | `TILE` | seedlingDemo/spinner.js | `TILE_SIZE` |
 | `TILE` | seedlingDemo/crusher.js | `TILE_SIZE` |
@@ -515,7 +516,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**21 named scalars** are `physics` or `rule` (16 with an AS3 anchor), and **184 small tables** (at most 16 literals) hold at least one (106 with an AS3 reference).
+**22 named scalars** are `physics` or `rule` (16 with an AS3 anchor), and **184 small tables** (at most 16 literals) hold at least one (106 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -534,6 +535,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `WEAPON_LENGTH` | seedlingDemo/bobBossFight.js | 24 | physics | magnitude | Enemies/BobBoss.as:weaponLength |
 | `DEATH_LIFT` | seedlingDemo/bobBossFight.js | 1.2 | physics | magnitude | Enemies/BobBoss.as:death |
 | `SHIELD_FORCE` | seedlingDemo/bobBossFight.js | 5 | physics | magnitude | Player.as:shieldForce |
+| `ROCK_GONE_FENCEPOST_TICKS` | seedlingDemo/breakableRocks.js | 2 | rule | count |  |
 | `YETI_PORTAL_TAG` | seedlingDemo/dialogue.js | 1 | rule | sentinel | NPCs/Yeti.as:createdPortal |
 | `STATUE_TALK_RANGE` | seedlingDemo/endingChain.js | 32 | rule | bound | NPCs/Statue.as:talkRange |
 | `NO_FORCE_CAP` | seedlingDemo/enemyDamage.js | -1 | physics | sentinel | Enemies/Enemy.as:maxForce |

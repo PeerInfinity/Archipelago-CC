@@ -27,7 +27,11 @@ describe('CEREMONY126 — the switches', () => {
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyPressForecast).toBe(false);
             expect(CONTACT_FIDELITY_DEFAULTS.ceremonyWalkHandoff).toBe(true);
             expect(CONTACT_FIDELITY.ceremonyPressForecast).toBe(false);
-            expect(Object.keys(CONTACT_FIDELITY_DEFAULTS).slice(-2)).toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
+            // ⛓ KNOCKBACK376 (wave 37c) appended `rockGoneFencepost` after them: the pair keeps its order and its place.
+            const keys = Object.keys(CONTACT_FIDELITY_DEFAULTS);
+            expect(keys.slice(keys.indexOf('ceremonyPressForecast'), keys.indexOf('ceremonyPressForecast') + 2))
+                .toEqual(['ceremonyPressForecast', 'ceremonyWalkHandoff']);
+            expect(keys.indexOf('ceremonyPressForecast')).toBe(keys.indexOf('previewBeamTowerDrift') + 1);
         });
     it('the env names are known worker env names', () => {
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CEREMONY_PRESS_FORECAST');

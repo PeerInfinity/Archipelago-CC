@@ -1868,6 +1868,20 @@ export const CONTACT_FIDELITY = {
      * `ceremonyCadenceStep`. OFF: byte-identical. `SEEDLING_CEREMONY_WALK_HANDOFF=0|1`.
      */
     ceremonyWalkHandoff: true,
+    /**
+     * fidelity KNOCKBACK376 D1 (wave 37c) — A BROKEN `BreakableRock` STOPS BEING SOLID TWO TICKS LATER THAN
+     * `HIT_TO_GONE_TICKS` SAID, MEASURED ON THE GAME. `hit()` → `play("break")` runs inside `Player.update` (the slash's
+     * `genericHit`, `Player.as:1091-1093`), and `World.update` runs each entity's graphic right after its update down a
+     * list `addUpdate` PREPENDS to (`World.as:47-61`; the player is added before the level's entities), so the rock's
+     * first `Spritemap.update` is the frame AFTER the hit; its 7th (`animCallbackTick`) calls `endAnim` →
+     * `FP.world.remove(this)`, which only queues until that frame's `updateLists` (`Engine.as:69-78`). The game frees the
+     * cell for the move on observation hit + 9; the model's `goneAt` (hit + 7 under `brokenRockIds(…, ticksCompleted +
+     * 1)`) freed it on hit + 7. Leg 376's knocked-back player went through `breakablerock@176,128`'s cell at t1256; the
+     * game held it until t1258 (`fidelityRockGone.js`). ON: `hitRock` records `goneAt = hit + HIT_TO_GONE_TICKS_GAME` (9).
+     * OFF: byte-identical. The persistence write (`rockFlags`, at the hit tick) is not changed.
+     * `SEEDLING_ROCK_GONE_FENCEPOST=0|1`.
+     */
+    rockGoneFencepost: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2241,6 +2255,9 @@ if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '1') CONTACT_F
 if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '0') CONTACT_FIDELITY.ceremonyPressForecast = false;
 if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '1') CONTACT_FIDELITY.ceremonyWalkHandoff = true;
 if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '0') CONTACT_FIDELITY.ceremonyWalkHandoff = false;
+// ⛓ fidelity KNOCKBACK376 D1: `SEEDLING_ROCK_GONE_FENCEPOST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '1') CONTACT_FIDELITY.rockGoneFencepost = true;
+if (globalThis.process?.env?.SEEDLING_ROCK_GONE_FENCEPOST === '0') CONTACT_FIDELITY.rockGoneFencepost = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

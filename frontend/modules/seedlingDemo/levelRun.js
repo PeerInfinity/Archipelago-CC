@@ -81,6 +81,7 @@ import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
 import { PUSH_SPEAR_DIRECTION, hitPushableFromPoint } from './pushables.js';
 import {
     TAGS_PER_LEVEL, brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
+    HIT_TO_GONE_TICKS_GAME,
 } from './breakableRocks.js';
 import {
     burnTree, burnWrites, burnedTreeIds, createBurnState,
@@ -6884,7 +6885,11 @@ export function createLevelRun({
                     continue;
                 }
                 const st = rockStateFor(level);
-                const { started, goneAt } = hitRock(st, rock, ticksCompleted);
+                // ⛓ fidelity KNOCKBACK376 D1: ON, the game's fired-to-gone count (`HIT_TO_GONE_TICKS_GAME`, the two
+                // measured fenceposts); OFF, the argument is absent and `hitRock` keeps `HIT_TO_GONE_TICKS`.
+                const { started, goneAt } = CONTACT_FIDELITY.rockGoneFencepost
+                    ? hitRock(st, rock, ticksCompleted, { hitToGone: HIT_TO_GONE_TICKS_GAME })
+                    : hitRock(st, rock, ticksCompleted);
                 // ⚠ `endAnim` writes `Game.setPersistence(tag, false)`
                 // UNCONDITIONALLY — its `check()` guard (`tag >= 0 && ...`)
                 // does not apply — so a `tag = -1` rock clears a flag in
