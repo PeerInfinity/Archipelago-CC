@@ -6792,6 +6792,10 @@ export function previewWalk(run, wps, tolerance = 0,
         strikeOffer = null } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
+    // ⛓ fidelity L105 D1 (`previewBeamTowerDrift`, OFF: the options as before): each step is told its previewed tick,
+    // so the stepper sweeps against the drifting BeamTower Solids as that frame leaves them.
+    const previewTickOpts = CONTACT_FIDELITY.previewBeamTowerDrift
+        ? (o, at) => ({ ...o, previewTick: at - startTick }) : (o) => o;
     /**
      * ⛓⛓⛓ THE ARROWS ADVANCE ON THE SAME CLOCK AS THE WALK, AND THE WALK IS
      * WHAT DECIDES WHETHER THE TRAPS FIRE.
@@ -7217,7 +7221,7 @@ export function previewWalk(run, wps, tolerance = 0,
             sample.held = held;
             spinRow(sample, st);
             if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
-            st = step(st, held, { dashImpulse: combat.dashImpulse });
+            st = step(st, held, previewTickOpts({ dashImpulse: combat.dashImpulse }, tick));
             combatAfter(tick - 1);
             truncated = lethalFloorOf(st);
             if (truncated) return;
@@ -7347,7 +7351,7 @@ export function previewWalk(run, wps, tolerance = 0,
              * sides' `hitsTimer` exactly one apart for a whole i-frame.
              */
             if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
-            st = step(st, held, { dashImpulse: combat.dashImpulse });
+            st = step(st, held, previewTickOpts({ dashImpulse: combat.dashImpulse }, tick));
             combatAfter(tick - 1);
             truncated = lethalFloorOf(st);
             if (truncated) break;
@@ -7435,7 +7439,7 @@ export function previewWalk(run, wps, tolerance = 0,
             sample.held = held;
             spinRow(sample, st);
             if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
-            st = step(st, held, { dashImpulse: combat.dashImpulse });
+            st = step(st, held, previewTickOpts({ dashImpulse: combat.dashImpulse }, tick));
             combatAfter(tick - 1);
             truncated = lethalFloorOf(st);
             if (truncated) break;
@@ -26178,6 +26182,8 @@ function solveSegmentUnder({
     const dashWalks = [];
     /** ⛓ FRONTIER3 — the walks planned on `FINE_LATTICE` after the frontier refused. */
     const fineLatticeWalks = [];
+    // ⛓ fidelity L105 D1b (`previewBeamTowerDrift`, OFF: stays empty) — one row per PHASE-arm drive the run left.
+    const phaseDriveLeft = [];
     /** ⛓ LAPSECOST D1 — the walks the narrow strike policy certified (`LAPSE_NARROW_RETRY`; empty with the lapse OFF). */
     const lapseNarrowWalks = [];
     /** ⛓ FORCEDHIT D2 — one row per crossing the forced-hit rung billed (`FORCED_HITS`; empty with it OFF). */
@@ -28629,13 +28635,45 @@ function solveSegmentUnder({
                     ...(dodge.partial ? { partial: dodge.partial } : {}) });
                 if (dodge.at === null) return { wps: dodge.wps, escalations };
                 const upto = dodge.at + dodge.ticks;
-                for (const sm of dodge.walk.samples.slice(0, upto)) {
+                /**
+                 * ⛓ fidelity L105 D1b (`previewBeamTowerDrift`, OFF: not asked) — THE PREVIEW IS DRIVEN ONLY WHILE THE
+                 * RUN IS ON IT. The arm plays the preview's keys open-loop, so a run the game moved off the previewed
+                 * path (measured, leg `level_105 <- in_L104_0_16 -> …` at seam 5689 with the snapshot preview: stopped
+                 * by `beamtower@48,40`'s Solid at x 58.41 from t211, beamed at t243, three pit deaths, then out by
+                 * L105's arrival door) kept walking the keys of a walk it was no longer taking. ON: the first tick whose
+                 * live position is not the preview's next sample hands back `{escalations}` (the spit arm's shape: the
+                 * walk re-plans from where it stands), and a lane crossing is the walk's own only through ITS exit
+                 * (`drive`'s identity: the level and the arrival point, or the pit) — any other crossing is refused by
+                 * name, never returned as the goal.
+                 */
+                const driveGuard = CONTACT_FIDELITY.previewBeamTowerDrift;
+                for (let i = 0; i < upto; i += 1) {
+                    const sm = dodge.walk.samples[i];
                     const held = new Set(sm.held);
                     perTick.push(held);
+                    const before = { x: run.state.x, y: run.state.y };
                     const { transition } = run.advance(held);
+                    if (transition && driveGuard && dodge.lane && crossTo
+                        && !(transition.to_level === crossTo.level && (crossTo.pit
+                            ? rectsOverlap(terrainProbeRect(before.x, before.y), crossTo.pit.rect)
+                            : (crossTo.arrival && run.state.x === crossTo.arrival.x
+                                && run.state.y === crossTo.arrival.y)))) {
+                        refuse(`${what}: the PHASE arm's lane walk left level ${transition.from_level} for `
+                            + `${transition.to_level} at run tick ${transition.t}, landing at (${run.state.x},`
+                            + `${run.state.y}) — not the walk's own exit (level ${crossTo.level}`
+                            + `${crossTo.arrival ? `, arrival (${crossTo.arrival.x},${crossTo.arrival.y})` : ''}); a `
+                            + 'crossing by another door is not the goal', { goal, obstacle: hit.sources[0]
+                            ? { kind: 'danger', id: hit.sources[0].id } : null });
+                    }
                     // ⛓ BEAMLANE: the lane walk crosses only on the corridor's last leg — the walk ARRIVED (FORCEDHIT's
                     // shape: `walkTo` returns the transition). Measured: leg 776 re-planned L105's exit inside L106.
                     if (transition) return dodge.lane ? { forced: { transition }, escalations } : { escalations };
+                    const next = dodge.walk.samples[i + 1];
+                    if (driveGuard && next && (run.state.x !== next.x || run.state.y !== next.y)) {
+                        phaseDriveLeft.push({ tick: run.ticksCompleted, what, lane: Boolean(dodge.lane), at: i + 1,
+                            preview: { x: next.x, y: next.y }, run: { x: run.state.x, y: run.state.y } });
+                        return { escalations };
+                    }
                 }
                 const wpAt = dodge.walk.samples[upto - 1]?.wp ?? 0;
                 // ⛓ fidelity SPINNINGAXE D2: a PARTIAL stall says so, so the walk re-probes (`partialDodgeReprobe`).
@@ -32612,6 +32650,7 @@ function solveSegmentUnder({
          * replaced, cut to 200 characters).
          */
         ...(fineLatticeWalks.length ? { fineLatticeWalks } : {}),
+        ...(phaseDriveLeft.length ? { phaseDriveLeft } : {}),
         ...(lapseNarrowWalks.length ? { lapseNarrowWalks } : {}),
         /**
          * ⛓ hammer-phase B3 — an optional result field, present only when a press kill's fight fallback ran

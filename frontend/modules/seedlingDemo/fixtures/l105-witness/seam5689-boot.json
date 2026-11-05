@@ -1,0 +1,93 @@
+{
+ "boot": {
+  "level": 105,
+  "x": 208,
+  "y": 64
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "despawn": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "keys": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "seal_parts": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ]
+ },
+ "rng": {
+  "seed": 614467865,
+  "split": true,
+  "cosmetic": 0
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasDarkShield": true,
+   "hasDarkSuit": true,
+   "hasDarkSword": true,
+   "hasFeather": true,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 4,
+  "time": 5689,
+  "primary": 0,
+  "secondary": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0
+ },
+ "inventory_slots": [
+  0,
+  1,
+  3,
+  2
+ ]
+}

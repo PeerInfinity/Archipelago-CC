@@ -376,7 +376,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // `in_L104_0_16 -> teleporter_80_144` takes a shorter walk with one hit (a W37 fix first).
             fineStanceWalk: false,
             // ⛓ fidelity FROZENPRESS D1 (wave 37): the walk's strike stands down on a refused input tick — ON since the L100 joint flip.
-            frozenPressForecast: true });
+            frozenPressForecast: true,
+            // ⛓ fidelity L105 D1 (wave 37): a preview steps the drifting BeamTower Solid per previewed tick — ships OFF.
+            previewBeamTowerDrift: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
