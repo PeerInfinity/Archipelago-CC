@@ -1,0 +1,12 @@
+A 236 steps: {'REFUSED': 34, 'SOLVED': 202}
+B 236 steps: {'REFUSED': 33, 'SOLVED': 203}
+common 236 moved 3
+step 167 L66
+  A: SOLVED 230 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es)
+  B: SOLVED 241 ticks, 4 decision(s), 1 re-plan(s), 0 hit(s), 1 pass(es)
+step 215 L100
+  A: REFUSED — solverBot(survey-step-215) reach-exit (288,96)->L101 -> break stance (breakablerock@128,144): the re-planned corridor failed too — solverBot(survey-step-215) re
+  B: SOLVED 327 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
+step 220 L105
+  A: SOLVED 416 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
+  B: SOLVED 413 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
