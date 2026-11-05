@@ -966,7 +966,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/census-seedling-bosslocks.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "argValue"
+            ],
             "browser": false,
             "category": "census",
             "citedBy": [
@@ -975,18 +977,33 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "at",
                 "check-frontier",
+                "from",
                 "json",
                 "no-write",
-                "write-frontier"
+                "write-frontier",
+                "write-recording-route"
             ],
             "file": "census-seedling-campaign.mjs",
             "flags": [
                 {
                     "how": [
+                        "argValue"
+                    ],
+                    "name": "at"
+                },
+                {
+                    "how": [
                         "includes"
                     ],
                     "name": "check-frontier"
+                },
+                {
+                    "how": [
+                        "argValue"
+                    ],
+                    "name": "from"
                 },
                 {
                     "how": [
@@ -1005,6 +1022,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write-frontier"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write-recording-route"
                 }
             ],
             "inheritedFlags": [
@@ -3905,7 +3928,8 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -20586,7 +20610,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "rerecord",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [

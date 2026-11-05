@@ -17669,12 +17669,14 @@ its byte-frozen free oracle is compared against.
 | 29 | `r9-solve-30` | L30 → L32 | 210 | — |
 | 30 | `r9-solve-32` | L32 → END | 839 | — |
 
-**ROUTE COMPLETE** — the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 4.2) → Fire); there is no next room on this route.
+**ROUTE COMPLETE** — the chain walks all 30 steps of the route it was recorded on (route-only through 4.2, as the survey derived it at 55c279a0), from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 4.2) → Fire); there is no next room on that route.
 
-**COVERAGE, BY ROUTE MODE** (`campaign-frontier.json` `coverage`; `route-only` is the route the chain was recorded on):
+**COVERAGE, BY ROUTE MODE** (`campaign-frontier.json` `coverage`; `recorded` is the route the chain was recorded on, `campaign-recording-route.json`, the survey's route-only route as derived at `55c279a01d`; `route-only` and `full` are today's survey routes):
 
-- `route-only` through 4.2: **30/30** route steps — COMPLETE
-- `full` through 4.2: **13/40** route steps — the chain leaves this route at segment 14: `r9-solve-0` arrives in L13, route step 14 crosses to L86
+- `recorded` through 4.2: **30/30** route steps — COMPLETE
+- `route-only` through 4.2: **20/29** route steps — the chain leaves this route at segment 21: `r9-solve-20` arrives in L13, route step 21 crosses to L0
+  - ⚠ today's `route-only` route leaves the recorded route at step 21 (30 → 29 steps): recorded L20: Level 020 - Shield (sphere 3.1) → Progressive Shield; stairsup@16,48 → L13 — leaves to L13; today L20: Level 020 - Shield (sphere 3.1) → Progressive Shield — restarts to L0
+- `full` through 4.2: **13/39** route steps — the chain leaves this route at segment 14: `r9-solve-0` arrives in L13, route step 14 crosses to L86
 
 <!-- GENERATED:campaign-chain END -->
 
