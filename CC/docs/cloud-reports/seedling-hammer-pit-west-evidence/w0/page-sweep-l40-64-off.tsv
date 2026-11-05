@@ -1,0 +1,64 @@
+366	done	5166	0	
+379	done	5180	0	
+380	done	5185	0	
+381	done	5190	0	
+382	done	5203	0	
+383	done	5188	0	
+384	done	5202	0	
+385	done	5192	0	
+386	done	5173	0	
+387	failed	5190	0	the solver ran out of 640, then 2560 work units on its held retry on exit in level 40: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solve
+388	failed	5179	0	the solver ran out of 640, then 2560 work units on its held retry on exit in level 40: solverBot(wasm-exit-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solve
+389	done	5188	0	
+390	done	5170	0	
+391	done	5186	0	
+392	done	5193	0	
+396	done	5184	0	
+397	done	5188	0	
+398	done	5191	0	
+399	done	5176	0	
+400	done	5193	0	
+401	done	5191	0	
+402	done	5173	0	
+403	done	5171	0	
+404	done	5188	0	
+405	done	5166	0	
+406	done	5163	0	
+407	done	5168	0	
+408	done	5173	0	
+409	done	5190	0	
+416	done	5185	0	
+418	done	5185	0	
+420	done	5181	0	
+422	done	5176	0	
+424	done	5188	0	
+426	done	5174	0	
+428	done	5189	0	
+430	done	5181	0	
+432	done	5207	0	
+434	done	5205	0	
+436	done	5186	0	
+438	done	5205	0	
+440	done	5210	0	
+369	done	5285	0	
+370	done	5293	0	
+374	done	5303	0	
+375	done	5294	0	
+413	done	5258	0	
+414	done	5252	0	
+393	done	5179	0	
+394	failed	5158	0	the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.5,853.4) —
+869	failed	5187	0	the solver declined Level 040 - Boss Key 2 in level 40 (pass dashless): solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,43
+871	failed	5162	0	the solver declined L40 flag 12: wandlock@480,560 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (488,904): solverBot:
+371	timeout	5269	0	
+372	done	5282	1	
+373	done	5320	0	
+395	failed	5300	0	the solver declined L40 flag 8: bosslock@480,352 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (488,904): solverBot
+410	done	5209	0	
+411	failed	5224	0	the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s
+870	failed	5203	0	the solver declined Level 040 - Boss Key 2 in level 40 (pass dashless): solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,43
+872	failed	5175	0	the solver declined L40 flag 12: wandlock@480,560 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (328,600): solverBot:
+376	timeout	5266	1	
+377	failed	5310	0	the solver declined L40 flag 1: wandlock@176,80 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,1} wandlock@176,80 -> hold stance -> break stance (breakablerock@176,128): the 
+378	done	5317	0	
+412	failed	5315	0	the solver declined L40 flag 8: bosslock@480,352 cleared in level 40 (refusal): solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (328,600): solverBot

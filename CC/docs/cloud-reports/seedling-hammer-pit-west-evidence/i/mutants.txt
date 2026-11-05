@@ -1,0 +1,14 @@
+M1 cut asked even where CPAIR answers: exit 1; ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+         × 367 (a triple answers its climb): the cut is never asked, and ON = OFF 64705ms
+M2 the hit body may be put back too: exit 0;       Tests  7 passed (7)
+M3 no put-back (every live chaser is the cut): exit 1; ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+         × 388 CHOOSER_CUT ON: the cut holds bob@192,480 and three more; the chaser arm kills it and the walk reaches the pit — SOLVED hitless inside 640, its plan replayed on a fresh run[
+M4 the hit body last: exit 1; ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+         × 388 CHOOSER_CUT ON: the cut holds bob@192,480 and three more; the chaser arm kills it and the walk reaches the pit — SOLVED hitless inside 640, its plan replayed on a fresh run[
+         × 387 CHOOSER_CUT ON: the same cut, SOLVED hitless inside 640 to out_pit_13_21 34731ms
+M5 no all-removed precheck, no head check: exit 0;       Tests  7 passed (7)
+M6 DVB never bounds: exit 1; ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+         × 388 DETOUR_VIA_BOUND ON alone, the deadline lifted (40960): OFF's EXHAUSTED refusal by name, its detour row refused before a leg 127270ms
+M7 DVB bounds every room: exit 0;       Tests  7 passed (7)
+M7 (rerun with the L14 row added to hammerPitWest.test.js): killed — the L14 row fails (verdict not 'can')
+M8 no deferral to NARROW: killed — the 403 row fails (ON re-plans through a kill)
