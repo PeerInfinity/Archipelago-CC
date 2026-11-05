@@ -1,0 +1,20 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostKillRung.train.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 258317[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE) [33m 631[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death; the strike floor OFF) [33m 175029[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t1216), and the executed prefix is the witness's first 1216 ticks (the strike floor OFF) [33m 82647[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerLatchWeigh.train.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 593823[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF plans the hold stance; ON plans the corpse weigh, and both walks west meet bob@736,800 at t271 [33m 461185[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with CPAIR size 3: the turret dies, its corpse is pushed onto button@480,384, the lock opens — and the volley the approach drew refuses by name [33m 132636[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerSpinnerPress.train.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 389093[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the press kill of spinner@816,848 corners at (770.96,860.99), 19 t after the landing at t2744 (L40C's wall) [33m 161007[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the kill completes (three landings), and its keys replayed on a fresh run kill the body with no death [33m 228083[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m11 passed[39m[22m[90m (11)[39m
+[2m   Start at [22m 03:55:42
+[2m   Duration [22m 1247.05s[2m (transform 2.16s, setup 0ms, import 5.41s, tests 1241.23s, environment 0ms)[22m
+
+EXIT 0
