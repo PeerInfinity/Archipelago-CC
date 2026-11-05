@@ -1,0 +1,18 @@
+fineStanceWalk=false frozenPressForecast=true unbilledDamageGate=false
+d=-8 t=5679 SOLVED 413 t, level 106, hits 0 [] fineWalks 0 [] verbs ["dodge"]
+d=-7 t=5680 SOLVED 413 t, level 106, hits 0 [] fineWalks 0 [] verbs ["dodge"]
+d=-6 t=5681 SOLVED 398 t, level 106, hits 0 [] fineWalks 0 [] verbs ["dodge","walk"]
+d=-5 t=5682 SOLVED 398 t, level 106, hits 0 [] fineWalks 0 [] verbs ["dodge","walk"]
+d=-4 t=5683 SOLVED 380 t, level 106, hits 0 [] fineWalks 0 [] verbs ["dodge"]
+d=-3 t=5684 SOLVED 310 t, level 104, hits 2 [{"t":283,"level":105,"source":"drop","id":"flyer@192,16","hits":2,"hitsMax":4,"died":false,"shake":5,"knockback":{"dx":0,"dy":0.9886123037584056,"landed":{"x":false,"y":true}}}; {"t":303,"level":105,"source":"drop","id":"flyer@192,16","hits":4,"hitsMax":4,"died":true,"shake":5,"knockback":null}] fineWalks 0 [] verbs ["dodge"]
+d=-2 t=5685 SOLVED 308 t, level 104, hits 2 [{"t":281,"level":105,"source":"drop","id":"flyer@192,16","hits":2,"hitsMax":4,"died":false,"shake":5,"knockback":{"dx":0,"dy":0.9836999469696873,"landed":{"x":false,"y":true}}}; {"t":301,"level":105,"source":"drop","id":"flyer@192,16","hits":4,"hitsMax":4,"died":true,"shake":5,"knockback":null}] fineWalks 0 [] verbs ["dodge"]
+d=-1 t=5686 SOLVED 306 t, level 104, hits 2 [{"t":279,"level":105,"source":"drop","id":"flyer@192,16","hits":2,"hitsMax":4,"died":false,"shake":5,"knockback":{"dx":0,"dy":0.9910019336187381,"landed":{"x":false,"y":true}}}; {"t":299,"level":105,"source":"drop","id":"flyer@192,16","hits":4,"hitsMax":4,"died":true,"shake":5,"knockback":null}] fineWalks 0 [] verbs ["dodge"]
+d=0 t=5687 SOLVED 308 t, level 104, hits 1 [{"t":243,"level":105,"source":"beamtower","id":"beamtower@48,40","hits":1,"hitsMax":4,"died":false,"shake":5,"knockback":{"dx":0,"dy":-4.94641233668643,"landed":{"x":false,"y":true}}}] fineWalks 0 [] verbs ["dodge"]
+d=1 t=5688 SOLVED 330 t, level 104, hits 1 [{"t":243,"level":105,"source":"beamtower","id":"beamtower@48,40","hits":1,"hitsMax":4,"died":false,"shake":5,"knockback":{"dx":0,"dy":-4.999890676241664,"landed":{"x":false,"y":true}}}] fineWalks 0 [] verbs ["dodge"]
+d=2 t=5689 SOLVED 330 t, level 104, hits 1 [{"t":243,"level":105,"source":"beamtower","id":"beamtower@48,40","hits":1,"hitsMax":4,"died":false,"shake":5,"knockback":{"dx":0,"dy":-4.976761198554863,"landed":{"x":false,"y":true}}}] fineWalks 0 [] verbs ["dodge"]
+d=3 t=5690 SOLVED 329 t, level 104, hits 1 [{"t":243,"level":105,"source":"beamtower","id":"beamtower@48,40","hits":1,"hitsMax":4,"died":false,"shake":5,"knockback":{"dx":0,"dy":-4.940113608872903,"landed":{"x":false,"y":true}}}] fineWalks 0 [] verbs ["dodge"]
+d=4 t=5691 REFUSED solverBot(wasm-exit-105): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-105) reach-exit (80,144)->L106's corridor (attempt 1) — the segment's o
+d=5 t=5692 REFUSED solverBot(wasm-exit-105): no corridor for goal reach-exit toward (88,152) in level 105. Obstacle: solid:beamtower (beamtower@48,40). No strategy row exists for this obstacle. Planner said: A* start ti
+d=6 t=5693 SOLVED 415 t, level 106, hits 0 [] fineWalks 0 [] verbs ["dodge","walk"]
+d=7 t=5694 SOLVED 429 t, level 106, hits 0 [] fineWalks 0 [] verbs ["dodge","walk"]
+d=8 t=5695 SOLVED 426 t, level 106, hits 0 [] fineWalks 0 [] verbs ["dodge","walk"]

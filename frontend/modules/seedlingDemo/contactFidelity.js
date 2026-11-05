@@ -1826,6 +1826,21 @@ export const CONTACT_FIDELITY = {
      * no press (an owed aim is dropped). OFF: byte-identical. `SEEDLING_FROZEN_PRESS_FORECAST=0|1`.
      */
     frozenPressForecast: true,
+    /**
+     * fidelity L105 D1 (wave 37) — A PREVIEW STEPS THE DRIFTING BEAMTOWER SOLID, TICK BY PREVIEWED TICK.
+     *
+     * `BeamTower.update()` drifts the tower by `y += 0.3·sin(worldFrame(100, 2)/100·2π)` at that frame's `Game.time`
+     * (`beamTowerDrift`, ON), and the tower updates BEFORE the player, so the player's sweep on frame k meets the Solid
+     * where its k-th update left it. `run.previewStepper()` built its options ONCE, so every previewed tick walked
+     * against the Solid as it stood at the preview's start. Measured, sweep leg `level_105 <- in_L104_0_16 ->
+     * exit:out_teleporter_80_144` (seam 5689): BEAMLANE's lane walk to (40,24) previewed clean for 413 ticks, and the
+     * run, driving those keys, was stopped by `beamtower@48,40`'s risen Solid at x 58.41 from t211, beamed at t243,
+     * knocked into `pit@48,0` and died three times. ON: `previewWalk` hands each step its previewed tick, and the stepper
+     * swaps the towers' Solids for their forecast at that tick (`beamTowerDrift` alone, from the live `y` and
+     * `Game.time`; a ceremony, an unknown `y` or no clock keeps the snapshot). OFF: byte-identical.
+     * `SEEDLING_PREVIEW_BEAM_TOWER_DRIFT=0|1`.
+     */
+    previewBeamTowerDrift: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2191,6 +2206,9 @@ if (globalThis.process?.env?.SEEDLING_FINE_STANCE_WALK === '0') CONTACT_FIDELITY
 // ⛓ fidelity FROZENPRESS D1: `SEEDLING_FROZEN_PRESS_FORECAST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FROZEN_PRESS_FORECAST === '1') CONTACT_FIDELITY.frozenPressForecast = true;
 if (globalThis.process?.env?.SEEDLING_FROZEN_PRESS_FORECAST === '0') CONTACT_FIDELITY.frozenPressForecast = false;
+// ⛓ fidelity L105 D1: `SEEDLING_PREVIEW_BEAM_TOWER_DRIFT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PREVIEW_BEAM_TOWER_DRIFT === '1') CONTACT_FIDELITY.previewBeamTowerDrift = true;
+if (globalThis.process?.env?.SEEDLING_PREVIEW_BEAM_TOWER_DRIFT === '0') CONTACT_FIDELITY.previewBeamTowerDrift = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
