@@ -25,10 +25,16 @@
  * `--set=crossroom` (⛓ CROSSROOM D4) plays `fidelityCrossRoom.CROSSROOM_WITNESSES` instead — L38's two
  * cross-room `ButtonRoom` presses, as `clear-tag` goals with a `presser` — through the same arms and checks.
  *
+ * `--set=bindings` (⛓ slice rules-sharedbinding-witnesses) plays `fidelityBindings.BINDING_WITNESSES` — the event-layer
+ * bindings the derived-rule table re-admits (`scripts/procgen/seedling-binding-witnesses.json`) — through the same arms,
+ * plus one check per arm: the event-layer flags in the game's `persistence_cleared` are EXACTLY the bound event's after
+ * the write, none before it (the compiled `seedling_playthrough` AP_1 is the layer). `--repeat=N` plays every arm N
+ * times, each on its own fresh page; the record holds every run.
+ *
  * Run: SEEDLING_PORT=9470 node scripts/procgen/probe-seedling-cleartag.mjs [--record=<path>] [--only=<substring>]
- *      [--set=cleartag|crossroom]
+ *      [--set=cleartag|crossroom|bindings] [--repeat=N]
  */
-import { existsSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
@@ -63,13 +69,24 @@ async function main() {
     const RECORD = process.argv.find((a) => a.startsWith('--record='))?.slice('--record='.length) ?? '';
     const ONLY = process.argv.find((a) => a.startsWith('--only='))?.slice('--only='.length) ?? '';
     const SET = process.argv.find((a) => a.startsWith('--set='))?.slice('--set='.length) ?? 'cleartag';
-    if (!['cleartag', 'crossroom'].includes(SET)) {
-        console.log(`FAIL: --set=${SET} — the sets are cleartag (the default) and crossroom`);
+    const REPEAT = Number(process.argv.find((a) => a.startsWith('--repeat='))?.slice('--repeat='.length) ?? '1');
+    if (!['cleartag', 'crossroom', 'bindings'].includes(SET) || !Number.isInteger(REPEAT) || REPEAT < 1) {
+        console.log(`FAIL: --set=${SET} --repeat=${REPEAT} — the sets are cleartag (the default), crossroom and bindings; --repeat a positive integer`);
         process.exit(1);
     }
+    const B = SET === 'bindings' ? await M('fidelityBindings.js') : null;
     const WITNESSES = SET === 'crossroom'
         ? (await M('fidelityCrossRoom.js')).CROSSROOM_WITNESSES
-        : (await M('fidelityClearTag.js')).CLEARTAG_WITNESSES;
+        : B ? B.BINDING_WITNESSES : (await M('fidelityClearTag.js')).CLEARTAG_WITNESSES;
+    // ⛓ BINDINGS: the event layer the witnesses are held against (the compiled seedling_playthrough AP_1).
+    const AP1 = B ? JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8')) : null;
+    const LAYER = B ? B.eventLayerFlags(AP1) : null;
+    if (B) {
+        for (const w of WITNESSES) {
+            const why = B.bindingMismatches(w, AP1);
+            if (why.length) { console.log(`FAIL: ${why.join('; ')}`); process.exit(1); }
+        }
+    }
     let failed = 0;
     const check = (name, ok, detail = '') => {
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
@@ -168,9 +185,10 @@ async function main() {
 
     const oracle = { source: SET === 'crossroom'
         ? 'probe-seedling-cleartag.mjs --set=crossroom --record (seedling fidelity CROSSROOM)'
-        : 'probe-seedling-cleartag.mjs --record (seedling fidelity CLEARTAG)', build: PAGE_NAME, arms: [] };
+        : B ? `probe-seedling-cleartag.mjs --set=bindings --repeat=${REPEAT} --record (slice rules-sharedbinding-witnesses)`
+            : 'probe-seedling-cleartag.mjs --record (seedling fidelity CLEARTAG)', build: PAGE_NAME, ...(B ? { repeat: REPEAT } : {}), arms: [] };
     try {
-        for (const a of clearTagArms(levelSource, WITNESSES).filter((x) => !ONLY || x.arm.includes(ONLY))) {
+        for (const a of clearTagArms(levelSource, WITNESSES).filter((x) => !ONLY || x.arm.includes(ONLY))) for (let run = 1; run <= REPEAT; run += 1) {
             const { level, tag } = a.w.goal.tag;
             const model = runTape(a.tape, { levelSource });
             const game = await play(a.tape);
@@ -178,8 +196,9 @@ async function main() {
             const vs = worstOf(game.ticks, model.ticks);
             const gameFlag = (game.status.persistence_cleared ?? []).some((c) => c.level === level && c.tag === tag);
             const modelFlag = modelWrote(a.tape, { level, tag }, levelSource);
+            const writes = B ? B.splitWrites(game.status.persistence_cleared, LAYER) : null;
             oracle.arms.push({
-                arm: a.arm, witness: a.w.key, verb: a.w.verb, tick_count: a.tape.tick_count, n: a.n,
+                arm: a.arm, ...(B ? { run, event: a.w.event, writes } : {}), witness: a.w.key, verb: a.w.verb, tick_count: a.tape.tick_count, n: a.n,
                 flag: { level, tag }, gameFlag, modelFlag, observations: game.ticks.length,
                 transitions: gameTransitions, vsModel: vs, error: game.status.error || '',
                 persistenceCleared: game.status.persistence_cleared ?? null,
@@ -196,6 +215,13 @@ async function main() {
                 gameFlag === a.flagExpected);
             check(`${a.arm}: the model agrees (its write tick ${a.flagExpected ? 'completed' : 'not yet run'})`,
                 modelFlag === a.flagExpected);
+            if (B) {
+                // ⛓ THE BINDING: after the write the layer's flags written are EXACTLY this event's; before it, none.
+                const want = a.flagExpected ? [a.w.event] : [];
+                check(`${a.arm}${REPEAT > 1 ? ` run ${run}/${REPEAT}` : ''}: the event-layer flags the game wrote are ${JSON.stringify(want)}`,
+                    JSON.stringify(writes.bound) === JSON.stringify(want),
+                    `bound ${JSON.stringify(writes.bound)}, unbound ${JSON.stringify(writes.unbound)}`);
+            }
         }
     } finally {
         await browser.close();
