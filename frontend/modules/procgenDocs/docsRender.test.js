@@ -295,8 +295,10 @@ describe('⛓ the links the render emits', () => {
         //   385 → 387: keygate colours — substrate-registry.md § Build-time — item introduction → sphere-growth.md and
         //              → flash.md § Declarations (G9) (2 doc).
         //   387 → 388: cloudberry P5c — cloudberry.md § Generating it → modules/apworldEditor.md (1 repo).
-        //   388 → 389: cloudberry P5d — cloudberry.md § the back exit → modules/apworldEditor.md (1 repo).
-        expect(checked).toBe(389);
+        //   388 → 389: goal-chest pipeline — substrate-registry.md § Build-time — goal containers → flash.md
+        //              § Declarations (G9) (1 doc).
+        //   389 → 390: cloudberry P5d — cloudberry.md § the back exit → modules/apworldEditor.md (1 repo).
+        expect(checked).toBe(390);
     });
 
     it('tags each link with the kind that produced it', () => {

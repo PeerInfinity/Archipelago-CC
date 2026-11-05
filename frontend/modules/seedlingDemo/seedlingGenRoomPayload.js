@@ -20,6 +20,8 @@ const cloneRule = (rule) => structuredClone(rule);
  * (`seedlingGeneratedSet.js`) — reads it without importing the registry entry
  * (which would register a second copy of it behind a computed specifier).
  */
+import { GOAL_CONTAINER_NOT_PLACED_REASONS } from '../procgenCore/goalContainer.js';
+
 export const GEN_ROOM_SUBSTRATE_ID = 'flash_seedling_gen';
 
 /**
@@ -124,7 +126,40 @@ export const KEYGATE_REQUEST_REFUSAL = 'keygate-request-not-met';
 /** ⛓ The set assembler's backstop: two rooms holding ONE key colour. */
 export const KEYGATE_SHARED_REFUSAL = 'keygate-colour-shared';
 
+/**
+ * ⛓ goal-chest-pipeline (⚖ the user 2026-11-04, rule 4: *"no loot chest in a goal-chest room, until hammer's
+ * CHEST-INCIDENTAL lands"*) — the NAME of the refusal of a room asked for a goal chest AND a loot chest. The walk to
+ * one chest crosses the other's trigger line and the solver's chest leg refuses a chest it did not name (seedling gen
+ * B1+B3's named gap), so the knob pair is refused on every draw, never re-rolled. ⛓ LIFTS when CHEST-INCIDENTAL
+ * (hammer: the solver models an incidental chest open) is on main.
+ */
+/** ⛓ goal-chest-pipeline — the `goal` knob's one value (`procgenSeedling.GOAL_CHEST_CLASS`, pinned equal in
+ *  `seedlingGenRoom`), spelled here because this module imports no generator. */
+export const GEN_ROOM_GOAL_CHEST = 'chest';
+/** ⛓ goal-chest-pipeline — location 0's `kind` in a room whose goal IS a chest (`seedlingGenRoom.CHEST_GOAL_KIND`). */
+export const CHEST_GOAL_KIND = 'chest-goal';
+
+/**
+ * ⛓ goal-chest-pipeline — **THE GOAL-CONTAINER NOTE OF A SHIPPED PAYLOAD** (the entry's `goalContainer.noteOf`;
+ * vocabulary `procgenCore/goalContainer.js`): `null` unless its `generation.goal` asked for a chest; `{placed: true}`
+ * when location 0 is the goal chest; else `{placed: false, reason}` — the generator's refusal name
+ * (`procgenSeedling.GOAL_CHEST_REFUSALS`, recorded as `generation.goalChestRefused`), or `no-ap-location` when the
+ * chest stands and the room holds no location to be it.
+ */
+export function goalContainerNoteOf(payload) {
+    if (payload?.generation?.goal !== GEN_ROOM_GOAL_CHEST) return null;
+    if ((payload.locations ?? []).some((l) => l?.kind === CHEST_GOAL_KIND)) return { placed: true };
+    if (payload.generation.goalChestRefused) return { placed: false, reason: payload.generation.goalChestRefused };
+    return { placed: false, reason: GOAL_CONTAINER_NOT_PLACED_REASONS.noLocation };
+}
+
+export const CHESTLOOT_IN_GOAL_CHEST_ROOM_REFUSAL = 'chestloot-in-goal-chest-room';
+
 export const GEN_ROOM_REFUSALS = Object.freeze({
+    chestLootInGoalChestRoom: (regionId, elements) => `${CHESTLOOT_IN_GOAL_CHEST_ROOM_REFUSAL}: generated Seedling room `
+        + `'${regionId}' is asked for a GOAL CHEST (\`goal\` = "chest") and its elements ${JSON.stringify(elements)} `
+        + 'draw a LOOT CHEST. A room holds one chest until the solver models opening a chest on the way to another '
+        + '(hammer\'s CHEST-INCIDENTAL), so the pair is refused: drop `chestloot` from the elements, or the goal knob.',
     noRegionId: () => 'generated Seedling room: a region_id is required',
     keygateRule: (regionId, location, item) => `${KEYGATE_RULE_REFUSAL}: generated Seedling room '${regionId}' `
         + `holds a KEY GATE, and its location '${location}' stands behind the lock, but the world's final rule for it `

@@ -11,7 +11,9 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { generate, exportRulesJson, puzzleIdentity, PUZZLE_PARAM_KEYS } from './apcalcGeneratorEngine.js';
+import {
+    generate, exportRulesJson, puzzleIdentity, PUZZLE_PARAM_KEYS, APCALC_GENERATOR_VERSION, retrySeed,
+} from './apcalcGeneratorEngine.js';
 
 const CONFIGS = [
     { seed: 1, numSpheres: 3, opsPerSphere: 2, numsPerSphere: 2, trashPerSphere: 1, maxBranches: 2, reuseAttempts: 0 },
@@ -91,5 +93,44 @@ describe('puzzleIdentity', () => {
         expect(names.size).toBe(2 + PUZZLE_PARAM_KEYS.length);
         const dirs = new Set([...names].map(n => n.toLowerCase()));
         expect(dirs.size).toBe(names.size);
+    });
+});
+
+describe('puzzleIdentity hashes the generator version', () => {
+    it('a different APCALC_GENERATOR_VERSION would give a different name', async () => {
+        expect(Number.isInteger(APCALC_GENERATOR_VERSION)).toBe(true);
+        const config = CONFIGS[1];
+        const { hash } = puzzleIdentity(config);
+        // Recompute the hash the way puzzleIdentity does, at this version and the next.
+        const fnv = text => {
+            let h = 0x811c9dc5;
+            for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+            return h.toString(16).padStart(8, '0').slice(0, 6);
+        };
+        const input = v => [`v=${v}`, ...PUZZLE_PARAM_KEYS.map(k => `${k}=${Number(config[k]) || 0}`)].join(';');
+        expect(fnv(input(APCALC_GENERATOR_VERSION))).toBe(hash);
+        expect(fnv(input(APCALC_GENERATOR_VERSION + 1))).not.toBe(hash);
+    });
+});
+
+// About 1 seed in 2,500 at the default options dead-ends in sphere 6 ("Failed to
+// generate chain"). Seed 4821 is one under this engine's RNG (mulberry32); before the
+// whole-generation retry it threw. The Python twin of this pin, and the JS<->Python
+// parity of the retried puzzle, are in worlds/apcalc/test/.
+describe('generate retries a dead-end seed', () => {
+    it('seed 4821 at the default params succeeds on its first retry', async () => {
+        const logs = [];
+        const g = await generate({ ...CONFIGS[1], seed: 4821 }, m => logs.push(m));
+        expect(g.generationAttempt).toBe(1);
+        expect(logs.some(m => m.includes('Failed to generate chain for sphere 6'))).toBe(true);
+        expect(logs.some(m => m.includes(`Retry 1/7: seed ${retrySeed(4821, 1)}`))).toBe(true);
+        expect(g.config.seed).toBe(4821); // the config (and so the puzzle's name) keeps the seed asked for
+        expect(g.nodes.length).toBeGreaterThan(0);
+    });
+
+    it('a seed that succeeds first time is not retried', async () => {
+        const g = await generate(CONFIGS[1], () => {});
+        expect(g.generationAttempt).toBe(0);
+        expect(retrySeed(42, 0)).toBe(42);
     });
 });
