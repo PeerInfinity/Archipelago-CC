@@ -15265,9 +15265,11 @@ export function createLevelRun({
      */
     // ⛓ fidelity CEREMONY126 D1: `onTouch(p, box)` replaces the overlap test (default null: today's, byte-identical)
     // — `freezeForecastNow` asks the same eligible pickups (the same skips) for their gap.
-    function pickupUnderfoot(onTouch = null) {
+    // ⛓ fidelity CEREMONYEXACT D1: `at` (`{x, y}`, default null = the run's own position, byte-identical) tests a
+    // position a forecast stepped to (`ceremonyStepNow`).
+    function pickupUnderfoot(onTouch = null, at = null) {
         if (!world.pickups) return null;
-        const box = playerBoxAt(state.x, state.y);
+        const box = at === null ? playerBoxAt(state.x, state.y) : playerBoxAt(at.x, at.y);
         for (const p of world.pickups) {
             if (collectedPickups.has(pickupKey(level, p))) continue;
             // ⛔⛔⛓ R5 SLICE 23: THE WAND'S GATE WRAPS THE CONTACT TEST, NOT
@@ -18221,7 +18223,57 @@ export function createLevelRun({
                 if (pickupGap === null || g < pickupGap) pickupGap = g;
             });
         }
-        return { refusedNext: timerNext > 0, timerNext, contact, pickupGap };
+        const out = { refusedNext: timerNext > 0, timerNext, contact, pickupGap };
+        // ⛓ fidelity CEREMONYEXACT D1: and the exact one-tick question, NON-ENUMERABLE (so the forecast's data shape,
+        // its JSON, a structured clone and every `toEqual` are FROZENPRESS/CEREMONY126's). Asked lazily by
+        // `strikePolicy.ceremonyGuard` with the held sets it is about to send; absent with no pickup in reach.
+        if (pickupGap !== null) Object.defineProperty(out, 'ceremonyStep', { value: ceremonyStepNow, enumerable: false });
+        return out;
+    };
+    /**
+     * ⛓ fidelity CEREMONYEXACT D1 (`CONTACT_FIDELITY.ceremonyPressForecast`) — **ON WHICH TICK, IF ANY, WOULD A PICKUP'S
+     * CEREMONY START, GIVEN THE KEYS ABOUT TO BE SENT?** `heldSeq` is one held set per tick from this boundary
+     * (`[held]` for a press decided now; `[aimKeys, {primary}]` for an aim). A placed pickup is touched at a tick's TOP
+     * from where the PREVIOUS tick left the player (`pickupUnderfoot`), so: the box overlapping one NOW ⇒ the ceremony
+     * starts on the first tick (`at: 0`); the box after stepping `heldSeq[k]` overlapping one ⇒ it starts on tick
+     * `k + 1`. A thrust scheduled onto that tick is lost (`runFrozenTick`'s `FROZEN_TICK_PRESS`; `Pickup.as:95`,
+     * `Player.as:1075-1078`). Stepped with the run's OWN stepper (`previewStepper`, the drive's movement model), a
+     * press's dash impulse priced as `advance` prices it (`slashPressForecast` on `slashInfo`, the facing the tick
+     * starts with). `{ at, tag, x, y }` or null. ⚠ A PURE READ (DIGESTREAD): copies only, nothing written. A step the
+     * stepper refuses (a death) answers null — the walk's own guards own that tick. Outside it, as `pickupGap`'s:
+     * runtime pickups (the Bob Boss's Fire, the dark sword) and a hit's knockback on the stepped tick.
+     */
+    const ceremonyStepNow = (heldSeq) => {
+        if (noclip || ceremony !== null) return null;
+        const touchedAt = (at) => {
+            let hit = null;
+            pickupUnderfoot((p, box) => { if (hit === null && rectsOverlap(box, p.rect)) hit = p; }, at);
+            return hit;
+        };
+        const named = (p, at) => ({ at, tag: p.tag ?? 'pickup', x: p.x, y: p.y });
+        const now = touchedAt(null);
+        if (now) return named(now, 0);
+        const weapon = weaponForPress();
+        const swings = weapon === 'sword' || weapon === 'ghostsword';
+        let step;
+        let slash = null;
+        try { step = runApi.previewStepper(); } catch { return null; }
+        let st = state;
+        let was = prevHeld;
+        for (let k = 0; k < heldSeq.length; k += 1) {
+            const held = heldSeq[k] instanceof Set ? heldSeq[k] : new Set(heldSeq[k]);
+            let dashImpulse = null;
+            if (swings && held.has(TALK_KEY) && !was.has(TALK_KEY)) {
+                slash ??= slashInfoNow();
+                const r = slashPressForecast(slash, { tick: ticksCompleted, ticksAhead: k, direction: st.direction });
+                if (r.outcome === 'dash') dashImpulse = r.impulse;
+            }
+            try { st = step(st, held, { dashImpulse, previewTick: k + 1 }); } catch { return null; }
+            const hit = touchedAt(st);
+            if (hit) return named(hit, k + 1);
+            was = held;
+        }
+        return null;
     };
     const collectedNow = () => collected.map((c) => ({ ...c }));
     const sealCollectionsNow = () => sealCollections.map((c) => ({ ...c }));
@@ -18620,7 +18672,9 @@ export function createLevelRun({
     // ⛓ fidelity BOSSFORK D2: and the boot's build, here because every binding the fight's build reads is now made.
     tentacleMouthAtBuild();
 
-    return {
+    // ⛓ fidelity CEREMONYEXACT D1: the run's own object, named so `ceremonyStepNow` can ask its `previewStepper`.
+    let runApi = null;
+    return (runApi = {
         get level() { return level; },
         get world() { return world; },
         get state() { return state; },
@@ -23728,5 +23782,5 @@ export function createLevelRun({
             });
             return { transition: record, grant, ...hits };
         },
-    };
+    });
 }
