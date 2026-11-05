@@ -1,0 +1,4 @@
+===== 394 OPP+CSH-frames true 2154
+stagedChaserHunt>deriveKillByChaser:1695 | ->deriveKillByChaser:196 | stagedChaserHunt>deriveGuardApproach:72 | stagedChaserHunt>stagedChaserHunt:50 | ->walkToUnder:43 | ->orbitKillChaser:42 | execute>execKillByPressOnce:26 | stagedChaserHunt>walkToUnder:18
+===== 411 OPP+CSH-frames true 2630
+stagedChaserHunt>deriveKillByChaser:2200 | ->deriveKillByChaser:117 | stagedChaserHunt>deriveGuardApproach:96 | stagedChaserHunt>stagedChaserHunt:65 | ->orbitKillChaser:54 | execute>execKillByPressOnce:46 | ->walkToUnder:34 | stagedChaserHunt>walkToUnder:9

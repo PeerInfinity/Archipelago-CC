@@ -1,0 +1,21 @@
+394/1 | D0 P40:0,40:12 | 276 | 8s | 382492b1376c | EXHAUSTED chaser:bob@736,752 @(744.3,802.3) || apitem (880,816) contact
+395/0 | ALL P40:0,40:13,40:16,40:12 | 20 | 2s | 5ef26e7cad6c | NO-STANCE on bosslock@480,352's key line in level 40  || clear-tag {40,8} bosslock@480,352
+395/0 | D0 P40:0,40:13,40:16,40:12 | 20 | 2s | 5ef26e7cad6c | NO-STANCE on bosslock@480,352's key line in level 40  || clear-tag {40,8} bosslock@480,352
+395/0 | D0+P12 P40:12 | 20 | 1s | 5ef26e7cad6c | NO-STANCE on bosslock@480,352's key line in level 40  || clear-tag {40,8} bosslock@480,352
+869/1 | ALL P40:0,40:13,40:16,40:12 | 3236 | 47s | 2444840d264b | SOLVED 4491t hits=0 deaths=0 gm=true
+869/1 | ALL P40:0,40:13,40:16 | 8993 | 81s | e808561201b2 | EXHAUSTED chaser:bob@736,752 @(744.3,803.0) || apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> weigh -> iceturret@472,400 approach door wandlock@480,560 (488,568) -> hold stance (wandlock@480,560)
+869/1 | ALL P40:12 | 3236 | 48s | 2444840d264b | SOLVED 4491t hits=0 deaths=0 gm=true
+869/1 | D0 P40:0,40:13,40:16,40:12 | 492 | 18s | 4f97f71bedad | EXHAUSTED enemy:iceturret@472,400 @(471.6,441.1) || apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432)
+869/1 | D0 P40:0,40:13,40:16 | 9042 | 73s | 7f9f69b6769c | EXHAUSTED chaser:bobsoldier@880,832 @(887.5,853.2) || apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> hold stance (wandlock@480,560)
+869/1 | LTS P40:0,40:13,40:16,40:12 | 3236 | 47s | 2444840d264b | SOLVED 4491t hits=0 deaths=0 gm=true
+869/0 | LTS P40:0,40:13,40:16,40:12 | 3236 | 40s | 2444840d264b | SOLVED 4491t hits=0 deaths=0 gm=true
+869/1 | LTS P40:12 | 3236 | 41s | 2444840d264b | SOLVED 4491t hits=0 deaths=0 gm=true
+869/1 | LTS+FO P40:0,40:13,40:16,40:12 | 3236 | 47s | 2444840d264b | SOLVED 4491t hits=0 deaths=0 gm=true
+870/1 | ALL P40:0,40:13,40:16,40:12 | 1021 | 18s | 5284aa54b39c | SOLVED 4519t hits=0 deaths=0 gm=true
+870/1 | ALL P40:12 | 1021 | 20s | 5284aa54b39c | SOLVED 4519t hits=0 deaths=0 gm=true
+870/1 | LTS P40:0,40:13,40:16,40:12 | 1021 | 22s | 5284aa54b39c | SOLVED 4519t hits=0 deaths=0 gm=true
+871/0 | ALL P40:0 | 7236 | 190s | a95a383e87ab | EXHAUSTED chaser:bob@736,752 @(744.3,802.3) || clear-tag {40,12} wandlock@480,560 -> hold stance
+871/0 | D0 P40:0,40:13,40:16 | 8756 | 138s | b1d5e5dbfd2a | EXHAUSTED chaser:bobsoldier@880,832 @(888.0,855.5) || clear-tag {40,12} wandlock@480,560 -> hold stance
+871/0 | D0 P40:0 | 7236 | 190s | a95a383e87ab | EXHAUSTED chaser:bob@736,752 @(744.3,802.3) || clear-tag {40,12} wandlock@480,560 -> hold stance
+871/0 | OPP+CSH P40:0 | 7236 | 188s | a95a383e87ab | EXHAUSTED chaser:bob@736,752 @(744.3,802.3) || clear-tag {40,12} wandlock@480,560 -> hold stance
+872/0 | ALL P40:0 | 2751 | 82s | 4b412f5096cc | SOLVED 1501t hits=0 deaths=0 gm=true
