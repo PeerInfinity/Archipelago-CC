@@ -27359,3 +27359,16 @@ in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fin
 4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
 327 t, 0 hits, game-witnessed.
 
+
+### Seedling hammer-phase KEYGATE-YIELD — the 8/83 keygate refusals are a stale collect stance (`COLLECT_RESTANCE`, OFF)
+
+⚖ The user queued it 2026-11-04 (the lab found it: 8 of 83 generated keygate rooms per arm refused
+`the-goal-approach-is-blocked`). Re-measured at `26ed405d3f`: the same 8 rooms in pre-sword and post-sword (branchy 10x10
+seeds 1 and 11, branchy 14x14 s11, bushy 14x14 s3/s4/s11, loopy 14x14 s1/s2). In every one the room is solvable in the
+game's terms and the solver is wrong: the key is collected, the lock opens, and the collect walk then aims at a stance
+`deriveStance` chose BEFORE the lock opened (no ring cell had a corridor, so the nearest collectable cell by `(d, y, x)`
+won, north/west first), which after the clear is reachable only through the torch's own avoid volume. Not the door cell,
+not the key line, not the generator: the door plans (`(3,8) -> (3,7) -> (3,6)` on the captured room), and a near-side
+ring cell plans and collects in all 8. `COLLECT_RESTANCE` (OFF) re-derives a corridorless collect stance once on a later
+walk attempt whose plan fails; certification 75/83 → 83/83 in both arms, one more mover (a pass-2 water pool kept
+instead of reverted on the same refusal). Evidence: `CC/docs/cloud-reports/seedling-hammer-keygate-yield-evidence/`.
