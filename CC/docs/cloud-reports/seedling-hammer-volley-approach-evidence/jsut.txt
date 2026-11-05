@@ -1,0 +1,7 @@
+CI vitest @ a839c6684 — run 41969052987 queued (2026-11-05T04:38:25Z)
+  job "JavaScript Unit Tests (Vitest shard 1/3)"  completed success  379/8920
+  job "JavaScript Unit Tests (Vitest shard 2/3)"  completed success  378/8759
+  job "JavaScript Unit Tests (Vitest shard 3/3)"  completed success  378/7837
+  job "JavaScript Unit Tests (slow Vitest)"  completed success  35/372
+  suite: vitest (unfiltered)  1135/25516   (25516 passed | 0 skipped | 0 failed)
+  slow battery                35/372   (372 passed | 0 failed)

@@ -1,0 +1,54 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172
+        throw new Error(`boxLock: unknown kind ${JSON.stringify(kind)} — one of `
+              ^
+
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+    at takeBoxLock (file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172:15)
+    at file:///tmp/p3b-boxlock-pLrMpi/snippet-11398570.mjs:3:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.4
+ ✓ scripts/procgen/boxLock.test.js (26 tests) 18964ms
+     ✓ reclaims a stale lock by `kill -0`, naming whom it reclaimed from  308ms
+     ✓ lets exactly ONE of eight simultaneous takers hold the box; the rest refuse  3218ms
+     ✓ serialises four QUEUED simultaneous takers — every one takes, no two hold at once  8904ms
+     ✓ lets a QUEUED taker die on SIGTERM — it never takes the box later  2612ms
+     ✓ passes when nothing moved, and refuses BY ROW when the head does  306ms
+     ✓ is exactly the machine drivers — every one carries the preamble  305ms
+     ✓ makes a REAL browser gate refuse before it spends anything  1153ms
+ ✓ frontend/modules/seedlingDemo/entityBlocks.test.js (30 tests) 2665ms
+     ✓ is in neither the simulation closure nor the solver-family closure  1561ms
+     ✓ is imported by nothing but its own test  462ms
+     ✓ …and a grep of `entities('<family>')` over the family files finds the same files  497ms
+ ✓ frontend/modules/seedlingDemo/solverEnvChannel.test.js (11 tests) 2707ms
+     ✓ nothing set = defaults: CHOOSER_PAIR at its shipped default (solverBot alone), no SEEDLING_* in the env  468ms
+     ✓ the result records the switches set (and carries no stamp at the defaults)  826ms
+     ✓ an unknown switch refuses BY NAME in the worker too: every solve, nothing installed  1001ms
+ ✓ frontend/modules/seedlingDemo/strategySwitch.test.js (22 tests) 1594ms
+     ✓ (a) absent: the worker's answer gains no field; present: it names the list, even on a refusal  1517ms
+ ✓ frontend/modules/seedlingDemo/hammerSouthDoor.test.js (3 tests) 1754ms
+     ✓ south of the latched door (APPROACH's staging point on legs 860/861): no side plans, and the door is named  1660ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeExact.test.js (12 tests) 1229ms
+     ✓ OFF is OFF's answer at every stand, SPIN OFF and ON (SPIN's own four classes)  314ms
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.test.js (5 tests) 774ms
+     ✓ no turret in range: the weigh's hold fallback is OFF's byte for byte, nothing approached  552ms
+ ✓ frontend/modules/procgenCore/contentIdentity.test.js (30 tests) 124ms
+ ✓ frontend/modules/seedlingDemo/hammerVolleyApproach.test.js (5 tests) 47377ms
+     ✓ the weigh's hold fallback in a room with no turret (`C2-no-block`): ON = OFF, nothing asked  449ms
+     ✓ a block weigh (L16, `r9-solve-16`): ON = OFF, and nothing is asked  5689ms
+     ✓ ICEST's pocket boot ((480,456)): the LIVE corpse weigh (not the reorder) is OFF's, SOLVED 4495, nothing asked  41221ms
+ ✓ frontend/modules/seedlingDemo/hammerLatchWeigh.test.js (6 tests) 52022ms
+     ✓ the weigh falls back to the hold in a room with no turret (`C2-no-block`): ON = OFF, nothing asked  442ms
+     ✓ a block weigh (L16, `r9-solve-16`): ON = OFF, and nothing is asked  6282ms
+     ✓ ICEST's pocket boot ((480,456), the latch persistence): ON = OFF, SOLVED through the live corpse weigh  44889ms
+
+ Test Files  10 passed (10)
+      Tests  150 passed (150)
+   Start at  04:57:21
+   Duration  57.90s (transform 8.81s, setup 0ms, import 17.61s, tests 129.21s, environment 1ms)
+
