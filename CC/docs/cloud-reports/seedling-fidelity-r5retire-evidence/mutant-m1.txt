@@ -1,0 +1,53 @@
+## the billiard, simulated with no route input at all
+   spinner@112,88: (120,96) -> (203.44,45.09) over 39 cell(s)
+   spinner@224,112: (232,120) -> (145.03,161.72) over 48 cell(s)
+   spinner@224,208: (232,216) -> (255.33,225.90) over 55 cell(s)
+   ✓ ⛓ the spinners REFLECT — the geometry is doing something
+      60 axis flip(s) in 900 ticks across 3 spinner(s)
+   ✓ ⛓ none of L39's three reaches water, lava or a pit in 900 ticks
+      a terrain death WRITES ITS TAG (`spinner.SPINNER_TERRAIN_WRITE`), so a shaft ledger of nine would silently become ten
+   ✓ ⛓⛓ |v| is STILL exactly moveSpeed after 900 ticks
+      `friction()`'s floor is `moveSpeed`, not 0 — the override is what makes this a billiard rather than something that coasts to a stop
+   ✓ ⛓ the body is the 7x7 `setHitbox(7, 7, 4, 4)` puts on it
+      [199.44,41.09] [141.03,157.72] [251.33,221.90]
+
+## the two arms that come back, from the committed pair
+   ✓ ⛓⛓ the glide reconstruction lands on the tick count THE GAME measured
+      410 against the recorded 410 (observation count - 1, from the slice-12 session — a number that predates this arithmetic, so a span transformed wrong would miss it)
+   ✓ ⛓⛓ the repeat reconstruction lands on ITS recorded tick count too
+      404 against 404
+   ✓ ⛓ 6 presses plus press 4
+      7 `primary` spans
+   ✓ ⛓⛓ THE TRANSFORM INVERTS, BYTE FOR BYTE — shifting the reconstruction back gives the committed tape
+      which is the difference between "these are the same spans" and "these look like the same spans"
+
+## the committed pair — the root and its shut-before control
+   ✓ ⛓ `r5-press-delay` is a canonical ROOT — it re-serialises to its own bytes
+      no producer derives it (its author refuses press 5 now); it is the recording every arm in this probe is a transform of
+   ✓ ⛓ the pair is ONE FIELD APART: two presses in the root, none in the control, every other span the same
+      26 spans against 24
+   ✓ ⛓ the model's press arm enters BOTH vacated cells, (13,5) and (12,5)
+      press 4 lands, and 120 ticks later press 5 does too — the spinner is elsewhere
+   ✓ ⛓⛓ the model's control enters NEITHER — the cells are sealed without the presses
+      a walk-proof is only evidence if the shut arm fails it
+   ✓ ⛓ the shaft's stuck box puts the blocker in (12,5) — press 4 landed, press 5 did not
+      box [197.44, 201.44) x [74.34, 79.34); the next 1 px step crosses y = 80
+
+## the model against the two game-side observations the refutation left behind
+   ✓ ⛓⛓ r5-press-glide t157: the model is on the GAME's y, to the double
+      model 83.83122648907042 against game 83.83122648907042
+      …and it ends t410 at (200.10, 83.93) tile (12,5)
+   ✓ ⛓⛓ r5-press-repeat t143: the model is on the GAME's y, to the double
+      model 90.98122648907042 against game 90.98122648907042
+      …and it ends t404 at (200.10, 90.98) tile (12,5)
+   ✓ ⛓⛓ after SIX presses the block is still in (12,5) — the cell press 5 was to empty
+      [pushableblockfire@144,176->9,11 pushableblockfire@208,80->12,5 pushableblockfire@48,176->3,11]
+
+## what is still owed
+   ⛔ `r5-press-axes` is NOT reconstructible — its eleven-tick walk-proof span survives in no artefact. Subsumed by `r5-press-glide`, which diverges on the same tick (157) at the same y.
+   ⚠ the two checks above are ONE TICK EACH. Byte-exactness over the whole stream needs the recording:
+     node scripts/procgen/check-seedling-bot-differential.mjs --record --win --only=r5-press-glide,r5-press-repeat
+
+same r5-press-glide: 3144 bytes
+same r5-press-repeat: 3446 bytes
+DIFFERS r5-press-delay-control: 2553 bytes committed vs 2553 derived — re-run with --write

@@ -3915,8 +3915,44 @@ export function* generateRegionGen(spec) {
 export function generateRegion(spec) {
     const gen = generateRegionGen(spec);
     let r = gen.next();
-    while (!r.done) r = gen.next();
+    while (!r.done) {
+        notePendingGeneration(r.value);
+        r = gen.next();
+    }
     return r.value;
+}
+
+// --- Pending generations (a synchronous drain that could not wait) ---
+//
+// A substrate whose generation runs outside JS (cloudberry's game page) yields an
+// event carrying `await` and, drained synchronously, refuses by name: it could not
+// wait. `collectPendingGenerations(fn)` runs `fn` and hands back every such promise
+// the synchronous drains inside it skipped, so a caller that CAN wait (the APWorld
+// Editor's Generate ▸) awaits exactly that work and asks once more. A substrate
+// that never yields `await` leaves the list empty: its callers are unchanged.
+
+let _pendingCollector = null;
+
+function notePendingGeneration(event) {
+    const pending = event?.await;
+    if (_pendingCollector && pending && typeof pending.then === 'function') _pendingCollector.push(pending);
+}
+
+/**
+ * Run `fn` synchronously; answer `{ value, pending }` — `fn`'s return value and the
+ * promises the synchronous region drains inside it yielded but could not wait on
+ * (`[]` for a substrate that generates synchronously). Nests: an inner call
+ * collects its own, and they are not reported to the outer one.
+ */
+export function collectPendingGenerations(fn) {
+    const outer = _pendingCollector;
+    const pending = [];
+    _pendingCollector = pending;
+    try {
+        return { value: fn(), pending };
+    } finally {
+        _pendingCollector = outer;
+    }
 }
 
 // Phase ① of shuffled-spiral (the "arrange" step): validate the config, build

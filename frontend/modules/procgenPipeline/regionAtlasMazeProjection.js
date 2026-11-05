@@ -746,8 +746,10 @@ export function projectRegionToMaze(region, grid, ctx) {
     // ⛓ A PLAIN LEVEL AS ONE LEVEL WORLD (session tile-rules-automation-r-a2, ⚖ Robert 2026-11-03 "3: Both at once"). Per
     // sub-region, each crossing is a tile carrying its atlas row's rule: copied, so the derivation reads it back (an echo).
     // A caller that supplies `plainLevelWorldFits(world)` asks for the level world instead, whose crossings are WALKED over
-    // the grid, and keeps it when the test says it fits (Seedling's: its item axis fits the certifier's lattice cap; L12's
-    // 15 items do not, so L12 stays per sub-region, named). Only analyzer rows, as for colliding crossings above.
+    // the grid, and keeps it when the test says it fits (Seedling's: its item axis fits the certifier's lattice bound,
+    // `levelWorldFits`; since session tile-l12-one-world L12's 15 items do). The test is handed the region too, so a caller
+    // can answer by region (the echo test's planted compile inherits the true compile's answers). Only analyzer rows, as for
+    // colliding crossings above.
     // A crossing between two declared sub-regions through material the grid cannot price (`needs_authoring`: a per-pixel
     // collision mask, whose crossing the rules producer's PHYSICS MODEL decides — L94 r2c16 <-> r3c4 through TreeLarge) has
     // no terrain a level world could walk: the world walls that footprint, so such a level stays per sub-region.
@@ -761,7 +763,7 @@ export function projectRegionToMaze(region, grid, ctx) {
     let keptPlain = null;
     if (walkable && declared.length > 0 && typeof ctx.levelEntitiesFor === 'function' && typeof ctx.plainLevelWorldFits === 'function') {
         const world = unwalkable.length > 0 || selfPress ? null : projectLevelWorld(region, grid, ctx, entities ?? []);
-        const fit = world ? ctx.plainLevelWorldFits(world)
+        const fit = world ? ctx.plainLevelWorldFits(world, region)
             : selfPress ? `its own press "${selfPress.name}" opens a target in the same world, which one search does not grant mid-walk`
                 + (pressOf(selfPress)?.latch_kept ? ` (not laid as a latch: ${pressOf(selfPress).latch_kept})` : '')
                 : `its crossing ${unwalkable[0].from} <-> ${unwalkable[0].to} goes through material only the physics model walks (${unwalkable[0].reasons[0]})`;

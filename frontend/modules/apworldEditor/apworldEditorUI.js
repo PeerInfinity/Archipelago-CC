@@ -159,11 +159,13 @@ import {
   REPLACE_REGION_CONTENT_OP, resolveZoneFetches, unplacedPoolItems, zoneConfigSplitSentence,
 } from './regionContent.js';
 import { loadLibraryOptions, servedLibraryCatalog } from './librarySourcePicker.js';
-import { REGION_SOURCE_KINDS } from './regionRegenerate.js';
+import { REGION_SOURCE_KINDS, regenerateRegionEntry } from './regionRegenerate.js';
+// ⛓ P5c — a realiser's yielded work, collected so a Generate ▸ the worker could not finish is finished here.
+import { collectPendingGenerations } from '../procgenPipeline/procgenPipelineEngine.js';
 import {
   INITIALISE_TIMEOUT_DEFAULT_S, INITIALISE_TIMEOUT_KEY, INITIALISE_TIMEOUT_SETTING,
   REGION_GENERATION_TIMEOUT_DEFAULT_S, REGION_GENERATION_TIMEOUT_KEY, REGION_GENERATION_TIMEOUT_SETTING,
-  initialiseTimeoutSeconds, regionGenerationTimeoutSeconds, runRegenerateInWorker,
+  initialiseTimeoutSeconds, regionGenerationTimeoutSeconds, runRegenerateInWorker, runRegenerateOnPage,
 } from './regionGenerationRun.js';
 // ⛓ APWORLD SUBSTRATE CHANGE R7 — *Initialise procgen data* for a BARE slot: the
 //   door, the form's preview and answers (`initialiseFlow`), the op's record.
@@ -7152,7 +7154,7 @@ class ApworldEditorUI {
     const s = ((performance.now() - run.handle.startedAt()) / 1000).toFixed(1);
     return run.handle.phase() === 'loading'
       ? `Loading the substrate libraries… ${s} s`
-      : `Generating as \`${gen.target}\`… ${s} s / ${run.budgetS} s`;
+      : `Generating as \`${gen.target}\`${run.onPage ? ' (on this page)' : ''}… ${s} s / ${run.budgetS} s`;
   }
 
   _paintRegionGenElapsed() {
@@ -7559,7 +7561,23 @@ class ApworldEditorUI {
     this._regionGenTicker = setInterval(() => this._paintRegionGenElapsed(), 100);
     this._render();
 
-    const res = await handle.promise;
+    let res = await handle.promise;
+    // ⛓⛓ P5c — the realiser yielded work the worker cannot wait on (a generation that
+    //   runs on the PAGE: cloudberry's game page). The same job is finished here, in
+    //   the same run (Generate ▸ stays disabled, the elapsed time keeps counting):
+    //   it awaits exactly that work, then asks once more (`regenerateAwaitingGeneration`).
+    //   A refusal with nothing pending was never flagged, and is answered as before.
+    if (res?.pendingGeneration && this._regionGen === gen && gen.run === run) {
+      run.onPage = true;
+      run.handle = runRegenerateOnPage(args, {
+        timeoutMs: budgetS * 1000,
+        regenerate: regenerateRegionEntry,
+        collect: collectPendingGenerations,
+        onPhase: () => this._paintRegionGenElapsed(),
+      });
+      this._render();
+      res = await run.handle.promise;
+    }
     run.outcome = res;
     // ⛓ Closed, replaced or re-opened while it ran: that boundary already
     //   stopped this run, and nothing about it is painted.

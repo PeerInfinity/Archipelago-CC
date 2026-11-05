@@ -2520,7 +2520,8 @@ Three probe shapes, in order of what each one settles:
 ⚠ And the diagnostic arms are WITHDRAWN, not committed: a fixture whose
 model is wrong is either a permanent red or a silenced one. Their numbers
 are banked in `r5Shaft.SPINNER_WEDGE`; `probe-seedling-r5-press-axes
---write-probes` regenerates them.
+--write-probes` regenerated them. (⛓ That probe is RETIRED — see *Seedling fidelity
+R5RETIRE* below; `probe-seedling-r5-spinner` re-derives what survives.)
 
 ### `runFire` refuses a glide it cannot certify
 
@@ -27359,3 +27360,24 @@ in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fin
 4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
 327 t, 0 hits, game-witnessed.
 
+### Seedling fidelity R5RETIRE — `probe-seedling-r5-press-axes` retired; its pair folded into `probe-seedling-r5-spinner`
+
+Planner `seedling-fidelity-planning-18`, wave 37 (⚖ the user 2026-11-02: *"Retire it in W37"*; GO 2026-11-04). The report is
+`CC/docs/cloud-reports/seedling-fidelity-r5retire.md`.
+
+**Why.** The probe's model drive has failed since the spinner wedge was modelled: `synthesizeLegs` refuses press 5's declared
+move (*"the declared blocks ended at [pushableblockfire@208,80->12,5] rather than [...->12,6]"*), which is what the GAME's
+undelayed arms did. It could re-emit none of its tapes, and it had no `--check`, so nothing noticed.
+
+**Where its checks went.** `probe-seedling-r5-spinner --check` now covers THREE committed tapes byte for byte: `r5-press-glide`
+and `r5-press-repeat` (as before) and `r5-press-delay-control` (new: the root minus both `primary` spans, emitted in the v5
+re-pin's one-line `pins` spelling, which is the only difference from `serializeTape`'s — 8 bytes). `r5-press-delay` is a ROOT
+(a byte-exact game recording whose author is gone): held canonical, and every reconstruction inverts back to it. Also folded:
+the two-sided walk-proof on the model, re-aimed at the committed pair (the press arm enters (13,5) and (12,5); the control
+neither), and the `PRESS_AXES` blocker deduction (the stuck box puts the blocker in (12,5)). Not folded, because they are
+dead: the drive itself, "exactly two presses" OF THE DRIVE, and "the glide arm's model rests at y≈93" (the model now wedges
+the block at y 83.83, the game's number). No tape byte moved.
+
+**Trap candidate.** A `probe-*` producer is not in `ci-producer-checks`' roster (its globs are `plan-seedling-*.mjs` and
+`regenerate-*-tapes.mjs`): the retired probe's drive was dead and no gate saw it, and `probe-seedling-r5-spinner --check` —
+where its pair now lives — runs on no CI job either. Run it by hand; enrolling it is a planner call (it is a CI change).

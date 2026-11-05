@@ -316,17 +316,19 @@ describe('the corpus census — printed, then pinned', () => {
          *              its own § Generating it (`same-doc` 32 → 33).
          *   385 → 387  keygate colours (2026-11-03, item introduction): substrate-registry.md § Build-time — item
          *              introduction → sphere-growth.md and → flash.md § Declarations (G9) (`doc` 290 → 292).
-         *   387 → 388  goal-chest pipeline (2026-11-04): substrate-registry.md § Build-time — goal containers →
+         *   387 → 388  cloudberry P5c (2026-11-04, editor one press): cloudberry.md § Generating it → the
+         *              module doc's § Region generation (modules/apworldEditor.md, `repo` 40 → 41).
+         *   388 → 389  goal-chest pipeline (2026-11-04): substrate-registry.md § Build-time — goal containers →
          *              flash.md § Declarations (G9) (`doc` 292 → 293).
          */
         expect(by).toEqual({
             'same-doc': 33,
             doc: 293,
             external: 22,
-            repo: 40,
+            repo: 41,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(388);
+        expect(CORPUS.length).toBe(389);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -340,7 +342,7 @@ describe('the corpus census — printed, then pinned', () => {
 
     it('sends every other repo path to GitHub, fragment kept', () => {
         const repo = RESOLVED.filter((r) => r.kind === 'repo');
-        expect(repo).toHaveLength(40);
+        expect(repo).toHaveLength(41);
         for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
         /** ⛓ The four families the corpus actually names. */
         const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();

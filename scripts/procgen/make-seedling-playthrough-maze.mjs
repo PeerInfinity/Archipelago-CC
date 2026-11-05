@@ -52,8 +52,7 @@ import {
     setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer, permissiveBindings,
     playthroughHandInputs,
 } from './make-seedling-playthrough-rules.mjs';
-import { regionItems } from '../../frontend/modules/mazeRoom/tileSpike/deriveTileLogic.js';
-import { LEVEL_WORLD_LATTICE_CAP } from '../../frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.js';
+import { levelWorldFits } from '../../frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.js';
 import { deserializeMazeWorld } from '../../frontend/modules/mazeRoom/mazeRoomEngine.js';
 import { itemNamesInRule } from '../../frontend/modules/procgenCore/ruleItemNames.js';
 import { VICTORY_ITEM } from '../../frontend/modules/seedlingDemo/seedlingAtlasDerivation.js';
@@ -613,15 +612,15 @@ export function projectionRegionOf(region, hand) {
 }
 
 /**
- * ⛓ A PLAIN LEVEL BECOMES ONE LEVEL WORLD when its item axis fits the certifier's lattice cap (`LEVEL_WORLD_LATTICE_CAP`,
- * read from its one constant, never a level list; designer GO, L12 option (a)). The projection asks only for a level whose
- * crossings the grid prices (see `projectRegionToMaze`). Returns true, or why not. Pure.
+ * ⛓ A PLAIN LEVEL BECOMES ONE LEVEL WORLD when its item axis fits the certifier's lattice bound — `levelWorldFits`, the one
+ * function the derives refuse by (lattice POINTS within `LEVEL_WORLD_MAX_POINTS`, the learner's memory bound; never a level
+ * list; designer GO, L12 option (a); session tile-l12-one-world: L12's 15 items fit). The projection asks only for a level
+ * whose crossings the grid prices (see `projectRegionToMaze`). Returns true, or why not. Pure. `maxPoints`: TEST-ONLY.
  */
-export function plainLevelWorldFits(world) {
+export function plainLevelWorldFits(world, { maxPoints } = {}) {
     const carrier = Object.values(world.sidecars).find((sc) => sc.playable_payload)?.playable_payload;
     if (!carrier) return 'no level-world payload';
-    const n = regionItems(deserializeMazeWorld(carrier)).length;
-    return n <= LEVEL_WORLD_LATTICE_CAP ? true : `its item axis has ${n} items, over the lattice cap ${LEVEL_WORLD_LATTICE_CAP}`;
+    return levelWorldFits(deserializeMazeWorld(carrier), maxPoints === undefined ? {} : { maxPoints });
 }
 
 /**
@@ -633,7 +632,19 @@ export function plainLevelWorldFits(world) {
 only rules the worlds copy, to plant in. Absent, the compile is the preset's, byte for byte. `embedSphereLog: false` skips the
  * sphere log (a sentinel compile places items no state can hold).
  */
-export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSphereLog = true, analysisHook = null, plainLevelWorlds = true, derivedTable = readDerivedRuleTable() } = {}) {
+export function buildPlaythroughMaze({
+    levels = LEVELS, plant = null, embedSphereLog = true, analysisHook = null, plainLevelWorlds = true, derivedTable = readDerivedRuleTable(),
+    levelWorlds = null, levelWorldBound = undefined,
+} = {}) {
+    // ⛓⛓ THE PLANTED COMPILE TAKES THE TRUE COMPILE'S LEVEL-WORLD DECISIONS (session tile-l12-one-world; latent since R-A2, found by
+    // tile-l12-level-world). A plant REPLACES every rule with its sentinel, so the planted payload's axis is not the true one
+    // (true items drop out, sentinels come in: L12 15 → 17); deciding on it could keep a level per sub-region in the echo test
+    // that the true compile makes one world (at a bound of 16 the probe labelled L12's 10 one-world pairs "echoed"). So a
+    // planted compile answers `plainLevelWorldFits` from `levelWorlds` (region_id → the true compile's answer; the probe passes
+    // its own), and with none given it runs the true compile first. `levelWorldBound`: TEST-ONLY (`plainLevelWorldFits`'s maxPoints).
+    if (plant && plainLevelWorlds && !levelWorlds) {
+        levelWorlds = buildPlaythroughMaze({ levels, embedSphereLog: false, derivedTable, levelWorldBound }).levelWorlds;
+    }
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
     const mapDoc = readJson(resolve(ATLAS_DIR, atlas.tile_space.map_document));
     const gameConfig = readJson(resolve(REPO, 'frontend/modules/flashPanel/games/seedling.json'));
@@ -664,8 +675,21 @@ export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSpher
         },
     });
     mazeProjection.projectionRegion = (region) => projectionRegionOf(region, hand);
-    // `plainLevelWorlds: false` keeps every plain level per sub-region (a regression row of that path, which L12/L94 still take).
-    if (plainLevelWorlds) mazeProjection.plainLevelWorldFits = plainLevelWorldFits;
+    // `plainLevelWorlds: false` keeps every plain level per sub-region (a regression row of that path; on main certifyLandingArrivals.test.js uses it for L29 + L31, and L12's per-sub-region subjects run on it since tile-l12-one-world).
+    const decided = new Map();
+    if (plainLevelWorlds) {
+        mazeProjection.plainLevelWorldFits = (world, region) => {
+            if (plant) {
+                if (!levelWorlds.has(region.region_id)) {
+                    throw new Error(`planted compile: the true compile made no level-world decision for ${region.region_id} — the plant moved the level's structure`);
+                }
+                return levelWorlds.get(region.region_id);
+            }
+            const fit = plainLevelWorldFits(world, levelWorldBound === undefined ? {} : { maxPoints: levelWorldBound });
+            decided.set(region.region_id, fit);
+            return fit;
+        };
+    }
     // TEST-ONLY: the red-first pin's hook into the analyzer's pricing output (`projectRegionToMaze`).
     if (analysisHook) mazeProjection.analysisHook = analysisHook;
     const restricted = restrictAtlas(atlas, levels, { start: START_LEVEL });
@@ -686,7 +710,7 @@ export function buildPlaythroughMaze({ levels = LEVELS, plant = null, embedSpher
     // sphere log embedded above from the composed rules is the same log.
     const override = applyDerivedRuleTable(rules, derivedTable, { partial: levels.length !== LEVELS.length || levels.some((l, i) => l !== LEVELS[i]) });
     if (override.composedDisagrees.length) throw new Error(override.composedDisagrees.map(composedDisagreeMessage).join('\n'));
-    return { text: `${stringifyRulesJson(rules)}\n`, report, unresolved: mazeProjection.unresolved ?? [] };
+    return { text: `${stringifyRulesJson(rules)}\n`, report, unresolved: mazeProjection.unresolved ?? [], levelWorlds: plant ? levelWorlds : decided };
 }
 
 if (isEntryPoint(import.meta.url)) {
