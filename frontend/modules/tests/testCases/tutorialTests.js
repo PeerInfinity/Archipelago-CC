@@ -28,6 +28,9 @@ import {
 } from '../../tutorials/tutorialExecutor.js';
 import { buildContext } from '../../tutorials/tutorialContext.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
+// MEASUREMENT-ONLY (cloud slice seedling-whole-game-wasm-measure): the walk sampler's readouts.
+import { getActivePanel as getActiveBotPanel } from '../../playbackBot/index.js';
+import { getActivePanelInstance as getActiveFlashPanel } from '../../flashPanel/index.js';
 
 const CATEGORY = 'Tutorials';
 const WALK_CATEGORY = 'Tutorial walks';
@@ -416,10 +419,12 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
     if (!ui) return tc.getOverallResult();
     // A bot step plays at test speed (botTestSpeed.js); the person's saved settings are untouched.
     const restoreSpeed = await startAppBotTestSpeed();
+    let measure = null;
     try {
         ui.start(tutorial.id);
         // Each step's own time (its action + its done wait), so a doneTimeoutMs margin is measured, not assumed.
         const stepStarts = [];
+        measure = startMeasureSampler(tutorial, stepStarts, ui);
         const outcome = await walkTutorial(tutorial, {
             onStep: ({ index, step }) => { stepStarts.push({ id: step.id, at: performance.now() }); ui._goTo(index); },
             perform: async () => {
@@ -433,8 +438,10 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
                 const ok = await waitFor(async () => {
                     if (ui.doneSteps.has(step.id) || await step.done(ui.ctx)) return true;
                     failed = step.failed ? (await step.failed(ui.ctx)) || null : null;
+                    // MEASUREMENT-ONLY: a skip probe (?measureSkipRefusals=N) takes a bot error itself, N times.
+                    if (failed && measure?.skipsLeft?.() > 0 && /Playback Bot says "error/.test(failed)) failed = null;
                     return Boolean(failed);
-                }, step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS, 250);
+                }, measureStepTimeout(step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS), 250);
                 if (failed) throw new Error(`the app shows it cannot finish: ${failed}`);
                 return Boolean(ok);
             },
@@ -454,6 +461,7 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
         tc.log?.(`${tutorial.id}: ${verdict.message}`);
         tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
     } finally {
+        measure?.stop();
         await restoreSpeed();
         // A walk that ended early never reached its own restore step (a feature check's ctx.setSetting).
         try { await ui.ctx.restoreSettings(); } catch (e) { tc.log?.(`could not restore the step settings: ${e.message}`); }
@@ -473,6 +481,96 @@ async function tutorialWalkRow(tc, tutorial, { runtime = null } = {}) {
         }
     }
     return tc.getOverallResult();
+}
+
+// ── MEASUREMENT-ONLY (cloud slice seedling-whole-game-wasm-measure) ──────────
+// ?measureStepTimeoutMs= raises every walk step's done-wait to at least that;
+// ?measureBotStallMs= lifts botCannotFinish's stall window. With either set, a
+// `[MEASURE]` line is logged every 15 s (and once at the end) with the bot's
+// status, the checks, the region, the region changes and wasm teleport pushes
+// so far, and the wasm memory size.
+const MEASURE_PARAMS = (() => {
+    try { return new URLSearchParams(globalThis.location?.search ?? ''); } catch { return new URLSearchParams(); }
+})();
+const MEASURE_STEP_MS = Number(MEASURE_PARAMS.get('measureStepTimeoutMs')) || 0;
+const MEASURE_STALL_MS = Number(MEASURE_PARAMS.get('measureBotStallMs')) || 0;
+if (MEASURE_STALL_MS > 0) globalThis.__measureBotStallMs = MEASURE_STALL_MS;
+// ?measureFlashRuntime=js|wasm walks every plain walk row under that Flash runtime (the row's session override).
+const MEASURE_RUNTIME = MEASURE_PARAMS.get('measureFlashRuntime') || null;
+const MEASURE_SKIPS = Number(MEASURE_PARAMS.get('measureSkipRefusals')) || 0;
+const measureStepTimeout = (ms) => (MEASURE_STEP_MS > 0 ? Math.max(ms, MEASURE_STEP_MS) : ms);
+
+function wasmMemoryBytes() {
+    let best = null;
+    for (const f of document.querySelectorAll('iframe')) {
+        try {
+            const w = f.contentWindow;
+            const n = w?.HEAPU8?.byteLength ?? w?.Module?.HEAPU8?.byteLength ?? w?.wasmMemory?.buffer?.byteLength ?? null;
+            if (Number.isFinite(n)) best = Math.max(best ?? 0, n);
+        } catch { /* cross-origin or torn down */ }
+    }
+    return best;
+}
+
+function startMeasureSampler(tutorial, stepStarts, ui) {
+    if (!(MEASURE_STEP_MS > 0 || MEASURE_STALL_MS > 0 || MEASURE_SKIPS > 0)) return null;
+    const t0 = performance.now();
+    let regionChanges = 0;
+    let lastRegion = null;
+    const unsub = eventBus.subscribe('gameState:regionChanged', (d) => {
+        regionChanges += 1;
+        lastRegion = d?.newRegion ?? d?.region ?? d?.to ?? lastRegion;
+    }, 'tests');
+    const sample = (tag) => {
+        try {
+            const bot = getActiveBotPanel()?.getBot?.() ?? getActiveBotPanel()?.bot ?? null;
+            const snap = ui.ctx.snapshot();
+            const checked = (snap?.checkedLocations ?? []).length;
+            const fp = getActiveFlashPanel();
+            const mem = wasmMemoryBytes();
+            const heap = performance.memory?.usedJSHeapSize ?? null;
+            const line = `[MEASURE ${tag}] ${tutorial.id} t=${((performance.now() - t0) / 1000).toFixed(0)}s`
+                + ` step=${stepStarts.at(-1)?.id ?? '?'} checked=${checked}`
+                + ` botQueue=${bot?._queue?.length ?? '?'} botCursor=${bot?._cursor ?? '?'} botChecked=${bot?._checkedSoFar?.size ?? '?'}`
+                + ` botRegion=${JSON.stringify(bot?._currentRegion ?? null)} lastRegionEvent=${JSON.stringify(lastRegion)}`
+                + ` regionChanges=${regionChanges} wasmPushes=${fp?.adapter?.invocationPushes ?? '?'} transport=${fp?.transport ?? '?'}`
+                + ` wasmMemMB=${mem == null ? '?' : (mem / 1048576).toFixed(0)} jsHeapMB=${heap == null ? '?' : (heap / 1048576).toFixed(0)}`
+                + ` status=${JSON.stringify(document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim() ?? null)}`;
+            console.log(line);
+        } catch (e) {
+            console.log(`[MEASURE ${tag}] sampler threw: ${e?.message ?? e}`);
+        }
+    };
+    const timer = setInterval(() => sample('tick'), 15000);
+    // The skip probe: on a bot error, log it, count the refused head as seen and play on from the next entry.
+    // It FIXES nothing; an entry after a skipped item may refuse only because that item was never collected.
+    let skips = 0;
+    let skipping = false;
+    const skipTimer = MEASURE_SKIPS > 0 ? setInterval(async () => {
+        if (skipping || skips >= MEASURE_SKIPS) return;
+        const status = document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim() ?? '';
+        if (!status.startsWith('error')) return;
+        const bot = getActiveBotPanel()?.getBot?.();
+        const head = bot?._queue?.[bot._cursor];
+        if (!bot || !head) return;
+        skipping = true;
+        skips += 1;
+        sample(`skip ${skips}`);
+        console.log(`[MEASURE skip ${skips}] t=${((performance.now() - t0) / 1000).toFixed(0)}s skipping entry ${bot._cursor + 1}/${bot._queue.length} "${head.locationName}" (sphere ${head.sphereIndex}${head.fractionalIndex != null ? '.' + head.fractionalIndex : ''})`);
+        try {
+            bot.stop();
+            bot._checkedSoFar.add(head.locationName);
+            await bot.play();
+        } catch (e) {
+            console.log(`[MEASURE skip ${skips}] play threw: ${e?.message ?? e}`);
+        } finally {
+            skipping = false;
+        }
+    }, 1000) : null;
+    return {
+        skipsLeft: () => MEASURE_SKIPS - skips,
+        stop: () => { clearInterval(timer); if (skipTimer) clearInterval(skipTimer); sample('end'); try { unsub?.(); } catch { /* */ } },
+    };
 }
 
 // The generator games' tutorials switch modules on in the Modules panel and
@@ -580,7 +678,7 @@ for (const { tutorial, id, kind, category } of walkRows) {
                 : tutorial.status === 'terminal' ? `needs a terminal: it must stop at ${terminalStep(tutorial)?.step.id}`
                     : `in progress: firstFailingStep ${tutorial.firstFailingStep ?? 'null'}`}). Reloads the world loaded before.`,
         // Named per row: the registry tells test functions apart by name.
-        testFunction: { [fn]: (tc) => tutorialWalkRow(tc, tutorial) }[fn],
+        testFunction: { [fn]: (tc) => tutorialWalkRow(tc, tutorial, { runtime: MEASURE_RUNTIME }) }[fn],
         category,
         enabled: false,
     });
