@@ -1,0 +1,2 @@
+ROW {"id":775,"key":"level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144","i":0,"run":0,"seamTime":5687,"budgetWork":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":308,"work":17},{"pass":"full","ok":true,"kind":null,"ticks":308,"work":17}],"work":34,"ok":true,"kind":null,"answer":"f1d03a59783c","message":null,"points":80,"trace":"1c0405e33952","checkpoints":[],"ms":654}
+REPLAY: leg 775 request 0 (budget 640): 1 distinct answer(s) over 1, 1 distinct trace(s)

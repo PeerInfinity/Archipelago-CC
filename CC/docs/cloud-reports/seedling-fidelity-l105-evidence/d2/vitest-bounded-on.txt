@@ -1,0 +1,10 @@
+files 122 passed 2845 failed 9
+failed	frontend/modules/seedlingDemo/contactFidelity.test.js	the shipped defaults: all three ON
+failed	frontend/modules/seedlingDemo/dashOnlyWindow.test.js	the default adds no field (today's request key list exactly)
+failed	frontend/modules/seedlingDemo/dashOnlyWindow.test.js	`stampHooks` is the service's one stamping door, exported for the sweep's request CAPTURE: it adds exactly what the service posts
+failed	frontend/modules/seedlingDemo/dashShape.test.js	the defaults add no field (today's request key list exactly)
+failed	frontend/modules/seedlingDemo/fidelityL100.test.js	ON: the solver's plan from the sliver IS the committed game witness, and breaks the rock from x 124
+failed	frontend/modules/seedlingDemo/fidelityL105.test.js	ships OFF, with its env name on the solver channel
+failed	frontend/modules/seedlingDemo/fidelityLapseCost.test.js	ON: leg 773's request (its live digest re-derived ON, as a page with the switch sends it) solves in 426 t with no hit
+failed	frontend/modules/seedlingDemo/fidelityRulesref.test.js	both ON: the committed witness, byte for byte — bridge, key line, door, L70, no hit
+failed	frontend/modules/seedlingDemo/hammerAxisStrikes.test.js	AXISON: on L95 flag 4 and L105 the axis strikes alone build no policy and answer OFF's plan

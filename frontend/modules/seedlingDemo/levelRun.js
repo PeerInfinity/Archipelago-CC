@@ -190,7 +190,7 @@ import {
 import { BOMB, createBombPusher, stepBomb, stepBombPusher } from './bombPusher.js';
 // ⛓ fidelity BEAMTOWER: `BeamTower` — its drifting Solid (`CONTACT_FIDELITY.beamTowerDrift`).
 import {
-    BEAM_TOWER, beamTowerReachRects, beamTowerSolidRect, createBeamTower, stepBeamTowerFrame,
+    BEAM_TOWER, beamTowerDriftedY, beamTowerReachRects, beamTowerSolidRect, createBeamTower, stepBeamTowerFrame,
 } from './beamTower.js';
 // ⛓⛓⛓ R6 SLICE 2: the THIRTEENTH family — the first projectile the PLAYER
 // makes, so the first per-visit body a tape is responsible for.
@@ -2665,6 +2665,35 @@ export function createLevelRun({
         const out = new Map();
         for (const [id, t] of st) out.set(id, { id, rect: beamTowerSolidRect(t), y: t.y });
         return out;
+    };
+    /**
+     * ⛓ fidelity L105 D1 (`CONTACT_FIDELITY.previewBeamTowerDrift`, OFF → null) — THE TOWERS' SOLIDS AT A PREVIEWED
+     * TICK: `(k) => Map` in `beamTowerRectsNow`'s shape, the Solid each tower holds when the player sweeps on the k-th
+     * frame from now (k ≥ 1: the towers update above the player, the k-th at `Game.time` `now + k − 1`). Pure: the live
+     * states are read, never stepped. Null — the snapshot stays — with the switch or `beamTowerDrift` OFF, under noclip,
+     * in a room with no tower, with no clock, during a ceremony (the next frames are frozen), or with a `y` unknown.
+     */
+    const beamTowerSolidForecast = () => {
+        if (!CONTACT_FIDELITY.previewBeamTowerDrift || !CONTACT_FIDELITY.beamTowerDrift || noclip) return null;
+        if (ceremony !== null) return null;
+        const st = beamTowerStateFor(level);
+        if (st.size === 0) return null;
+        const now = clock.now();
+        if (now === null) return null;
+        const towers = [...st.values()].map((t) => ({ id: t.id, cx: t.cx, y: t.y, yKnown: t.yKnown }));
+        if (towers.some((t) => !t.yKnown)) return null;
+        const memo = new Map();
+        return (k) => {
+            if (!memo.has(k)) {
+                const out = new Map();
+                for (const t of towers) {
+                    const y = beamTowerDriftedY(t.y, now, k);
+                    out.set(t.id, { id: t.id, rect: beamTowerSolidRect({ cx: t.cx, y }), y });
+                }
+                memo.set(k, out);
+            }
+            return memo.get(k);
+        };
     };
     /** The bombs' `Explosion.added()` calls waiting for this tick's `updateLists()` (see `drainBombBlastsNow`). */
     const pendingBombBlasts = [];
@@ -15234,7 +15263,9 @@ export function createLevelRun({
      * covers 23..57, i.e. the pickup saw observation 23 and the advance that
      * would have produced 24 became phase B's first frame instead.
      */
-    function pickupUnderfoot() {
+    // ⛓ fidelity CEREMONY126 D1: `onTouch(p, box)` replaces the overlap test (default null: today's, byte-identical)
+    // — `freezeForecastNow` asks the same eligible pickups (the same skips) for their gap.
+    function pickupUnderfoot(onTouch = null) {
         if (!world.pickups) return null;
         const box = playerBoxAt(state.x, state.y);
         for (const p of world.pickups) {
@@ -15279,6 +15310,7 @@ export function createLevelRun({
             // never collected from, and it would stop skipping the moment
             // anything reset the set.
             if (p.tag === 'seed' && cutscene[2]) continue;
+            if (onTouch !== null) { onTouch(p, box); continue; }
             if (rectsOverlap(box, p.rect)) return p;
         }
         return null;
@@ -18172,7 +18204,24 @@ export function createLevelRun({
             }
         }
         const timerNext = contact !== null ? BLAST_FREEZE_TICKS - 1 : Math.max(frozenTimer - 1, 0);
-        return { refusedNext: timerNext > 0, timerNext, contact };
+        if (!CONTACT_FIDELITY.ceremonyPressForecast) return { refusedNext: timerNext > 0, timerNext, contact };
+        /**
+         * ⛓ fidelity CEREMONY126 D1 (`CONTACT_FIDELITY.ceremonyPressForecast`) — **HOW FAR IS THE NEAREST PICKUP
+         * THAT COULD START A CEREMONY?** A placed pickup is touched at a tick's TOP from where the previous tick left
+         * the player (`pickupUnderfoot`), and that tick is the ceremony's first `Game.freezeObjects` frame — a thrust
+         * scheduled onto it is lost (`runFrozenTick`). `pickupGap`: the least Chebyshev gap (px) from the player's box
+         * to an uncollected pickup `pickupUnderfoot` would test (its own skips), or null (none, a ceremony already up,
+         * noclip). The policy prices it against its own travel bound (`strikePolicy.ceremonyGuard`). A pure read.
+         */
+        let pickupGap = null;
+        if (!noclip && ceremony === null) {
+            pickupUnderfoot((p, box) => {
+                const g = Math.max(p.rect.x - box.right, box.x - p.rect.right, p.rect.y - box.bottom,
+                    box.y - p.rect.bottom, 0);
+                if (pickupGap === null || g < pickupGap) pickupGap = g;
+            });
+        }
+        return { refusedNext: timerNext > 0, timerNext, contact, pickupGap };
     };
     const collectedNow = () => collected.map((c) => ({ ...c }));
     const sealCollectionsNow = () => sealCollections.map((c) => ({ ...c }));
@@ -20638,7 +20687,16 @@ export function createLevelRun({
              */
             const iFrame = damage.hitsTimer > 0 || damage.directionFace >= 0;
             const damageAtStart = { ...damage };
-            const step = (st, held, { dashImpulse = null } = {}) => {
+            /**
+             * ⛓ fidelity L105 D1 (`previewBeamTowerDrift`, OFF → null): a step told its PREVIEWED tick (`previewTick`,
+             * 1-based from the preview's start — `previewWalk` says it) sweeps against the towers' Solids as that
+             * frame's updates leave them (`beamTowerSolidForecast`). A step not told, or the forecast null: `opts`.
+             */
+            const towersAt = beamTowerSolidForecast();
+            const optsAt = (previewTick) => (towersAt && previewTick !== null
+                ? { ...opts, beamTowers: towersAt(previewTick) } : opts);
+            const step = (st, held, { dashImpulse = null, previewTick = null } = {}) => {
+                const opts = optsAt(previewTick);
                 if (!iFrame) {
                     const r = dashImpulse
                         ? stepV2(st, held, { ...opts, dashImpulse })

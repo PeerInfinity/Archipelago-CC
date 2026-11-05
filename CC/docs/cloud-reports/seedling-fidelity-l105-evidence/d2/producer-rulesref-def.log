@@ -1,0 +1,8 @@
+PASS: rulesref-l66-door: the staging boots at L66 (128,144) — {"level":66,"x":128,"y":144}
+PASS: rulesref-l66-door: the model replays it into L70 — 231 observations, ends {"level":70,"x":40,"y":56}
+PASS: rulesref-l66-door: bridge (7,9) opens, then bosslock@72,64, in that order — bridge t64, lock t228
+PASS: rulesref-l66-door: no hit — 0 hit(s)
+PASS: the committed rulesref-l66-door is what this script produces today — byte-identical
+
+all checks green
+exit 0

@@ -167,6 +167,8 @@ const fail = (m) => { throw new StrikePolicyError(m); };
  * asked on a refused tick; `dropped` the ones that withheld an owed press or a scheduled one. Reset by the reader.
  */
 export const FROZEN_PRESS_COUNTS = { stoodDown: 0, dropped: 0 };
+/** ⛓ fidelity CEREMONY126 D1 — the aims, presses and scheduled presses `ceremonyGuard` withheld. Reset by the reader. */
+export const CEREMONY_PRESS_COUNTS = { aim: 0, press: 0, planned: 0 };
 
 /**
  * ⛓ fidelity FROZENPRESS D1 — **THE OPTIONS A RUN-SIDE `decide` IS ASKED WITH**: the run's slash state, and with
@@ -818,6 +820,27 @@ function talkWhy(g, pressTick) {
         + '53). The press is refused, not priced — re-time it or route around the circle.';
 }
 
+/**
+ * ⛓ fidelity CEREMONY126 D1 (`CONTACT_FIDELITY.ceremonyPressForecast`) — **WOULD A PICKUP'S CEREMONY START ON THE TICK
+ * THIS PRESS'S THRUST FIRES?** The thrust a press schedules fires on the next tick; a placed pickup is touched at a
+ * tick's top from where the previous tick left the player, and that tick is the ceremony's first `Game.freezeObjects`
+ * frame — `genericHit` returns (`Player.as:1075-1078`), the thrust is lost (`levelRun.runFrozenTick`'s
+ * `FROZEN_TICK_PRESS`). `aheadTicks` of travel (1 for a press decided now, 2 for an aim whose press lands next tick)
+ * against `freeze.pickupGap` (`levelRun.freezeForecastNow`; absent with the key OFF → null, byte-identical). `null`
+ * when clear.
+ */
+export function ceremonyGuard(state, freeze, aheadTicks) {
+    if (freeze === null || freeze.pickupGap === null || freeze.pickupGap === undefined) return null;
+    const bound = aheadTicks * oneTickTravelBound(state.vx ?? 0, state.vy ?? 0);
+    return freeze.pickupGap <= bound ? { pickupGap: freeze.pickupGap, bound, aheadTicks } : null;
+}
+
+function ceremonyWhy(c, what) {
+    return `a pickup is ${c.pickupGap} px away (bound ${c.bound.toFixed(2)} over ${c.aheadTicks} tick(s)): its ceremony `
+        + `could start on the tick ${what}'s thrust fires, and \`genericHit\` returns under \`Game.freezeObjects\` — `
+        + 'the thrust would be lost, so the policy stands down (CEREMONY126)';
+}
+
 export function createStrikePolicy({
     facingToward, facingKeys, allowDash = false, hasSword = true, dashPlan = null,
     talkCircles = [],
@@ -978,6 +1001,15 @@ export function createStrikePolicy({
                  * The aim is dropped, not deferred: `owed` is untouched, so
                  * the same body is aimable again once the walk is clear.
                  */
+                // ⛓ fidelity CEREMONY126 D1: a ceremony starting on the thrust's tick — dropped like the talk refusal.
+                const lateCeremony = ceremonyGuard(state, freeze, 1);
+                if (lateCeremony !== null) {
+                    aimed = null;
+                    CEREMONY_PRESS_COUNTS.press += 1;
+                    trace.push({ tick, decision: STRIKE_NONE, target, ceremonyRefused: lateCeremony,
+                        why: ceremonyWhy(lateCeremony, 'this press') });
+                    return { held: walkHeld, decision: STRIKE_NONE };
+                }
                 const late = talkGuard(state, talkCircles, 1);
                 if (late !== null) {
                     aimed = null;
@@ -1041,6 +1073,14 @@ export function createStrikePolicy({
                 // release opens the same dialogue. The plan yields rather
                 // than triggers; `planSwordDash` is free to schedule the
                 // displacement elsewhere on the route.
+                // ⛓ fidelity CEREMONY126 D1: a scheduled press yields to a ceremony starting on its thrust's tick.
+                const nearCeremony = ceremonyGuard(state, freeze, 1);
+                if (nearCeremony !== null) {
+                    CEREMONY_PRESS_COUNTS.planned += 1;
+                    trace.push({ tick, decision: STRIKE_NONE, planned: true, ceremonyRefused: nearCeremony,
+                        why: ceremonyWhy(nearCeremony, 'the scheduled press') });
+                    return { held: walkHeld, decision: STRIKE_NONE };
+                }
                 const near = talkGuard(state, talkCircles, 1);
                 if (near !== null) {
                     trace.push({
@@ -1152,6 +1192,16 @@ export function createStrikePolicy({
              * travel — and the press arm re-checks with one tick's when the
              * real position is known.
              */
+            // ⛓ fidelity CEREMONY126 D1: the press this aim earns would fire its thrust two ticks of travel from here.
+            const aimCeremony = ceremonyGuard(state, freeze, 2);
+            if (aimCeremony !== null) {
+                if (bodies.length > 0) {
+                    CEREMONY_PRESS_COUNTS.aim += 1;
+                    trace.push({ tick, decision: STRIKE_NONE, saw: bodies.length, ceremonyRefused: aimCeremony,
+                        why: ceremonyWhy(aimCeremony, 'the press this aim earns') });
+                }
+                return { held: walkHeld, decision: STRIKE_NONE };
+            }
             const aimTalk = talkGuard(state, talkCircles, 2);
             if (aimTalk !== null) {
                 trace.push({

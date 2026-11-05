@@ -5674,10 +5674,24 @@ function drive(run, target, perTick, {
     axisAligned = false,
     // ⛓ fidelity SMALLGAPS D2: another waypoint follows this one on the walk (`waypointReached`); false = `hasArrived`.
     intermediate = false,
+    // ⛓ fidelity CEREMONY126 D2 (`ceremonyWalkHandoff`; the caller asks): `{x, y}` of the goal's own pickup — the walk
+    // may enter its volume and ends when a pickup ceremony is up. null: today's walk.
+    endOnCeremony = null,
 }) {
     let ticks = 0;
     const touched = [];
     for (;;) {
+        /**
+         * ⛓ fidelity CEREMONY126 D2 — **A CEREMONY THAT STARTS ON THE WALK ENDS IT.** The player is frozen
+         * (`Game.freezeObjects`: `Mobile.mobileUpdate` skips input and the move) until the dialogue is paged by X
+         * releases, which a walk never sends — so the walk would hold its keys at a frozen player for its whole
+         * budget. Returned like an arrival; the caller (the collect goal's verb) pages the ceremony. And the goal's OWN
+         * pickup's avoid volume is not a refusal on this walk (below): touching it is what the goal is for.
+         */
+        if (endOnCeremony !== null && run.progress('inCeremony')) {
+            if (touched.length > 0) grazes.push(...touched);
+            return null;
+        }
         if (until === 'arrival' && waypointReached(run.state, target, tolerance, intermediate)) {
             // ⚠ A GRAZE THAT STILL ARRIVES IS NOT A RE-PLAN, and that is the
             // whole of the distinction. See the `grazes` docblock.
@@ -5785,7 +5799,10 @@ function drive(run, target, perTick, {
                     + 'volume, so this check is the only place it can be caught.');
             }
             const v = run.world.avoidVolumesAt(box, { x: s.x, y: s.y }, { keys: run.progress('keys') })
-                .find((h) => !contacts.has(contactKey(h)));
+                .find((h) => !contacts.has(contactKey(h))
+                    // ⛓ fidelity CEREMONY126 D2: the collect goal's own pickup is walked INTO, not around.
+                    && !(endOnCeremony !== null && h.kind === 'pickup'
+                        && h.blocker?.x === endOnCeremony.x && h.blocker?.y === endOnCeremony.y));
             if (v) {
                 fail(`${what}: the route entered a ${v.kind} — ${v.blocker.tag} at `
                     + `(${v.blocker.x},${v.blocker.y}) in level ${run.level} — at `

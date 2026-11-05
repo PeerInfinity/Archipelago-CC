@@ -1811,7 +1811,7 @@ export const CONTACT_FIDELITY = {
      * the 8 px lattice first (the FRONTIER3 fine walk), and a throw there falls back to the 16 px plan as before.
      * OFF: byte-identical. `SEEDLING_FINE_STANCE_WALK=0|1`.
      */
-    fineStanceWalk: false,
+    fineStanceWalk: true,
     /**
      * fidelity FROZENPRESS D1 (wave 37) — THE WALK'S STRIKE STANDS DOWN ON A TICK WHOSE INPUT THE GAME REFUSES.
      *
@@ -1826,6 +1826,48 @@ export const CONTACT_FIDELITY = {
      * no press (an owed aim is dropped). OFF: byte-identical. `SEEDLING_FROZEN_PRESS_FORECAST=0|1`.
      */
     frozenPressForecast: true,
+    /**
+     * fidelity L105 D1 (wave 37) — A PREVIEW STEPS THE DRIFTING BEAMTOWER SOLID, TICK BY PREVIEWED TICK.
+     *
+     * `BeamTower.update()` drifts the tower by `y += 0.3·sin(worldFrame(100, 2)/100·2π)` at that frame's `Game.time`
+     * (`beamTowerDrift`, ON), and the tower updates BEFORE the player, so the player's sweep on frame k meets the Solid
+     * where its k-th update left it. `run.previewStepper()` built its options ONCE, so every previewed tick walked
+     * against the Solid as it stood at the preview's start. Measured, sweep leg `level_105 <- in_L104_0_16 ->
+     * exit:out_teleporter_80_144` (seam 5689): BEAMLANE's lane walk to (40,24) previewed clean for 413 ticks, and the
+     * run, driving those keys, was stopped by `beamtower@48,40`'s risen Solid at x 58.41 from t211, beamed at t243,
+     * knocked into `pit@48,0` and died three times. ON: `previewWalk` hands each step its previewed tick, and the stepper
+     * swaps the towers' Solids for their forecast at that tick (`beamTowerDrift` alone, from the live `y` and
+     * `Game.time`; a ceremony, an unknown `y` or no clock keeps the snapshot). OFF: byte-identical.
+     * `SEEDLING_PREVIEW_BEAM_TOWER_DRIFT=0|1`.
+     */
+    previewBeamTowerDrift: true,
+    /**
+     * fidelity CEREMONY126 D1 (wave 37b) — THE WALK'S STRIKE STANDS DOWN WHERE A PICKUP'S CEREMONY WOULD SWALLOW ITS
+     * THRUST. A placed pickup is touched at a tick's TOP from where the previous tick left the player
+     * (`Pickup.update` → `collide("Player")` → `pick_up()`, `Pickups/Pickup.as:78-83`; `levelRun.pickupUnderfoot`), and
+     * that tick is the ceremony's first `Game.freezeObjects` frame (`Pickup.as:95`). `Player.update` still calls
+     * `slash()` on it (`Player.as:560-563`; only `Mobile.mobileUpdate`'s friction/input/move is gated, `Mobile.as:35-41`)
+     * and `genericHit` returns at its first line (`Player.as:1075-1078`): the thrust a press scheduled on the tick
+     * before is LOST (`levelRun`'s `FROZEN_TICK_PRESS`, kept — the game's rule). Measured: route-survey step 125 (L64
+     * Ghostspear; the brief's "126") refused so at t43/t44. ON: `levelRun.freezeForecast` also carries `pickupGap` (the
+     * least Chebyshev gap from the box to a touchable uncollected pickup, `pickupUnderfoot`'s own skips), and
+     * `strikePolicy.ceremonyGuard` drops an aim (two ticks of travel) or a press / scheduled press (one tick) whose
+     * thrust could land on that first frozen frame — `owed` untouched, as the talk guard. Needs `frozenPressForecast`
+     * (it rides `strikeDecideOpts`). OFF: byte-identical (`pickupGap` absent). `SEEDLING_CEREMONY_PRESS_FORECAST=0|1`.
+     */
+    ceremonyPressForecast: false,
+    /**
+     * fidelity CEREMONY126 D2 (wave 37b) — A COLLECT GOAL'S STANCE WALK ENDS WHEN ITS PICKUP'S CEREMONY STARTS ON IT.
+     * The walk to a collect stance can cross the pickup's own rect (L64's Ghostspear: rect [74,86)×[30,34), stance =
+     * the placement (72,24) above it, the walk from the south). The touch starts the ceremony (t44 at (72.958,34.784),
+     * measured) and the player is frozen while its dialogue waits for X releases (`NPC.talk`, `Input.released`) — but
+     * `drive` kept holding movement keys toward the stance for its whole 400-tick budget: *"collect (72,24) stance
+     * waypoint 0 (72,24): not reached within 400 ticks; stalled at (72.958,34.784)"*. ON: that walk (`walkTo`'s
+     * `ceremonyEnds`, asked only by the collect goal's stance walk) returns as soon as `inCeremony` is up, and the
+     * verb (`execCollect` → `runCollect`, whose approach loop already exits on `inCeremony`) pages the ceremony with
+     * `ceremonyCadenceStep`. OFF: byte-identical. `SEEDLING_CEREMONY_WALK_HANDOFF=0|1`.
+     */
+    ceremonyWalkHandoff: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -2191,6 +2233,14 @@ if (globalThis.process?.env?.SEEDLING_FINE_STANCE_WALK === '0') CONTACT_FIDELITY
 // ⛓ fidelity FROZENPRESS D1: `SEEDLING_FROZEN_PRESS_FORECAST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FROZEN_PRESS_FORECAST === '1') CONTACT_FIDELITY.frozenPressForecast = true;
 if (globalThis.process?.env?.SEEDLING_FROZEN_PRESS_FORECAST === '0') CONTACT_FIDELITY.frozenPressForecast = false;
+// ⛓ fidelity L105 D1: `SEEDLING_PREVIEW_BEAM_TOWER_DRIFT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PREVIEW_BEAM_TOWER_DRIFT === '1') CONTACT_FIDELITY.previewBeamTowerDrift = true;
+if (globalThis.process?.env?.SEEDLING_PREVIEW_BEAM_TOWER_DRIFT === '0') CONTACT_FIDELITY.previewBeamTowerDrift = false;
+// ⛓ fidelity CEREMONY126 D1/D2: `SEEDLING_CEREMONY_PRESS_FORECAST=0|1`, `SEEDLING_CEREMONY_WALK_HANDOFF=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '1') CONTACT_FIDELITY.ceremonyPressForecast = true;
+if (globalThis.process?.env?.SEEDLING_CEREMONY_PRESS_FORECAST === '0') CONTACT_FIDELITY.ceremonyPressForecast = false;
+if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '1') CONTACT_FIDELITY.ceremonyWalkHandoff = true;
+if (globalThis.process?.env?.SEEDLING_CEREMONY_WALK_HANDOFF === '0') CONTACT_FIDELITY.ceremonyWalkHandoff = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
