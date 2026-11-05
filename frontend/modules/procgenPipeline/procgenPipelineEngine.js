@@ -53,6 +53,7 @@ import {
     introductionRequestOf, markRegionIntroduction, regionIntroductionNote, regionIntroductionOf,
     unrequestedIntroductions,
 } from '../procgenCore/itemIntroduction.js';
+import { goalContainerReportOfSidecars } from '../procgenCore/goalContainer.js';
 import { scheduleSphereIntroductions } from './sphereIntroductions.js';
 
 /** The registry entry for an id, or `undefined` (a library / atlas source id): the planner's lookup. */
@@ -8048,6 +8049,12 @@ export function buildRulesJson(grid, opts = {}) {
         // what it was. The SLOT's, like the rest of this block.
         const introductions = introductionReport(allRegions.map(regionIntroductionOf));
         if (introductions) slotMetadata.introductions = introductions;
+        // ⛓⛓ THE GOAL-CONTAINERS REPORT (goal-chest-pipeline; `procgenCore/goalContainer.js`) — how many regions
+        // configured for a goal container got one, and why the rest kept their default goal, read off the slot's
+        // OWN serialised sidecars through each substrate's declared `goalContainer.noteOf`. ABSENT when none was.
+        const goalContainers = goalContainerReportOfSidecars(scaffold.preset_sidecars?.[String(playerId)],
+            (id) => substrateRegistry.get(id));
+        if (goalContainers) slotMetadata.goalContainers = goalContainers;
         scaffold.procgen_metadata = { [String(playerId)]: slotMetadata };
         // ⛓⛓ APWORLD SUBSTRATE CHANGE R6b — the config each content source was
         // installed with, for every source that declares

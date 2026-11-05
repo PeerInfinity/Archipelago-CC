@@ -33,6 +33,8 @@
  *             · ⛔ AND A LOOT CHEST (`kind: 'chest-loot'`, seedling gen B1): the same
  *               row, its own `report.lootChests` (the chest is the location — the
  *               generator certified it opened; an `apitem` there would drop it)
+ *             · ⛔ AND A GOAL CHEST (`kind: 'chest-goal'`, goal-chest-pipeline): location 0
+ *               of a room whose goal is a chest — the same row, `report.goalChests`
  *   parking   level N (appended): a walled 3×3 with one floor cell, no exits;
  *             the game sits there while the host plays another substrate
  *   start     level 0 on its first door's approach cell (the Menu hop's own
@@ -130,6 +132,10 @@ const cellPx = (cell) => ({ x: cell.tx * GEN_ROOM_TILE_SIZE, y: cell.ty * GEN_RO
 export const CHEST_DOOR_KIND = 'chest-door';
 /** ⛓ seedling gen B1 — `seedlingGenRoom.CHEST_LOOT_KIND`: a loot chest's row, kept exactly as a door chest's. */
 export const CHEST_LOOT_KIND = 'chest-loot';
+/** ⛓ goal-chest-pipeline — `seedlingGenRoom.CHEST_GOAL_KIND`: a goal chest's row (location 0), kept as a loot chest's. */
+export const CHEST_GOAL_KIND = 'chest-goal';
+/** The row kinds whose location IS a chest the assembler keeps (no `apitem`), each with its own report list. */
+const KEPT_CHEST_KINDS = Object.freeze([CHEST_DOOR_KIND, CHEST_LOOT_KIND, CHEST_GOAL_KIND]);
 /** ⛓ strategy elements r2 — `seedlingGenRoom.BOSS_KEY_KIND`: a key spot (an ordinary, REPLACED location). */
 export const BOSS_KEY_KIND = 'boss-key';
 
@@ -145,13 +151,13 @@ export function placeApItems(record, locations, region = '?') {
     const chests = [];
     for (const loc of locations) {
         const { x, y } = cellPx(loc.cell);
-        if (loc.kind === CHEST_DOOR_KIND || loc.kind === CHEST_LOOT_KIND) {
+        if (KEPT_CHEST_KINDS.includes(loc.kind)) {
             const chest = entities.find((e) => e.type === 'chest' && e.x === x && e.y === y
                 && Number.parseInt(e.attrs?.tag, 10) === loc.tag);
             if (!chest) refuse(GENERATED_SET_REFUSALS.chestDoorMissing(region, loc.name, loc.cell, loc.tag));
-            // ⛓ B1 — a loot chest's row says so (`kind`); a door chest's row is unchanged.
+            // ⛓ B1 — a loot chest's row says so (`kind`), as a goal chest's does; a door chest's row is unchanged.
             chests.push({ location: loc.name, cell: loc.cell, tag: loc.tag, rewrite: false,
-                ...(loc.kind === CHEST_LOOT_KIND ? { kind: CHEST_LOOT_KIND } : {}) });
+                ...(loc.kind !== CHEST_DOOR_KIND ? { kind: loc.kind } : {}) });
             continue;
         }
         const item = { type: AP_ITEM_TYPE, x, y, attrs: { tag: String(loc.tag), look: AP_LOOK } };
@@ -207,6 +213,7 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
     const apitems = [];
     const chestDoors = [];
     const lootChests = [];
+    const goalChests = [];
     const entries = census.rooms.map((region, level) => {
         const p = payloads[level];
         const roomDoors = p.exits.map((e) => {
@@ -230,7 +237,10 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
         });
         const { record: withItems, placed, chests } = placeApItems(p.record, p.locations, region);
         for (const a of placed) apitems.push({ room: level, region, ...a });
-        for (const c of chests) (c.kind === CHEST_LOOT_KIND ? lootChests : chestDoors).push({ room: level, region, ...c });
+        for (const c of chests) {
+            const list = c.kind === CHEST_LOOT_KIND ? lootChests : c.kind === CHEST_GOAL_KIND ? goalChests : chestDoors;
+            list.push({ room: level, region, ...c });
+        }
         return { record: emitDoorEntities(withItems, roomDoors), name: region };
     });
     entries.push({ record: parkingRoomRecord(), name: PARKING_ROOM_NAME });
@@ -252,7 +262,7 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
 
     const table = new Map();
     const unjoined = [];
-    for (const a of [...apitems, ...chestDoors, ...lootChests]) {
+    for (const a of [...apitems, ...chestDoors, ...lootChests, ...goalChests]) {
         const joined = locationItemOf(a.location);
         if (!joined) unjoined.push(a.location);
         table.set(placementKey(a.room, a.tag), {
@@ -282,6 +292,8 @@ export function assembleGeneratedSeedlingSet(rules, { locationItemOf = () => nul
             ...(chestDoors.length > 0 ? { chestDoors } : {}),
             // ⛓ seedling gen B1 — the loot chests' report rows; the key is ABSENT without one.
             ...(lootChests.length > 0 ? { lootChests } : {}),
+            // ⛓ goal-chest-pipeline — the goal chests' report rows (each a room's location 0); ABSENT without one.
+            ...(goalChests.length > 0 ? { goalChests } : {}),
             unjoined,
             unsigned: doors.length,
             warnings: validation.warnings,
