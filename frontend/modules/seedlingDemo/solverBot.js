@@ -10152,6 +10152,27 @@ function deriveStance(run, resolved, contacts,
 }
 
 /**
+ * ⛓ hammer-phase KEYGATE-YIELD (`COLLECT_RESTANCE`, OFF) — the collect walk's `reaim`: `deriveStance` asked again from
+ * the live run with the attempt's contacts; `{aim, stand}` when that stance has a corridor, else null (a refusal of the
+ * ring search is null too: the walk's own ladder keeps the question). `stand` is STRIKELAPSE's tail priced from the
+ * NEW stance exactly as the collect site prices it from the first (`collectStandWalk`; absent where the site passes
+ * none), so the walk certified is still the walk driven.
+ */
+export function collectReaim(run, resolved, economies) {
+    return (contacts) => {
+        try {
+            const s = deriveStance(run, resolved, contacts, { economies });
+            if (s.corridor === false) return null;
+            return CONTACT_FIDELITY.strikeIframeLapse && resolved.strategy === 'collect'
+                ? { aim: s, stand: collectStandWalk(run, resolved, s).stand ?? null } : { aim: s };
+        } catch (e) {
+            if (e instanceof SolverRefusal) return null;
+            throw e;
+        }
+    };
+}
+
+/**
  * ⛓⛓⛓ R8 SLICE 3 — HOW LONG TO HOLD, DERIVED FROM THE MECHANISM THE HOLD IS
  * FOR. The leg spec's `ticks: 200` was a margin somebody measured; a live
  * policy has to answer the question the margin was hiding.
@@ -16624,6 +16645,43 @@ export const APPROACH_DOOR_COUNTS = { doors: [] };
 /** Zero `APPROACH_DOOR_COUNTS`. */
 export function resetApproachDoorCounts() {
     APPROACH_DOOR_COUNTS.doors = [];
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE KEYGATE-YIELD — A CORRIDORLESS COLLECT STANCE IS RE-DERIVED ONCE THE LADDER HAS OPENED THE
+ * WAY (⚖ the user queued the slice on 2026-11-04; the lab's keygate element, 8 of 83 generated rooms per arm refused
+ * `the-goal-approach-is-blocked`).
+ *
+ * `deriveStance` runs BEFORE the collect walk. When no ring cell has a corridor yet (the pickup is behind a door the
+ * walk's own ladder must open: the keygate's lock), it returns the nearest collectable cell by `(d, y, x)`, flagged
+ * `corridor: false`, and the walk enters the ladder with that aim. The aim is never asked again: the ladder opens the
+ * lock, the next attempt re-plans to the SAME cell, and when that cell lies beyond the pickup (a one-tile dead end
+ * whose only way in is the pickup's own cell, an avoid volume by design) the plan still fails and the frontier names
+ * the pickup itself, which no strategy binds. MEASURED on all 8 rooms (pre-sword and post-sword alike): the key is
+ * held, the lock is open, the refused aim plans with avoid volumes off, and a ring cell on the near side plans a
+ * corridor and can collect (`seedling-hammer-keygate-yield-evidence/attribution-*.jsonl`).
+ *
+ * `COLLECT_RESTANCE` (OFF): a collect walk whose stance was corridorless carries `reaim` (`walkTo`'s option). On a
+ * LATER attempt (attempt > 0: the ladder has applied something) whose plan to the aim fails, the stance is derived
+ * again from the live run (`deriveStance`, the same function, the attempt's contacts); a stance that now has a
+ * corridor replaces the aim and the attempt re-plans, and the walk asks no more. A re-derivation that is still
+ * corridorless changes nothing (the ladder runs as it does OFF). A walk whose aim plans is never asked. OFF, nothing is
+ * read. `SEEDLING_COLLECT_RESTANCE=1` / `withCollectRestance(enabled, fn)`.
+ */
+export const COLLECT_RESTANCE = { enabled: globalThis.process?.env?.SEEDLING_COLLECT_RESTANCE === '1' };
+export const COLLECT_RESTANCE_DEFAULT = false;
+
+/** Run `fn` with `COLLECT_RESTANCE` set to `enabled`, restoring the previous value. */
+export function withCollectRestance(enabled, fn) {
+    return withSwitch(COLLECT_RESTANCE, enabled, fn);
+}
+
+/** The switch's instrument, written only ON, read by nothing that decides: `restances`, each aim replaced. */
+export const COLLECT_RESTANCE_COUNTS = { restances: [] };
+
+/** Zero `COLLECT_RESTANCE_COUNTS`. */
+export function resetCollectRestanceCounts() {
+    COLLECT_RESTANCE_COUNTS.restances = [];
 }
 
 /**
@@ -30362,6 +30420,12 @@ function solveSegmentUnder({
          * with that wait as its tail.
          */
         stand = null,
+        /**
+         * ⛓ hammer-phase KEYGATE-YIELD (`COLLECT_RESTANCE`, OFF: the collect site passes null) — `(contacts) =>
+         * {aim, stand?} | null`: asked on a later attempt whose plan to `aim` failed; a non-null answer replaces `aim`
+         * (and `stand`, when it names one: the tail priced from the new aim) once.
+         */
+        reaim = null,
     }) => {
         /**
          * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **A SKIRTED LANE IS CROSSED TWICE,
@@ -30421,6 +30485,19 @@ function solveSegmentUnder({
                         : solverPlanOpts(run, contacts, goalPlanExtra));
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
+                // ⛓ hammer-phase KEYGATE-YIELD (`COLLECT_RESTANCE`, OFF: `reaim` is null) — after the ladder has applied
+                // something, a corridorless collect stance is derived again from the live run before the frontier is asked.
+                if (reaim !== null && attempt > 0 && !fineFirst) {
+                    const next = reaim(contacts);
+                    if (next) {
+                        COLLECT_RESTANCE_COUNTS.restances.push({ what, attempt, tick: perTick.length,
+                            from: { x: aim.x, y: aim.y }, to: { x: next.aim.x, y: next.aim.y } });
+                        aim = next.aim;
+                        if (next.stand !== undefined) stand = next.stand;
+                        reaim = null;
+                        continue attempts;
+                    }
+                }
                 /**
                  * ⛓⛓ FRONTIER3 — A FRONTIER WITH NO VERB GETS ONE FINER ASK.
                  * `identifyAndSelect` refuses when no obstacle on the frontier
@@ -32436,6 +32513,10 @@ function solveSegmentUnder({
             // ⛓ STRIKELAPSE D1: the collect's approach is the walk's priced tail (`collectStandWalk`; lapse ON only).
             ...(CONTACT_FIDELITY.strikeIframeLapse && resolved.strategy === 'collect'
                 ? collectStandWalk(run, resolved, stance) : {}),
+            // ⛓ hammer-phase KEYGATE-YIELD (`COLLECT_RESTANCE`, OFF: absent) — a corridorless stance is re-derived
+            // after the ladder clears (`collectReaim`, with STRIKELAPSE's tail re-priced from the new stance).
+            ...(COLLECT_RESTANCE.enabled && stance.corridor === false
+                ? { reaim: collectReaim(run, resolved, economies) } : {}),
         });
         if (collectedInPassing('on the walk to its stance')) continue;
         // ⛓ STRIKELAPSE D1: the approach that follows was PROBED as the walk's tail (`collectStandWalk`), so the gate
