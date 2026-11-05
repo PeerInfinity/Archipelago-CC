@@ -2,7 +2,7 @@
 # scratch (CLEARTAG-CHAIN): captured requests "<id>/<i>" ($REQS) × arms ($@) through chain.mjs, $N at once.
 # An arm is '+'-joined tokens: D0, CC (CLEARTAG_CHAIN), SB CSH OPP LWF TA SD FO PEE FSB (the census's nine), ALL (the nine),
 # and pT (stage L40 persistence tag T, e.g. p0 = the tree burnt, p12 = the south door cleared).
-# Env: ROOT (the tree to import; default this checkout), CAPF, OUT, CAP (40960), N (2).
+# Env: ROOT (the tree to import; default this checkout), CAPF, OUT, CAP (40960), N (2), FRAMES (0; 1 = per-unit frame attribution, ~4x slower).
 T="$(cd "$(dirname "$0")" && pwd)"
 tok() { case "$1" in
   D0) echo "X_ARM=D0";; CC) echo SEEDLING_CLEARTAG_CHAIN=1;; SB) echo SEEDLING_STANCE_BURN=1;;
@@ -17,5 +17,5 @@ for A in "$@"; do E=""; P=""
   for R in $REQS; do id=${R%/*}; i=${R#*/}
     while [ "$(jobs -rp | wc -l)" -ge "${N:-2}" ]; do sleep 2; done
     env $E node "$T/chain.mjs" --root="${ROOT:-/home/user/Archipelago-CC}" --requests="$CAPF" --id=$id --i=$i --cap=${CAP:-40960} \
-      --arm=$A ${P:+--persist=$P} --frames=0 --out="$OUT/rows.jsonl" > "$OUT/$A-$id-$i.log" 2>&1 &
+      --arm=$A ${P:+--persist=$P} --frames=${FRAMES:-0} --out="$OUT/rows.jsonl" > "$OUT/$A-$id-$i.log" 2>&1 &
   done; done; wait; echo ALLDONE

@@ -46,7 +46,9 @@ const frameOf = () => {
         if (!m) continue;
         if (INTEREST.test(m[1])) { inner ??= m[1]; if (/^(exec|resolve|staged|prerequisite)/.test(m[1])) outer = m[1]; }
     }
-    return `${outer ?? '-'}>${inner ?? '-'}`;
+    // CLEARTAG-CHAIN: the frames this slice's bill is read by — the staged hunt and the prerequisite order, anywhere on the stack
+    const tags = ['stagedChaserHunt', 'clearTagPrerequisite'].filter((n) => st.some((l) => l.includes(`at ${n} (`) || l.includes(`.${n} (`)));
+    return `${outer ?? '-'}>${inner ?? '-'}${tags.length ? ` [${tags.join('+')}]` : ''}`;
 };
 const lastRow = () => rows.length ? rows[rows.length - 1] : null;
 const origPush = Array.prototype.push;
@@ -114,6 +116,8 @@ const msg = best.ok ? null : best.message;
 const out = { id: Number(args.id), key, i: Number(args.i), arm: args.arm ?? 'D0', persist: args.persist ?? null, cap: CAP, capturedBudget,
     ok: best.ok, gm, verbs: best.ok ? best.plan.verbs : null, ticks: best.ok ? best.plan.solution.length : null, work: units, ms: Date.now() - t0, passes: passRows,
     digest: createHash('md5').update(best.ok ? JSON.stringify(best.plan.solution.map((k) => [...k])) : msg).digest('hex').slice(0, 12),
+    // CLEARTAG-CHAIN radius: the clear-tag arm's prerequisite arrivals, counted only by the instrumented scratch tree
+    ctHits: globalThis.__ctChainHits ?? null, ctCrossHits: globalThis.__ctCrossHits ?? null,
     head: msg ? msg.slice(0, 4000) : null, marks, bySite, byFrame, rows };
 if (args.out) appendFileSync(args.out, JSON.stringify(out) + '\n');
 console.log(`${args.id}/${args.i} ${args.arm ?? 'D0'} ${out.ok ? `SOLVED ${out.ticks} gm=${JSON.stringify(gm)}` : 'REFUSED'} work=${units} ms=${out.ms} passes=${JSON.stringify(passRows)}`);
