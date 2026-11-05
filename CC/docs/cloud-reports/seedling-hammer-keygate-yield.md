@@ -162,7 +162,7 @@ certified with the approach it drives (⚖ 30(c)).
 | `generate-docs-index --check` | OK (193 docs) |
 | `derive-seedling-tick0 --check` | ALL CHECKS PASSED |
 | `check-seedling-wasm-ship` (headless) | ALL PASS — 415 PASS, 0 FAIL, 0 SKIP (dev server on :8000) |
-| JSUT | run **41961040388** on `476d7f2277`. PENDING at commit time |
+| JSUT | run **41961040388** on `476d7f2277`: **slow battery 372/372 passed**; shards 1 and 3 green; shard 2 had **1 red, mine**: `scripts/procgen/lintGateLabels.test.js` flagged `hammerKeygateYield.test.js:54` (`toHaveLength(1)`, a pinned count). Fixed in the next commit (the row matches the whole one-entry array), and both files are green locally. The re-run on the new head is the planner's to read (`node scripts/procgen/ci-summary.mjs <sha> --wait`). |
 | Train tier | **None run locally, by reasoning.** OFF is byte-identical by construction (no `reaim` is passed), and the train pins run at the defaults. The planner's dispatched train-tier run is the measurement. |
 
 Docs: `seedling-bot.md` gets a paragraph after POCKET-BURN naming `COLLECT_RESTANCE` (OFF) and what it does.
@@ -196,6 +196,7 @@ Docs: `seedling-bot.md` gets a paragraph after POCKET-BURN naming `COLLECT_RESTA
 - Gate commands: `identity-block.sh` and `check-seedling-wasm-ship` need a dev server on :8000. The first run of the
   wasm check SKIPped silently, exit 0, without one. I started `scripts/serve-nocache.py 8000` (none was running).
 - The sweep workflow has no `solver_env` (§7).
+- The bounded set misses a repo-wide test gate: `lintGateLabels.test.js` (a pinned `toHaveLength(n)` in a new row) reds a new test file the way `contentIdentity`/`entityBlocks`/`boxLock` do. Add it to the list of gates to run when a slice adds a test file.
 
 ## 9. Residue and hand-overs
 

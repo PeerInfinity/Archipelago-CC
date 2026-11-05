@@ -51,8 +51,8 @@ describe('hammer-phase KEYGATE-YIELD: COLLECT_RESTANCE', () => {
         expect(COLLECT_RESTANCE_COUNTS.restances).toEqual([]);
         const on = withCollectRestance(true, () => answer(f));
         expect(on.verdict).toBe('SOLVED');
-        expect(COLLECT_RESTANCE_COUNTS.restances).toHaveLength(1);
-        expect(COLLECT_RESTANCE_COUNTS.restances[0]).toMatchObject({ attempt: 1, from: { x: 24, y: 104 }, to: { x: 56, y: 104 } });
+        // one re-aim exactly: the array matched whole (a second entry would not match)
+        expect(COLLECT_RESTANCE_COUNTS.restances).toMatchObject([{ attempt: 1, from: { x: 24, y: 104 }, to: { x: 56, y: 104 } }]);
         resetCollectRestanceCounts();
     }, 120000);
 
