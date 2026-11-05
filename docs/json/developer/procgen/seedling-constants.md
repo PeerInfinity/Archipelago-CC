@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**84 files, 7068 literals.** Class × position:
+**84 files, 7070 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 7 | 1718 | 610 | 2335 |
-| rule | 15 | 1197 | 588 | 1800 |
+| rule | 15 | 1197 | 589 | 1801 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 15 | 404 | 2438 | 2857 |
+| structural | 15 | 404 | 2439 | 2858 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 37 | 3381 | 3650 | 7068 |
+| total | 37 | 3381 | 3652 | 7070 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1811 | 0 | 97 | 123 | 4 | 300 | 2335 |
-| rule | 663 | 143 | 244 | 22 | 619 | 109 | 1800 |
+| rule | 663 | 143 | 244 | 22 | 620 | 109 | 1801 |
 
 Rows whose note starts `REVIEW:`: **116**.
 
@@ -464,7 +464,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 45 derived or aliased top-level constants
+### The 44 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -478,7 +478,6 @@ None: a name declared in several files now reads one profile key (the table belo
 | `SLASH_REACH_DASH` | seedlingDemo/presses.js | `SLASH_REACH * SLASH_SCALE_DASH.x` |
 | `FIRE_PRESS_CADENCE` | seedlingDemo/fireVerb.js | `FIRE_WINDOW.endTick + 1` |
 | `FIRE_RADIUS` | seedlingDemo/fireVerb.js | `FIRE_SPRITE.w / 2` |
-| `HIT_TO_GONE_TICKS_GAME` | seedlingDemo/breakableRocks.js | `HIT_TO_GONE_TICKS + ROCK_GONE_FENCEPOST_TICKS` |
 | `WAIT_AFTER_PRESS_TICKS` | seedlingDemo/burnableTree.js | `HIT_TO_GONE_TICKS + 12` |
 | `TILE` | seedlingDemo/spinner.js | `TILE_SIZE` |
 | `TILE` | seedlingDemo/crusher.js | `TILE_SIZE` |

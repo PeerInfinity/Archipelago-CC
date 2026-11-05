@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1249,
         "indexHeadings": 2,
-        "lines": 34829,
+        "lines": 34832,
         "pages": 4,
-        "words": 509025
+        "words": 509087
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -375,7 +375,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
             "headings": 752,
-            "lines": 27423,
+            "lines": 27427,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -383,17 +383,17 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 304454
+            "words": 304525
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
             "file": "seedling-constants.md",
             "h1": "Seedling Constants Census",
             "headings": 16,
-            "lines": 734,
+            "lines": 733,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-constants.md",
-            "words": 10891
+            "words": 10882
         },
         {
             "description": "The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate.",

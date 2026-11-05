@@ -13,24 +13,24 @@
  * (x, y, vx, vy, hits, hits_timer): the knockback itself is exact. The recovery re-plan then refuses on
  * `spinner@192,160`.
  *
- * THE RULE (two fenceposts, both the kind SLOTS D4a found for the burnable tree):
- *   1. THE ANIMATION'S FIRST UPDATE IS THE FRAME AFTER THE HIT. `BreakableRock.hit` → `play("break")` runs inside
- *      `Player.update` (`slash()` → `genericHit`, `Player.as:892-928, 1091-1093`), and `World.update` runs each
- *      entity's update THEN its graphic's (`World.as:47-61`) down a list `addUpdate` PREPENDS to — `loadlevel` adds
- *      the player before the level's entities, so a rock's graphic was updated BEFORE the player's hit on that frame
- *      and its first `Spritemap.update` is the next one. `animCallbackTick` (4 frames at 20, `FP.elapsed` 0.0333) is
- *      7 updates, so `endAnim` → `FP.world.remove(this)` runs on the frame hit + 7.
- *   2. THE REMOVAL LANDS AT THAT FRAME'S END. `World.remove` only queues; `Engine.update` runs `updateLists` after
- *      `World.update` (`Engine.as:69-78`), so the callback frame's own move is still blocked and the cell is free
- *      from the frame after.
- * ⇒ the player first moves into the cell on the frame ENTERING at `ticksCompleted` = hit + 8, i.e. the observation
- * hit + 9. `HIT_TO_GONE_TICKS` (7) is the model's OFF arithmetic under `brokenRockIds(…, ticksCompleted + 1)`, which
- * frees it on observation hit + 7: two early. ON, `hitRock` records `goneAt = hit + HIT_TO_GONE_TICKS_GAME` (9).
+ * THE RULE. `goneAt` (`fired + HIT_TO_GONE_TICKS`, 7) is the update that runs `endAnim`, and that is right: CLEARTAG's
+ * cut witnesses pin `endAnim`'s persistence write there on the game. The rock's CELL stays solid two observations
+ * longer than the model said, for two fenceposts on the query side (`breakableRocks.ROCK_GONE_FENCEPOST_TICKS`):
+ *   1. `brokenRockIds(…, ticksCompleted + 1)` — the bridges' observation convention — calls the rock gone on the update
+ *      entering at `goneAt − 1`, the frame BEFORE `endAnim`. (SLOTS D4a found the same off-by-one for the burnable tree
+ *      and moved its query to `ticksCompleted`.)
+ *   2. `endAnim`'s `FP.world.remove(this)` only queues (`World.as:118-124`) until that frame's `updateLists`
+ *      (`Engine.as:69-78`), so `endAnim`'s own frame still collides; the cell is free from the update entering at
+ *      `goneAt + 1`.
+ * ⇒ the move first enters the cell on observation `goneAt + 2` = `fired + 9`; OFF the model let it in on `goneAt`.
+ * ON, `brokenRockIds` lags the solid by `ROCK_GONE_FENCEPOST_TICKS` (`lag`); `goneAt`, the write and every reader of
+ * `rocksBroken` are unchanged.
  *
  * WITNESSES (p4g, headless, `probe-seedling-rock-gone.mjs --record`, `fixtures/rockgone-witness/`):
  *   - `rockgone-l40-plain`: L40, entity (200,136), `noDamage`: hold `left` (pinned on `@176,128` at x 194.5),
  *     `primary` on input 10. The game's `Bot.slashTests` shows the swing's first test landing on observation 12
- *     (the model's `hitTick` 11), and x first leaves 194.5 on observation 20; OFF the model leaves it on 18.
+ *     (the model's `hitTick` + 1; `goneAt` 18), and x first leaves 194.5 on observation 20 (`goneAt` + 2); OFF the
+ *     model leaves it on 18.
  *   - `rockgone-l40-dash`: the same stance from 16 px further east; a plain swing on input 0 (facing down, it
  *     reaches nothing), walk left onto the rock, the dash press on input 12 (`slashTimer` > 0: `Player.as:784-791`).
  *   - `rockgone-leg376-play`: the leg's own play, captured by `probe-seedling-contact-divergence.mjs --capture`
@@ -38,8 +38,7 @@
  *     and the game's player rows on all 1259 sampled ticks. ON = the game at 0 px on every tick; OFF first differs at
  *     t1256, player.x.
  *
- * ⛔ Not changed: the persistence write (`rockFlags`, stamped at the hit tick), which is a separate approximation of
- * `endAnim`'s `Game.setPersistence` and moves no position.
+ * ⛔ Not changed: `goneAt` (the write tick CLEARTAG witnesses) and `rockFlags` (the ledger row, stamped at the hit).
  */
 
 import { dirname, join } from 'node:path';

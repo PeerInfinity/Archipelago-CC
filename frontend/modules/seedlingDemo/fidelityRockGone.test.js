@@ -1,8 +1,8 @@
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY KNOCKBACK376 (wave 37c) — sweep leg 376 (L40 Totem Part 64,144 from L42): the game does not
  * follow the planned hit's knockback past `breakablerock@176,128`. Measured (W0): the knockback is exact; the rock's
- * cell opened two ticks early in the model. Key `rockGoneFencepost` (D1, OFF): `hitRock` records the game's
- * fired-to-gone count (`HIT_TO_GONE_TICKS_GAME`, 9). The witnesses are recorded on the game
+ * cell opened two observations early in the model. Key `rockGoneFencepost` (D1, OFF): `brokenRockIds` lags the solid
+ * past `goneAt` (`endAnim`'s update, unchanged) by `ROCK_GONE_FENCEPOST_TICKS` (2). The witnesses are recorded on the game
  * (`fixtures/rockgone-witness/`, p4g headless, 0 px): two short tapes (`probe-seedling-rock-gone.mjs --record`) and
  * the leg's own captured play (`probe-seedling-contact-divergence.mjs --capture`).
  */
@@ -13,7 +13,7 @@ import { gunzipSync } from 'node:zlib';
 
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import {
-    HIT_TO_GONE_TICKS, HIT_TO_GONE_TICKS_GAME, ROCK_GONE_FENCEPOST_TICKS, brokenRockIds, createRockState, hitRock,
+    HIT_TO_GONE_TICKS, ROCK_GONE_FENCEPOST_TICKS, brokenRockIds, createRockState, hitRock,
 } from './breakableRocks.js';
 import {
     ROCKGONE_TAPES, ROCKGONE_WITNESS_DIR, compareRockGoneWitness, firstMoveAfter, firstTestAfter, replayLegWitness,
@@ -40,21 +40,19 @@ describe('KNOCKBACK376 — the switch', () => {
     });
 });
 
-describe('KNOCKBACK376 D1 — the count', () => {
-    it('the game\'s count is the animation\'s 7 plus the two fenceposts', () => {
+describe('KNOCKBACK376 D1 — the lag', () => {
+    it('`goneAt` keeps the animation\'s 7; the solid outlives it by the two fenceposts', () => {
         expect(HIT_TO_GONE_TICKS).toBe(7);
         expect(ROCK_GONE_FENCEPOST_TICKS).toBe(2);
-        expect(HIT_TO_GONE_TICKS_GAME).toBe(9);
     });
-    it('`hitRock` takes the count as an option; without it, the OFF count', () => {
+    it('`brokenRockIds` takes the lag as an option; without it, the OFF arithmetic', () => {
         const rock = { rockId: 'breakablerock@176,128', persistTag: 22, rockType: 0, x: 176, y: 128 };
-        expect(hitRock(createRockState(), rock, 11).goneAt).toBe(18);
         const st = createRockState();
-        expect(hitRock(st, rock, 11, { hitToGone: HIT_TO_GONE_TICKS_GAME }).goneAt).toBe(20);
-        expect(brokenRockIds(st, 19).size).toBe(0);
-        expect(brokenRockIds(st, 20).has(rock.rockId)).toBe(true);
-        // A second swing does not restart the animation, under either count.
-        expect(hitRock(st, rock, 13, { hitToGone: HIT_TO_GONE_TICKS_GAME })).toMatchObject({ started: false, goneAt: 20 });
+        expect(hitRock(st, rock, 11).goneAt).toBe(18);
+        expect(brokenRockIds(st, 17).size).toBe(0);
+        expect(brokenRockIds(st, 18).has(rock.rockId)).toBe(true);
+        expect(brokenRockIds(st, 19, { lag: ROCK_GONE_FENCEPOST_TICKS }).size).toBe(0);
+        expect(brokenRockIds(st, 20, { lag: ROCK_GONE_FENCEPOST_TICKS }).has(rock.rockId)).toBe(true);
     });
 });
 
@@ -73,10 +71,11 @@ describe('KNOCKBACK376 D1 — the short game witnesses (p4g, 0 px)', () => {
             const gameOpen = firstMoveAfter(w.game, last + 1);
             expect(firstMoveAfter(on.samples.filter(Boolean), last + 1)).toBe(gameOpen);
             const rock = on.samples.at(-1).rocks.find((r) => r.id === 'breakablerock@176,128');
-            // The game's swing counter shows the first test on the observation after the model's `hitTick`; the cell
-            // opens on the observation `hitTick + 9`.
+            // The game's swing counter shows the first test on the observation after the model's `hitTick`; `goneAt`
+            // is unchanged ON (`hitTick + 7`), and the cell opens on `goneAt + 2`.
             expect(firstTestAfter(w.game, last)).toBe(rock.hitTick + 1);
-            expect(gameOpen).toBe(rock.hitTick + HIT_TO_GONE_TICKS_GAME);
+            expect(rock.goneAt).toBe(rock.hitTick + HIT_TO_GONE_TICKS);
+            expect(gameOpen).toBe(rock.goneAt + ROCK_GONE_FENCEPOST_TICKS);
         });
         it(`${name}: OFF, the model frees the cell two observations before the game`, async () => {
             const w = recorded(name);

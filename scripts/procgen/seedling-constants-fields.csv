@@ -1208,7 +1208,8 @@ frontend/modules/seedlingDemo/breakableRocks.js|outOfBandFlagFor|outOfBandFlagFo
 frontend/modules/seedlingDemo/breakableRocks.js|rockBreaksUnder|rockBreaksUnder,rule,sentinel,,rock type tiers vs ghost sword
 frontend/modules/seedlingDemo/breakableRocks.js|hitRock|hitRock,rule,sentinel,,tag -1 default / rockType 0 default
 frontend/modules/seedlingDemo/breakableRocks.js|hitRock|h8fb253f4|0|0,structural,,,firedTick validation
-frontend/modules/seedlingDemo/breakableRocks.js|(module)|ha636728c|2|0,rule,count,,KNOCKBACK376 ROCK_GONE_FENCEPOST_TICKS: rock graphic updated before the player (+1) and removal at the callback frame's end (+1); measured on p4g
+frontend/modules/seedlingDemo/breakableRocks.js|(module)|ha636728c|2|0,rule,count,,KNOCKBACK376 ROCK_GONE_FENCEPOST_TICKS: the query's +1 frees the cell an update before endAnim (+1) and endAnim's remove lands at its update's end (+1); measured on p4g
+frontend/modules/seedlingDemo/breakableRocks.js|brokenRockIds|ha6daaa39|0|0,rule,sentinel,,KNOCKBACK376 lag default 0 = the OFF arithmetic
 frontend/modules/seedlingDemo/chest.js|CHEST|(module)|60,rule,magnitude,Chest.as:openTimerMax,REVIEW: fade after desolidify; removal after it may be presentation only
 frontend/modules/seedlingDemo/chest.js|CHEST|(module)|2,physics,magnitude,Chest.as:m,probe line inset
 frontend/modules/seedlingDemo/chest.js|CHEST|(module)|8,physics,magnitude,,setHitbox origin / half-tile offset

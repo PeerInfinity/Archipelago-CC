@@ -1869,16 +1869,14 @@ export const CONTACT_FIDELITY = {
      */
     ceremonyWalkHandoff: true,
     /**
-     * fidelity KNOCKBACK376 D1 (wave 37c) — A BROKEN `BreakableRock` STOPS BEING SOLID TWO TICKS LATER THAN
-     * `HIT_TO_GONE_TICKS` SAID, MEASURED ON THE GAME. `hit()` → `play("break")` runs inside `Player.update` (the slash's
-     * `genericHit`, `Player.as:1091-1093`), and `World.update` runs each entity's graphic right after its update down a
-     * list `addUpdate` PREPENDS to (`World.as:47-61`; the player is added before the level's entities), so the rock's
-     * first `Spritemap.update` is the frame AFTER the hit; its 7th (`animCallbackTick`) calls `endAnim` →
-     * `FP.world.remove(this)`, which only queues until that frame's `updateLists` (`Engine.as:69-78`). The game frees the
-     * cell for the move on observation hit + 9; the model's `goneAt` (hit + 7 under `brokenRockIds(…, ticksCompleted +
-     * 1)`) freed it on hit + 7. Leg 376's knocked-back player went through `breakablerock@176,128`'s cell at t1256; the
-     * game held it until t1258 (`fidelityRockGone.js`). ON: `hitRock` records `goneAt = hit + HIT_TO_GONE_TICKS_GAME` (9).
-     * OFF: byte-identical. The persistence write (`rockFlags`, at the hit tick) is not changed.
+     * fidelity KNOCKBACK376 D1 (wave 37c) — A BROKEN `BreakableRock`'S CELL STAYS SOLID TWO OBSERVATIONS PAST
+     * `goneAt`, MEASURED ON THE GAME. `goneAt` is `endAnim`'s update (CLEARTAG witnesses the write there), but the rocks'
+     * query reads `ticksCompleted + 1` (the bridges' convention: it frees the cell one update BEFORE `endAnim`; SLOTS
+     * D4a fixed the same for the tree) and `endAnim`'s `FP.world.remove` only lands at its update's end
+     * (`World.as:118-124`, `Engine.as:69-78`): the game first lets the move into the cell on observation `goneAt + 2`.
+     * Leg 376's knocked-back player went through `breakablerock@176,128`'s cell at t1256; the game held it until t1258
+     * (`fidelityRockGone.js`: p4g witnesses at 0 px). ON: `brokenRockIds` lags the solid by `ROCK_GONE_FENCEPOST_TICKS`
+     * (2); `goneAt`, the write and `rocksBroken` are unchanged. OFF: byte-identical.
      * `SEEDLING_ROCK_GONE_FENCEPOST=0|1`.
      */
     rockGoneFencepost: false,
