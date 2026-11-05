@@ -1,6 +1,6 @@
 # cloud report — rules-sharedbinding-witnesses
 
-Branch `claude/rules-sharedbinding-witnesses-er71b3`. `git merge-base HEAD origin/main` = **0885fec4b3642634e011cfe2e090a301c8c45d0e** (R-A3).
+Branch `claude/rules-sharedbinding-witnesses-er71b3`. ⚠ **The LAST TWO commits are report-only** (drop both before landing): the first report commit named a guard's file name that contains the forbidden docs-tree string, so it failed that guard; it was already pushed, and amending would have needed a force-push, so the fix is a second report-only commit. `git merge-base HEAD origin/main` = **0885fec4b3642634e011cfe2e090a301c8c45d0e** (R-A3).
 Planner: `seedling-rules-planning-5`. ⚖ user 2026-11-04 "(c) after R-A3 lands"; rules-4's R-A3 ruling (c).
 
 ## Verdict
@@ -149,12 +149,12 @@ Options for the ruling:
 - **Bounded vitest: 95 files, 1699 passed.** The files:
   - every test I touched;
   - every default-tier test that reads the playthrough atlas, the maze preset, AP_1, the partition, the table or the derived-rules modules;
-  - `boxLock.test.js`, `noNewDocsReferences.test.js`, `checkProcgenHelp.test.js`, `seedlingConstantsCensus.test.js`, `derivedRuleTableFresh.test.js`, `derivedRulesProbe.test.js`, `fidelityClearTag.test.js`, `fidelityCrossRoom.test.js`, `fidelityLightPole.test.js`.
+  - `boxLock.test.js`, the no-gitignored-docs-tree guard (`scripts/test/no*References.test.js`), `checkProcgenHelp.test.js`, `seedlingConstantsCensus.test.js`, `derivedRuleTableFresh.test.js`, `derivedRulesProbe.test.js`, `fidelityClearTag.test.js`, `fidelityCrossRoom.test.js`, `fidelityLightPole.test.js`.
 - `census-seedling-constants.mjs --write`: no change. Its census test passes.
 - `generate-procgen-reference.mjs`, then `--check`: **ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH** (525 instruments after the new script).
 - Producer `--check`, all exit 0: `make-seedling-playthrough-rules.mjs`, `make-seedling-subregion-partition.mjs`, `make-seedling-playthrough-maze.mjs` and `plan-seedling-binding-witness.mjs`.
 - Dirt: Generate left `preset_files.json` and `frontend/presets/apquest/` untouched. No pytest was run.
-- Not touched: `worlds/seedling/`, `vendor/seedling`, `.github/`, any submodule pointer, and any `NewDocs` string.
+- Not touched: `worlds/seedling/`, `vendor/seedling`, `.github/`, any submodule pointer, and the forbidden docs-tree string (none in any tracked file: its guard passes).
 
 ## Notes
 
