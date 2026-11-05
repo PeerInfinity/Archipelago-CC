@@ -1840,7 +1840,7 @@ export const CONTACT_FIDELITY = {
      * thrust could land on that first frozen frame — `owed` untouched, as the talk guard. Needs `frozenPressForecast`
      * (it rides `strikeDecideOpts`). OFF: byte-identical (`pickupGap` absent). `SEEDLING_CEREMONY_PRESS_FORECAST=0|1`.
      */
-    ceremonyPressForecast: false,
+    ceremonyPressForecast: true,
     /**
      * fidelity CEREMONY126 D2 (wave 37b) — A COLLECT GOAL'S STANCE WALK ENDS WHEN ITS PICKUP'S CEREMONY STARTS ON IT.
      * The walk to a collect stance can cross the pickup's own rect (L64's Ghostspear: rect [74,86)×[30,34), stance =
@@ -1852,7 +1852,7 @@ export const CONTACT_FIDELITY = {
      * verb (`execCollect` → `runCollect`, whose approach loop already exits on `inCeremony`) pages the ceremony with
      * `ceremonyCadenceStep`. OFF: byte-identical. `SEEDLING_CEREMONY_WALK_HANDOFF=0|1`.
      */
-    ceremonyWalkHandoff: false,
+    ceremonyWalkHandoff: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
