@@ -19086,6 +19086,38 @@ function execKillByPress(run, perTick, resolved, ctx) {
     }
 }
 
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE OPP-FREEZE — THE PRESS KILL'S OPPORTUNISTIC STRIKE ASKS THE FROZEN-TICK FORECAST
+ * (`OPP_FREEZE_FORECAST`, OFF; ⚖ the user queued the slice on 2026-11-04 from fidelity FROZENPRESS's hand-over, its
+ * report § 7: *"OPP's `opp.decide` in `execKillByPressOnce` is not wired to `strikeDecideOpts`"*).
+ *
+ * Fidelity's `frozenPressForecast` hands every run-side `strike.decide` the run's `freezeForecast`
+ * (`strikePolicy.strikeDecideOpts`), so on a tick whose input the game refuses (the player frozen by an ice-turret
+ * blast, `Player.as:1521`) the policy takes no aim and no press. The press kill's OPP call built its own `{ slash }`
+ * and never asked it, so an owed opportunistic press on a frozen tick would be LOST (`levelRun`'s `FROZEN_TICK_PRESS`).
+ * ON, that call asks `strikeDecideOpts(run)`: `slash` exactly as before, plus `freeze` while fidelity's key is ON
+ * (OFF there, `strikeDecideOpts` is `{ slash }` again — this switch never adds a forecast fidelity's key withholds).
+ * MEASURED (OPP-FREEZE W0, `CC/docs/cloud-reports/seedling-hammer-opp-freeze.md`): with `OPPORTUNISTIC_STRIKE` ON,
+ * 6577 asks inside the press kill over the route survey, leg 860 and the committed sweep requests, none on a refused
+ * tick — ON is identical on every measured solve; the gap is closed by a constructed row.
+ *
+ * `SEEDLING_OPP_FREEZE_FORECAST=1` turns it on in a node process (the page's worker has no `process`), and
+ * `withOppFreezeForecast(enabled, fn)` is for a test or a witness. OFF, the call is byte-identical. Read only where
+ * `OPPORTUNISTIC_STRIKE` is ON (the call's own guard), so OPP OFF never reads it.
+ */
+export const OPP_FREEZE_FORECAST = { enabled: globalThis.process?.env?.SEEDLING_OPP_FREEZE_FORECAST === '1' };
+export const OPP_FREEZE_FORECAST_DEFAULT = false;
+
+/** Run `fn` with `OPP_FREEZE_FORECAST` set to `enabled`, restoring the previous value. */
+export function withOppFreezeForecast(enabled, fn) {
+    return withSwitch(OPP_FREEZE_FORECAST, enabled, fn);
+}
+
+/** The press kill's OPP `decide` options: OFF the `{ slash }` it always built; ON `strikeDecideOpts(run)`. */
+export function oppDecideOpts(run) {
+    return OPP_FREEZE_FORECAST.enabled ? strikeDecideOpts(run) : { slash: run.progress('slashInfo') };
+}
+
 function execKillByPressOnce(run, perTick, resolved, ctx) {
     /**
      * ⛓ R9 SLICE P2 — ⚖ 47's PERMISSION, off `ctx`, defaulted to the
@@ -19612,7 +19644,8 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 || (fightKeys === null && following === null && !aimed && !held.has('primary')))) {
                 OPPORTUNISTIC_STRIKE_COUNTS.asked += 1;
                 const offered = oppOffer(opp, run.state, run.entities('strikeBodies') ?? [], run.ticksCompleted);
-                const d = opp.decide(run.state, offered, run.ticksCompleted, held, { slash: run.progress('slashInfo') });
+                // ⛓ hammer-phase OPP-FREEZE (`OPP_FREEZE_FORECAST`, OFF ⇒ `{ slash }`): ON, the frozen-tick forecast too
+                const d = opp.decide(run.state, offered, run.ticksCompleted, held, oppDecideOpts(run));
                 if (d.decision !== STRIKE_NONE) {
                     held = d.held;
                     OPPORTUNISTIC_STRIKE_TRACE.sink?.({ kind: 'drive', t: run.ticksCompleted, decision: d.decision,
