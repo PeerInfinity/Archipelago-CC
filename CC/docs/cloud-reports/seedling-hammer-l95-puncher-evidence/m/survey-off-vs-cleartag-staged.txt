@@ -1,0 +1,4 @@
+route survey --through=end at 26ed405d3f (+ this slice's untracked test), OFF vs SEEDLING_CLEARTAG_STAND=1 SEEDLING_CHASER_STAGED_HUNT=1: 236 / 236 steps
+OFF {'SOLVED': 202, 'REFUSED': 34}
+ON  {'SOLVED': 202, 'REFUSED': 34}
+movers (rows differing in any field but timing): 0

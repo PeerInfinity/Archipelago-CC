@@ -1,0 +1,14 @@
+{"id": 105, "key": "level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 106, "key": "level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 116, "key": "level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 117, "key": "level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 127, "key": "level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 128, "key": "level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 138, "key": "level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 139, "key": "level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 149, "key": "level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 150, "key": "level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 160, "key": "level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 161, "key": "level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 171, "key": "level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
+{"id": 172, "key": "level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "cleartag+staged"}
