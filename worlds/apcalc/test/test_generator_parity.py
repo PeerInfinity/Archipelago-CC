@@ -15,7 +15,7 @@ applied after generation, `worlds/apcalc/__init__.py`), the JS panel's wider ran
 (numSpheres 2-20, opsPerSphere up to 5, trashPerSphere up to 10, maxBranches from 1),
 the RNG itself (the AP world uses random.Random; MT vs mulberry32 is the one intended
 difference), and the two exporters (`export.py` vs `exportRulesJson`), which differ by
-design (see NewDocs/plans/server-data/apcalc-generators-comparison.md section 1).
+design (the server-data-on-connect arc compared the two generators section by section).
 
 JS numbers are doubles: past 2^53 the JS puzzle stops being exact and the two diverge.
 The configs below stay far under it (measured, 2026-11-04: the largest value is about
