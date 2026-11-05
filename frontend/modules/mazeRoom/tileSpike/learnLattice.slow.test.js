@@ -57,7 +57,7 @@ describe('the compact cache through the derive', () => {
     it('L12 as ONE level world: compact ≡ full at sampled points of every arrival (lazy plans byte-equal)', () => {
         const doc = JSON.parse(buildPlaythroughMaze({ levels: ['level_12', 'level_83'], embedSphereLog: false }).text);
         const L12 = deserializeMazeWorld(doc.preset_sidecars['1'].level_12__r0c19.playable_payload);
-        expect(L12.sharedWorld.regions).toHaveLength(6);
+        expect([...L12.sharedWorld.regions].sort()).toEqual(Object.keys(doc.preset_sidecars['1']).filter((k) => k.startsWith('level_12__')).sort());
         expect(walkFor(latticeAxis(regionItems(L12), regionLevels(L12)))).toBe('learn');
         expect(check(L12, 12)).toBeGreaterThan(0);
     }, 300_000);

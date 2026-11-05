@@ -202,11 +202,11 @@ describe('the HYBRID: rank walk ≤ RANK_WALK_MAX_POINTS < learning walk ≤ LEV
 });
 
 describe('the pass over a shared world takes the same switch', () => {
-    it('deriveLevelWorldLogic: a forced learn ≡ rank on the preset\'s smallest shared world with ≥ 2 items', () => {
+    it('deriveLevelWorldLogic: a forced learn ≡ rank on the preset\'s smallest shared world over a multi-item axis', () => {
         const axisOf = (w) => latticeAxis(regionItems(w), regionLevels(w));
         const [name] = Object.entries(RULES.preset_sidecars['1']).map(([n, sc]) => [n, sc.playable_payload])
             .filter(([, p]) => p?.shared_world).map(([n, p]) => [n, deserializeMazeWorld(p)])
-            .filter(([, w]) => regionItems(w).length >= 2).sort(([, a], [, b]) => latticeSize(axisOf(a)) - latticeSize(axisOf(b)))[0];
+            .filter(([, w]) => regionItems(w).length > 1).sort(([, a], [, b]) => latticeSize(axisOf(a)) - latticeSize(axisOf(b)))[0];
         const sw = deserializeMazeWorld(RULES.preset_sidecars['1'][name].playable_payload);
         const rank = strip(deriveLevelWorldLogic(sw, HELPERS, { native: true, walk: 'rank' }));
         expect(rank.pairs.some((p) => p.minimal.length > 0)).toBe(true);
