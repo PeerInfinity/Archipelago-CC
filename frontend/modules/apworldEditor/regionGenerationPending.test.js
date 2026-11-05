@@ -235,4 +235,17 @@ describe('the worker flags it; the page finishes it', () => {
         expect(cr).toMatchObject({ ok: false, cancelled: true, onPage: true });
         expect(regenerationAnswer(args, cr, 5).text).toContain('generation cancelled — nothing was recorded');
     });
+
+    it('⛓ a REJECTED pending promise is the page run\'s named failure answer, not an unhandled rejection', async () => {
+        // Cloudberry's ensure already turns a generator rejection into a refusal; this pins the
+        // generic path for a substrate whose yielded `await` itself rejects.
+        const args = { region: 'r', substrate: 's', seed: 1 };
+        const collect = (fn) => ({ value: fn(), pending: [Promise.reject(new Error('SubstrateGenFailed: the worker died'))] });
+        const res = await runRegenerateOnPage(args, {
+            timeoutMs: 60000, regenerate: () => ({ ok: false, threw: 'generating' }), collect,
+        }).promise;
+        expect(res).toMatchObject({ ok: false, onPage: true, threw: 'SubstrateGenFailed: the worker died' });
+        expect(res.timedOut).toBeUndefined();
+        expect(regenerationAnswer(args, res, 60).text).toContain('SubstrateGenFailed: the worker died');
+    });
 });
