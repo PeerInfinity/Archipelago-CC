@@ -1,6 +1,6 @@
 /**
  * The compact reach cache's equality check (session tile-l12-one-world), shared by `compactReach.test.js` (default tier) and
- * `learnLattice.slow.test.js` (L12 as one level world). Test-only.
+ * `learnLattice.train.test.js` (L12 as one level world). Test-only.
  */
 import { expect } from 'vitest';
 import { nativeReachUnder, compactReach, enteredAt } from './deriveLevelWorldLogic.js';

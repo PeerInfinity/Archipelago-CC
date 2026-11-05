@@ -1,5 +1,12 @@
 /**
- * SLOW TIER of the learning walk and the compact reach cache (session tile-l12-one-world; measured by tile-l12-level-world):
+ * TRAIN TIER of the learning walk and the compact reach cache (session tile-l12-one-world; measured by tile-l12-level-world;
+ * ⚖ design-3 2026-11-04: moved off the push slow tier, +55 s there). It runs on js-land/** train pushes and on dispatch
+ * (`gh workflow run unittests_frontend.yml … -f train=true`); `npm run test:unit:train -- <this file>`.
+ * ⛓ WHERE THE PUSH-PATH COVERAGE LIVES: the learner's production path is L12 as one level world, certified on every push by
+ * `deriveLevelWorldLogic.slow.test.js` (native every region, L12's rows included); the learner ≡ rank gadget rows, the mutants,
+ * the monotone census, the switch / bound pins and the preset census are the default tier's (`learnLattice.test.js`), and the
+ * compact cache's direct lazy-plan pin with its mutant is `compactReach.test.js`. The rows below re-prove the equivalence on
+ * committed worlds the RANK walk takes in production (L40 laid, a rope and a block world), plus L12's compact sample:
  *   - learning walk ≡ rank walk, byte for byte (minimal sets, witness plans + cells, `unreachable`), on L40 laid (the pass + its 5
  *     entries, one shared cache), a rope world and a block world — the committed preset's;
  *   - the compact cache through the derive: L40 laid, compact on ≡ off, with lazy re-searches really taken;

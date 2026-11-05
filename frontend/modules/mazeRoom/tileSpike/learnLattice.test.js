@@ -7,7 +7,7 @@
  *   - the static monotone census (`assertMonotoneWorld`) refuses BY NAME, and the learner itself does NOT detect a violation;
  *   - the HYBRID's switch (`walkFor`, `RANK_WALK_MAX_POINTS`) and the refusal bound (`LEVEL_WORLD_MAX_POINTS`), and today's
  *     census of the preset's world axes against them.
- * L40 laid, a rope world and a block world (learner ≡ rank) are the slow tier's (`learnLattice.slow.test.js`).
+ * L40 laid, a rope world and a block world (learner ≡ rank) are the train tier's (`learnLattice.train.test.js`).
  */
 import { describe, it, expect, afterEach } from 'vitest';
 import { deserializeMazeWorld } from '../mazeRoomEngine.js';
