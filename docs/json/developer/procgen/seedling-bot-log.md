@@ -27381,5 +27381,6 @@ requests replayed in node and a page sweep:
 - Design (2), a forced-hit rung pricing the hold, does not help: with `coveredGoalRefusal` off (diagnosis only) DETOUR
   spends the budget, and at 6,000 units the proof is asked from the walk's start (24,360), where nothing is forced.
 
-Rows: `hammerL95Puncher.test.js` (fixture `fixtures/hammer-l95-puncher/leg160-l95-l12-request.json.gz`). The report is
+Rows: `hammerL95Puncher.test.js` (leg 160 on the dashless pass, the pass the plan comes from) and
+`hammerL95Puncher.train.test.js` (the worker's two passes, 28 s), fixture `fixtures/hammer-l95-puncher/leg160-l95-l12-request.json.gz`. The report is
 `CC/docs/cloud-reports/seedling-hammer-l95-puncher.md`.
