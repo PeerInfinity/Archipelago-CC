@@ -554,6 +554,62 @@
       },
       "additionalProperties": false
     },
+    "entrance_randomization": {
+      "type": "object",
+      "description": "Each slot's entrance randomization, keyed by player slot ID (string) — the shape `loop_costs` and `discovery_mode` use (ENTRANCE RANDOMIZATION E2, per player from day one: a block at the document level is refused by name, stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`). A slot WITHOUT an entry is not entrance-randomized. Its exits' own facts ride on each exit (`$defs/exitEntranceRandomization`). Cross-field constraints are refused by name by frontend/modules/procgenCore/entranceRandomizationCheck.js (every placed exit is an exit with `er.shuffle: true`; every group in `target_group_lookup` is one some exit declares). Producer: none yet (E4, the procgen ER mode). Consumers keep it: stateManager/core/initialization.js (the loaded slot's entry, also in the worker's static data as `entrance_randomization`), the APWorld Editor, and the worldgen round trip (`_worldgen_entrance_randomization.json`, re-injected under the exporting player by exporter/games/base/handler.py).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "One slot's shuffle: how it was made and what moved.",
+          "properties": {
+            "algorithm": {
+              "enum": ["ger"],
+              "description": "The shuffle algorithm: `ger`, Archipelago's generic ER (entrance_rando.py) as ported to JS."
+            },
+            "coupled": {
+              "type": "boolean",
+              "description": "GER's `coupled`: when true, placing an exit also places its reverse the other way. `false` is schema-legal (GER allows it)."
+            },
+            "target_group_lookup": {
+              "type": "object",
+              "description": "GER's `target_group_lookup`: a group → the groups its exits may be connected to. Every group named (key or value) is a group some exit's `er.group` declares.",
+              "additionalProperties": {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1 },
+                "uniqueItems": true
+              }
+            },
+            "seed": {
+              "type": "integer",
+              "description": "The shuffle's own seed."
+            },
+            "source": {
+              "type": "object",
+              "description": "What the shuffle ran over (e.g. the atlas id of the playthrough atlas).",
+              "properties": {
+                "atlas_id": { "type": "string", "minLength": 1 }
+              }
+            },
+            "placements": {
+              "type": "array",
+              "description": "The spoiler: what moved, one row per placed exit, in placement order. `exit` names an exit of this slot with `er.shuffle: true`, at most once.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "exit": { "type": "string", "minLength": 1 },
+                  "target": { "type": "string", "minLength": 1 }
+                },
+                "required": ["exit", "target"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["algorithm", "coupled", "target_group_lookup", "placements"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
     "region_atlas": {
       "type": "object",
       "description": "Which region atlas each slot's graph was compiled from, keyed by player slot ID (string) — the shape `procgen_metadata`, `loop_costs` and `preset_sidecars` use (rules F2, 2026-10-05; a block at the document level is refused by name: stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`, and `scripts/procgen/migrate-per-player-blocks.mjs` moves an old document). Producers: frontend/modules/procgenPipeline/regionAtlasCompiler.js `compileRegionAtlas` (via `regionAtlasReference`), the procgen pipeline's `buildRulesJson` and the APWorld Editor's initialise op (a substrate's `rulesJsonBlocks`, landed under the slot by rulesDocOps.js), and the hub's player-scope `set-key region_atlas` (the marking tool's Save, documentKeys.js `regionAtlasSetKeyOp`).",
@@ -886,9 +942,36 @@
         "connected_region": { "type": "string" },
         "access_rule": {
           "oneOf": [{ "$ref": "#/$defs/rule" }, { "type": "null" }]
-        }
+        },
+        "er": { "$ref": "#/$defs/exitEntranceRandomization" }
       },
       "required": ["name", "connected_region"]
+    },
+    "exitEntranceRandomization": {
+      "type": "object",
+      "description": "This exit's entrance-randomization facts (ENTRANCE RANDOMIZATION E2): a PROPERTY of the exit, not a rule kind — no rule evaluator reads it and reachability ignores it (the exit's `connected_region` is the connection, shuffled or not). The vocabulary is Archipelago's generic ER (entrance_rando.py): `group` is the exit's randomization group (a string here, GER's is an int) and `type` its `EntranceType`. Cross-field constraints the schema cannot state are refused by name by frontend/modules/procgenCore/entranceRandomizationCheck.js (a `reverse` names an exit of the same player, reverses are mutual, a `one_way` exit names no reverse); the runtime loader runs it on the loaded slot. Producer: none yet (E4, the procgen ER mode, writes it). Consumers keep it: stateManager/core/initialization.js `loadExits` (as `er` on the loaded exit), the APWorld Editor (edits keep unknown exit fields), and the worldgen round trip (world_generator writes `_worldgen_exit_er.json`, exporter/exporter.py re-attaches it by exit name).",
+      "properties": {
+        "group": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The exit's randomization group (e.g. `stairs_down`). The block's `target_group_lookup` maps a group to the groups its exits may connect to."
+        },
+        "type": {
+          "enum": ["one_way", "two_way"],
+          "description": "GER's `EntranceType`: a `two_way` exit has a way back (its `reverse`); a `one_way` exit has none and names no `reverse`."
+        },
+        "reverse": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The AP exit name of the paired exit that leads back (same player). The explicit pairing `exporter[\"<p>\"].assume_bidirectional_exits: false` lacked. When the named exit carries `er` too, its `reverse` names this exit."
+        },
+        "shuffle": {
+          "type": "boolean",
+          "description": "Whether the shuffle may move this exit. A `placements[].exit` must name an exit whose `shuffle` is true."
+        }
+      },
+      "required": ["group", "type", "shuffle"],
+      "additionalProperties": false
     },
     "location": {
       "type": "object",

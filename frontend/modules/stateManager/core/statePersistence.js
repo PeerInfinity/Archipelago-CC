@@ -969,6 +969,9 @@ export function getStaticGameData(sm) {
     // ⛓ rules F2: `flash_panel` is per player (`{"<p>": block}`); the panel
     // gets the LOADED slot's block, never another slot's.
     flash_panel: sm.rules?.flash_panel?.[sm.playerId],
+    // ENTRANCE RANDOMIZATION E2: the LOADED slot's block (null: not shuffled);
+    // each exit's own `er` rides on `exits`.
+    entrance_randomization: sm.entranceRandomization ?? null,
     playerId: sm.playerId, // String player ID
     // Every player named by the rules file, not just the loaded one — UI that
     // labels a player (cost debugger status, spoiler checklist) already reads
