@@ -1,0 +1,130 @@
+## 388/1 D0: REFUSED work 7054 (dashless 3527, full 3527), 57 s
+work by frame: execReachPit>deriveChaserDetour 6960; execReachPit>walkToUnder 50; execReachPit>climbLadderUnder 44
+  u1 brave iceturret@472,400 t0
+  u25 time bob@192,480 t0
+  u25 bait bob@192,480 t0
+  u25 kill bob@192,480 t0
+  u47 narrow bob@192,480 t0
+  u3527 detour bob@192,480 t0
+  u3527 forced-hit bob@192,480 t0
+  u3528 brave iceturret@472,400 t0
+  u3552 time bob@192,480 t0
+  u3552 bait bob@192,480 t0
+  u3552 kill bob@192,480 t0
+  u3574 narrow bob@192,480 t0
+  u7054 detour bob@192,480 t0
+  u7054 forced-hit bob@192,480 t0
+  END: solverBot(wasm-exit-40) reach-pit (24,28)->L43: the combat ladder is EXHAUSTED. The corridor passes through danger at (216.5,504.6) — chaser:bob@192,480 (inside leash 80 (d=4.4), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:
+
+## 387/1 D0: REFUSED work 7054 (dashless 3527, full 3527), 57 s
+work by frame: execReachPit>deriveChaserDetour 6960; execReachPit>walkToUnder 50; execReachPit>climbLadderUnder 44
+  u1 brave iceturret@472,400 t0
+  u25 time bob@192,480 t0
+  u25 bait bob@192,480 t0
+  u25 kill bob@192,480 t0
+  u47 narrow bob@192,480 t0
+  u3527 detour bob@192,480 t0
+  u3527 forced-hit bob@192,480 t0
+  u3528 brave iceturret@472,400 t0
+  u3552 time bob@192,480 t0
+  u3552 bait bob@192,480 t0
+  u3552 kill bob@192,480 t0
+  u3574 narrow bob@192,480 t0
+  u7054 detour bob@192,480 t0
+  u7054 forced-hit bob@192,480 t0
+  END: solverBot(wasm-exit-40) reach-pit (23,28)->L43: the combat ladder is EXHAUSTED. The corridor passes through danger at (216.5,504.6) — chaser:bob@192,480 (inside leash 80 (d=4.4), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:
+
+## 395/0 D0: REFUSED work 20 (dashless 10, full 10), 2 s
+work by frame: execClearTag>deriveBlockRoute 18; execClearTag>deriveKeylockStance 2
+  END: solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (488,904): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put the player box on the line when walked into the lock, none with a corridor from (488,904).
+
+## 394/1 D0: REFUSED work 1398 (dashless 699, full 699), 18 s
+work by frame: ->orbitKillChaser 1080; ->deriveKillByChaser 180; ->walkToUnder 54; execute>execKillByPressOnce 52; ->climbLadderUnder 18; ->deriveGuardApproach 14
+  u0 apitem  t0
+  u16 time spinner@880,848 t0
+  u16 bait spinner@880,848 t0
+  u16 kill spinner@880,848 t0
+  u53 time bobsoldier@880,832 t860
+  u53 bait bobsoldier@880,832 t860
+  u690 kill bobsoldier@880,832 t860
+  u699 narrow bobsoldier@880,832 t860
+  u699 detour bobsoldier@880,832 t860
+  u699 forced-hit bobsoldier@880,832 t860
+  END: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (887.9,854.7) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) — and every rung of ⚖ §11.8a's order refused:
+
+## 871/0 D0: REFUSED work 364 (dashless 182, full 182), 9 s
+work by frame: execClearTag>deriveBlockRoute 362; execClearTag>deriveHoldStance 2
+  END: solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (488,904): solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40 — 1 cell(s) land the player box in the button and none of them plans a corridor from (488,904). A hold that cannot be stood on is not a strategy for this obstacle. ⛔ AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a t
+
+## 869/1 D0: REFUSED work 3222 (dashless 1611, full 1611), 47 s
+work by frame: ->orbitKillChaser 1320; resolveObstacleStrategy>deriveBlockRoute 1232; ->deriveKillByChaser 494; ->walkToUnder 86; execute>execKillByPressOnce 54; ->deriveGuardApproach 14
+  u0 apitem  t0
+  u183 shove pushableblockfire@576,576 t0
+  u198 hold wandlock@448,432 t0
+  u624 burn burnabletree@872,784 t0
+  u640 time spinner@880,848 t0
+  u640 bait spinner@880,848 t0
+  u640 kill spinner@880,848 t0
+  u674 time bob@736,800 t865
+  u674 bait bob@736,800 t865
+  u804 kill bob@736,800 t865
+  u822 time bobsoldier@880,832 t1051
+  u822 bait bobsoldier@880,832 t1051
+  u1606 kill bobsoldier@880,832 t1051
+  u1611 narrow bobsoldier@880,832 t1051
+  u1611 detour bobsoldier@880,832 t1051
+  u1611 forced-hit bobsoldier@880,832 t1051
+  END: solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes through danger at (887.4,848.8) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)` from 8 to 16 px off the body crosses this box THIS tick (no en
+
+## 412/0 D0: REFUSED work 20 (dashless 10, full 10), 1 s
+work by frame: execClearTag>deriveBlockRoute 18; execClearTag>deriveKeylockStance 2
+  END: solverBot(wasm-location-40) clear-tag {40,8} bosslock@480,352: 'keylock' could not be resolved from (328,600): solverBot: no REACHABLE stance on bosslock@480,352's key line in level 40 — 0 cell(s) put the player box on the line when walked into the lock, none with a corridor from (328,600).
+
+## 411/0 D0: REFUSED work 82 (dashless 41, full 41), 22 s
+work by frame: execute>execKillByPressOnce 50; ->walkToUnder 32
+  u0 apitem  t0
+  u16 time spinner@880,848 t0
+  u16 bait spinner@880,848 t0
+  u16 kill spinner@880,848 t0
+  END: solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t819 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is ref
+
+## 872/0 D0: REFUSED work 364 (dashless 182, full 182), 8 s
+work by frame: execClearTag>deriveBlockRoute 362; execClearTag>deriveHoldStance 2
+  END: solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560: 'hold' could not be resolved from (328,600): solverBot: no REACHABLE stance inside buttonroom@880,768 in level 40 — 1 cell(s) land the player box in the button and none of them plans a corridor from (328,600). A hold that cannot be stood on is not a strategy for this obstacle. ⛔ AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a t
+
+## 376/0 D0: SOLVED 1565 work 400 (dashless 106, full 294), 15 s
+work by frame: ->walkToUnder 362; resolveObstacleStrategy>deriveBlockRoute 18; execHold>execHold 8; execute>execKillByPressOnce 8; resolveObstacleStrategy>deriveHoldStance 2; execBreak>execBreak 2
+  u0 apitem  t0
+  u1 brave iceturret@472,400 t0
+  u12 hold wandlock@176,80 t0
+  u13 hold wandlock@208,128 t0
+  u85 break breakablerock@176,128 t1112
+  u88 time spinner@192,128 t1112
+  u88 bait spinner@192,128 t1112
+  u88 kill spinner@192,128 t1112
+  END: 
+
+## 870/1 D0: REFUSED work 1330 (dashless 665, full 665), 52 s
+work by frame: resolveObstacleStrategy>deriveBlockRoute 1232; execute>execKillByPressOnce 50; ->walkToUnder 38; resolveObstacleStrategy>deriveHoldStance 8; resolveObstacleStrategy>resolveBurnStrategy 2
+  u0 apitem  t0
+  u183 shove pushableblockfire@576,576 t0
+  u198 hold wandlock@448,432 t0
+  u624 burn burnabletree@872,784 t0
+  u640 time spinner@880,848 t0
+  u640 bait spinner@880,848 t0
+  u640 kill spinner@880,848 t0
+  END: solverBot(wasm-location-40) apitem (656,528) contact -> shove stance (pushableblockfire@576,576) -> hold stance (wandlock@448,432) -> burn stance (burnabletree@872,784) -> kill (spinner@880,848) by press: the player died at t822 (chaser bob@736,752) while pressing spinner@880,848, after 2 landing(s) — a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player r
+
+## 376/1 D0: REFUSED work 178 (dashless 89, full 89), 4 s
+work by frame: ->walkToUnder 78; ->climbLadderUnder 74; resolveObstacleStrategy>deriveBlockRoute 18; execHold>execHold 6; resolveObstacleStrategy>deriveHoldStance 2
+  u0 apitem  t0
+  u1 brave iceturret@472,400 t0
+  u12 hold wandlock@176,80 t0
+  u13 hold wandlock@208,128 t0
+  u52 time spinner@192,160 t100
+  u52 bait spinner@192,160 t100
+  u52 kill spinner@192,160 t100
+  u86 narrow spinner@192,160 t100
+  u89 forced-hit spinner@192,160 t100
+  END: solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80): the combat ladder is EXHAUSTED. The corridor passes through danger at (167.4,135.5) — spinner:spinner@192,160 (a live Spinner BODY at (173.1,134.1) at horizon 1113 — `Enemy.hitPlayer`'s 7x7 `collide("Player", x, y)` at force 3) — and every rung of ⚖ §11.8a's order refused:
+

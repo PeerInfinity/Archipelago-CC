@@ -1,0 +1,24 @@
+456 328 touch false obstacle {"kind":"proximity-hazard","blocker":{"cls":{"as3":"IceTurret","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Ene
+472 328 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":464,"y":320,"w":16,"h":16,"right":480,"bottom":336},"cls":null,"tag":"tile:Blue Wall","x":472,"y":328}}
+488 328 touch true obstacle {"kind":"proximity-hazard","blocker":{"cls":{"as3":"IceTurret","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Ene
+504 328 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":496,"y":320,"w":16,"h":16,"right":512,"bottom":336},"cls":null,"tag":"tile:Blue Wall","x":504,"y":328}}
+520 328 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":512,"y":320,"w":16,"h":16,"right":528,"bottom":336},"cls":null,"tag":"tile:Blue Wall (dark)","x":520,"y":328}}
+456 344 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":448,"y":336,"w":16,"h":16,"right":464,"bottom":352},"cls":null,"tag":"tile:Blue Wall","x":456,"y":344}}
+472 344 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":464,"y":336,"w":16,"h":16,"right":480,"bottom":352},"cls":null,"tag":"tile:Blue Wall","x":472,"y":344}}
+488 344 touch true obstacle {"kind":"proximity-hazard","blocker":{"cls":{"as3":"IceTurret","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Ene
+504 344 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":496,"y":336,"w":16,"h":16,"right":512,"bottom":352},"cls":null,"tag":"tile:Blue Wall","x":504,"y":344}}
+520 344 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":512,"y":336,"w":16,"h":16,"right":528,"bottom":352},"cls":null,"tag":"tile:Blue Wall","x":520,"y":344}}
+456 360 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":448,"y":352,"w":16,"h":16,"right":464,"bottom":368},"cls":null,"tag":"tile:Blue Wall","x":456,"y":360}}
+472 360 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":464,"y":352,"w":16,"h":16,"right":480,"bottom":368},"cls":null,"tag":"tile:Blue Wall (dark)","x":472,"y":360}}
+504 360 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":496,"y":352,"w":16,"h":16,"right":512,"bottom":368},"cls":null,"tag":"tile:Blue Wall (dark)","x":504,"y":360}}
+520 360 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":512,"y":352,"w":16,"h":16,"right":528,"bottom":368},"cls":null,"tag":"tile:Blue Wall","x":520,"y":360}}
+456 376 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":448,"y":368,"w":16,"h":16,"right":464,"bottom":384},"cls":null,"tag":"tile:Blue Wall","x":456,"y":376}}
+472 376 touch false obstacle {"kind":"proximity-hazard","blocker":{"cls":{"as3":"IceTurret","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Ene
+488 376 touch true obstacle {"kind":"proximity-hazard","blocker":{"cls":{"as3":"IceTurret","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Ene
+504 376 touch false obstacle {"kind":"proximity-hazard","blocker":{"cls":{"as3":"IceTurret","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Ene
+520 376 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":512,"y":368,"w":16,"h":16,"right":528,"bottom":384},"cls":null,"tag":"tile:Blue Wall","x":520,"y":376}}
+456 392 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":448,"y":384,"w":16,"h":16,"right":464,"bottom":400},"cls":null,"tag":"tile:Blue Wall","x":456,"y":392}}
+472 392 touch false obstacle {"kind":"proximity-hazard","blocker":{"cls":{"as3":"IceTurret","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Ene
+488 392 touch true obstacle {"kind":"proximity-hazard","blocker":{"cls":{"as3":"IceTurret","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Ene
+504 392 touch false obstacle {"kind":"proximity-hazard","blocker":{"cls":{"as3":"IceTurret","roles":["blocking","trigger","pickup","proximity-hazard","combat"],"collider":"rect","type":"Ene
+520 392 touch false obstacle {"kind":"solid","blocker":{"rect":{"x":512,"y":384,"w":16,"h":16,"right":528,"bottom":400},"cls":null,"tag":"tile:Blue Wall","x":520,"y":392}}

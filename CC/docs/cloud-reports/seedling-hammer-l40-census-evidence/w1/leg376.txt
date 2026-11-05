@@ -1,0 +1,18 @@
+# leg 376 (Level 040 - Totem Part 64,144 from L42), four repeat page sweeps at the head, + W0's run
+failed seam 5313 plans [[true,1565,"dashless:false,full:true"],[false,null,"dashless:false,full:false"]] hits [[1248,1]] divs [[1256,3.08,0]]
+done seam 5319 plans [[true,1736,"dashless:true,full:true"]] hits [] divs []
+failed seam 5314 plans [[true,1565,"dashless:false,full:true"],[false,null,"dashless:false,full:false"]] hits [[1248,1]] divs [[1256,3.08,0]]
+failed seam 5333 plans [[false,null,"dashless:false,full:false"],[false,null,"dashless:false,full:false"]] hits [] divs []
+done seam 5327 plans [[true,1888,"dashless:true,full:false"]] hits [] divs []
+
+# captured request work (page budget 640, held retry 2560)
+run 1 req 0 budget 640 seam 5319 [["dashless",true,138,null],["full",true,219,"sword-dash"]]
+run 2 req 0 budget 640 seam 5314 [["dashless",false,106,null],["full",true,294,null]]
+run 2 req 1 budget 640 seam 6596 [["dashless",false,89,null],["full",false,89,null]]
+run 3 req 0 budget 640 seam 5333 [["dashless",false,641,"crusher-fork"],["full",false,1,"walk"]]
+run 3 req 1 budget 2560 seam 5333 [["dashless",false,2562,"crusher-fork"],["full",false,1,"walk"]]
+run 4 req 0 budget 640 seam 5327 [["dashless",true,137,null],["full",false,426,null]]
+
+# run 3 (seam 5333) /1 replayed uncapped (chain.mjs, D0)
+REFUSED work 8450 [["dashless",2975],["full",5475]]
+solverBot(wasm-location-40) apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (170.8,136.9) — bomb:bombpusher@112,128#17 (a Bomb's Explosion at (178,136), r 15 (`Explosion.as:52-56`: the square, then the origin-to-origin disc), the bomb aimed and stepped with the walk by `bombPusher.js` against the previewed player) — and every rung of ⚖ §11.8a's order refused:
