@@ -16483,6 +16483,50 @@ export function resetChooserPairCounts() {
 }
 
 /**
+ * ⛓⛓ SEEDLING HAMMER-PHASE PIT-WEST — THE REMOVAL CHOOSER ANSWERS A CUT OF ANY SIZE (⚖ the user queued the slice on
+ * 2026-11-05, the L40 census's step 6: *"the chooser or kill rung for the bob cluster at the L39 arrival"*).
+ *
+ * L40's west pit corridor (legs 387/388, the L39 arrival → `out_pit_13_21`/`_14_21`) is a one-tile maze with FOUR live
+ * chasers standing in it at spawn: `puncher@128,624` in the only shaft north, `bob@192,480` in the row west of the
+ * loop, one of `bob@208,448`/`bob@224,496` on the loop's two arms, and one of `bob@352,448`/`bob@352,416` beside the
+ * pit. The smallest set whose joint removal admits a corridor has size 4, so the single chooser, C1 and CPAIR (size 3,
+ * its 4 nearest partners all west of the pit) each answer EMPTY, and the kill rung gets no target although every body
+ * in the way is one the chaser arm kills.
+ *
+ * With this switch, where the list is still empty after CPAIR, the climb asks a CUT (`chooseCutToRemove`): the joint
+ * removal of EVERY live chaser must admit a corridor (else nothing chasers can do opens one: `[]`), then each chaser that
+ * is not the hit's own is put back, the furthest from the hit point first, and stays back when the corridor survives
+ * it. What is left is an irreducible set (no member can be put back alone). It is offered only when the hit's body is
+ * in it — the hit's body first, then the rest by distance from the hit — so BAIT and the kill rung take the body the
+ * walk actually met, and the next climb (a world edit re-plans) asks again of the room the kill left: CPAIR's shape,
+ * one size up. A cut the hit's body is not part of is never offered (that body's removal changes no corridor).
+ * Cost: one `plansReach` per live chaser, plus two.
+ *
+ * OFF by default. `SEEDLING_CHOOSER_CUT=1` turns it on in a node process (the page's worker reads it off the solver
+ * env channel), `withChooserCut(enabled, fn)` is for a test or a witness. OFF, nothing is asked and every walk and trace
+ * is byte-identical. ON where the chooser, C1 or CPAIR already answers, nothing is asked either.
+ */
+export const CHOOSER_CUT = { enabled: globalThis.process?.env?.SEEDLING_CHOOSER_CUT === '1' };
+export const CHOOSER_CUT_DEFAULT = false;
+
+/** Run `fn` with `CHOOSER_CUT` set to `enabled`, restoring the previous value. */
+export function withChooserCut(enabled, fn) {
+    return withSwitch(CHOOSER_CUT, enabled, fn);
+}
+
+/**
+ * The switch's instrument, written only with it ON and read by nothing that decides: `asked` climbs that asked a cut,
+ * `plans` reach asks made, `admitted` climbs a cut answered, `cuts` each cut offered (`{t, hit, set}`, the hit's body
+ * first), `refused` each climb that asked and offered nothing (`{t, hit, why}`).
+ */
+export const CHOOSER_CUT_COUNTS = { asked: 0, plans: 0, admitted: 0, cuts: [], refused: [] };
+
+/** Zero `CHOOSER_CUT_COUNTS`. */
+export function resetChooserCutCounts() {
+    Object.assign(CHOOSER_CUT_COUNTS, { asked: 0, plans: 0, admitted: 0, cuts: [], refused: [] });
+}
+
+/**
  * ⛓⛓ SEEDLING HAMMER-PHASE ICEST — THE WALK'S KILL RUNG KILLS A STATIC ICE TURRET (⚖ the user queued the slice on
  * 2026-10-26: *"Ice turret static kill"*; CPAIR's hand-over, fidelity L40LATCH's D2.2).
  *
@@ -25070,6 +25114,25 @@ function planWaypointsOrNull(world, from, aim, allowTeleporter, opts) {
  */
 export const DETOUR_RUNG = Object.freeze({ maxVias: 2, maxPreviews: 300, maxPlanned: 500 });
 
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE PIT-WEST — `DETOUR_VIA_BOUND` (OFF): the DETOUR search's proven no-answer, refused before it
+ * is paid for. `deriveChaserDetour` builds its via set by planning a leg to every lattice cell of the room and then
+ * previews candidates only while `planned < maxPlanned`; in a room of at least `maxPlanned` cells the loop never runs,
+ * so the rung answers `wps: null` after planning the whole set. MEASURED (L40 census, wall G): 3,479 legs of the 500
+ * planned, 0 candidates, ~3,480 work units a pass on legs 387/388/871 — the spend the page's deadline then cuts at.
+ * ON, that case is returned before any leg (the same verdict, `previews: 0`, the bound named and `viaSet` its size); a
+ * room under the bound is searched as ever. It changes no answer, only the work spent and therefore what the anytime
+ * deadline cuts, so it is its own switch. `SEEDLING_DETOUR_VIA_BOUND=1` / `withDetourViaBound(enabled, fn)`.
+ * `counts.bounded`: rungs refused up front (an instrument, read by nothing that decides).
+ */
+export const DETOUR_VIA_BOUND = { enabled: globalThis.process?.env?.SEEDLING_DETOUR_VIA_BOUND === '1', counts: { bounded: 0 } };
+export const DETOUR_VIA_BOUND_DEFAULT = false;
+
+/** Run `fn` with `DETOUR_VIA_BOUND` set to `enabled`, restoring the previous value. */
+export function withDetourViaBound(enabled, fn) {
+    return withSwitch(DETOUR_VIA_BOUND, enabled, fn);
+}
+
 /** A polyline's length, from `from` through every waypoint. */
 function corridorLength(from, wps) {
     let n = 0;
@@ -25162,6 +25225,31 @@ export function deriveChaserDetour(run, {
     const pitch = planOpts.lattice ?? DEFAULT_LATTICE;
     const from = { x: run.state.x, y: run.state.y };
     const home = nodeAt(from.x, from.y, pitch);
+    /**
+     * ⛓⛓ PIT-WEST (`DETOUR_VIA_BOUND`, OFF) — the via set below plans one leg per lattice cell of the room (home
+     * excepted), and the search loop runs only while `planned < maxPlanned`. A room with at least `maxPlanned` cells
+     * therefore spends the whole via set and previews NOTHING: the answer is `wps: null` before a leg is planned (L40,
+     * 60 x 58 cells: 3,479 legs against the bound of 500, ~3,480 work units a pass, 0 candidates). ON, that proven
+     * no-answer is returned up front with the same verdict and the bound named; OFF, the set is built as ever.
+     */
+    if (DETOUR_VIA_BOUND.enabled) {
+        const cols = Math.ceil(((run.world.width ?? 0) * TILE_SIZE) / pitch);
+        const rows = Math.ceil(((run.world.height ?? 0) * TILE_SIZE) / pitch);
+        const homeIn = home.tx >= 0 && home.tx < cols && home.ty >= 0 && home.ty < rows;
+        const cells = cols * rows - (homeIn ? 1 : 0);
+        if (cells >= maxPlanned) {
+            DETOUR_VIA_BOUND.counts.bounded += 1;
+            return {
+                wps: null, previews: 0, planned: 0,
+                bound: { name: 'DETOUR_RUNG', hit: ['maxPlanned'], previews: 0, maxPreviews, planned: 0, maxPlanned,
+                    maxVias, unasked: 0, viaSet: cells },
+                why: `no corridor can be previewed: the via set is every lattice cell of the room (${cells} at `
+                    + `${pitch} px), one planned leg each, and the search previews only while fewer than ${maxPlanned} `
+                    + 'legs are planned, so it would spend the whole set and preview 0 candidates — refused before '
+                    + 'planning a leg (DETOUR_VIA_BOUND).',
+            };
+        }
+    }
     const legs = new Map();
     let planned = 0;
     const leg = (a, b, tele) => {
@@ -27486,6 +27574,59 @@ function solveSegmentUnder({
         return [];
     };
 
+    /**
+     * ⛓⛓ PIT-WEST (`CHOOSER_CUT`, OFF) — the chooser's own question asked of a CUT of live chasers: every live chaser
+     * removed must admit a corridor; then each one that is not the hit's own is put back, the furthest from the hit
+     * point first, and stays back while the corridor survives. The irreducible set left is returned (the hit's chasers
+     * first, then by distance from the hit point, ties by id) only if a hit's body cannot be put back either; else `[]`.
+     */
+    const chooseCutToRemove = (aim, contacts, allowTeleporter, hit) => {
+        const live = [...(run.entities('chasers') ?? [])];
+        const byId = new Map(live.map((c) => [c.id, c]));
+        const heads = [...new Set((hit.sources ?? []).filter((sx) => sx.kind === 'chaser' && byId.has(sx.id))
+            .map((sx) => sx.id))];
+        const t = perTick.length;
+        const refuse = (why) => {
+            CHOOSER_CUT_COUNTS.refused.push({ t, hit: heads[0] ?? null, why });
+            return [];
+        };
+        if (heads.length === 0) return refuse('no live chaser in the hit');
+        CHOOSER_CUT_COUNTS.asked += 1;
+        const dist = (c) => Math.hypot(c.x - hit.x, c.y - hit.y);
+        const volumes = dangerVolumes(run, 0);
+        const admitsWithout = (ids) => {
+            CHOOSER_CUT_COUNTS.plans += 1;
+            const gone = new Set(ids);
+            const opts = solverPlanOpts(run, contacts, { ...goalPlanExtra,
+                extraVolumes: volumes.filter((v) => !gone.has(v.id)) });
+            const reach = plansReach(run.world, allowTeleporter, opts);
+            if (reach) return reach.from(run.state)(aim);
+            try {
+                planWaypoints(run.world, run.state, aim, allowTeleporter, opts);
+                return true;
+            } catch (e) {
+                if (!(e instanceof BotDriverV2Error)) throw e;
+                return false;
+            }
+        };
+        let cut = live.map((c) => c.id);
+        if (!admitsWithout(cut)) return refuse('every live chaser removed admits no corridor');
+        const order = (a, b) => dist(b) - dist(a) || (a.id < b.id ? -1 : 1);
+        for (const c of live.filter((x) => !heads.includes(x.id)).sort(order)) {
+            const without = cut.filter((id) => id !== c.id);
+            if (admitsWithout(without)) cut = without;
+        }
+        // a hit body that can be put back with the rest of the cut standing is not what is in the way
+        if (!heads.some((h) => !admitsWithout(cut.filter((id) => id !== h)))) {
+            return refuse('the hit\'s body is not in the cut');
+        }
+        const set = [...heads.filter((h) => cut.includes(h)),
+            ...cut.filter((id) => !heads.includes(id)).sort((a, b) => order(byId.get(b), byId.get(a)))];
+        CHOOSER_CUT_COUNTS.admitted += 1;
+        CHOOSER_CUT_COUNTS.cuts.push({ t, hit: heads[0], set });
+        return set.map((id) => ({ ...byId.get(id), stepped: true, viaCut: set }));
+    };
+
     const reasonsOf = (d) => d.sources
         .map((x) => `${x.kind}:${x.id ?? '?'} (${x.why})`).join('; ');
 
@@ -28934,6 +29075,11 @@ function solveSegmentUnder({
                 }
             }
             if (removable.length === 0) removable = choosePairToRemove(aim, contacts, allowTeleporter, hit);
+        }
+        // ⛓⛓ PIT-WEST (`CHOOSER_CUT`, OFF) — where the list is STILL empty, an irreducible cut of live chasers that
+        // holds the hit's body (`chooseCutToRemove`), the hit's body first: the kill rung takes it and re-climbs.
+        if (CHOOSER_CUT.enabled && removable.length === 0) {
+            removable = chooseCutToRemove(aim, contacts, allowTeleporter, hit);
         }
         // ⛓ BAIT and the ceiling arm read the head of the ordered set, which
         // is the body the single-return chooser used to hand them.
