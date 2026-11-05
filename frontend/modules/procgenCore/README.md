@@ -13,6 +13,13 @@ vocabulary. Nothing here knows what a level looks like.
 - `procgenRng.js` — `ProcgenRng`: `pick`/`shuffle`/`nextInt`/`next`/`draws`/
   `state` over an **injected source**. There is no default source; a default
   would make this directory import from a substrate.
+- `entranceRandomizer.js` — the entrance-randomization SHUFFLE CORE (ER arc,
+  E3): a port of `entrance_rando.py` (`randomizeEntrances`, `EntranceLookup`,
+  `ERPlacementState`, `bakeTargetGroupLookup`, the pure
+  `disconnectForRandomization`) with the reachability callback and the rng
+  INJECTED; coupled and uncoupled; refuses by name
+  (`EntranceRandomizationError`). `makePlainGraphReach` is its one (test)
+  evaluator. The Python→JS name map is in the file header.
 
 ⛔ **THE URL DIET (slice 12):** `urlParams.js` REFUSES `?directed=` by name and
 never writes it — a URL names the launch parameters a person types, and a
