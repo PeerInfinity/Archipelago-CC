@@ -1,0 +1,15 @@
+id   default                    | cleartag                   | staged                     | cleartag-staged           
+105  771t 0h w395 df49abb695af  | 771t 0h w403 df49abb695af  | 771t 0h w395 df49abb695af  | 771t 0h w403 df49abb695af 
+106  777t 0h w422 e4dc1e41415c  | 777t 0h w428 e4dc1e41415c  | 777t 0h w422 e4dc1e41415c  | 777t 0h w428 e4dc1e41415c 
+116  836t 0h w377 33ecd04f678c  | 836t 0h w385 33ecd04f678c  | 836t 0h w377 33ecd04f678c  | 836t 0h w385 33ecd04f678c 
+117  842t 0h w404 dc1128c12038  | 842t 0h w410 dc1128c12038  | 842t 0h w404 dc1128c12038  | 842t 0h w410 dc1128c12038 
+127  494t 2h w150 91e93cad7d53  | 643t 0h w351 7a2ec2b99461  | 494t 2h w150 91e93cad7d53  | 643t 0h w351 7a2ec2b99461 
+128  541t 2h w153 31be66c2f0ec  | 648t 0h w385 ae83f13a5b19  | 541t 2h w153 31be66c2f0ec  | 648t 0h w385 ae83f13a5b19 
+138  864t 0h w404 cae2f1bfbbbd  | 864t 0h w412 cae2f1bfbbbd  | 864t 0h w404 cae2f1bfbbbd  | 864t 0h w412 cae2f1bfbbbd 
+139  872t 0h w436 18b75cecbd16  | 872t 0h w442 18b75cecbd16  | 872t 0h w436 18b75cecbd16  | 872t 0h w442 18b75cecbd16 
+149  444t 0h w312 cac9c22b8946  | 444t 0h w318 cac9c22b8946  | 444t 0h w312 cac9c22b8946  | 444t 0h w318 cac9c22b8946 
+150  447t 0h w324 51f166427adb  | 447t 0h w330 51f166427adb  | 447t 0h w324 51f166427adb  | 447t 0h w330 51f166427adb 
+160  632t 2h w166 f7765903792f  | REFUSED(refusal) w350      | 632t 2h w166 f7765903792f  | 794t 0h w643 b6a1482dccf4 
+161  610t 2h w168 438f8950b48a  | REFUSED(refusal) w642      | 610t 2h w168 438f8950b48a  | 809t 0h w643 7f3ca9343128 
+171  672t 2h w170 4bca4e01f593  | 700t 0h w179 3c7606677bfd  | 672t 2h w170 4bca4e01f593  | 700t 0h w179 3c7606677bfd 
+172  675t 2h w171 e6001dc3720f  | 750t 0h w387 f30f628627d1  | 675t 2h w171 e6001dc3720f  | 750t 0h w387 f30f628627d1 

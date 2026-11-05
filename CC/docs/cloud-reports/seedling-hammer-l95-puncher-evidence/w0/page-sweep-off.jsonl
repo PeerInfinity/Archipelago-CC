@@ -1,0 +1,14 @@
+{"id": 105, "key": "level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "off"}
+{"id": 106, "key": "level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "off"}
+{"id": 116, "key": "level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "off"}
+{"id": 117, "key": "level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "off"}
+{"id": 127, "key": "level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 2, "hits": [[433, 428.4, 258.1, true], [474, 445.88, 258.1, true]], "tag": "off"}
+{"id": 128, "key": "level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 2, "hits": [[493, 445.25, 258.04, true], [520, 445.92, 258.04, true]], "tag": "off"}
+{"id": 138, "key": "level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "off"}
+{"id": 139, "key": "level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "off"}
+{"id": 149, "key": "level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "off"}
+{"id": 150, "key": "level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 0, "hits": [], "tag": "off"}
+{"id": 160, "key": "level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 2, "hits": [[575, 429.51, 258.15, true], [615, 445.89, 258.15, true]], "tag": "off"}
+{"id": 161, "key": "level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 2, "hits": [[562, 445.25, 258.12, true], [589, 445.93, 258.12, true]], "tag": "off"}
+{"id": 171, "key": "level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared", "failed": null, "ok": true, "roomHitsMax": 2, "hits": [[610, 427.96, 258.07, true], [652, 445.85, 258.07, true]], "tag": "off"}
+{"id": 172, "key": "level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared", "failed": null, "ok": true, "roomHitsMax": 2, "hits": [[627, 445.32, 258.23, true], [654, 445.99, 258.23, true]], "tag": "off"}
