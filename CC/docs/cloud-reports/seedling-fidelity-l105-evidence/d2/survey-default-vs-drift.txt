@@ -1,0 +1,6 @@
+A 236 steps: {'REFUSED': 34, 'SOLVED': 202}
+B 236 steps: {'REFUSED': 34, 'SOLVED': 202}
+common 236 moved 1
+step 220 L105
+  A: SOLVED 416 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)
+  B: SOLVED 413 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es)

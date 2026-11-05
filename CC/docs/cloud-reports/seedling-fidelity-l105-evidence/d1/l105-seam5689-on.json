@@ -1,0 +1,372 @@
+{
+ "game": "seedling",
+ "name": "l105-d0",
+ "boot": {
+  "level": 105,
+  "x": 208,
+  "y": 64
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "keys": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "seal_parts": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ]
+ },
+ "rng": {
+  "seed": 614467865,
+  "split": true,
+  "cosmetic": 0
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasDarkShield": true,
+   "hasDarkSuit": true,
+   "hasDarkSword": true,
+   "hasFeather": true,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 4,
+  "time": 5689,
+  "primary": 0,
+  "secondary": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0
+ },
+ "tick_count": 307,
+ "inputs": [
+  {
+   "key": "left",
+   "from": 0,
+   "to": 41
+  },
+  {
+   "key": "primary",
+   "from": 41,
+   "to": 42
+  },
+  {
+   "key": "left",
+   "from": 42,
+   "to": 66
+  },
+  {
+   "key": "right",
+   "from": 66,
+   "to": 67
+  },
+  {
+   "key": "down",
+   "from": 67,
+   "to": 68
+  },
+  {
+   "key": "primary",
+   "from": 68,
+   "to": 69
+  },
+  {
+   "key": "up",
+   "from": 69,
+   "to": 70
+  },
+  {
+   "key": "left",
+   "from": 69,
+   "to": 71
+  },
+  {
+   "key": "right",
+   "from": 72,
+   "to": 74
+  },
+  {
+   "key": "up",
+   "from": 78,
+   "to": 90
+  },
+  {
+   "key": "primary",
+   "from": 90,
+   "to": 91
+  },
+  {
+   "key": "down",
+   "from": 91,
+   "to": 92
+  },
+  {
+   "key": "up",
+   "from": 92,
+   "to": 93
+  },
+  {
+   "key": "left",
+   "from": 97,
+   "to": 150
+  },
+  {
+   "key": "right",
+   "from": 150,
+   "to": 151
+  },
+  {
+   "key": "left",
+   "from": 151,
+   "to": 153
+  },
+  {
+   "key": "right",
+   "from": 154,
+   "to": 156
+  },
+  {
+   "key": "up",
+   "from": 160,
+   "to": 163
+  },
+  {
+   "key": "primary",
+   "from": 170,
+   "to": 171
+  },
+  {
+   "key": "primary",
+   "from": 172,
+   "to": 173
+  },
+  {
+   "key": "up",
+   "from": 170,
+   "to": 179
+  },
+  {
+   "key": "primary",
+   "from": 178,
+   "to": 179
+  },
+  {
+   "key": "down",
+   "from": 179,
+   "to": 182
+  },
+  {
+   "key": "up",
+   "from": 182,
+   "to": 183
+  },
+  {
+   "key": "down",
+   "from": 185,
+   "to": 186
+  },
+  {
+   "key": "primary",
+   "from": 190,
+   "to": 191
+  },
+  {
+   "key": "primary",
+   "from": 192,
+   "to": 193
+  },
+  {
+   "key": "left",
+   "from": 189,
+   "to": 211
+  },
+  {
+   "key": "right",
+   "from": 212,
+   "to": 214
+  },
+  {
+   "key": "primary",
+   "from": 215,
+   "to": 216
+  },
+  {
+   "key": "primary",
+   "from": 217,
+   "to": 218
+  },
+  {
+   "key": "primary",
+   "from": 223,
+   "to": 224
+  },
+  {
+   "key": "primary",
+   "from": 229,
+   "to": 230
+  },
+  {
+   "key": "primary",
+   "from": 236,
+   "to": 237
+  },
+  {
+   "key": "down",
+   "from": 218,
+   "to": 239
+  },
+  {
+   "key": "primary",
+   "from": 238,
+   "to": 239
+  },
+  {
+   "key": "up",
+   "from": 239,
+   "to": 240
+  },
+  {
+   "key": "down",
+   "from": 240,
+   "to": 245
+  },
+  {
+   "key": "primary",
+   "from": 244,
+   "to": 245
+  },
+  {
+   "key": "up",
+   "from": 245,
+   "to": 247
+  },
+  {
+   "key": "primary",
+   "from": 256,
+   "to": 257
+  },
+  {
+   "key": "primary",
+   "from": 258,
+   "to": 259
+  },
+  {
+   "key": "right",
+   "from": 251,
+   "to": 265
+  },
+  {
+   "key": "primary",
+   "from": 264,
+   "to": 265
+  },
+  {
+   "key": "left",
+   "from": 265,
+   "to": 266
+  },
+  {
+   "key": "right",
+   "from": 266,
+   "to": 275
+  },
+  {
+   "key": "left",
+   "from": 277,
+   "to": 279
+  },
+  {
+   "key": "primary",
+   "from": 280,
+   "to": 281
+  },
+  {
+   "key": "primary",
+   "from": 282,
+   "to": 283
+  },
+  {
+   "key": "primary",
+   "from": 288,
+   "to": 289
+  },
+  {
+   "key": "primary",
+   "from": 294,
+   "to": 295
+  },
+  {
+   "key": "primary",
+   "from": 300,
+   "to": 301
+  },
+  {
+   "key": "down",
+   "from": 283,
+   "to": 303
+  },
+  {
+   "key": "primary",
+   "from": 302,
+   "to": 303
+  },
+  {
+   "key": "up",
+   "from": 303,
+   "to": 304
+  },
+  {
+   "key": "down",
+   "from": 304,
+   "to": 307
+  }
+ ],
+ "tape_version": 8
+}

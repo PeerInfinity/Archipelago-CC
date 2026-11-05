@@ -138,8 +138,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 139,
-            "count": 189,
+            "browser": 140,
+            "count": 190,
             "id": "probe"
         },
         {
@@ -234,13 +234,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 505,
-        "browser": 205,
-        "cited": 266,
-        "files": 523,
+        "blockStyle": 506,
+        "browser": 206,
+        "cited": 267,
+        "files": 524,
         "lineStyle": 18,
-        "withDocblock": 523,
-        "withFlags": 443
+        "withDocblock": 524,
+        "withFlags": 444
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11738,6 +11738,52 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-ceremony — walk the player onto a real pickup and watch what the game does. `Bot.autoAdvance`'s FIRST LIVE FIRE.",
             "path": "scripts/procgen/probe-seedling-ceremony.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-ceremony126.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-ceremony126 — ⛓⛓⛓ seedling-fidelity-ceremony126: L64's GHOSTSPEAR CEREMONY ON THE GAME — the solver's route-survey step-125 tape (the stance walk enters the pickup, the verb pages the ceremony) and a `primary` press whose thrust lands on the ceremony's first frozen frame (LOST) — PLAYED ON THE GAME AN…",
+            "path": "scripts/procgen/probe-seedling-ceremony126.mjs"
         },
         {
             "argvHelpers": [

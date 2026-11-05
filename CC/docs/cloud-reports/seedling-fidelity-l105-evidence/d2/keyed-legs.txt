@@ -1,0 +1,45 @@
+## beam (18)
+771	level_103 <- in_L102_0_96 -> exit:out_teleporter_0_64
+772	level_103 <- in_L102_0_96 -> exit:out_teleporter_304_144
+773	level_103 <- in_L104_144_128 -> exit:out_teleporter_0_64
+774	level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144
+775	level_104 <- in_L103_0_64 -> exit:out_teleporter_0_16
+776	level_104 <- in_L103_0_64 -> exit:out_teleporter_144_128
+777	level_104 <- in_L105_224_64 -> exit:out_teleporter_0_16
+778	level_104 <- in_L105_224_64 -> exit:out_teleporter_144_128
+779	level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144
+780	level_105 <- in_L104_0_16 -> exit:out_teleporter_224_64
+781	level_105 <- in_L106_256_0 -> exit:out_teleporter_80_144
+782	level_105 <- in_L106_256_0 -> exit:out_teleporter_224_64
+786	level_107 <- in_L102_224_96 -> exit:out_teleporter_0_48
+787	level_107 <- in_L102_224_96 -> exit:out_teleporter_304_176
+788	level_107 <- in_L108_0_32 -> exit:out_teleporter_0_48
+789	level_107 <- in_L108_0_32 -> exit:out_teleporter_304_176
+790	level_108__r2c0 <- in_L107_304_176 -> exit:out_teleporter_0_32
+791	level_108__r11c8 <- in_L109_0_112 -> exit:out_teleporter_224_224
+## lava (19)
+620	level_72 <- in_L71_304_96 -> exit:out_teleporter_0_256
+621	level_72 <- in_L71_304_96 -> exit:out_teleporter_176_0
+622	level_72 <- in_L73_32_144 -> exit:out_teleporter_0_256
+623	level_72 <- in_L73_32_144 -> exit:out_teleporter_176_0
+632	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_0
+633	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_224
+634	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_0
+635	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224
+636	level_76 <- in_L71_304_256 -> exit:out_teleporter_0_80
+637	level_76 <- in_L71_304_256 -> exit:out_teleporter_304_112
+638	level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80
+639	level_76 <- in_L77_0_32 -> exit:out_teleporter_304_112
+644	level_78__r0c2 <- in_L79_64_224 -> exit:out_teleporter_32_0
+645	level_78__r0c16 <- in_L77_96_304 -> exit:out_teleporter_256_0
+646	level_79__r0c4 <- in_L80_32_304 -> exit:out_teleporter_64_0
+647	level_79__r8c4 <- in_L78_32_0 -> exit:out_teleporter_64_224
+648	level_79__r8c4 <- in_L78_32_0 -> location:Level 079 - Darksuit
+755	level_99__r2c4 <- in_L100_48_96 -> exit:out_stairsup_48_96
+756	level_99__r2c7 <- in_L98_112_112 -> exit:out_stairsdown_112_112
+## l100 (2)
+757	level_100__r2c3 <- in_L99_48_96 -> exit:out_stairsdown_48_96
+925	level_100__r4c10 <- in_L99_48_96 ~> level_100__r2c3 -> exit:out_teleporter_288_96
+## l69 (2)
+595	level_69 <- in_pit_L70_3_8 -> exit:out_lightbosscontroller_72_72
+596	level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights

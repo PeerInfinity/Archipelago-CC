@@ -27360,6 +27360,61 @@ in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fin
 4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
 327 t, 0 hits, game-witnessed.
 
+
+### Seedling fidelity L105 — a preview steps the drifting BeamTower Solid (`previewBeamTowerDrift`, OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37b (⚖ the user's GO 2026-11-04: make L105 hitless so `fineStanceWalk` can
+flip). The report is `CC/docs/cloud-reports/seedling-fidelity-l105.md`.
+
+**W0.** The hit is not `fineStanceWalk`'s. At base `26ed405d3f` both captured requests of sweep leg `level_105 <-
+in_L104_0_16 -> exit:out_teleporter_80_144` answer the same, trace for trace, with the switch ON and OFF, over seam −8..+8.
+The hit window (seams 5684–5690 of the captured clocks: 1 beam hit, or 2 flyer hits) belongs to the default solver; p17's
+attribution runs were single sweep rows at other seams. The plan is BEAMLANE's (`beamLaneWalk`): the lane walk previewed
+clean for 413 ticks, the arm drove its keys open-loop, and the run was stopped by `beamtower@48,40`'s Solid at x 58.41 from
+t211 (the tower's drift, `beamTowerDrift` ON, raised it into the lane; the preview's stepper held the Solid where it stood at
+the preview's start). The beam hit at t243 knocked the player into `pit@48,0`; two more pit deaths followed, then the arrival
+door to L104, which `{forced: {transition}}` returned as the goal. The sweep scored it `done`; the game agrees (divs []).
+
+**D1.** (a) `levelRun.previewStepper`'s step takes an optional `previewTick`; under the key the towers' Solids are swapped for
+`beamTowerSolidForecast(k)` (`beamTower.beamTowerDriftedY`: `stepBeamTowerFrame`'s drift summed in its order from the live
+`y` and `Game.time`; a ceremony, an unknown `y` or no clock keeps the snapshot). `previewWalk` passes its own tick at all three
+step sites. (b) The PHASE arm drives a preview's keys only while the run is on the preview (else `{escalations}`: the walk
+re-plans; a row in the new optional result field `phaseDriveLeft`), and a lane crossing is returned only through the walk's
+own exit (`drive`'s identity), else refused by name. ON: every seam of both requests solves hitless into L106 (2 refusals
+also solve). Game witness (p4g, 0 px, 308 ticks, no hit, L106 at t307); the OFF control reproduces on the game (hit t243, L104).
+Mutant M1 (forecast removed, guard kept): every hit seam refuses by name at the tower instead of a fake solve.
+
+**Trap candidates.** (1) A switch named by a 3-of-4 sweep A/B is a hypothesis: replay the captured request with the switch
+both ways before working on it. (2) A preview built from a snapshot of a moving Solid is right only while the Solid does not
+move; open-loop drive of such a preview turns a forecast miss into deaths. (3) A transition returned as the goal must be the
+goal's own exit — check identity at every place that returns one.
+
+### Seedling fidelity CEREMONY126 — the Ghostspear's ceremony: a swallowed strike and the walk it unmasked (`ceremonyPressForecast`, `ceremonyWalkHandoff`, OFF)
+
+Planner `seedling-fidelity-planning-18`, wave 37b (⚖ the user's GO 2026-11-04). The report is
+`CC/docs/cloud-reports/seedling-fidelity-ceremony126.md`.
+
+**W0.** At base `26ed405d3f` the L64 Ghostspear row is route-survey step **125** (not 126): `FROZEN_TICK_PRESS` at t43 —
+the walk's opportunistic strike presses on the tick before the pickup's touch, and the touch tick is the ceremony's
+first `Game.freezeObjects` frame, where `slash()` still runs and `genericHit` returns (`Player.as:560-563`, `:1075-1078`;
+`Mobile.as:35-41`; `Pickup.as:78-95`): the thrust is lost. FROZENPRESS's prototype guard unmasked a "stall" at
+(72.958, 34.784) that is the ceremony itself (started t44 at that point): the collect stance (72,24) lies beyond the
+pickup's rect, and `drive` held movement keys at a frozen player for 400 ticks — the dialogue pages only on X releases.
+
+**D1** (`ceremonyPressForecast`): `freezeForecast.pickupGap` (ON only; a pure read through `pickupUnderfoot`'s own skips)
+and `strikePolicy.ceremonyGuard` — an aim (2 ticks of travel) or a press (1) whose thrust could land on a ceremony's first
+frame stands down. **D2** (`ceremonyWalkHandoff`): the collect goal's stance walk lets its own pickup's avoid volume
+through and ends once `inCeremony` is up (`drive`'s `endOnCeremony`, `walkTo`'s `ceremonyEnds`); `runCollect` pages it.
+Both ON: step 125 SOLVED 150 t, 0 hits, 0 re-plans; step 183 (L79 Darksuit, the same stall class) SOLVED 102 t. Game
+witnesses (p4g, 0 px, `probe-seedling-ceremony126.mjs`): the solved tape, and a plain press into the first frozen frame
+= the press-free model. Local survey: OFF = base on all 236 rows; ON 204/32 (D1's conservative bound moves 141 −8,
+221 +27, 236 +1 ticks, 0 hits) and hammer's `solveProgress` L40 kill-rung pins (679 → 675 t, listed for hammer-3).
+
+**Trap candidates.** (1) A "walk stall" whose velocity is non-zero and whose box overlaps a pickup is a ceremony freeze,
+not geometry — check `inCeremony` first. (2) A live `botStatus` poll can read a tick while that tick's dead frames are
+still running (the first live tick after a ceremony read the frozen position); compare against the bot's own per-tick
+observations (`botDrain`).
+
 ### Seedling fidelity R5RETIRE — `probe-seedling-r5-press-axes` retired; its pair folded into `probe-seedling-r5-spinner`
 
 Planner `seedling-fidelity-planning-18`, wave 37 (⚖ the user 2026-11-02: *"Retire it in W37"*; GO 2026-11-04). The report is
