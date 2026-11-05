@@ -1,10 +1,10 @@
-M1 the staged hunt never asked (returns the arm's first answer): RED —       Tests  1 failed | 3 passed (4)
-M2 the staging cells kept with the switch OFF (the gate dropped on `waits`): GREEN (survived) —       Tests  4 passed (4)
-M3 the staging order reversed (farthest from the body first): RED —       Tests  1 failed | 3 passed (4)
-M4 the hit cells offered as staging too (every refused cell a wait): RED —       Tests  1 failed | 3 passed (4)
-M1 red row: × frontend/modules/seedlingDemo/hammerL95Puncher.test.js > hammer-phase L95-PUNCHER — the L95_624_64 puncher kill under `CLEARTAG_STAND` (`C
-M1 first assertion: -
-M3 red row: × frontend/modules/seedlingDemo/hammerL95Puncher.test.js > hammer-phase L95-PUNCHER — the L95_624_64 puncher kill under `CLEARTAG_STAND` (`C
-M3 first assertion: -
-M4 red row: × frontend/modules/seedlingDemo/hammerL95Puncher.test.js > hammer-phase L95-PUNCHER — the L95_624_64 puncher kill under `CLEARTAG_STAND` (`C
-M4 first assertion: -
+M1 the staged hunt never asked (returns the arm's first answer): RED — default tier: Tests  1 failed | 3 passed (4); train: Tests  1 failed (1)
+   red (default): L95 leg 160, CLEARTAG ON (the dashless pass): OFF the ladder is exhaus
+   red (train): OFF both passes refuse (the ladder exhausted); ON the dashless pass st
+M2 `waits` kept with the switch OFF (the gate dropped on `waits`): GREEN (survived) — default tier: Tests  4 passed (4); train: Tests  1 passed (1)
+M3 the staging order reversed (farthest from the body first): RED — default tier: Tests  1 failed | 3 passed (4); train: Tests  1 failed (1)
+   red (default): L95 leg 160, CLEARTAG ON (the dashless pass): OFF the ladder is exhaus
+   red (train): OFF both passes refuse (the ladder exhausted); ON the dashless pass st
+M4 hit cells offered as staging too: RED — default tier: Tests  1 failed | 3 passed (4); train: Tests  1 failed (1)
+   red (default): L95 leg 160, CLEARTAG ON (the dashless pass): OFF the ladder is exhaus
+   red (train): OFF both passes refuse (the ladder exhausted); ON the dashless pass st

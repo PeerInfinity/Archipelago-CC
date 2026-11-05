@@ -22,6 +22,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -44,9 +45,12 @@ const LEG_L35 = FIX('hammer-cleartag-stand', 'leg127-l35-l12-request.json.gz');
 const PUNCHER = 'puncher@416,256';
 
 /** A captured leg solved as the worker does, under the two switches; the model's hits re-driven from the plan. */
-function solveLeg(leg, { cleartag, staged }) {
+function solveLeg(leg, { cleartag, staged, dashlessOnly = false }) {
     const req = restoreRequest(leg.requests[0].request);
-    const { passes = ANYTIME_PASSES, source, ...tape } = req;
+    const { passes: asked = ANYTIME_PASSES, source, ...tape } = req;
+    // ⛓ `dashlessOnly`: the anytime solve's first pass alone — the pass every L95 answer here comes from (the full
+    // pass's dash upgrade is cut by the work budget, lossless for the plan). The worker's two passes: the train row.
+    const passes = dashlessOnly ? asked.filter((p) => p.pass === 'dashless') : asked;
     const levelSource12 = levelSourceFromAtlas(source.records);
     resetChaserStagedHuntCounts();
     const answer = withClearTagStand(cleartag, () => withChaserStagedHunt(staged,
@@ -55,7 +59,8 @@ function solveLeg(leg, { cleartag, staged }) {
     if (!answer.ok) return { ok: false, message: String(answer.message ?? ''), asks };
     const shadow = replayTape({ staging: tape.staging, perTick: [...tape.perTick, ...answer.plan.solution],
         levelSource: levelSource12, scratchPersistence: tape.scratchPersistence });
-    return { ok: true, ticks: answer.plan.solution.length, plan: JSON.stringify(answer.plan.solution.map((k) => [...k])),
+    const plan = JSON.stringify(answer.plan.solution.map((k) => [...k]));
+    return { ok: true, ticks: answer.plan.solution.length, plan, planSha: createHash('sha1').update(plan).digest('hex').slice(0, 12),
         hits: shadow.ledger('playerHits').map((h) => [h.t, h.source, h.id]), asks };
 }
 
@@ -67,23 +72,23 @@ describe('hammer-phase L95-PUNCHER — the L95_624_64 puncher kill under `CLEART
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_CLEARTAG_STAND');
     });
 
-    it('L95 leg 160, CLEARTAG ON: OFF the ladder is exhausted (no leash stance waits clean); ON it stages and kills, 0 hits', () => {
-        const off = solveLeg(LEG_L95, { cleartag: true, staged: false });
+    it('L95 leg 160, CLEARTAG ON (the dashless pass): OFF the ladder is exhausted; ON it stages and kills, 0 hits', () => {
+        const off = solveLeg(LEG_L95, { cleartag: true, staged: false, dashlessOnly: true });
         expect(off.ok).toBe(false);
         expect(off.message).toMatch(/the combat ladder is EXHAUSTED/);
         expect(off.message).toMatch(new RegExp(`chaser arm: no stance derives for ${PUNCHER} on level 12: .*`
             + '17 of those reachable and with a corridor onward, and 17 of THOSE refused by the forecast'));
         expect(off.asks).toEqual([]);
-        const on = solveLeg(LEG_L95, { cleartag: true, staged: true });
+        const on = solveLeg(LEG_L95, { cleartag: true, staged: true, dashlessOnly: true });
         expect(on.ok).toBe(true);
         expect(on.hits).toEqual([]);
         expect(on.ticks).toBe(794);
+        expect(on.planSha).toBe('b6a1482dccf4');
         // the staging the arm's own `waits` named: (376,232), hitless and out of the body's reach inside its ceiling.
         // Asked again from there the arm prices (376,248) at once (wait 0): the 19-tick approach from the staging cell
-        // meets the body at a phase whose wind-ups all end inside an i-frame. (The second row is the full pass's
-        // dash upgrade, cut by the work budget; the plan is the dashless pass's.)
-        expect(on.asks[0]).toEqual({ id: PUNCHER, t: 0, cell: { x: 376, y: 232 }, wait: 0, verdict: 'staged' });
-        expect(on.asks.filter((a) => a.verdict === 'staged')).toHaveLength(1);
+        // meets the body at a phase whose wind-ups all end inside an i-frame. The worker's two passes (the full pass's
+        // dash upgrade cut by the work budget, the same plan): `hammerL95Puncher.train.test.js`.
+        expect(on.asks).toEqual([{ id: PUNCHER, t: 0, cell: { x: 376, y: 232 }, wait: 0, verdict: 'staged' }]);
     }, 120_000);
 
     it('L35 leg 127, CLEARTAG ON: the switch ON answers OFF\'s plan byte for byte (the arm priced a stance; never staged)', () => {
