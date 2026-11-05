@@ -17,6 +17,10 @@
  *   - `is_vanilla` / `is_canonical` / `preset_label` → `{"<p>": value}` (rules
  *     F3, 2026-10-10; ⚖ user 2026-10-03: *"This should also be per player.
  *     This should not be folder level. I want to fix this in the schema."*).
+ *   - `entrance_randomization` → `{"<p>": block}` (ENTRANCE RANDOMIZATION E2,
+ *     2026-11-04): per player from day one, so no committed document ever held
+ *     a document-level block; it is listed so the loader's refusal of one names
+ *     a script that really moves it (the F2 wrap, nothing new).
  *
  *   node scripts/procgen/migrate-per-player-blocks.mjs --check   # exit 1 naming every unmigrated file
  *   node scripts/procgen/migrate-per-player-blocks.mjs --write   # move them (idempotent: a second run writes 0 bytes)
@@ -120,7 +124,7 @@ const ROOT = join(HERE, '..', '..');
 const { stringifyRulesJson } = await import(join(ROOT, 'frontend/modules/shared/rulesJsonBuilder.js'));
 
 const KEYS = ['procgen_metadata', 'loop_costs', 'provenance', 'region_atlas', 'flash_panel',
-    'is_vanilla', 'is_canonical', 'preset_label'];
+    'is_vanilla', 'is_canonical', 'preset_label', 'entrance_randomization'];
 /** ⛓ The flat flag whose home is `exporter["<p>"]` (rules F1). */
 const EXPORTER_FLAGS = ['assume_bidirectional_exits'];
 const MW = 'frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311';

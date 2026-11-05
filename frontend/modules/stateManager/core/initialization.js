@@ -27,6 +27,10 @@
 
 import { getGameLogic } from '../../shared/gameLogic/gameLogicRegistry.js';
 import { PlayerIdUtils } from '../../shared/playerIdUtils.js';
+import {
+  entranceRandomizationOf,
+  refuseInvalidEntranceRandomization,
+} from '../../procgenCore/entranceRandomizationCheck.js';
 
 /**
  * Loads and processes JSON rules data for a specific player
@@ -153,6 +157,10 @@ function validateJSONData(jsonData, selectedPlayerId) {
   }
 
   refuseRetiredTopLevelKeys(jsonData);
+  // ENTRANCE RANDOMIZATION E2: the loaded slot's exits' `er` and its
+  // `entrance_randomization` block, cross-checked (reverses exist and pair,
+  // placements name shuffled exits, groups are declared) and refused by name.
+  refuseInvalidEntranceRandomization(jsonData, selectedPlayerId);
 
   if (!jsonData.schema_version || jsonData.schema_version !== 3) {
     console.error(
@@ -183,6 +191,11 @@ function validateJSONData(jsonData, selectedPlayerId) {
  * facts, so slot maps too (`{"<p>": true}` / `{"<p>": "label"}`); a document-
  * level boolean or string is the retired shape (the exporter OR'd it over every
  * slot, so a multiworld's non-canonical `_P1` said `is_canonical: true`).
+ *
+ * ⛓ ENTRANCE RANDOMIZATION E2: `entrance_randomization` was per player from
+ * day one (`{"<p>": block}`); no document-level form was ever written, and one
+ * is refused by name exactly like the F2 blocks — read as absent it would load
+ * an entrance-randomized world as a vanilla one, silently.
  */
 const MIGRATE_SCRIPT = 'scripts/procgen/migrate-per-player-blocks.mjs --write';
 const isNotSlotMap = (v) => !v || typeof v !== 'object' || Array.isArray(v)
@@ -198,6 +211,7 @@ export const RETIRED_TOP_LEVEL_KEYS = Object.freeze({
   is_vanilla: ['is_vanilla["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
   is_canonical: ['is_canonical["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
   preset_label: ['preset_label["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
+  entrance_randomization: ['entrance_randomization["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
 });
 
 /**
@@ -279,6 +293,10 @@ function loadPlayerData(sm, jsonData, selectedPlayerId, progress = null) {
   sm.mode = jsonData.mode?.[selectedPlayerId] || null;
   sm.itempoolCounts = jsonData.itempool_counts?.[selectedPlayerId] || {};
   sm.progressionMapping = jsonData.progression_mapping?.[selectedPlayerId] || {};
+  // ENTRANCE RANDOMIZATION E2: the loaded slot's block (null: not shuffled).
+  // Reachability never reads it — the shuffle is already in the exits'
+  // `connected_region`; it is the spoiler and the provenance of that wiring.
+  sm.entranceRandomization = entranceRandomizationOf(jsonData, selectedPlayerId);
   sm.gameInfo = jsonData.game_info || {};
 
   // Initialize prog_items for games that use accumulated/progressive items
@@ -447,6 +465,10 @@ function loadExits(sm, selectedPlayerId, progress = null) {
             : sm.playerId,
           type: originalExitObject.type || 'Exit',
         };
+        // ENTRANCE RANDOMIZATION E2: the exit's `er` (group, type, reverse,
+        // shuffle) rides along when present. A property, never a rule: no
+        // evaluator reads it, so reachability is unchanged.
+        if (originalExitObject.er !== undefined) processedExit.er = originalExitObject.er;
 
         sm.exits.push(processedExit);
       });
