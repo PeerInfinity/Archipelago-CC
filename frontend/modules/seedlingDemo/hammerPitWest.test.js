@@ -17,6 +17,9 @@ import { describe, expect, it } from 'vitest';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { replayTape } from './jsRuntimeSolver.js';
+import { loadTape } from './fixtures/index.js';
+import { canCross } from './seedlingCanCross.js';
+import { stagingFromTape } from './tapeRunner.js';
 import {
     CHOOSER_CUT, CHOOSER_CUT_DEFAULT, DETOUR_RUNG, DETOUR_VIA_BOUND, DETOUR_VIA_BOUND_DEFAULT, deriveChaserDetour,
     solverPlanOpts, withChooserCut, withDetourViaBound,
@@ -64,4 +67,15 @@ describe('hammer-phase PIT-WEST — the fast rows', () => {
         expect(out.why).toContain('(DETOUR_VIA_BOUND)');
         expect(DETOUR_VIA_BOUND.counts.bounded).toBe(before + 1);
     });
+
+    it('DETOUR_VIA_BOUND ON in a room under the bound (swordless L14): the DETOUR rung still answers, '
+        + 'the committed tape\'s keys (`seedlingCanCross`\'s `can` row)', () => {
+        const before = DETOUR_VIA_BOUND.counts.bounded;
+        const r = withDetourViaBound(true, () => canCross({ level: 14, exit: 15, dashMode: 'none',
+            arrival: { staging: stagingFromTape(loadTape('l14-swordless-detour')) } }));
+        expect(r.verdict).toBe('can');
+        expect(r.plan).toMatchObject({ ticks: 173, landed: 15, deaths: 0, hits: 0, rungs: ['detour'] });
+        expect(r.witness.replayed).toEqual({ observations: 174, landed: 15, agrees: true });
+        expect(DETOUR_VIA_BOUND.counts.bounded).toBe(before);
+    }, 120_000);
 });
