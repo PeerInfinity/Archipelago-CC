@@ -34,6 +34,17 @@ export const TABLE_FILE = resolve(REPO, 'frontend/modules/flashPanel/atlases/see
 /** The committed maze preset: its world payloads are the derivation's input (`payloadMd5`). */
 export const MAZE_PRESET = resolve(REPO, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json');
 export const ENGINE_ROOT = resolve(REPO, 'frontend/modules/mazeRoom/tileSpike/certifyPlaythroughMaze.js');
+/**
+ * ⛓ The BINDING WITNESS LEDGER (slice rules-sharedbinding-witnesses, `plan-seedling-binding-witness.mjs`): the events whose
+ * entity ↔ event binding the game has witnessed; a sharedBinding element is re-admitted only when every event it names
+ * is here. An input of the selection, so its bytes are in `inputs` (`witnessMd5`).
+ */
+export const WITNESS_LEDGER = resolve(REPO, 'scripts/procgen/seedling-binding-witnesses.json');
+
+/** The ledger's entries (`{event, …}`), or none where no ledger is committed. */
+export function readBindingWitnesses(file = WITNESS_LEDGER) {
+    return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')).witnesses : [];
+}
 /** How a stale table is regenerated (named in every staleness failure). */
 export const REGEN_RECIPE = 'run alone, in this order: (1) `gh workflow run seedling-probe.yml -R PeerInfinity/Archipelago-CC --ref <branch> '
     + '-f probes=probe-seedling-derived-rules.mjs`; (2) `gh run download <run> -R PeerInfinity/Archipelago-CC` and copy '
@@ -83,8 +94,9 @@ export function engineMd5(root = ENGINE_ROOT) {
 }
 
 /** The table's `inputs` block for a compiled maze document. */
-export function tableInputs(mazeRules) {
-    return { payloadMd5: payloadMd5(mazeRules), engineMd5: engineMd5(), engineFiles: importClosure().length };
+export function tableInputs(mazeRules, ledger = WITNESS_LEDGER) {
+    return { payloadMd5: payloadMd5(mazeRules), engineMd5: engineMd5(), engineFiles: importClosure().length,
+        witnessMd5: existsSync(ledger) ? md5(readFileSync(ledger, 'utf8')) : null };
 }
 
 /** Why the committed table is stale against `mazeRules` (the committed maze preset) and the engine, or []. */
@@ -98,6 +110,10 @@ export function tableStaleness(table, mazeRules) {
     if (now.engineMd5 !== table.inputs.engineMd5) {
         out.push(`the derivation engine moved (engineMd5 ${table.inputs.engineMd5} → ${now.engineMd5}, ${now.engineFiles} files in the closure of `
             + `${relative(REPO, ENGINE_ROOT)}; a comment-only edit counts)`);
+    }
+    if ((now.witnessMd5 ?? null) !== (table.inputs.witnessMd5 ?? null)) {
+        out.push(`the binding witness ledger moved (witnessMd5 ${table.inputs.witnessMd5 ?? null} → ${now.witnessMd5}, ${relative(REPO, WITNESS_LEDGER)}): `
+            + 'the sharedBinding re-admissions changed');
     }
     return out.map((m) => `STALE derived-rule table: ${m} — regenerate: ${REGEN_RECIPE}`);
 }

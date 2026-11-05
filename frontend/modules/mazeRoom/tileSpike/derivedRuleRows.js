@@ -93,13 +93,15 @@ function sharedMembersOf(rules) {
  * Label the certifier's rows.
  *
  * @param {object[]} rows `certifyPlaythroughMaze(…, {rows: true}).rows`
- * @param {{rules: object, echoes: Set<string>, explained?: {label: string, as: string, why: string}[]}} opts `rules` = the
- *   compiled maze document the rows came from (its AP regions and shared worlds); `echoes` = the AP element keys whose rule
- *   the maze payload copies (`findEchoes`); `explained` = the named problems (above), by certifier row label
+ * @param {{rules: object, echoes: Set<string>, explained?: {label: string, as: string, why: string}[], witnessed?: {event: string}[]}} opts
+ *   `rules` = the compiled maze document the rows came from (its AP regions and shared worlds); `echoes` = the AP element
+ *   keys whose rule the maze payload copies (`findEchoes`); `explained` = the named problems (above), by certifier row
+ *   label; `witnessed` = the binding ledger's entries (`scripts/procgen/seedling-binding-witnesses.json`), each an event
+ *   whose entity ↔ event binding the GAME has witnessed
  * @returns {{elements: object[], regions: Map<string, object>}} one row per element per arrival, and per region its
  *   arrivals and its Route A class ('overridable', 'internal-only', 'several arrivals', 'walk-in from another member')
  */
-export function labelDerivedRows(rows, { rules, echoes, explained = [] }) {
+export function labelDerivedRows(rows, { rules, echoes, explained = [], witnessed = [] }) {
     for (const x of explained) {
         if (!DERIVED_ROW_LABELS.includes(x.as) || x.as === 'problem') throw new Error(`derived rows: an explained problem's label must be one of the others, got ${x.as}`);
     }
@@ -173,12 +175,22 @@ export function labelDerivedRows(rows, { rules, echoes, explained = [] }) {
     // read off the document's own event locations (no list). An event LOCATION is bound too: its place is the layer's `side`.
     // Re-admitting a row needs a GAME witness for its binding (a probe that the entity's action writes that flag), per row,
     // a named delta to the pin (rules-4: an R-A4-era follow-up).
+    // ⛓ RE-ADMITTED BY A GAME WITNESS (slice rules-sharedbinding-witnesses; rules-4's R-A3 ruling (c): "later and per row:
+    // re-admit only with a GAME witness for the binding"): an element ALL of whose events have a ledger entry (`witnessed`)
+    // carries no `sharedBinding` but `bindingWitnessed` (the same events). A ledger event the document does not place is
+    // refused (stale); no ledger, no re-admission.
     const bound = new Set();
     for (const r of Object.values(REGIONS)) for (const l of r.locations ?? []) if (l.event) bound.add(l.item?.name ?? l.name);
+    const witness = new Set(witnessed.map((w) => w.event));
+    const stale = [...witness].filter((n) => !bound.has(n));
+    if (stale.length) throw new Error(`derived rows: binding witness(es) naming no event the document places (stale): ${stale.join(', ')}`);
     for (const e of elements) {
         const named = [...ruleItemNames(e.derived)].filter((n) => bound.has(n));
         if (e.kind === 'location' && bound.has(e.name)) named.push(e.name);
-        if (named.length > 0) e.sharedBinding = { by: 'playthroughEventLayer', events: [...new Set(named)].sort() };
+        const events = [...new Set(named)].sort();
+        if (events.length === 0) continue;
+        if (events.every((n) => witness.has(n))) e.bindingWitnessed = { by: 'gameWitnessLedger', events };
+        else e.sharedBinding = { by: 'playthroughEventLayer', events };
     }
     // ⛓ EXACT (session tile-rules-automation-r-a3, designer GO: "re-define the pin's routeA exact to exclude path-vs-edge"):
     // overridable (one fresh arrival, rooted, not walked in, no partial row), echo-free, and its derived rule EQUAL to today's
@@ -261,6 +273,7 @@ export function summarizeDerivedRows({ elements, regions, unpriced = [] }) {
         echoedElements: keys.filter((k) => echoedKey.has(k)).length,
         unpriced: unpriced.length,
         sharedBinding: new Set(elements.filter((e) => e.sharedBinding).map((e) => e.key)).size,
+        bindingWitnessed: new Set(elements.filter((e) => e.bindingWitnessed).map((e) => e.key)).size,
         arrivals: {
             regionsPriced: regions.size, arrivalNodes: nodes, regionsPerArrivalCount: hist,
             regionsArrivalDependent: [...regions.values()].filter((r) => r.dependent).length,

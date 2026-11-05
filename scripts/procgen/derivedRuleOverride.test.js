@@ -14,7 +14,7 @@ import {
     applyDerivedRuleTable, applyDerivedRuleTableToAtlas, refuseHandRowsUnderTable, tableStaleness, tableInputs,
     composedDisagreeMessage, importClosure, REGEN_RECIPE,
 } from './seedlingDerivedRuleTable.js';
-import { derivedRuleTable, labelDerivedRows } from '../../frontend/modules/mazeRoom/tileSpike/derivedRuleRows.js';
+import { derivedRuleTable, labelDerivedRows, summarizeDerivedRows } from '../../frontend/modules/mazeRoom/tileSpike/derivedRuleRows.js';
 
 const has = (item) => ({ rule: 'Has', args: { item_name: item } });
 const TRUE = { rule: 'True_' };
@@ -131,6 +131,31 @@ describe('derivedRuleTable: the selection', () => {
         const t = derivedRuleTable(label(rows), { rules });
         expect(t.rows).toEqual([]);
         expect(t.excluded).toEqual([{ key: 'a|@E', why: 'sharedBinding (playthroughEventLayer): E' }]);
+    });
+    // ⛓ BINDING WITNESSES (slice rules-sharedbinding-witnesses; rules-4's R-A3 ruling (c)): a sharedBinding element is
+    // re-admitted only when EVERY event it names has a ledger entry — the ledger is data, never a list in code.
+    const witnessed = (rows, w) => labelDerivedRows(rows, { rules: rules2, echoes: new Set(), witnessed: w });
+    const rules2 = {
+        regions: { 1: { a: { exits: [{ name: 'a -> b', connected_region: 'b' }], locations: [{ name: 'E', event: true, item: { name: 'E' } }, { name: 'F', event: true, item: { name: 'F' } }] }, b: { exits: [], locations: [] } } },
+        preset_sidecars: rules.preset_sidecars,
+    };
+    const both = { rule: 'And', children: [has('E'), has('F')] };
+    it('a WITNESSED binding re-admits its element (bindingWitnessed, no sharedBinding); a mutant without the ledger restores the exclusion', () => {
+        const t = witnessed([exitRow(has('E'), has('E'))], [{ event: 'E' }]);
+        expect(t.elements[0].sharedBinding).toBeUndefined();
+        expect(t.elements[0].bindingWitnessed).toEqual({ by: 'gameWitnessLedger', events: ['E'] });
+        expect(derivedRuleTable(t, { rules: rules2 }).rows.map((r) => r.key)).toEqual(['a|a -> b']);
+        expect(summarizeDerivedRows(t).sharedBinding).toBe(0);
+        // m: the ledger dropped → the exclusion is back, by its fact.
+        expect(derivedRuleTable(witnessed([exitRow(has('E'), has('E'))], []), { rules: rules2 }).excluded)
+            .toEqual([{ key: 'a|a -> b', why: 'sharedBinding (playthroughEventLayer): E' }]);
+    });
+    it('an element naming a witnessed AND an unwitnessed event stays excluded, naming both', () => {
+        const t = derivedRuleTable(witnessed([exitRow(both, both)], [{ event: 'E' }]), { rules: rules2 });
+        expect(t).toEqual({ rows: [], excluded: [{ key: 'a|a -> b', why: 'sharedBinding (playthroughEventLayer): E, F' }] });
+    });
+    it('a ledger entry naming no event the document places is refused (stale)', () => {
+        expect(() => witnessed([exitRow(has('X'), has('X'))], [{ event: 'E' }, { event: 'Gone' }])).toThrow(/naming no event the document places \(stale\): Gone/);
     });
     it('a named exclusion is listed with its reason; a stale one is refused', () => {
         const t = derivedRuleTable(label([exitRow(has('X'), has('X'))]), { rules, exclusions: [{ key: 'a|a -> b', why: 'because' }] });
