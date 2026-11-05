@@ -1,0 +1,13 @@
+
+ RUN  v4.0.15 /tmp/claude-0/-home-user-Archipelago-CC/81408249-ac28-5336-b9ed-80a403456ce0/scratchpad/mwt
+
+ ✓ frontend/modules/seedlingDemo/hammerTurretApproach.train.test.js (3 tests) 439478ms
+     ✓ OFF: the stance walk into the range is not certified — LWEIGH's refusal on the t917 blast  194935ms
+     ✓ ON: the approach is timed on the turret's clock from cover, the kill is hitless, and Boss Key 2 is collected at t4142 on a fresh run  203749ms
+     ✓ ICEST's pocket boot (480,456): SOLVED 4495 through the corpse weigh, ON keys identical, nothing approached  40790ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  04:04:44
+   Duration  447.83s (transform 6.23s, setup 0ms, import 8.19s, tests 439.48s, environment 0ms)
+

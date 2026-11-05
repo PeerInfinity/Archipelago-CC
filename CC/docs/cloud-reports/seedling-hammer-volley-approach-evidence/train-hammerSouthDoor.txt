@@ -1,0 +1,14 @@
+
+ RUN  v4.0.15 /tmp/claude-0/-home-user-Archipelago-CC/81408249-ac28-5336-b9ed-80a403456ce0/scratchpad/mwt2
+
+ ✓ frontend/modules/seedlingDemo/hammerSouthDoor.train.test.js (4 tests) 553665ms
+     ✓ OFF, south of the latched door: APPROACH's refusal on the arrival legs — 12 forks, all no-plan, from (488,579)  29338ms
+     ✓ ON, south of the latched door: the door's hold first, the approach from the doorway, Boss Key 2 hitless at t4810 on a fresh run  297518ms
+     ✓ the latch staging (the near side once the latch has faded the door): SOLVED 4142 ON, nothing asked  185109ms
+     ✓ ICEST's pocket boot (480,456): ON keys identical to OFF, nothing asked  41691ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  04:04:44
+   Duration  562.35s (transform 6.24s, setup 0ms, import 8.51s, tests 553.67s, environment 0ms)
+

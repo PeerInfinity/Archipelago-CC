@@ -27359,3 +27359,34 @@ in fidelity's session, and confirmed in the hammer planner's) *"Land 2, hold fin
 4 solves and moves nothing on the route; with `fineStanceWalk` ON, step 216 / leg 914 goes 731 t with 1 unbilled hit →
 327 t, 0 hits, game-witnessed.
 
+
+### Seedling hammer-phase VOLLEY-APPROACH — LWEIGH's hit approach, rewound to the range's edge and tried on forks (`VOLLEY_APPROACH`, OFF)
+
+⚖ The user queued it 2026-11-04 (fidelity FROZENPRESS's hand-over: with `frozenPressForecast` ON, leg 860 under A5 +
+`PRESS_ESCAPE_EXACT` + `forecastShieldBump` refuses at work 5171 by LWEIGH's name, the t2118 blast on the reordered
+weigh's walk). Report: `CC/docs/cloud-reports/seedling-hammer-volley-approach.md`.
+
+**W0.** Reproduced: A5 REFUSED 5171 (the t2118 refusal), main's defaults REFUSED 3094 (`burnabletree@872,784`'s burn
+stance). Traced (a scratch hook replaying the walk): the live stance walk from t1448 crosses the open south door at t2036,
+is in range from t2041 (the turret's clock runs from there), dodges volley 1 (t2069) behind `pushableblockfire@480,480`,
+stands at (471.2,456.0) through the t2111 startshot; volley 2 spawns at t2114 aimed at the player and #2.0 lands at t2118
+(the walk's own swing landed on the turret at t2117). The walk's certificate steps no blast; the one-tick
+`freezeForecast` names the contact on the tick it lands. OFF's dashless pass walks the same route ~270 ticks later, is
+not hit, and refuses on the weigh's fade dwell. `TURRET_APPROACH` from 860 still stages south of the latched door
+(12 no-plan forks, work 1951).
+
+**M.** From the entry (t2035): (1) a wait outside the range, the same walk replayed: 0/49 hitless (outside, the clock
+re-arms; the room's other bodies move); (2) sides and routes with no wait: 12 forks, none hitless; (3) APPROACH's whole
+search (sides × routes × in-range waits): the up side via (466,445), wait 34, after 36 forks. Chosen: (3), reached by a
+rewind to the range's edge, so the walk's ladder (the door) is kept and only the in-range tail is re-searched.
+
+**I.** `volleyApproachRetry` + the frontier's retry (asked only where LWEIGH's guard would refuse a hit of the turret's own,
+and only when `TURRET_APPROACH` did not replace the walk); `approachSides` / `approachForkTries` moved out of
+`approachKillForCorpse` unchanged; the nested kill under `requireVerb('kill', …)`. 860 A5 ON: past t2118 to work 7513,
+`weigh (fade, corpse home)`: the dwell's condition (both t2 locks open) is ALREADY TRUE when the dwell is asked (not traced
+further here; `execCorpseWeigh`'s, the same wall OFF's dashless pass meets). The latch chain (CPAIR-3 + LWF): rewound to t817, the right side via (467,402), wait 46; alone the
+four-order bound at `pushableblock@576,560`; + `FIFTH_ORDER` SOLVED 4286, hitless on a fresh replay.
+
+**Trap candidates.** (1) A wait outside an ice turret's range is not a wait on its clock (`IceTurret.update`'s `else`
+re-arms `shootTimer`), so "time the approach" means a wait spent inside the range, under cover. (2) The anytime answer
+reports the full pass's refusal; the dashless pass can be past the wall the answer names, so read `onPass`.

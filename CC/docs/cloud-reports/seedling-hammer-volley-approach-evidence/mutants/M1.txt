@@ -1,0 +1,10 @@
+before 85435360
+mutated 5d215abf
+     ↓ leg 860, A5: OFF refuses by LWEIGH's name at t2118; ON rewinds to t2035, approaches hitless, and runs past t2118 to the weigh's fade dwell
+     × the latch chain, CPAIR size 3 + LWF (TURRET_APPROACH OFF): ON rewinds the t917 approach to t817 and approaches hitless; alone it meets the four-order bound, with FIFTH_ORDER it SOLVES Boss Key 2 hitless at 4286 183772ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 'solverBot(l40latch) collect (656,528)…' to contain 'applied 4 strategies for one goal [sh…'
+Expected: "applied 4 strategies for one goal [shove(pushableblockfire@576,576), weigh(wandlock@448,432), hold(wandlock@480,560), weigh(wandlock@800,400)]"
+Received: "solverBot(l40latch) collect (656,528) stance (ladder-routed: no corridor from (888,776) to a stance that can collect bosskey@656,528 — 16 walkable candidate(s) in range, 10 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> shove stance (pushableblockfire@576,576) -> weigh (wandlock@448,432): the reordered corpse weigh took a hit at t917 (blast:iceturret@472,400#2.2) on its way to iceturret@472,400's kill stance (488,445) — the approach into the turret's range is not certified (⛓ LWEIGH: a volley-aware approach is the unbuilt arm)"
+      Tests  1 failed | 1 skipped (2)
+restored 85435360

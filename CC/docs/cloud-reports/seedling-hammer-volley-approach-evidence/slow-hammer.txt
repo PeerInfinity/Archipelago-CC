@@ -1,0 +1,20 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerBk2Combat.slow.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 656231[2mms[22m[39m
+     [33m[2m✓[22m[39m pocket shut, OPP, OFF: the burn walk's combat ladder is EXHAUSTED on the BobSoldier in its notch [33m 55753[2mms[22m[39m
+     [33m[2m✓[22m[39m pocket shut, OPP, ON: staged at (856,856) after 15 still ticks, the BobSoldier dies hitless and the refusal moves past the combat to the ice turret's approach from the door [33m 338498[2mms[22m[39m
+     [33m[2m✓[22m[39m pocket open, no OPP, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4810, the staged hunt never asked [33m 261973[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerEscapeExact.slow.test.js [2m([22m[2m2 tests[22m[2m)[22m[33m 802811[2mms[22m[39m
+     [33m[2m✓[22m[39m [needs fidelity's forecastShieldBump] key ON, SPIN OFF, ON: the t541 no-landing claims, then the frozen-tick press refusal at t2119 — spinner@816,848 is not reached (measured; not the brief's "hitless") [33m 400630[2mms[22m[39m
+     [33m[2m✓[22m[39m [needs forecastShieldBump + frozenPressForecast] the same arm with the freeze forecast ON: no press lands on a frozen tick, and the solve runs past t2119 to its next wall [33m 402178[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 51836[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown) [33m 51835[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashShape.slow.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 53013[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, sweep request 392:0 solved whole ships the same ticks for less work [33m 53011[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+[2m   Start at [22m 03:49:23
+[2m   Duration [22m 1574.06s[2m (transform 4.98s, setup 0ms, import 9.60s, tests 1563.89s, environment 1ms)[22m
+

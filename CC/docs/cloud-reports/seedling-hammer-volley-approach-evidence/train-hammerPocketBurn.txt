@@ -1,0 +1,13 @@
+
+ RUN  v4.0.15 /tmp/claude-0/-home-user-Archipelago-CC/81408249-ac28-5336-b9ed-80a403456ce0/scratchpad/mwt3
+
+ ✓ frontend/modules/seedlingDemo/hammerPocketBurn.train.test.js (4 tests) 407744ms
+     ✓ pocket shut, OFF: the latch hold's stance refuses on the tree, and its prerequisite list names no burn  57998ms
+     ✓ pocket shut, ON: the burn is raised for the hold's stance, and the refusal moves past the pocket to the burn walk's combat (bobsoldier@880,832)  52837ms
+     ✓ pocket open, ON: SOUTHDOOR's solve unchanged — Boss Key 2 hitless at t4810 on a fresh run  296903ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  04:04:44
+   Duration  416.59s (transform 6.56s, setup 0ms, import 8.65s, tests 407.74s, environment 0ms)
+

@@ -1,0 +1,10 @@
+before 85435360
+mutated 4853fa65
+     [32m✓[39m ships OFF, the env alone turns it on, and its env name is on the page's switch channel[32m 3[2mms[22m[39m
+[31m     [31m×[31m the retry's nested kill is gated by the strategy switch (`kill`) before any rewind or fork[39m[32m 9[2mms[22m[39m
+     [33m[2m✓[22m[39m the weigh's hold fallback in a room with no turret (`C2-no-block`): ON = OFF, nothing asked [33m 438[2mms[22m[39m
+     [33m[2m✓[22m[39m a block weigh (L16, `r9-solve-16`): ON = OFF, and nothing is asked [33m 7081[2mms[22m[39m
+     [33m[2m✓[22m[39m ICEST's pocket boot ((480,456)): the LIVE corpse weigh (not the reorder) is OFF's, SOLVED 4495, nothing asked [33m 42963[2mms[22m[39m
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (5)[39m
+restored 85435360
