@@ -933,11 +933,12 @@ In-app row `apworld-re-roll-opens-the-form-on-the-own-substrate-at-the-next-seed
   rule) and its `procgenParamsFromPayload` read differs from the defaults (trap
   1399: the recorded knobs can be the harder ones, so the defaults come first);
 - the free-item sentence, unless the target hosts surplus exits natively, and
-  (S1) the grant sentence — *"6 library items [Right arrow, …] will be granted as
-  starting items — the slot does not define them and the realiser is handed them
-  free, so the same edit declares them"* — whenever the target's library holds
-  items the slot neither defines nor holds (`regenerationGrants`, the pipeline's
-  `grantedLibraryItems` for the one target; none for a library or zone source);
+  (S1) the grant sentence — *"6 library items [Right arrow, …] may be granted as
+  starting items — the realiser is handed them free, and the same edit declares only
+  those a surplus exit drifts onto"* — whenever the target's library holds items the
+  slot neither defines nor holds (`regenerationGrants`, the pipeline's
+  `grantedLibraryItems` for the one target: the CANDIDATES; none for a library or zone
+  source). What lands is narrowed after the run (P5d, below);
 - (R3) what the TARGET needs in the starting inventory — the same need line the
   Items tab's Starting inventory block draws (below), with its **grant ▸**
   buttons, for a target whose registry entry declares `startingInventory`; none
@@ -960,7 +961,9 @@ substrate, seed, regionParams, hazardOpts, size?, freeItems, ms}` — through
 `_saveRegionSidecar`'s own path (the op preview → the schema/placement veto →
 ONE op, one undo); the answer is the regenerate op's own description plus V0's
 count. (S1, ⚖ Q1b) The same op carries **`grants: {items: {name: def}, starting:
-[names]}`** when there is something to grant: a def per granted name into
+[names]}`** when there is something to grant (P5d, ⚖ Robert 2026-11-05 *"Only what was
+used"*: only the candidates the built room LEANS ON — see *Grants: only what the rooms
+lean on* below): a def per granted name into
 `items[p]` (the pipeline's `grantedItemDef` shape, ids 999↓ past any id the slot
 already uses) and the names appended to `starting_items[p]` — the realiser was
 handed them FREE, so without them the payload is built on items the document never
@@ -1023,6 +1026,58 @@ as before (unit pin: the same answer object, the bytes equal to the bare op).
   say) is answered exactly as before.
 
 Unit pins: `regionGenerationPending.test.js` (each pin names the mutant it kills).
+
+**Grants: only what the rooms lean on (P5d, ⚖ Robert 2026-11-05 *"Only what was used"*,
+scope *"Both"*).** `topDownSteps.grantedLibraryItems` stays the CANDIDATE list, the
+items the realiser is handed free (so the geometry is unchanged). The grant keeps a
+candidate only when something leans on it (`topDownSteps.grantsUsedBy`):
+- the engine's surplus-exit drift, its one reader of free items
+  (`collectUsedFreeItems`; `layout.stats.freeItemsUsed` for a whole realise): a drifted
+  exit's geometry needs the item and its logic does not, so it must be held from the
+  start;
+- a realised substrate's declared `startingInventory` need that the source's own
+  starting items do not meet (bounce: an arrow to move at all; its braid puts every
+  portal on a free arrow): every candidate the need names.
+Generate ▸ grants from the run's `freeItemsUsed`; Initialise from its realise's. The
+pipeline's top-down compile uses the same rule (R9: one rule). A room the panel's
+editor hand-edited clears `freeItemsUsed` to null ("unknown"), and then every candidate
+is granted, as before P5d. Measured before the change, per Regenerate on `adventure`:
+jta granted 47 starting items, cloudberry 12 (Jetpack, Double Jump, …), flash_seedling_gen
+3 (a Seedling room started armed), bounce 6. After: 0, 0, 0 and 2. No committed preset
+moved: the top-down presets realise maze and text_adventure, which declare no library
+items. Unit pins: `procgenPipeline/grantsUsedBy.test.js`, the drift pin in
+`topDownBounce.slow.test.js`.
+
+**The entry gate, recovered (P5d, ⚖ Robert 2026-11-05).** Sphere growth hands a ZONE
+region its entry gate (`entrance.requirement`, "what every player inside holds"), and
+the document did not carry it. So Regenerate refused a Cloudberry region whose way back
+the document writes as `Has Clouds`, and rebuilt a Double Jump region without its
+Double Jump hero. `recoverEntryGate` recovers it only where the original generator
+handed one. Measured in the engine: only `buildSphereZoneRegion` does; a procedural
+region, and every top-down, initialise, spiral and grid-growth realise, gets none.
+- **A sphere-growth slot:** the record it wrote, `procgen_metadata[p].sphere_tree.
+  nodes[].gate`, found by the sidecar's `grid_cell`.
+- **A slot that records no driver** (origin unknown; ⚖ *"(a) Use the fallback"*): the
+  BFS parent's entering exit rule's items.
+- Either is intersected with `regionHeldItems`: X is held when the region is
+  unreachable once every exit whose rule needs X is closed.
+
+`withRecoveredEntryGate` then realises the exit back to the parent the way sphere growth
+does:
+- an ungated back portal (cloudberry, braid bounce) is free when every item its rule
+  needs is held, and otherwise keeps the document's rule (Cloudberry then LOCKS its
+  start door, an authored lock);
+- a gated one gets the entry gate, but only from sphere growth's record: bounce's arrows
+  are directional, so an entering-exit gate is not the way back.
+
+The document's rules are never changed. The engine adds no second back exit when the
+caller supplies one on the entrance side. Measured over every committed preset: 43 of
+1951 regions' specs change. 32 regenerate byte-identically. The 9 Cloudberry
+sphere-growth regions are corrections (their way back is free again, as generated).
+`bounce_worldgen`'s `region_2_1` (no driver, braid) gets its way back west free (the
+room becomes 240×430), a ruled change. Unit pins: `regionRegenerateEntryGate.test.js`
+(the reproduce table: every committed Cloudberry region regenerates its generation's
+request).
 
 **Initialise procgen data takes the same road (P5d).** The worker's dispatch
 (`workerJobAnswer`) flags an initialise exactly as it flags a region regenerate, and
@@ -2453,8 +2508,10 @@ slot's sidecar-issue count (V0):
 > unplaced — location names and existing access rules unchanged — built in the
 > generation worker (0.2 s) — 0 sidecar issues in slot 1
 
-As `bounce` the grant clause reads *"6 library items granted as starting items
-(Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms)"*.
+As `bounce` the grant clause reads *"2 library items granted as starting items
+(Right arrow, Left arrow)"* — since P5d only the candidates the rooms lean on (bounce's
+declared starting need names both arrows); before P5d it granted all six of its library
+items.
 
 **The preset card** (`presets/presetUI.js`, `procgenDriverLabel`) labels a slot
 this op initialised *"Initialised in the APWorld Editor (<source_game>)"* — the
@@ -2470,10 +2527,11 @@ substrate's own blocks (`rulesJsonBlocks`), each landed under the slot
 (`region_atlas[p]`, `flash_panel[p]`, rules F2 — so a second Seedling slot of one
 document initialises beside the first), with
 return exits ON one exit per return route appended to `regions[p][R].exits`, and
-(S1) **the grants**: every non-victory library item of the target that the slot
-does not define or hold gets a definition in `items[p]` and is appended to
-`starting_items[p]` (bounce: `Right arrow`, `Left arrow`, `Springs`, `Jetpacks`,
-`Blue platforms`, `Brown platforms`; maze and text_adventure grant none). **Why:
+(S1) **the grants**: since P5d, the candidates the built rooms lean on (below) get a
+definition in `items[p]` and are appended to `starting_items[p]` (bounce: `Right arrow`,
+`Left arrow`; maze, text_adventure, cloudberry, jta, noiz2sa and flash_seedling_gen
+grant none unless a drift used one). The CANDIDATES are every non-victory library item
+of the target that the slot does not define or hold. **Why:
 the payload was built with them free** — `initialiseSlot` hands the realiser the
 pipeline's own `grantedLibraryItems(doc, p, [substrate]).startingItems`, exactly
 as `buildTopDownEnvelope` does, and the pipeline's compile writes the same two

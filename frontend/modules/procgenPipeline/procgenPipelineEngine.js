@@ -3729,7 +3729,12 @@ function* generateRegionZoneGen(spec) {
     // keeps the gated back portal (it has the width for a back-portal branch
     // tip), so column output stays byte-identical.
     const ent = spec.entrances?.[0];
-    if (ent && (ent.requirement !== undefined || ent.access_rule !== undefined)) {
+    // ⛓ P5d — a caller that supplies the back exit itself (the APWorld Editor's
+    //   regenerate: the document's exit to the parent, pinned on the entrance side,
+    //   realised as below) gets no second one. Sphere growth never puts an exit on
+    //   the entrance side, so its regions are unchanged.
+    if (ent && (ent.requirement !== undefined || ent.access_rule !== undefined)
+        && !exitSpecs.some((s) => s.side === ent.side)) {
         // Gated back portal (column) vs ungated (braid) — the substrate
         // decides from its regionParams; default gated.
         const backGated = adapter.backPortalGated?.(spec.params) ?? true;

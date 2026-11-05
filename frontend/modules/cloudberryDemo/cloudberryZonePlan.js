@@ -51,11 +51,13 @@
 
 import { createRng } from '../shared/rng.js';
 import {
-    CLOUDBERRY_ABILITY_ITEMS, CLOUDBERRY_GAME_ITEMS, CLOUDBERRY_ITEMS_BY_AP_NAME, CLOUDBERRY_LIBRARY_OBSTACLES, PAGE_SIDE,
+    CLOUDBERRY_ABILITY_ITEMS, CLOUDBERRY_GAME_ITEMS, CLOUDBERRY_ITEMS_BY_AP_NAME, CLOUDBERRY_ITEM_NAMES,
+    CLOUDBERRY_LIBRARY_OBSTACLES, PAGE_SIDE,
     buildCloudberryPayload, emitCloudberryPaths, heroDoubleJump, requirementRule, requiredItems,
 } from './cloudberryRules.js';
 import {
     CLOUDBERRY_HAZARD_UPGRADES, CLOUDBERRY_HERO_PHYSICS, CLOUDBERRY_HERO_VARIATION_MAX, CLOUDBERRY_TILESETS,
+    cloudberryRecordedKnobs,
     DEFAULT_CLOUDBERRY_PROCGEN_PARAMS,
 } from './cloudberryProcgenParams.js';
 
@@ -272,15 +274,20 @@ export function planCloudberryLevel(specs, ctx = {}) {
         if (seen.has(s.side)) throw new Error(`${what}: duplicate exit side '${s.side}'`);
         seen.add(s.side);
         const { physics, authored } = splitCloudberryRequirement(s.requirement, s.counts);
-        return { side: s.side, back: s.side === backSide, physics, authored };
+        const back = s.side === backSide;
+        // ⛓ P5d (⚖ Robert 2026-11-05, "lock as fallback") — the way back is the start
+        //   door, which has no pieces: a back exit that still needs platform items (a
+        //   caller could not show every player inside holds them) is an AUTHORED lock
+        //   on that door, like Jetpack in an exit gate (R15): the page greys it until
+        //   the player holds them. Free (sphere growth's, and a recovered entry gate's
+        //   back exit) stays free.
+        if (back && physics.length) {
+            return { side: s.side, back, physics: [], lockedBack: true,
+                authored: [...authored, ...physics.map((g) => ({ item: CLOUDBERRY_ITEM_NAMES[g], count: 1 }))] };
+        }
+        return { side: s.side, back, physics, authored };
     });
     const forward = exits.filter((e) => !e.back);
-    for (const e of exits.filter((x) => x.back)) {
-        if (e.physics.length) {
-            throw new Error(`${what}: the way back (${e.side}) needs platform items [${e.physics.join(', ')}] `
-                + '— the start door offers it free (backPortalGated is false)');
-        }
-    }
     const E = forward.length ? forward[0].physics : null;
     for (const e of forward) {
         if (!sameSet(e.physics, E)) {
@@ -391,6 +398,8 @@ export function planCloudberryLevel(specs, ctx = {}) {
     const retries = Math.max(0, knob(params, 'cloudberryRetries') | 0);
     return {
         region_id, args, needs, retries, pieceSets, locations, exits, jetpack,
+        // ⛓ P5d — what the payload records beside the request (`params.knobs`).
+        knobs: cloudberryRecordedKnobs(params),
         ...(doubleJump ? { doubleJump: true } : {}),
         ...(heroDraw ? { heroDraw } : {}),
         key: cloudberryLevelKey(args, needs, heroDraw),
@@ -513,6 +522,6 @@ export function emitCloudberryZone(plan, result) {
 export function cloudberryZonePayload(plan, result, zone) {
     return buildCloudberryPayload(plan.region_id, {
         generate: result.generate, docSha256: result.docSha256, checks: zone.checks, gateRules: zone.gateRules,
-        doubleJump: result.facts?.doubleJump === true,
+        doubleJump: result.facts?.doubleJump === true, knobs: plan.knobs,
     });
 }
